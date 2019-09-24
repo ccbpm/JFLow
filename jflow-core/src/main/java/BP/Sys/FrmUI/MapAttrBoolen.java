@@ -16,45 +16,46 @@ public class MapAttrBoolen extends EntityMyPK
 		///#region 文本字段参数属性.
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
+	public final void setKeyOfEn(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 绑定的枚举ID
 	*/
-	public final String getUIBindKey()
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value)
+	public final void setUIBindKey(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
 	/** 
 	 数据类型
 	*/
-	public final int getMyDataType()
+	public final int getMyDataType()throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.MyDataType);
 	}
-	public final void setMyDataType(int value)
+	public final void setMyDataType(int value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
@@ -192,8 +193,9 @@ public class MapAttrBoolen extends EntityMyPK
 	 绑定函数
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindFunction()
+	public final String BindFunction() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}

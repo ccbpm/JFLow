@@ -3,6 +3,8 @@ package BP.GPM;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -14,34 +16,37 @@ public class StationMenu extends EntityMM
 		///#region 属性
 	/** 
 	 菜单
+	 * @throws Exception 
 	*/
-	public final String getFK_Menu()
+	public final String getFK_Menu() throws Exception
 	{
 		return this.GetValStringByKey(StationMenuAttr.FK_Menu);
 	}
-	public final void setFK_Menu(String value)
+	public final void setFK_Menu(String value) throws Exception
 	{
 		this.SetValByKey(StationMenuAttr.FK_Menu, value);
 	}
 	/** 
 	 岗位
+	 * @throws Exception 
 	*/
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(StationMenuAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		this.SetValByKey(StationMenuAttr.FK_Station, value);
 	}
 	/** 
 	 是否选中
+	 * @throws Exception 
 	*/
-	public final String getIsChecked()
+	public final String getIsChecked() throws Exception
 	{
 		return this.GetValStringByKey(StationMenuAttr.IsChecked);
 	}
-	public final void setIsChecked(String value)
+	public final void setIsChecked(String value) throws Exception
 	{
 		this.SetValByKey(StationMenuAttr.IsChecked, value);
 	}
@@ -60,8 +65,9 @@ public class StationMenu extends EntityMM
 	 岗位菜单
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public StationMenu(String no)
+	public StationMenu(String no) throws Exception
 	{
 		this.Retrieve();
 	}
@@ -76,10 +82,10 @@ public class StationMenu extends EntityMM
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_StationMenu");
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "岗位菜单";
-		map.EnType = EnType.Sys;
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+		map.setEnDesc("岗位菜单");
+		map.setEnType(EnType.Sys);
 
 			//map.AddTBStringPK(StationMenuAttr.FK_Station, null, "岗位", false, false, 0, 50, 20);
 		map.AddDDLEntitiesPK(StationMenuAttr.FK_Station, null, "岗位", new Stations(), true);

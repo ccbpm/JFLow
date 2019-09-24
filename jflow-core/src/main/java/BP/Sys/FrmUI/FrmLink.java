@@ -17,125 +17,133 @@ public class FrmLink extends EntityMyPK
 		///#region 属性
 	/** 
 	 FontStyle
+	 * @throws Exception 
 	*/
-	public final String getFontStyle()
+	public final String getFontStyle() throws Exception
 	{
 		return this.GetValStringByKey(FrmLinkAttr.FontStyle);
 	}
-	public final void setFontStyle(String value)
+	public final void setFontStyle(String value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.FontStyle, value);
 	}
-	public final String getFontColorHtml()
+	public final String getFontColorHtml() throws Exception
 	{
 		return PubClass.ToHtmlColor(this.getFontColor());
 	}
 	/** 
 	 FontColor
+	 * @throws Exception 
 	*/
-	public final String getFontColor()
+	public final String getFontColor() throws Exception
 	{
 		return this.GetValStringByKey(FrmLinkAttr.FontColor);
 	}
-	public final void setFontColor(String value)
+	public final void setFontColor(String value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.FontColor, value);
 	}
-	public final String getURL()
+	public final String getURL() throws Exception
 	{
 		return this.GetValStringByKey(FrmLinkAttr.URL).replace("#", "@");
 	}
-	public final void setURL(String value)
+	public final void setURL(String value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.URL, value);
 	}
 	/** 
 	 Font
+	 * @throws Exception 
 	*/
-	public final String getFontName()
+	public final String getFontName() throws Exception
 	{
 		return this.GetValStringByKey(FrmLinkAttr.FontName);
 	}
-	public final void setFontName(String value)
+	public final void setFontName(String value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.FontName, value);
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getY()
+	public final float getY() throws Exception
 	{
 		return this.GetValFloatByKey(FrmLinkAttr.Y);
 	}
-	public final void setY(float value)
+	public final void setY(float value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getX()
+	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(FrmLinkAttr.X);
 	}
-	public final void setX(float value)
+	public final void setX(float value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.X, value);
 	}
 	/** 
 	 FontSize
+	 * @throws Exception 
 	*/
-	public final int getFontSize()
+	public final int getFontSize() throws Exception
 	{
 		return this.GetValIntByKey(FrmLinkAttr.FontSize);
 	}
-	public final void setFontSize(int value)
+	public final void setFontSize(int value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.FontSize, value);
 	}
 	/** 
 	 FK_MapData
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(FrmLinkAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.FK_MapData, value);
 	}
 	/** 
 	 Text
+	 * @throws Exception 
 	*/
-	public final String getText()
+	public final String getText() throws Exception
 	{
 		return this.GetValStrByKey(FrmLinkAttr.Text);
 	}
-	public final void setText(String value)
+	public final void setText(String value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.Text, value);
 	}
-	public final String getTarget()
+	public final String getTarget() throws Exception
 	{
 		return this.GetValStringByKey(FrmLinkAttr.Target);
 	}
-	public final void setTarget(String value)
+	public final void setTarget(String value) throws Exception
 	{
 		this.SetValByKey(FrmLinkAttr.Target, value);
 	}
-	public final boolean getIsBold()
+	public final boolean getIsBold() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmLabAttr.IsBold);
 	}
-	public final void setIsBold(boolean value)
+	public final void setIsBold(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmLabAttr.IsBold, value);
 	}
-	public final boolean getIsItalic()
+	public final boolean getIsItalic() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmLabAttr.IsItalic);
 	}
-	public final void setIsItalic(boolean value)
+	public final void setIsItalic(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmLabAttr.IsItalic, value);
 	}

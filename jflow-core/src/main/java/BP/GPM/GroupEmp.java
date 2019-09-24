@@ -14,19 +14,19 @@ public class GroupEmp extends EntityMM
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(GroupEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(GroupEmpAttr.FK_Emp, value);
 	}
-	public final String getFK_Group()
+	public final String getFK_Group() throws Exception
 	{
 		return this.GetValStringByKey(GroupEmpAttr.FK_Group);
 	}
-	public final void setFK_Group(String value)
+	public final void setFK_Group(String value) throws Exception
 	{
 		this.SetValByKey(GroupEmpAttr.FK_Group, value);
 	}

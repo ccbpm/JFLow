@@ -69,8 +69,8 @@ public class NodeDept extends EntityMM
 
 		Map map = new Map("WF_NodeDept", "节点部门");
 
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
+		map.setDepositaryOfEntity( Depositary.None;
+		map.setDepositaryOfMap( Depositary.Application;
 
 		map.IndexField = NodeEmpAttr.FK_Node;
 

@@ -98,7 +98,7 @@ public class RptDept extends Entity
 		}
 
 		Map map = new Map("Sys_RptDept", "报表部门对应信息");
-		map.EnType = EnType.Dot2Dot;
+		map.setEnType( EnType.Dot2Dot;
 
 		map.AddTBStringPK(RptDeptAttr.FK_Rpt, null, "报表", false, false, 1, 15, 1);
 		map.AddDDLEntitiesPK(RptDeptAttr.FK_Dept,null,"部门",new Depts(),true);

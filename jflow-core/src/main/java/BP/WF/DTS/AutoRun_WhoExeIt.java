@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.Port.*;
 import BP.Sys.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
@@ -44,9 +45,10 @@ public class AutoRun_WhoExeIt extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String info = "";
 		String sql = "SELECT WorkID,FK_Emp,FK_Node,FK_Flow FROM WF_GenerWorkerList WHERE WhoExeIt!=0 AND IsPass=0 AND IsEnable=1 ORDER BY FK_Emp";

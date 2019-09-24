@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -13,9 +15,10 @@ public class DeptEmpStation extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -23,29 +26,31 @@ public class DeptEmpStation extends EntityMyPK
 	}
 	/** 
 	 人员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(DeptEmpStationAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		SetValByKey(DeptEmpStationAttr.FK_Emp, value);
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp() + "_" + this.getFK_Station());
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(DeptEmpStationAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(DeptEmpStationAttr.FK_Dept, value);
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp() + "_" + this.getFK_Station());
 	}
-	public final String getFK_StationT()
+	public final String getFK_StationT() throws Exception
 	{
 			//return this.GetValRefTextByKey(DeptEmpStationAttr.FK_Station);
 
@@ -53,12 +58,13 @@ public class DeptEmpStation extends EntityMyPK
 	}
 	/** 
 	岗位
+	 * @throws Exception 
 	*/
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(DeptEmpStationAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		SetValByKey(DeptEmpStationAttr.FK_Station, value);
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp() + "_" + this.getFK_Station());
@@ -107,9 +113,10 @@ public class DeptEmpStation extends EntityMyPK
 	 更新删除前做的事情
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp() + "_" + this.getFK_Station());
 		return super.beforeUpdateInsertAction();

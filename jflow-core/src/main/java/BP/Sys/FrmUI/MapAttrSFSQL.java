@@ -16,34 +16,37 @@ public class MapAttrSFSQL extends EntityMyPK
 		///#region 文本字段参数属性.
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
+	 * @throws Exception 
 	*/
-	public final String getKeyOfEn()
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
+	public final void setKeyOfEn(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 绑定的枚举ID
+	 * @throws Exception 
 	*/
-	public final String getUIBindKey()
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value)
+	public final void setUIBindKey(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
@@ -179,8 +182,9 @@ public class MapAttrSFSQL extends EntityMyPK
 	 绑定函数
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindFunction()
+	public final String BindFunction() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -188,8 +192,9 @@ public class MapAttrSFSQL extends EntityMyPK
 	 外键表属性
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSFTable()
+	public final String DoSFTable() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/GuideSFTableAttr.htm?FK_SFTable=" + this.getUIBindKey();
 	}
@@ -197,12 +202,13 @@ public class MapAttrSFSQL extends EntityMyPK
 	 设置填充其他下拉框
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDDLFullCtrl()
+	public final String DoDDLFullCtrl() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=DDLFullCtrl_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
 	}
-	public final String DoDDLFullCtrl2019()
+	public final String DoDDLFullCtrl2019() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
@@ -210,8 +216,9 @@ public class MapAttrSFSQL extends EntityMyPK
 	 设置下拉框显示过滤
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAutoFullDLL()
+	public final String DoAutoFullDLL() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDLL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -219,8 +226,9 @@ public class MapAttrSFSQL extends EntityMyPK
 	 设置级联
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoActiveDDL()
+	public final String DoActiveDDL() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}

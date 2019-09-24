@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -28,23 +30,23 @@ public class BarEmps extends EntitiesMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final String InitMyBars()
+	public final String InitMyBars() throws Exception
 	{
 		Bars bars = new Bars();
 		bars.RetrieveAll();
-		for (Bar b : bars)
+		for (Bar b : bars.ToJavaList())
 		{
 			BarEmp be = new BarEmp();
-			be.setMyPK( b.No + "_" + WebUser.getNo();
+			be.setMyPK( b.getNo() + "_" + WebUser.getNo());
 			if (be.RetrieveFromDBSources() == 1)
 			{
 				continue;
 			}
 
-			be.setFK_Bar(b.No);
+			be.setFK_Bar(b.getNo());
 			be.setFK_Emp(WebUser.getNo());
 			be.setIsShow(true);
-			be.setTitle(b.Name);
+			be.setTitle(b.getName());
 			be.Insert();
 		}
 

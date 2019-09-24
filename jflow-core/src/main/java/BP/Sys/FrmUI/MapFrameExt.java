@@ -17,15 +17,15 @@ public class MapFrameExt extends EntityMyPK
 	/** 
 	 连接
 	*/
-	public final String getUrl()
+	public final String getUrl() throws Exception
 	{
 		return this.GetValStrByKey("Tag1");
 	}
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(MapFrameAttr.FK_MapData);
 	}
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStrByKey(MapFrameAttr.Name);
 	}
@@ -134,7 +134,7 @@ public class MapFrameExt extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoFrameExt()
+	public final String DoFrameExt() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/FrameExt/Default.htm?MyPK=" + this.getMyPK();
 	}

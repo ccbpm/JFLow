@@ -4,6 +4,8 @@ import BP.Sys.*;
 import BP.Web.WebUser;
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -77,100 +79,104 @@ public class App extends EntityNoName
 		}
 		return url;
 	}
-	public final void setUrl(String value)
+	public final void setUrl(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.Url, value);
 	}
 	/** 
 	 跳转连接
+	 * @throws Exception 
 	*/
-	public final String getSubUrl()
+	public final String getSubUrl() throws Exception
 	{
 		return this.GetValStrByKey(AppAttr.SubUrl);
 	}
-	public final void setSubUrl(String value)
+	public final void setSubUrl(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.Url, value);
 	}
 	/** 
 	 是否启用
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnable()
+	public final boolean getIsEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(AppAttr.IsEnable);
 	}
-	public final void setIsEnable(boolean value)
+	public final void setIsEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(AppAttr.IsEnable, value);
 	}
 	/** 
 	 顺序
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(AppAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(AppAttr.Idx, value);
 	}
 	/** 
 	 用户控件ID
+	 * @throws Exception 
 	*/
-	public final String getUidControl()
+	public final String getUidControl() throws Exception
 	{
 		return this.GetValStrByKey(AppAttr.UidControl);
 	}
-	public final void setUidControl(String value)
+	public final void setUidControl(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.UidControl, value);
 	}
 	/** 
 	 密码控件ID
 	*/
-	public final String getPwdControl()
+	public final String getPwdControl() throws Exception
 	{
 		return this.GetValStrByKey(AppAttr.PwdControl);
 	}
-	public final void setPwdControl(String value)
+	public final void setPwdControl(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.PwdControl, value);
 	}
 	/** 
 	 提交方式
 	*/
-	public final String getActionType()
+	public final String getActionType() throws Exception
 	{
 		return this.GetValStrByKey(AppAttr.ActionType);
 	}
-	public final void setActionType(String value)
+	public final void setActionType(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.ActionType, value);
 	}
 	/** 
 	 登录方式@0=SID验证@1=连接@2=表单提交
 	*/
-	public final String getSSOType()
+	public final String getSSOType() throws Exception
 	{
 		return this.GetValStrByKey(AppAttr.SSOType);
 	}
-	public final void setSSOType(String value)
+	public final void setSSOType(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.SSOType, value);
 	}
-	public final String getFK_AppSort()
+	public final String getFK_AppSort() throws Exception
 	{
 		return this.GetValStringByKey(AppAttr.FK_AppSort);
 	}
-	public final void setFK_AppSort(String value)
+	public final void setFK_AppSort(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.FK_AppSort, value);
 	}
-	public final String getRefMenuNo()
+	public final String getRefMenuNo() throws Exception
 	{
 		return this.GetValStringByKey(AppAttr.RefMenuNo);
 	}
-	public final void setRefMenuNo(String value)
+	public final void setRefMenuNo(String value) throws Exception
 	{
 		this.SetValByKey(AppAttr.RefMenuNo, value);
 	}
@@ -179,7 +185,7 @@ public class App extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 按钮权限控制
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -199,8 +205,9 @@ public class App extends EntityNoName
 	 系统
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public App(String no)
+	public App(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -216,10 +223,10 @@ public class App extends EntityNoName
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_App");
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "系统";
-		map.EnType = EnType.Sys;
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+		map.setEnDesc("系统");
+		map.setEnType(EnType.Sys);
 
 		map.AddTBStringPK(AppAttr.No, null, "编号", true, false, 2, 30, 100);
 		map.AddDDLSysEnum(AppAttr.AppModel, 0, "应用类型", true, true, AppAttr.AppModel, "@0=BS系统@1=CS系统");
@@ -243,7 +250,7 @@ public class App extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "编辑菜单";
 		rm.ClassMethodName = this.toString() + ".DoMenu";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -292,7 +299,7 @@ public class App extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 
 		if (DataType.IsNullOrEmpty(this.getRefMenuNo()) == false)
@@ -301,8 +308,8 @@ public class App extends EntityNoName
 			AppSort appSort = new AppSort(this.getFK_AppSort());
 
 			Menu menu = new Menu(this.getRefMenuNo());
-			menu.Name = this.Name;
-			menu.ParentNo = appSort.getRefMenuNo();
+			menu.setName(this.getName());;
+			menu.setParentNo(appSort.getRefMenuNo());;
 			menu.Update();
 		}
 
@@ -310,7 +317,7 @@ public class App extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		AppSort sort = new AppSort(this.getFK_AppSort());
 
@@ -320,57 +327,57 @@ public class App extends EntityNoName
 		// 创建子菜单.
 		Object tempVar = menu.DoCreateSubNode();
 		Menu appMenu = tempVar instanceof Menu ? (Menu)tempVar : null;
-		appMenu.setFK_App(this.No);
-		appMenu.Name = this.Name;
+		appMenu.setFK_App(this.getNo());
+		appMenu.setName(this.getName());
 		appMenu.setHisMenuType(MenuType.App);
 		appMenu.Update();
 
 		//设置相关的菜单编号.
-		this.setRefMenuNo(appMenu.No);
+		this.setRefMenuNo(appMenu.getNo());
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 为该系统创建几个空白菜单
 		//Menu en = appMenu.DoCreateSubNode() as Menu;
 		//en.FK_App = this.No;
-		//en.Name = this.Name;
+		//en.setName ( this.Name;
 		//en.MenuType = 2;
 		//en.IsDir = true;
 		//en.Update();
 
 		Object tempVar2 = appMenu.DoCreateSubNode();
 		Menu dir = tempVar2 instanceof Menu ? (Menu)tempVar2 : null;
-		dir.setFK_App(this.No);
-		dir.Name = "功能目录1";
+		dir.setFK_App(this.getNo());
+		dir.setName("功能目录1");
 		dir.setMenuType(MenuType.Dir);
 		dir.Update();
 
 		Object tempVar3 = dir.DoCreateSubNode();
 		Menu func = tempVar3 instanceof Menu ? (Menu)tempVar3 : null;
-		func.Name = "xxx管理1";
-		func.setFK_App(this.No);
+		func.setName("xxx管理1");
+		func.setFK_App(this.getNo());
 		func.setMenuType(MenuType.Menu);
 		func.setUrl("http://ccflow.org");
 		func.Update();
 
 		Object tempVar4 = func.DoCreateSubNode();
 		Menu funcDot = tempVar4 instanceof Menu ? (Menu)tempVar4 : null;
-		funcDot.Name = "查看";
+		funcDot.setName("查看");
 		funcDot.setMenuType(MenuType.Function);
-		funcDot.setFK_App(this.No);
+		funcDot.setFK_App(this.getNo());
 		funcDot.Update();
 
 		Object tempVar5 = func.DoCreateSubNode();
 		funcDot = tempVar5 instanceof Menu ? (Menu)tempVar5 : null;
-		funcDot.Name = "增加";
+		funcDot.setName("增加");
 		funcDot.setMenuType(MenuType.Function);
-		funcDot.setFK_App(this.No);
+		funcDot.setFK_App(this.getNo());
 		funcDot.Update();
 
 		Object tempVar6 = func.DoCreateSubNode();
 		funcDot = tempVar6 instanceof Menu ? (Menu)tempVar6 : null;
-		funcDot.Name = "删除";
+		funcDot.setName("删除");
 		funcDot.setMenuType(MenuType.Function);
-		funcDot.setFK_App(this.No);
+		funcDot.setFK_App(this.getNo());
 		funcDot.Update();
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
@@ -380,21 +387,22 @@ public class App extends EntityNoName
 
 	/** 
 	 为BPM初始化菜单.
+	 * @throws Exception 
 	*/
-	public static void InitBPMMenu()
+	public static void InitBPMMenu() throws Exception
 	{
 		AppSort sort = new AppSort();
-		sort.No = "01";
+		sort.setNo("01");
 		if (sort.RetrieveFromDBSources() == 0)
 		{
-			sort.Name = "应用系统";
+			sort.setName("应用系统");
 			sort.setRefMenuNo("2000");
 			sort.Insert();
 		}
 
 		App app = new App();
-		app.No = "CCFlowBPM";
-		app.Name = "BPM系统";
+		app.setNo("CCFlowBPM");
+		app.setName("BPM系统");
 		app.setFK_AppSort("01");
 		app.Insert();
 	}
@@ -411,10 +419,11 @@ public class App extends EntityNoName
 	 刷新设置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoRef()
+	public final String DoRef() throws Exception
 	{
-		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.No;
+		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.getNo();
 
 	   // PubClass.WinOpen("/GPM/WhoCanUseApp.aspx?FK_App= " + this.getNo()+ " &IsRef=1", 500, 700);
 		//return null;
@@ -423,24 +432,27 @@ public class App extends EntityNoName
 	 查看可以访问的人员
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoWhoCanUseApp()
+	public final String DoWhoCanUseApp() throws Exception
 	{
-		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.No;
+		return "../../../GPM/WhoCanUseApp.aspx?FK_App=" + this.getNo();
 	}
 	/** 
 	 打开菜单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoMenu()
+	public final String DoMenu() throws Exception
 	{
-		return "../../../GPM/AppMenu.htm?FK_App=" + this.No;
+		return "../../../GPM/AppMenu.htm?FK_App=" + this.getNo();
 	}
 	/** 
 	 刷新数据.
+	 * @throws Exception 
 	*/
-	public final void RefData()
+	public final void RefData() throws Exception
 	{
 		//删除数据.
 		EmpMenus mymes = new EmpMenus();
@@ -465,9 +477,9 @@ public class App extends EntityNoName
 
 			EmpApp me = new EmpApp();
 			me.Copy(this);
-			me.setFK_Emp(emp.No);
-			me.setFK_App(this.No);
-			me.setMyPK( this.No + "_" + me.getFK_Emp();
+			me.setFK_Emp(emp.getNo());
+			me.setFK_App(this.getNo());
+			me.setMyPK( this.getNo() + "_" + me.getFK_Emp());
 			me.Insert();
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 初始化系统访问权限.

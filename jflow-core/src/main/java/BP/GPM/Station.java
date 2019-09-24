@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -11,11 +13,11 @@ public class Station extends EntityNoName
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getFK_StationType()
+	public final String getFK_StationType() throws Exception
 	{
 		return this.GetValStrByKey(StationAttr.FK_StationType);
 	}
-	public final void setFK_StationType(String value)
+	public final void setFK_StationType(String value) throws Exception
 	{
 		this.SetValByKey(StationAttr.FK_StationType, value);
 	}
@@ -25,7 +27,7 @@ public class Station extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 实现基本的方方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -46,8 +48,9 @@ public class Station extends EntityNoName
 	 岗位
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public Station(String _No)
+	public Station(String _No) throws Exception
 	{
 		super(_No);
 	}

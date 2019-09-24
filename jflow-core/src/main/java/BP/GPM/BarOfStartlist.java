@@ -61,14 +61,15 @@ public class BarOfStartlist extends BarBase
 	}
 	/** 
 	 内容信息
+	 * @throws Exception 
 	*/
 	@Override
-	public String getDocuments()
+	public String getDocuments() throws Exception
 	{
 		Paras ps = new Paras();
 		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
-			ps.SQL = "SELECT top 9 Title,RDT,FK_Flow,WorkID,FK_Node,Sender FROM WF_GenerWorkFlow WHERE Starter=" + ps.DBStr + "FK_Emp ORDER BY WorkID ";
+			ps.SQL = "SELECT top 9 Title,RDT,FK_Flow,WorkID,FK_Node,Sender FROM WF_GenerWorkFlow WHERE Starter=" + ps.getDBStr() + "FK_Emp ORDER BY WorkID ";
 		}
 
 		ps.AddFK_Emp();

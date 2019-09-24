@@ -16,7 +16,7 @@ public class SFTableClass extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -83,8 +83,9 @@ public class SFTableClass extends EntityNoName
 	 编辑数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoEdit()
+	public final String DoEdit() throws Exception
 	{
 		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Ens.htm?EnsName=" + this.getNo();
 	}

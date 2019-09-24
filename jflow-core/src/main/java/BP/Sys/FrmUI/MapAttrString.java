@@ -14,41 +14,43 @@ public class MapAttrString extends EntityMyPK
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 文本字段参数属性.
-	public final boolean getIsSupperText()
+	public final boolean getIsSupperText() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.IsSupperText);
 	}
-	public final void setIsSupperText(boolean value)
+	public final void setIsSupperText(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.IsSupperText, value);
 	}
-	public final boolean getIsRichText()
+	public final boolean getIsRichText() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.IsRichText);
 	}
-	public final void setIsRichText(boolean value)
+	public final void setIsRichText(boolean value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.IsRichText, value);
 	}
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
+	 * @throws Exception 
 	*/
-	public final String getKeyOfEn()
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
+	public final void setKeyOfEn(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
@@ -376,8 +378,9 @@ public class MapAttrString extends EntityMyPK
 	 绑定函数
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindFunction()
+	public final String BindFunction() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -385,8 +388,9 @@ public class MapAttrString extends EntityMyPK
 	 快速录入
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoFastEnter()
+	public final String DoFastEnter() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/FastInput.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -394,8 +398,9 @@ public class MapAttrString extends EntityMyPK
 	 快速录入
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoPop2019()
+	public final String DoPop2019() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/Pop/Default.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -403,8 +408,9 @@ public class MapAttrString extends EntityMyPK
 	 全局默认值
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDefVal()
+	public final String DoDefVal() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/DefVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -417,8 +423,9 @@ public class MapAttrString extends EntityMyPK
 	 简单列表模式
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoPopFullCtrl()
+	public final String DoPopFullCtrl() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/PopFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
 	}
@@ -426,8 +433,9 @@ public class MapAttrString extends EntityMyPK
 	 多条件查询列表模式
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoPopFullCtrlAdv()
+	public final String DoPopFullCtrlAdv() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/PopFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
 	}
@@ -440,8 +448,9 @@ public class MapAttrString extends EntityMyPK
 	 批处理
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoEleBatch()
+	public final String DoEleBatch() throws Exception
 	{
 		//return "../../Admin/FoolFormDesigner/EleBatch.aspx?EleType=MapAttr&KeyOfEn=" + this.KeyOfEn + "&FType=1&MyPK=" + this.getMyPK() + "&FK_MapData=" + this.FK_MapData;
 		return "../../Admin/FoolFormDesigner/EleBatch.htm?EleType=MapAttr&KeyOfEn=" + this.getKeyOfEn() + "&FType=1&MyPK=" + this.getMyPK() + "&FK_MapData=" + this.getFK_MapData();
@@ -452,7 +461,7 @@ public class MapAttrString extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoMultipleChoiceSmall()
+	public final String DoMultipleChoiceSmall() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/MultipleChoiceSmall.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&m=s";
 	}
@@ -461,7 +470,7 @@ public class MapAttrString extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoMultipleChoiceSearch()
+	public final String DoMultipleChoiceSearch() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/MultipleChoiceSearch.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&m=s";
 	}
@@ -469,8 +478,9 @@ public class MapAttrString extends EntityMyPK
 	 超链接
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoLink()
+	public final String DoLink() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/Link.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK() + "&FK_MapExt=Link_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
 	}
@@ -479,7 +489,7 @@ public class MapAttrString extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoPopVal()
+	public final String DoPopVal() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK() + "&FK_MapExt=PopVal_" + this.getFK_MapData() + "_" + this.getKeyOfEn();
 	}
@@ -487,9 +497,9 @@ public class MapAttrString extends EntityMyPK
 	 正则表达式
 	 
 	 @return 
-	*/
-	public final String DoRegularExpression()
-	{
+	*/ 
+	public final String DoRegularExpression() throws Exception
+	{ 
 		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 
@@ -498,7 +508,7 @@ public class MapAttrString extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoTBFullCtrl2019()
+	public final String DoTBFullCtrl2019() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/TBFullCtrl/Default.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=TBFullCtrl_" + this.getMyPK();
 	}
@@ -508,7 +518,7 @@ public class MapAttrString extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoInputCheck()
+	public final String DoInputCheck() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/InputCheck.htm?FK_MapData=" + this.getFK_MapData() + "&OperAttrKey=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK() + "&DoType=New&ExtType=InputCheck";
 	}
@@ -517,7 +527,7 @@ public class MapAttrString extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoEditFExtContral()
+	public final String DoEditFExtContral() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
@@ -526,7 +536,7 @@ public class MapAttrString extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoEditFExtContral2019()
+	public final String DoEditFExtContral2019() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/EditFExtContral/Default.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}

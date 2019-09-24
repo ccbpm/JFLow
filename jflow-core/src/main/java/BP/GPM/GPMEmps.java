@@ -28,7 +28,7 @@ public class GPMEmps extends EntitiesNoName
 	{
 	}
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return super.RetrieveAll("Name");
 	}

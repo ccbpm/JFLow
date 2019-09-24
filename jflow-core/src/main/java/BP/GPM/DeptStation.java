@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -13,9 +15,10 @@ public class DeptStation extends Entity
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -24,27 +27,29 @@ public class DeptStation extends Entity
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(DeptStationAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(DeptStationAttr.FK_Dept, value);
 	}
-	public final String getFK_StationT()
+	public final String getFK_StationT() throws Exception
 	{
 		return this.GetValRefTextByKey(DeptStationAttr.FK_Station);
 	}
 	/** 
 	岗位
+	 * @throws Exception 
 	*/
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(DeptStationAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		SetValByKey(DeptStationAttr.FK_Station, value);
 	}
@@ -70,8 +75,9 @@ public class DeptStation extends Entity
 	 
 	 @param deptid 部门
 	 @param stationid 岗位编号 	
+	 * @throws Exception 
 	*/
-	public DeptStation(String deptid, String stationid)
+	public DeptStation(String deptid, String stationid) throws Exception
 	{
 		this.setFK_Dept(deptid);
 		this.setFK_Station(stationid);

@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -11,44 +13,44 @@ public class BarEmp extends EntityMyPK
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(BarEmpAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(BarEmpAttr.Idx, value);
 	}
-	public final String getFK_Bar()
+	public final String getFK_Bar() throws Exception
 	{
 		return this.GetValStringByKey(BarEmpAttr.FK_Bar);
 	}
-	public final void setFK_Bar(String value)
+	public final void setFK_Bar(String value) throws Exception
 	{
 		this.SetValByKey(BarEmpAttr.FK_Bar, value);
 	}
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(BarEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(BarEmpAttr.FK_Emp, value);
 	}
-	public final boolean getIsShow()
+	public final boolean getIsShow() throws Exception
 	{
 		return this.GetValBooleanByKey(BarEmpAttr.IsShow);
 	}
-	public final void setIsShow(boolean value)
+	public final void setIsShow(boolean value) throws Exception
 	{
 		this.SetValByKey(BarEmpAttr.IsShow, value);
 	}
 
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(BarEmpAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(BarEmpAttr.Title, value);
 	}
@@ -68,8 +70,9 @@ public class BarEmp extends EntityMyPK
 	 人员信息块
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public BarEmp(String no)
+	public BarEmp(String no) throws Exception
 	{
 	  //  this.setNo(no);
 		this.Retrieve();
@@ -85,10 +88,10 @@ public class BarEmp extends EntityMyPK
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_BarEmp");
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "人员信息块";
-		map.EnType = EnType.Sys;
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap( Depositary.Application);
+		map.setEnDesc( "人员信息块");
+		map.setEnType( EnType.Sys);
 
 		map.AddMyPK(); // 主键是由:  FK_Bar+"_"+FK_Emp 组成的，它是一个复合主键.
 		map.AddTBString(BarEmpAttr.FK_Bar, null, "信息块编号", true, false, 0, 90, 20);
@@ -105,15 +108,15 @@ public class BarEmp extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 显示与隐藏.
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(BarEmpAttr.FK_Bar, this.getFK_Bar(), BarEmpAttr.Idx);
 	}
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown(BarEmpAttr.FK_Bar, this.getFK_Bar(), BarEmpAttr.Idx);
 	}
-	public final void DoHidShow()
+	public final void DoHidShow() throws Exception
 	{
 		this.setIsShow(this.getIsShow());
 		this.Update();

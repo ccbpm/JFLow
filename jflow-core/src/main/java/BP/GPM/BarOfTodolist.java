@@ -2,6 +2,7 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.Web.WebUser;
 
 /** 
  流程待办
@@ -28,9 +29,10 @@ public class BarOfTodolist extends BarBase
 	}
 	/** 
 	 权限控制-是否可以查看
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanView()
+	public boolean getIsCanView() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -64,11 +66,12 @@ public class BarOfTodolist extends BarBase
 	}
 	/** 
 	 内容信息
+	 * @throws Exception 
 	*/
 	@Override
-	public String getDocuments()
+	public String getDocuments() throws Exception
 	{
-		String sql = "select A.WorkID, A.FK_Flow, A.FK_Node, A.Title , A.Sender, A.RDT FROM WF_GenerWorkFlow A , WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.IsPass=0 AND B.FK_Emp='" + Web.WebUser.getNo() + "' ";
+		String sql = "select A.WorkID, A.FK_Flow, A.FK_Node, A.Title , A.Sender, A.RDT FROM WF_GenerWorkFlow A , WF_GenerWorkerlist B WHERE A.WorkID=B.WorkID AND B.IsPass=0 AND B.FK_Emp='" + WebUser.getNo() + "' ";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0)

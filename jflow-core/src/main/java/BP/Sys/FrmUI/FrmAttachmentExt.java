@@ -36,23 +36,25 @@ public class FrmAttachmentExt extends EntityMyPK
 		///#region 参数属性.
 	/** 
 	 是否可见？
+	 * @throws Exception 
 	*/
-	public final boolean getIsVisable()
+	public final boolean getIsVisable() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsVisable, true);
 	}
-	public final void setIsVisable(boolean value)
+	public final void setIsVisable(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsVisable, value);
 	}
 	/** 
 	 附件类型
+	 * @throws Exception 
 	*/
-	public final int getFileType()
+	public final int getFileType() throws Exception
 	{
 		return this.GetParaInt(FrmAttachmentAttr.FileType);
 	}
-	public final void setFileType(int value)
+	public final void setFileType(int value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.FileType, value);
 	}
@@ -60,12 +62,13 @@ public class FrmAttachmentExt extends EntityMyPK
 	 使用上传附件的 - 控件类型
 	 0=批量.
 	 1=单个。
+	 * @throws Exception 
 	*/
-	public final int getUploadCtrl()
+	public final int getUploadCtrl() throws Exception
 	{
 		return this.GetParaInt(FrmAttachmentAttr.UploadCtrl);
 	}
-	public final void setUploadCtrl(int value)
+	public final void setUploadCtrl(int value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.UploadCtrl, value);
 	}
@@ -74,12 +77,13 @@ public class FrmAttachmentExt extends EntityMyPK
 	 0=不校验.
 	 1=不能为空.
 	 2=每个类别下不能为空.
+	 * @throws Exception 
 	*/
-	public final UploadFileNumCheck getUploadFileNumCheck()
+	public final UploadFileNumCheck getUploadFileNumCheck() throws Exception
 	{
 		return UploadFileNumCheck.forValue(this.GetValIntByKey(FrmAttachmentAttr.UploadFileNumCheck));
 	}
-	public final void setUploadFileNumCheck(UploadFileNumCheck value)
+	public final void setUploadFileNumCheck(UploadFileNumCheck value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.UploadFileNumCheck, value.getValue());
 	}
@@ -89,30 +93,33 @@ public class FrmAttachmentExt extends EntityMyPK
 		///#region 属性
 	/** 
 	 节点编号
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(FrmAttachmentAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.FK_Node, value);
 	}
 	/** 
 	 上传类型（单个的，多个，指定的）
+	 * @throws Exception 
 	*/
-	public final AttachmentUploadType getUploadType()
+	public final AttachmentUploadType getUploadType() throws Exception
 	{
 		return AttachmentUploadType.forValue(this.GetValIntByKey(FrmAttachmentAttr.UploadType));
 	}
-	public final void setUploadType(AttachmentUploadType value)
+	public final void setUploadType(AttachmentUploadType value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.UploadType, value.getValue());
 	}
 	/** 
 	 类型名称
+	 * @throws Exception 
 	*/
-	public final String getUploadTypeT()
+	public final String getUploadTypeT() throws Exception
 	{
 		if (this.getUploadType() == AttachmentUploadType.Multi)
 		{
@@ -130,75 +137,82 @@ public class FrmAttachmentExt extends EntityMyPK
 	}
 	/** 
 	 是否可以上传
+	 * @throws Exception 
 	*/
-	public final boolean getIsUpload()
+	public final boolean getIsUpload() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsUpload);
 	}
-	public final void setIsUpload(boolean value)
+	public final void setIsUpload(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.IsUpload, value);
 	}
 	/** 
 	 是否可以下载
+	 * @throws Exception 
 	*/
-	public final boolean getIsDownload()
+	public final boolean getIsDownload() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsDownload);
 	}
-	public final void setIsDownload(boolean value)
+	public final void setIsDownload(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.IsDownload, value);
 	}
 	/** 
 	 附件删除方式
+	 * @throws Exception 
 	*/
-	public final AthDeleteWay getHisDeleteWay()
+	public final AthDeleteWay getHisDeleteWay() throws Exception
 	{
 		return AthDeleteWay.forValue(this.GetValIntByKey(FrmAttachmentAttr.DeleteWay));
 	}
-	public final void setHisDeleteWay(AthDeleteWay value)
+	public final void setHisDeleteWay(AthDeleteWay value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.DeleteWay, value.getValue());
 	}
 
 	/** 
 	 是否可以排序?
+	 * @throws Exception 
 	*/
-	public final boolean getIsOrder()
+	public final boolean getIsOrder() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsOrder);
 	}
-	public final void setIsOrder(boolean value)
+	public final void setIsOrder(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.IsOrder, value);
 	}
 	/** 
 	 自动控制大小
+	 * @throws Exception 
 	*/
-	public final boolean getIsAutoSize()
+	public final boolean getIsAutoSize() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsAutoSize);
 	}
-	public final void setIsAutoSize(boolean value)
+	public final void setIsAutoSize(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.IsAutoSize, value);
 	}
 	/** 
 	 IsShowTitle
+	 * @throws Exception 
 	*/
-	public final boolean getIsShowTitle()
+	public final boolean getIsShowTitle() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsShowTitle);
 	}
-	public final void setIsShowTitle(boolean value)
+	public final void setIsShowTitle(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.IsShowTitle, value);
 	}
 	/** 
 	 是否是节点表单.
+	 * @throws Exception 
 	*/
-	public final boolean getIsNodeSheet()
+	public final boolean getIsNodeSheet() throws Exception
 	{
 		if (this.getFK_MapData().startsWith("ND") == true)
 		{
@@ -208,19 +222,21 @@ public class FrmAttachmentExt extends EntityMyPK
 	}
 	/** 
 	 备注列
+	 * @throws Exception 
 	*/
-	public final boolean getIsNote()
+	public final boolean getIsNote() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsNote);
 	}
-	public final void setIsNote(boolean value)
+	public final void setIsNote(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.IsNote, value);
 	}
 	/** 
 	 附件名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		String str = this.GetValStringByKey(FrmAttachmentAttr.Name);
 		if (DataType.IsNullOrEmpty(str) == true)
@@ -229,33 +245,35 @@ public class FrmAttachmentExt extends EntityMyPK
 		}
 		return str;
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.Name, value);
 	}
 	/** 
 	 类别
+	 * @throws Exception 
 	*/
-	public final String getSort()
+	public final String getSort() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentAttr.Sort);
 	}
-	public final void setSort(String value)
+	public final void setSort(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.Sort, value);
 	}
 	/** 
 	 要求的格式
+	 * @throws Exception 
 	*/
-	public final String getExts()
+	public final String getExts() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentAttr.Exts);
 	}
-	public final void setExts(String value)
+	public final void setExts(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.Exts, value);
 	}
-	public final String getSaveTo()
+	public final String getSaveTo() throws Exception
 	{
 		String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
 		if (s.equals("") || s == null)
@@ -264,128 +282,128 @@ public class FrmAttachmentExt extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setSaveTo(String value)
+	public final void setSaveTo(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.SaveTo, value);
 	}
 	/** 
 	 附件标识
 	*/
-	public final String getNoOfObj()
+	public final String getNoOfObj() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttachmentAttr.NoOfObj);
 	}
-	public final void setNoOfObj(String value)
+	public final void setNoOfObj(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.NoOfObj, value);
 	}
 	/** 
 	 Y
 	*/
-	public final float getY()
+	public final float getY() throws Exception
 	{
 		return this.GetValFloatByKey(FrmAttachmentAttr.Y);
 	}
-	public final void setY(float value)
+	public final void setY(float value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.Y, value);
 	}
 	/** 
 	 X
 	*/
-	public final float getX()
+	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(FrmAttachmentAttr.X);
 	}
-	public final void setX(float value)
+	public final void setX(float value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.X, value);
 	}
 	/** 
 	 W
 	*/
-	public final float getW()
+	public final float getW() throws Exception
 	{
 		return this.GetValFloatByKey(FrmAttachmentAttr.W);
 	}
-	public final void setW(float value)
+	public final void setW(float value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.W, value);
 	}
 	/** 
 	 H
 	*/
-	public final float getH()
+	public final float getH() throws Exception
 	{
 		return this.GetValFloatByKey(FrmAttachmentAttr.H);
 	}
-	public final void setH(float value)
+	public final void setH(float value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.H, value);
 	}
 	/** 
-	 数据控制方式
+	 数据控制方式 
 	*/
-	public final AthCtrlWay getHisCtrlWay()
+	public final AthCtrlWay getHisCtrlWay() throws Exception
 	{
 		return AthCtrlWay.forValue(this.GetValIntByKey(FrmAttachmentAttr.CtrlWay));
 	}
-	public final void setHisCtrlWay(AthCtrlWay value)
+	public final void setHisCtrlWay(AthCtrlWay value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.CtrlWay, value.getValue());
 	}
 	/** 
 	 是否是合流汇总多附件？
 	*/
-	public final boolean getIsHeLiuHuiZong()
+	public final boolean getIsHeLiuHuiZong() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsHeLiuHuiZong);
 	}
-	public final void setIsHeLiuHuiZong(boolean value)
+	public final void setIsHeLiuHuiZong(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsHeLiuHuiZong, value);
 	}
 	/** 
 	 该附件是否汇总到合流节点上去？
 	*/
-	public final boolean getIsToHeLiuHZ()
+	public final boolean getIsToHeLiuHZ() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsToHeLiuHZ);
 	}
-	public final void setIsToHeLiuHZ(boolean value)
+	public final void setIsToHeLiuHZ(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsToHeLiuHZ, value);
 	}
 	/** 
 	 文件展现方式
 	*/
-	public final FileShowWay getFileShowWay()
+	public final FileShowWay getFileShowWay() throws Exception
 	{
 		return FileShowWay.forValue(this.GetParaInt(FrmAttachmentAttr.FileShowWay));
 	}
-	public final void setFileShowWay(FileShowWay value)
+	public final void setFileShowWay(FileShowWay value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.FileShowWay, value.getValue());
 	}
 	/** 
 	 上传方式（对于父子流程有效）
 	*/
-	public final AthUploadWay getAthUploadWay()
+	public final AthUploadWay getAthUploadWay() throws Exception
 	{
 		return AthUploadWay.forValue(this.GetValIntByKey(FrmAttachmentAttr.AthUploadWay));
 	}
-	public final void setAthUploadWay(AthUploadWay value)
+	public final void setAthUploadWay(AthUploadWay value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.AthUploadWay, value.getValue());
 	}
 	/** 
 	 FK_MapData
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(FrmAttachmentAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttachmentAttr.FK_MapData, value);
 	}
@@ -393,7 +411,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否要转换成html
 	*/
-	public final boolean getIsTurn2Html()
+	public final boolean getIsTurn2Html() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsTurn2Html);
 	}
@@ -401,77 +419,77 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否启用锁定行
 	*/
-	public final boolean getIsRowLock()
+	public final boolean getIsRowLock() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsRowLock, false);
 	}
-	public final void setIsRowLock(boolean value)
+	public final void setIsRowLock(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsRowLock, value);
 	}
 	/** 
 	 是否启用打印
 	*/
-	public final boolean getIsWoEnablePrint()
+	public final boolean getIsWoEnablePrint() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnablePrint);
 	}
-	public final void setIsWoEnablePrint(boolean value)
+	public final void setIsWoEnablePrint(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnablePrint, value);
 	}
 	/** 
 	 是否启用只读
 	*/
-	public final boolean getIsWoEnableReadonly()
+	public final boolean getIsWoEnableReadonly() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableReadonly);
 	}
-	public final void setIsWoEnableReadonly(boolean value)
+	public final void setIsWoEnableReadonly(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableReadonly, value);
 	}
 	/** 
 	 是否启用修订
 	*/
-	public final boolean getIsWoEnableRevise()
+	public final boolean getIsWoEnableRevise() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableRevise);
 	}
-	public final void setIsWoEnableRevise(boolean value)
+	public final void setIsWoEnableRevise(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableRevise, value);
 	}
 	/** 
 	 是否启用保存
 	*/
-	public final boolean getIsWoEnableSave()
+	public final boolean getIsWoEnableSave() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableSave);
 	}
-	public final void setIsWoEnableSave(boolean value)
+	public final void setIsWoEnableSave(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableSave, value);
 	}
 	/** 
 	 是否查看用户留痕
 	*/
-	public final boolean getIsWoEnableViewKeepMark()
+	public final boolean getIsWoEnableViewKeepMark() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableViewKeepMark);
 	}
-	public final void setIsWoEnableViewKeepMark(boolean value)
+	public final void setIsWoEnableViewKeepMark(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableViewKeepMark, value);
 	}
 	/** 
 	 是否启用weboffice
 	*/
-	public final boolean getIsWoEnableWF()
+	public final boolean getIsWoEnableWF() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableWF);
 	}
-	public final void setIsWoEnableWF(boolean value)
+	public final void setIsWoEnableWF(boolean value) throws Exception 
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableWF, value);
 	}
@@ -479,11 +497,11 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否启用套红
 	*/
-	public final boolean getIsWoEnableOver()
+	public final boolean getIsWoEnableOver() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableOver);
 	}
-	public final void setIsWoEnableOver(boolean value)
+	public final void setIsWoEnableOver(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableOver, value);
 	}
@@ -491,11 +509,11 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否启用签章
 	*/
-	public final boolean getIsWoEnableSeal()
+	public final boolean getIsWoEnableSeal() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableSeal);
 	}
-	public final void setIsWoEnableSeal(boolean value)
+	public final void setIsWoEnableSeal(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableSeal, value);
 	}
@@ -503,11 +521,11 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否启用公文模板
 	*/
-	public final boolean getIsWoEnableTemplete()
+	public final boolean getIsWoEnableTemplete() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableTemplete);
 	}
-	public final void setIsWoEnableTemplete(boolean value)
+	public final void setIsWoEnableTemplete(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableTemplete, value);
 	}
@@ -515,23 +533,23 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否记录节点信息
 	*/
-	public final boolean getIsWoEnableCheck()
+	public final boolean getIsWoEnableCheck() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableCheck);
 	}
-	public final void setIsWoEnableCheck(boolean value)
-	{
+	public final void setIsWoEnableCheck(boolean value) throws Exception
+	{ 
 		this.SetPara(FrmAttachmentAttr.IsWoEnableCheck, value);
 	}
 
 	/** 
 	 是否插入流程图
 	*/
-	public final boolean getIsWoEnableInsertFlow()
+	public final boolean getIsWoEnableInsertFlow() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableInsertFlow);
 	}
-	public final void setIsWoEnableInsertFlow(boolean value)
+	public final void setIsWoEnableInsertFlow(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableInsertFlow, value);
 	}
@@ -539,11 +557,11 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否插入风险点
 	*/
-	public final boolean getIsWoEnableInsertFengXian()
+	public final boolean getIsWoEnableInsertFengXian() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableInsertFengXian);
 	}
-	public final void setIsWoEnableInsertFengXian(boolean value)
+	public final void setIsWoEnableInsertFengXian(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableInsertFengXian, value);
 	}
@@ -551,23 +569,23 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否启用留痕模式
 	*/
-	public final boolean getIsWoEnableMarks()
+	public final boolean getIsWoEnableMarks() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableMarks);
 	}
-	public final void setIsWoEnableMarks(boolean value)
+	public final void setIsWoEnableMarks(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableMarks, value);
 	}
 
 	/** 
 	 是否插入风险点
-	*/
-	public final boolean getIsWoEnableDown()
+	*/ 
+	public final boolean getIsWoEnableDown() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableDown);
 	}
-	public final void setIsWoEnableDown(boolean value)
+	public final void setIsWoEnableDown(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableDown, value);
 	}
@@ -575,22 +593,22 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否启用快捷键
 	*/
-	public final boolean getFastKeyIsEnable()
+	public final boolean getFastKeyIsEnable() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.FastKeyIsEnable);
 	}
-	public final void setFastKeyIsEnable(boolean value)
+	public final void setFastKeyIsEnable(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.FastKeyIsEnable, value);
 	}
 	/** 
 	 启用规则
 	*/
-	public final String getFastKeyGenerRole()
+	public final String getFastKeyGenerRole() throws Exception
 	{
 		return this.GetParaString(FrmAttachmentAttr.FastKeyGenerRole);
 	}
-	public final void setFastKeyGenerRole(String value)
+	public final void setFastKeyGenerRole(String value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.FastKeyGenerRole, value);
 	}
@@ -768,7 +786,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	}
 		///#endregion
 
-	public final String DtlOfAth()
+	public final String DtlOfAth() throws Exception
 	{
 		String url = "../../Admin/FoolFormDesigner/MapDefDtlFreeFrm.htm?FK_MapDtl=" + this.getMyPK() + "&For=" + this.getMyPK();
 		return url;
@@ -795,8 +813,9 @@ public class FrmAttachmentExt extends EntityMyPK
 	 固定模式类别设置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSettingSort()
+	public final String DoSettingSort() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/AttachmentSortSetting.htm?FK_MapData=" + this.getFK_MapData() + "&MyPK=" + this.getMyPK() + "&Ath=" + this.getNoOfObj();
 	}
@@ -804,8 +823,9 @@ public class FrmAttachmentExt extends EntityMyPK
 	 执行高级设置.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAdv()
+	public final String DoAdv() throws Exception
 	{
 		return "/WF/Admin/FoolFormDesigner/Attachment.aspx?FK_MapData=" + this.getFK_MapData() + "&MyPK=" + this.getMyPK() + "&Ath=" + this.getNoOfObj();
 	}

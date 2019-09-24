@@ -123,7 +123,7 @@ public class RTFEngine {
 	public String TempFilePath = "";
 
 	// 获取特殊要处理的流程节点信息.
-	public final String GetValueByKeyOfCheckNode(String[] strs) {
+	public final String GetValueByKeyOfCheckNode(String[] strs) throws Exception {
 		for (Object en : this.getHisEns()) {
 
 			String val = ((Entity) en).GetValStringByKey(strs[2]);
@@ -430,8 +430,9 @@ public class RTFEngine {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetValueByAtKey(String key) {
+	public final String GetValueByAtKey(String key) throws Exception {
 		for (Entity en : Entities.convertEntities(this.getHisEns())) {
 			String enKey = en.toString();
 
@@ -584,8 +585,9 @@ public class RTFEngine {
 	 * 
 	 * @param key
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String GetValueByKey(String key) {
+	public final String GetValueByKey(String key) throws Exception {
 		key = key.replace(" ", "");
 		key = key.replace("\r\n", "");
 
@@ -794,8 +796,9 @@ public class RTFEngine {
 	 *            生成文件
 	 * @param isOpen
 	 *            是否用IE打开？
+	 * @throws Exception 
 	 */
-	public final void MakeDoc(String cfile, String path, String file, String replaceVals, boolean isOpen) {
+	public final void MakeDoc(String cfile, String path, String file, String replaceVals, boolean isOpen) throws Exception {
 		cfile = cfile.replace(".rtf.rtf", ".rtf");
 
 		if (new File(path).exists() == false)

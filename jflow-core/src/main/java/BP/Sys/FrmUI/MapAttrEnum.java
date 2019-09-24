@@ -16,34 +16,35 @@ public class MapAttrEnum extends EntityMyPK
 		///#region 文本字段参数属性.
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
+	public final void setKeyOfEn(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 绑定的枚举ID
 	*/
-	public final String getUIBindKey()
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value)
+	public final void setUIBindKey(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
@@ -240,8 +241,9 @@ public class MapAttrEnum extends EntityMyPK
 	 绑定函数
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindFunction()
+	public final String BindFunction() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -254,13 +256,14 @@ public class MapAttrEnum extends EntityMyPK
 	 编辑枚举值
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSysEnum()
+	public final String DoSysEnum() throws Exception
 	{
 		return "../../Admin/CCFormDesigner/DialogCtr/EnumerationNew.htm?DoType=FrmEnumeration_SaveEnum&EnumKey=" + this.getUIBindKey();
 	}
 
-	public final String DoDDLFullCtrl2019()
+	public final String DoDDLFullCtrl2019() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
@@ -268,8 +271,9 @@ public class MapAttrEnum extends EntityMyPK
 	 设置自动填充
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAutoFull()
+	public final String DoAutoFull() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDLL.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
@@ -277,8 +281,9 @@ public class MapAttrEnum extends EntityMyPK
 	 高级设置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoRadioBtns()
+	public final String DoRadioBtns() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/RadioBtns.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
@@ -286,8 +291,9 @@ public class MapAttrEnum extends EntityMyPK
 	 设置级联
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoActiveDDL()
+	public final String DoActiveDDL() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}

@@ -51,11 +51,11 @@ public abstract class EntityTree extends Entity
 	 父节点编号
 	 * @throws Exception 
 	*/
-	public final String getParentNo() throws Exception
+	public String getParentNo() throws Exception
 	{
 		return this.GetValStringByKey(EntityTreeAttr.ParentNo);
 	}
-	public final void setParentNo(String value) throws Exception
+	public void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(EntityTreeAttr.ParentNo, value);
 	}

@@ -42,7 +42,7 @@ public class StationType extends EntityNoName
 			return this.get_enMap();
 		}
 		Map map = new Map("Port_StationType");
-		map.EnDesc = "岗位类型";
+		map.setEnDesc( "岗位类型";
 		map.Java_SetCodeStruct("2");
 
 		map.Java_SetDepositaryOfEntity(Depositary.None);

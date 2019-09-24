@@ -2,6 +2,7 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import java.util.*;
 
@@ -14,31 +15,34 @@ public class Dept extends EntityTree
 		///#region 属性
 	/** 
 	 全名
+	 * @throws Exception 
 	*/
-	public final String getNameOfPath()
+	public final String getNameOfPath() throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.NameOfPath);
 	}
-	public final void setNameOfPath(String value)
+	public final void setNameOfPath(String value) throws Exception
 	{
 		this.SetValByKey(DeptAttr.NameOfPath, value);
 	}
 	/** 
 	 父节点的ID
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
 	private Depts _HisSubDepts = null;
 	/** 
 	 它的子节点
+	 * @throws Exception 
 	*/
-	public final Depts getHisSubDepts()
+	public final Depts getHisSubDepts() throws Exception
 	{
 		if (_HisSubDepts == null)
 		{
@@ -61,8 +65,9 @@ public class Dept extends EntityTree
 	 部门
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Dept(String no)
+	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
@@ -72,7 +77,7 @@ public class Dept extends EntityTree
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 重写方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -114,7 +119,7 @@ public class Dept extends EntityTree
 		RefMethod rm = new RefMethod();
 		rm.Title = "重置该部门一下的部门路径";
 		rm.ClassMethodName = this.toString() + ".DoResetPathName";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 
 		String msg = "当该部门名称变化后,该部门与该部门的子部门名称路径(Port_Dept.NameOfPath)将发生变化.";
 		msg += "\t\n 该部门与该部门的子部门的人员路径也要发生变化Port_Emp列DeptDesc.StaDesc.";
@@ -158,8 +163,9 @@ public class Dept extends EntityTree
 	 创建下级节点.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoMyCreateSubNode()
+	public final String DoMyCreateSubNode() throws Exception
 	{
 		Entity en = this.DoCreateSubNode();
 		return en.ToJson();
@@ -169,14 +175,15 @@ public class Dept extends EntityTree
 	 创建同级节点.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoMyCreateSameLevelNode()
+	public final String DoMyCreateSameLevelNode() throws Exception
 	{
 		Entity en = this.DoCreateSameLevelNode();
 		return en.ToJson();
 	}
 
-	public final String DoSameLevelDept(String no, String name)
+	public final String DoSameLevelDept(String no, String name) throws Exception
 	{
 		Dept en = new Dept();
 		en.setNo(no);
@@ -191,7 +198,7 @@ public class Dept extends EntityTree
 
 		return "增加成功..";
 	}
-	public final String DoSubDept(String no, String name)
+	public final String DoSubDept(String no, String name) throws Exception
 	{
 		Dept en = new Dept();
 		en.setNo(no);
@@ -210,8 +217,9 @@ public class Dept extends EntityTree
 	 重置部门
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoResetPathName()
+	public final String DoResetPathName() throws Exception
 	{
 		this.GenerNameOfPath();
 		return "重置成功.";
@@ -219,8 +227,9 @@ public class Dept extends EntityTree
 
 	/** 
 	 生成部门全名称.
+	 * @throws Exception 
 	*/
-	public final void GenerNameOfPath()
+	public final void GenerNameOfPath() throws Exception
 	{
 		String name = this.getName();
 
@@ -270,8 +279,9 @@ public class Dept extends EntityTree
 	 处理子部门全名称
 	 
 	 @param FK_Dept
+	 * @throws Exception 
 	*/
-	public final void GenerChildNameOfPath(String deptNo)
+	public final void GenerChildNameOfPath(String deptNo) throws Exception
 	{
 		Depts depts = new Depts(deptNo);
 		if (depts != null && depts.size() > 0)

@@ -2,6 +2,7 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import java.util.*;
 
@@ -14,8 +15,9 @@ public class Emp extends EntityNoName
 		///#region 扩展属性
 	/** 
 	 该人员是否被禁用.
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnable()
+	public final boolean getIsEnable() throws Exception
 	{
 		if (this.getNo().equals("admin"))
 		{
@@ -39,19 +41,21 @@ public class Emp extends EntityNoName
 
 	/** 
 	 拼音
+	 * @throws Exception 
 	*/
-	public final String getPinYin()
+	public final String getPinYin() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.PinYin);
 	}
-	public final void setPinYin(String value)
+	public final void setPinYin(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.PinYin, value);
 	}
 	/** 
 	 主要的部门。
+	 * @throws Exception 
 	*/
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 		try
 		{
@@ -64,65 +68,69 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
-	public final String getFK_DeptText()
+	public final String getFK_DeptText() throws Exception
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
 	}
-	public final String getTel()
+	public final String getTel() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Tel);
 	}
-	public final void setTel(String value)
+	public final void setTel(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Tel, value);
 	}
-	public final String getEmail()
+	public final String getEmail() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Email);
 	}
-	public final void setEmail(String value)
+	public final void setEmail(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Email, value);
 	}
 	/** 
 	 密码
+	 * @throws Exception 
 	*/
-	public final String getPass()
+	public final String getPass() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Pass);
 	}
-	public final void setPass(String value)
+	public final void setPass(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Pass, value);
 	}
 	/** 
 	 顺序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Idx, value);
 	}
 	/** 
 	 签字类型
+	 * @throws Exception 
 	*/
-	public final int getSignType()
+	public final int getSignType() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.SignType);
 	}
-	public final void setSignType(int value)
+	public final void setSignType(int value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.SignType, value);
 	}
@@ -136,8 +144,9 @@ public class Emp extends EntityNoName
 	 
 	 @param pass 密码
 	 @return 是否匹配成功
+	 * @throws Exception 
 	*/
-	public final boolean CheckPass(String pass)
+	public final boolean CheckPass(String pass) throws Exception
 	{
 		if (this.getPass().equals(pass))
 		{
@@ -160,8 +169,9 @@ public class Emp extends EntityNoName
 	 操作员
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
 		this.setNo(no.trim());
 		if (this.getNo().length() == 0)
@@ -182,7 +192,7 @@ public class Emp extends EntityNoName
 		}
 	}
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -240,13 +250,13 @@ public class Emp extends EntityNoName
 		 RefMethod rm = new RefMethod();
 		 rm.Title = "设置图片签名";
 		 rm.ClassMethodName = this.toString() + ".DoSinger";
-		 rm.RefMethodType = RefMethodType.RightFrameOpen;
+		 rm.refMethodType = RefMethodType.RightFrameOpen;
 		 map.AddRefMethod(rm);
 
 		 rm = new RefMethod();
 		 rm.Title = "部门岗位";
 		 rm.ClassMethodName = this.toString() + ".DoEmpDepts";
-		 rm.RefMethodType = RefMethodType.RightFrameOpen;
+		 rm.refMethodType = RefMethodType.RightFrameOpen;
 		 map.AddRefMethod(rm);
 
 			 //节点绑定部门. 节点绑定部门.
@@ -266,7 +276,7 @@ public class Emp extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "修改主部门";
 		rm.ClassMethodName = this.toString() + ".DoEditMainDept";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 			// rm.RefAttrKey = EmpAttr.FK_Dept;
 		map.AddRefMethod(rm);
 
@@ -274,25 +284,25 @@ public class Emp extends EntityNoName
 		return this.get_enMap();
 	}
 
-	public final String DoEditMainDept()
+	public final String DoEditMainDept() throws Exception
 	{
 		return "../../../GPM/EmpDeptMainDept.htm?FK_Emp=" + this.getNo();
 	}
 
 
-	public final String DoEmpDepts()
+	public final String DoEmpDepts() throws Exception
 	{
 		return "../../../GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
 	}
 
-	public final String DoSinger()
+	public final String DoSinger() throws Exception
 	{
 		return "../../../GPM/Siganture.htm?EmpNo=" + this.getNo();
 	}
 
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//增加拼音，以方便查找.
 		String pinyinQP = BP.DA.DataType.ParseStringToPinyin(this.getName()).toLowerCase();
@@ -306,7 +316,7 @@ public class Emp extends EntityNoName
 		String depts = "";
 		String stas = "";
 
-		for (DeptEmpStation item : des)
+		for (DeptEmpStation item : des.ToJavaList())
 		{
 			BP.GPM.Dept dept = new BP.GPM.Dept();
 			dept.setNo(item.getFK_Dept());
@@ -319,7 +329,7 @@ public class Emp extends EntityNoName
 			//给拼音重新定义值,让其加上部门的信息.
 			this.setPinYin(this.getPinYin() + pinyinJX + "/" + BP.DA.DataType.ParseStringToPinyinJianXie(dept.getName()).toLowerCase() + ",");
 
-			BP.Port.Station sta = new Port.Station();
+			BP.Port.Station sta = new BP.Port.Station();
 			sta.setNo(item.getFK_Station());
 			if (sta.RetrieveFromDBSources() == 0)
 			{
@@ -337,9 +347,10 @@ public class Emp extends EntityNoName
 
 	/** 
 	 保存后修改WF_Emp中的邮箱
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		String sql = "Select Count(*) From WF_Emp Where No='" + this.getNo() + "'";
 		int count = DBAccess.RunSQLReturnValInt(sql);
@@ -356,7 +367,7 @@ public class Emp extends EntityNoName
 		super.afterInsertUpdateAction();
 	}
 
-	public static String GenerPinYin(String no, String name)
+	public static String GenerPinYin(String no, String name) throws Exception
 	{
 		//增加拼音，以方便查找.
 		String pinyinQP = BP.DA.DataType.ParseStringToPinyin(name).toLowerCase();
@@ -370,7 +381,7 @@ public class Emp extends EntityNoName
 		String depts = "";
 		String stas = "";
 
-		for (DeptEmpStation item : des)
+		for (DeptEmpStation item : des.ToJavaList())
 		{
 			BP.GPM.Dept dept = new BP.GPM.Dept();
 			dept.setNo(item.getFK_Dept());
@@ -383,7 +394,7 @@ public class Emp extends EntityNoName
 			//给拼音重新定义值,让其加上部门的信息.
 			py = py + pinyinJX + "/" + BP.DA.DataType.ParseStringToPinyinJianXie(dept.getName()).toLowerCase() + ",";
 
-			BP.Port.Station sta = new Port.Station();
+			BP.Port.Station sta = new BP.Port.Station();
 			sta.setNo(item.getFK_Station());
 			if (sta.RetrieveFromDBSources() == 0)
 			{
@@ -400,20 +411,22 @@ public class Emp extends EntityNoName
 
 	/** 
 	 向上移动
+	 * @throws Exception 
 	*/
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(EmpAttr.FK_Dept, this.getFK_Dept(), EmpAttr.Idx);
 	}
 	/** 
 	 向下移动
+	 * @throws Exception 
 	*/
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown(EmpAttr.FK_Dept, this.getFK_Dept(), EmpAttr.Idx);
 	}
 
-	public final String DoResetpassword(String pass1, String pass2)
+	public final String DoResetpassword(String pass1, String pass2) throws Exception
 	{
 		if (pass1.equals(pass2) == false)
 		{

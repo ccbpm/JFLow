@@ -79,7 +79,7 @@ public class Inc extends EntityNoName
 		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
 
 		map.AdjunctType = AdjunctType.None;
-		map.EnType = EnType.View; //独立组织是一个视图.
+		map.setEnType( EnType.View; //独立组织是一个视图.
 
 		map.AddTBStringPK(IncAttr.No, null, "编号", true, false, 1, 30, 40);
 		map.AddTBString(IncAttr.ParentNo, null, "父节点编号", true, false, 0, 30, 40);

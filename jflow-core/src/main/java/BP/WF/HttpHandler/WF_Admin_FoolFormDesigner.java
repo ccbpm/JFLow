@@ -361,8 +361,8 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		else
 		{
 			en.FK_Node = this.getFK_Node();
-			//en.Name = "从表" + en.No;
-			en.Name = "从表";
+			//en.setName ( "从表" + en.No;
+			en.setName ( "从表";
 			en.PTable = en.No;
 			en.H = 300;
 			en.Insert();

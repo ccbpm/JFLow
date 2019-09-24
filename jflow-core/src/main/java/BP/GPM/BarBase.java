@@ -27,8 +27,9 @@ public abstract class BarBase
 	public abstract String getName();
 	/** 
 	 权限控制-是否可以查看
+	 * @throws Exception 
 	*/
-	public abstract boolean getIsCanView();
+	public abstract boolean getIsCanView() throws Exception;
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 系统属性.
 
@@ -44,8 +45,9 @@ public abstract class BarBase
 	public abstract String getMore();
 	/** 
 	 内容信息
+	 * @throws Exception 
 	*/
-	public abstract String getDocuments();
+	public abstract String getDocuments() throws Exception;
 	/** 
 	 宽度
 	*/

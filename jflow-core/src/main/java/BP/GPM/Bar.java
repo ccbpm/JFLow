@@ -2,6 +2,9 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -24,136 +27,143 @@ public class Bar extends EntityNoName
 		///#region 属性
 	/** 
 	 更多的URL
+	 * @throws Exception 
 	*/
-	public final String getMoreUrl()
+	public final String getMoreUrl() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.MoreUrl);
 	}
-	public final void setMoreUrl(String value)
+	public final void setMoreUrl(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.MoreUrl, value);
 	}
 	/** 
 	 更多标签
+	 * @throws Exception 
 	*/
-	public final String getMoreLab()
+	public final String getMoreLab() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.MoreLab);
 	}
-	public final void setMoreLab(String value)
+	public final void setMoreLab(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.MoreLab, value);
 	}
 	/** 
 	 标题
+	 * @throws Exception 
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.Title, value);
 	}
 	/** 
 	 用户是否可以删除
+	 * @throws Exception 
 	*/
-	public final boolean getIsDel()
+	public final boolean getIsDel() throws Exception
 	{
 		return this.GetValBooleanByKey(BarAttr.IsDel);
 	}
-	public final void setIsDel(boolean value)
+	public final void setIsDel(boolean value) throws Exception
 	{
 		this.SetValByKey(BarAttr.IsDel, value);
 	}
 	/** 
 	 类型
+	 * @throws Exception 
 	*/
-	public final int getBarType()
+	public final int getBarType() throws Exception
 	{
 		return this.GetValIntByKey(BarAttr.BarType);
 	}
-	public final void setBarType(int value)
+	public final void setBarType(int value) throws Exception
 	{
 		this.SetValByKey(BarAttr.BarType, value);
 	}
 	/** 
 	 打开方式
+	 * @throws Exception 
 	*/
-	public final int getOpenWay()
+	public final int getOpenWay() throws Exception
 	{
 		return this.GetValIntByKey(BarAttr.OpenWay);
 	}
-	public final void setOpenWay(int value)
+	public final void setOpenWay(int value) throws Exception
 	{
 		this.SetValByKey(BarAttr.OpenWay, value);
 	}
 	/** 
 	 顺序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(BarAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(BarAttr.Idx, value);
 	}
 	/** 
 	 Tag1
 	*/
-	public final String getTag1()
+	public final String getTag1() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.Tag1);
 	}
-	public final void setTag1(String value)
+	public final void setTag1(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.Tag1, value);
 	}
 	/** 
 	 Tag
 	*/
-	public final String getTag2()
+	public final String getTag2() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.Tag2);
 	}
-	public final void setTag2(String value)
+	public final void setTag2(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.Tag2, value);
 	}
-	public final String getTag3()
+	public final String getTag3() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.Tag3);
 	}
-	public final void setTag3(String value)
+	public final void setTag3(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.Tag3, value);
 	}
-	public final String getDocGenerRDT()
+	public final String getDocGenerRDT() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.DocGenerRDT);
 	}
-	public final void setDocGenerRDT(String value)
+	public final void setDocGenerRDT(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.DocGenerRDT, value);
 	}
-	public final String getWidth()
+	public final String getWidth() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.Width);
 	}
-	public final void setWidth(String value)
+	public final void setWidth(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.Width, value);
 	}
-	public final String getHeight()
+	public final String getHeight() throws Exception
 	{
 		return this.GetValStrByKey(BarAttr.Height);
 	}
-	public final void setHeight(String value)
+	public final void setHeight(String value) throws Exception
 	{
 		this.SetValByKey(BarAttr.Height, value);
 	}
-	public final String getDoc()
+	public final String getDoc() throws Exception
 	{
 		String html = "";
 		switch (this.getBarType())
@@ -170,7 +180,7 @@ public class Bar extends EntityNoName
 				{
 					String no = dr.get("No").toString();
 					String name = dr.get("Name").toString();
-					String url = this.getTag2().Clone().toString();
+					String url = this.getTag2().clone().toString();
 						//url = url.Replace("@No", no);
 					url = url.replace("~", "'");
 						//if (url.Contains("@"))
@@ -247,8 +257,9 @@ public class Bar extends EntityNoName
 	 信息块
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public Bar(String no)
+	public Bar(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -264,10 +275,10 @@ public class Bar extends EntityNoName
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_Bar");
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "信息块";
-		map.EnType = EnType.Sys;
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+		map.setEnDesc("信息块");
+		map.setEnType(EnType.Sys);
 
 		map.AddTBStringPK(BarAttr.No, null, "编号", true, false, 1, 200, 200);
 		map.AddTBString(BarAttr.Name, null, "名称", true, false, 0, 3900, 20);
@@ -311,10 +322,10 @@ public class Bar extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final String GetDocument()
+	public final String GetDocument() throws Exception
 	{
 
-		BarBase barBase = (BarBase)ClassFactory.GetObject_OK(this.No);
+		BarBase barBase = (BarBase)ClassFactory.GetObject_OK(this.getNo());
 		if (barBase == null)
 		{
 			this.Delete();
@@ -323,7 +334,7 @@ public class Bar extends EntityNoName
 		return barBase.getDocuments();
 	}
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		String sql = "DELETE FROM GPM_BarEmp WHERE FK_Bar=' " + this.getNo()+ " '";
 		DBAccess.RunSQL(sql);

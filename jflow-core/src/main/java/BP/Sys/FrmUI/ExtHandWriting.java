@@ -16,56 +16,61 @@ public class ExtHandWriting extends EntityMyPK
 	// 属性
 	/** 
 	 目标
+	 * @throws Exception 
 	*/
-	public final String getTarget()
+	public final String getTarget() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.Tag1);
 	}
-	public final void setTarget(String value)
+	public final void setTarget(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.Tag1, value);
 	}
 	/** 
 	 URL
+	 * @throws Exception 
 	*/
-	public final String getURL()
+	public final String getURL() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.Tag2).replace("#", "@");
 	}
-	public final void setURL(String value)
+	public final void setURL(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.Tag2, value);
 	}
 	/** 
 	 FK_MapData
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
+	 * @throws Exception 
 	*/
-	public final String getKeyOfEn()
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
+	public final void setKeyOfEn(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 Text
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStrByKey(MapAttrAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}

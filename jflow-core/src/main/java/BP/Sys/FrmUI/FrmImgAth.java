@@ -16,100 +16,109 @@ public class FrmImgAth extends EntityMyPK
 		///#region 属性
 	/** 
 	 名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(FrmImgAthAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.Name, value);
 	}
 	/** 
 	 控件ID
+	 * @throws Exception 
 	*/
-	public final String getCtrlID()
+	public final String getCtrlID() throws Exception
 	{
 		return this.GetValStringByKey(FrmImgAthAttr.CtrlID);
 	}
-	public final void setCtrlID(String value)
+	public final void setCtrlID(String value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.CtrlID, value);
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getY()
+	public final float getY() throws Exception
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.Y);
 	}
-	public final void setY(float value)
+	public final void setY(float value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getX()
+	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.X);
 	}
-	public final void setX(float value)
+	public final void setX(float value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.X, value);
 	}
 	/** 
 	 H
+	 * @throws Exception 
 	*/
-	public final float getH()
+	public final float getH() throws Exception
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.H);
 	}
-	public final void setH(float value)
+	public final void setH(float value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.H, value);
 	}
 	/** 
 	 W
+	 * @throws Exception 
 	*/
-	public final float getW()
+	public final float getW() throws Exception
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.W);
 	}
-	public final void setW(float value)
+	public final void setW(float value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.W, value);
 	}
 	/** 
 	 FK_MapData
+	 * @throws Exception 
 	*/
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(FrmImgAthAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.FK_MapData, value);
 	}
 	/** 
 	 是否可编辑
+	 * @throws Exception 
 	*/
-	public final boolean getIsEdit()
+	public final boolean getIsEdit() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmImgAthAttr.IsEdit);
 	}
-	public final void setIsEdit(boolean value)
+	public final void setIsEdit(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.IsEdit, value);
 	}
 	/** 
 	 是否必填，2016-11-1
+	 * @throws Exception 
 	*/
-	public final boolean getIsRequired()
+	public final boolean getIsRequired() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmImgAthAttr.IsRequired);
 	}
-	public final void setIsRequired(boolean value)
+	public final void setIsRequired(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmImgAthAttr.IsRequired, value);
 	}

@@ -2,6 +2,7 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import java.util.*;
 
@@ -14,10 +15,11 @@ public class GPMEmp extends EntityNoName
 		///#region 扩展属性
 	/** 
 	 该人员是否被禁用.
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnable()
+	public final boolean getIsEnable() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if ("admin".equals(this.getNo()))
 		{
 			return true;
 		}
@@ -42,19 +44,21 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 拼音
+	 * @throws Exception 
 	*/
-	public final String getPinYin()
+	public final String getPinYin() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.PinYin);
 	}
-	public final void setPinYin(String value)
+	public final void setPinYin(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.PinYin, value);
 	}
 	/** 
 	 主要的部门。
+	 * @throws Exception 
 	*/
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 		try
 		{
@@ -67,65 +71,69 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
-	public final String getFK_DeptText()
+	public final String getFK_DeptText() throws Exception
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
 	}
-	public final String getTel()
+	public final String getTel() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Tel);
 	}
-	public final void setTel(String value)
+	public final void setTel(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Tel, value);
 	}
-	public final String getEmail()
+	public final String getEmail() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Email);
 	}
-	public final void setEmail(String value)
+	public final void setEmail(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Email, value);
 	}
 	/** 
 	 密码
+	 * @throws Exception 
 	*/
-	public final String getPass()
+	public final String getPass() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Pass);
 	}
-	public final void setPass(String value)
+	public final void setPass(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Pass, value);
 	}
 	/** 
 	 顺序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Idx, value);
 	}
 	/** 
 	 签字类型
+	 * @throws Exception 
 	*/
-	public final int getSignType()
+	public final int getSignType() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.SignType);
 	}
-	public final void setSignType(int value)
+	public final void setSignType(int value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.SignType, value);
 	}
@@ -139,8 +147,9 @@ public class GPMEmp extends EntityNoName
 	 
 	 @param pass 密码
 	 @return 是否匹配成功
+	 * @throws Exception 
 	*/
-	public final boolean CheckPass(String pass)
+	public final boolean CheckPass(String pass) throws Exception
 	{
 		if (this.getPass().equals(pass))
 		{
@@ -163,13 +172,14 @@ public class GPMEmp extends EntityNoName
 	 操作员
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public GPMEmp(String no)
+	public GPMEmp(String no) throws Exception
 	{
 		super(no);
 	}
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -190,11 +200,11 @@ public class GPMEmp extends EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 基本属性
-		map.EnDBUrl = new DBUrl(DBUrlType.AppCenterDSN); //要连接的数据源（表示要连接到的那个系统数据库）。
-		map.PhysicsTable = "Port_Emp"; // 要物理表。
+		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); //要连接的数据源（表示要连接到的那个系统数据库）。
+		map.setPhysicsTable("Port_Emp"); // 要物理表。
 		map.Java_SetDepositaryOfMap(Depositary.Application); //实体map的存放位置.
 		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体存放位置
-		map.EnDesc = "用户"; // "用户"; // 实体的描述.
+		map.setEnDesc("用户"); // "用户"; // 实体的描述.
 		map.Java_SetEnType(EnType.App); //实体类型。
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion
@@ -227,13 +237,13 @@ public class GPMEmp extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "设置图片签名";
 		rm.ClassMethodName = this.toString() + ".DoSinger";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "部门岗位";
 		rm.ClassMethodName = this.toString() + ".DoEmpDepts";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 			//节点绑定部门. 节点绑定部门.
@@ -244,34 +254,34 @@ public class GPMEmp extends EntityNoName
 		return this.get_enMap();
 	}
 
-	public final String DoEmpDepts()
+	public final String DoEmpDepts() throws Exception
 	{
-		return "../../../GPM/EmpDepts.htm?FK_Emp=" + this.No;
+		return "../../../GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
 	}
 
-	public final String DoSinger()
+	public final String DoSinger() throws Exception
 	{
-		return "../../../GPM/Siganture.htm?EmpNo=" + this.No;
+		return "../../../GPM/Siganture.htm?EmpNo=" + this.getNo();
 	}
 
-	public static GPMEmp GenerData(GPMEmp en)
+	public static GPMEmp GenerData(GPMEmp en) throws Exception
 	{
 		//增加拼音，以方便查找.
-		String pinyinQP = BP.DA.DataType.ParseStringToPinyin(en.Name).toLowerCase();
-		String pinyinJX = BP.DA.DataType.ParseStringToPinyinJianXie(en.Name).toLowerCase();
+		String pinyinQP = BP.DA.DataType.ParseStringToPinyin(en.getName()).toLowerCase();
+		String pinyinJX = BP.DA.DataType.ParseStringToPinyinJianXie(en.getName()).toLowerCase();
 		en.setPinYin("," + pinyinQP + "," + pinyinJX + ",");
 
 		//处理岗位信息.
 		DeptEmpStations des = new DeptEmpStations();
-		des.Retrieve(DeptEmpStationAttr.FK_Emp, en.No);
+		des.Retrieve(DeptEmpStationAttr.FK_Emp, en.getNo());
 
 		String depts = "";
 		String stas = "";
 
-		for (DeptEmpStation item : des)
+		for (DeptEmpStation item : des.ToJavaList())
 		{
 			BP.GPM.Dept dept = new BP.GPM.Dept();
-			dept.No = item.FK_Dept;
+			dept.setNo(item.getFK_Dept());
 			if (dept.RetrieveFromDBSources() == 0)
 			{
 				item.Delete();
@@ -279,28 +289,28 @@ public class GPMEmp extends EntityNoName
 			}
 
 			//给拼音重新定义值,让其加上部门的信息.
-			en.setPinYin(en.getPinYin() + pinyinJX + "/" + BP.DA.DataType.ParseStringToPinyinJianXie(dept.Name).toLowerCase() + ",");
+			en.setPinYin(en.getPinYin() + pinyinJX + "/" + BP.DA.DataType.ParseStringToPinyinJianXie(dept.getName()).toLowerCase() + ",");
 
 			BP.Port.Station sta = new BP.Port.Station();
-			sta.No = item.FK_Station;
+			sta.setNo(item.getFK_Station());
 			if (sta.RetrieveFromDBSources() == 0)
 			{
 				item.Delete();
 				continue;
 			}
 
-			stas += "@" + dept.NameOfPath + "|" + sta.Name;
+			stas += "@" + dept.getNameOfPath() + "|" + sta.getName();
 
-			if (depts.contains("@" + dept.NameOfPath) == false)
+			if (depts.contains("@" + dept.getNameOfPath()) == false)
 			{
-				depts += "@" + dept.NameOfPath;
+				depts += "@" + dept.getNameOfPath();
 			}
 		}
 		return en;
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//处理其他的数据.
 		BP.GPM.GPMEmp.GenerData(this);
@@ -308,20 +318,22 @@ public class GPMEmp extends EntityNoName
 	}
 	/** 
 	 向上移动
+	 * @throws Exception 
 	*/
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(EmpAttr.FK_Dept, this.getFK_Dept(), EmpAttr.Idx);
 	}
 	/** 
 	 向下移动
+	 * @throws Exception 
 	*/
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown(EmpAttr.FK_Dept, this.getFK_Dept(), EmpAttr.Idx);
 	}
 
-	public final String DoResetpassword(String pass1, String pass2)
+	public final String DoResetpassword(String pass1, String pass2) throws Exception
 	{
 		if (pass1.equals(pass2) == false)
 		{

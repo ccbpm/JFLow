@@ -123,11 +123,11 @@ public class Dept extends EntityNoName
 
 		//创建下一级目录.
 		EntityTree en = fs.DoCreateSubNode();
-		en.Name = "流程目录1";
+		en.setName ( "流程目录1";
 		en.Update();
 
 		en = fs.DoCreateSubNode();
-		en.Name = "流程目录2";
+		en.setName ( "流程目录2";
 		en.Update();
 
 		//表单根目录.

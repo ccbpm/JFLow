@@ -23,8 +23,9 @@ public class Dev2Interface
 	 
 	 @param userNo 用户名
 	 @param SID 安全ID,请参考流程设计器操作手册
+	 * @throws Exception 
 	*/
-	public static void Port_Login(String userNo, String sid)
+	public static void Port_Login(String userNo, String sid) throws Exception
 	{
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
@@ -35,7 +36,7 @@ public class Dev2Interface
 				throw new RuntimeException("用户不存在或者SID错误。");
 			}
 
-			if (!dt.Rows[0]["SID"].toString().equals(sid))
+			if (!dt.Rows.get(0).get("SID").toString().equals(sid))
 			{
 				throw new RuntimeException("用户不存在或者SID错误。");
 			}
@@ -49,8 +50,9 @@ public class Dev2Interface
 	 用户登陆,此方法是在开发者校验好用户名与密码后执行
 	 
 	 @param userNo 用户名
+	 * @throws Exception 
 	*/
-	public static void Port_Login(String userNo)
+	public static void Port_Login(String userNo) throws Exception
 	{
 		BP.Port.Emp emp = new BP.Port.Emp(userNo);
 		WebUser.SignInOfGener(emp);

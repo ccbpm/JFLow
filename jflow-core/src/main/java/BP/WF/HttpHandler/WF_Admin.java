@@ -457,7 +457,7 @@ public class WF_Admin extends DirectoryPageBase
 		{
 			BP.WF.Template.SQLTemplate en = new SQLTemplate();
 			en.No = dr.get(0).toString();
-			en.Name = dr.get(1).toString();
+			en.setName ( dr.get(1).toString();
 			en.setDocs(dr.get(2).toString());
 
 			if (strs.contains(en.getDocs().trim() + ";") == true)

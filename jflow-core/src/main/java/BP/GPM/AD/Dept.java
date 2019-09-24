@@ -95,7 +95,7 @@ public class Dept extends EntityTree
 		map.PhysicsTable = "Port_Dept";
 		map.Java_SetEnType(EnType.Admin);
 
-		map.EnDesc = "部门"; //  实体的描述.
+		map.setEnDesc( "部门"; //  实体的描述.
 		map.Java_SetDepositaryOfEntity(Depositary.None); //实体map的存放位置.
 		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
 

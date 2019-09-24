@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -57,7 +59,7 @@ public class Bars extends EntitiesNoName
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		//初始化数据到，表里面去.
 		ArrayList als = ClassFactory.GetObjects("BP.GPM.BarBase");
@@ -75,8 +77,8 @@ public class Bars extends EntitiesNoName
 			}
 
 			BP.GPM.Bar bar = new Bar();
-			bar.No = en.getNo();
-			bar.Name = en.getName();
+			bar.setNo ( en.getNo());
+			bar.setName(en.getName());
 			bar.setTitle(en.getTitle());
 			bar.setMoreUrl(en.getMore());
 			bar.setHeight(en.getHeight());
@@ -90,11 +92,11 @@ public class Bars extends EntitiesNoName
 
 
 			BP.GPM.BarEmp barEmp = new BarEmp();
-			barEmp.setMyPK( en.getNo() + "_" + Web.WebUser.getNo();
+			barEmp.setMyPK( en.getNo() + "_" +WebUser.getNo());
 		   int i = barEmp.RetrieveFromDBSources();
 
 			barEmp.setFK_Bar(en.getNo());
-			barEmp.setFK_Emp(Web.WebUser.getNo());
+			barEmp.setFK_Emp(WebUser.getNo());
 			barEmp.setIsShow(true);
 			barEmp.setTitle(en.getName());
 			if (i == 0)

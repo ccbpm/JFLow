@@ -14,7 +14,7 @@ public class FrmBtn extends EntityMyPK
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(FrmBtnAttr.FK_MapData);
 	}

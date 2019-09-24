@@ -3,6 +3,8 @@ package BP.GPM;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -14,34 +16,37 @@ public class GroupMenu extends EntityMM
 		///#region 属性
 	/** 
 	 菜单
+	 * @throws Exception 
 	*/
-	public final String getFK_Menu()
+	public final String getFK_Menu() throws Exception
 	{
 		return this.GetValStringByKey(GroupMenuAttr.FK_Menu);
 	}
-	public final void setFK_Menu(String value)
+	public final void setFK_Menu(String value) throws Exception
 	{
 		this.SetValByKey(GroupMenuAttr.FK_Menu, value);
 	}
 	/** 
 	 权限组
+	 * @throws Exception 
 	*/
-	public final String getFK_Group()
+	public final String getFK_Group() throws Exception
 	{
 		return this.GetValStringByKey(GroupMenuAttr.FK_Group);
 	}
-	public final void setFK_Group(String value)
+	public final void setFK_Group(String value) throws Exception
 	{
 		this.SetValByKey(GroupMenuAttr.FK_Group, value);
 	}
 	/** 
 	 是否选中
+	 * @throws Exception 
 	*/
-	public final String getIsChecked()
+	public final String getIsChecked() throws Exception
 	{
 		return this.GetValStringByKey(GroupMenuAttr.IsChecked);
 	}
-	public final void setIsChecked(String value)
+	public final void setIsChecked(String value) throws Exception
 	{
 		this.SetValByKey(GroupMenuAttr.IsChecked, value);
 	}
@@ -60,8 +65,9 @@ public class GroupMenu extends EntityMM
 	 权限组菜单
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public GroupMenu(String no)
+	public GroupMenu(String no) throws Exception
 	{
 		this.Retrieve();
 	}
@@ -76,10 +82,10 @@ public class GroupMenu extends EntityMM
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_GroupMenu");
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "权限组菜单";
-		map.EnType = EnType.Sys;
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+		map.setEnDesc("权限组菜单");
+		map.setEnType(EnType.Sys);
 
 		map.AddTBStringPK(GroupMenuAttr.FK_Group, null, "权限组", false, false, 0, 50, 20);
 		map.AddTBStringPK(GroupMenuAttr.FK_Menu, null, "菜单", false, false, 0, 50, 20);

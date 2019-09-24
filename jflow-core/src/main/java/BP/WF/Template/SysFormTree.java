@@ -131,7 +131,7 @@ public class SysFormTree extends EntityTree
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
 		en.No = BP.DA.DBAccess.GenerOID().toString();
-		en.Name = name;
+		en.setName ( name;
 		en.Insert();
 		return en.No;
 	}
@@ -141,7 +141,7 @@ public class SysFormTree extends EntityTree
 		en.Copy(this);
 		en.No = BP.DA.DBAccess.GenerOID().toString();
 		en.setParentNo(this.No);
-		en.Name = name;
+		en.setName ( name;
 		en.Insert();
 		return en.No;
 	}

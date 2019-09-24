@@ -253,7 +253,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 					continue;
 				}
 
-				myen.Name = name;
+				myen.setName ( name;
 
 				en = ens.GetNewEntity;
 
@@ -290,7 +290,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 					successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的更新成功</span><br/>";
 					continue;
 				}
-				myen.Name = name;
+				myen.setName ( name;
 
 				//给实体赋值
 				errInfo += SetEntityAttrVal(no, dr, attrs, en, dt, 0);

@@ -3,6 +3,8 @@ package BP.GPM;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -12,19 +14,19 @@ public class GroupStation extends EntityMM
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(GroupStationAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		this.SetValByKey(GroupStationAttr.FK_Station, value);
 	}
-	public final String getFK_Group()
+	public final String getFK_Group() throws Exception
 	{
 		return this.GetValStringByKey(GroupStationAttr.FK_Group);
 	}
-	public final void setFK_Group(String value)
+	public final void setFK_Group(String value) throws Exception
 	{
 		this.SetValByKey(GroupStationAttr.FK_Group, value);
 	}
@@ -43,8 +45,9 @@ public class GroupStation extends EntityMM
 	 权限组岗位
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public GroupStation(String no)
+	public GroupStation(String no) throws Exception
 	{
 		this.Retrieve();
 	}
@@ -59,10 +62,10 @@ public class GroupStation extends EntityMM
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_GroupStation");
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "权限组岗位";
-		map.EnType = EnType.Sys;
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+		map.setEnDesc("权限组岗位");
+		map.setEnType(EnType.Sys);
 
 		map.AddTBStringPK(GroupStationAttr.FK_Group, null, "权限组", false, false, 0, 50, 20);
 		map.AddDDLEntitiesPK(GroupStationAttr.FK_Station, null, "岗位", new Stations(), true);

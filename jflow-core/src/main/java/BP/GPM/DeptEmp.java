@@ -2,6 +2,8 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -13,9 +15,10 @@ public class DeptEmp extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -23,24 +26,26 @@ public class DeptEmp extends EntityMyPK
 	}
 	/** 
 	 人员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(DeptEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		SetValByKey(DeptEmpAttr.FK_Emp, value);
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(DeptEmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(DeptEmpAttr.FK_Dept, value);
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
@@ -67,8 +72,9 @@ public class DeptEmp extends EntityMyPK
 	 
 	 @param deptNo 部门编号
 	 @param empNo 人员编号
+	 * @throws Exception 
 	*/
-	public DeptEmp(String deptNo, String empNo)
+	public DeptEmp(String deptNo, String empNo) throws Exception
 	{
 		this.setFK_Dept(deptNo);
 		this.setFK_Emp(empNo);
@@ -106,9 +112,10 @@ public class DeptEmp extends EntityMyPK
 	 更新前做的事情
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
 		return super.beforeUpdateInsertAction();

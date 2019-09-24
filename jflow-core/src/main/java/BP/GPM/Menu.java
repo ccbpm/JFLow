@@ -2,6 +2,10 @@ package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+import BP.Sys.FrmType;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -12,7 +16,7 @@ public class Menu extends EntityTree
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -28,11 +32,11 @@ public class Menu extends EntityTree
 		}
 		return uac;
 	}
-	public final String getCtrlObjs()
+	public final String getCtrlObjs() throws Exception
 	{
 		return this.GetValStringByKey(MenuAttr.CtrlObjs);
 	}
-	public final void setCtrlObjs(String value)
+	public final void setCtrlObjs(String value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.CtrlObjs, value);
 	}
@@ -49,30 +53,33 @@ public class Menu extends EntityTree
 	//}
 	/** 
 	 功能
+	 * @throws Exception 
 	*/
-	public final MenuType getHisMenuType()
+	public final MenuType getHisMenuType() throws Exception
 	{
 		return MenuType.forValue(this.GetValIntByKey(MenuAttr.MenuType));
 	}
-	public final void setHisMenuType(MenuType value)
+	public final void setHisMenuType(MenuType value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.MenuType, value.getValue());
 	}
 	/** 
 	 是否启用
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnable()
+	public final boolean getIsEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(MenuAttr.IsEnable);
 	}
-	public final void setIsEnable(boolean value)
+	public final void setIsEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.IsEnable, value);
 	}
 	/** 
 	 打开方式
+	 * @throws Exception 
 	*/
-	public final String getOpenWay()
+	public final String getOpenWay() throws Exception
 	{
 		int openWay = 0;
 
@@ -81,46 +88,47 @@ public class Menu extends EntityTree
 			case 0:
 				return "_blank";
 			case 1:
-				return this.No;
+				return this.getNo();
 			default:
 				return "";
 		}
 	}
 	/** 
 	 是否是ccSytem
+	 * @throws Exception 
 	*/
-	public final MenuType getMenuType()
+	public final MenuType getMenuType() throws Exception
 	{
 		return MenuType.forValue(this.GetValIntByKey(MenuAttr.MenuType));
 	}
-	public final void setMenuType(MenuType value)
+	public final void setMenuType(MenuType value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.MenuType, value.getValue());
 	}
-	public final String getFK_App()
+	public final String getFK_App() throws Exception
 	{
 		return this.GetValStringByKey(MenuAttr.FK_App);
 	}
-	public final void setFK_App(String value)
+	public final void setFK_App(String value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.FK_App, value);
 	}
 
-	public final String getFlag()
+	public final String getFlag() throws Exception
 	{
 		return this.GetValStringByKey(MenuAttr.Flag);
 	}
-	public final void setFlag(String value)
+	public final void setFlag(String value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.Flag, value);
 	}
 
-	public final String getImg()
+	public final String getImg() throws Exception
 	{
 		String s = this.GetValStringByKey("WebPath");
 		if (DataType.IsNullOrEmpty(s))
 		{
-			if (this.getHisMenuType() == GPM.MenuType.Dir)
+			if (this.getHisMenuType() == MenuType.Dir)
 			{
 				return "/Images/Btn/View.gif";
 			}
@@ -134,35 +142,36 @@ public class Menu extends EntityTree
 			return s;
 		}
 	}
-	public final void setImg(String value)
+	public final void setImg(String value) throws Exception
 	{
 		this.SetValByKey("WebPath", value);
 	}
-	public final String getUrl()
+	public final String getUrl() throws Exception
 	{
 		return this.GetValStringByKey(MenuAttr.Url);
 	}
-	public final void setUrl(String value)
+	public final void setUrl(String value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.Url, value);
 	}
-	public final String getUrlExt()
+	public final String getUrlExt() throws Exception
 	{
 		return this.GetValStringByKey(MenuAttr.UrlExt);
 	}
-	public final void setUrlExt(String value)
+	public final void setUrlExt(String value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.UrlExt, value);
 	}
 	public boolean IsCheck = false;
 	/** 
 	 标记
+	 * @throws Exception 
 	*/
-	public final String getTag1()
+	public final String getTag1() throws Exception
 	{
 		return this.GetValStringByKey(MenuAttr.Tag1);
 	}
-	public final void setTag1(String value)
+	public final void setTag1(String value) throws Exception
 	{
 		this.SetValByKey(MenuAttr.Tag1, value);
 	}
@@ -181,15 +190,16 @@ public class Menu extends EntityTree
 	 菜单
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public Menu(String no)
+	public Menu(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
 	}
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		if (this.getFlag().contains("FlowSort") || this.getFlag().contains("Flow"))
 		{
@@ -199,12 +209,12 @@ public class Menu extends EntityTree
 		return super.beforeDelete();
 	}
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//删除他的子项目.
 		Menus ens = new Menus();
 		ens.Retrieve(MenuAttr.ParentNo, this.getNo());
-		for (Menu item : ens)
+		for (Menu item : ens.ToJavaList())
 		{
 			item.Delete();
 		}
@@ -222,11 +232,11 @@ public class Menu extends EntityTree
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_Menu"); // 类的基本属性.
-		map.DepositaryOfEntity = Depositary.None;
-		map.DepositaryOfMap = Depositary.Application;
-		map.EnDesc = "系统菜单";
-		map.EnType = EnType.Sys;
-		map.CodeStruct = "4";
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+		map.setEnDesc("系统菜单");
+		map.setEnType(EnType.Sys);
+		map.setCodeStruct("4");
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 与树有关的必备属性.
@@ -317,7 +327,7 @@ public class Menu extends EntityTree
 		rm.getHisAttrs().AddTBString("Name", null, "单据名称", true, false, 0, 100, 400);
 		rm.getHisAttrs().AddTBString("PTable", null, "存储表(为空则为编号相同)", true, false, 0, 100, 100);
 		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "单据模式", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单");
-		rm.getHisAttrs().AddDDLSQL("Sys_FormTree", "", "选择表单树", "SELECT No,Name FROM Sys_FormTree WHERE ParentNo='1'");
+		rm.getHisAttrs().AddDDLSQL("Sys_FormTree", "", "选择表单树", "SELECT No,Name FROM Sys_FormTree WHERE ParentNo='1'",true);
 
 		rm.ClassMethodName = this.toString() + ".DoAddCCBill";
 		map.AddRefMethod(rm);
@@ -339,10 +349,11 @@ public class Menu extends EntityTree
 	 @param ptable 物理表
 	 @param frmType 表单类型
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAddCCBill(String no, String name, String ptable, int frmType, String formTree)
+	public final String DoAddCCBill(String no, String name, String ptable, int frmType, String formTree) throws Exception
 	{
-		if (this.getMenuType() != GPM.MenuType.Dir)
+		if (this.getMenuType() != MenuType.Dir)
 		{
 			return "err@菜单树的节点必须为目录才能创建.";
 		}
@@ -352,22 +363,22 @@ public class Menu extends EntityTree
 			//创建表单.
 			if (frmType == 0)
 			{
-				BP.Sys.CCFormAPI.CreateFrm(no, name, formTree, Sys.FrmType.FoolForm);
+				BP.Sys.CCFormAPI.CreateFrm(no, name, formTree, FrmType.FoolForm);
 			}
 			else
 			{
-				BP.Sys.CCFormAPI.CreateFrm(no, name, formTree, Sys.FrmType.FreeFrm);
+				BP.Sys.CCFormAPI.CreateFrm(no, name, formTree, FrmType.FreeFrm);
 			}
 
 			//更改单据属性.
 			BP.Frm.FrmBill fb = new BP.Frm.FrmBill(no);
-			fb.No = no;
-			fb.Name = name;
-			fb.PTable = ptable;
+			fb.setNo(no);
+			fb.setName(name);
+			fb.setPTable(ptable);
 			fb.Update();
 
 			//执行绑定.
-			fb.DoBindMenu(this.No,name);
+			fb.DoBindMenu(this.getNo(),name);
 
 			return "<a href='../Comm/En.htm?EnName=BP.Frm.FrmBill&No=" + no + "' target=_blank>打开单据属性</a>.";
 		}
@@ -380,8 +391,9 @@ public class Menu extends EntityTree
 	 增加增删改查功能权限
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAddRight3()
+	public final String DoAddRight3() throws Exception
 	{
 		if (this.getUrl().contains("Search.htm") == false && this.getUrl().contains("SearchBS.htm") == false)
 		{
@@ -390,24 +402,24 @@ public class Menu extends EntityTree
 
 		Object tempVar = this.DoCreateSubNode();
 		Menu en = tempVar instanceof Menu ? (Menu)tempVar : null;
-		en.Name = "增加权限";
-		en.setMenuType(GPM.MenuType.Function); //功能权限.
+		en.setName("增加权限");
+		en.setMenuType(MenuType.Function); //功能权限.
 		en.setUrl(this.getUrl());
 		en.setTag1("Insert");
 		en.Update();
 
 		Object tempVar2 = this.DoCreateSubNode();
 		en = tempVar2 instanceof Menu ? (Menu)tempVar2 : null;
-		en.Name = "修改权限";
-		en.setMenuType(GPM.MenuType.Function); //功能权限.
+		en.setName("修改权限");
+		en.setMenuType(MenuType.Function); //功能权限.
 		en.setUrl(this.getUrl());
 		en.setTag1("Update");
 		en.Update();
 
 		Object tempVar3 = this.DoCreateSubNode();
 		en = tempVar3 instanceof Menu ? (Menu)tempVar3 : null;
-		en.Name = "删除权限";
-		en.setMenuType(GPM.MenuType.Function); //功能权限.
+		en.setName("删除权限");
+		en.setMenuType(MenuType.Function); //功能权限.
 		en.setUrl(this.getUrl());
 		en.setTag1("Delete");
 		en.Update();
@@ -416,12 +428,13 @@ public class Menu extends EntityTree
 	}
 	/** 
 	 路径
+	 * @throws Exception 
 	*/
-	public final String getWebPath()
+	public final String getWebPath() throws Exception
 	{
 		return this.GetValStrByKey(EntityNoMyFileAttr.WebPath);
 	}
-	public final void setWebPath(String value)
+	public final void setWebPath(String value) throws Exception
 	{
 		this.SetValByKey(EntityNoMyFileAttr.WebPath, value);
 	}
@@ -429,9 +442,10 @@ public class Menu extends EntityTree
 	 更新
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setWebPath(this.getWebPath().replace("//", "/"));
 
@@ -442,8 +456,9 @@ public class Menu extends EntityTree
 	 创建下级节点.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoMyCreateSubNode()
+	public final String DoMyCreateSubNode() throws Exception
 	{
 		Entity en = this.DoCreateSubNode();
 		en.SetValByKey(MenuAttr.FK_App, this.GetValByKey(MenuAttr.FK_App));
@@ -455,8 +470,9 @@ public class Menu extends EntityTree
 	 创建同级节点.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoMyCreateSameLevelNode()
+	public final String DoMyCreateSameLevelNode() throws Exception
 	{
 		Entity en = this.DoCreateSameLevelNode();
 		en.SetValByKey(MenuAttr.FK_App, this.GetValByKey(MenuAttr.FK_App));

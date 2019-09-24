@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 import java.io.*;
 
@@ -9,51 +11,51 @@ public class SysDocFile extends EntityMyPK
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 实现基本属性
-	public final String getEnName()
+	public final String getEnName() throws Exception
 	{
 		return this.GetValStringByKey(SysDocFileAttr.EnName);
 	}
-	public final void setEnName(String value)
+	public final void setEnName(String value) throws Exception
 	{
 		this.SetValByKey(SysDocFileAttr.EnName, value);
 	}
-	public final String getRefKey()
+	public final String getRefKey() throws Exception
 	{
 		return this.GetValStringByKey(SysDocFileAttr.RefKey);
 	}
-	public final void setRefKey(String value)
+	public final void setRefKey(String value) throws Exception
 	{
 		this.SetValByKey(SysDocFileAttr.RefKey, value);
 	}
-	public final String getRefVal()
+	public final String getRefVal() throws Exception
 	{
 		return this.GetValStringByKey(SysDocFileAttr.RefVal);
 	}
-	public final void setRefVal(String value)
+	public final void setRefVal(String value) throws Exception
 	{
 		this.SetValByKey(SysDocFileAttr.RefVal, value);
 	}
-	public final String getFileName()
+	public final String getFileName() throws Exception
 	{
 		return this.GetValStringByKey(SysDocFileAttr.FileName);
 	}
-	public final void setFileName(String value)
+	public final void setFileName(String value) throws Exception
 	{
 		this.SetValByKey(SysDocFileAttr.FileName, value);
 	}
-	public final int getFileSize()
+	public final int getFileSize() throws Exception
 	{
 		return this.GetValIntByKey(SysDocFileAttr.FileSize);
 	}
-	public final void setFileSize(int value)
+	public final void setFileSize(int value) throws Exception
 	{
 		this.SetValByKey(SysDocFileAttr.FileSize, value);
 	}
-	public final String getFileType()
+	public final String getFileType() throws Exception
 	{
 		return this.GetValStringByKey(SysDocFileAttr.FileType);
 	}
-	public final void setFileType(String value)
+	public final void setFileType(String value) throws Exception
 	{
 		this.SetValByKey(SysDocFileAttr.FileType, value);
 	}
@@ -62,7 +64,7 @@ public class SysDocFile extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 字段
-	public final String getDocHtml()
+	public final String getDocHtml() throws Exception
 	{
 		return DataType.ParseText2Html(this.getDocText());
 	}
@@ -70,11 +72,11 @@ public class SysDocFile extends EntityMyPK
 	{
 		return "";
 	}
-	public final String getDocText()
+	public final String getDocText() throws Exception
 	{
 		return this.getD1() + this.getD2() + this.getD3() + this.getD4() + this.getD5() + this.getD6() + this.getD7() + this.getD8() + this.getD9() + this.getD10() + this.getD11() + this.getD12() + this.getD13() + this.getD14() + this.getD15() + this.getD16() + this.getD17() + this.getD18() + this.getD19() + this.getD20();
 	}
-	public final void setDocText(String value)
+	public final void setDocText(String value) throws Exception
 	{
 		int len = value.length();
 		this.setFileSize(len);
@@ -100,164 +102,164 @@ public class SysDocFile extends EntityMyPK
 			}
 		}
 	}
-	public final String getD1()
+	public final String getD1() throws Exception
 	{
 		return this.GetValStrByKey("D1");
 	}
-	public final void setD1(String value)
+	public final void setD1(String value) throws Exception
 	{
 		this.SetValByKey("D1", value);
 	}
-	public final String getD2()
+	public final String getD2() throws Exception
 	{
 		return this.GetValStrByKey("D2");
 	}
-	public final void setD2(String value)
+	public final void setD2(String value) throws Exception
 	{
 		this.SetValByKey("D2", value);
 	}
-	public final String getD3()
+	public final String getD3() throws Exception
 	{
 		return this.GetValStrByKey("D3");
 	}
-	public final void setD3(String value)
+	public final void setD3(String value) throws Exception
 	{
 		this.SetValByKey("D3", value);
 	}
-	public final String getD4()
+	public final String getD4() throws Exception
 	{
 		return this.GetValStrByKey("D4");
 	}
-	public final void setD4(String value)
+	public final void setD4(String value) throws Exception
 	{
 		this.SetValByKey("D4", value);
 	}
-	public final String getD5()
+	public final String getD5() throws Exception
 	{
 		return this.GetValStrByKey("D5");
 	}
-	public final void setD5(String value)
+	public final void setD5(String value) throws Exception
 	{
 		this.SetValByKey("D5", value);
 	}
-	public final String getD6()
+	public final String getD6() throws Exception
 	{
 		return this.GetValStrByKey("D6");
 	}
-	public final void setD6(String value)
+	public final void setD6(String value) throws Exception
 	{
 		this.SetValByKey("D6", value);
 	}
-	public final String getD7()
+	public final String getD7() throws Exception
 	{
 		return this.GetValStrByKey("D7");
 	}
-	public final void setD7(String value)
-	{
+	public final void setD7(String value) throws Exception
+	{ 
 		this.SetValByKey("D7", value);
 	}
-	public final String getD8()
+	public final String getD8() throws Exception
 	{
 		return this.GetValStrByKey("D8");
 	}
-	public final void setD8(String value)
+	public final void setD8(String value) throws Exception
 	{
 		this.SetValByKey("D8", value);
 	}
-	public final String getD9()
+	public final String getD9() throws Exception
 	{
 		return this.GetValStrByKey("D9");
 	}
-	public final void setD9(String value)
+	public final void setD9(String value) throws Exception
 	{
 		this.SetValByKey("D9", value);
 	}
 
-	public final String getD10()
+	public final String getD10() throws Exception
 	{
 		return this.GetValStrByKey("D10");
 	}
-	public final void setD10(String value)
+	public final void setD10(String value) throws Exception
 	{
 		this.SetValByKey("D10", value);
 	}
-	public final String getD11()
+	public final String getD11() throws Exception
 	{
 		return this.GetValStrByKey("D11");
 	}
-	public final void setD11(String value)
+	public final void setD11(String value) throws Exception
 	{
 		this.SetValByKey("D11", value);
 	}
-	public final String getD12()
-	{
+	public final String getD12()throws Exception
+	{ 
 		return this.GetValStrByKey("D12");
 	}
-	public final void setD12(String value)
+	public final void setD12(String value) throws Exception
 	{
 		this.SetValByKey("D12", value);
 	}
-	public final String getD13()
+	public final String getD13() throws Exception
 	{
 		return this.GetValStrByKey("D13");
 	}
-	public final void setD13(String value)
+	public final void setD13(String value) throws Exception
 	{
 		this.SetValByKey("D13", value);
 	}
-	public final String getD14()
+	public final String getD14() throws Exception
 	{
 		return this.GetValStrByKey("D14");
 	}
-	public final void setD14(String value)
+	public final void setD14(String value) throws Exception
 	{
 		this.SetValByKey("D14", value);
 	}
-	public final String getD15()
+	public final String getD15() throws Exception
 	{
 		return this.GetValStrByKey("D15");
 	}
-	public final void setD15(String value)
+	public final void setD15(String value) throws Exception
 	{
 		this.SetValByKey("D15", value);
 	}
-	public final String getD16()
+	public final String getD16() throws Exception
 	{
 		return this.GetValStrByKey("D16");
 	}
-	public final void setD16(String value)
+	public final void setD16(String value) throws Exception
 	{
 		this.SetValByKey("D16", value);
-	}
-	public final String getD17()
+	} 
+	public final String getD17() throws Exception
 	{
 		return this.GetValStrByKey("D17");
 	}
-	public final void setD17(String value)
+	public final void setD17(String value) throws Exception
 	{
 		this.SetValByKey("D17", value);
 	}
-	public final String getD18()
+	public final String getD18() throws Exception
 	{
 		return this.GetValStrByKey("D18");
 	}
-	public final void setD18(String value)
+	public final void setD18(String value) throws Exception
 	{
 		this.SetValByKey("D18", value);
 	}
-	public final String getD19()
+	public final String getD19() throws Exception
 	{
 		return this.GetValStrByKey("D19");
 	}
-	public final void setD19(String value)
+	public final void setD19(String value) throws Exception
 	{
 		this.SetValByKey("D19", value);
 	}
-	public final String getD20()
+	public final String getD20() throws Exception
 	{
 		return this.GetValStrByKey("D20");
 	}
-	public final void setD20(String value)
+	public final void setD20(String value) throws Exception
 	{
 		this.SetValByKey("D20", value);
 	}
@@ -269,7 +271,7 @@ public class SysDocFile extends EntityMyPK
 	public SysDocFile()
 	{
 	}
-	public SysDocFile(String pk)
+	public SysDocFile(String pk) throws Exception
 	{
 		super(pk);
 	}
@@ -280,7 +282,7 @@ public class SysDocFile extends EntityMyPK
 	 @param key
 	 @param val
 	*/
-	public SysDocFile(String enName, String key, String val)
+	public SysDocFile(String enName, String key, String val) throws Exception
 	{
 		this.setMyPK(enName + "@" + key + "@" + val);
 	}
@@ -375,11 +377,6 @@ public class SysDocFile extends EntityMyPK
 		catch (RuntimeException ex)
 		{
 			throw ex;
-			String filePath = BP.Sys.SystemConfig.getPathOfFDB() + enName;
-			if ((new File(filePath)).isDirectory() == false)
-			{
-				(new File(filePath)).mkdirs();
-			}
 		}
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -387,21 +384,21 @@ public class SysDocFile extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 共用方法
-	public static String GetValHtmlV1(String enName, String pkVal)
+	public static String GetValHtmlV1(String enName, String pkVal) throws Exception
 	{
 		SysDocFile sdf = new SysDocFile();
 		sdf.setMyPK(enName + "@Doc@" + pkVal);
 		sdf.RetrieveFromDBSources();
 		return sdf.getDocHtml();
 	}
-	public static String GetValTextV1(String enName, String pkVal)
+	public static String GetValTextV1(String enName, String pkVal) throws Exception
 	{
 		SysDocFile sdf = new SysDocFile();
 		sdf.setMyPK(enName + "@Doc@" + pkVal);
 		sdf.RetrieveFromDBSources();
 		return sdf.getDocText();
 	}
-	public static void SetValV1(String enName, String pkVal, String val)
+	public static void SetValV1(String enName, String pkVal, String val) throws Exception
 	{
 		SysDocFile sdf = new SysDocFile();
 		sdf.setMyPK(enName + "@Doc@" + pkVal);

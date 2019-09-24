@@ -3,6 +3,8 @@ package BP.Sys;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
+import BP.Tools.DateUtils;
+import BP.Web.WebUser;
 
 import java.util.*;
 import java.io.*;
@@ -17,12 +19,13 @@ public class MapData extends EntityNoName
 		///#region entity 相关属性(参数属性)
 	/** 
 	 属性ens
+	 * @throws Exception 
 	*/
-	public final String getEnsName()
+	public final String getEnsName() throws Exception
 	{
 		return this.GetValStringByKey(MapDataAttr.EnsName);
 	}
-	public final void setEnsName(String value)
+	public final void setEnsName(String value) throws Exception
 	{
 		this.SetPara(MapDataAttr.EnsName, value);
 	}
@@ -34,174 +37,189 @@ public class MapData extends EntityNoName
 		///#region weboffice文档属性(参数属性)
 	/** 
 	 是否启用锁定行
+	 * @throws Exception 
 	*/
-	public final boolean getIsRowLock()
+	public final boolean getIsRowLock() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsRowLock, false);
 	}
-	public final void setIsRowLock(boolean value)
+	public final void setIsRowLock(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsRowLock, value);
 	}
 
 	/** 
 	 是否启用打印
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnablePrint()
+	public final boolean getIsWoEnablePrint() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnablePrint);
 	}
-	public final void setIsWoEnablePrint(boolean value)
+	public final void setIsWoEnablePrint(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnablePrint, value);
 	}
 	/** 
 	 是否启用只读
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableReadonly()
+	public final boolean getIsWoEnableReadonly() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableReadonly);
 	}
-	public final void setIsWoEnableReadonly(boolean value)
+	public final void setIsWoEnableReadonly(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableReadonly, value);
 	}
 	/** 
 	 是否启用修订
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableRevise()
+	public final boolean getIsWoEnableRevise() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableRevise);
 	}
-	public final void setIsWoEnableRevise(boolean value)
+	public final void setIsWoEnableRevise(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableRevise, value);
 	}
 	/** 
 	 是否启用保存
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableSave()
+	public final boolean getIsWoEnableSave() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableSave);
 	}
-	public final void setIsWoEnableSave(boolean value)
+	public final void setIsWoEnableSave(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableSave, value);
 	}
 	/** 
 	 是否查看用户留痕
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableViewKeepMark()
+	public final boolean getIsWoEnableViewKeepMark() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableViewKeepMark);
 	}
-	public final void setIsWoEnableViewKeepMark(boolean value)
+	public final void setIsWoEnableViewKeepMark(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableViewKeepMark, value);
 	}
 	/** 
 	 是否启用weboffice
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableWF()
+	public final boolean getIsWoEnableWF() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableWF);
 	}
-	public final void setIsWoEnableWF(boolean value)
+	public final void setIsWoEnableWF(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableWF, value);
 	}
 
 	/** 
 	 是否启用套红
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableOver()
+	public final boolean getIsWoEnableOver() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableOver);
 	}
-	public final void setIsWoEnableOver(boolean value)
+	public final void setIsWoEnableOver(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableOver, value);
 	}
 
 	/** 
 	 是否启用签章
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableSeal()
+	public final boolean getIsWoEnableSeal() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableSeal);
 	}
-	public final void setIsWoEnableSeal(boolean value)
+	public final void setIsWoEnableSeal(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableSeal, value);
 	}
 
 	/** 
 	 是否启用公文模板
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableTemplete()
+	public final boolean getIsWoEnableTemplete() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableTemplete);
 	}
-	public final void setIsWoEnableTemplete(boolean value)
+	public final void setIsWoEnableTemplete(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableTemplete, value);
 	}
 
 	/** 
 	 是否记录节点信息
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableCheck()
+	public final boolean getIsWoEnableCheck() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableCheck);
 	}
-	public final void setIsWoEnableCheck(boolean value)
+	public final void setIsWoEnableCheck(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableCheck, value);
 	}
 
 	/** 
 	 是否插入流程图
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableInsertFlow()
+	public final boolean getIsWoEnableInsertFlow() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableInsertFlow);
 	}
-	public final void setIsWoEnableInsertFlow(boolean value)
+	public final void setIsWoEnableInsertFlow(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableInsertFlow, value);
 	}
 
 	/** 
 	 是否插入风险点
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableInsertFengXian()
+	public final boolean getIsWoEnableInsertFengXian() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableInsertFengXian);
 	}
-	public final void setIsWoEnableInsertFengXian(boolean value)
+	public final void setIsWoEnableInsertFengXian(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableInsertFengXian, value);
 	}
 
 	/** 
 	 是否启用留痕模式
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableMarks()
+	public final boolean getIsWoEnableMarks() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableMarks);
 	}
-	public final void setIsWoEnableMarks(boolean value)
+	public final void setIsWoEnableMarks(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableMarks, value);
 	}
 	/** 
 	 是否插入风险点
+	 * @throws Exception 
 	*/
-	public final boolean getIsWoEnableDown()
+	public final boolean getIsWoEnableDown() throws Exception
 	{
 		return this.GetParaBoolen(FrmAttachmentAttr.IsWoEnableDown);
 	}
-	public final void setIsWoEnableDown(boolean value)
+	public final void setIsWoEnableDown(boolean value) throws Exception
 	{
 		this.SetPara(FrmAttachmentAttr.IsWoEnableDown, value);
 	}
@@ -210,35 +228,35 @@ public class MapData extends EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 自动计算属性.
-	public final float getMaxLeft()
+	public final float getMaxLeft() throws Exception
 	{
 		return this.GetParaFloat(MapDataAttr.MaxLeft);
 	}
-	public final void setMaxLeft(float value)
+	public final void setMaxLeft(float value) throws Exception
 	{
 		this.SetPara(MapDataAttr.MaxLeft, value);
 	}
-	public final float getMaxRight()
+	public final float getMaxRight() throws Exception
 	{
 		return this.GetParaFloat(MapDataAttr.MaxRight);
 	}
-	public final void setMaxRight(float value)
+	public final void setMaxRight(float value) throws Exception
 	{
 		this.SetPara(MapDataAttr.MaxRight, value);
 	}
-	public final float getMaxTop()
+	public final float getMaxTop() throws Exception
 	{
 		return this.GetParaFloat(MapDataAttr.MaxTop);
 	}
-	public final void setMaxTop(float value)
+	public final void setMaxTop(float value) throws Exception
 	{
 		this.SetPara(MapDataAttr.MaxTop, value);
 	}
-	public final float getMaxEnd()
+	public final float getMaxEnd() throws Exception
 	{
 		return this.GetParaFloat(MapDataAttr.MaxEnd);
 	}
-	public final void setMaxEnd(float value)
+	public final void setMaxEnd(float value) throws Exception
 	{
 		this.SetPara(MapDataAttr.MaxEnd, value);
 	}
@@ -249,45 +267,49 @@ public class MapData extends EntityNoName
 		///#region 报表属性(参数方式存储).
 	/** 
 	 是否关键字查询
+	 * @throws Exception 
 	*/
-	public final boolean getRptIsSearchKey()
+	public final boolean getRptIsSearchKey() throws Exception
 	{
 		return this.GetParaBoolen(MapDataAttr.RptIsSearchKey, true);
 	}
-	public final void setRptIsSearchKey(boolean value)
+	public final void setRptIsSearchKey(boolean value) throws Exception
 	{
 		this.SetPara(MapDataAttr.RptIsSearchKey, value);
 	}
 	/** 
 	 时间段查询方式
+	 * @throws Exception 
 	*/
-	public final DTSearchWay getRptDTSearchWay()
+	public final DTSearchWay getRptDTSearchWay() throws Exception
 	{
 		return DTSearchWay.forValue(this.GetParaInt(MapDataAttr.RptDTSearchWay));
 	}
-	public final void setRptDTSearchWay(DTSearchWay value)
+	public final void setRptDTSearchWay(DTSearchWay value) throws Exception
 	{
 		this.SetPara(MapDataAttr.RptDTSearchWay, value.getValue());
 	}
 	/** 
 	 时间字段
+	 * @throws Exception 
 	*/
-	public final String getRptDTSearchKey()
+	public final String getRptDTSearchKey() throws Exception
 	{
 		return this.GetParaString(MapDataAttr.RptDTSearchKey);
 	}
-	public final void setRptDTSearchKey(String value)
+	public final void setRptDTSearchKey(String value) throws Exception
 	{
 		this.SetPara(MapDataAttr.RptDTSearchKey, value);
 	}
 	/** 
 	 查询外键枚举字段
+	 * @throws Exception 
 	*/
-	public final String getRptSearchKeys()
+	public final String getRptSearchKeys() throws Exception
 	{
 		return this.GetParaString(MapDataAttr.RptSearchKeys, "*");
 	}
-	public final void setRptSearchKeys(String value)
+	public final void setRptSearchKeys(String value) throws Exception
 	{
 		this.SetPara(MapDataAttr.RptSearchKeys, value);
 	}
@@ -298,30 +320,33 @@ public class MapData extends EntityNoName
 		///#region 外键属性
 	/** 
 	版本号.
+	 * @throws Exception 
 	*/
-	public final String getVer()
+	public final String getVer() throws Exception
 	{
 		return this.GetValStringByKey(MapDataAttr.Ver);
 	}
-	public final void setVer(String value)
+	public final void setVer(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.Ver, value);
 	}
 	/** 
 	 顺序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(MapDataAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.Idx, value);
 	}
 	/** 
 	 扩展控件
+	 * @throws Exception 
 	*/
-	public final FrmEles getHisFrmEles()
+	public final FrmEles getHisFrmEles() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
 		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles)tempVar : null;
@@ -334,8 +359,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 框架
+	 * @throws Exception 
 	*/
-	public final MapFrames getMapFrames()
+	public final MapFrames getMapFrames() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
 		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames)tempVar : null;
@@ -348,8 +374,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 分组字段
+	 * @throws Exception 
 	*/
-	public final GroupFields getGroupFields()
+	public final GroupFields getGroupFields() throws Exception
 	{
 		Object tempVar = this.GetRefObject("GroupFields");
 		GroupFields obj = tempVar instanceof GroupFields ? (GroupFields)tempVar : null;
@@ -362,8 +389,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 逻辑扩展
+	 * @throws Exception 
 	*/
-	public final MapExts getMapExts()
+	public final MapExts getMapExts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapExts");
 		MapExts obj = tempVar instanceof MapExts ? (MapExts)tempVar : null;
@@ -376,8 +404,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 事件
+	 * @throws Exception 
 	*/
-	public final FrmEvents getFrmEvents()
+	public final FrmEvents getFrmEvents() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
 		FrmEvents obj = tempVar instanceof FrmEvents ? (FrmEvents)tempVar : null;
@@ -390,8 +419,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 从表原始属性的获取
+	 * @throws Exception 
 	*/
-	public final MapDtls getOrigMapDtls()
+	public final MapDtls getOrigMapDtls() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
 		MapDtls obj = tempVar instanceof MapDtls ? (MapDtls)tempVar : null;
@@ -405,8 +435,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 查询给MapData下的所有从表数据
+	 * @throws Exception 
 	*/
-	public final MapDtls getMapDtls()
+	public final MapDtls getMapDtls() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
 		MapDtls obj = tempVar instanceof MapDtls ? (MapDtls)tempVar : null;
@@ -419,8 +450,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 枚举值
+	 * @throws Exception 
 	*/
-	public final SysEnums getSysEnums()
+	public final SysEnums getSysEnums() throws Exception
 	{
 		Object tempVar = this.GetRefObject("SysEnums");
 		SysEnums obj = tempVar instanceof SysEnums ? (SysEnums)tempVar : null;
@@ -457,8 +489,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 报表
+	 * @throws Exception 
 	*/
-	public final FrmRpts getFrmRpts()
+	public final FrmRpts getFrmRpts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRpts");
 		FrmRpts obj = tempVar instanceof FrmRpts ? (FrmRpts)tempVar : null;
@@ -471,8 +504,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 超连接
+	 * @throws Exception 
 	*/
-	public final FrmLinks getFrmLinks()
+	public final FrmLinks getFrmLinks() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks)tempVar : null;
@@ -485,8 +519,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 按钮
+	 * @throws Exception 
 	*/
-	public final FrmBtns getFrmBtns()
+	public final FrmBtns getFrmBtns() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmBtns");
 		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns)tempVar : null;
@@ -500,8 +535,9 @@ public class MapData extends EntityNoName
 
 	/** 
 	 元素
+	 * @throws Exception 
 	*/
-	public final FrmEles getFrmEles()
+	public final FrmEles getFrmEles() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
 		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles)tempVar : null;
@@ -514,8 +550,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 线
+	 * @throws Exception 
 	*/
-	public final FrmLines getFrmLines()
+	public final FrmLines getFrmLines() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
 		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines)tempVar : null;
@@ -528,8 +565,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	*/
-	public final FrmLabs getFrmLabs()
+	public final FrmLabs getFrmLabs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
@@ -542,8 +580,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 图片
+	 * @throws Exception 
 	*/
-	public final FrmImgs getFrmImgs()
+	public final FrmImgs getFrmImgs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgs");
 		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs)tempVar : null;
@@ -557,7 +596,7 @@ public class MapData extends EntityNoName
 	/** 
 	 附件
 	*/
-	public final FrmAttachments getFrmAttachments()
+	public final FrmAttachments getFrmAttachments() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
 		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments)tempVar : null;
@@ -571,7 +610,7 @@ public class MapData extends EntityNoName
 	/** 
 	 图片附件
 	*/
-	public final FrmImgAths getFrmImgAths()
+	public final FrmImgAths getFrmImgAths() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
 		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths)tempVar : null;
@@ -586,7 +625,7 @@ public class MapData extends EntityNoName
 	// <summary>
 	/** 图片附件记录
 	*/
-	public final FrmImgAthDBs getFrmImgAthDB()
+	public final FrmImgAthDBs getFrmImgAthDB() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAthDBs");
 		FrmImgAthDBs obj = tempVar instanceof FrmImgAthDBs ? (FrmImgAthDBs)tempVar : null;
@@ -600,7 +639,7 @@ public class MapData extends EntityNoName
 	/** 
 	 单选按钮
 	*/
-	public final FrmRBs getFrmRBs()
+	public final FrmRBs getFrmRBs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
 		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs)tempVar : null;
@@ -614,7 +653,7 @@ public class MapData extends EntityNoName
 	/** 
 	 属性
 	*/
-	public final MapAttrs getMapAttrs()
+	public final MapAttrs getMapAttrs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapAttrs");
 		MapAttrs obj = tempVar instanceof MapAttrs ? (MapAttrs)tempVar : null;
@@ -628,7 +667,7 @@ public class MapData extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final void CleanObject()
+	public final void CleanObject() throws Exception
 	{
 		this.getRow().SetValByKey("FrmEles", null);
 		this.getRow().SetValByKey("MapFrames", null);
@@ -656,7 +695,7 @@ public class MapData extends EntityNoName
 	/** 
 	 清空缓存
 	*/
-	public final void ClearCash()
+	public final void ClearCash() throws Exception
 	{
 		BP.DA.CashFrmTemplate.Remove(this.getNo());
 		CleanObject();
@@ -667,16 +706,16 @@ public class MapData extends EntityNoName
 	/** 
 	 事件实体
 	*/
-	public final String getFormEventEntity()
+	public final String getFormEventEntity() throws Exception
 	{
 		return this.GetValStringByKey(MapDataAttr.FormEventEntity);
 	}
-	public final void setFormEventEntity(String value)
+	public final void setFormEventEntity(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FormEventEntity, value);
 	}
 
-	public static boolean getIsEditDtlModel()
+	public static boolean getIsEditDtlModel() throws Exception
 	{
 		String s = WebUser.GetSessionByKey("IsEditDtlModel", "0");
 		if (s.equals("0"))
@@ -721,8 +760,9 @@ public class MapData extends EntityNoName
 	 生成Frm
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerHisFrm()
+	public final String GenerHisFrm() throws Exception
 	{
 		String body = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\CCFormDesigner\\EleTemplate\\Body.txt");
 
@@ -733,9 +773,9 @@ public class MapData extends EntityNoName
 		String labTemplate = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\CCFormDesigner\\EleTemplate\\Label.txt");
 		String myLabs = "";
 		FrmLabs labs = new FrmLabs(this.getNo());
-		for (FrmLab lab : labs)
+		for (FrmLab lab : labs.ToJavaList())
 		{
-			Object tempVar = labTemplate.Clone();
+			Object tempVar = labTemplate;
 			String labTxt = tempVar instanceof String ? (String)tempVar : null;
 
 			labTxt = labTxt.replace("@MyPK", lab.getMyPK());
@@ -767,8 +807,9 @@ public class MapData extends EntityNoName
 		///#region 属性
 	/** 
 	 物理表
+	 * @throws Exception 
 	*/
-	public final String getPTable()
+	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
 		if (s.equals("") || s == null)
@@ -777,30 +818,32 @@ public class MapData extends EntityNoName
 		}
 		return s;
 	}
-	public final void setPTable(String value)
+	public final void setPTable(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 表存储模式0=自定义表,1,指定的表,2=指定的表不能修改表结构.
+	 * @throws Exception 
 	 @周朋
 	*/
-	public final int getPTableModel()
+	public final int getPTableModel() throws Exception
 	{
 		return this.GetValIntByKey(MapDataAttr.PTableModel);
 	}
-	public final void setPTableModel(int value)
+	public final void setPTableModel(int value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.PTableModel, value);
 	}
 	/** 
 	 URL
+	 * @throws Exception 
 	*/
-	public final String getUrl()
+	public final String getUrl() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.Url);
 	}
-	public final void setUrl(String value)
+	public final void setUrl(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.Url, value);
 	}
@@ -809,26 +852,27 @@ public class MapData extends EntityNoName
 		return DBUrlType.AppCenterDSN;
 			// return (DBUrlType)this.GetValIntByKey(MapDataAttr.DBURL);
 	}
-	public final int getHisFrmTypeInt()
+	public final int getHisFrmTypeInt() throws Exception
 	{
 		return this.GetValIntByKey(MapDataAttr.FrmType);
 	}
-	public final void setHisFrmTypeInt(int value)
+	public final void setHisFrmTypeInt(int value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FrmType, value);
 	}
-	public final FrmType getHisFrmType()
+	public final FrmType getHisFrmType() throws Exception
 	{
 		return FrmType.forValue(this.GetValIntByKey(MapDataAttr.FrmType));
 	}
-	public final void setHisFrmType(FrmType value)
+	public final void setHisFrmType(FrmType value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单类型名称
+	 * @throws Exception 
 	*/
-	public final String getHisFrmTypeText()
+	public final String getHisFrmTypeText() throws Exception
 	{
 		return this.getHisFrmType().toString();
 
@@ -837,46 +881,49 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 备注
+	 * @throws Exception 
 	*/
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.Note, value);
 	}
 	/** 
 	 是否有CA.
+	 * @throws Exception 
 	*/
-	public final boolean getIsHaveCA()
+	public final boolean getIsHaveCA() throws Exception
 	{
 		return this.GetParaBoolen("IsHaveCA", false);
 
 	}
-	public final void setIsHaveCA(boolean value)
+	public final void setIsHaveCA(boolean value) throws Exception
 	{
 		this.SetPara("IsHaveCA", value);
 	}
 	/** 
 	 类别，可以为空.
+	 * @throws Exception 
 	*/
-	public final String getFK_FrmSort()
+	public final String getFK_FrmSort() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.FK_FrmSort);
 	}
-	public final void setFK_FrmSort(String value)
+	public final void setFK_FrmSort(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FK_FrmSort, value);
 	}
 	/** 
 	 数据源
 	*/
-	public final String getDBSrc()
+	public final String getDBSrc() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.DBSrc);
 	}
-	public final void setDBSrc(String value)
+	public final void setDBSrc(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.DBSrc, value);
 	}
@@ -884,36 +931,37 @@ public class MapData extends EntityNoName
 	/** 
 	 类别，可以为空.
 	*/
-	public final String getFK_FormTree()
+	public final String getFK_FormTree() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.FK_FormTree);
 	}
-	public final void setFK_FormTree(String value)
+	public final void setFK_FormTree(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FK_FormTree, value);
 	}
 	/** 
 	 类别名称
+	 * @throws Exception 
 	*/
-	public final String getFK_FormTreeText()
+	public final String getFK_FormTreeText() throws Exception
 	{
 		return DBAccess.RunSQLReturnStringIsNull("SELECT Name FROM Sys_FormTree WHERE No='" + this.getFK_FormTree() + "'", "目录错误");
 	}
 	/** 
 	 从表集合.
 	*/
-	public final String getDtls()
+	public final String getDtls() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.Dtls);
 	}
-	public final void setDtls(String value)
+	public final void setDtls(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.Dtls, value);
 	}
 	/** 
 	 主键
 	*/
-	public final String getEnPK()
+	public final String getEnPK() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDataAttr.EnPK);
 		if (DataType.IsNullOrEmpty(s))
@@ -922,12 +970,12 @@ public class MapData extends EntityNoName
 		}
 		return s;
 	}
-	public final void setEnPK(String value)
+	public final void setEnPK(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.EnPK, value);
 	}
 	private Entities _HisEns = null;
-	public final Entities getHisEns()
+	public final Entities getHisEns() throws Exception
 	{
 		if (_HisEns == null)
 		{
@@ -935,67 +983,67 @@ public class MapData extends EntityNoName
 		}
 		return _HisEns;
 	}
-	public final Entity getHisEn()
+	public final Entity getHisEn() throws Exception
 	{
 		return this.getHisEns().getNewEntity();
 	}
-	public final float getFrmW()
+	public final float getFrmW() throws Exception
 	{
 		return this.GetValFloatByKey(MapDataAttr.FrmW);
 	}
-	public final void setFrmW(float value)
+	public final void setFrmW(float value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FrmW, value);
 	}
-	public final float getFrmH()
+	public final float getFrmH() throws Exception
 	{
 		return this.GetValFloatByKey(MapDataAttr.FrmH);
 	}
-	public final void setFrmH(float value)
+	public final void setFrmH(float value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FrmH, value);
 	}
 	/** 
 	 应用类型.  0独立表单.1节点表单
 	*/
-	public final String getAppType()
+	public final String getAppType() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.AppType);
 	}
-	public final void setAppType(String value)
+	public final void setAppType(String value)throws Exception
 	{
 		this.SetValByKey(MapDataAttr.AppType, value);
 	}
 	/** 
 	 表单body属性.
 	*/
-	public final String getBodyAttr()
+	public final String getBodyAttr() throws Exception
 	{
 		String str = this.GetValStrByKey(MapDataAttr.BodyAttr);
 		str = str.replace("~", "'");
 		return str;
 	}
-	public final void setBodyAttr(String value)
+	public final void setBodyAttr(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.BodyAttr, value);
 	}
 	/** 
 	 流程控件s.
 	*/
-	public final String getFlowCtrls()
+	public final String getFlowCtrls() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.FlowCtrls);
 	}
-	public final void setFlowCtrls(String value)
+	public final void setFlowCtrls(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.FlowCtrls, value);
 	}
 
-	public final int getTableCol()
+	public final int getTableCol() throws Exception
 	{
 		return this.GetValIntByKey(MapDataAttr.TableCol);
 	}
-	public final void setTableCol(int value)
+	public final void setTableCol(int value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.TableCol, value);
 	}
@@ -1005,7 +1053,7 @@ public class MapData extends EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
-	public final Map GenerHisMap()
+	public final Map GenerHisMap() throws Exception
 	{
 		MapAttrs mapAttrs = this.getMapAttrs();
 		if (mapAttrs.size() == 0)
@@ -1058,7 +1106,7 @@ public class MapData extends EntityNoName
 		return map;
 	}
 	private GEEntity _HisEn = null;
-	public final GEEntity getHisGEEn()
+	public final GEEntity getHisGEEn() throws Exception
 	{
 		if (this._HisEn == null)
 		{
@@ -1081,7 +1129,7 @@ public class MapData extends EntityNoName
 		DataTable dt = ds.Tables[this.getNo()];
 
 		//装载数据.
-		en.getRow().LoadDataTable(dt, dt.Rows[0]);
+		en.getRow().LoadDataTable(dt, dt.Rows.get(0));
 
 		// dtls.
 		MapDtls dtls = this.getMapDtls();
@@ -1109,8 +1157,9 @@ public class MapData extends EntityNoName
 	 
 	 @param no
 	 @return 
+	 * @throws Exception 
 	*/
-	public static Map GenerHisMap(String no)
+	public static Map GenerHisMap(String no) throws Exception
 	{
 		if (SystemConfig.getIsDebug())
 		{
@@ -1143,8 +1192,9 @@ public class MapData extends EntityNoName
 	 映射基础
 	 
 	 @param no 映射编号
+	 * @throws Exception 
 	*/
-	public MapData(String no)
+	public MapData(String no) throws Exception
 	{
 		super(no);
 	}
@@ -1234,21 +1284,23 @@ public class MapData extends EntityNoName
 
 	/** 
 	 上移
+	 * @throws Exception 
 	*/
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(MapDataAttr.FK_FormTree, this.getFK_FormTree(), MapDataAttr.Idx);
 	}
 	/** 
 	 下移
+	 * @throws Exception 
 	*/
-	public final void DoOrderDown()
+	public final void DoOrderDown() throws Exception
 	{
 		this.DoOrderDown(MapDataAttr.FK_FormTree, this.getFK_FormTree(), MapDataAttr.Idx);
 	}
 
 	//检查表单
-	public final void CheckPTableSaveModel(String filed)
+	public final void CheckPTableSaveModel(String filed) throws Exception
 	{
 		if (this.getPTableModel() == 2)
 		{
@@ -1327,7 +1379,7 @@ public class MapData extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 常用方法.
 	private FormEventBase _HisFEB = null;
-	public final FormEventBase getHisFEB()
+	public final FormEventBase getHisFEB() throws Exception
 	{
 		if (this.getFormEventEntity().equals(""))
 		{
@@ -1348,16 +1400,17 @@ public class MapData extends EntityNoName
 	 @param en
 	 @param atParas
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public final String DoEvent(String eventType, Entity en)
+	public final String DoEvent(String eventType, Entity en) throws Exception
 	{
 		return DoEvent(eventType, en, null);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public string DoEvent(string eventType, Entity en, string atParas = null)
-	public final String DoEvent(String eventType, Entity en, String atParas)
+	public final String DoEvent(String eventType, Entity en, String atParas) throws Exception
 	{
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1410,8 +1463,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 升级逻辑.
+	 * @throws Exception 
 	*/
-	public final void Upgrade()
+	public final void Upgrade() throws Exception
 	{
 		String sql = "";
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1504,17 +1558,17 @@ public class MapData extends EntityNoName
 	public static MapData ImpMapData(DataSet ds)
 	{
 		String errMsg = "";
-		if (ds.Tables.Contains("WF_Flow") == true)
+		if (ds.Tables.contains("WF_Flow") == true)
 		{
 			errMsg += "@此模板文件为流程模板。";
 		}
 
-		if (ds.Tables.Contains("Sys_MapAttr") == false)
+		if (ds.Tables.contains("Sys_MapAttr") == false)
 		{
 			errMsg += "@缺少表:Sys_MapAttr";
 		}
 
-		if (ds.Tables.Contains("Sys_MapData") == false)
+		if (ds.Tables.contains("Sys_MapData") == false)
 		{
 			errMsg += "@缺少表:Sys_MapData";
 		}
@@ -1540,12 +1594,13 @@ public class MapData extends EntityNoName
 	 设置表单为只读属性
 	 
 	 @param fk_mapdata 表单ID
+	 * @throws Exception 
 	*/
-	public static void SetFrmIsReadonly(String fk_mapdata)
+	public static void SetFrmIsReadonly(String fk_mapdata) throws Exception
 	{
 		//把主表字段设置为只读.
 		MapAttrs attrs = new MapAttrs(fk_mapdata);
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
 			if (attr.getDefValReal().contains("@"))
 			{
@@ -1574,7 +1629,7 @@ public class MapData extends EntityNoName
 			dtl.Update();
 
 			attrs = new MapAttrs(dtl.getNo());
-			for (MapAttr attr : attrs)
+			for (MapAttr attr : attrs.ToJavaList())
 			{
 				if (attr.getDefValReal().contains("@"))
 				{
@@ -1595,7 +1650,7 @@ public class MapData extends EntityNoName
 
 		//把附件设置为只读.
 		FrmAttachments aths = new FrmAttachments(fk_mapdata);
-		for (FrmAttachment item : aths)
+		for (FrmAttachment item : aths.ToJavaList())
 		{
 			item.setIsUpload(false);
 			item.setHisDeleteWay(AthDeleteWay.DelSelf);
@@ -1628,17 +1683,17 @@ public class MapData extends EntityNoName
 		//if (ds.Tables[0].TableName != "Sys_MapData")
 		//    errMsg += "@非表单模板。";
 
-		if (ds.Tables.Contains("WF_Flow") == true)
+		if (ds.Tables.contains("WF_Flow") == true)
 		{
 			errMsg += "@此模板文件为流程模板。";
 		}
 
-		if (ds.Tables.Contains("Sys_MapAttr") == false)
+		if (ds.Tables.contains("Sys_MapAttr") == false)
 		{
 			errMsg += "@缺少表:Sys_MapAttr";
 		}
 
-		if (ds.Tables.Contains("Sys_MapData") == false)
+		if (ds.Tables.contains("Sys_MapData") == false)
 		{
 			errMsg += "@缺少表:Sys_MapData";
 		}
@@ -1692,10 +1747,10 @@ public class MapData extends EntityNoName
 
 			if (DataType.IsNullOrEmpty(oldMapID) == true)
 			{
-				oldMapID = dtMap.Rows[0]["No"].toString();
+				oldMapID = dtMap.Rows.get(0).getValue("No").toString();
 			}
 		}
-		String timeKey = LocalDateTime.now().toString("MMddHHmmss");
+		String timeKey = DateUtils.format(new Date(),"MMddHHmmss");
 
 
 
@@ -2076,7 +2131,7 @@ public class MapData extends EntityNoName
 								throw new RuntimeException("val:" + val.toString() + "oldMapID:" + oldMapID + "fk_mapdata:" + fk_mapdata);
 							}
 						}
-						int beforeID = en.getOID();
+						int beforeID = (int) en.getOID();
 						en.setOID(0);
 						en.DirectInsert();
 						endDoSQL += "@UPDATE Sys_MapAttr SET GroupID=" + en.getOID() + " WHERE FK_MapData='" + fk_mapdata + "' AND GroupID='" + beforeID + "'";
@@ -2085,7 +2140,7 @@ public class MapData extends EntityNoName
 				case "Sys_Enum":
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.SysEnum se = new Sys.SysEnum();
+						SysEnum se = new SysEnum();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -2102,7 +2157,7 @@ public class MapData extends EntityNoName
 				case "Sys_EnumMain":
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.SysEnumMain sem = new Sys.SysEnumMain();
+						SysEnumMain sem = new SysEnumMain();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -2150,8 +2205,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 修复map.
+	 * @throws Exception 
 	*/
-	public final void RepairMap()
+	public final void RepairMap() throws Exception
 	{
 		GroupFields gfs = new GroupFields(this.getNo());
 		if (gfs.size() == 0)
@@ -2247,7 +2303,7 @@ public class MapData extends EntityNoName
 		//检查特殊UIBindkey丢失的问题.
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getNo());
-		for (MapAttr item : attrs)
+		for (MapAttr item : attrs.ToJavaList())
 		{
 			if (item.getLGType() == FieldTypeS.Enum || item.getLGType() == FieldTypeS.FK)
 			{
@@ -2262,7 +2318,7 @@ public class MapData extends EntityNoName
 
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getHisFrmType() == FrmType.Url || this.getHisFrmType() == FrmType.Entity)
 		{
@@ -2276,8 +2332,9 @@ public class MapData extends EntityNoName
 	}
 	/** 
 	 设置Para 参数.
+	 * @throws Exception 
 	*/
-	public final void ResetMaxMinXY()
+	public final void ResetMaxMinXY() throws Exception
 	{
 		if (this.getHisFrmType() != FrmType.FreeFrm)
 		{
@@ -2374,8 +2431,9 @@ public class MapData extends EntityNoName
 	 @param md
 	 @param scrWidth
 	 @return 
+	 * @throws Exception 
 	*/
-	public static float GenerSpanWeiYi(MapData md, float scrWidth)
+	public static float GenerSpanWeiYi(MapData md, float scrWidth) throws Exception
 	{
 		if (scrWidth == 0)
 		{
@@ -2416,8 +2474,9 @@ public class MapData extends EntityNoName
 	 @param md
 	 @param scrWidth
 	 @return 
+	 * @throws Exception 
 	*/
-	public static float GenerSpanWidth(MapData md, float scrWidth)
+	public static float GenerSpanWidth(MapData md, float scrWidth) throws Exception
 	{
 		if (scrWidth == 0)
 		{
@@ -2444,8 +2503,9 @@ public class MapData extends EntityNoName
 	 @param md
 	 @param scrWidth
 	 @return 
+	 * @throws Exception 
 	*/
-	public static float GenerSpanHeight(MapData md, float scrHeight)
+	public static float GenerSpanHeight(MapData md, float scrHeight) throws Exception
 	{
 		if (scrHeight == 0)
 		{
@@ -2463,7 +2523,7 @@ public class MapData extends EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getHisFrmType() == FrmType.Url || this.getHisFrmType() == FrmType.Entity)
 		{
@@ -2479,7 +2539,7 @@ public class MapData extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region  检查是否有ca认证设置.
 		boolean isHaveCA = false;
-		for (MapAttr item : this.getMapAttrs())
+		for (MapAttr item : this.getMapAttrs().ToJavaList())
 		{
 			if (item.getSignType() == SignType.CA)
 			{
@@ -2520,7 +2580,7 @@ public class MapData extends EntityNoName
 		BP.DA.DBAccess.RunSQL(sql);
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		String sql = "";
 		sql = "SELECT * FROM Sys_MapDtl WHERE FK_MapData ='" + this.getNo() + "'";
@@ -2605,7 +2665,7 @@ public class MapData extends EntityNoName
 			///#region 删除注册到的外检表.
 		SFTables sfs = new SFTables();
 		sfs.Retrieve(SFTableAttr.SrcTable, this.getPTable());
-		for (SFTable item : sfs)
+		for (SFTable item : sfs.ToJavaList())
 		{
 			if (item.IsCanDelete() == null)
 			{
@@ -2716,7 +2776,7 @@ public class MapData extends EntityNoName
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 与Excel相关的操作 .
-	public final void setDesignerTool(String value)
+	public final void setDesignerTool(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.DesignerTool, value);
 	}

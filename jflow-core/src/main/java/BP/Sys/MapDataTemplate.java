@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -21,8 +23,9 @@ public class MapDataTemplate extends EntityNoName
 	 映射基础
 	 
 	 @param no 映射编号
+	 * @throws Exception 
 	*/
-	public MapDataTemplate(String no)
+	public MapDataTemplate(String no) throws Exception
 	{
 		super(no);
 	}

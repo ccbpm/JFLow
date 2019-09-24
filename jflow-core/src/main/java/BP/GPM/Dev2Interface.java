@@ -36,7 +36,7 @@ public class Dev2Interface
 				throw new RuntimeException("用户不存在或者SID错误。");
 			}
 
-			if (!dt.Rows.get(0).get("SID").toString().equals(sid))
+			if (!dt.Rows.get(0).getValue("SID").toString().equals(sid))
 			{
 				throw new RuntimeException("用户不存在或者SID错误。");
 			}

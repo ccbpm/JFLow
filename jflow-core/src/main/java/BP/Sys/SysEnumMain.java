@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -11,19 +13,19 @@ public class SysEnumMain extends EntityNoName
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 实现基本的方方法
-	public final String getCfgVal()
+	public final String getCfgVal() throws Exception
 	{
 		return this.GetValStrByKey(SysEnumMainAttr.CfgVal);
 	}
-	public final void setCfgVal(String value)
+	public final void setCfgVal(String value) throws Exception
 	{
 		this.SetValByKey(SysEnumMainAttr.CfgVal, value);
 	}
-	public final String getLang()
+	public final String getLang() throws Exception
 	{
 		return this.GetValStrByKey(SysEnumMainAttr.Lang);
 	}
-	public final void setLang(String value)
+	public final void setLang(String value) throws Exception
 	{
 		this.SetValByKey(SysEnumMainAttr.Lang, value);
 	}
@@ -42,8 +44,9 @@ public class SysEnumMain extends EntityNoName
 	 SysEnumMain
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public SysEnumMain(String no)
+	public SysEnumMain(String no) throws Exception
 	{
 		try
 		{
@@ -61,7 +64,7 @@ public class SysEnumMain extends EntityNoName
 			this.setNo(no);
 			this.setName("未命名");
 			String cfgVal = "";
-			for (SysEnum item : ses)
+			for (SysEnum item : ses.ToJavaList())
 			{
 				cfgVal += "@" + item.getIntKey() + "=" + item.getLab();
 			}
@@ -70,7 +73,7 @@ public class SysEnumMain extends EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		// 检查这个类型是否被使用？
 		MapAttrs attrs = new MapAttrs();
@@ -85,7 +88,7 @@ public class SysEnumMain extends EntityNoName
 		else
 		{
 			String msg = "错误:下列数据已经引用了枚举您不能删除它。"; // "错误:下列数据已经引用了枚举您不能删除它。";
-			for (MapAttr attr : attrs)
+			for (MapAttr attr : attrs.ToJavaList())
 			{
 				msg += "\t\n" + attr.getField() + attr.getName() + " Table = " + attr.getFK_MapData();
 			}

@@ -2,7 +2,10 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.Sys.*;
+import BP.Web.WebUser;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -14,9 +17,10 @@ public class ToolbarExcelSln extends EntityMyPK
 		///#region 界面上的访问控制
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
@@ -36,188 +40,205 @@ public class ToolbarExcelSln extends EntityMyPK
 		///#region 功能按钮.
 	/** 
 	 打开本地标签.
+	 * @throws Exception 
 	*/
-	public final String getOfficeOpenLab()
+	public final String getOfficeOpenLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeOpenLab);
 	}
-	public final void setOfficeOpenLab(String value)
+	public final void setOfficeOpenLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeOpenLab, value);
 	}
 	/** 
 	 是否打开本地模版文件.
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeOpenEnable()
+	public final boolean getOfficeOpenEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeOpenEnable);
 	}
-	public final void setOfficeOpenEnable(boolean value)
+	public final void setOfficeOpenEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeOpenEnable, value);
 	}
 	/** 
 	 打开模板 标签.
+	 * @throws Exception 
 	*/
-	public final String getOfficeOpenTemplateLab()
+	public final String getOfficeOpenTemplateLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeOpenTemplateLab);
 	}
-	public final void setOfficeOpenTemplateLab(String value)
+	public final void setOfficeOpenTemplateLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeOpenTemplateLab, value);
 	}
 	/** 
 	 打开模板.
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeOpenTemplateEnable()
+	public final boolean getOfficeOpenTemplateEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeOpenTemplateEnable);
 	}
-	public final void setOfficeOpenTemplateEnable(boolean value)
+	public final void setOfficeOpenTemplateEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeOpenTemplateEnable, value);
 	}
 	/** 
 	 保存 标签.
+	 * @throws Exception 
 	*/
-	public final String getOfficeSaveLab()
+	public final String getOfficeSaveLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeSaveLab);
 	}
-	public final void setOfficeSaveLab(String value)
+	public final void setOfficeSaveLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeSaveLab, value);
 	}
 	/** 
 	 保存.是否启用.
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeSaveEnable()
+	public final boolean getOfficeSaveEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeSaveEnable);
 	}
-	public final void setOfficeSaveEnable(boolean value)
+	public final void setOfficeSaveEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeSaveEnable, value);
 	}
 	/** 
 	 接受修订 标签.
+	 * @throws Exception 
 	*/
-	public final String getOfficeAcceptLab()
+	public final String getOfficeAcceptLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeAcceptLab);
 	}
-	public final void setOfficeAcceptLab(String value)
+	public final void setOfficeAcceptLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeAcceptLab, value);
 	}
 	/** 
 	 接受修订.
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeAcceptEnable()
+	public final boolean getOfficeAcceptEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeAcceptEnable);
 	}
-	public final void setOfficeAcceptEnable(boolean value)
+	public final void setOfficeAcceptEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeAcceptEnable, value);
 	}
 	/** 
 	 拒绝修订 标签.
+	 * @throws Exception 
 	*/
-	public final String getOfficeRefuseLab()
+	public final String getOfficeRefuseLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeRefuseLab);
 	}
-	public final void setOfficeRefuseLab(String value)
+	public final void setOfficeRefuseLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeRefuseLab, value);
 	}
 	/** 
 	 拒绝修订.
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeRefuseEnable()
+	public final boolean getOfficeRefuseEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeRefuseEnable);
 	}
-	public final void setOfficeRefuseEnable(boolean value)
+	public final void setOfficeRefuseEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeRefuseEnable, value);
 	}
 	/** 
 	 套红按钮 标签.
+	 * @throws Exception 
 	*/
-	public final String getOfficeOverLab()
+	public final String getOfficeOverLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeOverLab);
 	}
-	public final void setOfficeOverLab(String value)
+	public final void setOfficeOverLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeOverLab, value);
 	}
 	/** 
 	 套红按钮.
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeOverEnable()
+	public final boolean getOfficeOverEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeOverEnable);
 	}
-	public final void setOfficeOverEnable(boolean value)
+	public final void setOfficeOverEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeOverEnable, value);
 	}
 	/** 
 	 查看用户留痕
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeMarksEnable()
+	public final boolean getOfficeMarksEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeMarksEnable);
 	}
-	public final void setOfficeMarksEnable(boolean value)
+	public final void setOfficeMarksEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeMarksEnable, value);
 	}
 	/** 
 	 打印按钮-标签
+	 * @throws Exception 
 	*/
-	public final String getOfficePrintLab()
+	public final String getOfficePrintLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficePrintLab);
 	}
-	public final void setOfficePrintLab(String value)
+	public final void setOfficePrintLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficePrintLab, value);
 	}
 	/** 
 	 打印
+	 * @throws Exception 
 	*/
-	public final boolean getOfficePrintEnable()
+	public final boolean getOfficePrintEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficePrintEnable);
 	}
-	public final void setOfficePrintEnable(boolean value)
+	public final void setOfficePrintEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficePrintEnable, value);
 	}
 	/** 
 	 签章-标签
+	 * @throws Exception 
 	*/
-	public final String getOfficeSealLab()
+	public final String getOfficeSealLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeSealLab);
 	}
-	public final void setOfficeSealLab(String value)
+	public final void setOfficeSealLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeSealLab, value);
 	}
 	/** 
 	 签章
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeSealEnable()
+	public final boolean getOfficeSealEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeSealEnable);
 	}
-	public final void setOfficeSealEnable(boolean value)
+	public final void setOfficeSealEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeSealEnable, value);
 	}
@@ -226,119 +247,130 @@ public class ToolbarExcelSln extends EntityMyPK
 
 	/** 
 	 插入流程-标签
+	 * @throws Exception 
 	*/
-	public final String getOfficeInsertFlowLab()
+	public final String getOfficeInsertFlowLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeInsertFlowLab);
 	}
-	public final void setOfficeInsertFlowLab(String value)
+	public final void setOfficeInsertFlowLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeInsertFlowLab, value);
 	}
 	/** 
 	 插入流程
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeInsertFlowEnable()
+	public final boolean getOfficeInsertFlowEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeInsertFlowEnable);
 	}
-	public final void setOfficeInsertFlowEnable(boolean value)
+	public final void setOfficeInsertFlowEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeInsertFlowEnable, value);
 	}
 
 	/** 
 	 是否自动记录节点信息
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeNodeInfo()
+	public final boolean getOfficeNodeInfo() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeNodeInfo);
 	}
-	public final void setOfficeNodeInfo(boolean value)
+	public final void setOfficeNodeInfo(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeNodeInfo, value);
 	}
 	/** 
 	 是否该节点保存为PDF
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeReSavePDF()
+	public final boolean getOfficeReSavePDF() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeReSavePDF);
 	}
-	public final void setOfficeReSavePDF(boolean value)
+	public final void setOfficeReSavePDF(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeReSavePDF, value);
 	}
 	/** 
 	 是否进入留痕模式
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeIsMarks()
+	public final boolean getOfficeIsMarks() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeIsMarks);
 	}
-	public final void setOfficeIsMarks(boolean value)
+	public final void setOfficeIsMarks(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeIsMarks, value);
 	}
 	/** 
 	 指定文档模板
+	 * @throws Exception 
 	*/
-	public final String getOfficeTemplate()
+	public final String getOfficeTemplate() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeTemplate);
 	}
-	public final void setOfficeTemplate(String value)
+	public final void setOfficeTemplate(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeTemplate, value);
 	}
 	/** 
 	 是否使用父流程的文档
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeIsParent()
+	public final boolean getOfficeIsParent() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeIsParent);
 	}
-	public final void setOfficeIsParent(boolean value)
+	public final void setOfficeIsParent(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeIsParent, value);
 	}
 	/** 
 	 是否启用标签
+	 * @throws Exception 
 	*/
-	public final String getOfficeDownLab()
+	public final String getOfficeDownLab() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeDownLab);
 	}
-	public final void setOfficeDownLab(String value)
+	public final void setOfficeDownLab(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeDownLab, value);
 	}
 	/** 
 	 下载
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeIsDown()
+	public final boolean getOfficeIsDown() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeIsDown);
 	}
 	/** 
 	 是否自动套红
+	 * @throws Exception 
 	*/
-	public final boolean getOfficeTHEnable()
+	public final boolean getOfficeTHEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(ToolbarExcelAttr.OfficeTHEnable);
 	}
-	public final void setOfficeTHEnable(boolean value)
+	public final void setOfficeTHEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeTHEnable, value);
 	}
 	/** 
 	 套红模板
+	 * @throws Exception 
 	*/
-	public final String getOfficeTHTemplate()
+	public final String getOfficeTHTemplate() throws Exception
 	{
 		return this.GetValStringByKey(ToolbarExcelAttr.OfficeTHTemplate);
 	}
-	public final void setOfficeTHTemplate(String value)
+	public final void setOfficeTHTemplate(String value) throws Exception
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeTHTemplate, value);
 	}
@@ -357,19 +389,19 @@ public class ToolbarExcelSln extends EntityMyPK
 	 ToolbarExcel功能控制
 	 
 	 @param no 表单ID
+	 * @throws Exception 
 	*/
-	public ToolbarExcelSln(String mypk)
+	public ToolbarExcelSln(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
-	public ToolbarExcelSln(String fk_flow, int fk_node, String fk_frm)
+	public ToolbarExcelSln(String fk_flow, int fk_node, String fk_frm) throws Exception
 	{
 		int i = this.Retrieve(ToolbarExcelSlnAttr.FK_Flow, fk_flow, ToolbarExcelSlnAttr.FK_Node, fk_node, ToolbarExcelSlnAttr.FK_Frm, fk_frm);
 		if (i == 0)
 		{
 			return;
-			throw new RuntimeException("@表单关联信息已被删除。");
 		}
 	}
 	/** 

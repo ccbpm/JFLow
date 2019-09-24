@@ -21,8 +21,9 @@ public class MapDtls extends EntitiesNoName
 	 明细s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public MapDtls(String fk_mapdata)
+	public MapDtls(String fk_mapdata) throws Exception
 	{
 		if (fk_mapdata == null)
 		{

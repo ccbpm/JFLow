@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.Web.WebUser;
 
 /** 
  文件管理者
@@ -10,59 +11,60 @@ public class SysFileManager extends EntityOID
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 实现基本属性
-	/** 
+	/**
+	 * @throws Exception  
 	 
 	*/
-	public final String getWebPath()
+	public final String getWebPath() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.WebPath);
 	}
-	public final void setWebPath(String value)
+	public final void setWebPath(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.WebPath, value);
 	}
-	public final String getAttrFileNo()
+	public final String getAttrFileNo() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.AttrFileNo);
 	}
-	public final void setAttrFileNo(String value)
+	public final void setAttrFileNo(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.AttrFileNo, value);
 	}
 
-	public final String getAttrFileName()
+	public final String getAttrFileName() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.AttrFileName);
 	}
-	public final void setAttrFileName(String value)
+	public final void setAttrFileName(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.AttrFileName, value);
 	}
 
-	public final String getMyFileName()
+	public final String getMyFileName() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.MyFileName);
 	}
-	public final void setMyFileName(String value)
+	public final void setMyFileName(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.MyFileName, value);
 	}
-	public final String getMyFileWebUrl()
+	public final String getMyFileWebUrl() throws Exception
 	{
 		return this.getWebPath();
 	}
 
-	public final String getMyFileExt()
+	public final String getMyFileExt() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.MyFileExt);
 	}
-	public final void setMyFileExt(String value)
+	public final void setMyFileExt(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.MyFileExt, value);
 	}
 
 
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		String s = this.GetValStringByKey(SysFileManagerAttr.Rec);
 		if (s == null || s.equals(""))
@@ -71,76 +73,76 @@ public class SysFileManager extends EntityOID
 		}
 		return s;
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.Rec, value);
 	}
 
-	public final String getRecText()
+	public final String getRecText() throws Exception
 	{
 		return this.GetValRefTextByKey(SysFileManagerAttr.Rec);
 	}
-	public final String getEnName()
+	public final String getEnName() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.EnName);
 	}
-	public final void setEnName(String value)
+	public final void setEnName(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.EnName, value);
 	}
-	public final Object getRefVal()
+	public final Object getRefVal() throws Exception
 	{
 		return this.GetValByKey(SysFileManagerAttr.RefVal);
 	}
-	public final void setRefVal(Object value)
+	public final void setRefVal(Object value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.RefVal, value);
 	}
-	public final String getMyFilePath()
+	public final String getMyFilePath() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.MyFilePath);
 	}
-	public final void setMyFilePath(String value)
+	public final void setMyFilePath(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.MyFilePath, value);
 	}
-	public final int getMyFileH()
+	public final int getMyFileH() throws Exception
 	{
 		return this.GetValIntByKey(SysFileManagerAttr.MyFileH);
 	}
-	public final void setMyFileH(int value)
+	public final void setMyFileH(int value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.MyFileH, value);
 	}
-	public final int getMyFileW()
+	public final int getMyFileW() throws Exception
 	{
 		return this.GetValIntByKey(SysFileManagerAttr.MyFileW);
 	}
-	public final void setMyFileW(int value)
+	public final void setMyFileW(int value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.MyFileW, value);
 	}
-	public final float getMyFileSize()
+	public final float getMyFileSize() throws Exception
 	{
 		return this.GetValIntByKey(SysFileManagerAttr.MyFileSize);
 	}
-	public final void setMyFileSize(float value)
+	public final void setMyFileSize(float value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.MyFileSize, value);
 	}
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.RDT, value);
 	}
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		return this.GetValStringByKey(SysFileManagerAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(SysFileManagerAttr.Note, value);
 	}
@@ -156,8 +158,9 @@ public class SysFileManager extends EntityOID
 	 文件管理者
 	 
 	 <param MyFileName="_OID">
+	 * @throws Exception 
 	*/
-	public SysFileManager(int _OID)
+	public SysFileManager(int _OID) throws Exception
 	{
 		super(_OID);
 	}
@@ -196,16 +199,16 @@ public class SysFileManager extends EntityOID
 		return this.get_enMap();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 	   this.setRec(WebUser.getNo());
 	   this.setRDT(DataType.getCurrentDataTime());
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
-		if (this.getRec().equals(Web.WebUser.getNo()))
+		if (this.getRec().equals(WebUser.getNo()))
 		{
 			return super.beforeDelete();
 		}

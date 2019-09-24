@@ -13,7 +13,7 @@ public class SysDocFiles extends Entities
 	public SysDocFiles()
 	{
 	}
-	public SysDocFiles(String _tableName, String _key)
+	public SysDocFiles(String _tableName, String _key) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SysDocFileAttr.EnName, _tableName);

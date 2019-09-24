@@ -2,6 +2,8 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -13,7 +15,7 @@ public class SFTableSQL extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -67,7 +69,7 @@ public class SFTableSQL extends EntityNoName
 		RefMethod rm = new RefMethod();
 		rm.Title = "查看数据";
 		rm.ClassMethodName = this.toString() + ".DoEdit";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.IsForEns = false;
 		 map.AddRefMethod(rm);
 		this.set_enMap(map);
@@ -80,8 +82,9 @@ public class SFTableSQL extends EntityNoName
 	 编辑数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoEdit()
+	public final String DoEdit() throws Exception
 	{
 		if (this.getIsClass())
 		{
@@ -95,8 +98,9 @@ public class SFTableSQL extends EntityNoName
 
 	/** 
 	 是否是类
+	 * @throws Exception 
 	*/
-	public final boolean getIsClass()
+	public final boolean getIsClass() throws Exception
 	{
 		if (this.getNo().contains("."))
 		{
@@ -109,14 +113,14 @@ public class SFTableSQL extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
 		if (attrs.size() != 0)
 		{
 			String err = "";
-			for (MapAttr item : attrs)
+			for (MapAttr item : attrs.ToJavaList())
 			{
 				err += " @ " + item.getMyPK() + " " + item.getName();
 			}

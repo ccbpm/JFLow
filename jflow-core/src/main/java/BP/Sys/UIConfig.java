@@ -20,8 +20,9 @@ public class UIConfig
 	 UI的设置.Search. Card, Group信息.
 	 
 	 @param enName
+	 * @throws Exception 
 	*/
-	public UIConfig(Entity en)
+	public UIConfig(Entity en) throws Exception
 	{
 		this.HisEn = en;
 		EnCfg cfg = new EnCfg(en.toString());
@@ -109,8 +110,9 @@ public class UIConfig
 	}
 	/** 
 	 焦点字段
+	 * @throws Exception 
 	*/
-	public final String getFocusField()
+	public final String getFocusField() throws Exception
 	{
 		String s = this.HisAP.GetValStrByKey("FocusField");
 		if (DataType.IsNullOrEmpty(s))

@@ -1,9 +1,7 @@
 package BP.Sys;
 
-import Oracle.ManagedDataAccess.Client.*;
 import BP.DA.*;
 import BP.En.*;
-import MySql.Data.MySqlClient.*;
 import java.util.*;
 
 /** 
@@ -31,7 +29,7 @@ public class SFDBSrcs extends EntitiesNoName
 		///#endregion
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int i = this.RetrieveAllFromDBSource();
 		if (i == 0)
@@ -49,8 +47,9 @@ public class SFDBSrcs extends EntitiesNoName
 	 查询数据源
 	 
 	 @return 返回查询的个数
+	 * @throws Exception 
 	*/
-	public final int RetrieveDBSrc()
+	public final int RetrieveDBSrc() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SFDBSrcAttr.DBSrcType, " < ", 100);
@@ -65,8 +64,9 @@ public class SFDBSrcs extends EntitiesNoName
 	 查询数据源
 	 
 	 @return 返回查询的个数
+	 * @throws Exception 
 	*/
-	public final int RetrieveWCSrc()
+	public final int RetrieveWCSrc() throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SFDBSrcAttr.DBSrcType, "= ",  DBSrcType.WebServices.getValue());

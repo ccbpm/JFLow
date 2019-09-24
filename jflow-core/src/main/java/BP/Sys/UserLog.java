@@ -2,6 +2,7 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.*;
 import java.util.*;
 
@@ -25,50 +26,52 @@ public class UserLog extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
-	public final String getIP()
+	public final String getIP() throws Exception
 	{
 		return this.GetValStringByKey(UserLogAttr.IP);
 	}
-	public final void setIP(String value)
+	public final void setIP(String value) throws Exception
 	{
 		this.SetValByKey(UserLogAttr.IP, value);
 	}
 	/** 
 	 日志标记键
+	 * @throws Exception 
 	*/
-	public final String getLogFlag()
+	public final String getLogFlag() throws Exception
 	{
 		return this.GetValStringByKey(UserLogAttr.LogFlag);
 	}
-	public final void setLogFlag(String value)
+	public final void setLogFlag(String value) throws Exception
 	{
 		this.SetValByKey(UserLogAttr.LogFlag, value);
 	}
 	/** 
 	 FK_Emp
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(UserLogAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(UserLogAttr.FK_Emp, value);
 	}
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(UserLogAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(UserLogAttr.RDT, value);
 	}
 
-	public final String getDocs()
+	public final String getDocs() throws Exception
 	{
 		return this.GetValStringByKey(UserLogAttr.Docs);
 	}
-	public final void setDocs(String value)
+	public final void setDocs(String value) throws Exception
 	{
 		this.SetValByKey(UserLogAttr.Docs, value);
 	}

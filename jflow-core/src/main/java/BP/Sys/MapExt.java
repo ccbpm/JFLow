@@ -3,6 +3,8 @@ package BP.Sys;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
+
 import java.util.*;
 
 /** 
@@ -16,12 +18,13 @@ public class MapExt extends EntityMyPK
 	 转化JSON
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String PopValToJson()
+	public final String PopValToJson() throws Exception
 	{
 		return BP.Tools.Json.ToJsonEntityModel(this.PopValToHashtable());
 	}
-	public final Hashtable PopValToHashtable()
+	public final Hashtable PopValToHashtable() throws Exception
 	{
 
 		//创建一个ht, 然后把他转化成json返回出去。
@@ -77,108 +80,111 @@ public class MapExt extends EntityMyPK
 	/** 
 	 连接
 	*/
-	public final String getPopValUrl()
+	public final String getPopValUrl() throws Exception
 	{
 		return this.getDoc();
 	}
-	public final void setPopValUrl(String value)
+	public final void setPopValUrl(String value) throws Exception
 	{
 		this.setDoc(value);
 	}
 	/** 
 	 实体SQL
 	*/
-	public final String getPopValEntitySQL()
+	public final String getPopValEntitySQL() throws Exception
 	{
 		return this.getTag2();
 	}
-	public final void setPopValEntitySQL(String value)
+	public final void setPopValEntitySQL(String value) throws Exception
 	{
 		this.setTag2(value);
 	}
 	/** 
 	 分组SQL
 	*/
-	public final String getPopValGroupSQL()
+	public final String getPopValGroupSQL() throws Exception
 	{
 		return this.getTag1();
 	}
-	public final void setPopValGroupSQL(String value)
+	public final void setPopValGroupSQL(String value) throws Exception
 	{
 		this.setTag1(value);
 	}
 	/** 
 	 分页SQL带有关键字
 	*/
-	public final String getPopValTablePageSQL()
+	public final String getPopValTablePageSQL() throws Exception
 	{
 		return this.getTag();
 	}
-	public final void setPopValTablePageSQL(String value)
+	public final void setPopValTablePageSQL(String value) throws Exception
 	{
 		this.setTag(value);
 	}
 	/** 
 	 分页SQL获取总行数
 	*/
-	public final String getPopValTablePageSQLCount()
+	public final String getPopValTablePageSQLCount() throws Exception
 	{
 		return this.getTag1();
 	}
-	public final void setPopValTablePageSQLCount(String value)
+	public final void setPopValTablePageSQLCount(String value) throws Exception
 	{
 		this.setTag1(value);
 	}
 	/** 
 	 标题
+	 * @throws Exception 
 	*/
-	public final String getPopValTitle()
+	public final String getPopValTitle() throws Exception
 	{
 		return this.GetParaString("PopValTitle");
 	}
-	public final void setPopValTitle(String value)
+	public final void setPopValTitle(String value) throws Exception
 	{
 		this.SetPara("PopValTitle", value);
 	}
 
-	public final String getPopValTreeSQL()
+	public final String getPopValTreeSQL() throws Exception
 	{
 		return this.getPopValEntitySQL();
 	}
-	public final void setPopValTreeSQL(String value)
+	public final void setPopValTreeSQL(String value) throws Exception
 	{
 		  this.setPopValEntitySQL(value);
 	}
 	/** 
 	 根目录
+	 * @throws Exception 
 	*/
-	public final String getPopValTreeParentNo()
+	public final String getPopValTreeParentNo() throws Exception
 	{
 		return this.GetParaString("PopValTreeParentNo");
 	}
-	public final void setPopValTreeParentNo(String value)
+	public final void setPopValTreeParentNo(String value) throws Exception
 	{
 		this.SetPara("PopValTreeParentNo", value);
 	}
 	/** 
 	 Pop 返回值的格式.
+	 * @throws Exception 
 	*/
-	public final PopValFormat getPopValFormat()
+	public final PopValFormat getPopValFormat() throws Exception
 	{
 		return PopValFormat.forValue(this.GetParaInt("PopValFormat"));
 	}
-	public final void setPopValFormat(PopValFormat value)
+	public final void setPopValFormat(PopValFormat value) throws Exception
 	{
 		this.SetPara("PopValFormat", value.getValue());
 	}
 	/** 
 	 双实体树的实体
 	*/
-	public final String getPopValDoubleTreeEntitySQL()
+	public final String getPopValDoubleTreeEntitySQL() throws Exception
 	{
 		return this.getTag1();
 	}
-	public final void setPopValDoubleTreeEntitySQL(String value)
+	public final void setPopValDoubleTreeEntitySQL(String value) throws Exception
 	{
 		this.setTag1(value);
 	}
@@ -186,66 +192,66 @@ public class MapExt extends EntityMyPK
 	 pop 选择方式
 	 0,多选,1=单选.
 	*/
-	public final PopValSelectModel getPopValSelectModel()
+	public final PopValSelectModel getPopValSelectModel()  throws Exception
 	{
 		return PopValSelectModel.forValue(this.GetParaInt("PopValSelectModel"));
 	}
-	public final void setPopValSelectModel(PopValSelectModel value)
+	public final void setPopValSelectModel(PopValSelectModel value) throws Exception
 	{
 		this.SetPara("PopValSelectModel", value.getValue());
 	}
 	/** 
 	 PopVal工作模式
 	*/
-	public final PopValWorkModel getPopValWorkModel()
+	public final PopValWorkModel getPopValWorkModel() throws Exception
 	{
 		return PopValWorkModel.forValue(this.GetParaInt("PopValWorkModel"));
 	}
-	public final void setPopValWorkModel(PopValWorkModel value)
+	public final void setPopValWorkModel(PopValWorkModel value) throws Exception
 	{
 		this.SetPara("PopValWorkModel", value.getValue());
 	}
 	/** 
 	 开窗的列中文名称.
 	*/
-	public final String getPopValColNames()
+	public final String getPopValColNames() throws Exception
 	{
 	  return this.getTag3();
 	}
-	public final void setPopValColNames(String value)
+	public final void setPopValColNames(String value) throws Exception
 	{
 		this.setTag3(value);
 	}
 	/** 
 	 查询条件
 	*/
-	public final String getPopValSearchCond()
+	public final String getPopValSearchCond() throws Exception
 	{
 	  return this.getTag4();
 	}
-	public final void setPopValSearchCond(String value)
+	public final void setPopValSearchCond(String value) throws Exception
 	{
 		this.setTag4(value);
 	}
 	/** 
 	 搜索提示关键字
 	*/
-	public final String getPopValSearchTip()
+	public final String getPopValSearchTip() throws Exception
 	{
 		return this.GetParaString("PopValSearchTip", "请输入关键字");
 	}
-	public final void setPopValSearchTip(String value)
+	public final void setPopValSearchTip(String value) throws Exception
 	{
 		this.SetPara("PopValSearchTip", value);
 	}
 	/** 
 	 数据源
 	*/
-	public final String getFK_DBSrc()
+	public final String getFK_DBSrc() throws Exception
 	{
 		return this.GetValStrByKey(MapExtAttr.FK_DBSrc);
 	}
-	public final void setFK_DBSrc(String value)
+	public final void setFK_DBSrc(String value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.FK_DBSrc, value);
 	}
@@ -254,7 +260,7 @@ public class MapExt extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getExtDesc()
+	public final String getExtDesc() throws Exception
 	{
 		String dec = "";
 		switch (this.getExtType())
@@ -282,91 +288,91 @@ public class MapExt extends EntityMyPK
 	/** 
 	 是否自适应大小
 	*/
-	public final boolean getIsAutoSize()
+	public final boolean getIsAutoSize() throws Exception
 	{
 		return this.GetValBooleanByKey(MapExtAttr.IsAutoSize);
 	}
-	public final void setIsAutoSize(boolean value)
+	public final void setIsAutoSize(boolean value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.IsAutoSize, value);
 	}
 	/** 
 	 数据格式
 	*/
-	public final String getDBType()
+	public final String getDBType() throws Exception
 	{
 		return this.GetValStrByKey(MapExtAttr.DBType);
 	}
-	public final void setDBType(String value)
+	public final void setDBType(String value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.DBType, value);
 	}
-	public final String getAtPara()
+	public final String getAtPara() throws Exception
 	{
 		return this.GetValStrByKey(MapExtAttr.AtPara);
 	}
-	public final void setAtPara(String value)
+	public final void setAtPara(String value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.AtPara, value);
 	}
 
-	public final String getExtType()
+	public final String getExtType() throws Exception
 	{
 		return this.GetValStrByKey(MapExtAttr.ExtType);
 	}
-	public final void setExtType(String value)
+	public final void setExtType(String value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.ExtType, value);
 	}
-	public final int getDoWay()
+	public final int getDoWay() throws Exception
 	{
 		return this.GetValIntByKey(MapExtAttr.DoWay);
 	}
-	public final void setDoWay(int value)
+	public final void setDoWay(int value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.DoWay, value);
 	}
 	/** 
 	 操作的attrs
 	*/
-	public final String getAttrOfOper()
+	public final String getAttrOfOper() throws Exception
 	{
 		return this.GetValStrByKey(MapExtAttr.AttrOfOper);
 	}
-	public final void setAttrOfOper(String value)
-	{
+	public final void setAttrOfOper(String value) throws Exception
+	{ 
 		this.SetValByKey(MapExtAttr.AttrOfOper, value);
 	}
 	/** 
 	 激活的attrs
 	*/
-	public final String getAttrsOfActive()
+	public final String getAttrsOfActive() throws Exception
 	{
 		  //  return this.GetValStrByKey(MapExtAttr.AttrsOfActive).replace("~", "'");
 		return this.GetValStrByKey(MapExtAttr.AttrsOfActive);
 	}
-	public final void setAttrsOfActive(String value)
+	public final void setAttrsOfActive(String value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.AttrsOfActive, value);
 	}
-	public final String getFK_MapData()
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(MapExtAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
+	public final void setFK_MapData(String value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.FK_MapData, value);
 	}
 	/** 
 	 Doc
 	*/
-	public final String getDoc()
+	public final String getDoc() throws Exception
 	{
 		String str = this.GetValStrByKey("Doc").replace("~","'");
 		str = str.replace("~", "'");
 		return str;
 	}
-	public final void setDoc(String value)
+	public final void setDoc(String value) throws Exception
 	{
 		String str = value.replace("'", "~");
 		this.SetValByKey("Doc", str);
@@ -377,8 +383,9 @@ public class MapExt extends EntityMyPK
 	
 	@param ht
 	@return 
+ * @throws Exception 
    */
-	public final String AutoFullDLL_SQL_ForDtl(Hashtable htMainEn, Hashtable htDtlEn)
+	public final String AutoFullDLL_SQL_ForDtl(Hashtable htMainEn, Hashtable htDtlEn) throws Exception
 	{
 		String fullSQL = this.getDoc().replace("@WebUser.getNo()", WebUser.getNo());
 		fullSQL = fullSQL.replace("@WebUser.getName()", WebUser.getName());
@@ -387,8 +394,9 @@ public class MapExt extends EntityMyPK
 
 		if (fullSQL.contains("@"))
 		{
-			for (String key : htDtlEn.keySet())
+			for (Object key1 : htDtlEn.keySet())
 			{
+				String key = key1.toString();
 				if (fullSQL.contains("@") == false)
 				{
 					break;
@@ -407,8 +415,9 @@ public class MapExt extends EntityMyPK
 
 		if (fullSQL.contains("@"))
 		{
-			for (String key : htMainEn.keySet())
+			for (Object key1 : htMainEn.keySet())
 			{
+				String key = key1.toString();
 				if (fullSQL.contains("@") == false)
 				{
 					break;
@@ -444,7 +453,7 @@ public class MapExt extends EntityMyPK
 		return sql;
 	}
 
-	public final String getDocOfSQLDeal()
+	public final String getDocOfSQLDeal() throws Exception
 	{
 		String sql = this.getDoc();
 		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
@@ -454,7 +463,7 @@ public class MapExt extends EntityMyPK
 		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		return sql;
 	}
-	public final String getTag()
+	public final String getTag() throws Exception
 	{
 		String s = this.GetValStrByKey("Tag").replace("~", "'");
 
@@ -465,55 +474,55 @@ public class MapExt extends EntityMyPK
 
 		return s;
 	}
-	public final void setTag(String value)
+	public final void setTag(String value) throws Exception
 	{
 		this.SetValByKey("Tag", value);
 	}
-	public final String getTag1()
+	public final String getTag1() throws Exception
 	{
 		return this.GetValStrByKey("Tag1").replace("~", "'");
 	}
-	public final void setTag1(String value)
+	public final void setTag1(String value) throws Exception
 	{
 		this.SetValByKey("Tag1", value);
 	}
-	public final String getTag2()
+	public final String getTag2() throws Exception
 	{
 		return this.GetValStrByKey("Tag2").replace("~", "'");
 	}
-	public final void setTag2(String value)
+	public final void setTag2(String value) throws Exception
 	{
 		this.SetValByKey("Tag2", value);
 	}
-	public final String getTag3()
+	public final String getTag3() throws Exception
 	{
 		return this.GetValStrByKey("Tag3").replace("~", "'");
 	}
-	public final void setTag3(String value)
+	public final void setTag3(String value) throws Exception
 	{
 		this.SetValByKey("Tag3", value);
 	}
-	public final String getTag4()
+	public final String getTag4() throws Exception
 	{
 		return this.GetValStrByKey("Tag4").replace("~", "'");
 	}
-	public final void setTag4(String value)
+	public final void setTag4(String value) throws Exception
 	{
 		this.SetValByKey("Tag4", value);
 	}
-	public final int getH()
+	public final int getH() throws Exception
 	{
 		return this.GetValIntByKey(MapExtAttr.H);
 	}
-	public final void setH(int value)
+	public final void setH(int value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.H, value);
 	}
-	public final int getW()
+	public final int getW() throws Exception
 	{
 		return this.GetValIntByKey(MapExtAttr.W);
 	}
-	public final void setW(int value)
+	public final void setW(int value) throws Exception
 	{
 		this.SetValByKey(MapExtAttr.W, value);
 	}
@@ -533,7 +542,7 @@ public class MapExt extends EntityMyPK
 	 
 	 @param no
 	*/
-	public MapExt(String mypk)
+	public MapExt(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -600,7 +609,7 @@ public class MapExt extends EntityMyPK
 	/** 
 	 统一生成主键的规则.
 	*/
-	public final void InitPK()
+	public final void InitPK() throws Exception
 	{
 		switch (this.getExtType())
 		{
@@ -657,7 +666,7 @@ public class MapExt extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (this.getMyPK().equals(""))
 		{
@@ -668,7 +677,7 @@ public class MapExt extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		this.InitPK();
 
@@ -704,7 +713,7 @@ public class MapExt extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		if (this.getExtType().equals("MultipleChoiceSmall") == true)
 		{
@@ -736,79 +745,12 @@ public class MapExt extends EntityMyPK
 
 	/** 
 	 删除垃圾数据.
+	 * @throws Exception 
 	*/
-	public static void DeleteDB()
+	public static void DeleteDB() throws Exception
 	{
 		MapExts exts = new MapExts();
 		exts.RetrieveAll();
 		return;
-
-		for (MapExt ext : exts)
-		{
-			if (ext.getExtType().equals(MapExtXmlList.ActiveDDL))
-			{
-				if (ext.getAttrOfOper().trim().length() == 0)
-				{
-					ext.Delete();
-					continue;
-				}
-
-				MapAttr attr = new MapAttr();
-				attr.setMyPK(ext.getAttrOfOper());
-				if (attr.getIsExits() == true)
-				{
-					ext.setAttrOfOper(attr.getKeyOfEn());
-					ext.Delete();
-
-					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
-					ext.Save();
-				}
-
-				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper()))
-				{
-					ext.Delete(); //直接删除.
-
-					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
-					ext.Save();
-					continue;
-				}
-
-				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive()))
-				{
-					ext.Delete(); //直接删除.
-					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
-					ext.Save();
-					continue;
-				}
-
-				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getFK_MapData() + "_" + ext.getAttrsOfActive() + "_" + ext.getAttrOfOper()))
-				{
-					ext.Delete(); //直接删除.
-					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
-					ext.Save();
-					continue;
-				}
-
-
-				//三个主键的情况.
-				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper()))
-				{
-					ext.Delete();
-					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
-					ext.Save();
-					continue;
-				}
-
-				//三个主键的情况.
-				if (ext.getMyPK().equals(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrsOfActive()))
-				{
-					ext.Delete();
-					ext.setMyPK(ext.getExtType() + "_" + ext.getFK_MapData() + "_" + ext.getAttrOfOper() + "_" + ext.getAttrsOfActive());
-					ext.Save();
-					continue;
-				}
-
-			}
-		}
 	}
 }

@@ -1,9 +1,7 @@
 package BP.Sys;
 
-import Oracle.ManagedDataAccess.Client.*;
 import BP.DA.*;
 import BP.En.*;
-import MySql.Data.MySqlClient.*;
 import java.util.*;
 
 /** 
@@ -28,63 +26,69 @@ public class SFDBSrc extends EntityNoName
 	}
 	/** 
 	 是否是树形实体?
+	 * @throws Exception 
 	*/
-	public final String getUserID()
+	public final String getUserID() throws Exception
 	{
 		return this.GetValStringByKey(SFDBSrcAttr.UserID);
 	}
-	public final void setUserID(String value)
+	public final void setUserID(String value) throws Exception
 	{
 		this.SetValByKey(SFDBSrcAttr.UserID, value);
 	}
 	/** 
 	 密码
+	 * @throws Exception 
 	*/
-	public final String getPassword()
+	public final String getPassword() throws Exception
 	{
 		return this.GetValStringByKey(SFDBSrcAttr.Password);
 	}
-	public final void setPassword(String value)
+	public final void setPassword(String value) throws Exception
 	{
 		this.SetValByKey(SFDBSrcAttr.Password, value);
 	}
 	/** 
 	 数据库名称
+	 * @throws Exception 
 	*/
-	public final String getDBName()
+	public final String getDBName() throws Exception
 	{
 		return this.GetValStringByKey(SFDBSrcAttr.DBName);
 	}
-	public final void setDBName(String value)
+	public final void setDBName(String value) throws Exception
 	{
 		this.SetValByKey(SFDBSrcAttr.DBName, value);
 	}
 	/** 
 	 数据库类型
+	 * @throws Exception 
 	*/
-	public final DBSrcType getDBSrcType()
+	public final DBSrcType getDBSrcType() throws Exception
 	{
 		return DBSrcType.forValue(this.GetValIntByKey(SFDBSrcAttr.DBSrcType));
 	}
-	public final void setDBSrcType(DBSrcType value)
+	public final void setDBSrcType(DBSrcType value) throws Exception
 	{
 		this.SetValByKey(SFDBSrcAttr.DBSrcType, value.getValue());
 	}
 	/** 
 	 IP地址
+	 * @throws Exception 
 	*/
-	public final String getIP()
+	public final String getIP() throws Exception
 	{
 		return this.GetValStringByKey(SFDBSrcAttr.IP);
 	}
-	public final void setIP(String value)
+	public final void setIP(String value) throws Exception
 	{
 		this.SetValByKey(SFDBSrcAttr.IP, value);
 	}
 	/** 
 	 数据库类型
+	 * @throws Exception 
 	*/
-	public final DBType getHisDBType()
+	public final DBType getHisDBType() throws Exception
 	{
 		switch (this.getDBSrcType())
 		{

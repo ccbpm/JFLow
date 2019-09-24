@@ -15,17 +15,17 @@ import java.time.*;
 */
 public class Track extends BP.En.EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性.
 	/** 
 	 表单数据
 	*/
 	public String FrmDB = null;
 	public String FK_Flow = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基本属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 字段属性.
 	/** 
 	 节点从
@@ -321,10 +321,10 @@ public class Track extends BP.En.EntityMyPK
 	{
 		this.SetValByKey(TrackAttr.NDToT, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion attrs
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造.
 	public String RptName = null;
 	@Override
@@ -337,7 +337,7 @@ public class Track extends BP.En.EntityMyPK
 
 		Map map = new Map("Frm_Track", "轨迹表");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 字段
 		map.AddMyPK(); //增加一个自动增长的列.
 
@@ -364,7 +364,7 @@ public class Track extends BP.En.EntityMyPK
 		map.AddTBStringDoc(TrackAttr.NodeData, null, "节点数据(日志信息)", true, false);
 		map.AddTBString(TrackAttr.Tag, null, "参数", true, false, 0, 300, 3000);
 		map.AddTBString(TrackAttr.Exer, null, "执行人", true, false, 0, 200, 100);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 字段
 
 		this.set_enMap(map);
@@ -380,9 +380,10 @@ public class Track extends BP.En.EntityMyPK
 	 增加授权人
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (WebUser.getNo().equals("Guest"))
 		{
@@ -400,20 +401,10 @@ public class Track extends BP.En.EntityMyPK
 			}
 		}
 
-		LocalDateTime d = LocalDateTime.MIN;
-		tangible.OutObject<LocalDateTime> tempOut_d = new tangible.OutObject<LocalDateTime>();
-		if (DataType.IsNullOrEmpty(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
-		{
-		d = tempOut_d.argValue;
-			this.setRDT(BP.DA.DataType.getCurrentDataTime());
-		}
-	else
-	{
-		d = tempOut_d.argValue;
-	}
-
+		
+        if (DataType.IsNullOrEmpty(this.getRDT()))
+            this.setRDT(BP.DA.DataType.getCurrentDataTimess());
 		return super.beforeInsert();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 构造.
+
 }

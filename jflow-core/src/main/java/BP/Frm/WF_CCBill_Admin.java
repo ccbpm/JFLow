@@ -27,9 +27,9 @@ public class WF_CCBill_Admin extends DirectoryPageBase
 	 获得js,sql内容.
 	 
 	 @return 
-	 * @throws IOException 
+	 * @throws Exception 
 	*/
-	public final String MethodDoc_GetScript() throws IOException
+	public final String MethodDoc_GetScript() throws Exception
 	{
 		BP.Frm.MethodFunc en = new BP.Frm.MethodFunc(this.getMyPK());
 		int type = this.GetRequestValInt("TypeOfFunc");
@@ -113,7 +113,7 @@ public class WF_CCBill_Admin extends DirectoryPageBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]DoMethod=[" + this.GetRequestVal("DoMethod") + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+		throw new RuntimeException("@标记[" + this.getDoType() + "]DoMethod=[" + this.GetRequestVal("DoMethod") + "]，没有找到. @RowURL:" + HttpContextHelper.getRequestRawUrl());
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 执行父类的重写方法.

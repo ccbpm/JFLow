@@ -1,25 +1,24 @@
 package BP.Frm;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
+import BP.Tools.StringHelper;
 import BP.Web.*;
-import BP.Port.*;
 import BP.En.*;
-import BP.WF.*;
-import BP.WF.Template.*;
-import BP.WF.Data.*;
-import BP.WF.HttpHandler.*;
-import BP.NetPlatformImpl.*;
 import java.util.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.time.*;
+import java.net.URLDecoder;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill extends DirectoryPageBase
+public class WF_CCBill extends WebContralBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法.
 	/** 
 	 构造函数
@@ -27,29 +26,31 @@ public class WF_CCBill extends DirectoryPageBase
 	public WF_CCBill()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法.
 
 	/** 
 	 发起列表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Start_Init()
+	public final String Start_Init() throws Exception
 	{
 		//获得发起列表. 
 		DataSet ds = BP.Frm.Dev2Interface.DB_StartBills(WebUser.getNo());
 
 		//返回组合
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/** 
 	 草稿列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Draft_Init()
+	public final String Draft_Init() throws Exception
 	{
 		//草稿列表.
 		DataTable dt = BP.Frm.Dev2Interface.DB_Draft(this.getFrmID(), WebUser.getNo());
@@ -61,21 +62,23 @@ public class WF_CCBill extends DirectoryPageBase
 	 单据初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MyBill_Init()
+	public final String MyBill_Init() throws Exception
 	{
 		//获得发起列表. 
 		DataSet ds = BP.Frm.Dev2Interface.DB_StartBills(WebUser.getNo());
 
 		//返回组合
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	/** 
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
-	public final String DoMethod_ExeSQL()
+	public final String DoMethod_ExeSQL() throws Exception
 	{
 		MethodFunc func = new MethodFunc(this.getMyPK());
 		String doc = func.getMethodDoc_SQL();
@@ -106,8 +109,9 @@ public class WF_CCBill extends DirectoryPageBase
 	 执行SQL
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoMethodPara_ExeSQL()
+	public final String DoMethodPara_ExeSQL() throws Exception
 	{
 		MethodFunc func = new MethodFunc(this.getMyPK());
 		String doc = func.getMethodDoc_SQL();
@@ -115,41 +119,41 @@ public class WF_CCBill extends DirectoryPageBase
 		GEEntity en = new GEEntity(func.getFrmID(), this.getWorkID());
 		doc = BP.WF.Glo.DealExp(doc, en, null); //替换里面的内容.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 替换参数变量.
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getMyPK());
-		for (MapAttr item : attrs)
+		for (MapAttr item : attrs.ToJavaList())
 		{
-			if (item.UIContralType == UIContralType.TB)
+			if (item.getUIContralType() == UIContralType.TB)
 			{
-				doc = doc.replace("@" + item.KeyOfEn, this.GetRequestVal("TB_" + item.KeyOfEn));
+				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("TB_" + item.getKeyOfEn()));
 				continue;
 			}
 
-			if (item.UIContralType == UIContralType.DDL)
+			if (item.getUIContralType() == UIContralType.DDL)
 			{
-				doc = doc.replace("@" + item.KeyOfEn, this.GetRequestVal("DDL_" + item.KeyOfEn));
+				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("DDL_" + item.getKeyOfEn()));
 				continue;
 			}
 
 
-			if (item.UIContralType == UIContralType.CheckBok)
+			if (item.getUIContralType() == UIContralType.CheckBok)
 			{
-				doc = doc.replace("@" + item.KeyOfEn, this.GetRequestVal("CB_" + item.KeyOfEn));
+				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("CB_" + item.getKeyOfEn()));
 				continue;
 			}
 
-			if (item.UIContralType == UIContralType.RadioBtn)
+			if (item.getUIContralType() == UIContralType.RadioBtn)
 			{
-				doc = doc.replace("@" + item.KeyOfEn, this.GetRequestVal("RB_" + item.KeyOfEn));
+				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("RB_" + item.getKeyOfEn()));
 				continue;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 替换参数变量.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 开始执行SQLs.
 		try
 		{
@@ -170,20 +174,18 @@ public class WF_CCBill extends DirectoryPageBase
 
 			return "err@" + func.getMsgErr() + " @ " + ex.getMessage();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 开始执行SQLs.
 
-		return "err@" + func.getMethodDocTypeOfFunc() + ",执行的类型没有解析.";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 单据处理.
 	/** 
 	 创建空白的WorkID.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MyBill_CreateBlankBillID()
+	public final String MyBill_CreateBlankBillID() throws Exception
 	{
 		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankBillID(this.getFrmID(), WebUser.getNo(), null));
 	}
@@ -191,8 +193,9 @@ public class WF_CCBill extends DirectoryPageBase
 	 创建空白的DictID.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MyDict_CreateBlankDictID()
+	public final String MyDict_CreateBlankDictID() throws Exception
 	{
 		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankDictID(this.getFrmID(), WebUser.getNo(), null));
 	}
@@ -200,8 +203,9 @@ public class WF_CCBill extends DirectoryPageBase
 	 执行保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MyBill_SaveIt()
+	public final String MyBill_SaveIt() throws Exception
 	{
 		//执行保存.
 		GEEntity rpt = new GEEntity(this.getFrmID(), this.getWorkID());
@@ -209,12 +213,13 @@ public class WF_CCBill extends DirectoryPageBase
 		rpt = tempVar instanceof GEEntity ? (GEEntity)tempVar : null;
 
 		Hashtable ht = GetMainTableHT();
-		for (String item : ht.keySet())
+		for (Object item : ht.keySet())
 		{
-			rpt.SetValByKey(item, ht.get(item));
+			if(item!=null)
+			rpt.SetValByKey(item.toString(), ht.get(item));
 		}
 
-		rpt.OID = this.getWorkID();
+		rpt.setOID(this.getWorkID());
 		rpt.SetValByKey("BillState", BillState.Editing.getValue());
 		rpt.Update();
 
@@ -225,22 +230,23 @@ public class WF_CCBill extends DirectoryPageBase
 	 执行保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MyDict_SaveIt()
+	public final String MyDict_SaveIt() throws Exception
 	{
-		//  throw new Exception("dddssds");
 		//执行保存.
 		GEEntity rpt = new GEEntity(this.getFrmID(), this.getWorkID());
 		Object tempVar = BP.Sys.PubClass.CopyFromRequest(rpt);
 		rpt = tempVar instanceof GEEntity ? (GEEntity)tempVar : null;
 
 		Hashtable ht = GetMainTableHT();
-		for (String item : ht.keySet())
+		for (Object item : ht.keySet())
 		{
-			rpt.SetValByKey(item, ht.get(item));
+			if(item!=null)
+			rpt.SetValByKey(item.toString(), ht.get(item));
 		}
 
-		rpt.OID = this.getWorkID();
+		rpt.setOID(this.getWorkID());
 		rpt.SetValByKey("BillState", BillState.Editing.getValue());
 		rpt.Update();
 
@@ -248,7 +254,7 @@ public class WF_CCBill extends DirectoryPageBase
 		return str;
 	}
 
-	public final String GetFrmEntitys()
+	public final String GetFrmEntitys() throws Exception
 	{
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 		QueryObject qo = new QueryObject(rpts);
@@ -256,10 +262,10 @@ public class WF_CCBill extends DirectoryPageBase
 		qo.DoQuery();
 		return BP.Tools.Json.ToJson(rpts.ToDataTableField());
 	}
-	private Hashtable GetMainTableHT()
+	private Hashtable GetMainTableHT() throws UnsupportedEncodingException
 	{
 		Hashtable htMain = new Hashtable();
-		for (String key : HttpContextHelper.RequestParamKeys)
+		for (String key : HttpContextHelper.getRequestParamKeys())
 		{
 			if (key == null)
 			{
@@ -272,7 +278,7 @@ public class WF_CCBill extends DirectoryPageBase
 				String val = HttpContextHelper.RequestParams(key);
 				if (htMain.containsKey(key.replace("TB_", "")) == false)
 				{
-					val = HttpUtility.UrlDecode(val, Encoding.UTF8);
+					val = URLDecoder.decode(this.GetRequestVal(key), "UTF-8");
 					htMain.put(key.replace("TB_", ""), val);
 				}
 				continue;
@@ -299,29 +305,29 @@ public class WF_CCBill extends DirectoryPageBase
 		return htMain;
 	}
 
-	public final String MyBill_SaveAsDraft()
+	public final String MyBill_SaveAsDraft() throws Exception
 	{
 		String str = BP.Frm.Dev2Interface.SaveWork(this.getFrmID(), this.getWorkID());
 		return str;
 	}
 	//删除单据
-	public final String MyBill_Delete()
+	public final String MyBill_Delete() throws Exception
 	{
 		return BP.Frm.Dev2Interface.MyBill_Delete(this.getFrmID(), this.getWorkID());
 	}
 
-	public final String MyBill_Deletes()
+	public final String MyBill_Deletes() throws Exception
 	{
 		return BP.Frm.Dev2Interface.MyBill_DeleteDicts(this.getFrmID(), this.GetRequestVal("WorkIDs"));
 	}
 
 	//删除实体
-	public final String MyDict_Delete()
+	public final String MyDict_Delete() throws Exception
 	{
 		return BP.Frm.Dev2Interface.MyDict_Delete(this.getFrmID(), this.getWorkID());
 	}
 
-	public final String MyEntityTree_Delete()
+	public final String MyEntityTree_Delete() throws Exception
 	{
 		return BP.Frm.Dev2Interface.MyEntityTree_Delete(this.getFrmID(), this.GetRequestVal("BillNo"));
 	}
@@ -329,17 +335,18 @@ public class WF_CCBill extends DirectoryPageBase
 	 复制单据数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MyBill_Copy()
+	public final String MyBill_Copy() throws Exception
 	{
 		return BP.Frm.Dev2Interface.MyBill_Copy(this.getFrmID(), this.getWorkID());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 单据处理.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取查询条件
-	public final String Search_ToolBar()
+	public final String Search_ToolBar() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -352,7 +359,7 @@ public class WF_CCBill extends DirectoryPageBase
 		//获取字段属性
 		MapAttrs attrs = new MapAttrs(this.getFrmID());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //增加枚举/外键字段信息
 
 		dt.Columns.Add("Field", String.class);
@@ -360,7 +367,7 @@ public class WF_CCBill extends DirectoryPageBase
 		dt.Columns.Add("Width", Integer.class);
 		dt.TableName = "Attrs";
 
-		String[] ctrls = md.RptSearchKeys.split("[*]", -1);
+		String[] ctrls = md.getRptSearchKeys().split("[*]", -1);
 		DataTable dtNoName = null;
 
 		MapAttr mapattr;
@@ -376,39 +383,39 @@ public class WF_CCBill extends DirectoryPageBase
 			Object tempVar = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, ctrl);
 			mapattr = tempVar instanceof MapAttr ? (MapAttr)tempVar : null;
 			dr = dt.NewRow();
-			dr.set("Field", mapattr.KeyOfEn);
-			dr.set("Name", mapattr.Name);
-			dr.set("Width", mapattr.UIWidth);
+			dr.set("Field", mapattr.getKeyOfEn());
+			dr.set("Name", mapattr.getName());
+			dr.set("Width", mapattr.getUIWidth());
 			dt.Rows.add(dr);
 
-			Attr attr = mapattr.HisAttr;
+			Attr attr = mapattr.getHisAttr();
 			if (mapattr == null)
 			{
 				continue;
 			}
 
-			if (attr.IsEnum == true)
+			if (attr.getIsEnum() == true)
 			{
-				SysEnums ses = new SysEnums(mapattr.UIBindKey);
+				SysEnums ses = new SysEnums(mapattr.getUIBindKey());
 				DataTable dtEnum = ses.ToDataTableField();
-				dtEnum.TableName = mapattr.KeyOfEn;
+				dtEnum.TableName = mapattr.getKeyOfEn();
 				ds.Tables.add(dtEnum);
 				continue;
 			}
-			if (attr.IsFK == true)
+			if (attr.getIsFK() == true)
 			{
-				Entities ensFK = attr.HisFKEns;
+				Entities ensFK = attr.getHisFKEns();
 				ensFK.RetrieveAll();
 
 				DataTable dtEn = ensFK.ToDataTableField();
-				dtEn.TableName = attr.Key;
+				dtEn.TableName = attr.getKey();
 				ds.Tables.add(dtEn);
 			}
 			//绑定SQL的外键
-			if (attr.UIDDLShowType == BP.Web.Controls.DDLShowType.BindSQL)
+			if (attr.getUIDDLShowType() == DDLShowType.BindSQL) 
 			{
 				//获取SQl
-				String sql = attr.UIBindKey;
+				String sql = attr.getUIBindKey();
 				sql = BP.WF.Glo.DealExp(sql, null, null);
 				DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
 				for (DataColumn col : dtSQl.Columns)
@@ -429,8 +436,8 @@ public class WF_CCBill extends DirectoryPageBase
 							break;
 					}
 				}
-				dtSQl.TableName = attr.Key;
-				if (ds.Tables.Contains(attr.getKey()) == false)
+				dtSQl.TableName = attr.getKey();
+				if (ds.Tables.contains(attr.getKey()) == false)
 				{
 					ds.Tables.add(dtSQl);
 				}
@@ -444,15 +451,15 @@ public class WF_CCBill extends DirectoryPageBase
 		return BP.Tools.Json.ToJson(ds);
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 查询条件
 
 
-	public final String Search_Init()
+	public final String Search_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 查询显示的列
 		MapAttrs mapattrs = new MapAttrs();
 		mapattrs.Retrieve(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.Idx);
@@ -469,55 +476,55 @@ public class WF_CCBill extends DirectoryPageBase
 		//设置标题、单据号位于开始位置
 
 
-		for (MapAttr attr : mapattrs)
+		for (MapAttr attr : mapattrs.ToJavaList())
 		{
-			String searchVisable = attr.atPara.GetValStrByKey("SearchVisable");
+			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
 			if (searchVisable.equals("0"))
 			{
 				continue;
 			}
-			if (attr.UIVisible == false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
 			row = dt.NewRow();
-			row.set("KeyOfEn", attr.KeyOfEn);
-			row.set("Name", attr.Name);
-			row.set("Width", attr.UIWidthInt);
-			row.set("UIContralType", attr.UIContralType);
-			row.set("LGType", attr.LGType);
+			row.set("KeyOfEn", attr.getKeyOfEn());
+			row.set("Name", attr.getName());
+			row.set("Width", attr.getUIWidthInt());
+			row.set("UIContralType", attr.getUIContralType());
+			row.set("LGType", attr.getLGType());
 			row.set("AtPara", attr.GetValStringByKey("AtPara"));
 			dt.Rows.add(row);
 		}
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 查询显示的列
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 查询语句
 		MapData md = new MapData(this.getFrmID());
 
 		//取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + "_" + this.getFrmID() + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + "_" + this.getFrmID() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
-		Attrs attrs = rpts.GetNewEntity.getEnMap().getAttrs();
+		Attrs attrs = rpts.getNewEntity().getEnMap().getAttrs();
 
 		QueryObject qo = new QueryObject(rpts);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 关键字字段.
-		String keyWord = ur.SearchKey;
+		String keyWord = ur.getSearchKey();
 
 		if (md.GetParaBoolen("IsSearchKey") && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			Attr attrPK = new Attr();
 			for (Attr attr : attrs)
 			{
-				if (attr.IsPK)
+				if (attr.getIsPK())
 				{
 					attrPK = attr;
 					break;
@@ -527,32 +534,32 @@ public class WF_CCBill extends DirectoryPageBase
 			String enumKey = ","; //求出枚举值外键.
 			for (Attr attr : attrs)
 			{
-				switch (attr.MyFieldType)
+				switch (attr.getMyFieldType())
 				{
-					case FieldType.Enum:
-						enumKey = "," + attr.Key + "Text,";
+					case Enum:
+						enumKey = "," + attr.getKey()+ "Text,";
 						break;
-					case FieldType.FK:
+					case FK:
 						continue;
 					default:
 						break;
 				}
 
-				if (attr.MyDataType != DataType.AppString)
+				if (attr.getMyDataType() != DataType.AppString)
 				{
 					continue;
 				}
 
 				//排除枚举值关联refText.
-				if (attr.MyFieldType == FieldType.RefText)
+				if (attr.getMyFieldType() == FieldType.RefText)
 				{
-					if (enumKey.contains("," + attr.Key + ",") == true)
+					if (enumKey.contains("," + attr.getKey() + ",") == true)
 					{
 						continue;
 					}
 				}
 
-				if (attr.Key.equals("FK_Dept"))
+				if (attr.getKey().equals("FK_Dept"))
 				{
 					continue;
 				}
@@ -564,11 +571,11 @@ public class WF_CCBill extends DirectoryPageBase
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
@@ -576,44 +583,44 @@ public class WF_CCBill extends DirectoryPageBase
 
 				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 
 			}
-			qo.MyParas.Add("SKey", keyWord);
+			qo.getMyParas().Add("SKey", keyWord);
 			qo.addRightBracket();
 		}
 		else
 		{
 			qo.AddHD();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 关键字段查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 时间段的查询
-		if (md.GetParaInt("DTSearchWay") != (int)DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
+		if (md.GetParaInt("DTSearchWay") != DTSearchWay.None.getValue() && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
-			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
+			String dtFrom = ur.getDTFrom(); 
+			String dtTo = ur.getDTTo(); 
 
 			//按日期查询
-			if (md.GetParaInt("DTSearchWay") == (int)DTSearchWay.ByDate)
+			if (md.GetParaInt("DTSearchWay") == DTSearchWay.ByDate.getValue())
 			{
 				qo.addAnd();
 				qo.addLeftBracket();
 				dtTo += " 23:59:59";
-				qo.SQL = md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'";
+				qo.setSQL(md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.SQL = md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'";
+				qo.setSQL(md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 
-			if (md.GetParaInt("DTSearchWay") == (int)DTSearchWay.ByDateTime)
+			if (md.GetParaInt("DTSearchWay") == DTSearchWay.ByDateTime.getValue())
 			{
 				//取前一天的24：00
 				if (dtFrom.trim().length() == 10) //2017-09-30
@@ -625,7 +632,7 @@ public class WF_CCBill extends DirectoryPageBase
 					dtFrom += ":00";
 				}
 
-				dtFrom = LocalDateTime.parse(dtFrom).AddDays(-1).toString("yyyy-MM-dd") + " 24:00";
+				dtFrom =DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"),-1) + " 24:00";
 
 				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
 				{
@@ -634,24 +641,23 @@ public class WF_CCBill extends DirectoryPageBase
 
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.SQL = md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'";
+				qo.setSQL(md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.SQL = md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'";
+				qo.setSQL( md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 时间段的查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 外键或者枚举的查询
 
 		//获得关键字.
-		AtPara ap = new AtPara(ur.Vals);
+		AtPara ap = new AtPara(ur.getVals());
 		for (String str : ap.getHisHT().keySet())
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-			var val = ap.GetValStrByKey(str);
+			String val = ap.GetValStrByKey(str);
 			if (val.equals("all"))
 			{
 				continue;
@@ -662,8 +668,7 @@ public class WF_CCBill extends DirectoryPageBase
 
 			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-				var typeVal = BP.Sys.Glo.GenerRealType(attrs, str, ap.GetValStrByKey(str));
+				Object typeVal = BP.Sys.Glo.GenerRealType(attrs, str, ap.GetValStrByKey(str));
 				qo.AddWhere(str, typeVal);
 
 			}
@@ -674,10 +679,10 @@ public class WF_CCBill extends DirectoryPageBase
 
 			qo.addRightBracket();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 外键或者枚举的查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 查询语句
 
 		qo.addAnd();
@@ -686,9 +691,9 @@ public class WF_CCBill extends DirectoryPageBase
 		ur.SetPara("RecCount", qo.GetCount());
 		ur.Save();
 
-		if (DataType.IsNullOrEmpty(ur.OrderBy) == false && DataType.IsNullOrEmpty(ur.OrderWay) == false)
+		if (DataType.IsNullOrEmpty(ur.getOrderBy()) == false && DataType.IsNullOrEmpty(ur.getOrderWay()) == false)
 		{
-			qo.DoQuery("OID", this.getPageSize(), this.getPageIdx(), ur.OrderBy, ur.OrderWay);
+			qo.DoQuery("OID", this.getPageSize(), this.getPageIdx(), ur.getOrderBy(), ur.getOrderWay());
 		}
 		else
 		{
@@ -706,8 +711,9 @@ public class WF_CCBill extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerBill_Init()
+	public final String GenerBill_Init() throws Exception
 	{
 		GenerBills bills = new GenerBills();
 		bills.Retrieve(GenerBillAttr.Starter, WebUser.getNo());
@@ -717,8 +723,9 @@ public class WF_CCBill extends DirectoryPageBase
 	 查询初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SearchData_Init()
+	public final String SearchData_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 		String sql = "";
@@ -729,7 +736,7 @@ public class WF_CCBill extends DirectoryPageBase
 			tSpan = null;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 1、获取时间段枚举/总数.
 		SysEnums ses = new SysEnums("TSpan");
 		DataTable dtTSpan = ses.ToDataTableField();
@@ -754,10 +761,10 @@ public class WF_CCBill extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 2、处理流程类别列表.
 		sql = " SELECT  A.BillState as No, B.Lab as Name, COUNT(WorkID) as Num FROM Frm_GenerBill A, Sys_Enum B ";
 		sql += " WHERE A.BillState=B.IntKey AND B.EnumKey='BillState' AND  A.Starter='" + WebUser.getNo() + "' AND BillState >=1";
@@ -771,16 +778,16 @@ public class WF_CCBill extends DirectoryPageBase
 		DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtFlows.Columns[0].ColumnName = "No";
-			dtFlows.Columns[1].ColumnName = "Name";
-			dtFlows.Columns[2].ColumnName = "Num";
+			dtFlows.Columns.get(0).ColumnName = "No";
+			dtFlows.Columns.get(1).ColumnName = "Name";
+			dtFlows.Columns.get(2).ColumnName = "Num";
 		}
 		dtFlows.TableName = "Flows";
 		ds.Tables.add(dtFlows);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 3、处理流程实例列表.
 		String sqlWhere = "";
 		sqlWhere = "(1 = 1)AND Starter = '" + WebUser.getNo() + "' AND BillState >= 1";
@@ -817,56 +824,60 @@ public class WF_CCBill extends DirectoryPageBase
 		DataTable mydt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			mydt.Columns[0].ColumnName = "WorkID";
-			mydt.Columns[1].ColumnName = "FrmID";
-			mydt.Columns[2].ColumnName = "FrmName";
-			mydt.Columns[3].ColumnName = "Title";
-			mydt.Columns[4].ColumnName = "BillState";
-			mydt.Columns[5].ColumnName = "Starter";
-			mydt.Columns[6].ColumnName = "StarterName";
-			mydt.Columns[7].ColumnName = "Sender";
-			mydt.Columns[8].ColumnName = "RDT";
+			mydt.Columns.get(0).ColumnName = "WorkID";
+			mydt.Columns.get(1).ColumnName = "FrmID";
+			mydt.Columns.get(2).ColumnName = "FrmName";
+			mydt.Columns.get(3).ColumnName = "Title";
+			mydt.Columns.get(4).ColumnName = "BillState";
+			mydt.Columns.get(5).ColumnName = "Starter";
+			mydt.Columns.get(6).ColumnName = "StarterName";
+			mydt.Columns.get(7).ColumnName = "Sender";
+			mydt.Columns.get(8).ColumnName = "RDT";
 		}
 
 		mydt.TableName = "Frm_Bill";
 		if (mydt != null)
 		{
 			mydt.Columns.Add("TDTime");
-			for (DataRow dr : mydt.Rows)
-			{
-				//   dr["TDTime"] =  GetTraceNewTime(dr["FK_Flow"].ToString(), int.Parse(dr["WorkID"].ToString()), int.Parse(dr["FID"].ToString()));
-			}
+			
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
+
 
 		ds.Tables.add(mydt);
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 查询.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
+
 		///#region 单据导出
-	public final String Search_Exp()
+	public final String Search_Exp() throws Exception
 	{
 		FrmBill frmBill = new FrmBill(this.getFrmID());
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
+		
+		
+		MapAttrs mapAttrs = new MapAttrs();
+		Attrs attrs = new Attrs();
+		mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
+
+		for (MapAttr attr : mapAttrs.ToJavaList())
+			attrs.Add(attr.getHisAttr());
+		
+		
 
 		String name = "数据导出";
-		String filename = frmBill.Name + "_" + BP.DA.DataType.getCurrentDataTime()CNOfLong + ".xls";
-		String filePath = ExportDGToExcel(Search_Data(), rpts.GetNewEntity, null, null, filename);
-
+		String filename = frmBill.getName() + "_" + BP.DA.DataType.getCurrentDataTimeCNOfLong() + ".xls";
+		String filePath = ExportDGToExcel(Search_Data(), rpts.getNewEntity(), name, attrs);
 
 		return filePath;
 	}
 
-	public final DataTable Search_Data()
+	public final DataTable Search_Data() throws Exception
 	{
 		DataSet ds = new DataSet();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 查询语句
 
 		MapData md = new MapData(this.getFrmID());
@@ -874,25 +885,25 @@ public class WF_CCBill extends DirectoryPageBase
 
 		//取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + "_" + this.getFrmID() + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + "_" + this.getFrmID() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
-		Attrs attrs = rpts.GetNewEntity.getEnMap().getAttrs();
+		Attrs attrs = rpts.getNewEntity().getEnMap().getAttrs();
 
 		QueryObject qo = new QueryObject(rpts);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 关键字字段.
-		String keyWord = ur.SearchKey;
+		String keyWord = ur.getSearchKey();
 
 		if (md.GetParaBoolen("IsSearchKey") && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			Attr attrPK = new Attr();
 			for (Attr attr : attrs)
 			{
-				if (attr.IsPK)
+				if (attr.getIsPK())
 				{
 					attrPK = attr;
 					break;
@@ -902,33 +913,33 @@ public class WF_CCBill extends DirectoryPageBase
 			String enumKey = ","; //求出枚举值外键.
 			for (Attr attr : attrs)
 			{
-				switch (attr.MyFieldType)
+				switch (attr.getMyFieldType())
 				{
-					case FieldType.Enum:
-						enumKey = "," + attr.Key + "Text,";
+					case Enum:
+						enumKey = "," + attr.getKey() + "Text,";
 						break;
-					case FieldType.FK:
+					case FK:
 
 						continue;
 					default:
 						break;
 				}
 
-				if (attr.MyDataType != DataType.AppString)
+				if (attr.getMyDataType() != DataType.AppString)
 				{
 					continue;
 				}
 
 				//排除枚举值关联refText.
-				if (attr.MyFieldType == FieldType.RefText)
+				if (attr.getMyFieldType() == FieldType.RefText)
 				{
-					if (enumKey.contains("," + attr.Key + ",") == true)
+					if (enumKey.contains("," + attr.getKey() + ",") == true)
 					{
 						continue;
 					}
 				}
 
-				if (attr.Key.equals("FK_Dept"))
+				if (attr.getKey().equals("FK_Dept"))
 				{
 					continue;
 				}
@@ -940,11 +951,11 @@ public class WF_CCBill extends DirectoryPageBase
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
@@ -952,15 +963,15 @@ public class WF_CCBill extends DirectoryPageBase
 
 				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 
 			}
-			qo.MyParas.Add("SKey", keyWord);
+			qo.getMyParas().Add("SKey", keyWord);
 			qo.addRightBracket();
 
 		}
@@ -968,29 +979,29 @@ public class WF_CCBill extends DirectoryPageBase
 		{
 			qo.AddHD();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 关键字段查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 时间段的查询
-		if (md.GetParaInt("DTSearchWay") != (int)DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
+		if (md.GetParaInt("DTSearchWay") != DTSearchWay.None.getValue() && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
-			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
+			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
+			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			//按日期查询
-			if (md.GetParaInt("DTSearchWay") == (int)DTSearchWay.ByDate)
+			if (md.GetParaInt("DTSearchWay") == DTSearchWay.ByDate.getValue())
 			{
 				qo.addAnd();
 				qo.addLeftBracket();
 				dtTo += " 23:59:59";
-				qo.SQL = md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'";
+				qo.setSQL(md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.SQL = md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'";
+				qo.setSQL(md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 
-			if (md.GetParaInt("DTSearchWay") == (int)DTSearchWay.ByDateTime)
+			if (md.GetParaInt("DTSearchWay") == DTSearchWay.ByDateTime.getValue())
 			{
 				//取前一天的24：00
 				if (dtFrom.trim().length() == 10) //2017-09-30
@@ -1002,7 +1013,7 @@ public class WF_CCBill extends DirectoryPageBase
 					dtFrom += ":00";
 				}
 
-				dtFrom = LocalDateTime.parse(dtFrom).AddDays(-1).toString("yyyy-MM-dd") + " 24:00";
+				dtFrom = DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"),-1) + " 24:00";
 
 				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
 				{
@@ -1011,24 +1022,23 @@ public class WF_CCBill extends DirectoryPageBase
 
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.SQL = md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'";
+				qo.setSQL( md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.SQL = md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'";
+				qo.setSQL(md.GetParaString("DTSearchKey") + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 时间段的查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 外键或者枚举的查询
 
 		//获得关键字.
-		AtPara ap = new AtPara(ur.Vals);
+		AtPara ap = new AtPara(ur.getVals());
 		for (String str : ap.getHisHT().keySet())
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-			var val = ap.GetValStrByKey(str);
+			String val = ap.GetValStrByKey(str);
 			if (val.equals("all"))
 			{
 				continue;
@@ -1039,8 +1049,7 @@ public class WF_CCBill extends DirectoryPageBase
 			//获得真实的数据类型.
 			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-				var typeVal = BP.Sys.Glo.GenerRealType(attrs, str, ap.GetValStrByKey(str));
+				Object typeVal = BP.Sys.Glo.GenerRealType(attrs, str, ap.GetValStrByKey(str));
 				qo.AddWhere(str, typeVal);
 			}
 			else
@@ -1050,33 +1059,37 @@ public class WF_CCBill extends DirectoryPageBase
 
 			qo.addRightBracket();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 外键或者枚举的查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 查询语句
 		qo.addOrderBy("OID");
 		return qo.DoQueryToTable();
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion  执行导出
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 单据导入
-	public final String ImpData_Done()
+	public final String ImpData_Done() throws Exception
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var files = HttpContextHelper.RequestFiles();
-		if (HttpContextHelper.RequestFilesCount == 0)
+		HttpServletRequest request = getRequest();
+		if (CommonFileUtils.getFilesSize(request, "File_Upload") == 0)
 		{
 			return "err@请选择要导入的数据信息。";
 		}
+		
+		String fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
+		String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
+		if (!prefix.equals("xls") && !prefix.equals("xlsx")) {
+
+			return "err@上传的文件必须是Excel文件.";
+		}
 
 		String errInfo = "";
-
 		String ext = ".xls";
-		String fileName = (new File(HttpContextHelper.RequestFiles(0).FileName)).getName();
 		if (fileName.contains(".xlsx"))
 		{
 			ext = ".xlsx";
@@ -1084,14 +1097,14 @@ public class WF_CCBill extends DirectoryPageBase
 
 
 		//设置文件名
-		String fileNewName = LocalDateTime.now().toString("yyyyMMddHHmmssff") + ext;
+		String fileNewName = DateUtils.format(new Date(),"yyyyMMddHHmmssff") + ext;
 
 		//文件存放路径
-		String filePath = BP.Sys.SystemConfig.PathOfTemp + "\\" + fileNewName;
-		HttpContextHelper.UploadFile(HttpContextHelper.RequestFiles(0), filePath);
-
+		String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "/" + fileNewName;
+		File file = new File(filePath);
+		CommonFileUtils.upload(request, "File_Upload", file);
 		//从excel里面获得数据表.
-		DataTable dt = BP.DA.DBLoad.ReadExcelFileToDataTable(filePath);
+		DataTable dt = BP.DA.DBLoad.GetTableByExt(filePath);
 
 		//删除临时文件
 		(new File(filePath)).delete();
@@ -1110,19 +1123,19 @@ public class WF_CCBill extends DirectoryPageBase
 		String noColName = ""; //实体列的编号名称.
 		String nameColName = ""; //实体列的名字名称.
 
-		BP.En.Map map = en.EnMap;
+		BP.En.Map map = en.getEnMap();
 		Attr attr = map.GetAttrByKey("BillNo");
-		noColName = attr.Desc;
-		String codeStruct = bill.getEnMap().CodeStruct;
+		noColName = attr.getDesc();
+		String codeStruct = bill.getEnMap().getCodeStruct();
 		attr = map.GetAttrByKey("Title");
-		nameColName = attr.Desc;
+		nameColName = attr.getDesc();
 
 		//定义属性.
-		Attrs attrs = map.Attrs;
+		Attrs attrs = map.getAttrs();
 
 		int impWay = this.GetRequestValInt("ImpWay");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 清空方式导入.
 		//清空方式导入.
 		int count = 0; //导入的行数
@@ -1137,12 +1150,12 @@ public class WF_CCBill extends DirectoryPageBase
 			{
 				String no = dr.get(noColName).toString();
 				String name = dr.get(nameColName).toString();
-				myen.OID = 0;
+				myen.setOID(0);
 
 				//判断是否是自增序列，序列的格式
 				if (!DataType.IsNullOrEmpty(codeStruct))
 				{
-					no = tangible.StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
+					no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
 				}
 
 
@@ -1160,10 +1173,10 @@ public class WF_CCBill extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 清空方式导入.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 更新方式导入
 		if (impWay == 1 || impWay == 2)
 		{
@@ -1174,9 +1187,9 @@ public class WF_CCBill extends DirectoryPageBase
 				//判断是否是自增序列，序列的格式
 				if (!DataType.IsNullOrEmpty(codeStruct))
 				{
-					no = tangible.StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
+					no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
 				}
-				GEEntity myen = rpts.GetNewEntity instanceof GEEntity ? (GEEntity)rpts.GetNewEntity : null;
+				GEEntity myen = rpts.getNewEntity() instanceof GEEntity ? (GEEntity)rpts.getNewEntity() : null;
 				myen.SetValByKey("BillNo", no);
 				if (myen.Retrieve("BillNo", no) == 1)
 				{
@@ -1194,18 +1207,18 @@ public class WF_CCBill extends DirectoryPageBase
 				successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的导入成功</span><br/>";
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
 	}
 
-	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, GEEntity en, DataTable dt, int saveType)
+	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, GEEntity en, DataTable dt, int saveType) throws Exception
 	{
 		if (saveType == 0)
 		{
 			String OID = MyDict_CreateBlankDictID();
-			en.OID = Long.parseLong(OID);
+			en.setOID(Long.parseLong(OID));
 			en.RetrieveFromDBSources();
 		}
 
@@ -1213,80 +1226,80 @@ public class WF_CCBill extends DirectoryPageBase
 		//按照属性赋值.
 		for (Attr item : attrs)
 		{
-			if (item.Key.equals("BillNo"))
+			if (item.getKey().equals("BillNo"))
 			{
-				en.SetValByKey(item.Key, no);
+				en.SetValByKey(item.getKey(), no);
 				continue;
 			}
-			if (item.Key.equals("Title"))
+			if (item.getKey().equals("Title"))
 			{
-				en.SetValByKey(item.Key, dr.get(item.Desc).toString());
+				en.SetValByKey(item.getKey(), dr.get(item.getDesc()).toString());
 				continue;
 			}
 
-			if (dt.Columns.Contains(item.Desc) == false)
+			if (dt.Columns.contains(item.getDesc()) == false)
 			{
 				continue;
 			}
 
 			//枚举处理.
-			if (item.MyFieldType == FieldType.Enum)
+			if (item.getMyFieldType() == FieldType.Enum)
 			{
-				String val = dr.get(item.Desc).toString();
+				String val = dr.get(item.getDesc()).toString();
 
 				SysEnum se = new SysEnum();
-				int i = se.Retrieve(SysEnumAttr.EnumKey, item.UIBindKey, SysEnumAttr.Lab, val);
+				int i = se.Retrieve(SysEnumAttr.EnumKey, item.getUIBindKey(), SysEnumAttr.Lab, val);
 
 				if (i == 0)
 				{
-					errInfo += "err@枚举[" + item.Key + "][" + item.Desc + "]，值[" + val + "]不存在.";
+					errInfo += "err@枚举[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
 					continue;
 				}
 
-				en.SetValByKey(item.Key, se.IntKey);
+				en.SetValByKey(item.getKey(), se.getIntKey());
 				continue;
 			}
 
 			//外键处理.
-			if (item.MyFieldType == FieldType.FK)
+			if (item.getMyFieldType() == FieldType.FK)
 			{
-				String val = dr.get(item.Desc).toString();
-				Entity attrEn = item.HisFKEn;
+				String val = dr.get(item.getDesc()).toString();
+				Entity attrEn = item.getHisFKEn();
 				int i = attrEn.Retrieve("Name", val);
 				if (i == 0)
 				{
-					errInfo += "err@外键[" + item.Key + "][" + item.Desc + "]，值[" + val + "]不存在.";
+					errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
 					continue;
 				}
 
 				if (i != 1)
 				{
-					errInfo += "err@外键[" + item.Key + "][" + item.Desc + "]，值[" + val + "]重复..";
+					errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]重复..";
 					continue;
 				}
 
 				//把编号值给他.
-				en.SetValByKey(item.Key, attrEn.GetValByKey("No"));
+				en.SetValByKey(item.getKey(), attrEn.GetValByKey("No"));
 				continue;
 			}
 
 			//boolen类型的处理..
-			if (item.MyDataType == DataType.AppBoolean)
+			if (item.getMyDataType() == DataType.AppBoolean)
 			{
-				String val = dr.get(item.Desc).toString();
+				String val = dr.get(item.getDesc()).toString();
 				if (val.equals("是") || val.equals("有"))
 				{
-					en.SetValByKey(item.Key, 1);
+					en.SetValByKey(item.getKey(), 1);
 				}
 				else
 				{
-					en.SetValByKey(item.Key, 0);
+					en.SetValByKey(item.getKey(), 0);
 				}
 				continue;
 			}
 
-			String myval = dr.get(item.Desc).toString();
-			en.SetValByKey(item.Key, myval);
+			String myval = dr.get(item.getDesc()).toString();
+			en.SetValByKey(item.getKey(), myval);
 		}
 
 		en.SetValByKey("BillState", BillState.Editing.getValue());
@@ -1295,10 +1308,10 @@ public class WF_CCBill extends DirectoryPageBase
 		return errInfo;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -1317,24 +1330,24 @@ public class WF_CCBill extends DirectoryPageBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.getRequestRawUrl());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获得demo信息.
-	public final String MethodDocDemoJS_Init()
+	public final String MethodDocDemoJS_Init() throws Exception
 	{
 		MethodFunc func = new MethodFunc(this.getMyPK());
 		return func.getMethodDoc_JavaScript_Demo();
 	}
-	public final String MethodDocDemoSQL_Init()
+	public final String MethodDocDemoSQL_Init() throws Exception
 	{
 		MethodFunc func = new MethodFunc(this.getMyPK());
 		return func.getMethodDoc_SQL_Demo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获得demo信息.
 
 }

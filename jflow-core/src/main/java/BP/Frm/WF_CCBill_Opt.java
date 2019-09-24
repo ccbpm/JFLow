@@ -2,42 +2,30 @@ package BP.Frm;
 
 import BP.DA.*;
 import BP.Sys.*;
-import BP.Web.*;
-import BP.Port.*;
+import BP.Tools.DateUtils;
 import BP.En.*;
-import BP.WF.*;
-import BP.WF.Template.*;
 import BP.WF.Data.*;
 import BP.WF.HttpHandler.*;
-import java.time.*;
 
-/** 
- 页面功能实体
-*/
-public class WF_CCBill_Opt extends DirectoryPageBase
-{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法.
-	/** 
-	 构造函数
-	*/
-	public WF_CCBill_Opt()
-	{
+/**
+ * 页面功能实体
+ */
+public class WF_CCBill_Opt extends DirectoryPageBase {
+
+	/**
+	 * 构造函数
+	 */
+	public WF_CCBill_Opt() {
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 构造方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 关联单据.
-	/** 
-	 设置父子关系.
-	 
-	 @return 
-	*/
-	public final String RefBill_Done()
-	{
-		try
-		{
+	/**
+	 * 设置父子关系.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String RefBill_Done() throws Exception {
+		try {
 			String frmID = this.GetRequestVal("FrmID");
 			long workID = this.GetRequestValInt64("WorkID");
 			GERpt rpt = new GERpt(frmID, workID);
@@ -45,36 +33,34 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 			String pFrmID = this.GetRequestVal("PFrmID");
 			long pWorkID = this.GetRequestValInt64("PWorkID");
 
-			//把数据copy到当前的子表单里.
+			// 把数据copy到当前的子表单里.
 			GERpt rptP = new GERpt(pFrmID, pWorkID);
 			rpt.Copy(rptP);
 			rpt.setPWorkID(pWorkID);
 			rpt.SetValByKey("PFrmID", pFrmID);
 			rpt.Update();
 
-			//更新控制表,设置父子关系.
+			// 更新控制表,设置父子关系.
 			GenerBill gbill = new GenerBill(workID);
 			gbill.setPFrmID(pFrmID);
 			gbill.setPWorkID(pWorkID);
 			gbill.Update();
 			return "执行成功";
-		}
-		catch (RuntimeException ex)
-		{
+		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
-	 单据初始化
-	 
-	 @return 
-	*/
-	public final String RefBill_Init()
-	{
+
+	/**
+	 * 单据初始化
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String RefBill_Init() throws Exception {
 		DataSet ds = new DataSet();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 查询显示的列
+		/// #region 查询显示的列
 		MapAttrs mapattrs = new MapAttrs();
 		mapattrs.Retrieve(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.Idx);
 
@@ -86,18 +72,14 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 		dt.Columns.Add("UIContralType", Integer.class);
 		dt.Columns.Add("LGType", Integer.class);
 
-		//设置标题、单据号位于开始位置
+		// 设置标题、单据号位于开始位置
 
-
-		for (MapAttr attr : mapattrs.ToJavaList())
-		{
+		for (MapAttr attr : mapattrs.ToJavaList()) {
 			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
-			if (searchVisable.equals("0"))
-			{
+			if (searchVisable.equals("0")) {
 				continue;
 			}
-			if (attr.getUIVisible() == false)
-			{
+			if (attr.getUIVisible() == false) {
 				continue;
 			}
 			row = dt.NewRow();
@@ -109,11 +91,10 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 			dt.Rows.add(row);
 		}
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 查询显示的列
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 查询语句
+		/// #endregion 查询显示的列
+
+		/// #region 查询语句
 
 		MapData md = new MapData(this.getFrmID());
 
@@ -123,89 +104,81 @@ public class WF_CCBill_Opt extends DirectoryPageBase
 
 		QueryObject qo = new QueryObject(rpts);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 关键字字段.
+		/// #region 关键字字段.
 		String keyWord = this.GetRequestVal("SearchKey");
 
-		if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
-		{
+		if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1) {
 			qo.addLeftBracket();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
-			{
-				qo.AddWhere("Title", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-			}
-			else
-			{
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
+				qo.AddWhere("Title", " LIKE ",
+						SystemConfig.getAppCenterDBType() == DBType.MySQL
+								? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")
+								: (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+			} else {
 				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 			qo.addOr();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
-			{
-				qo.AddWhere("BillNo", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-			}
-			else
-			{
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
+				qo.AddWhere("BillNo", " LIKE ",
+						SystemConfig.getAppCenterDBType() == DBType.MySQL
+								? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")
+								: ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+			} else {
 				qo.AddWhere("BillNo", " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 
-			qo.MyParas.Add("SKey", keyWord);
+			qo.getMyParas().Add("SKey", keyWord);
 			qo.addRightBracket();
 
-		}
-		else
-		{
+		} else {
 			qo.AddHD();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 关键字段查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 时间段的查询
+		/// #endregion 关键字段查询
+
+		/// #region 时间段的查询
 		String dtFrom = this.GetRequestVal("DTFrom");
 		String dtTo = this.GetRequestVal("DTTo");
-		if (DataType.IsNullOrEmpty(dtFrom) == false)
-		{
+		if (DataType.IsNullOrEmpty(dtFrom) == false) {
 
-			//取前一天的24：00
-			if (dtFrom.trim().length() == 10) //2017-09-30
+			// 取前一天的24：00
+			if (dtFrom.trim().length() == 10) // 2017-09-30
 			{
 				dtFrom += " 00:00:00";
 			}
-			if (dtFrom.trim().length() == 16) //2017-09-30 00:00
+			if (dtFrom.trim().length() == 16) // 2017-09-30 00:00
 			{
 				dtFrom += ":00";
 			}
 
-			dtFrom = LocalDateTime.parse(dtFrom).AddDays(-1).toString("yyyy-MM-dd") + " 24:00";
+			dtFrom = DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"), -1) + " 24:00";
 
-			if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
-			{
+			if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1) {
 				dtTo += " 24:00";
 			}
 
 			qo.addAnd();
 			qo.addLeftBracket();
-			qo.SQL = " RDT>= '" + dtFrom + "'";
+			qo.setSQL(" RDT>= '" + dtFrom + "'");
 			qo.addAnd();
-			qo.SQL = "RDT <= '" + dtTo + "'";
+			qo.setSQL("RDT <= '" + dtTo + "'");
 			qo.addRightBracket();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 时间段的查询
+
+		/// #endregion 时间段的查询
 
 		qo.DoQuery("OID", this.getPageSize(), this.getPageIdx());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
+		/// #endregion
 
 		DataTable mydt = rpts.ToDataTableField();
 		mydt.TableName = "DT";
 
-		ds.Tables.add(mydt); //把数据加入里面.
+		ds.Tables.add(mydt); // 把数据加入里面.
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 关联单据.
+
+	/// #endregion 关联单据.
 
 }

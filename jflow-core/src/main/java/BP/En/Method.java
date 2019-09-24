@@ -1,9 +1,6 @@
 package BP.En;
 
-import BP.DA.*;
-import BP.Web.Controls.*;
-import BP.En.*;
-import BP.Web.*;
+import BP.Difference.Handler.CommonUtils;
 import java.math.*;
 
 /** 
@@ -16,11 +13,9 @@ public abstract class Method
 	*/
 	public MsgShowType HisMsgShowType = MsgShowType.Blank;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region Http
 	public final String Request(String key)
 	{
-		return HttpContextHelper.RequestParams(key);
+		return CommonUtils.getRequest().getParameter(key);
 	}
 	/** 
 	 获取MyPK

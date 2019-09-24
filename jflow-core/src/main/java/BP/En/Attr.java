@@ -40,10 +40,7 @@ public class Attr
 		attr.setUIRefKeyText(this.getUIRefKeyText());
 		attr.setUIVisible(this.getUIVisible());
 
-			//if (this.IsPK)
-			//    attr.setMyDataType ( = FieldType.PK;
-			//    attr.MyFieldType = FieldType.PK;
-
+	
 		switch (this.getMyFieldType())
 		{
 			case Enum:
@@ -73,12 +70,10 @@ public class Attr
 						attr.setUIIsEnable(this.getUIIsReadonly());
 						break;
 					case DataType.AppDate:
-							//if (this.Tag == "1")
-							//    attr.DefaultVal = DataType.CurrentData;
+
 						break;
 					case DataType.AppDateTime:
-							//if (this.Tag == "1")
-							//    attr.DefaultVal = DataType.CurrentData;
+
 						break;
 					default:
 						break;
@@ -86,8 +81,7 @@ public class Attr
 				break;
 		}
 
-			//attr.HisAutoFull = this.AutoFullWay;
-			//attr.AutoFullDoc = this.AutoFullDoc;
+
 		return attr;
 	}
 	public final BP.Web.Controls.TBType getHisTBType()

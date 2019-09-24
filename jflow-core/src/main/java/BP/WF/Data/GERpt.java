@@ -15,202 +15,202 @@ public class GERpt extends BP.En.EntityOID
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region attrs
-	public final long getOID()
+	public final long getOID() throws Exception
 	{
 		return this.GetValInt64ByKey(GERptAttr.OID);
 	}
-	public final void setOID(long value)
+	public final void setOID(long value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.OID, value);
 	}
 	/** 
 	 流程时间跨度
 	*/
-	public final float getFlowDaySpan()
+	public final float getFlowDaySpan() throws Exception
 	{
 		return this.GetValFloatByKey(GERptAttr.FlowDaySpan);
 	}
-	public final void setFlowDaySpan(float value)
+	public final void setFlowDaySpan(float value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FlowDaySpan, value);
 	}
-	public final int getMyNum()
+	public final int getMyNum() throws Exception
 	{
 		return this.GetValIntByKey(GERptAttr.MyNum);
 	}
-	public final void setMyNum(int value)
+	public final void setMyNum(int value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.MyNum, value);
 	}
 	/** 
 	 主流程ID
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(GERptAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FID, value);
 	}
-	public final String getGUID()
+	public final String getGUID() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.GUID);
 	}
-	public final void setGUID(String value)
+	public final void setGUID(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.GUID, value);
 	}
 	/** 
 	 流程参与人员
 	*/
-	public final String getFlowEmps()
+	public final String getFlowEmps() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FlowEmps);
 	}
-	public final void setFlowEmps(String value)
+	public final void setFlowEmps(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FlowEmps, value);
 	}
 	/** 
 	 流程备注
 	*/
-	public final String getFlowNote()
+	public final String getFlowNote() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FlowNote);
 	}
-	public final void setFlowNote(String value)
-	{
+	public final void setFlowNote(String value) throws Exception
+	{ 
 		this.SetValByKey(GERptAttr.FlowNote, value);
 	}
 	/** 
 	 客户编号
 	*/
-	public final String getGuestNo()
+	public final String getGuestNo() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.GuestNo);
 	}
-	public final void setGuestNo(String value)
+	public final void setGuestNo(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.GuestNo, value);
 	}
 	/** 
 	 客户名称
 	*/
-	public final String getGuestName()
+	public final String getGuestName() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.GuestName);
 	}
-	public final void setGuestName(String value)
+	public final void setGuestName(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.GuestName, value);
 	}
-	public final String getBillNo()
+	public final String getBillNo() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.BillNo);
 	}
-	public final void setBillNo(String value)
+	public final void setBillNo(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.BillNo, value);
 	}
 	/** 
 	 流程发起人
 	*/
-	public final String getFlowStarter()
+	public final String getFlowStarter() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FlowStarter);
 	}
-	public final void setFlowStarter(String value)
+	public final void setFlowStarter(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FlowStarter, value);
 	}
 	/** 
 	 流程发起时间
 	*/
-	public final String getFlowStartRDT()
+	public final String getFlowStartRDT() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FlowStartRDT);
 	}
-	public final void setFlowStartRDT(String value)
+	public final void setFlowStartRDT(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FlowStartRDT, value);
 	}
 	/** 
 	 流程结束者
 	*/
-	public final String getFlowEnder()
+	public final String getFlowEnder() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FlowEnder);
 	}
-	public final void setFlowEnder(String value)
+	public final void setFlowEnder(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FlowEnder, value);
 	}
 	/** 
 	 流程最后处理时间
 	*/
-	public final String getFlowEnderRDT()
+	public final String getFlowEnderRDT() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FlowEnderRDT);
 	}
-	public final void setFlowEnderRDT(String value)
+	public final void setFlowEnderRDT(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FlowEnderRDT, value);
 	}
-	public final String getFlowEndNodeText()
+	public final String getFlowEndNodeText()  throws Exception
 	{
 		Node nd = new Node(this.getFlowEndNode());
 		return nd.getName();
 	}
-	public final int getFlowEndNode()
+	public final int getFlowEndNode() throws Exception
 	{
 		return this.GetValIntByKey(GERptAttr.FlowEndNode);
 	}
-	public final void setFlowEndNode(int value)
+	public final void setFlowEndNode(int value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FlowEndNode, value);
 	}
 	/** 
 	 流程标题
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.Title, value);
 	}
 	/** 
 	 隶属年月
 	*/
-	public final String getFK_NY()
+	public final String getFK_NY() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FK_NY);
 	}
-	public final void setFK_NY(String value)
+	public final void setFK_NY(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.FK_NY, value);
 	}
 	/** 
 	 发起人部门
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
-	{
+	public final void setFK_Dept(String value) throws Exception
+	{ 
 		this.SetValByKey(GERptAttr.FK_Dept, value);
 	}
 	/** 
 	 流程状态
 	*/
-	public final WFState getWFState()
+	public final WFState getWFState() throws Exception
 	{
 		return WFState.forValue(this.GetValIntByKey(GERptAttr.WFState));
 	}
-	public final void setWFState(WFState value)
+	public final void setWFState(WFState value) throws Exception
 	{
 			//设置他的值.
 		this.SetValByKey(GERptAttr.WFState,value.getValue());
@@ -234,60 +234,60 @@ public class GERpt extends BP.En.EntityOID
 	/** 
 	 父流程WorkID
 	*/
-	public final long getPWorkID()
+	public final long getPWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(GERptAttr.PWorkID);
 	}
-	public final void setPWorkID(long value)
-	{
+	public final void setPWorkID(long value) throws Exception
+	{ 
 		this.SetValByKey(GERptAttr.PWorkID, value);
 	}
 	/** 
 	 发出的节点
 	*/
-	public final int getPNodeID()
+	public final int getPNodeID() throws Exception
 	{
 		return this.GetValIntByKey(GERptAttr.PNodeID);
 	}
-	public final void setPNodeID(int value)
+	public final void setPNodeID(int value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.PNodeID, value);
 	}
 	/** 
 	 父流程流程编号
 	*/
-	public final String getPFlowNo()
+	public final String getPFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value)
-	{
+	public final void setPFlowNo(String value) throws Exception
+	{ 
 		this.SetValByKey(GERptAttr.PFlowNo, value);
 	}
-	public final String getPEmp()
+	public final String getPEmp() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.PEmp);
 	}
-	public final void setPEmp(String value)
+	public final void setPEmp(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.PEmp, value);
 	}
 	/** 
 	 项目编号
 	*/
-	public final String getPrjNo()
+	public final String getPrjNo() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.PrjNo);
 	}
-	public final void setPrjNo(String value)
+	public final void setPrjNo(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.PrjNo, value);
 	}
-	public final String getPrjName()
+	public final String getPrjName() throws Exception
 	{
 		return this.GetValStringByKey(GERptAttr.PrjName);
 	}
-	public final void setPrjName(String value)
+	public final void setPrjName(String value) throws Exception
 	{
 		this.SetValByKey(GERptAttr.PrjName, value);
 	}
@@ -298,7 +298,7 @@ public class GERpt extends BP.En.EntityOID
 		///#region 重写。
 
 	@Override
-	public void Copy(DataRow dr)
+	public void Copy(DataRow dr) throws Exception
 	{
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
@@ -323,7 +323,7 @@ public class GERpt extends BP.En.EntityOID
 		}
 	}
 	@Override
-	public void Copy(Entity fromEn)
+	public void Copy(Entity fromEn) throws Exception
 	{
 		if (fromEn == null)
 		{

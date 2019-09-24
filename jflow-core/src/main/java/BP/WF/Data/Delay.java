@@ -18,276 +18,295 @@ public class Delay extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 workid
+	 * @throws Exception 
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(DelayAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.WorkID, value);
 	}
 	/** 
 	 发起人
+	 * @throws Exception 
 	*/
-	public final String getStarter()
+	public final String getStarter() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.Starter);
 	}
-	public final void setStarter(String value)
+	public final void setStarter(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.Starter, value);
 	}
 	/** 
 	 发起人名称
+	 * @throws Exception 
 	*/
-	public final String getStarterName()
+	public final String getStarterName() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.StarterName);
 	}
-	public final void setStarterName(String value)
+	public final void setStarterName(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.StarterName, value);
 	}
 	/** 
 	 流程状态
+	 * @throws Exception 
 	*/
-	public final int getWFStateInt()
+	public final int getWFStateInt() throws Exception
 	{
 		return this.GetValIntByKey(DelayAttr.WFState);
 	}
-	public final void setWFStateInt(int value)
+	public final void setWFStateInt(int value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.WFState, value);
 	}
 	/** 
 	 流程状态
+	 * @throws Exception 
 	*/
-	public final WFState getWFState()
+	public final WFState getWFState() throws Exception
 	{
 		return WFState.forValue(this.GetValIntByKey(DelayAttr.WFState));
 	}
-	public final void setWFState(WFState value)
+	public final void setWFState(WFState value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.WFState, value.getValue());
 	}
 	/** 
 	 部门编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FK_Dept, value);
 	}
 	/** 
 	 部门名称
+	 * @throws Exception 
 	*/
-	public final String getDeptName()
+	public final String getDeptName() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.DeptName);
 	}
-	public final void setDeptName(String value)
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.DeptName, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FK_Flow, value);
 	}
 	/** 
 	 流程名称
+	 * @throws Exception 
 	*/
-	public final String getFlowName()
+	public final String getFlowName() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.FlowName);
 	}
-	public final void setFlowName(String value)
+	public final void setFlowName(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FlowName, value);
 	}
 	/** 
 	 当前节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(DelayAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
+	 * @throws Exception 
 	*/
-	public final String getNodeName()
+	public final String getNodeName() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.NodeName);
 	}
-	public final void setNodeName(String value)
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.NodeName, value);
 	}
 	/** 
 	 工作人部门
+	 * @throws Exception 
 	*/
-	public final String getWorkerDept()
+	public final String getWorkerDept() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.WorkerDept);
 	}
-	public final void setWorkerDept(String value)
+	public final void setWorkerDept(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.WorkerDept, value);
 	}
 	/** 
 	 标题
+	 * @throws Exception 
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.Title, value);
 	}
 	/** 
 	 记录日期
+	 * @throws Exception 
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.RDT, value);
 	}
 	/** 
 	 应完成日期
+	 * @throws Exception 
 	*/
-	public final String getSDT()
+	public final String getSDT() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.SDT);
 	}
-	public final void setSDT(String value)
+	public final void setSDT(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.SDT, value);
 	}
 	/** 
 	 人员编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FK_Emp, value);
 	}
 	/** 
 	 fid
+	 * @throws Exception 
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(DelayAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FID, value);
 	}
 	/** 
 	 流程类别
+	 * @throws Exception 
 	*/
-	public final String getFK_FlowSort()
+	public final String getFK_FlowSort() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.FK_FlowSort);
 	}
-	public final void setFK_FlowSort(String value)
+	public final void setFK_FlowSort(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FK_FlowSort, value);
 	}
 	/** 
 	 系统类型
+	 * @throws Exception 
 	*/
-	public final String getSysType()
+	public final String getSysType() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.SysType);
 	}
-	public final void setSysType(String value)
+	public final void setSysType(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.SysType, value);
 	}
 	/** 
 	 应完成日期
 	*/
-	public final String getSDTOfNode()
+	public final String getSDTOfNode() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.SDTOfNode);
 	}
-	public final void setSDTOfNode(String value)
+	public final void setSDTOfNode(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.SDTOfNode, value);
 	}
 	/** 
 	 催办次数
 	*/
-	public final int getPressTimes()
+	public final int getPressTimes() throws Exception
 	{
 		return this.GetValIntByKey(DelayAttr.PressTimes);
 	}
-	public final void setPressTimes(int value)
+	public final void setPressTimes(int value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.PressTimes, value);
 	}
 	/** 
 	 单据编号
 	*/
-	public final String getBillNo()
+	public final String getBillNo() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.BillNo);
 	}
-	public final void setBillNo(String value)
+	public final void setBillNo(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.BillNo, value);
 	}
 	/** 
 	 备注
 	*/
-	public final String getFlowNote()
+	public final String getFlowNote() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.FlowNote);
 	}
-	public final void setFlowNote(String value)
+	public final void setFlowNote(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.FlowNote, value);
 	}
 	/** 
 	 待办处理人
 	*/
-	public final String getTodoEmps()
+	public final String getTodoEmps() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.TodoEmps);
 	}
-	public final void setTodoEmps(String value)
+	public final void setTodoEmps(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.TodoEmps, value);
 	}
 	/** 
 	 发送人
 	*/
-	public final String getSender()
+	public final String getSender() throws Exception
 	{
 		return this.GetValStringByKey(DelayAttr.Sender);
 	}
-	public final void setSender(String value)
+	public final void setSender(String value) throws Exception
 	{
 		this.SetValByKey(DelayAttr.Sender, value);
 	}
@@ -391,7 +410,7 @@ public class Delay extends EntityMyPK
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final String DoOpenTrack()
+	public final String DoOpenTrack() throws Exception
 	{
 		//@sly
 		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();

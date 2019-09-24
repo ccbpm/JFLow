@@ -35,319 +35,323 @@ public class MyDeptFlow extends Entity
 	/** 
 	 备注
 	*/
-	public final String getFlowNote()
+	public final String getFlowNote() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.FlowNote);
 	}
-	public final void setFlowNote(String value)
+	public final void setFlowNote(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FlowNote, value);
 	}
 	/** 
 	 工作流程编号
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FK_Flow,value);
 	}
 	/** 
 	 BillNo
 	*/
-	public final String getBillNo()
+	public final String getBillNo() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.BillNo);
 	}
-	public final void setBillNo(String value)
+	public final void setBillNo(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.BillNo, value);
 	}
 	/** 
 	 流程名称
 	*/
-	public final String getFlowName()
+	public final String getFlowName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.FlowName);
 	}
-	public final void setFlowName(String value)
+	public final void setFlowName(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FlowName, value);
 	}
 	/** 
 	 优先级
 	*/
-	public final int getPRI()
+	public final int getPRI() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptFlowAttr.PRI);
 	}
-	public final void setPRI(int value)
+	public final void setPRI(int value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.PRI, value);
 	}
 	/** 
 	 待办人员数量
 	*/
-	public final int getTodoEmpsNum()
+	public final int getTodoEmpsNum() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptFlowAttr.TodoEmpsNum);
 	}
-	public final void setTodoEmpsNum(int value)
+	public final void setTodoEmpsNum(int value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.TodoEmpsNum, value);
 	}
 	/** 
 	 待办人员列表
 	*/
-	public final String getTodoEmps()
+	public final String getTodoEmps() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.TodoEmps);
 	}
-	public final void setTodoEmps(String value)
+	public final void setTodoEmps(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.TodoEmps, value);
 	}
 	/** 
 	 参与人
 	*/
-	public final String getEmps()
+	public final String getEmps() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.Emps);
 	}
-	public final void setEmps(String value)
+	public final void setEmps(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.Emps, value);
 	}
 	/** 
 	 状态
 	*/
-	public final TaskSta getTaskSta()
+	public final TaskSta getTaskSta() throws Exception
 	{
 		return TaskSta.forValue(this.GetValIntByKey(MyDeptFlowAttr.TaskSta));
 	}
-	public final void setTaskSta(TaskSta value)
+	public final void setTaskSta(TaskSta value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.TaskSta, value.getValue());
 	}
 	/** 
 	 类别编号
 	*/
-	public final String getFK_FlowSort()
+	public final String getFK_FlowSort() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.FK_FlowSort);
 	}
-	public final void setFK_FlowSort(String value)
+	public final void setFK_FlowSort(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FK_FlowSort, value);
 	}
 	/** 
 	 部门编号
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FK_Dept,value);
 	}
 	/** 
 	 标题
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.Title,value);
 	}
 	/** 
 	 客户编号
 	*/
-	public final String getGuestNo()
+	public final String getGuestNo() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.GuestNo);
 	}
-	public final void setGuestNo(String value)
+	public final void setGuestNo(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.GuestNo, value);
 	}
 	/** 
 	 客户名称
 	*/
-	public final String getGuestName()
+	public final String getGuestName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.GuestName);
 	}
-	public final void setGuestName(String value)
+	public final void setGuestName(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.GuestName, value);
 	}
 	/** 
 	 产生时间
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.RDT,value);
 	}
 	/** 
 	 节点应完成时间
 	*/
-	public final String getSDTOfNode()
+	public final String getSDTOfNode() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.SDTOfNode);
 	}
-	public final void setSDTOfNode(String value)
+	public final void setSDTOfNode(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.SDTOfNode, value);
 	}
 	/** 
 	 流程应完成时间
 	*/
-	public final String getSDTOfFlow()
+	public final String getSDTOfFlow() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.SDTOfFlow);
 	}
-	public final void setSDTOfFlow(String value)
+	public final void setSDTOfFlow(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.SDTOfFlow, value);
 	}
 	/** 
 	 流程ID
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(MyDeptFlowAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.WorkID,value);
 	}
 	/** 
 	 主线程ID
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(MyDeptFlowAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FID, value);
 	}
 	/** 
 	 父节点流程编号.
 	*/
-	public final long getPWorkID()
+	public final long getPWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(MyDeptFlowAttr.PWorkID);
 	}
-	public final void setPWorkID(long value)
+	public final void setPWorkID(long value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.PWorkID, value);
 	}
 	/** 
 	 父流程调用的节点
 	*/
-	public final int getPNodeID()
+	public final int getPNodeID() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptFlowAttr.PNodeID);
 	}
-	public final void setPNodeID(int value)
+	public final void setPNodeID(int value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.PNodeID, value);
 	}
 	/** 
 	 PFlowNo
 	*/
-	public final String getPFlowNo()
+	public final String getPFlowNo() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value)
+	public final void setPFlowNo(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.PFlowNo, value);
 	}
 	/** 
 	 吊起子流程的人员
 	*/
-	public final String getPEmp()
+	public final String getPEmp() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.PEmp);
 	}
-	public final void setPEmp(String value)
+	public final void setPEmp(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.PEmp, value);
 	}
 	/** 
 	 发起人
 	*/
-	public final String getStarter()
+	public final String getStarter() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.Starter);
 	}
-	public final void setStarter(String value)
+	public final void setStarter(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.Starter, value);
 	}
 	/** 
 	 发起人名称
 	*/
-	public final String getStarterName()
+	public final String getStarterName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.StarterName);
 	}
-	public final void setStarterName(String value)
+	public final void setStarterName(String value) throws Exception
 	{
 		this.SetValByKey(MyDeptFlowAttr.StarterName, value);
 	}
 	/** 
 	 发起人部门名称
+	 * @throws Exception 
 	*/
-	public final String getDeptName()
+	public final String getDeptName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.DeptName);
 	}
-	public final void setDeptName(String value)
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(MyDeptFlowAttr.DeptName, value);
 	}
 	/** 
 	 当前节点名称
+	 * @throws Exception 
 	*/
-	public final String getNodeName()
+	public final String getNodeName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.NodeName);
 	}
-	public final void setNodeName(String value)
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(MyDeptFlowAttr.NodeName, value);
 	}
 	/** 
 	 当前工作到的节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptFlowAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FK_Node, value);
 	}
 	/** 
 	 工作流程状态
+	 * @throws Exception 
 	*/
-	public final WFState getWFState()
+	public final WFState getWFState() throws Exception
 	{
 		return WFState.forValue(this.GetValIntByKey(MyDeptFlowAttr.WFState));
 	}
-	public final void setWFState(WFState value)
+	public final void setWFState(WFState value) throws Exception
 	{
 		if (value == WFState.Complete)
 		{
@@ -366,16 +370,17 @@ public class MyDeptFlow extends Entity
 	}
 	/** 
 	 状态(简单)
+	 * @throws Exception 
 	*/
-	public final WFSta getWFSta()
+	public final WFSta getWFSta() throws Exception
 	{
 		return WFSta.forValue(this.GetValIntByKey(MyDeptFlowAttr.WFSta));
 	}
-	public final void setWFSta(WFSta value)
+	public final void setWFSta(WFSta value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.WFSta, value.getValue());
 	}
-	public final String getWFStateText()
+	public final String getWFStateText() throws Exception
 	{
 		BP.WF.WFState ws = (WFState)this.getWFState();
 		switch (ws)
@@ -394,12 +399,13 @@ public class MyDeptFlow extends Entity
 	}
 	/** 
 	 GUID
+	 * @throws Exception 
 	*/
-	public final String getGUID()
+	public final String getGUID() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.GUID);
 	}
-	public final void setGUID(String value)
+	public final void setGUID(String value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.GUID, value);
 	}
@@ -409,25 +415,26 @@ public class MyDeptFlow extends Entity
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 参数属性.
 
-	public final String getParas_ToNodes()
+	public final String getParas_ToNodes() throws Exception
 	{
 		return this.GetParaString("ToNodes");
 	}
 
-	public final void setParas_ToNodes(String value)
+	public final void setParas_ToNodes(String value) throws Exception
 	{
 		this.SetPara("ToNodes", value);
 	}
 	/** 
 	 加签信息
+	 * @throws Exception 
 	*/
 
-	public final String getParas_AskForReply()
+	public final String getParas_AskForReply() throws Exception
 	{
 		return this.GetParaString("AskForReply");
 	}
 
-	public final void setParas_AskForReply(String value)
+	public final void setParas_AskForReply(String value) throws Exception
 	{
 		this.SetPara("AskForReply", value);
 	}
@@ -520,7 +527,7 @@ public class MyDeptFlow extends Entity
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 执行诊断
-	public final String DoTrack()
+	public final String DoTrack() throws Exception
 	{
 		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}

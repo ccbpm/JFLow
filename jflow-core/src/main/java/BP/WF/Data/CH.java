@@ -18,320 +18,349 @@ public class CH extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 发送人
+	 * @throws Exception 
 	*/
-	public final String getSender()
+	public final String getSender() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.Sender);
 	}
-	public final void setSender(String value)
+	public final void setSender(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.Sender, value);
 	}
 	/** 
 	 发送人名称
+	 * @throws Exception 
 	*/
-	public final String getSenderT()
+	public final String getSenderT() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.SenderT);
 	}
-	public final void setSenderT(String value)
+	public final void setSenderT(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.SenderT, value);
 	}
 	/** 
 	 考核状态
+	 * @throws Exception 
 	*/
-	public final CHSta getCHSta()
+	public final CHSta getCHSta() throws Exception
 	{
 		return CHSta.forValue(this.GetValIntByKey(CHAttr.CHSta));
 	}
-	public final void setCHSta(CHSta value)
+	public final void setCHSta(CHSta value) throws Exception
 	{
 		this.SetValByKey(CHAttr.CHSta, value.getValue());
 	}
 	/** 
 	 时间到
+	 * @throws Exception 
 	*/
-	public final String getDTTo()
+	public final String getDTTo() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.DTTo);
 	}
-	public final void setDTTo(String value)
+	public final void setDTTo(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.DTTo, value);
 	}
 	/** 
 	 时间从
+	 * @throws Exception 
 	*/
-	public final String getDTFrom()
+	public final String getDTFrom() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.DTFrom);
 	}
-	public final void setDTFrom(String value)
+	public final void setDTFrom(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.DTFrom, value);
 	}
 	/** 
 	 应完成日期
+	 * @throws Exception 
 	*/
-	public final String getSDT()
+	public final String getSDT() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.SDT);
 	}
-	public final void setSDT(String value)
+	public final void setSDT(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.SDT, value);
 	}
 	/** 
 	 流程标题
+	 * @throws Exception 
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.Title, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_Flow, value);
 	}
 	/** 
 	 流程
+	 * @throws Exception 
 	*/
-	public final String getFK_FlowT()
+	public final String getFK_FlowT() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.FK_FlowT);
 	}
-	public final void setFK_FlowT(String value)
+	public final void setFK_FlowT(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_FlowT, value);
 	}
 	/** 
 	 限期
+	 * @throws Exception 
 	*/
-	public final int getTimeLimit()
+	public final int getTimeLimit() throws Exception
 	{
 		return this.GetValIntByKey(CHAttr.TimeLimit);
 	}
-	public final void setTimeLimit(int value)
+	public final void setTimeLimit(int value) throws Exception
 	{
 		this.SetValByKey(CHAttr.TimeLimit, value);
 	}
 	/** 
 	 实际完成用时.
+	 * @throws Exception 
 	*/
-	public final float getUseDays()
+	public final float getUseDays() throws Exception
 	{
 		return this.GetValFloatByKey(CHAttr.UseDays);
 	}
-	public final void setUseDays(float value)
+	public final void setUseDays(float value) throws Exception
 	{
 		this.SetValByKey(CHAttr.UseDays, value);
 	}
 	/** 
 	 逾期时间
+	 * @throws Exception 
 	*/
-	public final float getOverDays()
+	public final float getOverDays() throws Exception
 	{
 		return this.GetValFloatByKey(CHAttr.OverDays);
 	}
-	public final void setOverDays(float value)
+	public final void setOverDays(float value) throws Exception
 	{
 		this.SetValByKey(CHAttr.OverDays, value);
 	}
 	/** 
 	 用时（分钟）
+	 * @throws Exception 
 	*/
-	public final float getUseMinutes()
+	public final float getUseMinutes() throws Exception
 	{
 		return this.GetValFloatByKey(CHAttr.UseMinutes);
 	}
-	public final void setUseMinutes(float value)
+	public final void setUseMinutes(float value) throws Exception
 	{
 		this.SetValByKey(CHAttr.UseMinutes, value);
 	}
 	/** 
 	 超时（分钟）
+	 * @throws Exception 
 	*/
-	public final float getOverMinutes()
+	public final float getOverMinutes() throws Exception
 	{
 		return this.GetValFloatByKey(CHAttr.OverMinutes);
 	}
-	public final void setOverMinutes(float value)
+	public final void setOverMinutes(float value) throws Exception
 	{
 		this.SetValByKey(CHAttr.OverMinutes, value);
 	}
 	/** 
 	 操作人员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_Emp, value);
 	}
 	/** 
 	 人员
+	 * @throws Exception 
 	*/
-	public final String getFK_EmpT()
+	public final String getFK_EmpT() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.FK_EmpT);
 	}
-	public final void setFK_EmpT(String value)
+	public final void setFK_EmpT(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_EmpT, value);
 	}
 	/** 
 	 相关当事人
+	 * @throws Exception 
 	*/
-	public final String getGroupEmps()
+	public final String getGroupEmps() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.GroupEmps);
 	}
-	public final void setGroupEmps(String value)
+	public final void setGroupEmps(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.GroupEmps, value);
 	}
 	/** 
 	 相关当事人名称
+	 * @throws Exception 
 	*/
-	public final String getGroupEmpsNames()
+	public final String getGroupEmpsNames() throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.GroupEmpsNames);
 	}
-	public final void setGroupEmpsNames(String value)
+	public final void setGroupEmpsNames(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.GroupEmpsNames, value);
 	}
 	/** 
 	 相关当事人数量
+	 * @throws Exception 
 	*/
-	public final int getGroupEmpsNum()
+	public final int getGroupEmpsNum() throws Exception
 	{
 		return this.GetValIntByKey(CHAttr.GroupEmpsNum);
 	}
-	public final void setGroupEmpsNum(int value)
+	public final void setGroupEmpsNum(int value) throws Exception
 	{
 		this.SetValByKey(CHAttr.GroupEmpsNum, value);
 	}
 	/** 
 	 部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(CHAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_Dept, value);
 	}
 	/** 
 	 部门名称
+	 * @throws Exception 
 	*/
-	public final String getFK_DeptT()
+	public final String getFK_DeptT() throws Exception
 	{
 		return this.GetValStrByKey(CHAttr.FK_DeptT);
 	}
-	public final void setFK_DeptT(String value)
+	public final void setFK_DeptT(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_DeptT, value);
 	}
 	/** 
 	 年月
+	 * @throws Exception 
 	*/
-	public final String getFK_NY()
+	public final String getFK_NY() throws Exception
 	{
 		return this.GetValStrByKey(CHAttr.FK_NY);
 	}
-	public final void setFK_NY(String value)
+	public final void setFK_NY(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_NY, value);
 	}
 	/** 
 	 考核方式
+	 * @throws Exception 
 	*/
-	public final int getDTSWay()
+	public final int getDTSWay() throws Exception
 	{
 		return this.GetValIntByKey(CHAttr.DTSWay);
 	}
-	public final void setDTSWay(int value)
+	public final void setDTSWay(int value) throws Exception
 	{
 		this.SetValByKey(CHAttr.DTSWay, value);
 	}
 	/** 
 	 周
+	 * @throws Exception 
 	*/
-	public final int getWeekNum()
+	public final int getWeekNum() throws Exception
 	{
 		return this.GetValIntByKey(CHAttr.WeekNum);
 	}
-	public final void setWeekNum(int value)
+	public final void setWeekNum(int value) throws Exception
 	{
 		this.SetValByKey(CHAttr.WeekNum, value);
 	}
 	/** 
 	 工作ID
+	 * @throws Exception 
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(CHAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(CHAttr.WorkID, value);
 	}
 	/** 
 	 流程ID
+	 * @throws Exception 
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(CHAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FID, value);
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(CHAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
+	 * @throws Exception 
 	*/
-	public final String getFK_NodeT()
+	public final String getFK_NodeT() throws Exception
 	{
 		return this.GetValStrByKey(CHAttr.FK_NodeT);
 	}
-	public final void setFK_NodeT(String value)
+	public final void setFK_NodeT(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_NodeT, value);
 	}
 	/** 
 	 总扣分
+	 * @throws Exception 
 	*/
-	public final float getPoints()
+	public final float getPoints() throws Exception
 	{
 		return this.GetValFloatByKey(CHAttr.Points);
 	}
-	public final void setPoints(float value)
+	public final void setPoints(float value) throws Exception
 	{
 		this.SetValByKey(CHAttr.Points, value);
 	}

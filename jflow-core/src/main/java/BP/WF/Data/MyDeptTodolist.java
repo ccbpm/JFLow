@@ -35,309 +35,316 @@ public class MyDeptTodolist extends Entity
 	}
 	/** 
 	 工作流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.FK_Flow,value);
 	}
 	/** 
 	 BillNo
+	 * @throws Exception 
 	*/
-	public final String getBillNo()
+	public final String getBillNo() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.BillNo);
 	}
-	public final void setBillNo(String value)
+	public final void setBillNo(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.BillNo, value);
 	}
 	/** 
 	 流程名称
+	 * @throws Exception 
 	*/
-	public final String getFlowName()
+	public final String getFlowName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.FlowName);
 	}
-	public final void setFlowName(String value)
+	public final void setFlowName(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.FlowName, value);
 	}
 	/** 
 	 优先级
+	 * @throws Exception 
 	*/
-	public final int getPRI()
+	public final int getPRI() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptTodolistAttr.PRI);
 	}
-	public final void setPRI(int value)
+	public final void setPRI(int value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.PRI, value);
 	}
 	/** 
 	 待办人员数量
+	 * @throws Exception 
 	*/
-	public final int getTodoEmpsNum()
+	public final int getTodoEmpsNum() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptTodolistAttr.TodoEmpsNum);
 	}
-	public final void setTodoEmpsNum(int value)
+	public final void setTodoEmpsNum(int value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.TodoEmpsNum, value);
 	}
 	/** 
 	 待办人员列表
+	 * @throws Exception 
 	*/
-	public final String getTodoEmps()
+	public final String getTodoEmps() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.TodoEmps);
 	}
-	public final void setTodoEmps(String value)
+	public final void setTodoEmps(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.TodoEmps, value);
 	}
 	/** 
 	 参与人
+	 * @throws Exception 
 	*/
-	public final String getEmps()
+	public final String getEmps() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.Emps);
 	}
-	public final void setEmps(String value)
+	public final void setEmps(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.Emps, value);
 	}
 	/** 
 	 状态
 	*/
-	public final TaskSta getTaskSta()
+	public final TaskSta getTaskSta() throws Exception
 	{
 		return TaskSta.forValue(this.GetValIntByKey(MyDeptTodolistAttr.TaskSta));
 	}
-	public final void setTaskSta(TaskSta value)
+	public final void setTaskSta(TaskSta value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.TaskSta, value.getValue());
 	}
 	/** 
 	 类别编号
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.FK_Emp, value);
 	}
 	/** 
 	 部门编号
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.FK_Dept,value);
 	}
 	/** 
 	 标题
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.Title,value);
 	}
 	/** 
 	 客户编号
 	*/
-	public final String getGuestNo()
+	public final String getGuestNo() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.GuestNo);
 	}
-	public final void setGuestNo(String value)
+	public final void setGuestNo(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.GuestNo, value);
 	}
 	/** 
 	 客户名称
 	*/
-	public final String getGuestName()
+	public final String getGuestName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.GuestName);
 	}
-	public final void setGuestName(String value)
+	public final void setGuestName(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.GuestName, value);
 	}
 	/** 
 	 产生时间
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.RDT,value);
 	}
 	/** 
 	 节点应完成时间
 	*/
-	public final String getSDTOfNode()
+	public final String getSDTOfNode() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.SDTOfNode);
 	}
-	public final void setSDTOfNode(String value)
+	public final void setSDTOfNode(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.SDTOfNode, value);
 	}
 	/** 
 	 流程应完成时间
 	*/
-	public final String getSDTOfFlow()
+	public final String getSDTOfFlow() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.SDTOfFlow);
 	}
-	public final void setSDTOfFlow(String value)
+	public final void setSDTOfFlow(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.SDTOfFlow, value);
 	}
 	/** 
 	 流程ID
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(MyDeptTodolistAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.WorkID,value);
 	}
 	/** 
 	 主线程ID
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(MyDeptTodolistAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.FID, value);
 	}
 	/** 
 	 父节点流程编号.
 	*/
-	public final long getPWorkID()
+	public final long getPWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(MyDeptTodolistAttr.PWorkID);
 	}
-	public final void setPWorkID(long value)
+	public final void setPWorkID(long value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.PWorkID, value);
 	}
 	/** 
 	 父流程调用的节点
 	*/
-	public final int getPNodeID()
+	public final int getPNodeID() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptTodolistAttr.PNodeID);
 	}
-	public final void setPNodeID(int value)
+	public final void setPNodeID(int value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.PNodeID, value);
 	}
 	/** 
 	 PFlowNo
 	*/
-	public final String getPFlowNo()
+	public final String getPFlowNo() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value)
+	public final void setPFlowNo(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.PFlowNo, value);
 	}
 	/** 
 	 吊起子流程的人员
 	*/
-	public final String getPEmp()
+	public final String getPEmp() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.PEmp);
 	}
-	public final void setPEmp(String value)
+	public final void setPEmp(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.PEmp, value);
 	}
 	/** 
 	 发起人
 	*/
-	public final String getStarter()
+	public final String getStarter() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.Starter);
 	}
-	public final void setStarter(String value)
+	public final void setStarter(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.Starter, value);
 	}
 	/** 
 	 发起人名称
 	*/
-	public final String getStarterName()
+	public final String getStarterName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.StarterName);
 	}
-	public final void setStarterName(String value)
+	public final void setStarterName(String value) throws Exception
 	{
 		this.SetValByKey(MyDeptTodolistAttr.StarterName, value);
 	}
 	/** 
 	 发起人部门名称
 	*/
-	public final String getDeptName()
+	public final String getDeptName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.DeptName);
 	}
-	public final void setDeptName(String value)
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(MyDeptTodolistAttr.DeptName, value);
 	}
 	/** 
 	 当前节点名称
 	*/
-	public final String getNodeName()
+	public final String getNodeName() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.NodeName);
 	}
-	public final void setNodeName(String value)
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(MyDeptTodolistAttr.NodeName, value);
 	}
 	/** 
 	 当前工作到的节点
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(MyDeptTodolistAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.FK_Node, value);
 	}
 	/** 
 	 工作流程状态
 	*/
-	public final WFState getWFState()
+	public final WFState getWFState() throws Exception
 	{
 		return WFState.forValue(this.GetValIntByKey(MyDeptTodolistAttr.WFState));
 	}
-	public final void setWFState(WFState value)
+	public final void setWFState(WFState value) throws Exception
 	{
 		if (value == WFState.Complete)
 		{
@@ -357,15 +364,15 @@ public class MyDeptTodolist extends Entity
 	/** 
 	 状态(简单)
 	*/
-	public final WFSta getWFSta()
+	public final WFSta getWFSta() throws Exception
 	{
 		return WFSta.forValue(this.GetValIntByKey(MyDeptTodolistAttr.WFSta));
 	}
-	public final void setWFSta(WFSta value)
+	public final void setWFSta(WFSta value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.WFSta, value.getValue());
 	}
-	public final String getWFStateText()
+	public final String getWFStateText() throws Exception
 	{
 		BP.WF.WFState ws = (WFState)this.getWFState();
 		switch (ws)
@@ -385,11 +392,11 @@ public class MyDeptTodolist extends Entity
 	/** 
 	 GUID
 	*/
-	public final String getGUID()
+	public final String getGUID() throws Exception
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.GUID);
 	}
-	public final void setGUID(String value)
+	public final void setGUID(String value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.GUID, value);
 	}
@@ -497,7 +504,7 @@ public class MyDeptTodolist extends Entity
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 执行功能.
-	public final String DoTrack()
+	public final String DoTrack() throws Exception
 	{
 		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=";
 	}
@@ -508,7 +515,7 @@ public class MyDeptTodolist extends Entity
 	 @param Note
 	 @return 
 	*/
-	public final String DoShift(String ToEmp, String Note)
+	public final String DoShift(String ToEmp, String Note) throws Exception
 	{
 		if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
 		{
@@ -530,7 +537,7 @@ public class MyDeptTodolist extends Entity
 	 
 	 @return 
 	*/
-	public final String DoDelete()
+	public final String DoDelete() throws Exception
 	{
 		if (BP.WF.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
 		{
@@ -547,7 +554,7 @@ public class MyDeptTodolist extends Entity
 			return "删除失败@" + ex.getMessage();
 		}
 	}
-	public final String DoSkip()
+	public final String DoSkip() throws Exception
 	{
 		return "../../Admin/FlowDB/FlowSkip.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
@@ -558,7 +565,7 @@ public class MyDeptTodolist extends Entity
 	 @param note 回滚原因
 	 @return 回滚的结果
 	*/
-	public final String DoComeBack(int nodeid, String note)
+	public final String DoComeBack(int nodeid, String note) throws Exception
 	{
 		BP.WF.Template.FlowSheet fl = new FlowSheet(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), nodeid, note);

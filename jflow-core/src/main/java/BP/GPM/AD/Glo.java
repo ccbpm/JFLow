@@ -118,7 +118,6 @@ public class Glo
 		return true;
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 登录校验相关.
 
 }

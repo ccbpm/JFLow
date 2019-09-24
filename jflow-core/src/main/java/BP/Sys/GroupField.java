@@ -2,20 +2,18 @@ package BP.Sys;
 
 import BP.DA.*;
 import BP.En.*;
-import java.util.*;
+import BP.En.Map;
+import BP.Web.WebUser;
 
-/** 
- GroupField
-*/
-public class GroupField extends EntityOID
-{
+/**
+ * GroupField
+ */
+public class GroupField extends EntityOID {
 	@Override
-	public UAC getHisUAC()
-	{
+	public UAC getHisUAC() throws Exception {
 		UAC uac = new UAC();
-		if (WebUser.getNo().equals("admin") || WebUser.getIsAdmin())
-		{
-				/* */
+		if (WebUser.getNo().equals("admin") || WebUser.getIsAdmin()) {
+			/* */
 			uac.IsDelete = true;
 			uac.IsInsert = false;
 			uac.IsUpdate = true;
@@ -26,95 +24,98 @@ public class GroupField extends EntityOID
 		return uac;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
+	/// #region 属性
 	public boolean IsUse = false;
-	/** 
-	 表单ID
-	*/
-	public final String getFrmID()
-	{
+
+	/**
+	 * 表单ID
+	 * 
+	 * @throws Exception
+	 */
+	public final String getFrmID() throws Exception {
 		return this.GetValStrByKey(GroupFieldAttr.FrmID);
 	}
-	public final void setFrmID(String value)
-	{
+
+	public final void setFrmID(String value) throws Exception {
 		this.SetValByKey(GroupFieldAttr.FrmID, value);
 	}
-	public final String getEnName()
-	{
+
+	public final String getEnName() throws Exception {
 		return this.GetValStrByKey(GroupFieldAttr.FrmID);
 	}
-	public final void setEnName(String value)
-	{
+
+	public final void setEnName(String value) throws Exception {
 		this.SetValByKey(GroupFieldAttr.FrmID, value);
 	}
-	/** 
-	 标签
-	*/
-	public final String getLab()
-	{
+
+	/**
+	 * 标签
+	 * 
+	 * @throws Exception
+	 */
+	public final String getLab() throws Exception {
 		return this.GetValStrByKey(GroupFieldAttr.Lab);
 	}
-	public final void setLab(String value)
-	{
+
+	public final void setLab(String value) throws Exception {
 		this.SetValByKey(GroupFieldAttr.Lab, value);
 	}
-	/** 
-	 顺序号
-	*/
-	public final int getIdx()
-	{
+
+	/**
+	 * 顺序号
+	 * 
+	 * @throws Exception
+	 */
+	public final int getIdx() throws Exception {
 		return this.GetValIntByKey(GroupFieldAttr.Idx);
 	}
-	public final void setIdx(int value)
-	{
+
+	public final void setIdx(int value) throws Exception {
 		this.SetValByKey(GroupFieldAttr.Idx, value);
 	}
-	/** 
-	 控件类型
-	*/
-	public final String getCtrlType()
-	{
+
+	/**
+	 * 控件类型
+	 * 
+	 * @throws Exception
+	 */
+	public final String getCtrlType() throws Exception {
 		return this.GetValStrByKey(GroupFieldAttr.CtrlType);
 	}
-	public final void setCtrlType(String value)
-	{
+
+	public final void setCtrlType(String value) throws Exception {
 		this.SetValByKey(GroupFieldAttr.CtrlType, value);
 	}
-	/** 
-	 控件ID
-	*/
-	public final String getCtrlID()
-	{
+
+	/**
+	 * 控件ID
+	 * 
+	 * @throws Exception
+	 */
+	public final String getCtrlID() throws Exception {
 		return this.GetValStrByKey(GroupFieldAttr.CtrlID);
 	}
-	public final void setCtrlID(String value)
-	{
+
+	public final void setCtrlID(String value) throws Exception {
 		this.SetValByKey(GroupFieldAttr.CtrlID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
-	/** 
-	 GroupField
-	*/
-	public GroupField()
-	{
+	/**
+	 * GroupField
+	 */
+	public GroupField() {
 	}
-	public GroupField(int oid)
-	{
+
+	public GroupField(int oid) throws Exception {
 		super(oid);
 	}
-	/** 
-	 EnMap
-	*/
+
+	/**
+	 * EnMap
+	 */
 	@Override
-	public Map getEnMap()
-	{
-		if (this.get_enMap() != null)
-		{
+	public Map getEnMap() {
+		if (this.get_enMap() != null) {
 			return this.get_enMap();
 		}
 		Map map = new Map("Sys_GroupField", "傻瓜表单分组");
@@ -132,88 +133,86 @@ public class GroupField extends EntityOID
 		map.AddTBString(MapAttrAttr.GUID, null, "GUID", true, true, 0, 128, 20, true);
 		map.AddTBAtParas(3000);
 
-
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
 		rm.Title = "删除隶属分组的字段";
 		rm.Warning = "您确定要删除该分组下的所有字段吗？";
 		rm.ClassMethodName = this.toString() + ".DoDelAllField";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "调整字段顺序";
 		rm.ClassMethodName = this.toString() + ".DoGroupFieldIdx";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+	/// #endregion
 
-	/** 
-	 外部调用的
-	 
-	 @return 
-	*/
-	public final String AddGroup()
-	{
+	/**
+	 * 外部调用的
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String AddGroup() throws Exception {
 		this.InsertAsNew();
 		return "执行成功.";
 	}
 
-
-	/** 
-	 删除所有隶属该分组的字段.
-	 
-	 @return 
-	*/
-	public final String DoDelAllField()
-	{
-		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getFrmID() + "' AND GroupID=" + this.getOID() + " AND KeyOfEn NOT IN ('OID','RDT','REC','RefPK','FID')";
+	/**
+	 * 删除所有隶属该分组的字段.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String DoDelAllField() throws Exception {
+		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getFrmID() + "' AND GroupID=" + this.getOID()
+				+ " AND KeyOfEn NOT IN ('OID','RDT','REC','RefPK','FID')";
 		int i = BP.DA.DBAccess.RunSQL(sql);
 		return "删除字段{" + i + "}个，被删除成功.";
 	}
-	/** 
-	 分组内的字段顺序调整
-	 
-	 @return 
-	*/
-	public final String DoGroupFieldIdx()
-	{
-		return "../../Admin/FoolFormDesigner/GroupFieldIdx.htm?FrmID=" + this.getFrmID() + "&GroupField=" + this.getOID();
+
+	/**
+	 * 分组内的字段顺序调整
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String DoGroupFieldIdx() throws Exception {
+		return "../../Admin/FoolFormDesigner/GroupFieldIdx.htm?FrmID=" + this.getFrmID() + "&GroupField="
+				+ this.getOID();
 	}
+
 	@Override
-	protected boolean beforeUpdate()
-	{
+	protected boolean beforeUpdate() throws Exception {
 		String sql = "UPDATE Sys_GroupField SET LAB='" + this.getLab() + "' WHERE OID=" + this.getOID();
 		BP.DA.DBAccess.RunSQL(sql);
 		return super.beforeUpdate();
 	}
-	public final String DoDown()
-	{
+
+	public final String DoDown() throws Exception {
 		this.DoOrderDown(GroupFieldAttr.FrmID, this.getFrmID(), GroupFieldAttr.Idx);
 		return "执行成功";
 	}
-	public final String DoUp()
-	{
+
+	public final String DoUp() throws Exception {
 		this.DoOrderUp(GroupFieldAttr.FrmID, this.getFrmID(), GroupFieldAttr.Idx);
 		return "执行成功";
 	}
-	@Override
-	protected boolean beforeInsert()
-	{
 
-		try
-		{
-			String sql = "SELECT MAX(IDX) FROM " + this.getEnMap().getPhysicsTable() + " WHERE FrmID='" + this.getFrmID() + "'";
+	@Override
+	protected boolean beforeInsert() throws Exception {
+
+		try {
+			String sql = "SELECT MAX(IDX) FROM " + this.getEnMap().getPhysicsTable() + " WHERE FrmID='"
+					+ this.getFrmID() + "'";
 			this.setIdx(DBAccess.RunSQLReturnValInt(sql, 0) + 1);
-		}
-		catch (java.lang.Exception e)
-		{
+		} catch (java.lang.Exception e) {
 			this.setIdx(1);
 		}
 		return super.beforeInsert();

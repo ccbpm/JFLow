@@ -14,17 +14,17 @@ import java.math.*;
 */
 public abstract class FrmEventBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 要求子类强制重写的属性.
 	/** 
 	 表单编号
 	 该参数用于说明要把此事件注册到那一个表单模版上.
 	*/
 	public abstract String getFrmNo();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 要求子类重写的属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 常用属性.
 	/** 
 	 工作ID
@@ -77,10 +77,10 @@ public abstract class FrmEventBase
 	{
 		Row = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 常用属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 数据字段的方法
 	/** 
 	 时间参数
@@ -161,10 +161,10 @@ public abstract class FrmEventBase
 	{
 		return new java.math.BigDecimal(this.GetValStr(key));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取参数方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 表单事件基类
@@ -172,10 +172,10 @@ public abstract class FrmEventBase
 	public FrmEventBase()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点表单事件
 	public String FrmLoadAfter()
 	{
@@ -185,10 +185,10 @@ public abstract class FrmEventBase
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 要求子类重写的方法(节点事件).
 	/** 
 	 保存后
@@ -213,22 +213,23 @@ public abstract class FrmEventBase
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 要求子类重写的方法(节点事件).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基类方法.
 	/** 
 	 执行事件
 	 
 	 @param eventType 事件类型
 	 @param en 实体参数
+	 * @throws Exception 
 	*/
-	public final String DoIt(String eventType, Entity en, Row row, String atPara)
+	public final String DoIt(String eventType, Entity en, Row row, String atPara) throws Exception
 	{
 		this.setRow(row);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理参数.
 		Row r = en.getRow();
 		try
@@ -273,10 +274,10 @@ public abstract class FrmEventBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理参数.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 执行事件.
 		switch (eventType)
 		{
@@ -293,10 +294,8 @@ public abstract class FrmEventBase
 			default:
 				throw new RuntimeException("@没有判断的事件类型:" + eventType);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion 执行事件.
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基类方法.
 }

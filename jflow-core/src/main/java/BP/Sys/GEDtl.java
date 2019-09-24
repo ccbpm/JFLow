@@ -3,6 +3,7 @@ package BP.Sys;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
+import BP.Web.WebUser;
 
 import java.util.*;
 import java.math.*;
@@ -12,7 +13,6 @@ import java.math.*;
 */
 public class GEDtl extends EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造函数
 	@Override
 	public String toString()
@@ -24,68 +24,71 @@ public class GEDtl extends EntityOID
 	{
 		return this.FK_MapDtl;
 	}
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(GEDtlAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(GEDtlAttr.RDT, value);
 	}
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(GEDtlAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(GEDtlAttr.Rec, value);
 	}
 	/** 
 	 关联的PK值
+	 * @throws Exception 
 	*/
-	public final String getRefPK()
+	public final String getRefPK() throws Exception
 	{
 		return this.GetValStringByKey(GEDtlAttr.RefPK);
 	}
-	public final void setRefPK(String value)
+	public final void setRefPK(String value) throws Exception
 	{
 		this.SetValByKey(GEDtlAttr.RefPK, value);
 	}
-	public final long getRefPKInt64()
+	public final long getRefPKInt64() throws Exception
 	{
 		return this.GetValInt64ByKey(GEDtlAttr.RefPK);
 	}
-	public final void setRefPKInt64(long value)
+	public final void setRefPKInt64(long value) throws Exception
 	{
 		this.SetValByKey(GEDtlAttr.RefPK, value);
 	}
 	/** 
 	 行是否锁定
+	 * @throws Exception 
 	*/
-	public final boolean getIsRowLock()
+	public final boolean getIsRowLock() throws Exception
 	{
 		return this.GetValBooleanByKey(GEDtlAttr.IsRowLock);
 	}
-	public final void setIsRowLock(boolean value)
+	public final void setIsRowLock(boolean value) throws Exception
 	{
 		this.SetValByKey(GEDtlAttr.IsRowLock, value);
 	}
 	/** 
 	 关联的PKint
+	 * @throws Exception 
 	*/
-	public final int getRefPKInt()
+	public final int getRefPKInt() throws Exception
 	{
 		return this.GetValIntByKey(GEDtlAttr.RefPK);
 	}
-	public final void setRefPKInt(int value)
+	public final void setRefPKInt(int value) throws Exception
 	{
 		this.SetValByKey(GEDtlAttr.RefPK, value);
 	}
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(GEDtlAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(GEDtlAttr.FID, value);
 	}
@@ -113,17 +116,14 @@ public class GEDtl extends EntityOID
 	 
 	 @param nodeid 节点ID
 	 @param _oid OID
+	 * @throws Exception 
 	*/
-	public GEDtl(String fk_mapdtl, int _oid)
+	public GEDtl(String fk_mapdtl, int _oid) throws Exception
 	{
 		this.FK_MapDtl = fk_mapdtl;
 		this.setOID(_oid);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region Map
 	/** 
 	 重写基类方法
 	*/
@@ -140,7 +140,7 @@ public class GEDtl extends EntityOID
 			throw new RuntimeException("没有给" + this.FK_MapDtl + "值，您不能获取它的Map。");
 		}
 
-		BP.Sys.MapDtl md = new BP.Sys.MapDtl(this.FK_MapDtl);
+		MapDtl md = new MapDtl(this.FK_MapDtl);
 		this.set_enMap(md.GenerMap());
 		return this.get_enMap();
 	}
@@ -157,40 +157,41 @@ public class GEDtl extends EntityOID
 
 		return new GEDtls(this.FK_MapDtl);
 	}
-	public final boolean IsChange(GEDtl dtl)
+	public final boolean IsChange(GEDtl dtl) throws Exception
 	{
 		Attrs attrs = dtl.getEnMap().getAttrs();
 		for (Attr attr : attrs)
 		{
-			if (this.GetValByKey(attr.getKey()) == dtl.GetValByKey(attr.getKey()))
-			{
-				continue;
-			}
-			else
-			{
-				return true;
+			Object oldVal = this.GetValByKey(attr.getKey());
+			Object val = dtl.GetValByKey(attr.getKey());
+			if(oldVal == null){
+				if(oldVal!=null)
+					return true;
+			}else{
+				if(oldVal==null)
+					return true;
+				if(oldVal.toString().equals(val.toString())==true)
+					continue;
+				else
+					return true;
 			}
 		}
 		return false;
 	}
-	@Override
-	protected boolean beforeUpdate()
-	{
-		this.AutoFull(); //处理自动计算。
-		return super.beforeUpdate();
-	}
+
 	/** 
 	 记录人
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		// 判断是否有变化的项目，决定是否执行储存。
 		MapAttrs mattrs = new MapAttrs(this.FK_MapDtl);
 		boolean isChange = false;
-		for (MapAttr mattr : mattrs)
+		for (MapAttr mattr : mattrs.ToJavaList())
 		{
 			if (isChange)
 			{
@@ -200,7 +201,6 @@ public class GEDtl extends EntityOID
 			{
 				case "Rec":
 				case "RDT":
-			   // case "RefPK":
 				case "FID":
 					break;
 				default:
@@ -215,7 +215,7 @@ public class GEDtl extends EntityOID
 						s = s.replace("￥", "");
 						s = s.replace(",", "");
 
-						if (mattr.getDefValDecimal().equals(BigDecimal.Parse(s)))
+						if (mattr.getDefValDecimal().equals(BigDecimal.valueOf(Double.parseDouble((s)))))
 						{
 							continue;
 						}
@@ -231,7 +231,6 @@ public class GEDtl extends EntityOID
 						isChange = true;
 						break;
 					}
-					break;
 			}
 		}
 		if (isChange == false)
@@ -241,10 +240,7 @@ public class GEDtl extends EntityOID
 
 		this.setRec(WebUser.getNo());
 		this.setRDT(DataType.getCurrentDataTime());
-
-		this.AutoFull(); //处理自动计算。
 		return super.beforeInsert();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+	
 }

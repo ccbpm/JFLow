@@ -11,7 +11,7 @@ import java.math.*;
 */
 public class Attr
 {
-	public final BP.Sys.MapAttr getToMapAttr()
+	public final BP.Sys.MapAttr getToMapAttr() throws Exception
 	{
 
 		BP.Sys.MapAttr attr = new BP.Sys.MapAttr();

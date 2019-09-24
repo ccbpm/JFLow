@@ -4,564 +4,545 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 
-import java.util.*;
-
-/** 
- 纬度报表
-*/
-public class FrmRpt extends EntityNoName
-{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 外键属性
-	/** 
-	 框架
-	 * @throws Exception 
-	*/
-	public final MapFrames getMapFrames() throws Exception
-	{
+/**
+ * 纬度报表
+ */
+public class FrmRpt extends EntityNoName {
+	/**
+	 * 框架
+	 * 
+	 * @throws Exception
+	 */
+	public final MapFrames getMapFrames() throws Exception {
 		Object tempVar = this.GetRefObject("MapFrames");
-		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames)tempVar : null;
-		if (obj == null)
-		{
+		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames) tempVar : null;
+		if (obj == null) {
 			obj = new MapFrames(this.getNo());
 			this.SetRefObject("MapFrames", obj);
 		}
 		return obj;
 	}
-	/** 
-	 逻辑扩展
-	*/
-	public final MapExts getMapExts()
-	{
+
+	/**
+	 * 逻辑扩展
+	 * 
+	 * @throws Exception
+	 */
+	public final MapExts getMapExts() throws Exception {
 		Object tempVar = this.GetRefObject("MapExts");
-		MapExts obj = tempVar instanceof MapExts ? (MapExts)tempVar : null;
-		if (obj == null)
-		{
+		MapExts obj = tempVar instanceof MapExts ? (MapExts) tempVar : null;
+		if (obj == null) {
 			obj = new MapExts(this.getNo());
 			this.SetRefObject("MapExts", obj);
 		}
 		return obj;
 	}
-	/** 
-	 事件
-	*/
-	public final FrmEvents getFrmEvents()
-	{
+
+	/**
+	 * 事件
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmEvents getFrmEvents() throws Exception {
 		Object tempVar = this.GetRefObject("FrmEvents");
-		FrmEvents obj = tempVar instanceof FrmEvents ? (FrmEvents)tempVar : null;
-		if (obj == null)
-		{
+		FrmEvents obj = tempVar instanceof FrmEvents ? (FrmEvents) tempVar : null;
+		if (obj == null) {
 			obj = new FrmEvents(this.getNo());
 			this.SetRefObject("FrmEvents", obj);
 		}
 		return obj;
 	}
 
-	/** 
-	 从表
-	 * @throws Exception 
-	*/
-	public final FrmRpts getFrmRpts() throws Exception
-	{
+	/**
+	 * 从表
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmRpts getFrmRpts() throws Exception {
 		Object tempVar = this.GetRefObject("FrmRpts");
-		FrmRpts obj = tempVar instanceof FrmRpts ? (FrmRpts)tempVar : null;
-		if (obj == null)
-		{
+		FrmRpts obj = tempVar instanceof FrmRpts ? (FrmRpts) tempVar : null;
+		if (obj == null) {
 			obj = new FrmRpts(this.getNo());
 			this.SetRefObject("FrmRpts", obj);
 		}
 		return obj;
 	}
-	/** 
-	 超连接
-	 * @throws Exception 
-	*/
-	public final FrmLinks getFrmLinks() throws Exception
-	{
+
+	/**
+	 * 超连接
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmLinks getFrmLinks() throws Exception {
 		Object tempVar = this.GetRefObject("FrmLinks");
-		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks)tempVar : null;
-		if (obj == null)
-		{
+		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks) tempVar : null;
+		if (obj == null) {
 			obj = new FrmLinks(this.getNo());
 			this.SetRefObject("FrmLinks", obj);
 		}
 		return obj;
 	}
-	/** 
-	 按钮
-	 * @throws Exception 
-	*/
-	public final FrmBtns getFrmBtns() throws Exception
-	{
+
+	/**
+	 * 按钮
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmBtns getFrmBtns() throws Exception {
 		Object tempVar = this.GetRefObject("FrmLinks");
-		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns)tempVar : null;
-		if (obj == null)
-		{
+		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns) tempVar : null;
+		if (obj == null) {
 			obj = new FrmBtns(this.getNo());
 			this.SetRefObject("FrmBtns", obj);
 		}
 		return obj;
 	}
-	/** 
-	 元素
-	 * @throws Exception 
-	*/
-	public final FrmEles getFrmEles() throws Exception
-	{
+
+	/**
+	 * 元素
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmEles getFrmEles() throws Exception {
 		Object tempVar = this.GetRefObject("FrmEles");
-		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles)tempVar : null;
-		if (obj == null)
-		{
+		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles) tempVar : null;
+		if (obj == null) {
 			obj = new FrmEles(this.getNo());
 			this.SetRefObject("FrmEles", obj);
 		}
 		return obj;
 	}
-	/** 
-	 线
-	 * @throws Exception 
-	*/
-	public final FrmLines getFrmLines() throws Exception
-	{
+
+	/**
+	 * 线
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmLines getFrmLines() throws Exception {
 		Object tempVar = this.GetRefObject("FrmLines");
-		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines)tempVar : null;
-		if (obj == null)
-		{
+		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines) tempVar : null;
+		if (obj == null) {
 			obj = new FrmLines(this.getNo());
 			this.SetRefObject("FrmLines", obj);
 		}
 		return obj;
 	}
-	/** 
-	 标签
-	 * @throws Exception 
-	*/
-	public final FrmLabs getFrmLabs() throws Exception
-	{
+
+	/**
+	 * 标签
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmLabs getFrmLabs() throws Exception {
 		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
-		if (obj == null)
-		{
+		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs) tempVar : null;
+		if (obj == null) {
 			obj = new FrmLabs(this.getNo());
 			this.SetRefObject("FrmLabs", obj);
 		}
 		return obj;
 	}
-	/** 
-	 图片
-	 * @throws Exception 
-	*/
-	public final FrmImgs getFrmImgs() throws Exception
-	{
+
+	/**
+	 * 图片
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmImgs getFrmImgs() throws Exception {
 		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs)tempVar : null;
-		if (obj == null)
-		{
+		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs) tempVar : null;
+		if (obj == null) {
 			obj = new FrmImgs(this.getNo());
 			this.SetRefObject("FrmLabs", obj);
 		}
 		return obj;
 	}
-	/** 
-	 附件
-	 * @throws Exception 
-	*/
-	public final FrmAttachments getFrmAttachments() throws Exception
-	{
+
+	/**
+	 * 附件
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmAttachments getFrmAttachments() throws Exception {
 		Object tempVar = this.GetRefObject("FrmAttachments");
-		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments)tempVar : null;
-		if (obj == null)
-		{
+		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments) tempVar : null;
+		if (obj == null) {
 			obj = new FrmAttachments(this.getNo());
 			this.SetRefObject("FrmAttachments", obj);
 		}
 		return obj;
 	}
-	/** 
-	 图片附件
-	 * @throws Exception 
-	*/
-	public final FrmImgAths getFrmImgAths() throws Exception
-	{
+
+	/**
+	 * 图片附件
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmImgAths getFrmImgAths() throws Exception {
 		Object tempVar = this.GetRefObject("FrmImgAths");
-		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths)tempVar : null;
-		if (obj == null)
-		{
+		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths) tempVar : null;
+		if (obj == null) {
 			obj = new FrmImgAths(this.getNo());
 			this.SetRefObject("FrmImgAths", obj);
 		}
 		return obj;
 	}
-	/** 
-	 单选按钮
-	 * @throws Exception 
-	*/
-	public final FrmRBs getFrmRBs() throws Exception
-	{
+
+	/**
+	 * 单选按钮
+	 * 
+	 * @throws Exception
+	 */
+	public final FrmRBs getFrmRBs() throws Exception {
 		Object tempVar = this.GetRefObject("FrmRBs");
-		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs)tempVar : null;
-		if (obj == null)
-		{
+		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs) tempVar : null;
+		if (obj == null) {
 			obj = new FrmRBs(this.getNo());
 			this.SetRefObject("FrmRBs", obj);
 		}
 		return obj;
 	}
-	/** 
-	 属性
-	*/
-	public final MapAttrs getMapAttrs()
-	{
+
+	/**
+	 * 属性
+	 * 
+	 * @throws Exception
+	 */
+	public final MapAttrs getMapAttrs() throws Exception {
 		Object tempVar = this.GetRefObject("MapAttrs");
-		MapAttrs obj = tempVar instanceof MapAttrs ? (MapAttrs)tempVar : null;
-		if (obj == null)
-		{
+		MapAttrs obj = tempVar instanceof MapAttrs ? (MapAttrs) tempVar : null;
+		if (obj == null) {
 			obj = new MapAttrs(this.getNo());
 			this.SetRefObject("MapAttrs", obj);
 		}
 		return obj;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
-	public final String getSQLOfRow()
-	{
+	public final String getSQLOfRow() throws Exception {
 		return this.GetValStringByKey(FrmRptAttr.SQLOfRow);
 	}
-	public final void setSQLOfRow(String value)
-	{
+
+	public final void setSQLOfRow(String value) throws Exception {
 		this.SetValByKey(FrmRptAttr.SQLOfRow, value);
 	}
-	public final String getSQLOfColumn()
-	{
+
+	public final String getSQLOfColumn() throws Exception {
 		return this.GetValStringByKey(FrmRptAttr.SQLOfColumn);
 	}
-	public final void setSQLOfColumn(String value)
-	{
+
+	public final void setSQLOfColumn(String value) throws Exception {
 		this.SetValByKey(FrmRptAttr.SQLOfColumn, value);
 	}
+
 	public GEDtls HisGEDtls_temp = null;
-	public final EditModel getHisEditModel()
-	{
+
+	public final EditModel getHisEditModel() throws Exception {
 		return EditModel.forValue(this.GetValIntByKey(FrmRptAttr.EditModel));
 	}
-	public final void setHisEditModel(EditModel value)
-	{
+
+	public final void setHisEditModel(EditModel value) throws Exception {
 		this.SetValByKey(FrmRptAttr.EditModel, value.getValue());
 	}
-	/** 
-	 
-	*/
-	public final WhenOverSize getHisWhenOverSize()
-	{
+
+	/**
+	 * @throws Exception
+	 * 
+	 */
+	public final WhenOverSize getHisWhenOverSize() throws Exception {
 		return WhenOverSize.forValue(this.GetValIntByKey(FrmRptAttr.WhenOverSize));
 	}
-	public final void setHisWhenOverSize(WhenOverSize value)
-	{
+
+	public final void setHisWhenOverSize(WhenOverSize value) throws Exception {
 		this.SetValByKey(FrmRptAttr.WhenOverSize, value.getValue());
 	}
-	public final boolean getIsExp()
-	{
+
+	public final boolean getIsExp() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsExp);
 	}
-	public final void setIsExp(boolean value)
-	{
+
+	public final void setIsExp(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsExp, value);
 	}
-	public final boolean getIsImp()
-	{
+
+	public final boolean getIsImp() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsImp);
 	}
-	public final void setIsImp(boolean value)
-	{
+
+	public final void setIsImp(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsImp, value);
 	}
-	public final boolean getIsShowSum()
-	{
+
+	public final boolean getIsShowSum() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsShowSum);
 	}
-	public final void setIsShowSum(boolean value)
-	{
+
+	public final void setIsShowSum(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsShowSum, value);
 	}
-	public final boolean getIsShowIdx()
-	{
+
+	public final boolean getIsShowIdx() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsShowIdx);
 	}
-	public final void setIsShowIdx(boolean value)
-	{
+
+	public final void setIsShowIdx(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsShowIdx, value);
 	}
-	public final boolean getIsReadonly_del()
-	{
+
+	public final boolean getIsReadonly_del() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsReadonly);
 	}
-	public final void setIsReadonly_del(boolean value)
-	{
+
+	public final void setIsReadonly_del(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsReadonly, value);
 	}
-	public final boolean getIsShowTitle()
-	{
+
+	public final boolean getIsShowTitle() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsShowTitle);
 	}
-	public final void setIsShowTitle(boolean value)
-	{
+
+	public final void setIsShowTitle(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsShowTitle, value);
 	}
-	/** 
-	 是否是合流汇总数据
-	*/
-	public final boolean getIsHLDtl()
-	{
+
+	/**
+	 * 是否是合流汇总数据
+	 * 
+	 * @throws Exception
+	 */
+	public final boolean getIsHLDtl() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsHLDtl);
 	}
-	public final void setIsHLDtl(boolean value)
-	{
+
+	public final void setIsHLDtl(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsHLDtl, value);
 	}
+
 	public int _IsReadonly = 2;
-	public final boolean getIsReadonly()
-	{
-		if (_IsReadonly != 2)
-		{
-			if (_IsReadonly == 1)
-			{
+
+	public final boolean getIsReadonly() throws Exception {
+		if (_IsReadonly != 2) {
+			if (_IsReadonly == 1) {
 				return true;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
 
-		if (this.getIsDelete() || this.getIsInsert() || this.getIsUpdate())
-		{
+		if (this.getIsDelete() || this.getIsInsert() || this.getIsUpdate()) {
 			_IsReadonly = 0;
 			return false;
 		}
 		_IsReadonly = 1;
 		return true;
 	}
-	public final boolean getIsDelete()
-	{
+
+	public final boolean getIsDelete() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsDelete);
 	}
-	public final void setIsDelete(boolean value)
-	{
+
+	public final void setIsDelete(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsDelete, value);
 	}
-	public final boolean getIsInsert()
-	{
+
+	public final boolean getIsInsert() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsInsert);
 	}
-	public final void setIsInsert(boolean value)
-	{
+
+	public final void setIsInsert(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsInsert, value);
 	}
-	/** 
-	 是否可见
-	*/
-	public final boolean getIsView()
-	{
+
+	/**
+	 * 是否可见
+	 * 
+	 * @throws Exception
+	 */
+	public final boolean getIsView() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsView);
 	}
-	public final void setIsView(boolean value)
-	{
+
+	public final void setIsView(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsView, value);
 	}
-	public final boolean getIsUpdate()
-	{
+
+	public final boolean getIsUpdate() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsUpdate);
 	}
-	public final void setIsUpdate(boolean value)
-	{
+
+	public final void setIsUpdate(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsUpdate, value);
 	}
-	/** 
-	 是否启用多附件
-	*/
-	public final boolean getIsEnableAthM()
-	{
+
+	/**
+	 * 是否启用多附件
+	 */
+	public final boolean getIsEnableAthM() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsEnableAthM);
 	}
-	public final void setIsEnableAthM(boolean value)
-	{
+
+	public final void setIsEnableAthM(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsEnableAthM, value);
 	}
-	/** 
-	 是否启用分组字段
-	*/
-	public final boolean getIsEnableGroupField()
-	{
+
+	/**
+	 * 是否启用分组字段
+	 */
+	public final boolean getIsEnableGroupField() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsEnableGroupField);
 	}
-	public final void setIsEnableGroupField(boolean value)
-	{
+
+	public final void setIsEnableGroupField(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsEnableGroupField, value);
 	}
-	/** 
-	 是否起用审核连接
-	*/
-	public final boolean getIsEnablePass()
-	{
+
+	/**
+	 * 是否起用审核连接
+	 */
+	public final boolean getIsEnablePass() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsEnablePass);
 	}
-	public final void setIsEnablePass(boolean value)
-	{
+
+	public final void setIsEnablePass(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsEnablePass, value);
 	}
-	public final boolean getIsCopyNDData()
-	{
+
+	public final boolean getIsCopyNDData() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsCopyNDData);
 	}
-	public final void setIsCopyNDData(boolean value)
-	{
+
+	public final void setIsCopyNDData(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsCopyNDData, value);
 	}
-	/** 
-	 是否启用一对多
-	*/
-	public final boolean getIsEnableM2M()
-	{
+
+	/**
+	 * 是否启用一对多
+	 */
+	public final boolean getIsEnableM2M() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsEnableM2M);
 	}
-	public final void setIsEnableM2M(boolean value)
-	{
+
+	public final void setIsEnableM2M(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsEnableM2M, value);
 	}
-	/** 
-	 是否启用一对多多
-	*/
-	public final boolean getIsEnableM2MM()
-	{
+
+	/**
+	 * 是否启用一对多多
+	 */
+	public final boolean getIsEnableM2MM() throws Exception {
 		return this.GetValBooleanByKey(FrmRptAttr.IsEnableM2MM);
 	}
-	public final void setIsEnableM2MM(boolean value)
-	{
+
+	public final void setIsEnableM2MM(boolean value) throws Exception {
 		this.SetValByKey(FrmRptAttr.IsEnableM2MM, value);
 	}
 
 	public boolean IsUse = false;
-	/** 
-	 是否检查人员的权限
-	*/
-	public final DtlOpenType getDtlOpenType()
-	{
+
+	/**
+	 * 是否检查人员的权限
+	 */
+	public final DtlOpenType getDtlOpenType() throws Exception {
 		return DtlOpenType.forValue(this.GetValIntByKey(FrmRptAttr.DtlOpenType));
 	}
-	public final void setDtlOpenType(DtlOpenType value)
-	{
+
+	public final void setDtlOpenType(DtlOpenType value) throws Exception {
 		this.SetValByKey(FrmRptAttr.DtlOpenType, value.getValue());
 	}
-	/** 
-	 分组字段
-	*/
-	public final String getGroupField()
-	{
+
+	/**
+	 * 分组字段
+	 */
+	public final String getGroupField() throws Exception {
 		return this.GetValStrByKey(FrmRptAttr.GroupField);
 	}
-	public final void setGroupField(String value)
-	{
+
+	public final void setGroupField(String value) throws Exception {
 		this.SetValByKey(FrmRptAttr.GroupField, value);
 	}
-	public final String getFK_MapData()
-	{
+
+	public final String getFK_MapData() throws Exception {
 		return this.GetValStrByKey(FrmRptAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
-	{
+
+	public final void setFK_MapData(String value) throws Exception {
 		this.SetValByKey(FrmRptAttr.FK_MapData, value);
 	}
-	public final int getRowsOfList()
-	{
+
+	public final int getRowsOfList() throws Exception {
 		return this.GetValIntByKey(FrmRptAttr.RowsOfList);
 	}
-	public final void setRowsOfList(int value)
-	{
+
+	public final void setRowsOfList(int value) throws Exception {
 		this.SetValByKey(FrmRptAttr.RowsOfList, value);
 	}
-	public final int getRowIdx()
-	{
+
+	public final int getRowIdx() throws Exception {
 		return this.GetValIntByKey(FrmRptAttr.RowIdx);
 	}
-	public final void setRowIdx(int value)
-	{
+
+	public final void setRowIdx(int value) throws Exception {
 		this.SetValByKey(FrmRptAttr.RowIdx, value);
 	}
-	public final int getGroupID()
-	{
+
+	public final int getGroupID() throws Exception {
 		return this.GetValIntByKey(FrmRptAttr.GroupID);
 	}
-	public final void setGroupID(int value)
-	{
+
+	public final void setGroupID(int value) throws Exception {
 		this.SetValByKey(FrmRptAttr.GroupID, value);
 	}
-	public final String getPTable()
-	{
+
+	public final String getPTable() throws Exception {
 		String s = this.GetValStrByKey(FrmRptAttr.PTable);
-		if (s.equals("") || s == null)
-		{
+		if (s.equals("") || s == null) {
 			s = this.getNo();
-			if (s.substring(0, 1).equals("0"))
-			{
+			if (s.substring(0, 1).equals("0")) {
 				return "T" + this.getNo();
-			}
-			else
-			{
+			} else {
 				return s;
 			}
-		}
-		else
-		{
-			if (s.substring(0, 1).equals("0"))
-			{
+		} else {
+			if (s.substring(0, 1).equals("0")) {
 				return "T" + this.getNo();
-			}
-			else
-			{
+			} else {
 				return s;
 			}
 		}
 	}
-	public final void setPTable(String value)
-	{
+
+	public final void setPTable(String value) throws Exception {
 		this.SetValByKey(FrmRptAttr.PTable, value);
 	}
-	/** 
-	 多表头
-	*/
-	public final String getMTR()
-	{
+
+	/**
+	 * 多表头
+	 */
+	public final String getMTR() throws Exception {
 		String s = this.GetValStrByKey(FrmRptAttr.MTR);
-		s = s.replace("《","<");
-		s = s.replace("》",">");
-		s = s.replace("‘","'");
+		s = s.replace("《", "<");
+		s = s.replace("》", ">");
+		s = s.replace("‘", "'");
 		return s;
 	}
-	public final void setMTR(String value)
-	{
+
+	public final void setMTR(String value) throws Exception {
 		String s = value;
-		s = s.replace("<","《");
+		s = s.replace("<", "《");
 		s = s.replace(">", "》");
 		s = s.replace("'", "‘");
 		this.SetValByKey(FrmRptAttr.MTR, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	/// #endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
-	public final Map GenerMap()
-	{
+	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	/// #region 构造方法
+	public final Map GenerMap() throws Exception {
 		boolean isdebug = SystemConfig.getIsDebug();
 
-		if (isdebug == false)
-		{
+		if (isdebug == false) {
 			Map m = BP.DA.Cash.GetMap(this.getNo());
-			if (m != null)
-			{
+			if (m != null) {
 				return m;
 			}
 		}
@@ -573,44 +554,42 @@ public class FrmRpt extends EntityNoName
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
 		Attrs attrs = new Attrs();
-		for (MapAttr mapAttr : mapAttrs.ToJavaList())
-		{
+		for (MapAttr mapAttr : mapAttrs.ToJavaList()) {
 			map.AddAttr(mapAttr.getHisAttr());
 		}
 
 		BP.DA.Cash.SetMap(this.getNo(), map);
 		return map;
 	}
-	public final GEDtl getHisGEDtl()
-	{
+
+	public final GEDtl getHisGEDtl() throws Exception {
 		GEDtl dtl = new GEDtl(this.getNo());
 		return dtl;
 	}
-	public final GEEntity GenerGEMainEntity(String mainPK)
-	{
+
+	public final GEEntity GenerGEMainEntity(String mainPK) throws Exception {
 		GEEntity en = new GEEntity(this.getFK_MapData(), mainPK);
 		return en;
 	}
-	/** 
-	 纬度报表
-	*/
-	public FrmRpt()
-	{
+
+	/**
+	 * 纬度报表
+	 */
+	public FrmRpt() {
 	}
-	public FrmRpt(String mypk) throws Exception
-	{
+
+	public FrmRpt(String mypk) throws Exception {
 		this.setNo(mypk);
 		this._IsReadonly = 2;
 		this.Retrieve();
 	}
-	/** 
-	 EnMap
-	*/
+
+	/**
+	 * EnMap
+	 */
 	@Override
-	public Map getEnMap()
-	{
-		if (this.get_enMap() != null)
-		{
+	public Map getEnMap() {
+		if (this.get_enMap() != null) {
 			return this.get_enMap();
 		}
 		Map map = new Map("Sys_FrmRpt", "纬度报表");
@@ -618,7 +597,6 @@ public class FrmRpt extends EntityNoName
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 		map.IndexField = FrmImgAthDBAttr.FK_MapData;
-
 
 		map.AddTBStringPK(FrmRptAttr.No, null, "编号", true, false, 1, 20, 20);
 		map.AddTBString(FrmRptAttr.Name, null, "描述", true, false, 1, 50, 20);
@@ -653,9 +631,11 @@ public class FrmRpt extends EntityNoName
 		map.AddBoolean(FrmRptAttr.IsEnableM2M, false, "是否启用M2M", false, false);
 		map.AddBoolean(FrmRptAttr.IsEnableM2MM, false, "是否启用M2M", false, false);
 
-		map.AddDDLSysEnum(FrmRptAttr.WhenOverSize, 0, "WhenOverSize", true, true, FrmRptAttr.WhenOverSize, "@0=不处理@1=向下顺增行@2=次页显示");
+		map.AddDDLSysEnum(FrmRptAttr.WhenOverSize, 0, "WhenOverSize", true, true, FrmRptAttr.WhenOverSize,
+				"@0=不处理@1=向下顺增行@2=次页显示");
 
-		map.AddDDLSysEnum(FrmRptAttr.DtlOpenType, 1, "数据开放类型", true, true, FrmRptAttr.DtlOpenType, "@0=操作员@1=工作ID@2=流程ID");
+		map.AddDDLSysEnum(FrmRptAttr.DtlOpenType, 1, "数据开放类型", true, true, FrmRptAttr.DtlOpenType,
+				"@0=操作员@1=工作ID@2=流程ID");
 
 		map.AddDDLSysEnum(FrmRptAttr.EditModel, 0, "显示格式", true, true, FrmRptAttr.EditModel, "@0=表格@1=卡片");
 
@@ -668,78 +648,77 @@ public class FrmRpt extends EntityNoName
 		map.AddTBFloat(FrmRptAttr.FrmW, 900, "FrmW", true, true);
 		map.AddTBFloat(FrmRptAttr.FrmH, 1200, "FrmH", true, true);
 
-			//MTR 多表头列.
+		// MTR 多表头列.
 		map.AddTBString(FrmRptAttr.MTR, null, "多表头列", true, false, 0, 3000, 20);
 		map.AddTBString(FrmRptAttr.GUID, null, "GUID", true, false, 0, 128, 20);
-
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	public final float getX()
-	{
+
+	public final float getX() throws Exception {
 		return this.GetValFloatByKey(FrmImgAttr.X);
 	}
-	public final float getY()
-	{
+
+	public final float getY() throws Exception {
 		return this.GetValFloatByKey(FrmImgAttr.Y);
 	}
-	public final float getW()
-	{
+
+	public final float getW() throws Exception {
 		return this.GetValFloatByKey(FrmImgAttr.W);
 	}
-	public final float getH()
-	{
+
+	public final float getH() throws Exception {
 		return this.GetValFloatByKey(FrmImgAttr.H);
 	}
-	public final float getFrmW()
-	{
+
+	public final float getFrmW() throws Exception {
 		return this.GetValFloatByKey(FrmRptAttr.FrmW);
 	}
-	public final float getFrmH()
-	{
+
+	public final float getFrmH() throws Exception {
 		return this.GetValFloatByKey(FrmRptAttr.FrmH);
 	}
-	/** 
-	 获取个数
-	 
-	 @param fk_val
-	 @return 
-	*/
-	public final int GetCountByFK(int workID)
-	{
-		return BP.DA.DBAccess.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE WorkID=" + workID);
+
+	/**
+	 * 获取个数
+	 * 
+	 * @param fk_val
+	 * @return
+	 */
+	public final int GetCountByFK(int workID) throws Exception {
+		return BP.DA.DBAccess
+				.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE WorkID=" + workID);
 	}
 
-	public final int GetCountByFK(String field, String val)
-	{
-		return BP.DA.DBAccess.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE " + field + "='" + val + "'");
+	public final int GetCountByFK(String field, String val) throws Exception {
+		return BP.DA.DBAccess.RunSQLReturnValInt(
+				"select COUNT(OID) from " + this.getPTable() + " WHERE " + field + "='" + val + "'");
 	}
-	public final int GetCountByFK(String field, long val)
-	{
-		return BP.DA.DBAccess.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE " + field + "=" + val);
-	}
-	public final int GetCountByFK(String f1, long val1, String f2, String val2)
-	{
-		return BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(OID) from " + this.getPTable() + " WHERE " + f1 + "=" + val1 + " AND " + f2 + "='" + val2 + "'");
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-	public final void IntMapAttrs() throws Exception
-	{
+	public final int GetCountByFK(String field, long val) throws Exception {
+		return BP.DA.DBAccess
+				.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE " + field + "=" + val);
+	}
+
+	public final int GetCountByFK(String f1, long val1, String f2, String val2) throws Exception {
+		return BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(OID) from " + this.getPTable() + " WHERE " + f1 + "="
+				+ val1 + " AND " + f2 + "='" + val2 + "'");
+	}
+	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	/// #endregion
+
+	public final void IntMapAttrs() throws Exception {
 		BP.Sys.MapData md = new BP.Sys.MapData();
 		md.setNo(this.getNo());
-		if (md.RetrieveFromDBSources() == 0)
-		{
+		if (md.RetrieveFromDBSources() == 0) {
 			md.setName(this.getName());
 			md.Insert();
 		}
 
 		MapAttrs attrs = new MapAttrs(this.getNo());
 		BP.Sys.MapAttr attr = new BP.Sys.MapAttr();
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "OID") == false)
-		{
+		if (attrs.Contains(MapAttrAttr.KeyOfEn, "OID") == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
 			attr.setHisEditType(EditType.Readonly);
@@ -755,8 +734,7 @@ public class FrmRpt extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "RefPK") == false)
-		{
+		if (attrs.Contains(MapAttrAttr.KeyOfEn, "RefPK") == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
 			attr.setHisEditType(EditType.Readonly);
@@ -772,9 +750,7 @@ public class FrmRpt extends EntityNoName
 			attr.Insert();
 		}
 
-
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "FID") == false)
-		{
+		if (attrs.Contains(MapAttrAttr.KeyOfEn, "FID") == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
 			attr.setHisEditType(EditType.Readonly);
@@ -790,8 +766,7 @@ public class FrmRpt extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "RDT") == false)
-		{
+		if (attrs.Contains(MapAttrAttr.KeyOfEn, "RDT") == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
 			attr.setHisEditType(EditType.UnDel);
@@ -807,8 +782,7 @@ public class FrmRpt extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "Rec") == false)
-		{
+		if (attrs.Contains(MapAttrAttr.KeyOfEn, "Rec") == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
 			attr.setHisEditType(EditType.Readonly);
@@ -827,15 +801,13 @@ public class FrmRpt extends EntityNoName
 			attr.Insert();
 		}
 	}
-	private void InitExtMembers() throws Exception
-	{
-		/* 如果启用了多附件*/
-		if (this.getIsEnableAthM())
-		{
+
+	private void InitExtMembers() throws Exception {
+		/* 如果启用了多附件 */
+		if (this.getIsEnableAthM()) {
 			BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
 			athDesc.setMyPK(this.getNo() + "_AthM");
-			if (athDesc.RetrieveFromDBSources() == 0)
-			{
+			if (athDesc.RetrieveFromDBSources() == 0) {
 				athDesc.setFK_MapData(this.getNo());
 				athDesc.setNoOfObj("AthM");
 				athDesc.setName(this.getName());
@@ -843,44 +815,40 @@ public class FrmRpt extends EntityNoName
 			}
 		}
 	}
+
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		this.InitExtMembers();
 		return super.beforeInsert();
 	}
+
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
-	{
-		if (this.getIsEnablePass())
-		{
-			/*判断是否有IsPass 字段。*/
+	protected boolean beforeUpdateInsertAction() throws Exception {
+		if (this.getIsEnablePass()) {
+			/* 判断是否有IsPass 字段。 */
 			MapAttrs attrs = new MapAttrs(this.getNo());
-			if (attrs.Contains(MapAttrAttr.KeyOfEn, "IsPass") == false)
-			{
+			if (attrs.Contains(MapAttrAttr.KeyOfEn, "IsPass") == false) {
 				throw new RuntimeException("您启用了从表单(" + this.getName() + ")条数据审核选项，但是该从表里没IsPass字段，请参考帮助文档。");
 			}
 		}
 		return super.beforeUpdateInsertAction();
 	}
+
 	@Override
-	protected boolean beforeUpdate() throws NumberFormatException, Exception
-	{
+	protected boolean beforeUpdate() throws NumberFormatException, Exception {
 		MapAttrs attrs = new MapAttrs(this.getNo());
 		boolean isHaveEnable = false;
-		for (MapAttr attr : attrs.ToJavaList())
-		{
-			if (attr.getUIIsEnable() && attr.getUIContralType() == UIContralType.TB)
-			{
+		for (MapAttr attr : attrs.ToJavaList()) {
+			if (attr.getUIIsEnable() && attr.getUIContralType() == UIContralType.TB) {
 				isHaveEnable = true;
 			}
 		}
 		this.InitExtMembers();
 		return super.beforeUpdate();
 	}
+
 	@Override
-	protected boolean beforeDelete() throws Exception
-	{
+	protected boolean beforeDelete() throws Exception {
 		String sql = "";
 		sql += "@DELETE FROM Sys_FrmLine WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_FrmLab WHERE FK_MapData='" + this.getNo() + "'";
@@ -891,24 +859,19 @@ public class FrmRpt extends EntityNoName
 		sql += "@DELETE FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_MapFrame WHERE FK_MapData='" + this.getNo() + "'";
 
-		if (this.getNo().contains("BP.") == false)
-		{
-		sql += "@DELETE FROM Sys_MapExt WHERE FK_MapData='" + this.getNo() + "'";
+		if (this.getNo().contains("BP.") == false) {
+			sql += "@DELETE FROM Sys_MapExt WHERE FK_MapData='" + this.getNo() + "'";
 		}
 
 		sql += "@DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_MapData WHERE No='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_GroupField WHERE FrmID='" + this.getNo() + "'";
 		DBAccess.RunSQLs(sql);
-		try
-		{
-			if (DBAccess.RunSQLReturnValInt("SELECT COUNT(*) as Num FROM " + this.getPTable() + " WHERE 1=1 ") == 0)
-			{
+		try {
+			if (DBAccess.RunSQLReturnValInt("SELECT COUNT(*) as Num FROM " + this.getPTable() + " WHERE 1=1 ") == 0) {
 				BP.DA.DBAccess.RunSQL("DROP TABLE " + this.getPTable());
 			}
-		}
-		catch (java.lang.Exception e)
-		{
+		} catch (java.lang.Exception e) {
 		}
 		return super.beforeDelete();
 	}

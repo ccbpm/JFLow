@@ -6,6 +6,8 @@ import BP.En.Map;
 import BP.Web.WebUser;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** 
  信息块
@@ -23,7 +25,6 @@ public class Bar extends EntityNoName
 		return uac;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	/** 
 	 更多的URL
@@ -180,14 +181,9 @@ public class Bar extends EntityNoName
 				{
 					String no = dr.get("No").toString();
 					String name = dr.get("Name").toString();
-					String url = this.getTag2().clone().toString();
-						//url = url.Replace("@No", no);
+					String url = this.getTag2().toString();
 					url = url.replace("~", "'");
-						//if (url.Contains("@"))
-						//{
-						//   foreach (DataColumn dc in dt.Columns)
-						//        url = url.Replace("@" + dc.ColumnName, dr[dc.ColumnName].ToString());
-						//}
+
 					url = this.GetParameteredString(url, dr);
 
 					if (url.toLowerCase().startsWith("javascript:"))
@@ -231,21 +227,22 @@ public class Bar extends EntityNoName
 	*/
 	private String GetParameteredString(String stringInput, DataRow dr)
 	{
-		String regE = "@[a-zA-Z]([\\w-]*[a-zA-Z0-9])?"; //字母开始，字母+数字结尾，字母+数字+下划线+中划线中间
-		//String regE = "@[\\w-]+";                               //字母+数字+下划线+中划线
-		MatchCollection mc = Regex.Matches(stringInput, regE, RegexOptions.IgnoreCase);
-		for (Match m : mc)
+		String regE = "@[a-zA-Z]([\\w-]*[a-zA-Z0-9])?"; //字母开始，字母+数字结尾，字母+数字+下划线+中划线中间                             
+		//字母+数字+下划线+中划线
+		 // 编译正则表达式
+	    Pattern pattern = Pattern.compile(regE);
+	    // 忽略大小写的写法
+	    // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+	    Matcher matcher = pattern.matcher(stringInput);
+		while (matcher.find())
 		{
-			String v = m.Value;
-			String f = m.Value.substring(1);
-			stringInput = stringInput.replace(v, String.format("%1$s", dr.get(f)));
+			String v = matcher.group();
+			String f = matcher.group().substring(1);
+			stringInput = stringInput.replace(v, String.format("%1$s", dr.getValue(f).toString()));
 		}
 		return stringInput;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	/** 
 	 信息块
@@ -284,42 +281,17 @@ public class Bar extends EntityNoName
 		map.AddTBString(BarAttr.Name, null, "名称", true, false, 0, 3900, 20);
 
 		map.AddTBString(BarAttr.Title, null, "标题", true, false, 0, 3900, 20);
-
-			//map.AddDDLSysEnum(BarAttr.BarType, 0, "信息块类型", true, true, 
-			//BarAttr.BarType, "@0=标题消息列表(Tag1=SQL语句)@1=其它");
-			//map.AddTBString(BarAttr.Tag1, null, "Tag1", true, false, 0, 3900, 300,true);
-			//map.AddTBString(BarAttr.Tag2, null, "Tag2", true, false, 0, 3900, 300, true);
-			//map.AddTBString(BarAttr.Tag3, null, "Tag3", true, false, 0, 3900, 300, true);
-			//map.AddBoolean(BarAttr.IsDel, true, "用户是否可删除",true,true);
-
-
 		map.AddDDLSysEnum(BarAttr.OpenWay, 0, "打开方式", true, true, BarAttr.OpenWay, "@0=新窗口@1=本窗口@2=覆盖新窗口");
 		map.AddBoolean(BarAttr.IsLine, false, "是否独占一行", true, true);
 
-			////map.AddDDLSysEnum(AppAttr.CtrlWay, 0, "控制方式", true, true,
-			////   AppAttr.CtrlWay, "@0=游客@1=所有人员@2=按岗位@3=按部门@4=按人员@5=按SQL");
-
-			//map.AddTBInt(BarAttr.Idx, 0, "显示顺序", false, true);
-
-			// map.AddTBString(BarAttr.MoreLab, "更多...", "更多标签", true, false, 0, 900, 20);
 		map.AddTBString(BarAttr.MoreUrl, null, "更多标签Url", true, false, 0, 3900, 20,true);
-			 //map.AddTBString(BarAttr.Doc, null, "Doc", false, false, 0, 3900, 20, false);
-
-			//map.AddTBDateTime(BarAttr.DocGenerRDT, null, "Doc生成日期", false, false);
-
-			//map.AddTBInt(BarAttr.Width, 200, "显示宽度", false, true);
-			//map.AddTBInt(BarAttr.Height, 100, "显示高度", false, true);
-
-			//map.getAttrsOfOneVSM().Add(new ByStations(), new Stations(), ByStationAttr.RefObj, ByStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "可访问的岗位");
-			//map.getAttrsOfOneVSM().Add(new ByDepts(), new Depts(), ByStationAttr.RefObj, ByDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "可访问的部门");
-			//map.getAttrsOfOneVSM().Add(new ByEmps(), new Emps(), ByStationAttr.RefObj, ByEmpAttr.FK_Emp, EmpAttr.Name, EmpAttr.No, "可访问的人员");
-
+		
 		map.AddSearchAttr(BarAttr.OpenWay);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String GetDocument() throws Exception

@@ -28,7 +28,6 @@ public class CCFormAPI
 		return "附件(" + num + ")";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 创建修改字段.
 	/** 
 	 创建通用组件入口
@@ -72,7 +71,6 @@ public class CCFormAPI
 				fe.setX(x);
 				fe.setY(y);
 				fe.Insert();
-				//CreateOrSaveAthImg(fk_mapdata, no, name, x, y);
 				break;
 
 			case "iFrame": //框架.

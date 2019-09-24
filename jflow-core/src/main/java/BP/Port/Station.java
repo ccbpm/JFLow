@@ -11,8 +11,6 @@ import java.util.*;
 */
 public class Station extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 实现基本的方法
 	@Override
 	public UAC getHisUAC() throws Exception
 	{
@@ -24,11 +22,7 @@ public class Station extends EntityNoName
 	{
 		return this.GetValStrByKey("Name");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
 	/** 
 	 岗位
 	*/
@@ -71,72 +65,8 @@ public class Station extends EntityNoName
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 100, 100);
 		map.AddTBString(StationAttr.OrgNo, null, "隶属组织编号", true, false, 0, 100, 100);
 
-
-			////如果是一人一部门多岗位,就启动这个映射.
-			//if (BP.Sys.SystemConfig.OSModel == OSModel.OneOne)
-			//{
-			//    //岗位人员.
-			//    map.getAttrsOfOneVSM().Add(new EmpStations(), new Emps(), EmpStationAttr.FK_Station, EmpStationAttr.FK_Emp,
-			//      DeptAttr.Name, DeptAttr.No, "人员");
-			//}
-
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 重写查询. 2015.09.31 为适应ws的查询.
-	/** 
-	 查询
-	 
-	 @return 
-	*/
-	@Override
-	public int Retrieve()
-	{
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
-		{
-			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
-			DataTable dt = v.GetStation(this.getNo());
-			if (dt.Rows.size() == 0)
-			{
-				throw new RuntimeException("@编号为(" + this.getNo() + ")的岗位不存在。");
-			}
-			this.getRow().LoadDataTable(dt, dt.Rows.get(0));
-			return 1;
-		}
-		else
-		{
-			return super.Retrieve();
-		}
-	}
-	/** 
-	 查询.
-	 
-	 @return 
-	*/
-	@Override
-	public int RetrieveFromDBSources()
-	{
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
-		{
-			BP.En30.ccportal.PortalInterfaceSoapClient v = DataType.GetPortalInterfaceSoapClientInstance();
-			DataTable dt = v.GetStation(this.getNo());
-			if (dt.Rows.size() == 0)
-			{
-				return 0;
-			}
-			this.getRow().LoadDataTable(dt, dt.Rows.get(0));
-			return 1;
-		}
-		else
-		{
-			return super.RetrieveFromDBSources();
-		}
-	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
+	
 }

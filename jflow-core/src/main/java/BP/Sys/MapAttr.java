@@ -3,11 +3,11 @@ package BP.Sys;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
+import BP.Tools.DateUtils;
 import BP.Web.WebUser;
 
 import java.util.*;
 import java.io.*;
-import java.time.*;
 import java.math.*;
 
 /** 
@@ -15,7 +15,7 @@ import java.math.*;
 */
 public class MapAttr extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 文本字段参数属性.
 	/** 
 	 是否是超大文本？
@@ -53,10 +53,7 @@ public class MapAttr extends EntityMyPK
 	{
 		this.SetPara("IsEnableQrCode", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 数值字段参数属性,2017-1-9,liuxc
 	/** 
 	 数值字段是否合计(默认true)
@@ -79,15 +76,16 @@ public class MapAttr extends EntityMyPK
 		this.SetPara(MapAttrAttr.ExtIsSum, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 	/** 
 	 是否必填字段
+	 * @throws Exception 
 	*/
-	public final boolean getUIIsInput()
+	public final boolean getUIIsInput() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.UIIsInput, false);
 	}
@@ -97,8 +95,9 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 在手机端中是否显示
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableInAPP()
+	public final boolean getIsEnableInAPP() throws Exception
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.IsEnableInAPP, true);
 	}
@@ -118,10 +117,10 @@ public class MapAttr extends EntityMyPK
 	{
 		this.SetPara("IsEnableJS", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public EntitiesNoName _ens = null;
 	/** 
@@ -203,15 +202,17 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 是否是导入过来的字段
+	 * @throws Exception 
 	*/
-	public final boolean getIsTableAttr()
+	public final boolean getIsTableAttr() throws Exception
 	{
 		return DataType.IsNumStr(this.getKeyOfEn().replace("F", ""));
 	}
 	/** 
 	 转换成属性.
+	 * @throws Exception 
 	*/
-	public final Attr getHisAttr()
+	public final Attr getHisAttr() throws Exception
 	{
 		Attr attr = new Attr();
 		attr.setKey(this.getKeyOfEn());
@@ -224,9 +225,7 @@ public class MapAttr extends EntityMyPK
 		}
 		else
 		{
-				// attr.DefaultVal
 			attr.setDefaultValOfReal(this.getDefValReal());
-				//this.DefValReal;
 		}
 
 
@@ -261,8 +260,7 @@ public class MapAttr extends EntityMyPK
 			case FK:
 				attr.setUIContralType(this.getUIContralType());
 				attr.setMyFieldType(FieldType.FK);
-					//attr.UIRefKeyValue = "No";
-					//attr.UIRefKeyText = "Name";
+				
 				attr.setUIIsReadonly(this.getUIIsEnable());
 				break;
 			default:
@@ -282,13 +280,13 @@ public class MapAttr extends EntityMyPK
 					case DataType.AppDate:
 						if (this.getTag().equals("1"))
 						{
-							attr.setDefaultVal(DataType.getCurrentData());
+							attr.setDefaultVal(DataType.getCurrentDate());
 						}
 						break;
 					case DataType.AppDateTime:
 						if (this.getTag().equals("1"))
 						{
-							attr.setDefaultVal(DataType.getCurrentData());
+							attr.setDefaultVal(DataType.getCurrentDate());
 						}
 						break;
 					default:
@@ -298,17 +296,13 @@ public class MapAttr extends EntityMyPK
 				break;
 		}
 
-			//attr.AutoFullWay = this.HisAutoFull;
-			//attr.AutoFullDoc = this.AutoFullDoc;
-			//attr.MyFieldType = FieldType
-			//attr.UIDDLShowType= BP.Web.Controls.DDLShowType.Self
-
 		return attr;
 	}
 	/** 
 	 是否主键
+	 * @throws Exception 
 	*/
-	public final boolean getIsPK()
+	public final boolean getIsPK() throws Exception
 	{
 		switch (this.getKeyOfEn())
 		{
@@ -385,7 +379,7 @@ public class MapAttr extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}
-	public final boolean getIsNum()
+	public final boolean getIsNum() throws Exception
 	{
 		switch (this.getMyDataType())
 		{
@@ -398,7 +392,7 @@ public class MapAttr extends EntityMyPK
 				return true;
 		}
 	}
-	public final BigDecimal getDefValDecimal()
+	public final BigDecimal getDefValDecimal() throws Exception
 	{
 		return new java.math.BigDecimal(this.getDefVal());
 	}
@@ -433,8 +427,9 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 默认值
+	 * @throws Exception 
 	*/
-	public final String getDefVal()
+	public final String getDefVal() throws Exception
 	{
 		String s = this.GetValStrByKey(MapAttrAttr.DefVal);
 		if (this.getIsNum())
@@ -449,25 +444,15 @@ public class MapAttr extends EntityMyPK
 		{
 			case BP.DA.DataType.AppDate:
 				if (this.getTag().equals("1") || s.equals("@RDT"))
-				{
-					return DataType.getCurrentData();
-				}
+					return DataType.getCurrentDate();
 				else
-				{
 					return "          ";
-				}
-				break;
+				
 			case BP.DA.DataType.AppDateTime:
 				if (this.getTag().equals("1") || s.equals("@RDT"))
-				{
 					return DataType.getCurrentDataTime();
-				}
 				else
-				{
 					return "               ";
-				}
-					//return "    -  -    :  ";
-				break;
 			default:
 				break;
 		}
@@ -498,7 +483,7 @@ public class MapAttr extends EntityMyPK
 			case "@rdt":
 				if (this.getMyDataType() == DataType.AppDate)
 				{
-					return DataType.getCurrentData();
+					return DataType.getCurrentDate();
 				}
 				else
 				{
@@ -507,7 +492,7 @@ public class MapAttr extends EntityMyPK
 			case "@rd":
 				if (this.getMyDataType() == DataType.AppDate)
 				{
-					return DataType.getCurrentData();
+					return DataType.getCurrentDate();
 				}
 				else
 				{
@@ -516,16 +501,14 @@ public class MapAttr extends EntityMyPK
 			case "@yyyy年MM月dd日":
 				return DataType.getCurrentDataCNOfLong();
 			case "@yyyy年MM月dd日hh时mm分":
-				return LocalDateTime.now().toString("yyyy年MM月dd日HH时mm分");
+				return DateUtils.format(new Date(),"yyyy年MM月dd日HH时mm分");
 			case "@yy年MM月dd日":
 				return DataType.getCurrentDataCNOfShort();
 			case "@yy年MM月dd日hh时mm分":
-				return LocalDateTime.now().toString("yy年MM月dd日HH时mm分");
+				return DateUtils.format(new Date(),"yy年MM月dd日HH时mm分");
 			default:
 				return s;
-				//throw new Exception("没有约定的变量默认值类型" + s);
 		}
-		return this.GetValStrByKey(MapAttrAttr.DefVal);
 	}
 	public final void setDefVal(String value) throws Exception
 	{
@@ -568,7 +551,7 @@ public class MapAttr extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
-	public final String getMyDataTypeS() 
+	public final String getMyDataTypeS() throws Exception 
 	{
 		switch (this.getMyDataType())
 		{
@@ -621,7 +604,7 @@ public class MapAttr extends EntityMyPK
 		}
 
 	}
-	public final String getMyDataTypeStr()
+	public final String getMyDataTypeStr() throws Exception
 	{
 		return DataType.GetDataTypeDese(this.getMyDataType());
 	}
@@ -668,8 +651,9 @@ public class MapAttr extends EntityMyPK
 	}
 	/** 
 	 是否可以为空, 对数值类型的数据有效.
+	 * @throws Exception 
 	*/
-	public final boolean getIsNull()
+	public final boolean getIsNull() throws Exception
 	{
 		if (this.getMinLen() == 0)
 		{
@@ -683,16 +667,16 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 所在的分组
 	*/
-	public final int getGroupID() throws Exception
+	public final long getGroupID() throws Exception
 	{
 		String str = this.GetValStringByKey(MapAttrAttr.GroupID);
 		if (str.equals("无") || str.equals(""))
 		{
 			return 0;
 		}
-		return Integer.parseInt(str);
+		return Long.parseLong(str);
 	}
-	public final void setGroupID(int value) throws Exception
+	public final void setGroupID(long value) throws Exception
 	{
 		this.SetValByKey(MapAttrAttr.GroupID, value);
 	}
@@ -706,8 +690,7 @@ public class MapAttr extends EntityMyPK
 		{
 			return true;
 		}
-			//if (this.ColSpan == 4 && this.MyDataType == DataType.AppString)
-			//    return true;
+
 		return false;
 	}
 	/** 
@@ -716,12 +699,11 @@ public class MapAttr extends EntityMyPK
 	public final int getUIRows() throws Exception
 	{
 		if (this.getUIHeight() < 40)
-		{
 			return 1;
-		}
-
-		BigDecimal d = BigDecimal.Parse(String.valueOf(this.getUIHeight())).divide(23);
-		return (int)Double.isNaN(d) ? Double.NaN : Math.round(d.multiply(Math.pow(10, 0))) / Math.pow(10, 0);
+		
+		java.math.BigDecimal d = new java.math.BigDecimal((new Float(this.getUIHeight())).toString());
+		java.math.BigDecimal c = new java.math.BigDecimal(13);
+		return d.divide(c, 0, RoundingMode.HALF_UP).intValue();
 	}
 	/** 
 	 高度
@@ -761,22 +743,6 @@ public class MapAttr extends EntityMyPK
 	*/
 	public final float getUIWidth() throws Exception
 	{
-			//switch (this.MyDataType)
-			//{
-			//    case DataType.AppString:
-			//        return this.GetValFloatByKey(MapAttrAttr.UIWidth);
-			//    case DataType.AppFloat:
-			//    case DataType.AppInt:
-			//    case DataType.AppMoney:
-			//    case DataType.AppRate:
-			//    case DataType.AppDouble:
-			//        return 80;
-			//    case DataType.AppDate:
-			//        return 75;
-			//    case DataType.AppDateTime:
-			//        return 112;
-			//    default:
-			//        return 70;
 		return this.GetValFloatByKey(MapAttrAttr.UIWidth);
 	}
 	public final void setUIWidth(float value) throws Exception
@@ -840,8 +806,6 @@ public class MapAttr extends EntityMyPK
  */
 	public final SignType getSignType() throws Exception
 	{
-			//if (this.UIIsEnable)
-			//    return SignType.None;
 		return SignType.forValue(this.GetValIntByKey(MapAttrAttr.IsSigan));
 	}
 	public final void setSignType(SignType value) throws Exception
@@ -991,7 +955,7 @@ public class MapAttr extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
 	}
-	public final String getF_Desc()
+	public final String getF_Desc() throws Exception
 	{
 		switch (this.getMyDataType())
 		{
@@ -1062,11 +1026,7 @@ public class MapAttr extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.Y, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法b
 	/** 
 	 实体属性
 	*/
@@ -1175,7 +1135,7 @@ public class MapAttr extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
@@ -1183,28 +1143,6 @@ public class MapAttr extends EntityMyPK
 	@Override
 	protected void afterInsert() throws Exception
 	{
-		//switch (map.EnDBUrl.DBUrlType)
-		//{
-		//    case DBUrlType.AppCenterDSN:
-		//        switch (map.EnDBUrl.DBType)
-		//        {
-		//            case DBType.MSSQL:
-		//                BP.DA.DBAccess.RunSQL("ALERT ");
-		//                break;
-		//            case DBType.Oracle:
-		//                break;
-		//            case DBType.Informix:
-		//                break;
-		//            case DBType.MSSQL:
-		//                BP.DA.DBAccess.RunSQL("ALERT ");
-		//                break;
-		//            default:
-		//                break;
-		//        }
-		//        break;
-		//    default:
-		//        break;
-		//}
 		super.afterInsert();
 	}
 	/** 
@@ -1274,8 +1212,9 @@ public class MapAttr extends EntityMyPK
 	 生成他的外键字典数据,转化为json.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerHisFKData()
+	public final String GenerHisFKData() throws Exception
 	{
 		SFTable sf = new SFTable(this.getUIBindKey());
 		return BP.Tools.Json.ToJson(sf.GenerHisDataTable());
@@ -1371,12 +1310,8 @@ public class MapAttr extends EntityMyPK
 		return null;
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		//if (this.LGType == FieldTypeS.Normal)
-		//    if (this.UIIsEnable == true &&this.DefVal !=null &&  this.DefVal.Contains("@") == true)
-		//        throw new Exception("@不能在非只读(不可编辑)的字段设置具有@的默认值. 您设置的默认值为:" + this.DefVal);
-		//if (this.UIContralType == En.UIContralType.DDL && this.LGType == FieldTypeS.Normal)
 
 		//added by liuxc,2016-12-2
 		//判断当前属性是否有分组，没有分组，则自动创建一个分组，并关联
@@ -1399,7 +1334,7 @@ public class MapAttr extends EntityMyPK
 			}
 		}
 
-		if (this.getLGType() == FieldTypeS.Enum && this.getUIContralType() == En.UIContralType.RadioBtn)
+		if (this.getLGType() == FieldTypeS.Enum && this.getUIContralType() == UIContralType.RadioBtn)
 		{
 			String sql = "UPDATE Sys_FrmRB SET UIIsEnable=" + this.GetValIntByKey(MapAttrAttr.UIIsEnable) + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND KeyOfEn='" + this.getKeyOfEn() + "'";
 			DBAccess.RunSQL(sql);
@@ -1447,9 +1382,10 @@ public class MapAttr extends EntityMyPK
 	 插入之间需要做的事情.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getName()))
 		{
@@ -1494,7 +1430,6 @@ public class MapAttr extends EntityMyPK
 		if (this.IsExit(MapAttrAttr.KeyOfEn, this.getKeyOfEn(), MapAttrAttr.FK_MapData, this.getFK_MapData()))
 		{
 			return false;
-			throw new RuntimeException("@在[" + this.getMyPK() + "]已经存在字段名称[" + this.getName() + "]字段[" + this.getKeyOfEn() + "]");
 		}
 
 		if (this.getIdx() == 0)
@@ -1508,16 +1443,17 @@ public class MapAttr extends EntityMyPK
 	 删除之前
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		String sqls = "DELETE FROM Sys_MapExt WHERE (AttrOfOper='" + this.getKeyOfEn() + "' OR AttrsOfActive='" + this.getKeyOfEn() + "' ) AND (FK_MapData='" + this.getFK_MapData() + "')";
 		//删除权限管理字段.
 		sqls += "@DELETE FROM Sys_FrmSln WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
 
 		//如果外部数据，或者ws数据，就删除其影子字段.
-		if (this.getUIContralType() == En.UIContralType.DDL && this.getLGType() == FieldTypeS.Normal)
+		if (this.getUIContralType() == UIContralType.DDL && this.getLGType() == FieldTypeS.Normal)
 		{
 			sqls += "@DELETE FROM Sys_MapAttr WHERE KeyOfEn='" + this.getKeyOfEn() + "T' AND FK_MapData='" + this.getFK_MapData() + "'";
 		}

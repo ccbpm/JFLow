@@ -4,111 +4,100 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 
-import java.util.*;
+/**
+ * 线
+ */
+public class FrmLine extends EntityMyPK {
 
-/** 
- 线
-*/
-public class FrmLine extends EntityMyPK
-{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
-	public final String getBorderColorHtml() throws Exception
-	{
+	public final String getBorderColorHtml() throws Exception {
 		return PubClass.ToHtmlColor(this.getBorderColor());
 	}
-	public final String getBorderColor()
-	{
+
+	public final String getBorderColor() throws Exception {
 		return this.GetValStringByKey("BorderColor");
 	}
-	public final void setBorderColor(String value)
-	{
+
+	public final void setBorderColor(String value) throws Exception {
 		this.SetValByKey(FrmLineAttr.BorderColor, value);
 	}
-	public final float getBorderWidth()
-	{
+
+	public final float getBorderWidth() throws Exception {
 		return this.GetValFloatByKey(FrmLineAttr.BorderWidth);
 	}
-	public final void setBorderWidth(float value)
-	{
+
+	public final void setBorderWidth(float value) throws Exception {
 		this.SetValByKey(FrmLineAttr.BorderWidth, value);
 	}
-	/** 
-	 GUID
-	*/
-	public final String getGUID()
-	{
+
+	/**
+	 * GUID
+	 */
+	public final String getGUID() throws Exception {
 		return this.GetValStrByKey(FrmLineAttr.GUID);
 	}
-	public final void setGUID(String value)
-	{
+
+	public final void setGUID(String value) throws Exception {
 		this.SetValByKey(FrmLineAttr.GUID, value);
 	}
-	/** 
-	 Y1
-	*/
-	public final float getY1()
-	{
+
+	/**
+	 * Y1
+	 */
+	public final float getY1() throws Exception {
 		return this.GetValFloatByKey(FrmLineAttr.Y1);
 	}
-	public final void setY1(float value)
-	{
+
+	public final void setY1(float value) throws Exception {
 		this.SetValByKey(FrmLineAttr.Y1, value);
 	}
-	/** 
-	 X1
-	*/
-	public final float getX1()
-	{
+
+	/**
+	 * X1
+	 */
+	public final float getX1() throws Exception {
 		return this.GetValFloatByKey(FrmLineAttr.X1);
 	}
-	public final void setX1(float value)
-	{
+
+	public final void setX1(float value) throws Exception {
 		this.SetValByKey(FrmLineAttr.X1, value);
 	}
-	public final String getFK_MapData()
-	{
+
+	public final String getFK_MapData() throws Exception {
 		return this.GetValStrByKey(FrmLineAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
-	{
+
+	public final void setFK_MapData(String value) throws Exception {
 		this.SetValByKey(FrmLineAttr.FK_MapData, value);
 	}
-	public final float getY2()
-	{
+
+	public final float getY2() throws Exception {
 		return this.GetValFloatByKey(FrmLineAttr.Y2);
 	}
-	public final void setY2(float value)
-	{
+
+	public final void setY2(float value) throws Exception {
 		this.SetValByKey(FrmLineAttr.Y2, value);
 	}
-	public final float getX2()
-	{
+
+	public final float getX2() throws Exception {
 		return this.GetValFloatByKey(FrmLineAttr.X2);
 	}
-	public final void setX2(float value)
-	{
+
+	public final void setX2(float value) throws Exception {
 		this.SetValByKey(FrmLineAttr.X2, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
-	/** 
-	 线
-	*/
-	public FrmLine()
-	{
+	/**
+	 * 线
+	 */
+	public FrmLine() {
 	}
-	/** 
-	 EnMap
-	*/
+
+	/**
+	 * EnMap
+	 */
 	@Override
-	public Map getEnMap()
-	{
-		if (this.get_enMap() != null)
-		{
+	public Map getEnMap() {
+		if (this.get_enMap() != null) {
 			return this.get_enMap();
 		}
 		Map map = new Map("Sys_FrmLine", "线");
@@ -116,7 +105,6 @@ public class FrmLine extends EntityMyPK
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 		map.IndexField = FrmImgAthDBAttr.FK_MapData;
-
 
 		map.AddMyPK();
 		map.AddTBString(FrmLineAttr.FK_MapData, null, "主表", true, false, 0, 100, 20);
@@ -127,7 +115,7 @@ public class FrmLine extends EntityMyPK
 		map.AddTBFloat(FrmLineAttr.X2, 9, "X2", false, false);
 		map.AddTBFloat(FrmLineAttr.Y2, 9, "Y2", false, false);
 
-			//不再用的两个字段,但是还不能删除.
+		// 不再用的两个字段,但是还不能删除.
 		map.AddTBFloat("X", 9, "X", false, false);
 		map.AddTBFloat("Y", 9, "Y", false, false);
 
@@ -138,19 +126,17 @@ public class FrmLine extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-	/** 
-	 是否存在相同的数据?
-	 
-	 @return 
-	*/
-	public final boolean IsExitGenerPK()
-	{
-		String sql = "SELECT COUNT(*) FROM " + this.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND x1=" + this.getX1() + " and x2=" + this.getX2() + " and y1=" + this.getY1() + " and y2=" + this.getY2();
-		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
-		{
+	/**
+	 * 是否存在相同的数据?
+	 * 
+	 * @return
+	 */
+	public final boolean IsExitGenerPK() throws Exception {
+		String sql = "SELECT COUNT(*) FROM " + this.getEnMap().getPhysicsTable() + " WHERE FK_MapData='"
+				+ this.getFK_MapData() + "' AND x1=" + this.getX1() + " and x2=" + this.getX2() + " and y1="
+				+ this.getY1() + " and y2=" + this.getY2();
+		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0) {
 			return false;
 		}
 		return true;

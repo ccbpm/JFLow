@@ -7,7 +7,6 @@ import BP.DA.*;
 */
 public abstract class EntityOID extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
 	/** 
 	 是否是自动增长列

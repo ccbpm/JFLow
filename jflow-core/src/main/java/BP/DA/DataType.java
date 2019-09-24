@@ -33,8 +33,8 @@ import BP.WF.PortalInterface;
 import BP.Web.WebUser;
 
 public class DataType {
-	public static boolean IsNullOrEmpty(String s) {
-		if (s == null || s.equals("") == true || s.equals("null") == true)
+	public static boolean IsNullOrEmpty(Object object) {
+		if (object == null || object.equals("") == true || object.equals("null") == true)
 			return true;
 		return false;
 	}

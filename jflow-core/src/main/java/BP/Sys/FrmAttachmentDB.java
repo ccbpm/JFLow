@@ -255,8 +255,9 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 	/** 
 	 附件类型
+	 * @throws Exception 
 	*/
-	public final AttachmentUploadType getHisAttachmentUploadType()
+	public final AttachmentUploadType getHisAttachmentUploadType() throws Exception
 	{
 		if (this.getMyPK().contains("_") && this.getMyPK().length() < 32)
 		{
@@ -442,7 +443,7 @@ public class FrmAttachmentDB extends EntityMyPK
 				if (ef.RetrieveFromDBSources() > 0)
 				{
 					ets = new ExcelTables(fk_ef);
-					for (ExcelTable et : ets)
+					for (ExcelTable et : ets.ToJavaList())
 					{
 						if (DBAccess.IsExitsObject(et.getNo()))
 						{
@@ -458,35 +459,32 @@ public class FrmAttachmentDB extends EntityMyPK
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
-
 	/** 
 	 获得临时文件
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public final String GenerTempFile()
+	public final String GenerTempFile() throws Exception
 	{
-		return GenerTempFile(Sys.AthSaveWay.IISServer);
+		return GenerTempFile(AthSaveWay.WebServer);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public string GenerTempFile(AthSaveWay saveWay= Sys.AthSaveWay.IISServer)
-	public final String GenerTempFile(AthSaveWay saveWay)
+
+	public final String GenerTempFile(AthSaveWay saveWay) throws Exception
 	{
-		if (saveWay == Sys.AthSaveWay.IISServer)
+		if (saveWay == AthSaveWay.WebServer)
 		{
 			return this.getFileFullName();
 		}
 
-		if (saveWay == Sys.AthSaveWay.FTPServer)
+		if (saveWay == AthSaveWay.FTPServer)
 		{
 			return this.MakeFullFileFromFtp();
 		}
 
-		if (saveWay == Sys.AthSaveWay.DB)
+		if (saveWay == AthSaveWay.DB)
 		{
 			throw new RuntimeException("@尚未处理存储到db里面的文件.");
 		}

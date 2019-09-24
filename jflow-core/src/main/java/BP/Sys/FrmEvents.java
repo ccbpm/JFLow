@@ -3,6 +3,7 @@ package BP.Sys;
 import BP.DA.*;
 import BP.En.*;
 import BP.Port.*;
+import BP.Tools.StringHelper;
 import BP.Web.*;
 import java.util.*;
 import java.io.*;
@@ -84,7 +85,7 @@ public class FrmEvents extends EntitiesOID
 			return null;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 执行的是业务单元.
 		if (nev.getHisDoType() == EventDoType.BuessUnit)
 		{
@@ -93,7 +94,7 @@ public class FrmEvents extends EntitiesOID
 			enBuesss.WorkID = Long.parseLong(en.getPKVal().toString());
 			return enBuesss.DoIt();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 执行的是业务单元.
 
 
@@ -103,7 +104,7 @@ public class FrmEvents extends EntitiesOID
 			return null;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理执行内容
 		Attrs attrs = en.getEnMap().getAttrs();
 		String MsgOK = "";
@@ -133,33 +134,28 @@ public class FrmEvents extends EntitiesOID
 		doc = doc.replace("@WorkID", en.GetValStrByKey("OID", "@WorkID"));
 
 		//SDK表单上服务器地址,应用到使用ccflow的时候使用的是sdk表单,该表单会存储在其他的服务器上. 
-		doc = doc.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost"));
+		doc = doc.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 
 		if (doc.contains("@") == true)
 		{
-			if (HttpContextHelper.getCurrent() != null)
+			//如果是 bs 系统, 有可能参数来自于url ,就用url的参数替换它们 .
+			String url = Glo.getRequest().getRemoteAddr();
+			if (url.indexOf('?') != -1)
 			{
-				/*如果是 bs 系统, 有可能参数来自于url ,就用url的参数替换它们 .*/
-				//string url = BP.Sys.Glo.Request.RawUrl;
-				//2019-07-25 zyt改造
-				String url = HttpContextHelper.getRequestRawUrl();
-				if (url.indexOf('?') != -1)
+				url = url.substring(url.indexOf('?'));//.indexOf('?');
+			}
+
+			String[] paras = url.split("[&]", -1);
+			for (String s : paras)
+			{
+				String[] mys = s.split("[=]", -1);
+
+				if (doc.contains("@" + mys[0]) == false)
 				{
-					url = tangible.StringHelper.trimStart(url.substring(url.indexOf('?')), '?');
+					continue;
 				}
 
-				String[] paras = url.split("[&]", -1);
-				for (String s : paras)
-				{
-					String[] mys = s.split("[=]", -1);
-
-					if (doc.contains("@" + mys[0]) == false)
-					{
-						continue;
-					}
-
-					doc = doc.replace("@" + mys[0], mys[1]);
-				}
+				doc = doc.replace("@" + mys[0], mys[1]);
 			}
 		}
 
@@ -179,12 +175,10 @@ public class FrmEvents extends EntitiesOID
 			if (SystemConfig.getIsBSsystem())
 			{
 				/*是bs系统，并且是url参数执行类型.*/
-				//string url = BP.Sys.Glo.Request.RawUrl;
-				//2019-07-25 zyt改造
 				String url = HttpContextHelper.getRequestRawUrl();
 				if (url.indexOf('?') != -1)
 				{
-					url = tangible.StringHelper.trimStart(url.substring(url.indexOf('?')), '?');
+					url = StringHelper.trimStart(url.substring(url.indexOf('?')), '?');
 				}
 
 				String[] paras = url.split("[&]", -1);
@@ -244,7 +238,7 @@ public class FrmEvents extends EntitiesOID
 			//增加上系统约定的参数.
 			doc += "&EntityName=" + en.toString() + "&EntityPK=" + en.getPK() + "&EntityPKVal=" + en.getPKVal() + "&FK_Event=" + nev.getMyPK();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理执行内容
 
 		if (atPara != null && doc.contains("@") == true)
@@ -278,7 +272,7 @@ public class FrmEvents extends EntitiesOID
 				break;
 
 			case URLOfSelf:
-				Object tempVar2 = doc.Clone();
+				Object tempVar2 = doc;
 				String myURL = tempVar2 instanceof String ? (String)tempVar2 : null;
 				if (myURL.contains("http") == false)
 				{
@@ -308,7 +302,7 @@ public class FrmEvents extends EntitiesOID
 						myURL = cfgBaseUrl + myURL;
 					}
 				}
-				myURL = myURL.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost"));
+				myURL = myURL.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 
 				if (myURL.contains("&FID=") == false && en.getRow().containsKey("FID") == true)
 				{
@@ -370,7 +364,7 @@ public class FrmEvents extends EntitiesOID
 				//开始执行.
 				try
 				{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 处理整理参数.
 					Row r = en.getRow();
 					try
@@ -425,7 +419,7 @@ public class FrmEvents extends EntitiesOID
 							}
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 处理整理参数.
 
 					ev.setSysPara(r);
@@ -484,7 +478,7 @@ public class FrmEvents extends EntitiesOID
 				//开始执行webserives.
 				break;
 			case SpecClass:
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region //执行dll文件中指定类的指定方法，added by liuxc,2016-01-16
 				String evdll = nev.getMonthedDLL();
 				String evclass = nev.getMonthedClass();
@@ -677,7 +671,7 @@ public class FrmEvents extends EntitiesOID
 
 				//非静态方法
 				return (md.Invoke(abl.CreateInstance(evclass), pvs) != null ? md.Invoke(abl.CreateInstance(evclass), pvs) : "").toString();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 			default:
 				throw new RuntimeException("@no such way." + nev.getHisDoType().toString());
@@ -693,8 +687,9 @@ public class FrmEvents extends EntitiesOID
 	 事件
 	 
 	 @param FK_MapData FK_MapData
+	 * @throws Exception 
 	*/
-	public FrmEvents(String fk_MapData)
+	public FrmEvents(String fk_MapData) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmEventAttr.FK_MapData, fk_MapData);
@@ -704,8 +699,9 @@ public class FrmEvents extends EntitiesOID
 	 事件
 	 
 	 @param FK_MapData 按节点ID查询
+	 * @throws Exception 
 	*/
-	public FrmEvents(int nodeID)
+	public FrmEvents(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmEventAttr.FK_Node, nodeID);
@@ -720,8 +716,7 @@ public class FrmEvents extends EntitiesOID
 		return new FrmEvent();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+
 	/** 
 	 转化成 java list,C#不能调用.
 	 
@@ -745,6 +740,6 @@ public class FrmEvents extends EntitiesOID
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

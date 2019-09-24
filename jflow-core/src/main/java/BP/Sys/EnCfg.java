@@ -3,18 +3,14 @@ package BP.Sys;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
-import BP.*;
-import BP.Web.*;
 
-import java.nio.file.Path;
-import java.util.*;
 
 /** 
  EnCfgs
 */
 public class EnCfg extends EntityNo
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region UI设置.
 	public final String getUI() throws Exception
 	{
@@ -24,11 +20,7 @@ public class EnCfg extends EntityNo
 	{
 		this.SetValByKey(EnCfgAttr.UI, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion UI设置.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 基本属性
 	/** 
 	 数据分析方式
 	 * @throws Exception 
@@ -72,14 +64,16 @@ public class EnCfg extends EntityNo
 	}
 	/** 
 	 附件存储位置.
+	 * @throws Exception 
 	*/
-	public final String getFJWebPath()
+	public final String getFJWebPath() throws Exception
 	{
 		String str = this.GetValStringByKey(EnCfgAttr.FJWebPath);
 		if (str.equals("") || str == null)
 		{
 			
-			str = Path.combine(HttpContextHelper.getRequestApplicationPath(), "DataUser/", this.getNo());
+			return BP.Sys.Glo.getRequest().getRemoteHost() + "/DataUser/"
+					+ this.getNo() + "/";
 		}
 		str = str.replace("\\", "/");
 		if (!str.endsWith("/"))
@@ -92,10 +86,10 @@ public class EnCfg extends EntityNo
 	{
 		this.SetValByKey(EnCfgAttr.FJWebPath, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 	/** 
 	 批处理-设置页面大小
@@ -121,10 +115,10 @@ public class EnCfg extends EntityNo
 	{
 		this.SetPara("PageSizeOfSearch", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 系统实体
@@ -180,6 +174,4 @@ public class EnCfg extends EntityNo
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 }

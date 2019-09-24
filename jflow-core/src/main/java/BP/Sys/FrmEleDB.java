@@ -4,144 +4,132 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 
-import java.util.*;
-
-/** 
- 表单元素扩展DB
-*/
-public class FrmEleDB extends EntityMyPK
-{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
-	/** 
-	 EleID
-	*/
-	public final String getEleID()
-	{
+/**
+ * 表单元素扩展DB
+ */
+public class FrmEleDB extends EntityMyPK {
+	/**
+	 * EleID
+	 */
+	public final String getEleID() throws Exception {
 		return this.GetValStrByKey(FrmEleDBAttr.EleID);
 	}
-	public final void setEleID(String value)
-	{
+
+	public final void setEleID(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.EleID, value);
 	}
-	/** 
-	 Tag1
-	*/
-	public final String getTag1()
-	{
+
+	/**
+	 * Tag1
+	 */
+	public final String getTag1() throws Exception {
 		return this.GetValStringByKey(FrmEleDBAttr.Tag1);
 	}
-	public final void setTag1(String value)
-	{
+
+	public final void setTag1(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.Tag1, value);
 	}
-	/** 
-	 Tag2
-	*/
-	public final String getTag2()
-	{
+
+	/**
+	 * Tag2
+	 */
+	public final String getTag2() throws Exception {
 		return this.GetValStringByKey(FrmEleDBAttr.Tag2);
 	}
-	public final void setTag2(String value)
-	{
+
+	public final void setTag2(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.Tag2, value);
 	}
-	/** 
-	 Tag3
-	*/
-	public final String getTag3()
-	{
+
+	/**
+	 * Tag3
+	 */
+	public final String getTag3() throws Exception {
 		return this.GetValStringByKey(FrmEleDBAttr.Tag3);
 	}
-	public final void setTag3(String value)
-	{
+
+	public final void setTag3(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.Tag3, value);
 	}
-	/** 
-	 Tag4
-	*/
-	public final String getTag4()
-	{
+
+	/**
+	 * Tag4
+	 */
+	public final String getTag4() throws Exception {
 		return this.GetValStringByKey(FrmEleDBAttr.Tag4);
 	}
-	public final void setTag4(String value)
-	{
+
+	public final void setTag4(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.Tag4, value);
 	}
-	/** 
-	 Tag5
-	*/
-	public final String getTag5()
-	{
+
+	/**
+	 * Tag5
+	 */
+	public final String getTag5() throws Exception {
 		return this.GetValStringByKey(FrmEleDBAttr.Tag5);
 	}
-	public final void setTag5(String value)
-	{
+
+	public final void setTag5(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.Tag5, value);
 	}
-	/** 
-	 FK_MapData
-	*/
-	public final String getFK_MapData()
-	{
+
+	/**
+	 * FK_MapData
+	 */
+	public final String getFK_MapData() throws Exception {
 		return this.GetValStrByKey(FrmEleDBAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value)
-	{
+
+	public final void setFK_MapData(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.FK_MapData, value);
 	}
-	/** 
-	 RefPKVal
-	*/
-	public final String getRefPKVal()
-	{
+
+	/**
+	 * RefPKVal
+	 */
+	public final String getRefPKVal() throws Exception {
 		return this.GetValStrByKey(FrmEleDBAttr.RefPKVal);
 	}
-	public final void setRefPKVal(String value)
-	{
+
+	public final void setRefPKVal(String value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.RefPKVal, value);
 	}
-	/** 
-	 流程ID
-	*/
-	public final long getFID()
-	{
+
+	/**
+	 * 流程ID
+	 */
+	public final long getFID() throws Exception {
 		return this.GetValInt64ByKey(FrmEleDBAttr.FID);
 	}
-	public final void setFID(long value)
-	{
+
+	public final void setFID(long value) throws Exception {
 		this.SetValByKey(FrmEleDBAttr.FID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造方法
-	/** 
-	 表单元素扩展DB
-	*/
-	public FrmEleDB()
-	{
+	/**
+	 * 表单元素扩展DB
+	 */
+	public FrmEleDB() {
 	}
-	/** 
-	 表单元素扩展DB
-	 
-	 @param mypk
-	 * @throws Exception 
-	*/
-	public FrmEleDB(String mypk) throws Exception
-	{
+
+	/**
+	 * 表单元素扩展DB
+	 * 
+	 * @param mypk
+	 * @throws Exception
+	 */
+	public FrmEleDB(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
-	/** 
-	 EnMap
-	*/
+
+	/**
+	 * EnMap
+	 */
 	@Override
-	public Map getEnMap()
-	{
-		if (this.get_enMap() != null)
-		{
+	public Map getEnMap() {
+		if (this.get_enMap() != null) {
 			return this.get_enMap();
 		}
 		Map map = new Map("Sys_FrmEleDB", "表单元素扩展DB");
@@ -164,18 +152,14 @@ public class FrmEleDB extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
-	{
-		//this.setMyPK( this.FK_MapData + "_" + this.EleID + "_" + this.RefPKVal;
-	   // this.GenerPKVal();
+	protected boolean beforeUpdateInsertAction() throws Exception {
+
 		return super.beforeUpdateInsertAction();
 	}
-	public final void GenerPKVal()
-	{
+
+	public final void GenerPKVal() throws Exception {
 		this.setMyPK(this.getFK_MapData() + "_" + this.getEleID() + "_" + this.getRefPKVal());
 	}
 }

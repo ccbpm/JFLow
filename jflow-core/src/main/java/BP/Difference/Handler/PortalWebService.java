@@ -107,6 +107,35 @@ public class PortalWebService {
 	}
 	
 	/**
+	 * 人員登陸
+	 * @param userNo
+	 * @param password
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean CheckUserNoPassWord(String userNo, String password) throws Exception
+    {
+		return HttpRequestPost(userNo,password,"CheckUserNoPassWord");
+    }
+	
+	private boolean HttpRequestPost(String userNo, String password, String method) throws Exception {
+		String webPath = SystemConfig.getAppSettings().get("HostURL")+"/services/PortalInterfaceWS";
+		Service service = new Service();
+		Call call = (Call) service.createCall();
+		call.setTargetEndpointAddress(webPath);
+		call.setOperationName(new QName("http://WebServiceImp", method));// WSDL里面描述的接口名称
+		call.addParameter("userNo", org.apache.axis.encoding.XMLType.XSD_LONG, javax.xml.rpc.ParameterMode.IN);// 接口的参数
+		call.addParameter("password", org.apache.axis.encoding.XMLType.XSD_DATE, javax.xml.rpc.ParameterMode.IN);// 接口的参数
+		
+		call.setReturnType(org.apache.axis.encoding.XMLType.XSD_BOOLEAN);// 设置返回类型
+
+		boolean result = (boolean) call.invoke(new Object[] { userNo, password});
+		// 给方法传递参数，并且调用方法
+		System.out.println("result is " + result);
+		return result;
+	}
+	
+	/**
 	 * 调用Jflow-web中WebService接口
 	 * @param sender
 	 * @param sendToEmpNo

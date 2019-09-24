@@ -1079,4 +1079,21 @@ public class SystemConfig {
 		}
 		return true;
 	}
+	
+    public static String getHostURL()
+    {
+        if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("HostURL")) == false)
+        {
+            return (String) SystemConfig.getAppSettings().get("HostURL");
+        }
+        return getHostURLOfBS();
+    }
+    
+    public static String getHostURLOfBS()
+    {
+        
+        String url = "http://" +Con ;
+        return url;
+       
+    }
 }

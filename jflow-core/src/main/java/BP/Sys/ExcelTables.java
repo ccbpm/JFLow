@@ -1,5 +1,7 @@
 package BP.Sys;
 
+import java.util.List;
+
 import BP.En.*;
 
 /** 
@@ -30,6 +32,10 @@ public class ExcelTables extends EntitiesNoName
 	{
 		this.Retrieve(ExcelTableAttr.FK_ExcelFile, fk_excelfile, ExcelTableAttr.Name);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	
+	public final List<ExcelTable> ToJavaList()
+	{
+		return (List<ExcelTable>)(Object)this;
+	}
 		///#endregion 构造方法
 }

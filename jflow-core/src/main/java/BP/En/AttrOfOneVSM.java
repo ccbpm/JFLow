@@ -19,6 +19,8 @@ public class AttrOfOneVSM
 	*/
 	public String RefTreeAttr = null;
 	
+   public EntitiesTree EnsTree = null;
+	
 	public String RootNo = null;
 	
 	/**

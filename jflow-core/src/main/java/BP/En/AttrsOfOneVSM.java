@@ -1,18 +1,20 @@
 package BP.En;
 
+import java.util.ArrayList;
+
 import BP.En.*;
 
 /** 
  AttrsOfOneVSM 集合
 */
-public class AttrsOfOneVSM extends System.Collections.CollectionBase
+public class AttrsOfOneVSM extends  ArrayList<AttrOfOneVSM>
 {
 	public AttrsOfOneVSM()
 	{
 	}
 	public final AttrOfOneVSM get(int index)
 	{
-		return (AttrOfOneVSM)this.InnerList[index];
+		return (AttrOfOneVSM) this.get(index);
 	}
 	/** 
 	 增加一个SearchKey .
@@ -25,7 +27,7 @@ public class AttrsOfOneVSM extends System.Collections.CollectionBase
 		{
 			return;
 		}
-		this.InnerList.add(attr);
+		this.add(attr);
 	}
 
 	/** 
@@ -73,8 +75,6 @@ public class AttrsOfOneVSM extends System.Collections.CollectionBase
 		Add(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc, Dot2DotModel.Default, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public void Add(Entities _ensOfMM, Entities _ensOfM, string AttrOfOneInMM, string AttrOfMInMM, string AttrOfMText, string AttrOfMValue, string desc, Dot2DotModel model= Dot2DotModel.Default, EntitiesTree ensTree=null, string refTreeAttr=null)
 	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc, Dot2DotModel model, EntitiesTree ensTree, String refTreeAttr)
 	{
 
@@ -83,7 +83,7 @@ public class AttrsOfOneVSM extends System.Collections.CollectionBase
 
 		//工作模式.
 		en.dot2DotModel = model;
-		en.EnsTree = ensTree;
+		en.EnsTree=ensTree;
 		en.RefTreeAttr = refTreeAttr;
 
 		this.Add(en);

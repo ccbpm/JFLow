@@ -2,10 +2,18 @@ package BP.Web;
 
 import BP.En.*;
 import BP.DA.*;
+import BP.Difference.ContextHolderUtils;
 import BP.Port.*;
 import BP.Pub.*;
 import BP.Sys.*;
+import BP.Tools.StringHelper;
+
 import java.util.*;
+
+import javax.servlet.http.Cookie;
+
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.time.*;
 
 /** 
@@ -20,8 +28,9 @@ public class GuestUser
 	 @param guestName
 	 @param lang
 	 @param isRememberMe
+	 * @throws Exception 
 	*/
-	public static void SignInOfGener(String guestNo, String guestName, String lang, boolean isRememberMe)
+	public static void SignInOfGener(String guestNo, String guestName, String lang, boolean isRememberMe) throws Exception
 	{
 		SignInOfGener(guestNo, guestName, "deptNo", "deptName", lang, isRememberMe);
 	}
@@ -34,11 +43,12 @@ public class GuestUser
 	 @param deptName 部门名称
 	 @param lang 语言
 	 @param isRememberMe 是否记忆我
+	 * @throws Exception 
 	*/
-	public static void SignInOfGener(String guestNo, String guestName, String deptNo, String deptName, String lang, boolean isRememberMe)
+	public static void SignInOfGener(String guestNo, String guestName, String deptNo, String deptName, String lang, boolean isRememberMe) throws Exception
 	{
 		//2019-07-25 zyt改造
-		if (HttpContextHelper.getCurrent() == null)
+		if (ContextHolderUtils.getInstance() == null)
 		{
 			SystemConfig.setIsBSsystem(false);
 		}
@@ -68,56 +78,48 @@ public class GuestUser
 		WebUser.setSysLang(lang);
 		if (BP.Sys.SystemConfig.getIsBSsystem())
 		{
-			// Guest  信息.
-			/*HttpCookie cookie = new HttpCookie("CCSGuest");
-			//cookie.Expires = DateTime.Now.AddMonths(10);
-			cookie.Expires = DateTime.Now.AddDays(2);
-			cookieValues.Add("GuestNo", guestNo);
-			cookieValues.Add("GuestName", HttpUtility.UrlEncode(guestName));
-			cookieValues.Add("DeptNo", deptNo);
-			cookieValues.Add("DeptName", HttpUtility.UrlEncode(deptName));
-
-			//System.Web.HttpContext.Current.Response.AppendCookie(cookie); //加入到会话。
-			HttpContextHelper.ResponseCookieAdd(cookie);
-			*/
-
-			HashMap<String, String> cookieValues = new HashMap<String, String>();
-			// HttpCookie cookie = new HttpCookie("CCS");
-			//cookie.Expires = DateTime.Now.AddDays(2);
-
-			// Guest  信息.
-			cookieValues.put("GuestNo", guestNo);
-			cookieValues.put("GuestName", HttpUtility.UrlEncode(guestName));
-
-			cookieValues.put("DeptNo", deptNo);
-			cookieValues.put("DeptName", HttpUtility.UrlEncode(deptName));
-
-			cookieValues.put("No", "Guest");
-			cookieValues.put("Name", HttpUtility.UrlEncode(em.getName()));
+			int expiry = 60 * 60 * 24 * 2;
+			ContextHolderUtils.addCookie("GuestNo", expiry, guestNo);
+			ContextHolderUtils.addCookie("GuestName", expiry, URLEncoder.encode(guestName, "UTF-8"));
+			
+			ContextHolderUtils.addCookie("DeptNo", expiry, deptNo);
+			ContextHolderUtils.addCookie("DeptName", expiry, URLEncoder.encode(deptName, "UTF-8"));
+			
+			ContextHolderUtils.addCookie("No", expiry, "Guest");
+			ContextHolderUtils.addCookie("Name", expiry, URLEncoder.encode(em.getName(), "UTF-8"));
+			
+			
 
 			if (isRememberMe)
 			{
-				cookieValues.put("IsRememberMe", "1");
+				ContextHolderUtils.addCookie("IsRememberMe",expiry, "1");
 			}
 			else
 			{
-				cookieValues.put("IsRememberMe", "0");
+				ContextHolderUtils.addCookie("IsRememberMe",expiry, "0");
 			}
 
-			cookieValues.put("FK_Dept", em.getFK_Dept());
-			cookieValues.put("FK_DeptName", HttpUtility.UrlEncode(em.getFK_DeptText()));
+			ContextHolderUtils.addCookie("FK_Dept",expiry, em.getFK_Dept());
+			ContextHolderUtils.addCookie("FK_DeptName",expiry,URLEncoder.encode(em.getFK_DeptText(), "UTF-8"));
 
-			cookieValues.put("Token", HttpContextHelper.getCurrentSessionID());
-			cookieValues.put("SID", HttpContextHelper.getCurrentSessionID());
+			ContextHolderUtils.addCookie("Token",expiry, getNoOfSessionID());
+			ContextHolderUtils.addCookie("SID",expiry, getNoOfSessionID());
 
-			cookieValues.put("Lang", lang);
-			cookieValues.put("Style", "0");
-			cookieValues.put("Auth", ""); //授权人.
-			HttpContextHelper.ResponseCookieAdd(cookieValues, LocalDateTime.now().plusDays(2), "CCS");
+			ContextHolderUtils.addCookie("Lang",expiry, lang);
+			ContextHolderUtils.addCookie("Style",expiry, "0");
+			ContextHolderUtils.addCookie("Auth",expiry, ""); //授权人.
 		}
 	}
+	
+	public static String getNoOfSessionID() {
+		String s = GetSessionByKey("No", null);
+		if (s == null) {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			return ContextHolderUtils.getSession().getId();
+		}
+		return s;
+	}
+
 		///#region 静态方法
 	/** 
 	 通过key,取出session.
@@ -128,42 +130,22 @@ public class GuestUser
 	*/
 	public static String GetSessionByKey(String key, String isNullAsVal)
 	{
-		if (getIsBSMode())
-		{
-			String str = HttpContextHelper.SessionGetString(key);
-			if (DataType.IsNullOrEmpty(str))
-			{
+		if (getIsBSMode() && null != ContextHolderUtils.getRequest() && null != ContextHolderUtils.getSession()) {
+			Object value = ContextHolderUtils.getSession().getAttribute(key);
+			String str = value == null ? "" : String.valueOf(value);
+			if (StringHelper.isNullOrEmpty(str)) {
 				str = isNullAsVal;
 			}
 			return str;
-		}
-		else
-		{
-			if (BP.Port.Current.Session.get(key) == null || BP.Port.Current.Session.get(key).toString().equals(""))
-			{
-				BP.Port.Current.Session.put(key, isNullAsVal);
+		} else {
+			if ((Current.Session.get(key) == null || Current.Session.get(key).toString().equals("")) && isNullAsVal != null) {
 				return isNullAsVal;
-			}
-			else
-			{
-				return (String)BP.Port.Current.Session.get(key);
+			} else {
+				String str = (String) Current.Session.get(key);
+				return str;
 			}
 		}
 	}
-	/* 2019-7-25 张磊注释，net core中需要知道object的具体类型才行（不能被序列化的对象，无法放入session中）
-	public static object GetObjByKey(string key)
-	{
-	    if (IsBSMode)
-	    {
-	        return System.Web.HttpContext.Current.Session[key];
-	    }
-	    else
-	    {
-	        return BP.Port.Current.Session[key];
-	    }
-	}*/
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
 	/** 
 	 是不是b/s 工作模式。
@@ -171,39 +153,28 @@ public class GuestUser
 	protected static boolean getIsBSMode()
 	{
 			//2019-07-25 zyt改造
-		if (HttpContextHelper.getCurrent() == null)
-		{
+		if (ContextHolderUtils.getRequest() == null) {
 			return false;
-		}
-		else
-		{
+		} else {
 			return true;
 		}
 	}
 
 	public static Object GetSessionByKey(String key, Object defaultObjVal)
 	{
-		if (getIsBSMode())
-		{
-			Object obj = HttpContextHelper.SessionGet(key);
-			if (obj == null)
-			{
-				return defaultObjVal;
+		if (getIsBSMode() && null != ContextHolderUtils.getRequest() && null != ContextHolderUtils.getSession()) {
+			Object value = ContextHolderUtils.getSession().getAttribute(key);
+			String str = value == null ? "" : String.valueOf(value);
+			if (StringHelper.isNullOrEmpty(str)) {
+				str = defaultObjVal.toString();
 			}
-			else
-			{
-				return obj;
-			}
-		}
-		else
-		{
-			if (BP.Port.Current.Session.get(key) == null)
-			{
-				return defaultObjVal;
-			}
-			else
-			{
-				return BP.Port.Current.Session.get(key);
+			return str;
+		} else {
+			if ((Current.Session.get(key) == null || Current.Session.get(key).toString().equals("")) && defaultObjVal != null) {
+				return defaultObjVal.toString();
+			} else {
+				String str = (String) Current.Session.get(key);
+				return str;
 			}
 		}
 	}
@@ -216,17 +187,10 @@ public class GuestUser
 	*/
 	public static void SetSessionByKey(String key, Object val)
 	{
-		if (val == null)
-		{
-			return;
-		}
-		if (getIsBSMode())
-		{
-			HttpContextHelper.SessionSet(key, val);
-		}
-		else
-		{
-			BP.Port.Current.SetSession(key, val);
+		if (getIsBSMode() && null != ContextHolderUtils.getRequest() && null != ContextHolderUtils.getSession()) {
+			ContextHolderUtils.getSession().setAttribute(key, val);
+		} else {
+			Current.SetSession(key, val);
 		}
 	}
 	/** 
@@ -234,84 +198,45 @@ public class GuestUser
 	*/
 	public static void Exit()
 	{
-		if (getIsBSMode() == false)
-		{
-			try
-			{
-				String token = WebUser.getToken();
-
-				HttpContextHelper.ResponseCookieDelete(new String[] {"No", "Name", "Pass", "IsRememberMe", "Auth", "AuthName"}, "CCS");
-
-				BP.Port.Current.Session.clear();
-
-				/* 2019-07-25 张磊 注释掉，CCSGuest 不再使用
-				// Guest  信息.
-				cookie = new HttpCookie("CCSGuest");
-				cookie.Expires = DateTime.Now.AddDays(2);
-				cookie.Values.Add("GuestNo", string.Empty);
-				cookie.Values.Add("GuestName", string.Empty);
-				cookie.Values.Add("DeptNo", string.Empty);
-				cookie.Values.Add("DeptName", string.Empty);
-				System.Web.HttpContext.Current.Response.AppendCookie(cookie); //加入到会话。
-				*/
-			}
-			catch (java.lang.Exception e)
-			{
-			}
-		}
-		else
-		{
-			try
-			{
-				BP.Port.Current.Session.clear();
-
-				HttpContextHelper.ResponseCookieDelete(new String[] {"No", "Name", "Pass", "IsRememberMe", "Auth", "AuthName"}, "CCS");
-
-				HttpContextHelper.SessionClear();
-
-				/* 2019-07-25 张磊 注释掉，CCSGuest 不再使用 
-				// Guest  信息.
-				cookie = new HttpCookie("CCSGuest");
-				cookie.Expires = DateTime.Now.AddDays(2);
-				cookie.Values.Add("GuestNo", string.Empty);
-				cookie.Values.Add("GuestName", string.Empty);
-				cookie.Values.Add("DeptNo", string.Empty);
-				cookie.Values.Add("DeptName", string.Empty);
-				System.Web.HttpContext.Current.Response.AppendCookie(cookie); //加入到会话。
-				*/
-			}
-			catch (java.lang.Exception e2)
-			{
-			}
-		}
+		
 	}
 	public static String GetValFromCookie(String valKey, String isNullAsVal, boolean isChinese)
 	{
-		if (getIsBSMode() == false)
-		{
-			return BP.Port.Current.GetSessionStr(valKey, isNullAsVal);
+		if (!getIsBSMode()) {
+			return Current.GetSessionStr(valKey, isNullAsVal);
 		}
-
-		try
-		{
-			String val = HttpContextHelper.RequestCookieGet(valKey, "CCS");
-			/*
-			if (isChinese)
-			    val = HttpUtility.UrlDecode(hc[valKey]);
-			else
-			    val = hc.Values[valKey];
-			*/
-			if (DataType.IsNullOrEmpty(val))
-			{
+	
+		try {
+			// 先从session里面取.
+			Object value = ContextHolderUtils.getSession().getAttribute(valKey);
+			String v = value == null ? "" : String.valueOf(value);
+			if (!StringHelper.isNullOrEmpty(v)) {
+				if (isChinese) {
+					v = URLDecoder.decode(v, "UTF-8");
+				}
+				return v;
+			}
+		} catch (java.lang.Exception e) {}
+	
+		try {
+			String val = null;
+			Cookie cookie = ContextHolderUtils.getCookie(valKey);
+			if (cookie != null){
+				if (isChinese) {
+					val = URLDecoder.decode(cookie.getValue(), "UTF-8");
+				} else {
+					val = cookie.getValue();
+				}
+			}
+	
+			if (StringHelper.isNullOrEmpty(val)) {
 				return isNullAsVal;
 			}
 			return val;
-		}
-		catch (java.lang.Exception e)
-		{
+		} catch (java.lang.Exception e2) {
+			e2.printStackTrace();
 			return isNullAsVal;
 		}
-		throw new RuntimeException("@err-001 登录信息丢失。");
 	}
 	/** 
 	 编号
@@ -327,8 +252,8 @@ public class GuestUser
 				return "admin";
 			}
 
-			GuestUser.setNo(HttpContextHelper.RequestCookieGet("No", "CCS"));
-			GuestUser.setName(HttpContextHelper.RequestCookieGet("Name", "CCS"));
+			GuestUser.setNo(GetSessionByKey("No", "CCS"));
+			GuestUser.setName(GetSessionByKey("Name", "CCS"));
 
 			if (DataType.IsNullOrEmpty(GuestUser.getNo()))
 			{

@@ -25,7 +25,6 @@ import BP.Sys.OSModel;
 import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Dev2Interface;
-import BP.WF.DotNetToJavaStringHelper;
 
 /**
  * User 的摘要说明。
@@ -926,15 +925,7 @@ public class WebUser {
 		}
 	}
 
-	// 部门权限
-	 
 
-	// 部门权限
-
-	// public static Stations getHisStations() {
-	// EmpStations sts = new EmpStations();
-	// return sts.GetHisStations(WebUser.getNo());
-	// }
 	public static Stations getHisStations() throws Exception {
 		Object obj = null;
 		obj = GetSessionByKey("HisSts", obj);

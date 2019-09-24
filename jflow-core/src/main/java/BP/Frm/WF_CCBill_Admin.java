@@ -3,6 +3,7 @@ package BP.Frm;
 import java.io.IOException;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonUtils;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -94,8 +95,6 @@ public class WF_CCBill_Admin extends DirectoryPageBase
 		return "保存成功.";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
 	 
@@ -113,8 +112,6 @@ public class WF_CCBill_Admin extends DirectoryPageBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]DoMethod=[" + this.GetRequestVal("DoMethod") + "]，没有找到. @RowURL:" + HttpContextHelper.getRequestRawUrl());
+		throw new RuntimeException("@标记[" + this.getDoType() + "]DoMethod=[" + this.GetRequestVal("DoMethod") + "]，没有找到. @RowURL:" + CommonUtils.getRequest().getRequestURI());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 执行父类的重写方法.
 }

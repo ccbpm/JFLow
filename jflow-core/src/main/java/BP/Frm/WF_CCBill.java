@@ -2,6 +2,7 @@ package BP.Frm;
 
 import BP.DA.*;
 import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.DateUtils;
@@ -265,8 +266,10 @@ public class WF_CCBill extends WebContralBase
 	private Hashtable GetMainTableHT() throws UnsupportedEncodingException
 	{
 		Hashtable htMain = new Hashtable();
-		for (String key : HttpContextHelper.getRequestParamKeys())
+		Enumeration enu = getRequest().getParameterNames();
+		while (enu.hasMoreElements())
 		{
+			String key = (String) enu.nextElement();
 			if (key == null)
 			{
 				continue;
@@ -274,31 +277,28 @@ public class WF_CCBill extends WebContralBase
 
 			if (key.contains("TB_"))
 			{
-
-				String val = HttpContextHelper.RequestParams(key);
 				if (htMain.containsKey(key.replace("TB_", "")) == false)
 				{
-					val = URLDecoder.decode(this.GetRequestVal(key), "UTF-8");
-					htMain.put(key.replace("TB_", ""), val);
+					htMain.put(key.replace("TB_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
 				}
 				continue;
 			}
 
 			if (key.contains("DDL_"))
 			{
-				htMain.put(key.replace("DDL_", ""), HttpContextHelper.RequestParams(key));
+				htMain.put(key.replace("DDL_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
 				continue;
 			}
 
 			if (key.contains("CB_"))
 			{
-				htMain.put(key.replace("CB_", ""), HttpContextHelper.RequestParams(key));
+				htMain.put(key.replace("CB_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
 				continue;
 			}
 
 			if (key.contains("RB_"))
 			{
-				htMain.put(key.replace("RB_", ""), HttpContextHelper.RequestParams(key));
+				htMain.put(key.replace("RB_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
 				continue;
 			}
 		}
@@ -375,7 +375,7 @@ public class WF_CCBill extends WebContralBase
 		for (String ctrl : ctrls)
 		{
 			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示
-			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
+			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(this.GetRequestVal(ctrl)))
 			{
 				continue;
 			}
@@ -1330,7 +1330,7 @@ public class WF_CCBill extends WebContralBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.getRequestRawUrl());
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + CommonUtils.getRequest().getRequestURI());
 	}
 
 		///#endregion 执行父类的重写方法.

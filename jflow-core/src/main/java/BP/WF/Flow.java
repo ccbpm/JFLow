@@ -2,12 +2,55 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.Port.*;
 import BP.En.*;
-import BP.WF.Template.*;
 import BP.WF.Data.*;
+import BP.WF.Template.BillTemplate;
+import BP.WF.Template.BillTemplates;
+import BP.WF.Template.CC;
+import BP.WF.Template.CCDept;
+import BP.WF.Template.CCStation;
+import BP.WF.Template.Cond;
+import BP.WF.Template.Conds;
+import BP.WF.Template.ConnDataFrom;
+import BP.WF.Template.DTSField;
+import BP.WF.Template.DataStoreModel;
+import BP.WF.Template.Direction;
+import BP.WF.Template.DirectionAttr;
+import BP.WF.Template.Directions;
+import BP.WF.Template.DraftRole;
+import BP.WF.Template.FindWorkerRole;
+import BP.WF.Template.FlowAttr;
+import BP.WF.Template.FlowDTSTime;
+import BP.WF.Template.FlowDTSWay;
+import BP.WF.Template.FlowDeptDataRightCtrlType;
+import BP.WF.Template.FrmField;
+import BP.WF.Template.FrmFieldAttr;
+import BP.WF.Template.FrmFields;
+import BP.WF.Template.FrmNode;
+import BP.WF.Template.FrmNodeAttr;
+import BP.WF.Template.FrmNodes;
+import BP.WF.Template.FrmWorkCheck;
+import BP.WF.Template.LabNotes;
+import BP.WF.Template.NodeAttr;
+import BP.WF.Template.NodeDept;
+import BP.WF.Template.NodeEmp;
+import BP.WF.Template.NodeExt;
+import BP.WF.Template.NodeExts;
+import BP.WF.Template.NodeReturn;
+import BP.WF.Template.NodeStation;
+import BP.WF.Template.NodeToolbar;
+import BP.WF.Template.SDTOfFlowRole;
+import BP.WF.Template.Selector;
+import BP.WF.Template.Selectors;
+import BP.WF.Template.StartGuideWay;
+import BP.WF.Template.SubFlowYanXu;
 import BP.Web.*;
 import java.util.*;
+
+import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
+
 import java.io.*;
 import java.nio.file.*;
 import java.time.*;
@@ -20,12 +63,14 @@ import java.math.*;
 */
 public class Flow extends BP.En.EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+private static final boolean IsExits = false;
+	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 参数属性.
 	/** 
 	 最大值x
+	 * @throws Exception 
 	*/
-	public final int getMaxX()
+	public final int getMaxX() throws Exception
 	{
 		int i = this.GetParaInt("MaxX");
 		if (i == 0)
@@ -38,14 +83,15 @@ public class Flow extends BP.En.EntityNoName
 		}
 		return this.GetParaInt("MaxX");
 	}
-	public final void setMaxX(int value)
+	public final void setMaxX(int value) throws Exception
 	{
 		this.SetPara("MaxX", value);
 	}
 	/** 
 	 最大值Y
+	 * @throws Exception 
 	*/
-	public final int getMaxY()
+	public final int getMaxY() throws Exception
 	{
 		int i = this.GetParaInt("MaxY");
 		if (i == 0)
@@ -59,7 +105,7 @@ public class Flow extends BP.En.EntityNoName
 
 		return this.GetParaInt("MaxY");
 	}
-	public final void setMaxY(int value)
+	public final void setMaxY(int value) throws Exception
 	{
 		this.SetPara("MaxY", value);
 	}
@@ -76,35 +122,37 @@ public class Flow extends BP.En.EntityNoName
 		///#region 业务数据表同步属性.
 	/** 
 	 同步方式
+	 * @throws Exception 
 	*/
-	public final FlowDTSWay getDTSWay()
+	public final FlowDTSWay getDTSWay() throws Exception
 	{
 		return FlowDTSWay.forValue(this.GetValIntByKey(FlowAttr.DTSWay));
 	}
-	public final void setDTSWay(FlowDTSWay value)
+	public final void setDTSWay(FlowDTSWay value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSWay, value.getValue());
 	}
-	public final FlowDTSTime getDTSTime()
+	public final FlowDTSTime getDTSTime() throws Exception
 	{
 		return FlowDTSTime.forValue(this.GetValIntByKey(FlowAttr.DTSTime));
 	}
-	public final void setDTSTime(FlowDTSTime value)
+	public final void setDTSTime(FlowDTSTime value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSTime, value.getValue());
 	}
-	public final DTSField getDTSField()
+	public final DTSField getDTSField() throws Exception
 	{
 		return DTSField.forValue(this.GetValIntByKey(FlowAttr.DTSField));
 	}
-	public final void setDTSField(DTSField value)
+	public final void setDTSField(DTSField value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSField, value.getValue());
 	}
 	/** 
 	 数据源
+	 * @throws Exception 
 	*/
-	public final String getDTSDBSrc()
+	public final String getDTSDBSrc() throws Exception
 	{
 		String str = this.GetValStringByKey(FlowAttr.DTSDBSrc);
 		if (DataType.IsNullOrEmpty(str))
@@ -113,48 +161,51 @@ public class Flow extends BP.En.EntityNoName
 		}
 		return str;
 	}
-	public final void setDTSDBSrc(String value)
+	public final void setDTSDBSrc(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSDBSrc, value);
 	}
 	/** 
 	 业务表
+	 * @throws Exception 
 	*/
-	public final String getDTSBTable()
+	public final String getDTSBTable() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.DTSBTable);
 	}
-	public final void setDTSBTable(String value)
+	public final void setDTSBTable(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSBTable, value);
 	}
-	public final String getDTSBTablePK()
+	public final String getDTSBTablePK() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.DTSBTablePK);
 	}
-	public final void setDTSBTablePK(String value)
+	public final void setDTSBTablePK(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSBTablePK, value);
 	}
 	/** 
 	 要同步的节点s
+	 * @throws Exception 
 	*/
-	public final String getDTSSpecNodes()
+	public final String getDTSSpecNodes() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.DTSSpecNodes);
 	}
-	public final void setDTSSpecNodes(String value)
+	public final void setDTSSpecNodes(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSSpecNodes, value);
 	}
 	/** 
 	 同步的字段对应关系.
+	 * @throws Exception 
 	*/
-	public final String getDTSFields()
+	public final String getDTSFields() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.DTSFields);
 	}
-	public final void setDTSFields(String value)
+	public final void setDTSFields(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DTSFields, value);
 	}
@@ -166,40 +217,42 @@ public class Flow extends BP.En.EntityNoName
 	/** 
 	 流程事件实体
 	*/
-	public final String getFlowEventEntity()
+	public final String getFlowEventEntity() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.FlowEventEntity);
 	}
-	public final void setFlowEventEntity(String value)
+	public final void setFlowEventEntity(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.FlowEventEntity, value);
 	}
 
 	/** 
 	 流程标记
+	 * @throws Exception 
 	*/
-	public final String getFlowMark()
+	public final String getFlowMark() throws Exception
 	{
 		String str = this.GetValStringByKey(FlowAttr.FlowMark);
 		if (str.equals(""))
 		{
-			return this.No;
+			return this.getNo();
 		}
 		return str;
 	}
-	public final void setFlowMark(String value)
+	public final void setFlowMark(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.FlowMark, value);
 	}
 
 	/** 
 	 节点图形类型
+	 * @throws Exception 
 	*/
-	public final int getChartType()
+	public final int getChartType() throws Exception
 	{
 		return this.GetValIntByKey(FlowAttr.ChartType);
 	}
-	public final void setChartType(int value)
+	public final void setChartType(int value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.ChartType, value);
 	}
@@ -210,27 +263,29 @@ public class Flow extends BP.En.EntityNoName
 		///#region 发起限制.
 	/** 
 	 发起限制.
+	 * @throws Exception 
 	*/
-	public final StartLimitRole getStartLimitRole()
+	public final StartLimitRole getStartLimitRole() throws Exception
 	{
 		return StartLimitRole.forValue(this.GetValIntByKey(FlowAttr.StartLimitRole));
 	}
-	public final void setStartLimitRole(StartLimitRole value)
+	public final void setStartLimitRole(StartLimitRole value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartLimitRole, value.getValue());
 	}
 	/** 
 	 发起内容
+	 * @throws Exception 
 	*/
-	public final String getStartLimitPara()
+	public final String getStartLimitPara() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.StartLimitPara);
 	}
-	public final void setStartLimitPara(String value)
+	public final void setStartLimitPara(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartLimitPara, value);
 	}
-	public final String getStartLimitAlert()
+	public final String getStartLimitAlert() throws Exception
 	{
 		String s = this.GetValStringByKey(FlowAttr.StartLimitAlert);
 		if (s.equals(""))
@@ -239,18 +294,19 @@ public class Flow extends BP.En.EntityNoName
 		}
 		return s;
 	}
-	public final void setStartLimitAlert(String value)
+	public final void setStartLimitAlert(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartLimitAlert, value);
 	}
 	/** 
 	 限制触发时间
+	 * @throws Exception 
 	*/
-	public final StartLimitWhen getStartLimitWhen()
+	public final StartLimitWhen getStartLimitWhen() throws Exception
 	{
 		return StartLimitWhen.forValue(this.GetValIntByKey(FlowAttr.StartLimitWhen));
 	}
-	public final void setStartLimitWhen(StartLimitWhen value)
+	public final void setStartLimitWhen(StartLimitWhen value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartLimitWhen, value.getValue());
 	}
@@ -261,41 +317,42 @@ public class Flow extends BP.En.EntityNoName
 		///#region 导航模式
 	/** 
 	 发起导航方式
+	 * @throws Exception 
 	*/
-	public final StartGuideWay getStartGuideWay()
+	public final StartGuideWay getStartGuideWay() throws Exception
 	{
 		return StartGuideWay.forValue(this.GetValIntByKey(FlowAttr.StartGuideWay));
 	}
-	public final void setStartGuideWay(StartGuideWay value)
+	public final void setStartGuideWay(StartGuideWay value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartGuideWay, value.getValue());
 	}
 	/** 
 	 右侧的超链接
 	*/
-	public final String getStartGuideLink()
+	public final String getStartGuideLink() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.StartGuideLink);
 	}
-	public final void setStartGuideLink(String value)
+	public final void setStartGuideLink(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartGuideLink, value);
 	}
 	/** 
 	 标签
 	*/
-	public final String getStartGuideLab()
+	public final String getStartGuideLab() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.StartGuideLab);
 	}
-	public final void setStartGuideLab(String value)
+	public final void setStartGuideLab(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartGuideLab, value);
 	}
 	/** 
 	 前置导航参数1
 	*/
-	public final String getStartGuidePara1()
+	public final String getStartGuidePara1() throws Exception
 	{
 		if (this.getStartGuideWay() == Template.StartGuideWay.BySelfUrl)
 		{
@@ -311,7 +368,7 @@ public class Flow extends BP.En.EntityNoName
 			return this.GetValStringByKey(FlowAttr.StartGuidePara1);
 		}
 	}
-	public final void setStartGuidePara1(String value)
+	public final void setStartGuidePara1(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartGuidePara1, value);
 	}
@@ -320,11 +377,11 @@ public class Flow extends BP.En.EntityNoName
 	/** 
 	 流程发起参数2
 	*/
-	public final String getStartGuidePara2()
+	public final String getStartGuidePara2() throws Exception
 	{
 		String str = this.GetValStringByKey(FlowAttr.StartGuidePara2);
 		str = str.replace("~", "'");
-		if (DataType.IsNullOrEmpty(str) == null)
+		if (DataType.IsNullOrEmpty(str))
 		{
 			if (this.getStartGuideWay() == BP.WF.Template.StartGuideWay.ByHistoryUrl)
 			{
@@ -332,39 +389,39 @@ public class Flow extends BP.En.EntityNoName
 		}
 		return str;
 	}
-	public final void setStartGuidePara2(String value)
+	public final void setStartGuidePara2(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartGuidePara2, value);
 	}
 	/** 
 	 流程发起参数3
 	*/
-	public final String getStartGuidePara3()
+	public final String getStartGuidePara3() throws Exception
 	{
 		return this.GetValStrByKey(FlowAttr.StartGuidePara3);
 	}
-	public final void setStartGuidePara3(String value)
+	public final void setStartGuidePara3(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.StartGuidePara3, value);
 	}
 	/** 
 	 是否启用数据重置按钮？
 	*/
-	public final boolean getIsResetData()
+	public final boolean getIsResetData() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsResetData);
 	}
 	/** 
 	 是否启用导入历史数据按钮?
 	*/
-	public final boolean getIsImpHistory()
+	public final boolean getIsImpHistory() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsImpHistory);
 	}
 	/** 
 	 是否自动装载上一笔数据?
 	*/
-	public final boolean getIsLoadPriData()
+	public final boolean getIsLoadPriData() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsLoadPriData);
 	}
@@ -376,18 +433,18 @@ public class Flow extends BP.En.EntityNoName
 	/** 
 	 流程删除规则
 	*/
-	public final FlowDeleteRole getFlowDeleteRole()
+	public final FlowDeleteRole getFlowDeleteRole() throws Exception
 	{
 		return FlowDeleteRole.forValue(this.GetValIntByKey(FlowAttr.FlowDeleteRole));
 	}
 	/** 
 	 草稿规则
 	*/
-	public final DraftRole getDraftRole()
+	public final DraftRole getDraftRole() throws Exception
 	{
 		return DraftRole.forValue(this.GetValIntByKey(FlowAttr.Draft));
 	}
-	public final void setDraftRole(DraftRole value)
+	public final void setDraftRole(DraftRole value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.Draft, value.getValue());
 	}
@@ -395,80 +452,80 @@ public class Flow extends BP.En.EntityNoName
 	/** 
 	 运行类型
 	*/
-	public final FlowRunWay getHisFlowRunWay()
+	public final FlowRunWay getHisFlowRunWay() throws Exception
 	{
 		return FlowRunWay.forValue(this.GetValIntByKey(FlowAttr.FlowRunWay));
 	}
-	public final void setHisFlowRunWay(FlowRunWay value)
+	public final void setHisFlowRunWay(FlowRunWay value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.FlowRunWay, value.getValue());
 	}
 	/** 
 	 运行对象
 	*/
-	public final String getRunObj()
+	public final String getRunObj() throws Exception
 	{
 		return this.GetValStrByKey(FlowAttr.RunObj);
 	}
-	public final void setRunObj(String value)
+	public final void setRunObj(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.RunObj, value);
 	}
 	/** 
 	 时间点规则
 	*/
-	public final SDTOfFlowRole getSDTOfFlowRole()
+	public final SDTOfFlowRole getSDTOfFlowRole() throws Exception
 	{
 		return SDTOfFlowRole.forValue(this.GetValIntByKey(FlowAttr.SDTOfFlowRole));
 	}
 	/** 
 	 按照SQL来计算流程完成时间
 	*/
-	public final String getSDTOfFlowRoleSQL()
+	public final String getSDTOfFlowRoleSQL() throws Exception
 	{
 		return this.GetValStrByKey(FlowAttr.SDTOfFlowRoleSQL);
 	}
 	/** 
 	 流程部门数据查询权限控制方式
 	*/
-	public final FlowDeptDataRightCtrlType getHisFlowDeptDataRightCtrlType()
+	public final FlowDeptDataRightCtrlType getHisFlowDeptDataRightCtrlType() throws Exception
 	{
 		return FlowDeptDataRightCtrlType.forValue(this.GetValIntByKey(FlowAttr.DRCtrlType));
 	}
-	public final void setHisFlowDeptDataRightCtrlType(FlowDeptDataRightCtrlType value)
+	public final void setHisFlowDeptDataRightCtrlType(FlowDeptDataRightCtrlType value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DRCtrlType, value);
 	}
 	/** 
 	 流程应用类型
 	*/
-	public final FlowAppType getFlowAppType()
+	public final FlowAppType getFlowAppType() throws Exception
 	{
 		return FlowAppType.forValue(this.GetValIntByKey(FlowAttr.FlowAppType));
 	}
-	public final void setFlowAppType(FlowAppType value)
+	public final void setFlowAppType(FlowAppType value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.FlowAppType, value.getValue());
 	}
 	/** 
 	 流程备注的表达式
 	*/
-	public final String getFlowNoteExp()
+	public final String getFlowNoteExp() throws Exception
 	{
 		return this.GetValStrByKey(FlowAttr.FlowNoteExp);
 	}
-	public final void setFlowNoteExp(String value)
+	public final void setFlowNoteExp(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.FlowNoteExp, value);
 	}
 	/** 
 	 是否可以在手机里启用
 	*/
-	public final boolean getIsStartInMobile()
+	public final boolean getIsStartInMobile() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsStartInMobile);
 	}
-	public final void setIsStartInMobile(boolean value)
+	public final void setIsStartInMobile(boolean value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.IsStartInMobile, value);
 	}
@@ -482,7 +539,7 @@ public class Flow extends BP.En.EntityNoName
 	 
 	 @return 
 	*/
-	public final Work NewWork()
+	public final Work NewWork() throws Exception
 	{
 		return NewWork(WebUser.getNo());
 	}
@@ -492,7 +549,7 @@ public class Flow extends BP.En.EntityNoName
 	 @param empNo 人员编号
 	 @return 
 	*/
-	public final Work NewWork(String empNo)
+	public final Work NewWork(String empNo) throws Exception
 	{
 		Emp emp = new Emp(empNo);
 		return NewWork(emp, null);
@@ -504,7 +561,7 @@ public class Flow extends BP.En.EntityNoName
 	 @param paras 参数集合,如果是CS调用，要发起子流程，要从其他table里copy数据,就不能从request里面取,可以传递为null.
 	 @return 返回的Work.
 	*/
-	public final Work NewWork(Emp emp, Hashtable paras)
+	public final Work NewWork(Emp emp, Hashtable paras) throws Exception
 	{
 		// 检查是否可以发起该流程？
 		if (Glo.CheckIsCanStartFlow_InitStartFlow(this) == false)
@@ -567,11 +624,11 @@ public class Flow extends BP.En.EntityNoName
 		try
 		{
 			//从报表里查询该数据是否存在？
-			if (this.getIsGuestFlow() == true && DataType.IsNullOrEmpty(GuestUser.No) == false)
+			if (this.getIsGuestFlow() == true && DataType.IsNullOrEmpty(GuestUser.getNo()) == false)
 			{
 				/*是客户参与的流程，并且具有客户登陆的信息。*/
 				ps.SQL = "SELECT OID,FlowEndNode FROM " + this.getPTable() + " WHERE GuestNo=" + dbstr + "GuestNo AND WFState=" + dbstr + "WFState ";
-				ps.Add(GERptAttr.GuestNo, GuestUser.No);
+				ps.Add(GERptAttr.GuestNo, GuestUser.getNo());
 				ps.Add(GERptAttr.WFState, WFState.Blank.getValue());
 				DataTable dt = DBAccess.RunSQLReturnTable(ps);
 				if (dt.Rows.size() > 0 && IsNewWorkID == false)
@@ -590,7 +647,7 @@ public class Flow extends BP.En.EntityNoName
 			{
 
 				ps.SQL = "SELECT WorkID,FK_Node FROM WF_GenerWorkFlow WHERE WFState=0 AND Starter=" + dbstr + "FlowStarter AND FK_Flow=" + dbstr + "FK_Flow ";
-				ps.Add(GERptAttr.FlowStarter, emp.No);
+				ps.Add(GERptAttr.FlowStarter, emp.getNo());
 				ps.Add(GenerWorkFlowAttr.FK_Flow, this.getNo());
 				DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
@@ -616,8 +673,8 @@ public class Flow extends BP.En.EntityNoName
 				wk.ResetDefaultVal();
 				wk.setRec(WebUser.getNo());
 
-				wk.SetValByKey(StartWorkAttr.RecText, emp.Name);
-				wk.SetValByKey(StartWorkAttr.Emps, emp.No);
+				wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
+				wk.SetValByKey(StartWorkAttr.Emps, emp.getNo());
 
 				wk.SetValByKey(WorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
 				wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
@@ -627,7 +684,7 @@ public class Flow extends BP.En.EntityNoName
 
 				//把尽量可能的流程字段放入，否则会出现冲掉流程字段属性.
 				wk.SetValByKey(GERptAttr.FK_NY, BP.DA.DataType.CurrentYearMonth);
-				wk.SetValByKey(GERptAttr.FK_Dept, emp.FK_Dept);
+				wk.SetValByKey(GERptAttr.FK_Dept, emp.getFK_Dept());
 				wk.setFID(0);
 
 				try
@@ -657,30 +714,30 @@ public class Flow extends BP.En.EntityNoName
 					rpt.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this, wk));
 					//WebUser.getNo() + "," + WebUser.getName() + "在" + DataType.CurrentDataCNOfShort + "发起.";
 					rpt.setWFState(WFState.Blank);
-					rpt.setFlowStarter(emp.No);
+					rpt.setFlowStarter(emp.getNo());
 					rpt.setFK_NY(DataType.CurrentYearMonth);
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
 					{
-						rpt.setFlowEmps("@" + emp.Name + "@");
+						rpt.setFlowEmps("@" + emp.getName() + "@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
-						rpt.setFlowEmps("@" + emp.No + "@");
+						rpt.setFlowEmps("@" + emp.getNo() + "@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
-						rpt.setFlowEmps("@" + emp.No + "," + emp.Name + "@");
+						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName() + "@");
 					}
 
 					rpt.setFlowEnderRDT(BP.DA.DataType.getCurrentDataTime());
 					rpt.setFlowStartRDT(BP.DA.DataType.getCurrentDataTime());
 
-					rpt.setFK_Dept(emp.FK_Dept);
-					rpt.setFlowEnder(emp.No);
+					rpt.setFK_Dept(emp.getFK_Dept());
+					rpt.setFlowEnder(emp.getNo());
 					rpt.setFlowEndNode(this.getStartNodeID());
-					rpt.setFlowStarter(emp.No);
+					rpt.setFlowStarter(emp.getNo());
 					rpt.setWFState(WFState.Blank);
 					rpt.setFID(0);
 					rpt.DirectUpdate();
@@ -697,28 +754,28 @@ public class Flow extends BP.En.EntityNoName
 					// rpt.Title = WebUser.getNo() + "," + WebUser.getName() + "在" + DataType.CurrentDataCNOfShort + "发起.";
 
 					rpt.setWFState(WFState.Blank);
-					rpt.setFlowStarter(emp.No);
+					rpt.setFlowStarter(emp.getNo());
 
 					rpt.setFlowEndNode(this.getStartNodeID());
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
 					{
-						rpt.setFlowEmps("@" + emp.Name + "@");
+						rpt.setFlowEmps("@" + emp.getName() + "@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
-						rpt.setFlowEmps("@" + emp.No + "@");
+						rpt.setFlowEmps("@" + emp.getNo() + "@");
 					}
 
 					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 					{
-						rpt.setFlowEmps("@" + emp.No + "," + emp.Name + "@");
+						rpt.setFlowEmps("@" + emp.getNo() + "," + emp.getName() + "@");
 					}
 
-					rpt.setFK_NY(DataType.CurrentYearMonth);
-					rpt.setFK_Dept(emp.FK_Dept);
-					rpt.setFlowEnder(emp.No);
-					rpt.setFlowStarter(emp.No);
+					rpt.setFK_NY(DataType.getCurrentYearMonth());
+					rpt.setFK_Dept(emp.getFK_Dept());
+					rpt.setFlowEnder(emp.getNo());
+					rpt.setFlowStarter(emp.getNo());
 					rpt.InsertAsOID(wk.getOID());
 				}
 
@@ -859,7 +916,7 @@ public class Flow extends BP.En.EntityNoName
 		if (paras.containsKey("CopyFormWorkID") == true)
 		{
 			CopyFormWorkID = paras.get("CopyFormWorkID").toString();
-			PFlowNo = this.No;
+			PFlowNo = this.getNo();
 			PNodeIDStr = paras.get("CopyFormNode").toString();
 			PWorkIDStr = CopyFormWorkID;
 			PFIDStr = "0";
@@ -903,8 +960,8 @@ public class Flow extends BP.En.EntityNoName
 			}
 			else
 			{
-				PFlowNo = this.No;
-				PNodeIDStr = Integer.parseInt(this.No) + "01";
+				PFlowNo = this.getNo();
+				PNodeIDStr = Integer.parseInt(this.getNo()) + "01";
 				PWorkIDStr = workidPri;
 				PFIDStr = "0";
 				CopyFormWorkID = workidPri;
@@ -1020,25 +1077,25 @@ public class Flow extends BP.En.EntityNoName
 				rpt.SetValByKey(GERptAttr.FlowEnderRDT, BP.DA.DataType.getCurrentDataTime());
 				rpt.SetValByKey(GERptAttr.MyNum, 0);
 				rpt.SetValByKey(GERptAttr.WFState, WFState.Blank.getValue());
-				rpt.SetValByKey(GERptAttr.FlowStarter, emp.No);
-				rpt.SetValByKey(GERptAttr.FlowEnder, emp.No);
+				rpt.SetValByKey(GERptAttr.FlowStarter, emp.getNo());
+				rpt.SetValByKey(GERptAttr.FlowEnder, emp.getNo());
 				rpt.SetValByKey(GERptAttr.FlowEndNode, this.getStartNodeID());
-				rpt.SetValByKey(GERptAttr.FK_Dept, emp.FK_Dept);
+				rpt.SetValByKey(GERptAttr.FK_Dept, emp.getFK_Dept());
 				rpt.SetValByKey(GERptAttr.FK_NY, DataType.CurrentYearMonth);
 
 				if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
 				{
-					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.Name + "@");
+					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getName() + "@");
 				}
 
 				if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 				{
-					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.No + "@");
+					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo() + "@");
 				}
 
 				if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 				{
-					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.No + "," + emp.Name + "@");
+					rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo() + "," + emp.getName() + "@");
 				}
 
 			}
@@ -1069,7 +1126,7 @@ public class Flow extends BP.En.EntityNoName
 						}
 
 						//new 一个实例.
-						GEDtl dtlData = new GEDtl(dtl.No);
+						GEDtl dtlData = new GEDtl(dtl.getNo());
 
 						//删除以前的数据.
 						sql = "DELETE FROM " + dtlData.EnMap.PhysicsTable + " WHERE RefPK=" + wk.getOID();
@@ -1094,7 +1151,7 @@ public class Flow extends BP.En.EntityNoName
 							dtlData.Copy(geDtlFromData);
 							dtlData.RefPK = String.valueOf(wk.getOID());
 							dtlData.FID = wk.getOID();
-							if (this.No.equals(PFlowNo) == false && (this.getStartLimitRole() == StartLimitRole.OnlyOneSubFlow))
+							if (this.getNo().equals(PFlowNo) == false && (this.getStartLimitRole() == StartLimitRole.OnlyOneSubFlow))
 							{
 								dtlData.SaveAsOID(geDtlFromData.OID); //为子流程的时候，仅仅允许被调用1次.
 							}
@@ -1109,8 +1166,8 @@ public class Flow extends BP.En.EntityNoName
 									{
 										newDB.Copy(db);
 										newDB.RefPKVal = dtlData.OID.toString();
-										newDB.FID = dtlData.OID;
-										newDB.setMyPK( BP.DA.DBAccess.GenerGUID();
+										newDB.setFID(dtlData.OID);
+										newDB.setMyPK(BP.DA.DBAccess.GenerGUID());
 										newDB.Insert();
 									}
 								}
@@ -1142,7 +1199,7 @@ public class Flow extends BP.En.EntityNoName
 						if (athDB_N.HisAttachmentUploadType == AttachmentUploadType.Single)
 						{
 							/*如果是单附件.*/
-							athDB_N.setMyPK( athDB_N.FK_FrmAttachment + "_" + wk.getOID();
+							athDB_N.setMyPK(athDB_N.FK_FrmAttachment + "_" + wk.getOID());
 							if (athDB_N.IsExits == true)
 							{
 								continue; //说明上一个节点或者子线程已经copy过了, 但是还有子线程向合流点传递数据的可能，所以不能用break.
@@ -1151,7 +1208,7 @@ public class Flow extends BP.En.EntityNoName
 						}
 						else
 						{
-							athDB_N.setMyPK( athDB_N.UploadGUID + "_" + athDB_N.FK_MapData + "_" + wk.getOID();
+							athDB_N.setMyPK(athDB_N.UploadGUID + "_" + athDB_N.FK_MapData + "_" + wk.getOID());
 							athDB_N.Insert();
 						}
 					}
@@ -1232,11 +1289,11 @@ public class Flow extends BP.En.EntityNoName
 			wk.SetValByKey(StartWorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
 			wk.SetValByKey(StartWorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
 			wk.SetValByKey("FK_NY", DataType.CurrentYearMonth);
-			wk.setFK_Dept(emp.FK_Dept);
-			wk.SetValByKey("FK_DeptName", emp.FK_DeptText);
-			wk.SetValByKey("FK_DeptText", emp.FK_DeptText);
+			wk.setFK_Dept(emp.getFK_Dept());
+			wk.SetValByKey("FK_DeptName", emp.getFK_DeptText());
+			wk.SetValByKey("FK_DeptText", emp.getFK_DeptText());
 			wk.setFID(0);
-			wk.SetValByKey(StartWorkAttr.RecText, emp.Name);
+			wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
 
 			int jumpNodeID = Integer.parseInt(paras.get("JumpToNode").toString());
 			Node jumpNode = new Node(jumpNodeID);
@@ -1244,7 +1301,7 @@ public class Flow extends BP.En.EntityNoName
 			String jumpToEmp = paras.get("JumpToEmp").toString();
 			if (DataType.IsNullOrEmpty(jumpToEmp))
 			{
-				jumpToEmp = emp.No;
+				jumpToEmp = emp.getNo();
 			}
 
 			WorkNode wn = new WorkNode(wk, nd);
@@ -1263,21 +1320,21 @@ public class Flow extends BP.En.EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 最后整理wk数据.
-		wk.setRec(emp.No);
+		wk.setRec(emp.getNo());
 		wk.SetValByKey(WorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
 		wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
 		wk.SetValByKey("FK_NY", DataType.CurrentYearMonth);
-		wk.setFK_Dept(emp.FK_Dept);
-		wk.SetValByKey("FK_DeptName", emp.FK_DeptText);
-		wk.SetValByKey("FK_DeptText", emp.FK_DeptText);
+		wk.setFK_Dept(emp.getFK_Dept());
+		wk.SetValByKey("FK_DeptName", emp.getFK_DeptText());
+		wk.SetValByKey("FK_DeptText", emp.getFK_DeptText());
 
-		if (rpt.getEnMap().getAttrs().Contains("BillNo") == true)
+		if (rpt.getEnMap().getAttrs().contains("BillNo") == true)
 		{
 			wk.SetValByKey(NDXRptBaseAttr.BillNo, rpt.getBillNo());
 		}
 
 		wk.setFID(0);
-		wk.SetValByKey(StartWorkAttr.RecText, emp.Name);
+		wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
 		if (wk.IsExits == false)
 		{
 			wk.DirectInsert();
@@ -1295,13 +1352,13 @@ public class Flow extends BP.En.EntityNoName
 		mygwf.setWorkID(wk.getOID());
 		if (mygwf.RetrieveFromDBSources() == 0)
 		{
-			mygwf.setFK_Flow(this.No);
+			mygwf.setFK_Flow(this.getNo());
 			mygwf.setFK_FlowSort(this.getFK_FlowSort());
 			mygwf.setSysType(this.getSysType());
 			mygwf.setFK_Node(nd.getNodeID());
 			mygwf.setWorkID(wk.getOID());
 			mygwf.setWFState(WFState.Blank);
-			mygwf.setFlowName(this.Name);
+			mygwf.setFlowName(this.getName());
 			mygwf.Insert();
 		}
 		mygwf.setStarter(WebUser.getNo());
@@ -1358,7 +1415,7 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 ///#warning 2011-10-15 偶然发现一次工作丢失情况.
 
-			String fk_mapData = "ND" + Integer.parseInt(this.No) + "Rpt";
+			String fk_mapData = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
 			GERpt rpt = new GERpt(fk_mapData);
 			rpt.setOID(Integer.parseInt(String.valueOf(workid)));
 			if (rpt.RetrieveFromDBSources() >= 1)
@@ -1378,9 +1435,9 @@ public class Flow extends BP.En.EntityNoName
 				String msg = "@不应该出现的异常.";
 				msg += "@在为节点NodeID=" + nd.getNodeID() + " workid:" + workid + " 获取数据时.";
 				msg += "@获取它的Rpt表数据时，不应该查询不到。";
-				msg += "@GERpt 信息: table:" + rpt.getEnMap().PhysicsTable + "   OID=" + rpt.getOID();
+				msg += "@GERpt 信息: table:" + rpt.getEnMap().getPhysicsTable() + "   OID=" + rpt.getOID();
 
-				String sql = "SELECT count(*) FROM " + rpt.getEnMap().PhysicsTable + " WHERE OID=" + workid;
+				String sql = "SELECT count(*) FROM " + rpt.getEnMap().getPhysicsTable()+ " WHERE OID=" + workid;
 				int num = DBAccess.RunSQLReturnValInt(sql);
 
 				msg += " @SQL:" + sql;
@@ -1399,16 +1456,16 @@ public class Flow extends BP.En.EntityNoName
 				Log.DefaultLogWriteLineError(msg);
 
 				MapData md = new MapData("ND" + Integer.parseInt(nd.getFK_Flow()) + "01");
-				sql = "SELECT * FROM " + md.PTable + " WHERE OID=" + workid;
+				sql = "SELECT * FROM " + md.getPTable() + " WHERE OID=" + workid;
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				if (dt.Rows.size() == 1)
 				{
-					rpt.Copy(dt.Rows[0]);
+					rpt.Copy(dt.Rows.get(0));
 					try
 					{
-						rpt.setFlowStarter(dt.Rows[0][StartWorkAttr.Rec].toString());
-						rpt.setFlowStartRDT(dt.Rows[0][StartWorkAttr.RDT].toString());
-						rpt.setFK_Dept(dt.Rows[0][StartWorkAttr.FK_Dept].toString());
+						rpt.setFlowStarter(dt.Rows.get(0).getValue(StartWorkAttr.Rec).toString());
+						rpt.setFlowStartRDT(dt.Rows.get(0).getValue(StartWorkAttr.RDT).toString());
+						rpt.setFK_Dept(dt.Rows.get(0).getValue(StartWorkAttr.FK_Dept).toString());
 					}
 					catch (java.lang.Exception e)
 					{
@@ -1421,7 +1478,7 @@ public class Flow extends BP.En.EntityNoName
 					}
 					catch (RuntimeException ex)
 					{
-						Log.DefaultLogWriteLineError("@不应该出插入不进去 rpt:" + rpt.getEnMap().PhysicsTable + " workid=" + workid);
+						Log.DefaultLogWriteLineError("@不应该出插入不进去 rpt:" + rpt.getEnMap().getPhysicsTable() + " workid=" + workid);
 						rpt.RetrieveFromDBSources();
 					}
 				}
@@ -1433,7 +1490,7 @@ public class Flow extends BP.En.EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 ///#warning 不应该出现的工作丢失.
-				Log.DefaultLogWriteLineError("@工作[" + nd.getNodeID() + " : " + wk.EnDesc + "], 报表数据WorkID=" + workid + " 丢失, 没有从NDxxxRpt里找到记录,请联系管理员。");
+				Log.DefaultLogWriteLineError("@工作[" + nd.getNodeID() + " : " + wk.getEnDesc() + "], 报表数据WorkID=" + workid + " 丢失, 没有从NDxxxRpt里找到记录,请联系管理员。");
 
 				wk.Copy(rpt);
 				wk.setRec(WebUser.getNo());
@@ -1444,7 +1501,7 @@ public class Flow extends BP.En.EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 判断是否有删除草稿的需求.
-		if (SystemConfig.IsBSsystem == true && isPostBack == false && nd.getIsStartNode() && HttpContextHelper.RequestParams("IsDeleteDraft").equals("1"))
+		if (SystemConfig.getIsBSsystem() == true && isPostBack == false && nd.getIsStartNode() && HttpContextHelper.RequestParams("IsDeleteDraft").equals("1"))
 		{
 
 			/*需要删除草稿.*/
@@ -1507,7 +1564,7 @@ public class Flow extends BP.En.EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 其他通用方法.
-	public final String DoBTableDTS()
+	public final String DoBTableDTS() throws Exception
 	{
 		if (this.getDTSWay() == FlowDTSWay.None)
 		{
@@ -1599,14 +1656,14 @@ public class Flow extends BP.En.EntityNoName
 
 		for (int i = 0; i < lcArr.length; i++)
 		{
-			switch (src.DBSrcType)
+			switch (src.getDBSrcType())
 			{
-				case Sys.DBSrcType.Localhost:
+				case Localhost:
 					switch (SystemConfig.getAppCenterDBType())
 					{
-						case DBType.MSSQL:
+						case MSSQL:
 							break;
-						case DBType.Oracle:
+						case Oracle:
 							if (ywDt.Columns[ywArr[i]].DataType == LocalDateTime.class)
 							{
 								if (!DataType.IsNullOrEmpty(lcDt.Rows[0][lcArr[i].toString()].toString()))
@@ -1703,18 +1760,18 @@ public class Flow extends BP.En.EntityNoName
 				String RunObj = this.getRunObj();
 				String FK_Emp = RunObj.substring(0, RunObj.indexOf('@'));
 				BP.Port.Emp emp = new BP.Port.Emp();
-				emp.No = FK_Emp;
+				emp.setNo(FK_Emp);
 				if (emp.RetrieveFromDBSources() == 0)
 				{
 					return "启动自动启动流程错误：发起人(" + FK_Emp + ")不存在。";
 				}
 
 				WebUser.SignInOfGener(emp);
-				String info_send = BP.WF.Dev2Interface.Node_StartWork(this.No, null, null, 0, null, 0, null).ToMsgOfText();
+				String info_send = BP.WF.Dev2Interface.Node_StartWork(this.getNo(), null, null, 0, null, 0, null).ToMsgOfText();
 				if (!WebUser.getNo().equals("admin"))
 				{
 					emp = new BP.Port.Emp();
-					emp.No = "admin";
+					emp.setNo("admin");
 					emp.Retrieve();
 					WebUser.SignInOfGener(emp);
 					return info_send;
@@ -1728,17 +1785,17 @@ public class Flow extends BP.En.EntityNoName
 
 		String msg = "";
 		BP.Sys.MapExt me = new MapExt();
-		me.setMyPK( "ND" + Integer.parseInt(this.No) + "01_" + MapExtXmlList.StartFlow;
+		me.setMyPK("ND" + Integer.parseInt(this.getNo()) + "01_" + MapExtXmlList.StartFlow);
 		int i = me.RetrieveFromDBSources();
 		if (i == 0)
 		{
-			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + this.Name + ")的开始节点设置发起数据,请参考说明书解决.");
-			return "没有为流程(" + this.Name + ")的开始节点设置发起数据,请参考说明书解决.";
+			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + this.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
+			return "没有为流程(" + this.getName() + ")的开始节点设置发起数据,请参考说明书解决.";
 		}
 		if (DataType.IsNullOrEmpty(me.Tag))
 		{
-			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + this.Name + ")的开始节点设置发起数据,请参考说明书解决.");
-			return "没有为流程(" + this.Name + ")的开始节点设置发起数据,请参考说明书解决.";
+			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + this.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
+			return "没有为流程(" + this.getName() + ")的开始节点设置发起数据,请参考说明书解决.";
 		}
 
 		// 获取从表数据.
@@ -1765,24 +1822,24 @@ public class Flow extends BP.En.EntityNoName
 		DataTable dtMain = DBAccess.RunSQLReturnTable(me.Tag);
 		if (dtMain.Rows.size() == 0)
 		{
-			return "流程(" + this.Name + ")此时无任务,查询语句:" + me.Tag.Replace("'", "”");
+			return "流程(" + this.getName() + ")此时无任务,查询语句:" + me.Tag.Replace("'", "”");
 		}
 
 		msg += "@查询到(" + dtMain.Rows.size() + ")条任务.";
 
-		if (dtMain.Columns.Contains("Starter") == false)
+		if (dtMain.Columns.contains("Starter") == false)
 		{
 			errMsg += "@配值的主表中没有Starter列.";
 		}
 
-		if (dtMain.Columns.Contains("MainPK") == false)
+		if (dtMain.Columns.contains("MainPK") == false)
 		{
 			errMsg += "@配值的主表中没有MainPK列.";
 		}
 
 		if (errMsg.length() > 2)
 		{
-			return "流程(" + this.Name + ")的开始节点设置发起数据,不完整." + errMsg;
+			return "流程(" + this.getName() + ")的开始节点设置发起数据,不完整." + errMsg;
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 检查数据源是否正确.
@@ -1790,7 +1847,7 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理流程发起.
 
-		String fk_mapdata = "ND" + Integer.parseInt(this.No) + "01";
+		String fk_mapdata = "ND" + Integer.parseInt(this.getNo()) + "01";
 
 		MapData md = new MapData(fk_mapdata);
 		int idx = 0;
@@ -1802,7 +1859,7 @@ public class Flow extends BP.En.EntityNoName
 			String sql = "SELECT OID FROM " + md.PTable + " WHERE MainPK='" + mainPK + "'";
 			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 			{
-				msg += "@" + this.Name + ",第" + idx + "条,此任务在之前已经完成。";
+				msg += "@" + this.getName() + ",第" + idx + "条,此任务在之前已经完成。";
 				continue; //说明已经调度过了
 			}
 
@@ -1811,11 +1868,11 @@ public class Flow extends BP.En.EntityNoName
 			{
 				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
-				emp.No = starter;
+				emp.setNo(starter);
 				if (emp.RetrieveFromDBSources() == 0)
 				{
-					msg += "@" + this.Name + ",第" + idx + "条,设置的发起人员:" + emp.No + "不存在.";
-					msg += "@数据驱动方式发起流程(" + this.Name + ")设置的发起人员:" + emp.No + "不存在。";
+					msg += "@" + this.getName() + ",第" + idx + "条,设置的发起人员:" + emp.getNo() + "不存在.";
+					msg += "@数据驱动方式发起流程(" + this.getName() + ")设置的发起人员:" + emp.getNo() + "不存在。";
 					continue;
 				}
 				WebUser.SignInOfGener(emp);
@@ -1837,7 +1894,7 @@ public class Flow extends BP.En.EntityNoName
 				{
 					for (DataTable dt : ds.Tables)
 					{
-						if (!dt.TableName.equals(dtl.No))
+						if (!dt.TableName.equals(dtl.getNo()))
 						{
 							continue;
 						}
@@ -1877,12 +1934,12 @@ public class Flow extends BP.En.EntityNoName
 				WorkNode wn = new WorkNode(wk, nd);
 				String infoSend = wn.NodeSend().ToMsgOfHtml();
 				BP.DA.Log.DefaultLogWriteLineInfo(msg);
-				msg += "@" + this.Name + ",第" + idx + "条,发起人员:" + WebUser.getNo() + "-" + WebUser.getName() + "已完成.\r\n" + infoSend;
+				msg += "@" + this.getName() + ",第" + idx + "条,发起人员:" + WebUser.getNo() + "-" + WebUser.getName() + "已完成.\r\n" + infoSend;
 				//this.SetText("@第（" + idx + "）条任务，" + WebUser.getNo() + " - " + WebUser.getName() + "已经完成。\r\n" + msg);
 			}
 			catch (RuntimeException ex)
 			{
-				msg += "@" + this.Name + ",第" + idx + "条,发起人员:" + WebUser.getNo() + "-" + WebUser.getName() + "发起时出现错误.\r\n" + ex.getMessage();
+				msg += "@" + this.getName() + ",第" + idx + "条,发起人员:" + WebUser.getNo() + "-" + WebUser.getName() + "发起时出现错误.\r\n" + ex.getMessage();
 			}
 			msg += "<hr>";
 		}
@@ -1893,9 +1950,10 @@ public class Flow extends BP.En.EntityNoName
 
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -1905,12 +1963,12 @@ public class Flow extends BP.En.EntityNoName
 		return uac;
 	}
 
-	public final String ClearCash()
+	public final String ClearCash() throws Exception
 	{
 		BP.DA.Cash.ClearCash();
 		//清空流程中的缓存
 		//获取改流程中的节点数据
-		Nodes nds = new Nodes(this.No);
+		Nodes nds = new Nodes(this.getNo());
 		for (Node nd : nds.ToJavaList())
 		{
 			//判断表单的类型
@@ -1947,7 +2005,7 @@ public class Flow extends BP.En.EntityNoName
 
 		BP.DA.Cash.ClearCash();
 
-		Nodes nds = new Nodes(this.No);
+		Nodes nds = new Nodes(this.getNo());
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 检查独立表单
@@ -2014,10 +2072,10 @@ public class Flow extends BP.En.EntityNoName
 
 			//更新计算数据.
 			this.setNumOfBill(DBAccess.RunSQLReturnValInt("SELECT count(*) FROM WF_BillTemplate WHERE NodeID IN (SELECT NodeID FROM WF_Flow WHERE No=' " + this.getNo()+ " ')"));
-			this.setNumOfDtl(DBAccess.RunSQLReturnValInt("SELECT count(*) FROM Sys_MapDtl WHERE FK_MapData='ND" + Integer.parseInt(this.No) + "Rpt'"));
+			this.setNumOfDtl(DBAccess.RunSQLReturnValInt("SELECT count(*) FROM Sys_MapDtl WHERE FK_MapData='ND" + Integer.parseInt(this.getNo()) + "Rpt'"));
 			this.DirectUpdate();
 
-			String msg = "@  =======  关于《" + this.Name + " 》流程检查报告  ============";
+			String msg = "@  =======  关于《" + this.getName() + " 》流程检查报告  ============";
 			msg += "@信息输出分为三种: 信息  警告  错误. 如果遇到输出的错误，则必须要去修改或者设置.";
 			msg += "@流程检查目前还不能覆盖100%的错误,需要手工的运行一次才能确保流程设计的正确性.";
 
@@ -2044,10 +2102,10 @@ public class Flow extends BP.En.EntityNoName
 				///#endregion 检查是否是数据合并模式?
 
 			//单据模版.
-			BillTemplates bks = new BillTemplates(this.No);
+			BillTemplates bks = new BillTemplates(this.getNo());
 
 			//条件集合.
-			Conds conds = new Conds(this.No);
+			Conds conds = new Conds(this.getNo());
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 对节点进行检查
@@ -2196,7 +2254,7 @@ public class Flow extends BP.En.EntityNoName
 									msg += "@错误:您设置了该节点的访问规则是按SQL查询,执行此语句错误." + ex.getMessage();
 								}
 
-								if (testDB.Columns.Contains("no") == false || testDB.Columns.Contains("name") == false)
+								if (testDB.Columns.contains("no") == false || testDB.Columns.contains("name") == false)
 								{
 									msg += "@错误:您设置了该节点的访问规则是按SQL查询，设置的sql不符合规则，此sql的要求是查询必须包含No,Name两个列，sql表达式里支持@+字段变量，详细参考开发手册.";
 								}
@@ -2213,12 +2271,12 @@ public class Flow extends BP.En.EntityNoName
 						MapAttrs rptAttrs = new BP.Sys.MapAttrs();
 						rptAttrs.Retrieve(MapAttrAttr.FK_MapData, "ND" + str1 + "Rpt", MapAttrAttr.KeyOfEn);
 
-						if (rptAttrs.Contains(BP.Sys.MapAttrAttr.KeyOfEn, nd.getDeliveryParas()) == false)
+						if (rptAttrs.contains(BP.Sys.MapAttrAttr.KeyOfEn, nd.getDeliveryParas()) == false)
 						{
 							/*检查节点字段是否有FK_Emp字段*/
 							msg += "@错误:您设置了该节点的访问规则是[06.按上一节点表单指定的字段值作为本步骤的接受人]，但是您没有在节点属性的[访问规则设置内容]里设置指定的表单字段，详细参考开发手册.";
 						}
-						//if (mattrs.Contains(BP.Sys.MapAttrAttr.KeyOfEn, "FK_Emp") == false)
+						//if (mattrs.contains(BP.Sys.MapAttrAttr.KeyOfEn, "FK_Emp") == false)
 						//{
 						//    /*检查节点字段是否有FK_Emp字段*/
 						//    msg += "@错误:您设置了该节点的访问规则是按指定节点表单人员，但是您没有在节点表单中增加FK_Emp字段，详细参考开发手册 .";
@@ -2274,7 +2332,7 @@ public class Flow extends BP.En.EntityNoName
 							{
 								continue;
 							}
-							if (ndOfCond.getHisWork().getEnMap().getAttrs().Contains(cond.getAttrKey()) == false)
+							if (ndOfCond.getHisWork().getEnMap().getAttrs().contains(cond.getAttrKey()) == false)
 							{
 								throw new RuntimeException("@错误:属性:" + cond.getAttrKey() + " , " + cond.getAttrName() + " 不存在。");
 							}
@@ -2296,14 +2354,14 @@ public class Flow extends BP.En.EntityNoName
 				if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
 				{
 					MapAttr mattr = new MapAttr();
-					mattr.setMyPK( nd.getNodeFrmID() + "_FID";
+					mattr.setMyPK(nd.getNodeFrmID() + "_FID");
 					if (mattr.RetrieveFromDBSources() == 0)
 					{
-						mattr.setKeyOfEn ("FID";
+						mattr.setKeyOfEn("FID");
 						mattr.FK_MapData = nd.getNodeFrmID();
-						mattr.setMyDataType (DataType.AppInt;
-						mattr.setUIVisible(false;
-						mattr.setName("FID(自动增加)";
+						mattr.setMyDataType (DataType.AppInt);
+						mattr.setUIVisible(false);
+						mattr.setName("FID(自动增加)");
 						mattr.Insert();
 
 						GEEntity en = new GEEntity(nd.getNodeFrmID());
@@ -2341,7 +2399,7 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 检查越轨流程,子流程发起。
 			SubFlowYanXus ygflows = new SubFlowYanXus();
-			ygflows.Retrieve(SubFlowYanXuAttr.SubFlowNo, this.No, SubFlowYanXuAttr.SubFlowType, SubFlowType.YanXuFlow.getValue());
+			ygflows.Retrieve(SubFlowYanXuAttr.SubFlowNo, this.getNo(), SubFlowYanXuAttr.SubFlowType, SubFlowType.YanXuFlow.getValue());
 			for (SubFlowYanXu flow : ygflows)
 			{
 				Flow fl = new Flow(flow.getSubFlowNo());
@@ -2371,7 +2429,7 @@ public class Flow extends BP.En.EntityNoName
 
 
 			msg += "@流程的基础信息: ------ ";
-			msg += "@编号:   " + this.getNo()+ "  名称:" + this.Name + " , 存储表:" + this.getPTable();
+			msg += "@编号:   " + this.getNo()+ "  名称:" + this.getName() + " , 存储表:" + this.getPTable();
 
 			msg += "@信息:开始检查节点流程报表.";
 			this.DoCheck_CheckRpt(this.getHisNodes());
@@ -2431,7 +2489,7 @@ public class Flow extends BP.En.EntityNoName
 
 				if (this.getIsMD5())
 				{
-					if (nd.getHisWork().getEnMap().getAttrs().Contains(WorkAttr.MD5) == false)
+					if (nd.getHisWork().getEnMap().getAttrs().contains(WorkAttr.MD5) == false)
 					{
 						nd.RepareMap(this);
 					}
@@ -2500,7 +2558,7 @@ public class Flow extends BP.En.EntityNoName
 
 
 			//创建track.
-			Track.CreateOrRepairTrackTable(this.No);
+			Track.CreateOrRepairTrackTable(this.getNo());
 
 			//生成 V001 视图. del by stone 2016.03.27.
 			// CheckRptViewDel(nds);
@@ -2522,8 +2580,8 @@ public class Flow extends BP.En.EntityNoName
 		errorAppend.append("@信息: -------- 流程节点表单的字段类型检查: ------ ");
 		try
 		{
-			Nodes nds = new Nodes(this.No);
-			String fk_mapdatas = "'ND" + Integer.parseInt(this.No) + "Rpt'";
+			Nodes nds = new Nodes(this.getNo());
+			String fk_mapdatas = "'ND" + Integer.parseInt(this.getNo()) + "Rpt'";
 			for (Node nd : nds.ToJavaList())
 			{
 				fk_mapdatas += ",'ND" + nd.getNodeID() + "'";
@@ -2553,13 +2611,13 @@ public class Flow extends BP.En.EntityNoName
 
 				//存在2种数据类型，以不同于NDxxRpt字段类型为主
 				MapAttr baseMapAttr = new MapAttr();
-				MapAttr rptMapAttr = new MapAttr("ND" + Integer.parseInt(this.No) + "Rpt", keyOfEn);
+				MapAttr rptMapAttr = new MapAttr("ND" + Integer.parseInt(this.getNo()) + "Rpt", keyOfEn);
 
 				//Rpt表中不存在此字段
 				if (rptMapAttr == null || rptMapAttr.MyPK.equals(""))
 				{
 					this.DoCheck_CheckRpt(this.getHisNodes());
-					rptMapAttr = new MapAttr("ND" + Integer.parseInt(this.No) + "Rpt", keyOfEn);
+					rptMapAttr = new MapAttr("ND" + Integer.parseInt(this.getNo()) + "Rpt", keyOfEn);
 					this.getHisGERpt().CheckPhysicsTable();
 				}
 
@@ -2619,11 +2677,11 @@ public class Flow extends BP.En.EntityNoName
 				rptMapattr.setMaxLen(baseMapAttr.MaxLen;
 				if (rptMapAttr.Update() > 0)
 				{
-					errorAppend.append("@修改了" + "ND" + Integer.parseInt(this.No) + "Rpt 表，字段" + keyOfEn + "修改为：" + baseMapAttr.MyDataTypeStr);
+					errorAppend.append("@修改了" + "ND" + Integer.parseInt(this.getNo()) + "Rpt 表，字段" + keyOfEn + "修改为：" + baseMapAttr.MyDataTypeStr);
 				}
 				else
 				{
-					errorAppend.append("@错误:修改" + "ND" + Integer.parseInt(this.No) + "Rpt 表，字段" + keyOfEn + "修改为：" + baseMapAttr.MyDataTypeStr + "失败。");
+					errorAppend.append("@错误:修改" + "ND" + Integer.parseInt(this.getNo()) + "Rpt 表，字段" + keyOfEn + "修改为：" + baseMapAttr.MyDataTypeStr + "失败。");
 				}
 			}
 		}
@@ -2647,19 +2705,20 @@ public class Flow extends BP.En.EntityNoName
 	private static String PathFlowDesc;
 	static
 	{
-		PathFlowDesc = SystemConfig.PathOfDataUser + "FlowDesc\\";
+		PathFlowDesc = SystemConfig.getPathOfDataUser() + "FlowDesc\\";
 	}
 	/** 
 	 生成流程模板
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GenerFlowXmlTemplete()
+	public final String GenerFlowXmlTemplete() throws Exception
 	{
-		String name = this.Name;
+		String name = this.getName();
 		name = BP.Tools.StringExpressionCalculate.ReplaceBadCharOfFileName(name);
 
-		String path = this.No + "." + name;
+		String path = this.getNo() + "." + name;
 		path = PathFlowDesc + path + "\\";
 
 		this.DoExpFlowXmlTemplete(path);
@@ -2674,8 +2733,9 @@ public class Flow extends BP.En.EntityNoName
 	 
 	 @param path
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataSet DoExpFlowXmlTemplete(String path)
+	public final DataSet DoExpFlowXmlTemplete(String path) throws Exception
 	{
 		if ((new File(path)).isDirectory() == false)
 		{
@@ -2685,7 +2745,7 @@ public class Flow extends BP.En.EntityNoName
 		DataSet ds = GetFlow(path);
 		if (ds != null)
 		{
-			String name = this.Name;
+			String name = this.getName();
 			name = BP.Tools.StringExpressionCalculate.ReplaceBadCharOfFileName(name);
 			// name = name + "." + this.Ver.Replace(":", "_") + ".xml";
 			name = name + ".xml";
@@ -2706,7 +2766,7 @@ public class Flow extends BP.En.EntityNoName
 	{
 		try
 		{
-			String name = this.No + "." + this.Name;
+			String name = this.getNo() + "." + this.getName();
 			name = BP.Tools.StringExpressionCalculate.ReplaceBadCharOfFileName(name);
 			String path = PathFlowDesc + name + "\\";
 			DataSet ds = GetFlow(path);
@@ -2715,7 +2775,7 @@ public class Flow extends BP.En.EntityNoName
 				return;
 			}
 
-			String directory = this.No + "." + this.Name;
+			String directory = this.getNo() + "." + this.getName();
 			directory = BP.Tools.StringExpressionCalculate.ReplaceBadCharOfFileName(directory);
 			path = PathFlowDesc + directory + "\\";
 			String xmlName = path + "Flow" + ".xml";
@@ -2763,52 +2823,52 @@ public class Flow extends BP.En.EntityNoName
 		// 流程信息。
 		String sql = "SELECT * FROM WF_Flow WHERE No=' " + this.getNo()+ " '";
 
-		Flow fl = new Flow(this.No);
+		Flow fl = new Flow(this.getNo());
 		DataTable dtFlow = fl.ToDataTableField("WF_Flow");
 		dtFlow.TableName = "WF_Flow";
 		ds.Tables.add(dtFlow);
 
 		// 节点信息
-		Nodes nds = new Nodes(this.No);
+		Nodes nds = new Nodes(this.getNo());
 		DataTable dtNodes = nds.ToDataTableField("WF_Node");
 		ds.Tables.add(dtNodes);
 
 		//节点属性
-		NodeExts ndexts = new NodeExts(this.No);
+		NodeExts ndexts = new NodeExts(this.getNo());
 		DataTable dtNodeExts = ndexts.ToDataTableField("WF_NodeExt");
 		ds.Tables.add(dtNodeExts);
 
 		//接收人规则
-		Selectors selectors = new Selectors(this.No);
+		Selectors selectors = new Selectors(this.getNo());
 		DataTable dtSelectors = selectors.ToDataTableField("WF_Selector");
 		ds.Tables.add(dtSelectors);
 
 		// 单据模版. 
-		BillTemplates tmps = new BillTemplates(this.No);
+		BillTemplates tmps = new BillTemplates(this.getNo());
 		String pks = "";
-		for (BillTemplate tmp : tmps)
+		for (BillTemplate tmp : tmps.ToJavaList())
 		{
 			try
 			{
 				if (path != null)
 				{
-					Files.copy(Paths.get(SystemConfig.PathOfDataUser + "\\CyclostyleFile\\" + tmp.getNo() + ".rtf"), Paths.get(path + "\\" + tmp.getNo() + ".rtf"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+					Files.copy(Paths.get(SystemConfig.getPathOfDataUser() + "\\CyclostyleFile\\" + tmp.getNo() + ".rtf"), Paths.get(path + "\\" + tmp.getNo() + ".rtf"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 				}
 			}
 			catch (java.lang.Exception e)
 			{
-				pks += "@" + tmp.PKVal;
+				pks += "@" + tmp.getPKVal();
 				tmp.Delete();
 			}
 		}
-		tmps.Remove(pks);
+		tmps.remove(pks);
 		ds.Tables.add(tmps.ToDataTableField("WF_BillTemplate"));
 
 
 		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow=' " + this.getNo()+ " '";
 
 		// 条件信息
-		Conds cds = new BP.WF.Template.Conds(this.No);
+		Conds cds = new BP.WF.Template.Conds(this.getNo());
 		ds.Tables.add(cds.ToDataTableField("WF_Cond"));
 
 		// 节点与表单绑定.
@@ -2828,7 +2888,7 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(dirs.ToDataTableField("WF_Direction"));
 
 		// 流程标签.
-		LabNotes labs = new LabNotes(this.No);
+		LabNotes labs = new LabNotes(this.getNo());
 		ds.Tables.add(labs.ToDataTableField("WF_LabNote"));
 
 		// 可退回的节点。
@@ -2875,15 +2935,15 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(fls.ToDataTableField("WF_NodeSubFlow"));
 
 		//表单信息，包含从表.
-		sql = "SELECT No FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.No, "No");
+		sql = "SELECT No FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.getNo(), "No");
 		MapDatas mds = new MapDatas();
 		mds.RetrieveInSQL(MapDataAttr.No, sql);
 		ds.Tables.add(mds.ToDataTableField("Sys_MapData"));
 
 		// Sys_MapAttr.
-		sql = "SELECT MyPK FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		sql += " UNION "; //增加多附件的扩展列.
-		sql += "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData IN ( SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.No, "FK_MapData") + " ) ";
+		sql += "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData IN ( SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) ";
 
 		MapAttrs attrs = new MapAttrs();
 		attrs.RetrieveInSQL(MapAttrAttr.MyPK, sql);
@@ -2891,28 +2951,28 @@ public class Flow extends BP.En.EntityNoName
 
 
 		// Sys_EnumMain
-		sql = "SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData") + ")";
+		sql = "SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + ")";
 		SysEnumMains ses = new SysEnumMains();
 		ses.RetrieveInSQL(SysEnumMainAttr.No, sql);
 		ds.Tables.add(ses.ToDataTableField("Sys_EnumMain"));
 
 
 		// Sys_Enum
-		sql = "SELECT MyPK FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData") + " ) )";
+		sql = "SELECT MyPK FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) )";
 		SysEnums sesDtl = new SysEnums();
 		sesDtl.RetrieveInSQL("MyPK", sql);
 		ds.Tables.add(sesDtl.ToDataTableField("Sys_Enum"));
 
 
 		// Sys_MapDtl
-		sql = "SELECT No FROM Sys_MapDtl WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT No FROM Sys_MapDtl WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		MapDtls mdtls = new MapDtls();
 		mdtls.RetrieveInSQL(sql);
 		ds.Tables.add(mdtls.ToDataTableField("Sys_MapDtl"));
 
 
 		// Sys_MapExt
-		sql = "SELECT MyPK FROM Sys_MapExt WHERE  " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_MapExt WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		MapExts mexts = new MapExts();
 		mexts.RetrieveInSQL(sql);
 		ds.Tables.add(mexts.ToDataTableField("Sys_MapExt"));
@@ -2920,14 +2980,14 @@ public class Flow extends BP.En.EntityNoName
 
 
 		// Sys_GroupField
-		sql = "SELECT OID FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.No, "FrmID"); // +" " + Glo.MapDataLikeKey(this.No, "EnName");
+		sql = "SELECT OID FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.getNo(), "EnName");
 		GroupFields gfs = new GroupFields();
 		gfs.RetrieveInSQL(sql);
 		ds.Tables.add(gfs.ToDataTableField("Sys_GroupField"));
 
 
 		// Sys_MapFrame
-		sql = "SELECT MyPK FROM Sys_MapFrame WHERE" + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_MapFrame WHERE" + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		MapFrames mfs = new MapFrames();
 		mfs.RetrieveInSQL("MyPK", sql);
 		ds.Tables.add(mfs.ToDataTableField("Sys_MapFrame"));
@@ -2935,14 +2995,14 @@ public class Flow extends BP.En.EntityNoName
 
 
 		// Sys_FrmLine.
-		sql = "SELECT MyPK FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmLines frmls = new FrmLines();
 		frmls.RetrieveInSQL(sql);
 		ds.Tables.add(frmls.ToDataTableField("Sys_FrmLine"));
 
 
 		// Sys_FrmLab.
-		sql = "SELECT MyPK FROM Sys_FrmLab WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmLab WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmLabs frmlabs = new FrmLabs();
 		frmlabs.RetrieveInSQL(sql);
 		ds.Tables.add(frmlabs.ToDataTableField("Sys_FrmLab"));
@@ -2950,45 +3010,45 @@ public class Flow extends BP.En.EntityNoName
 
 
 		// Sys_FrmEle.
-		sql = "SELECT MyPK FROM Sys_FrmEle WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmEle WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 
 		FrmEles frmEles = new FrmEles();
 		frmEles.RetrieveInSQL(sql);
 		ds.Tables.add(frmEles.ToDataTableField("Sys_FrmEle"));
 
 		// Sys_FrmLink.
-		sql = "SELECT MyPK FROM Sys_FrmLink WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmLink WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmLinks frmLinks = new FrmLinks();
 		frmLinks.RetrieveInSQL(sql);
 		ds.Tables.add(frmLinks.ToDataTableField("Sys_FrmLink"));
 
 		// Sys_FrmRB.
-		sql = "SELECT MyPK FROM Sys_FrmRB WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmRB WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmRBs frmRBs = new FrmRBs();
 		frmRBs.RetrieveInSQL(sql);
 		ds.Tables.add(frmRBs.ToDataTableField("Sys_FrmRB"));
 
 		// Sys_FrmImgAth.
-		sql = "SELECT MyPK FROM Sys_FrmImgAth WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmImgAth WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmImgAths frmIs = new FrmImgAths();
 		frmIs.RetrieveInSQL(sql);
 		ds.Tables.add(frmIs.ToDataTableField("Sys_FrmImgAth"));
 
 		// Sys_FrmImg.
-		sql = "SELECT MyPK FROM Sys_FrmImg WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmImg WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmImgs frmImgs = new FrmImgs();
 		frmImgs.RetrieveInSQL(sql);
 		ds.Tables.add(frmImgs.ToDataTableField("Sys_FrmImg"));
 
 
 		// Sys_FrmAttachment.
-		sql = "SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmAttachments frmaths = new FrmAttachments();
 		frmaths.RetrieveInSQL(sql);
 		ds.Tables.add(frmaths.ToDataTableField("Sys_FrmAttachment"));
 
 		// Sys_FrmEvent.
-		sql = "SELECT MyPK FROM Sys_FrmEvent WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT MyPK FROM Sys_FrmEvent WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		FrmEvents frmevens = new FrmEvents();
 		frmevens.RetrieveInSQL(sql);
 		ds.Tables.add(frmevens.ToDataTableField("Sys_FrmEvent"));
@@ -3012,24 +3072,24 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(dt);
 
 		// 单据模版. 
-		BillTemplates tmps = new BillTemplates(this.No);
+		BillTemplates tmps = new BillTemplates(this.getNo());
 		String pks = "";
-		for (BillTemplate tmp : tmps)
+		for (BillTemplate tmp : tmps.ToJavaList())
 		{
 			try
 			{
 				if (path != null)
 				{
-					Files.copy(Paths.get(SystemConfig.PathOfDataUser + "\\CyclostyleFile\\" + tmp.getNo() + ".rtf"), Paths.get(path + "\\" + tmp.getNo() + ".rtf"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+					Files.copy(Paths.get(SystemConfig.getPathOfDataUser() + "\\CyclostyleFile\\" + tmp.getNo() + ".rtf"), Paths.get(path + "\\" + tmp.getNo() + ".rtf"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 				}
 			}
 			catch (java.lang.Exception e)
 			{
-				pks += "@" + tmp.PKVal;
+				pks += "@" + tmp.getPKVal();
 				tmp.Delete();
 			}
 		}
-		tmps.Remove(pks);
+		tmps.remove(pks);
 		ds.Tables.add(tmps.ToDataTableField("WF_BillTemplate"));
 
 		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow=' " + this.getNo()+ " '";
@@ -3066,7 +3126,7 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(dt);
 
 		// 流程标签.
-		LabNotes labs = new LabNotes(this.No);
+		LabNotes labs = new LabNotes(this.getNo());
 		ds.Tables.add(labs.ToDataTableField("WF_LabNote"));
 
 
@@ -3126,109 +3186,109 @@ public class Flow extends BP.En.EntityNoName
 		ds.Tables.add(dt);
 
 
-		int flowID = Integer.parseInt(this.No);
-		sql = "SELECT * FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.No, "No");
+		int flowID = Integer.parseInt(this.getNo());
+		sql = "SELECT * FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.getNo(), "No");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapData";
 		ds.Tables.add(dt);
 
 
 		// Sys_MapAttr.
-		sql = "SELECT * FROM Sys_MapAttr WHERE  " + Glo.MapDataLikeKey(this.No, "FK_MapData") + " ORDER BY FK_MapData,Idx";
-		//sql = "SELECT * FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData") + "  ORDER BY FK_MapData,Idx";
+		sql = "SELECT * FROM Sys_MapAttr WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ORDER BY FK_MapData,Idx";
+		//sql = "SELECT * FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + "  ORDER BY FK_MapData,Idx";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapAttr";
 		ds.Tables.add(dt);
 
 		// Sys_EnumMain
-		//sql = "SELECT * FROM Sys_EnumMain WHERE No IN (SELECT KeyOfEn from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData") +")";
-		sql = "SELECT * FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData") + ")";
+		//sql = "SELECT * FROM Sys_EnumMain WHERE No IN (SELECT KeyOfEn from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") +")";
+		sql = "SELECT * FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + ")";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_EnumMain";
 		ds.Tables.add(dt);
 
 		// Sys_Enum
-		sql = "SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData") + " ) )";
+		sql = "SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT No FROM Sys_EnumMain WHERE No IN (SELECT UIBindKey from Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData") + " ) )";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_Enum";
 		ds.Tables.add(dt);
 
 		// Sys_MapDtl
-		sql = "SELECT * FROM Sys_MapDtl WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_MapDtl WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapDtl";
 		ds.Tables.add(dt);
 
 		// Sys_MapExt
-		//sql = "SELECT * FROM Sys_MapExt WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
-		sql = "SELECT * FROM Sys_MapExt WHERE  " + Glo.MapDataLikeKey(this.No, "FK_MapData"); // +Glo.MapDataLikeKey(this.No, "FK_MapData");
+		//sql = "SELECT * FROM Sys_MapExt WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
+		sql = "SELECT * FROM Sys_MapExt WHERE  " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData"); // +Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
 		// Sys_GroupField
-		sql = "SELECT * FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.No, "FrmID"); // +" " + Glo.MapDataLikeKey(this.No, "EnName");
+		sql = "SELECT * FROM Sys_GroupField WHERE   " + Glo.MapDataLikeKey(this.getNo(), "FrmID"); // +" " + Glo.MapDataLikeKey(this.getNo(), "EnName");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_GroupField";
 		ds.Tables.add(dt);
 
 		// Sys_MapFrame
-		sql = "SELECT * FROM Sys_MapFrame WHERE" + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_MapFrame WHERE" + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapFrame";
 		ds.Tables.add(dt);
 
 		// Sys_FrmLine.
-		sql = "SELECT * FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmLine WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmLine";
 		ds.Tables.add(dt);
 
 		// Sys_FrmLab.
-		sql = "SELECT * FROM Sys_FrmLab WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmLab WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmLab";
 		ds.Tables.add(dt);
 
 		// Sys_FrmEle.
-		sql = "SELECT * FROM Sys_FrmEle WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmEle WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmEle";
 		ds.Tables.add(dt);
 
 		// Sys_FrmLink.
-		sql = "SELECT * FROM Sys_FrmLink WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmLink WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmLink";
 		ds.Tables.add(dt);
 
 		// Sys_FrmRB.
-		sql = "SELECT * FROM Sys_FrmRB WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmRB WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmRB";
 		ds.Tables.add(dt);
 
 		// Sys_FrmImgAth.
-		sql = "SELECT * FROM Sys_FrmImgAth WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmImgAth WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmImgAth";
 		ds.Tables.add(dt);
 
 		// Sys_FrmImg.
-		sql = "SELECT * FROM Sys_FrmImg WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmImg WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmImg";
 		ds.Tables.add(dt);
 
 		// Sys_FrmAttachment.
-		sql = "SELECT * FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmAttachment WHERE FK_Node=0 AND " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmAttachment";
 		ds.Tables.add(dt);
 
 		// Sys_FrmEvent.
-		sql = "SELECT * FROM Sys_FrmEvent WHERE " + Glo.MapDataLikeKey(this.No, "FK_MapData");
+		sql = "SELECT * FROM Sys_FrmEvent WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FrmEvent";
 		ds.Tables.add(dt);
@@ -3242,10 +3302,12 @@ public class Flow extends BP.En.EntityNoName
 		///#region 其他公用方法1
 	/** 
 	 重新设置Rpt表
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final void CheckRptOfReset()
+	public final void CheckRptOfReset() throws NumberFormatException, Exception
 	{
-		String fk_mapData = "ND" + Integer.parseInt(this.No) + "Rpt";
+		String fk_mapData = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
 		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "'";
 		DBAccess.RunSQL(sql);
 
@@ -3257,8 +3319,9 @@ public class Flow extends BP.En.EntityNoName
 	 重新装载
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReloadRptData()
+	public final String DoReloadRptData() throws Exception
 	{
 		this.DoCheck_CheckRpt(this.getHisNodes());
 
@@ -3266,16 +3329,16 @@ public class Flow extends BP.En.EntityNoName
 
 		if (this.getHisDataStoreModel() != DataStoreModel.ByCCFlow)
 		{
-			return "@流程" " + this.getNo()+ " this.Name + "的数据存储非轨迹模式不能重新生成.";
+			return "@流程" + this.getNo()+  this.getName() + "的数据存储非轨迹模式不能重新生成.";
 		}
 
 		DBAccess.RunSQL("DELETE FROM " + this.getPTable());
 
-		String sql = "SELECT OID FROM ND" + Integer.parseInt(this.No) + "01 WHERE  OID NOT IN (SELECT OID FROM  " + this.getPTable() + " ) ";
+		String sql = "SELECT OID FROM ND" + Integer.parseInt(this.getNo()) + "01 WHERE  OID NOT IN (SELECT OID FROM  " + this.getPTable() + " ) ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		this.CheckRptData(this.getHisNodes(), dt);
 
-		return "@共有:" + dt.Rows.size() + "条(" + this.Name + ")数据被装载成功。";
+		return "@共有:" + dt.Rows.size() + "条(" + this.getName() + ")数据被装载成功。";
 	}
 	/** 
 	 检查与修复报表数据
@@ -3285,7 +3348,7 @@ public class Flow extends BP.En.EntityNoName
 	*/
 	private String CheckRptData(Nodes nds, DataTable dt)
 	{
-		GERpt rpt = new GERpt("ND" + Integer.parseInt(this.No) + "Rpt");
+		GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 		String err = "";
 		for (DataRow dr : dt.Rows)
 		{
@@ -3307,7 +3370,7 @@ public class Flow extends BP.En.EntityNoName
 					}
 
 					rpt.Copy(wk);
-					if (nd.getNodeID() == Integer.parseInt(this.No + "01"))
+					if (nd.getNodeID() == Integer.parseInt(this.getNo() + "01"))
 					{
 						startWork = wk;
 					}
@@ -3316,11 +3379,11 @@ public class Flow extends BP.En.EntityNoName
 					{
 						if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
 						{
-							if (flowEmps.contains("@" + wk.getRecOfEmp().Name + "@"))
+							if (flowEmps.contains("@" + wk.getRecOfEmp().getName() + "@"))
 							{
 								continue;
 							}
-							flowEmps += wk.getRecOfEmp().Name + "@";
+							flowEmps += wk.getRecOfEmp().getName() + "@";
 						}
 
 						if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDOnly)
@@ -3338,7 +3401,7 @@ public class Flow extends BP.En.EntityNoName
 							{
 								continue;
 							}
-							flowEmps += wk.getRec() + "," + wk.getRecOfEmp().Name;
+							flowEmps += wk.getRec() + "," + wk.getRecOfEmp().getName();
 						}
 
 
@@ -3407,13 +3470,13 @@ public class Flow extends BP.En.EntityNoName
 	private void CheckRptDtl(Nodes nds)
 	{
 		MapDtls dtlsDtl = new MapDtls();
-		dtlsDtl.Retrieve(MapDtlAttr.FK_MapData, "ND" + Integer.parseInt(this.No) + "Rpt");
-		for (MapDtl dtl : dtlsDtl)
+		dtlsDtl.Retrieve(MapDtlAttr.FK_MapData, "ND" + Integer.parseInt(this.getNo()) + "Rpt");
+		for (MapDtl dtl : dtlsDtl.ToJavaList())
 		{
 			dtl.Delete();
 		}
 
-		//  dtlsDtl.Delete(MapDtlAttr.FK_MapData, "ND" + int.Parse(this.No) + "Rpt");
+		//  dtlsDtl.Delete(MapDtlAttr.FK_MapData, "ND" + int.Parse(this.getNo()) + "Rpt");
 		for (Node nd : nds.ToJavaList())
 		{
 			if (nd.getIsEndNode() == false)
@@ -3428,28 +3491,28 @@ public class Flow extends BP.En.EntityNoName
 				continue;
 			}
 
-			String rpt = "ND" + Integer.parseInt(this.No) + "Rpt";
+			String rpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
 			int i = 0;
 			for (MapDtl dtl : dtls.ToJavaList())
 			{
 				i++;
-				String rptDtlNo = "ND" + Integer.parseInt(this.No) + "RptDtl" + String.valueOf(i);
+				String rptDtlNo = "ND" + Integer.parseInt(this.getNo()) + "RptDtl" + String.valueOf(i);
 				MapDtl rtpDtl = new MapDtl();
-				rtpDtl.No = rptDtlNo;
+				rtpDtl.setNo(rptDtlNo);
 				if (rtpDtl.RetrieveFromDBSources() == 0)
 				{
 					rtpDtl.Copy(dtl);
-					rtpDtl.No = rptDtlNo;
-					rtpDtl.FK_MapData = rpt;
-					rtpDtl.PTable = rptDtlNo;
+					rtpDtl.setNo(rptDtlNo);
+					rtpDtl.setFK_MapData(rpt);
+					rtpDtl.setPTable(rptDtlNo);
 					rtpDtl.Insert();
 				}
 
 				MapAttrs attrsRptDtl = new MapAttrs(rptDtlNo);
-				MapAttrs attrs = new MapAttrs(dtl.No);
-				for (MapAttr attr : attrs)
+				MapAttrs attrs = new MapAttrs(dtl.getNo());
+				for (MapAttr attr : attrs.ToJavaList())
 				{
-					if (attrsRptDtl.Contains(MapAttrAttr.KeyOfEn, attr.KeyOfEn) == true)
+					if (attrsRptDtl.contains(MapAttrAttr.KeyOfEn, attr.getKeyOfEn()) == true)
 					{
 						continue;
 					}
@@ -3457,7 +3520,7 @@ public class Flow extends BP.En.EntityNoName
 					MapAttr attrN = new MapAttr();
 					attrN.Copy(attr);
 					attrN.FK_MapData = rptDtlNo;
-					switch (attr.KeyOfEn)
+					switch (attr.getKeyOfEn())
 					{
 						case "FK_NY":
 							attrN.UIVisible = true;
@@ -3494,8 +3557,8 @@ public class Flow extends BP.En.EntityNoName
 	*/
 	private void DoCheck_CheckRpt(Nodes nds)
 	{
-		String fk_mapData = "ND" + Integer.parseInt(this.No) + "Rpt";
-		String flowId = Integer.parseInt(this.No).toString();
+		String fk_mapData = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
+		String flowId = Integer.parseInt(this.getNo()).toString();
 
 		//生成该节点的 nds 比如  "'ND101','ND102','ND103'"
 		String ndsstrs = "";
@@ -3548,11 +3611,11 @@ public class Flow extends BP.En.EntityNoName
 			//找到这个属性.
 			BP.Sys.MapAttr ma = new BP.Sys.MapAttr(mypk);
 
-			ma.setMyPK( "ND" + flowId + "Rpt_" + ma.KeyOfEn;
-			ma.FK_MapData = "ND" + flowId + "Rpt";
+			ma.setMyPK( "ND" + flowId + "Rpt_" + ma.getKeyOfEn();
+			ma.getFK_MapData() = "ND" + flowId + "Rpt";
 			ma.UIIsEnable = false;
 
-			if (ma.DefValReal.Contains("@"))
+			if (ma.DefValReal.contains("@"))
 			{
 				/*如果是一个有变量的参数.*/
 				ma.DefVal = "";
@@ -3572,13 +3635,13 @@ public class Flow extends BP.En.EntityNoName
 		md.No = "ND" + flowId + "Rpt";
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			md.Name = this.Name;
+			md.Name = this.getName();
 			md.PTable = this.getPTable();
 			md.Insert();
 		}
 		else
 		{
-			md.Name = this.Name;
+			md.Name = this.getName();
 			md.PTable = this.getPTable();
 			md.Update();
 		}
@@ -3590,7 +3653,7 @@ public class Flow extends BP.En.EntityNoName
 		int groupID = 0;
 		for (MapAttr attr : attrs)
 		{
-			switch (attr.KeyOfEn)
+			switch (attr.getKeyOfEn())
 			{
 				case StartWorkAttr.FK_Dept:
 					attr.setUIContralType (UIContralType.TB;
@@ -3618,7 +3681,7 @@ public class Flow extends BP.En.EntityNoName
 			}
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.Title) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.Title) == false)
 		{
 			/* 标题 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3638,7 +3701,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.OID) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.OID) == false)
 		{
 			/* WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3656,7 +3719,7 @@ public class Flow extends BP.En.EntityNoName
 		}
 
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FID) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FID) == false)
 		{
 			/* WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3673,7 +3736,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.WFState) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.WFState) == false)
 		{
 			/* 流程状态 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3693,7 +3756,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.WFSta) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.WFSta) == false)
 		{
 			/* 流程状态Ext */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3713,7 +3776,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowEmps) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowEmps) == false)
 		{
 			/* 参与人 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3733,7 +3796,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowStarter) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowStarter) == false)
 		{
 			/* 发起人 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3755,7 +3818,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowStartRDT) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowStartRDT) == false)
 		{
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3773,7 +3836,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowEnder) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowEnder) == false)
 		{
 			/* 发起人 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3793,7 +3856,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowEnderRDT) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowEnderRDT) == false)
 		{
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3811,7 +3874,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowEndNode) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowEndNode) == false)
 		{
 			/* 结束节点 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3831,7 +3894,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowDaySpan) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowDaySpan) == false)
 		{
 			/* FlowDaySpan */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3850,7 +3913,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.PFlowNo) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.PFlowNo) == false)
 		{
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3870,7 +3933,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.PNodeID) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.PNodeID) == false)
 		{
 			/* 父流程WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3890,7 +3953,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.PWorkID) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.PWorkID) == false)
 		{
 			/* 父流程WorkID */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3910,7 +3973,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.PEmp) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.PEmp) == false)
 		{
 			/* 调起子流程的人员 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3930,7 +3993,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.BillNo) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.BillNo) == false)
 		{
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3951,7 +4014,7 @@ public class Flow extends BP.En.EntityNoName
 		}
 
 
-		if (attrs.Contains(md.No + "_MyNum") == false)
+		if (attrs.contains(md.No + "_MyNum") == false)
 		{
 			/* MyNum */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3971,7 +4034,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.AtPara) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.AtPara) == false)
 		{
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -3991,7 +4054,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.GUID) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.GUID) == false)
 		{
 			/* 父流程 流程编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -4011,7 +4074,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.PrjNo) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.PrjNo) == false)
 		{
 			/* 项目编号 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -4030,7 +4093,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.setIdx(-100;
 			attr.Insert();
 		}
-		if (attrs.Contains(md.No + "_" + GERptAttr.PrjName) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.PrjName) == false)
 		{
 			/* 项目名称 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -4050,7 +4113,7 @@ public class Flow extends BP.En.EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(md.No + "_" + GERptAttr.FlowNote) == false)
+		if (attrs.contains(md.No + "_" + GERptAttr.FlowNote) == false)
 		{
 			/* 流程信息 */
 			MapAttr attr = new BP.Sys.MapAttr();
@@ -4264,8 +4327,9 @@ public class Flow extends BP.En.EntityNoName
 	private BP.WF.FlowEventBase _FDEventEntity = null;
 	/** 
 	 节点实体类，没有就返回为空.
+	 * @throws Exception 
 	*/
-	private BP.WF.FlowEventBase getFEventEntity()
+	private BP.WF.FlowEventBase getFEventEntity() throws Exception
 	{
 		if (_FDEventEntity == null && !this.getFlowMark().equals("") && !this.getFlowEventEntity().equals(""))
 		{
@@ -4280,45 +4344,49 @@ public class Flow extends BP.En.EntityNoName
 		///#region 基本属性
 	/** 
 	 是否是MD5加密流程
+	 * @throws Exception 
 	*/
-	public final boolean getIsMD5()
+	public final boolean getIsMD5() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsMD5);
 	}
-	public final void setIsMD5(boolean value)
+	public final void setIsMD5(boolean value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.IsMD5, value);
 	}
 	/** 
 	 是否有单据
+	 * @throws Exception 
 	*/
-	public final int getNumOfBill()
+	public final int getNumOfBill() throws Exception
 	{
 		return this.GetValIntByKey(FlowAttr.NumOfBill);
 	}
-	public final void setNumOfBill(int value)
+	public final void setNumOfBill(int value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.NumOfBill, value);
 	}
 	/** 
 	 标题生成规则
+	 * @throws Exception 
 	*/
-	public final String getTitleRole()
+	public final String getTitleRole() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.TitleRole);
 	}
-	public final void setTitleRole(String value)
+	public final void setTitleRole(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.TitleRole, value);
 	}
 	/** 
 	 明细表
+	 * @throws Exception 
 	*/
-	public final int getNumOfDtl()
+	public final int getNumOfDtl() throws Exception
 	{
 		return this.GetValIntByKey(FlowAttr.NumOfDtl);
 	}
-	public final void setNumOfDtl(int value)
+	public final void setNumOfDtl(int value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.NumOfDtl, value);
 	}
@@ -4326,36 +4394,38 @@ public class Flow extends BP.En.EntityNoName
 	{
 		return this.GetValIntByKey(FlowAttr.AvgDay);
 	}
-	public final void setAvgDay(BigDecimal value)
+	public final void setAvgDay(BigDecimal value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.AvgDay, value);
 	}
-	public final int getStartNodeID()
+	public final int getStartNodeID() throws NumberFormatException, Exception
 	{
-		return Integer.parseInt(this.No + "01");
+		return Integer.parseInt(this.getNo() + "01");
 			//return this.GetValIntByKey(FlowAttr.StartNodeID);
 	}
 	/** 
 	 add 2013-01-01.
 	 业务主表(默认为NDxxRpt)
+	 * @throws Exception 
 	*/
-	public final String getPTable()
+	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStringByKey(FlowAttr.PTable);
 		if (DataType.IsNullOrEmpty(s))
 		{
-			s = "ND" + Integer.parseInt(this.No) + "Rpt";
+			s = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
 		}
 		return s;
 	}
-	public final void setPTable(String value)
+	public final void setPTable(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.PTable, value);
 	}
 	/** 
 	 历史记录显示字段.
+	 * @throws Exception 
 	*/
-	public final String getHistoryFields()
+	public final String getHistoryFields() throws Exception
 	{
 		String strs = this.GetValStringByKey(FlowAttr.HistoryFields);
 		if (DataType.IsNullOrEmpty(strs))
@@ -4367,121 +4437,132 @@ public class Flow extends BP.En.EntityNoName
 	}
 	/** 
 	 是否启用？
+	 * @throws Exception 
 	*/
-	public final boolean getIsGuestFlow()
+	public final boolean getIsGuestFlow() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsGuestFlow);
 	}
-	public final void setIsGuestFlow(boolean value)
+	public final void setIsGuestFlow(boolean value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.IsGuestFlow, value);
 	}
 	/** 
 	 是否可以独立启动
+	 * @throws Exception 
 	*/
-	public final boolean getIsCanStart()
+	public final boolean getIsCanStart() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsCanStart);
 	}
-	public final void setIsCanStart(boolean value)
+	public final void setIsCanStart(boolean value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.IsCanStart, value);
 	}
 	/** 
 	 是否可以批量发起
+	 * @throws Exception 
 	*/
-	public final boolean getIsBatchStart()
+	public final boolean getIsBatchStart() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsBatchStart);
 	}
-	public final void setIsBatchStart(boolean value)
+	public final void setIsBatchStart(boolean value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.IsBatchStart, value);
 	}
 	/** 
 	 是否自动计算未来的处理人
+	 * @throws Exception 
 	*/
-	public final boolean getIsFullSA()
+	public final boolean getIsFullSA() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsFullSA);
 	}
-	public final void setIsFullSA(boolean value)
+	public final void setIsFullSA(boolean value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.IsFullSA, value);
 	}
 	/** 
 	 批量发起字段
+	 * @throws Exception 
 	*/
-	public final String getBatchStartFields()
+	public final String getBatchStartFields() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.BatchStartFields);
 	}
-	public final void setBatchStartFields(String value)
+	public final void setBatchStartFields(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.BatchStartFields, value);
 	}
 	/** 
 	 单据格式
+	 * @throws Exception 
 	*/
-	public final String getBillNoFormat()
+	public final String getBillNoFormat() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.BillNoFormat);
 	}
-	public final void setBillNoFormat(String value)
+	public final void setBillNoFormat(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.BillNoFormat, value);
 	}
 	/** 
 	 流程类别
+	 * @throws Exception 
 	*/
-	public final String getFK_FlowSort()
+	public final String getFK_FlowSort() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.FK_FlowSort);
 	}
-	public final void setFK_FlowSort(String value)
+	public final void setFK_FlowSort(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.FK_FlowSort, value);
 	}
 	/** 
 	 系统类别
+	 * @throws Exception 
 	*/
-	public final String getSysType()
+	public final String getSysType() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.SysType);
 	}
-	public final void setSysType(String value)
+	public final void setSysType(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.SysType, value);
 	}
 	/** 
 	 参数
+	 * @throws Exception 
 	*/
-	public final String getParas()
+	public final String getParas() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.Paras);
 	}
-	public final void setParas(String value)
+	public final void setParas(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.Paras, value);
 	}
 	/** 
 	 流程类别名称
+	 * @throws Exception 
 	*/
-	public final String getFK_FlowSortText()
+	public final String getFK_FlowSortText() throws Exception
 	{
 		FlowSort fs = new FlowSort(this.getFK_FlowSort());
-		return fs.Name;
+		return fs.getName();
 			//return this.GetValRefTextByKey(FlowAttr.FK_FlowSort);
 	}
 
 	/** 
 	 版本号
+	 * @throws Exception 
 	*/
-	public final String getVer()
+	public final String getVer() throws Exception
 	{
 		return this.GetValStringByKey(FlowAttr.Ver);
 	}
-	public final void setVer(String value)
+	public final void setVer(String value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.Ver, value);
 	}
@@ -4492,26 +4573,29 @@ public class Flow extends BP.En.EntityNoName
 		///#region 计算属性
 	/** 
 	 流程类型(大的类型)
+	 * @throws Exception 
 	*/
-	public final int getFlowType_del()
+	public final int getFlowType_del() throws Exception
 	{
 		return this.GetValIntByKey(FlowAttr.FlowType);
 	}
 	/** 
 	 (当前节点为子流程时)是否检查所有子流程完成后父流程自动发送
+	 * @throws Exception 
 	*/
-	public final SubFlowOver getSubFlowOver()
+	public final SubFlowOver getSubFlowOver() throws Exception
 	{
 		return SubFlowOver.forValue(this.GetValIntByKey(FlowAttr.IsAutoSendSubFlowOver));
 	}
 	/** 
 	 是否启用数据模版？
+	 * @throws Exception 
 	*/
-	public final boolean getIsDBTemplate()
+	public final boolean getIsDBTemplate() throws Exception
 	{
 		return this.GetValBooleanByKey(FlowAttr.IsDBTemplate);
 	}
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		String s = this.GetValStringByKey("Note");
 		if (s.length() == 0)
@@ -4520,7 +4604,7 @@ public class Flow extends BP.En.EntityNoName
 		}
 		return s;
 	}
-	public final String getNoteHtml()
+	public final String getNoteHtml() throws Exception
 	{
 		if (this.getNote().equals("无") || this.getNote().equals(""))
 		{
@@ -4551,23 +4635,25 @@ public class Flow extends BP.En.EntityNoName
 		///#region 扩展属性
 	/** 
 	 应用类型
+	 * @throws Exception 
 	*/
-	public final FlowAppType getHisFlowAppType()
+	public final FlowAppType getHisFlowAppType() throws Exception
 	{
 		return FlowAppType.forValue(this.GetValIntByKey(FlowAttr.FlowAppType));
 	}
-	public final void setHisFlowAppType(FlowAppType value)
+	public final void setHisFlowAppType(FlowAppType value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.FlowAppType, value.getValue());
 	}
 	/** 
 	 数据存储模式
+	 * @throws Exception 
 	*/
-	public final DataStoreModel getHisDataStoreModel()
+	public final DataStoreModel getHisDataStoreModel() throws Exception
 	{
 		return DataStoreModel.forValue(this.GetValIntByKey(FlowAttr.DataStoreModel));
 	}
-	public final void setHisDataStoreModel(DataStoreModel value)
+	public final void setHisDataStoreModel(DataStoreModel value) throws Exception
 	{
 		this.SetValByKey(FlowAttr.DataStoreModel, value.getValue());
 	}
@@ -4576,9 +4662,14 @@ public class Flow extends BP.En.EntityNoName
 	*/
 	public final boolean getIsToParentNextNode()
 	{
-		return this.GetValBooleanByKey(NodeAttr.IsToParentNextNode);
+		try {
+			return this.GetValBooleanByKey(NodeAttr.IsToParentNextNode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	public final void setIsToParentNextNode(boolean value)
+	public final void setIsToParentNextNode(boolean value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.IsToParentNextNode, value);
 	}
@@ -4591,7 +4682,7 @@ public class Flow extends BP.En.EntityNoName
 	*/
 	public final Nodes getHisNodes()
 	{
-		_HisNodes = new Nodes(this.No);
+		_HisNodes = new Nodes(this.getNo());
 		return _HisNodes;
 	}
 	public final void setHisNodes(Nodes value)
@@ -4611,7 +4702,7 @@ public class Flow extends BP.En.EntityNoName
 				return nd;
 			}
 		}
-		throw new RuntimeException("@没有找到他的开始节点,工作流程[" + this.Name + "]定义错误.");
+		throw new RuntimeException("@没有找到他的开始节点,工作流程[" + this.getName() + "]定义错误.");
 	}
 	/** 
 	 他的事务类别
@@ -4627,13 +4718,13 @@ public class Flow extends BP.En.EntityNoName
 	{
 		try
 		{
-			BP.WF.Data.GERpt wk = new BP.WF.Data.GERpt("ND" + Integer.parseInt(this.No) + "Rpt");
+			BP.WF.Data.GERpt wk = new BP.WF.Data.GERpt("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 			return wk;
 		}
 		catch (java.lang.Exception e)
 		{
 			this.DoCheck();
-			BP.WF.Data.GERpt wk1 = new BP.WF.Data.GERpt("ND" + Integer.parseInt(this.No) + "Rpt");
+			BP.WF.Data.GERpt wk1 = new BP.WF.Data.GERpt("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 			return wk1;
 		}
 	}
@@ -4656,7 +4747,7 @@ public class Flow extends BP.En.EntityNoName
 	*/
 	public Flow(String _No)
 	{
-		this.No = _No;
+		this.setNo(_No);
 		if (SystemConfig.IsDebug)
 		{
 			int i = this.RetrieveFromDBSources();
@@ -4671,20 +4762,20 @@ public class Flow extends BP.En.EntityNoName
 		}
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//获得事件实体.
 		if (DataType.IsNullOrEmpty(this.getFlowMark()) == true)
 		{
-			this.setFlowEventEntity(BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.No));
+			this.setFlowEventEntity(BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.getNo()));
 		}
 		else
 		{
 			this.setFlowEventEntity(BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.getFlowMark()));
 		}
 
-		DBAccess.RunSQL("UPDATE WF_Node SET FlowName='" + this.Name + "' WHERE FK_Flow=' " + this.getNo()+ " '");
-		DBAccess.RunSQL("UPDATE Sys_MapData SET  Name='" + this.Name + "' WHERE No='" + this.getPTable() + "'");
+		DBAccess.RunSQL("UPDATE WF_Node SET FlowName='" + this.getName() + "' WHERE FK_Flow=' " + this.getNo()+ " '");
+		DBAccess.RunSQL("UPDATE Sys_MapData SET  Name='" + this.getName() + "' WHERE No='" + this.getPTable() + "'");
 		return super.beforeUpdateInsertAction();
 	}
 	/** 
@@ -4871,7 +4962,7 @@ public class Flow extends BP.En.EntityNoName
 
 		// DBAccess.CreatIndex(DBUrlType.AppCenterDSN, ptable, "my");
 
-		return "流程[ " + this.getNo()+ " ." + this.Name + "]索引创建成功.";
+		return "流程[ " + this.getNo()+ " ." + this.getName() + "]索引创建成功.";
 	}
 	/** 
 	 删除数据.
@@ -4924,9 +5015,9 @@ public class Flow extends BP.En.EntityNoName
 		// DBAccess.RunSQL("DELETE FROM WF_FileManager " + sql);
 		DBAccess.RunSQL("DELETE FROM WF_RememberMe " + sql);
 
-		if (DBAccess.IsExitsObject("ND" + Integer.parseInt(this.No) + "Track"))
+		if (DBAccess.IsExitsObject("ND" + Integer.parseInt(this.getNo()) + "Track"))
 		{
-			DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(this.No) + "Track ");
+			DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(this.getNo()) + "Track ");
 		}
 
 		if (DBAccess.IsExitsObject(this.getPTable()))
@@ -4935,10 +5026,10 @@ public class Flow extends BP.En.EntityNoName
 		}
 
 		DBAccess.RunSQL("DELETE FROM WF_CH WHERE FK_Flow=' " + this.getNo()+ " '");
-		//DBAccess.RunSQL("DELETE FROM Sys_MapExt WHERE FK_MapData LIKE 'ND"+int.Parse(this.No)+"%'" );
+		//DBAccess.RunSQL("DELETE FROM Sys_MapExt WHERE FK_MapData LIKE 'ND"+int.Parse(this.getNo())+"%'" );
 
 		//删除节点数据。
-		Nodes nds = new Nodes(this.No);
+		Nodes nds = new Nodes(this.getNo());
 		for (Node nd : nds.ToJavaList())
 		{
 			try
@@ -4962,7 +5053,7 @@ public class Flow extends BP.En.EntityNoName
 				}
 			}
 		}
-		MapDtls mydtls = new MapDtls("ND" + Integer.parseInt(this.No) + "Rpt");
+		MapDtls mydtls = new MapDtls("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 		for (MapDtl dtl : mydtls)
 		{
 			try
@@ -4997,7 +5088,7 @@ public class Flow extends BP.En.EntityNoName
 
 		try
 		{
-			ds.ReadXml(path);
+			ds.readXml(path);
 		}
 		catch (RuntimeException ex)
 		{
@@ -5005,44 +5096,44 @@ public class Flow extends BP.En.EntityNoName
 		}
 
 
-		if (ds.Tables.Contains("WF_Flow") == false)
+		if (ds.Tables.contains("WF_Flow") == false)
 		{
 			throw new RuntimeException("导入错误，非流程模版文件" + path + "。");
 		}
 
-		DataTable dtFlow = ds.Tables["WF_Flow"];
+		DataTable dtFlow = ds.GetTableByName("WF_Flow");
 		Flow fl = new Flow();
-		String oldFlowNo = dtFlow.Rows[0]["No"].toString();
-		String oldFlowName = dtFlow.Rows[0]["Name"].toString();
+		String oldFlowNo = dtFlow.Rows.get(0).getValue("No").toString();
+		String oldFlowName = dtFlow.Rows.get(0).getValue("Name").toString();
 
 		int oldFlowID = Integer.parseInt(oldFlowNo);
 		int iOldFlowLength = String.valueOf(oldFlowID).length();
-		String timeKey = LocalDateTime.now().toString("yyMMddhhmmss");
+		String timeKey = DateUtils.format(new Date(),"yyMMddhhmmss");
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 根据不同的流程模式，设置生成不同的流程编号.
 		switch (model)
 		{
 			case AsNewFlow: //做为一个新流程.
-				fl.No = fl.GenerNewNo;
+				fl.setNo(fl.getGenerNewNo());
 				fl.DoDelData();
 				fl.DoDelete(); //删除可能存在的垃圾.
 				break;
 			case AsTempleteFlowNo: //用流程模版中的编号
-				fl.No = oldFlowNo;
+				fl.setNo(oldFlowNo);
 				if (fl.IsExits)
 				{
-					throw new RuntimeException("导入错误:流程模版(" + oldFlowName + ")中的编号(" + oldFlowNo + ")在系统中已经存在,流程名称为:" + dtFlow.Rows[0]["name"].toString());
+					throw new RuntimeException("导入错误:流程模版(" + oldFlowName + ")中的编号(" + oldFlowNo + ")在系统中已经存在,流程名称为:" + dtFlow.Rows.get(0).getValue("name").toString());
 				}
 				else
 				{
-					fl.No = oldFlowNo;
+					fl.setNo(oldFlowNo);
 					fl.DoDelData();
 					fl.DoDelete(); //删除可能存在的垃圾.
 				}
 				break;
 			case OvrewaiteCurrFlowNo: //覆盖当前的流程.
-				fl.No = oldFlowNo;
+				fl.setNo(oldFlowNo);
 				fl.DoDelData();
 				fl.DoDelete(); //删除可能存在的垃圾.
 				break;
@@ -5052,7 +5143,7 @@ public class Flow extends BP.En.EntityNoName
 					throw new RuntimeException("@您是按照指定的流程编号导入的，但是您没有传入正确的流程编号。");
 				}
 
-				fl.No = SpecialFlowNo.toString();
+				fl.setNo(SpecialFlowNo.toString());
 				fl.DoDelData();
 				fl.DoDelete(); //删除可能存在的垃圾.
 				break;
@@ -5062,17 +5153,17 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 根据不同的流程模式，设置生成不同的流程编号.
 
-		// string timeKey = fl.No;
+		// string timeKey = fl.getNo();
 		int idx = 0;
 		String infoErr = "";
 		String infoTable = "";
-		int flowID = Integer.parseInt(fl.No);
+		int flowID = Integer.parseInt(fl.getNo());
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理流程表数据
 		for (DataColumn dc : dtFlow.Columns)
 		{
-			String val = dtFlow.Rows[0][dc.ColumnName] instanceof String ? (String)dtFlow.Rows[0][dc.ColumnName] : null;
+			String val = dtFlow.Rows.get(0).getValue(dc.ColumnName) instanceof String ? (String)dtFlow.Rows.get(0).getValue(dc.ColumnName) : null;
 			switch (dc.ColumnName.toLowerCase())
 			{
 				case "no":
@@ -5093,28 +5184,28 @@ public class Flow extends BP.En.EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理OID 插入重复的问题 Sys_GroupField, Sys_MapAttr.
-		DataTable mydtGF = ds.Tables["Sys_GroupField"];
-		DataTable myDTAttr = ds.Tables["Sys_MapAttr"];
-		DataTable myDTAth = ds.Tables["Sys_FrmAttachment"];
-		DataTable myDTDtl = ds.Tables["Sys_MapDtl"];
-		DataTable myDFrm = ds.Tables["Sys_MapFrame"];
+		DataTable mydtGF = ds.GetTableByName("Sys_GroupField");
+		DataTable myDTAttr = ds.GetTableByName("Sys_MapAttr");
+		DataTable myDTAth = ds.GetTableByName("Sys_FrmAttachment");
+		DataTable myDTDtl = ds.GetTableByName("Sys_MapDtl");
+		DataTable myDFrm = ds.GetTableByName("Sys_MapFrame");
 		if (mydtGF != null)
 		{
-			//throw new Exception("@" + fl.No + fl.Name + ", 缺少：Sys_GroupField");
+			//throw new Exception("@" + fl.getNo() + fl.getName() + ", 缺少：Sys_GroupField");
 			for (DataRow dr : mydtGF.Rows)
 			{
-				Sys.GroupField gf = new Sys.GroupField();
+				GroupField gf = new GroupField();
 				for (DataColumn dc : mydtGF.Columns)
 				{
 					String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
 					gf.SetValByKey(dc.ColumnName, val);
 				}
-				int oldID = gf.OID;
-				gf.OID = DBAccess.GenerOID();
-				dr.set("OID", gf.OID);
+				int oldID = (int) gf.getOID();
+				gf.setOID(DBAccess.GenerOID());
+				dr.set("OID", gf.getOID());
 
 				// 属性。
-				if (myDTAttr != null && myDTAttr.Columns.Contains("GroupID"))
+				if (myDTAttr != null && myDTAttr.Columns.contains("GroupID"))
 				{
 					for (DataRow dr1 : myDTAttr.Rows)
 					{
@@ -5125,12 +5216,12 @@ public class Flow extends BP.En.EntityNoName
 
 						if (dr1.get("GroupID").toString().equals(String.valueOf(oldID)))
 						{
-							dr1.set("GroupID", gf.OID);
+							dr1.set("GroupID", gf.getOID());
 						}
 					}
 				}
 
-				if (myDTAth != null && myDTAth.Columns.Contains("GroupID"))
+				if (myDTAth != null && myDTAth.Columns.contains("GroupID"))
 				{
 					// 附件。
 					for (DataRow dr1 : myDTAth.Rows)
@@ -5142,12 +5233,12 @@ public class Flow extends BP.En.EntityNoName
 
 						if (dr1.get("GroupID").toString().equals(String.valueOf(oldID)))
 						{
-							dr1.set("GroupID", gf.OID);
+							dr1.set("GroupID", gf.getOID());
 						}
 					}
 				}
 
-				if (myDTDtl != null && myDTDtl.Columns.Contains("GroupID"))
+				if (myDTDtl != null && myDTDtl.Columns.contains("GroupID"))
 				{
 					// 从表。
 					for (DataRow dr1 : myDTDtl.Rows)
@@ -5164,7 +5255,7 @@ public class Flow extends BP.En.EntityNoName
 					}
 				}
 
-				if (myDFrm != null && myDFrm.Columns.Contains("GroupID"))
+				if (myDFrm != null && myDFrm.Columns.contains("GroupID"))
 				{
 					// frm.
 					for (DataRow dr1 : myDFrm.Rows)
@@ -5220,7 +5311,7 @@ public class Flow extends BP.En.EntityNoName
 									val = flowID + val.substring(iOldFlowLength);
 									break;
 								case "fk_flow":
-									val = fl.No;
+									val = fl.getNo();
 									break;
 								default:
 									val = val.replace("ND" + oldFlowID, "ND" + flowID);
@@ -5243,7 +5334,7 @@ public class Flow extends BP.En.EntityNoName
 					//        switch (dc.ColumnName.ToLower())
 					//        {
 					//            case "fk_flow":
-					//                val = fl.No;
+					//                val = fl.getNo();
 					//                break;
 					//            default:
 					//                val = val.Replace("ND" + oldFlowID, "ND" + flowID);
@@ -5278,7 +5369,7 @@ public class Flow extends BP.En.EntityNoName
 									val = flowID + val.substring(iOldFlowLength);
 									break;
 								case "fk_flow":
-									val = fl.No;
+									val = fl.getNo();
 									break;
 								default:
 									val = val.replace("ND" + oldFlowID, "ND" + flowID);
@@ -5313,7 +5404,7 @@ public class Flow extends BP.En.EntityNoName
 									val = flowID + val.substring(iOldFlowLength);
 									break;
 								case "fk_flow":
-									val = fl.No;
+									val = fl.getNo();
 									break;
 								default:
 									val = val.replace("ND" + oldFlowID, "ND" + flowID);
@@ -5348,7 +5439,7 @@ public class Flow extends BP.En.EntityNoName
 									val = flowID + val.substring(iOldFlowLength);
 									break;
 								case "fk_flow":
-									val = fl.No;
+									val = fl.getNo();
 									break;
 								default:
 									val = val.replace("ND" + oldFlowID, "ND" + flowID);
@@ -5356,7 +5447,7 @@ public class Flow extends BP.En.EntityNoName
 							}
 							cd.SetValByKey(dc.ColumnName, val);
 						}
-						cd.OID = DBAccess.GenerOID();
+						cd.setOID(DBAccess.GenerOID());
 						cd.DirectInsert();
 					}
 					break;
@@ -5415,7 +5506,7 @@ public class Flow extends BP.En.EntityNoName
 					for (DataRow dr : dt.Rows)
 					{
 						FrmNode fn = new FrmNode();
-						fn.setFK_Flow(fl.No);
+						fn.setFK_Flow(fl.getNo());
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -5434,7 +5525,7 @@ public class Flow extends BP.En.EntityNoName
 									val = flowID + val.substring(iOldFlowLength);
 									break;
 								case "fk_flow":
-									val = fl.No;
+									val = fl.getNo();
 									break;
 								default:
 									break;
@@ -5442,7 +5533,7 @@ public class Flow extends BP.En.EntityNoName
 							fn.SetValByKey(dc.ColumnName, val);
 						}
 						// 开始插入。
-						fn.setMyPK( fn.getFK_Frm() + "_" + fn.getFK_Node();
+						fn.setMyPK(fn.getFK_Frm() + "_" + fn.getFK_Node());
 						fn.Insert();
 					}
 					break;
@@ -5469,7 +5560,7 @@ public class Flow extends BP.En.EntityNoName
 									val = flowID + val.substring(iOldFlowLength);
 									break;
 								case "fk_flow":
-									val = fl.No;
+									val = fl.getNo();
 									break;
 								default:
 									val = val.replace("ND" + oldFlowID, "ND" + flowID);
@@ -5486,7 +5577,7 @@ public class Flow extends BP.En.EntityNoName
 					for (DataRow dr : dt.Rows)
 					{
 						Cond cd = new Cond();
-						cd.setFK_Flow(fl.No);
+						cd.setFK_Flow(fl.getNo());
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -5508,7 +5599,7 @@ public class Flow extends BP.En.EntityNoName
 									val = flowID + val.substring(iOldFlowLength);
 									break;
 								case "fk_flow":
-									val = fl.No;
+									val = fl.getNo();
 									break;
 								default:
 									val = val.replace("ND" + oldFlowID, "ND" + flowID);
@@ -5517,33 +5608,33 @@ public class Flow extends BP.En.EntityNoName
 							cd.SetValByKey(dc.ColumnName, val);
 						}
 
-						cd.setFK_Flow(fl.No);
+						cd.setFK_Flow(fl.getNo());
 
 						//  return this.FK_MainNode + "_" + this.ToNodeID + "_" + this.HisCondType.ToString() + "_" + ConnDataFrom.Stas.ToString();
 						// ，开始插入。 
-						if (cd.MyPK.Contains("Stas"))
+						if (cd.getMyPK().contains("Stas"))
 						{
-							cd.setMyPK( cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Stas.toString();
+							cd.setMyPK(cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Stas.toString());
 						}
-						else if (cd.MyPK.Contains("Dept"))
+						else if (cd.getMyPK().contains("Dept"))
 						{
-							cd.setMyPK( cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Depts.toString();
+							cd.setMyPK(cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Depts.toString());
 						}
-						else if (cd.MyPK.Contains("Paras"))
+						else if (cd.getMyPK().contains("Paras"))
 						{
-							cd.setMyPK( cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Paras.toString();
+							cd.setMyPK(cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Paras.toString());
 						}
-						else if (cd.MyPK.Contains("Url"))
+						else if (cd.getMyPK().contains("Url"))
 						{
-							cd.setMyPK( cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Url.toString();
+							cd.setMyPK(cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.Url.toString());
 						}
-						else if (cd.MyPK.Contains("SQL"))
+						else if (cd.getMyPK().contains("SQL"))
 						{
-							cd.setMyPK( cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.SQL;
+							cd.setMyPK(cd.getFK_Node() + "_" + cd.getToNodeID() + "_" + cd.getHisCondType().toString() + "_" + ConnDataFrom.SQL);
 						}
 						else
 						{
-							cd.setMyPK( DBAccess.GenerOID().toString() + LocalDateTime.now().toString("yyMMddHHmmss");
+							cd.setMyPK(DBAccess.GenerOID().toString() + DateUtils.format(new Date(),"yyMMddHHmmss"));
 						}
 						cd.DirectInsert();
 					}
@@ -5652,7 +5743,7 @@ public class Flow extends BP.En.EntityNoName
 							}
 							dir.SetValByKey(dc.ColumnName, val);
 						}
-						dir.setFK_Flow(fl.No);
+						dir.setFK_Flow(fl.getNo());
 						dir.Insert();
 					}
 					break;
@@ -5671,8 +5762,8 @@ public class Flow extends BP.En.EntityNoName
 							ln.SetValByKey(dc.ColumnName, val);
 						}
 						idx++;
-						ln.setFK_Flow(fl.No);
-						ln.setMyPK( ln.getFK_Flow() + "_" + ln.getX() + "_" + ln.getY() + "_" + idx;
+						ln.setFK_Flow(fl.getNo());
+						ln.setMyPK(ln.getFK_Flow() + "_" + ln.getX() + "_" + ln.getY() + "_" + idx);
 						ln.DirectInsert();
 					}
 					break;
@@ -5708,10 +5799,10 @@ public class Flow extends BP.En.EntityNoName
 				case "WF_Node": //导入节点信息.
 					for (DataRow dr : dt.Rows)
 					{
-						BP.WF.Template.NodeExt nd = new BP.WF.Template.NodeExt();
-						BP.WF.Template.CC cc = new CC(); // 抄送相关的信息.
+						NodeExt nd = new NodeExt();
+						CC cc = new CC(); // 抄送相关的信息.
 						//cc.CheckPhysicsTable();
-						BP.WF.Template.FrmWorkCheck fwc = new FrmWorkCheck();
+						FrmWorkCheck fwc = new FrmWorkCheck();
 
 						for (DataColumn dc : dt.Columns)
 						{
@@ -5749,12 +5840,12 @@ public class Flow extends BP.En.EntityNoName
 
 						}
 
-						nd.setFK_Flow(fl.No);
-						nd.setFlowName(fl.Name);
+						nd.setFK_Flow(fl.getNo());
+						nd.setFlowName(fl.getName());
 						try
 						{
 
-							if (nd.getEnMap().getAttrs().Contains("OfficePrintEnable"))
+							if (nd.getEnMap().getAttrs().contains("OfficePrintEnable"))
 							{
 								if (nd.GetValStringByKey("OfficePrintEnable").equals("打印"))
 								{
@@ -5786,7 +5877,7 @@ public class Flow extends BP.En.EntityNoName
 						Node nd = new Node();
 						nd.setNodeID(Integer.parseInt(dr.get(NodeAttr.NodeID).toString()));
 						nd.RetrieveFromDBSources();
-						nd.setFK_Flow(fl.No);
+						nd.setFK_Flow(fl.getNo());
 						//获取表单类别
 						String formType = dr.get(NodeAttr.FormType).toString();
 						for (DataColumn dc : dt.Columns)
@@ -5831,8 +5922,8 @@ public class Flow extends BP.En.EntityNoName
 							}
 							nd.SetValByKey(dc.ColumnName, val);
 						}
-						nd.setFK_Flow(fl.No);
-						nd.setFlowName(fl.Name);
+						nd.setFK_Flow(fl.getNo());
+						nd.setFlowName(fl.getName());
 						nd.DirectUpdate();
 					}
 					break;
@@ -5935,7 +6026,7 @@ public class Flow extends BP.En.EntityNoName
 				case "Sys_Enum": //RptEmps.xml。
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.SysEnum se = new Sys.SysEnum();
+						SysEnum se = new SysEnum();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -5948,7 +6039,7 @@ public class Flow extends BP.En.EntityNoName
 							}
 							se.SetValByKey(dc.ColumnName, val);
 						}
-						se.setMyPK( se.EnumKey + "_" + se.Lang + "_" + se.IntKey;
+						se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getIntKey());
 						if (se.IsExits)
 						{
 							continue;
@@ -5959,7 +6050,7 @@ public class Flow extends BP.En.EntityNoName
 				case "Sys_EnumMain": //RptEmps.xml。
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.SysEnumMain sem = new Sys.SysEnumMain();
+						SysEnumMain sem = new SysEnumMain();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -5979,7 +6070,7 @@ public class Flow extends BP.En.EntityNoName
 				case "Sys_MapAttr": //RptEmps.xml。
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.MapAttr ma = new Sys.MapAttr();
+						MapAttr ma = new MapAttr();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -5999,9 +6090,9 @@ public class Flow extends BP.En.EntityNoName
 							}
 							ma.SetValByKey(dc.ColumnName, val);
 						}
-						boolean b = ma.IsExit(Sys.MapAttrAttr.FK_MapData, ma.FK_MapData, Sys.MapAttrAttr.KeyOfEn, ma.KeyOfEn);
+						boolean b = ma.IsExit(MapAttrAttr.FK_MapData, ma.getFK_MapData(), MapAttrAttr.KeyOfEn, ma.getKeyOfEn());
 
-						ma.setMyPK( ma.FK_MapData + "_" + ma.KeyOfEn;
+						ma.setMyPK(ma.getFK_MapData() + "_" + ma.getKeyOfEn());
 						if (b == true)
 						{
 							ma.DirectUpdate();
@@ -6015,7 +6106,7 @@ public class Flow extends BP.En.EntityNoName
 				case "Sys_MapData": //RptEmps.xml。
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.MapData md = new Sys.MapData();
+						MapData md = new MapData();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -6024,7 +6115,7 @@ public class Flow extends BP.En.EntityNoName
 								continue;
 							}
 
-							val = val.replace("ND" + oldFlowID, "ND" + Integer.parseInt(fl.No));
+							val = val.replace("ND" + oldFlowID, "ND" + Integer.parseInt(fl.getNo()));
 							md.SetValByKey(dc.ColumnName, val);
 						}
 						md.Save();
@@ -6033,7 +6124,7 @@ public class Flow extends BP.En.EntityNoName
 				case "Sys_MapDtl": //RptEmps.xml。
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.MapDtl md = new Sys.MapDtl();
+						MapDtl md = new MapDtl();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -6052,7 +6143,7 @@ public class Flow extends BP.En.EntityNoName
 				case "Sys_MapExt":
 					for (DataRow dr : dt.Rows)
 					{
-						Sys.MapExt md = new Sys.MapExt();
+						MapExt md = new MapExt();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
@@ -6088,7 +6179,7 @@ public class Flow extends BP.En.EntityNoName
 							en.SetValByKey(dc.ColumnName, val);
 						}
 
-						en.setMyPK( UUID.NewGuid().toString();
+						en.setMyPK(UUID.NewGuid().toString());
 						// DBAccess.GenerOIDByGUID(); "LIE" + timeKey + "_" + idx;
 						//if (en.IsExitGenerPK())
 						//    continue;
@@ -6117,7 +6208,7 @@ public class Flow extends BP.En.EntityNoName
 					break;
 				case "Sys_FrmImg":
 					idx = 0;
-					timeKey = LocalDateTime.now().toString("yyyyMMddHHmmss");
+					timeKey = DateUtils.format(new Date(),"yyyyMMddHHmmss");
 					for (DataRow dr : dt.Rows)
 					{
 						idx++;
@@ -6133,7 +6224,7 @@ public class Flow extends BP.En.EntityNoName
 							en.SetValByKey(dc.ColumnName, val);
 						}
 
-						en.setMyPK( UUID.NewGuid().toString();
+						en.setMyPK(UUID.NewGuid().toString());
 					}
 					break;
 				case "Sys_FrmLab":
@@ -6155,7 +6246,7 @@ public class Flow extends BP.En.EntityNoName
 							en.SetValByKey(dc.ColumnName, val);
 						}
 
-						en.setMyPK( BP.DA.DBAccess.GenerGUID(); // "Lab" + timeKey + "_" + idx;
+						en.setMyPK(BP.DA.DBAccess.GenerGUID()); // "Lab" + timeKey + "_" + idx;
 						en.Insert();
 					}
 					break;
@@ -6176,7 +6267,7 @@ public class Flow extends BP.En.EntityNoName
 
 							en.SetValByKey(dc.ColumnName, val);
 						}
-						en.setMyPK( UUID.NewGuid().toString();
+						en.setMyPK(UUID.NewGuid().toString());
 						en.Insert();
 					}
 					break;
@@ -6198,7 +6289,7 @@ public class Flow extends BP.En.EntityNoName
 							en.SetValByKey(dc.ColumnName, val);
 						}
 
-						en.setMyPK( en.FK_MapData + "_" + en.NoOfObj;
+						en.setMyPK(en.getFK_MapData() + "_" + en.getNoOfObj());
 						en.Save();
 					}
 					break;
@@ -6409,7 +6500,7 @@ public class Flow extends BP.En.EntityNoName
 		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE FK_Node NOT IN (SELECT NodeID FROM WF_Node) AND FK_Node > 0");
 
 		//处理分组错误.
-		Nodes nds = new Nodes(fl.No);
+		Nodes nds = new Nodes(fl.getNo());
 		for (Node nd : nds.ToJavaList())
 		{
 			MapFrmFool cols = new MapFrmFool("ND" + nd.getNodeID());
@@ -6447,7 +6538,7 @@ public class Flow extends BP.En.EntityNoName
 
 		while (true)
 		{
-			String strID = this.No + tangible.StringHelper.padLeft(String.valueOf(idx), 2, '0');
+			String strID = this.getNo() + tangible.StringHelper.padLeft(String.valueOf(idx), 2, '0');
 			nd.setNodeID(Integer.parseInt(strID));
 			if (nd.IsExits == false)
 			{
@@ -6459,8 +6550,8 @@ public class Flow extends BP.En.EntityNoName
 		nd.setHisNodeWorkType(NodeWorkType.Work);
 		nd.setName("New Node " + idx);
 		nd.setHisNodePosType(NodePosType.Mid);
-		nd.setFK_Flow(this.No);
-		nd.setFlowName(this.Name);
+		nd.setFK_Flow(this.getNo());
+		nd.setFlowName(this.getName());
 		nd.setX(x);
 		nd.setY(y);
 		nd.setICON(icon);
@@ -6472,7 +6563,7 @@ public class Flow extends BP.En.EntityNoName
 		nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
 
 		//为创建节点设置默认值 @于庆海. 
-		String file = SystemConfig.PathOfDataUser + "\\XML\\DefaultNewNodeAttr.xml";
+		String file = SystemConfig.getPathOfDataUser() + "\\XML\\DefaultNewNodeAttr.xml";
 		if ((new File(file)).isFile() == true)
 		{
 			DataSet ds = new DataSet();
@@ -6509,11 +6600,11 @@ public class Flow extends BP.En.EntityNoName
 		{
 			pm.setFK_Event(EventListOfNode.SendSuccess);
 			pm.setFK_Node(nd.getNodeID());
-			pm.setFK_Flow(this.No);
+			pm.setFK_Flow(this.getNo());
 
 			pm.setSMSPushWay(1); // 发送短消息.
 			pm.setMailPushWay(0); //不发送邮件消息.
-			pm.setMyPK( DBAccess.GenerGUID();
+			pm.setMyPK(DBAccess.GenerGUID());
 			pm.Insert();
 		}
 
@@ -6523,11 +6614,11 @@ public class Flow extends BP.En.EntityNoName
 		{
 			pm.setFK_Event(EventListOfNode.ReturnAfter);
 			pm.setFK_Node(nd.getNodeID());
-			pm.setFK_Flow(this.No);
+			pm.setFK_Flow(this.getNo());
 
 			pm.setSMSPushWay(1); // 发送短消息.
 			pm.setMailPushWay(0); //不发送邮件消息.
-			pm.setMyPK( DBAccess.GenerGUID();
+			pm.setMyPK(DBAccess.GenerGUID());
 			pm.Insert();
 		}
 	}
@@ -6554,13 +6645,13 @@ public class Flow extends BP.En.EntityNoName
 				}
 			}
 
-			this.Name = flowName;
-			if (DataType.IsNullOrEmpty(this.Name))
+			this.setName(flowName);
+			if (DataType.IsNullOrEmpty(this.getName()))
 			{
-				this.Name = "新建流程" + this.No; //新建流程.
+				this.setName("新建流程" + this.getNo()); //新建流程.
 			}
 
-			this.No = this.GenerNewNoByKey(FlowAttr.No);
+			this.setNo(this.GenerNewNoByKey(FlowAttr.No));
 			this.setHisDataStoreModel(model);
 			this.setPTable(pTable);
 			this.setFK_FlowSort(flowSort);
@@ -6582,7 +6673,7 @@ public class Flow extends BP.En.EntityNoName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 删除有可能存在的历史数据.
-			Flow fl = new Flow(this.No);
+			Flow fl = new Flow(this.getNo());
 			fl.DoDelData();
 			fl.DoDelete();
 			this.Save();
@@ -6590,11 +6681,11 @@ public class Flow extends BP.En.EntityNoName
 				///#endregion 删除有可能存在的历史数据.
 
 			Node nd = new Node();
-			nd.setNodeID(Integer.parseInt(this.No + "01"));
+			nd.setNodeID(Integer.parseInt(this.getNo() + "01"));
 			nd.setName("Start Node"); //  "开始节点";
 			nd.setStep(1);
-			nd.setFK_Flow(this.No);
-			nd.setFlowName(this.Name);
+			nd.setFK_Flow(this.getNo());
+			nd.setFlowName(this.getName());
 			nd.setHisNodePosType(NodePosType.Start);
 			nd.setHisNodeWorkType(NodeWorkType.StartWork);
 			nd.setX(200);
@@ -6626,11 +6717,11 @@ public class Flow extends BP.En.EntityNoName
 			select.Update();
 
 			nd = new Node();
-			nd.setNodeID(Integer.parseInt(this.No + "02"));
+			nd.setNodeID(Integer.parseInt(this.getNo() + "02"));
 			nd.setName("Node 2"); // "结束节点";
 			nd.setStep(2);
-			nd.setFK_Flow(this.No);
-			nd.setFlowName(this.Name);
+			nd.setFK_Flow(this.getNo());
+			nd.setFlowName(this.getName());
 			nd.setHisNodePosType(NodePosType.Mid);
 			nd.setHisNodeWorkType(NodeWorkType.Work);
 			nd.setX(200);
@@ -6644,11 +6735,11 @@ public class Flow extends BP.En.EntityNoName
 			nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
 
 			//为创建节点设置默认值 @于庆海. 
-			String fileNewNode = SystemConfig.PathOfDataUser + "\\XML\\DefaultNewNodeAttr.xml";
+			String fileNewNode = SystemConfig.getPathOfDataUser() + "\\XML\\DefaultNewNodeAttr.xml";
 			if ((new File(fileNewNode)).isFile() == true)
 			{
 				DataSet ds_NodeDef = new DataSet();
-				ds_NodeDef.ReadXml(fileNewNode);
+				ds_NodeDef.readXml(fileNewNode);
 
 				DataTable dt = ds_NodeDef.Tables[0];
 				for (DataColumn dc : dt.Columns)
@@ -6669,12 +6760,12 @@ public class Flow extends BP.En.EntityNoName
 			select.Update();
 
 			BP.Sys.MapData md = new BP.Sys.MapData();
-			md.No = "ND" + Integer.parseInt(this.No) + "Rpt";
-			md.Name = this.Name;
+			md.No = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
+			md.setName(this.getName());
 			md.Save();
 
 			// 装载模版.
-			String file = BP.Sys.SystemConfig.PathOfDataUser + "XML\\TempleteSheetOfStartNode.xml";
+			String file = BP.Sys.SystemConfig.getPathOfDataUser() + "XML\\TempleteSheetOfStartNode.xml";
 			if ((new File(file)).isFile() == false)
 			{
 				throw new RuntimeException("@开始节点表单模版丢失" + file);
@@ -6684,14 +6775,14 @@ public class Flow extends BP.En.EntityNoName
 			DataSet ds = new DataSet();
 			ds.ReadXml(file);
 
-			String nodeID = "ND" + Integer.parseInt(this.No + "01");
+			String nodeID = "ND" + Integer.parseInt(this.getNo() + "01");
 			BP.Sys.MapData.ImpMapData(nodeID, ds);
 
 			//创建track.
-			Track.CreateOrRepairTrackTable(this.No);
+			Track.CreateOrRepairTrackTable(this.getNo());
 
 
-			return this.No;
+			return this.getNo();
 		}
 		catch (RuntimeException ex)
 		{
@@ -6713,9 +6804,10 @@ public class Flow extends BP.En.EntityNoName
 	 更新之前做检查
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		this.setVer(BP.DA.DataType.getCurrentDataTime());
 		Node.CheckFlow(this);
@@ -6726,10 +6818,10 @@ public class Flow extends BP.En.EntityNoName
 	*/
 	public static void UpdateVer(String flowNo)
 	{
-		String sql = "UPDATE WF_Flow SET Ver='" + BP.DA.DataType.getCurrentDataTime()ss + "' WHERE No='" + flowNo + "'";
+		String sql = "UPDATE WF_Flow SET Ver='" + BP.DA.DataType.getCurrentDataTime() + "' WHERE No='" + flowNo + "'";
 		DBAccess.RunSQL(sql);
 	}
-	public final String DoDelete()
+	public final String DoDelete() throws Exception
 	{
 		//检查流程有没有版本管理？
 		if (this.getFK_FlowSort().length() > 1)
@@ -6799,7 +6891,7 @@ public class Flow extends BP.En.EntityNoName
 		sql += "@ DELETE FROM WF_CH WHERE FK_Flow=' " + this.getNo()+ " '";
 		//删除抄送
 		sql += "@ DELETE FROM WF_CCList WHERE FK_Flow=' " + this.getNo()+ " '";
-		Nodes nds = new Nodes(this.No);
+		Nodes nds = new Nodes(this.getNo());
 		for (Node nd : nds.ToJavaList())
 		{
 			// 删除节点所有相关的东西.
@@ -6815,19 +6907,19 @@ public class Flow extends BP.En.EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 删除流程报表,删除轨迹
 		MapData md = new MapData();
-		md.No = "ND" + Integer.parseInt(this.No) + "Rpt";
+		md.setNo("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 		md.Delete();
 
 		//删除视图.
-		if (DBAccess.IsExitsObject("V_" + this.No))
+		if (DBAccess.IsExitsObject("V_" + this.getNo()))
 		{
-			DBAccess.RunSQL("DROP VIEW V_" + this.No);
+			DBAccess.RunSQL("DROP VIEW V_" + this.getNo());
 		}
 
 		//删除轨迹.
-		if (DBAccess.IsExitsObject("ND" + Integer.parseInt(this.No) + "Track") == true)
+		if (DBAccess.IsExitsObject("ND" + Integer.parseInt(this.getNo()) + "Track") == true)
 		{
-			DBAccess.RunSQL("DROP TABLE ND" + Integer.parseInt(this.No) + "Track ");
+			DBAccess.RunSQL("DROP TABLE ND" + Integer.parseInt(this.getNo()) + "Track ");
 		}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -6846,15 +6938,17 @@ public class Flow extends BP.En.EntityNoName
 
 	/** 
 	 向上移动
+	 * @throws Exception 
 	*/
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(FlowAttr.FK_FlowSort, this.getFK_FlowSort(), FlowAttr.Idx);
 	}
 	/** 
 	 向下移动
+	 * @throws Exception 
 	*/
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown(FlowAttr.FK_FlowSort, this.getFK_FlowSort(), FlowAttr.Idx);
 	}
@@ -6867,8 +6961,9 @@ public class Flow extends BP.En.EntityNoName
 	 创建新版本.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String VerCreateNew()
+	public final String VerCreateNew() throws Exception
 	{
 		try
 		{
@@ -6879,11 +6974,11 @@ public class Flow extends BP.En.EntityNoName
 
 			newFlow.setPTable(this.getPTable());
 			newFlow.setFK_FlowSort(""); //不能显示流程树上.
-			newFlow.Name = this.Name;
+			newFlow.setName(this.getName());
 			newFlow.setVer(DataType.getCurrentDataTime());
 			newFlow.setIsCanStart(false); //不能发起.
 			newFlow.DirectUpdate();
-			return newFlow.No;
+			return newFlow.getNo();
 		}
 		catch (RuntimeException ex)
 		{
@@ -6897,8 +6992,9 @@ public class Flow extends BP.En.EntityNoName
 	 设置当前的版本为新版本.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String VerSetCurrentVer()
+	public final String VerSetCurrentVer() throws Exception
 	{
 		String sql = "SELECT FK_FlowSort,No FROM WF_Flow WHERE PTable='" + this.getPTable() + "' AND FK_FlowSort!='' ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -6907,7 +7003,7 @@ public class Flow extends BP.En.EntityNoName
 			return "err@没有找到主版本,请联系管理员.";
 		}
 		String flowSort = dt.Rows.get(0).getValue(0).toString();
-		String oldFlowNo = dt.Rows[0][1].toString();
+		String oldFlowNo = dt.Rows.get(0).getValue(1).toString();
 		sql = "UPDATE WF_Flow SET FK_FlowSort='',IsCanStart=0 WHERE PTable='" + this.getPTable() + "' ";
 		DBAccess.RunSQL(sql);
 
@@ -6918,7 +7014,7 @@ public class Flow extends BP.En.EntityNoName
 		BP.DA.Cash2019.DeleteRow("BP.WF.Flow", oldFlowNo);
 		BP.DA.Cash2019.DeleteRow("BP.WF.Flow", this.getNo());
 		Flow flow = new Flow(oldFlowNo);
-		flow = new Flow(this.No);
+		flow = new Flow(this.getNo());
 
 
 		return "info@设置成功.";
@@ -6927,8 +7023,9 @@ public class Flow extends BP.En.EntityNoName
 	 获得版本列表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String VerGenerVerList()
+	public final String VerGenerVerList() throws Exception
 	{
 		//if (this.FK_FlowSort.Equals("") == true)
 		//    return "err@当前版本为分支版本，您无法管理，只有主版本才能管理。";
@@ -6955,12 +7052,12 @@ public class Flow extends BP.En.EntityNoName
 		Flows fls = new Flows();
 		fls.RetrieveInSQL(sql);
 
-		for (Flow item : fls)
+		for (Flow item : fls.ToJavaList())
 		{
 			DataRow dr = dt.NewRow();
 			dr.set("Ver", item.getVer());
-			dr.set("No", item.No);
-			dr.set("Name", item.Name);
+			dr.set("No", item.getNo());
+			dr.set("Name", item.getName());
 
 			if (DataType.IsNullOrEmpty(item.getFK_FlowSort()) == true)
 			{
@@ -6971,8 +7068,8 @@ public class Flow extends BP.En.EntityNoName
 				dr.set("IsRel", "1");
 			}
 
-			dr.set("NumOfRuning", DBAccess.RunSQLReturnValInt("SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='" + item.No + "' AND WFState=2"));
-			dr.set("NumOfOK", DBAccess.RunSQLReturnValInt("SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='" + item.No + "' AND WFState=3"));
+			dr.set("NumOfRuning", DBAccess.RunSQLReturnValInt("SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='" + item.getNo() + "' AND WFState=2"));
+			dr.set("NumOfOK", DBAccess.RunSQLReturnValInt("SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='" + item.getNo() + "' AND WFState=3"));
 			dt.Rows.add(dr);
 		}
 

@@ -1,5 +1,6 @@
 package BP.WF.CloudWS;
 
+import BP.DA.DataTable;
 import BP.WF.*;
 
 //------------------------------------------------------------------------------
@@ -38,7 +39,7 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetFormPagingData", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetFormPagingData(bool isPublic, string searchText, int pageIdx, int pageSize, string dirStr, string userNo);
-	System.Data.DataTable GetFormPagingData(boolean isPublic, String searchText, int pageIdx, int pageSize, String dirStr, String userNo);
+	DataTable GetFormPagingData(boolean isPublic, String searchText, int pageIdx, int pageSize, String dirStr, String userNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetFormTotalCount", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] int GetFormTotalCount(bool isPublic, string searchText, string dirStr, string userNo);
@@ -46,11 +47,11 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/PriFormDir", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable PriFormDir(string userNo, string pwd, string guid);
-	System.Data.DataTable PriFormDir(String userNo, String pwd, String guid);
+	DataTable PriFormDir(String userNo, String pwd, String guid);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetRecentlyPriFormTemp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetRecentlyPriFormTemp(string userNo, string pwd, string guid);
-	System.Data.DataTable GetRecentlyPriFormTemp(String userNo, String pwd, String guid);
+	DataTable GetRecentlyPriFormTemp(String userNo, String pwd, String guid);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SavePubFormToPri", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] string SavePubFormToPri(string userNo, string pwd, string guid, string dir, string no);
@@ -58,11 +59,11 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetPubFormTree", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetPubFormTree();
-	System.Data.DataTable GetPubFormTree();
+	DataTable GetPubFormTree();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetRecentlyFormTemp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetRecentlyFormTemp();
-	System.Data.DataTable GetRecentlyFormTemp();
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetRecentlyFormTemp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetRecentlyFormTemp();
+	DataTable GetRecentlyFormTemp();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetFormData", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] object[] GetFormData(bool isPublic, string guid);
@@ -86,7 +87,7 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/PriFlowDir", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable PriFlowDir(string userNo, string pwd, string guid);
-	System.Data.DataTable PriFlowDir(String userNo, String pwd, String guid);
+	DataTable PriFlowDir(String userNo, String pwd, String guid);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/AddPriFlowDir", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] bool AddPriFlowDir(string userNo, string pwd, string guid, string parentNo, string dirName);
@@ -102,7 +103,7 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetRecentlyPriFlowTemp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetRecentlyPriFlowTemp(string userNo, string pwd, string guid);
-	System.Data.DataTable GetRecentlyPriFlowTemp(String userNo, String pwd, String guid);
+	DataTable GetRecentlyPriFlowTemp(String userNo, String pwd, String guid);
 
 	// CODEGEN: 参数"bytes"需要其他方案信息，使用参数模式无法捕获这些信息。特定特性为"System.Xml.Serialization.XmlElementAttribute"。
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
@@ -111,23 +112,23 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetPriFlowTemplateByGuid", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetPriFlowTemplateByGuid(string guid);
-	System.Data.DataTable GetPriFlowTemplateByGuid(String guid);
+	DataTable GetPriFlowTemplateByGuid(String guid);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetPubFlowTree", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetPubFlowTree();
-	System.Data.DataTable GetPubFlowTree();
+	DataTable GetPubFlowTree();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDataByNo", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetDataByNo(string no);
-	System.Data.DataTable GetDataByNo(String no);
+	DataTable GetDataByNo(String no);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetSonDirByParentNo", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetSonDirByParentNo(string no);
-	System.Data.DataTable GetSonDirByParentNo(String no);
+	DataTable GetSonDirByParentNo(String no);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetRecentlyFlowTemp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetRecentlyFlowTemp();
-	System.Data.DataTable GetRecentlyFlowTemp();
+	DataTable GetRecentlyFlowTemp();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetTotalCount", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] int GetTotalCount(bool isPublic, string searchText, string dirStr, string userNo);
@@ -135,11 +136,11 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetPagingData", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetPagingData(bool isPublic, string searchText, int pageIdx, int pageSize, string dirStr, string userNo);
-	System.Data.DataTable GetPagingData(boolean isPublic, String searchText, int pageIdx, int pageSize, String dirStr, String userNo);
+	DataTable GetPagingData(boolean isPublic, String searchText, int pageIdx, int pageSize, String dirStr, String userNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetFlowTemplateByGuid", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetFlowTemplateByGuid(string guid);
-	System.Data.DataTable GetFlowTemplateByGuid(String guid);
+	DataTable GetFlowTemplateByGuid(String guid);
 
 	// CODEGEN: 参数"GetFlowXMLResult"需要其他方案信息，使用参数模式无法捕获这些信息。特定特性为"System.Xml.Serialization.XmlElementAttribute"。
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
@@ -148,7 +149,7 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetCloudFlowsDDlTreeDt", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetCloudFlowsDDlTreeDt();
-	System.Data.DataTable GetCloudFlowsDDlTreeDt();
+	DataTable GetCloudFlowsDDlTreeDt();
 
 	// CODEGEN: 参数"bytes"需要其他方案信息，使用参数模式无法捕获这些信息。特定特性为"System.Xml.Serialization.XmlElementAttribute"。
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
@@ -157,7 +158,7 @@ public interface WSSoap
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetFlowTemFromCloud", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)][System.ServiceModel.ServiceKnownTypeAttribute(typeof(object[]))] System.Data.DataTable GetFlowTemFromCloud(string str);
-	System.Data.DataTable GetFlowTemFromCloud(String str);
+	DataTable GetFlowTemFromCloud(String str);
 
 	// CODEGEN: 参数"GetImageBytesByNoResult"需要其他方案信息，使用参数模式无法捕获这些信息。特定特性为"System.Xml.Serialization.XmlElementAttribute"。
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:

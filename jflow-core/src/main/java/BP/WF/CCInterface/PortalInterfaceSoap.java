@@ -1,5 +1,6 @@
 package BP.WF.CCInterface;
 
+import BP.DA.DataTable;
 import BP.WF.*;
 
 //------------------------------------------------------------------------------
@@ -65,64 +66,64 @@ public interface PortalInterfaceSoap
 	int CheckUserNoPassWord(String userNo, String password);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDept", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetDept(string deptNo);
-	System.Data.DataTable GetDept(String deptNo);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDept", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetDept(string deptNo);
+	DataTable GetDept(String deptNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDepts", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetDepts();
-	System.Data.DataTable GetDepts();
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDepts", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetDepts();
+	DataTable GetDepts();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDeptsByParentNo", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetDeptsByParentNo(string parentDeptNo);
-	System.Data.DataTable GetDeptsByParentNo(String parentDeptNo);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDeptsByParentNo", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetDeptsByParentNo(string parentDeptNo);
+	DataTable GetDeptsByParentNo(String parentDeptNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetStations();
-	System.Data.DataTable GetStations();
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetStations();
+	DataTable GetStations();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetStation", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetStation(string stationNo);
-	System.Data.DataTable GetStation(String stationNo);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetStation", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetStation(string stationNo);
+	DataTable GetStation(String stationNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmps", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetEmps();
-	System.Data.DataTable GetEmps();
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmps", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetEmps();
+	DataTable GetEmps();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmpsByDeptNo", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetEmpsByDeptNo(string deptNo);
-	System.Data.DataTable GetEmpsByDeptNo(String deptNo);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmpsByDeptNo", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetEmpsByDeptNo(string deptNo);
+	DataTable GetEmpsByDeptNo(String deptNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetEmp(string no);
-	System.Data.DataTable GetEmp(String no);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetEmp(string no);
+	DataTable GetEmp(String no);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDeptEmp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetDeptEmp();
-	System.Data.DataTable GetDeptEmp();
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDeptEmp", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetDeptEmp();
+	DataTable GetDeptEmp();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmpHisDepts", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetEmpHisDepts(string empNo);
-	System.Data.DataTable GetEmpHisDepts(String empNo);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmpHisDepts", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetEmpHisDepts(string empNo);
+	DataTable GetEmpHisDepts(String empNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmpHisStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetEmpHisStations(string empNo);
-	System.Data.DataTable GetEmpHisStations(String empNo);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetEmpHisStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetEmpHisStations(string empNo);
+	DataTable GetEmpHisStations(String empNo);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDeptEmpStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GetDeptEmpStations();
-	System.Data.DataTable GetDeptEmpStations();
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GetDeptEmpStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GetDeptEmpStations();
+	DataTable GetDeptEmpStations();
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GenerEmpsByStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GenerEmpsByStations(string stationNos);
-	System.Data.DataTable GenerEmpsByStations(String stationNos);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GenerEmpsByStations", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GenerEmpsByStations(string stationNos);
+	DataTable GenerEmpsByStations(String stationNos);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GenerEmpsByDepts", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GenerEmpsByDepts(string deptNos);
-	System.Data.DataTable GenerEmpsByDepts(String deptNos);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GenerEmpsByDepts", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GenerEmpsByDepts(string deptNos);
+	DataTable GenerEmpsByDepts(String deptNos);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GenerEmpsBySpecDeptAndStats", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] System.Data.DataTable GenerEmpsBySpecDeptAndStats(string deptNo, string stations);
-	System.Data.DataTable GenerEmpsBySpecDeptAndStats(String deptNo, String stations);
+//ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/GenerEmpsBySpecDeptAndStats", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] DataTable GenerEmpsBySpecDeptAndStats(string deptNo, string stations);
+	DataTable GenerEmpsBySpecDeptAndStats(String deptNo, String stations);
 
 //C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
 //ORIGINAL LINE: [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/SendSuccess", ReplyAction="*")][System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)] string SendSuccess(string flowNo, int nodeID, long workid, string userNo, string userName);

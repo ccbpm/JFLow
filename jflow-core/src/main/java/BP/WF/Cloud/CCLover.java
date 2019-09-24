@@ -16,34 +16,37 @@ public class CCLover
 		///#region 内存的用户与密码.
 	/** 
 	 获得当前用户.
+	 * @throws Exception 
 	*/
-	public static String getUserNo()
+	public static String getUserNo() throws Exception
 	{
 		return BP.Sys.GloVars.GetValByKey("CCLoverNo", null);
 	}
-	public static void setUserNo(String value)
+	public static void setUserNo(String value) throws Exception
 	{
 		BP.Sys.GloVars.SetValByKey("CCLoverNo", value);
 	}
 	/** 
 	 密码
+	 * @throws Exception 
 	*/
-	public static String getPassword()
+	public static String getPassword() throws Exception
 	{
 		return BP.Sys.GloVars.GetValByKey("CCLoverPassword", null);
 	}
-	public static void setPassword(String value)
+	public static void setPassword(String value) throws Exception
 	{
 		BP.Sys.GloVars.SetValByKey("CCLoverPassword", value);
 	}
 	/** 
 	 GUID
+	 * @throws Exception 
 	*/
-	public static String getGUID()
+	public static String getGUID() throws Exception
 	{
 		return BP.Sys.GloVars.GetValByKey("CCLoverGUID", null);
 	}
-	public static void setGUID(String value)
+	public static void setGUID(String value) throws Exception
 	{
 		BP.Sys.GloVars.SetValByKey("CCLoverGUID", value);
 	}

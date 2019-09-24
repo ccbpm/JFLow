@@ -249,10 +249,8 @@ public class FrmAttachmentDB extends EntityMyPK
 			return AttachmentUploadType.Multi;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	/** 
 	 附件数据存储

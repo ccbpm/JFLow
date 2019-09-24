@@ -2,6 +2,9 @@ package BP.Sys;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
 import BP.En.*;
+import BP.Tools.AesEncodeUtil;
+import BP.Tools.Cryptos;
+
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -360,38 +363,51 @@ public class Glo
 	}
 
 	///#region 加密解密文件.
-	public static void File_JiaMi(String fileFullPath)
-	{
-		//南京宝旺达.
-		if (SystemConfig.getCustomerNo().equals("BWDA"))
-		{
 
-		}
-	}
-	public static void File_JieMi(String fileFullPath)
-	{
-		//南京宝旺达.
-		if (SystemConfig.getCustomerNo().equals("BWDA"))
-		{
+	
+	/**
+	 * 文件上传加密
+	 * @param fileFullPath上传的文件
+	 * @param toFileFullPath 加密的文件
+	 * @throws Exception 
+	 */
+	 ///#region 加密解密文件.
+     public static void File_JiaMi(String fileFullPath,String toFileFullPath) throws Exception{
+        	 AesEncodeUtil.encryptFile(fileFullPath,toFileFullPath);
+         
+     }
+     
+     /**
+      * 文件下载解密
+      * @param fileFullPath 下载的文件
+      * @param toFileFullPath解密的文件
+      */
+     public static void File_JieMi(String fileFullPath,String toFileFullPath){
+        	 AesEncodeUtil.decryptFile(fileFullPath,toFileFullPath);
+     }
+     /// <summary>
+     /// 字符串的解密
+     /// </summary>
+     /// <param name="str">加密的字符串</param>
+     /// <returns>返回解密后的字符串</returns>
+     public static String String_JieMi(String str) throws Exception
+     {
+         //南京宝旺达.
+         if (SystemConfig.getCustomerNo().equals("BWDA"))         
+             return Cryptos.aesDecrypt(str);
+          
+         return str;
+     }
+     public static String String_JieMi_FTP(String str) throws Exception
+     {
+ 
+        //南京宝旺达.
+       if (SystemConfig.getCustomerNo().equals( "BWDA"))
+        	 return Cryptos.aesDecrypt(str);  
 
-		}
-	}
-	/** 
-	 字符串的解密
-	 
-	 @param str 加密的字符串
-	 @return 返回解密后的字符串
-	*/
-	public static String String_JieMi(String str)
-	{
-		//南京宝旺达.
-		if (SystemConfig.getCustomerNo().equals("BWDA"))
-		{
-			return str;
-		}
+         return str;
+     }
 
-		return str;
-	}
 	///#endregion 加密解密文件.
 
 }

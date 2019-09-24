@@ -3,6 +3,8 @@ package BP.WF;
 import BP.Sys.*;
 import BP.Tools.Cryptos;
 import BP.Tools.DateUtils;
+import BP.Tools.FtpUtil;
+import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
@@ -5392,6 +5394,41 @@ public class Glo {
 		}
 		return result;
 	}
+	/**
+	 * 获得ftp连接对象
+	 * 
+	 * @throws Exception
+	 */
+	public static SftpUtil getSftpUtil() throws Exception {
+		// 获取
+		String ip = SystemConfig.getFTPServerIP();
+
+		String userNo = SystemConfig.getFTPUserNo();
+		String pass = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserPassword());
+
+		SftpUtil ftp = new SftpUtil(ip, 22, userNo, pass);
+		return ftp;
+
+	}
+	
+	/**
+	 * 获得ftp连接对象
+	 * 
+	 * @throws Exception
+	 */
+	public static FtpUtil getFtpUtil() throws Exception {
+		// 获取
+		String ip = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPServerIP());
+
+		String userNo = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserNo());
+		String pass = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserPassword());
+
+		FtpUtil ftp = new FtpUtil(ip, 21, userNo, pass);
+		return ftp;
+
+		// return Platform.JFlow;
+	}
+
 
 	/// #endregion 其他方法。
 }

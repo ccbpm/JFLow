@@ -1,5 +1,9 @@
 package BP.WF;
 
+import BP.DA.DataRow;
+import BP.DA.DataTable;
+import BP.En.QueryObject;
+
 /** 
  审核工作节点
 */
@@ -40,7 +44,7 @@ public class WorkCheck
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
 			if (dt != null && dt.Rows.size() > 0)
 			{
-				myPk = dt.Rows[0]["RDT"].toString();
+				myPk = dt.Rows.get(0).getValue("RDT").toString();
 				myPk = myPk.replace("-", "").replace(":", "").replace(" ", "");
 				myPk = myPk.substring(4);
 				newPK = Integer.parseInt(String.valueOf(this.WorkID)) + this.NodeID + Integer.parseInt(this.FlowNo) + Integer.parseInt(myPk);
@@ -69,7 +73,7 @@ public class WorkCheck
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
 			if (dt != null && dt.Rows.size() > 0)
 			{
-				myPk = dt.Rows[0]["RDT"].toString();
+				myPk = dt.Rows.get(0).getValue("RDT").toString();
 				myPk = myPk.replace("-", "").replace(":", "").replace(" ", "");
 				myPk = myPk.substring(2);
 				newPK = Long.parseLong(String.valueOf(this.WorkID)) + this.NodeID + Long.parseLong(this.FlowNo) + Long.parseLong(myPk);
@@ -81,12 +85,12 @@ public class WorkCheck
 			return 0;
 		}
 	}
-	public final Tracks getHisWorkChecks()
+	public final Tracks getHisWorkChecks() throws Exception
 	{
 		if (_HisWorkChecks == null)
 		{
 			_HisWorkChecks = new Tracks();
-			BP.En.QueryObject qo = new En.QueryObject(_HisWorkChecks);
+			BP.En.QueryObject qo = new QueryObject(_HisWorkChecks);
 
 			if (this.FID != 0)
 			{
@@ -103,13 +107,11 @@ public class WorkCheck
 				}
 			}
 
-			qo.addOrderBy(TrackAttr.RDT);
+			qo.addOrderByDesc(TrackAttr.RDT);
 
-			String sql = qo.SQL;
+			String sql = qo.getSQL();
 			sql = sql.replace("WF_Track", "ND" + Integer.parseInt(this.FlowNo) + "Track");
-			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql, qo.MyParas);
-
-			dt.DefaultView.Sort = "RDT desc";
+			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
 
 			BP.En.Attrs attrs = _HisWorkChecks.getNewEntity().getEnMap().getAttrs();
 			for (DataRow dr : dt.Rows)
@@ -117,7 +119,7 @@ public class WorkCheck
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
 				{
-					en.Row.SetValByKey(attr.Key, dr.get(attr.getKey()));
+					en.getRow().SetValByKey(attr.getKey(), dr.get(attr.getKey()));
 				}
 
 				_HisWorkChecks.AddEntity(en);
@@ -126,7 +128,7 @@ public class WorkCheck
 		return _HisWorkChecks;
 	}
 	private Tracks _HisWorkChecks = null;
-	public final Tracks getHisWorkChecks_New()
+	public final Tracks getHisWorkChecks_New() throws Exception
 	{
 		if (_HisWorkChecks == null)
 		{
@@ -144,11 +146,6 @@ public class WorkCheck
 			}
 			else
 			{
-					//sql += " WorkID=" + dbstr + "WorkID OR WorkID=" + dbstr + "FID ORDER BY RDT DESC ";
-					// ps.Add("WorkID", this.WorkID);
-					// ps.Add("FID", this.FID);
-				 //   qo.AddWhereIn(TrackAttr.WorkID, "(" + this.WorkID + "," + this.FID + ")");
-
 				sql += " WorkID=" + dbstr + "WorkID OR WorkID=" + dbstr + "FID ORDER BY RDT DESC ";
 				ps.Add("WorkID", this.WorkID);
 				ps.Add("FID", this.FID);
@@ -165,7 +162,7 @@ public class WorkCheck
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
 				{
-					en.Row.SetValByKey(attr.Key, dr.get(attr.getKey()));
+					en.getRow().SetValByKey(attr.getKey(), dr.get(attr.getKey()));
 				}
 
 				_HisWorkChecks.AddEntity(en);

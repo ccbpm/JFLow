@@ -18,7 +18,7 @@ import java.math.*;
 */
 public class WorkFlow
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 当前工作统计信息
 	/** 
 	 正常范围的运行的个数。
@@ -44,10 +44,10 @@ public class WorkFlow
 		String sql = "SELECT COUNT(*) FROM V_WF_CURRWROKS WHERE FK_Emp='" + FK_Emp + "' AND WorkTimeState=2";
 		return DBAccess.RunSQLReturnValInt(sql);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  权限管理
 	/** 
 	 是不是能够作当前的工作。
@@ -59,44 +59,9 @@ public class WorkFlow
 	{
 		WorkNode wn = this.GetCurrentWorkNode();
 		return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(wn.getWorkID(), empId);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#region 使用dev2InterFace 中的算法
-		//return true;
-		// 找到当前的工作节点
-
-		// 判断是不是开始工作节点..
-		if (wn.getHisNode().getIsStartNode())
-		{
-			// 从物理上判断是不是有这个权限。
-			// return WorkFlow.IsCanDoWorkCheckByEmpStation(wn.HisNode.NodeID, empId);
-			return true;
-		}
-
-		// 判断他的工作生成的工作者.
-		GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID(), wn.getHisNode().getNodeID());
-		if (gwls.size() == 0)
-		{
-			//return true;
-			//throw new Exception("@工作流程定义错误,没有找到能够执行此项工作的人员.相关信息:工作ID="+this.WorkID+",节点ID="+wn.HisNode.NodeID );
-			throw new RuntimeException("@工作流程定义错误,没有找到能够执行此项工作的人员.相关信息:WorkID=" + this.getWorkID() + ",NodeID=" + wn.getHisNode().getNodeID());
-		}
-
-		for (GenerWorkerList en : gwls.ToJavaList())
-		{
-			if (en.getFK_Emp().equals(empId))
-			{
-				return true;
-			}
-		}
-		return false;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 流程公共方法
+
 	/** 
 	 执行驳回
 	 应用场景:子流程向分合点驳回时
@@ -105,8 +70,9 @@ public class WorkFlow
 	 @param fk_node 被驳回的节点
 	 @param msg
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReject(long fid, int fk_node, String msg)
+	public final String DoReject(long fid, int fk_node, String msg) throws Exception
 	{
 		GenerWorkerList wl = new GenerWorkerList();
 		int i = wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fk_node);
@@ -138,8 +104,9 @@ public class WorkFlow
 	 逻辑删除流程
 	 
 	 @param msg 逻辑删除流程原因，可以为空。
+	 * @throws Exception 
 	*/
-	public final void DoDeleteWorkFlowByFlag(String msg)
+	public final void DoDeleteWorkFlowByFlag(String msg) throws Exception
 	{
 		try
 		{
@@ -183,8 +150,9 @@ public class WorkFlow
 	 恢复逻辑删除流程
 	 
 	 @param msg 回复原因,可以为空.
+	 * @throws Exception 
 	*/
-	public final void DoUnDeleteWorkFlowByFlag(String msg)
+	public final void DoUnDeleteWorkFlowByFlag(String msg) throws Exception
 	{
 		try
 		{
@@ -219,7 +187,7 @@ public class WorkFlow
 
 		Flow fl = new Flow(flowNo);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 记录流程删除日志
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(flowNo) + "Rpt");
 		rpt.SetValByKey(GERptAttr.OID, workID);
@@ -245,7 +213,7 @@ public class WorkFlow
 			log.Delete();
 			return ex.getStackTrace();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 记录流程删除日志
 
 		DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE WorkID=" + workID);
@@ -254,7 +222,7 @@ public class WorkFlow
 
 		String info = "";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 正常的删除信息.
 		String msg = "";
 		try
@@ -298,10 +266,10 @@ public class WorkFlow
 			throw new RuntimeException(err);
 		}
 		info = "@删除流程删除成功";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 正常的删除信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除该流程下面的子流程.
 		if (isDelSubFlow)
 		{
@@ -312,7 +280,7 @@ public class WorkFlow
 				BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(item.getFK_Flow(), item.getWorkID(), true);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除该流程下面的子流程.
 
 		BP.DA.Log.DefaultLogWriteLineInfo("@[" + fl.getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + workID + "]。");
@@ -328,7 +296,7 @@ public class WorkFlow
 		WorkNode wn = this.GetCurrentWorkNode();
 		Emp empOfWorker = wn.getHisWork().getRecOfEmp();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 正常的删除信息.
 		String msg = "";
 		try
@@ -372,10 +340,10 @@ public class WorkFlow
 			throw new RuntimeException(err);
 		}
 		String info = "@删除流程删除成功";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 正常的删除信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理分流程删除的问题完成率的问题。
 		if (1 == 2)
 		{
@@ -401,7 +369,7 @@ public class WorkFlow
 
 					Node priNode = (Node)priNodes[0];
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 处理完成率
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + this.getFID() + " AND IsPass=1";
 					BigDecimal ok = (BigDecimal)DBAccess.RunSQLReturnValInt(sql);
@@ -422,7 +390,7 @@ public class WorkFlow
 						/*说明全部的人员都完成了，就让合流点显示它。*/
 						DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0  WHERE IsPass=3  AND WorkID=" + this.getFID() + " AND FK_Node=" + fk_node);
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 处理完成率
 				}
 			} // 结束有待命的状态判断。
@@ -453,13 +421,13 @@ public class WorkFlow
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 写入删除日志.
 		wn.AddToTrack(ActionType.DeleteSubThread, empOfWorker.No, empOfWorker.Name, wn.getHisNode().getNodeID(), wn.getHisNode().getName(), "子线程被:" + WebUser.getName() + "删除.");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 写入删除日志.
 
 		return "子线程被删除成功.";
@@ -504,7 +472,7 @@ public class WorkFlow
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除独立表单的数据.
 		FrmNodes fns = new FrmNodes();
 		fns.Retrieve(FrmNodeAttr.FK_Flow, flowNo);
@@ -527,7 +495,7 @@ public class WorkFlow
 
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除独立表单的数据.
 
 		//删除流程数据.
@@ -535,7 +503,7 @@ public class WorkFlow
 		DBAccess.RunSQL("DELETE FROM " + fl.getPTable() + " WHERE OID=" + workid);
 		DBAccess.RunSQL("DELETE FROM WF_CHEval WHERE  WorkID=" + workid); // 删除质量考核数据。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 正常的删除信息.
 		BP.DA.Log.DefaultLogWriteLineInfo("@[" + fl.getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + workid + "]。");
 		String msg = "";
@@ -589,7 +557,7 @@ public class WorkFlow
 			Log.DebugWriteInfo(msg);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 正常的删除信息.
 	}
 	/** 
@@ -604,7 +572,7 @@ public class WorkFlow
 			throw new RuntimeException("@该流程非子线程流程实例，不能执行该方法。");
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 正常的删除信息.
 		String msg = "";
 		try
@@ -648,10 +616,10 @@ public class WorkFlow
 			throw new RuntimeException(err);
 		}
 		String info = "@删除流程删除成功";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 正常的删除信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理分流程删除的问题完成率的问题。
 		if (1 == 2)
 		{
@@ -662,7 +630,7 @@ public class WorkFlow
 			 * 3，这里要解决合流节点的完成率的问题.
 			 */
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 应该删除一个子线程后，就需要计算完成率的问题。但是目前应用到该场景极少,因为。能够看到河流点信息，说明已经到达了完成率了。
 
 			/* 目前还没有必要，因为在分流点,才有计算完成率的需求. */
@@ -688,7 +656,7 @@ public class WorkFlow
 
 					Node priNode = (Node)priNodes[0];
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 处理完成率
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + this.getFID() + " AND IsPass=1";
 					BigDecimal ok = (BigDecimal)DBAccess.RunSQLReturnValInt(sql);
@@ -709,7 +677,7 @@ public class WorkFlow
 						/* 说明: 全部的人员都完成了，就让合流点显示它。*/
 						DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0  WHERE IsPass=3  AND WorkID=" + this.getFID() + " AND FK_Node=" + fk_node);
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 处理完成率
 				}
 			} // 结束有待命的状态判断。
@@ -740,7 +708,7 @@ public class WorkFlow
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
@@ -843,7 +811,7 @@ public class WorkFlow
 			wn.getHisFlow().DoFlowEventEntity(EventListOfNode.BeforeFlowDel, wn.getHisNode(), wn.getHisWork(), null);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除独立表单的数据.
 		FrmNodes fns = new FrmNodes();
 		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getHisFlow().No);
@@ -865,7 +833,7 @@ public class WorkFlow
 			{
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除独立表单的数据.
 
 		//删除流程数据.
@@ -873,7 +841,7 @@ public class WorkFlow
 		DBAccess.RunSQL("DELETE FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + this.getWorkID());
 		DBAccess.RunSQL("DELETE FROM WF_CHEval WHERE  WorkID=" + this.getWorkID()); // 删除质量考核数据。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 正常的删除信息.
 		BP.DA.Log.DefaultLogWriteLineInfo("@[" + this.getHisFlow().Name + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + this.getWorkID() + "]。");
 		String msg = "";
@@ -930,10 +898,10 @@ public class WorkFlow
 			throw new RuntimeException(err);
 		}
 		info = "@删除流程删除成功";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 正常的删除信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理分流程删除的问题完成率的问题。
 		if (this.getFID() != 0)
 		{
@@ -958,7 +926,7 @@ public class WorkFlow
 
 					Node priNode = (Node)priNodes[0];
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 处理完成率
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + wn.getHisWork().getFID() + " AND IsPass=1";
 					BigDecimal ok = (BigDecimal)DBAccess.RunSQLReturnValInt(sql);
@@ -979,7 +947,7 @@ public class WorkFlow
 						/*说明全部的人员都完成了，就让合流点显示它。*/
 						DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0  WHERE IsPass=3  AND WorkID=" + wn.getHisWork().getFID() + " AND FK_Node=" + fk_node);
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 处理完成率
 				}
 			} // 结束有待命的状态判断。
@@ -1009,10 +977,10 @@ public class WorkFlow
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除该流程下面的子流程.
 		if (isDelSubFlow)
 		{
@@ -1024,7 +992,7 @@ public class WorkFlow
 				BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(item.getFK_Flow(), item.getWorkID(), true);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除该流程下面的子流程.
 
 
@@ -1068,7 +1036,7 @@ public class WorkFlow
 		}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程的强制终止\删除 或者恢复使用流程,
 	/** 
 	 恢复流程.
@@ -1103,7 +1071,7 @@ public class WorkFlow
 			throw new RuntimeException("@恢复流程出现错误." + ex.getMessage());
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -1373,7 +1341,7 @@ public class WorkFlow
 			stopMsg += this.DoFlowSubOver();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理明细表的汇总.
 //            Node currND = new Node(this.HisGenerWorkFlow.FK_Node);
 
@@ -1401,10 +1369,10 @@ public class WorkFlow
 //                }
 //            }
 		this._IsComplete = 1;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理明细表的汇总.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理后续的业务.
 
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -1473,7 +1441,7 @@ public class WorkFlow
 
 		//调用结束后事件.
 		stopMsg += this.getHisFlow().DoFlowEventEntity(EventListOfNode.FlowOverAfter, currNode, rpt, null);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理后续的业务.
 
 		//执行最后一个子流程发送后的检查，不管是否成功，都要结束该流程。
@@ -1481,7 +1449,7 @@ public class WorkFlow
 
 		//string dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
 		ps = new Paras();
 		ps.SQL = "UPDATE ND" + Integer.parseInt(currNode.getFK_Flow()) + "Track SET NDTo=" + dbstr + "NDTo,NDToT=" + dbstr + "NDToT,EmpTo=" + dbstr + "EmpTo,EmpToT=" + dbstr + "EmpToT WHERE NDFrom=" + dbstr + "NDFrom AND EmpFrom=" + dbstr + "EmpFrom AND WorkID=" + dbstr + "WorkID AND ActionType=" + ActionType.WorkCheck.getValue();
@@ -1494,7 +1462,7 @@ public class WorkFlow
 		ps.Add(TrackAttr.EmpFrom, WebUser.getNo());
 		ps.Add(TrackAttr.WorkID, this.getWorkID());
 		BP.DA.DBAccess.RunSQL(ps);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理审核问题.
 
 		return stopMsg;
@@ -1649,10 +1617,10 @@ public class WorkFlow
 
 		return "已经成功执行解除冻结:";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 他的节点
@@ -1765,10 +1733,10 @@ public class WorkFlow
 			return true;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public WorkFlow(String fk_flow, long wkid)
 	{
@@ -1830,10 +1798,10 @@ public class WorkFlow
 		this._HisFlow = flow;
 		this._WorkID = wkid;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共属性
 
 	/** 
@@ -1880,10 +1848,10 @@ public class WorkFlow
 		}
 		return _HisStartWorkNode;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 运算属性
 	public int _IsComplete = -1;
 	/** 
@@ -1919,10 +1887,10 @@ public class WorkFlow
 			return "未";
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 静态方法
 
 	/** 
@@ -1993,10 +1961,10 @@ public class WorkFlow
 		return emps;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程方法
 
 	private String _AppType = null;
@@ -2290,6 +2258,6 @@ public class WorkFlow
 
 		return "@撤消移交成功，<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlow.htm?FK_Flow=" + this.getHisFlow().No + "&FK_Node=" + wk.getFK_Node() + "&FID=" + wk.getFID() + "&WorkID=" + this.getWorkID() + "'><img src='" + Glo.getCCFlowAppPath() + "WF/Img/Btn/Do.gif' border=0/>执行工作</A>";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

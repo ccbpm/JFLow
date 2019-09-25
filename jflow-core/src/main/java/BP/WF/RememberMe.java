@@ -1,93 +1,90 @@
 package BP.WF;
 
-import BP.DA.*;
 import BP.En.*;
-import BP.WF.*;
-import BP.Port.*;
-import java.util.*;
+import BP.Web.WebUser;
 
 /** 
  记忆我
 */
 public class RememberMe extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 属性
 	/** 
 	 操作员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(RememberMeAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value)throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.FK_Emp, value);
-		this.setMyPK( this.getFK_Node() + "_" + WebUser.getNo();
+		this.setMyPK( this.getFK_Node() + "_" + WebUser.getNo());
 	}
 	/** 
 	 当前节点
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node()throws Exception
 	{
 		return this.GetValIntByKey(RememberMeAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value)throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.FK_Node, value);
-		this.setMyPK( this.getFK_Node() + "_" + WebUser.getNo();
+		this.setMyPK( this.getFK_Node() + "_" + WebUser.getNo());
 	}
 	/** 
 	 有效的工作人员
 	*/
-	public final String getObjs()
+	public final String getObjs()throws Exception
 	{
 		return this.GetValStringByKey(RememberMeAttr.Objs);
 	}
-	public final void setObjs(String value)
+	public final void setObjs(String value)throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.Objs, value);
 	}
 	/** 
 	 有效的操作人员ext
 	*/
-	public final String getObjsExt()
+	public final String getObjsExt()throws Exception
 	{
 		return this.GetValStringByKey(RememberMeAttr.ObjsExt);
 	}
-	public final void setObjsExt(String value)
+	public final void setObjsExt(String value)throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.ObjsExt, value);
 	}
 	/** 
 	 所有的人员数量.
+	 * @throws Exception 
 	*/
-	public final int getNumOfEmps()
+	public final int getNumOfEmps() throws Exception
 	{
 		return this.getEmps().split("[@]", -1).length - 2;
 	}
 	/** 
 	 可以处理的人员数量
 	*/
-	public final int getNumOfObjs()
+	public final int getNumOfObjs()throws Exception
 	{
 		return this.getObjs().split("[@]", -1).length - 2;
 	}
 	/** 
 	 所有的工作人员
 	*/
-	public final String getEmps()
+	public final String getEmps()throws Exception
 	{
 		return this.GetValStringByKey(RememberMeAttr.Emps);
 	}
-	public final void setEmps(String value)
+	public final void setEmps(String value)throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.Emps, value);
 	}
 	/** 
 	 所有的工作人员ext
 	*/
-	public final String getEmpsExt()
+	public final String getEmpsExt()throws Exception
 	{
 		String str = this.GetValStringByKey(RememberMeAttr.EmpsExt).trim();
 		if (str.length() == 0)
@@ -104,15 +101,11 @@ public class RememberMe extends EntityMyPK
 			return str;
 		}
 	}
-	public final void setEmpsExt(String value)
+	public final void setEmpsExt(String value)throws Exception
 	{
 		this.SetValByKey(RememberMeAttr.EmpsExt, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 构造函数
 	/** 
 	 RememberMe
 	*/
@@ -144,14 +137,14 @@ public class RememberMe extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.setFK_Emp(WebUser.getNo());
-		this.setMyPK( this.getFK_Node() + "_" + this.getFK_Emp();
+		this.setMyPK( this.getFK_Node() + "_" + this.getFK_Emp());
 		return super.beforeUpdateInsertAction();
 	}
 }

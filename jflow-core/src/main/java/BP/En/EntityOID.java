@@ -300,7 +300,7 @@ public abstract class EntityOID extends Entity
 	 @param oid
 	 * @throws Exception 
 	*/
-	public final void SaveAsOID(int oid) throws Exception
+	public final void SaveAsOID(long oid) throws Exception
 	{
 		this.SetValByKey("OID", oid);
 		if (this.getIsExits() == false)
@@ -309,6 +309,5 @@ public abstract class EntityOID extends Entity
 		}
 		this.Update();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 }

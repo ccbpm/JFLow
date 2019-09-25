@@ -5,7 +5,7 @@ import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
 import BP.WF.Template.*;
-import java.util.*;
+import BP.Web.WebUser;
 import java.time.*;
 
 /** 
@@ -13,7 +13,7 @@ import java.time.*;
 */
 public class Track extends BP.En.Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性.
 	/** 
 	 表单数据
@@ -21,12 +21,13 @@ public class Track extends BP.En.Entity
 	public String FrmDB = null;
 	/** 
 	 主键值
+	 * @throws Exception 
 	*/
-	public final String getMyPK()
+	public final String getMyPK() throws Exception
 	{
 		return this.GetValStrByKey(TrackAttr.MyPK);
 	}
-	public final void setMyPK(String value)
+	public final void setMyPK(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.MyPK, value);
 	}
@@ -42,118 +43,113 @@ public class Track extends BP.En.Entity
 		return "MyPK";
 	}
 	public String FK_Flow = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 基本属性.
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#region 字段属性.
 	/** 
 	 节点从
 	*/
-	public final int getNDFrom()
+	public final int getNDFrom() throws Exception
 	{
 		return this.GetValIntByKey(TrackAttr.NDFrom);
 	}
-	public final void setNDFrom(int value)
+	public final void setNDFrom(int value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDFrom, value);
 	}
 	/** 
 	 节点到
 	*/
-	public final int getNDTo()
+	public final int getNDTo() throws Exception
 	{
 		return this.GetValIntByKey(TrackAttr.NDTo);
 	}
-	public final void setNDTo(int value)
+	public final void setNDTo(int value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDTo, value);
 	}
 	/** 
 	 从人员
 	*/
-	public final String getEmpFrom()
+	public final String getEmpFrom() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpFrom);
 	}
-	public final void setEmpFrom(String value)
+	public final void setEmpFrom(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpFrom, value);
 	}
 	/** 
 	 到人员
 	*/
-	public final String getEmpTo()
+	public final String getEmpTo() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpTo);
 	}
-	public final void setEmpTo(String value)
+	public final void setEmpTo(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpTo, value);
 	}
 	/** 
 	 参数数据.
 	*/
-	public final String getTag()
+	public final String getTag() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Tag);
 	}
-	public final void setTag(String value)
+	public final void setTag(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.Tag, value);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.RDT, value);
 	}
 	/** 
 	 fid
 	*/
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(TrackAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.FID, value);
 	}
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(TrackAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.WorkID, value);
 	}
 	/** 
 	 CWorkID
 	*/
-	public final long getCWorkID()
+	public final long getCWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(TrackAttr.CWorkID);
 	}
-	public final void setCWorkID(long value)
+	public final void setCWorkID(long value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.CWorkID, value);
 	}
 	/** 
 	 活动类型
 	*/
-	public final ActionType getHisActionType()
+	public final ActionType getHisActionType() throws Exception
 	{
 		return ActionType.forValue(this.GetValIntByKey(TrackAttr.ActionType));
 	}
-	public final void setHisActionType(ActionType value)
+	public final void setHisActionType(ActionType value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.ActionType, value.getValue());
 	}
@@ -230,102 +226,102 @@ public class Track extends BP.En.Entity
 	/** 
 	 活动名称
 	*/
-	public final String getActionTypeText()
+	public final String getActionTypeText() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.ActionTypeText);
 	}
-	public final void setActionTypeText(String value)
+	public final void setActionTypeText(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.ActionTypeText, value);
 	}
 	/** 
 	 节点数据
 	*/
-	public final String getNodeData()
+	public final String getNodeData() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NodeData);
 	}
-	public final void setNodeData(String value)
+	public final void setNodeData(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NodeData, value);
 	}
 	/** 
 	 实际执行人
 	*/
-	public final String getExer()
+	public final String getExer() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Exer);
 	}
-	public final void setExer(String value)
+	public final void setExer(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.Exer, value);
 	}
 	/** 
 	 审核意见
 	*/
-	public final String getMsg()
+	public final String getMsg() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Msg);
 	}
-	public final void setMsg(String value)
+	public final void setMsg(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.Msg, value);
 	}
 	/** 
 	 消息
 	*/
-	public final String getMsgHtml()
+	public final String getMsgHtml() throws Exception
 	{
 		return this.GetValHtmlStringByKey(TrackAttr.Msg);
 	}
 	/** 
 	 人员到
 	*/
-	public final String getEmpToT()
+	public final String getEmpToT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpToT);
 	}
-	public final void setEmpToT(String value)
+	public final void setEmpToT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpToT, value);
 	}
 	/** 
 	 人员从
 	*/
-	public final String getEmpFromT()
+	public final String getEmpFromT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpFromT);
 	}
-	public final void setEmpFromT(String value)
+	public final void setEmpFromT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.EmpFromT, value);
 	}
 	/** 
 	 节点从
 	*/
-	public final String getNDFromT()
+	public final String getNDFromT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NDFromT);
 	}
-	public final void setNDFromT(String value)
+	public final void setNDFromT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDFromT, value);
 	}
 	/** 
 	 节点到
 	*/
-	public final String getNDToT()
+	public final String getNDToT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NDToT);
 	}
-	public final void setNDToT(String value)
+	public final void setNDToT(String value) throws Exception
 	{
 		this.SetValByKey(TrackAttr.NDToT, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion attrs
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造.
 	public String RptName = null;
 	@Override
@@ -338,7 +334,7 @@ public class Track extends BP.En.Entity
 
 		Map map = new Map("WF_Track", "轨迹表");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 字段
 			//增加一个自动增长的列.
 		map.AddTBIntPK(TrackAttr.MyPK, 0, "MyPK", true, false);
@@ -368,7 +364,7 @@ public class Track extends BP.En.Entity
 		map.AddTBString(TrackAttr.Tag, null, "参数", true, false, 0, 300, 3000);
 		map.AddTBString(TrackAttr.Exer, null, "执行人", true, false, 0, 200, 100);
 			//   map.AddTBString(TrackAttr.InnerKey, null, "内部的Key,用于防止插入重复", true, false, 0, 200, 100);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 字段
 
 		this.set_enMap(map);
@@ -386,7 +382,7 @@ public class Track extends BP.En.Entity
 	 @param flowNo 流程编号
 	 @param mypk 主键
 	*/
-	public Track(String flowNo, String mypk)
+	public Track(String flowNo, String mypk) throws Exception
 	{
 		String sql = "SELECT * FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK='" + mypk + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -394,14 +390,15 @@ public class Track extends BP.En.Entity
 		{
 			throw new RuntimeException("@日志数据丢失.." + sql);
 		}
-		this.Row.LoadDataTable(dt, dt.Rows[0]);
+		this.getRow().LoadDataTable(dt, dt.Rows.get(0));
 	}
 	/** 
 	 创建track.
 	 
 	 @param fk_flow 流程编号
+	 * @throws Exception 
 	*/
-	public static void CreateOrRepairTrackTable(String fk_flow)
+	public static void CreateOrRepairTrackTable(String fk_flow) throws Exception
 	{
 		String ptable = "ND" + Integer.parseInt(fk_flow) + "Track";
 		if (DBAccess.IsExitsObject(ptable) == true)
@@ -432,19 +429,19 @@ public class Track extends BP.En.Entity
 		String sqlRename = "";
 		switch (SystemConfig.getAppCenterDBType())
 		{
-			case DBType.MSSQL:
+			case MSSQL:
 				sqlRename = "EXEC SP_RENAME WF_Track, " + ptable;
 				break;
-			case DBType.Informix:
+			case Informix:
 				sqlRename = "RENAME TABLE WF_Track TO " + ptable;
 				break;
-			case DBType.Oracle:
+			case Oracle:
 				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
 				break;
-			case DBType.PostgreSQL:
+			case PostgreSQL:
 				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
 				break;
-			case DBType.MySQL:
+			case MySQL:
 				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
 				break;
 			default:
@@ -459,21 +456,21 @@ public class Track extends BP.En.Entity
 		DBAccess.DropTablePK(ptable);
 
 		//创建主键.
-		DBAccess.CreatePK(ptable, TrackAttr.MyPK, tk.getEnMap().EnDBUrl.DBType);
+		DBAccess.CreatePK(ptable, TrackAttr.MyPK, tk.getEnMap().getEnDBUrl().getDBType());
 	}
 	/** 
 	 插入
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public final void DoInsert(long mypk)
+	public final void DoInsert(long mypk) throws Exception
 	{
 		String ptable = "ND" + Integer.parseInt(this.FK_Flow) + "Track";
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql = "INSERT INTO " + ptable;
 		sql += "(";
 		sql += "" + TrackAttr.MyPK + ",";
-		sql += "" + TrackAttr.ActionType + ",";
 		sql += "" + TrackAttr.ActionTypeText + ",";
 		sql += "" + TrackAttr.FID + ",";
 		sql += "" + TrackAttr.WorkID + ",";
@@ -523,7 +520,6 @@ public class Track extends BP.En.Entity
 		if (mypk == 0)
 		{
 			this.SetValByKey(TrackAttr.MyPK, DBAccess.GenerOIDByGUID());
-			//this.SetValByKey(TrackAttr.MyPK, DBAccess.GenerGUID());
 
 		}
 		else
@@ -532,19 +528,9 @@ public class Track extends BP.En.Entity
 			this.SetValByKey(TrackAttr.MyPK, mypk);
 		}
 
-		LocalDateTime d = LocalDateTime.MIN;
-		tangible.OutObject<LocalDateTime> tempOut_d = new tangible.OutObject<LocalDateTime>();
-		if (DataType.IsNullOrEmpty(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
-		{
-		d = tempOut_d.argValue;
-			this.setRDT(DataType.getCurrentDataTime());
-		}
-	else
-	{
-		d = tempOut_d.argValue;
-	}
+		this.setRDT(DataType.getCurrentDataTimess());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 执行保存
 		try
 		{
@@ -553,18 +539,17 @@ public class Track extends BP.En.Entity
 
 			switch (SystemConfig.getAppCenterDBType())
 			{
-				case DBType.MSSQL:
+				case MSSQL:
 					this.RunSQL(ps);
 					break;
-				case DBType.Access:
+				case Access:
 					this.RunSQL(ps);
 					break;
-				case DBType.MySQL:
-				case DBType.Informix:
+				case MySQL:
+				case Informix:
 				default:
-					ps.SQL = ps.SQL.Replace("[", "").replace("]", "");
+					ps.SQL = ps.SQL.replace("[", "").replace("]", "");
 					this.RunSQL(ps); // 运行sql.
-					//  this.RunSQL(sql.Replace("[", "").replace("]", ""), SqlBuilder.GenerParas(this, null));
 					break;
 			}
 		}
@@ -584,7 +569,7 @@ public class Track extends BP.En.Entity
 			BP.DA.DBAccess.SaveBigTextToDB(this.FrmDB, ptable, "MyPK", this.getMyPK(), "FrmDB");
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 执行保存
 
 		//解决流程的开始日期计算错误的问题.
@@ -607,19 +592,20 @@ public class Track extends BP.En.Entity
 	 增加授权人
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		if (WebUser.getNo().equals("Guest"))
 		{
-			this.setExer(BP.Web.GuestUser.No + "," + BP.Web.GuestUser.Name);
+			this.setExer(BP.Web.GuestUser.getNo() + "," + BP.Web.GuestUser.getName());
 		}
 		else
 		{
 			if (WebUser.getIsAuthorize())
 			{
-				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.Auth, WebUser.AuthName));
+				this.setExer(BP.WF.Glo.DealUserInfoShowModel(WebUser.getAuth(), WebUser.getAuthName()));
 			}
 			else
 			{
@@ -627,21 +613,11 @@ public class Track extends BP.En.Entity
 			}
 		}
 
-		LocalDateTime d = LocalDateTime.MIN;
-		tangible.OutObject<LocalDateTime> tempOut_d = new tangible.OutObject<LocalDateTime>();
-		if (DataType.IsNullOrEmpty(getRDT()) || LocalDateTime.TryParse(this.getRDT(), tempOut_d) == false)
-		{
-		d = tempOut_d.argValue;
-			this.setRDT(BP.DA.DataType.getCurrentDataTime());
-		}
-	else
-	{
-		d = tempOut_d.argValue;
-	}
+		this.setRDT(BP.DA.DataType.getCurrentDataTimess());
 
 		this.DoInsert(0);
 		return false;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造.
 }

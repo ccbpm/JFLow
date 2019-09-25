@@ -28,8 +28,6 @@ public class CCFlowAPI
 		return GenerWorkNode(fk_flow, fk_node, workID, fid, userNo, "0");
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataSet GenerWorkNode(string fk_flow, int fk_node, Int64 workID, Int64 fid, string userNo, string fromWorkOpt = "0")
 	public static DataSet GenerWorkNode(String fk_flow, int fk_node, long workID, long fid, String userNo, String fromWorkOpt)
 	{
 		//节点.

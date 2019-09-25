@@ -1,5 +1,6 @@
 package BP.WF.Rpt;
 
+import BP.DA.DataType;
 import BP.WF.*;
 import java.util.*;
 import java.io.*;
@@ -43,8 +44,6 @@ public class RptExportTemplateCell
 	/** 
 	 获取单元格名称
 	*/
-//C# TO JAVA CONVERTER TODO TASK: Java annotations will not correspond to .NET attributes:
-//ORIGINAL LINE: [XmlIgnore] public string CellName
 	public final String getCellName()
 	{
 		if (DataType.IsNullOrEmpty(_cellName))

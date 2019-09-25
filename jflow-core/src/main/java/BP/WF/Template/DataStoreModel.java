@@ -1,7 +1,5 @@
 package BP.WF.Template;
 
-import BP.WF.*;
-
 /** 
  流程数据存储模式
 */

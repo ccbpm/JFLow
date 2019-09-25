@@ -2,25 +2,18 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.Sys.*;
-import BP.Port.*;
 import BP.En.*;
 import BP.WF.Template.*;
-import BP.WF.Data.*;
-import BP.Web.*;
 import java.util.*;
-import java.io.*;
-import java.nio.file.*;
-import java.time.*;
-import java.math.*;
+
 
 /** 
  流程集合
 */
 public class Flows extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 查询
-	public static void GenerHtmlRpts()
+	public static void GenerHtmlRpts() throws Exception
 	{
 		Flows fls = new Flows();
 		fls.RetrieveAll();
@@ -63,16 +56,15 @@ public class Flows extends EntitiesNoName
 
 			pathDef = SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\index.htm";
 			DataType.WriteFile(pathDef, msg);
-			System.Diagnostics.Process.Start(SystemConfig.getPathOfWorkDir() + "\\VisualFlow\\DataUser\\FlowDesc\\");
 		}
 		catch (java.lang.Exception e)
 		{
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 查询
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询
 	/** 
 	 查出来全部的自动流程
@@ -100,10 +92,10 @@ public class Flows extends EntitiesNoName
 		qo.addOrderBy(FlowAttr.No);
 		return qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 工作流程
@@ -121,10 +113,10 @@ public class Flows extends EntitiesNoName
 	{
 		this.Retrieve(FlowAttr.FK_FlowSort, fk_sort);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 得到实体
 	/** 
 	 得到它的 Entity 
@@ -134,10 +126,10 @@ public class Flows extends EntitiesNoName
 	{
 		return new Flow();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -162,6 +154,6 @@ public class Flows extends EntitiesNoName
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

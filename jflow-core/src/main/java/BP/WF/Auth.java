@@ -1,19 +1,13 @@
 package BP.WF;
 
-import BP.DA.*;
-import BP.Web.*;
 import BP.En.*;
 import BP.En.Map;
-import BP.Port.*;
-import BP.Sys.*;
-import java.util.*;
 
 /** 
  授权
 */
 public class Auth extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
 	/** 
 	 流程编号

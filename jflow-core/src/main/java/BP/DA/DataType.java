@@ -1818,25 +1818,7 @@ public class DataType {
 	 */
 	public static PortalInterface GetPortalInterfaceSoapClientInstance() {
 		return null;
-		// BasicHttpBinding basicBinding = new BasicHttpBinding();
-		// basicBinding.setReceiveTimeout(ts);
-		// basicBinding.setSendTimeout(ts);
-		// basicBinding.setMaxBufferSize(2147483647);
-		// basicBinding.setMaxReceivedMessageSize(2147483647);
-		// basicBinding.setName("PortalInterfaceSoapClient");
-		// basicBinding.Security.Mode = BasicHttpSecurityMode.None;
-		//
-		// //url.
-		// String url = DataType.getBPMHost() +
-		// "/DataUser/PortalInterface.asmx";
-		//
-		// EndpointAddress endPoint = new EndpointAddress(url);
-		//
-		// var ctor =
-		// BP.En30.ccportal.PortalInterfaceSoapClient.class.GetConstructor(new
-		// java.lang.Class[] {Binding.class, EndpointAddress.class});
-		// return (BP.En30.ccportal.PortalInterfaceSoapClient)ctor.Invoke(new
-		// Object[] {basicBinding, endPoint});
+		
 	}
 
 	/**

@@ -2,12 +2,22 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.WF.Data.*;
+import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
+import BP.Tools.StringHelper;
 import BP.En.*;
 import BP.Port.*;
 import BP.Web.*;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.time.*;
 
 /** 
@@ -15,7 +25,7 @@ import java.time.*;
 */
 public class WorkFlowBuessRole
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 生成标题的方法.
 	/** 
 	 生成标题
@@ -24,10 +34,11 @@ public class WorkFlowBuessRole
 	 @param emp 人员
 	 @param rdt 日期
 	 @return 生成string.
+	 * @throws Exception 
 	*/
-	public static String GenerTitle(Flow fl, Work wk, Emp emp, String rdt)
+	public static String GenerTitle(Flow fl, Work wk, Emp emp, String rdt) throws Exception
 	{
-		Object tempVar = fl.getTitleRole().Clone();
+		Object tempVar = fl.getTitleRole();
 		String titleRole = tempVar instanceof String ? (String)tempVar : null;
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
@@ -40,7 +51,7 @@ public class WorkFlowBuessRole
 
 			if (myattr != null)
 			{
-				titleRole = myattr.DefaultVal.toString();
+				titleRole = myattr.getDefaultVal().toString();
 			}
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
@@ -50,11 +61,11 @@ public class WorkFlowBuessRole
 		}
 
 
-		titleRole = titleRole.replace("@WebUser.getNo()", emp.No);
-		titleRole = titleRole.replace("@WebUser.getName()", emp.Name);
-		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
-		titleRole = titleRole.replace("@WebUser.getFK_DeptName", emp.FK_DeptText);
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()", emp.FK_Dept);
+		titleRole = titleRole.replace("WebUser.No", emp.getNo());
+		titleRole = titleRole.replace("@WebUser.Name", emp.getName());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", emp.getFK_DeptText());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", emp.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", rdt);
 		if (titleRole.contains("@") == true)
 		{
@@ -67,11 +78,11 @@ public class WorkFlowBuessRole
 				{
 					break;
 				}
-				if (attr.IsRefAttr == false)
+				if (attr.getIsRefAttr() == false)
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
+				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -81,11 +92,11 @@ public class WorkFlowBuessRole
 				{
 					break;
 				}
-				if (attr.IsRefAttr == true)
+				if (attr.getIsRefAttr() == true)
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
+				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 			}
 		}
 		titleRole = titleRole.replace('~', '-');
@@ -110,10 +121,11 @@ public class WorkFlowBuessRole
 	 
 	 @param wk
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String GenerTitle(Flow fl, Work wk)
+	public static String GenerTitle(Flow fl, Work wk) throws Exception
 	{
-		Object tempVar = fl.getTitleRole().Clone();
+		Object tempVar = fl.getTitleRole();
 		String titleRole = tempVar instanceof String ? (String)tempVar : null;
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
@@ -126,7 +138,7 @@ public class WorkFlowBuessRole
 
 			if (myattr != null)
 			{
-				titleRole = myattr.DefaultVal.toString();
+				titleRole = myattr.getDefaultVal().toString();
 			}
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
@@ -140,11 +152,11 @@ public class WorkFlowBuessRole
 			titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
 		}
 
-		titleRole = titleRole.replace("@WebUser.getNo()", wk.getRec());
-		titleRole = titleRole.replace("@WebUser.getName()", wk.getRecText());
-		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
-		titleRole = titleRole.replace("@WebUser.getFK_DeptName", wk.getRecOfEmp().FK_DeptText);
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()", wk.getRecOfEmp().FK_Dept);
+		titleRole = titleRole.replace("WebUser.No", wk.getRec());
+		titleRole = titleRole.replace("@WebUser.Name", wk.getRecText());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", wk.getRecOfEmp().getFK_DeptText());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", wk.getRecOfEmp().getFK_Dept());
 		titleRole = titleRole.replace("@RDT", wk.getRDT());
 
 		if (titleRole.contains("@"))
@@ -158,21 +170,14 @@ public class WorkFlowBuessRole
 				{
 					break;
 				}
-				if (attr.IsRefAttr == false)
+				if (attr.getIsRefAttr() == false)
 				{
 					continue;
 				}
 
 				String temp = wk.GetValStrByKey(attr.getKey());
-				if (DataType.IsNullOrEmpty(temp))
-				{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-///#warning 为什么，加这个代码？牺牲了很多效率，我注销了. by zhoupeng 2016.8.15
-					//  wk.DirectUpdate();
-					// wk.RetrieveFromDBSources();
-				}
-
-				titleRole = titleRole.replace("@" + attr.Key, temp);
+				
+				titleRole = titleRole.replace("@" + attr.getKey(), temp);
 			}
 
 			//在考虑其它的字段替换.
@@ -183,11 +188,11 @@ public class WorkFlowBuessRole
 					break;
 				}
 
-				if (attr.IsRefAttr == true)
+				if (attr.getIsRefAttr() == true)
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
+				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 			}
 		}
 		titleRole = titleRole.replace('~', '-');
@@ -209,10 +214,11 @@ public class WorkFlowBuessRole
 	 @param fl
 	 @param wk
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String GenerTitle(Flow fl, GERpt wk)
+	public static String GenerTitle(Flow fl, GERpt wk) throws Exception
 	{
-		Object tempVar = fl.getTitleRole().Clone();
+		Object tempVar = fl.getTitleRole();
 		String titleRole = tempVar instanceof String ? (String)tempVar : null;
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
@@ -225,7 +231,7 @@ public class WorkFlowBuessRole
 
 			if (myattr != null)
 			{
-				titleRole = myattr.DefaultVal.toString();
+				titleRole = myattr.getDefaultVal().toString();
 			}
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
@@ -242,8 +248,8 @@ public class WorkFlowBuessRole
 
 		titleRole = titleRole.replace("@WebUser.getNo()", wk.getFlowStarter());
 		titleRole = titleRole.replace("@WebUser.getName()", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
-		titleRole = titleRole.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
+		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
 		titleRole = titleRole.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", wk.getFlowStartRDT());
 		if (titleRole.contains("@"))
@@ -257,11 +263,11 @@ public class WorkFlowBuessRole
 				{
 					break;
 				}
-				if (attr.IsRefAttr == false)
+				if (attr.getIsRefAttr() == false)
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
+				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -272,11 +278,11 @@ public class WorkFlowBuessRole
 					break;
 				}
 
-				if (attr.IsRefAttr == true)
+				if (attr.getIsRefAttr() == true)
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, wk.GetValStrByKey(attr.getKey()));
+				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 			}
 		}
 		titleRole = titleRole.replace('~', '-');
@@ -284,7 +290,7 @@ public class WorkFlowBuessRole
 
 		if (titleRole.contains("@"))
 		{
-			titleRole = GenerTitleExt(fl, Integer.parseInt(fl.No + "01"), wk.getOID(), titleRole);
+			titleRole = GenerTitleExt(fl, Integer.parseInt(fl.getNo() + "01"), wk.getOID(), titleRole);
 		}
 
 		// 为当前的工作设置title.
@@ -297,17 +303,18 @@ public class WorkFlowBuessRole
 	 @param fl 流程
 	 @param workid 工作ID
 	 @return 返回生成的标题
+	 * @throws Exception 
 	*/
-	private static String GenerTitleExt(Flow fl, int nodeId, long workid, String titleRole)
+	private static String GenerTitleExt(Flow fl, int nodeId, long workid, String titleRole) throws Exception
 	{
-		FrmNodes nds = new FrmNodes(fl.No, nodeId);
-		for (FrmNode item : nds)
+		FrmNodes nds = new FrmNodes(fl.getNo(), nodeId);
+		for (FrmNode item : nds.ToJavaList())
 		{
 			GEEntity en = null;
 			try
 			{
 				en = new GEEntity(item.getFK_Frm());
-				en.PKVal = workid;
+				en.setPKVal(workid);
 				if (en.RetrieveFromDBSources() == 0)
 				{
 					continue;
@@ -326,11 +333,11 @@ public class WorkFlowBuessRole
 				{
 					break;
 				}
-				if (attr.IsRefAttr == false)
+				if (attr.getIsRefAttr() == false)
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
+				titleRole = titleRole.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -341,11 +348,11 @@ public class WorkFlowBuessRole
 					break;
 				}
 
-				if (attr.IsRefAttr == true)
+				if (attr.getIsRefAttr() == true)
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
+				titleRole = titleRole.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
 			}
 
 			//如果全部已经替换完成.
@@ -356,10 +363,10 @@ public class WorkFlowBuessRole
 		}
 		return titleRole;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 生成标题的方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 产生单据编号
 	/** 
 	 产生单据编号
@@ -367,8 +374,9 @@ public class WorkFlowBuessRole
 	 @param billFormat
 	 @param en
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String GenerBillNo(String billNo, long workid, Entity en, String flowPTable)
+	public static String GenerBillNo(String billNo, long workid, Entity en, String flowPTable) throws Exception
 	{
 		if (DataType.IsNullOrEmpty(billNo))
 		{
@@ -381,23 +389,24 @@ public class WorkFlowBuessRole
 		}
 
 		/*如果，Bill 有规则 */
-		billNo = billNo.replace("{YYYY}", LocalDateTime.now().toString("yyyy"));
-		billNo = billNo.replace("{yyyy}", LocalDateTime.now().toString("yyyy"));
+		billNo = billNo.replace("{YYYY}", DateUtils.format(new Date(), "yyyy"));
+		billNo = billNo.replace("{yyyy}", DateUtils.format(new Date(), "yyyy"));
 
-		billNo = billNo.replace("{yy}", LocalDateTime.now().toString("yy"));
-		billNo = billNo.replace("{YY}", LocalDateTime.now().toString("yy"));
+		billNo = billNo.replace("{yy}", DateUtils.format(new Date(), "yy"));
+		billNo = billNo.replace("{YY}", DateUtils.format(new Date(), "yy"));
 
-		billNo = billNo.replace("{MM}", LocalDateTime.now().toString("MM"));
-		billNo = billNo.replace("{mm}", LocalDateTime.now().toString("MM"));
+		billNo = billNo.replace("{MM}", DateUtils.format(new Date(), "MM"));
+		billNo = billNo.replace("{mm}", DateUtils.format(new Date(), "mm"));
 
-		billNo = billNo.replace("{DD}", String.format("%d", LocalDateTime.now()));
-		billNo = billNo.replace("{dd}", String.format("%d", LocalDateTime.now()));
-		billNo = billNo.replace("{HH}", LocalDateTime.now().toString("HH"));
-		billNo = billNo.replace("{hh}", LocalDateTime.now().toString("HH"));
+		billNo = billNo.replace("{DD}",DateUtils.format(new Date(), "dd"));
+		billNo = billNo.replace("{dd}",DateUtils.format(new Date(), "dd"));
+		
+		billNo = billNo.replace("{HH}", DateUtils.format(new Date(), "HH"));
+		billNo = billNo.replace("{hh}", DateUtils.format(new Date(), "HH"));
 
-		billNo = billNo.replace("{LSH}", String.valueOf(workid));
-		billNo = billNo.replace("{WorkID}", String.valueOf(workid));
-		billNo = billNo.replace("{OID}", String.valueOf(workid));
+		billNo = billNo.replace("{LSH}", (new Long(workid)).toString());
+		billNo = billNo.replace("{WorkID}", (new Long(workid)).toString());
+		billNo = billNo.replace("{OID}", (new Long(workid)).toString());
 
 		if (billNo.contains("@WebUser.DeptZi"))
 		{
@@ -422,7 +431,7 @@ public class WorkFlowBuessRole
 
 				sql = "SELECT COUNT(OID) FROM " + flowPTable + " WHERE PWorkID =" + pWorkID + " AND WFState >1 ";
 				num = BP.DA.DBAccess.RunSQLReturnValInt(sql, 0);
-				billNo = billNo + tangible.StringHelper.padLeft(String.valueOf(num), i, '0');
+				billNo = billNo + StringHelper.padLeft(String.valueOf(num), i, '0');
 				billNo = billNo.replace("{LSH" + i + "}", "");
 				break;
 			}
@@ -432,10 +441,10 @@ public class WorkFlowBuessRole
 			String sql = "";
 			int num = 0;
 			String supposeBillNo = billNo; //假设单据号，长度与真实单据号一致
-			ArrayList<Map.Entry<Integer, Integer>> loc = new ArrayList<Map.Entry<Integer, Integer>>(); //流水号位置，流水号位数
+			ArrayList<Entry<Integer, Integer>> loc = new ArrayList<Entry<Integer, Integer>>(); //流水号位置，流水号位数
 			String lsh; //流水号设置码
 			int lshIdx = -1; //流水号设置码所在位置
-
+			Map<Integer, Integer>  map = new HashMap<Integer, Integer>();
 			for (int i = 2; i < 9; i++)
 			{
 				lsh = "{LSH" + i + "}";
@@ -450,10 +459,16 @@ public class WorkFlowBuessRole
 					//查找流水号所在位置
 					lshIdx = supposeBillNo.indexOf(lsh);
 					//将找到的流水号码替换成假设的流水号
-					supposeBillNo = (lshIdx == 0 ? "" : supposeBillNo.substring(0, lshIdx)) + tangible.StringHelper.padLeft("", i, '_') + (lshIdx + 6 < supposeBillNo.length() ? supposeBillNo.substring(lshIdx + 6) : "");
+					supposeBillNo = (lshIdx == 0 ? "" : supposeBillNo.substring(0, lshIdx)) + StringHelper.padLeft("", i, '_') + (lshIdx + 6 < supposeBillNo.length() ? supposeBillNo.substring(lshIdx + 6) : "");
 					//保存当前流程号所处位置，及流程号长度，以便之后使用替换成正确的流水号
-					loc.add(new Map.Entry<Integer, Integer>(lshIdx, i));
+					map.put(lshIdx, i);
 				}
+			}
+			
+			Iterator<Entry<Integer, Integer>> iterator = map.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry<Integer, Integer> entry = iterator.next();
+				loc.add(entry);
 			}
 
 			//数据库中查找符合的单据号集合,NOTE:此处需要注意，在LIKE中带有左广方括号时，要使用一对广播号将其转义
@@ -465,9 +480,9 @@ public class WorkFlowBuessRole
 			if (DataType.IsNullOrEmpty(maxBillNo))
 			{
 				//没有数据，则所有流水号都从1开始
-				for (Map.Entry<Integer, Integer> kv : loc.entrySet())
+				for (java.util.Map.Entry<Integer, Integer> kv : loc)
 				{
-					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + tangible.StringHelper.padLeft("1", kv.getValue(), '0') + (kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
+					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + StringHelper.padLeft("1", kv.getValue(), '0') + (kv.getKey() + kv.getValue() + 1 < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
 				}
 			}
 			else
@@ -479,7 +494,7 @@ public class WorkFlowBuessRole
 				for (int i = loc.size() - 1; i >= 0; i--)
 				{
 					//获取单据号中当前位的流水码数
-					ilsh = Integer.parseInt(tangible.StringHelper.substring(maxBillNo, loc.get(i).getKey(), loc.get(i).getValue()));
+					ilsh = Integer.parseInt(StringHelper.substring(maxBillNo, loc.get(i).getKey(), loc.get(i).getValue()));
 
 					if (plus1idx >= 0)
 					{
@@ -493,7 +508,7 @@ public class WorkFlowBuessRole
 						continue;
 					}
 
-					if (ilsh >= Integer.parseInt(tangible.StringHelper.padLeft("", loc.get(i).getValue(), '9')))
+					if (ilsh >= Integer.parseInt(StringHelper.padLeft("", loc.get(i).getValue(), '9')))
 					{
 						//右侧已经达到最大值
 						if (i > 0)
@@ -522,9 +537,9 @@ public class WorkFlowBuessRole
 				}
 
 				//拼接单据号
-				for (Map.Entry<Integer, Integer> kv : loc.entrySet())
+				for (java.util.Map.Entry<Integer, Integer> kv : loc)
 				{
-					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + tangible.StringHelper.padLeft(mlsh.get(kv.getKey()).toString(), kv.getValue(), '0') + (kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
+					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + StringHelper.padLeft(mlsh.get(kv.getKey()).toString(), kv.getValue(), '0') + (kv.getKey() + kv.getValue() + 1 < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
 				}
 			}
 
@@ -533,10 +548,10 @@ public class WorkFlowBuessRole
 
 		return billNo;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 产生单据编号
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获得下一个节点.
 	/** 
 	 获得下一个节点
@@ -546,20 +561,19 @@ public class WorkFlowBuessRole
 	 @param currWorkFlow 当前的工作主表信息
 	 @param enPara 参数
 	 @return 返回找到的节点
+	 * @throws Exception 
 	*/
 
-	public static Node RequestNextNode(Node currNode, long workid, GenerWorkFlow currWorkFlow)
+	public static Node RequestNextNode(Node currNode, long workid, GenerWorkFlow currWorkFlow) throws Exception
 	{
 		return RequestNextNode(currNode, workid, currWorkFlow, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static Node RequestNextNode(Node currNode, Int64 workid, GenerWorkFlow currWorkFlow, GERpt enPara = null)
-	public static Node RequestNextNode(Node currNode, long workid, GenerWorkFlow currWorkFlow, GERpt enPara)
+	public static Node RequestNextNode(Node currNode, long workid, GenerWorkFlow currWorkFlow, GERpt enPara) throws Exception
 	{
 		if (currNode.getHisToNodes().size() == 1)
 		{
-			return (Node)currNode.getHisToNodes()[0];
+			return (Node)currNode.getHisToNodes().get(0);
 		}
 
 		// 判断是否有用户选择的节点。
@@ -601,7 +615,7 @@ public class WorkFlowBuessRole
 		Nodes nds = currNode.getHisToNodes();
 		if (nds.size() == 1)
 		{
-			Node toND = (Node)nds[0];
+			Node toND = (Node)nds.get(0);
 			return toND;
 		}
 		if (nds.size() == 0)
@@ -616,7 +630,7 @@ public class WorkFlowBuessRole
 			throw new RuntimeException("@没有为节点(" + currNode.getNodeID() + " , " + currNode.getName() + ")设置方向条件,有分支的地方必须有方向条件.");
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 		Nodes myNodes = new Nodes();
 		int toNodeId = 0;
@@ -624,7 +638,7 @@ public class WorkFlowBuessRole
 		for (Node nd : nds.ToJavaList())
 		{
 			Conds dcs = new Conds();
-			for (Cond dc : dcsAll)
+			for (Cond dc : dcsAll.ToJavaList())
 			{
 				if (dc.getToNodeID() != nd.getNodeID())
 				{
@@ -654,7 +668,7 @@ public class WorkFlowBuessRole
 				myNodes.AddEntity(nd);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 
 		// 如果没有找到,就找到没有设置方向条件的节点,没有设置方向条件的节点是默认同意的.
@@ -663,7 +677,7 @@ public class WorkFlowBuessRole
 			for (Node nd : nds.ToJavaList())
 			{
 				Conds dcs = new Conds();
-				for (Cond dc : dcsAll)
+				for (Cond dc : dcsAll.ToJavaList())
 				{
 					if (dc.getToNodeID() != nd.getNodeID())
 					{
@@ -687,14 +701,14 @@ public class WorkFlowBuessRole
 		//如果找到1个.
 		if (myNodes.size() == 1)
 		{
-			Node toND = myNodes[0] instanceof Node ? (Node)myNodes[0] : null;
+			Node toND = myNodes.get(0) instanceof Node ? (Node)myNodes.get(0) : null;
 			return toND;
 		}
 
 		//如果找到了多个.
-		for (Cond dc : dcsAll)
+		for (Cond dc : dcsAll.ToJavaList())
 		{
-			for (Node myND : myNodes)
+			for (Node myND : myNodes.ToJavaList())
 			{
 				if (dc.getToNodeID() == myND.getNodeID())
 				{
@@ -705,10 +719,10 @@ public class WorkFlowBuessRole
 
 		throw new RuntimeException("@找到下一步节点.");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 找到下一个节点的接受人员
 	/** 
 	 找到下一个节点的接受人员
@@ -747,12 +761,12 @@ public class WorkFlowBuessRole
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeEmp)
 		{
 			DataRow dr = dt.NewRow();
-			dr.set(0, WebUser.getNo());
+			dr.setValue(0, WebUser.getNo());
 			dt.Rows.add(dr);
 			return dt;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 首先判断是否配置了获取下一步接受人员的sql.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySQL || toNode.getHisDeliveryWay() == DeliveryWay.BySQLTemplate || toNode.getHisDeliveryWay() == DeliveryWay.BySQLAsSubThreadEmpsAndData)
 		{
@@ -768,7 +782,7 @@ public class WorkFlowBuessRole
 					throw new RuntimeException("@您设置的当前节点按照SQL，决定下一步的接受人员，但是你没有设置SQL.");
 				}
 				sql = toNode.getDeliveryParas();
-				sql = sql.Clone().toString();
+				sql = sql.toString();
 			}
 
 			//特殊的变量.
@@ -780,9 +794,11 @@ public class WorkFlowBuessRole
 			{
 				if (Glo.getSendHTOfTemp() != null)
 				{
-					for (String key : Glo.getSendHTOfTemp().keySet())
+					for (Object key : Glo.getSendHTOfTemp().keySet())
 					{
-						sql = sql.replace("@" + key, Glo.getSendHTOfTemp().get(key).toString());
+						if(key == null)
+							continue;
+						sql = sql.replace("@" + key.toString(), Glo.getSendHTOfTemp().get(key).toString());
 					}
 				}
 			}
@@ -794,13 +810,13 @@ public class WorkFlowBuessRole
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 首先判断是否配置了获取下一步接受人员的sql.
 
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按绑定部门计算,该部门一人处理标识该工作结束(子线程)..
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySetDeptAsSubthread)
 		{
@@ -817,10 +833,10 @@ public class WorkFlowBuessRole
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按绑定部门计算,该部门一人处理标识该工作结束(子线程)..
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照明细表,作为子线程的接收人.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDtlAsSubThreadEmps)
 		{
@@ -862,10 +878,10 @@ public class WorkFlowBuessRole
 			}
 			throw new RuntimeException("@没有找到分流节点的明细表作为子线程的发起的数据源，流程设计错误，请确认分流节点表单中的明细表是否有UserNo约定的系统字段。" + msg);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照明细表,作为子线程的接收人.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按节点绑定的人员处理.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByBindEmp)
 		{
@@ -879,10 +895,10 @@ public class WorkFlowBuessRole
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按节点绑定的人员处理.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照选择的人员处理。
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySelected || toNode.getHisDeliveryWay() == DeliveryWay.ByFEE)
 		{
@@ -916,20 +932,20 @@ public class WorkFlowBuessRole
 				}
 
 				//插入里面.
-				for (SelectAccper item : sas)
+				for (SelectAccper item : sas.ToJavaList())
 				{
 					DataRow dr = dt.NewRow();
-					dr.set(0, item.getFK_Emp());
+					dr.setValue(0, item.getFK_Emp());
 					dt.Rows.add(dr);
 				}
 				return dt;
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照选择的人员处理。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照指定节点的处理人计算。
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySpecNodeEmp || toNode.getHisDeliveryWay() == DeliveryWay.ByStarter)
 		{
@@ -938,7 +954,7 @@ public class WorkFlowBuessRole
 			if (toNode.getHisDeliveryWay() == DeliveryWay.ByStarter)
 			{
 				/*找开始节点的处理人员. */
-				strs = Integer.parseInt(fl.No) + "01";
+				strs = Integer.parseInt(fl.getNo()) + "01";
 				ps = new Paras();
 				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
 				ps.Add("FK_Node", Integer.parseInt(strs));
@@ -952,7 +968,7 @@ public class WorkFlowBuessRole
 				{
 					/* 有可能当前节点就是第一个节点，那个时间还没有初始化数据，就返回当前人. */
 					DataRow dr = dt.NewRow();
-					dr.set(0, WebUser.getNo());
+					dr.setValue(0, WebUser.getNo());
 					dt.Rows.add(dr);
 					return dt;
 				}
@@ -961,7 +977,7 @@ public class WorkFlowBuessRole
 			// 首先从本流程里去找。
 			strs = strs.replace(";", ",");
 			String[] nds = strs.split("[,]", -1);
-			for (String nd : nds.ToJavaList())
+			for (String nd : nds)
 			{
 				if (DataType.IsNullOrEmpty(nd))
 				{
@@ -992,7 +1008,7 @@ public class WorkFlowBuessRole
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.set(0, row.get(0).toString());
+						dr.setValue(0, row.get(0).toString());
 						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
@@ -1001,7 +1017,7 @@ public class WorkFlowBuessRole
 
 				//就要到轨迹表里查,因为有可能是跳过的节点.
 				ps = new Paras();
-				ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.No) + "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr + "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr + "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr + "NDFrom AND WorkID=" + dbStr + "WorkID";
+				ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.getNo()) + "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr + "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr + "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr + "NDFrom AND WorkID=" + dbStr + "WorkID";
 				ps.Add("ActionType1", ActionType.Skip.getValue());
 				ps.Add("ActionType2", ActionType.Forward.getValue());
 				ps.Add("ActionType3", ActionType.ForwardFL.getValue());
@@ -1016,7 +1032,7 @@ public class WorkFlowBuessRole
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.set(0, row.get(0).toString());
+						dr.setValue(0, row.get(0).toString());
 						dt.Rows.add(dr);
 					}
 				}
@@ -1057,7 +1073,7 @@ public class WorkFlowBuessRole
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.set(0, row.get(0).toString());
+							dr.setValue(0, row.get(0).toString());
 							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
@@ -1066,7 +1082,7 @@ public class WorkFlowBuessRole
 
 					//就要到轨迹表里查,因为有可能是跳过的节点.
 					ps = new Paras();
-					ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.No) + "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr + "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr + "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr + "NDFrom AND WorkID=" + dbStr + "WorkID";
+					ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.getNo()) + "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr + "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr + "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr + "NDFrom AND WorkID=" + dbStr + "WorkID";
 					ps.Add("ActionType1", ActionType.Start.getValue());
 					ps.Add("ActionType2", ActionType.Forward.getValue());
 					ps.Add("ActionType3", ActionType.ForwardFL.getValue());
@@ -1089,7 +1105,7 @@ public class WorkFlowBuessRole
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.set(0, row.get(0).toString());
+							dr.setValue(0, row.get(0).toString());
 							dt.Rows.add(dr);
 						}
 					}
@@ -1101,12 +1117,12 @@ public class WorkFlowBuessRole
 				return dt;
 			}
 
-			throw new RuntimeException("@流程设计错误，到达的节点（" + toNode.getName() + "）在指定的节点(" + strs + ")中没有数据，无法找到工作的人员。 @技术信息如下: 投递方式:BySpecNodeEmp sql=" + ps.SQLNoPara);
+			throw new RuntimeException("@流程设计错误，到达的节点（" + toNode.getName() + "）在指定的节点(" + strs + ")中没有数据，无法找到工作的人员。 @技术信息如下: 投递方式:BySpecNodeEmp sql=" + ps.getSQLNoPara());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照节点绑定的人员处理。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照上一个节点表单指定字段的人员处理。
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormEmpsField)
 		{
@@ -1138,7 +1154,7 @@ public class WorkFlowBuessRole
 
 					String[] ss = str.split("[,]", -1);
 					DataRow dr = dt.NewRow();
-					dr.set(0, ss[0]);
+					dr.setValue(0, ss[0]);
 					dt.Rows.add(dr);
 				}
 				if (dt.Rows.size() == 0)
@@ -1159,7 +1175,7 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(emps))
 			{
-				throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).Desc + "]中指定接受人，工作无法向下发送。");
+				throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人，工作无法向下发送。");
 			}
 
 			// 把它加入接受人员列表中.
@@ -1171,19 +1187,16 @@ public class WorkFlowBuessRole
 					continue;
 				}
 
-				//if (BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(NO) AS NUM FROM Port_Emp WHERE NO='" + s + "' or name='"+s+"'", 0) == 0)
-				//    continue;
-
 				DataRow dr = dt.NewRow();
-				dr.set(0, s);
+				dr.setValue(0, s);
 				dt.Rows.add(dr);
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照上一个节点表单指定字段的人员处理。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获得项目编号.
 		String prjNo = "";
 		FlowAppType flowAppType = currNode.getHisFlow().getHisFlowAppType();
@@ -1200,10 +1213,10 @@ public class WorkFlowBuessRole
 				throw new RuntimeException("@当前流程是工程类流程，但是在节点表单中没有PrjNo字段(注意区分大小写)，请确认。@异常信息:" + ex.getMessage());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获得项目编号.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按部门与岗位的交集计算.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 		{
@@ -1226,10 +1239,10 @@ public class WorkFlowBuessRole
 				throw new RuntimeException("@节点访问规则(" + toNode.getHisDeliveryWay().toString() + ")错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按部门与岗位的交集计算.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断节点部门里面是否设置了部门，如果设置了就按照它的部门处理。
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDept)
 		{
@@ -1312,10 +1325,10 @@ public class WorkFlowBuessRole
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断节点部门里面是否设置了部门，如果设置了，就按照它的部门处理。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 仅按岗位计算
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByStationOnly)
 		{
@@ -1330,13 +1343,13 @@ public class WorkFlowBuessRole
 			}
 			else
 			{
-				throw new RuntimeException("@节点访问规则错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 仅按岗位计算，没有找到人员:SQL=" + ps.SQLNoPara);
+				throw new RuntimeException("@节点访问规则错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 仅按岗位计算，没有找到人员:SQL=" + ps.getSQLNoPara());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按岗位计算(以部门集合为纬度).
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept)
 		{
@@ -1355,16 +1368,16 @@ public class WorkFlowBuessRole
 			}
 			else
 			{
-				throw new RuntimeException("@节点访问规则(" + toNode.getHisDeliveryWay().toString() + ")错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 按岗位计算(以部门集合为纬度)。技术信息,执行的SQL=" + ps.SQLNoPara);
+				throw new RuntimeException("@节点访问规则(" + toNode.getHisDeliveryWay().toString() + ")错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 按岗位计算(以部门集合为纬度)。技术信息,执行的SQL=" + ps.getSQLNoPara());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		String empNo = WebUser.getNo();
 		String empDept = WebUser.getFK_Dept();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按指定的节点的人员岗位，做为下一步骤的流程接受人。
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySpecNodeEmpStation)
 		{
@@ -1386,11 +1399,11 @@ public class WorkFlowBuessRole
 				}
 
 				empNo = dt.Rows.get(0).getValue(0).toString();
-				empDept = dt.Rows[0][1].toString();
+				empDept = dt.Rows.get(0).getValue(1).toString();
 			}
 			else
 			{
-				if (enParas.Row.ContainsKey(para) == false)
+				if (enParas.getRow().containsKey(para) == false)
 				{
 					throw new RuntimeException("@在找人接收人的时候错误@字段{" + para + "}不包含在rpt里，流程设计错误。");
 				}
@@ -1402,13 +1415,13 @@ public class WorkFlowBuessRole
 				}
 
 				BP.Port.Emp em = new BP.Port.Emp(empNo);
-				empDept = em.FK_Dept;
+				empDept = em.getFK_Dept();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按指定的节点人员，做为下一步骤的流程接受人。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 最后判断 - 按照岗位来执行。
 		if (currNode.getIsStartNode() == false)
 		{
@@ -1477,7 +1490,7 @@ public class WorkFlowBuessRole
 		{
 			/* 说明，就把当前人员做为下一个节点处理人。*/
 			DataRow dr = dt.NewRow();
-			dr.set(0, WebUser.getNo());
+			dr.setValue(0, WebUser.getNo());
 			dt.Rows.add(dr);
 			return dt;
 		}
@@ -1488,7 +1501,7 @@ public class WorkFlowBuessRole
 			/* 没有查询到的情况下, 先按照本部门计算。*/
 			if (flowAppType == FlowAppType.Normal)
 			{
-				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.Database)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 				{
 						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B  WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
 					ps = new Paras();
@@ -1497,11 +1510,11 @@ public class WorkFlowBuessRole
 					ps.Add("FK_Dept", empDept);
 				}
 
-				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.WebServices)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + toNode.getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 					var ws = DataType.GetPortalInterfaceSoapClientInstance();
 					return ws.GenerEmpsBySpecDeptAndStats(empDept, stas);
 				}
@@ -1574,11 +1587,6 @@ public class WorkFlowBuessRole
 						isInit = true;
 					}
 				}
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-///#warning edit by peng, 用来确定不同岗位集合的传递包含同一个人的处理方式。
-
-				//  if (isInit == false || isInit == true)
 				return dt;
 			}
 		}
@@ -1589,7 +1597,7 @@ public class WorkFlowBuessRole
 		/* 没有查询到的情况下, 按照最大匹配数 提高一个级别计算，递归算法未完成。
 		 * 因为:以上已经做的岗位的判断，就没有必要在判断其它类型的节点处理了。
 		 * */
-		Object tempVar = empDept.Clone();
+		Object tempVar = empDept;
 		String nowDeptID = tempVar instanceof String ? (String)tempVar : null;
 		while (true)
 		{
@@ -1607,14 +1615,14 @@ public class WorkFlowBuessRole
 			{
 				/*如果父亲级没有，就找父级的平级. */
 				BP.Port.Depts myDepts = new BP.Port.Depts();
-				myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.ParentNo);
-				for (BP.Port.Dept item : myDepts)
+				myDepts.Retrieve(BP.Port.DeptAttr.ParentNo, myDept.getParentNo());
+				for (BP.Port.Dept item : myDepts.ToJavaList())
 				{
-					if (nowDeptID.equals(item.No))
+					if (nowDeptID.equals(item.getNo()))
 					{
 						continue;
 					}
-					mydtTemp = RequetNextNodeWorkers_DiGui(item.No, empNo, toNode);
+					mydtTemp = RequetNextNodeWorkers_DiGui(item.getNo(), empNo, toNode);
 					if (mydtTemp == null)
 					{
 						continue;
@@ -1634,7 +1642,7 @@ public class WorkFlowBuessRole
 		}
 
 		/*如果向上找没有找到，就考虑从本级部门上向下找。 */
-		Object tempVar2 = empDept.Clone();
+		Object tempVar2 = empDept;
 		nowDeptID = tempVar2 instanceof String ? (String)tempVar2 : null;
 		BP.Port.Depts subDepts = new BP.Port.Depts(nowDeptID);
 
@@ -1645,7 +1653,7 @@ public class WorkFlowBuessRole
 			throw new RuntimeException("@按岗位计算没有找到(" + toNode.getName() + ")接受人.");
 		}
 		return mydt123;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  按照岗位来执行。
 	}
 	/** 
@@ -1654,18 +1662,19 @@ public class WorkFlowBuessRole
 	 @param subDepts
 	 @param empNo
 	 @return 
+	 * @throws Exception 
 	*/
-	private static DataTable RequetNextNodeWorkers_DiGui_ByDepts(BP.Port.Depts subDepts, String empNo, Node toNode)
+	private static DataTable RequetNextNodeWorkers_DiGui_ByDepts(BP.Port.Depts subDepts, String empNo, Node toNode) throws Exception
 	{
-		for (BP.Port.Dept item : subDepts)
+		for (BP.Port.Dept item : subDepts.ToJavaList())
 		{
-			DataTable dt = RequetNextNodeWorkers_DiGui(item.No, empNo, toNode);
+			DataTable dt = RequetNextNodeWorkers_DiGui(item.getNo(), empNo, toNode);
 			if (dt != null)
 			{
 				return dt;
 			}
 
-			dt = RequetNextNodeWorkers_DiGui_ByDepts(item.HisSubDepts, empNo, toNode);
+			dt = RequetNextNodeWorkers_DiGui_ByDepts(item.getHisSubDepts(), empNo, toNode);
 			if (dt != null)
 			{
 				return dt;
@@ -1679,8 +1688,9 @@ public class WorkFlowBuessRole
 	 @param deptNo
 	 @param emp1
 	 @return 
+	 * @throws Exception 
 	*/
-	private static DataTable RequetNextNodeWorkers_DiGui(String deptNo, String empNo, Node toNode)
+	private static DataTable RequetNextNodeWorkers_DiGui(String deptNo, String empNo, Node toNode) throws Exception
 	{
 		String sql;
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -1712,7 +1722,7 @@ public class WorkFlowBuessRole
 			else
 			{
 				BP.Port.Dept deptP = new BP.Port.Dept(deptNo);
-				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp AND FK_Dept = '" + deptP.ParentNo + "')";
+				sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE No!=" + dbStr + "FK_Emp AND FK_Dept = '" + deptP.getParentNo() + "')";
 			}
 
 			ps = new Paras();
@@ -1731,12 +1741,11 @@ public class WorkFlowBuessRole
 		{
 			return dt;
 		}
-		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 找到下一个节点的接受人员
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行抄送.
 	/** 
 	 执行抄送.
@@ -1744,8 +1753,9 @@ public class WorkFlowBuessRole
 	 @param rpt
 	 @param workid
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String DoCCAuto(Node node, GERpt rpt, long workid, long fid)
+	public static String DoCCAuto(Node node, GERpt rpt, long workid, long fid) throws Exception
 	{
 
 			if (node.getHisCCRole() == CCRole.AutoCC || node.getHisCCRole() == CCRole.HandAndAuto)
@@ -1777,11 +1787,11 @@ public class WorkFlowBuessRole
 			String toUserName = dr.get(1).toString();
 
 			//生成标题与内容.
-			Object tempVar = ccEn.getCCTitle().Clone();
+			Object tempVar = ccEn.getCCTitle();
 			String ccTitle = tempVar instanceof String ? (String)tempVar : null;
 			ccTitle = BP.WF.Glo.DealExp(ccTitle, rpt, null);
 
-			Object tempVar2 = ccEn.getCCDoc().Clone();
+			Object tempVar2 = ccEn.getCCDoc();
 			String ccDoc = tempVar2 instanceof String ? (String)tempVar2 : null;
 			ccDoc = BP.WF.Glo.DealExp(ccDoc, rpt, null);
 
@@ -1791,7 +1801,7 @@ public class WorkFlowBuessRole
 			//抄送信息.
 			ccMsg += "(" + toUserNo + " - " + toUserName + ");";
 			CCList list = new CCList();
-			list.setMyPK( workid + "_" + node.getNodeID() + "_" + dr.get(0).toString();
+			list.setMyPK( workid + "_" + node.getNodeID() + "_" + dr.get(0).toString());
 			list.setFK_Flow(node.getFK_Flow());
 			list.setFlowName(node.getFlowName());
 			list.setFK_Node(node.getNodeID());
@@ -1838,7 +1848,7 @@ public class WorkFlowBuessRole
 				//     string sid = list.CCTo + "_" + list.WorkID + "_" + list.FK_Node + "_" + list.RDT;
 				//     string url = basePath + "WF/Do.aspx?DoType=OF&SID=" + sid;
 				//     string urlWap = basePath + "WF/Do.aspx?DoType=OF&SID=" + sid + "&IsWap=1";
-				//     string mytemp = mailTemp.Clone() as string;
+				//     string mytemp = mailTemp as string;
 				//     mytemp = string.Format(mytemp, wfemp.Name, WebUser.getName(), url, urlWap);
 				//     string title = string.Format("工作抄送:{0}.工作:{1},发送人:{2},需您查阅",
 				//this.HisNode.FlowName, this.HisNode.Name, WebUser.getName());
@@ -1859,8 +1869,9 @@ public class WorkFlowBuessRole
 	 @param workid
 	 @param fid
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String DoCCByEmps(Node nd, GERpt rptGE, long workid, long fid)
+	public static String DoCCByEmps(Node nd, GERpt rptGE, long workid, long fid) throws Exception
 	{
 		if (nd.getHisCCRole() != CCRole.BySysCCEmps)
 		{
@@ -1870,11 +1881,11 @@ public class WorkFlowBuessRole
 		CC cc = nd.getHisCC();
 
 		//生成标题与内容.
-		Object tempVar = cc.getCCTitle().Clone();
+		Object tempVar = cc.getCCTitle();
 		String ccTitle = tempVar instanceof String ? (String)tempVar : null;
 		ccTitle = BP.WF.Glo.DealExp(ccTitle, rptGE, null);
 
-		Object tempVar2 = cc.getCCDoc().Clone();
+		Object tempVar2 = cc.getCCDoc();
 		String ccDoc = tempVar2 instanceof String ? (String)tempVar2 : null;
 		ccDoc = BP.WF.Glo.DealExp(ccDoc, rptGE, null);
 
@@ -1895,26 +1906,26 @@ public class WorkFlowBuessRole
 		String ccMsg = "@消息自动抄送给";
 		String basePath = BP.WF.Glo.getHostURL();
 
-		String mailTemp = BP.DA.DataType.ReadTextFile2Html(BP.Sys.SystemConfig.PathOfDataUser + "\\EmailTemplete\\CC_" + WebUser.SysLang + ".txt");
-		for (Map.Entry item : ht.entrySet())
+		String mailTemp = BP.DA.DataType.ReadTextFile2Html(BP.Sys.SystemConfig.getPathOfDataUser() + "/EmailTemplete/CC_" + WebUser.getSysLang() + ".txt");
+		for (Object item : ht.keySet())
 		{
-			ccDoc = ccDoc.replace("@Accepter", item.getValue().toString());
-			ccTitle = ccTitle.replace("@Accepter", item.getValue().toString());
+			ccDoc = ccDoc.replace("@Accepter", ht.get(item).toString());
+			ccTitle = ccTitle.replace("@Accepter", ht.get(item).toString());
 			//抄送信息.
-			ccMsg += "(" + item.getValue().toString() + " - " + item.getValue().toString() + ");";
+			ccMsg += "(" + ht.get(item).toString() + " - " + ht.get(item).toString() + ");";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 如果是写入抄送列表.
 			CCList list = new CCList();
-			list.setMyPK( DBAccess.GenerGUID(); // workid + "_" + node.NodeID + "_" + item.Key.ToString();
+			list.setMyPK( DBAccess.GenerGUID()); // workid + "_" + node.NodeID + "_" + item.Key.ToString();
 			list.setFK_Flow(nd.getFK_Flow());
 			list.setFlowName(nd.getFlowName());
 			list.setFK_Node(nd.getNodeID());
 			list.setNodeName(nd.getName());
 			list.setTitle(ccTitle);
 			list.setDoc(ccDoc);
-			list.setCCTo(item.getKey().toString());
-			list.setCCToName(item.getValue().toString());
+			list.setCCTo(item.toString());
+			list.setCCToName(ht.get(item).toString());
 			list.setRDT(DataType.getCurrentDataTime());
 			list.setRec(WebUser.getNo());
 			list.setWorkID(workid);
@@ -1943,14 +1954,14 @@ public class WorkFlowBuessRole
 				list.CheckPhysicsTable();
 				list.Update();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 如果要写入抄送
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 写入消息机制.
 			if (BP.WF.Glo.getIsEnableSysMessage() == true)
 			{
-				ccMsg += list.getCCTo() + "(" + item.getValue().toString() + ");";
+				ccMsg += list.getCCTo() + "(" + ht.get(item).toString() + ");";
 				WFEmp wfemp = new WFEmp(list.getCCTo());
 
 				String sid = list.getCCTo() + "_" + list.getWorkID() + "_" + list.getFK_Node() + "_" + list.getRDT();
@@ -1962,22 +1973,18 @@ public class WorkFlowBuessRole
 				urlWap = urlWap.replace("//", "/");
 				urlWap = urlWap.replace("//", "/");
 
-				Object tempVar3 = mailTemp.Clone();
+				Object tempVar3 = mailTemp;
 				String mytemp = tempVar3 instanceof String ? (String)tempVar3 : null;
-				mytemp = String.format(mytemp, wfemp.Name, WebUser.getName(), url, urlWap);
+				mytemp = String.format(mytemp, wfemp.getName(), WebUser.getName(), url, urlWap);
 
 				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", nd.getFlowName(), nd.getName(), WebUser.getName());
 
-				BP.WF.Dev2Interface.Port_SendMsg(wfemp.No, title, mytemp, null, BP.WF.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID());
+				BP.WF.Dev2Interface.Port_SendMsg(wfemp.getNo(), title, mytemp, null, BP.WF.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID());
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-				///#endregion 写入消息机制.
+
 		}
 
 		return ccMsg;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 执行抄送.
-
 
 }

@@ -13,7 +13,7 @@ import BP.Sys.*;
 */
 public class FlowCheckError
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法与属性.
 	public DataTable dt = null;
 	/** 
@@ -26,8 +26,9 @@ public class FlowCheckError
 	public Nodes nds = null;
 	/** 
 	 通用的
+	 * @throws Exception 
 	*/
-	public final GERpt getHisGERpt()
+	public final GERpt getHisGERpt() throws Exception
 	{
 		return this.flow.getHisGERpt();
 	}
@@ -35,11 +36,12 @@ public class FlowCheckError
 	 流程检查
 	 
 	 @param fl 流程实体
+	 * @throws Exception 
 	*/
-	public FlowCheckError(Flow fl)
+	public FlowCheckError(Flow fl) throws Exception
 	{
 		this.flow = fl;
-		this.nds = new Nodes(fl.No);
+		this.nds = new Nodes(fl.getNo());
 		//构造消息存储.
 		dt = new DataTable();
 		dt.Columns.Add("InfoType");
@@ -51,8 +53,9 @@ public class FlowCheckError
 	 流程检查
 	 
 	 @param flNo 流程编号
+	 * @throws Exception 
 	*/
-	public FlowCheckError(String flNo)
+	public FlowCheckError(String flNo) throws Exception
 	{
 		this.flow = new Flow(flNo);
 		this.nds = new Nodes(this.flow.getNo());
@@ -77,8 +80,6 @@ public class FlowCheckError
 		AddMsgInfo(info, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: private void AddMsgInfo(string info, Node nd = null)
 	private void AddMsgInfo(String info, Node nd)
 	{
 		AddMsg("信息", info, nd);
@@ -95,8 +96,6 @@ public class FlowCheckError
 		AddMsgWarning(info, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: private void AddMsgWarning(string info, Node nd = null)
 	private void AddMsgWarning(String info, Node nd)
 	{
 		AddMsg("警告", info, nd);
@@ -107,8 +106,6 @@ public class FlowCheckError
 		AddMsgError(info, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: private void AddMsgError(string info, Node nd = null)
 	private void AddMsgError(String info, Node nd)
 	{
 		AddMsg("错误", info, nd);
@@ -127,30 +124,29 @@ public class FlowCheckError
 		AddMsg(type, info, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: private void AddMsg(string type, string info, Node nd = null)
 	private void AddMsg(String type, String info, Node nd)
 	{
 		DataRow dr = this.dt.NewRow();
-		dr.set(0, type);
-		dr.set(1, info);
+		dr.setValue(0, type);
+		dr.setValue(1, info);
 
 		if (nd != null)
 		{
-			dr.set(2, nd.getNodeID());
-			dr.set(3, nd.getName());
+			dr.setValue(2, nd.getNodeID());
+			dr.setValue(3, nd.getName());
 		}
 		this.dt.Rows.add(dr);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法与属性.
 
 	/** 
 	 校验流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final void DoCheck()
+	public final void DoCheck() throws Exception
 	{
 		BP.DA.Cash.ClearCash();
 		try
@@ -218,16 +214,16 @@ public class FlowCheckError
 			nd.RepareMap(this.flow);
 
 			// 从表检查。
-			Sys.MapDtls dtls = new BP.Sys.MapDtls("ND" + nd.getNodeID());
-			for (Sys.MapDtl dtl : dtls.ToJavaList())
+			MapDtls dtls = new BP.Sys.MapDtls("ND" + nd.getNodeID());
+			for (MapDtl dtl : dtls.ToJavaList())
 			{
-				this.AddMsgInfo("检查明细表" + dtl.Name, nd);
-				dtl.HisGEDtl.CheckPhysicsTable();
+				this.AddMsgInfo("检查明细表" + dtl.getName(), nd);
+				dtl.getHisGEDtl().CheckPhysicsTable();
 			}
 
 			MapAttrs mattrs = new MapAttrs("ND" + nd.getNodeID());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 对节点的访问规则进行检查
 
 			this.AddMsgInfo("开始对节点的访问规则进行检查", nd);
@@ -370,10 +366,10 @@ public class FlowCheckError
 				default:
 					break;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 检查节点完成条件，方向条件的定义.
 			//设置它没有流程完成条件.
 			nd.setIsCCFlow(false);
@@ -408,7 +404,7 @@ public class FlowCheckError
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 检查节点完成条件的定义.
 		}
 	}
@@ -807,7 +803,7 @@ public class FlowCheckError
 		}
 		ndsstrs = ndsstrs.substring(0, ndsstrs.length() - 1);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 插入字段。
 		String sql = "SELECT distinct KeyOfEn FROM Sys_MapAttr WHERE FK_MapData IN (" + ndsstrs + ")";
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
@@ -884,10 +880,10 @@ public class FlowCheckError
 			md.PTable = this.flow.getPTable();
 			md.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 插入字段。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 补充上流程字段到NDxxxRpt.
 		int groupID = 0;
 		for (MapAttr attr : attrs)
@@ -1371,10 +1367,10 @@ public class FlowCheckError
 			attr.setIdx(-100;
 			attr.Insert();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 补充上流程字段。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 为流程字段设置分组。
 		try
 		{
@@ -1396,10 +1392,10 @@ public class FlowCheckError
 		{
 			Log.DefaultLogWriteLineError(ex.getMessage());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 为流程字段设置分组
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 尾后处理.
 		GERpt gerpt = this.getHisGERpt();
 		gerpt.CheckPhysicsTable(); //让报表重新生成.
@@ -1408,7 +1404,7 @@ public class FlowCheckError
 
 		DBAccess.RunSQL("UPDATE Sys_MapAttr SET Name='活动时间' WHERE FK_MapData='ND" + flowId + "Rpt' AND KeyOfEn='CDT'");
 		DBAccess.RunSQL("UPDATE Sys_MapAttr SET Name='参与者' WHERE FK_MapData='ND" + flowId + "Rpt' AND KeyOfEn='Emps'");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 尾后处理.
 	}
 }

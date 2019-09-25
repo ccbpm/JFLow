@@ -107,7 +107,7 @@ public abstract class Entity implements Serializable {
 		throw new RuntimeException("@娌℃湁缁欍��" + this.getEnDesc() + "銆戝畾涔変富閿��");
 	}
 
-	public String getClassID() {
+	public String getClassID() throws Exception {
 		return this.toString();
 	}
 

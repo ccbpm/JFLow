@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,9 +16,10 @@ public class SubFlowYanXu extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -26,68 +28,74 @@ public class SubFlowYanXu extends EntityMyPK
 	}
 	/** 
 	 主流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(SubFlowAutoAttr.FK_Flow, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getSubFlowNo()
+	public final String getSubFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowYanXuAttr.SubFlowNo);
 	}
-	public final void setSubFlowNo(String value)
+	public final void setSubFlowNo(String value) throws Exception
 	{
 		SetValByKey(SubFlowYanXuAttr.SubFlowNo, value);
 	}
 	/** 
 	 流程名称
+	 * @throws Exception 
 	*/
-	public final String getSubFlowName()
+	public final String getSubFlowName() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowYanXuAttr.SubFlowName);
 	}
 	/** 
 	 条件表达式.
+	 * @throws Exception 
 	*/
-	public final String getCondExp()
+	public final String getCondExp() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowYanXuAttr.CondExp);
 	}
-	public final void setCondExp(String value)
+	public final void setCondExp(String value) throws Exception
 	{
 		SetValByKey(SubFlowYanXuAttr.CondExp, value);
 	}
 	/** 
 	 表达式类型
+	 * @throws Exception 
 	*/
-	public final ConnDataFrom getExpType()
+	public final ConnDataFrom getExpType() throws Exception
 	{
 		return ConnDataFrom.forValue(this.GetValIntByKey(SubFlowYanXuAttr.ExpType));
 	}
-	public final void setExpType(ConnDataFrom value)
+	public final void setExpType(ConnDataFrom value) throws Exception
 	{
 		SetValByKey(SubFlowYanXuAttr.ExpType, value.getValue());
 	}
-	public final String getFK_Node()
+	public final String getFK_Node() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowYanXuAttr.FK_Node);
 	}
-	public final void setFK_Node(String value)
+	public final void setFK_Node(String value) throws Exception
 	{
 		SetValByKey(SubFlowYanXuAttr.FK_Node, value);
 	}
 
 	/** 
 	 运行类型
+	 * @throws Exception 
 	*/
-	public final SubFlowModel getHisSubFlowModel()
+	public final SubFlowModel getHisSubFlowModel() throws Exception
 	{
 		return SubFlowModel.forValue(this.GetValIntByKey(SubFlowAutoAttr.SubFlowModel));
 	}
@@ -155,11 +163,12 @@ public class SubFlowYanXu extends EntityMyPK
 	 设置主键
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setMyPK( this.getFK_Node() + "_" + this.getSubFlowNo() + "_2";
+		this.setMyPK(this.getFK_Node() + "_" + this.getSubFlowNo() + "_2");
 		return super.beforeInsert();
 	}
 
@@ -169,8 +178,9 @@ public class SubFlowYanXu extends EntityMyPK
 	 上移
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoUp()
+	public final String DoUp() throws Exception
 	{
 		this.DoOrderUp(SubFlowYanXuAttr.FK_Node, this.getFK_Node(), SubFlowYanXuAttr.SubFlowType, "2", SubFlowYanXuAttr.Idx);
 		return "执行成功";
@@ -179,8 +189,9 @@ public class SubFlowYanXu extends EntityMyPK
 	 下移
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDown()
+	public final String DoDown() throws Exception
 	{
 		this.DoOrderDown(SubFlowYanXuAttr.FK_Node, this.getFK_Node(), SubFlowYanXuAttr.SubFlowType, "2", SubFlowYanXuAttr.Idx);
 		return "执行成功";

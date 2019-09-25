@@ -605,7 +605,7 @@ public class WorkNode
 			wl.setFK_Emp(dt.Rows.get(0).getValue(0).toString());
 
 			Emp emp = new Emp();
-			emp.No = wl.getFK_Emp();
+			emp.setNo (wl.getFK_Emp();
 			if (emp.RetrieveFromDBSources() == 0)
 			{
 				String[] para = new String[1];
@@ -819,7 +819,7 @@ public class WorkNode
 				wl.setFK_NodeText(town.getHisNode().getName());
 				wl.setFK_Emp(fk_emp);
 
-				emp.No = wl.getFK_Emp();
+				emp.setNo (wl.getFK_Emp();
 				if (emp.RetrieveFromDBSources() == 0)
 				{
 					continue;

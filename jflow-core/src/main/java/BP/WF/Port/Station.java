@@ -2,6 +2,7 @@ package BP.WF.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import java.util.*;
 
@@ -14,9 +15,10 @@ public class Station extends EntityNoName
 		///#region 实现基本的方方法
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -37,8 +39,9 @@ public class Station extends EntityNoName
 	 岗位
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public Station(String _No)
+	public Station(String _No) throws Exception
 	{
 		super(_No);
 	}

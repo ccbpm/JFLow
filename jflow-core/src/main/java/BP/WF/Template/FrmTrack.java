@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.WF.*;
 import BP.Sys.*;
@@ -26,60 +27,65 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 控件状态
+	 * @throws Exception 
 	*/
-	public final FrmTrackSta getFrmTrackSta()
+	public final FrmTrackSta getFrmTrackSta() throws Exception
 	{
 		return FrmTrackSta.forValue(this.GetValIntByKey(FrmTrackAttr.FrmTrackSta));
 	}
-	public final void setFrmTrackSta(FrmTrackSta value)
+	public final void setFrmTrackSta(FrmTrackSta value) throws Exception
 	{
 		this.SetValByKey(FrmTrackAttr.FrmTrackSta, value.getValue());
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getFrmTrack_Y()
+	public final float getFrmTrack_Y() throws Exception
 	{
 		return this.GetValFloatByKey(FrmTrackAttr.FrmTrack_Y);
 	}
-	public final void setFrmTrack_Y(float value)
+	public final void setFrmTrack_Y(float value) throws Exception
 	{
 		this.SetValByKey(FrmTrackAttr.FrmTrack_Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getFrmTrack_X()
+	public final float getFrmTrack_X() throws Exception
 	{
 		return this.GetValFloatByKey(FrmTrackAttr.FrmTrack_X);
 	}
-	public final void setFrmTrack_X(float value)
+	public final void setFrmTrack_X(float value) throws Exception
 	{
 		this.SetValByKey(FrmTrackAttr.FrmTrack_X, value);
 	}
 	/** 
 	 W
+	 * @throws Exception 
 	*/
-	public final float getFrmTrack_W()
+	public final float getFrmTrack_W() throws Exception
 	{
 		return this.GetValFloatByKey(FrmTrackAttr.FrmTrack_W);
 	}
-	public final void setFrmTrack_W(float value)
+	public final void setFrmTrack_W(float value) throws Exception
 	{
 		this.SetValByKey(FrmTrackAttr.FrmTrack_W, value);
 	}
-	public final String getFrmTrack_Wstr()
+	public final String getFrmTrack_Wstr() throws Exception
 	{
 		if (this.getFrmTrack_W() == 0)
 		{
@@ -89,16 +95,17 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 H
+	 * @throws Exception 
 	*/
-	public final float getFrmTrack_H()
+	public final float getFrmTrack_H() throws Exception
 	{
 		return this.GetValFloatByKey(FrmTrackAttr.FrmTrack_H);
 	}
-	public final void setFrmTrack_H(float value)
+	public final void setFrmTrack_H(float value) throws Exception
 	{
 		this.SetValByKey(FrmTrackAttr.FrmTrack_H, value);
 	}
-	public final String getFrmTrack_Hstr()
+	public final String getFrmTrack_Hstr() throws Exception
 	{
 		if (this.getFrmTrack_H() == 0)
 		{
@@ -108,15 +115,17 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 节点名称.
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
 	/** 
 	 显示标签
+	 * @throws Exception 
 	*/
-	public final String getFrmTrackLab()
+	public final String getFrmTrackLab() throws Exception
 	{
 		return this.GetValStrByKey(FrmTrackAttr.FrmTrackLab);
 	}
@@ -127,9 +136,10 @@ public class FrmTrack extends Entity
 		///#region 构造方法
 	/** 
 	 控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -155,8 +165,9 @@ public class FrmTrack extends Entity
 	 轨迹图标组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTrack(String mapData)
+	public FrmTrack(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -185,8 +196,9 @@ public class FrmTrack extends Entity
 	 轨迹图标组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTrack(int nodeID)
+	public FrmTrack(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -207,7 +219,7 @@ public class FrmTrack extends Entity
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmTrackAttr.FrmTrackLab, "轨迹", "显示标签", true, false, 0, 200, 10, false);
-
+s
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
@@ -227,7 +239,7 @@ public class FrmTrack extends Entity
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		return super.beforeUpdateInsertAction();
 	}

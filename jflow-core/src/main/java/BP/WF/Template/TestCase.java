@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,9 +16,10 @@ public class TestCase extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -25,28 +27,29 @@ public class TestCase extends EntityMyPK
 	}
 	/** 
 	 流程测试的事务编号
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(TestCaseDtlAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(TestCaseDtlAttr.FK_Node, value);
 	}
-	public final String getParaType()
+	public final String getParaType() throws Exception
 	{
 		return this.GetValStringByKey(TestCaseDtlAttr.ParaType);
 	}
-	public final void setParaType(String value)
+	public final void setParaType(String value) throws Exception
 	{
 		SetValByKey(TestCaseDtlAttr.ParaType, value);
 	}
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(TestCaseDtlAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(TestCaseDtlAttr.FK_Flow, value);
 	}

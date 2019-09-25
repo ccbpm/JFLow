@@ -2,6 +2,7 @@ package BP.WF.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Port.*;
 import BP.Web.*;
@@ -16,72 +17,76 @@ public class WFEmp extends EntityNoName
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
-	public final String getHisAlertWayT()
+	public final String getHisAlertWayT() throws Exception
 	{
 		return this.GetValRefTextByKey(WFEmpAttr.AlertWay);
 	}
-	public final AlertWay getHisAlertWay()
+	public final AlertWay getHisAlertWay() throws Exception
 	{
 		return AlertWay.forValue(this.GetValIntByKey(WFEmpAttr.AlertWay));
 	}
-	public final void setHisAlertWay(AlertWay value)
+	public final void setHisAlertWay(AlertWay value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.AlertWay, value.getValue());
 	}
 	/** 
 	 用户状态
+	 * @throws Exception 
 	*/
-	public final int getUseSta()
+	public final int getUseSta() throws Exception
 	{
 		return this.GetValIntByKey(WFEmpAttr.UseSta);
 	}
-	public final void setUseSta(int value)
+	public final void setUseSta(int value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.UseSta, value);
 	}
 	/** 
 	 部门编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(WFEmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.FK_Dept, value);
 	}
 	/** 
 	 风格文件
+	 * @throws Exception 
 	*/
-	public final String getStyle()
+	public final String getStyle() throws Exception
 	{
 		return this.GetValStringByKey(WFEmpAttr.Style);
 	}
-	public final void setStyle(String value)
+	public final void setStyle(String value) throws Exception
 	{
 		this.SetValByKey(WFEmpAttr.Style, value);
 	}
 
 	/** 
 	 电话
+	 * @throws Exception 
 	*/
-	public final String getTel()
+	public final String getTel() throws Exception
 	{
 		return this.GetValStringByKey(WFEmpAttr.Tel);
 	}
-	public final void setTel(String value)
+	public final void setTel(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.Tel, value);
 	}
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(WFEmpAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.Idx, value);
 	}
-	public final String getTelHtml()
+	public final String getTelHtml() throws Exception
 	{
 		if (this.getTel().length() == 0)
 		{
@@ -92,7 +97,7 @@ public class WFEmp extends EntityNoName
 			return "<a href=\"javascript:WinOpen('./Msg/SMS.aspx?Tel=" + this.getTel() + "');\"  ><img src='/WF/Img/SMS.gif' border=0/>" + this.getTel() + "</a>";
 		}
 	}
-	public final String getEmailHtml()
+	public final String getEmailHtml() throws Exception
 	{
 		if (this.getEmail() == null || this.getEmail().length() == 0)
 		{
@@ -103,48 +108,49 @@ public class WFEmp extends EntityNoName
 			return "<a href='Mailto:" + this.getEmail() + "' ><img src='/WF/Img/SMS.gif' border=0/>" + this.getEmail() + "</a>";
 		}
 	}
-	public final String getEmail()
+	public final String getEmail() throws Exception
 	{
 		return this.GetValStringByKey(WFEmpAttr.Email);
 	}
-	public final void setEmail(String value)
+	public final void setEmail(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.Email, value);
 	}
-	public final String getAuthor()
+	public final String getAuthor() throws Exception
 	{
 		return this.GetValStrByKey(WFEmpAttr.Author);
 	}
-	public final void setAuthor(String value)
+	public final void setAuthor(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.Author, value);
 	}
-	public final String getAuthorDate()
+	public final String getAuthorDate() throws Exception
 	{
 		return this.GetValStringByKey(WFEmpAttr.AuthorDate);
 	}
-	public final void setAuthorDate(String value)
+	public final void setAuthorDate(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.AuthorDate, value);
 	}
-	public final String getAuthorToDate()
+	public final String getAuthorToDate() throws Exception
 	{
 		return this.GetValStringByKey(WFEmpAttr.AuthorToDate);
 	}
-	public final void setAuthorToDate(String value)
+	public final void setAuthorToDate(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.AuthorToDate, value);
 	}
 	/** 
 	 授权的流程
+	 * @throws Exception 
 	*/
-	public final String getAuthorFlows()
+	public final String getAuthorFlows() throws Exception
 	{
 		String s = this.GetValStringByKey(WFEmpAttr.AuthorFlows);
 		s = s.replace(",", "','");
 		return "('" + s + "')";
 	}
-	public final void setAuthorFlows(String value)
+	public final void setAuthorFlows(String value) throws Exception
 	{
 			//授权流程为空时的bug  解决
 		if (!DataType.IsNullOrEmpty(value))
@@ -159,23 +165,24 @@ public class WFEmp extends EntityNoName
 	}
 	/** 
 	 发起流程.
+	 * @throws Exception 
 	*/
-	public final String getStartFlows()
+	public final String getStartFlows() throws Exception
 	{
 		return this.GetValStrByKey(WFEmpAttr.StartFlows);
 	}
-	public final void setStartFlows(String value)
+	public final void setStartFlows(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.StartFlows, value);
 	}
 	/** 
 	 图片签名密码
 	*/
-	public final String getSPass()
+	public final String getSPass() throws Exception
 	{
 		return this.GetValStringByKey(WFEmpAttr.SPass);
 	}
-	public final void setSPass(String value)
+	public final void setSPass(String value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.SPass, value);
 	}
@@ -183,22 +190,22 @@ public class WFEmp extends EntityNoName
 	/** 
 	 授权方式
 	*/
-	public final AuthorWay getHisAuthorWay()
+	public final AuthorWay getHisAuthorWay() throws Exception
 	{
-		return getAuthorWay().forValue(this.getAuthorWay());
+		return AuthorWay.forValue(this.getAuthorWay());
 	}
 	/** 
 	 授权方式
 	*/
-	public final int getAuthorWay()
+	public final int getAuthorWay() throws Exception
 	{
 		return this.GetValIntByKey(WFEmpAttr.AuthorWay);
 	}
-	public final void setAuthorWay(int value)
+	public final void setAuthorWay(int value) throws Exception
 	{
 		SetValByKey(WFEmpAttr.AuthorWay, value);
 	}
-	public final boolean getAuthorIsOK()
+	public final boolean getAuthorIsOK() throws Exception
 	{
 		int b = this.GetValIntByKey(WFEmpAttr.AuthorWay);
 		if (b == 0)
@@ -238,7 +245,7 @@ public class WFEmp extends EntityNoName
 	 
 	 @param no
 	*/
-	public WFEmp(String no)
+	public WFEmp(String no) throws Exception
 	{
 		this.setNo(no);
 		try
@@ -309,7 +316,7 @@ public class WFEmp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws NumberFormatException, Exception
 	{
 		String msg = "";
 		//if (this.Email.Length == 0)
@@ -341,7 +348,7 @@ public class WFEmp extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.setUseSta(1);
 		return super.beforeInsert();
@@ -349,7 +356,7 @@ public class WFEmp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public static void DTSData()
+	public static void DTSData() throws Exception
 	{
 		String sql = "select No from Port_Emp where No not in (select No from WF_Emp)";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -368,12 +375,12 @@ public class WFEmp extends EntityNoName
 			}
 		}
 	}
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp("FK_Dept", this.getFK_Dept(), "Idx");
 		return;
 	}
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown("FK_Dept", this.getFK_Dept(), "Idx");
 		return;

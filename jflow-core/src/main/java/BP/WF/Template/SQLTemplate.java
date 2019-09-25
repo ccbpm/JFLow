@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,9 +16,10 @@ public class SQLTemplate extends EntityNoName
 		///#region  属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -25,17 +27,18 @@ public class SQLTemplate extends EntityNoName
 	}
 	/** 
 	 打开的连接
+	 * @throws Exception 
 	*/
-	public final String getDocs()
+	public final String getDocs() throws Exception
 	{
 		String s = this.GetValStrByKey(SQLTemplateAttr.Docs);
 		if (s.equals("") || s == null)
 		{
-			return this.No;
+			return this.getNo();
 		}
 		return s;
 	}
-	public final void setDocs(String value)
+	public final void setDocs(String value) throws Exception
 	{
 		this.SetValByKey(SQLTemplateAttr.Docs, value);
 	}
@@ -50,7 +53,7 @@ public class SQLTemplate extends EntityNoName
 	public SQLTemplate()
 	{
 	}
-	public SQLTemplate(String no)
+	public SQLTemplate(String no) throws Exception
 	{
 		super(no.replace("\n","").trim());
 	}

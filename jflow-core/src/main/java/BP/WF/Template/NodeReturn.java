@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -18,9 +19,10 @@ public class NodeReturn extends EntityMM
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -28,23 +30,25 @@ public class NodeReturn extends EntityMM
 	}
 	/** 
 	退回到
+	 * @throws Exception 
 	*/
-	public final int getReturnTo()
+	public final int getReturnTo() throws Exception
 	{
 		return this.GetValIntByKey(NodeReturnAttr.ReturnTo);
 	}
-	public final void setReturnTo(int value)
+	public final void setReturnTo(int value) throws Exception
 	{
 		this.SetValByKey(NodeReturnAttr.ReturnTo, value);
 	}
 	/** 
 	 工作流程
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeReturnAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(NodeReturnAttr.FK_Node, value);
 	}

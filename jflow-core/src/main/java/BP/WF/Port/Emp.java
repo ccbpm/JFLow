@@ -2,8 +2,13 @@ package BP.WF.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
+import BP.Sys.MapAttrs;
+import BP.Sys.MapData;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -16,8 +21,9 @@ public class Emp extends EntityNoName
 		///#region 扩展属性
 	/** 
 	 主要的部门。
+	 * @throws Exception 
 	*/
-	public final Dept getHisDept()
+	public final Dept getHisDept() throws Exception
 	{
 
 		try
@@ -33,44 +39,44 @@ public class Emp extends EntityNoName
 	/** 
 	 部门
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
-	public final String getFK_DeptText()
+	public final String getFK_DeptText() throws Exception
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
 	}
 	/** 
 	 密码
 	*/
-	public final String getPass()
+	public final String getPass() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Pass);
 	}
-	public final void setPass(String value)
+	public final void setPass(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Pass, value);
 	}
 	/** 
 	 手机号码
 	*/
-	public final String getTel()
+	public final String getTel() throws Exception
 	{
 		return this.GetValStrByKey(EmpAttr.Tel);
 	}
-	public final void setTel(String value)
+	public final void setTel(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.Tel, value);
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final boolean CheckPass(String pass)
+	public final boolean CheckPass(String pass) throws Exception
 	{
 		if (this.getPass().equals(pass))
 		{
@@ -88,11 +94,12 @@ public class Emp extends EntityNoName
 	 工作人员编号
 	 
 	 @param _No No
+	 * @throws Exception 
 	*/
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
-		this.No = no.trim();
-		if (this.No.Length == 0)
+		this.setNo(no.trim());
+		if (this.getNo().length() == 0)
 		{
 			throw new RuntimeException("@要查询的操作员编号为空。");
 		}
@@ -111,9 +118,10 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
@@ -178,8 +186,9 @@ public class Emp extends EntityNoName
 	 
 	 @param userNo 当前用户编号
 	 @return 返回重置信息
+	 * @throws Exception 
 	*/
-	public final String DoChangeUserNo(String userNo)
+	public final String DoChangeUserNo(String userNo) throws Exception
 	{
 		if (!WebUser.getNo().equals("admin"))
 		{
@@ -232,7 +241,7 @@ public class Emp extends EntityNoName
 				msg += "@流程业务表记录人，更新了[" + i + "]个。";
 			}
 
-			String trackTable = "ND" + Integer.parseInt(fl.No) + "Track";
+			String trackTable = "ND" + Integer.parseInt(fl.getNo()) + "Track";
 			sql = "UPDATE  " + trackTable + "  SET EmpFrom='" + userNo + "' WHERE EmpFrom=' " + this.getNo()+ " '";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
@@ -259,20 +268,20 @@ public class Emp extends EntityNoName
 
 
 		//更新其他字段.
-		BP.Sys.MapAttrs attrs = new Sys.MapAttrs();
+		MapAttrs attrs = new MapAttrs();
 		attrs.RetrieveAll();
-		for (BP.Sys.MapAttr attr : attrs)
+		for (BP.Sys.MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.DefValReal.Contains("@WebUser.getNo()") == true)
+			if (attr.getDefValReal().contains("@WebUser.getNo()") == true)
 			{
 				try
 				{
-					BP.Sys.MapData md = new Sys.MapData(attr.FK_MapData);
-					sql = "UPDATE " + md.PTable + " SET " + attr.KeyOfEn + "='" + userNo + "' WHERE " + attr.KeyOfEn + "=' " + this.getNo()+ " '";
+					MapData md = new MapData(attr.getFK_MapData());
+					sql = "UPDATE " + md.getPTable() + " SET " + attr.getKeyOfEn() + "='" + userNo + "' WHERE " + attr.getKeyOfEn() + "=' " + this.getNo()+ " '";
 					i = DBAccess.RunSQL(sql);
 					if (i != 0)
 					{
-						msg += "@表[" + md.Name + "],[" + md.PTable + "] [" + attr.KeyOfEn + "]，更新了[" + i + "]个。";
+						msg += "@表[" + md.getName() + "],[" + md.getPTable() + "] [" + attr.getKeyOfEn() + "]，更新了[" + i + "]个。";
 					}
 				}
 				catch (java.lang.Exception e)
@@ -287,27 +296,29 @@ public class Emp extends EntityNoName
 	}
 	/** 
 	 执行禁用
+	 * @throws Exception 
 	*/
-	public final String DoDisableIt()
+	public final String DoDisableIt() throws Exception
 	{
-		WFEmp emp = new WFEmp(this.No);
+		WFEmp emp = new WFEmp(this.getNo());
 		emp.setUseSta(0);
 		emp.Update();
 		return "已经执行(禁用)成功";
 	}
 	/** 
 	 执行启用
+	 * @throws Exception 
 	*/
-	public final String DoEnableIt()
+	public final String DoEnableIt() throws Exception
 	{
-		WFEmp emp = new WFEmp(this.No);
+		WFEmp emp = new WFEmp(this.getNo());
 		emp.setUseSta(1);
 		emp.Update();
 		return "已经执行(启用)成功";
 	}
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		//if (WebUser.getIsAdmin() == false)
 		//    throw new Exception("err@非管理员不能删除.");
@@ -315,9 +326,9 @@ public class Emp extends EntityNoName
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
-		WFEmp emp = new WFEmp(this.No);
+		WFEmp emp = new WFEmp(this.getNo());
 		emp.Update();
 		return super.beforeUpdate();
 	}

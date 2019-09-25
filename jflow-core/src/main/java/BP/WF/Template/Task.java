@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Port.*;
 import BP.WF.*;
@@ -16,67 +17,73 @@ public class Task extends EntityMyPK
 		///#region 属性
 	/** 
 	 参数
+	 * @throws Exception 
 	*/
-	public final String getParas()
+	public final String getParas() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.Paras);
 	}
-	public final void setParas(String value)
+	public final void setParas(String value) throws Exception
 	{
 		this.SetValByKey(TaskAttr.Paras, value);
 	}
 	/** 
 	 发起人
+	 * @throws Exception 
 	*/
-	public final String getStarter()
+	public final String getStarter() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.Starter);
 	}
-	public final void setStarter(String value)
+	public final void setStarter(String value) throws Exception
 	{
 		this.SetValByKey(TaskAttr.Starter, value);
 	}
 	/** 
 	 到达的人员
+	 * @throws Exception 
 	*/
-	public final String getToEmps()
+	public final String getToEmps() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.ToEmps);
 	}
-	public final void setToEmps(String value)
+	public final void setToEmps(String value) throws Exception
 	{
 		this.SetValByKey(TaskAttr.ToEmps, value);
 	}
 	/** 
 	 到达节点（可以为0）
+	 * @throws Exception 
 	*/
-	public final int getToNode()
+	public final int getToNode() throws Exception
 	{
 		return this.GetValIntByKey(TaskAttr.ToNode);
 	}
-	public final void setToNode(int value)
+	public final void setToNode(int value) throws Exception
 	{
 		this.SetValByKey(TaskAttr.ToNode, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(TaskAttr.FK_Flow, value);
 	}
 	/** 
 	 发起时间（可以为空）
+	 * @throws Exception 
 	*/
-	public final String getStartDT()
+	public final String getStartDT() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.StartDT);
 	}
-	public final void setStartDT(String value)
+	public final void setStartDT(String value) throws Exception
 	{
 		this.SetValByKey(TaskAttr.StartDT, value);
 	}

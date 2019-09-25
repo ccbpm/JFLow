@@ -188,10 +188,10 @@ public class Sync extends Method
 				String name = entity.Name.replace("CN=", "");
 
 				//判断是 group 还是 user.
-				// emp.No = name;// this.GetValFromDirectoryEntryByKey(entry, "samaccountname");
+				// emp.setNo (name;// this.GetValFromDirectoryEntryByKey(entry, "samaccountname");
 				//emp.c = name;// this.GetValFromDirectoryEntryByKey(entry, "cn");
 
-				emp.No = this.GetValFromDirectoryEntryByKey(entity, "sAMAccountName");
+				emp.setNo (this.GetValFromDirectoryEntryByKey(entity, "sAMAccountName");
 				emp.Name = this.GetValFromDirectoryEntryByKey(entity, "displayName");
 
 				emp.SetValByKey("Manager", this.GetValFromDirectoryEntryByKey(entity, "Manager"));
@@ -436,7 +436,7 @@ public class Sync extends Method
 
 				//判断是 group 还是 user.
 				BP.GPM.Station station = new Station();
-				// emp.No = name;// this.GetValFromDirectoryEntryByKey(entry, "samaccountname");
+				// emp.setNo (name;// this.GetValFromDirectoryEntryByKey(entry, "samaccountname");
 				station.No = entry.Guid.toString();
 				station.Name = name; // this.GetValFromDirectoryEntryByKey(entry, "cn");
 				// station.Idx = idxStation++;
@@ -447,8 +447,8 @@ public class Sync extends Method
 			{
 				//判断是 group 还是 user.
 				BP.GPM.AD.Emp emp = new Emp();
-				// emp.No = name;// this.GetValFromDirectoryEntryByKey(entry, "samaccountname");
-				emp.No = name; // this.GetValFromDirectoryEntryByKey(entry, "cn");
+				// emp.setNo (name;// this.GetValFromDirectoryEntryByKey(entry, "samaccountname");
+				emp.setNo (name; // this.GetValFromDirectoryEntryByKey(entry, "cn");
 				emp.Name = this.GetValFromDirectoryEntryByKey(entry, "displayName");
 
 				if (emp.IsExits == true)

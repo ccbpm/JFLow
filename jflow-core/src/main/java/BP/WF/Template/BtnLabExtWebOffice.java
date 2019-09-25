@@ -15,9 +15,10 @@ public class BtnLabExtWebOffice extends Entity
 {
 	/** 
 	 访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();

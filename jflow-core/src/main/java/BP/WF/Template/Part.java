@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.Port.*;
 import BP.WF.*;
@@ -26,144 +27,157 @@ public class Part extends EntityMyPK
 	}
 	/** 
 	 配件的事务编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(PartAttr.FK_Flow, value);
 	}
 	/** 
 	 类型
+	 * @throws Exception 
 	*/
-	public final String getPartType()
+	public final String getPartType() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.PartType);
 	}
-	public final void setPartType(String value)
+	public final void setPartType(String value) throws Exception
 	{
 		SetValByKey(PartAttr.PartType, value);
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(PartAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(PartAttr.FK_Node, value);
 	}
 	/** 
 	 字段存储0
+	 * @throws Exception 
 	*/
-	public final String getTag0()
+	public final String getTag0() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag0);
 	}
-	public final void setTag0(String value)
+	public final void setTag0(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag0, value);
 	}
 	/** 
 	 字段存储1
+	 * @throws Exception 
 	*/
-	public final String getTag1()
+	public final String getTag1() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag1);
 	}
-	public final void setTag1(String value)
+	public final void setTag1(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag1, value);
 	}
 	/** 
 	 字段存储2
+	 * @throws Exception 
 	*/
-	public final String getTag2()
+	public final String getTag2() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag2);
 	}
-	public final void setTag2(String value)
+	public final void setTag2(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag2, value);
 	}
 	/** 
 	 字段存储3
+	 * @throws Exception 
 	*/
-	public final String getTag3()
+	public final String getTag3() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag3);
 	}
-	public final void setTag3(String value)
+	public final void setTag3(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag3, value);
 	}
 	/** 
 	 字段存储4
+	 * @throws Exception 
 	*/
-	public final String getTag4()
+	public final String getTag4() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag4);
 	}
-	public final void setTag4(String value)
+	public final void setTag4(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag4, value);
 	}
 	/** 
 	 字段存储5
+	 * @throws Exception 
 	*/
-	public final String getTag5()
+	public final String getTag5() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag5);
 	}
-	public final void setTag5(String value)
+	public final void setTag5(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag5, value);
 	}
 	/** 
 	 字段存储6
+	 * @throws Exception 
 	*/
-	public final String getTag6()
+	public final String getTag6() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag6);
 	}
-	public final void setTag6(String value)
+	public final void setTag6(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag6, value);
 	}
 	/** 
 	 字段存储7
+	 * @throws Exception 
 	*/
-	public final String getTag7()
+	public final String getTag7() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag7);
 	}
-	public final void setTag7(String value)
+	public final void setTag7(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag7, value);
 	}
 	/** 
 	 字段存储8
+	 * @throws Exception 
 	*/
-	public final String getTag8()
+	public final String getTag8() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag8);
 	}
-	public final void setTag8(String value)
+	public final void setTag8(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag8, value);
 	}
 	/** 
 	 字段存储9
+	 * @throws Exception 
 	*/
-	public final String getTag9()
+	public final String getTag9() throws Exception
 	{
 		return this.GetValStringByKey(PartAttr.Tag9);
 	}
-	public final void setTag9(String value)
+	public final void setTag9(String value) throws Exception
 	{
 		SetValByKey(PartAttr.Tag9, value);
 	}
@@ -182,8 +196,9 @@ public class Part extends EntityMyPK
 	 配件
 	 
 	 @param _oid 配件ID	
+	 * @throws Exception 
 	*/
-	public Part(String mypk)
+	public Part(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();

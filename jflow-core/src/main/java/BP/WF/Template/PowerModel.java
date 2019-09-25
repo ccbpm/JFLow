@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -17,23 +18,25 @@ public class PowerModel extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFlowNo()
+	public final String getFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(PowerModelAttr.FlowNo);
 	}
-	public final void setFlowNo(String value)
+	public final void setFlowNo(String value) throws Exception
 	{
 		this.SetValByKey(PowerModelAttr.FlowNo, value);
 	}
 	/** 
 	 权限标记
+	 * @throws Exception 
 	*/
-	public final String getPowerFlag()
+	public final String getPowerFlag() throws Exception
 	{
 		return this.GetValStringByKey(PowerModelAttr.PowerFlag);
 	}
-	public final void setPowerFlag(String value)
+	public final void setPowerFlag(String value) throws Exception
 	{
 		this.SetValByKey(PowerModelAttr.PowerFlag, value);
 	}

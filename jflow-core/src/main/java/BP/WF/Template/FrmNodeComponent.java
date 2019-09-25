@@ -17,24 +17,26 @@ public class FrmNodeComponent extends Entity
 		///#region 公共属性
 	/** 
 	 节点属性.
+	 * @throws Exception 
 	*/
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws NumberFormatException, Exception
 	{
 		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
@@ -107,9 +109,10 @@ public class FrmNodeComponent extends Entity
 	}
 	/** 
 	 EnMap
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{
@@ -147,7 +150,7 @@ public class FrmNodeComponent extends Entity
 	}
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		GroupField gf = new GroupField();
 
@@ -237,10 +240,10 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmThread" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.EnName = "ND" + this.getNodeID();
-				gf.CtrlID = "FrmThread" + this.getNo();
-				gf.CtrlType = GroupCtrlType.Thread;
-				gf.Lab = "子线程";
+				gf.setEnName("ND" + this.getNodeID());
+				gf.setCtrlID("FrmThread" + this.getNo());
+				gf.setCtrlType(GroupCtrlType.Thread);
+				gf.setLab("子线程");
 				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
@@ -262,10 +265,10 @@ public class FrmNodeComponent extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlID, "FrmFTC" + this.getNo()) == false)
 			{
 				gf = new GroupField();
-				gf.FrmID = "ND" + this.getNodeID();
-				gf.CtrlID = "FrmFTC" + this.getNo();
-				gf.CtrlType = GroupCtrlType.FTC;
-				gf.Lab = "流转自定义";
+				gf.setFrmID("ND" + this.getNodeID());
+				gf.setCtrlID("FrmFTC" + this.getNo());
+				gf.setCtrlType(GroupCtrlType.FTC);
+				gf.setLab("流转自定义");
 				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
@@ -279,7 +282,7 @@ public class FrmNodeComponent extends Entity
 		///#endregion
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		Node fl = new Node();
 		fl.setNodeID(this.getNodeID());

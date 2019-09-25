@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -16,34 +17,37 @@ public class SysFormTree extends EntityTree
 		///#region 属性.
 	/** 
 	 是否是目录
+	 * @throws Exception 
 	*/
-	public final boolean getIsDir()
+	public final boolean getIsDir() throws Exception
 	{
 		return this.GetValBooleanByKey(SysFormTreeAttr.IsDir);
 	}
-	public final void setIsDir(boolean value)
+	public final void setIsDir(boolean value) throws Exception
 	{
 		this.SetValByKey(SysFormTreeAttr.IsDir, value);
 	}
 	/** 
 	 序号
+	 * @throws Exception 
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(SysFormTreeAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(SysFormTreeAttr.Idx, value);
 	}
 	/** 
 	 父节点编号
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStringByKey(SysFormTreeAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(SysFormTreeAttr.ParentNo, value);
 	}
@@ -62,8 +66,9 @@ public class SysFormTree extends EntityTree
 	 独立表单树
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public SysFormTree(String _No)
+	public SysFormTree(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -101,11 +106,11 @@ public class SysFormTree extends EntityTree
 		///#endregion 系统方法.
 
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
-		if (!DataType.IsNullOrEmpty(this.No))
+		if (!DataType.IsNullOrEmpty(this.getNo()))
 		{
-			DeleteChild(this.No);
+			DeleteChild(this.getNo());
 		}
 		return super.beforeDelete();
 	}
@@ -113,44 +118,38 @@ public class SysFormTree extends EntityTree
 	 删除子项
 	 
 	 @param parentNo
+	 * @throws Exception 
 	*/
-	private void DeleteChild(String parentNo)
+	private void DeleteChild(String parentNo) throws Exception
 	{
 		SysFormTrees formTrees = new SysFormTrees();
 		formTrees.RetrieveByAttr(SysFormTreeAttr.ParentNo, parentNo);
-		for (SysFormTree item : formTrees)
+		for (SysFormTree item : formTrees.ToJavaList())
 		{
 			MapData md = new MapData();
-			md.FK_FormTree = item.No;
+			md.setFK_FormTree(item.getNo());
 			md.Delete();
-			DeleteChild(item.No);
+			DeleteChild(item.getNo());
 		}
 	}
-	public final String DoCreateSameLevelNodeIt(String name)
+	public final String DoCreateSameLevelNodeIt(String name) throws Exception
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
-		en.No = BP.DA.DBAccess.GenerOID().toString();
-		en.setName ( name;
+		en.setNo(String.valueOf(DBAccess.GenerOID()));
+		en.setName(name);
 		en.Insert();
-		return en.No;
+		return en.getNo();
 	}
-	public final String DoCreateSubNodeIt(String name)
+	public final String DoCreateSubNodeIt(String name) throws Exception
 	{
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
-		en.No = BP.DA.DBAccess.GenerOID().toString();
-		en.setParentNo(this.No);
-		en.setName ( name;
+		en.setNo(String.valueOf(DBAccess.GenerOID()));
+		en.setParentNo(this.getNo());
+		en.setName(name);
 		en.Insert();
-		return en.No;
+		return en.getNo();
 	}
-	public final void DoUp()
-	{
-		this.DoOrderUp(SysFormTreeAttr.ParentNo, this.getParentNo(), SysFormTreeAttr.Idx);
-	}
-	public final void DoDown()
-	{
-		this.DoOrderDown(SysFormTreeAttr.ParentNo, this.getParentNo(), SysFormTreeAttr.Idx);
-	}
+	
 }

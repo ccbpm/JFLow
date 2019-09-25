@@ -1196,7 +1196,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		ft.No = "1";
 		if (ft.RetrieveFromDBSources() == 0)
 		{
-			ft.Name = "表单库";
+			ft.setName("表单库";
 			ft.setParentNo("0");
 			ft.Insert();
 		}

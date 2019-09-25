@@ -3066,8 +3066,8 @@ public class Node extends Entity
 				attr.setMinLen(0;
 				attr.setMaxLen(200;
 				attr.setIdx(-100;
-				attr.X = (float)171.2;
-				attr.Y = (float)68.4;
+				attr.setX((float)171.2;
+				attr.setY((float)68.4;
 				attr.Insert();
 			}
 
@@ -3290,8 +3290,8 @@ public class Node extends Entity
 			attr.setMinLen(0;
 			attr.setMaxLen(200;
 			attr.setIdx(-100;
-			attr.X = (float)174.83;
-			attr.Y = (float)54.4;
+			attr.setX((float)174.83;
+			attr.setY((float)54.4;
 			attr.Insert();
 
 

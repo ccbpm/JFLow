@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.Web.*;
 import BP.WF.*;
@@ -22,127 +23,138 @@ public class Selector extends Entity
 	}
 	/** 
 	 选择模式
+	 * @throws Exception 
 	*/
-	public final SelectorModel getSelectorModel()
+	public final SelectorModel getSelectorModel() throws Exception
 	{
 		return SelectorModel.forValue(this.GetValIntByKey(SelectorAttr.SelectorModel));
 	}
-	public final void setSelectorModel(SelectorModel value)
+	public final void setSelectorModel(SelectorModel value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.SelectorModel, value.getValue());
 	}
 	/** 
 	 分组数据源
+	 * @throws Exception 
 	*/
-	public final String getSelectorP1()
+	public final String getSelectorP1() throws Exception
 	{
 		String s = this.GetValStringByKey(SelectorAttr.SelectorP1);
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP1(String value)
+	public final void setSelectorP1(String value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.SelectorP1, value);
 	}
 	/** 
 	 实体数据源
+	 * @throws Exception 
 	*/
-	public final String getSelectorP2()
+	public final String getSelectorP2() throws Exception
 	{
 		String s = this.GetValStringByKey(SelectorAttr.SelectorP2);
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP2(String value)
+	public final void setSelectorP2(String value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.SelectorP2, value);
 	}
 	/** 
 	 默认选择数据源
+	 * @throws Exception 
 	*/
-	public final String getSelectorP3()
+	public final String getSelectorP3() throws Exception
 	{
 		String s = this.GetValStringByKey(SelectorAttr.SelectorP3);
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP3(String value)
+	public final void setSelectorP3(String value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.SelectorP3, value);
 	}
 	/** 
 	 强制选择数据源
+	 * @throws Exception 
 	*/
-	public final String getSelectorP4()
+	public final String getSelectorP4() throws Exception
 	{
 		String s = this.GetValStringByKey(SelectorAttr.SelectorP4);
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP4(String value)
+	public final void setSelectorP4(String value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.SelectorP3, value);
 	}
 	/** 
 	 是否自动装载上一笔加载的数据
+	 * @throws Exception 
 	*/
-	public final boolean getIsAutoLoadEmps()
+	public final boolean getIsAutoLoadEmps() throws Exception
 	{
 		return this.GetValBooleanByKey(SelectorAttr.IsAutoLoadEmps);
 	}
-	public final void setIsAutoLoadEmps(boolean value)
+	public final void setIsAutoLoadEmps(boolean value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.IsAutoLoadEmps, value);
 	}
 	/** 
 	 是否单选？
+	 * @throws Exception 
 	*/
-	public final boolean getIsSimpleSelector()
+	public final boolean getIsSimpleSelector() throws Exception
 	{
 		return this.GetValBooleanByKey(SelectorAttr.IsSimpleSelector);
 	}
-	public final void setIsSimpleSelector(boolean value)
+	public final void setIsSimpleSelector(boolean value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.IsSimpleSelector, value);
 	}
 	/** 
 	 是否启用部门搜索范围限定
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableDeptRange()
+	public final boolean getIsEnableDeptRange() throws Exception
 	{
 		return this.GetValBooleanByKey(SelectorAttr.IsEnableDeptRange);
 	}
-	public final void setIsEnableDeptRange(boolean value)
+	public final void setIsEnableDeptRange(boolean value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.IsEnableDeptRange, value);
 	}
 	/** 
 	 是否启用岗位搜索范围限定
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableStaRange()
+	public final boolean getIsEnableStaRange() throws Exception
 	{
 		return this.GetValBooleanByKey(SelectorAttr.IsEnableStaRange);
 	}
-	public final void setIsEnableStaRange(boolean value)
+	public final void setIsEnableStaRange(boolean value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.IsEnableStaRange, value);
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(SelectorAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(SelectorAttr.NodeID, value);
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
@@ -173,7 +185,7 @@ public class Selector extends Entity
 	 
 	 @param nodeid
 	*/
-	public Selector(int nodeid)
+	public Selector(int nodeid) throws Exception
 	{
 		this.setNodeID(nodeid);
 		this.Retrieve();
@@ -248,7 +260,7 @@ public class Selector extends Entity
 	 
 	 @return 
 	*/
-	public final System.Data.DataSet GenerDataSet(int nodeid, Entity en)
+	public final DataSet GenerDataSet(int nodeid, Entity en)
 	{
 		DataSet ds = null;
 		switch (this.getSelectorModel())
@@ -349,8 +361,9 @@ public class Selector extends Entity
 	 
 	 @param nodeID 节点ID
 	 @return 返回值
+	 * @throws Exception 
 	*/
-	private DataSet BySQL(int nodeID, Entity en)
+	private DataSet BySQL(int nodeID, Entity en) throws Exception
 	{
 		// 定义数据容器.
 		DataSet ds = new DataSet();
@@ -416,8 +429,9 @@ public class Selector extends Entity
 	 
 	 @param nodeID 节点ID
 	 @return 返回数据源dataset
+	 * @throws Exception 
 	*/
-	private DataSet ByDept(int nodeID, Entity en)
+	private DataSet ByDept(int nodeID, Entity en) throws Exception
 	{
 		// 定义数据容器.
 		DataSet ds = new DataSet();
@@ -486,7 +500,7 @@ public class Selector extends Entity
 		return ds;
 	}
 
-	private DataSet AccepterOfDeptStationOfCurrentOper(int nodeID, Entity en)
+	private DataSet AccepterOfDeptStationOfCurrentOper(int nodeID, Entity en) throws NumberFormatException, Exception
 	{
 
 		// 定义数据容器.
@@ -590,8 +604,9 @@ public class Selector extends Entity
 	 
 	 @param nodeID 节点ID
 	 @return 返回数据源dataset
+	 * @throws Exception 
 	*/
-	private DataSet ByStation(int nodeID, Entity en)
+	private DataSet ByStation(int nodeID, Entity en) throws Exception
 	{
 		// 定义数据容器.
 		DataSet ds = new DataSet();

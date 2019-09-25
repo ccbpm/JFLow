@@ -16,71 +16,76 @@ public class FrmThread extends Entity
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws NumberFormatException, Exception
 	{
 		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 控件状态
+	 * @throws Exception 
 	*/
-	public final FrmThreadSta getFrmThreadSta()
+	public final FrmThreadSta getFrmThreadSta() throws Exception
 	{
 		return FrmThreadSta.forValue(this.GetValIntByKey(FrmThreadAttr.FrmThreadSta));
 	}
-	public final void setFrmThreadSta(FrmThreadSta value)
+	public final void setFrmThreadSta(FrmThreadSta value) throws Exception
 	{
 		this.SetValByKey(FrmThreadAttr.FrmThreadSta, value.getValue());
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getFrmThread_Y()
+	public final float getFrmThread_Y() throws Exception
 	{
 		return this.GetValFloatByKey(FrmThreadAttr.FrmThread_Y);
 	}
-	public final void setFrmThread_Y(float value)
+	public final void setFrmThread_Y(float value) throws Exception
 	{
 		this.SetValByKey(FrmThreadAttr.FrmThread_Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getFrmThread_X()
+	public final float getFrmThread_X() throws Exception
 	{
 		return this.GetValFloatByKey(FrmThreadAttr.FrmThread_X);
 	}
-	public final void setFrmThread_X(float value)
+	public final void setFrmThread_X(float value) throws Exception
 	{
 		this.SetValByKey(FrmThreadAttr.FrmThread_X, value);
 	}
 	/** 
 	 W
+	 * @throws Exception 
 	*/
-	public final float getFrmThread_W()
+	public final float getFrmThread_W() throws Exception
 	{
 		return this.GetValFloatByKey(FrmThreadAttr.FrmThread_W);
 	}
-	public final void setFrmThread_W(float value)
+	public final void setFrmThread_W(float value) throws Exception
 	{
 		this.SetValByKey(FrmThreadAttr.FrmThread_W, value);
 	}
-	public final String getFrmThread_Wstr()
+	public final String getFrmThread_Wstr() throws Exception
 	{
 		if (this.getFrmThread_W() == 0)
 		{
@@ -90,16 +95,17 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 H
+	 * @throws Exception 
 	*/
-	public final float getFrmThread_H()
+	public final float getFrmThread_H() throws Exception
 	{
 		return this.GetValFloatByKey(FrmThreadAttr.FrmThread_H);
 	}
-	public final void setFrmThread_H(float value)
+	public final void setFrmThread_H(float value) throws Exception
 	{
 		this.SetValByKey(FrmThreadAttr.FrmThread_H, value);
 	}
-	public final String getFrmThread_Hstr()
+	public final String getFrmThread_Hstr() throws Exception
 	{
 		if (this.getFrmThread_H() == 0)
 		{
@@ -109,15 +115,17 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 节点名称.
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	*/
-	public final String getFrmThreadLab()
+	public final String getFrmThreadLab() throws Exception
 	{
 		return this.GetValStringByKey(FrmThreadAttr.FrmThreadLab);
 	}
@@ -129,9 +137,10 @@ public class FrmThread extends Entity
 		///#region 构造方法
 	/** 
 	 控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -197,9 +206,10 @@ public class FrmThread extends Entity
 	}
 	/** 
 	 EnMap
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{

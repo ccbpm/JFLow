@@ -17,119 +17,130 @@ public class FrmWorkCheck extends Entity
 		///#region 属性
 	/** 
 	 节点编号
+	 * @throws Exception 
 	*/
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws NumberFormatException, Exception
 	{
 		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 状态
+	 * @throws Exception 
 	*/
-	public final FrmWorkCheckSta getHisFrmWorkCheckSta()
+	public final FrmWorkCheckSta getHisFrmWorkCheckSta() throws Exception
 	{
 		return FrmWorkCheckSta.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCSta));
 	}
-	public final void setHisFrmWorkCheckSta(FrmWorkCheckSta value)
+	public final void setHisFrmWorkCheckSta(FrmWorkCheckSta value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCSta, value.getValue());
 	}
 	/** 
 	 显示格式(0=表格,1=自由.)
+	 * @throws Exception 
 	*/
-	public final FrmWorkShowModel getHisFrmWorkShowModel()
+	public final FrmWorkShowModel getHisFrmWorkShowModel() throws Exception
 	{
 		return FrmWorkShowModel.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCShowModel));
 	}
-	public final void setHisFrmWorkShowModel(FrmWorkShowModel value)
+	public final void setHisFrmWorkShowModel(FrmWorkShowModel value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCShowModel, value.getValue());
 	}
 	/** 
 	 附件类型
+	 * @throws Exception 
 	*/
-	public final FWCAth getFWCAth()
+	public final FWCAth getFWCAth() throws Exception
 	{
 		return FWCAth.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCAth));
 	}
-	public final void setFWCAth(FWCAth value)
+	public final void setFWCAth(FWCAth value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCAth, value.getValue());
 	}
 	/** 
 	 组件类型
+	 * @throws Exception 
 	*/
-	public final FWCType getHisFrmWorkCheckType()
+	public final FWCType getHisFrmWorkCheckType() throws Exception
 	{
 		return FWCType.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCType));
 	}
-	public final void setHisFrmWorkCheckType(FWCType value)
+	public final void setHisFrmWorkCheckType(FWCType value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCType, value.getValue());
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	*/
-	public final String getFWCLab()
+	public final String getFWCLab() throws Exception
 	{
 		return this.GetValStrByKey(FrmWorkCheckAttr.FWCLab);
 	}
 	/** 
 	 组件类型名称
+	 * @throws Exception 
 	*/
-	public final String getFWCTypeT()
+	public final String getFWCTypeT() throws Exception
 	{
 		return this.GetValRefTextByKey(FrmWorkCheckAttr.FWCType);
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getFWC_Y()
+	public final float getFWC_Y() throws Exception
 	{
 		return this.GetValFloatByKey(FrmWorkCheckAttr.FWC_Y);
 	}
-	public final void setFWC_Y(float value)
+	public final void setFWC_Y(float value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWC_Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getFWC_X()
+	public final float getFWC_X() throws Exception
 	{
 		return this.GetValFloatByKey(FrmWorkCheckAttr.FWC_X);
 	}
-	public final void setFWC_X(float value)
+	public final void setFWC_X(float value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWC_X, value);
 	}
 	/** 
 	 W
+	 * @throws Exception 
 	*/
-	public final float getFWC_W()
+	public final float getFWC_W() throws Exception
 	{
 		return this.GetValFloatByKey(FrmWorkCheckAttr.FWC_W);
 	}
-	public final void setFWC_W(float value)
+	public final void setFWC_W(float value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWC_W, value);
 	}
-	public final String getFWC_Wstr()
+	public final String getFWC_Wstr() throws Exception
 	{
 		if (this.getFWC_W() == 0)
 		{
@@ -139,16 +150,17 @@ public class FrmWorkCheck extends Entity
 	}
 	/** 
 	 H
+	 * @throws Exception 
 	*/
-	public final float getFWC_H()
+	public final float getFWC_H() throws Exception
 	{
 		return this.GetValFloatByKey(FrmWorkCheckAttr.FWC_H);
 	}
-	public final void setFWC_H(float value)
+	public final void setFWC_H(float value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWC_H, value);
 	}
-	public final String getFWC_Hstr()
+	public final String getFWC_Hstr() throws Exception
 	{
 		if (this.getFWC_H() == 0)
 		{
@@ -158,92 +170,101 @@ public class FrmWorkCheck extends Entity
 	}
 	/** 
 	 轨迹图是否显示?
+	 * @throws Exception 
 	*/
-	public final boolean getFWCTrackEnable()
+	public final boolean getFWCTrackEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmWorkCheckAttr.FWCTrackEnable);
 	}
-	public final void setFWCTrackEnable(boolean value)
+	public final void setFWCTrackEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCTrackEnable, value);
 	}
 	/** 
 	 历史审核信息是否显示?
+	 * @throws Exception 
 	*/
-	public final boolean getFWCListEnable()
+	public final boolean getFWCListEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmWorkCheckAttr.FWCListEnable);
 	}
-	public final void setFWCListEnable(boolean value)
+	public final void setFWCListEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCListEnable, value);
 	}
 	/** 
 	 在轨迹表里是否显示所有的步骤？
+	 * @throws Exception 
 	*/
-	public final boolean getFWCIsShowAllStep()
+	public final boolean getFWCIsShowAllStep() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmWorkCheckAttr.FWCIsShowAllStep);
 	}
-	public final void setFWCIsShowAllStep(boolean value)
+	public final void setFWCIsShowAllStep(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCIsShowAllStep, value);
 	}
 	/** 
 	 是否显示轨迹在没有走到的节点
+	 * @throws Exception 
 	*/
-	public final boolean getFWCIsShowTruck()
+	public final boolean getFWCIsShowTruck() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmWorkCheckAttr.FWCIsShowTruck);
 	}
-	public final void setFWCIsShowTruck(boolean value)
+	public final void setFWCIsShowTruck(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCIsShowTruck, value);
 	}
 	/** 
 	 是否显示退回信息？
+	 * @throws Exception 
 	*/
-	public final boolean getFWCIsShowReturnMsg()
+	public final boolean getFWCIsShowReturnMsg() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmWorkCheckAttr.FWCIsShowReturnMsg);
 	}
-	public final void setFWCIsShowReturnMsg(boolean value)
+	public final void setFWCIsShowReturnMsg(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCIsShowReturnMsg, value);
 	}
 	/** 
 	 如果用户未审核是否按照默认意见填充?
+	 * @throws Exception 
 	*/
-	public final boolean getFWCIsFullInfo()
+	public final boolean getFWCIsFullInfo() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmWorkCheckAttr.FWCIsFullInfo);
 	}
-	public final void setFWCIsFullInfo(boolean value)
+	public final void setFWCIsFullInfo(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCIsFullInfo, value);
 	}
 	/** 
 	 默认审核信息
+	 * @throws Exception 
 	*/
-	public final String getFWCDefInfo()
+	public final String getFWCDefInfo() throws Exception
 	{
 		return this.GetValStringByKey(FrmWorkCheckAttr.FWCDefInfo);
 	}
-	public final void setFWCDefInfo(String value)
+	public final void setFWCDefInfo(String value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCDefInfo, value);
 	}
 	/** 
 	 节点名称.
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
 	/** 
 	 节点意见名称，如果为空则取节点名称.
+	 * @throws Exception 
 	*/
-	public final String getFWCNodeName()
+	public final String getFWCNodeName() throws Exception
 	{
 		String str = this.GetValStringByKey(FrmWorkCheckAttr.FWCNodeName);
 		if (DataType.IsNullOrEmpty(str))
@@ -254,74 +275,79 @@ public class FrmWorkCheck extends Entity
 	}
 	/** 
 	 操作名词(审核，审定，审阅，批示)
+	 * @throws Exception 
 	*/
-	public final String getFWCOpLabel()
+	public final String getFWCOpLabel() throws Exception
 	{
 		return this.GetValStringByKey(FrmWorkCheckAttr.FWCOpLabel);
 	}
-	public final void setFWCOpLabel(String value)
+	public final void setFWCOpLabel(String value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCOpLabel, value);
 	}
 	/** 
 	 操作字段
+	 * @throws Exception 
 	*/
-	public final String getFWCFields()
+	public final String getFWCFields() throws Exception
 	{
 		return this.GetValStringByKey(FrmWorkCheckAttr.FWCFields);
 	}
-	public final void setFWCFields(String value)
+	public final void setFWCFields(String value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCFields, value);
 	}
 	/** 
 	 是否显示数字签名？
+	 * @throws Exception 
 	*/
-	public final boolean getSigantureEnabel()
+	public final boolean getSigantureEnabel() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmWorkCheckAttr.SigantureEnabel);
 	}
-	public final void setSigantureEnabel(boolean value)
+	public final void setSigantureEnabel(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.SigantureEnabel, value);
 	}
 
 	/** 
 	 协作模式下操作员显示顺序
+	 * @throws Exception 
 	*/
-	public final FWCOrderModel getFWCOrderModel()
+	public final FWCOrderModel getFWCOrderModel() throws Exception
 	{
 		return FWCOrderModel.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCOrderModel, 0));
 	}
-	public final void setFWCOrderModel(FWCOrderModel value)
+	public final void setFWCOrderModel(FWCOrderModel value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCOrderModel, value.getValue());
 	}
 	/** 
 	 审核组件状态
+	 * @throws Exception 
 	*/
-	public final FrmWorkCheckSta getFWCSta()
+	public final FrmWorkCheckSta getFWCSta() throws Exception
 	{
 		return FrmWorkCheckSta.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCSta, 0));
 	}
-	public final void setFWCSta(FrmWorkCheckSta value)
+	public final void setFWCSta(FrmWorkCheckSta value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCSta, value.getValue());
 	}
 
-	public final int getFWCVer()
+	public final int getFWCVer() throws Exception
 	{
 		return this.GetValIntByKey(FrmWorkCheckAttr.FWCVer, 0);
 	}
-	public final void setFWCVer(int value)
+	public final void setFWCVer(int value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCVer,value);
 	}
-	public final String getFWCView()
+	public final String getFWCView() throws Exception
 	{
 		return this.GetValStringByKey(FrmWorkCheckAttr.FWCView);
 	}
-	public final void setFWCView(String value)
+	public final void setFWCView(String value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCView, value);
 	}
@@ -333,9 +359,10 @@ public class FrmWorkCheck extends Entity
 		///#region 构造方法
 	/** 
 	 控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -401,9 +428,10 @@ public class FrmWorkCheck extends Entity
 	}
 	/** 
 	 EnMap
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{
@@ -477,7 +505,7 @@ public class FrmWorkCheck extends Entity
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getFWCAth() == FWCAth.MinAth)
 		{
@@ -488,25 +516,25 @@ public class FrmWorkCheck extends Entity
 			{
 				workCheckAth = new FrmAttachment();
 				/*如果没有查询到它,就有可能是没有创建.*/
-				workCheckAth.setMyPK( "ND" + this.getNodeID() + "_FrmWorkCheck";
-				workCheckAth.FK_MapData = "ND" + String.valueOf(this.getNodeID());
-				workCheckAth.NoOfObj = "FrmWorkCheck";
-				workCheckAth.Exts = "*.*";
+				workCheckAth.setMyPK("ND" + this.getNodeID() + "_FrmWorkCheck");
+				workCheckAth.setFK_MapData("ND" + String.valueOf(this.getNodeID()));
+				workCheckAth.setNoOfObj("FrmWorkCheck");
+				workCheckAth.setExts("*.*");
 
 				//存储路径.
-				workCheckAth.SaveTo = "/DataUser/UploadFile/";
-				workCheckAth.IsNote = false; //不显示note字段.
-				workCheckAth.IsVisable = false; // 让其在form 上不可见.
+				workCheckAth.setSaveTo("/DataUser/UploadFile/");
+				workCheckAth.setIsNote(false); //不显示note字段.
+				workCheckAth.setIsVisable(false); // 让其在form 上不可见.
 
 				//位置.
-				workCheckAth.X = (float)94.09;
-				workCheckAth.Y = (float)333.18;
-				workCheckAth.W = (float)626.36;
-				workCheckAth.H = (float)150;
+				workCheckAth.setX((float)94.09);
+				workCheckAth.setY((float)333.18);
+				workCheckAth.setW((float)626.36);
+				workCheckAth.setH((float)150);
 
 				//多附件.
-				workCheckAth.UploadType = AttachmentUploadType.Multi;
-				workCheckAth.Name = "审核组件";
+				workCheckAth.setUploadType(AttachmentUploadType.Multi);
+				workCheckAth.setName("审核组件");
 				workCheckAth.SetValByKey("AtPara", "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=@IsWoEnableTemplete=1");
 				workCheckAth.Insert();
 			}
@@ -515,7 +543,7 @@ public class FrmWorkCheck extends Entity
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		Node fl = new Node();
 		fl.setNodeID(this.getNodeID());

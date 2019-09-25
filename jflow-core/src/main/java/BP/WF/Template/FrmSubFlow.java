@@ -18,156 +18,170 @@ public class FrmSubFlow extends Entity
 		///#region 属性
 	/** 
 	 标签
+	 * @throws Exception 
 	*/
-	public final String getSFLab()
+	public final String getSFLab() throws Exception
 	{
 		return this.GetValStringByKey(FrmSubFlowAttr.SFLab);
 	}
 	/** 
 	 编号
+	 * @throws Exception 
 	*/
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws Exception
 	{
 		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 可触发的子流程
+	 * @throws Exception 
 	*/
-	public final String getSFActiveFlows()
+	public final String getSFActiveFlows() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.SFActiveFlows);
 	}
-	public final void setSFActiveFlows(String value)
+	public final void setSFActiveFlows(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.SFActiveFlows, value);
 	}
 	/** 
 	 字段列
+	 * @throws Exception 
 	*/
-	public final String getSFFields()
+	public final String getSFFields() throws Exception
 	{
 		return this.GetValStringByKey(FrmSubFlowAttr.SFFields);
 	}
-	public final void setSFFields(String value)
+	public final void setSFFields(String value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFFields, value);
 	}
 	/** 
 	 状态
+	 * @throws Exception 
 	*/
-	public final FrmSubFlowSta getHisFrmSubFlowSta()
+	public final FrmSubFlowSta getHisFrmSubFlowSta() throws Exception
 	{
 		return FrmSubFlowSta.forValue(this.GetValIntByKey(FrmSubFlowAttr.SFSta));
 	}
-	public final void setHisFrmSubFlowSta(FrmSubFlowSta value)
+	public final void setHisFrmSubFlowSta(FrmSubFlowSta value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFSta, value.getValue());
 	}
 	/** 
 	 显示控制方式
+	 * @throws Exception 
 	*/
-	public final SFShowCtrl getSFShowCtrl()
+	public final SFShowCtrl getSFShowCtrl() throws Exception
 	{
 		return SFShowCtrl.forValue(this.GetValIntByKey(FrmSubFlowAttr.SFShowCtrl));
 	}
-	public final void setSFShowCtrl(SFShowCtrl value)
+	public final void setSFShowCtrl(SFShowCtrl value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFShowCtrl, value.getValue());
 	}
 	/** 
 	 显示格式(0=表格,1=自由.)
+	 * @throws Exception 
 	*/
-	public final FrmWorkShowModel getHisFrmWorkShowModel()
+	public final FrmWorkShowModel getHisFrmWorkShowModel() throws Exception
 	{
 		return FrmWorkShowModel.forValue(this.GetValIntByKey(FrmSubFlowAttr.SFShowModel));
 	}
-	public final void setHisFrmWorkShowModel(FrmWorkShowModel value)
+	public final void setHisFrmWorkShowModel(FrmWorkShowModel value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFShowModel, value.getValue());
 	}
 	/** 
 	 控件状态
+	 * @throws Exception 
 	*/
-	public final FrmSubFlowSta getSFSta()
+	public final FrmSubFlowSta getSFSta() throws Exception
 	{
 		return FrmSubFlowSta.forValue(this.GetValIntByKey(FrmSubFlowAttr.SFSta));
 	}
-	public final void setSFSta(FrmSubFlowSta value)
+	public final void setSFSta(FrmSubFlowSta value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFSta, value.getValue());
 	}
 	/** 
 	 显示方式
+	 * @throws Exception 
 	*/
-	public final FrmWorkShowModel getSFShowModel()
+	public final FrmWorkShowModel getSFShowModel() throws Exception
 	{
 		return FrmWorkShowModel.forValue(this.GetValIntByKey(FrmSubFlowAttr.SFShowModel));
 	}
-	public final void setSFShowModel(FrmWorkShowModel value)
+	public final void setSFShowModel(FrmWorkShowModel value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFShowModel, value.getValue());
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getSF_Y()
+	public final float getSF_Y() throws Exception
 	{
 		return this.GetValFloatByKey(FrmSubFlowAttr.SF_Y);
 	}
-	public final void setSF_Y(float value)
+	public final void setSF_Y(float value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SF_Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getSF_X()
+	public final float getSF_X() throws Exception
 	{
 		return this.GetValFloatByKey(FrmSubFlowAttr.SF_X);
 	}
-	public final void setSF_X(float value)
+	public final void setSF_X(float value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SF_X, value);
 	}
 	/** 
 	 打开类型
+	 * @throws Exception 
 	*/
-	public final int getSFOpenType()
+	public final int getSFOpenType() throws Exception
 	{
 		return this.GetValIntByKey(FrmSubFlowAttr.SFOpenType);
 	}
-	public final void setSFOpenType(int value)
+	public final void setSFOpenType(int value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFOpenType, value);
 	}
 	/** 
 	 W
+	 * @throws Exception 
 	*/
-	public final float getSF_W()
+	public final float getSF_W() throws Exception
 	{
 		return this.GetValFloatByKey(FrmSubFlowAttr.SF_W);
 	}
-	public final void setSF_W(float value)
+	public final void setSF_W(float value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SF_W, value);
 	}
-	public final String getSF_Wstr()
+	public final String getSF_Wstr() throws Exception
 	{
 		if (this.getSF_W() == 0)
 		{
@@ -177,16 +191,17 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 H
+	 * @throws Exception 
 	*/
-	public final float getSF_H()
+	public final float getSF_H() throws Exception
 	{
 		return this.GetValFloatByKey(FrmSubFlowAttr.SF_H);
 	}
-	public final void setSF_H(float value)
+	public final void setSF_H(float value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SF_H, value);
 	}
-	public final String getSF_Hstr()
+	public final String getSF_Hstr() throws Exception
 	{
 		if (this.getSF_H() == 0)
 		{
@@ -196,70 +211,77 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 轨迹图是否显示?
+	 * @throws Exception 
 	*/
-	public final boolean getSFTrackEnable()
+	public final boolean getSFTrackEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmSubFlowAttr.SFTrackEnable);
 	}
-	public final void setSFTrackEnable(boolean value)
+	public final void setSFTrackEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFTrackEnable, value);
 	}
 	/** 
 	 历史审核信息是否显示?
+	 * @throws Exception 
 	*/
-	public final boolean getSFListEnable()
+	public final boolean getSFListEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmSubFlowAttr.SFListEnable);
 	}
-	public final void setSFListEnable(boolean value)
+	public final void setSFListEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFListEnable, value);
 	}
 	/** 
 	 在轨迹表里是否显示所有的步骤？
+	 * @throws Exception 
 	*/
-	public final boolean getSFIsShowAllStep()
+	public final boolean getSFIsShowAllStep() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmSubFlowAttr.SFIsShowAllStep);
 	}
-	public final void setSFIsShowAllStep(boolean value)
+	public final void setSFIsShowAllStep(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFIsShowAllStep, value);
 	}
 	/** 
 	 如果用户未审核是否按照默认意见填充?
+	 * @throws Exception 
 	*/
-	public final boolean getSFIsFullInfo()
+	public final boolean getSFIsFullInfo() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmSubFlowAttr.SFIsFullInfo);
 	}
-	public final void setSFIsFullInfo(boolean value)
+	public final void setSFIsFullInfo(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFIsFullInfo, value);
 	}
 	/** 
 	 默认审核信息
+	 * @throws Exception 
 	*/
-	public final String getSFDefInfo()
+	public final String getSFDefInfo() throws Exception
 	{
 		return this.GetValStringByKey(FrmSubFlowAttr.SFDefInfo);
 	}
-	public final void setSFDefInfo(String value)
+	public final void setSFDefInfo(String value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFDefInfo, value);
 	}
 	/** 
 	 节点名称.
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
 	/** 
 	 标题，如果为空则取节点名称.
+	 * @throws Exception 
 	*/
-	public final String getSFCaption()
+	public final String getSFCaption() throws Exception
 	{
 		String str = this.GetValStringByKey(FrmSubFlowAttr.SFCaption);
 		if (str.equals(""))
@@ -268,29 +290,31 @@ public class FrmSubFlow extends Entity
 		}
 		return str;
 	}
-	public final void setSFCaption(String value)
+	public final void setSFCaption(String value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFCaption, value);
 	}
 	/** 
 	 操作名词(审核，审定，审阅，批示)
+	 * @throws Exception 
 	*/
-	public final String getSFOpLabel()
+	public final String getSFOpLabel() throws Exception
 	{
 		return this.GetValStringByKey(FrmSubFlowAttr.SFOpLabel);
 	}
-	public final void setSFOpLabel(String value)
+	public final void setSFOpLabel(String value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SFOpLabel, value);
 	}
 	/** 
 	 是否显示数字签名？
+	 * @throws Exception 
 	*/
-	public final boolean getSigantureEnabel()
+	public final boolean getSigantureEnabel() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmSubFlowAttr.SigantureEnabel);
 	}
-	public final void setSigantureEnabel(boolean value)
+	public final void setSigantureEnabel(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmSubFlowAttr.SigantureEnabel, value);
 	}
@@ -301,9 +325,10 @@ public class FrmSubFlow extends Entity
 		///#region 构造方法
 	/** 
 	 控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -369,9 +394,10 @@ public class FrmSubFlow extends Entity
 	}
 	/** 
 	 EnMap
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{
@@ -442,8 +468,9 @@ public class FrmSubFlow extends Entity
 	 自动触发
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSubFlowAuto()
+	public final String DoSubFlowAuto() throws Exception
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowAuto.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -451,8 +478,9 @@ public class FrmSubFlow extends Entity
 	 手动启动子流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSubFlowHand()
+	public final String DoSubFlowHand() throws Exception
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowHand.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -460,8 +488,9 @@ public class FrmSubFlow extends Entity
 	 延续子流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSubFlowYanXu()
+	public final String DoSubFlowYanXu() throws Exception
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowYanXu.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}

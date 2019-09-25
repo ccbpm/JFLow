@@ -4,6 +4,8 @@ import BP.DA.*;
 import BP.En.*;
 import BP.Port.*;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -13,8 +15,9 @@ public class SelectAccpers extends EntitiesMyPK
 {
 	/** 
 	 是否记忆下次选择
+	 * @throws Exception 
 	*/
-	public final boolean getIsSetNextTime()
+	public final boolean getIsSetNextTime() throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -36,8 +39,9 @@ public class SelectAccpers extends EntitiesMyPK
 	 @param fk_node
 	 @param Rec
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int QueryAccepter(int fk_node, String rec, long workid)
+	public final int QueryAccepter(int fk_node, String rec, long workid) throws Exception
 	{
 		//查询出来当前的数据.
 		int i = this.Retrieve(SelectAccperAttr.FK_Node, fk_node, SelectAccperAttr.WorkID, workid);
@@ -66,8 +70,9 @@ public class SelectAccpers extends EntitiesMyPK
 	 @param rec 当前人员
 	 @param workid 工作ID
 	 @return 
+	 * @throws Exception 
 	*/
-	public final int QueryAccepterPriSetting(int fk_node)
+	public final int QueryAccepterPriSetting(int fk_node) throws Exception
 	{
 		//找出最近的工作ID.
 		int maxWorkID = BP.DA.DBAccess.RunSQLReturnValInt("SELECT Max(WorkID) FROM WF_SelectAccper WHERE " + SelectAccperAttr.IsRemember + "=1 AND Rec='" + WebUser.getNo() + "' AND FK_Node=" + fk_node, 0);
@@ -84,8 +89,9 @@ public class SelectAccpers extends EntitiesMyPK
 	}
 	/** 
 	 他的到人员
+	 * @throws Exception 
 	*/
-	public final Emps getHisEmps()
+	public final Emps getHisEmps() throws Exception
 	{
 		Emps ens = new Emps();
 		for (SelectAccper ns : this.ToJavaList())
@@ -96,8 +102,9 @@ public class SelectAccpers extends EntitiesMyPK
 	}
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (SelectAccper ns : this.ToJavaList())
@@ -117,8 +124,9 @@ public class SelectAccpers extends EntitiesMyPK
 	 
 	 @param fk_flow
 	 @param workid
+	 * @throws Exception 
 	*/
-	public SelectAccpers(long workid)
+	public SelectAccpers(long workid) throws Exception
 	{
 		BP.En.QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SelectAccperAttr.WorkID, workid);

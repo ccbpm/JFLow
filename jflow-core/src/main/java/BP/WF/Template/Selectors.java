@@ -20,7 +20,7 @@ public class Selectors extends Entities
 	{
 	}
 
-	public Selectors(String fk_flow)
+	public Selectors(String fk_flow) throws Exception
 	{
 		String sql = "select NodeId from WF_Node where FK_Flow='" + fk_flow + "'";
 		this.RetrieveInSQL(sql);

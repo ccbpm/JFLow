@@ -17,8 +17,9 @@ public class WorkflowDefintionManager
 	 @param nodes 节点信息，格式为:@NodeID=xxxx@X=xxx@Y=xxx@Name=xxxx@RunModel=1
 	 @param dirs 方向信息，格式为: @Node=xxxx@ToNode=xxx@X=xxx@Y=xxx@Name=xxxx   
 	 @param labes 标签信息，格式为:@MyPK=xxxxx@Label=xxx@X=xxx@Y=xxxx
+	 * @throws Exception 
 	*/
-	public static String SaveFlow(String fk_flow, String nodes, String dirs, String labes)
+	public static String SaveFlow(String fk_flow, String nodes, String dirs, String labes) throws Exception
 	{
 		try
 		{
@@ -65,7 +66,7 @@ public class WorkflowDefintionManager
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 保存节点
 			String[] nds = nodes.split("[~]", -1);
-			for (String nd : nds.ToJavaList())
+			for (String nd : nds)
 			{
 				if (DataType.IsNullOrEmpty(nd))
 				{
@@ -95,7 +96,7 @@ public class WorkflowDefintionManager
 
 				AtPara ap = new AtPara(lab);
 				LabNote ln = new LabNote();
-				ln.setMyPK( BP.DA.DBAccess.GenerGUID(); // ap.GetValStrByKey("MyPK");
+				ln.setMyPK(BP.DA.DBAccess.GenerGUID()); // ap.GetValStrByKey("MyPK");
 				ln.setFK_Flow(fk_flow);
 				ln.setName(ap.GetValStrByKey("Label"));
 				ln.setX(ap.GetValIntByKey("X"));
@@ -145,8 +146,9 @@ public class WorkflowDefintionManager
 	 删除一个流程模版
 	 
 	 @param flowNo 流程编号
+	 * @throws Exception 
 	*/
-	public static String DeleteFlowTemplete(String flowNo)
+	public static String DeleteFlowTemplete(String flowNo) throws Exception
 	{
 		BP.WF.Flow fl = new BP.WF.Flow(flowNo);
 		try

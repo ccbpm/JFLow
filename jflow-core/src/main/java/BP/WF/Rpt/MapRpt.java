@@ -3,6 +3,7 @@ package BP.WF.Rpt;
 import BP.DA.*;
 import BP.Port.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -17,45 +18,49 @@ public class MapRpt extends EntityNoName
 		///#region 报表权限控制方式
 	/** 
 	 报表查看权限控制.
+	 * @throws Exception 
 	*/
-	public final RightViewWay getRightViewWay()
+	public final RightViewWay getRightViewWay() throws Exception
 	{
 		return RightViewWay.forValue(this.GetValIntByKey(MapRptAttr.RightViewWay));
 	}
-	public final void setRightViewWay(RightViewWay value)
+	public final void setRightViewWay(RightViewWay value) throws Exception
 	{
 		this.SetValByKey(MapRptAttr.RightViewWay, value.getValue());
 	}
 	/** 
 	 报表查看权限控制-数据
+	 * @throws Exception 
 	*/
-	public final String getRightViewTag()
+	public final String getRightViewTag() throws Exception
 	{
 		return this.GetValStringByKey(MapRptAttr.RightViewTag);
 	}
-	public final void setRightViewTag(String value)
+	public final void setRightViewTag(String value) throws Exception
 	{
 		this.SetValByKey(MapRptAttr.RightViewTag, value);
 	}
 	/** 
 	 报表部门权限控制.
+	 * @throws Exception 
 	*/
-	public final RightDeptWay getRightDeptWay()
+	public final RightDeptWay getRightDeptWay() throws Exception
 	{
 		return RightDeptWay.forValue(this.GetValIntByKey(MapRptAttr.RightDeptWay));
 	}
-	public final void setRightDeptWay(RightDeptWay value)
+	public final void setRightDeptWay(RightDeptWay value) throws Exception
 	{
 		this.SetValByKey(MapRptAttr.RightDeptWay, value.getValue());
 	}
 	/** 
 	 报表部门权限控制-数据
+	 * @throws Exception 
 	*/
-	public final String getRightDeptTag()
+	public final String getRightDeptTag() throws Exception
 	{
 		return this.GetValStringByKey(MapRptAttr.RightDeptTag);
 	}
-	public final void setRightDeptTag(String value)
+	public final void setRightDeptTag(String value) throws Exception
 	{
 		this.SetValByKey(MapRptAttr.RightDeptTag, value);
 	}
@@ -66,56 +71,60 @@ public class MapRpt extends EntityNoName
 		///#region 外键属性
 	/** 
 	 框架
+	 * @throws Exception 
 	*/
-	public final MapFrames getMapFrames()
+	public final MapFrames getMapFrames() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapFrames");
 		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapFrames(this.No);
+			obj = new MapFrames(this.getNo());
 			this.SetRefObject("MapFrames", obj);
 		}
 		return obj;
 	}
 	/** 
 	 分组字段
+	 * @throws Exception 
 	*/
-	public final GroupFields getGroupFields()
+	public final GroupFields getGroupFields() throws Exception
 	{
 		Object tempVar = this.GetRefObject("GroupFields");
 		GroupFields obj = tempVar instanceof GroupFields ? (GroupFields)tempVar : null;
 		if (obj == null)
 		{
-			obj = new GroupFields(this.No);
+			obj = new GroupFields(this.getNo());
 			this.SetRefObject("GroupFields", obj);
 		}
 		return obj;
 	}
 	/** 
 	 逻辑扩展
+	 * @throws Exception 
 	*/
-	public final MapExts getMapExts()
+	public final MapExts getMapExts() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapExts");
 		MapExts obj = tempVar instanceof MapExts ? (MapExts)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapExts(this.No);
+			obj = new MapExts(this.getNo());
 			this.SetRefObject("MapExts", obj);
 		}
 		return obj;
 	}
 	/** 
 	 事件
+	 * @throws Exception 
 	*/
-	public final FrmEvents getFrmEvents()
+	public final FrmEvents getFrmEvents() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEvents");
 		FrmEvents obj = tempVar instanceof FrmEvents ? (FrmEvents)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmEvents(this.No);
+			obj = new FrmEvents(this.getNo());
 			this.SetRefObject("FrmEvents", obj);
 		}
 		return obj;
@@ -123,154 +132,165 @@ public class MapRpt extends EntityNoName
 
 	/** 
 	 从表
+	 * @throws Exception 
 	*/
-	public final MapDtls getMapDtls()
+	public final MapDtls getMapDtls() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapDtls");
 		MapDtls obj = tempVar instanceof MapDtls ? (MapDtls)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapDtls(this.No);
+			obj = new MapDtls(this.getNo());
 			this.SetRefObject("MapDtls", obj);
 		}
 		return obj;
 	}
 	/** 
 	 超连接
+	 * @throws Exception 
 	*/
-	public final FrmLinks getFrmLinks()
+	public final FrmLinks getFrmLinks() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLinks(this.No);
+			obj = new FrmLinks(this.getNo());
 			this.SetRefObject("FrmLinks", obj);
 		}
 		return obj;
 	}
 	/** 
 	 按钮
+	 * @throws Exception 
 	*/
-	public final FrmBtns getFrmBtns()
+	public final FrmBtns getFrmBtns() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLinks");
 		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmBtns(this.No);
+			obj = new FrmBtns(this.getNo());
 			this.SetRefObject("FrmBtns", obj);
 		}
 		return obj;
 	}
 	/** 
 	 元素
+	 * @throws Exception 
 	*/
-	public final FrmEles getFrmEles()
+	public final FrmEles getFrmEles() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmEles");
 		FrmEles obj = tempVar instanceof FrmEles ? (FrmEles)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmEles(this.No);
+			obj = new FrmEles(this.getNo());
 			this.SetRefObject("FrmEles", obj);
 		}
 		return obj;
 	}
 	/** 
 	 线
+	 * @throws Exception 
 	*/
-	public final FrmLines getFrmLines()
+	public final FrmLines getFrmLines() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLines");
 		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLines(this.No);
+			obj = new FrmLines(this.getNo());
 			this.SetRefObject("FrmLines", obj);
 		}
 		return obj;
 	}
 	/** 
 	 标签
+	 * @throws Exception 
 	*/
-	public final FrmLabs getFrmLabs()
+	public final FrmLabs getFrmLabs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmLabs(this.No);
+			obj = new FrmLabs(this.getNo());
 			this.SetRefObject("FrmLabs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 图片
+	 * @throws Exception 
 	*/
-	public final FrmImgs getFrmImgs()
+	public final FrmImgs getFrmImgs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmLabs");
 		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmImgs(this.No);
+			obj = new FrmImgs(this.getNo());
 			this.SetRefObject("FrmLabs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 附件
+	 * @throws Exception 
 	*/
-	public final FrmAttachments getFrmAttachments()
+	public final FrmAttachments getFrmAttachments() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmAttachments");
 		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmAttachments(this.No);
+			obj = new FrmAttachments(this.getNo());
 			this.SetRefObject("FrmAttachments", obj);
 		}
 		return obj;
 	}
 	/** 
 	 图片附件
+	 * @throws Exception 
 	*/
-	public final FrmImgAths getFrmImgAths()
+	public final FrmImgAths getFrmImgAths() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmImgAths");
 		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmImgAths(this.No);
+			obj = new FrmImgAths(this.getNo());
 			this.SetRefObject("FrmImgAths", obj);
 		}
 		return obj;
 	}
 	/** 
 	 单选按钮
+	 * @throws Exception 
 	*/
-	public final FrmRBs getFrmRBs()
+	public final FrmRBs getFrmRBs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("FrmRBs");
 		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmRBs(this.No);
+			obj = new FrmRBs(this.getNo());
 			this.SetRefObject("FrmRBs", obj);
 		}
 		return obj;
 	}
 	/** 
 	 属性
+	 * @throws Exception 
 	*/
-	public final MapAttrs getMapAttrs()
+	public final MapAttrs getMapAttrs() throws Exception
 	{
 		Object tempVar = this.GetRefObject("MapAttrs");
 		MapAttrs obj = tempVar instanceof MapAttrs ? (MapAttrs)tempVar : null;
 		if (obj == null)
 		{
-			obj = new MapAttrs(this.No);
+			obj = new MapAttrs(this.getNo());
 			this.SetRefObject("MapAttrs", obj);
 		}
 		return obj;
@@ -288,7 +308,7 @@ public class MapRpt extends EntityNoName
 	   String str = this.GetValStrByKey(MapRptAttr.FK_Flow);
 	   if (str.equals("") || str == null)
 	   {
-		   str = this.No.Replace("ND", "");
+		   str = this.getNo().replace("ND", "");
 		   str = str.replace("MyRpt", "");
 		   str = tangible.StringHelper.padLeft(str, 3, '0');
 		   this.SetValByKey(MapRptAttr.FK_Flow, str);
@@ -298,43 +318,45 @@ public class MapRpt extends EntityNoName
 	   }
 	   return str;
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(MapRptAttr.FK_Flow, value);
 	}
 	/** 
 	 物理表
+	 * @throws Exception 
 	*/
-	public final String getPTable()
+	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapRptAttr.PTable);
 		if (s.equals("") || s == null)
 		{
-			return this.No;
+			return this.getNo();
 		}
 		return s;
 	}
-	public final void setPTable(String value)
+	public final void setPTable(String value) throws Exception
 	{
 		this.SetValByKey(MapRptAttr.PTable, value);
 	}
 	/** 
 	 备注
+	 * @throws Exception 
 	*/
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		return this.GetValStrByKey(MapRptAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(MapRptAttr.Note, value);
 	}
 	private Entities _HisEns = null;
-	public final Entities getHisEns()
+	public final Entities getHisEns() throws Exception
 	{
 		if (_HisEns == null)
 		{
-			_HisEns = BP.En.ClassFactory.GetEns(this.No);
+			_HisEns = BP.En.ClassFactory.GetEns(this.getNo());
 		}
 		return _HisEns;
 	}
@@ -348,11 +370,11 @@ public class MapRpt extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	private GEEntity _HisEn = null;
-	public final GEEntity getHisGEEn()
+	public final GEEntity getHisGEEn() throws Exception
 	{
 		if (this._HisEn == null)
 		{
-			_HisEn = new GEEntity(this.No);
+			_HisEn = new GEEntity(this.getNo());
 		}
 		return _HisEn;
 	}
@@ -368,7 +390,7 @@ public class MapRpt extends EntityNoName
 		GEEntity en = this.getHisGEEn();
 
 		// 它的table.
-		DataTable dt = ds.Tables[this.No];
+		DataTable dt = ds.Tables[this.getNo()];
 
 		//装载数据.
 		en.Row.LoadDataTable(dt, dt.Rows[0]);
@@ -404,8 +426,9 @@ public class MapRpt extends EntityNoName
 	 报表设计
 	 
 	 @param no 映射编号
+	 * @throws Exception 
 	*/
-	public MapRpt(String no)
+	public MapRpt(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -467,14 +490,15 @@ public class MapRpt extends EntityNoName
 		///#region 其他方法.
 	/** 
 	 显示的列.
+	 * @throws Exception 
 	*/
-	public final MapAttrs getHisShowColsAttrs()
+	public final MapAttrs getHisShowColsAttrs() throws Exception
 	{
-		MapAttrs mattrs = new MapAttrs(this.No);
+		MapAttrs mattrs = new MapAttrs(this.getNo());
 		return mattrs;
 	}
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.ResetIt();
 		return super.beforeInsert();
@@ -482,14 +506,15 @@ public class MapRpt extends EntityNoName
 
 	/** 
 	 重置设置.
+	 * @throws Exception 
 	*/
-	public final void ResetIt()
+	public final void ResetIt() throws Exception
 	{
-		MapData md = new MapData(this.No);
-		md.RptIsSearchKey = true;
-		md.RptDTSearchWay = DTSearchWay.None;
-		md.RptDTSearchKey = "";
-		md.RptSearchKeys = "*FK_Dept*WFSta*FK_NY*";
+		MapData md = new MapData(this.getNo());
+		md.setRptIsSearchKey(true);
+		md.setRptDTSearchWay(DTSearchWay.None);
+		md.setRptDTSearchKey("");
+		md.setRptSearchKeys("*FK_Dept*WFSta*FK_NY*");
 
 		Flow fl = new Flow(this.getFK_Flow());
 		this.setPTable(fl.getPTable());
@@ -499,9 +524,9 @@ public class MapRpt extends EntityNoName
 		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt");
 
 		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo()); // 删除已经有的字段。
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (keys.contains("'" + attr.KeyOfEn + "'") == false)
+			if (keys.contains("'" + attr.getKeyOfEn() + "'") == false)
 			{
 				continue;
 			}
@@ -513,9 +538,10 @@ public class MapRpt extends EntityNoName
 	 删除之前.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo());

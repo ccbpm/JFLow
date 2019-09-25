@@ -18,18 +18,19 @@ public class FrmNodeExt extends EntityMyPK
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性.
-	public final String getFK_Frm()
+	public final String getFK_Frm() throws Exception
 	{
 		return this.GetValStrByKey(FrmNodeAttr.FK_Frm);
 	}
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(FrmNodeAttr.FK_Node);
 	}
 	/** 
-	 @李国文 
+	 @throws Exception 
+	 * @李国文 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FK_Flow);
 	}
@@ -40,9 +41,10 @@ public class FrmNodeExt extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -212,29 +214,29 @@ public class FrmNodeExt extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 表单元素权限.
-	public final String DoDtls()
+	public final String DoDtls() throws Exception
 	{
 		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoFields()
+	public final String DoFields() throws Exception
 	{
 		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoAths()
+	public final String DoAths() throws Exception
 	{
 		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
-	public final String DoImgAths()
+	public final String DoImgAths() throws Exception
 	{
 		return "../../Admin/Sln/ImgAths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
-	public final String DoCopyFromNode()
+	public final String DoCopyFromNode() throws Exception
 	{
 		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoEnableRole()
+	public final String DoEnableRole() throws Exception
 	{
 		return "../../Admin/AttrNode/BindFrmsNodeEnableRole.htm?MyPK=" + this.getMyPK();
 	}

@@ -28,19 +28,19 @@ public class SysFormTrees extends EntitiesTree
 	}
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		int i = super.RetrieveAll();
 		if (i == 0)
 		{
 			SysFormTree fs = new SysFormTree();
-			fs.Name = "公文类";
-			fs.No = "01";
+			fs.setName("公文类");
+			fs.setNo("01");
 			fs.Insert();
 
 			fs = new SysFormTree();
-			fs.Name = "办公类";
-			fs.No = "02";
+			fs.setName("办公类");
+			fs.setNo("02");
 			fs.Insert();
 			i = super.RetrieveAll();
 		}

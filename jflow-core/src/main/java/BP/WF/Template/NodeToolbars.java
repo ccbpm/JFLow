@@ -36,8 +36,9 @@ public class NodeToolbars extends EntitiesOID
 	 工具栏集合.
 	 
 	 @param fk_node
+	 * @throws Exception 
 	*/
-	public NodeToolbars(String fk_node)
+	public NodeToolbars(String fk_node) throws Exception
 	{
 		this.Retrieve(NodeToolbarAttr.FK_Node, fk_node);
 	}

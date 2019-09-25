@@ -36,8 +36,9 @@ public class SubFlowHands extends EntitiesMyPK
 	 手工启动子流程集合
 	 
 	 @param fk_node 节点ID
+	 * @throws Exception 
 	*/
-	public SubFlowHands(int fk_node)
+	public SubFlowHands(int fk_node) throws Exception
 	{
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, SubFlowYanXuAttr.SubFlowType, SubFlowType.HandSubFlow.getValue(), SubFlowYanXuAttr.Idx);
 	}

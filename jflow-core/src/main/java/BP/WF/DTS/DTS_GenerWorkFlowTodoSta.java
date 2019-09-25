@@ -109,7 +109,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 
 			if (!fk_emp.equals(emp.No))
 			{
-				emp.No = fk_emp;
+				emp.setNo (fk_emp;
 				emp.Retrieve();
 			}
 		}

@@ -2,9 +2,12 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Sys.*;
 import BP.Port.*;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 import java.io.*;
 
@@ -53,92 +56,95 @@ public class NodeExt extends Entity
 		///#region 属性.
 	/** 
 	 会签规则
+	 * @throws Exception 
 	*/
-	public final HuiQianRole getHuiQianRole()
+	public final HuiQianRole getHuiQianRole() throws Exception
 	{
 		return HuiQianRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianRole));
 	}
-	public final void setHuiQianRole(HuiQianRole value)
+	public final void setHuiQianRole(HuiQianRole value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.HuiQianRole, value.getValue());
 	}
 
-	public final HuiQianLeaderRole getHuiQianLeaderRole()
+	public final HuiQianLeaderRole getHuiQianLeaderRole() throws Exception
 	{
 		return HuiQianLeaderRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianLeaderRole));
 	}
-	public final void setHuiQianLeaderRole(HuiQianLeaderRole value)
+	public final void setHuiQianLeaderRole(HuiQianLeaderRole value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.HuiQianLeaderRole, value.getValue());
 	}
 	/** 
 	 超时处理方式
+	 * @throws Exception 
 	*/
-	public final OutTimeDeal getHisOutTimeDeal()
+	public final OutTimeDeal getHisOutTimeDeal() throws Exception
 	{
 		return OutTimeDeal.forValue(this.GetValIntByKey(NodeAttr.OutTimeDeal));
 	}
-	public final void setHisOutTimeDeal(OutTimeDeal value)
+	public final void setHisOutTimeDeal(OutTimeDeal value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.OutTimeDeal, value.getValue());
 	}
 	/** 
 	 访问规则
+	 * @throws Exception 
 	*/
-	public final ReturnRole getHisReturnRole()
+	public final ReturnRole getHisReturnRole() throws Exception
 	{
 		return ReturnRole.forValue(this.GetValIntByKey(NodeAttr.ReturnRole));
 	}
-	public final void setHisReturnRole(ReturnRole value)
+	public final void setHisReturnRole(ReturnRole value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.ReturnRole, value.getValue());
 	}
 	/** 
 	 访问规则
 	*/
-	public final DeliveryWay getHisDeliveryWay()
+	public final DeliveryWay getHisDeliveryWay() throws Exception
 	{
 		return DeliveryWay.forValue(this.GetValIntByKey(NodeAttr.DeliveryWay));
 	}
-	public final void setHisDeliveryWay(DeliveryWay value)
+	public final void setHisDeliveryWay(DeliveryWay value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.DeliveryWay, value.getValue());
 	}
 	/** 
 	 步骤
 	*/
-	public final int getStep()
+	public final int getStep() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.Step);
 	}
-	public final void setStep(int value)
+	public final void setStep(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.Step, value);
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 审核组件状态
 	*/
-	public final FrmWorkCheckSta getHisFrmWorkCheckSta()
+	public final FrmWorkCheckSta getHisFrmWorkCheckSta() throws Exception
 	{
 		return FrmWorkCheckSta.forValue(this.GetValIntByKey(NodeAttr.FWCSta));
 	}
 
-	public final FWCAth getFWCAth()
+	public final FWCAth getFWCAth() throws Exception
 	{
 		return FWCAth.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCAth));
 	}
-	public final void setFWCAth(FWCAth value)
+	public final void setFWCAth(FWCAth value) throws Exception
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCAth, value.getValue());
 	}
@@ -146,77 +152,77 @@ public class NodeExt extends Entity
 	/** 
 	 超时处理内容
 	*/
-	public final String getDoOutTime()
+	public final String getDoOutTime() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.DoOutTime);
 	}
-	public final void setDoOutTime(String value)
+	public final void setDoOutTime(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.DoOutTime, value);
 	}
 	/** 
 	 超时处理条件
 	*/
-	public final String getDoOutTimeCond()
+	public final String getDoOutTimeCond() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.DoOutTimeCond);
 	}
-	public final void setDoOutTimeCond(String value)
+	public final void setDoOutTimeCond(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.DoOutTimeCond, value);
 	}
 	/** 
 	 节点名称
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.Name, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.FK_Flow, value);
 	}
 	/** 
 	 流程名称
 	*/
-	public final String getFlowName()
+	public final String getFlowName() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.FlowName);
 	}
-	public final void setFlowName(String value)
+	public final void setFlowName(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.FlowName, value);
 	}
 	/** 
 	 接受人sql
 	*/
-	public final String getDeliveryParas11()
+	public final String getDeliveryParas11() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.DeliveryParas);
 	}
-	public final void setDeliveryParas11(String value)
+	public final void setDeliveryParas11(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.DeliveryParas, value);
 	}
 	/** 
 	 是否可以退回
 	*/
-	public final boolean getReturnEnable()
+	public final boolean getReturnEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ReturnRole);
 	}
-	public final boolean getIsYouLiTai()
+	public final boolean getIsYouLiTai() throws Exception
 	{
 		return this.GetValBooleanByKey(NodeAttr.IsYouLiTai);
 	}
@@ -236,9 +242,10 @@ public class NodeExt extends Entity
 		///#region 初试化全局的 Node
 	/** 
 	 访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (this.getFK_Flow().equals(""))
@@ -274,7 +281,7 @@ public class NodeExt extends Entity
 	 
 	 @param nodeid 节点ID
 	*/
-	public NodeExt(int nodeid)
+	public NodeExt(int nodeid) throws Exception
 	{
 		this.setNodeID(nodeid);
 		this.Retrieve();
@@ -624,7 +631,7 @@ public class NodeExt extends Entity
 		rm.Title = "接收人规则";
 		rm.Icon = "../../WF/Admin/AttrNode/Img/Sender.png";
 		rm.ClassMethodName = this.toString() + ".DoAccepterRoleNew";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
@@ -632,14 +639,14 @@ public class NodeExt extends Entity
 		rm.Title = "节点事件"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoAction";
 		rm.Icon = "../../WF/Img/Event.png";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "节点消息"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoMessage";
 		rm.Icon = "../../WF/Img/Message24.png";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
@@ -648,28 +655,28 @@ public class NodeExt extends Entity
 		rm.ClassMethodName = this.toString() + ".DoCond";
 		rm.Icon = "../../WF/Admin/AttrNode/Img/Cond.png";
 			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Menu/Cond.png";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "发送后转向"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoTurnToDeal";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Turnto.png";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "发送阻塞规则";
 		rm.ClassMethodName = this.toString() + ".DoBlockModel";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/BlockModel.png";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "多人处理规则";
 		rm.ClassMethodName = this.toString() + ".DoTodolistModel";
 		rm.Icon = "../../WF/Img/Multiplayer.png";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
@@ -683,7 +690,7 @@ public class NodeExt extends Entity
 		rm.ClassMethodName = this.toString() + ".DoCanReturnNodes";
 		rm.Icon = "../../WF/Img/Btn/DTS.gif";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.LinkModel;
+		rm.refMethodType = RefMethodType.LinkModel;
 			//设置相关字段.
 		rm.RefAttrKey = NodeAttr.ReturnRole;
 		rm.RefAttrLinkLabel = "设置可退回的节点";
@@ -695,7 +702,7 @@ public class NodeExt extends Entity
 		rm.ClassMethodName = this.toString() + ".DoCanCancelNodes";
 		rm.Icon = "../../WF/Img/Btn/DTS.gif";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 
 			//设置相关字段.
 		rm.RefAttrKey = NodeAttr.CancelRole;
@@ -732,7 +739,7 @@ public class NodeExt extends Entity
 			//设置相关字段.
 		rm.RefAttrKey = NodeAttr.CCRole;
 		rm.RefAttrLinkLabel = "自动抄送设置";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -744,7 +751,7 @@ public class NodeExt extends Entity
 		rm.Title = "表单方案";
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/Form.png";
 		rm.ClassMethodName = this.toString() + ".DoSheet";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
 
@@ -753,7 +760,7 @@ public class NodeExt extends Entity
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/telephone.png";
 			//rm.Icon = ../../Img/Mobile.png";
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
 
@@ -762,7 +769,7 @@ public class NodeExt extends Entity
 		rm.Icon = "../../WF/Img/Components.png";
 			//rm.Icon = ../../Img/Mobile.png";
 		rm.ClassMethodName = this.toString() + ".DoFrmNodeComponent";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
 
@@ -771,7 +778,7 @@ public class NodeExt extends Entity
 		rm.Title = "特别控件特别用户权限";
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/SpecUserSpecFields.png";
 		rm.ClassMethodName = this.toString() + ".DoSpecFieldsSpecUsers()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -801,21 +808,21 @@ public class NodeExt extends Entity
 		rm.Title = "子流程基本设置";
 		rm.Icon = "../../WF/Admin/AttrNode/Img/SubFlows.png";
 		rm.ClassMethodName = this.toString() + ".DoSubFlow";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "父子流程";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "手动启动子流程"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoSubFlowHand";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "父子流程";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "自动触发子流程"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoSubFlowAuto";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "父子流程";
 		map.AddRefMethod(rm);
 
@@ -823,7 +830,7 @@ public class NodeExt extends Entity
 		rm.Title = "延续子流程"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoSubFlowYanXu";
 			//  rm.Icon = "../../WF/Img/Event.png";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "父子流程";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -836,7 +843,7 @@ public class NodeExt extends Entity
 		rm.Title = "设置考核规则";
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
 		rm.ClassMethodName = this.toString() + ".DoCHRole";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "考核规则";
 		map.AddRefMethod(rm);
 
@@ -844,7 +851,7 @@ public class NodeExt extends Entity
 		rm.Title = "超时处理规则";
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/OvertimeRole.png";
 		rm.ClassMethodName = this.toString() + ".DoCHOvertimeRole";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "考核规则";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -855,7 +862,7 @@ public class NodeExt extends Entity
 		rm = new RefMethod();
 		rm.Title = "自定义属性(通用)";
 		rm.ClassMethodName = this.toString() + ".DoSelfParas()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
 		rm.Visable = false;
 		map.AddRefMethod(rm);
@@ -863,7 +870,7 @@ public class NodeExt extends Entity
 		rm = new RefMethod();
 		rm.Title = "自定义属性(自定义)";
 		rm.ClassMethodName = this.toString() + ".DoNodeAttrExt()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
 		rm.Visable = false;
 		map.AddRefMethod(rm);
@@ -872,7 +879,7 @@ public class NodeExt extends Entity
 		rm.Title = "设置节点类型";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
 		rm.ClassMethodName = this.toString() + ".DoNodeAppType()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
 			//rm.Visable = false;
 		map.AddRefMethod(rm);
@@ -881,7 +888,7 @@ public class NodeExt extends Entity
 		rm.Title = "批量设置节点属性";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
 		rm.ClassMethodName = this.toString() + ".DoNodeAttrs()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
 		rm.Visable = false;
 		map.AddRefMethod(rm);
@@ -899,7 +906,7 @@ public class NodeExt extends Entity
 		rm.Title = "工作批处理规则";
 		rm.Icon = "../../WF/Img/Btn/DTS.gif";
 		rm.ClassMethodName = this.toString() + ".DoBatchStartFields()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "实验中的功能";
 		map.AddRefMethod(rm);
 
@@ -909,7 +916,7 @@ public class NodeExt extends Entity
 		rm.GroupName = "实验中的功能";
 		rm.Icon = "../../WF/Admin/AttrNode/Img/CC.png";
 		rm.ClassMethodName = this.toString() + ".DoCCer"; //要执行的方法名.
-		rm.RefMethodType = RefMethodType.RightFrameOpen; // 功能类型
+		rm.refMethodType = RefMethodType.RightFrameOpen; // 功能类型
 		map.AddRefMethod(rm);
 
 
@@ -919,7 +926,7 @@ public class NodeExt extends Entity
 	   //     rm.Icon = "../../WF/Admin/AttrNode/Img/CC.png";
 		rm.ClassMethodName = this.toString() + ".DoHelpRole"; //要执行的方法名.
 		rm.RefAttrKey = BtnAttr.HelpRole; //帮助信息.
-		rm.RefMethodType = RefMethodType.LinkeWinOpen; // 功能类型
+		rm.refMethodType = RefMethodType.LinkeWinOpen; // 功能类型
 		map.AddRefMethod(rm);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -935,8 +942,9 @@ public class NodeExt extends Entity
 	 考核规则
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoCHRole()
+	public final String DoCHRole() throws Exception
 	{
 		return "../../Admin/AttrNode/CHRole.htm?FK_Node=" + this.getNodeID();
 	}
@@ -944,8 +952,9 @@ public class NodeExt extends Entity
 	 超时处理规则
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoCHOvertimeRole()
+	public final String DoCHOvertimeRole() throws Exception
 	{
 		return "../../Admin/AttrNode/CHOvertimeRole.htm?FK_Node=" + this.getNodeID();
 	}
@@ -958,8 +967,9 @@ public class NodeExt extends Entity
 	 多人处理规则.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoTodolistModel()
+	public final String DoTodolistModel() throws Exception
 	{
 		return "../../Admin/AttrNode/TodolistModel.htm?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID();
 	}
@@ -967,8 +977,9 @@ public class NodeExt extends Entity
 	 批处理规则
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoBatchStartFields()
+	public final String DoBatchStartFields() throws Exception
 	{
 		return "../../Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID();
 	}
@@ -976,8 +987,9 @@ public class NodeExt extends Entity
 	 批量修改节点属性
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoNodeAttrs()
+	public final String DoNodeAttrs() throws Exception
 	{
 		return "../../Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow=" + this.getFK_Flow();
 	}
@@ -985,12 +997,13 @@ public class NodeExt extends Entity
 	 表单方案
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSheet()
+	public final String DoSheet() throws Exception
 	{
 		return "../../Admin/AttrNode/FrmSln/Default.htm?FK_Node=" + this.getNodeID();
 	}
-	public final String DoSheetOld()
+	public final String DoSheetOld() throws Exception
 	{
 		return "../../Admin/AttrNode/NodeFromWorkModel.htm?FK_Node=" + this.getNodeID();
 	}
@@ -1000,8 +1013,9 @@ public class NodeExt extends Entity
 	 接受人规则
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAccepterRoleNew()
+	public final String DoAccepterRoleNew() throws Exception
 	{
 		return "../../Admin/AttrNode/AccepterRole/Default.htm?FK_Node=" + this.getNodeID();
 	}
@@ -1011,7 +1025,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoBlockModel()
+	public final String DoBlockModel() throws Exception
 	{
 		return "../../Admin/AttrNode/BlockModel.htm?FK_Node=" + this.getNodeID();
 	}
@@ -1020,7 +1034,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoTurnToDeal()
+	public final String DoTurnToDeal() throws Exception
 	{
 		return "../../Admin/AttrNode/TurnToDeal.htm?FK_Node=" + this.getNodeID();
 	}
@@ -1029,7 +1043,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoCCer()
+	public final String DoCCer() throws Exception
 	{
 		return "../../Admin/AttrNode/CCRole.htm?FK_Node=" + this.getNodeID();
 	}
@@ -1038,7 +1052,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoHelpRole()
+	public final String DoHelpRole() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/HelpRole.htm?NodeID=" + this.getNodeID();
 	}
@@ -1052,7 +1066,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoFrmNodeComponent()
+	public final String DoFrmNodeComponent() throws Exception
 	{
 		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PKVal=" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
@@ -1061,7 +1075,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoSpecFieldsSpecUsers()
+	public final String DoSpecFieldsSpecUsers() throws Exception
 	{
 		return "../../Admin/AttrNode/SepcFiledsSepcUsers.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
@@ -1070,7 +1084,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoSortingMapAttrs()
+	public final String DoSortingMapAttrs() throws Exception
 	{
 		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
@@ -1084,7 +1098,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoSelfParas()
+	public final String DoSelfParas() throws Exception
 	{
 		return "../../Admin/AttrNode/SelfParas.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -1093,7 +1107,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoNodeAttrExt()
+	public final String DoNodeAttrExt() throws Exception
 	{
 		return "../../../DataUser/OverrideFiles/NodeAttrExt.htm?FK_Flow=" + this.getNodeID();
 	}
@@ -1103,7 +1117,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoNodeAppType()
+	public final String DoNodeAppType() throws Exception
 	{
 		return "../../Admin/AttrNode/NodeAppType.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -1117,7 +1131,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoSubFlow()
+	public final String DoSubFlow() throws Exception
 	{
 		return "../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.FrmSubFlow&PK=" + this.getNodeID();
 	}
@@ -1126,7 +1140,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoSubFlowAuto()
+	public final String DoSubFlowAuto() throws Exception
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowAuto.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -1135,7 +1149,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoSubFlowHand()
+	public final String DoSubFlowHand() throws Exception
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowHand.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -1144,7 +1158,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoSubFlowYanXu()
+	public final String DoSubFlowYanXu() throws Exception
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowYanXu.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -1152,8 +1166,8 @@ public class NodeExt extends Entity
 		///#endregion 子流程。
 
 
-	public final String DoTurn()
-	{
+	public final String DoTurn() throws Exception
+	{  
 		return "../../Admin/AttrNode/TurnTo.htm?FK_Node=" + this.getNodeID();
 		//, "节点完成转向处理", "FrmTurn", 800, 500, 200, 300);
 		//BP.WF.Node nd = new BP.WF.Node(this.NodeID);
@@ -1164,7 +1178,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoCCRole()
+	public final String DoCCRole() throws Exception
 	{
 		return "../../Comm/En.htm?EnName=BP.WF.Template.CC&PKVal=" + this.getNodeID();
 	}
@@ -1173,7 +1187,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoAccepter()
+	public final String DoAccepter() throws Exception
 	{
 		return "../../Comm/En.htm?EnName=BP.WF.Template.Selector&PK=" + this.getNodeID();
 	}
@@ -1182,7 +1196,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoActiveFlows()
+	public final String DoActiveFlows() throws Exception
 	{
 		return "../../Admin/ConditionSubFlow.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
@@ -1191,7 +1205,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoCanReturnNodes()
+	public final String DoCanReturnNodes() throws Exception
 	{
 		return "../../Admin/AttrNode/CanReturnNodes.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
@@ -1200,7 +1214,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoCanCancelNodes()
+	public final String DoCanCancelNodes() throws Exception
 	{
 		return "../../Admin/AttrNode/CanCancelNodes.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
@@ -1209,12 +1223,12 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DXReport()
+	public final String DXReport() throws Exception
 	{
 		return "../../Admin/DXReport.aspx?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 
-	public final String DoCond()
+	public final String DoCond() throws Exception
 	{
 		return "../../Admin/Cond/List.htm?CondType=" + CondType.Flow.getValue() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MainNode=" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&FK_Attr=&DirType=&ToNodeID=" + this.getNodeID();
 	}
@@ -1223,7 +1237,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoFormCol4()
+	public final String DoFormCol4() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/Designer.htm?PK=ND" + this.getNodeID();
 	}
@@ -1232,7 +1246,7 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoFormFree()
+	public final String DoFormFree() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=ND" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
 	}
@@ -1241,12 +1255,12 @@ public class NodeExt extends Entity
 	 
 	 @return 
 	*/
-	public final String DoFormTree()
+	public final String DoFormTree() throws Exception
 	{
 		return "../../Admin/Sln/BindFrms.htm?ShowType=FlowFrms&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID() + "&Lang=CH";
 	}
 
-	public final String DoMapData()
+	public final String DoMapData() throws Exception
 	{
 		int i = this.GetValIntByKey(NodeAttr.FormType);
 
@@ -1256,21 +1270,19 @@ public class NodeExt extends Entity
 		{
 			case FreeForm:
 				return "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=ND" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow();
-				break;
 			default:
 			case FoolForm:
 				return "../../Admin/FoolFormDesigner/Designer.htm?PK=ND" + this.getNodeID();
-				break;
 		}
-		return null;
 	}
 
 	/** 
 	 消息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoMessage()
+	public final String DoMessage() throws Exception
 	{
 		return "../../Admin/AttrNode/PushMessage.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -1278,8 +1290,9 @@ public class NodeExt extends Entity
 	 事件
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAction()
+	public final String DoAction() throws Exception
 	{
 		return "../../Admin/AttrNode/Action.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() + "&tk=" + (new Random()).nextDouble();
 	}
@@ -1287,8 +1300,9 @@ public class NodeExt extends Entity
 	 单据打印
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoBill()
+	public final String DoBill() throws Exception
 	{
 		return "../../Admin/AttrNode/Bill.htm?FK_Node=" + this.getNodeID() + "&NodeID=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getNodeID();
 	}
@@ -1296,10 +1310,11 @@ public class NodeExt extends Entity
 	 保存提示信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SaveHelpAlert(String text)
+	public final String SaveHelpAlert(String text) throws Exception
 	{
-		String file = SystemConfig.PathOfDataUser + "\\CCForm\\HelpAlert\\" + this.getNodeID() + ".htm";
+		String file = SystemConfig.getPathOfDataUser() + "\\CCForm\\HelpAlert\\" + this.getNodeID() + ".htm";
 		String folder = (new File(file)).getParent();
 		//若文件夹不存在，则创建
 		if ((new File(folder)).isDirectory() == false)
@@ -1314,11 +1329,12 @@ public class NodeExt extends Entity
 	 读取提示信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ReadHelpAlert()
+	public final String ReadHelpAlert() throws Exception
 	{
 		String doc = "";
-		String file = SystemConfig.PathOfDataUser + "\\CCForm\\HelpAlert\\" + this.getNodeID() + ".htm";
+		String file = SystemConfig.getPathOfDataUser() + "\\CCForm\\HelpAlert\\" + this.getNodeID() + ".htm";
 		String folder = (new File(file)).getParent();
 		if ((new File(folder)).isDirectory() != false)
 		{
@@ -1331,7 +1347,7 @@ public class NodeExt extends Entity
 		return doc;
 	}
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		//更新流程版本
 		Flow.UpdateVer(this.getFK_Flow());
@@ -1363,7 +1379,7 @@ public class NodeExt extends Entity
 		}
 
 		//如果启动了会签,并且是抢办模式,强制设置为队列模式.或者组长模式.
-		if (this.getHuiQianRole() != WF.HuiQianRole.None)
+		if (this.getHuiQianRole() != HuiQianRole.None)
 		{
 			if (this.getHuiQianRole() == HuiQianRole.Teamup)
 			{
@@ -1420,31 +1436,31 @@ public class NodeExt extends Entity
 		if (this.getFWCAth() == FWCAth.MinAth)
 		{
 			FrmAttachment workCheckAth = new FrmAttachment();
-			workCheckAth.setMyPK( "ND" + this.getNodeID() + "_FrmWorkCheck";
+			workCheckAth.setMyPK("ND" + this.getNodeID() + "_FrmWorkCheck");
 			//不包含审核组件
 			if (workCheckAth.RetrieveFromDBSources() == 0)
 			{
 				workCheckAth = new FrmAttachment();
 				/*如果没有查询到它,就有可能是没有创建.*/
-				workCheckAth.setMyPK( "ND" + this.getNodeID() + "_FrmWorkCheck";
-				workCheckAth.FK_MapData = "ND" + String.valueOf(this.getNodeID());
-				workCheckAth.NoOfObj = "FrmWorkCheck";
-				workCheckAth.Exts = "*.*";
+				workCheckAth.setMyPK("ND" + this.getNodeID() + "_FrmWorkCheck");
+				workCheckAth.setFK_MapData("ND" + String.valueOf(this.getNodeID()));
+				workCheckAth.setNoOfObj("FrmWorkCheck");
+				workCheckAth.setExts("*.*");
 
 				//存储路径.
-				workCheckAth.SaveTo = "/DataUser/UploadFile/";
-				workCheckAth.IsNote = false; //不显示note字段.
-				workCheckAth.IsVisable = false; // 让其在form 上不可见.
+				workCheckAth.setSaveTo("/DataUser/UploadFile/");
+				workCheckAth.setIsNote(false); //不显示note字段.
+				workCheckAth.setIsVisable(false); // 让其在form 上不可见.
 
 				//位置.
-				workCheckAth.X = (float)94.09;
-				workCheckAth.Y = (float)333.18;
-				workCheckAth.W = (float)626.36;
-				workCheckAth.H = (float)150;
+				workCheckAth.setX((float)94.09);
+				workCheckAth.setY((float)333.18);
+				workCheckAth.setW((float)626.36);
+				workCheckAth.setH((float)150);
 
 				//多附件.
-				workCheckAth.UploadType = AttachmentUploadType.Multi;
-				workCheckAth.Name = "审核组件";
+				workCheckAth.setUploadType(AttachmentUploadType.Multi);
+				workCheckAth.setName("审核组件");
 				workCheckAth.SetValByKey("AtPara", "@IsWoEnablePageset=1@IsWoEnablePrint=1@IsWoEnableViewModel=1@IsWoEnableReadonly=0@IsWoEnableSave=1@IsWoEnableWF=1@IsWoEnableProperty=1@IsWoEnableRevise=1@IsWoEnableIntoKeepMarkModel=1@FastKeyIsEnable=0@IsWoEnableViewKeepMark=1@FastKeyGenerRole=");
 				workCheckAth.Insert();
 			}
@@ -1464,9 +1480,9 @@ public class NodeExt extends Entity
 			if (gf.IsExit(GroupFieldAttr.CtrlType, GroupCtrlType.FWC, GroupFieldAttr.FrmID, "ND" + this.getNodeID()) == false)
 			{
 				gf = new GroupField();
-				gf.EnName = "ND" + this.getNodeID();
-				gf.CtrlType = GroupCtrlType.FWC;
-				gf.Lab = "审核信息";
+				gf.setEnName("ND" + this.getNodeID());
+				gf.setCtrlType(GroupCtrlType.FWC);
+				gf.setLab("审核信息");
 				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
@@ -1476,12 +1492,12 @@ public class NodeExt extends Entity
 
 
 		//清除所有的缓存.
-		BP.DA.CashEntity.DCash.Clear();
+		BP.DA.CashEntity.getDCash().clear();
 
 		return super.beforeUpdate();
 	}
 	@Override
-	protected void afterInsertUpdateAction()
+	protected void afterInsertUpdateAction() throws Exception
 	{
 		Node fl = new Node();
 		fl.setNodeID(this.getNodeID());
@@ -1498,7 +1514,7 @@ public class NodeExt extends Entity
 
 		BtnLab btnLab = new BtnLab(this.getNodeID());
 		btnLab.RetrieveFromDBSources();
-		Cash2019.UpdateRow(btnLab.toString(), String.valueOf(this.getNodeID()), btnLab.Row);
+		Cash2019.UpdateRow(btnLab.toString(), String.valueOf(this.getNodeID()), btnLab.getRow());
 		//如果是组长会签模式，通用选择器只能单项选择
 		if (this.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && this.getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne)
 		{

@@ -2,8 +2,10 @@ package BP.WF.Port.SubInc;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Port.*;
+import BP.Tools.Cryptos;
 import BP.Web.*;
 import BP.WF.*;
 import BP.WF.Port.*;
@@ -16,9 +18,9 @@ public class AdminEmp extends EntityNoName
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
-	public final boolean getIsAdmin()
+	public final boolean getIsAdmin() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -33,81 +35,82 @@ public class AdminEmp extends EntityNoName
 
 	/** 
 	 用户状态
+	 * @throws Exception 
 	*/
-	public final int getUseSta()
+	public final int getUseSta() throws Exception
 	{
 		return this.GetValIntByKey(AdminEmpAttr.UseSta);
 	}
-	public final void setUseSta(int value)
+	public final void setUseSta(int value) throws Exception
 	{
 		SetValByKey(AdminEmpAttr.UseSta, value);
 	}
 	/** 
 	 用户类型
 	*/
-	public final int getUserType()
+	public final int getUserType() throws Exception
 	{
 		return this.GetValIntByKey(AdminEmpAttr.UserType);
 	}
-	public final void setUserType(int value)
+	public final void setUserType(int value) throws Exception
 	{
 		SetValByKey(AdminEmpAttr.UserType, value);
 	}
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(AdminEmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(AdminEmpAttr.FK_Dept, value);
 	}
 	/** 
 	 组织结构
 	*/
-	public final String getOrgNo()
+	public final String getOrgNo() throws Exception
 	{
 		return this.GetValStringByKey(AdminEmpAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
+	public final void setOrgNo(String value) throws Exception
 	{
 		SetValByKey(AdminEmpAttr.OrgNo, value);
 	}
-	public final String getRootOfDept()
+	public final String getRootOfDept() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return "0";
 		}
 
 		return this.GetValStringByKey(AdminEmpAttr.RootOfDept);
 	}
-	public final void setRootOfDept(String value)
+	public final void setRootOfDept(String value) throws Exception
 	{
 		SetValByKey(AdminEmpAttr.RootOfDept, value);
 	}
-	public final String getRootOfFlow()
+	public final String getRootOfFlow() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return "0";
 		}
 
 		return this.GetValStrByKey(AdminEmpAttr.RootOfFlow);
 	}
-	public final void setRootOfFlow(String value)
+	public final void setRootOfFlow(String value) throws Exception
 	{
 		SetValByKey(AdminEmpAttr.RootOfFlow, value);
 	}
-	public final String getRootOfForm()
+	public final String getRootOfForm() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return "0";
 		}
 
 		return this.GetValStringByKey(AdminEmpAttr.RootOfForm);
 	}
-	public final void setRootOfForm(String value)
+	public final void setRootOfForm(String value) throws Exception
 	{
 		SetValByKey(AdminEmpAttr.RootOfForm, value);
 	}
@@ -117,9 +120,9 @@ public class AdminEmp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造函数
 	@Override
-	public En.UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
-		UAC uac = new En.UAC();
+		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
 		return uac;
@@ -134,8 +137,9 @@ public class AdminEmp extends EntityNoName
 	 管理员
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public AdminEmp(String no)
+	public AdminEmp(String no) throws Exception
 	{
 		this.setNo(no);
 		try
@@ -198,7 +202,7 @@ public class AdminEmp extends EntityNoName
 		rm.Title = "增加管理员";
 		rm.getHisAttrs().AddTBString("emp", null, "管理员帐号", true, false, 0, 100, 100);
 		rm.getHisAttrs().AddTBString("OrgNo", null, "可管理的组织结构代码", true, false, 0, 100, 100);
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		rm.ClassMethodName = this.toString() + ".DoAdd";
 		map.AddRefMethod(rm);
 
@@ -214,9 +218,9 @@ public class AdminEmp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			this.setRootOfDept("0");
 			this.setRootOfFlow("0");
@@ -228,45 +232,45 @@ public class AdminEmp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final String DoAdd(String empNo, String orgNo)
+	public final String DoAdd(String empNo, String orgNo) throws Exception
 	{
 
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.No = empNo;
+		emp.setNo(empNo);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "err@管理员增加失败，ID=" + empNo + "不存在用户表，您增加的管理员必须存在与Port_Emp用户表.";
 		}
 
 		BP.Port.Dept dept = new BP.Port.Dept();
-		dept.No = orgNo;
+		dept.setNo(orgNo);
 		if (dept.RetrieveFromDBSources() == 0)
 		{
 			return "err@orgNo错误, 不存在 Port_Dept 里面。";
 		}
 
 		BP.WF.Port.Inc inc = new BP.WF.Port.Inc();
-		inc.No = orgNo;
+		inc.setNo(orgNo);
 		if (inc.RetrieveFromDBSources() == 0)
 		{
 			return "err@orgNo错误, 不存在 Port_Inc 里面。";
 		}
 
 		//求根目录流程树.
-		BP.WF.Template.FlowSort fsRoot = new WF.Template.FlowSort();
+		BP.WF.Template.FlowSort fsRoot = new BP.WF.Template.FlowSort();
 		fsRoot.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo,"0");
 
 
-		BP.WF.Template.FlowSort fs = new WF.Template.FlowSort();
-		fs.No = "Inc" + orgNo;
+		BP.WF.Template.FlowSort fs = new BP.WF.Template.FlowSort();
+		fs.setNo("Inc" + orgNo);
 		if (fs.RetrieveFromDBSources() == 1)
 		{
 			return "err@该组织已经初始化过流程树目录.";
 		}
 
-		fs.Name = dept.Name + "-流程树";
-		fs.ParentNo = fsRoot.No;
-		fs.setOrgNo(dept.No);
+		fs.setName(dept.getName() + "-流程树");
+		fs.setParentNo(fsRoot.getNo());
+		fs.setOrgNo(dept.getNo());
 		fs.Insert();
 
 
@@ -275,20 +279,20 @@ public class AdminEmp extends EntityNoName
 		frmRoot.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo, "0");
 
 		BP.Sys.FrmTree frmTree = new BP.Sys.FrmTree();
-		frmTree.No = "Inc" + orgNo;
+		frmTree.setNo("Inc" + orgNo);
 		if (frmTree.RetrieveFromDBSources() == 1)
 		{
 			return "err@该组织已经初始化过表单树目录.";
 		}
 
-		frmTree.ParentNo = frmRoot.No;
-		frmTree.Name = dept.Name + "-表单树";
-		frmTree.OrgNo = dept.No;
+		frmTree.setParentNo(frmRoot.getNo());
+		frmTree.setName(dept.getName() + "-表单树");
+		frmTree.setOrgNo(dept.getNo());
 		frmTree.Insert();
 
 
 		AdminEmp ae = new AdminEmp();
-		ae.No = empNo;
+		ae.setNo(empNo);
 		if (ae.RetrieveFromDBSources() == 1)
 		{
 			if (ae.getIsAdmin() == true)
@@ -317,10 +321,11 @@ public class AdminEmp extends EntityNoName
 	 
 	 @param password
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSetPassword(String password)
+	public final String DoSetPassword(String password) throws Exception
 	{
-		String str = BP.Tools.Cryptography.EncryptString(password);
+		String str = Cryptos.aesEncrypt(password);
 		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No=' " + this.getNo()+ " '");
 		return "设置成功..";
 	}

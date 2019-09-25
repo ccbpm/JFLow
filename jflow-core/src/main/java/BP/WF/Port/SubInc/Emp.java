@@ -2,8 +2,10 @@ package BP.WF.Port.SubInc;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Port.*;
+import BP.Tools.Cryptos;
 import BP.Web.*;
 import BP.WF.*;
 import BP.WF.Port.*;
@@ -16,9 +18,9 @@ public class Emp extends EntityNoName
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
-	public final boolean getIsAdmin()
+	public final boolean getIsAdmin() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return true;
 		}
@@ -33,81 +35,82 @@ public class Emp extends EntityNoName
 
 	/** 
 	 用户状态
+	 * @throws Exception 
 	*/
-	public final int getUseSta()
+	public final int getUseSta() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.UseSta);
 	}
-	public final void setUseSta(int value)
+	public final void setUseSta(int value) throws Exception
 	{
 		SetValByKey(EmpAttr.UseSta, value);
 	}
 	/** 
 	 用户类型
 	*/
-	public final int getUserType()
+	public final int getUserType() throws Exception
 	{
 		return this.GetValIntByKey(EmpAttr.UserType);
 	}
-	public final void setUserType(int value)
+	public final void setUserType(int value) throws Exception
 	{
 		SetValByKey(EmpAttr.UserType, value);
 	}
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(EmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(EmpAttr.FK_Dept, value);
 	}
 	/** 
 	 组织结构
 	*/
-	public final String getOrgNo()
+	public final String getOrgNo() throws Exception
 	{
 		return this.GetValStringByKey(EmpAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
+	public final void setOrgNo(String value) throws Exception
 	{
 		SetValByKey(EmpAttr.OrgNo, value);
 	}
-	public final String getRootOfDept()
+	public final String getRootOfDept() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return "0";
 		}
 
 		return this.GetValStringByKey(EmpAttr.RootOfDept);
 	}
-	public final void setRootOfDept(String value)
+	public final void setRootOfDept(String value) throws Exception
 	{
 		SetValByKey(EmpAttr.RootOfDept, value);
 	}
-	public final String getRootOfFlow()
+	public final String getRootOfFlow() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return "0";
 		}
 
 		return this.GetValStrByKey(EmpAttr.RootOfFlow);
 	}
-	public final void setRootOfFlow(String value)
+	public final void setRootOfFlow(String value) throws Exception
 	{
 		SetValByKey(EmpAttr.RootOfFlow, value);
 	}
-	public final String getRootOfForm()
+	public final String getRootOfForm() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			return "0";
 		}
 
 		return this.GetValStringByKey(EmpAttr.RootOfForm);
 	}
-	public final void setRootOfForm(String value)
+	public final void setRootOfForm(String value) throws Exception
 	{
 		SetValByKey(EmpAttr.RootOfForm, value);
 	}
@@ -117,9 +120,9 @@ public class Emp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造函数
 	@Override
-	public En.UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
-		UAC uac = new En.UAC();
+		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
 		return uac;
@@ -134,8 +137,9 @@ public class Emp extends EntityNoName
 	 子公司人员
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public Emp(String no)
+	public Emp(String no) throws Exception
 	{
 		this.setNo(no);
 		try
@@ -197,9 +201,9 @@ public class Emp extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		if (this.No.equals("admin"))
+		if (this.getNo().equals("admin"))
 		{
 			this.setRootOfDept("0");
 			this.setRootOfFlow("0");
@@ -210,17 +214,17 @@ public class Emp extends EntityNoName
 			if (this.getUserType() == 1)
 			{
 				//为树目录更新OrgNo编号.
-				BP.WF.Template.FlowSort fs = new Template.FlowSort();
-				fs.No = this.getRootOfFlow(); //周朋需要对照翻译.
+				BP.WF.Template.FlowSort fs = new BP.WF.Template.FlowSort();
+				fs.setNo(this.getRootOfFlow()); //周朋需要对照翻译.
 				if (fs.RetrieveFromDBSources() == 1)
 				{
 					fs.setOrgNo(this.getRootOfDept());
 					fs.Update();
 
 					//更新本级目录.
-					BP.WF.Template.FlowSorts fsSubs = new Template.FlowSorts();
-					fsSubs.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo, fs.No);
-					for (BP.WF.Template.FlowSort item : fsSubs)
+					BP.WF.Template.FlowSorts fsSubs = new BP.WF.Template.FlowSorts();
+					fsSubs.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo, fs.getNo());
+					for (BP.WF.Template.FlowSort item : fsSubs.ToJavaList())
 					{
 						item.setOrgNo(this.getRootOfDept());
 						item.Update();
@@ -240,10 +244,11 @@ public class Emp extends EntityNoName
 	 
 	 @param password
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSetPassword(String password)
+	public final String DoSetPassword(String password) throws Exception
 	{
-		String str = BP.Tools.Cryptography.EncryptString(password);
+		String str = Cryptos.aesEncrypt(password);
 		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No=' " + this.getNo()+ " '");
 		return "设置成功..";
 	}
@@ -252,21 +257,22 @@ public class Emp extends EntityNoName
 	 
 	 @param empID
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoAddAdminer(String empID)
+	public final String DoAddAdminer(String empID) throws Exception
 	{
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.No = empID;
+		emp.setNo(empID);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "err@子公司人员增加失败，ID=" + empID + "不存在用户表，您增加的子公司人员必须存在与Port_Emp用户表.";
 		}
 
 		Emp Emp = new Emp();
-		Emp.No = empID;
+		Emp.setNo(empID);
 		if (Emp.RetrieveFromDBSources() == 1)
 		{
-			return "err@子公司人员【" + Emp.Name + "】已经存在，您不需要在增加.";
+			return "err@子公司人员【" + Emp.getName() + "】已经存在，您不需要在增加.";
 		}
 
 		Emp.Copy(emp);

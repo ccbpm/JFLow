@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,9 +16,10 @@ public class SubFlowAuto extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -26,100 +28,110 @@ public class SubFlowAuto extends EntityMyPK
 	}
 	/** 
 	 主流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(SubFlowAutoAttr.FK_Flow, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getSubFlowNo()
+	public final String getSubFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAttr.SubFlowNo);
 	}
-	public final void setSubFlowNo(String value)
+	public final void setSubFlowNo(String value) throws Exception
 	{
 		SetValByKey(SubFlowAutoAttr.SubFlowNo, value);
 	}
 	/** 
 	 流程名称
+	 * @throws Exception 
 	*/
-	public final String getFlowName()
+	public final String getFlowName() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.SubFlowName);
 	}
 	/** 
 	 条件表达式.
+	 * @throws Exception 
 	*/
-	public final String getCondExp()
+	public final String getCondExp() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.CondExp);
 	}
-	public final void setCondExp(String value)
+	public final void setCondExp(String value) throws Exception
 	{
 		SetValByKey(SubFlowAutoAttr.CondExp, value);
 	}
 	/** 
 	 表达式类型
+	 * @throws Exception 
 	*/
-	public final ConnDataFrom getExpType()
+	public final ConnDataFrom getExpType() throws Exception
 	{
 		return ConnDataFrom.forValue(this.GetValIntByKey(SubFlowAutoAttr.ExpType));
 	}
-	public final void setExpType(ConnDataFrom value)
+	public final void setExpType(ConnDataFrom value) throws Exception
 	{
 		SetValByKey(SubFlowAutoAttr.ExpType, value.getValue());
 	}
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(SubFlowAutoAttr.FK_Node);
 	}
 	/** 
 	 调用时间 0=工作发送时, 1=工作到达时.
+	 * @throws Exception 
 	*/
-	public final int getInvokeTime()
+	public final int getInvokeTime() throws Exception
 	{
 		return this.GetValIntByKey(SubFlowAutoAttr.InvokeTime);
 	}
 
 	/** 
 	 运行类型
+	 * @throws Exception 
 	*/
-	public final SubFlowModel getHisSubFlowModel()
+	public final SubFlowModel getHisSubFlowModel() throws Exception
 	{
 		return SubFlowModel.forValue(this.GetValIntByKey(SubFlowAutoAttr.SubFlowModel));
 	}
 	/** 
 	 类型
+	 * @throws Exception 
 	*/
-	public final SubFlowType getHisSubFlowType()
+	public final SubFlowType getHisSubFlowType() throws Exception
 	{
 		return SubFlowType.forValue(this.GetValIntByKey(SubFlowAutoAttr.SubFlowType));
 	}
 	/** 
 	 仅仅发起一次.
+	 * @throws Exception 
 	*/
-	public final boolean getStartOnceOnly()
+	public final boolean getStartOnceOnly() throws Exception
 	{
 		return this.GetValBooleanByKey(SubFlowAutoAttr.StartOnceOnly);
 	}
 
-	public final boolean getCompleteReStart()
+	public final boolean getCompleteReStart() throws Exception
 	{
 		return this.GetValBooleanByKey(SubFlowAutoAttr.CompleteReStart);
 	}
 	/** 
 	 指定的流程启动后,才能启动该子流程(请在文本框配置子流程).
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableSpecFlowStart()
+	public final boolean getIsEnableSpecFlowStart() throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowStart);
+		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowStart);
 		if (val == false)
 		{
 			return false;
@@ -131,17 +143,18 @@ public class SubFlowAuto extends EntityMyPK
 		}
 		return false;
 	}
-	public final String getSpecFlowStart()
+	public final String getSpecFlowStart() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.SpecFlowStart);
 	}
 	/** 
 	 指定的流程结束后,才能启动该子流程(请在文本框配置子流程).
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableSpecFlowOver()
+	public final boolean getIsEnableSpecFlowOver() throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowOver);
+		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowOver);
 		if (val == false)
 		{
 			return false;
@@ -153,17 +166,18 @@ public class SubFlowAuto extends EntityMyPK
 		}
 		return false;
 	}
-	public final String getSpecFlowOver()
+	public final String getSpecFlowOver() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.SpecFlowOver);
 	}
 	/** 
 	 按SQL配置
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableSQL()
+	public final boolean getIsEnableSQL() throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSQL);
+		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSQL);
 		if (val == false)
 		{
 			return false;
@@ -177,18 +191,19 @@ public class SubFlowAuto extends EntityMyPK
 
 	}
 
-	public final String getSpecSQL()
+	public final String getSpecSQL() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.SpecSQL);
 	}
 
 	/** 
 	 指定平级子流程节点结束后启动子流程
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableSameLevelNode()
+	public final boolean getIsEnableSameLevelNode() throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSameLevelNode);
+		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSameLevelNode);
 		if (val == false)
 		{
 			return false;
@@ -202,7 +217,7 @@ public class SubFlowAuto extends EntityMyPK
 
 	}
 
-	public final String getSameLevelNode()
+	public final String getSameLevelNode() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.SameLevelNode);
 	}
@@ -210,8 +225,9 @@ public class SubFlowAuto extends EntityMyPK
 
 	/** 
 	 自动发起的子流程发送方式
+	 * @throws Exception 
 	*/
-	public final int getSendModel()
+	public final int getSendModel() throws Exception
 	{
 		return this.GetValIntByKey(SubFlowAutoAttr.SendModel);
 	}
@@ -302,16 +318,17 @@ public class SubFlowAuto extends EntityMyPK
 	 设置主键
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setMyPK( this.getFK_Node() + "_" + this.getSubFlowNo() + "_1";
+		this.setMyPK(this.getFK_Node() + "_" + this.getSubFlowNo() + "_1");
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws NumberFormatException, Exception
 	{
 		if (this.getSendModel() == 1)
 		{
@@ -320,7 +337,7 @@ public class SubFlowAuto extends EntityMyPK
 			Node nd = new Node(Integer.parseInt(this.getSubFlowNo() + "01"));
 
 			Nodes tonds = nd.getHisToNodes();
-			for (Node item : tonds)
+			for (Node item : tonds.ToJavaList())
 			{
 				if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
 				{
@@ -342,8 +359,9 @@ public class SubFlowAuto extends EntityMyPK
 	 上移
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoUp()
+	public final String DoUp() throws Exception
 	{
 		this.DoOrderUp(SubFlowAutoAttr.FK_Node, String.valueOf(this.getFK_Node()), SubFlowAutoAttr.SubFlowType, "1", SubFlowAutoAttr.Idx);
 		return "执行成功";
@@ -352,8 +370,9 @@ public class SubFlowAuto extends EntityMyPK
 	 下移
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDown()
+	public final String DoDown() throws Exception
 	{
 		this.DoOrderDown(SubFlowAutoAttr.FK_Node, String.valueOf(this.getFK_Node()), SubFlowAutoAttr.SubFlowType, "2", SubFlowAutoAttr.Idx);
 		return "执行成功";

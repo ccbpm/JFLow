@@ -527,7 +527,7 @@ public class Cond extends EntityMyPK
 
 					//@于庆海.
 				BP.Port.Emp emp = new BP.Port.Emp(this.getSpecOper());
-				emp.No = this.getSpecOper();
+				emp.setNo (this.getSpecOper();
 				if (emp.RetrieveFromDBSources() == 1)
 				{
 					BP.GPM.DeptEmp de = new GPM.DeptEmp();

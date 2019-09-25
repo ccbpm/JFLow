@@ -75,11 +75,11 @@ public abstract class EntityTree extends Entity
 	 顺序号
 	 * @throws Exception 
 	*/
-	public final int getIdx() throws Exception
+	public int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(EntityTreeAttr.Idx);
 	}
-	public final void setIdx(int value) throws Exception
+	public void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(EntityTreeAttr.Idx, value);
 	}

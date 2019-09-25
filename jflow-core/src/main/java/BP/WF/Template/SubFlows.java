@@ -36,8 +36,9 @@ public class SubFlows extends EntitiesMyPK
 	 子流程集合.
 	 
 	 @param fk_node 节点
+	 * @throws Exception 
 	 */
-	public SubFlows(int fk_node)
+	public SubFlows(int fk_node) throws Exception
 	{
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node);
 	}

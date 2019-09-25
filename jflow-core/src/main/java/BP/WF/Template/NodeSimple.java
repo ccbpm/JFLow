@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
@@ -19,39 +20,41 @@ public class NodeSimple extends Entity
 		///#region 节点属性.
 	/** 
 	 节点编号
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.Name, value);
 	}
-	public final float getX()
+	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(NodeAttr.X);
 	}
-	public final void setX(float value)
+	public final void setX(float value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.X, value);
 	}
 	/** 
 	 y
+	 * @throws Exception 
 	*/
-	public final float getY()
+	public final float getY() throws Exception
 	{
 		return this.GetValFloatByKey(NodeAttr.Y);
 	}
-	public final void setY(float value)
+	public final void setY(float value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.Y, value);
 	}

@@ -156,7 +156,7 @@ public class WF_AppClassic extends DirectoryPageBase
 			}
 
 			BP.Port.Emp emp = new Emp();
-			emp.No = userNo;
+			emp.setNo (userNo;
 			if (emp.RetrieveFromDBSources() == 0)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "NikeName") == true)
@@ -171,7 +171,7 @@ public class WF_AppClassic extends DirectoryPageBase
 						return "err@用户名或者密码错误.";
 					}
 
-					emp.No = no;
+					emp.setNo (no;
 					int i = emp.RetrieveFromDBSources();
 					if (i == 0)
 					{
@@ -190,7 +190,7 @@ public class WF_AppClassic extends DirectoryPageBase
 						return "err@用户名或者密码错误.";
 					}
 
-					emp.No = no;
+					emp.setNo (no;
 					int i = emp.RetrieveFromDBSources();
 					if (i == 0)
 					{

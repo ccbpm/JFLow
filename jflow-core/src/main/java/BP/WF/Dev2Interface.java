@@ -472,7 +472,7 @@ public class Dev2Interface
 			{
 				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
-				emp.No = starter;
+				emp.setNo (starter;
 				if (emp.RetrieveFromDBSources() == 0)
 				{
 					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.No + "不存在。");
@@ -3747,7 +3747,7 @@ public class Dev2Interface
 	{
 		/* 仅仅传递了人员编号，就按照人员来取.*/
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.No = userNo;
+		emp.setNo (userNo;
 		emp.RetrieveFromDBSources();
 		WebUser.SignInOfGener(emp);
 
@@ -9881,7 +9881,7 @@ public class Dev2Interface
 				continue;
 			}
 			Emp emp = new Emp();
-			emp.No = empNo;
+			emp.setNo (empNo;
 			if (emp.RetrieveFromDBSources() == 0)
 			{
 				return;
@@ -10008,7 +10008,7 @@ public class Dev2Interface
 	{
 		//检查人员是否存在.
 		Emp emp = new Emp();
-		emp.No = askForEmp;
+		emp.setNo (askForEmp;
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			throw new RuntimeException("@要加签的人员编号错误:" + askForEmp);

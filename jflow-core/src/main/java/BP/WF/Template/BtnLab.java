@@ -15,9 +15,10 @@ public class BtnLab extends Entity
 {
 	/** 
 	 访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -45,222 +46,229 @@ public class BtnLab extends Entity
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(BtnAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.NodeID, value);
 	}
 	/** 
 	 名称
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.Name, value);
 	}
 	/** 
 	 查询标签
+	 * @throws Exception 
 	*/
-	public final String getSearchLab()
+	public final String getSearchLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.SearchLab);
 	}
-	public final void setSearchLab(String value)
+	public final void setSearchLab(String value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.SearchLab, value);
 	}
 	/** 
 	 查询是否可用
+	 * @throws Exception 
 	*/
-	public final boolean getSearchEnable()
+	public final boolean getSearchEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.SearchEnable);
 	}
-	public final void setSearchEnable(boolean value)
+	public final void setSearchEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.SearchEnable, value);
 	}
 	/** 
 	 移交
+	 * @throws Exception 
 	*/
-	public final String getShiftLab()
+	public final String getShiftLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.ShiftLab);
 	}
-	public final void setShiftLab(String value)
+	public final void setShiftLab(String value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.ShiftLab, value);
 	}
 	/** 
 	 是否启用移交
+	 * @throws Exception 
 	*/
-	public final boolean getShiftEnable()
+	public final boolean getShiftEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ShiftEnable);
 	}
-	public final void setShiftEnable(boolean value)
+	public final void setShiftEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.ShiftEnable, value);
 	}
 	/** 
 	 选择接受人
+	 * @throws Exception 
 	*/
-	public final String getSelectAccepterLab()
+	public final String getSelectAccepterLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.SelectAccepterLab);
 	}
 	/** 
 	 选择接受人类型
 	*/
-	public final int getSelectAccepterEnable()
+	public final int getSelectAccepterEnable() throws Exception
 	{
 		return this.GetValIntByKey(BtnAttr.SelectAccepterEnable);
 	}
-	public final void setSelectAccepterEnable(int value)
+	public final void setSelectAccepterEnable(int value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.SelectAccepterEnable, value);
 	}
 	/** 
 	 保存
 	*/
-	public final String getSaveLab()
+	public final String getSaveLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.SaveLab);
 	}
 	/** 
 	 是否启用保存
 	*/
-	public final boolean getSaveEnable()
+	public final boolean getSaveEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.SaveEnable);
 	}
 	/** 
 	 子线程按钮标签
 	*/
-	public final String getThreadLab()
+	public final String getThreadLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.ThreadLab);
 	}
 	/** 
 	 子线程按钮是否启用
 	*/
-	public final boolean getThreadEnable()
+	public final boolean getThreadEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ThreadEnable);
 	}
 	/** 
 	 是否可以删除（当前分流，分合流节点发送出去的）子线程.
 	*/
-	public final boolean getThreadIsCanDel()
+	public final boolean getThreadIsCanDel() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ThreadIsCanDel);
 	}
 	/** 
 	 是否可以移交.
 	*/
-	public final boolean getThreadIsCanShift()
+	public final boolean getThreadIsCanShift() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ThreadIsCanShift);
 	}
 	/** 
 	 子流程按钮标签
 	*/
-	public final String getSubFlowLab()
+	public final String getSubFlowLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.SubFlowLab);
 	}
 	/** 
 	 跳转标签
 	*/
-	public final String getJumpWayLab()
+	public final String getJumpWayLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.JumpWayLab);
 	}
-	public final JumpWay getJumpWayEnum()
+	public final JumpWay getJumpWayEnum() throws Exception
 	{
 		return JumpWay.forValue(this.GetValIntByKey(NodeAttr.JumpWay));
 	}
 	/** 
 	 是否启用跳转
 	*/
-	public final boolean getJumpWayEnable()
+	public final boolean getJumpWayEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(NodeAttr.JumpWay);
 	}
 	/** 
 	 退回标签
 	*/
-	public final String getReturnLab()
+	public final String getReturnLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.ReturnLab);
 	}
 	/** 
 	 退回字段
 	*/
-	public final String getReturnField()
+	public final String getReturnField() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.ReturnField);
 	}
 	/** 
 	 退回是否启用
 	*/
-	public final boolean getReturnEnable()
+	public final boolean getReturnEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ReturnRole);
 	}
 	/** 
 	 挂起标签
 	*/
-	public final String getHungLab()
+	public final String getHungLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.HungLab);
 	}
 	/** 
 	 是否启用挂起
 	*/
-	public final boolean getHungEnable()
+	public final boolean getHungEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.HungEnable);
 	}
 	/** 
 	 打印标签
 	*/
-	public final String getPrintDocLab()
+	public final String getPrintDocLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.PrintDocLab);
 	}
 	/** 
 	 是否启用打印
 	*/
-	public final boolean getPrintDocEnable()
+	public final boolean getPrintDocEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.PrintDocEnable);
 	}
 	/** 
 	 发送标签
 	*/
-	public final String getSendLab()
+	public final String getSendLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.SendLab);
 	}
 	/** 
 	 是否启用发送?
 	*/
-	public final boolean getSendEnable()
+	public final boolean getSendEnable() throws Exception
 	{
 		return true;
 	}
 	/** 
 	 发送的Js代码
 	*/
-	public final String getSendJS()
+	public final String getSendJS() throws Exception
 	{
 		String str = this.GetValStringByKey(BtnAttr.SendJS).replace("~", "'");
 		if (this.getCCRole() == BP.WF.CCRole.WhenSend)
@@ -272,21 +280,21 @@ public class BtnLab extends Entity
 	/** 
 	 轨迹标签
 	*/
-	public final String getTrackLab()
+	public final String getTrackLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.TrackLab);
 	}
 	/** 
 	 是否启用轨迹
 	*/
-	public final boolean getTrackEnable()
+	public final boolean getTrackEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.TrackEnable);
 	}
 	/** 
 	 查看父流程标签
 	*/
-	public final String getShowParentFormLab()
+	public final String getShowParentFormLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.ShowParentFormLab);
 	}
@@ -294,7 +302,7 @@ public class BtnLab extends Entity
 	/** 
 	 是否启用查看父流程
 	*/
-	public final boolean getShowParentFormEnable()
+	public final boolean getShowParentFormEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ShowParentFormEnable);
 	}
@@ -303,70 +311,70 @@ public class BtnLab extends Entity
 	/** 
 	 抄送标签
 	*/
-	public final String getCCLab()
+	public final String getCCLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.CCLab);
 	}
 	/** 
 	 抄送规则
 	*/
-	public final CCRole getCCRole()
+	public final CCRole getCCRole() throws Exception
 	{
 		return CCRole.forValue(this.GetValIntByKey(BtnAttr.CCRole));
 	}
 	/** 
 	 删除标签
 	*/
-	public final String getDeleteLab()
+	public final String getDeleteLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.DelLab);
 	}
 	/** 
 	 删除类型
 	*/
-	public final int getDeleteEnable()
+	public final int getDeleteEnable() throws Exception
 	{
 		return this.GetValIntByKey(BtnAttr.DelEnable);
 	}
 	/** 
 	 结束流程
 	*/
-	public final String getEndFlowLab()
+	public final String getEndFlowLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.EndFlowLab);
 	}
 	/** 
 	 是否启用结束流程
 	*/
-	public final boolean getEndFlowEnable()
+	public final boolean getEndFlowEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.EndFlowEnable);
 	}
 	/** 
 	 是否启用流转自定义
 	*/
-	public final String getTCLab()
+	public final String getTCLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.TCLab);
 	}
 	/** 
 	 是否启用流转自定义
 	*/
-	public final boolean getTCEnable()
+	public final boolean getTCEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.TCEnable);
 	}
-	public final void setTCEnable(boolean value)
+	public final void setTCEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.TCEnable, value);
 	}
 
-	public final int getHelpRole()
+	public final int getHelpRole() throws Exception
 	{
 		return this.GetValIntByKey(BtnAttr.HelpRole);
 	}
 
-	public final String getHelpLab()
+	public final String getHelpLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.HelpLab);
 	}
@@ -374,7 +382,7 @@ public class BtnLab extends Entity
 	/** 
 	 审核标签
 	*/
-	public final String getWorkCheckLab()
+	public final String getWorkCheckLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.WorkCheckLab);
 	}
@@ -395,53 +403,53 @@ public class BtnLab extends Entity
 	/** 
 	 审核是否可用
 	*/
-	public final boolean getWorkCheckEnable()
+	public final boolean getWorkCheckEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.WorkCheckEnable);
 	}
-	public final void setWorkCheckEnable(boolean value)
+	public final void setWorkCheckEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.WorkCheckEnable, value);
 	}
 	/** 
 	 考核 是否可用
 	*/
-	public final int getCHRole()
+	public final int getCHRole() throws Exception
 	{
 		return this.GetValIntByKey(BtnAttr.CHRole);
 	}
 	/** 
 	 考核 标签
 	*/
-	public final String getCHLab()
+	public final String getCHLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.CHLab);
 	}
 	/** 
 	 重要性 是否可用
 	*/
-	public final boolean getPRIEnable()
+	public final boolean getPRIEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.PRIEnable);
 	}
 	/** 
 	 重要性 标签
 	*/
-	public final String getPRILab()
+	public final String getPRILab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.PRILab);
 	}
 	/** 
 	 关注 是否可用
 	*/
-	public final boolean getFocusEnable()
+	public final boolean getFocusEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.FocusEnable);
 	}
 	/** 
 	 关注 标签
 	*/
-	public final String getFocusLab()
+	public final String getFocusLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.FocusLab);
 	}
@@ -449,14 +457,14 @@ public class BtnLab extends Entity
 	/** 
 	 分配 是否可用
 	*/
-	public final boolean getAllotEnable()
+	public final boolean getAllotEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.AllotEnable);
 	}
 	/** 
 	 分配 标签
 	*/
-	public final String getAllotLab()
+	public final String getAllotLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.AllotLab);
 	}
@@ -464,14 +472,14 @@ public class BtnLab extends Entity
 	/** 
 	 确认 是否可用
 	*/
-	public final boolean getConfirmEnable()
+	public final boolean getConfirmEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.ConfirmEnable);
 	}
 	/** 
 	 确认标签
 	*/
-	public final String getConfirmLab()
+	public final String getConfirmLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.ConfirmLab);
 	}
@@ -479,28 +487,28 @@ public class BtnLab extends Entity
 	/** 
 	 打包下载 是否可用
 	*/
-	public final boolean getPrintZipEnable()
+	public final boolean getPrintZipEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.PrintZipEnable);
 	}
 	/** 
 	 打包下载 标签
 	*/
-	public final String getPrintZipLab()
+	public final String getPrintZipLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.PrintZipLab);
 	}
 	/** 
 	 pdf 是否可用
 	*/
-	public final boolean getPrintPDFEnable()
+	public final boolean getPrintPDFEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.PrintPDFEnable);
 	}
 	/** 
 	 打包下载 标签
 	*/
-	public final String getPrintPDFLab()
+	public final String getPrintPDFLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.PrintPDFLab);
 	}
@@ -508,14 +516,14 @@ public class BtnLab extends Entity
 	/** 
 	 html 是否可用
 	*/
-	public final boolean getPrintHtmlEnable()
+	public final boolean getPrintHtmlEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.PrintHtmlEnable);
 	}
 	/** 
 	 html 标签
 	*/
-	public final String getPrintHtmlLab()
+	public final String getPrintHtmlLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.PrintHtmlLab);
 	}
@@ -524,47 +532,47 @@ public class BtnLab extends Entity
 	/** 
 	 批量处理是否可用
 	*/
-	public final boolean getBatchEnable()
+	public final boolean getBatchEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.BatchEnable);
 	}
 	/** 
 	 批处理标签
 	*/
-	public final String getBatchLab()
+	public final String getBatchLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.BatchLab);
 	}
 	/** 
 	 加签
 	*/
-	public final boolean getAskforEnable()
+	public final boolean getAskforEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.AskforEnable);
 	}
 	/** 
 	 加签
 	*/
-	public final String getAskforLab()
+	public final String getAskforLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.AskforLab);
 	}
 	/** 
 	 会签规则
 	*/
-	public final HuiQianRole getHuiQianRole()
+	public final HuiQianRole getHuiQianRole() throws Exception
 	{
 		return HuiQianRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianRole));
 	}
 	/** 
 	 会签标签
 	*/
-	public final String getHuiQianLab()
+	public final String getHuiQianLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.HuiQianLab);
 	}
 
-	public final HuiQianLeaderRole getHuiQianLeaderRole()
+	public final HuiQianLeaderRole getHuiQianLeaderRole() throws Exception
 	{
 		return HuiQianLeaderRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianLeaderRole));
 	}
@@ -572,148 +580,148 @@ public class BtnLab extends Entity
 	/** 
 	是否启用文档,@0=不启用@1=按钮方式@2=公文在前@3=表单在前
 	*/
-	private int getWebOfficeEnable()
+	private int getWebOfficeEnable() throws Exception
 	{
 		return this.GetValIntByKey(BtnAttr.WebOfficeEnable);
 	}
 	/** 
 	 公文的工作模式 @0=不启用@1=按钮方式@2=标签页置后方式@3=标签页置前方式
 	*/
-	public final WebOfficeWorkModel getWebOfficeWorkModel()
+	public final WebOfficeWorkModel getWebOfficeWorkModel() throws Exception
 	{
 		return WebOfficeWorkModel.forValue(this.getWebOfficeEnable());
 	}
-	public final void setWebOfficeWorkModel(WebOfficeWorkModel value)
+	public final void setWebOfficeWorkModel(WebOfficeWorkModel value) throws Exception
 	{
 		this.SetValByKey(BtnAttr.WebOfficeEnable, value.getValue());
 	}
 	/** 
 	 文档按钮标签
 	*/
-	public final String getWebOfficeLab()
+	public final String getWebOfficeLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.WebOfficeLab);
 	}
 	/** 
 	 打开本地文件
 	*/
-	public final boolean getOfficeOpenEnable()
+	public final boolean getOfficeOpenEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeOpenEnable);
 	}
 	/** 
 	 打开本地标签      
 	*/
-	public final String getOfficeOpenLab()
+	public final String getOfficeOpenLab() throws Exception
 	{
 		return this.GetValStrByKey(BtnAttr.OfficeOpenLab);
 	}
 	/** 
 	 打开模板
 	*/
-	public final boolean getOfficeOpenTemplateEnable()
+	public final boolean getOfficeOpenTemplateEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeOpenTemplateEnable);
 	}
 	/** 
 	 打开模板标签
 	*/
-	public final String getOfficeOpenTemplateLab()
+	public final String getOfficeOpenTemplateLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeOpenTemplateLab);
 	}
 	/** 
 	 保存按钮
 	*/
-	public final boolean getOfficeSaveEnable()
+	public final boolean getOfficeSaveEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeSaveEnable);
 	}
 	/** 
 	 保存标签
 	*/
-	public final String getOfficeSaveLab()
+	public final String getOfficeSaveLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeSaveLab);
 	}
 	/** 
 	 接受修订
 	*/
-	public final boolean getOfficeAcceptEnable()
+	public final boolean getOfficeAcceptEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeAcceptEnable);
 	}
 	/** 
 	 接受修订标签
 	*/
-	public final String getOfficeAcceptLab()
+	public final String getOfficeAcceptLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeAcceptLab);
 	}
 	/** 
 	 拒绝修订
 	*/
-	public final boolean getOfficeRefuseEnable()
+	public final boolean getOfficeRefuseEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeRefuseEnable);
 	}
 	/** 
 	 拒绝修订标签
 	*/
-	public final String getOfficeRefuseLab()
+	public final String getOfficeRefuseLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeRefuseLab);
 	}
-	public final String getOfficeOVerLab()
+	public final String getOfficeOVerLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeOverLab);
 	}
 	/** 
 	 是否套红
 	*/
-	public final boolean getOfficeOverEnable()
+	public final boolean getOfficeOverEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeOverEnable);
 	}
 	/** 
 	 套红按钮标签
 	*/
-	public final String getOfficeOverLab()
+	public final String getOfficeOverLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeOverLab);
 	}
 	/** 
 	 是否打印
 	*/
-	public final boolean getOfficePrintEnable()
+	public final boolean getOfficePrintEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficePrintEnable);
 	}
 	/** 
 	 是否查看用户留痕
 	*/
-	public final boolean getOfficeMarksEnable()
+	public final boolean getOfficeMarksEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeMarksEnable);
 	}
 	/** 
 	 打印按钮标签
 	*/
-	public final String getOfficePrintLab()
+	public final String getOfficePrintLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficePrintLab);
 	}
 	/** 
 	 签章按钮
 	*/
-	public final boolean getOfficeSealEnable()
+	public final boolean getOfficeSealEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeSealEnable);
 	}
 	/** 
 	 签章标签
 	*/
-	public final String getOfficeSealLab()
+	public final String getOfficeSealLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeSealLab);
 	}
@@ -721,14 +729,14 @@ public class BtnLab extends Entity
 	/** 
 	插入流程
 	*/
-	public final boolean getOfficeInsertFlowEnable()
+	public final boolean getOfficeInsertFlowEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeInsertFlowEnable);
 	}
 	/** 
 	 流程标签
 	*/
-	public final String getOfficeInsertFlowLab()
+	public final String getOfficeInsertFlowLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeInsertFlowLab);
 	}
@@ -737,15 +745,15 @@ public class BtnLab extends Entity
 	/** 
 	 是否自动记录节点信息
 	*/
-	public final boolean getOfficeNodeInfo()
+	public final boolean getOfficeNodeInfo() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeNodeInfo);
 	}
 
 	/** 
 	 是否自动记录节点信息
-	*/
-	public final boolean getOfficeReSavePDF()
+	*/ 
+	public final boolean getOfficeReSavePDF() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeReSavePDF);
 	}
@@ -753,7 +761,7 @@ public class BtnLab extends Entity
 	/** 
 	 是否进入留痕模式
 	*/
-	public final boolean getOfficeIsMarks()
+	public final boolean getOfficeIsMarks() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeIsMarks);
 	}
@@ -761,12 +769,12 @@ public class BtnLab extends Entity
 	/** 
 	 风险点模板
 	*/
-	public final String getOfficeFengXianTemplate()
+	public final String getOfficeFengXianTemplate() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeFengXianTemplate);
 	}
 
-	public final boolean getOfficeReadOnly()
+	public final boolean getOfficeReadOnly() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeReadOnly);
 	}
@@ -774,14 +782,14 @@ public class BtnLab extends Entity
 	/** 
 	 下载按钮标签
 	*/
-	public final String getOfficeDownLab()
+	public final String getOfficeDownLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeDownLab);
 	}
 	/** 
 	 下载按钮标签
 	*/
-	public final boolean getOfficeIsDown()
+	public final boolean getOfficeIsDown() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeDownEnable);
 	}
@@ -789,7 +797,7 @@ public class BtnLab extends Entity
 	/** 
 	 是否启用下载
 	*/
-	public final boolean getOfficeDownEnable()
+	public final boolean getOfficeDownEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeDownEnable);
 	}
@@ -797,7 +805,7 @@ public class BtnLab extends Entity
 	/** 
 	 指定文档模板
 	*/
-	public final String getOfficeTemplate()
+	public final String getOfficeTemplate() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeTemplate);
 	}
@@ -806,7 +814,7 @@ public class BtnLab extends Entity
 	/** 
 	 是否使用父流程的文档
 	*/
-	public final boolean getOfficeIsParent()
+	public final boolean getOfficeIsParent() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeIsParent);
 	}
@@ -814,14 +822,14 @@ public class BtnLab extends Entity
 	/** 
 	 是否自动套红
 	*/
-	public final boolean getOfficeTHEnable()
+	public final boolean getOfficeTHEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeTHEnable);
 	}
 	/** 
 	 自动套红模板
 	*/
-	public final String getOfficeTHTemplate()
+	public final String getOfficeTHTemplate() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeTHTemplate);
 	}
@@ -830,14 +838,14 @@ public class BtnLab extends Entity
 	/** 
 	 公文标签
 	*/
-	public final String getOfficeBtnLab()
+	public final String getOfficeBtnLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeBtnLab);
 	}
 	/** 
 	 公文标签
 	*/
-	public final boolean getOfficeBtnEnable()
+	public final boolean getOfficeBtnEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(BtnAttr.OfficeBtnEnable);
 	}
@@ -846,14 +854,14 @@ public class BtnLab extends Entity
 	/** 
 	 备注标签
 	*/
-	public final String getNoteLab()
+	public final String getNoteLab() throws Exception
 	{
 		return this.GetValStringByKey(BtnAttr.NoteLab);
 	}
 	/** 
 	备注标签
 	*/
-	public final int getNoteEnable()
+	public final int getNoteEnable() throws Exception
 	{
 		return this.GetValIntByKey(BtnAttr.NoteEnable);
 	}

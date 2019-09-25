@@ -3,9 +3,12 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Web.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
+import BP.WF.Port.WFEmp;
+
 import java.util.*;
 
 /** 
@@ -17,49 +20,51 @@ public class PushMsg extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(PushMsgAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.FK_Flow, value);
 	}
 	/** 
 	 事件
+	 * @throws Exception 
 	*/
-	public final String getFK_Event()
+	public final String getFK_Event() throws Exception
 	{
 		return this.GetValStringByKey(PushMsgAttr.FK_Event);
 	}
-	public final void setFK_Event(String value)
+	public final void setFK_Event(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.FK_Event, value);
 	}
 	/** 
 	 推送方式.
 	*/
-	public final int getPushWay()
+	public final int getPushWay() throws Exception
 	{
 		return this.GetValIntByKey(PushMsgAttr.PushWay);
 	}
-	public final void setPushWay(int value)
+	public final void setPushWay(int value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.PushWay, value);
 	}
 	/** 
 	节点
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(PushMsgAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.FK_Node, value);
 	}
-	public final String getPushDoc()
+	public final String getPushDoc() throws Exception
 	{
 		String s = this.GetValStringByKey(PushMsgAttr.PushDoc);
 		if (DataType.IsNullOrEmpty(s) == true)
@@ -68,11 +73,11 @@ public class PushMsg extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setPushDoc(String value)
+	public final void setPushDoc(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.PushDoc, value);
 	}
-	public final String getTag()
+	public final String getTag() throws Exception
 	{
 		String s = this.GetValStringByKey(PushMsgAttr.Tag);
 		if (DataType.IsNullOrEmpty(s) == true)
@@ -81,7 +86,7 @@ public class PushMsg extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setTag(String value)
+	public final void setTag(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.Tag, value);
 	}
@@ -93,18 +98,18 @@ public class PushMsg extends EntityMyPK
 	/** 
 	 邮件推送方式
 	*/
-	public final int getMailPushWay()
+	public final int getMailPushWay() throws Exception
 	{
 		return this.GetValIntByKey(PushMsgAttr.MailPushWay);
 	}
-	public final void setMailPushWay(int value)
+	public final void setMailPushWay(int value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.MailPushWay, value);
 	}
 	/** 
 	 推送方式Name
 	*/
-	public final String getMailPushWayText()
+	public final String getMailPushWayText() throws Exception
 	{
 		if (this.getFK_Event().equals(EventListOfNode.WorkArrive))
 		{
@@ -165,18 +170,18 @@ public class PushMsg extends EntityMyPK
 	/** 
 	 邮件地址
 	*/
-	public final String getMailAddress()
+	public final String getMailAddress() throws Exception
 	{
 		return this.GetValStringByKey(PushMsgAttr.MailAddress);
 	}
-	public final void setMailAddress(String value)
+	public final void setMailAddress(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.MailAddress, value);
 	}
 	/** 
 	 邮件标题.
 	*/
-	public final String getMailTitle()
+	public final String getMailTitle() throws Exception
 	{
 		String str = this.GetValStrByKey(PushMsgAttr.MailTitle);
 		if (DataType.IsNullOrEmpty(str) == false)
@@ -203,45 +208,45 @@ public class PushMsg extends EntityMyPK
 				return "流程{{Title}}已经删除,处理人@WebUser.getNo(),@WebUser.getName()";
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
-				break;
 		}
-		return str;
 	}
 	/** 
 	 Email节点s
 	*/
-	public final String getMailNodes()
+	public final String getMailNodes() throws Exception
 	{
 		return this.GetValStringByKey(PushMsgAttr.MailNodes);
 	}
-	public final void setMailNodes(String value)
+	public final void setMailNodes(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.MailNodes, value);
 	}
 	/** 
 	 邮件标题
+	 * @throws Exception 
 	*/
-	public final String getMailTitle_Real()
+	public final String getMailTitle_Real() throws Exception
 	{
 		String str = this.GetValStrByKey(PushMsgAttr.MailTitle);
 		return str;
 	}
-	public final void setMailTitle_Real(String value)
+	public final void setMailTitle_Real(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.MailTitle, value);
 	}
 	/** 
 	 邮件内容
+	 * @throws Exception 
 	*/
-	public final String getMailDoc_Real()
+	public final String getMailDoc_Real() throws Exception
 	{
 		return this.GetValStrByKey(PushMsgAttr.MailDoc);
 	}
-	public final void setMailDoc_Real(String value)
+	public final void setMailDoc_Real(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.MailDoc, value);
 	}
-	public final String getMailDoc()
+	public final String getMailDoc() throws Exception
 	{
 		String str = this.GetValStrByKey(PushMsgAttr.MailDoc);
 		if (DataType.IsNullOrEmpty(str) == false)
@@ -322,52 +327,54 @@ public class PushMsg extends EntityMyPK
 				break;
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
-				break;
 		}
 		return str;
 	}
 	/** 
 	 短信接收人字段
+	 * @throws Exception 
 	*/
-	public final String getSMSField()
+	public final String getSMSField() throws Exception
 	{
 		return this.GetValStringByKey(PushMsgAttr.SMSField);
 	}
-	public final void setSMSField(String value)
+	public final void setSMSField(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.SMSField, value);
 	}
-	public final String getSMSNodes()
+	public final String getSMSNodes() throws Exception
 	{
 		return this.GetValStringByKey(PushMsgAttr.SMSNodes);
 	}
-	public final void setSMSNodes(String value)
+	public final void setSMSNodes(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.SMSNodes, value);
 	}
-	public final String getSMSPushModel()
+	public final String getSMSPushModel() throws Exception
 	{
 		return this.GetValStringByKey(PushMsgAttr.SMSPushModel);
 	}
-	public final void setSMSPushModel(String value)
+	public final void setSMSPushModel(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.SMSPushModel, value);
 	}
 	/** 
 	 短信提醒方式
+	 * @throws Exception 
 	*/
-	public final int getSMSPushWay()
+	public final int getSMSPushWay() throws Exception
 	{
 		return this.GetValIntByKey(PushMsgAttr.SMSPushWay);
 	}
-	public final void setSMSPushWay(int value)
+	public final void setSMSPushWay(int value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.SMSPushWay, value);
 	}
 	/** 
 	 发送消息标签
+	 * @throws Exception 
 	*/
-	public final String getSMSPushWayText()
+	public final String getSMSPushWayText() throws Exception
 	{
 		if (this.getFK_Event().equals(EventListOfNode.WorkArrive))
 		{
@@ -445,20 +452,22 @@ public class PushMsg extends EntityMyPK
 	}
 	/** 
 	 短信模版内容
+	 * @throws Exception 
 	*/
-	public final String getSMSDoc_Real()
+	public final String getSMSDoc_Real() throws Exception
 	{
 		String str = this.GetValStrByKey(PushMsgAttr.SMSDoc);
 		return str;
 	}
-	public final void setSMSDoc_Real(String value)
+	public final void setSMSDoc_Real(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.SMSDoc, value);
 	}
 	/** 
 	 短信模版内容
+	 * @throws Exception 
 	*/
-	public final String getSMSDoc()
+	public final String getSMSDoc() throws Exception
 	{
 		String str = this.GetValStrByKey(PushMsgAttr.SMSDoc);
 		if (DataType.IsNullOrEmpty(str) == false)
@@ -489,33 +498,34 @@ public class PushMsg extends EntityMyPK
 				break;
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
-				break;
 		}
 		return str;
 	}
-	public final void setSMSDoc(String value)
+	public final void setSMSDoc(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.SMSDoc, value);
 	}
 	/** 
 	 按照指定的SQL
+	 * @throws Exception 
 	*/
-	public final String getBySQL()
+	public final String getBySQL() throws Exception
 	{
 		return this.GetValStrByKey(PushMsgAttr.BySQL);
 	}
-	public final void setBySQL(String value)
+	public final void setBySQL(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.BySQL, value);
 	}
 	/** 
 	 发送给指定的人员，人员之间以逗号分割
+	 * @throws Exception 
 	*/
-	public final String getByEmps()
+	public final String getByEmps() throws Exception
 	{
 		return this.GetValStrByKey(PushMsgAttr.ByEmps);
 	}
-	public final void setByEmps(String value)
+	public final void setByEmps(String value) throws Exception
 	{
 		this.SetValByKey(PushMsgAttr.ByEmps, value);
 	}
@@ -630,7 +640,7 @@ public class PushMsg extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理参数.
-		Row r = en.Row;
+		Row r = en.getRow();
 		try
 		{
 			//系统参数.
@@ -658,19 +668,19 @@ public class PushMsg extends EntityMyPK
 		}
 
 		//生成标题.
-		long workid = Long.parseLong(en.PKVal.toString());
+		long workid = Long.parseLong(en.getPKVal().toString());
 		String title = "标题";
 		if (en.Row.ContainsKey("Title") == true)
 		{
 			title = en.GetValStringByKey("Title"); // 获得工作标题.
 			if (DataType.IsNullOrEmpty(title))
 			{
-				title = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + en.PKVal, "标题");
+				title = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + en.getPKVal(), "标题");
 			}
 		}
 		else
 		{
-			title = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + en.PKVal, "标题");
+			title = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + en.getPKVal(), "标题");
 		}
 
 		//生成URL.
@@ -757,12 +767,12 @@ public class PushMsg extends EntityMyPK
 			//获取退回原因
 			Paras ps = new Paras();
 			ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
-			ps.Add(ReturnWorkAttr.WorkID, Long.parseLong(en.PKVal.toString()));
+			ps.Add(ReturnWorkAttr.WorkID, Long.parseLong(en.getPKVal().toString()));
 			DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 			if (retunWdt.Rows.size() != 0)
 			{
-				String returnMsg = retunWdt.Rows[0]["BeiZhu"].toString();
-				String returner = retunWdt.Rows[0]["ReturnerName"].toString();
+				String returnMsg = retunWdt.Rows.get(0).getValue("BeiZhu").toString();
+				String returner = retunWdt.Rows.get(0).getValue("ReturnerName").toString();
 				smsDoc = smsDoc.replace("ReturnMsg", returnMsg);
 			}
 		}
@@ -818,7 +828,7 @@ public class PushMsg extends EntityMyPK
 
 
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-					Object tempVar = smsDoc.Clone();
+					Object tempVar = smsDoc;
 					String smsDocReal = tempVar instanceof String ? (String)tempVar : null;
 					smsDocReal = smsDocReal.replace("{EmpStr}", empName);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
@@ -849,8 +859,8 @@ public class PushMsg extends EntityMyPK
 			//替换SQL中的参数
 			bySQL = bySQL.replace("@WebUser.getNo()", WebUser.getNo());
 			bySQL = bySQL.replace("@WebUser.getName()", WebUser.getName());
-			bySQL = bySQL.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull);
-			bySQL = bySQL.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName);
+			bySQL = bySQL.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+			bySQL = bySQL.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
 			bySQL = bySQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 			/*如果仍然有没有替换下来的变量.*/
 			if (bySQL.contains("@") == true)
@@ -865,7 +875,7 @@ public class PushMsg extends EntityMyPK
 
 
 				// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-				Object tempVar2 = smsDoc.Clone();
+				Object tempVar2 = smsDoc;
 				String smsDocReal = tempVar2 instanceof String ? (String)tempVar2 : null;
 				smsDocReal = smsDocReal.replace("{EmpStr}", empName);
 				openUrl = openUrl.replace("{EmpStr}", empNo);
@@ -901,14 +911,14 @@ public class PushMsg extends EntityMyPK
 				}
 				WFEmp emp = new WFEmp(empNo);
 				// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-				Object tempVar3 = smsDoc.Clone();
+				Object tempVar3 = smsDoc;
 				String smsDocReal = tempVar3 instanceof String ? (String)tempVar3 : null;
-				smsDocReal = smsDocReal.replace("{EmpStr}", emp.Name);
-				openUrl = openUrl.replace("{EmpStr}", emp.No);
+				smsDocReal = smsDocReal.replace("{EmpStr}", emp.getName());
+				openUrl = openUrl.replace("{EmpStr}", emp.getNo());
 				//发送消息
 				BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
 				//处理短消息.
-				toEmpIDs += emp.Name + ",";
+				toEmpIDs += emp.getName() + ",";
 			}
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -925,7 +935,7 @@ public class PushMsg extends EntityMyPK
 				/*当前节点的处理人.*/
 				toEmpIDs = jumpToEmps;
 				String[] emps = toEmpIDs.split("[,]", -1);
-				for (String empNo : emps.ToJavaList())
+				for (String empNo : emps)
 				{
 					if (DataType.IsNullOrEmpty(empNo))
 					{
@@ -933,7 +943,7 @@ public class PushMsg extends EntityMyPK
 					}
 
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-					Object tempVar4 = smsDoc.Clone();
+					Object tempVar4 = smsDoc;
 					String smsDocReal = tempVar4 instanceof String ? (String)tempVar4 : null;
 					smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
@@ -952,7 +962,7 @@ public class PushMsg extends EntityMyPK
 				/*如果向接受人发送消息.*/
 				toEmpIDs = objs.getVarAcceptersID();
 				String[] emps = toEmpIDs.split("[,]", -1);
-				for (String empNo : emps.ToJavaList())
+				for (String empNo : emps)
 				{
 					if (DataType.IsNullOrEmpty(empNo))
 					{
@@ -963,7 +973,7 @@ public class PushMsg extends EntityMyPK
 						continue;
 					}
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-					Object tempVar5 = smsDoc.Clone();
+					Object tempVar5 = smsDoc;
 					String smsDocReal = tempVar5 instanceof String ? (String)tempVar5 : null;
 					smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
@@ -1008,7 +1018,7 @@ public class PushMsg extends EntityMyPK
 				}
 				String[] emps = empsStrs.split("[@]", -1);
 
-				for (String empNo : emps.ToJavaList())
+				for (String empNo : emps)
 				{
 					if (DataType.IsNullOrEmpty(empNo))
 					{
@@ -1016,7 +1026,7 @@ public class PushMsg extends EntityMyPK
 					}
 
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-					Object tempVar6 = smsDoc.Clone();
+					Object tempVar6 = smsDoc;
 					String smsDoccReal = tempVar6 instanceof String ? (String)tempVar6 : null;
 					smsDoc = smsDoc.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
@@ -1037,7 +1047,7 @@ public class PushMsg extends EntityMyPK
 				//获取当前节点的接收人
 				GenerWorkFlow gwf = new GenerWorkFlow(workid);
 				String[] emps = gwf.getTodoEmps().split("[;]", -1);
-				for (String emp : emps.ToJavaList())
+				for (String emp : emps)
 				{
 					if (DataType.IsNullOrEmpty(emp))
 					{
@@ -1049,7 +1059,7 @@ public class PushMsg extends EntityMyPK
 						continue;
 					}
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
-					Object tempVar7 = smsDoc.Clone();
+					Object tempVar7 = smsDoc;
 					String smsDocReal = tempVar7 instanceof String ? (String)tempVar7 : null;
 					smsDocReal = smsDocReal.replace("{EmpStr}", empA[0]);
 					openUrl = openUrl.replace("{EmpStr}", empA[0]);
@@ -1634,7 +1644,7 @@ public class PushMsg extends EntityMyPK
 	{
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//  this.setMyPK( this.FK_Event + "_" + this.FK_Node + "_" + this.PushWay;
 

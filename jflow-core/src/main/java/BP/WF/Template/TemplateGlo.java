@@ -1,7 +1,11 @@
 package BP.WF.Template;
 
+import BP.Tools.DateUtils;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.time.*;
+import java.util.Date;
 
 /** 
  流程模版的操作
@@ -18,20 +22,21 @@ public class TemplateGlo
 	 @param flowMark 标记
 	 @param flowVer 版本
 	 @return 创建的流程编号
+	 * @throws Exception 
 	*/
-	public static String NewFlow(String flowSort, String flowName, BP.WF.Template.DataStoreModel dsm, String ptable, String flowMark, String flowVer)
+	public static String NewFlow(String flowSort, String flowName, BP.WF.Template.DataStoreModel dsm, String ptable, String flowMark, String flowVer) throws Exception
 	{
 		//执行保存.
 		BP.WF.Flow fl = new BP.WF.Flow();
 
 		String flowNo = fl.DoNewFlow(flowSort, flowName, dsm, ptable, flowMark);
-		fl.No = flowNo;
+		fl.setNo(flowNo);
 		fl.Retrieve();
 
 	   FlowExt flowExt = new FlowExt(flowNo);
 	   flowExt.setDesignerNo(WebUser.getNo());
 	   flowExt.setDesignerName(WebUser.getName());
-	   flowExt.setDesignTime(LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+	   flowExt.setDesignTime(DateUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
 	   flowExt.DirectSave();
 
 
@@ -71,7 +76,7 @@ public class TemplateGlo
 //ORIGINAL LINE: public static int NewNode(string flowNo, int x, int y,string icon=null)
 	public static int NewNode(String flowNo, int x, int y, String icon)
 	{
-		BP.WF.Flow fl = new WF.Flow(flowNo);
+		BP.WF.Flow fl = new BP.WF.Flow(flowNo);
 		BP.WF.Node nd = fl.DoNewNode(x, y, icon);
 		return nd.getNodeID();
 	}
@@ -79,10 +84,11 @@ public class TemplateGlo
 	 删除节点.
 	 
 	 @param nodeid
+	 * @throws Exception 
 	*/
-	public static void DeleteNode(int nodeid)
+	public static void DeleteNode(int nodeid) throws Exception
 	{
-		BP.WF.Node nd = new WF.Node(nodeid);
+		BP.WF.Node nd = new BP.WF.Node(nodeid);
 		nd.Delete();
 	}
 }

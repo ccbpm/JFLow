@@ -2,7 +2,10 @@ package BP.WF.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -12,9 +15,10 @@ public class DeptFlowSearch extends EntityMyPK
 {
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -32,34 +36,35 @@ public class DeptFlowSearch extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 工作人员ID
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(DeptFlowSearchAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		SetValByKey(DeptFlowSearchAttr.FK_Emp, value);
 	}
 	/** 
 	部门
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(DeptFlowSearchAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		SetValByKey(DeptFlowSearchAttr.FK_Dept, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(DeptFlowSearchAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(DeptFlowSearchAttr.FK_Flow, value);
 	}

@@ -588,10 +588,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				if (GetGroupID(mapDtl.No, groups) == 0)
 				{
 					group = new GroupField();
-					group.Lab = mapDtl.Name;
+					group.setLab( mapDtl.Name;
 					group.FrmID = mapDtl.FK_MapData;
-					group.CtrlType = GroupCtrlType.Dtl;
-					group.CtrlID = mapDtl.No;
+					group.setCtrlType(GroupCtrlType.Dtl;
+					group.setCtrlID(mapDtl.No;
 					group.Insert();
 
 					groups.AddEntity(group);
@@ -603,10 +603,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				if (GetGroupID(athMent.MyPK, groups) == 0)
 				{
 					group = new GroupField();
-					group.Lab = athMent.Name;
+					group.setLab( athMent.Name;
 					group.EnName = athMent.FK_MapData;
-					group.CtrlType = GroupCtrlType.Ath;
-					group.CtrlID = athMent.MyPK;
+					group.setCtrlType(GroupCtrlType.Ath;
+					group.setCtrlID(athMent.MyPK;
 					group.Insert();
 
 					athMent.GroupID = group.OID;
@@ -622,10 +622,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				if (GetGroupID(fbtn.MyPK, groups) == 0)
 				{
 					group = new GroupField();
-					group.Lab = fbtn.Text;
+					group.setLab( fbtn.Text;
 					group.FrmID = fbtn.FK_MapData;
-					group.CtrlType = GroupCtrlType.Btn;
-					group.CtrlID = fbtn.MyPK;
+					group.setCtrlType(GroupCtrlType.Btn;
+					group.setCtrlID(fbtn.MyPK;
 					group.Insert();
 
 					fbtn.GroupID = group.OID;
@@ -1065,11 +1065,11 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					if (tgroup == null)
 					{
 						group = new GroupField();
-						group.Lab = tdtl.Name;
+						group.setLab( tdtl.Name;
 						group.FrmID = tdtl.FK_MapData;
-						group.CtrlType = GroupCtrlType.Dtl;
-						group.CtrlID = tdtl.No;
-						group.Idx = groupidx;
+						group.setCtrlType(GroupCtrlType.Dtl;
+						group.setCtrlID(tdtl.No;
+						group.setIdx(groupidx;
 						group.Insert();
 
 						tgroupidx = groupidx;
@@ -1080,7 +1080,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						///#region 1.明细表排序
 					if (tgroupidx != groupidx && group != null)
 					{
-						tgroup.Idx = groupidx;
+						tgroup.setIdx(groupidx;
 						tgroup.DirectUpdate();
 
 						tgroupidx = groupidx;
@@ -1252,11 +1252,11 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					if (tgroup == null)
 					{
 						tgroup = new GroupField();
-						tgroup.Lab = tdtl.Name;
+						tgroup.setLab( tdtl.Name;
 						tgroup.FrmID = tdtl.FK_MapData;
-						tgroup.CtrlType = GroupCtrlType.Dtl;
-						tgroup.CtrlID = tdtl.No;
-						tgroup.Idx = maxDtlIdx;
+						tgroup.setCtrlType(GroupCtrlType.Dtl;
+						tgroup.setCtrlID(tdtl.No;
+						tgroup.setIdx(maxDtlIdx;
 						tgroup.Insert();
 
 						tgroups.AddEntity(group);
@@ -1264,7 +1264,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 					if (tgroup.Idx != maxDtlIdx)
 					{
-						tgroup.Idx = maxDtlIdx;
+						tgroup.setIdx(maxDtlIdx;
 						tgroup.DirectUpdate();
 					}
 

@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -28,27 +29,29 @@ public class NodeStation extends EntityMM
 	}
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeStationAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(NodeStationAttr.FK_Node, value);
 	}
-	public final String getFK_StationT()
+	public final String getFK_StationT() throws Exception
 	{
 		return this.GetValRefTextByKey(NodeStationAttr.FK_Station);
 	}
 	/** 
 	 工作岗位
+	 * @throws Exception 
 	*/
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(NodeStationAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		this.SetValByKey(NodeStationAttr.FK_Station, value);
 	}
@@ -89,9 +92,10 @@ public class NodeStation extends EntityMM
 	 节点岗位发生变化，删除该节点记忆的接收人员。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		RememberMe remeberMe = new RememberMe();
 		remeberMe.Delete(RememberMeAttr.FK_Node, this.getFK_Node());

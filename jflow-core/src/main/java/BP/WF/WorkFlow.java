@@ -1272,7 +1272,7 @@ public class WorkFlow
 			}
 
 			Emp emp = new Emp();
-			emp.No = pEmp;
+			emp.setNo (pEmp;
 			if (emp.RetrieveFromDBSources() == 0)
 			{
 				throw new RuntimeException("@吊起子流程上的人员编号(" + pEmp + ")已不存在,无法启动父流程.");

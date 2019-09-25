@@ -36,8 +36,9 @@ public class SubFlowAutos extends EntitiesMyPK
 	 自动触发子流程集合.
 	 
 	 @param fk_node 节点
+	 * @throws Exception 
 	*/
-	public SubFlowAutos(int fk_node)
+	public SubFlowAutos(int fk_node) throws Exception
 	{
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, SubFlowYanXuAttr.SubFlowType, SubFlowType.AutoSubFlow.getValue(), SubFlowYanXuAttr.Idx);
 	}

@@ -32,7 +32,7 @@ public class WFEmps extends EntitiesNoName
 	}
 
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		return super.RetrieveAll("FK_Dept", "Idx");
 	}

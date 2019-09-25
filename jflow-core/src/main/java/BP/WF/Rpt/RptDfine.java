@@ -3,9 +3,11 @@ package BP.WF.Rpt;
 import BP.DA.*;
 import BP.Port.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Sys.*;
 import BP.WF.Data.*;
+import BP.Web.WebUser;
 import BP.WF.*;
 import java.util.*;
 
@@ -19,12 +21,13 @@ public class RptDfine extends EntityNoName
 		///#region 属性
 	/** 
 	 本部门流程查询权限定义
+	 * @throws Exception 
 	*/
-	public final int getMyDeptRole()
+	public final int getMyDeptRole() throws Exception
 	{
 		return this.GetValIntByKey(RptDfineAttr.MyDeptRole);
 	}
-	public final void setMyDeptRole(int value)
+	public final void setMyDeptRole(int value) throws Exception
 	{
 		this.SetValByKey(RptDfineAttr.MyDeptRole, value);
 	}
@@ -34,7 +37,7 @@ public class RptDfine extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
@@ -61,7 +64,7 @@ public class RptDfine extends EntityNoName
 	 
 	 @param no 映射编号
 	*/
-	public RptDfine(String no)
+	public RptDfine(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -110,7 +113,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示的列";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SelectCols.png";
 		rm.ClassMethodName = this.toString() + ".DoColsChoseOf_MyStartFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 
@@ -118,7 +121,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示列次序";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Order.png";
 		rm.ClassMethodName = this.toString() + ".DoColsOrder_MyStartFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 
@@ -126,7 +129,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置查询条件";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SearchCond.png";
 		rm.ClassMethodName = this.toString() + ".DoSearchCond_MyStartFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 
@@ -134,7 +137,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置导出模板";
 		rm.Icon = "../../WF/Img/Guide.png";
 		rm.ClassMethodName = this.toString() + ".DoRptExportTemplate_MyStartFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 
@@ -142,7 +145,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行查询";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 		rm.ClassMethodName = this.toString() + ".DoSearch_MyStartFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 		rm = new RefMethod();
@@ -150,7 +153,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行分析";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 		rm.ClassMethodName = this.toString() + ".DoGroup_MyStartFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 
@@ -159,7 +162,7 @@ public class RptDfine extends EntityNoName
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Reset.png";
 		rm.Warning = "您确定要执行吗?如果确定，以前配置将清空。";
 		rm.ClassMethodName = this.toString() + ".DoReset_MyStartFlow()";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -171,7 +174,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示的列";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SelectCols.png";
 		rm.ClassMethodName = this.toString() + ".DoColsChoseOf_MyJoinFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
 
@@ -179,7 +182,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示列次序";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Order.png";
 		rm.ClassMethodName = this.toString() + ".DoColsOrder_MyJoinFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
 
@@ -187,7 +190,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置查询条件";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SearchCond.png";
 		rm.ClassMethodName = this.toString() + ".DoSearchCond_MyJoinFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
 
@@ -203,7 +206,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行查询";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 		rm.ClassMethodName = this.toString() + ".DoSearch_MyJoinFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
 
@@ -211,7 +214,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行分析";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 		rm.ClassMethodName = this.toString() + ".DoGroup_MyJoinFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
 
@@ -221,7 +224,7 @@ public class RptDfine extends EntityNoName
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Reset.png";
 		rm.Warning = "您确定要执行吗?";
 		rm.ClassMethodName = this.toString() + ".DoReset_MyJoinFlow()";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -233,7 +236,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示的列";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SelectCols.png";
 		rm.ClassMethodName = this.toString() + ".DoColsChoseOf_MyDeptFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 
@@ -241,7 +244,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示列次序";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Order.png";
 		rm.ClassMethodName = this.toString() + ".DoColsOrder_MyDeptFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 
@@ -249,7 +252,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置查询条件";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SearchCond.png";
 		rm.ClassMethodName = this.toString() + ".DoSearchCond_MyDeptFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 
@@ -257,7 +260,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置导出模板";
 		rm.Icon = "../../WF/Img/Guide.png";
 		rm.ClassMethodName = this.toString() + ".DoRptExportTemplate_MyDeptFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 
@@ -265,7 +268,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行查询";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 		rm.ClassMethodName = this.toString() + ".DoSearch_MyDeptFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 
@@ -273,7 +276,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行分析";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 		rm.ClassMethodName = this.toString() + ".DoGroup_MyDeptFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 
@@ -282,7 +285,7 @@ public class RptDfine extends EntityNoName
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Reset.png";
 		rm.Warning = "您确定要执行吗?";
 		rm.ClassMethodName = this.toString() + ".DoReset_MyDeptFlow()";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -294,7 +297,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示的列";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SelectCols.png";
 		rm.ClassMethodName = this.toString() + ".DoColsChoseOf_AdminerFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
@@ -302,7 +305,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置显示列次序";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Order.png";
 		rm.ClassMethodName = this.toString() + ".DoColsOrder_AdminerFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
@@ -310,7 +313,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置查询条件";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SearchCond.png";
 		rm.ClassMethodName = this.toString() + ".DoSearchCond_AdminerFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
@@ -318,7 +321,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "设置导出模板";
 		rm.Icon = "../../WF/Img/Guide.png";
 		rm.ClassMethodName = this.toString() + ".DoRptExportTemplate_AdminerFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
@@ -326,7 +329,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行查询";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 		rm.ClassMethodName = this.toString() + ".DoSearch_AdminerFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
@@ -334,7 +337,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "执行分析";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 		rm.ClassMethodName = this.toString() + ".DoGroup_AdminerFlow()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
@@ -342,7 +345,7 @@ public class RptDfine extends EntityNoName
 		rm.Title = "查询权限";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 		rm.ClassMethodName = this.toString() + ".DoReset_AdminerFlowRight()";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
@@ -352,7 +355,7 @@ public class RptDfine extends EntityNoName
 		rm.Icon = "../../WF/Admin/RptDfine/Img/Reset.png";
 		rm.Warning = "您确定要执行吗?";
 		rm.ClassMethodName = this.toString() + ".DoReset_AdminerFlow()";
-		rm.RefMethodType = RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -371,57 +374,66 @@ public class RptDfine extends EntityNoName
 	 
 	 @param rptMark
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChose(String rptMark)
+	public final String DoColsChose(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 列的次序
 	 
 	 @param rptMark
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder(String rptMark)
+	public final String DoColsOrder(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 查询条件设置
 	 
 	 @param rptMark
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond(String rptMark)
+	public final String DoSearchCond(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 导出模版设置
 	 
 	 @param rptMark
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate(String rptMark)
+	public final String DoRptExportTemplate(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 重置设置.
+	 * @throws Exception 
 	*/
-	public final String DoReset(String rptMark, String rptName)
+	public final String DoReset(String rptMark, String rptName) throws Exception
 	{
 		MapData md = new MapData();
-		md.No = "ND" + Integer.parseInt(this.No) + "Rpt" + rptMark;
+		md.setNo("ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark);
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			md.Name = rptName;
+			md.setName(rptName);
 			md.Insert();
 		}
 
-		md.RptIsSearchKey = true; //按关键查询.
-		md.RptDTSearchWay = DTSearchWay.None; //按日期查询.
-		md.RptDTSearchKey = "";
+		md.setRptIsSearchKey(true); //按关键查询.
+		md.setRptDTSearchWay(DTSearchWay.None); //按日期查询.
+		md.setRptDTSearchKey("");
 
 		//设置查询条件.
 		switch (rptMark)
@@ -438,8 +450,8 @@ public class RptDfine extends EntityNoName
 				break;
 		}
 
-		Flow fl = new Flow(this.No);
-		md.PTable = fl.getPTable();
+		Flow fl = new Flow(this.getNo());
+		md.setPTable(fl.getPTable());
 		md.Update();
 
 		String keys = ",OID,FK_Dept,FlowStarter,WFState,Title,FlowStarter,FlowStartRDT,FlowEmps,FlowDaySpan,FlowEnder,FlowEnderRDT,FK_NY,FlowEndNode,WFSta,";
@@ -447,45 +459,45 @@ public class RptDfine extends EntityNoName
 		//string keys = ",OID,Title,WFSta,";
 
 		//查询出来所有的字段.
-		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.No) + "Rpt");
-		attrs.Delete(MapAttrAttr.FK_MapData, md.No); // 删除已经有的字段。
-		for (MapAttr attr : attrs)
+		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getNo()) + "Rpt");
+		attrs.Delete(MapAttrAttr.FK_MapData, md.getNo()); // 删除已经有的字段。
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (keys.contains("," + attr.KeyOfEn + ",") == false)
+			if (keys.contains("," + attr.getKeyOfEn() + ",") == false)
 			{
 				continue;
 			}
 
-			attr.FK_MapData = md.No;
-			attr.setUIIsEnable(false;
+			attr.setFK_MapData(md.getNo());
+			attr.setUIIsEnable(false);
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 判断特殊的字段.
-			switch (attr.KeyOfEn)
+			switch (attr.getKeyOfEn())
 			{
 				case GERptAttr.FK_Dept:
-					attr.UIBindKey = "BP.Port.Depts";
-					attr.setUIContralType (UIContralType.DDL;
-					attr.setLGType(FieldTypeS.FK;
-					attr.setUIVisible(true;
-					attr.setDefVal("";
-					attr.setMaxLen(100;
+					attr.setUIBindKey("BP.Port.Depts");
+					attr.setUIContralType(UIContralType.DDL);
+					attr.setLGType(FieldTypeS.FK);
+					attr.setUIVisible(true);
+					attr.setDefVal("");
+					attr.setMaxLen(100);
 					attr.Update();
 					break;
 				case GERptAttr.FK_NY:
-					attr.UIBindKey = "BP.Pub.NYs";
-					attr.setUIContralType (UIContralType.DDL;
-					attr.setLGType(FieldTypeS.FK;
-					attr.setUIVisible(true;
-					attr.setUIIsEnable(false;
+					attr.setUIBindKey("BP.Pub.NYs");
+					attr.setUIContralType (UIContralType.DDL);
+					attr.setLGType(FieldTypeS.FK);
+					attr.setUIVisible(true);
+					attr.setUIIsEnable(false);
 					//attr.GroupID = groupID;
 					attr.Update();
 					break;
 				case GERptAttr.Title:
-					attr.UIWidth = 120;
+					attr.setUIWidth(120);
 					break;
 				case GERptAttr.FlowStarter:
-					attr.setUIIsEnable(false;
+					attr.setUIIsEnable(false);
 					//attr.setLGType(FieldTypeS.FK;
 					//attr.UIBindKey = "BP.Port.Emps";
 					//attr.setUIContralType (UIContralType.DDL;
@@ -517,8 +529,10 @@ public class RptDfine extends EntityNoName
 	 设置选择的列
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_MyStartFlow()
+	public final String DoColsChoseOf_MyStartFlow() throws NumberFormatException, Exception
 	{
 		return this.DoColsChose("My");
 	}
@@ -526,8 +540,10 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_MyStartFlow()
+	public final String DoColsOrder_MyStartFlow() throws NumberFormatException, Exception
 	{
 		return DoColsOrder("My");
 	}
@@ -535,8 +551,10 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_MyStartFlow()
+	public final String DoSearchCond_MyStartFlow() throws NumberFormatException, Exception
 	{
 		return DoSearchCond("My");
 	}
@@ -544,8 +562,10 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_MyStartFlow()
+	public final String DoRptExportTemplate_MyStartFlow() throws NumberFormatException, Exception
 	{
 		return DoRptExportTemplate("My");
 	}
@@ -553,8 +573,9 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReset_MyStartFlow()
+	public final String DoReset_MyStartFlow() throws Exception
 	{
 		return DoReset("My", "我发起的流程");
 	}
@@ -562,20 +583,22 @@ public class RptDfine extends EntityNoName
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSearch_MyStartFlow()
+	public final String DoSearch_MyStartFlow() throws Exception
 	{
-		return "../../RptDfine/Search.htm?SearchType=My&FK_Flow=" + this.No;
+		return "../../RptDfine/Search.htm?SearchType=My&FK_Flow=" + this.getNo();
 	}
 
 	/** 
 	 分析
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoGroup_MyStartFlow()
+	public final String DoGroup_MyStartFlow() throws Exception
 	{
-		return "../../RptDfine/Group.htm?GroupType=My&FK_Flow=" + this.No;
+		return "../../RptDfine/Group.htm?GroupType=My&FK_Flow=" + this.getNo();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
@@ -586,8 +609,10 @@ public class RptDfine extends EntityNoName
 	 设置选择的列
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_MyJoinFlow()
+	public final String DoColsChoseOf_MyJoinFlow() throws NumberFormatException, Exception
 	{
 		return this.DoColsChose("MyJoin");
 	}
@@ -595,8 +620,10 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_MyJoinFlow()
+	public final String DoColsOrder_MyJoinFlow() throws NumberFormatException, Exception
 	{
 		return DoColsOrder("MyJoin");
 	}
@@ -604,8 +631,10 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_MyJoinFlow()
+	public final String DoSearchCond_MyJoinFlow() throws NumberFormatException, Exception
 	{
 		return DoSearchCond("MyJoin");
 	}
@@ -613,8 +642,10 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_MyJoinFlow()
+	public final String DoRptExportTemplate_MyJoinFlow() throws NumberFormatException, Exception
 	{
 		return DoRptExportTemplate("MyJoin");
 	}
@@ -622,8 +653,9 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReset_MyJoinFlow()
+	public final String DoReset_MyJoinFlow() throws Exception
 	{
 		return DoReset("MyJoin", "我审批的流程");
 	}
@@ -631,15 +663,16 @@ public class RptDfine extends EntityNoName
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSearch_MyJoinFlow()
+	public final String DoSearch_MyJoinFlow() throws Exception
 	{
-		return "../../RptDfine/Search.htm?SearchType=MyJoin&FK_Flow=" + this.No;
+		return "../../RptDfine/Search.htm?SearchType=MyJoin&FK_Flow=" + this.getNo();
 	}
 
-	public final String DoGroup_MyJoinFlow()
+	public final String DoGroup_MyJoinFlow() throws Exception
 	{
-		return "../../RptDfine/Group.htm?GroupType=MyJoin&FK_Flow=" + this.No;
+		return "../../RptDfine/Group.htm?GroupType=MyJoin&FK_Flow=" + this.getNo();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 我审批的流程
@@ -650,8 +683,10 @@ public class RptDfine extends EntityNoName
 	 设置选择的列
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_MyDeptFlow()
+	public final String DoColsChoseOf_MyDeptFlow() throws NumberFormatException, Exception
 	{
 		return this.DoColsChose("MyDept");
 	}
@@ -659,8 +694,10 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_MyDeptFlow()
+	public final String DoColsOrder_MyDeptFlow() throws NumberFormatException, Exception
 	{
 		return DoColsOrder("MyDept");
 	}
@@ -668,8 +705,10 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_MyDeptFlow()
+	public final String DoSearchCond_MyDeptFlow() throws NumberFormatException, Exception
 	{
 		return DoSearchCond("MyDept");
 	}
@@ -677,8 +716,10 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_MyDeptFlow()
+	public final String DoRptExportTemplate_MyDeptFlow() throws NumberFormatException, Exception
 	{
 		return DoRptExportTemplate("MyDept");
 	}
@@ -686,8 +727,9 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReset_MyDeptFlow()
+	public final String DoReset_MyDeptFlow() throws Exception
 	{
 		return DoReset("MyDept", "本部门发起的流程");
 	}
@@ -695,20 +737,22 @@ public class RptDfine extends EntityNoName
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSearch_MyDeptFlow()
+	public final String DoSearch_MyDeptFlow() throws Exception
 	{
-		return "../../RptDfine/Search.htm?SearchType=MyDept&FK_Flow=" + this.No;
+		return "../../RptDfine/Search.htm?SearchType=MyDept&FK_Flow=" + this.getNo();
 	}
 
 	/** 
 	 分析
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoGroup_MyDeptFlow()
+	public final String DoGroup_MyDeptFlow() throws Exception
 	{
-		return "../../RptDfine/Group.htm?GroupType=MyDept&FK_Flow=" + this.No;
+		return "../../RptDfine/Group.htm?GroupType=MyDept&FK_Flow=" + this.getNo();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 本部门发起的流程
@@ -719,8 +763,10 @@ public class RptDfine extends EntityNoName
 	 设置选择的列
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_AdminerFlow()
+	public final String DoColsChoseOf_AdminerFlow() throws NumberFormatException, Exception
 	{
 		return this.DoColsChose("Adminer");
 	}
@@ -728,8 +774,10 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_AdminerFlow()
+	public final String DoColsOrder_AdminerFlow() throws NumberFormatException, Exception
 	{
 		return DoColsOrder("Adminer");
 	}
@@ -737,8 +785,10 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_AdminerFlow()
+	public final String DoSearchCond_AdminerFlow() throws NumberFormatException, Exception
 	{
 		return DoSearchCond("Adminer");
 	}
@@ -746,8 +796,10 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_AdminerFlow()
+	public final String DoRptExportTemplate_AdminerFlow() throws NumberFormatException, Exception
 	{
 		return DoRptExportTemplate("Adminer");
 	}
@@ -755,8 +807,9 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoReset_AdminerFlow()
+	public final String DoReset_AdminerFlow() throws Exception
 	{
 		return DoReset("Adminer", "本部门发起的流程");
 	}
@@ -764,25 +817,27 @@ public class RptDfine extends EntityNoName
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoSearch_AdminerFlow()
+	public final String DoSearch_AdminerFlow() throws Exception
 	{
-		return "../../RptDfine/Search.htm?SearchType=Adminer&FK_Flow=" + this.No;
+		return "../../RptDfine/Search.htm?SearchType=Adminer&FK_Flow=" + this.getNo();
 	}
 
 	/** 
 	 分析
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoGroup_AdminerFlow()
+	public final String DoGroup_AdminerFlow() throws Exception
 	{
-		return "../../RptDfine/Search.htm?GroupType=Adminer&FK_Flow=" + this.No;
+		return "../../RptDfine/Search.htm?GroupType=Adminer&FK_Flow=" + this.getNo();
 	}
 
-	public final String DoReset_AdminerFlowRight()
+	public final String DoReset_AdminerFlowRight() throws Exception
 	{
-		return "../../Admin/RptDfine/AdvSearchRight.htm?FK_Flow=" + this.No;
+		return "../../Admin/RptDfine/AdvSearchRight.htm?FK_Flow=" + this.getNo();
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 高级查询

@@ -2,6 +2,7 @@ package BP.WF.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,12 +16,13 @@ public class Inc extends EntityNoName
 		///#region 属性
 	/** 
 	 父节点编号
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStrByKey(IncAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(IncAttr.ParentNo, value);
 	}
@@ -40,8 +42,9 @@ public class Inc extends EntityNoName
 	 独立组织
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Inc(String no)
+	public Inc(String no) throws Exception
 	{
 		super(no);
 	}
@@ -52,9 +55,10 @@ public class Inc extends EntityNoName
 		///#region 重写方法
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -78,8 +82,8 @@ public class Inc extends EntityNoName
 		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体map的存放位置.
 		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
 
-		map.AdjunctType = AdjunctType.None;
-		map.setEnType( EnType.View; //独立组织是一个视图.
+		map.setAdjunctType(AdjunctType.None);
+		map.setEnType(EnType.View); //独立组织是一个视图.
 
 		map.AddTBStringPK(IncAttr.No, null, "编号", true, false, 1, 30, 40);
 		map.AddTBString(IncAttr.ParentNo, null, "父节点编号", true, false, 0, 30, 40);
@@ -98,9 +102,9 @@ public class Inc extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	public final String SetSubInc(String userNo)
+	public final String SetSubInc(String userNo) throws Exception
 	{
-		BP.WF.Port.SubInc.Dept dept = new WF.Port.SubInc.Dept(this.No);
+		BP.WF.Port.SubInc.Dept dept = new BP.WF.Port.SubInc.Dept(this.getNo());
 		return dept.SetSubInc(userNo);
 	}
 

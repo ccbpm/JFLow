@@ -37,8 +37,9 @@ public class Parts extends EntitiesMyPK
 	 配件集合.
 	 
 	 @param FlowNo
+	 * @throws Exception 
 	*/
-	public Parts(String fk_flow)
+	public Parts(String fk_flow) throws Exception
 	{
 		this.Retrieve(PartAttr.FK_Flow, fk_flow);
 	}

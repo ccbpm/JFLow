@@ -37,8 +37,9 @@ public class PartParentSubGuides extends EntitiesMyPK
 	 配件集合.
 	 
 	 @param FlowNo
+	 * @throws Exception 
 	*/
-	public PartParentSubGuides(String fk_flow)
+	public PartParentSubGuides(String fk_flow) throws Exception
 	{
 		this.Retrieve(PartAttr.FK_Flow, fk_flow);
 	}

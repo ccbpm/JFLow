@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,9 +16,10 @@ public class NodeToolbar extends EntityOID
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -25,24 +27,25 @@ public class NodeToolbar extends EntityOID
 	}
 	/** 
 	 工具栏的事务编号
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeToolbarAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(NodeToolbarAttr.FK_Node, value);
 	}
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(NodeToolbarAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		SetValByKey(NodeToolbarAttr.Title, value);
 	}
-	public final String getUrl()
+	public final String getUrl() throws Exception
 	{
 		String s = this.GetValStringByKey(NodeToolbarAttr.Url);
 
@@ -52,37 +55,39 @@ public class NodeToolbar extends EntityOID
 		}
 		return s;
 	}
-	public final void setUrl(String value)
+	public final void setUrl(String value) throws Exception
 	{
 		SetValByKey(NodeToolbarAttr.Url, value);
 	}
-	public final String getTarget()
+	public final String getTarget() throws Exception
 	{
 		return this.GetValStringByKey(NodeToolbarAttr.Target);
 	}
-	public final void setTarget(String value)
+	public final void setTarget(String value) throws Exception
 	{
 		SetValByKey(NodeToolbarAttr.Target, value);
 	}
 	/** 
 	 显示在那里？
+	 * @throws Exception 
 	*/
-	public final ShowWhere getShowWhere()
+	public final ShowWhere getShowWhere() throws Exception
 	{
 		return ShowWhere.forValue(this.GetValIntByKey(NodeToolbarAttr.ShowWhere));
 	}
-	public final void setShowWhere(ShowWhere value)
+	public final void setShowWhere(ShowWhere value) throws Exception
 	{
 		SetValByKey(NodeToolbarAttr.ShowWhere, value.getValue());
 	}
 	/** 
 	 执行类型
+	 * @throws Exception 
 	*/
-	public final int getExcType()
+	public final int getExcType() throws Exception
 	{
 		return this.GetValIntByKey(NodeToolbarAttr.ExcType);
 	}
-	public final void setExcType(int value)
+	public final void setExcType(int value) throws Exception
 	{
 		SetValByKey(NodeToolbarAttr.ExcType, value);
 	}
@@ -101,10 +106,11 @@ public class NodeToolbar extends EntityOID
 	 工具栏
 	 
 	 @param _oid 工具栏ID	
+	 * @throws Exception 
 	*/
-	public NodeToolbar(int oid)
+	public NodeToolbar(int oid) throws Exception
 	{
-		this.OID = oid;
+		this.setOID(oid);
 		this.Retrieve();
 	}
 	/** 

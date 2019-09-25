@@ -15,8 +15,9 @@ public class NodeCancels extends EntitiesMM
 		///#region 构造与属性.
 	/** 
 	 他的撤销到
+	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (NodeCancel ns : this.ToJavaList())
@@ -35,8 +36,9 @@ public class NodeCancels extends EntitiesMM
 	 可撤销的节点
 	 
 	 @param NodeID 节点ID
+	 * @throws Exception 
 	*/
-	public NodeCancels(int NodeID)
+	public NodeCancels(int NodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.FK_Node, NodeID);
@@ -46,8 +48,9 @@ public class NodeCancels extends EntitiesMM
 	 可撤销的节点
 	 
 	 @param NodeNo NodeNo 
+	 * @throws Exception 
 	*/
-	public NodeCancels(String NodeNo)
+	public NodeCancels(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.CancelTo, NodeNo);
@@ -71,15 +74,16 @@ public class NodeCancels extends EntitiesMM
 	 
 	 @param sts 可撤销的节点
 	 <Cancels></Cancels>
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts)
+	public final Nodes GetHisNodes(Nodes sts) throws Exception
 	{
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
-		for (Node st : sts)
+		for (Node st : sts.ToJavaList())
 		{
 			tmp = this.GetHisNodes(st.getNo());
-			for (Node nd : tmp)
+			for (Node nd : tmp.ToJavaList())
 			{
 				if (nds.Contains(nd))
 				{
@@ -95,8 +99,9 @@ public class NodeCancels extends EntitiesMM
 	 
 	 @param NodeNo 撤销到编号
 	 <Cancels>节点s</Cancels>
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo)
+	public final Nodes GetHisNodes(String NodeNo) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.CancelTo, NodeNo);
@@ -114,8 +119,9 @@ public class NodeCancels extends EntitiesMM
 	 
 	 @param nodeID 此节点的ID
 	 <Cancels>转向此节点的集合的Nodes (FromNodes)</Cancels> 
+	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID)
+	public final Nodes GetHisNodes(int nodeID) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.FK_Node, nodeID);

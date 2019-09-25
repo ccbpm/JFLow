@@ -2,8 +2,11 @@ package BP.WF.Port.SubInc;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.Port.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -23,8 +26,9 @@ public class StationType extends EntityNoName
 	 岗位类型
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public StationType(String _No)
+	public StationType(String _No) throws Exception
 	{
 		super(_No);
 	}
@@ -42,7 +46,7 @@ public class StationType extends EntityNoName
 			return this.get_enMap();
 		}
 		Map map = new Map("Port_StationType");
-		map.setEnDesc( "岗位类型";
+		map.setEnDesc("岗位类型");
 		map.Java_SetCodeStruct("2");
 
 		map.Java_SetDepositaryOfEntity(Depositary.None);

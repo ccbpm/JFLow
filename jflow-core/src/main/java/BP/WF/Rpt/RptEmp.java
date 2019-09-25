@@ -2,8 +2,11 @@ package BP.WF.Rpt;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -13,7 +16,7 @@ public class RptEmp extends Entity
 {
 
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -31,27 +34,29 @@ public class RptEmp extends Entity
 		///#region 基本属性
 	/** 
 	 报表ID
+	 * @throws Exception 
 	*/
-	public final String getFK_Rpt()
+	public final String getFK_Rpt() throws Exception
 	{
 		return this.GetValStringByKey(RptEmpAttr.FK_Rpt);
 	}
-	public final void setFK_Rpt(String value)
+	public final void setFK_Rpt(String value) throws Exception
 	{
 		SetValByKey(RptEmpAttr.FK_Rpt, value);
 	}
-	public final String getFK_EmpT()
+	public final String getFK_EmpT() throws Exception
 	{
 		return this.GetValRefTextByKey(RptEmpAttr.FK_Emp);
 	}
 	/** 
 	人员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(RptEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		SetValByKey(RptEmpAttr.FK_Emp, value);
 	}
@@ -77,8 +82,9 @@ public class RptEmp extends Entity
 	 
 	 @param _empoid 报表ID
 	 @param wsNo 人员编号 	
+	 * @throws Exception 
 	*/
-	public RptEmp(String _empoid, String wsNo)
+	public RptEmp(String _empoid, String wsNo) throws Exception
 	{
 		this.setFK_Rpt(_empoid);
 		this.setFK_Emp(wsNo);

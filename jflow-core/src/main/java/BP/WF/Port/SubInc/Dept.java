@@ -2,6 +2,7 @@ package BP.WF.Port.SubInc;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import BP.WF.*;
 import BP.WF.Port.*;
@@ -16,12 +17,13 @@ public class Dept extends EntityNoName
 		///#region 属性
 	/** 
 	 父节点编号
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
@@ -42,7 +44,7 @@ public class Dept extends EntityNoName
 	 
 	 @param no 编号
 	*/
-	public Dept(String no)
+	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
@@ -55,7 +57,7 @@ public class Dept extends EntityNoName
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -65,7 +67,7 @@ public class Dept extends EntityNoName
 	 Map
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() 
 	{
 		if (this.get_enMap() != null)
 		{
@@ -77,7 +79,7 @@ public class Dept extends EntityNoName
 		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体map的存放位置.
 		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
 
-		map.AdjunctType = AdjunctType.None;
+		map.setAdjunctType(AdjunctType.None);
 
 		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 30, 40);
 		map.AddTBString(DeptAttr.Name, null,"名称", true, false, 0, 60, 200);
@@ -97,53 +99,53 @@ public class Dept extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion
 
-	private void InitFlowSortTree()
+	private void InitFlowSortTree() throws Exception
 	{
 		//设置流程树权限.
-		BP.WF.Template.FlowSort fs = new WF.Template.FlowSort();
-		fs.No = "Inc" + this.No;
+		BP.WF.Template.FlowSort fs = new BP.WF.Template.FlowSort();
+		fs.setNo("Inc" + this.getNo());
 		if (fs.RetrieveFromDBSources() != 0)
 		{
-			fs.setOrgNo(this.No);
+			fs.setOrgNo(this.getNo());
 			fs.Update();
 			return;
 		}
 
 		//获得根目录节点.
-		BP.WF.Template.FlowSort root = new Template.FlowSort();
+		BP.WF.Template.FlowSort root = new BP.WF.Template.FlowSort();
 		int i = root.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo, "0");
 
 		//设置流程树权限.
-		fs.Name = this.Name;
-		fs.ParentNo = root.No;
-		fs.setOrgNo(this.No);
-		fs.Idx = 999;
+		fs.setName(this.getName());
+		fs.setParentNo(root.getNo());
+		fs.setOrgNo(this.getNo());
+		fs.setIdx(999);
 		fs.Save();
 
 
 		//创建下一级目录.
 		EntityTree en = fs.DoCreateSubNode();
-		en.setName ( "流程目录1";
+		en.setName("流程目录1");
 		en.Update();
 
 		en = fs.DoCreateSubNode();
-		en.setName ( "流程目录2";
+		en.setName("流程目录2");
 		en.Update();
 
 		//表单根目录.
-		BP.Sys.FrmTree ftRoot = new Sys.FrmTree();
+		BP.Sys.FrmTree ftRoot = new BP.Sys.FrmTree();
 		ftRoot.Retrieve(BP.WF.Template.FlowSortAttr.ParentNo, "0");
 
 
 		//设置表单树权限.
-		BP.Sys.FrmTree ft = new Sys.FrmTree();
-		ft.No = "Inc" + this.No;
+		BP.Sys.FrmTree ft = new BP.Sys.FrmTree();
+		ft.setNo("Inc" + this.getNo());
 		if (ft.RetrieveFromDBSources() == 0)
 		{
-			ft.Name = this.Name;
-			ft.ParentNo = ftRoot.No;
-			ft.OrgNo = this.No;
-			ft.Idx = 999;
+			ft.setName(this.getName());
+			ft.setParentNo(ftRoot.getNo());
+			ft.setOrgNo(this.getNo());
+			ft.setIdx(999);
 			ft.Insert();
 
 			//创建两个目录.
@@ -152,57 +154,57 @@ public class Dept extends EntityNoName
 		}
 		else
 		{
-			ft.Name = this.Name;
-			ft.ParentNo = ftRoot.No;
-			ft.OrgNo = this.No;
-			ft.Idx = 999;
+			ft.setName(this.getName());
+			ft.setParentNo(ftRoot.getNo());
+			ft.setOrgNo(this.getNo());
+			ft.setIdx(999);
 			ft.Update();
 		}
 	}
 
-	public final String SetSubInc(String userNo)
+	public final String SetSubInc(String userNo) throws Exception
 	{
 		//检查是否有该用户.
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.No = userNo;
+		emp.setNo(userNo);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "err@用户编号错误:" + userNo;
 		}
 
 		AdminEmp ad = new AdminEmp();
-		ad.No = userNo + "@" + this.No;
+		ad.setNo(userNo + "@" + this.getNo());
 		if (ad.RetrieveFromDBSources() == 1)
 		{
 			return "err@该用户已经是该公司的管理员了.";
 		}
 
 		ad.Copy(emp);
-		ad.No = userNo + "@" + this.No; //增加一个影子版本.
-		ad.setRootOfDept(this.No);
-		ad.setRootOfFlow("Inc" + this.No);
-		ad.setRootOfForm("Inc" + this.No);
+		ad.setNo(userNo + "@" + this.getNo()); //增加一个影子版本.
+		ad.setRootOfDept(this.getNo());
+		ad.setRootOfFlow("Inc" + this.getNo());
+		ad.setRootOfForm("Inc" + this.getNo());
 		ad.setUserType(1);
 		ad.setUseSta(1);
 		ad.Insert();
 
 		//设置二级管理员.
-		ad.No = userNo;
+		ad.setNo(userNo);
 		if (ad.RetrieveFromDBSources() == 0)
 		{
 			ad.Copy(emp);
-			ad.setRootOfDept(this.No);
-			ad.setRootOfFlow("Inc" + this.No);
-			ad.setRootOfForm("Inc" + this.No);
+			ad.setRootOfDept(this.getNo());
+			ad.setRootOfFlow("Inc" + this.getNo());
+			ad.setRootOfForm("Inc" + this.getNo());
 			ad.setUserType(1);
 			ad.setUseSta(1);
 			ad.Insert();
 		}
 		else
 		{
-			ad.setRootOfDept(this.No);
-			ad.setRootOfFlow("Inc" + this.No);
-			ad.setRootOfForm("Inc" + this.No);
+			ad.setRootOfDept(this.getNo());
+			ad.setRootOfFlow("Inc" + this.getNo());
+			ad.setRootOfForm("Inc" + this.getNo());
 			ad.setUserType(1);
 			ad.setUseSta(1);
 			ad.Update();
@@ -211,6 +213,6 @@ public class Dept extends EntityNoName
 		//初始化表单树，流程树.
 		InitFlowSortTree();
 
-		return "设置成功,[" + ad.No + "," + ad.Name + "]重新登录就可以看到.";
+		return "设置成功,[" + ad.getNo() + "," + ad.getName() + "]重新登录就可以看到.";
 	}
 }

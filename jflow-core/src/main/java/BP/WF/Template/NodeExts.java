@@ -22,7 +22,7 @@ public class NodeExts extends Entities
 	{
 	}
 
-	public NodeExts(String fk_flow)
+	public NodeExts(String fk_flow) throws Exception
 	{
 		this.Retrieve(NodeAttr.FK_Flow, fk_flow, NodeAttr.Step);
 		return;

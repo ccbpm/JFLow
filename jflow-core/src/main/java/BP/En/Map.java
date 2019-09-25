@@ -2708,7 +2708,7 @@ public class Map {
 	}
 
 	/// #region Decimal类型
-	public final void AddTBDecimal(String key, String _Field, BigDecimal defaultVal, String desc, boolean uiVisable,
+	public final void AddTBDecimal(String key, String _Field, int defaultVal, String desc, boolean uiVisable,
 			boolean isReadonly) {
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2722,7 +2722,7 @@ public class Map {
 		this.getAttrs().Add(attr);
 	}
 
-	public final void AddTBDecimal(String key, BigDecimal defaultVal, String desc, boolean uiVisable,
+	public final void AddTBDecimal(String key, int defaultVal, String desc, boolean uiVisable,
 			boolean isReadonly) {
 		this.AddTBDecimal(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}

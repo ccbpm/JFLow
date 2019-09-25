@@ -408,7 +408,7 @@ public class FindWorkerRole extends EntityOIDName
 						}
 						//指定它
 						Emp emp = new Emp();
-						emp.No = empNo;
+						emp.setNo (empNo;
 						if (emp.RetrieveFromDBSources() == 0)
 						{
 							throw new RuntimeException("@指定的节点字段(" + this.getTagVal1() + ")的值(" + empNo + ")是非法的人员编号...");

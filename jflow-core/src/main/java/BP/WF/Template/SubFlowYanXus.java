@@ -36,8 +36,9 @@ public class SubFlowYanXus extends EntitiesMyPK
 	 延续子流程集合.
 	 
 	 @param fk_node
+	 * @throws Exception 
 	*/
-	public SubFlowYanXus(int fk_node)
+	public SubFlowYanXus(int fk_node) throws Exception
 	{
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, SubFlowYanXuAttr.SubFlowType, SubFlowType.YanXuFlow.getValue());
 	}

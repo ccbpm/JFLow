@@ -1,5 +1,6 @@
 package BP.WF.Rpt;
 
+import BP.DA.DataType;
 import BP.WF.*;
 import java.util.*;
 import java.io.*;

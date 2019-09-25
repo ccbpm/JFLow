@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,9 +16,10 @@ public class SubFlowHand extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -26,85 +28,93 @@ public class SubFlowHand extends EntityMyPK
 	}
 	/** 
 	 主流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowAutoAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(SubFlowAutoAttr.FK_Flow, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getSubFlowNo()
+	public final String getSubFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowHandAttr.SubFlowNo);
 	}
-	public final void setSubFlowNo(String value)
+	public final void setSubFlowNo(String value) throws Exception
 	{
 		SetValByKey(SubFlowHandAttr.SubFlowNo, value);
 	}
 	/** 
 	 流程名称
+	 * @throws Exception 
 	*/
-	public final String getSubFlowName()
+	public final String getSubFlowName() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowHandAttr.SubFlowName);
 	}
 	/** 
 	 条件表达式.
+	 * @throws Exception 
 	*/
-	public final String getCondExp()
+	public final String getCondExp() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowHandAttr.CondExp);
 	}
-	public final void setCondExp(String value)
+	public final void setCondExp(String value) throws Exception
 	{
 		SetValByKey(SubFlowHandAttr.CondExp, value);
 	}
 	/** 
 	 仅仅可以启动一次?
+	 * @throws Exception 
 	*/
-	public final boolean getStartOnceOnly()
+	public final boolean getStartOnceOnly() throws Exception
 	{
 		return this.GetValBooleanByKey(SubFlowYanXuAttr.StartOnceOnly);
 	}
 
 	/** 
 	 该流程启动的子流程运行结束后才可以再次启动
+	 * @throws Exception 
 	*/
-	public final boolean getCompleteReStart()
+	public final boolean getCompleteReStart() throws Exception
 	{
 		return this.GetValBooleanByKey(SubFlowAutoAttr.CompleteReStart);
 	}
 	/** 
 	 表达式类型
+	 * @throws Exception 
 	*/
-	public final ConnDataFrom getExpType()
+	public final ConnDataFrom getExpType() throws Exception
 	{
 		return ConnDataFrom.forValue(this.GetValIntByKey(SubFlowHandAttr.ExpType));
 	}
-	public final void setExpType(ConnDataFrom value)
+	public final void setExpType(ConnDataFrom value) throws Exception
 	{
 		SetValByKey(SubFlowHandAttr.ExpType, value.getValue());
 	}
-	public final String getFK_Node()
+	public final String getFK_Node() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowHandAttr.FK_Node);
 	}
-	public final void setFK_Node(String value)
+	public final void setFK_Node(String value) throws Exception
 	{
 		SetValByKey(SubFlowHandAttr.FK_Node, value);
 	}
 	/** 
 	 指定的流程结束后,才能启动该子流程(请在文本框配置子流程).
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableSpecFlowOver()
+	public final boolean getIsEnableSpecFlowOver() throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowOver);
+		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowOver);
 		if (val == false)
 		{
 			return false;
@@ -116,28 +126,30 @@ public class SubFlowHand extends EntityMyPK
 		}
 		return false;
 	}
-	public final String getSpecFlowOver()
+	public final String getSpecFlowOver() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowYanXuAttr.SpecFlowOver);
 	}
-	public final String getSpecFlowStart()
+	public final String getSpecFlowStart() throws Exception
 	{
 		return this.GetValStringByKey(SubFlowYanXuAttr.SpecFlowStart);
 	}
 	/** 
 	 自动发起的子流程发送方式
+	 * @throws Exception 
 	*/
-	public final int getSendModel()
+	public final int getSendModel() throws Exception
 	{
 		return this.GetValIntByKey(SubFlowAutoAttr.SendModel);
 	}
 	/** 
 	 指定的流程启动后,才能启动该子流程(请在文本框配置子流程).
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableSpecFlowStart()
+	public final boolean getIsEnableSpecFlowStart() throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowStart);
+		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowStart);
 		if (val == false)
 		{
 			return false;
@@ -213,9 +225,9 @@ public class SubFlowHand extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setMyPK( this.getFK_Node() + "_" + this.getSubFlowNo() + "_0";
+		this.setMyPK(this.getFK_Node() + "_" + this.getSubFlowNo() + "_0");
 		return super.beforeInsert();
 	}
 }

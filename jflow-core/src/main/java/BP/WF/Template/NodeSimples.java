@@ -40,8 +40,9 @@ public class NodeSimples extends EntitiesOIDName
 	 节点集合.
 	 
 	 @param FlowNo
+	 * @throws Exception 
 	*/
-	public NodeSimples(String fk_flow)
+	public NodeSimples(String fk_flow) throws Exception
 	{
 		this.Retrieve(NodeAttr.FK_Flow, fk_flow, NodeAttr.Step);
 	}

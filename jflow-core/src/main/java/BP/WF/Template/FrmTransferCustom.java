@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.WF.*;
 import BP.Sys.*;
@@ -15,82 +16,88 @@ public class FrmTransferCustom extends Entity
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws NumberFormatException, Exception
 	{
 		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 控件状态
+	 * @throws Exception 
 	*/
-	public final FTCSta getFTCSta()
+	public final FTCSta getFTCSta() throws Exception
 	{
 		return FTCSta.forValue(this.GetValIntByKey(FTCAttr.FTCSta));
 	}
-	public final void setFTCSta(FTCSta value)
+	public final void setFTCSta(FTCSta value) throws Exception
 	{
 		this.SetValByKey(FTCAttr.FTCSta, value.getValue());
 	}
 	/** 
 	 工作模式
+	 * @throws Exception 
 	*/
-	public final int getFTCWorkModel()
+	public final int getFTCWorkModel() throws Exception
 	{
 		return this.GetValIntByKey(FTCAttr.FTCWorkModel);
 	}
-	public final void setFTCWorkModel(int value)
+	public final void setFTCWorkModel(int value) throws Exception
 	{
 		this.SetValByKey(FTCAttr.FTCWorkModel, value);
 	}
 	/** 
 	 Y
+	 * @throws Exception 
 	*/
-	public final float getFTC_Y()
+	public final float getFTC_Y() throws Exception
 	{
 		return this.GetValFloatByKey(FTCAttr.FTC_Y);
 	}
-	public final void setFTC_Y(float value)
+	public final void setFTC_Y(float value) throws Exception
 	{
 		this.SetValByKey(FTCAttr.FTC_Y, value);
 	}
 	/** 
 	 X
+	 * @throws Exception 
 	*/
-	public final float getFTC_X()
+	public final float getFTC_X() throws Exception
 	{
 		return this.GetValFloatByKey(FTCAttr.FTC_X);
 	}
-	public final void setFTC_X(float value)
+	public final void setFTC_X(float value) throws Exception
 	{
 		this.SetValByKey(FTCAttr.FTC_X, value);
 	}
 	/** 
 	 W
+	 * @throws Exception 
 	*/
-	public final float getFTC_W()
+	public final float getFTC_W() throws Exception
 	{
 		return this.GetValFloatByKey(FTCAttr.FTC_W);
 	}
-	public final void setFTC_W(float value)
+	public final void setFTC_W(float value) throws Exception
 	{
 		this.SetValByKey(FTCAttr.FTC_W, value);
 	}
-	public final String getFTC_Wstr()
+	public final String getFTC_Wstr() throws Exception
 	{
 		if (this.getFTC_W() == 0)
 		{
@@ -100,16 +107,17 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 H
+	 * @throws Exception 
 	*/
-	public final float getFTC_H()
+	public final float getFTC_H() throws Exception
 	{
 		return this.GetValFloatByKey(FTCAttr.FTC_H);
 	}
-	public final void setFTC_H(float value)
+	public final void setFTC_H(float value) throws Exception
 	{
 		this.SetValByKey(FTCAttr.FTC_H, value);
 	}
-	public final String getFTC_Hstr()
+	public final String getFTC_Hstr() throws Exception
 	{
 		if (this.getFTC_H() == 0)
 		{
@@ -119,15 +127,17 @@ public class FrmTransferCustom extends Entity
 	}
 	/** 
 	 节点名称.
+	 * @throws Exception 
 	*/
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
 	/** 
 	 显示标签
+	 * @throws Exception 
 	*/
-	public final String getFTCLab()
+	public final String getFTCLab() throws Exception
 	{
 		return this.GetValStrByKey(FTCAttr.FTCLab);
 	}
@@ -138,9 +148,10 @@ public class FrmTransferCustom extends Entity
 		///#region 构造方法
 	/** 
 	 控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -166,8 +177,9 @@ public class FrmTransferCustom extends Entity
 	 流转自定义组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTransferCustom(String mapData)
+	public FrmTransferCustom(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -196,17 +208,19 @@ public class FrmTransferCustom extends Entity
 	 流转自定义组件
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public FrmTransferCustom(int nodeID)
+	public FrmTransferCustom(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{

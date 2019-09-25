@@ -2,6 +2,7 @@ package BP.WF.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,12 +16,13 @@ public class Dept extends EntityNoName
 		///#region 属性
 	/** 
 	 父节点编号
+	 * @throws Exception 
 	*/
-	public final String getParentNo()
+	public final String getParentNo() throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
+	public final void setParentNo(String value) throws Exception
 	{
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
@@ -40,8 +42,9 @@ public class Dept extends EntityNoName
 	 部门
 	 
 	 @param no 编号
+	 * @throws Exception 
 	*/
-	public Dept(String no)
+	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
@@ -52,9 +55,10 @@ public class Dept extends EntityNoName
 		///#region 重写方法
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -76,7 +80,7 @@ public class Dept extends EntityNoName
 		map.Java_SetDepositaryOfEntity(Depositary.Application); //实体map的存放位置.
 		map.Java_SetDepositaryOfMap(Depositary.Application); // Map 的存放位置.
 
-		map.AdjunctType = AdjunctType.None;
+		map.setAdjunctType(AdjunctType.None);
 
 		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 30, 40);
 		map.AddTBString(DeptAttr.Name, null,"名称", true, false, 0, 60, 200);

@@ -56,7 +56,7 @@ public class WF_Setting extends DirectoryPageBase
 		ht.put("UserName", WebUser.getName());
 
 		BP.Port.Emp emp = new Emp();
-		emp.No = WebUser.getNo();
+		emp.setNo (WebUser.getNo();
 		emp.Retrieve();
 
 		//部门名称.

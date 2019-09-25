@@ -110,7 +110,7 @@ public class AutoRunStratFlows extends Method
 					String fk_emp = RunObj.substring(0, RunObj.indexOf('@'));
 
 					BP.Port.Emp emp = new BP.Port.Emp();
-					emp.No = fk_emp;
+					emp.setNo (fk_emp;
 					if (emp.RetrieveFromDBSources() == 0)
 					{
 						BP.DA.Log.DebugWriteError("启动自动启动流程错误：发起人(" + fk_emp + ")不存在。");
@@ -252,7 +252,7 @@ public class AutoRunStratFlows extends Method
 			{
 				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
-				emp.No = starter;
+				emp.setNo (starter;
 				if (emp.RetrieveFromDBSources() == 0)
 				{
 					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.No + "不存在。");

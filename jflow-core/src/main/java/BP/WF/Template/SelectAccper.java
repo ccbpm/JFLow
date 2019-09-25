@@ -2,8 +2,11 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
+import BP.Web.WebUser;
+
 import java.util.*;
 
 /** 
@@ -28,23 +31,24 @@ public class SelectAccper extends EntityMyPK
 	}
 	/** 
 	工作ID
+	 * @throws Exception 
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(SelectAccperAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.WorkID, value);
 	}
 	/** 
 	节点
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(SelectAccperAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.FK_Node, value);
 	}
@@ -52,29 +56,29 @@ public class SelectAccper extends EntityMyPK
 	/** 
 	 到人员
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(SelectAccperAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.FK_Emp, value);
 	}
 	/** 
 	 标记
 	*/
-	public final String getTag()
+	public final String getTag() throws Exception
 	{
 		return this.GetValStringByKey(SelectAccperAttr.Tag);
 	}
-	public final void setTag(String value)
+	public final void setTag(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.Tag, value);
 	}
 	/** 
 	 人员名称
 	*/
-	public final String getEmpName()
+	public final String getEmpName() throws Exception
 	{
 		String s = this.GetValStringByKey(SelectAccperAttr.EmpName);
 		if (s.equals("") || s == null)
@@ -83,84 +87,84 @@ public class SelectAccper extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setEmpName(String value)
+	public final void setEmpName(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.EmpName, value);
 	}
 	/** 
 	 部门名称
 	*/
-	public final String getDeptName()
+	public final String getDeptName() throws Exception
 	{
 		return this.GetValStringByKey(SelectAccperAttr.DeptName);
 	}
-	public final void setDeptName(String value)
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.DeptName, value);
 	}
 	/** 
 	 接收人
 	*/
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(SelectAccperAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.Rec, value);
 	}
 	/** 
 	 办理意见  信息
 	*/
-	public final String getInfo()
+	public final String getInfo() throws Exception
 	{
 		return this.GetValStringByKey(SelectAccperAttr.Info);
 	}
-	public final void setInfo(String value)
+	public final void setInfo(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.Info, value);
 	}
 	/** 
 	 是否记忆
 	*/
-	public final boolean getIsRemember()
+	public final boolean getIsRemember() throws Exception
 	{
 		return this.GetValBooleanByKey(SelectAccperAttr.IsRemember);
 	}
-	public final void setIsRemember(boolean value)
+	public final void setIsRemember(boolean value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.IsRemember, value);
 	}
 	/** 
 	 顺序号
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(SelectAccperAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.Idx, value);
 	}
 	/** 
 	  类型(@0=接受人@1=抄送人)
 	*/
-	public final int getAccType()
+	public final int getAccType() throws Exception
 	{
 		return this.GetValIntByKey(SelectAccperAttr.AccType);
 	}
-	public final void setAccType(int value)
+	public final void setAccType(int value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.AccType, value);
 	}
 	/** 
 	 时限
 	*/
-	public final float getTSpanHour()
+	public final float getTSpanHour() throws Exception
 	{
 		return this.GetValFloatByKey(SelectAccperAttr.TSpanHour);
 	}
-	public final void setTSpanHour(float value)
+	public final void setTSpanHour(float value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.TSpanHour, value);
 	}
@@ -168,22 +172,22 @@ public class SelectAccper extends EntityMyPK
 	/** 
 	 工作到达日期(计划)
 	*/
-	public final String getPlanADT()
+	public final String getPlanADT() throws Exception
 	{
 		return this.GetValStringByKey(SelectAccperAttr.PlanADT);
 	}
-	public final void setPlanADT(String value)
+	public final void setPlanADT(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.PlanADT, value);
 	}
 	/** 
 	 工作应完成日期(计划)
 	*/
-	public final String getPlanSDT()
+	public final String getPlanSDT() throws Exception
 	{
 		return this.GetValStringByKey(SelectAccperAttr.PlanSDT);
 	}
-	public final void setPlanSDT(String value)
+	public final void setPlanSDT(String value) throws Exception
 	{
 		this.SetValByKey(SelectAccperAttr.PlanSDT, value);
 	}
@@ -199,7 +203,7 @@ public class SelectAccper extends EntityMyPK
 	{
 
 	}
-	public SelectAccper(String mypk)
+	public SelectAccper(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -253,21 +257,21 @@ public class SelectAccper extends EntityMyPK
 
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
 		this.ResetPK();
 
 		return super.beforeInsert();
 	}
 
-	public final void ResetPK()
+	public final void ResetPK() throws Exception
 	{
 		//注释掉了.
 		// this.setMyPK( this.FK_Node + "_" + this.WorkID + "_" + this.FK_Emp+"_"+this.Idx;
-		this.setMyPK( this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp();
+		this.setMyPK(this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp());
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getDeptName().length() == 0)
 		{

@@ -748,10 +748,10 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				/* 是否是左边 */
 				lab = new FrmLab();
 				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
-				lab.FK_MapData = this.getFK_MapData();
-				lab.Text = ma.Name;
-				lab.X = 40;
-				lab.Y = maxEnd;
+				lab.setFK_MapData( this.getFK_MapData();
+				lab.setText ( ma.Name;
+				lab.setX ( 40;
+				lab.setY(maxEnd;
 				lab.Insert();
 
 				ma.X = lab.X + 80;
@@ -762,10 +762,10 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			{
 				lab = new FrmLab();
 				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
-				lab.FK_MapData = this.getFK_MapData();
-				lab.Text = ma.Name;
-				lab.X = 350;
-				lab.Y = maxEnd;
+				lab.setFK_MapData( this.getFK_MapData();
+				lab.setText ( ma.Name;
+				lab.setX ( 350;
+				lab.setY(maxEnd;
 				lab.Insert();
 
 				ma.X = lab.X + 80;

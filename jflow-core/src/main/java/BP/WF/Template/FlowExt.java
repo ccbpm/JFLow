@@ -1616,7 +1616,7 @@ public class FlowExt extends EntityNoName
 		}
 
 		BP.Port.Emp emp = new Emp();
-		emp.No = worker;
+		emp.setNo (worker;
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "人员编号不正确" + worker + ".";

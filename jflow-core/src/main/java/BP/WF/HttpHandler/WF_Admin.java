@@ -342,7 +342,7 @@ public class WF_Admin extends DirectoryPageBase
 		String password = this.GetValFromFrmByKey("TB_PW");
 
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.No = userNo;
+		emp.setNo (userNo;
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "err@用户名或密码错误.";

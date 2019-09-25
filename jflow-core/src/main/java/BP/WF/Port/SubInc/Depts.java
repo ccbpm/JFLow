@@ -16,9 +16,10 @@ public class Depts extends EntitiesNoName
 	 查询全部。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	public int RetrieveAll()
+	public int RetrieveAll() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{

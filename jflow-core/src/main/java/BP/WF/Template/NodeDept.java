@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -18,28 +19,30 @@ public class NodeDept extends EntityMM
 		///#region 基本属性
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeDeptAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(NodeDeptAttr.FK_Node,value);
 	}
 	/** 
 	 工作部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(NodeDeptAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(NodeDeptAttr.FK_Dept,value);
 	}
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenAll();
@@ -69,8 +72,8 @@ public class NodeDept extends EntityMM
 
 		Map map = new Map("WF_NodeDept", "节点部门");
 
-		map.setDepositaryOfEntity( Depositary.None;
-		map.setDepositaryOfMap( Depositary.Application;
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
 
 		map.IndexField = NodeEmpAttr.FK_Node;
 

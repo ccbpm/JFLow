@@ -25,10 +25,11 @@ public class FrmTransferCustoms extends Entities
 	 流转自定义组件s
 	 
 	 @param fk_mapdata s
+	 * @throws Exception 
 	*/
-	public FrmTransferCustoms(String fk_mapdata)
+	public FrmTransferCustoms(String fk_mapdata) throws Exception
 	{
-		if (SystemConfig.IsDebug)
+		if (SystemConfig.getIsDebug())
 		{
 			this.Retrieve("No", fk_mapdata);
 		}

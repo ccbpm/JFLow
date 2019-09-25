@@ -3,7 +3,9 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
+import BP.Web.WebUser;
 import BP.WF.*;
 import java.util.*;
 
@@ -16,122 +18,130 @@ public class TruckViewPower extends EntityNoName
 		///#region 属性
 	/** 
 	 发起人可看
+	 * @throws Exception 
 	*/
-	public final boolean getPStarter()
+	public final boolean getPStarter() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PStarter);
 	}
-	public final void setPStarter(boolean value)
+	public final void setPStarter(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PStarter, value);
 	}
 	/** 
 	 参与人可见
+	 * @throws Exception 
 	*/
-	public final boolean getPWorker()
+	public final boolean getPWorker() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PWorker);
 	}
-	public final void setPWorker(boolean value)
+	public final void setPWorker(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PWorker, value);
 	}
 	/** 
 	 被抄送人可见
+	 * @throws Exception 
 	*/
-	public final boolean getPCCer()
+	public final boolean getPCCer() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PCCer);
 	}
-	public final void setPCCer(boolean value)
+	public final void setPCCer(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PCCer, value);
 	}
 	/** 
 	 本部门可见
+	 * @throws Exception 
 	*/
-	public final boolean getPMyDept()
+	public final boolean getPMyDept() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PMyDept);
 	}
-	public final void setPMyDept(boolean value)
+	public final void setPMyDept(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PMyDept, value);
 	}
 	/** 
 	 直属上级部门可见
+	 * @throws Exception 
 	*/
-	public final boolean getPPMyDept()
+	public final boolean getPPMyDept() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PPMyDept);
 	}
-	public final void setPPMyDept(boolean value)
+	public final void setPPMyDept(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PPMyDept, value);
 	}
 	/** 
 	 上级部门可见
+	 * @throws Exception 
 	*/
-	public final boolean getPPDept()
+	public final boolean getPPDept() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PPDept);
 	}
-	public final void setPPDept(boolean value)
+	public final void setPPDept(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PPDept, value);
 	}
 	/** 
 	 平级部门可见
+	 * @throws Exception 
 	*/
-	public final boolean getPSameDept()
+	public final boolean getPSameDept() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PSameDept);
 	}
-	public final void setPSameDept(boolean value)
+	public final void setPSameDept(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSameDept, value);
 	}
 	/** 
 	 指定部门可见
+	 * @throws Exception 
 	*/
-	public final boolean getPSpecDept()
+	public final boolean getPSpecDept() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PSpecDept);
 	}
-	public final void setPSpecDept(boolean value)
+	public final void setPSpecDept(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecDept, value);
 	}
 	/** 
 	 部门编号
 	*/
-	public final String getPSpecDeptExt()
+	public final String getPSpecDeptExt() throws Exception
 	{
 		return this.GetValStrByKey(TruckViewPowerAttr.PSpecDeptExt);
 	}
-	public final void setPSpecDeptExt(String value)
+	public final void setPSpecDeptExt(String value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecDeptExt, value);
 	}
 	/** 
 	 指定岗位可见
 	*/
-	public final boolean getPSpecSta()
+	public final boolean getPSpecSta() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PSpecSta);
 	}
-	public final void setPSpecSta(boolean value)
+	public final void setPSpecSta(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecSta, value);
 	}
 	/** 
 	 岗位编号
 	*/
-	public final String getPSpecStaExt()
+	public final String getPSpecStaExt() throws Exception
 	{
 		return this.GetValStrByKey(TruckViewPowerAttr.PSpecStaExt);
 	}
-	public final void setPSpecStaExt(String value)
+	public final void setPSpecStaExt(String value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecStaExt, value);
 	}
@@ -139,11 +149,11 @@ public class TruckViewPower extends EntityNoName
 	/** 
 	 权限组
 	*/
-	public final boolean getPSpecGroup()
+	public final boolean getPSpecGroup() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PSpecGroup);
 	}
-	public final void setPSpecGroup(boolean value)
+	public final void setPSpecGroup(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecGroup, value);
 	}
@@ -151,11 +161,11 @@ public class TruckViewPower extends EntityNoName
 	/** 
 	 权限组编号
 	*/
-	public final String getPSpecGroupExt()
+	public final String getPSpecGroupExt() throws Exception
 	{
 		return this.GetValStrByKey(TruckViewPowerAttr.PSpecGroupExt);
 	}
-	public final void setPSpecGroupExt(String value)
+	public final void setPSpecGroupExt(String value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecGroupExt, value);
 	}
@@ -163,22 +173,22 @@ public class TruckViewPower extends EntityNoName
 	/** 
 	 指定的人员
 	*/
-	public final boolean getPSpecEmp()
+	public final boolean getPSpecEmp() throws Exception
 	{
 		return this.GetValBooleanByKey(TruckViewPowerAttr.PSpecEmp);
 	}
-	public final void setPSpecEmp(boolean value)
+	public final void setPSpecEmp(boolean value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecEmp, value);
 	}
 	/** 
 	 指定编号
 	*/
-	public final String getPSpecEmpExt()
+	public final String getPSpecEmpExt() throws Exception
 	{
 		return this.GetValStrByKey(TruckViewPowerAttr.PSpecEmpExt);
 	}
-	public final void setPSpecEmpExt(String value)
+	public final void setPSpecEmpExt(String value) throws Exception
 	{
 		this.SetValByKey(TruckViewPowerAttr.PSpecEmpExt, value);
 	}
@@ -202,7 +212,7 @@ public class TruckViewPower extends EntityNoName
 	{
 	}
 
-	public TruckViewPower(String no)
+	public TruckViewPower(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -269,8 +279,9 @@ public class TruckViewPower extends EntityNoName
 	 @param workid 流程ID
 	 @param userNo 操作员
 	 @return 
+	 * @throws Exception 
 	*/
-	public final boolean CheckICanView(long workid, String userNo)
+	public final boolean CheckICanView(long workid, String userNo) throws Exception
 	{
 		if (userNo == null)
 		{

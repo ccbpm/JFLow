@@ -1658,7 +1658,7 @@ public class WF extends DirectoryPageBase
 	public final String LoginSubmit()
 	{
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.No = this.GetValFromFrmByKey("TB_No");
+		emp.setNo (this.GetValFromFrmByKey("TB_No");
 
 		if (emp.RetrieveFromDBSources() == 0)
 		{

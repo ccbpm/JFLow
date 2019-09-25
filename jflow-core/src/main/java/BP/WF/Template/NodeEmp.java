@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -18,27 +19,29 @@ public class NodeEmp extends EntityMM
 		///#region 基本属性
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeEmpAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(NodeEmpAttr.FK_Node,value);
 	}
 	/** 
 	 到人员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(NodeEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(NodeEmpAttr.FK_Emp,value);
 	}
-	public final String getFK_EmpT()
+	public final String getFK_EmpT() throws Exception
 	{
 		return this.GetValRefTextByKey(NodeEmpAttr.FK_Emp);
 	}

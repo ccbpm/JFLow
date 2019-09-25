@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.Template.*;
 import BP.WF.*;
@@ -21,47 +22,49 @@ public class Direction extends EntityMyPK
 		///#region 基本属性
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getNode()
+	public final int getNode() throws Exception
 	{
 		return this.GetValIntByKey(DirectionAttr.Node);
 	}
-	public final void setNode(int value)
+	public final void setNode(int value) throws Exception
 	{
 		this.SetValByKey(DirectionAttr.Node, value);
 	}
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(DirectionAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(DirectionAttr.FK_Flow, value);
 	}
 	/** 
 	 转向的节点
+	 * @throws Exception 
 	*/
-	public final int getToNode()
+	public final int getToNode() throws Exception
 	{
 		return this.GetValIntByKey(DirectionAttr.ToNode);
 	}
-	public final void setToNode(int value)
+	public final void setToNode(int value) throws Exception
 	{
 		this.SetValByKey(DirectionAttr.ToNode,value);
 	}
-	public final boolean getIsCanBack()
+	public final boolean getIsCanBack() throws Exception
 	{
 		return this.GetValBooleanByKey(DirectionAttr.IsCanBack);
 	}
-	public final void setIsCanBack(boolean value)
+	public final void setIsCanBack(boolean value) throws Exception
 	{
 		this.SetValByKey(DirectionAttr.IsCanBack, value);
 	}
-	public final String getDots()
+	public final String getDots() throws Exception
 	{
 		return this.GetValStringByKey(DirectionAttr.Dots);
 	}
-	public final void setDots(String value)
+	public final void setDots(String value) throws Exception
 	{
 		this.SetValByKey(DirectionAttr.Dots, value);
 	}
@@ -121,17 +124,18 @@ public class Direction extends EntityMyPK
 	 处理pk 
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setMyPK( this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode();
+		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode());
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete()
+	protected boolean beforeDelete() throws Exception
 	{
-		this.setMyPK( this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode();
+		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode());
 		return super.beforeDelete();
 	}
 }

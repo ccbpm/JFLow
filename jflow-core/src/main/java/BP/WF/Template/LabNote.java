@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.Port.*;
 import BP.WF.*;
@@ -27,43 +28,46 @@ public class LabNote extends EntityMyPK
 
 	/** 
 	 x
+	 * @throws Exception 
 	*/
-	public final int getX()
+	public final int getX() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.X);
 	}
-	public final void setX(int value)
+	public final void setX(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.X, value);
 	}
 
 	/** 
 	 y
+	 * @throws Exception 
 	*/
-	public final int getY()
+	public final int getY() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.Y);
 	}
-	public final void setY(int value)
+	public final void setY(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.Y, value);
 	}
 	/** 
 	 标签的事务编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(NodeAttr.FK_Flow, value);
 	}
-	public final String getName()
+	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(NodeAttr.Name);
 	}
-	public final void setName(String value)
+	public final void setName(String value) throws Exception
 	{
 		SetValByKey(NodeAttr.Name, value);
 	}
@@ -82,8 +86,9 @@ public class LabNote extends EntityMyPK
 	 标签
 	 
 	 @param _oid 标签ID	
+	 * @throws Exception 
 	*/
-	public LabNote(String mypk)
+	public LabNote(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -117,9 +122,9 @@ public class LabNote extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()
+	protected boolean beforeInsert() throws Exception
 	{
-		this.setMyPK( BP.DA.DBAccess.GenerOID().toString();
+		this.setMyPK(String.valueOf(BP.DA.DBAccess.GenerOID()));
 		return super.beforeInsert();
 	}
 }

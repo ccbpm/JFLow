@@ -45,8 +45,9 @@ public class FlowExts extends EntitiesNoName
 	 工作流程
 	 
 	 @param fk_sort
+	 * @throws Exception 
 	*/
-	public FlowExts(String fk_sort)
+	public FlowExts(String fk_sort) throws Exception
 	{
 		this.Retrieve(BP.WF.Template.FlowAttr.FK_FlowSort, fk_sort);
 	}

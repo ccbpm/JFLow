@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -16,9 +17,10 @@ public class FoolTruckNodeFrm extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -28,46 +30,50 @@ public class FoolTruckNodeFrm extends EntityMyPK
 	}
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(FrmNodeAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Node, value);
 	}
 	/** 
 	 表单ID
+	 * @throws Exception 
 	*/
-	public final String getFK_Frm()
+	public final String getFK_Frm() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FK_Frm);
 	}
-	public final void setFK_Frm(String value)
+	public final void setFK_Frm(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Frm, value);
 	}
 	/** 
 	 对应的解决方案
 	 0=默认方案.节点编号= 自定义方案, 1=不可编辑.
+	 * @throws Exception 
 	*/
-	public final int getFrmSln()
+	public final int getFrmSln() throws Exception
 	{
 		return this.GetValIntByKey(FrmNodeAttr.FrmSln);
 	}
-	public final void setFrmSln(int value)
+	public final void setFrmSln(int value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FrmSln, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Flow, value);
 	}
@@ -86,8 +92,9 @@ public class FoolTruckNodeFrm extends EntityMyPK
 	 累加表单方案
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FoolTruckNodeFrm(String mypk)
+	public FoolTruckNodeFrm(String mypk) throws Exception
 	{
 		super(mypk);
 	}
@@ -121,9 +128,10 @@ public class FoolTruckNodeFrm extends EntityMyPK
 	 修改前的操作
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws Exception
 	{
 		//表单方案如果是只读或者默认方案时，删除对应的设置的权限
 		if (this.getFrmSln() == 0 || this.getFrmSln() == 1)

@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.WF.*;
+import BP.Web.WebUser;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -17,12 +18,13 @@ public class CCList extends EntityMyPK
 		///#region 属性
 	/** 
 	 状态
+	 * @throws Exception 
 	*/
-	public final CCSta getHisSta()
+	public final CCSta getHisSta() throws Exception
 	{
 		return CCSta.forValue(this.GetValIntByKey(CCListAttr.Sta));
 	}
-	public final void setHisSta(CCSta value)
+	public final void setHisSta(CCSta value) throws Exception
 	{
 		if (value == CCSta.Read)
 		{
@@ -32,9 +34,10 @@ public class CCList extends EntityMyPK
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 
 		UAC uac = new UAC();
@@ -48,29 +51,29 @@ public class CCList extends EntityMyPK
 		uac.IsUpdate = true;
 		return uac;
 	}
-	public final String getCCTo()
+	public final String getCCTo() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.CCTo);
 	}
-	public final void setCCTo(String value)
+	public final void setCCTo(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.CCTo, value);
 	}
 	/** 
 	 抄送部门
 	*/
-	public final String getCCToDept()
+	public final String getCCToDept() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.CCToDept);
 	}
-	public final void setCCToDept(String value)
+	public final void setCCToDept(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.CCToDept, value);
 	}
 	/** 
 	 抄送给Name
 	*/
-	public final String getCCToName()
+	public final String getCCToName() throws Exception
 	{
 		String s = this.GetValStringByKey(CCListAttr.CCToName);
 		if (DataType.IsNullOrEmpty(s))
@@ -79,7 +82,7 @@ public class CCList extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setCCToName(String value)
+	public final void setCCToName(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.CCToName, value);
 	}
@@ -87,7 +90,7 @@ public class CCList extends EntityMyPK
 	/** 
 	 抄送给部门名称
 	*/
-	public final String getCCToDeptName()
+	public final String getCCToDeptName() throws Exception
 	{
 		String s = this.GetValStringByKey(CCListAttr.CCToDeptName);
 		if (DataType.IsNullOrEmpty(s))
@@ -96,14 +99,14 @@ public class CCList extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setCCToDeptName(String value)
+	public final void setCCToDeptName(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.CCToDeptName, value);
 	}
 	/** 
 	 抄送给部门名称
 	*/
-	public final String getCCToDeptNameHtml()
+	public final String getCCToDeptNameHtml() throws Exception
 	{
 		String s = this.GetValStringByKey(CCListAttr.CCToDeptName);
 		if (DataType.IsNullOrEmpty(s))
@@ -115,22 +118,22 @@ public class CCList extends EntityMyPK
 	/** 
 	 读取时间
 	*/
-	public final String getCDT()
+	public final String getCDT() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.CDT);
 	}
-	public final void setCDT(String value)
+	public final void setCDT(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.CDT, value);
 	}
 	/** 
 	 抄送人所在的节点编号
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(CCListAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.FK_Node, value);
 	}
@@ -145,128 +148,128 @@ public class CCList extends EntityMyPK
 	//        this.SetValByKey(CCListAttr.NDFrom, value);
 	//    }
 	//}
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(CCListAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.WorkID, value);
 	}
-	public final long getFID()
+	public final long getFID() throws Exception
 	{
 		return this.GetValInt64ByKey(CCListAttr.FID);
 	}
-	public final void setFID(long value)
+	public final void setFID(long value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.FID, value);
 	}
 	/** 
 	 父流程工作ID
 	*/
-	public final long getPWorkID()
+	public final long getPWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(CCListAttr.PWorkID);
 	}
-	public final void setPWorkID(long value)
+	public final void setPWorkID(long value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.PWorkID, value);
 	}
 	/** 
 	 父流程编号
 	*/
-	public final String getPFlowNo()
+	public final String getPFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value)
+	public final void setPFlowNo(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.PFlowNo, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_FlowT()
+	public final String getFK_FlowT() throws Exception
 	{
 		return this.GetValRefTextByKey(CCListAttr.FK_Flow);
 	}
-	public final String getFlowName()
+	public final String getFlowName() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.FlowName);
 	}
-	public final void setFlowName(String value)
+	public final void setFlowName(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.FlowName, value);
 	}
-	public final String getNodeName()
+	public final String getNodeName() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.NodeName);
 	}
-	public final void setNodeName(String value)
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.NodeName, value);
 	}
 	/** 
 	 抄送标题
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.Title);
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.Title, value);
 	}
 	/** 
 	 抄送内容
 	*/
-	public final String getDoc()
+	public final String getDoc() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.Doc);
 	}
-	public final void setDoc(String value)
+	public final void setDoc(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.Doc, value);
 	}
-	public final String getDocHtml()
+	public final String getDocHtml() throws Exception
 	{
 		return this.GetValHtmlStringByKey(CCListAttr.Doc);
 	}
 	/** 
 	 抄送对象
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.FK_Flow, value);
 	}
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.Rec, value);
 	}
-	public final String getRDT()
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.RDT, value);
 	}
 	/** 
 	 是否加入待办列表
 	*/
-	public final boolean getInEmpWorks()
+	public final boolean getInEmpWorks() throws Exception
 	{
 		return this.GetValBooleanByKey(CCListAttr.InEmpWorks);
 	}
-	public final void setInEmpWorks(boolean value)
+	public final void setInEmpWorks(boolean value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.InEmpWorks, value);
 	}

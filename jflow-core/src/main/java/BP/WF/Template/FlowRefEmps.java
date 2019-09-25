@@ -37,8 +37,9 @@ public class FlowRefEmps extends EntitiesMyPK
 	 流程关联人员集合.
 	 
 	 @param FlowNo
+	 * @throws Exception 
 	*/
-	public FlowRefEmps(String fk_flow)
+	public FlowRefEmps(String fk_flow) throws Exception
 	{
 		this.Retrieve(FlowRefEmpAttr.FK_Flow, fk_flow);
 	}

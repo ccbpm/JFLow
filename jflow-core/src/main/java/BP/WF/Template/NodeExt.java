@@ -9,6 +9,9 @@ import BP.WF.*;
 import BP.Web.WebUser;
 
 import java.util.*;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
 import java.io.*;
 
 /** 
@@ -34,7 +37,7 @@ public class NodeExt extends Entity
 			return "javascript:alert('此处还没有帮助信息！')";
 		}
 
-		return String.format("http://online.ccflow.org/KM/Tree.aspx?no=%1$s&st=%2$s", sysNo, Uri.EscapeDataString(searchTitle));
+		return String.format("http://online.ccflow.org/KM/Tree.aspx?no=%1$s&st=%2$s", sysNo, StringEscapeUtils.escapeJava(searchTitle));
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

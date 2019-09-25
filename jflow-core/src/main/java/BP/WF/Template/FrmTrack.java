@@ -16,11 +16,11 @@ public class FrmTrack extends Entity
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getNo()
+	public final String getNo() throws Exception
 	{
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)
+	public final void setNo(String value) throws NumberFormatException, Exception
 	{
 		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
@@ -205,9 +205,10 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 EnMap
+	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{
@@ -219,7 +220,7 @@ public class FrmTrack extends Entity
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmTrackAttr.FrmTrackLab, "轨迹", "显示标签", true, false, 0, 200, 10, false);
-s
+
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 

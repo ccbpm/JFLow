@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Web.*;
 import BP.GPM.*;
 import BP.Sys.*;
@@ -17,8 +18,10 @@ public class FindWorkerRole extends EntityOIDName
 		///#region  找同事
 	/** 
 	 找同事规则
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final FindColleague getHisFindColleague()
+	public final FindColleague getHisFindColleague() throws NumberFormatException, Exception
 	{
 		return FindColleague.forValue(Integer.parseInt(this.getTagVal3()));
 	}
@@ -29,15 +32,19 @@ public class FindWorkerRole extends EntityOIDName
 		///#region  找领导类型
 	/** 
 	 寻找领导类型
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final FindLeaderType getHisFindLeaderType()
+	public final FindLeaderType getHisFindLeaderType() throws NumberFormatException, Exception
 	{
 		return FindLeaderType.forValue(Integer.parseInt(this.getSortVal1()));
 	}
 	/** 
 	 模式
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final FindLeaderModel getHisFindLeaderModel()
+	public final FindLeaderModel getHisFindLeaderModel() throws NumberFormatException, Exception
 	{
 		return FindLeaderModel.forValue(Integer.parseInt(this.getSortVal2()));
 	}
@@ -46,11 +53,11 @@ public class FindWorkerRole extends EntityOIDName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
-	public final boolean getIsEnable()
+	public final boolean getIsEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FindWorkerRoleAttr.IsEnable);
 	}
-	public final void setIsEnable(boolean value)
+	public final void setIsEnable(boolean value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.IsEnable, value);
 	}
@@ -67,11 +74,11 @@ public class FindWorkerRole extends EntityOIDName
 	/** 
 	 找人规则的事务编号
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(FindWorkerRoleAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.FK_Node, value);
 	}
@@ -79,31 +86,31 @@ public class FindWorkerRole extends EntityOIDName
 	/** 
 	 类别0值
 	*/
-	public final String getSortVal0()
+	public final String getSortVal0() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal0);
 	}
-	public final void setSortVal0(String value)
+	public final void setSortVal0(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortVal0, value);
 	}
 	/** 
 	 类别0Text
 	*/
-	public final String getSortText0()
+	public final String getSortText0() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText0);
 	}
-	public final void setSortText0(String value)
+	public final void setSortText0(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortText0, value);
 	}
 
-	public final String getSortText3()
+	public final String getSortText3() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText3);
-	}
-	public final void setSortText3(String value)
+	} 
+	public final void setSortText3(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortText3, value);
 	}
@@ -111,22 +118,22 @@ public class FindWorkerRole extends EntityOIDName
 	/** 
 	 类别1值
 	*/
-	public final String getSortVal1()
+	public final String getSortVal1() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal1);
 	}
-	public final void setSortVal1(String value)
+	public final void setSortVal1(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortVal1, value);
 	}
 	/** 
 	 类别1Text
 	*/
-	public final String getSortText1()
+	public final String getSortText1() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText1);
 	}
-	public final void setSortText1(String value)
+	public final void setSortText1(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortText1, value);
 	}
@@ -134,110 +141,110 @@ public class FindWorkerRole extends EntityOIDName
 	/** 
 	 类别2值
 	*/
-	public final String getSortVal2()
+	public final String getSortVal2() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal2);
 	}
-	public final void setSortVal2(String value)
+	public final void setSortVal2(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortVal2, value);
 	}
 	/** 
 	 类别2Text
 	*/
-	public final String getSortText2()
+	public final String getSortText2() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText2);
 	}
-	public final void setSortText2(String value)
+	public final void setSortText2(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortText2, value);
 	}
 	/** 
 	 类别3值
 	*/
-	public final String getSortVal3()
+	public final String getSortVal3() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal3);
 	}
-	public final void setSortVal3(String value)
+	public final void setSortVal3(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortVal3, value);
 	}
 	/** 
 	 类别3Text
 	*/
-	public final String getSortText4()
+	public final String getSortText4() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText4);
 	}
-	public final void setSortText4(String value)
+	public final void setSortText4(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.SortText4, value);
 	}
 	/** 
 	 数据0
 	*/
-	public final String getTagVal0()
+	public final String getTagVal0() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal0);
 	}
-	public final void setTagVal0(String value)
+	public final void setTagVal0(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagVal0, value);
 	}
 	/** 
 	 数据1
 	*/
-	public final String getTagVal1()
+	public final String getTagVal1() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal1);
 	}
-	public final void setTagVal1(String value)
+	public final void setTagVal1(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagVal1, value);
 	}
 	/** 
 	 TagVal2
 	*/
-	public final String getTagVal2()
+	public final String getTagVal2() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal2);
 	}
-	public final void setTagVal2(String value)
+	public final void setTagVal2(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagVal2, value);
 	}
 	/** 
 	 TagVal3
 	*/
-	public final String getTagVal3()
+	public final String getTagVal3() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal3);
 	}
-	public final void setTagVal3(String value)
+	public final void setTagVal3(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagVal3, value);
 	}
 	/** 
 	 数据0
 	*/
-	public final String getTagText0()
+	public final String getTagText0() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText0);
 	}
-	public final void setTagText0(String value)
+	public final void setTagText0(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagText0, value);
 	}
 	/** 
 	 TagText1
 	*/
-	public final String getTagText1()
+	public final String getTagText1() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText1);
 	}
-	public final void setTagText1(String value)
+	public final void setTagText1(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagText1, value);
 	}
@@ -245,22 +252,22 @@ public class FindWorkerRole extends EntityOIDName
 	/** 
 	 数据1
 	*/
-	public final String getTagText2()
+	public final String getTagText2() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText2);
 	}
-	public final void setTagText2(String value)
+	public final void setTagText2(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagText2, value);
 	}
 	/** 
 	 TagText3
 	*/
-	public final String getTagText3()
+	public final String getTagText3() throws Exception
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText3);
 	}
-	public final void setTagText3(String value)
+	public final void setTagText3(String value) throws Exception
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagText3, value);
 	}
@@ -347,14 +354,14 @@ public class FindWorkerRole extends EntityOIDName
 	/** 
 	 上移
 	*/
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(FindWorkerRoleAttr.FK_Node, String.valueOf(this.getFK_Node()), FindWorkerRoleAttr.Idx);
 	}
 	/** 
 	 下移
 	*/
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown(FindWorkerRoleAttr.FK_Node, String.valueOf(this.getFK_Node()), FindWorkerRoleAttr.Idx);
 	}
@@ -366,8 +373,9 @@ public class FindWorkerRole extends EntityOIDName
 	 生成数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable GenerWorkerOfDataTable()
+	public final DataTable GenerWorkerOfDataTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		// 首先判断第一类别
@@ -396,7 +404,7 @@ public class FindWorkerRole extends EntityOIDName
 							throw new RuntimeException("@没有找到指定节点数据，请反馈给系统管理员，技术信息:" + sql);
 						}
 						empNo = dt.Rows.get(0).getValue(0) instanceof String ? (String)dt.Rows.get(0).getValue(0) : null;
-						empDept = dt.Rows[0][1] instanceof String ? (String)dt.Rows[0][1] : null;
+						empDept = dt.Rows.get(0).getValue(1) instanceof String ? (String)dt.Rows.get(0).getValue(1) : null;
 						break;
 					case BySpecField: //指定节点字段人员的直接领导..
 						sql = " SELECT " + this.getTagVal1() + " FROM " + this.HisNode.getHisFlow().getPTable() + " WHERE OID=" + this.WorkID;
@@ -408,16 +416,15 @@ public class FindWorkerRole extends EntityOIDName
 						}
 						//指定它
 						Emp emp = new Emp();
-						emp.setNo (empNo;
+						emp.setNo(empNo);
 						if (emp.RetrieveFromDBSources() == 0)
 						{
 							throw new RuntimeException("@指定的节点字段(" + this.getTagVal1() + ")的值(" + empNo + ")是非法的人员编号...");
 						}
-						empDept = emp.FK_Dept;
+						empDept = emp.getFK_Dept();
 						break;
 					default:
 						throw new RuntimeException("@尚未处理的Case:" + this.getHisFindLeaderType());
-						break;
 				}
 				if (DataType.IsNullOrEmpty(empNo))
 				{
@@ -442,7 +449,7 @@ public class FindWorkerRole extends EntityOIDName
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 按部门查找
-	private DataTable GenerByDept()
+	private DataTable GenerByDept() throws Exception
 	{
 		//部门编号.
 		String deptNo = this.getTagVal1();
@@ -478,8 +485,9 @@ public class FindWorkerRole extends EntityOIDName
 	 当前提交人的直线领导
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private DataTable GenerHisSpecEmps(String empNo, String empDept)
+	private DataTable GenerHisSpecEmps(String empNo, String empDept) throws Exception
 	{
 		DeptEmp de = new DeptEmp();
 
@@ -500,7 +508,7 @@ public class FindWorkerRole extends EntityOIDName
 
 				break;
 			case SpecDuty: // 特定职务级别的领导.
-				Object tempVar = empDept.Clone();
+				Object tempVar = empDept;
 				tempDeptNo = tempVar instanceof String ? (String)tempVar : null;
 				while (true)
 				{
@@ -512,15 +520,14 @@ public class FindWorkerRole extends EntityOIDName
 					}
 
 					Dept d = new Dept(tempDeptNo);
-					if (d.ParentNo.equals("0"))
+					if (d.getParentNo().equals("0"))
 					{
 						return null; //如果到了跟节点.
 					}
 					tempDeptNo = d.getParentNo();
 				}
-				break;
 			case SpecStation: // 特定岗位的领导.
-				Object tempVar2 = empDept.Clone();
+				Object tempVar2 = empDept;
 				tempDeptNo = tempVar2 instanceof String ? (String)tempVar2 : null;
 				while (true)
 				{
@@ -532,14 +539,13 @@ public class FindWorkerRole extends EntityOIDName
 					}
 
 					Dept d = new Dept(tempDeptNo);
-					if (d.ParentNo.equals("0"))
+					if (d.getParentNo().equals("0"))
 					{
 						/* 在直线领导中没有找到 */
 						return null; //如果到了跟节点.
 					}
 					tempDeptNo = d.getParentNo();
 				}
-				break;
 			default:
 				break;
 		}
@@ -547,7 +553,7 @@ public class FindWorkerRole extends EntityOIDName
 		// 增加列.
 		dt.Columns.Add(new DataColumn("No", String.class));
 		DataRow dr = dt.NewRow();
-		dr.set(0, leader);
+		dr.setValue(0, leader);
 		dt.Rows.add(dr);
 		return dt;
 	}
@@ -561,8 +567,9 @@ public class FindWorkerRole extends EntityOIDName
 	 当前提交人的直线领导
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private DataTable GenerHisLeader(String empNo, String empDept)
+	private DataTable GenerHisLeader(String empNo, String empDept) throws Exception
 	{
 		DeptEmp de = new DeptEmp();
 
@@ -582,7 +589,7 @@ public class FindWorkerRole extends EntityOIDName
 				}
 				break;
 			case SpecDutyLevelLeader: // 特定职务级别的领导.
-				Object tempVar = empDept.Clone();
+				Object tempVar = empDept;
 				tempDeptNo = tempVar instanceof String ? (String)tempVar : null;
 				while (true)
 				{
@@ -594,15 +601,14 @@ public class FindWorkerRole extends EntityOIDName
 					}
 
 					Dept d = new Dept(tempDeptNo);
-					if (d.ParentNo.equals("0"))
+					if (d.getParentNo().equals("0"))
 					{
 						return null; //如果到了跟节点.
 					}
 					tempDeptNo = d.getParentNo();
 				}
-				break;
 			case DutyLeader: // 特定职务的领导.
-				Object tempVar2 = empDept.Clone();
+				Object tempVar2 = empDept;
 				tempDeptNo = tempVar2 instanceof String ? (String)tempVar2 : null;
 				while (true)
 				{
@@ -614,15 +620,14 @@ public class FindWorkerRole extends EntityOIDName
 					}
 
 					Dept d = new Dept(tempDeptNo);
-					if (d.ParentNo.equals("0"))
+					if (d.getParentNo().equals("0"))
 					{
 						return null; //如果到了跟节点.
 					}
 					tempDeptNo = d.getParentNo();
 				}
-				break;
 			case SpecStation: // 特定岗位的领导.
-				Object tempVar3 = empDept.Clone();
+				Object tempVar3 = empDept;
 				tempDeptNo = tempVar3 instanceof String ? (String)tempVar3 : null;
 				while (true)
 				{
@@ -634,14 +639,13 @@ public class FindWorkerRole extends EntityOIDName
 					}
 
 					Dept d = new Dept(tempDeptNo);
-					if (d.ParentNo.equals("0"))
+					if (d.getParentNo().equals("0"))
 					{
 						/* 在直线领导中没有找到 */
 						return null; //如果到了跟节点.
 					}
 					tempDeptNo = d.getParentNo();
 				}
-				break;
 			default:
 				break;
 		}
@@ -649,7 +653,7 @@ public class FindWorkerRole extends EntityOIDName
 		// 增加列.
 		dt.Columns.Add(new DataColumn("No", String.class));
 		DataRow dr = dt.NewRow();
-		dr.set(0, leader);
+		dr.setValue(0, leader);
 		dt.Rows.add(dr);
 		return dt;
 	}

@@ -3,6 +3,8 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
+import BP.GPM.DeptEmp;
 import BP.WF.Data.*;
 import BP.Web.*;
 import BP.WF.*;
@@ -18,38 +20,39 @@ public class Cond extends EntityMyPK
 	/** 
 	 指定人员方式
 	*/
-	public final SpecOperWay getSpecOperWay()
+	public final SpecOperWay getSpecOperWay() throws Exception
 	{
 		return SpecOperWay.forValue(this.GetParaInt(CondAttr.SpecOperWay));
 	}
-	public final void setSpecOperWay(SpecOperWay value)
+	public final void setSpecOperWay(SpecOperWay value) throws Exception
 	{
 		this.SetPara(CondAttr.SpecOperWay, value.getValue());
 	}
 	/** 
 	 指定人员参数
 	*/
-	public final String getSpecOperPara()
+	public final String getSpecOperPara() throws Exception
 	{
 		return this.GetParaString(CondAttr.SpecOperPara);
 	}
-	public final void setSpecOperPara(String value)
+	public final void setSpecOperPara(String value) throws Exception
 	{
 		this.SetPara(CondAttr.SpecOperPara, value);
 	}
 	/** 
 	 求指定的人员.
+	 * @throws Exception 
 	*/
-	public final String getSpecOper()
+	public final String getSpecOper() throws Exception
 	{
 		BP.WF.Template.SpecOperWay way = this.getSpecOperWay();
-		if (way == Template.SpecOperWay.CurrOper)
+		if (way == SpecOperWay.CurrOper)
 		{
 			return WebUser.getNo();
 		}
 
 
-		if (way == Template.SpecOperWay.SpecNodeOper)
+		if (way == SpecOperWay.SpecNodeOper)
 		{
 			String sql = "SELECT FK_Emp FROM WF_GenerWorkerlist WHERE FK_Node=" + this.getSpecOperPara() + " AND WorkID=" + this.getWorkID();
 			String fk_emp = DBAccess.RunSQLReturnStringIsNull(sql, null);
@@ -60,9 +63,9 @@ public class Cond extends EntityMyPK
 			return fk_emp;
 		}
 
-		if (way == Template.SpecOperWay.SpecSheetField)
+		if (way == SpecOperWay.SpecSheetField)
 		{
-			if (this.en.Row.ContainsKey(this.getSpecOperPara().replace("@", "")) == false)
+			if (this.en.getRow().containsKey(this.getSpecOperPara().replace("@", "")) == false)
 			{
 				throw new RuntimeException("@您在配置方向条件时错误，求指定的人员的时候，按照指定的字段[" + this.getSpecOperPara() + "]作为处理人，但是该字段不存在。");
 			}
@@ -70,9 +73,9 @@ public class Cond extends EntityMyPK
 			return this.en.GetValStringByKey(this.getSpecOperPara().replace("@", ""));
 		}
 
-		if (way == Template.SpecOperWay.CurrOper)
+		if (way == SpecOperWay.CurrOper)
 		{
-			if (this.en.Row.ContainsKey(this.getSpecOperPara().replace("@", "")) == false)
+			if (this.en.getRow().containsKey(this.getSpecOperPara().replace("@", "")) == false)
 			{
 				throw new RuntimeException("@您在配置方向条件时错误，求指定的人员的时候，按照指定的字段[" + this.getSpecOperPara() + "]作为处理人，但是该字段不存在。");
 			}
@@ -80,7 +83,7 @@ public class Cond extends EntityMyPK
 			return this.en.GetValStringByKey(this.getSpecOperPara().replace("@", ""));
 		}
 
-		if (way == Template.SpecOperWay.SpenEmpNo)
+		if (way == SpecOperWay.SpenEmpNo)
 		{
 			if (DataType.IsNullOrEmpty(this.getSpecOperPara()) == false)
 			{
@@ -99,92 +102,101 @@ public class Cond extends EntityMyPK
 	public GERpt en = null;
 	/** 
 	 数据来源
+	 * @throws Exception 
 	*/
-	public final ConnDataFrom getHisDataFrom()
+	public final ConnDataFrom getHisDataFrom() throws Exception
 	{
 		return ConnDataFrom.forValue(this.GetValIntByKey(CondAttr.DataFrom));
 	}
-	public final void setHisDataFrom(ConnDataFrom value)
+	public final void setHisDataFrom(ConnDataFrom value) throws Exception
 	{
 		this.SetValByKey(CondAttr.DataFrom, value.getValue());
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(CondAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(CondAttr.FK_Flow, value);
 	}
 	/** 
 	 备注
+	 * @throws Exception 
 	*/
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 		return this.GetValStringByKey(CondAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(CondAttr.Note, value);
 	}
 	/** 
 	 条件类型(表单条件，岗位条件，部门条件，开发者参数)
+	 * @throws Exception 
 	*/
-	public final CondType getHisCondType()
+	public final CondType getHisCondType() throws Exception
 	{
 		return CondType.forValue(this.GetValIntByKey(CondAttr.CondType));
 	}
-	public final void setHisCondType(CondType value)
+	public final void setHisCondType(CondType value) throws Exception
 	{
 		this.SetValByKey(CondAttr.CondType, value.getValue());
 	}
 	/** 
 	 要运算的节点
+	 * @throws Exception 
 	*/
-	public final Node getHisNode()
+	public final Node getHisNode() throws Exception
 	{
 		return new Node(this.getNodeID());
 	}
 	/** 
 	 优先级
+	 * @throws Exception 
 	*/
-	public final int getPRI()
+	public final int getPRI() throws Exception
 	{
 		return this.GetValIntByKey(CondAttr.PRI);
 	}
-	public final void setPRI(int value)
+	public final void setPRI(int value) throws Exception
 	{
 		this.SetValByKey(CondAttr.PRI, value);
 	}
 	/** 
 	 MyPOID
+	 * @throws Exception 
 	*/
-	public final int getMyPOID()
+	public final int getMyPOID() throws Exception
 	{
 		return this.GetValIntByKey(CondAttr.MyPOID);
 	}
-	public final void setMyPOID(int value)
+	public final void setMyPOID(int value) throws Exception
 	{
 		this.SetValByKey(CondAttr.MyPOID, value);
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(CondAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(CondAttr.NodeID, value);
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		int i = this.GetValIntByKey(CondAttr.FK_Node);
 		if (i == 0)
@@ -193,37 +205,40 @@ public class Cond extends EntityMyPK
 		}
 		return i;
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(CondAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
+	 * @throws Exception 
 	*/
-	public final String getFK_NodeT()
+	public final String getFK_NodeT() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		return nd.getName();
 	}
 	/** 
 	 对方向条件有效
+	 * @throws Exception 
 	*/
-	public final int getToNodeID()
+	public final int getToNodeID() throws Exception
 	{
 		return this.GetValIntByKey(CondAttr.ToNodeID);
 	}
-	public final void setToNodeID(int value)
+	public final void setToNodeID(int value) throws Exception
 	{
 		this.SetValByKey(CondAttr.ToNodeID, value);
 	}
 	/** 
 	 关系类型
+	 * @throws Exception 
 	*/
-	public final CondOrAnd getCondOrAnd()
+	public final CondOrAnd getCondOrAnd() throws Exception
 	{
 		return CondOrAnd.forValue(this.GetValIntByKey(CondAttr.CondOrAnd));
 	}
-	public final void setCondOrAnd(CondOrAnd value)
+	public final void setCondOrAnd(CondOrAnd value) throws Exception
 	{
 		this.SetValByKey(CondAttr.CondOrAnd, value.getValue());
 	}
@@ -234,9 +249,10 @@ public class Cond extends EntityMyPK
 	 在更新与插入之前要做得操作。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		this.RunSQL("UPDATE WF_Node SET IsCCFlow=0");
 		// this.RunSQL("UPDATE WF_Node SET IsCCNode=1 WHERE NodeID IN (SELECT NodeID FROM WF_Cond WHERE CondType=" + (int)CondType.Node + ")");
@@ -250,12 +266,13 @@ public class Cond extends EntityMyPK
 		///#region 实现基本的方方法
 	/** 
 	 属性
+	 * @throws Exception 
 	*/
-	public final String getFK_Attr()
+	public final String getFK_Attr() throws Exception
 	{
 		return this.GetValStringByKey(CondAttr.FK_Attr);
 	}
-	public final void setFK_Attr(String value)
+	public final void setFK_Attr(String value) throws Exception
 	{
 		if (value == null)
 		{
@@ -268,46 +285,50 @@ public class Cond extends EntityMyPK
 
 		BP.Sys.MapAttr attr = new BP.Sys.MapAttr(value);
 
-		if (attr.LGType == FieldTypeS.Enum)
+		if (attr.getLGType() == FieldTypeS.Enum)
 		{
 				/*是一个枚举类型的*/
-			SysEnum se = new SysEnum(attr.UIBindKey, this.getOperatorValueInt());
-			this.setOperatorValueT(se.Lab);
+			SysEnum se = new SysEnum(attr.getUIBindKey(), this.getOperatorValueInt());
+			this.setOperatorValueT(se.getLab());
 		}
 
-		this.SetValByKey(CondAttr.AttrKey, attr.KeyOfEn);
-		this.SetValByKey(CondAttr.AttrName, attr.Name);
+		this.SetValByKey(CondAttr.AttrKey, attr.getKeyOfEn());
+		this.SetValByKey(CondAttr.AttrName, attr.getName());
 
 	}
 	/** 
 	 要运算的实体属性
+	 * @throws Exception 
 	*/
-	public final String getAttrKey()
+	public final String getAttrKey() throws Exception
 	{
 		return this.GetValStringByKey(CondAttr.AttrKey);
 	}
 	/** 
 	 属性名称
+	 * @throws Exception 
 	*/
-	public final String getAttrName()
+	public final String getAttrName() throws Exception
 	{
 		return this.GetValStringByKey(CondAttr.AttrName);
 	}
 	/** 
 	 操作的值
+	 * @throws Exception 
 	*/
-	public final String getOperatorValueT()
+	public final String getOperatorValueT() throws Exception
 	{
 		return this.GetValStringByKey(CondAttr.OperatorValueT);
 	}
-	public final void setOperatorValueT(String value)
+	public final void setOperatorValueT(String value) throws Exception
 	{
 		this.SetValByKey(CondAttr.OperatorValueT, value);
 	}
 	/** 
 	 运算符号
+	 * @throws Exception 
 	*/
-	public final String getFK_Operator()
+	public final String getFK_Operator() throws Exception
 	{
 		String s = this.GetValStringByKey(CondAttr.FK_Operator);
 		if (s == null || s.equals(""))
@@ -316,7 +337,7 @@ public class Cond extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setFK_Operator(String value)
+	public final void setFK_Operator(String value) throws Exception
 	{
 		String val = "";
 
@@ -351,21 +372,23 @@ public class Cond extends EntityMyPK
 	}
 	/** 
 	 运算值
+	 * @throws Exception 
 	*/
-	public final Object getOperatorValue()
+	public final Object getOperatorValue() throws Exception
 	{
 		String s = this.GetValStringByKey(CondAttr.OperatorValue);
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setOperatorValue(Object value)
+	public final void setOperatorValue(Object value) throws Exception
 	{
 		this.SetValByKey(CondAttr.OperatorValue, value instanceof String ? (String)value : null);
 	}
 	/** 
 	 操作值Str
+	 * @throws Exception 
 	*/
-	public final String getOperatorValueStr()
+	public final String getOperatorValueStr() throws Exception
 	{
 		String sql = this.GetValStringByKey(CondAttr.OperatorValue);
 		sql = sql.replace("~", "'");
@@ -373,15 +396,17 @@ public class Cond extends EntityMyPK
 	}
 	/** 
 	 操作值int
+	 * @throws Exception 
 	*/
-	public final int getOperatorValueInt()
+	public final int getOperatorValueInt() throws Exception
 	{
 		return this.GetValIntByKey(CondAttr.OperatorValue);
 	}
 	/** 
 	 操作值boolen
+	 * @throws Exception 
 	*/
-	public final boolean getOperatorValueBool()
+	public final boolean getOperatorValueBool() throws Exception
 	{
 		return this.GetValBooleanByKey(CondAttr.OperatorValue);
 	}
@@ -414,8 +439,9 @@ public class Cond extends EntityMyPK
 	 上移
 	 
 	 @param fk_node 节点ID
+	 * @throws Exception 
 	*/
-	public final void DoUp(int fk_node)
+	public final void DoUp(int fk_node) throws Exception
 	{
 		int condtypeInt = this.getHisCondType().getValue();
 		this.DoOrderUp(CondAttr.FK_Node, String.valueOf(fk_node), CondAttr.CondType, String.valueOf(condtypeInt), CondAttr.PRI);
@@ -424,8 +450,9 @@ public class Cond extends EntityMyPK
 	 下移
 	 
 	 @param fk_node 节点ID
+	 * @throws Exception 
 	*/
-	public final void DoDown(int fk_node)
+	public final void DoDown(int fk_node) throws Exception
 	{
 		int condtypeInt = this.getHisCondType().getValue();
 		this.DoOrderDown(CondAttr.FK_Node, String.valueOf(fk_node), CondAttr.CondType, String.valueOf(condtypeInt), CondAttr.PRI);
@@ -445,8 +472,9 @@ public class Cond extends EntityMyPK
 	 条件
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public Cond(String mypk)
+	public Cond(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -496,14 +524,14 @@ public class Cond extends EntityMyPK
 			{
 				BP.GPM.DeptEmpStations sts = new BP.GPM.DeptEmpStations();
 				sts.Retrieve("FK_Emp", this.getSpecOper());
-				for (BP.GPM.DeptEmpStation st : sts)
+				for (BP.GPM.DeptEmpStation st : sts.ToJavaList())
 				{
-					if (strs.contains("@" + st.FK_Station + "@"))
+					if (strs.contains("@" + st.getFK_Station() + "@"))
 					{
-						this.MsgOfCond = "@以岗位判断方向，条件为true：岗位集合" + strs + "，操作员(" + WebUser.getNo() + ")岗位:" + st.FK_Station + st.FK_StationT;
+						this.MsgOfCond = "@以岗位判断方向，条件为true：岗位集合" + strs + "，操作员(" + WebUser.getNo() + ")岗位:" + st.getFK_Station() + st.getFK_StationT();
 						return true;
 					}
-					strs1 += st.FK_Station + "-" + st.FK_StationT;
+					strs1 += st.getFK_Station() + "-" + st.getFK_StationT();
 				}
 			}
 
@@ -521,17 +549,17 @@ public class Cond extends EntityMyPK
 			strs += this.getOperatorValueT().toString();
 
 			BP.GPM.DeptEmps sts = new BP.GPM.DeptEmps();
-			if (SystemConfig.OSModel == OSModel.OneMore)
+			if (SystemConfig.getOSModel() == OSModel.OneMore)
 			{
 				sts.Retrieve(BP.GPM.DeptEmpAttr.FK_Emp, this.getSpecOper());
 
 					//@于庆海.
 				BP.Port.Emp emp = new BP.Port.Emp(this.getSpecOper());
-				emp.setNo (this.getSpecOper();
+				emp.setNo(this.getSpecOper());
 				if (emp.RetrieveFromDBSources() == 1)
 				{
-					BP.GPM.DeptEmp de = new GPM.DeptEmp();
-					de.FK_Dept = emp.FK_Dept;
+					DeptEmp de = new DeptEmp();
+					de.setFK_Dept(emp.getFK_Dept());
 					sts.AddEntity(de);
 				}
 			}
@@ -540,20 +568,20 @@ public class Cond extends EntityMyPK
 				BP.Port.Emp emp = new BP.Port.Emp(this.getSpecOper());
 
 				BP.GPM.DeptEmp myen = new BP.GPM.DeptEmp();
-				myen.FK_Dept = emp.FK_Dept;
-				myen.FK_Emp = emp.No;
+				myen.setFK_Dept(emp.getFK_Dept());
+				myen.setFK_Emp(emp.getNo());
 				sts.AddEntity(myen);
 			}
 
 			String strs1 = "";
-			for (BP.GPM.DeptEmp st : sts)
+			for (BP.GPM.DeptEmp st : sts.ToJavaList())
 			{
-				if (strs.contains("@" + st.FK_Dept + "@"))
+				if (strs.contains("@" + st.getFK_Dept() + "@"))
 				{
-					this.MsgOfCond = "@以岗位判断方向，条件为true：部门集合" + strs + "，操作员(" + WebUser.getNo() + ")部门:" + st.FK_Dept;
+					this.MsgOfCond = "@以岗位判断方向，条件为true：部门集合" + strs + "，操作员(" + WebUser.getNo() + ")部门:" + st.getFK_Dept();
 					return true;
 				}
-				strs1 += st.FK_Dept;
+				strs1 += st.getFK_Dept();
 			}
 
 			this.MsgOfCond = "@以部门判断方向，条件为false：部门集合" + strs + "，操作员(" + WebUser.getNo() + ")部门:" + strs1;
@@ -586,7 +614,7 @@ public class Cond extends EntityMyPK
 					//sql = sql.Replace("@" + key, urlParams[key]);
 			}
 
-			if (en.IsOIDEntity == true)
+			if (en.getIsOIDEntity() == true)
 			{
 				sql = sql.replace("@WorkID", en.GetValStrByKey("OID"));
 				sql = sql.replace("@OID", en.GetValStrByKey("OID"));
@@ -597,7 +625,7 @@ public class Cond extends EntityMyPK
 					/* 如果包含 @ */
 				for (Attr attr : this.en.getEnMap().getAttrs())
 				{
-					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
+					sql = sql.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
 				}
 			}
 
@@ -620,7 +648,7 @@ public class Cond extends EntityMyPK
 				//this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.AttrKey + " (" + en.GetValStringByKey(this.AttrKey) + ") 操作符:(" + this.FK_Operator + ") 判断值:(" + this.OperatorValue.ToString() + ")";
 			String fk_sqlTemplate = this.getOperatorValueStr();
 			SQLTemplate sqltemplate = new SQLTemplate();
-			sqltemplate.No = fk_sqlTemplate;
+			sqltemplate.setNo(fk_sqlTemplate);
 			if (sqltemplate.RetrieveFromDBSources() == 0)
 			{
 				throw new RuntimeException("@配置的SQLTemplate编号为[" + sqltemplate + "]被删除了,判断条件丢失.");
@@ -632,7 +660,7 @@ public class Cond extends EntityMyPK
 			sql = sql.replace("@WebUser.getName()", WebUser.getName());
 			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
-			if (en.IsOIDEntity == true)
+			if (en.getIsOIDEntity() == true)
 			{
 				sql = sql.replace("@WorkID", en.GetValStrByKey("OID"));
 				sql = sql.replace("@OID", en.GetValStrByKey("OID"));
@@ -643,7 +671,7 @@ public class Cond extends EntityMyPK
 					/* 如果包含 @ */
 				for (Attr attr : this.en.getEnMap().getAttrs())
 				{
-					sql = sql.replace("@" + attr.Key, en.GetValStrByKey(attr.getKey()));
+					sql = sql.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
 				}
 			}
 
@@ -673,7 +701,7 @@ public class Cond extends EntityMyPK
 				url = url + "?1=2";
 			}
 
-			url = url.replace("@SDKFromServHost", BP.Sys.SystemConfig.AppSettings["SDKFromServHost"]);
+			url = url.replace("@SDKFromServHost", BP.Sys.SystemConfig.getAppSettings().get("SDKFromServHost"));
 			url = BP.WF.Glo.DealExp(url, this.en, "");
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -699,7 +727,7 @@ public class Cond extends EntityMyPK
 
 			if (url.contains("&SID") == false)
 			{
-				url += "&SID=" + WebUser.SID;
+				url += "&SID=" + WebUser.getSID();
 			}
 
 			if (url.contains("&UserNo") == false)
@@ -713,7 +741,7 @@ public class Cond extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 对url进行处理.
-			if (SystemConfig.IsBSsystem)
+			if (SystemConfig.getIsBSsystem())
 			{
 					/*是bs系统，并且是url参数执行类型.*/
 				String myurl = HttpContextHelper.RequestRawUrl; // BP.Sys.Glo.Request.RawUrl;
@@ -746,7 +774,7 @@ public class Cond extends EntityMyPK
 				//替换特殊的变量.
 			url = url.replace("&?", "&");
 
-			if (SystemConfig.IsBSsystem == false)
+			if (SystemConfig.getIsBSsystem() == false)
 			{
 					/*非bs模式下调用,比如在cs模式下调用它,它就取不到参数. */
 			}
@@ -755,24 +783,24 @@ public class Cond extends EntityMyPK
 			if (url.contains("http") == false)
 			{
 					/*如果没有绝对路径 */
-				if (SystemConfig.IsBSsystem)
+				if (SystemConfig.getIsBSsystem())
 				{
 						/*在cs模式下自动获取*/
-					String host = HttpContextHelper.RequestUrlHost; //BP.Sys.Glo.Request.Url.Host;
+					String host = BP.Sys.Glo.getRequest().getRemoteHost(); //BP.Sys.Glo.Request.Url.Host;
 					if (url.contains("@AppPath"))
 					{
-						url = url.replace("@AppPath", "http://" + host + HttpContextHelper.RequestApplicationPath); //BP.Sys.Glo.Request.ApplicationPath
+						url = url.replace("@AppPath", "http://" + host + BP.Sys.Glo.getRequest().getRemoteAddr()); //BP.Sys.Glo.Request.ApplicationPath
 					}
 					else //BP.Sys.Glo.Request.Url.Authority
 					{
-						url = "http://" + HttpContextHelper.RequestUrlAuthority + url;
+						url = "http://" + BP.Sys.Glo.getRequest().getRemoteHost() + url;
 					}
 				}
 
-				if (SystemConfig.IsBSsystem == false)
+				if (SystemConfig.getIsBSsystem() == false)
 				{
 						/*在cs模式下它的baseurl 从web.config中获取.*/
-					String cfgBaseUrl = SystemConfig.AppSettings["HostURL"];
+					String cfgBaseUrl = (String) SystemConfig.getAppSettings().get("HostURL");
 					if (DataType.IsNullOrEmpty(cfgBaseUrl))
 					{
 						String err = "调用url失败:没有在web.config中配置BaseUrl,导致url事件不能被执行.";
@@ -841,7 +869,7 @@ public class Cond extends EntityMyPK
 
 		if (this.getHisDataFrom() == ConnDataFrom.Paras)
 		{
-			Hashtable ht = en.Row;
+			Hashtable ht = en.getRow();
 			return BP.WF.Glo.CondExpPara(this.getOperatorValueStr(), ht, en.getOID());
 		}
 
@@ -850,10 +878,10 @@ public class Cond extends EntityMyPK
 		{
 			if (en.getEnMap().getAttrs().Contains(this.getAttrKey()) == false)
 			{
-				throw new RuntimeException("err@判断条件方向出现错误：实体：" + nd.EnDesc + " 属性" + this.getAttrKey() + "已经被删除方向条件判断失败.");
+				throw new RuntimeException("err@判断条件方向出现错误：实体：" + nd.getEnDesc() + " 属性" + this.getAttrKey() + "已经被删除方向条件判断失败.");
 			}
 
-			this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.getAttrKey() + " (" + en.GetValStringByKey(this.getAttrKey()) + ") 操作符:(" + this.getFK_Operator() + ") 判断值:(" + this.getOperatorValue().toString() + ")";
+			this.MsgOfCond = "@以表单值判断方向，值 " + en.getEnDesc() + "." + this.getAttrKey() + " (" + en.GetValStringByKey(this.getAttrKey()) + ") 操作符:(" + this.getFK_Operator() + ") 判断值:(" + this.getOperatorValue().toString() + ")";
 			return CheckIsPass(en);
 		}
 
@@ -861,12 +889,12 @@ public class Cond extends EntityMyPK
 		if (this.getHisDataFrom() == ConnDataFrom.StandAloneFrm)
 		{
 			MapAttr attr = new MapAttr(this.getFK_Attr());
-			GEEntity myen = new GEEntity(attr.FK_MapData, en.getOID());
+			GEEntity myen = new GEEntity(attr.getFK_MapData(), en.getOID());
 			return CheckIsPass(myen);
 		}
 		return false;
 	}
-	private boolean CheckIsPass(Entity en)
+	private boolean CheckIsPass(Entity en) throws Exception
 	{
 
 		try
@@ -897,7 +925,7 @@ public class Cond extends EntityMyPK
 					}
 				case ">":
 				case "dayu":
-					if (en.GetValStringByKey(this.getAttrKey()).CompareTo(this.getOperatorValue().toString()) == 1)
+					if (en.GetValStringByKey(this.getAttrKey()).compareTo(this.getOperatorValue().toString()) == 1)
 					{
 						return true;
 					}
@@ -922,7 +950,7 @@ public class Cond extends EntityMyPK
 					}
 				case "<":
 				case "xiaoyu":
-					if (en.GetValStringByKey(this.getAttrKey()).CompareTo(this.getOperatorValue().toString()) == -1)
+					if (en.GetValStringByKey(this.getAttrKey()).compareTo(this.getOperatorValue().toString()) == -1)
 					{
 						return true;
 					}
@@ -961,7 +989,7 @@ public class Cond extends EntityMyPK
 		catch (RuntimeException ex)
 		{
 			Node nd23 = new Node(this.getNodeID());
-			throw new RuntimeException("@判断条件:Node=[" + this.getNodeID() + "," + nd23.EnDesc + "], 出现错误。@" + ex.getMessage() + "。有可能您设置了非法的条件判断方式。");
+			throw new RuntimeException("@判断条件:Node=[" + this.getNodeID() + "," + nd23.getEnDesc() + "], 出现错误。@" + ex.getMessage() + "。有可能您设置了非法的条件判断方式。");
 		}
 	}
 	/** 

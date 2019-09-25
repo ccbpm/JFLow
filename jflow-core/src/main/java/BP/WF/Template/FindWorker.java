@@ -56,14 +56,14 @@ public class FindWorker
 		if (DataType.IsNullOrEmpty(JumpToEmp) == false)
 		{
 			String[] emps = JumpToEmp.split("[,]", -1);
-			for (String emp : emps.ToJavaList())
+			for (String emp : emps)
 			{
 				if (DataType.IsNullOrEmpty(emp))
 				{
 					continue;
 				}
 				DataRow dr = dt.NewRow();
-				dr.set(0, emp);
+				dr.setValue(0, emp);
 				dt.Rows.add(dr);
 			}
 			return dt;
@@ -73,7 +73,7 @@ public class FindWorker
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByPreviousNodeEmp)
 		{
 			DataRow dr = dt.NewRow();
-			dr.set(0, WebUser.getNo());
+			dr.setValue(0, WebUser.getNo());
 			dt.Rows.add(dr);
 			return dt;
 		}
@@ -94,7 +94,7 @@ public class FindWorker
 					throw new RuntimeException("@您设置的当前节点按照SQL，决定下一步的接受人员，但是你没有设置SQL.");
 				}
 				sql = town.getHisNode().getDeliveryParas();
-				sql = sql.Clone().toString();
+				sql = sql.toString();
 			}
 
 
@@ -113,7 +113,7 @@ public class FindWorker
 			{
 				if (BP.WF.Glo.getSendHTOfTemp() != null)
 				{
-					for (String key : BP.WF.Glo.getSendHTOfTemp().keySet())
+					for (Object key : BP.WF.Glo.getSendHTOfTemp().keySet())
 					{
 						sql = sql.replace("@" + key, BP.WF.Glo.getSendHTOfTemp().get(key).toString());
 					}
@@ -122,12 +122,12 @@ public class FindWorker
 
 			if (sql.contains("@GuestUser.No"))
 			{
-				sql = sql.replace("@GuestUser.No", GuestUser.No);
+				sql = sql.replace("@GuestUser.No", GuestUser.getNo());
 			}
 
 			if (sql.contains("@GuestUser.Name"))
 			{
-				sql = sql.replace("@GuestUser.Name", GuestUser.Name);
+				sql = sql.replace("@GuestUser.Name", GuestUser.getName());
 			}
 
 			dt = DBAccess.RunSQLReturnTable(sql);
@@ -255,10 +255,10 @@ public class FindWorker
 				}
 
 				//插入里面.
-				for (SelectAccper item : sas)
+				for (SelectAccper item : sas.ToJavaList())
 				{
 					DataRow dr = dt.NewRow();
-					dr.set(0, item.getFK_Emp());
+					dr.setValue(0, item.getFK_Emp());
 					dt.Rows.add(dr);
 				}
 				return dt;
@@ -291,7 +291,7 @@ public class FindWorker
 				if (this.currWn.getHisNode().getIsStartNode())
 				{
 					DataRow dr = dt.NewRow();
-					dr.set(0, WebUser.getNo());
+					dr.setValue(0, WebUser.getNo());
 					dt.Rows.add(dr);
 					return dt;
 				}
@@ -310,7 +310,7 @@ public class FindWorker
 			// 首先从本流程里去找。
 			strs = strs.replace(";", ",");
 			String[] nds = strs.split("[,]", -1);
-			for (String nd : nds.ToJavaList())
+			for (String nd : nds)
 			{
 				if (DataType.IsNullOrEmpty(nd))
 				{
@@ -361,7 +361,7 @@ public class FindWorker
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.set(0, row.get(0).toString());
+						dr.setValue(0, row.get(0).toString());
 						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
@@ -370,7 +370,7 @@ public class FindWorker
 
 				//就要到轨迹表里查,因为有可能是跳过的节点.
 				ps = new Paras();
-				ps.SQL = "SELECT DISTINCT(" + TrackAttr.EmpFrom + ") FROM ND" + Integer.parseInt(fl.No) + "Track WHERE"
+				ps.SQL = "SELECT DISTINCT(" + TrackAttr.EmpFrom + ") FROM ND" + Integer.parseInt(fl.getNo()) + "Track WHERE"
 					+ " (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr + "ActionType2 OR ActionType=" + dbStr + "ActionType3"
 					+ "  OR ActionType=" + dbStr + "ActionType4 OR ActionType=" + dbStr + "ActionType5 OR ActionType=" + dbStr + "ActionType6)"
 					+ "   AND NDFrom=" + dbStr + "NDFrom AND " + workSQL;
@@ -388,7 +388,7 @@ public class FindWorker
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.set(0, row.get(0).toString());
+						dr.setValue(0, row.get(0).toString());
 						dt.Rows.add(dr);
 					}
 					continue;
@@ -407,7 +407,7 @@ public class FindWorker
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.set(0, row.get(0).toString());
+						dr.setValue(0, row.get(0).toString());
 						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
@@ -452,7 +452,7 @@ public class FindWorker
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.set(0, row.get(0).toString());
+							dr.setValue(0, row.get(0).toString());
 							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
@@ -461,7 +461,7 @@ public class FindWorker
 
 					//就要到轨迹表里查,因为有可能是跳过的节点.
 					ps = new Paras();
-					ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.No) + "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr + "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr + "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr + "NDFrom AND WorkID=" + dbStr + "WorkID";
+					ps.SQL = "SELECT " + TrackAttr.EmpFrom + " FROM ND" + Integer.parseInt(fl.getNo()) + "Track WHERE (ActionType=" + dbStr + "ActionType1 OR ActionType=" + dbStr + "ActionType2 OR ActionType=" + dbStr + "ActionType3 OR ActionType=" + dbStr + "ActionType4 OR ActionType=" + dbStr + "ActionType5) AND NDFrom=" + dbStr + "NDFrom AND WorkID=" + dbStr + "WorkID";
 					ps.Add("ActionType1", ActionType.Start.getValue());
 					ps.Add("ActionType2", ActionType.Forward.getValue());
 					ps.Add("ActionType3", ActionType.ForwardFL.getValue());
@@ -485,7 +485,7 @@ public class FindWorker
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.set(0, row.get(0).toString());
+							dr.setValue(0, row.get(0).toString());
 							dt.Rows.add(dr);
 						}
 					}
@@ -497,7 +497,7 @@ public class FindWorker
 				return dt;
 			}
 
-			throw new RuntimeException("@流程设计错误，到达的节点（" + town.getHisNode().getName() + "）在指定的节点(" + strs + ")中没有数据，无法找到工作的人员。 @技术信息如下: 投递方式:BySpecNodeEmp sql=" + ps.SQLNoPara);
+			throw new RuntimeException("@流程设计错误，到达的节点（" + town.getHisNode().getName() + "）在指定的节点(" + strs + ")中没有数据，无法找到工作的人员。 @技术信息如下: 投递方式:BySpecNodeEmp sql=" + ps.getSQLNoPara());
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#endregion 按照节点绑定的人员处理。
@@ -535,7 +535,7 @@ public class FindWorker
 
 					String[] ss = str.split("[,]", -1);
 					DataRow dr = dt.NewRow();
-					dr.set(0, ss[0]);
+					dr.setValue(0, ss[0]);
 					dt.Rows.add(dr);
 				}
 				if (dt.Rows.size() == 0)
@@ -556,7 +556,7 @@ public class FindWorker
 
 			if (DataType.IsNullOrEmpty(emps))
 			{
-				throw new RuntimeException("@没有在字段[" + this.currWn.getHisWork().getEnMap().getAttrs().GetAttrByKey(specEmpFields).Desc + "]中指定接受人，工作无法向下发送。");
+				throw new RuntimeException("@没有在字段[" + this.currWn.getHisWork().getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人，工作无法向下发送。");
 			}
 
 			// 把它加入接受人员列表中.
@@ -572,7 +572,7 @@ public class FindWorker
 				//    continue;
 
 				DataRow dr = dt.NewRow();
-				dr.set(0, s);
+				dr.setValue(0, s);
 				dt.Rows.add(dr);
 			}
 			return dt;
@@ -786,7 +786,7 @@ public class FindWorker
 			{
 				if (this.town.getHisNode().getHisWhenNoWorker() == false)
 				{
-					throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按岗位计算，没有找到人员:SQL=" + ps.SQLNoPara);
+					throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按岗位计算，没有找到人员:SQL=" + ps.getSQLNoPara());
 				}
 				else
 				{
@@ -815,7 +815,7 @@ public class FindWorker
 			{
 				if (this.town.getHisNode().getHisWhenNoWorker() == false)
 				{
-					throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按岗位计算，没有找到人员:SQL=" + ps.SQLNoPara);
+					throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按岗位计算，没有找到人员:SQL=" + ps.getSQLNoPara());
 				}
 				else
 				{
@@ -849,7 +849,7 @@ public class FindWorker
 					String empTo = kv[1];
 					//BP.Port.Emp emp = new BP.Port.Emp(empTo);
 					DataRow dr = dt.NewRow();
-					dr.set(0, empTo);
+					dr.setValue(0, empTo);
 					//  dr[1] = emp.Name;
 					dt.Rows.add(dr);
 					return dt;
@@ -860,7 +860,7 @@ public class FindWorker
 			{
 				String empTo = defUser;
 				DataRow dr = dt.NewRow();
-				dr.set(0, empTo);
+				dr.setValue(0, empTo);
 				dt.Rows.add(dr);
 				return dt;
 			}
@@ -889,7 +889,7 @@ public class FindWorker
 			{
 				if (this.town.getHisNode().getHisWhenNoWorker() == false)
 				{
-					throw new RuntimeException("@节点访问规则(" + town.getHisNode().getHisDeliveryWay().toString() + ")错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 按岗位计算(以部门集合为纬度)。技术信息,执行的SQL=" + ps.SQLNoPara);
+					throw new RuntimeException("@节点访问规则(" + town.getHisNode().getHisDeliveryWay().toString() + ")错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 按岗位计算(以部门集合为纬度)。技术信息,执行的SQL=" + ps.getSQLNoPara());
 				}
 				else
 				{
@@ -935,14 +935,14 @@ public class FindWorker
 					}
 
 					empNo = dt.Rows.get(0).getValue(0).toString();
-					empDept = dt.Rows[0][1].toString();
+					empDept = dt.Rows.get(0).getValue(1).toString();
 				}
 
 				//  throw new Exception("@流程设计错误，到达的节点（" + town.HisNode.Name + "）在指定的节点中没有数据，无法找到工作的人员，指定的节点是:"+para);
 			}
 			else
 			{
-				if (this.currWn.rptGe.Row.ContainsKey(para) == false)
+				if (this.currWn.rptGe.getRow().containsKey(para) == false)
 				{
 					throw new RuntimeException("@在找人接收人的时候错误@字段{" + para + "}不包含在rpt里，流程设计错误。");
 				}
@@ -954,7 +954,7 @@ public class FindWorker
 				}
 
 				BP.Port.Emp em = new BP.Port.Emp(empNo);
-				empDept = em.FK_Dept;
+				empDept = em.getFK_Dept();
 			}
 		}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -1032,7 +1032,7 @@ public class FindWorker
 		{
 			/* 说明，就把当前人员做为下一个节点处理人。*/
 			DataRow dr = dt.NewRow();
-			dr.set(0, WebUser.getNo());
+			dr.setValue(0, WebUser.getNo());
 			dt.Rows.add(dr);
 			return dt;
 		}
@@ -1043,7 +1043,7 @@ public class FindWorker
 			/* 没有查询到的情况下, 先按照本部门计算。*/
 			if (flowAppType == FlowAppType.Normal)
 			{
-				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.Database)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 				{
 					sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B         WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
 					ps = new Paras();
@@ -1052,12 +1052,12 @@ public class FindWorker
 					ps.Add("FK_Dept", empDept);
 				}
 
-				if (BP.Sys.SystemConfig.getOSDBSrc() == Sys.OSDBSrc.WebServices)
+				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + town.getHisNode().getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-					var ws = DataType.GetPortalInterfaceSoapClientInstance();
+					PortalInterface ws = DataType.GetPortalInterfaceSoapClientInstance();
 					return ws.GenerEmpsBySpecDeptAndStats(empDept, stas);
 				}
 			}
@@ -1143,7 +1143,7 @@ public class FindWorker
 		/* 没有查询到的情况下, 按照最大匹配数 提高一个级别计算，递归算法未完成。
 		 * 因为:以上已经做的岗位的判断，就没有必要在判断其它类型的节点处理了。
 		 * */
-		Object tempVar = empDept.Clone();
+		Object tempVar = empDept;
 		String nowDeptID = tempVar instanceof String ? (String)tempVar : null;
 
 		//第1步:直线父级寻找.
@@ -1168,7 +1168,7 @@ public class FindWorker
 		}
 
 		//第2步：父级的子级.
-		Object tempVar2 = empDept.Clone();
+		Object tempVar2 = empDept;
 		nowDeptID = tempVar2 instanceof String ? (String)tempVar2 : null;
 		while (true)
 		{
@@ -1190,7 +1190,7 @@ public class FindWorker
 		}
 
 		/*如果向上找没有找到，就考虑从本级部门上向下找。只找一级下级的平级 */
-		Object tempVar3 = empDept.Clone();
+		Object tempVar3 = empDept;
 		nowDeptID = tempVar3 instanceof String ? (String)tempVar3 : null;
 
 		//递归出来子部门下有该岗位的人员
@@ -1211,7 +1211,7 @@ public class FindWorker
 			}
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
 			{
-				throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo() + ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称：" + WebUser.getFK_DeptName);
+				throw new RuntimeException("@按岗位智能计算没有找到(" + town.getHisNode().getName() + ")接受人 @当前工作人员:" + WebUser.getNo() + ",名称:" + WebUser.getName() + " , 部门编号:" + WebUser.getFK_Dept() + " 部门名称：" + WebUser.getFK_DeptName());
 			}
 
 			if (dt.Rows.size() == 0)
@@ -1298,8 +1298,9 @@ public class FindWorker
 	 执行找人
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable DoIt(Flow fl, WorkNode currWn, WorkNode toWn)
+	public final DataTable DoIt(Flow fl, WorkNode currWn, WorkNode toWn) throws Exception
 	{
 		// 给变量赋值.
 		this.fl = fl;
@@ -1384,14 +1385,14 @@ public class FindWorker
 									}
 
 									DataRow dr = re_dt.NewRow();
-									dr.set(0, empRow.get(0));
+									dr.setValue(0, empRow.get(0));
 									re_dt.Rows.add(dr);
 								}
 							}
 							break;
 						case "SpecEmps": //按人员编号
 							String[] emps = specContent.split("[,]", -1);
-							for (String emp : emps.ToJavaList())
+							for (String emp : emps)
 							{
 								//排除为空编号
 								if (DataType.IsNullOrEmpty(emp))
@@ -1400,7 +1401,7 @@ public class FindWorker
 								}
 
 								DataRow dr = re_dt.NewRow();
-								dr.set(0, emp);
+								dr.setValue(0, emp);
 								re_dt.Rows.add(dr);
 							}
 							break;
@@ -1418,7 +1419,7 @@ public class FindWorker
 				 * 
 				 */
 				//复制表结构
-				DataTable dt = re_dt.Clone();
+				DataTable dt = re_dt;
 				for (DataRow row : re_dt.Rows)
 				{
 					//排除当前登录人
@@ -1428,7 +1429,7 @@ public class FindWorker
 					}
 
 					DataRow dr = dt.NewRow();
-					dr.set(0, row.get(0));
+					dr.setValue(0, row.get(0));
 					dt.Rows.add(dr);
 				}
 				return dt;
@@ -1438,7 +1439,7 @@ public class FindWorker
 
 		// 规则集合.
 		FindWorkerRoles ens = new FindWorkerRoles(town.getHisNode().getNodeID());
-		for (FindWorkerRole en : ens)
+		for (FindWorkerRole en : ens.ToJavaList())
 		{
 			en.fl = this.fl;
 			en.town = toWn;
@@ -1455,7 +1456,7 @@ public class FindWorker
 			//本节点接收人不允许包含上一步发送人
 			if (this.town.getHisNode().getIsExpSender() == true)
 			{
-				DataTable re_dt = dt.Clone();
+				DataTable re_dt = dt;
 				for (DataRow row : dt.Rows)
 				{
 					if (row.get(0).toString().equals(WebUser.getNo()))
@@ -1463,7 +1464,7 @@ public class FindWorker
 						continue;
 					}
 					DataRow dr = re_dt.NewRow();
-					dr.set(0, row.get(0));
+					dr.setValue(0, row.get(0));
 					re_dt.Rows.add(dr);
 				}
 				return re_dt;

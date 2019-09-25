@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -16,20 +17,21 @@ public class FlowSort extends EntityTree
 		///#region 属性.
 	/** 
 	 组织编号
+	 * @throws Exception 
 	*/
-	public final String getOrgNo()
+	public final String getOrgNo() throws Exception
 	{
 		return this.GetValStrByKey(FlowSortAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
+	public final void setOrgNo(String value) throws Exception
 	{
 		this.SetValByKey(FlowSortAttr.OrgNo, value);
 	}
-	public final String getDomain()
+	public final String getDomain() throws Exception
 	{
 		return this.GetValStrByKey(FlowSortAttr.Domain);
 	}
-	public final void setDomain(String value)
+	public final void setDomain(String value) throws Exception
 	{
 		this.SetValByKey(FlowSortAttr.Domain, value);
 	}

@@ -7,6 +7,7 @@ import BP.Port.*;
 import BP.WF.XML.*;
 import BP.WF.Template.*;
 import java.time.*;
+import java.util.List;
 
 /** 
  工作 集合
@@ -20,6 +21,15 @@ public abstract class Works extends EntitiesOID
 	*/
 	public Works()
 	{
+	}
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<Work> ToJavaList()
+	{
+		return (List<Work>)(Object)this;
 	}
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion

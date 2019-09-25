@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -28,27 +29,29 @@ public class DirectionStation extends EntityMM
 	}
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Direction()
+	public final int getFK_Direction() throws Exception
 	{
 		return this.GetValIntByKey(DirectionStationAttr.FK_Direction);
 	}
-	public final void setFK_Direction(int value)
+	public final void setFK_Direction(int value) throws Exception
 	{
 		this.SetValByKey(DirectionStationAttr.FK_Direction, value);
 	}
-	public final String getFK_StationT()
+	public final String getFK_StationT() throws Exception
 	{
 		return this.GetValRefTextByKey(DirectionStationAttr.FK_Station);
 	}
 	/** 
 	 工作岗位
+	 * @throws Exception 
 	*/
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(DirectionStationAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		this.SetValByKey(DirectionStationAttr.FK_Station, value);
 	}

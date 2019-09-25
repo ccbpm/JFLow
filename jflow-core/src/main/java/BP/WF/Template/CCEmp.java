@@ -19,27 +19,29 @@ public class CCEmp extends EntityMM
 		///#region 基本属性
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(CCEmpAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(CCEmpAttr.FK_Node,value);
 	}
 	/** 
 	 到人员
+	 * @throws Exception 
 	*/
-	public final String getFK_Emp()
+	public final String getFK_Emp() throws Exception
 	{
 		return this.GetValStringByKey(CCEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(CCEmpAttr.FK_Emp,value);
 	}
-	public final String getFK_EmpT()
+	public final String getFK_EmpT() throws Exception
 	{
 		return this.GetValRefTextByKey(CCEmpAttr.FK_Emp);
 	}

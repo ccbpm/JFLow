@@ -13,8 +13,9 @@ public class CCEmps extends EntitiesMM
 {
 	/** 
 	 他的到人员
+	 * @throws Exception 
 	*/
-	public final Emps getHisEmps()
+	public final Emps getHisEmps() throws Exception
 	{
 		Emps ens = new Emps();
 		for (CCEmp ns : this.ToJavaList())
@@ -25,8 +26,9 @@ public class CCEmps extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (CCEmp ns : this.ToJavaList())

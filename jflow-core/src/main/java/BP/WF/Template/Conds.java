@@ -42,7 +42,7 @@ public class Conds extends Entities
 		}
 		return true;
 	}
-	public final CondOrAnd getCondOrAnd()
+	public final CondOrAnd getCondOrAnd() throws Exception
 	{
 		for (Cond item : this.ToJavaList())
 		{
@@ -53,8 +53,9 @@ public class Conds extends Entities
 	}
 	/** 
 	 是否通过
+	 * @throws Exception 
 	*/
-	public final boolean getIsPass()
+	public final boolean getIsPass() throws Exception
 	{
 		if (this.getCondOrAnd() == CondOrAnd.ByAnd)
 		{
@@ -148,8 +149,9 @@ public class Conds extends Entities
 	 条件
 	 
 	 @param fk_flow 流程编号
+	 * @throws Exception 
 	*/
-	public Conds(String fk_flow)
+	public Conds(String fk_flow) throws Exception
 	{
 		this.Retrieve(CondAttr.FK_Flow, fk_flow);
 	}
@@ -158,8 +160,9 @@ public class Conds extends Entities
 	 
 	 @param ct 类型
 	 @param nodeID 节点
+	 * @throws Exception 
 	*/
-	public Conds(CondType ct, int nodeID, long workid, GERpt enData)
+	public Conds(CondType ct, int nodeID, long workid, GERpt enData) throws Exception
 	{
 		this.NodeID = nodeID;
 		this.Retrieve(CondAttr.NodeID, nodeID, CondAttr.CondType, ct.getValue(), CondAttr.PRI);
@@ -174,8 +177,9 @@ public class Conds extends Entities
 	 
 	 @param ct
 	 @param nodeID
+	 * @throws Exception 
 	*/
-	public Conds(CondType ct, int nodeID)
+	public Conds(CondType ct, int nodeID) throws Exception
 	{
 		this.Retrieve(CondAttr.NodeID, nodeID, CondAttr.CondType, ct.getValue(), CondAttr.PRI);
 	}

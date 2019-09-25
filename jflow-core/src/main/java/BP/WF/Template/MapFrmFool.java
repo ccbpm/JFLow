@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.Web.WebUser;
 import BP.Sys.*;
@@ -17,8 +18,9 @@ public class MapFrmFool extends EntityNoName
 		///#region 属性
 	/** 
 	 是否是节点表单?
+	 * @throws Exception 
 	*/
-	public final boolean getIsNodeFrm()
+	public final boolean getIsNodeFrm() throws Exception
 	{
 		if (this.getNo().contains("ND") == false)
 		{
@@ -39,19 +41,22 @@ public class MapFrmFool extends EntityNoName
 	}
 	/** 
 	 物理存储表
+	 * @throws Exception 
 	*/
-	public final String getPTable()
+	public final String getPTable() throws Exception
 	{
 		return this.GetValStrByKey(MapDataAttr.PTable);
 	}
-	public final void setPTable(String value)
+	public final void setPTable(String value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 节点ID.
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws NumberFormatException, Exception
 	{
 		if (this.getNo().indexOf("ND") != 0)
 		{
@@ -66,14 +71,14 @@ public class MapFrmFool extends EntityNoName
 	public final int getTableCol()
 	{
 		return 4;
-		int i = this.GetValIntByKey(MapDataAttr.TableCol);
-		if (i == 0 || i == 1)
-		{
-			return 4;
-		}
-		return i;
+//		int i = this.GetValIntByKey(MapDataAttr.TableCol);
+//		if (i == 0 || i == 1)
+//		{
+//			return 4;
+//		}
+//		return i;
 	}
-	public final void setTableCol(int value)
+	public final void setTableCol(int value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.TableCol, value);
 	}
@@ -84,7 +89,7 @@ public class MapFrmFool extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		if (WebUser.getNo().equals("admin"))
@@ -111,8 +116,9 @@ public class MapFrmFool extends EntityNoName
 	 傻瓜表单属性
 	 
 	 @param no 表单ID
+	 * @throws Exception 
 	*/
-	public MapFrmFool(String no)
+	public MapFrmFool(String no) throws Exception
 	{
 		super(no);
 	}
@@ -151,7 +157,7 @@ public class MapFrmFool extends EntityNoName
 		map.AddDDLEntities(MapDataAttr.DBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), true);
 		map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
 			//表单的运行类型.
-		map.AddDDLSysEnum(MapDataAttr.FrmType, (int)BP.Sys.FrmType.FreeFrm, "表单类型", true, false, MapDataAttr.FrmType);
+		map.AddDDLSysEnum(MapDataAttr.FrmType, FrmType.FreeFrm.getValue(), "表单类型", true, false, MapDataAttr.FrmType);
 			//表单解析 0 普通 1 页签展示
 		map.AddDDLSysEnum(MapDataAttr.FrmShowType, 0, "表单展示方式", true, true, "表单展示方式", "@0=普通方式@1=页签方式");
 
@@ -187,7 +193,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Icon = "../../WF/Img/FileType/xlsx.gif";
 		rm.Visable = true;
 		rm.Target = "_blank";
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -195,7 +201,7 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoPageLoadFull";
 		rm.Icon = "../../WF/Img/FullData.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
@@ -204,7 +210,7 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoEvent";
 		rm.Icon = "../../WF/Img/Event.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
@@ -212,7 +218,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Title = "批量设置验证规则";
 		rm.Icon = "../../WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpressionBatch";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -220,7 +226,7 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoBatchEditAttr";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/field.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		  //  map.AddRefMethod(rm);
 
@@ -228,7 +234,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Title = "手机端表单";
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/telephone.png";
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -236,7 +242,7 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoInitScript";
 		rm.Icon = "../../WF/Img/Script.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
@@ -245,14 +251,14 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoBodyAttr";
 		rm.Icon = "../../WF/Img/Script.png";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "导出XML表单模版"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoExp";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "../../WF/Img/Export.png";
 		rm.Visable = true;
 		rm.RefAttrLinkLabel = "导出到xml";
@@ -283,7 +289,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Title = "模板打印";
 		rm.ClassMethodName = this.toString() + ".DoBill";
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
@@ -291,7 +297,7 @@ public class MapFrmFool extends EntityNoName
 		rm.Title = "模板打印2019";
 		rm.ClassMethodName = this.toString() + ".DoBill2019";
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
-		rm.RefMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
@@ -317,7 +323,7 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoSearch";
 		rm.Icon = "../../WF/Img/Table.gif";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
@@ -327,7 +333,7 @@ public class MapFrmFool extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoGroup";
 		rm.Icon = "../../WF/Img/Table.gif";
 		rm.Visable = true;
-		rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
@@ -339,9 +345,10 @@ public class MapFrmFool extends EntityNoName
 	}
 	/** 
 	 删除后清缓存
+	 * @throws Exception 
 	*/
 	@Override
-	protected void afterDelete()
+	protected void afterDelete() throws Exception
 	{
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getNo());
@@ -357,12 +364,13 @@ public class MapFrmFool extends EntityNoName
 	 
 	 @param val 要改变的类型
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoChangeFrmType(int val)
+	public final String DoChangeFrmType(int val) throws Exception
 	{
 		MapData md = new MapData(this.getNo());
 		String str = "原来的是:" + md.getHisFrmTypeText() + "类型，";
-		md.HisFrmTypeInt = val;
+		md.setHisFrmTypeInt(val);
 		str += "现在修改为：" + md.getHisFrmTypeText() + "类型";
 		md.Update();
 
@@ -373,7 +381,7 @@ public class MapFrmFool extends EntityNoName
 
 
 	@Override
-	protected boolean beforeUpdate()
+	protected boolean beforeUpdate() throws NumberFormatException, Exception
 	{
 		//注册事件表单实体.
 		//BP.Sys.FormEventBase feb = BP.Sys.Glo.GetFormEventBaseByEnName(this.getNo());
@@ -386,21 +394,21 @@ public class MapFrmFool extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected void afterUpdate()
+	protected void afterUpdate() throws Exception
 	{
 		//修改关联明细表
 		MapDtl dtl = new MapDtl();
-		dtl.No = this.getNo();
+		dtl.setNo(this.getNo());
 		if (dtl.RetrieveFromDBSources() == 1)
 		{
-			dtl.Name = this.Name;
-			dtl.PTable = this.getPTable();
+			dtl.setName(this.getName());
+			dtl.setPTable(this.getPTable());
 			dtl.DirectUpdate();
 
 			MapData map = new MapData(this.getNo());
 			//避免显示在表单库中
-			map.FK_FrmSort = "";
-			map.FK_FormTree = "";
+			map.setFK_FrmSort("");
+			map.setFK_FormTree("");
 			map.DirectUpdate();
 		}
 
@@ -415,8 +423,9 @@ public class MapFrmFool extends EntityNoName
 	 单据打印
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoBill()
+	public final String DoBill() throws Exception
 	{
 		return "../../Admin/AttrNode/Bill.htm?FK_MapData= " + this.getNo()+ " &NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
@@ -424,8 +433,9 @@ public class MapFrmFool extends EntityNoName
 	 单据打印
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoBill2019()
+	public final String DoBill2019() throws Exception
 	{
 		return "../../Admin/AttrNode/Bill2019.htm?FK_MapData= " + this.getNo()+ " &FrmID= " + this.getNo()+ " &NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
@@ -434,8 +444,9 @@ public class MapFrmFool extends EntityNoName
 	 傻瓜表单设计器
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoDesignerFool()
+	public final String DoDesignerFool() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &MyPK= " + this.getNo()+ " &IsFirst=1&IsEditMapData=True";
 	}
@@ -444,8 +455,9 @@ public class MapFrmFool extends EntityNoName
 	 节点表单组件
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoNodeFrmCompent()
+	public final String DoNodeFrmCompent() throws Exception
 	{
 		if (this.getNo().contains("ND") == true)
 		{
@@ -458,8 +470,9 @@ public class MapFrmFool extends EntityNoName
 	}
 	/** 
 	 执行旧版本的兼容性检查.
+	 * @throws Exception 
 	*/
-	public final String DoCheckFixFrmForUpdateVer()
+	public final String DoCheckFixFrmForUpdateVer() throws Exception
 	{
 		// 更新状态.
 		DBAccess.RunSQL("UPDATE Sys_GroupField SET CtrlType='' WHERE CtrlType IS NULL");
@@ -482,9 +495,9 @@ public class MapFrmFool extends EntityNoName
 		{
 			GroupField gf = null;
 			GroupFields gfs = new GroupFields(this.getNo());
-			for (GroupField mygf : gfs)
+			for (GroupField mygf : gfs.ToJavaList())
 			{
-				if (mygf.CtrlID.equals(""))
+				if (mygf.getCtrlID().equals(""))
 				{
 					gf = mygf;
 				}
@@ -493,15 +506,15 @@ public class MapFrmFool extends EntityNoName
 			if (gf == null)
 			{
 				gf = new GroupField();
-				gf.Lab = "基本信息";
-				gf.FrmID = this.getNo();
+				gf.setLab("基本信息");
+				gf.setFrmID(this.getNo());
 				gf.Insert();
 			}
 
 			//设置GID.
-			for (MapAttr attr : attrs)
+			for (MapAttr attr : attrs.ToJavaList())
 			{
-				attr.Update(MapAttrAttr.GroupID, gf.OID);
+				attr.Update(MapAttrAttr.GroupID, gf.getOID());
 			}
 		}
 
@@ -510,7 +523,7 @@ public class MapFrmFool extends EntityNoName
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			GroupField gf = new GroupField();
-			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.No, GroupFieldAttr.FrmID, this.getNo());
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, dtl.getNo(), GroupFieldAttr.FrmID, this.getNo());
 			if (i == 1)
 			{
 				continue;
@@ -520,12 +533,12 @@ public class MapFrmFool extends EntityNoName
 			//if (gf.IsExit(GroupFieldAttr.CtrlID, dtl.No) == true && !DataType.IsNullOrEmpty(gf.CtrlType))
 			//    continue;
 
-			gf.Lab = dtl.Name;
-			gf.CtrlID = dtl.No;
-			gf.CtrlType = "Dtl";
-			gf.FrmID = dtl.FK_MapData;
+			gf.setLab(dtl.getName());
+			gf.setCtrlID(dtl.getNo());
+			gf.setCtrlType("Dtl");
+			gf.setFrmID(dtl.getFK_MapData());
 			gf.DirectSave();
-			str += "@为从表" + dtl.Name + " 增加了分组.";
+			str += "@为从表" + dtl.getName() + " 增加了分组.";
 		}
 
 		// 框架.
@@ -558,7 +571,7 @@ public class MapFrmFool extends EntityNoName
 			}
 
 			GroupField gf = new GroupField();
-			int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.MyPK, GroupFieldAttr.FrmID, this.getNo());
+			int i = gf.Retrieve(GroupFieldAttr.CtrlID, ath.getMyPK(), GroupFieldAttr.FrmID, this.getNo());
 			if (i == 1)
 			{
 				continue;

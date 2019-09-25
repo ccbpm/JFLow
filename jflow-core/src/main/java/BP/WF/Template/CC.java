@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.WF.*;
+import BP.WF.Glo;
 import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
@@ -22,8 +23,9 @@ public class CC extends Entity
 	 
 	 @param rpt
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable GenerCCers(Entity rpt, long workid)
+	public final DataTable GenerCCers(Entity rpt, long workid) throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add(new DataColumn("No", String.class));
@@ -156,7 +158,7 @@ public class CC extends Entity
 						dt.Rows.add(dr);
 					}
 
-					if (dept.ParentNo.equals("0"))
+					if (dept.getParentNo().equals("0"))
 					{
 						break;
 					}
@@ -168,7 +170,7 @@ public class CC extends Entity
 
 		if (this.getCCIsSQLs() == true)
 		{
-			Object tempVar = this.getCCSQL().clone();
+			Object tempVar = this.getCCSQL();
 			sql = tempVar instanceof String ? (String)tempVar : null;
 			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
 			sql = sql.replace("@WebUser.getName()", WebUser.getName());
@@ -189,21 +191,22 @@ public class CC extends Entity
 			}
 		}
 		//将dt中的重复数据过滤掉  
-		DataView myDataView = new DataView(dt);
-		//此处可加任意数据项组合  
-		String[] strComuns = {"No", "Name"};
-		dt = myDataView.ToTable(true, strComuns);
+//		DataView myDataView = new DataView(dt);
+//		//此处可加任意数据项组合  
+//		String[] strComuns = {"No", "Name"};
+//		dt = myDataView.ToTable(true, strComuns);
 
 		return dt;
 	}
 	/** 
 	节点ID
+	 * @throws Exception 
 	*/
-	public final int getNodeID()
+	public final int getNodeID() throws Exception
 	{
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
+	public final void setNodeID(int value) throws Exception
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
@@ -227,8 +230,9 @@ public class CC extends Entity
 	}
 	/** 
 	 抄送标题
+	 * @throws Exception 
 	*/
-	public final String getCCTitle()
+	public final String getCCTitle() throws Exception
 	{
 		String s = this.GetValStringByKey(CCAttr.CCTitle);
 		if (DataType.IsNullOrEmpty(s))
@@ -237,14 +241,15 @@ public class CC extends Entity
 		}
 		return s;
 	}
-	public final void setCCTitle(String value)
+	public final void setCCTitle(String value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCTitle, value);
 	}
 	/** 
 	 抄送内容
+	 * @throws Exception 
 	*/
-	public final String getCCDoc()
+	public final String getCCDoc() throws Exception
 	{
 		String s = this.GetValStringByKey(CCAttr.CCDoc);
 		if (DataType.IsNullOrEmpty(s))
@@ -253,14 +258,15 @@ public class CC extends Entity
 		}
 		return s;
 	}
-	public final void setCCDoc(String value)
+	public final void setCCDoc(String value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCDoc, value);
 	}
 	/** 
 	 抄送对象
+	 * @throws Exception 
 	*/
-	public final String getCCSQL()
+	public final String getCCSQL() throws Exception
 	{
 		String sql = this.GetValStringByKey(CCAttr.CCSQL);
 		sql = sql.replace("~", "'");
@@ -269,62 +275,67 @@ public class CC extends Entity
 		sql = sql.replace("''", "'");
 		return sql;
 	}
-	public final void setCCSQL(String value)
+	public final void setCCSQL(String value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCSQL, value);
 	}
 	/** 
 	 是否启用按照岗位抄送
+	 * @throws Exception 
 	*/
-	public final boolean getCCIsStations()
+	public final boolean getCCIsStations() throws Exception
 	{
 		return this.GetValBooleanByKey(CCAttr.CCIsStations);
 	}
-	public final void setCCIsStations(boolean value)
+	public final void setCCIsStations(boolean value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCIsStations, value);
 	}
 	/** 
 	 抄送到岗位计算方式.
+	 * @throws Exception 
 	*/
-	public final CCStaWay getCCStaWay()
+	public final CCStaWay getCCStaWay() throws Exception
 	{
 		return CCStaWay.forValue(this.GetValIntByKey(CCAttr.CCStaWay));
 	}
-	public final void setCCStaWay(CCStaWay value)
+	public final void setCCStaWay(CCStaWay value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCStaWay, value.getValue());
 	}
 	/** 
 	 是否启用按照部门抄送
+	 * @throws Exception 
 	*/
-	public final boolean getCCIsDepts()
+	public final boolean getCCIsDepts() throws Exception
 	{
 		return this.GetValBooleanByKey(CCAttr.CCIsDepts);
 	}
-	public final void setCCIsDepts(boolean value)
+	public final void setCCIsDepts(boolean value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCIsDepts, value);
 	}
 	/** 
 	 是否启用按照人员抄送
+	 * @throws Exception 
 	*/
-	public final boolean getCCIsEmps()
+	public final boolean getCCIsEmps() throws Exception
 	{
 		return this.GetValBooleanByKey(CCAttr.CCIsEmps);
 	}
-	public final void setCCIsEmps(boolean value)
+	public final void setCCIsEmps(boolean value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCIsEmps, value);
 	}
 	/** 
 	 是否启用按照SQL抄送
+	 * @throws Exception 
 	*/
-	public final boolean getCCIsSQLs()
+	public final boolean getCCIsSQLs() throws Exception
 	{
 		return this.GetValBooleanByKey(CCAttr.CCIsSQLs);
 	}
-	public final void setCCIsSQLs(boolean value)
+	public final void setCCIsSQLs(boolean value) throws Exception
 	{
 		this.SetValByKey(CCAttr.CCIsSQLs, value);
 	}

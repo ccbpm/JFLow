@@ -19,16 +19,17 @@ public class FlowFormTrees extends EntitiesTree
 	}
 	/** 
 	 独立表单树
+	 * @throws Exception 
 	*/
-	public FlowFormTrees(String flowNo)
+	public FlowFormTrees(String flowNo) throws Exception
 	{
 	   int i = this.Retrieve(FlowFormTreeAttr.FK_Flow, flowNo);
 	   if (i == 0)
 	   {
 		   FlowFormTree tree = new FlowFormTree();
-		   tree.No = "100";
+		   tree.setNo("100");
 		   tree.setFK_Flow(flowNo);
-		   tree.Name = "根目录";
+		   tree.setName("根目录");
 		  // tree.IsDir = false;
 		   tree.setParentNo("0");
 		   tree.Insert();

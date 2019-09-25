@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.Template.*;
 import BP.Port.*;
@@ -15,34 +16,35 @@ public class HungUp extends EntityMyPK
 {
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final HungUpWay getHungUpWay()
+	public final HungUpWay getHungUpWay() throws Exception
 	{
 		return HungUpWay.forValue(this.GetValIntByKey(HungUpAttr.HungUpWay));
 	}
-	public final void setHungUpWay(HungUpWay value)
+	public final void setHungUpWay(HungUpWay value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.HungUpWay, value.getValue());
 	}
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(HungUpAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.FK_Node, value);
 	}
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(HungUpAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.WorkID, value);
 	}
 	/** 
 	 挂起标题
+	 * @throws Exception 
 	*/
-	public final String getTitle()
+	public final String getTitle() throws Exception
 	{
 		String s = this.GetValStringByKey(HungUpAttr.Title);
 		if (DataType.IsNullOrEmpty(s))
@@ -51,59 +53,63 @@ public class HungUp extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setTitle(String value)
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.Title, value);
 	}
 	/** 
 	 挂起原因
+	 * @throws Exception 
 	*/
-	public final String getNote()
+	public final String getNote() throws Exception
 	{
 	   return this.GetValStringByKey(HungUpAttr.Note);
 	}
-	public final void setNote(String value)
+	public final void setNote(String value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.Note, value);
 	}
-	public final String getRec()
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(HungUpAttr.Rec);
 	}
-	public final void setRec(String value)
+	public final void setRec(String value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.Rec, value);
 	}
 	/** 
 	 解除挂起时间
+	 * @throws Exception 
 	*/
-	public final String getDTOfUnHungUp()
+	public final String getDTOfUnHungUp() throws Exception
 	{
 		return this.GetValStringByKey(HungUpAttr.DTOfUnHungUp);
 	}
-	public final void setDTOfUnHungUp(String value)
+	public final void setDTOfUnHungUp(String value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.DTOfUnHungUp, value);
 	}
 	/** 
 	 预计解除挂起时间
+	 * @throws Exception 
 	*/
-	public final String getDTOfUnHungUpPlan()
+	public final String getDTOfUnHungUpPlan() throws Exception
 	{
 		return this.GetValStringByKey(HungUpAttr.DTOfUnHungUpPlan);
 	}
-	public final void setDTOfUnHungUpPlan(String value)
+	public final void setDTOfUnHungUpPlan(String value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.DTOfUnHungUpPlan, value);
 	}
 	/** 
 	 解除挂起时间
+	 * @throws Exception 
 	*/
-	public final String getDTOfHungUp()
+	public final String getDTOfHungUp() throws Exception
 	{
 		return this.GetValStringByKey(HungUpAttr.DTOfHungUp);
 	}
-	public final void setDTOfHungUp(String value)
+	public final void setDTOfHungUp(String value) throws Exception
 	{
 		this.SetValByKey(HungUpAttr.DTOfHungUp, value);
 	}

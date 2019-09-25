@@ -259,8 +259,9 @@ public class Selector extends Entity
 	 产生数据.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataSet GenerDataSet(int nodeid, Entity en)
+	public final DataSet GenerDataSet(int nodeid, Entity en) throws Exception
 	{
 		DataSet ds = null;
 		switch (this.getSelectorModel())
@@ -288,7 +289,6 @@ public class Selector extends Entity
 				break;
 			default:
 				throw new RuntimeException("@错误:没有判断的选择类型:" + this.getSelectorModel());
-				break;
 		}
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
@@ -297,24 +297,24 @@ public class Selector extends Entity
 			{
 				for (int i = 0; i < dt.Columns.size(); i++)
 				{
-					if (dt.Columns[i].ColumnName.toUpperCase().equals("NO"))
+					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("NO"))
 					{
-						dt.Columns[i].ColumnName = "No";
+						dt.Columns.get(i).ColumnName = "No";
 					}
 
-					if (dt.Columns[i].ColumnName.toUpperCase().equals("NAME"))
+					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("NAME"))
 					{
-						dt.Columns[i].ColumnName = "Name";
+						dt.Columns.get(i).ColumnName = "Name";
 					}
 
-					if (dt.Columns[i].ColumnName.toUpperCase().equals("PARENTNO"))
+					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("PARENTNO"))
 					{
-						dt.Columns[i].ColumnName = "ParentNo";
+						dt.Columns.get(i).ColumnName = "ParentNo";
 					}
 
-					if (dt.Columns[i].ColumnName.toUpperCase().equals("FK_DEPT"))
+					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("FK_DEPT"))
 					{
-						dt.Columns[i].ColumnName = "FK_Dept";
+						dt.Columns.get(i).ColumnName = "FK_Dept";
 					}
 				}
 			}

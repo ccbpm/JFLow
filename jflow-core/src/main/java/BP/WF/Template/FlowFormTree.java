@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -66,11 +67,11 @@ public class FlowFormTree extends EntityTree
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 属性
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Flow, value);
 	}
@@ -89,8 +90,9 @@ public class FlowFormTree extends EntityTree
 	 独立表单树
 	 
 	 @param _No
+	 * @throws Exception 
 	*/
-	public FlowFormTree(String _No)
+	public FlowFormTree(String _No) throws Exception
 	{
 		super(_No);
 	}

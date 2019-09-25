@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
@@ -36,7 +37,7 @@ public class FrmNode extends EntityMyPK
 		}
 	}
 	private Frm _hisFrm = null;
-	public final Frm getHisFrm()
+	public final Frm getHisFrm() throws Exception
 	{
 		if (this._hisFrm == null)
 		{
@@ -47,9 +48,10 @@ public class FrmNode extends EntityMyPK
 	}
 	/** 
 	 UI界面上的访问控制
+	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC()
+	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -57,116 +59,119 @@ public class FrmNode extends EntityMyPK
 	}
 	/** 
 	 表单类型
+	 * @throws Exception 
 	*/
-	public final BP.Sys.FrmType getHisFrmType()
+	public final FrmType getHisFrmType() throws Exception
 	{
-		return (BP.Sys.FrmType)this.GetValIntByKey(FrmNodeAttr.FrmType);
+		return FrmType.forValue(this.GetValIntByKey(FrmNodeAttr.FrmType));
 	}
-	public final void setHisFrmType(BP.Sys.FrmType value)
+	public final void setHisFrmType(BP.Sys.FrmType value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单类型
+	 * @throws Exception 
 	*/
-	public final String getHisFrmTypeText()
+	public final String getHisFrmTypeText() throws Exception
 	{
-		SysEnum se = new SysEnum(FrmNodeAttr.FrmType, (int)this.getHisFrmType());
-		return se.Lab;
+		SysEnum se = new SysEnum(FrmNodeAttr.FrmType, this.getHisFrmType().getValue());
+		return se.getLab();
 			// return (BP.Sys.FrmType)this.GetValIntByKey(FrmNodeAttr.FrmType);
 	}
 	/** 
 	 是否启用装载填充事件
+	 * @throws Exception 
 	*/
-	public final boolean getIsEnableLoadData()
+	public final boolean getIsEnableLoadData() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmNodeAttr.IsEnableLoadData);
 	}
-	public final void setIsEnableLoadData(boolean value)
+	public final void setIsEnableLoadData(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.IsEnableLoadData, value);
 	}
 	/** 
 	 是否启用节点组件?
 	*/
-	public final boolean getIsEnableFWC()
+	public final boolean getIsEnableFWC() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmNodeAttr.IsEnableFWC);
 	}
-	public final void setIsEnableFWC(boolean value)
+	public final void setIsEnableFWC(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.IsEnableFWC, value);
 	}
 	/** 
 	 是否执行1变n
 	*/
-	public final boolean getIs1ToN()
+	public final boolean getIs1ToN() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmNodeAttr.Is1ToN);
 	}
-	public final void setIs1ToN(boolean value)
+	public final void setIs1ToN(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.Is1ToN, value);
 	}
 	/** 
 	 是否默认打开
 	*/
-	public final boolean getIsDefaultOpen()
+	public final boolean getIsDefaultOpen() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmNodeAttr.IsDefaultOpen);
 	}
-	public final void setIsDefaultOpen(boolean value)
+	public final void setIsDefaultOpen(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.IsDefaultOpen, value);
 	}
 	/** 
 	节点
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(FrmNodeAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Node, value);
 	}
 	/** 
 	 顺序号
 	*/
-	public final int getIdx()
+	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(FrmNodeAttr.Idx);
 	}
-	public final void setIdx(int value)
+	public final void setIdx(int value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.Idx, value);
 	}
 	/** 
 	 谁是主键？
 	*/
-	public final WhoIsPK getWhoIsPK()
+	public final WhoIsPK getWhoIsPK() throws Exception
 	{
 		return WhoIsPK.forValue(this.GetValIntByKey(FrmNodeAttr.WhoIsPK));
 	}
-	public final void setWhoIsPK(WhoIsPK value)
+	public final void setWhoIsPK(WhoIsPK value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.WhoIsPK, value.getValue());
 	}
 	/** 
 	 表单ID
 	*/
-	public final String getFK_Frm()
+	public final String getFK_Frm() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FK_Frm);
 	}
-	public final void setFK_Frm(String value)
+	public final void setFK_Frm(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Frm, value);
 	}
 	/** 
 	 模版文件
 	*/
-	public final String getTempleteFile()
+	public final String getTempleteFile() throws Exception
 	{
 		String str = this.GetValStringByKey(FrmNodeAttr.TempleteFile);
 		if (DataType.IsNullOrEmpty(str))
@@ -175,112 +180,118 @@ public class FrmNode extends EntityMyPK
 		}
 		return str;
 	}
-	public final void setTempleteFile(String value)
+	public final void setTempleteFile(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.TempleteFile, value);
 	}
 	/** 
 	 是否显示
 	*/
-	public final String getIsEnable()
+	public final String getIsEnable() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.IsEnable);
 	}
-	public final void setIsEnable(String value)
+	public final void setIsEnable(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.IsEnable, value);
 	}
 	/** 
 	 关键字段
 	*/
-	public final String getGuanJianZiDuan()
+	public final String getGuanJianZiDuan() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.GuanJianZiDuan);
 	}
-	public final void setGuanJianZiDuan(String value)
+	public final void setGuanJianZiDuan(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.GuanJianZiDuan, value);
 	}
 	/** 
 	 对应的解决方案
 	 0=默认方案.节点编号 1=自定义方案, 1=不可编辑.
+	 * @throws Exception 
 	*/
-	public final FrmSln getFrmSln()
+	public final FrmSln getFrmSln() throws Exception
 	{
 		if (this.GetValIntByKey(FrmNodeAttr.FrmSln) > 5)
 		{
-			return Template.FrmSln.Self;
+			return FrmSln.Self;
 		}
 
 		return FrmSln.forValue(this.GetValIntByKey(FrmNodeAttr.FrmSln));
 	}
-	public final void setFrmSln(FrmSln value)
+	public final void setFrmSln(FrmSln value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FrmSln, value.getValue());
 	}
 	/** 
 	 启用规则
+	 * @throws Exception 
 	*/
-	public final int getFrmEnableRoleInt()
+	public final int getFrmEnableRoleInt() throws Exception
 	{
 		return this.GetValIntByKey(FrmNodeAttr.FrmEnableRole);
 	}
-	public final void setFrmEnableRoleInt(int value)
+	public final void setFrmEnableRoleInt(int value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FrmEnableRole, value);
 	}
 	/** 
 	 表单启用规则
 	*/
-	public final FrmEnableRole getFrmEnableRole()
+	public final FrmEnableRole getFrmEnableRole() throws Exception
 	{
 		return FrmEnableRole.forValue(this.GetValIntByKey(FrmNodeAttr.FrmEnableRole));
 	}
-	public final void setFrmEnableRole(FrmEnableRole value)
+	public final void setFrmEnableRole(FrmEnableRole value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FrmEnableRole, value.getValue());
 	}
 	/** 
 	 启用规则.
+	 * @throws Exception 
 	*/
-	public final String getFrmEnableRoleText()
+	public final String getFrmEnableRoleText() throws Exception 
 	{
-		if (this.getFrmEnableRole() == Template.FrmEnableRole.WhenHaveFrmPara && this.getFK_Frm().equals("ND" + this.getFK_Node()))
+		if (this.getFrmEnableRole() == FrmEnableRole.WhenHaveFrmPara && this.getFK_Frm().equals("ND" + this.getFK_Node()))
 		{
 			return "不启用";
 		}
 
 		SysEnum se = new SysEnum(FrmNodeAttr.FrmEnableRole, this.getFrmEnableRoleInt());
-		return se.Lab;
+		return se.getLab();
 	}
 	/** 
 	 表单启动表达式
+	 * @throws Exception 
 	*/
-	public final String getFrmEnableExp()
+	public final String getFrmEnableExp() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FrmEnableExp);
 	}
-	public final void setFrmEnableExp(String value)
+	public final void setFrmEnableExp(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FrmEnableExp, value);
 	}
 	/** 
 	 流程编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Flow, value);
 	}
 	/** 
 	 是否可以编辑？
+	 * @throws Exception 
 	*/
-	public final boolean getIsEdit()
+	public final boolean getIsEdit() throws Exception
 	{
-		if (this.getFrmSln() == Template.FrmSln.Readonly)
+		if (this.getFrmSln() == FrmSln.Readonly)
 		{
 			return false;
 		}
@@ -288,8 +299,9 @@ public class FrmNode extends EntityMyPK
 	}
 	/** 
 	 是否可以编辑？
+	 * @throws Exception 
 	*/
-	public final int getIsEditInt()
+	public final int getIsEditInt() throws Exception
 	{
 		if (this.getIsEdit())
 		{
@@ -299,41 +311,45 @@ public class FrmNode extends EntityMyPK
 	}
 	/** 
 	 是否可以打印
+	 * @throws Exception 
 	*/
-	public final boolean getIsPrint()
+	public final boolean getIsPrint() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmNodeAttr.IsPrint);
 	}
-	public final void setIsPrint(boolean value)
+	public final void setIsPrint(boolean value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.IsPrint, value);
 	}
 	/** 
 	 是否可以打印
+	 * @throws Exception 
 	*/
-	public final int getIsPrintInt()
+	public final int getIsPrintInt() throws Exception
 	{
 		return this.GetValIntByKey(FrmNodeAttr.IsPrint);
 	}
 	/** 
 	 汇总
+	 * @throws Exception 
 	*/
-	public final String getHuiZong()
+	public final String getHuiZong() throws Exception
 	{
 		return this.GetValStringByKey(FrmNodeAttr.HuiZong);
 	}
-	public final void setHuiZong(String value)
+	public final void setHuiZong(String value) throws Exception
 	{
 		this.SetValByKey(FrmNodeAttr.HuiZong, value);
 	}
 	/** 
 	打开时是否关闭其它的页面？
+	 * @throws Exception 
 	*/
-	public final boolean getIsCloseEtcFrm()
+	public final boolean getIsCloseEtcFrm() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmNodeAttr.IsCloseEtcFrm);
 	}
-	public final int getIsCloseEtcFrmInt()
+	public final int getIsCloseEtcFrmInt() throws Exception
 	{
 		if (this.getIsCloseEtcFrm())
 		{
@@ -356,8 +372,9 @@ public class FrmNode extends EntityMyPK
 	 节点表单
 	 
 	 @param mypk
+	 * @throws Exception 
 	*/
-	public FrmNode(String mypk)
+	public FrmNode(String mypk) throws Exception
 	{
 		super(mypk);
 	}
@@ -366,18 +383,19 @@ public class FrmNode extends EntityMyPK
 	 
 	 @param fk_node 节点
 	 @param fk_frm 表单
+	 * @throws Exception 
 	*/
-	public FrmNode(String fk_flow, int fk_node, String fk_frm)
+	public FrmNode(String fk_flow, int fk_node, String fk_frm) throws Exception
 	{
 		int i = this.Retrieve(FrmNodeAttr.FK_Node, fk_node, FrmNodeAttr.FK_Frm, fk_frm);
 		if (i == 0)
 		{
 			this.setIsPrint(false);
 			//不可以编辑.
-			this.setFrmSln(Template.FrmSln.Default);
+			this.setFrmSln(FrmSln.Default);
 			// this.IsEdit = false;
 			return;
-			throw new RuntimeException("@表单关联信息已被删除。");
+//			throw new RuntimeException("@表单关联信息已被删除。");
 		}
 	}
 	/** 
@@ -438,16 +456,16 @@ public class FrmNode extends EntityMyPK
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 方法.
-	public final void DoUp()
+	public final void DoUp() throws Exception
 	{
 		this.DoOrderUp(FrmNodeAttr.FK_Node, String.valueOf(this.getFK_Node()), FrmNodeAttr.Idx);
 	}
-	public final void DoDown()
+	public final void DoDown() throws Exception
 	{
 		this.DoOrderDown(FrmNodeAttr.FK_Node, String.valueOf(this.getFK_Node()), FrmNodeAttr.Idx);
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		if (this.getFK_Frm().length() == 0)
 		{
@@ -464,14 +482,14 @@ public class FrmNode extends EntityMyPK
 			throw new RuntimeException("@流程编号为空");
 		}
 
-		this.setMyPK( this.getFK_Frm() + "_" + this.getFK_Node() + "_" + this.getFK_Flow();
+		this.setMyPK(this.getFK_Frm() + "_" + this.getFK_Node() + "_" + this.getFK_Flow());
 
 		//获取表单的类型
 		MapData mapData = new MapData();
-		mapData.No = this.getFK_Frm();
+		mapData.setNo(this.getFK_Frm());
 		if (mapData.RetrieveFromDBSources() == 1)
 		{
-			this.setHisFrmType(mapData.HisFrmType);
+			this.setHisFrmType(mapData.getHisFrmType());
 		}
 		else
 		{

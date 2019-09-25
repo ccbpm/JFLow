@@ -19,23 +19,25 @@ public class CCDept extends EntityMM
 		///#region 基本属性
 	/** 
 	节点
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(CCDeptAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(CCDeptAttr.FK_Node,value);
 	}
 	/** 
 	 工作部门
+	 * @throws Exception 
 	*/
-	public final String getFK_Dept()
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(CCDeptAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
+	public final void setFK_Dept(String value) throws Exception
 	{
 		this.SetValByKey(CCDeptAttr.FK_Dept,value);
 	}

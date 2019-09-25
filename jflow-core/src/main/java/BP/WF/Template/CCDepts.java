@@ -13,8 +13,9 @@ public class CCDepts extends EntitiesMM
 {
 	/** 
 	 他的工作部门
+	 * @throws Exception 
 	*/
-	public final Stations getHisStations()
+	public final Stations getHisStations() throws Exception
 	{
 		Stations ens = new Stations();
 		for (CCDept ns : this.ToJavaList())
@@ -25,8 +26,9 @@ public class CCDepts extends EntitiesMM
 	}
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (CCDept ns : this.ToJavaList())

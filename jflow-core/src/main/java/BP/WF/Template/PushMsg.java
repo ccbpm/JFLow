@@ -617,21 +617,22 @@ public class PushMsg extends EntityMyPK
 	 @param jumpToNode 跳转到的节点
 	 @param jumpToEmps 跳转到的人员
 	 @return 执行成功的消息
+	 * @throws Exception 
 	*/
 
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode)
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode) throws Exception
 	{
 		return DoSendMessage(currNode, en, atPara, objs, jumpToNode, null);
 	}
 
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs)
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs) throws Exception
 	{
 		return DoSendMessage(currNode, en, atPara, objs, null, null);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public string DoSendMessage(Node currNode, Entity en, string atPara, SendReturnObjs objs, Node jumpToNode = null, string jumpToEmps = null)
-	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps)
+	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
 	{
 		if (en == null)
 		{
@@ -644,11 +645,11 @@ public class PushMsg extends EntityMyPK
 		try
 		{
 			//系统参数.
-			r.Add("FK_MapData", en.getClassID());
+			r.put("FK_MapData", en.getClassID());
 		}
 		catch (java.lang.Exception e)
 		{
-			r["FK_MapData"] = en.getClassID();
+			r.put("FK_MapData", en.getClassID());
 		}
 
 		if (atPara != null)
@@ -658,11 +659,11 @@ public class PushMsg extends EntityMyPK
 			{
 				try
 				{
-					r.Add(s, ap.GetValStrByKey(s));
+					r.put(s, ap.GetValStrByKey(s));
 				}
 				catch (java.lang.Exception e2)
 				{
-					r[s] = ap.GetValStrByKey(s);
+					r.put(s , ap.GetValStrByKey(s));
 				}
 			}
 		}
@@ -670,7 +671,7 @@ public class PushMsg extends EntityMyPK
 		//生成标题.
 		long workid = Long.parseLong(en.getPKVal().toString());
 		String title = "标题";
-		if (en.Row.ContainsKey("Title") == true)
+		if (en.getRow().containsKey("Title") == true)
 		{
 			title = en.GetValStringByKey("Title"); // 获得工作标题.
 			if (DataType.IsNullOrEmpty(title))
@@ -725,8 +726,9 @@ public class PushMsg extends EntityMyPK
 	 @param objs 发送返回的对象
 	 @param r 表单数据HashTable
 	 @return 
+	 * @throws Exception 
 	*/
-	private String SendMessage(String title, Entity en, Node currNode, long workid, String jumpToEmps, String openUrl, SendReturnObjs objs, Row r)
+	private String SendMessage(String title, Entity en, Node currNode, long workid, String jumpToEmps, String openUrl, SendReturnObjs objs, Row r) throws Exception
 	{
 		//不启用消息
 		if (this.getSMSPushWay() == 0)
@@ -753,8 +755,8 @@ public class PushMsg extends EntityMyPK
 		smsDoc = smsDoc.replace("{Url}", openUrl);
 		smsDoc = smsDoc.replace("@WebUser.getNo()", WebUser.getNo());
 		smsDoc = smsDoc.replace("@WebUser.getName()", WebUser.getName());
-		smsDoc = smsDoc.replace("@WorkID", en.PKVal.toString());
-		smsDoc = smsDoc.replace("@OID", en.PKVal.toString());
+		smsDoc = smsDoc.replace("@WorkID", en.getPKVal().toString());
+		smsDoc = smsDoc.replace("@OID", en.getPKVal().toString());
 
 		/*如果仍然有没有替换下来的变量.*/
 		if (smsDoc.contains("@") == true)
@@ -787,7 +789,7 @@ public class PushMsg extends EntityMyPK
 		if (this.getSMSPushWay() == 2)
 		{
 			/*从字段里取数据. */
-			String toEmp = r[this.getSMSField()] instanceof String ? (String)r[this.getSMSField()] : null;
+			String toEmp = r.get(this.getSMSField()) instanceof String ? (String)r.get(this.getSMSField()) : null;
 			//修改内容
 			smsDoc = smsDoc.replace("{EmpStr}", toEmp);
 			openUrl = openUrl.replace("{EmpStr}", toEmp);

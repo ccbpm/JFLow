@@ -16,8 +16,9 @@ public class FrmNodes extends EntitiesMyPK
 		///#region 属性.
 	/** 
 	 他的工作节点
+	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes()
+	public final Nodes getHisNodes() throws Exception
 	{
 		Nodes ens = new Nodes();
 		for (FrmNode ns : this.ToJavaList())

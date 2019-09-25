@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Template.*;
 import BP.Port.*;
 import BP.WF.*;
@@ -26,144 +27,157 @@ public class FlowRefEmp extends EntityMyPK
 	}
 	/** 
 	 流程关联人员的事务编号
+	 * @throws Exception 
 	*/
-	public final String getFK_Flow()
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
+	public final void setFK_Flow(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.FK_Flow, value);
 	}
 	/** 
 	 类型
+	 * @throws Exception 
 	*/
-	public final String getFlowRefEmpType()
+	public final String getFlowRefEmpType() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.FlowRefEmpType);
 	}
-	public final void setFlowRefEmpType(String value)
+	public final void setFlowRefEmpType(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.FlowRefEmpType, value);
 	}
 	/** 
 	 节点ID
+	 * @throws Exception 
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(FlowRefEmpAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.FK_Node, value);
 	}
 	/** 
 	 字段存储0
+	 * @throws Exception 
 	*/
-	public final String getTag0()
+	public final String getTag0() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag0);
 	}
-	public final void setTag0(String value)
+	public final void setTag0(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag0, value);
 	}
 	/** 
 	 字段存储1
+	 * @throws Exception 
 	*/
-	public final String getTag1()
+	public final String getTag1() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag1);
 	}
-	public final void setTag1(String value)
+	public final void setTag1(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag1, value);
 	}
 	/** 
 	 字段存储2
+	 * @throws Exception 
 	*/
-	public final String getTag2()
+	public final String getTag2() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag2);
 	}
-	public final void setTag2(String value)
+	public final void setTag2(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag2, value);
 	}
 	/** 
 	 字段存储3
+	 * @throws Exception 
 	*/
-	public final String getTag3()
+	public final String getTag3() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag3);
 	}
-	public final void setTag3(String value)
+	public final void setTag3(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag3, value);
 	}
 	/** 
 	 字段存储4
+	 * @throws Exception 
 	*/
-	public final String getTag4()
+	public final String getTag4() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag4);
 	}
-	public final void setTag4(String value)
+	public final void setTag4(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag4, value);
 	}
 	/** 
 	 字段存储5
+	 * @throws Exception 
 	*/
-	public final String getTag5()
+	public final String getTag5() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag5);
 	}
-	public final void setTag5(String value)
+	public final void setTag5(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag5, value);
 	}
 	/** 
 	 字段存储6
+	 * @throws Exception 
 	*/
-	public final String getTag6()
+	public final String getTag6() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag6);
 	}
-	public final void setTag6(String value)
+	public final void setTag6(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag6, value);
 	}
 	/** 
 	 字段存储7
+	 * @throws Exception 
 	*/
-	public final String getTag7()
+	public final String getTag7() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag7);
 	}
-	public final void setTag7(String value)
+	public final void setTag7(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag7, value);
 	}
 	/** 
 	 字段存储8
+	 * @throws Exception 
 	*/
-	public final String getTag8()
+	public final String getTag8() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag8);
 	}
-	public final void setTag8(String value)
+	public final void setTag8(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag8, value);
 	}
 	/** 
 	 字段存储9
+	 * @throws Exception 
 	*/
-	public final String getTag9()
+	public final String getTag9() throws Exception
 	{
 		return this.GetValStringByKey(FlowRefEmpAttr.Tag9);
 	}
-	public final void setTag9(String value)
+	public final void setTag9(String value) throws Exception
 	{
 		SetValByKey(FlowRefEmpAttr.Tag9, value);
 	}
@@ -182,8 +196,9 @@ public class FlowRefEmp extends EntityMyPK
 	 流程关联人员
 	 
 	 @param _oid 流程关联人员ID	
+	 * @throws Exception 
 	*/
-	public FlowRefEmp(String mypk)
+	public FlowRefEmp(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();

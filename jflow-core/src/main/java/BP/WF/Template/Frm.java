@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.Sys.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -15,35 +16,35 @@ public class Frm extends EntityNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 基本属性
 	public FrmNode HisFrmNode = null;
-	public final String getPTable()
+	public final String getPTable() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttr.PTable);
 	}
-	public final void setPTable(String value)
+	public final void setPTable(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttr.PTable, value);
 	}
-	public final String getFK_Flow11()
+	public final String getFK_Flow11() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttr.FK_Flow);
 	}
-	public final void setFK_Flow11(String value)
+	public final void setFK_Flow11(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttr.FK_Flow, value);
 	}
-	public final String getURL()
+	public final String getURL() throws Exception
 	{
 		return this.GetValStringByKey(FrmAttr.URL);
 	}
-	public final void setURL(String value)
+	public final void setURL(String value) throws Exception
 	{
 		this.SetValByKey(FrmAttr.URL, value);
 	}
-	public final FrmType getHisFrmType()
+	public final FrmType getHisFrmType() throws Exception
 	{
-		return (FrmType)this.GetValIntByKey(FrmAttr.FrmType);
+		return FrmType.forValue(this.GetValIntByKey(FrmAttr.FrmType));
 	}
-	public final void setHisFrmType(FrmType value)
+	public final void setHisFrmType(FrmType value) throws Exception
 	{
 		this.SetValByKey(FrmAttr.FrmType, value.getValue());
 	}
@@ -62,8 +63,9 @@ public class Frm extends EntityNoName
 	 Frm
 	 
 	 @param no
+	 * @throws Exception 
 	*/
-	public Frm(String no)
+	public Frm(String no) throws Exception
 	{
 		super(no);
 
@@ -88,7 +90,7 @@ public class Frm extends EntityNoName
 		 //   map.AddDDLSysEnum(FrmAttr.FrmType, 0, "独立表单属性:运行类型", true, false, FrmAttr.FrmType);
 
 			//表单的运行类型.
-		map.AddDDLSysEnum(FrmAttr.FrmType, (int)BP.Sys.FrmType.FreeFrm, "表单类型",true, false, FrmAttr.FrmType);
+		map.AddDDLSysEnum(FrmAttr.FrmType, FrmType.FreeFrm.getValue(), "表单类型",true, false, FrmAttr.FrmType);
 
 		map.AddTBString(FrmAttr.PTable, null, "物理表", true, false, 0, 50, 10);
 		map.AddTBInt(FrmAttr.DBURL, 0, "DBURL", true, false);
@@ -105,11 +107,11 @@ public class Frm extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	public final int getFrmW()
+	public final int getFrmW() throws Exception
 	{
-		return this.GetValIntByKey(Sys.MapDataAttr.FrmW);
+		return this.GetValIntByKey(MapDataAttr.FrmW);
 	}
-	public final int getFrmH()
+	public final int getFrmH() throws Exception
 	{
 		return this.GetValIntByKey(BP.Sys.MapDataAttr.FrmH);
 	}

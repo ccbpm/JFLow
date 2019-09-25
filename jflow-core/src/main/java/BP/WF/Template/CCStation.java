@@ -2,6 +2,7 @@ package BP.WF.Template;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.Port.*;
 import BP.WF.*;
 import java.util.*;
@@ -29,29 +30,29 @@ public class CCStation extends EntityMM
 	/** 
 	节点
 	*/
-	public final int getFK_Node()
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(CCStationAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(CCStationAttr.FK_Node, value);
 	}
 	/** 
 	 岗位名称
 	*/
-	public final String getFK_StationT()
+	public final String getFK_StationT() throws Exception
 	{
 		return this.GetValRefTextByKey(CCStationAttr.FK_Station);
 	}
 	/** 
 	 工作岗位
 	*/
-	public final String getFK_Station()
+	public final String getFK_Station() throws Exception
 	{
 		return this.GetValStringByKey(CCStationAttr.FK_Station);
 	}
-	public final void setFK_Station(String value)
+	public final void setFK_Station(String value) throws Exception
 	{
 		this.SetValByKey(CCStationAttr.FK_Station, value);
 	}

@@ -54,14 +54,14 @@ public class DTSDominInfo extends Method
 	{
 		return "功能未实现。";
 
-		String domainHost = "127.0.0.1";
-
-		String sqls = "";
-		sqls += "@DELETE FROM Port_Emp";
-		sqls += "@DELETE FROM Port_Dept";
-		sqls += "@DELETE FROM Port_Station";
-		sqls += "@DELETE FROM Port_DeptEmpStation";
-		DBAccess.RunSQLs(sqls);
+//		String domainHost = "127.0.0.1";
+//
+//		String sqls = "";
+//		sqls += "@DELETE FROM Port_Emp";
+//		sqls += "@DELETE FROM Port_Dept";
+//		sqls += "@DELETE FROM Port_Station";
+//		sqls += "@DELETE FROM Port_DeptEmpStation";
+//		DBAccess.RunSQLs(sqls);
 
 
 		// 把部门导入里面去。
@@ -92,6 +92,6 @@ public class DTSDominInfo extends Method
 		//    }
 		//}
 
-		return "生成成功，请打开 。<br>如果您想共享出来请压缩后发送到template＠ccflow.org";
+//		return "生成成功，请打开 。<br>如果您想共享出来请压缩后发送到template＠ccflow.org";
 	}
 }

@@ -32,16 +32,16 @@ public class DeleteBlankGroupField extends Method
 		return true;
 	}
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		GroupFields gfs = new GroupFields();
 		gfs.RetrieveAll();
 
 		int delNum = 0;
-		for (GroupField item : gfs)
+		for (GroupField item : gfs.ToJavaList())
 		{
 			int num = 0;
-			num += DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM Sys_MapAttr WHERE GroupID='" + item.OID + "' and FK_MapData='" + item.FrmID + "'");
+			num += DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM Sys_MapAttr WHERE GroupID='" + item.getOID() + "' and FK_MapData='" + item.getFrmID() + "'");
 			//num += DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM Sys_FrmAttachment WHERE GroupID=" + item.OID + " and FK_MapData='" + item.EnName + "'");
 			//num += DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM Sys_MapDtl WHERE GroupID=" + item.OID + " and FK_MapData='" + item.EnName + "'");
 			//num += DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM Sys_MapFrame WHERE GroupID=" + item.OID + " and FK_MapData='" + item.EnName + "'");

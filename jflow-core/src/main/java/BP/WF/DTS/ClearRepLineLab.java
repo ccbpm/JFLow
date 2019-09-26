@@ -44,28 +44,29 @@ public class ClearRepLineLab extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		FrmLines ens = new FrmLines();
 		ens.RetrieveAllFromDBSource();
 		String sql = "";
-		for (FrmLine item : ens)
+		for (FrmLine item : ens.ToJavaList())
 		{
-			sql = "DELETE FROM " + item.EnMap.PhysicsTable + " WHERE FK_MapData='" + item.FK_MapData + "' AND  x1=" + item.X1 + " and x2=" + item.X2 + " and y1=" + item.Y1 + " and y2=" + item.Y2;
+			sql = "DELETE FROM " + item.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + item.getFK_MapData() + "' AND  x1=" + item.getX1() + " and x2=" + item.getX2() + " and y1=" + item.getY1() + " and y2=" + item.getY2();
 			DBAccess.RunSQL(sql);
-			item.setMyPK( BP.DA.DBAccess.GenerOIDByGUID().toString();
+			item.setMyPK(String.valueOf(DBAccess.GenerOIDByGUID()));
 			item.Insert();
 		}
 
 		FrmLabs labs = new FrmLabs();
 		labs.RetrieveAllFromDBSource();
-		for (FrmLab item : labs)
+		for (FrmLab item : labs.ToJavaList())
 		{
-			sql = "DELETE FROM " + item.EnMap.PhysicsTable + " WHERE FK_MapData='" + item.FK_MapData + "' and x=" + item.X + " and y=" + item.Y + " and Text='" + item.Text + "'";
+			sql = "DELETE FROM " + item.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + item.getFK_MapData() + "' and x=" + item.getX() + " and y=" + item.getY() + " and Text='" + item.getText() + "'";
 			DBAccess.RunSQL(sql);
-			item.setMyPK( BP.DA.DBAccess.GenerOIDByGUID().toString();
+			item.setMyPK(String.valueOf(DBAccess.GenerOIDByGUID()));
 			item.Insert();
 		}
 		return "删除成功";

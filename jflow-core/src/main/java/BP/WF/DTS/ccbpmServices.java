@@ -5,12 +5,15 @@ import BP.En.*;
 import BP.WF.*;
 import BP.Port.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.Data.*;
+import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
 import BP.DTS.*;
 import BP.Web.*;
 import BP.WF.*;
 import java.time.*;
+import java.util.Date;
 
 /** 
  ccbpm服务
@@ -44,9 +47,10 @@ public class ccbpmServices extends Method
 	 开始执行方法.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 
 		//执行自动任务.
@@ -437,14 +441,14 @@ public class ccbpmServices extends Method
 						{
 							Emp myemp = new Emp(doOutTime);
 
-							boolean boo = BP.WF.Dev2Interface.WriteToSMS(myemp.No, LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"), "系统发送逾期消息", "您的流程:'" + title + "'的完成时间应该为'" + compleateTime + "',流程已经逾期,请及时处理!", "系统消息");
+							boolean boo = BP.WF.Dev2Interface.WriteToSMS(myemp.getNo(), DateUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"), "系统发送逾期消息", "您的流程:'" + title + "'的完成时间应该为'" + compleateTime + "',流程已经逾期,请及时处理!", "系统消息");
 							if (boo)
 							{
-								msg = "'" + title + "'逾期消息已经发送给:'" + myemp.Name + "'";
+								msg = "'" + title + "'逾期消息已经发送给:'" + myemp.getName() + "'";
 							}
 							else
 							{
-								msg = "'" + title + "'逾期消息发送未成功,发送人为:'" + myemp.Name + "'";
+								msg = "'" + title + "'逾期消息发送未成功,发送人为:'" + myemp.getName() + "'";
 							}
 							BP.DA.Log.DefaultLogWriteLine(LogType.Info, msg);
 						}

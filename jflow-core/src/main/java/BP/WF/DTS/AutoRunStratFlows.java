@@ -6,10 +6,12 @@ import BP.Port.*;
 import BP.Web.*;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.time.*;
+import java.util.Date;
 
 /** 
  Method 的摘要说明
@@ -47,9 +49,10 @@ public class AutoRunStratFlows extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		BP.WF.Flows fls = new Flows();
 		fls.RetrieveAll();
@@ -63,21 +66,21 @@ public class AutoRunStratFlows extends Method
 				continue;
 			}
 
-			if (LocalDateTime.now().toString("HH:mm").equals(fl.Tag))
+			if (DateUtils.format(new Date(),"HH:mm").equals(fl.Tag))
 			{
 				continue;
 			}
 
 			if (fl.getRunObj() == null || fl.getRunObj().equals(""))
 			{
-				String msg = "您设置自动运行流程错误，没有设置流程内容，流程编号：" + fl.getNo() + ",流程名称:" + fl.Name;
+				String msg = "您设置自动运行流程错误，没有设置流程内容，流程编号：" + fl.getNo() + ",流程名称:" + fl.getName();
 				BP.DA.Log.DebugWriteError(msg);
 				continue;
 			}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#region 判断当前时间是否可以运行它。
-			String nowStr = LocalDateTime.now().toString("yyyy-MM-dd,HH:mm");
+			String nowStr = DateUtils.format(new Date(),"yyyy-MM-dd,HH:mm");
 			String[] strs = fl.getRunObj().split("[@]", -1); //破开时间串。
 			boolean IsCanRun = false;
 			for (String str : strs)
@@ -98,7 +101,7 @@ public class AutoRunStratFlows extends Method
 			}
 
 			// 设置时间.
-			fl.Tag = LocalDateTime.now().toString("HH:mm");
+			fl.Tag = DateUtils.format(new Date(),"HH:mm");
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 				///#endregion 判断当前时间是否可以运行它。
 
@@ -110,7 +113,7 @@ public class AutoRunStratFlows extends Method
 					String fk_emp = RunObj.substring(0, RunObj.indexOf('@'));
 
 					BP.Port.Emp emp = new BP.Port.Emp();
-					emp.setNo (fk_emp;
+					emp.setNo(fk_emp);
 					if (emp.RetrieveFromDBSources() == 0)
 					{
 						BP.DA.Log.DebugWriteError("启动自动启动流程错误：发起人(" + fk_emp + ")不存在。");
@@ -120,21 +123,21 @@ public class AutoRunStratFlows extends Method
 					try
 					{
 						//让 userNo 登录.
-						BP.WF.Dev2Interface.Port_Login(emp.No);
+						BP.WF.Dev2Interface.Port_Login(emp.getNo());
 
 						//创建空白工作, 发起开始节点.
-						long workID = BP.WF.Dev2Interface.Node_CreateBlankWork(fl.No);
+						long workID = BP.WF.Dev2Interface.Node_CreateBlankWork(fl.getNo());
 
 						//执行发送.
-						SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(fl.No, workID);
+						SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(fl.getNo(), workID);
 
 						//string info_send= BP.WF.Dev2Interface.Node_StartWork(fl.No,);
-						BP.DA.Log.DefaultLogWriteLineInfo("流程:" + fl.No + fl.Name + "的定时任务\t\n -------------- \t\n" + objs.ToMsgOfText());
+						BP.DA.Log.DefaultLogWriteLineInfo("流程:" + fl.getNo() + fl.getName() + "的定时任务\t\n -------------- \t\n" + objs.ToMsgOfText());
 
 					}
 					catch (RuntimeException ex)
 					{
-						BP.DA.Log.DebugWriteError("流程:" + fl.No + fl.Name + "自动发起错误:\t\n -------------- \t\n" + ex.getMessage());
+						BP.DA.Log.DebugWriteError("流程:" + fl.getNo() + fl.getName() + "自动发起错误:\t\n -------------- \t\n" + ex.getMessage());
 					}
 					continue;
 				case DataModel: //按数据集合驱动的模式执行。
@@ -166,19 +169,19 @@ public class AutoRunStratFlows extends Method
 	{
 	}
 
-	public final void DTS_Flow(BP.WF.Flow fl)
+	public final void DTS_Flow(BP.WF.Flow fl) throws Exception
 	{
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 读取数据.
 		BP.Sys.MapExt me = new MapExt();
-		me.setMyPK( "ND" + Integer.parseInt(fl.No) + "01" + "_" + MapExtXmlList.StartFlow;
+		me.setMyPK("ND" + Integer.parseInt(fl.getNo()) + "01" + "_" + MapExtXmlList.StartFlow);
 		int i = me.RetrieveFromDBSources();
 		if (i == 0)
 		{
 			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
 			return;
 		}
-		if (DataType.IsNullOrEmpty(me.Tag))
+		if (DataType.IsNullOrEmpty(me.getTag()))
 		{
 			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
 			return;
@@ -186,7 +189,7 @@ public class AutoRunStratFlows extends Method
 
 		// 获取从表数据.
 		DataSet ds = new DataSet();
-		String[] dtlSQLs = me.Tag1.split("[*]", -1);
+		String[] dtlSQLs = me.getTag1().split("[*]", -1);
 		for (String sql : dtlSQLs)
 		{
 			if (DataType.IsNullOrEmpty(sql))
@@ -207,19 +210,19 @@ public class AutoRunStratFlows extends Method
 			///#region 检查数据源是否正确.
 		String errMsg = "";
 		// 获取主表数据.
-		DataTable dtMain = BP.DA.DBAccess.RunSQLReturnTable(me.Tag);
+		DataTable dtMain = BP.DA.DBAccess.RunSQLReturnTable(me.getTag());
 		if (dtMain.Rows.size() == 0)
 		{
 			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.getName() + ")此时无任务.");
 			return;
 		}
 
-		if (dtMain.Columns.Contains("Starter") == false)
+		if (dtMain.Columns.contains("Starter") == false)
 		{
 			errMsg += "@配值的主表中没有Starter列.";
 		}
 
-		if (dtMain.Columns.Contains("MainPK") == false)
+		if (dtMain.Columns.contains("MainPK") == false)
 		{
 			errMsg += "@配值的主表中没有MainPK列.";
 		}
@@ -234,7 +237,7 @@ public class AutoRunStratFlows extends Method
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 			///#region 处理流程发起.
-		String nodeTable = "ND" + Integer.parseInt(fl.No) + "01";
+		String nodeTable = "ND" + Integer.parseInt(fl.getNo()) + "01";
 		int idx = 0;
 		for (DataRow dr : dtMain.Rows)
 		{
@@ -252,10 +255,10 @@ public class AutoRunStratFlows extends Method
 			{
 				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
-				emp.setNo (starter;
+				emp.setNo(starter);
 				if (emp.RetrieveFromDBSources() == 0)
 				{
-					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.No + "不存在。");
+					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.getNo() + "不存在。");
 					continue;
 				}
 				WebUser.SignInOfGener(emp);
@@ -284,7 +287,7 @@ public class AutoRunStratFlows extends Method
 						boolean isHave = false;
 						for (Attr attr : wk.getEnMap().getAttrs())
 						{
-							if (attr.Key.toLowerCase().equals(f))
+							if (attr.getKey().toLowerCase().equals(f))
 							{
 								isHave = true;
 								break;
@@ -299,7 +302,7 @@ public class AutoRunStratFlows extends Method
 			}
 			if (DataType.IsNullOrEmpty(err) == false)
 			{
-				throw new RuntimeException("您设置的字段:" + err + "不存在开始节点的表单中，设置的sql:" + me.Tag);
+				throw new RuntimeException("您设置的字段:" + err + "不存在开始节点的表单中，设置的sql:" + me.getTag());
 			}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -318,13 +321,13 @@ public class AutoRunStratFlows extends Method
 				{
 					for (DataTable dt : ds.Tables)
 					{
-						if (!dt.TableName.equals(dtl.No))
+						if (!dt.TableName.equals(dtl.getNo()))
 						{
 							continue;
 						}
 
 						//删除原来的数据。
-						GEDtl dtlEn = dtl.HisGEDtl;
+						GEDtl dtlEn = dtl.getHisGEDtl();
 						dtlEn.Delete(GEDtlAttr.RefPK, String.valueOf(wk.getOID()));
 
 						// 执行数据插入。
@@ -335,14 +338,14 @@ public class AutoRunStratFlows extends Method
 								continue;
 							}
 
-							dtlEn = dtl.HisGEDtl;
+							dtlEn = dtl.getHisGEDtl();
 							for (DataColumn dc : dt.Columns)
 							{
 								dtlEn.SetValByKey(dc.ColumnName, drDtl.get(dc.ColumnName).toString());
 							}
 
-							dtlEn.RefPK = String.valueOf(wk.getOID());
-							dtlEn.OID = 0;
+							dtlEn.setRefPK(String.valueOf(wk.getOID()));
+							dtlEn.setOID(0);
 							dtlEn.Insert();
 						}
 					}
@@ -376,7 +379,7 @@ public class AutoRunStratFlows extends Method
 				if (toNodeID == fl.getStartNodeID())
 				{
 					/* 发起后让它停留在开始节点上，就是为开始节点创建一个待办。*/
-					long workID = BP.WF.Dev2Interface.Node_CreateBlankWork(fl.No, null, null, WebUser.getNo(), null);
+					long workID = BP.WF.Dev2Interface.Node_CreateBlankWork(fl.getNo(), null, null, WebUser.getNo(), null);
 					if (workID != wk.getOID())
 					{
 						throw new RuntimeException("@异常信息:不应该不一致的workid.");

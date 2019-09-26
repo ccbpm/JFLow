@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -34,9 +35,10 @@ public class GenerPinYinForEmp extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getIsAdmin() == true)
 		{
@@ -51,9 +53,10 @@ public class GenerPinYinForEmp extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		if (BP.DA.DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == true)
 		{
@@ -69,7 +72,7 @@ public class GenerPinYinForEmp extends Method
 		emps.RetrieveAll();
 		for (BP.GPM.Emp item : emps.ToJavaList())
 		{
-			if (item.PinYin.Contains("/") == true)
+			if (item.getPinYin().contains("/") == true)
 			{
 				continue;
 			}

@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.Port.*;
 import BP.Sys.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
@@ -46,9 +47,10 @@ public class AutoRunWF_Task extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String info = "";
 		String sql = "SELECT * FROM WF_Task WHERE TaskSta=0 ORDER BY Starter";
@@ -108,7 +110,7 @@ public class AutoRunWF_Task extends Method
 			{
 				if (paras.contains("PrjNo=") == false || paras.contains("PrjName=") == false)
 				{
-					info += "err@工程类的流程，没有PrjNo，PrjName参数:" + fl.Name;
+					info += "err@工程类的流程，没有PrjNo，PrjName参数:" + fl.getName();
 					DBAccess.RunSQL("UPDATE WF_Task SET TaskSta=2,Msg='" + info + "' WHERE MyPK='" + mypk + "'");
 					continue;
 				}
@@ -117,10 +119,10 @@ public class AutoRunWF_Task extends Method
 			long workID = 0;
 			try
 			{
-				String fTable = "ND" + Integer.parseInt(fl.No + "01").toString();
+				String fTable = "ND" + fl.getNo() + "01";
 				MapData md = new MapData(fTable);
 				//sql = "";
-				sql = "SELECT * FROM " + md.PTable + " WHERE MainPK='" + mypk + "' AND WFState=1";
+				sql = "SELECT * FROM " + md.getPTable() + " WHERE MainPK='" + mypk + "' AND WFState=1";
 				try
 				{
 					if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)

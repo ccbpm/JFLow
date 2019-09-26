@@ -1,5 +1,6 @@
 package BP.WF.DTS;
 
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.DA.*;
@@ -33,9 +34,10 @@ public class GenerCH extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -47,9 +49,10 @@ public class GenerCH extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String err = "";
 		try
@@ -64,7 +67,7 @@ public class GenerCH extends Method
 			for (Node nd : nds.ToJavaList())
 			{
 				String sql = "SELECT * FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "TRACK WHERE NDFrom=" + nd.getNodeID() + " ORDER BY WorkID, RDT ";
-				System.Data.DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				String priRDT = null;
 				String sdt = null;
 				for (DataRow dr : dt.Rows)

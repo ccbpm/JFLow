@@ -53,7 +53,7 @@ public class GenerDeptTree extends Method
 			return "err@ Port_Dept 没有找到 TreeNo 的列.";
 		}
 
-		BP.GPM.Dept dept = new GPM.Dept();
+		BP.GPM.Dept dept = new BP.GPM.Dept();
 		int i = dept.Retrieve(DeptAttr.ParentNo, "0");
 		if (i == 0)
 		{
@@ -61,11 +61,11 @@ public class GenerDeptTree extends Method
 		}
 
 		//更新跟节点的TreeNo. 
-		String sql = "UPDATE Port_Dept SET TreeNo='01' WHERE No='" + dept.No + "'";
+		String sql = "UPDATE Port_Dept SET TreeNo='01' WHERE No='" + dept.getNo() + "'";
 		DBAccess.RunSQL(sql);
 
 		BP.Port.Depts depts = new Depts();
-		depts.Retrieve(BP.Port.DeptAttr.ParentNo, dept.No);
+		depts.Retrieve(BP.Port.DeptAttr.ParentNo, dept.getNo());
 
 		int idx = 0;
 		for (BP.Port.Dept item : depts.ToJavaList())
@@ -73,12 +73,12 @@ public class GenerDeptTree extends Method
 			idx++;
 
 			String subNo = tangible.StringHelper.padLeft(String.valueOf(idx), 2, '0');
-			sql = "UPDATE Port_Dept SET TreeNo='01" + subNo + "' WHERE No='" + item.No + "'";
+			sql = "UPDATE Port_Dept SET TreeNo='01" + subNo + "' WHERE No='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
 
-			sql = "UPDATE Port_DeptEmp SET DeptTreeNo='01" + subNo + "' WHERE FK_Dept='" + item.No + "'";
+			sql = "UPDATE Port_DeptEmp SET DeptTreeNo='01" + subNo + "' WHERE FK_Dept='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
-			sql = "UPDATE Port_DeptEmpStation SET DeptTreeNo='01" + subNo + "' WHERE FK_Dept='" + item.No + "'";
+			sql = "UPDATE Port_DeptEmpStation SET DeptTreeNo='01" + subNo + "' WHERE FK_Dept='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
 
 			SetDeptTreeNo(item, "01" + subNo);
@@ -90,20 +90,20 @@ public class GenerDeptTree extends Method
 	public final void SetDeptTreeNo(Dept dept, String pTreeNo)
 	{
 		BP.Port.Depts depts = new Depts();
-		depts.Retrieve(BP.Port.DeptAttr.ParentNo, dept.No);
+		depts.Retrieve(BP.Port.DeptAttr.ParentNo, dept.getNo());
 
 		int idx = 0;
 		for (BP.Port.Dept item : depts.ToJavaList())
 		{
 			idx++;
 			String subNo = tangible.StringHelper.padLeft(String.valueOf(idx), 2, '0');
-			String sql = "UPDATE Port_Dept SET TreeNo='" + pTreeNo + subNo + "' WHERE No='" + item.No + "'";
+			String sql = "UPDATE Port_Dept SET TreeNo='" + pTreeNo + subNo + "' WHERE No='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
 
 			//更新其他的表字段.
-			sql = "UPDATE Port_DeptEmp SET DeptTreeNo='" + pTreeNo + "' WHERE FK_Dept='" + item.No + "'";
+			sql = "UPDATE Port_DeptEmp SET DeptTreeNo='" + pTreeNo + "' WHERE FK_Dept='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
-			sql = "UPDATE Port_DeptEmpStation SET DeptTreeNo='" + pTreeNo + "' WHERE FK_Dept='" + item.No + "'";
+			sql = "UPDATE Port_DeptEmpStation SET DeptTreeNo='" + pTreeNo + "' WHERE FK_Dept='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
 
 			//递归调用.

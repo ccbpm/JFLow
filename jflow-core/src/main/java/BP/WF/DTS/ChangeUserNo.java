@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -18,7 +19,7 @@ public class ChangeUserNo extends Method
 	public ChangeUserNo()
 	{
 		this.Title = "修改人员编号（原来一个操作中编号叫A,现在修改成B）";
-		this.Help = "请慎重执行，执行前请先备份数据库，系统会把生成的SQL放在日志里，打开日志文件(" + BP.Sys.SystemConfig.PathOfDataUser + "\\Log)，然后找到这些sql.";
+		this.Help = "请慎重执行，执行前请先备份数据库，系统会把生成的SQL放在日志里，打开日志文件(" + BP.Sys.SystemConfig.getPathOfDataUser() + "\\Log)，然后找到这些sql.";
 		this.GroupName = "系统维护";
 
 	}
@@ -31,14 +32,15 @@ public class ChangeUserNo extends Method
 	public void Init()
 	{
 		this.Warning = "您确定要执行吗？";
-		HisAttrs.AddTBString("P1", null, "原用户名", true, false, 0, 10, 10);
-		HisAttrs.AddTBString("P2", null, "新用户名", true, false, 0, 10, 10);
+		getHisAttrs().AddTBString("P1", null, "原用户名", true, false, 0, 10, 10);
+		getHisAttrs().AddTBString("P2", null, "新用户名", true, false, 0, 10, 10);
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -53,9 +55,10 @@ public class ChangeUserNo extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String oldNo = this.GetValStrByKey("P1");
 		String newNo = this.GetValStrByKey("P2");
@@ -68,14 +71,14 @@ public class ChangeUserNo extends Method
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAll();
 
-		for (MapData md : mds)
+		for (MapData md : mds.ToJavaList())
 		{
-			MapAttrs attrs = new MapAttrs(md.No);
-			for (MapAttr attr : attrs)
+			MapAttrs attrs = new MapAttrs(md.getNo());
+			for (MapAttr attr : attrs.ToJavaList())
 			{
-				if (attr.UIIsEnable == false && attr.DefValReal.equals("@WebUser.getNo()"))
+				if (attr.getUIIsEnable() == false && attr.getDefValReal().equals("@WebUser.getNo()"))
 				{
-					sqls += "\t\n UPDATE " + md.PTable + " SET ";
+					sqls += "\t\n UPDATE " + md.getPTable() + " SET ";
 				}
 				continue;
 

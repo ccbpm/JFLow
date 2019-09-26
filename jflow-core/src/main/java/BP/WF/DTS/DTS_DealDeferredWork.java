@@ -7,6 +7,7 @@ import BP.En.*;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.WF.*;
+import BP.WF.Glo;
 
 /** 
  处理延期的任务 的摘要说明
@@ -48,13 +49,14 @@ public class DTS_DealDeferredWork extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		//string sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <='" + DataType.CurrentData + "' ORDER BY FK_Emp";
 		//改成小于号SDT <'" + DataType.CurrentData
-		String sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <'" + DataType.CurrentData + "' ORDER BY FK_Emp";
+		String sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <'" + DataType.getCurrentDate() + "' ORDER BY FK_Emp";
 		//string sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <='2013-12-30' ORDER BY FK_Emp";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		String msg = "";
@@ -92,7 +94,7 @@ public class DTS_DealDeferredWork extends Method
 				Work wk = nodeN.getHisWork();
 				wk.setOID(workid);
 				wk.Retrieve();
-				Object tempVar = nd.getDoOutTimeCond().Clone();
+				Object tempVar = nd.getDoOutTimeCond();
 				String exp = tempVar instanceof String ? (String)tempVar : null;
 				if (Glo.ExeExp(exp, wk) == false)
 				{

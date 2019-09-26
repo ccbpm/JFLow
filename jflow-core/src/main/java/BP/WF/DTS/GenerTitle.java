@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -32,9 +33,10 @@ public class GenerTitle extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -46,12 +48,13 @@ public class GenerTitle extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		BP.WF.Template.FlowSheets ens = new BP.WF.Template.FlowSheets();
-		for (BP.WF.Template.FlowSheet en : ens)
+		for (BP.WF.Template.FlowSheet en : ens.ToJavaList())
 		{
 			en.DoGenerTitle();
 		}

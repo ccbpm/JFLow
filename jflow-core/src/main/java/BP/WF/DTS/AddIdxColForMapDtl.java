@@ -48,9 +48,10 @@ public class AddIdxColForMapDtl extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		MapDtls dtls = new MapDtls();
 		dtls.RetrieveAll();
@@ -58,22 +59,22 @@ public class AddIdxColForMapDtl extends Method
 		for (MapDtl item : dtls.ToJavaList())
 		{
 			MapAttr ma = new MapAttr();
-			ma.setMyPK( item.No + "_Idx";
-			if (ma.IsExits == true)
+			ma.setMyPK(item.getNo() + "_Idx");
+			if (ma.getIsExits() == true)
 			{
 				continue;
 			}
 
-			ma.FK_MapData = item.No;
-			ma.KeyOfEn = "Idx";
-			ma.Name = "Idx";
-			ma.LGType = FieldTypeS.Normal;
-			ma.UIVisible = false;
-			ma.DefVal = "0";
-			ma.MyDataType = DataType.AppInt;
+			ma.setFK_MapData(item.getNo());
+			ma.setKeyOfEn("Idx");
+			ma.setName("Idx");
+			ma.setLGType(FieldTypeS.Normal);
+			ma.setUIVisible(false);
+			ma.setDefVal("0");
+			ma.setMyDataType(DataType.AppInt);
 			ma.Insert();
 
-			GEDtl dtl = new GEDtl(item.No);
+			GEDtl dtl = new GEDtl(item.getNo());
 			dtl.CheckPhysicsTable();
 		}
 		return "执行成功.";

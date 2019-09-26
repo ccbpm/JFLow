@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -35,9 +36,10 @@ public class DocFieldAddLengthTo1000 extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -49,20 +51,21 @@ public class DocFieldAddLengthTo1000 extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String strs = "开始执行....";
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.MyDataType, DataType.AppString, MapAttrAttr.FK_MapData);
 		strs += "<br>@如下字段受到了影响。";
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.UIHeightInt > 50 && attr.MaxLen < 1000)
+			if (attr.getUIHeightInt() > 50 && attr.getMaxLen() < 1000)
 			{
-				strs += " @ 类:" + attr.FK_MapData + " 字段:" + attr.KeyOfEn + " , " + attr.Name + " ";
-				attr.setMaxLen(1000;
+				strs += " @ 类:" + attr.getFK_MapData() + " 字段:" + attr.getKeyOfEn() + " , " + attr.getName() + " ";
+				attr.setMaxLen(1000);
 				attr.Update();
 			}
 		}

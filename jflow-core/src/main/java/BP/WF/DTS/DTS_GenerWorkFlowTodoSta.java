@@ -5,8 +5,12 @@ import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.*;
+import BP.WF.Port.WFEmp;
+
 import java.time.*;
+import java.util.Date;
 
 /** 
  更新WF_GenerWorkerFlow.TodoSta状态. 
@@ -47,9 +51,10 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		//系统期望的是，每一个人仅发一条信息.  "您有xx个预警工作，yy个预期工作，请及时处理。"
 
@@ -58,7 +63,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 		dtEmps.Columns.Add("WarningNum", Integer.class);
 		dtEmps.Columns.Add("OverTimeNum", Integer.class);
 
-		String timeDT = LocalDateTime.now().toString("yyyy-MM-dd");
+		String timeDT = DateUtils.format(new Date(),"yyyy-MM-dd");
 		String sql = "";
 
 		//查询出预警的工作.
@@ -73,7 +78,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 			///#region 向预警人员发消息.
 		// 向预警的人员发消息.
 		Node nd = new Node();
-		WFEmp emp = new Port.WFEmp();
+		WFEmp emp = new WFEmp();
 		for (DataRow dr : dt.Rows)
 		{
 			long workid = Long.parseLong(dr.get("WorkID").toString());
@@ -107,9 +112,9 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 				continue;
 			}
 
-			if (!fk_emp.equals(emp.No))
+			if (!fk_emp.equals(emp.getNo()))
 			{
-				emp.setNo (fk_emp;
+				emp.setNo(fk_emp);
 				emp.Retrieve();
 			}
 		}

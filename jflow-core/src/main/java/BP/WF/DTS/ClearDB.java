@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -49,9 +50,10 @@ public class ClearDB extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		if (!WebUser.getNo().equals("admin"))
 		{
@@ -73,11 +75,11 @@ public class ClearDB extends Method
 
 		Flows fls = new Flows();
 		fls.RetrieveAll();
-		for (Flow item : fls)
+		for (Flow item : fls.ToJavaList())
 		{
 			try
 			{
-				DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(item.No) + "Track");
+				DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(item.getNo()) + "Track");
 			}
 			catch (java.lang.Exception e)
 			{
@@ -90,7 +92,7 @@ public class ClearDB extends Method
 			try
 			{
 				Work wk = nd.getHisWork();
-				DBAccess.RunSQL("DELETE FROM " + wk.EnMap.PhysicsTable);
+				DBAccess.RunSQL("DELETE FROM " + wk.getEnMap().getPhysicsTable());
 			}
 			catch (java.lang.Exception e2)
 			{
@@ -99,11 +101,11 @@ public class ClearDB extends Method
 
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAll();
-		for (MapData nd : mds)
+		for (MapData nd : mds.ToJavaList())
 		{
 			try
 			{
-				DBAccess.RunSQL("DELETE FROM " + nd.PTable);
+				DBAccess.RunSQL("DELETE FROM " + nd.getPTable());
 			}
 			catch (java.lang.Exception e3)
 			{
@@ -116,7 +118,7 @@ public class ClearDB extends Method
 		{
 			try
 			{
-				DBAccess.RunSQL("DELETE FROM " + dtl.PTable);
+				DBAccess.RunSQL("DELETE FROM " + dtl.getPTable());
 			}
 			catch (java.lang.Exception e4)
 			{

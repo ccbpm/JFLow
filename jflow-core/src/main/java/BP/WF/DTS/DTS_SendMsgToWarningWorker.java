@@ -6,6 +6,7 @@ import BP.Port.*;
 import BP.En.*;
 import BP.Sys.*;
 import BP.WF.*;
+import BP.WF.Port.WFEmp;
 
 /** 
  向预期的工作人员发送提醒消息 的摘要说明
@@ -45,9 +46,10 @@ public class DTS_SendMsgToWarningWorker extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 
 		/*查找一天预警1次的消息记录，并执行推送。*/
@@ -63,7 +65,7 @@ public class DTS_SendMsgToWarningWorker extends Method
 			String empNo = dr.get("FK_Emp").toString();
 			String empName = dr.get("FK_EmpText").toString();
 
-			WFEmp emp = new Port.WFEmp(empNo);
+			WFEmp emp = new WFEmp(empNo);
 
 			if (way == CHAlertWay.ByEmail)
 			{

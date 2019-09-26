@@ -7,6 +7,7 @@ import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
+import BP.Web.WebUser;
 import BP.DTS.*;
 import BP.WF.*;
 import java.io.*;
@@ -23,7 +24,7 @@ public class DelWorkFlowData extends DataIOEn
 		//this.ToDBUrl = DBUrlType.AppCenterDSN;
 	}
 	@Override
-	public void Do()
+	public void Do() throws Exception
 	{
 		if (!WebUser.getNo().equals("admin"))
 		{
@@ -56,7 +57,7 @@ public class DelWorkFlowData extends DataIOEn
 			try
 			{
 				wk = nd.getHisWork();
-				DBAccess.RunSQL("DELETE FROM " + wk.EnMap.PhysicsTable);
+				DBAccess.RunSQL("DELETE FROM " + wk.getEnMap().getPhysicsTable());
 			}
 			catch (RuntimeException ex)
 			{

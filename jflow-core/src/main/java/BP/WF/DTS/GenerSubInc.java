@@ -1,10 +1,12 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
+import BP.WF.Template.FlowSort;
 
 /** 
  升级ccflow6 要执行的调度
@@ -30,9 +32,10 @@ public class GenerSubInc extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -47,9 +50,10 @@ public class GenerSubInc extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		//找到根目录.
 		String sql = "SELECT No FROM WF_FlowSort where ParentNo='0'";
@@ -71,13 +75,13 @@ public class GenerSubInc extends Method
 			String incName = dr.get("Name").toString();
 
 			//检查该公司是否创建了树节点, 如果没有就插入一个.
-			BP.WF.Template.FlowSort fs = new Template.FlowSort();
-			fs.No = incNo;
+			FlowSort fs = new FlowSort();
+			fs.setNo(incNo);
 			if (fs.RetrieveFromDBSources() == 0)
 			{
-				fs.Name = incName;
+				fs.setName(incName);
 				fs.setOrgNo(incNo);
-				fs.ParentNo = rootNo;
+				fs.setParentNo(rootNo);
 				fs.setOrgNo(incNo);
 				fs.Insert();
 			}

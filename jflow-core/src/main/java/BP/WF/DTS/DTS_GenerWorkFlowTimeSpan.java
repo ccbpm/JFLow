@@ -77,18 +77,18 @@ public class DTS_GenerWorkFlowTimeSpan extends Method
 		BP.DA.DBAccess.RunSQL(sql);
 
 		//设置为上周.
-		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.NextWeek.getValue() + " WHERE RDT >= '" + dtBegin.toString(DataType.SysDataFormat) + " 00:00' AND RDT <= '" + dtEnd.toString(DataType.SysDataFormat) + " 00:00'";
+		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.NextWeek.getValue() + " WHERE RDT >= '" + dtBegin.toString(DataType.getSysDataFormat()) + " 00:00' AND RDT <= '" + dtEnd.toString(DataType.getSysDataFormat()) + " 00:00'";
 		BP.DA.DBAccess.RunSQL(sql);
 
 		dtBegin = dtBegin.plusDays(-7);
 		dtEnd = dtEnd.plusDays(-7);
 
 		//把上周的，设置为两个周以前.
-		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.TowWeekAgo.getValue() + " WHERE RDT >= '" + dtBegin.toString(DataType.SysDataFormat) + " 00:00' AND RDT <= '" + dtEnd.toString(DataType.SysDataFormat) + " 00:00' ";
+		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.TowWeekAgo.getValue() + " WHERE RDT >= '" + dtBegin.toString(DataType.getSysDataFormat()) + " 00:00' AND RDT <= '" + dtEnd.toString(DataType.getSysDataFormat()) + " 00:00' ";
 		BP.DA.DBAccess.RunSQL(sql);
 
 		//把上周的，设置为更早.
-		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.More.getValue() + " WHERE RDT <= '" + dtBegin.toString(DataType.SysDataFormat) + " 00:00' ";
+		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.More.getValue() + " WHERE RDT <= '" + dtBegin.toString(DataType.getSysDataFormat()) + " 00:00' ";
 		BP.DA.DBAccess.RunSQL(sql);
 
 		return "执行成功...";

@@ -5,16 +5,17 @@ import BP.DA.*;
 import BP.Port.*;
 import BP.Web.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
 import java.io.*;
-import java.time.*;
+import java.util.Date;
 
 /**
  * 处理工作退回
  */
 public class WorkReturn {
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	
 	/// #region 变量
 	/**
 	 * 从节点
@@ -51,7 +52,7 @@ public class WorkReturn {
 	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 	private Paras ps;
 	public String ReturnToEmp = null;
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	
 	/// #endregion
 
 	/**
@@ -117,8 +118,9 @@ public class WorkReturn {
 
 	/**
 	 * 删除两个节点之间的业务数据与流程引擎控制数据.
+	 * @throws Exception 
 	 */
-	private void DeleteSpanNodesGenerWorkerListData() {
+	private void DeleteSpanNodesGenerWorkerListData() throws Exception {
 		if (this.IsBackTrack == true) {
 			return;
 		}
@@ -321,7 +323,7 @@ public class WorkReturn {
 		// 以退回到的节点向前数据用递归删除它。
 		if (IsBackTrack == false) {
 			/* 如果退回不需要原路返回，就删除中间点的数据。 */
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			
 			/// #warning 没有考虑两种流程数据存储模式。
 			// DeleteToNodesData(this.ReturnToNode.HisToNodes);
 		}
@@ -913,8 +915,9 @@ public class WorkReturn {
 	 * 普通节点到普通节点的退回
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	private String ExeReturn1_1() {
+	private String ExeReturn1_1() throws Exception {
 		// 为软通小杨处理rpt变量不能替换的问题.
 		GERpt rpt = this.HisNode.getHisFlow().getHisGERpt();
 		rpt.setOID(this.WorkID);
@@ -956,14 +959,14 @@ public class WorkReturn {
 
 		// 计算出来 退回到节点的应完成时间.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
-		LocalDateTime dtOfShould = LocalDateTime.MIN;
+		Date dtOfShould;
 
 		// 增加天数. 考虑到了节假日.
-		dtOfShould = Glo.AddDayHoursSpan(LocalDateTime.now(), this.ReturnToNode.getTimeLimit(),
+		dtOfShould = Glo.AddDayHoursSpan(new Date(), this.ReturnToNode.getTimeLimit(),
 				this.ReturnToNode.getTimeLimitHH(), this.ReturnToNode.getTimeLimitMM(), this.ReturnToNode.getTWay());
 
 		// 应完成日期.
-		String sdt = dtOfShould.toString(DataType.getSysDataTimeFormat());
+		String sdt = DateUtils.format(dtOfShould,DataType.getSysDataTimeFormat());
 
 		// 改变当前待办工作节点
 		gwf.setWFState(WFState.ReturnSta);
@@ -1171,13 +1174,13 @@ public class WorkReturn {
 
 	private String infoLog = "";
 
-	private void ReorderLog(Node fromND, Node toND, ReturnWork rw) {
-		String filePath = BP.Sys.SystemConfig.getPathOfDataUser() + "\\ReturnLog\\" + this.HisNode.getFK_Flow() + "\\";
+	private void ReorderLog(Node fromND, Node toND, ReturnWork rw) throws Exception {
+		String filePath = BP.Sys.SystemConfig.getPathOfDataUser() + "/ReturnLog/" + this.HisNode.getFK_Flow() + "/";
 		if ((new File(filePath)).isDirectory() == false) {
 			(new File(filePath)).mkdirs();
 		}
 
-		String file = filePath + "\\" + rw.getMyPK();
+		String file = filePath + "/" + rw.getMyPK();
 		infoLog = "\r\n退回人:" + WebUser.getNo() + "," + WebUser.getName() + " \r\n退回节点:" + fromND.getName() + " \r\n退回到:"
 				+ toND.getName();
 		infoLog += "\r\n退回时间:" + DataType.getCurrentDataTime();
@@ -1289,7 +1292,7 @@ public class WorkReturn {
 				}
 			}
 
-			// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			
 			/// #region 删除当前节点数据，删除附件信息。
 			// 删除明细表信息。
 			MapDtls dtls = new MapDtls("ND" + nd.getNodeID());
@@ -1359,7 +1362,7 @@ public class WorkReturn {
 		}
 	}
 
-	private WorkNode DoReturnSubFlow(int backtoNodeID, String msg, boolean isHiden)
+	private WorkNode DoReturnSubFlow(int backtoNodeID, String msg, boolean isHiden) throws Exception
 	{
 		Node nd = new Node(backtoNodeID);
 		ps = new Paras();
@@ -1397,10 +1400,10 @@ public class WorkReturn {
 		// wl.WarningHour = nd.WarningHour;
 		wl.setFK_Dept(emp.getFK_Dept());
 
-		LocalDateTime dtNew = LocalDateTime.now();
+		Date dtNew = new Date();
 		// dtNew = dtNew.AddDays(nd.WarningHour);
 
-		wl.setSDT(dtNew.toString(DataType.getSysDataTimeFormat())); // DataType.getCurrentDataTime();
+		wl.setSDT(DateUtils.format(dtNew,DataType.getSysDataTimeFormat())); // DataType.getCurrentDataTime();
 		wl.setFK_Flow(this.HisNode.getFK_Flow());
 		wl.Insert();
 
@@ -1425,12 +1428,12 @@ public class WorkReturn {
 		rw.setBeiZhu(msg);
 		try
 		{
-			rw.setMyPK( rw.getReturnToNode() + "_" + rw.getWorkID() + "_" + LocalDateTime.now().toString("yyyyMMddhhmmss");
+			rw.setMyPK( rw.getReturnToNode() + "_" + rw.getWorkID() + "_" + DateUtils.format(new Date(),"yyyyMMddhhmmss"));
 			rw.Insert();
 		}
 		catch (java.lang.Exception e)
 		{
-			rw.setMyPK( rw.getReturnToNode() + "_" + rw.getWorkID() + "_" + BP.DA.DBAccess.GenerOID();
+			rw.setMyPK( rw.getReturnToNode() + "_" + rw.getWorkID() + "_" + BP.DA.DBAccess.GenerOID());
 			rw.Insert();
 		}
 

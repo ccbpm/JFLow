@@ -4308,6 +4308,16 @@ public class Glo {
 		Date dt = DataType.ParseSysDate2DateTime(sysdt);
 		return AddMinutes(dt, 0, minutes);
 	}
+	
+	
+	 public static Date AddDayHoursSpan(Date specDT, int day, int hh, int minutes, TWay tway)
+     {
+         Date mydt = BP.DA.DataType.AddDays(specDT, day, tway);
+         
+         mydt = AddDayHoursSpan(mydt,0,hh,minutes);
+
+         return mydt;
+     }
 
 	/**
 	 * 在指定的日期上增加n天n小时，并考虑节假日

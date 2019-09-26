@@ -3,10 +3,7 @@ package BP.WF;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
-import BP.WF.*;
 import BP.Web.WebUser;
-import BP.Port.*;
-import java.util.*;
 
 /** 
  退回轨迹
@@ -17,106 +14,107 @@ public class ReturnWork extends EntityMyPK
 		///#region 基本属性
 	/** 
 	 工作ID
+	 * @throws Exception 
 	*/
-	public final long getWorkID()
+	public final long getWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(ReturnWorkAttr.WorkID);
 	}
-	public final void setWorkID(long value)
+	public final void setWorkID(long value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.WorkID, value);
 	}
 	/** 
 	 退回到节点
 	*/
-	public final int getReturnToNode()
+	public final int getReturnToNode()throws Exception
 	{
 		return this.GetValIntByKey(ReturnWorkAttr.ReturnToNode);
 	}
-	public final void setReturnToNode(int value)
+	public final void setReturnToNode(int value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.ReturnToNode, value);
 	}
 	/** 
 	 退回节点
 	*/
-	public final int getReturnNode()
+	public final int getReturnNode()throws Exception
 	{
 		return this.GetValIntByKey(ReturnWorkAttr.ReturnNode);
 	}
-	public final void setReturnNode(int value)
+	public final void setReturnNode(int value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.ReturnNode, value);
 	}
-	public final String getReturnNodeName()
+	public final String getReturnNodeName()throws Exception
 	{
 		return this.GetValStrByKey(ReturnWorkAttr.ReturnNodeName);
 	}
-	public final void setReturnNodeName(String value)
+	public final void setReturnNodeName(String value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.ReturnNodeName, value);
 	}
 	/** 
 	 退回人
 	*/
-	public final String getReturner()
+	public final String getReturner()throws Exception
 	{
 		return this.GetValStringByKey(ReturnWorkAttr.Returner);
 	}
-	public final void setReturner(String value)
+	public final void setReturner(String value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.Returner, value);
 	}
-	public final String getReturnerName()
+	public final String getReturnerName()throws Exception
 	{
 		return this.GetValStringByKey(ReturnWorkAttr.ReturnerName);
 	}
-	public final void setReturnerName(String value)
+	public final void setReturnerName(String value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.ReturnerName, value);
 	}
 	/** 
 	 退回给
 	*/
-	public final String getReturnToEmp()
+	public final String getReturnToEmp()throws Exception
 	{
 		return this.GetValStringByKey(ReturnWorkAttr.ReturnToEmp);
 	}
-	public final void setReturnToEmp(String value)
+	public final void setReturnToEmp(String value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.ReturnToEmp, value);
 	}
-	public final String getBeiZhu()
+	public final String getBeiZhu()throws Exception
 	{
 		return this.GetValStringByKey(ReturnWorkAttr.BeiZhu);
 	}
-	public final void setBeiZhu(String value)
+	public final void setBeiZhu(String value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.BeiZhu, value);
 	}
-	public final String getBeiZhuHtml()
+	public final String getBeiZhuHtml()throws Exception
 	{
 		return this.GetValHtmlStringByKey(ReturnWorkAttr.BeiZhu);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT()
+	public final String getRDT()throws Exception
 	{
 		return this.GetValStringByKey(ReturnWorkAttr.RDT);
 	}
-	public final void setRDT(String value)
+	public final void setRDT(String value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.RDT, value);
 	}
 	/** 
 	 是否要原路返回？
 	*/
-	public final boolean getIsBackTracking()
+	public final boolean getIsBackTracking()throws Exception
 	{
 		return this.GetValBooleanByKey(ReturnWorkAttr.IsBackTracking);
 	}
-	public final void setIsBackTracking(boolean value)
+	public final void setIsBackTracking(boolean value)throws Exception
 	{
 		SetValByKey(ReturnWorkAttr.IsBackTracking, value);
 	}

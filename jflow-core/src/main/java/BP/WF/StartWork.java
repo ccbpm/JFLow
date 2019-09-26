@@ -2,166 +2,119 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.En.*;
-import BP.Port.*;
+import BP.Web.WebUser;
 
-/** 	 
- 开始工作基类,所有开始工作都要从这里继承
-*/
-public abstract class StartWork extends Work
-{
+/**
+ * 开始工作基类,所有开始工作都要从这里继承
+ */
+public abstract class StartWork extends Work {
 
-		///#region 与_SQLCash 操作有关
+	/// #region 与_SQLCash 操作有关
 	private SQLCash _SQLCash = null;
+
 	@Override
-	public SQLCash getSQLCash()
-	{
-		if (_SQLCash == null)
-		{
+	public SQLCash getSQLCash() throws Exception {
+		if (_SQLCash == null) {
 			_SQLCash = BP.DA.Cash.GetSQL("ND" + String.valueOf(this.getNodeID()));
-			if (_SQLCash == null)
-			{
+			if (_SQLCash == null) {
 				_SQLCash = new SQLCash(this);
 				BP.DA.Cash.SetSQL("ND" + String.valueOf(this.getNodeID()), _SQLCash);
 			}
 		}
 		return _SQLCash;
 	}
+
 	@Override
-	public void setSQLCash(SQLCash value)
-	{
+	public void setSQLCash(SQLCash value) {
 		_SQLCash = value;
 	}
 
-		///#endregion
+	/// #endregion
 
-
-		///#region  单据属性
-	/** 
-	 FK_Dept
-	*/
-	public final String getFK_Dept()
-	{
+	/// #region 单据属性
+	/**
+	 * FK_Dept
+	 */
+	public final String getFK_Dept() throws Exception {
 		return this.GetValStringByKey(StartWorkAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
-	{
+
+	public final void setFK_Dept(String value) throws Exception {
 		this.SetValByKey(StartWorkAttr.FK_Dept, value);
 	}
-	//public string FK_DeptOf2Code
-	//{
-	//    get
-	//    {
-	//        return this.FK_Dept.Substring(6);
-	//    } 
-	//}
-	/** 
-	 FK_XJ
-	*/
-	//public string FK_XJ
-	//{
-	//    get
-	//    {
-	//        return this.GetValStringByKey(StartWorkAttr.FK_Dept);
-	//    }
-	//    set
-	//    {
-	//        this.SetValByKey(StartWorkAttr.FK_Dept, value);
-	//    }
-	//}
 
-		///#endregion
-
-
-		///#region 基本属性
-	/** 
-	 工作内容标题
-	*/
-	public final String getTitle()
-	{
+	/**
+	 * 工作内容标题
+	 */
+	public final String getTitle() throws Exception {
 		return this.GetValStringByKey(StartWorkAttr.Title);
 	}
-	public final void setTitle(String value)
-	{
-		this.SetValByKey(StartWorkAttr.Title,value);
+
+	public final void setTitle(String value) throws Exception {
+		this.SetValByKey(StartWorkAttr.Title, value);
 	}
 
-		///#endregion
-
-
-		///#region 构造函数
-	/** 
-	 工作流程
-	*/
-	protected StartWork()
-	{
+	/**
+	 * 工作流程
+	 */
+	protected StartWork() {
 	}
-	protected StartWork(long oid)
-	{
+
+	protected StartWork(long oid) throws Exception {
 		super(oid);
 	}
 
-		///#endregion
-
-
-		///#region  重写基类的方法。
-	/** 
-	 删除之前的操作。
-	 
-	 @return 
-	*/
+	/**
+	 * 删除之前的操作。
+	 * 
+	 * @return
+	 */
 	@Override
-	protected boolean beforeDelete()
-	{
-		if (super.beforeDelete() == false)
-		{
+	protected boolean beforeDelete() throws Exception {
+		if (super.beforeDelete() == false) {
 			return false;
 		}
-		if (this.getOID() < 0)
-		{
+		if (this.getOID() < 0) {
 			throw new RuntimeException("@实体[" + this.getEnDesc() + "]没有被实例化，不能Delete().");
 		}
 		return true;
 	}
-	/** 
-	 插入之前的操作。
-	 
-	 @return 
-	*/
+
+	/**
+	 * 插入之前的操作。
+	 * 
+	 * @return
+	 */
 	@Override
-	protected boolean beforeInsert()
-	{
-		if (this.getOID() > 0)
-		{
+	protected boolean beforeInsert() throws Exception {
+		if (this.getOID() > 0) {
 			throw new RuntimeException("@实体[" + this.getEnDesc() + "], 已经被实例化，不能Insert.");
 		}
 
 		this.SetValByKey("OID", DBAccess.GenerOID());
 		return super.beforeInsert();
 	}
+
 	@Override
-	protected boolean beforeUpdateInsertAction()
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		this.setEmps(WebUser.getNo());
 		return super.beforeUpdateInsertAction();
 	}
-	/** 
-	 更新操作
-	 
-	 @return 
-	*/
+
+	/**
+	 * 更新操作
+	 * 
+	 * @return
+	 */
 	@Override
-	protected boolean beforeUpdate()
-	{
-		if (super.beforeUpdate() == false)
-		{
+	protected boolean beforeUpdate() throws Exception {
+		if (super.beforeUpdate() == false) {
 			return false;
 		}
-		if (this.getOID() < 0)
-		{
+		if (this.getOID() < 0) {
 			throw new RuntimeException("@实体[" + this.getEnDesc() + "]没有被实例化，不能Update().");
 		}
 		return super.beforeUpdate();
 	}
 
-		///#endregion
 }

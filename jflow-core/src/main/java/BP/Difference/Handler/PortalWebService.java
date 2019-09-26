@@ -43,11 +43,29 @@ public class PortalWebService {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean SendToWebServices(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
+	public boolean SendToWebServices(String mypk,String sender, String sendToEmpNo,String tel, String title, String msgInfo, String OpenUrl,
 			String msgType) throws Exception {
-		return HttpRequest(sender,sendToEmpNo,title,msgInfo,OpenUrl,msgType,"SendToWebServices");
+		return HttpRequest(mypk,sender,sendToEmpNo,tel,title,msgInfo,OpenUrl,msgType,"SendToWebServices");
 		
 	}
+	
+	/**
+	 * 站内消息
+	 * 
+	 * @param sender
+	 * @param sendToEmpNo
+	 * @param title
+	 * @param url
+	 * @param msgType
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean SendToCCMSG(String mypk,String sender, String sendToEmpNo,String tel, String title, String msgInfo, String OpenUrl,
+			String msgType) throws Exception {
+		return HttpRequest(mypk,sender,sendToEmpNo,tel,title,msgInfo,OpenUrl,msgType,"SendToCCMSG");
+		
+	}
+	
 
 	/**
 	 * 发送到钉钉
@@ -60,9 +78,9 @@ public class PortalWebService {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean SendToDingDing(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
+	public boolean SendToDingDing(String mypk,String sender, String sendToEmpNo,String tel, String title, String msgInfo, String OpenUrl,
 			String msgType) throws Exception {
-		return HttpRequest(sender,sendToEmpNo,title,msgInfo,OpenUrl,msgType,"SendToDingDing");
+		return HttpRequest(mypk,sender,sendToEmpNo,tel,title,msgInfo,OpenUrl,msgType,"SendToDingDing");
 	}
 	
 	/**
@@ -76,9 +94,9 @@ public class PortalWebService {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean SendToWeiXin(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
+	public boolean SendToWeiXin(String mypk,String sender, String sendToEmpNo,String tel, String title, String msgInfo, String OpenUrl,
 			String msgType) throws Exception {
-		return HttpRequest(sender,sendToEmpNo,title,msgInfo,OpenUrl,msgType,"SendToWeiXin");
+		return HttpRequest(mypk,sender,sendToEmpNo,tel,title,msgInfo,OpenUrl,msgType,"SendToWeiXin");
 	}
 	
 	/**
@@ -92,9 +110,9 @@ public class PortalWebService {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean SendToCCIM(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
+	public boolean SendToCCIM(String mypk,String sender, String sendToEmpNo,String tel, String title, String msgInfo, String OpenUrl,
 			String msgType) throws Exception {
-		return HttpRequest(sender,sendToEmpNo,title,msgInfo,OpenUrl,msgType,"SendToCCIM");
+		return HttpRequest(mypk,sender,sendToEmpNo,tel,title,msgInfo,OpenUrl,msgType,"SendToCCIM");
 	}
 	
 	/**
@@ -177,7 +195,7 @@ public class PortalWebService {
 			///#region 给各个属性-赋值
 		if (ht != null)
 		{
-			for (String str : ht.keySet())
+			for (Object str : ht.keySet())
 			{
 				wk.SetValByKey(str, ht.get(str));
 			}
@@ -272,8 +290,9 @@ public class PortalWebService {
 	 
 	 @param guestNo 客户编号
 	 @param guestName 客户名称
+	 * @throws Exception 
 	*/
-	public static void Port_Login(String guestNo, String guestName)
+	public static void Port_Login(String guestNo, String guestName) throws Exception
 	{
 		//登陆.
 		BP.Web.GuestUser.SignInOfGener(guestNo, guestName, "CH", true);
@@ -285,8 +304,9 @@ public class PortalWebService {
 	 @param guestName 客户名称
 	 @param deptNo 客户的部门编号
 	 @param deptName 客户的部门名称
+	 * @throws Exception 
 	*/
-	public static void Port_Login(String guestNo, String guestName, String deptNo, String deptName)
+	public static void Port_Login(String guestNo, String guestName, String deptNo, String deptName) throws Exception
 	{
 		//登陆.
 		BP.Web.GuestUser.SignInOfGener(guestNo, guestName, deptNo,deptName,"CH", true);
@@ -461,15 +481,17 @@ public class PortalWebService {
 	 * @param method
 	 * @return
 	 */
-	private boolean HttpRequest(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
+	private boolean HttpRequest(String mypk,String sender, String sendToEmpNo,String tel, String title, String msgInfo, String OpenUrl,
 			String msgType, String method) throws Exception {
 		String webPath = SystemConfig.getAppSettings().get("HostURL")+"/services/PortalInterfaceWS";
 		Service service = new Service();
 		Call call = (Call) service.createCall();
 		call.setTargetEndpointAddress(webPath);
 		call.setOperationName(new QName("http://WebServiceImp", method));// WSDL里面描述的接口名称
+		call.addParameter("mypk", org.apache.axis.encoding.XMLType.XSD_LONG, javax.xml.rpc.ParameterMode.IN);// 接口的参数
 		call.addParameter("sender", org.apache.axis.encoding.XMLType.XSD_LONG, javax.xml.rpc.ParameterMode.IN);// 接口的参数
 		call.addParameter("sendToEmpNo", org.apache.axis.encoding.XMLType.XSD_DATE, javax.xml.rpc.ParameterMode.IN);// 接口的参数
+		call.addParameter("tel", org.apache.axis.encoding.XMLType.XSD_LONG, javax.xml.rpc.ParameterMode.IN);// 接口的参数
 		call.addParameter("title", org.apache.axis.encoding.XMLType.XSD_DATE, javax.xml.rpc.ParameterMode.IN);// 接口的参数
 		call.addParameter("msgInfo", org.apache.axis.encoding.XMLType.XSD_DATE, javax.xml.rpc.ParameterMode.IN);// 接口的参数
 		call.addParameter("OpenUrl", org.apache.axis.encoding.XMLType.XSD_DATE, javax.xml.rpc.ParameterMode.IN);// 接口的参数
@@ -478,7 +500,7 @@ public class PortalWebService {
 
 		call.setReturnType(org.apache.axis.encoding.XMLType.XSD_BOOLEAN);// 设置返回类型
 
-		boolean result = (boolean) call.invoke(new Object[] { sender, sendToEmpNo, title, msgInfo, OpenUrl, msgType });
+		boolean result = (boolean) call.invoke(new Object[] { mypk,sender, sendToEmpNo,tel, title, msgInfo, OpenUrl, msgType });
 		// 给方法传递参数，并且调用方法
 		System.out.println("result is " + result);
 		return result;

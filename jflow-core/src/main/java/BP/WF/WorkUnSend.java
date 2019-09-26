@@ -1,11 +1,9 @@
 package BP.WF;
 
-import BP.En.*;
 import BP.Web.*;
 import BP.DA.*;
-import BP.Port.*;
 import BP.Sys.*;
-import BP.WF.XML.*;
+import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
 import java.math.*;
 
@@ -31,7 +29,7 @@ public class WorkUnSend
 			else
 			{
 
-				boolean b = HttpContextHelper.RequestRawUrl.toLowerCase().contains("oneflow");
+				boolean b =  BP.Sys.Glo.getRequest().getRequestURI().toLowerCase().contains("oneflow");
 				if (b)
 				{
 					_AppType = "WF/OneFlow";
@@ -53,7 +51,7 @@ public class WorkUnSend
 	{
 		if (_VirPath == null)
 		{
-			if (BP.Sys.SystemConfig.IsBSsystem)
+			if (BP.Sys.SystemConfig.getIsBSsystem())
 			{
 				_VirPath = Glo.getCCFlowAppPath(); //BP.Sys.Glo.Request.ApplicationPath;
 			}
@@ -66,7 +64,7 @@ public class WorkUnSend
 	}
 	public String FlowNo = null;
 	private Flow _HisFlow = null;
-	public final Flow getHisFlow()
+	public final Flow getHisFlow() throws Exception
 	{
 		if (_HisFlow == null)
 		{
@@ -127,8 +125,9 @@ public class WorkUnSend
 	 得到当前的进行中的工作。
 	 
 	 @return 		 
+	 * @throws Exception 
 	*/
-	public final WorkNode GetCurrentWorkNode()
+	public final WorkNode GetCurrentWorkNode() throws Exception
 	{
 		int currNodeID = 0;
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
@@ -165,8 +164,9 @@ public class WorkUnSend
 	 执行子线程的撤销.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	private String DoThreadUnSend()
+	private String DoThreadUnSend() throws Exception
 	{
 		//定义当前的节点.
 		WorkNode wn = this.GetCurrentWorkNode();
@@ -358,7 +358,7 @@ public class WorkUnSend
 				wlN.setFK_Emp(s);
 
 				WFEmp myEmp = new WFEmp(s);
-				wlN.setFK_EmpText(myEmp.Name);
+				wlN.setFK_EmpText(myEmp.getName());
 
 				wlN.Insert();
 			}
@@ -389,18 +389,18 @@ public class WorkUnSend
 			///#region 计算完成率。
 		boolean isSetEnable = false; //是否关闭合流节点待办.
 		String mysql = "SELECT COUNT(DISTINCT WorkID) FROM WF_GenerWorkerlist WHERE FID=" + this.FID + " AND IsPass=1 AND FK_Node IN (SELECT Node FROM WF_Direction WHERE ToNode=" + wn.getHisNode().getNodeID() + ")";
-		BigDecimal numOfPassed = DBAccess.RunSQLReturnValDecimal(mysql, 0, 1);
+		BigDecimal numOfPassed = DBAccess.RunSQLReturnValDecimal(mysql, new BigDecimal(0), 1);
 
-		if (nd.getPassRate().compareTo(100) == 0)
+		if (nd.getPassRate().compareTo(new BigDecimal(100)) == 0)
 		{
 			isSetEnable = true;
 		}
 		else
 		{
 			mysql = "SELECT COUNT(DISTINCT WorkID) FROM WF_GenerWorkFlow WHERE FID=" + this.FID;
-			BigDecimal numOfAll = DBAccess.RunSQLReturnValDecimal(mysql, 0, 1);
+			BigDecimal numOfAll = DBAccess.RunSQLReturnValDecimal(mysql, new BigDecimal(0), 1);
 
-			BigDecimal rate = numOfPassed.divide(numOfAll.multiply(100));
+			BigDecimal rate = numOfPassed.divide(numOfAll).multiply(new BigDecimal(100));
 			if (nd.getPassRate().compareTo(rate) > 0)
 			{
 				isSetEnable = true;
@@ -431,14 +431,15 @@ public class WorkUnSend
 			return "@撤消执行成功. " + msg;
 		}
 
-		return "工作已经被您撤销到:" + cancelToNode.getName();
 	}
 	/** 
 	 
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String DoUnSend()
+	public final String DoUnSend() throws NumberFormatException, Exception
 	{
 		String str = DoUnSendIt();
 
@@ -454,8 +455,9 @@ public class WorkUnSend
 	}
 	/** 
 	 执行撤消
+	 * @throws Exception 
 	*/
-	private String DoUnSendIt()
+	private String DoUnSendIt() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 		if (gwf.getWFState() == WFState.Complete)
@@ -575,7 +577,7 @@ public class WorkUnSend
 			///#region 判断是否是会签状态,是否是会签人做的撤销. 主持人是不能撤销的.
 		if (gwf.getHuiQianTaskSta() != HuiQianTaskSta.None)
 		{
-			String IsEnableUnSendWhenHuiQian = SystemConfig.AppSettings["IsEnableUnSendWhenHuiQian"];
+			String IsEnableUnSendWhenHuiQian = SystemConfig.getAppSettings().get("IsEnableUnSendWhenHuiQian").toString();
 			if (DataType.IsNullOrEmpty(IsEnableUnSendWhenHuiQian) == false && IsEnableUnSendWhenHuiQian.equals("0"))
 			{
 				return "info@当前节点是会签状态，您不能执行撤销.";
@@ -651,7 +653,7 @@ public class WorkUnSend
 			// 找到将要撤销到的NodeID.
 			for (DataRow dr : dt.Rows)
 			{
-				for (NodeCancel nc : ncs)
+				for (NodeCancel nc : ncs.ToJavaList())
 				{
 					if (nc.getCancelTo() == Integer.parseInt(dr.get(0).toString()))
 					{
@@ -727,7 +729,6 @@ public class WorkUnSend
 				{
 					return this.DoUnSendSubFlow(gwf); //是子流程时.
 				}
-				break;
 			case SubThreadWork:
 				break;
 			default:
@@ -821,7 +822,7 @@ public class WorkUnSend
 		DataTable dtPrevTrack = Dev2Interface.Flow_GetPreviousNodeTrack(this.WorkID, cancelToNode.getNodeID());
 		if (dtPrevTrack != null && dtPrevTrack.Rows.size() > 0)
 		{
-			gwf.setSender(dtPrevTrack.Rows[0]["EmpFrom"].toString());
+			gwf.setSender(dtPrevTrack.Rows.get(0).getValue("EmpFrom").toString());
 		}
 
 		if (cancelToNode.getIsEnableTaskPool() && Glo.getIsEnableTaskPool())
@@ -911,7 +912,7 @@ public class WorkUnSend
 				wlN.setFK_Emp(s);
 
 				WFEmp myEmp = new WFEmp(s);
-				wlN.setFK_EmpText(myEmp.Name);
+				wlN.setFK_EmpText(myEmp.getName());
 
 				wlN.Insert();
 			}
@@ -949,10 +950,8 @@ public class WorkUnSend
 					case FoolForm:
 					case FreeForm:
 						return "@撤消执行成功." + msg;
-						break;
 					default:
 						return "@撤销成功." + msg;
-						break;
 				}
 
 		}
@@ -965,13 +964,10 @@ public class WorkUnSend
 				case FoolForm:
 				case FreeForm:
 					return "@撤消执行成功. " + msg;
-					break;
 				default:
 					return "撤销成功:" + msg;
-					break;
 			}
 		}
-		return "工作已经被您撤销到:" + cancelToNode.getName();
 	}
 	/** 
 	 撤消分流点
@@ -980,8 +976,9 @@ public class WorkUnSend
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	private String DoUnSendFeiLiu(GenerWorkFlow gwf)
+	private String DoUnSendFeiLiu(GenerWorkFlow gwf) throws Exception
 	{
 		//首先要检查，当前的处理人是否是分流节点的处理人？如果是，就要把，未走完的所有子线程都删除掉。
 		GenerWorkerList gwl = new GenerWorkerList();
@@ -1004,7 +1001,7 @@ public class WorkUnSend
 		wn.AddToTrack(ActionType.UnSend, WebUser.getNo(), WebUser.getName(), gwf.getFK_Node(), gwf.getNodeName(), "");
 
 		//删除上一个节点的数据。
-		for (Node ndNext : nd.getHisToNodes())
+		for (Node ndNext : nd.getHisToNodes().ToJavaList())
 		{
 			i = DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.WorkID + " AND FK_Node=" + ndNext.getNodeID());
 			if (i == 0)
@@ -1048,8 +1045,9 @@ public class WorkUnSend
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	private String DoUnSendInFeiLiuHeiliu(GenerWorkFlow gwf)
+	private String DoUnSendInFeiLiuHeiliu(GenerWorkFlow gwf) throws Exception
 	{
 		//首先要检查，当前的处理人是否是分流节点的处理人？如果是，就要把，未走完的所有子线程都删除掉。
 		GenerWorkerList gwl = new GenerWorkerList();
@@ -1091,7 +1089,7 @@ public class WorkUnSend
 
 
 		//删除上一个节点的数据。
-		for (Node ndNext : nd.getHisToNodes())
+		for (Node ndNext : nd.getHisToNodes().ToJavaList())
 		{
 			i = DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.WorkID + " AND FK_Node=" + ndNext.getNodeID());
 			if (i == 0)
@@ -1143,8 +1141,9 @@ public class WorkUnSend
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DoUnSendHeiLiu_Main(GenerWorkFlow gwf)
+	public final String DoUnSendHeiLiu_Main(GenerWorkFlow gwf) throws Exception
 	{
 		Node currNode = new Node(gwf.getFK_Node());
 		Node priFLNode = currNode.getHisPriFLNode();
@@ -1180,7 +1179,7 @@ public class WorkUnSend
 		BP.DA.DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=0 WHERE WorkID=" + this.WorkID + " AND FK_Node=" + gwf.getFK_Node());
 
 		//删除子线程的功能
-		for (Node ndNext : wnPri.getHisNode().getHisToNodes())
+		for (Node ndNext : wnPri.getHisNode().getHisToNodes().ToJavaList())
 		{
 			i = DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.WorkID + " AND FK_Node=" + ndNext.getNodeID());
 			if (i == 0)
@@ -1238,7 +1237,7 @@ public class WorkUnSend
 				wlN.setFK_Emp(s);
 
 				WFEmp myEmp = new WFEmp(s);
-				wlN.setFK_EmpText(myEmp.Name);
+				wlN.setFK_EmpText(myEmp.getName());
 
 				wlN.Insert();
 			}
@@ -1267,7 +1266,7 @@ public class WorkUnSend
 				return "@撤消执行成功.";
 		}
 	}
-	public final String DoUnSendSubFlow(GenerWorkFlow gwf)
+	public final String DoUnSendSubFlow(GenerWorkFlow gwf) throws Exception
 	{
 		WorkNode wn = this.GetCurrentWorkNode();
 		WorkNode wnPri = wn.GetPreviousWorkNode();
@@ -1301,11 +1300,11 @@ public class WorkUnSend
 
 
 			///#region 判断撤消的百分比条件的临界点条件
-		if (wn.getHisNode().getPassRate().compareTo(0) != 0)
+		if (wn.getHisNode().getPassRate().compareTo(new BigDecimal(0)) != 0)
 		{
-			BigDecimal all = (BigDecimal)BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(*) NUM FROM WF_GenerWorkerList WHERE FID=" + this.FID + " AND FK_Node=" + wnPri.getHisNode().getNodeID());
-			BigDecimal ok = (BigDecimal)BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(*) NUM FROM WF_GenerWorkerList WHERE FID=" + this.FID + " AND IsPass=1 AND FK_Node=" + wnPri.getHisNode().getNodeID());
-			BigDecimal rate = ok.divide(all.multiply(100));
+			BigDecimal all = new BigDecimal(BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(*) NUM FROM WF_GenerWorkerList WHERE FID=" + this.FID + " AND FK_Node=" + wnPri.getHisNode().getNodeID()));
+			BigDecimal ok = new BigDecimal(BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(*) NUM FROM WF_GenerWorkerList WHERE FID=" + this.FID + " AND IsPass=1 AND FK_Node=" + wnPri.getHisNode().getNodeID()));
+			BigDecimal rate = ok.divide(all).multiply(new BigDecimal(100));
 			if (wn.getHisNode().getPassRate().compareTo(rate) <= 0)
 			{
 				DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0 WHERE FK_Node=" + wn.getHisNode().getNodeID() + " AND WorkID=" + this.FID);

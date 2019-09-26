@@ -18,8 +18,9 @@ public class AppClass
 	 
 	 @param workid
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String JobSchedule(long workid)
+	public static String JobSchedule(long workid) throws Exception
 	{
 		DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workid);
 

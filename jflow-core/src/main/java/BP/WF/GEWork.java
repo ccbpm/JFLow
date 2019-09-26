@@ -55,17 +55,14 @@ public class GEWork extends Work {
 	 *            节点ID
 	 * @param _oid
 	 *            OID
+	 * @throws Exception 
 	 */
-	public GEWork(int nodeid, String nodeFrmID, long _oid) {
+	public GEWork(int nodeid, String nodeFrmID, long _oid) throws Exception {
 		this.NodeFrmID = nodeFrmID;
 		this.setNodeID(nodeid);
 		this.setOID(_oid);
 		this.setSQLCash(null);
 	}
-
-	/// #endregion
-
-	/// #region Map
 	/**
 	 * 重写基类方法
 	 * 

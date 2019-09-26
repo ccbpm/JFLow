@@ -32,17 +32,14 @@ public class GEStartWork extends StartWork {
 	 *            节点ID
 	 * @param _oid
 	 *            OID
+	 * @throws Exception 
 	 */
-	public GEStartWork(int nodeid, String nodeFrmID, long _oid) {
+	public GEStartWork(int nodeid, String nodeFrmID, long _oid) throws Exception {
 		this.setNodeID(nodeid);
 		this.NodeFrmID = nodeFrmID;
 		this.setOID(_oid);
 		this.setSQLCash(null);
 	}
-
-	/// #endregion
-
-	/// #region Map
 	/**
 	 * 重写基类方法
 	 * 

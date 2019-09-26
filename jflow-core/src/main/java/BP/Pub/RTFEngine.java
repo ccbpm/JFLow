@@ -773,9 +773,9 @@ public class RTFEngine {
 	 *            模板文件
 	 * @throws Exception
 	 */
-	public final void MakeDoc(String cfile, String replaceVal) throws Exception {
+	public final void MakeDoc(String cfile) throws Exception {
 		String file = PubClass.GenerTempFileName("doc");
-		this.MakeDoc(cfile, SystemConfig.getPathOfTemp(), file, replaceVal, true);
+		this.MakeDoc(cfile, SystemConfig.getPathOfTemp(), file,  true);
 	}
 
 	public String ensStrs = "";
@@ -798,7 +798,7 @@ public class RTFEngine {
 	 *            是否用IE打开？
 	 * @throws Exception 
 	 */
-	public final void MakeDoc(String cfile, String path, String file, String replaceVals, boolean isOpen) throws Exception {
+	public final void MakeDoc(String cfile, String path, String file,  boolean isOpen) throws Exception {
 		cfile = cfile.replace(".rtf.rtf", ".rtf");
 
 		if (new File(path).exists() == false)
@@ -1087,7 +1087,7 @@ public class RTFEngine {
 			}
 
 			// 要替换的字段
-			if (replaceVals != null && replaceVals.contains("@")) {
+			/*if (replaceVals != null && replaceVals.contains("@")) {
 				String[] vals = replaceVals.split("[@]", -1);
 				for (String val : vals) {
 					if (val == null || val.equals("")) {
@@ -1106,7 +1106,7 @@ public class RTFEngine {
 					String[] myvals = myRep.split("[=]", -1);
 					str = new StringBuilder(str.toString().replace("<" + myvals[0] + ">", "<" + myvals[1] + ">"));
 				}
-			}
+			}*/
 			//
 			str = new StringBuilder(str.toString().replace("<", ""));
 			str = new StringBuilder(str.toString().replace(">", ""));

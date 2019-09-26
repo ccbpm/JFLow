@@ -1,9 +1,11 @@
 package BP.WF;
 
+import java.util.ArrayList;
+
 /** 
  工作发送返回对象集合.
 */
-public class SendReturnObjs extends ArrayList<Object>
+public class SendReturnObjs extends ArrayList<SendReturnObj>
 {
 
 		///#region 获取系统变量.
@@ -214,7 +216,7 @@ public class SendReturnObjs extends ArrayList<Object>
 				return;
 			}
 		}
-		this.InnerList.add(obj);
+		this.add(obj);
 	}
 	/** 
 	 转化成特殊的格式

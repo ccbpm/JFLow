@@ -38,7 +38,7 @@ public abstract class EntityOID extends Entity
 			return 0;
 		}
 	}
-	public final void setOID(int value) throws Exception
+	public final void setOID(long value) throws Exception
 	{
 		this.SetValByKey(EntityOIDAttr.OID, value);
 	}

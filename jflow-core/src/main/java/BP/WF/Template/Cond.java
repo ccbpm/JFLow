@@ -701,7 +701,7 @@ public class Cond extends EntityMyPK
 				url = url + "?1=2";
 			}
 
-			url = url.replace("@SDKFromServHost", BP.Sys.SystemConfig.getAppSettings().get("SDKFromServHost"));
+			url = url.replace("@SDKFromServHost", BP.Sys.SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 			url = BP.WF.Glo.DealExp(url, this.en, "");
 
 

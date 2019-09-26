@@ -27,13 +27,14 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondPRI_Init()
+	public final String CondPRI_Init() throws Exception
 	{
 		Conds cds = new Conds();
 		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2, CondAttr.PRI);
 
-		for (Cond item : cds)
+		for (Cond item : cds.ToJavaList())
 		{
 			Node nd = new Node(item.getToNodeID());
 			item.setNote(nd.getName());
@@ -41,7 +42,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return cds.ToJson();
 	}
-	public final String CondPRI_Move()
+	public final String CondPRI_Move() throws Exception
 	{
 		switch (this.GetRequestVal("MoveType"))
 		{
@@ -74,13 +75,14 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化Init.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Condition_Init()
+	public final String Condition_Init() throws Exception
 	{
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		Cond cond = new Cond();
 		cond.Retrieve(CondAttr.NodeID, this.getFK_Node(), CondAttr.ToNodeID, toNodeID);
-		cond.Row.Add("HisDataFrom", cond.getHisDataFrom().toString());
+		cond.getRow().put("HisDataFrom", cond.getHisDataFrom().toString());
 
 		//   cond.HisDataFrom
 		//CurrentCond = DataFrom[cond.HisDataFrom];
@@ -101,8 +103,8 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		//string sql = "SELECT A.NodeID, A.Name FROM WF_Node A,  WF_Direction B WHERE A.NodeID=B.ToNode AND B.Node=" + this.FK_Node;
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		dt.Columns[0].ColumnName = "NodeID";
-		dt.Columns[1].ColumnName = "Name";
+		dt.Columns.get(0).setColumnName("NodeID");
+		dt.Columns.get(1).setColumnName("Name");
 
 		return BP.Tools.Json.ToJson(dt);
 	}
@@ -114,8 +116,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByUrl_Init()
+	public final String CondByUrl_Init() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -125,7 +128,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Url.toString();
 
 		Cond cond = new Cond();
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -134,8 +137,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByUrl_Save()
+	public final String CondByUrl_Save() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -150,7 +154,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.Url);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -171,8 +175,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByUrl_Delete()
+	public final String CondByUrl_Delete() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -245,22 +250,22 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapAttr";
-		dt.Columns[0].ColumnName = "No";
-		dt.Columns[1].ColumnName = "Name";
+		dt.Columns.get(0).setColumnName("No");
+		dt.Columns.get(1).setColumnName("Name");
 
 		DataRow dr = dt.NewRow();
-		dr.set(0, "all");
-		dr.set(1, "请选择表单字段");
+		dr.setValue(0, "all");
+		dr.setValue(1, "请选择表单字段");
 		dt.Rows.add(dr);
 		ds.Tables.add(dt);
 
 		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
 	}
-	public final String CondByFrm_InitField()
+	public final String CondByFrm_InitField() throws NumberFormatException, Exception
 	{
 		//字段属性.
 		MapAttr attr = new MapAttr();
-		attr.setMyPK( "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + this.getKeyOfEn();
+		attr.setMyPK("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + this.getKeyOfEn());
 		attr.Retrieve();
 		return AttrCond(attr);
 	}
@@ -268,8 +273,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByFrm_Save()
+	public final String CondByFrm_Save() throws Exception
 	{
 		//定义变量.
 		String field = this.GetRequestVal("DDL_Fields");
@@ -328,7 +334,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			qo.AddWhere(CondAttr.ToNodeID, toNodeID);
 		}
 		int num = qo.DoQuery();
-		for (Cond item : conds)
+		for (Cond item : conds.ToJavaList())
 		{
 			item.setCondOrAnd(cond.getCondOrAnd());
 			item.Update();
@@ -346,19 +352,19 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		{
 			case Flow:
 			case Node:
-				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case Dir:
 				// cond.setMyPK( cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
-				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case SubFlow: //启动子流程.
-				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
@@ -387,12 +393,12 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		//string sql = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node=" + this.FK_Node;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Frms";
-		dt.Columns[0].ColumnName = "No";
-		dt.Columns[1].ColumnName = "Name";
+		dt.Columns.get(0).setColumnName("No");
+		dt.Columns.get(1).setColumnName("Name");
 
 		DataRow dr = dt.NewRow();
-		dr.set(0, "all");
-		dr.set(1, "请选择表单");
+		dr.setValue(0, "all");
+		dr.setValue(1, "请选择表单");
 		dt.Rows.add(dr);
 
 		DataSet ds = new DataSet();
@@ -411,14 +417,15 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 获得一个表单的字段.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String StandAloneFrm_InitFrmAttr()
+	public final String StandAloneFrm_InitFrmAttr() throws Exception
 	{
 		String frmID = this.GetRequestVal("FrmID");
 		MapAttrs attrs = new MapAttrs(frmID);
 		return attrs.ToJson();
 	}
-	public final String StandAloneFrm_Save()
+	public final String StandAloneFrm_Save() throws Exception
 	{
 		String frmID = this.GetRequestVal("FrmID");
 
@@ -478,7 +485,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			qo.AddWhere(CondAttr.ToNodeID, toNodeID);
 		}
 		int num = qo.DoQuery();
-		for (Cond item : conds)
+		for (Cond item : conds.ToJavaList())
 		{
 			item.setCondOrAnd(cond.getCondOrAnd());
 			item.Update();
@@ -496,19 +503,19 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		{
 			case Flow:
 			case Node:
-				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case Dir:
 				// cond.setMyPK( cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
-				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case SubFlow: //启动子流程.
-				cond.setMyPK( BP.DA.DBAccess.GenerOID().toString(); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
+				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
 				BP.DA.DBAccess.RunSQL(sql);
@@ -520,11 +527,11 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		return "保存成功!!";
 	}
 
-	public final String StandAloneFrm_InitField()
+	public final String StandAloneFrm_InitField() throws Exception
 	{
 		//字段属性.
 		MapAttr attr = new MapAttr();
-		attr.setMyPK( this.getFrmID() + "_" + this.getKeyOfEn();
+		attr.setMyPK(this.getFrmID() + "_" + this.getKeyOfEn());
 		attr.Retrieve();
 		return AttrCond(attr);
 	}
@@ -535,15 +542,15 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		ds.Tables.add(attr.ToDataTableField("Sys_MapAttr"));
 
-		if (attr.LGType == FieldTypeS.Enum)
+		if (attr.getLGType() == FieldTypeS.Enum)
 		{
-			SysEnums ses = new SysEnums(attr.UIBindKey);
+			SysEnums ses = new SysEnums(attr.getUIBindKey());
 			ds.Tables.add(ses.ToDataTableField("Enums"));
 		}
 
 
 			///#region 增加操作符 number.
-		if (attr.IsNum)
+		if (attr.getIsNum())
 		{
 			DataTable dtOperNumber = new DataTable();
 			dtOperNumber.TableName = "Opers";
@@ -623,8 +630,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondBySQLTemplate_Init()
+	public final String CondBySQLTemplate_Init() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -634,7 +642,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQLTemplate.toString();
 
 		Cond cond = new Cond();
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -643,8 +651,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondBySQLTemplate_Save()
+	public final String CondBySQLTemplate_Save() throws Exception
 	{
 
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
@@ -660,7 +669,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.SQLTemplate);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -681,8 +690,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondBySQLTemplate_Delete()
+	public final String CondBySQLTemplate_Delete() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -709,8 +719,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondBySQL_Init()
+	public final String CondBySQL_Init() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -720,7 +731,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQL.toString();
 
 		Cond cond = new Cond();
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -729,8 +740,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondBySQL_Save()
+	public final String CondBySQL_Save() throws Exception
 	{
 
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
@@ -746,7 +758,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.SQL);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -767,8 +779,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondBySQL_Delete()
+	public final String CondBySQL_Delete() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -816,7 +829,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		Cond cond = new Cond();
 		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 
@@ -826,8 +839,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByStation_Save()
+	public final String CondByStation_Save() throws Exception
 	{
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
@@ -842,7 +856,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + HisCondType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + ToNodeID + ") AND DataFrom!=" + ConnDataFrom.Stas.getValue());
 
 		// 删除岗位条件.
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		if (cond.RetrieveFromDBSources() == 0)
 		{
 			cond.setHisDataFrom(ConnDataFrom.Stas);
@@ -880,8 +894,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByStation_Delete()
+	public final String CondByStation_Delete() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -903,7 +918,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 
 		///#region 按照部门条件计算CondByDept_Delete
-	public final String CondByDept_Save()
+	public final String CondByDept_Save() throws Exception
 	{
 		int FK_MainNode = this.GetRequestValInt("FK_MainNode");
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
@@ -915,7 +930,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + this.GetRequestValInt("ToNodeID") + ") AND DataFrom!=" + ConnDataFrom.Depts.getValue());
 
 		String mypk = this.GetRequestValInt("FK_MainNode") + "_" + this.GetRequestValInt("ToNodeID") + "_" + condType.toString() + "_" + ConnDataFrom.Depts.toString();
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 
 		if (cond.RetrieveFromDBSources() == 0)
 		{
@@ -947,7 +962,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return "保存成功!!";
 	}
-	public final String CondByDept_Delete()
+	public final String CondByDept_Delete() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -975,8 +990,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByPara_Init()
+	public final String CondByPara_Init() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -986,7 +1002,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		String mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.Paras.toString();
 
 		Cond cond = new Cond();
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 
 		return cond.ToJson();
@@ -995,8 +1011,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByPara_Save()
+	public final String CondByPara_Save() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -1012,7 +1029,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.Paras);
 
 		cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
@@ -1033,8 +1050,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByPara_Delete()
+	public final String CondByPara_Delete() throws Exception
 	{
 		String fk_mainNode = this.GetRequestVal("FK_MainNode");
 		String toNodeID = this.GetRequestVal("ToNodeID");
@@ -1077,7 +1095,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		int ToNodeID = this.GetRequestValInt("ToNodeID");
 		Cond cond = new Cond();
 		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
-		cond.setMyPK( mypk;
+		cond.setMyPK(mypk);
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 

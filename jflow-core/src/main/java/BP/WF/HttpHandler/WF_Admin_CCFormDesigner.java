@@ -25,8 +25,9 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	 创建枚举类型字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FrmEnumeration_NewEnumField()
+	public final String FrmEnumeration_NewEnumField() throws Exception
 	{
 		UIContralType ctrl = UIContralType.RadioBtn;
 		String ctrlDoType = GetRequestVal("ctrlDoType");
@@ -53,8 +54,9 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	 创建外键字段.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NewSFTableField()
+	public final String NewSFTableField() throws Exception
 	{
 		try
 		{
@@ -160,8 +162,9 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	 获得系统的表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NewFrmGuide_Init()
+	public final String NewFrmGuide_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -207,20 +210,20 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 		md.AppType = "0"; //独立表单
 		md.DBSrc = this.GetRequestVal("DDL_DBSrc");
-		if (md.IsExits == true)
+		if (md.getIsExits() == true)
 		{
-			return "err@表单ID:" + md.No + "已经存在.";
+			return "err@表单ID:" + md.getNo() + "已经存在.";
 		}
 
-		switch (md.HisFrmType)
+		switch (md.getHisFrmType())
 		{
 			//自由，傻瓜，SL表单不做判断
-			case BP.Sys.FrmType.FreeFrm:
+			case FreeFrm:
 			case BP.Sys.FrmType.FoolForm:
 				break;
 			case BP.Sys.FrmType.Url:
 			case BP.Sys.FrmType.Entity:
-				md.Url = md.PTable;
+				md.setUrl(md.getPTable());
 				break;
 			//如果是以下情况，导入模式
 			case BP.Sys.FrmType.WordFrm:
@@ -232,7 +235,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		md.Insert();
 
 		//增加上OID字段.
-		BP.Sys.CCFormAPI.RepareCCForm(md.No);
+		BP.Sys.CCFormAPI.RepareCCForm(md.getNo());
 
 		BP.Frm.EntityType entityType = EntityType.forValue(this.GetRequestValInt("EntityType"));
 
@@ -240,7 +243,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			///#region 如果是单据.
 		if (entityType == EntityType.FrmBill)
 		{
-			BP.Frm.FrmBill bill = new FrmBill(md.No);
+			BP.Frm.FrmBill bill = new FrmBill(md.getNo());
 			bill.setEntityType(EntityType.FrmBill);
 			bill.setBillNoFormat("ccbpm{yyyy}-{MM}-{dd}-{LSH4}");
 
@@ -258,7 +261,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			///#region 如果是实体 EnityNoName .
 		if (entityType == EntityType.FrmDict)
 		{
-			BP.Frm.FrmDict entityDict = new FrmDict(md.No);
+			BP.Frm.FrmDict entityDict = new FrmDict(md.getNo());
 			entityDict.setBillNoFormat("3"); //编码格式.001,002,003.
 
 			entityDict.setBtnNewModel(0);
@@ -276,75 +279,75 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			///#endregion 如果是实体 EnityNoName .
 
 		//创建表与字段.
-		GEEntity en = new GEEntity(md.No);
+		GEEntity en = new GEEntity(md.getNo());
 		en.CheckPhysicsTable();
 
-		if (md.HisFrmType == BP.Sys.FrmType.WordFrm || md.HisFrmType == BP.Sys.FrmType.ExcelFrm)
+		if (md.getHisFrmType() == BP.Sys.FrmType.WordFrm || md.getHisFrmType() == BP.Sys.FrmType.ExcelFrm)
 		{
 			/*把表单模版存储到数据库里 */
-			return "url@../../Comm/RefFunc/En.htm?EnName=BP.WF.Template.MapFrmExcel&PKVal=" + md.No;
+			return "url@../../Comm/RefFunc/En.htm?EnName=BP.WF.Template.MapFrmExcel&PKVal=" + md.getNo();
 		}
 
-		if (md.HisFrmType == BP.Sys.FrmType.Entity)
+		if (md.getHisFrmType() == BP.Sys.FrmType.Entity)
 		{
-			return "url@../../Comm/Ens.htm?EnsName=" + md.PTable;
+			return "url@../../Comm/Ens.htm?EnsName=" + md.getPTable();
 		}
 
-		if (md.HisFrmType == BP.Sys.FrmType.FreeFrm)
+		if (md.getHisFrmType() == BP.Sys.FrmType.FreeFrm)
 		{
-			return "url@FormDesigner.htm?FK_MapData=" + md.No;
+			return "url@FormDesigner.htm?FK_MapData=" + md.getNo();
 		}
 
 
-		return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + md.No;
+		return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + md.getNo();
 	}
 
 		///#endregion 创建表单.
 
-	public final String LetLogin()
+	public final String LetLogin() throws Exception
 	{
 		BP.Port.Emp emp = new BP.Port.Emp("admin");
 		WebUser.SignInOfGener(emp);
 		return "登录成功.";
 	}
 
-	public final String GoToFrmDesigner_Init()
+	public final String GoToFrmDesigner_Init() throws Exception
 	{
 		//根据不同的表单类型转入不同的表单设计器上去.
 		BP.Sys.MapData md = new BP.Sys.MapData(this.getFK_MapData());
-		if (md.HisFrmType == BP.Sys.FrmType.FoolForm)
+		if (md.getHisFrmType() == BP.Sys.FrmType.FoolForm)
 		{
 			/* 傻瓜表单 需要翻译. */
 			return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + this.getFK_MapData();
 		}
 
-		if (md.HisFrmType == BP.Sys.FrmType.FreeFrm)
+		if (md.getHisFrmType() == BP.Sys.FrmType.FreeFrm)
 		{
 			/* 自由表单 */
 			return "url@FormDesigner.htm?FK_MapData=" + this.getFK_MapData() + "&IsFirst=1";
 		}
 
-		if (md.HisFrmType == BP.Sys.FrmType.VSTOForExcel)
+		if (md.getHisFrmType() == BP.Sys.FrmType.VSTOForExcel)
 		{
 			/* 自由表单 */
 			return "url@FormDesigner.htm?FK_MapData=" + this.getFK_MapData();
 		}
 
-		if (md.HisFrmType == BP.Sys.FrmType.Url)
+		if (md.getHisFrmType() == BP.Sys.FrmType.Url)
 		{
 			/* 自由表单 */
 			return "url@../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapDataURL&No=" + this.getFK_MapData();
 		}
 
-		if (md.HisFrmType == BP.Sys.FrmType.Entity)
+		if (md.getHisFrmType() == BP.Sys.FrmType.Entity)
 		{
-			return "url@../../Comm/Ens.htm?EnsName=" + md.PTable;
+			return "url@../../Comm/Ens.htm?EnsName=" + md.getPTable();
 		}
 
-		return "err@没有判断的表单转入类型" + md.HisFrmType.toString();
+		return "err@没有判断的表单转入类型" + md.getHisFrmType().toString();
 	}
 
-	public final String PublicNoNameCtrlCreate()
+	public final String PublicNoNameCtrlCreate() throws Exception
 	{
 		try
 		{
@@ -358,7 +361,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	public final String NewImage()
+	public final String NewImage() throws Exception
 	{
 
 		try
@@ -373,7 +376,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 	}
-	public final String NewField()
+	public final String NewField() throws Exception
 	{
 		try
 		{
@@ -389,8 +392,9 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	 生成所有表单元素.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_AllElements_ResponseJson()
+	public final String CCForm_AllElements_ResponseJson() throws Exception
 	{
 		try
 		{
@@ -477,13 +481,13 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					//  figureComCols = "Name,No,Sta,X,Y,H,W";
-					dt.Columns[0].ColumnName = "Name";
-					dt.Columns[1].ColumnName = "No";
-					dt.Columns[2].ColumnName = "Sta";
-					dt.Columns[3].ColumnName = "X";
-					dt.Columns[4].ColumnName = "Y";
-					dt.Columns[5].ColumnName = "H";
-					dt.Columns[6].ColumnName = "W";
+					dt.Columns.get(0).setColumnName("Name");
+					dt.Columns.get(1).setColumnName("No");
+					dt.Columns.get(2).setColumnName("Sta");
+					dt.Columns.get(3).setColumnName("X");
+					dt.Columns.get(4).setColumnName("Y");
+					dt.Columns.get(5).setColumnName("H");
+					dt.Columns.get(6).setColumnName("W");
 				}
 				ds.Tables.add(dt);
 			}
@@ -500,8 +504,9 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	 保存表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SaveForm()
+	public final String SaveForm() throws Exception
 	{
 		//清缓存
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
@@ -514,7 +519,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 表格处理.
-	public final String Tables_Init()
+	public final String Tables_Init() throws Exception
 	{
 		BP.Sys.SFTables tabs = new BP.Sys.SFTables();
 		tabs.RetrieveAll();
@@ -529,12 +534,12 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
-	public final String Tables_Delete()
+	public final String Tables_Delete() throws Exception
 	{
 		try
 		{
 			BP.Sys.SFTable tab = new BP.Sys.SFTable();
-			tab.No = this.getNo();
+			tab.setNo(this.getNo());
 			tab.Delete();
 			return "删除成功.";
 		}
@@ -544,7 +549,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 	}
 
-	public final String TableRef_Init()
+	public final String TableRef_Init() throws Exception
 	{
 		BP.Sys.MapAttrs mapAttrs = new BP.Sys.MapAttrs();
 		mapAttrs.RetrieveByAttr(BP.Sys.MapAttrAttr.UIBindKey, this.getFK_SFTable());
@@ -561,8 +566,9 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	 表单重置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ResetFrm_Init()
+	public final String ResetFrm_Init() throws Exception
 	{
 		MapData md = new MapData(this.getFK_MapData());
 		md.ResetMaxMinXY();
@@ -577,8 +583,9 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	 
 	 @param frmId 新表单ID
 	 @param frmName 新表单内容
+	 * @throws Exception 
 	*/
-	public final void DoCopyFrm()
+	public final void DoCopyFrm() throws Exception
 	{
 		String fromFrmID = GetRequestVal("FromFrmID");
 		String toFrmID = GetRequestVal("ToFrmID");
@@ -589,11 +596,11 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		MapData fromMap = new MapData(fromFrmID);
 		//单据信息
 		FrmBill fromBill = new FrmBill();
-		fromBill.No = fromFrmID;
+		fromBill.setNo(fromFrmID);
 		int billCount = fromBill.RetrieveFromDBSources();
 		//实体单据
 		FrmDict fromDict = new FrmDict();
-		fromDict.No = fromFrmID;
+		fromDict.setNo(fromFrmID);
 		int DictCount = fromDict.RetrieveFromDBSources();
 
 			///#endregion 原表单信息
@@ -602,15 +609,15 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			///#region 复制表单
 		MapData toMapData = new MapData();
 		toMapData = fromMap;
-		toMapData.No = toFrmID;
-		toMapData.Name = toFrmName;
+		toMapData.setNo(toFrmID);
+		toMapData.setName(toFrmName);
 		toMapData.Insert();
 		if (billCount != 0)
 		{
 			FrmBill toBill = new FrmBill();
 			toBill = fromBill;
-			toBill.No = toFrmID;
-			toBill.Name = toFrmName;
+			toBill.setNo(toFrmID);
+			toBill.setName(toFrmName);
 			toBill.setEntityType(EntityType.FrmBill);
 			toBill.Update();
 		}
@@ -618,8 +625,8 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		{
 			FrmDict toDict = new FrmDict();
 			toDict = fromDict;
-			toDict.No = toFrmID;
-			toDict.Name = toFrmName;
+			toDict.setNo(toFrmID);
+			toDict.setName(toFrmName);
 			toDict.setEntityType(EntityType.FrmDict);
 			toDict.Update();
 		}

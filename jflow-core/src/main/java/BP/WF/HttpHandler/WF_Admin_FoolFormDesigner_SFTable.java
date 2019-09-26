@@ -29,8 +29,9 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 	  初始化sf0. @于庆海，新方法.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SF0_Init()
+	public final String SF0_Init() throws Exception
 	{
 		String cl = "BP.En.Entities";
 		ArrayList al = ClassFactory.GetObjects(cl);
@@ -53,7 +54,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 
 			try
 			{
-				Entity en = ens.GetNewEntity;
+				Entity en = ens.getNewEntity();
 				if (en == null)
 				{
 					continue;
@@ -72,13 +73,13 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 				DataRow dr = dt.NewRow();
 				dr.set("No", ens.toString());
 
-				if (en.IsTreeEntity)
+				if (en.getIsTreeEntity())
 				{
-					dr.set("Name", en.EnMap.EnDesc + "(树结构) " + ens.toString());
+					dr.set("Name", en.getEnMap().getEnDesc() + "(树结构) " + ens.toString());
 				}
 				else
 				{
-					dr.set("Name", en.EnMap.EnDesc + " " + ens.toString());
+					dr.set("Name", en.getEnMap().getEnDesc() + " " + ens.toString());
 				}
 
 				dt.Rows.add(dr);

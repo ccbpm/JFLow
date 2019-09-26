@@ -3049,7 +3049,7 @@ public abstract class Entity implements Serializable {
 		}
 	}
 
-	public String getClassIDOfShort() {
+	public String getClassIDOfShort() throws Exception {
 		String clsID = this.getClassID();
 		return clsID.substring(clsID.lastIndexOf('.') + 1);
 	}

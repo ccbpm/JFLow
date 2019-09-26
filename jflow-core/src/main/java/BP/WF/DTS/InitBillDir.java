@@ -5,12 +5,14 @@ import BP.En.*;
 import BP.WF.*;
 import BP.Port.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
 import BP.DTS.*;
 import BP.WF.*;
 import java.io.*;
 import java.time.*;
+import java.util.Date;
 
 public class InitBillDir extends DataIOEn
 {
@@ -27,9 +29,10 @@ public class InitBillDir extends DataIOEn
 	}
 	/** 
 	 创建单据目录
+	 * @throws Exception 
 	*/
 	@Override
-	public void Do()
+	public void Do() throws Exception
 	{
 		if (true) //此方法暂时排除，不需要创建目录。
 		{
@@ -45,7 +48,7 @@ public class InitBillDir extends DataIOEn
 
 
 		String path = BP.WF.Glo.getFlowFileBill();
-		String year = LocalDateTime.now().getYear().toString();
+		String year = String.valueOf(DateUtils.getYear(new Date()));
 
 		if ((new File(path)).isDirectory() == false)
 		{
@@ -58,18 +61,18 @@ public class InitBillDir extends DataIOEn
 		}
 
 
-		for (Dept Dept : Depts)
+		for (Dept Dept : Depts.ToJavaList())
 		{
-			if ((new File(path + "\\\\" + year + "\\\\" + Dept.No)).isDirectory() == false)
+			if ((new File(path + "\\\\" + year + "\\\\" + Dept.getNo())).isDirectory() == false)
 			{
-				(new File(path + "\\\\" + year + "\\\\" + Dept.No)).mkdirs();
+				(new File(path + "\\\\" + year + "\\\\" + Dept.getNo())).mkdirs();
 			}
 
-			for (BillTemplate func : funcs)
+			for (BillTemplate func : funcs.ToJavaList())
 			{
-				if ((new File(path + "\\\\" + year + "\\\\" + Dept.No + "\\\\" + func.getNo())).isDirectory() == false)
+				if ((new File(path + "\\\\" + year + "\\\\" + Dept.getNo() + "\\\\" + func.getNo())).isDirectory() == false)
 				{
-					(new File(path + "\\\\" + year + "\\\\" + Dept.No + "\\\\" + func.getNo())).mkdirs();
+					(new File(path + "\\\\" + year + "\\\\" + Dept.getNo() + "\\\\" + func.getNo())).mkdirs();
 				}
 			}
 		}

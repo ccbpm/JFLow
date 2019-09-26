@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -41,9 +42,10 @@ public class OneKeyLoadTemplete extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (!WebUser.getNo().equals("admin"))
 		{
@@ -91,14 +93,14 @@ public class OneKeyLoadTemplete extends Method
 
 			///#region 1 装载流程基础表数据.
 		DataSet ds = new DataSet();
-		ds.ReadXml(path + "\\FlowTables.xml");
+		ds.readXml(path + "\\FlowTables.xml");
 
 		//流程类别.
 		FlowSorts sorts = new FlowSorts();
 		sorts.ClearTable();
-		DataTable dt = ds.Tables["WF_FlowSort"];
+		DataTable dt = ds.GetTableByName("WF_FlowSort");
 	   // sorts = QueryObject.InitEntitiesByDataTable(sorts, dt, null) as FlowSorts;
-		for (FlowSort item : sorts)
+		for (FlowSort item : sorts.ToJavaList())
 		{
 			item.DirectInsert(); //插入数据.
 		}
@@ -108,12 +110,12 @@ public class OneKeyLoadTemplete extends Method
 
 			///#region 2 组织结构.
 		ds = new DataSet();
-		ds.ReadXml(path + "\\PortTables.xml");
+		ds.readXml(path + "\\PortTables.xml");
 
 		//Port_Emp.
 		Emps emps = new Emps();
 		emps.ClearTable();
-		dt = ds.Tables["Port_Emp"];
+		dt = ds.GetTableByName("Port_Emp");
 		Object tempVar = QueryObject.InitEntitiesByDataTable(emps, dt, null);
 		emps = tempVar instanceof Emps ? (Emps)tempVar : null;
 		for (Emp item : emps.ToJavaList())
@@ -124,7 +126,7 @@ public class OneKeyLoadTemplete extends Method
 		//Depts.
 		Depts depts = new Depts();
 		depts.ClearTable();
-		dt = ds.Tables["Port_Dept"];
+		dt = ds.GetTableByName("Port_Dept");
 		Object tempVar2 = QueryObject.InitEntitiesByDataTable(depts, dt, null);
 		depts = tempVar2 instanceof Depts ? (Depts)tempVar2 : null;
 		for (Dept item : depts.ToJavaList())
@@ -135,24 +137,24 @@ public class OneKeyLoadTemplete extends Method
 		//Stations.
 		Stations stas = new Stations();
 		stas.ClearTable();
-		dt = ds.Tables["Port_Station"];
+		dt = ds.GetTableByName("Port_Station");
 		Object tempVar3 = QueryObject.InitEntitiesByDataTable(stas, dt, null);
 		stas = tempVar3 instanceof Stations ? (Stations)tempVar3 : null;
-		for (Station item : stas)
+		for (Station item : stas.ToJavaList())
 		{
 			item.DirectInsert(); //插入数据.
 		}
 
 
-		if (BP.Sys.SystemConfig.OSModel == OSModel.OneMore)
+		if (BP.Sys.SystemConfig.getOSModel() == OSModel.OneMore)
 		{
 			//EmpDepts.
 			BP.GPM.DeptEmps eds = new BP.GPM.DeptEmps();
 			eds.ClearTable();
-			dt = ds.Tables["Port_DeptEmp"];
+			dt = ds.GetTableByName("Port_DeptEmp");
 			Object tempVar4 = QueryObject.InitEntitiesByDataTable(eds, dt, null);
 			eds = tempVar4 instanceof BP.GPM.DeptEmps ? (BP.GPM.DeptEmps)tempVar4 : null;
-			for (BP.GPM.DeptEmp item : eds)
+			for (BP.GPM.DeptEmp item : eds.ToJavaList())
 			{
 				item.DirectInsert(); //插入数据.
 			}
@@ -163,15 +165,15 @@ public class OneKeyLoadTemplete extends Method
 
 			///#region 3 恢复系统数据.
 		ds = new DataSet();
-		ds.ReadXml(path + "\\SysTables.xml");
+		ds.readXml(path + "\\SysTables.xml");
 
 		//枚举Main.
 		SysEnumMains sems = new SysEnumMains();
 		sems.ClearTable();
-		dt = ds.Tables["Sys_EnumMain"];
+		dt = ds.GetTableByName("Sys_EnumMain");
 		Object tempVar5 = QueryObject.InitEntitiesByDataTable(sems, dt, null);
 		sems = tempVar5 instanceof SysEnumMains ? (SysEnumMains)tempVar5 : null;
-		for (SysEnumMain item : sems)
+		for (SysEnumMain item : sems.ToJavaList())
 		{
 			item.DirectInsert(); //插入数据.
 		}
@@ -179,10 +181,10 @@ public class OneKeyLoadTemplete extends Method
 		//枚举.
 		SysEnums ses = new SysEnums();
 		ses.ClearTable();
-		dt = ds.Tables["Sys_Enum"];
+		dt = ds.GetTableByName("Sys_Enum");
 		Object tempVar6 = QueryObject.InitEntitiesByDataTable(ses, dt, null);
 		ses = tempVar6 instanceof SysEnums ? (SysEnums)tempVar6 : null;
-		for (SysEnum item : ses)
+		for (SysEnum item : ses.ToJavaList())
 		{
 			item.DirectInsert(); //插入数据.
 		}
@@ -213,17 +215,17 @@ public class OneKeyLoadTemplete extends Method
 			(new File(pathOfTables)).mkdirs();
 			SFTables tabs = new SFTables();
 			tabs.RetrieveAll();
-			for (SFTable item : tabs)
+			for (SFTable item : tabs.ToJavaList())
 			{
-				if (item.No.Contains("."))
+				if (item.getNo().contains("."))
 				{
 					continue;
 				}
 
-				String sql = "SELECT * FROM " + item.No;
+				String sql = "SELECT * FROM " + item.getNo();
 				ds = new DataSet();
 				ds.Tables.add(BP.DA.DBAccess.RunSQLReturnTable(sql));
-				ds.WriteXml(pathOfTables + "\\" + item.No + ".xml");
+				ds.WriteXml(pathOfTables + "\\" + item.getNo() + ".xml");
 			}
 		}
 
@@ -234,7 +236,7 @@ public class OneKeyLoadTemplete extends Method
 		//删除所有的流程数据.
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAll();
-		for (MapData fl : mds)
+		for (MapData fl : mds.ToJavaList())
 		{
 			//if (fl.FK_FormTree.Length > 1 || fl.FK_FrmSort.Length > 1)
 			//    continue;
@@ -246,7 +248,7 @@ public class OneKeyLoadTemplete extends Method
 		fss.ClearTable();
 
 		// 调度表单文件。         
-		String frmPath = path + "\\Form";
+		String frmPath = path + "/Form";
 		File dirInfo = new File(frmPath);
 		File[] dirs = dirInfo.GetDirectories();
 		for (File item : dirs)
@@ -256,15 +258,15 @@ public class OneKeyLoadTemplete extends Method
 				continue;
 			}
 
-			String[] fls = (new File(item.getPath())).list(File::isFile);
+			String[] fls = (new File(item.getPath())).list();
 			if (fls.length == 0)
 			{
 				continue;
 			}
 
 			SysFormTree fs = new SysFormTree();
-			fs.No = item.getName().substring(0, item.getName().indexOf('.'));
-			fs.Name = item.getName().substring(item.getName().indexOf('.'));
+			fs.setNo(item.getName().substring(0, item.getName().indexOf('.')));
+			fs.setName(item.getName().substring(item.getName().indexOf('.')));
 			fs.setParentNo("0");
 			fs.Insert();
 
@@ -280,10 +282,10 @@ public class OneKeyLoadTemplete extends Method
 					}
 
 					ds = new DataSet();
-					ds.ReadXml(f);
+					ds.readXml(f);
 
 					MapData md = MapData.ImpMapData(ds);
-					md.FK_FrmSort = fs.No;
+					md.setFK_FrmSort(fs.getNo());
 					md.Update();
 				}
 				catch (RuntimeException ex)
@@ -300,7 +302,7 @@ public class OneKeyLoadTemplete extends Method
 		//删除所有的流程数据.
 		Flows flsEns = new Flows();
 		flsEns.RetrieveAll();
-		for (Flow fl : flsEns)
+		for (Flow fl : flsEns.ToJavaList())
 		{
 			fl.DoDelete(); //删除流程.
 		}
@@ -314,8 +316,8 @@ public class OneKeyLoadTemplete extends Method
 
 		//生成流程树.
 		FlowSort fsRoot = new FlowSort();
-		fsRoot.No = "99";
-		fsRoot.Name = "流程树";
+		fsRoot.setNo("99");
+		fsRoot.setName("流程树");
 		fsRoot.setParentNo("0");
 		fsRoot.DirectInsert();
 
@@ -326,29 +328,29 @@ public class OneKeyLoadTemplete extends Method
 				continue;
 			}
 
-			String[] fls = (new File(dir.getPath())).list(File::isFile);
+			String[] fls = (new File(dir.getPath())).list();
 			if (fls.length == 0)
 			{
 				continue;
 			}
 
 			FlowSort fs = new FlowSort();
-			fs.No = dir.getName().substring(0, dir.getName().indexOf('.'));
-			fs.Name = dir.getName().substring(3);
-			fs.ParentNo = fsRoot.No;
+			fs.setNo(dir.getName().substring(0, dir.getName().indexOf('.')));
+			fs.setName(dir.getName().substring(3));
+			fs.setParentNo(fsRoot.getNo());
 			fs.Insert();
 
 			for (String filePath : fls)
 			{
 				msg += "\t\n@开始调度流程模板文件:" + filePath;
-				Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(fs.No, filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
-				msg += "\t\n@流程:" + myflow.Name + "装载成功。";
+				Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(fs.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+				msg += "\t\n@流程:" + myflow.getName() + "装载成功。";
 
 				File info = new File(filePath);
-				myflow.Name = info.getName().replace(".xml", "");
-				if (myflow.Name.substring(2, 3).equals("."))
+				myflow.setName(info.getName().replace(".xml", ""));
+				if (myflow.getName().substring(2, 3).equals("."))
 				{
-					myflow.Name = myflow.Name.substring(3);
+					myflow.setName(myflow.getName().substring(3));
 				}
 
 				myflow.DirectUpdate();

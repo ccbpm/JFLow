@@ -43,9 +43,10 @@ public class PackAutoErrFormatFieldTable extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String keys = "~!@#$%^&*()+{}|:<>?`=[];,./～！＠＃￥％……＆×（）——＋｛｝｜：“《》？｀－＝［］；＇，．／";
 		char[] cc = keys.toCharArray();
@@ -54,17 +55,17 @@ public class PackAutoErrFormatFieldTable extends Method
 			DBAccess.RunSQL("update sys_mapattr set keyofen=REPLACE(keyofen,'" + c + "' , '')");
 		}
 
-		BP.Sys.MapAttrs attrs = new Sys.MapAttrs();
+		MapAttrs attrs = new MapAttrs();
 		attrs.RetrieveAll();
 		int idx = 0;
 		String msg = "";
-		for (BP.Sys.MapAttr item : attrs)
+		for (BP.Sys.MapAttr item : attrs.ToJavaList())
 		{
-			String f = item.KeyOfEn.Clone().toString();
+			String f = item.getKeyOfEn().toString();
 			try
 			{
-				int i = Integer.parseInt(item.KeyOfEn.substring(0, 1));
-				item.KeyOfEn = "F" + item.KeyOfEn;
+				int i = Integer.parseInt(item.getKeyOfEn().substring(0, 1));
+				item.setKeyOfEn("F" + item.getKeyOfEn());
 				try
 				{
 					MapAttr itemCopy = new MapAttr();
@@ -81,8 +82,8 @@ public class PackAutoErrFormatFieldTable extends Method
 			{
 				continue;
 			}
-			DBAccess.RunSQL("UPDATE sys_mapAttr set KeyOfEn='" + item.KeyOfEn + "', mypk=FK_MapData+'_'+keyofen where keyofen='" + item.KeyOfEn + "'");
-			msg += "@第(" + idx + ")个错误修复成功，原（" + f + "）修复成(" + item.KeyOfEn + ").";
+			DBAccess.RunSQL("UPDATE sys_mapAttr set KeyOfEn='" + item.getKeyOfEn() + "', mypk=FK_MapData+'_'+keyofen where keyofen='" + item.getKeyOfEn() + "'");
+			msg += "@第(" + idx + ")个错误修复成功，原（" + f + "）修复成(" + item.getKeyOfEn() + ").";
 			idx++;
 		}
 

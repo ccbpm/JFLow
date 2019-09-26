@@ -5,12 +5,15 @@ import BP.En.*;
 import BP.WF.*;
 import BP.Port.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
+import BP.Web.WebUser;
 import BP.DTS.*;
 import BP.WF.*;
 import java.io.*;
 import java.time.*;
+import java.util.Date;
 
 public class OutputSQLs extends DataIOEn
 {
@@ -26,13 +29,13 @@ public class OutputSQLs extends DataIOEn
 		this.ToDBUrl = DBUrlType.AppCenterDSN;
 	}
 	@Override
-	public void Do()
+	public void Do() throws Exception
 	{
 		String sql = this.GenerSqls();
 	}
-	public final String GenerSqls()
+	public final String GenerSqls() throws Exception
 	{
-		Log.DefaultLogWriteLine(LogType.Info, WebUser.getName() + "开始调度考核信息:" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss"));
+		Log.DefaultLogWriteLine(LogType.Info, WebUser.getName() + "开始调度考核信息:" + DateUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
 		String infoMsg = "", errMsg = "";
 
 		Nodes nds = new Nodes();
@@ -55,10 +58,10 @@ public class OutputSQLs extends DataIOEn
 				continue;
 			}
 			i++;
-			Map map = nd.getHisWork().EnMap;
-			delSQL = "\n DELETE FROM " + map.PhysicsTable + " WHERE  OID  NOT IN (SELECT WORKID FROM WF_GenerWorkFlow ) AND WFState= " + WFState.Runing.getValue();
+			Map map = nd.getHisWork().getEnMap();
+			delSQL = "\n DELETE FROM " + map.getPhysicsTable() + " WHERE  OID  NOT IN (SELECT WORKID FROM WF_GenerWorkFlow ) AND WFState= " + WFState.Runing.getValue();
 
-			sqls += "\n\n\n -- NO:" + i + "、" + nd.getFK_Flow() + nd.getFlowName() + " :  " + map.EnDesc + " \n" + delSQL + "; \n" + insertSql + "; \n" + updateSQL + ";";
+			sqls += "\n\n\n -- NO:" + i + "、" + nd.getFK_Flow() + nd.getFlowName() + " :  " + map.getEnDesc() + " \n" + delSQL + "; \n" + insertSql + "; \n" + updateSQL + ";";
 		}
 		Log.DefaultLogWriteLineInfo(sqls);
 		return sqls;

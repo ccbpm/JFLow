@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -35,9 +36,10 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -49,14 +51,15 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		BP.WF.Flows ens = new Flows();
-		for (BP.WF.Flow en : ens)
+		for (BP.WF.Flow en : ens.ToJavaList())
 		{
-			String sql = "SELECT * FROM " + en.getPTable() + " WHERE OID NOT IN (SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Flow='" + en.No + "')";
+			String sql = "SELECT * FROM " + en.getPTable() + " WHERE OID NOT IN (SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Flow='" + en.getNo() + "')";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 			for (DataRow dr : dt.Rows)
@@ -68,8 +71,8 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 				gwf.setFK_FlowSort(en.getFK_FlowSort());
 				gwf.setSysType(en.getSysType());
 
-				gwf.setFK_Flow(en.No);
-				gwf.setFlowName(en.Name);
+				gwf.setFK_Flow(en.getNo());
+				gwf.setFlowName(en.getName());
 				gwf.setTitle(dr.get(NDXRptBaseAttr.Title).toString());
 				gwf.setWFState(WFState.forValue(Integer.parseInt(dr.get(NDXRptBaseAttr.WFState).toString())));
 			//    gwf.WFSta = WFSta.Complete;
@@ -80,11 +83,11 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 				gwf.setFK_Node(Integer.parseInt(dr.get(NDXRptBaseAttr.FlowEndNode).toString()));
 				gwf.setFK_Dept(dr.get(NDXRptBaseAttr.FK_Dept).toString());
 
-				Port.Dept dept = null;
+				Dept dept = null;
 				try
 				{
-					dept = new Port.Dept(gwf.getFK_Dept());
-					gwf.setDeptName(dept.Name);
+					dept = new Dept(gwf.getFK_Dept());
+					gwf.setDeptName(dept.getName());
 				}
 				catch (java.lang.Exception e)
 				{

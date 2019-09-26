@@ -47,9 +47,10 @@ public class RepariDB extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String rpt = PubClass.DBRpt(BP.DA.DBCheckLevel.High);
 
@@ -63,9 +64,9 @@ public class RepariDB extends Method
 		// 修复因bug丢失的字段.
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAll();
-		for (MapData md : mds)
+		for (MapData md : mds.ToJavaList())
 		{
-			String nodeid = md.No.Replace("ND","");
+			String nodeid = md.getNo().replace("ND","");
 			try
 			{
 				BP.WF.Node nd = new Node(Integer.parseInt(nodeid));
@@ -78,18 +79,18 @@ public class RepariDB extends Method
 			}
 
 			MapAttr attr = new MapAttr();
-			if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, md.No) == false)
+			if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, md.getNo()) == false)
 			{
-				attr.FK_MapData = md.No;
-				attr.setKeyOfEn ("OID";
-				attr.setName("OID";
-				attr.setMyDataType (BP.DA.DataType.AppInt;
-				attr.setUIContralType (UIContralType.TB;
-				attr.setLGType(FieldTypeS.Normal;
-				attr.setUIVisible(false;
-				attr.setUIIsEnable(false;
-				attr.setDefVal("0";
-				attr.setHisEditType(BP.En.EditType.Readonly;
+				attr.setFK_MapData(md.getNo());
+				attr.setKeyOfEn("OID");
+				attr.setName("OID");
+				attr.setMyDataType(BP.DA.DataType.AppInt);
+				attr.setUIContralType(UIContralType.TB);
+				attr.setLGType(FieldTypeS.Normal);
+				attr.setUIVisible(false);
+				attr.setUIIsEnable(false);
+				attr.setDefVal("0");
+				attr.setHisEditType(BP.En.EditType.Readonly);
 				attr.Insert();
 			}
 		}

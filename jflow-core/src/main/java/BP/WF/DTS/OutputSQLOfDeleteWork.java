@@ -26,11 +26,11 @@ public class OutputSQLOfDeleteWork extends DataIOEn
 		this.ToDBUrl = DBUrlType.AppCenterDSN;
 	}
 	@Override
-	public void Do()
+	public void Do() throws Exception
 	{
 		String sql = this.GenerSqls();
 	}
-	public final String GenerSqls()
+	public final String GenerSqls() throws Exception
 	{
 		Nodes nds = new Nodes();
 		nds.RetrieveAll();

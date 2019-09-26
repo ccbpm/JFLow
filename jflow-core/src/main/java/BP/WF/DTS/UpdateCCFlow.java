@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -45,9 +46,10 @@ public class UpdateCCFlow extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		if (!WebUser.getNo().equals("admin"))
 		{

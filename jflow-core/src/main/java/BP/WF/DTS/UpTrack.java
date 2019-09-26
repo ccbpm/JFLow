@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -30,9 +31,10 @@ public class UpTrack extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -47,9 +49,10 @@ public class UpTrack extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
@@ -58,7 +61,7 @@ public class UpTrack extends Method
 		for (Flow fl : fls.ToJavaList())
 		{
 			// 检查报表.
-			Track.CreateOrRepairTrackTable(fl.No);
+			Track.CreateOrRepairTrackTable(fl.getNo());
 
 			// 查询.
 			String sql = "SELECT * FROM WF_Track WHERE FK_Flow='" + fl.getNo() + "'";
@@ -66,8 +69,8 @@ public class UpTrack extends Method
 			for (int i = 0; i < dt.Rows.size(); i++)
 			{
 				Track tk = new Track();
-				tk.FK_Flow = fl.No;
-				tk.Row.LoadDataTable(dt, dt.Rows[0]);
+				tk.FK_Flow = fl.getNo();
+				tk.getRow().LoadDataTable(dt, dt.Rows.get(0));
 				tk.DoInsert(0); // 执行insert.
 			}
 		}

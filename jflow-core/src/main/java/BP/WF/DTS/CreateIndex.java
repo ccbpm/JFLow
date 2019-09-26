@@ -47,9 +47,11 @@ public class CreateIndex extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws NumberFormatException, Exception
 	{
 		String info = "开始为Track表创建索引.";
 

@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -31,9 +32,10 @@ public class UpdatePort_EmpSigantureSta extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -52,8 +54,9 @@ public class UpdatePort_EmpSigantureSta extends Method
 	@Override
 	public Object Do()
 	{
-		String path = BP.Sys.SystemConfig.PathOfDataUser + "Siganture";
-		String[] files = (new File(path)).list(File::isFile);
+		String path = BP.Sys.SystemConfig.getPathOfDataUser() + "Siganture";
+		File file1 = new File(path);
+		String[] files = file1.list();
 
 		//清空设置为图片签名的记录.
 		String sql = "UPDATE Port_Emp SET SignType=0 WHERE SignType=1";

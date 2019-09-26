@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
@@ -21,7 +22,7 @@ public class LoadTemplete extends Method
 	{
 		this.Title = "装载流程演示模板";
 		this.Help = "为了帮助各位爱好者学习与掌握ccflow, 特提供一些流程模板与表单模板以方便学习。";
-		this.Help += "@这些模板的位于" + SystemConfig.PathOfData + "\\FlowDemo\\";
+		this.Help += "@这些模板的位于" + SystemConfig.getPathOfData() + "/FlowDemo/";
 		this.GroupName = "流程维护";
 
 	}
@@ -36,9 +37,10 @@ public class LoadTemplete extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
+	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo()
+	public boolean getIsCanDo() throws Exception
 	{
 		if (WebUser.getNo().equals("admin"))
 		{
@@ -62,12 +64,12 @@ public class LoadTemplete extends Method
 
 		//创建root.
 		SysFormTree root = new SysFormTree();
-		root.No = "1";
-		root.Name = "表单库";
+		root.setNo("1");
+		root.setName("表单库");
 		root.setParentNo("0");
 		root.Insert();
 
-		String frmPath = SystemConfig.PathOfWebApp + "\\SDKFlowDemo\\FlowDemo\\Form\\";
+		String frmPath = SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Form/";
 		File dirInfo = new File(frmPath);
 		File[] dirs = dirInfo.GetDirectories();
 		int i = 0;
@@ -78,15 +80,15 @@ public class LoadTemplete extends Method
 				continue;
 			}
 
-			String[] fls = (new File(item.getPath())).list(File::isFile);
+			String[] fls = (new File(item.getPath())).list();
 			if (fls.length == 0)
 			{
 				continue;
 			}
 
 			SysFormTree fs = new SysFormTree();
-			fs.No = item.getName().substring(0, 2);
-			fs.Name = item.getName().substring(3);
+			fs.setNo(item.getName().substring(0, 2));
+			fs.setName(item.getName().substring(3));
 			fs.setParentNo("1");
 			fs.setIdx(i++);
 			fs.Insert();
@@ -103,14 +105,14 @@ public class LoadTemplete extends Method
 				BP.DA.Log.DefaultLogWriteLineInfo("@开始调度表单模板文件:" + f);
 
 				DataSet ds = new DataSet();
-				ds.ReadXml(f);
+				ds.readXml(f);
 
 				try
 				{
 					MapData md = MapData.ImpMapData(ds);
-					md.FK_FrmSort = fs.No;
-					md.FK_FormTree = fs.No;
-					md.AppType = "0";
+					md.setFK_FrmSort(fs.getNo());
+					md.setFK_FormTree(fs.getNo());
+					md.setAppType("0");
 					md.Update();
 				}
 				catch (RuntimeException ex)
@@ -128,12 +130,12 @@ public class LoadTemplete extends Method
 			///#region 处理流程.
 		FlowSorts sorts = new FlowSorts();
 		sorts.ClearTable();
-		dirInfo = new File(SystemConfig.PathOfWebApp + "\\SDKFlowDemo\\FlowDemo\\Flow\\");
+		dirInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/");
 		dirs = dirInfo.GetDirectories();
 
 		FlowSort fsRoot = new FlowSort();
-		fsRoot.No = "99";
-		fsRoot.Name = "流程树";
+		fsRoot.setNo("99");
+		fsRoot.setName("流程树");
 		fsRoot.setParentNo("0");
 		fsRoot.DirectInsert();
 
@@ -144,16 +146,16 @@ public class LoadTemplete extends Method
 				continue;
 			}
 
-			String[] fls = (new File(dir.getPath())).list(File::isFile);
+			String[] fls = (new File(dir.getPath())).list();
 			if (fls.length == 0)
 			{
 				continue;
 			}
 
 			FlowSort fs = new FlowSort();
-			fs.No = dir.getName().substring(0, 3);
-			fs.Name = dir.getName().substring(3);
-			fs.ParentNo = fsRoot.No;
+			fs.setNo(dir.getName().substring(0, 3));
+			fs.setName(dir.getName().substring(3));
+			fs.setParentNo(fsRoot.getNo());
 			fs.Insert();
 
 			for (String filePath : fls)
@@ -161,21 +163,21 @@ public class LoadTemplete extends Method
 				msg += "\t\n@开始调度流程模板文件:" + filePath;
 				BP.DA.Log.DefaultLogWriteLineInfo("@开始调度流程模板文件:" + filePath);
 
-				Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(fs.No, filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
-				msg += "\t\n@流程:[" + myflow.Name + "]装载成功。";
+				Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(fs.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+				msg += "\t\n@流程:[" + myflow.getName() + "]装载成功。";
 
 				File info = new File(filePath);
-				myflow.Name = info.getName().replace(".xml", "");
-				if (myflow.Name.substring(2, 3).equals("."))
+				myflow.setName(info.getName().replace(".xml", ""));
+				if (myflow.getName().substring(2, 3).equals("."))
 				{
-					myflow.Name = myflow.Name.substring(3);
+					myflow.setName(myflow.getName().substring(3));
 				}
 				myflow.DirectUpdate();
 			}
 
 
 			//调度它的下一级目录.
-			File dirSubInfo = new File(SystemConfig.PathOfWebApp + "\\SDKFlowDemo\\FlowDemo\\Flow\\" + dir.getName());
+			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/" + dir.getName());
 			File[] myDirs = dirSubInfo.GetDirectories();
 			for (File mydir : myDirs)
 			{
@@ -184,7 +186,7 @@ public class LoadTemplete extends Method
 					continue;
 				}
 
-				String[] myfls = (new File(mydir.getPath())).list(File::isFile);
+				String[] myfls = (new File(mydir.getPath())).list();
 				if (myfls.length == 0)
 				{
 					continue;
@@ -193,7 +195,7 @@ public class LoadTemplete extends Method
 				// 流程类别.
 				Object tempVar = fs.DoCreateSubNode();
 				FlowSort subFlowSort = tempVar instanceof FlowSort ? (FlowSort)tempVar : null;
-				subFlowSort.Name = mydir.getName().substring(3);
+				subFlowSort.setName(mydir.getName().substring(3));
 				subFlowSort.Update();
 
 				for (String filePath : myfls)
@@ -201,14 +203,14 @@ public class LoadTemplete extends Method
 					msg += "\t\n@开始调度流程模板文件:" + filePath;
 					BP.DA.Log.DefaultLogWriteLineInfo("@开始调度流程模板文件:" + filePath);
 
-					Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(subFlowSort.No, filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
-					msg += "\t\n@流程:" + myflow.Name + "装载成功。";
+					Flow myflow = BP.WF.Flow.DoLoadFlowTemplate(subFlowSort.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+					msg += "\t\n@流程:" + myflow.getName() + "装载成功。";
 
 					File info = new File(filePath);
-					myflow.Name = info.getName().replace(".xml", "");
-					if (myflow.Name.substring(2, 3).equals("."))
+					myflow.setName(info.getName().replace(".xml", ""));
+					if (myflow.getName().substring(2, 3).equals("."))
 					{
-						myflow.Name = myflow.Name.substring(3);
+						myflow.setName(myflow.getName().substring(3));
 					}
 					myflow.DirectUpdate();
 				}
@@ -218,7 +220,7 @@ public class LoadTemplete extends Method
 		//执行流程检查.
 		Flows flsEns = new Flows();
 		flsEns.RetrieveAll();
-		for (Flow fl : flsEns)
+		for (Flow fl : flsEns.ToJavaList())
 		{
 			fl.DoCheck();
 		}

@@ -5,10 +5,12 @@ import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.io.*;
 import java.time.*;
+import java.util.Date;
 
 /** 
  Method 的摘要说明
@@ -22,7 +24,7 @@ public class GenerTemplate extends Method
 	{
 		this.Title = "生成流程模板与表单模板";
 		this.Help = "把系统中的流程与表单转化成模板放在指定的目录下。";
-		this.HisAttrs.AddTBString("Path", "C:\\ccflow.Template", "生成的路径", true, false, 1, 1900, 200);
+		this.getHisAttrs().AddTBString("Path", "C:/ccflow.Template", "生成的路径", true, false, 1, 1900, 200);
 	}
 	/** 
 	 设置执行变量
@@ -45,19 +47,20 @@ public class GenerTemplate extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
-		String path = this.GetValStrByKey("Path") + "_" + LocalDateTime.now().toString("yy年MM月dd日HH时mm分");
+		String path = this.GetValStrByKey("Path") + "_" + DateUtils.format(new Date(),"yy年MM月dd日HH时mm分");
 		if ((new File(path)).isDirectory())
 		{
 			return "系统正在执行中，请稍后。";
 		}
 
 		(new File(path)).mkdirs();
-		(new File(path + "\\Flow.流程模板")).mkdirs();
-		(new File(path + "\\Frm.表单模板")).mkdirs();
+		(new File(path + "/Flow.流程模板")).mkdirs();
+		(new File(path + "/Frm.表单模板")).mkdirs();
 
 		Flows fls = new Flows();
 		fls.RetrieveAll();
@@ -65,9 +68,9 @@ public class GenerTemplate extends Method
 		sorts.RetrieveAll();
 
 		// 生成流程模板。
-		for (FlowSort sort : sorts)
+		for (FlowSort sort : sorts.ToJavaList())
 		{
-			String pathDir = path + "\\Flow.流程模板\\" + sort.No + "." + sort.Name;
+			String pathDir = path + "/Flow.流程模板/" + sort.getNo() + "." + sort.getName();
 			(new File(pathDir)).mkdirs();
 			for (Flow fl : fls.ToJavaList())
 			{
@@ -76,20 +79,20 @@ public class GenerTemplate extends Method
 		}
 
 		// 生成表单模板。
-		for (FlowSort sort : sorts)
+		for (FlowSort sort : sorts.ToJavaList())
 		{
-			String pathDir = path + "\\Frm.表单模板\\" + sort.No + "." + sort.Name;
+			String pathDir = path + "/Frm.表单模板/" + sort.getNo() + "." + sort.getName();
 			(new File(pathDir)).mkdirs();
 			for (Flow fl : fls.ToJavaList())
 			{
-				String pathFlowDir = pathDir + "\\" + fl.getNo() + "." + fl.Name;
+				String pathFlowDir = pathDir + "/" + fl.getNo() + "." + fl.getName();
 				(new File(pathFlowDir)).mkdirs();
-				Nodes nds = new Nodes(fl.No);
+				Nodes nds = new Nodes(fl.getNo());
 				for (Node nd : nds.ToJavaList())
 				{
 					MapData md = new MapData("ND" + nd.getNodeID());
-					System.Data.DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
-					ds.WriteXml(pathFlowDir + "\\" + nd.getNodeID() + "." + nd.getName() + ".Frm.xml");
+					DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+					ds.WriteXml(pathFlowDir + "/" + nd.getNodeID() + "." + nd.getName() + ".Frm.xml");
 				}
 			}
 		}
@@ -97,17 +100,17 @@ public class GenerTemplate extends Method
 		// 独立表单模板.
 		SysFormTrees frmSorts = new SysFormTrees();
 		frmSorts.RetrieveAll();
-		for (SysFormTree sort : frmSorts)
+		for (SysFormTree sort : frmSorts.ToJavaList())
 		{
-			String pathDir = path + "\\Frm.表单模板\\" + sort.No + "." + sort.Name;
+			String pathDir = path + "/Frm.表单模板/" + sort.getNo() + "." + sort.getName();
 			(new File(pathDir)).mkdirs();
 
 			MapDatas mds = new MapDatas();
-			mds.Retrieve(MapDataAttr.FK_FrmSort, sort.No);
-			for (MapData md : mds)
+			mds.Retrieve(MapDataAttr.FK_FrmSort, sort.getNo());
+			for (MapData md : mds.ToJavaList())
 			{
-				System.Data.DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
-				ds.WriteXml(pathDir + "\\" + md.No + "." + md.Name + ".Frm.xml");
+				DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+				ds.WriteXml(pathDir + "/" + md.getNo() + "." + md.getName() + ".Frm.xml");
 			}
 		}
 		return "生成成功，请打开" + path + "。<br>如果您想共享出来请压缩后发送到template＠ccflow.org";

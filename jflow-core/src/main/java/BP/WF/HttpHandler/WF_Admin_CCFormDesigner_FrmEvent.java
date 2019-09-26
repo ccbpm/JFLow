@@ -48,8 +48,9 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 	 事件基类
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Action_Init()
+	public final String Action_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -96,11 +97,11 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 		dtBuess.Columns.Add("Name", String.class);
 		dtBuess.TableName = "BuessUnits";
 		ArrayList al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
-		for (BuessUnitBase en : al)
+		for (Object en : al)
 		{
 			DataRow dr = dtBuess.NewRow();
 			dr.set("No", en.toString());
-			dr.set("Name", en.Title);
+			dr.set("Name", en.getTitle());
 			dtBuess.Rows.add(dr);
 		}
 
@@ -112,37 +113,38 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 	 执行删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ActionDtl_Delete()
+	public final String ActionDtl_Delete() throws Exception
 	{
 		//事件实体.
 		FrmEvent en = new FrmEvent();
-		en.setMyPK( this.getMyPK();
+		en.setMyPK(this.getMyPK());
 		en.Delete();
 		return "删除成功.";
 	}
-	public final String ActionDtl_Save()
+	public final String ActionDtl_Save() throws Exception
 	{
 		//事件实体.
 		FrmEvent en = new FrmEvent();
 
-		en.FK_Node = this.getFK_Node();
-		en.FK_Event = this.GetRequestVal("FK_Event"); //事件类型.
-		en.HisDoTypeInt = this.GetValIntFromFrmByKey("EventDoType"); //执行类型.
-		en.setMyPK( this.getFK_Node() + "_" + en.FK_Event + "_" + en.HisDoTypeInt; //组合主键.
+		en.setFK_Node(this.getFK_Node());
+		en.setFK_Event(this.GetRequestVal("FK_Event")); //事件类型.
+		en.setHisDoTypeInt(this.GetValIntFromFrmByKey("EventDoType")); //执行类型.
+		en.setMyPK(this.getFK_Node() + "_" + en.getFK_Event() + "_" + en.getHisDoTypeInt()); //组合主键.
 		en.RetrieveFromDBSources();
 
-		en.MsgOKString = this.GetValFromFrmByKey("MsgOK"); //成功的消息.
-		en.MsgErrorString = this.GetValFromFrmByKey("MsgError"); //失败的消息.
+		en.setMsgOKString(this.GetValFromFrmByKey("MsgOK")); //成功的消息.
+		en.setMsgErrorString(this.GetValFromFrmByKey("MsgError")); //失败的消息.
 
 		//执行内容.
-		if (en.HisDoType == EventDoType.BuessUnit)
+		if (en.getHisDoType() == EventDoType.BuessUnit)
 		{
-			en.DoDoc = this.GetValFromFrmByKey("DDL_Doc");
+			en.setDoDoc(this.GetValFromFrmByKey("DDL_Doc"));
 		}
 		else
 		{
-			en.DoDoc = this.GetValFromFrmByKey("TB_Doc");
+			en.setDoDoc(this.GetValFromFrmByKey("TB_Doc"));
 		}
 
 		en.Save();

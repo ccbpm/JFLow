@@ -7,9 +7,10 @@ import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
-import LitJson.*;
 import BP.WF.XML.*;
 import BP.WF.*;
+
+import java.net.URLDecoder;
 import java.util.*;
 
 /** 
@@ -49,8 +50,9 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 	 创建流程节点并返回编号
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CreateNode()
+	public final String CreateNode() throws Exception
 	{
 		try
 		{
@@ -91,8 +93,9 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 	 根据节点编号删除流程节点
 	 
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public final String DeleteNode()
+	public final String DeleteNode() throws Exception
 	{
 		try
 		{
@@ -120,12 +123,14 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 	 修改节点名称
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String Node_EditNodeName()
+	public final String Node_EditNodeName() throws  Exception
 	{
 		String FK_Node = this.GetValFromFrmByKey("NodeID");
-		String NodeName = HttpContextHelper.UrlDecode(this.GetValFromFrmByKey("NodeName"));
-
+//		String NodeName = HttpContextHelper.UrlDecode(this.GetValFromFrmByKey("NodeName"));
+		String NodeName = URLDecoder.decode(this.GetValFromFrmByKey("NodeName"), "UTF-8");
 		BP.WF.Node node = new BP.WF.Node();
 		node.setNodeID(Integer.parseInt(FK_Node));
 		int iResult = node.RetrieveFromDBSources();
@@ -142,8 +147,9 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 	 修改节点运行模式
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Node_ChangeRunModel()
+	public final String Node_ChangeRunModel() throws Exception
 	{
 		String runModel = GetValFromFrmByKey("RunModel");
 		BP.WF.Node node = new BP.WF.Node(this.getFK_Node());
@@ -177,14 +183,15 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 	 删除连接线
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Direction_Delete()
+	public final String Direction_Delete() throws Exception
 	{
 		try
 		{
 			Directions di = new Directions();
 			di.Retrieve(DirectionAttr.FK_Flow, this.getFK_Flow(), DirectionAttr.Node, this.getFK_Node(), DirectionAttr.ToNode, this.GetValFromFrmByKey("ToNode"));
-			for (Direction direct : di)
+			for (Direction direct : di.ToJavaList())
 			{
 				direct.Delete();
 			}
@@ -199,8 +206,9 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 	 添加标签
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CreatLabNote()
+	public final String CreatLabNote() throws Exception
 	{
 		try
 		{
@@ -214,7 +222,7 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 			int x = Integer.parseInt(this.GetValFromFrmByKey("X"));
 			int y = Integer.parseInt(this.GetValFromFrmByKey("Y"));
 
-			lb.setMyPK( this.getFK_Flow() + "_" + x + "_" + y + "_" + (num + 1);
+			lb.setMyPK(this.getFK_Flow() + "_" + x + "_" + y + "_" + (num + 1));
 			lb.setName(Name);
 			lb.setFK_Flow(this.getFK_Flow());
 			lb.setX(x);
@@ -234,7 +242,7 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 		}
 	}
 
-	public final void CheckBillFrm()
+	public final void CheckBillFrm() throws Exception
 	{
 		GEEntity en = new GEEntity(this.getEnsName());
 		en.CheckPhysicsTable();

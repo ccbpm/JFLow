@@ -204,8 +204,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String CondByFrm_Init()
+	public final String CondByFrm_Init() throws NumberFormatException, Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -259,7 +261,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		dt.Rows.add(dr);
 		ds.Tables.add(dt);
 
-		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
+		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
 	}
 	public final String CondByFrm_InitField() throws NumberFormatException, Exception
 	{
@@ -384,8 +386,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String StandAloneFrm_Init()
+	public final String StandAloneFrm_Init() throws Exception
 	{
 		ps = new Paras();
 		ps.SQL = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node";
@@ -411,7 +414,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		conds.Retrieve(CondAttr.FK_Node, fk_mainNode, CondAttr.ToNodeID, toNodeID);
 		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
+		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
 	}
 	/** 
 	 获得一个表单的字段.
@@ -535,7 +538,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		attr.Retrieve();
 		return AttrCond(attr);
 	}
-	private String AttrCond(MapAttr attr)
+	private String AttrCond(MapAttr attr) throws Exception
 	{
 		//定义数据容器.
 		DataSet ds = new DataSet();
@@ -619,7 +622,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 			///#endregion 增加操作符 number.
 
-		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
+		return BP.Tools.Json.ToJson(ds); // cond.ToJson();
 	}
 
 		///#endregion
@@ -808,8 +811,9 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CondByStation_Init()
+	public final String CondByStation_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -833,7 +837,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	/** 
 	 保存
@@ -1075,7 +1079,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 
 		///#region 按照岗位的方向条件.
-	public final String CondStation_Init()
+	public final String CondStation_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -1099,7 +1103,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		cond.RetrieveFromDBSources();
 		ds.Tables.add(cond.ToDataTableField("Cond"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 
 
 	}

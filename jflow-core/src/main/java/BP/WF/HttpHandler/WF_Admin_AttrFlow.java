@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.Web.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.DA.*;
 import BP.WF.Template.*;
 import BP.WF.*;
@@ -24,8 +25,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	 代码生成器.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String APICodeFEE_Init()
+	public final String APICodeFEE_Init() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(getFK_Flow()))
 		{
@@ -38,11 +40,11 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 		if (BP.WF.Glo.getPlatform() == Platform.CCFlow)
 		{
-			tmpPath = SystemConfig.PathOfWebApp + "\\WF\\Admin\\AttrFlow\\APICodeFEE.txt.CCFlow";
+			tmpPath = SystemConfig.getPathOfWebApp() + "/WF/Admin/AttrFlow/APICodeFEE.txt.CCFlow";
 		}
 		else
 		{
-			tmpPath = SystemConfig.PathOfWebApp + "\\WF\\Admin\\AttrFlow\\APICodeFEE.txt.JFlow";
+			tmpPath = SystemConfig.getPathOfWebApp() + "/WF/Admin/AttrFlow/APICodeFEE.txt.JFlow";
 		}
 
 		if ((new File(tmpPath)).isFile() == false)
@@ -50,9 +52,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			return String.format("未找到事件编写模板文件“%1$s”，请联系管理员！", tmpPath);
 		}
 
-		String Title = flow.Name + "[" + flow.No + "]";
+		String Title = flow.getName() + "[" + flow.getNo() + "]";
 		String code = BP.DA.DataType.ReadTextFile(tmpPath); //, System.Text.Encoding.UTF8).replace("F001Templepte", string.Format("FEE{0}", flow.No)).replace("@FlowName", flow.Name).replace("@FlowNo", flow.No);
-		code = code.replace("F001Templepte", String.format("FEE%1$s", flow.No)).replace("@FlowName", flow.Name).replace("@FlowNo", flow.No);
+		code = code.replace("F001Templepte", String.format("FEE%1$s", flow.getNo())).replace("@FlowName", flow.getName()).replace("@FlowNo", flow.getNo());
 
 
 		//此处将重要行标示出来，根据下面的数组中的项来检索重要行号
@@ -62,7 +64,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		//this.Pub1.AddLi(string.Format("<a href=\"APICodeFEE.aspx?FK_Flow={0}&Download=1\" target=\"_blank\" class=\"easyui-linkbutton\" data-options=\"iconCls:'icon-save',plain:true\">下载代码</a><br />", FK_Flow));
 
 		String msg = "<script type=\"text/javascript\">SyntaxHighlighter.highlight();</script>";
-		msg += String.format("<pre type=\"syntaxhighlighter\" class=\"brush: csharp; html-script: false; highlight: [%3$s]\" title=\"%1$s[编号：%2$s] 流程自定义事件代码生成\">", flow.Name, flow.No, APICodeFEE_Init_GetImportantLinesNumbers(lineStrings, code));
+		msg += String.format("<pre type=\"syntaxhighlighter\" class=\"brush: csharp; html-script: false; highlight: [%3$s]\" title=\"%1$s[编号：%2$s] 流程自定义事件代码生成\">", flow.getName(), flow.getNo(), APICodeFEE_Init_GetImportantLinesNumbers(lineStrings, code));
 		msg += code.replace("<", "&lt;"); //SyntaxHighlighter中，使用<Pre>包含的代码要将左尖括号改成其转义形式
 		msg += "</pre>";
 
@@ -346,7 +348,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		//转化成json,返回.
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
-	public final String DTSBTableExt_Save()
+	public final String DTSBTableExt_Save() throws Exception
 	{
 		String rpt = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
 		Flow fl = new Flow(this.getFK_Flow());
@@ -362,23 +364,23 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		String lcStr = ""; //要同步的流程字段
 		String ywStr = ""; //第三方字段
 		String err = "";
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			int val = this.GetRequestValInt("CB_" + attr.KeyOfEn);
+			int val = this.GetRequestValInt("CB_" + attr.getKeyOfEn());
 			if (val == 0)
 			{
 				continue;
 			}
 
-			String refField = this.GetRequestVal("DDL_" + attr.KeyOfEn);
+			String refField = this.GetRequestVal("DDL_" + attr.getKeyOfEn());
 
 			//如果选中的业务字段重复，抛出异常
 			if (ywStr.contains("@" + refField + "@"))
 			{
-				err += "@配置【" + attr.KeyOfEn + " - " + attr.Name +
+				err += "@配置【" + attr.getKeyOfEn() + " - " + attr.getName() +
 					"】错误, 请确保选中业务字段的唯一性，该业务字段已经被其他字段所使用。";
 			}
-			lcStr += "@" + attr.KeyOfEn + "@,";
+			lcStr += "@" + attr.getKeyOfEn() + "@,";
 			ywStr += "@" + refField + "@,";
 		}
 
@@ -457,19 +459,19 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 			en.SetValByKey(BP.WF.Template.FlowAttr.StartGuideWay, val);
 
-			if (en.getStartGuideWay() == Template.StartGuideWay.None)
+			if (en.getStartGuideWay() == StartGuideWay.None)
 			{
 				en.setStartGuideWay(BP.WF.Template.StartGuideWay.None);
 			}
 
-			if (en.getStartGuideWay() == Template.StartGuideWay.ByHistoryUrl)
+			if (en.getStartGuideWay() == StartGuideWay.ByHistoryUrl)
 			{
 				en.setStartGuidePara1(this.GetRequestVal("TB_ByHistoryUrl"));
 				en.setStartGuidePara2("");
 				en.setStartGuideWay(BP.WF.Template.StartGuideWay.ByHistoryUrl);
 			}
 
-			if (en.getStartGuideWay() == Template.StartGuideWay.BySelfUrl)
+			if (en.getStartGuideWay() == StartGuideWay.BySelfUrl)
 			{
 				en.setStartGuidePara1(this.GetRequestVal("TB_SelfURL"));
 				en.setStartGuidePara2("");
@@ -477,7 +479,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			}
 
 			//单条模式.
-			if (en.getStartGuideWay() == Template.StartGuideWay.BySQLOne)
+			if (en.getStartGuideWay() == StartGuideWay.BySQLOne)
 			{
 				en.setStartGuidePara1(this.GetRequestVal("TB_BySQLOne1")); //查询语句.
 				en.setStartGuidePara2(this.GetRequestVal("TB_BySQLOne2")); //列表语句.
@@ -487,14 +489,14 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 				en.setStartGuideWay(BP.WF.Template.StartGuideWay.BySQLOne);
 			}
 			//多条模式
-			if (en.getStartGuideWay() == Template.StartGuideWay.BySQLMulti)
+			if (en.getStartGuideWay() == StartGuideWay.BySQLMulti)
 			{
 				en.setStartGuidePara1(this.GetRequestVal("TB_BySQLMulti1")); //查询语句.
 				en.setStartGuidePara2(this.GetRequestVal("TB_BySQLMulti2")); //列表语句.
 				en.setStartGuideWay(BP.WF.Template.StartGuideWay.BySQLMulti);
 			}
 			//多条-子父流程-合卷审批.
-			if (en.getStartGuideWay() == Template.StartGuideWay.SubFlowGuide)
+			if (en.getStartGuideWay() == StartGuideWay.SubFlowGuide)
 			{
 				en.setStartGuidePara1(this.GetRequestVal("TB_SubFlow1")); //查询语句.
 				en.setStartGuidePara2(this.GetRequestVal("TB_SubFlow2")); //列表语句.
@@ -506,7 +508,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			BP.WF.Template.FrmNodes fns = new BP.WF.Template.FrmNodes(Integer.parseInt(this.getFK_Flow() + "01"));
 			if (fns.size() >= 2)
 			{
-				if (en.getStartGuideWay() == Template.StartGuideWay.ByFrms)
+				if (en.getStartGuideWay() == StartGuideWay.ByFrms)
 				{
 					en.setStartGuideWay(BP.WF.Template.StartGuideWay.ByFrms);
 				}
@@ -574,10 +576,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 
 		//设置文件名
-		String fileNewName = LocalDateTime.now().toString("yyyyMMddHHmmssff") + "_" + (new File(files[0].FileName)).getName();
+		String fileNewName = DateUtils.format(new Date(),"yyyyMMddHHmmssff") + "_" + (new File(files[0].FileName)).getName();
 
 		//文件存放路径
-		String filePath = BP.Sys.SystemConfig.PathOfTemp + "\\" + fileNewName;
+		String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "/" + fileNewName;
 		//files[0].SaveAs(filePath);
 		HttpContextHelper.UploadFile(files[0], filePath);
 
@@ -606,10 +608,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		BP.WF.Flow flow = BP.WF.Flow.DoLoadFlowTemplate(FK_FlowSort, filePath, model, flowNo);
 
 		Hashtable ht = new Hashtable();
-		ht.put("FK_Flow", flow.No);
-		ht.put("FlowName", flow.Name);
+		ht.put("FK_Flow", flow.getNo());
+		ht.put("FlowName", flow.getName());
 		ht.put("FK_FlowSort", flow.getFK_FlowSort());
-		ht.put("Msg", "导入成功,流程编号为:" + flow.No + "名称为:" + flow.Name);
+		ht.put("Msg", "导入成功,流程编号为:" + flow.getNo() + "名称为:" + flow.getName());
 		return BP.Tools.Json.ToJson(ht);
 	}
 
@@ -621,28 +623,29 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	 修改节点ICON
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NodesIcon_Init()
+	public final String NodesIcon_Init() throws Exception
 	{
-		DataSet ds = new System.Data.DataSet();
+		DataSet ds = new DataSet();
 		Nodes nds = new Nodes(this.getFK_Flow());
 		DataTable dt = nds.ToDataTableField("Nodes");
 		ds.Tables.add(dt);
 
 		//把文件放入ds.
-		String path = SystemConfig.PathOfWebApp + "\\WF\\Admin\\ClientBin\\NodeIcon\\";
-		String[] strs = (new File(path)).list(File::isFile);
-		DataTable dtIcon = new System.Data.DataTable();
+		String path = SystemConfig.getPathOfWebApp() + "/WF/Admin/ClientBin/NodeIcon/";
+		String[] strs = (new File(path)).list();
+		DataTable dtIcon = new DataTable();
 		dtIcon.Columns.Add("No");
 		dtIcon.Columns.Add("Name");
 		for (String str : strs)
 		{
-			String fileName = str.substring(str.lastIndexOf("\\") + 1);
+			String fileName = str.substring(str.lastIndexOf("/") + 1);
 			fileName = fileName.substring(0, fileName.lastIndexOf("."));
 
 			DataRow dr = dtIcon.NewRow();
-			dr.set(0, fileName);
-			dr.set(1, fileName);
+			dr.setValue(0, fileName);
+			dr.setValue(1, fileName);
 			dtIcon.Rows.add(dr);
 		}
 
@@ -658,8 +661,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	 流程时限消息设置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String PushMsgEntity_Init()
+	public final String PushMsgEntity_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -674,11 +678,11 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 		//mypk
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.setMyPK( this.getMyPK();
+		msg.setMyPK(this.getMyPK());
 		msg.RetrieveFromDBSources();
 		ds.Tables.add(msg.ToDataTableField("PushMsgEntity"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/** 
@@ -689,7 +693,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	public final String PushMsg_Save()
 	{
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.setMyPK( this.getMyPK();
+		msg.setMyPK(this.getMyPK());
 		msg.RetrieveFromDBSources();
 
 		msg.setFK_Event(this.getFK_Event()); //流程时限规则
@@ -768,9 +772,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			///#endregion 邮件保存.
 
 		//保存.
-		if (DataType.IsNullOrEmpty(msg.MyPK) == true)
+		if (DataType.IsNullOrEmpty(msg.getMyPK()) == true)
 		{
-			msg.setMyPK( BP.DA.DBAccess.GenerGUID();
+			msg.setMyPK(BP.DA.DBAccess.GenerGUID());
 			msg.Insert();
 		}
 		else

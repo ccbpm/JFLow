@@ -37,8 +37,9 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	 时间轴
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String TimeBase_Init()
+	public final String TimeBase_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -141,7 +142,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 		//返回结果.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	public final String TimeBase_OpenFrm()
@@ -233,7 +234,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 		///#endregion 属性.
 
-	public final String FlowBBS_Delete()
+	public final String FlowBBS_Delete() throws Exception
 	{
 		return BP.WF.Dev2Interface.Flow_BBSDelete(this.getFK_Flow(), this.getMyPK(), WebUser.getNo());
 	}
@@ -291,8 +292,9 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	 获取可操作状态信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String OP_GetStatus()
+	public final String OP_GetStatus() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		Hashtable ht = new Hashtable();
@@ -472,8 +474,9 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	 
 	 @param gwf
 	 @return 
+	 * @throws Exception 
 	*/
-	private boolean IsCanPrintSpecForTianYe(GenerWorkFlow gwf)
+	private boolean IsCanPrintSpecForTianYe(GenerWorkFlow gwf) throws Exception
 	{
 		//如果已经完成了，并且节点不是最后一个节点就不能打印.
 		if (gwf.getWFState() == WFState.Complete)
@@ -510,8 +513,9 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	 获取附件列表及单据列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetAthsAndBills()
+	public final String GetAthsAndBills() throws Exception
 	{
 		String sql = "";
 		String json = "{\"Aths\":";
@@ -566,7 +570,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		{
 			String url = "";
 			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), String.valueOf(nodeID), this.getWorkID(), this.getFK_Flow(), this.getFID());
-			if (item.No.equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
+			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
 			{
 				if (nd.getFormUrl().contains("?"))
 				{
@@ -577,10 +581,10 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 					url = "@url=" + nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
 				}
 			}
-			re += "{" + String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\",\"IsDefault\":\"%4$s\"", item.No, item.getName(), url, item.getIsDefault()) + "},";
+			re += "{" + String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\",\"IsDefault\":\"%4$s\"", item.getNo(), item.getName(), url, item.getIsDefault()) + "},";
 		}
 
-		return tangible.StringHelper.trimEnd(re, ',') + "]";
+		return StringHelper.trimEnd(re, ',') + "]";
 	}
 
 	/** 
@@ -681,7 +685,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 				dt = DBAccess.RunSQLReturnTable(sql);
 				DataTable newdt = new DataTable();
-				newdt = dt.Clone();
+				newdt = dt.clone();
 				//判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
 				if (dt.Rows.size() > 0)
 				{
@@ -955,7 +959,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 			//    }
 			//}
 
-			String str = BP.Tools.Json.DataSetToJson(ds);
+			String str = BP.Tools.Json.ToJson(ds);
 			//  DataType.WriteFile("c:\\GetFlowTrackJsonData_CCflow.txt", str);
 			return str;
 		}
@@ -995,8 +999,9 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	 提交评论.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowBBS_Save()
+	public final String FlowBBS_Save() throws Exception
 	{
 		String msg = this.GetValFromFrmByKey("TB_Msg");
 		String mypk = BP.WF.Dev2Interface.Flow_BBSAdd(this.getFK_Flow(), this.getWorkID(), this.getFID(), msg, WebUser.getNo(), WebUser.getName());
@@ -1010,12 +1015,13 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	 回复评论.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowBBS_Replay()
+	public final String FlowBBS_Replay() throws Exception
 	{
 		SMS sms = new SMS();
 		sms.RetrieveByAttr(SMSAttr.MyPK, getMyPK());
-		sms.setMyPK( DBAccess.GenerGUID();
+		sms.setMyPK(DBAccess.GenerGUID());
 		sms.setRDT(DataType.getCurrentDataTime());
 		sms.setSendToEmpNo(this.getUserName());
 		sms.setSender(WebUser.getNo());
@@ -1035,7 +1041,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		ps.SQL = "SELECT COUNT(ActionType) FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		ps.Add("WorkID", this.getWorkID());
-		String count = BP.DA.DBAccess.RunSQLReturnValInt(ps).toString();
+		String count = String.valueOf(DBAccess.RunSQLReturnValInt(ps));
 		return count;
 	}
 

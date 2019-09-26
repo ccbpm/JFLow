@@ -104,15 +104,16 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 	  初始化sf2.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SF2_Init()
+	public final String SF2_Init() throws Exception
 	{
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
 		return srcs.ToJson();
 	}
 
-	public final String SF2_GetTVs()
+	public final String SF2_GetTVs() throws Exception
 	{
 		String src = this.GetRequestVal("src");
 
@@ -122,7 +123,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String SF2_GetCols()
+	public final String SF2_GetCols() throws Exception
 	{
 		String src = this.GetRequestVal("src");
 		String table = this.GetRequestVal("table");
@@ -142,35 +143,35 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 
 		for (DataRow r : dt.Rows)
 		{
-			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == DBNull.Value || DataType.IsNullOrEmpty(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
+			r.setValue("Name", r.getValue("No") + (r.getValue("Name") == null || r.getValue("Name") == null || DataType.IsNullOrEmpty(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
 		}
 
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String SF2_Save()
+	public final String SF2_Save() throws Exception
 	{
 		SFTable sf = new SFTable();
-		sf.No = this.GetValFromFrmByKey("No");
-		if (sf.IsExits)
+		sf.setNo(this.GetValFromFrmByKey("No"));
+		if (sf.getIsExits())
 		{
-			return "err@标记:" + sf.No + "已经存在.";
+			return "err@标记:" + sf.getNo() + "已经存在.";
 		}
 
-		attr.setName(this.GetValFromFrmByKey("Name");
-		sf.FK_SFDBSrc = this.GetValFromFrmByKey("FK_DBSrc");
-		sf.setSrcTable(this.GetValFromFrmByKey("SrcTable");
-		sf.CodeStruct = (CodeStruct) this.GetValIntFromFrmByKey("CodeStruct");
-		sf.setColumnValue(this.GetValFromFrmByKey("ColumnValue");
-		sf.ColumnText = this.GetValFromFrmByKey("ColumnText");
-		if (sf.CodeStruct == CodeStruct.Tree)
+		sf.setName(this.GetValFromFrmByKey("Name"));
+		sf.setFK_SFDBSrc(this.GetValFromFrmByKey("FK_DBSrc"));
+		sf.setSrcTable(this.GetValFromFrmByKey("SrcTable"));
+		sf.setCodeStruct(CodeStruct.forValue(this.GetValIntFromFrmByKey("CodeStruct")));
+		sf.setColumnValue(this.GetValFromFrmByKey("ColumnValue"));
+		sf.setColumnText(this.GetValFromFrmByKey("ColumnText"));
+		if (sf.getCodeStruct() == CodeStruct.Tree)
 		{
-			sf.ParentValue = this.GetValFromFrmByKey("ParentValue");
-			sf.DefVal = this.GetValFromFrmByKey("RootValue");
+			sf.setParentValue(this.GetValFromFrmByKey("ParentValue"));
+			sf.setDefVal(this.GetValFromFrmByKey("RootValue"));
 		}
-		sf.SelectStatement = this.GetValFromFrmByKey("Selectstatement");
-		attr.setSrcType(SrcType.TableOrView;
-		sf.FK_Val = "FK_" + sf.No;
+		sf.setSelectStatement(this.GetValFromFrmByKey("Selectstatement"));
+		sf.setSrcType(SrcType.TableOrView);
+		sf.setFK_Val("FK_" + sf.getNo());
 		sf.Save();
 
 		return "保存成功！";

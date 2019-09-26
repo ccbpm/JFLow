@@ -7,6 +7,7 @@ import BP.Tools.*;
 import BP.WF.*;
 import BP.Web.*;
 import BP.Sys.*;
+import BP.Sys.FrmUI.MapAttrDT;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.util.*;
@@ -33,8 +34,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	  设计器初始化.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Designer_Init()
+	public final String Designer_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 		//如果是第一次进入，就执行旧版本的升级检查.
@@ -46,10 +48,10 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			{
 				/*如果是类的实体.*/
 				Entities ens = ClassFactory.GetEns(this.getFK_MapData());
-				Entity en = ens.GetNewEntity;
+				Entity en = ens.getNewEntity();
 
 				MapData mymd = new MapData();
-				mymd.No = this.getFK_MapData();
+				mymd.setNo(this.getFK_MapData());
 				int i = mymd.RetrieveFromDBSources();
 				if (i == 0)
 				{
@@ -57,7 +59,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				}
 
 				mymd.RetrieveFromDBSources();
-				mymd.HisFrmType = FrmType.FoolForm;
+				mymd.setHisFrmType(FrmType.FoolForm);
 				mymd.Update();
 
 			}
@@ -72,14 +74,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		MapData md = new MapData(this.getFK_MapData());
 		//清缓存
 		md.ClearCash();
-		ds.Tables.add(md.ToDataTableField("Sys_MapData").Copy());
+		ds.Tables.add(md.ToDataTableField("Sys_MapData").copy());
 
 
 		// 字段属性.
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
-		for (MapAttr item : attrs)
+		for (MapAttr item : attrs.ToJavaList())
 		{
-			item.DefVal = item.DefValReal;
+			item.setDefVal(item.getDefValReal());
 		}
 
 		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
@@ -106,14 +108,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		ds.Tables.add(MapExts.ToDataTableField("Sys_MapExt"));
 
 		// 检查组件的分组是否完整?
-		for (GroupField item : gfs)
+		for (GroupField item : gfs.ToJavaList())
 		{
 				boolean isHave = false;
-			if (item.CtrlType.equals("Dtl"))
+			if (item.getCtrlType().equals("Dtl"))
 			{
 				for (MapDtl dtl : dtls.ToJavaList())
 				{
-					if (dtl.No == item.CtrlID)
+					if (dtl.getNo().equals(item.getCtrlID()))
 					{
 						isHave = true;
 						break;
@@ -134,7 +136,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			{
 				FrmNodeComponent fnc = new FrmNodeComponent(Integer.parseInt(nodeStr));
 				//   var f = fnc.GetValFloatByKey("FWC_H");
-				ds.Tables.add(fnc.ToDataTableField("WF_Node").Copy());
+				ds.Tables.add(fnc.ToDataTableField("WF_Node").copy());
 			}
 		}
 
@@ -169,14 +171,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		//如果传递来了节点信息, 就是说明了独立表单的节点方案处理, 现在就要做如下判断
 		if (this.getFK_Node() != 0)
 		{
-			dtl.No = this.getFK_MapDtl() + "_" + this.getFK_Node();
+			dtl.setNo(this.getFK_MapDtl() + "_" + this.getFK_Node());
 
 			if (dtl.RetrieveFromDBSources() == 0)
 			{
 				// 开始复制它的属性.
 				MapAttrs attrs = new MapAttrs(this.getFK_MapDtl());
-				MapDtl odtl = new Sys.MapDtl();
-				odtl.No = this.getFK_MapDtl();
+				MapDtl odtl = new MapDtl();
+				odtl.setNo(this.getFK_MapDtl());
 				int i = odtl.RetrieveFromDBSources();
 				if (i == 0)
 				{
@@ -185,18 +187,18 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 
 				//存储表要与原明细表一致
-				if (DataType.IsNullOrEmpty(odtl.PTable))
+				if (DataType.IsNullOrEmpty(odtl.getPTable()))
 				{
-					dtl.PTable = odtl.No;
+					dtl.setPTable(odtl.getNo());
 				}
 				else
 				{
-					dtl.PTable = odtl.PTable;
+					dtl.setPTable(odtl.getPTable());
 				}
 
 				//让其直接保存.
-				dtl.No = this.getFK_MapDtl() + "_" + this.getFK_Node();
-				dtl.FK_MapData = "Temp";
+				dtl.setNo(this.getFK_MapDtl() + "_" + this.getFK_Node());
+				dtl.setFK_MapData("Temp");
 				dtl.DirectInsert(); //生成一个明细表属性的主表.
 
 				//字段的分组也要一同复制
@@ -204,64 +206,64 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 				//循环保存字段.
 				int idx = 0;
-				for (MapAttr item : attrs)
+				for (MapAttr item : attrs.ToJavaList())
 				{
-					if (item.GroupID != 0)
+					if (item.getGroupID() != 0)
 					{
-						if (groupids.containsKey(item.GroupID))
+						if (groupids.containsKey(item.getGroupID()))
 						{
-							item.GroupID = groupids.get(item.GroupID);
+							item.setGroupID(groupids.get(item.getGroupID()));
 						}
 						else
 						{
-							GroupField gf = new Sys.GroupField();
-							gf.OID = item.GroupID;
+							GroupField gf = new GroupField();
+							gf.setOID(item.getGroupID());
 
 							if (gf.RetrieveFromDBSources() == 0)
 							{
-								gf.Lab = "默认分组";
+								gf.setLab("默认分组");
 							}
 
-							gf.EnName = dtl.No;
+							gf.setEnName(dtl.getNo());
 							gf.InsertAsNew();
 
-							if (groupids.containsKey(item.GroupID) == false)
+							if (groupids.containsKey(item.getGroupID()) == false)
 							{
-								groupids.put(item.GroupID, gf.OID);
+								groupids.put(item.getGroupID(), gf.getOID());
 							}
 
-							item.GroupID = gf.OID;
+							item.setGroupID(gf.getOID());
 						}
 					}
 
-					item.FK_MapData = this.getFK_MapDtl() + "_" + this.getFK_Node();
-					item.setMyPK( item.FK_MapData + "_" + item.KeyOfEn;
+					item.setFK_MapData(this.getFK_MapDtl() + "_" + this.getFK_Node());
+					item.setMyPK(item.getFK_MapData() + "_" + item.getKeyOfEn());
 					item.Save();
 					idx++;
-					item.Idx = idx;
+					item.setIdx(idx);
 					item.DirectUpdate();
 				}
 
 				MapData md = new MapData();
-				md.No = "Temp";
-				if (md.IsExits == false)
+				md.setNo("Temp");
+				if (md.getIsExits() == false)
 				{
-					md.Name = "为权限方案设置的临时的数据";
+					md.setName("为权限方案设置的临时的数据");
 					md.Insert();
 				}
 			}
 
-			return "sln@" + dtl.No;
+			return "sln@" + dtl.getNo();
 		}
 
-		dtl.No = this.getFK_MapDtl();
+		dtl.setNo(this.getFK_MapDtl());
 		if (dtl.RetrieveFromDBSources() == 0)
 		{
 			BP.Sys.CCFormAPI.CreateOrSaveDtl(this.getFK_MapData(), this.getFK_MapDtl(), this.getFK_MapDtl(), 100, 200);
 		}
 		else
 		{
-			BP.Sys.CCFormAPI.CreateOrSaveDtl(this.getFK_MapData(), this.getFK_MapDtl(), dtl.Name, dtl.X, dtl.Y);
+			BP.Sys.CCFormAPI.CreateOrSaveDtl(this.getFK_MapData(), this.getFK_MapDtl(), dtl.getName(), dtl.getX(), dtl.getY());
 		}
 
 		return "创建成功.";
@@ -283,11 +285,16 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	{
 		String name = GetRequestVal("name");
 		String flag = GetRequestVal("flag");
-		//此处为字段中文转拼音，设置为最大20个字符，edited by liuxc,2017-9-25
-		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(flag, "true"), true, 20);
+		//此处为字段中文转拼音，设置为最大20个字符
+		if (flag.equals("true"))
+		{
+			 return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, true, true, 20);			
+		}
+
+		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, false, true, 20);
 	}
 
-	public final String Designer_GFDoUp()
+	public final String Designer_GFDoUp() throws Exception
 	{
 		String msg = "";
 		GroupField gf = new GroupField(this.getRefOID());
@@ -295,7 +302,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		return msg;
 	}
-	public final String Designer_GFDoDown()
+	public final String Designer_GFDoDown() throws Exception
 	{
 		String msg = "";
 		GroupField mygf = new GroupField(this.getRefOID());
@@ -307,35 +314,36 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 增加一个枚举类型
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SysEnumList_SaveEnumField()
+	public final String SysEnumList_SaveEnumField() throws Exception
 	{
-		MapAttr attr = new Sys.MapAttr();
-		attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
+		MapAttr attr = new MapAttr();
+		attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 		if (attr.RetrieveFromDBSources() != 0)
 		{
 			return "err@字段名[" + this.getKeyOfEn() + "]已经存在.";
 		}
 
-		attr.FK_MapData = this.getFK_MapData();
-		attr.setKeyOfEn (this.getKeyOfEn();
-		attr.UIBindKey = this.GetRequestVal("EnumKey");
+		attr.setFK_MapData(this.getFK_MapData());
+		attr.setKeyOfEn(this.getKeyOfEn());
+		attr.setUIBindKey(this.GetRequestVal("EnumKey"));
 
-		attr.GroupID = this.GetRequestValInt("GroupFeid");
+		attr.setGroupID(this.GetRequestValInt("GroupFeid"));
 
-		attr.setUIContralType (En.UIContralType.DDL;
-		attr.setMyDataType (DataType.AppInt;
-		attr.setLGType(En.FieldTypeS.Enum;
+		attr.setUIContralType(UIContralType.DDL);
+		attr.setMyDataType (DataType.AppInt);
+		attr.setLGType(FieldTypeS.Enum);
 
-		SysEnumMain sem = new Sys.SysEnumMain();
-		sem.No = attr.UIBindKey;
+		SysEnumMain sem = new SysEnumMain();
+		sem.setNo(attr.getUIBindKey());
 		if (sem.RetrieveFromDBSources() != 0)
 		{
-			attr.Name = sem.Name;
+			attr.setName(sem.getName());
 		}
 		else
 		{
-			attr.setName("枚举" + attr.UIBindKey;
+			attr.setName("枚举" + attr.getUIBindKey());
 		}
 
 		//paras参数
@@ -343,64 +351,66 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID AND ( CtrlType='' OR CtrlType IS NULL ) ORDER BY OID DESC ";
 		ps.Add("FrmID", this.getFK_MapData());
 		//string sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.FK_MapData + "' AND ( CtrlType='' OR CtrlType IS NULL ) ORDER BY OID DESC ";
-		attr.GroupID = DBAccess.RunSQLReturnValInt(ps, 0);
+		attr.setGroupID(DBAccess.RunSQLReturnValInt(ps, 0));
 		attr.Insert();
-		return attr.MyPK;
+		return attr.getMyPK();
 	}
 
-	public final String Designer_NewMapDtl()
+	public final String Designer_NewMapDtl() throws Exception
 	{
 		MapDtl en = new MapDtl();
-		en.FK_MapData = this.getFK_MapData();
-		en.No = this.GetRequestVal("DtlNo");
+		en.setFK_MapData(this.getFK_MapData());
+		en.setNo(this.GetRequestVal("DtlNo"));
 
 		if (en.RetrieveFromDBSources() == 1)
 		{
-			return "err@从表ID:" + en.No + "已经存在.";
+			return "err@从表ID:" + en.getNo() + "已经存在.";
 		}
 		else
 		{
-			en.FK_Node = this.getFK_Node();
-			//en.setName ( "从表" + en.No;
-			en.setName ( "从表";
-			en.PTable = en.No;
-			en.H = 300;
+			en.setFK_Node(this.getFK_Node());
+			//en.setName ( "从表" + en.getNo());
+			en.setName("从表");
+			en.setPTable(en.getNo());
+			en.setH(300);
 			en.Insert();
 			en.IntMapAttrs();
 		}
 
 		//返回字串.
-		return en.No;
+		return en.getNo();
 	}
 
 	/** 
 	 创建一个多附件
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Designer_AthNew()
+	public final String Designer_AthNew() throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
-		ath.FK_MapData = this.getFK_MapData();
-		ath.NoOfObj = this.GetRequestVal("AthNo");
-		ath.setMyPK( ath.FK_MapData + "_" + ath.NoOfObj;
+		ath.setFK_MapData(this.getFK_MapData());
+		ath.setNoOfObj(this.GetRequestVal("AthNo"));
+		ath.setMyPK(ath.getFK_MapData() + "_" + ath.getNoOfObj());
 		if (ath.RetrieveFromDBSources() == 1)
 		{
-			return "err@附件ID:" + ath.NoOfObj + "已经存在.";
+			return "err@附件ID:" + ath.getNoOfObj() + "已经存在.";
 		}
 		BP.Sys.CCFormAPI.CreateOrSaveAthMulti(this.getFK_MapData(), this.GetRequestVal("AthNo"), "我的附件", 100, 200);
-		return ath.MyPK;
+		return ath.getMyPK();
 	}
 	/** 
 	 返回信息.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupField_Init()
+	public final String GroupField_Init() throws Exception
 	{
 		GroupField gf = new GroupField();
-		gf.OID = this.GetRequestValInt("GroupField");
-		if (gf.OID != 0)
+		gf.setOID(this.GetRequestValInt("GroupField"));
+		if (gf.getOID() != 0)
 		{
 			gf.Retrieve();
 		}
@@ -412,22 +422,23 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 保存空白的分组.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupField_SaveBlank()
+	public final String GroupField_SaveBlank() throws Exception
 	{
 		String no = this.GetValFromFrmByKey("TB_Blank_No");
 		String name = this.GetValFromFrmByKey("TB_Blank_Name");
 
 		GroupField gf = new GroupField();
-		gf.OID = this.GetRequestValInt("GroupField");
-		if (gf.OID != 0)
+		gf.setOID(this.GetRequestValInt("GroupField"));
+		if (gf.getOID() != 0)
 		{
 			gf.Retrieve();
 		}
 
-		gf.CtrlID = no;
-		gf.EnName = this.getFK_MapData();
-		gf.Lab = name;
+		gf.setCtrlID(no);
+		gf.setEnName(this.getFK_MapData());
+		gf.setLab(name);
 		gf.Save();
 		return "保存成功.";
 	}
@@ -436,8 +447,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 审核分组保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupField_Save()
+	public final String GroupField_Save() throws Exception
 	{
 		String lab = this.GetValFromFrmByKey("TB_Check_Name");
 		if (lab.length() == 0)
@@ -469,13 +481,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 创建审核分组
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupField_Create()
+	public final String GroupField_Create() throws Exception
 	{
 		BP.Sys.GroupField gf = new GroupField();
-		gf.FrmID = this.getFK_MapData();
-		gf.Lab = this.GetRequestVal("Lab");
-		gf.EnName = this.getFK_MapData();
+		gf.setFrmID(this.getFK_MapData());
+		gf.setLab(this.GetRequestVal("Lab"));
+		gf.setEnName(this.getFK_MapData());
 		gf.Insert();
 		return "创建成功..";
 	}
@@ -483,8 +496,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 保存分组
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupField_SaveCheck()
+	public final String GroupField_SaveCheck() throws Exception
 	{
 		String lab = this.GetRequestVal("TB_Check_Name");
 		String prx = this.GetRequestVal("TB_Check_No");
@@ -496,11 +510,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 删除分组
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupField_DeleteCheck()
+	public final String GroupField_DeleteCheck() throws Exception
 	{
 		GroupField gf = new GroupField();
-		gf.OID = this.GetRequestValInt("GroupField");
+		gf.setOID(this.GetRequestValInt("GroupField"));
 		gf.Delete();
 
 		BP.WF.Template.MapFrmFool md = new BP.WF.Template.MapFrmFool(this.getFK_MapData());
@@ -514,18 +529,19 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 删除并删除该分组下的字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupField_DeleteAllCheck()
+	public final String GroupField_DeleteAllCheck() throws Exception
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.GroupID, this.GetRequestValInt("GroupField"));
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.HisEditType != EditType.Edit)
+			if (attr.getHisEditType() != EditType.Edit)
 			{
 				continue;
 			}
-			if (attr.KeyOfEn.equals("FID"))
+			if (attr.getKeyOfEn().equals("FID"))
 			{
 				continue;
 			}
@@ -534,13 +550,13 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 		GroupField gf = new GroupField();
-		gf.OID = this.GetRequestValInt("GroupField");
+		gf.setOID(this.GetRequestValInt("GroupField"));
 		gf.Delete();
 
 		return "删除并删除该分组下的字段成功...";
 	}
 
-	public final String ImpTableField_Step1()
+	public final String ImpTableField_Step1() throws Exception
 	{
 		BP.Sys.SFDBSrcs ens = new BP.Sys.SFDBSrcs();
 		ens.RetrieveAll();
@@ -566,7 +582,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 
 	private String _STable = null;
-	public final String getSTable()
+	public final String getSTable() throws Exception
 	{
 		if (_STable == null)
 		{
@@ -578,12 +594,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				BP.En.Entity en = BP.En.ClassFactory.GetEn(this.getFK_MapData());
 				if (en != null)
 				{
-					_STable = en.EnMap.PhysicsTable;
+					_STable = en.getEnMap().getPhysicsTable();
 				}
 				else
 				{
 					MapData md = new MapData(this.getFK_MapData());
-					_STable = md.PTable;
+					_STable = md.getPTable();
 				}
 			}
 		}
@@ -690,55 +706,55 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			String columnName = name.substring("HID_Idx_".length());
 
 			MapAttr ma = new MapAttr();
-			ma.KeyOfEn = columnName;
-			ma.FK_MapData = this.getFK_MapData();
-			ma.setMyPK( this.getFK_MapData() + "_" + ma.KeyOfEn;
-			if (ma.IsExits)
+			ma.setKeyOfEn(columnName);
+			ma.setFK_MapData(this.getFK_MapData());
+			ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
+			if (ma.getIsExits())
 			{
-				msg += "\t\n字段:" + ma.KeyOfEn + " - " + ma.Name + "已存在.";
+				msg += "\t\n字段:" + ma.getKeyOfEn() + " - " + ma.getName() + "已存在.";
 				continue;
 			}
 
-			ma.Name = this.GetValFromFrmByKey("TB_Desc_" + columnName);
-			if (DataType.IsNullOrEmpty(ma.Name))
+			ma.setName(this.GetValFromFrmByKey("TB_Desc_" + columnName));
+			if (DataType.IsNullOrEmpty(ma.getName()))
 			{
-				ma.Name = ma.KeyOfEn;
+				ma.setName(ma.getKeyOfEn());
 			}
 
-			ma.MyDataType = this.GetValIntFromFrmByKey("DDL_DBType_" + columnName);
-			ma.MaxLen = this.GetValIntFromFrmByKey("TB_Len_" + columnName);
-			ma.UIBindKey = this.GetValFromFrmByKey("TB_BindKey_" + columnName);
-			ma.LGType = BP.En.FieldTypeS.Normal;
+			ma.setMyDataType(this.GetValIntFromFrmByKey("DDL_DBType_" + columnName));
+			ma.setMaxLen(this.GetValIntFromFrmByKey("TB_Len_" + columnName));
+			ma.setUIBindKey(this.GetValFromFrmByKey("TB_BindKey_" + columnName));
+			ma.setLGType(BP.En.FieldTypeS.Normal);
 
 			//绑定了外键或者枚举.
-			if (DataType.IsNullOrEmpty(ma.UIBindKey) == false)
+			if (DataType.IsNullOrEmpty(ma.getUIBindKey()) == false)
 			{
 				SysEnums se = new SysEnums();
-				se.Retrieve(SysEnumAttr.EnumKey, ma.UIBindKey);
+				se.Retrieve(SysEnumAttr.EnumKey, ma.getUIBindKey());
 				if (se.size() > 0)
 				{
-					ma.MyDataType = BP.DA.DataType.AppInt;
-					ma.LGType = BP.En.FieldTypeS.Enum;
-					ma.UIContralType = BP.En.UIContralType.DDL;
+					ma.setMyDataType(BP.DA.DataType.AppInt);
+					ma.setLGType(BP.En.FieldTypeS.Enum);
+					ma.setUIContralType(BP.En.UIContralType.DDL);
 				}
 				SFTable tb = new SFTable();
-				tb.No = ma.UIBindKey;
-				if (tb.IsExits == true)
+				tb.setNo(ma.getUIBindKey());
+				if (tb.getIsExits() == true)
 				{
-					ma.MyDataType = BP.DA.DataType.AppString;
-					ma.LGType = BP.En.FieldTypeS.FK;
-					ma.UIContralType = BP.En.UIContralType.DDL;
+					ma.setMyDataType(DataType.AppString);
+					ma.setLGType(FieldTypeS.FK);
+					ma.setUIContralType(UIContralType.DDL);
 				}
 			}
 
-			if (ma.MyDataType == BP.DA.DataType.AppBoolean)
+			if (ma.getMyDataType() == BP.DA.DataType.AppBoolean)
 			{
-				ma.UIContralType = BP.En.UIContralType.CheckBok;
+				ma.setUIContralType(UIContralType.CheckBok);
 			}
 
 			ma.Insert();
 
-			msg += "\t\n字段:" + ma.KeyOfEn + " - " + ma.Name + "加入成功.";
+			msg += "\t\n字段:" + ma.getKeyOfEn() + " - " + ma.getName() + "加入成功.";
 
 			//生成lab.
 			FrmLab lab = null;
@@ -747,29 +763,29 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				maxEnd = maxEnd + 40;
 				/* 是否是左边 */
 				lab = new FrmLab();
-				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
-				lab.setFK_MapData( this.getFK_MapData();
-				lab.setText ( ma.Name;
-				lab.setX ( 40;
-				lab.setY(maxEnd;
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID());
+				lab.setFK_MapData(this.getFK_MapData());
+				lab.setText(ma.getName());
+				lab.setX(40);
+				lab.setY(maxEnd);
 				lab.Insert();
 
-				ma.X = lab.X + 80;
-				ma.Y = maxEnd;
+				ma.setX(lab.getX() + 80);
+				ma.setY(maxEnd);
 				ma.Update();
 			}
 			else
 			{
 				lab = new FrmLab();
-				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
-				lab.setFK_MapData( this.getFK_MapData();
-				lab.setText ( ma.Name;
-				lab.setX ( 350;
-				lab.setY(maxEnd;
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID());
+				lab.setFK_MapData( this.getFK_MapData());
+				lab.setText ( ma.getName());
+				lab.setX(350);
+				lab.setY(maxEnd);
 				lab.Insert();
 
-				ma.X = lab.X + 80;
-				ma.Y = maxEnd;
+				ma.setX(lab.getX() + 80);
+				ma.setY(maxEnd);
 				ma.Update();
 			}
 			isLeft = !isLeft;
@@ -785,24 +801,25 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 框架信息.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MapFrame_Init()
+	public final String MapFrame_Init() throws Exception
 	{
 		MapFrame mf = new MapFrame();
-		mf.FK_MapData = this.getFK_MapData();
+		mf.setFK_MapData(this.getFK_MapData());
 
 		if (this.getMyPK() == null)
 		{
-			mf.URL = "http://ccflow.org";
-			mf.W = 400;
-			mf.H = 300;
-			mf.Name = "我的框架.";
-			mf.FK_MapData = this.getFK_MapData();
-			mf.setMyPK( BP.DA.DBAccess.GenerGUID();
+			mf.setURL("http://ccflow.org");
+			mf.setW(400);
+			mf.setH(300);
+			mf.setName("我的框架.");
+			mf.setFK_MapData(this.getFK_MapData());
+			mf.setMyPK(BP.DA.DBAccess.GenerGUID());
 		}
 		else
 		{
-			mf.setMyPK( this.getMyPK();
+			mf.setMyPK(this.getMyPK());
 			mf.RetrieveFromDBSources();
 		}
 		return mf.ToJson();
@@ -817,7 +834,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		MapFrame mf = new MapFrame();
 		Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(mf);
 		mf = tempVar instanceof MapFrame ? (MapFrame)tempVar : null;
-		mf.FK_MapData = this.getFK_MapData();
+		mf.setFK_MapData(this.getFK_MapData());
 
 		mf.Save(); //执行保存.
 		return "保存成功..";
@@ -829,8 +846,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SFList_Delete()
+	public final String SFList_Delete() throws Exception
 	{
 		try
 		{
@@ -847,8 +865,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 字典表列表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SFList_Init()
+	public final String SFList_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -868,18 +887,18 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		if (pTableModel == 0)
 		{
 			MapDtl dtl = new MapDtl();
-			dtl.No = this.getFK_MapData();
+			dtl.setNo(this.getFK_MapData());
 			if (dtl.RetrieveFromDBSources() == 1)
 			{
-				pTableModel = dtl.PTableModel;
+				pTableModel = dtl.getPTableModel();
 			}
 			else
 			{
 				MapData md = new MapData();
-				md.No = this.getFK_MapData();
+				md.setNo(this.getFK_MapData());
 				if (md.RetrieveFromDBSources() == 1)
 				{
-					pTableModel = md.PTableModel;
+					pTableModel = md.getPTableModel();
 				}
 			}
 		}
@@ -893,10 +912,10 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-	public final String SFList_SaveSFField()
+	public final String SFList_SaveSFField() throws Exception
 	{
-		MapAttr attr = new Sys.MapAttr();
-		attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
+		MapAttr attr = new MapAttr();
+		attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 		if (attr.RetrieveFromDBSources() != 0)
 		{
 			return "err@字段名[" + this.getKeyOfEn() + "]已经存在.";
@@ -909,18 +928,18 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
 		ps.Add("FrmID",this.getFK_MapData());
 		//string sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.FK_MapData + "' AND (CtrlType='' OR CtrlType IS NULL) ORDER BY OID DESC ";
-		attr.GroupID = DBAccess.RunSQLReturnValInt(ps, 0);
+		attr.setGroupID(DBAccess.RunSQLReturnValInt(ps, 0));
 		attr.Update();
 
-		SFTable sf = new SFTable(attr.UIBindKey);
+		SFTable sf = new SFTable(attr.getUIBindKey());
 
-		if (sf.SrcType == SrcType.TableOrView || sf.SrcType == SrcType.BPClass || sf.SrcType == SrcType.CreateTable)
+		if (sf.getSrcType() == SrcType.TableOrView || sf.getSrcType() == SrcType.BPClass || sf.getSrcType() == SrcType.CreateTable)
 		{
-			return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFTable&PKVal=" + attr.MyPK;
+			return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFTable&PKVal=" + attr.getMyPK();
 		}
 		else
 		{
-			return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFSQL&PKVal=" + attr.MyPK;
+			return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFSQL&PKVal=" + attr.getMyPK();
 		}
 	}
 
@@ -933,41 +952,42 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 初始化表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String EditTableField_Init()
+	public final String EditTableField_Init() throws Exception
 	{
 		MapAttr attr = new MapAttr();
-		attr.setKeyOfEn (this.getKeyOfEn();
-		attr.FK_MapData = this.getFK_MapData();
+		attr.setKeyOfEn (this.getKeyOfEn());
+		attr.setFK_MapData(this.getFK_MapData());
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 		{
-			attr.setMyPK( this.getMyPK();
+			attr.setMyPK( this.getMyPK());
 			attr.RetrieveFromDBSources();
 		}
 		else
 		{
 			SFTable sf = new SFTable(this.getFK_SFTable());
-			attr.Name = sf.Name;
-			attr.setKeyOfEn (sf.No;
+			attr.setName(sf.getName());
+			attr.setKeyOfEn(sf.getNo());
 		}
 
 		//第1次加载.
-		attr.setUIContralType (UIContralType.DDL;
+		attr.setUIContralType(UIContralType.DDL);
 
-		attr.FK_MapData = this.getFK_MapData();
+		attr.setFK_MapData(this.getFK_MapData());
 
 		//字体大小.
-		int size = attr.Para_FontSize;
+		int size = attr.getPara_FontSize();
 		if (size == 0)
 		{
-			attr.Para_FontSize = 12;
+			attr.setPara_FontSize(12);
 		}
 
 		//横跨的列数.
-		if (attr.ColSpan == 0)
+		if (attr.getColSpan() == 0)
 		{
-			attr.ColSpan = 1;
+			attr.setColSpan(1);
 		}
 
 		return attr.ToJson();
@@ -982,15 +1002,15 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		String ptable = "";
 
 		MapDtl dtl = new MapDtl();
-		dtl.No = this.getFK_MapData();
+		dtl.setNo(this.getFK_MapData());
 		if (dtl.RetrieveFromDBSources() == 1)
 		{
-			ptable = dtl.PTable;
+			ptable = dtl.getPTable();
 		}
 		else
 		{
 			MapData md = new MapData(this.getFK_MapData());
-			ptable = md.PTable;
+			ptable = md.getPTable();
 		}
 
 		//获得原始数据.
@@ -1030,7 +1050,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		mydt.TableName = "dt";
 		return BP.Tools.Json.ToJson(mydt);
 	}
-	public final String FieldTypeListChoseOneField_Save()
+	public final String FieldTypeListChoseOneField_Save() throws Exception
 	{
 		int dataType = this.GetRequestValInt("DataType");
 		String keyOfEn = this.GetRequestVal("KeyOfEn");
@@ -1038,31 +1058,31 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		String frmID = this.GetRequestVal("FK_MapData");
 
 		MapAttr attr = new MapAttr();
-		attr.FK_MapData = frmID;
-		attr.setKeyOfEn (keyOfEn;
-		attr.setMyPK( attr.FK_MapData + "_" + keyOfEn;
-		if (attr.IsExits)
+		attr.setFK_MapData(frmID);
+		attr.setKeyOfEn(keyOfEn);
+		attr.setMyPK(attr.getFK_MapData() + "_" + keyOfEn);
+		if (attr.getIsExits())
 		{
 			return "err@该字段[" + keyOfEn + "]已经加入里面了.";
 		}
 
-		attr.Name = name;
-		attr.setMyDataType (dataType;
+		attr.setName(name);
+		attr.setMyDataType(dataType);
 
 		if (BP.DA.DataType.AppBoolean == dataType)
 		{
-			attr.setUIContralType (UIContralType.CheckBok;
+			attr.setUIContralType (UIContralType.CheckBok);
 		}
 		else
 		{
-			attr.setUIContralType (UIContralType.TB;
+			attr.setUIContralType (UIContralType.TB);
 		}
 
 		Paras ps = new Paras();
 		ps.SQL = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID AND CtrlType='' OR CtrlType= NULL";
 		ps.Add("FrmID", this.getFK_MapData());
 		//string sql = "SELECT OID FROM Sys_GroupField A WHERE A.FrmID='" + this.FK_MapData + "' AND CtrlType='' OR CtrlType= NULL";
-		attr.GroupID = DBAccess.RunSQLReturnValInt(ps, 0);
+		attr.setGroupID(DBAccess.RunSQLReturnValInt(ps, 0));
 
 		attr.Insert();
 
@@ -1117,7 +1137,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		try
 		{
 			MapData md = new MapData();
-			md.No = this.getFK_MapData();
+			md.setNo(this.getFK_MapData());
 			if (md.RetrieveFromDBSources() != 0)
 			{
 				md.CheckPTableSaveModel(newNo);
@@ -1130,207 +1150,208 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		//求出选择的字段类型.
 		MapAttr attr = new MapAttr();
-		attr.Name = newName;
-		attr.setKeyOfEn (newNo;
-		attr.FK_MapData = this.getFK_MapData();
-		attr.setLGType(FieldTypeS.Normal;
-		attr.setMyPK( this.getFK_MapData() + "_" + newNo;
-		attr.GroupID = iGroupID;
-		attr.setMyDataType (fType;
+		attr.setName(newName);
+		attr.setKeyOfEn(newNo);
+		attr.setFK_MapData(this.getFK_MapData());
+		attr.setLGType(FieldTypeS.Normal);
+		attr.setMyPK( this.getFK_MapData() + "_" + newNo);
+		attr.setGroupID(iGroupID);
+		attr.setMyDataType(fType);
 
-		int colspan = attr.ColSpan;
-		attr.Para_FontSize = 12;
-		int rows = attr.UIRows;
+		int colspan = attr.getColSpan();
+		attr.setPara_FontSize(12);
+		int rows = attr.getUIRows();
 
-		if (attr.MyDataType == DataType.AppString)
+		if (attr.getMyDataType() == DataType.AppString)
 		{
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setMyDataType (DataType.AppString;
-			attr.setUIContralType (UIContralType.TB;
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.TB);
 			attr.Insert();
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&MyPK=" + attr.MyPK;
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&MyPK=" + attr.getMyPK();
 		}
 
-		if (attr.MyDataType == DataType.AppInt)
+		if (attr.getMyDataType() == DataType.AppInt)
 		{
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setMyDataType (DataType.AppInt;
-			attr.setUIContralType (UIContralType.TB;
-			attr.setDefVal("0";
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setMyDataType(DataType.AppInt);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setDefVal("0");
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
-		if (attr.MyDataType == DataType.AppMoney)
+		if (attr.getMyDataType() == DataType.AppMoney)
 		{
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setMyDataType (DataType.AppMoney;
-			attr.setUIContralType (UIContralType.TB;
-			attr.setDefVal("0.00";
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setMyDataType(DataType.AppMoney);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setDefVal("0.00");
 			attr.Insert();
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
-		if (attr.MyDataType == DataType.AppFloat)
+		if (attr.getMyDataType() == DataType.AppFloat)
 		{
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setMyDataType (DataType.AppFloat;
-			attr.setUIContralType (UIContralType.TB;
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setMyDataType(DataType.AppFloat);
+			attr.setUIContralType(UIContralType.TB);
 
-			attr.setDefVal("0";
+			attr.setDefVal("0");
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
-		if (attr.MyDataType == DataType.AppDouble)
+		if (attr.getMyDataType() == DataType.AppDouble)
 		{
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setMyDataType (DataType.AppDouble;
-			attr.setUIContralType (UIContralType.TB;
-			attr.setDefVal("0";
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setMyDataType(DataType.AppDouble);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setDefVal("0");
 			attr.Insert();
 
 
 
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrNum&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
-		if (attr.MyDataType == DataType.AppDate)
+		if (attr.getMyDataType() == DataType.AppDate)
 		{
 
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setUIContralType (UIContralType.TB;
-			attr.setMyDataType (DataType.AppDate;
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setMyDataType (DataType.AppDate);
 			attr.Insert();
 
-			BP.Sys.FrmUI.MapAttrDT dt = new Sys.FrmUI.MapAttrDT();
-			dt.setMyPK( attr.MyPK;
+			MapAttrDT dt = new MapAttrDT();
+			dt.setMyPK( attr.getMyPK());
 			dt.RetrieveFromDBSources();
-			dt.Format = 0;
+			dt.setFormat(0;
 			dt.Update();
 
 
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
-		if (attr.MyDataType == DataType.AppDateTime)
+		if (attr.getMyDataType() == DataType.AppDateTime)
 		{
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setUIContralType (UIContralType.TB;
-			attr.setMyDataType (DataType.AppDateTime;
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setUIContralType (UIContralType.TB);
+			attr.setMyDataType (DataType.AppDateTime);
 			attr.Insert();
 
-			BP.Sys.FrmUI.MapAttrDT dt = new Sys.FrmUI.MapAttrDT();
-			dt.setMyPK( attr.MyPK;
+			MapAttrDT dt = new MapAttrDT();
+			dt.setMyPK(attr.getMyPK());
 			dt.RetrieveFromDBSources();
-			dt.Format = 1;
+			dt.setFormat(1);
 			dt.Update();
 
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
-		if (attr.MyDataType == DataType.AppBoolean)
+		if (attr.getMyDataType() == DataType.AppBoolean)
 		{
-			attr.UIWidth = 100;
-			attr.UIHeight = 23;
-			attr.setUIVisible(true;
-			attr.setUIIsEnable(true;
-			attr.ColSpan = 1;
-			attr.setMinLen(0;
-			attr.setMaxLen(50;
-			attr.setUIContralType (UIContralType.CheckBok;
-			attr.setMyDataType (DataType.AppBoolean;
-			attr.setDefVal("0";
+			attr.setUIWidth(100);
+			attr.setUIHeight(23);
+			attr.setUIVisible(true);
+			attr.setUIIsEnable(true);
+			attr.setColSpan(1);
+			attr.setMinLen(0);
+			attr.setMaxLen(50);
+			attr.setUIContralType(UIContralType.CheckBok);
+			attr.setMyDataType(DataType.AppBoolean);
+			attr.setDefVal("0");
 			attr.Insert();
 
-			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrBoolen&MyPK=" + attr.MyPK + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.MyDataType + "&DoType=Edit&GroupField=" + this.getGroupField();
+			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrBoolen&MyPK=" + attr.getMyPK() + "&FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + newNo + "&FType=" + attr.getMyDataType() + "&DoType=Edit&GroupField=" + this.getGroupField();
 		}
 
-		return "err@没有判断的数据类型." + attr.MyDataTypeStr;
+		return "err@没有判断的数据类型." + attr.getMyDataTypeStr();
 	}
 	/** 
 	 字段初始化数据.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String EditF_FieldInit()
+	public final String EditF_FieldInit() throws Exception
 	{
 		MapAttr attr = new MapAttr();
-		attr.setKeyOfEn (this.getKeyOfEn();
-		attr.FK_MapData = this.getFK_MapData();
+		attr.setKeyOfEn(this.getKeyOfEn());
+		attr.setFK_MapData(this.getFK_MapData());
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 		{
-			attr.setMyPK( this.getMyPK();
+			attr.setMyPK(this.getMyPK());
 			attr.RetrieveFromDBSources();
 		}
 		else
 		{
-			attr.GroupID = this.getGroupField();
+			attr.setGroupID(this.getGroupField());
 		}
 
-		attr.FK_MapData = this.getFK_MapData();
+		attr.setFK_MapData(this.getFK_MapData());
 
 		//字体大小.
-		int size = attr.Para_FontSize;
+		int size = attr.getPara_FontSize();
 		if (size == 0)
 		{
-			attr.Para_FontSize = 12;
+			attr.setPara_FontSize(12);
 		}
 
-		String field = attr.Para_SiganField;
-		boolean IsEnableJS = attr.IsEnableJS;
-		boolean IsSupperText = attr.IsSupperText; //是否是超大文本？
-		boolean isBigDoc = attr.IsBigDoc;
+		String field = attr.getPara_SiganField();
+		boolean IsEnableJS = attr.getIsEnableJS();
+		boolean IsSupperText = attr.getIsSupperText(); //是否是超大文本？
+		boolean isBigDoc = attr.getIsBigDoc();
 
 		//横跨的列数.
-		if (attr.ColSpan == 0)
+		if (attr.getColSpan() == 0)
 		{
-			attr.ColSpan = 1;
+			attr.setColSpan(1);
 		}
 
 		return attr.ToJson();
@@ -1338,46 +1359,46 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String FieldInitEnum()
 	{
 		MapAttr attr = new MapAttr();
-		attr.setKeyOfEn (this.getKeyOfEn();
-		attr.FK_MapData = this.getFK_MapData();
+		attr.setKeyOfEn (this.getKeyOfEn());
+		attr.setFK_MapData(this.getFK_MapData());
 
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 		{
-			attr.setMyPK( this.getMyPK();
+			attr.setMyPK(this.getMyPK());
 			attr.RetrieveFromDBSources();
 		}
 		else
 		{
 			SysEnumMain sem = new SysEnumMain(this.getEnumKey());
-			attr.Name = sem.Name;
-			attr.setKeyOfEn (sem.No;
-			attr.setDefVal("0";
+			attr.setName(sem.getName());
+			attr.setKeyOfEn(sem.getNo());
+			attr.setDefVal("0");
 		}
 
 		//第1次加载.
-		if (attr.UIContralType == UIContralType.TB)
+		if (attr.getUIContralType() == UIContralType.TB)
 		{
-			attr.setUIContralType (UIContralType.DDL;
+			attr.setUIContralType (UIContralType.DDL);
 		}
 
-		attr.FK_MapData = this.getFK_MapData();
+		attr.setFK_MapData(this.getFK_MapData());
 
 		//字体大小.
-		int size = attr.Para_FontSize;
+		int size = attr.getPara_FontSize();
 		if (size == 0)
 		{
-			attr.Para_FontSize = 12;
+			attr.setPara_FontSize(12);
 		}
 
 		//横跨的列数.
-		if (attr.ColSpan == 0)
+		if (attr.getColSpan() == 0)
 		{
-			attr.ColSpan = 1;
+			attr.setColSpan(1);
 		}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var model = attr.RBShowModel;
-		attr.RBShowModel = model;
+		var model = attr.getRBShowModel();
+		attr.setRBShowModel(model);
 
 		return attr.ToJson();
 	}
@@ -1385,8 +1406,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 转化成json
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FieldInitGroupID()
+	public final String FieldInitGroupID() throws Exception
 	{
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
 
@@ -1397,8 +1419,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 分组&枚举： 两个数据源.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FieldInitGroupAndSysEnum()
+	public final String FieldInitGroupAndSysEnum() throws Exception
 	{
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
 
@@ -1411,7 +1434,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		if (enumKey.equals("") || enumKey == null || enumKey.equals("null"))
 		{
 			MapAttr ma = new MapAttr(this.getMyPK());
-			enumKey = ma.UIBindKey;
+			enumKey = ma.getUIBindKey();
 		}
 
 		SysEnums enums = new SysEnums(enumKey);
@@ -1427,13 +1450,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 执行删除.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FieldDelete()
+	public final String FieldDelete() throws Exception
 	{
 		try
 		{
 			MapAttr attr = new MapAttr();
-			attr.setMyPK( this.getMyPK();
+			attr.setMyPK(this.getMyPK());
 			attr.RetrieveFromDBSources();
 			attr.Delete();
 			return "删除成功...";
@@ -1447,8 +1471,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 保存枚举值.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FieldSaveEnum()
+	public final String FieldSaveEnum() throws Exception
 	{
 		try
 		{
@@ -1467,11 +1492,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			//赋值.
 			MapAttr attr = new MapAttr();
-			attr.setKeyOfEn (this.getKeyOfEn();
-			attr.FK_MapData = this.getFK_MapData();
+			attr.setKeyOfEn (this.getKeyOfEn());
+			attr.setFK_MapData(this.getFK_MapData());
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
-				attr.setMyPK( this.getMyPK();
+				attr.setMyPK(this.getMyPK());
 				attr.RetrieveFromDBSources();
 			}
 			else
@@ -1483,44 +1508,44 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				}
 			}
 
-			attr.setKeyOfEn (this.getKeyOfEn();
-			attr.FK_MapData = this.getFK_MapData();
-			attr.setLGType(FieldTypeS.Enum;
-			attr.UIBindKey = this.getEnumKey();
-			attr.setMyDataType (DataType.AppInt;
+			attr.setKeyOfEn(this.getKeyOfEn());
+			attr.setFK_MapData(this.getFK_MapData());
+			attr.setLGType(FieldTypeS.Enum);
+			attr.setUIBindKey(this.getEnumKey());
+			attr.setMyDataType (DataType.AppInt);
 
 			//控件类型.
-			attr.setUIContralType (UIContralType.DDL;
+			attr.setUIContralType(UIContralType.DDL);
 
-			attr.Name = this.GetValFromFrmByKey("TB_Name");
-			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn");
-			attr.ColSpan = this.GetValIntFromFrmByKey("DDL_ColSpan");
-			if (attr.ColSpan == 0)
+			attr.setName(this.GetValFromFrmByKey("TB_Name"));
+			attr.setKeyOfEn(this.GetValFromFrmByKey("TB_KeyOfEn"));
+			attr.setColSpan(this.GetValIntFromFrmByKey("DDL_ColSpan"));
+			if (attr.getColSpan() == 0)
 			{
-				attr.ColSpan = 1;
+				attr.setColSpan(1);
 			}
 
 			//显示方式.
-			attr.RBShowModel = this.GetValIntFromFrmByKey("DDL_RBShowModel");
+			attr.setRBShowModel(this.GetValIntFromFrmByKey("DDL_RBShowModel"));
 
 			//控件类型.
-			attr.setUIContralType ((UIContralType)this.GetValIntFromFrmByKey("RB_CtrlType");
+			attr.setUIContralType(UIContralType.forValue(this.GetValIntFromFrmByKey("RB_CtrlType")));
 
-			attr.UIIsInput = this.GetValBoolenFromFrmByKey("CB_IsInput"); //是否是必填项.
+			attr.setUIIsInput(this.GetValBoolenFromFrmByKey("CB_IsInput")); //是否是必填项.
 
-			attr.IsEnableJS = this.GetValBoolenFromFrmByKey("CB_IsEnableJS"); //是否启用js设置？
+			attr.setIsEnableJS(this.GetValBoolenFromFrmByKey("CB_IsEnableJS")); //是否启用js设置？
 
-			attr.Para_FontSize = this.GetValIntFromFrmByKey("TB_FontSize"); //字体大小.
+			attr.setPara_FontSize(this.GetValIntFromFrmByKey("TB_FontSize")); //字体大小.
 
 			//默认值.
-			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal");
+			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal"));
 
 			try
 			{
 				//分组.
 				if (this.GetValIntFromFrmByKey("DDL_GroupID") != 0)
 				{
-					attr.GroupID = this.GetValIntFromFrmByKey("DDL_GroupID"); //在那个分组里？
+					attr.setGroupID(this.GetValIntFromFrmByKey("DDL_GroupID")); //在那个分组里？
 				}
 			}
 			catch (java.lang.Exception e)
@@ -1532,25 +1557,25 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			int isEnable = this.GetValIntFromFrmByKey("RB_UIIsEnable");
 			if (isEnable == 0)
 			{
-				attr.setUIIsEnable(false;
+				attr.setUIIsEnable(false);
 			}
 			else
 			{
-				attr.setUIIsEnable(true;
+				attr.setUIIsEnable(true);
 			}
 
 			//是否可见?
 			int visable = this.GetValIntFromFrmByKey("RB_UIVisible");
 			if (visable == 0)
 			{
-				attr.setUIVisible(false;
+				attr.setUIVisible(false);
 			}
 			else
 			{
-				attr.setUIVisible(true;
+				attr.setUIVisible(true);
 			}
 
-			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
+			attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 
 			attr.Save();
 
@@ -1565,8 +1590,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 保存外键表字段.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String EditTableField_Save()
+	public final String EditTableField_Save() throws Exception
 	{
 		try
 		{
@@ -1578,11 +1604,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			//赋值.
 			MapAttr attr = new MapAttr();
-			attr.setKeyOfEn (this.getKeyOfEn();
-			attr.FK_MapData = this.getFK_MapData();
+			attr.setKeyOfEn(this.getKeyOfEn());
+			attr.setFK_MapData(this.getFK_MapData());
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
-				attr.setMyPK( this.getMyPK();
+				attr.setMyPK(this.getMyPK());
 				attr.RetrieveFromDBSources();
 			}
 			else
@@ -1594,36 +1620,36 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				}
 			}
 
-			attr.setKeyOfEn (this.getKeyOfEn();
-			attr.FK_MapData = this.getFK_MapData();
-			attr.setLGType(FieldTypeS.FK;
-			attr.UIBindKey = this.getFK_SFTable();
-			attr.setMyDataType (DataType.AppString;
+			attr.setKeyOfEn(this.getKeyOfEn());
+			attr.setFK_MapData(this.getFK_MapData());
+			attr.setLGType(FieldTypeS.FK);
+			attr.setUIBindKey(this.getFK_SFTable());
+			attr.setMyDataType (DataType.AppString);
 
 			//控件类型.
-			attr.setUIContralType (UIContralType.DDL;
+			attr.setUIContralType(UIContralType.DDL);
 
-			attr.Name = this.GetValFromFrmByKey("TB_Name");
-			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn");
-			attr.ColSpan = this.GetValIntFromFrmByKey("DDL_ColSpan");
-			if (attr.ColSpan == 0)
+			attr.setName(this.GetValFromFrmByKey("TB_Name"));
+			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn"));
+			attr.setColSpan(this.GetValIntFromFrmByKey("DDL_ColSpan"));
+			if (attr.getColSpan() == 0)
 			{
-				attr.ColSpan = 1;
+				attr.setColSpan(1);
 			}
 
-			attr.UIIsInput = this.GetValBoolenFromFrmByKey("CB_IsInput"); //是否是必填项.
+			attr.setUIIsInput(this.GetValBoolenFromFrmByKey("CB_IsInput")); //是否是必填项.
 
-			attr.Para_FontSize = this.GetValIntFromFrmByKey("TB_FontSize"); //字体大小.
+			attr.setPara_FontSize(this.GetValIntFromFrmByKey("TB_FontSize")); //字体大小.
 
 			//默认值.
-			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal");
+			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal"));
 
 			try
 			{
 				//分组.
 				if (this.GetValIntFromFrmByKey("DDL_GroupID") != 0)
 				{
-					attr.GroupID = this.GetValIntFromFrmByKey("DDL_GroupID"); //在那个分组里？
+					attr.setGroupID(this.GetValIntFromFrmByKey("DDL_GroupID")); //在那个分组里？
 				}
 			}
 			catch (java.lang.Exception e)
@@ -1635,25 +1661,25 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			int isEnable = this.GetValIntFromFrmByKey("RB_UIIsEnable");
 			if (isEnable == 0)
 			{
-				attr.setUIIsEnable(false;
+				attr.setUIIsEnable(false);
 			}
 			else
 			{
-				attr.setUIIsEnable(true;
+				attr.setUIIsEnable(true);
 			}
 
 			//是否可见?
 			int visable = this.GetValIntFromFrmByKey("RB_UIVisible");
 			if (visable == 0)
 			{
-				attr.setUIVisible(false;
+				attr.setUIVisible(false);
 			}
 			else
 			{
-				attr.setUIVisible(true;
+				attr.setUIVisible(true);
 			}
 
-			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
+			attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 			attr.Save();
 
 			return "保存成功.";
@@ -1667,47 +1693,48 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 执行保存.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String EditF_Save()
+	public final String EditF_Save() throws Exception
 	{
 		try
 		{
 			//定义变量.
 			int fType = Integer.parseInt(this.GetRequestVal("FType")); //字段数据物理类型
-			FieldTypeS lgType = (FieldTypeS)Integer.parseInt(this.GetRequestVal("LGType")); //逻辑类型.
+			FieldTypeS lgType = FieldTypeS.forValue(Integer.parseInt(this.GetRequestVal("LGType"))); //逻辑类型.
 			String uiBindKey = this.GetRequestVal("UIBindKey"); // context.Request.QueryString["UIBindKey"];
 
 			//赋值.
 			MapAttr attr = new MapAttr();
-			attr.setKeyOfEn (this.getKeyOfEn();
-			attr.FK_MapData = this.getFK_MapData();
-			attr.setLGType(lgType; //逻辑类型.
-			attr.UIBindKey = uiBindKey; //绑定的枚举或者外键.
-			attr.setMyDataType (fType; //物理类型.
+			attr.setKeyOfEn(this.getKeyOfEn());
+			attr.setFK_MapData(this.getFK_MapData());
+			attr.setLGType(lgType); //逻辑类型.
+			attr.setUIBindKey(uiBindKey); //绑定的枚举或者外键.
+			attr.setMyDataType(fType); //物理类型.
 
 			if (DataType.IsNullOrEmpty(this.getMyPK()) == false)
 			{
-				attr.setMyPK( this.getMyPK();
+				attr.setMyPK( this.getMyPK());
 				attr.RetrieveFromDBSources();
 			}
 
-			attr.FK_MapData = this.getFK_MapData();
-			attr.setMyDataType (fType; //数据类型.
-			attr.Name = this.GetValFromFrmByKey("TB_Name");
+			attr.setFK_MapData(this.getFK_MapData());
+			attr.setMyDataType(fType); //数据类型.
+			attr.setName(this.GetValFromFrmByKey("TB_Name"));
 
-			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn");
-			attr.ColSpan = this.GetValIntFromFrmByKey("DDL_ColSpan");
+			attr.setKeyOfEn (this.GetValFromFrmByKey("TB_KeyOfEn"));
+			attr.setColSpan(this.GetValIntFromFrmByKey("DDL_ColSpan"));
 
-			if (attr.ColSpan == 0)
+			if (attr.getColSpan() == 0)
 			{
-				attr.ColSpan = 1;
+				attr.setColSpan(1);
 			}
 
-			attr.Para_FontSize = this.GetValIntFromFrmByKey("TB_FontSize"); //字体大小.
-			attr.Para_Tip = this.GetValFromFrmByKey("TB_Tip"); //操作提示.
+			attr.setPara_FontSize(this.GetValIntFromFrmByKey("TB_FontSize")); //字体大小.
+			attr.setPara_Tip(this.GetValFromFrmByKey("TB_Tip")); //操作提示.
 
 			//默认值.
-			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal");
+			attr.setDefVal(this.GetValFromFrmByKey("TB_DefVal"));
 
 
 			//对于明细表就可能没有值.
@@ -1716,7 +1743,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				//分组.
 				if (this.GetValIntFromFrmByKey("DDL_GroupID") != 0)
 				{
-					attr.GroupID = this.GetValIntFromFrmByKey("DDL_GroupID"); //在那个分组里？
+					attr.setGroupID(this.GetValIntFromFrmByKey("DDL_GroupID")); //在那个分组里？
 				}
 			}
 			catch (java.lang.Exception e)
@@ -1726,37 +1753,37 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 
 			//把必填项拿出来，所有字段都可以设置成必填项 杨玉慧
-			attr.UIIsInput = this.GetValBoolenFromFrmByKey("CB_IsInput"); //是否是必填项.
+			attr.setUIIsInput(this.GetValBoolenFromFrmByKey("CB_IsInput")); //是否是必填项.
 
-			if (attr.MyDataType == BP.DA.DataType.AppString && lgType == FieldTypeS.Normal)
+			if (attr.getMyDataType() == BP.DA.DataType.AppString && lgType == FieldTypeS.Normal)
 			{
-				attr.IsRichText = this.GetValBoolenFromFrmByKey("CB_IsRichText"); //是否是富文本？
-				attr.IsSupperText = this.GetValBoolenFromFrmByKey("CB_IsSupperText"); //是否是超大文本？
+				attr.setIsRichText(this.GetValBoolenFromFrmByKey("CB_IsRichText")); //是否是富文本？
+				attr.setIsSupperText(this.GetValBoolenFromFrmByKey("CB_IsSupperText")); //是否是超大文本？
 
 				//高度.
-				attr.UIHeightInt = this.GetValIntFromFrmByKey("DDL_Rows") * 23;
+				attr.setUIHeightInt(this.GetValIntFromFrmByKey("DDL_Rows") * 23);
 
 				//最大最小长度.
-				attr.setMaxLen(this.GetValIntFromFrmByKey("TB_MaxLen");
-				attr.setMinLen(this.GetValIntFromFrmByKey("TB_MinLen");
+				attr.setMaxLen(this.GetValIntFromFrmByKey("TB_MaxLen"));
+				attr.setMinLen(this.GetValIntFromFrmByKey("TB_MinLen"));
 
-				attr.UIWidth = this.GetValIntFromFrmByKey("TB_UIWidth"); //宽度.
+				attr.setUIWidth(this.GetValIntFromFrmByKey("TB_UIWidth")); //宽度.
 			}
 
-			switch (attr.MyDataType)
+			switch (attr.getMyDataType())
 			{
 				case DataType.AppInt:
 				case DataType.AppFloat:
 				case DataType.AppDouble:
 				case DataType.AppMoney:
-					attr.IsSum = this.GetValBoolenFromFrmByKey("CB_IsSum");
+					attr.setIsSum(this.GetValBoolenFromFrmByKey("CB_IsSum"));
 					break;
 			}
 
 			//获取宽度.
 			try
 			{
-				attr.UIWidth = this.GetValIntFromFrmByKey("TB_UIWidth"); //宽度.
+				attr.setUIWidth(this.GetValIntFromFrmByKey("TB_UIWidth")); //宽度.
 			}
 			catch (java.lang.Exception e2)
 			{
@@ -1767,11 +1794,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			int isEnable = this.GetValIntFromFrmByKey("RB_UIIsEnable");
 			if (isEnable == 0)
 			{
-				attr.setUIIsEnable(false;
+				attr.setUIIsEnable(false);
 			}
 			else
 			{
-				attr.setUIIsEnable(true;
+				attr.setUIIsEnable(true);
 			}
 
 			//仅仅对普通类型的字段需要.
@@ -1781,15 +1808,15 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				int visable = this.GetValIntFromFrmByKey("RB_UIVisible");
 				if (visable == 0)
 				{
-					attr.setUIVisible(false;
+					attr.setUIVisible(false);
 				}
 				else
 				{
-					attr.setUIVisible(true;
+					attr.setUIVisible(true);
 				}
 			}
 
-			attr.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
+			attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 			attr.Save();
 
 			return "保存成功.";
@@ -1805,15 +1832,16 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 2，编辑属性。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DtlInit()
+	public final String DtlInit() throws Exception
 	{
 		MapDtl dtl = new MapDtl();
-		dtl.No = this.getFK_MapDtl();
+		dtl.setNo(this.getFK_MapDtl());
 		if (dtl.RetrieveFromDBSources() == 0)
 		{
-			dtl.FK_MapData = this.getFK_MapData();
-			dtl.Name = this.getFK_MapData();
+			dtl.setFK_MapData(this.getFK_MapData());
+			dtl.setName(this.getFK_MapData());
 			dtl.Insert();
 			dtl.IntMapAttrs();
 		}
@@ -1823,7 +1851,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			/* 如果传递来了节点信息, 就是说明了独立表单的节点方案处理, 现在就要做如下判断.
 			 * 1, 如果已经有了.
 			 */
-			dtl.No = this.getFK_MapDtl() + "_" + this.getFK_Node();
+			dtl.setNo(this.getFK_MapDtl() + "_" + this.getFK_Node());
 			if (dtl.RetrieveFromDBSources() == 0)
 			{
 
@@ -1831,27 +1859,27 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				MapAttrs attrs = new MapAttrs(this.getFK_MapDtl());
 
 				//让其直接保存.
-				dtl.No = this.getFK_MapDtl() + "_" + this.getFK_Node();
-				dtl.FK_MapData = "Temp";
+				dtl.setNo(this.getFK_MapDtl() + "_" + this.getFK_Node());
+				dtl.setFK_MapData("Temp");
 				dtl.DirectInsert(); //生成一个明细表属性的主表.
 
 				//循环保存字段.
 				int idx = 0;
-				for (MapAttr item : attrs)
+				for (MapAttr item : attrs.ToJavaList())
 				{
-					item.FK_MapData = this.getFK_MapDtl() + "_" + this.getFK_Node();
-					item.setMyPK( item.FK_MapData + "_" + item.KeyOfEn;
+					item.setFK_MapData(this.getFK_MapDtl() + "_" + this.getFK_Node());
+					item.setMyPK(item.getFK_MapData() + "_" + item.getKeyOfEn());
 					item.Save();
 					idx++;
-					item.Idx = idx;
+					item.setIdx(idx);
 					item.DirectUpdate();
 				}
 
 				MapData md = new MapData();
-				md.No = "Temp";
-				if (md.IsExits == false)
+				md.setNo("Temp");
+				if (md.getIsExits() == false)
 				{
-					md.Name = "为权限方案设置的临时的数据";
+					md.setName("为权限方案设置的临时的数据");
 					md.Insert();
 				}
 			}
@@ -1873,8 +1901,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 执行保存.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DtlSave()
+	public final String DtlSave() throws Exception
 	{
 		try
 		{
@@ -1898,7 +1927,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	*/
 	public final void DownTempFrm()
 	{
-		String fileFullName = SystemConfig.PathOfWebApp + "\\Temp\\" + this.getFK_MapData() + ".xml";
+		String fileFullName = SystemConfig.PathOfWebApp + "/Temp/" + this.getFK_MapData() + ".xml";
 
 		HttpContextHelper.ResponseWriteFile(fileFullName, this.getFK_MapData() + ".xml");
 	}
@@ -1922,39 +1951,40 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 字段属性编辑 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Attachment_Init()
+	public final String Attachment_Init() throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
-		ath.FK_MapData = this.getFK_MapData();
-		ath.NoOfObj = this.getAth();
-		ath.FK_Node = this.getFK_Node();
+		ath.setFK_MapData(this.getFK_MapData());
+		ath.setNoOfObj(this.getAth());
+		ath.setFK_Node(this.getFK_Node());
 		if (this.getMyPK() == null)
 		{
 			if (this.getFK_Node() == 0)
 			{
-				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth();
+				ath.setMyPK(this.getFK_MapData() + "_" + this.getAth());
 			}
 			else
 			{
-				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node();
+				ath.setMyPK(this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node());
 			}
 		}
 		else
 		{
-			ath.setMyPK( this.getMyPK();
+			ath.setMyPK(this.getMyPK());
 
 		}
 		int i = ath.RetrieveFromDBSources();
 		if (i == 0)
 		{
 			/*初始化默认值.*/
-			ath.NoOfObj = "Ath1";
-			ath.Name = "我的附件";
-			ath.SaveTo = SystemConfig.PathOfDataUser + "\\UploadFile\\" + this.getFK_MapData() + "\\";
-			ath.W = 150;
-			ath.H = 40;
-			ath.Exts = "*.*";
+			ath.setNoOfObj("Ath1");
+			ath.setName("我的附件");
+			ath.setSaveTo(SystemConfig.getPathOfDataUser() + "/UploadFile/" + this.getFK_MapData() + "/");
+			ath.setW(150);
+			ath.setH(40);
+			ath.setExts("*.*");
 		}
 
 		if (i == 0 && this.getFK_Node() != 0)
@@ -1962,7 +1992,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			/*这里处理 独立表单解决方案, 如果有FK_Node 就说明该节点需要单独控制该附件的属性. */
 			MapData mapData = new MapData();
 			mapData.RetrieveByAttr(MapDataAttr.No, this.getFK_MapData());
-			if (mapData.AppType.equals("0"))
+			if (mapData.getAppType().equals("0"))
 			{
 				FrmAttachment souceAthMent = new FrmAttachment();
 				// 查询出来原来的数据.
@@ -1974,17 +2004,17 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			}
 			if (this.getFK_Node() == 0)
 			{
-				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth();
+				ath.setMyPK(this.getFK_MapData() + "_" + this.getAth());
 			}
 			else
 			{
-				ath.setMyPK( this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node();
+				ath.setMyPK(this.getFK_MapData() + "_" + this.getAth() + "_" + this.getFK_Node());
 			}
 
 			//插入一个新的.
-			ath.FK_Node = this.getFK_Node();
-			ath.FK_MapData = this.getFK_MapData();
-			ath.NoOfObj = this.getAth();
+			ath.setFK_Node(this.getFK_Node());
+			ath.setFK_MapData(this.getFK_MapData());
+			ath.setNoOfObj(this.getAth());
 			//  ath.DirectInsert();
 		}
 
@@ -1998,10 +2028,10 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	public final String Attachment_Save()
 	{
 		FrmAttachment ath = new FrmAttachment();
-		ath.FK_MapData = this.getFK_MapData();
-		ath.NoOfObj = this.getAth();
-		ath.FK_Node = this.getFK_Node();
-		ath.setMyPK( this.getFK_MapData() + "_" + this.getAth();
+		ath.setFK_MapData(this.getFK_MapData());
+		ath.setNoOfObj(this.getAth());
+		ath.setFK_Node(this.getFK_Node());
+		ath.setMyPK(this.getFK_MapData() + "_" + this.getAth());
 
 		int i = ath.RetrieveFromDBSources();
 		Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(ath);
@@ -2016,12 +2046,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 		return "保存成功..";
 	}
-	public final String Attachment_Delete()
+	public final String Attachment_Delete() throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
-		ath.setMyPK( this.getMyPK();
+		ath.setMyPK(this.getMyPK());
 		ath.Delete();
-		return "删除成功.." + ath.MyPK;
+		return "删除成功.." + ath.getMyPK();
 	}
 
 
@@ -2031,8 +2061,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 获取数据源字典表信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SFGuide_GetInfo()
+	public final String SFGuide_GetInfo() throws Exception
 	{
 		String sfno = this.GetRequestVal("sfno"); //context.Request.QueryString["sfno"];
 
@@ -2051,7 +2082,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(dt);
 	}
-	public final String SFGuide_SaveInfo()
+	public final String SFGuide_SaveInfo() throws Exception
 	{
 		boolean IsNew = this.GetRequestValBoolen("IsNew");
 		String sfno = this.GetRequestVal("No");
@@ -2072,34 +2103,34 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		//判断是否已经存在
 		SFTable sftable = new SFTable();
-		sftable.No = sfno;
+		sftable.setNo(sfno);
 
 		if (IsNew && sftable.RetrieveFromDBSources() > 0)
 		{
 			return "err@字典编号" + sfno + "已经存在，不允许重复。";
 		}
 
-		sftable.Name = myname;
-		sftable.SrcType = (SrcType)srctype;
-		sftable.CodeStruct = (CodeStruct)codestruct;
-		sftable.DefVal = defval;
-		sftable.FK_SFDBSrc = sfdbsrc;
-		sftable.SrcTable = srctable;
-		sftable.ColumnValue = columnvalue;
-		sftable.ColumnText = columntext;
-		sftable.ParentValue = parentvalue;
-		sftable.TableDesc = tabledesc;
-		sftable.SelectStatement = selectstatement;
+		sftable.setName(myname);
+		sftable.setSrcType(SrcType.forValue(srctype));
+		sftable.setCodeStruct(CodeStruct.forValue(codestruct));
+		sftable.setDefVal(defval);
+		sftable.setFK_SFDBSrc(sfdbsrc);
+		sftable.setSrcTable(srctable);
+		sftable.setColumnValue(columnvalue);
+		sftable.setColumnText(columntext);
+		sftable.setParentValue(parentvalue);
+		sftable.setTableDesc(tabledesc);
+		sftable.setSelectStatement(selectstatement);
 
-		switch (sftable.SrcType)
+		switch (sftable.getSrcType())
 		{
-			case SrcType.BPClass:
-				String[] nos = sftable.No.split("[.]", -1);
-				sftable.FK_Val = "FK_" + tangible.StringHelper.trimEnd(nos[nos.length - 1], 's');
-				sftable.FK_SFDBSrc = "local";
+			case BPClass:
+				String[] nos = sftable.getNo().split("[.]", -1);
+				sftable.setFK_Val("FK_" + StringHelper.trimEnd(nos[nos.length - 1], 's'));
+				sftable.setFK_SFDBSrc("local");
 				break;
 			default:
-				sftable.FK_Val = "FK_" + sftable.No;
+				sftable.setFK_Val("FK_" + sftable.getNo());
 				break;
 		}
 
@@ -2116,16 +2147,16 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		SFDBSrc sr = new SFDBSrc(src);
 
-		if (sr.DBSrcType != DBSrcType.WebServices)
+		if (sr.getDBSrcType() != DBSrcType.WebServices)
 		{
-			return "err@数据源“" + sr.Name + "”不是WebService数据源.";
+			return "err@数据源“" + sr.getName() + "”不是WebService数据源.";
 		}
 
 		ArrayList<WSMethod> mtds = GetWebServiceMethods(sr);
 
 		return LitJson.JsonMapper.ToJson(mtds);
 	}
-	public final String SFGuide_GetCols()
+	public final String SFGuide_GetCols() throws Exception
 	{
 		String src = this.GetRequestVal("src"); //context.Request.QueryString["src"];
 		String table = this.GetRequestVal("table"); //context.Request.QueryString["table"];
@@ -2151,7 +2182,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		for (DataRow r : dt.Rows)
 		{
-			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == DBNull.Value || DataType.IsNullOrEmpty(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
+			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == null || DataType.IsNullOrEmpty(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -2160,8 +2191,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 //获取表/视图列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SFGuide_GetTVs()
+	public final String SFGuide_GetTVs() throws Exception
 	{
 		String src = this.GetRequestVal("src"); // context.Request.QueryString["src"];
 
@@ -2202,7 +2234,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		SFTables sfs = new SFTables();
 		Entities ens = null;
 		SFTable sf = null;
-		sfs.Retrieve(SFTableAttr.SrcType, (int)SrcType.BPClass);
+		sfs.Retrieve(SFTableAttr.SrcType, SrcType.BPClass.getValue());
 
 		switch (st)
 		{
@@ -2227,7 +2259,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 					continue;
 				}
 
-				ens = en.GetNewEntities;
+				ens = en.getGetNewEntities();
 				if (ens == null)
 				{
 					continue;
@@ -2236,19 +2268,19 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				Object tempVar = sfs.GetEntityByKey(ens.toString());
 				sf = tempVar instanceof SFTable ? (SFTable)tempVar : null;
 
-				if ((sf != null && !sfno.equals(sf.No)) || DataType.IsNullOrEmpty(ens.toString()))
+				if ((sf != null && !sfno.equals(sf.getNo())) || DataType.IsNullOrEmpty(ens.toString()))
 				{
 					continue;
 				}
 
-				s.append(String.format("{\"NO\":\"%1$s\",\"NAME\":\"%1$s[%2$s]\",\"DESC\":\"%2$s\"},", ens, en.EnDesc));
+				s.append(String.format("{\"NO\":\"%1$s\",\"NAME\":\"%1$s[%2$s]\",\"DESC\":\"%2$s\"},", ens, en.getEnDesc()));
 			}
 			catch (java.lang.Exception e)
 			{
 				continue;
 			}
 		}
-		return tangible.StringHelper.trimEnd(s.toString(), ',') + "]";
+		return StringHelper.trimEnd(s.toString(), ',') + "]";
 	}
 	/** 
 	 获取数据源列表
@@ -2296,7 +2328,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 			for (DataRow r : wsRows)
 			{
-				dt.Rows.Remove(r);
+				dt.Rows.remove(r);
 			}
 		}
 		return BP.Tools.Json.ToJson(dt);
@@ -2326,8 +2358,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 初始化数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ImpTableFieldSelectBindKey_Init()
+	public final String ImpTableFieldSelectBindKey_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 

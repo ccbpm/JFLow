@@ -1,5 +1,7 @@
 package BP.WF.XML;
 
+import java.util.List;
+
 import BP.DA.*;
 import BP.En.*;
 import BP.Sys.XML.*;
@@ -18,6 +20,15 @@ public class AdminMenuGroups extends XmlEns
 	*/
 	public AdminMenuGroups()
 	{
+	}
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
+	public final List<AdminMenuGroup> ToJavaList()
+	{
+		return (List<AdminMenuGroup>)(Object)this;
 	}
 
 		///#endregion

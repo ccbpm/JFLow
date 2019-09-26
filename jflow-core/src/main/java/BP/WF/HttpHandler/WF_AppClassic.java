@@ -61,25 +61,27 @@ public class WF_AppClassic extends DirectoryPageBase
 	 初始化Home
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Home_Init()
+	@SuppressWarnings("unchecked")
+	public final String Home_Init() throws Exception
 	{
 		Hashtable ht = new Hashtable();
 		ht.put("UserNo", WebUser.getNo());
 		ht.put("UserName", WebUser.getName());
 
 		//系统名称.
-		ht.put("SysName", BP.Sys.SystemConfig.SysName);
-		ht.put("CustomerName", BP.Sys.SystemConfig.CustomerName);
+		ht.put("SysName", SystemConfig.getSysName());
+		ht.put("CustomerName", SystemConfig.getCustomerName());
 
-		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks());
-		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing());
-		ht.put("Todolist_Sharing", BP.WF.Dev2Interface.getTodolist_Sharing());
-		ht.put("Todolist_CCWorks", BP.WF.Dev2Interface.getTodolist_CCWorks());
-		ht.put("Todolist_Apply", BP.WF.Dev2Interface.getTodolist_Apply()); //申请下来的任务个数.
-		ht.put("Todolist_Draft", BP.WF.Dev2Interface.getTodolist_Draft()); //草稿数量.
-		ht.put("Todolist_Complete", BP.WF.Dev2Interface.getTodolist_Complete()); //完成数量.
-		ht.put("UserDeptName", WebUser.getFK_DeptName);
+		ht.put("Todolist_EmpWorks", Dev2Interface.getTodolist_EmpWorks());
+		ht.put("Todolist_Runing", Dev2Interface.getTodolist_Runing());
+		ht.put("Todolist_Sharing", Dev2Interface.getTodolist_Sharing());
+		ht.put("Todolist_CCWorks", Dev2Interface.getTodolist_CCWorks());
+		ht.put("Todolist_Apply", Dev2Interface.getTodolist_Apply()); //申请下来的任务个数.
+		ht.put("Todolist_Draft", Dev2Interface.getTodolist_Draft()); //草稿数量.
+		ht.put("Todolist_Complete", Dev2Interface.getTodolist_Complete()); //完成数量.
+		ht.put("UserDeptName", WebUser.getFK_DeptName());
 
 		//我发起
 		MyStartFlows myStartFlows = new MyStartFlows();
@@ -102,22 +104,23 @@ public class WF_AppClassic extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
-	public final String Index_Init()
+	@SuppressWarnings("unchecked")
+	public final String Index_Init() throws Exception
 	{
 		Hashtable ht = new Hashtable();
-		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing()); //运行中.
-		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks()); //待办
-		ht.put("Todolist_CCWorks", BP.WF.Dev2Interface.getTodolist_CCWorks()); //抄送.
+		ht.put("Todolist_Runing", Dev2Interface.getTodolist_Runing()); //运行中.
+		ht.put("Todolist_EmpWorks", Dev2Interface.getTodolist_EmpWorks()); //待办
+		ht.put("Todolist_CCWorks", Dev2Interface.getTodolist_CCWorks()); //抄送.
 
 		//本周.
-		ht.put("TodayNum", BP.WF.Dev2Interface.getTodolist_CCWorks()); //抄送.
+		ht.put("TodayNum", Dev2Interface.getTodolist_CCWorks()); //抄送.
 
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
 
 
 		///#region 登录界面.
-	public final String Portal_Login()
+	public final String Portal_Login() throws Exception
 	{
 		String userNo = this.GetRequestVal("UserNo");
 
@@ -125,7 +128,7 @@ public class WF_AppClassic extends DirectoryPageBase
 		{
 			BP.Port.Emp emp = new Emp(userNo);
 
-			BP.WF.Dev2Interface.Port_Login(emp.No);
+			Dev2Interface.Port_Login(emp.getNo());
 			return ".";
 		}
 		catch (RuntimeException ex)
@@ -138,8 +141,9 @@ public class WF_AppClassic extends DirectoryPageBase
 	 登录.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Login_Submit()
+	public final String Login_Submit() throws Exception
 	{
 		try
 		{
@@ -156,7 +160,7 @@ public class WF_AppClassic extends DirectoryPageBase
 			}
 
 			BP.Port.Emp emp = new Emp();
-			emp.setNo (userNo;
+			emp.setNo(userNo);
 			if (emp.RetrieveFromDBSources() == 0)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "NikeName") == true)
@@ -171,7 +175,7 @@ public class WF_AppClassic extends DirectoryPageBase
 						return "err@用户名或者密码错误.";
 					}
 
-					emp.setNo (no;
+					emp.setNo(no);
 					int i = emp.RetrieveFromDBSources();
 					if (i == 0)
 					{
@@ -190,7 +194,7 @@ public class WF_AppClassic extends DirectoryPageBase
 						return "err@用户名或者密码错误.";
 					}
 
-					emp.setNo (no;
+					emp.setNo(no);
 					int i = emp.RetrieveFromDBSources();
 					if (i == 0)
 					{
@@ -211,7 +215,7 @@ public class WF_AppClassic extends DirectoryPageBase
 			}
 
 			//调用登录方法.
-			BP.WF.Dev2Interface.Port_Login(emp.No);
+			BP.WF.Dev2Interface.Port_Login(emp.getNo());
 
 			return "";
 		}
@@ -224,14 +228,16 @@ public class WF_AppClassic extends DirectoryPageBase
 	 执行登录
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Login_Init()
+	@SuppressWarnings("unchecked")
+	public final String Login_Init() throws Exception
 	{
 		Hashtable ht = new Hashtable();
-		ht.put("SysName", SystemConfig.SysName);
-		ht.put("ServiceTel", SystemConfig.ServiceTel);
-		ht.put("CustomerName", SystemConfig.CustomerName);
-		if (WebUser.getNo()OfRel == null)
+		ht.put("SysName", SystemConfig.getSysName());
+		ht.put("ServiceTel", SystemConfig.getServiceTel());
+		ht.put("CustomerName", SystemConfig.getCustomerName());
+		if (WebUser.getNoOfRel() == null)
 		{
 			ht.put("UserNo", "");
 			ht.put("UserName", "");

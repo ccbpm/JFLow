@@ -50,7 +50,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
 		wk.ResetDefaultVal();
-		if (BP.Sys.SystemConfig.IsBSsystem == true)
+		if (BP.Sys.SystemConfig.getIsBSsystem() == true)
 		{
 			// 处理传递过来的参数。
 			for (String k : HttpContextHelper.RequestQueryStringKeys)
@@ -78,41 +78,41 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 			///#endregion 获取节点表单的数据
 		//节点表单字段
 		MapData md = new MapData(nd.getNodeFrmID());
-		MapAttrs attrs = md.MapAttrs;
+		MapAttrs attrs = md.getMapAttrs();
 		DataTable dt = new DataTable();
 		dt.TableName = "Node_Note";
 		dt.Columns.Add("KeyOfEn", String.class);
 		dt.Columns.Add("NoteVal", String.class);
 		String nodeNote = nd.GetParaString("NodeNote");
 
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (nodeNote.contains("," + attr.KeyOfEn + ",") == false)
+			if (nodeNote.contains("," + attr.getKeyOfEn() + ",") == false)
 			{
 				continue;
 			}
 			String text = "";
-			switch (attr.LGType)
+			switch (attr.getLGType())
 			{
-				case FieldTypeS.Normal: // 输出普通类型字段.
-					if (attr.MyDataType == 1 && (int)attr.UIContralType == DataType.AppString)
+				case Normal: // 输出普通类型字段.
+					if (attr.getMyDataType() == 1 && (int)attr.getUIContralType() == DataType.AppString)
 					{
 
-						if (attrs.Contains(attr.KeyOfEn + "Text") == true)
+						if (attrs.Contains(attr.getKeyOfEn() + "Text") == true)
 						{
-							text = wk.GetValRefTextByKey(attr.KeyOfEn);
+							text = wk.GetValRefTextByKey(attr.getKeyOfEn());
 						}
 						if (DataType.IsNullOrEmpty(text))
 						{
-							if (attrs.Contains(attr.KeyOfEn + "T") == true)
+							if (attrs.Contains(attr.getKeyOfEn() + "T") == true)
 							{
-								text = wk.GetValStrByKey(attr.KeyOfEn + "T");
+								text = wk.GetValStrByKey(attr.getKeyOfEn() + "T");
 							}
 						}
 					}
 					else
 					{
-						text = wk.GetValStrByKey(attr.KeyOfEn);
+						text = wk.GetValStrByKey(attr.getKeyOfEn());
 						if (attr.IsRichText == true)
 						{
 							text = text.replace("white-space: nowrap;", "");
@@ -120,15 +120,15 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 					}
 
 					break;
-				case FieldTypeS.Enum:
-				case FieldTypeS.FK:
-					text = wk.GetValRefTextByKey(attr.KeyOfEn);
+				case Enum:
+				case FK:
+					text = wk.GetValRefTextByKey(attr.getKeyOfEn());
 					break;
 				default:
 					break;
 			}
 			DataRow dr = dt.NewRow();
-			dr.set("KeyOfEn", attr.KeyOfEn);
+			dr.set("KeyOfEn", attr.getKeyOfEn());
 			dr.set("NoteVal", text);
 			dt.Rows.add(dr);
 

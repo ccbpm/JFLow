@@ -54,13 +54,13 @@ public class CCMobile extends DirectoryPageBase
 		return ace.Login_Init();
 	}
 
-	public final String Login_Submit()
+	public final String Login_Submit() throws Exception
 	{
 		String userNo = this.GetRequestVal("TB_No");
 		String pass = this.GetRequestVal("TB_PW");
 
 		BP.Port.Emp emp = new Emp();
-		emp.setNo (userNo;
+		emp.setNo(userNo);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "NikeName") == true)
@@ -76,7 +76,7 @@ public class CCMobile extends DirectoryPageBase
 					return "err@用户名或者密码错误.";
 				}
 
-				emp.setNo (no;
+				emp.setNo(no);
 				int i = emp.RetrieveFromDBSources();
 				if (i == 0)
 				{
@@ -95,7 +95,7 @@ public class CCMobile extends DirectoryPageBase
 		}
 
 		//调用登录方法.
-		BP.WF.Dev2Interface.Port_Login(emp.No);
+		BP.WF.Dev2Interface.Port_Login(emp.getNo());
 
 		return "登录成功.";
 	}
@@ -110,7 +110,7 @@ public class CCMobile extends DirectoryPageBase
 		return wf.HuiQianList_Init();
 	}
 
-	public final String GetUserInfo()
+	public final String GetUserInfo() throws Exception
 	{
 		if (WebUser.getNo() == null)
 		{
@@ -119,7 +119,7 @@ public class CCMobile extends DirectoryPageBase
 
 		StringBuilder append = new StringBuilder();
 		append.append("{");
-		String userPath = SystemConfig.PathOfWebApp + "/DataUser/UserIcon/";
+		String userPath = SystemConfig.getPathOfWebApp() + "/DataUser/UserIcon/";
 		String userIcon = userPath + WebUser.getNo() + "Biger.png";
 		if ((new File(userIcon)).isFile())
 		{
@@ -130,7 +130,7 @@ public class CCMobile extends DirectoryPageBase
 			append.append("UserIcon:'DefaultBiger.png'");
 		}
 		append.append(",UserName:'" + WebUser.getName() + "'");
-		append.append(",UserDeptName:'" + WebUser.getFK_DeptName + "'");
+		append.append(",UserDeptName:'" + WebUser.getFK_DeptName() + "'");
 		append.append("}");
 		return append.toString();
 	}
@@ -139,15 +139,15 @@ public class CCMobile extends DirectoryPageBase
 		WF_MyFlow en = new WF_MyFlow();
 		return en.StartGuide_MulitSend();
 	}
-	public final String Home_Init()
+	public final String Home_Init() throws Exception
 	{
 		Hashtable ht = new Hashtable();
 		ht.put("UserNo", WebUser.getNo());
 		ht.put("UserName", WebUser.getName());
 
 		//系统名称.
-		ht.put("SysName", BP.Sys.SystemConfig.SysName);
-		ht.put("CustomerName", BP.Sys.SystemConfig.CustomerName);
+		ht.put("SysName", BP.Sys.SystemConfig.getSysName());
+		ht.put("CustomerName", BP.Sys.SystemConfig.getCustomerName());
 
 		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks());
 		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing());
@@ -165,20 +165,20 @@ public class CCMobile extends DirectoryPageBase
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Home_Init_WorkCount()
+	public final String Home_Init_WorkCount() throws Exception
 	{
 		Paras ps = new Paras();
 		ps.SQL = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + SystemConfig.getAppCenterDBVarStr() + "Emps%' GROUP BY TSpan";
 		ps.Add("Emps", WebUser.getNo());
-		//string sql = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + WebUser.getNo() + "%' GROUP BY TSpan";
 		DataSet ds = new DataSet();
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		ds.Tables.add(dt);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns[0].ColumnName = "TSpan";
-			dt.Columns[1].ColumnName = "Num";
+			dt.Columns.get(0).setColumnName("TSpan");
+			dt.Columns.get(1).setColumnName("Num");
 		}
 
 		String sql = "SELECT IntKey as No, Lab as Name FROM Sys_Enum WHERE EnumKey='TSpan'";
@@ -209,8 +209,9 @@ public class CCMobile extends DirectoryPageBase
 	 新版本.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Todolist_Init()
+	public final String Todolist_Init() throws Exception
 	{
 		String fk_node = this.GetRequestVal("FK_Node");
 		String showWhat = this.GetRequestVal("ShowWhat");
@@ -237,7 +238,7 @@ public class CCMobile extends DirectoryPageBase
 		append.append("[");
 		if (rws.size() != 0)
 		{
-			for (BP.WF.ReturnWork rw : rws)
+			for (BP.WF.ReturnWork rw : rws.ToJavaList())
 			{
 				append.append("{");
 				append.append("ReturnNodeName:'" + rw.getReturnNodeName() + "',");
@@ -268,8 +269,9 @@ public class CCMobile extends DirectoryPageBase
 	 打开手机端
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Do_OpenFlow()
+	public final String Do_OpenFlow() throws Exception
 	{
 		String sid = this.GetRequestVal("SID");
 		String[] strs = sid.split("[_]", -1);
@@ -282,7 +284,7 @@ public class CCMobile extends DirectoryPageBase
 		}
 
 		BP.Port.Emp empOF = new BP.Port.Emp(wl.getFK_Emp());
-		Web.WebUser.SignInOfGener(empOF);
+		WebUser.SignInOfGener(empOF);
 		return "MyFlow.htm?FK_Flow=" + wl.getFK_Flow() + "&WorkID=" + wl.getWorkID() + "&FK_Node=" + wl.getFK_Node() + "&FID=" + wl.getFID();
 	}
 	/** 
@@ -349,8 +351,9 @@ public class CCMobile extends DirectoryPageBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Search_Init()
+	public final String Search_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 		String sql = "";
@@ -407,9 +410,9 @@ public class CCMobile extends DirectoryPageBase
 		DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtFlows.Columns[0].ColumnName = "No";
-			dtFlows.Columns[1].ColumnName = "Name";
-			dtFlows.Columns[2].ColumnName = "Num";
+			dtFlows.Columns.get(0).setColumnName("No");
+			dtFlows.Columns.get(1).setColumnName("Name");
+			dtFlows.Columns.get(2).setColumnName("Num");
 		}
 		dtFlows.TableName = "Flows";
 		ds.Tables.add(dtFlows);
@@ -455,20 +458,20 @@ public class CCMobile extends DirectoryPageBase
 		DataTable mydt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			mydt.Columns[0].ColumnName = "WorkID";
-			mydt.Columns[1].ColumnName = "FID";
-			mydt.Columns[2].ColumnName = "FK_Flow";
-			mydt.Columns[3].ColumnName = "FlowName";
-			mydt.Columns[4].ColumnName = "Title";
-			mydt.Columns[5].ColumnName = "WFSta";
-			mydt.Columns[6].ColumnName = "WFState";
-			mydt.Columns[7].ColumnName = "Starter";
-			mydt.Columns[8].ColumnName = "StarterName";
-			mydt.Columns[9].ColumnName = "Sender";
-			mydt.Columns[10].ColumnName = "RDT";
-			mydt.Columns[11].ColumnName = "FK_Node";
-			mydt.Columns[12].ColumnName = "NodeName";
-			mydt.Columns[13].ColumnName = "TodoEmps";
+			mydt.Columns.get(0).setColumnName("WorkID");
+			mydt.Columns.get(1).setColumnName("FID");
+			mydt.Columns.get(2).setColumnName("FK_Flow");
+			mydt.Columns.get(3).setColumnName("FlowName");
+			mydt.Columns.get(4).setColumnName("Title");
+			mydt.Columns.get(5).setColumnName("WFSta");
+			mydt.Columns.get(6).setColumnName("WFState");
+			mydt.Columns.get(7).setColumnName("Starter");
+			mydt.Columns.get(8).setColumnName("StarterName");
+			mydt.Columns.get(9).setColumnName("Sender");
+			mydt.Columns.get(10).setColumnName("RDT");
+			mydt.Columns.get(11).setColumnName("FK_Node");
+			mydt.Columns.get(12).setColumnName("NodeName");
+			mydt.Columns.get(13).setColumnName("TodoEmps");
 
 
 		}
@@ -489,7 +492,7 @@ public class CCMobile extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-	 public static String GetTraceNewTime(String fk_flow, long workid, long fid)
+	 public static String GetTraceNewTime(String fk_flow, long workid, long fid) throws Exception
 	 {
 
 			///#region 获取track数据.
@@ -532,8 +535,9 @@ public class CCMobile extends DirectoryPageBase
 	 查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Search_Search()
+	public final String Search_Search() throws Exception
 	{
 		String TSpan = this.GetRequestVal("TSpan");
 		String FK_Flow = this.GetRequestVal("FK_Flow");
@@ -551,7 +555,7 @@ public class CCMobile extends DirectoryPageBase
 			qo.addAnd();
 			qo.AddWhere(GenerWorkFlowAttr.FK_Flow, this.GetRequestVal("FK_Flow"));
 		}
-		qo.Top = 50;
+		qo.setTop(50);
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{

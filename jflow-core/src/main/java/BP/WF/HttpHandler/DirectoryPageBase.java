@@ -381,7 +381,7 @@ public abstract class DirectoryPageBase
 		}
 		return str;
 	}
-	public final String getName()
+	public String getName()
 	{
 		String str = this.GetRequestVal("Name");
 		if (str == null || str.equals("") || str.equals("null"))
@@ -514,7 +514,7 @@ public abstract class DirectoryPageBase
 	/** 
 	 字典表
 	*/
-	public final String getFK_SFTable()
+	public String getFK_SFTable()
 	{
 		String str = this.GetRequestVal("FK_SFTable");
 		if (DataType.IsNullOrEmpty(str))
@@ -523,7 +523,7 @@ public abstract class DirectoryPageBase
 		}
 		return str;
 	}
-	public final String getEnumKey()
+	public String getEnumKey()
 	{
 		String str = this.GetRequestVal("EnumKey");
 		if (DataType.IsNullOrEmpty(str))
@@ -553,7 +553,7 @@ public abstract class DirectoryPageBase
 	/** 
 	 FK_MapData
 	*/
-	public final String getFK_MapData()
+	public String getFK_MapData()
 	{
 		String str = this.GetRequestVal("FK_MapData");
 		if (DataType.IsNullOrEmpty(str))

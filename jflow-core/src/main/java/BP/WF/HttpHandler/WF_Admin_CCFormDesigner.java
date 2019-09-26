@@ -86,29 +86,36 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	{
 		String name = GetRequestVal("name");
 		String flag = GetRequestVal("flag");
-		//暂时没发现此方法在哪里有调用，edited by liuxc,2017-9-25
-		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(flag, "true"), true, 20);
+		//此处配置最大长度为20
+		if (flag.equals("true"))
+		{
+			 return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, true, true, 20);			
+		}
+
+		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, false, true, 20);
+//		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(flag, "true"), true, 20);
 	}
 
 	/** 
 	 创建隐藏字段.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NewHidF()
+	public final String NewHidF() throws Exception
 	{
 		MapAttr mdHid = new MapAttr();
-		mdHid.setMyPK( this.getFK_MapData() + "_" + this.getKeyOfEn();
-		mdHid.FK_MapData = this.getFK_MapData();
-		mdHid.KeyOfEn = this.getKeyOfEn();
-		mdHid.Name = this.getName();
-		mdHid.MyDataType = Integer.parseInt(this.GetRequestVal("FieldType"));
-		mdHid.HisEditType = EditType.Edit;
-		mdHid.MaxLen = 100;
-		mdHid.MinLen = 0;
-		mdHid.LGType = FieldTypeS.Normal;
-		mdHid.UIVisible = false;
-		mdHid.UIIsEnable = false;
+		mdHid.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+		mdHid.setFK_MapData(this.getFK_MapData());
+		mdHid.setKeyOfEn(this.getKeyOfEn());
+		mdHid.setName(this.getName());
+		mdHid.setMyDataType(Integer.parseInt(this.GetRequestVal("FieldType")));
+		mdHid.setHisEditType(EditType.Edit);
+		mdHid.setMaxLen(100);
+		mdHid.setMinLen(0);
+		mdHid.setLGType(FieldTypeS.Normal);
+		mdHid.setUIVisible(false);
+		mdHid.setUIIsEnable(false);
 		mdHid.Insert();
 
 		return "创建成功..";
@@ -141,16 +148,23 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 创建表单.
-	public final String NewFrmGuide_GenerPinYin()
+	public final String NewFrmGuide_GenerPinYin() throws Exception
 	{
 		String isQuanPin = this.GetRequestVal("IsQuanPin");
 		String name = this.GetRequestVal("TB_Name");
 
-		//表单No长度最大100，因有前缀CCFrm_，因此此处设置最大94，added by liuxc,2017-9-25
-		String str = BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(isQuanPin, "1"), true, 94);
+		//表单No长度最大100，因有前缀CCFrm_，因此此处设置最大94
+		String str = "";
+		if (isQuanPin.equals("1"))
+		{
+			str = BP.Sys.CCFormAPI.ParseStringToPinyinField(name, true, true, 94);			
+		}else{
+			str = BP.Sys.CCFormAPI.ParseStringToPinyinField(name, false, true, 94);
+		}
+//		String str = BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(isQuanPin, "1"), true, 94);
 
 		MapData md = new MapData();
-		md.No = str;
+		md.setNo(str);
 		if (md.RetrieveFromDBSources() == 0)
 		{
 			return str;
@@ -177,26 +191,26 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		return BP.Tools.Json.ToJson(ds);
 
 	}
-	public final String NewFrmGuide_Create()
+	public final String NewFrmGuide_Create() throws Exception
 	{
 		MapData md = new MapData();
-		md.Name = this.GetRequestVal("TB_Name");
-		md.No = DataType.ParseStringForNo(this.GetRequestVal("TB_No"), 100);
+		md.setName(this.GetRequestVal("TB_Name"));
+		md.setNo(DataType.ParseStringForNo(this.GetRequestVal("TB_No"), 100));
 
-		md.HisFrmTypeInt = this.GetRequestValInt("DDL_FrmType");
+		md.setHisFrmTypeInt(this.GetRequestValInt("DDL_FrmType"));
 
 		//表单的物理表.
-		if (md.HisFrmType == BP.Sys.FrmType.Url || md.HisFrmType == BP.Sys.FrmType.Entity)
+		if (md.getHisFrmType() == BP.Sys.FrmType.Url || md.getHisFrmType() == BP.Sys.FrmType.Entity)
 		{
-			md.PTable = this.GetRequestVal("TB_PTable");
+			md.setPTable(this.GetRequestVal("TB_PTable"));
 		}
 		else
 		{
-			md.PTable = DataType.ParseStringForNo(this.GetRequestVal("TB_PTable"), 100);
+			md.setPTable(DataType.ParseStringForNo(this.GetRequestVal("TB_PTable"), 100));
 		}
 
-		//数据表模式。 @周朋 需要翻译.
-		md.PTableModel = this.GetRequestValInt("DDL_PTableModel");
+		//数据表模式。
+		md.setPTableModel(this.GetRequestValInt("DDL_PTableModel"));
 
 		//@李国文 需要对比翻译.
 		String sort = this.GetRequestVal("FK_FrmSort");
@@ -205,11 +219,11 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			sort = this.GetRequestVal("DDL_FrmTree");
 		}
 
-		md.FK_FrmSort = sort;
-		md.FK_FormTree = sort;
+		md.setFK_FrmSort(sort);
+		md.setFK_FormTree(sort);
 
-		md.AppType = "0"; //独立表单
-		md.DBSrc = this.GetRequestVal("DDL_DBSrc");
+		md.setAppType("0"); //独立表单
+		md.setDBSrc(this.GetRequestVal("DDL_DBSrc"));
 		if (md.getIsExits() == true)
 		{
 			return "err@表单ID:" + md.getNo() + "已经存在.";
@@ -219,15 +233,15 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		{
 			//自由，傻瓜，SL表单不做判断
 			case FreeFrm:
-			case BP.Sys.FrmType.FoolForm:
+			case FoolForm:
 				break;
-			case BP.Sys.FrmType.Url:
-			case BP.Sys.FrmType.Entity:
+			case Url:
+			case Entity:
 				md.setUrl(md.getPTable());
 				break;
 			//如果是以下情况，导入模式
-			case BP.Sys.FrmType.WordFrm:
-			case BP.Sys.FrmType.ExcelFrm:
+			case WordFrm:
+			case ExcelFrm:
 				break;
 			default:
 				throw new RuntimeException("未知表单类型.");

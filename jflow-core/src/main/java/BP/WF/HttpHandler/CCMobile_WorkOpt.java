@@ -162,8 +162,9 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 	 抄送初始化.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CC_Init()
+	public final String CC_Init() throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		Hashtable ht = new Hashtable();
@@ -202,8 +203,9 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 	 选择部门呈现信息.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CC_SelectDepts()
+	public final String CC_SelectDepts() throws Exception
 	{
 		BP.Port.Depts depts = new BP.Port.Depts();
 		depts.RetrieveAll();

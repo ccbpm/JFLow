@@ -40,7 +40,7 @@ public class WF_Admin extends DirectoryPageBase
 	*/
 	public final String TestFlow_GetRunOnPlant()
 	{
-		return BP.Sys.SystemConfig.RunOnPlant;
+		return BP.Sys.SystemConfig.getRunOnPlant();
 	}
 	/** 
 	 初始化界面.
@@ -105,9 +105,9 @@ public class WF_Admin extends DirectoryPageBase
 				}
 
 				DataRow dr = dtEmps.NewRow();
-				dr.set("No", emp.No);
-				dr.set("Name", emp.Name);
-				dr.set("FK_DeptText", emp.FK_DeptText);
+				dr.set("No", emp.getNo());
+				dr.set("Name", emp.getName());
+				dr.set("FK_DeptText", emp.getFK_DeptText());
 				dtEmps.Rows.add(dr);
 			}
 			return BP.Tools.Json.ToJson(dtEmps);
@@ -238,9 +238,9 @@ public class WF_Admin extends DirectoryPageBase
 
 				DataRow drNew = dtMyEmps.NewRow();
 
-				drNew.set("No", emp.No);
-				drNew.set("Name", emp.Name);
-				drNew.set("FK_DeptText", emp.FK_DeptText);
+				drNew.set("No", emp.getNo());
+				drNew.set("Name", emp.getName());
+				drNew.set("FK_DeptText", emp.getFK_DeptText());
 
 				dtMyEmps.Rows.add(drNew);
 			}
@@ -286,8 +286,9 @@ public class WF_Admin extends DirectoryPageBase
 	 初始化安装包
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DBInstall_Init()
+	public final String DBInstall_Init() throws Exception
 	{
 		if (DBAccess.TestIsConnection() == false)
 		{
@@ -300,20 +301,20 @@ public class WF_Admin extends DirectoryPageBase
 		}
 
 		//检查是否区分大小写. 
-		if (DBAccess.IsCaseSensitive == true)
+		if (DBAccess.IsCaseSensitive() == true)
 		{
 			return "err@ccbpm不支持,数据库区分大小写，请修改数据库的设置,让其不区分大小写. mysql数据库请参考设置:https://blog.csdn.net/ccflow/article/details/100079825";
 		}
 
 
 		Hashtable ht = new Hashtable();
-		ht.put("OSModel", (int)BP.WF.Glo.getOSModel()); //组织结构类型.
+		ht.put("OSModel", BP.WF.Glo.getOSModel()); //组织结构类型.
 		ht.put("DBType", SystemConfig.getAppCenterDBType().toString()); //数据库类型.
 		ht.put("Ver", BP.WF.Glo.Ver); //版本号.
 
 		return BP.Tools.Json.ToJson(ht);
 	}
-	public final String DBInstall_Submit()
+	public final String DBInstall_Submit() throws Exception
 	{
 		String lang = "CH";
 
@@ -336,13 +337,13 @@ public class WF_Admin extends DirectoryPageBase
 		///#endregion
 
 
-	public final String ReLoginSubmit()
+	public final String ReLoginSubmit() throws Exception
 	{
 		String userNo = this.GetValFromFrmByKey("TB_No");
 		String password = this.GetValFromFrmByKey("TB_PW");
 
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.setNo (userNo;
+		emp.setNo(userNo);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "err@用户名或密码错误.";
@@ -361,8 +362,9 @@ public class WF_Admin extends DirectoryPageBase
 	 加载模版.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SettingTemplate_Init()
+	public final String SettingTemplate_Init() throws Exception
 	{
 		//类型.
 		String templateType = this.GetRequestVal("TemplateType");
@@ -456,8 +458,8 @@ public class WF_Admin extends DirectoryPageBase
 		for (DataRow dr : dt.Rows)
 		{
 			BP.WF.Template.SQLTemplate en = new SQLTemplate();
-			en.No = dr.get(0).toString();
-			en.setName ( dr.get(1).toString();
+			en.setNo(dr.get(0).toString());
+			en.setName(dr.get(1).toString());
 			en.setDocs(dr.get(2).toString());
 
 			if (strs.contains(en.getDocs().trim() + ";") == true)

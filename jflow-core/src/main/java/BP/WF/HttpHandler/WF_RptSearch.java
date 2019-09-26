@@ -6,6 +6,7 @@ import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
+import BP.WF.Glo;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.util.*;
@@ -24,7 +25,7 @@ public class WF_RptSearch extends DirectoryPageBase
 
 
 		///#region 流程分布.
-	public final String DistributedOfMy_Init()
+	public final String DistributedOfMy_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -35,7 +36,7 @@ public class WF_RptSearch extends DirectoryPageBase
 
 		//string sql = "";
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
-		System.Data.DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Start";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
@@ -50,7 +51,7 @@ public class WF_RptSearch extends DirectoryPageBase
 		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp GROUP BY FK_Flow, FlowName ";
 		ps.Add("FK_Emp", WebUser.getNo());
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
-		System.Data.DataTable dtTodolist = BP.DA.DBAccess.RunSQLReturnTable(ps);
+		DataTable dtTodolist = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		dtTodolist.TableName = "Todolist";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
@@ -62,18 +63,18 @@ public class WF_RptSearch extends DirectoryPageBase
 		ds.Tables.add(dtTodolist);
 
 		//正在运行的流程.
-		System.Data.DataTable dtRuning = BP.WF.Dev2Interface.DB_TongJi_Runing();
+		DataTable dtRuning = BP.WF.Dev2Interface.DB_TongJi_Runing();
 		dtRuning.TableName = "Runing";
 		ds.Tables.add(dtRuning);
 
 
 		//归档的流程.
-		System.Data.DataTable dtOK = BP.WF.Dev2Interface.DB_TongJi_FlowComplete();
+		DataTable dtOK = BP.WF.Dev2Interface.DB_TongJi_FlowComplete();
 		dtOK.TableName = "OK";
 		ds.Tables.add(dtOK);
 
 		//返回结果.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 		///#endregion
@@ -139,8 +140,9 @@ public class WF_RptSearch extends DirectoryPageBase
 	 功能列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String KeySearch_Query()
+	public final String KeySearch_Query() throws Exception
 	{
 		String keywords = this.GetRequestVal("TB_KWds");
 		//对输入的关键字进行验证
@@ -193,8 +195,9 @@ public class WF_RptSearch extends DirectoryPageBase
 	 判断是否可以执行当前工作？
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String KeySearch_GenerOpenUrl()
+	public final String KeySearch_GenerOpenUrl() throws Exception
 	{
 		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo()) == true)
 		{

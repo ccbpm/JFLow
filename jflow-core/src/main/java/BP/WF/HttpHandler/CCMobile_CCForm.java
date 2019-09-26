@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
@@ -10,6 +11,7 @@ import BP.WF.Template.*;
 import BP.WF.*;
 import java.io.*;
 import java.time.*;
+import java.util.Date;
 
 /** 
  页面功能实体
@@ -85,27 +87,27 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
 				{
 					String val = this.GetValFromFrmByKey("TB_" + attr.getKey() + "_" + pkval, null);
-					item.SetValByKey(attr.Key, val);
+					item.SetValByKey(attr.getKey(), val);
 					continue;
 				}
 
-				if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == false)
+				if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == false)
 				{
-					String val = this.GetValFromFrmByKey("DDL_" + attr.Key + "_" + pkval);
-					item.SetValByKey(attr.Key, val);
+					String val = this.GetValFromFrmByKey("DDL_" + attr.getKey() + "_" + pkval);
+					item.SetValByKey(attr.getKey(), val);
 					continue;
 				}
 
-				if (attr.UIContralType == UIContralType.CheckBok && attr.UIIsReadonly == false)
+				if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == false)
 				{
-					String val = this.GetValFromFrmByKey("CB_" + attr.Key + "_" + pkval, "-1");
+					String val = this.GetValFromFrmByKey("CB_" + attr.getKey() + "_" + pkval, "-1");
 					if (val.equals("0"))
 					{
-						item.SetValByKey(attr.Key, 0);
+						item.SetValByKey(attr.getKey(), 0);
 					}
 					else
 					{
-						item.SetValByKey(attr.Key, 1);
+						item.SetValByKey(attr.getKey(), 1);
 					}
 					continue;
 				}
@@ -116,58 +118,6 @@ public class CCMobile_CCForm extends DirectoryPageBase
 		return "保存成功.";
 
 			///#endregion  查询出来从表数据.
-
-		///#region 保存新加行.
-
-		//string keyVal = "";
-		//foreach (Attr attr in map.Attrs)
-		//{
-
-		//    if (attr.MyDataType == DataType.AppDateTime || attr.MyDataType == DataType.AppDate)
-		//    {
-		//        if (attr.UIIsReadonly == true)
-		//            continue;
-
-		//        keyVal = this.GetValFromFrmByKey("TB_" + attr.Key + "_0", null);
-		//        dtl.SetValByKey(attr.Key, keyVal);
-		//        continue;
-		//    }
-
-
-		//    if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
-		//    {
-		//        keyVal = this.GetValFromFrmByKey("TB_" + attr.Key + "_0");
-		//        if (attr.IsNum && keyVal == "")
-		//            keyVal = "0";
-		//        dtl.SetValByKey(attr.Key, keyVal);
-		//        continue;
-		//    }
-
-		//    if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
-		//    {
-		//        keyVal = this.GetValFromFrmByKey("DDL_" + attr.Key + "_0");
-		//        dtl.SetValByKey(attr.Key, keyVal);
-		//        continue;
-		//    }
-
-		//    if (attr.UIContralType == UIContralType.CheckBok && attr.UIIsReadonly == true)
-		//    {
-		//        keyVal = this.GetValFromFrmByKey("CB_" + attr.Key + "_0", "-1");
-		//        if (keyVal == "-1")
-		//            dtl.SetValByKey(attr.Key, 0);
-		//        else
-		//            dtl.SetValByKey(attr.Key, 1);
-		//        continue;
-		//    }
-		//}
-
-		//dtl.SetValByKey("RefPK", this.GetRequestVal("RefPKVal"));
-		//dtl.PKVal = "0";
-		//dtl.Insert();
-
-		///#endregion 保存新加行.
-
-		//return "保存成功.";
 	}
 
 	//多附件上传方法
@@ -177,10 +127,10 @@ public class CCMobile_CCForm extends DirectoryPageBase
 		String attachPk = this.GetRequestVal("AttachPK");
 		// 多附件描述.
 		BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment(attachPk);
-		MapData mapData = new MapData(athDesc.FK_MapData);
+		MapData mapData = new MapData(athDesc.getFK_MapData());
 		String msg = null;
-		GEEntity en = new GEEntity(athDesc.FK_MapData);
-		en.PKVal = PKVal;
+		GEEntity en = new GEEntity(athDesc.getFK_MapData());
+		en.setPKVal(PKVal);
 		en.Retrieve();
 
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
@@ -281,12 +231,12 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				File info = new File(realSaveTo);
 
 				FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-				dbUpload.setMyPK( guid; // athDesc.FK_MapData + oid.ToString();
-				dbUpload.NodeID = String.valueOf(this.getFK_Node());
-				dbUpload.FK_FrmAttachment = attachPk;
-				dbUpload.FK_MapData = athDesc.FK_MapData;
-				dbUpload.FK_FrmAttachment = attachPk;
-				dbUpload.FileExts = info.Extension;
+				dbUpload.setMyPK(guid); // athDesc.getFK_MapData() + oid.ToString();
+				dbUpload.setNodeID(String.valueOf(this.getFK_Node()));
+				dbUpload.setFK_FrmAttachment(attachPk);
+				dbUpload.setFK_MapData(athDesc.getFK_MapData());
+				dbUpload.setFK_FrmAttachment(attachPk);
+				dbUpload.setFileExts(info.Extension);
 
 
 					///#region 处理文件路径，如果是保存到数据库，就存储pk.
@@ -304,13 +254,13 @@ public class CCMobile_CCForm extends DirectoryPageBase
 
 					///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
 
-				dbUpload.FileName = fileName + ext;
-				dbUpload.FileSize = (float)info.length();
-				dbUpload.RDT = DataType.getCurrentDataTime()ss;
-				dbUpload.Rec = WebUser.getNo();
-				dbUpload.RecName = WebUser.getName();
-				dbUpload.RefPKVal = PKVal;
-				dbUpload.FID = this.getFID();
+				dbUpload.setFileName(fileName + ext);
+				dbUpload.setFileSize((float)info.length());
+				dbUpload.setRDT(DataType.getCurrentDataTime());
+				dbUpload.setRec(WebUser.getNo());
+				dbUpload.setRecName(WebUser.getName());
+				dbUpload.setRefPKVal(PKVal);
+				dbUpload.setFID(this.getFID());
 
 				//if (athDesc.IsNote)
 				//    dbUpload.MyNote = this.Pub1.GetTextBoxByID("TB_Note").Text;
@@ -318,20 +268,20 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				//if (athDesc.Sort.Contains(","))
 				//    dbUpload.Sort = this.Pub1.GetDDLByID("ddl").SelectedItemStringVal;
 
-				dbUpload.UploadGUID = guid;
+				dbUpload.setUploadGUID(guid);
 				dbUpload.Insert();
 
-				if (athDesc.AthSaveWay == AthSaveWay.DB)
+				if (athDesc.getAthSaveWay() == AthSaveWay.DB)
 				{
 					//执行文件保存.
-					BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.EnMap.PhysicsTable, "MyPK", dbUpload.MyPK, "FDB");
+					BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.getEnMap().getPhysicsTable(), "MyPK", dbUpload.getMyPK(), "FDB");
 				}
 
 				//执行附件上传后事件，added by liuxc,2017-7-15
-				msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.FK_FrmAttachment + "@FK_FrmAttachmentDB=" + dbUpload.MyPK + "@FileFullName=" + dbUpload.FileFullName);
+				msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFK_FrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK() + "@FileFullName=" + dbUpload.getFileFullName());
 				if (!DataType.IsNullOrEmpty(msg))
 				{
-					BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.FileName + "，" + msg);
+					BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
 				}
 			}
 
@@ -339,12 +289,12 @@ public class CCMobile_CCForm extends DirectoryPageBase
 
 
 				///#region 保存到数据库 / FTP服务器上.
-			if (athDesc.AthSaveWay == AthSaveWay.DB || athDesc.AthSaveWay == AthSaveWay.FTPServer)
+			if (athDesc.getAthSaveWay() == AthSaveWay.DB || athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
 			{
 				String guid = DBAccess.GenerGUID();
 
 				//把文件临时保存到一个位置.
-				String temp = SystemConfig.PathOfTemp + guid + ".tmp";
+				String temp = SystemConfig.getPathOfTemp() + guid + ".tmp";
 				try
 				{
 					HttpContextHelper.UploadFile(file, temp);
@@ -376,37 +326,37 @@ public class CCMobile_CCForm extends DirectoryPageBase
 
 				File info = new File(temp);
 				FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-				dbUpload.setMyPK( BP.DA.DBAccess.GenerGUID();
-				dbUpload.NodeID = String.valueOf(getFK_Node());
-				dbUpload.FK_FrmAttachment = athDesc.MyPK;
-				dbUpload.FID = this.getFID(); //流程id.
-				if (athDesc.AthUploadWay == AthUploadWay.Inherit)
+				dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
+				dbUpload.setNodeID(String.valueOf(getFK_Node()));
+				dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+				dbUpload.setFID(this.getFID()); //流程id.
+				if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
 				{
 					/*如果是继承，就让他保持本地的PK. */
-					dbUpload.RefPKVal = PKVal.toString();
+					dbUpload.setRefPKVal(PKVal.toString());
 				}
 
-				if (athDesc.AthUploadWay == AthUploadWay.Interwork)
+				if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
 				{
 					/*如果是协同，就让他是PWorkID. */
 					Paras ps = new Paras();
 					ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 					ps.Add("WorkID", PKVal);
-					String pWorkID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0).toString();
+					String pWorkID = DBAccess.RunSQLReturnValInt(ps, 0).toString();
 					if (pWorkID == null || pWorkID.equals("0"))
 					{
 						pWorkID = PKVal;
 					}
-					dbUpload.RefPKVal = pWorkID;
+					dbUpload.setRefPKVal(pWorkID);
 				}
 
-				dbUpload.FK_MapData = athDesc.FK_MapData;
-				dbUpload.FK_FrmAttachment = athDesc.MyPK;
-				dbUpload.FileName = file.FileName;
-				dbUpload.FileSize = (float)info.length();
-				dbUpload.RDT = DataType.getCurrentDataTime()ss;
-				dbUpload.Rec = WebUser.getNo();
-				dbUpload.RecName = WebUser.getName();
+				dbUpload.setFK_MapData(athDesc.getFK_MapData());
+				dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+				dbUpload.setFileName(file.FileName);
+				dbUpload.setFileSize((float)info.length());
+				dbUpload.setRDT(DataType.getCurrentDataTime());
+				dbUpload.setRec(WebUser.getNo());
+				dbUpload.setRecName(WebUser.getName());
 				//if (athDesc.IsNote)
 				//    dbUpload.MyNote = this.Pub1.GetTextBoxByID("TB_Note").Text;
 
@@ -422,21 +372,21 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				//    }
 				//}
 
-				dbUpload.UploadGUID = guid;
+				dbUpload.setUploadGUID(guid);
 
-				if (athDesc.AthSaveWay == AthSaveWay.DB)
+				if (athDesc.getAthSaveWay() == AthSaveWay.DB)
 				{
 					dbUpload.Insert();
 					//把文件保存到指定的字段里.
 					dbUpload.SaveFileToDB("FileDB", temp);
 				}
 
-				if (athDesc.AthSaveWay == AthSaveWay.FTPServer)
+				if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
 				{
 					/*保存到fpt服务器上.*/
 					FtpSupport.FtpConnection ftpconn = new FtpSupport.FtpConnection(SystemConfig.FTPServerIP, SystemConfig.FTPUserNo, SystemConfig.FTPUserPassword);
 
-					String ny = LocalDateTime.now().toString("yyyy_MM");
+					String ny = DateUtils.format(new Date(),"yyyy-MM");
 
 					//判断目录年月是否存在.
 					if (ftpconn.DirectoryExist(ny) == false)
@@ -446,28 +396,28 @@ public class CCMobile_CCForm extends DirectoryPageBase
 					ftpconn.SetCurrentDirectory(ny);
 
 					//判断目录是否存在.
-					if (ftpconn.DirectoryExist(athDesc.FK_MapData) == false)
+					if (ftpconn.DirectoryExist(athDesc.getFK_MapData()) == false)
 					{
-						ftpconn.CreateDirectory(athDesc.FK_MapData);
+						ftpconn.CreateDirectory(athDesc.getFK_MapData());
 					}
 
 					//设置当前目录，为操作的目录。
-					ftpconn.SetCurrentDirectory(athDesc.FK_MapData);
+					ftpconn.SetCurrentDirectory(athDesc.getFK_MapData());
 
 					//把文件放上去.
-					ftpconn.PutFile(temp, guid + "." + dbUpload.FileExts);
+					ftpconn.PutFile(temp, guid + "." + dbUpload.getFileExts());
 					ftpconn.Close();
 
 					//设置路径.
-					dbUpload.FileFullName = ny + "//" + athDesc.FK_MapData + "//" + guid + "." + dbUpload.FileExts;
+					dbUpload.setFileFullName(ny + "//" + athDesc.getFK_MapData() + "//" + guid + "." + dbUpload.getFileExts());
 					dbUpload.Insert();
 				}
 
 				//执行附件上传后事件，added by liuxc,2017-7-15
-				msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.FK_FrmAttachment + "@FK_FrmAttachmentDB=" + dbUpload.MyPK + "@FileFullName=" + temp);
+				msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFK_FrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK() + "@FileFullName=" + temp);
 				if (!DataType.IsNullOrEmpty(msg))
 				{
-					BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.FileName + "，" + msg);
+					BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
 				}
 			}
 

@@ -22,8 +22,9 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 	 获取隐藏字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Hiddenfielddata()
+	public final String Hiddenfielddata() throws Exception
 	{
 		return BP.Sys.CCFormAPI.DB_Hiddenfielddata(this.getFK_MapData());
 	}
@@ -124,8 +125,9 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 	 获得外键列表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FrmTable_GetSFTableList()
+	public final String FrmTable_GetSFTableList() throws Exception
 	{
 		//WF_Admin_FoolFormDesigner wf = new WF_Admin_FoolFormDesigner(this.context);
 		SFTables ens = new SFTables();
@@ -165,9 +167,15 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 
 		String flag = this.GetRequestVal("flag");
 		flag = DataType.IsNullOrEmpty(flag) == true ? "true" : flag.toLowerCase();
+		//此处配置最大长度为20
+		if (flag.equals("true"))
+		{
+			 return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, true, true, 20);			
+		}
 
-		//此处配置最大长度为20，edited by liuxc,2017-9-25
-		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(flag, "true"), true, 20);
+		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, false, true, 20);
+		
+//		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(flag, "true"), true, 20);
 	}
 
 		///#endregion 功能界面方法.
@@ -176,8 +184,9 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 	 获得表单对应的物理表特定的数据类型字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FrmTextBoxChoseOneField_Init()
+	public final String FrmTextBoxChoseOneField_Init() throws Exception
 	{
 		DataTable mydt = MapData.GetFieldsOfPTableMode2(this.getFK_MapData());
 		mydt.TableName = "dt";

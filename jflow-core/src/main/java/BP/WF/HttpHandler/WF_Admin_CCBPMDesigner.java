@@ -2,15 +2,17 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Sys.*;
+import BP.Tools.StringHelper;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
+import BP.WF.Port.AdminEmp;
 import BP.WF.Template.*;
-import LitJson.*;
 import BP.WF.XML.*;
 import BP.WF.*;
 import java.util.*;
+import java.net.URLDecoder;
 import java.time.*;
 
 /** 
@@ -19,7 +21,7 @@ import java.time.*;
 public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 {
 
-	public final String GetFlowTreeTable2019()
+	public final String GetFlowTreeTable2019() throws Exception
 	{
 		String sql = "SELECT * FROM (SELECT 'F'+No as No,'F'+ParentNo ParentNo, Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                           union " + "\r\n" +
@@ -69,27 +71,27 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		if (dt.Rows.size() == 0)
 		{
 			FlowSort fs = new FlowSort();
-			fs.No = "99";
+			fs.setNo("99");
 			fs.setParentNo("0");
-			fs.Name = "流程树";
+			fs.setName("流程树");
 			fs.Insert();
 
-			dt.Rows.add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+			dt.Rows.AddDatas("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
 		}
 		else
 		{
-			DataRow[] drs = dt.Select("NAME='流程树'");
-			if (drs.length > 0 && !Equals(drs[0].get("PARENTNO"), "F0"))
+			List<DataRow> drs = dt.select("NAME='流程树'");
+			if (drs.size() > 0 && (!"F0".equals(drs.get(0).getValue("PARENTNO"))))
 			{
-				drs[0].set("ParentNo", "F0");
+				drs.get(0).setValue("PARENTNO", "F0");
 			}
 		}
 
 
 		if (!WebUser.getNo().equals("admin"))
 		{
-			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.getNo();
+			AdminEmp aemp = new AdminEmp();
+			aemp.setNo(WebUser.getNo());
 			if (aemp.RetrieveFromDBSources() == 0)
 			{
 				return "err@登录帐号错误.";
@@ -104,8 +106,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			DataRow newRootRow = dt.Select("No='F" + aemp.getRootOfFlow() + "'")[0];
 
 			newRootRow.set("ParentNo", "F0");
-			DataTable newDt = dt.Clone();
-			newDt.Rows.add(newRootRow.ItemArray);
+			DataTable newDt = dt;
+			newDt.Rows.AddDatas(newRootRow.ItemArray);
 			GenerChildRows(dt, newDt, newRootRow);
 			dt = newDt;
 		}
@@ -144,9 +146,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtFlowSorts.Columns[0].ColumnName = "No";
-			dtFlowSorts.Columns[1].ColumnName = "Name";
-			dtFlowSorts.Columns[2].ColumnName = "ParentNo";
+			dtFlowSorts.Columns.get(0).setColumnName("No");
+			dtFlowSorts.Columns.get(1).setColumnName("Name");
+			dtFlowSorts.Columns.get(2).setColumnName("ParentNo");
 		}
 
 
@@ -161,13 +163,13 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		ds.Tables.add(dtFlows);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dtFlows.Columns[0].ColumnName = "No";
-			dtFlows.Columns[1].ColumnName = "Name";
-			dtFlows.Columns[2].ColumnName = "FK_FlowSort";
+			dtFlows.Columns.get(0).setColumnName("No");
+			dtFlows.Columns.get(1).setColumnName("Name");
+			dtFlows.Columns.get(2).setColumnName("FK_FlowSort");
 		}
 
 		//转化为 json 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/** 
@@ -175,20 +177,21 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 
 	 @param userNo 管理员编号
 	 @return 登录信息
+	 * @throws Exception 
 	*/
-	public final String AdminerChang_LoginAs()
+	public final String AdminerChang_LoginAs() throws Exception
 	{
 		String orgNo = this.GetRequestVal("OrgNo");
 
-		BP.WF.Port.AdminEmp ae = new Port.AdminEmp();
-		ae.No = WebUser.getNo() + "@" + orgNo;
+		BP.WF.Port.AdminEmp ae = new BP.WF.Port.AdminEmp();
+		ae.setNo(WebUser.getNo() + "@" + orgNo);
 		if (ae.RetrieveFromDBSources() == 0)
 		{
 			return "err@您不是该组织的管理员.";
 		}
 
-		BP.WF.Port.AdminEmp ae1 = new Port.AdminEmp();
-		ae1.No = WebUser.getNo();
+		BP.WF.Port.AdminEmp ae1 = new BP.WF.Port.AdminEmp();
+		ae1.setNo(WebUser.getNo());
 		ae1.RetrieveFromDBSources();
 
 		if (ae1.getRootOfDept().equals(orgNo) == true)
@@ -197,7 +200,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 
 		ae1.Copy(ae);
-		ae1.No = WebUser.getNo();
+		ae1.setNo(WebUser.getNo());
 		ae1.Update();
 
 		//AdminEmp ad = new AdminEmp();
@@ -207,7 +210,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		return "info@登录成功, 如果系统不能自动刷新，请手工刷新。";
 	}
 
-	public final String Flows_Init()
+	public final String Flows_Init() throws Exception
 	{
 		DataTable dt = new DataTable();
 
@@ -224,8 +227,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		for (Flow fl : fls.ToJavaList())
 		{
 			DataRow dr = dt.NewRow();
-			dr.set("FlowNo", fl.No);
-			dr.set("FlowName", fl.Name);
+			dr.set("FlowNo", fl.getNo());
+			dr.set("FlowName", fl.getName());
 			dr.set("NumOfRuning", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.getNo() + "' AND WFState in (2,5)", 0));
 			dr.set("NumOfOK", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.getNo() + "' AND WFState = 3 ", 0));
 			dr.set("NumOfEtc", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM  WF_GenerWorkFlow WHERE FK_Flow='" + fl.getNo() + "' AND WFState in (4,5,6,7,8) ", 0));
@@ -313,32 +316,23 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 下载流程模版
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ExpFlowTemplete()
+	public final String ExpFlowTemplete() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
 		String fileXml = flow.GenerFlowXmlTemplete();
 		String docs = DataType.ReadTextFile(fileXml);
 		return docs;
 	}
-	public final String DownFormTemplete()
+	public final String DownFormTemplete() throws Exception
 	{
 		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(this.getFK_MapData());
-		String file = BP.Sys.SystemConfig.PathOfTemp + this.getFK_MapData() + ".xml";
+		String file = BP.Sys.SystemConfig.getPathOfTemp() + this.getFK_MapData() + ".xml";
 		ds.WriteXml(file);
 		String docs = DataType.ReadTextFile(file);
 		return docs;
 
-		//DataTable dt = new DataTable();
-		//dt.Columns.Add("FileName");
-		//dt.Columns.Add("FileType");
-		//dt.Columns.Add("FlieContent");
-		//DataRow dr = dt.NewRow();
-		//dr["FileName"] = md.Name+".xml";
-		//dr["FileType"] = "xml";
-		//dr["FlieContent"] = docs;
-		//dt.Rows.add(dr);
-		//return BP.Tools.Json.ToJson(dt);
 	}
 
 
@@ -360,8 +354,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	/** 
 	 使管理员登录使管理员登录    /// 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String LetLogin()
+	public final String LetLogin() throws Exception
 	{
 		LetAdminLogin(this.GetRequestVal("UserNo"), true);
 		return "登录成功.";
@@ -381,8 +376,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 根据部门、岗位获取人员列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetEmpsByStationTable()
+	public final String GetEmpsByStationTable() throws Exception
 	{
 		String deptid = this.GetRequestVal("DeptNo");
 		String stid = this.GetRequestVal("StationNo");
@@ -406,18 +402,18 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		BP.GPM.DeptEmpStations dess = new BP.GPM.DeptEmpStations();
 		dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, deptid, BP.GPM.DeptEmpStationAttr.FK_Station, stid);
 
-		for (BP.GPM.DeptEmpStation des : dess)
+		for (BP.GPM.DeptEmpStation des : dess.ToJavaList())
 		{
-			Object tempVar = emps.GetEntityByKey(des.FK_Emp);
+			Object tempVar = emps.GetEntityByKey(des.getFK_Emp());
 			emp = tempVar instanceof BP.GPM.Emp ? (BP.GPM.Emp)tempVar : null;
 
-			dt.Rows.add(emp.No, deptid + "|" + stid, emp.Name, "EMP");
+			dt.Rows.AddDatas(emp.getNo(), deptid + "|" + stid, emp.getName(), "EMP");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String GetStructureTreeRootTable()
+	public final String GetStructureTreeRootTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("NO", String.class);
@@ -430,8 +426,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		if (!WebUser.getNo().equals("admin"))
 		{
-			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.getNo();
+			BP.WF.Port.AdminEmp aemp = new BP.WF.Port.AdminEmp();
+			aemp.setNo(WebUser.getNo());
 
 			if (aemp.RetrieveFromDBSources() != 0 && aemp.getUserType() == 1 && !DataType.IsNullOrEmpty(aemp.getRootOfDept()))
 			{
@@ -447,8 +443,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			{
 				if (dept.Retrieve(BP.WF.Port.DeptAttr.No, newRootId) == 0)
 				{
-					dept.No = "-1";
-					dept.Name = "无部门";
+					dept.setNo("-1");
+					dept.setName("无部门");
 					dept.setParentNo("");
 				}
 			}
@@ -456,13 +452,13 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			{
 				if (dept.Retrieve(BP.WF.Port.DeptAttr.ParentNo, parentrootid) == 0)
 				{
-					dept.No = "-1";
-					dept.Name = "无部门";
+					dept.setNo("-1");
+					dept.setName("无部门");
 					dept.setParentNo("");
 				}
 			}
 
-			dt.Rows.add(dept.No, dept.getParentNo(), dept.Name, "DEPT");
+			dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 		}
 		else
 		{
@@ -472,22 +468,22 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			{
 				if (dept.Retrieve(BP.GPM.DeptAttr.No, newRootId) == 0)
 				{
-					dept.No = "-1";
-					dept.Name = "无部门";
-					dept.ParentNo = "";
+					dept.setNo("-1");
+					dept.setName("无部门");
+					dept.setParentNo("");
 				}
 			}
 			else
 			{
 				if (dept.Retrieve(BP.GPM.DeptAttr.ParentNo, parentrootid) == 0)
 				{
-					dept.No = "-1";
-					dept.Name = "无部门";
-					dept.ParentNo = "";
+					dept.setNo("-1");
+					dept.setName("无部门");
+					dept.setParentNo("");
 				}
 			}
 
-			dt.Rows.add(dept.No, dept.ParentNo, dept.Name, "DEPT");
+			dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -497,8 +493,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 获取指定部门下一级子部门及岗位列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetSubDeptsTable()
+	public final String GetSubDeptsTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("NO", String.class);
@@ -526,13 +523,13 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		for (BP.GPM.Dept dept : depts.ToJavaList())
 		{
 			//增加部门
-			dt.Rows.add(dept.No, dept.ParentNo, dept.Name, "DEPT");
+			dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 		}
 
 		//增加部门岗位
-		for (BP.GPM.DeptStation ds : dss)
+		for (BP.GPM.DeptStation ds : dss.ToJavaList())
 		{
-			Object tempVar = sts.GetEntityByKey(ds.FK_Station);
+			Object tempVar = sts.GetEntityByKey(ds.getFK_Station());
 			stt = tempVar instanceof BP.GPM.Station ? (BP.GPM.Station)tempVar : null;
 
 			if (stt == null)
@@ -540,27 +537,27 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 				continue;
 			}
 
-			dt.Rows.add(ds.FK_Station, rootid, stt.Name, "STATION");
+			dt.Rows.AddDatas(ds.getFK_Station(), rootid, stt.getName(), "STATION");
 		}
 
 		//增加没有岗位的人员
-		for (BP.GPM.DeptEmp de : des)
+		for (BP.GPM.DeptEmp de : des.ToJavaList())
 		{
-			if (dess.GetEntityByKey(BP.GPM.DeptEmpStationAttr.FK_Emp, de.FK_Emp) == null)
+			if (dess.GetEntityByKey(BP.GPM.DeptEmpStationAttr.FK_Emp, de.getFK_Emp()) == null)
 			{
-				if (inemps.contains(de.FK_Emp))
+				if (inemps.contains(de.getFK_Emp()))
 				{
 					continue;
 				}
 
-				inemps.add(de.FK_Emp);
+				inemps.add(de.getFK_Emp());
 			}
 		}
 
 		for (String inemp : inemps)
 		{
 			emp = new BP.GPM.Emp(inemp);
-			dt.Rows.add(emp.No, rootid, emp.Name, "EMP");
+			dt.Rows.AddDatas(emp.getNo(), rootid, emp.getName(), "EMP");
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -572,13 +569,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 初始化登录界面.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Default_Init()
+	public final String Default_Init() throws Exception
 	{
 		try
 		{
 			//如果登录信息丢失了,就让其重新登录一次.
-			if (DataType.IsNullOrEmpty(WebUser.getNo()OfRel) == true)
+			if (DataType.IsNullOrEmpty(WebUser.getNoOfRel()) == true)
 			{
 				String userNo = this.GetRequestVal("UserNo");
 				String sid = this.GetRequestVal("SID");
@@ -607,14 +605,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			}
 
 			//把系统信息加入里面去.
-			ht.put("SysNo", SystemConfig.SysNo);
-			ht.put("SysName", SystemConfig.SysName);
+			ht.put("SysNo", SystemConfig.getSysNo());
+			ht.put("SysName", SystemConfig.getSysName());
 
 			ht.put("CustomerNo", SystemConfig.getCustomerNo());
-			ht.put("CustomerName", SystemConfig.CustomerName);
+			ht.put("CustomerName", SystemConfig.getCustomerName());
 
 			//集成的平台.
-			ht.put("RunOnPlant", SystemConfig.RunOnPlant);
+			ht.put("RunOnPlant", SystemConfig.getRunOnPlant());
 
 			try
 			{
@@ -647,8 +645,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	public final String Login_InitInfo()
 	{
 		Hashtable ht = new Hashtable();
-		ht.put("SysNo", SystemConfig.SysNo);
-		ht.put("SysName", SystemConfig.SysName);
+		ht.put("SysNo", SystemConfig.getSysNo());
+		ht.put("SysName", SystemConfig.getSysName());
 
 		return BP.Tools.Json.ToJson(ht);
 	}
@@ -656,8 +654,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 初始化登录界面.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Login_Init()
+	public final String Login_Init() throws Exception
 	{
 
 		//检查数据库连接.
@@ -701,11 +700,11 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 				BP.WF.Dev2Interface.Port_LoginBySID(userNo, sid);
 				if (this.getFK_Flow() == null)
 				{
-					return "url@Default.htm?UserNo=" + userNo + "&Key=" + LocalDateTime.now().ToBinary();
+					return "url@Default.htm?UserNo=" + userNo + "&Key=" + new Date().getTime();
 				}
 				else
 				{
-					return "url@Designer.htm?UserNo=" + userNo + "&FK_Flow=" + this.getFK_Flow() + "&Key=" + LocalDateTime.now().ToBinary();
+					return "url@Designer.htm?UserNo=" + userNo + "&FK_Flow=" + this.getFK_Flow() + "&Key=" + new Date().getTime();
 				}
 			}
 			catch (RuntimeException ex)
@@ -751,23 +750,24 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 提交
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Login_Submit()
+	public final String Login_Submit() throws Exception
 	{
 		String[] para = new String[0];
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.No = this.GetRequestVal("TB_No").trim();
+		emp.setNo(this.GetRequestVal("TB_No").trim());
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "err@用户名或密码错误.";
 		}
 		//return BP.WF.Glo.lang("invalid_username_or_pwd", para);
 
-		if (!emp.No.equals("admin"))
+		if (!emp.getNo().equals("admin"))
 		{
 			//检查是否是管理员？
-			BP.WF.Port.AdminEmp adminEmp = new Port.AdminEmp();
-			adminEmp.No = emp.No;
+			BP.WF.Port.AdminEmp adminEmp = new BP.WF.Port.AdminEmp();
+			adminEmp.setNo(emp.getNo());
 			if (adminEmp.RetrieveFromDBSources() == 0)
 			{
 				return "err@您非管理员用户，不能登录.";
@@ -795,8 +795,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		//return BP.WF.Glo.lang("invalid_username_or_pwd", para);
 
 		//让其登录.
-		BP.WF.Dev2Interface.Port_Login(emp.No);
-		return "url@Default.htm?SID=" + emp.SID + "&UserNo=" + emp.No;
+		BP.WF.Dev2Interface.Port_Login(emp.getNo());
+		return "url@Default.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getNo();
 	}
 
 		///#endregion 登录窗口.
@@ -809,11 +809,12 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 获取流程所有元素
 	 
 	 @return json data
+	 * @throws Exception 
 	*/
-	public final String Flow_AllElements_ResponseJson()
+	public final String Flow_AllElements_ResponseJson() throws Exception
 	{
 		BP.WF.Flow flow = new BP.WF.Flow();
-		flow.No = this.getFK_Flow();
+		flow.setNo(this.getFK_Flow());
 		flow.RetrieveFromDBSources();
 
 		DataSet ds = new DataSet();
@@ -830,7 +831,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		ds.Tables.add(dtLabNote);
 
 
-		// return BP.Tools.Json.DataSetToJson(ds, false);
+		// return BP.Tools.Json.ToJson(ds)
 		return BP.Tools.Json.ToJson(ds);
 	}
 
@@ -842,8 +843,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 创建流程节点并返回编号
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CreateNode()
+	public final String CreateNode() throws Exception
 	{
 		try
 		{
@@ -915,8 +917,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 根据节点编号删除流程节点
 	 
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public final String DeleteNode()
+	public final String DeleteNode() throws Exception
 	{
 		try
 		{
@@ -944,13 +947,15 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 修改节点名称
 	 
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public final String Node_EditNodeName()
+	public final String Node_EditNodeName() throws NumberFormatException, Exception
 	{
 		String FK_Node = this.GetValFromFrmByKey("NodeID");
 		//string NodeName = System.Web.HttpContext.Current.Server.UrlDecode(this.GetValFromFrmByKey("NodeName"));
-		String NodeName = HttpContextHelper.UrlDecode(this.GetValFromFrmByKey("NodeName"));
-
+//		String NodeName = HttpContextHelper.UrlDecode(this.GetValFromFrmByKey("NodeName"));
+		String NodeName = URLDecoder.decode(this.GetValFromFrmByKey("NodeName"), "UTF-8");
 		BP.WF.Node node = new BP.WF.Node();
 		node.setNodeID(Integer.parseInt(FK_Node));
 		int iResult = node.RetrieveFromDBSources();
@@ -967,8 +972,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 修改节点运行模式
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Node_ChangeRunModel()
+	public final String Node_ChangeRunModel() throws Exception
 	{
 		String runModel = GetValFromFrmByKey("RunModel");
 		BP.WF.Node node = new BP.WF.Node(this.getFK_Node());
@@ -1004,8 +1010,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 获取用户信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetWebUserInfo()
+	public final String GetWebUserInfo() throws Exception
 	{
 		if (WebUser.getNo() == null)
 		{
@@ -1016,10 +1023,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		BP.Port.Emp emp = new BP.Port.Emp(WebUser.getNo());
 
-		ht.put("No", emp.No);
-		ht.put("Name", emp.Name);
-		ht.put("FK_Dept", emp.FK_Dept);
-		ht.put("SID", emp.SID);
+		ht.put("No", emp.getNo());
+		ht.put("Name", emp.getName());
+		ht.put("FK_Dept", emp.getFK_Dept());
+		ht.put("SID", emp.getSID());
 
 
 		if (WebUser.getNo().equals("admin"))
@@ -1031,8 +1038,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 		else
 		{
-			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.getNo();
+			BP.WF.Port.AdminEmp aemp = new BP.WF.Port.AdminEmp();
+			aemp.setNo(WebUser.getNo());
 
 			if (aemp.RetrieveFromDBSources() == 0)
 			{
@@ -1056,8 +1063,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 获取流程树数据
 	 
 	 @return 返回结果Json,流程树
+	 * @throws Exception 
 	*/
-	public final String GetFlowTreeTable()
+	public final String GetFlowTreeTable() throws Exception
 	{
 		String sql = "SELECT * FROM (SELECT 'F'+No as NO,'F'+ParentNo PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE, -1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                           union " + "\r\n" +
@@ -1096,27 +1104,27 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		if (dt.Rows.size() == 0)
 		{
 			FlowSort fs = new FlowSort();
-			fs.No = "99";
+			fs.setNo("99");
 			fs.setParentNo("0");
-			fs.Name = "流程树";
+			fs.setName("流程树");
 			fs.Insert();
 
-			dt.Rows.add("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+			dt.Rows.AddDatas("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
 		}
 		else
 		{
-			DataRow[] drs = dt.Select("NAME='流程树'");
-			if (drs.length > 0 && !Equals(drs[0].get("PARENTNO"), "F0"))
+			List<DataRow> drs = dt.select("NAME='流程树'");
+			if (drs.size() > 0 && (!"F0".equals(drs.get(0).getValue("PARENTNO"))))
 			{
-				drs[0].set("PARENTNO", "F0");
+				drs.get(0).setValue("PARENTNO", "F0");
 			}
 		}
 
 
 		if (!WebUser.getNo().equals("admin"))
 		{
-			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.getNo();
+			AdminEmp aemp = new AdminEmp();
+			aemp.setNo(WebUser.getNo());
 			if (aemp.RetrieveFromDBSources() == 0)
 			{
 				return "err@登录帐号错误.";
@@ -1131,8 +1139,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			DataRow newRootRow = dt.Select("NO='F" + aemp.getRootOfFlow() + "'")[0];
 
 			newRootRow.set("PARENTNO", "F0");
-			DataTable newDt = dt.Clone();
-			newDt.Rows.add(newRootRow.ItemArray);
+			DataTable newDt = dt;
+			newDt.Rows.AddDatas(newRootRow.ItemArray);
 			GenerChildRows(dt, newDt, newRootRow);
 			dt = newDt;
 		}
@@ -1146,7 +1154,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		DataRow[] rows = dt.Select("ParentNo='" + parentRow.get("NO") + "'");
 		for (DataRow r : rows)
 		{
-			newDt.Rows.add(r.ItemArray);
+			newDt.Rows.AddDatas(r.ItemArray);
 			GenerChildRows(dt, newDt, r);
 		}
 	}
@@ -1174,14 +1182,13 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		sql.append("               SELECT wn.NodeID" + "\r\n");
 		sql.append("               FROM   WF_Node wn" + "\r\n");
 		sql.append("               WHERE  wn.FK_Flow = '{0}' AND wn.NodePosType = 0" + "\r\n");
-//C# TO JAVA CONVERTER TODO TASK: The following line could not be converted:
-		sql.AppendLine("           )");
+		sql.append("           )");
 
 		DataTable dt = DBAccess.RunSQLReturnTable(String.format(sql.toString(), fk_flow));
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	public final String GetFormTreeTable()
+	public final String GetFormTreeTable() throws Exception
 	{
 
 			///#region 检查数据是否符合规范.
@@ -1193,14 +1200,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 		//检查根目录是否符合规范.
 		FrmTree ft = new FrmTree();
-		ft.No = "1";
+		ft.setNo("1");
 		if (ft.RetrieveFromDBSources() == 0)
 		{
-			ft.setName("表单库";
+			ft.setName("表单库");
 			ft.setParentNo("0");
 			ft.Insert();
 		}
-		if (ft.ParentNo.equals("0") == false)
+		if (ft.getParentNo().equals("0") == false)
 		{
 			ft.setParentNo("0");
 			ft.Update();
@@ -1227,8 +1234,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 
 		//获得表单数据.
-		DataTable dtSort = ds.Tables[0]; //类别表.
-		DataTable dtForm = ds.Tables[1].Clone(); //表单表,这个是最终返回的数据.
+		DataTable dtSort = ds.Tables.get(0); //类别表.
+		DataTable dtForm = ds.Tables.get(1).copy(); //表单表,这个是最终返回的数据.
 
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
@@ -1243,36 +1250,36 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		//增加顶级目录.
 		DataRow[] rowsOfSort = dtSort.Select("ParentNo='0'");
 		DataRow drFormRoot = dtForm.NewRow();
-		drFormRoot.set(0, rowsOfSort[0].get("No"));
-		drFormRoot.set(1, "0");
-		drFormRoot.set(2, rowsOfSort[0].get("Name"));
-		drFormRoot.set(3, rowsOfSort[0].get("Idx"));
-		drFormRoot.set(4, rowsOfSort[0].get("IsParent"));
-		drFormRoot.set(5, rowsOfSort[0].get("TType"));
+		drFormRoot.setValue(0, rowsOfSort[0].get("No"));
+		drFormRoot.setValue(1, "0");
+		drFormRoot.setValue(2, rowsOfSort[0].get("Name"));
+		drFormRoot.setValue(3, rowsOfSort[0].get("Idx"));
+		drFormRoot.setValue(4, rowsOfSort[0].get("IsParent"));
+		drFormRoot.setValue(5, rowsOfSort[0].get("TType"));
 		dtForm.Rows.add(drFormRoot); //增加顶级类别..
 
 		//把类别数据组装到form数据里.
 		for (DataRow dr : dtSort.Rows)
 		{
 			DataRow drForm = dtForm.NewRow();
-			drForm.set(0, dr.get("No"));
-			drForm.set(1, dr.get("ParentNo"));
-			drForm.set(2, dr.get("Name"));
-			drForm.set(3, dr.get("Idx"));
-			drForm.set(4, dr.get("IsParent"));
-			drForm.set(5, dr.get("TType"));
+			drForm.setValue(0, dr.get("No"));
+			drForm.setValue(1, dr.get("ParentNo"));
+			drForm.setValue(2, dr.get("Name"));
+			drForm.setValue(3, dr.get("Idx"));
+			drForm.setValue(4, dr.get("IsParent"));
+			drForm.setValue(5, dr.get("TType"));
 			dtForm.Rows.add(drForm); //类别.
 		}
 
-		for (DataRow row : ds.Tables[1].Rows)
+		for (DataRow row : ds.Tables.get(1).Rows)
 		{
-			dtForm.Rows.add(row.ItemArray);
+			dtForm.Rows.add(row);
 		}
 
 		if (WebUser.getNo().equals("admin") == false)
 		{
-			BP.WF.Port.AdminEmp aemp = new Port.AdminEmp();
-			aemp.No = WebUser.getNo();
+			BP.WF.Port.AdminEmp aemp = new BP.WF.Port.AdminEmp();
+			aemp.setNo(WebUser.getNo());
 			aemp.RetrieveFromDBSources();
 
 			if (aemp.getUserType() != 1)
@@ -1288,8 +1295,8 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			DataRow newRootRow = rootRows[0];
 
 			newRootRow.set("ParentNo", "0");
-			DataTable newDt = dtForm.Clone();
-			newDt.Rows.add(newRootRow.ItemArray);
+			DataTable newDt = dtForm;
+			newDt.Rows.AddDatas(newRootRow.ItemArray);
 
 			GenerChildRows(dtForm, newDt, newRootRow);
 			dtForm = newDt;
@@ -1300,7 +1307,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	}
 
 
-	public final String GetStructureTreeTable()
+	public final String GetStructureTreeTable() throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("NO", String.class);
@@ -1325,13 +1332,13 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		for (BP.GPM.Dept dept : depts.ToJavaList())
 		{
 			//增加部门
-			dt.Rows.add(dept.No, dept.ParentNo, dept.Name, "DEPT");
+			dt.Rows.AddDatas(dept.getNo(), dept.getParentNo(), dept.getName(), "DEPT");
 
 			//增加部门岗位
-			dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, dept.No);
-			for (BP.GPM.DeptStation ds : dss)
+			dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, dept.getNo());
+			for (BP.GPM.DeptStation ds : dss.ToJavaList())
 			{
-				Object tempVar = sts.GetEntityByKey(ds.FK_Station);
+				Object tempVar = sts.GetEntityByKey(ds.getFK_Station());
 				stt = tempVar instanceof BP.GPM.Station ? (BP.GPM.Station)tempVar : null;
 
 				if (stt == null)
@@ -1339,14 +1346,14 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 					continue;
 				}
 
-				dt.Rows.add(dept.No + "|" + ds.FK_Station, dept.No, stt.Name, "STATION");
+				dt.Rows.AddDatas(dept.getNo() + "|" + ds.getFK_Station(), dept.getNo(), stt.getName(), "STATION");
 
 				//增加部门岗位人员
-				dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, dept.No, BP.GPM.DeptEmpStationAttr.FK_Station, ds.FK_Station);
+				dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, dept.getNo(), BP.GPM.DeptEmpStationAttr.FK_Station, ds.getFK_Station());
 
-				for (BP.GPM.DeptEmpStation des : dess)
+				for (BP.GPM.DeptEmpStation des : dess.ToJavaList())
 				{
-					Object tempVar2 = emps.GetEntityByKey(des.FK_Emp);
+					Object tempVar2 = emps.GetEntityByKey(des.getFK_Emp());
 					empt = tempVar2 instanceof BP.GPM.Emp ? (BP.GPM.Emp)tempVar2 : null;
 
 					if (empt == null)
@@ -1354,7 +1361,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 						continue;
 					}
 
-					dt.Rows.add(dept.No + "|" + ds.FK_Station + "|" + des.FK_Emp, dept.No + "|" + ds.FK_Station, empt.Name, "EMP");
+					dt.Rows.AddDatas(dept.getNo() + "|" + ds.getFK_Station() + "|" + des.getFK_Emp(), dept.getNo() + "|" + ds.getFK_Station(), empt.getName(), "EMP");
 				}
 			}
 		}
@@ -1367,8 +1374,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 系统维护管理员菜单 需要翻译
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GetTreeJson_AdminMenu()
+	public final String GetTreeJson_AdminMenu() throws Exception
 	{
 		//查询全部.
 		AdminMenuGroups groups = new AdminMenuGroups();
@@ -1380,7 +1388,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		// 定义容器.
 		AdminMenus newMenus = new AdminMenus();
 
-		for (AdminMenuGroup menu : groups)
+		for (AdminMenuGroup menu : groups.ToJavaList())
 		{
 			//是否可以使用？
 			if (menu.IsCanUse(WebUser.getNo()) == false)
@@ -1397,7 +1405,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			newMenus.Add(newMenu);
 		}
 
-		for (AdminMenu menu : menus)
+		for (AdminMenu menu : menus.ToJavaList())
 		{
 			//是否可以使用？
 			if (menu.IsCanUse(WebUser.getNo()) == false)
@@ -1474,12 +1482,12 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 				filer = String.format("%1$s='%2$s'", rela, pId);
 			}
 
-			DataRow[] rows = tabel.Select(filer, idCol);
-			if (rows.length > 0)
+			List<DataRow> rows = tabel.select(filer);
+			if (rows.size() > 0)
 			{
-				for (int i = 0; i < rows.length; i++)
+				for (int i = 0; i < rows.size(); i++)
 				{
-					DataRow row = rows[i];
+					DataRow row = rows.get(i);
 
 					String jNo = row.get(idCol) instanceof String ? (String)row.get(idCol) : null;
 					String jText = row.get(txtCol) instanceof String ? (String)row.get(txtCol) : null;
@@ -1501,7 +1509,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 					{
 						for (String field : attrFields)
 						{
-							if (!tabel.Columns.Contains(field))
+							if (!tabel.Columns.contains(field))
 							{
 								continue;
 							}
@@ -1510,7 +1518,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 								attrs += ",\"" + field + "\":\"\"";
 								continue;
 							}
-							attrs += ",\"" + field + "\":" + (tabel.Columns[field].DataType == String.class ? String.format("\"%1$s\"", row.get(field)) : row.get(field));
+							attrs += ",\"" + field + "\":" + (tabel.Columns.get(field).DataType == String.class ? String.format("\"%1$s\"", row.get(field)) : row.get(field));
 						}
 					}
 
@@ -1548,7 +1556,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 		return treeJson;
 	}
-	public final String NewFlow()
+	public final String NewFlow() throws Exception
 	{
 		try
 		{
@@ -1582,35 +1590,38 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 上移流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MoveUpFlow()
+	public final String MoveUpFlow() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
 		flow.DoUp();
-		return flow.No;
+		return flow.getNo();
 	}
 	/** 
 	 下移流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MoveDownFlow()
+	public final String MoveDownFlow() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
 		flow.DoDown();
-		return flow.No;
+		return flow.getNo();
 	}
 	/** 
 	 删除流程类别.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DelFlowSort()
+	public final String DelFlowSort() throws Exception
 	{
 		String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
 
 		FlowSort fs = new FlowSort();
-		fs.No = fk_flowSort;
+		fs.setNo(fk_flowSort);
 
 		//检查是否有流程？
 		Paras ps = new Paras();
@@ -1640,72 +1651,77 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 新建同级流程类别 对照需要翻译
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NewSameLevelFlowSort()
+	public final String NewSameLevelFlowSort() throws Exception
 	{
 		FlowSort fs = null;
 		fs = new FlowSort(this.getNo().replace("F", "")); //传入的编号多出F符号，需要替换掉.
 
 		String orgNo = fs.getOrgNo(); //记录原来的组织结构编号. 对照需要翻译
 
-		String sameNodeNo = fs.DoCreateSameLevelNode().No;
+		String sameNodeNo = fs.DoCreateSameLevelNode().getNo();
 		fs = new FlowSort(sameNodeNo);
-		fs.Name = this.getName();
+		fs.setName(this.getName());
 		fs.setOrgNo(orgNo); // 组织结构编号. 对照需要翻译
 		fs.Update();
-		return "F" + fs.No;
+		return "F" + fs.getNo();
 	}
 	/** 
 	 新建下级类别. 
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NewSubFlowSort()
+	public final String NewSubFlowSort() throws Exception
 	{
 		FlowSort fsSub = new FlowSort(this.getNo().replace("F", "")); //传入的编号多出F符号，需要替换掉.
 		String orgNo = fsSub.getOrgNo(); //记录原来的组织结构编号. 对照需要翻译
 
-		String subNodeNo = fsSub.DoCreateSubNode().No;
+		String subNodeNo = fsSub.DoCreateSubNode().getNo();
 		FlowSort subFlowSort = new FlowSort(subNodeNo);
-		subFlowSort.Name = this.getName();
+		subFlowSort.setName(this.getName());
 		subFlowSort.setOrgNo(orgNo); // 组织结构编号. 对照需要翻译.
 		subFlowSort.Update();
-		return "F" + subFlowSort.No;
+		return "F" + subFlowSort.getNo();
 	}
 	/** 
 	 上移流程类别
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MoveUpFlowSort()
+	public final String MoveUpFlowSort() throws Exception
 	{
 		String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
 		FlowSort fsSub = new FlowSort(fk_flowSort); //传入的编号多出F符号，需要替换掉
 		fsSub.DoUp();
-		return "F" + fsSub.No;
+		return "F" + fsSub.getNo();
 	}
 	/** 
 	 下移流程类别
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MoveDownFlowSort()
+	public final String MoveDownFlowSort() throws Exception
 	{
 		String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
 		FlowSort fsSub = new FlowSort(fk_flowSort); //传入的编号多出F符号，需要替换掉
 		fsSub.DoDown();
-		return "F" + fsSub.No;
+		return "F" + fsSub.getNo();
 	}
 
 	/** 
 	 表单树 - 编辑表单类别
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_EditCCFormSort()
+	public final String CCForm_EditCCFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
-		formTree.Name = this.getName();
+		formTree.setName(this.getName());
 		formTree.Update();
 		return this.getNo();
 	}
@@ -1713,8 +1729,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 表单树 - 删除表单类别
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_DelFormSort()
+	public final String CCForm_DelFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
 
@@ -1745,54 +1762,59 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 表单树-上移表单类别
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_MoveUpCCFormSort()
+	public final String CCForm_MoveUpCCFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
 		formTree.DoUp();
-		return formTree.No;
+		return formTree.getNo();
 	}
 	/** 
 	 表单树-下移表单类别
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_MoveDownCCFormSort()
+	public final String CCForm_MoveDownCCFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
 		formTree.DoDown();
-		return formTree.No;
+		return formTree.getNo();
 	}
 
 	/** 
 	 表单树-上移表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_MoveUpCCFormTree()
+	public final String CCForm_MoveUpCCFormTree() throws Exception
 	{
 		MapData mapData = new MapData(this.getFK_MapData());
 		mapData.DoUp();
-		return mapData.No;
+		return mapData.getNo();
 	}
 	/** 
 	 表单树-下移表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_MoveDownCCFormTree()
+	public final String CCForm_MoveDownCCFormTree() throws Exception
 	{
 		MapData mapData = new MapData(this.getFK_MapData());
 		mapData.DoOrderDown();
-		return mapData.No;
+		return mapData.getNo();
 	}
 
 	/** 
 	 表单树 - 删除表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CCForm_DeleteCCFormMapData()
+	public final String CCForm_DeleteCCFormMapData() throws Exception
 	{
 		try
 		{
@@ -1806,14 +1828,15 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 	}
 
-	public final String EditFlowSort()
+	public final String EditFlowSort() throws Exception
 	{
 		FlowSort fs = new FlowSort(); //传入的编号多出F符号，需要替换掉
-		fs.No = tangible.StringHelper.trimStart(this.getNo(), 'F');
+		fs.setNo(StringHelper.trimStart(this.getNo(), 'F'));
 		fs.RetrieveFromDBSources();
-		fs.Name = this.getName();
+		fs.setName(this.getName());
 		fs.Update();
-		return fs.No;
+		return fs.getNo();
+		
 	}
 
 	/** 
@@ -1821,8 +1844,9 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 	 
 	 @param lang 当前的语言
 	 @return 成功则为空，有异常时返回异常信息
+	 * @throws Exception 
 	*/
-	public final String LetAdminLogin(String empNo, boolean islogin)
+	public final String LetAdminLogin(String empNo, boolean islogin) throws Exception
 	{
 		try
 		{

@@ -3,6 +3,7 @@ package BP.WF.HttpHandler;
 import BP.WF.*;
 import BP.Web.*;
 import BP.Sys.*;
+import BP.Tools.StringHelper;
 import BP.DA.*;
 import BP.En.*;
 import BP.WF.*;
@@ -25,13 +26,14 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 	 初始化 导入的界面 .
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Imp_Init()
+	public final String Imp_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
 		String sql = "";
-		System.Data.DataTable dt;
+		DataTable dt;
 
 		if (this.getFK_Flow() != null)
 		{
@@ -204,8 +206,9 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 	 @徐彪来调用.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Imp_CopyFromFlow()
+	public final String Imp_CopyFromFlow() throws Exception
 	{
 		String ndfrm = "ND" + Integer.parseInt(this.getFK_Flow()) + "01";
 		return Imp_CopyFrm(ndfrm);
@@ -215,8 +218,9 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 	 从节点导入
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Imp_FromsCopyFrm()
+	public final String Imp_FromsCopyFrm() throws Exception
 	{
 		return Imp_CopyFrm();
 	}
@@ -228,16 +232,17 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 	 @param isClear 是否清楚现有的元素？
 	 @param isSetReadonly 是否设置为只读？
 	 @return 执行结果
+	 * @throws Exception 
 	*/
 
-	public final String Imp_CopyFrm()
+	public final String Imp_CopyFrm() throws Exception
 	{
 		return Imp_CopyFrm(null);
 	}
 
 //C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public string Imp_CopyFrm(string frmID = null)
-	public final String Imp_CopyFrm(String frmID)
+	public final String Imp_CopyFrm(String frmID) throws Exception
 	{
 		try
 		{
@@ -251,7 +256,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			boolean isSetReadonly = this.GetRequestValBoolen("IsSetReadonly");
 
 			MapData md = new MapData(fromMapData);
-			MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(md.No));
+			MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(md.getNo()));
 
 			//设置为只读模式.
 			if (isSetReadonly == true)
@@ -285,8 +290,9 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 	 选择一个数据源，进入步骤2
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Imp_Src_Step2_Init()
+	public final String Imp_Src_Step2_Init() throws Exception
 	{
 		SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
 
@@ -300,8 +306,9 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 	 获取表字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Imp_Src_Step2_GetColumns()
+	public final String Imp_Src_Step2_GetColumns() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -318,7 +325,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String Imp_Src_Step3_Init()
+	public final String Imp_Src_Step3_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -327,12 +334,13 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 		DataTable tableColumns = src.GetColumns(this.GetRequestVal("STable"));
 
 		//01.添加列
-		DataTable dt = tableColumns.Clone();
+		DataTable dt = tableColumns.clone();
 		for (DataRow dr : tableColumns.Rows)
 		{
 			if (SColumns.contains(dr.get("no").toString()))
 			{
-				dt.ImportRow(dr);
+				dt.Rows.add(dr);
+				//dt.ImportRow(dr);
 			}
 		}
 		dt.TableName = "Columns";
@@ -348,95 +356,95 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 
 	}
 
-	public final String Imp_Src_Step3_Save()
+	public final String Imp_Src_Step3_Save() throws Exception
 	{
 
 		String hidImpFields = this.GetRequestVal("hidImpFields");
-		String[] fields = tangible.StringHelper.trimEnd(hidImpFields, ',').split("[,]", -1);
+		String[] fields = StringHelper.trimEnd(hidImpFields, ',').split("[,]", -1);
 
 		MapData md = new MapData();
-		md.No = this.getFK_MapData();
+		md.setNo(this.getFK_MapData());
 		md.RetrieveFromDBSources();
 
 
 		String msg = "导入字段信息:";
 		boolean isLeft = true;
-		float maxEnd = md.MaxEnd; //底部.
+		float maxEnd = md.getMaxEnd(); //底部.
 		for (int i = 0; i < fields.length; i++)
 		{
 			String colname = fields[i];
 
 			MapAttr ma = new MapAttr();
-			ma.KeyOfEn = colname;
-			ma.Name = this.GetRequestVal("TB_Desc_" + colname);
-			ma.FK_MapData = this.getFK_MapData();
-			ma.MyDataType = Integer.parseInt(this.GetRequestVal("DDL_DBType_" + colname));
-			ma.MaxLen = Integer.parseInt(this.GetRequestVal("TB_Len_" + colname));
-			ma.UIBindKey = this.GetRequestVal("TB_BindKey_" + colname);
-			ma.setMyPK( this.getFK_MapData() + "_" + ma.KeyOfEn;
-			ma.LGType = BP.En.FieldTypeS.Normal;
+			ma.setKeyOfEn(colname);
+			ma.setName(this.GetRequestVal("TB_Desc_" + colname));
+			ma.setFK_MapData(this.getFK_MapData());
+			ma.setMyDataType(Integer.parseInt(this.GetRequestVal("DDL_DBType_" + colname)));
+			ma.setMaxLen(Integer.parseInt(this.GetRequestVal("TB_Len_" + colname)));
+			ma.setUIBindKey(this.GetRequestVal("TB_BindKey_" + colname));
+			ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
+			ma.setLGType(BP.En.FieldTypeS.Normal);
 
-			if (!ma.UIBindKey.equals(""))
+			if (!ma.getUIBindKey().equals(""))
 			{
 				SysEnums se = new SysEnums();
-				se.Retrieve(SysEnumAttr.EnumKey, ma.UIBindKey);
+				se.Retrieve(SysEnumAttr.EnumKey, ma.getUIBindKey());
 				if (se.size() > 0)
 				{
-					ma.MyDataType = BP.DA.DataType.AppInt;
-					ma.LGType = BP.En.FieldTypeS.Enum;
-					ma.UIContralType = BP.En.UIContralType.DDL;
+					ma.setMyDataType(BP.DA.DataType.AppInt);
+					ma.setLGType(BP.En.FieldTypeS.Enum);
+					ma.setUIContralType(BP.En.UIContralType.DDL);
 				}
 
 				SFTable tb = new SFTable();
-				tb.No = ma.UIBindKey;
-				if (tb.IsExits == true)
+				tb.setNo(ma.getUIBindKey());
+				if (tb.getIsExits() == true)
 				{
-					ma.MyDataType = BP.DA.DataType.AppString;
-					ma.LGType = BP.En.FieldTypeS.FK;
-					ma.UIContralType = BP.En.UIContralType.DDL;
+					ma.setMyDataType(BP.DA.DataType.AppString);
+					ma.setLGType(BP.En.FieldTypeS.FK);
+					ma.setUIContralType(BP.En.UIContralType.DDL);
 				}
 			}
 
-			if (ma.MyDataType == BP.DA.DataType.AppBoolean)
+			if (ma.getMyDataType() == BP.DA.DataType.AppBoolean)
 			{
-				ma.UIContralType = BP.En.UIContralType.CheckBok;
+				ma.setUIContralType(BP.En.UIContralType.CheckBok);
 			}
-			if (ma.IsExits)
+			if (ma.getIsExits())
 			{
 				continue;
 			}
 			ma.Insert();
 
-			msg += "\t\n字段:" + ma.KeyOfEn + ma.Name + "加入成功.";
+			msg += "\t\n字段:" + ma.getKeyOfEn() + ma.getName() + "加入成功.";
 			FrmLab lab = null;
 			if (isLeft == true)
 			{
 				maxEnd = maxEnd + 40;
 				/* 是否是左边 */
 				lab = new FrmLab();
-				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
-				lab.setFK_MapData( this.getFK_MapData();
-				lab.setText ( ma.Name;
-				lab.setX ( 40;
-				lab.setY(maxEnd;
+				lab.setMyPK(BP.DA.DBAccess.GenerGUID());
+				lab.setFK_MapData(this.getFK_MapData());
+				lab.setText(ma.getName());
+				lab.setX(40);
+				lab.setY(maxEnd);
 				lab.Insert();
 
-				ma.X = lab.X + 80;
-				ma.Y = maxEnd;
+				ma.setX(lab.getX() + 80);
+				ma.setY(maxEnd);
 				ma.Update();
 			}
 			else
 			{
 				lab = new FrmLab();
-				lab.setMyPK( BP.DA.DBAccess.GenerGUID();
-				lab.setFK_MapData( this.getFK_MapData();
-				lab.setText ( ma.Name;
-				lab.setX ( 350;
-				lab.setY(maxEnd;
+				lab.setMyPK( BP.DA.DBAccess.GenerGUID());
+				lab.setFK_MapData( this.getFK_MapData());
+				lab.setText(ma.getName());
+				lab.setX(350);
+				lab.setY(maxEnd);
 				lab.Insert();
 
-				ma.X = lab.X + 80;
-				ma.Y = maxEnd;
+				ma.setX(lab.getX() + 80);
+				ma.setY(maxEnd);
 				ma.Update();
 			}
 			isLeft = !isLeft;

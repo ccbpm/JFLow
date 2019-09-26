@@ -26,7 +26,7 @@ public class GPMPage extends DirectoryPageBase
 	*/
 	public final String Siganture_Init()
 	{
-		if (WebUser.getNo()OfRel == null)
+		if (WebUser.getNoOfRel() == null)
 		{
 			return "err@登录信息丢失";
 		}
@@ -34,7 +34,7 @@ public class GPMPage extends DirectoryPageBase
 		ht.put("No", WebUser.getNo());
 		ht.put("Name",WebUser.getName());
 		ht.put("FK_Dept", WebUser.getFK_Dept());
-		ht.put("FK_DeptName", WebUser.getFK_DeptName);
+		ht.put("FK_DeptName", WebUser.getFK_DeptName());
 		return BP.Tools.Json.ToJson(ht);
 	}
 

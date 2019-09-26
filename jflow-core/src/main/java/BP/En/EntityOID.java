@@ -42,10 +42,10 @@ public abstract class EntityOID extends Entity
 	{
 		this.SetValByKey(EntityOIDAttr.OID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 构造一个空实例
@@ -64,10 +64,10 @@ public abstract class EntityOID extends Entity
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region override 方法
 	@Override
 	public int DirectInsert() throws Exception
@@ -232,10 +232,10 @@ public abstract class EntityOID extends Entity
 		return "OID";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region public 方法
 	/** 
 	 作为一个新的实体保存。

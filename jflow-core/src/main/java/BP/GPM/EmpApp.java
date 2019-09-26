@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class EmpApp extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getFK_Emp() throws Exception
 	{
@@ -74,10 +74,10 @@ public class EmpApp extends EntityMyPK
 	{
 		this.SetValByKey(AppAttr.Url, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 管理员与系统权限
@@ -125,6 +125,6 @@ public class EmpApp extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

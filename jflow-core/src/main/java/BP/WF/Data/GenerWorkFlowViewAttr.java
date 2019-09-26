@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class GenerWorkFlowViewAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -164,6 +164,6 @@ public class GenerWorkFlowViewAttr
 	 GUID
 	*/
 	public static final String GUID = "GUID";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

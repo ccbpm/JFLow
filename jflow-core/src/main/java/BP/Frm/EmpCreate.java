@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class EmpCreate extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	表单ID
@@ -44,10 +44,10 @@ public class EmpCreate extends EntityMM
 	{
 		return this.GetValRefTextByKey(EmpCreateAttr.FK_Emp);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 单据可创建的人员
@@ -74,6 +74,6 @@ public class EmpCreate extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

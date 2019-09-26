@@ -12,7 +12,7 @@ import BP.WF.*;
 */
 public class CCLover
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 内存的用户与密码.
 	/** 
 	 获得当前用户.
@@ -50,7 +50,7 @@ public class CCLover
 	{
 		BP.Sys.GloVars.SetValByKey("CCLoverGUID", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 内存的用户与密码.
 
 }

@@ -18,7 +18,7 @@ import java.util.*;
 */
 public class Direction extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	节点
@@ -68,10 +68,10 @@ public class Direction extends EntityMyPK
 	{
 		this.SetValByKey(DirectionAttr.Dots, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 节点方向
@@ -117,7 +117,7 @@ public class Direction extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

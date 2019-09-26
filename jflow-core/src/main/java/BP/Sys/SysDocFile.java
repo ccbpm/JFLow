@@ -9,7 +9,7 @@ import java.io.*;
 
 public class SysDocFile extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实现基本属性
 	public final String getEnName() throws Exception
 	{
@@ -59,10 +59,10 @@ public class SysDocFile extends EntityMyPK
 	{
 		this.SetValByKey(SysDocFileAttr.FileType, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 字段
 	public final String getDocHtml() throws Exception
 	{
@@ -263,10 +263,10 @@ public class SysDocFile extends EntityMyPK
 	{
 		this.SetValByKey("D20", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public SysDocFile()
 	{
@@ -335,10 +335,10 @@ public class SysDocFile extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 共用方法 V2.0
 	public static String GetValHtmlV2(String enName, String pkVal)
 	{
@@ -379,10 +379,10 @@ public class SysDocFile extends EntityMyPK
 			throw ex;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 共用方法
 	public static String GetValHtmlV1(String enName, String pkVal) throws Exception
 	{
@@ -463,6 +463,6 @@ public class SysDocFile extends EntityMyPK
 		////				//itmNew.Tag = nNewFileID;
 		////			}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

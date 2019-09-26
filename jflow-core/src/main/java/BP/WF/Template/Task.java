@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class Task extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 参数
@@ -87,10 +87,10 @@ public class Task extends EntityMyPK
 	{
 		this.SetValByKey(TaskAttr.StartDT, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 Task
@@ -131,6 +131,6 @@ public class Task extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

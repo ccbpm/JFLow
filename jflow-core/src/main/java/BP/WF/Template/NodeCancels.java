@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class NodeCancels extends EntitiesMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造与属性.
 	/** 
 	 他的撤销到
@@ -64,10 +64,10 @@ public class NodeCancels extends EntitiesMM
 	{
 		return new NodeCancel();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造与属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共方法.
 	/** 
 	 可撤销的节点s
@@ -134,10 +134,10 @@ public class NodeCancels extends EntitiesMM
 		}
 		return ens;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 公共方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -162,6 +162,6 @@ public class NodeCancels extends EntitiesMM
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

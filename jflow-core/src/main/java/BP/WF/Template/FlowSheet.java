@@ -17,7 +17,7 @@ import java.time.*;
 */
 public class FlowSheet extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	/** 
 	 流程事件实体
@@ -49,7 +49,7 @@ public class FlowSheet extends EntityNoName
 		this.SetValByKey(FlowAttr.FlowMark, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region   前置导航
 	/** 
 	 前置导航方式
@@ -164,7 +164,7 @@ public class FlowSheet extends EntityNoName
 	{
 		this.SetValByKey(FlowAttr.IsLoadPriData, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 	/** 
 	 设计者编号
@@ -199,10 +199,10 @@ public class FlowSheet extends EntityNoName
 	{
 		this.SetValByKey(FlowAttr.BillNoFormat, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 UI界面上的访问控制
@@ -260,7 +260,7 @@ public class FlowSheet extends EntityNoName
 		Map map = new Map("WF_Flow", "流程");
 		map.Java_SetCodeStruct("3");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性。
 		map.AddTBStringPK(FlowAttr.No, null, "编号", true, true, 1, 10, 3);
 		map.SetHelperUrl(FlowAttr.No, "http://ccbpm.mydoc.io/?v=5404&t=17023"); //使用alert的方式显示帮助信息.
@@ -326,20 +326,20 @@ public class FlowSheet extends EntityNoName
 
 		map.AddDDLSysEnum(FlowAttr.FlowAppType, FlowAppType.Normal.getValue(), "流程应用类型", true, true, "FlowAppType", "@0=业务流程@1=工程类(项目组流程)@2=公文流程(VSTO)");
 		map.AddTBString(FlowAttr.HelpUrl, null, "帮助文档", true, false, 0, 300, 10, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 启动方式
 		map.AddDDLSysEnum(FlowAttr.FlowRunWay, getFlowRunWay().HandWork.getValue(), "启动方式", true, true, FlowAttr.FlowRunWay, "@0=手工启动@1=指定人员定时启动@2=定时访问数据集自动启动@3=触发式启动");
 
 		map.SetHelperUrl(FlowAttr.FlowRunWay, "http://ccbpm.mydoc.io/?v=5404&t=17088");
 			// map.AddTBString(FlowAttr.RunObj, null, "运行内容", true, false, 0, 100, 10, true);
 		map.AddTBStringDoc(FlowAttr.RunObj, null, "运行内容", true, false, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 启动方式
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 流程启动限制
 		String role = "@0=不限制";
 		role += "@1=每人每天一次";
@@ -356,10 +356,10 @@ public class FlowSheet extends EntityNoName
 		map.SetHelperUrl(FlowAttr.StartLimitRole, "http://ccbpm.mydoc.io/?v=5404&t=17872");
 			//   map.AddTBString(FlowAttr.StartLimitAlert, null, "限制提示", true, false, 0, 500, 10, true);
 			//    map.AddDDLSysEnum(FlowAttr.StartLimitWhen, (int)StartLimitWhen.StartFlow, "提示时间", true, true, FlowAttr.StartLimitWhen, "@0=启动流程时@1=发送前提示", false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流程启动限制
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 发起前导航。
 			//map.AddDDLSysEnum(FlowAttr.DataStoreModel, (int)DataStoreModel.ByCCFlow,
 			//    "流程数据存储模式", true, true, FlowAttr.DataStoreModel,
@@ -377,18 +377,18 @@ public class FlowSheet extends EntityNoName
 			//     map.AddBoolean(FlowAttr.IsImpHistory, false, "是否启用导入历史数据按钮？", true, true, true);
 		map.AddBoolean(FlowAttr.IsLoadPriData, false, "是否自动装载上一笔数据？", true, true, true);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 发起前导航。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 延续流程。
 			// add 2013-03-24.
 		map.AddTBString(FlowAttr.DesignerNo, null, "设计者编号", false, false, 0, 32, 10);
 		map.AddTBString(FlowAttr.DesignerName, null, "设计者名称", false, false, 0, 100, 10);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 延续流程。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 数据同步方案
 			//数据同步方式.
 		map.AddDDLSysEnum(FlowAttr.DTSWay, FlowDTSWay.None.getValue(), "同步方式", true, true, FlowAttr.DTSWay, "@0=不同步@1=同步");
@@ -416,10 +416,10 @@ public class FlowSheet extends EntityNoName
 		map.AddTBString(FlowAttr.PTable, null, "流程数据存储表", true, false, 0, 30, 10);
 		map.SetHelperUrl(FlowAttr.PTable, "http://ccbpm.mydoc.io/?v=5404&t=17897");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 数据同步方案
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 权限控制.
 		map.AddBoolean(FlowAttr.PStarter, true, "发起人可看(必选)", true, false,true);
 		map.AddBoolean(FlowAttr.PWorker, true, "参与人可看(必选)", true, false, true);
@@ -444,7 +444,7 @@ public class FlowSheet extends EntityNoName
 		map.AddBoolean(FlowAttr.PSpecEmp, true, "指定的人员可看", true, true, false);
 		map.AddTBString(FlowAttr.PSpecEmp + "Ext", null, "指定的人员编号", true, false, 0, 200, 100, false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 权限控制.
 
 
@@ -626,10 +626,10 @@ public class FlowSheet extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  公共方法
 	/** 
 	 事件
@@ -714,7 +714,7 @@ public class FlowSheet extends EntityNoName
 		boolean isHaveGener = false;
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 创建流程引擎主表数据.
 			gwf = new GenerWorkFlow();
 			gwf.setWorkID(workid);
@@ -759,7 +759,7 @@ public class FlowSheet extends EntityNoName
 			gwf.setSDTOfFlow(dttime);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 创建流程引擎主表数据
 
 			String ndTrack = "ND" + Integer.parseInt(this.getNo()) + "Track";
@@ -837,7 +837,7 @@ public class FlowSheet extends EntityNoName
 			}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加入退回信息, 让接受人能够看到退回原因.
 			ReturnWork rw = new ReturnWork();
 			rw.setWorkID(workid);
@@ -852,7 +852,7 @@ public class FlowSheet extends EntityNoName
 			rw.setRDT(DataType.getCurrentDataTime());
 			rw.setIsBackTracking(false);
 			rw.setMyPK(BP.DA.DBAccess.GenerGUID());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion   加入退回信息, 让接受人能够看到退回原因.
 
 			//更新流程表的状态.
@@ -1144,7 +1144,7 @@ public class FlowSheet extends EntityNoName
 		//更新流程版本
 		Flow.UpdateVer(this.getNo());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查数据完整性 - 同步业务表数据。
 		// 检查业务是否存在.
 		Flow fl = new Flow(this.getNo());
@@ -1230,7 +1230,7 @@ public class FlowSheet extends EntityNoName
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 检查数据完整性. - 同步业务表数据。
 
 		return super.beforeUpdate();
@@ -1251,6 +1251,6 @@ public class FlowSheet extends EntityNoName
 		}
 		super.afterInsertUpdateAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

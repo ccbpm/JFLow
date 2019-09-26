@@ -27,7 +27,7 @@ import java.time.*;
 */
 public class Dev2Interface
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 写入消息表.
 	/** 
 	 写入消息
@@ -45,10 +45,10 @@ public class Dev2Interface
 		SMS.SendMsg(sendToUserNo, title, doc, msgFlag, "Info", "");
 		return true;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 等待要去处理的消息数量.
 	/** 
 	 待办工作
@@ -372,10 +372,10 @@ public class Dev2Interface
 		}
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 等待要去处理的消息数量.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 自动执行
 	/** 
 	 处理延期的任务.根据节点属性的设置
@@ -400,7 +400,7 @@ public class Dev2Interface
 	*/
 	public static void DTS_AutoStarterFlow(Flow fl)
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 读取数据.
 		BP.Sys.MapExt me = new BP.Sys.MapExt();
 		int i = me.Retrieve(MapExtAttr.FK_MapData, "ND" + Integer.parseInt(fl.No) + "01", MapExtAttr.ExtType, "PageLoadFull");
@@ -426,10 +426,10 @@ public class Dev2Interface
 			dtlTable.TableName = dtlName;
 			ds.Tables.add(dtlTable);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 读取数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查数据源是否正确.
 		String errMsg = "";
 		// 获取主表数据.
@@ -449,10 +449,10 @@ public class Dev2Interface
 			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.getName() + ")的开始节点设置发起数据,不完整." + errMsg);
 			return;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 检查数据源是否正确.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理流程发起.
 
 		String nodeTable = "ND" + Integer.parseInt(fl.No) + "01";
@@ -482,7 +482,7 @@ public class Dev2Interface
 				WebUser.SignInOfGener(emp);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region  给值.
 			Work wk = fl.NewWork();
 			for (DataColumn dc : dtMain.Columns)
@@ -528,7 +528,7 @@ public class Dev2Interface
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion  给值.
 
 			// 处理发送信息.
@@ -544,14 +544,14 @@ public class Dev2Interface
 				BP.DA.Log.DefaultLogWriteLineWarning(ex.getMessage());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理流程发起.
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 数据集合接口(如果您想获取一个结果集合的接口，都是以DB_开头的.)
 	/** 
 	 获取能发起流程的人员
@@ -603,7 +603,7 @@ public class Dev2Interface
 		return sql;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与子流程相关.
 	/** 
 	 获取流程事例的运行轨迹数据.
@@ -618,15 +618,15 @@ public class Dev2Interface
 		gwf.Retrieve(GenerWorkFlowAttr.PWorkID, workid);
 		return gwf;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取流程事例的轨迹图
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取流程事例的轨迹图
 
 	public static DataTable DB_GenerTrackTable(String fk_flow, long workid, long fid)
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取track数据.
 		String sqlOfWhere2 = "";
 		String sqlOfWhere1 = "";
@@ -688,7 +688,7 @@ public class Dev2Interface
 		//把track加入里面去.
 		dt.TableName = "Track";
 		return dt;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取track数据.
 	}
 	/** 
@@ -706,10 +706,10 @@ public class Dev2Interface
 		ps.Add(GERptAttr.FlowStarter, userNo);
 		return DBAccess.RunSQLReturnTable(ps);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取流程事例的轨迹图
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取能够发送或者抄送人员的列表.
 	/** 
 	 获取可以执行指定节点人的列表
@@ -759,10 +759,10 @@ public class Dev2Interface
 
 		return ds;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取能够发送或者抄送人员的列表.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取操送列表
 	/** 
 	 获取指定人员的抄送列表
@@ -887,10 +887,10 @@ public class Dev2Interface
 	{
 		return DB_CCList(FK_Emp, CCSta.CheckOver);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取当前操作员可以发起的流程集合
 	/** 
 	 获取指定人员能够发起流程的集合.
@@ -1091,10 +1091,10 @@ public class Dev2Interface
 		qo.AddWhere(GenerWorkerListAttr.IsPass, 0);
 		return qo.DoQueryToTable();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取当前操作员可以发起的流程集合
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程草稿
 	/** 
 	 获取当前操作员的指定流程的流程草稿数据
@@ -1150,10 +1150,10 @@ public class Dev2Interface
 		}
 		return dt;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 流程草稿
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 我关注的流程
 	/** 
 	 获得我关注的流程列表
@@ -1291,10 +1291,10 @@ public class Dev2Interface
 		}
 		return dt;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 我关注的流程
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取当前操作员的共享工作
 
 	public static DataTable DB_Todolist(String userNo)
@@ -2787,10 +2787,10 @@ public class Dev2Interface
 		gwfs.RetrieveInSQL(GenerWorkFlowAttr.WorkID, "(" + sql + ")");
 		return gwfs.ToDataTableField();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取当前操作员的共享工作
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取流程数据
 	/** 
 	 根据流程状态获取指定流程数据
@@ -2809,10 +2809,10 @@ public class Dev2Interface
 		ps.Add("Rec", WebUser.getNo());
 		return DBAccess.RunSQLReturnTable(ps);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 工作部件的数据源获取。
 	/** 
 	 获取当前节点可以退回的节点
@@ -3178,10 +3178,10 @@ public class Dev2Interface
 
 		return dt;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 工作部件的数据源获取
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取当前操作员的在途工作
 
 	/** 
@@ -3659,10 +3659,10 @@ public class Dev2Interface
 		dt.DefaultView.Sort = "RDT DESC";
 		return dt.DefaultView.ToTable();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取当前操作员的共享工作
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取当前的批处理工作
 	/** 
 	 获取当前节点的批处理工作
@@ -3692,12 +3692,12 @@ public class Dev2Interface
 		return dt;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取当前的批处理工作
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 登陆接口
 	/** 
 	 用户登陆,此方法是在开发者校验好用户名与密码后执行
@@ -4041,22 +4041,22 @@ public class Dev2Interface
 		//发送给人员ID , 有可能这个人员空的.
 		sms.setSendToEmpNo(sendToEmpNo);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 邮件信息
 		//邮件地址.
 		sms.setEmail(emp.getEmail());
 		//邮件标题.
 		sms.setTitle(emailTitle);
 		sms.setDocOfEmail(smsDoc);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 邮件信息
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 短消息信息
 		sms.setMobile(emp.getTel());
 		sms.setMobileInfo(smsDoc);
 		sms.setTitle(emailTitle);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 短消息信息
 
 		// 其他属性.
@@ -4243,10 +4243,10 @@ public class Dev2Interface
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		return dt;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 登陆接口
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与流程有关的接口
 	/** 
 	 写入日志
@@ -4392,7 +4392,7 @@ public class Dev2Interface
 			//t.DirectInsert();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 特殊判断.
 		if (at == ActionType.CallChildenFlow)
 		{
@@ -4414,7 +4414,7 @@ public class Dev2Interface
 			t.setMsg(cFlowInfo);
 			t.Insert();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 特殊判断.
 	}
 	/** 
@@ -5517,7 +5517,7 @@ public class Dev2Interface
 //ORIGINAL LINE: public static bool Flow_IsCanStartThisFlow(string flowNo, string userNo, string pFlowNo = null, int pNodeID = 0, Int64 pworkID = 0)
 	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID, long pworkID)
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断开始节点是否可以发起.
 		Node nd = new Node(Integer.parseInt(flowNo + "01"));
 		if (nd.getIsGuestNode() == true)
@@ -5638,10 +5638,10 @@ public class Dev2Interface
 		{
 			return true;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断开始节点是否可以发起.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查流程发起限制规则. 为周大福项目增加判断.
 		if (pNodeID == 0)
 		{
@@ -5736,10 +5736,10 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 检查流程发起限制规则.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断流程属性的规则.
 		Flow fl = new Flow(flowNo);
 		if (fl.getStartLimitRole() == StartLimitRole.None)
@@ -5764,7 +5764,7 @@ public class Dev2Interface
 
 			throw new RuntimeException("该流程只能允许发起一个子流程.");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断流程属性的规则.
 
 		return true;
@@ -5857,7 +5857,7 @@ public class Dev2Interface
 		}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否是开始节点.
 		/* 判断是否是开始节点 . */
 		String str = String.valueOf(mygwf.getFK_Node());
@@ -5881,7 +5881,7 @@ public class Dev2Interface
 			}
 			return false;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断是否是开始节点.
 
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
@@ -6480,7 +6480,7 @@ public class Dev2Interface
 	*/
 	public static void Flow_SetFlowTransferCustomV201605(String flowNo, long workid, TransferCustomType runType, String paras)
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 更新状态.
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
@@ -6509,7 +6509,7 @@ public class Dev2Interface
 		{
 			return; // 如果是按照设置的模式运行，就要更改状态后退出它.
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//删除以前存储的参数.
@@ -6644,7 +6644,7 @@ public class Dev2Interface
 		}
 		return false;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与流程有关的接口
 
 	/** 
@@ -6868,7 +6868,7 @@ public class Dev2Interface
 		Directions dirs = new Directions(gwf.getFK_Flow());
 		ds.Tables.add(dirs.ToDataTableField("WF_Direction"));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 运动轨迹
 		/*
 		 * 运动轨迹： 构造的一个表，用与存储运动轨迹.
@@ -6951,14 +6951,14 @@ public class Dev2Interface
 			}
 		}
 		ds.Tables.add(dtHistory);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 运动轨迹
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 游离态
 		TransferCustoms tranfs = new TransferCustoms(workID);
 		ds.Tables.add(tranfs.ToDataTableField("WF_TransferCustom"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 游离态
 
 		return ds;
@@ -7104,14 +7104,14 @@ public class Dev2Interface
 		}
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 与流程有关的接口
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 与流程有关的接口
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region get 属性节口
 	/** 
 	 获得流程运行过程中的参数
@@ -7129,10 +7129,10 @@ public class Dev2Interface
 		ps.Add(GenerWorkerListAttr.WorkID, workid);
 		return DBAccess.RunSQLReturnStringIsNull(ps, null);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion get 属性节口
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 工作有关接口
 	/** 
 	 发起流程
@@ -7244,7 +7244,7 @@ public class Dev2Interface
 			DBAccess.RunSQL("UPDATE WF_GenerWorkFlow SET PWorkID=" + parentWorkID + ",PFlowNo='" + parentFlowNo + "' WHERE WorkID=" + objs.getVarWorkID());
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 更新发送参数.
 		if (htWork != null)
 		{
@@ -7274,7 +7274,7 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 更新发送参数.
 
 		return objs;
@@ -7626,7 +7626,7 @@ public class Dev2Interface
 		Work wk = fl.NewWork(empStarter, htPara);
 		long workID = wk.getOID();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 给各个属性-赋值
 		if (ht != null)
 		{
@@ -7687,7 +7687,7 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 赋值
 
 		Paras ps = new Paras();
@@ -7744,7 +7744,7 @@ public class Dev2Interface
 			BP.WF.Dev2Interface.SetParentInfo(flowNo, wk.getOID(), parentWorkID); //设置父流程信息
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 增加是防止手动启动子流程或者平级子流程时关闭子流程页面找不到待办 保存到待办
 		if (isStartSameLevelFlow != null)
 		{
@@ -7771,7 +7771,7 @@ public class Dev2Interface
 			throw new RuntimeException("流程：" + gwf.getTitle() + "已经完成,您不能增加接受人.");
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 增加待办人员.
 
 		GenerWorkerList gwl = new GenerWorkerList();
@@ -7819,7 +7819,7 @@ public class Dev2Interface
 
 			tempStrs += "," + emp + ",";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 增加待办人员.
 
 		if (gwf.getWFState() == WFState.Blank)
@@ -7896,7 +7896,7 @@ public class Dev2Interface
 		Emp emp = new Emp(flowStarter);
 		Work wk = fl.NewWork(flowStarter);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 给各个属性-赋值
 		if (htWork != null)
 		{
@@ -7958,10 +7958,10 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 赋值
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 为开始工作创建待办
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(wk.getOID());
@@ -8061,7 +8061,7 @@ public class Dev2Interface
 			gwl.setPRI(gwf.getPRI());
 			gwl.Insert();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 为开始工作创建待办
 
 		// 执行对报表的数据表WFState状态的更新 
@@ -8101,7 +8101,7 @@ public class Dev2Interface
 		//wn.AddToTrack(ActionType.CallSubFlow, flowStarter, emp.Name, nd.NodeID, nd.Name, "来自" + WebUser.getNo() + "," + WebUser.getName()
 		//    + "工作发起.");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 更新发送参数.
 		if (htWork != null)
 		{
@@ -8121,7 +8121,7 @@ public class Dev2Interface
 				DBAccess.RunSQL(ps);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 更新发送参数.
 
 		return wk.getOID();
@@ -8260,7 +8260,7 @@ public class Dev2Interface
 			objs = wn.NodeSend(ndOfToNode, toEmps);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 更新发送参数.
 		if (htWork != null)
 		{
@@ -8357,7 +8357,7 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 更新发送参数.
 
 		return objs;
@@ -8572,7 +8572,7 @@ public class Dev2Interface
 			gwf.setNodeName(nd.getName());
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理抄送到人员.
 		if (toEmps != null)
 		{
@@ -8648,10 +8648,10 @@ public class Dev2Interface
 				toAllEmps += empNo + ",";
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理抄送到人员.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理抄送到部门.
 		if (toDepts != null)
 		{
@@ -8734,10 +8734,10 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理抄送到部门.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理抄送到岗位.
 		if (toStations != null)
 		{
@@ -8820,10 +8820,10 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 抄送到组.
 		if (toGroups != null)
 		{
@@ -8910,7 +8910,7 @@ public class Dev2Interface
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 抄送到组
 
 		return ccRec;
@@ -9316,7 +9316,7 @@ public class Dev2Interface
 			wk.BeforeSave();
 			wk.Save();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 保存从表
 			if (dsDtls != null)
 			{
@@ -9356,10 +9356,10 @@ public class Dev2Interface
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 保存从表结束
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 更新发送参数.
 			if (htWork != null)
 			{
@@ -9380,7 +9380,7 @@ public class Dev2Interface
 					DBAccess.RunSQL(ps);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 更新发送参数.
 
 			if (nd.getSaveModel() == SaveModel.NDAndRpt)
@@ -9488,7 +9488,7 @@ public class Dev2Interface
 			//    wk.Update();
 			//}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理保存后事件
 			boolean isHaveSaveAfter = false;
 			try
@@ -9511,10 +9511,10 @@ public class Dev2Interface
 			{
 				return "err@在执行保存后的事件期间出现错误:" + ex.getMessage();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 为开始工作创建待办.
 			if (nd.getIsStartNode() == true)
 			{
@@ -9602,7 +9602,7 @@ public class Dev2Interface
 				gwl.Save();
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 为开始工作创建待办
 
 			return "保存成功.";
@@ -10701,10 +10701,10 @@ public class Dev2Interface
 	{
 		Node_SetWorkUnRead(workid, WebUser.getNo());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 工作有关接口
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程属性与节点属性变更接口.
 	/** 
 	 更改流程属性
@@ -10732,10 +10732,10 @@ public class Dev2Interface
 		fl.Update();
 		return "修改成功";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 流程属性与节点属性变更接口.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region ccform 接口
 
 	/** 
@@ -10806,10 +10806,10 @@ public class Dev2Interface
 	{
 		return "增加成功";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion ccform 接口
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 页面.
 	/** 
 	 附件上传接口
@@ -10850,7 +10850,7 @@ public class Dev2Interface
 		MapData mapData = new MapData(frmID);
 		String msg = null;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取表单方案
 		//求主键. 如果该表单挂接到流程上.
 		if (nodeid != 0)
@@ -10893,13 +10893,13 @@ public class Dev2Interface
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取表单方案
 
 		//获取上传文件是否需要加密
 		boolean fileEncrypt = SystemConfig.IsEnableAthEncrypt;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 文件上传的iis服务器上 or db数据库里.
 		if (athDesc.AthSaveWay == AthSaveWay.IISServer)
 		{
@@ -11001,7 +11001,7 @@ public class Dev2Interface
 				dbUpload.SetPara("IsEncrypt", 1);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理文件路径，如果是保存到数据库，就存储pk.
 			if (athDesc.AthSaveWay == AthSaveWay.IISServer)
 			{
@@ -11014,7 +11014,7 @@ public class Dev2Interface
 				//保存到数据库
 				dbUpload.FileFullName = dbUpload.MyPK;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
 
 			dbUpload.FileName = fileName;
@@ -11033,10 +11033,10 @@ public class Dev2Interface
 				BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.EnMap.PhysicsTable, "MyPK", dbUpload.MyPK, "FDB");
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 文件上传的iis服务器上 or db数据库里.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 保存到数据库 / FTP服务器上.
 		if (athDesc.AthSaveWay == AthSaveWay.DB || athDesc.AthSaveWay == AthSaveWay.FTPServer)
 		{
@@ -11161,7 +11161,7 @@ public class Dev2Interface
 			}
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 保存到数据库.
 
 		return "";
@@ -11176,10 +11176,10 @@ public class Dev2Interface
 	{
 		return BP.WF.AppClass.SDK_Page_Init(workid);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 页面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与工作处理器相关的接口
 	/** 
 	 获得一个节点要转向的节点
@@ -11210,7 +11210,7 @@ public class Dev2Interface
 				continue; //如果是子线程节点.
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 判断方向条件,如果设置了方向条件，判断是否可以通过，不能通过的，就不让其显示.
 			Conds conds = new Conds();
 			int i = conds.Retrieve(CondAttr.FK_Node, nd.getNodeID(), CondAttr.ToNodeID, mynd.getNodeID());
@@ -11246,7 +11246,7 @@ public class Dev2Interface
 				continue;
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			nds.AddEntity(mynd);
@@ -11265,7 +11265,7 @@ public class Dev2Interface
 				continue; //如果是异表单的分合流.
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 判断方向条件,如果设置了方向条件，判断是否可以通过，不能通过的，就不让其显示.
 			Cond cond = new Cond();
 			int i = cond.Retrieve(CondAttr.FK_Node, nd.getNodeID(), CondAttr.ToNodeID, mynd.getNodeID());
@@ -11279,7 +11279,7 @@ public class Dev2Interface
 					continue;
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 
@@ -11311,7 +11311,7 @@ public class Dev2Interface
 					continue;
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 判断方向条件,如果设置了方向条件，判断是否可以通过，不能通过的，就不让其显示.
 				Cond cond = new Cond();
 				int i = cond.Retrieve(CondAttr.FK_Node, nd.getNodeID(), CondAttr.ToNodeID, mynd.getNodeID());
@@ -11325,7 +11325,7 @@ public class Dev2Interface
 						continue;
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
 				nds.AddEntity(mynd);
@@ -11624,10 +11624,10 @@ public class Dev2Interface
 		SendReturnObjs objs = firstwn.NodeSend();
 		return objs;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 附件上传
 //C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
 //ORIGINAL LINE: public static string SaveImageAsFile(byte[] img, string pkval, string fk_Frm_Ele)
@@ -11698,10 +11698,10 @@ public class Dev2Interface
 		return filePath;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 调度相关的操作.
 	/** 
 	 更新时间状态, 交付给 huangzhimin.
@@ -11714,7 +11714,7 @@ public class Dev2Interface
 		// 中午的更新, 与发送邮件通知.
 		boolean isPM = false;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 求出是否可以更新状态.
 		if (LocalDateTime.now().getHour() >= 9 && LocalDateTime.now().getHour() < 12)
 		{
@@ -11765,7 +11765,7 @@ public class Dev2Interface
 				return;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 求出是否可以更新状态.
 
 
@@ -11778,7 +11778,7 @@ public class Dev2Interface
 	*/
 	private static void DTS_SendMsgToWorker()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理预警的消息发送.
 		if (LocalDateTime.now().getHour() >= 0 && LocalDateTime.now().getHour() < 12)
 		{
@@ -11795,7 +11795,7 @@ public class Dev2Interface
 			en.Do();
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 	}
 	/** 
@@ -11829,6 +11829,6 @@ public class Dev2Interface
 		BP.WF.DTS.DTS_GenerWorkFlowTimeSpan ts = new BP.WF.DTS.DTS_GenerWorkFlowTimeSpan();
 		ts.Do();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

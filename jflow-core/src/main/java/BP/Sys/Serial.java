@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class Serial extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 序列号
@@ -37,10 +37,10 @@ public class Serial extends Entity
 	{
 		this.SetValByKey(SerialAttr.CfgKey, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 
 	/** 
@@ -67,7 +67,7 @@ public class Serial extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final int Gener(String CfgKey) throws Exception

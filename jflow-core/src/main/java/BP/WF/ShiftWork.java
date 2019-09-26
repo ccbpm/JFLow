@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class ShiftWork extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -119,10 +119,10 @@ public class ShiftWork extends EntityMyPK
 	{
 		SetValByKey(ShiftWorkAttr.ToEmp, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 移交记录
@@ -167,6 +167,6 @@ public class ShiftWork extends EntityMyPK
 		this.setRDT(DataType.getCurrentDataTime());
 		return super.beforeInsert();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

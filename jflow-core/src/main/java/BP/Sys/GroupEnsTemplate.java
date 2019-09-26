@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class GroupEnsTemplate extends EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 集合类名称
@@ -78,10 +78,10 @@ public class GroupEnsTemplate extends EntityOID
 		this.SetValByKey(GroupEnsTemplateAttr.Rec, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 
 	@Override
@@ -124,10 +124,10 @@ public class GroupEnsTemplate extends EntityOID
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询方法
 	/** 
 	 报表模板
@@ -148,6 +148,6 @@ public class GroupEnsTemplate extends EntityOID
 		qo.AddWhere(GroupEnsTemplateAttr.EnsName, className);
 		return qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

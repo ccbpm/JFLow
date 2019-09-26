@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class ShiftWorkAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -49,6 +49,6 @@ public class ShiftWorkAttr
 	 移交给人员名称
 	*/
 	public static final String ToEmpName = "ToEmpName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

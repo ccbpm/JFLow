@@ -9,7 +9,7 @@ import BP.Web.WebUser;
 */
 public class SysFileManager extends EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实现基本属性
 	/**
 	 * @throws Exception  
@@ -146,10 +146,10 @@ public class SysFileManager extends EntityOID
 	{
 		this.SetValByKey(SysFileManagerAttr.Note, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public SysFileManager()
 	{
@@ -214,10 +214,10 @@ public class SysFileManager extends EntityOID
 		}
 		return super.beforeDelete();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region　共用方法
 	public final void UpdateLoadFileOfAccess(String MyFilePath)
 	{
@@ -275,6 +275,6 @@ public class SysFileManager extends EntityOID
 		////				//itmNew.Tag = nNewFileID;
 		////			}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class FindWorkerRole extends EntityOIDName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  找同事
 	/** 
 	 找同事规则
@@ -25,10 +25,10 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return FindColleague.forValue(Integer.parseInt(this.getTagVal3()));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion  找同事
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  找领导类型
 	/** 
 	 寻找领导类型
@@ -48,10 +48,10 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return FindLeaderModel.forValue(Integer.parseInt(this.getSortVal2()));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	public final boolean getIsEnable() throws Exception
 	{
@@ -271,10 +271,10 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		this.SetValByKey(FindWorkerRoleAttr.TagText3, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 变量
 	public WorkNode town = null;
 	public WorkNode currWn = null;
@@ -283,10 +283,10 @@ public class FindWorkerRole extends EntityOIDName
 	public Paras ps = null;
 	public long WorkID = 0;
 	public Node HisNode = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 变量
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 找人规则
@@ -346,10 +346,10 @@ public class FindWorkerRole extends EntityOIDName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 内部方法.
 	/** 
 	 上移
@@ -366,7 +366,7 @@ public class FindWorkerRole extends EntityOIDName
 		this.DoOrderDown(FindWorkerRoleAttr.FK_Node, String.valueOf(this.getFK_Node()), FindWorkerRoleAttr.Idx);
 	}
 	private String sql = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 内部方法
 
 	/** 
@@ -386,7 +386,7 @@ public class FindWorkerRole extends EntityOIDName
 			case "Leader":
 			case "SpecEmps":
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region   首先找到2级参数，就是当事人是谁？
 				String empNo = null;
 				String empDept = null;
@@ -430,7 +430,7 @@ public class FindWorkerRole extends EntityOIDName
 				{
 					throw new RuntimeException("@遗漏的判断步骤，没有找到指定的工作人员.");
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
 				if (this.getSortVal0().equals("Leader"))
@@ -447,7 +447,7 @@ public class FindWorkerRole extends EntityOIDName
 		return null;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 按部门查找
 	private DataTable GenerByDept() throws Exception
 	{
@@ -476,10 +476,10 @@ public class FindWorkerRole extends EntityOIDName
 		}
 		return DBAccess.RunSQLReturnTable(sql);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 找同事
 	/** 
 	 当前提交人的直线领导
@@ -558,10 +558,10 @@ public class FindWorkerRole extends EntityOIDName
 		return dt;
 	}
 	public String ErrMsg = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 直线领导
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 直线领导
 	/** 
 	 当前提交人的直线领导
@@ -657,7 +657,7 @@ public class FindWorkerRole extends EntityOIDName
 		dt.Rows.add(dr);
 		return dt;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 直线领导
 
 	public final String getDBStr()

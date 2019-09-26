@@ -12,7 +12,7 @@ import java.util.*;
 public class TestSample extends EntityMyPK
 {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public final String getFK_API() throws Exception
 	{
@@ -70,10 +70,10 @@ public class TestSample extends EntityMyPK
 	{
 		this.SetValByKey(TestSampleAttr.TimesPerSecond, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 测试明细
@@ -91,7 +91,7 @@ public class TestSample extends EntityMyPK
 	{
 		super(_No);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

@@ -8,7 +8,7 @@ import BP.En.*;
 */
 public class BarOfStartlist extends BarBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统属性.
 	/** 
 	 流程编号/流程标记.
@@ -38,10 +38,10 @@ public class BarOfStartlist extends BarBase
 		}
 		return false;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 系统属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 外观行为.
 	/** 
 	 标题
@@ -121,6 +121,6 @@ public class BarOfStartlist extends BarBase
 	{
 		return true;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 外观行为.
 }

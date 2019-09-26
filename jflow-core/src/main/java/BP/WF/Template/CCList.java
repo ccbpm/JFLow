@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class CCList extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 状态
@@ -273,10 +273,10 @@ public class CCList extends EntityMyPK
 	{
 		this.SetValByKey(CCListAttr.InEmpWorks, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 CCList
@@ -333,6 +333,6 @@ public class CCList extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class MapAttrDT extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 文本字段参数属性.
 	/** 
 	 表单ID
@@ -69,10 +69,10 @@ public class MapAttrDT extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.IsSupperText, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制权限
@@ -110,7 +110,7 @@ public class MapAttrDT extends EntityMyPK
 		map.IndexField = MapAttrAttr.FK_MapData;
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本信息.
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "实体标识", false, false, 1, 100, 20);
@@ -130,10 +130,10 @@ public class MapAttrDT extends EntityMyPK
 
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 400, 20, true);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 傻瓜表单
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
@@ -147,10 +147,10 @@ public class MapAttrDT extends EntityMyPK
 
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 傻瓜表单。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 执行的方法.
 		RefMethod rm = new RefMethod();
 
@@ -178,7 +178,7 @@ public class MapAttrDT extends EntityMyPK
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 执行的方法.
 
 		this.set_enMap(map);
@@ -249,10 +249,10 @@ public class MapAttrDT extends EntityMyPK
 		super.afterDelete();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法执行.
 	/** 
 	 绑定函数
@@ -294,6 +294,6 @@ public class MapAttrDT extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方法执行.
 }

@@ -10,7 +10,7 @@ import java.util.*;
 */
 public class RptTemplates extends Entities
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	public RptTemplates()
 	{
@@ -37,16 +37,16 @@ public class RptTemplates extends Entities
 		return new RptTemplate();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -71,7 +71,7 @@ public class RptTemplates extends Entities
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

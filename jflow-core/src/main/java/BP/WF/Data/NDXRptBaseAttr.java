@@ -88,7 +88,7 @@ public class NDXRptBaseAttr
 	*/
 	public static final String BillNo = "BillNo";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 项目相关.
 	/** 
 	 项目编号
@@ -98,10 +98,10 @@ public class NDXRptBaseAttr
 	 项目名称
 	*/
 	public static final String PrjName = "PrjName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 项目相关.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 父子流程属性.
 	/** 
 	 父流程WorkID
@@ -123,6 +123,6 @@ public class NDXRptBaseAttr
 	 参数
 	*/
 	public static final String AtPara = "AtPara";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 父子流程属性.
 }

@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class Delay extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 workid
@@ -310,10 +310,10 @@ public class Delay extends EntityMyPK
 	{
 		this.SetValByKey(DelayAttr.Sender, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 UI界面上的访问控制
@@ -344,10 +344,10 @@ public class Delay extends EntityMyPK
 	{
 		super(pk);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Map
 	/** 
 	 EnMap
@@ -407,7 +407,7 @@ public class Delay extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String DoOpenTrack() throws Exception

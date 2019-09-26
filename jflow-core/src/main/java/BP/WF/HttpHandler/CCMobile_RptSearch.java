@@ -14,7 +14,7 @@ import BP.WF.*;
 */
 public class CCMobile_RptSearch extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -35,7 +35,7 @@ public class CCMobile_RptSearch extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
 	/** 
@@ -45,7 +45,7 @@ public class CCMobile_RptSearch extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 关键字查询.
 	/** 
 	 打开表单
@@ -67,7 +67,7 @@ public class CCMobile_RptSearch extends DirectoryPageBase
 		BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 		return search.KeySearch_Query();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 关键字查询.
 
 }

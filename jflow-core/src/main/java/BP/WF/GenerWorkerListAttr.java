@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class GenerWorkerListAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作节点
@@ -133,7 +133,7 @@ public class GenerWorkerListAttr
 	 外部用户名称
 	*/
 	public static final String GuestName = "GuestName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

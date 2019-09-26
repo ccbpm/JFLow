@@ -13,7 +13,7 @@ import BP.Sys.*;
 */
 public class ActiveAttr extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 选择这个属性时间需要的条件
@@ -42,10 +42,10 @@ public class ActiveAttr extends XmlEn
 	{
 		return this.GetValStringByKey(ActiveAttrAttr.For);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	public ActiveAttr()
 	{
@@ -58,6 +58,6 @@ public class ActiveAttr extends XmlEn
 	{
 		return new ActiveAttrs();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

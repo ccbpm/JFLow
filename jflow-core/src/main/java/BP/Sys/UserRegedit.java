@@ -15,9 +15,9 @@ import java.time.*;
 */
 public class UserRegedit extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 用户注册表信息键值列表
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -33,7 +33,7 @@ public class UserRegedit extends EntityMyPK
 		AutoMyPK = value;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 是否显示图片
@@ -335,10 +335,10 @@ public class UserRegedit extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写
 	@Override
 	public Entities getGetNewEntities()
@@ -350,7 +350,7 @@ public class UserRegedit extends EntityMyPK
 	{
 		return super.beforeUpdateInsertAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 重写
 
 	/** 

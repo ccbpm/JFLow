@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class NodeToolbar extends EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -91,10 +91,10 @@ public class NodeToolbar extends EntityOID
 	{
 		SetValByKey(NodeToolbarAttr.ExcType, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 工具栏
@@ -145,6 +145,6 @@ public class NodeToolbar extends EntityOID
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

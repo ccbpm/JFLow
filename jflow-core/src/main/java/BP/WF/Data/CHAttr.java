@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class CHAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public static final String MyPK = "MyPK";
 	/** 
@@ -143,6 +143,6 @@ public class CHAttr
 	 总扣分
 	*/
 	public static final String Points = "Points";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

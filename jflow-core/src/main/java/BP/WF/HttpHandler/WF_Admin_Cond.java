@@ -21,7 +21,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方向优先级.
 	/** 
 	 初始化
@@ -66,7 +66,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2, CondAttr.PRI);
 		return cds.ToJson();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方向优先级.
 
 	private Paras ps = new Paras();
@@ -108,7 +108,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方向条件URL
 	/** 
 	 初始化
@@ -190,10 +190,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return "无可删除的数据.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方向条件 Frm 模版
 	/** 
 	 初始化
@@ -313,7 +313,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			cond.setCondOrAnd(CondOrAnd.ByOr);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 方向条件，全部更新.
 		Conds conds = new Conds();
 		QueryObject qo = new QueryObject(conds);
@@ -333,7 +333,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			item.setCondOrAnd(cond.getCondOrAnd());
 			item.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		/* 执行同步*/
@@ -369,10 +369,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return "保存成功!!";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方向条件 Frm 模版
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 独立表单的方向条件.
 	/** 
 	 初始化
@@ -463,7 +463,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			cond.setCondOrAnd(CondOrAnd.ByOr);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 方向条件，全部更新.
 		Conds conds = new Conds();
 		QueryObject qo = new QueryObject(conds);
@@ -483,7 +483,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			item.setCondOrAnd(cond.getCondOrAnd());
 			item.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		/* 执行同步*/
@@ -541,7 +541,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			ds.Tables.add(ses.ToDataTableField("Enums"));
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 增加操作符 number.
 		if (attr.IsNum)
 		{
@@ -584,7 +584,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		}
 		else
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 增加操作符 string.
 			DataTable dtOper = new DataTable();
 			dtOper.TableName = "Opers";
@@ -606,18 +606,18 @@ public class WF_Admin_Cond extends DirectoryPageBase
 			dr.set("Name", " != 不等于");
 			dtOper.Rows.add(dr);
 			ds.Tables.add(dtOper);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 增加操作符 string.
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 增加操作符 number.
 
 		return BP.Tools.Json.DataSetToJson(ds, false); // cond.ToJson();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方向条件SQL 模版
 	/** 
 	 初始化
@@ -700,10 +700,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return "无可删除的数据.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方向条件SQL 模版
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方向条件SQL
 	/** 
 	 初始化
@@ -786,10 +786,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return "无可删除的数据.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方向条件岗位
 	/** 
 	 初始化
@@ -898,10 +898,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return "无可删除的数据.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 按照部门条件计算CondByDept_Delete
 	public final String CondByDept_Save()
 	{
@@ -966,10 +966,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 		return "无可删除的数据.";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方向条件Para
 	/** 
 	 初始化
@@ -1052,10 +1052,10 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 		return "无可删除的数据.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 按照岗位的方向条件.
 	public final String CondStation_Init()
 	{
@@ -1086,7 +1086,7 @@ public class WF_Admin_Cond extends DirectoryPageBase
 
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 按照岗位的方向条件.
 
 }

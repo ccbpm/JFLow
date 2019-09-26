@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class SubFlowAttr extends BP.En.EntityOIDNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 标题
@@ -65,10 +65,10 @@ public class SubFlowAttr extends BP.En.EntityOIDNameAttr
 	 子流程模式
 	*/
 	public static final String SubFlowModel = "SubFlowModel";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 子流程的发起.
 	/** 
 	 如果当前为子流程，仅仅只能被调用1次，不能被重复调用。
@@ -119,7 +119,7 @@ public class SubFlowAttr extends BP.En.EntityOIDNameAttr
 	*/
 	public static final String SameLevelNode = "SameLevelNode";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

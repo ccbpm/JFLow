@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class HungUpAttr extends EntityMyPKAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	public static final String Title = "Title";
 	/** 
@@ -56,6 +56,6 @@ public class HungUpAttr extends EntityMyPKAttr
 	 计划解除挂起时间
 	*/
 	public static final String DTOfUnHungUpPlan = "DTOfUnHungUpPlan";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

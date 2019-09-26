@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class CCEmp extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	节点
@@ -45,10 +45,10 @@ public class CCEmp extends EntityMM
 	{
 		return this.GetValRefTextByKey(CCEmpAttr.FK_Emp);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 节点到人员
@@ -76,6 +76,6 @@ public class CCEmp extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

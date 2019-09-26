@@ -382,7 +382,7 @@ public class WorkReturn {
 		gwfP.setTodoEmps(toEmps);
 		gwfP.Update();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 写入退回提示.
 		// 记录退回轨迹。
 		ReturnWork rw = new ReturnWork();
@@ -402,7 +402,7 @@ public class WorkReturn {
 
 		// 加入track.
 		this.AddToTrack(ActionType.Return, gwl.getFK_Emp(), gwl.getFK_EmpText(), this.ReturnToNode.getNodeID(), this.ReturnToNode.getName(), Msg);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//删除当前的流程.

@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class Station extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实现基本的方方法
 	/** 
 	 UI界面上的访问控制
@@ -27,10 +27,10 @@ public class Station extends EntityNoName
 		uac.OpenForSysAdmin();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 岗位
@@ -79,6 +79,6 @@ public class Station extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

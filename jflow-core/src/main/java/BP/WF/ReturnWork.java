@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class ReturnWork extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -120,10 +120,10 @@ public class ReturnWork extends EntityMyPK
 	{
 		SetValByKey(ReturnWorkAttr.IsBackTracking, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 退回轨迹
@@ -164,7 +164,7 @@ public class ReturnWork extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 

@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class NodeToolbarAttr extends BP.En.EntityOIDNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 节点
@@ -41,6 +41,6 @@ public class NodeToolbarAttr extends BP.En.EntityOIDNameAttr
 	 执行类型
 	*/
 	public static final String ExcType = "ExcType";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

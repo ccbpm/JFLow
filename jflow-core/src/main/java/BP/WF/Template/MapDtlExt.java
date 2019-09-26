@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class MapDtlExt extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 导入导出属性.
 	/** 
 	 用户访问.
@@ -76,10 +76,10 @@ public class MapDtlExt extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.ImpSQLFullOneRow, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本设置
 	/** 
 	 工作模式
@@ -105,10 +105,10 @@ public class MapDtlExt extends EntityNoName
 	{
 		this.SetPara(MapDtlAttr.IsRowLock, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基本设置
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性
 	/** 
 	 记录增加模式
@@ -239,10 +239,10 @@ public class MapDtlExt extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.FK_Node, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 外键属性
 	/** 
 	 框架
@@ -469,10 +469,10 @@ public class MapDtlExt extends EntityNoName
 		}
 		return obj;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public GEDtls HisGEDtls_temp = null;
 	/** 
@@ -798,10 +798,10 @@ public class MapDtlExt extends EntityNoName
 		s = s.replace("'", "‘");
 		this.SetValByKey(MapDtlAttr.MTR, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 明细
@@ -832,7 +832,7 @@ public class MapDtlExt extends EntityNoName
 		map.IndexField = MapDtlAttr.FK_MapData;
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基础信息.
 		map.AddTBStringPK(MapDtlAttr.No, null, "编号", true, false, 1, 100, 20);
 		map.AddTBString(MapDtlAttr.Name, null, "名称", true, false, 1, 200, 20);
@@ -907,10 +907,10 @@ public class MapDtlExt extends EntityNoName
 		map.SetHelperAlert(MapDtlAttr.ShowCols, "默认为空,全部显示,如果配置了就按照配置的计算,格式为:field1,field2");
 
 		map.AddTBString(MapDtlAttr.GUID, null, "GUID", false, false, 0, 128, 20);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基础信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 导入导出填充.
 			// 2014-07-17 for xinchang bank.
 		map.AddBoolean(MapDtlAttr.IsExp, true, "是否可以导出？(导出到Excel,Txt,html类型文件.)", true, true);
@@ -925,26 +925,26 @@ public class MapDtlExt extends EntityNoName
 		map.AddTBStringDoc(MapDtlAttr.ImpSQLSearch, null, "查询SQL(SQL里必须包含@Key关键字.)", true, false, true);
 		map.AddTBStringDoc(MapDtlAttr.ImpSQLFullOneRow, null, "数据填充一行数据的SQL(必须包含@Key关键字,为选择的主键)", true, false, true);
 		map.AddTBString(MapDtlAttr.ImpSQLNames, null, "列的中文名称", true, false, 0, 900, 20, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 导入导出填充.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 多表头.
 			//MTR 多表头列.
 		map.AddTBStringDoc(MapDtlAttr.MTR, null, "请书写html标记,以《TR》开头，以《/TR》结尾。", true, false, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 多表头.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 超链接.
 		map.AddBoolean(MapDtlAttr.IsEnableLink, false, "是否启用超链接", true, true);
 		map.AddTBString(MapDtlAttr.LinkLabel, "", "超连接标签", true, false, 0, 50, 100);
 		map.AddTBString(MapDtlAttr.LinkTarget, null, "连接目标", true, false, 0, 10, 100);
 		map.AddTBString(MapDtlAttr.LinkUrl, null, "连接URL", true, false, 0, 200, 200, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 多表头.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 工作流相关.
 			//add 2014-02-21.
 		map.AddBoolean(MapDtlAttr.IsCopyNDData, true, "是否允许copy节点数据", true, false);
@@ -954,10 +954,10 @@ public class MapDtlExt extends EntityNoName
 		map.AddDDLSQL(MapDtlAttr.SubThreadWorker, null, "子线程处理人字段", sql, true);
 		map.AddBoolean(MapDtlAttr.IsEnablePass, false, "是否启用通过审核功能?", true, true);
 		map.AddDDLSysEnum(MapDtlAttr.DtlOpenType, 1, "数据开放类型", true, true, MapDtlAttr.DtlOpenType, "@0=操作员@1=工作ID@2=流程ID@3=父流程WorkID");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 工作流相关.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 相关方法.
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
@@ -1017,10 +1017,10 @@ public class MapDtlExt extends EntityNoName
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 相关方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 实验中的功能.
 		rm = new RefMethod();
 		rm.GroupName = "实验中的功能";
@@ -1062,7 +1062,7 @@ public class MapDtlExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 实验中的功能.
 
 		this.set_enMap(map);
@@ -1222,7 +1222,7 @@ public class MapDtlExt extends EntityNoName
 			float maxEnd = 200;
 			boolean isLeft = true;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 字段顺序调整
 			MapAttrs mapAttrs = new MapAttrs(md.getNo());
 			for (MapAttr attr : mapAttrs.ToJavaList())
@@ -1268,10 +1268,10 @@ public class MapDtlExt extends EntityNoName
 				}
 				isLeft = !isLeft;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 明细表重置排序
 			MapDtls mapDtls = new MapDtls(this.getNo());
 			for (MapDtl dtl : mapDtls.ToJavaList())
@@ -1292,7 +1292,7 @@ public class MapDtlExt extends EntityNoName
 				dtl.Update();
 				maxEnd = maxEnd + dtl.getH();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			md.ResetMaxMinXY();
@@ -1327,7 +1327,7 @@ public class MapDtlExt extends EntityNoName
 		return "../../Admin/FoolFormDesigner/HidAttr.htm?DoType=Edit&FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性.
 	public final float getX() throws Exception
 	{
@@ -1353,7 +1353,7 @@ public class MapDtlExt extends EntityNoName
 	{
 		return this.GetValFloatByKey(MapDtlAttr.FrmH);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基本属性.
 
 
@@ -1526,9 +1526,9 @@ public class MapDtlExt extends EntityNoName
 		}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查填充的SQL是否符合要求.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//更新分组标签.  @fanleiwei. 代码有变化.
@@ -1589,6 +1589,6 @@ public class MapDtlExt extends EntityNoName
 	{
 		return BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(OID) from " + this.getPTable() + " WHERE " + f1 + "=" + val1 + " AND " + f2 + "='" + val2 + "'");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

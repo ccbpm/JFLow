@@ -300,7 +300,7 @@ public class BtnAttr extends BP.Sys.ToolbarExcelAttr
 	public static final String HelpRole = "HelpRole";
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公文2019
 	/** 
 	 公文标签
@@ -310,11 +310,11 @@ public class BtnAttr extends BP.Sys.ToolbarExcelAttr
 	 公文标签接受人
 	*/
 	public static final String OfficeBtnEnable = "OfficeBtnEnable";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 公文2019
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公文属性
 	public static final String DocLeftWord = "DocLeftWord";
 	public static final String DocRightWord = "DocRightWord";
@@ -322,7 +322,7 @@ public class BtnAttr extends BP.Sys.ToolbarExcelAttr
 	 工作方式
 	*/
 	public static final String WebOfficeFrmModel = "WebOfficeFrmModel";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 公文属性
 
 	/** 

@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class BillAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public static final String MyPK = "MyPK";
 	/** 
@@ -81,6 +81,6 @@ public class BillAttr
 	 全路径
 	*/
 	public static final String FullPath = "FullPath";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -14,7 +14,7 @@ import java.math.*;
 */
 public class WorkFlows extends ArrayList<Object>
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 工作流程
@@ -54,10 +54,10 @@ public class WorkFlows extends ArrayList<Object>
 		//}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询方法
 	/** 
 	 GetNotCompleteNode
@@ -83,10 +83,10 @@ public class WorkFlows extends ArrayList<Object>
 		}
 		*/
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 增加一个工作流程
@@ -104,10 +104,10 @@ public class WorkFlows extends ArrayList<Object>
 	{
 		return (WorkFlow)this.InnerList[index];
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 关于调度的自动方法
 	/** 
 	 清除死节点。
@@ -122,6 +122,6 @@ public class WorkFlows extends ArrayList<Object>
 		String errMsg = "清除死节点的错误信息：";
 		return infoMsg + errMsg;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

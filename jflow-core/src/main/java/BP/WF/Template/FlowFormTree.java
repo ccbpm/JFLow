@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class FlowFormTree extends EntityTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 扩展属性，不做数据操作
 	/** 
 	 节点类型
@@ -62,10 +62,10 @@ public class FlowFormTree extends EntityTree
 	{
 		IsCloseEtcFrm = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getFK_Flow() throws Exception
 	{
@@ -75,10 +75,10 @@ public class FlowFormTree extends EntityTree
 	{
 		this.SetValByKey(FrmNodeAttr.FK_Flow, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 独立表单树
@@ -96,7 +96,7 @@ public class FlowFormTree extends EntityTree
 	{
 		super(_No);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

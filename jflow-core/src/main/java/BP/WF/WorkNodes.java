@@ -17,7 +17,7 @@ import java.math.*;
 */
 public class WorkNodes extends ArrayList<Object>
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 他的工作s
@@ -155,10 +155,10 @@ public class WorkNodes extends ArrayList<Object>
 			wn.getHisWork().Delete();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 增加一个WorkNode
@@ -176,6 +176,6 @@ public class WorkNodes extends ArrayList<Object>
 	{
 		return (WorkNode)this.InnerList[index];
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -38,10 +38,10 @@ public abstract class Method
 	{
 		return Integer.parseInt(Request("RefOID"));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion Http
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region ROW
 	/** 
 	 获取Key值
@@ -142,7 +142,7 @@ public abstract class Method
 	{
 		this._row = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -153,7 +153,7 @@ public abstract class Method
 
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 参数
@@ -227,6 +227,6 @@ public abstract class Method
 	 是否显示在功能列表里
 	*/
 	public boolean IsVisable = true;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

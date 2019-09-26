@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class VGPMEmpMenu extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getCtrlObjs() throws Exception
 	{
@@ -115,10 +115,10 @@ public class VGPMEmpMenu extends EntityMyPK
 	{
 		this.SetValByKey(MenuAttr.Url, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 人员菜单功能
@@ -167,6 +167,6 @@ public class VGPMEmpMenu extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -7,7 +7,7 @@ import BP.WF.*;
 */
 public class NodeAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 新属性
 	/** 
 	 审核组件状态
@@ -127,10 +127,10 @@ public class NodeAttr
 	 工作量
 	*/
 	public static final String WorkloadDel = "Workload";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 OID
@@ -388,19 +388,19 @@ public class NodeAttr
 	 该节点是否是游离状态
 	*/
 	public static final String IsYouLiTai = "IsYouLiTai";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 父子流程
 	/** 
 	 (当前节点为启动子流程节点时)是否检查所有子流程结束后,该节点才能向下发送?
 	*/
 	public static final String IsCheckSubFlowOver_del = "IsCheckSubFlowOver_del";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 移动设置.
 	/** 
 	 手机工作模式
@@ -418,11 +418,11 @@ public class NodeAttr
 	 pad屏幕模式
 	*/
 	public static final String MPad_SrcModel = "MPad_SrcModel";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 移动设置.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 未来处理人.
 	/** 
 	 是否计算未来处理人
@@ -438,7 +438,7 @@ public class NodeAttr
 	public static final String IsFullSAAlert = "IsFullSAAlert";
 
 	public static final String RefOneFrmTreeType = "RefOneFrmTreeType";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 未来处理人.
 
 }

@@ -7,7 +7,7 @@ import BP.En.*;
 */
 public class ExcelTable extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 获取或设置Excel模板
@@ -61,18 +61,18 @@ public class ExcelTable extends EntityNoName
 		this.SetValByKey(ExcelTableAttr.SyncToTable, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public ExcelTable()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限控制
 	@Override
 	public UAC getHisUAC()
@@ -81,10 +81,10 @@ public class ExcelTable extends EntityNoName
 		uac.OpenAll();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限控制
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region EnMap
 	/** 
 	 Excel数据表Map
@@ -110,10 +110,10 @@ public class ExcelTable extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion EnMap
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写事件
 	/** 
 	 记录添加前事件
@@ -125,6 +125,6 @@ public class ExcelTable extends EntityNoName
 		return super.beforeInsert();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 重写事件
 }

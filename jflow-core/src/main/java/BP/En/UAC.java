@@ -14,7 +14,7 @@ import java.math.*;
 */
 public class UAC
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 常用方法
 	/** 
 	 从权限管理系统里装载数据.
@@ -108,10 +108,10 @@ public class UAC
 		}
 		return this;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 控制属性
 	/** 
 	 是否插入
@@ -143,10 +143,10 @@ public class UAC
 	 <p>注意：要启用导入权限控制，请使用uac.IsImp = UserRegedit.HaveRoleForImp(this.ToString());</p>
 	*/
 	public boolean IsImp = false;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 用户访问
@@ -155,6 +155,6 @@ public class UAC
 	{
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

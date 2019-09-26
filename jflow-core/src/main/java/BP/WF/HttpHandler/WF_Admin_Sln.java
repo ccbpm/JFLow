@@ -23,7 +23,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 绑定流程表单
 	/** 
 	 获取所有节点，复制表单
@@ -344,10 +344,10 @@ public class WF_Admin_Sln extends DirectoryPageBase
 		appendMenus.append(appendMenuSb);
 		appendMenuSb.setLength(0);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单方案.
 	/** 
 	 表单方案
@@ -366,7 +366,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 		FrmNodes fns = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果没有ndFrm 就增加上.
 		boolean isHaveNDFrm = false;
 		for (FrmNode fn : fns)
@@ -392,7 +392,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 			fn.Insert();
 			fns.AddEntity(fn);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果没有ndFrm 就增加上.
 
 		//组合这个实体才有外键信息.
@@ -414,10 +414,10 @@ public class WF_Admin_Sln extends DirectoryPageBase
 		//把json数据返回过去.
 		return fnes.ToJson();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 表单方案.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 字段权限.
 
 	public static class FieldsAttrs
@@ -438,7 +438,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 		*/
 		public boolean IsWriteToGenerWorkFlow;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 字段权限.
 
 }

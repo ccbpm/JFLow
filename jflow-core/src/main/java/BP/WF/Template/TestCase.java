@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class TestCase extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -53,10 +53,10 @@ public class TestCase extends EntityMyPK
 	{
 		SetValByKey(TestCaseDtlAttr.FK_Flow, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 流程测试
@@ -84,6 +84,6 @@ public class TestCase extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

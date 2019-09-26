@@ -10,7 +10,7 @@ import BP.Sys.*;
 */
 public class SQLList extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getNo()
 	{
@@ -27,10 +27,10 @@ public class SQLList extends XmlEn
 	{
 		return this.GetValStringByKey(SQLListAttr.Note);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 查询
@@ -55,6 +55,6 @@ public class SQLList extends XmlEn
 	{
 		return new SQLLists();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

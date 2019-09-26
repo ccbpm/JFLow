@@ -24,7 +24,7 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -37,13 +37,13 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 
 		return "err@没有判断的标记:" + this.getDoType();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点相关 Nodes
 	/** 
 	 创建流程节点并返回编号
@@ -170,7 +170,7 @@ public class WF_Admin_CCBPMDesigner2018 extends DirectoryPageBase
 
 		return "设置成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion end Node
 
 	/** 

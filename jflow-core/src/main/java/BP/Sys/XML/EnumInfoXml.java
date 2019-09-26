@@ -11,7 +11,7 @@ import BP.Sys.*;
 */
 public class EnumInfoXml extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getName()
 	{
@@ -30,10 +30,10 @@ public class EnumInfoXml extends XmlEn
 		str = "CH";
 		return this.GetValStringByKey(str);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	public EnumInfoXml()
 	{
@@ -51,6 +51,6 @@ public class EnumInfoXml extends XmlEn
 	{
 		return new EnumInfoXmls();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

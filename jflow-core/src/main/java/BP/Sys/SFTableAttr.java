@@ -43,7 +43,7 @@ public class SFTableAttr extends EntityNoNameAttr
 	*/
 	public static final String CodeStruct = "CodeStruct";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 链接到其他系统获取数据的属性。
 	/** 
 	 数据源
@@ -81,6 +81,6 @@ public class SFTableAttr extends EntityNoNameAttr
 	 加入日期
 	*/
 	public static final String RDT = "RDT";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 链接到其他系统获取数据的属性。
 }

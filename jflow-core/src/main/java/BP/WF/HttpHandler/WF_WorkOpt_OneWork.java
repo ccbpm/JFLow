@@ -47,7 +47,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		ds.Tables.add(dt);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  父子流程数据存储到这里.
 		Hashtable ht = new Hashtable();
 		for (DataRow dr : dt.Rows)
@@ -110,7 +110,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 				ht.put(mypk, msg);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//获取 WF_GenerWorkFlow
@@ -161,13 +161,13 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	public final String getMsg()
 	{
@@ -230,7 +230,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		}
 		return str;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
 	public final String FlowBBS_Delete()
@@ -299,7 +299,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 		boolean CanPackUp = true; //是否可以打包下载.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  PowerModel权限的解析
 		String psql = "SELECT A.PowerFlag,A.EmpNo,A.EmpName FROM WF_PowerModel A WHERE PowerCtrlType =1"
 		 + " UNION "
@@ -308,16 +308,16 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 
 	   String powers = DBAccess.RunSQLReturnStringIsNull(psql,"");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion PowerModel权限的解析
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 文件打印的权限判断，这里为天业集团做的特殊判断，现实的应用中，都可以打印.
 		if (SystemConfig.getCustomerNo().equals("TianYe") && !WebUser.getNo().equals("admin"))
 		{
 			CanPackUp = IsCanPrintSpecForTianYe(gwf);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 文件打印的权限判断，这里为天业集团做的特殊判断，现实的应用中，都可以打印.
 		if (CanPackUp == true)
 		{

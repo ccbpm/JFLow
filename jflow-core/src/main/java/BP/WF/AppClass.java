@@ -10,7 +10,7 @@ import BP.Web.WebUser;
 */
 public class AppClass
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 进度条.
 	/** 
 	 进度条 - for 为中科曙光.
@@ -40,7 +40,7 @@ public class AppClass
 		for (int i = 0; i < 100; i++)
 		{
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 判断当前节点的类型.
 			// 如果是 =0 就说明有分支，有分支就判断当前节点是否是分河流。
 			RunModel model = BP.WF.RunModel.forValue(0);
@@ -72,7 +72,7 @@ public class AppClass
 					currNode = tond.getNodeID();
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 判断当前节点的类型.
 
 			int nextNode = GetNextNodeID(currNode, dirs);
@@ -169,10 +169,10 @@ public class AppClass
 
 		return 0;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 进度条.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region sdk表单装载的时候返回的数据.
 	/** 
 	 sdk表单加载的时候，要返回的数据.
@@ -241,6 +241,6 @@ public class AppClass
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion sdk表单装载的时候返回的数据.
 }

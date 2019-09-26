@@ -181,13 +181,13 @@ public class MapAttrAttr extends EntityMyPKAttr
 	public static final String TBModel = "TBModel";
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 	/** 
 	 是否必填
 	*/
 	public static final String UIIsInput = "UIIsInput";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
 	/** 

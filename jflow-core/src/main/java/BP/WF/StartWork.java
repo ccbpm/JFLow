@@ -9,7 +9,7 @@ import BP.Port.*;
 */
 public abstract class StartWork extends Work
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与_SQLCash 操作有关
 	private SQLCash _SQLCash = null;
 	@Override
@@ -31,10 +31,10 @@ public abstract class StartWork extends Work
 	{
 		_SQLCash = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  单据属性
 	/** 
 	 FK_Dept
@@ -68,10 +68,10 @@ public abstract class StartWork extends Work
 	//        this.SetValByKey(StartWorkAttr.FK_Dept, value);
 	//    }
 	//}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作内容标题
@@ -84,10 +84,10 @@ public abstract class StartWork extends Work
 	{
 		this.SetValByKey(StartWorkAttr.Title,value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 工作流程
@@ -99,10 +99,10 @@ public abstract class StartWork extends Work
 	{
 		super(oid);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  重写基类的方法。
 	/** 
 	 删除之前的操作。
@@ -162,6 +162,6 @@ public abstract class StartWork extends Work
 		}
 		return super.beforeUpdate();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

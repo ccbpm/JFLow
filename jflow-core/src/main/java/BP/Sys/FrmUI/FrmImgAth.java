@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class FrmImgAth extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 名称
@@ -122,10 +122,10 @@ public class FrmImgAth extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAthAttr.IsRequired, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	*/
@@ -192,7 +192,7 @@ public class FrmImgAth extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

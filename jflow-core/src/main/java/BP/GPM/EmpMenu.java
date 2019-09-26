@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class EmpMenu extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 人员
@@ -62,10 +62,10 @@ public class EmpMenu extends EntityMM
 	{
 		this.SetValByKey(EmpMenuAttr.IsChecked, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 人员菜单功能
@@ -98,6 +98,6 @@ public class EmpMenu extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

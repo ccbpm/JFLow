@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class Monitor extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	@Override
 	public UAC getHisUAC()
@@ -404,15 +404,15 @@ public class Monitor extends Entity
 	{
 		SetValByKey(MonitorAttr.GUID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 产生的工作流程
@@ -508,10 +508,10 @@ public class Monitor extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行功能.
 	public final String DoTrack() throws Exception
 	{
@@ -579,6 +579,6 @@ public class Monitor extends Entity
 		BP.WF.Template.FlowSheet fl = new FlowSheet(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), nodeid, note);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

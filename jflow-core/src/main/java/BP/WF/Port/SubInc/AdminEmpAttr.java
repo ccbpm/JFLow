@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class AdminEmpAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 No
@@ -77,6 +77,6 @@ public class AdminEmpAttr
 	 部门根目录
 	*/
 	public static final String RootOfDept = "RootOfDept";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

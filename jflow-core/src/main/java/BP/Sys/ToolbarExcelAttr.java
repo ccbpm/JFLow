@@ -10,7 +10,7 @@ import java.util.*;
 */
 public class ToolbarExcelAttr extends EntityNoNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  公文按钮
 	/** 
 	 打开本地-标签
@@ -138,6 +138,6 @@ public class ToolbarExcelAttr extends EntityNoNameAttr
 	public static final String OfficeSeal = "OfficeSeal";
 
 	public static final String OfficeInsertFlow = "OfficeInsertFlow";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

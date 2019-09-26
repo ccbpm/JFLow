@@ -20,7 +20,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 事件基类.
 	/** 
 	 事件类型
@@ -67,11 +67,11 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(dtBuess);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 事件基类.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  单据模版维护
 	/** 
 	 @李国文.
@@ -164,10 +164,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		HttpContextHelper.Response.ContentType = "application/octet-stream;charset=utf-8";
 		HttpContextHelper.ResponseWriteFile(MyFilePath);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  节点消息
 	public final String PushMsg_Init()
 	{
@@ -195,7 +195,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		//表单字段作为接收人.
 		msg.setSMSField(HttpContextHelper.RequestParams("DDL_SMS_Fields"));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 其他节点的处理人方式（求选择的节点）
 		String nodesOfSMS = "";
 		for (BP.WF.Node mynd : nds.ToJavaList())
@@ -211,7 +211,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			}
 		}
 		msg.setSMSNodes(nodesOfSMS);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 其他节点的处理人方式（求选择的节点）
 
 		//按照SQL
@@ -288,10 +288,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单模式
 	/** 
 	 表单模式
@@ -483,12 +483,12 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return "保存成功...";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 表单模式
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 手机表单字段排序
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region SortingMapAttrs_Init
 
 	public final String SortingMapAttrs_Init()
@@ -502,7 +502,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		Nodes nodes = null;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取数据
 		mapdatas = new MapDatas();
 		QueryObject qo = new QueryObject(mapdatas);
@@ -527,7 +527,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		qo.AddWhere(GroupFieldAttr.FrmID, getFK_MapData());
 		qo.addOrderBy(GroupFieldAttr.Idx);
 		qo.DoQuery();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		DataSet ds = new DataSet();
@@ -560,10 +560,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		if (mapdata != null)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 一、面板1、 分组数据+未分组数据
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region A、构建数据dtNoGroupAttrs，这个放在前面
 			//检索全部字段，查找出没有分组或分组信息不正确的字段，存入"无分组"集合
 			dtNoGroupAttrs = dtAttrs.Clone();
@@ -575,12 +575,12 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					dtNoGroupAttrs.Rows.add(dr.ItemArray);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region B、构建数据dtGroups，这个放在后面(！！涉及更新数据库)
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 如果没有，则创建分组（1.明细2.多附件3.按钮）
 			//01、未分组明细表,自动创建一个
 			for (MapDtl mapDtl : dtls.ToJavaList())
@@ -634,19 +634,19 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					groups.AddEntity(group);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			dtGroups = groups.ToDataTableField("dtGroups");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 三、其他。如果是明细表的字段排序，则增加"返回"按钮；否则增加"复制排序"按钮,2016-03-21
 
 			DataTable isDtl = new DataTable();
@@ -674,10 +674,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 			isDtl.Rows.add(tddr.ItemArray);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 增加节点信息
 			if (DataType.IsNullOrEmpty(getFK_Flow()) == false)
 			{
@@ -700,7 +700,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				ds.Tables.add(dtNodes);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			ds.Tables.add(mapdatas.ToDataTableField("mapdatas"));
@@ -749,10 +749,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		return gf == null ? 0 : gf.OID;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重置字段顺序
 	/** 
 	 重置字段顺序
@@ -786,10 +786,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			return "err@" + ex.getMessage().toString();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 设置在手机端显示的字段
 	/** 
 	 保存需要在手机端表单显示的字段
@@ -834,10 +834,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			return "err@" + ex.getMessage().toString();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 将分组、字段排序复制到其他节点
 	/** 
 	 将分组、字段排序复制到其他节点
@@ -895,7 +895,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			{
 				tmd = "ND" + nodeid;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 获取数据
 				tmapdatas = new MapDatas();
 				QueryObject qo = new QueryObject(tmapdatas);
@@ -924,13 +924,13 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				qo.AddWhere(MapDtlAttr.IsView, true);
 				//qo.addOrderBy(MapDtlAttr.RowIdx);
 				qo.DoQuery();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 复制排序逻辑
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region //分组排序复制
 				for (GroupField grp : groups)
 				{
@@ -959,10 +959,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					grp.Idx = maxGrpIdx = maxGrpIdx + 1;
 					grp.DirectUpdate();
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region //字段排序复制
 				for (MapAttr attr : attrs)
 				{
@@ -1035,10 +1035,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					attr.setIdx(maxAttrIdx = maxAttrIdx + 1;
 					attr.DirectUpdate();
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region //明细表排序复制
 				String dtlIdx = "";
 				GroupField tgroup = null;
@@ -1076,7 +1076,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						tgroups.AddEntity(group);
 					}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 1.明细表排序
 					if (tgroupidx != groupidx && group != null)
 					{
@@ -1095,10 +1095,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 					maxDtlIdx = Math.max(tgroupidx, maxDtlIdx);
 					idxDtls.add(dtl.No);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 2.获取源节点明细表中的字段分组、字段信息
 					oattrs = new MapAttrs();
 					qo = new QueryObject(oattrs);
@@ -1113,10 +1113,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					qo.AddWhere(GroupFieldAttr.FrmID, dtl.No);
 					qo.addOrderBy(GroupFieldAttr.Idx);
 					qo.DoQuery();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 3.获取目标节点明细表中的字段分组、字段信息
 					tarattrs = new MapAttrs();
 					qo = new QueryObject(tarattrs);
@@ -1131,10 +1131,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					qo.AddWhere(GroupFieldAttr.FrmID, tdtl.No);
 					qo.addOrderBy(GroupFieldAttr.Idx);
 					qo.DoQuery();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 4.明细表字段分组排序
 					maxGrpIdx = 0;
 					idxGrps = new ArrayList<String>();
@@ -1166,10 +1166,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						grp.Idx = maxGrpIdx = maxGrpIdx + 1;
 						grp.DirectUpdate();
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 5.明细表字段排序
 					maxAttrIdx = 0;
 					idxAttrs = new ArrayList<String>();
@@ -1234,7 +1234,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						attr.setIdx(maxAttrIdx = maxAttrIdx + 1;
 						attr.DirectUpdate();
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion
 				}
 
@@ -1276,10 +1276,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						tmapdata.DirectUpdate();
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
 			}
@@ -1296,13 +1296,13 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		Object tempVar = gfs.GetEntityByKey(GroupFieldAttr.CtrlID, ctrlID);
 		return tempVar instanceof GroupField ? (GroupField)tempVar : null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单模式
 	public final String SortingMapAttrs_Save()
 	{
@@ -1450,10 +1450,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return "保存成功...";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 表单模式
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点属性（列表）的操作
 	/** 
 	 初始化节点属性列表.
@@ -1544,10 +1544,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 特别控件特别用户权限
 	public final String SepcFiledsSepcUsers_Init()
 	{
@@ -1579,10 +1579,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		*/
 		return ""; //toJson
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 批量发起规则设置
 	public final String BatchStartFields_Init()
 	{
@@ -1609,10 +1609,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 		return "{\"nd\":" + nd.ToJson() + ",\"ses\":" + ses.ToJson() + ",\"attrs\":" + attrs.ToJson() + ",\"BatchRole\":" + srole + "}";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 批量发起规则设置save
 	public final String BatchStartFields_Save()
 	{
@@ -1648,10 +1648,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 发送阻塞模式
 	public final String BlockModel_Save()
 	{
@@ -1705,10 +1705,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 可以撤销的节点
 	public final String CanCancelNodes_Save()
 	{
@@ -1740,10 +1740,10 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return "设置成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单检查(CheckFrm.htm)
 	public final String CheckFrm_Check()
 	{
@@ -1851,7 +1851,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return msg;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

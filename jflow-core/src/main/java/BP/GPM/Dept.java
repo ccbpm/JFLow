@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class Dept extends EntityTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 全名
@@ -50,10 +50,10 @@ public class Dept extends EntityTree
 		}
 		return _HisSubDepts;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 部门
@@ -71,10 +71,10 @@ public class Dept extends EntityTree
 	{
 		super(no);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写方法
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -156,7 +156,7 @@ public class Dept extends EntityTree
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

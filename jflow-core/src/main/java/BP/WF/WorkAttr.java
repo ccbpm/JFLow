@@ -13,7 +13,7 @@ import java.time.*;
 */
 public class WorkAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -51,6 +51,6 @@ public class WorkAttr
 	 MD5
 	*/
 	public static final String MD5 = "MD5";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

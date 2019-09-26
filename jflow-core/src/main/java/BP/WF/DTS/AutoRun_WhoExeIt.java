@@ -60,7 +60,7 @@ public class AutoRun_WhoExeIt extends Method
 			return "无任务";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 自动启动流程B
 		for (DataRow dr : dt.Rows)
 		{
@@ -83,7 +83,7 @@ public class AutoRun_WhoExeIt extends Method
 				info += "err@发送错误:" + ex.getMessage().toString();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 自动启动流程
 
 		if (WebUser.getNo().equals("admin") == false)

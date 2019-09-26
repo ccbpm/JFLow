@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class SMS extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 新方法 2013
 	/** 
 	 发送消息
@@ -46,10 +46,10 @@ public class SMS extends EntityMyPK
 		sms.setAtPara(paras);
 		sms.Insert();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 新方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 手机短信属性
 	/** 
 	 手机号码
@@ -84,10 +84,10 @@ public class SMS extends EntityMyPK
 	{
 		SetValByKey(SMSAttr.MobileInfo, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  邮件属性
 	/** 
 	 参数
@@ -250,7 +250,7 @@ public class SMS extends EntityMyPK
 	{
 		this.SetPara(SMSAttr.OpenUrl, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String getPushModel()
@@ -258,7 +258,7 @@ public class SMS extends EntityMyPK
 		return this.GetParaString(SMSAttr.PushModel);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 UI界面上的访问控制
@@ -317,7 +317,7 @@ public class SMS extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -424,7 +424,7 @@ public class SMS extends EntityMyPK
 				return;
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 发送邮件
 			if (this.getPushModel().contains("Email") == true && DataType.IsNullOrEmpty(this.getEmail()) == false)
 			{
@@ -452,10 +452,10 @@ public class SMS extends EntityMyPK
 				}
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 发送邮件
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 发送短消息 调用接口
 			//发送短消息的前提必须是手机号不能为空
 			//if (DataType.IsNullOrEmpty(this.Mobile) == true)
@@ -490,7 +490,7 @@ public class SMS extends EntityMyPK
 				soap.SendToWebServices(this.MyPK, WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL());
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 发送短消息 调用接口
 
 		}

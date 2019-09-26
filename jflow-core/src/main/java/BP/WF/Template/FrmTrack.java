@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class FrmTrack extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getNo() throws Exception
 	{
@@ -129,10 +129,10 @@ public class FrmTrack extends Entity
 	{
 		return this.GetValStrByKey(FrmTrackAttr.FrmTrackLab);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制
@@ -221,7 +221,7 @@ public class FrmTrack extends Entity
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmTrackAttr.FrmTrackLab, "轨迹", "显示标签", true, false, 0, 200, 10, false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		map.AddDDLSysEnum(FrmTrackAttr.FrmTrackSta, getFrmTrackSta().Disable.getValue(), "组件状态", true, true, FrmTrackAttr.FrmTrackSta, "@0=禁用@1=显示轨迹图@2=显示轨迹表");
@@ -232,7 +232,7 @@ public class FrmTrack extends Entity
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_H, 300, "高度", true, false);
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_W, 400, "宽度", true, false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		this.set_enMap(map);
@@ -244,6 +244,6 @@ public class FrmTrack extends Entity
 	{
 		return super.beforeUpdateInsertAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

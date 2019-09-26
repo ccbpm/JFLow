@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class Group extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 按钮权限控制
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -20,9 +20,9 @@ public class Group extends EntityNoName
 		uac.OpenForAppAdmin();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 权限组
@@ -84,6 +84,6 @@ public class Group extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

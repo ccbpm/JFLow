@@ -93,7 +93,7 @@ public class ccbpmServices extends Method
 		{
 			DoTianJinSpecFunc();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  流程逾期
 		//判断是否有流程逾期的消息设置
 		DataTable dt = null;
@@ -120,10 +120,10 @@ public class ccbpmServices extends Method
 			}
 			continue;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流程逾期
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  流程预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
@@ -148,11 +148,11 @@ public class ccbpmServices extends Method
 			}
 			continue;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  流程预警
 		DataTable generTab = null;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 节点预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
@@ -220,10 +220,10 @@ public class ccbpmServices extends Method
 
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  节点预警
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 找到要节点逾期的数据.
 
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
@@ -233,7 +233,7 @@ public class ccbpmServices extends Method
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 找到要逾期的数据.
 
 		// 遍历循环,逾期表进行处理.
@@ -277,7 +277,7 @@ public class ccbpmServices extends Method
 				{
 					continue;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 启动逾期消息设置
 				PushMsgs pushMsgs = new PushMsgs();
 				int count = pushMsgs.Retrieve(PushMsgAttr.FK_Flow, node.getFK_Flow(), PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListOfNode.NodeOverDue);
@@ -325,7 +325,7 @@ public class ccbpmServices extends Method
 					}
 
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 启动逾期消息设置
 
 				//获得该节点的处理内容.
@@ -488,7 +488,7 @@ public class ccbpmServices extends Method
 			return;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 找到要逾期的数据.
 		DataTable generTab = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
@@ -507,7 +507,7 @@ public class ccbpmServices extends Method
 		}
 
 		generTab = DBAccess.RunSQLReturnTable(sql);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 找到要逾期的数据.
 
 		// 遍历循环,逾期表进行处理.
@@ -559,7 +559,7 @@ public class ccbpmServices extends Method
 	private void DoSendMsg()
 	{
 		int idx = 0;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 发送消息
 		SMSs sms = new SMSs();
 		BP.En.QueryObject qo = new BP.En.QueryObject(sms);
@@ -581,7 +581,7 @@ public class ccbpmServices extends Method
 				BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 发送消息
 	}
 	/** 
@@ -592,7 +592,7 @@ public class ccbpmServices extends Method
 	public final void SendMail(SMS sms)
 	{
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 发送邮件.
 		if (DataType.IsNullOrEmpty(sms.getEmail()))
 		{
@@ -660,7 +660,7 @@ public class ccbpmServices extends Method
 		{
 			throw ex;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 发送邮件.
 	}
 }

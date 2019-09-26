@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class MapDtl extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 导入导出属性.
 	/** 
 	 关联主键
@@ -114,10 +114,10 @@ public class MapDtl extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.ImpSQLFullOneRow, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本设置
 	/** 
 	 工作模式
@@ -143,10 +143,10 @@ public class MapDtl extends EntityNoName
 	{
 		this.SetPara(MapDtlAttr.IsRowLock, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基本设置
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性
 	/** 
 	 记录增加模式
@@ -267,10 +267,10 @@ public class MapDtl extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.FK_Node, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 外键属性
 	/** 
 	 框架
@@ -468,10 +468,10 @@ public class MapDtl extends EntityNoName
 		}
 		return obj;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public GEDtls HisGEDtls_temp = null;
 	public final EditModel getHisEditModel() throws Exception
@@ -833,10 +833,10 @@ public class MapDtl extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.Alias, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public final Map GenerMap() throws Exception
 	{
@@ -974,13 +974,13 @@ public class MapDtl extends EntityNoName
 
 			//MTR 多表头列.
 		map.AddTBString(MapDtlAttr.MTR, null, "多表头列", true, false, 0, 3000, 20);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 超链接.
 		map.AddBoolean(MapDtlAttr.IsEnableLink, false, "是否启用超链接", true, true);
 		map.AddTBString(MapDtlAttr.LinkLabel, "", "超连接标签", true, false, 0, 50, 100);
 		map.AddTBString(MapDtlAttr.LinkTarget, null, "连接目标", true, false, 0, 10, 100);
 		map.AddTBString(MapDtlAttr.LinkUrl, null, "连接URL", true, false, 0, 200, 200, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 超链接.
 
 			//SQL过滤表达式.
@@ -995,7 +995,7 @@ public class MapDtl extends EntityNoName
 		map.SetHelperAlert(MapDtlAttr.ShowCols, "默认为空,全部显示,如果配置了就按照配置的计算,格式为:field1,field2");
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 导入导出填充.
 			// 2014-07-17 for xinchang bank.
 		map.AddBoolean(MapDtlAttr.IsExp, true, "IsExp", false, false);
@@ -1007,7 +1007,7 @@ public class MapDtl extends EntityNoName
 		map.AddTBString(MapDtlAttr.ImpSQLInit, null, "初始化SQL", true, false, 0, 500, 20);
 		map.AddTBString(MapDtlAttr.ImpSQLFullOneRow, null, "数据填充SQL", true, false, 0, 500, 20);
 		map.AddTBString(MapDtlAttr.ImpSQLNames, null, "字段中文名", true, false, 0, 900, 20);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 导入导出填充.
 
 
@@ -1023,7 +1023,7 @@ public class MapDtl extends EntityNoName
 		return this.get_enMap();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性.
 	public final float getX() throws Exception
 	{
@@ -1066,7 +1066,7 @@ public class MapDtl extends EntityNoName
 	{
 		return this.GetValFloatByKey(MapDtlAttr.FrmH);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基本属性.
 
 	/** 
@@ -1091,7 +1091,7 @@ public class MapDtl extends EntityNoName
 	{
 		return BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(OID) from " + this.getPTable() + " WHERE " + f1 + "=" + val1 + " AND " + f2 + "='" + val2 + "'");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final void IntMapAttrs() throws Exception

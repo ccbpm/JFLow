@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class GenerBillAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性1
 	/** 
 	 工作ID
@@ -26,10 +26,10 @@ public class GenerBillAttr
 	 关联的单据号
 	*/
 	public static final String FrmName = "FrmName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 TSpan
@@ -166,6 +166,6 @@ public class GenerBillAttr
 	 待办状态
 	*/
 	public static final String TodoSta = "TodoSta";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

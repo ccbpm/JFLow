@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class AdminEmp extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	public final boolean getIsAdmin() throws Exception
 	{
@@ -114,10 +114,10 @@ public class AdminEmp extends EntityNoName
 	{
 		SetValByKey(AdminEmpAttr.RootOfForm, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -212,10 +212,10 @@ public class AdminEmp extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
@@ -229,7 +229,7 @@ public class AdminEmp extends EntityNoName
 
 		return super.beforeUpdateInsertAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String DoAdd(String empNo, String orgNo) throws Exception

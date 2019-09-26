@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class PowerModel extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 流程编号
@@ -40,11 +40,11 @@ public class PowerModel extends EntityMyPK
 	{
 		this.SetValByKey(PowerModelAttr.PowerFlag, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 权限模型
@@ -91,6 +91,6 @@ public class PowerModel extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

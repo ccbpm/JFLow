@@ -15,7 +15,7 @@ import BP.Sys.*;
 */
 public abstract class BarBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统属性.
 	/** 
 	 流程编号/流程标记.
@@ -30,10 +30,10 @@ public abstract class BarBase
 	 * @throws Exception 
 	*/
 	public abstract boolean getIsCanView() throws Exception;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 系统属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 外观行为.
 	/** 
 	 标题
@@ -59,7 +59,7 @@ public abstract class BarBase
 
 	public abstract boolean getIsLine();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 外观行为.
 
 }

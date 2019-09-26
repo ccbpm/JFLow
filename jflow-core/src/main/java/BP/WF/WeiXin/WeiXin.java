@@ -19,7 +19,7 @@ public class WeiXin
 		return accessToken;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 发送微信信息
 	public final MessageErrorModel PostWeiXinMsg(StringBuilder sb)
 	{
@@ -49,7 +49,7 @@ public class WeiXin
 		BP.DA.Log.DebugWriteInfo(url + "----------------" + parameters + "---------------" + str);
 		return str;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

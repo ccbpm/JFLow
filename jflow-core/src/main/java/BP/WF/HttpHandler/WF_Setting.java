@@ -24,7 +24,7 @@ public class WF_Setting extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -45,7 +45,7 @@ public class WF_Setting extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
 
@@ -135,7 +135,7 @@ public class WF_Setting extends DirectoryPageBase
 		return "保存成功";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 图片签名.
 	public final String Siganture_Init()
 	{
@@ -187,10 +187,10 @@ public class WF_Setting extends DirectoryPageBase
 		//   this.Response.Redirect(this.Request.RawUrl, true);
 		return "上传成功！";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 图片签名.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 头像.
 	public final String HeadPic_Save()
 	{
@@ -221,10 +221,10 @@ public class WF_Setting extends DirectoryPageBase
 
 		return "上传成功！";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 头像.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 切换部门.
 	/** 
 	 初始化切换部门.
@@ -302,7 +302,7 @@ public class WF_Setting extends DirectoryPageBase
 
 		return "@执行成功,已经切换到｛" + WebUser.getFK_DeptName + "｝部门上。";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String UserIcon_Init()
@@ -316,7 +316,7 @@ public class WF_Setting extends DirectoryPageBase
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 修改密码.
 	public final String ChangePassword_Init()
 	{
@@ -352,7 +352,7 @@ public class WF_Setting extends DirectoryPageBase
 
 		return "密码修改成功...";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 修改密码.
 
 }

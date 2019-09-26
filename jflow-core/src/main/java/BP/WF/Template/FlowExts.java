@@ -15,7 +15,7 @@ import java.time.*;
 */
 public class FlowExts extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询
 	/** 
 	 查询出来全部的在生存期间内的流程
@@ -30,10 +30,10 @@ public class FlowExts extends EntitiesNoName
 		qo.addOrderBy(BP.WF.Template.FlowAttr.No);
 		qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 工作流程
@@ -51,10 +51,10 @@ public class FlowExts extends EntitiesNoName
 	{
 		this.Retrieve(BP.WF.Template.FlowAttr.FK_FlowSort, fk_sort);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 得到实体
 	/** 
 	 得到它的 Entity 
@@ -64,10 +64,10 @@ public class FlowExts extends EntitiesNoName
 	{
 		return new FlowExt();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -92,6 +92,6 @@ public class FlowExts extends EntitiesNoName
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

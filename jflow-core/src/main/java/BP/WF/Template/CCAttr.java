@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class CCAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 标题
@@ -55,6 +55,6 @@ public class CCAttr
 	 要抄送的SQL
 	*/
 	public static final String CCSQL = "CCSQL";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

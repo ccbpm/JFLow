@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class GenerWorkFlowView extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 主键
@@ -400,10 +400,10 @@ public class GenerWorkFlowView extends Entity
 	{
 		SetValByKey(GenerWorkFlowViewAttr.GUID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 
 	public final String getParas_ToNodes() throws Exception
@@ -428,10 +428,10 @@ public class GenerWorkFlowView extends Entity
 	{
 		this.SetPara("AskForReply", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 访问权限
@@ -575,10 +575,10 @@ public class GenerWorkFlowView extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行功能.
 	//,string isOK, int wfstate, string fk_emp
 	public final String DoTest(String toEmpNo, int toNodeID) throws Exception
@@ -803,6 +803,6 @@ public class GenerWorkFlowView extends Entity
 	{
 		return "../../WorkOpt/FlowSkip.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

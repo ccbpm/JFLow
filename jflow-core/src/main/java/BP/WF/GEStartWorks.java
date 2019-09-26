@@ -8,17 +8,17 @@ import BP.En.*;
 */
 public class GEStartWorks extends Works
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重载基类方法
 	/** 
 	 节点ID
 	*/
 	public int NodeID = 0;
 	public String NodeFrmID = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 得到它的 Entity
@@ -49,6 +49,6 @@ public class GEStartWorks extends Works
 		this.NodeID = nodeid;
 		this.NodeFrmID = nodeFrmID;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

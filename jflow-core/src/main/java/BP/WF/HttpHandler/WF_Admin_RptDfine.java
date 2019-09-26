@@ -25,7 +25,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -60,10 +60,10 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 报表设计器. - 第2步选择列.
 	/** 
 	 初始化方法
@@ -151,7 +151,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		for (MapAttr attr : allAttrs)
 		{
 			attr.setUIVisible(true;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理特殊字段.
 			if (attr.KeyOfEn.equals("FK_NY"))
 			{
@@ -166,7 +166,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 				attr.UIBindKey = "BP.Port.Depts";
 				attr.setUIContralType (BP.En.UIContralType.DDL;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理特殊字段.
 
 			//增加上必要的字段.
@@ -189,10 +189,10 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 报表设计器. - 第3步设置列的顺序.
 	/** 
 	 初始化方法
@@ -293,10 +293,10 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 
 		return "保存成功..";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 报表设计器 - 第4步骤.
 	public final String S5SearchCond_Init()
 	{
@@ -341,7 +341,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo);
 		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查是否有日期字段.
 		boolean isHave = false;
 		for (MapAttr mattr : attrs)
@@ -375,7 +375,7 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 			}
 			ds.Tables.add(dtAttrs.ToDataTableField("Sys_MapAttrOfDate"));
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//返回数据.
@@ -422,6 +422,6 @@ public class WF_Admin_RptDfine extends DirectoryPageBase
 		Cash.Map_Cash.Remove(this.getRptNo());
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

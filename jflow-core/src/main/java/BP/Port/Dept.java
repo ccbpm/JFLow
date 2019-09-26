@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class Dept extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 父节点的ID
@@ -43,10 +43,10 @@ public class Dept extends EntityNoName
 		}
 		return _HisSubDepts;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 部门
@@ -64,10 +64,10 @@ public class Dept extends EntityNoName
 	{
 		super(no);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写方法
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -109,17 +109,17 @@ public class Dept extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 增加点对多属性
 			//他的部门权限
 		   // map.getAttrsOfOneVSM().Add(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "岗位权限");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String History() throws Exception
@@ -127,7 +127,7 @@ public class Dept extends EntityNoName
 		return "EnVerDtl.htm?EnName=" + this.toString() + "&PK=" + this.getNo();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写查询. 2015.09.31 为适应ws的查询.
 	/** 
 	 查询
@@ -154,7 +154,7 @@ public class Dept extends EntityNoName
 		 
 			return super.RetrieveFromDBSources();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

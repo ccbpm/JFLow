@@ -57,7 +57,7 @@ public class OneKeyLoadTemplete extends Method
 	{
 		String msg = "";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查数据文件是否完整.
 		String path = "C:\\CCFlowTemplete";
 		if ((new File(path)).isDirectory() == false)
@@ -85,10 +85,10 @@ public class OneKeyLoadTemplete extends Method
 		{
 			msg += "@错误：约定的文件不存在，" + file;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 检查数据文件是否完整.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 1 装载流程基础表数据.
 		DataSet ds = new DataSet();
 		ds.ReadXml(path + "\\FlowTables.xml");
@@ -102,10 +102,10 @@ public class OneKeyLoadTemplete extends Method
 		{
 			item.DirectInsert(); //插入数据.
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 1 装载流程基础表数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 2 组织结构.
 		ds = new DataSet();
 		ds.ReadXml(path + "\\PortTables.xml");
@@ -157,10 +157,10 @@ public class OneKeyLoadTemplete extends Method
 				item.DirectInsert(); //插入数据.
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 2 组织结构.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 3 恢复系统数据.
 		ds = new DataSet();
 		ds.ReadXml(path + "\\SysTables.xml");
@@ -202,10 +202,10 @@ public class OneKeyLoadTemplete extends Method
 		//    {
 		//    }
 		//}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 3 恢复系统数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 4.备份表单相关数据.
 		if (1 == 2)
 		{
@@ -226,10 +226,10 @@ public class OneKeyLoadTemplete extends Method
 				ds.WriteXml(pathOfTables + "\\" + item.No + ".xml");
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 4 备份表单相关数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 5.恢复表单数据.
 		//删除所有的流程数据.
 		MapDatas mds = new MapDatas();
@@ -292,10 +292,10 @@ public class OneKeyLoadTemplete extends Method
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 5.恢复表单数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 6.恢复流程数据.
 		//删除所有的流程数据.
 		Flows flsEns = new Flows();
@@ -354,7 +354,7 @@ public class OneKeyLoadTemplete extends Method
 				myflow.DirectUpdate();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 6.恢复流程数据.
 
 		BP.DA.Log.DefaultLogWriteLineInfo(msg);

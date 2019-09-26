@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class BarEmp extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final int getIdx() throws Exception
 	{
@@ -55,10 +55,10 @@ public class BarEmp extends EntityMyPK
 		this.SetValByKey(BarEmpAttr.Title, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 人员信息块
@@ -103,10 +103,10 @@ public class BarEmp extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 显示与隐藏.
 	public final void DoUp() throws Exception
 	{
@@ -124,6 +124,6 @@ public class BarEmp extends EntityMyPK
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 显示与隐藏.
 }

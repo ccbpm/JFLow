@@ -75,7 +75,7 @@ public class CCFlowAPI
 
 			//获取表单的mapAttr
 			//求出集合.
-			MapAttrs mattrs = md.MapAttrs; // new MapAttrs(md.No);
+			MapAttrs mattrs = md.getMapAttrs(); // new MapAttrs(md.No);
 
 			/*处理表单权限控制方案*/
 			FrmNode frmNode = new FrmNode();
@@ -118,7 +118,7 @@ public class CCFlowAPI
 			DataTable WF_Node = nd.ToDataTableField("WF_Node");
 			myds.Tables.add(WF_Node);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加入组件的状态信息, 在解析表单的时候使用.
 			BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 
@@ -177,7 +177,7 @@ public class CCFlowAPI
 				fnc.SetValByKey(FTCAttr.FTC_X, refFnc.GetValFloatByKey(FTCAttr.FTC_X));
 				fnc.SetValByKey(FTCAttr.FTC_Y, refFnc.GetValFloatByKey(FTCAttr.FTC_Y));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 没有审核组件分组就增加上审核组件分组. @杜需要翻译&测试.
 				if (md.HisFrmType == FrmType.FoolForm)
 				{
@@ -219,12 +219,12 @@ public class CCFlowAPI
 					}
 
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 没有审核组件分组就增加上审核组件分组.
 
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 没有审核组件分组就增加上审核组件分组. @杜需要翻译&测试.
 			if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) || (nd.getHisFormType() == NodeFormType.RefOneFrmTree && count != 0))
 			{
@@ -277,20 +277,20 @@ public class CCFlowAPI
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 没有审核组件分组就增加上审核组件分组.
 
 			myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 加入组件的状态信息, 在解析表单的时候使用.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 增加 groupfields
 			if (nd.getFormType() == NodeFormType.FoolTruck && nd.getIsStartNode() == false && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
 			{
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理字段分组排序.
 				//查询所有的分组, 如果是查看表单的方式，就不应该把当前的表单显示出来.
 				String myFrmIDs = "";
@@ -355,10 +355,10 @@ public class CCFlowAPI
 				DataTable dtGF = gfsNew.ToDataTableField("Sys_GroupField");
 				myds.Tables.Remove("Sys_GroupField");
 				myds.Tables.add(dtGF);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理字段分组排序.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理 mapattrs
 				//求当前表单的字段集合.
 				MapAttrs attrs = new MapAttrs();
@@ -494,10 +494,10 @@ public class CCFlowAPI
 				//替换掉现有的.
 				myds.Tables.Remove("Sys_MapAttr"); //移除.
 				myds.Tables.add(attrs.ToDataTableField("Sys_MapAttr")); //增加.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理mapattrs
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 把枚举放入里面去.
 				myds.Tables.Remove("Sys_Enum");
 
@@ -507,10 +507,10 @@ public class CCFlowAPI
 
 				// 加入最新的枚举.
 				myds.Tables.add(enums.ToDataTableField("Sys_Enum"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 把枚举放入里面去.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region  MapExt .
 				myds.Tables.Remove("Sys_MapExt");
 
@@ -523,10 +523,10 @@ public class CCFlowAPI
 
 				// 加入最新的MapExt.
 				myds.Tables.add(exts.ToDataTableField("Sys_MapExt"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion  MapExt .
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region  MapDtl .
 				myds.Tables.Remove("Sys_MapDtl");
 
@@ -542,10 +542,10 @@ public class CCFlowAPI
 
 				// 加入最新的MapDtl.
 				myds.Tables.add(dtls.ToDataTableField("Sys_MapDtl"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion  MapDtl .
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region  FrmAttachment .
 				myds.Tables.Remove("Sys_FrmAttachment");
 
@@ -560,15 +560,15 @@ public class CCFlowAPI
 
 				// 加入最新的Sys_FrmAttachment.
 				myds.Tables.add(frmAtchs.ToDataTableField("Sys_FrmAttachment"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion  FrmAttachment .
 
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 增加 groupfields
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 流程设置信息.
 			BP.WF.Dev2Interface.Node_SetWorkRead(fk_node, workID);
 
@@ -598,7 +598,7 @@ public class CCFlowAPI
 					dtToNDs.Columns.Add("IsSelectEmps", String.class); //是否弹出选择人的对话框？
 					dtToNDs.Columns.Add("IsSelected", String.class); //是否选择？
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 增加到达延续子流程节点。
 					if (nd.getSubFlowYanXuNum() >= 0)
 					{
@@ -613,10 +613,10 @@ public class CCFlowAPI
 							dtToNDs.Rows.add(dr);
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 增加到达延续子流程节点。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 到达其他节点.
 					//上一次选择的节点.
 					int defalutSelectedNodeID = 0;
@@ -645,7 +645,7 @@ public class CCFlowAPI
 						defalutSelectedNodeID = DBAccess.RunSQLReturnValInt(mysql, 0);
 					}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 为天业集团做一个特殊的判断.
 					if (SystemConfig.getCustomerNo().equals("TianYe") && nd.getName().contains("董事长") == true)
 					{
@@ -659,7 +659,7 @@ public class CCFlowAPI
 							}
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 为天业集团做一个特殊的判断.
 
 
@@ -691,7 +691,7 @@ public class CCFlowAPI
 
 						dtToNDs.Rows.add(dr);
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 到达其他节点。
 
 
@@ -709,10 +709,10 @@ public class CCFlowAPI
 			//// 流程数据.
 			//Flow fl = new Flow(fk_flow);
 			//myds.Tables.add(fl.ToDataTableField("WF_Flow"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 流程设置信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把主从表数据放入里面.
 			//.工作数据放里面去, 放进去前执行一次装载前填充事件.
 
@@ -793,10 +793,10 @@ public class CCFlowAPI
 			}
 			String sql = "";
 			DataTable dt = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把外键表加入DataSet
 			DataTable dtMapAttr = myds.Tables["Sys_MapAttr"];
 			MapExts mes = md.MapExts;
@@ -834,7 +834,7 @@ public class CCFlowAPI
 				String fk_mapData = dr.get("FK_MapData").toString();
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理下拉框数据范围. for 小杨.
 				Object tempVar2 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 				me = tempVar2 instanceof MapExt ? (MapExt)tempVar2 : null;
@@ -860,7 +860,7 @@ public class CCFlowAPI
 					myds.Tables.add(dt_FK_Dll);
 					continue;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理下拉框数据范围.
 
 				// 判断是否存在.
@@ -885,10 +885,10 @@ public class CCFlowAPI
 			}
 			ddlTable.TableName = "UIBindKey";
 			myds.Tables.add(ddlTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion End把外键表加入DataSet
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理流程-消息提示.
 			DataTable dtAlert = new DataTable();
 			dtAlert.TableName = "AlertMsg";
@@ -1025,10 +1025,10 @@ public class CCFlowAPI
 				default:
 					break;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 增加流程节点表单绑定信息.
 			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
 			{
@@ -1041,7 +1041,7 @@ public class CCFlowAPI
 				fn.Retrieve();
 				myds.Tables.add(fn.ToDataTableField("FrmNode"));
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 增加流程节点表单绑定信息.
 
 
@@ -1092,7 +1092,7 @@ public class CCFlowAPI
 			DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
 			return myds;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 流程设置信息.
 			Node nd = new Node(fk_node);
 
@@ -1110,10 +1110,10 @@ public class CCFlowAPI
 			// 流程数据.
 			Flow fl = new Flow(fk_flow);
 			myds.Tables.add(fl.ToDataTableField("WF_Flow"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 流程设置信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把主从表数据放入里面.
 			//.工作数据放里面去, 放进去前执行一次装载前填充事件.
 			BP.WF.Work wk = nd.getHisWork();
@@ -1204,10 +1204,10 @@ public class CCFlowAPI
 					myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把外键表加入DataSet
 			DataTable dtMapAttr = myds.Tables["Sys_MapAttr"];
 			for (DataRow dr : dtMapAttr.Rows)
@@ -1240,10 +1240,10 @@ public class CCFlowAPI
 
 				myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion End把外键表加入DataSet
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把流程信息放入里面.
 			//把流程信息表发送过去.
 			GenerWorkFlow gwf = new GenerWorkFlow();
@@ -1331,7 +1331,7 @@ public class CCFlowAPI
 			dtNodes.TableName = "Nodes";
 			myds.Tables.add(dtNodes);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 把流程信息放入里面.
 
 			return myds;

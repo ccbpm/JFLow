@@ -38,7 +38,7 @@ public class PushMsgAttr
 	*/
 	public static final String Tag = "Tag";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 消息设置.
 	/** 
 	 是否启用发送邮件
@@ -64,7 +64,7 @@ public class PushMsgAttr
 	 是否推送？
 	*/
 	public static final String MobilePushEnable = "MobilePushEnable";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 消息设置.
 
 	/** 

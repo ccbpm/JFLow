@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class LabNoteAttr extends BP.En.EntityMyPKAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 流程
@@ -26,6 +26,6 @@ public class LabNoteAttr extends BP.En.EntityMyPKAttr
 	 y
 	*/
 	public static final String Y = "Y";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

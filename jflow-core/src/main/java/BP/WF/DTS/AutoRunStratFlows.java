@@ -57,7 +57,7 @@ public class AutoRunStratFlows extends Method
 		BP.WF.Flows fls = new Flows();
 		fls.RetrieveAll();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 自动启动流程
 		for (BP.WF.Flow fl : fls.ToJavaList())
 		{
@@ -78,7 +78,7 @@ public class AutoRunStratFlows extends Method
 				continue;
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 判断当前时间是否可以运行它。
 			String nowStr = DateUtils.format(new Date(),"yyyy-MM-dd,HH:mm");
 			String[] strs = fl.getRunObj().split("[@]", -1); //破开时间串。
@@ -102,7 +102,7 @@ public class AutoRunStratFlows extends Method
 
 			// 设置时间.
 			fl.Tag = DateUtils.format(new Date(),"HH:mm");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 判断当前时间是否可以运行它。
 
 			// 以此用户进入.
@@ -155,7 +155,7 @@ public class AutoRunStratFlows extends Method
 			BP.Port.Emp empadmin = new BP.Port.Emp("admin");
 			WebUser.SignInOfGener(empadmin);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 发送消息
 
 		return "调度完成..";
@@ -171,7 +171,7 @@ public class AutoRunStratFlows extends Method
 
 	public final void DTS_Flow(BP.WF.Flow fl) throws Exception
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 读取数据.
 		BP.Sys.MapExt me = new MapExt();
 		me.setMyPK("ND" + Integer.parseInt(fl.getNo()) + "01" + "_" + MapExtXmlList.StartFlow);
@@ -203,10 +203,10 @@ public class AutoRunStratFlows extends Method
 			dtlTable.TableName = dtlName;
 			ds.Tables.add(dtlTable);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 读取数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查数据源是否正确.
 		String errMsg = "";
 		// 获取主表数据.
@@ -232,10 +232,10 @@ public class AutoRunStratFlows extends Method
 			BP.DA.Log.DefaultLogWriteLineError("流程(" + fl.getName() + ")的开始节点设置发起数据,不完整." + errMsg);
 			return;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 检查数据源是否正确.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理流程发起.
 		String nodeTable = "ND" + Integer.parseInt(fl.getNo()) + "01";
 		int idx = 0;
@@ -264,14 +264,14 @@ public class AutoRunStratFlows extends Method
 				WebUser.SignInOfGener(emp);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region  给值.
 			//System.Collections.Hashtable ht = new Hashtable();
 
 			Work wk = fl.NewWork();
 
 			String err = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 检查用户拼写的sql是否正确？
 			for (DataColumn dc : dtMain.Columns)
 			{
@@ -305,7 +305,7 @@ public class AutoRunStratFlows extends Method
 				throw new RuntimeException("您设置的字段:" + err + "不存在开始节点的表单中，设置的sql:" + me.getTag());
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 检查用户拼写的sql是否正确？
 
 			for (DataColumn dc : dtMain.Columns)
@@ -351,7 +351,7 @@ public class AutoRunStratFlows extends Method
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion  给值.
 
 
@@ -398,7 +398,7 @@ public class AutoRunStratFlows extends Method
 				BP.DA.Log.DefaultLogWriteLineWarning("@" + fl.getName() + ",第" + idx + "条,发起人员:" + WebUser.getNo() + "-" + WebUser.getName() + "发起时出现错误.\r\n" + ex.getMessage());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理流程发起.
 	}
 }

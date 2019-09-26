@@ -19,7 +19,7 @@ import java.io.*;
 */
 public class NodeExt extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 索引
 	/** 
 	 获取节点的帮助信息url
@@ -39,10 +39,10 @@ public class NodeExt extends Entity
 
 		return String.format("http://online.ccflow.org/KM/Tree.aspx?no=%1$s&st=%2$s", sysNo, StringEscapeUtils.escapeJava(searchTitle));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 常量
 	/** 
 	 CCFlow流程引擎
@@ -52,10 +52,10 @@ public class NodeExt extends Entity
 	 CCForm表单引擎
 	*/
 	private static final String SYS_CCFORM = "002";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	/** 
 	 会签规则
@@ -238,10 +238,10 @@ public class NodeExt extends Entity
 		return "NodeID";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 初试化全局的 Node
 	/** 
 	 访问控制
@@ -268,10 +268,10 @@ public class NodeExt extends Entity
 		}
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 节点
@@ -307,7 +307,7 @@ public class NodeExt extends Entity
 
 		map.IndexField = NodeAttr.FK_Flow;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  基础属性
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.SetHelperUrl(NodeAttr.NodeID, "http://ccbpm.mydoc.io/?v=5404&t=17901");
@@ -366,10 +366,10 @@ public class NodeExt extends Entity
 
 		map.AddTBString(NodeAttr.SelfParas, null, "自定义属性", true, false, 0, 500, 10, true);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  基础属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 分合流子线程属性
 		map.AddDDLSysEnum(NodeAttr.RunModel, 0, "节点类型", true, false, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=子线程");
 
@@ -412,10 +412,10 @@ public class NodeExt extends Entity
 
 		map.AddBoolean(NodeAttr.AutoRunEnable, false, "是否启用自动运行？(仅当分流点向子线程发送时有效)", true, true, true);
 		map.AddTBString(NodeAttr.AutoRunParas, null, "自动运行SQL", true, false, 0, 100, 10, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 分合流子线程属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 自动跳转规则
 		map.AddBoolean(NodeAttr.AutoJumpRole0, false, "处理人就是发起人", true, true, true);
 		map.SetHelperUrl(NodeAttr.AutoJumpRole0, "http://ccbpm.mydoc.io/?v=5404&t=17949"); //增加帮助
@@ -425,10 +425,10 @@ public class NodeExt extends Entity
 		map.AddBoolean(NodeAttr.WhenNoWorker, false, "(是)找不到人就跳转,(否)提示错误.", true, true, true);
 			//         map.AddDDLSysEnum(NodeAttr.WhenNoWorker, 0, "找不到处理人处理规则",
 			//true, true, NodeAttr.WhenNoWorker, "@0=提示错误@1=自动转到下一步");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  功能按钮状态
 		map.AddTBString(BtnAttr.SendLab, "发送", "发送按钮标签", true, false, 0, 50, 10);
 		map.SetHelperUrl(BtnAttr.SendLab, "http://ccbpm.mydoc.io/?v=5404&t=16219");
@@ -620,13 +620,13 @@ public class NodeExt extends Entity
 			//for 周大福.
 		map.AddTBString(BtnAttr.HelpLab, "帮助", "帮助标签", true, false, 0, 50, 10);
 		map.AddDDLSysEnum(BtnAttr.HelpRole, 0, "帮助显示规则", true, true, BtnAttr.HelpRole, "0=禁用@1=启用@2=强制提示@3=选择性提示");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  功能按钮状态
 
 			//节点工具栏,主从表映射.
 		map.AddDtl(new NodeToolbars(), NodeToolbarAttr.FK_Node);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基础功能.
 		RefMethod rm = null;
 
@@ -683,10 +683,10 @@ public class NodeExt extends Entity
 		map.AddRefMethod(rm);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基础功能.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 字段相关功能（不显示在菜单里）
 		rm = new RefMethod();
 		rm.Title = "可退回的节点(当退回规则设置可退回指定的节点时,该设置有效.)"; // "设计表单";
@@ -745,10 +745,10 @@ public class NodeExt extends Entity
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 字段相关功能（不显示在菜单里）
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 表单设置.
 		rm = new RefMethod();
 		rm.Title = "表单方案";
@@ -784,10 +784,10 @@ public class NodeExt extends Entity
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 表单设置.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 考核属性.
 
 		map.AddTBInt(NodeAttr.TAlertRole, 0, "逾期提醒规则", false, false); //"限期(天)"
@@ -802,10 +802,10 @@ public class NodeExt extends Entity
 		map.AddTBInt(NodeAttr.IsEval, 0, "是否工作质量考核", false, false);
 		map.AddTBInt(NodeAttr.OutTimeDeal, 0, "超时处理方式", false, false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 考核属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 父子流程.
 		rm = new RefMethod();
 		rm.Title = "子流程基本设置";
@@ -836,10 +836,10 @@ public class NodeExt extends Entity
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "父子流程";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 父子流程.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 考核.
 
 		rm = new RefMethod();
@@ -857,10 +857,10 @@ public class NodeExt extends Entity
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "考核规则";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 考核.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 实验中的功能
 		rm = new RefMethod();
 		rm.Title = "自定义属性(通用)";
@@ -932,14 +932,14 @@ public class NodeExt extends Entity
 		rm.refMethodType = RefMethodType.LinkeWinOpen; // 功能类型
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 实验中的功能
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 考核规则.
 	/** 
 	 考核规则
@@ -961,10 +961,10 @@ public class NodeExt extends Entity
 	{
 		return "../../Admin/AttrNode/CHOvertimeRole.htm?FK_Node=" + this.getNodeID();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 考核规则.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基础设置.
 	/** 
 	 多人处理规则.
@@ -1059,10 +1059,10 @@ public class NodeExt extends Entity
 	{
 		return "../../Admin/FoolFormDesigner/HelpRole.htm?NodeID=" + this.getNodeID();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单相关.
 	/** 
 	 节点组件
@@ -1091,10 +1091,10 @@ public class NodeExt extends Entity
 	{
 		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 表单相关.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实验中的功能.
 	/** 
 	 自定义参数（通用）
@@ -1124,10 +1124,10 @@ public class NodeExt extends Entity
 	{
 		return "../../Admin/AttrNode/NodeAppType.htm?FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFK_Flow() + "&tk=" + (new Random()).nextDouble();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 子流程。
 	/** 
 	 父子流程
@@ -1165,7 +1165,7 @@ public class NodeExt extends Entity
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowYanXu.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 子流程。
 
 
@@ -1355,7 +1355,7 @@ public class NodeExt extends Entity
 		//更新流程版本
 		Flow.UpdateVer(this.getFK_Flow());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理节点数据.
 		Node nd = new Node(this.getNodeID());
 		if (nd.getIsStartNode() == true)
@@ -1430,11 +1430,11 @@ public class NodeExt extends Entity
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理节点数据.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 创建审核组件附件
 		if (this.getFWCAth() == FWCAth.MinAth)
 		{
@@ -1468,10 +1468,10 @@ public class NodeExt extends Entity
 				workCheckAth.Insert();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 创建审核组件附件
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 审核组件.
 		GroupField gf = new GroupField();
 		if (this.getHisFrmWorkCheckSta() == FrmWorkCheckSta.Disable)
@@ -1490,7 +1490,7 @@ public class NodeExt extends Entity
 				gf.Insert(); //插入.
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 审核组件.
 
 
@@ -1529,6 +1529,6 @@ public class NodeExt extends Entity
 
 		super.afterInsertUpdateAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

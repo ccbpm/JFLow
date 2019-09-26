@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class TruckViewPower extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 发起人可看
@@ -200,10 +200,10 @@ public class TruckViewPower extends EntityNoName
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 流程轨迹权限
@@ -237,7 +237,7 @@ public class TruckViewPower extends EntityNoName
 		map.AddTBString(TruckViewPowerAttr.Name, null, "名称", true, false, 0, 50, 10, true);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 权限控制. 此部分与流程属性同步.
 		map.AddBoolean(TruckViewPowerAttr.PStarter, true, "发起人可看(必选)", true, false, true);
 		map.AddBoolean(TruckViewPowerAttr.PWorker, true, "参与人可看(必选)", true, false, true);
@@ -261,17 +261,17 @@ public class TruckViewPower extends EntityNoName
 
 		map.AddBoolean(TruckViewPowerAttr.PSpecEmp, true, "指定的人员可看", true, true, false);
 		map.AddTBString(TruckViewPowerAttr.PSpecEmpExt, null, "指定的人员编号", true, false, 0, 200, 100, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 权限控制.
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公用方法.
 	/** 
 	 检查指定的人员是否可以产看该轨迹图.
@@ -289,6 +289,6 @@ public class TruckViewPower extends EntityNoName
 		}
 		return true;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

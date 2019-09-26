@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class ReturnWorkAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -57,6 +57,6 @@ public class ReturnWorkAttr
 	 退回后是否需要原路返回？
 	*/
 	public static final String IsBackTracking = "IsBackTracking";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class SysEnumMain extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实现基本的方方法
 	public final String getCfgVal() throws Exception
 	{
@@ -29,10 +29,10 @@ public class SysEnumMain extends EntityNoName
 	{
 		this.SetValByKey(SysEnumMainAttr.Lang, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 SysEnumMain
@@ -127,6 +127,6 @@ public class SysEnumMain extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

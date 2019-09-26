@@ -141,5 +141,5 @@ public class UserInfoBelongDept
 		extattr = value;
 	}
 }
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#endregion

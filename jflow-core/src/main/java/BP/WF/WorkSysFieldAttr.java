@@ -51,7 +51,7 @@ public class WorkSysFieldAttr
 	*/
 	public static final String SysIsReadReceipts = "SysIsReadReceipts";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与质量考核相关的字段
 	/** 
 	 编号
@@ -69,6 +69,6 @@ public class WorkSysFieldAttr
 	 内容
 	*/
 	public static final String EvalNote = "EvalNote";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 与质量考核相关的字段
 }

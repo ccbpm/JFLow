@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class MyDeptFlow extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	@Override
 	public UAC getHisUAC()
@@ -409,10 +409,10 @@ public class MyDeptFlow extends Entity
 	{
 		SetValByKey(MyDeptFlowAttr.GUID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 
 	public final String getParas_ToNodes() throws Exception
@@ -438,10 +438,10 @@ public class MyDeptFlow extends Entity
 	{
 		this.SetPara("AskForReply", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 产生的工作流程
@@ -522,15 +522,15 @@ public class MyDeptFlow extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行诊断
 	public final String DoTrack() throws Exception
 	{
 		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

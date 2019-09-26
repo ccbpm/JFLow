@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class StationType extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 岗位类型
@@ -32,7 +32,7 @@ public class StationType extends EntityNoName
 	{
 		super(_No);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

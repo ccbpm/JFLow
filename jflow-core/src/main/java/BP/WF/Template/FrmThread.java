@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class FrmThread extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getNo() throws Exception
 	{
@@ -130,10 +130,10 @@ public class FrmThread extends Entity
 		return this.GetValStringByKey(FrmThreadAttr.FrmThreadLab);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制
@@ -224,7 +224,7 @@ public class FrmThread extends Entity
 		map.AddTBString(FrmThreadAttr.FrmThreadLab, "子线程", "显示标签", true, false, 0, 200, 10, true);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		map.AddDDLSysEnum(FrmThreadAttr.FrmThreadSta, getFrmThreadSta().Disable.getValue(), "组件状态", true, true, FrmThreadAttr.FrmThreadSta, "@0=禁用@1=启用");
@@ -235,7 +235,7 @@ public class FrmThread extends Entity
 		map.AddTBFloat(FrmThreadAttr.FrmThread_H, 300, "高度", true, false);
 		map.AddTBFloat(FrmThreadAttr.FrmThread_W, 400, "宽度", true, false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		this.set_enMap(map);
@@ -243,6 +243,6 @@ public class FrmThread extends Entity
 	}
 
 	 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

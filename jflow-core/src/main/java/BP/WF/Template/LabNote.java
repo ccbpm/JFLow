@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class LabNote extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -71,10 +71,10 @@ public class LabNote extends EntityMyPK
 	{
 		SetValByKey(NodeAttr.Name, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 标签
@@ -118,7 +118,7 @@ public class LabNote extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

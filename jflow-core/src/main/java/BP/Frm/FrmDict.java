@@ -16,7 +16,7 @@ import java.time.*;
 */
 public class FrmDict extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限控制.
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -31,10 +31,10 @@ public class FrmDict extends EntityNoName
 		uac.Readonly();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限控制.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 物理表
@@ -136,10 +136,10 @@ public class FrmDict extends EntityNoName
 	{
 		this.SetValByKey(FrmDictAttr.BillNoFormat, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 实体表单
@@ -171,7 +171,7 @@ public class FrmDict extends EntityNoName
 		map.Java_SetEnType(EnType.Sys);
 		map.Java_SetCodeStruct("4");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性.
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.SetHelperAlert(MapDataAttr.No, "也叫表单ID,系统唯一.");
@@ -182,10 +182,10 @@ public class FrmDict extends EntityNoName
 
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 200, 20, true);
 		map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 外观.
 		map.AddDDLSysEnum(FrmAttr.RowOpenModel, 0, "行记录打开模式", true, true, "RowOpenMode", "@0=新窗口打开@1=在本窗口打开@2=弹出窗口打开,关闭后不刷新列表@3=弹出窗口打开,关闭后刷新列表");
 		map.AddTBInt(FrmAttr.PopHeight, 500, "弹窗高度", true, false);
@@ -195,10 +195,10 @@ public class FrmDict extends EntityNoName
 
 		map.AddDDLSysEnum(FrmAttr.EntityEditModel, 0, "编辑模式", true, true, FrmAttr.EntityEditModel, "@0=表格@1=行编辑");
 		map.SetHelperAlert(FrmAttr.EntityEditModel,"用什么方式打开实体列表进行编辑0=只读查询模式SearchDict.htm,1=行编辑模式SearchEditer.htm");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 外观.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 实体表单.
 		map.AddDDLSysEnum(FrmDictAttr.EntityType, 0, "业务类型", true, false, FrmDictAttr.EntityType, "@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
 		map.SetHelperAlert(FrmDictAttr.EntityType, "该实体的类型,@0=单据@1=编号名称实体@2=树结构实体.");
@@ -206,10 +206,10 @@ public class FrmDict extends EntityNoName
 		map.AddTBString(FrmDictAttr.BillNoFormat, null, "实体编号规则", true, false, 0, 100, 20, true);
 		map.SetHelperAlert(FrmDictAttr.BillNoFormat, "\t\n实体编号规则: \t\n 2标识:01,02,03等, 3标识:001,002,003,等..");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 实体表单.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region MyBill - 按钮权限.
 		map.AddTBString(FrmDictAttr.BtnNewLable, "新建", "新建", true, false, 0, 50, 20);
 		map.AddDDLSysEnum(FrmDictAttr.BtnNewModel, 0, "新建模式", true, true, FrmDictAttr.BtnNewModel, "@0=表格模式@1=卡片模式@2=不可用");
@@ -243,10 +243,10 @@ public class FrmDict extends EntityNoName
 
 		map.AddTBString(FrmDictAttr.BtnExpZip, "导出zip文件", "导出zip文件", true, false, 0, 50, 20);
 		map.AddBoolean(FrmDictAttr.BtnExpZipEnable, false, "是否可用？", true, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按钮权限.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 查询按钮权限.
 		map.AddTBString(FrmDictAttr.BtnImpExcel, "导入Excel文件", "导入Excel文件", true, false, 0, 50, 20);
 		map.AddBoolean(FrmDictAttr.BtnImpExcelEnable, true, "是否可用？", true, true);
@@ -257,10 +257,10 @@ public class FrmDict extends EntityNoName
 		map.AddTBString(FrmDictAttr.BtnGroupLabel, "分析", "分析", true, false, 0, 50, 20);
 		map.AddBoolean(FrmDictAttr.BtnGroupEnable, true, "是否可用？", true, true);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 查询按钮权限.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设计者信息.
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
@@ -269,19 +269,19 @@ public class FrmDict extends EntityNoName
 		map.AddTBString(MapDataAttr.Ver, null, "版本号", true, true, 0, 30, 20);
 		map.AddTBStringDoc(MapDataAttr.Note, null, "备注", true, false, true);
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 设计者信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 扩展参数.
 		map.AddTBAtParas(3000); //参数属性.
 		map.AddTBString(FrmDictAttr.Tag0, null, "Tag0", false, false, 0, 500, 20);
 		map.AddTBString(FrmDictAttr.Tag1, null, "Tag1", false, false, 0, 4000, 20);
 		map.AddTBString(FrmDictAttr.Tag2, null, "Tag2", false, false, 0, 500, 20);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 扩展参数.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本功能.
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
@@ -347,10 +347,10 @@ public class FrmDict extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本功能.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 权限规则.
 		rm = new RefMethod();
 		rm.Title = "创建规则"; // "设计表单";
@@ -383,10 +383,10 @@ public class FrmDict extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 报表定义.
 		rm = new RefMethod();
 		rm.GroupName = "报表定义";
@@ -411,13 +411,13 @@ public class FrmDict extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 报表定义.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -429,7 +429,7 @@ public class FrmDict extends EntityNoName
 		//取出来全部的属性.
 		MapAttrs attrs = new MapAttrs(this.getNo());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 补充上流程字段到 NDxxxRpt.
 		if (attrs.Contains(this.getNo() + "_" + GERptAttr.OID) == false)
 		{
@@ -583,10 +583,10 @@ public class FrmDict extends EntityNoName
 			attr.setIdx(-97);
 			attr.Insert();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 补充上流程字段。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 注册到外键表.
 		SFTable sf = new SFTable();
 		sf.setNo(this.getNo());
@@ -601,11 +601,11 @@ public class FrmDict extends EntityNoName
 			sf.Insert();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 注册到外键表
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 报表定义
 	/** 
 	 选择显示的列
@@ -637,10 +637,10 @@ public class FrmDict extends EntityNoName
 	{
 		return "../../CCBill/Admin/SearchCond.htm?FrmID=" + this.getNo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 报表定义.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限控制.
 	public final String DoSaveRole() throws Exception
 	{
@@ -670,7 +670,7 @@ public class FrmDict extends EntityNoName
 	{
 		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限控制.
 
 	public final String DoMethod() throws Exception
@@ -710,16 +710,16 @@ public class FrmDict extends EntityNoName
 		return "加入成功,如何<a href='En.htm?EnName=BP.GPM.Menu&No=" + guid + "'>控制权限请转GPM.</a>";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 业务逻辑.
 	public final String CreateBlankWorkID() throws Exception
 	{
 		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankDictID(this.getNo(), WebUser.getNo(), null));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 业务逻辑.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法操作.
 	/** 
 	 打开单据
@@ -739,7 +739,7 @@ public class FrmDict extends EntityNoName
 	{
 		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID= " + this.getNo()+ " &t=" + new Date().getTime();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方法操作.
 
 }

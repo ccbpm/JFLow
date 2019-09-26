@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class SQLTemplate extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  属性
 	/** 
 	 UI界面上的访问控制
@@ -42,10 +42,10 @@ public class SQLTemplate extends EntityNoName
 	{
 		this.SetValByKey(SQLTemplateAttr.Docs, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 SQL模板
@@ -85,6 +85,6 @@ public class SQLTemplate extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -23,7 +23,7 @@ public class WorkflowDefintionManager
 	{
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理方向.
 			String sql = "DELETE FROM WF_Direction WHERE FK_Flow='" + fk_flow + "'";
 			DBAccess.RunSQL(sql);
@@ -60,10 +60,10 @@ public class WorkflowDefintionManager
 					// enDir.Update();
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理方向.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 保存节点
 			String[] nds = nodes.split("[~]", -1);
 			for (String nd : nds)
@@ -78,10 +78,10 @@ public class WorkflowDefintionManager
 				DBAccess.RunSQL(sql);
 			}
 			Flow.UpdateVer(fk_flow);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 保存节点
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理标签。
 			sql = "DELETE FROM WF_LabNote WHERE FK_Flow='" + fk_flow + "'";
 			DBAccess.RunSQL(sql);
@@ -103,7 +103,7 @@ public class WorkflowDefintionManager
 				ln.setY(ap.GetValIntByKey("Y"));
 				ln.Insert();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理标签。
 
 

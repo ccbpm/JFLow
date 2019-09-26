@@ -9,7 +9,7 @@ import BP.Sys.XML.*;
 */
 public class ChMulToneXml extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getNo()
 	{
@@ -23,10 +23,10 @@ public class ChMulToneXml extends XmlEn
 	{
 		return this.GetValStringByKey("No");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 节点扩展信息
@@ -42,6 +42,6 @@ public class ChMulToneXml extends XmlEn
 	{
 		return new ChMulToneXmls();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

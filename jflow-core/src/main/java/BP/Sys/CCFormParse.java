@@ -347,7 +347,7 @@ public class CCFormParse
 		}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 装饰类控件.
 	/** 
 	 保存线.
@@ -737,7 +737,7 @@ public class CCFormParse
 			img.DirectInsert();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 装饰类控件.
 
 }

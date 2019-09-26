@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class RememberMeAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作节点
@@ -45,6 +45,6 @@ public class RememberMeAttr
 	 工作人员（候选)
 	*/
 	public static final String EmpsExt = "EmpsExt";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

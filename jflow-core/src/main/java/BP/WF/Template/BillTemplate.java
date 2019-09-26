@@ -13,7 +13,7 @@ import java.io.*;
 */
 public class BillTemplate extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  属性
 	/** 
 	 UI界面上的访问控制
@@ -120,10 +120,10 @@ public class BillTemplate extends EntityNoName
 		this.SetValByKey(BillTemplateAttr.FK_MapData, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 单据模板
@@ -202,6 +202,6 @@ public class BillTemplate extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

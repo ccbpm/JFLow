@@ -11,7 +11,7 @@ import BP.WF.*;
 */
 public class AdminMenu extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getNo()
 	{
@@ -53,10 +53,10 @@ public class AdminMenu extends XmlEn
 	{
 		this.SetVal("Url", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 节点扩展信息
@@ -72,7 +72,7 @@ public class AdminMenu extends XmlEn
 	{
 		return new AdminMenus();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

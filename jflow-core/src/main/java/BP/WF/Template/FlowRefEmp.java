@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class FlowRefEmp extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -181,10 +181,10 @@ public class FlowRefEmp extends EntityMyPK
 	{
 		SetValByKey(FlowRefEmpAttr.Tag9, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 流程关联人员
@@ -236,6 +236,6 @@ public class FlowRefEmp extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

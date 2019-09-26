@@ -39,7 +39,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		BP.WF.Dev2Interface.Flow_DeleteSubThread(this.getFK_Flow(), this.getWorkID(), "手工删除");
 		return "删除成功";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 打印 rtf
 	/** 
 	 初始化
@@ -184,14 +184,14 @@ public class WF_WorkOpt extends DirectoryPageBase
 		long newWorkID = 0;
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 单据变量.
 			Bill bill = new Bill();
 			bill.setMyPK( wk.getFID() + "_" + wk.getOID() + "_" + nd.getNodeID() + "_" + func.getNo();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 生成单据
 			rtf.HisEns.Clear();
 			rtf.EnsDataDtls.Clear();
@@ -295,10 +295,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 			//用于扫描打印.
 			String qrUrl = SystemConfig.HostURL + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.MyPK;
 			rtf.MakeDoc(tempFile, path, file, false, qrUrl);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 转化成pdf.
 			if (func.getHisBillFileType() == BillFileType.PDF)
 			{
@@ -313,10 +313,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 					return "err@" + ex.getMessage();
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 保存单据.
 
 			bill.setFID(wk.getFID());
@@ -344,7 +344,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			{
 				bill.Update();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			//在线WebOffice打开
@@ -365,7 +365,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String PrintDoc_FormDoneIt(Node nd, long workID, long fid, String formID, BillTemplate func)
@@ -404,7 +404,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		long newWorkID = 0;
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 单据变量.
 			Bill bill = new Bill();
 			if (nd != null)
@@ -415,10 +415,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 			{
 				bill.setMyPK( fid + "_" + workID + "_0_" + func.getNo();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 生成单据
 			rtf.HisEns.Clear();
 			rtf.EnsDataDtls.Clear();
@@ -539,10 +539,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 			//用于扫描打印.
 			String qrUrl = SystemConfig.HostURL + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.MyPK;
 			rtf.MakeDoc(tempFile, path, file, false, qrUrl);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 转化成pdf.
 			if (func.getHisBillFileType() == BillFileType.PDF)
 			{
@@ -557,10 +557,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 					return "err@" + ex.getMessage();
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 保存单据.
 			if (nd != null)
 			{
@@ -596,7 +596,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			{
 				bill.Update();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			//在线WebOffice打开
@@ -738,7 +738,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		return fns.ToJson();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 通用人员选择器.
 	/** 
 	 通用人员选择器Init
@@ -931,7 +931,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	// 查询select集合
@@ -940,7 +940,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		String sql = "";
 		String emp = this.GetRequestVal("TB_Emps");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 保障查询语句的安全.
 		emp = emp.toLowerCase();
 		emp = emp.replace("'", "");
@@ -950,7 +950,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		emp = emp.replace("delete", "");
 		emp = emp.replace("update", "");
 		emp = emp.replace("insert", "");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 保障查询语句的安全.
 
 		boolean isPinYin = DBAccess.IsExitsTableCol("Port_Emp", "PinYin");
@@ -1084,7 +1084,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 会签.
 	/** 
 	 会签
@@ -1270,7 +1270,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			gwlOfMe.setIsRead(false);
 			gwlOfMe.SetPara("HuiQianZhuChiRen", WebUser.getNo());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 计算会签时间.
 			if (nd.getHisCHWay() == CHWay.None)
 			{
@@ -1297,7 +1297,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				dtOfWarning = Glo.AddDayHoursSpan(LocalDateTime.now(), nd.getWarningDay(), 0, 0, nd.getTWay());
 			}
 			gwlOfMe.setDTOfWarning(dtOfWarning.toString(DataType.getSysDataTimeFormat()));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 计算会签时间.
 
 			gwlOfMe.setSender(WebUser.getName()); //发送人为当前人.
@@ -1322,10 +1322,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		return "err@" + err;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与会签相关的.
 	// 查询select集合
 	public final String HuiQian_SelectEmps()
@@ -1450,10 +1450,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		return str;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 审核组件.
 	/** 
 	 校验密码
@@ -1514,7 +1514,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			return null;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 定义变量.
 		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node());
 		FrmWorkCheck frmWorkCheck = null;
@@ -1645,10 +1645,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 定义变量.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否显示 - 历史审核信息显示
 		boolean isDoc = false;
 		if (wcDesc.getFWCListEnable() == true)
@@ -1842,7 +1842,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 				row.set("FWCView", fwc.getFWCView());
 				tkDt.Rows.add(row);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region //审核组件附件数据
 				athDBs = new FrmAttachmentDBs();
 				QueryObject obj_Ath = new QueryObject(athDBs);
@@ -1866,10 +1866,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 					row.set("CanDelete", String.valueOf(this.getFK_Node()).equals(athDB.FK_MapData) && athDB.Rec == WebUser.getNo() && isReadonly == false);
 					athDt.Rows.add(row);
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region //子流程的审核组件数据
 				if (tk.getFID() != 0 && tk.getHisActionType() == ActionType.StartChildenFlow && tkDt.Select("ParentNode=" + tk.getNDFrom()).length == 0)
 				{
@@ -1928,12 +1928,12 @@ public class WF_WorkOpt extends DirectoryPageBase
 						}
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 处理审核信息,删除掉他.
 			if (tkDoc != null && 1 == 2)
 			{
@@ -1961,10 +1961,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断是否显示 - 历史审核信息显示
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 审核意见默认填写
 
 		//首先判断当前是否有此意见? 如果是退回的该信息已经存在了.
@@ -2044,10 +2044,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 				tkDt.Rows.add(row);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 显示有审核组件，但还未审核的节点. 包括退回后的.
 		if (tks == null)
 		{
@@ -2094,7 +2094,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 			tkDt.Rows.add(row);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 增加空白.
 
 		ds.Tables.add(tkDt);
@@ -2132,7 +2132,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			return "err@登录信息丢失,请重新登录.";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 定义变量.
 		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node()); // 当前节点的审核组件
 		FrmWorkCheck frmWorkCheck = null;
@@ -2264,10 +2264,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 定义变量.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否显示 - 历史审核信息显示
 		boolean isDoc = false;
 		if (wcDesc.getFWCListEnable() == true)
@@ -2433,7 +2433,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 						row.set("FWCView", fwc.getFWCView());
 						tkDt.Rows.add(row);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region //审核组件附件数据
 						athDBs = new FrmAttachmentDBs();
 						QueryObject obj_Ath = new QueryObject(athDBs);
@@ -2457,10 +2457,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 							row.set("CanDelete", String.valueOf(this.getFK_Node()).equals(athDB.FK_MapData) && athDB.Rec == WebUser.getNo() && isReadonly == false);
 							athDt.Rows.add(row);
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region //子流程的审核组件数据
 						if (tk.getFID() != 0 && tk.getHisActionType() == ActionType.StartChildenFlow && tkDt.Select("ParentNode=" + tk.getNDFrom()).length == 0)
 						{
@@ -2518,7 +2518,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 								}
 							}
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion
 						break;
 					default:
@@ -2527,7 +2527,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#warning 处理审核信息,删除掉他.
 			if (tkDoc != null && 1 == 2)
 			{
@@ -2543,10 +2543,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断是否显示 - 历史审核信息显示
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 审核意见默认填写
 
 		//首先判断当前是否有此意见? 如果是退回的该信息已经存在了.
@@ -2624,10 +2624,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 				tkDt.Rows.add(row);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 显示有审核组件，但还未审核的节点. 包括退回后的.
 		if (tks == null)
 		{
@@ -2674,7 +2674,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 			tkDt.Rows.add(row);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 增加空白.
 
 		ds.Tables.add(tkDt);
@@ -2876,7 +2876,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			return "";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 根据类型写入数据  qin
 		if (wcDesc.getHisFrmWorkCheckType() == FWCType.Check) //审核组件
 		{
@@ -2904,7 +2904,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		{
 			Dev2Interface.WriteTrackMonthLog(this.getFK_Flow(), this.getFK_Node(), wcDesc.getName(), this.getWorkID(), this.getFID(), msg, wcDesc.getFWCOpLabel());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		sql = "SELECT MyPK,RDT FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE NDFrom = " + this.getFK_Node() + " AND ActionType = " + ActionType.WorkCheck.getValue() + " AND EmpFrom = '" + WebUser.getNo() + "'";
@@ -2912,10 +2912,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		return dt.Rows.size() > 0 ? dt.Rows[0]["RDT"].toString() : "";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 工作分配.
 	/** 
 	 分配工作
@@ -2936,10 +2936,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 	{
 		return "";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行跳转.
 	/** 
 	 返回可以跳转的节点.
@@ -3019,10 +3019,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行跳转.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -3044,10 +3044,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到.");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 抄送Adv.
 	/** 
 	 选择权限组
@@ -3172,10 +3172,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 		}
 		//return "执行抄送成功.emps=(" + emps + ")  depts=(" + depts + ") stas=(" + stations + ") 标题:" + title + " ,抄送内容:" + doc;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 抄送Adv.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 抄送普通的抄送.
 	public final String CC_AddEmps()
 	{
@@ -3246,10 +3246,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 		}
 		//return "执行抄送成功.emps=(" + emps + ")  depts=(" + depts + ") stas=(" + stations + ") 标题:" + title + " ,抄送内容:" + doc;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 抄送普通的抄送.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 退回到分流节点处理器.
 	/** 
 	 初始化.
@@ -3370,7 +3370,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		return "err@没有判断的类型" + actionType;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 退回到分流节点处理器.
 
 	public final String DeleteFlowInstance_Init()
@@ -3584,7 +3584,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 选择接受人.
 	/** 
 	 初始化接受人.
@@ -3662,7 +3662,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			//TYEmp.AcceptChanges();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 计算上一次选择的结果, 并把结果返回过去.
 		String sql = "";
 		DataTable dt = new DataTable();
@@ -3721,7 +3721,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		//增加一个table.
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 计算上一次选择的结果, 并把结果返回过去.
 
 		//返回json.
@@ -3801,10 +3801,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 回滚.
 	/** 
 	 回滚操作.
@@ -3845,12 +3845,12 @@ public class WF_WorkOpt extends DirectoryPageBase
 		FlowExt flow = new FlowExt(this.getFK_Flow());
 		return flow.DoRebackFlowData(this.getWorkID(), this.getFK_Node(), this.GetRequestVal("Msg"));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 回滚.
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 工作退回.
 	/** 
 	 获得可以退回的节点.
@@ -3956,7 +3956,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		return BP.WF.Dev2Interface.Node_ReturnWork(this.getFK_Flow(), this.getWorkID(), this.getFID(), this.getFK_Node(), toNodeID, toEmp, reMesage, isBackBoolen);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -3991,7 +3991,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		return BP.WF.Dev2Interface.Flow_DoPress(this.getWorkID(), msg, true);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程数据模版. for 浙商银行 by zhoupeng.
 	/** 
 	 流程数据模版
@@ -4080,10 +4080,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 	{
 		return "设置成功";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 流程数据模版.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region tonodes
 	/** 
 	 初始化.
@@ -4195,7 +4195,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		Node currNode = new Node(this.getFK_Node());
 		Flow currFlow = new Flow(this.getFK_Flow());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理发送后转向.
 		try
 		{
@@ -4244,7 +4244,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 					msg = msg.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					return msg;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		}
@@ -4312,12 +4312,12 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion tonodes
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 自定义.
 	/** 
 	 初始化
@@ -4362,7 +4362,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		TransferCustoms tcs = new TransferCustoms(this.getWorkID());
 		if (tcs.size() == 0)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行计算未来处理人.
 
 			Work wk = currNode.getHisWork();
@@ -4372,7 +4372,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			wn.getHisFlow().setIsFullSA(true);
 			//执行计算未来处理人.
 			FullSA fsa = new FullSA(wn);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 执行计算未来处理人.
 
 			for (Node nd : nds.ToJavaList())
@@ -4396,7 +4396,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 					tc.setFK_Node(nd.getNodeID());
 					tc.setNodeName(nd.getName());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 计算出来当前节点的工作人员.
 					SelectAccpers sas = new SelectAccpers();
 					sas.Retrieve(SelectAccperAttr.WorkID, this.getWorkID(), SelectAccperAttr.FK_Node, nd.getNodeID());
@@ -4408,7 +4408,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 						workerID += sa.getFK_Emp() + ",";
 						workerName += sa.getEmpName() + ",";
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 计算出来当前节点的工作人员.
 
 					tc.setWorker(workerID);
@@ -4432,10 +4432,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 自定义.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 时限初始化数据
 	public final String CH_Init()
 	{
@@ -4460,7 +4460,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取流程节点信息的列表
 		Nodes nds = new Nodes(this.getFK_Flow());
 		//如果是游离态的节点有可能调整顺序
@@ -4580,7 +4580,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 			dt.Rows.add(dr);
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流程节点信息
 
 		ds.Tables.add(dt);
@@ -4589,7 +4589,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		ds.Tables.add(nd.ToDataTableField("WF_CurrNode"));
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取剩余天数
 		Part part = new Part();
 		part.setMyPK( nd.getFK_Flow() + "_0_DeadLineRole";
@@ -4629,7 +4629,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		dr.set("SpanTime", spanTime);
 		dt.Rows.add(dr);
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取剩余天数
 
 		return BP.Tools.Json.ToJson(ds);
@@ -4667,10 +4667,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 		}
 		return SDTOfNode.toString(DataType.getSysDataTimeFormat());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 时限初始化数据
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点时限重新设置
 	public final String CH_Save()
 	{
@@ -4703,10 +4703,10 @@ public class WF_WorkOpt extends DirectoryPageBase
 		gwf.Update();
 		return "保存成功";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 节点时限重新设置
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点备注的设置
 	public final String Note_Init()
 	{
@@ -4756,7 +4756,7 @@ public class WF_WorkOpt extends DirectoryPageBase
 		return "保存成功";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 节点备注的设置
 
 	private static String GetSpanTime(LocalDateTime t1, LocalDateTime t2, int day)

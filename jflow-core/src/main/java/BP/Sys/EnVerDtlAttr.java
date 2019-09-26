@@ -6,7 +6,7 @@ import java.util.*;
 
 public class EnVerDtlAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 
 	public static final String EnVerPK = "EnVerPK";
@@ -20,6 +20,6 @@ public class EnVerDtlAttr
 	public static final String RDT = "RDT";
 	public static final String Rec = "Rec";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

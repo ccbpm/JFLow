@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class AppSort extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 RefMenuNo
@@ -25,10 +25,10 @@ public class AppSort extends EntityNoName
 	{
 		this.SetValByKey(AppSortAttr.RefMenuNo, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 按钮权限控制
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -37,9 +37,9 @@ public class AppSort extends EntityNoName
 		uac.OpenForAppAdmin();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 系统类别
@@ -81,7 +81,7 @@ public class AppSort extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

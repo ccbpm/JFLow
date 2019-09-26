@@ -1,6 +1,6 @@
 package BP.Sys;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#region Copyright
 //------------------------------------------------------------------------------
 // <copyright file="ConfigReaders.cs" company="BP">
@@ -16,7 +16,7 @@ package BP.Sys;
 //
 // </copyright>                                                                
 //------------------------------------------------------------------------------
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#endregion
 
 //using System.Data.OracleClient;

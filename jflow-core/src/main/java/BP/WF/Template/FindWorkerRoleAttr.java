@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class FindWorkerRoleAttr extends BP.En.EntityOIDNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 节点ID
@@ -107,6 +107,6 @@ public class FindWorkerRoleAttr extends BP.En.EntityOIDNameAttr
 	 是否可用？
 	*/
 	public static final String IsEnable = "IsEnable";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

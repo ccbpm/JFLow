@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class AccepterRole extends EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -36,10 +36,10 @@ public class AccepterRole extends EntityOID
 	{
 		SetValByKey(AccepterRoleAttr.FK_Node, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 接受人规则
@@ -87,7 +87,7 @@ public class AccepterRole extends EntityOID
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

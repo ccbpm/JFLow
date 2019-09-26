@@ -9,16 +9,16 @@ import BP.En.*;
 */
 public class GEWorks extends Works
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重载基类方法
 	/** 
 	 节点ID
 	*/
 	public int NodeID = 0;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 得到它的 Entity
@@ -49,6 +49,6 @@ public class GEWorks extends Works
 		this.NodeFrmID = nodeFrmID;
 	}
 	public String NodeFrmID = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -10,7 +10,7 @@ import java.util.*;
 */
 public class SFDBSrc extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 标签

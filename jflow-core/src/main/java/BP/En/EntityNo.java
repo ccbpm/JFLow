@@ -8,7 +8,7 @@ import BP.DA.*;
 */
 public abstract class EntityNo extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 提供的属性
 	@Override
 	public String getPK()
@@ -27,10 +27,10 @@ public abstract class EntityNo extends Entity
 	{
 		this.SetValByKey(EntityNoNameAttr.No, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与编号有关的逻辑操作(这个属性只与dict EntityNo, 基类有关系。)
 	/** 
 	 Insert 之前的操作。
@@ -72,10 +72,10 @@ public abstract class EntityNo extends Entity
 		//}
 		//return base.beforeInsert();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造涵数
 	/** 
 	 事例化一个实体
@@ -123,10 +123,10 @@ public abstract class EntityNo extends Entity
 
 	   // return base.Save();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 提供的查寻方法
 	/** 
 	 生成一个编号
@@ -172,6 +172,6 @@ public abstract class EntityNo extends Entity
 		qo.AddWhere(EntityNoAttr.No, this.getNo());
 		return qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

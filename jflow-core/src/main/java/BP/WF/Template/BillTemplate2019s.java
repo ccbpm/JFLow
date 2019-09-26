@@ -12,7 +12,7 @@ import java.io.*;
 */
 public class BillTemplate2019s extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 得到它的 Entity 
@@ -28,10 +28,10 @@ public class BillTemplate2019s extends EntitiesNoName
 	public BillTemplate2019s()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询与构造
 	/** 
 	 按节点查询
@@ -74,10 +74,10 @@ public class BillTemplate2019s extends EntitiesNoName
 		qo.AddWhere(BillTemplate2019Attr.NodeID, fk_node);
 		qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 查询与构造
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -102,6 +102,6 @@ public class BillTemplate2019s extends EntitiesNoName
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class CC extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 抄送
@@ -340,10 +340,10 @@ public class CC extends Entity
 		this.SetValByKey(CCAttr.CCIsSQLs, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 抄送设置
@@ -396,7 +396,7 @@ public class CC extends Entity
 		map.AddTBStringDoc(CCAttr.CCDoc, null, "抄送内容(标题与内容支持变量)", true, false, true);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 对应关系
 			// 相关功能。
 
@@ -413,7 +413,7 @@ public class CC extends Entity
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new BP.WF.Template.CCEmps(), new BP.Port.Emps(), BP.WF.Template.NodeEmpAttr.FK_Node, BP.WF.Template.NodeEmpAttr.FK_Emp, "抄送接受人(AddBranchesAndLeaf)", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 对应关系
 
 			//// 相关功能。
@@ -430,6 +430,6 @@ public class CC extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

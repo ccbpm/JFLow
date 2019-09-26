@@ -32,7 +32,7 @@ public class DeptFlowSearch extends EntityMyPK
 		return uac;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作人员ID
@@ -68,10 +68,10 @@ public class DeptFlowSearch extends EntityMyPK
 	{
 		this.SetValByKey(DeptFlowSearchAttr.FK_Flow, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 流程部门数据查询权限
@@ -98,7 +98,7 @@ public class DeptFlowSearch extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

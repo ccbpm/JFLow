@@ -9,7 +9,7 @@ import java.util.*;
 */
 public class GETree extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	@Override
 	public String toString()
@@ -64,6 +64,6 @@ public class GETree extends EntityNoName
 	public String PhysicsTable = null;
 	public String Desc = null;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

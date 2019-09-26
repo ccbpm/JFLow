@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class CH extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 发送人
@@ -364,10 +364,10 @@ public class CH extends EntityMyPK
 	{
 		this.SetValByKey(CHAttr.Points, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 UI界面上的访问控制
@@ -398,10 +398,10 @@ public class CH extends EntityMyPK
 	{
 		super(pk);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Map
 	/** 
 	 EnMap
@@ -418,7 +418,7 @@ public class CH extends EntityMyPK
 
 		map.AddMyPK();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性.
 		map.AddTBInt(CHAttr.WorkID, 0, "工作ID", false, true);
 		map.AddTBInt(CHAttr.FID, 0, "FID", false, true);
@@ -452,10 +452,10 @@ public class CH extends EntityMyPK
 		map.AddTBString(CHAttr.FK_DeptT, null, "部门名称", true, true, 0, 500, 5);
 		map.AddTBString(CHAttr.FK_NY, null, "隶属月份", true, true, 0, 10, 10);
 		map.AddDDLSysEnum(CHAttr.DTSWay, 0, "考核方式", true, true, CHAttr.DTSWay, "@0=不考核@1=按照时效考核@2=按照工作量考核");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 计算属性.
 		map.AddTBString(CHAttr.TimeLimit, null, "规定限期", true, true, 0, 50, 5);
 		map.AddTBFloat(CHAttr.OverMinutes, 0, "逾期分钟", false, true);
@@ -465,13 +465,13 @@ public class CH extends EntityMyPK
 		map.AddTBInt(CHAttr.WeekNum, 0, "第几周", false, true);
 		map.AddTBFloat(CHAttr.Points, 0, "总扣分", true, true);
 		map.AddTBIntMyNum();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 计算属性.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

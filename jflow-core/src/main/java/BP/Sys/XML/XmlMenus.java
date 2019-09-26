@@ -10,7 +10,7 @@ import BP.Sys.*;
 */
 public abstract class XmlMenus extends XmlEns
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 构造
@@ -18,6 +18,6 @@ public abstract class XmlMenus extends XmlEns
 	public XmlMenus()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造
 }

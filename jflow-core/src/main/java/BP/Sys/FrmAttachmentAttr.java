@@ -169,7 +169,7 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	*/
 	public static final String DeleteWay = "DeleteWay";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 数据引用.
 	/** 
 	 数据引用
@@ -179,11 +179,11 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 阅读规则
 	*/
 	public static final String ReadRole = "ReadRole";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 数据引用.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region weboffice属性。
 	/** 
 	 是否启用锁定行
@@ -245,10 +245,10 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 是否启用下载
 	*/
 	public static final String IsWoEnableDown = "IsWoEnableDown";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion weboffice属性。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 快捷键.
 	/** 
 	 是否启用快捷键
@@ -258,7 +258,7 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 快捷键生成规则
 	*/
 	public static final String FastKeyGenerRole = "FastKeyGenerRole";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

@@ -16,7 +16,7 @@ import java.time.*;
 */
 public class WF_MyFlow extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  运行变量
 	/** 
 	 从节点.
@@ -172,7 +172,7 @@ public class WF_MyFlow extends DirectoryPageBase
 	{
 		return HttpContextHelper.RequestParams("DoType1");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String Focus()
@@ -348,7 +348,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		//当前工作.
 		Work currWK = this.getcurrND().getHisWork();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断前置导航.
 		if (this.getcurrND().getIsStartNode() && this.getIsCC() == false && this.getWorkID() == 0)
 		{
@@ -409,10 +409,10 @@ public class WF_MyFlow extends DirectoryPageBase
 					break;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断前置导航
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 前置导航数据拷贝到第一节点
 		if (this.getWorkID() != 0 && this.GetRequestVal("IsCheckGuide") != null)
 		{
@@ -435,10 +435,10 @@ public class WF_MyFlow extends DirectoryPageBase
 				BP.WF.Dev2Interface.SetParentInfo(this.getFK_Flow(), this.getWorkID(), pWorkID);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 启动同级子流程的信息存储
 		if (isStartSameLevelFlow != null && isStartSameLevelFlow.equals("1") == true && this.getWorkID() != 0)
 		{
@@ -456,10 +456,10 @@ public class WF_MyFlow extends DirectoryPageBase
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 启动同级子流程的信息存储
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理表单类型.
 		if (this.getcurrND().getHisFormType() == NodeFormType.SheetTree || this.getcurrND().getHisFormType() == NodeFormType.SheetAutoTree)
 		{
@@ -501,7 +501,7 @@ public class WF_MyFlow extends DirectoryPageBase
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 开始组合url.
 			String toUrl = "";
 
@@ -567,7 +567,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				toUrl += "&" + key + "=" + HttpContextHelper.RequestParams(key);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 开始组合url.
 
 			if (gwf == null)
@@ -630,7 +630,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			//sdk表单就让其跳转.
 			return "url@" + url;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理表单类型.
 
 		//求出当前节点frm的类型.
@@ -651,7 +651,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 内置表单类型的判断.
 		/*如果是傻瓜表单，就转到傻瓜表单的解析执行器上，为软通动力改造。*/
 		if (this.getWorkID() == 0)
@@ -735,7 +735,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			url = url.replace("&DoWhat=StartClassic", "");
 			return "url@" + url;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 内置表单类型的判断.
 
 		String myurl = "MyFlowGener.htm";
@@ -899,7 +899,7 @@ public class WF_MyFlow extends DirectoryPageBase
 	*/
 	public final String InitToolBar()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理是否是加签，或者是否是会签模式.
 		boolean isAskForOrHuiQian = false;
 		BtnLab btnLab = new BtnLab(this.getFK_Node());
@@ -935,14 +935,14 @@ public class WF_MyFlow extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理是否是加签，或者是否是会签模式，.
 
 		String tKey = LocalDateTime.now().toString("MM-dd-hh:mm:ss");
 		String toolbar = "";
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 是否是会签？.
 			if (isAskForOrHuiQian == true && SystemConfig.getCustomerNo().equals("LIMS"))
 			{
@@ -966,10 +966,10 @@ public class WF_MyFlow extends DirectoryPageBase
 
 				return toolbar;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 是否是会签.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 是否是抄送.
 			if (this.getIsCC())
 			{
@@ -983,10 +983,10 @@ public class WF_MyFlow extends DirectoryPageBase
 				}
 				return toolbar;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 是否是抄送.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 如果当前节点启用了协作会签.
 			if (btnLab.getHuiQianRole() == HuiQianRole.Teamup)
 			{
@@ -999,10 +999,10 @@ public class WF_MyFlow extends DirectoryPageBase
 					toolbar += "<input name='SendHuiQian' type=button value='会签发送' enable=true onclick=\" " + btnLab.getSendJS() + " if(SysCheckFrm()==false) return false;SaveDtlAll();Send(true); \" />";
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 如果当前节点启用了协作会签
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加载流程控制器 - 按钮
 			if (this.getcurrND().getHisFormType() == NodeFormType.SelfForm)
 			{
@@ -1326,11 +1326,11 @@ public class WF_MyFlow extends DirectoryPageBase
 			{
 				toolbar += "<input type=button name='Btn_Office'  onclick='OpenOffice();'  value='" + btnLab.getOfficeBtnLab() + "' enable=true/>";
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region  加载自定义的button.
 			BP.WF.Template.NodeToolbars bars = new NodeToolbars();
 			bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node());
@@ -1351,7 +1351,7 @@ public class WF_MyFlow extends DirectoryPageBase
 					toolbar += "<input type=button  value='" + bar.getTitle() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" />";
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion //加载自定义的button.
 
 		}
@@ -1374,7 +1374,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		str = str.replace("Send()", "SendIt()");
 		return str;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理是否是加签，或者是否是会签模式，.
 		boolean isAskForOrHuiQian = false;
 		if (String.valueOf(this.getFK_Node()).endsWith("01") == false)
@@ -1393,7 +1393,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理是否是加签，或者是否是会签模式，.
 
 		String tKey = LocalDateTime.now().toString("yyyy-MM-dd - hh:mm:ss");
@@ -1401,7 +1401,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		String toolbar = "";
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 是否是会签？.
 			if (isAskForOrHuiQian == true)
 			{
@@ -1413,10 +1413,10 @@ public class WF_MyFlow extends DirectoryPageBase
 				}
 				return toolbar;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 是否是抄送.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 是否是抄送.
 			if (this.getIsCC())
 			{
@@ -1430,10 +1430,10 @@ public class WF_MyFlow extends DirectoryPageBase
 				}
 				return toolbar;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 是否是抄送.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加载流程控制器 - 按钮
 			if (this.getcurrND().getHisFormType() == NodeFormType.SelfForm)
 			{
@@ -1704,10 +1704,10 @@ public class WF_MyFlow extends DirectoryPageBase
 			//    toolbar += "<a data-role='button' type=button name='PackUp'  value='" + btnLab.PrintZipLab + "' enable=true></a>";
 			//}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region //加载自定义的button.
 			BP.WF.Template.NodeToolbars bars = new NodeToolbars();
 			bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node());
@@ -1729,7 +1729,7 @@ public class WF_MyFlow extends DirectoryPageBase
 					toolbar += "<a data-role='button' type=button  value='" + bar.getTitle() + "' enable=true onclick=\"WinOpen('" + urlr3 + "'); \" ></a>";
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion //加载自定义的button.
 
 		}
@@ -1832,7 +1832,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			//当前节点.
 			Node currNode = new Node(this.getFK_Node());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理发送后转向.
 			/*处理转向问题.*/
 			switch (currNode.getHisTurnToDeal())
@@ -1908,7 +1908,7 @@ public class WF_MyFlow extends DirectoryPageBase
 					msg = msg.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 					return msg;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 		}
@@ -2124,7 +2124,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		//    wk.Update();
 		//}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 为开始工作创建待办.
 		if (nd.getIsStartNode() == true)
 		{
@@ -2205,12 +2205,12 @@ public class WF_MyFlow extends DirectoryPageBase
 			}
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 为开始工作创建待办
 		return "保存到待办";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单树操作
 	/** 
 	 获取表单树数据
@@ -2229,7 +2229,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		appFlowFormTree.Clear();
 		appFlowFormTree.AddEntity(root);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 添加表单及文件夹
 
 		//节点表单
@@ -2261,7 +2261,7 @@ public class WF_MyFlow extends DirectoryPageBase
 
 		for (FrmNode frmNode : frmNodes)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 增加判断是否启用规则.
 			switch (frmNode.getFrmEnableRole())
 			{
@@ -2411,10 +2411,10 @@ public class WF_MyFlow extends DirectoryPageBase
 				default:
 					throw new RuntimeException("@没有判断的规则." + frmNode.getFrmEnableRole());
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 检查是否有没有目录的表单?
 			boolean isHave = false;
 			for (MapData md : mds)
@@ -2442,7 +2442,7 @@ public class WF_MyFlow extends DirectoryPageBase
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 检查是否有没有目录的表单?
 
 			for (MapData md : mds)
@@ -2503,7 +2503,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		}
 		//找上级表单文件夹
 		AppendFolder(formTrees);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//扩展工具，显示位置为表单树类型.
@@ -2747,7 +2747,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		appendMenus.append(appendMenuSb);
 		appendMenuSb.setLength(0);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -2774,7 +2774,7 @@ public class WF_MyFlow extends DirectoryPageBase
 			// ds.Tables.add(wf_generWorkFlowDt);
 			// ds.WriteXml("c:\\xx.xml");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 如果是移动应用就考虑多表单的问题.
 			if (getcurrND().getHisFormType() == NodeFormType.SheetTree && this.getIsMobile() == true)
 			{
@@ -2794,7 +2794,7 @@ public class WF_MyFlow extends DirectoryPageBase
 				//把节点与表单的关联管理放入到系统.
 				ds.Tables.add(fns.ToDataTableField("FrmNodes"));
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 如果是移动应用就考虑多表单的问题.
 
 			if (WebUser.SysLang.equals("CH") == true)
@@ -2802,14 +2802,14 @@ public class WF_MyFlow extends DirectoryPageBase
 				return BP.Tools.Json.ToJson(ds);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理多语言.
 			if (WebUser.SysLang.equals("CH") == false)
 			{
 				Langues langs = new Langues();
 				langs.Retrieve(LangueAttr.Model, LangueModel.CCForm, LangueAttr.Sort, "Fields", LangueAttr.Langue, WebUser.SysLang); //查询语言.
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理多语言.
 
 			return BP.Tools.Json.ToJson(ds);

@@ -5,7 +5,7 @@ package BP.Frm;
 */
 public class FrmAttr extends BP.En.EntityOIDNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作模式
@@ -35,19 +35,19 @@ public class FrmAttr extends BP.En.EntityOIDNameAttr
 	 关联单据
 	*/
 	public static final String RefBill = "RefBill";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 隐藏属性.
 	/** 
 	 要显示的列
 	*/
 	public static final String ShowCols = "ShowCols";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 隐藏属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 按钮信息.
 	/** 
 	 按钮New标签
@@ -107,10 +107,10 @@ public class FrmAttr extends BP.En.EntityOIDNameAttr
 	 分析
 	*/
 	public static final String BtnGroupEnable = "BtnGroupEnable";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 打印
 	public static final String BtnPrintHtml = "BtnPrintHtml";
 	public static final String BtnPrintHtmlEnable = "BtnPrintHtmlEnable";
@@ -123,7 +123,7 @@ public class FrmAttr extends BP.En.EntityOIDNameAttr
 
 	public static final String BtnPrintCCWord = "BtnPrintCCWord";
 	public static final String BtnPrintCCWordEnable = "BtnPrintCCWordEnable";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -144,7 +144,7 @@ public class FrmAttr extends BP.En.EntityOIDNameAttr
 	public static final String RefBillRole = "RefBillRole";
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 集合的操作.
 	/** 
 	 导入Excel
@@ -162,7 +162,7 @@ public class FrmAttr extends BP.En.EntityOIDNameAttr
 	 导出excel
 	*/
 	public static final String BtnExpExcelEnable = "BtnExpExcelEnable";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 集合的操作.
 
 	/** 

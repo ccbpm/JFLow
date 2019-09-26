@@ -8,7 +8,7 @@ import java.util.*;
 */
 public class ExcelFields extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 生成Excel字段实体
@@ -18,10 +18,10 @@ public class ExcelFields extends EntitiesNoName
 	{
 		return new ExcelField();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public ExcelFields()
 	{
@@ -34,6 +34,6 @@ public class ExcelFields extends EntitiesNoName
 		qo.addOrderBy(ExcelFieldAttr.CellRow, ExcelFieldAttr.CellColumn);
 		qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法
 }

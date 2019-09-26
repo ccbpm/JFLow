@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class GEEntityWordFrm extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#region 属性。
 	public final int getOID() throws Exception
 	{
@@ -58,11 +58,11 @@ public class GEEntityWordFrm extends Entity
 	   {
 		   this.SetValByKey(GEEntityWordFrmAttr.FilePath, value);
 	   }
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#endregion 属性。
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	@Override
 	public String getPK()
@@ -116,10 +116,10 @@ public class GEEntityWordFrm extends Entity
 		this.setPKVal(pk);
 		this.Retrieve();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Map
 	/** 
 	 重写基类方法
@@ -153,7 +153,7 @@ public class GEEntityWordFrm extends Entity
 		}
 		return new GEEntityWordFrms(this.FK_MapData);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	private ArrayList _Dtls = null;

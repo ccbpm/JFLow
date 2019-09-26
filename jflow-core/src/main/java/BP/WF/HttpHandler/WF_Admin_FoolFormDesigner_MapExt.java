@@ -17,7 +17,7 @@ import java.time.*;
 */
 public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -45,10 +45,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 	public WF_Admin_FoolFormDesigner_MapExt()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region AutoFullDtlField 自动计算 a*b  功能界面 .
 	/** 
 	 保存(自动计算: @单价*@数量 模式.)
@@ -172,10 +172,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion AutoFullDtlField  功能界面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region AutoFull 自动计算 a*b  功能界面 .
 	/** 
 	 保存(自动计算: @单价*@数量 模式.)
@@ -231,10 +231,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion ActiveDDL 功能界面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region TBFullCtrl 功能界面 .
 	/** 
 	 保存
@@ -458,10 +458,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion TBFullCtrl 功能界面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region AutoFullDLL 功能界面 .
 	/** 
 	 保存
@@ -532,10 +532,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion AutoFullDLL 功能界面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region DDLFullCtrl 功能界面 .
 	/** 
 	 保存
@@ -608,10 +608,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion DDLFullCtrl 功能界面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region ActiveDDL 功能界面 .
 	/** 
 	 保存
@@ -696,10 +696,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion ActiveDDL 功能界面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 单选按钮事件
 	/** 
 	 返回信息。
@@ -778,10 +778,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region xxx 界面
 	/** 
 	 初始化正则表达式界面
@@ -1054,10 +1054,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			return "@保存失败:" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion xxx 界面方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region PopFullCtrl 功能界面 .
 	/** 
 	 保存
@@ -1278,11 +1278,11 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion PopFullCtrl 功能界面.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 杨玉慧  表单设计--表单属性   JS编程
 	public final String InitScript_Init()
 	{
@@ -1352,7 +1352,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String NRCMaterielDtlSave()

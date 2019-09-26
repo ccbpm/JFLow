@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class TruckViewPowerAttr extends EntityNoNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限组.
 	/** 
 	 发起人可看
@@ -75,6 +75,6 @@ public class TruckViewPowerAttr extends EntityNoNameAttr
 	 人员编号
 	*/
 	public static final String PSpecEmpExt = "PSpecEmpExt";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限组.
 }

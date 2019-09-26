@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class RptStationAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 报表ID
@@ -21,6 +21,6 @@ public class RptStationAttr
 	 岗位
 	*/
 	public static final String FK_Station = "FK_Station";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

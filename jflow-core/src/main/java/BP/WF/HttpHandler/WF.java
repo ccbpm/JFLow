@@ -14,7 +14,7 @@ import java.io.*;
 
 public class WF extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 单表单查看.
 	/** 
 	 流程单表单查看
@@ -39,7 +39,7 @@ public class WF extends DirectoryPageBase
 		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 把主从表数据放入里面.
 		//.工作数据放里面去, 放进去前执行一次装载前填充事件.
 		BP.WF.Work wk = nd.getHisWork();
@@ -52,7 +52,7 @@ public class WF extends DirectoryPageBase
 		DataTable mainTable = wk.ToDataTableField("MainTable");
 		mainTable.TableName = "MainTable";
 		myds.Tables.add(mainTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
@@ -61,7 +61,7 @@ public class WF extends DirectoryPageBase
 		myds.Tables.add(WF_Node);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 加入组件的状态信息, 在解析表单的时候使用.
 		nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 		BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
@@ -99,10 +99,10 @@ public class WF extends DirectoryPageBase
 			fnc.SetValByKey(FTCAttr.FTC_Y, refFnc.GetValFloatByKey(FTCAttr.FTC_Y));
 		}
 		myds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent").Copy());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 加入组件的状态信息, 在解析表单的时候使用.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 增加附件信息.
 		BP.Sys.FrmAttachments athDescs = new FrmAttachments();
 
@@ -156,10 +156,10 @@ public class WF extends DirectoryPageBase
 			//增加一个数据源.
 			myds.Tables.add(dbs.ToDataTableField("Sys_FrmAttachmentDB").Copy());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 把外键表加入DataSet
 		DataTable dtMapAttr = myds.Tables["Sys_MapAttr"];
 		DataTable dt = new DataTable();
@@ -199,7 +199,7 @@ public class WF extends DirectoryPageBase
 			String keyOfEn = dr.get("KeyOfEn").toString();
 			String fk_mapData = dr.get("FK_MapData").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 			me = tempVar instanceof MapExt ? (MapExt)tempVar : null;
@@ -225,7 +225,7 @@ public class WF extends DirectoryPageBase
 				myds.Tables.add(dt_FK_Dll);
 				continue;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理下拉框数据范围.
 
 			// 判断是否存在.
@@ -248,10 +248,10 @@ public class WF extends DirectoryPageBase
 		}
 		ddlTable.TableName = "UIBindKey";
 		myds.Tables.add(ddlTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion End把外键表加入DataSet
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 图片附件
 		nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(nd.getNodeFrmID(), String.valueOf(this.getWorkID()));
@@ -260,13 +260,13 @@ public class WF extends DirectoryPageBase
 			DataTable dt_ImgAth = imgAthDBs.ToDataTableField("Sys_FrmImgAthDB");
 			myds.Tables.add(dt_ImgAth);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
 		return BP.Tools.Json.ToJson(myds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
@@ -604,7 +604,7 @@ public class WF extends DirectoryPageBase
 
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 我的关注流程.
 	/** 
 	 我的关注流程
@@ -659,7 +659,7 @@ public class WF extends DirectoryPageBase
 		BP.WF.Dev2Interface.Flow_Focus(this.getWorkID());
 		return "执行成功";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 我的关注.
 
 	/** 
@@ -693,7 +693,7 @@ public class WF extends DirectoryPageBase
 			orgNos += ",'" + deptNo + "'";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取类别列表(根据当前人员所在组织结构进行过滤类别.)
 		FlowSorts fss = new FlowSorts();
 		BP.En.QueryObject qo = new En.QueryObject(fss);
@@ -717,7 +717,7 @@ public class WF extends DirectoryPageBase
 		//定义容器.
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtSort); //增加到里面去.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取类别列表.
 
 		//构造流程实例数据容器。
@@ -828,7 +828,7 @@ public class WF extends DirectoryPageBase
 			orgNos += ",'" + deptNo + "'";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取类别列表(根据当前人员所在组织结构进行过滤类别.)
 		FlowSorts fss = new FlowSorts();
 		BP.En.QueryObject qo = new En.QueryObject(fss);
@@ -859,7 +859,7 @@ public class WF extends DirectoryPageBase
 		//定义容器.
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtSort); //增加到里面去.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取类别列表.
 
 		//构造流程实例数据容器。
@@ -1023,7 +1023,7 @@ public class WF extends DirectoryPageBase
 		//返回组合
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获得列表.
 	/** 
 	 运行
@@ -1566,11 +1566,11 @@ public class WF extends DirectoryPageBase
 		//转化大写的toJson.
 		return BP.Tools.Json.ToJson(dt);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获得列表.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 共享任务池.
 	/** 
 	 初始化共享任务
@@ -1616,10 +1616,10 @@ public class WF extends DirectoryPageBase
 		BP.WF.Dev2Interface.Node_TaskPoolPutOne(this.getWorkID());
 		return "放入成功,其他的同事可以看到这件工作.您可以在任务池里看到它并重新申请下来.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 登录相关.
 	/** 
 	 返回当前会话信息.
@@ -1827,7 +1827,7 @@ public class WF extends DirectoryPageBase
 			{
 				continue;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 给字段赋值
 			Hashtable ht = new Hashtable();
 			for (String str : strs)
@@ -1883,7 +1883,7 @@ public class WF extends DirectoryPageBase
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 给字段赋值
 
 			//获取审核意见的值
@@ -2107,7 +2107,7 @@ public class WF extends DirectoryPageBase
 	{
 		return this.AuthExitAndLogin(this.getNo(), WebUser.Auth);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 登录相关.
 
 	/** 
@@ -2164,7 +2164,7 @@ public class WF extends DirectoryPageBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 处理page接口.
 	/** 
 	 执行的内容
@@ -2194,7 +2194,7 @@ public class WF extends DirectoryPageBase
 	*/
 	public final String Port_Init()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 安全性校验.
 		//if (this.UserNo == null )
 		//    return "err@必要的参数没有传入，请参考接口规则。UserNo";
@@ -2226,7 +2226,7 @@ public class WF extends DirectoryPageBase
 				return "err@安全校验出现错误:" + ex.getMessage();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 安全性校验.
 
 		if (this.getDoWhat().equals("PortLogin") == true)
@@ -2234,7 +2234,7 @@ public class WF extends DirectoryPageBase
 			return "登陆成功";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 生成参数串.
 		String paras = "";
 		for (String str : HttpContextHelper.RequestQueryStringKeys)
@@ -2270,7 +2270,7 @@ public class WF extends DirectoryPageBase
 			}
 		}
 		String nodeID = Integer.parseInt(this.getFK_Flow() + "01").toString();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 生成参数串.
 
 
@@ -2414,7 +2414,7 @@ public class WF extends DirectoryPageBase
 
 		return "err@没有约定的标记:DoWhat=" + this.getDoWhat();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 处理page接口.
 
 }

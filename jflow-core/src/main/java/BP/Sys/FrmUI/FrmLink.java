@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class FrmLink extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 FontStyle
@@ -235,6 +235,6 @@ public class FrmLink extends EntityMyPK
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterDelete();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

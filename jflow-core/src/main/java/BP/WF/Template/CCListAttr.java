@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class CCListAttr extends EntityMyPKAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 标题
@@ -86,6 +86,6 @@ public class CCListAttr extends EntityMyPKAttr
 	 是否加入待办列表
 	*/
 	public static final String InEmpWorks = "InEmpWorks";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

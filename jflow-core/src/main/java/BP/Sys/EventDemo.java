@@ -11,9 +11,9 @@ import BP.Web.*;
 */
 public abstract class EventDemo extends EventBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
 	/** 

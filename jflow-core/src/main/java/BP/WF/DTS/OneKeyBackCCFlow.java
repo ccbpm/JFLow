@@ -60,7 +60,7 @@ public class OneKeyBackCCFlow extends Method
 			(new File(path)).mkdirs();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 1.备份流程类别信息
 		DataSet dsFlows = new DataSet();
 		//WF_FlowSort
@@ -68,10 +68,10 @@ public class OneKeyBackCCFlow extends Method
 		dt.TableName = "WF_FlowSort";
 		dsFlows.Tables.add(dt);
 		dsFlows.WriteXml(path + "\\FlowTables.xml");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 备份流程类别信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 2.备份组织结构.
 		DataSet dsPort = new DataSet();
 		//emps
@@ -96,10 +96,10 @@ public class OneKeyBackCCFlow extends Method
 
 
 		dsPort.WriteXml(path + "\\PortTables.xml");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 备份表单相关数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 3.备份系统数据
 		DataSet dsSysTables = new DataSet();
 
@@ -118,10 +118,10 @@ public class OneKeyBackCCFlow extends Method
 		dt.TableName = "Sys_FormTree";
 		dsSysTables.Tables.add(dt);
 		dsSysTables.WriteXml(path + "\\SysTables.xml");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 备份系统数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 4.备份表单相关数据.
 		String pathOfTables = path + "\\SFTables";
 		(new File(pathOfTables)).mkdirs();
@@ -151,10 +151,10 @@ public class OneKeyBackCCFlow extends Method
 
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 备份表单相关数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 5.备份流程.
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
@@ -172,10 +172,10 @@ public class OneKeyBackCCFlow extends Method
 
 			fl.DoExpFlowXmlTemplete(pathDir);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 备份流程.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 6.备份表单.
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAllFromDBSource();
@@ -198,7 +198,7 @@ public class OneKeyBackCCFlow extends Method
 			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
 			ds.WriteXml(pathDir + "\\" + md.Name + ".xml");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 备份表单.
 
 		return "执行成功,存放路径:" + path;

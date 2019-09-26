@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class GEEntity extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 设置或者获取主键值.
@@ -88,10 +88,10 @@ public class GEEntity extends Entity
 		this.setPKVal(pk);
 		this.Retrieve();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造映射.
 	/** 
 	 重写基类方法
@@ -125,7 +125,7 @@ public class GEEntity extends Entity
 		}
 		return new GEEntitys(this.FK_MapData);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

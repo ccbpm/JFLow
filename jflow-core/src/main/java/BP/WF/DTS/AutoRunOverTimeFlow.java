@@ -54,7 +54,7 @@ public class AutoRunOverTimeFlow extends Method
 	@Override
 	public Object Do() throws Exception
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 找到要逾期的数据.
 		DataTable generTab = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
@@ -63,7 +63,7 @@ public class AutoRunOverTimeFlow extends Method
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 找到要逾期的数据.
 
 		// 遍历循环,逾期表进行处理.

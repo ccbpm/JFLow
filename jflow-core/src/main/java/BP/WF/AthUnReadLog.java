@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class AthUnReadLog extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -127,10 +127,10 @@ public class AthUnReadLog extends EntityMyPK
 	{
 		SetValByKey(AthUnReadLogAttr.NodeName, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	@Override
 	public UAC getHisUAC()
@@ -189,6 +189,6 @@ public class AthUnReadLog extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

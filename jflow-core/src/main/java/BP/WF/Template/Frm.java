@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class Frm extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	public FrmNode HisFrmNode = null;
 	public final String getPTable() throws Exception
@@ -48,10 +48,10 @@ public class Frm extends EntityNoName
 	{
 		this.SetValByKey(FrmAttr.FrmType, value.getValue());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 Frm
@@ -116,6 +116,6 @@ public class Frm extends EntityNoName
 		return this.GetValIntByKey(BP.Sys.MapDataAttr.FrmH);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

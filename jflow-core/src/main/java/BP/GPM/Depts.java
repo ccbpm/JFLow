@@ -42,7 +42,7 @@ public class Depts extends EntitiesTree
 		return qo.DoQuery();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
 	/** 
 	 转化成 java list,C#不能调用.
@@ -67,6 +67,6 @@ public class Depts extends EntitiesTree
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
 }

@@ -12,7 +12,7 @@ import BP.WF.*;
 public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 构造函数
@@ -134,10 +134,10 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			return "err@" + this.toString() + " msg:" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 创建表单.
 	public final String NewFrmGuide_GenerPinYin()
 	{
@@ -236,7 +236,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 		BP.Frm.EntityType entityType = EntityType.forValue(this.GetRequestValInt("EntityType"));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是单据.
 		if (entityType == EntityType.FrmBill)
 		{
@@ -251,10 +251,10 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			bill.Update();
 			bill.CheckEnityTypeAttrsFor_Bill();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果是单据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是实体 EnityNoName .
 		if (entityType == EntityType.FrmDict)
 		{
@@ -272,7 +272,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			entityDict.Update();
 			entityDict.CheckEnityTypeAttrsFor_EntityNoName();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果是实体 EnityNoName .
 
 		//创建表与字段.
@@ -298,7 +298,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + md.No;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 创建表单.
 
 	public final String LetLogin()
@@ -512,7 +512,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		return "保存成功.";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表格处理.
 	public final String Tables_Init()
 	{
@@ -554,7 +554,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -570,7 +570,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		return "重置成功.";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 复制表单
 	/** 
 	 复制表单属性和表单内容
@@ -583,7 +583,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		String fromFrmID = GetRequestVal("FromFrmID");
 		String toFrmID = GetRequestVal("ToFrmID");
 		String toFrmName = GetRequestVal("ToFrmName");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 原表单信息
 		//表单信息
 		MapData fromMap = new MapData(fromFrmID);
@@ -595,10 +595,10 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 		FrmDict fromDict = new FrmDict();
 		fromDict.No = fromFrmID;
 		int DictCount = fromDict.RetrieveFromDBSources();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 原表单信息
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制表单
 		MapData toMapData = new MapData();
 		toMapData = fromMap;
@@ -623,7 +623,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 			toDict.setEntityType(EntityType.FrmDict);
 			toDict.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制表单
 
 		MapData.ImpMapData(toFrmID, BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(fromFrmID));
@@ -634,7 +634,7 @@ public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 复制表单
 
 }

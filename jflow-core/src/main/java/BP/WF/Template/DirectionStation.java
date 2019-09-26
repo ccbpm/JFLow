@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class DirectionStation extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -55,10 +55,10 @@ public class DirectionStation extends EntityMM
 	{
 		this.SetValByKey(DirectionStationAttr.FK_Station, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 方向与工作岗位对应
@@ -93,6 +93,6 @@ public class DirectionStation extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

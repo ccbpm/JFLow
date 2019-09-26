@@ -12,7 +12,7 @@ import java.math.*;
 */
 public class GloVar extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final Object getValOfObject() throws Exception
 	{
@@ -107,10 +107,10 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.GroupKey, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 全局变量
@@ -177,10 +177,10 @@ public class GloVar extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共属性.
 	/** 
 	 公共假期
@@ -213,7 +213,7 @@ public class GloVar extends EntityNoName
 	{
 		_Holidays = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

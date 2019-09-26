@@ -15,13 +15,13 @@ import java.util.*;
 */
 public class WF_Admin extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	public final String getRefNo()
 	{
 		return this.GetRequestVal("RefNo");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -31,7 +31,7 @@ public class WF_Admin extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 测试页面.
 	/** 
 	 获得运行的集成平台.
@@ -277,10 +277,10 @@ public class WF_Admin extends DirectoryPageBase
 		String url = "../../WF/Port.htm?UserNo=" + userNo + "&SID=" + sid + "&DoWhat=" + this.GetRequestVal("DoWhat") + "&FK_Flow=" + this.getFK_Flow() + "&IsMobile=" + this.GetRequestVal("IsMobile");
 		return "url@" + url;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 测试页面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 安装.
 	/** 
 	 初始化安装包
@@ -332,7 +332,7 @@ public class WF_Admin extends DirectoryPageBase
 		return "info@系统成功安装 点击:<a href='./CCBPMDesigner/Login.htm' >这里直接登录流程设计器</a>";
 		// this.Response.Redirect("DBInstall.aspx?DoType=OK", true);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
@@ -374,7 +374,7 @@ public class WF_Admin extends DirectoryPageBase
 		DataTable dt = null;
 		String sql = "";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 节点方向条件模版.
 		if (templateType.equals("CondBySQL"))
 		{
@@ -393,10 +393,10 @@ public class WF_Admin extends DirectoryPageBase
 			/*方向条件, 节点方向url条件.*/
 			sql = "SELECT MyPK,Note,OperatorValue FROM WF_Cond WHERE CondType=" + condType + " AND DataFrom=" + ConnDataFrom.Paras.getValue();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 节点方向条件模版.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 表单扩展设置.
 
 		String add = "+";
@@ -433,17 +433,17 @@ public class WF_Admin extends DirectoryPageBase
 		{
 			sql = "SELECT MyPK, 'ID:'" + add + " a.AttrOfOper as Name,Doc FROM Sys_MapExt a  WHERE ExtType='AutoFull'";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 表单扩展设置.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 节点属性的模版.
 		//自动计算.
 		if (templateType.equals("NodeAccepterRole"))
 		{
 			sql = "SELECT NodeID, FlowName +' - '+Name, a.DeliveryParas as Docs FROM WF_Node a WHERE  a.DeliveryWay=" + DeliveryWay.BySQL.getValue();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 节点属性的模版.
 
 		if (sql.equals(""))

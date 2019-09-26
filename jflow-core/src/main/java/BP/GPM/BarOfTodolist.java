@@ -9,7 +9,7 @@ import BP.Web.WebUser;
 */
 public class BarOfTodolist extends BarBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统属性.
 	/** 
 	 标记
@@ -43,10 +43,10 @@ public class BarOfTodolist extends BarBase
 			return false;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 系统属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 外观行为.
 	/** 
 	 标题
@@ -128,6 +128,6 @@ public class BarOfTodolist extends BarBase
 	{
 		return false;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 外观行为.
 }

@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class AthUnReadLogAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -58,10 +58,10 @@ public class AthUnReadLogAttr
 	 节点名称
 	*/
 	public static final String NodeName = "NodeName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程属性
 	/** 
 	 标题
@@ -119,6 +119,6 @@ public class AthUnReadLogAttr
 	 父流程编号
 	*/
 	public static final String PFlowNo = "PFlowNo";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

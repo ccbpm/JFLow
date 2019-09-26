@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class GroupMenu extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 菜单
@@ -50,10 +50,10 @@ public class GroupMenu extends EntityMM
 	{
 		this.SetValByKey(GroupMenuAttr.IsChecked, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 权限组菜单
@@ -93,6 +93,6 @@ public class GroupMenu extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

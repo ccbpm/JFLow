@@ -7,7 +7,7 @@ import BP.DA.*;
 */
 public abstract class EntityOIDName extends EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 主键值
@@ -38,10 +38,10 @@ public abstract class EntityOIDName extends EntityOID
 	{
 		super(oid);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性方法
 	/** 
 	 名称
@@ -89,6 +89,6 @@ public abstract class EntityOIDName extends EntityOID
 		}
 		return super.beforeUpdate();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -7,7 +7,7 @@ import BP.DA.*;
 */
 public abstract class EntityMyPK extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	@Override
 	public String getPK()
@@ -36,10 +36,10 @@ public abstract class EntityMyPK extends Entity
 	{
 	   return this.getMyPK();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	public EntityMyPK()
 	{
@@ -56,6 +56,6 @@ public abstract class EntityMyPK extends Entity
 		this.setMyPK(_MyPK);
 		this.Retrieve();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

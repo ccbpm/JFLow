@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class WorkFlowDeleteLogAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -58,10 +58,10 @@ public class WorkFlowDeleteLogAttr
 	 删除节点后是否需要原路返回？
 	*/
 	public static final String IsBackTracking = "IsBackTracking";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程属性
 	/** 
 	 标题
@@ -119,6 +119,6 @@ public class WorkFlowDeleteLogAttr
 	 父流程编号
 	*/
 	public static final String PFlowNo = "PFlowNo";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

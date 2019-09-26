@@ -27,7 +27,7 @@ public class BtnLab extends Entity
 		return uac;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 but
@@ -866,10 +866,10 @@ public class BtnLab extends Entity
 		return this.GetValIntByKey(BtnAttr.NoteEnable);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 Btn
@@ -1050,7 +1050,7 @@ public class BtnLab extends Entity
 		map.AddDDLSysEnum(BtnAttr.HelpRole, 0, "帮助显示规则", true, true, BtnAttr.HelpRole, "0=禁用@1=启用@2=强制提示@3=选择性提示");
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 公文按钮
 		map.AddTBString(BtnAttr.OfficeOpenLab, "打开本地", "打开本地标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.OfficeOpenEnable, false, "是否启用", true, true);
@@ -1095,7 +1095,7 @@ public class BtnLab extends Entity
 		map.AddBoolean(BtnAttr.OfficeTHEnable, false, "是否自动套红", true, true);
 		map.AddTBString(BtnAttr.OfficeTHTemplate, "", "自动套红模板", true, false, 0, 200, 10);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		this.set_enMap(map);
@@ -1117,6 +1117,6 @@ public class BtnLab extends Entity
 
 		super.afterInsertUpdateAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

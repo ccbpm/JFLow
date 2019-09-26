@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class CCDept extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	节点
@@ -41,10 +41,10 @@ public class CCDept extends EntityMM
 	{
 		this.SetValByKey(CCDeptAttr.FK_Dept,value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 抄送部门
@@ -70,6 +70,6 @@ public class CCDept extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

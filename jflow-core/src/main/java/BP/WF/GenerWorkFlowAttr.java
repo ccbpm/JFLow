@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class GenerWorkFlowAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -208,6 +208,6 @@ public class GenerWorkFlowAttr
 
 	public static final String PrjNo = "PrjNo";
 	public static final String PrjName = "PrjName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

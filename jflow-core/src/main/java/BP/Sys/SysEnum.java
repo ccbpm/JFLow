@@ -26,7 +26,7 @@ public class SysEnum extends EntityMyPK
 		return en.getLab();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实现基本的方方法
 	/** 
 	 标签
@@ -91,10 +91,10 @@ public class SysEnum extends EntityMyPK
 	//    }
 	//}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 SysEnum
@@ -172,7 +172,7 @@ public class SysEnum extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 

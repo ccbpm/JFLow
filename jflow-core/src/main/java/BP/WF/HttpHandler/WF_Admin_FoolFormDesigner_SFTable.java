@@ -23,7 +23,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region xxx 界面 .
 	/** 
 	  初始化sf0. @于庆海，新方法.
@@ -94,10 +94,10 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 	{
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion xxx 界面方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表或者视图 .
 	/** 
 	  初始化sf2.
@@ -175,7 +175,7 @@ public class WF_Admin_FoolFormDesigner_SFTable extends DirectoryPageBase
 		return "保存成功！";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion xxx 界面方法.
 
 }

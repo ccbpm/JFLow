@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class ExtContral extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本-属性
 	/** 
 	 表单ID
@@ -49,10 +49,10 @@ public class ExtContral extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 附件属性
 	/** 
 	 关联的字段.
@@ -78,12 +78,12 @@ public class ExtContral extends EntityMyPK
 	{
 		this.SetPara("AthShowModel", value.getValue());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 附件属性
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 扩展控件
@@ -165,7 +165,7 @@ public class ExtContral extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

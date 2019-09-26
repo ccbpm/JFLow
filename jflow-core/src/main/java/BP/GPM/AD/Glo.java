@@ -5,7 +5,7 @@ import BP.GPM.*;
 
 public class Glo
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共变量.
 	public static String getADBasePath()
 	{
@@ -59,10 +59,10 @@ public class Glo
 
 		return de;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 公共变量.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 相关方法.
 
 	public static String GetPropertyValue(DirectoryEntry de, String propertyName)
@@ -76,10 +76,10 @@ public class Glo
 			return "";
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 登录校验相关.
 	public static native int LogonUser11(String lpszUsername, String lpszDomain, String lpszPassword, int dwLogonType, int dwLogonProvider, tangible.RefObject<IntPtr> phToken);
 	static

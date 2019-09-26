@@ -23,7 +23,7 @@ public class CCMobile extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -45,7 +45,7 @@ public class CCMobile extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到.");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
 	public final String Login_Init()
@@ -318,7 +318,7 @@ public class CCMobile extends DirectoryPageBase
 		return ccform.AttachmentUpload_DownByStream();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 关键字查询.
 	/** 
 	 打开表单
@@ -340,10 +340,10 @@ public class CCMobile extends DirectoryPageBase
 		BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 		return search.KeySearch_Query();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 关键字查询.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询.
 	/** 
 	 初始化
@@ -361,7 +361,7 @@ public class CCMobile extends DirectoryPageBase
 			tSpan = null;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 1、获取时间段枚举/总数.
 		SysEnums ses = new SysEnums("TSpan");
 		DataTable dtTSpan = ses.ToDataTableField();
@@ -390,10 +390,10 @@ public class CCMobile extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 2、处理流程类别列表.
 		if (tSpan.equals("-1"))
 		{
@@ -413,10 +413,10 @@ public class CCMobile extends DirectoryPageBase
 		}
 		dtFlows.TableName = "Flows";
 		ds.Tables.add(dtFlows);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 3、处理流程实例列表.
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		String sqlWhere = "";
@@ -481,7 +481,7 @@ public class CCMobile extends DirectoryPageBase
 				 dr.set("TDTime", GetTraceNewTime(dr.get("FK_Flow").toString(), Integer.parseInt(dr.get("WorkID").toString()), Integer.parseInt(dr.get("FID").toString())));
 			 }
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
@@ -491,7 +491,7 @@ public class CCMobile extends DirectoryPageBase
 	}
 	 public static String GetTraceNewTime(String fk_flow, long workid, long fid)
 	 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取track数据.
 		String sqlOfWhere2 = "";
 		String sqlOfWhere1 = "";
@@ -525,7 +525,7 @@ public class CCMobile extends DirectoryPageBase
 			Track.CreateOrRepairTrackTable(fk_flow);
 			return DBAccess.RunSQLReturnString(ps);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取track数据.
 	 }
 	/** 
@@ -566,7 +566,7 @@ public class CCMobile extends DirectoryPageBase
 		}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

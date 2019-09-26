@@ -54,7 +54,7 @@ public class LoadTemplete extends Method
 	{
 		String msg = "";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理表单.
 		// 调度表单文件。
 		SysFormTrees fss = new SysFormTrees();
@@ -121,10 +121,10 @@ public class LoadTemplete extends Method
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理表单.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理流程.
 		FlowSorts sorts = new FlowSorts();
 		sorts.ClearTable();
@@ -222,7 +222,7 @@ public class LoadTemplete extends Method
 		{
 			fl.DoCheck();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理流程.
 
 

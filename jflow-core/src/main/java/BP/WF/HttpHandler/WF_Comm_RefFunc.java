@@ -18,7 +18,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Dot2DotTreeDeptEmpModel.htm（部门人员选择）
 	/** 
 	 保存节点绑定人员信息
@@ -304,10 +304,10 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		}
 		return re;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion Dot2DotTreeDeptModel.htm（部门选择）
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Dot2DotStationModel.htm（岗位选择）
 
 	/** 
@@ -721,10 +721,10 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		}
 		return Newtonsoft.Json.JsonConvert.SerializeObject(re);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion Dot2DotStationModel.htm（岗位选择）
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Methods
 	/** 
 	 判断Port_StationType表中是否含有Idx字段
@@ -751,10 +751,10 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 
 		return false;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 辅助实体定义
 	/** 
 	 Eayui tree node对象
@@ -884,6 +884,6 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 			Code = value;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 辅助实体定义
 }

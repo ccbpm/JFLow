@@ -16,13 +16,13 @@ import java.util.*;
 */
 public class FrmNode extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 关于节点与office表单的toolbar权限控制方案.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 关于节点与office表单的toolbar权限控制方案.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	public final String getFrmUrl()
 	{
@@ -357,10 +357,10 @@ public class FrmNode extends EntityMyPK
 		}
 		return 0;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 节点表单
@@ -451,10 +451,10 @@ public class FrmNode extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法.
 	public final void DoUp() throws Exception
 	{
@@ -498,7 +498,7 @@ public class FrmNode extends EntityMyPK
 
 		return super.beforeUpdateInsertAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方法.
 
 }

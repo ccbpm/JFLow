@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class HungUp extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final HungUpWay getHungUpWay() throws Exception
 	{
@@ -113,10 +113,10 @@ public class HungUp extends EntityMyPK
 	{
 		this.SetValByKey(HungUpAttr.DTOfHungUp, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 挂起
@@ -162,6 +162,6 @@ public class HungUp extends EntityMyPK
 	public final void DoRelease()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

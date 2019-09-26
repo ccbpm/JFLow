@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class Dept extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 父节点编号
@@ -27,10 +27,10 @@ public class Dept extends EntityNoName
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 部门
@@ -48,10 +48,10 @@ public class Dept extends EntityNoName
 	{
 		super(no);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写方法
 	/** 
 	 UI界面上的访问控制
@@ -92,6 +92,6 @@ public class Dept extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

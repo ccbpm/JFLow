@@ -19,7 +19,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 导入
 	/** 
 	 初始化 导入的界面 .
@@ -53,7 +53,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			ds.Tables.add(dt);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 加入表单库目录.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
@@ -85,10 +85,10 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("FK_FORMTREE").ColumnName = "FK_FormTree";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 加入表单库目录.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 加入流程树目录.
 		sql = "SELECT No,Name,ParentNo FROM WF_FlowSort ORDER BY  PARENTNO, IDX ";
 
@@ -113,15 +113,15 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 加入流程树目录.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 数据源
 		BP.Sys.SFDBSrcs ens = new BP.Sys.SFDBSrcs();
 		ens.RetrieveAll();
 		ds.Tables.add(ens.ToDataTableField("SFDBSrcs"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//加入系统表.
@@ -279,7 +279,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 04.从外部数据源导入
 	/** 
 	 选择一个数据源，进入步骤2
@@ -448,10 +448,10 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 		return msg;
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

@@ -7,13 +7,13 @@ import java.util.*;
 
 public class CashFrmTemplate
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 缓存ht
 	private static Hashtable _hts;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 对实体的操作.
 	/** 
 	 放入表单
@@ -108,7 +108,7 @@ public class CashFrmTemplate
 			return null;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 对实体的操作.
 
 }

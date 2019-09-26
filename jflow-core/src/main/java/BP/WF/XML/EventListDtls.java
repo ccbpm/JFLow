@@ -11,7 +11,7 @@ import BP.WF.*;
 */
 public class EventListDtls extends XmlEns
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 从表事件s
@@ -19,10 +19,10 @@ public class EventListDtls extends XmlEns
 	public EventListDtls()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
@@ -50,6 +50,6 @@ public class EventListDtls extends XmlEns
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

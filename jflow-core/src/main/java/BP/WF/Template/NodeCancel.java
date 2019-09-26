@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class NodeCancel extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	撤销到
@@ -41,10 +41,10 @@ public class NodeCancel extends EntityMM
 	{
 		this.SetValByKey(NodeCancelAttr.FK_Node, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 可撤销的节点
@@ -74,6 +74,6 @@ public class NodeCancel extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

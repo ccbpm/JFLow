@@ -8,7 +8,7 @@ import BP.En.*;
 */
 public class DefVal extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 父节点编号
@@ -106,10 +106,10 @@ public class DefVal extends EntityMyPK
 	{
 		this.SetValByKey(DefValAttr.CurValue, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 
 	/** 
@@ -159,7 +159,7 @@ public class DefVal extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

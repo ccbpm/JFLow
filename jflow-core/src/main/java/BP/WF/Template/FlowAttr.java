@@ -7,7 +7,7 @@ import BP.WF.*;
 */
 public class FlowAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 编号
@@ -193,10 +193,10 @@ public class FlowAttr
 	 运行的SQL
 	*/
 	public static final String RunSQL = "RunSQL";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 基本属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 发起限制规则.
 	/** 
 	 发起限制规则
@@ -214,10 +214,10 @@ public class FlowAttr
 	 提示时间
 	*/
 	public static final String StartLimitWhen = "StartLimitWhen";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 发起限制规则.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 开始节点数据导入规则.
 	/** 
 	 发起前置规则
@@ -263,10 +263,10 @@ public class FlowAttr
 	 系统类别（第2级流程树节点编号）
 	*/
 	public static final String SysType = "SysType";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 开始节点数据导入规则.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 父子流程
 	/** 
 	 (当前节点为子流程时)是否检查所有子流程完成后父流程自动发送
@@ -288,10 +288,10 @@ public class FlowAttr
 	 子流程结束时，让父流程自动运行到下一步
 	*/
 	public static final String IsToParentNextNode = "IsToParentNextNode";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 父子流程
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 数据同步方式.
 	/** 
 	 数据同步方式.
@@ -319,10 +319,10 @@ public class FlowAttr
 	 数据源
 	*/
 	public static final String DTSDBSrc = "DTSDBSrc";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限组.
 	/** 
 	 发起人可看
@@ -368,7 +368,7 @@ public class FlowAttr
 	 指定的人员可看
 	*/
 	public static final String PSpecEmp = "PSpecEmp";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限组.
 
 	/** 

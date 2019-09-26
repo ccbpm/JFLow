@@ -10,7 +10,7 @@ import java.util.*;
 */
 public class GEEntityExcelFrm extends EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性。
 	/** 
 	 最后修改人
@@ -48,10 +48,10 @@ public class GEEntityExcelFrm extends EntityOID
 	{
 		this.SetValByKey(GEEntityExcelFrmAttr.FilePath, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	@Override
 	public String getPK()
@@ -105,10 +105,10 @@ public class GEEntityExcelFrm extends EntityOID
 		this.setOID(oid);
 		int i = this.RetrieveFromDBSources();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Map
 	/** 
 	 重写基类方法=
@@ -142,10 +142,10 @@ public class GEEntityExcelFrm extends EntityOID
 		}
 		return new GEEntityExcelFrms(this.FK_MapData);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 其他属性.
 	private ArrayList _Dtls = null;
 	public final ArrayList getDtls()
@@ -156,6 +156,6 @@ public class GEEntityExcelFrm extends EntityOID
 		}
 		return _Dtls;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 其他属性.
 }

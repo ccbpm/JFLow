@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class Emp extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 扩展属性
 	/** 
 	 该人员是否被禁用.
@@ -134,10 +134,10 @@ public class Emp extends EntityNoName
 	{
 		this.SetValByKey(EmpAttr.SignType, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共方法
 	/** 
 	 检查密码(可以重写此方法)
@@ -154,10 +154,10 @@ public class Emp extends EntityNoName
 		}
 		return false;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 公共方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 操作员
@@ -196,7 +196,7 @@ public class Emp extends EntityNoName
 
 		Map map = new Map();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性
 		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN)); //要连接的数据源（表示要连接到的那个系统数据库）。
 		map.setPhysicsTable("Port_Emp"); // 要物理表。
@@ -205,10 +205,10 @@ public class Emp extends EntityNoName
 		map.setEnDesc("用户"); // "用户"; // 实体的描述.
 		map.Java_SetEnType(EnType.App); //实体类型。
 		map.setEnType(EnType.App);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 字段
 
 			/*关于字段属性的增加 */
@@ -229,12 +229,12 @@ public class Emp extends EntityNoName
 
 
 		map.AddTBInt(EmpAttr.Idx, 0, "序号", true, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 字段
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造函数
 }

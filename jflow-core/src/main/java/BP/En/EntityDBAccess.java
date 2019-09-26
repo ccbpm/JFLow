@@ -13,7 +13,7 @@ import BP.Sys.*;
 
 public class EntityDBAccess
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 对实体的基本操作
 	/** 
 	 删除
@@ -116,13 +116,13 @@ public class EntityDBAccess
 			throw ex;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 产生序列号码方法
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public static int RetrieveV2(Entity en, String sql, Paras paras) throws Exception

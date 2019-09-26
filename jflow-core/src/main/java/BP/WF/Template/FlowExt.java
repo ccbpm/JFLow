@@ -17,7 +17,7 @@ import java.time.*;
 */
 public class FlowExt extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	/** 
 	 流程类别
@@ -86,7 +86,7 @@ public class FlowExt extends EntityNoName
 		this.SetValByKey(FlowAttr.FlowMark, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region   前置导航
 	/** 
 	 前置导航方式
@@ -213,7 +213,7 @@ public class FlowExt extends EntityNoName
 	{
 		this.SetValByKey(FlowAttr.IsStartInMobile, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 	/** 
 	 设计者编号
@@ -270,10 +270,10 @@ public class FlowExt extends EntityNoName
 	{
 		this.SetValByKey(FlowAttr.Tester, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 UI界面上的访问控制
@@ -332,7 +332,7 @@ public class FlowExt extends EntityNoName
 
 		Map map = new Map("WF_Flow", "流程");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性。
 		map.AddTBStringPK(FlowAttr.No, null, "编号", true, true, 1, 10, 3);
 		map.SetHelperUrl(FlowAttr.No, "http://ccbpm.mydoc.io/?v=5404&t=17023"); //使用alert的方式显示帮助信息.
@@ -397,10 +397,10 @@ public class FlowExt extends EntityNoName
 		map.AddDDLSysEnum(FlowAttr.ChartType, FlowChartType.Icon.getValue(), "节点图形类型", true, true, "ChartType", "@0=几何图形@1=肖像图片");
 
 		map.AddTBString(FlowAttr.HostRun, null, "运行主机(IP+端口)", true, false, 0, 40, 10, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 表单数据.
 
 			//批量发起 add 2013-12-27. 
@@ -436,20 +436,20 @@ public class FlowExt extends EntityNoName
 			//add  2013-08-30.
 		map.AddTBString(FlowAttr.BillNoFormat, null, "单据编号格式", true, false, 0, 50, 10, false);
 		map.SetHelperUrl(FlowAttr.BillNoFormat, "http://ccbpm.mydoc.io/?v=5404&t=17041");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 表单数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 开发者信息.
 
 		map.AddTBString(FlowAttr.DesignerNo, null, "设计者编号", true, true, 0, 50, 10, false);
 		map.AddTBString(FlowAttr.DesignerName, null, "设计者名称", true, true, 0, 50, 10, false);
 		map.AddTBString(FlowAttr.DesignTime, null, "创建时间", true, true, 0, 50, 20, false);
 		map.AddTBStringDoc(FlowAttr.Note, null, "流程描述", true, false, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 开发者信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本功能.
 			//map.AddRefMethod(rm);
 		RefMethod rm = new RefMethod();
@@ -552,10 +552,10 @@ public class FlowExt extends EntityNoName
 			//rm.Icon = "../../WF/Img/Btn/DTS.gif";
 			//rm.ClassMethodName = this.ToString() + ".DoFlowFormTree()";
 			//map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流程设置.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 时限规则
 		rm = new RefMethod();
 		rm.GroupName = "时限规则";
@@ -575,10 +575,10 @@ public class FlowExt extends EntityNoName
 			// rm.GroupName = "实验中的功能";
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 时限规则
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 模拟测试.
 		rm = new RefMethod();
 		rm.GroupName = "模拟测试";
@@ -606,10 +606,10 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 模拟测试.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 流程模版管理.
 		rm = new RefMethod();
 		rm.Title = "模版导入";
@@ -626,10 +626,10 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程模版";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流程模版管理.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 开发接口.
 		rm = new RefMethod();
 		rm.Title = "与业务表数据同步";
@@ -671,10 +671,10 @@ public class FlowExt extends EntityNoName
 		rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 开发接口.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 流程运行维护.
 		rm = new RefMethod();
 		rm.Icon = "../../WF/Img/Btn/DTS.gif";
@@ -795,10 +795,10 @@ public class FlowExt extends EntityNoName
 		rm.getHisAttrs().AddTBString("note", null, "回滚原因", true, false, 0, 600, 200);
 		rm.GroupName = "流程维护";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流程运行维护.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 流程监控.
 
 			//rm = new RefMethod();
@@ -860,10 +860,10 @@ public class FlowExt extends EntityNoName
 		map.AddRefMethod(rm);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流程监控.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 实验中的功能
 		rm = new RefMethod();
 		rm.Title = "数据订阅-实验中";
@@ -935,7 +935,7 @@ public class FlowExt extends EntityNoName
 		rm.GroupName = "实验中的功能";
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 实验中的功能
 
 			//rm = new RefMethod();
@@ -974,10 +974,10 @@ public class FlowExt extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程监控.
 
 
@@ -1005,10 +1005,10 @@ public class FlowExt extends EntityNoName
 	{
 		return "../../Admin/CCBPMDesigner/App/RptOrder.aspx?anaTime=mouth&FK_Flow=" + this.getNo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 流程监控.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 开发接口.
 	/** 
 	 执行删除指定日期范围内的流程
@@ -1177,10 +1177,10 @@ public class FlowExt extends EntityNoName
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 开发接口
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  基本功能
 	/** 
 	 事件
@@ -1314,7 +1314,7 @@ public class FlowExt extends EntityNoName
 		boolean isHaveGener = false;
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 创建流程引擎主表数据.
 			gwf = new GenerWorkFlow();
 			gwf.setWorkID(workid);
@@ -1369,7 +1369,7 @@ public class FlowExt extends EntityNoName
 				gwf.Insert(); //插入流程引擎数据.
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 创建流程引擎主表数据
 			String ndTrack = "ND" + Integer.parseInt(this.getNo()) + "Track";
 			String actionType = ActionType.Forward.getValue() + "," + ActionType.FlowOver.getValue() + "," + ActionType.ForwardFL.getValue() + "," + ActionType.ForwardHL.getValue();
@@ -1429,7 +1429,7 @@ public class FlowExt extends EntityNoName
 				gwl.Insert();
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加入退回信息, 让接受人能够看到退回原因.
 			ReturnWork rw = new ReturnWork();
 			rw.Delete(ReturnWorkAttr.WorkID, workid); //先删除历史的信息.
@@ -1447,7 +1447,7 @@ public class FlowExt extends EntityNoName
 			rw.setIsBackTracking(false);
 			rw.setMyPK(BP.DA.DBAccess.GenerGUID());
 			rw.Insert();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion   加入退回信息, 让接受人能够看到退回原因.
 
 			//更新流程表的状态.
@@ -1908,7 +1908,7 @@ public class FlowExt extends EntityNoName
 		//更新流程版本
 		Flow.UpdateVer(this.getNo());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 同步事件实体.
 		try
 		{
@@ -1924,25 +1924,25 @@ public class FlowExt extends EntityNoName
 		{
 			this.setFlowEventEntity("");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 同步事件实体.
 
 		//更新缓存数据。
 		Flow fl = new Flow(this.getNo());
 		fl.RetrieveFromDBSources();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region StartFlows的清缓存
 		if (fl.getIsStartInMobile() != this.getIsStartInMobile() || fl.getIsCanStart() != this.getIsCanStart())
 		{
 			//清空WF_Emp 的StartFlows
 			DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion StartFlows的清缓存
 
 		fl.Copy(this);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查数据完整性 - 同步业务表数据。
 		// 检查业务是否存在.
 		if (fl.getDTSWay() != FlowDTSWay.None)
@@ -2025,7 +2025,7 @@ public class FlowExt extends EntityNoName
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 检查数据完整性. - 同步业务表数据。
 
 
@@ -2047,7 +2047,7 @@ public class FlowExt extends EntityNoName
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 为systype设置，当前所在节点的第2级别目录。
 		FlowSort fs = new FlowSort(fl.getFK_FlowSort());
 		if (fs.getParentNo().equals("99") || fs.getParentNo().equals("0"))
@@ -2067,7 +2067,7 @@ public class FlowExt extends EntityNoName
 				this.setSysType(fsPP.getNo());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 为systype设置，当前所在节点的第2级别目录。
 
 		fl = new Flow();
@@ -2079,10 +2079,10 @@ public class FlowExt extends EntityNoName
 
 		super.afterInsertUpdateAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实验中的功能.
 	/** 
 	 删除多余的字段.
@@ -2150,6 +2150,6 @@ public class FlowExt extends EntityNoName
 
 		return "设置成功...";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

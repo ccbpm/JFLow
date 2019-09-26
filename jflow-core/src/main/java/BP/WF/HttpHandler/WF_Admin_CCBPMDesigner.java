@@ -341,7 +341,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		//return BP.Tools.Json.ToJson(dt);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -354,7 +354,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		return "err@没有判断的标记:" + this.getDoType();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
 	/** 
@@ -566,7 +566,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 主页.
 	/** 
 	 初始化登录界面.
@@ -639,10 +639,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			return "err@初始化界面期间出现如下错误:" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 登录窗口.
 	public final String Login_InitInfo()
 	{
@@ -798,12 +798,12 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		BP.WF.Dev2Interface.Port_Login(emp.No);
 		return "url@Default.htm?SID=" + emp.SID + "&UserNo=" + emp.No;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 登录窗口.
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程相关 Flow
 	/** 
 	 获取流程所有元素
@@ -833,10 +833,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		// return BP.Tools.Json.DataSetToJson(ds, false);
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion end Flow
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点相关 Nodes
 	/** 
 	 创建流程节点并返回编号
@@ -995,10 +995,10 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 		return "设置成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion end Node
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region CCBPMDesigner
 	/** 
 	 获取用户信息
@@ -1183,7 +1183,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 
 	public final String GetFormTreeTable()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查数据是否符合规范.
 		String rootNo = DBAccess.RunSQLReturnStringIsNull("SELECT No FROM Sys_FormTree WHERE ParentNo='' OR ParentNo IS NULL", null);
 		if (DataType.IsNullOrEmpty(rootNo) == false)
@@ -1205,7 +1205,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 			ft.setParentNo("0");
 			ft.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 检查数据是否符合规范.
 
 		//组织数据源.
@@ -1838,7 +1838,7 @@ public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
 		}
 		return "@登录成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

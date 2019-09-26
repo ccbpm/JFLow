@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class StationCreate extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -54,10 +54,10 @@ public class StationCreate extends EntityMM
 	{
 		this.SetValByKey(StationCreateAttr.FK_Station, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 单据可创建的工作岗位
@@ -83,7 +83,7 @@ public class StationCreate extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class FlowRefEmps extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 得到它的 Entity 
@@ -22,10 +22,10 @@ public class FlowRefEmps extends EntitiesMyPK
 	{
 		return new FlowRefEmp();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 流程关联人员集合
@@ -43,10 +43,10 @@ public class FlowRefEmps extends EntitiesMyPK
 	{
 		this.Retrieve(FlowRefEmpAttr.FK_Flow, fk_flow);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -71,6 +71,6 @@ public class FlowRefEmps extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -7,7 +7,7 @@ import BP.DA.*;
 */
 public abstract class EntityMyPKMyFile extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	@Override
 	public String getPK()
@@ -66,10 +66,10 @@ public abstract class EntityMyPKMyFile extends EntityMyPK
 	{
 		return DataType.IsImgExt(this.getMyFileExt());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	public EntityMyPKMyFile()
 	{
@@ -85,6 +85,6 @@ public abstract class EntityMyPKMyFile extends EntityMyPK
 		this.setMyPK(_MyPK);
 		this.Retrieve();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Cash2019
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 缓存ht
 	private static Hashtable _hts;
 	public static Hashtable gethts()
@@ -18,10 +18,10 @@ public class Cash2019
 		}
 		return _hts;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 对实体的操作.
 	/** 
 	 把实体放入缓存里面
@@ -105,10 +105,10 @@ public class Cash2019
 			return null;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 对实体的操作.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 对实体的集合操作.
 	/** 
 	 把集合放入缓存.
@@ -131,7 +131,7 @@ public class Cash2019
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 对实体的集合操作.
 
 }

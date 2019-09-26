@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class Cond extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 	/** 
 	 指定人员方式
@@ -94,10 +94,10 @@ public class Cond extends EntityMyPK
 
 		throw new RuntimeException("@配置异常，没有判断的条件类型。");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性.
 	public GERpt en = null;
 	/** 
@@ -242,7 +242,7 @@ public class Cond extends EntityMyPK
 	{
 		this.SetValByKey(CondAttr.CondOrAnd, value.getValue());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -262,7 +262,7 @@ public class Cond extends EntityMyPK
 		return super.beforeUpdateInsertAction();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 实现基本的方方法
 	/** 
 	 属性
@@ -457,10 +457,10 @@ public class Cond extends EntityMyPK
 		int condtypeInt = this.getHisCondType().getValue();
 		this.DoOrderDown(CondAttr.FK_Node, String.valueOf(fk_node), CondAttr.CondType, String.valueOf(condtypeInt), CondAttr.PRI);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 条件
@@ -479,10 +479,10 @@ public class Cond extends EntityMyPK
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共方法
 	/** 
 	 这个条件能不能通过
@@ -492,7 +492,7 @@ public class Cond extends EntityMyPK
 		Node nd = new Node(this.getFK_Node());
 		if (this.en == null)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 实体不存在则进行重新初始化
 			GERpt en = nd.getHisFlow().getHisGERpt();
 			try
@@ -508,13 +508,13 @@ public class Cond extends EntityMyPK
 				return false;
 					//throw new Exception("@在取得判断条件实体[" + nd.EnDesc + "], 出现错误:" + ex.Message + "@错误原因是定义流程的判断条件出现错误,可能是你选择的判断条件工作类是当前工作节点的下一步工作造成,取不到该实体的实例.");
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 		}
 
 		if (this.getHisDataFrom() == ConnDataFrom.Stas)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 按岗位控制
 			String strs = this.getOperatorValue().toString();
 			strs += this.getOperatorValueT().toString();
@@ -537,13 +537,13 @@ public class Cond extends EntityMyPK
 
 			this.MsgOfCond = "@以岗位判断方向，条件为false：岗位集合" + strs + "，操作员(" + WebUser.getNo() + ")岗位:" + strs1;
 			return false;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 		}
 
 		if (this.getHisDataFrom() == ConnDataFrom.Depts)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 按部门控制
 			String strs = this.getOperatorValue().toString();
 			strs += this.getOperatorValueT().toString();
@@ -587,13 +587,13 @@ public class Cond extends EntityMyPK
 			this.MsgOfCond = "@以部门判断方向，条件为false：部门集合" + strs + "，操作员(" + WebUser.getNo() + ")部门:" + strs1;
 			return false;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 		}
 
 		if (this.getHisDataFrom() == ConnDataFrom.SQL)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 按SQL 计算
 				//this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.AttrKey + " (" + en.GetValStringByKey(this.AttrKey) + ") 操作符:(" + this.FK_Operator + ") 判断值:(" + this.OperatorValue.ToString() + ")";
 			String sql = this.getOperatorValueStr();
@@ -636,14 +636,14 @@ public class Cond extends EntityMyPK
 			}
 
 			return true;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 按SQL 计算
 
 		}
 
 		if (this.getHisDataFrom() == ConnDataFrom.SQLTemplate)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 按SQLTemplate 计算
 				//this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.AttrKey + " (" + en.GetValStringByKey(this.AttrKey) + ") 操作符:(" + this.FK_Operator + ") 判断值:(" + this.OperatorValue.ToString() + ")";
 			String fk_sqlTemplate = this.getOperatorValueStr();
@@ -687,13 +687,13 @@ public class Cond extends EntityMyPK
 			}
 
 			throw new RuntimeException("@您设置的sql返回值，不符合ccflow的要求，必须是0或大于等于1。");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 		}
 
 		if (this.getHisDataFrom() == ConnDataFrom.Url)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region URL 参数计算
 			String url = this.getOperatorValueStr();
 			if (url.contains("?") == false)
@@ -704,7 +704,7 @@ public class Cond extends EntityMyPK
 			url = url.replace("@SDKFromServHost", BP.Sys.SystemConfig.getAppSettings().get("SDKFromServHost"));
 			url = BP.WF.Glo.DealExp(url, this.en, "");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加入必要的参数.
 			if (url.contains("&FK_Flow") == false)
 			{
@@ -736,10 +736,10 @@ public class Cond extends EntityMyPK
 			}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 加入必要的参数.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 对url进行处理.
 			if (SystemConfig.getIsBSsystem())
 			{
@@ -810,10 +810,10 @@ public class Cond extends EntityMyPK
 					url = cfgBaseUrl + url;
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 对url进行处理.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 求url的值
 			try
 			{
@@ -860,10 +860,10 @@ public class Cond extends EntityMyPK
 			{
 				throw new RuntimeException("@判断url方向出现错误:" + ex.getMessage() + ",执行url错误:" + url);
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 对url进行处理.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 		}
 
@@ -1039,6 +1039,6 @@ public class Cond extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

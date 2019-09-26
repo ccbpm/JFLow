@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class PartParentSubGuide extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -170,10 +170,10 @@ public class PartParentSubGuide extends EntityMyPK
 	{
 		SetValByKey(PartAttr.Tag9, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 配件
@@ -234,6 +234,6 @@ public class PartParentSubGuide extends EntityMyPK
 		this.setPartType(BP.WF.Template.PartType.ParentSubFlowGuide);
 		return super.beforeUpdateInsertAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

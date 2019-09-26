@@ -5,7 +5,7 @@ import BP.Sys.*;
 import java.io.*;
 import java.time.*;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#region enum LogType
 /** 
  信息类型

@@ -5,7 +5,7 @@ package BP.En;
 */
 public class OverrideFile
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 可以重写的表单事件.
 	/** 
 	 执行的事件
@@ -45,6 +45,6 @@ public class OverrideFile
 	public static void FrmEvent_SaveAfter(String frmID, Entity en)
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 可以重写的表单事件.
 }

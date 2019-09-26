@@ -121,7 +121,7 @@ public class MapDataAttr extends EntityNoNameAttr
 	public static final String FlowCtrls = "FlowCtrls";
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 报表属性(参数的方式存储).
 	/** 
 	 是否关键字查询
@@ -139,10 +139,10 @@ public class MapDataAttr extends EntityNoNameAttr
 	 查询外键枚举字段
 	*/
 	public static final String RptSearchKeys = "RptSearchKeys";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 报表属性(参数的方式存储).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 其他计算属性，参数存储.
 	/** 
 	 最左边的值
@@ -160,10 +160,10 @@ public class MapDataAttr extends EntityNoNameAttr
 	 最底部的值
 	*/
 	public static final String MaxEnd = "MaxEnd";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 其他计算属性，参数存储.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region weboffice属性。
 	/** 
 	 是否启用锁定行
@@ -225,12 +225,12 @@ public class MapDataAttr extends EntityNoNameAttr
 	 是否启用下载
 	*/
 	public static final String IsWoEnableDown = "IsWoEnableDown";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion weboffice属性。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 	public static final String EnsName = "EnsName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 }

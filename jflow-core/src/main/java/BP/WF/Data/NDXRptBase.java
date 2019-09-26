@@ -10,7 +10,7 @@ import BP.WF.*;
 */
 public abstract class NDXRptBase extends BP.En.EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 工作ID
@@ -280,10 +280,10 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 	{
 		this.SetValByKey(NDXRptBaseAttr.PEmp, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion attrs
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 构造
@@ -301,6 +301,6 @@ public abstract class NDXRptBase extends BP.En.EntityOID
 	{
 		super(workid);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造
 }

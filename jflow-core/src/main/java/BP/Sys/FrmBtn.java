@@ -12,7 +12,7 @@ import java.util.*;
 public class FrmBtn extends EntityMyPK
 {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 所在的分组
@@ -178,10 +178,10 @@ public class FrmBtn extends EntityMyPK
 			//else
 			return this.GetValStrByKey(FrmBtnAttr.Text).replace("@", "<br>");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 按钮
@@ -247,6 +247,6 @@ public class FrmBtn extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

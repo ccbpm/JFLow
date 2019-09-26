@@ -302,7 +302,7 @@ public class FlowCheckError
 					}
 
 					String sql = nd.getDeliveryParas();
-					for (MapAttr item : mattrs)
+					for (MapAttr item : mattrs.ToJavaList())
 					{
 						if (item.IsNum)
 						{

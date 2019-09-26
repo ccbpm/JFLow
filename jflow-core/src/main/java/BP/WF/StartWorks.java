@@ -9,7 +9,7 @@ import BP.Port.*;
 */
 public abstract class StartWorks extends Works
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 信息采集基类
@@ -17,10 +17,10 @@ public abstract class StartWorks extends Works
 	public StartWorks()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共查询方法
 	/** 
 	 查询到我的任务.
@@ -82,6 +82,6 @@ public abstract class StartWorks extends Works
 		qo.AddWhere(StartWorkAttr.OID, " IN ", " ( SELECT WorkID FROM V_WF_Msg  WHERE  (FK_Flow='" + flow + "' AND FK_Emp='" + WebUser.getNo() + "' ) AND ( FK_Flow in ( SELECT No FROM WF_Flow WHERE FK_FlowSort='" + flowSort + "' )) )");
 		return qo.DoQueryToTable();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

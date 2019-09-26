@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class TestAPI extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 测试过程
@@ -29,7 +29,7 @@ public class TestAPI extends EntityNoName
 	{
 		super(_No);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

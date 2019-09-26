@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class MethodLink extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 表单ID
@@ -76,10 +76,10 @@ public class MethodLink extends EntityMyPK
 	{
 		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -123,17 +123,17 @@ public class MethodLink extends EntityMyPK
 		map.AddTBString(MethodAttr.MethodName, null, "方法名", true, false, 0, 300, 10, true);
 		map.AddTBStringDoc(MethodAttr.MethodDoc_Url, null, "连接URL", true, false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 工具栏.
 		map.AddBoolean(MethodAttr.IsMyBillToolBar, true, "是否显示在MyBill.htm工具栏上", true, true, true);
 		map.AddBoolean(MethodAttr.IsMyBillToolExt, false, "是否显示在MyBill.htm工具栏右边的更多按钮里", true, true, true);
 		map.AddBoolean(MethodAttr.IsSearchBar, false, "是否显示在Search.htm工具栏上(用于批处理)", true, true, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 工具栏.
 
 		this.set_enMap(  map);
 		return map;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

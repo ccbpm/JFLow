@@ -9,7 +9,7 @@ import BP.En.*;
 */
 public class ExcelTables extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 生成Excel数据表实体
@@ -19,10 +19,10 @@ public class ExcelTables extends EntitiesNoName
 	{
 		return new ExcelTable();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public ExcelTables()
 	{

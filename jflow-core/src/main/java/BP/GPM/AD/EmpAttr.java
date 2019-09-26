@@ -10,7 +10,7 @@ import java.util.*;
 */
 public class EmpAttr extends BP.En.EntityNoNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 部门
@@ -40,7 +40,7 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	 拼音
 	*/
 	public static final String PinYin = "PinYin";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 	/** 
 	 签字类型

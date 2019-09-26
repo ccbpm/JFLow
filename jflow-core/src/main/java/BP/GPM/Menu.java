@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class Menu extends EntityTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -175,10 +175,10 @@ public class Menu extends EntityTree
 	{
 		this.SetValByKey(MenuAttr.Tag1, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 菜单
@@ -238,13 +238,13 @@ public class Menu extends EntityTree
 		map.setEnType(EnType.Sys);
 		map.setCodeStruct("4");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 与树有关的必备属性.
 		map.AddTBStringPK(MenuAttr.No, null, "功能编号", true, true, 1, 90, 50);
 		map.AddDDLEntities(MenuAttr.ParentNo, null, DataType.AppString, "父节点", new Menus(), "No", "Name", false);
 		map.AddTBString(MenuAttr.Name, null, "名称", true, false, 0, 300, 200, true);
 		map.AddTBInt(MenuAttr.Idx, 0, "顺序号", true, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 与树有关的必备属性.
 
 			// 类的字段属性. 
@@ -288,7 +288,7 @@ public class Menu extends EntityTree
 			//map.getAttrsOfOneVSM().Add(new ByEmps(), new Emps(), ByStationAttr.RefObj, ByEmpAttr.FK_Emp,
 			//    EmpAttr.Name, EmpAttr.No, "可访问的人员");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本功能.
 			//可以访问的权限组.
 		map.getAttrsOfOneVSM().Add(new GroupMenus(), new Groups(), GroupMenuAttr.FK_Menu, GroupMenuAttr.FK_Group, EmpAttr.Name, EmpAttr.No, "绑定到权限组");
@@ -312,11 +312,11 @@ public class Menu extends EntityTree
 		rm.IsCanBatch = true; //是否可以批处理？
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本功能.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 创建菜单.
 		rm = new RefMethod();
 		rm.GroupName = "创建菜单(对目录有效)";
@@ -331,14 +331,14 @@ public class Menu extends EntityTree
 
 		rm.ClassMethodName = this.toString() + ".DoAddCCBill";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 创建菜单.
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

@@ -27,7 +27,7 @@ public class BtnLabExtWebOffice extends Entity
 		return uac;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 but
@@ -664,10 +664,10 @@ public class BtnLabExtWebOffice extends Entity
 	{
 		return this.GetValStringByKey(BtnAttr.OfficeTHTemplate);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 Btn
@@ -705,7 +705,7 @@ public class BtnLabExtWebOffice extends Entity
 		map.AddTBString(BtnAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 公文按钮
 		map.AddTBString(BtnAttr.OfficeOpen, "打开本地", "打开本地标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.OfficeOpenEnable, false, "是否启用", true, true);
@@ -758,14 +758,14 @@ public class BtnLabExtWebOffice extends Entity
 
 		map.AddDDLSysEnum(BtnAttr.WebOfficeFrmModel, 0, "表单工作方式", true, true, "FrmType");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

@@ -13,7 +13,7 @@ import BP.WF.*;
 */
 public class FindWorker
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 变量
 	public WorkNode town = null;
 	public WorkNode currWn = null;
@@ -23,7 +23,7 @@ public class FindWorker
 	private String JumpToEmp = null;
 	private int JumpToNode = 0;
 	private long WorkID = 0;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 变量
 
 	/** 
@@ -138,7 +138,7 @@ public class FindWorker
 			return dt;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按绑定部门计算,该部门一人处理标识该工作结束(子线程)..
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySetDeptAsSubthread)
 		{
@@ -155,10 +155,10 @@ public class FindWorker
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按绑定部门计算,该部门一人处理标识该工作结束(子线程)..
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照明细表,作为子线程的接收人.
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDtlAsSubThreadEmps)
 		{
@@ -199,10 +199,10 @@ public class FindWorker
 			}
 			throw new RuntimeException("@没有找到分流节点的明细表作为子线程的发起的数据源，流程设计错误，请确认分流节点表单中的明细表是否有UserNo约定的系统字段。" + msg);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照明细表,作为子线程的接收人.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按节点绑定的人员处理.
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByBindEmp)
 		{
@@ -216,10 +216,10 @@ public class FindWorker
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按节点绑定的人员处理.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照选择的人员处理。
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected || town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelectedForPrj || town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByFEE)
 		{
@@ -265,10 +265,10 @@ public class FindWorker
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照选择的人员处理。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照指定节点的处理人计算。
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySpecNodeEmp || town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStarter)
 		{
@@ -499,10 +499,10 @@ public class FindWorker
 
 			throw new RuntimeException("@流程设计错误，到达的节点（" + town.getHisNode().getName() + "）在指定的节点(" + strs + ")中没有数据，无法找到工作的人员。 @技术信息如下: 投递方式:BySpecNodeEmp sql=" + ps.getSQLNoPara());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照节点绑定的人员处理。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照上一个节点表单指定字段的人员处理。
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormEmpsField)
 		{
@@ -577,7 +577,7 @@ public class FindWorker
 			}
 			return dt;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照上一个节点表单指定字段的人员处理。
 
 		String prjNo = "";
@@ -609,7 +609,7 @@ public class FindWorker
 		}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 为省立医院增加，按照指定的部门范围内的岗位计算..
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.FindSpecDeptEmpsInStationlist)
 		{
@@ -642,10 +642,10 @@ public class FindWorker
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按部门与岗位的交集计算.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按部门与岗位的交集计算.
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 		{
@@ -676,10 +676,10 @@ public class FindWorker
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按部门与岗位的交集计算.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断节点部门里面是否设置了部门，如果设置了就按照它的部门处理。
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDept)
 		{
@@ -766,10 +766,10 @@ public class FindWorker
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断节点部门里面是否设置了部门，如果设置了，就按照它的部门处理。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照岗位计算，项目类.
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationForPrj)
 		{
@@ -794,11 +794,11 @@ public class FindWorker
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照岗位计算，项目类.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 仅按岗位计算
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationOnly)
 		{
@@ -823,10 +823,10 @@ public class FindWorker
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按配置的人员路由表计算
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByFromEmpToEmp)
 		{
@@ -867,11 +867,11 @@ public class FindWorker
 
 			throw new RuntimeException("@接收人规则是按照人员路由表设置的，但是系统管理员没有为您配置路由,当前节点;" + town.getHisNode().getName());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按岗位计算(以部门集合为纬度).
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept)
 		{
@@ -897,13 +897,13 @@ public class FindWorker
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		String empNo = WebUser.getNo();
 		String empDept = WebUser.getFK_Dept();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按指定的节点的人员岗位，做为下一步骤的流程接受人。
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySpecNodeEmpStation)
 		{
@@ -957,10 +957,10 @@ public class FindWorker
 				empDept = em.getFK_Dept();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按指定的节点人员，做为下一步骤的流程接受人。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 最后判断 - 按照岗位来执行。
 		if (this.currWn.getHisNode().getIsStartNode() == false)
 		{
@@ -1129,7 +1129,7 @@ public class FindWorker
 					}
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning edit by peng, 用来确定不同岗位集合的传递包含同一个人的处理方式。
 
 				//  if (isInit == false || isInit == true)
@@ -1223,7 +1223,7 @@ public class FindWorker
 		}
 
 		return mydt;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  按照岗位来执行。
 	}
 
@@ -1332,7 +1332,7 @@ public class FindWorker
 				return re_dt; //如果只有一个人，就直接返回，就不处理了。
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 根据配置追加接收人 by dgq 2015.5.18
 
 			String paras = this.town.getHisNode().getDeliveryParas();
@@ -1408,7 +1408,7 @@ public class FindWorker
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			//本节点接收人不允许包含上一步发送人 。

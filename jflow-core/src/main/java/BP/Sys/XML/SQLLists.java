@@ -10,7 +10,7 @@ import BP.Sys.*;
 */
 public class SQLLists extends XmlEns
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 考核过错行为的数据元素
@@ -18,10 +18,10 @@ public class SQLLists extends XmlEns
 	public SQLLists()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
@@ -49,6 +49,6 @@ public class SQLLists extends XmlEns
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

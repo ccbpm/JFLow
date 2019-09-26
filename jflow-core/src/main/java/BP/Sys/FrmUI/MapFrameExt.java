@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class MapFrameExt extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 连接
@@ -29,10 +29,10 @@ public class MapFrameExt extends EntityMyPK
 	{
 		return this.GetValStrByKey(MapFrameAttr.Name);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 权限控制
@@ -109,7 +109,7 @@ public class MapFrameExt extends EntityMyPK
 
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 执行的方法.
 		RefMethod rm = new RefMethod();
 
@@ -118,16 +118,16 @@ public class MapFrameExt extends EntityMyPK
 		rm.ClassMethodName = this.toString() + ".DoFrameExt()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 执行的方法.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 框架扩展.
 	/** 
 	 框架扩展
@@ -138,7 +138,7 @@ public class MapFrameExt extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/FrameExt/Default.htm?MyPK=" + this.getMyPK();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 框架扩展.
 
 

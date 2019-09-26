@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class SubFlowHands extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 得到它的 Entity 
@@ -21,10 +21,10 @@ public class SubFlowHands extends EntitiesMyPK
 	{
 		return new SubFlowHand();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 手工启动子流程集合
@@ -42,10 +42,10 @@ public class SubFlowHands extends EntitiesMyPK
 	{
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, SubFlowYanXuAttr.SubFlowType, SubFlowType.HandSubFlow.getValue(), SubFlowYanXuAttr.Idx);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List
 	/** 
 	 转化成 java list,C#不能调用.
@@ -70,6 +70,6 @@ public class SubFlowHands extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

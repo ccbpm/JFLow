@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class FrmTransferCustom extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getNo() throws Exception
 	{
@@ -141,10 +141,10 @@ public class FrmTransferCustom extends Entity
 	{
 		return this.GetValStrByKey(FTCAttr.FTCLab);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制
@@ -234,7 +234,7 @@ public class FrmTransferCustom extends Entity
 		map.AddTBString(FTCAttr.FTCLab, "流转自定义", "显示标签", true, false, 0, 50, 10, true);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		map.AddDDLSysEnum(FTCAttr.FTCSta, getFTCSta().Disable.getValue(), "组件状态", true, true, FTCAttr.FTCSta, "@0=禁用@1=只读@2=可设置人员");
@@ -247,7 +247,7 @@ public class FrmTransferCustom extends Entity
 		map.AddTBFloat(FTCAttr.FTC_H, 300, "高度", true, false);
 		map.AddTBFloat(FTCAttr.FTC_W, 400, "宽度", true, false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		this.set_enMap(map);
@@ -255,6 +255,6 @@ public class FrmTransferCustom extends Entity
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

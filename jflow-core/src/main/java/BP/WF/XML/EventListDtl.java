@@ -12,7 +12,7 @@ import BP.Web.WebUser;
 */
 public class EventListDtl extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 编号
@@ -35,10 +35,10 @@ public class EventListDtl extends XmlEn
 	{
 		return this.GetValStringByKey("EventDesc");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 从表事件
@@ -54,6 +54,6 @@ public class EventListDtl extends XmlEn
 	{
 		return new EventListDtls();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -14,7 +14,7 @@ import java.util.List;
 */
 public abstract class Works extends EntitiesOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 信息采集基类
@@ -31,10 +31,10 @@ public abstract class Works extends EntitiesOID
 	{
 		return (List<Work>)(Object)this;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询方法
 	public final int Retrieve(String fromDataTime, String toDataTime) throws Exception
 	{
@@ -45,6 +45,6 @@ public abstract class Works extends EntitiesOID
 		qo.AddWhere(WorkAttr.RDT, " <= ", toDataTime);
 		return qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class GenerWorkFlowViewNYs extends EntitiesNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 月份s
@@ -27,7 +27,7 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 	{
 		return new GenerWorkFlowViewNY();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override
@@ -38,7 +38,7 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 		return super.RetrieveAll();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -63,6 +63,6 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

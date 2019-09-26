@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class FoolTruckNodeFrms extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法..
 	/** 
 	 累加表单方案
@@ -20,10 +20,10 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	public FoolTruckNodeFrms()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法..
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共方法.
 	/** 
 	 得到它的 Entity 
@@ -33,10 +33,10 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	{
 		return new FoolTruckNodeFrm();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 公共方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -61,7 +61,7 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

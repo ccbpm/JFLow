@@ -42,7 +42,7 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 		return en.HuiQian_SelectEmps();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 审核组件.
 	public final String WorkCheck_GetNewUploadedAths()
 	{
@@ -59,10 +59,10 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.WorkCheck_Save();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 审核组件
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 会签.
 	public final String HuiQian_AddEmps()
 	{
@@ -84,10 +84,10 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.HuiQian_SaveAndClose();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 会签
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 接收人选择器(限定接受人范围的).
 	public final String Accepter_Init()
 	{
@@ -104,10 +104,10 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.Accepter_Send();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 接收人选择器(限定接受人范围的).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 接收人选择器(通用).
 	public final String AccepterOfGener_Init()
 	{
@@ -135,10 +135,10 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 	{
 		return Dev2Interface.Flow_DoUnSend(this.GetRequestVal("flowNo"), Integer.parseInt(this.GetRequestVal("WorkID")));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 接收人选择器(通用).
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 选择人员(通用).
 	/** 
 	 将要去掉.
@@ -155,7 +155,7 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.SelectEmps_Init();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 选择人员(通用).
 
 	/** 
@@ -273,7 +273,7 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 
 		//return "执行抄送成功.emps=(" + emps + ")  depts=(" + depts + ") stas=(" + stations + ") 标题:" + title + " ,抄送内容:" + doc;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 退回.
 	public final String Return_Init()
 	{
@@ -286,11 +286,11 @@ public class CCMobile_WorkOpt extends DirectoryPageBase
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.DoReturnWork();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 退回.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region xxx 界面 .
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion xxx 界面方法.
 }

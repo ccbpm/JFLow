@@ -9,7 +9,7 @@ import java.util.*;
 */
 public class DeptStations extends Entities
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 工作部门岗位对应
@@ -27,10 +27,10 @@ public class DeptStations extends Entities
 		qo.AddWhere(DeptStationAttr.FK_Station, stationNo);
 		qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 得到它的 Entity 
@@ -40,10 +40,10 @@ public class DeptStations extends Entities
 	{
 		return new DeptStation();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 查询方法
 	/** 
 	 岗位对应的节点
@@ -95,10 +95,10 @@ public class DeptStations extends Entities
 			return ens;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -123,6 +123,6 @@ public class DeptStations extends Entities
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

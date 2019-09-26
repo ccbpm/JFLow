@@ -25,7 +25,7 @@ public class ToolbarExcelSlns extends EntitiesMyPK
 		return new ToolbarExcelSln();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
 
 	/** 
@@ -52,6 +52,6 @@ public class ToolbarExcelSlns extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

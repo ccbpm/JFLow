@@ -74,7 +74,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 		sql = "SELECT * FROM WF_GenerWorkerlist A WHERE a.DTOfWarning >'" + timeDT + "' AND a.SDT <'" + timeDT + "' AND A.IsPass=0 ORDER BY FK_Node,FK_Emp ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 向预警人员发消息.
 		// 向预警的人员发消息.
 		Node nd = new Node();
@@ -118,7 +118,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 				emp.Retrieve();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 向预警人员发消息.
 
 		if (dt.Rows.size() >= 1)

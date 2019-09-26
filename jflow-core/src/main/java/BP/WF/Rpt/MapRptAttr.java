@@ -26,7 +26,7 @@ public class MapRptAttr extends EntityNoNameAttr
 	*/
 	public static final String FK_Flow = "FK_Flow";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限控制 2014-12-18
 	/** 
 	 报表查看权限控制方式
@@ -44,6 +44,6 @@ public class MapRptAttr extends EntityNoNameAttr
 	 数据存储
 	*/
 	public static final String RightDeptTag = "RightDeptTag";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限控制
 }

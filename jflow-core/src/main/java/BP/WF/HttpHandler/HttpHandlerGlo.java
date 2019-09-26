@@ -7,7 +7,7 @@ import java.util.*;
 
 public class HttpHandlerGlo
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 转化格式  chen
 
 	public static void DownloadFile(String filepath, String tempName)
@@ -89,6 +89,6 @@ public class HttpHandlerGlo
 	{
 		HttpContextHelper.ResponseWriteFile(filepath, tempName);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class NodeDept extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	节点
@@ -48,10 +48,10 @@ public class NodeDept extends EntityMM
 		uac.OpenAll();
 		return super.getHisUAC();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 节点部门
@@ -89,7 +89,7 @@ public class NodeDept extends EntityMM
 
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

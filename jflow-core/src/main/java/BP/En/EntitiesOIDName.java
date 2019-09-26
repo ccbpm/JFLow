@@ -7,7 +7,7 @@ import BP.DA.*;
 */
 public abstract class EntitiesOIDName extends EntitiesOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 构造
@@ -18,6 +18,6 @@ public abstract class EntitiesOIDName extends EntitiesOID
 		// TODO: 在此处添加构造函数逻辑
 		//
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

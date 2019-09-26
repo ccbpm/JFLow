@@ -7,7 +7,7 @@ import BP.DA.*;
 */
 public abstract class EntityNoName extends EntityNo
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 名称
@@ -32,10 +32,10 @@ public abstract class EntityNoName extends EntityNo
 	//        this.SetValByKey("NameE", value);
 	//    }
 	//}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 
@@ -53,10 +53,10 @@ public abstract class EntityNoName extends EntityNo
 	{
 		super(_No);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 业务逻辑处理
 	/** 
 	 检查名称的问题.
@@ -106,7 +106,7 @@ public abstract class EntityNoName extends EntityNo
 		}
 		return super.beforeUpdate();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 

@@ -3,7 +3,7 @@ package BP.WF.WeiXin;
 import BP.WF.*;
 import java.util.*;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 	///#region news消息
 
 /** 

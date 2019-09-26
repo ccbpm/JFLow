@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class SubFlowYanXu extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -99,10 +99,10 @@ public class SubFlowYanXu extends EntityMyPK
 	{
 		return SubFlowModel.forValue(this.GetValIntByKey(SubFlowAutoAttr.SubFlowModel));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 延续子流程
@@ -156,7 +156,7 @@ public class SubFlowYanXu extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -172,7 +172,7 @@ public class SubFlowYanXu extends EntityMyPK
 		return super.beforeInsert();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 移动.
 	/** 
 	 上移
@@ -196,7 +196,7 @@ public class SubFlowYanXu extends EntityMyPK
 		this.DoOrderDown(SubFlowYanXuAttr.FK_Node, this.getFK_Node(), SubFlowYanXuAttr.SubFlowType, "2", SubFlowYanXuAttr.Idx);
 		return "执行成功";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 移动.
 
 }

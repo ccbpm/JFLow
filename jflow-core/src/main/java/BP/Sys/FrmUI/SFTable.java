@@ -13,7 +13,7 @@ import java.util.*;
 public class SFTable extends EntityNoName
 {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -78,7 +78,7 @@ public class SFTable extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

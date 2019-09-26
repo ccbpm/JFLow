@@ -22,7 +22,7 @@ import java.time.*;
 */
 public class WF_CCForm extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 多附件.
 	public final String Ath_Init()
 	{
@@ -41,7 +41,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 			BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, pkVal, this.getFK_FrmAttachment(), this.getWorkID(), this.getFID(), this.getPWorkID());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 如果图片显示.(先不考虑.)
 			if (athDesc.FileShowWay == FileShowWay.Pict)
 			{
@@ -52,10 +52,10 @@ public class WF_CCForm extends DirectoryPageBase
 					return "url@AthImg.htm?1=1" + this.getRequestParas();
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 如果图片显示.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行装载模版.
 			if (dbs.size() == 0 && athDesc.IsWoEnableTemplete == true)
 			{
@@ -149,10 +149,10 @@ public class WF_CCForm extends DirectoryPageBase
 					dbs.AddEntity(dbUpload);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 执行装载模版.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理权限问题.
 			// 处理权限问题, 有可能当前节点是可以上传或者删除，但是当前节点上不能让此人执行工作。
 			// bool isDel = athDesc.IsDeleteInt == 0 ? false : true;
@@ -171,7 +171,7 @@ public class WF_CCForm extends DirectoryPageBase
 			//}
 			athDesc.IsUpload = isUpdate;
 			//athDesc.HisDeleteWay = AthDeleteWay.DelAll; 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理权限问题.
 
 			String sort = athDesc.Sort.trim();
@@ -202,10 +202,10 @@ public class WF_CCForm extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 多附件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region HanderMapExt
 	/** 
 	 扩展处理.
@@ -546,10 +546,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 		return JsonString.toString();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion HanderMapExt
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 
 	/** 
@@ -569,10 +569,10 @@ public class WF_CCForm extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到.@原始URL:" + HttpContextHelper.RequestRawUrl);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region frm.htm 主表.
 	/** 
 	 执行数据初始化
@@ -591,7 +591,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 		MapData md = new MapData(this.getEnsName());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否是返回的URL.
 		if (md.HisFrmType == FrmType.Url)
 		{
@@ -689,14 +689,14 @@ public class WF_CCForm extends DirectoryPageBase
 			return "url@FrmExcel.aspx?1=2" + this.getRequestParasOfAll();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断是否是返回的URL.
 
 		//处理参数.
 		String paras = this.getRequestParasOfAll();
 		paras = paras.replace("&DoType=Frm_Init", "");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 流程的独立运行的表单.
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
 		{
@@ -797,10 +797,10 @@ public class WF_CCForm extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 非流程的独立运行的表单.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 非流程的独立运行的表单.
 
 		if (md.HisFrmType == FrmType.FreeFrm)
@@ -845,7 +845,7 @@ public class WF_CCForm extends DirectoryPageBase
 			return "url@FrmGener.htm?1=2" + paras;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 非流程的独立运行的表单.
 
 	}
@@ -1038,10 +1038,10 @@ public class WF_CCForm extends DirectoryPageBase
 		}
 		return false;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion frm.htm 主表.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region DtlFrm
 	public final String DtlFrm_Init()
 	{
@@ -1076,7 +1076,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 		//设置主键.
 		en.OID = DBAccess.GenerOID(this.getEnsName());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理权限方案。
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
 		{
@@ -1097,7 +1097,7 @@ public class WF_CCForm extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理权限方案。
 		//给从表赋值.
 		switch (dtl.DtlOpenType)
@@ -1144,10 +1144,10 @@ public class WF_CCForm extends DirectoryPageBase
 		}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion DtlFrm
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region frmFree
 	/** 
 	 实体类的初始化
@@ -1162,7 +1162,7 @@ public class WF_CCForm extends DirectoryPageBase
 			MapData md = new MapData(this.getEnsName());
 			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把主表数据放入.
 			String atParas = "";
 			Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -1231,10 +1231,10 @@ public class WF_CCForm extends DirectoryPageBase
 			mainTable.TableName = "MainTable";
 
 			ds.Tables.add(mainTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 把主表数据放入.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把外键表加入DataSet
 			DataTable dtMapAttr = ds.Tables["Sys_MapAttr"];
 
@@ -1271,7 +1271,7 @@ public class WF_CCForm extends DirectoryPageBase
 				String keyOfEn = dr.get("KeyOfEn").toString();
 				String fk_mapData = dr.get("FK_MapData").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理下拉框数据范围. for 小杨.
 				Object tempVar2 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 				me = tempVar2 instanceof MapExt ? (MapExt)tempVar2 : null;
@@ -1286,7 +1286,7 @@ public class WF_CCForm extends DirectoryPageBase
 					ds.Tables.add(dt);
 					continue;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理下拉框数据范围.
 
 				// 判断是否存在.
@@ -1309,7 +1309,7 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 			ddlTable.TableName = "UIBindKey";
 			ds.Tables.add(ddlTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion End把外键表加入DataSet
 
 			return BP.Tools.Json.DataSetToJson(ds, false);
@@ -1335,7 +1335,7 @@ public class WF_CCForm extends DirectoryPageBase
 			return FrmGener_Init_ForBPClass();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 定义流程信息的所用的 配置entity.
 		//节点与表单的权限控制.
 		FrmNode fn = null;
@@ -1351,12 +1351,12 @@ public class WF_CCForm extends DirectoryPageBase
 			fn = new FrmNode(this.getFK_Flow(), this.getFK_Node(), this.getFK_MapData());
 			isLoadData = fn.getIsEnableLoadData();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 定义流程信息的所用的 配置entity.
 
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 特殊判断 适应累加表单.
 			String fromWhere = this.GetRequestVal("FromWorkOpt");
 			if (fromWhere != null && fromWhere.equals("1") && this.getFK_Node() != 0 && this.getFK_Node() != 999999)
@@ -1372,7 +1372,7 @@ public class WF_CCForm extends DirectoryPageBase
 					return BP.Tools.Json.ToJson(myds);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 特殊判断.适应累加表单.
 
 			MapData md = new MapData(this.getEnsName());
@@ -1391,7 +1391,7 @@ public class WF_CCForm extends DirectoryPageBase
 				pk = this.getWorkID();
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 根据who is pk 获取数据.
 			en.OID = pk;
 			if (en.OID == 0)
@@ -1412,10 +1412,10 @@ public class WF_CCForm extends DirectoryPageBase
 			gwf.RetrieveFromDBSources();
 			ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 根据who is pk 获取数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 附加参数数据.
 			//把参数放入到 En 的 Row 里面。
 			if (DataType.IsNullOrEmpty(atParas) == false)
@@ -1456,10 +1456,10 @@ public class WF_CCForm extends DirectoryPageBase
 				en.ResetDefaultVal();
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 附加参数数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行装载填充.与相关的事件.
 			MapExt me = null;
 			if (isLoadData == true)
@@ -1498,10 +1498,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 			//执行事件
 			md.DoEvent(FrmEventList.SaveBefore, en, null);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 执行装载填充.与相关的事件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把外键表加入DataSet.
 			DataTable dtMapAttr = ds.Tables["Sys_MapAttr"];
 			MapExts mes = md.MapExts;
@@ -1546,7 +1546,7 @@ public class WF_CCForm extends DirectoryPageBase
 				String keyOfEn = dr.get("KeyOfEn").toString();
 				String fk_mapData = dr.get("FK_MapData").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理下拉框数据范围. for 小杨.
 				Object tempVar3 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 				me = tempVar3 instanceof MapExt ? (MapExt)tempVar3 : null;
@@ -1561,7 +1561,7 @@ public class WF_CCForm extends DirectoryPageBase
 					ds.Tables.add(dt);
 					continue;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理下拉框数据范围.
 
 				// 判断是否存在.
@@ -1585,10 +1585,10 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 			ddlTable.TableName = "UIBindKey";
 			ds.Tables.add(ddlTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion End把外键表加入DataSet
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加入组件的状态信息, 在解析表单的时候使用.
 
 			if (this.getFK_Node() != 0 && this.getFK_Node() != 999999 && (fn.getIsEnableFWC() == true || nd.getFrmWorkCheckSta() != FrmWorkCheckSta.Disable))
@@ -1677,7 +1677,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 没有审核组件分组就增加上审核组件分组. @杜需要翻译&测试.
 				if (nd.getNodeFrmID().equals("ND" + nd.getNodeID()) && nd.getHisFormType() != NodeFormType.RefOneFrmTree)
 				{
@@ -1734,7 +1734,7 @@ public class WF_CCForm extends DirectoryPageBase
 						}
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 没有审核组件分组就增加上审核组件分组.
 				ds.Tables.add(fnc.ToDataTableField("WF_FrmNodeComponent"));
 			}
@@ -1748,14 +1748,14 @@ public class WF_CCForm extends DirectoryPageBase
 				ds.Tables.add(fn.ToDataTableField("WF_FrmNode"));
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 加入组件的状态信息, 在解析表单的时候使用.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理权限方案
 			if (nd != null && nd.getFormType() == NodeFormType.SheetTree)
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 只读方案.
 				if (fn.getFrmSln() == FrmSln.Readonly)
 				{
@@ -1768,10 +1768,10 @@ public class WF_CCForm extends DirectoryPageBase
 					ds.Tables.Remove("Sys_MapAttr");
 					ds.Tables.add(dtMapAttr);
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 只读方案.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 自定义方案.
 				if (fn.getFrmSln() == FrmSln.Self)
 				{
@@ -1950,20 +1950,20 @@ public class WF_CCForm extends DirectoryPageBase
 
 					//处理radiobutton的模式的控件.
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 自定义方案.
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理权限方案s
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 加入主表的数据.
 			//增加主表数据.
 			DataTable mainTable = en.ToDataTableField(md.No);
 			mainTable.TableName = "MainTable";
 			ds.Tables.add(mainTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 加入主表的数据.
 
 			String json = BP.Tools.Json.DataSetToJson(ds, false);
@@ -1987,13 +1987,13 @@ public class WF_CCForm extends DirectoryPageBase
 			MapData md = new MapData(this.getEnsName());
 			DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet(md.No);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 把主表数据放入.
 			String atParas = "";
 			//主表实体.
 			GEEntity en = new GEEntity(this.getEnsName());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 求出 who is pk 值.
 			long pk = this.getRefOID();
 			if (pk == 0)
@@ -2030,7 +2030,7 @@ public class WF_CCForm extends DirectoryPageBase
 						break;
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion  求who is PK.
 
 			en.OID = pk;
@@ -2041,7 +2041,7 @@ public class WF_CCForm extends DirectoryPageBase
 			mainTable.TableName = "MainTable";
 
 			ds.Tables.add(mainTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 把主表数据放入.
 
 			return BP.Tools.Json.DataSetToJson(ds, false);
@@ -2067,7 +2067,7 @@ public class WF_CCForm extends DirectoryPageBase
 			//保存主表数据.
 			GEEntity en = new GEEntity(this.getEnsName());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 求出 who is pk 值.
 			long pk = this.getRefOID();
 			if (pk == 0)
@@ -2110,7 +2110,7 @@ public class WF_CCForm extends DirectoryPageBase
 					return "";
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion  求who is PK.
 
 			en.OID = pk;
@@ -2125,12 +2125,12 @@ public class WF_CCForm extends DirectoryPageBase
 			// 处理表单保存前事件.
 			MapData md = new MapData(this.getEnsName());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 调用事件.  @李国文.
 			//是不是从表的保存.
 			if (this.GetRequestValInt("IsForDtl") == 1)
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 从表保存前处理事件.
 				//获得主表事件.
 				FrmEvents fes = new FrmEvents(this.getEnsName()); //获得事件.
@@ -2158,14 +2158,14 @@ public class WF_CCForm extends DirectoryPageBase
 						febd.DoIt(FrmEventListDtl.RowSaveBefore, febd.HisEn, en, null);
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 从表保存前处理事件.
 			}
 			else
 			{
 				md.DoEvent(FrmEventList.SaveBefore, en);
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 调用事件.  @李国文.
 
 			if (i == 0)
@@ -2177,11 +2177,11 @@ public class WF_CCForm extends DirectoryPageBase
 				en.Update();
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 调用事件.
 			if (this.GetRequestValInt("IsForDtl") == 1)
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 从表保存前处理事件.
 				//获得主表事件.
 				FrmEvents fes = new FrmEvents(this.getEnsName()); //获得事件.
@@ -2210,14 +2210,14 @@ public class WF_CCForm extends DirectoryPageBase
 						febd.DoIt(FrmEventListDtl.RowSaveAfter, febd.HisEn, en, null);
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 从表保存前处理事件.
 			}
 			else
 			{
 				md.DoEvent(FrmEventList.SaveAfter, en);
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 调用事件.  @李国文.
 
 			return "保存成功.";
@@ -2227,10 +2227,10 @@ public class WF_CCForm extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region dtl.htm 从表.
 	/** 
 	 初始化从表数据
@@ -2244,19 +2244,19 @@ public class WF_CCForm extends DirectoryPageBase
 	}
 	private DataSet Dtl_Init_Dataset()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 组织参数.
 		MapDtl mdtl = new MapDtl(this.getEnsName());
 		mdtl.No = this.getEnsName();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是测试，就创建表.
 		if (this.getFK_Node() == 999999 || this.GetRequestVal("IsTest") != null)
 		{
 			GEDtl dtl = new GEDtl(mdtl.No);
 			dtl.CheckPhysicsTable();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果是测试，就创建表.
 
 		String frmID = mdtl.FK_MapData;
@@ -2307,7 +2307,7 @@ public class WF_CCForm extends DirectoryPageBase
 		String strs = this.getRequestParas();
 		strs = strs.replace("?", "@");
 		strs = strs.replace("&", "@");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 组织参数.
 
 		//获得他的描述,与数据.
@@ -2326,7 +2326,7 @@ public class WF_CCForm extends DirectoryPageBase
 		FrmEvents fes = new FrmEvents(this.getEnsName()); //获得事件.
 		GEEntity mainEn = null;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 从表保存前处理事件.
 		if (fes.size() > 0)
 		{
@@ -2337,13 +2337,13 @@ public class WF_CCForm extends DirectoryPageBase
 				throw new RuntimeException(msg);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 从表保存前处理事件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 保存的业务逻辑.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 保存的业务逻辑.
 
 		return "保存成功";
@@ -2370,7 +2370,7 @@ public class WF_CCForm extends DirectoryPageBase
 		String fk_mapDtl = this.getFK_MapDtl();
 		MapDtl mdtl = new MapDtl(fk_mapDtl);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理权限方案。
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
 		{
@@ -2392,7 +2392,7 @@ public class WF_CCForm extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理权限方案。
 
 		//从表实体.
@@ -2404,7 +2404,7 @@ public class WF_CCForm extends DirectoryPageBase
 			dtl.RetrieveFromDBSources();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 给实体循环赋值/并保存.
 		BP.En.Attrs attrs = dtl.getEnMap().getAttrs();
 		for (BP.En.Attr attr : attrs)
@@ -2429,7 +2429,7 @@ public class WF_CCForm extends DirectoryPageBase
 				break;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 从表保存前处理事件.
 		//获得主表事件.
 		FrmEvents fes = new FrmEvents(fk_mapDtl); //获得事件.
@@ -2454,7 +2454,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 			febd.DoIt(FrmEventListDtl.RowSaveBefore, febd.HisEn, dtl, null);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 从表保存前处理事件.
 
 
@@ -2469,10 +2469,10 @@ public class WF_CCForm extends DirectoryPageBase
 		{
 			dtl.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 给实体循环赋值/并保存.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 从表保存后处理事件。
 		if (fes.size() > 0)
 		{
@@ -2493,7 +2493,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 			febd.DoIt(FrmEventListDtl.RowSaveAfter, febd.HisEn, dtl, null);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理事件.
 
 		//返回当前数据存储信息.
@@ -2510,7 +2510,7 @@ public class WF_CCForm extends DirectoryPageBase
 		dtl.OID = this.getRefOID();
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 从表 删除 前处理事件.
 		//获得主表事件.
 		FrmEvents fes = new FrmEvents(this.getFK_MapDtl()); //获得事件.
@@ -2536,14 +2536,14 @@ public class WF_CCForm extends DirectoryPageBase
 				febd.DoIt(FrmEventListDtl.DtlRowDelBefore, febd.HisEn, dtl, null);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 从表 删除 前处理事件.
 
 		//执行删除.
 		dtl.Delete();
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 从表 删除 后处理事件.
 		//获得主表事件.
 		fes = new FrmEvents(this.getFK_MapDtl()); //获得事件.
@@ -2568,7 +2568,7 @@ public class WF_CCForm extends DirectoryPageBase
 				febd.DoIt(FrmEventListDtl.DtlRowDelAfter, febd.HisEn, dtl, null);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 从表 删除 后处理事件.
 
 		//如果可以上传附件这删除相应的附件信息
@@ -2589,10 +2589,10 @@ public class WF_CCForm extends DirectoryPageBase
 		dt.TableName = "ReloadDdl";
 		return BP.Tools.Json.ToJson(dt);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion dtl.htm 从表.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region dtl.Card
 	/** 
 	 初始化
@@ -2648,7 +2648,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 		//从表的数据.
 		//GEDtls enDtls = new GEDtls(this.EnsName);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  把从表的数据放入.
 		GEDtls enDtls = new GEDtls(md.No);
 		QueryObject qo = null;
@@ -2698,7 +2698,7 @@ public class WF_CCForm extends DirectoryPageBase
 		DataTable dtDtl = qo.DoQueryToTable();
 		dtDtl.TableName = "DTDtls";
 		ds.Tables.add(dtDtl);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 		//enDtls.Retrieve(GEDtlAttr.RefPK, this.RefPKVal);
 		//ds.Tables.add(enDtls.ToDataTableField("DTDtls"));
@@ -2731,10 +2731,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion dtl.Card
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 保存手写签名图片
 	/** 
 	 保存手写签名图片
@@ -2789,7 +2789,7 @@ public class WF_CCForm extends DirectoryPageBase
 			return "err@" + e.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -3588,7 +3588,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 		dbUpload.FileExts = info.Extension;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理文件路径，如果是保存到数据库，就存储pk.
 		if (frmAth.AthSaveWay == AthSaveWay.IISServer)
 		{
@@ -3601,7 +3601,7 @@ public class WF_CCForm extends DirectoryPageBase
 			//保存到数据库
 			dbUpload.FileFullName = dbUpload.MyPK;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
 
 
@@ -3711,7 +3711,7 @@ public class WF_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var file = HttpContextHelper.RequestFiles(i);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 文件上传的iis服务器上 or db数据库里.
 			if (athDesc.AthSaveWay == AthSaveWay.IISServer)
 			{
@@ -3838,7 +3838,7 @@ public class WF_CCForm extends DirectoryPageBase
 					}
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理文件路径，如果是保存到数据库，就存储pk.
 				if (athDesc.AthSaveWay == AthSaveWay.IISServer)
 				{
@@ -3851,7 +3851,7 @@ public class WF_CCForm extends DirectoryPageBase
 					//保存到数据库
 					dbUpload.FileFullName = dbUpload.MyPK;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
 
 				dbUpload.FileName = file.FileName;
@@ -3878,10 +3878,10 @@ public class WF_CCForm extends DirectoryPageBase
 					BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.FileName + "，" + msg);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 文件上传的iis服务器上 or db数据库里.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 保存到数据库 / FTP服务器上.
 			if (athDesc.AthSaveWay == AthSaveWay.DB || athDesc.AthSaveWay == AthSaveWay.FTPServer)
 			{
@@ -4029,7 +4029,7 @@ public class WF_CCForm extends DirectoryPageBase
 				}
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 保存到数据库.
 
 		}
@@ -4123,7 +4123,7 @@ public class WF_CCForm extends DirectoryPageBase
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 从表的选项.
 	/** 
 	 初始化数据
@@ -4213,10 +4213,10 @@ public class WF_CCForm extends DirectoryPageBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return BP.Tools.Json.ToJson(dt);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 从表的选项.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region SQL从表导入.
 	public final String DtlImpBySQL_Delete()
 	{
@@ -4242,7 +4242,7 @@ public class WF_CCForm extends DirectoryPageBase
 		QueryObject qo = new QueryObject(dtls);
 		//获取从表权限
 		MapDtl dtl = new MapDtl(ensName);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理权限方案。
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
 		{
@@ -4264,7 +4264,7 @@ public class WF_CCForm extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理权限方案。
 
 		//判断是否重复导入
@@ -4354,10 +4354,10 @@ public class WF_CCForm extends DirectoryPageBase
 		return "";
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion SQL从表导入
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Excel导入.
 	/** 
 	 导入excel.
@@ -4411,7 +4411,7 @@ public class WF_CCForm extends DirectoryPageBase
 			}
 
 			MapDtl dtl = new MapDtl(this.getFK_MapDtl());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理权限方案。
 			if (this.getFK_Node() != 0 && this.getFK_Node() != 999999)
 			{
@@ -4433,10 +4433,10 @@ public class WF_CCForm extends DirectoryPageBase
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理权限方案。
 			GEDtls dtls = new GEDtls(this.getFK_MapDtl());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 检查两个文件是否一致。 生成要导入的属性
 			BP.En.Attrs attrs = dtls.GetNewEntity.getEnMap().getAttrs();
 			BP.En.Attrs attrsExp = new BP.En.Attrs();
@@ -4465,10 +4465,10 @@ public class WF_CCForm extends DirectoryPageBase
 			{
 				throw new RuntimeException("@您导入的excel文件不符合系统要求的格式，请下载模版文件重新填入。");
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行导入数据.
 
 			if (this.GetRequestValInt("DDL_ImpWay") == 0)
@@ -4590,7 +4590,7 @@ public class WF_CCForm extends DirectoryPageBase
 				dtlEn.Insert();
 				oid++;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 执行导入数据.
 
 			if (DataType.IsNullOrEmpty(errMsg) == true)
@@ -4619,7 +4619,7 @@ public class WF_CCForm extends DirectoryPageBase
 	{
 		try
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 检查两个文件是否一致。 生成要导入的属性
 			Entities dtls = ClassFactory.GetEns(this.getFK_MapDtl());
 			EntityOID dtlEn = dtls.GetNewEntity instanceof EntityOID ? (EntityOID)dtls.GetNewEntity : null;
@@ -4650,10 +4650,10 @@ public class WF_CCForm extends DirectoryPageBase
 			{
 				return "err@您导入的excel文件不符合系统要求的格式，请下载模版文件重新填入。";
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行导入数据.
 
 			if (this.GetRequestValInt("DDL_ImpWay") == 0)
@@ -4757,7 +4757,7 @@ public class WF_CCForm extends DirectoryPageBase
 
 				dtlEn.Insert();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 执行导入数据.
 
 			if (DataType.IsNullOrEmpty(errMsg) == true)
@@ -4776,11 +4776,11 @@ public class WF_CCForm extends DirectoryPageBase
 			return "err@" + msg;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion  Excel导入.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 打印.
 	public final String Print_Init()
 	{
@@ -4924,7 +4924,7 @@ public class WF_CCForm extends DirectoryPageBase
 			engine.MakeDoc(file, toPath, tempNameChinese + "." + this.getWorkID() + ".doc", false);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 保存单据，以方便查询.
 		Bill bill = new Bill();
 		bill.setMyPK( this.getFID() + "_" + this.getWorkID() + "_" + this.getFK_Node() + "_" + billIdx;
@@ -4961,7 +4961,7 @@ public class WF_CCForm extends DirectoryPageBase
 		{
 			bill.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		BillTemplates templates = new BillTemplates();
@@ -4971,10 +4971,10 @@ public class WF_CCForm extends DirectoryPageBase
 
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 打印.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 附件组件.
 	/** 
 	 执行删除
@@ -5104,7 +5104,7 @@ public class WF_CCForm extends DirectoryPageBase
 	*/
 	public final BP.Sys.FrmAttachment GenerAthDesc()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 为累加表单做的特殊判断.
 		if (this.GetRequestValInt("FormType") == 10)
 		{
@@ -5113,7 +5113,7 @@ public class WF_CCForm extends DirectoryPageBase
 				return GenerAthDescOfFoolTruck(); //如果当前表单的ID。
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment();
@@ -5127,7 +5127,7 @@ public class WF_CCForm extends DirectoryPageBase
 		athDesc.setMyPK( this.getFK_FrmAttachment();
 		int result = athDesc.RetrieveFromDBSources();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否是明细表的多附件.
 		if (result == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false && this.getFK_FrmAttachment().contains("AthMDtl"))
 		{
@@ -5137,10 +5137,10 @@ public class WF_CCForm extends DirectoryPageBase
 			athDesc.UploadType = AttachmentUploadType.Multi;
 			athDesc.Insert();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断是否是明细表的多附件。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否可以查询出来，如果查询不出来，就可能是公文流程。
 		if (result == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false && this.getFK_FrmAttachment().contains("DocMultiAth"))
 		{
@@ -5184,10 +5184,10 @@ public class WF_CCForm extends DirectoryPageBase
 			//重新查询一次，把默认值加上.
 			athDesc.RetrieveFromDBSources();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断是否可以查询出来，如果查询不出来，就可能是公文流程。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理权限方案。
 		if (this.getFK_Node() != 0)
 		{
@@ -5259,7 +5259,7 @@ public class WF_CCForm extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理权限方案。
 
 
@@ -5274,13 +5274,13 @@ public class WF_CCForm extends DirectoryPageBase
 	{
 		String zipName = this.getWorkID() + "_" + this.getFK_FrmAttachment();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理权限控制.
 		BP.Sys.FrmAttachment athDesc = this.GenerAthDesc();
 
 		//查询出来数据实体.
 		BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, this.getPKVal(), this.getFK_FrmAttachment());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理权限控制.
 
 		if (dbs.size() == 0)
@@ -5421,11 +5421,11 @@ public class WF_CCForm extends DirectoryPageBase
 		fileName = fileName.replace(val, replVal);
 		return fileName;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 附件组件
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 必须传递参数
 	/** 
 	 执行的内容
@@ -5459,7 +5459,7 @@ public class WF_CCForm extends DirectoryPageBase
 	}
 	public final String Port_Init()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 安全性校验.
 		if (this.getUserNo() == null || this.getSID() == null || this.getDoWhat() == null || this.getFrmID() == null)
 		{
@@ -5477,10 +5477,10 @@ public class WF_CCForm extends DirectoryPageBase
 			BP.WF.Dev2Interface.Port_Login(this.getUserNo());
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 安全性校验.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 生成参数串.
 		String paras = "";
 		for (String str : HttpContextHelper.RequestParamKeys)
@@ -5502,7 +5502,7 @@ public class WF_CCForm extends DirectoryPageBase
 					break;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 生成参数串.
 
 		String url = "";
@@ -5522,7 +5522,7 @@ public class WF_CCForm extends DirectoryPageBase
 		}
 		return "url@" + url;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 

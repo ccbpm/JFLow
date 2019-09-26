@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class FrmWorkCheck extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 节点编号
@@ -352,10 +352,10 @@ public class FrmWorkCheck extends Entity
 		this.SetValByKey(FrmWorkCheckAttr.FWCView, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制
@@ -447,7 +447,7 @@ public class FrmWorkCheck extends Entity
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmWorkCheckAttr.FWCLab, "审核信息", "显示标签", true, false, 0, 100, 10, true);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 		map.AddDDLSysEnum(FrmWorkCheckAttr.FWCSta, FrmWorkCheckSta.Disable.getValue(), "审核组件状态", true, true, FrmWorkCheckAttr.FWCSta, "@0=禁用@1=启用@2=只读");
 		map.AddDDLSysEnum(FrmWorkCheckAttr.FWCShowModel, FrmWorkShowModel.Free.getValue(), "显示方式", true, true, FrmWorkCheckAttr.FWCShowModel, "@0=表格方式@1=自由模式"); //此属性暂时没有用.
@@ -495,13 +495,13 @@ public class FrmWorkCheck extends Entity
 		map.AddDDLSysEnum(FrmWorkCheckAttr.FWCVer, 0, "审核意见版本号", true, true, FrmWorkCheckAttr.FWCVer, "@0=2018@1=2019");
 		map.AddTBString(FrmWorkCheckAttr.FWCView, null, "审核意见立场", true, false, 20, 200, 200,true);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

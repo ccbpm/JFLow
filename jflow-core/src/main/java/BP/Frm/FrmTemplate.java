@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class FrmTemplate extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限控制.
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -31,10 +31,10 @@ public class FrmTemplate extends EntityNoName
 		uac.Readonly();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限控制.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 物理表
@@ -136,10 +136,10 @@ public class FrmTemplate extends EntityNoName
 	{
 		this.SetValByKey(FrmTemplateAttr.BillNoFormat, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 单据模版
@@ -171,7 +171,7 @@ public class FrmTemplate extends EntityNoName
 		map.Java_SetEnType(EnType.Sys);
 		map.Java_SetCodeStruct("4");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性.
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.SetHelperAlert(MapDataAttr.No, "也叫表单ID,系统唯一.");
@@ -184,10 +184,10 @@ public class FrmTemplate extends EntityNoName
 		map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), false);
 
 		map.AddDDLSysEnum(FrmAttr.RowOpenModel, 0, "行记录打开模式", true, true, FrmAttr.RowOpenModel, "@0=新窗口打开@1=弹出窗口打开,关闭后刷新列表@2=弹出窗口打开,关闭后不刷新列表");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 单据模版.
 		map.AddDDLSysEnum(FrmTemplateAttr.EntityType, 0, "业务类型", true, false, FrmTemplateAttr.EntityType, "@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
 		map.SetHelperAlert(FrmTemplateAttr.EntityType, "该实体的类型,@0=单据@1=编号名称实体@2=树结构实体.");
@@ -196,17 +196,17 @@ public class FrmTemplate extends EntityNoName
 
 		map.AddTBString(FrmTemplateAttr.BillNoFormat, null, "实体编号规则", true, false, 0, 100, 20, true);
 		map.SetHelperAlert(FrmTemplateAttr.BillNoFormat, "\t\n实体编号规则: \t\n 2标识:01,02,03等, 3标识:001,002,003,等..");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 单据模版.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 实体属性
 		map.AddTBInt(FrmTemplateAttr.EntityEditModel, 0, "编辑模式", true, false);
 			//map.AddDDLSysEnum(FrmAttr.EntityEditModel, 0, "编辑模式", true, true, FrmAttr.EntityEditModel, "@0=只读列表模式@1=Table编辑模式");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 实体属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 可以创建的权限.
 			//平铺模式.
 		map.getAttrsOfOneVSM().AddGroupPanelModel(new StationCreates(), new BP.WF.Port.Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位", StationAttr.FK_StationType);
@@ -218,13 +218,13 @@ public class FrmTemplate extends EntityNoName
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new EmpCreates(), new BP.Port.Emps(), EmpCreateAttr.FrmID, EmpCreateAttr.FK_Emp, "可以创建的人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 可以创建的权限
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

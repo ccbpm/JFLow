@@ -10,7 +10,7 @@ import BP.Sys.*;
 */
 public class EnsAppGroupXml extends XmlEnNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 类名
@@ -33,10 +33,10 @@ public class EnsAppGroupXml extends XmlEnNoName
 	{
 		return this.GetValStringByKey(EnsAppGroupXmlEnsName.GroupKey);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	public EnsAppGroupXml()
 	{
@@ -49,6 +49,6 @@ public class EnsAppGroupXml extends XmlEnNoName
 	{
 		return new EnsAppGroupXmls();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

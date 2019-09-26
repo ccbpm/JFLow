@@ -62,7 +62,7 @@ public class MakeForm2Html
 		//float wtX = 0;
 		float x = 0;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 输出Ele
 		FrmEles eles = mapData.FrmEles;
 		if (eles.size() >= 1)
@@ -77,10 +77,10 @@ public class MakeForm2Html
 			}
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 输出Ele
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 输出竖线与标签 & 超连接 Img.
 		FrmLabs labs = mapData.FrmLabs;
 		for (FrmLab lab : labs)
@@ -156,7 +156,7 @@ public class MakeForm2Html
 			float y = img.Y;
 			String imgSrc = "";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 图片类型
 			if (img.HisImgAppType == ImgAppType.Img)
 			{
@@ -197,10 +197,10 @@ public class MakeForm2Html
 				sb.append("\t\n</div>");
 				continue;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 图片类型
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 二维码
 			if (img.HisImgAppType == ImgAppType.QRCode)
 			{
@@ -220,10 +220,10 @@ public class MakeForm2Html
 
 				continue;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 电子签章
 			//图片类型
 			if (img.HisImgAppType == ImgAppType.Seal)
@@ -245,7 +245,7 @@ public class MakeForm2Html
 				//0.不可以修改，从数据表中取，1可以修改，使用组合获取并保存数据
 				if ((img.IsEdit == 1))
 				{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 加载签章
 					//如果设置了部门与岗位的集合进行拆分
 					if (!DataType.IsNullOrEmpty(img.Tag0) && img.Tag0.Contains("^") && img.Tag0.split("[^]", -1).Length == 4)
@@ -292,7 +292,7 @@ public class MakeForm2Html
 							break;
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 加载签章
 
 					imgSrc = CCFlowAppPath + "DataUser/Seal/" + fk_dept + "_" + stationNo + ".png";
@@ -370,7 +370,7 @@ public class MakeForm2Html
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 		}
 
@@ -400,10 +400,10 @@ public class MakeForm2Html
 			sb.append("\t\n</span>");
 			sb.append("\t\n</DIV>");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 输出竖线与标签
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 输出数据控件.
 		int fSize = 0;
 		for (MapAttr attr : mapAttrs)
@@ -432,7 +432,7 @@ public class MakeForm2Html
 
 			sb.append("<span>");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region add contrals.
 			if (attr.MaxLen >= 3999 && attr.TBModel == TBModel.RichText)
 			{
@@ -443,7 +443,7 @@ public class MakeForm2Html
 				continue;
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 通过逻辑类型，输出相关的控件.
 			String text = "";
 			switch (attr.LGType)
@@ -481,10 +481,10 @@ public class MakeForm2Html
 				default:
 					break;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 通过逻辑类型，输出相关的控件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion add contrals.
 
 
@@ -523,7 +523,7 @@ public class MakeForm2Html
 			sb.append("</DIV>");
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  输出 rb.
 		BP.Sys.FrmRBs myrbs = mapData.FrmRBs;
 		MapAttr attrRB = new MapAttr();
@@ -545,13 +545,13 @@ public class MakeForm2Html
 			sb.append("</span>");
 			sb.append("</DIV>");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  输出 rb.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 输出数据控件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 输出明细.
 		int dtlsCount = 0;
 		MapDtls dtls = new MapDtls(frmID);
@@ -640,10 +640,10 @@ public class MakeForm2Html
 			sb.append("</span>");
 			sb.append("</DIV>");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 输出明细.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 审核组件
 		if (flowNo != null)
 		{
@@ -656,7 +656,7 @@ public class MakeForm2Html
 
 				sb.append("<table   style='border: 1px outset #C0C0C0;padding: inherit; margin: 0;border-collapse:collapse;width:100%;' >");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 生成审核信息.
 				if (flowNo != null)
 				{
@@ -670,7 +670,7 @@ public class MakeForm2Html
 					for (DataRow dr : dt.Rows)
 					{
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 排除正在审批的人员.
 						String nodeID = dr.get("NDFrom").toString();
 						String empFrom = dr.get("EmpFrom").toString();
@@ -696,7 +696,7 @@ public class MakeForm2Html
 								continue;
 							}
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion 排除正在审批的人员.
 
 						sb.append("<tr>");
@@ -715,17 +715,17 @@ public class MakeForm2Html
 					}
 				}
 				sb.append("</table>");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 生成审核信息.
 
 				sb.append("</span>");
 				sb.append("</DIV>");
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 审核组件
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 父子流程组件
 		if (flowNo != null)
 		{
@@ -751,10 +751,10 @@ public class MakeForm2Html
 				sb.append("</DIV>");
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 父子流程组件
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 输出附件
 		FrmAttachments aths = new FrmAttachments(frmID);
 		//FrmAttachmentDBs athDBs = null;
@@ -869,7 +869,7 @@ public class MakeForm2Html
 				sb.append("</DIV>");
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 输出附件.
 
 		return sb;
@@ -2264,7 +2264,7 @@ public class MakeForm2Html
 			GEEntity en = new GEEntity(frmID, workid);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 生成水文.
 
 			String rdt = "";
@@ -2301,13 +2301,13 @@ public class MakeForm2Html
 			String templateFilePathMy = SystemConfig.PathOfDataUser + "InstancePacketOfData\\Template\\";
 			WaterImageManage wim = new WaterImageManage();
 			wim.DrawWords(templateFilePathMy + "ShuiYin.png", words, Float.parseFloat("0.15"), ImagePosition.Center, path + "\\ShuiYin.png");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			//生成 表单的 html.
 			StringBuilder sb = new StringBuilder();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 替换模版文件..
 			//首先判断是否有约定的文件.
 			String docs = "";
@@ -2464,5 +2464,5 @@ public class MakeForm2Html
 	}
 
 }
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#endregion

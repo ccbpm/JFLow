@@ -12,7 +12,7 @@ import java.time.*;
 */
 public abstract class EventBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	public Entity HisEn = null;
 	private Row _SysPara = null;
@@ -51,10 +51,10 @@ public abstract class EventBase
 	{
 		_title = value;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统参数
 	/** 
 	 表单ID
@@ -71,10 +71,10 @@ public abstract class EventBase
 		return this.GetValStr("EventType");
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 常用属性.
 	/** 
 	 工作ID
@@ -136,10 +136,10 @@ public abstract class EventBase
 	{
 		return this.GetValStr("Nos");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 常用属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取参数方法
 	public final java.util.Date GetValDateTime(String key)
 	{
@@ -176,7 +176,7 @@ public abstract class EventBase
 	{
 		return Integer.parseInt(this.GetValStr(key));
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 获取参数方法
 
 	/** 

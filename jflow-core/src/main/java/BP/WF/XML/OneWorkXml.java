@@ -12,7 +12,7 @@ import BP.WF.*;
 */
 public class OneWorkXml extends XmlEnNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
  
 	public final String getURL()
@@ -28,10 +28,10 @@ public class OneWorkXml extends XmlEnNoName
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 节点扩展信息
@@ -47,6 +47,6 @@ public class OneWorkXml extends XmlEnNoName
 	{
 		return new OneWorkXmls();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

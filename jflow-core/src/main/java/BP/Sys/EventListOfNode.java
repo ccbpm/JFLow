@@ -14,7 +14,7 @@ import java.math.*;
 */
 public class EventListOfNode extends FrmEventList
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点事件
 	/** 
 	 创建工作ID
@@ -90,10 +90,10 @@ public class EventListOfNode extends FrmEventList
 	public static final String FlowOverDue = "FlowOverDue";
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 节点事件
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程事件
 	/** 
 	 当创建workid的时候.
@@ -115,6 +115,6 @@ public class EventListOfNode extends FrmEventList
 	 流程删除后
 	*/
 	public static final String AfterFlowDel = "AfterFlowDel";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 流程事件
 }

@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class MapFrame extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -143,10 +143,10 @@ public class MapFrame extends EntityMyPK
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 框架
@@ -251,6 +251,6 @@ public class MapFrame extends EntityMyPK
 
 		return super.beforeUpdate();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

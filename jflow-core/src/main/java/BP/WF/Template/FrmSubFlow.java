@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class FrmSubFlow extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 标签
@@ -318,10 +318,10 @@ public class FrmSubFlow extends Entity
 	{
 		this.SetValByKey(FrmSubFlowAttr.SigantureEnabel, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制
@@ -410,7 +410,7 @@ public class FrmSubFlow extends Entity
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmSubFlowAttr.SFLab, "子流程", "显示标签", true, false, 0, 200, 10, true);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		map.AddDDLSysEnum(FrmSubFlowAttr.SFSta, FrmSubFlowSta.Disable.getValue(), "组件状态", true, true, FrmSubFlowAttr.SFSta, "@0=禁用@1=启用@2=只读");
@@ -434,7 +434,7 @@ public class FrmSubFlow extends Entity
 		map.AddDDLSysEnum(FrmSubFlowAttr.SFOpenType, 0, "打开子流程显示", true, true, FrmSubFlowAttr.SFOpenType, "@0=工作查看器@1=傻瓜表单轨迹查看器"); //此属性暂时没有用.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		RefMethod rm = new RefMethod();
@@ -459,10 +459,10 @@ public class FrmSubFlow extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 子流程。
 	/** 
 	 自动触发
@@ -494,10 +494,10 @@ public class FrmSubFlow extends Entity
 	{
 		return "../../Admin/AttrNode/SubFlow/SubFlowYanXu.htm?FK_Node=" + this.getNodeID() + "&tk=" + (new Random()).nextDouble();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 子流程。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写方法.
 	 
 	@Override
@@ -510,6 +510,6 @@ public class FrmSubFlow extends Entity
 
 		super.afterUpdate();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 重写方法.
 }

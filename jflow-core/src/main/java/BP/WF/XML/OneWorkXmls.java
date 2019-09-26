@@ -11,7 +11,7 @@ import BP.WF.*;
 */
 public class OneWorkXmls extends XmlEns
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 工作一户式s
@@ -19,10 +19,10 @@ public class OneWorkXmls extends XmlEns
 	public OneWorkXmls()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
@@ -53,6 +53,6 @@ public class OneWorkXmls extends XmlEns
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

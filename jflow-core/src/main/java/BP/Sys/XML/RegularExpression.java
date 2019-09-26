@@ -11,7 +11,7 @@ import BP.Sys.*;
 */
 public class RegularExpression extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 编号
@@ -39,10 +39,10 @@ public class RegularExpression extends XmlEn
 	{
 		return this.GetValStringByKey("Exp");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 节点扩展信息
@@ -58,6 +58,6 @@ public class RegularExpression extends XmlEn
 	{
 		return new RegularExpressions();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

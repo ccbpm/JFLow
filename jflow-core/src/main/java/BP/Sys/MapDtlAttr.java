@@ -190,7 +190,7 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String ImpModel = "ImpModel";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 	public static final String IsEnableLink = "IsEnableLink";
 	public static final String LinkLabel = "LinkLabel";
@@ -204,10 +204,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 明细表追加模式
 	*/
 	public static final String DtlAddRecModel = "DtlAddRecModel";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 	/** 
 	 是否启用锁定
@@ -221,10 +221,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 子线程分组字段.
 	*/
 	public static final String SubThreadGroupMark = "SubThreadGroupMark";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 导入导出属性.
 	/** 
 	 是否可以导出
@@ -246,6 +246,6 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 列的中文名称
 	*/
 	public static final String ImpSQLNames = "ImpSQLNames";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

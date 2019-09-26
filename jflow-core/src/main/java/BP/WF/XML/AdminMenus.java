@@ -11,7 +11,7 @@ import BP.WF.*;
 */
 public class AdminMenus extends XmlEns
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 考核率的数据元素
@@ -19,10 +19,10 @@ public class AdminMenus extends XmlEns
 	public AdminMenus()
 	{
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
@@ -50,7 +50,7 @@ public class AdminMenus extends XmlEns
 	{
 		return null; //new BP.ZF1.AdminAdminMenus();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

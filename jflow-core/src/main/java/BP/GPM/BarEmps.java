@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class BarEmps extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 人员信息块s
@@ -27,7 +27,7 @@ public class BarEmps extends EntitiesMyPK
 	{
 		return new BarEmp();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final String InitMyBars() throws Exception
@@ -53,7 +53,7 @@ public class BarEmps extends EntitiesMyPK
 		return "执行成功";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -78,6 +78,6 @@ public class BarEmps extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

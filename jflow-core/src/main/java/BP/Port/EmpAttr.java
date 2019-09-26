@@ -11,7 +11,7 @@ import java.io.*;
 */
 public class EmpAttr extends BP.En.EntityNoNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 部门
@@ -25,6 +25,6 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	 sid
 	*/
 	public static final String SID = "SID";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

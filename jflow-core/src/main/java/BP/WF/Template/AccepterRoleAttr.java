@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class AccepterRoleAttr extends BP.En.EntityOIDNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 节点编号
@@ -32,6 +32,6 @@ public class AccepterRoleAttr extends BP.En.EntityOIDNameAttr
 	public static final String Tag3 = "Tag3";
 	public static final String Tag4 = "Tag4";
 	public static final String Tag5 = "Tag5";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -14,13 +14,13 @@ import java.util.*;
 */
 public class MapFrmFree extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 文件模版属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 文件模版属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 物理存储表
@@ -99,10 +99,10 @@ public class MapFrmFree extends EntityNoName
 	{
 		this.SetValByKey(MapFrmFreeAttr.TableCol, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限控制.
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -117,10 +117,10 @@ public class MapFrmFree extends EntityNoName
 		uac.Readonly();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 权限控制.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 自由表单属性
@@ -152,7 +152,7 @@ public class MapFrmFree extends EntityNoName
 		Map map = new Map("Sys_MapData", "自由表单属性");
 		map.Java_SetEnType(EnType.Sys);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性.
 		map.AddTBStringPK(MapFrmFreeAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.AddTBString(MapFrmFreeAttr.PTable, null, "存储表", true, false, 0, 100, 20);
@@ -169,11 +169,11 @@ public class MapFrmFree extends EntityNoName
 
 			//表单的运行类型.
 		map.AddDDLSysEnum(MapFrmFreeAttr.FrmType, FrmType.FreeFrm.getValue(), "表单类型", true, false, MapFrmFreeAttr.FrmType);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设计者信息.
 		map.AddTBString(MapFrmFreeAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapFrmFreeAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
@@ -185,7 +185,7 @@ public class MapFrmFree extends EntityNoName
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 		map.AddTBInt(MapFrmFreeAttr.Idx, 100, "顺序号", false, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 设计者信息.
 
 		map.AddMyFile("表单模版");
@@ -193,7 +193,7 @@ public class MapFrmFree extends EntityNoName
 			//查询条件.
 		map.AddSearchAttr(MapFrmFreeAttr.DBSrc);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 方法 - 基本功能.
 		RefMethod rm = new RefMethod();
 
@@ -304,10 +304,10 @@ public class MapFrmFree extends EntityNoName
 			//rm.Target = "_blank";
 			//rm.Icon = ../../Img/Components.png";
 			//map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 方法 - 基本功能.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 高级设置.
 			//带有参数的方法.
 		rm = new RefMethod();
@@ -360,10 +360,10 @@ public class MapFrmFree extends EntityNoName
 		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
 		map.AddRefMethod(rm);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 高级设置.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 方法 - 开发接口.
 		rm = new RefMethod();
 		rm.Title = "调用查询API"; // "设计表单";
@@ -384,13 +384,13 @@ public class MapFrmFree extends EntityNoName
 		rm.Target = "_blank";
 		rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 方法 - 开发接口.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override
@@ -448,7 +448,7 @@ public class MapFrmFree extends EntityNoName
 		super.afterDelete();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 高级设置.
 	/** 
 	 改变表单类型 @李国文 ，需要搬到jflow.
@@ -481,11 +481,11 @@ public class MapFrmFree extends EntityNoName
 	{
 		return BP.Sys.CCFormAPI.CopyFrm(this.getNo(), frmID, frmName, fk_frmTree);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 高级设置.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点表单方法.
 	/** 
 	 单据打印
@@ -550,10 +550,10 @@ public class MapFrmFree extends EntityNoName
 		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.getNo();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 通用方法.
 	/** 
 	 重命名
@@ -791,6 +791,6 @@ public class MapFrmFree extends EntityNoName
 	{
 		return "../../Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData=" + this.getNo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 方法.
 }

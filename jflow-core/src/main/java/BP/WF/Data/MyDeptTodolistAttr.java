@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class MyDeptTodolistAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -163,6 +163,6 @@ public class MyDeptTodolistAttr
 	 GUID
 	*/
 	public static final String GUID = "GUID";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

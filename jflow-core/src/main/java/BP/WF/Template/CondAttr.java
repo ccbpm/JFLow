@@ -82,7 +82,7 @@ public class CondAttr
 	*/
 	public static final String Note = "Note";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性。
 	/** 
 	 指定人员方式
@@ -92,6 +92,6 @@ public class CondAttr
 	 指定人员方式的参数
 	*/
 	public static final String SpecOperPara = "SpecOperPara";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性。
 }

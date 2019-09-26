@@ -11,7 +11,7 @@ import BP.Sys.XML.*;
 */
 public class ChMulToneXmls extends XmlEns
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 多音字s
@@ -28,10 +28,10 @@ public class ChMulToneXmls extends XmlEns
 	{
 		return (List<ChMulToneXml>)(Object)this;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
@@ -59,6 +59,6 @@ public class ChMulToneXmls extends XmlEns
 	{
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

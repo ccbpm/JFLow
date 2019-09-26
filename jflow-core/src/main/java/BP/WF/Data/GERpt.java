@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class GERpt extends BP.En.EntityOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region attrs
 	public final long getOID() throws Exception
 	{
@@ -291,10 +291,10 @@ public class GERpt extends BP.En.EntityOID
 	{
 		this.SetValByKey(GERptAttr.PrjName, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion attrs
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写。
 
 	@Override
@@ -347,10 +347,10 @@ public class GERpt extends BP.En.EntityOID
 			this.SetValByKey(attr.getKey(), fromEn.GetValByKey(attr.getKey()));
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	private String _RptName = null;
 	public final String getRptName()
@@ -426,6 +426,6 @@ public class GERpt extends BP.En.EntityOID
 		this.setOID((int)oid);
 		this.Retrieve();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion attrs
 }

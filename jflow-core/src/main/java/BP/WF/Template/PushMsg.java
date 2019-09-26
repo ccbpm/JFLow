@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class PushMsg extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 流程编号
@@ -90,10 +90,10 @@ public class PushMsg extends EntityMyPK
 	{
 		this.SetValByKey(PushMsgAttr.Tag, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 事件消息.
 	/** 
 	 邮件推送方式
@@ -529,10 +529,10 @@ public class PushMsg extends EntityMyPK
 	{
 		this.SetValByKey(PushMsgAttr.ByEmps, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 消息推送
@@ -559,16 +559,16 @@ public class PushMsg extends EntityMyPK
 		map.AddTBInt(PushMsgAttr.FK_Node, 0, "节点", true, false);
 		map.AddTBString(PushMsgAttr.FK_Event, null, "事件类型", true, false, 0, 20, 10);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 将要删除.
 		map.AddDDLSysEnum(PushMsgAttr.PushWay, 0, "推送方式", true, false, PushMsgAttr.PushWay, "@0=按照指定节点的工作人员@1=按照指定的工作人员@2=按照指定的工作岗位@3=按照指定的部门@4=按照指定的SQL@5=按照系统指定的字段");
 			//设置内容.
 		map.AddTBString(PushMsgAttr.PushDoc, null, "推送保存内容", true, false, 0, 3500, 10);
 		map.AddTBString(PushMsgAttr.Tag, null, "Tag", true, false, 0, 500, 10);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 将要删除.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 短消息.
 		map.AddTBInt(PushMsgAttr.SMSPushWay, 0, "短消息发送方式", true, true);
 		map.AddTBString(PushMsgAttr.SMSField, null, "短消息字段", true, false, 0, 100, 10);
@@ -577,17 +577,17 @@ public class PushMsg extends EntityMyPK
 
 			//@0=站内消息@1=短信@2=钉钉@3=微信@4=即时通
 		map.AddTBString(PushMsgAttr.SMSPushModel, null, "短消息发送设置", true, false, 0, 50, 10);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 短消息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 邮件.
 		map.AddTBInt(PushMsgAttr.MailPushWay, 0, "邮件发送方式", true, true);
 		map.AddTBString(PushMsgAttr.MailAddress, null, "邮件字段", true, false, 0, 100, 10);
 		map.AddTBString(PushMsgAttr.MailTitle, null, "邮件标题模版", true, false, 0, 200, 20, true);
 		map.AddTBStringDoc(PushMsgAttr.MailDoc, null, "邮件内容模版", true, false, true);
 		map.AddTBString(PushMsgAttr.MailNodes, null, "Mail节点s", true, false, 0, 100, 10);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 邮件.
 
 		map.AddTBString(PushMsgAttr.BySQL, null, "按照SQL计算", true, false, 0, 500, 10);
@@ -597,7 +597,7 @@ public class PushMsg extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
@@ -639,7 +639,7 @@ public class PushMsg extends EntityMyPK
 			return "";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理参数.
 		Row r = en.getRow();
 		try
@@ -690,7 +690,7 @@ public class PushMsg extends EntityMyPK
 		String openWorkURl = hostUrl + "WF/Do.htm?DoType=OF&SID=" + sid;
 		openWorkURl = openWorkURl.replace("//", "/");
 		openWorkURl = openWorkURl.replace("http:/", "http://");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 
@@ -739,17 +739,17 @@ public class PushMsg extends EntityMyPK
 		String mailTitle = this.getMailTitle(); // 邮件标题
 		String smsDoc = this.getSMSDoc(); //消息模板
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 邮件标题
 		mailTitle = this.getMailTitle();
 		mailTitle = mailTitle.replace("{Title}", title);
 		mailTitle = mailTitle.replace("@WebUser.getNo()", WebUser.getNo());
 		mailTitle = mailTitle.replace("@WebUser.getName()", WebUser.getName());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 邮件标题
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  处理消息内容
 		smsDoc = smsDoc.replace("{Title}", title);
 		smsDoc = smsDoc.replace("{Url}", openUrl);
@@ -778,13 +778,13 @@ public class PushMsg extends EntityMyPK
 				smsDoc = smsDoc.replace("ReturnMsg", returnMsg);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理消息内容
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 消息发送
 		String toEmpIDs = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 表单字段作为接受人
 		if (this.getSMSPushWay() == 2)
 		{
@@ -798,10 +798,10 @@ public class PushMsg extends EntityMyPK
 			BP.WF.Dev2Interface.Port_SendMessage(toEmp, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
 			return "@已向:{" + toEmp + "}发送提醒信息.";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 表单字段作为接受人
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果发送给指定的节点处理人,就计算出来直接退回,任何方式的处理人都是一致的.
 		if (this.getSMSPushWay() == 3)
 		{
@@ -845,10 +845,10 @@ public class PushMsg extends EntityMyPK
 			}
 			return "@已向:{" + toEmpIDs + "}发送了短消息提醒.";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果发送给指定的节点处理人, 就计算出来直接退回, 任何方式的处理人都是一致的.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 按照SQL计算
 		if (this.getSMSPushWay() == 4)
 		{
@@ -892,10 +892,10 @@ public class PushMsg extends EntityMyPK
 			}
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 按照SQL计算
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 发送给指定的接收人
 		if (this.getSMSPushWay() == 5)
 		{
@@ -923,14 +923,14 @@ public class PushMsg extends EntityMyPK
 				toEmpIDs += emp.getName() + ",";
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 发送给指定的接收人
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 不同的消息事件，接收人不同的处理
 		if (this.getSMSPushWay() == 1)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 工作到达、退回、移交、撤销
 			if ((this.getFK_Event().equals(BP.Sys.EventListOfNode.WorkArrive) || this.getFK_Event().equals(BP.Sys.EventListOfNode.ReturnAfter) || this.getFK_Event().equals(BP.Sys.EventListOfNode.ShitAfter) || this.getFK_Event().equals(BP.Sys.EventListOfNode.UndoneAfter)) && DataType.IsNullOrEmpty(jumpToEmps) == false)
 			{
@@ -954,10 +954,10 @@ public class PushMsg extends EntityMyPK
 				}
 				return "@已向:{" + toEmpIDs + "}发送提醒信息.";
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 工作到达、退回、移交、撤销
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 节点发送成功后
 			if (this.getFK_Event().equals(BP.Sys.EventListOfNode.SendSuccess) && objs.getVarAcceptersID() != null)
 			{
@@ -985,11 +985,11 @@ public class PushMsg extends EntityMyPK
 				}
 				return "@已向:{" + toEmpIDs + "}发送提醒信息.";
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 节点发送成功后
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 流程结束后、流程删除后
 			if (this.getFK_Event().equals(BP.Sys.EventListOfNode.FlowOverAfter) || this.getFK_Event().equals(BP.Sys.EventListOfNode.AfterFlowDel))
 			{
@@ -1039,10 +1039,10 @@ public class PushMsg extends EntityMyPK
 				}
 				return "@已向:{" + empsStrs + "}发送提醒信息.";
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 流程结束后、流程删除后
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 节点预警、逾期
 			if (this.getFK_Event().equals(BP.Sys.EventListOfNode.NodeWarning) || this.getFK_Event().equals(BP.Sys.EventListOfNode.NodeOverDue))
 			{
@@ -1069,14 +1069,14 @@ public class PushMsg extends EntityMyPK
 					BP.WF.Dev2Interface.Port_SendMessage(empA[0], smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel(), paras);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 节点预警、逾期
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 不同的消息事件，接收人不同的处理
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  消息发送
 
 		return "";

@@ -17,7 +17,7 @@ import java.util.*;
 public class RptDfine extends EntityNoName
 {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 本部门流程查询权限定义
@@ -31,10 +31,10 @@ public class RptDfine extends EntityNoName
 	{
 		this.SetValByKey(RptDfineAttr.MyDeptRole, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -86,7 +86,7 @@ public class RptDfine extends EntityNoName
 		map.Java_SetCodeStruct("4");
 		;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性.
 		map.AddTBStringPK(RptDfineAttr.No, null, "编号", true, false, 1, 200, 20);
 		map.AddTBString(RptDfineAttr.Name, null, "流程名称", true, false, 0, 500, 20);
@@ -95,18 +95,18 @@ public class RptDfine extends EntityNoName
 
 			//map.AddTBString(RptDfineAttr.PTable, null, "物理表", true, false, 0, 500, 20);
 			//map.AddTBString(RptDfineAttr.Note, null, "备注", true, false, 0, 500, 20);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 绑定的关联关系.
 		map.getAttrsOfOneVSM().Add(new RptStations(), new Stations(), RptStationAttr.FK_Rpt, RptStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "岗位权限");
 		map.getAttrsOfOneVSM().Add(new RptDepts(), new Depts(), RptDeptAttr.FK_Rpt, RptDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "部门权限");
 		map.getAttrsOfOneVSM().Add(new RptEmps(), new Emps(), RptEmpAttr.FK_Rpt, RptEmpAttr.FK_Emp, DeptAttr.Name, DeptAttr.No, "人员权限");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 我发起的流程.
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
@@ -165,10 +165,10 @@ public class RptDfine extends EntityNoName
 		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 我发起的流程.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 我审批的流程.
 		rm = new RefMethod();
 		rm.Title = "设置显示的列";
@@ -227,10 +227,10 @@ public class RptDfine extends EntityNoName
 		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 我发起的流程.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 我部门发起的流程.
 		rm = new RefMethod();
 		rm.Title = "设置显示的列";
@@ -288,10 +288,10 @@ public class RptDfine extends EntityNoName
 		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 我部门发起的流程.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 高级查询.
 		rm = new RefMethod();
 		rm.Title = "设置显示的列";
@@ -358,16 +358,16 @@ public class RptDfine extends EntityNoName
 		rm.refMethodType = RefMethodType.Func;
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 高级查询.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 通用方法.
 	/** 
 	 选择的列
@@ -471,7 +471,7 @@ public class RptDfine extends EntityNoName
 			attr.setFK_MapData(md.getNo());
 			attr.setUIIsEnable(false);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 判断特殊的字段.
 			switch (attr.getKeyOfEn())
 			{
@@ -513,17 +513,17 @@ public class RptDfine extends EntityNoName
 				default:
 					break;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			attr.Insert();
 		}
 		return "标记为: " + rptMark + "的报表，重置成功...";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 我发起的流程
 	/** 
 	 设置选择的列
@@ -600,10 +600,10 @@ public class RptDfine extends EntityNoName
 	{
 		return "../../RptDfine/Group.htm?GroupType=My&FK_Flow=" + this.getNo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 我参与的流程
 	/** 
 	 设置选择的列
@@ -674,10 +674,10 @@ public class RptDfine extends EntityNoName
 	{
 		return "../../RptDfine/Group.htm?GroupType=MyJoin&FK_Flow=" + this.getNo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 我审批的流程
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 本部门发起的流程
 	/** 
 	 设置选择的列
@@ -754,10 +754,10 @@ public class RptDfine extends EntityNoName
 	{
 		return "../../RptDfine/Group.htm?GroupType=MyDept&FK_Flow=" + this.getNo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 本部门发起的流程
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 高级查询
 	/** 
 	 设置选择的列
@@ -839,7 +839,7 @@ public class RptDfine extends EntityNoName
 	{
 		return "../../Admin/RptDfine/AdvSearchRight.htm?FK_Flow=" + this.getNo();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 高级查询
 
 }

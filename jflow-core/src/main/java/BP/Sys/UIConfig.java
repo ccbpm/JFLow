@@ -69,7 +69,7 @@ public class UIConfig
 		String s = this.HisAP.GetValStrByKey("MoveTo");
 		return s;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 移动.
 
 	/** 

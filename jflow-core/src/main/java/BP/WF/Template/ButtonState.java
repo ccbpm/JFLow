@@ -29,7 +29,7 @@ public class ButtonState
 			return;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否可以撤销发送.
 		WorkNode wn = new WorkNode(this.WorkID, this.CurrNodeIDOfFlow);
 		WorkNode wnPri = wn.GetPreviousWorkNode();
@@ -48,7 +48,7 @@ public class ButtonState
 			this.Btn_Send = true;
 			this.Btn_Save = true;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 	}
 	public final void InitNodeIsNotCurr()

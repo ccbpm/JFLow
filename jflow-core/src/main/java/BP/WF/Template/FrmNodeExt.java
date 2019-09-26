@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class FrmNodeExt extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	public final String getFK_Frm() throws Exception
 	{
@@ -34,10 +34,10 @@ public class FrmNodeExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmNodeAttr.FK_Flow);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -52,10 +52,10 @@ public class FrmNodeExt extends EntityMyPK
 		return uac;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 节点表单
@@ -126,7 +126,7 @@ public class FrmNodeExt extends EntityMyPK
 			//是否显示
 		map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, false, 0, 20, 20);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 表单启用规则. @袁丽娜
 		map.AddDDLSysEnum(FrmNodeAttr.FrmEnableRole, 0, "启用规则", false, false, FrmNodeAttr.FrmEnableRole, "@0=始终启用@1=有数据时启用@2=有参数时启用@3=按表单的字段表达式@4=按SQL表达式@5=不启用@6=按岗位@7=按部门");
 
@@ -134,7 +134,7 @@ public class FrmNodeExt extends EntityMyPK
 
 
 		map.AddTBStringDoc(FrmNodeAttr.FrmEnableExp, null, "启用的表达式", false, false, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 表单启用规则.
 
 		RefMethod rm = new RefMethod();
@@ -190,7 +190,7 @@ public class FrmNodeExt extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -212,7 +212,7 @@ public class FrmNodeExt extends EntityMyPK
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单元素权限.
 	public final String DoDtls() throws Exception
 	{
@@ -240,7 +240,7 @@ public class FrmNodeExt extends EntityMyPK
 	{
 		return "../../Admin/AttrNode/BindFrmsNodeEnableRole.htm?MyPK=" + this.getMyPK();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 表单元素权限.
 
 }

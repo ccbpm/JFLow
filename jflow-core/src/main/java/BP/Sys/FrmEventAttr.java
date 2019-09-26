@@ -47,7 +47,7 @@ public class FrmEventAttr
 	*/
 	public static final String MsgError = "MsgError";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 消息设置.
 	/** 
 	 控制方式
@@ -93,6 +93,6 @@ public class FrmEventAttr
 	 DLL中所选类所选方法的参数表达式
 	*/
 	public static final String MonthedParas = "MonthedParas";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 消息设置.
 }

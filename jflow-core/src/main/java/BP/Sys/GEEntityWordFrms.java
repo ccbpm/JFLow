@@ -9,7 +9,7 @@ import java.util.*;
 */
 public class GEEntityWordFrms extends EntitiesOID
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重载基类方法
 	@Override
 	public String toString()
@@ -22,10 +22,10 @@ public class GEEntityWordFrms extends EntitiesOID
 	 主键
 	*/
 	public String FK_MapData = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 得到它的 Entity
@@ -57,10 +57,10 @@ public class GEEntityWordFrms extends EntitiesOID
 	{
 		this.FK_MapData = fk_mapdata;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -85,6 +85,6 @@ public class GEEntityWordFrms extends EntitiesOID
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

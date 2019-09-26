@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class MapAttrBoolen extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 文本字段参数属性.
 	/** 
 	 表单ID
@@ -59,10 +59,10 @@ public class MapAttrBoolen extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制权限
@@ -100,7 +100,7 @@ public class MapAttrBoolen extends EntityMyPK
 		map.IndexField = MapAttrAttr.FK_MapData;
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本信息.
 
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
@@ -118,10 +118,10 @@ public class MapAttrBoolen extends EntityMyPK
 
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 		map.AddTBStringDoc(MapAttrAttr.Tip, null, "激活提示", true, false); //@李国文
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 傻瓜表单。
 			//单元格数量 2013-07-24 增加。
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
@@ -138,7 +138,7 @@ public class MapAttrBoolen extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.UIWidth, 0, "宽度(对自由表单有效)", true, false);
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 傻瓜表单。
 
 
@@ -184,10 +184,10 @@ public class MapAttrBoolen extends EntityMyPK
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterDelete();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本功能.
 	/** 
 	 绑定函数
@@ -199,6 +199,6 @@ public class MapAttrBoolen extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

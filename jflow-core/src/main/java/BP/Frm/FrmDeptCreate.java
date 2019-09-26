@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class FrmDeptCreate extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -50,10 +50,10 @@ public class FrmDeptCreate extends EntityMM
 	{
 		this.SetValByKey(FrmDeptCreateAttr.FK_Dept, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 单据可创建的部门
@@ -79,7 +79,7 @@ public class FrmDeptCreate extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

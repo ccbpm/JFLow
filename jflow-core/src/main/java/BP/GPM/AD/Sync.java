@@ -38,7 +38,7 @@ public class Sync extends Method
 		return false;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region## 同步
 	private ArrayList<AdModel> list = new ArrayList<AdModel>();
 
@@ -149,7 +149,7 @@ public class Sync extends Method
 		//search.Dispose();
 	}
 	private String err = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final void SyncEmps()
@@ -349,7 +349,7 @@ public class Sync extends Method
 		return valueCollection.Value.toString();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region## 同步根组织单位
 	private String rootDeptNo = "";
 	private int idxDept = 0;
@@ -474,10 +474,10 @@ public class Sync extends Method
 	{
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region## 同步下属组织单位及下属用户
 	/** 
 	 功能: 同步下属组织单位及下属用户
@@ -536,6 +536,6 @@ public class Sync extends Method
 			}
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

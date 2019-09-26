@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class TaskAttr extends EntityMyPKAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 发起人
@@ -51,6 +51,6 @@ public class TaskAttr extends EntityMyPKAttr
 	 到达人员（可以为空）
 	*/
 	public static final String ToEmps = "ToEmps";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

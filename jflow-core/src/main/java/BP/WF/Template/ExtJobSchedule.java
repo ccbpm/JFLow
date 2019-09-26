@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class ExtJobSchedule extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 目标
@@ -65,10 +65,10 @@ public class ExtJobSchedule extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -114,7 +114,7 @@ public class ExtJobSchedule extends EntityMyPK
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 通用的属性.
 		map.AddMyPK();
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
@@ -129,19 +129,19 @@ public class ExtJobSchedule extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.UIWidth, 1, "宽度", true, false);
 
 		map.AddTBString(MapAttrAttr.Name, null, "名称", true, false, 0, 500, 20, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 通用的属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 个性化属性.
 		   // map.AddTBString(MapAttrAttr.Tag1, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
 		   // map.AddTBString(MapAttrAttr.Tag2, null, "URL", true, false, 0, 500, 20, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 个性化属性.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

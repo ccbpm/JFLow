@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class MyDeptEmp extends BP.En.EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region attrs - attrs
 	public String RptName = null;
 	@Override
@@ -32,7 +32,7 @@ public class MyDeptEmp extends BP.En.EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion attrs
 
 }

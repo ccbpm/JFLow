@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 表单设计器.
 	/** 
 	 是不是第一次进来.
@@ -40,7 +40,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		//如果是第一次进入，就执行旧版本的升级检查.
 		if (this.getIsFirst() == true)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region
 			if (this.getFK_MapData().contains("BP.") == true)
 			{
@@ -61,7 +61,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				mymd.Update();
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			MapFrmFool cols = new MapFrmFool(this.getFK_MapData());
@@ -142,7 +142,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		//把dataet转化成json 对象.
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -823,7 +823,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		return "保存成功..";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region SFList 外键表列表.
 	/** 
 	 删除
@@ -923,7 +923,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			return "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFSQL&PKVal=" + attr.MyPK;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 外键表列表.
 
 
@@ -1093,7 +1093,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			return "err@字段名：" + newNo + "已经存在.";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 计算GroupID  需要翻译
 		int iGroupID = this.getGroupField();
 		try
@@ -1111,7 +1111,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		{
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		try
@@ -2025,7 +2025,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region sfGuide
 	/** 
 	 获取数据源字典表信息
@@ -2301,10 +2301,10 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region Methods
 	/** 
 	 获取webservice方法列表
@@ -2316,11 +2316,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	{
 		return BP.WF.NetPlatformImpl.WF_Admin_FoolFormDesigner.GetWebServiceMethods(dbsrc);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region  ImpTableFieldSelectBindKey 外键枚举
 	/** 
 	 初始化数据
@@ -2341,7 +2341,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion  ImpTableFieldSelectBindKey 外键枚举
 
 

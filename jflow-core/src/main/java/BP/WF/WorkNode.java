@@ -21,7 +21,7 @@ import java.math.*;
 */
 public class WorkNode
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 权限判断
 	/** 
 	 判断一个人能不能对这个工作节点进行操作。
@@ -60,10 +60,10 @@ public class WorkNode
 			return false;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性/变量.
 	/** 
 	 子线程是否有分组标志.
@@ -181,10 +181,10 @@ public class WorkNode
 			return true;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性/变量.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region GenerWorkerList 相关方法.
 	//查询出每个节点表里的接收人集合（Emps）。
 	public final String GenerEmps(Node nd)
@@ -262,7 +262,7 @@ public class WorkNode
 
 		throw new RuntimeException("@此部分代码已经移除了.");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion GenerWorkerList 相关方法.
 
 	/** 
@@ -314,7 +314,7 @@ public class WorkNode
 				}
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 删除当前节点数据，删除附件信息。
 			// 删除明细表信息。
 			MapDtls dtls = new MapDtls("ND" + nd.getNodeID());
@@ -330,7 +330,7 @@ public class WorkNode
 			BP.DA.DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE RefPKVal=" + dbStr + "WorkID AND FK_MapData=" + dbStr + "FK_MapData ", "WorkID", String.valueOf(this.getWorkID()), "FK_MapData", "ND" + nd.getNodeID());
 			// 删除签名信息。
 			BP.DA.DBAccess.RunSQL("DELETE FROM Sys_FrmEleDB WHERE RefPKVal=" + dbStr + "WorkID AND FK_MapData=" + dbStr + "FK_MapData ", "WorkID", String.valueOf(this.getWorkID()), "FK_MapData", "ND" + nd.getNodeID());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 删除当前节点数据。
 
 			/*说明:已经删除该节点数据。*/
@@ -382,7 +382,7 @@ public class WorkNode
 		}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 根据工作岗位生成工作者
 	private Node _ndFrom = null;
 	private Node getndFrom()
@@ -422,7 +422,7 @@ public class WorkNode
 
 		this.getHisGenerWorkFlow().setTodoEmpsNum(-1);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断发送的类型，处理相关的FID.
 		// 定义下一个节点的接收人的 FID 与 WorkID.
 		long nextUsersWorkID = this.getWorkID();
@@ -455,14 +455,14 @@ public class WorkNode
 			nextUsersFID = this.getHisWork().getFID();
 			isSubthread2Subthread = true;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断发送的类型，处理相关的FID.
 
 		int toNodeId = town.getHisNode().getNodeID();
 		this.HisWorkerLists = new GenerWorkerLists();
 		this.HisWorkerLists.Clear();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 限期时间  town.HisNode.TSpan-1
 
 		LocalDateTime dtOfShould = LocalDateTime.now();
@@ -549,10 +549,10 @@ public class WorkNode
 				this.getHisGenerWorkFlow().setTodoEmpsNum(dt.Rows.size());
 				break;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 限期时间  town.HisNode.TSpan-1
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理 人员列表 数据源。
 		// 定义是否有分组mark. 如果有三列，就说明该集合中有分组 mark. 就是要处理一个人多个子线程的情况.
 		if (dt.Columns.size() == 3 && town.getHisNode().getHisFormType() == NodeFormType.SheetAutoTree)
@@ -728,7 +728,7 @@ public class WorkNode
 			/* 如果有多个人员，就要考虑接收人是否记忆属性的问题。 */
 			RememberMe rm = this.GetHisRememberMe(town.getHisNode());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 是否需要清空记忆属性.
 			// 如果按照选择的人员处理，就设置它的记忆为空。2011-11-06 处理电厂需求 .
 			if (this.town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected || this.town.getHisNode().getIsAllowRepeatEmps() == true || town.getHisNode().getIsRememberMe() == false)
@@ -763,7 +763,7 @@ public class WorkNode
 					rm.setObjs(""); //清空有效的接收人集合.
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 是否需要清空记忆属性.
 
 			String myemps = "";
@@ -787,7 +787,7 @@ public class WorkNode
 
 				GenerWorkerList wl = new GenerWorkerList();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 根据记忆是否设置该操作员可用与否。
 				if (rm != null)
 				{
@@ -812,7 +812,7 @@ public class WorkNode
 				{
 					wl.setIsEnable(false);
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 根据记忆是否设置该操作员可用与否。
 
 				wl.setFK_Node(toNodeId);
@@ -942,10 +942,10 @@ public class WorkNode
 			para[2] = this.getHisWorkFlow().getHisFlow().Name;
 			BP.WF.Glo.multilingual("@根据部门[{0}]产生工作人员出现错误，流程[{1}]中节点[{2}]定义错误,没有找到接收此工作的工作人员.", "WorkNode", "generate_receiver_error_by_depart", para);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理 人员列表 数据源。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设置流程数量,其他的信息为任务池提供数据。
 		String hisEmps = "";
 		int num = 0;
@@ -965,10 +965,10 @@ public class WorkNode
 
 		this.getHisGenerWorkFlow().setTodoEmpsNum(num);
 		this.getHisGenerWorkFlow().setTodoEmps(hisEmps);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  求出日志类型，并加入变量中。
 		ActionType at = ActionType.Forward;
 		switch (town.getHisNode().getHisNodeWorkType())
@@ -1014,13 +1014,13 @@ public class WorkNode
 			default:
 				break;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  求出日志类型，并加入变量中。
 
 		//把工作的当时信息存入数据库.
 		// string json = this.HisWork.ToJson();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是子线城前进.
 		if (at == ActionType.SubThreadForward)
 		{
@@ -1031,10 +1031,10 @@ public class WorkNode
 			}
 			//写入到日志.
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果是子线城前进.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是非子线城前进.
 		if (at != ActionType.SubThreadForward)
 		{
@@ -1061,10 +1061,10 @@ public class WorkNode
 				this.AddToTrack(at, this.getExecer(), BP.WF.Glo.multilingual("多人接收(见信息栏)", "WorkNode", "multiple_receivers", new String[0]), town.getHisNode().getNodeID(), town.getHisNode().getName(), info, this.getndFrom(), null, emps);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果是非子线城前进.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 把数据加入变量中.
 		String ids = "";
 		String names = "";
@@ -1100,15 +1100,15 @@ public class WorkNode
 		this.addMsg(SendReturnMsgFlag.VarAcceptersID, ids, ids, SendReturnMsgType.SystemMsg);
 		this.addMsg(SendReturnMsgFlag.VarAcceptersName, names, names, SendReturnMsgType.SystemMsg);
 		this.addMsg(SendReturnMsgFlag.VarAcceptersNID, idNames, idNames, SendReturnMsgType.SystemMsg);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return this.HisWorkerLists;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 条件
 	private Conds _HisNodeCompleteConditions = null;
 	/** 
@@ -1138,10 +1138,10 @@ public class WorkNode
 		}
 		return _HisFlowCompleteConditions;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 关于质量考核
 	///// <summary>
 	///// 得到以前的已经完成的工作节点.
@@ -1158,10 +1158,10 @@ public class WorkNode
 	//    }
 	//    return mywns;
 	//}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程公共方法
 	private Flow _HisFlow = null;
 	public final Flow getHisFlow()
@@ -1176,7 +1176,7 @@ public class WorkNode
 	private String JumpToEmp = null;
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region NodeSend 的附属功能.
 	/** 
 	 获得下一个节点.
@@ -1250,7 +1250,7 @@ public class WorkNode
 		int beforeSkipNodeID = 0; //added by liuxc,2015-7-13,标识自动跳转之前的节点ID
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region (最后)判断是否有延续流程.
 		if (this.getHisNode().getSubFlowYanXuNum() > 0)
 		{
@@ -1278,10 +1278,10 @@ public class WorkNode
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion (最后)判断是否有延续流程.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 计算到达的节点.
 		this.setndFrom(this.getHisNode());
 		while (true)
@@ -1356,13 +1356,13 @@ public class WorkNode
 					}
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region  初始化发起的工作节点。
 
 				if (1 == 2)
 				{
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 被 zhoupeng 删除 2014-06-20, 不应该存在这里.
 					if (this.getHisWork().EnMap.PhysicsTable == nd.getHisWork().EnMap.PhysicsTable)
 					{
@@ -1373,7 +1373,7 @@ public class WorkNode
 
 						/* 如果两个数据源不想等，就执行copy。 */
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 复制附件。
 						FrmAttachments athDesc = this.getHisNode().getMapData().FrmAttachments;
 						if (athDesc.size() > 0)
@@ -1405,10 +1405,10 @@ public class WorkNode
 								}
 							}
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion 复制附件。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 复制图片上传附件。
 						if (this.getHisNode().getMapData().FrmImgAths.size() > 0)
 						{
@@ -1432,10 +1432,10 @@ public class WorkNode
 								}
 							}
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion 复制图片上传附件。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 复制Ele
 						if (this.getHisNode().getMapData().FrmEles.size() > 0)
 						{
@@ -1455,10 +1455,10 @@ public class WorkNode
 								}
 							}
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion 复制Ele
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 复制明细数据
 						// int deBugDtlCount=
 						Sys.MapDtls dtls = this.getHisNode().getMapData().MapDtls;
@@ -1614,7 +1614,7 @@ public class WorkNode
 									dtCopy.RefPKInt64 = this.getWorkID();
 									deBugNumCopy++;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 										///#region  复制明细表单条 - 附件信息
 									if (toDtl.IsEnableAthM)
 									{
@@ -1636,11 +1636,11 @@ public class WorkNode
 											}
 										}
 									}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 										///#endregion  复制明细表单条 - 附件信息
 
 								}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 记录日志.
 								if (gedtls.size() != deBugNumCopy)
 								{
@@ -1657,7 +1657,7 @@ public class WorkNode
 									throw new RuntimeException(BP.WF.Glo.multilingual("@系统出现错误,请将如下信息反馈给管理员,谢谢。技术信息:{0}.", "WorkNode", "system_error", para6));
 								}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 									///#region 如果启用了审核机制
 								if (isEnablePass)
 								{
@@ -1692,15 +1692,15 @@ public class WorkNode
 									}
 									DBAccess.RunSQL("UPDATE " + startDtl.PTable + " SET Rec='" + startUser + "',Checker='" + this.getExecer() + "' WHERE BatchID=" + this.getWorkID() + " AND Rec='" + this.getExecer() + "'");
 								}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 									///#endregion 如果启用了审核机制
 							}
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion 复制明细数据
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 初始化发起的工作节点.
 
 				IsSkip = true;
@@ -1751,7 +1751,7 @@ public class WorkNode
 					// 如果出现了 处理人就是发起人的情况.
 					if (dr.get(0).toString().equals(this.getHisGenerWorkFlow().getStarter()))
 					{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 处理签名，让签名的人是发起人。
 
 
@@ -1787,7 +1787,7 @@ public class WorkNode
 						{
 							skipWork.DirectUpdate();
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion 处理签名，让签名的人是发起人。
 
 						isHave = true;
@@ -1896,7 +1896,7 @@ public class WorkNode
 					wk.DirectSave();
 
 					//added by liuxc,2015-10-16
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region //此处时，跳转的节点如果有签章，则签章路径会计算错误，需要重新计算一下签章路径，暂时没找到好法子，将UCEn.ascx.cs中的计算签章的逻辑挪过来使用
 					FrmImgs imgs = new FrmImgs();
 					imgs.Retrieve(FrmImgAttr.FK_MapData, "ND" + nd.getNodeID(), FrmImgAttr.ImgAppType, 1, FrmImgAttr.IsEdit, 1);
@@ -1992,7 +1992,7 @@ public class WorkNode
 						{
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion
 
 					this.AddToTrack(ActionType.Skip, Executor, ExecutorName, nd.getNodeID(), nd.getName(), BP.WF.Glo.multilingual("自动跳转(操作人与上一步相同)", "WorkNode", "system_error_jump_automatically_2", new String[0]), getndFrom());
@@ -2011,7 +2011,7 @@ public class WorkNode
 			setndFrom(nd);
 		} //结束循环。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 计算到达的节点.
 		throw new RuntimeException(BP.WF.Glo.multilingual("@找到下一步节点.", "WorkNode", "found_next_node", new String[0]));
 	}
@@ -2075,7 +2075,7 @@ public class WorkNode
 			throw new RuntimeException(BP.WF.Glo.multilingual("@没有找到接收人期望的数据.", "WorkNode", "not_found_receiver_expected_data", new String[0]));
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 要计算当前人员的应完成日期
 		// 计算出来 退回到节点的应完成时间. 
 		LocalDateTime dtOfShould = LocalDateTime.MIN;
@@ -2085,7 +2085,7 @@ public class WorkNode
 
 		// 应完成日期.
 		String sdt = dtOfShould.toString(DataType.getSysDataTimeFormat());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//更新日期，为了考核. 
@@ -2154,7 +2154,7 @@ public class WorkNode
 		//if (dcsAll.size() == 0)
 		//    throw new Exception("@没有为节点(" + currNode.NodeID + " , " + currNode.Name + ")设置方向条件.");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 		Nodes myNodes = new Nodes();
 		for (Node nd : nds.ToJavaList())
@@ -2186,7 +2186,7 @@ public class WorkNode
 				myNodes.AddEntity(nd);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 
 
@@ -2268,7 +2268,7 @@ public class WorkNode
 			return this.getHisNode().getHisToNodes();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果使用户选择的.
 		if (this.getHisNode().getCondModel() == CondModel.ByUserSelected)
 		{
@@ -2291,7 +2291,7 @@ public class WorkNode
 			}
 			return nds;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果使用户选择的.
 
 
@@ -2304,7 +2304,7 @@ public class WorkNode
 		Conds dcsAll = new Conds();
 		dcsAll.Retrieve(CondAttr.NodeID, this.getHisNode().getNodeID(), CondAttr.PRI);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 		Nodes myNodes = new Nodes();
 		int toNodeId = 0;
@@ -2340,10 +2340,10 @@ public class WorkNode
 				continue;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 走到最后，发现一个条件都不符合，就找没有设置方向条件的节点. （@杜翻译）
 		if (myNodes.size() == 0)
 		{
@@ -2367,7 +2367,7 @@ public class WorkNode
 				myNodes.Clear();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 走到最后，发现一个条件都不符合，就找没有设置方向条件的节点.
 
 
@@ -2404,7 +2404,7 @@ public class WorkNode
 		para[0] = this.getHisNode().getName();
 		this.addMsg("CurrWorkOver", BP.WF.Glo.multilingual("@当前节点工作[{0}]已经完成。", "WorkNode", "current_node_completed", para));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断流程条件.
 		try
 		{
@@ -2439,7 +2439,7 @@ public class WorkNode
 			String str = BP.WF.Glo.multilingual("@判断流程({0})完成条件出现错误:{1}.", "WorkNode", "error_workflow_complete_condition", ex.getStackTrace(), this.getHisNode().getName());
 			throw new RuntimeException(str);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 	}
 	/** 
@@ -2492,7 +2492,7 @@ public class WorkNode
 			this.getHisWork().DirectUpdate();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 2014-08-02 删除了其他人员的待办，增加了 IsPass=0 参数.
 		if (this.town != null && this.town.getHisNode().getNodeID() == this.getHisNode().getNodeID())
 		{
@@ -2514,7 +2514,7 @@ public class WorkNode
 			ps.Add("FK_Emp", this.getExecer());
 			DBAccess.RunSQL(ps);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 2014-08-02 删除了其他人员的待办，增加了 IsPass=0 参数.
 
 		if (this.town != null && this.town.getHisNode().getNodeID() == this.getHisNode().getNodeID())
@@ -2569,7 +2569,7 @@ public class WorkNode
 
 		return BP.WF.Glo.multilingual("@流程已经完成.", "WorkNode", "workflow_completed");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 附属功能
 	/** 
 	 普通节点到普通节点
@@ -2591,7 +2591,7 @@ public class WorkNode
 			toWK.RetrieveFromDBSources(); //有可能是跳转.
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 执行数据初始化
 		// town.
 		WorkNode town = new WorkNode(toWK, toND);
@@ -2640,7 +2640,7 @@ public class WorkNode
 		}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 保存目标节点数据.
 		if (this.getHisWork().EnMap.PhysicsTable != toWK.EnMap.PhysicsTable)
 		{
@@ -2694,7 +2694,7 @@ public class WorkNode
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 保存目标节点数据.
 
 		//@加入消息集合里。
@@ -2721,7 +2721,7 @@ public class WorkNode
 
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
 		try
 		{
@@ -2738,7 +2738,7 @@ public class WorkNode
 		}
 		catch (RuntimeException ex)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region  如果更新失败，可能是由于数据字段大小引起。
 			Flow flow = new Flow(toND.getFK_Flow());
 
@@ -2765,10 +2765,10 @@ public class WorkNode
 			ps.Add(TrackAttr.WorkID, this.getWorkID());
 			BP.DA.DBAccess.RunSQL(ps);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理审核问题.
 
 		//string htmlInfo = string.Format("@任务自动发送给{0}如下处理人{1}.", this.nextStationName,this._RememberMe.EmpsExt);
@@ -2806,10 +2806,10 @@ public class WorkNode
 
 		//this.addMsg(SendReturnMsgFlag.WorkStartNode, Glo.Multilingual("WorkNode","WorkStartNode",toND.Name), "WorkStartNode1");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  初始化发起的工作节点。
 		if (this.getHisWork().EnMap.PhysicsTable == toWK.EnMap.PhysicsTable)
 		{
@@ -2821,10 +2821,10 @@ public class WorkNode
 			/* 如果两个数据源不想等，就执行copy。 */
 			this.CopyData(toWK, toND, false);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 初始化发起的工作节点.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否是质量评价。
 		if (toND.getIsEval())
 		{
@@ -2834,7 +2834,7 @@ public class WorkNode
 			toWK.SetValByKey(WorkSysFieldAttr.EvalCent, 0);
 			toWK.SetValByKey(WorkSysFieldAttr.EvalNote, "");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 	}
@@ -3010,17 +3010,17 @@ public class WorkNode
 			this.getHisGenerWorkFlow().setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this.getHisFlow(), this.getHisWork()));
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除到达节点的子线程如果有，防止退回信息垃圾数据问题,如果退回处理了这个部分就不需要处理了.
 		ps = new Paras();
 		ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE FID=" + dbStr + "FID  AND FK_Node=" + dbStr + "FK_Node";
 		ps.Add("FID", this.getHisWork().getOID());
 		ps.Add("FK_Node", toNode.getNodeID());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除到达节点的子线程如果有，防止退回信息垃圾数据问题，如果退回处理了这个部分就不需要处理了.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 产生下一步骤的工作人员
 		// 发起.
 		Work wk = toNode.getHisWork();
@@ -3055,10 +3055,10 @@ public class WorkNode
 				IsHaveFH = true;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 产生下一步骤的工作人员
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制数据.
 		//获得当前流程数节点数据.
 		FrmAttachmentDBs athDBs = new FrmAttachmentDBs("ND" + this.getHisNode().getNodeID(), String.valueOf(this.getWorkID()));
@@ -3129,7 +3129,7 @@ public class WorkNode
 			idx++;
 			Work mywk = toNode.getHisWork();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 复制数据.
 			mywk.Copy(this.rptGe);
 			//  mywk.Copy(this.HisWork);  // 复制过来信息。
@@ -3147,7 +3147,7 @@ public class WorkNode
 					mywk.Copy(dr);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 复制数据.
 
 			boolean isHaveEmp = false;
@@ -3291,7 +3291,7 @@ public class WorkNode
 			}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理烟台（安检模式的流程）需求, 需要合流节点有一个明细表，根据明细表启动子线程任务,并要求把明细表的一行数据copy到下一个子线程的主表上去。
 			if (isHaveFLDtl == true)
 			{
@@ -3352,7 +3352,7 @@ public class WorkNode
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理烟台需求, 需要合流节点有一个明细表，根据明细表启动子线程任务,并要求把明细表的一行数据copy到下一个子线程的主表上去。
 
 			//非分组工作人员.
@@ -3363,7 +3363,7 @@ public class WorkNode
 				//给系统变量赋值，放在发送后返回对象里.
 				workIDs += mywk.getOID() + ",";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region  复制附件信息
 				if (athDBs.size() > 0)
 				{
@@ -3408,10 +3408,10 @@ public class WorkNode
 						}
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion  复制附件信息
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region  复制签名信息
 				if (this.getHisNode().getMapData().FrmImgs.size() > 0)
 				{
@@ -3442,10 +3442,10 @@ public class WorkNode
 						}
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion  复制附件信息
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 复制图片上传附件。
 				if (this.getHisNode().getMapData().FrmImgAths.size() > 0)
 				{
@@ -3466,10 +3466,10 @@ public class WorkNode
 						}
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 复制图片上传附件。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region  复制从表信息.
 				if (dtlsFrom.size() > 0 && dtlsTo.size() > 0)
 				{
@@ -3528,7 +3528,7 @@ public class WorkNode
 							dtCopy.OID = 0;
 							dtCopy.Insert();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 								///#region  复制从表单条 - 附件信息 - M2M- M2MM
 							if (toDtl.IsEnableAthM)
 							{
@@ -3550,16 +3550,16 @@ public class WorkNode
 									}
 								}
 							}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 								///#endregion  复制从表单条 - 附件信息
 						}
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion  复制附件信息
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region (循环最后处理)产生工作的信息
 			// 产生工作的信息。
 			GenerWorkFlow gwf = new GenerWorkFlow();
@@ -3657,13 +3657,13 @@ public class WorkNode
 
 			//设置当前的workid. 临时的id有变化.
 			wl.setWorkID(mywk.getOID());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 产生工作的信息.
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理消息提示
 		String info = BP.WF.Glo.multilingual("@分流节点[{0}]成功启动, 发送给{1}位处理人:{2}.", "WorkNode", "found_node_operator", toNode.getName(), String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getEmpsExt());
 
@@ -3692,7 +3692,7 @@ public class WorkNode
 		}
 
 		//  this.addMsg("Rpt", "@<a href='WFRpt.htm?WorkID=" + this.WorkID + "&FID=" + wk.FID + "&FK_Flow=" + this.HisNode.FK_Flow + "' target='_self' >工作轨迹</a>");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理消息提示
 	}
 	/** 
@@ -3734,7 +3734,7 @@ public class WorkNode
 		// 获取到达当前合流节点上 与上一个分流点之间的子线程节点的集合。
 		String spanNodes = this.SpanSubTheadNodes(toNode);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理FID.
 		long fid = this.getHisWork().getFID();
 		if (fid == 0)
@@ -3753,7 +3753,7 @@ public class WorkNode
 
 			this.getHisWork().setFID(fid);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion FID
 
 		// 先查询一下是否有人员，在合流节点上，如果没有就让其初始化人员. 
@@ -3797,7 +3797,7 @@ public class WorkNode
 		* 不让当前的操作员能看到自己的工作。
 		*/
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设置父流程状态 设置当前的节点为:
 
 		Work mainWK = town.getHisWork();
@@ -3834,7 +3834,7 @@ public class WorkNode
 		/* 合流点需要等待各个分流点全部处理完后才能看到它。*/
 		String mysql = "";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 对于多个分合流点可能会有问题。
 		mysql = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE IsEnable=1 AND FID=" + this.getHisWork().getFID() + " AND FK_Node IN (" + spanNodes + ")";
 		BigDecimal numAll = (BigDecimal)DBAccess.RunSQLReturnValInt(mysql);
@@ -3867,7 +3867,7 @@ public class WorkNode
 		}
 		else
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
 			ps = new Paras();
 			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
@@ -3893,19 +3893,19 @@ public class WorkNode
 		DBAccess.RunSQL(ps);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 设置父流程状态
 
 		this.addMsg("InfoToHeLiu", BP.WF.Glo.multilingual("@流程已经运行到合流节点[{0}]. @您的工作已经发送给如下人员[{1}]. @您是第一个到达此节点的处理人.", "WorkNode", "first_node_person", toNode.getName(), toEmpsStr));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.(不是很合理) 2015.12.30
 		Work towk = town.getHisWork();
 		towk.setOID(this.getHisWork().getFID());
 		towk.RetrieveFromDBSources();
 		towk.Copy(this.getHisWork());
 		towk.DirectUpdate();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.
 
 	}
@@ -3928,7 +3928,7 @@ public class WorkNode
 		ps.Add(GenerWorkerListAttr.FK_Emp, this.getExecer());
 		BP.DA.DBAccess.RunSQL(ps);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 检查当前的状态是是否是退回,如果是退回的状态，就给他赋值.
 		// 检查当前的状态是是否是退回，.
 		if (this.SendNodeWFState == WFState.ReturnSta)
@@ -3949,7 +3949,7 @@ public class WorkNode
 				//  this.NodeSend_11(this.JumpToNode);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion.
 
 		switch (this.getHisNode().getHisRunModel())
@@ -4190,13 +4190,13 @@ public class WorkNode
 					case SubThread: //5.5 子线程
 						if (toND5.getHisSubThreadType() == this.getHisNode().getHisSubThreadType())
 						{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 								///#region 删除到达节点的子线程如果有，防止退回信息垃圾数据问题,如果退回处理了这个部分就不需要处理了.
 							ps = new Paras();
 							ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE FID=" + dbStr + "FID  AND FK_Node=" + dbStr + "FK_Node";
 							ps.Add("FID", this.getHisWork().getFID());
 							ps.Add("FK_Node", toND5.getNodeID());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 								///#endregion 删除到达节点的子线程如果有，防止退回信息垃圾数据问题，如果退回处理了这个部分就不需要处理了.
 
 							this.NodeSend_11(toND5); //与普通节点一样.
@@ -4215,7 +4215,7 @@ public class WorkNode
 		}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行数据copy.
 	public final void CopyData(Work toWK, Node toND, boolean isSamePTable)
 	{
@@ -4231,7 +4231,7 @@ public class WorkNode
 			return;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 主表数据copy.
 		if (isSamePTable == false)
 		{
@@ -4285,10 +4285,10 @@ public class WorkNode
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 主表数据copy.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制附件。
 		if (this.getHisNode().getMapData().FrmAttachments.size() > 0)
 		{
@@ -4350,10 +4350,10 @@ public class WorkNode
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制附件。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制图片上传附件。
 		if (this.getHisNode().getMapData().FrmImgAths.size() > 0)
 		{
@@ -4377,10 +4377,10 @@ public class WorkNode
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制图片上传附件。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制Ele
 		if (this.getHisNode().getMapData().FrmImgs.size() > 0)
 		{
@@ -4410,10 +4410,10 @@ public class WorkNode
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制Ele
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制明细数据
 		// int deBugDtlCount=
 		Sys.MapDtls dtls = this.getHisNode().getMapData().MapDtls;
@@ -4581,7 +4581,7 @@ public class WorkNode
 					dtCopy.RefPKInt64 = this.getWorkID();
 					deBugNumCopy++;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region  复制明细表单条 - 附件信息
 					if (toDtl.IsEnableAthM)
 					{
@@ -4611,11 +4611,11 @@ public class WorkNode
 							}
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion  复制明细表单条 - 附件信息
 
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 记录日志.
 				if (gedtls.size() != deBugNumCopy)
 				{
@@ -4627,7 +4627,7 @@ public class WorkNode
 
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 如果启用了审核机制
 				if (isEnablePass)
 				{
@@ -4662,17 +4662,17 @@ public class WorkNode
 					}
 					DBAccess.RunSQL("UPDATE " + startDtl.PTable + " SET Rec='" + startUser + "',Checker='" + this.getExecer() + "' WHERE BatchID=" + this.getWorkID() + " AND Rec='" + this.getExecer() + "'");
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 如果启用了审核机制
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制明细数据
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 返回对象处理.
 	private SendReturnObjs HisMsgObjs = null;
 	public final void addMsg(String flag, String msg)
@@ -4695,10 +4695,10 @@ public class WorkNode
 	{
 		addMsg(flag, msg, msgofHtml, SendReturnMsgType.Info);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 返回对象处理.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 方法
 	/** 
 	 发送失败是撤消数据。
@@ -4934,7 +4934,7 @@ public class WorkNode
 		DataTable dt;
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
@@ -4973,7 +4973,7 @@ public class WorkNode
 				continue;
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 获得实体主键.
 			// 处理主键.
 			long pk = 0; // this.WorkID;
@@ -4996,7 +4996,7 @@ public class WorkNode
 			{
 				throw new RuntimeException(BP.WF.Glo.multilingual("@未能获取表单主键.", "WorkNode", "not_found_form_primary_key"));
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 获得实体主键.
 
 
@@ -5012,7 +5012,7 @@ public class WorkNode
 				geEn.PKVal = item.getWorkID(); //子线程的WorkID作为.
 				geEn.SetValByKey("FID", this.getWorkID());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理默认变量.
 				//foreach (Attr attr in geEn.getEnMap().getAttrs())
 				//{
@@ -5048,7 +5048,7 @@ public class WorkNode
 				//        continue;
 				//    }
 				//}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理默认变量.
 
 				geEn.DirectInsert();
@@ -5086,7 +5086,7 @@ public class WorkNode
 				continue;
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 获得实体主键.
 			// 处理主键.
 			long pk = 0; // this.WorkID;
@@ -5109,7 +5109,7 @@ public class WorkNode
 			{
 				throw new RuntimeException(BP.WF.Glo.multilingual("@未能获取表单主键.", "WorkNode", "not_found_form_primary_key"));
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 获得实体主键.
 
 
@@ -5311,11 +5311,11 @@ public class WorkNode
 				}
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 检查附件个数的完整性. - 该部分代码稳定后，移动到独立表单的检查上去。
 			for (FrmAttachment ath : this.getHisWork().getHisFrmAttachments())
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 增加阅读规则. @祝梦娟.
 				if (ath.ReadRole != 0)
 				{
@@ -5376,7 +5376,7 @@ public class WorkNode
 						}
 					}
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 增加阅读规则.
 
 				if (ath.UploadFileNumCheck == UploadFileNumCheck.None)
@@ -5438,11 +5438,11 @@ public class WorkNode
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 检查附件个数的完整性.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 检查图片附件的必填，added by liuxc,2016-11-1
 			for (FrmImgAth imgAth : this.getHisNode().getMapData().FrmImgAths)
 			{
@@ -5462,7 +5462,7 @@ public class WorkNode
 				}
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 检查图片附件的必填，added by liuxc,2016-11-1
 
 			if (!err.equals(""))
@@ -5738,7 +5738,7 @@ public class WorkNode
 		this.getHisGenerWorkFlow().setTodoEmps(gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ";");
 		this.getHisGenerWorkFlow().Update();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理天业集团对主持人的考核.
 		/*
 		 * 对于会签人的时间计算
@@ -5789,7 +5789,7 @@ public class WorkNode
 			dtNow = dtNow.plusDays(-1);
 			gwl.setDTOfWarning(dtNow.toString(DataType.getSysDataTimeFormat()));
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理天业集团对会签人的考核.
 
 		gwl.Update();
@@ -5907,7 +5907,7 @@ public class WorkNode
 			return false; //让其向下执行,因为只有一个人,就没有顺序的问题.
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  判断自己是否是组长？如果是组长，就让返回false, 让其运动到最后一个节点，因为组长同意了，就全部同意了。
 		if (this.getHisNode().getTeamLeaderConfirmRole() == TeamLeaderConfirmRole.ByDeptFieldLeader)
 		{
@@ -6040,7 +6040,7 @@ public class WorkNode
 				return true;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//查看是否我是最后一个？
@@ -6429,7 +6429,7 @@ public class WorkNode
 				valPara = row[key].toString().trim();
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 开始执行判断.
 			if (oper.equals("="))
 			{
@@ -6503,7 +6503,7 @@ public class WorkNode
 
 			String expression1 = exp + " Key=" + key + " oper=" + oper + " Val=" + val + ")";
 			throw new RuntimeException(BP.WF.Glo.multilingual("@阻塞模式参数配置格式错误:{0}.", "WorkNode", "error_in_param_setting", expression1));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 开始执行判断.
 		}
 
@@ -6722,7 +6722,7 @@ public class WorkNode
 
 			DataTable dt = null;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 按照人员选择
 			if (node.getHisDeliveryWay() == DeliveryWay.BySelected)
 			{
@@ -6733,10 +6733,10 @@ public class WorkNode
 					throw new RuntimeException(BP.WF.Glo.multilingual("@没有为延续子流程设置接收人.", "WorkNode", "not_found_receiver"));
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 按照人员选择.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 按照岗位与部门的交集.
 			if (node.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 			{
@@ -6761,10 +6761,10 @@ public class WorkNode
 					throw new RuntimeException(BP.WF.Glo.multilingual("@节点访问规则({0})错误:节点({1},{2}), 按照岗位与部门的交集确定接收人的范围错误，没有找到人员:SQL={3}.", "WorkNode", "error_in_access_rules_setting", para));
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 按照岗位与部门的交集
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 仅按岗位计算
 			if (node.getHisDeliveryWay() == DeliveryWay.ByStationOnly)
 			{
@@ -6784,10 +6784,10 @@ public class WorkNode
 					throw new RuntimeException(BP.WF.Glo.multilingual("@节点访问规则{0}错误:节点({1},{2}), 仅按岗位计算，没有找到人员:SQL={3}.", "WorkNode", "error_in_access_rules_setting", para2));
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 按绑定的人计算
 			if (node.getHisDeliveryWay() == DeliveryWay.ByBindEmp)
 			{
@@ -6800,7 +6800,7 @@ public class WorkNode
 					throw new RuntimeException(BP.WF.Glo.multilingual("@流程设计错误:没找到下一个节点(" + town.getHisNode().getName() + ")的接收人.", "WorkNode", "system_error_not_found_operator", town.getHisNode().getName()));
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			if (dt == null)
@@ -6925,7 +6925,7 @@ public class WorkNode
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 安全性检查.
 		//   第1: 检查是否可以处理当前的工作.
 		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), this.getExecer()) == false)
@@ -6996,7 +6996,7 @@ public class WorkNode
 			}
 			this.addMsg("SendWhen", sendWhen, sendWhen, SendReturnMsgType.Info);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 安全性检查.
 
 		//加入系统变量.
@@ -7050,7 +7050,7 @@ public class WorkNode
 		this.setWorkID(this.getHisWork().getOID());
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 第一步: 检查当前操作员是否可以发送: 共分如下 3 个步骤.
 		//第1.2.1: 如果是开始节点，就要检查发起流程限制条件.
 		if (this.getHisNode().getIsStartNode())
@@ -7205,7 +7205,7 @@ public class WorkNode
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 第一步: 检查当前操作员是否可以发送
 
 		//查询出来当前节点的工作报表.
@@ -7357,7 +7357,7 @@ public class WorkNode
 			oldSender = this.getHisGenerWorkFlow().getSender(); //旧发送人,在回滚的时候把该发送人赋值给他.
 			this.getHisGenerWorkFlow().setSender(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理退回的情况.
 			if (this.getHisGenerWorkFlow().getWFState() == WFState.ReturnSta)
 			{
@@ -7375,7 +7375,7 @@ public class WorkNode
 					this.JumpToEmp = mydt.Rows[0]["Returner"].toString();
 					String toEmpName = mydt.Rows[0]["ReturnerName"].toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region 如果当前是退回, 并且当前的运行模式是按照流程图运行.
 					if (this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByCCBPMDefine)
 					{
@@ -7396,10 +7396,10 @@ public class WorkNode
 							return this.HisMsgObjs;
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion 如果当前是退回, 并且当前的运行模式是按照流程图运行.*/
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#region  如果当前是退回. 并且当前的运行模式按照自由流程设置方式运行
 					if (this.getHisGenerWorkFlow().getTransferCustomType() == TransferCustomType.ByWorkerSet)
 					{
@@ -7421,11 +7421,11 @@ public class WorkNode
 							return this.HisMsgObjs;
 						}
 					}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 						///#endregion  如果当前是退回. 并且当前的运行模式按照自由流程设置方式运行
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理退回的情况.
 
 			//做了不可能性的判断.
@@ -7557,11 +7557,11 @@ public class WorkNode
 				this.HisGenerWorkFlow.Update(); //added by liuxc,2016-10=24,最后节点更新Sender字段
 				 * */
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 执行 自动 启动子流程.
 				CallAutoSubFlow(this.getHisNode(), 0); //启动本节点上的.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 执行启动子流程.
 
 				//调用发送成功事件.
@@ -7626,7 +7626,7 @@ public class WorkNode
 				return NodeSendToYGFlow(jumpToNode, jumpToEmp);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 第二步: 进入核心的流程运转计算区域. 5*5 的方式处理不同的发送情况.
 
 			// 执行节点向下发送的25种情况的判断.
@@ -7671,10 +7671,10 @@ public class WorkNode
 			this.rptGe.setFlowDaySpan(DataType.GeTimeLimits(this.getHisGenerWorkFlow().getRDT()));
 			long fid = this.rptGe.getFID();
 			this.rptGe.Update();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 第二步: 5*5 的方式处理不同的发送情况.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 第三步: 处理发送之后的业务逻辑.
 			//把当前节点表单数据copy的流程数据表里.
 			this.DoCopyCurrentWorkDataToRpt();
@@ -7685,32 +7685,32 @@ public class WorkNode
 			//处理子线程的独立表单向合流节点的独立表单明细表的数据汇总.
 			this.CheckFrmHuiZongToDtl();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 第三步: 处理发送之后的业务逻辑.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理 子线城 启动子流程
 			if (this.getHisNode().getIsStartNode() && this.getHisNode().getSubFlowStartWay() != SubFlowStartWay.None)
 			{
 				CallSubFlow();
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理子流程
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 生成单据
 			if (this.getHisNode().getHisPrintDocEnable() == true && this.getHisNode().getBillTemplates().size() > 0)
 			{
 
 				BillTemplates reffunc = this.getHisNode().getBillTemplates();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 生成单据信息
 				long workid = this.getHisWork().getOID();
 				int nodeId = this.getHisNode().getNodeID();
 				String flowNo = this.getHisNode().getFK_Flow();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
 				LocalDateTime dtNow = LocalDateTime.now();
@@ -7732,7 +7732,7 @@ public class WorkNode
 					String path;
 					try
 					{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 把数据放入 单据引擎。
 						rtf.HisEns.Clear(); //主表数据。
 						rtf.EnsDataDtls.Clear(); // 明细表数据.
@@ -7752,10 +7752,10 @@ public class WorkNode
 						{
 							rtf.AddDtlEns(ens);
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion 把数据放入 单据引擎。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 生成单据
 
 						paths = file.split("[_]", -1);
@@ -7779,10 +7779,10 @@ public class WorkNode
 						}
 
 						rtf.MakeDoc(func.getTempFilePath() + ".rtf", path, file, false);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 转化成pdf.
 						if (func.getHisBillFileType() == BillFileType.PDF)
 						{
@@ -7798,10 +7798,10 @@ public class WorkNode
 
 							}
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#region 保存单据
 						Bill bill = new Bill();
 						bill.setMyPK( this.getHisWork().getFID() + "_" + this.getHisWork().getOID() + "_" + this.getHisNode().getNodeID() + "_" + func.getNo());
@@ -7830,7 +7830,7 @@ public class WorkNode
 						{
 							bill.Update();
 						}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 							///#endregion
 					}
 					catch (RuntimeException ex)
@@ -7860,10 +7860,10 @@ public class WorkNode
 				}
 				this.addMsg(SendReturnMsgFlag.BillInfo, billInfo);
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行抄送.
 			//执行抄送.
 			if (this.getHisNode().getIsEndNode() == false)
@@ -7901,34 +7901,34 @@ public class WorkNode
 			}
 
 			DBAccess.DoTransactionCommit(); //提交事务.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理主要业务逻辑.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行 自动 启动子流程.
 			CallAutoSubFlow(this.getHisNode(), 0); //启动本节点上的.
 			CallAutoSubFlow(this.town.getHisNode(), 1);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 执行启动子流程.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理流程数据与业务表的数据同步.
 			if (this.getHisFlow().getDTSWay() != FlowDTSWay.None)
 			{
 				this.getHisFlow().DoBTableDTS(this.rptGe, this.getHisNode(), this.getIsStopFlow());
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理流程数据与业务表的数据同步.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理发送成功后的消息提示
 			if (this.getHisNode().getHisTurnToDeal() == TurnToDeal.SpecMsg)
 			{
 				String htmlInfo = "";
 				String textInfo = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 判断当前处理人员，可否处理下一步工作.
 				if (this.town != null && this.HisRememberMe != null && this.HisRememberMe.getEmps().contains("@" + WebUser.getNo() + "@") == true)
 				{
@@ -7937,7 +7937,7 @@ public class WorkNode
 					textInfo = BP.WF.Glo.multilingual("@下一步工作您仍然可以处理。", "WorkNode", "have_permission_next");
 					this.addMsg(SendReturnMsgFlag.MsgOfText, textInfo, null);
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 判断当前处理人员，可否处理下一步工作.
 
 				String msgOfSend = this.getHisNode().getTurnToDealDoc();
@@ -7994,10 +7994,10 @@ public class WorkNode
 
 				//return msgOfSend;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理发送成功后事件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 如果需要跳转.
 			if (town != null)
 			{
@@ -8007,7 +8007,7 @@ public class WorkNode
 					this.addMsg(SendReturnMsgFlag.VarToNodeName, town.getHisNode().getName(), town.getHisNode().getName(), SendReturnMsgType.SystemMsg);
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 如果这里设置了自动跳转，现在去掉了. 2014-11-07.
 				//if (town.HisNode.HisDeliveryWay == DeliveryWay.ByPreviousOperSkip)
 				//{
@@ -8015,10 +8015,10 @@ public class WorkNode
 				//    this.HisMsgObjs = town.HisMsgObjs;
 				//}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 如果需要跳转.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 删除已经发送的消息，那些消息已经成为了垃圾信息.
 			if (Glo.getIsEnableSysMessage() == true)
 			{
@@ -8027,10 +8027,10 @@ public class WorkNode
 				ps.Add("MsgFlag", "WKAlt" + this.getHisNode().getNodeID() + "_" + this.getWorkID());
 				BP.DA.DBAccess.RunSQL(ps);
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 设置流程的标记.
 			if (this.getHisNode().getIsStartNode())
 			{
@@ -8077,13 +8077,13 @@ public class WorkNode
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 设置流程的标记.
 
 			//执行时效考核.
 			Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(), this.rptGe.getTitle());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 触发下一个节点的自动发送, 处理国机的需求.  （去掉:2019-05-05）
 			if (this.HisMsgObjs.getVarToNodeID() != null && this.town != null && 1 == 2 && this.town.getHisNode().getWhoExeIt() != 0)
 			{
@@ -8123,10 +8123,10 @@ public class WorkNode
 					break;
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 触发下一个节点的自动发送。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 计算未来处理人.
 			if (this.town == null)
 			{
@@ -8137,10 +8137,10 @@ public class WorkNode
 				//  FullSA fsa = new FullSA(this.town);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 计算未来处理人.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 判断当前处理人员，可否处理下一步工作.
 			if (this.town != null && this.HisRememberMe != null && this.HisRememberMe.getEmps().contains("@" + WebUser.getNo() + "@") == true)
 			{
@@ -8150,7 +8150,7 @@ public class WorkNode
 
 				// this.addMsg(SendReturnMsgFlag.MsgOfText, textInfo, null);
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 判断当前处理人员，可否处理下一步工作.
 
 			//处理事件.
@@ -8196,7 +8196,7 @@ public class WorkNode
 			//启动下级子流程.
 			if (sub.getHisSubFlowModel() == SubFlowModel.SubLevel)
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 判断启动权限.
 				if (sub.getStartOnceOnly() == true)
 				{
@@ -8292,10 +8292,10 @@ public class WorkNode
 					throw new RuntimeException("配置错误，按指定平级子流程节点只使用触发平级子流程，不能触发下级子流程");
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 检查sendModel.
 				// 设置开始节点待办.
 				if (sub.getSendModel() == 0)
@@ -8334,7 +8334,7 @@ public class WorkNode
 
 					this.addMsg("SubFlow" + sub.getSubFlowNo(), sendObjs.ToMsgOfHtml());
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 检查sendModel.
 
 			}
@@ -8342,7 +8342,7 @@ public class WorkNode
 			//如果要自动启动平级的子流程，就需要判断当前是是否是子流程，如果不是子流程，就不能启动。
 			if (sub.getHisSubFlowModel() == SubFlowModel.SameLevel && this.getHisGenerWorkFlow().getPWorkID() != 0)
 			{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 判断启动权限.
 				if (sub.getStartOnceOnly() == true)
 				{
@@ -8475,10 +8475,10 @@ public class WorkNode
 					}
 
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 检查sendModel.
 				// 设置开始节点待办.
 				if (sub.getSendModel() == 0)
@@ -8528,7 +8528,7 @@ public class WorkNode
 
 					this.addMsg("SubFlow" + sub.getSubFlowNo(), sendObjs.ToMsgOfHtml());
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 检查sendModel.
 
 			}
@@ -8541,17 +8541,17 @@ public class WorkNode
 	*/
 	private void Deal_Event()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理节点到达事件..
 		//执行发送到达事件.
 		if (this.town != null)
 		{
 			String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive, this.town.getHisNode(), this.rptGe, null, null);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理节点到达事件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理发送成功后事件.
 		try
 		{
@@ -8584,7 +8584,7 @@ public class WorkNode
 		{
 			this.addMsg(SendReturnMsgFlag.SendSuccessMsgErr, ex.getMessage());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理发送成功后事件.
 	}
 
@@ -8604,7 +8604,7 @@ public class WorkNode
 	{
 		/*在提交错误的情况下，回滚数据。*/
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是分流点下同表单发送失败再次发送就出现错误
 		if (this.town != null && this.town.getHisNode().getHisNodeWorkType() == NodeWorkType.SubThreadWork && this.town.getHisNode().getHisSubThreadType() == SubThreadType.SameSheet)
 		{
@@ -8616,7 +8616,7 @@ public class WorkNode
 				DBAccess.RunSQL("DELETE FROM " + this.town.getHisWork().EnMap.PhysicsTable + " WHERE FID=" + this.getWorkID());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果是分流点下同表单发送失败再次发送就出现错误
 
 		try
@@ -8797,10 +8797,10 @@ public class WorkNode
 			throw new RuntimeException(ex.getMessage() + er1 + er2);
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 用户到的变量
 	public GenerWorkerLists HisWorkerLists = null;
 	private GenerWorkFlow _HisGenerWorkFlow;
@@ -8833,7 +8833,7 @@ public class WorkNode
 	 原来的发送人.
 	*/
 	private String oldSender = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
@@ -8884,7 +8884,7 @@ public class WorkNode
 			SendNodeWFState = gwf.getWFState(); //设置发送前的节点状态。
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设置流程标题.
 		if (this.title == null)
 		{
@@ -8910,7 +8910,7 @@ public class WorkNode
 
 		//流程标题.
 		this.rptGe.setTitle(gwf.getTitle());
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 设置流程标题.
 
 		if (DataType.IsNullOrEmpty(rptGe.getBillNo()))
@@ -9094,7 +9094,7 @@ public class WorkNode
 
 		StartWork sw = (StartWork)this.getHisWork();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 设置  HisGenerWorkFlow
 
 
@@ -9104,10 +9104,10 @@ public class WorkNode
 
 		this.setHisGenerWorkFlow(gwf);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion HisCHOfFlow
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  产生开始工作者,能够执行他们的人员.
 		GenerWorkerList wl = new GenerWorkerList();
 		wl.setWorkID(this.getHisWork().getOID());
@@ -9136,7 +9136,7 @@ public class WorkNode
 			wl.CheckPhysicsTable();
 			wl.Update();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		this.rptGe.setFlowStartRDT(DataType.getCurrentDataTime());
@@ -9725,14 +9725,14 @@ public class WorkNode
 			return;
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断节点完成条件
 		this.addMsg(SendReturnMsgFlag.OverCurr, BP.WF.Glo.multilingual("当前工作[{0}]已经完成", "WorkNode", "current_work_completed_para", this.getHisNode().getName()));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断流程条件.
 		try
 		{
@@ -9769,12 +9769,12 @@ public class WorkNode
 
 			throw new RuntimeException(str);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 启动多个节点
 	/** 
 	 生成为什么发送给他们
@@ -9885,11 +9885,11 @@ public class WorkNode
 		* 更新它的节点 worklist 信息, 说明当前节点已经完成了.
 		* 不让当前的操作员能看到自己的工作。
 		*/
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理合流节点表单数据。
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制主表数据. edit 2014-11-20 向合流点汇总数据.
 		//复制当前节点表单数据.
 		heLiuWK.setFID(0);
@@ -9903,10 +9903,10 @@ public class WorkNode
 		this.rptGe.RetrieveFromDBSources();
 		this.rptGe.Copy(this.getHisWork());
 		this.rptGe.DirectUpdate();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制主表数据.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理合流节点表单数据
 
 		//设置当前子线程已经通过.
@@ -9931,7 +9931,7 @@ public class WorkNode
 
 		/* 合流点需要等待各个分流点全部处理完后才能看到它。*/
 		String sql1 = "";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 对于多个分合流点可能会有问题。
 		ps = new Paras();
 		ps.SQL = "SELECT COUNT(distinct WorkID) AS Num FROM WF_GenerWorkerList WHERE  FID=" + dbStr + "FID AND FK_Node IN (" + this.SpanSubTheadNodes(nd) + ")";
@@ -9962,7 +9962,7 @@ public class WorkNode
 		}
 		else
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 为了不让其显示在途的工作需要， =3 不是正常的处理模式。
 			ps = new Paras();
 			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=3,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID";
@@ -9989,7 +9989,7 @@ public class WorkNode
 	*/
 	private void GenerHieLiuHuiZhongDtlData_2013(Node ndOfHeLiu)
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 汇总明细表.
 		MapDtls mydtls = ndOfHeLiu.getHisWork().getHisMapDtls();
 		for (MapDtl dtl : mydtls)
@@ -10005,7 +10005,7 @@ public class WorkNode
 			geDtl.Rec = this.getExecer();
 			geDtl.RDT = DataType.getCurrentDataTime();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 判断是否是质量评价
 			if (ndOfHeLiu.getIsEval())
 			{
@@ -10015,10 +10015,10 @@ public class WorkNode
 				geDtl.SetValByKey(WorkSysFieldAttr.EvalCent, 0);
 				geDtl.SetValByKey(WorkSysFieldAttr.EvalNote, "");
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 执行插入数据.
 			try
 			{
@@ -10028,11 +10028,11 @@ public class WorkNode
 			{
 				geDtl.Update();
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 执行插入数据.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 还要处理附件的 copy 汇总. 如果子线程上有附件组件.
 			if (dtl.IsEnableAthM == true)
 			{
@@ -10101,14 +10101,14 @@ public class WorkNode
 				}
 
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 还要处理附件的copy 汇总.
 			break;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 汇总明细表.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制附件。
 		FrmAttachments aths = ndOfHeLiu.getHisWork().getHisFrmAttachments(); // new FrmAttachments("ND" + this.HisNode.NodeID);
 		if (aths.size() == 0)
@@ -10191,10 +10191,10 @@ public class WorkNode
 			}
 			break;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制附件。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 复制Ele。
 		FrmEleDBs eleDBs = new FrmEleDBs("ND" + this.getHisNode().getNodeID(), String.valueOf(this.getWorkID()));
 		if (eleDBs.size() > 0)
@@ -10212,7 +10212,7 @@ public class WorkNode
 				eleDB_N.Save();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 复制Ele。
 
 
@@ -10259,10 +10259,10 @@ public class WorkNode
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作
@@ -10334,10 +10334,10 @@ public class WorkNode
 		}
 		return this.getHisGenerWorkFlow().getTodolistModel();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 建立一个工作节点事例.
@@ -10384,10 +10384,10 @@ public class WorkNode
 		this._HisWork = wk;
 		this._HisNode = nd;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 运算属性
 	private void Repair()
 	{
@@ -10539,6 +10539,6 @@ public class WorkNode
 		WorkNode wn = new WorkNode(wk, nd);
 		return wn;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

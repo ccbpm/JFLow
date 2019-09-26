@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class Contrast extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 
 	/** 
@@ -84,10 +84,10 @@ public class Contrast extends EntityMyPK
 	{
 		this.SetValByKey(ContrastAttr.OrderWay, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 对比状态存储
@@ -130,6 +130,6 @@ public class Contrast extends EntityMyPK
 	{
 		return new Contrasts();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

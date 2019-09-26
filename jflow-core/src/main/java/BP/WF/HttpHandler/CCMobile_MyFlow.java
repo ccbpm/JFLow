@@ -44,7 +44,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 			fk_node = Integer.parseInt(this.getFK_Flow() + "01");
 		}
 		Node nd = new Node(fk_node);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  获取节点表单的数据
 		Work wk = nd.getHisWork();
 		wk.setOID(this.getWorkID());
@@ -74,7 +74,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 				wk.SetValByKey(k, HttpContextHelper.RequestParams(k));
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 获取节点表单的数据
 		//节点表单字段
 		MapData md = new MapData(nd.getNodeFrmID());

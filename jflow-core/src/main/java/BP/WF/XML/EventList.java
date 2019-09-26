@@ -12,7 +12,7 @@ import BP.Web.WebUser;
 */
 public class EventList extends XmlEn
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getNo()
 	{
@@ -57,10 +57,10 @@ public class EventList extends XmlEn
 	{
 		return this.GetValBoolByKey("IsHaveMsg");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	/** 
 	 事件
@@ -76,6 +76,6 @@ public class EventList extends XmlEn
 	{
 		return new EventLists();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

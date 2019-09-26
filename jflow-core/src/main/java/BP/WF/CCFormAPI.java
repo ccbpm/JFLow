@@ -65,7 +65,7 @@ public class CCFormAPI extends Dev2Interface
 		DataSet myds = new DataSet();
 
 		// 创建实体..
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 主表
 
 		Entity en = BP.En.ClassFactory.GetEn(enName);
@@ -91,7 +91,7 @@ public class CCFormAPI extends Dev2Interface
 		mainTable.TableName = "MainTable";
 		myds.Tables.add(mainTable);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 主表 Sys_MapData
 		String sql = "SELECT * FROM Sys_MapData WHERE 1=2 ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -104,10 +104,10 @@ public class CCFormAPI extends Dev2Interface
 		dr.set(MapDataAttr.PTable, map.PhysicsTable);
 		dt.Rows.add(dr);
 		myds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 主表 Sys_MapData
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 主表 Sys_MapAttr
 		sql = "SELECT * FROM Sys_MapAttr WHERE 1=2 ";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -164,27 +164,27 @@ public class CCFormAPI extends Dev2Interface
 			dt.Rows.add(dr);
 		}
 		myds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 主表 Sys_MapAttr
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //主表 Sys_MapExt 扩展属性
 		////主表的配置信息.
 		//sql = "SELECT * FROM Sys_MapExt WHERE 1=2";
 		//dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//dt.TableName = "Sys_MapExt";
 		//myds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion //主表 Sys_MapExt 扩展属性
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 从表
 		for (EnDtl item : map.Dtls)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region  把从表的数据放入集合.
 
 			Entities dtls = item.Ens;
@@ -202,10 +202,10 @@ public class CCFormAPI extends Dev2Interface
 			dtDtl.TableName = item.EnsName; //修改明细表的名称.
 			myds.Tables.add(dtDtl); //加入这个明细表.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 把从表的数据放入.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 从表 Sys_MapDtl (相当于mapdata)
 
 			Entity dtl = dtls.GetNewEntity;
@@ -223,10 +223,10 @@ public class CCFormAPI extends Dev2Interface
 			dt.Rows.add(dr);
 			myds.Tables.add(dt);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 从表 Sys_MapDtl (相当于mapdata)
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 明细表 Sys_MapAttr
 			sql = "SELECT * FROM Sys_MapAttr WHERE 1=2";
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -282,11 +282,11 @@ public class CCFormAPI extends Dev2Interface
 				dt.Rows.add(dr);
 			}
 			myds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 明细表 Sys_MapAttr
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return myds;
@@ -398,7 +398,7 @@ public class CCFormAPI extends Dev2Interface
 		DataTable dtMapAttr = null;
 		MapExts mes = null;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 表单模版信息.（含主、从表的，以及从表的枚举/外键相关数据）.
 		//增加表单字段描述.
 		String sql = "SELECT * FROM Sys_MapData WHERE No='" + frmID + "' ";
@@ -425,11 +425,11 @@ public class CCFormAPI extends Dev2Interface
 		dt.TableName = "Sys_MapExt";
 		myds.Tables.add(dt);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 加载 从表表单模版信息.（含 从表的枚举/外键相关数据）
 		for (MapDtl item : md.MapDtls)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 返回指定的明细表的数据.
 			if (DataType.IsNullOrEmpty(specDtlFrmID) == true)
 			{
@@ -441,7 +441,7 @@ public class CCFormAPI extends Dev2Interface
 					continue;
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 返回指定的明细表的数据.
 
 			//明细表的主表描述
@@ -462,7 +462,7 @@ public class CCFormAPI extends Dev2Interface
 			dt.TableName = "Sys_MapExt_For_" + (DataType.IsNullOrEmpty(item.Alias) ? item.No : item.Alias);
 			myds.Tables.add(dt);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 从表的 外键表/枚举
 			mes = new MapExts(item.No);
 			for (DataRow dr : dtMapAttr.Rows)
@@ -477,7 +477,7 @@ public class CCFormAPI extends Dev2Interface
 				String uiBindKey = dr.get("UIBindKey").toString();
 				String mypk = dr.get("MyPK").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 枚举字段
 				if (lgType.equals("1"))
 				{
@@ -493,7 +493,7 @@ public class CCFormAPI extends Dev2Interface
 					myds.Tables.add(dtEnum);
 					continue;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion
 
 				String UIIsEnable = dr.get("UIIsEnable").toString();
@@ -502,12 +502,12 @@ public class CCFormAPI extends Dev2Interface
 					continue;
 				}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 外键字段
 				// 检查是否有下拉框自动填充。
 				String keyOfEn = dr.get("KeyOfEn").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理下拉框数据范围. for 小杨.
 				Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 				me = tempVar instanceof MapExt ? (MapExt)tempVar : null;
@@ -524,7 +524,7 @@ public class CCFormAPI extends Dev2Interface
 					myds.Tables.add(dt);
 					continue;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理下拉框数据范围.
 				else //无范围限制时
 				{
@@ -536,20 +536,20 @@ public class CCFormAPI extends Dev2Interface
 
 					myds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 外键字段
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 从表的 外键表/枚举
 
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 加载 从表表单模版信息.（含 从表的枚举/外键相关数据）
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 表单模版信息.（含主、从表的，以及从表的枚举/外键相关数据）.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 主表数据
 		if (BP.Sys.SystemConfig.IsBSsystem == true)
 		{
@@ -586,14 +586,14 @@ public class CCFormAPI extends Dev2Interface
 		mainTable.TableName = "MainTable";
 		myds.Tables.add(mainTable);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 主表数据
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  从表数据
 		for (MapDtl dtl : md.MapDtls)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 返回指定的明细表的数据.
 			if (DataType.IsNullOrEmpty(specDtlFrmID) == true)
 			{
@@ -605,7 +605,7 @@ public class CCFormAPI extends Dev2Interface
 					continue;
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 返回指定的明细表的数据.
 
 			GEDtls dtls = new GEDtls(dtl.No);
@@ -672,10 +672,10 @@ public class CCFormAPI extends Dev2Interface
 			dtDtl.TableName = DataType.IsNullOrEmpty(dtl.Alias) ? dtl.No : dtl.Alias; //edited by liuxc,2017-10-10.如果有别名，则使用别名，没有则使用No
 			myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 从表数据
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 主表的 外键表/枚举
 		dtMapAttr = myds.Tables["Sys_MapAttr"];
 		mes = md.MapExts;
@@ -720,7 +720,7 @@ public class CCFormAPI extends Dev2Interface
 			String keyOfEn = dr.get("KeyOfEn").toString();
 			String fk_mapData = dr.get("FK_MapData").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理下拉框数据范围. for 小杨.
 			Object tempVar4 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 			me = tempVar4 instanceof MapExt ? (MapExt)tempVar4 : null;
@@ -735,14 +735,14 @@ public class CCFormAPI extends Dev2Interface
 				myds.Tables.add(dt);
 				continue;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理下拉框数据范围.
 
 			dt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 			dt.TableName = uiBindKey;
 			myds.Tables.add(dt);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 主表的 外键表/枚举
 
 
@@ -808,7 +808,7 @@ public class CCFormAPI extends Dev2Interface
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 加载从表表单模版信息.
 
 		DataTable Sys_MapDtl = dtl.ToDataTableField("Sys_MapDtl");
@@ -821,10 +821,10 @@ public class CCFormAPI extends Dev2Interface
 		//明细表的配置信息.
 		DataTable Sys_MapExt = dtl.MapExts.ToDataTableField("Sys_MapExt");
 		myds.Tables.add(Sys_MapExt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 加载从表表单模版信息.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 把从表的- 外键表/枚举 加入 DataSet.
 		MapExts mes = dtl.MapExts;
 		MapExt me = null;
@@ -845,7 +845,7 @@ public class CCFormAPI extends Dev2Interface
 
 			String mypk = dr.get("MyPK").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 枚举字段
 			if (lgType.equals("1") == true)
 			{
@@ -865,10 +865,10 @@ public class CCFormAPI extends Dev2Interface
 				myds.Tables.add(dtEnum);
 				continue;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 外键字段
 			String UIIsEnable = dr.get("UIIsEnable").toString();
 			if (UIIsEnable.equals("0")) //字段未启用
@@ -879,7 +879,7 @@ public class CCFormAPI extends Dev2Interface
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.get("KeyOfEn").toString();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 			me = tempVar instanceof MapExt ? (MapExt)tempVar : null;
@@ -900,7 +900,7 @@ public class CCFormAPI extends Dev2Interface
 				myds.Tables.add(dt);
 				continue;
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 处理下拉框数据范围.
 
 			// 判断是否存在.
@@ -922,15 +922,15 @@ public class CCFormAPI extends Dev2Interface
 			{
 				myds.Tables.add(mydt);
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 外键字段
 		}
 		ddlTable.TableName = "UIBindKey";
 		myds.Tables.add(ddlTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 把从表的- 外键表/枚举 加入 DataSet.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 把主表数据放入.
 		if (BP.Sys.SystemConfig.IsBSsystem == true)
 		{
@@ -949,10 +949,10 @@ public class CCFormAPI extends Dev2Interface
 		DataTable mainTable = en.ToDataTableField(frmID);
 		mainTable.TableName = "MainTable";
 		myds.Tables.add(mainTable);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 把主表数据放入.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  把从表的数据放入.
 		GEDtls dtls = new GEDtls(dtl.No);
 		QueryObject qo = null;
@@ -1017,7 +1017,7 @@ public class CCFormAPI extends Dev2Interface
 		MapAttrs dtlAttrs = new MapAttrs(dtl.No);
 		for (MapAttr attr : dtlAttrs)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 修改区分大小写. Oracle
 			if (BP.DA.DBType.Oracle == SystemConfig.getAppCenterDBType())
 			{
@@ -1050,10 +1050,10 @@ public class CCFormAPI extends Dev2Interface
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 修改区分大小写.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 修改区分大小写. PostgreSQL
 			if (BP.DA.DBType.PostgreSQL == SystemConfig.getAppCenterDBType())
 			{
@@ -1086,7 +1086,7 @@ public class CCFormAPI extends Dev2Interface
 					}
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 修改区分大小写.
 
 			if (attr.UIContralType == UIContralType.TB)
@@ -1108,7 +1108,7 @@ public class CCFormAPI extends Dev2Interface
 
 		dtDtl.TableName = "DBDtl"; //修改明细表的名称.
 		myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 把从表的数据放入.
 
 

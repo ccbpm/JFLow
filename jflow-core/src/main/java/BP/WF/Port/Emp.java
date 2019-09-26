@@ -17,7 +17,7 @@ import java.util.*;
 public class Emp extends EntityNoName
 {
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 扩展属性
 	/** 
 	 主要的部门。
@@ -73,7 +73,7 @@ public class Emp extends EntityNoName
 	{
 		this.SetValByKey(EmpAttr.Tel, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	public final boolean CheckPass(String pass) throws Exception
@@ -140,7 +140,7 @@ public class Emp extends EntityNoName
 
 		Map map = new Map("Port_Emp", "用户");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 字段
 			/*关于字段属性的增加 */
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 1, 20, 100);
@@ -149,7 +149,7 @@ public class Emp extends EntityNoName
 		map.AddDDLEntities(EmpAttr.FK_Dept, null, "部门", new BP.Port.Depts(), true);
 		map.AddTBString(EmpAttr.SID, null, "SID", false, false, 0, 20, 10);
 		map.AddTBString(EmpAttr.Tel, null, "手机号码", false, false, 0, 11, 30);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 字段
 
 		map.AddSearchAttr(EmpAttr.FK_Dept); //查询条件.

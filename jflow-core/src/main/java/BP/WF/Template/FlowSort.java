@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class FlowSort extends EntityTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	/** 
 	 组织编号
@@ -35,10 +35,10 @@ public class FlowSort extends EntityTree
 	{
 		this.SetValByKey(FlowSortAttr.Domain, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 流程类别
@@ -65,7 +65,7 @@ public class FlowSort extends EntityTree
 		uac.IsUpdate = true;
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

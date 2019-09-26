@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class SysFormTree extends EntityTree
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	/** 
 	 是否是目录
@@ -51,10 +51,10 @@ public class SysFormTree extends EntityTree
 	{
 		this.SetValByKey(SysFormTreeAttr.ParentNo, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 独立表单树
@@ -72,10 +72,10 @@ public class SysFormTree extends EntityTree
 	{
 		super(_No);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统方法.
 	/** 
 	 独立表单树Map
@@ -102,7 +102,7 @@ public class SysFormTree extends EntityTree
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 系统方法.
 
 	@Override

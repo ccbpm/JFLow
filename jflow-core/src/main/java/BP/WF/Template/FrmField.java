@@ -14,7 +14,7 @@ import java.util.*;
 */
 public class FrmField extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 元素类型.
@@ -163,10 +163,10 @@ public class FrmField extends EntityMyPK
 		this.setMyPK(this.getFK_MapData() + "_" + this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.getKeyOfEn() + "_" + this.getEleType());
 		return super.InitMyPKVals();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 表单字段方案
@@ -235,7 +235,7 @@ public class FrmField extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	//protected override bool beforeInsert()

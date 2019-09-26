@@ -80,7 +80,7 @@ public class Dev2InterfaceAnonymous
 		Work wk = fl.NewWork(empStarter, htPara);
 		long workID = wk.getOID();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 给各个属性-赋值
 		if (ht != null)
 		{
@@ -125,7 +125,7 @@ public class Dev2InterfaceAnonymous
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 赋值
 
 		Paras ps = new Paras();
@@ -171,7 +171,7 @@ public class Dev2InterfaceAnonymous
 		return wk.getOID();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 门户。
 	/** 
 	 登陆
@@ -205,10 +205,10 @@ public class Dev2InterfaceAnonymous
 		//登陆.
 		BP.Web.GuestUser.Exit();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 门户。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取Guest的待办
 	/** 
 	 获取Guest的待办
@@ -264,10 +264,10 @@ public class Dev2InterfaceAnonymous
 		gwfs.RetrieveInSQL(GenerWorkFlowAttr.WorkID, "(" + sql + ")");
 		return gwfs.ToDataTableField();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 功能
 	/** 
 	 设置用户信息
@@ -336,10 +336,10 @@ public class Dev2InterfaceAnonymous
 			throw new RuntimeException("@WF_GenerWorkFlow - 设置外部用户待办信息失败:参数WorkID不能为空.");
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 通用方法
 	public static String TurnFlowMarkToFlowNo(String FlowMark)
 	{
@@ -361,6 +361,6 @@ public class Dev2InterfaceAnonymous
 		}
 		return s;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

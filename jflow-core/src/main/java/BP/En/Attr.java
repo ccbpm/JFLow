@@ -254,7 +254,7 @@ public class Attr
 		return "";
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	public Attr()
 	{
@@ -295,10 +295,10 @@ public class Attr
 		this._dataType = dataType;
 		this._defaultVal = defaultVal;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public String HelperUrl = null;
 	public AutoFullWay AutoFullWay ;
@@ -618,10 +618,10 @@ public class Attr
 			return true;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region UI 的扩展属性
 	public final int getUIWidthInt()
 	{
@@ -731,7 +731,7 @@ public class Attr
 	private Entity _HisFKEn = null;
 	public final Entity getHisFKEn()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#warning new a entity.
 
 	   return this.getHisFKEns().getNewEntity();
@@ -858,6 +858,6 @@ public class Attr
 		this._UIRefText = value;
 	}
 	public String UITag = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

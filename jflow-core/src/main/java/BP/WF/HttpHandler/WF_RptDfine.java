@@ -19,7 +19,7 @@ import java.math.*;
 */
 public class WF_RptDfine extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	/** 
 	 查询类型
@@ -77,7 +77,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		}
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
 	/** 
@@ -120,7 +120,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		return BP.Tools.Json.DataSetToJson(ds, false);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 功能列表
 	/** 
 	 功能列表
@@ -136,7 +136,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		RptDfine rd = new RptDfine(this.getFK_Flow());
 		Paras ps = new Paras();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 增加本部门发起流程的查询.
 		if (rd.getMyDeptRole() == 0)
 		{
@@ -165,7 +165,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			/*如果部门下所有的人都可以查看: */
 			ht.put("MyDept", "我本部门发起的流程");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 增加本部门发起流程的查询.
 
 		Flow fl = new Flow(this.getFK_Flow());
@@ -188,10 +188,10 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -212,10 +212,10 @@ public class WF_RptDfine extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region MyStartFlow.htm 我发起的流程
 	public final String FlowSearch_Init()
 	{
@@ -311,7 +311,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //增加显示列信息
 		DataRow row = null;
 		DataTable dt = new DataTable("Sys_MapAttr");
@@ -340,10 +340,10 @@ public class WF_RptDfine extends DirectoryPageBase
 		}
 
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //增加枚举/外键字段信息
 		attrs = new MapAttrs(rptNo);
 		dt = new DataTable("FilterCtrls");
@@ -476,10 +476,10 @@ public class WF_RptDfine extends DirectoryPageBase
 		}
 
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //增加第一页数据
 		GEEntitys ges = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ges);
@@ -510,7 +510,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), 1);
 		ds.Tables.add(ges.ToDataTableField("MainData"));
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
@@ -761,7 +761,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //显示的内容
 		DataRow row = null;
 		DataTable dt = new DataTable("Group_MapAttr");
@@ -796,10 +796,10 @@ public class WF_RptDfine extends DirectoryPageBase
 			}
 		}
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //分析的内容
 		dt = new DataTable("Analysis_MapAttr");
 		dt.Columns.Add("Field", String.class);
@@ -905,10 +905,10 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		}
 		ds.Tables.add(dt);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region //增加枚举/外键字段信息
 		attrs = new MapAttrs(rptNo);
 		dt = new DataTable("FilterCtrls");
@@ -1045,7 +1045,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		ds.Tables.add(dt);
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return BP.Tools.Json.DataSetToJson(ds, false);
@@ -1264,7 +1264,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		dt1.Columns.Add("IDX", Integer.class);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 对他进行分页面
 
 		int myIdx = 0;
@@ -1279,10 +1279,10 @@ public class WF_RptDfine extends DirectoryPageBase
 			}
 			dt1.Rows.add(mydr);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理 Int 类型的分组列。
 		DataTable dt = dt1.Clone();
 		dt.TableName = "GroupSearch";
@@ -1295,7 +1295,7 @@ public class WF_RptDfine extends DirectoryPageBase
 		{
 			dt.ImportRow(dr);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		// 处理这个物理表 , 如果有累计字段, 就扩展它的列。
@@ -1870,7 +1870,7 @@ public class WF_RptDfine extends DirectoryPageBase
 			qo.addAnd();
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 关键字查询
 		if (md.RptIsSearchKey)
 		{
@@ -1945,10 +1945,10 @@ public class WF_RptDfine extends DirectoryPageBase
 			qo.MyParas.Add("SKey", searchKey);
 			qo.addRightBracket();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region Url传参条件
 		for (Attr attr : attrs)
 		{
@@ -1991,10 +1991,10 @@ public class WF_RptDfine extends DirectoryPageBase
 				keys.add(attr.getKey());
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 过滤条件
 		for (MapAttr attr1 : rptAttrs)
 		{
@@ -2131,10 +2131,10 @@ public class WF_RptDfine extends DirectoryPageBase
 					break;
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 日期处理
 		if (md.RptDTSearchWay != DTSearchWay.None)
 		{
@@ -2186,7 +2186,7 @@ public class WF_RptDfine extends DirectoryPageBase
 				qo.addRightBracket();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return qo;
@@ -2200,7 +2200,7 @@ public class WF_RptDfine extends DirectoryPageBase
 
 		return dt;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion MyStartFlow.htm 我发起的流程
 
 	public final String MyDeptFlow_Init()

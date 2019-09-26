@@ -18,7 +18,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region APICodeFEE_Init.
 	/** 
 	 代码生成器.
@@ -94,10 +94,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return tangible.StringHelper.trimEnd(nums, ',');
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion APICodeFEE_Init.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点属性（列表）的操作
 	/** 
 	 初始化节点属性列表.
@@ -188,10 +188,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 		return BP.Tools.Json.ToJson(dt);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 与业务表数据同步
 	public final String DTSBTable_Init()
 	{
@@ -315,10 +315,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		return flow.ToJson();
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 数据调度 - 字段映射.
 	public final String DTSBTableExt_Init()
 	{
@@ -433,12 +433,12 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return "设置成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 前置导航save
 	/** 
 	 前置导航save
@@ -524,12 +524,12 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 流程轨迹查看权限
 	/** 
 	 流程轨迹查看权限
@@ -554,10 +554,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 流程轨迹查看权限save
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 数据导入.
 	/** 
 	 流程模版导入.
@@ -612,10 +612,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		ht.put("Msg", "导入成功,流程编号为:" + flow.No + "名称为:" + flow.Name);
 		return BP.Tools.Json.ToJson(ht);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 数据导入.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 修改node Icon.
 	/** 
 	 修改节点ICON
@@ -651,7 +651,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 修改node Icon.
 
 	/** 
@@ -697,7 +697,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 		BP.WF.Nodes nds = new BP.WF.Nodes(this.getFK_Flow());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 求出来选择的节点.
 		String nodesOfSMS = "";
 		String nodesOfEmail = "";
@@ -725,10 +725,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		//节点.
 		msg.setMailNodes(nodesOfEmail);
 		msg.setSMSNodes(nodesOfSMS);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 求出来选择的节点.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 短信保存.
 		//短消息发送设备
 		msg.setSMSPushModel(this.GetRequestVal("PushModel"));
@@ -748,10 +748,10 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		// smsstr = smsstr.Replace("@RDT",);
 		//短信内容模版.
 		msg.setSMSDoc_Real(smsstr);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 短信保存.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 邮件保存.
 		//邮件.
 		//msg.MailPushWay = Convert.ToInt32(HttpContext.Current.Request["RB_Email"].ToString().replace("RB_Email_", "")); ;
@@ -764,7 +764,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		//邮件地址.
 		msg.setMailAddress(HttpContextHelper.RequestParams("DDL_Email_Fields"));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 邮件保存.
 
 		//保存.

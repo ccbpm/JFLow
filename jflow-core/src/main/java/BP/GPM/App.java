@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class App extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	/** 
 	 打开方式
@@ -180,9 +180,9 @@ public class App extends EntityNoName
 	{
 		this.SetValByKey(AppAttr.RefMenuNo, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 按钮权限控制
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -191,9 +191,9 @@ public class App extends EntityNoName
 		uac.OpenForAppAdmin();
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 系统
@@ -272,7 +272,7 @@ public class App extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override
@@ -335,7 +335,7 @@ public class App extends EntityNoName
 		//设置相关的菜单编号.
 		this.setRefMenuNo(appMenu.getNo());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 为该系统创建几个空白菜单
 		//Menu en = appMenu.DoCreateSubNode() as Menu;
 		//en.FK_App = this.No;
@@ -379,7 +379,7 @@ public class App extends EntityNoName
 		funcDot.setMenuType(MenuType.Function);
 		funcDot.setFK_App(this.getNo());
 		funcDot.Update();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return super.beforeInsert();
@@ -472,7 +472,7 @@ public class App extends EntityNoName
 
 		for (Emp emp : emps.ToJavaList())
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 初始化系统访问权限.
 
 			EmpApp me = new EmpApp();
@@ -481,7 +481,7 @@ public class App extends EntityNoName
 			me.setFK_App(this.getNo());
 			me.setMyPK( this.getNo() + "_" + me.getFK_Emp());
 			me.Insert();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 初始化系统访问权限.
 		}
 	}

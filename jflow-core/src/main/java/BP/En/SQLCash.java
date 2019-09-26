@@ -71,7 +71,7 @@ public class SQLCash
 		return sql;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region UpdateSQLs
 	private Hashtable _UpdateSQLs;
 	public final Hashtable getUpdateSQLs()
@@ -82,7 +82,7 @@ public class SQLCash
 		}
 		return _UpdateSQLs;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

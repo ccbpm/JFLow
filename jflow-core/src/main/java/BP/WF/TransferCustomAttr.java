@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class TransferCustomAttr extends EntityMyPKAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 工作ID
@@ -58,6 +58,6 @@ public class TransferCustomAttr extends EntityMyPKAttr
 	 是否启用
 	*/
 	public static final String IsEnable = "IsEnable";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

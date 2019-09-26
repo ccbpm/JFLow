@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class NodeSimple extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 节点属性.
 	/** 
 	 节点编号
@@ -58,10 +58,10 @@ public class NodeSimple extends Entity
 	{
 		this.SetValByKey(NodeAttr.Y, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 节点属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 节点
@@ -94,14 +94,14 @@ public class NodeSimple extends Entity
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 基本属性.
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "名称", true, false, 0, 150, 10);
 		map.AddTBString(NodeAttr.FK_Flow, null, "流程编号", true, false, 0, 150, 10);
 		map.AddTBInt(NodeAttr.RunModel, 0, "运行模式", true, true);
 		map.AddTBInt(NodeAttr.Step, 0, "步骤", true, true);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 基本属性.
 
 		map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
@@ -110,6 +110,6 @@ public class NodeSimple extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

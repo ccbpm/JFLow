@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class NodeStation extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -55,10 +55,10 @@ public class NodeStation extends EntityMM
 	{
 		this.SetValByKey(NodeStationAttr.FK_Station, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 节点工作岗位
@@ -101,7 +101,7 @@ public class NodeStation extends EntityMM
 		remeberMe.Delete(RememberMeAttr.FK_Node, this.getFK_Node());
 		return super.beforeInsert();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

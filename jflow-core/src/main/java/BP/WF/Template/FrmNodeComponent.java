@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class FrmNodeComponent extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共属性
 	/** 
 	 节点属性.
@@ -40,10 +40,10 @@ public class FrmNodeComponent extends Entity
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 控制
@@ -154,7 +154,7 @@ public class FrmNodeComponent extends Entity
 	{
 		GroupField gf = new GroupField();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 审核组件.
 		FrmWorkCheck fwc = new FrmWorkCheck(this.getNodeID());
 		fwc.Copy(this);
@@ -174,10 +174,10 @@ public class FrmNodeComponent extends Entity
 				gf.Insert(); //插入.
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 审核组件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 父子流程组件.
 		FrmSubFlow subflow = new FrmSubFlow(this.getNodeID());
 		subflow.Copy(this);
@@ -199,10 +199,10 @@ public class FrmNodeComponent extends Entity
 				gf.Insert(); //插入.
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 父子流程组件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 处理轨迹组件.
 		FrmTrack track = new FrmTrack(this.getNodeID());
 		track.Copy(this);
@@ -223,10 +223,10 @@ public class FrmNodeComponent extends Entity
 				gf.Insert(); //插入.
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 处理轨迹组件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 子线程组件.
 		FrmThread thread = new FrmThread(this.getNodeID());
 		thread.Copy(this);
@@ -248,10 +248,10 @@ public class FrmNodeComponent extends Entity
 				gf.Insert(); //插入.
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 子线程组件.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 流转自定义组件.
 		FrmTransferCustom ftc = new FrmTransferCustom(this.getNodeID());
 		ftc.Copy(this);
@@ -273,12 +273,12 @@ public class FrmNodeComponent extends Entity
 				gf.Insert(); //插入.
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 流转自定义组件.
 
 		return super.beforeUpdate();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

@@ -53,7 +53,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 	//保存从表数据
 	public final String Dtl_SaveRow()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region  查询出来从表数据.
 		GEDtls dtls = new GEDtls(this.getEnsName());
 		GEDtl dtl = dtls.getNewEntity() instanceof GEDtl ? (GEDtl)dtls.getNewEntity() : null;
@@ -114,7 +114,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 			item.Update(); //执行更新.
 		}
 		return "保存成功.";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion  查询出来从表数据.
 
 		///#region 保存新加行.
@@ -190,7 +190,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 			var file = files[i];
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 文件上传的iis服务器上 or db数据库里.
 			if (athDesc.AthSaveWay == AthSaveWay.IISServer)
 			{
@@ -288,7 +288,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 				dbUpload.FK_FrmAttachment = attachPk;
 				dbUpload.FileExts = info.Extension;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#region 处理文件路径，如果是保存到数据库，就存储pk.
 				if (athDesc.AthSaveWay == AthSaveWay.IISServer)
 				{
@@ -301,7 +301,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 					//保存到数据库
 					dbUpload.FileFullName = dbUpload.MyPK;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 					///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
 
 				dbUpload.FileName = fileName + ext;
@@ -334,10 +334,10 @@ public class CCMobile_CCForm extends DirectoryPageBase
 					BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.FileName + "，" + msg);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 文件上传的iis服务器上 or db数据库里.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 保存到数据库 / FTP服务器上.
 			if (athDesc.AthSaveWay == AthSaveWay.DB || athDesc.AthSaveWay == AthSaveWay.FTPServer)
 			{
@@ -470,7 +470,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 					BP.Sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.FileName + "，" + msg);
 				}
 			}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion 保存到数据库.
 		}
 	}

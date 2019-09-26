@@ -12,7 +12,7 @@ import java.math.*;
 */
 public class GloVarExt extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final Object getValOfObject() throws Exception
 	{
@@ -107,10 +107,10 @@ public class GloVarExt extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.GroupKey, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 全局变量
@@ -154,6 +154,6 @@ public class GloVarExt extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

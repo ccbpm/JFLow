@@ -10,7 +10,7 @@ import java.util.*;
 */
 public class UserLogs extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造
 	public UserLogs()
 	{
@@ -27,10 +27,10 @@ public class UserLogs extends EntitiesMyPK
 		qo.AddWhere(UserLogAttr.FK_Emp, emp);
 		qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 重写
 	/** 
 	 得到它的 Entity
@@ -40,10 +40,10 @@ public class UserLogs extends EntitiesMyPK
 	{
 		return new UserLog();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成list
@@ -59,10 +59,10 @@ public class UserLogs extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
 	/** 
 	 转化成list
@@ -73,7 +73,7 @@ public class UserLogs extends EntitiesMyPK
 	{
 		return (List<UserLog>)(Object)this;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
 
 }

@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class GroupEmp extends EntityMM
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getFK_Emp() throws Exception
 	{
@@ -30,10 +30,10 @@ public class GroupEmp extends EntityMM
 	{
 		this.SetValByKey(GroupEmpAttr.FK_Group, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 权限组人员
@@ -60,6 +60,6 @@ public class GroupEmp extends EntityMM
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class EvalAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 流程编号
@@ -78,6 +78,6 @@ public class EvalAttr
 	 评价人员名称
 	*/
 	public static final String RecName = "RecName";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

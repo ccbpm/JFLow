@@ -5,7 +5,7 @@ package BP.WF;
 */
 public class SendReturnObjs extends ArrayList<Object>
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 获取系统变量.
 	public final long getVarWorkID()
 	{
@@ -162,7 +162,7 @@ public class SendReturnObjs extends ArrayList<Object>
 		}
 		return null;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -284,7 +284,7 @@ public class SendReturnObjs extends ArrayList<Object>
 			{
 				if (item.MsgOfText.contains("<"))
 				{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 不应该出现.
 				  //  BP.DA.Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
 					continue;
@@ -324,7 +324,7 @@ public class SendReturnObjs extends ArrayList<Object>
 			{
 				if (item.MsgOfText.contains("<"))
 				{
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 ///#warning 不应该出现.
 					//  BP.DA.Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
 					continue;

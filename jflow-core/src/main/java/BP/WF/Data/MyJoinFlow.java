@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class MyJoinFlow extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	@Override
 	public UAC getHisUAC()
@@ -424,10 +424,10 @@ public class MyJoinFlow extends Entity
 	{
 		SetValByKey(MyFlowAttr.GUID, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 参数属性.
 
 	public final String getParas_ToNodes() throws Exception
@@ -452,10 +452,10 @@ public class MyJoinFlow extends Entity
 	{
 		this.SetPara("AskForReply", value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 参数属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 产生的工作流程
@@ -558,10 +558,10 @@ public class MyJoinFlow extends Entity
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行诊断
 	public final String DoTrack() throws Exception
 	{
@@ -593,7 +593,7 @@ public class MyJoinFlow extends Entity
 
 		return "/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 }

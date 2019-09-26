@@ -15,7 +15,7 @@ import java.util.*;
 */
 public class SysForm extends EntityNoName
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	public final String getPTable() throws Exception
 	{
@@ -49,10 +49,10 @@ public class SysForm extends EntityNoName
 	{
 		this.SetValByKey(SysFormAttr.FK_FormTree, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 Frm
@@ -116,6 +116,6 @@ public class SysForm extends EntityNoName
 		return this.GetValIntByKey(MapDataAttr.FrmH);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

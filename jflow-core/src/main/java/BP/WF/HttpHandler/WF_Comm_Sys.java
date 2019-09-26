@@ -93,7 +93,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 		int impWay = this.GetRequestValInt("ImpWay");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 清空方式导入.
 		//清空方式导入.
 		int count = 0; //导入的行数
@@ -119,10 +119,10 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 清空方式导入.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 更新方式导入
 		if (impWay == 1 || impWay == 2)
 		{
@@ -148,7 +148,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
@@ -225,7 +225,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 		int impWay = this.GetRequestValInt("ImpWay");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 清空方式导入.
 		//清空方式导入.
 		int count = 0; //导入的行数
@@ -264,10 +264,10 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 清空方式导入.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 更新方式导入
 		if (impWay == 1 || impWay == 2)
 		{
@@ -298,7 +298,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 				successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的导入成功</span><br/>";
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
@@ -490,7 +490,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		return html;
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统实体属性.
 	public final String SystemClass_EnsCheck()
 	{
@@ -724,11 +724,11 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 		return BP.Tools.Json.ToJson(dt);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -756,10 +756,10 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 数据源管理
 	public final String SFDBSrcNewGuide_GetList()
 	{
@@ -941,6 +941,6 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		return BP.Tools.Json.ToJson(dt);
 
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

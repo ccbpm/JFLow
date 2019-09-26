@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class FrmNodes extends EntitiesMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	/** 
 	 他的工作节点
@@ -27,10 +27,10 @@ public class FrmNodes extends EntitiesMyPK
 		}
 		return ens;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法..
 	/** 
 	 节点表单
@@ -67,10 +67,10 @@ public class FrmNodes extends EntitiesMyPK
 		qo.addOrderBy(FrmNodeAttr.Idx);
 		qo.DoQuery();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 构造方法..
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共方法.
 	/** 
 	 得到它的 Entity 
@@ -145,10 +145,10 @@ public class FrmNodes extends EntitiesMyPK
 		}
 		return ens;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 公共方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
@@ -173,7 +173,7 @@ public class FrmNodes extends EntitiesMyPK
 		}
 		return list;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

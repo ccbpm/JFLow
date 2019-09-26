@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class MapExt extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 关于 Pop at 参数
 	/** 
 	 转化JSON
@@ -255,10 +255,10 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey(MapExtAttr.FK_DBSrc, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getExtDesc() throws Exception
 	{
@@ -526,10 +526,10 @@ public class MapExt extends EntityMyPK
 	{
 		this.SetValByKey(MapExtAttr.W, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 扩展
@@ -601,10 +601,10 @@ public class MapExt extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 其他方法.
 	/** 
 	 统一生成主键的规则.
@@ -740,7 +740,7 @@ public class MapExt extends EntityMyPK
 		}
 		super.afterInsertUpdateAction();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

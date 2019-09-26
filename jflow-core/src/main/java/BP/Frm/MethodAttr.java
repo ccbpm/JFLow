@@ -61,7 +61,7 @@ public class MethodAttr extends EntityMyPKAttr
 	*/
 	public static final String WhatAreYouTodo = "WhatAreYouTodo";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 外观.
 	/** 
 	 宽度.
@@ -71,12 +71,12 @@ public class MethodAttr extends EntityMyPKAttr
 	 高度
 	*/
 	public static final String PopHeight = "PopHeight";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 外观.
 
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 显示位置
 	/** 
 	 是否显示myToolBar工具栏上.
@@ -90,6 +90,6 @@ public class MethodAttr extends EntityMyPKAttr
 	 显示在查询列表工具栏目上，用于执行批处理.
 	*/
 	public static final String IsSearchBar = "IsSearchBar";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 显示位置
 }

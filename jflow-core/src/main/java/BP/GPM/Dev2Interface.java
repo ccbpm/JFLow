@@ -11,12 +11,12 @@ import BP.Port.*;
 */
 public class Dev2Interface
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 菜单权限
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 菜单权限
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 登陆接口
 	/** 
 	 用户登陆,此方法是在开发者校验好用户名与密码后执行
@@ -88,10 +88,10 @@ public class Dev2Interface
 		DBAccess.RunSQL(ps);
 		return strs;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 登陆接口
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region GPM接口
 	/** 
 	 获取一个操作人员对于一个系统的权限
@@ -121,7 +121,7 @@ public class Dev2Interface
 		ps.Add("FK_Emp", userNo);
 		return DBAccess.RunSQLReturnTable(ps);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion GPM接口
 
 }

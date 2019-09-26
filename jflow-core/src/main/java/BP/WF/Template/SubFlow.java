@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class SubFlow extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -179,10 +179,10 @@ public class SubFlow extends EntityMyPK
 	{
 		return this.GetValIntByKey(FlowAttr.IsAutoSendSLSubFlowOver);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 子流程
@@ -246,7 +246,7 @@ public class SubFlow extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 

@@ -28,7 +28,7 @@ import java.util.*;
 
 				wsurl += wsurl.endsWith(".asmx") ? "?wsdl" : "?singleWsdl";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region //解析WebService所有方法列表
 				//var methods = new Dictionary<string, string>(); //名称Name，全称Text
 				ArrayList<WSMethod> mtds = new ArrayList<WSMethod>();
@@ -104,7 +104,7 @@ import java.util.*;
 				stream.Close();
 				stream.Dispose();
 				wc.Dispose();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 				return mtds;

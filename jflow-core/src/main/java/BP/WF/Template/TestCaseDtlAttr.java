@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class TestCaseDtlAttr extends BP.En.EntityOIDNameAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 节点
@@ -37,6 +37,6 @@ public class TestCaseDtlAttr extends BP.En.EntityOIDNameAttr
 	 显示在那里？
 	*/
 	public static final String ShowWhere = "ShowWhere";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

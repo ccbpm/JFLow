@@ -7,7 +7,7 @@ import BP.DA.*;
 */
 public abstract class EntityTree extends Entity
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final boolean getIsRoot() throws Exception
 	{
@@ -84,10 +84,10 @@ public abstract class EntityTree extends Entity
 		this.SetValByKey(EntityTreeAttr.Idx, value);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造函数
 	/** 
 	 主键
@@ -122,10 +122,10 @@ public abstract class EntityTree extends Entity
 			throw new RuntimeException("@没有" + this.get_enMap().getPhysicsTable() + ", No = " + this.getNo() + "的记录。");
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 业务逻辑处理
 	/** 
 	 重新设置treeNo
@@ -174,10 +174,10 @@ public abstract class EntityTree extends Entity
 		}
 		return super.beforeUpdate();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 可让子类调用的方法
 	/** 
 	 新建同级节点
@@ -249,6 +249,6 @@ public abstract class EntityTree extends Entity
 		this.DoOrderDown(EntityTreeAttr.ParentNo, this.getParentNo(), EntityTreeAttr.Idx);
 		return "执行成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

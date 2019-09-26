@@ -12,16 +12,16 @@ import java.util.*;
 */
 public class FrmBtn extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性
 	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(FrmBtnAttr.FK_MapData);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 按钮
@@ -110,6 +110,6 @@ public class FrmBtn extends EntityMyPK
 	}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

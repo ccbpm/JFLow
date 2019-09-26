@@ -14,7 +14,7 @@ import java.time.*;
 */
 public class WFEmpAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 No
@@ -63,6 +63,6 @@ public class WFEmpAttr
 	 图片签名密码
 	*/
 	public static final String SPass = "SPass";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

@@ -11,7 +11,7 @@ import java.util.*;
 */
 public class Langue extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 模块：比如 ccform.
@@ -81,11 +81,11 @@ public class Langue extends EntityMyPK
 	{
 		this.SetValByKey(LangueAttr.ModelKey, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	public Langue()
 	{
@@ -119,7 +119,7 @@ public class Langue extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	@Override

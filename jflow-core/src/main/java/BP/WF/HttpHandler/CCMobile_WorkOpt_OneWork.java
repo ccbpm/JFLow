@@ -21,7 +21,7 @@ public class CCMobile_WorkOpt_OneWork extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region xxx 界面 .
 	public final String TimeBase_Init()
 	{
@@ -43,7 +43,7 @@ public class CCMobile_WorkOpt_OneWork extends DirectoryPageBase
 		WF en = new WF();
 		return en.Runing_OpenFrm();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion xxx 界面方法.
 
 }

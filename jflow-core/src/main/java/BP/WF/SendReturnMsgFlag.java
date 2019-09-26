@@ -118,7 +118,7 @@ public class SendReturnMsgFlag
 	*/
 	public static final String IsStopFlow = "IsStopFlow";
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 系统变量
 	/** 
 	 工作ID
@@ -160,6 +160,6 @@ public class SendReturnMsgFlag
 	 子线程的WorkIDs
 	*/
 	public static final String VarTreadWorkIDs = "VarTreadWorkIDs";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 系统变量
 }

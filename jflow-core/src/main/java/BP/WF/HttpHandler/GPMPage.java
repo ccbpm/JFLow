@@ -17,7 +17,7 @@ import java.io.*;
 */
 public class GPMPage extends DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 签名.
 	/** 
 	 图片签名初始化
@@ -87,11 +87,11 @@ public class GPMPage extends DirectoryPageBase
 		//   this.Response.Redirect(this.Request.RawUrl, true);
 		return "上传成功！";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 组织结构维护.
 	/** 
 	 初始化组织结构部门表维护.
@@ -202,7 +202,7 @@ public class GPMPage extends DirectoryPageBase
 
 		return DataTableConvertJson.DataTable2Json(DTable, totalCount);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 
@@ -241,7 +241,7 @@ public class GPMPage extends DirectoryPageBase
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -262,12 +262,12 @@ public class GPMPage extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region xxx 界面 .
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion xxx 界面方法.
 
 }

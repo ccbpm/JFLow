@@ -20,7 +20,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 	{
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 事件基类.
 	/** 
 	 事件类型
@@ -149,7 +149,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.Director
 
 		return "保存成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 事件基类.
 
 }

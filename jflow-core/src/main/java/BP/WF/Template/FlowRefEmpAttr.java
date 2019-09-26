@@ -12,7 +12,7 @@ import java.util.*;
 */
 public class FlowRefEmpAttr extends BP.En.EntityMyPKAttr
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 基本属性
 	/** 
 	 流程编号
@@ -66,6 +66,6 @@ public class FlowRefEmpAttr extends BP.En.EntityMyPKAttr
 	 字段存储9
 	*/
 	public static final String Tag9 = "Tag9";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

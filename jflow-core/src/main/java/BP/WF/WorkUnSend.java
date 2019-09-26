@@ -14,7 +14,7 @@ import java.math.*;
 */
 public class WorkUnSend
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性.
 	private String _AppType = null;
 	/** 
@@ -96,7 +96,7 @@ public class WorkUnSend
 			return true;
 		}
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
 	/** 
@@ -174,7 +174,7 @@ public class WorkUnSend
 		GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 		Node nd = new Node(gwf.getFK_Node());
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 求的撤销的节点.
 		int cancelToNodeID = 0;
 
@@ -227,7 +227,7 @@ public class WorkUnSend
 		{
 			throw new RuntimeException("@没有求出要撤销到的节点.");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 求的撤销的节点.
 
 		/********** 开始执行撤销. **********************/
@@ -259,7 +259,7 @@ public class WorkUnSend
 		// 调用撤消发送前事件。
 		String msg = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, wn.getHisWork(), null);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除当前节点数据。
 
 		// 删除产生的工作列表。
@@ -274,7 +274,7 @@ public class WorkUnSend
 
 		// 删除附件信息。
 		DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='ND" + gwf.getFK_Node() + "' AND RefPKVal='" + this.WorkID + "'");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除当前节点数据。
 
 		// 更新.
@@ -330,7 +330,7 @@ public class WorkUnSend
 			DBAccess.RunSQL("DELETE FROM WF_CHEval WHERE FK_Node=" + wn.getHisNode().getNodeID() + " AND WorkID=" + this.WorkID);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 恢复工作轨迹，解决工作抢办。
 		if (cancelToNode.getIsStartNode() == false && cancelToNode.getIsEnableTaskPool() == false)
 		{
@@ -363,10 +363,10 @@ public class WorkUnSend
 				wlN.Insert();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 恢复工作轨迹，解决工作抢办。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是开始节点, 检查此流程是否有子线程，如果有则删除它们。
 		if (nd.getIsStartNode())
 		{
@@ -382,10 +382,10 @@ public class WorkUnSend
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 计算完成率。
 		boolean isSetEnable = false; //是否关闭合流节点待办.
 		String mysql = "SELECT COUNT(DISTINCT WorkID) FROM WF_GenerWorkerlist WHERE FID=" + this.FID + " AND IsPass=1 AND FK_Node IN (SELECT Node FROM WF_Direction WHERE ToNode=" + wn.getHisNode().getNodeID() + ")";
@@ -416,7 +416,7 @@ public class WorkUnSend
 		{
 			DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=3 WHERE WorkID=" + this.FID + " AND  FK_Node=" + wn.getHisNode().getNodeID());
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		//调用撤消发送后事件。
@@ -543,7 +543,7 @@ public class WorkUnSend
 		}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是越轨流程状态 @fanleiwei.
 		String sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerlist WHERE WorkID=" + this.WorkID + " AND IsPass=80";
 		if (DBAccess.RunSQLReturnValInt(sql, 0) != 0)
@@ -562,7 +562,7 @@ public class WorkUnSend
 
 			return "撤销延续流程执行成功，撤销到[" + gwf.getNodeName() + "],撤销给[" + gwf.getTodoEmps() + "]";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果是越轨流程状态 .
 
 		if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(this.WorkID, WebUser.getNo()) == true)
@@ -571,7 +571,7 @@ public class WorkUnSend
 		}
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断是否是会签状态,是否是会签人做的撤销. 主持人是不能撤销的.
 		if (gwf.getHuiQianTaskSta() != HuiQianTaskSta.None)
 		{
@@ -615,7 +615,7 @@ public class WorkUnSend
 
 			return "会签人撤销成功.";
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断是否是会签状态,是否是会签人做的撤销.
 
 		if (gwf.getFID() != 0)
@@ -627,7 +627,7 @@ public class WorkUnSend
 		//定义当前的节点.
 		WorkNode wn = this.GetCurrentWorkNode();
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 求的撤销的节点.
 		int cancelToNodeID = 0;
 		if (nd.getHisCancelRole() == CancelRole.SpecNodes)
@@ -690,7 +690,7 @@ public class WorkUnSend
 		{
 			throw new RuntimeException("err@没有求出要撤销到的节点.");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 求的撤销的节点.
 
 		if (this.UnSendToNode != 0 && gwf.getFK_Node() != this.UnSendToNode)
@@ -708,7 +708,7 @@ public class WorkUnSend
 			}
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断当前节点的模式.
 		switch (nd.getHisNodeWorkType())
 		{
@@ -733,13 +733,13 @@ public class WorkUnSend
 			default:
 				break;
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 判断当前节点的模式.
 
 		/********** 开始执行撤销. **********************/
 		Node cancelToNode = new Node(cancelToNodeID);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果撤销到的节点是普通的节点，并且当前的节点是分流(分流)节点，并且分流(分流)节点已经发送下去了,就不允许撤销了.
 		if (cancelToNode.getHisRunModel() == RunModel.Ordinary && nd.getHisRunModel() == RunModel.HL && nd.getHisRunModel() == RunModel.FHL && nd.getHisRunModel() == RunModel.FL)
 		{
@@ -752,11 +752,11 @@ public class WorkUnSend
 
 			//  return this.DoUnSendHeiLiu_Main(gwf);
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果撤销到的节点是普通的节点，并且当前的节点是分流节点，并且分流节点已经发送下去了.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果当前是协作组长模式,就要考虑当前是否是会签节点，如果是会签节点，就要处理。
 		if (cancelToNode.getTodolistModel() == TodolistModel.TeamupGroupLeader || cancelToNode.getTodolistModel() == TodolistModel.Teamup)
 		{
@@ -773,7 +773,7 @@ public class WorkUnSend
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 如果当前是协作组长模式
 
 		//记录撤销前的处理人
@@ -797,7 +797,7 @@ public class WorkUnSend
 		// 调用撤消发送前事件。
 		String msg = nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, wn.getHisWork(), null);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除当前节点数据。
 		// 删除产生的工作列表。
 		GenerWorkerLists wls = new GenerWorkerLists();
@@ -811,7 +811,7 @@ public class WorkUnSend
 
 		// 删除附件信息。
 		DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='ND" + gwf.getFK_Node() + "' AND RefPKVal='" + this.WorkID + "'");
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 删除当前节点数据。
 
 		// 更新.
@@ -883,7 +883,7 @@ public class WorkUnSend
 			DBAccess.RunSQL("DELETE FROM WF_CHEval WHERE FK_Node=" + wn.getHisNode().getNodeID() + " AND WorkID=" + this.WorkID);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 恢复工作轨迹，解决工作抢办。
 		if (cancelToNode.getIsStartNode() == false && cancelToNode.getIsEnableTaskPool() == false)
 		{
@@ -916,10 +916,10 @@ public class WorkUnSend
 				wlN.Insert();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 恢复工作轨迹，解决工作抢办。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 如果是开始节点, 检查此流程是否有子流程，如果有则删除它们。
 		if (nd.getIsStartNode())
 		{
@@ -935,7 +935,7 @@ public class WorkUnSend
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 		String atPara = "@ToNode=" + cancelToNodeID + "@SendToEmpIDs=" + todoEmps;
 		//调用撤消发送后事件。
@@ -1211,7 +1211,7 @@ public class WorkUnSend
 		ShiftWorks fws = new ShiftWorks();
 		fws.Delete(ShiftWorkAttr.FK_Node, String.valueOf(wn.getHisNode().getNodeID()), ShiftWorkAttr.WorkID, String.valueOf(this.WorkID));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 恢复工作轨迹，解决工作抢办。
 		if (wnPri.getHisNode().getIsStartNode() == false)
 		{
@@ -1243,7 +1243,7 @@ public class WorkUnSend
 				wlN.Insert();
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 恢复工作轨迹，解决工作抢办。
 
 		// 删除以前的节点数据.
@@ -1299,7 +1299,7 @@ public class WorkUnSend
 		ShiftWorks fws = new ShiftWorks();
 		fws.Delete(ShiftWorkAttr.FK_Node, String.valueOf(wn.getHisNode().getNodeID()), ShiftWorkAttr.WorkID, String.valueOf(this.WorkID));
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 判断撤消的百分比条件的临界点条件
 		if (wn.getHisNode().getPassRate().compareTo(0) != 0)
 		{
@@ -1315,7 +1315,7 @@ public class WorkUnSend
 				DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=3 WHERE FK_Node=" + wn.getHisNode().getNodeID() + " AND WorkID=" + this.FID);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		// 处理事件。

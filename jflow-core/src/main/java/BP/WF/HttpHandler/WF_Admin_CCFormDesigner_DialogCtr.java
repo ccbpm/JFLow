@@ -118,7 +118,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 枚举界面.
 	/** 
 	 获得外键列表.
@@ -132,10 +132,10 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 		ens.RetrieveAll();
 		return ens.ToJson();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 枚举界面.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
@@ -148,11 +148,11 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到.");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行父类的重写方法.
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 功能界面 .
 	/** 
 	 转化拼音 @李国文.
@@ -169,7 +169,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
 		//此处配置最大长度为20，edited by liuxc,2017-9-25
 		return BP.Sys.CCFormAPI.ParseStringToPinyinField(name, Equals(flag, "true"), true, 20);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 功能界面方法.
 
 	/** 

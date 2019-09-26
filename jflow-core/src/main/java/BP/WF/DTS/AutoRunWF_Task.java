@@ -71,7 +71,7 @@ public class AutoRunWF_Task extends Method
 			return "无任务";
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 自动启动流程
 		for (DataRow dr : dt.Rows)
 		{
@@ -215,7 +215,7 @@ public class AutoRunWF_Task extends Method
 				}
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion 自动启动流程
 
 		return info;

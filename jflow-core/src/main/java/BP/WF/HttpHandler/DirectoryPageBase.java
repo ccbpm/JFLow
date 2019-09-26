@@ -15,7 +15,7 @@ import java.math.*;
 
 public abstract class DirectoryPageBase
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 执行方法.
 	/** 
 	 获得Form数据.
@@ -117,10 +117,10 @@ public abstract class DirectoryPageBase
 
 		return "err@子类[" + this.toString() + "]没有重写该[" + this.getDoType() + "]方法，请确认该方法是否缺少或者是非public类型的.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 执行方法.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 公共方法.
 	/** 
 	 公共方法获取值
@@ -303,10 +303,10 @@ public abstract class DirectoryPageBase
 
 		return urlExt;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 属性参数.
 	/** 
 	 
@@ -886,10 +886,10 @@ public abstract class DirectoryPageBase
 		}
 		return str;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 属性.
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 父子流程相关的属性.
 	public final long getPWorkID()
 	{
@@ -907,7 +907,7 @@ public abstract class DirectoryPageBase
 	{
 		return this.GetRequestVal("PFlowNo");
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion 父子流程相关的属性.
 
 
@@ -923,7 +923,7 @@ public abstract class DirectoryPageBase
 		boolean flag = true;
 		String filepath = BP.Sys.SystemConfig.PathOfTemp;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 参数及变量设置
 
 		if ((new File(filepath)).isDirectory() == false)
@@ -939,10 +939,10 @@ public abstract class DirectoryPageBase
 
 		FileOutputStream objFileStream = new FileOutputStream(filename);
 		OutputStreamWriter objStreamWriter = new OutputStreamWriter(objFileStream, java.nio.charset.StandardCharsets.UTF_16LE);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 生成导出文件
 		try
 		{
@@ -1032,13 +1032,13 @@ public abstract class DirectoryPageBase
 			objStreamWriter.close();
 			objFileStream.close();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除掉旧的文件
 		//DelExportedTempFile(filepath);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		if (flag)
@@ -1072,7 +1072,7 @@ public abstract class DirectoryPageBase
 		boolean flag = true;
 		String filepath = BP.Sys.SystemConfig.PathOfTemp;
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 参数及变量设置
 
 
@@ -1091,10 +1091,10 @@ public abstract class DirectoryPageBase
 
 		FileOutputStream objFileStream = new FileOutputStream(filename);
 		OutputStreamWriter objStreamWriter = new OutputStreamWriter(objFileStream, java.nio.charset.StandardCharsets.UTF_16LE);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 生成导出文件
 		try
 		{
@@ -1265,13 +1265,13 @@ public abstract class DirectoryPageBase
 			objStreamWriter.close();
 			objFileStream.close();
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 删除掉旧的文件
 		//DelExportedTempFile(filepath);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		if (flag)
@@ -1405,7 +1405,7 @@ public abstract class DirectoryPageBase
 				creatorRow = sheet.CreateRow(creatorRowIndex);
 			}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#region 单元格样式定义
 			//列标题单元格样式设定
 			ICellStyle titleStyle = wb.CreateCellStyle();
@@ -1474,7 +1474,7 @@ public abstract class DirectoryPageBase
 			//小数点、千分位单元格样式设定
 			HashMap<String, ICellStyle> cstyles = new HashMap<String, ICellStyle>();
 			ICellStyle cstyle = null;
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 				///#endregion
 
 			//输出列标题

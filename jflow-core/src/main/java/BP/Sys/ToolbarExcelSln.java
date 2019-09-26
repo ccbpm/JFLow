@@ -13,7 +13,7 @@ import java.util.*;
 */
 public class ToolbarExcelSln extends EntityMyPK
 {
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 界面上的访问控制
 	/** 
 	 UI界面上的访问控制
@@ -33,10 +33,10 @@ public class ToolbarExcelSln extends EntityMyPK
 		}
 		return uac;
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 功能按钮.
 	/** 
 	 打开本地标签.
@@ -374,10 +374,10 @@ public class ToolbarExcelSln extends EntityMyPK
 	{
 		this.SetValByKey(ToolbarExcelAttr.OfficeTHTemplate, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#region 构造方法
 	/** 
 	 ToolbarExcel功能控制区域
@@ -426,7 +426,7 @@ public class ToolbarExcelSln extends EntityMyPK
 		map.AddTBString(ToolbarExcelSlnAttr.FK_Flow, null, "流程编号", true, true, 1, 20, 20);
 
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#region 公文按钮
 		map.AddTBString(ToolbarExcelAttr.OfficeOpenLab, "打开本地", "打开本地标签", true, false, 0, 50, 10);
 		map.AddBoolean(ToolbarExcelAttr.OfficeOpenEnable, false, "是否启用", true, true);
@@ -469,12 +469,12 @@ public class ToolbarExcelSln extends EntityMyPK
 
 		map.AddBoolean(ToolbarExcelAttr.OfficeTHEnable, false, "是否自动套红", true, true);
 		map.AddTBString(ToolbarExcelAttr.OfficeTHTemplate, "", "自动套红模板", true, false, 0, 200, 10);
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+
 		///#endregion
 }

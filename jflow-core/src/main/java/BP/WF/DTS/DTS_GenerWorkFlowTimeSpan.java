@@ -5,8 +5,10 @@ import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.WF.*;
 import java.time.*;
+import java.util.Date;
 
 /** 
  同步待办时间戳 的摘要说明
@@ -48,47 +50,50 @@ public class DTS_GenerWorkFlowTimeSpan extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
+	 * @throws Throwable 
+	 * @throws NumberFormatException 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 
 		//只能在周1执行.
-		LocalDateTime dtNow = LocalDateTime.now();
+		Date dtNow = new Date();
 
 		//设置为开始的日期为周1.
-		LocalDateTime dtBegin = LocalDateTime.now();
+		Date dtBegin = new Date();
 
-		dtBegin = dtBegin.plusDays(-7);
+		dtBegin = DateUtils.addDay(dtBegin,-7);
 		for (int i = 0; i < 8; i++)
 		{
-			if (dtBegin.getDayOfWeek() == DayOfWeek.MONDAY)
+			if (Integer.parseInt(DateUtils.dayForWeek(dtBegin)) == DayOfWeek.MONDAY.getValue())
 			{
 				break;
 			}
-			dtBegin = dtBegin.plusDays(-1);
+			dtBegin = DateUtils.addDay(dtBegin,-1);
 		}
 
 		//结束日期为当前.
-		LocalDateTime dtEnd = dtBegin.plusDays(7);
+		Date dtEnd = DateUtils.addDay(dtBegin,7);
 
 		//默认都设置为本周
 		String sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.ThisWeek.getValue();
 		BP.DA.DBAccess.RunSQL(sql);
 
 		//设置为上周.
-		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.NextWeek.getValue() + " WHERE RDT >= '" + dtBegin.toString(DataType.getSysDataFormat()) + " 00:00' AND RDT <= '" + dtEnd.toString(DataType.getSysDataFormat()) + " 00:00'";
+		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.NextWeek.getValue() + " WHERE RDT >= '" + DateUtils.format(dtBegin,DataType.getSysDataFormat()) + " 00:00' AND RDT <= '" + DateUtils.format(dtEnd,DataType.getSysDataFormat()) + " 00:00'";
 		BP.DA.DBAccess.RunSQL(sql);
 
-		dtBegin = dtBegin.plusDays(-7);
-		dtEnd = dtEnd.plusDays(-7);
+		dtBegin = DateUtils.addDay(dtBegin,-7);
+		dtEnd = DateUtils.addDay(dtEnd,-7);
 
 		//把上周的，设置为两个周以前.
-		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.TowWeekAgo.getValue() + " WHERE RDT >= '" + dtBegin.toString(DataType.getSysDataFormat()) + " 00:00' AND RDT <= '" + dtEnd.toString(DataType.getSysDataFormat()) + " 00:00' ";
+		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.TowWeekAgo.getValue() + " WHERE RDT >= '" + DateUtils.format(dtBegin,DataType.getSysDataFormat()) + " 00:00' AND RDT <= '" + DateUtils.format(dtEnd,DataType.getSysDataFormat()) + " 00:00' ";
 		BP.DA.DBAccess.RunSQL(sql);
 
 		//把上周的，设置为更早.
-		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.More.getValue() + " WHERE RDT <= '" + dtBegin.toString(DataType.getSysDataFormat()) + " 00:00' ";
+		sql = "UPDATE WF_GenerWorkFlow SET TSpan=" + TSpan.More.getValue() + " WHERE RDT <= '" + DateUtils.format(dtBegin,DataType.getSysDataFormat()) + " 00:00' ";
 		BP.DA.DBAccess.RunSQL(sql);
 
 		return "执行成功...";

@@ -55,34 +55,34 @@ public class OneKeyLoadTemplete extends Method
 		return true;
 	}
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String msg = "";
 
 
 			///#region 检查数据文件是否完整.
-		String path = "C:\\CCFlowTemplete";
+		String path = "C:/CCFlowTemplete";
 		if ((new File(path)).isDirectory() == false)
 		{
 			msg += "@错误：约定的目录不存在服务器" + path + ",请把从ccflow备份的文件放入" + path;
 		}
 
 		//PortTables.
-		String file = path + "\\PortTables.xml";
+		String file = path + "/PortTables.xml";
 		if ((new File(file)).isFile() == false)
 		{
 			msg += "@错误：约定的文件不存在，" + file;
 		}
 
 		//SysTables.
-		file = path + "\\SysTables.xml";
+		file = path + "/SysTables.xml";
 		if ((new File(file)).isFile() == false)
 		{
 			msg += "@错误：约定的文件不存在，" + file;
 		}
 
 		//FlowTables.
-		file = path + "\\FlowTables.xml";
+		file = path + "/FlowTables.xml";
 		if ((new File(file)).isFile() == false)
 		{
 			msg += "@错误：约定的文件不存在，" + file;
@@ -93,7 +93,7 @@ public class OneKeyLoadTemplete extends Method
 
 			///#region 1 装载流程基础表数据.
 		DataSet ds = new DataSet();
-		ds.readXml(path + "\\FlowTables.xml");
+		ds.readXml(path + "/FlowTables.xml");
 
 		//流程类别.
 		FlowSorts sorts = new FlowSorts();
@@ -110,7 +110,7 @@ public class OneKeyLoadTemplete extends Method
 
 			///#region 2 组织结构.
 		ds = new DataSet();
-		ds.readXml(path + "\\PortTables.xml");
+		ds.readXml(path + "/PortTables.xml");
 
 		//Port_Emp.
 		Emps emps = new Emps();
@@ -165,7 +165,7 @@ public class OneKeyLoadTemplete extends Method
 
 			///#region 3 恢复系统数据.
 		ds = new DataSet();
-		ds.readXml(path + "\\SysTables.xml");
+		ds.readXml(path + "/SysTables.xml");
 
 		//枚举Main.
 		SysEnumMains sems = new SysEnumMains();
@@ -211,7 +211,7 @@ public class OneKeyLoadTemplete extends Method
 			///#region 4.备份表单相关数据.
 		if (1 == 2)
 		{
-			String pathOfTables = path + "\\SFTables";
+			String pathOfTables = path + "/SFTables";
 			(new File(pathOfTables)).mkdirs();
 			SFTables tabs = new SFTables();
 			tabs.RetrieveAll();
@@ -225,7 +225,7 @@ public class OneKeyLoadTemplete extends Method
 				String sql = "SELECT * FROM " + item.getNo();
 				ds = new DataSet();
 				ds.Tables.add(BP.DA.DBAccess.RunSQLReturnTable(sql));
-				ds.WriteXml(pathOfTables + "\\" + item.getNo() + ".xml");
+				ds.WriteXml(pathOfTables + "/" + item.getNo() + ".xml");
 			}
 		}
 
@@ -250,7 +250,7 @@ public class OneKeyLoadTemplete extends Method
 		// 调度表单文件。         
 		String frmPath = path + "/Form";
 		File dirInfo = new File(frmPath);
-		File[] dirs = dirInfo.GetDirectories();
+		File[] dirs = dirInfo.listFiles();
 		for (File item : dirs)
 		{
 			if (item.getPath().contains(".svn"))
@@ -276,7 +276,10 @@ public class OneKeyLoadTemplete extends Method
 				{
 					msg += "@开始调度表单模板文件:" + f;
 					File info = new File(f);
-					if (!info.Extension.equals(".xml"))
+					String fileName = info.getName();
+					int lastIndx = fileName.lastIndexOf('.');
+					String ext = fileName.substring(lastIndx);
+					if (!ext.equals(".xml"))
 					{
 						continue;
 					}
@@ -307,8 +310,8 @@ public class OneKeyLoadTemplete extends Method
 			fl.DoDelete(); //删除流程.
 		}
 
-		dirInfo = new File(path + "\\Flow\\");
-		dirs = dirInfo.GetDirectories();
+		dirInfo = new File(path + "/Flow/");
+		dirs = dirInfo.listFiles();
 
 		//删除数据.
 		FlowSorts fsRoots = new FlowSorts();

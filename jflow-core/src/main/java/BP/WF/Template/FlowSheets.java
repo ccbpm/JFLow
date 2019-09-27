@@ -22,13 +22,14 @@ public class FlowSheets extends EntitiesNoName
 	 
 	 @param FlowSort 流程类别
 	 @param IsCountInLifeCycle 是不是计算在生存期间内 true 查询出来全部的 
+	 * @throws Exception 
 	*/
-	public final void Retrieve(String FlowSort)
+	public final int Retrieve(String FlowSort) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(BP.WF.Template.FlowAttr.FK_FlowSort, FlowSort);
 		qo.addOrderBy(BP.WF.Template.FlowAttr.No);
-		qo.DoQuery();
+		return qo.DoQuery();
 	}
 
 		///#endregion

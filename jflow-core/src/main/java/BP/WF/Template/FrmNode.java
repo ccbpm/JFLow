@@ -3,10 +3,7 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
-import BP.Port.*;
 import BP.Sys.*;
-import BP.WF.*;
-import java.util.*;
 
 /** 
  节点表单
@@ -16,22 +13,14 @@ import java.util.*;
 */
 public class FrmNode extends EntityMyPK
 {
-
-		///#region 关于节点与office表单的toolbar权限控制方案.
-
-
-		///#endregion 关于节点与office表单的toolbar权限控制方案.
-
-
-		///#region 基本属性
-	public final String getFrmUrl()
+	public final String getFrmUrl() throws Exception
 	{
 		switch (this.getHisFrmType())
 		{
-			case FrmType.FoolForm:
-				return Glo.getCCFlowAppPath() + "/WF/CCForm/FrmFix";
-			case FrmType.FreeFrm:
-				return Glo.getCCFlowAppPath() + "/WF/CCForm/Frm";
+			case FoolForm:
+				return BP.WF.Glo.getCCFlowAppPath() + "/WF/CCForm/FrmFix";
+			case FreeFrm:
+				return BP.WF.Glo.getCCFlowAppPath() + "/WF/CCForm/Frm";
 			default:
 				throw new RuntimeException("err,未处理。");
 		}

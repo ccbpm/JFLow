@@ -52,7 +52,7 @@ public class LoadTemplete extends Method
 		}
 	}
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		String msg = "";
 
@@ -71,7 +71,7 @@ public class LoadTemplete extends Method
 
 		String frmPath = SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Form/";
 		File dirInfo = new File(frmPath);
-		File[] dirs = dirInfo.GetDirectories();
+		File[] dirs = dirInfo.listFiles();
 		int i = 0;
 		for (File item : dirs)
 		{
@@ -96,7 +96,10 @@ public class LoadTemplete extends Method
 			for (String f : fls)
 			{
 				File info = new File(f);
-				if (!info.Extension.equals(".xml"))
+				String fileName = info.getName();
+				int lastIndx = fileName.lastIndexOf('.');
+				String ext = fileName.substring(lastIndx);
+				if (!ext.equals(".xml"))
 				{
 					continue;
 				}
@@ -131,7 +134,7 @@ public class LoadTemplete extends Method
 		FlowSorts sorts = new FlowSorts();
 		sorts.ClearTable();
 		dirInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/");
-		dirs = dirInfo.GetDirectories();
+		dirs = dirInfo.listFiles();
 
 		FlowSort fsRoot = new FlowSort();
 		fsRoot.setNo("99");
@@ -178,7 +181,7 @@ public class LoadTemplete extends Method
 
 			//调度它的下一级目录.
 			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/" + dir.getName());
-			File[] myDirs = dirSubInfo.GetDirectories();
+			File[] myDirs = dirSubInfo.listFiles();
 			for (File mydir : myDirs)
 			{
 				if (mydir.getPath().contains(".svn"))

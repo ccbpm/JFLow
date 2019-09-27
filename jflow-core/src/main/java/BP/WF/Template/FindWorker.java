@@ -1056,7 +1056,6 @@ public class FindWorker
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + town.getHisNode().getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
 					PortalInterface ws = DataType.GetPortalInterfaceSoapClientInstance();
 					return ws.GenerEmpsBySpecDeptAndStats(empDept, stas);
 				}
@@ -1233,8 +1232,9 @@ public class FindWorker
 	 @param deptNo 部门编号
 	 @param empNo 人员编号
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable Func_GenerWorkerList_SpecDept(String deptNo, String empNo)
+	public final DataTable Func_GenerWorkerList_SpecDept(String deptNo, String empNo) throws Exception
 	{
 		String sql;
 
@@ -1267,8 +1267,9 @@ public class FindWorker
 	 @param deptNo
 	 @param emp1
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataTable Func_GenerWorkerList_SpecDept_SameLevel(String deptNo, String empNo)
+	public final DataTable Func_GenerWorkerList_SpecDept_SameLevel(String deptNo, String empNo) throws Exception
 	{
 		String sql;
 

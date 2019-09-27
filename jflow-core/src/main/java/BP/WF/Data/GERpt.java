@@ -3,10 +3,8 @@ package BP.WF.Data;
 import BP.DA.DataRow;
 import BP.En.*;
 import BP.En.Map;
-import BP.WF.Template.*;
 import BP.Sys.*;
 import BP.WF.*;
-import java.util.*;
 
 /** 
  报表
@@ -14,15 +12,7 @@ import java.util.*;
 public class GERpt extends BP.En.EntityOID
 {
 
-		///#region attrs
-	public final long getOID() throws Exception
-	{
-		return this.GetValInt64ByKey(GERptAttr.OID);
-	}
-	public final void setOID(long value) throws Exception
-	{
-		this.SetValByKey(GERptAttr.OID, value);
-	}
+
 	/** 
 	 流程时间跨度
 	*/

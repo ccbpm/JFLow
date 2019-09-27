@@ -5,6 +5,7 @@ import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Tools.StringHelper;
 import BP.WF.Template.*;
 import BP.WF.*;
 
@@ -44,9 +45,10 @@ public class GenerDeptTree extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		if (DBAccess.IsExitsTableCol("Port_Dept", "TreeNo") == false)
 		{
@@ -72,7 +74,7 @@ public class GenerDeptTree extends Method
 		{
 			idx++;
 
-			String subNo = tangible.StringHelper.padLeft(String.valueOf(idx), 2, '0');
+			String subNo = StringHelper.padLeft(String.valueOf(idx), 2, '0');
 			sql = "UPDATE Port_Dept SET TreeNo='01" + subNo + "' WHERE No='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
 
@@ -87,7 +89,7 @@ public class GenerDeptTree extends Method
 		return "执行成功.";
 	}
 
-	public final void SetDeptTreeNo(Dept dept, String pTreeNo)
+	public final void SetDeptTreeNo(Dept dept, String pTreeNo) throws Exception
 	{
 		BP.Port.Depts depts = new Depts();
 		depts.Retrieve(BP.Port.DeptAttr.ParentNo, dept.getNo());
@@ -96,7 +98,7 @@ public class GenerDeptTree extends Method
 		for (BP.Port.Dept item : depts.ToJavaList())
 		{
 			idx++;
-			String subNo = tangible.StringHelper.padLeft(String.valueOf(idx), 2, '0');
+			String subNo = StringHelper.padLeft(String.valueOf(idx), 2, '0');
 			String sql = "UPDATE Port_Dept SET TreeNo='" + pTreeNo + subNo + "' WHERE No='" + item.getNo() + "'";
 			DBAccess.RunSQL(sql);
 

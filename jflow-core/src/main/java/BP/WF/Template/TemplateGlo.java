@@ -65,16 +65,15 @@ public class TemplateGlo
 	 @param x 位置x
 	 @param y 位置y
 	 @return 新的节点ID
+	 * @throws Exception 
 	*/
 
-	public static int NewNode(String flowNo, int x, int y)
+	public static int NewNode(String flowNo, int x, int y) throws Exception
 	{
 		return NewNode(flowNo, x, y, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static int NewNode(string flowNo, int x, int y,string icon=null)
-	public static int NewNode(String flowNo, int x, int y, String icon)
+	public static int NewNode(String flowNo, int x, int y, String icon) throws Exception
 	{
 		BP.WF.Flow fl = new BP.WF.Flow(flowNo);
 		BP.WF.Node nd = fl.DoNewNode(x, y, icon);

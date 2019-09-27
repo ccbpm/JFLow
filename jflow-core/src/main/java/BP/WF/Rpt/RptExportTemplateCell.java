@@ -150,11 +150,11 @@ public class RptExportTemplateCell
 		switch (alphaCount)
 		{
 			case 1:
-				return (char)(col + 64) + row;
+				return (char)(col + 64)+"" + row;
 			case 2:
-				return (char)((col / 26) + 64) + (char)((col % 26) + 64) + row;
+				return (char)((col / 26) + 64)+"" + (char)((col % 26) + 64) + row;
 			case 3:
-				return (char)((col / 26 / 26) + 64) + (char)(((col - col / 26 / 26 * 26 * 26) / 26) + 64) + (char)((col % 26) + 64) + row;
+				return (char)((col / 26 / 26) + 64)+"" + (char)(((col - col / 26 / 26 * 26 * 26) / 26) + 64) + (char)((col % 26) + 64) + row;
 		}
 
 		return "Unkown";

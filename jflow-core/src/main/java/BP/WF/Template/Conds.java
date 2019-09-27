@@ -1,10 +1,7 @@
 package BP.WF.Template;
 
-import BP.DA.*;
-import BP.Sys.*;
 import BP.En.*;
 import BP.WF.Data.*;
-import BP.Web.*;
 import BP.WF.*;
 import java.util.*;
 
@@ -25,8 +22,9 @@ public class Conds extends Entities
 	}
 	/** 
 	 在这里面的所有条件是不是都符合.
+	 * @throws Exception 
 	*/
-	public final boolean getIsAllPassed()
+	public final boolean getIsAllPassed() throws Exception
 	{
 		if (this.size() == 0)
 		{
@@ -68,8 +66,9 @@ public class Conds extends Entities
 	}
 	/** 
 	 是否通过  
+	 * @throws Exception 
 	*/
-	public final boolean getIsPassAnd()
+	public final boolean getIsPassAnd() throws Exception
 	{
 			// 判断  and. 的关系。
 		for (Cond en : this.ToJavaList())
@@ -81,7 +80,7 @@ public class Conds extends Entities
 		}
 		return true;
 	}
-	public final boolean getIsPassOr()
+	public final boolean getIsPassOr() throws Exception
 	{
 			// 判断  and. 的关系。
 		for (Cond en : this.ToJavaList())
@@ -107,8 +106,9 @@ public class Conds extends Entities
 	}
 	/** 
 	 是不是其中的一个passed. 
+	 * @throws Exception 
 	*/
-	public final boolean getIsOneOfCondPassed()
+	public final boolean getIsOneOfCondPassed() throws Exception
 	{
 		for (Cond en : this.ToJavaList())
 		{
@@ -121,8 +121,9 @@ public class Conds extends Entities
 	}
 	/** 
 	 取出其中一个的完成条件。. 
+	 * @throws Exception 
 	*/
-	public final Cond getGetOneOfCondPassed()
+	public final Cond getGetOneOfCondPassed() throws Exception
 	{
 		for (Cond en : this.ToJavaList())
 		{

@@ -1009,7 +1009,7 @@ public class DateUtils
 	}
 	
 	
-	public static String dayForWeek(Date tmpDate) throws Throwable {  
+	public static String dayForWeek(Date tmpDate) throws Exception {  
         tmpDate = parse(tmpDate,"yyyy-MM-dd"); 
 
         Calendar cal = Calendar.getInstance(); 

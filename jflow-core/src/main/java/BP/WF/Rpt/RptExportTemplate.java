@@ -14,12 +14,12 @@ public class RptExportTemplate
 	/** 
 	 模板最后修改时间
 	*/
-	private LocalDateTime LastModify = LocalDateTime.MIN;
-	public final LocalDateTime getLastModify()
+	private Date LastModify = new Date(0);
+	public final Date getLastModify()
 	{
 		return LastModify;
 	}
-	public final void setLastModify(LocalDateTime value)
+	public final void setLastModify(Date value)
 	{
 		LastModify = value;
 	}
@@ -123,7 +123,9 @@ public class RptExportTemplate
 	*/
 	public final boolean SaveXml(String fileName)
 	{
-		try
+		return true;
+		
+		/*try
 		{
 			try (OutputStreamWriter sw = new OutputStreamWriter(fileName, java.nio.charset.StandardCharsets.UTF_8))
 			{
@@ -135,7 +137,7 @@ public class RptExportTemplate
 		catch (java.lang.Exception e)
 		{
 			return false;
-		}
+		}*/
 	}
 
 	/** 
@@ -164,35 +166,20 @@ public class RptExportTemplate
 	*/
 	public static RptExportTemplate FromXml(String fileName)
 	{
-		RptExportTemplate t;
+		RptExportTemplate t=null;
 
 		if (!(new File(fileName)).isFile())
 		{
 			t = new RptExportTemplate();
-			t.setLastModify(LocalDateTime.now());
+			t.setLastModify(new Date());
 			t.setDirection(FillDirection.Vertical);
 			t.setCells(new ArrayList<RptExportTemplateCell>());
 
 			t.SaveXml(fileName);
 			return t;
 		}
-
-		try
-		{
-			try (InputStreamReader sr = new InputStreamReader(fileName, java.nio.charset.StandardCharsets.UTF_8))
-			{
-				Object tempVar = (new XmlSerializer(RptExportTemplate.class)).Deserialize(sr);
-				t = tempVar instanceof RptExportTemplate ? (RptExportTemplate)tempVar : null;
-			}
-		}
-		catch (java.lang.Exception e)
-		{
-			t = new RptExportTemplate();
-			t.setLastModify(LocalDateTime.now());
-			t.setDirection(FillDirection.Vertical);
-			t.setCells(new ArrayList<RptExportTemplateCell>());
-		}
-
 		return t;
+
+		
 	}
 }

@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.*;
+import BP.Difference.ContextHolderUtils;
 import BP.Sys.*;
 import BP.En.*;
 import BP.En.Map;
@@ -486,8 +487,9 @@ public class Cond extends EntityMyPK
 		///#region 公共方法
 	/** 
 	 这个条件能不能通过
+	 * @throws Exception 
 	*/
-	public boolean getIsPassed()
+	public boolean getIsPassed() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 		if (this.en == null)
@@ -603,16 +605,15 @@ public class Cond extends EntityMyPK
 			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
 
 				//获取参数值
-				//System.Collections.Specialized.NameValueCollection urlParams = HttpContextHelper.RequestParams; // System.Web.HttpContext.Current.Request.Form;
-			for (String key : HttpContextHelper.RequestParamKeys)
-			{
-					//循环使用数组
+			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+			while (enu.hasMoreElements()) {
+				String key = (String) enu.nextElement();
 				if (DataType.IsNullOrEmpty(key) == false && sql.contains(key) == true)
 				{
-					sql = sql.replace("@" + key, HttpContextHelper.RequestParams(key));
+					sql = sql.replace("@" + key,  ContextHolderUtils.getRequest().getParameter(key));
 				}
-					//sql = sql.Replace("@" + key, urlParams[key]);
 			}
+			
 
 			if (en.getIsOIDEntity() == true)
 			{
@@ -744,7 +745,7 @@ public class Cond extends EntityMyPK
 			if (SystemConfig.getIsBSsystem())
 			{
 					/*是bs系统，并且是url参数执行类型.*/
-				String myurl = HttpContextHelper.RequestRawUrl; // BP.Sys.Glo.Request.RawUrl;
+				String myurl = BP.Sys.Glo.getRequest().getRequestURI(); // BP.Sys.Glo.Request.RawUrl;
 				if (myurl.indexOf('?') != -1)
 				{
 					myurl = myurl.substring(myurl.indexOf('?'));
@@ -818,10 +819,7 @@ public class Cond extends EntityMyPK
 			try
 			{
 				url = url.replace("'", "");
-					// url = url.Replace("//", "/");
-					// url = url.Replace("//", "/");
-				System.Text.Encoding encode = System.Text.Encoding.GetEncoding("gb2312");
-				String text = DataType.ReadURLContext(url, 8000, encode);
+				String text = DataType.ReadURLContext(url, 8000);
 				if (text == null)
 				{
 						//throw new Exception("@流程设计的方向条件错误，执行的URL错误:" + url + ", 返回为null, 请检查设置是否正确。");

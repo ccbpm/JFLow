@@ -12,6 +12,8 @@ import BP.WF.Template.*;
 import BP.DTS.*;
 import BP.Web.*;
 import BP.WF.*;
+
+import java.text.ParseException;
 import java.time.*;
 import java.util.Date;
 
@@ -47,7 +49,7 @@ public class ccbpmServices extends Method
 	 开始执行方法.
 	 
 	 @return 
-	 * @throws Exception 
+	 * @throws Throwable 
 	*/
 	@Override
 	public Object Do() throws Exception
@@ -85,8 +87,9 @@ public class ccbpmServices extends Method
 	}
 	/** 
 	 逾期流程
+	 * @throws Exception 
 	*/
-	private void DoOverDueFlow()
+	private void DoOverDueFlow() throws Exception
 	{
 		//特殊处理天津的需求.
 		if (SystemConfig.getCustomerNo().equals(""))
@@ -99,7 +102,7 @@ public class ccbpmServices extends Method
 		DataTable dt = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfFlow<='" + DataType.getCurrentDataTime() + "' ";
+		sql += " WHERE a.SDTOfFlow<='" + DataType.getCurrentDateTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		dt = DBAccess.RunSQLReturnTable(sql);
@@ -127,7 +130,7 @@ public class ccbpmServices extends Method
 			///#region  流程预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfFlowWarning<='" + DataType.getCurrentDataTime() + "' ";
+		sql += " WHERE a.SDTOfFlowWarning<='" + DataType.getCurrentDateTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		dt = DBAccess.RunSQLReturnTable(sql);
@@ -156,7 +159,7 @@ public class ccbpmServices extends Method
 			///#region 节点预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfNode>='" + DataType.getCurrentDataTime() + "' ";
+		sql += " WHERE a.SDTOfNode>='" + DataType.getCurrentDateTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
@@ -179,7 +182,7 @@ public class ccbpmServices extends Method
 			int minHour = 0;
 			if (count != 0)
 			{
-				for (PushMsg pushMsg : pushMsgs)
+				for (PushMsg pushMsg : pushMsgs.ToJavaList())
 				{
 					if (pushMsg.GetParaInt("NoticeType") == 0)
 					{
@@ -200,11 +203,11 @@ public class ccbpmServices extends Method
 				}
 
 				//计算当天时间和节点应完成日期的时间差
-				int hours = DataType.SpanHours(compleateTime,DataType.CurrentData);
+				int hours = DataType.SpanDays(compleateTime);
 				int noticeHour = 0;
 				if (hours > minHour) //如果小于最新提醒天数则不发消息
 				{
-					for (PushMsg pushMsg : pushMsgs)
+					for (PushMsg pushMsg : pushMsgs.ToJavaList())
 					{
 						if (pushMsg.GetParaInt("NoticeType") == 1)
 						{
@@ -228,7 +231,7 @@ public class ccbpmServices extends Method
 
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfNode<='" + DataType.getCurrentDataTime() + "' ";
+		sql += " WHERE a.SDTOfNode<='" + DataType.getCurrentDateTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
@@ -285,7 +288,7 @@ public class ccbpmServices extends Method
 				int minDay = 0;
 				if (count != 0)
 				{
-					for (PushMsg pushMsg : pushMsgs)
+					for (PushMsg pushMsg : pushMsgs.ToJavaList())
 					{
 						if (pushMsg.GetParaInt("NoticeType") == 0)
 						{
@@ -306,11 +309,11 @@ public class ccbpmServices extends Method
 					}
 
 					//计算当天时间和节点应完成日期的时间差
-					int days = DataType.SpanDays(DataType.CurrentData, compleateTime);
+					int days = DataType.SpanDays(DataType.getCurrentDate(), compleateTime);
 					int noticeDay = 0;
 					if (days > minDay) //如果小于最新提醒天数则不发消息
 					{
-						for (PushMsg pushMsg : pushMsgs)
+						for (PushMsg pushMsg : pushMsgs.ToJavaList())
 						{
 							if (pushMsg.GetParaInt("NoticeType") == 1)
 							{
@@ -365,10 +368,10 @@ public class ccbpmServices extends Method
 						Emp empShift = new Emp(doOutTime);
 						try
 						{
-							BP.WF.Dev2Interface.Node_Shift(workid, empShift.No, "流程节点已经逾期,系统自动移交");
+							BP.WF.Dev2Interface.Node_Shift(workid, empShift.getNo(), "流程节点已经逾期,系统自动移交");
 
 							msg = "流程 '" + node.getFlowName() + "',标题: '" + title + "'的应该完成时间为'" + compleateTime + "',当前节点'" + node.getName() +
-								  "'超时处理规则为'移交到指定的人',已经自动移交给'" + empShift.Name + ".";
+								  "'超时处理规则为'移交到指定的人',已经自动移交给'" + empShift.getName() + ".";
 							BP.DA.Log.DefaultLogWriteLine(LogType.Info, msg);
 						}
 						catch (RuntimeException ex)
@@ -476,8 +479,9 @@ public class ccbpmServices extends Method
 	/** 
 	 特殊处理天津的流程
 	 当指定的节点，到了10号，15号自动向下发送.
+	 * @throws Exception 
 	*/
-	private void DoTianJinSpecFunc()
+	private void DoTianJinSpecFunc() throws Exception
 	{
 		if (LocalDateTime.now().getDayOfMonth() == 10 || LocalDateTime.now().getDayOfMonth() == 15)
 		{
@@ -555,8 +559,9 @@ public class ccbpmServices extends Method
 	}
 	/** 
 	 发送消息
+	 * @throws Exception 
 	*/
-	private void DoSendMsg()
+	private void DoSendMsg() throws Exception
 	{
 		int idx = 0;
 
@@ -564,7 +569,7 @@ public class ccbpmServices extends Method
 		SMSs sms = new SMSs();
 		BP.En.QueryObject qo = new BP.En.QueryObject(sms);
 		sms.Retrieve(SMSAttr.EmailSta, MsgSta.UnRun.getValue());
-		for (SMS sm : sms)
+		for (SMS sm : sms.ToJavaList())
 		{
 			if (sm.getEmail().length() == 0)
 			{
@@ -574,7 +579,7 @@ public class ccbpmServices extends Method
 			}
 			try
 			{
-				this.SendMail(sm);
+				sm.SendEmailNowAsync(sm.getEmail(), sm.getTitle(), sm.getDocOfEmail());
 			}
 			catch (RuntimeException ex)
 			{
@@ -584,83 +589,5 @@ public class ccbpmServices extends Method
 
 			///#endregion 发送消息
 	}
-	/** 
-	 发送邮件。
-	 
-	 @param sms
-	*/
-	public final void SendMail(SMS sms)
-	{
 
-
-			///#region 发送邮件.
-		if (DataType.IsNullOrEmpty(sms.getEmail()))
-		{
-			WFEmp emp = new WFEmp(sms.getSendToEmpNo());
-			sms.setEmail(emp.getEmail());
-		}
-
-		System.Net.Mail.MailMessage myEmail = new System.Net.Mail.MailMessage();
-		myEmail.From = new MailAddress("ccbpmtester@tom.com", "ccbpm123", System.Text.Encoding.UTF8);
-
-		myEmail.To.Add(sms.getEmail());
-		myEmail.Subject = sms.getTitle();
-		myEmail.SubjectEncoding = System.Text.Encoding.UTF8; //邮件标题编码
-
-		myEmail.Body = sms.getDocOfEmail();
-		myEmail.BodyEncoding = System.Text.Encoding.UTF8; //邮件内容编码
-		myEmail.IsBodyHtml = true; //是否是HTML邮件
-
-		myEmail.Priority = MailPriority.High; //邮件优先级
-
-		SmtpClient client = new SmtpClient();
-
-		//邮件地址.
-		String emailAddr = SystemConfig.GetValByKey("SendEmailAddress", null);
-		if (emailAddr == null)
-		{
-			emailAddr = "ccbpmtester@tom.com";
-		}
-
-		String emailPassword = SystemConfig.GetValByKey("SendEmailPass", null);
-		if (emailPassword == null)
-		{
-			emailPassword = "ccbpm123";
-		}
-
-		//是否启用ssl? 
-		boolean isEnableSSL = false;
-		String emailEnableSSL = SystemConfig.GetValByKey("SendEmailEnableSsl", null);
-		if (emailEnableSSL == null || emailEnableSSL.equals("0"))
-		{
-			isEnableSSL = false;
-		}
-		else
-		{
-			isEnableSSL = true;
-		}
-
-		client.Credentials = new System.Net.NetworkCredential(emailAddr, emailPassword);
-
-		//上述写你的邮箱和密码
-		client.Port = SystemConfig.GetValByKeyInt("SendEmailPort", 25); //使用的端口
-		client.Host = SystemConfig.GetValByKey("SendEmailHost", "smtp.tom.com");
-
-		//是否启用加密,有的邮件服务器发送配置不成功就是因为此参数的错误。
-		client.EnableSsl = SystemConfig.GetValByKeyBoolen("SendEmailEnableSsl", isEnableSSL);
-
-		Object userState = myEmail;
-		try
-		{
-			client.SendAsync(myEmail, userState);
-			sms.setHisEmailSta(MsgSta.RunOK);
-			sms.Update();
-		}
-		catch (System.Net.Mail.SmtpException ex)
-		{
-			throw ex;
-		}
-
-			///#endregion 发送邮件.
-	}
 }

@@ -1,8 +1,4 @@
 package BP.WF.Data;
-
-import BP.En.*;
-import BP.WF.Template.*;
-import BP.Sys.*;
 import BP.WF.*;
 
 /** 
@@ -10,20 +6,6 @@ import BP.WF.*;
 */
 public abstract class NDXRptBase extends BP.En.EntityOID
 {
-
-		///#region 属性
-	/** 
-	 工作ID
-	 * @throws Exception 
-	*/
-	public final long getOID() throws Exception
-	{
-		return this.GetValInt64ByKey(NDXRptBaseAttr.OID);
-	}
-	public final void setOID(long value) throws Exception
-	{
-		this.SetValByKey(NDXRptBaseAttr.OID, value);
-	}
 	/** 
 	 流程时间跨度
 	 * @throws Exception 

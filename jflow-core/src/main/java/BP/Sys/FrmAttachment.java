@@ -431,7 +431,7 @@ public class FrmAttachment extends EntityMyPK {
 		return this.GetValIntByKey(FrmAttachmentAttr.GroupID);
 	}
 
-	public final void setGroupID(int value) throws Exception {
+	public final void setGroupID(long value) throws Exception {
 		this.SetValByKey(FrmAttachmentAttr.GroupID, value);
 	}
 

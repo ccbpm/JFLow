@@ -35,9 +35,9 @@ public class BillTemplate extends EntityNoName
 	{
 		return BillFileType.forValue(this.GetValIntByKey(BillTemplateAttr.BillFileType));
 	}
-	public final void setHisBillFileType(BillFileType value) throws Exception
+	public final void setHisBillFileType(int value) throws Exception
 	{
-		this.SetValByKey(BillTemplateAttr.BillFileType, value.getValue());
+		this.SetValByKey(BillTemplateAttr.BillFileType, value);
 	}
 	/** 
 	 二维码生成方式
@@ -47,9 +47,9 @@ public class BillTemplate extends EntityNoName
 	{
 		return QRModel.forValue(this.GetValIntByKey(BillTemplateAttr.QRModel));
 	}
-	public final void setQRModel(QRModel value) throws Exception
+	public final void setQRModel(int value) throws Exception
 	{
-		this.SetValByKey(BillTemplateAttr.QRModel, value.getValue());
+		this.SetValByKey(BillTemplateAttr.QRModel, value);
 	}
 	public final TemplateFileModel getTemplateFileModel() throws Exception
 	{
@@ -68,9 +68,9 @@ public class BillTemplate extends EntityNoName
 	{
 		return BillOpenModel.forValue(this.GetValIntByKey(BillTemplateAttr.BillOpenModel));
 	}
-	public final void setBillOpenModel(BillOpenModel value) throws Exception
+	public final void setBillOpenModel(int value) throws Exception
 	{
-		this.SetValByKey(BillTemplateAttr.BillOpenModel, value.getValue());
+		this.SetValByKey(BillTemplateAttr.BillOpenModel, value);
 	}
 	/** 
 	 打开的连接

@@ -95,7 +95,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 			switch (attr.getLGType())
 			{
 				case Normal: // 输出普通类型字段.
-					if (attr.getMyDataType() == 1 && (int)attr.getUIContralType() == DataType.AppString)
+					if (attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString)
 					{
 
 						if (attrs.Contains(attr.getKeyOfEn() + "Text") == true)
@@ -113,7 +113,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 					else
 					{
 						text = wk.GetValStrByKey(attr.getKeyOfEn());
-						if (attr.IsRichText == true)
+						if (attr.getIsRichText() == true)
 						{
 							text = text.replace("white-space: nowrap;", "");
 						}
@@ -184,7 +184,7 @@ public class CCMobile_MyFlow extends DirectoryPageBase
 
 	public final String MyFlowGener_Delete()
 	{
-		BP.WF.Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), Web.WebUser.getName() + "用户删除", true);
+		BP.WF.Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), WebUser.getName() + "用户删除", true);
 		return "删除成功...";
 	}
 

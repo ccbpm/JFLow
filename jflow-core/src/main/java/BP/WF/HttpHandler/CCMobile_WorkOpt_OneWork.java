@@ -23,7 +23,7 @@ public class CCMobile_WorkOpt_OneWork extends DirectoryPageBase
 
 
 		///#region xxx 界面 .
-	public final String TimeBase_Init()
+	public final String TimeBase_Init() throws Exception
 	{
 		WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork();
 		return en.TimeBase_Init();

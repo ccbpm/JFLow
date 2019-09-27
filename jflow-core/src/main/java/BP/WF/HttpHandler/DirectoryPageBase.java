@@ -9,6 +9,9 @@ import NPOI.HSSF.UserModel.*;
 import NPOI.SS.UserModel.*;
 import BP.WF.*;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.*;
 import java.time.*;
 import java.math.*;
@@ -480,7 +483,7 @@ public abstract class DirectoryPageBase
 	/** 
 	 部门编号
 	*/
-	public final String getFK_Dept()
+	public String getFK_Dept()
 	{
 		String str = this.GetRequestVal("FK_Dept");
 		if (str == null || str.equals("") || str.equals("null"))
@@ -617,7 +620,7 @@ public abstract class DirectoryPageBase
 	/** 
 	 相关编号
 	*/
-	public final String getRefNo()
+	public String getRefNo()
 	{
 		String str = this.GetRequestVal("RefNo");
 		if (DataType.IsNullOrEmpty(str) == true)
@@ -729,7 +732,7 @@ public abstract class DirectoryPageBase
 	/** 
 	 SID
 	*/
-	public final String getSID()
+	public String getSID()
 	{
 		String str = this.GetRequestVal("SID"); // context.Request.QueryString["SID"];
 		if (DataType.IsNullOrEmpty(str) == true)
@@ -1679,6 +1682,9 @@ public abstract class DirectoryPageBase
 		}
 
 		return "Unkown";
+	}
+	public HttpServletRequest getRequest() {
+		return ContextHolderUtils.getRequest();
 	}
 
 }

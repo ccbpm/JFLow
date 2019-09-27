@@ -46,8 +46,9 @@ public class WF_Admin extends DirectoryPageBase
 	 初始化界面.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String TestFlow_Init()
+	public final String TestFlow_Init() throws Exception
 	{
 		//清除缓存.
 		BP.Sys.SystemConfig.DoClearCash();
@@ -64,7 +65,7 @@ public class WF_Admin extends DirectoryPageBase
 		{
 			Emp emp = new Emp(this.getRefNo());
 			WebUser.SignInOfGener(emp);
-			HttpContextHelper.SessionSet("FK_Flow", this.getFK_Flow());
+			WebUser.SetSessionByKey("FK_Flow", this.getFK_Flow());
 			return "url@../MyFlow.htm?FK_Flow=" + this.getFK_Flow();
 		}
 

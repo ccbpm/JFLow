@@ -1,17 +1,19 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Sys.XML.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.Template.*;
-import BP.NetPlatformImpl.*;
 import BP.WF.*;
 import java.util.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.*;
 import java.time.*;
 import java.math.*;
@@ -19,7 +21,7 @@ import java.math.*;
 /** 
  页面功能实体
 */
-public class WF_Comm extends DirectoryPageBase
+public class WF_Comm extends WebContralBase
 {
 
 		///#region 树的实体.
@@ -27,8 +29,9 @@ public class WF_Comm extends DirectoryPageBase
 	 获得树的结构
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Tree_Init()
+	public final String Tree_Init() throws Exception
 	{
 		Object tempVar = ClassFactory.GetEns(this.getEnsName());
 		EntitiesTree ens = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
@@ -47,17 +50,17 @@ public class WF_Comm extends DirectoryPageBase
 
 		///#region 部门-人员关系.
 
-	public final String Tree_MapBaseInfo()
+	public final String Tree_MapBaseInfo() throws Exception
 	{
 		Object tempVar = ClassFactory.GetEns(this.getTreeEnsName());
 		EntitiesTree enTrees = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
-		EntityTree enenTree = enTrees.GetNewEntity instanceof EntityTree ? (EntityTree)enTrees.GetNewEntity : null;
+		EntityTree enenTree = enTrees.getNewEntity() instanceof EntityTree ? (EntityTree)enTrees.getNewEntity() : null;
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 		Hashtable ht = new Hashtable();
-		ht.put("TreeEnsDesc", enenTree.EnDesc);
-		ht.put("EnsDesc", en.EnDesc);
-		ht.put("EnPK", en.PK);
+		ht.put("TreeEnsDesc", enenTree.getEnDesc());
+		ht.put("EnsDesc", en.getEnDesc());
+		ht.put("EnPK", en.getPK());
 		return BP.Tools.Json.ToJson(ht);
 	}
 
@@ -65,21 +68,23 @@ public class WF_Comm extends DirectoryPageBase
 	 获得树的结构
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String TreeEn_Init()
+	public final String TreeEn_Init() throws Exception
 	{
 		Object tempVar = ClassFactory.GetEns(this.getTreeEnsName());
 		EntitiesTree ens = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
 		ens.RetrieveAll(EntityTreeAttr.Idx);
-		return ens.ToJsonOfTree();
+		return ens.ToJsonOfTree("0");
 	}
 
 	/** 
 	 获取树关联的集合
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String TreeEmp_Init()
+	public final String TreeEmp_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 		String RefPK = this.GetRequestVal("RefPK");
@@ -91,9 +96,9 @@ public class WF_Comm extends DirectoryPageBase
 		ds.Tables.add(dt);
 
 		//获取实体对应的列明
-		Entity en = ens.GetNewEntity;
-		Map map = en.EnMapInTime;
-		MapAttrs attrs = map.Attrs.ToMapAttrs;
+		Entity en = ens.getNewEntity();
+		Map map = en.getEnMapInTime();
+		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 		//属性集合.
 		DataTable dtAttrs = attrs.ToDataTableField();
 		dtAttrs.TableName = "Sys_MapAttrs";
@@ -104,27 +109,27 @@ public class WF_Comm extends DirectoryPageBase
 		dt.Columns.Add("Width", Integer.class);
 		dt.Columns.Add("UIContralType", Integer.class);
 		DataRow row = null;
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.UIVisible == false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
 
-			if (this.getRefPK().equals(attr.KeyOfEn))
+			if (this.getRefPK().equals(attr.getKeyOfEn()))
 			{
 				continue;
 			}
 
 			row = dt.NewRow();
-			row.set("field", attr.KeyOfEn);
-			row.set("title", attr.Name);
-			row.set("Width", attr.UIWidthInt * 2);
-			row.set("UIContralType", attr.UIContralType);
+			row.set("field", attr.getKeyOfEn());
+			row.set("title", attr.getName());
+			row.set("Width", attr.getUIWidthInt() * 2);
+			row.set("UIContralType", attr.getUIContralType());
 
-			if (attr.HisAttr.IsFKorEnum)
+			if (attr.getHisAttr().getIsFKorEnum())
 			{
-				row.set("field", attr.KeyOfEn + "Text");
+				row.set("field", attr.getKeyOfEn() + "Text");
 			}
 			dt.Rows.add(row);
 		}
@@ -176,338 +181,205 @@ public class WF_Comm extends DirectoryPageBase
 	 初始化数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ContrastDtl_Init()
+	public final String ContrastDtl_Init() throws Exception
 	{
-		//获得.
-		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
-		Map map = en.EnMapInTime;
+		// 获得
+				Entities ens = ClassFactory.GetEns(this.getEnsName());
+				Entity en = ens.getNewEntity();
+				Map map = ens.getNewEntity().getEnMapInTime();
 
-		MapAttrs attrs = map.Attrs.ToMapAttrs;
+				MapAttrs attrs = map.getAttrs().ToMapAttrs();
 
-		//属性集合.
-		DataTable dtAttrs = attrs.ToDataTableField();
-		dtAttrs.TableName = "Sys_MapAttrs";
+				// 属性集合.
+				DataTable dtAttrs = attrs.ToDataTableField();
+				dtAttrs.TableName = "Sys_MapAttrs";
 
-		DataSet ds = new DataSet();
-		ds.Tables.add(dtAttrs); //把描述加入.
+				DataSet ds = new DataSet();
+				ds.Tables.add(dtAttrs); // 把描述加入.
 
-		//查询结果
-		QueryObject qo = new QueryObject(ens);
+				// 查询结果
+				QueryObject qo = new QueryObject(ens);
+				Enumeration enu = getRequest().getParameterNames();
+				boolean isExist = false;
+				while (enu.hasMoreElements()) {
+					isExist = false;
+					String key = (String) enu.nextElement();
+					if (key.indexOf("EnsName") != -1)
+						continue;
 
-		String[] strs = HttpContextHelper.Request.Form.toString().split("[&]", -1);
-		for (String str : strs)
-		{
-			if (str.indexOf("EnsName") != -1)
-			{
-				continue;
-			}
+					if (key == "OID" || key == "MyPK")
+						continue;
 
-			String[] mykey = str.split("[=]", -1);
-			String key = mykey[0];
-
-
-			if (key.equals("OID") || key.equals("MyPK"))
-			{
-				continue;
-			}
-
-			if (key.equals("FK_Dept"))
-			{
-				this.setFK_Dept(mykey[1]);
-				continue;
-			}
-			boolean isExist = false;
-			boolean IsInt = false;
-			boolean IsDouble = false;
-			boolean IsFloat = false;
-			boolean IsMoney = false;
-			for (Attr attr : en.getEnMap().getAttrs())
-			{
-				if (attr.Key.equals(key))
-				{
-					isExist = true;
-					if (attr.MyDataType == DataType.AppInt)
-					{
-						IsInt = true;
-					}
-					if (attr.MyDataType == DataType.AppDouble)
-					{
-						IsDouble = true;
-					}
-					if (attr.MyDataType == DataType.AppFloat)
-					{
-						IsFloat = true;
-					}
-					if (attr.MyDataType == DataType.AppMoney)
-					{
-						IsMoney = true;
-					}
-					break;
-				}
-			}
-
-			if (isExist == false)
-			{
-				continue;
-			}
-
-			if (mykey[1].equals("mvals"))
-			{
-				//如果用户多项选择了，就要找到它的选择项目.
-
-				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK( WebUser.getNo() + this.getEnsName() + "_SearchAttrs";
-				sUr.RetrieveFromDBSources();
-
-				/* 如果是多选值 */
-				String cfgVal = sUr.MVals;
-				AtPara ap = new AtPara(cfgVal);
-				String instr = ap.GetValStrByKey(key);
-				String val = "";
-				if (instr == null || instr.equals(""))
-				{
-					if (key.equals("FK_Dept") || key.equals("FK_Unit"))
-					{
-						if (key.equals("FK_Dept"))
-						{
-							val = WebUser.getFK_Dept();
-						}
-					}
-					else
-					{
+					if (key == "FK_Dept") {
+						this.setFK_Dept(getRequest().getParameter(key));
 						continue;
 					}
-				}
-				else
-				{
-					instr = instr.replace("..", ".");
-					instr = instr.replace(".", "','");
-					instr = instr.substring(2);
-					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(mykey[0], instr);
-				}
-			}
-			else
-			{
-				if (IsInt == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], Integer.parseInt(mykey[1]));
-				}
-				else if (IsDouble == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], Double.parseDouble(mykey[1]));
-				}
-				else if (IsFloat == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], Float.parseFloat(mykey[1]));
-				}
-				else if (IsMoney == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], BigDecimal.Parse(mykey[1]));
-				}
-				else
-				{
-					qo.AddWhere(mykey[0], mykey[1]);
-				}
-			}
-			qo.addAnd();
-		}
 
-		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
-		{
-			if (this.getFK_Dept().length() == 2)
-			{
-				qo.AddWhere("FK_Dept", " = ", "all");
-				qo.addAnd();
-			}
-			else
-			{
-				if (this.getFK_Dept().length() == 8)
-				{
-					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
-				}
-				else
-				{
-					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+					for (Attr attr : en.getEnMap().getAttrs()) {
+						if (attr.getKey().equals(key)) {
+							isExist = true;
+							break;
+						}
+					}
+
+					if (isExist == false)
+						continue;
+
+					if (getRequest().getParameter(key) == "mvals") {
+						// 如果用户多项选择了，就要找到它的选择项目.
+
+						UserRegedit sUr = new UserRegedit();
+						sUr.setMyPK(WebUser.getNo() + this.getEnsName() + "_SearchAttrs");
+						sUr.RetrieveFromDBSources();
+
+						/* 如果是多选值 */
+						String cfgVal = sUr.getMVals();
+						AtPara ap = new AtPara(cfgVal);
+						String instr = ap.GetValStrByKey(key);
+						String val = "";
+						if (instr == null || instr == "") {
+							if (key == "FK_Dept" || key == "FK_Unit") {
+								if (key == "FK_Dept")
+									val = WebUser.getFK_Dept();
+							} else {
+								continue;
+							}
+						} else {
+							instr = instr.replace("..", ".");
+							instr = instr.replace(".", "','");
+							instr = instr.substring(2);
+							instr = instr.substring(0, instr.length() - 2);
+							qo.AddWhereIn(key, instr);
+						}
+					} else {
+						qo.AddWhere(key, getRequest().getParameter(key));
+					}
+					qo.addAnd();
 				}
 
-				qo.addAnd();
-			}
-		}
+				if (this.getFK_Dept() != null
+						&& (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp") == "all")) {
+					if (this.getFK_Dept().length() == 2) {
+						qo.AddWhere("FK_Dept", " = ", "all");
+						qo.addAnd();
+					} else {
+						if (this.getFK_Dept().length() == 8) {
+							qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+						} else {
+							qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+						}
 
-		qo.AddHD();
-		qo.DoQuery();
-		DataTable dt = ens.ToDataTableField();
-		dt.TableName = "Group_Dtls";
-		ds.Tables.add(dt);
+						qo.addAnd();
+					}
+				}
 
-		return BP.Tools.Json.ToJson(ds);
+				qo.AddHD();
+
+				DataTable dt = qo.DoQueryToTable();
+				dt.TableName = "Group_Dtls";
+				ds.Tables.add(dt);
+
+				return BP.Tools.Json.ToJson(ds);
 	}
 
 	/** 
 	 执行导出
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String GroupDtl_Exp()
+	public final String GroupDtl_Exp() throws Exception
 	{
-		//获得.
-		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
+		// 获得
+				Entities ens = ClassFactory.GetEns(this.getEnsName());
+				Entity en = ens.getNewEntity();
+				Map map = ens.getNewEntity().getEnMapInTime();
 
-		//查询结果
-		QueryObject qo = new QueryObject(ens);
-		String[] strs = HttpContextHelper.Request.Form.toString().split("[&]", -1);
-		for (String str : strs)
-		{
-			if (str.indexOf("EnsName") != -1)
-			{
-				continue;
-			}
+				// 查询结果
+				QueryObject qo = new QueryObject(ens);
+				Enumeration enu = getRequest().getParameterNames();
+				boolean isExist = false;
+				while (enu.hasMoreElements()) {
+					isExist = false;
+					String key = (String) enu.nextElement();
+					if (key.indexOf("EnsName") != -1)
+						continue;
 
-			String[] mykey = str.split("[=]", -1);
-			String key = mykey[0];
+					if (key == "OID" || key == "MyPK")
+						continue;
 
-			if (key.equals("OID") || key.equals("MyPK"))
-			{
-				continue;
-			}
-
-			if (key.equals("FK_Dept"))
-			{
-				this.setFK_Dept(mykey[1]);
-				continue;
-			}
-
-			boolean isExist = false;
-			boolean IsInt = false;
-			boolean IsDouble = false;
-			boolean IsFloat = false;
-			boolean IsMoney = false;
-			for (Attr attr : en.getEnMap().getAttrs())
-			{
-				if (attr.Key.equals(key))
-				{
-					isExist = true;
-					if (attr.MyDataType == DataType.AppInt)
-					{
-						IsInt = true;
-					}
-					if (attr.MyDataType == DataType.AppDouble)
-					{
-						IsDouble = true;
-					}
-					if (attr.MyDataType == DataType.AppFloat)
-					{
-						IsFloat = true;
-					}
-					if (attr.MyDataType == DataType.AppMoney)
-					{
-						IsMoney = true;
-					}
-					break;
-				}
-			}
-
-			if (isExist == false)
-			{
-				continue;
-			}
-
-			if (mykey[1].equals("mvals"))
-			{
-				//如果用户多项选择了，就要找到它的选择项目.
-
-				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK( WebUser.getNo() + this.getEnsName() + "_SearchAttrs";
-				sUr.RetrieveFromDBSources();
-
-				/* 如果是多选值 */
-				String cfgVal = sUr.MVals;
-				AtPara ap = new AtPara(cfgVal);
-				String instr = ap.GetValStrByKey(key);
-				String val = "";
-				if (instr == null || instr.equals(""))
-				{
-					if (key.equals("FK_Dept") || key.equals("FK_Unit"))
-					{
-						if (key.equals("FK_Dept"))
-						{
-							val = WebUser.getFK_Dept();
-						}
-					}
-					else
-					{
+					if (key == "FK_Dept") {
+						this.setFK_Dept(getRequest().getParameter(key));
 						continue;
 					}
-				}
-				else
-				{
-					instr = instr.replace("..", ".");
-					instr = instr.replace(".", "','");
-					instr = instr.substring(2);
-					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(mykey[0], instr);
-				}
-			}
-			else
-			{
-				if (IsInt == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], Integer.parseInt(mykey[1]));
-				}
-				else if (IsDouble == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], Double.parseDouble(mykey[1]));
-				}
-				else if (IsFloat == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], Float.parseFloat(mykey[1]));
-				}
-				else if (IsMoney == true && DataType.IsNullOrEmpty(mykey[1]) == false)
-				{
-					qo.AddWhere(mykey[0], BigDecimal.Parse(mykey[1]));
-				}
-				else
-				{
-					qo.AddWhere(mykey[0], mykey[1]);
-				}
-			}
-			qo.addAnd();
-		}
 
-		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
-		{
-			if (this.getFK_Dept().length() == 2)
-			{
-				qo.AddWhere("FK_Dept", " = ", "all");
-				qo.addAnd();
-			}
-			else
-			{
-				if (this.getFK_Dept().length() == 8)
-				{
-					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
-				}
-				else
-				{
-					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+					for (Attr attr : en.getEnMap().getAttrs()) {
+						if (attr.getKey().equals(key)) {
+							isExist = true;
+							break;
+						}
+					}
+
+					if (isExist == false)
+						continue;
+
+					if (getRequest().getParameter(key) == "mvals") {
+						// 如果用户多项选择了，就要找到它的选择项目.
+
+						UserRegedit sUr = new UserRegedit();
+						sUr.setMyPK(WebUser.getNo() + this.getEnsName() + "_SearchAttrs");
+						sUr.RetrieveFromDBSources();
+
+						/* 如果是多选值 */
+						String cfgVal = sUr.getMVals();
+						AtPara ap = new AtPara(cfgVal);
+						String instr = ap.GetValStrByKey(key);
+						String val = "";
+						if (instr == null || instr == "") {
+							if (key == "FK_Dept" || key == "FK_Unit") {
+								if (key == "FK_Dept")
+									val = WebUser.getFK_Dept();
+							} else {
+								continue;
+							}
+						} else {
+							instr = instr.replace("..", ".");
+							instr = instr.replace(".", "','");
+							instr = instr.substring(2);
+							instr = instr.substring(0, instr.length() - 2);
+							qo.AddWhereIn(key, instr);
+						}
+					} else {
+						qo.AddWhere(key, getRequest().getParameter(key));
+					}
+					qo.addAnd();
 				}
 
-				qo.addAnd();
-			}
-		}
+				if (this.getFK_Dept() != null
+						&& (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp") == "all")) {
+					if (this.getFK_Dept().length() == 2) {
+						qo.AddWhere("FK_Dept", " = ", "all");
+						qo.addAnd();
+					} else {
+						if (this.getFK_Dept().length() == 8) {
+							qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+						} else {
+							qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+						}
 
-		qo.AddHD();
+						qo.addAnd();
+					}
+				}
 
-		DataTable dt = qo.DoQueryToTable();
+				qo.AddHD();
 
-		String filePath = ExportDGToExcel(dt, en, en.EnDesc);
+				DataTable dt = qo.DoQueryToTable();
 
+				String filePath = ExportDGToExcel(dt, en, en.getEnDesc(), null);
 
-		return filePath;
+				return filePath;
 	}
 
 		///#endregion 统计分析组件.
@@ -525,8 +397,9 @@ public class WF_Comm extends DirectoryPageBase
 	 获得实体
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_Init()
+	public final String Entity_Init() throws Exception
 	{
 		try
 		{
@@ -535,17 +408,17 @@ public class WF_Comm extends DirectoryPageBase
 
 			if (pkval.equals("0") || pkval.equals("") || pkval == null || pkval.equals("undefined"))
 			{
-				Map map = en.EnMap;
+				Map map = en.getEnMap();
 				for (Attr attr : en.getEnMap().getAttrs())
 				{
-					en.SetValByKey(attr.Key, attr.DefaultVal);
+					en.SetValByKey(attr.getKey(), attr.getDefaultVal());
 				}
 				//设置默认的数据.
 				en.ResetDefaultVal();
 			}
 			else
 			{
-				en.PKVal = pkval;
+				en.setPKVal(pkval);
 				en.Retrieve();
 
 				//int i=en.RetrieveFromDBSources();
@@ -564,8 +437,9 @@ public class WF_Comm extends DirectoryPageBase
 	 删除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_Delete()
+	public final String Entity_Delete() throws Exception
 	{
 		try
 		{
@@ -595,7 +469,7 @@ public class WF_Comm extends DirectoryPageBase
 
 				///#endregion 首先判断参数删除.
 
-			if (en.PKCount != 1)
+			if (en.getPKCount() != 1)
 			{
 				/*多个主键的情况. 遍历属性，循环赋值.*/
 				for (Attr attr : en.getEnMap().getAttrs())
@@ -605,11 +479,11 @@ public class WF_Comm extends DirectoryPageBase
 			}
 			else
 			{
-				en.PKVal = this.getPKVal();
+				en.setPKVal(this.getPKVal());
 			}
 
 			int i = en.RetrieveFromDBSources(); //查询出来再删除.
-			return en.Delete().toString(); //返回影响行数.
+			return String.valueOf(en.Delete()); //返回影响行数.
 		}
 		catch (RuntimeException ex)
 		{
@@ -620,8 +494,9 @@ public class WF_Comm extends DirectoryPageBase
 	 更新
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_Update()
+	public final String Entity_Update() throws Exception
 	{
 		try
 		{
@@ -638,7 +513,7 @@ public class WF_Comm extends DirectoryPageBase
 			//返回数据.
 			//return en.ToJson(false);
 
-			return en.Update().toString(); //返回影响行数.
+			return String.valueOf(en.Update()); //返回影响行数.
 		}
 		catch (RuntimeException ex)
 		{
@@ -661,12 +536,12 @@ public class WF_Comm extends DirectoryPageBase
 			if (i == 0)
 			{
 				en.ResetDefaultVal();
-				en.PKVal = this.getPKVal();
+				en.setPKVal(this.getPKVal());
 			}
 
-			if (en.Row.ContainsKey("RetrieveFromDBSources") == true)
+			if (en.getRow().containsKey("RetrieveFromDBSources") == true)
 			{
-				en.Row["RetrieveFromDBSources"] = i;
+				en.Row.getv["RetrieveFromDBSources"] = i;
 			}
 			else
 			{
@@ -691,10 +566,10 @@ public class WF_Comm extends DirectoryPageBase
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
 			en = en.CreateInstance();
-			en.PKVal = this.getPKVal();
+			en.setPKVal(this.getPKVal());
 			en.Retrieve();
 
-			if (en.Row.ContainsKey("Retrieve") == true)
+			if (en.getRow().ContainsKey("Retrieve") == true)
 			{
 				en.Row["Retrieve"] = "1";
 			}
@@ -714,14 +589,15 @@ public class WF_Comm extends DirectoryPageBase
 	 是否存在
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_IsExits()
+	public final String Entity_IsExits() throws Exception
 	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
-			en.PKVal = this.getPKVal();
-			boolean isExit = en.IsExits;
+			en.setPKVal(this.getPKVal());
+			boolean isExit = en.getIsExits();
 			if (isExit == true)
 			{
 				return "1";
@@ -737,8 +613,9 @@ public class WF_Comm extends DirectoryPageBase
 	 执行保存
 	 
 	 @return 返回保存影响的行数
+	 * @throws Exception 
 	*/
-	public final String Entity_Save()
+	public final String Entity_Save() throws Exception
 	{
 		try
 		{
@@ -748,7 +625,7 @@ public class WF_Comm extends DirectoryPageBase
 				return "err@实体类名错误[" + this.getEnName() + "].";
 			}
 
-			en.PKVal = this.getPKVal();
+			en.setPKVal(this.getPKVal());
 			en.RetrieveFromDBSources();
 
 			//遍历属性，循环赋值.
@@ -768,7 +645,7 @@ public class WF_Comm extends DirectoryPageBase
 				}
 			}
 
-			return en.Save().toString();
+			return String.valueOf(en.Save());
 		}
 		catch (RuntimeException ex)
 		{
@@ -779,8 +656,9 @@ public class WF_Comm extends DirectoryPageBase
 	 执行插入.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_Insert()
+	public final String Entity_Insert() throws Exception
 	{
 		try
 		{
@@ -812,8 +690,9 @@ public class WF_Comm extends DirectoryPageBase
 	 执行插入.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_DirectInsert()
+	public final String Entity_DirectInsert() throws Exception
 	{
 		try
 		{
@@ -844,12 +723,15 @@ public class WF_Comm extends DirectoryPageBase
 	 查询
 	 
 	 @return 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	*/
-	public final String Entity_DoMethodReturnString()
+	public final String Entity_DoMethodReturnString() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		//创建类实体.
 		BP.En.Entity en = ClassFactory.GetEn(this.getEnName()); // Activator.CreateInstance(System.Type.GetType("BP.En.Entity")) as BP.En.Entity;
-		en.PKVal = this.getPKVal();
+		en.setPKVal(this.getPKVal());
 		en.RetrieveFromDBSources();
 
 		String methodName = this.GetRequestVal("MethodName");
@@ -871,7 +753,7 @@ public class WF_Comm extends DirectoryPageBase
 			myparas = paras.split("[~]", -1);
 		}
 
-		Object tempVar = mp.Invoke(en, myparas);
+		Object tempVar = mp.invoke(en, myparas);
 		String result = tempVar instanceof String ? (String)tempVar : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
 		return result;
 	}
@@ -903,8 +785,9 @@ public class WF_Comm extends DirectoryPageBase
 	 获得实体集合s
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entities_Init()
+	public final String Entities_Init() throws Exception
 	{
 		try
 		{
@@ -1072,8 +955,13 @@ public class WF_Comm extends DirectoryPageBase
 	 执行方法
 	 
 	 @return 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
 	*/
-	public final String Entities_DoMethodReturnString()
+	public final String Entities_DoMethodReturnString() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		//创建类实体.
 		BP.En.Entities ens = ClassFactory.GetEns(this.getEnsName()); // Activator.CreateInstance(System.Type.GetType("BP.En.Entity")) as BP.En.Entity;
@@ -1101,7 +989,7 @@ public class WF_Comm extends DirectoryPageBase
 			myparas = paras.split("[~]", -1);
 		}
 
-		Object tempVar = mp.Invoke(ens, myparas);
+		Object tempVar = mp.invoke(ens, myparas);
 		String result = tempVar instanceof String ? (String)tempVar : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
 		return result;
 	}
@@ -1114,8 +1002,9 @@ public class WF_Comm extends DirectoryPageBase
 	 初始化.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Method_Init()
+	public final String Method_Init() throws Exception
 	{
 		String ensName = this.GetRequestVal("M");
 		Method rm = BP.En.ClassFactory.GetMethod(ensName);
@@ -1124,7 +1013,7 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@方法名错误或者该方法已经不存在" + ensName;
 		}
 
-		if (rm.HisAttrs.size() == 0)
+		if (rm.getHisAttrs().size() == 0)
 		{
 			Hashtable ht = new Hashtable();
 			ht.put("No", ensName);
@@ -1137,7 +1026,7 @@ public class WF_Comm extends DirectoryPageBase
 		DataTable dt = new DataTable();
 
 		//转化为集合.
-		MapAttrs attrs = rm.HisAttrs.ToMapAttrs;
+		MapAttrs attrs = rm.getHisAttrs().ToMapAttrs();
 
 		return "";
 	}
@@ -1147,75 +1036,75 @@ public class WF_Comm extends DirectoryPageBase
 		Method rm = BP.En.ClassFactory.GetMethod(ensName);
 		// rm.Init();
 		int mynum = 0;
-		for (Attr attr : rm.HisAttrs)
+		for (Attr attr : rm.getHisAttrs())
 		{
-			if (attr.MyFieldType == FieldType.RefText)
+			if (attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}
 			mynum++;
 		}
 		int idx = 0;
-		for (Attr attr : rm.HisAttrs)
+		for (Attr attr : rm.getHisAttrs())
 		{
-			if (attr.MyFieldType == FieldType.RefText)
+			if (attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}
-			if (attr.UIVisible == false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
 			try
 			{
-				switch (attr.UIContralType)
+				switch (attr.getUIContralType())
 				{
-					case UIContralType.TB:
-						switch (attr.MyDataType)
+					case TB:
+						switch (attr.getMyDataType())
 						{
 							case BP.DA.DataType.AppString:
 							case BP.DA.DataType.AppDate:
 							case BP.DA.DataType.AppDateTime:
 								String str1 = this.GetValFromFrmByKey(attr.getKey());
-								rm.SetValByKey(attr.Key, str1);
+								rm.SetValByKey(attr.getKey(), str1);
 								break;
 							case BP.DA.DataType.AppInt:
 								int myInt = this.GetValIntFromFrmByKey(attr.getKey()); //int.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.Row[idx] = myInt;
-								rm.SetValByKey(attr.Key, myInt);
+								rm.SetValByKey(attr.getKey(), myInt);
 								break;
 							case BP.DA.DataType.AppFloat:
 								float myFloat = this.GetValFloatFromFrmByKey(attr.getKey()); // float.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
-								rm.SetValByKey(attr.Key, myFloat);
+								rm.SetValByKey(attr.getKey(), myFloat);
 								break;
 							case BP.DA.DataType.AppDouble:
 							case BP.DA.DataType.AppMoney:
 								BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
-								rm.SetValByKey(attr.Key, myDoub);
+								rm.SetValByKey(attr.getKey(), myDoub);
 								break;
 							case BP.DA.DataType.AppBoolean:
 								boolean myBool = this.GetValBoolenFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
-								rm.SetValByKey(attr.Key, myBool);
+								rm.SetValByKey(attr.getKey(), myBool);
 								break;
 							default:
 								return "err@没有判断的数据类型．";
 						}
 						break;
-					case UIContralType.DDL:
+					case DDL:
 						try
 						{
 							String str = this.GetValFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 							// string str = this.UCEn1.GetDDLByKey("DDL_" + attr.getKey()).SelectedItemStringVal;
-							rm.SetValByKey(attr.Key, str);
+							rm.SetValByKey(attr.getKey(), str);
 						}
 						catch (java.lang.Exception e)
 						{
-							rm.SetValByKey(attr.Key, "");
+							rm.SetValByKey(attr.getKey(), "");
 						}
 						break;
-					case UIContralType.CheckBok:
+					case CheckBok:
 						boolean myBoolval = this.GetValBoolenFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
-						rm.SetValByKey(attr.Key, myBoolval);
+						rm.SetValByKey(attr.getKey(), myBoolval);
 						break;
 					default:
 						break;
@@ -1224,7 +1113,7 @@ public class WF_Comm extends DirectoryPageBase
 			}
 			catch (RuntimeException ex)
 			{
-				return "err@获得参数错误" + "attr=" + attr.Key + " attr = " + attr.Key + ex.getMessage();
+				return "err@获得参数错误" + "attr=" + attr.getKey() + " attr = " + attr.getKey() + ex.getMessage();
 			}
 		}
 
@@ -1259,7 +1148,7 @@ public class WF_Comm extends DirectoryPageBase
 
 		for (BP.En.Method en : al)
 		{
-			if (en.IsCanDo == false || en.IsVisable == false)
+			if (en.getIsCanDo() == false || en.IsVisable == false)
 			{
 				continue;
 			}
@@ -1280,8 +1169,9 @@ public class WF_Comm extends DirectoryPageBase
 	 获得查询的基本信息.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Search_MapBaseInfo()
+	public final String Search_MapBaseInfo() throws Exception
 	{
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -1290,13 +1180,13 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名:" + this.getEnsName() + "错误";
 		}
 
-		Entity en = ens.GetNewEntity;
-		Map map = ens.GetNewEntity.EnMapInTime;
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 
 		Hashtable ht = new Hashtable();
 
 		//把权限信息放入.
-		UAC uac = en.HisUAC;
+		UAC uac = en.getHisUAC();
 		ht.put("IsUpdata", uac.IsUpdate);
 		ht.put("IsInsert", uac.IsInsert);
 		ht.put("IsDelete", uac.IsDelete);
@@ -1304,14 +1194,14 @@ public class WF_Comm extends DirectoryPageBase
 		ht.put("IsExp", uac.IsExp); //是否可以导出?
 		ht.put("IsImp", uac.IsImp); //是否可以导入?
 
-		ht.put("EnDesc", en.EnDesc); //描述?
+		ht.put("EnDesc", en.getEnDesc()); //描述?
 		ht.put("EnName", en.toString()); //类名?
 
 
 		//把map信息放入
-		ht.put("PhysicsTable", map.PhysicsTable);
-		ht.put("CodeStruct", map.CodeStruct);
-		ht.put("CodeLength", map.CodeLength);
+		ht.put("PhysicsTable", map.getPhysicsTable());
+		ht.put("CodeStruct", map.getCodeStruct());
+		ht.put("CodeLength", map.getCodeLength());
 
 		//查询条件.
 		if (map.IsShowSearchKey == true)
@@ -1324,7 +1214,7 @@ public class WF_Comm extends DirectoryPageBase
 		}
 
 		//按日期查询.
-		ht.put("DTSearchWay", (int)map.DTSearchWay);
+		ht.put("DTSearchWay", map.DTSearchWay);
 		ht.put("DTSearchLable", map.DTSearchLable);
 		ht.put("DTSearchKey", map.DTSearchKey);
 
@@ -1334,8 +1224,9 @@ public class WF_Comm extends DirectoryPageBase
 	 外键或者枚举的查询.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Search_SearchAttrs()
+	public final String Search_SearchAttrs() throws Exception
 	{
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -1345,7 +1236,7 @@ public class WF_Comm extends DirectoryPageBase
 		}
 
 		Entity en = ens.getNewEntity();
-		Map map = ens.GetNewEntity.EnMapInTime;
+		Map map = ens.getNewEntity().getEnMapInTime();
 
 		DataSet ds = new DataSet();
 
@@ -1357,14 +1248,14 @@ public class WF_Comm extends DirectoryPageBase
 		dt.Columns.Add("UIContralType");
 		dt.TableName = "Attrs";
 
-		AttrSearchs attrs = map.SearchAttrs;
+		AttrSearchs attrs = map.getSearchAttrs();
 		for (AttrSearch item : attrs)
 		{
 			DataRow dr = dt.NewRow();
-			dr.set("Field", item.getKey());
-			dr.set("Name", item.HisAttr.Desc);
+			dr.set("Field", item.Key);
+			dr.set("Name", item.HisAttr.getDesc());
 			dr.set("Width", item.Width); //下拉框显示的宽度.
-			dr.set("UIContralType", item.HisAttr.UIContralType);
+			dr.set("UIContralType", item.HisAttr.getUIContralType());
 
 			dt.Rows.add(dr);
 		}
@@ -1373,18 +1264,18 @@ public class WF_Comm extends DirectoryPageBase
 		//把外键枚举增加到里面.
 		for (AttrSearch item : attrs)
 		{
-			if (item.HisAttr.IsEnum == true)
+			if (item.HisAttr.getIsEnum() == true)
 			{
-				SysEnums ses = new SysEnums(item.HisAttr.UIBindKey);
+				SysEnums ses = new SysEnums(item.HisAttr.getUIBindKey());
 				DataTable dtEnum = ses.ToDataTableField();
 				dtEnum.TableName = item.Key;
 				ds.Tables.add(dtEnum);
 				continue;
 			}
 
-			if (item.HisAttr.IsFK == true)
+			if (item.HisAttr.getIsFK() == true)
 			{
-				Entities ensFK = item.HisAttr.HisFKEns;
+				Entities ensFK = item.HisAttr.getHisFKEns();
 				ensFK.RetrieveAll();
 
 				DataTable dtEn = ensFK.ToDataTableField();
@@ -1392,10 +1283,10 @@ public class WF_Comm extends DirectoryPageBase
 				ds.Tables.add(dtEn);
 			}
 			//绑定SQL的外键
-			if (item.HisAttr.UIDDLShowType == BP.Web.Controls.DDLShowType.BindSQL)
+			if (item.HisAttr.getUIDDLShowType() == DDLShowType.BindSQL)
 			{
 				//获取SQl
-				String sql = item.HisAttr.UIBindKey;
+				String sql = item.HisAttr.getUIBindKey();
 				sql = BP.WF.Glo.DealExp(sql, null, null);
 				DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
 				for (DataColumn col : dtSQl.Columns)
@@ -1417,7 +1308,7 @@ public class WF_Comm extends DirectoryPageBase
 					}
 				}
 				dtSQl.TableName = item.Key;
-				if (ds.Tables.Contains(item.getKey()) == false)
+				if (ds.Tables.contains(item.Key) == false)
 				{
 					ds.Tables.add(dtSQl);
 				}
@@ -1445,8 +1336,8 @@ public class WF_Comm extends DirectoryPageBase
 	{
 		//获得.
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
-		Map map = en.EnMapInTime;
+		Entity en = ens.getNewEntity();
+		Map map = en.getEnMapInTime();
 
 		MapAttrs attrs = new MapAttrs();
 		;
@@ -1455,11 +1346,11 @@ public class WF_Comm extends DirectoryPageBase
 
 
 		MapData md = new MapData();
-		md.No = this.getEnsName();
+		md.setNo(this.getEnsName();
 		int count = md.RetrieveFromDBSources();
 		if (count == 0)
 		{
-			attrs = map.Attrs.ToMapAttrs;
+			attrs = map.getAttrs().ToMapAttrs();
 		}
 		else
 		{
@@ -1473,22 +1364,22 @@ public class WF_Comm extends DirectoryPageBase
 		dtAttrs.Columns.Add("Name", String.class);
 		dtAttrs.Columns.Add("Width", Integer.class);
 		dtAttrs.Columns.Add("UIContralType", Integer.class);
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			String searchVisable = attr.atPara.GetValStrByKey("SearchVisable");
+			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
 			if (searchVisable.equals("0"))
 			{
 				continue;
 			}
-			if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || attr.UIVisible == false)
+			if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || attr.getUIVisible() == false)
 			{
 				continue;
 			}
 			row = dtAttrs.NewRow();
-			row.set("KeyOfEn", attr.KeyOfEn);
-			row.set("Name", attr.Name);
-			row.set("Width", attr.UIWidthInt);
-			row.set("UIContralType", attr.UIContralType);
+			row.set("KeyOfEn", attr.getKeyOfEn());
+			row.set("Name", attr.getName());
+			row.set("Width", attr.getUIWidthInt());
+			row.set("UIContralType", attr.getUIContralType());
 
 			dtAttrs.Rows.add(row);
 		}
@@ -1496,36 +1387,36 @@ public class WF_Comm extends DirectoryPageBase
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtAttrs); //把描述加入.
 
-		md.Name = map.EnDesc;
+		md.setName(map.getEnDesc());
 
 		//附件类型.
-		md.SetPara("BPEntityAthType", (int)map.HisBPEntityAthType);
+		md.SetPara("BPEntityAthType", String.valueOf(map.HisBPEntityAthType));
 
 		//获取实体类的主键
-		md.SetPara("PK", en.PK);
+		md.SetPara("PK", en.getPK());
 
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 		//取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs";
+		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
 		//获得关键字.
-		AtPara ap = new AtPara(ur.Vals);
+		AtPara ap = new AtPara(ur.getVals());
 
 		//关键字.
-		String keyWord = ur.SearchKey;
+		String keyWord = ur.getSearchKey();
 		QueryObject qo = new QueryObject(ens);
 
 
 			///#region 关键字字段.
-		if (en.EnMap.IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
+		if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			Attr attrPK = new Attr();
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
-				if (attr.IsPK)
+				if (attr.getIsPK())
 				{
 					attrPK = attr;
 					break;
@@ -1533,35 +1424,35 @@ public class WF_Comm extends DirectoryPageBase
 			}
 			int i = 0;
 			String enumKey = ","; //求出枚举值外键.
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
-				switch (attr.MyFieldType)
+				switch (attr.getMyFieldType())
 				{
-					case FieldType.Enum:
-						enumKey = "," + attr.Key + "Text,";
+					case Enum:
+						enumKey = "," + attr.getKey() + "Text,";
 						break;
-					case FieldType.FK:
+					case FK:
 						// case FieldType.PKFK:
 						continue;
 					default:
 						break;
 				}
 
-				if (attr.MyDataType != DataType.AppString)
+				if (attr.getMyDataType() != DataType.AppString)
 				{
 					continue;
 				}
 
 				//排除枚举值关联refText.
-				if (attr.MyFieldType == FieldType.RefText)
+				if (attr.getMyFieldType() == FieldType.RefText)
 				{
-					if (enumKey.contains("," + attr.Key + ",") == true)
+					if (enumKey.contains("," + attr.getKey() + ",") == true)
 					{
 						continue;
 					}
 				}
 
-				if (attr.Key.equals("FK_Dept"))
+				if (attr.getKey().equals("FK_Dept"))
 				{
 					continue;
 				}
@@ -1573,11 +1464,11 @@ public class WF_Comm extends DirectoryPageBase
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
@@ -1585,15 +1476,15 @@ public class WF_Comm extends DirectoryPageBase
 
 				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 
 			}
-			qo.MyParas.Add("SKey", keyWord);
+			qo.getMyParas().Add("SKey", keyWord);
 			qo.addRightBracket();
 
 		}
@@ -1604,9 +1495,9 @@ public class WF_Comm extends DirectoryPageBase
 
 			///#endregion
 
-		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
+		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
+			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
 			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			//按日期查询
@@ -1615,9 +1506,9 @@ public class WF_Comm extends DirectoryPageBase
 				qo.addAnd();
 				qo.addLeftBracket();
 				dtTo += " 23:59:59";
-				qo.SQL = map.DTSearchKey + " >= '" + dtFrom + "'";
+				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'";
 				qo.addAnd();
-				qo.SQL = map.DTSearchKey + " <= '" + dtTo + "'";
+				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'";
 				qo.addRightBracket();
 			}
 
@@ -1642,9 +1533,9 @@ public class WF_Comm extends DirectoryPageBase
 
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.SQL = map.DTSearchKey + " >= '" + dtFrom + "'";
+				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'";
 				qo.addAnd();
-				qo.SQL = map.DTSearchKey + " <= '" + dtTo + "'";
+				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'";
 				qo.addRightBracket();
 			}
 		}
@@ -1664,12 +1555,12 @@ public class WF_Comm extends DirectoryPageBase
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-					var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.RefAttrKey, attr.DefaultValRun);
+					var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.RefAttrKey, attr.getDefaultVal()Run);
 					qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, valType);
 				}
 				else
 				{
-					qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, attr.DefaultValRun);
+					qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, attr.getDefaultVal()Run);
 				}
 				qo.addRightBracket();
 				continue;
@@ -1691,15 +1582,15 @@ public class WF_Comm extends DirectoryPageBase
 			qo.addAnd();
 			qo.addLeftBracket();
 
-			if (attr.DefaultVal.Length >= 8)
+			if (attr.getDefaultVal().Length >= 8)
 			{
 				String date = "2005-09-01";
 				try
 				{
 					/* 就可能是年月日。 */
-					String y = ap.GetValStrByKey("DDL_" + attr.Key + "_Year");
-					String m = ap.GetValStrByKey("DDL_" + attr.Key + "_Month");
-					String d = ap.GetValStrByKey("DDL_" + attr.Key + "_Day");
+					String y = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Year");
+					String m = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Month");
+					String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
 					date = y + "-" + m + "-" + d;
 
 					if (opkey.equals("<="))
@@ -1772,11 +1663,11 @@ public class WF_Comm extends DirectoryPageBase
 
 		if (GetRequestVal("DoWhat") != null && GetRequestVal("DoWhat").equals("Batch"))
 		{
-			qo.DoQuery(en.PK, 500, 1);
+			qo.DoQuery(en.getPK(), 500, 1);
 		}
 		else
 		{
-			qo.DoQuery(en.PK, this.getPageSize(), this.getPageIdx());
+			qo.DoQuery(en.getPK(), this.getPageSize(), this.getPageIdx());
 		}
 
 			///#endregion 获得查询数据.
@@ -1853,19 +1744,19 @@ public class WF_Comm extends DirectoryPageBase
 	private DataTable Search_Data(Entities ens, Entity en)
 	{
 		//获得.
-		Map map = en.EnMapInTime;
+		Map map = en.getEnMapInTime();
 
-		MapAttrs attrs = map.Attrs.ToMapAttrs;
+		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 		//取出来查询条件.
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs";
+		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
 		//获得关键字.
-		AtPara ap = new AtPara(ur.Vals);
+		AtPara ap = new AtPara(ur.getVals());
 
 		//关键字.
-		String keyWord = ur.SearchKey;
+		String keyWord = ur.getSearchKey();
 		QueryObject qo = new QueryObject(ens);
 
 
@@ -1873,7 +1764,7 @@ public class WF_Comm extends DirectoryPageBase
 		if (en.EnMap.IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() > 1)
 		{
 			Attr attrPK = new Attr();
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
 				if (attr.IsPK)
 				{
@@ -1882,9 +1773,9 @@ public class WF_Comm extends DirectoryPageBase
 				}
 			}
 			int i = 0;
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
-				switch (attr.MyFieldType)
+				switch (attr.getMyFieldType())
 				{
 					case FieldType.Enum:
 					case FieldType.FK:
@@ -1894,17 +1785,17 @@ public class WF_Comm extends DirectoryPageBase
 						break;
 				}
 
-				if (attr.MyDataType != DataType.AppString)
+				if (attr.getMyDataType() != DataType.AppString)
 				{
 					continue;
 				}
 
-				if (attr.MyFieldType == FieldType.RefText)
+				if (attr.getMyFieldType() == FieldType.RefText)
 				{
 					continue;
 				}
 
-				if (attr.Key.equals("FK_Dept"))
+				if (attr.getKey().equals("FK_Dept"))
 				{
 					continue;
 				}
@@ -1916,11 +1807,11 @@ public class WF_Comm extends DirectoryPageBase
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
@@ -1928,11 +1819,11 @@ public class WF_Comm extends DirectoryPageBase
 
 				if (SystemConfig.getAppCenterDBVarStr().equals("@"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 
 			}
@@ -1947,9 +1838,9 @@ public class WF_Comm extends DirectoryPageBase
 
 			///#endregion
 
-		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
+		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
+			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
 			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			if (map.DTSearchWay == DTSearchWay.ByDate)
@@ -1960,9 +1851,9 @@ public class WF_Comm extends DirectoryPageBase
 				dtFrom += " 00:00:00";
 				//结束查询时间
 				dtTo += " 23:59:59";
-				qo.SQL = map.DTSearchKey + " >= '" + dtFrom + "'";
+				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'";
 				qo.addAnd();
-				qo.SQL = map.DTSearchKey + " <= '" + dtTo + "'";
+				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'";
 				qo.addRightBracket();
 			}
 
@@ -1987,9 +1878,9 @@ public class WF_Comm extends DirectoryPageBase
 
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.SQL = map.DTSearchKey + " >= '" + dtFrom + "'";
+				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.SQL = map.DTSearchKey + " <= '" + dtTo + "'";
+				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 		}
@@ -2000,11 +1891,11 @@ public class WF_Comm extends DirectoryPageBase
 		String opkey = ""; // 操作符号。
 		for (AttrOfSearch attr : en.getEnMap().getAttrs()OfSearch)
 		{
-			if (attr.IsHidden)
+			if (attr.getIsHidden())
 			{
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, attr.DefaultValRun);
+				qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, attr.getDefaultVal()Run);
 				qo.addRightBracket();
 				continue;
 			}
@@ -2025,15 +1916,15 @@ public class WF_Comm extends DirectoryPageBase
 			qo.addAnd();
 			qo.addLeftBracket();
 
-			if (attr.DefaultVal.Length >= 8)
+			if (attr.getDefaultVal().Length >= 8)
 			{
 				String date = "2005-09-01";
 				try
 				{
 					/* 就可能是年月日。 */
-					String y = ap.GetValStrByKey("DDL_" + attr.Key + "_Year");
-					String m = ap.GetValStrByKey("DDL_" + attr.Key + "_Month");
-					String d = ap.GetValStrByKey("DDL_" + attr.Key + "_Day");
+					String y = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Year");
+					String m = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Month");
+					String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
 					date = y + "-" + m + "-" + d;
 
 					if (opkey.equals("<="))
@@ -2187,13 +2078,13 @@ public class WF_Comm extends DirectoryPageBase
 		String ensName = this.getEnsName();
 		int index = this.getIndex();
 		Entities ens = BP.En.ClassFactory.GetEns(ensName);
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 		BP.En.RefMethod rm = en.EnMap.HisRefMethods[index];
 
 		String pk = this.getPKVal();
 		if (pk == null)
 		{
-			pk = this.GetRequestVal(en.PK);
+			pk = this.GetRequestVal(en.getPK());
 		}
 
 		if (pk == null)
@@ -2222,7 +2113,7 @@ public class WF_Comm extends DirectoryPageBase
 					continue;
 				}
 
-				en.PKVal = mypk;
+				en.setPKVal(mypk;
 				en.Retrieve();
 				rm.HisEn = en;
 
@@ -2278,7 +2169,7 @@ public class WF_Comm extends DirectoryPageBase
 		dtMain.TableName = "MainTable";
 		for (MapAttr attr : attrs)
 		{
-			dtMain.Columns.Add(attr.KeyOfEn, String.class);
+			dtMain.Columns.Add(attr.getKeyOfEn(), String.class);
 		}
 
 		DataRow mydrMain = dtMain.NewRow();
@@ -2402,7 +2293,7 @@ public class WF_Comm extends DirectoryPageBase
 				sqlBindKey = BP.WF.Glo.DealExp(sqlBindKey, en, null);
 
 				DataTable dt1 = DBAccess.RunSQLReturnTable(sqlBindKey);
-				dt1.TableName = attr.Key;
+				dt1.TableName = attr.getKey();
 
 				//@杜. 翻译当前部分.
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
@@ -2479,18 +2370,18 @@ public class WF_Comm extends DirectoryPageBase
 
 		//查询出来从表数据.
 		Entities dtls = ClassFactory.GetEns(this.getEnsName());
-		Entity en = dtls.GetNewEntity;
+		Entity en = dtls.getNewEntity();
 		QueryObject qo = new QueryObject(dtls);
-		qo.addOrderBy(en.PK);
+		qo.addOrderBy(en.getPK());
 		qo.DoQuery();
 		ds.Tables.add(dtls.ToDataTableField("Ens"));
 
 		//实体.
-		Entity dtl = dtls.GetNewEntity;
+		Entity dtl = dtls.getNewEntity();
 		//定义Sys_MapData.
 		MapData md = new MapData();
-		md.No = this.getEnName();
-		md.Name = dtl.EnDesc;
+		md.setNo(this.getEnName());
+		md.setName(dtl.getEnDesc());
 
 
 			///#region 加入权限信息.
@@ -2526,7 +2417,7 @@ public class WF_Comm extends DirectoryPageBase
 
 
 			///#region 添加EN的主键
-		md.SetPara("PK", en.PK);
+		md.SetPara("PK", en.getPK());
 
 			///#endregion
 
@@ -2581,7 +2472,7 @@ public class WF_Comm extends DirectoryPageBase
 		String enumKeys = "";
 		for (Attr attr : dtl.getEnMap().getAttrs())
 		{
-			if (attr.MyFieldType == FieldType.Enum)
+			if (attr.getMyFieldType() == FieldType.Enum)
 			{
 				enumKeys += "'" + attr.UIBindKey + "',";
 			}
@@ -2691,59 +2582,59 @@ public class WF_Comm extends DirectoryPageBase
 
 				///#region  查询出来s实体数据.
 			Entities dtls = BP.En.ClassFactory.GetEns(this.getEnsName());
-			Entity en = dtls.GetNewEntity;
+			Entity en = dtls.getNewEntity();
 			QueryObject qo = new QueryObject(dtls);
-			//qo.DoQuery(en.PK, BP.Sys.SystemConfig.PageSize, this.PageIdx, false);
+			//qo.DoQuery(en.getPK(), BP.Sys.SystemConfig.PageSize, this.PageIdx, false);
 			qo.DoQuery();
 			Map map = en.EnMap;
 			for (Entity item : dtls.ToJavaList())
 			{
 				String pkval = item.PKVal.toString();
 
-				for (Attr attr : map.Attrs)
+				for (Attr attr : map.getAttrs())
 				{
 					if (attr.IsRefAttr == true)
 					{
 						continue;
 					}
 
-					if (attr.MyDataType == DataType.AppDateTime || attr.MyDataType == DataType.AppDate)
+					if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
 					{
 						if (attr.UIIsReadonly == false)
 						{
 							continue;
 						}
 
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.Key, null);
-						item.SetValByKey(attr.Key, val);
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
 
-					if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
+					if (attr.getUIContralType() == UIContralType.TB && attr.UIIsReadonly == false)
 					{
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.Key, null);
-						item.SetValByKey(attr.Key, val);
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
+					if (attr.getUIContralType() == UIContralType.DDL && attr.UIIsReadonly == true)
 					{
 						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
-						item.SetValByKey(attr.Key, val);
+						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.UIContralType == UIContralType.CheckBok && attr.UIIsReadonly == true)
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.UIIsReadonly == true)
 					{
-						String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.Key, "-1");
+						String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
 						if (val.equals("-1"))
 						{
-							item.SetValByKey(attr.Key, 0);
+							item.SetValByKey(attr.getKey(), 0);
 						}
 						else
 						{
-							item.SetValByKey(attr.Key, 1);
+							item.SetValByKey(attr.getKey(), 1);
 						}
 						continue;
 					}
@@ -2765,45 +2656,45 @@ public class WF_Comm extends DirectoryPageBase
 			String valValue = "";
 
 
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
 
-				if (attr.MyDataType == DataType.AppDateTime || attr.MyDataType == DataType.AppDate)
+				if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
 				{
 					if (attr.UIIsReadonly == false)
 					{
 						continue;
 					}
 
-					valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.Key, null);
-					en.SetValByKey(attr.Key, valValue);
+					valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.getKey(), null);
+					en.SetValByKey(attr.getKey(), valValue);
 					continue;
 				}
 
-				if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
+				if (attr.getUIContralType() == UIContralType.TB && attr.UIIsReadonly == false)
 				{
 					valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.getKey());
-					en.SetValByKey(attr.Key, valValue);
+					en.SetValByKey(attr.getKey(), valValue);
 					continue;
 				}
 
-				if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
+				if (attr.getUIContralType() == UIContralType.DDL && attr.UIIsReadonly == true)
 				{
 					valValue = this.GetValFromFrmByKey("DDL_" + 0 + "_" + attr.getKey());
-					en.SetValByKey(attr.Key, valValue);
+					en.SetValByKey(attr.getKey(), valValue);
 					continue;
 				}
 
-				if (attr.UIContralType == UIContralType.CheckBok && attr.UIIsReadonly == true)
+				if (attr.getUIContralType() == UIContralType.CheckBok && attr.UIIsReadonly == true)
 				{
-					valValue = this.GetValFromFrmByKey("CB_" + 0 + "_" + attr.Key, "-1");
+					valValue = this.GetValFromFrmByKey("CB_" + 0 + "_" + attr.getKey(), "-1");
 					if (valValue.equals("-1"))
 					{
-						en.SetValByKey(attr.Key, 0);
+						en.SetValByKey(attr.getKey(), 0);
 					}
 					else
 					{
-						en.SetValByKey(attr.Key, 1);
+						en.SetValByKey(attr.getKey(), 1);
 					}
 					continue;
 				}
@@ -2819,7 +2710,7 @@ public class WF_Comm extends DirectoryPageBase
 
 			try
 			{
-				if (en.PKVal.toString().equals("0"))
+				if (en.getPK()Val.toString().equals("0"))
 				{
 				}
 				else
@@ -2854,7 +2745,7 @@ public class WF_Comm extends DirectoryPageBase
 	{
 		String ensName = this.getEnsName();
 		Entities ens = BP.En.ClassFactory.GetEns(ensName);
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 		BP.En.RefMethods rms = en.EnMap.HisRefMethods;
 		DataTable dt = new DataTable();
 		dt.TableName = "RM";
@@ -2922,7 +2813,7 @@ public class WF_Comm extends DirectoryPageBase
 	public final String Refmethod_Done()
 	{
 		Entities ens = BP.En.ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 		String msg = "";
 
 		String pk = this.getPKVal();
@@ -2930,7 +2821,7 @@ public class WF_Comm extends DirectoryPageBase
 		if (pk.contains(",") == false)
 		{
 			/*批处理的方式.*/
-			en.PKVal = pk;
+			en.setPKVal(pk;
 
 			en.Retrieve();
 			msg = DoOneEntity(en, this.getIndex());
@@ -2953,7 +2844,7 @@ public class WF_Comm extends DirectoryPageBase
 				continue;
 			}
 
-			en.PKVal = mypk;
+			en.setPKVal(mypk;
 			en.Retrieve();
 
 			String s = DoOneEntity(en, this.getIndex());
@@ -2979,7 +2870,7 @@ public class WF_Comm extends DirectoryPageBase
 		int mynum = 0;
 		for (Attr attr : rm.HisAttrs)
 		{
-			if (attr.MyFieldType == FieldType.RefText)
+			if (attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}
@@ -2991,42 +2882,42 @@ public class WF_Comm extends DirectoryPageBase
 		int idx = 0;
 		for (Attr attr : rm.HisAttrs)
 		{
-			if (attr.MyFieldType == FieldType.RefText)
+			if (attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}
 
-			switch (attr.UIContralType)
+			switch (attr.getUIContralType())
 			{
 				case UIContralType.TB:
-					switch (attr.MyDataType)
+					switch (attr.getMyDataType())
 					{
 						case BP.DA.DataType.AppString:
 						case BP.DA.DataType.AppDate:
 						case BP.DA.DataType.AppDateTime:
 							String str1 = this.GetValFromFrmByKey(attr.getKey());
 							objs[idx] = str1;
-							//attr.DefaultVal=str1;
+							//attr.getDefaultVal()=str1;
 							break;
 						case BP.DA.DataType.AppInt:
 							int myInt = this.GetValIntFromFrmByKey(attr.getKey());
 							objs[idx] = myInt;
-							//attr.DefaultVal=myInt;
+							//attr.getDefaultVal()=myInt;
 							break;
 						case BP.DA.DataType.AppFloat:
 							float myFloat = this.GetValFloatFromFrmByKey(attr.getKey());
 							objs[idx] = myFloat;
-							//attr.DefaultVal=myFloat;
+							//attr.getDefaultVal()=myFloat;
 							break;
 						case BP.DA.DataType.AppDouble:
 						case BP.DA.DataType.AppMoney:
 							BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.getKey());
 							objs[idx] = myDoub;
-							//attr.DefaultVal=myDoub;
+							//attr.getDefaultVal()=myDoub;
 							break;
 						case BP.DA.DataType.AppBoolean:
 							objs[idx] = this.GetValBoolenFromFrmByKey(attr.getKey());
-							attr.DefaultVal = false;
+							attr.getDefaultVal() = false;
 							break;
 						default:
 							throw new RuntimeException("没有判断的数据类型．");
@@ -3036,17 +2927,17 @@ public class WF_Comm extends DirectoryPageBase
 				case UIContralType.DDL:
 					try
 					{
-						if (attr.MyDataType == DataType.AppString)
+						if (attr.getMyDataType() == DataType.AppString)
 						{
 							String str = this.GetValFromFrmByKey(attr.getKey());
 							objs[idx] = str;
-							attr.DefaultVal = str;
+							attr.getDefaultVal() = str;
 						}
 						else
 						{
 							int enumVal = this.GetValIntFromFrmByKey(attr.getKey());
 							objs[idx] = enumVal;
-							attr.DefaultVal = enumVal;
+							attr.getDefaultVal() = enumVal;
 						}
 
 					}
@@ -3058,7 +2949,7 @@ public class WF_Comm extends DirectoryPageBase
 				case UIContralType.CheckBok:
 					objs[idx] = this.GetValBoolenFromFrmByKey(attr.getKey());
 
-					attr.DefaultVal = objs[idx].toString();
+					attr.getDefaultVal() = objs[idx].toString();
 
 					break;
 				default:
@@ -3217,7 +3108,7 @@ public class WF_Comm extends DirectoryPageBase
 			//创建类实体.
 			Object tempVar2 = java.lang.Class.forName("BP.En.Entity").newInstance();
 			BP.En.Entity en = tempVar2 instanceof BP.En.Entity ? (BP.En.Entity)tempVar2 : null;
-			en.PKVal = this.getPKVal();
+			en.setPKVal(this.getPKVal();
 			en.RetrieveFromDBSources();
 
 			java.lang.Class tp = en.getClass();
@@ -3458,11 +3349,11 @@ public class WF_Comm extends DirectoryPageBase
 		{
 			return "err@参数类名不正确.";
 		}
-		en.PKVal = this.getPKVal();
+		en.setPKVal(this.getPKVal();
 		int i = en.RetrieveFromDBSources();
 		if (i == 0)
 		{
-			return "err@数据[" + this.getEnName() + "]主键为[" + en.PKVal + "]不存在，或者没有保存。";
+			return "err@数据[" + this.getEnName() + "]主键为[" + en.getPK()Val + "]不存在，或者没有保存。";
 		}
 
 		//获取文件的名称
@@ -3607,11 +3498,11 @@ public class WF_Comm extends DirectoryPageBase
 		{
 			return "err@参数类名不正确.";
 		}
-		en.PKVal = this.getPKVal();
+		en.setPKVal(this.getPKVal());
 		int i = en.RetrieveFromDBSources();
 		if (i == 0)
 		{
-			return "err@数据[" + this.getEnName() + "]主键为[" + en.PKVal + "]不存在，或者没有保存。";
+			return "err@数据[" + this.getEnName() + "]主键为[" + en.getPKVal() + "]不存在，或者没有保存。";
 		}
 
 		//获取文件的名称
@@ -3737,13 +3628,13 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名:" + this.getEnsName() + "错误";
 		}
 
-		Entity en = ens.GetNewEntity;
-		Map map = ens.GetNewEntity.EnMapInTime;
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().EnMapInTime;
 
 		Hashtable ht = new Hashtable();
 
 		//把权限信息放入.
-		UAC uac = en.HisUAC;
+		UAC uac = en.getHisUAC();
 		if (this.GetRequestValBoolen("IsReadonly"))
 		{
 			ht.put("IsUpdata", false);
@@ -3763,14 +3654,14 @@ public class WF_Comm extends DirectoryPageBase
 		ht.put("IsExp", uac.IsExp); //是否可以导出?
 		ht.put("IsImp", uac.IsImp); //是否可以导入?
 
-		ht.put("EnDesc", en.EnDesc); //描述?
+		ht.put("EnDesc", en.getEnDesc()); //描述?
 		ht.put("EnName", en.toString()); //类名?
 
 
 		//把map信息放入
-		ht.put("PhysicsTable", map.PhysicsTable);
-		ht.put("CodeStruct", map.CodeStruct);
-		ht.put("CodeLength", map.CodeLength);
+		ht.put("PhysicsTable", map.getPhysicsTable());
+		ht.put("CodeStruct", map.getCodeStruct());
+		ht.put("CodeLength", map.getCodeLength());
 
 		//查询条件.
 		if (map.IsShowSearchKey == true)
@@ -3806,8 +3697,8 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.GetNewEntity;
-		Map map = ens.GetNewEntity.EnMapInTime;
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().EnMapInTime;
 
 		DataSet ds = new DataSet();
 
@@ -3818,7 +3709,7 @@ public class WF_Comm extends DirectoryPageBase
 		dt.Columns.Add("MyFieldType");
 		dt.TableName = "Attrs";
 
-		AttrSearchs attrs = map.SearchAttrs;
+		AttrSearchs attrs = map.getSearchAttrs();
 		for (AttrSearch item : attrs)
 		{
 			DataRow dr = dt.NewRow();
@@ -3834,7 +3725,7 @@ public class WF_Comm extends DirectoryPageBase
 		{
 			if (item.HisAttr.IsEnum == true)
 			{
-				SysEnums ses = new SysEnums(item.HisAttr.UIBindKey);
+				SysEnums ses = new SysEnums(item.HisAttr.getUIBindKey());
 				DataTable dtEnum = ses.ToDataTableField();
 				dtEnum.TableName = item.Key;
 				ds.Tables.add(dtEnum);
@@ -3843,7 +3734,7 @@ public class WF_Comm extends DirectoryPageBase
 
 			if (item.HisAttr.IsFK == true)
 			{
-				Entities ensFK = item.HisAttr.HisFKEns;
+				Entities ensFK = item.HisAttr.getHisFKEns();
 				ensFK.RetrieveAll();
 
 				DataTable dtEn = ensFK.ToDataTableField();
@@ -3870,9 +3761,9 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.GetNewEntity;
-		Map map = ens.GetNewEntity.EnMapInTime;
-		Attrs attrs = map.Attrs;
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
+		Attrs attrs = map.getAttrs();
 		DataTable dt = new DataTable();
 		dt.Columns.Add("Field");
 		dt.Columns.Add("Name");
@@ -3887,14 +3778,14 @@ public class WF_Comm extends DirectoryPageBase
 		boolean contentFlag = false;
 		for (Attr attr : attrs)
 		{
-			if (attr.UIContralType == UIContralType.DDL)
+			if (attr.getUIContralType() == UIContralType.DDL)
 			{
 				DataRow dr = dt.NewRow();
 				dr.set("Field", attr.getKey());
 				dr.set("Name", attr.Desc);
 
 				// 根据状态 设置信息.
-				if (ur.Vals.indexOf(attr.getKey()) != -1)
+				if (ur.getVals().indexOf(attr.getKey()) != -1)
 				{
 					dr.set("Checked", "true");
 					contentFlag = true;
@@ -3921,8 +3812,8 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.GetNewEntity;
-		Map map = ens.GetNewEntity.EnMapInTime;
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().EnMapInTime;
 		DataSet ds = new DataSet();
 		//// 查询出来关于它的活动列配置。
 		//ActiveAttrs aas = new ActiveAttrs();
@@ -3957,29 +3848,29 @@ public class WF_Comm extends DirectoryPageBase
 		ddlDt.Rows.add(ddlDr);
 		ds.Tables.add(ddlDt);
 
-		for (Attr attr : map.Attrs)
+		for (Attr attr : map.getAttrs())
 		{
 			if (attr.IsPK || attr.IsNum == false)
 			{
 				continue;
 			}
-			if (attr.UIContralType == UIContralType.TB == false)
+			if (attr.getUIContralType() == UIContralType.TB == false)
 			{
 				continue;
 			}
-			if (attr.UIVisible == false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
-			if (attr.MyFieldType == FieldType.FK)
+			if (attr.getMyFieldType() == FieldType.FK)
 			{
 				continue;
 			}
-			if (attr.MyFieldType == FieldType.Enum)
+			if (attr.getMyFieldType() == FieldType.Enum)
 			{
 				continue;
 			}
-			if (attr.Key.equals("OID") || attr.Key.equals("WorkID") || attr.Key.equals("MID"))
+			if (attr.getKey().equals("OID") || attr.getKey().equals("WorkID") || attr.getKey().equals("MID"))
 			{
 				continue;
 			}
@@ -3992,11 +3883,11 @@ public class WF_Comm extends DirectoryPageBase
 			//    if (aa.AttrKey != attr.getKey())
 			//        continue;
 			//    DataRow dr = dt.NewRow();
-			//    dr["Field"] = attr.Key;
+			//    dr["Field"] = attr.getKey();
 			//    dr["Name"] = attr.Desc;
 
 			//    // 根据状态 设置信息.
-			//    if (ur.Vals.IndexOf(attr.getKey()) != -1)
+			//    if (ur.getVals().IndexOf(attr.getKey()) != -1)
 			//        dr["Checked"] = "true";
 
 			//    dt.Rows.add(dr);
@@ -4014,7 +3905,7 @@ public class WF_Comm extends DirectoryPageBase
 
 
 			// 根据状态 设置信息.
-			if (ur.Vals.indexOf(attr.getKey()) != -1)
+			if (ur.getVals().indexOf(attr.getKey()) != -1)
 			{
 				dtr.set("Checked", "true");
 			}
@@ -4025,12 +3916,12 @@ public class WF_Comm extends DirectoryPageBase
 			ddlDt.Columns.Add("No");
 			ddlDt.Columns.Add("Name");
 			ddlDt.Columns.Add("Selected");
-			ddlDt.TableName = attr.Key;
+			ddlDt.TableName = attr.getKey();
 
 			ddlDr = ddlDt.NewRow();
 			ddlDr.set("No", "SUM");
 			ddlDr.set("Name", "求和");
-			if (ur.Vals.indexOf("@" + attr.Key + "=SUM") != -1)
+			if (ur.getVals().indexOf("@" + attr.getKey() + "=SUM") != -1)
 			{
 				ddlDr.set("Selected", "true");
 			}
@@ -4039,7 +3930,7 @@ public class WF_Comm extends DirectoryPageBase
 			ddlDr = ddlDt.NewRow();
 			ddlDr.set("No", "AVG");
 			ddlDr.set("Name", "求平均");
-			if (ur.Vals.indexOf("@" + attr.Key + "=AVG") != -1)
+			if (ur.getVals().indexOf("@" + attr.getKey() + "=AVG") != -1)
 			{
 				ddlDr.set("Selected", "true");
 			}
@@ -4050,7 +3941,7 @@ public class WF_Comm extends DirectoryPageBase
 				ddlDr = ddlDt.NewRow();
 				ddlDr.set("No", "AMOUNT");
 				ddlDr.set("Name", "求累计");
-				if (ur.Vals.indexOf("@" + attr.Key + "=AMOUNT") != -1)
+				if (ur.getVals().indexOf("@" + attr.getKey() + "=AMOUNT") != -1)
 				{
 					ddlDr.set("Selected", "true");
 				}
@@ -4074,8 +3965,8 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.GetNewEntity;
-		Map map = ens.GetNewEntity.EnMapInTime;
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().EnMapInTime;
 		DataSet ds = new DataSet();
 
 		//获取注册信息表
@@ -4118,7 +4009,7 @@ public class WF_Comm extends DirectoryPageBase
 
 
 		//根据注册表信息获取里面的分组信息
-		String StateNumKey = ur.Vals.substring(ur.Vals.indexOf("@StateNumKey") + 1);
+		String StateNumKey = ur.getVals().substring(ur.getVals().indexOf("@StateNumKey") + 1);
 
 		String[] statNumKeys = StateNumKey.split("[@]", -1);
 		for (String ct : statNumKeys)
@@ -4139,7 +4030,7 @@ public class WF_Comm extends DirectoryPageBase
 			{
 				Attr attr = map.GetAttrByKey(paras[0]);
 				AttrsOfNum.Add(attr);
-				dataType = attr.MyDataType;
+				dataType = attr.getMyDataType();
 			}
 
 			if (this.GetRequestVal("DDL_" + paras[0]) == null)
@@ -4244,7 +4135,7 @@ public class WF_Comm extends DirectoryPageBase
 		String groupBy = " GROUP BY ";
 		Attrs AttrsOfGroup = new Attrs();
 
-		String SelectedGroupKey = ur.Vals.substring(0, ur.Vals.indexOf("@StateNumKey")); // 为保存操作状态的需要。
+		String SelectedGroupKey = ur.getVals().substring(0, ur.getVals().indexOf("@StateNumKey")); // 为保存操作状态的需要。
 		if (!DataType.IsNullOrEmpty(SelectedGroupKey))
 		{
 			boolean isSelected = false;
@@ -4305,7 +4196,7 @@ public class WF_Comm extends DirectoryPageBase
 		{
 			String whereLike = "";
 			boolean isAddAnd = false;
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
 				if (attr.IsNum)
 				{
@@ -4341,9 +4232,9 @@ public class WF_Comm extends DirectoryPageBase
 
 		//其余查询条件
 		//时间
-		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.DTFrom) == false)
+		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
-			String dtFrom = ur.DTFrom; // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
+			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
 			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			//按日期查询
@@ -4428,7 +4319,7 @@ public class WF_Comm extends DirectoryPageBase
 		}
 
 		// 组装成需要的 sql 
-		String sql = selectSQL + groupKey + " FROM " + map.PhysicsTable + where + groupBy + orderby;
+		String sql = selectSQL + groupKey + " FROM " + map.getPhysicsTable() + where + groupBy + orderby;
 
 
 		myps.SQL = sql;
@@ -4465,7 +4356,7 @@ public class WF_Comm extends DirectoryPageBase
 		dt.Rows.Clear();
 		for (Attr attr : AttrsOfGroup)
 		{
-			dt.Columns[attr.Key].DataType = String.class;
+			dt.Columns[attr.getKey()].DataType = String.class;
 		}
 		for (DataRow dr : dt1.Rows)
 		{
@@ -4480,18 +4371,18 @@ public class WF_Comm extends DirectoryPageBase
 			// 首先扩充列.
 			for (Attr attr : AttrsOfNum)
 			{
-				if (StateNumKey.indexOf(attr.Key + "=AMOUNT") == -1)
+				if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
 				{
 					continue;
 				}
 
-				switch (attr.MyDataType)
+				switch (attr.getMyDataType())
 				{
 					case DataType.AppInt:
-						dt.Columns.Add(attr.Key + "Amount", Integer.class);
+						dt.Columns.Add(attr.getKey() + "Amount", Integer.class);
 						break;
 					default:
-						dt.Columns.Add(attr.Key + "Amount", BigDecimal.class);
+						dt.Columns.Add(attr.getKey() + "Amount", BigDecimal.class);
 						break;
 				}
 			}
@@ -4501,7 +4392,7 @@ public class WF_Comm extends DirectoryPageBase
 			{
 				for (Attr attr : AttrsOfNum)
 				{
-					if (StateNumKey.indexOf(attr.Key + "=AMOUNT") == -1)
+					if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
 					{
 						continue;
 					}
@@ -4509,11 +4400,11 @@ public class WF_Comm extends DirectoryPageBase
 					//形成查询sql.
 					if (whereOfLJ.length() > 10)
 					{
-						sql = "SELECT SUM(" + attr.Key + ") FROM " + map.PhysicsTable + whereOfLJ + " AND ";
+						sql = "SELECT SUM(" + attr.getKey() + ") FROM " + map.getPhysicsTable() + whereOfLJ + " AND ";
 					}
 					else
 					{
-						sql = "SELECT SUM(" + attr.Key + ") FROM " + map.PhysicsTable + " WHERE ";
+						sql = "SELECT SUM(" + attr.getKey() + ") FROM " + map.getPhysicsTable() + " WHERE ";
 					}
 
 					for (Attr attr1 : AttrsOfGroup)
@@ -4537,13 +4428,13 @@ public class WF_Comm extends DirectoryPageBase
 					}
 
 					sql = sql.substring(0, sql.length() - "AND ".length());
-					if (attr.MyDataType == DataType.AppInt)
+					if (attr.getMyDataType() == DataType.AppInt)
 					{
-						dr.set(attr.Key + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
+						dr.set(attr.getKey() + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
 					}
 					else
 					{
-						dr.set(attr.Key + "Amount", DBAccess.RunSQLReturnValDecimal(sql, 0, 2));
+						dr.set(attr.getKey() + "Amount", DBAccess.RunSQLReturnValDecimal(sql, 0, 2));
 					}
 				}
 			}
@@ -4552,7 +4443,7 @@ public class WF_Comm extends DirectoryPageBase
 		// 为表扩充外键
 		for (Attr attr : AttrsOfGroup)
 		{
-			dt.Columns.Add(attr.Key + "T", String.class);
+			dt.Columns.Add(attr.getKey() + "T", String.class);
 		}
 		for (Attr attr : AttrsOfGroup)
 		{
@@ -4569,7 +4460,7 @@ public class WF_Comm extends DirectoryPageBase
 					}
 					catch (java.lang.Exception e)
 					{
-						dr.set(attr.Key + "T", " ");
+						dr.set(attr.getKey() + "T", " ");
 						continue;
 					}
 
@@ -4577,7 +4468,7 @@ public class WF_Comm extends DirectoryPageBase
 					{
 						if (se.IntKey == val)
 						{
-							dr.set(attr.Key + "T", se.Lab);
+							dr.set(attr.getKey() + "T", se.Lab);
 						}
 					}
 				}
@@ -4591,29 +4482,29 @@ public class WF_Comm extends DirectoryPageBase
 				try
 				{
 					myen.Retrieve();
-					dr.set(attr.Key + "T", myen.GetValStrByKey(attr.UIRefKeyText));
+					dr.set(attr.getKey() + "T", myen.GetValStrByKey(attr.UIRefKeyText));
 				}
 				catch (java.lang.Exception e2)
 				{
 					if (val == null || val.length() <= 1)
 					{
-						dr.set(attr.Key + "T", val);
+						dr.set(attr.getKey() + "T", val);
 					}
 					else if (val.substring(0, 2).equals("63"))
 					{
 						try
 						{
 							BP.Port.Dept Dept = new BP.Port.Dept(val);
-							dr.set(attr.Key + "T", Dept.Name);
+							dr.set(attr.getKey() + "T", Dept.Name);
 						}
 						catch (java.lang.Exception e3)
 						{
-							dr.set(attr.Key + "T", val);
+							dr.set(attr.getKey() + "T", val);
 						}
 					}
 					else
 					{
-						dr.set(attr.Key + "T", val);
+						dr.set(attr.getKey() + "T", val);
 					}
 				}
 			}
@@ -4645,8 +4536,8 @@ public class WF_Comm extends DirectoryPageBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.GetNewEntity;
-		Map map = ens.GetNewEntity.EnMapInTime;
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 		DataSet ds = new DataSet();
 
 		//获取注册信息表
@@ -4662,7 +4553,7 @@ public class WF_Comm extends DirectoryPageBase
 			return "info@<img src='../Img/Warning.gif' /><b><font color=red> 您没有选择分析的数据</font></b>";
 		}
 
-		String filePath = ExportGroupExcel(ds, en.EnDesc, ur.Vals);
+		String filePath = ExportGroupExcel(ds, en.getEnDesc(), ur.getVals());
 
 
 		return filePath;

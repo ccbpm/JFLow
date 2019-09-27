@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Sys.*;
+import BP.Tools.DataTableConvertJson;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
@@ -58,7 +59,7 @@ public class GPMPage extends DirectoryPageBase
 
 		try
 		{
-			String tempFile = BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + this.getFK_Emp() + ".jpg";
+			String tempFile = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + this.getFK_Emp() + ".jpg";
 			if ((new File(tempFile)).isFile() == true)
 			{
 				(new File(tempFile)).delete();
@@ -76,7 +77,7 @@ public class GPMPage extends DirectoryPageBase
 		}
 
 		//f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + this.FK_Emp + ".jpg");
-		HttpContextHelper.UploadFile(f, BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + this.getFK_Emp() + ".jpg");
+		HttpContextHelper.UploadFile(f, BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + this.getFK_Emp() + ".jpg");
 
 		// f.SaveAs(BP.Sys.SystemConfig.PathOfWebApp + "/DataUser/Siganture/" + WebUser.getName() + ".jpg");
 
@@ -101,7 +102,7 @@ public class GPMPage extends DirectoryPageBase
 	public final String Organization_Init()
 	{
 
-		BP.GPM.Depts depts = new GPM.Depts();
+		BP.GPM.Depts depts = new BP.GPM.Depts();
 		if (WebUser.getNo().equals("admin") == false)
 		{
 			depts.Retrieve("ParentNo",WebUser.getFK_Dept());
@@ -175,20 +176,20 @@ public class GPMPage extends DirectoryPageBase
 			orderByStr = " ORDER BY " + orderKey;
 		}
 
-		switch (DBAccess.AppCenterDBType)
+		switch (DBAccess.getAppCenterDBType())
 		{
-			case DBType.Oracle:
+			case Oracle:
 				int beginIndex = (pageNumber - 1) * pageSize + 1;
 				int endIndex = pageNumber * pageSize;
 
 				sql = "SELECT * FROM ( SELECT A.*, ROWNUM RN " +
 					"FROM (SELECT * FROM  " + dataSource + orderByStr + ") A WHERE ROWNUM <= " + endIndex + " ) WHERE RN >=" + beginIndex;
 				break;
-			case DBType.MSSQL:
+			case MSSQL:
 				sql = "SELECT TOP " + pageSize + " * FROM " + dataSource + " WHERE " + key + " NOT IN  ("
 				+ "SELECT TOP (" + pageSize + "*(" + pageNumber + "-1)) " + key + " FROM " + dataSource + " )" + orderByStr;
 				break;
-			case DBType.MySQL:
+			case MySQL:
 				pageNumber -= 1;
 				sql = "select * from  " + dataSource + orderByStr + " limit " + pageNumber + "," + pageSize;
 				break;

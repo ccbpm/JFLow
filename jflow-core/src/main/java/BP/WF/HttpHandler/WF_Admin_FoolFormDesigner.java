@@ -1,8 +1,10 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.ContextHolderUtils;
 import BP.Port.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Tools.*;
 import BP.WF.*;
 import BP.Web.*;
@@ -611,22 +613,22 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		return _STable;
 	}
 
-	public final String ImpTableField_Step2()
+	public final String ImpTableField_Step2() throws Exception
 	{
 
 		HashMap<String, Object> dictionary = new HashMap<String, Object>();
 
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
-		dictionary.put("SFDBSrc", src.ToDataTableField());
+		dictionary.put("SFDBSrc", src.ToDataTableField("SFDBSrc").Rows);
 
 		DataTable tables = src.GetTables();
-		dictionary.put("tables", tables);
+		dictionary.put("tables", tables.Rows);
 
 		DataTable tableColumns = src.GetColumns(this.getSTable());
-		dictionary.put("columns", tableColumns);
+		dictionary.put("columns", tableColumns.Rows);
 
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
-		dictionary.put("attrs", attrs.ToDataTableField("attrs"));
+		dictionary.put("attrs", attrs.ToDataTableField("attrs").Rows);
 		dictionary.put("STable", this.getSTable());
 
 		return BP.Tools.Json.ToJson(dictionary);
@@ -659,141 +661,107 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		return sCols;
 	}
 
-	public final String ImpTableField_Step3()
+	public final String ImpTableField_Step3() throws Exception
 	{
-		DataSet ds = new DataSet();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		List<DataRow> list = new LinkedList<DataRow>();
+		map.put("selectedColumns", list);
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var tableColumns = src.GetColumns(this.getSTable());
-		DataTable dt = tableColumns.Clone();
-		dt.TableName = "selectedColumns";
-		for (DataRow dr : tableColumns.Rows)
-		{
-			if (this.getSColumns().contains(dr.get("No")))
-			{
-				dt.Rows.add(dr.ItemArray);
+		DataTable tableColumns = src.GetColumns(this.getSTable());
+		String selectedColumns = "," + this.getSColumns() + ",";
+		for (DataRow dr : tableColumns.Rows) {
+			if (selectedColumns.indexOf("," + dr.getValue("No") + ",") != -1) {
+				list.add(dr);
 			}
 		}
-		ds.Tables.add(dt);
 		SysEnums ens = new SysEnums(MapAttrAttr.MyDataType);
-		ds.Tables.add(ens.ToDataTableField("MyDataType"));
+		map.put("MyDataType", ens.ToDataTableField("MyDataType").Rows);
 		SysEnums ens1 = new SysEnums(MapAttrAttr.LGType);
-		ds.Tables.add(ens1.ToDataTableField("LGType"));
-		return BP.Tools.Json.ToJson(ds);
+		map.put("LGType", ens1.ToDataTableField("LGType").Rows);
+		return BP.Tools.Json.ToJson(map);
 	}
 	/** 
 	 保存字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ImpTableField_Save()
+	public final String ImpTableField_Save() throws Exception
 	{
-		MapData md = new MapData();
-		md.setNo(this.getFK_MapData());
+		MapData md = new MapData(this.getFK_MapData());
 		md.RetrieveFromDBSources();
-
-		String msg = md.getName() + "导入字段信息:" + this.getFK_MapData();
+		String msg = "导入字段信息:";
 		boolean isLeft = true;
 		float maxEnd = md.getMaxEnd();
-
-		for (String name : HttpContextHelper.RequestParamKeys)
-		{
-			if (name.startsWith("HID_Idx_") == false)
-			{
-				continue;
-			}
-
-			String columnName = name.substring("HID_Idx_".length());
-
-			MapAttr ma = new MapAttr();
-			ma.setKeyOfEn(columnName);
-			ma.setFK_MapData(this.getFK_MapData());
-			ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
-			if (ma.getIsExits())
-			{
-				msg += "\t\n字段:" + ma.getKeyOfEn() + " - " + ma.getName() + "已存在.";
-				continue;
-			}
-
-			ma.setName(this.GetValFromFrmByKey("TB_Desc_" + columnName));
-			if (DataType.IsNullOrEmpty(ma.getName()))
-			{
-				ma.setName(ma.getKeyOfEn());
-			}
-
-			ma.setMyDataType(this.GetValIntFromFrmByKey("DDL_DBType_" + columnName));
-			ma.setMaxLen(this.GetValIntFromFrmByKey("TB_Len_" + columnName));
-			ma.setUIBindKey(this.GetValFromFrmByKey("TB_BindKey_" + columnName));
-			ma.setLGType(BP.En.FieldTypeS.Normal);
-
-			//绑定了外键或者枚举.
-			if (DataType.IsNullOrEmpty(ma.getUIBindKey()) == false)
-			{
-				SysEnums se = new SysEnums();
-				se.Retrieve(SysEnumAttr.EnumKey, ma.getUIBindKey());
-				if (se.size() > 0)
-				{
-					ma.setMyDataType(BP.DA.DataType.AppInt);
-					ma.setLGType(BP.En.FieldTypeS.Enum);
-					ma.setUIContralType(BP.En.UIContralType.DDL);
+		@SuppressWarnings("unchecked")
+		Enumeration<String> e = ContextHolderUtils.getRequest().getParameterNames();
+		while (e.hasMoreElements()) {
+			String name = e.nextElement();
+			if (name.startsWith("HID_Idx_")) {
+				String columnName = name.substring("HID_Idx_".length());
+				MapAttr ma = new MapAttr();
+				ma.setKeyOfEn(columnName);
+				ma.setName(this.GetRequestVal("TB_Desc_" + columnName));
+				ma.setFK_MapData(this.getFK_MapData());
+				ma.setMyDataType(this.GetRequestValInt("DDL_DBType_" + columnName));
+				ma.setMaxLen(this.GetRequestValInt("TB_Len_" + columnName));
+				ma.setUIBindKey(this.GetRequestVal("TB_BindKey_" + columnName));
+				ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
+				ma.setLGType(BP.En.FieldTypeS.Normal);
+				//
+				if (!"".equals(ma.getUIBindKey())) {
+					SysEnums se = new SysEnums();
+					se.Retrieve(SysEnumAttr.EnumKey, ma.getUIBindKey());
+					if (se.GetCountByKey(SysEnumAttr.EnumKey, ma.getUIBindKey()) > 0) {	// ?
+						ma.setMyDataType(BP.DA.DataType.AppInt);
+						ma.setLGType(BP.En.FieldTypeS.Enum);
+						ma.setUIContralType(BP.En.UIContralType.DDL);
+					}
+					SFTable tb = new SFTable();
+					tb.setNo(ma.getUIBindKey());
+					if (tb.IsExit(EntityNoNameAttr.No, ma.getUIBindKey())) {	// ?
+						ma.setMyDataType(BP.DA.DataType.AppString);
+						ma.setLGType(BP.En.FieldTypeS.FK);
+						ma.setUIContralType(BP.En.UIContralType.DDL);
+					}
 				}
-				SFTable tb = new SFTable();
-				tb.setNo(ma.getUIBindKey());
-				if (tb.getIsExits() == true)
-				{
-					ma.setMyDataType(DataType.AppString);
-					ma.setLGType(FieldTypeS.FK);
-					ma.setUIContralType(UIContralType.DDL);
+				if (ma.getMyDataType() == BP.DA.DataType.AppBoolean) {
+					ma.setUIContralType(BP.En.UIContralType.CheckBok);
 				}
+				if (ma.IsExit(EntityMyPKAttr.MyPK, this.getFK_MapData() + "_" + ma.getKeyOfEn())) {	// ?
+					msg += "\t\n字段:" + ma.getKeyOfEn() + " - " + ma.getName() + "已存在.";
+					continue;
+				}
+				ma.Insert();
+				msg += "\t\n字段:" + ma.getKeyOfEn() + " - " + ma.getName() + "加入成功.";
+				FrmLab lab = null;
+				if (isLeft) {
+					maxEnd = maxEnd + 40;
+					lab = new FrmLab();
+					lab.setMyPK(BP.DA.DBAccess.GenerGUID());
+					lab.setFK_MapData(this.getFK_MapData());
+					lab.setText(ma.getName());
+					lab.setX(40);
+					lab.setY(maxEnd);
+					lab.Insert();
+					ma.setX(lab.getX() + 80);
+					ma.setY(maxEnd);
+					ma.Update();
+				} else {
+					lab = new FrmLab();
+					lab.setMyPK(BP.DA.DBAccess.GenerGUID());
+					lab.setFK_MapData(this.getFK_MapData());
+					lab.setText(ma.getName());
+					lab.setX(350);
+					lab.setY(maxEnd);
+					lab.Insert();
+					ma.setX(lab.getX() + 80);
+					ma.setY(maxEnd);
+					ma.Update();
+				}
+				isLeft = !isLeft;
 			}
-
-			if (ma.getMyDataType() == BP.DA.DataType.AppBoolean)
-			{
-				ma.setUIContralType(UIContralType.CheckBok);
-			}
-
-			ma.Insert();
-
-			msg += "\t\n字段:" + ma.getKeyOfEn() + " - " + ma.getName() + "加入成功.";
-
-			//生成lab.
-			FrmLab lab = null;
-			if (isLeft == true)
-			{
-				maxEnd = maxEnd + 40;
-				/* 是否是左边 */
-				lab = new FrmLab();
-				lab.setMyPK( BP.DA.DBAccess.GenerGUID());
-				lab.setFK_MapData(this.getFK_MapData());
-				lab.setText(ma.getName());
-				lab.setX(40);
-				lab.setY(maxEnd);
-				lab.Insert();
-
-				ma.setX(lab.getX() + 80);
-				ma.setY(maxEnd);
-				ma.Update();
-			}
-			else
-			{
-				lab = new FrmLab();
-				lab.setMyPK( BP.DA.DBAccess.GenerGUID());
-				lab.setFK_MapData( this.getFK_MapData());
-				lab.setText ( ma.getName());
-				lab.setX(350);
-				lab.setY(maxEnd);
-				lab.Insert();
-
-				ma.setX(lab.getX() + 80);
-				ma.setY(maxEnd);
-				ma.Update();
-			}
-			isLeft = !isLeft;
 		}
-
-		//更新名称.
-		DBAccess.RunSQL("UPDATE Sys_MapAttr SET Name=KeyOfEn WHERE Name=NULL OR Name='' ");
-
 		md.ResetMaxMinXY();
 		return msg;
 	}
@@ -828,11 +796,12 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 框架信息保存.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MapFrame_Save()
+	public final String MapFrame_Save() throws Exception
 	{
 		MapFrame mf = new MapFrame();
-		Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(mf);
+		Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(mf,ContextHolderUtils.getRequest());
 		mf = tempVar instanceof MapFrame ? (MapFrame)tempVar : null;
 		mf.setFK_MapData(this.getFK_MapData());
 
@@ -996,8 +965,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 从表里选择字段.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FieldTypeListChoseOneField_Init()
+	public final String FieldTypeListChoseOneField_Init() throws Exception
 	{
 		String ptable = "";
 
@@ -1014,11 +984,11 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 		//获得原始数据.
-		DataTable dt = BP.DA.DBAccess.GetTableSchema(ptable, false);
+		DataTable dt = BP.DA.DBAccess.GetTableSchema(ptable);
 
 		//创建样本.
-		DataTable mydt = BP.DA.DBAccess.GetTableSchema(ptable, false);
-		mydt.Rows.Clear();
+		DataTable mydt = BP.DA.DBAccess.GetTableSchema(ptable);
+		mydt.Rows.clear();
 
 		//获得现有的列..
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
@@ -1092,8 +1062,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 字段选择.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FieldTypeSelect_Create()
+	public final String FieldTypeSelect_Create() throws Exception
 	{
 		String no = this.GetRequestVal("KeyOfEn");
 		if (no.equals("No"))
@@ -1264,7 +1235,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 			MapAttrDT dt = new MapAttrDT();
 			dt.setMyPK( attr.getMyPK());
 			dt.RetrieveFromDBSources();
-			dt.setFormat(0;
+			dt.setFormat(0);
 			dt.Update();
 
 
@@ -1356,7 +1327,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		return attr.ToJson();
 	}
-	public final String FieldInitEnum()
+	public final String FieldInitEnum() throws Exception
 	{
 		MapAttr attr = new MapAttr();
 		attr.setKeyOfEn (this.getKeyOfEn());
@@ -1397,7 +1368,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var model = attr.getRBShowModel();
+		int model = attr.getRBShowModel();
 		attr.setRBShowModel(model);
 
 		return attr.ToJson();
@@ -1925,11 +1896,14 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	/** 
 	 下载表单.
 	*/
-	public final void DownTempFrm()
+	public final String DownTempFrm()
 	{
-		String fileFullName = SystemConfig.PathOfWebApp + "/Temp/" + this.getFK_MapData() + ".xml";
-
-		HttpContextHelper.ResponseWriteFile(fileFullName, this.getFK_MapData() + ".xml");
+		
+		return "";
+		
+//		String fileFullName = SystemConfig.getPathOfWebApp() + "/Temp/" + this.getFK_MapData() + ".xml";
+//
+//		HttpContextHelper.ResponseWriteFile(fileFullName, this.getFK_MapData() + ".xml");
 	}
 
 
@@ -2024,8 +1998,9 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 保存.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Attachment_Save()
+	public final String Attachment_Save() throws Exception
 	{
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(this.getFK_MapData());
@@ -2034,7 +2009,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		ath.setMyPK(this.getFK_MapData() + "_" + this.getAth());
 
 		int i = ath.RetrieveFromDBSources();
-		Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(ath);
+		Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(ath, ContextHolderUtils.getRequest());
 		ath = tempVar instanceof FrmAttachment ? (FrmAttachment)tempVar : null;
 		if (i == 0)
 		{
@@ -2137,7 +2112,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		sftable.Save();
 		return "保存成功！";
 	}
-	public final String SFGuide_Getmtds()
+	public final String SFGuide_Getmtds() throws Exception
 	{
 		String src = this.GetRequestVal("src"); //context.Request.QueryString["src"];
 		if (DataType.IsNullOrEmpty(src))
@@ -2154,7 +2129,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 
 		ArrayList<WSMethod> mtds = GetWebServiceMethods(sr);
 
-		return LitJson.JsonMapper.ToJson(mtds);
+		return Json.ToJson(mtds);
 	}
 	public final String SFGuide_GetCols() throws Exception
 	{
@@ -2211,23 +2186,21 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 	 获得clsss列表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SFGuide_GetClass()
+	public final String SFGuide_GetClass() throws Exception
 	{
 		String sfno = this.GetRequestVal("sfno"); // context.Request.QueryString["sfno"];
 		String stru = this.GetRequestVal("struct"); //context.Request.QueryString["struct"];
 		int st = 0;
-
-		tangible.OutObject<Integer> tempOut_st = new tangible.OutObject<Integer>();
-		if (DataType.IsNullOrEmpty(stru) || !tangible.TryParseHelper.tryParseInt(stru, tempOut_st))
+		RefObject<Integer> tempRef_st = new RefObject<Integer>(st);
+		boolean tempVar = StringUtils.isEmpty(stru) || !TryParse(stru);
+			st = tempRef_st.argvalue;
+		if (tempVar)
 		{
-		st = tempOut_st.argValue;
 			throw new RuntimeException("err@参数不正确.");
 		}
-	else
-	{
-		st = tempOut_st.argValue;
-	}
+	
 
 		String error = "";
 		ArrayList arr = null;
@@ -2250,7 +2223,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 
 		StringBuilder s = new StringBuilder("[");
-		for (BP.En.Entity en : arr)
+		for (Object en : arr)
 		{
 			try
 			{
@@ -2259,21 +2232,21 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 					continue;
 				}
 
-				ens = en.getGetNewEntities();
+				ens = ((Entity) en).getGetNewEntities();
 				if (ens == null)
 				{
 					continue;
 				}
 
-				Object tempVar = sfs.GetEntityByKey(ens.toString());
-				sf = tempVar instanceof SFTable ? (SFTable)tempVar : null;
+				Object tempVar2 = sfs.GetEntityByKey(ens.toString());
+				sf = tempVar2 instanceof SFTable ? (SFTable)tempVar2 : null;
 
 				if ((sf != null && !sfno.equals(sf.getNo())) || DataType.IsNullOrEmpty(ens.toString()))
 				{
 					continue;
 				}
 
-				s.append(String.format("{\"NO\":\"%1$s\",\"NAME\":\"%1$s[%2$s]\",\"DESC\":\"%2$s\"},", ens, en.getEnDesc()));
+				s.append(String.format("{\"NO\":\"%1$s\",\"NAME\":\"%1$s[%2$s]\",\"DESC\":\"%2$s\"},", ens, ((Entity) en).getEnDesc()));
 			}
 			catch (java.lang.Exception e)
 			{
@@ -2282,45 +2255,62 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 		}
 		return StringHelper.trimEnd(s.toString(), ',') + "]";
 	}
+	
+	/**
+	 * 转换数值是否成功
+	 * @param st
+	 * @return
+	 */
+	public final boolean TryParse(String st){
+		int a = 0;
+		try {
+			a = Integer.parseInt(st);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	/** 
 	 获取数据源列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SFGuide_GetSrcs()
+	public final String SFGuide_GetSrcs() throws Exception
 	{
 
-		String type = this.GetRequestVal("type");
-		int itype;
+		String type = ContextHolderUtils.getRequest().getParameter("type");
+		int itype = 0;
 		boolean onlyWS = false;
 
 		SFDBSrcs srcs = new SFDBSrcs();
-		tangible.OutObject<Integer> tempOut_itype = new tangible.OutObject<Integer>();
-		if (!DataType.IsNullOrEmpty(type) && tangible.TryParseHelper.tryParseInt(type, tempOut_itype))
+		RefObject<Integer> tempRef_itype = new RefObject<Integer>(itype);
+		boolean tempVar = !StringUtils.isEmpty(type) && TryParse(type);
+			itype = tempRef_itype.argvalue;
+		if (tempVar)
 		{
-		itype = tempOut_itype.argValue;
 			onlyWS = true;
 			srcs.Retrieve(SFDBSrcAttr.DBSrcType, itype);
 		}
 		else
 		{
-		itype = tempOut_itype.argValue;
 			srcs.RetrieveAll();
 		}
 
 		DataTable dt = srcs.ToDataTableField();
 
-		for (DataColumn col : dt.Columns)
+		/*for (DataColumn col : dt.Columns)
 		{
 			col.ColumnName = col.ColumnName.toUpperCase();
-		}
+		}*/
 
 		if (onlyWS == false)
 		{
-			ArrayList<DataRow> wsRows = new ArrayList<DataRow>();
+			java.util.ArrayList<DataRow> wsRows = new java.util.ArrayList<DataRow>();
 			for (DataRow r : dt.Rows)
 			{
-				if (Equals(r.get("DBSrcType"), (int)DBSrcType.WebServices))
+				if (r.getValue("DBSRCTYPE").equals(DBSrcType.WebServices.getValue()))
 				{
 					wsRows.add(r);
 				}
@@ -2331,7 +2321,7 @@ public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
 				dt.Rows.remove(r);
 			}
 		}
-		return BP.Tools.Json.ToJson(dt);
+		return BP.Tools.Json.ToJsonUpper(dt);
 	}
 
 		///#endregion

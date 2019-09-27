@@ -1,7 +1,10 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonFileUtils;
 import BP.Sys.*;
+import BP.Tools.DealString;
+import BP.Tools.StringHelper;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
@@ -10,7 +13,11 @@ import BP.WF.Template.*;
 import BP.NetPlatformImpl.*;
 import BP.WF.*;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.*;
 
 /** 
@@ -87,7 +94,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	{
 		//错误信息
 		String errInfo = "";
-		EntityMyPK en = (EntityMyPK)ens.GetNewEntity;
+		EntityMyPK en = (EntityMyPK)ens.getNewEntity();
 		//定义属性.
 		Attrs attrs = en.getEnMap().getAttrs();
 
@@ -104,16 +111,16 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			ens.ClearTable();
 			for (DataRow dr : dt.Rows)
 			{
-				en = (EntityMyPK)ens.GetNewEntity;
+				en = (EntityMyPK)ens.getNewEntity();
 				//给实体赋值
 				errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 0);
 				//获取PKVal
-				en.PKVal = en.InitMyPKVals();
+				en.setPKVal(en.InitMyPKVals());
 				if (en.RetrieveFromDBSources() == 0)
 				{
 					en.Insert();
 					count++;
-					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.PKVal + "的导入成功</span><br/>";
+					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
 				}
 
 			}
@@ -128,23 +135,23 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		{
 			for (DataRow dr : dt.Rows)
 			{
-				en = (EntityMyPK)ens.GetNewEntity;
+				en = (EntityMyPK)ens.getNewEntity();
 				//给实体赋值
 				errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 1);
 
 				//获取PKVal
-				en.PKVal = en.InitMyPKVals();
+				en.setPKVal(en.InitMyPKVals());
 				if (en.RetrieveFromDBSources() == 0)
 				{
 					en.Insert();
 					count++;
-					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.PKVal + "的导入成功</span><br/>";
+					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的导入成功</span><br/>";
 				}
 				else
 				{
 					changeCount++;
 					SetEntityAttrVal("", dr, attrs, en, dt, 1);
-					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.PKVal + "的更新成功</span><br/>";
+					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的更新成功</span><br/>";
 				}
 			}
 		}
@@ -160,149 +167,154 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	*/
 	public final String ImpData_Done()
 	{
+		HttpServletRequest request = getRequest();
+//    	MultipartFile multiFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");  	
+//        if (multiFile==null)
+//            return "err@请选择要导入的数据信息。";
+    	long filesSize = CommonFileUtils.getFilesSize(request, "File_Upload");
+    	if(filesSize == 0){
+    		return "err@请选择要导入的数据信息。";
+    	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
-		if (files.size() == 0)
-		{
-			return "err@请选择要导入的数据信息。";
+        String errInfo="";
+
+        String ext = ".xls";
+//        String fileName = multiFile.getOriginalFilename();
+        String fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
+        if (fileName.contains(".xlsx"))
+            ext = ".xlsx";
+
+
+        //设置文件名
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String currDate = sdf.format(new Date());
+		
+        String fileNewName = currDate + ext;
+        //文件存放路径
+        String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "\\" + fileNewName;
+        File tempFile = new File(filePath);
+        if(tempFile.exists()){
+        	tempFile.delete();
 		}
-
-		String errInfo = "";
-
-		String ext = ".xls";
-		String fileName = (new File(files[0].FileName)).getName();
-		if (fileName.contains(".xlsx"))
-		{
-			ext = ".xlsx";
-		}
-
-
-		//设置文件名
-		String fileNewName = LocalDateTime.now().toString("yyyyMMddHHmmssff") + ext;
-
-		//文件存放路径
-		String filePath = BP.Sys.SystemConfig.PathOfTemp + "\\" + fileNewName;
-		//files[0].SaveAs(filePath);
-		HttpContextHelper.UploadFile(files[0], filePath);
-		//从excel里面获得数据表.
-		DataTable dt = BP.DA.DBLoad.ReadExcelFileToDataTable(filePath);
-
-		//删除临时文件
-		(new File(filePath)).delete();
-
-		if (dt.Rows.size() == 0)
-		{
-			return "err@无导入的数据";
-		}
-
-		//获得entity.
-		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
-
-		if (en.PK.equals("MyPK") == true)
-		{
-			return this.ImpData_DoneMyPK(ens, dt);
-		}
-
-		if (en.IsNoEntity == false)
-		{
-			return "err@必须是EntityNo或者EntityMyPK实体,才能导入.";
-		}
-
-		String noColName = ""; //实体列的编号名称.
-		String nameColName = ""; //实体列的名字名称.
-
-		Attr attr = en.EnMap.GetAttrByKey("No");
-		noColName = attr.Desc;
-		BP.En.Map map = en.EnMap;
-		String codeStruct = map.CodeStruct;
-		attr = map.GetAttrByKey("Name");
-		nameColName = attr.Desc;
-
-		//定义属性.
-		Attrs attrs = en.getEnMap().getAttrs();
-
-		int impWay = this.GetRequestValInt("ImpWay");
-
-
-			///#region 清空方式导入.
-		//清空方式导入.
-		int count = 0; //导入的行数
-		int changeCount = 0; //更新的行数
-		String successInfo = "";
-		if (impWay == 0)
-		{
-			ens.ClearTable();
-			for (DataRow dr : dt.Rows)
-			{
-				String no = dr.get(noColName).toString();
-				String name = dr.get(nameColName).toString();
-
-				//判断是否是自增序列，序列的格式
-				if (!DataType.IsNullOrEmpty(codeStruct))
-				{
-					no = tangible.StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
-				}
-
-				EntityNoName myen = ens.GetNewEntity instanceof EntityNoName ? (EntityNoName)ens.GetNewEntity : null;
-				myen.No = no;
-				if (myen.IsExits == true)
-				{
-					errInfo += "err@编号[" + no + "][" + name + "]重复.";
-					continue;
-				}
-
-				myen.setName ( name;
-
-				en = ens.GetNewEntity;
-
-				//给实体赋值
-				errInfo += SetEntityAttrVal(no, dr, attrs, en, dt, 0);
-				count++;
-				successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的导入成功</span><br/>";
-			}
+		try {
+			//multiFile.transferTo(tempFile);
+			CommonFileUtils.upload(request, "File_Upload", tempFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@执行失败";
 		}
 
 
-			///#endregion 清空方式导入.
+        //从excel里面获得数据表.
+        DataTable dt = BP.DA.DBLoad.GetTableByExt(filePath);
+
+        //删除临时文件
+        tempFile.delete();
+
+        if (dt.Rows.size()==0)
+            return "err@无导入的数据";
+
+        //获得entity.
+        Entities ens = ClassFactory.GetEns(this.getEnsName());
+        Entity en =ens.getNewEntity();
+        
+        if(en.getPK().equals("MyPK") == true)
+            return this.ImpData_DoneMyPK(ens, dt);
+        
+        if (en.getIsNoEntity()==false)
+            return "err@必须是EntityNo是实体";
+
+        String noColName = ""; //实体列的编号名称.
+        String nameColName = ""; //实体列的名字名称.
+        BP.En.Map map = en.getEnMap();
+        String codeStruct = map.getCodeStruct();
+        Attr attr=map.GetAttrByKey("No");
+        noColName = attr.getDesc(); //
+
+        attr=en.getEnMap().GetAttrByKey("Name");
+        nameColName = attr.getDesc(); //
+
+        //定义属性.
+        Attrs attrs = en.getEnMap().getAttrs();
+
+        int impWay = this.GetRequestValInt("ImpWay");
+
+        ///#region 清空方式导入.
+        //清空方式导入.
+        int count =0;//导入的行数
+        int changeCount = 0;//更新的行数
+        String successInfo="";
+        if (impWay==0)
+        {
+            ens.ClearTable();
+            for(DataRow dr : dt.Rows)
+            {
+                String no = dr.getValue(noColName).toString();
+                //判断是否是自增序列，序列的格式
+                if(!StringHelper.isNullOrEmpty(codeStruct)){
+                	no = DealString.padLeft(no,Integer.parseInt(codeStruct),'0');
+                }
+                
+                String name = dr.getValue(nameColName).toString();
+
+                EntityNoName myen = (EntityNoName) ens.getNewEntity();
+                myen.setNo(no);
+                if (myen.getIsExits()==true)
+                {
+                    errInfo += "err@编号["+no+"]["+name+"]重复.";
+                    continue;
+                }
+               
+                myen.setName(name);
+
+                 en = ens.getNewEntity();
+
+                //给实体赋值
+                errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
+                count++;
+                successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的导入成功</span><br/>";
+                
+            }
+        }
+
+        ///#endregion 清空方式导入.
 
 
-			///#region 更新方式导入
-		if (impWay == 1 || impWay == 2)
-		{
-			for (DataRow dr : dt.Rows)
-			{
-				String no = dr.get(noColName).toString();
-				String name = dr.get(nameColName).toString();
-				//判断是否是自增序列，序列的格式
-				if (!DataType.IsNullOrEmpty(codeStruct))
-				{
-					no = tangible.StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
-				}
-				EntityNoName myen = ens.GetNewEntity instanceof EntityNoName ? (EntityNoName)ens.GetNewEntity : null;
-				myen.No = no;
-				if (myen.IsExits == true)
-				{
-					//给实体赋值
-					errInfo += SetEntityAttrVal(no, dr, attrs, myen, dt, 1);
-					changeCount++;
-					successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的更新成功</span><br/>";
-					continue;
-				}
-				myen.setName ( name;
+        ///#region 更新方式导入
+        if (impWay == 1 || impWay == 2)
+        {
+            for(DataRow dr : dt.Rows)
+            {
+            	String no = dr.getValue(noColName).toString();
+            	//判断是否是自增序列，序列的格式
+                if(!StringHelper.isNullOrEmpty(codeStruct)){
+                	no = DealString.padLeft(no,Integer.parseInt(codeStruct),'0');
+                }
+                String name = dr.getValue(nameColName).toString();
 
-				//给实体赋值
-				errInfo += SetEntityAttrVal(no, dr, attrs, en, dt, 0);
-				count++;
-				successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的导入成功</span><br/>";
-			}
-		}
+                EntityNoName myen = (EntityNoName) ens.getNewEntity();
+                myen.setNo(no);
+                if (myen.getIsExits() == true)
+                {
+                    //给实体赋值
+                    errInfo += SetEntityAttrVal(no,dr, attrs, myen, dt,1);
+                    changeCount++;
+                    successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的更新成功</span><br/>";
+                    continue;
+                }
+                myen.setName(name);
 
-			///#endregion
+                //给实体赋值
+                errInfo += SetEntityAttrVal(no,dr, attrs, en, dt,0);
+                count++;
+                successInfo +="&nbsp;&nbsp;<span>"+noColName+"为"+no+","+nameColName+"为"+name+"的导入成功</span><br/>";
+            }
+        }
+       /// #endregion
 
-		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
-	}
+           return "errInfo="+errInfo+"@Split"+"count="+count+"@Split"+"successInfo="+successInfo+"@Split"+"changeCount="+changeCount;
+
+}
 
 	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType)
 	{
@@ -310,86 +322,86 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		//按照属性赋值.
 		for (Attr item : attrs)
 		{
-			if (item.Key.equals("No"))
+			if (item.getKey().equals("No"))
 			{
-				en.SetValByKey(item.Key, no);
+				en.SetValByKey(item.getKey(), no);
 				continue;
 			}
-			if (item.Key.equals("Name"))
+			if (item.getKey().equals("Name"))
 			{
-				en.SetValByKey(item.Key, dr.get(item.Desc).toString());
+				en.SetValByKey(item.getKey(), dr.get(item.getDesc()).toString());
 				continue;
 			}
 
 
-			if (dt.Columns.Contains(item.Desc) == false)
+			if (dt.Columns.contains(item.getDesc()) == false)
 			{
 				continue;
 			}
 
 			//枚举处理.
-			if (item.MyFieldType == FieldType.Enum)
+			if (item.getMyFieldType() == FieldType.Enum)
 			{
-				String val = dr.get(item.Desc).toString();
+				String val = dr.get(item.getDesc()).toString();
 
 				SysEnum se = new SysEnum();
-				int i = se.Retrieve(SysEnumAttr.EnumKey, item.UIBindKey, SysEnumAttr.Lab, val);
+				int i = se.Retrieve(SysEnumAttr.EnumKey, item.getUIBindKey(), SysEnumAttr.Lab, val);
 
 				if (i == 0)
 				{
-					errInfo += "err@枚举[" + item.Key + "][" + item.Desc + "]，值[" + val + "]不存在.";
+					errInfo += "err@枚举[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
 					continue;
 				}
 
-				en.SetValByKey(item.Key, se.IntKey);
+				en.SetValByKey(item.getKey(), se.getIntKey());
 				continue;
 			}
 
 			//外键处理.
-			if (item.MyFieldType == FieldType.FK)
+			if (item.getMyFieldType() == FieldType.FK)
 			{
-				String val = dr.get(item.Desc).toString();
-				Entity attrEn = item.HisFKEn;
+				String val = dr.get(item.getDesc()).toString();
+				Entity attrEn = item.getHisFKEn();
 				int i = attrEn.Retrieve("Name", val);
 				if (i == 0)
 				{
-					errInfo += "err@外键[" + item.Key + "][" + item.Desc + "]，值[" + val + "]不存在.";
+					errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]不存在.";
 					continue;
 				}
 
 				if (i != 1)
 				{
-					errInfo += "err@外键[" + item.Key + "][" + item.Desc + "]，值[" + val + "]重复..";
+					errInfo += "err@外键[" + item.getKey() + "][" + item.getDesc() + "]，值[" + val + "]重复..";
 					continue;
 				}
 
 				//把编号值给他.
-				en.SetValByKey(item.Key, attrEn.GetValByKey("No"));
+				en.SetValByKey(item.getKey(), attrEn.GetValByKey("No"));
 				continue;
 			}
 
 			//boolen类型的处理..
-			if (item.MyDataType == DataType.AppBoolean)
+			if (item.getMyDataType() == DataType.AppBoolean)
 			{
-				String val = dr.get(item.Desc).toString();
+				String val = dr.get(item.getDesc()).toString();
 				if (val.equals("是") || val.equals("有"))
 				{
-					en.SetValByKey(item.Key, 1);
+					en.SetValByKey(item.getKey(), 1);
 				}
 				else
 				{
-					en.SetValByKey(item.Key, 0);
+					en.SetValByKey(item.getKey(), 0);
 				}
 				continue;
 			}
 
-			String myval = dr.get(item.Desc).toString();
-			en.SetValByKey(item.Key, myval);
+			String myval = dr.get(item.getDesc()).toString();
+			en.SetValByKey(item.getKey(), myval);
 		}
 
 		try
 		{
-			if (en.IsNoEntity == true)
+			if (en.getIsNoEntity() == true)
 			{
 				if (saveType == 0)
 				{
@@ -427,7 +439,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		String expFileName = "all-wcprops,dir-prop-base,entries";
 		String expDirName = ".svn";
 
-		String pathDir = BP.Sys.SystemConfig.PathOfData + "\\JSLib\\";
+		String pathDir = BP.Sys.SystemConfig.getPathOfData() + "/JSLib/";
 
 		String html = "";
 		html += "<fieldset>";
@@ -436,7 +448,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 		//.AddFieldSet();
 		File dir = new File(pathDir);
-		File[] dirs = dir.GetDirectories();
+		File[] dirs = new File(pathDir).listFiles();
 		for (File mydir : dirs)
 		{
 			if (expDirName.contains(mydir.getName()))
@@ -446,26 +458,29 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			File[] fls = mydir.GetFiles();
-			for (File fl : fls.ToJavaList())
-			{
-				if (expFileName.contains(fl.getName()))
+			if(mydir.isDirectory()){
+				File[] fls = mydir.listFiles();
+				for (File fl : fls)
 				{
-					continue;
+					if (expFileName.contains(fl.getName()))
+					{
+						continue;
+					}
+
+					html += "<li>" + fl.getName() + "</li>";
 				}
 
-				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
 		html += "</fieldset>";
 
-		pathDir = BP.Sys.SystemConfig.PathOfDataUser + "\\JSLib\\";
+		pathDir = BP.Sys.SystemConfig.getPathOfDataUser() + "/JSLib/";
 		html += "<fieldset>";
 		html += "<legend>" + "用户自定义函数. 位置:" + pathDir + "</legend>";
 
 		dir = new File(pathDir);
-		dirs = dir.GetDirectories();
+		dirs = dir.listFiles();
 		for (File mydir : dirs)
 		{
 			if (expDirName.contains(mydir.getName()))
@@ -475,14 +490,16 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			File[] fls = mydir.GetFiles();
-			for (File fl : fls.ToJavaList())
-			{
-				if (expFileName.contains(fl.getName()))
+			if(mydir.isDirectory()){
+				File[] fls = mydir.listFiles();
+				for (File fl : fls)
 				{
-					continue;
+					if (expFileName.contains(fl.getName()))
+					{
+						continue;
+					}
+					html += "<li>" + fl.getName() + "</li>";
 				}
-				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
@@ -497,7 +514,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		try
 		{
 			BP.En.Entity en = BP.En.ClassFactory.GetEn(this.getEnName());
-			BP.En.Map map = en.EnMap;
+			BP.En.Map map = en.getEnMap();
 			en.CheckPhysicsTable();
 			String msg = "";
 			// string msg = "";
@@ -510,27 +527,27 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 			DataTable dt = new DataTable();
 			Entity refen = null;
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
-				if (attr.MyFieldType == FieldType.FK || attr.MyFieldType == FieldType.PKFK)
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
 				{
-					refen = ClassFactory.GetEns(attr.UIBindKey).GetNewEntity;
-					table = refen.EnMap.PhysicsTable;
+					refen = ClassFactory.GetEns(attr.getUIBindKey()).getNewEntity();
+					table = refen.getEnMap().getPhysicsTable();
 					sql1 = "SELECT COUNT(*) FROM " + table;
 
-					Attr pkAttr = refen.EnMap.GetAttrByKey(refen.PK);
-					sql2 = "SELECT COUNT( distinct " + pkAttr.Field + ") FROM " + table;
+					Attr pkAttr = refen.getEnMap().GetAttrByKey(refen.getPK());
+					sql2 = "SELECT COUNT( distinct " + pkAttr.getField() + ") FROM " + table;
 
 					COUNT1 = DBAccess.RunSQLReturnValInt(sql1);
 					COUNT2 = DBAccess.RunSQLReturnValInt(sql2);
 
 					if (COUNT1 != COUNT2)
 					{
-						msg += "<BR>@关联表(" + refen.EnMap.EnDesc + ")主键不唯一，它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
-						msg += "@SQL= SELECT * FROM (  select " + refen.PK + ",  COUNT(*) AS NUM  from " + table + " GROUP BY " + refen.PK + " ) WHERE NUM!=1";
+						msg += "<BR>@关联表(" + refen.getEnMap().getEnDesc() + ")主键不唯一，它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
+						msg += "@SQL= SELECT * FROM (  select " + refen.getPK() + ",  COUNT(*) AS NUM  from " + table + " GROUP BY " + refen.getPK() + " ) WHERE NUM!=1";
 					}
 
-					sql = "SELECT " + attr.Field + " FROM " + map.PhysicsTable + " WHERE " + attr.Field + " NOT IN (SELECT " + pkAttr.Field + " FROM " + table + " )";
+					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN (SELECT " + pkAttr.getField() + " FROM " + table + " )";
 					dt = DBAccess.RunSQLReturnTable(sql);
 					if (dt.Rows.size() == 0)
 					{
@@ -541,9 +558,9 @@ public class WF_Comm_Sys extends DirectoryPageBase
 						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.getDesc() + " sql= " + sql;
 					}
 				}
-				if (attr.MyFieldType == FieldType.PKEnum || attr.MyFieldType == FieldType.Enum)
+				if (attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.Enum)
 				{
-					sql = "SELECT " + attr.Field + " FROM " + map.PhysicsTable + " WHERE " + attr.Field + " NOT IN ( select Intkey from sys_enum WHERE ENUMKEY='" + attr.UIBindKey + "' )";
+					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN ( select Intkey from sys_enum WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
 					dt = DBAccess.RunSQLReturnTable(sql);
 					if (dt.Rows.size() == 0)
 					{
@@ -557,27 +574,27 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			}
 
 			// 检查pk是否一致。
-			if (en.PKs.Length == 1)
+			if (en.getPKs().length == 1)
 			{
-				sql1 = "SELECT COUNT(*) FROM " + map.PhysicsTable;
+				sql1 = "SELECT COUNT(*) FROM " + map.getPhysicsTable();
 				COUNT1 = DBAccess.RunSQLReturnValInt(sql1);
 
-				Attr attrMyPK = en.EnMap.GetAttrByKey(en.PK);
-				sql2 = "SELECT COUNT(DISTINCT " + attrMyPK.Field + ") FROM " + map.PhysicsTable;
+				Attr attrMyPK = en.getEnMap().GetAttrByKey(en.getPK());
+				sql2 = "SELECT COUNT(DISTINCT " + attrMyPK.getField() + ") FROM " + map.getPhysicsTable();
 				COUNT2 = DBAccess.RunSQLReturnValInt(sql2);
 				if (COUNT1 != COUNT2)
 				{
-					msg += "@物理表(" + map.EnDesc + ")中主键不唯一;它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
-					msg += "@SQL= SELECT * FROM (  select " + en.PK + ",  COUNT(*) AS NUM  from " + map.PhysicsTable + " GROUP BY " + en.PK + " ) WHERE NUM!=1";
+					msg += "@物理表(" + map.getEnDesc() + ")中主键不唯一;它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
+					msg += "@SQL= SELECT * FROM (  select " + en.getPK() + ",  COUNT(*) AS NUM  from " + map.getPhysicsTable() + " GROUP BY " + en.getPK() + " ) WHERE NUM!=1";
 				}
 			}
 
 			if (msg.equals(""))
 			{
-				return map.EnDesc + ":数据体检成功,完全正确.";
+				return map.getEnDesc() + ":数据体检成功,完全正确.";
 			}
 
-			String info = map.EnDesc + ":数据体检信息：体检失败" + msg;
+			String info = map.getEnDesc() + ":数据体检信息：体检失败" + msg;
 			return info;
 
 		}
@@ -589,14 +606,14 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	public final String SystemClass_Fields()
 	{
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 
-		BP.En.Map map = en.EnMap;
+		BP.En.Map map = en.getEnMap();
 		en.CheckPhysicsTable();
 
 		String html = "<table>";
 
-		html += "<caption>数据结构" + map.EnDesc + "," + map.PhysicsTable + "</caption>";
+		html += "<caption>数据结构" + map.getEnDesc() + "," + map.getPhysicsTable() + "</caption>";
 
 		html += "<tr>";
 		html += "<th>序号</th>";
@@ -611,9 +628,9 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		html += "</tr>";
 
 		int i = 0;
-		for (Attr attr : map.Attrs)
+		for (Attr attr : map.getAttrs())
 		{
-			if (attr.MyFieldType == FieldType.RefText)
+			if (attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}
@@ -621,32 +638,32 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			html += "<tr>";
 			html += "<td>" + i + "</td>";
 			html += "<td>" + attr.getDesc() + "</td>";
-			html += "<td>" + attr.Key + "</td>";
-			html += "<td>" + attr.Field + "</td>";
-			html += "<td>" + attr.MyDataTypeStr + "</td>";
-			html += "<td>" + attr.MyFieldType.toString() + "</td>";
+			html += "<td>" + attr.getKey() + "</td>";
+			html += "<td>" + attr.getField() + "</td>";
+			html += "<td>" + attr.getMyDataTypeStr() + "</td>";
+			html += "<td>" + attr.getMyFieldType().toString() + "</td>";
 
-			if (attr.MyDataType == DataType.AppBoolean || attr.MyDataType == DataType.AppDouble || attr.MyDataType == DataType.AppFloat || attr.MyDataType == DataType.AppInt || attr.MyDataType == DataType.AppMoney)
+			if (attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat || attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney)
 			{
 				html += "<td>无</td>";
 			}
 			else
 			{
-				html += "<td>" + attr.MaxLength + "</td>";
+				html += "<td>" + attr.getMaxLength() + "</td>";
 			}
 
 
-			switch (attr.MyFieldType)
+			switch (attr.getMyFieldType())
 			{
-				case FieldType.Enum:
-				case FieldType.PKEnum:
+				case Enum:
+				case PKEnum:
 					try
 					{
-						SysEnums ses = new SysEnums(attr.UIBindKey);
+						SysEnums ses = new SysEnums(attr.getUIBindKey());
 						String str = "";
-						for (SysEnum se : ses)
+						for (SysEnum se : ses.ToJavaList())
 						{
-							str += se.IntKey + "&nbsp;" + se.Lab + ",";
+							str += se.getIntKey() + "&nbsp;" + se.getLab() + ",";
 						}
 						html += "<td>" + str + "</td>";
 					}
@@ -656,17 +673,17 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 					}
 					break;
-				case FieldType.FK:
-				case FieldType.PKFK:
-					Entities myens = ClassFactory.GetEns(attr.UIBindKey);
-					html += "<td>表/视图:" + myens.GetNewEntity.EnMap.PhysicsTable + " 关联字段:" + attr.UIRefKeyValue + "," + attr.UIRefKeyText + "</td>";
+				case FK:
+				case PKFK:
+					Entities myens = ClassFactory.GetEns(attr.getUIBindKey());
+					html += "<td>表/视图:" + myens.getNewEntity().getEnMap().getPhysicsTable() + " 关联字段:" + attr.getUIRefKeyValue() + "," + attr.getUIRefKeyText() + "</td>";
 					break;
 				default:
 					html += "<td>无</td>";
 					break;
 			}
 
-			html += "<td>" + attr.DefaultVal.toString() + "</td>";
+			html += "<td>" + attr.getDefaultVal().toString() + "</td>";
 			html += "</tr>";
 		}
 		html += "</table>";
@@ -689,7 +706,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			try
 			{
 				en = obj instanceof Entity ? (Entity)obj : null;
-				String s = en.EnDesc;
+				String s = en.getEnDesc();
 				if (en == null)
 				{
 					continue;
@@ -711,14 +728,14 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			dr.set("No", en.toString());
 			try
 			{
-				dr.set("EnsName", en.GetNewEntities.toString());
+				dr.set("EnsName", en.getGetNewEntities().toString());
 			}
 			catch (java.lang.Exception e2)
 			{
 				dr.set("EnsName", en.toString() + "s");
 			}
-			dr.set("Name", en.EnMap.EnDesc);
-			dr.set("PTable", en.EnMap.PhysicsTable);
+			dr.set("Name", en.getEnMap().getEnDesc());
+			dr.set("PTable", en.getEnMap().getPhysicsTable());
 			dt.Rows.add(dr);
 		}
 
@@ -754,7 +771,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + this.getRequest().getRequestURL());
 	}
 
 		///#endregion 执行父类的重写方法.
@@ -791,36 +808,36 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	public final String SFDBSrcNewGuide_SaveSrc()
 	{
 		SFDBSrc src = new SFDBSrc();
-		src.No = this.GetRequestVal("TB_No");
+		src.setNo(this.GetRequestVal("TB_No"));
 		if (src.RetrieveFromDBSources() > 0 && this.GetRequestVal("NewOrEdit").equals("New"))
 		{
-			return ("已经存在数据源编号为“" + src.No + "”的数据源，编号不能重复！");
+			return ("已经存在数据源编号为“" + src.getNo() + "”的数据源，编号不能重复！");
 		}
-		src.Name = this.GetRequestVal("TB_Name");
-		src.DBSrcType = (DBSrcType)this.GetRequestValInt("DDL_DBSrcType");
-		switch (src.DBSrcType)
+		src.setName(this.GetRequestVal("TB_Name"));
+		src.setDBSrcType(DBSrcType.forValue(this.GetRequestValInt("DDL_DBSrcType")));
+		switch (src.getDBSrcType())
 		{
-			case DBSrcType.SQLServer:
-			case DBSrcType.Oracle:
-			case DBSrcType.MySQL:
-			case DBSrcType.Informix:
-				if (src.DBSrcType != DBSrcType.Oracle)
+			case SQLServer:
+			case Oracle:
+			case MySQL:
+			case Informix:
+				if (src.getDBSrcType() != DBSrcType.Oracle)
 				{
-					src.DBName = this.GetRequestVal("TB_DBName");
+					src.setDBName(this.GetRequestVal("TB_DBName"));
 				}
 				else
 				{
-					src.DBName = "";
+					src.setDBName("");
 				}
-				src.IP = this.GetRequestVal("TB_IP");
-				src.UserID = this.GetRequestVal("TB_UserID");
-				src.Password = this.GetRequestVal("TB_PWword");
+				src.setIP(this.GetRequestVal("TB_IP"));
+				src.setUserID(this.GetRequestVal("TB_UserID"));
+				src.setPassword(this.GetRequestVal("TB_PWword"));
 				break;
-			case DBSrcType.WebServices:
-				src.DBName = "";
-				src.IP = this.GetRequestVal("TB_IP");
-				src.UserID = "";
-				src.Password = "";
+			case WebServices:
+				src.setDBName("");
+				src.setIP(this.GetRequestVal("TB_IP"));
+				src.setUserID("");
+				src.setPassword("");
 				break;
 			default:
 				break;
@@ -860,24 +877,27 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	//javaScript 脚本上传
 	public final String javaScriptImp_Done()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
-		if (files.size() == 0)
-		{
-			return "err@请选择要上传的流程模版。";
+		File xmlFile = null;
+		String fileName="";
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
+			fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
+			
+			String savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"JSLibData"+"/"+fileName;
+			xmlFile = new File(savePath);
+			if(xmlFile.exists()){
+				xmlFile.delete();
+			}
+			
+			try {
+				CommonFileUtils.upload(request, "File_Upload", xmlFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
+			}
 		}
-		String fileName = files[0].FileName;
-		String savePath = BP.Sys.SystemConfig.PathOfDataUser + "JSLibData" + "\\" + fileName;
-
-		//存在文件则删除
-		if ((new File(savePath)).isDirectory() == true)
-		{
-			(new File(savePath)).delete();
-		}
-
-		//files[0].SaveAs(savePath);
-		HttpContextHelper.UploadFile(files[0], savePath);
-		return "脚本" + fileName + "导入成功";
+		return "脚本"+fileName+"导入成功";
 	}
 
 	public final String RichUploadFile()
@@ -892,7 +912,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		//获取文件存放目录
 		String directory = this.GetRequestVal("Directory");
 		String fileName = files[0].FileName;
-		String savePath = BP.Sys.SystemConfig.PathOfDataUser + "RichTextFile" + "\\" + directory;
+		String savePath = BP.Sys.SystemConfig.getPathOfDataUser() + "RichTextFile" + "\\" + directory;
 
 		if ((new File(savePath)).isDirectory() == false)
 		{
@@ -917,28 +937,23 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	 */
 	public final String javaScriptFiles()
 	{
-		String savePath = BP.Sys.SystemConfig.PathOfDataUser + "JSLibData";
-
-		File di = new File(savePath);
-		//找到该目录下的文件 
-		File[] fileList = di.GetFiles();
-
-		if (fileList == null || fileList.length == 0)
-		{
+		String savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"JSLibData";
+		File dirFile = new File(savePath);
+		if(!dirFile.isDirectory()) 
 			return "";
-		}
-		DataTable dt = new DataTable();
-		dt.Columns.Add("FileName");
-		dt.Columns.Add("ChangeTime");
-		for (File file : fileList)
-		{
-			DataRow dr = dt.NewRow();
-			dr.set("FileName", file.getName());
-			dr.set("ChangeTime", file.LastAccessTime.toString());
-
+	    File[] fileList = dirFile.listFiles();
+	    if(fileList==null||fileList.length==0)
+	    	return "";
+	    DataTable dt = new DataTable();
+	    dt.Columns.Add("FileName");
+	    dt.Columns.Add("ChangeTime");
+	    for(File file:fileList){
+	    	DataRow dr = dt.NewRow();
+			dr.setValue("FileName", file.getName());
+			dr.setValue("ChangeTime",new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(file.lastModified())));
 			dt.Rows.add(dr);
-		}
-		return BP.Tools.Json.ToJson(dt);
+	    }
+	    return BP.Tools.Json.ToJson(dt);
 
 	}
 

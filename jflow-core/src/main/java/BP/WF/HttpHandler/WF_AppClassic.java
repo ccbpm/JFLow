@@ -44,9 +44,8 @@ public class WF_AppClassic extends DirectoryPageBase
 			default:
 				break;
 		}
-
-		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+		// 找不不到标记就抛出异常.
+		return "err@没有判断的执行标记:" + this.getDoType();
 	}
 
 		///#endregion 执行父类的重写方法.

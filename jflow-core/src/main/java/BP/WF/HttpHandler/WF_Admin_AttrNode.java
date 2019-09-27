@@ -3,14 +3,26 @@ package BP.WF.HttpHandler;
 import BP.WF.*;
 import BP.Web.*;
 import BP.Sys.*;
+import BP.Tools.StringHelper;
 import BP.DA.*;
+import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.*;
 import BP.WF.Template.*;
 import BP.WF.XML.*;
 import BP.WF.*;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 
-public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class WF_Admin_AttrNode extends WebContralBase
 {
 	/** 
 	 构造函数
@@ -56,12 +68,12 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		dtBuess.Columns.Add("No", String.class);
 		dtBuess.Columns.Add("Name", String.class);
 		dtBuess.TableName = "BuessUnits";
-		ArrayList al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
+		ArrayList<BuessUnitBase> al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
 		for (BuessUnitBase en : al)
 		{
 			DataRow dr = dtBuess.NewRow();
 			dr.set("No", en.toString());
-			dr.set("Name", en.Title);
+			dr.set("Name", en.getTitle());
 			dtBuess.Rows.add(dr);
 		}
 
@@ -72,114 +84,105 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 
-		///#region  单据模版维护
-	/** 
-	 @李国文.
-	 
-	 @return 
-	*/
-	public final String Bill_Save()
+	private HttpServletResponse response;
+	public void setHttpServletResp(HttpServletResponse response) {
+
+		this.response = response;
+	}
+	///#region  单据模版维护
+	public final String Bill_Save() throws Exception
 	{
+		
 		BillTemplate bt = new BillTemplate();
-		if (HttpContextHelper.RequestFilesCount == 0)
-		{
-			return "err@请上传模版.";
+		HttpServletRequest request = getRequest();
+		// 上传附件
+		String fileName = CommonFileUtils.getOriginalFilename(request,"bill");
+		String filepath = SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + fileName;
+		filepath = filepath.replace("\\", "/");
+		
+		try{
+			CommonFileUtils.upload(request, "bill",new File(filepath));
+		}catch(Exception e){
+			e.printStackTrace();
+			return "err@执行失败";		
 		}
-
-		//上传附件
-		String filepath = "";
-		//HttpPostedFile file = HttpContext.Current.Request.Files[0];
-		//HttpPostedFile file = HttpContextHelper.RequestFiles(0);
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var file = HttpContextHelper.RequestFiles(0);
-		String fileName = file.FileName;
-		fileName = fileName.toLowerCase();
-
-		filepath = SystemConfig.PathOfDataUser + "CyclostyleFile\\" + fileName;
-		//file.SaveAs(filepath);
-		HttpContextHelper.UploadFile(file, filepath);
 
 		bt.setNodeID(this.getFK_Node());
 		bt.setFK_MapData(this.getFK_MapData());
-		bt.setNo(this.GetRequestVal("TB_No"));
-
-		if (DataType.IsNullOrEmpty(bt.getNo()))
-		{
-			bt.setNo(DA.DBAccess.GenerOID("Template").toString());
+		bt.setNo(request.getParameter("TB_No"));
+		if (StringHelper.isNullOrEmpty(bt.getNo())) {
+			bt.setNo(String.valueOf(DBAccess.GenerOID("Template")));
 		}
-
-		bt.Name = this.GetRequestVal("TB_Name");
-		bt.setTempFilePath(fileName); //文件.
-
-		//打印的文件类型.
-		bt.setHisBillFileType(BillFileType.forValue(this.GetRequestValInt("DDL_BillFileType")));
-
-		//打开模式.
-		bt.setBillOpenModel(BillOpenModel.forValue(this.GetRequestValInt("DDL_BillOpenModel")));
-
-		//二维码模式.
-		bt.setQRModel(QRModel.forValue(this.GetRequestValInt("DDL_BillOpenModel")));
-
+		bt.setName(request.getParameter("TB_Name"));
+		bt.setTempFilePath(fileName);
+		
+		bt.setHisBillFileType(Integer.parseInt(request.getParameter("DDL_BillFileType")));
+		bt.setBillOpenModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
+		bt.setQRModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
+		
 		//模版类型.rtf / VSTOForWord / VSTOForExcel .
-		if (fileName.contains(".doc"))
-		{
-			bt.setTemplateFileModel(TemplateFileModel.VSTOForWord);
-		}
+        if (fileName.contains(".doc"))
+            bt.setTemplateFileModel(TemplateFileModel.VSTOForWord);
 
-		if (fileName.contains(".xls"))
-		{
-			bt.setTemplateFileModel(TemplateFileModel.VSTOForExcel);
-		}
+        if (fileName.contains(".xls"))
+            bt.setTemplateFileModel(TemplateFileModel.VSTOForExcel);
 
-		if (fileName.contains(".rtf"))
-		{
-			bt.setTemplateFileModel(TemplateFileModel.RTF);
-		}
+        if (fileName.contains(".rtf"))
+            bt.setTemplateFileModel(TemplateFileModel.RTF);
 
-		bt.Save();
+        bt.Save();
 
-		bt.SaveFileToDB("DBFile", filepath); //把文件保存到数据库里.
+        bt.SaveFileToDB("DBFile", filepath); //把文件保存到数据库里. 
 
-		return "保存成功.";
+		return "保存成功";
 	}
 	/** 
 	 下载文件.
+	 * @throws Exception 
 	*/
-	public final void Bill_Download()
+	public final void Bill_Download() throws Exception
 	{
 		BillTemplate en = new BillTemplate(this.getNo());
 		String MyFilePath = en.getTempFilePath();
-		//HttpResponse response = context.Response;
+		String fileName = MyFilePath.substring(MyFilePath.lastIndexOf("/") + 1);
 
-		//response.Clear();
-		//response.Buffer = true;
-		//response.Charset = "utf-8";
-		//response.AppendHeader("Content-Disposition", string.Format("attachment;filename={0}", en.TempFilePath.Substring(MyFilePath.LastIndexOf('\\') + 1)));
-		//response.ContentEncoding = System.Text.Encoding.UTF8;
-		//response.BinaryWrite(System.IO.File.ReadAllBytes(MyFilePath));
-		//response.End();
+		// 设置响应头和客户端保存文件名
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("multipart/form-data");
+		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
 
-		HttpContextHelper.ResponseWrite("Charset");
-		HttpContextHelper.ResponseWriteHeader("Content-Disposition", String.format("attachment;filename=%1$s", en.getTempFilePath().substring(MyFilePath.lastIndexOf('\\') + 1)));
-		HttpContextHelper.Response.ContentType = "application/octet-stream;charset=utf-8";
-		HttpContextHelper.ResponseWriteFile(MyFilePath);
+		InputStream inputStream = new FileInputStream(MyFilePath);
+
+		OutputStream os = response.getOutputStream();
+
+		long downloadedLength = 0l;
+		byte[] b = new byte[2048];
+		int length;
+		while ((length = inputStream.read(b)) > 0) {
+			os.write(b, 0, length);
+			downloadedLength += b.length;
+		}
+
+		os.close();
+		inputStream.close();
+		
 	}
 
 		///#endregion
 
 
 		///#region  节点消息
-	public final String PushMsg_Init()
+	public final String PushMsg_Init() throws Exception
 	{
 		//增加上单据模版集合.
 		int nodeID = this.GetRequestValInt("FK_Node");
 		BP.WF.Template.PushMsgs ens = new BP.WF.Template.PushMsgs(nodeID);
 		return ens.ToJson();
 	}
-	public final String PushMsg_Save()
+	public final String PushMsg_Save() throws Exception
 	{
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.setMyPK( this.getMyPK();
+		msg.setMyPK(this.getMyPK());
 		msg.RetrieveFromDBSources();
 
 		msg.setFK_Event(this.getFK_Event());
@@ -190,24 +193,28 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		msg.setFK_Flow(nd.getFK_Flow());
 
 		//推送方式。
-		msg.setSMSPushWay((int)(HttpContextHelper.RequestParams("RB_SMS").replace("RB_SMS_", "")));
+		msg.setSMSPushWay(Integer.parseInt((this.GetRequestVal("RB_SMS").replace("RB_SMS_", ""))));
 
 		//表单字段作为接收人.
-		msg.setSMSField(HttpContextHelper.RequestParams("DDL_SMS_Fields"));
+		msg.setSMSField(this.GetRequestVal("DDL_SMS_Fields"));
 
 
 			///#region 其他节点的处理人方式（求选择的节点）
 		String nodesOfSMS = "";
+		String nodesOfEmail = "";
 		for (BP.WF.Node mynd : nds.ToJavaList())
 		{
-			for (String key : HttpContextHelper.RequestParamKeys)
-			{
-				if (key.contains("CB_SMS_" + mynd.getNodeID()) && nodesOfSMS.contains(mynd.getNodeID() + "") == false)
-				{
+			Enumeration<String> enums = getRequest().getParameterNames();
+			while (enums.hasMoreElements()) {
+				String key = (String) enums.nextElement();
+				if (key.contains("CB_SMS_" + mynd.getNodeID()) && nodesOfSMS.contains(mynd.getNodeID() + "") == false) {
 					nodesOfSMS += mynd.getNodeID() + ",";
 				}
 
-
+				if (key.contains("CB_Email_" + mynd.getNodeID())
+						&& nodesOfEmail.contains(mynd.getNodeID() + "") == false) {
+					nodesOfEmail += mynd.getNodeID() + ",";
+				}
 			}
 		}
 		msg.setSMSNodes(nodesOfSMS);
@@ -215,42 +222,42 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			///#endregion 其他节点的处理人方式（求选择的节点）
 
 		//按照SQL
-		msg.setBySQL(HttpContextHelper.RequestParams("TB_SQL"));
+		msg.setBySQL(this.GetRequestVal("TB_SQL"));
 
 		//发给指定的人员
-		msg.setByEmps(HttpContextHelper.RequestParams("TB_Emps"));
+		msg.setByEmps(this.GetRequestVal("TB_Emps"));
 
 		//短消息发送设备
 		msg.setSMSPushModel(this.GetRequestVal("PushModel"));
 
 		//邮件标题
-		msg.setMailTitle_Real(HttpContextHelper.RequestParams("TB_title"));
+		msg.setMailTitle_Real(this.GetRequestVal("TB_title"));
 
 		//短信内容模版.
-		msg.setSMSDoc_Real(HttpContextHelper.RequestParams("TB_SMS"));
+		msg.setSMSDoc_Real(this.GetRequestVal("TB_SMS"));
 
 		//节点预警
 		if (this.getFK_Event().equals(BP.Sys.EventListOfNode.NodeWarning))
 		{
-			int noticeType = (int)(HttpContextHelper.RequestParams("RB_NoticeType").replace("RB_NoticeType", ""));
+			int noticeType = Integer.parseInt(this.GetRequestVal("RB_NoticeType").replace("RB_NoticeType", ""));
 			msg.SetPara("NoticeType", noticeType);
-			int hour = (int)HttpContextHelper.RequestParams("TB_NoticeHour");
+			int hour = Integer.parseInt(this.GetRequestVal("TB_NoticeHour"));
 			msg.SetPara("NoticeHour", hour);
 		}
 
 		//节点逾期
 		if (this.getFK_Event().equals(BP.Sys.EventListOfNode.NodeOverDue))
 		{
-			int noticeType = (int)(HttpContextHelper.RequestParams("RB_NoticeType").replace("RB_NoticeType", ""));
+			int noticeType = Integer.parseInt(this.GetRequestVal("RB_NoticeType").replace("RB_NoticeType", ""));
 			msg.SetPara("NoticeType", noticeType);
-			int day = (int)HttpContextHelper.RequestParams("TB_NoticeDay");
+			int day = Integer.parseInt(this.GetRequestVal("TB_NoticeDay"));
 			msg.SetPara("NoticeDay", day);
 		}
 
 		//保存.
-		if (DataType.IsNullOrEmpty(msg.MyPK) == true)
+		if (DataType.IsNullOrEmpty(msg.getMyPK()) == true)
 		{
-			msg.setMyPK( BP.DA.DBAccess.GenerGUID();
+			msg.setMyPK(BP.DA.DBAccess.GenerGUID());
 			msg.Insert();
 		}
 		else
@@ -261,7 +268,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		return "保存成功..";
 	}
 
-	public final String PushMsgEntity_Init()
+	public final String PushMsgEntity_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -280,11 +287,11 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		//mypk
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
-		msg.setMyPK( this.getMyPK();
+		msg.setMyPK(this.getMyPK());
 		msg.RetrieveFromDBSources();
 		ds.Tables.add(msg.ToDataTableField("PushMsgEntity"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 
@@ -297,8 +304,9 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	 表单模式
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NodeFromWorkModel_Init()
+	public final String NodeFromWorkModel_Init() throws Exception
 	{
 		//数据容器.
 		DataSet ds = new DataSet();
@@ -333,8 +341,9 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	 表单模式
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NodeFromWorkModel_Save()
+	public final String NodeFromWorkModel_Save() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 
@@ -354,7 +363,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.FreeForm);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm;
+				md.setHisFrmType(FrmType.FreeFrm);
 				md.Update();
 			}
 			else
@@ -363,7 +372,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.FoolForm);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FoolForm;
+				md.setHisFrmType(FrmType.FoolForm);
 				md.Update();
 			}
 			//表单引用
@@ -388,7 +397,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			nd.setFormType(NodeFormType.FoolTruck);
 			nd.DirectUpdate();
 
-			md.HisFrmType = BP.Sys.FrmType.FoolForm; //同时更新表单表住表.
+			md.setHisFrmType(FrmType.FoolForm); //同时更新表单表住表.
 			md.Update();
 		}
 
@@ -399,8 +408,8 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_CustomURL"));
 			nd.DirectUpdate();
 
-			md.HisFrmType = BP.Sys.FrmType.Url; //同时更新表单表住表.
-			md.Url = this.GetValFromFrmByKey("TB_CustomURL");
+			md.setHisFrmType(FrmType.Url); //同时更新表单表住表.
+			md.setUrl(this.GetValFromFrmByKey("TB_CustomURL"));
 			md.Update();
 
 		}
@@ -411,8 +420,8 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_FormURL"));
 			nd.DirectUpdate();
 
-			md.HisFrmType = BP.Sys.FrmType.Url;
-			md.Url = this.GetValFromFrmByKey("TB_FormURL");
+			md.setHisFrmType(FrmType.Url);
+			md.setUrl(this.GetValFromFrmByKey("TB_FormURL"));
 			md.Update();
 
 		}
@@ -427,7 +436,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.SheetTree);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
 				md.Update();
 			}
 			else
@@ -435,7 +444,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.DisableIt);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
 				md.Update();
 			}
 		}
@@ -467,14 +476,14 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			{
 				btn.setWebOfficeFrmModel(BP.Sys.FrmType.FreeFrm);
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
 				md.Update();
 			}
 			else
 			{
 				btn.setWebOfficeFrmModel(BP.Sys.FrmType.FoolForm);
 
-				md.HisFrmType = BP.Sys.FrmType.FoolForm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FoolForm); //同时更新表单表住表.
 				md.Update();
 			}
 
@@ -491,7 +500,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		///#region SortingMapAttrs_Init
 
-	public final String SortingMapAttrs_Init()
+	public final String SortingMapAttrs_Init() throws Exception
 	{
 		MapDatas mapdatas;
 		MapAttrs attrs;
@@ -536,7 +545,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 		//控制页面按钮需要的
 		MapDtl tdtl = new MapDtl();
-		tdtl.No = getFK_MapData();
+		tdtl.setNo(getFK_MapData());
 		if (tdtl.RetrieveFromDBSources() == 1)
 		{
 			ds.Tables.add(tdtl.ToDataTableField("tdtl"));
@@ -545,7 +554,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	private void BindData4SortingMapAttrs_Init(MapDatas mapdatas, MapAttrs attrs, GroupFields groups, MapDtls dtls, FrmAttachments athMents, FrmBtns btns, Nodes nodes, DataSet ds)
+	private void BindData4SortingMapAttrs_Init(MapDatas mapdatas, MapAttrs attrs, GroupFields groups, MapDtls dtls, FrmAttachments athMents, FrmBtns btns, Nodes nodes, DataSet ds) throws Exception
 	{
 		Object tempVar = mapdatas.GetEntityByKey(getFK_MapData());
 		MapData mapdata = tempVar instanceof MapData ? (MapData)tempVar : null;
@@ -566,13 +575,13 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 				///#region A、构建数据dtNoGroupAttrs，这个放在前面
 			//检索全部字段，查找出没有分组或分组信息不正确的字段，存入"无分组"集合
-			dtNoGroupAttrs = dtAttrs.Clone();
+			dtNoGroupAttrs = dtAttrs.clone();
 
 			for (DataRow dr : dtAttrs.Rows)
 			{
 				if (IsExistInDataRowArray(dtGroups.Rows, GroupFieldAttr.OID, dr.get(MapAttrAttr.GroupID)) == false)
 				{
-					dtNoGroupAttrs.Rows.add(dr.ItemArray);
+					dtNoGroupAttrs.Rows.AddDatas(dr.ItemArray);
 				}
 			}
 
@@ -585,31 +594,31 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			//01、未分组明细表,自动创建一个
 			for (MapDtl mapDtl : dtls.ToJavaList())
 			{
-				if (GetGroupID(mapDtl.No, groups) == 0)
+				if (GetGroupID(mapDtl.getNo(), groups) == 0)
 				{
 					group = new GroupField();
-					group.setLab( mapDtl.Name;
-					group.FrmID = mapDtl.FK_MapData;
-					group.setCtrlType(GroupCtrlType.Dtl;
-					group.setCtrlID(mapDtl.No;
+					group.setLab(mapDtl.getName());
+					group.setFrmID(mapDtl.getFK_MapData());
+					group.setCtrlType(GroupCtrlType.Dtl);
+					group.setCtrlID(mapDtl.getNo());
 					group.Insert();
 
 					groups.AddEntity(group);
 				}
 			}
 			//02、未分组多附件自动分配一个
-			for (FrmAttachment athMent : athMents)
+			for (FrmAttachment athMent : athMents.ToJavaList())
 			{
-				if (GetGroupID(athMent.MyPK, groups) == 0)
+				if (GetGroupID(athMent.getMyPK(), groups) == 0)
 				{
 					group = new GroupField();
-					group.setLab( athMent.Name;
-					group.EnName = athMent.FK_MapData;
-					group.setCtrlType(GroupCtrlType.Ath;
-					group.setCtrlID(athMent.MyPK;
+					group.setLab(athMent.getName());
+					group.setEnName(athMent.getFK_MapData());
+					group.setCtrlType(GroupCtrlType.Ath);
+					group.setCtrlID(athMent.getMyPK());
 					group.Insert();
 
-					athMent.GroupID = group.OID;
+					athMent.setGroupID(group.getOID());
 					athMent.Update();
 
 					groups.AddEntity(group);
@@ -617,18 +626,18 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			}
 
 			//03、未分组按钮自动创建一个
-			for (FrmBtn fbtn : btns)
+			for (FrmBtn fbtn : btns.ToJavaList())
 			{
-				if (GetGroupID(fbtn.MyPK, groups) == 0)
+				if (GetGroupID(fbtn.getMyPK(), groups) == 0)
 				{
 					group = new GroupField();
-					group.setLab( fbtn.Text;
-					group.FrmID = fbtn.FK_MapData;
-					group.setCtrlType(GroupCtrlType.Btn;
-					group.setCtrlID(fbtn.MyPK;
+					group.setLab(fbtn.getText());
+					group.setFrmID(fbtn.getFK_MapData());
+					group.setCtrlType(GroupCtrlType.Btn);
+					group.setCtrlID(fbtn.getMyPK());
 					group.Insert();
 
-					fbtn.GroupID = group.OID;
+					fbtn.setGroupID(group.getOID());
 					fbtn.Update();
 
 					groups.AddEntity(group);
@@ -639,11 +648,6 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 			dtGroups = groups.ToDataTableField("dtGroups");
 
-				///#endregion
-
-
-
-				///#endregion
 
 
 
@@ -658,22 +662,22 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			DataRow tddr = isDtl.NewRow();
 
 			MapDtl tdtl = new MapDtl();
-			tdtl.No = getFK_MapData();
+			tdtl.setNo(getFK_MapData());
 			if (tdtl.RetrieveFromDBSources() == 1)
 			{
 				tddr.set("tdDtl", 1);
-				tddr.set("FK_MapData", tdtl.FK_MapData);
-				tddr.set("No", tdtl.No);
+				tddr.set("FK_MapData", tdtl.getFK_MapData());
+				tddr.set("No", tdtl.getNo());
 			}
 			else
 			{
 				tddr.set("tdDtl", 0);
 				tddr.set("FK_MapData", getFK_MapData());
-				tddr.set("No", tdtl.No);
+				tddr.set("No", tdtl.getNo());
 			}
 
 
-			isDtl.Rows.add(tddr.ItemArray);
+			isDtl.Rows.AddDatas(tddr.ItemArray);
 
 				///#endregion
 
@@ -691,7 +695,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 					if (nodeid.length() > 2)
 					{
-						flowno = tangible.StringHelper.padLeft(nodeid.substring(0, nodeid.length() - 2), 3, '0');
+						flowno = StringHelper.padLeft(nodeid.substring(0, nodeid.length() - 2), 3, '0');
 						nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, flowno, BP.WF.Template.NodeAttr.Step);
 					}
 				}
@@ -742,11 +746,11 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		return false;
 	}
 
-	private int GetGroupID(String ctrlID, GroupFields gfs)
+	private int GetGroupID(String ctrlID, GroupFields gfs) throws Exception
 	{
 		Object tempVar = gfs.GetEntityByKey(GroupFieldAttr.CtrlID, ctrlID);
 		GroupField gf = tempVar instanceof GroupField ? (GroupField)tempVar : null;
-		return gf == null ? 0 : gf.OID;
+		return (int) (gf == null ? 0 : gf.getOID());
 	}
 
 
@@ -758,8 +762,9 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	 重置字段顺序
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SortingMapAttrs_ReSet()
+	public final String SortingMapAttrs_ReSet() throws Exception
 	{
 		try
 		{
@@ -772,9 +777,9 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			qo.DoQuery(); //执行查询
 			int rowIdx = 0;
 			//执行更新
-			for (MapAttr mapAttr : attrs)
+			for (MapAttr mapAttr : attrs.ToJavaList())
 			{
-				mapattr.setIdx(rowIdx;
+				mapAttr.setIdx(rowIdx);
 				mapAttr.DirectUpdate();
 				rowIdx++;
 			}
@@ -795,8 +800,9 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	 保存需要在手机端表单显示的字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SortingMapAttrs_From_Save()
+	public final String SortingMapAttrs_From_Save() throws Exception
 	{
 		//获取需要显示的字段集合
 		String atts = this.GetRequestVal("attrs");
@@ -805,23 +811,23 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			MapAttrs attrs = new MapAttrs(getFK_MapData());
 			MapAttr att = null;
 			//更新每个字段的显示属性
-			for (MapAttr attr : attrs)
+			for (MapAttr attr : attrs.ToJavaList())
 			{
-				Object tempVar = attrs.GetEntityByKey(MapAttrAttr.FK_MapData, getFK_MapData(), MapAttrAttr.KeyOfEn, attr.KeyOfEn);
+				Object tempVar = attrs.GetEntityByKey(MapAttrAttr.FK_MapData, getFK_MapData(), MapAttrAttr.KeyOfEn, attr.getKeyOfEn());
 				att = tempVar instanceof MapAttr ? (MapAttr)tempVar : null;
-				if (atts.contains("," + attr.KeyOfEn + ","))
+				if (atts.contains("," + attr.getKeyOfEn() + ","))
 				{
-					att.IsEnableInAPP = true;
+					att.setIsEnableInAPP(true);
 				}
 				else
 				{
-					att.IsEnableInAPP = false;
+					att.setIsEnableInAPP(false);
 				}
 				att.Update();
 
-				if (atts.contains("," + getFK_MapData() + "_" + attr.KeyOfEn + ",") == true)
+				if (atts.contains("," + getFK_MapData() + "_" + attr.getKeyOfEn() + ",") == true)
 				{
-					FrmAttachment ath = new FrmAttachment(getFK_MapData() + "_" + attr.KeyOfEn);
+					FrmAttachment ath = new FrmAttachment(getFK_MapData() + "_" + attr.getKeyOfEn());
 					ath.SetPara("IsShowMobile", 1);
 					ath.Update();
 
@@ -843,8 +849,9 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	 将分组、字段排序复制到其他节点
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SortingMapAttrs_Copy()
+	public final String SortingMapAttrs_Copy() throws Exception
 	{
 		try
 		{
@@ -932,31 +939,31 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 					///#region //分组排序复制
-				for (GroupField grp : groups)
+				for (GroupField grp : groups.ToJavaList())
 				{
 					//通过分组名称来确定是同一个组，同一个组在不同的节点分组编号是不一样的
-					Object tempVar = tgroups.GetEntityByKey(GroupFieldAttr.Lab, grp.Lab);
+					Object tempVar = tgroups.GetEntityByKey(GroupFieldAttr.Lab, grp.getLab());
 					tgrp = tempVar instanceof GroupField ? (GroupField)tempVar : null;
 					if (tgrp == null)
 					{
 						continue;
 					}
 
-					tgrp.Idx = grp.Idx;
+					tgrp.setIdx(grp.getIdx());
 					tgrp.DirectUpdate();
 
-					maxGrpIdx = Math.max(grp.Idx, maxGrpIdx);
-					idxGrps.add(grp.Lab);
+					maxGrpIdx = Math.max(grp.getIdx(), maxGrpIdx);
+					idxGrps.add(grp.getLab());
 				}
 
-				for (GroupField grp : tgroups)
+				for (GroupField grp : tgroups.ToJavaList())
 				{
-					if (idxGrps.contains(grp.Lab))
+					if (idxGrps.contains(grp.getLab()))
 					{
 						continue;
 					}
-
-					grp.Idx = maxGrpIdx = maxGrpIdx + 1;
+					maxGrpIdx = maxGrpIdx + 1;
+					grp.setIdx(maxGrpIdx);
 					grp.DirectUpdate();
 				}
 
@@ -964,75 +971,75 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 					///#region //字段排序复制
-				for (MapAttr attr : attrs)
+				for (MapAttr attr : attrs.ToJavaList())
 				{
 					//排除主键
-					if (attr.IsPK == true)
+					if (attr.getIsPK() == true)
 					{
 						continue;
 					}
 
-					Object tempVar2 = tattrs.GetEntityByKey(MapAttrAttr.KeyOfEn, attr.KeyOfEn);
+					Object tempVar2 = tattrs.GetEntityByKey(MapAttrAttr.KeyOfEn, attr.getKeyOfEn());
 					tattr = tempVar2 instanceof MapAttr ? (MapAttr)tempVar2 : null;
 					if (tattr == null)
 					{
 						continue;
 					}
 
-					Object tempVar3 = groups.GetEntityByKey(GroupFieldAttr.OID, attr.GroupID);
+					Object tempVar3 = groups.GetEntityByKey(GroupFieldAttr.OID, attr.getGroupID());
 					group = tempVar3 instanceof GroupField ? (GroupField)tempVar3 : null;
 
 					//比对字段的分组是否一致，不一致则更新一致
 					if (group == null)
 					{
 						//源字段分组为空，则目标字段分组置为0
-						tattr.GroupID = 0;
+						tattr.setGroupID(0);
 					}
 					else
 					{
 						//此处要判断目标节点中是否已经创建了这个源字段所属分组，如果没有创建，则要自动创建
-						Object tempVar4 = tgroups.GetEntityByKey(GroupFieldAttr.Lab, group.Lab);
+						Object tempVar4 = tgroups.GetEntityByKey(GroupFieldAttr.Lab, group.getLab());
 						tgrp = tempVar4 instanceof GroupField ? (GroupField)tempVar4 : null;
 
 						if (tgrp == null)
 						{
 							tgrp = new GroupField();
-							tgrp.Lab = group.Lab;
-							tgrp.FrmID = tmd;
-							tgrp.Idx = group.Idx;
+							tgrp.setLab(group.getLab());
+							tgrp.setFrmID(tmd);
+							tgrp.setIdx(group.getIdx());
 							tgrp.Insert();
 							tgroups.AddEntity(tgrp);
 
-							tattr.GroupID = tgrp.OID;
+							tattr.setGroupID(tgrp.getOID());
 						}
 						else
 						{
-							if (tgrp.OID != tattr.GroupID)
+							if (tgrp.getOID() != tattr.getGroupID())
 							{
-								tattr.GroupID = tgrp.OID;
+								tattr.setGroupID(tgrp.getOID());
 							}
 						}
 					}
 
-					tattr.setIdx(attr.Idx;
+					tattr.setIdx(attr.getIdx());
 					tattr.DirectUpdate();
-					maxAttrIdx = Math.max(attr.Idx, maxAttrIdx);
-					idxAttrs.add(attr.KeyOfEn);
+					maxAttrIdx = Math.max(attr.getIdx(), maxAttrIdx);
+					idxAttrs.add(attr.getKeyOfEn());
 				}
 
-				for (MapAttr attr : tattrs)
+				for (MapAttr attr : tattrs.ToJavaList())
 				{
 					//排除主键
-					if (attr.IsPK == true)
+					if (attr.getIsPK() == true)
 					{
 						continue;
 					}
-					if (idxAttrs.contains(attr.KeyOfEn))
+					if (idxAttrs.contains(attr.getKeyOfEn()))
 					{
 						continue;
 					}
-
-					attr.setIdx(maxAttrIdx = maxAttrIdx + 1;
+					maxAttrIdx = maxAttrIdx + 1;
+					attr.setIdx(maxAttrIdx);
 					attr.DirectUpdate();
 				}
 
@@ -1047,7 +1054,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 				for (MapDtl dtl : dtls.ToJavaList())
 				{
-					dtlIdx = dtl.No.Replace(dtl.FK_MapData + "Dtl", "");
+					dtlIdx = dtl.getNo().replace(dtl.getFK_MapData() + "Dtl", "");
 					Object tempVar5 = tdtls.GetEntityByKey(MapDtlAttr.No, tmd + "Dtl" + dtlIdx);
 					tdtl = tempVar5 instanceof MapDtl ? (MapDtl)tempVar5 : null;
 
@@ -1057,19 +1064,19 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					}
 
 					//判断目标明细表是否有分组，没有分组，则创建分组
-					tgroup = GetGroup(tdtl.No, tgroups);
-					tgroupidx = tgroup == null ? 0 : tgroup.Idx;
-					group = GetGroup(dtl.No, groups);
-					groupidx = group == null ? 0 : group.Idx;
+					tgroup = GetGroup(tdtl.getNo(), tgroups);
+					tgroupidx = tgroup == null ? 0 : tgroup.getIdx();
+					group = GetGroup(dtl.getNo(), groups);
+					groupidx = group == null ? 0 : group.getIdx();
 
 					if (tgroup == null)
 					{
 						group = new GroupField();
-						group.setLab( tdtl.Name;
-						group.FrmID = tdtl.FK_MapData;
-						group.setCtrlType(GroupCtrlType.Dtl;
-						group.setCtrlID(tdtl.No;
-						group.setIdx(groupidx;
+						group.setLab(tdtl.getName());
+						group.setFrmID(tdtl.getFK_MapData());
+						group.setCtrlType(GroupCtrlType.Dtl);
+						group.setCtrlID(tdtl.getNo());
+						group.setIdx(groupidx);
 						group.Insert();
 
 						tgroupidx = groupidx;
@@ -1080,21 +1087,21 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						///#region 1.明细表排序
 					if (tgroupidx != groupidx && group != null)
 					{
-						tgroup.setIdx(groupidx;
+						tgroup.setIdx(groupidx);
 						tgroup.DirectUpdate();
 
 						tgroupidx = groupidx;
-						Object tempVar6 = tmapdatas.GetEntityByKey(MapDataAttr.No, tdtl.No);
+						Object tempVar6 = tmapdatas.GetEntityByKey(MapDataAttr.No, tdtl.getNo());
 						tmapdata = tempVar6 instanceof MapData ? (MapData)tempVar6 : null;
 						if (tmapdata != null)
 						{
-							tmapdata.Idx = tgroup.Idx;
+							tmapdata.setIdx(tgroup.getIdx());
 							tmapdata.DirectUpdate();
 						}
 					}
 
 					maxDtlIdx = Math.max(tgroupidx, maxDtlIdx);
-					idxDtls.add(dtl.No);
+					idxDtls.add(dtl.getNo());
 
 						///#endregion
 
@@ -1102,7 +1109,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						///#region 2.获取源节点明细表中的字段分组、字段信息
 					oattrs = new MapAttrs();
 					qo = new QueryObject(oattrs);
-					qo.AddWhere(MapAttrAttr.FK_MapData, dtl.No);
+					qo.AddWhere(MapAttrAttr.FK_MapData, dtl.getNo());
 					qo.addAnd();
 					qo.AddWhere(MapAttrAttr.UIVisible, true);
 					qo.addOrderBy(MapAttrAttr.GroupID, MapAttrAttr.Idx);
@@ -1110,7 +1117,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 					ogroups = new GroupFields();
 					qo = new QueryObject(ogroups);
-					qo.AddWhere(GroupFieldAttr.FrmID, dtl.No);
+					qo.AddWhere(GroupFieldAttr.FrmID, dtl.getNo());
 					qo.addOrderBy(GroupFieldAttr.Idx);
 					qo.DoQuery();
 
@@ -1120,7 +1127,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 						///#region 3.获取目标节点明细表中的字段分组、字段信息
 					tarattrs = new MapAttrs();
 					qo = new QueryObject(tarattrs);
-					qo.AddWhere(MapAttrAttr.FK_MapData, tdtl.No);
+					qo.AddWhere(MapAttrAttr.FK_MapData, tdtl.getNo());
 					qo.addAnd();
 					qo.AddWhere(MapAttrAttr.UIVisible, true);
 					qo.addOrderBy(MapAttrAttr.GroupID, MapAttrAttr.Idx);
@@ -1128,7 +1135,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 					targroups = new GroupFields();
 					qo = new QueryObject(targroups);
-					qo.AddWhere(GroupFieldAttr.FrmID, tdtl.No);
+					qo.AddWhere(GroupFieldAttr.FrmID, tdtl.getNo());
 					qo.addOrderBy(GroupFieldAttr.Idx);
 					qo.DoQuery();
 
@@ -1139,31 +1146,31 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					maxGrpIdx = 0;
 					idxGrps = new ArrayList<String>();
 
-					for (GroupField grp : ogroups)
+					for (GroupField grp : ogroups.ToJavaList())
 					{
 						//通过分组名称来确定是同一个组，同一个组在不同的节点分组编号是不一样的
-						Object tempVar7 = targroups.GetEntityByKey(GroupFieldAttr.Lab, grp.Lab);
+						Object tempVar7 = targroups.GetEntityByKey(GroupFieldAttr.Lab, grp.getLab());
 						tgrp = tempVar7 instanceof GroupField ? (GroupField)tempVar7 : null;
 						if (tgrp == null)
 						{
 							continue;
 						}
 
-						tgrp.Idx = grp.Idx;
+						tgrp.setIdx(grp.getIdx());
 						tgrp.DirectUpdate();
 
-						maxGrpIdx = Math.max(grp.Idx, maxGrpIdx);
-						idxGrps.add(grp.Lab);
+						maxGrpIdx = Math.max(grp.getIdx(), maxGrpIdx);
+						idxGrps.add(grp.getLab());
 					}
 
-					for (GroupField grp : targroups)
+					for (GroupField grp : targroups.ToJavaList())
 					{
-						if (idxGrps.contains(grp.Lab))
+						if (idxGrps.contains(grp.getLab()))
 						{
 							continue;
 						}
-
-						grp.Idx = maxGrpIdx = maxGrpIdx + 1;
+						maxGrpIdx = maxGrpIdx + 1;
+						grp.setIdx(maxGrpIdx);
 						grp.DirectUpdate();
 					}
 
@@ -1174,64 +1181,64 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 					maxAttrIdx = 0;
 					idxAttrs = new ArrayList<String>();
 
-					for (MapAttr attr : oattrs)
+					for (MapAttr attr : oattrs.ToJavaList())
 					{
-						Object tempVar8 = tarattrs.GetEntityByKey(MapAttrAttr.KeyOfEn, attr.KeyOfEn);
+						Object tempVar8 = tarattrs.GetEntityByKey(MapAttrAttr.KeyOfEn, attr.getKeyOfEn());
 						tattr = tempVar8 instanceof MapAttr ? (MapAttr)tempVar8 : null;
 						if (tattr == null)
 						{
 							continue;
 						}
 
-						Object tempVar9 = ogroups.GetEntityByKey(GroupFieldAttr.OID, attr.GroupID);
+						Object tempVar9 = ogroups.GetEntityByKey(GroupFieldAttr.OID, attr.getGroupID());
 						group = tempVar9 instanceof GroupField ? (GroupField)tempVar9 : null;
 
 						//比对字段的分组是否一致，不一致则更新一致
 						if (group == null)
 						{
 							//源字段分组为空，则目标字段分组置为0
-							tattr.GroupID = 0;
+							tattr.setGroupID(0);
 						}
 						else
 						{
 							//此处要判断目标节点中是否已经创建了这个源字段所属分组，如果没有创建，则要自动创建
-							Object tempVar10 = targroups.GetEntityByKey(GroupFieldAttr.Lab, group.Lab);
+							Object tempVar10 = targroups.GetEntityByKey(GroupFieldAttr.Lab, group.getLab());
 							tgrp = tempVar10 instanceof GroupField ? (GroupField)tempVar10 : null;
 
 							if (tgrp == null)
 							{
 								tgrp = new GroupField();
-								tgrp.Lab = group.Lab;
-								tgrp.EnName = tdtl.No;
-								tgrp.Idx = group.Idx;
+								tgrp.setLab(group.getLab());
+								tgrp.setEnName(tdtl.getNo());
+								tgrp.setIdx(group.getIdx());
 								tgrp.Insert();
 								targroups.AddEntity(tgrp);
 
-								tattr.GroupID = tgrp.OID;
+								tattr.setGroupID(tgrp.getOID());
 							}
 							else
 							{
-								if (tgrp.OID != tattr.GroupID)
+								if (tgrp.getOID() != tattr.getGroupID())
 								{
-									tattr.GroupID = tgrp.OID;
+									tattr.setGroupID(tgrp.getOID());
 								}
 							}
 						}
 
-						tattr.setIdx(attr.Idx;
+						tattr.setIdx(attr.getIdx());
 						tattr.DirectUpdate();
-						maxAttrIdx = Math.max(attr.Idx, maxAttrIdx);
-						idxAttrs.add(attr.KeyOfEn);
+						maxAttrIdx = Math.max(attr.getIdx(), maxAttrIdx);
+						idxAttrs.add(attr.getKeyOfEn());
 					}
 
-					for (MapAttr attr : tarattrs)
+					for (MapAttr attr : tarattrs.ToJavaList())
 					{
-						if (idxAttrs.contains(attr.KeyOfEn))
+						if (idxAttrs.contains(attr.getKeyOfEn()))
 						{
 							continue;
 						}
-
-						attr.setIdx(maxAttrIdx = maxAttrIdx + 1;
+						maxAttrIdx = maxAttrIdx + 1;
+						attr.setIdx(maxAttrIdx);
 						attr.DirectUpdate();
 					}
 
@@ -1239,40 +1246,40 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				}
 
 				//确定目标节点中，源节点没有的明细表的排序
-				for (MapDtl dtl : tdtls)
+				for (MapDtl dtl : tdtls.ToJavaList())
 				{
-					if (idxDtls.contains(dtl.No))
+					if (idxDtls.contains(dtl.getNo()))
 					{
 						continue;
 					}
 
 					maxDtlIdx = maxDtlIdx + 1;
-					tgroup = GetGroup(dtl.No, tgroups);
+					tgroup = GetGroup(dtl.getNo(), tgroups);
 
 					if (tgroup == null)
 					{
 						tgroup = new GroupField();
-						tgroup.setLab( tdtl.Name;
-						tgroup.FrmID = tdtl.FK_MapData;
-						tgroup.setCtrlType(GroupCtrlType.Dtl;
-						tgroup.setCtrlID(tdtl.No;
-						tgroup.setIdx(maxDtlIdx;
+						tgroup.setLab(tdtl.getName());
+						tgroup.setFrmID(tdtl.getFK_MapData());
+						tgroup.setCtrlType(GroupCtrlType.Dtl);
+						tgroup.setCtrlID(tdtl.getNo());
+						tgroup.setIdx(maxDtlIdx);
 						tgroup.Insert();
 
 						tgroups.AddEntity(group);
 					}
 
-					if (tgroup.Idx != maxDtlIdx)
+					if (tgroup.getIdx() != maxDtlIdx)
 					{
-						tgroup.setIdx(maxDtlIdx;
+						tgroup.setIdx(maxDtlIdx);
 						tgroup.DirectUpdate();
 					}
 
-					Object tempVar11 = tmapdatas.GetEntityByKey(MapDataAttr.No, dtl.No);
+					Object tempVar11 = tmapdatas.GetEntityByKey(MapDataAttr.No, dtl.getNo());
 					tmapdata = tempVar11 instanceof MapData ? (MapData)tempVar11 : null;
 					if (tmapdata != null)
 					{
-						tmapdata.Idx = maxDtlIdx;
+						tmapdata.setIdx(maxDtlIdx);
 						tmapdata.DirectUpdate();
 					}
 				}
@@ -1291,7 +1298,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		}
 	}
 
-	private GroupField GetGroup(String ctrlID, GroupFields gfs)
+	private GroupField GetGroup(String ctrlID, GroupFields gfs) throws Exception
 	{
 		Object tempVar = gfs.GetEntityByKey(GroupFieldAttr.CtrlID, ctrlID);
 		return tempVar instanceof GroupField ? (GroupField)tempVar : null;
@@ -1304,7 +1311,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 表单模式
-	public final String SortingMapAttrs_Save()
+	public final String SortingMapAttrs_Save() throws Exception
 	{
 		Node nd = new Node(this.getFK_Node());
 
@@ -1322,7 +1329,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.FreeForm);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm;
+				md.setHisFrmType(FrmType.FreeFrm);
 				md.Update();
 			}
 			else
@@ -1330,7 +1337,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.FoolForm);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FoolForm;
+				md.setHisFrmType(FrmType.FoolForm);
 				md.Update();
 			}
 
@@ -1355,7 +1362,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			nd.setFormType(NodeFormType.FoolTruck);
 			nd.DirectUpdate();
 
-			md.HisFrmType = BP.Sys.FrmType.FoolForm; //同时更新表单表住表.
+			md.setHisFrmType(FrmType.FoolForm); //同时更新表单表住表.
 			md.Update();
 		}
 
@@ -1366,8 +1373,8 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_CustomURL"));
 			nd.DirectUpdate();
 
-			md.HisFrmType = BP.Sys.FrmType.Url; //同时更新表单表住表.
-			md.Url = this.GetValFromFrmByKey("TB_CustomURL");
+			md.setHisFrmType(FrmType.Url); //同时更新表单表住表.
+			md.setUrl(this.GetValFromFrmByKey("TB_CustomURL"));
 			md.Update();
 
 		}
@@ -1378,8 +1385,8 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_FormURL"));
 			nd.DirectUpdate();
 
-			md.HisFrmType = BP.Sys.FrmType.Url;
-			md.Url = this.GetValFromFrmByKey("TB_FormURL");
+			md.setHisFrmType(FrmType.Url);
+			md.setUrl(this.GetValFromFrmByKey("TB_FormURL"));
 			md.Update();
 
 		}
@@ -1394,7 +1401,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.SheetTree);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
 				md.Update();
 			}
 			else
@@ -1402,7 +1409,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 				nd.setFormType(NodeFormType.DisableIt);
 				nd.DirectUpdate();
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
 				md.Update();
 			}
 		}
@@ -1434,14 +1441,14 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 			{
 				btn.setWebOfficeFrmModel(BP.Sys.FrmType.FreeFrm);
 
-				md.HisFrmType = BP.Sys.FrmType.FreeFrm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
 				md.Update();
 			}
 			else
 			{
 				btn.setWebOfficeFrmModel(BP.Sys.FrmType.FoolForm);
 
-				md.HisFrmType = BP.Sys.FrmType.FoolForm; //同时更新表单表住表.
+				md.setHisFrmType(FrmType.FoolForm); //同时更新表单表住表.
 				md.Update();
 			}
 
@@ -1459,8 +1466,9 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 	 初始化节点属性列表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NodeAttrs_Init()
+	public final String NodeAttrs_Init() throws Exception
 	{
 		String strFlowId = GetRequestVal("FK_Flow");
 		if (DataType.IsNullOrEmpty(strFlowId))
@@ -1490,7 +1498,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		dt.Columns.Add("HisFrmEventsCount"); //消息&事件Count
 		dt.Columns.Add("HisFinishCondsCount"); //流程完成条件Count
 		DataRow dr;
-		for (Node node : nodes)
+		for (Node node : nodes.ToJavaList())
 		{
 			dr = dt.NewRow();
 			dr.set("NodeID", node.getNodeID());
@@ -1584,7 +1592,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 批量发起规则设置
-	public final String BatchStartFields_Init()
+	public final String BatchStartFields_Init() throws Exception
 	{
 		int nodeID = Integer.parseInt(String.valueOf(this.getFK_Node()));
 		//获取节点字段集合
@@ -1614,7 +1622,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 批量发起规则设置save
-	public final String BatchStartFields_Save()
+	public final String BatchStartFields_Save() throws Exception
 	{
 		int nodeID = Integer.parseInt(String.valueOf(this.getFK_Node()));
 		BP.Sys.MapAttrs attrs = new BP.Sys.MapAttrs("ND" + nodeID);
@@ -1653,7 +1661,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 发送阻塞模式
-	public final String BlockModel_Save()
+	public final String BlockModel_Save() throws Exception
 	{
 		BP.WF.Node nd = new BP.WF.Node(this.getFK_Node());
 
@@ -1710,7 +1718,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 可以撤销的节点
-	public final String CanCancelNodes_Save()
+	public final String CanCancelNodes_Save() throws Exception
 	{
 		BP.WF.Template.NodeCancels rnds = new BP.WF.Template.NodeCancels();
 		rnds.Delete(BP.WF.Template.NodeCancelAttr.FK_Node, this.getFK_Node());
@@ -1745,7 +1753,7 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 表单检查(CheckFrm.htm)
-	public final String CheckFrm_Check()
+	public final String CheckFrm_Check() throws Exception
 	{
 		if (!WebUser.getNo().equals("admin"))
 		{
@@ -1767,47 +1775,47 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		String fieldMsg = "";
 
 		//1.1主表
-		for (MapExt me : mes)
+		for (MapExt me : mes.ToJavaList())
 		{
-			if (!DataType.IsNullOrEmpty(me.AttrOfOper))
+			if (!DataType.IsNullOrEmpty(me.getAttrOfOper()))
 			{
-				en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrOfOper);
+				en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.getAttrOfOper());
 
-				if (en != null && !DataType.IsNullOrEmpty(me.AttrsOfActive))
+				if (en != null && !DataType.IsNullOrEmpty(me.getAttrsOfActive()))
 				{
-					en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrsOfActive);
+					en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.getAttrsOfActive());
 				}
 			}
 
 			if (en == null)
 			{
 				me.DirectDelete();
-				msg += "删除扩展设置中MyPK=" + me.PKVal + "的设置项；<br />";
+				msg += "删除扩展设置中MyPK=" + me.getPKVal() + "的设置项；<br />";
 			}
 		}
 
 		//1.2明细表
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
-			mes = new MapExts(dtl.No);
-			attrs = new MapAttrs(dtl.No);
+			mes = new MapExts(dtl.getNo());
+			attrs = new MapAttrs(dtl.getNo());
 
-			for (MapExt me : mes)
+			for (MapExt me : mes.ToJavaList())
 			{
-				if (!DataType.IsNullOrEmpty(me.AttrOfOper))
+				if (!DataType.IsNullOrEmpty(me.getAttrOfOper()))
 				{
-					en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrOfOper);
+					en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.getAttrOfOper());
 
-					if (en != null && !DataType.IsNullOrEmpty(me.AttrsOfActive))
+					if (en != null && !DataType.IsNullOrEmpty(me.getAttrsOfActive()))
 					{
-						en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.AttrsOfActive);
+						en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, me.getAttrsOfActive());
 					}
 				}
 
 				if (en == null)
 				{
 					me.DirectDelete();
-					msg += "删除扩展设置中MyPK=" + me.PKVal + "的设置项；<br />";
+					msg += "删除扩展设置中MyPK=" + me.getPKVal() + "的设置项；<br />";
 				}
 			}
 		}
@@ -1817,14 +1825,14 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		ffs.Retrieve(FrmFieldAttr.FK_MapData, this.getFK_MapData());
 
 		//2.1主表
-		for (FrmField ff : ffs)
+		for (FrmField ff : ffs.ToJavaList())
 		{
 			en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, ff.getKeyOfEn());
 
 			if (en == null)
 			{
 				ff.DirectDelete();
-				msg += "删除字段权限中MyPK=" + ff.PKVal + "的设置项；<br />";
+				msg += "删除字段权限中MyPK=" + ff.getPKVal() + "的设置项；<br />";
 			}
 		}
 
@@ -1832,17 +1840,17 @@ public class WF_Admin_AttrNode extends BP.WF.HttpHandler.DirectoryPageBase
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			ffs = new FrmFields();
-			ffs.Retrieve(FrmFieldAttr.FK_MapData, dtl.No);
-			attrs = new MapAttrs(dtl.No);
+			ffs.Retrieve(FrmFieldAttr.FK_MapData, dtl.getNo());
+			attrs = new MapAttrs(dtl.getNo());
 
-			for (FrmField ff : ffs)
+			for (FrmField ff : ffs.ToJavaList())
 			{
 				en = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, ff.getKeyOfEn());
 
 				if (en == null)
 				{
 					ff.DirectDelete();
-					msg += "删除字段权限中MyPK=" + ff.PKVal + "的设置项；<br />";
+					msg += "删除字段权限中MyPK=" + ff.getPKVal() + "的设置项；<br />";
 				}
 			}
 		}

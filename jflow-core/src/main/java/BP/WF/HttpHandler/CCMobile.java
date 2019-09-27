@@ -229,7 +229,7 @@ public class CCMobile extends DirectoryPageBase
 		dt = BP.WF.Dev2Interface.DB_FlowComplete();
 		return BP.Tools.Json.ToJson(dt);
 	}
-	public final String DB_GenerReturnWorks()
+	public final String DB_GenerReturnWorks() throws Exception
 	{
 		/* 如果工作节点退回了*/
 		BP.WF.ReturnWorks rws = new BP.WF.ReturnWorks();
@@ -250,7 +250,8 @@ public class CCMobile extends DirectoryPageBase
 			append.deleteCharAt(append.length() - 1);
 		}
 		append.append("]");
-		return BP.Tools.Entitis2Json.Instance.ReplaceIllgalChart(append.toString());
+		return append.toString();
+//		return BP.Tools.Entitis2Json.Instance.ReplaceIllgalChart(append.toString());
 	}
 
 	public final String Start_Init()
@@ -336,8 +337,9 @@ public class CCMobile extends DirectoryPageBase
 	 执行查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SearchKey_Query()
+	public final String SearchKey_Query() throws Exception
 	{
 		BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 		return search.KeySearch_Query();

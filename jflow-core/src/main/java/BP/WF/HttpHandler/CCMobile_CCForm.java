@@ -53,7 +53,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 	}
 
 	//保存从表数据
-	public final String Dtl_SaveRow()
+	public final String Dtl_SaveRow() throws Exception
 	{
 
 			///#region  查询出来从表数据.
@@ -64,7 +64,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 		for (Entity item : dtls.ToJavaList())
 		{
 			String pkval = item.GetValStringByKey(dtl.getPK());
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
 				if (attr.getIsRefAttr() == true)
 				{
@@ -240,16 +240,16 @@ public class CCMobile_CCForm extends DirectoryPageBase
 
 
 					///#region 处理文件路径，如果是保存到数据库，就存储pk.
-				if (athDesc.AthSaveWay == AthSaveWay.IISServer)
+				if (athDesc.getAthSaveWay() == AthSaveWay.IISServer)
 				{
 					//文件方式保存
-					dbUpload.FileFullName = realSaveTo;
+					dbUpload.setFileFullName(realSaveTo);
 				}
 
-				if (athDesc.AthSaveWay == AthSaveWay.FTPServer)
+				if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
 				{
 					//保存到数据库
-					dbUpload.FileFullName = dbUpload.MyPK;
+					dbUpload.setFileFullName(dbUpload.getMyPK());
 				}
 
 					///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
@@ -342,7 +342,7 @@ public class CCMobile_CCForm extends DirectoryPageBase
 					Paras ps = new Paras();
 					ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 					ps.Add("WorkID", PKVal);
-					String pWorkID = DBAccess.RunSQLReturnValInt(ps, 0).toString();
+					String pWorkID = String.valueOf(DBAccess.RunSQLReturnValInt(ps, 0));
 					if (pWorkID == null || pWorkID.equals("0"))
 					{
 						pWorkID = PKVal;

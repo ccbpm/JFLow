@@ -358,7 +358,7 @@ public abstract class WebContralBase {
 		return str;
 	}
 
-	public final String getFK_Dept() {
+	public String getFK_Dept() {
 		String str = getRequest().getParameter("FK_Dept");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return null;

@@ -3,14 +3,20 @@ package BP.WF.HttpHandler;
 import BP.Web.*;
 import BP.Sys.*;
 import BP.Tools.DateUtils;
+import BP.Tools.StringHelper;
 import BP.DA.*;
+import BP.Difference.ContextHolderUtils;
+import BP.Difference.Handler.CommonFileUtils;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.*;
 import java.time.*;
 
-public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
+public class WF_Admin_AttrFlow extends DirectoryPageBase 
 {
 	 /** 
 	 构造函数
@@ -94,7 +100,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			}
 		}
 
-		return tangible.StringHelper.trimEnd(nums, ',');
+		return StringHelper.trimEnd(nums, ',');
 	}
 
 		///#endregion APICodeFEE_Init.
@@ -105,8 +111,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	 初始化节点属性列表.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String NodeAttrs_Init()
+	public final String NodeAttrs_Init() throws Exception
 	{
 		String strFlowId = GetRequestVal("FK_Flow");
 		if (DataType.IsNullOrEmpty(strFlowId))
@@ -137,7 +144,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		dt.Columns.Add("HisFrmEventsCount"); //消息&事件Count
 		dt.Columns.Add("HisFinishCondsCount"); //流程完成条件Count
 		DataRow dr;
-		for (Node node : nodes)
+		for (Node node : nodes.ToJavaList())
 		{
 			dr = dt.NewRow();
 			dr.set("NodeID", node.getNodeID());
@@ -195,7 +202,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 与业务表数据同步
-	public final String DTSBTable_Init()
+	public final String DTSBTable_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -217,15 +224,16 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		DataTable dtFlow = fl.ToDataTableField("Flow");
 		ds.Tables.add(dtFlow);
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/** 
 	 与业务表数据同步
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DTSBTable_Save()
+	public final String DTSBTable_Save() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
 
@@ -243,7 +251,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 		DTSField field = DTSField.forValue(this.GetRequestValInt("DTSField"));
 
-		if (field == 0)
+		if (field.getValue() == 0)
 		{
 			field = DTSField.SameNames;
 		}
@@ -277,11 +285,11 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 			if (!DataType.IsNullOrEmpty(str))
 			{
-				flow.setDTSFields(tangible.StringHelper.trimEnd(str, ',') + "@" + tangible.StringHelper.trimEnd(ywStr, ','));
+				flow.setDTSFields(StringHelper.trimEnd(str, ',') + "@" + StringHelper.trimEnd(ywStr, ','));
 			}
 			else
 			{
-				PubClass.Alert("未检测到业务主表【" + flow.getPTable() + "】与表【" + flow.getDTSBTable() + "】有相同的字段名.");
+				Log.DebugWriteError("未检测到业务主表【" + flow.getPTable() + "】与表【" + flow.getDTSBTable() + "】有相同的字段名.");
 				return ""; //不执行保存
 			}
 		}
@@ -308,8 +316,8 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 			}
 			catch (java.lang.Exception e)
 			{
-				//PubClass.Alert(ex.Message);
-				PubClass.Alert("设置的字段有误.【" + flow.getDTSFields() + "】");
+				//Log.DebugWriteError(ex.Message);
+				Log.DebugWriteError("设置的字段有误.【" + flow.getDTSFields() + "】");
 				return ""; //不执行保存
 			}
 		}
@@ -322,7 +330,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 
 
 		///#region 数据调度 - 字段映射.
-	public final String DTSBTableExt_Init()
+	public final String DTSBTableExt_Init() throws Exception
 	{
 		//定义数据容器.
 		DataSet ds = new DataSet();
@@ -346,7 +354,7 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		ds.Tables.add(dtAttrs);
 
 		//转化成json,返回.
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	public final String DTSBTableExt_Save() throws Exception
 	{
@@ -446,13 +454,14 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	 前置导航save
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String StartGuide_Save()
+	public final String StartGuide_Save() throws Exception
 	{
 		try
 		{
 			Flow en = new Flow();
-			en.No = this.getFK_Flow();
+			en.setNo(this.getFK_Flow());
 			en.Retrieve();
 
 			int val = this.GetRequestValInt("RB_StartGuideWay");
@@ -544,9 +553,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		{
 			BP.WF.Template.TruckViewPower en = new BP.WF.Template.TruckViewPower(getFK_Flow());
 			en.Retrieve();
-
-			Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(en);
-			en = tempVar instanceof BP.WF.Template.TruckViewPower ? (BP.WF.Template.TruckViewPower)tempVar : null;
+			en = (TruckViewPower) BP.Sys.PubClass.CopyFromRequestByPost(en, ContextHolderUtils.getRequest());
+//			Object tempVar = BP.Sys.PubClass.CopyFromRequestByPost(en);
+//			en = tempVar instanceof BP.WF.Template.TruckViewPower ? (BP.WF.Template.TruckViewPower)tempVar : null;
 			en.Save(); //执行保存.
 			return "保存成功";
 		}
@@ -565,54 +574,57 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	 流程模版导入.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Imp_Done()
+	public final String Imp_Done() throws Exception
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-		var files = HttpContextHelper.RequestFiles(); //context.Request.Files;
-		if (files.size() == 0)
-		{
-		return "err@请选择要上传的流程模版。";
+		
+		File xmlFile = null;
+		String fileName = UUID.randomUUID().toString();
+		try {
+			xmlFile = File.createTempFile(fileName, ".xml");
+		} catch (IOException e1) {
+			xmlFile = new File(System.getProperty("java.io.tmpdir"), fileName + ".xml");
 		}
-
-		//设置文件名
-		String fileNewName = DateUtils.format(new Date(),"yyyyMMddHHmmssff") + "_" + (new File(files[0].FileName)).getName();
-
-		//文件存放路径
-		String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "/" + fileNewName;
-		//files[0].SaveAs(filePath);
-		HttpContextHelper.UploadFile(files[0], filePath);
-
+		xmlFile.deleteOnExit();
+		HttpServletRequest request = ContextHolderUtils.getRequest();
+		try{
+			CommonFileUtils.upload(request,"File_Upload", xmlFile);
+		}catch(Exception e){
+			e.printStackTrace();
+			return "err@执行失败";		
+		}
+		
 		String flowNo = this.getFK_Flow();
 		String FK_FlowSort = this.GetRequestVal("FK_Sort");
-		//检查流程编号
-		if (DataType.IsNullOrEmpty(flowNo) == false)
-		{
+		// 检查流程编号
+		if (flowNo != null && !"".equals(flowNo)) {
 			Flow fl = new Flow(flowNo);
 			FK_FlowSort = fl.getFK_FlowSort();
 		}
-		//检查流程类别编号
-		if (DataType.IsNullOrEmpty(FK_FlowSort))
-		{
+		// 检查流程类别编号
+		if (FK_FlowSort == null || "".equals(FK_FlowSort)) {
 			return "err@所选流程类别编号不存在。";
 		}
-
-		//导入模式
-		BP.WF.ImpFlowTempleteModel model = BP.WF.ImpFlowTempleteModel.forValue(this.GetRequestValInt("ImpWay"));
+		// 导入模式
+		ImpFlowTempleteModel model = ImpFlowTempleteModel.forValue(this.GetRequestValInt("ImpWay"));
 		if (model == ImpFlowTempleteModel.AsSpecFlowNo)
-		{
 			flowNo = this.GetRequestVal("SpecFlowNo");
+
+		// 执行导入
+		BP.WF.Flow flow;
+		try {
+			flow = BP.WF.Flow.DoLoadFlowTemplate(FK_FlowSort, xmlFile.getAbsolutePath(), model, flowNo);
+			Hashtable<String, String> ht = new Hashtable<String, String>();
+			ht.put("FK_Flow", flow.getNo());
+			ht.put("FlowName", flow.getName());
+			ht.put("FK_FlowSort", flow.getFK_FlowSort());
+			ht.put("Msg", "导入成功,流程编号为:" + flow.getNo() + "名称为:" + flow.getName());
+			return BP.Tools.Json.ToJson(ht);
+		} catch (Exception e) {
+			return "err@导入失败: " + e.getMessage();
 		}
 
-		//执行导入
-		BP.WF.Flow flow = BP.WF.Flow.DoLoadFlowTemplate(FK_FlowSort, filePath, model, flowNo);
-
-		Hashtable ht = new Hashtable();
-		ht.put("FK_Flow", flow.getNo());
-		ht.put("FlowName", flow.getName());
-		ht.put("FK_FlowSort", flow.getFK_FlowSort());
-		ht.put("Msg", "导入成功,流程编号为:" + flow.getNo() + "名称为:" + flow.getName());
-		return BP.Tools.Json.ToJson(ht);
 	}
 
 		///#endregion 数据导入.
@@ -689,8 +701,9 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 	 流程时限消息设置
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String PushMsg_Save()
+	public final String PushMsg_Save() throws Exception
 	{
 		BP.WF.Template.PushMsg msg = new BP.WF.Template.PushMsg();
 		msg.setMyPK(this.getMyPK());
@@ -707,23 +720,23 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		String nodesOfEmail = "";
 		for (BP.WF.Node mynd : nds.ToJavaList())
 		{
-			for (String key : HttpContextHelper.RequestParamKeys)
-			{
+			Enumeration<String> enums = ContextHolderUtils.getRequest().getParameterNames();
+			while (enums.hasMoreElements()) {
+				String key = (String) enums.nextElement();
 				if (key.contains("CB_Station_" + mynd.getNodeID()) && nodesOfSMS.contains(mynd.getNodeID() + "") == false)
 				{
 					nodesOfSMS += mynd.getNodeID() + ",";
 				}
-
-				if (key.contains("CB_SMS_" + mynd.getNodeID()) && nodesOfSMS.contains(mynd.getNodeID() + "") == false)
-				{
+				if (key.contains("CB_SMS_" + mynd.getNodeID()) && nodesOfSMS.contains(mynd.getNodeID() + "") == false) {
 					nodesOfSMS += mynd.getNodeID() + ",";
 				}
 
-				if (key.contains("CB_Email_" + mynd.getNodeID()) && nodesOfEmail.contains(mynd.getNodeID() + "") == false)
-				{
+				if (key.contains("CB_Email_" + mynd.getNodeID())
+						&& nodesOfEmail.contains(mynd.getNodeID() + "") == false) {
 					nodesOfEmail += mynd.getNodeID() + ",";
 				}
 			}
+			
 		}
 
 		//节点.
@@ -738,17 +751,17 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		msg.setSMSPushModel(this.GetRequestVal("PushModel"));
 
 		//短信推送方式。
-		msg.setSMSPushWay((int)(HttpContextHelper.RequestParams("RB_SMS").replace("RB_SMS_", "")));
+		msg.setSMSPushWay(Integer.parseInt(this.GetRequestVal("RB_SMS").replace("RB_SMS_", "")));
 
 		//短信手机字段.
-		msg.setSMSField(HttpContextHelper.RequestParams("DDL_SMS_Fields"));
+		msg.setSMSField(this.GetRequestVal("DDL_SMS_Fields"));
 		//替换变量
-		String smsstr = HttpContextHelper.RequestParams("TB_SMS");
+		String smsstr = this.GetRequestVal("TB_SMS");
 		//扬玉慧 此处是配置界面  不应该把用户名和用户编号转化掉
 		//smsstr = smsstr.Replace("@WebUser.getName()", WebUser.getName());
 		//smsstr = smsstr.Replace("@WebUser.getNo()", WebUser.getNo());
 
-		System.Data.DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable();
+		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable();
 		// smsstr = smsstr.Replace("@RDT",);
 		//短信内容模版.
 		msg.setSMSDoc_Real(smsstr);
@@ -760,13 +773,13 @@ public class WF_Admin_AttrFlow extends BP.WF.HttpHandler.DirectoryPageBase
 		//邮件.
 		//msg.MailPushWay = Convert.ToInt32(HttpContext.Current.Request["RB_Email"].ToString().replace("RB_Email_", "")); ;
 		//2019-07-25 zyt改造
-		msg.setMailPushWay((int)(HttpContextHelper.RequestParams("RB_Email").replace("RB_Email_", "")));
+		msg.setMailPushWay(Integer.parseInt(this.GetRequestVal("RB_Email").replace("RB_Email_", "")));
 		//邮件标题与内容.
-		msg.setMailTitle_Real(HttpContextHelper.RequestParams("TB_Email_Title"));
-		msg.setMailDoc_Real(HttpContextHelper.RequestParams("TB_Email_Doc"));
+		msg.setMailTitle_Real(this.GetRequestVal("TB_Email_Title"));
+		msg.setMailDoc_Real(this.GetRequestVal("TB_Email_Doc"));
 
 		//邮件地址.
-		msg.setMailAddress(HttpContextHelper.RequestParams("DDL_Email_Fields"));
+		msg.setMailAddress(this.GetRequestVal("DDL_Email_Fields"));
 
 
 			///#endregion 邮件保存.

@@ -1,9 +1,13 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.GPM.StationType;
 import BP.Sys.*;
+import BP.Tools.StringHelper;
 import BP.WF.Template.*;
 import BP.WF.*;
+import BP.WF.Glo;
+
 import java.util.*;
 
 public class WF_Comm_RefFunc extends DirectoryPageBase
@@ -24,226 +28,180 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 	 保存节点绑定人员信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2DotTreeDeptEmpModel_SaveNodeEmps()
+	public final String Dot2DotTreeDeptEmpModel_SaveNodeEmps() throws Exception
 	{
-		JsonResultInnerData jr = new JsonResultInnerData();
-		String nodeid = this.GetRequestVal("nodeid");
-		String data = this.GetRequestVal("data");
-		String partno = this.GetRequestVal("partno");
-		boolean lastpart = false;
-		int partidx = 0;
-		int partcount = 0;
-		int nid = 0;
+        String nodeid = this.GetRequestVal("NodeId");
+        String data = this.GetRequestVal("data");
+        String partno = this.GetRequestVal("partno");
+        boolean lastpart = false;
+        int partidx = 0;
+        int partcount = 0;
+        int nid = 0;
+        String msg = "";
 
-		tangible.OutObject<Integer> tempOut_nid = new tangible.OutObject<Integer>();
-		if (DataType.IsNullOrEmpty(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
-		{
-		nid = tempOut_nid.argValue;
-			throw new RuntimeException("参数nodeid不正确");
-		}
-	else
-	{
-		nid = tempOut_nid.argValue;
+        if (StringHelper.isNullOrEmpty(nodeid))
+        	throw new RuntimeException("参数nodeid不正确");
+        nid = Integer.parseInt(nodeid);
+        if (StringHelper.isNullOrEmpty(data))
+            data = "";
+        BP.WF.Template.NodeEmps nemps = new BP.WF.Template.NodeEmps();
+        String[] empNos = data.split(",");
+
+        //提交内容过长时，采用分段式提交
+        if (StringHelper.isNullOrEmpty(partno))
+        {
+            nemps.Delete(BP.WF.Template.NodeEmpAttr.FK_Node, nid);
+        }
+        else
+        {
+            String[] parts = partno.split("/");
+
+            if (parts.length != 2)
+            	throw new RuntimeException("err@参数partno不正确");
+
+            partidx = Integer.parseInt(parts[0]);
+            partcount = Integer.parseInt(parts[1]);
+
+            empNos = data.split(",");
+
+            if (partidx == 1)
+                nemps.Delete(BP.WF.Template.NodeEmpAttr.FK_Node, nid);
+
+            lastpart = partidx == partcount;
+        }
+
+        DataTable dtEmps = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Emp");
+        BP.WF.Template.NodeEmp nemp = null;
+
+        for(String empNo : empNos)
+        {
+        	if (DBAccess.getAppCenterDBType() == DBType.Oracle)
+            {
+        		if (dtEmps.selectx("No=" + empNo).size() + dtEmps.selectx("NO=" + empNo).size() == 0)
+            		continue;
+            }else{
+            	if (dtEmps.selectx("No=" + empNo).size() == 0)
+            		continue;
+            }
+            nemp = new BP.WF.Template.NodeEmp();
+            nemp.setFK_Node(nid);
+            nemp.setFK_Emp(empNo);
+            nemp.Insert();
+        }
+
+        Map<String,Object> jre = new HashMap<String,Object>();
+        if (StringHelper.isNullOrEmpty(partno))
+        {
+            msg = "保存成功";
+        }
+        else
+        {
+             jre.put("lastpart", lastpart);
+             jre.put("partidx", partidx);
+             jre.put("partcount", partcount);
+             //jr.setInnerData(jre);
+             if (lastpart)
+            	  //jr.setMsg("保存成功");
+             	  msg = "保存成功";
+            else
+                //jr.setMsg(String.format("第{0}/{1}段保存成功", partidx, partcount));
+             	msg = String.format("第{0}/{1}段保存成功", partidx, partcount);
+        }
+        return transction(BP.Tools.Json.ToJson(jre),msg);
 	}
 
-		if (DataType.IsNullOrEmpty(data))
-		{
-			data = "";
-		}
-
-		BP.WF.Template.NodeEmps nemps = new BP.WF.Template.NodeEmps();
-		String[] empNos = data.split(",".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-		//提交内容过长时，采用分段式提交
-		if (DataType.IsNullOrEmpty(partno))
-		{
-			nemps.Delete(BP.WF.Template.NodeEmpAttr.FK_Node, nid);
-		}
-		else
-		{
-			String[] parts = partno.split(java.util.regex.Pattern.quote("/"), -1);
-
-			if (parts.length != 2)
-			{
-				throw new RuntimeException("参数partno不正确");
-			}
-
-			partidx = Integer.parseInt(parts[0]);
-			partcount = Integer.parseInt(parts[1]);
-
-			empNos = data.split(",".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-			if (partidx == 1)
-			{
-				nemps.Delete(BP.WF.Template.NodeEmpAttr.FK_Node, nid);
-			}
-
-			lastpart = partidx == partcount;
-		}
-
-		DataTable dtEmps = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Emp");
-		BP.WF.Template.NodeEmp nemp = null;
-
-		for (String empNo : empNos)
-		{
-			if (dtEmps.Select(String.format("No='%1$s'", empNo)).length + dtEmps.Select(String.format("NO='%1$s'", empNo)).length == 0)
-			{
-				continue;
-			}
-
-			nemp = new BP.WF.Template.NodeEmp();
-			nemp.setFK_Node(nid);
-			nemp.setFK_Emp(empNo);
-			nemp.Insert();
-		}
-
-		if (DataType.IsNullOrEmpty(partno))
-		{
-			jr.setMsg("保存成功");
-		}
-		else
-		{
-			class AnonymousType
-			{
-				public boolean lastpart;
-				public int partidx;
-				public int partcount;
-
-				public AnonymousType(boolean _lastpart, int _partidx, int _partcount)
-				{
-					lastpart = _lastpart;
-					partidx = _partidx;
-					partcount = _partcount;
-				}
-			}
-			jr.setInnerData(AnonymousType(lastpart, partidx, partcount));
-
-			if (lastpart)
-			{
-				jr.setMsg("保存成功");
-			}
-			else
-			{
-				jr.setMsg(String.format("第%1$s/%2$s段保存成功", partidx, partcount));
-			}
-		}
-
-		return Newtonsoft.Json.JsonConvert.SerializeObject(jr);
-	}
-
-
+	public String transction(String innerData,String msg){
+    	return "{\"innerData\": "+innerData+",\"msg\":\""+msg+"\"}";
+    }
 
 	/** 
 	 保存节点绑定部门信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2DotTreeDeptModel_SaveNodeDepts()
+	public final String Dot2DotTreeDeptModel_SaveNodeDepts() throws Exception
 	{
 		JsonResultInnerData jr = new JsonResultInnerData();
-		String nodeid = this.GetRequestVal("nodeid");
-		String data = this.GetRequestVal("data");
-		String partno = this.GetRequestVal("partno");
-		boolean lastpart = false;
-		int partidx = 0;
-		int partcount = 0;
-		int nid = 0;
+        String nodeid = this.GetRequestVal("NodeId");
+        String data = this.GetRequestVal("data");
+        String partno = this.GetRequestVal("partno");
+        boolean lastpart = false;
+        int partidx = 0;
+        int partcount = 0;
+        int nid = 0;
 
-		tangible.OutObject<Integer> tempOut_nid = new tangible.OutObject<Integer>();
-		if (DataType.IsNullOrEmpty(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
-		{
-		nid = tempOut_nid.argValue;
-			throw new RuntimeException("参数nodeid不正确");
-		}
-	else
-	{
-		nid = tempOut_nid.argValue;
-	}
+        try {
+        	nid = Integer.parseInt(nodeid);
+        } catch (Exception e) {
+        	throw new RuntimeException("参数nodeid不正确");
+        }
+        if (StringHelper.isNullOrEmpty(nodeid))// ||  int.TryParse(nodeid, out nid) == false
+        	throw new RuntimeException("参数nodeid不正确");
 
-		if (DataType.IsNullOrEmpty(data))
-		{
-			data = "";
-		}
+        if (StringHelper.isNullOrEmpty(data))
+            data = "";
 
-		BP.WF.Template.NodeDepts ndepts = new BP.WF.Template.NodeDepts();
-		String[] deptNos = data.split("|".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+        BP.WF.Template.NodeDepts ndepts = new BP.WF.Template.NodeDepts();
+        String[] deptNos = data.split("\\|");
 
-		//提交内容过长时，采用分段式提交
-		if (DataType.IsNullOrEmpty(partno))
-		{
-			ndepts.Delete(BP.WF.Template.NodeDeptAttr.FK_Node, nid);
-		}
-		else
-		{
-			String[] parts = partno.split(java.util.regex.Pattern.quote("/"), -1);
+        //提交内容过长时，采用分段式提交
+        if (StringHelper.isNullOrEmpty(partno))
+        {
+            ndepts.Delete(BP.WF.Template.NodeDeptAttr.FK_Node, nid);
+        }
+        else
+        {
+            String[] parts = partno.split("/",0);
 
-			if (parts.length != 2)
-			{
-				throw new RuntimeException("参数partno不正确");
-			}
+            if (parts.length != 2)
+            	throw new RuntimeException("参数partno不正确");
 
-			partidx = Integer.parseInt(parts[0]);
-			partcount = Integer.parseInt(parts[1]);
+            partidx = Integer.parseInt(parts[0]);
+            partcount = Integer.parseInt(parts[1]);
 
-			deptNos = data.split("|".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            deptNos = data.split("\\|");
 
-			if (partidx == 1)
-			{
-				ndepts.Delete(BP.WF.Template.NodeDeptAttr.FK_Node, nid);
-			}
+            if (partidx == 1)
+                ndepts.Delete(BP.WF.Template.NodeDeptAttr.FK_Node, nid);
 
-			lastpart = partidx == partcount;
-		}
+            lastpart = partidx == partcount;
+        }
 
-		DataTable dtDepts = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Dept");
-		BP.WF.Template.NodeDept nemp = null;
+        DataTable dtDepts = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Dept");
+        BP.WF.Template.NodeDept nemp = null;
 
-		for (String deptNo : deptNos)
-		{
-			if (dtDepts.Select(String.format("No='%1$s'", deptNo)).length + dtDepts.Select(String.format("NO='%1$s'", deptNo)).length == 0)
-			{
-				continue;
-			}
+        for(String deptNo : deptNos)
+        {
+            if (dtDepts.selectx("No="+deptNo).size() + dtDepts.selectx("NO="+deptNo).size() == 0)
+                continue;
+            nemp = new BP.WF.Template.NodeDept();
+            nemp.setFK_Node(nid);
+            nemp.setFK_Dept(deptNo);
+            nemp.Insert();
+        }
 
-			nemp = new BP.WF.Template.NodeDept();
-			nemp.setFK_Node(nid);
-			nemp.setFK_Dept(deptNo);
-			nemp.Insert();
-		}
+        if (StringHelper.isNullOrEmpty(partno))
+        {
+            jr.setMsg("保存成功");
+        }
+        else
+        {
+       	 Map<String,Object> jre = new HashMap<String,Object>();
+            jre.put("lastpart", lastpart);
+            jre.put("partidx", partidx);
+            jre.put("partcount", partcount);
+            jr.setInnerData(jre);
+            if (lastpart)
+           	  jr.setMsg("保存成功");
+            else
+                jr.setMsg(String.format("第%d/%d段保存成功", partidx, partcount));
+        }
 
-		if (DataType.IsNullOrEmpty(partno))
-		{
-			jr.setMsg("保存成功");
-		}
-		else
-		{
-			class AnonymousType
-			{
-				public boolean lastpart;
-				public int partidx;
-				public int partcount;
-
-				public AnonymousType(boolean _lastpart, int _partidx, int _partcount)
-				{
-					lastpart = _lastpart;
-					partidx = _partidx;
-					partcount = _partcount;
-				}
-			}
-			jr.setInnerData(AnonymousType(lastpart, partidx, partcount));
-
-			if (lastpart)
-			{
-				jr.setMsg("保存成功");
-			}
-			else
-			{
-				jr.setMsg(String.format("第%1$s/%2$s段保存成功", partidx, partcount));
-			}
-		}
-
-		return Newtonsoft.Json.JsonConvert.SerializeObject(jr);
+       // return Newtonsoft.Json.JsonConvert.SerializeObject(jr);
+        return BP.Tools.Json.ToJson(jr);
 	}
 
 
@@ -274,7 +232,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		}
 
 		//对Oracle数据库做兼容性处理
-		if (DBAccess.AppCenterDBType == DBType.Oracle)
+		if (DBAccess.getAppCenterDBType() == DBType.Oracle)
 		{
 			for (DataColumn col : dt.Columns)
 			{
@@ -314,112 +272,87 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 	 保存节点绑定岗位信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2DotStationModel_SaveNodeStations()
+	public final String Dot2DotStationModel_SaveNodeStations() throws Exception
 	{
 		JsonResultInnerData jr = new JsonResultInnerData();
-		String nodeid = this.GetRequestVal("nodeid");
-		String data = this.GetRequestVal("data");
-		String partno = this.GetRequestVal("partno");
-		boolean lastpart = false;
-		int partidx = 0;
-		int partcount = 0;
-		int nid = 0;
+        String nodeid = this.GetRequestVal("nodeid");
+        String data = this.GetRequestVal("data");
+        String partno = this.GetRequestVal("partno");
+        boolean lastpart = false;
+        int partidx = 0;
+        int partcount = 0;
+        int nid = 0;
 
-		tangible.OutObject<Integer> tempOut_nid = new tangible.OutObject<Integer>();
-		if (DataType.IsNullOrEmpty(nodeid) || tangible.TryParseHelper.tryParseInt(nodeid, tempOut_nid) == false)
-		{
-		nid = tempOut_nid.argValue;
-			throw new RuntimeException("参数nodeid不正确");
-		}
-	else
-	{
-		nid = tempOut_nid.argValue;
-	}
+        try {
+//			int.TryParse(nodeid, out nid)
+            nid = Integer.parseInt(nodeid);
+        } catch (Exception e) {
+        	throw new RuntimeException("参数nodeid不正确");
+        }
+        if (StringHelper.isNullOrEmpty(nodeid))
+            throw new RuntimeException("参数nodeid不正确");
 
-		if (DataType.IsNullOrEmpty(data))
-		{
-			data = "";
-		}
+        if (StringHelper.isNullOrEmpty(data))
+            data = "";
 
-		BP.WF.Template.NodeStations nsts = new BP.WF.Template.NodeStations();
-		String[] stNos = data.split("|".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+        BP.WF.Template.NodeStations nsts = new BP.WF.Template.NodeStations();
+        String[] stNos = data.split("\\|");
 
-		//提交内容过长时，采用分段式提交
-		if (DataType.IsNullOrEmpty(partno))
-		{
-			nsts.Delete(BP.WF.Template.NodeStationAttr.FK_Node, nid);
-		}
-		else
-		{
-			String[] parts = partno.split(java.util.regex.Pattern.quote("/"), -1);
+        //提交内容过长时，采用分段式提交
+        if (StringHelper.isNullOrEmpty(partno))
+        {
+            nsts.Delete(BP.WF.Template.NodeStationAttr.FK_Node, nid);
+        }
+        else
+        {
+            String[] parts = partno.split("/",0);
 
-			if (parts.length != 2)
-			{
-				throw new RuntimeException("参数partno不正确");
-			}
+            if (parts.length != 2)
+                throw new RuntimeException("参数partno不正确");
 
-			partidx = Integer.parseInt(parts[0]);
-			partcount = Integer.parseInt(parts[1]);
+            partidx = Integer.parseInt(parts[0]);
+            partcount = Integer.parseInt(parts[1]);
 
-			stNos = data.split("|".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            stNos = data.split("\\|");
 
-			if (partidx == 1)
-			{
-				nsts.Delete(BP.WF.Template.NodeStationAttr.FK_Node, nid);
-			}
+            if (partidx == 1)
+                nsts.Delete(BP.WF.Template.NodeStationAttr.FK_Node, nid);
 
-			lastpart = partidx == partcount;
-		}
+            lastpart = partidx == partcount;
+        }
 
-		DataTable dtSts = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Station");
-		BP.WF.Template.NodeStation nst = null;
+        DataTable dtSts = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Station");
+        BP.WF.Template.NodeStation nst = null;
 
-		for (String stNo : stNos)
-		{
-			if (dtSts.Select(String.format("No='%1$s'", stNo)).length + dtSts.Select(String.format("NO='%1$s'", stNo)).length == 0)
-			{
-				continue;
-			}
+        for(String stNo : stNos)
+        {
+            if (dtSts.selectx("No="+stNo).size() + dtSts.selectx("NO="+stNo).size() == 0)
+                continue;
+            nst = new BP.WF.Template.NodeStation();
+            nst.setFK_Node(nid);
+            nst.setFK_Station(stNo);
+            nst.Insert();
+        }
 
-			nst = new BP.WF.Template.NodeStation();
-			nst.setFK_Node(nid);
-			nst.setFK_Station(stNo);
-			nst.Insert();
-		}
-
-		if (DataType.IsNullOrEmpty(partno))
-		{
-			jr.setMsg("保存成功");
-		}
-		else
-		{
-			class AnonymousType
-			{
-				public boolean lastpart;
-				public int partidx;
-				public int partcount;
-
-				public AnonymousType(boolean _lastpart, int _partidx, int _partcount)
-				{
-					lastpart = _lastpart;
-					partidx = _partidx;
-					partcount = _partcount;
-				}
-			}
-			jr.setInnerData(AnonymousType(lastpart, partidx, partcount));
-
-			if (lastpart)
-			{
-				jr.setMsg("保存成功");
-			}
-			else
-			{
-				jr.setMsg(String.format("第%1$s/%2$s段保存成功", partidx, partcount));
-			}
-		}
-
-		return Newtonsoft.Json.JsonConvert.SerializeObject(jr);
+        if (StringHelper.isNullOrEmpty(partno))
+        {
+        	jr.setMsg("保存成功");
+        }
+        else
+        {
+            Map<String,Object> jre = new HashMap<String,Object>();
+             jre.put("lastpart", lastpart);
+             jre.put("partidx", partidx);
+             jre.put("partcount", partcount);
+             jr.setInnerData(jre);
+             if (lastpart)
+            	  jr.setMsg("保存成功");
+            else
+                jr.setMsg(String.format("第%d/%d段保存成功", partidx, partcount));
+        }
+        return BP.Tools.Json.ToJson(jr);
 	}
 
 	/** 
@@ -462,16 +395,16 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 
 			if (dt.Rows.size() == 0)
 			{
-				dt.Rows.add("-1", "无单位数据", parentrootid);
+				dt.Rows.AddDatas("-1", "无单位数据", parentrootid);
 			}
 
 			node = new EasyuiTreeNode();
-			node.setid("UNITROOT_" + dt.Rows[0]["No"]);
-			node.settext(dt.Rows[0]["Name"] instanceof String ? (String)dt.Rows[0]["Name"] : null);
+			node.setid("UNITROOT_" + dt.Rows.get(0).getValue("No"));
+			node.settext(dt.Rows.get(0).getValue("Name") instanceof String ? (String)dt.Rows.get(0).getValue("Name") : null);
 			node.seticonCls("icon-department");
 			node.setattributes(new EasyuiTreeNodeAttributes());
-			node.getattributes().setNo(dt.Rows[0]["No"] instanceof String ? (String)dt.Rows[0]["No"] : null);
-			node.getattributes().setName(dt.Rows[0]["Name"] instanceof String ? (String)dt.Rows[0]["Name"] : null);
+			node.getattributes().setNo(dt.Rows.get(0).getValue("No") instanceof String ? (String)dt.Rows.get(0).getValue("No") : null);
+			node.getattributes().setName(dt.Rows.get(0).getValue("Name") instanceof String ? (String)dt.Rows.get(0).getValue("Name") : null);
 			node.getattributes().setParentNo(parentrootid);
 			node.getattributes().setTType("UNITROOT");
 			node.setstate("closed");
@@ -690,7 +623,7 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 		}
 
 		//对Oracle数据库做兼容性处理
-		if (DBAccess.AppCenterDBType == DBType.Oracle)
+		if (DBAccess.getAppCenterDBType() == DBType.Oracle)
 		{
 			for (DataColumn col : dt.Columns)
 			{
@@ -730,14 +663,15 @@ public class WF_Comm_RefFunc extends DirectoryPageBase
 	 判断Port_StationType表中是否含有Idx字段
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final boolean CheckStationTypeIdxExists()
+	public final boolean CheckStationTypeIdxExists() throws Exception
 	{
 		if (DBAccess.IsExitsTableCol("Port_StationType", "Idx") == false)
 		{
 			if (DBAccess.IsView("Port_StationType", SystemConfig.getAppCenterDBType()) == false)
 			{
-				BP.GPM.StationType st = new GPM.StationType();
+				StationType st = new StationType();
 				st.CheckPhysicsTable();
 
 				DBAccess.RunSQL("UPDATE Port_StationType SET Idx = 1");

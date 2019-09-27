@@ -71,7 +71,7 @@ public abstract class HttpHandlerBase implements IHttpHandler, IRequiresSessionS
 				err = "err@在执行类[" + this.getCtrlType().toString() + "]，方法[" + ctrl.getDoType() + "]错误 \t\n @" + ex.getMessage() + " \t\n @技术信息:" + ex.getStackTrace() + " \t\n相关参数:" + paras;
 			}
 
-			if (Web.WebUser.getNo() == null)
+			if (WebUser.getNo() == null)
 			{
 				err = "err@登录时间过长,请重新登录. @其他信息:" + err;
 			}

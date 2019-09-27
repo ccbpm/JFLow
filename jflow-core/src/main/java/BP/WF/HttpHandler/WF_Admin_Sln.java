@@ -43,7 +43,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 		StringBuilder sBuilder = new StringBuilder();
 		sBuilder.append("<select id = \"copynodesdll\"  multiple = \"multiple\" style = \"border - style:None; width: 100%; Height: 100%; \">");
 
-		for (Node node : nodes)
+		for (Node node : nodes.ToJavaList())
 		{
 			sBuilder.append("<option " + (getFK_Node() == node.getNodeID() ? "disabled = \"disabled\"" : "") + " value = \"" + node.getNodeID() + "\" >" + "[" + node.getNodeID() + "]" + node.getName() + "</ option >");
 		}
@@ -91,14 +91,14 @@ public class WF_Admin_Sln extends DirectoryPageBase
 				if (fn.IsExit("mypk", frm + "_" + this.getFK_Node() + "_" + this.getFK_Flow()))
 				{
 					frmNode.Copy(fn);
-					frmNode.setMyPK( frm + "_" + nodeid + "_" + this.getFK_Flow();
+					frmNode.setMyPK(frm + "_" + nodeid + "_" + this.getFK_Flow());
 					frmNode.setFK_Flow(this.getFK_Flow());
 					frmNode.setFK_Node(nodeid);
 					frmNode.setFK_Frm(frm);
 				}
 				else
 				{
-					frmNode.setMyPK( frm + "_" + nodeid + "_" + this.getFK_Flow();
+					frmNode.setMyPK( frm + "_" + nodeid + "_" + this.getFK_Flow());
 					frmNode.setFK_Flow(this.getFK_Flow());
 					frmNode.setFK_Node(nodeid);
 					frmNode.setFK_Frm(frm);
@@ -120,11 +120,11 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	{
 		try
 		{
-			String formNos = HttpContextHelper.RequestParams("formNos"); // this.context.Request["formNos"];
+			String formNos = this.GetRequestVal("formNos"); // this.context.Request["formNos"];
 
 			FrmNodes fns = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
 			//删除已经删除的。
-			for (FrmNode fn : fns)
+			for (FrmNode fn : fns.ToJavaList())
 			{
 				if (formNos.contains("," + fn.getFK_Frm() + ",") == false)
 				{
@@ -151,7 +151,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 				fn.setFK_Flow(this.getFK_Flow());
 				fn.setFK_Node(this.getFK_Node());
 
-				fn.setMyPK( fn.getFK_Frm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow();
+				fn.setMyPK(fn.getFK_Frm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
 
 				fn.Save();
 			}
@@ -180,12 +180,12 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 		//根节点
 		BP.WF.Template.FlowFormTree root = new BP.WF.Template.FlowFormTree();
-		root.Name = "表单库";
+		root.setName("表单库");
 		int i = root.Retrieve(FlowFormTreeAttr.ParentNo, "0");
 		if (i == 0)
 		{
-			root.Name = "表单库";
-			root.No = "1";
+			root.setName("表单库");
+			root.setNo("1");
 			root.setNodeType("root");
 			root.Insert();
 		}
@@ -193,10 +193,10 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 		appendFormTrees.AddEntity(root);
 
-		for (SysFormTree formTree : formTrees)
+		for (SysFormTree formTree : formTrees.ToJavaList())
 		{
 			//已经添加排除
-			if (appendFormTrees.Contains("No", formTree.No) == true)
+			if (appendFormTrees.Contains("No", formTree.getNo()) == true)
 			{
 				continue;
 			}
@@ -204,7 +204,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 			//根节点排除
 			if (formTree.getParentNo().equals("0"))
 			{
-				root.No = formTree.No;
+				root.setNo(formTree.getNo());
 				continue;
 			}
 
@@ -212,27 +212,27 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 			//文件夹
 			BP.WF.Template.FlowFormTree nodeFolder = new BP.WF.Template.FlowFormTree();
-			nodeFolder.No = formTree.No;
-			nodeFolder.ParentNo = formTree.getParentNo();
-			nodeFolder.Name = formTree.Name;
+			nodeFolder.setNo(formTree.getNo());
+			nodeFolder.setParentNo(formTree.getParentNo());
+			nodeFolder.setName(formTree.getName());
 			nodeFolder.setNodeType("folder");
 			if (formTree.getParentNo().equals("0"))
 			{
-				nodeFolder.ParentNo = root.No;
+				nodeFolder.setParentNo(root.getNo());
 			}
 			appendFormTrees.AddEntity(nodeFolder);
 
 			//表单
 			MapDatas mapS = new MapDatas();
-			mapS.RetrieveByAttr(MapDataAttr.FK_FormTree, formTree.No);
+			mapS.RetrieveByAttr(MapDataAttr.FK_FormTree, formTree.getNo());
 			if (mapS != null && mapS.size() > 0)
 			{
-				for (MapData map : mapS)
+				for (MapData map : mapS.ToJavaList())
 				{
 					BP.WF.Template.FlowFormTree formFolder = new BP.WF.Template.FlowFormTree();
-					formFolder.No = map.No;
-					formFolder.ParentNo = map.FK_FormTree;
-					formFolder.Name = map.Name + "[" + map.No + "]";
+					formFolder.setNo(map.getNo());
+					formFolder.setParentNo(map.getFK_FormTree());
+					formFolder.setName(map.getName() + "[" + map.getNo() + "]");
 					formFolder.setNodeType("form");
 					appendFormTrees.AddEntity(formFolder);
 				}
@@ -241,14 +241,14 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 		String strCheckedNos = "";
 		//设置选中
-		for (FrmNode frmNode : frmNodes)
+		for (FrmNode frmNode : frmNodes.ToJavaList())
 		{
 			strCheckedNos += "," + frmNode.getFK_Frm() + ",";
 		}
 		//重置
 		appendMenus.setLength(0);
 		//生成数据
-		TansEntitiesToGenerTree(appendFormTrees, root.No, strCheckedNos);
+		TansEntitiesToGenerTree(appendFormTrees, root.getNo(), strCheckedNos);
 		return appendMenus.toString();
 	}
 
@@ -271,7 +271,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 		}
 		appendMenus.append("[{");
 		appendMenus.append("\"id\":\"" + rootNo + "\"");
-		appendMenus.append(",\"text\":\"" + root.Name + "\"");
+		appendMenus.append(",\"text\":\"" + root.getName() + "\"");
 		appendMenus.append(",\"state\":\"open\"");
 
 		//attributes
@@ -297,18 +297,18 @@ public class WF_Admin_Sln extends DirectoryPageBase
 		appendMenuSb.append("[");
 		for (EntityTree item : ens)
 		{
-			if (item.ParentNo != parentEn.No)
+			if (!item.getParentNo().equals(parentEn.getNo()))
 			{
 				continue;
 			}
 
-			if (checkIds.contains("," + item.No + ","))
+			if (checkIds.contains("," + item.getNo() + ","))
 			{
-				appendMenuSb.append("{\"id\":\"" + item.No + "\",\"text\":\"" + item.Name + "\",\"checked\":true");
+				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":true");
 			}
 			else
 			{
-				appendMenuSb.append("{\"id\":\"" + item.No + "\",\"text\":\"" + item.Name + "\",\"checked\":false");
+				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":false");
 			}
 
 
@@ -369,7 +369,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 			///#region 如果没有ndFrm 就增加上.
 		boolean isHaveNDFrm = false;
-		for (FrmNode fn : fns)
+		for (FrmNode fn : fns.ToJavaList())
 		{
 			if (fn.getFK_Frm().equals("ND" + this.getFK_Node()))
 			{
@@ -397,17 +397,17 @@ public class WF_Admin_Sln extends DirectoryPageBase
 
 		//组合这个实体才有外键信息.
 		FrmNodeExts fnes = new FrmNodeExts();
-		for (FrmNode fn : fns)
+		for (FrmNode fn : fns.ToJavaList())
 		{
 			MapData md = new MapData();
-			md.No = fn.getFK_Frm();
-			if (md.IsExits == false)
+			md.setNo(fn.getFK_Frm());
+			if (md.getIsExits() == false)
 			{
 				fn.Delete(); //说明该表单不存在了，就需要把这个删除掉.
 				continue;
 			}
 
-			FrmNodeExt myen = new FrmNodeExt(fn.MyPK);
+			FrmNodeExt myen = new FrmNodeExt(fn.getMyPK());
 			fnes.AddEntity(myen);
 		}
 

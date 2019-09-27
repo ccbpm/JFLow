@@ -22,7 +22,7 @@ public class FrmBtn extends EntityMyPK
 	{
 		return this.GetValIntByKey(FrmBtnAttr.GroupID);
 	}
-	public final void setGroupID(int value) throws Exception
+	public final void setGroupID(long value) throws Exception
 	{
 		this.SetValByKey(FrmBtnAttr.GroupID, value);
 	}

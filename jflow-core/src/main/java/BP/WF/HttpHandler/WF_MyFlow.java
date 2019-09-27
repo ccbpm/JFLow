@@ -135,7 +135,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		_btnWord = value;
 	}
 	private GenerWorkFlow _HisGenerWorkFlow = null;
-	public final GenerWorkFlow getHisGenerWorkFlow()
+	public final GenerWorkFlow getHisGenerWorkFlow() throws Exception
 	{
 		if (_HisGenerWorkFlow == null)
 		{
@@ -144,7 +144,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		return _HisGenerWorkFlow;
 	}
 	private Node _currNode = null;
-	public final Node getcurrND()
+	public final Node getcurrND() throws Exception
 	{
 		if (_currNode == null)
 		{
@@ -153,7 +153,7 @@ public class WF_MyFlow extends DirectoryPageBase
 		return _currNode;
 	}
 	private Flow _currFlow = null;
-	public final Flow getcurrFlow()
+	public final Flow getcurrFlow() throws Exception
 	{
 		if (_currFlow == null)
 		{
@@ -170,7 +170,7 @@ public class WF_MyFlow extends DirectoryPageBase
 	//杨玉慧
 	public final String getDoType1()
 	{
-		return HttpContextHelper.RequestParams("DoType1");
+		return this.GetRequestVal("DoType1");
 	}
 
 		///#endregion

@@ -147,7 +147,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.Director
 			}
 
 			//创建临时文件.
-			String temp = SystemConfig.PathOfTemp + "\\" + UUID.NewGuid() + ".xml";
+			String temp = SystemConfig.getPathOfTemp() + "\\" + UUID.NewGuid() + ".xml";
 			//this.context.Request.Files[0].SaveAs(temp);
 			HttpContextHelper.UploadFile(HttpContextHelper.RequestFiles(0), temp);
 			String fk_mapData = this.getFK_MapData();

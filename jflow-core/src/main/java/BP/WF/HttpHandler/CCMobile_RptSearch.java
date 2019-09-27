@@ -61,8 +61,9 @@ public class CCMobile_RptSearch extends DirectoryPageBase
 	 执行查询
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String KeySearch_Query()
+	public final String KeySearch_Query() throws Exception
 	{
 		BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 		return search.KeySearch_Query();

@@ -326,9 +326,23 @@ public class Glo
 		return;
 
 	}
-	///#endregion 写入用户日志.
 
-	
+	public static ArrayList<String> getQueryStringKeys()
+	{
+		// 处理传递过来的参数。
+		ArrayList<String> requestKeys = new ArrayList<String>();
+		if(getRequest()!=null){
+			Enumeration enu = getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				// 判断是否有内容，hasNext()
+				String key = (String) enu.nextElement();
+				requestKeys.add(key);
+			}
+		}
+		
+		return requestKeys;
+	}
 
 	public static HttpServletRequest getRequest()
 	{

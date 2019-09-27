@@ -7,11 +7,13 @@ import BP.Sys.*;
 import BP.Tools.*;
 import BP.Web.*;
 import BP.WF.Data.*;
-import BP.WFEmp;
+import BP.WF.Port.WFEmp;
+import BP.WF.Port.WFEmpAttr;
+import BP.WF.Port.WFEmps;
 import BP.WF.Template.*;
 import java.util.*;
 import java.io.*;
-import java.nio.file.*;
+import java.text.SimpleDateFormat;
 import java.time.*;
 
 /** 
@@ -28,7 +30,8 @@ import java.time.*;
 public class Dev2Interface
 {
 
-		///#region 写入消息表.
+		private static final String ContextHolderUtils = null;
+	///#region 写入消息表.
 	/** 
 	 写入消息
 	 用途可以处理提醒.
@@ -39,21 +42,19 @@ public class Dev2Interface
 	 @param doc 内容
 	 @param msgFlag 消息标记
 	 @return 写入成功或者失败.
+	 * @throws Exception 
 	*/
-	public static boolean WriteToSMS(String sendToUserNo, String sendDT, String title, String doc, String msgFlag)
+	public static boolean WriteToSMS(String sendToUserNo, String sendDT, String title, String doc, String msgFlag) throws Exception
 	{
 		SMS.SendMsg(sendToUserNo, title, doc, msgFlag, "Info", "");
 		return true;
 	}
 
-		///#endregion
-
-
-		///#region 等待要去处理的消息数量.
 	/** 
 	 待办工作
+	 * @throws Exception 
 	*/
-	public static int getTodolist_Todolist()
+	public static int getTodolist_Todolist() throws Exception
 	{
 		Paras ps = new Paras();
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -198,8 +199,9 @@ public class Dev2Interface
 
 	/** 
 	 抄送数量
+	 * @throws Exception 
 	*/
-	public static int getTodolist_CCWorks()
+	public static int getTodolist_CCWorks() throws Exception
 	{
 		Paras ps = new Paras();
 		ps.SQL = "SELECT count(MyPK) as Num FROM WF_CCList WHERE CCTo=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND Sta=0";
@@ -208,16 +210,18 @@ public class Dev2Interface
 	}
 	/** 
 	 返回挂起流程数量
+	 * @throws Exception 
 	*/
-	public static int getTodolist_HungUpNum()
+	public static int getTodolist_HungUpNum() throws Exception
 	{
 		String sql = "SELECT  COUNT(WorkID) AS Num from WF_GenerWorkFlow where WFState=4 and  WorkID in (SELECT distinct WorkID FROM WF_HungUp WHERE Rec='" + WebUser.getNo() + "')";
 		return BP.DA.DBAccess.RunSQLReturnValInt(sql);
 	}
 	/** 
 	 在途的工作数量
+	 * @throws Exception 
 	*/
-	public static int getTodolist_Runing()
+	public static int getTodolist_Runing() throws Exception
 	{
 		String sql;
 		int state = WFState.Runing.getValue();
@@ -239,8 +243,9 @@ public class Dev2Interface
 
 	/** 
 	 获取草稿箱流程数量
+	 * @throws Exception 
 	*/
-	public static int getTodolist_Draft()
+	public static int getTodolist_Draft() throws Exception
 	{
 			/*获取数据.*/
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -252,7 +257,7 @@ public class Dev2Interface
 	/** 
 	 会签的数量
 	*/
-	public static int getTodolist_HuiQian()
+	public static int getTodolist_HuiQian()throws Exception
 	{
 			/*获取数据.*/
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -266,7 +271,7 @@ public class Dev2Interface
 	 
 	 @return 
 	*/
-	public static int getTodolist_Complete()
+	public static int getTodolist_Complete()throws Exception
 	{
 
 			/* 如果不是删除流程注册表. */
@@ -274,19 +279,12 @@ public class Dev2Interface
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT count(WorkID) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' AND WFState=" + WFState.Complete.getValue();
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
-			//}
-			//else
-			//{
-			//    Paras ps = new Paras();
-			//    string dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-			//    ps.SQL = "SELECT count(*) Num FROM V_FlowData WHERE FlowEmps LIKE '%@" + WebUser.getNo() + "%' AND FID=0 AND WFState=" + (int)WFState.Complete;
-			//    return BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
-			//}
+
 	}
 	/** 
 	 共享任务个数
 	*/
-	public static int getTodolist_Sharing()
+	public static int getTodolist_Sharing()throws Exception
 	{
 		Paras ps = new Paras();
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -328,7 +326,7 @@ public class Dev2Interface
 	/** 
 	 申请下来的工作个数
 	*/
-	public static int getTodolist_Apply()
+	public static int getTodolist_Apply()throws Exception
 	{
 		if (BP.WF.Glo.getIsEnableTaskPool() == false)
 		{
@@ -381,8 +379,9 @@ public class Dev2Interface
 	 处理延期的任务.根据节点属性的设置
 	 
 	 @return 返回处理的消息
+	 * @throws Exception 
 	*/
-	public static String DTS_DealDeferredWork()
+	public static String DTS_DealDeferredWork() throws Exception
 	{
 		BP.WF.DTS.DTS_DealDeferredWork en = new BP.WF.DTS.DTS_DealDeferredWork();
 		en.Do();
@@ -397,13 +396,15 @@ public class Dev2Interface
 	 2，根据自己的时间需要调用这个接口。
 	 
 	 @param fl 流程实体,您可以 new Flow(flowNo); 来传入.
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public static void DTS_AutoStarterFlow(Flow fl)
+	public static void DTS_AutoStarterFlow(Flow fl) throws Exception
 	{
 
 			///#region 读取数据.
 		BP.Sys.MapExt me = new BP.Sys.MapExt();
-		int i = me.Retrieve(MapExtAttr.FK_MapData, "ND" + Integer.parseInt(fl.No) + "01", MapExtAttr.ExtType, "PageLoadFull");
+		int i = me.Retrieve(MapExtAttr.FK_MapData, "ND" + Integer.parseInt(fl.getNo()) + "01", MapExtAttr.ExtType, "PageLoadFull");
 		if (i == 0)
 		{
 			BP.DA.Log.DefaultLogWriteLineError("没有为流程(" + fl.getName() + ")的开始节点设置发起数据,请参考说明书解决.");
@@ -412,7 +413,7 @@ public class Dev2Interface
 
 		// 获取从表数据.
 		DataSet ds = new DataSet();
-		String[] dtlSQLs = me.Tag1.split("[*]", -1);
+		String[] dtlSQLs = me.getTag1().split("[*]", -1);
 		for (String sql : dtlSQLs)
 		{
 			if (DataType.IsNullOrEmpty(sql))
@@ -433,13 +434,13 @@ public class Dev2Interface
 			///#region 检查数据源是否正确.
 		String errMsg = "";
 		// 获取主表数据.
-		DataTable dtMain = BP.DA.DBAccess.RunSQLReturnTable(me.Tag);
-		if (dtMain.Columns.Contains("Starter") == false)
+		DataTable dtMain = BP.DA.DBAccess.RunSQLReturnTable(me.getTag());
+		if (dtMain.Columns.contains("Starter") == false)
 		{
 			errMsg += "@配值的主表中没有Starter列.";
 		}
 
-		if (dtMain.Columns.Contains("MainPK") == false)
+		if (dtMain.Columns.contains("MainPK") == false)
 		{
 			errMsg += "@配值的主表中没有MainPK列.";
 		}
@@ -455,13 +456,13 @@ public class Dev2Interface
 
 			///#region 处理流程发起.
 
-		String nodeTable = "ND" + Integer.parseInt(fl.No) + "01";
+		String nodeTable = "ND" + Integer.parseInt(fl.getNo()) + "01";
 		MapData md = new MapData(nodeTable);
 
 		for (DataRow dr : dtMain.Rows)
 		{
 			String mainPK = dr.get("MainPK").toString();
-			String sql = "SELECT OID FROM " + md.PTable + " WHERE MainPK='" + mainPK + "'";
+			String sql = "SELECT OID FROM " + md.getPTable() + " WHERE MainPK='" + mainPK + "'";
 			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 			{
 				continue; //说明已经调度过了
@@ -472,10 +473,10 @@ public class Dev2Interface
 			{
 				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
-				emp.setNo (starter;
+				emp.setNo(starter);
 				if (emp.RetrieveFromDBSources() == 0)
 				{
-					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.No + "不存在。");
+					BP.DA.Log.DefaultLogWriteLineInfo("@数据驱动方式发起流程(" + fl.getName() + ")设置的发起人员:" + emp.getNo() + "不存在。");
 					continue;
 				}
 
@@ -493,18 +494,18 @@ public class Dev2Interface
 			if (ds.Tables.size() != 0)
 			{
 				String refPK = dr.get("MainPK").toString();
-				MapDtls dtls = wk.getHisNode().getMapData().MapDtls; // new MapDtls(nodeTable);
+				MapDtls dtls = wk.getHisNode().getMapData().getMapDtls(); // new MapDtls(nodeTable);
 				for (MapDtl dtl : dtls.ToJavaList())
 				{
 					for (DataTable dt : ds.Tables)
 					{
-						if (!dt.TableName.equals(dtl.No))
+						if (!dt.TableName.equals(dtl.getNo()))
 						{
 							continue;
 						}
 
 						//删除原来的数据。
-						GEDtl dtlEn = dtl.HisGEDtl;
+						GEDtl dtlEn = dtl.getHisGEDtl();
 						dtlEn.Delete(GEDtlAttr.RefPK, String.valueOf(wk.getOID()));
 
 						// 执行数据插入。
@@ -515,14 +516,14 @@ public class Dev2Interface
 								continue;
 							}
 
-							dtlEn = dtl.HisGEDtl;
+							dtlEn = dtl.getHisGEDtl();
 
 							for (DataColumn dc : dt.Columns)
 							{
 								dtlEn.SetValByKey(dc.ColumnName, drDtl.get(dc.ColumnName).toString());
 							}
 
-							dtlEn.RefPK = String.valueOf(wk.getOID());
+							dtlEn.setRefPK( String.valueOf(wk.getOID()));
 							dtlEn.Insert();
 						}
 					}
@@ -558,8 +559,10 @@ public class Dev2Interface
 	 
 	 @param fk_flow 流程编号
 	 @return 
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public static String GetFlowStarters(String fk_flow)
+	public static String GetFlowStarters(String fk_flow) throws NumberFormatException, Exception
 	{
 		BP.WF.Node nd = new Node(Integer.parseInt(fk_flow + "01"));
 		String sql = "";
@@ -577,11 +580,10 @@ public class Dev2Interface
 				break;
 			default:
 				throw new RuntimeException("@开始节点的人员访问规则错误,不允许在开始节点设置此访问类型:" + nd.getHisDeliveryWay());
-				break;
 		}
 		return sql;
 	}
-	public static String GetFlowStarters(String fk_flow, String fk_dept)
+	public static String GetFlowStarters(String fk_flow, String fk_dept) throws Exception
 	{
 		BP.WF.Node nd = new Node(Integer.parseInt(fk_flow + "01"));
 		String sql = "";
@@ -598,7 +600,6 @@ public class Dev2Interface
 				break;
 			default:
 				throw new RuntimeException("@开始节点的人员访问规则错误,不允许在开始节点设置此访问类型:" + nd.getHisDeliveryWay());
-				break;
 		}
 		return sql;
 	}
@@ -611,8 +612,9 @@ public class Dev2Interface
 	 
 	 @param workid 工作ID
 	 @return GenerWorkFlows
+	 * @throws Exception 
 	*/
-	public static GenerWorkFlows DB_SubFlows(long workid)
+	public static GenerWorkFlows DB_SubFlows(long workid) throws Exception
 	{
 		GenerWorkFlows gwf = new GenerWorkFlows();
 		gwf.Retrieve(GenerWorkFlowAttr.PWorkID, workid);
@@ -624,7 +626,7 @@ public class Dev2Interface
 
 		///#region 获取流程事例的轨迹图
 
-	public static DataTable DB_GenerTrackTable(String fk_flow, long workid, long fid)
+	public static DataTable DB_GenerTrackTable(String fk_flow, long workid, long fid) throws Exception
 	{
 
 			///#region 获取track数据.
@@ -898,8 +900,9 @@ public class Dev2Interface
 	 
 	 @param userNo 操作员编号
 	 @return BP.WF.Flows 可发起的流程对象集合,如何使用该方法形成发起工作列表,请参考:\WF\UC\Start.ascx
+	 * @throws Exception 
 	*/
-	public static Flows DB_GenerCanStartFlowsOfEntities(String userNo)
+	public static Flows DB_GenerCanStartFlowsOfEntities(String userNo) throws Exception
 	{
 		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
@@ -939,31 +942,26 @@ public class Dev2Interface
 	 
 	 @param userNo 发起人编号
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static DataTable DB_StarFlows(String userNo)
+	public static DataTable DB_StarFlows(String userNo) throws Exception
 	{
 		return DB_StarFlows(userNo, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_StarFlows(string userNo, string domain = null)
-	public static DataTable DB_StarFlows(String userNo, String domain)
+	public static DataTable DB_StarFlows(String userNo, String domain) throws Exception
 	{
-		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo, domain);
-		DataView dv = new DataView(dt);
-		dv.Sort = "Idx";
-		return dv.Table;
+		return DB_GenerCanStartFlowsOfDataTable(userNo, domain);
+
 	}
 
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo)
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo) throws Exception
 	{
 		return DB_GenerCanStartFlowsOfDataTable(userNo, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_GenerCanStartFlowsOfDataTable(string userNo, string domain = null)
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String domain)
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String domain) throws Exception
 	{
 		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,A.IsStartInMobile, A.Idx";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
@@ -1000,7 +998,7 @@ public class Dev2Interface
 		}
 		return dt;
 	}
-	public static DataTable DB_GenerCanStartFlowsTree(String userNo)
+	public static DataTable DB_GenerCanStartFlowsTree(String userNo) throws Exception
 	{
 		//发起.
 		DataTable table = DB_GenerCanStartFlowsOfDataTable(userNo);
@@ -1041,8 +1039,9 @@ public class Dev2Interface
 	 @param nodeIDOfHL 合流点ID
 	 @param workid 工作ID
 	 @return 与表WF_GenerWorkerList结构类同的datatable.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerHLSubFlowDtl_TB(int nodeIDOfHL, long workid)
+	public static DataTable DB_GenerHLSubFlowDtl_TB(int nodeIDOfHL, long workid) throws Exception
 	{
 		Node nd = new Node(nodeIDOfHL);
 		Work wk = nd.getHisWork();
@@ -1055,7 +1054,7 @@ public class Dev2Interface
 		qo.addAnd();
 		qo.AddWhere(GenerWorkerListAttr.IsEnable, 1);
 		qo.addAnd();
-		qo.AddWhere(GenerWorkerListAttr.FK_Node, nd.getFromNodes()[0].GetValByKey(NodeAttr.NodeID));
+		qo.AddWhere(GenerWorkerListAttr.FK_Node, nd.getFromNodes().get(0).GetValByKey(NodeAttr.NodeID));
 
 		DataTable dt = qo.DoQueryToTable();
 		if (dt.Rows.size() == 1)
@@ -1074,8 +1073,9 @@ public class Dev2Interface
 	 @param nodeIDOfHL 合流点ID
 	 @param workid 工作ID
 	 @return 与表WF_GenerWorkerList结构类同的datatable.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerHLSubFlowDtl_YB(int nodeIDOfHL, long workid)
+	public static DataTable DB_GenerHLSubFlowDtl_YB(int nodeIDOfHL, long workid) throws Exception
 	{
 		Node nd = new Node(nodeIDOfHL);
 		Work wk = nd.getHisWork();
@@ -1101,16 +1101,15 @@ public class Dev2Interface
 	 
 	 @param fk_flow 流程编号
 	 @return 返回草稿数据集合,列信息. OID=工作ID,Title=标题,RDT=记录日期,FK_Flow=流程编号,FID=流程ID, FK_Node=节点ID
+	 * @throws Exception 
 	*/
 
-	public static DataTable DB_GenerDraftDataTable()
+	public static DataTable DB_GenerDraftDataTable() throws Exception
 	{
 		return DB_GenerDraftDataTable(null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_GenerDraftDataTable(string flowNo = null)
-	public static DataTable DB_GenerDraftDataTable(String flowNo)
+	public static DataTable DB_GenerDraftDataTable(String flowNo) throws Exception
 	{
 		/*获取数据.*/
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -1161,21 +1160,20 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param userNo 操作员编号
 	 @return 返回当前关注的流程列表.
+	 * @throws Exception 
 	*/
 
-	public static DataTable DB_Focus(String flowNo)
+	public static DataTable DB_Focus(String flowNo) throws Exception
 	{
 		return DB_Focus(flowNo, null);
 	}
 
-	public static DataTable DB_Focus()
+	public static DataTable DB_Focus() throws Exception
 	{
 		return DB_Focus(null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_Focus(string flowNo = null, string userNo = null)
-	public static DataTable DB_Focus(String flowNo, String userNo)
+	public static DataTable DB_Focus(String flowNo, String userNo) throws Exception
 	{
 		if (flowNo.equals(""))
 		{
@@ -1295,15 +1293,7 @@ public class Dev2Interface
 		///#endregion 我关注的流程
 
 
-		///#region 获取当前操作员的共享工作
-
-	public static DataTable DB_Todolist(String userNo)
-	{
-		return DB_Todolist(userNo, 0);
-	}
-
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_Todolist(string userNo, int fk_node = 0)
+	///#region 获取当前操作员的共享工作
 	public static DataTable DB_Todolist(String userNo, int fk_node)
 	{
 		String sql = "";
@@ -1412,21 +1402,20 @@ public class Dev2Interface
 	 
 	 @param fk_node 节点编号
 	 @return 共享工作列表
+	 * @throws Exception 
 	*/
 
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node)
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node) throws Exception
 	{
 		return DB_GenerEmpWorksOfDataTable(userNo, fk_node, null);
 	}
 
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo)
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo) throws Exception
 	{
 		return DB_GenerEmpWorksOfDataTable(userNo, 0, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_GenerEmpWorksOfDataTable(string userNo, int fk_node = 0, string showWhat = null)
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node, String showWhat)
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int fk_node, String showWhat) throws Exception
 	{
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
@@ -1734,16 +1723,15 @@ public class Dev2Interface
 	 @param fk_flow 流程编号
 	 @param fk_node 节点编号
 	 @return 共享工作列表
+	 * @throws Exception 
 	*/
 
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo)
+	/*public static DataTable DB_GenerEmpWorksOfDataTable(String userNo)
 	{
 		return DB_GenerEmpWorksOfDataTable(userNo, null);
-	}
+	}*/
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_GenerEmpWorksOfDataTable(string userNo, string fk_flow = null)
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, String fk_flow)
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, String fk_flow) throws Exception
 	{
 
 		Paras ps = new Paras();
@@ -1857,8 +1845,9 @@ public class Dev2Interface
 	 @param wfState 流程状态
 	 @param fk_flow 流程编号
 	 @return 表结构与视图WF_EmpWorks一致
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, WFState wfState, String fk_flow)
+	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, WFState wfState, String fk_flow) throws Exception
 	{
 
 		Paras ps = new Paras();
@@ -1977,16 +1966,15 @@ public class Dev2Interface
 	 区分是自己的待办，还是被授权的待办通过数据源的 FK_Emp 字段来区分。
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static DataTable DB_Todolist()
+	public static DataTable DB_Todolist() throws Exception
 	{
 		return DB_Todolist(null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_Todolist(string userNo = null)
-	public static DataTable DB_Todolist(String userNo)
+	public static DataTable DB_Todolist(String userNo) throws Exception
 	{
 		if (userNo == null)
 		{
@@ -2022,22 +2010,22 @@ public class Dev2Interface
 				case All:
 					if (BP.WF.Glo.getIsEnableTaskPool() == true)
 					{
-						ps.SQL += " UNION  SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' AND TaskSta!=1  ";
+						ps.SQL += " UNION  SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND TaskSta!=1  ";
 					}
 					else
 					{
-						ps.SQL += " UNION  SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' ";
+						ps.SQL += " UNION  SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' ";
 					}
 
 					break;
 				case SpecFlows:
 					if (BP.WF.Glo.getIsEnableTaskPool() == true)
 					{
-						ps.SQL += " UNION SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' AND  FK_Flow IN " + emp.getAuthorFlows() + " AND TaskSta!=0 ";
+						ps.SQL += " UNION SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND  FK_Flow IN " + emp.getAuthorFlows() + " AND TaskSta!=0 ";
 					}
 					else
 					{
-						ps.SQL += " UNION SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' AND  FK_Flow IN " + emp.getAuthorFlows() + "  ";
+						ps.SQL += " UNION SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND  FK_Flow IN " + emp.getAuthorFlows() + "  ";
 					}
 
 					break;
@@ -2054,8 +2042,9 @@ public class Dev2Interface
 	 数据内容请参考图:WF_EmpWorks
 	 
 	 @return 返回从视图WF_EmpWorks查询出来的数据.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerEmpWorksOfDataTable()
+	public static DataTable DB_GenerEmpWorksOfDataTable() throws Exception
 	{
 		Paras ps = new Paras();
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -2112,8 +2101,7 @@ public class Dev2Interface
 				ps.Add("FK_Emp", WebUser.getNo());
 				return BP.DA.DBAccess.RunSQLReturnTable(ps);
 
-				WebUser.Auth = null; //对方已经取消了授权.
-			default:
+		default:
 				throw new RuntimeException("no such way...");
 		}
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
@@ -2140,8 +2128,9 @@ public class Dev2Interface
 	 @param pageSize 每页的数量
 	 @param pageIdx 第几页
 	 @return 用户编号
+	 * @throws Exception 
 	*/
-	public static DataTable DB_FlowComplete(String userNo, String flowNo, int pageSize, int pageIdx)
+	public static DataTable DB_FlowComplete(String userNo, String flowNo, int pageSize, int pageIdx) throws Exception
 	{
 		/* 如果不是删除流程注册表. */
 		GenerWorkFlows ens = new GenerWorkFlows();
@@ -2172,8 +2161,9 @@ public class Dev2Interface
 	 @param pageIdx
 	 @param strFlow
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_FlowComplete(String userNo, int pageCount, int pageSize, int pageIdx, String strFlow)
+	public static DataTable DB_FlowComplete(String userNo, int pageCount, int pageSize, int pageIdx, String strFlow) throws Exception
 	{
 
 		/* 如果不是删除流程注册表. */
@@ -2219,8 +2209,9 @@ public class Dev2Interface
 	 获取已经完成流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_TongJi_FlowComplete()
+	public static DataTable DB_TongJi_FlowComplete() throws Exception
 	{
 
 		DataTable dt = null;
@@ -2252,8 +2243,9 @@ public class Dev2Interface
 	 获取已经完成流程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_FlowComplete()
+	public static DataTable DB_FlowComplete() throws Exception
 	{
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
@@ -2340,8 +2332,9 @@ public class Dev2Interface
 	 获取已经完成
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_FlowCompleteAndCC()
+	public static DataTable DB_FlowCompleteAndCC() throws Exception
 	{
 		DataTable dt = DB_FlowComplete();
 		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
@@ -2375,10 +2368,9 @@ public class Dev2Interface
 			newRow.set("Type", "CC");
 			dt.Rows.add(newRow);
 		}
-		dt.DefaultView.Sort = "RDT DESC";
-		return dt.DefaultView.ToTable();
+		return dt;
 	}
-	public static DataTable DB_FlowComplete2(String fk_flow, String title)
+	public static DataTable DB_FlowComplete2(String fk_flow, String title) throws Exception
 	{
 
 		/* 如果不是删除流程注册表. */
@@ -2410,7 +2402,7 @@ public class Dev2Interface
 
 	}
 
-	public static DataTable DB_FlowCompleteAndCC2(String fk_flow, String title)
+	public static DataTable DB_FlowCompleteAndCC2(String fk_flow, String title) throws Exception
 	{
 		DataTable dt = DB_FlowComplete2(fk_flow, title);
 		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
@@ -2443,8 +2435,7 @@ public class Dev2Interface
 			newRow.set("Type", "CC");
 			dt.Rows.add(newRow);
 		}
-		dt.DefaultView.Sort = "RDT DESC";
-		return dt.DefaultView.ToTable();
+		return dt;
 	}
 	/** 
 	 获得任务池的工作列表
@@ -2572,8 +2563,9 @@ public class Dev2Interface
 	 获得我从任务池里申请下来的工作列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_TaskPoolOfMyApply()
+	public static DataTable DB_TaskPoolOfMyApply() throws Exception
 	{
 		if (BP.WF.Glo.getIsEnableTaskPool() == false)
 		{
@@ -2588,11 +2580,7 @@ public class Dev2Interface
 		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
-			// ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ORDER BY FK_Flow,ADT DESC ";
-			//ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp ORDER BY ADT DESC ";
 			ps.SQL = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp";
-
-			// ps.SQL = "select v1.*,v2.name,v3.name as ParentName from (" + realSql + ") as v1 left join JXW_Inc v2 on v1.WorkID=v2.OID left join Jxw_Inc V3 on v1.PWorkID = v3.OID ORDER BY v1.ADT DESC";
 
 			ps.Add("FK_Emp", WebUser.getNo());
 			return BP.DA.DBAccess.RunSQLReturnTable(ps);
@@ -2698,8 +2686,9 @@ public class Dev2Interface
 	 获得所有的流程挂起工作列表
 	 
 	 @return 返回从视图WF_EmpWorks查询出来的数据.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerHungUpList()
+	public static DataTable DB_GenerHungUpList() throws Exception
 	{
 		return DB_GenerHungUpList(null);
 	}
@@ -2708,8 +2697,9 @@ public class Dev2Interface
 	 
 	 @param fk_flow 流程编号,如果编号为空则返回所有的流程挂起工作列表.
 	 @return 返回从视图WF_EmpWorks查询出来的数据.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerHungUpList(String fk_flow)
+	public static DataTable DB_GenerHungUpList(String fk_flow) throws Exception
 	{
 		String sql;
 		int state = WFState.HungUp.getValue();
@@ -2744,8 +2734,9 @@ public class Dev2Interface
 	 获得逻辑删除的流程
 	 
 	 @return 返回从视图WF_EmpWorks查询出来的数据.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerDeleteWorkList()
+	public static DataTable DB_GenerDeleteWorkList() throws Exception
 	{
 		return DB_GenerDeleteWorkList(WebUser.getNo(), null);
 	}
@@ -2756,7 +2747,7 @@ public class Dev2Interface
 	 @param fk_flow 流程编号(可以为空)
 	 @return WF_GenerWorkFlow数据结构的集合
 	*/
-	public static DataTable DB_GenerDeleteWorkList(String userNo, String fk_flow)
+	public static DataTable DB_GenerDeleteWorkList(String userNo, String fk_flow)throws Exception
 	{
 		String sql;
 		int state = WFState.Delete.getValue();
@@ -2799,7 +2790,7 @@ public class Dev2Interface
 	 @param sta 流程状态
 	 @return 数据表OID,Title,RDT,FID
 	*/
-	public static DataTable DB_NDxxRpt(String fk_flow, WFState sta)
+	public static DataTable DB_NDxxRpt(String fk_flow, WFState sta)throws Exception
 	{
 		Flow fl = new Flow(fk_flow);
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
@@ -2821,8 +2812,9 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @param fid FID
 	 @return No节点编号,Name节点名称,Rec记录人,RecName记录人名称
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerWillReturnNodes(int fk_node, long workid, long fid)
+	public static DataTable DB_GenerWillReturnNodes(int fk_node, long workid, long fid) throws Exception
 	{
 		DataTable dt = new DataTable("obt");
 		dt.Columns.Add("No", String.class); // 节点ID
@@ -2872,7 +2864,7 @@ public class Dev2Interface
 		{
 			/*如果是子线程，它只能退回它的上一个节点，现在写死了，其它的设置不起作用了。*/
 			Nodes nds = nd.getFromNodes();
-			for (Node ndFrom : nds)
+			for (Node ndFrom : nds.ToJavaList())
 			{
 				Work wk;
 				switch (ndFrom.getHisRunModel())
@@ -2973,9 +2965,7 @@ public class Dev2Interface
 				{
 					sql = "SELECT A.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking, a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 AND a.FK_Node!=" + fk_node + " ORDER BY a.RDT DESC";
 				}
-				//                    sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking, a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 AND a.FK_Node!=" + fk_node + " AND a.AtPara NOT LIKE '%@IsHuiQian=1%' ORDER BY a.RDT DESC";
 
-				// BP.DA.Log.DebugWriteWarning(sql);
 
 				dt = DBAccess.RunSQLReturnTable(sql);
 
@@ -3092,7 +3082,7 @@ public class Dev2Interface
 					throw new RuntimeException("@流程设计错误，您设置该节点可以退回指定的节点，但是指定的节点集合为空，请在节点属性设置它的制订节点。");
 				}
 
-				for (NodeReturn item : rnds)
+				for (NodeReturn item : rnds.ToJavaList())
 				{
 					GenerWorkerLists gwls = new GenerWorkerLists();
 					int i = gwls.Retrieve(GenerWorkerListAttr.FK_Node, item.getReturnTo(), GenerWorkerListAttr.WorkID, workid);
@@ -3130,7 +3120,7 @@ public class Dev2Interface
 					throw new RuntimeException("@流程设计错误:当前节点没有画向后退回的退回线,更多的信息请参考退回规则.");
 				}
 
-				for (Direction dir : dirs)
+				for (Direction dir : dirs.ToJavaList())
 				{
 					Node toNode = new Node(dir.getToNode());
 					sql = "SELECT a.FK_Emp,a.FK_EmpText FROM WF_GenerWorkerlist a, WF_Node b WHERE   a.FK_Node=" + toNode.getNodeID() + " AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1";
@@ -3143,8 +3133,8 @@ public class Dev2Interface
 					DataRow dr = dt.NewRow();
 					dr.set("No", String.valueOf(toNode.getNodeID()));
 					dr.set("Name", toNode.getName());
-					dr.set("Rec", dt1.get(0).getValue(0));
-					dr.set("RecName", dt1.Rows[0][1]);
+					dr.set("Rec", dt1.Rows.get(0).getValue(0));
+					dr.set("RecName", dt1.Rows.get(0).getValue(1));
 					if (toNode.getIsBackTracking() == true)
 					{
 						dr.set("IsBackTracking", "1");
@@ -3192,37 +3182,36 @@ public class Dev2Interface
 	 @param fk_flow 流程编号
 	 @param isMyStarter 是否仅仅查询我发起的在途流程
 	 @return 返回从数据视图WF_GenerWorkflow查询出来的数据.
+	 * @throws Exception 
 	*/
 
-	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter)
+	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter) throws Exception
 	{
 		return DB_GenerRuning(userNo, fk_flow, isMyStarter, null);
 	}
 
-	public static DataTable DB_GenerRuning(String userNo, String fk_flow)
+	public static DataTable DB_GenerRuning(String userNo, String fk_flow) throws Exception
 	{
 		return DB_GenerRuning(userNo, fk_flow, false, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataTable DB_GenerRuning(string userNo, string fk_flow, bool isMyStarter = false, string domain = null)
-	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter, String domain)
+	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter, String domain) throws Exception
 	{
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 
 		//获取用户当前所在的节点
 		String currNode = "";
-		switch (DBAccess.AppCenterDBType)
+		switch (DBAccess.getAppCenterDBType())
 		{
-			case DBType.Oracle:
+			case Oracle:
 				currNode = "(SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC ) WHERE rownum=1)";
 				break;
-			case DBType.MySQL:
-			case DBType.PostgreSQL:
+			case MySQL:
+			case PostgreSQL:
 				currNode = "(SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC LIMIT 1)";
 				break;
-			case DBType.MSSQL:
+			case MSSQL:
 				currNode = "(SELECT TOP 1 FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC)";
 				break;
 			default:
@@ -3355,8 +3344,9 @@ public class Dev2Interface
 	 在途统计:用于流程查询
 	 
 	 @return 返回 FK_Flow,FlowName,Num 三个列.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_TongJi_Runing()
+	public static DataTable DB_TongJi_Runing() throws Exception
 	{
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
@@ -3385,8 +3375,9 @@ public class Dev2Interface
 	 统计流程状态
 	 
 	 @return 返回：流程类别编号，名称，流程编号，流程名称，TodoSta0代办中,TodoSta1预警中,TodoSta2预期中,TodoSta3已办结. 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_TongJi_TodoSta()
+	public static DataTable DB_TongJi_TodoSta() throws Exception
 	{
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
@@ -3436,8 +3427,9 @@ public class Dev2Interface
 	 在途工作
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerRuningV2()
+	public static DataTable DB_GenerRuningV2() throws Exception
 	{
 		String userNo = WebUser.getNo();
 		String fk_flow = null;
@@ -3474,8 +3466,9 @@ public class Dev2Interface
 	 
 	 @param myPK
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerPopAlert(String type)
+	public static DataTable DB_GenerPopAlert(String type) throws Exception
 	{
 		String sql = "";
 		if (type.equals("unRead"))
@@ -3528,28 +3521,22 @@ public class Dev2Interface
 	 获取未完成的流程(也称为在途流程:我参与的但是此流程未完成)
 	 
 	 @return 返回从数据视图WF_GenerWorkflow查询出来的数据.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerRuning()
+	public static DataTable DB_GenerRuning() throws Exception
 	{
 		DataTable dt = DB_GenerRuning(WebUser.getNo(), null);
 
-		/*暂时屏蔽type的拼接，拼接后转json会报错 于庆海修改*/
-		/*dt.Columns.Add("Type");
-		foreach (DataRow row in dt.Rows)
-		{
-		    row["Type"] = "RUNNING";
-		}*/
-
-		dt.DefaultView.Sort = "RDT DESC";
-		return dt.DefaultView.ToTable();
+		return dt;
 	}
 	/** 
 	 获取某一个人的在途（参与、未完成的工作）
 	 
 	 @param userNo
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerRuning(String userNo)
+	public static DataTable DB_GenerRuning(String userNo) throws Exception
 	{
 		DataTable dt = DB_GenerRuning(userNo, null);
 		dt.Columns.Add("Type");
@@ -3559,15 +3546,15 @@ public class Dev2Interface
 			row.set("Type", "RUNNING");
 		}
 
-		dt.DefaultView.Sort = "RDT DESC";
-		return dt.DefaultView.ToTable();
+		return dt;
 	}
 	/** 
 	 把抄送的信息也发送
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerRuningAndCC()
+	public static DataTable DB_GenerRuningAndCC() throws Exception
 	{
 		DataTable dt = DB_GenerRuning();
 		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
@@ -3598,79 +3585,19 @@ public class Dev2Interface
 			newRow.set("Type", "CC");
 			dt.Rows.add(newRow);
 		}
-		dt.DefaultView.Sort = "RDT DESC";
-		return dt.DefaultView.ToTable();
+		
+		return dt;
 	}
-	/** 
-	 为什么需要这个接口？
-	 
-	 @param name
-	 @param fk_flow
-	 @param title
-	 @return 
-	*/
-	public static DataTable DB_GenerRuning3(String name, String fk_flow, String title)
-	{
-		DataTable dt = DB_GenerRuning2(name, fk_flow, title);
-
-		dt.Columns.Add("Type");
-
-		for (DataRow row : dt.Rows)
-		{
-			row.set("Type", "RUNNING");
-		}
-
-		dt.DefaultView.Sort = "RDT DESC";
-		return dt.DefaultView.ToTable();
-	}
-	public static DataTable DB_GenerRuningAndCC2(String name, String fk_flow, String title)
-	{
-		DataTable dt = DB_GenerRuning3(name, fk_flow, title);
-		DataTable ccDT = DB_CCList_CheckOver(WebUser.getNo());
-		try
-		{
-			dt.Columns.Add("MyPK");
-			dt.Columns.Add("Sta");
-		}
-		catch (RuntimeException e)
-		{
-
-		}
-
-		for (DataRow row : ccDT.Rows)
-		{
-			DataRow newRow = dt.NewRow();
-
-			for (DataColumn column : ccDT.Columns)
-			{
-				for (DataColumn dtColumn : dt.Columns)
-				{
-					if (column.ColumnName.equals(dtColumn.ColumnName))
-					{
-						newRow.set(column.ColumnName, row.get(dtColumn.ColumnName));
-					}
-
-				}
-
-			}
-			newRow.set("Type", "CC");
-			dt.Rows.add(newRow);
-		}
-		dt.DefaultView.Sort = "RDT DESC";
-		return dt.DefaultView.ToTable();
-	}
-
-		///#endregion 获取当前操作员的共享工作
-
-
+	
 		///#region 获取当前的批处理工作
 	/** 
 	 获取当前节点的批处理工作
 	 
 	 @param FK_Node
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable GetBatch(int FK_Node)
+	public static DataTable GetBatch(int FK_Node) throws Exception
 	{
 
 		BP.WF.Node nd = new BP.WF.Node(FK_Node);
@@ -3687,33 +3614,25 @@ public class Dev2Interface
 		}
 
 		String sql = "SELECT a.*, b.Starter,b.Title as STitle,b.ADT,b.WorkID FROM " + fromTable + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
-		// string sql = "SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='" + WebUser.getNo() + "'";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		return dt;
 	}
 
 
-		///#endregion 获取当前的批处理工作
-
-		///#endregion
-
-
-		///#region 登陆接口
 	/** 
 	 用户登陆,此方法是在开发者校验好用户名与密码后执行
 	 
 	 @param userNo 用户名
 	 @param SID 安全ID,请参考流程设计器操作手册
+	 * @throws Exception 
 	*/
 
-	public static void Port_LoginBySID(String userNo, String sid)
+	public static void Port_LoginBySID(String userNo, String sid) throws Exception
 	{
 		Port_LoginBySID(userNo, sid, "PC");
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static void Port_LoginBySID(string userNo, string sid, string deviceNo = "PC")
-	public static void Port_LoginBySID(String userNo, String sid, String deviceNo)
+	public static void Port_LoginBySID(String userNo, String sid, String deviceNo) throws Exception
 	{
 		if (userNo.equals(WebUser.getNo()))
 		{
@@ -3742,12 +3661,13 @@ public class Dev2Interface
 	 @param fk_dept 所在部门
 	 @param deptName 部门名称
 	 @return 
+	 * @throws Exception 
 	*/
-	public static void Port_Login(String userNo)
+	public static void Port_Login(String userNo) throws Exception
 	{
 		/* 仅仅传递了人员编号，就按照人员来取.*/
 		BP.Port.Emp emp = new BP.Port.Emp();
-		emp.setNo (userNo;
+		emp.setNo (userNo);
 		emp.RetrieveFromDBSources();
 		WebUser.SignInOfGener(emp);
 
@@ -3788,8 +3708,9 @@ public class Dev2Interface
 	 @param userNo 信息接收人
 	 @param msgTitle 标题
 	 @param msgDoc 内容
+	 * @throws Exception 
 	*/
-	public static void Port_SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag)
+	public static void Port_SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag) throws Exception
 	{
 		Port_SendMsg(userNo, msgTitle, msgDoc, msgFlag, BP.WF.SMSMsgType.Self, null, 0, 0, 0);
 	}
@@ -3800,21 +3721,20 @@ public class Dev2Interface
 	 @param logDev 设备编号
 	 @param activeMinutes 登录有效时间
 	 @return 返回一个新的SID
+	 * @throws Exception 
 	*/
 
-	public static String Port_GenerSID(String userNo, String logDev)
+	public static String Port_GenerSID(String userNo, String logDev) throws Exception
 	{
 		return Port_GenerSID(userNo, logDev, 0);
 	}
 
-	public static String Port_GenerSID(String userNo)
+	public static String Port_GenerSID(String userNo) throws Exception
 	{
 		return Port_GenerSID(userNo, "PC", 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Port_GenerSID(string userNo, string logDev = "PC", int activeMinutes = 0)
-	public static String Port_GenerSID(String userNo, String logDev, int activeMinutes)
+	public static String Port_GenerSID(String userNo, String logDev, int activeMinutes) throws Exception
 	{
 		if (logDev == null)
 		{
@@ -3839,21 +3759,23 @@ public class Dev2Interface
 			String guid = DBAccess.GenerGUID();
 			emp.SetPara(key, guid);
 
-			LocalDateTime dt = LocalDateTime.now();
-			dt = dt.plusMinutes(activeMinutes);
+			Date dt = new Date();
+			dt = DateUtils.addMinutes(dt, activeMinutes);
 
-			emp.SetPara(key + "_DT", dt.toString("yyyy-MM-dd HH:mm:ss"));
+
+			emp.SetPara(key + "_DT", DateUtils.format(dt,"yyyy-MM-dd HH:mm:ss"));
 			emp.Update();
 			return guid;
 		}
 
-		LocalDateTime dtTo = DataType.ParseSysDateTime2DateTime(guidOID_Dt);
-		if (dtTo.compareTo(LocalDateTime.now()) < 0)
+		Date dtTo = DataType.ParseSysDateTime2DateTime(guidOID_Dt);
+		if (dtTo.compareTo(new Date()) < 0)
 		{
-			LocalDateTime dtUpdate = LocalDateTime.now();
-			dtUpdate = dtUpdate.plusMinutes(activeMinutes);
-
-			emp.SetPara(key + "_DT", dtUpdate.toString("yyyy-MM-dd HH:mm:ss"));
+			Date dtUpdate = new Date();
+			dtUpdate = DateUtils.addMinutes(dtUpdate, activeMinutes);
+			
+	
+			emp.SetPara(key + "_DT",DateUtils.format(dtUpdate,"yyyy-MM-dd HH:mm:ss"));
 			emp.Update();
 			return myGuid;
 		}
@@ -3861,10 +3783,10 @@ public class Dev2Interface
 		String guidNew = DBAccess.GenerGUID();
 		emp.SetPara(key, guidNew);
 
-		LocalDateTime dtNew = LocalDateTime.now();
-		dtNew = dtNew.plusMinutes(activeMinutes);
+		Date dtNew = new Date();
+		dtNew = DateUtils.addMinutes(dtNew,activeMinutes);
 
-		emp.SetPara(key + "_DT", dtNew.toString("yyyy-MM-dd HH:mm:ss"));
+		emp.SetPara(key + "_DT", DateUtils.format(dtNew,"yyyy-MM-dd HH:mm:ss"));
 		emp.Update();
 		return guidNew;
 	}
@@ -3879,7 +3801,7 @@ public class Dev2Interface
 	{
 		return true;
 
-		if (DataType.IsNullOrEmpty(userNo))
+		/*if (DataType.IsNullOrEmpty(userNo))
 		{
 			return false;
 		}
@@ -3906,7 +3828,7 @@ public class Dev2Interface
 		else
 		{
 			return false;
-		}
+		}*/
 	}
 	/** 
 	 设置SID
@@ -3964,8 +3886,9 @@ public class Dev2Interface
 	 @param nodeID 节点ID
 	 @param workID 工作ID
 	 @param fid FID
+	 * @throws Exception 
 	*/
-	public static void Port_SendMsg(String userNo, String title, String msgDoc, String msgFlag, String msgType, String flowNo, long nodeID, long workID, long fid)
+	public static void Port_SendMsg(String userNo, String title, String msgDoc, String msgFlag, String msgType, String flowNo, long nodeID, long workID, long fid) throws Exception
 	{
 		if (workID != 0)
 		{
@@ -3993,21 +3916,20 @@ public class Dev2Interface
 	 @param pushModel 可以接受消息的类型(如邮件、短信、丁丁、微信等)
 	 @param msgPK 唯一标志,防止发送重复.
 	 @param atParas 参数.
+	 * @throws Exception 
 	*/
 
-	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel, String msgPK)
+	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel, String msgPK) throws Exception
 	{
 		Port_SendMessage(sendToEmpNo, smsDoc, emailTitle, msgType, msgGroupFlag, sendEmpNo, openUrl, pushModel, msgPK, null);
 	}
 
-	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel)
+	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel) throws Exception
 	{
 		Port_SendMessage(sendToEmpNo, smsDoc, emailTitle, msgType, msgGroupFlag, sendEmpNo, openUrl, pushModel, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static void Port_SendMessage(string sendToEmpNo, string smsDoc, string emailTitle, string msgType, string msgGroupFlag, string sendEmpNo, string openUrl, string pushModel, string msgPK = null, string atParas = null)
-	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel, String msgPK, String atParas)
+	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel, String msgPK, String atParas) throws Exception
 	{
 		WFEmp emp = new WFEmp(sendToEmpNo);
 		SMS sms = new SMS();
@@ -4019,11 +3941,11 @@ public class Dev2Interface
 				return;
 			}
 
-			sms.setMyPK( msgPK;
+			sms.setMyPK( msgPK);
 		}
 		else
 		{
-			sms.setMyPK( DBAccess.GenerGUID();
+			sms.setMyPK( DBAccess.GenerGUID());
 		}
 
 		sms.setHisEmailSta(MsgSta.UnRun);
@@ -4259,46 +4181,45 @@ public class Dev2Interface
 	 @param at 活动类型
 	 @param tag 参数:用@符号隔开比如, @PWorkID=101@PFlowNo=003
 	 @param cFlowInfo 子流程信息
+	 * @throws Exception 
 	*/
 
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom, String empNameFrom, String rdt)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom, String empNameFrom, String rdt) throws Exception
 	{
 		WriteTrack(flowNo, nodeFromID, nodeFromName, workid, fid, msg, at, tag, cFlowInfo, optionMsg, empNoTo, empNameTo, empNoFrom, empNameFrom, rdt, null);
 	}
 
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom, String empNameFrom)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom, String empNameFrom) throws Exception
 	{
 		WriteTrack(flowNo, nodeFromID, nodeFromName, workid, fid, msg, at, tag, cFlowInfo, optionMsg, empNoTo, empNameTo, empNoFrom, empNameFrom, null, null);
 	}
 
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom) throws Exception
 	{
 		WriteTrack(flowNo, nodeFromID, nodeFromName, workid, fid, msg, at, tag, cFlowInfo, optionMsg, empNoTo, empNameTo, empNoFrom, null, null, null);
 	}
 
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo) throws Exception
 	{
 		WriteTrack(flowNo, nodeFromID, nodeFromName, workid, fid, msg, at, tag, cFlowInfo, optionMsg, empNoTo, empNameTo, null, null, null, null);
 	}
 
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo) throws Exception
 	{
 		WriteTrack(flowNo, nodeFromID, nodeFromName, workid, fid, msg, at, tag, cFlowInfo, optionMsg, empNoTo, null, null, null, null, null);
 	}
 
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg) throws Exception
 	{
 		WriteTrack(flowNo, nodeFromID, nodeFromName, workid, fid, msg, at, tag, cFlowInfo, optionMsg, null, null, null, null, null, null);
 	}
 
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo) throws Exception
 	{
 		WriteTrack(flowNo, nodeFromID, nodeFromName, workid, fid, msg, at, tag, cFlowInfo, null, null, null, null, null, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static void WriteTrack(string flowNo, int nodeFromID, string nodeFromName, Int64 workid, Int64 fid, string msg, ActionType at, string tag, string cFlowInfo, string optionMsg = null, string empNoTo = null, string empNameTo = null, string empNoFrom = null, string empNameFrom = null, string rdt = null, string fwcView = null)
-	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom, String empNameFrom, String rdt, String fwcView)
+	public static void WriteTrack(String flowNo, int nodeFromID, String nodeFromName, long workid, long fid, String msg, ActionType at, String tag, String cFlowInfo, String optionMsg, String empNoTo, String empNameTo, String empNoFrom, String empNameFrom, String rdt, String fwcView) throws Exception
 	{
 		if (at == ActionType.CallChildenFlow)
 		{
@@ -4426,7 +4347,7 @@ public class Dev2Interface
 	 @param fid fID
 	 @param msg 信息
 	*/
-	public static void WriteTrackInfo(String flowNo, int nodeFrom, String ndFromName, long workid, long fid, String msg, String optionMsg)
+	public static void WriteTrackInfo(String flowNo, int nodeFrom, String ndFromName, long workid, long fid, String msg, String optionMsg) throws Exception
 	{
 		WriteTrack(flowNo, nodeFrom, ndFromName, workid, fid, msg, ActionType.Info, null, null, optionMsg);
 	}
@@ -4439,16 +4360,15 @@ public class Dev2Interface
 	 @param FID FID
 	 @param msg 审核信息
 	 @param optionName 操作名称(比如:科长审核、部门经理审批),如果为空就是"审核".
+	 * @throws Exception 
 	*/
 
-	public static void WriteTrackWorkCheck(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName)
+	public static void WriteTrackWorkCheck(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName) throws Exception
 	{
 		WriteTrackWorkCheck(flowNo, currNodeID, workid, fid, msg, optionName, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static void WriteTrackWorkCheck(string flowNo, int currNodeID, Int64 workid, Int64 fid, string msg, string optionName, string fwcView = null)
-	public static void WriteTrackWorkCheck(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName, String fwcView)
+	public static void WriteTrackWorkCheck(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName, String fwcView) throws Exception
 	{
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
@@ -4495,7 +4415,7 @@ public class Dev2Interface
 
 		if (num > 1)
 		{
-			ps.Clear();
+			ps.clear();
 			ps.SQL = "DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  Tag=" + dbStr + "Tag ";
 			ps.Add(TrackAttr.Tag, tag);
 			DBAccess.RunSQL(ps);
@@ -4509,11 +4429,10 @@ public class Dev2Interface
 		}
 	}
 
-	public static void WriteTrackWorkCheckForTangRenYiYao(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName)
+	public static void WriteTrackWorkCheckForTangRenYiYao(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName) throws Exception
 	{
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
-		//WorkNode wn = new WorkNode(workid, currNodeID);
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
 		gwf.RetrieveFromDBSources();
@@ -4539,9 +4458,6 @@ public class Dev2Interface
 			DBAccess.RunSQL(ps);
 
 			////先删除其他人员写入的数据.
-			////string sql = "DELETE FROM ND" + int.Parse(flowNo) + "Track WHERE  Tag LIKE '" + gwf.Paras_LastSendTruckID + "%' AND EmpFrom='"+WebUser.getNo()+"' ";
-			//string sql = "DELETE FROM ND" + int.Parse(flowNo) + "Track WHERE  Tag LIKE '" + gwf.Paras_LastSendTruckID + "%'";
-			//DBAccess.RunSQL(ps);
 			//写入日志
 			WriteTrack(flowNo, currNodeID, nodeName, workid, fid, msg, ActionType.WorkCheck, tag, null, optionName);
 		}
@@ -4569,11 +4485,12 @@ public class Dev2Interface
 	 @param fid
 	 @param msg
 	 @param optionName
+	 * @throws Exception 
 	*/
-	public static void WriteTrackDailyLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName)
+	public static void WriteTrackDailyLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName) throws Exception
 	{
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
-		String today = BP.DA.DataType.CurrentData;
+		String today = BP.DA.DataType.getCurrentDate();
 
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET Msg=" + dbStr + "Msg WHERE  RDT LIKE '" + today + "%' AND WorkID=" + dbStr + "WorkID  AND NDFrom=" + dbStr + "NDFrom AND EmpFrom=" + dbStr + "EmpFrom AND ActionType=" + ActionType.WorkCheck.getValue();
@@ -4596,36 +4513,37 @@ public class Dev2Interface
 	 @param fid
 	 @param msg
 	 @param optionName
+	 * @throws Throwable 
 	*/
-	public static void WriteTrackWeekLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName)
+	public static void WriteTrackWeekLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName) throws Throwable
 	{
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
-		LocalDateTime dTime = LocalDateTime.now();
-		LocalDateTime startWeek = dTime.plusDays(1 - Integer.parseInt(String.format("%d", dTime.getDayOfWeek()))); //本周第一天
+		Date dTime = new Date();
+		Date startWeek = DateUtils.addDay(dTime,(1 - Integer.parseInt(String.format("%d", DateUtils.dayForWeek(dTime))))); //本周第一天
 
 		Hashtable ht = new Hashtable(); //当前日期所属的week包含哪些日期
 		for (int i = 1; i < 7; i++)
 		{
-			ht.put(i + 1, startWeek.plusDays(i).toString("yyyy-MM-dd"));
+			ht.put(i + 1, DateUtils.parse(DateUtils.addDay(startWeek,i),"yyyy-MM-dd"));
 		}
-		ht.put(1, startWeek.toString("yyyy-MM-dd"));
+		ht.put(1, DateUtils.parse(startWeek,"yyyy-MM-dd"));
 
 		boolean isExitWeek = false; //本周是否已经有插入数据
 		String insertDate = null;
 		DataTable dt;
 		String sql = null;
 
-		for (Map.Entry de : ht.entrySet())
+		for (Object de : ht.entrySet())
 		{
 			sql = "SELECT * FROM ND" + Integer.parseInt(flowNo) +
-				"Track  WHERE  RDT LIKE '" + de.getValue().toString() + "%' AND WorkID=" + workid + "  AND NDFrom='" +
+				"Track  WHERE  RDT LIKE '" + ht.get(de).toString() + "%' AND WorkID=" + workid + "  AND NDFrom='" +
 				nodeFrom + "' AND EmpFrom='" + WebUser.getNo() + "' AND ActionType=" + ActionType.WorkCheck.getValue();
 
 			if (DBAccess.RunSQLReturnCOUNT(sql) != 0)
 			{
 				isExitWeek = true;
-				insertDate = de.getValue().toString();
+				insertDate =  ht.get(de).toString();
 				break;
 			}
 		}
@@ -4634,7 +4552,7 @@ public class Dev2Interface
 		if (isExitWeek)
 		{
 			Paras ps = new Paras();
-			ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET RDT='" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss") + "',Msg=" + dbStr + "Msg WHERE  RDT LIKE '" + insertDate + "%' AND WorkID=" + dbStr + "WorkID  AND NDFrom=" + dbStr + "NDFrom AND EmpFrom=" + dbStr + "EmpFrom AND ActionType=" + ActionType.WorkCheck.getValue();
+			ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET RDT='" + DateUtils.parse(new Date(),"yyyy-MM-dd HH:mm:ss") + "',Msg=" + dbStr + "Msg WHERE  RDT LIKE '" + insertDate + "%' AND WorkID=" + dbStr + "WorkID  AND NDFrom=" + dbStr + "NDFrom AND EmpFrom=" + dbStr + "EmpFrom AND ActionType=" + ActionType.WorkCheck.getValue();
 			ps.Add(TrackAttr.Msg, msg);
 			ps.Add(TrackAttr.WorkID, workid);
 			ps.Add(TrackAttr.NDFrom, nodeFrom);
@@ -4656,39 +4574,40 @@ public class Dev2Interface
 	 @param fid
 	 @param msg
 	 @param optionName
+	 * @throws Exception 
 	*/
-	public static void WriteTrackMonthLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName)
+	public static void WriteTrackMonthLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName) throws Exception
 	{
 		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		String today = BP.DA.DataType.getCurrentDate();
 
-		LocalDateTime dTime = LocalDateTime.now();
-		LocalDateTime startDay = dTime.plusDays(1 - dTime.getDayOfMonth()); //本月第一天
+		Date dTime = new Date();
+		Date startDay =DateUtils.addDay(dTime, 1 - DateUtils.getDayOfMonth(dTime)) ; //本月第一天
 
-		int days = LocalDateTime.DaysInMonth(dTime.getYear(), dTime.getMonthValue());
+		int days = DateUtils.getDayOfMonth(startDay);
 		Hashtable ht = new Hashtable();
 
 		for (int i = 1; i < days; i++)
 		{
-			ht.put(i + 1, startDay.plusDays(i).toString("yyyy-MM-dd"));
+			ht.put(i + 1, DateUtils.parse(DateUtils.addDay(startDay,i),"yyyy-MM-dd"));
 		}
-		ht.put(1, startDay.toString("yyyy-MM-dd"));
+		ht.put(1, DateUtils.parse(startDay,"yyyy-MM-dd"));
 
 		boolean isExitMonth = false; //本月是否已经有插入数据
 		String insertDate = null;
 		DataTable dt;
 		String sql = null;
 
-		for (Map.Entry de : ht.entrySet())
+		for (Object de : ht.entrySet())
 		{
 			sql = "SELECT * FROM ND" + Integer.parseInt(flowNo) +
-				"Track  WHERE  RDT LIKE '" + de.getValue().toString() + "%' AND WorkID=" + workid + "  AND NDFrom='" +
+				"Track  WHERE  RDT LIKE '" + ht.get(de).toString() + "%' AND WorkID=" + workid + "  AND NDFrom='" +
 				nodeFrom + "' AND EmpFrom='" + WebUser.getNo() + "' AND ActionType=" + ActionType.WorkCheck.getValue();
 
 			if (DBAccess.RunSQLReturnCOUNT(sql) != 0)
 			{
 				isExitMonth = true;
-				insertDate = de.getValue().toString();
+				insertDate = ht.get(de).toString();
 				break;
 			}
 		}
@@ -4696,7 +4615,7 @@ public class Dev2Interface
 		if (isExitMonth)
 		{
 			Paras ps = new Paras();
-			ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET RDT='" + LocalDateTime.now().toString("yyyy-MM-dd HH:mm:ss") + "' Msg=" + dbStr + "Msg WHERE  RDT LIKE '" + insertDate + "%' AND WorkID=" + dbStr + "WorkID  AND NDFrom=" + dbStr + "NDFrom AND EmpFrom=" + dbStr + "EmpFrom AND ActionType=" + ActionType.WorkCheck.getValue();
+			ps.SQL = "UPDATE  ND" + Integer.parseInt(flowNo) + "Track SET RDT='" + DateUtils.parse(new Date(),"yyyy-MM-dd HH:mm:ss") + "' Msg=" + dbStr + "Msg WHERE  RDT LIKE '" + insertDate + "%' AND WorkID=" + dbStr + "WorkID  AND NDFrom=" + dbStr + "NDFrom AND EmpFrom=" + dbStr + "EmpFrom AND ActionType=" + ActionType.WorkCheck.getValue();
 			ps.Add(TrackAttr.Msg, msg);
 			ps.Add(TrackAttr.WorkID, workid);
 			ps.Add(TrackAttr.NDFrom, nodeFrom);
@@ -4767,16 +4686,15 @@ public class Dev2Interface
 	 @param workId
 	 @param nodeFrom
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static String GetCheckInfo(String flowNo, long workId, int nodeFrom)
+	public static String GetCheckInfo(String flowNo, long workId, int nodeFrom) throws Exception
 	{
 		return GetCheckInfo(flowNo, workId, nodeFrom, "同意");
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string GetCheckInfo(string flowNo, Int64 workId, int nodeFrom, string isNullAsVal = "同意")
-	public static String GetCheckInfo(String flowNo, long workId, int nodeFrom, String isNullAsVal)
+	public static String GetCheckInfo(String flowNo, long workId, int nodeFrom, String isNullAsVal) throws Exception
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + WebUser.getNo() + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
@@ -4841,14 +4759,15 @@ public class Dev2Interface
 	 @param workId 工作ID
 	 @param nodeFrom 节点从
 	 @return 删除自己的审核信息
+	 * @throws Exception 
 	*/
-	public static void DeleteCheckInfo(String flowNo, long workId, int nodeFrom)
+	public static void DeleteCheckInfo(String flowNo, long workId, int nodeFrom) throws Exception
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "DELETE FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND EmpFrom='" + WebUser.getNo() + "' AND WorkID=" + workId;
 		BP.DA.DBAccess.RunSQL(sql);
 	}
-	public static String GetAskForHelpReInfo(String flowNo, long workId, int nodeFrom)
+	public static String GetAskForHelpReInfo(String flowNo, long workId, int nodeFrom)throws Exception
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.AskforHelp.getValue() + " AND EmpFrom='" + WebUser.getNo() + "' AND WorkID=" + workId + " ORDER BY RDT DESC ";
@@ -4894,7 +4813,7 @@ public class Dev2Interface
 	 @param workID
 	 @param newBillNo
 	*/
-	public static void SetBillNo(String flowNo, long workID, String newBillNo)
+	public static void SetBillNo(String flowNo, long workID, String newBillNo)throws Exception
 	{
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
@@ -4917,21 +4836,20 @@ public class Dev2Interface
 	 @param subFlowNo 子流程编号
 	 @param subFlowWorkID 子流程workid
 	 @param parentWorkID 父流程WorkID
+	 * @throws Exception 
 	*/
 
-	public static void SetParentInfo(String subFlowNo, long subFlowWorkID, long parentWorkID, String parentEmpNo)
+	public static void SetParentInfo(String subFlowNo, long subFlowWorkID, long parentWorkID, String parentEmpNo) throws Exception
 	{
 		SetParentInfo(subFlowNo, subFlowWorkID, parentWorkID, parentEmpNo, 0);
 	}
 
-	public static void SetParentInfo(String subFlowNo, long subFlowWorkID, long parentWorkID)
+	public static void SetParentInfo(String subFlowNo, long subFlowWorkID, long parentWorkID) throws Exception
 	{
 		SetParentInfo(subFlowNo, subFlowWorkID, parentWorkID, null, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static void SetParentInfo(string subFlowNo, Int64 subFlowWorkID, Int64 parentWorkID, string parentEmpNo = null, int parentNodeID = 0)
-	public static void SetParentInfo(String subFlowNo, long subFlowWorkID, long parentWorkID, String parentEmpNo, int parentNodeID)
+	public static void SetParentInfo(String subFlowNo, long subFlowWorkID, long parentWorkID, String parentEmpNo, int parentNodeID) throws Exception
 	{
 		//创建父流程.
 		GenerWorkFlow pgwf = new GenerWorkFlow(parentWorkID);
@@ -4971,7 +4889,7 @@ public class Dev2Interface
 		BP.DA.DBAccess.RunSQL(ps);
 	}
 
-	public static GERpt Flow_GenerGERpt(String flowNo, long workID)
+	public static GERpt Flow_GenerGERpt(String flowNo, long workID) throws Exception
 	{
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(flowNo) + "Rpt", workID);
 		return rpt;
@@ -4998,8 +4916,9 @@ public class Dev2Interface
 	 @param workID 工作ID
 	 @param msg 原因
 	 @return 执行信息
+	 * @throws Exception 
 	*/
-	public static void Flow_DoComeBackWorkFlow(String flowNo, long workID, String msg)
+	public static void Flow_DoComeBackWorkFlow(String flowNo, long workID, String msg) throws Exception
 	{
 		WorkFlow wf = new WorkFlow(flowNo, workID);
 		wf.DoComeBackWorkFlow(msg);
@@ -5012,8 +4931,9 @@ public class Dev2Interface
 	 @param workid 要恢复的workid
 	 @param backToNodeID 恢复到的节点编号，如果是0，标示回复到流程最后一个节点上去.
 	 @param note 恢复的原因，此原因会记录到日志.
+	 * @throws Exception 
 	*/
-	public static String Flow_DoRebackWorkFlow(String flowNo, long workid, int backToNodeID, String note)
+	public static String Flow_DoRebackWorkFlow(String flowNo, long workid, int backToNodeID, String note) throws Exception
 	{
 		BP.WF.Template.FlowSheet fs = new BP.WF.Template.FlowSheet(flowNo);
 		return fs.DoRebackFlowData(workid, backToNodeID, note);
@@ -5029,16 +4949,15 @@ public class Dev2Interface
 	 @param workID 工作ID
 	 @param isDelSubFlow 是否要删除它的子流程
 	 @return 执行信息
+	 * @throws Exception 
 	*/
 
-	public static String Flow_DoDeleteFlowByReal(String flowNo, long workID)
+	public static String Flow_DoDeleteFlowByReal(String flowNo, long workID) throws Exception
 	{
 		return Flow_DoDeleteFlowByReal(flowNo, workID, false);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Flow_DoDeleteFlowByReal(string flowNo, Int64 workID, bool isDelSubFlow = false)
-	public static String Flow_DoDeleteFlowByReal(String flowNo, long workID, boolean isDelSubFlow)
+	public static String Flow_DoDeleteFlowByReal(String flowNo, long workID, boolean isDelSubFlow) throws Exception
 	{
 		try
 		{
@@ -5050,7 +4969,7 @@ public class Dev2Interface
 		}
 		return "删除成功";
 	}
-	public static String Flow_DoDeleteDraft(String flowNo, long workID, boolean isDelSubFlow)
+	public static String Flow_DoDeleteDraft(String flowNo, long workID, boolean isDelSubFlow) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workID);
@@ -5077,7 +4996,7 @@ public class Dev2Interface
 		Node nd = fl.getHisStartNode();
 		Work wk = nd.getHisWork();
 		ps = new Paras();
-		ps.SQL = "DELETE FROM " + wk.EnMap.PhysicsTable + " WHERE OID=" + dbstr + "OID";
+		ps.SQL = "DELETE FROM " + wk.getEnMap().getPhysicsTable() + " WHERE OID=" + dbstr + "OID";
 		ps.Add("OID", workID);
 		BP.DA.DBAccess.RunSQL(ps);
 
@@ -5094,8 +5013,9 @@ public class Dev2Interface
 	 @param isDelSubFlow 是否删除子流程
 	 @param note 删除原因
 	 @return 删除过程信息
+	 * @throws Exception 
 	*/
-	public static String Flow_DoDeleteWorkFlowAlreadyComplete(String flowNo, long workID, boolean isDelSubFlow, String note)
+	public static String Flow_DoDeleteWorkFlowAlreadyComplete(String flowNo, long workID, boolean isDelSubFlow, String note) throws Exception
 	{
 		return WorkFlow.DoDeleteWorkFlowAlreadyComplete(flowNo, workID, isDelSubFlow, note);
 	}
@@ -5113,8 +5033,9 @@ public class Dev2Interface
 	 @param deleteNote 删除原因
 	 @param isDelSubFlow 是否要删除它的子流程
 	 @return 执行信息
+	 * @throws Exception 
 	*/
-	public static String Flow_DoDeleteFlowByWriteLog(String flowNo, long workID, String deleteNote, boolean isDelSubFlow)
+	public static String Flow_DoDeleteFlowByWriteLog(String flowNo, long workID, String deleteNote, boolean isDelSubFlow) throws Exception
 	{
 		WorkFlow wf = new WorkFlow(flowNo, workID);
 		return wf.DoDeleteWorkFlowByWriteLog(deleteNote, isDelSubFlow);
@@ -5128,8 +5049,9 @@ public class Dev2Interface
 	 @param msg 逻辑删除的原因
 	 @param isDelSubFlow 逻辑删除的原因
 	 @return 执行信息,执行不成功抛出异常.
+	 * @throws Exception 
 	*/
-	public static String Flow_DoDeleteFlowByFlag(String flowNo, long workID, String msg, boolean isDelSubFlow)
+	public static String Flow_DoDeleteFlowByFlag(String flowNo, long workID, String msg, boolean isDelSubFlow) throws Exception
 	{
 		WorkFlow wf = new WorkFlow(flowNo, workID);
 		wf.DoDeleteWorkFlowByFlag(msg);
@@ -5160,8 +5082,9 @@ public class Dev2Interface
 	 @param workID 工作流程ID
 	 @param msg 撤销删除的原因
 	 @return 执行消息,如果撤销不成功则抛出异常.
+	 * @throws Exception 
 	*/
-	public static String Flow_DoUnDeleteFlowByFlag(String flowNo, long workID, String msg)
+	public static String Flow_DoUnDeleteFlowByFlag(String flowNo, long workID, String msg) throws Exception
 	{
 		WorkFlow wf = new WorkFlow(flowNo, workID);
 		wf.DoUnDeleteWorkFlowByFlag(msg);
@@ -5174,21 +5097,20 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param workID 工作ID
 	 @return 返回成功执行信息
+	 * @throws Exception 
 	*/
 
-	public static String Flow_DoUnSend(String flowNo, long workID, int unSendToNode)
+	public static String Flow_DoUnSend(String flowNo, long workID, int unSendToNode) throws Exception
 	{
 		return Flow_DoUnSend(flowNo, workID, unSendToNode, 0);
 	}
 
-	public static String Flow_DoUnSend(String flowNo, long workID)
+	public static String Flow_DoUnSend(String flowNo, long workID) throws Exception
 	{
 		return Flow_DoUnSend(flowNo, workID, 0, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Flow_DoUnSend(string flowNo, Int64 workID, int unSendToNode = 0, Int64 fid = 0)
-	public static String Flow_DoUnSend(String flowNo, long workID, int unSendToNode, long fid)
+	public static String Flow_DoUnSend(String flowNo, long workID, int unSendToNode, long fid) throws Exception
 	{
 
 		WorkUnSend unSend = new WorkUnSend(flowNo, workID, unSendToNode, fid);
@@ -5202,8 +5124,9 @@ public class Dev2Interface
 	 @param WorkID 工作流程ID
 	 @param FK_Node 当前节点编号
 	 @return 上一节点发送记录
+	 * @throws Exception 
 	*/
-	public static DataTable Flow_GetPreviousNodeTrack(long WorkID, int FK_Node)
+	public static DataTable Flow_GetPreviousNodeTrack(long WorkID, int FK_Node) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(WorkID);
 		if (gwf.RetrieveFromDBSources() == 0)
@@ -5243,8 +5166,9 @@ public class Dev2Interface
 	 @param isFixSubFlows 是否冻结子流程？
 	 @param msg 冻结原因.
 	 @return 冻结的信息.
+	 * @throws Exception 
 	*/
-	public static String Flow_DoFix(String flowNo, long workid, boolean isFixSubFlows, String msg)
+	public static String Flow_DoFix(String flowNo, long workid, boolean isFixSubFlows, String msg) throws Exception
 	{
 		String info = "";
 		try
@@ -5290,8 +5214,9 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param workid workid
 	 @param msg 解除原因
+	 * @throws Exception 
 	*/
-	public static String Flow_DoUnFix(String flowNo, long workid, String msg)
+	public static String Flow_DoUnFix(String flowNo, long workid, String msg) throws Exception
 	{
 		// 执行冻结.
 		WorkFlow wf = new WorkFlow(flowNo, workid);
@@ -5305,16 +5230,15 @@ public class Dev2Interface
 	 @param workID 工作ID
 	 @param msg 流程结束原因
 	 @return 返回成功执行信息
+	 * @throws Exception 
 	*/
 
-	public static String Flow_DoFlowOver(String flowNo, long workID, String msg)
+	public static String Flow_DoFlowOver(String flowNo, long workID, String msg) throws Exception
 	{
 		return Flow_DoFlowOver(flowNo, workID, msg, 1);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Flow_DoFlowOver(string flowNo, Int64 workID, string msg, int stopFlowType = 1)
-	public static String Flow_DoFlowOver(String flowNo, long workID, String msg, int stopFlowType)
+	public static String Flow_DoFlowOver(String flowNo, long workID, String msg, int stopFlowType) throws Exception
 	{
 		WorkFlow wf = new WorkFlow(flowNo, workID);
 
@@ -5331,8 +5255,9 @@ public class Dev2Interface
 
 	/** 
 	 流程运行完成后自动运行/结束父流程或者同级子流程
+	 * @throws Exception 
 	*/
-	public static String FlowOverAutoSendParentOrSameLevelFlow(GenerWorkFlow gwf, Flow flow)
+	public static String FlowOverAutoSendParentOrSameLevelFlow(GenerWorkFlow gwf, Flow flow) throws Exception
 	{
 		//判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
 		if (gwf.getPWorkID() != 0)
@@ -5341,12 +5266,12 @@ public class Dev2Interface
 			if (slWorkID == 0) //启动该流程的是父子流程
 			{
 				SubFlows subFlows = new SubFlows();
-				int count = subFlows.Retrieve(SubFlowAttr.FK_Node, gwf.getPNodeID(), SubFlowAttr.SubFlowNo, flow.No);
+				int count = subFlows.Retrieve(SubFlowAttr.FK_Node, gwf.getPNodeID(), SubFlowAttr.SubFlowNo, flow.getNo());
 				if (count == 0)
 				{
 					throw new RuntimeException("父子流程关系配置信息丢失，请联系管理员");
 				}
-				SubFlow subFlow = subFlows[0] instanceof SubFlow ? (SubFlow)subFlows[0] : null;
+				SubFlow subFlow = subFlows.get(0) instanceof SubFlow ? (SubFlow)subFlows.get(0) : null;
 				if (flow.getIsToParentNextNode() == true || subFlow.getIsAutoSendSubFlowOver() == 1)
 				{
 					//主流程自动运行到一下节点
@@ -5369,12 +5294,12 @@ public class Dev2Interface
 				int slNodeID = gwf.GetParaInt("SLNodeID");
 
 				SubFlows subFlows = new SubFlows();
-				int count = subFlows.Retrieve(SubFlowAttr.FK_Node, slNodeID, SubFlowAttr.SubFlowNo, flow.No);
+				int count = subFlows.Retrieve(SubFlowAttr.FK_Node, slNodeID, SubFlowAttr.SubFlowNo, flow.getNo());
 				if (count == 0)
 				{
 					throw new RuntimeException("同级子流程关系配置信息丢失，请联系管理员");
 				}
-				SubFlow subFlow = subFlows[0] instanceof SubFlow ? (SubFlow)subFlows[0] : null;
+				SubFlow subFlow = subFlows.get(0) instanceof SubFlow ? (SubFlow)subFlows.get(0) : null;
 				Flow fl = new Flow(slFlowNo);
 				if (subFlow.getIsAutoSendSLSubFlowOver() == 1)
 				{
@@ -5404,12 +5329,11 @@ public class Dev2Interface
 	 @param fk_flow 流程编号
 	 @param workid 工作ID
 	 @return 下一步骤的所要到达的节点, 如果获取不到就会抛出异常.
+	 * @throws Exception 
 	*/
-	public static int Node_GetNextStepNode(String fk_flow, long workid)
+	public static int Node_GetNextStepNode(String fk_flow, long workid) throws Exception
 	{
 		////检查当前人员是否可以执行当前工作.
-		//if (BP.WF.Dev2Interface.Flow_CheckIsCanDoCurrentWork( workid, WebUser.getNo()) == false)
-		//    throw new Exception("@当前人员不能执行此节点上的工作.");
 
 		//获取当前nodeID.
 		int currNodeID = BP.WF.Dev2Interface.Node_GetCurrentNodeID(fk_flow, workid);
@@ -5442,8 +5366,9 @@ public class Dev2Interface
 	 @param nodeID 节点ID
 	 @param workID 工作ID
 	 @return 当前工作
+	 * @throws Exception 
 	*/
-	public static Work Flow_GetCurrentWork(int nodeID, long workID)
+	public static Work Flow_GetCurrentWork(int nodeID, long workID) throws Exception
 	{
 		Node nd = new Node(nodeID);
 		Work wk = nd.getHisWork();
@@ -5456,8 +5381,9 @@ public class Dev2Interface
 	 
 	 @param workID 工作ID
 	 @return 当前工作节点的Work
+	 * @throws Exception 
 	*/
-	public static Work Flow_GetCurrentWork(long workID)
+	public static Work Flow_GetCurrentWork(long workID) throws Exception
 	{
 		Node nd = new Node(Flow_GetCurrentNode(workID));
 		Work wk = nd.getHisWork();
@@ -5496,26 +5422,26 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param userNo 用户编号
 	 @return 是否可以发起当前流程
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
 
-	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID)
+	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID) throws NumberFormatException, Exception
 	{
 		return Flow_IsCanStartThisFlow(flowNo, userNo, pFlowNo, pNodeID, 0);
 	}
 
-	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo)
+	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo) throws NumberFormatException, Exception
 	{
 		return Flow_IsCanStartThisFlow(flowNo, userNo, pFlowNo, 0, 0);
 	}
 
-	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo)
+	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo) throws NumberFormatException, Exception
 	{
 		return Flow_IsCanStartThisFlow(flowNo, userNo, null, 0, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static bool Flow_IsCanStartThisFlow(string flowNo, string userNo, string pFlowNo = null, int pNodeID = 0, Int64 pworkID = 0)
-	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID, long pworkID)
+	public static boolean Flow_IsCanStartThisFlow(String flowNo, String userNo, String pFlowNo, int pNodeID, long pworkID) throws NumberFormatException, Exception
 	{
 
 			///#region 判断开始节点是否可以发起.
@@ -5552,7 +5478,7 @@ public class Dev2Interface
 
 						if (num == 0)
 						{
-							ps.Clear();
+							ps.clear();
 							ps.SQL = "SELECT COUNT(A.FK_Node) as Num FROM WF_NodeDept A, Port_Emp B WHERE A.FK_Dept= B.FK_Dept AND  A.FK_Node=" + dbstr + "FK_Node AND B.No=" + dbstr + "FK_Emp";
 							ps.Add("FK_Node", nd.getNodeID());
 							ps.Add("FK_Emp", userNo);
@@ -5568,7 +5494,7 @@ public class Dev2Interface
 					break;
 				case ByDeptAndStation:
 
-					if (SystemConfig.OSModel == OSModel.OneOne)
+					if (SystemConfig.getOSModel() == OSModel.OneOne)
 					{
 						String sql = "SELECT COUNT(A.FK_Node) as Num FROM WF_NodeDept A, Port_Emp B, WF_NodeStation C, " + Glo.getEmpStation() + " D";
 						sql += " WHERE A.FK_Dept= B.FK_Dept AND  A.FK_Node=" + dbstr + "FK_Node AND B.No=" + dbstr + "FK_Emp AND  A.FK_Node=C.FK_Node AND C.FK_Station=D.FK_Station AND D.FK_Emp=" + dbstr + "FK_Emp";
@@ -5599,23 +5525,12 @@ public class Dev2Interface
 			switch (nd.getHisDeliveryWay())
 			{
 				case ByStation:
-					//var obj = BP.DA.DataType.GetPortalInterfaceSoapClientInstance();
-					//DataTable mydt = obj.GetEmpHisStations(WebUser.getNo());
-					//string mystas = BP.DA.DBAccess.GenerWhereInPKsString(mydt);
-					//ps.SQL = "SELECT COUNT(FK_Node) AS Num FROM WF_NodeStation WHERE FK_Node=" + dbstr + "FK_Node AND FK_Station IN(" + mystas + ")";
-					//ps.Add("FK_Node", nd.NodeID);
-					//num = DBAccess.RunSQLReturnValInt(ps);
+
 					break;
 				case ByDept:
-					//var objMy = BP.DA.DataType.GetPortalInterfaceSoapClientInstance();
-					//DataTable mydtDept = objMy.GetEmpHisDepts(WebUser.getNo());
-					//string dtps = BP.DA.DBAccess.GenerWhereInPKsString(mydtDept);
 
-					//ps.SQL = "SELECT COUNT(FK_Node) as Num FROM WF_NodeDept WHERE FK_Dept IN (" + dtps + ") B.FK_Dept AND  A.FK_Node=" + dbstr + "FK_Node";
-					//ps.Add("FK_Node", nd.NodeID);
-					//num = DBAccess.RunSQLReturnValInt(ps);
 					throw new RuntimeException("@目前取消支持.");
-					break;
+
 				case ByBindEmp:
 					ps.SQL = "SELECT COUNT(*) AS Num FROM WF_NodeEmp WHERE FK_Emp=" + dbstr + "FK_Emp AND FK_Node=" + dbstr + "FK_Node";
 					ps.Add("FK_Emp", userNo);
@@ -5652,7 +5567,7 @@ public class Dev2Interface
 		SubFlowHands subflows = new SubFlowHands(pNodeID);
 
 		//当前的子流程.
-		for (SubFlowHand item : subflows)
+		for (SubFlowHand item : subflows.ToJavaList())
 		{
 			if (item.getSubFlowNo().equals(flowNo) == false)
 			{
@@ -5679,7 +5594,7 @@ public class Dev2Interface
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				if (dt.Rows.size() != 0)
 				{
-					if (dt.Rows.size() == 1 && Integer.parseInt(dt.Rows[0]["WFState"].toString()) == 0)
+					if (dt.Rows.size() == 1 && Integer.parseInt(dt.Rows.get(0).getValue("WFState").toString()) == 0)
 					{
 
 					}
@@ -5710,7 +5625,7 @@ public class Dev2Interface
 					if (dt.Rows.size() == 0)
 					{
 						BP.WF.Flow myflow = new Flow(flStr);
-						throw new RuntimeException("流程:[" + myflow.Name + "]没有发起,您不能启动[" + item.getSubFlowName() + "]。");
+						throw new RuntimeException("流程:[" + myflow.getName() + "]没有发起,您不能启动[" + item.getSubFlowName() + "]。");
 					}
 				}
 			}
@@ -5731,7 +5646,7 @@ public class Dev2Interface
 					if (dt.Rows.size() == 0)
 					{
 						BP.WF.Flow myflow = new Flow(flStr);
-						throw new RuntimeException("流程:[" + myflow.Name + "]没有完成,您不能启动[" + item.getSubFlowName() + "]。");
+						throw new RuntimeException("流程:[" + myflow.getName() + "]没有完成,您不能启动[" + item.getSubFlowName() + "]。");
 					}
 				}
 			}
@@ -5836,8 +5751,9 @@ public class Dev2Interface
 	 @param workID
 	 @param userNo
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean Flow_IsCanDoCurrentWork(long workID, String userNo)
+	public static boolean Flow_IsCanDoCurrentWork(long workID, String userNo) throws Exception
 	{
 		if (workID == 0)
 		{
@@ -5896,7 +5812,7 @@ public class Dev2Interface
 		}
 
 		//判断是否是待办.
-		int myisPass = Integer.parseInt(dt.Rows[0]["IsPass"].toString());
+		int myisPass = Integer.parseInt(dt.Rows.get(0).getValue("IsPass").toString());
 
 		//新增加的标记,=90 就是会签主持人执行会签的状态. 翻译.
 		if (myisPass == 90)
@@ -5914,7 +5830,7 @@ public class Dev2Interface
 			return false;
 		}
 
-		WFState wfsta = WFState.forValue(Integer.parseInt(dt.Rows[0]["WFState"].toString()));
+		WFState wfsta = WFState.forValue(Integer.parseInt(dt.Rows.get(0).getValue("WFState").toString()));
 		if (wfsta == WFState.Complete)
 		{
 			return false;
@@ -5926,10 +5842,10 @@ public class Dev2Interface
 		}
 
 		//判断是否是客户处理节点. 
-		int isGuestNode = Integer.parseInt(dt.Rows[0]["IsGuestNode"].toString());
+		int isGuestNode = Integer.parseInt(dt.Rows.get(0).getValue("IsGuestNode").toString());
 		if (isGuestNode == 1)
 		{
-			if (dt.Rows[0]["GuestNo"].toString().equals(BP.Web.GuestUser.No))
+			if (dt.Rows.get(0).getValue("GuestNo").toString().equals(BP.Web.GuestUser.getNo()))
 			{
 				return true;
 			}
@@ -5994,7 +5910,7 @@ public class Dev2Interface
 		}
 
 		int i = Integer.parseInt(dt.Rows.get(0).getValue(0).toString());
-		TaskSta TaskStai = TaskSta.forValue(Integer.parseInt(dt.Rows[0][1].toString()));
+		TaskSta TaskStai = TaskSta.forValue(Integer.parseInt(dt.Rows.get(0).getValue(1).toString()));
 		if (TaskStai == TaskSta.Sharing)
 		{
 			return false;
@@ -6033,16 +5949,15 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @param fid FID
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static boolean Flow_IsCanViewTruck(String flowNo, long workid)
+	public static boolean Flow_IsCanViewTruck(String flowNo, long workid) throws Exception
 	{
 		return Flow_IsCanViewTruck(flowNo, workid, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static bool Flow_IsCanViewTruck(string flowNo, Int64 workid, string userNo = null)
-	public static boolean Flow_IsCanViewTruck(String flowNo, long workid, String userNo)
+	public static boolean Flow_IsCanViewTruck(String flowNo, long workid, String userNo) throws Exception
 	{
 		if (userNo == null)
 		{
@@ -6097,8 +6012,9 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param workid 子线程的工作ID
 	 @param info 删除信息
+	 * @throws Exception 
 	*/
-	public static String Flow_DeleteSubThread(String flowNo, long workid, String info)
+	public static String Flow_DeleteSubThread(String flowNo, long workid, String info) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.SetValByKey(GenerWorkFlowAttr.WorkID, workid);
@@ -6119,16 +6035,15 @@ public class Dev2Interface
 	 @param msg 催办消息
 	 @param isPressSubFlow 是否催办子流程？
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 
-	public static String Flow_DoPress(long workID, String msg)
+	public static String Flow_DoPress(long workID, String msg) throws Exception
 	{
 		return Flow_DoPress(workID, msg, false);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Flow_DoPress(Int64 workID, string msg, bool isPressSubFlow = false)
-	public static String Flow_DoPress(long workID, String msg, boolean isPressSubFlow)
+	public static String Flow_DoPress(long workID, String msg, boolean isPressSubFlow) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
@@ -6189,8 +6104,9 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param workid 工作ID
 	 @return 是否设置成功
+	 * @throws Exception 
 	*/
-	public static boolean Flow_ReSetFlowTitle(String flowNo, int nodeID, long workid)
+	public static boolean Flow_ReSetFlowTitle(String flowNo, int nodeID, long workid) throws Exception
 	{
 		Node nd = new Node(nodeID);
 		Work wk = nd.getHisWork();
@@ -6207,8 +6123,9 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @param paras 参数,格式：@GroupMark=xxxx@IsCC=1
 	 @return 是否设置成功
+	 * @throws Exception 
 	*/
-	public static boolean Flow_SetFlowParas(String flowNo, long workid, String paras)
+	public static boolean Flow_SetFlowParas(String flowNo, long workid, String paras) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
@@ -6236,8 +6153,9 @@ public class Dev2Interface
 	 
 	 @param workid 工作ID
 	 @param sdt 应完成日期
+	 * @throws Exception 
 	*/
-	public static void Flow_SetSDTOfFlow(long workid, String sdt)
+	public static void Flow_SetSDTOfFlow(long workid, String sdt) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
 		gwf.setSDTOfFlow(sdt);
@@ -6250,8 +6168,9 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @param title 标题
 	 @return 是否设置成功
+	 * @throws Exception 
 	*/
-	public static boolean Flow_SetFlowTitle(String flowNo, long workid, String title)
+	public static boolean Flow_SetFlowTitle(String flowNo, long workid, String title) throws Exception
 	{
 		//替换标题中出现的英文 ""引号，造成在获取数据时，造成异常
 		title = title.replace('"', '“');
@@ -6272,15 +6191,6 @@ public class Dev2Interface
 		int num = DBAccess.RunSQL(ps);
 
 
-		if (fl.getHisDataStoreModel() == DataStoreModel.ByCCFlow)
-		{
-			//ps = new Paras();
-			//ps.SQL = "UPDATE ND" + int.Parse(flowNo + "01") + " SET Title=" + dbstr + "Title WHERE OID=" + dbstr + "WorkID";
-			//ps.Add(GenerWorkFlowAttr.Title, title);
-			//ps.Add(GenerWorkFlowAttr.WorkID, workid);
-			//DBAccess.RunSQL(ps);
-		}
-
 		if (num == 0)
 		{
 			return false;
@@ -6299,8 +6209,9 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @param toNodeID 调度到节点
 	 @param toEmper 调度到人员
+	 * @throws Exception 
 	*/
-	public static String Flow_Schedule(long workid, int toNodeID, String toEmper)
+	public static String Flow_Schedule(long workid, int toNodeID, String toEmper) throws Exception
 	{
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
@@ -6311,10 +6222,10 @@ public class Dev2Interface
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
 		gwf.setWFState(WFState.Runing);
 		gwf.setTaskSta(TaskSta.None);
-		gwf.setTodoEmps(toEmper + "," + emp.Name + ";");
+		gwf.setTodoEmps(toEmper + "," + emp.getName() + ";");
 		gwf.setFK_Node(toNodeID);
 		gwf.setNodeName(nd.getName());
-		//gwf.StarterName =emp.Name;
+		//gwf.StarterName =emp.getName();
 		gwf.Update();
 
 		//让其都设置完成。
@@ -6334,12 +6245,12 @@ public class Dev2Interface
 
 		// 执行更新.
 		GenerWorkerLists gwls = new GenerWorkerLists(workid);
-		GenerWorkerList gwl = gwls[gwls.size() - 1] instanceof GenerWorkerList ? (GenerWorkerList)gwls[gwls.size() - 1] : null; //获得最后一个。
+		GenerWorkerList gwl = gwls.get(gwls.size() - 1) instanceof GenerWorkerList ? (GenerWorkerList)gwls.get(gwls.size() - 1) : null; //获得最后一个。
 		gwl.setWorkID(workid);
 		gwl.setFK_Node(toNodeID);
 		gwl.setFK_NodeText(nd.getName());
 		gwl.setFK_Emp(toEmper);
-		gwl.setFK_EmpText(emp.Name);
+		gwl.setFK_EmpText(emp.getName());
 		gwl.setIsPass(false);
 		gwl.setIsEnable(true);
 		gwl.setIsRead(false);
@@ -6347,8 +6258,8 @@ public class Dev2Interface
 		//  gwl.Sender = WebUser.getNo();
 		gwl.setHungUpTimes(0);
 		gwl.setFID(gwf.getFID());
-		gwl.setFK_Dept(emp.FK_Dept);
-		gwl.setFK_DeptT(emp.FK_DeptText);
+		gwl.setFK_Dept(emp.getFK_Dept());
+		gwl.setFK_DeptT(emp.getFK_DeptText());
 
 		if (gwl.Update() == 0)
 		{
@@ -6362,7 +6273,7 @@ public class Dev2Interface
 			throw new RuntimeException("@调度错误");
 		}
 
-		return "该流程(" + gwf.getTitle() + ")，已经调度到(" + nd.getName() + "),分配给(" + emp.Name + ")";
+		return "该流程(" + gwf.getTitle() + ")，已经调度到(" + nd.getName() + "),分配给(" + emp.getName() + ")";
 	}
 	/** 
 	 设置流程运行模式
@@ -6374,8 +6285,9 @@ public class Dev2Interface
 	 @param runType 是否自动运行？ 如果自动运行，就按照流程设置的规则运行。
 	 非自动运行，就按照用户自己定义的运转顺序计算。
 	 @param paras 手工运行的参数格式为: @节点ID1`子流程No`处理模式`接受人1,接受人n`抄送人1NO,抄送人nNO`抄送人1Name,抄送人nName@节点ID2`子流程No`处理模式`接受人1,接受人n`抄送人1NO,抄送人nNO`抄送人1Name,抄送人nName
+	 * @throws Exception 
 	*/
-	public static void Flow_SetFlowTransferCustom(String flowNo, long workid, TransferCustomType runType, String paras)
+	public static void Flow_SetFlowTransferCustom(String flowNo, long workid, TransferCustomType runType, String paras) throws Exception
 	{
 		//删除以前存储的参数.
 		BP.DA.DBAccess.RunSQL("DELETE FROM WF_TransferCustom WHERE WorkID=" + workid);
@@ -6408,7 +6320,7 @@ public class Dev2Interface
 			tc.setWorkID(workid); //工作ID.
 			tc.setWorker(vals[3]); //工作人员.
 			tc.setSubFlowNo(subFlow); //子流程.
-			tc.setMyPK( tc.getFK_Node() + "_" + tc.getWorkID() + "_" + idx;
+			tc.setMyPK( tc.getFK_Node() + "_" + tc.getWorkID() + "_" + idx);
 			tc.setTodolistModel(TodolistModel.forValue(todomodel)); //处理模式.
 			tc.Save();
 			idx++;
@@ -6428,7 +6340,7 @@ public class Dev2Interface
 				}
 
 				sa = new SelectAccper();
-				sa.setMyPK( nodeid + "_" + workid + "_" + ccs[i];
+				sa.setMyPK( nodeid + "_" + workid + "_" + ccs[i]);
 				sa.setFK_Emp(ccs[i].trim());
 				sa.setEmpName(ccNames[i].trim());
 				sa.setFK_Node(nodeid);
@@ -6477,8 +6389,9 @@ public class Dev2Interface
 	 @param workid
 	 @param runType
 	 @param paras 格式为:@节点编号1;处理人员1,处理人员2,处理人员n(可选);应处理时间(可选)
+	 * @throws Exception 
 	*/
-	public static void Flow_SetFlowTransferCustomV201605(String flowNo, long workid, TransferCustomType runType, String paras)
+	public static void Flow_SetFlowTransferCustomV201605(String flowNo, long workid, TransferCustomType runType, String paras) throws Exception
 	{
 
 			///#region 更新状态.
@@ -6566,7 +6479,7 @@ public class Dev2Interface
 				}
 
 				sa = new SelectAccper();
-				sa.setMyPK( nodeid + "_" + workid + "_" + ccs[i];
+				sa.setMyPK( nodeid + "_" + workid + "_" + ccs[i]);
 				sa.setFK_Emp(ccs[i].trim());
 				sa.setEmpName(ccNames[i].trim());
 				sa.setFK_Node(nodeid);
@@ -6584,8 +6497,9 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param workid 工作ID
 	 @return 是否可以删除该流程
+	 * @throws Exception 
 	*/
-	public static boolean Flow_IsCanDeleteFlowInstance(String flowNo, long workid, String userNo)
+	public static boolean Flow_IsCanDeleteFlowInstance(String flowNo, long workid, String userNo) throws Exception
 	{
 		if (userNo.equals("admin"))
 		{
@@ -6657,8 +6571,9 @@ public class Dev2Interface
 	 @param empNo 评论人编号
 	 @param empName 评论人名称
 	 @return 插入ID主键
+	 * @throws Exception 
 	*/
-	public static String Flow_BBSAdd(String flowNo, long workid, long fid, String msg, String empNo, String empName)
+	public static String Flow_BBSAdd(String flowNo, long workid, long fid, String msg, String empNo, String empName) throws Exception
 	{
 		return Glo.AddToTrack(ActionType.FlowBBS, flowNo, workid, fid, 0, null, empNo, empName, 0, null, empNo, empName, msg, null);
 	}
@@ -6693,8 +6608,9 @@ public class Dev2Interface
 	 取消设置关注
 	 
 	 @param workid 要取消设置的工作ID
+	 * @throws Exception 
 	*/
-	public static void Flow_Focus(long workid)
+	public static void Flow_Focus(long workid) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
@@ -6726,8 +6642,9 @@ public class Dev2Interface
 	 @param toEmpIDs 人员集合
 	 @param note 调整原因
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String Flow_ReSend(long workid, int toNodeID, String toEmpIDs, String note)
+	public static String Flow_ReSend(long workid, int toNodeID, String toEmpIDs, String note) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
 		if (gwf.getWFState() == WFState.Complete)
@@ -6751,7 +6668,7 @@ public class Dev2Interface
 			}
 
 			BP.Port.Emp emp = new Emp(empID);
-			todoEmps += emp.No + "," + emp.Name + ";";
+			todoEmps += emp.getNo() + "," + emp.getName() + ";";
 			num++;
 
 			emps.AddEntity(emp);
@@ -6779,8 +6696,8 @@ public class Dev2Interface
 		for (Emp item : emps.ToJavaList())
 		{
 			//插入一条信息，让调整的人员显示待办.
-			gwl.setFK_Emp(item.No);
-			gwl.setFK_EmpText(item.Name);
+			gwl.setFK_Emp(item.getNo());
+			gwl.setFK_EmpText(item.getName());
 			gwl.setFK_Node(toNodeID);
 			gwl.setIsPassInt(0);
 			gwl.setIsRead(false);
@@ -6806,8 +6723,9 @@ public class Dev2Interface
 	 取消、确认.
 	 
 	 @param workid 要取消设置的工作ID
+	 * @throws Exception 
 	*/
-	public static void Flow_Confirm(long workid)
+	public static void Flow_Confirm(long workid) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
@@ -6835,8 +6753,9 @@ public class Dev2Interface
 	 
 	 @param workID workID
 	 @return 返回进度数据
+	 * @throws Exception 
 	*/
-	public static DataSet DB_JobSchedule(long workID)
+	public static DataSet DB_JobSchedule(long workID) throws Exception
 	{
 		String sql = "";
 		DataSet ds = new DataSet();
@@ -6919,8 +6838,8 @@ public class Dev2Interface
 			dr.set("NodeName", gwf.getNodeName());
 			dr.set("EmpNo", WebUser.getNo());
 			dr.set("EmpName", WebUser.getName());
-			dr.set("DeptName", WebUser.getFK_DeptName); //部门名称.
-			dr.set("RDT", DataType.CurrentData);
+			dr.set("DeptName", WebUser.getFK_DeptName()); //部门名称.
+			dr.set("RDT", DataType.getCurrentDate());
 			dr.set("SDT", "");
 			dr.set("IsPass", 0); // gwl.IsPassInt; //是否通过.
 			dtHistory.Rows.add(dr);
@@ -6972,26 +6891,25 @@ public class Dev2Interface
 	 @param AuthorDate 委托开始时间，默认当前时间
 	 @param AuthorToDate 委托结束时间
 	 @return 设置结果：成功true,失败 false
+	 * @throws Exception 
 	*/
 
-	public static boolean Flow_AuthorSave(String Author, int AuthorWay, String AuthorFlows, String AuthorDate)
+	public static boolean Flow_AuthorSave(String Author, int AuthorWay, String AuthorFlows, String AuthorDate) throws Exception
 	{
 		return Flow_AuthorSave(Author, AuthorWay, AuthorFlows, AuthorDate, null);
 	}
 
-	public static boolean Flow_AuthorSave(String Author, int AuthorWay, String AuthorFlows)
+	public static boolean Flow_AuthorSave(String Author, int AuthorWay, String AuthorFlows) throws Exception
 	{
 		return Flow_AuthorSave(Author, AuthorWay, AuthorFlows, null, null);
 	}
 
-	public static boolean Flow_AuthorSave(String Author, int AuthorWay)
+	public static boolean Flow_AuthorSave(String Author, int AuthorWay) throws Exception
 	{
 		return Flow_AuthorSave(Author, AuthorWay, null, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static bool Flow_AuthorSave(string Author, int AuthorWay, string AuthorFlows = null, string AuthorDate = null, string AuthorToDate = null)
-	public static boolean Flow_AuthorSave(String Author, int AuthorWay, String AuthorFlows, String AuthorDate, String AuthorToDate)
+	public static boolean Flow_AuthorSave(String Author, int AuthorWay, String AuthorFlows, String AuthorDate, String AuthorToDate) throws Exception
 	{
 		if (WebUser.getNo() == null)
 		{
@@ -7001,7 +6919,7 @@ public class Dev2Interface
 		WFEmp emp = new WFEmp(WebUser.getNo());
 		emp.setAuthor(Author);
 		emp.setAuthorWay(AuthorWay);
-		emp.setAuthorDate(BP.DA.DataType.CurrentData);
+		emp.setAuthorDate(BP.DA.DataType.getCurrentDate());
 
 		if (!DataType.IsNullOrEmpty(AuthorFlows))
 		{
@@ -7026,8 +6944,9 @@ public class Dev2Interface
 	 取消委托当前登录人的委托信息
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean Flow_AuthorCancel()
+	public static boolean Flow_AuthorCancel() throws Exception
 	{
 		if (WebUser.getNo() == null)
 		{
@@ -7047,8 +6966,9 @@ public class Dev2Interface
 	 获取当前登录人的委托人
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_AuthorEmps()
+	public static DataTable DB_AuthorEmps() throws Exception
 	{
 		if (WebUser.getNo() == null)
 		{
@@ -7062,8 +6982,9 @@ public class Dev2Interface
 	 
 	 @param empNo 授权人员编号
 	 @return 
+	 * @throws Exception 
 	*/
-	public static DataTable DB_AuthorEmpWorks(String empNo)
+	public static DataTable DB_AuthorEmpWorks(String empNo) throws Exception
 	{
 		if (WebUser.getNo() == null)
 		{
@@ -7080,22 +7001,22 @@ public class Dev2Interface
 				case All:
 					if (BP.WF.Glo.getIsEnableTaskPool() == true)
 					{
-						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' AND TaskSta!=1  ORDER BY ADT DESC";
+						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND TaskSta!=1  ORDER BY ADT DESC";
 					}
 					else
 					{
-						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' ORDER BY ADT DESC";
+						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' ORDER BY ADT DESC";
 					}
 
 					break;
 				case SpecFlows:
 					if (BP.WF.Glo.getIsEnableTaskPool() == true)
 					{
-						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' AND  FK_Flow IN " + emp.getAuthorFlows() + " AND TaskSta!=0    ORDER BY ADT DESC";
+						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND  FK_Flow IN " + emp.getAuthorFlows() + " AND TaskSta!=0    ORDER BY ADT DESC";
 					}
 					else
 					{
-						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.No + "' AND  FK_Flow IN " + emp.getAuthorFlows() + "   ORDER BY ADT DESC";
+						sql = "SELECT * FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp='" + emp.getNo() + "' AND  FK_Flow IN " + emp.getAuthorFlows() + "   ORDER BY ADT DESC";
 					}
 
 					break;
@@ -7119,8 +7040,9 @@ public class Dev2Interface
 	 @param nodeID 节点ID
 	 @param workid 工作ID
 	 @return 如果没有就返回null,有就返回@参数名0=参数值0@参数名1=参数值1
+	 * @throws Exception 
 	*/
-	public static String GetFlowParas(int nodeID, long workid)
+	public static String GetFlowParas(int nodeID, long workid) throws Exception
 	{
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
@@ -7143,8 +7065,9 @@ public class Dev2Interface
 	 @param nextNodeID 发起后要跳转到的节点(可以为空)
 	 @param nextWorker 发起后要跳转到的节点并指定的工作人员(可以为空)
 	 @return 发送到第二个节点的执行信息
+	 * @throws Exception 
 	*/
-	public static SendReturnObjs Node_StartWork(String flowNo, Hashtable ht, DataSet workDtls, int nextNodeID, String nextWorker)
+	public static SendReturnObjs Node_StartWork(String flowNo, Hashtable ht, DataSet workDtls, int nextNodeID, String nextWorker) throws Exception
 	{
 		return Node_StartWork(flowNo, ht, workDtls, nextNodeID, nextWorker, 0, null);
 	}
@@ -7159,8 +7082,9 @@ public class Dev2Interface
 	 @param parentWorkID 父流程的workid，如果没有可以为0
 	 @param parentFlowNo 父流程的编号，如果没有可以为空
 	 @return 发送到第二个节点的执行信息
+	 * @throws Exception 
 	*/
-	public static SendReturnObjs Node_StartWork(String flowNo, Hashtable htWork, DataSet workDtls, int nextNodeID, String nextWorker, long parentWorkID, String parentFlowNo)
+	public static SendReturnObjs Node_StartWork(String flowNo, Hashtable htWork, DataSet workDtls, int nextNodeID, String nextWorker, long parentWorkID, String parentFlowNo) throws Exception
 	{
 		// 给全局变量赋值.
 		BP.WF.Glo.setSendHTOfTemp(htWork);
@@ -7170,9 +7094,11 @@ public class Dev2Interface
 		long workID = wk.getOID();
 		if (htWork != null)
 		{
-			for (String str : htWork.keySet())
+			for (Object str : htWork.keySet())
 			{
-				switch (str)
+				if(str==null)
+					continue;
+				switch (str.toString())
 				{
 					case StartWorkAttr.OID:
 					case StartWorkAttr.CDT:
@@ -7187,7 +7113,7 @@ public class Dev2Interface
 					default:
 						break;
 				}
-				wk.SetValByKey(str, htWork.get(str));
+				wk.SetValByKey(str.toString(), htWork.get(str));
 			}
 		}
 
@@ -7197,19 +7123,19 @@ public class Dev2Interface
 			//保存从表
 			for (DataTable dt : workDtls.Tables)
 			{
-				for (MapDtl dtl : wk.getHisMapDtls())
+				for (MapDtl dtl : wk.getHisMapDtls().ToJavaList())
 				{
-					if (!dt.TableName.equals(dtl.No))
+					if (!dt.TableName.equals(dtl.getNo()))
 					{
 						continue;
 					}
 
 					//获取dtls
-					GEDtls daDtls = new GEDtls(dtl.No);
+					GEDtls daDtls = new GEDtls(dtl.getNo());
 					daDtls.Delete(GEDtlAttr.RefPK, wk.getOID()); // 清除现有的数据.
 
-					GEDtl daDtl = daDtls.GetNewEntity instanceof GEDtl ? (GEDtl)daDtls.GetNewEntity : null;
-					daDtl.RefPK = String.valueOf(wk.getOID());
+					GEDtl daDtl = daDtls.getNewEntity() instanceof GEDtl ? (GEDtl)daDtls.getNewEntity() : null;
+					daDtl.setRefPK( String.valueOf(wk.getOID()));
 
 					// 为从表复制数据.
 					for (DataRow dr : dt.Rows)
@@ -7223,7 +7149,7 @@ public class Dev2Interface
 							daDtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName));
 						}
 
-						daDtl.RefPK = String.valueOf(wk.getOID());
+						daDtl.setRefPK( String.valueOf(wk.getOID()));
 						daDtl.InsertAsOID(DBAccess.GenerOID("Dtl")); //插入数据.
 					}
 				}
@@ -7249,9 +7175,11 @@ public class Dev2Interface
 		if (htWork != null)
 		{
 			String paras = "";
-			for (String key : htWork.keySet())
+			for (Object key : htWork.keySet())
 			{
-				paras += "@" + key + "=" + htWork.get(key).toString();
+				if(key==null)
+					continue;
+				paras += "@" + key.toString() + "=" + htWork.get(key).toString();
 			}
 
 			if (DataType.IsNullOrEmpty(paras) == false && Glo.getIsEnableTrackRec() == true)
@@ -7359,24 +7287,24 @@ public class Dev2Interface
 		//    rpt.SetValByKey(GERptAttr.FlowEnderRDT, BP.DA.DataType.getCurrentDataTime());
 		//    rpt.SetValByKey(GERptAttr.MyNum, 0);
 		//    rpt.SetValByKey(GERptAttr.WFState, (int)WFState.Blank);
-		//    rpt.SetValByKey(GERptAttr.FlowStarter, emp.No);
-		//    rpt.SetValByKey(GERptAttr.FlowEnder, emp.No);
+		//    rpt.SetValByKey(GERptAttr.FlowStarter, emp.getNo());
+		//    rpt.SetValByKey(GERptAttr.FlowEnder, emp.getNo());
 		//    rpt.SetValByKey(GERptAttr.FlowEndNode, this.StartNodeID);
 		//    rpt.SetValByKey(GERptAttr.FK_Dept, emp.FK_Dept);
 		//    rpt.SetValByKey(GERptAttr.FK_NY, DataType.CurrentYearMonth);
 
 		//    if (Glo.UserInfoShowModel == UserInfoShowModel.UserNameOnly)
-		//        rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.Name);
+		//        rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getName());
 
 		//    if (Glo.UserInfoShowModel == UserInfoShowModel.UserIDUserName)
-		//        rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.No);
+		//        rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo());
 
 		//    if (Glo.UserInfoShowModel == UserInfoShowModel.UserIDUserName)
-		//        rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.No + "," + emp.Name);
+		//        rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getNo() + "," + emp.getName());
 
 		//}
 
-		//if (rpt.EnMap.PhysicsTable != wk.EnMap.PhysicsTable)
+		//if (rpt.getEnMap().getPhysicsTable() != wk.getEnMap().getPhysicsTable())
 		//    wk.Update(); //更新工作节点数据.
 		//rpt.Update(); // 更新流程数据表.
 		///#endregion 特殊赋值.
@@ -7396,13 +7324,13 @@ public class Dev2Interface
 		//                continue;
 
 		//            //new 一个实例.
-		//            GEDtl dtlData = new GEDtl(dtl.No);
+		//            GEDtl dtlData = new GEDtl(dtl.getNo());
 
 		//            //检查该明细表是否有数据，如果没有数据，就copy过来，如果有，就说明已经copy过了。
-		//            //  sql = "SELECT COUNT(OID) FROM "+dtlData.EnMap.PhysicsTable+" WHERE RefPK="+wk.OID;
+		//            //  sql = "SELECT COUNT(OID) FROM "+dtlData.getEnMap().getPhysicsTable()+" WHERE RefPK="+wk.OID;
 
 		//            //删除以前的数据.
-		//            sql = "DELETE FROM " + dtlData.EnMap.PhysicsTable + " WHERE RefPK=" + wk.OID;
+		//            sql = "DELETE FROM " + dtlData.getEnMap().getPhysicsTable() + " WHERE RefPK=" + wk.OID;
 		//            DBAccess.RunSQL(sql);
 
 
@@ -7413,7 +7341,7 @@ public class Dev2Interface
 		//            foreach (GEDtl geDtlFromData in dtlsFromData)
 		//            {
 		//                dtlData.Copy(geDtlFromData);
-		//                dtlData.RefPK = wk.OID.ToString();
+		//                dtlData.setRefPK( wk.OID.ToString();
 		//                if (this.No == PFlowNo)
 		//                {
 		//                    dtlData.InsertAsNew();
@@ -7505,8 +7433,9 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param userNo 用户编号
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public static long Node_CreateBlankWork(String flowNo, String userNo)
+	public static long Node_CreateBlankWork(String flowNo, String userNo) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, null, null, userNo);
 	}
@@ -7525,76 +7454,75 @@ public class Dev2Interface
 	 @param jumpToEmp 要跳转到的人员,如果没有则为null.
 	 @param todoEmps 待办人员,如果没有则为null.
 	 @return 为开始节点创建工作后产生的WorkID.
+	 * @throws Exception 
 	*/
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode, String jumpToEmp, String todoEmps)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode, String jumpToEmp, String todoEmps) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, parentFID, parentFlowNo, parentNodeID, parentEmp, jumpToNode, jumpToEmp, todoEmps, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode, String jumpToEmp)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode, String jumpToEmp) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, parentFID, parentFlowNo, parentNodeID, parentEmp, jumpToNode, jumpToEmp, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, parentFID, parentFlowNo, parentNodeID, parentEmp, jumpToNode, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, parentFID, parentFlowNo, parentNodeID, parentEmp, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, parentFID, parentFlowNo, parentNodeID, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, parentFID, parentFlowNo, 0, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, parentFID, null, 0, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, parentWorkID, 0, null, 0, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter, String title) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, title, 0, 0, null, 0, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls, String starter) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, starter, null, 0, 0, null, 0, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht, DataSet workDtls) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, null, null, 0, 0, null, 0, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht)
+	public static long Node_CreateBlankWork(String flowNo, java.util.Hashtable ht) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, null, null, null, 0, 0, null, 0, null, 0, null, null, null);
 	}
 
-	public static long Node_CreateBlankWork(String flowNo)
+	public static long Node_CreateBlankWork(String flowNo) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, null, null, null, null, 0, 0, null, 0, null, 0, null, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static Int64 Node_CreateBlankWork(string flowNo, Hashtable ht = null, DataSet workDtls = null, string starter = null, string title = null, Int64 parentWorkID = 0, Int64 parentFID = 0, string parentFlowNo = null, int parentNodeID = 0, string parentEmp = null, int jumpToNode = 0, string jumpToEmp = null, string todoEmps = null, string isStartSameLevelFlow = null)
-	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode, String jumpToEmp, String todoEmps, String isStartSameLevelFlow)
+	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode, String jumpToEmp, String todoEmps, String isStartSameLevelFlow) throws Exception
 	{
 
 		//把一些其他的参数也增加里面去,传递给ccflow.
@@ -7630,9 +7558,11 @@ public class Dev2Interface
 			///#region 给各个属性-赋值
 		if (ht != null)
 		{
-			for (String str : ht.keySet())
+			for (Object str : ht.keySet())
 			{
-				switch (str)
+				if(str == null)
+					continue;
+				switch (str.toString())
 				{
 					case StartWorkAttr.OID:
 					case StartWorkAttr.CDT:
@@ -7647,7 +7577,7 @@ public class Dev2Interface
 					default:
 						break;
 				}
-				wk.SetValByKey(str, ht.get(str));
+				wk.SetValByKey(str.toString(), ht.get(str));
 			}
 		}
 		wk.setOID(workID);
@@ -7656,25 +7586,25 @@ public class Dev2Interface
 			//保存从表
 			for (DataTable dt : workDtls.Tables)
 			{
-				for (MapDtl dtl : wk.getHisMapDtls())
+				for (MapDtl dtl : wk.getHisMapDtls().ToJavaList())
 				{
-					if (!dt.TableName.equals(dtl.No))
+					if (!dt.TableName.equals(dtl.getNo()))
 					{
 						continue;
 					}
 
 					//获取dtls
-					GEDtls daDtls = new GEDtls(dtl.No);
+					GEDtls daDtls = new GEDtls(dtl.getNo());
 					daDtls.Delete(GEDtlAttr.RefPK, wk.getOID()); // 清除现有的数据.
 
-					GEDtl daDtl = daDtls.GetNewEntity instanceof GEDtl ? (GEDtl)daDtls.GetNewEntity : null;
-					daDtl.RefPK = String.valueOf(wk.getOID());
+					GEDtl daDtl = daDtls.getNewEntity() instanceof GEDtl ? (GEDtl)daDtls.getNewEntity() : null;
+					daDtl.setRefPK( String.valueOf(wk.getOID()));
 
 					// 为从表复制数据.
 					for (DataRow dr : dt.Rows)
 					{
 						daDtl.ResetDefaultVal();
-						daDtl.RefPK = String.valueOf(wk.getOID());
+						daDtl.setRefPK( String.valueOf(wk.getOID()));
 
 						//明细列.
 						for (DataColumn dc : dt.Columns)
@@ -7700,7 +7630,7 @@ public class Dev2Interface
 		//执行对报表的数据表WFState状态的更新,让它为runing的状态.
 		ps = new Paras();
 		ps.SQL = "UPDATE " + fl.getPTable() + " SET WFState=0,FK_Dept=" + dbstr + "FK_Dept,Title=" + dbstr + "Title WHERE OID=" + dbstr + "OID";
-		ps.Add(GERptAttr.FK_Dept, empStarter.FK_Dept);
+		ps.Add(GERptAttr.FK_Dept, empStarter.getFK_Dept());
 		ps.Add(GERptAttr.Title, title);
 		ps.Add(GERptAttr.OID, wk.getOID());
 		DBAccess.RunSQL(ps);
@@ -7711,20 +7641,20 @@ public class Dev2Interface
 		int i = gwf.RetrieveFromDBSources();
 
 		//将流程信息提前写入wf_GenerWorkFlow,避免查询不到
-		gwf.setFlowName(fl.Name);
+		gwf.setFlowName(fl.getName());
 		gwf.setFK_Flow(flowNo);
 		gwf.setFK_FlowSort(fl.getFK_FlowSort());
 		gwf.setSysType(fl.getSysType());
 
-		gwf.setFK_Dept(empStarter.FK_Dept);
-		gwf.setDeptName(empStarter.FK_DeptText);
+		gwf.setFK_Dept(empStarter.getFK_Dept());
+		gwf.setDeptName(empStarter.getFK_DeptText());
 		gwf.setFK_Node(fl.getStartNodeID());
 		gwf.setNodeName(nd.getName());
 		gwf.setWFState(WFState.Blank);
 		gwf.setTitle(title);
 
-		gwf.setStarter(empStarter.No);
-		gwf.setStarterName(empStarter.Name);
+		gwf.setStarter(empStarter.getNo());
+		gwf.setStarterName(empStarter.getName());
 		gwf.setRDT(DataType.getCurrentDataTime());
 		gwf.setPWorkID(parentWorkID);
 		gwf.setPFID(parentFID);
@@ -7762,8 +7692,9 @@ public class Dev2Interface
 	 
 	 @param workid 工作ID
 	 @param todoEmps 要增加的处理人员,多个人员用逗号分开.
+	 * @throws Exception 
 	*/
-	public static void Node_AddTodolist(long workid, String todoEmps)
+	public static void Node_AddTodolist(long workid, String todoEmps) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
 		if (gwf.getWFState() == WFState.Complete)
@@ -7779,7 +7710,7 @@ public class Dev2Interface
 
 		String[] emps = todoEmps.split("[,]", -1); //分开字符串.
 		String tempStrs = ""; //临时变量，防止重复插入.
-		for (String emp : emps.ToJavaList())
+		for (String emp : emps)
 		{
 			if (DataType.IsNullOrEmpty(emp) == true)
 			{
@@ -7803,12 +7734,12 @@ public class Dev2Interface
 
 			Emp empEn = new Emp(emp);
 
-			gwl.setFK_EmpText(empEn.Name);
+			gwl.setFK_EmpText(empEn.getName());
 			gwl.setFK_NodeText(gwf.getNodeName());
 			gwl.setFID(0);
 			gwl.setFK_Flow(gwf.getFK_Flow());
-			gwl.setFK_Dept(empEn.FK_Dept);
-			gwl.setFK_DeptT(empEn.FK_DeptText);
+			gwl.setFK_Dept(empEn.getFK_Dept());
+			gwl.setFK_DeptT(empEn.getFK_DeptText());
 
 			gwl.setSDT("无");
 			gwl.setDTOfWarning(DataType.getCurrentDataTime());
@@ -7840,46 +7771,45 @@ public class Dev2Interface
 	 @param parentWorkID 父流程的WorkID,如果没有父流程就传入为0.
 	 @param parentFlowNo 父流程的流程编号,如果没有父流程就传入为null.
 	 @return 为开始节点创建工作后产生的WorkID.
+	 * @throws Exception 
 	*/
 
-	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter, String title, long parentWorkID, String parentFlowNo)
+	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter, String title, long parentWorkID, String parentFlowNo) throws Exception
 	{
 		return Node_CreateStartNodeWork(flowNo, htWork, workDtls, flowStarter, title, parentWorkID, parentFlowNo, 0);
 	}
 
-	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter, String title, long parentWorkID)
+	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter, String title, long parentWorkID) throws Exception
 	{
 		return Node_CreateStartNodeWork(flowNo, htWork, workDtls, flowStarter, title, parentWorkID, null, 0);
 	}
 
-	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter, String title)
+	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter, String title) throws Exception
 	{
 		return Node_CreateStartNodeWork(flowNo, htWork, workDtls, flowStarter, title, 0, null, 0);
 	}
 
-	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter)
+	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls, String flowStarter) throws Exception
 	{
 		return Node_CreateStartNodeWork(flowNo, htWork, workDtls, flowStarter, null, 0, null, 0);
 	}
 
-	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls)
+	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork, DataSet workDtls) throws Exception
 	{
 		return Node_CreateStartNodeWork(flowNo, htWork, workDtls, null, null, 0, null, 0);
 	}
 
-	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork)
+	public static long Node_CreateStartNodeWork(String flowNo, java.util.Hashtable htWork) throws Exception
 	{
 		return Node_CreateStartNodeWork(flowNo, htWork, null, null, null, 0, null, 0);
 	}
 
-	public static long Node_CreateStartNodeWork(String flowNo)
+	public static long Node_CreateStartNodeWork(String flowNo) throws Exception
 	{
 		return Node_CreateStartNodeWork(flowNo, null, null, null, null, 0, null, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static Int64 Node_CreateStartNodeWork(string flowNo, Hashtable htWork = null, DataSet workDtls = null, string flowStarter = null, string title = null, Int64 parentWorkID = 0, string parentFlowNo = null, int parentNDFrom = 0)
-	public static long Node_CreateStartNodeWork(String flowNo, Hashtable htWork, DataSet workDtls, String flowStarter, String title, long parentWorkID, String parentFlowNo, int parentNDFrom)
+	public static long Node_CreateStartNodeWork(String flowNo, Hashtable htWork, DataSet workDtls, String flowStarter, String title, long parentWorkID, String parentFlowNo, int parentNDFrom) throws Exception
 	{
 		// 给全局变量赋值.
 		BP.WF.Glo.setSendHTOfTemp(htWork);
@@ -7900,9 +7830,11 @@ public class Dev2Interface
 			///#region 给各个属性-赋值
 		if (htWork != null)
 		{
-			for (String str : htWork.keySet())
+			for (Object str : htWork.keySet())
 			{
-				switch (str)
+				if(str == null)
+					continue;
+				switch (str.toString())
 				{
 					case StartWorkAttr.OID:
 					case StartWorkAttr.CDT:
@@ -7917,7 +7849,7 @@ public class Dev2Interface
 					default:
 						break;
 				}
-				wk.SetValByKey(str, htWork.get(str));
+				wk.SetValByKey(str.toString(), htWork.get(str));
 			}
 			//将参数保存到业务表
 			wk.DirectUpdate();
@@ -7928,24 +7860,24 @@ public class Dev2Interface
 			//保存从表
 			for (DataTable dt : workDtls.Tables)
 			{
-				for (MapDtl dtl : wk.getHisMapDtls())
+				for (MapDtl dtl : wk.getHisMapDtls().ToJavaList())
 				{
-					if (!dt.TableName.equals(dtl.No))
+					if (!dt.TableName.equals(dtl.getNo()))
 					{
 						continue;
 					}
 					//获取dtls
-					GEDtls daDtls = new GEDtls(dtl.No);
+					GEDtls daDtls = new GEDtls(dtl.getNo());
 					daDtls.Delete(GEDtlAttr.RefPK, wk.getOID()); // 清除现有的数据.
 
-					GEDtl daDtl = daDtls.GetNewEntity instanceof GEDtl ? (GEDtl)daDtls.GetNewEntity : null;
-					daDtl.RefPK = String.valueOf(wk.getOID());
+					GEDtl daDtl = daDtls.getNewEntity() instanceof GEDtl ? (GEDtl)daDtls.getNewEntity() : null;
+					daDtl.setRefPK( String.valueOf(wk.getOID()));
 
 					// 为从表复制数据.
 					for (DataRow dr : dt.Rows)
 					{
 						daDtl.ResetDefaultVal();
-						daDtl.RefPK = String.valueOf(wk.getOID());
+						daDtl.setRefPK( String.valueOf(wk.getOID()));
 
 						//明细列.
 						for (DataColumn dc : dt.Columns)
@@ -7967,13 +7899,13 @@ public class Dev2Interface
 		gwf.setWorkID(wk.getOID());
 		int i = gwf.RetrieveFromDBSources();
 
-		gwf.setFlowName(fl.Name);
+		gwf.setFlowName(fl.getName());
 		gwf.setFK_Flow(flowNo);
 		gwf.setFK_FlowSort(fl.getFK_FlowSort());
 		gwf.setSysType(fl.getSysType());
 
-		gwf.setFK_Dept(emp.FK_Dept);
-		gwf.setDeptName(emp.FK_DeptText);
+		gwf.setFK_Dept(emp.getFK_Dept());
+		gwf.setDeptName(emp.getFK_DeptText());
 		gwf.setFK_Node(fl.getStartNodeID());
 
 		gwf.setNodeName(nd.getName());
@@ -8002,8 +7934,8 @@ public class Dev2Interface
 			gwf.setTitle(title);
 		}
 
-		gwf.setStarter(emp.No);
-		gwf.setStarterName(emp.Name);
+		gwf.setStarter(emp.getNo());
+		gwf.setStarterName(emp.getName());
 		gwf.setRDT(DataType.getCurrentDataTime());
 
 		if (htWork != null && htWork.containsKey("PRI") == true)
@@ -8040,16 +7972,16 @@ public class Dev2Interface
 		gwl.setWorkID(wk.getOID());
 		if (gwl.RetrieveFromDBSources() == 0)
 		{
-			gwl.setFK_Emp(emp.No);
-			gwl.setFK_EmpText(emp.Name);
+			gwl.setFK_Emp(emp.getNo());
+			gwl.setFK_EmpText(emp.getName());
 
 			gwl.setFK_Node(nd.getNodeID());
 			gwl.setFK_NodeText(nd.getName());
 			gwl.setFID(0);
 
-			gwl.setFK_Flow(fl.No);
-			gwl.setFK_Dept(emp.FK_Dept);
-			gwl.setFK_DeptT(emp.FK_DeptText);
+			gwl.setFK_Flow(fl.getNo());
+			gwl.setFK_Dept(emp.getFK_Dept());
+			gwl.setFK_DeptT(emp.getFK_DeptText());
 
 
 			gwl.setSDT("无");
@@ -8057,7 +7989,6 @@ public class Dev2Interface
 			gwl.setIsEnable(true);
 
 			gwl.setIsPass(false);
-			//     gwl.Sender = WebUser.getNo();
 			gwl.setPRI(gwf.getPRI());
 			gwl.Insert();
 		}
@@ -8096,19 +8027,17 @@ public class Dev2Interface
 		ps.Add("OID", wk.getOID());
 		DBAccess.RunSQL(ps);
 
-		////写入日志.
-		//WorkNode wn = new WorkNode(wk, nd);
-		//wn.AddToTrack(ActionType.CallSubFlow, flowStarter, emp.Name, nd.NodeID, nd.Name, "来自" + WebUser.getNo() + "," + WebUser.getName()
-		//    + "工作发起.");
 
 
 			///#region 更新发送参数.
 		if (htWork != null)
 		{
 			String paras = "";
-			for (String key : htWork.keySet())
+			for (Object key : htWork.keySet())
 			{
-				paras += "@" + key + "=" + htWork.get(key).toString();
+				if(key == null)
+					continue;
+				paras += "@" + key.toString() + "=" + htWork.get(key).toString();
 			}
 
 			if (DataType.IsNullOrEmpty(paras) == false && Glo.getIsEnableTrackRec() == true)
@@ -8134,21 +8063,20 @@ public class Dev2Interface
 	 @param ht 节点表单数据
 	 @param dsDtl 节点表单从表数据
 	 @return 返回发送结果
+	 * @throws Exception 
 	*/
 
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, java.util.Hashtable ht)
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, java.util.Hashtable ht) throws Exception
 	{
 		return Node_SendWork(fk_flow, workID, ht, null);
 	}
 
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID)
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID) throws Exception
 	{
 		return Node_SendWork(fk_flow, workID, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static SendReturnObjs Node_SendWork(string fk_flow, Int64 workID, Hashtable ht = null, DataSet dsDtl = null)
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable ht, DataSet dsDtl)
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable ht, DataSet dsDtl) throws Exception
 	{
 		return Node_SendWork(fk_flow, workID, ht, dsDtl, 0, null);
 	}
@@ -8160,8 +8088,9 @@ public class Dev2Interface
 	 @param toNodeID 发送到的节点编号，如果是0就让ccflow自动计算.
 	 @param toEmps 发送到的人员,多个人员用逗号分开比如：zhangsan,lisi. 如果是null则表示让ccflow自动计算.
 	 @return 返回执行信息
+	 * @throws Exception 
 	*/
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, int toNodeID, String toEmps)
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, int toNodeID, String toEmps) throws Exception
 	{
 		return Node_SendWork(fk_flow, workID, null, null, toNodeID, toEmps);
 	}
@@ -8172,11 +8101,12 @@ public class Dev2Interface
 	 @param workID 工作ID
 	 @param htWork 节点表单数据(Hashtable中的key与节点表单的字段名相同,value 就是字段值)
 	 @return 执行信息
+	 * @throws Exception 
 	*/
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, int toNodeID, String nextWorkers)
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, int toNodeID, String nextWorkers) throws Exception
 	{
 
-		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName, null);
+		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null);
 	}
 	/** 
 	 发送工作
@@ -8189,10 +8119,11 @@ public class Dev2Interface
 	 @param nextWorkers 下一步的接受人，如果多个人员用逗号分开，比如:zhangsan,lisi,
 	 如果为空，则标识让ccflow按照节点访问规则自动寻找。
 	 @return 执行信息
+	 * @throws Exception 
 	*/
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String nextWorkers)
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String nextWorkers) throws Exception
 	{
-		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName, null);
+		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null);
 	}
 	/** 
 	 发送工作
@@ -8209,8 +8140,10 @@ public class Dev2Interface
 	 @param execUserDeptNo 执行人部门名称
 	 @param execUserDeptName 执行人部门编号
 	 @return 发送的结果对象
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String toEmps, String execUserNo, String execUserName, String execUserDeptNo, String execUserDeptName, String title)
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String toEmps, String execUserNo, String execUserName, String execUserDeptNo, String execUserDeptName, String title) throws  Exception
 	{
 
 		//给临时的发送变量赋值，解决带有参数的转向。
@@ -8268,10 +8201,12 @@ public class Dev2Interface
 			Paras ps = new Paras();
 
 			String paras = "";
-			for (String key : htWork.keySet())
+			for (Object key : htWork.keySet())
 			{
+				if(key == null)
+					continue;
 				paras += "@" + key + "=" + htWork.get(key).toString();
-				switch (key)
+				switch (key.toString())
 				{
 					case WorkSysFieldAttr.SysSDTOfFlow:
 						ps = new Paras();
@@ -8315,10 +8250,10 @@ public class Dev2Interface
 			//判断流程是否启动流程时限
 			if (nd.getIsStartNode() && wn.getHisGenerWorkFlow().getWFState() != WFState.ReturnSta)
 			{
-				LocalDateTime dtOfFlow = LocalDateTime.now();
-				LocalDateTime dtOfFlowWarning = LocalDateTime.now();
+				Date dtOfFlow = new Date();
+				Date dtOfFlowWarning = new Date();
 				Part part = new Part();
-				part.setMyPK( nd.getFK_Flow() + "_0_DeadLineRole";
+				part.setMyPK( nd.getFK_Flow() + "_0_DeadLineRole");
 				int count = part.RetrieveFromDBSources();
 				if (count != 0)
 				{
@@ -8343,14 +8278,14 @@ public class Dev2Interface
 							break;
 					}
 					//获取时限时间
-					dtOfFlow = Glo.AddDayHoursSpan(LocalDateTime.now(), tag1, tag2, Integer.parseInt(part.getTag3()), (TWay)Integer.parseInt(part.getTag4()));
+					dtOfFlow = Glo.AddDayHoursSpan(new Date(), tag1, tag2, Integer.parseInt(part.getTag3()), TWay.forValue(Integer.parseInt(part.getTag4())));
 					//计算警告日期.  时限时间-预警时间
-					dtOfFlowWarning = Glo.AddDayHoursSpan(LocalDateTime.now(), (tag1 * 24 + tag2 - tag7) / 24, (tag1 * 24 + tag2 - tag7) % 24, Integer.parseInt(part.getTag3()), (TWay)Integer.parseInt(part.getTag4()));
+					dtOfFlowWarning = Glo.AddDayHoursSpan(new Date(), (tag1 * 24 + tag2 - tag7) / 24, (tag1 * 24 + tag2 - tag7) % 24, Integer.parseInt(part.getTag3()), TWay.forValue(Integer.parseInt(part.getTag4())));
 					String dbstr = SystemConfig.getAppCenterDBVarStr();
 					Paras ps = new Paras();
 					ps.SQL = "UPDATE WF_GenerWorkFlow SET SDTOfFlow=" + dbstr + "SDTOfFlow,SDTOfFlowWarning=" + dbstr + "SDTOfFlowWarning WHERE WorkID=" + dbstr + "WorkID";
-					ps.Add(GenerWorkFlowAttr.SDTOfFlow, dtOfFlow.toString(DataType.getSysDataTimeFormat()));
-					ps.Add(GenerWorkFlowAttr.SDTOfFlowWarning, dtOfFlowWarning.toString(DataType.getSysDataTimeFormat()));
+					ps.Add(GenerWorkFlowAttr.SDTOfFlow, DateUtils.format(dtOfFlow,DataType.getSysDataTimeFormat()));
+					ps.Add(GenerWorkFlowAttr.SDTOfFlowWarning, DateUtils.format(dtOfFlowWarning,DataType.getSysDataTimeFormat()));
 					ps.Add(GenerWorkerListAttr.WorkID, workID);
 					DBAccess.RunSQL(ps);
 
@@ -8373,8 +8308,9 @@ public class Dev2Interface
 	 @param fid fid
 	 @param empNo 要增加的处理人编号
 	 @param empName 要增加的处理人名称
+	 * @throws Exception 
 	*/
-	public static void Node_InsertOrderEmp(String flowNo, int nodeID, long workid, long fid, String empNo, String empName)
+	public static void Node_InsertOrderEmp(String flowNo, int nodeID, long workid, long fid, String empNo, String empName) throws Exception
 	{
 		GenerWorkerList gwl = new GenerWorkerList();
 		int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, nodeID);
@@ -8417,8 +8353,9 @@ public class Dev2Interface
 	 @param ccToEmpNo 抄送给
 	 @param ccToEmpName 抄送给名称
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String Node_CC_WriteTo_Todolist(int fk_node, long workID, String ccToEmpNo, String ccToEmpName)
+	public static String Node_CC_WriteTo_Todolist(int fk_node, long workID, String ccToEmpNo, String ccToEmpName) throws Exception
 	{
 		return Node_CC_WriteTo_CClist(fk_node, workID, ccToEmpNo, ccToEmpName, "", "");
 	}
@@ -8426,14 +8363,15 @@ public class Dev2Interface
 	 执行抄送
 	 
 	 @param flowNo 流程编号
-	 @param workID 工作ID
+	 @param workID 工作IDs
 	 @param toEmpNo 抄送人员编号
 	 @param toEmpName 抄送人员人员名称
 	 @param msgTitle 标题
 	 @param msgDoc 内容
 	 @return 执行信息
+	 * @throws Exception 
 	*/
-	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String toEmpNo, String toEmpName, String msgTitle, String msgDoc)
+	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String toEmpNo, String toEmpName, String msgTitle, String msgDoc) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workID);
@@ -8449,7 +8387,7 @@ public class Dev2Interface
 		Node fromNode = new Node(fk_node);
 
 		CCList list = new CCList();
-		list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+		list.setMyPK( String.valueOf(DBAccess.GenerOIDByGUID())); // workID + "_" + fk_node + "_" + empNo;
 		list.setFK_Flow(gwf.getFK_Flow());
 		list.setFlowName(gwf.getFlowName());
 		list.setFK_Node(fk_node);
@@ -8461,7 +8399,7 @@ public class Dev2Interface
 
 		//增加抄送人部门.
 		Emp emp = new Emp(toEmpNo);
-		list.setCCToDept(emp.FK_Dept);
+		list.setCCToDept(emp.getFK_Dept());
 		list.setRDT(DataType.getCurrentDataTime());
 		list.setRec(WebUser.getNo());
 		list.setWorkID(gwf.getWorkID());
@@ -8521,31 +8459,26 @@ public class Dev2Interface
 	 @param toDepts 到部门，格式:001,002,003
 	 @param toStations 到岗位 格式:001,002,003
 	 @param toStations 到权限组 格式:001,002,003
+	 * @throws Exception 
 	*/
 
-	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps, String toDepts, String toStations)
+	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps, String toDepts, String toStations) throws Exception
 	{
 		return Node_CC_WriteTo_CClist(fk_node, workID, title, doc, toEmps, toDepts, toStations, null);
 	}
 
-	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps, String toDepts)
-	{
-		return Node_CC_WriteTo_CClist(fk_node, workID, title, doc, toEmps, toDepts, null, null);
-	}
 
-	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps)
+	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps) throws Exception
 	{
 		return Node_CC_WriteTo_CClist(fk_node, workID, title, doc, toEmps, null, null, null);
 	}
 
-	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc)
+	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc) throws Exception
 	{
 		return Node_CC_WriteTo_CClist(fk_node, workID, title, doc, null, null, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Node_CC_WriteTo_CClist(int fk_node, Int64 workID, string title, string doc, string toEmps = null, string toDepts = null, string toStations = null, string toGroups = null)
-	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps, String toDepts, String toStations, String toGroups)
+	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps, String toDepts, String toStations, String toGroups) throws Exception
 	{
 
 		Node nd = new Node(fk_node);
@@ -8577,7 +8510,7 @@ public class Dev2Interface
 		if (toEmps != null)
 		{
 			String[] emps = toEmps.split("[;]", -1);
-			for (String empStr : emps.ToJavaList())
+			for (String empStr : emps)
 			{
 				if (DataType.IsNullOrEmpty(empStr) == true || empStr.contains(",") == false)
 				{
@@ -8594,7 +8527,7 @@ public class Dev2Interface
 				}
 
 				CCList list = new CCList();
-				list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+				list.setMyPK( String.valueOf(DBAccess.GenerOIDByGUID())); // workID + "_" + fk_node + "_" + empNo;
 				list.setFK_Flow(gwf.getFK_Flow());
 				list.setFlowName(gwf.getFlowName());
 				list.setFK_Node(fk_node);
@@ -8658,7 +8591,7 @@ public class Dev2Interface
 			toDepts = toDepts.replace(";", ",");
 
 			String[] depts = toDepts.split("[,]", -1);
-			for (String deptNo : depts.ToJavaList())
+			for (String deptNo : depts)
 			{
 				if (DataType.IsNullOrEmpty(deptNo) == true)
 				{
@@ -8677,7 +8610,7 @@ public class Dev2Interface
 					}
 
 					CCList list = new CCList();
-					list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+					list.setMyPK( String.valueOf(DBAccess.GenerOIDByGUID())); // workID + "_" + fk_node + "_" + empNo;
 					list.setFK_Flow(gwf.getFK_Flow());
 					list.setFlowName(gwf.getFlowName());
 					list.setFK_Node(fk_node);
@@ -8692,7 +8625,6 @@ public class Dev2Interface
 					list.setFID(gwf.getFID());
 					list.setPFlowNo(gwf.getPFlowNo());
 					list.setPWorkID(gwf.getPWorkID());
-					// list.NDFrom = ndFrom;
 
 					//是否要写入待办.
 					if (nd.getCCWriteTo() == CCWriteTo.CCList)
@@ -8763,7 +8695,7 @@ public class Dev2Interface
 					}
 
 					CCList list = new CCList();
-					list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+					list.setMyPK( String.valueOf(DBAccess.GenerOIDByGUID())); // workID + "_" + fk_node + "_" + empNo;
 					list.setFK_Flow(gwf.getFK_Flow());
 					list.setFlowName(gwf.getFlowName());
 					list.setFK_Node(fk_node);
@@ -8783,11 +8715,11 @@ public class Dev2Interface
 					//是否要写入待办.
 					if (nd.getCCWriteTo() == CCWriteTo.CCList)
 					{
-						list.setInEmpWorks(false); //added by liuxc,2015.7.6
+						list.setInEmpWorks(false); 
 					}
 					else
 					{
-						list.setInEmpWorks(true); //added by liuxc,2015.7.6
+						list.setInEmpWorks(true); 
 					}
 
 					//写入待办和写入待办与抄送列表,状态不同
@@ -8853,7 +8785,7 @@ public class Dev2Interface
 					}
 
 					CCList list = new CCList();
-					list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+					list.setMyPK( String.valueOf(DBAccess.GenerOIDByGUID())); // workID + "_" + fk_node + "_" + empNo;
 					list.setFK_Flow(gwf.getFK_Flow());
 					list.setFlowName(gwf.getFlowName());
 					list.setFK_Node(fk_node);
@@ -8915,9 +8847,6 @@ public class Dev2Interface
 
 		return ccRec;
 
-		////记录日志.
-		//Glo.AddToTrack(ActionType.CC, gwf.FK_Flow, workID, gwf.FID, gwf.FK_Node, gwf.NodeName,
-		//    WebUser.getNo(), WebUser.getName(), gwf.FK_Node, gwf.NodeName, toAllEmps, toAllEmps, title, null);
 	}
 	/** 
 	 执行删除
@@ -9006,16 +8935,17 @@ public class Dev2Interface
 	 @param pFlowNo 父流程编号(可以为null)
 	 @param pWorkID 父流程WorkID(可以为0)
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String Node_CC(String fk_flow, int fk_node, long workID, String toEmpNo, String toEmpName, String msgTitle, String msgDoc, String pFlowNo, long pWorkID)
+	public static String Node_CC(String fk_flow, int fk_node, long workID, String toEmpNo, String toEmpName, String msgTitle, String msgDoc, String pFlowNo, long pWorkID) throws Exception
 	{
 		Flow fl = new Flow(fk_flow);
 		Node nd = new Node(fk_node);
 
 		CCList list = new CCList();
-		list.setMyPK( DBAccess.GenerOIDByGUID().toString(); // workID + "_" + fk_node + "_" + empNo;
+		list.setMyPK(String.valueOf(DBAccess.GenerOIDByGUID())); 
 		list.setFK_Flow(fk_flow);
-		list.setFlowName(fl.Name);
+		list.setFlowName(fl.getName());
 		list.setFK_Node(fk_node);
 		list.setNodeName(nd.getName());
 		list.setTitle(msgTitle);
@@ -9035,7 +8965,7 @@ public class Dev2Interface
 		}
 		//增加抄送人部门.
 		Emp emp = new Emp(toEmpNo);
-		list.setCCToDept(emp.FK_Dept);
+		list.setCCToDept(emp.getFK_Dept());
 
 		list.setRDT(DataType.getCurrentDataTime());
 		list.setRec(WebUser.getNo());
@@ -9069,8 +8999,9 @@ public class Dev2Interface
 	 
 	 @param fk_flow 流程编号
 	 @param workID 工作ID
+	 * @throws Exception 
 	*/
-	public static void Node_DeleteDraft(String fk_flow, long workID)
+	public static void Node_DeleteDraft(String fk_flow, long workID) throws Exception
 	{
 		//设置引擎表.
 		GenerWorkFlow gwf = new GenerWorkFlow();
@@ -9117,8 +9048,9 @@ public class Dev2Interface
 	 
 	 @param fk_flow
 	 @param workID
+	 * @throws Exception 
 	*/
-	public static void Node_SetDraft2Todolist(String fk_flow, long workID)
+	public static void Node_SetDraft2Todolist(String fk_flow, long workID) throws Exception
 	{
 		//设置引擎表.
 		GenerWorkFlow gwf = new GenerWorkFlow();
@@ -9165,8 +9097,9 @@ public class Dev2Interface
 	 
 	 @param fk_flow 流程编号
 	 @param workID 工作ID
+	 * @throws Exception 
 	*/
-	public static void Node_SetDraft(String fk_flow, long workID)
+	public static void Node_SetDraft(String fk_flow, long workID) throws Exception
 	{
 		//设置引擎表.
 		GenerWorkFlow gwf = new GenerWorkFlow();
@@ -9206,9 +9139,7 @@ public class Dev2Interface
 		}
 
 		Flow fl = new Flow(fk_flow);
-		//string sql = "UPDATE "+fl.PTable+" SET WFStarter=1, FlowStater='"+WebUser.getNo()+"' WHERE OID="+workID;
 
-		//@sly .
 		String sql = "UPDATE " + fl.getPTable() + " SET  FlowStarter='" + WebUser.getNo() + "',WFState=1 WHERE OID=" + workID;
 		DBAccess.RunSQL(sql);
 	}
@@ -9218,8 +9149,9 @@ public class Dev2Interface
 	 @param workID 工作ID
 	 @param paras 参数
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean Flow_SaveParas(long workID, String paras)
+	public static boolean Flow_SaveParas(long workID, String paras) throws Exception
 	{
 		AtPara ap = new AtPara(paras);
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
@@ -9236,8 +9168,9 @@ public class Dev2Interface
 	 @param nodeID 节点ID
 	 @param workID 工作ID
 	 @return 返回保存的信息
+	 * @throws Exception 
 	*/
-	public static String Node_SaveWork(String fk_flow, int fk_node, long workID)
+	public static String Node_SaveWork(String fk_flow, int fk_node, long workID) throws Exception
 	{
 		return Node_SaveWork(fk_flow, fk_node, workID, new Hashtable(), null);
 	}
@@ -9248,8 +9181,9 @@ public class Dev2Interface
 	 @param workID workid
 	 @param wk 节点表单参数
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String Node_SaveWork(String fk_flow, int fk_node, long workID, Hashtable wk)
+	public static String Node_SaveWork(String fk_flow, int fk_node, long workID, Hashtable wk) throws Exception
 	{
 		return Node_SaveWork(fk_flow, fk_node, workID, wk, null);
 	}
@@ -9260,8 +9194,9 @@ public class Dev2Interface
 	 @param workID 工作ID
 	 @param htWork 工作数据
 	 @return 返回执行信息
+	 * @throws Exception 
 	*/
-	public static String Node_SaveWork(String fk_flow, int fk_node, long workID, Hashtable htWork, DataSet dsDtls)
+	public static String Node_SaveWork(String fk_flow, int fk_node, long workID, Hashtable htWork, DataSet dsDtls) throws Exception
 	{
 		if (htWork == null)
 		{
@@ -9281,9 +9216,11 @@ public class Dev2Interface
 
 			if (htWork != null)
 			{
-				for (String str : htWork.keySet())
+				for (Object str : htWork.keySet())
 				{
-					switch (str)
+					if(str== null)
+						continue;
+					switch (str.toString())
 					{
 						case StartWorkAttr.OID:
 						case StartWorkAttr.CDT:
@@ -9299,13 +9236,13 @@ public class Dev2Interface
 							break;
 					}
 
-					if (wk.Row.ContainsKey(str))
+					if (wk.getRow().containsKey(str))
 					{
-						wk.SetValByKey(str, htWork.get(str));
+						wk.SetValByKey(str.toString(), htWork.get(str));
 					}
 					else
 					{
-						wk.Row.Add(str, htWork.get(str));
+						wk.getRow().put(str.toString(), htWork.get(str));
 					}
 				}
 			}
@@ -9323,21 +9260,21 @@ public class Dev2Interface
 				//保存从表
 				for (DataTable dt : dsDtls.Tables)
 				{
-					for (MapDtl dtl : wk.getHisMapDtls())
+					for (MapDtl dtl : wk.getHisMapDtls().ToJavaList())
 					{
-						if (!dt.TableName.equals(dtl.No))
+						if (!dt.TableName.equals(dtl.getNo()))
 						{
 							continue;
 						}
 						//获取dtls
-						GEDtls daDtls = new GEDtls(dtl.No);
+						GEDtls daDtls = new GEDtls(dtl.getNo());
 						daDtls.Delete(GEDtlAttr.RefPK, workID); // 清除现有的数据.
 
 						// 为从表复制数据.
 						for (DataRow dr : dt.Rows)
 						{
-							GEDtl daDtl = daDtls.GetNewEntity instanceof GEDtl ? (GEDtl)daDtls.GetNewEntity : null;
-							daDtl.RefPK = String.valueOf(workID);
+							GEDtl daDtl = daDtls.getNewEntity() instanceof GEDtl ? (GEDtl)daDtls.getNewEntity() : null;
+							daDtl.setRefPK( String.valueOf(workID));
 							//明细列.
 							for (DataColumn dc : dt.Columns)
 							{
@@ -9347,8 +9284,8 @@ public class Dev2Interface
 
 							daDtl.ResetDefaultVal();
 
-							daDtl.RefPK = String.valueOf(workID);
-							daDtl.RDT = DataType.getCurrentDataTime();
+							daDtl.setRefPK( String.valueOf(workID));
+							daDtl.setRDT(DataType.getCurrentDataTime());
 
 							//执行保存.
 							daDtl.InsertAsOID(DBAccess.GenerOID("Dtl")); //插入数据.
@@ -9364,7 +9301,7 @@ public class Dev2Interface
 			if (htWork != null)
 			{
 				String paras = "";
-				for (String key : htWork.keySet())
+				for (Object key : htWork.keySet())
 				{
 					paras += "@" + key + "=" + htWork.get(key).toString();
 				}
@@ -9413,7 +9350,7 @@ public class Dev2Interface
 					rptGe.SetValByKey(GERptAttr.FlowStarter, WebUser.getNo());
 					rptGe.SetValByKey(GERptAttr.FlowStartRDT, DataType.getCurrentDataTime());
 					rptGe.SetValByKey(GERptAttr.WFState, 0);
-					rptGe.SetValByKey(GERptAttr.FK_NY, DataType.CurrentYearMonth);
+					rptGe.SetValByKey(GERptAttr.FK_NY, DataType.getCurrentYearMonth());
 					rptGe.SetValByKey(GERptAttr.FK_Dept, WebUser.getFK_Dept());
 					rptGe.Insert();
 				}
@@ -9550,7 +9487,7 @@ public class Dev2Interface
 				gwf.setTitle(title); //标题.
 				if (i == 0)
 				{
-					gwf.setFlowName(fl.Name);
+					gwf.setFlowName(fl.getName());
 					gwf.setFK_Flow(fk_flow);
 					gwf.setFK_FlowSort(fl.getFK_FlowSort());
 					gwf.setSysType(fl.getSysType());
@@ -9560,7 +9497,7 @@ public class Dev2Interface
 					gwf.setWFState(wfState);
 
 					gwf.setFK_Dept(WebUser.getFK_Dept());
-					gwf.setDeptName(WebUser.getFK_DeptName);
+					gwf.setDeptName(WebUser.getFK_DeptName());
 					gwf.setStarter(WebUser.getNo());
 					gwf.setStarterName(WebUser.getName());
 					gwf.setRDT(DataType.getCurrentDataTime());
@@ -9590,7 +9527,7 @@ public class Dev2Interface
 
 				gwl.setFK_Flow(fk_flow);
 				gwl.setFK_Dept(WebUser.getFK_Dept());
-				gwl.setFK_DeptT(WebUser.getFK_DeptName);
+				gwl.setFK_DeptT(WebUser.getFK_DeptName());
 
 				gwl.setSDT("无");
 				gwl.setDTOfWarning(DataType.getCurrentDataTime());
@@ -9619,8 +9556,9 @@ public class Dev2Interface
 	 @param workID 工作ID
 	 @param htData 独立表单数据Key Value 格式存放.
 	 @return 返回执行信息
+	 * @throws Exception 
 	*/
-	public static void Node_SaveFlowSheet(String fk_mapdata, long workID, Hashtable htData)
+	public static void Node_SaveFlowSheet(String fk_mapdata, long workID, Hashtable htData) throws Exception
 	{
 		Node_SaveFlowSheet(fk_mapdata, workID, htData, null);
 	}
@@ -9632,17 +9570,18 @@ public class Dev2Interface
 	 @param htData 独立表单数据Key Value 格式存放.
 	 @param workDtls 从表数据
 	 @return 返回执行信息
+	 * @throws Exception 
 	*/
-	public static void Node_SaveFlowSheet(String fk_mapdata, long workID, Hashtable htData, DataSet workDtls)
+	public static void Node_SaveFlowSheet(String fk_mapdata, long workID, Hashtable htData, DataSet workDtls) throws Exception
 	{
 		MapData md = new MapData(fk_mapdata);
-		GEEntity en = md.HisGEEn;
+		GEEntity en = md.getHisGEEn();
 		en.SetValByKey("OID", workID);
 		int i = en.RetrieveFromDBSources();
 
-		for (String key : htData.keySet())
+		for (Object key : htData.keySet())
 		{
-			en.SetValByKey(key, htData.get(key).toString());
+			en.SetValByKey(key.toString(), htData.get(key).toString());
 		}
 
 		en.SetValByKey("OID", workID);
@@ -9669,22 +9608,22 @@ public class Dev2Interface
 			{
 				for (MapDtl dtl : dtls.ToJavaList())
 				{
-					if (!dt.TableName.equals(dtl.No))
+					if (!dt.TableName.equals(dtl.getNo()))
 					{
 						continue;
 					}
 					//获取dtls
-					GEDtls daDtls = new GEDtls(dtl.No);
+					GEDtls daDtls = new GEDtls(dtl.getNo());
 					daDtls.Delete(GEDtlAttr.RefPK, workID); // 清除现有的数据.
 
-					GEDtl daDtl = daDtls.GetNewEntity instanceof GEDtl ? (GEDtl)daDtls.GetNewEntity : null;
-					daDtl.RefPK = String.valueOf(workID);
+					GEDtl daDtl = daDtls.getNewEntity() instanceof GEDtl ? (GEDtl)daDtls.getNewEntity() : null;
+					daDtl.setRefPK( String.valueOf(workID));
 
 					// 为从表复制数据.
 					for (DataRow dr : dt.Rows)
 					{
 						daDtl.ResetDefaultVal();
-						daDtl.RefPK = String.valueOf(workID);
+						daDtl.setRefPK( String.valueOf(workID));
 
 						//明细列.
 						for (DataColumn dc : dt.Columns)
@@ -9706,8 +9645,9 @@ public class Dev2Interface
 	 @param nodeid 节点编号
 	 @param workid 工作ID
 	 @param empNo 取出来的人员编号
+	 * @throws Exception 
 	*/
-	public static boolean Node_TaskPoolTakebackOne(long workid)
+	public static boolean Node_TaskPoolTakebackOne(long workid) throws Exception
 	{
 		if (Glo.getIsEnableTaskPool() == false)
 		{
@@ -9767,8 +9707,9 @@ public class Dev2Interface
 	 @param nodeid 节点编号
 	 @param workid 工作ID
 	 @param empNo 人员ID
+	 * @throws Exception 
 	*/
-	public static void Node_TaskPoolPutOne(long workid)
+	public static void Node_TaskPoolPutOne(long workid) throws Exception
 	{
 		if (Glo.getIsEnableTaskPool() == false)
 		{
@@ -9842,16 +9783,15 @@ public class Dev2Interface
 	 @param toNodeID 到达的节点ID
 	 @param emps 如果多个就用逗号分开
 	 @param Del_Selected 是否删除历史选择
+	 * @throws Exception 
 	*/
 
-	public static void Node_AddNextStepAccepters(long workID, int toNodeID, String fk_emp)
+	public static void Node_AddNextStepAccepters(long workID, int toNodeID, String fk_emp) throws Exception
 	{
 		Node_AddNextStepAccepters(workID, toNodeID, fk_emp, true);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static void Node_AddNextStepAccepters(Int64 workID, int toNodeID, string fk_emp, bool del_Selected = true)
-	public static void Node_AddNextStepAccepters(long workID, int toNodeID, String fk_emp, boolean del_Selected)
+	public static void Node_AddNextStepAccepters(long workID, int toNodeID, String fk_emp, boolean del_Selected) throws Exception
 	{
 		if (DataType.IsNullOrEmpty(fk_emp) == true)
 		{
@@ -9874,27 +9814,27 @@ public class Dev2Interface
 
 
 		String[] emps = fk_emp.split("[,]", -1);
-		for (String empNo : emps.ToJavaList())
+		for (String empNo : emps)
 		{
 			if (DataType.IsNullOrEmpty(empNo) == true)
 			{
 				continue;
 			}
 			Emp emp = new Emp();
-			emp.setNo (empNo;
+			emp.setNo (empNo);
 			if (emp.RetrieveFromDBSources() == 0)
 			{
 				return;
 			}
 
 
-			sa.setFK_Emp(emp.No);
-			sa.setEmpName(emp.Name);
-			sa.setDeptName(emp.FK_DeptText);
+			sa.setFK_Emp(emp.getNo());
+			sa.setEmpName(emp.getName());
+			sa.setDeptName(emp.getFK_DeptText());
 			sa.setFK_Node(toNodeID);
 			sa.setWorkID(workID);
 			sa.ResetPK();
-			if (sa.IsExits == false)
+			if (sa.getIsExits() == false)
 			{
 				sa.Insert();
 			}
@@ -9908,18 +9848,18 @@ public class Dev2Interface
 	 @param emp 接收人
 	 @param tag 分组维度，可以为空.是为了分流节点向下发送时候，可能有一个工作人员两个或者两个以上的子线程的情况出现。
 	 tag 是个维度，这个维度可能是一个类别，一个批次，一个标记，总之它是一个字符串。详细: http://bbs.ccflow.org/showtopic-3065.aspx 
+	 * @throws Exception 
 	*/
-	public static void Node_AddNextStepAccepter(long workID, int formNodeID, String emp, String tag)
+	public static void Node_AddNextStepAccepter(long workID, int formNodeID, String emp, String tag) throws Exception
 	{
 		SelectAccper sa = new SelectAccper();
 		sa.Delete(SelectAccperAttr.FK_Node, formNodeID, SelectAccperAttr.WorkID, workID, SelectAccperAttr.FK_Emp, emp, SelectAccperAttr.Tag, tag);
 
-		Emp empEn = new Emp();
-		sa.setMyPK( formNodeID + "_" + workID + "_" + emp + "_" + tag;
-		empEn.No = emp;
+		Emp empEn = new Emp(emp);
+		sa.setMyPK( formNodeID + "_" + workID + "_" + emp + "_" + tag);
 		sa.setTag(tag);
 		sa.setFK_Emp(emp);
-		sa.setEmpName(empEn.Name);
+		sa.setEmpName(empEn.getName());
 		sa.setFK_Node(formNodeID);
 
 		sa.setWorkID(workID);
@@ -9934,8 +9874,9 @@ public class Dev2Interface
 	 @param reldata 解除挂起日期(可以为空)
 	 @param hungNote 挂起原因
 	 @return 返回执行信息
+	 * @throws Exception 
 	*/
-	public static String Node_HungUpWork(String fk_flow, long workid, int wayInt, String reldata, String hungNote)
+	public static String Node_HungUpWork(String fk_flow, long workid, int wayInt, String reldata, String hungNote) throws Exception
 	{
 		HungUpWay way = HungUpWay.forValue(wayInt);
 		BP.WF.WorkFlow wf = new WorkFlow(fk_flow, workid);
@@ -9948,8 +9889,9 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @param msg 取消挂起原因
 	 @return 执行信息
+	 * @throws Exception 
 	*/
-	public static void Node_UnHungUpWork(String fk_flow, long workid, String msg)
+	public static void Node_UnHungUpWork(String fk_flow, long workid, String msg) throws Exception
 	{
 		BP.WF.WorkFlow wf = new WorkFlow(fk_flow, workid);
 		wf.DoUnHungUp();
@@ -9962,7 +9904,7 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @return 返回时间串，如果没有挂起的动作就抛出异常.
 	*/
-	public static TimeSpan Node_GetHungUpTimeSpan(String flowNo, int nodeID, long workid)
+	public static Date Node_GetHungUpTimeSpan(String flowNo, int nodeID, long workid)
 	{
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 
@@ -9973,8 +9915,8 @@ public class Dev2Interface
 		ps.Add(TrackAttr.NDFrom, nodeID);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
-		LocalDateTime dtStart = LocalDateTime.now();
-		LocalDateTime dtEnd = LocalDateTime.now();
+		Date dtStart = new Date();
+		Date dtEnd = new Date();
 		for (DataRow item : dt.Rows)
 		{
 			ActionType at = (ActionType)item.get(TrackAttr.ActionType);
@@ -9992,7 +9934,7 @@ public class Dev2Interface
 			}
 		}
 
-		TimeSpan ts = dtEnd - dtStart;
+		Date ts = new Date(dtEnd.getTime() - dtStart.getTime());
 		return ts;
 	}
 	/** 
@@ -10003,12 +9945,13 @@ public class Dev2Interface
 	 @param askForEmp 请求人员
 	 @param askForNote 内容
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String Node_Askfor(long workid, AskforHelpSta askforSta, String askForEmp, String askForNote)
+	public static String Node_Askfor(long workid, AskforHelpSta askforSta, String askForEmp, String askForNote) throws Exception
 	{
 		//检查人员是否存在.
 		Emp emp = new Emp();
-		emp.setNo (askForEmp;
+		emp.setNo (askForEmp);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			throw new RuntimeException("@要加签的人员编号错误:" + askForEmp);
@@ -10046,7 +9989,7 @@ public class Dev2Interface
 			gwl.setFK_Emp(WebUser.getNo());
 			gwl.setFK_EmpText(WebUser.getName());
 			gwl.setFK_Dept(WebUser.getFK_Dept());
-			gwl.setFK_DeptT(WebUser.getFK_DeptName);
+			gwl.setFK_DeptT(WebUser.getFK_DeptName());
 
 			gwl.setIsPassInt(askforSta.getValue());
 			gwl.Insert();
@@ -10078,8 +10021,8 @@ public class Dev2Interface
 
 				// 更换主键后，执行insert ,让被加签人有代办工作.
 				item.setIsPassInt(0);
-				item.setFK_Emp(emp.No);
-				item.setFK_EmpText(emp.Name);
+				item.setFK_Emp(emp.getNo());
+				item.setFK_EmpText(emp.getName());
 				try
 				{
 					item.Insert();
@@ -10096,7 +10039,7 @@ public class Dev2Interface
 		}
 
 		//写入日志.
-		BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), workid, gwf.getFID(), askForNote, ActionType.AskforHelp, "", null, null, emp.No, emp.Name);
+		BP.WF.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), workid, gwf.getFID(), askForNote, ActionType.AskforHelp, "", null, null, emp.getNo(), emp.getName());
 
 		Flow fl = new Flow(gwf.getFK_Flow());
 		BP.WF.Dev2Interface.Port_SendMsg(askForEmp, gwf.getTitle(), askForNote, "AK" + gwf.getFK_Node() + "_" + gwf.getWorkID(), SMSMsgType.AskFor, gwf.getFK_Flow(), gwf.getFK_Node(), workid, gwf.getFID());
@@ -10106,7 +10049,7 @@ public class Dev2Interface
 		//设置成工作未读。
 		BP.WF.Dev2Interface.Node_SetWorkUnRead(workid, askForEmp);
 
-		String msg = "您的工作已经提交给(" + askForEmp + " " + emp.Name + ")加签了。";
+		String msg = "您的工作已经提交给(" + askForEmp + " " + emp.getName() + ")加签了。";
 
 		//加签后事件
 		BP.WF.Node hisNode = new BP.WF.Node(gwf.getFK_Node());
@@ -10128,8 +10071,9 @@ public class Dev2Interface
 	 @param fid FID
 	 @param replyNote 答复信息
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String Node_AskforReply(long workid, String replyNote)
+	public static String Node_AskforReply(long workid, String replyNote) throws Exception
 	{
 		// 把回复信息临时的写入 流程注册信息表以便让发送方法获取这个信息写入日志.
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
@@ -10145,7 +10089,7 @@ public class Dev2Interface
 		}
 		catch (RuntimeException ex)
 		{
-			if (ex.getMessage().Contains("请选择下一步骤工作") == true || ex.getMessage().Contains("用户没有选择发送到的节点") == true)
+			if (ex.getMessage().contains("请选择下一步骤工作") == true || ex.getMessage().contains("用户没有选择发送到的节点") == true)
 			{
 				if (nd.getCondModel() == CondModel.ByUserSelected)
 				{
@@ -10177,15 +10121,16 @@ public class Dev2Interface
 	 @param toEmps 要分配的人，多个人用逗号分开.
 	 @param msg 分配原因.
 	 @return 分配信息.
+	 * @throws Exception 
 	*/
-	public static String Node_Allot(String flowNo, int nodeID, long workID, long fid, String toEmps, String msg)
+	public static String Node_Allot(String flowNo, int nodeID, long workID, long fid, String toEmps, String msg) throws Exception
 	{
 		//生成实例.
 		GenerWorkerLists gwls = new GenerWorkerLists(workID, nodeID);
 
 		//要分配给的人员.
 		String[] emps = toEmps.split("[,]", -1);
-		for (String empNo : emps.ToJavaList())
+		for (String empNo : emps)
 		{
 			if (DataType.IsNullOrEmpty(empNo) == true)
 			{
@@ -10210,9 +10155,9 @@ public class Dev2Interface
 			// 没有找到的情况, 就获得一个实例，作为数据样本然后把数据insert.
 			if (gwl == null)
 			{
-				gwl = gwls[0] instanceof GenerWorkerList ? (GenerWorkerList)gwls[0] : null;
-				gwl.setFK_Emp(empEmp.No);
-				gwl.setFK_EmpText(empEmp.Name);
+				gwl = gwls.get(0) instanceof GenerWorkerList ? (GenerWorkerList)gwls.get(0) : null;
+				gwl.setFK_Emp(empEmp.getNo());
+				gwl.setFK_EmpText(empEmp.getName());
 				gwl.setIsEnable(true);
 				gwl.setIsPassInt(0);
 				gwl.Insert();
@@ -10238,8 +10183,9 @@ public class Dev2Interface
 	 @param toEmp
 	 @param msg
 	 @return 
+	 * @throws Exception 
 	*/
-	public static String Node_Shift(String flowNo, int nodeID, long workID, long fid, String toEmp, String msg)
+	public static String Node_Shift(String flowNo, int nodeID, long workID, long fid, String toEmp, String msg) throws Exception
 	{
 		return Node_Shift(workID, toEmp, msg);
 	}
@@ -10250,8 +10196,9 @@ public class Dev2Interface
 	 @param toEmp 要移交的人
 	 @param msg 移交信息
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public static String Node_Shift(long workID, String toEmp, String msg)
+	public static String Node_Shift(long workID, String toEmp, String msg) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
@@ -10266,31 +10213,31 @@ public class Dev2Interface
 			/*如果是队列模式，或者是协作模式. */
 			try
 			{
-				String sql = "UPDATE WF_GenerWorkerlist SET FK_Emp='" + emp.No + "', FK_EmpText='" + emp.Name + "' WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Node=" + gwf.getFK_Node() + " AND WorkID=" + workID;
+				String sql = "UPDATE WF_GenerWorkerlist SET FK_Emp='" + emp.getNo() + "', FK_EmpText='" + emp.getName() + "' WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Node=" + gwf.getFK_Node() + " AND WorkID=" + workID;
 				i = BP.DA.DBAccess.RunSQL(sql);
 			}
 			catch (java.lang.Exception e)
 			{
-				return "@移交失败，您所移交的人员(" + emp.No + " " + emp.Name + ")已经在代办列表里.";
+				return "@移交失败，您所移交的人员(" + emp.getNo() + " " + emp.getName() + ")已经在代办列表里.";
 			}
 
 			//记录日志.
-			Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.Name, msg, null);
+			Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
 
-			String info = "@工作移交成功。@您已经成功的把工作移交给：" + emp.No + " , " + emp.Name;
+			String info = "@工作移交成功。@您已经成功的把工作移交给：" + emp.getNo() + " , " + emp.getName();
 
 			//移交后事件 @yuanlina
-			String atPara1 = "@SendToEmpIDs=" + emp.No;
+			String atPara1 = "@SendToEmpIDs=" + emp.getNo();
 			info += "@" + nd.getHisFlow().DoFlowEventEntity(EventListOfNode.ShitAfter, nd, work, atPara1);
 
 			info += "@<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlowInfo.htm?DoType=UnShift&FK_Flow=" + nd.getFK_Flow() + "&WorkID=" + workID + "&FK_Node=" + gwf.getFK_Node() + "&FID=" + gwf.getFID() + "' ><img src='./Img/Action/UnSend.png' border=0 />撤消工作移交</a>.";
 
-			//处理移交后发送的消息事件 @yuanlina
+			//处理移交后发送的消息事件
 			PushMsgs pms1 = new PushMsgs();
 			pms1.Retrieve(PushMsgAttr.FK_Node, nd.getNodeID(), PushMsgAttr.FK_Event, EventListOfNode.ShitAfter);
-			for (PushMsg pm : pms1)
+			for (PushMsg pm : pms1.ToJavaList())
 			{
-				pm.DoSendMessage(nd, nd.getHisWork(), null, null, null, emp.No);
+				pm.DoSendMessage(nd, nd.getHisWork(), null, null, null, emp.getNo());
 			}
 
 			return "移交成功.";
@@ -10307,8 +10254,8 @@ public class Dev2Interface
 
 		for (GenerWorkerList item : gwls.ToJavaList())
 		{
-			item.setFK_Emp(emp.No);
-			item.setFK_EmpText(emp.Name);
+			item.setFK_Emp(emp.getNo());
+			item.setFK_EmpText(emp.getName());
 			item.setIsEnable(true);
 			item.Insert();
 			break;
@@ -10324,19 +10271,19 @@ public class Dev2Interface
 		sf.setWorkID(workID);
 		sf.setFK_Node(gwf.getFK_Node());
 		sf.setToEmp(toEmp);
-		sf.setToEmpName(emp.Name);
+		sf.setToEmpName(emp.getName());
 		sf.setNote(msg);
 		sf.setFK_Emp(WebUser.getNo());
 		sf.setFK_EmpName(WebUser.getName());
 		sf.Insert();
 
 		//记录日志.
-		Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.Name, msg, null);
+		Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
 
 
-		String inf1o = "@工作移交成功。@您已经成功的把工作移交给：" + emp.No + " , " + emp.Name;
+		String inf1o = "@工作移交成功。@您已经成功的把工作移交给：" + emp.getNo() + " , " + emp.getName();
 		//移交后事件 @yuanlina
-		String atPara = "@SendToEmpIDs=" + emp.No;
+		String atPara = "@SendToEmpIDs=" + emp.getNo();
 		inf1o += "@" + nd.getHisFlow().DoFlowEventEntity(EventListOfNode.ShitAfter, nd, work, atPara);
 
 
@@ -10348,8 +10295,9 @@ public class Dev2Interface
 	 @param flowNo 撤销编号
 	 @param workID 工作ID
 	 @return 返回撤销信息
+	 * @throws Exception 
 	*/
-	public static String Node_ShiftUn(String flowNo, long workID)
+	public static String Node_ShiftUn(String flowNo, long workID) throws Exception
 	{
 		WorkFlow mwf = new WorkFlow(flowNo, workID);
 		return mwf.DoUnShift();
@@ -10366,21 +10314,20 @@ public class Dev2Interface
 	 @param msg 退回原因
 	 @param isBackToThisNode 退回后是否要原路返回？
 	 @return 执行结果，此结果要提示给用户。
+	 * @throws Exception 
 	*/
 
-	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String returnToEmp, String msg)
+	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String returnToEmp, String msg) throws Exception
 	{
 		return Node_ReturnWork(fk_flow, workID, fid, currentNodeID, returnToNodeID, returnToEmp, msg, false);
 	}
 
-	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String returnToEmp)
+	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String returnToEmp) throws Exception
 	{
 		return Node_ReturnWork(fk_flow, workID, fid, currentNodeID, returnToNodeID, returnToEmp, "无", false);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Node_ReturnWork(string fk_flow, Int64 workID, Int64 fid, int currentNodeID, int returnToNodeID, string returnToEmp, string msg = "无", bool isBackToThisNode = false)
-	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String returnToEmp, String msg, boolean isBackToThisNode)
+	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String returnToEmp, String msg, boolean isBackToThisNode) throws Exception
 	{
 		WorkReturn wr = new WorkReturn(fk_flow, workID, fid, currentNodeID, returnToNodeID, returnToEmp, isBackToThisNode, msg);
 		return wr.DoIt();
@@ -10393,8 +10340,9 @@ public class Dev2Interface
 	 @param msg 退回信息
 	 @param isBackToThisNode 是否原路返回
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public static String Node_ReturnWork(long workID, int returnToNodeID, String msg, boolean isBackToThisNode)
+	public static String Node_ReturnWork(long workID, int returnToNodeID, String msg, boolean isBackToThisNode) throws Exception
 	{
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 		return Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), returnToNodeID, null, msg, isBackToThisNode);
@@ -10410,8 +10358,9 @@ public class Dev2Interface
 	 @param msg 退回消息
 	 @param isBackToThisNode 是否原路返回
 	 @return 退回执行的信息，执行不成功就抛出异常。
+	 * @throws Exception 
 	*/
-	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String msg, boolean isBackToThisNode)
+	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String msg, boolean isBackToThisNode) throws Exception
 	{
 		return Node_ReturnWork(fk_flow, workID, fid, currentNodeID, returnToNodeID, null, msg, isBackToThisNode);
 	}
@@ -10439,8 +10388,9 @@ public class Dev2Interface
 	 @param fk_flow 流程编号
 	 @param fid 流程ID
 	 @param workid 工作ID
+	 * @throws Exception 
 	*/
-	public static void Node_FHL_KillSubFlow(String fk_flow, long fid, long workid)
+	public static void Node_FHL_KillSubFlow(String fk_flow, long fid, long workid) throws Exception
 	{
 		WorkFlow wkf = new WorkFlow(fk_flow, workid);
 		wkf.DoDeleteWorkFlowByReal(true);
@@ -10452,8 +10402,9 @@ public class Dev2Interface
 	 @param fid 流程ID
 	 @param workid 子线程ID
 	 @param msg 驳回消息
+	 * @throws Exception 
 	*/
-	public static String Node_FHL_DoReject(String fk_flow, int NodeSheetfReject, long fid, long workid, String msg)
+	public static String Node_FHL_DoReject(String fk_flow, int NodeSheetfReject, long fid, long workid, String msg) throws Exception
 	{
 		WorkFlow wkf = new WorkFlow(fk_flow, workid);
 		return wkf.DoReject(fid, NodeSheetfReject, msg);
@@ -10466,16 +10417,15 @@ public class Dev2Interface
 	 @param workid 工作ID
 	 @param tackToNodeID 取回到的节点ID
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static String Node_Tackback(int fromNodeID, long workid, int tackToNodeID)
+	public static String Node_Tackback(int fromNodeID, long workid, int tackToNodeID) throws Exception
 	{
 		return Node_Tackback(fromNodeID, workid, tackToNodeID, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string Node_Tackback(int fromNodeID, Int64 workid, int tackToNodeID, string doMsg = null)
-	public static String Node_Tackback(int fromNodeID, long workid, int tackToNodeID, String doMsg)
+	public static String Node_Tackback(int fromNodeID, long workid, int tackToNodeID, String doMsg) throws Exception
 	{
 		if (doMsg == null)
 		{
@@ -10507,8 +10457,9 @@ public class Dev2Interface
 	 @param workid 工作id
 	 @param fid 流程id
 	 @param checkNote 填写意见
+	 * @throws Exception 
 	*/
-	public static void Node_DoCCCheckNote(String fk_flow, int fk_node, long workid, long fid, String checkNote)
+	public static void Node_DoCCCheckNote(String fk_flow, int fk_node, long workid, long fid, String checkNote) throws Exception
 	{
 		FrmWorkCheck fwc = new FrmWorkCheck(fk_node);
 
@@ -10523,8 +10474,9 @@ public class Dev2Interface
 	 
 	 @param nodeID 节点编号
 	 @param workid 工作ID
+	 * @throws Exception 
 	*/
-	public static void Node_SetWorkRead(int nodeID, long workid)
+	public static void Node_SetWorkRead(int nodeID, long workid) throws Exception
 	{
 		Node_SetWorkRead(nodeID, workid, WebUser.getNo());
 	}
@@ -10534,8 +10486,9 @@ public class Dev2Interface
 	 @param nodeID 节点ID
 	 @param workid WorkID
 	 @param empNo 操作员
+	 * @throws Exception 
 	*/
-	public static void Node_SetWorkRead(int nodeID, long workid, String empNo)
+	public static void Node_SetWorkRead(int nodeID, long workid, String empNo) throws Exception
 	{
 		Node nd = new Node(nodeID);
 
@@ -10567,7 +10520,7 @@ public class Dev2Interface
 			/*获取上一个节点ID */
 			Nodes fromNodes = nd.getFromNodes();
 			int fromNodeID = 0;
-			for (Node item : fromNodes)
+			for (Node item : fromNodes.ToJavaList())
 			{
 				ps = new Paras();
 				ps.SQL = "SELECT FK_Node FROM WF_GenerWorkerlist WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node ";
@@ -10593,7 +10546,7 @@ public class Dev2Interface
 				ps.SQL = "SELECT " + BP.WF.WorkSysFieldAttr.SysIsReadReceipts + " FROM ND" + fromNodeID + "    WHERE OID=" + dbstr + "OID";
 				ps.Add("OID", workid);
 				DataTable dt1 = DBAccess.RunSQLReturnTable(ps);
-				if (dt1.get(0).getValue(0).toString().equals("1"))
+				if (dt1.Rows.get(0).getValue(0).toString().equals("1"))
 				{
 					isSend = true;
 				}
@@ -10611,7 +10564,7 @@ public class Dev2Interface
 			/*获取上一个节点ID*/
 			Nodes fromNodes = nd.getFromNodes();
 			int fromNodeID = 0;
-			for (Node item : fromNodes)
+			for (Node item : fromNodes.ToJavaList())
 			{
 				ps = new Paras();
 				ps.SQL = "SELECT FK_Node FROM WF_GenerWorkerlist  WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node ";
@@ -10665,7 +10618,7 @@ public class Dev2Interface
 			String sender = dt.Rows.get(0).getValue(0).toString();
 
 			//发送已读回执。
-			BP.WF.Dev2Interface.Port_SendMsg(sender, "已读回执:" + title, "您发送的工作已经被" + WebUser.getName() + "在" + DataType.getCurrentDataTime()CNOfShort + " 打开.", "RP" + workid + "_" + nodeID, BP.WF.SMSMsgType.Self, nd.getFK_Flow(), nd.getNodeID(), workid, 0);
+			BP.WF.Dev2Interface.Port_SendMsg(sender, "已读回执:" + title, "您发送的工作已经被" + WebUser.getName() + "在" + DataType.getCurrentDataTimeCNOfShort() + " 打开.", "RP" + workid + "_" + nodeID, BP.WF.SMSMsgType.Self, nd.getFK_Flow(), nd.getNodeID(), workid, 0);
 		}
 
 		//执行节点打开后事件.
@@ -10696,8 +10649,9 @@ public class Dev2Interface
 	 
 	 @param nodeID 节点ID
 	 @param workid 工作ID
+	 * @throws Exception 
 	*/
-	public static void Node_SetWorkUnRead(long workid)
+	public static void Node_SetWorkUnRead(long workid) throws Exception
 	{
 		Node_SetWorkUnRead(workid, WebUser.getNo());
 	}
@@ -10715,8 +10669,9 @@ public class Dev2Interface
 	 @param attr2 字段2(可为null)
 	 @param v2 值2(可为null)
 	 @return 执行结果
+	 * @throws Exception 
 	*/
-	public static String ChangeAttr_Flow(String fk_flow, String attr1, Object v1, String attr2, Object v2)
+	public static String ChangeAttr_Flow(String fk_flow, String attr1, Object v1, String attr2, Object v2) throws Exception
 	{
 		Flow fl = new Flow(fk_flow);
 		if (attr1 != null)
@@ -10757,8 +10712,9 @@ public class Dev2Interface
 	 @param deptno 部门编号
 	 @param stationno 岗位编号
 	 @return 返回非null值时，为签章失败
+	 * @throws Exception 
 	*/
-	public static String CCForm_Seal(long workid, int nodeid, String deptno, String stationno)
+	public static String CCForm_Seal(long workid, int nodeid, String deptno, String stationno) throws Exception
 	{
 		try
 		{
@@ -10771,17 +10727,17 @@ public class Dev2Interface
 
 			String sealimg = BP.WF.Glo.getCCFlowAppPath() + "DataUser/Seal/" + deptno + "_" + stationno + ".jpg";
 
-			if ((new File(SystemConfig.PathOfWebApp + sealimg)).isFile() == false)
+			if ((new File(SystemConfig.getPathOfWebApp() + sealimg)).isFile() == false)
 			{
 				return "签章文件：" + sealimg + "不存在，请联系管理员！";
 			}
 
 			FrmEleDB athDB_N = new FrmEleDB();
-			athDB_N.FK_MapData = "ND" + nodeid;
-			athDB_N.RefPKVal = String.valueOf(workid);
-			athDB_N.EleID = String.valueOf(workid);
+			athDB_N.setFK_MapData("ND" + nodeid);
+			athDB_N.setRefPKVal(String.valueOf(workid));
+			athDB_N.setEleID(String.valueOf(workid));
 			athDB_N.GenerPKVal();
-			athDB_N.Tag1 = sealimg;
+			athDB_N.setTag1(sealimg);
 			athDB_N.DirectInsert();
 
 			return null;
@@ -10823,95 +10779,70 @@ public class Dev2Interface
 	 @param fileName 附件名称
 	 @param sort 分类
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID, String filePath, String fileName, String sort, int fid)
+	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID, String filePath, String fileName, String sort, int fid) throws Exception
 	{
 		return CCForm_AddAth(nodeid, flowid, workid, athNo, frmID, filePath, fileName, sort, fid, 0);
 	}
 
-	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID, String filePath, String fileName, String sort)
+	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID, String filePath, String fileName, String sort) throws Exception
 	{
 		return CCForm_AddAth(nodeid, flowid, workid, athNo, frmID, filePath, fileName, sort, 0, 0);
 	}
 
-	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID, String filePath, String fileName)
+	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID, String filePath, String fileName) throws Exception
 	{
 		return CCForm_AddAth(nodeid, flowid, workid, athNo, frmID, filePath, fileName, null, 0, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static string CCForm_AddAth(int nodeid, string flowid, Int64 workid, String athNo, string frmID, string filePath, string fileName, string sort = null, Int32 fid = 0, Int32 pworkid = 0)
-	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID, String filePath, String fileName, String sort, int fid, int pworkid)
-	{
+	public static String CCForm_AddAth(int nodeid, String flowid, long workid, String athNo, String frmID,
+			String filePath, String fileName, String sort, long fid, long pworkid) throws Exception {
+		File item = new File(filePath);
+		// 求主键. 如果该表单挂接到流程上.
 		String pkVal = String.valueOf(workid);
 		// 多附件描述.
 		BP.Sys.FrmAttachment athDesc = new BP.Sys.FrmAttachment(athNo);
 		MapData mapData = new MapData(frmID);
-		String msg = null;
-
-
-			///#region 获取表单方案
-		//求主键. 如果该表单挂接到流程上.
-		if (nodeid != 0)
-		{
-			//判断表单方案。
+		if (nodeid != 0 && nodeid != 999999) {
+			// 判断表单方案。
 			FrmNode fn = new FrmNode(flowid, nodeid, frmID);
 			if (fn.getFrmSln() == FrmSln.Readonly)
-			{
-				return "err@不允许上传附件.";
-			}
+				throw new Exception("err@不允许上传附件.");
 
-			//是默认的方案的时候.
-			if (fn.getFrmSln() == FrmSln.Default)
-			{
-				//判断当前方案设置的whoIsPk ，让附件集成 whoIsPK 的设置。
+			// 是默认的方案的时候.
+			if (fn.getFrmSln() == FrmSln.Default) {
+				// 判断当前方案设置的whoIsPk ，让附件集成 whoIsPK 的设置。
 				if (fn.getWhoIsPK() == WhoIsPK.FID)
-				{
-					pkVal = String.valueOf(fid);
-				}
+					pkVal = Long.toString(fid);
 
 				if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
-				{
-					pkVal = String.valueOf(pworkid);
-				}
+					pkVal = Long.toString(pworkid);
 			}
 
-			//自定义方案.
-			if (fn.getFrmSln() == FrmSln.Self)
-			{
+			// 自定义方案.
+			if (fn.getFrmSln() == FrmSln.Self) {
 				athDesc = new FrmAttachment(athNo + "_" + nodeid);
-				if (athDesc.HisCtrlWay == AthCtrlWay.FID)
-				{
-					pkVal = String.valueOf(fid);
-				}
+				if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+					pkVal = Long.toString(fid);
 
-				if (athDesc.HisCtrlWay == AthCtrlWay.PWorkID)
-				{
-					pkVal = String.valueOf(pworkid);
-				}
+				if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+					pkVal = Long.toString(pworkid);
 			}
 		}
+		// 获取上传文件是否需要加密
+		boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+		if (athDesc.getAthSaveWay() == AthSaveWay.WebServer) {
 
-
-			///#endregion 获取表单方案
-
-		//获取上传文件是否需要加密
-		boolean fileEncrypt = SystemConfig.IsEnableAthEncrypt;
-
-
-			///#region 文件上传的iis服务器上 or db数据库里.
-		if (athDesc.AthSaveWay == AthSaveWay.IISServer)
-		{
-			String savePath = athDesc.SaveTo;
-			if (savePath.contains("@") == true || savePath.contains("*") == true)
-			{
-				/*如果有变量*/
+			String savePath = athDesc.getSaveTo();
+			if (savePath.contains("@") == true || savePath.contains("*") == true) {
+				/* 如果有变量 */
 				savePath = savePath.replace("*", "@");
+				savePath = BP.WF.Glo.DealExp(savePath, null, null);
 
-				if (savePath.contains("@") && nodeid != 0)
-				{
-					/*如果包含 @ */
+				if (savePath.contains("@") && nodeid != 0) {
+					/* 如果包含 @ */
 					BP.WF.Flow flow = new BP.WF.Flow(flowid);
 					BP.WF.Data.GERpt myen = flow.getHisGERpt();
 					myen.setOID(workid);
@@ -10919,260 +10850,254 @@ public class Dev2Interface
 					savePath = BP.WF.Glo.DealExp(savePath, myen, null);
 				}
 				if (savePath.contains("@") == true)
-				{
-					throw new RuntimeException("@路径配置错误,变量没有被正确的替换下来." + savePath);
-				}
-			}
-			else
-			{
-				savePath = athDesc.SaveTo + "\\" + pkVal;
+					throw new Exception("@路径配置错误,变量没有被正确的替换下来." + savePath);
+
+			} else {
+				savePath = athDesc.getSaveTo() + "/" + pkVal;
 			}
 
-			//替换关键的字串.
-			savePath = savePath.replace("\\\\", "\\");
+			// 替换关键的字串.
+			savePath = savePath.replace("\\\\", "/");
+			try {
+				if (savePath.indexOf(":") == -1)
+					savePath = BP.Difference.ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
 
-			try
-			{
-				savePath = SystemConfig.PathOfWebApp + savePath;
-			}
-			catch (RuntimeException ex)
-			{
-				savePath = SystemConfig.PathOfDataUser + "UploadFile\\" + mapData.No + "\\";
-				//return "err@获取路径错误" + ex.Message + ",配置的路径是:" + savePath + ",您需要在附件属性上修改该附件的存储路径.";
-			}
+				File fileInfo = new File(savePath);
 
-			try
-			{
-				if ((new File(savePath)).isDirectory() == false)
-				{
-					(new File(savePath)).mkdirs();
-				}
-			}
-			catch (RuntimeException ex)
-			{
-				throw new RuntimeException("err@创建路径出现错误，可能是没有权限或者路径配置有问题:" + savePath + "@异常信息:" + ex.getMessage());
+				if (fileInfo.exists() == false)
+					fileInfo.mkdirs();
+
+			} catch (Exception ex) {
+				throw new RuntimeException("@创建路径出现错误，可能是没有权限或者路径配置有问题:"
+						+ BP.Difference.ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath("~/" + savePath)
+						+ "===" + savePath + "@技术问题:" + ex.getMessage());
+
 			}
 
 			String guid = BP.DA.DBAccess.GenerGUID();
 			String ext = fileName.substring(fileName.lastIndexOf("."));
-			String realSaveTo = savePath + "\\" + guid + "." + fileName;
+			String realSaveTo = savePath + "/" + guid + "." + fileName;
+
 			realSaveTo = realSaveTo.replace("~", "-");
 			realSaveTo = realSaveTo.replace("'", "-");
 			realSaveTo = realSaveTo.replace("*", "-");
-			if (fileEncrypt == true)
-			{
-				String strtmp = realSaveTo + ".tmp";
-				if ((new File(filePath)).isFile() == true)
-				{
-					Files.copy(Paths.get(filePath), Paths.get(strtmp), StandardCopyOption.COPY_ATTRIBUTES); //先明文保存到本地(加个后缀名.tmp)
-				}
-				else
-				{
-					return "err@需要保存的文件不存在";
-				}
 
-				EncHelper.EncryptDES(strtmp, strtmp.replace(".tmp", "")); //加密
-				(new File(strtmp)).delete(); //删除临时文件
+			String saveTo = realSaveTo;
+			if (fileEncrypt == true)
+				saveTo = realSaveTo + ".tmp";
+			File file = new File(saveTo); // 获取根目录对应的真实物理路径
+
+			try {
+				// 构造临时对象
+				InputStream is = new FileInputStream(item);
+				int buffer = 1024; // 定义缓冲区的大小
+				int length = 0;
+				byte[] b = new byte[buffer];
+				FileOutputStream fos = new FileOutputStream(file);
+				while ((length = is.read(b)) != -1) {
+					// 计算上传文件的百分比
+					fos.write(b, 0, length); // 向文件输出流写读取的数据
+				}
+				fos.close();
+			} catch (RuntimeException ex) {
+
+				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
 			}
-			else
-			{
-				//文件保存的路径
-				if ((new File(filePath)).isFile() == true)
-				{
-					Files.copy(Paths.get(filePath), Paths.get(realSaveTo), StandardCopyOption.COPY_ATTRIBUTES);
-				}
-				else
-				{
-					return "err@需要保存的文件不存在";
-				}
+
+			if (fileEncrypt == true) {
+				File fileT = new File(saveTo);
+				AesEncodeUtil.encryptFile(saveTo, realSaveTo);
+				fileT.delete();// 删除临时文件
 			}
 
 			File info = new File(realSaveTo);
+
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-			dbUpload.setMyPK( guid; // athDesc.FK_MapData + oid.ToString();
-			dbUpload.NodeID = String.valueOf(nodeid);
-			dbUpload.Sort = sort;
-			dbUpload.FK_FrmAttachment = athNo;
-			dbUpload.FK_MapData = athDesc.FK_MapData;
-			dbUpload.FileExts = ext;
-			dbUpload.FID = fid;
+			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();
+			dbUpload.setFK_FrmAttachment(athNo);
+			dbUpload.setSort(sort);
+			dbUpload.setFK_MapData(athDesc.getFK_MapData());
+			dbUpload.setFileExts(ext);
+			dbUpload.setFID(fid);
+			dbUpload.setNodeID(String.valueOf(nodeid));
 			if (fileEncrypt == true)
-			{
 				dbUpload.SetPara("IsEncrypt", 1);
+
+			/// #region 处理文件路径，如果是保存到数据库，就存储pk.
+			if (athDesc.getAthSaveWay() == AthSaveWay.WebServer) {
+				// 文件方式保存
+				dbUpload.setFileFullName(realSaveTo);
 			}
 
-
-				///#region 处理文件路径，如果是保存到数据库，就存储pk.
-			if (athDesc.AthSaveWay == AthSaveWay.IISServer)
-			{
-				//文件方式保存
-				dbUpload.FileFullName = realSaveTo;
+			if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+				// 保存到数据库
+				dbUpload.setFileFullName(dbUpload.getMyPK());
 			}
+			/// #endregion 处理文件路径，如果是保存到数据库，就存储pk.
 
-			if (athDesc.AthSaveWay == AthSaveWay.FTPServer)
-			{
-				//保存到数据库
-				dbUpload.FileFullName = dbUpload.MyPK;
-			}
+			dbUpload.setFileName(fileName);
+			dbUpload.setFileSize((float) info.length());
+			dbUpload.setRDT(DataType.getCurrentDataTimess());
+			dbUpload.setRec(BP.Web.WebUser.getNo());
+			dbUpload.setRecName(BP.Web.WebUser.getName());
+			dbUpload.setFID(fid);
+			dbUpload.setUploadGUID(guid);
+			dbUpload.setRefPKVal(pkVal);
 
-				///#endregion 处理文件路径，如果是保存到数据库，就存储pk.
-
-			dbUpload.FileName = fileName;
-			dbUpload.FileSize = (float)info.length();
-			dbUpload.RDT = DataType.getCurrentDataTime()ss;
-			dbUpload.Rec = WebUser.getNo();
-			dbUpload.RecName = WebUser.getName();
-			dbUpload.RefPKVal = pkVal;
-
-			dbUpload.UploadGUID = guid;
 			dbUpload.Insert();
 
-			if (athDesc.AthSaveWay == AthSaveWay.DB)
-			{
-				//执行文件保存.
-				BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.EnMap.PhysicsTable, "MyPK", dbUpload.MyPK, "FDB");
+			if (athDesc.getAthSaveWay() == AthSaveWay.DB) {
+				// 执行文件保存.
+				BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.getEnMap().getPhysicsTable(), "MyPK",
+						dbUpload.getMyPK(), "FDB");
 			}
+
 		}
+		/// #endregion 文件上传的iis服务器上 or db数据库里.
 
-			///#endregion 文件上传的iis服务器上 or db数据库里.
+		/// #region 保存到数据库 / FTP服务器上.
+		if (athDesc.getAthSaveWay() == AthSaveWay.DB || athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+			String guid = BP.DA.DBAccess.GenerGUID();
 
+			// 把文件临时保存到一个位置.
+			String temp = SystemConfig.getPathOfTemp() + "/" + "" + guid + ".tmp";
 
-			///#region 保存到数据库 / FTP服务器上.
-		if (athDesc.AthSaveWay == AthSaveWay.DB || athDesc.AthSaveWay == AthSaveWay.FTPServer)
-		{
-			String guid = DBAccess.GenerGUID();
-
-			//把文件临时保存到一个位置.
-			String temp = SystemConfig.PathOfTemp + guid + ".tmp";
-
+			String tempD = temp;
 			if (fileEncrypt == true)
-			{
+				tempD = SystemConfig.getPathOfTemp() + "/" + "" + guid + "_Desc" + ".tmp";
+			File tempFile = new File(tempD);
+			InputStream is = null;
+			try {
+				// 构造临时对象
+				is = new FileInputStream(item);
+				int buffer = 1024; // 定义缓冲区的大小
+				int length = 0;
+				byte[] b = new byte[buffer];
+				FileOutputStream fos = new FileOutputStream(tempFile);
+				while ((length = is.read(b)) != -1) {
+					fos.write(b, 0, length); // 向文件输出流写读取的数据
+				}
+				fos.close();
+				is.close();
+			} catch (Exception ex) {
+				tempFile.delete();
+				throw new RuntimeException("@文件存储失败,有可能是路径的表达式出问题,导致是非法的路径名称:" + ex.getMessage());
 
-				String strtmp = SystemConfig.PathOfTemp + guid + "_Desc" + ".tmp";
-				if ((new File(filePath)).isFile() == true)
-				{
-					Files.copy(Paths.get(filePath), Paths.get(strtmp), StandardCopyOption.COPY_ATTRIBUTES); //先明文保存到本地(加个后缀名.tmp)
-				}
-				else
-				{
-					return "err@需要保存的文件不存在";
-				}
-
-				EncHelper.EncryptDES(strtmp, temp); //加密
-				(new File(strtmp)).delete(); //删除临时文件
 			}
-			else
-			{
-				//文件保存的路径
-				if ((new File(filePath)).isFile() == true)
-				{
-					Files.copy(Paths.get(filePath), Paths.get(temp), StandardCopyOption.COPY_ATTRIBUTES);
-				}
-				else
-				{
-					return "err@需要保存的文件不存在";
-				}
+			if (fileEncrypt == true) {
+				File fileTD = new File(tempD);
+				AesEncodeUtil.encryptFile(tempD, temp);// 加密
+				fileTD.delete();// 删除临时文件
 			}
-			String ext = fileName.substring(fileName.lastIndexOf("."));
 
 			File info = new File(temp);
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-			dbUpload.setMyPK( BP.DA.DBAccess.GenerGUID();
-			dbUpload.Sort = sort;
-			dbUpload.NodeID = String.valueOf(nodeid);
-			dbUpload.FK_FrmAttachment = athDesc.MyPK;
-			dbUpload.FileExts = ext;
-			dbUpload.FID = fid; //流程id.
-			if (fileEncrypt == true)
-			{
-				dbUpload.SetPara("IsEncrypt", 1);
+			dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
+			dbUpload.setNodeID(String.valueOf(nodeid));
+			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+			dbUpload.setSort(sort);
+			dbUpload.setFID(fid); // 流程id.
+			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
+				/* 如果是继承，就让他保持本地的PK. */
+				dbUpload.setRefPKVal(pkVal);
 			}
 
-			if (athDesc.AthUploadWay == AthUploadWay.Inherit)
-			{
-				/*如果是继承，就让他保持本地的PK. */
-				dbUpload.RefPKVal = pkVal.toString();
-			}
-
-			if (athDesc.AthUploadWay == AthUploadWay.Interwork)
-			{
-				/*如果是协同，就让他是PWorkID. */
-				Paras ps = new Paras();
-				ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
-				ps.Add("WorkID", pkVal);
-				String pWorkID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0).toString();
-				if (pWorkID == null || pWorkID.equals("0"))
-				{
+			if (athDesc.getAthUploadWay() == AthUploadWay.Interwork) {
+				/* 如果是协同，就让他是PWorkID. */
+				String pWorkID = String.valueOf(BP.DA.DBAccess
+						.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + pkVal, 0));
+				if (pWorkID == null || pWorkID == "0")
 					pWorkID = pkVal;
-				}
-
-				dbUpload.RefPKVal = pWorkID;
+				dbUpload.setRefPKVal(pWorkID);
 			}
+			String exts = fileName.substring(fileName.lastIndexOf("."));
+			dbUpload.setFK_MapData(athDesc.getFK_MapData());
+			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+			dbUpload.setFileName(fileName);
+			dbUpload.setFileExts(exts);
+			dbUpload.setFileSize((float) info.length());
+			dbUpload.setRDT(DataType.getCurrentDataTimess());
+			dbUpload.setRec(BP.Web.WebUser.getNo());
+			dbUpload.setRecName(BP.Web.WebUser.getName());
+			if (fileEncrypt == true)
+				dbUpload.SetPara("IsEncrypt", 1);
 
-			dbUpload.FK_MapData = athDesc.FK_MapData;
-			dbUpload.FK_FrmAttachment = athDesc.MyPK;
-			dbUpload.FileName = fileName;
-			dbUpload.FileSize = (float)info.length();
-			dbUpload.RDT = DataType.getCurrentDataTime()ss;
-			dbUpload.Rec = WebUser.getNo();
-			dbUpload.RecName = WebUser.getName();
+			dbUpload.setUploadGUID(guid);
 
-			dbUpload.UploadGUID = guid;
-
-			if (athDesc.AthSaveWay == AthSaveWay.DB)
-			{
+			if (athDesc.getAthSaveWay() == AthSaveWay.DB) {
 				dbUpload.Insert();
-				//把文件保存到指定的字段里.
+				// 把文件保存到指定的字段里.
 				dbUpload.SaveFileToDB("FileDB", temp);
 			}
 
-			if (athDesc.AthSaveWay == AthSaveWay.FTPServer)
-			{
-				/*保存到fpt服务器上.*/
-				FtpSupport.FtpConnection ftpconn = new FtpSupport.FtpConnection(SystemConfig.FTPServerIP, SystemConfig.FTPUserNo, SystemConfig.FTPUserPassword);
+			if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
 
-				String ny = LocalDateTime.now().toString("yyyy_MM");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
+				String ny = sdf.format(new Date());
 
-				//判断目录年月是否存在.
-				if (ftpconn.DirectoryExist(ny) == false)
-				{
-					ftpconn.CreateDirectory(ny);
+				String workDir = ny + "\\" + athDesc.getFK_MapData() + "\\";
+
+				// 特殊处理文件路径.
+				if (SystemConfig.getCustomerNo().equals("BWDA")) {
+
+					sdf = new SimpleDateFormat("yyyy_MM_dd");
+					ny = sdf.format(new Date());
+
+					ny = ny.replace("_", "/");
+					ny = ny.replace("_", "/");
+
+					workDir = ny + "/" + WebUser.getNo() + "/";
 				}
 
-				ftpconn.SetCurrentDirectory(ny);
+				boolean isOK = false;
 
-				//判断目录是否存在.
-				if (ftpconn.DirectoryExist(athDesc.FK_MapData) == false)
-				{
-					ftpconn.CreateDirectory(athDesc.FK_MapData);
+				if (SystemConfig.getFTPServerType().equals("FTP")) {
+
+					FtpUtil ftpUtil = BP.WF.Glo.getFtpUtil();
+
+					ftpUtil.changeWorkingDirectory(workDir, true);
+
+					// 把文件放在FTP服务器上去.
+					isOK = ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(), temp);
+
+					ftpUtil.releaseConnection();
 				}
 
-				//设置当前目录，为操作的目录。
-				ftpconn.SetCurrentDirectory(athDesc.FK_MapData);
+				if (SystemConfig.getFTPServerType().equals("SFTP")) {
 
-				//把文件放上去.
-				ftpconn.PutFile(temp, guid + "." + dbUpload.FileExts);
-				ftpconn.Close();
+					SftpUtil ftpUtil = BP.WF.Glo.getSftpUtil();
 
-				//设置路径.
-				dbUpload.FileFullName = ny + "//" + athDesc.FK_MapData + "//" + guid + "." + dbUpload.FileExts;
+					ftpUtil.changeWorkingDirectory(workDir, true);
+					// 把文件放在FTP服务器上去.
+					isOK = ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(), temp);
+					ftpUtil.releaseConnection();
+				}
+
+				// 删除临时文件
+				tempFile.delete();
+				new File(SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp").delete();
+
+				// 设置路径.
+				dbUpload.setFileFullName(workDir + guid + "." + dbUpload.getFileExts());
+
+				if (isOK == false)
+					throw new com.sun.star.uno.Exception("err文件上传失败，请检查ftp服务器配置信息");
+
 				dbUpload.Insert();
-				(new File(temp)).delete();
-			}
 
+			}
 		}
 
-			///#endregion 保存到数据库.
-
-		return "";
+		return "附件添加成功";
 	}
 	/** 
 	 sdk表单加载初始化信息
 	 
 	 @param workid 工作ID
 	 @return 请参考相关的文档,或者baidu ccbpm sdk表单 SDK_Page_Init
+	 * @throws Exception 
 	*/
-	public static String SDK_Page_Init(long workid)
+	public static String SDK_Page_Init(long workid) throws Exception
 	{
 		return BP.WF.AppClass.SDK_Page_Init(workid);
 	}
@@ -11188,8 +11113,9 @@ public class Dev2Interface
 	 @param ndFrom 节点从
 	 @param workid 工作ID
 	 @return 返回可以到达的节点
+	 * @throws Exception 
 	*/
-	public static Nodes WorkOpt_GetToNodes(String flowNo, int ndFrom, long workid, long FID)
+	public static Nodes WorkOpt_GetToNodes(String flowNo, int ndFrom, long workid, long FID) throws Exception
 	{
 		Nodes nds = new Nodes();
 
@@ -11202,7 +11128,7 @@ public class Dev2Interface
 		rpt.Retrieve();
 
 		//首先输出普通的节点 
-		for (Node mynd : toNDs)
+		for (Node mynd : toNDs.ToJavaList())
 		{
 			boolean bIsCanDo = true;
 			if (mynd.getHisRunModel() == RunModel.SubThread)
@@ -11217,7 +11143,7 @@ public class Dev2Interface
 			// 设置方向条件，就判断它。
 			if (i > 0)
 			{
-				for (Cond cond : conds)
+				for (Cond cond : conds.ToJavaList())
 				{
 					cond.setWorkID(workid);
 					cond.en = rpt;
@@ -11253,7 +11179,7 @@ public class Dev2Interface
 		}
 
 		//同表单子线程.
-		for (Node mynd : toNDs)
+		for (Node mynd : toNDs.ToJavaList())
 		{
 			if (mynd.getHisRunModel() != RunModel.SubThread)
 			{
@@ -11288,7 +11214,7 @@ public class Dev2Interface
 
 		// 检查是否具有异表单的子线程.
 		boolean isHave = false;
-		for (Node mynd : toNDs)
+		for (Node mynd : toNDs.ToJavaList())
 		{
 			if (mynd.getHisSubThreadType() == SubThreadType.UnSameSheet)
 			{
@@ -11304,7 +11230,7 @@ public class Dev2Interface
 			nds.AddEntity(myn1d);
 
 			/*增加异表单的子线程*/
-			for (Node mynd : toNDs)
+			for (Node mynd : toNDs.ToJavaList())
 			{
 				if (mynd.getHisSubThreadType() != SubThreadType.UnSameSheet)
 				{
@@ -11341,26 +11267,28 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param nodeID 当前节点编号
 	 @return 返回上一次当前用户选择的节点,如果没有找到（当前用户第一次发送的情况下找不到）就返回0.
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public static int WorkOpt_ToNodes_GetLasterSelectNodeID(String flowNo, int nodeID)
+	public static int WorkOpt_ToNodes_GetLasterSelectNodeID(String flowNo, int nodeID) throws NumberFormatException, Exception
 	{
 		String sql = "";
 		switch (SystemConfig.getAppCenterDBType())
 		{
-			case DBType.MSSQL:
-			case DBType.Access:
+			case MSSQL:
+			case Access:
 				sql = "SELECT TOP 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
-			case DBType.Oracle:
+			case Oracle:
 				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  RowNum=1 AND EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
-			case DBType.MySQL:
+			case MySQL:
 				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ") limit 0,1";
 				break;
-			case DBType.Informix:
+			case Informix:
 				sql = "SELECT first 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
-			case DBType.PostgreSQL:
+			case PostgreSQL:
 				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ") ORDER BY RDT DESC limit 1";
 				break;
 			default:
@@ -11376,8 +11304,9 @@ public class Dev2Interface
 	 @param workid
 	 @param fid
 	 @param toNodes
+	 * @throws Exception 
 	*/
-	public static SendReturnObjs WorkOpt_SendToNodes(String flowNo, int nodeID, long workid, long fid, String toNodes)
+	public static SendReturnObjs WorkOpt_SendToNodes(String flowNo, int nodeID, long workid, long fid, String toNodes) throws Exception
 	{
 		//把参数更新到数据库里面.
 		GenerWorkFlow gwf = new GenerWorkFlow();
@@ -11404,16 +11333,15 @@ public class Dev2Interface
 	 @param WorkID 工作ID
 	 @param FID 流程ID
 	 @return 
+	 * @throws Exception 
 	*/
 
-	public static DataSet WorkOpt_AccepterDB(int nodeID, long WorkID)
+	public static DataSet WorkOpt_AccepterDB(int nodeID, long WorkID) throws Exception
 	{
 		return WorkOpt_AccepterDB(nodeID, WorkID, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public static DataSet WorkOpt_AccepterDB(int nodeID, Int64 WorkID, Int64 FID = 0)
-	public static DataSet WorkOpt_AccepterDB(int nodeID, long WorkID, long FID)
+	public static DataSet WorkOpt_AccepterDB(int nodeID, long WorkID, long FID) throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -11445,8 +11373,9 @@ public class Dev2Interface
 	 
 	 @param nodeID 指定的节点
 	 @return 
+	 * @throws Exception 
 	*/
-	private static DataTable WorkOpt_Accepter_ByStation(int nodeID)
+	private static DataTable WorkOpt_Accepter_ByStation(int nodeID) throws Exception
 	{
 		if (nodeID == 0)
 		{
@@ -11493,8 +11422,9 @@ public class Dev2Interface
 	}
 	/** 
 	 按sql方式
+	 * @throws Exception 
 	*/
-	private static DataSet WorkOpt_Accepter_BySQL(int nodeID)
+	private static DataSet WorkOpt_Accepter_BySQL(int nodeID) throws Exception
 	{
 		DataSet ds = new DataSet();
 		Selector MySelector = new Selector(nodeID);
@@ -11570,8 +11500,9 @@ public class Dev2Interface
 	 @param fid 流程ID
 	 @param emps 指定的人员集合zhangsan,lisi,wangwu
 	 @param isNextTime 是否下次自动设置
+	 * @throws Exception 
 	*/
-	public static void WorkOpt_SetAccepter(int nodeID, long workid, long fid, String emps, boolean isNextTime)
+	public static void WorkOpt_SetAccepter(int nodeID, long workid, long fid, String emps, boolean isNextTime) throws Exception
 	{
 		SelectAccpers ens = new SelectAccpers();
 		ens.Delete(SelectAccperAttr.FK_Node, nodeID, SelectAccperAttr.WorkID, workid);
@@ -11590,7 +11521,7 @@ public class Dev2Interface
 			}
 
 			SelectAccper en = new SelectAccper();
-			en.setMyPK( nodeID + "_" + workid + "_" + str;
+			en.setMyPK( nodeID + "_" + workid + "_" + str);
 			en.setFK_Emp(str);
 			en.setFK_Node(nodeID);
 
@@ -11608,8 +11539,9 @@ public class Dev2Interface
 	 @param workid
 	 @param fid
 	 @param toNodes
+	 * @throws Exception 
 	*/
-	public static SendReturnObjs WorkOpt_SendToEmps(String flowNo, int nodeID, long workid, long fid, int toNodeID, String toEmps, boolean isRememberMe)
+	public static SendReturnObjs WorkOpt_SendToEmps(String flowNo, int nodeID, long workid, long fid, int toNodeID, String toEmps, boolean isRememberMe) throws Exception
 	{
 		WorkOpt_SetAccepter(toNodeID, workid, fid, toEmps, isRememberMe);
 
@@ -11625,82 +11557,6 @@ public class Dev2Interface
 		return objs;
 	}
 
-		///#endregion
-
-
-		///#region 附件上传
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: public static string SaveImageAsFile(byte[] img, string pkval, string fk_Frm_Ele)
-	public static String SaveImageAsFile(byte[] img, String pkval, String fk_Frm_Ele)
-	{
-		FrmEle fe = new FrmEle(fk_Frm_Ele);
-		System.Drawing.Image newImage;
-		try (MemoryStream ms = new MemoryStream(img, 0, img.length))
-		{
-			ms.Write(img, 0, img.length);
-			newImage = Image.FromStream(ms, true);
-			Bitmap bitmap = new Bitmap(newImage, new Size(fe.WOfInt, fe.HOfInt));
-
-			if ((new File(fe.HandSigantureSavePath + "\\" + fe.FK_MapData + "\\")).isDirectory() == false)
-			{
-				(new File(fe.HandSigantureSavePath + "\\" + fe.FK_MapData + "\\")).mkdirs();
-			}
-
-			String saveTo = fe.HandSigantureSavePath + "\\" + fe.FK_MapData + "\\" + pkval + ".jpg";
-			bitmap.Save(saveTo, ImageFormat.Jpeg);
-
-			String pathFile = HttpContextHelper.RequestApplicationPath + fe.HandSiganture_UrlPath + fe.FK_MapData + "/" + pkval + ".jpg";
-			FrmEleDB ele = new FrmEleDB();
-			ele.FK_MapData = fe.FK_MapData;
-			ele.EleID = fe.EleID;
-			ele.RefPKVal = pkval;
-			ele.Tag1 = pathFile.replace("\\\\", "\\");
-			ele.Tag1 = pathFile.replace("////", "//");
-
-			ele.Tag2 = saveTo.replace("\\\\", "\\");
-			ele.Tag2 = saveTo.replace("////", "//");
-
-			ele.GenerPKVal();
-			ele.Save();
-
-			return pathFile;
-		}
-	}
-
-	/** 
-	 上传文件.
-	 
-	 @param FileByte
-	 @param fileName
-	 @return 
-	*/
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: public static string UploadFile(byte[] FileByte, String fileName)
-	public static String UploadFile(byte[] FileByte, String fileName)
-	{
-		String path = HttpContextHelper.RequestApplicationPath + "\\DataUser\\UploadFile";
-		if (!(new File(path)).isDirectory())
-		{
-			(new File(path)).mkdirs();
-		}
-
-		String filePath = path + "\\" + fileName;
-		if ((new File(filePath)).isFile())
-		{
-			(new File(filePath)).delete();
-		}
-
-		//这里使用绝对路径来索引
-		FileOutputStream stream = new FileOutputStream(filePath);
-		stream.write(FileByte, 0, FileByte.length);
-		stream.close();
-
-		return filePath;
-	}
-
-
-		///#endregion
-
 
 		///#region 调度相关的操作.
 	/** 
@@ -11708,31 +11564,32 @@ public class Dev2Interface
 	 作用：按照当前的时间，每天两次更新WF_GenerWorkFlow 的 TodoSta 状态字段。
 	 该字段： 0=正常(绿牌), 1=预警(黄牌), 2=逾期(红牌), 3=按时完成(绿牌) , 4=逾期完成(红牌).
 	 该方法作用是，每天，中午时间段，与下午时间段，执行更新这两个状态，仅仅更新两次。
+	 * @throws Exception 
 	*/
-	public static void DTS_GenerWorkFlowTodoSta()
+	public static void DTS_GenerWorkFlowTodoSta() throws Exception
 	{
 		// 中午的更新, 与发送邮件通知.
 		boolean isPM = false;
 
 
 			///#region 求出是否可以更新状态.
-		if (LocalDateTime.now().getHour() >= 9 && LocalDateTime.now().getHour() < 12)
+		if (DateUtils.getHour(new Date()) >= 9 && DateUtils.getHour(new Date()) < 12)
 		{
 			isPM = true;
-			String timeKey = "DTSTodoStaPM" + LocalDateTime.now().toString("yyMMdd");
+			String timeKey = "DTSTodoStaPM" + DateUtils.format(new Date(),"yyMMdd");
 			Paras ps = new Paras();
 			ps.SQL = "SELECT Val FROM Sys_GloVar WHERE No='" + timeKey + "'";
 			String time = DBAccess.RunSQLReturnStringIsNull(ps, null);
 			if (time == null)
 			{
 				GloVar var = new GloVar();
-				var.No = timeKey;
-				var.Name = "时效调度 WFTodoSta PM 调度";
-				var.GroupKey = "WF";
-				var.Val = timeKey; //更新时间点.
-				var.Note = "时效调度PM" + timeKey;
+				var.setNo(timeKey);
+				var.setName("时效调度 WFTodoSta PM 调度");
+				var.setGroupKey("WF");
+				var.setVal(timeKey); //更新时间点.
+				var.setNote("时效调度PM" + timeKey);
 				var.Insert();
-				time = var.Val;
+				time = var.getVal();
 			}
 			else
 			{
@@ -11742,22 +11599,22 @@ public class Dev2Interface
 		}
 
 		//下午时间段.
-		if (LocalDateTime.now().getHour() >= 13 && LocalDateTime.now().getHour() < 18)
+		if (DateUtils.getHour(new Date()) >= 13 && DateUtils.getHour(new Date()) < 18)
 		{
-			String timeKey = "DTSTodoStaAM" + LocalDateTime.now().toString("yyMMdd");
+			String timeKey = "DTSTodoStaAM" + DateUtils.format(new Date(),"yyMMdd");
 			Paras ps = new Paras();
 			ps.SQL = "SELECT Val FROM Sys_GloVar WHERE No='" + timeKey + "'";
 			String time = DBAccess.RunSQLReturnStringIsNull(ps, null);
 			if (time == null)
 			{
 				GloVar var = new GloVar();
-				var.No = timeKey;
-				var.Name = "时效调度 WFTodoSta AM 调度";
-				var.GroupKey = "WF";
-				var.Val = timeKey; //更新时间点.
-				var.Note = "时效调度AM" + timeKey;
+				var.setNo(timeKey);
+				var.setName("时效调度 WFTodoSta AM 调度");
+				var.setGroupKey("WF");
+				var.setVal(timeKey); //更新时间点.
+				var.setNote("时效调度AM" + timeKey);
 				var.Insert();
-				time = var.Val;
+				time = var.getVal();
 			}
 			else
 			{
@@ -11775,14 +11632,15 @@ public class Dev2Interface
 	}
 	/** 
 	 预警与逾期的提醒.
+	 * @throws Exception 
 	*/
-	private static void DTS_SendMsgToWorker()
+	private static void DTS_SendMsgToWorker() throws Exception
 	{
 
 			///#region 处理预警的消息发送.
-		if (LocalDateTime.now().getHour() >= 0 && LocalDateTime.now().getHour() < 12)
+		if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 0 && Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < 12)
 		{
-			String timeKey = "DTSWarningPM" + LocalDateTime.now().toString("yyMMdd");
+			String timeKey = "DTSWarningPM" + DateUtils.format(new Date(),"yyMMdd");
 			Paras ps = new Paras();
 			ps.SQL = "SELECT Val FROM Sys_GloVar WHERE No='" + timeKey + "'";
 			String time = DBAccess.RunSQLReturnStringIsNull(ps, null);
@@ -11800,23 +11658,25 @@ public class Dev2Interface
 	}
 	/** 
 	 生成工作的 TimeSpan
+	 * @throws Throwable 
 	*/
-	public static void DTS_GenerWorkFlowTimeSpan()
+	public static void DTS_GenerWorkFlowTimeSpan() throws Throwable
 	{
-		if (LocalDateTime.now().getHour() >= 8 && LocalDateTime.now().getHour() < 10 && LocalDateTime.Today.getDayOfWeek() == DayOfWeek.MONDAY)
+		if (DateUtils.getHour(new Date()) >= 8 && DateUtils.getHour(new Date()) < 10 
+				&&Integer.parseInt(DateUtils.dayForWeek(new Date())) == DayOfWeek.MONDAY.getValue())
 		{
-			String timeKey = "DTSTimeSpanPM" + LocalDateTime.now().toString("yyMMdd");
+			String timeKey = "DTSTimeSpanPM" + DateUtils.format(new Date(),"yyMMdd");
 			Paras ps = new Paras();
 			ps.SQL = "SELECT Val FROM Sys_GloVar WHERE No='" + timeKey + "'";
 			String time = DBAccess.RunSQLReturnStringIsNull(ps, null);
 			if (time == null)
 			{
 				GloVar var = new GloVar();
-				var.No = timeKey;
-				var.Name = "设置时间段" + timeKey + "一周执行一次.";
-				var.GroupKey = "WF";
-				var.Val = timeKey; //更新时间点.
-				var.Note = "设置时间段PM" + timeKey;
+				var.setNo(timeKey);
+				var.setName("设置时间段" + timeKey + "一周执行一次.");
+				var.setGroupKey("WF");
+				var.setVal(timeKey); //更新时间点.
+				var.setNote("设置时间段PM" + timeKey);
 				var.Insert();
 			}
 			else

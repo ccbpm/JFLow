@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,7 +35,10 @@ public class DateUtils
 	public static final String YMDHMS_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	
 	public static void main(String[] args){
-		System.out.println(getCurrentDate(YMDHMS_PATTERN));
+		//System.out.println(getCurrentDate(YMDHMS_PATTERN));
+			System.out.println(DayOfWeek.SUNDAY.getValue());
+			
+		
 	}
 	/**
 	 * 获得系统当前时间YYYY-MM-DD
@@ -1004,6 +1008,35 @@ public class DateUtils
 		return c.get(Calendar.WEEK_OF_YEAR);
 	}
 	
+	
+	public static String dayForWeek(Date tmpDate) throws Throwable {  
+        tmpDate = parse(tmpDate,"yyyy-MM-dd"); 
+
+        Calendar cal = Calendar.getInstance(); 
+
+        String[] weekDays = { "7", "1", "2", "3", "4", "5", "6" };
+
+        try {
+
+            cal.setTime(tmpDate);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1; // 指示一个星期中的某天。
+
+        if (w < 0)
+
+            w = 0;
+
+        return weekDays[w];
+
+    }  
+
+	
 	/**
 	 * 得到某一年周的总数
 	 * 
@@ -1166,11 +1199,5 @@ public class DateUtils
 		return c.getTime();
 	}
 	
-//	public static void main(String[] agrs)
-//	{
-//		System.out.println(System.currentTimeMillis());
-//		System.out.println(new Date(1339405463841l));
-//		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//		System.out.println(df.format(DateUtils.getLastDayOfMonth(2008, 10)));
-//	}
+	
 }

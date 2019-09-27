@@ -1044,6 +1044,22 @@ public class MapAttr extends EntityMyPK
 		this.setKeyOfEn(key);
 		this.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.KeyOfEn, this.getKeyOfEn());
 	}
+	public final int getTextColSpan() throws Exception {
+		int i = this.GetValIntByKey(MapAttrAttr.TextColSpan);
+		if (this.getUIIsLine() && i == 1) {
+			return 3;
+		}
+		
+		return i;
+	}
+	public final int getRowSpan() throws Exception {
+		int i = this.GetValIntByKey(MapAttrAttr.RowSpan);
+		if (this.getUIIsLine() && i == 1) {
+			return 3;
+		}
+		
+		return i;
+	}
 	/** 
 	 EnMap
 	*/
@@ -1463,4 +1479,5 @@ public class MapAttr extends EntityMyPK
 		BP.DA.DBAccess.RunSQLs(sqls);
 		return super.beforeDelete();
 	}
+	
 }

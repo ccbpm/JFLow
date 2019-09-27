@@ -3,7 +3,6 @@ package BP.WF;
 import BP.DA.*;
 import BP.Port.*;
 import BP.Web.*;
-import BP.En.*;
 import BP.WF.Data.*;
 import BP.Sys.*;
 import java.util.*;
@@ -29,8 +28,9 @@ public class Dev2InterfaceAnonymous
 	 @param nextWorker 操作员，如果为null就是当前人员。
 	 @param title 创建工作时的标题，如果为null，就按设置的规则生成。
 	 @return 为开始节点创建工作后产生的WorkID.
+	 * @throws Exception 
 	*/
-	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String guestNo, String title)
+	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String guestNo, String title) throws Exception
 	{
 		return Node_CreateBlankWork(flowNo, ht, workDtls, guestNo, title, 0, null, 0, null);
 	}
@@ -45,8 +45,9 @@ public class Dev2InterfaceAnonymous
 	 @param parentWorkID 父流程的WorkID,如果没有父流程就传入为0.
 	 @param parentFlowNo 父流程的流程编号,如果没有父流程就传入为null.
 	 @return 为开始节点创建工作后产生的WorkID.
+	 * @throws Exception 
 	*/
-	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String guestNo, String title, long parentWorkID, String parentFlowNo, int parentNodeID, String parentEmp)
+	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String guestNo, String title, long parentWorkID, String parentFlowNo, int parentNodeID, String parentEmp) throws Exception
 	{
 
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
@@ -84,9 +85,11 @@ public class Dev2InterfaceAnonymous
 			///#region 给各个属性-赋值
 		if (ht != null)
 		{
-			for (String str : ht.keySet())
+			for (Object str : ht.keySet())
 			{
-				wk.SetValByKey(str, ht.get(str));
+				if(str==null)
+					continue;
+				wk.SetValByKey(str.toString(), ht.get(str));
 			}
 		}
 		wk.setOID(workID);
@@ -95,24 +98,24 @@ public class Dev2InterfaceAnonymous
 			//保存从表
 			for (DataTable dt : workDtls.Tables)
 			{
-				for (MapDtl dtl : wk.getHisMapDtls())
+				for (MapDtl dtl : wk.getHisMapDtls().ToJavaList())
 				{
-					if (!dt.TableName.equals(dtl.No))
+					if (!dt.TableName.equals(dtl.getNo()))
 					{
 						continue;
 					}
 					//获取dtls
-					GEDtls daDtls = new GEDtls(dtl.No);
+					GEDtls daDtls = new GEDtls(dtl.getNo());
 					daDtls.Delete(GEDtlAttr.RefPK, wk.getOID()); // 清除现有的数据.
 
-					GEDtl daDtl = daDtls.GetNewEntity instanceof GEDtl ? (GEDtl)daDtls.GetNewEntity : null;
-					daDtl.RefPK = String.valueOf(wk.getOID());
+					GEDtl daDtl = daDtls.getNewEntity() instanceof GEDtl ? (GEDtl)daDtls.getNewEntity() : null;
+					daDtl.setRefPK(String.valueOf(wk.getOID()));
 
 					// 为从表复制数据.
 					for (DataRow dr : dt.Rows)
 					{
 						daDtl.ResetDefaultVal();
-						daDtl.RefPK = String.valueOf(wk.getOID());
+						daDtl.setRefPK(String.valueOf(wk.getOID()));
 
 						//明细列.
 						for (DataColumn dc : dt.Columns)
@@ -144,7 +147,7 @@ public class Dev2InterfaceAnonymous
 			ps = new Paras();
 			ps.SQL = "UPDATE " + fl.getPTable() + " SET WFState=" + dbstr + "WFState,FK_Dept=" + dbstr + "FK_Dept,Title=" + dbstr + "Title WHERE OID=" + dbstr + "OID";
 			ps.Add(GERptAttr.WFState, WFState.Blank.getValue());
-			ps.Add(GERptAttr.FK_Dept, empStarter.FK_Dept);
+			ps.Add(GERptAttr.FK_Dept, empStarter.getFK_Dept());
 			ps.Add(GERptAttr.Title, BP.WF.WorkFlowBuessRole.GenerTitle(fl, wk));
 			ps.Add(GERptAttr.OID, wk.getOID());
 			DBAccess.RunSQL(ps);
@@ -178,8 +181,9 @@ public class Dev2InterfaceAnonymous
 	 
 	 @param guestNo 客户编号
 	 @param guestName 客户名称
+	 * @throws Exception 
 	*/
-	public static void Port_Login(String guestNo, String guestName)
+	public static void Port_Login(String guestNo, String guestName) throws Exception
 	{
 		//登陆.
 		BP.Web.GuestUser.SignInOfGener(guestNo, guestName, "CH", true);
@@ -191,8 +195,9 @@ public class Dev2InterfaceAnonymous
 	 @param guestName 客户名称
 	 @param deptNo 客户的部门编号
 	 @param deptName 客户的部门名称
+	 * @throws Exception 
 	*/
-	public static void Port_Login(String guestNo, String guestName, String deptNo, String deptName)
+	public static void Port_Login(String guestNo, String guestName, String deptNo, String deptName) throws Exception
 	{
 		//登陆.
 		BP.Web.GuestUser.SignInOfGener(guestNo, guestName, deptNo,deptName,"CH", true);
@@ -244,8 +249,9 @@ public class Dev2InterfaceAnonymous
 	 
 	 @param fk_flow 流程编号
 	 @return 返回从数据视图WF_GenerWorkflow查询出来的数据.
+	 * @throws Exception 
 	*/
-	public static DataTable DB_GenerRuning(String fk_flow, String guestNo)
+	public static DataTable DB_GenerRuning(String fk_flow, String guestNo) throws Exception
 	{
 
 		String sql;
@@ -276,8 +282,9 @@ public class Dev2InterfaceAnonymous
 	 @param workID 工作ID
 	 @param guestNo 客户编号
 	 @param guestName 客户名称
+	 * @throws Exception 
 	*/
-	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName)
+	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName) throws Exception
 	{
 		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();

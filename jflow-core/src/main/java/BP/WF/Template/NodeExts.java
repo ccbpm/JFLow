@@ -28,7 +28,10 @@ public class NodeExts extends Entities
 		return;
 	}
 
-		///#endregion
+	public final List<NodeExt> ToJavaList()
+	{
+		return (List<NodeExt>)(Object)this;
+	}
 
 	@Override
 	public Entity getNewEntity()

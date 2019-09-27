@@ -1764,22 +1764,23 @@ public class Flow extends BP.En.EntityNoName {
 	 * 执行检查2018
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoCheck2018() {
+	public final String DoCheck2018() throws Exception {
 		FlowCheckError check = new FlowCheckError(this);
 		check.DoCheck();
 
 		return BP.Tools.Json.ToJson(check.dt);
-		// return "../../Admin/Testing/FlowCheckError.htm?FK_Flow= " +
-		// this.getNo()+ " &Lang=CH";
+
 	}
 
 	/**
 	 * 校验流程
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public final String DoCheck() {
+	public final String DoCheck() throws Exception {
 
 		BP.DA.Cash.ClearCash();
 
@@ -2455,7 +2456,7 @@ public class Flow extends BP.En.EntityNoName {
 		}
 	}
 
-	public final DataSet GetFlow(String path) {
+	public final DataSet GetFlow(String path) throws Exception {
 		// 把所有的数据都存储在这里。
 		DataSet ds = new DataSet();
 

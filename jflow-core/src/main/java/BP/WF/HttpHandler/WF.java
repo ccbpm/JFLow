@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.WF.*;
@@ -12,7 +13,7 @@ import BP.WF.*;
 import java.util.*;
 import java.io.*;
 
-public class WF extends DirectoryPageBase
+public class WF extends WebContralBase
 {
 
 		///#region 单表单查看.

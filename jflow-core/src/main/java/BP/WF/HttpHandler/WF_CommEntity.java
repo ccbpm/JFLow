@@ -1,13 +1,13 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
-import ICSharpCode.SharpZipLib.Zip.*;
 import BP.WF.*;
 import java.io.*;
 import java.nio.file.*;
@@ -15,7 +15,7 @@ import java.nio.file.*;
 /** 
  页面功能实体
 */
-public class WF_CommEntity extends DirectoryPageBase
+public class WF_CommEntity extends WebContralBase
 {
 
 	/** 

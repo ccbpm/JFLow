@@ -12,7 +12,7 @@ import BP.WF.*;
 /** 
  页面功能实体
 */
-public class CCMobile_WorkOpt_OneWork extends DirectoryPageBase
+public class CCMobile_WorkOpt_OneWork extends WebContralBase
 {
 	/** 
 	 构造函数

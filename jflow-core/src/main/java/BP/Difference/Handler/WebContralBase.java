@@ -367,7 +367,7 @@ public abstract class WebContralBase {
 	}
 	
 
-	public final String getName() {
+	public String getName() {
 		String str = getRequest().getParameter("Name");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return null;
@@ -448,7 +448,7 @@ public abstract class WebContralBase {
 	/**
 	 * 字典表
 	 */
-	public final String getFK_SFTable() {
+	public String getFK_SFTable() {
 		String str = this.GetRequestVal("FK_SFTable");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return null;

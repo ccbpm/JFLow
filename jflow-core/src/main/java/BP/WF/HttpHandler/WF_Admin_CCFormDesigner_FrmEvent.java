@@ -4,13 +4,14 @@ import BP.WF.*;
 import BP.Web.*;
 import BP.Sys.*;
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.*;
 import BP.WF.Template.*;
 import BP.WF.XML.*;
 import BP.WF.*;
 import java.util.*;
 
-public class WF_Admin_CCFormDesigner_FrmEvent extends BP.WF.HttpHandler.DirectoryPageBase
+public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 {
 
 	/** 

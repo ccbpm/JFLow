@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -13,7 +14,7 @@ import java.util.*;
 /** 
  页面功能实体
 */
-public class WF_Admin extends DirectoryPageBase
+public class WF_Admin extends WebContralBase
 {
 
 		///#region 属性.
@@ -269,8 +270,9 @@ public class WF_Admin extends DirectoryPageBase
 	 转到指定的url.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String TestFlow_ReturnToUser()
+	public final String TestFlow_ReturnToUser() throws Exception
 	{
 		String userNo = this.GetRequestVal("UserNo");
 		BP.WF.Dev2Interface.Port_Login(userNo);

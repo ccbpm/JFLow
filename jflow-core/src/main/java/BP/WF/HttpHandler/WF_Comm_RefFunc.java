@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.GPM.StationType;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
@@ -10,7 +11,7 @@ import BP.WF.Glo;
 
 import java.util.*;
 
-public class WF_Comm_RefFunc extends DirectoryPageBase
+public class WF_Comm_RefFunc extends WebContralBase
 {
 
 

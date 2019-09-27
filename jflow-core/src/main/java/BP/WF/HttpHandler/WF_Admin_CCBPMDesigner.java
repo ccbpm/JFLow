@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
 import BP.Web.*;
@@ -18,7 +19,7 @@ import java.time.*;
 /** 
  初始化函数
 */
-public class WF_Admin_CCBPMDesigner extends DirectoryPageBase
+public class WF_Admin_CCBPMDesigner extends WebContralBase
 {
 
 	public final String GetFlowTreeTable2019() throws Exception

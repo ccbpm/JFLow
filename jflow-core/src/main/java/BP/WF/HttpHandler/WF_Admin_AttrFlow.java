@@ -7,6 +7,7 @@ import BP.Tools.StringHelper;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
 import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.util.*;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.time.*;
 
-public class WF_Admin_AttrFlow extends DirectoryPageBase 
+public class WF_Admin_AttrFlow extends WebContralBase 
 {
 	 /** 
 	 构造函数

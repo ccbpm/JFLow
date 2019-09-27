@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.En.*;
 import BP.WF.*;
@@ -9,7 +10,7 @@ import java.util.*;
 /** 
  初始化函数
 */
-public class WF_Admin_CCFormDesigner_DialogCtr extends DirectoryPageBase
+public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 {
 	/** 
 	 构造函数

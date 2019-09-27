@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -13,7 +14,7 @@ import java.util.*;
 /** 
  页面功能实体
 */
-public class WF_Admin_Multilingual extends DirectoryPageBase
+public class WF_Admin_Multilingual extends WebContralBase
 {
 
 

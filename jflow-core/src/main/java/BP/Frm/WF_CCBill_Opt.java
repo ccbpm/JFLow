@@ -10,7 +10,7 @@ import BP.WF.HttpHandler.*;
 /**
  * 页面功能实体
  */
-public class WF_CCBill_Opt extends DirectoryPageBase {
+public class WF_CCBill_Opt extends WebContralBase {
 
 	/**
 	 * 构造函数

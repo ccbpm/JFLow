@@ -1,19 +1,19 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
-import Newtonsoft.Json.*;
 import BP.WF.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_Sln extends DirectoryPageBase
+public class WF_Admin_Sln extends WebContralBase
 {
 
 	/** 
@@ -29,8 +29,9 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	 获取所有节点，复制表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindForm_GetFlowNodeDropList()
+	public final String BindForm_GetFlowNodeDropList() throws Exception
 	{
 		Nodes nodes = new Nodes();
 		nodes.Retrieve(BP.WF.Template.NodeAttr.FK_Flow, getFK_Flow(), BP.WF.Template.NodeAttr.Step);
@@ -57,8 +58,9 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	 复制表单到节点 
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindFrmsDtl_DoCopyFrmToNodes()
+	public final String BindFrmsDtl_DoCopyFrmToNodes() throws Exception
 	{
 		String nodeStr = this.GetRequestVal("NodeStr"); //节点string,
 		String frmStr = this.GetRequestVal("frmStr"); //表单string,
@@ -115,8 +117,9 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	 保存流程表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindFrmsDtl_Save()
+	public final String BindFrmsDtl_Save() throws Exception
 	{
 		try
 		{
@@ -167,8 +170,9 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	 获取表单库所有表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindForm_GenerForms()
+	public final String BindForm_GenerForms() throws Exception
 	{
 		//形成树
 		FlowFormTrees appendFormTrees = new FlowFormTrees();
@@ -261,7 +265,7 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	*/
 	private StringBuilder appendMenus = new StringBuilder();
 	private StringBuilder appendMenuSb = new StringBuilder();
-	public final void TansEntitiesToGenerTree(Entities ens, String rootNo, String checkIds)
+	public final void TansEntitiesToGenerTree(Entities ens, String rootNo, String checkIds) throws Exception
 	{
 		Object tempVar = ens.GetEntityByKey(rootNo);
 		EntityTree root = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
@@ -353,8 +357,9 @@ public class WF_Admin_Sln extends DirectoryPageBase
 	 表单方案
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BindFrms_Init()
+	public final String BindFrms_Init() throws Exception
 	{
 		//注册这个枚举，防止第一次运行出错.
 		BP.Sys.SysEnums ses = new SysEnums("FrmEnableRole");

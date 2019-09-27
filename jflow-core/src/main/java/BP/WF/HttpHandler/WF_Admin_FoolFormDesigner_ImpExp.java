@@ -5,11 +5,12 @@ import BP.Web.*;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.*;
 import BP.WF.*;
 import java.util.*;
 
-public class WF_Admin_FoolFormDesigner_ImpExp extends BP.WF.HttpHandler.DirectoryPageBase
+public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 {
 
 

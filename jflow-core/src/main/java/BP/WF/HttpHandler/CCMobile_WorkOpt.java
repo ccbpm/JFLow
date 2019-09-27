@@ -13,7 +13,7 @@ import java.util.*;
 /** 
  页面功能实体
 */
-public class CCMobile_WorkOpt extends DirectoryPageBase
+public class CCMobile_WorkOpt extends WebContralBase
 {
 	/** 
 	 构造函数

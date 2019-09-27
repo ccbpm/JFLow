@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -12,7 +13,7 @@ import BP.WF.*;
 /** 
  初始化函数
 */
-public class WF_Admin_CCBPMDesigner_App_CH extends DirectoryPageBase
+public class WF_Admin_CCBPMDesigner_App_CH extends WebContralBase
 {
 	/** 
 	 构造函数

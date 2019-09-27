@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.*;
 import BP.Port.*;
@@ -29,7 +30,7 @@ import java.time.*;
 /** 
  表单功能界面
 */
-public class WF_CCForm extends DirectoryPageBase
+public class WF_CCForm extends WebContralBase
 {
 
 		///#region 多附件.

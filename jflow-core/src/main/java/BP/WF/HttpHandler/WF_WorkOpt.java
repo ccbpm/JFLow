@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -16,7 +17,7 @@ import java.time.*;
 /** 
  页面功能实体g
 */
-public class WF_WorkOpt extends DirectoryPageBase
+public class WF_WorkOpt extends WebContralBase
 {
 	/** 
 	 过程执行.

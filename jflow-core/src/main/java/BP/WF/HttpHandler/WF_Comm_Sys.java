@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Difference.Handler.CommonFileUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.DealString;
 import BP.Tools.StringHelper;
@@ -10,7 +11,6 @@ import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
-import BP.NetPlatformImpl.*;
 import BP.WF.*;
 import java.util.*;
 
@@ -23,7 +23,7 @@ import java.time.*;
 /** 
  页面功能实体
 */
-public class WF_Comm_Sys extends DirectoryPageBase
+public class WF_Comm_Sys extends WebContralBase
 {
 	/** 
 	 单元测试
@@ -90,7 +90,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	{
 		return "";
 	}
-	private String ImpData_DoneMyPK(Entities ens, DataTable dt)
+	private String ImpData_DoneMyPK(Entities ens, DataTable dt) throws Exception
 	{
 		//错误信息
 		String errInfo = "";
@@ -164,8 +164,9 @@ public class WF_Comm_Sys extends DirectoryPageBase
 	 执行导入
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ImpData_Done()
+	public final String ImpData_Done() throws Exception
 	{
 		HttpServletRequest request = getRequest();
 //    	MultipartFile multiFile = ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");  	
@@ -316,7 +317,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 }
 
-	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType)
+	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType) throws Exception
 	{
 		String errInfo = "";
 		//按照属性赋值.
@@ -509,7 +510,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 
 		///#region 系统实体属性.
-	public final String SystemClass_EnsCheck()
+	public final String SystemClass_EnsCheck() throws Exception
 	{
 		try
 		{
@@ -603,7 +604,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	public final String SystemClass_Fields()
+	public final String SystemClass_Fields() throws Exception
 	{
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getNewEntity();
@@ -690,7 +691,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		return html;
 	}
 
-	public final String SystemClass_Init()
+	public final String SystemClass_Init() throws Exception
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("No");
@@ -778,7 +779,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 
 
 		///#region 数据源管理
-	public final String SFDBSrcNewGuide_GetList()
+	public final String SFDBSrcNewGuide_GetList() throws Exception
 	{
 		//SysEnums enums = new SysEnums(SFDBSrcAttr.DBSrcType);
 		SFDBSrcs srcs = new SFDBSrcs();
@@ -787,7 +788,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		return srcs.ToJson();
 	}
 
-	public final String SFDBSrcNewGuide_LoadSrc()
+	public final String SFDBSrcNewGuide_LoadSrc() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -805,7 +806,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String SFDBSrcNewGuide_SaveSrc()
+	public final String SFDBSrcNewGuide_SaveSrc() throws Exception
 	{
 		SFDBSrc src = new SFDBSrc();
 		src.setNo(this.GetRequestVal("TB_No"));
@@ -855,7 +856,7 @@ public class WF_Comm_Sys extends DirectoryPageBase
 		return "保存成功..";
 	}
 
-	public final String SFDBSrcNewGuide_DelSrc()
+	public final String SFDBSrcNewGuide_DelSrc() throws Exception
 	{
 		String no = this.GetRequestVal("No");
 

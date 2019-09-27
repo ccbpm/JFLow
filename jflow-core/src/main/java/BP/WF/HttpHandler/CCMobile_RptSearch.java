@@ -12,7 +12,7 @@ import BP.WF.*;
 /** 
  页面功能实体
 */
-public class CCMobile_RptSearch extends DirectoryPageBase
+public class CCMobile_RptSearch extends WebContralBase
 {
 
 		///#region 执行父类的重写方法.

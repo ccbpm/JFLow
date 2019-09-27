@@ -16,7 +16,7 @@ import BP.WF.HttpHandler.*;
 /** 
  页面功能实体
 */
-public class WF_CCBill_Admin extends DirectoryPageBase
+public class WF_CCBill_Admin extends WebContralBase
 {
 	/** 
 	 构造函数

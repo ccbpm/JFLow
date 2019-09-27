@@ -4,6 +4,7 @@ import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.WF.XML.*;
 import BP.WF.Template.*;
@@ -14,7 +15,7 @@ import java.util.*;
 /** 
  页面功能实体
 */
-public class WF_WorkOpt_OneWork extends DirectoryPageBase
+public class WF_WorkOpt_OneWork extends WebContralBase
 {
 	/** 
 	 进度图.
@@ -260,7 +261,7 @@ public class WF_WorkOpt_OneWork extends DirectoryPageBase
 		return "err@没有判断的执行类型：" + this.getDoType() + " @类 " + this.toString();
 	}
 
-	public final String OP_ComeBack()
+	public final String OP_ComeBack() throws Exception
 	{
 		WorkFlow wf3 = new WorkFlow(getFK_Flow(), getWorkID());
 		wf3.DoComeBackWorkFlow("无");

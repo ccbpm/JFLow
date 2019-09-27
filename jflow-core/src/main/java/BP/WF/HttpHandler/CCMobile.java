@@ -14,7 +14,7 @@ import java.io.*;
 /** 
  页面功能实体
 */
-public class CCMobile extends DirectoryPageBase
+public class CCMobile extends WebContralBase
 {
 	/** 
 	 构造函数

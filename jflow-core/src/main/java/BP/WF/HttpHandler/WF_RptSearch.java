@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -14,7 +15,7 @@ import java.util.*;
 /** 
  页面功能实体
 */
-public class WF_RptSearch extends DirectoryPageBase
+public class WF_RptSearch extends WebContralBase
 {
 	/** 
 	 构造函数
@@ -123,7 +124,7 @@ public class WF_RptSearch extends DirectoryPageBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + this.getRequest().getRequestURL());
 	}
 
 		///#endregion 执行父类的重写方法.

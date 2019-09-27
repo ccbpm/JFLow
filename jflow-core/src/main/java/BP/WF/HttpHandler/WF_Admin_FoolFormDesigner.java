@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.Handler.WebContralBase;
 import BP.Port.*;
 import BP.En.*;
 import BP.En.Map;
@@ -17,7 +18,7 @@ import java.util.*;
 /** 
  处理页面的业务逻辑
 */
-public class WF_Admin_FoolFormDesigner extends DirectoryPageBase
+public class WF_Admin_FoolFormDesigner extends WebContralBase
 {
 
 		///#region 表单设计器.

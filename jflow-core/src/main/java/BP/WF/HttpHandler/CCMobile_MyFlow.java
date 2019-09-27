@@ -12,7 +12,7 @@ import BP.WF.*;
 /** 
  页面功能实体
 */
-public class CCMobile_MyFlow extends DirectoryPageBase
+public class CCMobile_MyFlow extends WebContralBase
 {
 	/** 
 	 构造函数

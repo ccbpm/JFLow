@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.DataTableConvertJson;
 import BP.Web.*;
@@ -8,7 +9,6 @@ import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
-import BP.NetPlatformImpl.*;
 import BP.WF.*;
 import java.util.*;
 import java.io.*;
@@ -16,7 +16,7 @@ import java.io.*;
 /** 
  页面功能实体
 */
-public class GPMPage extends DirectoryPageBase
+public class GPMPage extends WebContralBase
 {
 
 		///#region 签名.

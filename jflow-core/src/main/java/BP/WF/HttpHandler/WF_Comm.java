@@ -1555,7 +1555,7 @@ public class WF_Comm extends WebContralBase
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-					var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.RefAttrKey, attr.getDefaultVal()Run);
+					var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.RefAttrKey, attr.getDefaultValRun());
 					qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, valType);
 				}
 				else

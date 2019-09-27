@@ -19,9 +19,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.commons.io.FileUtils;
-
 import BP.Tools.DealString;
 import BP.Tools.Json;
 import BP.Tools.StringExpressionCalculate;
@@ -29,7 +27,6 @@ import BP.Tools.StringHelper;
 import BP.Tools.StringUtils;
 import BP.Tools.chs2py;
 import BP.WF.Glo;
-import BP.WF.PortalInterface;
 import BP.Web.WebUser;
 
 public class DataType {
@@ -734,6 +731,8 @@ public class DataType {
 		int days = Integer.parseInt(String.valueOf(between_days));
 		return days;
 	}
+	
+	
 
 	/**
 	 * 检查是否是一个字段或者表名称
@@ -1811,15 +1810,6 @@ public class DataType {
 		}
 	}
 
-	/**
-	 * 得到WebService对象
-	 * 
-	 * @return
-	 */
-	public static PortalInterface GetPortalInterfaceSoapClientInstance() {
-		return null;
-		
-	}
 
 	/**
 	 * 将文本转换成可用做Name,Text的文本，文本中仅允许含有汉字、字母、数字、下划线

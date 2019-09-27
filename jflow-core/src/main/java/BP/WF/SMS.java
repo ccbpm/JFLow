@@ -11,7 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import BP.DA.*;
-import BP.Difference.Handler.PortalWebService;
+import BP.Difference.Handler.PortalInterface;
 import BP.En.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -399,7 +399,7 @@ public class SMS extends EntityMyPK
 			if (this.getPushModel().contains("Email") == true && DataType.IsNullOrEmpty(this.getEmail()) == false)
 				SendEmailNowAsync(this.getEmail(), this.getTitle(), this.getDocOfEmail());
 			
-			PortalWebService service = new PortalWebService();
+			PortalInterface service = new PortalInterface();
 			//站内消息
 			if (this.getPushModel().contains("CCMsg") == true)
 			{

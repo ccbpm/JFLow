@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.GPM.*;
 import BP.En.*;
 import BP.DA.*;
+import BP.Difference.Handler.PortalInterface;
 import BP.Web.*;
 import BP.Port.*;
 import BP.Sys.*;
@@ -36,7 +37,7 @@ public class FindWorker
 	public FindWorker()
 	{
 	}
-	public final DataTable FindByWorkFlowModel()
+	public final DataTable FindByWorkFlowModel() throws Exception
 	{
 		this.town = town;
 
@@ -1056,7 +1057,7 @@ public class FindWorker
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + town.getHisNode().getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
-					PortalInterface ws = DataType.GetPortalInterfaceSoapClientInstance();
+					PortalInterface ws = new PortalInterface();
 					return ws.GenerEmpsBySpecDeptAndStats(empDept, stas);
 				}
 			}
@@ -1153,7 +1154,6 @@ public class FindWorker
 			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0"))
 			{
 				break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
-				throw new RuntimeException("@按岗位计算没有找到(" + town.getHisNode().getName() + ")接受人.");
 			}
 
 			//检查指定的父部门下面是否有该人员.
@@ -1176,7 +1176,6 @@ public class FindWorker
 			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0"))
 			{
 				break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
-				throw new RuntimeException("@按岗位计算没有找到(" + town.getHisNode().getName() + ")接受人.");
 			}
 
 			//该部门下的所有子部门是否有人员.

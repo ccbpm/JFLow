@@ -1,7 +1,7 @@
 package BP.Port;
 
 import BP.DA.*;
-import BP.Difference.Handler.PortalWebService;
+import BP.Difference.Handler.PortalInterface;
 import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
@@ -93,7 +93,7 @@ public class Emp extends EntityNoName {
 		// 检查是否与通用密码相符.
 		if (SystemConfig.getOSDBSrc() == OSDBSrc.WebServices) {
 			// 如果是使用webservices校验.
-			PortalWebService ws = new PortalWebService();
+			PortalInterface ws = new PortalInterface();
 			boolean IsCheck = ws.CheckUserNoPassWord(this.getNo(), pass);
 			if (IsCheck == true) {
 				return true;

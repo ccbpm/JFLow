@@ -2321,12 +2321,18 @@ public class Glo {
 	 * 是否admin
 	 * @throws Exception 
 	 */
-	public static boolean getIsAdmin() throws Exception {
-		String s = BP.Sys.SystemConfig.getAppSettings().get("adminers").toString();
-		if (DataType.IsNullOrEmpty(s)) {
-			s = "admin,";
+	public static boolean getIsAdmin(String userNo) {
+		String adminers = SystemConfig.getAppSettings().get("adminers").toString();
+		if (StringHelper.isNullOrEmpty(adminers)) {
+			adminers = "admin";
 		}
-		return s.contains(WebUser.getNo());
+		String[] ss = adminers.split(",");
+		for (String s : ss) {
+			if (s.equals(userNo)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static boolean getIsEnableTrackRec() {

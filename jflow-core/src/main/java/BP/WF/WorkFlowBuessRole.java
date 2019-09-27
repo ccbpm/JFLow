@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.DA.*;
+import BP.Difference.Handler.PortalInterface;
 import BP.WF.Data.*;
 import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
@@ -731,8 +732,9 @@ public class WorkFlowBuessRole
 	 @param currNode 当前节点
 	 @param toNode 到达节点
 	 @return 下一步工作人员No,Name格式的返回.
+	 * @throws Exception 
 	*/
-	public static DataTable RequetNextNodeWorkers(Flow fl, Node currNode, Node toNode, Entity enParas, long workid)
+	public static DataTable RequetNextNodeWorkers(Flow fl, Node currNode, Node toNode, Entity enParas, long workid) throws Exception
 	{
 		if (toNode.getIsGuestNode())
 		{
@@ -1514,8 +1516,7 @@ public class WorkFlowBuessRole
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + toNode.getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
-
-					var ws = DataType.GetPortalInterfaceSoapClientInstance();
+					PortalInterface ws = new PortalInterface();
 					return ws.GenerEmpsBySpecDeptAndStats(empDept, stas);
 				}
 			}
@@ -1606,7 +1607,6 @@ public class WorkFlowBuessRole
 			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0"))
 			{
 				break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
-				throw new RuntimeException("@按岗位计算没有找到(" + toNode.getName() + ")接受人.");
 			}
 
 			//检查指定的部门下面是否有该人员.

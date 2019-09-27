@@ -9,7 +9,7 @@ public class WeiXin
 	public final String GenerAccessToken()
 	{
 		String accessToken = "";
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + BP.Sys.SystemConfig.WX_CorpID + "&corpsecret=" + BP.Sys.SystemConfig.WX_AppSecret + "";
+		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + BP.Sys.SystemConfig.getWX_CorpID() + "&corpsecret=" + BP.Sys.SystemConfig.getWX_AppSecret() + "";
 
 		AccessToken AT = new AccessToken();
 	//	String str = BP.DA.DataType.ReadURLContext(url, 5000, Encoding.UTF8);

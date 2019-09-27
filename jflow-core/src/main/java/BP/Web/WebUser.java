@@ -644,6 +644,8 @@ public class WebUser {
 	public static String getNoOfRel() {
 		return GetSessionByKey("No", null);
 	}
+	
+	
 
 	/**
 	 * 编号

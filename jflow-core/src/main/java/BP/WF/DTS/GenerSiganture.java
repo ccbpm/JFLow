@@ -1,13 +1,19 @@
 package BP.WF.DTS;
 
-import BP.DA.*;
-import BP.Web.Controls.*;
 import BP.Port.*;
 import BP.En.*;
-import BP.Sys.*;
-import BP.WF.*;
+import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.*;
+
+import javax.imageio.ImageIO;
 
 /** 
  Method 的摘要说明
@@ -47,9 +53,10 @@ public class GenerSiganture extends Method
 	 执行
 	 
 	 @return 返回执行结果
+	 * @throws Exception 
 	*/
 	@Override
-	public Object Do()
+	public Object Do() throws Exception
 	{
 		try
 		{
@@ -68,18 +75,11 @@ public class GenerSiganture extends Method
 				}
 
 				Files.copy(Paths.get(BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/Templete.JPG"), Paths.get(path), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				
+				paintWaterMarkPhoto(pathMe,emp.getName(),path);
 
-				System.Drawing.Image img = System.Drawing.Image.FromFile(path);
-				Font font = new Font(fontName, 15);
-				Graphics g = Graphics.FromImage(img);
-				System.Drawing.SolidBrush drawBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
-				System.Drawing.StringFormat drawFormat = new System.Drawing.StringFormat(StringFormatFlags.DirectionVertical); //文本
-				g.DrawString(emp.Name, font, drawBrush, 3, 3);
-				img.Save(pathMe);
-				img.Dispose();
-				g.Dispose();
 
-				Files.copy(Paths.get(pathMe), Paths.get(BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.Name + ".JPG"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(pathMe), Paths.get(BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getName() + ".JPG"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 			}
 			return "执行成功...";
 		}
@@ -88,4 +88,50 @@ public class GenerSiganture extends Method
 			return "执行失败，请确认对 " + BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/ 目录有访问权限？异常信息:" + ex.getMessage();
 		}
 	}
+	
+	private static void paintWaterMarkPhoto(String targerImagePath,String words,String srcImagePath) {
+        Integer degree = -15;
+        OutputStream os = null;
+        try {
+            Image srcImage = ImageIO.read(new File(srcImagePath));
+            BufferedImage bufImage = new BufferedImage(srcImage.getWidth(null), srcImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
+            // 得到画布对象
+            Graphics2D graphics2D = bufImage.createGraphics();
+            // 设置对线段的锯齿状边缘处理
+            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            graphics2D.drawImage(srcImage.getScaledInstance(srcImage.getWidth(null), srcImage.getHeight(null), Image.SCALE_SMOOTH),
+                    0, 0, null);
+           
+            // 透明度
+            float alpha = 0.25f;
+            graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
+            // 设置颜色和画笔粗细
+            graphics2D.setColor(Color.gray);
+            graphics2D.setStroke(new BasicStroke(10));
+            graphics2D.setFont(new Font("宋体", Font.ITALIC, 15));
+            // 绘制图案或文字
+            String cont = words;
+            int charWidth1 = 8;
+            int charWidth2 = 8;
+            int halfGap = 12;
+            graphics2D.drawString(cont, (srcImage.getWidth(null) - cont.length() * charWidth1) / 2,
+                    (srcImage.getHeight(null) - (charWidth1 + halfGap)) / 2);
+            
+            graphics2D.dispose();
+ 
+            os = new FileOutputStream(targerImagePath);
+            // 生成图片 (可设置 jpg或者png格式)
+            ImageIO.write(bufImage, "JPG", os);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

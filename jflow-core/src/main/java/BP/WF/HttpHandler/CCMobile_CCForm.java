@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.DateUtils;
 import BP.Web.*;
@@ -24,7 +25,7 @@ public class CCMobile_CCForm extends WebContralBase
 	public CCMobile_CCForm()
 	{
 	}
-	public final String HandlerMapExt()
+	public final String HandlerMapExt() throws Exception
 	{
 		WF_CCForm en = new WF_CCForm();
 		return en.HandlerMapExt();
@@ -39,14 +40,15 @@ public class CCMobile_CCForm extends WebContralBase
 	 表单初始化.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Frm_Init()
+	public final String Frm_Init() throws Exception
 	{
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.Frm_Init();
 	}
 
-	public final String Dtl_Init()
+	public final String Dtl_Init() throws Exception
 	{
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.Dtl_Init();
@@ -168,14 +170,14 @@ public class CCMobile_CCForm extends WebContralBase
 				}
 				else
 				{
-					savePath = athDesc.SaveTo + "\\" + PKVal;
+					savePath = athDesc.getSaveTo() + "\\" + PKVal;
 				}
 
 				//替换关键的字串.
 				savePath = savePath.replace("\\\\", "\\");
 				try
 				{
-					savePath = SystemConfig.PathOfWebApp + savePath;
+					savePath = SystemConfig.getPathOfWebApp() + savePath;
 				}
 				catch (RuntimeException e)
 				{

@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -222,8 +223,9 @@ public class CCMobile extends WebContralBase
 	 查询已完成.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Complete_Init()
+	public final String Complete_Init() throws Exception
 	{
 		DataTable dt = null;
 		dt = BP.WF.Dev2Interface.DB_FlowComplete();
@@ -260,7 +262,7 @@ public class CCMobile extends WebContralBase
 		return wfPage.Start_Init();
 	}
 
-	public final String HandlerMapExt()
+	public final String HandlerMapExt() throws Exception
 	{
 		WF_CCForm en = new WF_CCForm();
 		return en.HandlerMapExt();

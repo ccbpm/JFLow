@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.Port.*;
@@ -131,7 +132,7 @@ public class CCMobile_WorkOpt extends WebContralBase
 	}
 
 	//string flowNo, Int64 workID, int unSendToNode = 0
-	public final String AccepterOfGener_UnSend()
+	public final String AccepterOfGener_UnSend() throws NumberFormatException, Exception
 	{
 		return Dev2Interface.Flow_DoUnSend(this.GetRequestVal("flowNo"), Integer.parseInt(this.GetRequestVal("WorkID")));
 	}
@@ -236,8 +237,9 @@ public class CCMobile_WorkOpt extends WebContralBase
 	 抄送发送.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String CC_Send()
+	public final String CC_Send() throws Exception
 	{
 		//人员信息. 格式 zhangsan,张三;lisi,李四;
 		String emps = this.GetRequestVal("Emps");

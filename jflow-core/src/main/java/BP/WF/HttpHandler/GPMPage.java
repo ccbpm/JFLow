@@ -24,8 +24,9 @@ public class GPMPage extends WebContralBase
 	 图片签名初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Siganture_Init()
+	public final String Siganture_Init() throws Exception
 	{
 		if (WebUser.getNoOfRel() == null)
 		{
@@ -98,8 +99,9 @@ public class GPMPage extends WebContralBase
 	 初始化组织结构部门表维护.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Organization_Init()
+	public final String Organization_Init() throws Exception
 	{
 
 		BP.GPM.Depts depts = new BP.GPM.Depts();

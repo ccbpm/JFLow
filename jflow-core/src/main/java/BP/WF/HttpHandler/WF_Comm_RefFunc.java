@@ -5,8 +5,6 @@ import BP.Difference.Handler.WebContralBase;
 import BP.GPM.StationType;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
-import BP.WF.Template.*;
-import BP.WF.*;
 import BP.WF.Glo;
 
 import java.util.*;
@@ -358,12 +356,13 @@ public class WF_Comm_RefFunc extends WebContralBase
 	 获取部门树根结点
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2DotStationModel_GetStructureTreeRoot()
+	public final String Dot2DotStationModel_GetStructureTreeRoot() throws Exception
 	{
 		JsonResultInnerData jr = new JsonResultInnerData();
 
-		EasyuiTreeNode node, subnode;
+		EasyuiTreeNode node;
 		ArrayList<EasyuiTreeNode> d = new ArrayList<EasyuiTreeNode>();
 		String parentrootid = this.GetRequestVal("parentrootid");
 		String sql = null;
@@ -446,15 +445,16 @@ public class WF_Comm_RefFunc extends WebContralBase
 		jr.setInnerData(d);
 		jr.setMsg(String.valueOf(isUnitModel).toLowerCase());
 
-		return Newtonsoft.Json.JsonConvert.SerializeObject(jr);
+		return BP.Tools.Json.ToJson(jr);
 	}
 
 	/** 
 	 获取指定部门下一级子部门及人员列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2DotStationModel_GetSubUnits()
+	public final String Dot2DotStationModel_GetSubUnits() throws Exception
 	{
 		String parentid = this.GetRequestVal("parentid");
 		String nid = this.GetRequestVal("nodeid");
@@ -576,22 +576,21 @@ public class WF_Comm_RefFunc extends WebContralBase
 			}
 		}
 
-		return Newtonsoft.Json.JsonConvert.SerializeObject(d);
+		return BP.Tools.Json.ToJson(d);
 	}
 
 	/** 
 	 获取节点绑定人员信息列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2DotStationModel_GetNodeStations()
+	public final String Dot2DotStationModel_GetNodeStations() throws Exception
 	{
 		JsonResultInnerData jr = new JsonResultInnerData();
 
 		DataTable dt = null;
 		String nid = this.GetRequestVal("nodeid");
-		int pagesize = Integer.parseInt(this.GetRequestVal("pagesize"));
-		int pageidx = Integer.parseInt(this.GetRequestVal("pageidx"));
 		String st = this.GetRequestVal("stype");
 		String sql = "";
 		String sortField = CheckStationTypeIdxExists() ? "Idx" : "No";
@@ -646,12 +645,12 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 		jr.setInnerData(dt);
 		jr.setMsg("");
-		String re = Newtonsoft.Json.JsonConvert.SerializeObject(jr);
+		String re = BP.Tools.Json.ToJson(jr);
 		if (Glo.Plant == BP.WF.Plant.JFlow)
 		{
 			re = re.replace("\"NO\"", "\"No\"").replace("\"NAME\"", "\"Name\"").replace("\"UNITNO\"", "\"UnitNo\"").replace("\"UNITNAME\"", "\"UnitName\"");
 		}
-		return Newtonsoft.Json.JsonConvert.SerializeObject(re);
+		return BP.Tools.Json.ToJson(re);
 	}
 
 	/** 

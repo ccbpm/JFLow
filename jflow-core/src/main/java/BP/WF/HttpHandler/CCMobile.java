@@ -311,13 +311,13 @@ public class CCMobile extends WebContralBase
 		return en.OP_UnSend();
 	}
 
-	public final String AttachmentUpload_Down()
+	public final String AttachmentUpload_Down() throws Exception
 	{
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.AttachmentUpload_Down();
 	}
 
-	public final String AttachmentUpload_DownByStream()
+	public final String AttachmentUpload_DownByStream() throws Exception
 	{
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.AttachmentUpload_DownByStream();

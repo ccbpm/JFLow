@@ -126,6 +126,12 @@ public class AesEncodeUtil {
         return d;
     }
 
+    /**
+     * 
+     * @param strSrcFile 原始文件
+     * @param strDestFile 加密后的文件
+     * @throws Exception
+     */
     // 加密文件
     public static  void encryptFile(String strSrcFile, String strDestFile) throws Exception {
         try {       	

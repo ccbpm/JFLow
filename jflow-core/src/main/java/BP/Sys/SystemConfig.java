@@ -28,11 +28,10 @@ public class SystemConfig {
 	private static boolean _IsBSsystem = true;
 
 	public static String getFTPServerType() {
-		
+
 		return SystemConfig.getAppSettings().get("FTPServerType").toString();
 	}
 
-	/// #region ftp配置.
 	public static String getFTPServerIP() {
 		return SystemConfig.getAppSettings().get("FTPServerIP").toString();
 	}
@@ -42,7 +41,6 @@ public class SystemConfig {
 		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();
 		return str;
 
-		// return str;
 	}
 
 	public static String getFTPUserPassword() throws Exception {
@@ -50,38 +48,40 @@ public class SystemConfig {
 		return str;
 	}
 
-	 /// <summary>
-    /// 附件上传加密
-    /// </summary>
-    public static boolean getIsEnableAthEncrypt(){
-    	Object isEnableAthEncryptObj=SystemConfig.getAppSettings().get("IsEnableAthEncrypt");
-    	if(isEnableAthEncryptObj==null){
-    		return false;
-    	}
-    	
-        String IsEnableAthEncrypt = isEnableAthEncryptObj.toString();
+	/// <summary>
+	/// 附件上传加密
+	/// </summary>
+	public static boolean getIsEnableAthEncrypt() {
+		Object isEnableAthEncryptObj = SystemConfig.getAppSettings().get("IsEnableAthEncrypt");
+		if (isEnableAthEncryptObj == null) {
+			return false;
+		}
 
-        if (DataType.IsNullOrEmpty(IsEnableAthEncrypt) == true)
-            return false;
+		String IsEnableAthEncrypt = isEnableAthEncryptObj.toString();
 
-        if (SystemConfig.getAppSettings().get("IsEnableAthEncrypt").toString().equals("1"))
-            return true;
-        return false;
-    
-    }
-    /// <summary>
-    /// 附件上传位置
-    /// </summary>
-    public static boolean getIsUploadFileToFTP(){
-        String IsUploadFileToFTP = SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString();
+		if (DataType.IsNullOrEmpty(IsEnableAthEncrypt) == true)
+			return false;
 
-        if (DataType.IsNullOrEmpty(IsUploadFileToFTP) == true)
-            return false;
+		if (SystemConfig.getAppSettings().get("IsEnableAthEncrypt").toString().equals("1"))
+			return true;
+		return false;
 
-        if (SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString().equals("1"))
-            return true;
-        return false;
-    }
+	}
+
+	/// <summary>
+	/// 附件上传位置
+	/// </summary>
+	public static boolean getIsUploadFileToFTP() {
+		String IsUploadFileToFTP = SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString();
+
+		if (DataType.IsNullOrEmpty(IsUploadFileToFTP) == true)
+			return false;
+
+		if (SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString().equals("1"))
+			return true;
+		return false;
+	}
+
 	public static String getAttachWebSite() {
 		return SystemConfig.getAppSettings().get("AttachWebSite").toString();
 	}
@@ -244,7 +244,7 @@ public class SystemConfig {
 		if (_CS_AppSettings == null || _CS_AppSettings.size() == 0) {
 			try {
 				_CS_AppSettings = new java.util.Hashtable<String, Object>();
-				
+
 				Properties props = new Properties();
 				InputStream is = null;
 				try {
@@ -261,8 +261,6 @@ public class SystemConfig {
 		}
 		return _CS_AppSettings;
 	}
-
-
 
 	/**
 	 * 封装了AppSettings
@@ -375,18 +373,18 @@ public class SystemConfig {
 
 	/*
 	 * 集成的框架.
-	 * */
+	 */
 	public static String getRunOnPlant() {
-		 
-		String str= (String) SystemConfig.getAppSettings().get("RunOnPlant") ;
-		if ( str== null) {
-			return "BP";			 
+
+		String str = (String) SystemConfig.getAppSettings().get("RunOnPlant");
+		if (str == null) {
+			return "BP";
 		}
-		
+
 		return str;
-		 
+
 	}
-	
+
 	/**
 	 * ccflow网站目录
 	 * 
@@ -705,114 +703,110 @@ public class SystemConfig {
 	}
 
 	/// #region 微信相关配置信息
-     /// <summary>
-     /// 企业标识
-     /// </summary>
-     public static String getWX_CorpID(){
-    	 return getAppSettings().get("CorpID").toString();
-     }
-     
-     /// <summary>
-     /// 帐号钥匙
-     /// </summary>
-     public static String getWX_AppSecret(){
-    	 return getAppSettings().get("AppSecret").toString();
-     }
-    
-     /// <summary>
-     /// 应用令牌
-     /// </summary>
-     public static String getWX_WeiXinToken(){
-    	 return getAppSettings().get("WeiXinToken").toString();
-     }
-     
-     /// <summary>
-     /// 应用加密所用的秘钥
-     /// </summary>
-     public static String getWX_EncodingAESKey(){
-    	 return getAppSettings().get("EncodingAESKey").toString();
-     }
-    
-     /// <summary>
-     /// 进入应用后的欢迎提示
-     /// </summary>
-     public static boolean getWeiXin_AgentWelCom(){
-    	 return GetValByKeyBoolen("WeiXin_AgentWelCom", false);
-     }
-     
-     /// <summary>
-     /// 应用ID
-     /// </summary>
-     public static String getWX_AgentID(){
-    	 return getAppSettings().get("AgentID").toString();
-     }
-     
-     /// <summary>
-     /// 消息链接网址
-     /// </summary>
-     public static String getWX_MessageUrl()
-     {
-    	 return getAppSettings().get("WeiXin_MessageUrl").toString();
-     }
-     ///#endregion
+	/// <summary>
+	/// 企业标识
+	/// </summary>
+	public static String getWX_CorpID() {
+		return getAppSettings().get("CorpID").toString();
+	}
 
-     ///#region 钉钉配置相关
-     /// <summary>
-     /// 企业标识
-     /// </summary>
-     public static String getDing_CorpID()
-     {
-    	 return getAppSettings().get("Ding_CorpID").toString();
-        
-     }
-     /// <summary>
-     /// 密钥
-     /// </summary>
-     public static String getDing_CorpSecret()
-     {
-    	 return getAppSettings().get("Ding_CorpSecret").toString();
-    
-     }
-     /// <summary>
-     /// 登录验证密钥
-     /// </summary>
-     public static String getDing_SSOsecret()
-     {
-    	 return getAppSettings().get("Ding_SSOsecret").toString();
-        
-     }
-     /// <summary>
-     /// 消息超链接服务器地址
-     /// </summary>
-     public static String getDing_MessageUrl()
-     {
-    	 return getAppSettings().get("Ding_MessageUrl").toString();
-       
-     }
-     /// <summary>
-     /// 企业应用编号
-     /// </summary>
-     public static String getDing_AgentID()
-     {
-    	 return getAppSettings().get("Ding_AgentID").toString();
-    	
-     }
-     ///#endregion
+	/// <summary>
+	/// 帐号钥匙
+	/// </summary>
+	public static String getWX_AppSecret() {
+		return getAppSettings().get("AppSecret").toString();
+	}
 
+	/// <summary>
+	/// 应用令牌
+	/// </summary>
+	public static String getWX_WeiXinToken() {
+		return getAppSettings().get("WeiXinToken").toString();
+	}
 
- 	public static String GetValByKey(String key, String isNullas) {
+	/// <summary>
+	/// 应用加密所用的秘钥
+	/// </summary>
+	public static String getWX_EncodingAESKey() {
+		return getAppSettings().get("EncodingAESKey").toString();
+	}
 
- 		if (getAppSettings().containsKey(key) == false)
- 			return isNullas;
+	/// <summary>
+	/// 进入应用后的欢迎提示
+	/// </summary>
+	public static boolean getWeiXin_AgentWelCom() {
+		return GetValByKeyBoolen("WeiXin_AgentWelCom", false);
+	}
 
- 		Object s = getAppSettings().get(key);
- 		if (s == null) {
- 			s = isNullas;
- 		}
- 		return s.toString();
- 	}
- 	
- 	
+	/// <summary>
+	/// 应用ID
+	/// </summary>
+	public static String getWX_AgentID() {
+		return getAppSettings().get("AgentID").toString();
+	}
+
+	/// <summary>
+	/// 消息链接网址
+	/// </summary>
+	public static String getWX_MessageUrl() {
+		return getAppSettings().get("WeiXin_MessageUrl").toString();
+	}
+	/// #endregion
+
+	/// #region 钉钉配置相关
+	/// <summary>
+	/// 企业标识
+	/// </summary>
+	public static String getDing_CorpID() {
+		return getAppSettings().get("Ding_CorpID").toString();
+
+	}
+
+	/// <summary>
+	/// 密钥
+	/// </summary>
+	public static String getDing_CorpSecret() {
+		return getAppSettings().get("Ding_CorpSecret").toString();
+
+	}
+
+	/// <summary>
+	/// 登录验证密钥
+	/// </summary>
+	public static String getDing_SSOsecret() {
+		return getAppSettings().get("Ding_SSOsecret").toString();
+
+	}
+
+	/// <summary>
+	/// 消息超链接服务器地址
+	/// </summary>
+	public static String getDing_MessageUrl() {
+		return getAppSettings().get("Ding_MessageUrl").toString();
+
+	}
+
+	/// <summary>
+	/// 企业应用编号
+	/// </summary>
+	public static String getDing_AgentID() {
+		return getAppSettings().get("Ding_AgentID").toString();
+
+	}
+	/// #endregion
+
+	public static String GetValByKey(String key, String isNullas) {
+
+		if (getAppSettings().containsKey(key) == false)
+			return isNullas;
+
+		Object s = getAppSettings().get(key);
+		if (s == null) {
+			s = isNullas;
+		}
+		return s.toString();
+	}
+
 	public static boolean GetValByKeyBoolen(String key, boolean isNullas) {
 
 		if (getAppSettings().containsKey(key) == false)
@@ -884,21 +878,19 @@ public class SystemConfig {
 	}
 
 	public static String getPassword() throws Exception {
-		
-		if (SystemConfig.getCustomerNo().equals("BWDA") ) {
+
+		if (SystemConfig.getCustomerNo().equals("BWDA")) {
 			String user = getAppSettings().get("JflowPassword.encryption").toString();
 			user = Glo.String_JieMi(user);
 			return user;
 		}
-		
-		return  getAppSettings().get("JflowPassword").toString();
-	 
+
+		return getAppSettings().get("JflowPassword").toString();
+
 	}
 
 	public static void setAppCenterDSN(String value) {
-		/*
-		 * warning getAppSettings().get("AppCenterDSN").toString() = value;
-		 */
+
 		getAppSettings().put("AppCenterDSN", value);
 	}
 
@@ -987,27 +979,6 @@ public class SystemConfig {
 	public static String getAppCenterDBDatabase() {
 		if (_AppCenterDBDatabase == null) {
 			_AppCenterDBDatabase = getAppSettings().get("AppCenterDBDatabase").toString();
-			/*
-			 * warning switch (BP.DA.DBAccess.getAppCenterDBType()){ case MSSQL:
-			 * SqlConnection connMSSQL = new
-			 * SqlConnection(SystemConfig.getAppCenterDSN()); if
-			 * (connMSSQL.State != ConnectionState.Open) { connMSSQL.Open(); }
-			 * _AppCenterDBDatabase = connMSSQL.Database; break; case Oracle:
-			 * OracleConnection connOra = new
-			 * OracleConnection(SystemConfig.getAppCenterDSN()); if
-			 * (connOra.State != ConnectionState.Open) { connOra.Open(); }
-			 * _AppCenterDBDatabase = connOra.Database; break; case MySQL:
-			 * MySqlConnection connMySQL = new
-			 * MySqlConnection(SystemConfig.getAppCenterDSN()); if
-			 * (connMySQL.State != ConnectionState.Open) { connMySQL.Open(); }
-			 * _AppCenterDBDatabase = connMySQL.Database; break; //case
-			 * DA.DBType.Informix: // IfxConnection connIFX = new
-			 * IfxConnection(SystemConfig.AppCenterDSN); // if (connIFX.State !=
-			 * ConnectionState.Open) // connIFX.Open(); // _AppCenterDBDatabase
-			 * = connIFX.Database; // break; default: throw new
-			 * RuntimeException("@没有判断的数据类型."); break; }
-			 */
-
 		}
 		// 返回database.
 		return _AppCenterDBDatabase;
@@ -1039,7 +1010,6 @@ public class SystemConfig {
 	 * 执行清空
 	 */
 	public static void DoClearCash() {
-		// HttpRuntime.UnloadAppDomain();
 		BP.DA.Cash.getMap_Cash().clear();
 		BP.DA.Cash.getSQL_Cash().clear();
 		BP.DA.Cash.getEnsData_Cash().clear();
@@ -1047,12 +1017,6 @@ public class SystemConfig {
 		BP.DA.Cash.getBS_Cash().clear();
 		BP.DA.Cash.getBill_Cash().clear();
 		BP.DA.CashEntity.getDCash().clear();
-
-		try {
-			// System.Web.HttpContext.Current.Session.Clear();
-			// System.Web.HttpContext.Current.Application.Clear();
-		} catch (java.lang.Exception e) {
-		}
 	}
 
 	/**
@@ -1080,21 +1044,40 @@ public class SystemConfig {
 		}
 		return true;
 	}
-	
-    public static String getHostURL()
-    {
-        if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("HostURL")) == false)
-        {
-            return (String) SystemConfig.getAppSettings().get("HostURL");
-        }
-        return getHostURLOfBS();
-    }
-    
-    public static String getHostURLOfBS()
-    {
-        
-        String url = "http://" +CommonUtils.getRequest().getServerName()+":"+CommonUtils.getRequest().getServerPort()+"/"+CommonUtils.getRequest().getContextPath() ;
-        return url;
-       
-    }
+
+	public static String getHostURL() {
+		if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("HostURL")) == false) {
+			return (String) SystemConfig.getAppSettings().get("HostURL");
+		}
+		return getHostURLOfBS();
+	}
+
+	public static String getHostURLOfBS() {
+
+		String url = "http://" + CommonUtils.getRequest().getServerName() + ":"
+				+ CommonUtils.getRequest().getServerPort() + "/" + CommonUtils.getRequest().getContextPath();
+		return url;
+
+	}
+
+	/**
+	 * 是否多语言
+	 */
+	public static boolean getIsMultilingual() {
+		if (getAppSettings().get("IsMultilingual").toString().equals("1"))
+			return true;
+		return false;
+	}
+
+	/// <summary>
+	/// 使用的语言
+	/// </summary>
+	public static String getLangue() {
+
+		String str = getAppSettings().get("Langue").toString();
+		if (DataType.IsNullOrEmpty(str))
+			return "CN";
+		return str;
+
+	}
 }

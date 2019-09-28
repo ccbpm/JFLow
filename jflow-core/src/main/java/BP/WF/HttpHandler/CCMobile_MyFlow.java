@@ -160,7 +160,7 @@ public class CCMobile_MyFlow extends WebContralBase {
 		return "删除成功...";
 	}
 
-	public final String AttachmentUpload_Down() {
+	public final String AttachmentUpload_Down() throws Exception {
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.AttachmentUpload_Down();
 	}

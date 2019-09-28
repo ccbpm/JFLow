@@ -23,7 +23,7 @@ public class CCMobile_CCForm extends WebContralBase {
 		return en.HandlerMapExt();
 	}
 
-	public final String AttachmentUpload_Down() {
+	public final String AttachmentUpload_Down() throws Exception {
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.AttachmentUpload_Down();
 	}

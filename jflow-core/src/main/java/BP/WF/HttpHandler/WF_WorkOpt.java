@@ -3,11 +3,13 @@ package BP.WF.HttpHandler;
 import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Data.*;
+import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.util.*;
@@ -23,10 +25,11 @@ public class WF_WorkOpt extends WebContralBase
 	 过程执行.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ccbpmServices()
+	public final String ccbpmServices() throws Exception
 	{
-		BP.WF.DTS.ccbpmServices en = new DTS.ccbpmServices();
+		BP.WF.DTS.ccbpmServices en = new BP.WF.DTS.ccbpmServices();
 		en.Do();
 		return "执行成功，请检查:\\DataUser\\Log\\下面的执行信息。 ";
 	}
@@ -34,20 +37,21 @@ public class WF_WorkOpt extends WebContralBase
 	 删除子线程
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ThreadDtl_DelSubFlow()
+	public final String ThreadDtl_DelSubFlow() throws Exception
 	{
 		BP.WF.Dev2Interface.Flow_DeleteSubThread(this.getFK_Flow(), this.getWorkID(), "手工删除");
 		return "删除成功";
 	}
 
-		///#region 打印 rtf
 	/** 
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String PrintDoc_Init()
+	public final String PrintDoc_Init() throws Exception
 	{
 		String sourceType = this.GetRequestVal("SourceType");
 		String FK_MapData = "";
@@ -100,7 +104,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		if (templetes.size() == 1)
 		{
-			BillTemplate templete = templetes[0] instanceof BillTemplate ? (BillTemplate)templetes[0] : null;
+			BillTemplate templete = templetes.get(0) instanceof BillTemplate ? (BillTemplate)templetes.get(0) : null;
 
 			//单据的打印
 			if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
@@ -140,8 +144,6 @@ public class WF_WorkOpt extends WebContralBase
 		return PrintDoc_DoneIt(null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public string PrintDoc_DoneIt(string billTemplateNo = null)
 	public final String PrintDoc_DoneIt(String billTemplateNo)
 	{
 		Node nd = new Node(this.getFK_Node());
@@ -156,13 +158,13 @@ public class WF_WorkOpt extends WebContralBase
 		//如果不是 BillTemplateExcel 打印.
 		if (func.getTemplateFileModel() == TemplateFileModel.VSTOForExcel)
 		{
-			return "url@httpccword://-fromccflow,App=BillTemplateExcel,TemplateNo=" + func.getNo() + ",WorkID=" + this.getWorkID() + ",FK_Flow=" + this.getFK_Flow() + ",FK_Node=" + this.getFK_Node() + ",UserNo=" + WebUser.getNo() + ",SID=" + WebUser.SID;
+			return "url@httpccword://-fromccflow,App=BillTemplateExcel,TemplateNo=" + func.getNo() + ",WorkID=" + this.getWorkID() + ",FK_Flow=" + this.getFK_Flow() + ",FK_Node=" + this.getFK_Node() + ",UserNo=" + WebUser.getNo() + ",SID=" + WebUser.getSID();
 		}
 
 		//如果不是 BillTemplateWord 打印
 		if (func.getTemplateFileModel() == TemplateFileModel.VSTOForWord)
 		{
-			return "url@httpccword://-fromccflow,App=BillTemplateWord,TemplateNo=" + func.getNo() + ",WorkID=" + this.getWorkID() + ",FK_Flow=" + this.getFK_Flow() + ",FK_Node=" + this.getFK_Node() + ",UserNo=" + WebUser.getNo() + ",SID=" + WebUser.SID;
+			return "url@httpccword://-fromccflow,App=BillTemplateWord,TemplateNo=" + func.getNo() + ",WorkID=" + this.getWorkID() + ",FK_Flow=" + this.getFK_Flow() + ",FK_Node=" + this.getFK_Node() + ",UserNo=" + WebUser.getNo() + ",SID=" + WebUser.getSID();
 		}
 
 		String billInfo = "";
@@ -188,21 +190,18 @@ public class WF_WorkOpt extends WebContralBase
 
 				///#region 单据变量.
 			Bill bill = new Bill();
-			bill.setMyPK( wk.getFID() + "_" + wk.getOID() + "_" + nd.getNodeID() + "_" + func.getNo();
-
-				///#endregion
-
+			bill.setMyPK(wk.getFID() + "_" + wk.getOID() + "_" + nd.getNodeID() + "_" + func.getNo());
 
 				///#region 生成单据
-			rtf.HisEns.Clear();
-			rtf.EnsDataDtls.Clear();
+			rtf.getHisEns().clear();
+			rtf.getEnsDataDtls().clear();
 			if (func.getNodeID() != 0)
 			{
 				//把流程主表数据放入里面去.
 				GEEntity ndxxRpt = new GEEntity("ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt");
 				try
 				{
-					ndxxRpt.PKVal = this.getWorkID();
+					ndxxRpt.setPKVal(this.getWorkID());
 					ndxxRpt.Retrieve();
 
 					newWorkID = this.getWorkID();
@@ -211,7 +210,7 @@ public class WF_WorkOpt extends WebContralBase
 				{
 					if (getFID() > 0)
 					{
-						ndxxRpt.PKVal = this.getFID();
+						ndxxRpt.setPKVal(this.getFID());
 						ndxxRpt.Retrieve();
 
 						newWorkID = this.getFID();
@@ -234,9 +233,9 @@ public class WF_WorkOpt extends WebContralBase
 				ndxxRpt.Copy(wk);
 
 				//把数据赋值给wk. 有可能用户还没有执行流程检查，字段没有同步到 NDxxxRpt.
-				if (ndxxRpt.Row.size() > wk.Row.size())
+				if (ndxxRpt.getRow().size() > wk.getRow().size())
 				{
-					wk.Row = ndxxRpt.Row;
+					wk.setRow(ndxxRpt.getRow());
 				}
 
 				rtf.HisGEEntity = wk;
@@ -250,15 +249,15 @@ public class WF_WorkOpt extends WebContralBase
 
 				//增加多附件数据
 				FrmAttachments aths = wk.getHisFrmAttachments();
-				for (FrmAttachment athDesc : aths)
+				for (FrmAttachment athDesc : aths.ToJavaList())
 				{
 					FrmAttachmentDBs athDBs = new FrmAttachmentDBs();
-					if (athDBs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.MyPK, FrmAttachmentDBAttr.RefPKVal, newWorkID, "RDT") == 0)
+					if (athDBs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK(), FrmAttachmentDBAttr.RefPKVal, newWorkID, "RDT") == 0)
 					{
 						continue;
 					}
 
-					rtf.EnsDataAths.Add(athDesc.NoOfObj, athDBs);
+					rtf.getEnsDataAths().put(athDesc.getNoOfObj(), athDBs);
 				}
 
 				//把审核日志表加入里面去.
@@ -294,10 +293,9 @@ public class WF_WorkOpt extends WebContralBase
 			}
 
 			//用于扫描打印.
-			String qrUrl = SystemConfig.HostURL + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.MyPK;
+			String qrUrl = SystemConfig.getHostURL() + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.getMyPK();
 			rtf.MakeDoc(tempFile, path, file, false, qrUrl);
 
-				///#endregion
 
 
 				///#region 转化成pdf.
@@ -328,9 +326,8 @@ public class WF_WorkOpt extends WebContralBase
 			bill.setUrl(billUrl);
 			bill.setRDT(DataType.getCurrentDataTime());
 			bill.setFullPath(path + file);
-			bill.setFK_NY(DataType.CurrentYearMonth);
+			bill.setFK_NY(DataType.getCurrentYearMonth());
 			bill.setFK_Flow(nd.getFK_Flow());
-			// bill.FK_BillType = func.FK_BillType;
 			bill.setEmps(rtf.HisGEEntity.GetValStrByKey("Emps"));
 			bill.setFK_Starter(rtf.HisGEEntity.GetValStrByKey("Rec"));
 			bill.setStartDT(rtf.HisGEEntity.GetValStrByKey("RDT"));
@@ -409,27 +406,19 @@ public class WF_WorkOpt extends WebContralBase
 				///#region 单据变量.
 			Bill bill = new Bill();
 			if (nd != null)
-			{
-				bill.setMyPK( wk.getFID() + "_" + wk.getOID() + "_" + nd.getNodeID() + "_" + func.getNo();
-			}
+				bill.setMyPK( wk.getFID() + "_" + wk.getOID() + "_" + nd.getNodeID() + "_" + func.getNo());
 			else
-			{
-				bill.setMyPK( fid + "_" + workID + "_0_" + func.getNo();
-			}
-
-				///#endregion
-
-
+				bill.setMyPK( fid + "_" + workID + "_0_" + func.getNo());
 				///#region 生成单据
-			rtf.HisEns.Clear();
-			rtf.EnsDataDtls.Clear();
+			rtf.getHisEns().clear();
+			rtf.getEnsDataDtls().clear();
 			if (DataType.IsNullOrEmpty(func.getFK_MapData()) == false)
 			{
 				//把流程主表数据放入里面去.
 				GEEntity ndxxRpt = new GEEntity(formID);
 				try
 				{
-					ndxxRpt.PKVal = pkval;
+					ndxxRpt.setPKVal(pkval);
 					ndxxRpt.Retrieve();
 
 					newWorkID = pkval;
@@ -438,7 +427,7 @@ public class WF_WorkOpt extends WebContralBase
 				{
 					if (getFID() > 0)
 					{
-						ndxxRpt.PKVal = this.getFID();
+						ndxxRpt.setPKVal(this.getFID());
 						ndxxRpt.Retrieve();
 
 						newWorkID = this.getFID();
@@ -470,11 +459,11 @@ public class WF_WorkOpt extends WebContralBase
 				ArrayList<Entities> al = mapData.GetDtlsDatasOfList(String.valueOf(pkval));
 				if (al.isEmpty())
 				{
-					MapDtls mapdtls = mapData.MapDtls;
-					for (MapDtl dtl : mapdtls)
+					MapDtls mapdtls = mapData.getMapDtls();
+					for (MapDtl dtl : mapdtls.ToJavaList())
 					{
-						GEDtls dtls1 = new GEDtls(dtl.No);
-						mapData.EnMap.AddDtl(dtls1, "RefPK");
+						GEDtls dtls1 = new GEDtls(dtl.getNo());
+						mapData.getEnMap().AddDtl(dtls1, "RefPK");
 
 					}
 					al = mapData.GetDtlsDatasOfList(String.valueOf(pkval));
@@ -485,16 +474,16 @@ public class WF_WorkOpt extends WebContralBase
 				}
 
 				//增加多附件数据
-				FrmAttachments aths = mapData.FrmAttachments;
-				for (FrmAttachment athDesc : aths)
+				FrmAttachments aths = mapData.getFrmAttachments();
+				for (FrmAttachment athDesc : aths.ToJavaList())
 				{
 					FrmAttachmentDBs athDBs = new FrmAttachmentDBs();
-					if (athDBs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.MyPK, FrmAttachmentDBAttr.RefPKVal, newWorkID, "RDT") == 0)
+					if (athDBs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK(), FrmAttachmentDBAttr.RefPKVal, newWorkID, "RDT") == 0)
 					{
 						continue;
 					}
 
-					rtf.EnsDataAths.Add(athDesc.NoOfObj, athDBs);
+					rtf.getEnsDataAths().put(athDesc.getNoOfObj(), athDBs);
 				}
 
 				if (nd != null)
@@ -538,7 +527,7 @@ public class WF_WorkOpt extends WebContralBase
 			}
 
 			//用于扫描打印.
-			String qrUrl = SystemConfig.HostURL + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.MyPK;
+			String qrUrl = SystemConfig.getHostURL() + "WF/WorkOpt/PrintDocQRGuide.htm?MyPK=" + bill.getMyPK();
 			rtf.MakeDoc(tempFile, path, file, false, qrUrl);
 
 				///#endregion
@@ -582,7 +571,7 @@ public class WF_WorkOpt extends WebContralBase
 			bill.setUrl(billUrl);
 			bill.setRDT(DataType.getCurrentDataTime());
 			bill.setFullPath(path + file);
-			bill.setFK_NY(DataType.CurrentYearMonth);
+			bill.setFK_NY(DataType.getCurrentYearMonth());
 			bill.setEmps(rtf.HisGEEntity.GetValStrByKey("Emps"));
 			bill.setFK_Starter(rtf.HisGEEntity.GetValStrByKey("Rec"));
 			bill.setStartDT(rtf.HisGEEntity.GetValStrByKey("RDT"));
@@ -603,9 +592,7 @@ public class WF_WorkOpt extends WebContralBase
 			//在线WebOffice打开
 			if (func.getBillOpenModel() == BillOpenModel.WebOffice)
 			{
-				//return "err@该部分的代码还没有重构.";
 				return "err@【/WF/WebOffice/PrintOffice.htm】该文件没有重构好,您可以找到旧版本解决，或者自己开发。";
-				//return "url@../WebOffice/PrintOffice.aspx?MyPK=" + bill.MyPK;
 			}
 			return billUrl;
 		}
@@ -673,7 +660,7 @@ public class WF_WorkOpt extends WebContralBase
 	 * @return
 	 * @throws Exception 
 	 */
-	public final String Packup_FromInit()
+	public final String Packup_FromInit() throws Exception
 	{
 		try
 		{
@@ -695,8 +682,9 @@ public class WF_WorkOpt extends WebContralBase
 	 扫描二维码获得文件.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String PrintDocQRGuide_Init()
+	public final String PrintDocQRGuide_Init() throws Exception
 	{
 		try
 		{
@@ -720,8 +708,9 @@ public class WF_WorkOpt extends WebContralBase
 	 选择表单,发起前置导航.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String StartGuideFrms_Init()
+	public final String StartGuideFrms_Init() throws Exception
 	{
 		BP.WF.Template.FrmNodes fns = new BP.WF.Template.FrmNodes();
 
@@ -732,9 +721,9 @@ public class WF_WorkOpt extends WebContralBase
 		qo.addOrderBy(FrmNodeAttr.Idx);
 		qo.DoQuery();
 
-		for (BP.WF.Template.FrmNode item : fns)
+		for (BP.WF.Template.FrmNode item : fns.ToJavaList())
 		{
-			item.setGuanJianZiDuan(item.getHisFrm().Name);
+			item.setGuanJianZiDuan(item.getHisFrm().getName());
 		}
 		return fns.ToJson();
 	}
@@ -745,8 +734,9 @@ public class WF_WorkOpt extends WebContralBase
 	 通用人员选择器Init
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String AccepterOfGener_Init()
+	public final String AccepterOfGener_Init() throws Exception
 	{
 		/* 获得上一次发送的人员列表. */
 		int toNodeID = this.GetRequestValInt("ToNode");
@@ -790,8 +780,8 @@ public class WF_WorkOpt extends WebContralBase
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
 			if (dt.Rows.size() != 0)
 			{
-				String tag = dt.Rows[0]["Tag"].toString();
-				String emps = dt.Rows[0]["EmpTo"].toString();
+				String tag = dt.Rows.get(0).getValue("Tag").toString();
+				String emps = dt.Rows.get(0).getValue("EmpTo").toString();
 				if (tag != null && tag.contains("EmpsAccepter=") == true)
 				{
 					String[] strs = tag.split("[@]", -1);
@@ -840,8 +830,9 @@ public class WF_WorkOpt extends WebContralBase
 	 增加接收人.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String AccepterOfGener_AddEmps()
+	public final String AccepterOfGener_AddEmps() throws Exception
 	{
 		try
 		{
@@ -860,7 +851,7 @@ public class WF_WorkOpt extends WebContralBase
 		}
 		catch (RuntimeException ex)
 		{
-			if (ex.getMessage().Contains("INSERT") == true)
+			if (ex.getMessage().contains("INSERT") == true)
 			{
 				return "err@人员名称重复,导致部分人员插入失败.";
 			}
@@ -872,8 +863,9 @@ public class WF_WorkOpt extends WebContralBase
 	 删除.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String AccepterOfGener_Delete()
+	public final String AccepterOfGener_Delete() throws Exception
 	{
 		//删除指定的人员.
 		Paras ps = new Paras();
@@ -891,8 +883,9 @@ public class WF_WorkOpt extends WebContralBase
 	 执行发送.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String AccepterOfGener_Send()
+	public final String AccepterOfGener_Send() throws Exception
 	{
 		try
 		{
@@ -936,7 +929,7 @@ public class WF_WorkOpt extends WebContralBase
 		///#endregion
 
 	// 查询select集合
-	public final String AccepterOfGener_SelectEmps()
+	public final String AccepterOfGener_SelectEmps() throws Exception
 	{
 		String sql = "";
 		String emp = this.GetRequestVal("TB_Emps");
@@ -963,7 +956,7 @@ public class WF_WorkOpt extends WebContralBase
 				if (SystemConfig.getCustomerNo().equals("TianYe")) // 只改了oracle的
 				{
 					String endSql = "";
-					if (Web.WebUser.getFK_Dept().indexOf("18099") == 0)
+					if (WebUser.getFK_Dept().indexOf("18099") == 0)
 					{
 						endSql = " AND B.No LIKE '18099%' ";
 					}
@@ -972,7 +965,7 @@ public class WF_WorkOpt extends WebContralBase
 						endSql = " AND B.No NOT LIKE '18099%' ";
 					}
 
-					String specFlowNos = SystemConfig.AppSettings["SpecFlowNosForAccpter"];
+					String specFlowNos = SystemConfig.getAppSettings().get("SpecFlowNosForAccpter").toString();
 					if (specFlowNos.equals("") || specFlowNos == null)
 					{
 						specFlowNos = ",001,";
@@ -1007,7 +1000,7 @@ public class WF_WorkOpt extends WebContralBase
 				if (SystemConfig.getCustomerNo().equals("TianYe")) //只改了oracle的
 				{
 					String endSql = "";
-					if (Web.WebUser.getFK_Dept().indexOf("18099") == 0)
+					if (WebUser.getFK_Dept().indexOf("18099") == 0)
 					{
 						endSql = " AND B.No LIKE '18099%' ";
 					}
@@ -1016,7 +1009,7 @@ public class WF_WorkOpt extends WebContralBase
 						endSql = " AND B.No NOT LIKE '18099%' ";
 					}
 
-					String specFlowNos = SystemConfig.AppSettings["SpecFlowNosForAccpter"];
+					String specFlowNos = SystemConfig.getAppSettings().get("SpecFlowNosForAccpter").toString();
 					if (specFlowNos.equals("") || specFlowNos == null)
 					{
 						specFlowNos = ",001,";
@@ -1074,12 +1067,11 @@ public class WF_WorkOpt extends WebContralBase
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-		//  BP.DA.Log.DebugWriteError(sql);
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			dt.Columns[0].ColumnName = "No";
-			dt.Columns[1].ColumnName = "Name";
+			dt.Columns.get(0).ColumnName = "No";
+			dt.Columns.get(1).ColumnName = "Name";
 		}
 
 		return BP.Tools.Json.ToJson(dt);
@@ -1091,8 +1083,9 @@ public class WF_WorkOpt extends WebContralBase
 	 会签
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String HuiQian_Init()
+	public final String HuiQian_Init() throws Exception
 	{
 		//要找到主持人.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -1106,7 +1099,7 @@ public class WF_WorkOpt extends WebContralBase
 		BtnLab btnLab = new BtnLab(this.getFK_Node());
 		if (btnLab.getHuiQianRole() != HuiQianRole.TeamupGroupLeader || (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && btnLab.getHuiQianLeaderRole() != HuiQianLeaderRole.OnlyOne))
 		{
-			for (GenerWorkerList item : ens)
+			for (GenerWorkerList item : ens.ToJavaList())
 			{
 
 				if ((gwf.getTodoEmps().contains(item.getFK_Emp() + ",") == true || gwf.getHuiQianZhuChiRen().contains(item.getFK_Emp() + ",") == true) && !item.getFK_Emp().equals(WebUser.getNo()))
@@ -1146,7 +1139,7 @@ public class WF_WorkOpt extends WebContralBase
 		for (DataRow dr : mydt.Rows)
 		{
 			String fk_emp = dr.get("FK_Emp").toString();
-			for (GenerWorkerList item : ens)
+			for (GenerWorkerList item : ens.ToJavaList())
 			{
 				if (item.getFK_Emp().equals(fk_emp))
 				{
@@ -1161,8 +1154,9 @@ public class WF_WorkOpt extends WebContralBase
 	 移除
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String HuiQian_Delete()
+	public final String HuiQian_Delete() throws Exception
 	{
 		String emp = this.GetRequestVal("FK_Emp");
 		if (this.getFK_Emp().equals(WebUser.getNo()))
@@ -1201,8 +1195,8 @@ public class WF_WorkOpt extends WebContralBase
 		//从待办里移除.
 		BP.Port.Emp myemp = new BP.Port.Emp(this.getFK_Emp());
 		String str = gwf.getTodoEmps();
-		str = str.replace(myemp.Name + ";", "");
-		str = str.replace(myemp.No + "," + myemp.Name + ";", "");
+		str = str.replace(myemp.getName() + ";", "");
+		str = str.replace(myemp.getNo() + "," + myemp.getName() + ";", "");
 
 		gwf.setTodoEmps(str);
 		gwf.Update();
@@ -1213,8 +1207,9 @@ public class WF_WorkOpt extends WebContralBase
 	 增加审核人员
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String HuiQian_AddEmps()
+	public final String HuiQian_AddEmps() throws Exception
 	{
 
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -1242,7 +1237,7 @@ public class WF_WorkOpt extends WebContralBase
 		String err = "";
 
 		String[] emps = empStrs.split("[,]", -1);
-		for (String empStr : emps.ToJavaList())
+		for (String empStr : emps)
 		{
 			if (DataType.IsNullOrEmpty(empStr) == true)
 			{
@@ -1252,22 +1247,22 @@ public class WF_WorkOpt extends WebContralBase
 			Emp emp = new Emp(empStr);
 
 			//查查是否存在队列里？
-			num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, emp.No, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
+			num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, emp.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
 
 			if (num == 1)
 			{
-				err += " 人员[" + emp.No + "," + emp.Name + "]已经在队列里.";
+				err += " 人员[" + emp.getNo() + "," + emp.getName() + "]已经在队列里.";
 				continue;
 			}
 
 			//查询出来其他列的数据.
 			gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
 
-			gwlOfMe.setFK_Emp(emp.No);
-			gwlOfMe.setFK_EmpText(emp.Name);
+			gwlOfMe.setFK_Emp(emp.getNo());
+			gwlOfMe.setFK_EmpText(emp.getName());
 			gwlOfMe.setIsPassInt(-1); //设置不可以用.
-			gwlOfMe.setFK_Dept(emp.FK_Dept);
-			gwlOfMe.setFK_DeptT(emp.FK_DeptText); //部门名称.
+			gwlOfMe.setFK_Dept(emp.getFK_Dept());
+			gwlOfMe.setFK_DeptT(emp.getFK_DeptText()); //部门名称.
 			gwlOfMe.setIsRead(false);
 			gwlOfMe.SetPara("HuiQianZhuChiRen", WebUser.getNo());
 
@@ -1280,13 +1275,13 @@ public class WF_WorkOpt extends WebContralBase
 			else
 			{
 				//给会签人设置应该完成日期. 考虑到了节假日.                
-				LocalDateTime dtOfShould = Glo.AddDayHoursSpan(LocalDateTime.now(), nd.getTimeLimit(), nd.getTimeLimitHH(), nd.getTimeLimitMM(), nd.getTWay());
+				Date dtOfShould = BP.WF.Glo.AddDayHoursSpan(new Date(), nd.getTimeLimit(), nd.getTimeLimitHH(), nd.getTimeLimitMM(), nd.getTWay());
 				//应完成日期.
-				gwlOfMe.setSDT(dtOfShould.toString(DataType.getSysDataTimeFormat() + ":ss"));
+				gwlOfMe.setSDT(DateUtils.format(dtOfShould,DataType.getSysDataTimeFormat() + ":ss"));
 			}
 
 			//求警告日期.
-			LocalDateTime dtOfWarning = LocalDateTime.now();
+			Date dtOfWarning = new Date();
 			if (nd.getWarningDay() == 0)
 			{
 				//  dtOfWarning = "无";
@@ -1295,9 +1290,9 @@ public class WF_WorkOpt extends WebContralBase
 			{
 				//计算警告日期。
 				// 增加小时数. 考虑到了节假日.
-				dtOfWarning = Glo.AddDayHoursSpan(LocalDateTime.now(), nd.getWarningDay(), 0, 0, nd.getTWay());
+				dtOfWarning = BP.WF.Glo.AddDayHoursSpan(new Date(), nd.getWarningDay(), 0, 0, nd.getTWay());
 			}
-			gwlOfMe.setDTOfWarning(dtOfWarning.toString(DataType.getSysDataTimeFormat()));
+			gwlOfMe.setDTOfWarning(DateUtils.format(dtOfWarning,DataType.getSysDataTimeFormat()));
 
 				///#endregion 计算会签时间.
 
@@ -1306,7 +1301,7 @@ public class WF_WorkOpt extends WebContralBase
 			gwlOfMe.Insert(); //插入作为待办.
 
 			//发送消息.
-			BP.WF.Dev2Interface.Port_SendMsg(emp.No, "bpm会签邀请", "HuiQian" + gwf.getWorkID() + "_" + gwf.getFK_Node() + "_" + emp.No, WebUser.getName() + "邀请您对工作｛" + gwf.getTitle() + "｝进行会签,请您在{" + gwlOfMe.getSDT() + "}前完成.", "HuiQian", gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
+			BP.WF.Dev2Interface.Port_SendMsg(emp.getNo(), "bpm会签邀请", "HuiQian" + gwf.getWorkID() + "_" + gwf.getFK_Node() + "_" + emp.getNo(), WebUser.getName() + "邀请您对工作｛" + gwf.getTitle() + "｝进行会签,请您在{" + gwlOfMe.getSDT() + "}前完成.", "HuiQian", gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
 
 					String empStrSepc = WebUser.getNo() + "," + WebUser.getName() + ";";
 			if (gwf.getTodoEmps().contains(empStrSepc) == false)
@@ -1329,7 +1324,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		///#region 与会签相关的.
 	// 查询select集合
-	public final String HuiQian_SelectEmps()
+	public final String HuiQian_SelectEmps() throws Exception
 	{
 		return AccepterOfGener_SelectEmps();
 	}
@@ -1337,8 +1332,9 @@ public class WF_WorkOpt extends WebContralBase
 	 保存并关闭
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String HuiQian_SaveAndClose()
+	public final String HuiQian_SaveAndClose() throws Exception
 	{
 		//生成变量.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -1460,11 +1456,12 @@ public class WF_WorkOpt extends WebContralBase
 	 校验密码
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String WorkCheck_CheckPass()
+	public final String WorkCheck_CheckPass() throws Exception
 	{
 		String sPass = this.GetRequestVal("SPass");
-		WFEmp emp = new Port.WFEmp(WebUser.getNo());
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		if (emp.getSPass().equals(sPass))
 		{
 			return "签名成功";
@@ -1475,14 +1472,15 @@ public class WF_WorkOpt extends WebContralBase
 	 修改密码
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String WorkCheck_ChangePass()
+	public final String WorkCheck_ChangePass() throws Exception
 	{
 		String sPass = this.GetRequestVal("SPass");
 		String sPass1 = this.GetRequestVal("SPass1");
 		String sPass2 = this.GetRequestVal("SPass2");
 
-		WFEmp emp = new Port.WFEmp(WebUser.getNo());
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		if (emp.getSPass().equals(sPass))
 		{
 			return "旧密码错误";
@@ -1504,7 +1502,7 @@ public class WF_WorkOpt extends WebContralBase
 	*/
 	public final String WorkCheck_Init()
 	{
-		if (Web.WebUser.getNo() == null)
+		if (WebUser.getNo() == null)
 		{
 			return "err@登录信息丢失,请重新登录.";
 		}
@@ -1575,16 +1573,16 @@ public class WF_WorkOpt extends WebContralBase
 		FrmAttachmentDBs frmathdbs = new FrmAttachmentDBs();
 		frmathdbs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, "ND" + this.getFK_Node() + "_FrmWorkCheck", FrmAttachmentDBAttr.RefPKVal, String.valueOf(this.getWorkID()),FrmAttachmentDBAttr.Rec,WebUser.getNo(), FrmAttachmentDBAttr.RDT);
 
-		for (FrmAttachmentDB athDB : frmathdbs)
+		for (FrmAttachmentDB athDB : frmathdbs.ToJavaList())
 		{
 			row = athDt.NewRow();
 			row.set("NodeID", this.getFK_Node());
-			row.set("MyPK", athDB.MyPK);
-			row.set("FK_FrmAttachment", athDB.FK_FrmAttachment);
-			row.set("FK_MapData", athDB.FK_MapData);
-			row.set("FileName", athDB.FileName);
-			row.set("FileExts", athDB.FileExts);
-			row.set("CanDelete", athDB.Rec == WebUser.getNo() && isReadonly == false);
+			row.set("MyPK", athDB.getMyPK());
+			row.set("FK_FrmAttachment", athDB.getFK_FrmAttachment());
+			row.set("FK_MapData", athDB.getFK_MapData());
+			row.set("FileName", athDB.getFileName());
+			row.set("FileExts", athDB.getFileExts());
+			row.set("CanDelete", athDB.getRec().equals(WebUser.getNo()) && isReadonly == false);
 			athDt.Rows.add(row);
 		}
 		ds.Tables.add(athDt);
@@ -1659,7 +1657,7 @@ public class WF_WorkOpt extends WebContralBase
 			//已走过节点
 			int empIdx = 0;
 			int lastNodeId = 0;
-			for (BP.WF.Track tk : tks)
+			for (BP.WF.Track tk : tks.ToJavaList())
 			{
 				if (tk.getHisActionType() == ActionType.FlowBBS)
 				{
@@ -1677,7 +1675,7 @@ public class WF_WorkOpt extends WebContralBase
 					lastNodeId = tk.getNDFrom();
 				}
 
-				tk.Row.Add("T_NodeIndex", idx);
+				tk.getRow().put("T_NodeIndex", idx);
 
 				Object tempVar = nds.GetEntityByKey(tk.getNDFrom());
 				nd = tempVar instanceof Node ? (Node)tempVar : null;
@@ -1698,12 +1696,12 @@ public class WF_WorkOpt extends WebContralBase
 				//排序，结合人员表Idx进行排序
 				if (fwc.getFWCOrderModel() == FWCOrderModel.SqlAccepter)
 				{
-					tk.Row["T_CheckIndex"] = DBAccess.RunSQLReturnValInt(String.format("SELECT Idx FROM Port_Emp WHERE No='%1$s'", tk.getEmpFrom()), 0);
+					tk.getRow().SetValByKey("T_CheckIndex",DBAccess.RunSQLReturnValInt(String.format("SELECT Idx FROM Port_Emp WHERE No='%1$s'", tk.getEmpFrom()), 0));
 					noneEmpIdx++;
 				}
 				else
 				{
-					tk.Row["T_CheckIndex"] = noneEmpIdx++;
+					tk.getRow().SetValByKey("T_CheckIndex",noneEmpIdx++);
 				}
 				switch (tk.getHisActionType())
 				{
@@ -1728,7 +1726,7 @@ public class WF_WorkOpt extends WebContralBase
 				}
 			}
 
-			for (Track tk : tks)
+			for (Track tk : tks.ToJavaList())
 			{
 				if (nodes.contains(tk.getNDFrom() + ",") == false)
 				{
@@ -1803,8 +1801,8 @@ public class WF_WorkOpt extends WebContralBase
 
 				row.set("ParentNode", 0);
 				row.set("RDT", DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
-				row.set("T_NodeIndex", tk.Row["T_NodeIndex"]);
-				row.set("T_CheckIndex", tk.Row["T_CheckIndex"]);
+				row.set("T_NodeIndex", tk.getRow().GetValByKey("T_NodeIndex"));
+				row.set("T_CheckIndex", tk.getRow().GetValByKey("T_CheckIndex"));
 
 				if (isReadonly == false && tk.getEmpFrom().equals(WebUser.getNo()) && this.getFK_Node() == tk.getNDFrom() && isExitTb_doc && (wcDesc.getHisFrmWorkCheckType() == FWCType.Check || ((wcDesc.getHisFrmWorkCheckType() == FWCType.DailyLog || wcDesc.getHisFrmWorkCheckType() == FWCType.WeekLog) && LocalDateTime.parse(tk.getRDT()).toString("yyyy-MM-dd").equals(LocalDateTime.now().toString("yyyy-MM-dd"))) || (wcDesc.getHisFrmWorkCheckType() == FWCType.MonthLog && LocalDateTime.parse(tk.getRDT()).toString("yyyy-MM").equals(LocalDateTime.now().toString("yyyy-MM")))))
 				{
@@ -2911,7 +2909,7 @@ public class WF_WorkOpt extends WebContralBase
 		sql = "SELECT MyPK,RDT FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE NDFrom = " + this.getFK_Node() + " AND ActionType = " + ActionType.WorkCheck.getValue() + " AND EmpFrom = '" + WebUser.getNo() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql, 1, 1, "MyPK", "RDT", "DESC");
 
-		return dt.Rows.size() > 0 ? dt.Rows[0]["RDT"].toString() : "";
+		return dt.Rows.size() > 0 ? dt.Rows.get(0).getValue("RDT"].toString() : "";
 	}
 
 		///#endregion
@@ -3692,10 +3690,10 @@ public class WF_WorkOpt extends WebContralBase
 			String emps = "";
 			if (mydt.Rows.size() != 0)
 			{
-				emps = mydt.Rows[0]["Tag"].toString();
+				emps = mydt.Rows.get(0).getValue("Tag").toString();
 				if (emps.equals("") || emps == null)
 				{
-					emps = mydt.Rows[0]["EmpTo"].toString();
+					emps = mydt.Rows.get(0).getValue("EmpTo").toString();
 					emps = emps + "," + emps;
 				}
 			}
@@ -4760,7 +4758,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		///#endregion 节点备注的设置
 
-	private static String GetSpanTime(LocalDateTime t1, LocalDateTime t2, int day)
+	private static String GetSpanTime(Date t1, Date t2, int day)
 	{
 		LocalDateTime span = t2 - t1;
 

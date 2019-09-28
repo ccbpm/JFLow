@@ -1,15 +1,15 @@
 package BP.WF.HttpHandler;
 
-import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
+import BP.Sys.XML.XmlEn;
+import BP.Tools.StringHelper;
 import BP.WF.XML.*;
 import BP.WF.Template.*;
 import BP.Web.*;
-import BP.WF.*;
 import java.util.*;
 
 /** 
@@ -21,8 +21,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	 进度图.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String JobSchedule_Init()
+	public final String JobSchedule_Init() throws Exception
 	{
 		DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(this.getWorkID());
 		return BP.Tools.Json.ToJson(ds);
@@ -146,7 +147,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String TimeBase_OpenFrm()
+	public final String TimeBase_OpenFrm() throws Exception
 	{
 		WF en = new WF();
 		return en.Runing_OpenFrm();
@@ -155,8 +156,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	 返回打开路径
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FrmGuide_Init()
+	public final String FrmGuide_Init() throws Exception
 	{
 		WF en = new WF();
 		return en.Runing_OpenFrm();
@@ -211,16 +213,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		return str;
 
 	}
-	public final String getEnumKey()
-	{
-		String str = this.GetRequestVal("EnumKey");
-		if (str == null || str.equals("") || str.equals("null"))
-		{
-			return null;
-		}
-		return str;
-
-	}
 
 
 	public final String getName()
@@ -233,7 +225,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		return str;
 	}
 
-		///#endregion 属性.
 
 	public final String FlowBBS_Delete() throws Exception
 	{
@@ -243,8 +234,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	 执行撤销
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String OP_UnSend()
+	public final String OP_UnSend() throws Exception
 	{
 		try
 		{
@@ -268,21 +260,19 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		return "流程已经被重新启用.";
 	}
 
-	public final String OP_UnHungUp()
+	public final String OP_UnHungUp() throws Exception
 	{
 		WorkFlow wf2 = new WorkFlow(getFK_Flow(), getWorkID());
-		//  wf2.DoUnHungUp();
 		return "流程已经被解除挂起.";
 	}
 
-	public final String OP_HungUp()
+	public final String OP_HungUp() throws Exception
 	{
 		WorkFlow wf1 = new WorkFlow(getFK_Flow(), getWorkID());
-		//wf1.DoHungUp()
 		return "流程已经被挂起.";
 	}
 
-	public final String OP_DelFlow()
+	public final String OP_DelFlow() throws Exception
 	{
 		WorkFlow wf = new WorkFlow(getFK_Flow(), getWorkID());
 		wf.DoDeleteWorkFlowByReal(true);
@@ -310,10 +300,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		psql = "SELECT PowerFlag From(" + psql + ")D WHERE  D.EmpNo='" + WebUser.getNo() + "'";
 
 	   String powers = DBAccess.RunSQLReturnStringIsNull(psql,"");
-
-
-			///#endregion PowerModel权限的解析
-
 
 			///#region 文件打印的权限判断，这里为天业集团做的特殊判断，现实的应用中，都可以打印.
 		if (SystemConfig.getCustomerNo().equals("TianYe") && !WebUser.getNo().equals("admin"))
@@ -550,8 +536,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	 获取OneWork页面的tabs集合
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String OneWork_GetTabs()
+	public final String OneWork_GetTabs() throws Exception
 	{
 		String re = "[";
 
@@ -567,8 +554,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 
 		Node nd = new Node(nodeID);
 
-		for (OneWorkXml item : xmls)
+		for (XmlEn en : xmls.ToJavaListXmlEns())
 		{
+			OneWorkXml item  = (OneWorkXml)en;
 			String url = "";
 			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), String.valueOf(nodeID), this.getWorkID(), this.getFK_Flow(), this.getFID());
 			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
@@ -595,8 +583,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	 @param workid 工作编号
 	 @param fid 父流程编号
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Chart_Init()
+	public final String Chart_Init() throws Exception
 	{
 		String fk_flow = this.getFK_Flow();
 		long workid = this.getWorkID();
@@ -633,10 +622,6 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 
 			if (workid != 0)
 			{
-				//获取流程信息，added by liuxc,2016-10-26
-				//sql =
-				//    "SELECT wgwf.Starter,wgwf.StarterName,wgwf.RDT,wgwf.WFSta,wgwf.WFState FROM WF_GenerWorkFlow wgwf WHERE wgwf.WorkID = " +
-				//    workid;
 				sql = "SELECT wgwf.Starter as \"Starter\","
 					  + "        wgwf.StarterName as \"StarterName\","
 					  + "        wgwf.RDT as \"RDT\","
@@ -670,9 +655,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 				ds.Tables.add(dt);
 
 				//获得流程状态.
-				WFState wfState = WFState.forValue(Integer.parseInt(dt.Rows[0]["WFState"].toString()));
+				WFState wfState = WFState.forValue(Integer.parseInt(dt.Rows.get(0).getValue("WFState").toString()));
 
-				String fk_Node = dt.Rows[0]["FK_Node"].toString();
+				String fk_Node = dt.Rows.get(0).getValue("FK_Node").toString();
 				//把节点审核配置信息.
 				FrmWorkCheck fwc = new FrmWorkCheck(fk_Node);
 				ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
@@ -689,61 +674,66 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 				newdt = dt.clone();
 				//判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
 				if (dt.Rows.size() > 0)
-				{
-					if (Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.Return.getValue()) || Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.UnSend.getValue()))
+				{               	
+                	int acTypeInt= Integer.parseInt(dt.Rows.get(0).getValue("ActionType").toString() );                	 
+                    if ( acTypeInt== ActionType.UnSend.getValue() || acTypeInt== ActionType.Return.getValue())
 					{
 						if (dt.Rows.size() > 1)
 						{
-							dt.Rows.RemoveAt(0);
-							dt.Rows.RemoveAt(0);
+							dt.Rows.remove(0);
+							dt.Rows.remove(0);
 						}
 						else
 						{
-							dt.Rows.RemoveAt(0);
+							dt.Rows.remove(0);
 						}
 
 						newdt = dt;
 					}
-					else if (dt.Rows.size() > 1 && (Equals(dt.Rows[1]["ACTIONTYPE"], ActionType.Return.getValue()) || Equals(dt.Rows[1]["ACTIONTYPE"], ActionType.UnSend.getValue())))
-					{
-						//删除已发送的节点，
-						if (dt.Rows.size() > 3)
-						{
-							dt.Rows.RemoveAt(1);
-							dt.Rows.RemoveAt(1);
-						}
-						else
-						{
-							dt.Rows.RemoveAt(1);
-						}
-
-						String fk_node = "";
-						if (dt.Rows[0]["NDFrom"].equals(dt.Rows[0]["NDTo"]))
-						{
-							fk_node = dt.Rows[0]["NDFrom"].toString();
-						}
-						if (DataType.IsNullOrEmpty(fk_node) == false)
-						{
-							//如果是跳转页面，则需要删除中间跳转的节点
-							for (DataRow dr : dt.Rows)
+					else if (dt.Rows.size() > 1 ){
+						acTypeInt= Integer.parseInt(dt.Rows.get(1).getValue("ActionType").toString() );  
+						if(acTypeInt == ActionType.Return.getValue() || acTypeInt == ActionType.UnSend.getValue()){
+							//删除已发送的节点，
+							if (dt.Rows.size() > 3)
 							{
-								if (Equals(dr.get("ACTIONTYPE"), ActionType.Skip.getValue()) && dr.get("NDFrom").toString().equals(fk_node))
+								dt.Rows.remove(1);
+								dt.Rows.remove(1);
+							}
+							else
+							{
+								dt.Rows.remove(1);
+							}
+
+							String fk_node = "";
+							if (dt.Rows.get(0).getValue("NDFrom").equals(dt.Rows.get(0).getValue("NDTo")))
+							{
+								fk_node = dt.Rows.get(0).getValue("NDFrom").toString();
+							}
+							if (DataType.IsNullOrEmpty(fk_node) == false)
+							{
+								//如果是跳转页面，则需要删除中间跳转的节点
+								for (DataRow dr : dt.Rows)
 								{
-									continue;
+									if (Integer.parseInt(dr.getValue("ACTIONTYPE").toString())== ActionType.Skip.getValue()
+											&& dr.getValue("NDFrom").toString().equals(fk_node))
+									{
+										continue;
+									}
+									DataRow newdr = newdt.NewRow();
+									newdr.ItemArray = dr.ItemArray;
+									newdt.Rows.add(newdr);
 								}
-								DataRow newdr = newdt.NewRow();
-								newdr.ItemArray = dr.ItemArray;
-								newdt.Rows.add(newdr);
+							}
+							else
+							{
+								newdt = dt.copy();
 							}
 						}
-						else
-						{
-							newdt = dt.Copy();
-						}
+						
 					}
 					else
 					{
-						newdt = dt.Copy();
+						newdt = dt.copy();
 					}
 
 
@@ -799,25 +789,14 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 				ds.Tables.add(dt);
 			}
 
-			//for (int i = 0; i < ds.Tables.size(); i++)
-			//{
-			//    dt = ds.Tables[i];
-			//    dt.TableName = dt.TableName.ToUpper();
-			//    for (int j = 0; j < dt.Columns.size(); j++)
-			//    {
-			//        dt.Columns[j].ColumnName = dt.Columns[j].ColumnName.ToUpper();
-			//    }
-			//}
-
-			String str = BP.Tools.Json.DataSetToJson(ds);
-			//  DataType.WriteFile("c:\\GetFlowTrackJsonData_CCflow.txt", str);
+			
+			String str = BP.Tools.Json.ToJson(ds);
 			return str;
 		}
 		catch (RuntimeException ex)
 		{
 			return "err@" + ex.getMessage();
 		}
-		return json;
 	}
 	/** 
 	 获取流程的JSON数据，以供显示工作轨迹/流程设计
@@ -911,16 +890,17 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 				//判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
 				if (dt.Rows.size() > 0)
 				{
-					if (Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.Return.getValue()) || Equals(dt.Rows[0]["ACTIONTYPE"], ActionType.UnSend.getValue()))
+					ActionType at = ActionType.forValue(Integer.parseInt(dt.Rows.get(0).getValue("ACTIONTYPE").toString()));
+					if (at == ActionType.Return || at== ActionType.UnSend)
 					{
 						if (dt.Rows.size() > 1)
 						{
-							dt.Rows.RemoveAt(0);
-							dt.Rows.RemoveAt(0);
+							dt.Rows.remove(0);
+							dt.Rows.remove(0);
 						}
 						else
 						{
-							dt.Rows.RemoveAt(0);
+							dt.Rows.remove(0);
 						}
 					}
 				}
@@ -1046,7 +1026,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		return count;
 	}
 
-	public final String Runing_OpenFrm()
+	public final String Runing_OpenFrm() throws Exception
 	{
 		BP.WF.HttpHandler.WF wf = new WF();
 		return wf.Runing_OpenFrm();

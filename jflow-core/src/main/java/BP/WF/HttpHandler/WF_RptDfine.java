@@ -1,11 +1,14 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
+import BP.Tools.FileAccess;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.WF.*;
 import BP.WF.Rpt.*;
 import BP.WF.Template.*;
@@ -78,9 +81,6 @@ public class WF_RptDfine extends WebContralBase
 		}
 	}
 
-
-		///#endregion 属性.
-
 	/** 
 	 构造函数
 	*/
@@ -118,7 +118,7 @@ public class WF_RptDfine extends WebContralBase
 		}
 		ds.Tables.add(dt);
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 
@@ -127,8 +127,9 @@ public class WF_RptDfine extends WebContralBase
 	 功能列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Default_Init()
+	public final String Default_Init() throws Exception
 	{
 		Hashtable ht = new Hashtable();
 		ht.put("My", "我发起的流程");
@@ -146,7 +147,6 @@ public class WF_RptDfine extends WebContralBase
 			{
 				ps.SQL = "SELECT Leader FROM Port_Dept WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "No";
 				ps.Add("No", WebUser.getFK_Dept());
-				//string sql = "SELECT Leader FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'";
 				String strs = DBAccess.RunSQLReturnStringIsNull(ps, null);
 				if (strs != null && strs.contains(WebUser.getNo()) == true)
 				{
@@ -170,9 +170,9 @@ public class WF_RptDfine extends WebContralBase
 			///#endregion 增加本部门发起流程的查询.
 
 		Flow fl = new Flow(this.getFK_Flow());
-		ht.put("FlowName", fl.Name);
+		ht.put("FlowName", fl.getName());
 
-		String advEmps = SystemConfig.AppSettings["AdvEmps"];
+		String advEmps = SystemConfig.getAppSettings().get("AdvEmps").toString();
 		if (advEmps != null && advEmps.contains(WebUser.getNo()) == true)
 		{
 			ht.put("Adminer", "高级查询");
@@ -211,14 +211,11 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + CommonUtils.getRequest().getRequestURI());
 	}
 
-		///#endregion 执行父类的重写方法.
-
-
 		///#region MyStartFlow.htm 我发起的流程
-	public final String FlowSearch_Init()
+	public final String FlowSearch_Init() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
@@ -233,7 +230,7 @@ public class WF_RptDfine extends WebContralBase
 
 		//报表信息，包含是否显示关键字查询RptIsSearchKey，过滤条件枚举/下拉字段RptSearchKeys，时间段查询方式RptDTSearchWay，时间字段RptDTSearchKey
 		MapData md = new MapData();
-		md.No = rptNo;
+		md.setNo( rptNo);
 		if (md.RetrieveFromDBSources() == 0)
 		{
 			/*如果没有找到，就让其重置一下.*/
@@ -266,31 +263,31 @@ public class WF_RptDfine extends WebContralBase
 
 		String cfgfix = "_SearchAttrs";
 		UserRegedit ur = new UserRegedit();
-		ur.AutoMyPK = false;
-		ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
+		ur.setAutoMyPK(false);
+		ur.setMyPK( WebUser.getNo() + rptNo + cfgfix);
 
 		if (ur.RetrieveFromDBSources() == 0)
 		{
-			ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
-			ur.FK_Emp = WebUser.getNo();
-			ur.CfgKey = rptNo + cfgfix;
+			ur.setMyPK( WebUser.getNo() + rptNo + cfgfix);
+			ur.setFK_Emp(WebUser.getNo());
+			ur.setCfgKey(rptNo + cfgfix);
 
 			ur.Insert();
 		}
 
 		vals = ur.GetVals();
-		md.SetPara("RptDTSearchWay", (int)md.RptDTSearchWay);
-		md.SetPara("RptDTSearchKey", md.RptDTSearchKey);
-		md.SetPara("RptIsSearchKey", md.RptIsSearchKey);
+		md.SetPara("RptDTSearchWay", md.getRptDTSearchWay().getValue());
+		md.SetPara("RptDTSearchKey", md.getRptDTSearchKey());
+		md.SetPara("RptIsSearchKey", md.getRptIsSearchKey());
 
-		md.SetPara("T_SearchKey", ur.SearchKey);
+		md.SetPara("T_SearchKey", ur.getSearchKey());
 
-		if (md.RptDTSearchWay != DTSearchWay.None)
+		if (md.getRptDTSearchWay() != DTSearchWay.None)
 		{
-			ar = new MapAttr(rptNo, md.RptDTSearchKey);
-			md.SetPara("T_DateLabel", ar.Name);
+			ar = new MapAttr(rptNo, md.getRptDTSearchKey());
+			md.SetPara("T_DateLabel", ar.getName());
 
-			if (md.RptDTSearchWay == DTSearchWay.ByDate)
+			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
 			{
 				md.SetPara("T_DTFrom", ur.GetValStringByKey(UserRegeditAttr.DTFrom));
 				md.SetPara("T_DTTo", ur.GetValStringByKey(UserRegeditAttr.DTTo));
@@ -303,10 +300,13 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 		//判断是否含有导出至模板的模板文件，如果有，则显示导出至模板按钮RptExportToTmp
-		String tmpDir = BP.Sys.SystemConfig.PathOfDataUser + "TempleteExpEns\\" + rptNo;
+		String tmpDir = BP.Sys.SystemConfig.getPathOfDataUser() + "TempleteExpEns/" + rptNo;
 		if ((new File(tmpDir)).isDirectory())
 		{
-			if (Directory.GetFiles(tmpDir, "*.xls*").Length > 0)
+			
+			List resultList = new ArrayList();
+			FileAccess.findFiles(tmpDir, "*.xls*", resultList);
+			if (resultList.size() > 0)
 			{
 				md.SetPara("T_RptExportToTmp", "1");
 			}
@@ -324,17 +324,17 @@ public class WF_RptDfine extends WebContralBase
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
 
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
 			row = dt.NewRow();
-			row.set("No", attr.KeyOfEn);
-			row.set("Name", attr.Name);
-			row.set("Width", attr.UIWidthInt);
-			row.set("UIContralType", attr.UIContralType);
+			row.set("No", attr.getKeyOfEn());
+			row.set("Name", attr.getName());
+			row.set("Width", attr.getUIWidthInt());
+			row.set("UIContralType", attr.getUIContralType());
 
-			if (attr.HisAttr.IsFKorEnum)
+			if (attr.getHisAttr().getIsFKorEnum())
 			{
-				row.set("No", attr.KeyOfEn + "Text");
+				row.set("No", attr.getKeyOfEn() + "Text");
 			}
 
 			dt.Rows.add(row);
@@ -357,13 +357,13 @@ public class WF_RptDfine extends WebContralBase
 		dt.Columns.Add("TextField", String.class);
 		dt.Columns.Add("ParentField", String.class);
 		dt.Columns.Add("W", String.class);
-		String[] ctrls = md.RptSearchKeys.split("[*]", -1);
+		String[] ctrls = md.getRptSearchKeys().split("[*]", -1);
 		DataTable dtNoName = null;
 
 		for (String ctrl : ctrls)
 		{
 			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示context.Request.QueryString[ctrl]
-			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
+			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(this.GetRequestVal(ctrl)))
 			{
 				continue;
 			}
@@ -377,21 +377,21 @@ public class WF_RptDfine extends WebContralBase
 
 			row = dt.NewRow();
 			row.set("Id", ctrl);
-			row.set("Name", ar.Name);
-			row.set("DataType", ar.MyDataType);
-			row.set("W", ar.UIWidth); //宽度.
+			row.set("Name", ar.getName());
+			row.set("DataType", ar.getMyDataType());
+			row.set("W", ar.getUIWidth()); //宽度.
 
-			switch (ar.UIContralType)
+			switch (ar.getUIContralType())
 			{
-				case UIContralType.DDL:
+				case DDL:
 					row.set("Type", "combo");
-					fcid = "DDL_" + ar.KeyOfEn;
+					fcid = "DDL_" + ar.getKeyOfEn();
 					if (vals.containsKey(fcid))
 					{
 						if (vals.get(fcid).equals("mvals"))
 						{
-							AtPara ap = new AtPara(ur.MVals);
-							row.set("DefaultValue", ap.GetValStrByKey(ar.KeyOfEn));
+							AtPara ap = new AtPara(ur.getMVals());
+							row.set("DefaultValue", ap.GetValStrByKey(ar.getKeyOfEn()));
 						}
 						else
 						{
@@ -399,10 +399,10 @@ public class WF_RptDfine extends WebContralBase
 						}
 					}
 
-					switch (ar.LGType)
+					switch (ar.getLGType())
 					{
-						case FieldTypeS.FK:
-							Entities ens = ar.HisAttr.HisFKEns;
+						case FK:
+							Entities ens = ar.getHisAttr().getHisFKEns();
 							ens.RetrieveAll();
 							EntitiesTree treeEns = ens instanceof EntitiesTree ? (EntitiesTree)ens : null;
 
@@ -410,7 +410,7 @@ public class WF_RptDfine extends WebContralBase
 							{
 								row.set("Type", "combotree");
 								dtNoName = ens.ToDataTableField();
-								dtNoName.TableName = ar.KeyOfEn;
+								dtNoName.TableName = ar.getKeyOfEn();
 								ds.Tables.add(dtNoName);
 
 								row.set("ValueField", "No");
@@ -425,7 +425,7 @@ public class WF_RptDfine extends WebContralBase
 								{
 									row.set("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
-									dtNoName.TableName = ar.KeyOfEn;
+									dtNoName.TableName = ar.getKeyOfEn();
 									ds.Tables.add(dtNoName);
 
 									row.set("ValueField", "No");
@@ -434,12 +434,12 @@ public class WF_RptDfine extends WebContralBase
 								}
 								else
 								{
-									dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-									dtNoName.Rows.add("all", "全部");
+									dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
+									dtNoName.Rows.AddDatas("all", "全部");
 
 									for (Entity en : ens)
 									{
-										dtNoName.Rows.add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
+										dtNoName.Rows.AddDatas(en.GetValStringByKey(ar.getHisAttr().getUIRefKeyValue()), en.GetValStringByKey(ar.getHisAttr().getUIRefKeyText()));
 									}
 
 									ds.Tables.add(dtNoName);
@@ -449,15 +449,15 @@ public class WF_RptDfine extends WebContralBase
 								}
 							}
 							break;
-						case FieldTypeS.Enum:
-							dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-							dtNoName.Rows.add("all", "全部");
+						case Enum:
+							dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
+							dtNoName.Rows.AddDatas("all", "全部");
 
-							SysEnums enums = new SysEnums(ar.UIBindKey);
+							SysEnums enums = new SysEnums(ar.getUIBindKey());
 
-							for (SysEnum en : enums)
+							for (SysEnum en : enums.ToJavaList())
 							{
-								dtNoName.Rows.add(en.IntKey.toString(), en.Lab);
+								dtNoName.Rows.AddDatas(String.valueOf(en.getIntKey()), en.getLab());
 							}
 
 							ds.Tables.add(dtNoName);
@@ -502,23 +502,23 @@ public class WF_RptDfine extends WebContralBase
 				return "err@" + this.getSearchType() + "标记错误.";
 		}
 
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
+		qo = InitQueryObject(qo, md, ges.getNewEntity().getEnMap().getAttrs(), attrs, ur);
 
 		qo.AddWhere(" AND  WFState > 1 ");
 		qo.AddWhere(" AND FID = 0 ");
 
 		md.SetPara("T_total", qo.GetCount());
-		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), 1);
+		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), 1);
 		ds.Tables.add(ges.ToDataTableField("MainData"));
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 			///#endregion
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
 
-	public final String FlowSearch_Done()
+	public final String FlowSearch_Done() throws NumberFormatException, Exception
 	{
 		String vals = this.GetRequestVal("vals");
 		String searchKey = GetRequestVal("key");
@@ -530,14 +530,14 @@ public class WF_RptDfine extends WebContralBase
 
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 		UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
-		ur.SearchKey = searchKey;
-		ur.DTFrom_Data = dtFrom;
-		ur.DTTo_Data = dtTo;
-		ur.Vals = vals;
-		ur.MVals = mvals;
+		ur.setSearchKey(searchKey);
+		ur.setDTFrom_Data(dtFrom);
+		ur.setDTTo_Data(dtTo);
+		ur.setVals(vals);
+		ur.setMVals(mvals);
 		ur.Update();
 
 		DataSet ds = new DataSet();
@@ -564,23 +564,24 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
+		qo = InitQueryObject(qo, md, ges.getNewEntity().getEnMap().getAttrs(), attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
 
 		md.SetPara("T_total", qo.GetCount());
-		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.PageSize : Integer.parseInt(pageSize), pageIdx);
+		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), pageIdx);
 		ds.Tables.add(ges.ToDataTableField("MainData"));
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 	/** 
 	 导出
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowSearch_Exp()
+	public final String FlowSearch_Exp() throws Exception
 	{
 		String vals = this.GetRequestVal("vals");
 		String searchKey = GetRequestVal("key");
@@ -591,14 +592,14 @@ public class WF_RptDfine extends WebContralBase
 
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
 		UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
+		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
-		ur.SearchKey = searchKey;
-		ur.DTFrom_Data = dtFrom;
-		ur.DTTo_Data = dtTo;
-		ur.Vals = vals;
-		ur.MVals = mvals;
+		ur.setSearchKey(searchKey);
+		ur.setDTFrom_Data(dtFrom);
+		ur.setDTTo_Data(dtTo);
+		ur.setVals(vals);
+		ur.setMVals(mvals);
 		ur.Update();
 
 
@@ -633,16 +634,16 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
+		qo = InitQueryObject(qo, md, ges.getNewEntity().getEnMap().getAttrs(), attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 		qo.addOrderByDesc("OID");
 		Attrs attrsa = new Attrs();
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			attrsa.Add(attr.HisAttr);
+			attrsa.Add(attr.getHisAttr());
 		}
 
-		String filePath = ExportDGToExcel(qo.DoQueryToTable(), ges.GetNewEntity, title, attrsa);
+		String filePath = ExportDGToExcel(qo.DoQueryToTable(), ges.getNewEntity(), title, attrsa);
 
 
 		return filePath;
@@ -651,8 +652,9 @@ public class WF_RptDfine extends WebContralBase
 	 流程分組分析 1.获取查询条件 2.获取分组的枚举或者外键值 3.获取分析的信息列表进行求和、求平均
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowGroup_Init()
+	public final String FlowGroup_Init() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
@@ -666,7 +668,7 @@ public class WF_RptDfine extends WebContralBase
 
 		//报表信息，包含是否显示关键字查询RptIsSearchKey，过滤条件枚举/下拉字段RptSearchKeys，时间段查询方式RptDTSearchWay，时间字段RptDTSearchKey
 		MapData md = new MapData();
-		md.No = rptNo;
+		md.setNo(rptNo);
 		if (md.RetrieveFromDBSources() == 0)
 		{
 			/*如果没有找到，就让其重置一下.*/
@@ -700,14 +702,14 @@ public class WF_RptDfine extends WebContralBase
 		//查询条件的信息表
 		String cfgfix = "_SearchAttrs";
 		UserRegedit ur = new UserRegedit();
-		ur.AutoMyPK = false;
-		ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
+		ur.setAutoMyPK(false);
+		ur.setMyPK( WebUser.getNo() + rptNo + cfgfix);
 
 		if (ur.RetrieveFromDBSources() == 0)
 		{
-			ur.setMyPK( WebUser.getNo() + rptNo + cfgfix;
-			ur.FK_Emp = WebUser.getNo();
-			ur.CfgKey = rptNo + cfgfix;
+			ur.setMyPK( WebUser.getNo() + rptNo + cfgfix);
+			ur.setFK_Emp(WebUser.getNo());
+			ur.setCfgKey(rptNo + cfgfix);
 
 			ur.Insert();
 		}
@@ -715,14 +717,14 @@ public class WF_RptDfine extends WebContralBase
 		//分组条件存储的信息表
 		cfgfix = "_GroupAttrs";
 		UserRegedit groupUr = new UserRegedit();
-		groupUr.AutoMyPK = false;
-		groupUr.setMyPK( WebUser.getNo() + rptNo + cfgfix;
+		groupUr.setAutoMyPK(false);
+		groupUr.setMyPK( WebUser.getNo() + rptNo + cfgfix);
 
 		if (groupUr.RetrieveFromDBSources() == 0)
 		{
-			groupUr.setMyPK( WebUser.getNo() + rptNo + cfgfix;
-			groupUr.FK_Emp = WebUser.getNo();
-			groupUr.CfgKey = rptNo + cfgfix;
+			groupUr.setMyPK( WebUser.getNo() + rptNo + cfgfix);
+			groupUr.setFK_Emp(WebUser.getNo());
+			groupUr.setCfgKey(rptNo + cfgfix);
 
 			groupUr.Insert();
 		}
@@ -730,17 +732,17 @@ public class WF_RptDfine extends WebContralBase
 
 
 		vals = ur.GetVals();
-		md.SetPara("RptDTSearchWay", (int)md.RptDTSearchWay);
-		md.SetPara("RptDTSearchKey", md.RptDTSearchKey);
-		md.SetPara("RptIsSearchKey", md.RptIsSearchKey);
-		md.SetPara("T_SearchKey", ur.SearchKey);
+		md.SetPara("RptDTSearchWay", md.getRptDTSearchWay().getValue());
+		md.SetPara("RptDTSearchKey", md.getRptDTSearchKey());
+		md.SetPara("RptIsSearchKey", md.getRptIsSearchKey());
+		md.SetPara("T_SearchKey", ur.getSearchKey());
 
-		if (md.RptDTSearchWay != DTSearchWay.None)
+		if (md.getRptDTSearchWay() != DTSearchWay.None)
 		{
-			ar = new MapAttr(rptNo, md.RptDTSearchKey);
-			md.SetPara("T_DateLabel", ar.Name);
+			ar = new MapAttr(rptNo, md.getRptDTSearchKey());
+			md.SetPara("T_DateLabel", ar.getName());
 
-			if (md.RptDTSearchWay == DTSearchWay.ByDate)
+			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
 			{
 				md.SetPara("T_DTFrom", ur.GetValStringByKey(UserRegeditAttr.DTFrom));
 				md.SetPara("T_DTTo", ur.GetValStringByKey(UserRegeditAttr.DTTo));
@@ -753,10 +755,12 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 		//判断是否含有导出至模板的模板文件，如果有，则显示导出至模板按钮RptExportToTmp
-		String tmpDir = BP.Sys.SystemConfig.PathOfDataUser + "TempleteExpEns\\" + rptNo;
+		String tmpDir = BP.Sys.SystemConfig.getPathOfDataUser() + "TempleteExpEns/" + rptNo;
 		if ((new File(tmpDir)).isDirectory())
 		{
-			if (Directory.GetFiles(tmpDir, "*.xls*").Length > 0)
+			List resultList = new ArrayList();
+			FileAccess.findFiles(tmpDir, "*.xls*", resultList);
+			if (resultList.size() > 0)
 			{
 				md.SetPara("T_RptExportToTmp", "1");
 			}
@@ -774,21 +778,21 @@ public class WF_RptDfine extends WebContralBase
 		MapAttrs attrs = new MapAttrs();
 		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
 
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.UIContralType == UIContralType.DDL)
+			if (attr.getUIContralType() == UIContralType.DDL)
 			{
 				DataRow dr = dt.NewRow();
-				dr.set("Field", attr.KeyOfEn);
-				dr.set("Name", attr.HisAttr.Desc);
+				dr.set("Field", attr.getKeyOfEn());
+				dr.set("Name", attr.getHisAttr().getDesc());
 
 				// 根据状态 设置信息.
-				if (groupUr.Vals.indexOf(attr.KeyOfEn) != -1)
+				if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
 				{
 					dr.set("Checked", "true");
 				}
 
-				if (groupUr.Vals.indexOf(attr.KeyOfEn) != -1)
+				if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
 				{
 					dr.set("Checked", "true");
 				}
@@ -827,40 +831,40 @@ public class WF_RptDfine extends WebContralBase
 		ds.Tables.add(ddlDt);
 
 
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.IsPK || attr.IsNum == false)
+			if (attr.getIsPK() || attr.getIsNum() == false)
 			{
 				continue;
 			}
-			if (attr.UIContralType == UIContralType.TB == false)
+			if (attr.getUIContralType() == UIContralType.TB)
 			{
 				continue;
 			}
-			if (attr.UIVisible == false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
-			if (attr.HisAttr.MyFieldType == FieldType.FK)
+			if (attr.getHisAttr().getMyFieldType() == FieldType.FK)
 			{
 				continue;
 			}
-			if (attr.HisAttr.MyFieldType == FieldType.Enum)
+			if (attr.getHisAttr().getMyFieldType() == FieldType.Enum)
 			{
 				continue;
 			}
-			if (attr.KeyOfEn.equals("OID") || attr.KeyOfEn.equals("WorkID") || attr.KeyOfEn.equals("MID"))
+			if (attr.getKeyOfEn().equals("OID") || attr.getKeyOfEn().equals("WorkID") || attr.getKeyOfEn().equals("MID"))
 			{
 				continue;
 			}
 
 			dtr = dt.NewRow();
-			dtr.set("Field", attr.KeyOfEn);
-			dtr.set("Name", attr.HisAttr.Desc);
+			dtr.set("Field", attr.getKeyOfEn());
+			dtr.set("Name", attr.getHisAttr().getDesc());
 
 
 			// 根据状态 设置信息.
-			if (groupUr.Vals.indexOf(attr.KeyOfEn) != -1)
+			if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
 			{
 				dtr.set("Checked", "true");
 			}
@@ -870,12 +874,12 @@ public class WF_RptDfine extends WebContralBase
 			ddlDt.Columns.Add("No");
 			ddlDt.Columns.Add("Name");
 			ddlDt.Columns.Add("Selected");
-			ddlDt.TableName = attr.KeyOfEn;
+			ddlDt.TableName = attr.getKeyOfEn();
 
 			ddlDr = ddlDt.NewRow();
 			ddlDr.set("No", "SUM");
 			ddlDr.set("Name", "求和");
-			if (groupUr.Vals.indexOf("@" + attr.KeyOfEn + "=SUM") != -1)
+			if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=SUM") != -1)
 			{
 				ddlDr.set("Selected", "true");
 			}
@@ -884,7 +888,7 @@ public class WF_RptDfine extends WebContralBase
 			ddlDr = ddlDt.NewRow();
 			ddlDr.set("No", "AVG");
 			ddlDr.set("Name", "求平均");
-			if (groupUr.Vals.indexOf("@" + attr.KeyOfEn + "=AVG") != -1)
+			if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=AVG") != -1)
 			{
 				ddlDr.set("Selected", "true");
 			}
@@ -895,7 +899,7 @@ public class WF_RptDfine extends WebContralBase
 				ddlDr = ddlDt.NewRow();
 				ddlDr.set("No", "AMOUNT");
 				ddlDr.set("Name", "求累计");
-				if (groupUr.Vals.indexOf("@" + attr.KeyOfEn + "=AMOUNT") != -1)
+				if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=AMOUNT") != -1)
 				{
 					ddlDr.set("Selected", "true");
 				}
@@ -922,13 +926,13 @@ public class WF_RptDfine extends WebContralBase
 		dt.Columns.Add("TextField", String.class);
 		dt.Columns.Add("ParentField", String.class);
 		dt.Columns.Add("W", String.class);
-		String[] ctrls = md.RptSearchKeys.split("[*]", -1);
+		String[] ctrls = md.getRptSearchKeys().split("[*]", -1);
 		DataTable dtNoName = null;
 
 		for (String ctrl : ctrls)
 		{
 			//增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示context.Request.QueryString[ctrl]
-			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(ctrl)))
+			if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(this.GetRequestVal(ctrl)))
 			{
 				continue;
 			}
@@ -942,21 +946,21 @@ public class WF_RptDfine extends WebContralBase
 
 			row = dt.NewRow();
 			row.set("Field", ctrl);
-			row.set("Name", ar.Name);
-			row.set("DataType", ar.MyDataType);
-			row.set("W", ar.UIWidth); //宽度.
+			row.set("Name", ar.getName());
+			row.set("DataType", ar.getMyDataType());
+			row.set("W", ar.getUIWidth()); //宽度.
 
-			switch (ar.UIContralType)
+			switch (ar.getUIContralType())
 			{
-				case UIContralType.DDL:
+				case DDL:
 					row.set("Type", "combo");
-					fcid = "DDL_" + ar.KeyOfEn;
+					fcid = "DDL_" + ar.getKeyOfEn();
 					if (vals.containsKey(fcid))
 					{
 						if (vals.get(fcid).equals("mvals"))
 						{
-							AtPara ap = new AtPara(ur.MVals);
-							row.set("DefaultValue", ap.GetValStrByKey(ar.KeyOfEn));
+							AtPara ap = new AtPara(ur.getMVals());
+							row.set("DefaultValue", ap.GetValStrByKey(ar.getKeyOfEn()));
 						}
 						else
 						{
@@ -964,11 +968,11 @@ public class WF_RptDfine extends WebContralBase
 						}
 					}
 
-					switch (ar.LGType)
+					switch (ar.getLGType())
 					{
 
-						case FieldTypeS.FK:
-							Entities ens = ar.HisAttr.HisFKEns;
+						case FK:
+							Entities ens = ar.getHisAttr().getHisFKEns();
 							ens.RetrieveAll();
 							EntitiesTree treeEns = ens instanceof EntitiesTree ? (EntitiesTree)ens : null;
 
@@ -976,7 +980,7 @@ public class WF_RptDfine extends WebContralBase
 							{
 								row.set("Type", "combotree");
 								dtNoName = ens.ToDataTableField();
-								dtNoName.TableName = ar.KeyOfEn;
+								dtNoName.TableName = ar.getKeyOfEn();
 								ds.Tables.add(dtNoName);
 
 								row.set("ValueField", "No");
@@ -991,7 +995,7 @@ public class WF_RptDfine extends WebContralBase
 								{
 									row.set("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
-									dtNoName.TableName = ar.KeyOfEn;
+									dtNoName.TableName = ar.getKeyOfEn();
 									ds.Tables.add(dtNoName);
 
 									row.set("ValueField", "No");
@@ -1000,12 +1004,12 @@ public class WF_RptDfine extends WebContralBase
 								}
 								else
 								{
-									dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-									dtNoName.Rows.add("all", "全部");
+									dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
+									dtNoName.Rows.AddDatas("all", "全部");
 
 									for (Entity en : ens)
 									{
-										dtNoName.Rows.add(en.GetValStringByKey(ar.HisAttr.UIRefKeyValue), en.GetValStringByKey(ar.HisAttr.UIRefKeyText));
+										dtNoName.Rows.AddDatas(en.GetValStringByKey(ar.getHisAttr().getUIRefKeyValue()), en.GetValStringByKey(ar.getHisAttr().getUIRefKeyText()));
 									}
 
 									ds.Tables.add(dtNoName);
@@ -1016,15 +1020,15 @@ public class WF_RptDfine extends WebContralBase
 							}
 							break;
 
-						case FieldTypeS.Enum:
-							dtNoName = GetNoNameDataTable(ar.KeyOfEn);
-							dtNoName.Rows.add("all", "全部");
+						case Enum:
+							dtNoName = GetNoNameDataTable(ar.getKeyOfEn());
+							dtNoName.Rows.AddDatas("all", "全部");
 
-							SysEnums enums = new SysEnums(ar.UIBindKey);
+							SysEnums enums = new SysEnums(ar.getUIBindKey());
 
-							for (SysEnum en : enums)
+							for (SysEnum en : enums.ToJavaList())
 							{
-								dtNoName.Rows.add(en.IntKey.toString(), en.Lab);
+								dtNoName.Rows.AddDatas(String.valueOf(en.getIntKey()), en.getLab());
 							}
 
 							ds.Tables.add(dtNoName);
@@ -1047,12 +1051,11 @@ public class WF_RptDfine extends WebContralBase
 		ds.Tables.add(dt);
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
-			///#endregion
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String FlowGropu_Done()
+	public final String FlowGropu_Done() throws Exception
 	{
 
 		if (!this.getGroupType().equals("My") && this.getGroupType().equals("MyJoin") && this.getGroupType().equals("MyDept") && this.getGroupType().equals("Adminer"))
@@ -1073,8 +1076,9 @@ public class WF_RptDfine extends WebContralBase
 	 
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final DataSet FlowGroupDoneSet()
+	public final DataSet FlowGroupDoneSet() throws Exception
 	{
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getGroupType();
 		DataSet ds = new DataSet();
@@ -1082,13 +1086,13 @@ public class WF_RptDfine extends WebContralBase
 		MapAttrs attrs = new MapAttrs(rptNo);
 		GEEntitys ges = new GEEntitys(rptNo);
 		GEEntity en = new GEEntity(rptNo);
-		Map map = en.EnMapInTime;
+		Map map = en.getEnMapInTime();
 
 
 
 		UserRegedit groupUr = new UserRegedit(WebUser.getNo(), rptNo + "_GroupAttrs");
 		//分组的参数
-		String groupVals = groupUr.Vals;
+		String groupVals = groupUr.getVals();
 		//查询条件
 		//分组
 		String groupKey = "";
@@ -1116,7 +1120,7 @@ public class WF_RptDfine extends WebContralBase
 			{
 				Attr attr = GetAttrByKey(attrs, paras[0]);
 				AttrsOfNum.Add(attr);
-				dataType = attr.MyDataType;
+				dataType = attr.getMyDataType();
 			}
 
 			if (paras[0].equals("Group_Number"))
@@ -1254,14 +1258,14 @@ public class WF_RptDfine extends WebContralBase
 
 		//查询注册信息表
 		UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
+		ur.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
-		qo = InitQueryObject(qo, md, ges.GetNewEntity.getEnMap().getAttrs(), attrs, ur);
+		qo = InitQueryObject(qo, md, ges.getNewEntity().getEnMap().getAttrs(), attrs, ur);
 		qo.AddWhere(" AND  WFState > 1 "); //排除空白，草稿数据.
 
 		DataTable dt2 = qo.DoGroupQueryToTable(selectSQL + groupKey, groupBy, orderby);
 
-		DataTable dt1 = dt2.Clone();
+		DataTable dt1 = dt2.clone();
 
 		dt1.Columns.Add("IDX", Integer.class);
 
@@ -1281,23 +1285,18 @@ public class WF_RptDfine extends WebContralBase
 			dt1.Rows.add(mydr);
 		}
 
-			///#endregion
-
-
 			///#region 处理 Int 类型的分组列。
-		DataTable dt = dt1.Clone();
+		DataTable dt = dt1.clone();
 		dt.TableName = "GroupSearch";
-		dt.Rows.Clear();
+		dt.Rows.clear();
 		for (Attr attr : AttrsOfGroup)
 		{
-			dt.Columns[attr.Key].DataType = String.class;
+			dt.Columns.get(attr.getKey()).DataType = String.class;
 		}
 		for (DataRow dr : dt1.Rows)
 		{
-			dt.ImportRow(dr);
+			 dt.Rows.add(dr);
 		}
-
-			///#endregion
 
 		// 处理这个物理表 , 如果有累计字段, 就扩展它的列。
 		if (isHaveLJ)
@@ -1305,25 +1304,25 @@ public class WF_RptDfine extends WebContralBase
 			// 首先扩充列.
 			for (Attr attr : AttrsOfNum)
 			{
-				if (StateNumKey.indexOf(attr.Key + "=AMOUNT") == -1)
+				if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
 				{
 					continue;
 				}
 
-				switch (attr.MyDataType)
+				switch (attr.getMyDataType())
 				{
 					case DataType.AppInt:
-						dt.Columns.Add(attr.Key + "Amount", Integer.class);
+						dt.Columns.Add(attr.getKey() + "Amount", Integer.class);
 						break;
 					default:
-						dt.Columns.Add(attr.Key + "Amount", BigDecimal.class);
+						dt.Columns.Add(attr.getKey() + "Amount", BigDecimal.class);
 						break;
 				}
 			}
 
 			String sql = "";
 			String whereOFLJ = "";
-			AtPara ap = new AtPara(ur.Vals);
+			AtPara ap = new AtPara(ur.getVals());
 			/** #region 获得查询数据.
 			*/
 			for (String str : ap.getHisHT().keySet())
@@ -1345,7 +1344,7 @@ public class WF_RptDfine extends WebContralBase
 			{
 				for (Attr attr : AttrsOfNum)
 				{
-					if (StateNumKey.indexOf(attr.Key + "=AMOUNT") == -1)
+					if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
 					{
 						continue;
 					}
@@ -1353,11 +1352,11 @@ public class WF_RptDfine extends WebContralBase
 					//形成查询sql.
 					if (whereOFLJ.length() > 0)
 					{
-						sql = "SELECT SUM(" + attr.Key + ") FROM " + ges.GetNewEntity.EnMap.PhysicsTable + whereOFLJ + " AND ";
+						sql = "SELECT SUM(" + attr.getKey() + ") FROM " + ges.getNewEntity().getEnMap().getPhysicsTable() + whereOFLJ + " AND ";
 					}
 					else
 					{
-						sql = "SELECT SUM(" + attr.Key + ") FROM " + ges.GetNewEntity.EnMap.PhysicsTable + " WHERE ";
+						sql = "SELECT SUM(" + attr.getKey() + ") FROM " + ges.getNewEntity().getEnMap().getPhysicsTable() + " WHERE ";
 					}
 
 					for (Attr attr1 : AttrsOfGroup)
@@ -1368,26 +1367,26 @@ public class WF_RptDfine extends WebContralBase
 								sql += " FK_NY <= '" + dr.get("FK_NY") + "' AND FK_ND='" + dr.get("FK_NY").toString().substring(0, 4) + "' AND ";
 								break;
 							case "FK_Dept":
-								sql += attr1.Key + "='" + dr.get(attr1.getKey()) + "' AND ";
+								sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
 								break;
 							case "FK_SJ":
 							case "FK_XJ":
-								sql += attr1.Key + " LIKE '" + dr.get(attr1.getKey()) + "%' AND ";
+								sql += attr1.getKey() + " LIKE '" + dr.get(attr1.getKey()) + "%' AND ";
 								break;
 							default:
-								sql += attr1.Key + "='" + dr.get(attr1.getKey()) + "' AND ";
+								sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
 								break;
 						}
 					}
 
 					sql = sql.substring(0, sql.length() - "AND ".length());
-					if (attr.MyDataType == DataType.AppInt)
+					if (attr.getMyDataType() == DataType.AppInt)
 					{
-						dr.set(attr.Key + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
+						dr.setValue(attr.getKey() + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
 					}
 					else
 					{
-						dr.set(attr.Key + "Amount", DBAccess.RunSQLReturnValDecimal(sql, 0, 2));
+						dr.setValue(attr.getKey() + "Amount", DBAccess.RunSQLReturnValDecimal(sql, new BigDecimal(0), 2));
 					}
 				}
 			}
@@ -1396,14 +1395,14 @@ public class WF_RptDfine extends WebContralBase
 		// 为表扩充外键
 		for (Attr attr : AttrsOfGroup)
 		{
-			dt.Columns.Add(attr.Key + "T", String.class);
+			dt.Columns.Add(attr.getKey() + "T", String.class);
 		}
 		for (Attr attr : AttrsOfGroup)
 		{
-			if (attr.UIBindKey.indexOf(".") == -1)
+			if (attr.getUIBindKey().indexOf(".") == -1)
 			{
 				/* 说明它是枚举类型 */
-				SysEnums ses = new SysEnums(attr.UIBindKey);
+				SysEnums ses = new SysEnums(attr.getUIBindKey());
 				for (DataRow dr : dt.Rows)
 				{
 					int val = 0;
@@ -1413,15 +1412,15 @@ public class WF_RptDfine extends WebContralBase
 					}
 					catch (java.lang.Exception e)
 					{
-						dr.set(attr.Key + "T", " ");
+						dr.set(attr.getKey() + "T", " ");
 						continue;
 					}
 
-					for (SysEnum se : ses)
+					for (SysEnum se : ses.ToJavaList())
 					{
-						if (se.IntKey == val)
+						if (se.getIntKey() == val)
 						{
-							dr.set(attr.Key + "T", se.Lab);
+							dr.set(attr.getKey() + "T", se.getLab());
 						}
 					}
 				}
@@ -1429,42 +1428,42 @@ public class WF_RptDfine extends WebContralBase
 			}
 			for (DataRow dr : dt.Rows)
 			{
-				Entity myen = attr.HisFKEn;
+				Entity myen = attr.getHisFKEn();
 				String val = dr.get(attr.getKey()).toString();
-				myen.SetValByKey(attr.UIRefKeyValue, val);
+				myen.SetValByKey(attr.getUIRefKeyValue(), val);
 				try
 				{
 					myen.Retrieve();
-					dr.set(attr.Key + "T", myen.GetValStrByKey(attr.UIRefKeyText));
+					dr.set(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText()));
 				}
 				catch (java.lang.Exception e2)
 				{
 					if (val == null || val.length() <= 1)
 					{
-						dr.set(attr.Key + "T", val);
+						dr.set(attr.getKey() + "T", val);
 					}
 					else if (val.substring(0, 2).equals("63"))
 					{
 						try
 						{
 							BP.Port.Dept Dept = new BP.Port.Dept(val);
-							dr.set(attr.Key + "T", Dept.Name);
+							dr.set(attr.getKey() + "T", Dept.getName());
 						}
 						catch (java.lang.Exception e3)
 						{
-							dr.set(attr.Key + "T", val);
+							dr.set(attr.getKey() + "T", val);
 						}
 					}
 					else
 					{
-						dr.set(attr.Key + "T", val);
+						dr.set(attr.getKey() + "T", val);
 					}
 				}
 			}
 		}
 		ds.Tables.add(dt);
-		ds.Tables.add(AttrsOfNum.ToMapAttrs.ToDataTableField("AttrsOfNum"));
-		ds.Tables.add(AttrsOfGroup.ToMapAttrs.ToDataTableField("AttrsOfGroup"));
+		ds.Tables.add(AttrsOfNum.ToMapAttrs().ToDataTableField("AttrsOfNum"));
+		ds.Tables.add(AttrsOfGroup.ToMapAttrs().ToDataTableField("AttrsOfGroup"));
 
 
 		return ds;
@@ -1474,8 +1473,9 @@ public class WF_RptDfine extends WebContralBase
 	 执行导出
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowGroup_Exp()
+	public final String FlowGroup_Exp() throws Exception
 	{
 		String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getGroupType();
 		String desc = "";
@@ -1513,8 +1513,9 @@ public class WF_RptDfine extends WebContralBase
 
 
 
-		String filePath = ExportGroupExcel(ds, desc, ur.Vals);
+		String filePath = ExportDGToExcel(ds,desc, ur.getVals());
 
+		
 
 		return filePath;
 	}
@@ -1523,8 +1524,9 @@ public class WF_RptDfine extends WebContralBase
 	 初始化数据
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowContrastDtl_Init()
+	public final String FlowContrastDtl_Init() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
@@ -1548,17 +1550,17 @@ public class WF_RptDfine extends WebContralBase
 		dt.Columns.Add("Name", String.class);
 		dt.Columns.Add("Width", Integer.class);
 		dt.Columns.Add("UIContralType", Integer.class);
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
 			row = dt.NewRow();
-			row.set("No", attr.KeyOfEn);
-			row.set("Name", attr.Name);
-			row.set("Width", attr.UIWidthInt);
-			row.set("UIContralType", attr.UIContralType);
+			row.setValue("No", attr.getKeyOfEn());
+			row.setValue("Name",attr.getName());
+			row.setValue("Width",attr.getUIWidthInt());
+			row.setValue("UIContralType",attr.getUIContralType().getValue());
 
-			if (attr.HisAttr.IsFKorEnum)
+			if (attr.getHisAttr().getIsFKorEnum())
 			{
-				row.set("No", attr.KeyOfEn + "Text");
+				row.setValue("No",attr.getKeyOfEn() + "Text");
 			}
 
 			dt.Rows.add(row);
@@ -1568,18 +1570,16 @@ public class WF_RptDfine extends WebContralBase
 
 		//查询结果
 		QueryObject qo = new QueryObject(ges);
-
-
-		var strs = HttpContextHelper.RequestParamKeys; // this.context.Request.Form.ToString().Split('&');
-		for (String str : strs)
-		{
-			if (str.indexOf("FK_Flow") != -1 || str.indexOf("SearchType") != -1)
+		Enumeration enu=getRequest().getParameterNames();  
+        boolean isExist = false;
+        String newFK_Dept=this.getFK_Dept();
+        while(enu.hasMoreElements()){ 
+        	isExist = false;
+        	String key=(String)enu.nextElement();  
+			if (key.equals("FK_Flow")|| key.equals("SearchType"))
 			{
 				continue;
 			}
-
-			String[] mykey = str.split("[=]", -1);
-			String key = mykey[0];
 
 			if (key.equals("OID") || key.equals("MyPK"))
 			{
@@ -1588,13 +1588,12 @@ public class WF_RptDfine extends WebContralBase
 
 			if (key.equals("FK_Dept"))
 			{
-				this.setFK_Dept(mykey[1]);
+				newFK_Dept = getRequest().getParameter(key);
 				continue;
 			}
-			boolean isExist = false;
-			for (MapAttr attr : attrs)
+			for (MapAttr attr : attrs.ToJavaList())
 			{
-				if (attr.KeyOfEn.toUpperCase().equals(key.toUpperCase()))
+				if (attr.getKeyOfEn().toUpperCase().equals(key.toUpperCase()))
 				{
 					isExist = true;
 					break;
@@ -1606,16 +1605,16 @@ public class WF_RptDfine extends WebContralBase
 				continue;
 			}
 
-			if (mykey[1].equals("mvals"))
+			if (getRequest().getParameter(key).equals("mvals"))
 			{
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
+				sUr.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
 				sUr.RetrieveFromDBSources();
 
-				/* 如果是多选值 */
-				String cfgVal = sUr.MVals;
+				// 如果是多选值 
+				String cfgVal = sUr.getMVals();
 				AtPara ap = new AtPara(cfgVal);
 				String instr = ap.GetValStrByKey(key);
 				String val = "";
@@ -1639,17 +1638,17 @@ public class WF_RptDfine extends WebContralBase
 					instr = instr.replace(".", "','");
 					instr = instr.substring(2);
 					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(mykey[0], instr);
+					qo.AddWhereIn(key, instr);
 				}
 			}
 			else
 			{
-				qo.AddWhere(mykey[0], mykey[1]);
+				qo.AddWhere(key, getRequest().getParameter(key));
 			}
 			qo.addAnd();
 		}
 
-		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
+		if (newFK_Dept != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
 		{
 			if (this.getFK_Dept().length() == 2)
 			{
@@ -1660,11 +1659,11 @@ public class WF_RptDfine extends WebContralBase
 			{
 				if (this.getFK_Dept().length() == 8)
 				{
-					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+					qo.AddWhere("FK_Dept", " = ", newFK_Dept);
 				}
 				else
 				{
-					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+					qo.AddWhere("FK_Dept", " like ", newFK_Dept + "%");
 				}
 
 				qo.addAnd();
@@ -1685,8 +1684,9 @@ public class WF_RptDfine extends WebContralBase
 	 执行导出
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FlowGroupDtl_Exp()
+	public final String FlowGroupDtl_Exp() throws Exception
 	{
 		if (DataType.IsNullOrEmpty(this.getFK_Flow()))
 		{
@@ -1708,18 +1708,16 @@ public class WF_RptDfine extends WebContralBase
 		//查询结果
 		QueryObject qo = new QueryObject(ges);
 
-		//string[] strs = this.context.Request.Form.ToString().Split('&');
-
-		var strs = HttpContextHelper.RequestParamKeys;
-		for (String str : strs)
-		{
-			if (str.indexOf("FK_Flow") != -1 || str.indexOf("SearchType") != -1)
+		Enumeration enu=getRequest().getParameterNames();  
+        boolean isExist = false;
+        String newFK_Dept=this.getFK_Dept();
+        while(enu.hasMoreElements()){ 
+        	isExist = false;
+        	String key=(String)enu.nextElement();  
+			if (key.equals("FK_Flow")|| key.equals("SearchType"))
 			{
 				continue;
 			}
-
-			String[] mykey = str.split("[=]", -1);
-			String key = mykey[0];
 
 			if (key.equals("OID") || key.equals("MyPK"))
 			{
@@ -1728,13 +1726,12 @@ public class WF_RptDfine extends WebContralBase
 
 			if (key.equals("FK_Dept"))
 			{
-				this.setFK_Dept(mykey[1]);
+				newFK_Dept = getRequest().getParameter(key);
 				continue;
 			}
-			boolean isExist = false;
-			for (MapAttr attr : attrs)
+			for (MapAttr attr : attrs.ToJavaList())
 			{
-				if (attr.KeyOfEn.toUpperCase().equals(key.toUpperCase()))
+				if (attr.getKeyOfEn().toUpperCase().equals(key.toUpperCase()))
 				{
 					isExist = true;
 					break;
@@ -1746,16 +1743,16 @@ public class WF_RptDfine extends WebContralBase
 				continue;
 			}
 
-			if (mykey[1].equals("mvals"))
+			if (getRequest().getParameter(key).equals("mvals"))
 			{
 				//如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK( WebUser.getNo() + rptNo + "_SearchAttrs";
+				sUr.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
 				sUr.RetrieveFromDBSources();
 
-				/* 如果是多选值 */
-				String cfgVal = sUr.MVals;
+				// 如果是多选值 
+				String cfgVal = sUr.getMVals();
 				AtPara ap = new AtPara(cfgVal);
 				String instr = ap.GetValStrByKey(key);
 				String val = "";
@@ -1779,17 +1776,17 @@ public class WF_RptDfine extends WebContralBase
 					instr = instr.replace(".", "','");
 					instr = instr.substring(2);
 					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(mykey[0], instr);
+					qo.AddWhereIn(key, instr);
 				}
 			}
 			else
 			{
-				qo.AddWhere(mykey[0], mykey[1]);
+				qo.AddWhere(key, getRequest().getParameter(key));
 			}
 			qo.addAnd();
 		}
 
-		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
+		if (newFK_Dept != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
 		{
 			if (this.getFK_Dept().length() == 2)
 			{
@@ -1800,11 +1797,11 @@ public class WF_RptDfine extends WebContralBase
 			{
 				if (this.getFK_Dept().length() == 8)
 				{
-					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+					qo.AddWhere("FK_Dept", " = ", newFK_Dept);
 				}
 				else
 				{
-					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
+					qo.AddWhere("FK_Dept", " like ", newFK_Dept + "%");
 				}
 
 				qo.addAnd();
@@ -1812,20 +1809,19 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 		qo.AddHD();
-
 		DataTable dt = qo.DoQueryToTable();
 		Attrs newAttrs = new Attrs();
-		for (MapAttr attr : attrs)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.KeyOfEn.toUpperCase().equals("OID"))
+			if (attr.getKeyOfEn().toUpperCase().equals("OID"))
 			{
 				continue;
 			}
 
-			newAttrs.Add(attr.HisAttr);
+			newAttrs.Add(attr.getHisAttr());
 		}
 
-		String filePath = ExportDGToExcel(dt, ges.GetNewEntity, rptNo, newAttrs);
+		String filePath = ExportDGToExcel(dt, ges.getNewEntity(), rptNo, newAttrs);
 
 
 		return filePath;
@@ -1836,14 +1832,15 @@ public class WF_RptDfine extends WebContralBase
 	 
 	 @param key key
 	 @return attr
+	 * @throws Exception 
 	*/
-	public final Attr GetAttrByKey(MapAttrs mapAttrs, String key)
+	public final Attr GetAttrByKey(MapAttrs mapAttrs, String key) throws Exception
 	{
-		for (MapAttr attr : mapAttrs)
+		for (MapAttr attr : mapAttrs.ToJavaList())
 		{
-			if (attr.KeyOfEn.toUpperCase().equals(key.toUpperCase()))
+			if (attr.getKeyOfEn().toUpperCase().equals(key.toUpperCase()))
 			{
-				return attr.HisAttr;
+				return attr.getHisAttr();
 			}
 		}
 		return null;
@@ -1855,8 +1852,9 @@ public class WF_RptDfine extends WebContralBase
 	 
 	 @param qo
 	 @return 
+	 * @throws Exception 
 	*/
-	public final QueryObject InitQueryObject(QueryObject qo, MapData md, Attrs attrs, MapAttrs rptAttrs, UserRegedit ur)
+	public final QueryObject InitQueryObject(QueryObject qo, MapData md, Attrs attrs, MapAttrs rptAttrs, UserRegedit ur) throws Exception
 	{
 		HashMap<String, String> kvs = null;
 		ArrayList<String> keys = new ArrayList<String>();
@@ -1873,9 +1871,9 @@ public class WF_RptDfine extends WebContralBase
 
 
 			///#region 关键字查询
-		if (md.RptIsSearchKey)
+		if (md.getRptIsSearchKey())
 		{
-			searchKey = ur.SearchKey;
+			searchKey = ur.getSearchKey();
 		}
 
 		if (DataType.IsNullOrEmpty(searchKey))
@@ -1890,27 +1888,27 @@ public class WF_RptDfine extends WebContralBase
 
 			for (Attr attr : attrs)
 			{
-				switch (attr.MyFieldType)
+				switch (attr.getMyFieldType())
 				{
-					case FieldType.Enum:
-					case FieldType.FK:
-					case FieldType.PKFK:
+					case Enum:
+					case FK:
+					case PKFK:
 						continue;
 					default:
 						break;
 				}
 
-				if (attr.MyDataType != DataType.AppString)
+				if (attr.getMyDataType() != DataType.AppString)
 				{
 					continue;
 				}
 
-				if (attr.MyFieldType == FieldType.RefText)
+				if (attr.getMyFieldType() == FieldType.RefText)
 				{
 					continue;
 				}
 
-				if (attr.Key.equals("FK_Dept"))
+				if (attr.getKey().equals("FK_Dept"))
 				{
 					continue;
 				}
@@ -1922,11 +1920,11 @@ public class WF_RptDfine extends WebContralBase
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 					{
-						qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
@@ -1935,15 +1933,15 @@ public class WF_RptDfine extends WebContralBase
 
 				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 				{
-					qo.AddWhere(attr.Key, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.Key, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 			}
 
-			qo.MyParas.Add("SKey", searchKey);
+			qo.getMyParas().Add("SKey", searchKey);
 			qo.addRightBracket();
 		}
 
@@ -1953,7 +1951,7 @@ public class WF_RptDfine extends WebContralBase
 			///#region Url传参条件
 		for (Attr attr : attrs)
 		{
-			if (DataType.IsNullOrEmpty(HttpContextHelper.RequestParams(attr.getKey())))
+			if (DataType.IsNullOrEmpty(this.GetRequestVal(attr.getKey())))
 			{
 				continue;
 			}
@@ -1961,25 +1959,25 @@ public class WF_RptDfine extends WebContralBase
 			qo.addAnd();
 			qo.addLeftBracket();
 
-			val = HttpContextHelper.RequestParams(attr.getKey());
+			val = this.GetRequestVal(attr.getKey());
 
-			switch (attr.MyDataType)
+			switch (attr.getMyDataType())
 			{
 				case DataType.AppBoolean:
-					qo.AddWhere(attr.Key, (boolean)Integer.parseInt(val));
+					qo.AddWhere(attr.getKey(), Boolean.valueOf(val));
 					break;
 				case DataType.AppDate:
 				case DataType.AppDateTime:
 				case DataType.AppString:
-					qo.AddWhere(attr.Key, val);
+					qo.AddWhere(attr.getKey(), val);
 					break;
 				case DataType.AppDouble:
 				case DataType.AppFloat:
 				case DataType.AppMoney:
-					qo.AddWhere(attr.Key, Double.parseDouble(val));
+					qo.AddWhere(attr.getKey(), Double.parseDouble(val));
 					break;
 				case DataType.AppInt:
-					qo.AddWhere(attr.Key, Integer.parseInt(val));
+					qo.AddWhere(attr.getKey(), Integer.parseInt(val));
 					break;
 				default:
 					break;
@@ -1997,16 +1995,16 @@ public class WF_RptDfine extends WebContralBase
 
 
 			///#region 过滤条件
-		for (MapAttr attr1 : rptAttrs)
+		for (MapAttr attr1 : rptAttrs.ToJavaList())
 		{
-			Attr attr = attr1.HisAttr;
+			Attr attr = attr1.getHisAttr();
 			//此处做判断，如果在URL中已经传了参数，则不算SearchAttrs中的设置
 			if (keys.contains(attr.getKey()))
 			{
 				continue;
 			}
 
-			if (attr.MyFieldType == FieldType.RefText)
+			if (attr.getMyFieldType() == FieldType.RefText)
 			{
 				continue;
 			}
@@ -2014,45 +2012,11 @@ public class WF_RptDfine extends WebContralBase
 			String selectVal = "";
 			String cid = "";
 
-			switch (attr.UIContralType)
+			switch (attr.getUIContralType())
 			{
-				//case UIContralType.TB:
-				//    switch (attr.MyDataType)
-				//    {
-				//        case DataType.AppDate:
-				//        case DataType.AppDateTime:
-				//            if (attr.MyDataType == DataType.AppDate)
-				//                cid = "D_" + attr.Key;
-				//            else
-				//                cid = "DT_" + attr.Key;
-
-				//            if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
-				//                continue;
-
-				//            selectVal = kvs[cid];
-
-				//            qo.addAnd();
-				//            qo.addLeftBracket();
-				//            qo.AddWhere(attr.Key, selectVal);
-				//            qo.addRightBracket();
-				//            break;
-				//        default:
-				//            cid = "TB_" + attr.Key;
-
-				//            if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
-				//                continue;
-
-				//            selectVal = kvs[cid];
-
-				//            qo.addAnd();
-				//            qo.addLeftBracket();
-				//            qo.AddWhere(attr.Key, " LIKE ", "%" + selectVal + "%");
-				//            qo.addRightBracket();
-				//            break;
-				//    }
-				//    break;
-				case UIContralType.DDL:
-					cid = "DDL_" + attr.Key;
+				
+				case DDL:
+					cid = "DDL_" + attr.getKey();
 
 					if (kvs.containsKey(cid) == false || DataType.IsNullOrEmpty(kvs.get(cid)))
 					{
@@ -2069,14 +2033,14 @@ public class WF_RptDfine extends WebContralBase
 					if (selectVal.equals("mvals"))
 					{
 						/* 如果是多选值 */
-						AtPara ap = new AtPara(ur.MVals);
+						AtPara ap = new AtPara(ur.getMVals());
 						String instr = ap.GetValStrByKey(attr.getKey());
 
 						if (DataType.IsNullOrEmpty(instr))
 						{
-							if (attr.Key.equals("FK_Dept") || attr.Key.equals("FK_Unit"))
+							if (attr.getKey().equals("FK_Dept") || attr.getKey().equals("FK_Unit"))
 							{
-								if (attr.Key.equals("FK_Dept"))
+								if (attr.getKey().equals("FK_Dept"))
 								{
 									selectVal = WebUser.getFK_Dept();
 								}
@@ -2095,7 +2059,7 @@ public class WF_RptDfine extends WebContralBase
 
 							qo.addAnd();
 							qo.addLeftBracket();
-							qo.AddWhereIn(attr.Key, "(" + instr + ")");
+							qo.AddWhereIn(attr.getKey(), "(" + instr + ")");
 							qo.addRightBracket();
 							continue;
 						}
@@ -2104,48 +2068,35 @@ public class WF_RptDfine extends WebContralBase
 					qo.addAnd();
 					qo.addLeftBracket();
 
-					if (attr.UIBindKey.equals("BP.Port.Depts") || attr.UIBindKey.equals("BP.Port.Units")) //判断特殊情况。
+					if (attr.getUIBindKey().equals("BP.Port.Depts") || attr.getUIBindKey().equals("BP.Port.Units")) //判断特殊情况。
 					{
-						qo.AddWhere(attr.Key, " LIKE ", selectVal + "%");
+						qo.AddWhere(attr.getKey(), " LIKE ", selectVal + "%");
 					}
 					else
 					{
-						qo.AddWhere(attr.Key, selectVal);
+						qo.AddWhere(attr.getKey(), selectVal);
 					}
 
 					qo.addRightBracket();
 					break;
-				//case UIContralType.CheckBok:
-				//    cid = "CB_" + attr.Key;
-
-				//    if (kvs.ContainsKey(cid) == false || string.IsNullOrWhiteSpace(kvs[cid]))
-				//        continue;
-
-				//    selectVal = kvs[cid];
-
-				//    qo.addAnd();
-				//    qo.addLeftBracket();
-				//    qo.AddWhere(attr.Key, int.Parse(selectVal));
-				//    qo.addRightBracket();
-				//    break;
+				
 				default:
 					break;
 			}
 		}
 
-			///#endregion
 
 
 			///#region 日期处理
-		if (md.RptDTSearchWay != DTSearchWay.None)
+		if (md.getRptDTSearchWay() != DTSearchWay.None)
 		{
-			String dtKey = md.RptDTSearchKey;
+			String dtKey = md.getRptDTSearchKey();
 			String dtFrom = ur.GetValStringByKey(UserRegeditAttr.DTFrom).trim();
 			String dtTo = ur.GetValStringByKey(UserRegeditAttr.DTTo).trim();
 
 			if (DataType.IsNullOrEmpty(dtFrom) == true)
 			{
-				if (md.RptDTSearchWay == DTSearchWay.ByDate)
+				if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
 				{
 					dtFrom = "1900-01-01";
 				}
@@ -2157,7 +2108,7 @@ public class WF_RptDfine extends WebContralBase
 
 			if (DataType.IsNullOrEmpty(dtTo) == true)
 			{
-				if (md.RptDTSearchWay == DTSearchWay.ByDate)
+				if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
 				{
 					dtTo = "2999-01-01";
 				}
@@ -2167,23 +2118,23 @@ public class WF_RptDfine extends WebContralBase
 				}
 			}
 
-			if (md.RptDTSearchWay == DTSearchWay.ByDate)
+			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
 			{
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.SQL = dtKey + " >= '" + dtFrom + "'";
+				qo.setSQL(dtKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.SQL = dtKey + " <= '" + dtTo + "'";
+				qo.setSQL(dtKey + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 
-			if (md.RptDTSearchWay == DTSearchWay.ByDateTime)
+			if (md.getRptDTSearchWay() == DTSearchWay.ByDateTime)
 			{
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.SQL = dtKey + " >= '" + dtFrom + " 00:00'";
+				qo.setSQL(dtKey + " >= '" + dtFrom + " 00:00'");
 				qo.addAnd();
-				qo.SQL = dtKey + " <= '" + dtTo + " 23:59'";
+				qo.setSQL(dtKey + " <= '" + dtTo + " 23:59'");
 				qo.addRightBracket();
 			}
 		}
@@ -2204,7 +2155,7 @@ public class WF_RptDfine extends WebContralBase
 
 		///#endregion MyStartFlow.htm 我发起的流程
 
-	public final String MyDeptFlow_Init()
+	public final String MyDeptFlow_Init() throws Exception
 	{
 		String fk_mapdata = "ND" + Integer.parseInt(this.getFK_Flow()) + "RptMyDept";
 
@@ -2237,10 +2188,10 @@ public class WF_RptDfine extends WebContralBase
 			ds.Tables.add(ges.ToDataTableField("dt"));
 		}
 
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String MyJoinFlow_Init()
+	public final String MyJoinFlow_Init() throws Exception
 	{
 		String fk_mapdata = "ND" + Integer.parseInt(this.getFK_Flow()) + "RptMyJoin";
 
@@ -2269,6 +2220,6 @@ public class WF_RptDfine extends WebContralBase
 			qo.DoQuery();
 			ds.Tables.add(ges.ToDataTableField("dt"));
 		}
-		return BP.Tools.Json.DataSetToJson(ds, false);
+		return BP.Tools.Json.ToJson(ds);
 	}
 }

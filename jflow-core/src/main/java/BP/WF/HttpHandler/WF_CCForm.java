@@ -496,7 +496,7 @@ public class WF_CCForm extends WebContralBase {
 		// 找不不到标记就抛出异常.
 		return "err@没有此方法 " + this.toString() + " - " + this.getDoType();
 		// throw new RuntimeException("@标记[" + this.getDoType() +
-		// "]，没有找到.@原始URL:" + HttpContextHelper.RequestRawUrl);
+		// "]，没有找到.@原始URL:" + CommonUtils.getRequest().getRequestURI());
 	}
 
 	/// #endregion 执行父类的重写方法.

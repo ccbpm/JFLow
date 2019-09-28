@@ -4,12 +4,7 @@ import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
-import BP.Port.*;
-import BP.En.*;
-import BP.WF.*;
 import BP.WF.Glo;
-import BP.WF.Template.*;
-import BP.WF.*;
 import java.util.*;
 
 /** 
@@ -210,12 +205,10 @@ public class WF_RptSearch extends WebContralBase
 		}
 	}
 	//打开表单.
-	public final String KeySearch_OpenFrm()
+	public final String KeySearch_OpenFrm() throws Exception
 	{
 	   BP.WF.HttpHandler.WF wf = new WF();
 		return wf.Runing_OpenFrm();
 	}
-
-		///#endregion
 
 }

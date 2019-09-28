@@ -33,18 +33,18 @@ public class CCMobile_WorkOpt_OneWork extends WebContralBase
 	 执行撤销操作.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String TimeBase_UnSend()
+	public final String TimeBase_UnSend() throws Exception
 	{
 		WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork();
 		return en.OP_UnSend();
 	}
-	public final String TimeBase_OpenFrm()
+	public final String TimeBase_OpenFrm() throws Exception
 	{
 		WF en = new WF();
 		return en.Runing_OpenFrm();
 	}
 
-		///#endregion xxx 界面方法.
 
 }

@@ -27,7 +27,7 @@ public class DataTable implements Cloneable
 	/**
 	 * @return 复制DataTable的结构
 	 */
-	public DataTable copy(){		
+	public DataTable clone(){		
 		DataTable v = new DataTable();
 		for(DataColumn Column: this.Columns){
 			v.Columns.Add(Column.ColumnName,Column.DataType);
@@ -40,7 +40,7 @@ public class DataTable implements Cloneable
 	 * @return 复制DataTable的结构与数据。
 	 * @throws CloneNotSupportedException
 	 */
-	public DataTable clone()
+	public DataTable copy()
 	{
 		try
 		{
@@ -50,7 +50,6 @@ public class DataTable implements Cloneable
 			return v;
 		} catch (CloneNotSupportedException e)
 		{
-			// this shouldn't happen, since we are Cloneable
 			throw new InternalError();
 		}
 	}

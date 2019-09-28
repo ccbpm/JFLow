@@ -1444,7 +1444,7 @@ public abstract class WebContralBase {
 		return s;
 	}
 
-	public final Long getOID()
+	public final long getOID()
 	{
 		String str = this.GetRequestVal("RefOID"); // context.Request.QueryString["RefOID"];
 		if (DataType.IsNullOrEmpty(str) == true)

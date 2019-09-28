@@ -1059,6 +1059,15 @@ public class SystemConfig {
 		return url;
 
 	}
+	
+	public static String getMobileURL() {
+		if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("MobileURL")) == false) {
+			return (String) SystemConfig.getAppSettings().get("MobileURL");
+		}
+		return getHostURLOfBS();
+	}
+
+	
 
 	/**
 	 * 是否多语言

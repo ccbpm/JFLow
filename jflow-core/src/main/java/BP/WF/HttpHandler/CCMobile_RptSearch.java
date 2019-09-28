@@ -52,8 +52,9 @@ public class CCMobile_RptSearch extends WebContralBase
 	 打开表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String KeySearch_OpenFrm()
+	public final String KeySearch_OpenFrm() throws Exception
 	{
 		BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 		return search.KeySearch_OpenFrm();

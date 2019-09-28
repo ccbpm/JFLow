@@ -7,8 +7,6 @@ import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
-import BP.WF.Template.*;
-import BP.WF.*;
 import java.util.*;
 import java.io.*;
 
@@ -49,7 +47,7 @@ public class CCMobile extends WebContralBase
 
 		///#endregion 执行父类的重写方法.
 
-	public final String Login_Init()
+	public final String Login_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF ace = new WF();
 		return ace.Login_Init();
@@ -104,8 +102,9 @@ public class CCMobile extends WebContralBase
 	 会签列表
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String HuiQianList_Init()
+	public final String HuiQianList_Init() throws Exception
 	{
 		WF wf = new WF();
 		return wf.HuiQianList_Init();
@@ -135,7 +134,7 @@ public class CCMobile extends WebContralBase
 		append.append("}");
 		return append.toString();
 	}
-	public final String StartGuide_MulitSend()
+	public final String StartGuide_MulitSend() throws Exception
 	{
 		WF_MyFlow en = new WF_MyFlow();
 		return en.StartGuide_MulitSend();
@@ -194,13 +193,13 @@ public class CCMobile extends WebContralBase
 
 		return BP.Tools.Json.ToJson(dt);
 	}
-	public final String MyFlow_Init()
+	public final String MyFlow_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF_MyFlow wfPage = new WF_MyFlow();
 		return wfPage.MyFlow_Init();
 	}
 
-	public final String Runing_Init()
+	public final String Runing_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF wfPage = new WF();
 	  return wfPage.Runing_Init();
@@ -253,10 +252,9 @@ public class CCMobile extends WebContralBase
 		}
 		append.append("]");
 		return append.toString();
-//		return BP.Tools.Entitis2Json.Instance.ReplaceIllgalChart(append.toString());
 	}
 
-	public final String Start_Init()
+	public final String Start_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF wfPage = new WF();
 		return wfPage.Start_Init();
@@ -294,8 +292,9 @@ public class CCMobile extends WebContralBase
 	 流程单表单查看.
 	 
 	 @return json
+	 * @throws Exception 
 	*/
-	public final String FrmView_Init()
+	public final String FrmView_Init() throws Exception
 	{
 		BP.WF.HttpHandler.WF wf = new WF();
 		return wf.FrmView_Init();
@@ -304,8 +303,9 @@ public class CCMobile extends WebContralBase
 	 撤销发送
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String FrmView_UnSend()
+	public final String FrmView_UnSend() throws Exception
 	{
 		BP.WF.HttpHandler.WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork();
 		return en.OP_UnSend();
@@ -329,8 +329,9 @@ public class CCMobile extends WebContralBase
 	 打开表单
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String SearchKey_OpenFrm()
+	public final String SearchKey_OpenFrm() throws Exception
 	{
 		BP.WF.HttpHandler.WF_RptSearch search = new WF_RptSearch();
 		return search.KeySearch_OpenFrm();

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.List;
 
 public class FileAccess {
 
@@ -255,4 +256,28 @@ public class FileAccess {
 			}
 			return file.delete();
 		}
+		
+		public static void findFiles(String baseDirName, String targetFileName, List fileList) throws Exception {   
+	    	File baseDir = new File(baseDirName);		// 创建一个File对象
+			if (!baseDir.exists() || !baseDir.isDirectory()) {	// 判断目录是否存在
+				return;
+			}
+	        String tempName = null;   
+	        //判断目录是否存在   
+	        File tempFile;
+	    	File[] files = baseDir.listFiles();
+	    	for (int i = 0; i < files.length; i++) {
+				tempFile = files[i];
+				if(tempFile.isDirectory()){
+					findFiles(tempFile.getAbsolutePath(), targetFileName, fileList);
+				}else if(tempFile.isFile()){
+					tempName = tempFile.getName();
+					if(tempName.indexOf(targetFileName)!=-1){
+						// 匹配成功，将文件名添加到结果集
+						fileList.add(tempFile.getAbsoluteFile());
+					}
+				}
+			}
+	    }   
+
 }

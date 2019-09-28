@@ -31,64 +31,65 @@ public class WF_CommEntity extends WebContralBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dtl_Save()
+	public final String Dtl_Save() throws Exception
 	{
 		try
 		{
 
 				///#region  查询出来从表数据.
 			Entities dtls = ClassFactory.GetEns(this.getEnsName());
-			Entity dtl = dtls.GetNewEntity;
+			Entity dtl = dtls.getNewEntity();
 			dtls.Retrieve(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
-			Map map = dtl.EnMap;
-			for (Entity item : dtls.ToJavaList())
+			Map map = dtl.getEnMap();
+			for (Entity item : dtls)
 			{
-				String pkval = item.GetValStringByKey(dtl.PK);
-				for (Attr attr : map.Attrs)
+				String pkval = item.GetValStringByKey(dtl.getPK());
+				for (Attr attr : map.getAttrs())
 				{
-					if (attr.IsRefAttr == true)
+					if (attr.getIsRefAttr() == true)
 					{
 						continue;
 					}
 
-					if (attr.MyDataType == DataType.AppDateTime || attr.MyDataType == DataType.AppDate)
+					if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
 					{
-						if (attr.UIIsReadonly == true)
+						if (attr.getUIIsReadonly() == true)
 						{
 							continue;
 						}
 
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.Key, null);
-						item.SetValByKey(attr.Key, val);
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
 
-					if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
+					if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
 					{
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.Key, null);
-						item.SetValByKey(attr.Key, val);
+						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
+					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
 					{
 						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
-						item.SetValByKey(attr.Key, val);
+						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.UIContralType == UIContralType.CheckBok && attr.UIIsReadonly == true)
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
 					{
-						String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.Key, "-1");
+						String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
 						if (val.equals("-1"))
 						{
-							item.SetValByKey(attr.Key, 0);
+							item.SetValByKey(attr.getKey(), 0);
 						}
 						else
 						{
-							item.SetValByKey(attr.Key, 1);
+							item.SetValByKey(attr.getKey(), 1);
 						}
 						continue;
 					}
@@ -105,57 +106,57 @@ public class WF_CommEntity extends WebContralBase
 			for (int i = 0; i < newRowCount; i++)
 			{
 				String val = "";
-				for (Attr attr : map.Attrs)
+				for (Attr attr : map.getAttrs())
 				{
 
-					if (attr.MyDataType == DataType.AppDateTime || attr.MyDataType == DataType.AppDate)
+					if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
 					{
-						if (attr.UIIsReadonly == true)
+						if (attr.getUIIsReadonly() == true)
 						{
 							continue;
 						}
 
-						val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.Key, null);
-						dtl.SetValByKey(attr.Key, val);
+						val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.getKey(), null);
+						dtl.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
 
-					if (attr.UIContralType == UIContralType.TB && attr.UIIsReadonly == false)
+					if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
 					{
 						val = this.GetValFromFrmByKey("TB_" + i + "_" + attr.getKey());
-						if (attr.IsNum && val.equals(""))
+						if (attr.getIsNum() && val.equals(""))
 						{
 							val = "0";
 						}
-						 dtl.SetValByKey(attr.Key, val);
+						 dtl.SetValByKey(attr.getKey(), val);
 						 continue;
 					}
 
-					if (attr.UIContralType == UIContralType.DDL && attr.UIIsReadonly == true)
+					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
 					{
 						val = this.GetValFromFrmByKey("DDL_" + i + "_" + attr.getKey());
-						dtl.SetValByKey(attr.Key, val);
+						dtl.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.UIContralType == UIContralType.CheckBok && attr.UIIsReadonly == true)
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
 					{
-						val = this.GetValFromFrmByKey("CB_" + i + "_" + attr.Key, "-1");
+						val = this.GetValFromFrmByKey("CB_" + i + "_" + attr.getKey(), "-1");
 						if (val.equals("-1"))
 						{
-							dtl.SetValByKey(attr.Key, 0);
+							dtl.SetValByKey(attr.getKey(), 0);
 						}
 						else
 						{
-							dtl.SetValByKey(attr.Key, 1);
+							dtl.SetValByKey(attr.getKey(), 1);
 						}
 						continue;
 					}
 				}
 				//dtl.SetValByKey(pkval, 0);
 				dtl.SetValByKey(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
-				dtl.PKVal = "0";
+				dtl.setPKVal("0");
 				dtl.Insert();
 			}
 
@@ -172,8 +173,9 @@ public class WF_CommEntity extends WebContralBase
 	 保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dtl_Init()
+	public final String Dtl_Init() throws Exception
 	{
 		//定义容器.
 		DataSet ds = new DataSet();
@@ -184,28 +186,28 @@ public class WF_CommEntity extends WebContralBase
 		ds.Tables.add(dtls.ToDataTableField("Dtls"));
 
 		//实体.
-		Entity dtl = dtls.GetNewEntity;
+		Entity dtl = dtls.getNewEntity();
 		//定义Sys_MapData.
 		MapData md = new MapData();
-		md.No = this.getEnName();
-		md.Name = dtl.EnDesc;
+		md.setNo(this.getEnName());
+		md.setName(dtl.getEnDesc());
 
 
 			///#region 加入权限信息.
 		//把权限加入参数里面.
-		if (dtl.HisUAC.IsInsert)
+		if (dtl.getHisUAC().IsInsert)
 		{
 			md.SetPara("IsInsert", "1");
 		}
-		if (dtl.HisUAC.IsUpdate)
+		if (dtl.getHisUAC().IsUpdate)
 		{
 			md.SetPara("IsUpdate", "1");
 		}
-		if (dtl.HisUAC.IsDelete)
+		if (dtl.getHisUAC().IsDelete)
 		{
 			md.SetPara("IsDelete", "1");
 		}
-		if (dtl.HisUAC.IsImp)
+		if (dtl.getHisUAC().IsImp)
 		{
 			md.SetPara("IsImp", "1");
 		}
@@ -216,7 +218,7 @@ public class WF_CommEntity extends WebContralBase
 
 
 			///#region 字段属性.
-		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs;
+		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs();
 		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
 		ds.Tables.add(sys_MapAttrs);
 
@@ -252,7 +254,7 @@ public class WF_CommEntity extends WebContralBase
 
 
 			// 判断是否存在.
-			if (ds.Tables.Contains(uiBindKey) == true)
+			if (ds.Tables.contains(uiBindKey) == true)
 			{
 				continue;
 			}
@@ -262,29 +264,29 @@ public class WF_CommEntity extends WebContralBase
 
 		for (Attr attr : dtl.getEnMap().getAttrs())
 		{
-			if (attr.IsRefAttr == true)
+			if (attr.getIsRefAttr() == true)
 			{
 				continue;
 			}
 
-			if (DataType.IsNullOrEmpty(attr.UIBindKey) || attr.UIBindKey.Length <= 10)
+			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) || attr.getUIBindKey().length() <= 10)
 			{
 				continue;
 			}
 
-			if (attr.UIIsReadonly == true)
+			if (attr.getUIIsReadonly() == true)
 			{
 				continue;
 			}
 
-			if (attr.UIBindKey.Contains("SELECT") == true || attr.UIBindKey.Contains("select") == true)
+			if (attr.getUIBindKey().contains("SELECT") == true || attr.getUIBindKey().contains("select") == true)
 			{
 				/*是一个sql*/
-				Object tempVar = attr.UIBindKey.Clone();
+				Object tempVar = attr.getUIBindKey();
 				String sqlBindKey = tempVar instanceof String ? (String)tempVar : null;
 
 				// 判断是否存在.
-				if (ds.Tables.Contains(sqlBindKey) == true)
+				if (ds.Tables.contains(sqlBindKey) == true)
 				{
 					continue;
 				}
@@ -292,7 +294,7 @@ public class WF_CommEntity extends WebContralBase
 				sqlBindKey = BP.WF.Glo.DealExp(sqlBindKey, null, null);
 
 				DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
-				dt.TableName = attr.Key;
+				dt.TableName = attr.getKey();
 
 				//@杜. 翻译当前部分.
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
@@ -308,9 +310,9 @@ public class WF_CommEntity extends WebContralBase
 		String enumKeys = "";
 		for (Attr attr : dtl.getEnMap().getAttrs())
 		{
-			if (attr.MyFieldType == FieldType.Enum)
+			if (attr.getMyFieldType() == FieldType.Enum)
 			{
-				enumKeys += "'" + attr.UIBindKey + "',";
+				enumKeys += "'" + attr.getUIBindKey() + "',";
 			}
 		}
 
@@ -343,28 +345,28 @@ public class WF_CommEntity extends WebContralBase
 		String refPKVal = this.GetRequestVal("RefVal");
 		Entities dtls = ClassFactory.GetEns(this.getEnsName());
 		dtls.Retrieve(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
-		Entity en = dtls.GetNewEntity;
+		Entity en = dtls.getNewEntity();
 		String name = "数据导出";
 		if (refPKVal.contains("/") == true)
 		{
 			refPKVal = refPKVal.replace("/", "_");
 		}
-		String filename = refPKVal + "_" + en.toString() + "_" + DataType.CurrentData + "_" + name + ".xls";
+		String filename = refPKVal + "_" + en.toString() + "_" + DataType.getCurrentDate() + "_" + name + ".xls";
 		String filePath = ExportDGToExcel(dtls.ToDataTableField(), en, name, null, filename);
 
-		filePath = BP.Sys.SystemConfig.PathOfTemp + filename;
+		filePath = BP.Sys.SystemConfig.getPathOfTemp() + filename;
 
-		String tempPath = BP.Sys.SystemConfig.PathOfTemp + refPKVal + "\\";
+		String tempPath = BP.Sys.SystemConfig.getPathOfTemp() + refPKVal + "\\";
 		if ((new File(tempPath)).isDirectory() == false)
 		{
 			(new File(tempPath)).mkdirs();
 		}
 
-		String myFilePath = BP.Sys.SystemConfig.PathOfDataUser + this.getEnsName().substring(0, this.getEnsName().length() - 1);
+		String myFilePath = BP.Sys.SystemConfig.getPathOfDataUser() + this.getEnsName().substring(0, this.getEnsName().length() - 1);
 
-		for (Entity dt : dtls.ToJavaList())
+		for (Entity dt : dtls)
 		{
-			String pkval = dt.PKVal.toString();
+			String pkval = dt.getPKVal().toString();
 			Object tempVar = dt.GetValByKey("MyFileExt");
 			String ext = DataType.IsNullOrEmpty(tempVar instanceof String ? (String)tempVar : null) ? "" : dt.GetValByKey("MyFileExt").toString();
 			if (DataType.IsNullOrEmpty(ext) == true)
@@ -380,13 +382,13 @@ public class WF_CommEntity extends WebContralBase
 		Files.copy(Paths.get(filePath), Paths.get(tempPath + filename), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 
 		//生成压缩文件
-		String zipFile = BP.Sys.SystemConfig.PathOfTemp + refPKVal + "_" + en.toString() + "_" + DataType.CurrentData + "_" + name + ".zip";
+		String zipFile = BP.Sys.SystemConfig.getPathOfTemp() + refPKVal + "_" + en.toString() + "_" + DataType.getCurrentDate() + "_" + name + ".zip";
 
 		File finfo = new File(zipFile);
 
 		(new FastZip()).CreateZip(finfo.getPath(), tempPath, true, "");
 
-		return "/DataUser/Temp/" + refPKVal + "_" + en.toString() + "_" + DataType.CurrentData + "_" + name + ".zip";
+		return "/DataUser/Temp/" + refPKVal + "_" + en.toString() + "_" + DataType.getCurrentDate() + "_" + name + ".zip";
 	}
 
 		///#endregion 从表.
@@ -421,7 +423,7 @@ public class WF_CommEntity extends WebContralBase
 					return "err@类名错误" + this.getEnsName(); //@李国文.
 				}
 
-				en = ens.GetNewEntity;
+				en = ens.getNewEntity();
 			}
 			else
 			{
@@ -434,22 +436,22 @@ public class WF_CommEntity extends WebContralBase
 			}
 
 			//获得描述.
-			Map map = en.EnMap;
+			Map map = en.getEnMap();
 			String pkVal = this.getPKVal();
 			if (isBlank == false)
 			{
-				en.PKVal = pkVal;
+				en.setPKVal(pkVal);
 				int i = en.RetrieveFromDBSources();
 				if (i == 0)
 				{
-					return "err@数据[" + map.EnDesc + "]主键为[" + pkVal + "]不存在，或者没有保存。";
+					return "err@数据[" + map.getEnDesc() + "]主键为[" + pkVal + "]不存在，或者没有保存。";
 				}
 			}
 			else
 			{
 				for (Attr attr : en.getEnMap().getAttrs())
 				{
-					en.SetValByKey(attr.Key, attr.DefaultVal);
+					en.SetValByKey(attr.getKey(), attr.getDefaultVal());
 				}
 
 				//设置默认的数据.
@@ -458,7 +460,7 @@ public class WF_CommEntity extends WebContralBase
 				en.SetValByKey("RefPKVal", this.getRefPKVal());
 
 				//自动生成一个编号.
-				if (en.IsNoEntity == true && en.EnMap.IsAutoGenerNo == true)
+				if (en.getIsNoEntity() == true && en.getEnMap().getIsAutoGenerNo() == true)
 				{
 					en.SetValByKey("No", en.GenerNewNoByKey("No"));
 				}
@@ -470,11 +472,11 @@ public class WF_CommEntity extends WebContralBase
 
 			//定义Sys_MapData.
 			MapData md = new MapData();
-			md.No = this.getEnName();
-			md.Name = map.EnDesc;
+			md.setNo(this.getEnName());
+			md.setName(map.getEnDesc());
 
 			//附件类型.
-			md.SetPara("BPEntityAthType", (int)map.HisBPEntityAthType);
+			md.SetPara("BPEntityAthType", map.HisBPEntityAthType.toString());
 
 
 			//多附件上传
@@ -484,7 +486,7 @@ public class WF_CommEntity extends WebContralBase
 				DataTable attrFiles = new DataTable("AttrFiles");
 				attrFiles.Columns.Add("FileNo");
 				attrFiles.Columns.Add("FileName");
-				for (AttrFile attrFile : map.HisAttrFiles)
+				for (AttrFile attrFile : map.getHisAttrFiles())
 				{
 					DataRow dr = attrFiles.NewRow();
 					dr.set("FileNo", attrFile.FileNo);
@@ -494,31 +496,31 @@ public class WF_CommEntity extends WebContralBase
 				ds.Tables.add(attrFiles);
 
 				//增加附件列表
-				SysFileManagers sfs = new SysFileManagers(en.toString(), en.PKVal.toString());
+				SysFileManagers sfs = new SysFileManagers(en.toString(), en.getPKVal().toString());
 				ds.Tables.add(sfs.ToDataTableField("Sys_FileManager"));
 			}
 
 
 				///#region 加入权限信息.
 			//把权限加入参数里面.
-			if (en.HisUAC.IsInsert)
+			if (en.getHisUAC().IsInsert)
 			{
 				md.SetPara("IsInsert", "1");
 			}
-			if (en.HisUAC.IsUpdate)
+			if (en.getHisUAC().IsUpdate)
 			{
 				md.SetPara("IsUpdate", "1");
 			}
 			if (isBlank == true)
 			{
-				if (en.HisUAC.IsDelete)
+				if (en.getHisUAC().IsDelete)
 				{
 					md.SetPara("IsDelete", "0");
 				}
 			}
 			else
 			{
-				if (en.HisUAC.IsDelete)
+				if (en.getHisUAC().IsDelete)
 				{
 					md.SetPara("IsDelete", "1");
 				}
@@ -536,10 +538,10 @@ public class WF_CommEntity extends WebContralBase
 
 				///#region 增加上分组信息.
 			EnCfg ec = new EnCfg(this.getEnName());
-			String groupTitle = ec.GroupTitle;
+			String groupTitle = ec.getGroupTitle();
 			if (DataType.IsNullOrEmpty(groupTitle) == true)
 			{
-				groupTitle = "@" + en.PK + ",基本信息," + map.EnDesc + "";
+				groupTitle = "@" + en.getPK() + ",基本信息," + map.getEnDesc() + "";
 			}
 
 			//增加上.
@@ -585,9 +587,9 @@ public class WF_CommEntity extends WebContralBase
 
 
 				///#region 字段属性.
-			MapAttrs attrs = en.getEnMap().getAttrs().ToMapAttrs;
+			MapAttrs attrs = en.getEnMap().getAttrs().ToMapAttrs();
 			DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
-			sys_MapAttrs.Columns.Remove(MapAttrAttr.GroupID);
+			sys_MapAttrs.Columns.remove(MapAttrAttr.GroupID);
 			sys_MapAttrs.Columns.Add("GroupID");
 
 
@@ -599,7 +601,7 @@ public class WF_CommEntity extends WebContralBase
 			{
 				if (currGroupID.equals("") == true)
 				{
-					currGroupID = dtGroups.Rows[0]["OID"].toString();
+					currGroupID = dtGroups.Rows.get(0).getValue("OID").toString();
 				}
 
 				String keyOfEn = drAttr.get(MapAttrAttr.KeyOfEn).toString();
@@ -657,7 +659,7 @@ public class WF_CommEntity extends WebContralBase
 				String fk_mapData = dr.get("FK_MapData").toString();
 
 				// 判断是否存在.
-				if (ds.Tables.Contains(uiBindKey) == true)
+				if (ds.Tables.contains(uiBindKey) == true)
 				{
 					continue;
 				}
@@ -671,30 +673,30 @@ public class WF_CommEntity extends WebContralBase
 			//加入sql模式的外键.
 			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				if (attr.IsRefAttr == true)
+				if (attr.getIsRefAttr() == true)
 				{
 					continue;
 				}
 
-				if (DataType.IsNullOrEmpty(attr.UIBindKey) || attr.UIBindKey.Length <= 10)
+				if (DataType.IsNullOrEmpty(attr.getUIBindKey()) || attr.getUIBindKey().Length <= 10)
 				{
 					continue;
 				}
 
-				if (attr.UIIsReadonly == true)
+				if (attr.getUIIsReadonly() == true)
 				{
 					continue;
 				}
 
-				if (attr.UIBindKey.Contains("SELECT") == true || attr.UIBindKey.Contains("select") == true)
+				if (attr.getUIBindKey().contains("SELECT") == true || attr.getUIBindKey().contains("select") == true)
 				{
 					/*是一个sql*/
-					Object tempVar = attr.UIBindKey.Clone();
+					Object tempVar = attr.getUIBindKey();
 					String sqlBindKey = tempVar instanceof String ? (String)tempVar : null;
 					sqlBindKey = BP.WF.Glo.DealExp(sqlBindKey, en, null);
 
 					DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
-					dt.TableName = attr.Key;
+					dt.TableName = attr.getKey();
 
 					//@杜. 翻译当前部分.
 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
@@ -709,11 +711,11 @@ public class WF_CommEntity extends WebContralBase
 
 			//加入枚举的外键.
 			String enumKeys = "";
-			for (Attr attr : map.Attrs)
+			for (Attr attr : map.getAttrs())
 			{
-				if (attr.MyFieldType == FieldType.Enum)
+				if (attr.getMyFieldType() == FieldType.Enum)
 				{
-					enumKeys += "'" + attr.UIBindKey + "',";
+					enumKeys += "'" + attr.getUIBindKey() + "',";
 				}
 			}
 
@@ -759,13 +761,13 @@ public class WF_CommEntity extends WebContralBase
 			dtM.Columns.Add("IsCanBatch");
 			dtM.Columns.Add("RefAttrKey");
 
-			RefMethods rms = map.HisRefMethods;
+			RefMethods rms = map.getHisRefMethods();
 			for (RefMethod item : rms)
 			{
 				item.HisEn = en;
 				//item.HisAttrs = en.getEnMap().getAttrs();B
 				String myurl = "";
-				if (item.RefMethodType != RefMethodType.Func)
+				if (item.refMethodType != RefMethodType.Func)
 				{
 					Object tempVar2 = item.Do(null);
 					myurl = tempVar2 instanceof String ? (String)tempVar2 : null;
@@ -776,7 +778,7 @@ public class WF_CommEntity extends WebContralBase
 				}
 				else
 				{
-					myurl = "../RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.GetNewEntities.toString() + "&PKVal=" + this.getPKVal();
+					myurl = "../RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=" + this.getPKVal();
 				}
 
 				DataRow dr = dtM.NewRow();
@@ -787,7 +789,7 @@ public class WF_CommEntity extends WebContralBase
 				dr.set("Visable", item.Visable);
 				dr.set("Warning", item.Warning);
 
-				dr.set("RefMethodType", (int)item.RefMethodType);
+				dr.set("RefMethodType", item.refMethodType);
 				dr.set("RefAttrKey", item.RefAttrKey);
 				dr.set("Url", myurl);
 				dr.set("W", item.Width);
@@ -845,14 +847,15 @@ public class WF_CommEntity extends WebContralBase
 			 }
 		}
 		fileManager.Delete();
-		return fileManager.MyFileName + "删除成功";
+		return fileManager.getMyFileName() + "删除成功";
 	}
 	/** 
 	 实体初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Entity_Init()
+	public final String Entity_Init() throws Exception
 	{
 		try
 		{
@@ -871,7 +874,7 @@ public class WF_CommEntity extends WebContralBase
 					return "err@类名没有传递过来";
 				}
 				Entities ens = ClassFactory.GetEns(this.getEnsName());
-				en = ens.GetNewEntity;
+				en = ens.getNewEntity();
 			}
 			else
 			{
@@ -884,13 +887,13 @@ public class WF_CommEntity extends WebContralBase
 			}
 
 			//获得描述.
-			Map map = en.EnMap;
+			Map map = en.getEnMap();
 
 			String pkVal = this.getPKVal();
 
 			if (isBlank == false)
 			{
-				en.PKVal = pkVal;
+				en.setPKVal(pkVal);
 				en.RetrieveFromDBSources();
 			}
 
@@ -923,13 +926,13 @@ public class WF_CommEntity extends WebContralBase
 			dtM.Columns.Add("FunPara");
 
 
-			RefMethods rms = map.HisRefMethods;
+			RefMethods rms = map.getHisRefMethods();
 			for (RefMethod item : rms)
 			{
 				item.HisEn = en;
 
 				String myurl = "";
-				if (item.RefMethodType == RefMethodType.LinkeWinOpen || item.RefMethodType == RefMethodType.RightFrameOpen || item.RefMethodType == RefMethodType.LinkModel)
+				if (item.refMethodType == RefMethodType.LinkeWinOpen || item.refMethodType == RefMethodType.RightFrameOpen || item.refMethodType == RefMethodType.LinkModel)
 				{
 					try
 					{
@@ -947,7 +950,7 @@ public class WF_CommEntity extends WebContralBase
 				}
 				else
 				{
-					myurl = "../RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.GetNewEntities.toString() + "&PKVal=" + this.getPKVal();
+					myurl = "../RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=" + this.getPKVal();
 				}
 
 				DataRow dr = dtM.NewRow();
@@ -959,7 +962,7 @@ public class WF_CommEntity extends WebContralBase
 				dr.set("Warning", item.Warning);
 
 
-				dr.set("RefMethodType", (int)item.RefMethodType);
+				dr.set("RefMethodType", item.refMethodType);
 				dr.set("RefAttrKey", item.RefAttrKey);
 				dr.set("Url", myurl);
 				dr.set("W", item.Width);
@@ -967,7 +970,7 @@ public class WF_CommEntity extends WebContralBase
 				dr.set("Icon", item.Icon);
 				dr.set("IsCanBatch", item.IsCanBatch);
 				dr.set("GroupName", item.GroupName);
-				Attrs attrs = item.HisAttrs;
+				Attrs attrs = item.getHisAttrs();
 				if (attrs.size() == 0)
 				{
 					dr.set("FunPara", "false");
@@ -984,7 +987,7 @@ public class WF_CommEntity extends WebContralBase
 
 
 				///#region 加入一对多的实体编辑
-			AttrsOfOneVSM oneVsM = en.getEnMap().getAttrs()OfOneVSM;
+			AttrsOfOneVSM oneVsM = en.getEnMap().getAttrsOfOneVSM();
 			String sql = "";
 			int i = 0;
 			if (oneVsM.size() > 0)
@@ -992,88 +995,88 @@ public class WF_CommEntity extends WebContralBase
 				for (AttrOfOneVSM vsM : oneVsM)
 				{
 					//判断该dot2dot是否显示？
-					Entity enMM = vsM.EnsOfMM.GetNewEntity;
-					enMM.SetValByKey(vsM.AttrOfOneInMM, this.getPKVal());
-					if (enMM.HisUAC.IsView == false)
+					Entity enMM = vsM.getEnsOfMM().getNewEntity();
+					enMM.SetValByKey(vsM.getAttrOfOneInMM(), this.getPKVal());
+					if (enMM.getHisUAC().IsView == false)
 					{
 						continue;
 					}
 					DataRow dr = dtM.NewRow();
 					dr.set("No", enMM.toString());
 					// dr["GroupName"] = vsM.GroupName;
-					if (en.PKVal != null)
+					if (en.getPKVal() != null)
 					{
 						//判断模式.
 						String url = "";
-						if (vsM.Dot2DotModel == Dot2DotModel.TreeDept)
+						if (vsM.dot2DotModel == Dot2DotModel.TreeDept)
 						{
-							//url = "Dot2DotTreeDeptModel.htm?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.EnsOfMM.ToString();
-							//  url = "Branches.htm?EnName=" + en.ToString() + "&AttrKey=" + vsM.EnsOfMM.ToString();
+							//url = "Dot2DotTreeDeptModel.htm?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.getEnsOfMM().ToString();
+							//  url = "Branches.htm?EnName=" + en.ToString() + "&AttrKey=" + vsM.getEnsOfMM().ToString();
 
-							url = "Branches.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName=" + vsM.EnsOfMM.toString();
-							// url += "&PKVal=" + en.PKVal;
-							url += "&Dot2DotEnName=" + vsM.EnsOfMM.GetNewEntity.toString(); //存储实体类.
-							url += "&AttrOfOneInMM=" + vsM.AttrOfOneInMM; //存储表那个与主表关联. 比如: FK_Node
-							url += "&AttrOfMInMM=" + vsM.AttrOfMInMM; //dot2dot存储表那个与实体表.  比如:FK_Station.
-							url += "&EnsOfM=" + vsM.EnsOfM.toString(); //默认的B实体分组依据.  比如:FK_Station.
+							url = "Branches.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName=" + vsM.getEnsOfMM().toString();
+							// url += "&PKVal=" + en.getPKVal();
+							url += "&Dot2DotEnName=" + vsM.getEnsOfMM().getNewEntity().toString(); //存储实体类.
+							url += "&AttrOfOneInMM=" + vsM.getAttrOfOneInMM(); //存储表那个与主表关联. 比如: FK_Node
+							url += "&AttrOfMInMM=" + vsM.getAttrOfMInMM(); //dot2dot存储表那个与实体表.  比如:FK_Station.
+							url += "&EnsOfM=" + vsM.getEnsOfM().toString(); //默认的B实体分组依据.  比如:FK_Station.
 							url += "&DefaultGroupAttrKey=" + vsM.DefaultGroupAttrKey; //默认的B实体分组依据.
 
 						}
-						else if (vsM.Dot2DotModel == Dot2DotModel.TreeDeptEmp)
+						else if (vsM.dot2DotModel == Dot2DotModel.TreeDeptEmp)
 						{
-							//   url = "Dot2DotTreeDeptEmpModel.htm?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.EnsOfMM.ToString();
-							// url = "Dot2Dot.aspx?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.EnsOfMM.ToString();
-							url = "BranchesAndLeaf.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName=" + vsM.EnsOfMM.toString();
-							//   url += "&PKVal=" + en.PKVal;
-							url += "&Dot2DotEnName=" + vsM.EnsOfMM.GetNewEntity.toString(); //存储实体类.
-							url += "&AttrOfOneInMM=" + vsM.AttrOfOneInMM; //存储表那个与主表关联. 比如: FK_Node
-							url += "&AttrOfMInMM=" + vsM.AttrOfMInMM; //dot2dot存储表那个与实体表.  比如:FK_Station.
-							url += "&EnsOfM=" + vsM.EnsOfM.toString(); //默认的B实体分组依据.  比如:FK_Station.
+							//   url = "Dot2DotTreeDeptEmpModel.htm?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.getEnsOfMM().ToString();
+							// url = "Dot2Dot.aspx?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.getEnsOfMM().ToString();
+							url = "BranchesAndLeaf.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName=" + vsM.getEnsOfMM().toString();
+							//   url += "&PKVal=" + en.getPKVal();
+							url += "&Dot2DotEnName=" + vsM.getEnsOfMM().getNewEntity().toString(); //存储实体类.
+							url += "&AttrOfOneInMM=" + vsM.getAttrOfOneInMM(); //存储表那个与主表关联. 比如: FK_Node
+							url += "&AttrOfMInMM=" + vsM.getAttrOfMInMM(); //dot2dot存储表那个与实体表.  比如:FK_Station.
+							url += "&EnsOfM=" + vsM.getEnsOfM().toString(); //默认的B实体分组依据.  比如:FK_Station.
 							url += "&DefaultGroupAttrKey=" + vsM.DefaultGroupAttrKey; //默认的B实体分组依据.  比如:FK_Station.
 							//url += "&RootNo=" + vsM.RootNo; //默认的B实体分组依据.  比如:FK_Station.
 						}
 						else
 						{
-							// url = "Dot2Dot.aspx?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.EnsOfMM.ToString();
-							url = "Dot2Dot.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName=" + vsM.EnsOfMM.toString(); //比如:BP.WF.Template.NodeStations
-							url += "&AttrOfOneInMM=" + vsM.AttrOfOneInMM; //存储表那个与主表关联. 比如: FK_Node
-							url += "&AttrOfMInMM=" + vsM.AttrOfMInMM; //dot2dot存储表那个与实体表.  比如:FK_Station.
-							url += "&EnsOfM=" + vsM.EnsOfM.toString(); //默认的B实体.   //比如:BP.Port.Stations
+							// url = "Dot2Dot.aspx?EnsName=" + en.GetNewEntities.ToString() + "&EnName=" + this.EnName + "&AttrKey=" + vsM.getEnsOfMM().ToString();
+							url = "Dot2Dot.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName=" + vsM.getEnsOfMM().toString(); //比如:BP.WF.Template.NodeStations
+							url += "&AttrOfOneInMM=" + vsM.getAttrOfOneInMM(); //存储表那个与主表关联. 比如: FK_Node
+							url += "&AttrOfMInMM=" + vsM.getAttrOfMInMM(); //dot2dot存储表那个与实体表.  比如:FK_Station.
+							url += "&EnsOfM=" + vsM.getEnsOfM().toString(); //默认的B实体.   //比如:BP.Port.Stations
 							url += "&DefaultGroupAttrKey=" + vsM.DefaultGroupAttrKey; //默认的B实体分组依据.  比如:FK_Station.
 
 							//+"&RefAttrEnsName=" + vsM.EnsOfM.ToString();
-							//url += "&RefAttrKey=" + vsM.AttrOfOneInMM + "&RefAttrEnsName=" + vsM.EnsOfM.ToString();
+							//url += "&RefAttrKey=" + vsM.getAttrOfOneInMM() + "&RefAttrEnsName=" + vsM.EnsOfM.ToString();
 						}
 
-						dr.set("Url", url + "&" + en.PK + "=" + en.PKVal + "&PKVal=" + en.PKVal);
+						dr.set("Url", url + "&" + en.getPK() + "=" + en.getPKVal() + "&PKVal=" + en.getPKVal());
 						dr.set("Icon", "../Img/M2M.png");
 
 					}
 
 					dr.set("W", "900");
 					dr.set("H", "500");
-					dr.set("RefMethodType", (int)RefMethodType.RightFrameOpen);
+					dr.set("RefMethodType", RefMethodType.RightFrameOpen);
 
 
 					// 获得选择的数量.
 					try
 					{
-						sql = "SELECT COUNT(*) as NUM FROM " + vsM.EnsOfMM.GetNewEntity.EnMap.PhysicsTable + " WHERE " + vsM.AttrOfOneInMM + "='" + en.PKVal + "'";
+						sql = "SELECT COUNT(*) as NUM FROM " + vsM.getEnsOfMM().getNewEntity().getEnMap().getPhysicsTable() + " WHERE " + vsM.getAttrOfOneInMM() + "='" + en.getPKVal() + "'";
 						i = DBAccess.RunSQLReturnValInt(sql);
 					}
 					catch (java.lang.Exception e)
 					{
-						sql = "SELECT COUNT(*) as NUM FROM " + vsM.EnsOfMM.GetNewEntity.EnMap.PhysicsTable + " WHERE " + vsM.AttrOfOneInMM + "=" + en.PKVal;
+						sql = "SELECT COUNT(*) as NUM FROM " + vsM.getEnsOfMM().getNewEntity().getEnMap().getPhysicsTable() + " WHERE " + vsM.getAttrOfOneInMM() + "=" + en.getPKVal();
 						try
 						{
 							i = DBAccess.RunSQLReturnValInt(sql);
 						}
 						catch (java.lang.Exception e2)
 						{
-							vsM.EnsOfMM.GetNewEntity.CheckPhysicsTable();
+							vsM.getEnsOfMM().getNewEntity().CheckPhysicsTable();
 						}
 					}
-					dr.set("Title", vsM.Desc + "(" + i + ")");
+					dr.set("Title", vsM.getDesc() + "(" + i + ")");
 					dtM.Rows.add(dr);
 				}
 			}
@@ -1082,42 +1085,42 @@ public class WF_CommEntity extends WebContralBase
 
 
 				///#region 从表
-			EnDtls enDtls = en.EnMap.Dtls;
+			EnDtls enDtls = en.getEnMap().getDtls();
 			for (EnDtl enDtl : enDtls)
 			{
 				//判断该dtl是否要显示?
-				Entity myEnDtl = enDtl.Ens.GetNewEntity; //获取他的en
-				myEnDtl.SetValByKey(enDtl.RefKey, this.getPKVal()); //给refpk赋值.
-				if (myEnDtl.HisUAC.IsView == false)
+				Entity myEnDtl = enDtl.getEns().getNewEntity(); //获取他的en
+				myEnDtl.SetValByKey(enDtl.getRefKey(), this.getPKVal()); //给refpk赋值.
+				if (myEnDtl.getHisUAC().IsView == false)
 				{
 					continue;
 				}
 
 				DataRow dr = dtM.NewRow();
-				//string url = "Dtl.aspx?EnName=" + this.EnName + "&PK=" + this.PKVal + "&EnsName=" + enDtl.EnsName + "&RefKey=" + enDtl.RefKey + "&RefVal=" + en.PKVal.ToString() + "&MainEnsName=" + en.ToString() ;
-				String url = "Dtl.htm?EnName=" + this.getEnName() + "&PK=" + this.getPKVal() + "&EnsName=" + enDtl.EnsName + "&RefKey=" + enDtl.RefKey + "&RefVal=" + en.PKVal.toString() + "&MainEnsName=" + en.toString();
+				//string url = "Dtl.aspx?EnName=" + this.EnName + "&PK=" + this.PKVal + "&EnsName=" + enDtl.getEnsName() + "&RefKey=" + enDtl.getRefKey() + "&RefVal=" + en.getPKVal().ToString() + "&MainEnsName=" + en.ToString() ;
+				String url = "Dtl.htm?EnName=" + this.getEnName() + "&PK=" + this.getPKVal() + "&EnsName=" + enDtl.getEnsName() + "&RefKey=" + enDtl.getRefKey() + "&RefVal=" + en.getPKVal().toString() + "&MainEnsName=" + en.toString();
 				try
 				{
-					i = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM " + enDtl.Ens.GetNewEntity.EnMap.PhysicsTable + " WHERE " + enDtl.RefKey + "='" + en.PKVal + "'");
+					i = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM " + enDtl.getEns().getNewEntity().getEnMap().getPhysicsTable() + " WHERE " + enDtl.getRefKey() + "='" + en.getPKVal() + "'");
 				}
 				catch (java.lang.Exception e3)
 				{
 					try
 					{
-						i = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM " + enDtl.Ens.GetNewEntity.EnMap.PhysicsTable + " WHERE " + enDtl.RefKey + "=" + en.PKVal);
+						i = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM " + enDtl.getEns().getNewEntity().getEnMap().getPhysicsTable() + " WHERE " + enDtl.getRefKey() + "=" + en.getPKVal());
 					}
 					catch (java.lang.Exception e4)
 					{
-						enDtl.Ens.GetNewEntity.CheckPhysicsTable();
+						enDtl.getEns().getNewEntity().CheckPhysicsTable();
 					}
 				}
 
-				dr.set("No", enDtl.EnsName);
-				dr.set("Title", enDtl.Desc + "(" + i + ")");
+				dr.set("No", enDtl.getEnsName());
+				dr.set("Title", enDtl.getDesc() + "(" + i + ")");
 				dr.set("Url", url);
-				dr.set("GroupName", enDtl.GroupName);
+				dr.set("GroupName", enDtl.getGroupName());
 
-				dr.set("RefMethodType", (int)RefMethodType.RightFrameOpen);
+				dr.set("RefMethodType", RefMethodType.RightFrameOpen);
 
 				dtM.Rows.add(dr);
 			}
@@ -1140,7 +1143,7 @@ public class WF_CommEntity extends WebContralBase
 
 
 		///#region 部门人员模式.
-	public final String BranchesAndLeaf_SearchByNodeID()
+	public final String BranchesAndLeaf_SearchByNodeID() throws Exception
 	{
 		String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
@@ -1155,7 +1158,7 @@ public class WF_CommEntity extends WebContralBase
 
 		return ensMen.ToJson();
 	}
-	public final String BranchesAndLeaf_SearchByKey()
+	public final String BranchesAndLeaf_SearchByKey() throws Exception
 	{
 		String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
@@ -1172,7 +1175,7 @@ public class WF_CommEntity extends WebContralBase
 
 		return ensMen.ToJson();
 	}
-	public final String BranchesAndLeaf_Delete()
+	public final String BranchesAndLeaf_Delete() throws Exception
 	{
 		try
 		{
@@ -1192,23 +1195,24 @@ public class WF_CommEntity extends WebContralBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String BranchesAndLeaf_Init()
+	public final String BranchesAndLeaf_Init() throws Exception
 	{
 		String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
 
 		//string enName = this.GetRequestVal("EnName");
 		Entity en = ClassFactory.GetEn(this.getEnName());
-		en.PKVal = this.getPKVal();
+		en.setPKVal(this.getPKVal());
 		en.Retrieve();
 
 		//找到映射.
-		AttrsOfOneVSM oneVsM = en.getEnMap().getAttrs()OfOneVSM;
+		AttrsOfOneVSM oneVsM = en.getEnMap().getAttrsOfOneVSM();
 		AttrOfOneVSM vsM = null;
 		for (AttrOfOneVSM item : oneVsM)
 		{
-			if (item.Dot2DotModel == Dot2DotModel.TreeDeptEmp && item.EnsOfMM.toString().equals(dot2DotEnsName) && item.DefaultGroupAttrKey.equals(defaultGroupAttrKey))
+			if (item.dot2DotModel == Dot2DotModel.TreeDeptEmp && item.getEnsOfMM().toString().equals(dot2DotEnsName) && item.DefaultGroupAttrKey.equals(defaultGroupAttrKey))
 			{
 				vsM = item;
 				break;
@@ -1231,25 +1235,25 @@ public class WF_CommEntity extends WebContralBase
 			///#region 生成树目录.
 		String ensOfM = this.GetRequestVal("EnsOfM"); //多的实体.
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
-		Entity enMen = ensMen.GetNewEntity;
+		Entity enMen = ensMen.getNewEntity();
 
-		Attr attr = enMen.EnMap.GetAttrByKey(defaultGroupAttrKey);
+		Attr attr = enMen.getEnMap().GetAttrByKey(defaultGroupAttrKey);
 		if (attr == null)
 		{
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不存在，请确认是否删除了该属性?";
 		}
 
-		if (attr.MyFieldType == FieldType.Normal)
+		if (attr.getMyFieldType() == FieldType.Normal)
 		{
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不能是普通字段，必须是外键或者枚举.";
 		}
 
-		Entities trees = attr.HisFKEns;
+		Entities trees = attr.getHisFKEns();
 		trees.RetrieveAll();
 
 		DataTable dt = trees.ToDataTableField("DBTrees");
 		//如果没有parnetNo 列，就增加上, 有可能是分组显示使用这个模式.
-		if (dt.Columns.Contains("ParentNo") == false)
+		if (dt.Columns.contains("ParentNo") == false)
 		{
 			dt.Columns.Add("ParentNo");
 			for (DataRow dr : dt.Rows)
@@ -1264,23 +1268,23 @@ public class WF_CommEntity extends WebContralBase
 
 			///#region 生成选择的数据.
 		Entities dot2Dots = ClassFactory.GetEns(dot2DotEnsName);
-		dot2Dots.Retrieve(vsM.AttrOfOneInMM, this.getPKVal());
+		dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), this.getPKVal());
 
 		DataTable dtSelected = dot2Dots.ToDataTableField("DBMMs");
 
 		String attrOfMInMM = this.GetRequestVal("AttrOfMInMM");
 		String AttrOfOneInMM = this.GetRequestVal("AttrOfOneInMM");
 
-		dtSelected.Columns[attrOfMInMM].ColumnName = "No";
+		dtSelected.Columns.get(attrOfMInMM).setColumnName("No");
 
-		if (dtSelected.Columns.Contains(attrOfMInMM + "Text") == false)
+		if (dtSelected.Columns.contains(attrOfMInMM + "Text") == false)
 		{
 			return "err@MM实体类字段属性需要按照外键属性编写:" + dot2DotEnsName + " - " + attrOfMInMM;
 		}
 
-		dtSelected.Columns[attrOfMInMM + "Text").ColumnName = "Name";
+		dtSelected.Columns.get(attrOfMInMM + "Text").ColumnName = "Name";
 
-		dtSelected.Columns.Remove(AttrOfOneInMM);
+		dtSelected.Columns.remove(AttrOfOneInMM);
 		ds.Tables.add(dtSelected); //已经选择的数据.
 
 			///#endregion 生成选择的数据.
@@ -1296,8 +1300,9 @@ public class WF_CommEntity extends WebContralBase
 	 执行保存
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2Dot_Save()
+	public final String Dot2Dot_Save() throws Exception
 	{
 
 		try
@@ -1310,7 +1315,7 @@ public class WF_CommEntity extends WebContralBase
 			String attrOfMInMM = this.GetRequestVal("AttrOfMInMM");
 
 			//获得点对点的实体.
-			Entity en = ClassFactory.GetEns(dot2DotEnsName).GetNewEntity;
+			Entity en = ClassFactory.GetEns(dot2DotEnsName).getNewEntity();
 			en.Delete(attrOfOneInMM, this.getPKVal()); //首先删除.
 
 			String[] strs = eles.split("[,]", -1);
@@ -1336,15 +1341,16 @@ public class WF_CommEntity extends WebContralBase
 	 获得分组的数据源
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Dot2Dot_GenerGroupEntitis()
+	public final String Dot2Dot_GenerGroupEntitis() throws Exception
 	{
 		String key = this.GetRequestVal("DefaultGroupAttrKey");
 
 		//实体集合.
 		String ensName = this.GetRequestVal("EnsOfM");
 		Entities ens = ClassFactory.GetEns(ensName);
-		Entity en = ens.GetNewEntity;
+		Entity en = ens.getNewEntity();
 
 		Attrs attrs = en.getEnMap().getAttrs();
 		Attr attr = attrs.GetAttrByKey(key);
@@ -1354,24 +1360,24 @@ public class WF_CommEntity extends WebContralBase
 			return "err@设置的分组外键错误[" + key + "],不存在[" + ensName + "]或者已经被删除.";
 		}
 
-		if (attr.MyFieldType == FieldType.Normal)
+		if (attr.getMyFieldType() == FieldType.Normal)
 		{
 			return "err@设置的默认分组[" + key + "]不能是普通字段.";
 		}
 
-		if (attr.MyFieldType == FieldType.FK)
+		if (attr.getMyFieldType() == FieldType.FK)
 		{
-			Entities ensFK = attr.HisFKEns;
-			ensFK.Clear();
+			Entities ensFK = attr.getHisFKEns();
+			ensFK.clear();
 			ensFK.RetrieveAll();
 			return ensFK.ToJson();
 		}
 
-		if (attr.MyFieldType == FieldType.Enum)
+		if (attr.getMyFieldType() == FieldType.Enum)
 		{
 			/* 如果是枚举 */
 			SysEnums ses = new SysEnums();
-			ses.Retrieve(SysEnumAttr.IntKey, attr.UIBindKey);
+			ses.Retrieve(SysEnumAttr.IntKey, attr.getUIBindKey());
 		}
 
 		return "err@设置的默认分组[" + key + "]不能是普通字段.";

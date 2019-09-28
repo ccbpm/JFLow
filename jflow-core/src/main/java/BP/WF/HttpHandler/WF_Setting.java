@@ -7,6 +7,7 @@ import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
+import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
 import BP.NetPlatformImpl.*;
 import BP.WF.*;
@@ -57,13 +58,13 @@ public class WF_Setting extends WebContralBase
 		ht.put("UserName", WebUser.getName());
 
 		BP.Port.Emp emp = new Emp();
-		emp.setNo (WebUser.getNo();
+		emp.setNo (WebUser.getNo());
 		emp.Retrieve();
 
 		//部门名称.
-		ht.put("DeptName", emp.FK_DeptText);
+		ht.put("DeptName", emp.getFK_DeptText());
 
-		if (SystemConfig.OSModel == OSModel.OneMore)
+		if (SystemConfig.getOSModel() == OSModel.OneMore)
 		{
 			BP.GPM.DeptEmpStations des = new BP.GPM.DeptEmpStations();
 			des.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Emp, WebUser.getNo());
@@ -71,34 +72,34 @@ public class WF_Setting extends WebContralBase
 			String depts = "";
 			String stas = "";
 
-			for (BP.GPM.DeptEmpStation item : des)
+			for (BP.GPM.DeptEmpStation item : des.ToJavaList())
 			{
 				BP.Port.Dept dept = new Dept();
-				dept.No = item.FK_Dept;
+				dept.setNo(item.getFK_Dept());
 				int count = dept.RetrieveFromDBSources();
 				if (count != 0)
 				{
-					depts += dept.Name + "、";
+					depts += dept.getName() + "、";
 				}
 
 
-				if (DataType.IsNullOrEmpty(item.FK_Station) == true)
+				if (DataType.IsNullOrEmpty(item.getFK_Station()) == true)
 				{
 					continue;
 				}
 
-				if (DataType.IsNullOrEmpty(item.FK_Dept) == true)
+				if (DataType.IsNullOrEmpty(item.getFK_Dept()) == true)
 				{
 					//   item.Delete();
 					continue;
 				}
 
 				BP.Port.Station sta = new Station();
-				sta.No = item.FK_Station;
+				sta.setNo(item.getFK_Station());
 				count = sta.RetrieveFromDBSources();
 				if (count != 0)
 				{
-					stas += sta.Name + "、";
+					stas += sta.getName() + "、";
 				}
 			}
 
@@ -271,11 +272,11 @@ public class WF_Setting extends WebContralBase
 	public final String ChangeDept_Submit()
 	{
 		String deptNo = this.GetRequestVal("DeptNo");
-		BP.GPM.Dept dept = new GPM.Dept(deptNo);
+		BP.GPM.Dept dept = new BP.GPM.Dept(deptNo);
 
-		WebUser.getFK_Dept() = dept.No;
-		WebUser.getFK_DeptName = dept.Name;
-		WebUser.getFK_DeptNameOfFull = dept.NameOfPath;
+		WebUser.setFK_Dept(dept.getNo());
+		WebUser.setFK_DeptName(dept.getName());
+		WebUser.setFK_DeptNameOfFull(dept.getNameOfPath());
 
 		////重新设置cookies.
 		//string strs = "";
@@ -286,7 +287,7 @@ public class WF_Setting extends WebContralBase
 		//strs += "@FK_DeptNameOfFull=" + WebUser.getFK_DeptNameOfFull;
 		//WebUser.SetValToCookie(strs);
 
-		WFEmp emp = new Port.WFEmp(WebUser.getNo());
+		WFEmp emp = new WFEmp(WebUser.getNo());
 		emp.setStartFlows("");
 		emp.Update();
 
@@ -301,7 +302,7 @@ public class WF_Setting extends WebContralBase
 
 		}
 
-		return "@执行成功,已经切换到｛" + WebUser.getFK_DeptName + "｝部门上。";
+		return "@执行成功,已经切换到｛" + WebUser.getFK_DeptName() + "｝部门上。";
 	}
 
 		///#endregion

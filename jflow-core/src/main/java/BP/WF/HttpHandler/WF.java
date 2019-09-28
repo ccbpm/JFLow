@@ -1272,7 +1272,7 @@ public class WF extends WebContralBase
 
 		if (gwf.atPara.HisHT.size() > 0)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 			for (var item : gwf.atPara.HisHT.keySet())
 			{
 				urlExt += "&" + item + "=" + gwf.atPara.HisHT[item];
@@ -1348,7 +1348,7 @@ public class WF extends WebContralBase
 
 		if (gwf.atPara.HisHT.size() > 0)
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 			for (var item : gwf.atPara.HisHT.keySet())
 			{
 				endUrl += "&" + item + "=" + gwf.atPara.HisHT[item];

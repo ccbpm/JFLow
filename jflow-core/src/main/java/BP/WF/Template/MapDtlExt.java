@@ -1514,7 +1514,7 @@ public class MapDtlExt extends EntityNoName
 
 
 		//获得事件实体.
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		FormEventBaseDtl febd = BP.Sys.Glo.GetFormDtlEventBaseByEnName(this.getNo());
 		if (febd == null)
 		{

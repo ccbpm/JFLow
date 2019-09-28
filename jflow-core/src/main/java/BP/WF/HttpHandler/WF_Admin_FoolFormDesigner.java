@@ -1368,7 +1368,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setColSpan(1);
 		}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		int model = attr.getRBShowModel();
 		attr.setRBShowModel(model);
 

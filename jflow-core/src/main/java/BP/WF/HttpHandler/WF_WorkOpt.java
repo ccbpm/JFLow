@@ -3886,7 +3886,7 @@ public class WF_WorkOpt extends WebContralBase
 					for (SubFlow subFlow : subFlows)
 					{
 						//根据FlowNo获取有没有发起流程
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 						var subGwf = gwfs.GetEntityByKey(GenerWorkFlowAttr.FK_Flow,subFlow.getSubFlowNo());
 						if (subGwf != null)
 						{
@@ -4386,7 +4386,7 @@ public class WF_WorkOpt extends WebContralBase
 				{
 					continue;
 				}
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 				var gwl = gwls.GetEntityByKey(GenerWorkerListAttr.FK_Node, nd.getNodeID());
 				if (gwl == null)
 				{
@@ -4763,11 +4763,11 @@ public class WF_WorkOpt extends WebContralBase
 	private static String GetSpanTime(LocalDateTime t1, LocalDateTime t2, int day)
 	{
 		LocalDateTime span = t2 - t1;
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var days = span.Days;
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var hours = span.Hours;
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var minutes = span.Minutes;
 
 		if (days == 0 && hours == 0 && minutes == 0)

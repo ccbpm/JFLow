@@ -1556,7 +1556,7 @@ public class WF_Comm extends WebContralBase
 				//获得真实的数据类型.
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 					Object valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun());
 					qo.AddWhere(attr.getRefAttrKey(), attr.DefaultSymbol, valType);
 				}
@@ -1620,7 +1620,7 @@ public class WF_Comm extends WebContralBase
 			///#region 获得查询数据.
 		for (String str : ap.getHisHT().keySet())
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 			var val = ap.GetValStrByKey(str);
 			if (val.equals("all"))
 			{
@@ -1630,7 +1630,7 @@ public class WF_Comm extends WebContralBase
 			qo.addLeftBracket();
 
 			//获得真实的数据类型.
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 			var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
 
 			qo.AddWhere(str, valType);
@@ -1954,7 +1954,7 @@ public class WF_Comm extends WebContralBase
 			///#region 获得查询数据.
 		for (String str : ap.getHisHT().keySet())
 		{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 			var val = ap.GetValStrByKey(str);
 			if (val.equals("all"))
 			{
@@ -3229,7 +3229,7 @@ public class WF_Comm extends WebContralBase
 		String httpHandlerName = this.GetRequestVal("HttpHandlerName");
 		String methodName = this.GetRequestVal("DoMethod");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var type = java.lang.Class.forName(httpHandlerName);
 		if (type == null)
 		{
@@ -3325,7 +3325,7 @@ public class WF_Comm extends WebContralBase
 
 	public final String EntityAth_Upload()
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var files = HttpContextHelper.RequestFiles();
 		if (files.size() == 0)
 		{
@@ -3474,7 +3474,7 @@ public class WF_Comm extends WebContralBase
 	public final String EntityMultiAth_Upload()
 	{
 		//HttpFileCollection files = context.Request.Files;
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var files = HttpContextHelper.RequestFiles();
 		if (files.size() == 0)
 		{

@@ -113,7 +113,7 @@ public class SubFlowHand extends EntityMyPK
 	*/
 	public final boolean getIsEnableSpecFlowOver() throws Exception
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowOver);
 		if (val == false)
 		{
@@ -148,7 +148,7 @@ public class SubFlowHand extends EntityMyPK
 	*/
 	public final boolean getIsEnableSpecFlowStart() throws Exception
 	{
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowStart);
 		if (val == false)
 		{

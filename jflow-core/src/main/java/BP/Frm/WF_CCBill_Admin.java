@@ -1,17 +1,7 @@
 package BP.Frm;
 
-import java.io.IOException;
-
-import BP.DA.*;
 import BP.Difference.Handler.CommonUtils;
-import BP.Sys.*;
-import BP.Web.*;
-import BP.Port.*;
-import BP.En.*;
-import BP.WF.*;
-import BP.WF.Template.*;
-import BP.WF.Data.*;
-import BP.WF.HttpHandler.*;
+import BP.Difference.Handler.WebContralBase;
 
 /** 
  页面功能实体

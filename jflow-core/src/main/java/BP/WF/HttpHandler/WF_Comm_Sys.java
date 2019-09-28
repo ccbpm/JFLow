@@ -904,7 +904,7 @@ public class WF_Comm_Sys extends WebContralBase
 	public final String RichUploadFile()
 	{
 		//HttpFileCollection files = context.Request.Files;
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var files = HttpContextHelper.RequestFiles();
 		if (files.size() == 0)
 		{

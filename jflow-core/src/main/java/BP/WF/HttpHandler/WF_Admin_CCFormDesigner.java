@@ -4,16 +4,14 @@ import BP.WF.*;
 import BP.Web.*;
 import BP.Sys.*;
 import BP.DA.*;
+import BP.Difference.Handler.WebContralBase;
 import BP.En.*;
 import BP.WF.Template.*;
 import BP.Frm.*;
 import BP.WF.*;
 
-public class WF_Admin_CCFormDesigner extends BP.WF.HttpHandler.DirectoryPageBase
+public class WF_Admin_CCFormDesigner extends WebContralBase
 {
-
-
-		///#region 执行父类的重写方法.
 	/** 
 	 构造函数
 	*/

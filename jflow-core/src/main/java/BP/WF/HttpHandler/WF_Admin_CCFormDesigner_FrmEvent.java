@@ -1,14 +1,9 @@
 package BP.WF.HttpHandler;
 
-import BP.WF.*;
-import BP.Web.*;
 import BP.Sys.*;
 import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
-import BP.En.*;
-import BP.WF.Template.*;
 import BP.WF.XML.*;
-import BP.WF.*;
 import java.util.*;
 
 public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
@@ -21,8 +16,6 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 	{
 	}
 
-
-		///#region 事件基类.
 	/** 
 	 事件类型
 	*/
@@ -80,8 +73,9 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 	 获得该节点下已经绑定该类型的实体.
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String ActionDtl_Init()
+	public final String ActionDtl_Init() throws Exception
 	{
 		DataSet ds = new DataSet();
 
@@ -97,8 +91,8 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 		dtBuess.Columns.Add("No", String.class);
 		dtBuess.Columns.Add("Name", String.class);
 		dtBuess.TableName = "BuessUnits";
-		ArrayList al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
-		for (Object en : al)
+		ArrayList<BuessUnitBase> al = BP.En.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
+		for (BuessUnitBase en : al)
 		{
 			DataRow dr = dtBuess.NewRow();
 			dr.set("No", en.toString());

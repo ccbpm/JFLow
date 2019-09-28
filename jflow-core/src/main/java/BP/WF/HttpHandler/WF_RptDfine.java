@@ -1569,7 +1569,7 @@ public class WF_RptDfine extends WebContralBase
 		//查询结果
 		QueryObject qo = new QueryObject(ges);
 
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var strs = HttpContextHelper.RequestParamKeys; // this.context.Request.Form.ToString().Split('&');
 		for (String str : strs)
 		{
@@ -1709,7 +1709,7 @@ public class WF_RptDfine extends WebContralBase
 		QueryObject qo = new QueryObject(ges);
 
 		//string[] strs = this.context.Request.Form.ToString().Split('&');
-//C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
+
 		var strs = HttpContextHelper.RequestParamKeys;
 		for (String str : strs)
 		{

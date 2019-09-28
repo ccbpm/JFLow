@@ -47,7 +47,7 @@ import BP.Web.WebUser;
 
 @Controller
 @RequestMapping("/WF/Ath")
-@Scope("request")
+@Scope("request") 
 public class AttachmentUploadController extends BaseController {
 
 	public String getFK_FrmAttachment() {

@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
@@ -33,7 +34,7 @@ public class WF_Admin_Multilingual extends WebContralBase
 	{
 		Hashtable ht = new Hashtable();
 
-		if (SystemConfig.IsMultilingual == true)
+		if (SystemConfig.getIsMultilingual() == true)
 		{
 			ht.put("IsMultilingual", "1");
 		}
@@ -42,13 +43,10 @@ public class WF_Admin_Multilingual extends WebContralBase
 			ht.put("IsMultilingual", "0");
 		}
 
-		ht.put("Langue", SystemConfig.Langue);
+		ht.put("Langue", SystemConfig.getLangue());
 		return BP.Tools.Json.ToJson(ht);
 	}
 
-
-
-		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
 	 
@@ -66,13 +64,9 @@ public class WF_Admin_Multilingual extends WebContralBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + HttpContextHelper.RequestRawUrl);
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + CommonUtils.getRequest().getRequestURI());
 	}
 
-		///#endregion 执行父类的重写方法.
-
-
-		///#region ccform
 	/** 
 	 表单的配置
 	 
@@ -82,7 +76,5 @@ public class WF_Admin_Multilingual extends WebContralBase
 	{
 		return "";
 	}
-
-		///#endregion xxx 界面方法.
 
 }

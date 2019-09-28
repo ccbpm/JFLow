@@ -3,16 +3,12 @@ package BP.WF.HttpHandler;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
 import BP.Difference.Handler.WebContralBase;
-import BP.Port.*;
 import BP.En.*;
-import BP.En.Map;
 import BP.Tools.*;
 import BP.WF.*;
-import BP.Web.*;
 import BP.Sys.*;
 import BP.Sys.FrmUI.MapAttrDT;
 import BP.WF.Template.*;
-import BP.WF.*;
 import java.util.*;
 
 /** 
@@ -154,8 +150,9 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	 初始化
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String MapDefDtlFreeFrm_Init()
+	public final String MapDefDtlFreeFrm_Init() throws Exception
 	{
 		String isFor = this.GetRequestVal("For");
 		if (!isFor.equals(""))
@@ -232,7 +229,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 							if (groupids.containsKey(item.getGroupID()) == false)
 							{
-								groupids.put(item.getGroupID(), gf.getOID());
+								groupids.put((int)item.getGroupID(), (int)gf.getOID());
 							}
 
 							item.setGroupID(gf.getOID());
@@ -1129,10 +1126,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		attr.setMyPK( this.getFK_MapData() + "_" + newNo);
 		attr.setGroupID(iGroupID);
 		attr.setMyDataType(fType);
-
-		int colspan = attr.getColSpan();
 		attr.setPara_FontSize(12);
-		int rows = attr.getUIRows();
 
 		if (attr.getMyDataType() == DataType.AppString)
 		{
@@ -1314,12 +1308,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		{
 			attr.setPara_FontSize(12);
 		}
-
-		String field = attr.getPara_SiganField();
-		boolean IsEnableJS = attr.getIsEnableJS();
-		boolean IsSupperText = attr.getIsSupperText(); //是否是超大文本？
-		boolean isBigDoc = attr.getIsBigDoc();
-
 		//横跨的列数.
 		if (attr.getColSpan() == 0)
 		{
@@ -2113,29 +2101,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		sftable.Save();
 		return "保存成功！";
 	}
-	public final String SFGuide_Getmtds() throws Exception
-	{
-		String src = this.GetRequestVal("src"); //context.Request.QueryString["src"];
-		if (DataType.IsNullOrEmpty(src))
-		{
-			return "err@系统中没有webservices类型的数据源，该类型的外键表不能创建，请维护数据源.";
-		}
 
-		SFDBSrc sr = new SFDBSrc(src);
-
-		if (sr.getDBSrcType() != DBSrcType.WebServices)
-		{
-			return "err@数据源“" + sr.getName() + "”不是WebService数据源.";
-		}
-
-		ArrayList<WSMethod> mtds = GetWebServiceMethods(sr);
-
-		return Json.ToJson(mtds);
-	}
 	public final String SFGuide_GetCols() throws Exception
 	{
-		String src = this.GetRequestVal("src"); //context.Request.QueryString["src"];
-		String table = this.GetRequestVal("table"); //context.Request.QueryString["table"];
+		String src = this.GetRequestVal("src"); 
+		String table = this.GetRequestVal("table"); 
 
 		if (DataType.IsNullOrEmpty(src))
 		{
@@ -2202,8 +2172,6 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			throw new RuntimeException("err@参数不正确.");
 		}
 	
-
-		String error = "";
 		ArrayList arr = null;
 		SFTables sfs = new SFTables();
 		Entities ens = null;
@@ -2325,26 +2293,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		return BP.Tools.Json.ToJsonUpper(dt);
 	}
 
-		///#endregion
 
 
-		///#region Methods
-	/** 
-	 获取webservice方法列表
-	 
-	 @param dbsrc WebService数据源
-	 @return 
-	*/
-	public final ArrayList<WSMethod> GetWebServiceMethods(SFDBSrc dbsrc)
-	{
-		return BP.WF.NetPlatformImpl.WF_Admin_FoolFormDesigner.GetWebServiceMethods(dbsrc);
-	}
-
-		///#endregion
-
-
-
-		///#region  ImpTableFieldSelectBindKey 外键枚举
 	/** 
 	 初始化数据
 	 

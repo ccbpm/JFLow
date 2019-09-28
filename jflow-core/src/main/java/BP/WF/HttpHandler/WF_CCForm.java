@@ -560,10 +560,6 @@ public class WF_CCForm extends WebContralBase
 		return JsonString.toString();
 	}
 
-		///#endregion HanderMapExt
-
-
-		///#region 执行父类的重写方法.
 
 	/** 
 	 构造函数
@@ -4406,10 +4402,6 @@ public class WF_CCForm extends WebContralBase
 
 	}
 
-		///#endregion 打印.
-
-
-		///#region 附件组件.
 	/** 
 	 执行删除
 	 
@@ -4429,7 +4421,6 @@ public class WF_CCForm extends WebContralBase
 	}
 	public final String AttachmentUpload_DownByStream()
 	{
-		// return AttachmentUpload_Down(true);
 		return AttachmentUpload_Down();
 	}
 	/** 
@@ -4471,17 +4462,10 @@ public class WF_CCForm extends WebContralBase
 		downDB.setMyPK(this.getMyPK());
 		downDB.Retrieve();
 		downDB.setFileName(HttpUtility.UrlEncode(downDB.FileName));
-//C# TO JAVA CONVERTER WARNING: Unsigned integer types have no direct equivalent in Java:
-//ORIGINAL LINE: byte[] byteList = downDB.GetFileFromDB("FileDB", null);
 		byte[] byteList = downDB.GetFileFromDB("FileDB", null);
 		if (byteList != null)
 		{
-			//HttpContext.Current.Response.Charset = "GB2312";
-			//HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename=" + downDB.FileName);
-			//HttpContext.Current.Response.ContentType = "application/octet-stream;charset=gb2312";
-			//HttpContext.Current.Response.BinaryWrite(byteList);
-			//HttpContext.Current.Response.End();
-			//HttpContext.Current.Response.Close();
+			
 			HttpContextHelper.ResponseWriteFile(byteList, downDB.FileName, "application/octet-stream;charset=gb2312");
 		}
 	}

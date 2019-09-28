@@ -23,8 +23,6 @@ public class WF_Comm_RefFunc extends WebContralBase
 	}
 
 
-
-		///#region Dot2DotTreeDeptEmpModel.htm（部门人员选择）
 	/** 
 	 保存节点绑定人员信息
 	 
@@ -656,10 +654,6 @@ public class WF_Comm_RefFunc extends WebContralBase
 		return Newtonsoft.Json.JsonConvert.SerializeObject(re);
 	}
 
-		///#endregion Dot2DotStationModel.htm（岗位选择）
-
-
-		///#region Methods
 	/** 
 	 判断Port_StationType表中是否含有Idx字段
 	 

@@ -1,54 +1,52 @@
 package BP.WF.HttpHandler;
 
 import BP.WF.*;
-import BP.Web.*;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
 import BP.DA.*;
+import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
-import BP.En.*;
-import BP.WF.*;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
-public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
-{
+import javax.servlet.http.HttpServletRequest;
 
+public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
-	/** 
-	 构造函数
-	*/
-	public WF_Admin_FoolFormDesigner_ImpExp()
-	{
+	/**
+	 * 构造函数
+	 */
+	public WF_Admin_FoolFormDesigner_ImpExp() {
 	}
 
-
-		///#region 导入
-	/** 
-	 初始化 导入的界面 .
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Imp_Init() throws Exception
-	{
+	/// #region 导入
+	/**
+	 * 初始化 导入的界面 .
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String Imp_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		String sql = "";
 		DataTable dt;
 
-		if (this.getFK_Flow() != null)
-		{
-			//加入节点表单. 如果没有流程参数.
+		if (this.getFK_Flow() != null) {
+			// 加入节点表单. 如果没有流程参数.
 
 			Paras ps = new Paras();
-			ps.SQL = "SELECT NodeID, Name  FROM WF_Node WHERE FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow ORDER BY NODEID ";
+			ps.SQL = "SELECT NodeID, Name  FROM WF_Node WHERE FK_Flow=" + SystemConfig.getAppCenterDBVarStr()
+					+ "FK_Flow ORDER BY NODEID ";
 			ps.Add("FK_Flow", this.getFK_Flow());
 			dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 			dt.TableName = "WF_Node";
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-			{
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 				dt.Columns.get("NODEID").ColumnName = "NodeID";
 				dt.Columns.get("NAME").ColumnName = "Name";
 			}
@@ -56,200 +54,171 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 			ds.Tables.add(dt);
 		}
 
-
-			///#region 加入表单库目录.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
+		/// #region 加入表单库目录.
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 			sql = "SELECT NO as No ,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
-		}
-		else
-		{
+		} else {
 			sql = "SELECT No,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
 		}
 
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FormTree";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
 		}
 		ds.Tables.add(dt);
 
-		//加入表单
+		// 加入表单
 		sql = "SELECT A.No, A.Name, A.FK_FormTree  FROM Sys_MapData A, Sys_FormTree B WHERE A.FK_FormTree=B.No";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapData";
 		ds.Tables.add(dt);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("FK_FORMTREE").ColumnName = "FK_FormTree";
 		}
 
-			///#endregion 加入表单库目录.
+		/// #endregion 加入表单库目录.
 
-
-			///#region 加入流程树目录.
+		/// #region 加入流程树目录.
 		sql = "SELECT No,Name,ParentNo FROM WF_FlowSort ORDER BY  PARENTNO, IDX ";
 
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_FlowSort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
 		}
 		ds.Tables.add(dt);
 
-		//加入表单
+		// 加入表单
 		sql = "SELECT No, Name, FK_FlowSort  FROM WF_Flow ";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Flow";
 		ds.Tables.add(dt);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 		}
 
-			///#endregion 加入流程树目录.
+		/// #endregion 加入流程树目录.
 
-
-			///#region 数据源
+		/// #region 数据源
 		BP.Sys.SFDBSrcs ens = new BP.Sys.SFDBSrcs();
 		ens.RetrieveAll();
 		ds.Tables.add(ens.ToDataTableField("SFDBSrcs"));
 
-			///#endregion
+		/// #endregion
 
-		//加入系统表.
+		// 加入系统表.
 		return BP.Tools.Json.ToJson(ds);
 	}
-	/** 
-	 从本机装载表单模版
-	 
-	 @param fileByte 文件流
-	 @param fk_mapData 表单模版ID
-	 @param isClear 是否清空？
-	 @return 执行结果
-	*/
-	public final String Imp_LoadFrmTempleteFromLocalFile()
-	{
-		try
-		{
-			if (HttpContextHelper.RequestFilesCount == 0)
-			{
-				return "err@请上传导入的模板文件.";
-			}
 
-			//创建临时文件.
-			String temp = SystemConfig.getPathOfTemp() + "\\" + UUID.NewGuid() + ".xml";
-			//this.context.Request.Files[0].SaveAs(temp);
-			HttpContextHelper.UploadFile(HttpContextHelper.RequestFiles(0), temp);
-			String fk_mapData = this.getFK_MapData();
-			DataSet ds = new DataSet();
-			//ds.ReadXml(path);
-			ds.ReadXml(temp);
-
-			//执行装载.
-			MapData.ImpMapData(fk_mapData, ds);
-			if (this.getFK_Node() != 0)
-			{
-				Node nd = new Node(this.getFK_Node());
-				nd.RepareMap(nd.getHisFlow());
-			}
-			//清空缓存
-			MapData mymd = new MapData(fk_mapData);
-			mymd.RepairMap();
-			BP.Sys.SystemConfig.DoClearCash();
-			return "执行成功.";
+	/**
+	 * 从本机装载表单模版
+	 * 
+	 * @param fileByte
+	 *            文件流
+	 * @param fk_mapData
+	 *            表单模版ID
+	 * @param isClear
+	 *            是否清空？
+	 * @return 执行结果
+	 */
+	public String Imp_LoadFrmTempleteFromLocalFile() throws Exception {
+		File xmlFile = null;
+		String fileName = UUID.randomUUID().toString();
+		try {
+			xmlFile = File.createTempFile(fileName, ".xml");
+		} catch (IOException e1) {
+			xmlFile = new File(System.getProperty("java.io.tmpdir"), fileName + ".xml");
 		}
-		catch (RuntimeException ex)
-		{
-			//第一次导入，可能因为没有字段，导致报错，系统会刷新一次，并修复字段
-			//所以再执行一次导入
-			try
-			{
-				String fk_mapData = this.getFK_MapData();
+		xmlFile.deleteOnExit();
+		HttpServletRequest request = getRequest();
+		try {
+			CommonFileUtils.upload(request, "file", xmlFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@执行失败";
+		}
 
-				//读取上传的XML 文件.
-				DataSet ds = new DataSet();
-				//ds.ReadXml(path);
-				ds.ReadXml(HttpContextHelper.RequestFileStream(0)); //this.context.Request.Files[0].InputStream
+		Object a = getRequest().getParameter("file");
+		String fk_mapData = this.getFK_MapData();
+		// 读取上传的XML 文件.
+		DataSet ds = new DataSet();
+		ds.readXml(xmlFile.getAbsolutePath());
+		// 执行装载.
+		MapData.ImpMapData(fk_mapData, ds);
 
-				//执行装载.
-				MapData.ImpMapData(fk_mapData, ds);
-
-				if (this.getFK_Node() != 0)
-				{
-					Node nd = new Node(this.getFK_Node());
-					nd.RepareMap(nd.getHisFlow());
-				}
-				//清空缓存
-				MapData mymd = new MapData(fk_mapData);
-				mymd.RepairMap();
-				BP.Sys.SystemConfig.DoClearCash();
+		if (fk_mapData.contains("ND")) {
+			// 判断是否是节点表单
+			int nodeID = 0;
+			try {
+				nodeID = Integer.parseInt(fk_mapData.replace("ND", ""));
+			} catch (Exception e) {
 				return "执行成功.";
 			}
-			catch (RuntimeException newex)
-			{
-				return "err@导入失败:" + newex.getMessage();
-			}
+
+			Node nd = new Node(nodeID);
+			Flow flow = new Flow(nd.getFK_Flow());
+			nd.RepareMap(flow);
 		}
+		return "执行成功.";
 	}
-	/** 
-	 从流程上copy表单
-	 @徐彪来调用.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Imp_CopyFromFlow() throws Exception
-	{
+
+	/**
+	 * 从流程上copy表单 @徐彪来调用.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String Imp_CopyFromFlow() throws Exception {
 		String ndfrm = "ND" + Integer.parseInt(this.getFK_Flow()) + "01";
 		return Imp_CopyFrm(ndfrm);
 	}
-	/** 
-	 从表单库导入
-	 从节点导入
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Imp_FromsCopyFrm() throws Exception
-	{
+
+	/**
+	 * 从表单库导入 从节点导入
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String Imp_FromsCopyFrm() throws Exception {
 		return Imp_CopyFrm();
 	}
-	/** 
-	 从节点上Copy
-	 
-	 @param fromMapData 从表单ID
-	 @param fk_mapdata 到表单ID
-	 @param isClear 是否清楚现有的元素？
-	 @param isSetReadonly 是否设置为只读？
-	 @return 执行结果
-	 * @throws Exception 
-	*/
 
-	public final String Imp_CopyFrm() throws Exception
-	{
+	/**
+	 * 从节点上Copy
+	 * 
+	 * @param fromMapData
+	 *            从表单ID
+	 * @param fk_mapdata
+	 *            到表单ID
+	 * @param isClear
+	 *            是否清楚现有的元素？
+	 * @param isSetReadonly
+	 *            是否设置为只读？
+	 * @return 执行结果
+	 * @throws Exception
+	 */
+
+	public final String Imp_CopyFrm() throws Exception {
 		return Imp_CopyFrm(null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public string Imp_CopyFrm(string frmID = null)
-	public final String Imp_CopyFrm(String frmID) throws Exception
-	{
-		try
-		{
+	public final String Imp_CopyFrm(String frmID) throws Exception {
+		try {
 			String fromMapData = frmID;
-			if (fromMapData == null)
-			{
+			if (fromMapData == null) {
 				fromMapData = this.GetRequestVal("FromFrmID");
 			}
 
@@ -259,65 +228,58 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 			MapData md = new MapData(fromMapData);
 			MapData.ImpMapData(this.getFK_MapData(), BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(md.getNo()));
 
-			//设置为只读模式.
-			if (isSetReadonly == true)
-			{
+			// 设置为只读模式.
+			if (isSetReadonly == true) {
 				MapData.SetFrmIsReadonly(this.getFK_MapData());
 			}
 
 			// 如果是节点表单，就要执行一次修复，以免漏掉应该有的系统字段。
-			if (this.getFK_MapData().contains("ND") == true)
-			{
+			if (this.getFK_MapData().contains("ND") == true) {
 				String fk_node = this.getFK_MapData().replace("ND", "");
 				Node nd = new Node(Integer.parseInt(fk_node));
 				nd.RepareMap(nd.getHisFlow());
 			}
-			//清空缓存
+			// 清空缓存
 			MapData mymd = new MapData(fromMapData);
 			mymd.RepairMap();
 			BP.Sys.SystemConfig.DoClearCash();
 			return "执行成功.";
-		}
-		catch (RuntimeException ex)
-		{
+		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}
 
 	}
 
-
-		///#region 04.从外部数据源导入
-	/** 
-	 选择一个数据源，进入步骤2
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Imp_Src_Step2_Init() throws Exception
-	{
+	/// #region 04.从外部数据源导入
+	/**
+	 * 选择一个数据源，进入步骤2
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String Imp_Src_Step2_Init() throws Exception {
 		SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
 
-		//获取所有的表/视图
+		// 获取所有的表/视图
 		DataTable dtTables = src.GetTables();
 
 		return BP.Tools.FormatToJson.ToJson(dtTables);
 	}
 
-	/** 
-	 获取表字段
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Imp_Src_Step2_GetColumns() throws Exception
-	{
+	/**
+	 * 获取表字段
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final String Imp_Src_Step2_GetColumns() throws Exception {
 		DataSet ds = new DataSet();
 
-		//01.当前节点表单已经存在的列
+		// 01.当前节点表单已经存在的列
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
 		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
-		//02.数据源表中的列
+		// 02.数据源表中的列
 		SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
 		DataTable tableColumns = src.GetColumns(this.GetRequestVal("STable"));
 		tableColumns.TableName = "TableColumns";
@@ -326,28 +288,25 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	public final String Imp_Src_Step3_Init() throws Exception
-	{
+	public final String Imp_Src_Step3_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		String SColumns = this.GetRequestVal("SColumns");
 		SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
 		DataTable tableColumns = src.GetColumns(this.GetRequestVal("STable"));
 
-		//01.添加列
+		// 01.添加列
 		DataTable dt = tableColumns.clone();
-		for (DataRow dr : tableColumns.Rows)
-		{
-			if (SColumns.contains(dr.get("no").toString()))
-			{
+		for (DataRow dr : tableColumns.Rows) {
+			if (SColumns.contains(dr.get("no").toString())) {
 				dt.Rows.add(dr);
-				//dt.ImportRow(dr);
+				// dt.ImportRow(dr);
 			}
 		}
 		dt.TableName = "Columns";
 		ds.Tables.add(dt);
 
-		//02.添加枚举
+		// 02.添加枚举
 		SysEnums ens = new SysEnums(MapAttrAttr.MyDataType);
 		ds.Tables.add(ens.ToDataTableField("EnumsDataType"));
 		ens = new SysEnums(MapAttrAttr.LGType);
@@ -357,8 +316,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 
 	}
 
-	public final String Imp_Src_Step3_Save() throws Exception
-	{
+	public final String Imp_Src_Step3_Save() throws Exception {
 
 		String hidImpFields = this.GetRequestVal("hidImpFields");
 		String[] fields = StringHelper.trimEnd(hidImpFields, ',').split("[,]", -1);
@@ -367,12 +325,10 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 		md.setNo(this.getFK_MapData());
 		md.RetrieveFromDBSources();
 
-
 		String msg = "导入字段信息:";
 		boolean isLeft = true;
-		float maxEnd = md.getMaxEnd(); //底部.
-		for (int i = 0; i < fields.length; i++)
-		{
+		float maxEnd = md.getMaxEnd(); // 底部.
+		for (int i = 0; i < fields.length; i++) {
 			String colname = fields[i];
 
 			MapAttr ma = new MapAttr();
@@ -385,12 +341,10 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 			ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
 			ma.setLGType(BP.En.FieldTypeS.Normal);
 
-			if (!ma.getUIBindKey().equals(""))
-			{
+			if (!ma.getUIBindKey().equals("")) {
 				SysEnums se = new SysEnums();
 				se.Retrieve(SysEnumAttr.EnumKey, ma.getUIBindKey());
-				if (se.size() > 0)
-				{
+				if (se.size() > 0) {
 					ma.setMyDataType(BP.DA.DataType.AppInt);
 					ma.setLGType(BP.En.FieldTypeS.Enum);
 					ma.setUIContralType(BP.En.UIContralType.DDL);
@@ -398,28 +352,24 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 
 				SFTable tb = new SFTable();
 				tb.setNo(ma.getUIBindKey());
-				if (tb.getIsExits() == true)
-				{
+				if (tb.getIsExits() == true) {
 					ma.setMyDataType(BP.DA.DataType.AppString);
 					ma.setLGType(BP.En.FieldTypeS.FK);
 					ma.setUIContralType(BP.En.UIContralType.DDL);
 				}
 			}
 
-			if (ma.getMyDataType() == BP.DA.DataType.AppBoolean)
-			{
+			if (ma.getMyDataType() == BP.DA.DataType.AppBoolean) {
 				ma.setUIContralType(BP.En.UIContralType.CheckBok);
 			}
-			if (ma.getIsExits())
-			{
+			if (ma.getIsExits()) {
 				continue;
 			}
 			ma.Insert();
 
 			msg += "\t\n字段:" + ma.getKeyOfEn() + ma.getName() + "加入成功.";
 			FrmLab lab = null;
-			if (isLeft == true)
-			{
+			if (isLeft == true) {
 				maxEnd = maxEnd + 40;
 				/* 是否是左边 */
 				lab = new FrmLab();
@@ -433,12 +383,10 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 				ma.setX(lab.getX() + 80);
 				ma.setY(maxEnd);
 				ma.Update();
-			}
-			else
-			{
+			} else {
 				lab = new FrmLab();
-				lab.setMyPK( BP.DA.DBAccess.GenerGUID());
-				lab.setFK_MapData( this.getFK_MapData());
+				lab.setMyPK(BP.DA.DBAccess.GenerGUID());
+				lab.setFK_MapData(this.getFK_MapData());
 				lab.setText(ma.getName());
 				lab.setX(350);
 				lab.setY(maxEnd);
@@ -451,16 +399,15 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 			isLeft = !isLeft;
 		}
 
-		//重新设置.
+		// 重新设置.
 		md.ResetMaxMinXY();
 
 		return msg;
 
 	}
 
-		///#endregion
+	/// #endregion
 
-
-		///#endregion
+	/// #endregion
 
 }

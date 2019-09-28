@@ -11,7 +11,8 @@ import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
-import BP.WF.*;
+import BP.WF.UnitTesting.Glo;
+import BP.WF.UnitTesting.TestBase;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,19 +42,15 @@ public class WF_Comm_Sys extends WebContralBase
 		al = BP.En.ClassFactory.GetObjects("BP.UnitTesting.TestBase");
 		for (Object obj : al)
 		{
-			BP.UnitTesting.TestBase en = null;
+			TestBase en = null;
 			try
 			{
-				en = obj instanceof BP.UnitTesting.TestBase ? (BP.UnitTesting.TestBase)obj : null;
+				en = obj instanceof TestBase ? (TestBase)obj : null;
 				if (en == null)
 				{
 					continue;
 				}
-				String s = en.Title;
-				if (en == null)
-				{
-					continue;
-				}
+				
 			}
 			catch (java.lang.Exception e)
 			{
@@ -77,7 +74,7 @@ public class WF_Comm_Sys extends WebContralBase
 	{
 		try
 		{
-			BP.UnitTesting.TestBase tc = BP.UnitTesting.Glo.GetTestEntity(this.getEnName());
+			TestBase tc = Glo.GetTestEntity(this.getEnName());
 			tc.Do();
 			return "执行成功.<hr>" + tc.Note.replace("\t\n", "@<br>");
 		}
@@ -699,15 +696,13 @@ public class WF_Comm_Sys extends WebContralBase
 		dt.Columns.Add("Name");
 		dt.Columns.Add("PTable");
 
-		ArrayList al = null;
-		al = BP.En.ClassFactory.GetObjects("BP.En.Entity");
+		ArrayList al = BP.En.ClassFactory.GetObjects("BP.En.Entity");
 		for (Object obj : al)
 		{
 			Entity en = null;
 			try
 			{
 				en = obj instanceof Entity ? (Entity)obj : null;
-				String s = en.getEnDesc();
 				if (en == null)
 				{
 					continue;
@@ -743,11 +738,7 @@ public class WF_Comm_Sys extends WebContralBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-		///#endregion
 
-
-
-		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
 	 
@@ -756,11 +747,6 @@ public class WF_Comm_Sys extends WebContralBase
 	@Override
 	protected String DoDefaultMethod()
 	{
-		String sfno = this.GetRequestVal("sfno");
-		SFTable sftable = null;
-		DataTable dt = null;
-		StringBuilder s = null;
-
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -775,13 +761,11 @@ public class WF_Comm_Sys extends WebContralBase
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + this.getRequest().getRequestURL());
 	}
 
-		///#endregion 执行父类的重写方法.
 
 
 		///#region 数据源管理
 	public final String SFDBSrcNewGuide_GetList() throws Exception
 	{
-		//SysEnums enums = new SysEnums(SFDBSrcAttr.DBSrcType);
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
 
@@ -903,33 +887,30 @@ public class WF_Comm_Sys extends WebContralBase
 
 	public final String RichUploadFile()
 	{
-		//HttpFileCollection files = context.Request.Files;
+		File xmlFile = null;
+		String fileName="";
+		String savePath="";
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) { 
+			fileName = CommonFileUtils.getOriginalFilename(request, "upfile");
+			savePath = BP.Sys.SystemConfig.getPathOfDataUser()+"RichTextFile";
+			if(new File(savePath).exists()==false)
+				new File(savePath).mkdirs();
+			savePath = savePath+"/"+fileName;
+			xmlFile = new File(savePath);
+			if(xmlFile.exists()){
+				xmlFile.delete();
+			}
 
-		var files = HttpContextHelper.RequestFiles();
-		if (files.size() == 0)
-		{
-			return "err@请选择要上传的图片。";
+			try {
+				CommonFileUtils.upload(request, "upfile", xmlFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
+			}
 		}
-		//获取文件存放目录
-		String directory = this.GetRequestVal("Directory");
-		String fileName = files[0].FileName;
-		String savePath = BP.Sys.SystemConfig.getPathOfDataUser() + "RichTextFile" + "\\" + directory;
-
-		if ((new File(savePath)).isDirectory() == false)
-		{
-			(new File(savePath)).mkdirs();
-		}
-
-		savePath = savePath + "\\" + fileName;
-		//存在文件则删除
-		if ((new File(savePath)).isDirectory() == true)
-		{
-			(new File(savePath)).delete();
-		}
-
-		//files[0].SaveAs(savePath);
-		HttpContextHelper.UploadFile(files[0], savePath);
-		return savePath;
+         return savePath;
 	}
 
 	/**
@@ -957,6 +938,4 @@ public class WF_Comm_Sys extends WebContralBase
 	    return BP.Tools.Json.ToJson(dt);
 
 	}
-
-		///#endregion
 }

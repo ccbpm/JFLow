@@ -23,8 +23,6 @@ public class WF_Admin extends WebContralBase
 		return this.GetRequestVal("RefNo");
 	}
 
-		///#endregion
-
 	/** 
 	 构造函数
 	*/
@@ -32,8 +30,6 @@ public class WF_Admin extends WebContralBase
 	{
 	}
 
-
-		///#region 测试页面.
 	/** 
 	 获得运行的集成平台.
 	 
@@ -59,8 +55,6 @@ public class WF_Admin extends WebContralBase
 			return "err@您不是管理员，无法执行该操作.";
 		}
 
-		// 让admin 登录.
-		//   BP.WF.Dev2Interface.Port_Login("admin");
 
 		if (this.getRefNo() != null)
 		{
@@ -148,10 +142,8 @@ public class WF_Admin extends WebContralBase
 					break;
 				case ByBindEmp:
 					sql = "select No,Name from Port_Emp where No in (select FK_Emp from WF_NodeEmp where FK_Node='" + nodeid + "') ";
-					//emps.RetrieveInSQL("select fk_emp from wf_NodeEmp WHERE fk_node=" + int.Parse(this.FK_Flow + "01") + " ");
 					break;
 				case ByDeptAndStation:
-					//added by liuxc,2015.6.30.
 					//区别集成与BPM模式
 					if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneOne)
 					{

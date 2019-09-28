@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Sys.XML.*;
+import BP.Tools.DateUtils;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
@@ -569,13 +570,13 @@ public class WF_Comm extends WebContralBase
 			en.setPKVal(this.getPKVal());
 			en.Retrieve();
 
-			if (en.getRow().ContainsKey("Retrieve") == true)
+			if (en.getRow().containsKey("Retrieve") == true)
 			{
 				en.Row["Retrieve"] = "1";
 			}
 			else
 			{
-				en.Row.Add("Retrieve", "1");
+				en.getRow().put("Retrieve", "1");
 			}
 
 			return en.ToJson(false);
@@ -723,11 +724,9 @@ public class WF_Comm extends WebContralBase
 	 查询
 	 
 	 @return 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
+	 * @throws Exception 
 	*/
-	public final String Entity_DoMethodReturnString() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	public final String Entity_DoMethodReturnString() throws Exception
 	{
 		//创建类实体.
 		BP.En.Entity en = ClassFactory.GetEn(this.getEnName()); // Activator.CreateInstance(System.Type.GetType("BP.En.Entity")) as BP.En.Entity;
@@ -1498,7 +1497,7 @@ public class WF_Comm extends WebContralBase
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
 			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
-			String dtTo = ur.DTTo; // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
+			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
 
 			//按日期查询
 			if (map.DTSearchWay == DTSearchWay.ByDate)
@@ -1506,9 +1505,9 @@ public class WF_Comm extends WebContralBase
 				qo.addAnd();
 				qo.addLeftBracket();
 				dtTo += " 23:59:59";
-				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'";
+				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'";
+				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 
@@ -1523,8 +1522,11 @@ public class WF_Comm extends WebContralBase
 				{
 					dtFrom += ":00";
 				}
+				
+				Date date = DateUtils.addDay(new Date(), -1);
+				String dttime = DateUtils.format(date, "yyyy-MM-dd");
 
-				dtFrom = LocalDateTime.parse(dtFrom).AddDays(-1).toString("yyyy-MM-dd") + " 24:00";
+				dtFrom = dttime + " 24:00";
 
 				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
 				{
@@ -1533,9 +1535,9 @@ public class WF_Comm extends WebContralBase
 
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'";
+				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
-				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'";
+				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
 				qo.addRightBracket();
 			}
 		}
@@ -1544,9 +1546,9 @@ public class WF_Comm extends WebContralBase
 
 			///#region 普通属性
 		String opkey = ""; // 操作符号。
-		for (AttrOfSearch attr : en.getEnMap().getAttrs()OfSearch)
+		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch())
 		{
-			if (attr.IsHidden)
+			if (attr.getIsHidden())
 			{
 				qo.addAnd();
 				qo.addLeftBracket();
@@ -1555,12 +1557,12 @@ public class WF_Comm extends WebContralBase
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java unless the Java 10 inferred typing option is selected:
-					var valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.RefAttrKey, attr.getDefaultValRun());
-					qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, valType);
+					Object valType = BP.Sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun());
+					qo.AddWhere(attr.getRefAttrKey(), attr.DefaultSymbol, valType);
 				}
 				else
 				{
-					qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, attr.getDefaultVal()Run);
+					qo.AddWhere(attr.getRefAttrKey(), attr.DefaultSymbol, attr.getDefaultVal()Run);
 				}
 				qo.addRightBracket();
 				continue;
@@ -1596,18 +1598,18 @@ public class WF_Comm extends WebContralBase
 					if (opkey.equals("<="))
 					{
 						LocalDateTime dt = DataType.ParseSysDate2DateTime(date).AddDays(1);
-						date = dt.toString(DataType.SysDataFormat);
+						date = dt.toString(DataType.getSysDataFormat());
 					}
 				}
 				catch (java.lang.Exception e)
 				{
 				}
 
-				qo.AddWhere(attr.RefAttrKey, opkey, date);
+				qo.AddWhere(attr.getRefAttrKey(), opkey, date);
 			}
 			else
 			{
-				qo.AddWhere(attr.RefAttrKey, opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
+				qo.AddWhere(attr.getRefAttrKey(), opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
 			}
 			qo.addRightBracket();
 		}
@@ -1712,7 +1714,7 @@ public class WF_Comm extends WebContralBase
 
 			String myurl = "";
 
-			myurl = "RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.GetNewEntities.toString() + "&PKVal=";
+			myurl = "RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=";
 
 			DataRow dr = dtM.NewRow();
 
@@ -1721,7 +1723,7 @@ public class WF_Comm extends WebContralBase
 			dr.set("Tip", item.ToolTip);
 			dr.set("Visable", item.Visable);
 			dr.set("Warning", item.Warning);
-			dr.set("RefMethodType", (int)item.RefMethodType);
+			dr.set("RefMethodType", item.refMethodType);
 			dr.set("RefAttrKey", item.RefAttrKey);
 			dr.set("URL", myurl);
 			dr.set("W", item.Width);
@@ -1827,7 +1829,7 @@ public class WF_Comm extends WebContralBase
 				}
 
 			}
-			qo.MyParas.Add("SKey", keyWord);
+			qo.getMyParas().Add("SKey", keyWord);
 			qo.addRightBracket();
 
 		}
@@ -1895,7 +1897,7 @@ public class WF_Comm extends WebContralBase
 			{
 				qo.addAnd();
 				qo.addLeftBracket();
-				qo.AddWhere(attr.RefAttrKey, attr.DefaultSymbol, attr.getDefaultVal()Run);
+				qo.AddWhere(attr.getRefAttrKey(), attr.DefaultSymbol, attr.getDefaultVal()Run);
 				qo.addRightBracket();
 				continue;
 			}
@@ -1937,11 +1939,11 @@ public class WF_Comm extends WebContralBase
 				{
 				}
 
-				qo.AddWhere(attr.RefAttrKey, opkey, date);
+				qo.AddWhere(attr.getRefAttrKey(), opkey, date);
 			}
 			else
 			{
-				qo.AddWhere(attr.RefAttrKey, opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
+				qo.AddWhere(attr.getRefAttrKey(), opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
 			}
 			qo.addRightBracket();
 		}
@@ -1974,7 +1976,7 @@ public class WF_Comm extends WebContralBase
 	{
 
 		BP.Sys.UserRegedit ur = new UserRegedit();
-		ur.setMyPK( WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs";
+		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
 		String url = "?EnsName=" + this.getEnsName();
@@ -2118,7 +2120,7 @@ public class WF_Comm extends WebContralBase
 				rm.HisEn = en;
 
 				// 如果是link.
-				if (rm.RefMethodType == RefMethodType.LinkModel || rm.RefMethodType == RefMethodType.LinkeWinOpen || rm.RefMethodType == RefMethodType.RightFrameOpen)
+				if (rm.refMethodType == RefMethodType.LinkModel || rm.refMethodType == RefMethodType.LinkeWinOpen || rm.refMethodType == RefMethodType.RightFrameOpen)
 				{
 					Object tempVar = rm.Do(null);
 					String url = tempVar instanceof String ? (String)tempVar : null;
@@ -4578,8 +4580,9 @@ public class WF_Comm extends WebContralBase
 	 常用词汇
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String HelperWordsData()
+	public final String HelperWordsData() throws Exception
 	{
 
 		String FK_MapData = this.GetRequestVal("FK_MapData");
@@ -4634,7 +4637,7 @@ public class WF_Comm extends WebContralBase
 			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
 			{
 				MapData mapData = new MapData(this.getFK_MapData());
-				rptNo = mapData.PTable;
+				rptNo = mapData.getPTable();
 			}
 
 
@@ -4693,7 +4696,7 @@ public class WF_Comm extends WebContralBase
 	{
 		try
 		{
-			String path = BP.Sys.SystemConfig.PathOfDataUser + "Fastenter\\" + getFK_MapData() + "\\" + GetRequestVal("AttrKey");
+			String path = BP.Sys.SystemConfig.getPathOfDataUser() + "Fastenter\\" + getFK_MapData() + "\\" + GetRequestVal("AttrKey");
 			;
 			if (!(new File(path)).isDirectory())
 			{
@@ -4732,10 +4735,10 @@ public class WF_Comm extends WebContralBase
 
 					strArray = folder.split("[\\\\]", -1);
 					fileName = strArray[strArray.length - 1].replace("\"", "").replace("'", "");
-					liStr += String.format("{id:\"%1$s\",value:\"%2$s\"},", DataTableConvertJson.GetFilteredStrForJSON(fileName, true), DataTableConvertJson.GetFilteredStrForJSON(Files.readString(folder,), false));
+					liStr += String.format("{id:\"%1$s\",value:\"%2$s\"},", DataTableConvertJson.GetFilteredStrForJSON(fileName, true), DataTableConvertJson.GetFilteredStrForJSON(Files.readString(folder), false));
 
 					dt.Rows[count]["CurValue"] = DataTableConvertJson.GetFilteredStrForJSON(fileName, true);
-					dt.Rows[count]["TxtStr"] = DataTableConvertJson.GetFilteredStrForJSON(Files.readString(folder,), false);
+					dt.Rows[count]["TxtStr"] = DataTableConvertJson.GetFilteredStrForJSON(Files.readString(folder), false);
 				}
 				count += 1;
 			}

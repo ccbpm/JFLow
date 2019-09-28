@@ -476,7 +476,7 @@ public abstract class WebContralBase {
 	/**
 	 * FK_MapData
 	 */
-	public final String getFK_MapData() {
+	public String getFK_MapData() {
 		String str = this.GetRequestVal("FK_MapData");
 		if (str == null || str.equals("") || str.equals("null")) {
 			str = this.GetRequestVal("FrmID");

@@ -2291,4 +2291,103 @@ public class MakeForm2Html
         }
    
     }
+    public static String MakeBillToPDF(String frmId, long workid, String basePath, boolean urlIsHostUrl) throws Exception
+    {
+
+    	String resultMsg = "";
+
+        //  获取单据的属性信息
+        BP.Frm.FrmBill bill = new BP.Frm.FrmBill(frmId);
+        String fileNameFormat = null;
+
+        //存放信息地址
+        String hostURL = SystemConfig.GetValByKey("HostURL", "");
+        String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + bill.getNo() + "\\" + workid;
+
+        //处理正确的文件名.
+        if (fileNameFormat == null)
+            fileNameFormat = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM Frm_GenerBill WHERE WorkID=" + workid, "" + workid);
+
+
+        if (DataType.IsNullOrEmpty(fileNameFormat) == true)
+            fileNameFormat = String.valueOf(workid);
+
+        fileNameFormat = BP.DA.DataType.PraseStringToFileName(fileNameFormat);
+
+        Hashtable ht = new Hashtable();
+
+        //生成pdf文件
+        String pdfPath = path + "\\pdf";
+
+
+        DataRow dr = null;
+        resultMsg = setPDFPath(frmId, workid, null, null);
+        if (resultMsg.indexOf("err@") != -1)
+            return resultMsg;
+
+
+
+        //获取表单的信息执行打印
+        String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + bill.getNo() + "\\" + workid + "\\" + "index.htm";
+        resultMsg = MakeHtmlDocument(bill.getNo(), workid, null, fileNameFormat, urlIsHostUrl, path, billUrl, frmId, basePath);
+
+        if (resultMsg.indexOf("err@") != -1)
+            return resultMsg;
+
+        ht.put("htm", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + frmId + "/" + workid + "/" + "index.htm");
+
+        //#region 把所有的文件做成一个zip文件.
+        if (new File(pdfPath).exists() == false)
+       	 new File(pdfPath).mkdirs();
+        
+        fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
+        String pdfFormFile = pdfPath + "\\" + bill.getName() + ".pdf";
+        String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
+        try
+        {
+            Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
+            if (urlIsHostUrl == false)
+                ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
+            else
+                ht.put("pdf", SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
+
+
+        }
+        catch (Exception ex)
+        {
+            /*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
+            fileNameFormat = DBAccess.GenerGUID();
+            pdfFormFile = pdfPath + "\\" + fileNameFormat + ".pdf";
+
+            Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
+            ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "") + "/InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
+        }
+      
+
+        //生成压缩文件
+        String zipFile = path + "\\..\\" + fileNameFormat + ".zip";
+
+        File finfo = new File(zipFile);
+        ZipFilePath = finfo.getName(); //文件路径.
+        File zipFileFile = new File(zipFile);
+        try
+        {
+        	while (zipFileFile.exists() == true) {
+				zipFileFile.delete();
+			}
+			// 执行压缩.
+			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
+			fz.zip();
+
+            ht.put("zip", SystemConfig.getHostURLOfBS() + "/DataUser/InstancePacketOfData/" + frmId + "/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
+        }
+        catch (Exception ex)
+        {
+            ht.put("zip", "err@生成zip文件遇到权限问题:" + ex.getMessage() + " @Path:" + pdfPath);
+        }
+
+        return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
+
+
+    }
 }

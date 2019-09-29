@@ -386,7 +386,7 @@ public class WF_Comm extends WebContralBase {
 			String pkval = this.getPKVal();
 			Entity en = ClassFactory.GetEn(this.getEnName());
 
-			if (pkval.equals("0") || pkval.equals("") || pkval == null || pkval.equals("undefined")) {
+			if (pkval == null || pkval.equals("0") || pkval.equals("") || pkval.equals("undefined")) {
 				Map map = en.getEnMap();
 				for (Attr attr : en.getEnMap().getAttrs()) {
 					en.SetValByKey(attr.getKey(), attr.getDefaultVal());

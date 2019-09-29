@@ -26,8 +26,9 @@ public class CCMobile_WorkOpt extends WebContralBase
 	 打包下载
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String Packup_Init()
+	public final String Packup_Init() throws Exception
 	{
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.Packup_Init();

@@ -1035,7 +1035,24 @@ public class DateUtils
         return weekDays[w];
 
     }  
-
+	public static String getDayOfWeekT(int week){
+		if(week == 7)
+			return "SUNDAY";
+		if(week == 1)
+			return "MONDAY";
+		if(week == 2)
+			return "TUESDAY";
+		if(week == 3)
+			return "WEDNESDAY";
+		if(week == 4)
+			return "THURSDAY";
+		if(week == 5)
+			return "FRIDAY";
+		if(week == 6)
+			return "STAURDAY";
+		return "";
+	}
+	
 	
 	/**
 	 * 得到某一年周的总数

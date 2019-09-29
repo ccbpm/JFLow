@@ -41,7 +41,7 @@ public class OutputSQLs extends DataIOEn
 		Nodes nds = new Nodes();
 		nds.RetrieveAll();
 
-		String fromDateTime = LocalDateTime.now().getYear() + "-01-01";
+		String fromDateTime = DataType.getCurrentYear() + "-01-01";
 		fromDateTime = "2004-01-01 00:00";
 		//string fromDateTime=DateTime.Now.Year+"-01-01 00:00";
 		//string fromDateTime=DateTime.Now.Year+"-01-01 00:00";

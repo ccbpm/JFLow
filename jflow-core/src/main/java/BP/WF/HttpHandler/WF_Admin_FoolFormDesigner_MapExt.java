@@ -1410,7 +1410,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 				String workId = workid;
 				String shuLiang = dt.Rows.get(i).getValue("Qty").toString();
 				String piCiHao = dt.Rows.get(i).getValue("PCH").toString();
-				String rdt = LocalDateTime.now().toString();
+				String rdt = DataType.getCurrentDate();
 				String userNo = WebUser.getNo();
 
 				String sql2 = "INSERT INTO ND105Dtl1(MingChen,JianHao,RefPK,ShuLiang,PiCiHao,RDT,Rec) VALUES('" + name + "','" + jianHao + "','" + workId + "','" + shuLiang + "','" + piCiHao + "','" + rdt + "','" + userNo + "')";

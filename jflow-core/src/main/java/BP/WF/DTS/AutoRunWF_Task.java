@@ -4,12 +4,14 @@ import BP.DA.*;
 import BP.En.*;
 import BP.Port.*;
 import BP.Sys.*;
+import BP.Tools.DateUtils;
 import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
 import BP.WF.*;
 import java.time.*;
+import java.util.Date;
 
 /** 
  Method 的摘要说明
@@ -99,7 +101,7 @@ public class AutoRunWF_Task extends Method
 			if (DataType.IsNullOrEmpty(startDT) == false)
 			{
 				/*如果设置了发起时间,就检查当前时间是否与现在的时间匹配.*/
-				if (LocalDateTime.now().compareTo(LocalDateTime.parse(startDT)) < 0)
+				if (new Date().compareTo(DateUtils.parse(startDT)) < 0)
 				{
 					continue;
 				}

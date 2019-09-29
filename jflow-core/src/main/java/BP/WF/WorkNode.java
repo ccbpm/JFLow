@@ -6340,7 +6340,7 @@ public class WorkNode {
 		this.JumpToEmp = jumpToEmp;
 
 		String sql = null;
-		LocalDateTime dt = LocalDateTime.now();
+		Date dt =new Date();
 		this.getHisWork().setRec(this.getExecer());
 		this.setWorkID(this.getHisWork().getOID());
 
@@ -6983,9 +6983,6 @@ public class WorkNode {
 				int nodeId = this.getHisNode().getNodeID();
 				String flowNo = this.getHisNode().getFK_Flow();
 
-				/// #endregion
-
-				LocalDateTime dtNow = LocalDateTime.now();
 				Flow fl = this.getHisNode().getHisFlow();
 				String year = String.valueOf(dt.getYear());
 				String billInfo = "";

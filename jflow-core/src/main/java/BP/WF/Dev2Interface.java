@@ -4239,7 +4239,6 @@ public class Dev2Interface
 		t.setFID(fid);
 
 		//记录日期.
-		LocalDateTime d = LocalDateTime.MIN;
 		if (DataType.IsNullOrEmpty(rdt))
 		{
 			t.setRDT(DataType.getCurrentDataTime());

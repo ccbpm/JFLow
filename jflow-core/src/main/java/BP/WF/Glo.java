@@ -4991,8 +4991,8 @@ public class Glo {
 						continue;
 					}
 
-					String weekStr = LocalDateTime.now().getDayOfWeek().toString().toLowerCase();
-					if (str.toLowerCase().contains(weekStr) == false) {
+					String weekStr = DateUtils.getDayOfWeekT(Integer.parseInt(DateUtils.dayForWeek(new Date())));
+					if (str.toUpperCase().contains(weekStr) == false) {
 						continue; // 判断是否当前的周.
 					}
 

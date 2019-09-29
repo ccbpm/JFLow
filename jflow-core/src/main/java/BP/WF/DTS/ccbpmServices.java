@@ -6,15 +6,8 @@ import BP.WF.*;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.Tools.DateUtils;
-import BP.WF.Data.*;
-import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
-import BP.DTS.*;
 import BP.Web.*;
-import BP.WF.*;
-
-import java.text.ParseException;
-import java.time.*;
 import java.util.Date;
 
 /** 
@@ -483,7 +476,8 @@ public class ccbpmServices extends Method
 	*/
 	private void DoTianJinSpecFunc() throws Exception
 	{
-		if (LocalDateTime.now().getDayOfMonth() == 10 || LocalDateTime.now().getDayOfMonth() == 15)
+		int day = Integer.parseInt(DataType.getCurrentDay());
+		if (day == 10 || day == 15)
 		{
 			/* 一个是10号自动审批，一个是15号自动审批. */
 		}
@@ -500,12 +494,12 @@ public class ccbpmServices extends Method
 		sql += " WHERE  ";
 		sql += "   a.FK_Node=b.NodeID  ";
 
-		if (LocalDateTime.now().getDayOfMonth() == 10)
+		if (day == 10)
 		{
 			sql += "   AND  b.NodeID=13304 ";
 		}
 
-		if (LocalDateTime.now().getDayOfMonth() == 15)
+		if (day == 15)
 		{
 			sql += "AND b.NodeID=13302 ";
 		}

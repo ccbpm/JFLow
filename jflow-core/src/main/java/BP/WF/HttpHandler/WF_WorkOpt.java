@@ -182,8 +182,8 @@ public class WF_WorkOpt extends WebContralBase
 		Work wk = nd.getHisWork();
 		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
-
-		String file = LocalDateTime.now().getYear() + "_" + WebUser.getFK_Dept() + "_" + func.getNo() + "_" + getWorkID() + ".doc";
+		
+		String file = DataType.getCurrentYear() + "_" + WebUser.getFK_Dept() + "_" + func.getNo() + "_" + getWorkID() + ".doc";
 		BP.Pub.RTFEngine rtf = new BP.Pub.RTFEngine();
 
 		String[] paths;
@@ -228,7 +228,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 						dir.Do();
-						path = BP.WF.Glo.getFlowFileBill() + LocalDateTime.now().getYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+						path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
 						String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 						billInfo += "@<font color=red>" + msgErr + "</font>";
 						throw new RuntimeException(msgErr + "@其它信息:" + ex.getMessage());
@@ -283,7 +283,7 @@ public class WF_WorkOpt extends WebContralBase
 				billUrl = billUrl.replace(".doc", ".pdf");
 			}
 
-			path = BP.WF.Glo.getFlowFileBill() + LocalDateTime.now().getYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
 			//  path = Server.MapPath(path);
 			if ((new File(path)).isDirectory() == false)
 			{
@@ -362,7 +362,7 @@ public class WF_WorkOpt extends WebContralBase
 		{
 			BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 			dir.Do();
-			path = BP.WF.Glo.getFlowFileBill() + LocalDateTime.now().getYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
 			String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 			return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
 		}
@@ -398,7 +398,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		MapData mapData = new MapData(formID);
 
-		String file = LocalDateTime.now().getYear() + "_" + WebUser.getFK_Dept() + "_" + func.getNo() + "_" + getWorkID() + ".doc";
+		String file = DataType.getCurrentYear() + "_" + WebUser.getFK_Dept() + "_" + func.getNo() + "_" + getWorkID() + ".doc";
 		BP.Pub.RTFEngine rtf = new BP.Pub.RTFEngine();
 
 		String[] paths;
@@ -445,7 +445,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 						dir.Do();
-						path = BP.WF.Glo.getFlowFileBill() + LocalDateTime.now().getYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+						path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
 						String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 						billInfo += "@<font color=red>" + msgErr + "</font>";
 						throw new RuntimeException(msgErr + "@其它信息:" + ex.getMessage());
@@ -517,7 +517,7 @@ public class WF_WorkOpt extends WebContralBase
 				billUrl = billUrl.replace(".doc", ".pdf");
 			}
 
-			path = BP.WF.Glo.getFlowFileBill() + LocalDateTime.now().getYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
 			//  path = Server.MapPath(path);
 			if ((new File(path)).isDirectory() == false)
 			{
@@ -604,7 +604,7 @@ public class WF_WorkOpt extends WebContralBase
 		{
 			BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 			dir.Do();
-			path = BP.WF.Glo.getFlowFileBill() + LocalDateTime.now().getYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
 			String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 			return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
 		}

@@ -177,7 +177,7 @@ public class SysEnums extends Entities
 
 			for (String s : strs)
 			{
-				if (s.equals("") || s == null)
+				if (s == null || s.equals("") )
 				{
 					continue;
 				}

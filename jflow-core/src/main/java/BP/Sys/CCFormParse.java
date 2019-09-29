@@ -199,15 +199,6 @@ public class CCFormParse
 		attr.setMyPK(fk_mapdata + "_" + fieldID);
 		attr.RetrieveFromDBSources();
 
-		//if (attr.KeyOfEn == "BiaoTi")
-		//{
-		//    int i = 11;
-		//}
-
-		//执行一次查询,以防止其他的属性更新错误.
-		//if (pks.Contains("@" + attr.KeyOfEn + "@") == true)
-		//    attr.RetrieveFromDBSources();
-
 		switch (shape)
 		{
 			case "TextBoxStr": //文本类型.

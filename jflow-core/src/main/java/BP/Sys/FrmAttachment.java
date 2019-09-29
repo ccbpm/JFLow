@@ -324,7 +324,7 @@ public class FrmAttachment extends EntityMyPK {
 	public final String getSaveTo() throws Exception {
 		if (this.getAthSaveWay() == AthSaveWay.WebServer) {
 			String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
-			if (s.equals("") || s == null) {
+			if (s == null || s.equals("")) {
 				s = SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\";
 			}
 			return s;
@@ -332,7 +332,7 @@ public class FrmAttachment extends EntityMyPK {
 
 		if (this.getAthSaveWay() == AthSaveWay.FTPServer) {
 			String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
-			if (s.equals("") || s == null) {
+			if (s == null || s.equals("") ) {
 				s = "//" + this.getFK_MapData() + "//";
 			}
 			return s;

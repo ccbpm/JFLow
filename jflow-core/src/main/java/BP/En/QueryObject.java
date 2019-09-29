@@ -1077,7 +1077,7 @@ public class QueryObject {
 				switch (map.getEnDBUrl().getDBType()) {
 				case Oracle:
 					toIdx = top + pageSize;
-					if (this._sql.equals("") || this._sql == null) {
+					if (this._sql == null || this._sql.equals("")) {
 						if (top == 0) {
 							sql = "SELECT * FROM ( SELECT  " + pk + " FROM " + map.getPhysicsTable() + " "
 									+ this._orderBy + "   ) WHERE ROWNUM <=" + pageSize;
@@ -1114,7 +1114,7 @@ public class QueryObject {
 					return this.doEntitiesQuery();
 				case Informix:
 					toIdx = top + pageSize;
-					if (this._sql.equals("") || this._sql == null) {
+					if (this._sql == null || this._sql.equals("")) {
 						if (top == 0) {
 							sql = " SELECT first  " + pageSize + "  " + this.getEn().getPK() + " FROM "
 									+ map.getPhysicsTable() + " " + this._orderBy;
@@ -1151,7 +1151,7 @@ public class QueryObject {
 					return this.doEntitiesQuery();
 				case MySQL:
 					toIdx = top + pageSize;
-					if (this._sql.equals("") || this._sql == null) {
+					if (this._sql == null || this._sql.equals("")) {
 						if (top == 0) {
 							sql = " SELECT  " + this.getEn().getPK() + " FROM " + map.getPhysicsTable() + " "
 									+ this._orderBy + " LIMIT " + pageSize;
@@ -1190,7 +1190,7 @@ public class QueryObject {
 				default:
 					toIdx = top + pageSize;
 
-					if (this._sql.equals("") || this._sql == null) {
+					if (this._sql == null || this._sql.equals("")) {
 						sql = " SELECT  [" + this.getEn().getPK() + "] FROM " + map.getPhysicsTable() + " "
 								+ this._orderBy;
 					} else {
@@ -1269,20 +1269,19 @@ public class QueryObject {
 	 */
 	public final int GetCount() throws Exception {
 		String sql = this.getSQL();
-		// sql="SELECT COUNT(*) "+sql.substing(sql.IndexOf("FROM") ) ;
 		String ptable = this.getEn().getEnMap().getPhysicsTable();
 		String pk = this.getEn().getPK();
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
-			if (this._sql.equals("") || this._sql == null) {
+			if (this._sql == null || this._sql.equals("")) {
 				sql = "SELECT COUNT(" + ptable + "." + pk + ") as C FROM " + ptable;
 			} else {
 				sql = "SELECT COUNT(" + ptable + "." + pk + ") as C " + sql.substring(sql.indexOf("FROM "));
 			}
 			break;
 		default:
-			if (this._sql.equals("") || this._sql == null) {
+			if ( this._sql == null || this._sql.equals("")) {
 				sql = "SELECT COUNT(" + ptable + "." + pk + ") as C FROM " + ptable;
 			} else {
 				sql = sql.substring(sql.indexOf("FROM "));
@@ -1325,13 +1324,13 @@ public class QueryObject {
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
-			if (this._sql == "" || this._sql == null)
+			if (this._sql == null || this._sql.equals(""))
 				sql = selectSQl + " FROM " + ptable + "WHERE " + groupBy + orderBy;
 			else
 				sql = selectSQl + sql.substring(sql.indexOf(" FROM ")) + groupBy + orderBy;
 			break;
 		default:
-			if (this._sql == "" || this._sql == null)
+			if (this._sql == null || this._sql.equals(""))
 				sql = selectSQl + " FROM " + ptable + "WHERE " + groupBy + orderBy;
 			else {
 				sql = sql.substring(sql.indexOf(" FROM "));

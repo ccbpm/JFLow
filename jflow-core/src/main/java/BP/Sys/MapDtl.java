@@ -757,7 +757,7 @@ public class MapDtl extends EntityNoName
 	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDtlAttr.PTable);
-		if (s.equals("") || s == null)
+		if (s == null || s.equals(""))
 		{
 
 			s = this.getNo();

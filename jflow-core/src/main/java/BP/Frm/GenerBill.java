@@ -371,13 +371,6 @@ public class GenerBill extends Entity
 	}
 	public final void setBillState(BillState value) throws Exception
 	{
-			//if (value == BillState.)
-			//    SetValByKey(GenerBillAttr.BillSta, (int)BillSta.Complete);
-			//else if (value == BillState.Delete)
-			//    SetValByKey(GenerBillAttr.BillSta, (int)BillSta.Etc);
-			//else
-			//    SetValByKey(GenerBillAttr.BillSta, (int)BillSta.Runing);
-
 		SetValByKey(GenerBillAttr.BillState, value.getValue());
 	}
 	/** 

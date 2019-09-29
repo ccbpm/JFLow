@@ -369,7 +369,7 @@ public class MapAttr extends EntityMyPK
 	public final String getName() throws Exception
 	{
 		String s = this.GetValStrByKey(MapAttrAttr.Name);
-		if (s.equals("") || s == null)
+		if (s == null || s.equals(""))
 		{
 			return this.getKeyOfEn();
 		}
@@ -904,7 +904,7 @@ public class MapAttr extends EntityMyPK
 	public final String getUIRefKey() throws Exception
 	{
 		String s = this.GetValStrByKey(MapAttrAttr.UIRefKey);
-		if (s.equals("") || s == null)
+		if (s == null || s.equals(""))
 		{
 			s = "No";
 		}
@@ -921,7 +921,7 @@ public class MapAttr extends EntityMyPK
 	public final String getUIRefKeyText() throws Exception
 	{
 		String s = this.GetValStrByKey(MapAttrAttr.UIRefKeyText);
-		if (s.equals("") || s == null)
+		if ( s == null || s.equals(""))
 		{
 			s = "Name";
 		}

@@ -1470,7 +1470,7 @@ public class PubClass {
 		if (checkBoxIDs != null) {
 			String[] strs = checkBoxIDs.split(",");
 			for (String str : strs) {
-				if (str == null || str == "")
+				if (str == null || str.equals(""))
 					continue;
 
 				// 设置该属性为false.
@@ -1480,7 +1480,7 @@ public class PubClass {
 
 		for (Iterator iter = Glo.getRequest().getParameterMap().keySet().iterator(); iter.hasNext();) {
 			String key = (String) iter.next();
-			if (key == null || key == "")
+			if (key == null || key.equals(""))
 				continue;
 			// 获得实际的值, 具有特殊标记的，系统才赋值.
 			String attrKey = key;

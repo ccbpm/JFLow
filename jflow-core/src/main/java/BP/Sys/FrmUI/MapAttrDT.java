@@ -199,8 +199,6 @@ public class MapAttrDT extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		//if (this.Format == 0 && this.MyDataType == 7)
-		//    this.Format = 1;
 
 		//设置时间类型.
 		int format = this.getFormat();

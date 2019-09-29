@@ -257,18 +257,18 @@ public class MakeForm2Html
                         sealType = img.getTag0().split("^")[2];
                         sealField = img.getTag0().split("^")[3];
                         //如果部门没有设定，就获取部门来源
-                        if (fk_dept == "all")
+                        if (fk_dept.equals("all"))
                         {
                             //默认当前登陆人
                             fk_dept = WebUser.getFK_Dept();
                             //发起人
-                            if (sealType == "1")
+                            if (sealType.equals("1"))
                             {
                                 sql = "SELECT FK_Dept FROM WF_GenerWorkFlow WHERE WorkID=" + en.GetValStrByKey("OID");
                                 fk_dept = BP.DA.DBAccess.RunSQLReturnString(sql);
                             }
                             //表单字段
-                            if (sealType == "2" && !DataType.IsNullOrEmpty(sealField))
+                            if (sealType.equals("2") && !DataType.IsNullOrEmpty(sealField))
                             {
                                 //判断字段是否存在
                                 for (MapAttr attr: mapAttrs.ToJavaList())
@@ -530,7 +530,7 @@ public class MakeForm2Html
             sb.append("<tr>");
             for (MapAttr item :attrsOfDtls.ToJavaList())
             {
-                if (item.getKeyOfEn() == "OID")
+                if (item.getKeyOfEn().equals("OID"))
                     continue;
                 if (item.getUIVisible() == false)
                     continue;
@@ -791,7 +791,7 @@ public class MakeForm2Html
 
         //生成表头.
         String frmName = mapData.getName();
-        if (SystemConfig.getCustomerNo() == "TianYe")
+        if (SystemConfig.getCustomerNo().equals("TianYe"))
             frmName = "";
         
         int tableCol = mapData.getTableCol();
@@ -937,7 +937,7 @@ public class MakeForm2Html
                                 imgSrc = DealEnExp(en, url);
                             }
                             // 由于火狐 不支持onerror 所以 判断图片是否存在放到服务器端
-                            if (imgSrc == "" || imgSrc == null)
+                            if (imgSrc == null || imgSrc.equals(""))
                                 imgSrc = "../DataUser/ICON/CCFlow/LogBig.png";
 
                             //＠basePath
@@ -1298,7 +1298,7 @@ public class MakeForm2Html
                 sb.append("<tr>");
                 for (MapAttr item :attrsOfDtls.ToJavaList())
                 {
-                    if (item.getKeyOfEn() == "OID")
+                    if (item.getKeyOfEn().equals("OID"))
                         continue;
                     if (item.getUIVisible() == false)
                         continue;
@@ -1579,13 +1579,13 @@ public class MakeForm2Html
                             }
                         }
 
-                        if (singType == "0" || singType == "2")
+                        if (singType.equals("0") || singType.equals("2"))
                         {
                             empStrs = dr.getValue("EmpFromT").toString();
                         }
 
 
-                        if (singType == "1")
+                        if (singType.equals("1"))
                         {
                             empStrs = "<img src='../../../../../DataUser/Siganture/" + dr.getValue("EmpFrom").toString() + ".jpg' title='" + dr.getValue("EmpFromT").toString() + "' style='height:60px;' border=0 onerror=\"src='../../../../../DataUser/Siganture/UnName.JPG'\" /> " + dr.getValue("EmpFromT").toString();
                         }

@@ -43,7 +43,7 @@ public class FrmTemplate extends EntityNoName
 	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
-		if (s.equals("") || s == null)
+		if (s == null || s.equals(""))
 		{
 			return this.getNo();
 		}

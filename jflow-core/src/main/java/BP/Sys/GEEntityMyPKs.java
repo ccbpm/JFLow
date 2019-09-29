@@ -1,6 +1,4 @@
 package BP.Sys;
-
-import BP.DA.*;
 import BP.En.*;
 import java.util.*;
 
@@ -14,8 +12,6 @@ public class GEEntityMyPKs extends Entities
 	@Override
 	public String toString()
 	{
-		//if (this.FK_MapData == null)
-		//    throw new Exception("@没有能 FK_MapData 给值。");
 		return this.FK_MapData;
 	}
 	/** 

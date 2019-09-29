@@ -276,9 +276,9 @@ public class FrmAttachmentExt extends EntityMyPK
 	public final String getSaveTo() throws Exception
 	{
 		String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
-		if (s.equals("") || s == null)
+		if ( s == null || s.equals(""))
 		{
-			s = SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\";
+			s = SystemConfig.getPathOfDataUser() + "/UploadFile/" + this.getFK_MapData() + "/";
 		}
 		return s;
 	}

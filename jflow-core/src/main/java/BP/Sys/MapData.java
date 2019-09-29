@@ -733,30 +733,6 @@ public class MapData extends EntityNoName
 		WebUser.SetSessionByKey("IsEditDtlModel", "1");
 	}
 
-		///#endregion 基本属性.
-
-
-		///#region 表单结构数据json
-	/** 
-	 表单图数据
-	*/
-	//public string FormJson
-	//{
-	//    get
-	//    {
-	//        // return this.GenerHisFrm();
-	//        string str = this.GetBigTextFromDB("FormJson");
-	//        if (str == null || str == "")
-	//        {
-	//            return "";
-	//        }
-	//        return str;
-	//    }
-	//    set
-	//    {
-	//        this.SaveBigTxtToDB("FormJson", value);
-	//    }
-	//}
 	/** 
 	 生成Frm
 	 
@@ -813,7 +789,7 @@ public class MapData extends EntityNoName
 	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
-		if (s.equals("") || s == null)
+		if (s == null || s.equals("") )
 		{
 			return this.getNo();
 		}

@@ -1015,7 +1015,7 @@ public class WF_WorkOpt extends WebContralBase
 					}
 
 					String specFlowNos = SystemConfig.getAppSettings().get("SpecFlowNosForAccpter").toString();
-					if (specFlowNos.equals("") || specFlowNos == null)
+					if (specFlowNos == null || specFlowNos.equals("") )
 					{
 						specFlowNos = ",001,";
 					}
@@ -3377,7 +3377,7 @@ public class WF_WorkOpt extends WebContralBase
 		{
 			String msg = BP.WF.Dev2Interface.Flow_DeleteSubThread(this.getFK_Flow(), this.getWorkID(), "手工删除");
 			//提示信息.
-			if (msg.equals("") || msg == null)
+			if (msg == null || msg.equals(""))
 			{
 				msg = "该工作删除成功...";
 			}

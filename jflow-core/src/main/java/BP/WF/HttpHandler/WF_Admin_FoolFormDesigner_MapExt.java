@@ -1277,7 +1277,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 			String sql = this.GetRequestVal("TB_" + attr.getKeyOfEn());
 			sql = sql.trim();
-			if (sql.equals("") || sql == null)
+			if ( sql == null || sql.equals(""))
 			{
 				continue;
 			}

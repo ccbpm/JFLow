@@ -23,7 +23,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	*/
 	public final boolean getIsFirst()
 	{
-		if (this.GetRequestVal("IsFirst") == null || this.GetRequestVal("IsFirst").equals("") || this.GetRequestVal("IsFirst").equals("null"))
+		if (DataType.IsNullOrEmpty(this.GetRequestVal("IsFirst")) == true)
 		{
 			return false;
 		}
@@ -1391,7 +1391,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		//枚举值.
 		String enumKey = this.getEnumKey();
-		if (enumKey.equals("") || enumKey == null || enumKey.equals("null"))
+		if (DataType.IsNullOrEmpty(enumKey)==true)
 		{
 			MapAttr ma = new MapAttr(this.getMyPK());
 			enumKey = ma.getUIBindKey();

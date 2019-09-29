@@ -494,7 +494,7 @@ public abstract class FlowEventBase {
 			while (enu.hasMoreElements()) {
 				// 判断是否有内容，hasNext()
 				String key = (String) enu.nextElement();
-				if (key == "OID" || key == "WorkID" || key == null)
+				if ( key == null || key.equals("OID") || key.equals("WorkID"))
 					continue;
 
 				r.put(key, BP.Sys.Glo.getRequest().getParameter(key));

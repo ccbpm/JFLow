@@ -251,7 +251,7 @@ public class WF_CCForm extends WebContralBase {
 
 					String[] ss = str.split("[:]", -1);
 					String fk_dtl = ss[0];
-					if (ss[1].equals("") || ss[1] == null) {
+					if (ss[1] == null || ss[1].equals("")) {
 						continue;
 					}
 					Object tempVar = WebUser.GetSessionByKey("DtlKey", null);
@@ -293,7 +293,7 @@ public class WF_CCForm extends WebContralBase {
 				if (DataType.IsNullOrEmpty(me.getTag()) == false) {
 					String[] strs = me.getTag().split("[$]", -1);
 					for (String str : strs) {
-						if (str.equals("") || str == null) {
+						if (str == null || str.equals("")) {
 							continue;
 						}
 
@@ -312,7 +312,7 @@ public class WF_CCForm extends WebContralBase {
 				sql = me.getDocOfSQLDeal();
 				String[] strs1 = me.getTag().split("[$]", -1);
 				for (String str : strs1) {
-					if (str.equals("") || str == null) {
+					if (str == null || str.equals("")){
 						continue;
 					}
 
@@ -1068,17 +1068,10 @@ public class WF_CCForm extends WebContralBase {
 					continue;
 				}
 
-				// string lgType = dr[MapAttrAttr.LGType].ToString();
-				// if (lgType == "0")
-				// continue
-
 				String uiBindKey = dr.get("UIBindKey").toString();
 				if (DataType.IsNullOrEmpty(uiBindKey) == true) {
 					String myPK = dr.get("MyPK").toString();
-					/* 如果是空的 */
-					// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
-					// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK +
-					// ",的UIBindKey IsNull ");
+			
 				}
 
 				// 检查是否有下拉框自动填充。

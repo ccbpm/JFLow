@@ -503,7 +503,7 @@ public class SqlBuilder {
 	 * @throws Exception 
 	 */
 	public static String GenerCreateTableSQLOfMS(Entity en) throws Exception {
-		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null) {
+		if ( en.getEnMap().getPhysicsTable() == null || en.getEnMap().getPhysicsTable().equals("")) {
 			return "DELETE FROM Sys_enum where enumkey='sdsf44a23'";
 		}
 		

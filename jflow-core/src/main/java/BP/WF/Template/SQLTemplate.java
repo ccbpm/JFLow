@@ -32,7 +32,7 @@ public class SQLTemplate extends EntityNoName
 	public final String getDocs() throws Exception
 	{
 		String s = this.GetValStrByKey(SQLTemplateAttr.Docs);
-		if (s.equals("") || s == null)
+		if (s == null || s.equals(""))
 		{
 			return this.getNo();
 		}

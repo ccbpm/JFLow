@@ -3,6 +3,8 @@ package BP.En;
 import java.util.ArrayList;
 import java.util.List;
 
+import BP.DA.DataType;
+
 /**
  * 树实体s
  */
@@ -31,7 +33,7 @@ public abstract class EntitiesTree extends Entities
       /// <returns></returns>
       public String ToJsonOfTree(String rootNo) throws Exception
       {
-    	  if(rootNo==null || rootNo==""){
+    	  if(DataType.IsNullOrEmpty(rootNo)==true){
     		  rootNo="0";
     	  }
           appendMenus = new StringBuilder();

@@ -2555,7 +2555,7 @@ public abstract class Entity implements Serializable {
 			SysEnums ens = new SysEnums();
 			ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
 			for (String s : strs) {
-				if (s.equals("") || s == null) {
+				if (DataType.IsNullOrEmpty(s) == true) {
 					continue;
 				}
 
@@ -2830,7 +2830,7 @@ public abstract class Entity implements Serializable {
 			SysEnums ens = new SysEnums();
 			ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
 			for (String s : strs) {
-				if (s.equals("") || s == null) {
+				if (DataType.IsNullOrEmpty(s)==true) {
 					continue;
 				}
 
@@ -3913,9 +3913,9 @@ public abstract class Entity implements Serializable {
         if (DataType.IsNullOrEmpty(s))
             s = this.getEnMap().GetAttrByKey(key).getDefaultVal().toString();
 
-        if (s == "0")
+        if (s.equals("0"))
             return false;
-        if (s == "1")
+        if (s.equals("1"))
             return true;
 
         if (s.toUpperCase().equals("FALSE"))
@@ -4017,7 +4017,7 @@ public abstract class Entity implements Serializable {
 			}
 
 			String str = this.GetValStrByKey(attr.getKey());
-			if (str.equals("") || attr.getDefaultVal().toString().equals(str) || str == null) {
+			if (str == null || str.equals("") || attr.getDefaultVal().toString().equals(str)) {
 				continue;
 			}
 
@@ -4057,8 +4057,6 @@ public abstract class Entity implements Serializable {
 			}
 
 			if (attr.getIsFKorEnum()) {
-				// if (attr.DefaultVal == null || attr.DefaultVal == "")
-				// continue;
 
 				if (!attr.getDefaultVal().toString().equals(str)) {
 					return false;

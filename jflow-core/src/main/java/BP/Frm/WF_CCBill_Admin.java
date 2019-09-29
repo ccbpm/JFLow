@@ -64,13 +64,6 @@ public class WF_CCBill_Admin extends WebContralBase
 		if (type == 1)
 		{
 			en.setMethodDoc_JavaScript(doc);
-
-			//string path=SystemConfig.PathOfDataUser + "JSLibData\\Method\\" ;
-			//if (System.IO.Directory.Exists(path) == false)
-			//    System.IO.Directory.CreateDirectory(path);
-			////写入文件.
-			//string file = path + en.MyPK + ".js";
-			//DataType.WriteFile(file, doc);
 		}
 
 		//url.

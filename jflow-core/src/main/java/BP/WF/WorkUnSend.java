@@ -344,7 +344,7 @@ public class WorkUnSend
 			String[] empStrs = rm.getObjs().split("[@]", -1);
 			for (String s : empStrs)
 			{
-				if (s.equals("") || s == null)
+				if (s == null || s.equals(""))
 				{
 					continue;
 				}
@@ -898,7 +898,7 @@ public class WorkUnSend
 			String[] empStrs = rm.getObjs().split("[@]", -1);
 			for (String s : empStrs)
 			{
-				if (s.equals("") || s == null)
+				if (s == null || s.equals(""))
 				{
 					continue;
 				}
@@ -1223,7 +1223,7 @@ public class WorkUnSend
 			String[] empStrs = rm.getObjs().split("[@]", -1);
 			for (String s : empStrs)
 			{
-				if (s.equals("") || s == null)
+				if (s == null || s.equals(""))
 				{
 					continue;
 				}

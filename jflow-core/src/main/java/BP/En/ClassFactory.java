@@ -55,7 +55,7 @@ public class ClassFactory {
 	/// <param name="className"></param>
 	/// <returns></returns>
 	public static Object GetObject_OK(String className) throws Exception {
-		if (className == "" || className == null)
+		if (DataType.IsNullOrEmpty(className) == true)
 			return "err@要转化类名称为空...";
 		Class clazz = Class.forName(className);
 		return clazz.newInstance();

@@ -211,20 +211,7 @@ public abstract class EntityTree extends Entity
 		en.setNo(String.valueOf(BP.DA.DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
 		en.setName("新建节点" + en.getNo());
 		en.setParentNo(this.getNo());
-	  //  en.MenuType = this.MenuType + 1;
-		//en.IsDir = false;
-		//en.TreeNo = this.GenerNewNoByKey(EntityTreeAttr.TreeNo, EntityTreeAttr.ParentNo, this.getNo());
-		//if (en.TreeNo.Substring(en.TreeNo.Length - 2) == "01")
-		//    en.TreeNo = this.TreeNo + "10";
 		en.Insert();
-
-		//// 设置此节点是目录
-		//if (this.IsDir == false)
-		//{
-		//    this.Retrieve();
-		//    this.IsDir = true;
-		//    this.Update();
-		//}
 		return en;
 	}
 	/** 

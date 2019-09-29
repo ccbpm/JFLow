@@ -81,7 +81,7 @@ public class SelectAccper extends EntityMyPK
 	public final String getEmpName() throws Exception
 	{
 		String s = this.GetValStringByKey(SelectAccperAttr.EmpName);
-		if (s.equals("") || s == null)
+		if ( s == null || s.equals(""))
 		{
 			s = this.getFK_Emp();
 		}

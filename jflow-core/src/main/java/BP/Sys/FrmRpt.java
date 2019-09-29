@@ -494,7 +494,7 @@ public class FrmRpt extends EntityNoName {
 
 	public final String getPTable() throws Exception {
 		String s = this.GetValStrByKey(FrmRptAttr.PTable);
-		if (s.equals("") || s == null) {
+		if (s == null || s.equals("")) {
 			s = this.getNo();
 			if (s.substring(0, 1).equals("0")) {
 				return "T" + this.getNo();

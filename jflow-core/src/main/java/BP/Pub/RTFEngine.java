@@ -726,13 +726,13 @@ public class RTFEngine {
 					// 替换rtf模板文件中的签名图片标识为图片字符串
 					// str = str.replace(imgMark, pict.ToString());
 				} else if (strs[1].trim().equals("BoolenText")) {
-					if (val == "0")
+					if (val.equals("0"))
 						return "否";
 					else
 						return "是";
 
 				} else if (strs[1].trim().equals("Boolen")) {
-					if (val == "1")
+					if (val.equals("1"))
 						return "[√]";
 					else
 						return "[×]";
@@ -1086,28 +1086,6 @@ public class RTFEngine {
 				str = new StringBuilder(str.toString().replace("<" + athName + ">", this.GetCode(athFilesName)));
 			}
 
-			// 要替换的字段
-			/*if (replaceVals != null && replaceVals.contains("@")) {
-				String[] vals = replaceVals.split("[@]", -1);
-				for (String val : vals) {
-					if (val == null || val.equals("")) {
-						continue;
-					}
-
-					if (val.contains("=") == false) {
-						continue;
-					}
-
-					Object tempVar2 = val;
-					String myRep = (String) ((tempVar2 instanceof String) ? tempVar2 : null);
-
-					myRep = myRep.trim();
-					myRep = myRep.replace("null", "");
-					String[] myvals = myRep.split("[=]", -1);
-					str = new StringBuilder(str.toString().replace("<" + myvals[0] + ">", "<" + myvals[1] + ">"));
-				}
-			}*/
-			//
 			str = new StringBuilder(str.toString().replace("<", ""));
 			str = new StringBuilder(str.toString().replace(">", ""));
 			try {
@@ -1132,8 +1110,7 @@ public class RTFEngine {
 					"生成文档失败：单据名称[" + this.CyclostyleFilePath + "] 异常信息：" + ex.getMessage() + " @自动修复单据信息：" + msg);
 		}
 		if (isOpen) {
-			// PubClass.Print(BP.Sys.Glo.getRequest().ApplicationPath + "Temp/"
-			// + file);
+
 			PubClass.Print(Glo.getCCFlowAppPath() + "Temp/" + file);
 		}
 	}

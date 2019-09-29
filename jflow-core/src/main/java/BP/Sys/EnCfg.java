@@ -52,7 +52,7 @@ public class EnCfg extends EntityNo
 	public final String getFJSavePath() throws Exception
 	{
 		String str = this.GetValStringByKey(EnCfgAttr.FJSavePath);
-		if (str.equals("") || str == null || str.equals(""))
+		if (str == null || str.equals(""))
 		{
 			return BP.Sys.SystemConfig.getPathOfDataUser() + this.getNo() + "\\";
 		}
@@ -69,7 +69,7 @@ public class EnCfg extends EntityNo
 	public final String getFJWebPath() throws Exception
 	{
 		String str = this.GetValStringByKey(EnCfgAttr.FJWebPath);
-		if (str.equals("") || str == null)
+		if (str == null ||str.equals(""))
 		{
 			
 			return BP.Sys.Glo.getRequest().getRemoteHost() + "/DataUser/"

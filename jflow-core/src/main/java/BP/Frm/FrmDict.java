@@ -43,7 +43,7 @@ public class FrmDict extends EntityNoName
 	public final String getPTable() throws Exception
 	{
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
-		if (s.equals("") || s == null)
+		if (DataType.IsNullOrEmpty(s)==true)
 		{
 			return this.getNo();
 		}

@@ -71,12 +71,7 @@ public class MapFrmFool extends EntityNoName
 	public final int getTableCol()
 	{
 		return 4;
-//		int i = this.GetValIntByKey(MapDataAttr.TableCol);
-//		if (i == 0 || i == 1)
-//		{
-//			return 4;
-//		}
-//		return i;
+
 	}
 	public final void setTableCol(int value) throws Exception
 	{

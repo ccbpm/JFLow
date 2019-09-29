@@ -263,7 +263,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				String[] nodes = this.GetRequestVal("Nodes").split("[@]", -1);
 				for (String item : nodes)
 				{
-					if (item.equals("") || item == null)
+					if (item == null || item.equals(""))
 					{
 						continue;
 					}
@@ -278,7 +278,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				String[] dirs = this.GetRequestVal("Dirs").split("[@]", -1);
 				for (String item : dirs)
 				{
-					if (item.equals("") || item == null)
+					if (item == null || item.equals(""))
 					{
 						continue;
 					}
@@ -294,7 +294,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				String[] labs = this.GetRequestVal("Labs").split("[@]", -1);
 				for (String item : labs)
 				{
-					if (item.equals("") || item == null)
+					if (item == null || item.equals(""))
 					{
 						continue;
 					}

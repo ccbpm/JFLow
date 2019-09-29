@@ -160,7 +160,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 			String lin = "";
 			while ((lin = br.readLine()) != null)
 			{
-				if (lin.trim().equals("") || lin == null)
+				if (lin == null || lin.trim().equals("") )
 				{
 					continue;
 				}

@@ -143,7 +143,7 @@ public class WF_Comm extends WebContralBase {
 	 */
 	public final String getFK_Dept() {
 		String str = this.GetRequestVal("FK_Dept");
-		if (str == null || str.equals("") || str.equals("null")) {
+		if (DataType.IsNullOrEmpty(str)==true) {
 			return null;
 		}
 		return str;
@@ -193,10 +193,10 @@ public class WF_Comm extends WebContralBase {
 			if (key.indexOf("EnsName") != -1)
 				continue;
 
-			if (key == "OID" || key == "MyPK")
+			if (key.equals("OID") || key.equals("MyPK"))
 				continue;
 
-			if (key == "FK_Dept") {
+			if (key.equals("FK_Dept")) {
 				this.setFK_Dept(getRequest().getParameter(key));
 				continue;
 			}
@@ -211,7 +211,7 @@ public class WF_Comm extends WebContralBase {
 			if (isExist == false)
 				continue;
 
-			if (getRequest().getParameter(key) == "mvals") {
+			if (getRequest().getParameter(key).equals("mvals")) {
 				// 如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
@@ -223,9 +223,9 @@ public class WF_Comm extends WebContralBase {
 				AtPara ap = new AtPara(cfgVal);
 				String instr = ap.GetValStrByKey(key);
 				String val = "";
-				if (instr == null || instr == "") {
-					if (key == "FK_Dept" || key == "FK_Unit") {
-						if (key == "FK_Dept")
+				if (instr == null || instr.equals("")) {
+					if (key.equals("FK_Dept" )|| key.equals("FK_Unit")) {
+						if (key.equals("FK_Dept"))
 							val = WebUser.getFK_Dept();
 					} else {
 						continue;
@@ -244,7 +244,7 @@ public class WF_Comm extends WebContralBase {
 		}
 
 		if (this.getFK_Dept() != null
-				&& (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp") == "all")) {
+				&& (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all"))) {
 			if (this.getFK_Dept().length() == 2) {
 				qo.AddWhere("FK_Dept", " = ", "all");
 				qo.addAnd();
@@ -290,10 +290,10 @@ public class WF_Comm extends WebContralBase {
 			if (key.indexOf("EnsName") != -1)
 				continue;
 
-			if (key == "OID" || key == "MyPK")
+			if (key.equals("OID") || key.equals("MyPK"))
 				continue;
 
-			if (key == "FK_Dept") {
+			if (key.equals("FK_Dept")) {
 				this.setFK_Dept(getRequest().getParameter(key));
 				continue;
 			}
@@ -308,7 +308,7 @@ public class WF_Comm extends WebContralBase {
 			if (isExist == false)
 				continue;
 
-			if (getRequest().getParameter(key) == "mvals") {
+			if (getRequest().getParameter(key).equals("mvals")) {
 				// 如果用户多项选择了，就要找到它的选择项目.
 
 				UserRegedit sUr = new UserRegedit();
@@ -320,9 +320,9 @@ public class WF_Comm extends WebContralBase {
 				AtPara ap = new AtPara(cfgVal);
 				String instr = ap.GetValStrByKey(key);
 				String val = "";
-				if (instr == null || instr == "") {
-					if (key == "FK_Dept" || key == "FK_Unit") {
-						if (key == "FK_Dept")
+				if (instr == null || instr.equals("")) {
+					if (key.equals("FK_Dept") || key.equals("FK_Unit")) {
+						if (key.equals("FK_Dept"))
 							val = WebUser.getFK_Dept();
 					} else {
 						continue;
@@ -341,7 +341,7 @@ public class WF_Comm extends WebContralBase {
 		}
 
 		if (this.getFK_Dept() != null
-				&& (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp") == "all")) {
+				&& (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all"))) {
 			if (this.getFK_Dept().length() == 2) {
 				qo.AddWhere("FK_Dept", " = ", "all");
 				qo.addAnd();

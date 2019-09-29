@@ -83,6 +83,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.math.*;
@@ -571,7 +572,7 @@ public class Flow extends BP.En.EntityNoName {
 				while (enu.hasMoreElements()) {
 					// 判断是否有内容，hasNext()
 					String key = (String) enu.nextElement();
-					if (key == "OID" || key == "WorkID" || key == null)
+					if (key == null || key.equals("OID") ||  key.equals("WorkID"))
 						continue;
 					if (paras.containsKey(key))
 						paras.remove(key);
@@ -1486,7 +1487,7 @@ public class Flow extends BP.En.EntityNoName {
 				case MSSQL:
 					break;
 				case Oracle:
-					if (ywDt.Columns.get(ywArr[i]).DataType == LocalDateTime.class) {
+					if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
 						if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
 							values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
 						} else {
@@ -1509,7 +1510,7 @@ public class Flow extends BP.En.EntityNoName {
 			case MySQL:
 				break;
 			case Oracle:
-				if (ywDt.Columns.get(ywArr[i]).DataType == LocalDateTime.class) {
+				if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
 					if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
 						values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
 					} else {

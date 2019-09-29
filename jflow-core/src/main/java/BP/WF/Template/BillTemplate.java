@@ -79,7 +79,7 @@ public class BillTemplate extends EntityNoName
 	public final String getTempFilePath() throws Exception
 	{
 		String s = this.GetValStrByKey(BillTemplateAttr.TempFilePath);
-		if (s.equals("") || s == null)
+		if (s == null || s.equals(""))
 		{
 			return this.getNo();
 		}

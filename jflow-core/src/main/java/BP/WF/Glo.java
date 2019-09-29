@@ -687,7 +687,7 @@ public class Glo {
 			String cfgVal = enumMain.getCfgVal();
 			String[] strs = cfgVal.split("[@]", -1);
 			for (String s : strs) {
-				if (s.equals("") || s == null) {
+				if (s == null || s.equals("")) {
 					continue;
 				}
 
@@ -3829,7 +3829,7 @@ public class Glo {
 		ps.SQL = "SELECT UseSta FROM WF_Emp WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		ps.AddFK_Emp();
 		String s = DBAccess.RunSQLReturnStringIsNull(ps, "1");
-		if (s.equals("1") || s == null) {
+		if (s == null || s.equals("1")) {
 			return true;
 		}
 		return false;

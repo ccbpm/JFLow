@@ -324,7 +324,7 @@ public class WorkNode {
 				String[] ndsStrs = nd.getHisToNDs().split("[@]", -1);
 				String inStr = "";
 				for (String s : ndsStrs) {
-					if (s.equals("") || s == null) {
+					if (s == null || s.equals("")) {
 						continue;
 					}
 					inStr += "'" + s + "',";

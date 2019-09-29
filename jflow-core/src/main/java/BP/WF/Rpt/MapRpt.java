@@ -304,7 +304,7 @@ public class MapRpt extends EntityNoName {
 	 */
 	public final String getFK_Flow() throws Exception {
 		String str = this.GetValStrByKey(MapRptAttr.FK_Flow);
-		if (str.equals("") || str == null) {
+		if (str == null || str.equals("") ) {
 			str = this.getNo().replace("ND", "");
 			str = str.replace("MyRpt", "");
 			str = StringHelper.padLeft(str, 3, '0');
@@ -326,7 +326,7 @@ public class MapRpt extends EntityNoName {
 	 */
 	public final String getPTable() throws Exception {
 		String s = this.GetValStrByKey(MapRptAttr.PTable);
-		if (s.equals("") || s == null) {
+		if (s == null || s.equals("")) {
 			return this.getNo();
 		}
 		return s;

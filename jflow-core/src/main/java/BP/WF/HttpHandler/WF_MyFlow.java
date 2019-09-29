@@ -778,7 +778,7 @@ public class WF_MyFlow extends WebContralBase {
 	public final String MyFlow_StopFlow() throws Exception {
 		try {
 			String str = BP.WF.Dev2Interface.Flow_DoFlowOver(this.getFK_Flow(), this.getWorkID(), "流程成功结束");
-			if (str.equals("") || str == null) {
+			if ( str == null || str.equals("")) {
 				return "流程成功结束";
 			}
 			return str;
@@ -796,7 +796,7 @@ public class WF_MyFlow extends WebContralBase {
 	public final String MyFlow_DeleteFlowByReal() throws Exception {
 		try {
 			String str = BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(this.getFK_Flow(), this.getWorkID());
-			if (str.equals("") || str == null) {
+			if (str == null || str.equals("")) {
 				return "流程成功结束";
 			}
 			return str;

@@ -1021,11 +1021,11 @@ public class Dev2Interface
 		{
 			if (DataType.IsNullOrEmpty(row.get("ParentNo").toString()))
 			{
-				Row.setValue("ParentNo", row.get("FK_FlowSort"));
+				row.setValue("ParentNo", row.get("FK_FlowSort"));
 			}
 			if (DataType.IsNullOrEmpty(row.get("ICON").toString()))
 			{
-				Row.setValue("ICON", "icon-4");
+				row.setValue("ICON", "icon-4");
 			}
 		}
 		return table;
@@ -3543,7 +3543,7 @@ public class Dev2Interface
 
 		for (DataRow row : dt.Rows)
 		{
-			Row.setValue("Type", "RUNNING");
+			row.setValue("Type", "RUNNING");
 		}
 
 		return dt;

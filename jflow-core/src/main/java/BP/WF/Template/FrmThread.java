@@ -227,7 +227,7 @@ public class FrmThread extends Entity
 
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		map.AddDDLSysEnum(FrmThreadAttr.FrmThreadSta, getFrmThreadSta().Disable.getValue(), "组件状态", true, true, FrmThreadAttr.FrmThreadSta, "@0=禁用@1=启用");
+		map.AddDDLSysEnum(FrmThreadAttr.FrmThreadSta, FrmThreadSta.Disable.getValue(), "组件状态", true, true, FrmThreadAttr.FrmThreadSta, "@0=禁用@1=启用");
 
 		map.AddTBFloat(FrmThreadAttr.FrmThread_X, 5, "位置X", true, false);
 		map.AddTBFloat(FrmThreadAttr.FrmThread_Y, 5, "位置Y", true, false);

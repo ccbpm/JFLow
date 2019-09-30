@@ -204,7 +204,7 @@ public class WF extends WebContralBase {
 			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
 			if (mydt == null) {
 				DataRow ddldr = ddlTable.NewRow();
-				ddldr.set("No", uiBindKey);
+				ddldr.setValue("No", uiBindKey);
 				ddlTable.Rows.add(ddldr);
 			} else {
 				myds.Tables.add(mydt);
@@ -556,9 +556,9 @@ public class WF extends WebContralBase {
 				// currEmp = dr["ToDoEmps"].ToString();
 				// currEmp = currEmp.TrimEnd(';');
 			}
-			dr.set("ToDoEmps", currEmp);
-			dr.set("FlowNote", wfstaT);
-			dr.set("AtPara",
+			dr.setValue("ToDoEmps", currEmp);
+			dr.setValue("FlowNote", wfstaT);
+			dr.setValue("AtPara",
 					(wfsta == BP.WF.WFSta.Complete.getValue() ? StringHelper
 							.trimEnd(StringHelper.trimStart(dr.get("Sender").toString(), '('), ')').split("[,]", -1)[1]
 							: ""));
@@ -604,7 +604,7 @@ public class WF extends WebContralBase {
 		// 找到当前人员所在的部门集合, 应该找到他的组织集合为了减少业务逻辑.
 		String orgNos = "'18099','103'"; // 空的数据.
 		for (DataRow dr : dt.Rows) {
-			String deptNo = dr.get(0).toString();
+			String deptNo = dr.getValue(0).toString();
 			orgNos += ",'" + deptNo + "'";
 		}
 
@@ -656,12 +656,12 @@ public class WF extends WebContralBase {
 
 				DataRow drNew = dtStart.NewRow();
 
-				drNew.set("No", drFlow.get("No"));
-				drNew.set("Name", drFlow.get("Name"));
-				drNew.set("FK_FlowSort", drFlow.get("FK_FlowSort"));
-				drNew.set("IsBatchStart", drFlow.get("IsBatchStart"));
-				drNew.set("IsStartInMobile", drFlow.get("IsStartInMobile"));
-				drNew.set("Note", drFlow.get("Note"));
+				drNew.setValue("No", drFlow.get("No"));
+				drNew.setValue("Name", drFlow.get("Name"));
+				drNew.setValue("FK_FlowSort", drFlow.get("FK_FlowSort"));
+				drNew.setValue("IsBatchStart", drFlow.get("IsBatchStart"));
+				drNew.setValue("IsStartInMobile", drFlow.get("IsStartInMobile"));
+				drNew.setValue("Note", drFlow.get("Note"));
 				dtStart.Rows.add(drNew); // 增加到里里面去.
 			}
 		}
@@ -730,7 +730,7 @@ public class WF extends WebContralBase {
 		// 找到当前人员所在的部门集合, 应该找到他的组织集合为了减少业务逻辑.
 		String orgNos = "'0'";
 		for (DataRow dr : dt.Rows) {
-			String deptNo = dr.get(0).toString();
+			String deptNo = dr.getValue(0).toString();
 			orgNos += ",'" + deptNo + "'";
 		}
 
@@ -786,12 +786,12 @@ public class WF extends WebContralBase {
 
 				DataRow drNew = dtStart.NewRow();
 
-				drNew.set("No", drFlow.get("No"));
-				drNew.set("Name", drFlow.get("Name"));
-				drNew.set("FK_FlowSort", drFlow.get("FK_FlowSort"));
-				drNew.set("IsBatchStart", drFlow.get("IsBatchStart"));
-				drNew.set("IsStartInMobile", drFlow.get("IsStartInMobile"));
-				drNew.set("Note", drFlow.get("Note"));
+				drNew.setValue("No", drFlow.get("No"));
+				drNew.setValue("Name", drFlow.get("Name"));
+				drNew.setValue("FK_FlowSort", drFlow.get("FK_FlowSort"));
+				drNew.setValue("IsBatchStart", drFlow.get("IsBatchStart"));
+				drNew.setValue("IsStartInMobile", drFlow.get("IsStartInMobile"));
+				drNew.setValue("Note", drFlow.get("Note"));
 				dtStart.Rows.add(drNew); // 增加到里里面去.
 			}
 		}

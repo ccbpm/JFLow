@@ -1502,7 +1502,7 @@ public class FlowExt extends EntityNoName
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			for (DataRow dr : dt.Rows)
 			{
-				if (emps.contains("," + dr.get(0).toString() + ","))
+				if (emps.contains("," + dr.getValue(0).toString() + ","))
 				{
 					continue;
 				}

@@ -655,7 +655,7 @@ public class WorkUnSend
 			{
 				for (NodeCancel nc : ncs.ToJavaList())
 				{
-					if (nc.getCancelTo() == Integer.parseInt(dr.get(0).toString()))
+					if (nc.getCancelTo() == Integer.parseInt(dr.getValue(0).toString()))
 					{
 						cancelToNodeID = nc.getCancelTo();
 						break;
@@ -765,7 +765,7 @@ public class WorkUnSend
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 			for (DataRow dr : dt.Rows)
 			{
-				int ac = Integer.parseInt(dr.get(0).toString());
+				int ac = Integer.parseInt(dr.getValue(0).toString());
 				ActionType at = ActionType.forValue(ac);
 				if (at == ActionType.TeampUp)
 				{

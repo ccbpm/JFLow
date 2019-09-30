@@ -172,7 +172,7 @@ public class WF_CCForm extends WebContralBase {
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				String strs = "";
 				for (DataRow dr : dt.Rows) {
-					strs += dr.get(0) + ",";
+					strs += dr.getValue(0) + ",";
 				}
 				athDesc.setSort(strs);
 			}
@@ -1105,7 +1105,7 @@ public class WF_CCForm extends WebContralBase {
 					ds.Tables.add(dataTable);
 				} else {
 					DataRow ddldr = ddlTable.NewRow();
-					ddldr.set("No", uiBindKey);
+					ddldr.setValue("No", uiBindKey);
 					ddlTable.Rows.add(ddldr);
 				}
 			}
@@ -1342,7 +1342,7 @@ public class WF_CCForm extends WebContralBase {
 					ds.Tables.add(dataTable);
 				} else {
 					DataRow ddldr = ddlTable.NewRow();
-					ddldr.set("No", uiBindKey);
+					ddldr.setValue("No", uiBindKey);
 					ddlTable.Rows.add(ddldr);
 				}
 			}
@@ -1410,12 +1410,12 @@ public class WF_CCForm extends WebContralBase {
 							DataRow dr = gf.NewRow();
 
 							nd.WorkID = this.getWorkID(); // 为获取表单ID提供参数.
-							dr.set(GroupFieldAttr.OID, 100);
-							dr.set(GroupFieldAttr.FrmID, nd.getNodeFrmID());
-							dr.set(GroupFieldAttr.CtrlType, "FWC");
-							dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
-							dr.set(GroupFieldAttr.Idx, 100);
-							dr.set(GroupFieldAttr.Lab, "审核信息");
+							dr.setValue(GroupFieldAttr.OID, 100);
+							dr.setValue(GroupFieldAttr.FrmID, nd.getNodeFrmID());
+							dr.setValue(GroupFieldAttr.CtrlType, "FWC");
+							dr.setValue(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
+							dr.setValue(GroupFieldAttr.Idx, 100);
+							dr.setValue(GroupFieldAttr.Lab, "审核信息");
 							gf.Rows.add(dr);
 
 							ds.Tables.remove("Sys_GroupField");
@@ -1451,12 +1451,12 @@ public class WF_CCForm extends WebContralBase {
 							DataRow dr = gf.NewRow();
 
 							nd.WorkID = this.getWorkID(); // 为获取表单ID提供参数.
-							dr.set(GroupFieldAttr.OID, 100);
-							dr.set(GroupFieldAttr.FrmID, nd.getNodeFrmID());
-							dr.set(GroupFieldAttr.CtrlType, "FWC");
-							dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
-							dr.set(GroupFieldAttr.Idx, 100);
-							dr.set(GroupFieldAttr.Lab, "审核信息");
+							dr.setValue(GroupFieldAttr.OID, 100);
+							dr.setValue(GroupFieldAttr.FrmID, nd.getNodeFrmID());
+							dr.setValue(GroupFieldAttr.CtrlType, "FWC");
+							dr.setValue(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
+							dr.setValue(GroupFieldAttr.Idx, 100);
+							dr.setValue(GroupFieldAttr.Lab, "审核信息");
 							gf.Rows.add(dr);
 
 							ds.Tables.remove("Sys_GroupField");
@@ -1496,7 +1496,7 @@ public class WF_CCForm extends WebContralBase {
 				/// #region 只读方案.
 				if (fn.getFrmSln() == FrmSln.Readonly) {
 					for (DataRow dr : dtMapAttr.Rows) {
-						dr.set(MapAttrAttr.UIIsEnable, 0);
+						dr.setValue(MapAttrAttr.UIIsEnable, 0);
 					}
 
 					// 改变他的属性. 不知道是否应该这样写？
@@ -1520,11 +1520,11 @@ public class WF_CCForm extends WebContralBase {
 								continue;
 							}
 
-							dr.set(MapAttrAttr.UIIsEnable, ff.getUIIsEnable()); // 是否只读?
-							dr.set(MapAttrAttr.UIVisible, ff.getUIVisible()); // 是否可见?
-							dr.set(MapAttrAttr.UIIsInput, ff.getIsNotNull()); // 是否必填?
+							dr.setValue(MapAttrAttr.UIIsEnable, ff.getUIIsEnable()); // 是否只读?
+							dr.setValue(MapAttrAttr.UIVisible, ff.getUIVisible()); // 是否可见?
+							dr.setValue(MapAttrAttr.UIIsInput, ff.getIsNotNull()); // 是否必填?
 
-							dr.set(MapAttrAttr.DefVal, ff.getDefVal()); // 默认值.
+							dr.setValue(MapAttrAttr.DefVal, ff.getDefVal()); // 默认值.
 
 							Attr attr = new Attr();
 							attr.setMyDataType(DataType.AppString);
@@ -3677,8 +3677,8 @@ public class WF_CCForm extends WebContralBase {
 			idx++;
 
 			DataRow dr = dt.NewRow();
-			dr.set("BillNo", strs[0]);
-			dr.set("BillName", strs[1]);
+			dr.setValue("BillNo", strs[0]);
+			dr.setValue("BillName", strs[1]);
 
 			dt.Rows.add(dr);
 		}

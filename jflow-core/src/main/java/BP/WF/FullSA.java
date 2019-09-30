@@ -81,8 +81,8 @@ public class FullSA {
 					continue;
 				}
 				for (DataRow dr : dt.Rows) {
-					String no = dr.get(0).toString();
-					String name = dr.get(1).toString();
+					String no = dr.getValue(0).toString();
+					String name = dr.getValue(1).toString();
 					sa = new SelectAccper();
 					sa.setFK_Emp(no);
 					sa.setEmpName(name);
@@ -130,8 +130,8 @@ public class FullSA {
 							continue;
 						}
 						for (DataRow dr : dt.Rows) {
-							String no = dr.get(0).toString();
-							String name = dr.get(1).toString();
+							String no = dr.getValue(0).toString();
+							String name = dr.getValue(1).toString();
 							sa = new SelectAccper();
 							sa.setFK_Emp(no);
 							sa.setEmpName(name);
@@ -245,7 +245,7 @@ public class FullSA {
 				}
 
 				for (DataRow dr : dt.Rows) {
-					Emp emp = new Emp(dr.get(0).toString());
+					Emp emp = new Emp(dr.getValue(0).toString());
 					sa.setFK_Emp(emp.getNo());
 					sa.setFK_Node(item.getNodeID());
 					sa.setDeptName(emp.getFK_DeptText());
@@ -307,7 +307,7 @@ public class FullSA {
 
 				dt = DBAccess.RunSQLReturnTable(ps);
 				for (DataRow dr : dt.Rows) {
-					Emp emp = new Emp(dr.get(0).toString());
+					Emp emp = new Emp(dr.getValue(0).toString());
 					sa.setFK_Emp(emp.getNo());
 					sa.setFK_Node(item.getNodeID());
 					sa.setDeptName(emp.getFK_DeptText());
@@ -350,7 +350,7 @@ public class FullSA {
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
 			for (DataRow dr : dt.Rows) {
-				this.LastTimeDot = dr.get(0).toString();
+				this.LastTimeDot = dr.getValue(0).toString();
 				break;
 			}
 		}

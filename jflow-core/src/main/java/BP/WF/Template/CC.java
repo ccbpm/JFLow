@@ -49,8 +49,8 @@ public class CC extends Entity
 			for (DataRow mydr : mydt.Rows)
 			{
 				DataRow dr = dt.NewRow();
-				dr.set("No", mydr.get("No"));
-				dr.set("Name", mydr.get("Name"));
+				dr.setValue("No", mydr.get("No"));
+				dr.setValue("Name", mydr.get("Name"));
 				dt.Rows.add(dr);
 			}
 		}
@@ -63,8 +63,8 @@ public class CC extends Entity
 			for (DataRow mydr : mydt.Rows)
 			{
 				DataRow dr = dt.NewRow();
-				dr.set("No", mydr.get("No"));
-				dr.set("Name", mydr.get("Name"));
+				dr.setValue("No", mydr.get("No"));
+				dr.setValue("Name", mydr.get("Name"));
 				dt.Rows.add(dr);
 			}
 		}
@@ -80,8 +80,8 @@ public class CC extends Entity
 				for (DataRow mydr : mydt.Rows)
 				{
 					DataRow dr = dt.NewRow();
-					dr.set("No", mydr.get("No"));
-					dr.set("Name", mydr.get("Name"));
+					dr.setValue("No", mydr.get("No"));
+					dr.setValue("Name", mydr.get("Name"));
 					dt.Rows.add(dr);
 				}
 			}
@@ -106,8 +106,8 @@ public class CC extends Entity
 				for (DataRow mydr : mydt.Rows)
 				{
 					DataRow dr = dt.NewRow();
-					dr.set("No", mydr.get("No"));
-					dr.set("Name", mydr.get("Name"));
+					dr.setValue("No", mydr.get("No"));
+					dr.setValue("Name", mydr.get("Name"));
 					dt.Rows.add(dr);
 				}
 			}
@@ -121,8 +121,8 @@ public class CC extends Entity
 				for (DataRow mydr : mydt.Rows)
 				{
 					DataRow dr = dt.NewRow();
-					dr.set("No", mydr.get("No"));
-					dr.set("Name", mydr.get("Name"));
+					dr.setValue("No", mydr.get("No"));
+					dr.setValue("Name", mydr.get("Name"));
 					dt.Rows.add(dr);
 				}
 			}
@@ -153,8 +153,8 @@ public class CC extends Entity
 					for (DataRow mydr : mydt.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.set("No", mydr.get("No"));
-						dr.set("Name", mydr.get("Name"));
+						dr.setValue("No", mydr.get("No"));
+						dr.setValue("Name", mydr.get("Name"));
 						dt.Rows.add(dr);
 					}
 
@@ -185,8 +185,8 @@ public class CC extends Entity
 			for (DataRow mydr : mydt.Rows)
 			{
 				DataRow dr = dt.NewRow();
-				dr.set("No", mydr.get("No"));
-				dr.set("Name", mydr.get("Name"));
+				dr.setValue("No", mydr.get("No"));
+				dr.setValue("Name", mydr.get("Name"));
 				dt.Rows.add(dr);
 			}
 		}

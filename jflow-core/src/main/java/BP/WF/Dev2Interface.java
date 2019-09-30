@@ -2842,7 +2842,7 @@ public class Dev2Interface
 			for (GenerWorkerList gwl : gwls.ToJavaList())
 			{
 				DataRow dr = dt.NewRow();
-				dr.set("No", String.valueOf(gwl.getFK_Node()));
+				dr.setValue("No", String.valueOf(gwl.getFK_Node()));
 
 				if (nodes.contains(String.valueOf(gwl.getFK_Node()) + ",") == true)
 				{
@@ -2851,10 +2851,10 @@ public class Dev2Interface
 
 				nodes += String.valueOf(gwl.getFK_Node()) + ",";
 
-				dr.set("Name", gwl.getFK_NodeText());
-				dr.set("Rec", gwl.getFK_Emp());
-				dr.set("RecName", gwl.getFK_EmpText());
-				dr.set("IsBackTracking", "0");
+				dr.setValue("Name", gwl.getFK_NodeText());
+				dr.setValue("Rec", gwl.getFK_Emp());
+				dr.setValue("RecName", gwl.getFK_EmpText());
+				dr.setValue("IsBackTracking", "0");
 				dt.Rows.add(dr);
 			}
 			return dt;
@@ -2898,19 +2898,19 @@ public class Dev2Interface
 				}
 
 				DataRow dr = dt.NewRow();
-				dr.set("No", String.valueOf(ndFrom.getNodeID()));
-				dr.set("Name", ndFrom.getName());
+				dr.setValue("No", String.valueOf(ndFrom.getNodeID()));
+				dr.setValue("Name", ndFrom.getName());
 
-				dr.set("Rec", wk.getRec());
-				dr.set("RecName", wk.getRecText());
+				dr.setValue("Rec", wk.getRec());
+				dr.setValue("RecName", wk.getRecText());
 
 				if (ndFrom.getIsBackTracking())
 				{
-					dr.set("IsBackTracking", "1");
+					dr.setValue("IsBackTracking", "1");
 				}
 				else
 				{
-					dr.set("IsBackTracking", "0");
+					dr.setValue("IsBackTracking", "0");
 				}
 
 				dt.Rows.add(dr);
@@ -3094,18 +3094,18 @@ public class Dev2Interface
 					for (GenerWorkerList gwl : gwls.ToJavaList())
 					{
 						DataRow dr = dt.NewRow();
-						dr.set("No", String.valueOf(gwl.getFK_Node()));
-						dr.set("Name", gwl.getFK_NodeText());
-						dr.set("Rec", gwl.getFK_Emp());
-						dr.set("RecName", gwl.getFK_EmpText());
+						dr.setValue("No", String.valueOf(gwl.getFK_Node()));
+						dr.setValue("Name", gwl.getFK_NodeText());
+						dr.setValue("Rec", gwl.getFK_Emp());
+						dr.setValue("RecName", gwl.getFK_EmpText());
 						Node mynd = new Node(item.getFK_Node());
 						if (mynd.getIsBackTracking()) //是否可以原路返回.
 						{
-							dr.set("IsBackTracking", "1");
+							dr.setValue("IsBackTracking", "1");
 						}
 						else
 						{
-							dr.set("IsBackTracking", "0");
+							dr.setValue("IsBackTracking", "0");
 						}
 
 						dt.Rows.add(dr);
@@ -3131,17 +3131,17 @@ public class Dev2Interface
 					}
 
 					DataRow dr = dt.NewRow();
-					dr.set("No", String.valueOf(toNode.getNodeID()));
-					dr.set("Name", toNode.getName());
-					dr.set("Rec", dt1.Rows.get(0).getValue(0));
-					dr.set("RecName", dt1.Rows.get(0).getValue(1));
+					dr.setValue("No", String.valueOf(toNode.getNodeID()));
+					dr.setValue("Name", toNode.getName());
+					dr.setValue("Rec", dt1.Rows.get(0).getValue(0));
+					dr.setValue("RecName", dt1.Rows.get(0).getValue(1));
 					if (toNode.getIsBackTracking() == true)
 					{
-						dr.set("IsBackTracking", "1");
+						dr.setValue("IsBackTracking", "1");
 					}
 					else
 					{
-						dr.set("IsBackTracking", "0");
+						dr.setValue("IsBackTracking", "0");
 					}
 
 					dt.Rows.add(dr);
@@ -3694,7 +3694,7 @@ public class Dev2Interface
 		String strs = "";
 		for (DataRow dr : dt.Rows)
 		{
-			strs += "@" + dr.get(0) + "=" + dr.get(1).toString();
+			strs += "@" + dr.getValue(0) + "=" + dr.getValue(1).toString();
 		}
 		ps = new Paras();
 		ps.SQL = "UPDATE  sys_sms SET IsAlert=1 WHERE  SendTo=" + SystemConfig.getAppCenterDBVarStr() + "SendTo AND IsAlert=0";
@@ -5787,8 +5787,8 @@ public class Dev2Interface
 
 			for (DataRow dr : mydt.Rows)
 			{
-				String fk_emp = dr.get(0).toString();
-				String isPass = dr.get(1).toString();
+				String fk_emp = dr.getValue(0).toString();
+				String isPass = dr.getValue(1).toString();
 				if (userNo.equals(fk_emp) && (isPass.equals("0") || isPass.equals("80") || isPass.equals("90")))
 				{
 					return true;
@@ -6816,15 +6816,15 @@ public class Dev2Interface
 		for (DataRow drTrack : dtTrack.Rows)
 		{
 			DataRow dr = dtHistory.NewRow();
-			dr.set("FK_Node", drTrack.get("NDFrom"));
+			dr.setValue("FK_Node", drTrack.get("NDFrom"));
 			//dr["ActionType"] = drTrack["NDFrom"];
-			dr.set("NodeName", drTrack.get("NDFromT"));
-			dr.set("EmpNo", drTrack.get("EmpFrom"));
-			dr.set("EmpName", drTrack.get("EmpFromT"));
-			dr.set("DeptName", drTrack.get("DeptName")); //部门名称.
-			dr.set("RDT", drTrack.get("RDT"));
-			dr.set("SDT", "");
-			dr.set("IsPass", 1); // gwl.IsPassInt; //是否通过.
+			dr.setValue("NodeName", drTrack.get("NDFromT"));
+			dr.setValue("EmpNo", drTrack.get("EmpFrom"));
+			dr.setValue("EmpName", drTrack.get("EmpFromT"));
+			dr.setValue("DeptName", drTrack.get("DeptName")); //部门名称.
+			dr.setValue("RDT", drTrack.get("RDT"));
+			dr.setValue("SDT", "");
+			dr.setValue("IsPass", 1); // gwl.IsPassInt; //是否通过.
 			dtHistory.Rows.add(dr);
 		}
 
@@ -6832,27 +6832,27 @@ public class Dev2Interface
 		if (gwf.getWFState() != WFState.Complete && 1 == 2)
 		{
 			DataRow dr = dtHistory.NewRow();
-			dr.set("FK_Node", gwf.getFK_Node());
+			dr.setValue("FK_Node", gwf.getFK_Node());
 			//dr["ActionType"] = drTrack["NDFrom"];
-			dr.set("NodeName", gwf.getNodeName());
-			dr.set("EmpNo", WebUser.getNo());
-			dr.set("EmpName", WebUser.getName());
-			dr.set("DeptName", WebUser.getFK_DeptName()); //部门名称.
-			dr.set("RDT", DataType.getCurrentDate());
-			dr.set("SDT", "");
-			dr.set("IsPass", 0); // gwl.IsPassInt; //是否通过.
+			dr.setValue("NodeName", gwf.getNodeName());
+			dr.setValue("EmpNo", WebUser.getNo());
+			dr.setValue("EmpName", WebUser.getName());
+			dr.setValue("DeptName", WebUser.getFK_DeptName()); //部门名称.
+			dr.setValue("RDT", DataType.getCurrentDate());
+			dr.setValue("SDT", "");
+			dr.setValue("IsPass", 0); // gwl.IsPassInt; //是否通过.
 			dtHistory.Rows.add(dr);
 		}
 
 		if (dtHistory.Rows.size() == 0)
 		{
 			DataRow dr = dtHistory.NewRow();
-			dr.set("FK_Node", gwf.getFK_Node());
-			dr.set("NodeName", gwf.getNodeName());
-			dr.set("EmpNo", gwf.getStarter());
-			dr.set("EmpName", gwf.getStarterName());
-			dr.set("RDT", gwf.getRDT());
-			dr.set("SDT", gwf.getSDTOfNode());
+			dr.setValue("FK_Node", gwf.getFK_Node());
+			dr.setValue("NodeName", gwf.getNodeName());
+			dr.setValue("EmpNo", gwf.getStarter());
+			dr.setValue("EmpName", gwf.getStarterName());
+			dr.setValue("RDT", gwf.getRDT());
+			dr.setValue("SDT", gwf.getSDTOfNode());
 			dtHistory.Rows.add(dr);
 		}
 
@@ -6864,7 +6864,7 @@ public class Dev2Interface
 			{
 				if (Integer.parseInt(dr.get("FK_Node").toString()) == nd.getNodeID())
 				{
-					dr.set("RunModel", runMode);
+					dr.setValue("RunModel", runMode);
 				}
 			}
 		}
@@ -8124,7 +8124,7 @@ public class Dev2Interface
 		for (DataRow dr : dt.Rows)
 		{
 			idx++;
-			String myEmpNo = dr.get(0).toString();
+			String myEmpNo = dr.getValue(0).toString();
 			sql = "UPDATE WF_GenerWorkerList SET IsPass=" + idx + " WHERE FK_Emp='" + myEmpNo + "' AND WorkID=" + workid + " AND FK_Node=" + nodeID;
 			BP.DA.DBAccess.RunSQL(sql);
 		}
@@ -8273,7 +8273,7 @@ public class Dev2Interface
 		String toAllEmps = ",";
 		for (DataRow dr : mydt.Rows)
 		{
-			toAllEmps += dr.get(0).toString() + ",";
+			toAllEmps += dr.getValue(0).toString() + ",";
 		}
 
 		//录制本次抄送的人员.
@@ -8386,8 +8386,8 @@ public class Dev2Interface
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				for (DataRow dr : dt.Rows)
 				{
-					String empNo = dr.get(0).toString();
-					String empName = dr.get(1).toString();
+					String empNo = dr.getValue(0).toString();
+					String empName = dr.getValue(1).toString();
 					if (toAllEmps.contains("," + empNo + ",") == true)
 					{
 						continue;
@@ -8471,8 +8471,8 @@ public class Dev2Interface
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				for (DataRow dr : dt.Rows)
 				{
-					String empNo = dr.get(0).toString();
-					String empName = dr.get(1).toString();
+					String empNo = dr.getValue(0).toString();
+					String empName = dr.getValue(1).toString();
 					if (toAllEmps.contains("," + empNo + ",") == true)
 					{
 						continue;
@@ -8561,8 +8561,8 @@ public class Dev2Interface
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 				for (DataRow dr : dt.Rows)
 				{
-					String empNo = dr.get(0).toString();
-					String empName = dr.get(1).toString();
+					String empNo = dr.getValue(0).toString();
+					String empName = dr.getValue(1).toString();
 					if (toAllEmps.contains("," + empNo + ",") == true)
 					{
 						continue;

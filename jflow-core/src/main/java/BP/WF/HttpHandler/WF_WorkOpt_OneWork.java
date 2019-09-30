@@ -481,11 +481,11 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		for (DataRow dr : dt.Rows)
 		{
 			//判断节点是否启用了按钮?
-			int nodeid = Integer.parseInt(dr.get(0).toString());
+			int nodeid = Integer.parseInt(dr.getValue(0).toString());
 			BtnLab btn = new BtnLab(nodeid);
 			if (btn.getPrintPDFEnable() == true || btn.getPrintZipEnable() == true)
 			{
-				String empFrom = dr.get(1).toString();
+				String empFrom = dr.getValue(1).toString();
 				if (gwf.getWFState() == BP.WF.WFState.Complete && (empFrom.equals(WebUser.getNo()) || gwf.getStarter().equals(WebUser.getNo())))
 				{
 					return true;

@@ -63,9 +63,9 @@ public class AppClass
 				for (Node tond : tonds.ToJavaList())
 				{
 					DataRow mydr = tracks.NewRow();
-					mydr.set("NodeName", tond.getName());
-					mydr.set("FK_Node", tond.getNodeID()); // nd["NodeID"].ToString();
-					mydr.set("RunModel", tond.getHisRunModel().getValue());
+					mydr.setValue("NodeName", tond.getName());
+					mydr.setValue("FK_Node", tond.getNodeID()); // nd["NodeID"].ToString();
+					mydr.setValue("RunModel", tond.getHisRunModel().getValue());
 					tracks.Rows.add(mydr);
 
 					//设置当前节点.
@@ -87,9 +87,9 @@ public class AppClass
 				if (Integer.parseInt(nd.get("NodeID").toString()) == nextNode)
 				{
 					DataRow mydr = tracks.NewRow();
-					mydr.set("NodeName", nd.get("Name").toString());
-					mydr.set("FK_Node", nd.get("NodeID").toString());
-					mydr.set("RunModel", nd.get("RunModel").toString());
+					mydr.setValue("NodeName", nd.get("Name").toString());
+					mydr.setValue("FK_Node", nd.get("NodeID").toString());
+					mydr.setValue("RunModel", nd.get("RunModel").toString());
 					tracks.Rows.add(mydr);
 					break;
 				}
@@ -124,15 +124,15 @@ public class AppClass
 			strs += "," + nodeID + ",";
 
 			DataRow drNew = dtNew.NewRow();
-			drNew.set("FK_Node", dr.get("FK_Node"));
-			drNew.set("NodeName", dr.get("NodeName"));
-			drNew.set("RunModel", dr.get("RunModel"));
-			drNew.set("EmpNo", dr.get("EmpNo"));
-			drNew.set("EmpName", dr.get("EmpName"));
-			drNew.set("DeptName", dr.get("DeptName"));
-			drNew.set("RDT", dr.get("RDT"));
-			drNew.set("SDT", dr.get("SDT"));
-			drNew.set("IsPass", dr.get("IsPass"));
+			drNew.setValue("FK_Node", dr.get("FK_Node"));
+			drNew.setValue("NodeName", dr.get("NodeName"));
+			drNew.setValue("RunModel", dr.get("RunModel"));
+			drNew.setValue("EmpNo", dr.get("EmpNo"));
+			drNew.setValue("EmpName", dr.get("EmpName"));
+			drNew.setValue("DeptName", dr.get("DeptName"));
+			drNew.setValue("RDT", dr.get("RDT"));
+			drNew.setValue("SDT", dr.get("SDT"));
+			drNew.setValue("IsPass", dr.get("IsPass"));
 
 			dtNew.Rows.add(drNew);
 		}

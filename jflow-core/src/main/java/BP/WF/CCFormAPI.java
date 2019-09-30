@@ -93,9 +93,9 @@ public class CCFormAPI extends Dev2Interface {
 
 		Map map = en.getEnMapInTime();
 		DataRow dr = dt.NewRow();
-		dr.set(MapDataAttr.No, enName);
-		dr.set(MapDataAttr.Name, map.getEnDesc());
-		dr.set(MapDataAttr.PTable, map.getPhysicsTable());
+		dr.setValue(MapDataAttr.No, enName);
+		dr.setValue(MapDataAttr.Name, map.getEnDesc());
+		dr.setValue(MapDataAttr.PTable, map.getPhysicsTable());
 		dt.Rows.add(dr);
 		myds.Tables.add(dt);
 
@@ -107,15 +107,15 @@ public class CCFormAPI extends Dev2Interface {
 		dt.TableName = "Sys_MapAttr";
 		for (Attr attr : map.getAttrs()) {
 			dr = dt.NewRow();
-			dr.set(MapAttrAttr.MyPK, enName + "_" + attr.getKey());
-			dr.set(MapAttrAttr.Name, attr.getDesc());
+			dr.setValue(MapAttrAttr.MyPK, enName + "_" + attr.getKey());
+			dr.setValue(MapAttrAttr.Name, attr.getDesc());
 
-			dr.set(MapAttrAttr.MyDataType, attr.getMyDataType()); // 数据类型.
-			dr.set(MapAttrAttr.MinLen, attr.getMinLength()); // 最小长度.
-			dr.set(MapAttrAttr.MaxLen, attr.getMaxLength()); // 最大长度.
+			dr.setValue(MapAttrAttr.MyDataType, attr.getMyDataType()); // 数据类型.
+			dr.setValue(MapAttrAttr.MinLen, attr.getMinLength()); // 最小长度.
+			dr.setValue(MapAttrAttr.MaxLen, attr.getMaxLength()); // 最大长度.
 
 			// 设置他的逻辑类型.
-			dr.set(MapAttrAttr.LGType, 0); // 逻辑类型.
+			dr.setValue(MapAttrAttr.LGType, 0); // 逻辑类型.
 			switch (attr.getMyFieldType()) {
 			case Enum:
 				dr.setValue(MapAttrAttr.LGType, 1);
@@ -132,7 +132,7 @@ public class CCFormAPI extends Dev2Interface {
 
 				break;
 			case FK:
-				dr.set(MapAttrAttr.LGType, 2);
+				dr.setValue(MapAttrAttr.LGType, 2);
 
 				Entities ens = attr.getHisFKEns();
 				dr.setValue(MapAttrAttr.UIBindKey, ens.toString());
@@ -150,7 +150,7 @@ public class CCFormAPI extends Dev2Interface {
 			}
 
 			// 设置控件类型.
-			dr.set(MapAttrAttr.UIContralType, attr.getUIContralType().getValue());
+			dr.setValue(MapAttrAttr.UIContralType, attr.getUIContralType().getValue());
 			dt.Rows.add(dr);
 		}
 		myds.Tables.add(dt);
@@ -183,9 +183,9 @@ public class CCFormAPI extends Dev2Interface {
 			dt.TableName = "Sys_MapDtl_For_" + item.getEnsName();
 
 			dr = dt.NewRow();
-			dr.set(MapDtlAttr.No, item.getEnsName());
-			dr.set(MapDtlAttr.Name, item.getDesc());
-			dr.set(MapDtlAttr.PTable, dtl.getEnMap().getPhysicsTable());
+			dr.setValue(MapDtlAttr.No, item.getEnsName());
+			dr.setValue(MapDtlAttr.Name, item.getDesc());
+			dr.setValue(MapDtlAttr.PTable, dtl.getEnMap().getPhysicsTable());
 			dt.Rows.add(dr);
 			myds.Tables.add(dt);
 
@@ -195,15 +195,15 @@ public class CCFormAPI extends Dev2Interface {
 			dt.TableName = "Sys_MapAttr_For_" + item.getEnsName();
 			for (Attr attr : map.getAttrs()) {
 				dr = dt.NewRow();
-				dr.set(MapAttrAttr.MyPK, enName + "_" + attr.getKey());
-				dr.set(MapAttrAttr.Name, attr.getDesc());
+				dr.setValue(MapAttrAttr.MyPK, enName + "_" + attr.getKey());
+				dr.setValue(MapAttrAttr.Name, attr.getDesc());
 
-				dr.set(MapAttrAttr.MyDataType, attr.getMyDataType()); // 数据类型.
-				dr.set(MapAttrAttr.MinLen, attr.getMinLength()); // 最小长度.
-				dr.set(MapAttrAttr.MaxLen, attr.getMaxLength()); // 最大长度.
+				dr.setValue(MapAttrAttr.MyDataType, attr.getMyDataType()); // 数据类型.
+				dr.setValue(MapAttrAttr.MinLen, attr.getMinLength()); // 最小长度.
+				dr.setValue(MapAttrAttr.MaxLen, attr.getMaxLength()); // 最大长度.
 
 				// 设置他的逻辑类型.
-				dr.set(MapAttrAttr.LGType, 0); // 逻辑类型.
+				dr.setValue(MapAttrAttr.LGType, 0); // 逻辑类型.
 				switch (attr.getMyFieldType()) {
 				case Enum:
 					dr.setValue(MapAttrAttr.LGType, 1);
@@ -219,7 +219,7 @@ public class CCFormAPI extends Dev2Interface {
 					}
 					break;
 				case FK:
-					dr.set(MapAttrAttr.LGType, 2);
+					dr.setValue(MapAttrAttr.LGType, 2);
 
 					Entities ens = attr.getHisFKEns();
 					dr.setValue(MapAttrAttr.UIBindKey, ens.toString());
@@ -237,7 +237,7 @@ public class CCFormAPI extends Dev2Interface {
 				}
 
 				// 设置控件类型.
-				dr.set(MapAttrAttr.UIContralType, attr.getUIContralType().getValue());
+				dr.setValue(MapAttrAttr.UIContralType, attr.getUIContralType().getValue());
 				dt.Rows.add(dr);
 			}
 			myds.Tables.add(dt);
@@ -587,7 +587,7 @@ public class CCFormAPI extends Dev2Interface {
 				}
 
 				for (DataRow dr : dtDtl.Rows) {
-					dr.set(attr.getKeyOfEn(), attr.getDefVal());
+					dr.setValue(attr.getKeyOfEn(), attr.getDefVal());
 				}
 			}
 
@@ -815,7 +815,7 @@ public class CCFormAPI extends Dev2Interface {
 
 			if (mydt == null) {
 				DataRow ddldr = ddlTable.NewRow();
-				ddldr.set("No", uiBindKey);
+				ddldr.setValue("No", uiBindKey);
 				ddlTable.Rows.add(ddldr);
 			} else {
 				myds.Tables.add(mydt);
@@ -951,8 +951,8 @@ public class CCFormAPI extends Dev2Interface {
 				for (DataRow dr : dtDtl.Rows) {
 					// 本身是大写的不进行修改
 					if (DataType.IsNullOrEmpty(dr.get(attr.getKeyOfEn()) + "")) {
-						dr.set(attr.getKeyOfEn(), dr.get(attr.getKeyOfEn().toLowerCase()));
-						dr.set(attr.getKeyOfEn().toLowerCase(), null);
+						dr.setValue(attr.getKeyOfEn(), dr.get(attr.getKeyOfEn().toLowerCase()));
+						dr.setValue(attr.getKeyOfEn().toLowerCase(), null);
 					}
 				}
 			}
@@ -969,7 +969,7 @@ public class CCFormAPI extends Dev2Interface {
 			}
 
 			for (DataRow dr : dtDtl.Rows) {
-				dr.set(attr.getKeyOfEn(), attr.getDefVal());
+				dr.setValue(attr.getKeyOfEn(), attr.getDefVal());
 			}
 		}
 

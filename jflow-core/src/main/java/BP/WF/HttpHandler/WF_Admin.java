@@ -101,9 +101,9 @@ public class WF_Admin extends WebContralBase
 				}
 
 				DataRow dr = dtEmps.NewRow();
-				dr.set("No", emp.getNo());
-				dr.set("Name", emp.getName());
-				dr.set("FK_DeptText", emp.getFK_DeptText());
+				dr.setValue("No", emp.getNo());
+				dr.setValue("Name", emp.getName());
+				dr.setValue("FK_DeptText", emp.getFK_DeptText());
 				dtEmps.Rows.add(dr);
 			}
 			return BP.Tools.Json.ToJson(dtEmps);
@@ -221,7 +221,7 @@ public class WF_Admin extends WebContralBase
 			String emps = "";
 			for (DataRow dr : dt.Rows)
 			{
-				String myemp = dr.get(0).toString();
+				String myemp = dr.getValue(0).toString();
 				if (emps.contains("," + myemp + ",") == true)
 				{
 					continue;
@@ -232,9 +232,9 @@ public class WF_Admin extends WebContralBase
 
 				DataRow drNew = dtMyEmps.NewRow();
 
-				drNew.set("No", emp.getNo());
-				drNew.set("Name", emp.getName());
-				drNew.set("FK_DeptText", emp.getFK_DeptText());
+				drNew.setValue("No", emp.getNo());
+				drNew.setValue("Name", emp.getName());
+				drNew.setValue("FK_DeptText", emp.getFK_DeptText());
 
 				dtMyEmps.Rows.add(drNew);
 			}
@@ -453,9 +453,9 @@ public class WF_Admin extends WebContralBase
 		for (DataRow dr : dt.Rows)
 		{
 			BP.WF.Template.SQLTemplate en = new SQLTemplate();
-			en.setNo(dr.get(0).toString());
-			en.setName(dr.get(1).toString());
-			en.setDocs(dr.get(2).toString());
+			en.setNo(dr.getValue(0).toString());
+			en.setName(dr.getValue(1).toString());
+			en.setDocs(dr.getValue(2).toString());
 
 			if (strs.contains(en.getDocs().trim() + ";") == true)
 			{

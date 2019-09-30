@@ -48,9 +48,9 @@ public class WF_Comm_Sys extends WebContralBase {
 			}
 
 			DataRow dr = dt.NewRow();
-			dr.set("No", en.toString());
-			dr.set("Name", en.Title);
-			dr.set("Note", en.Note);
+			dr.setValue("No", en.toString());
+			dr.setValue("Name", en.Title);
+			dr.setValue("Note", en.Note);
 			dt.Rows.add(dr);
 		}
 		return BP.Tools.Json.ToJson(dt);
@@ -629,14 +629,14 @@ public class WF_Comm_Sys extends WebContralBase {
 
 			DataRow dr = dt.NewRow();
 
-			dr.set("No", en.toString());
+			dr.setValue("No", en.toString());
 			try {
-				dr.set("EnsName", en.getGetNewEntities().toString());
+				dr.setValue("EnsName", en.getGetNewEntities().toString());
 			} catch (java.lang.Exception e2) {
-				dr.set("EnsName", en.toString() + "s");
+				dr.setValue("EnsName", en.toString() + "s");
 			}
-			dr.set("Name", en.getEnMap().getEnDesc());
-			dr.set("PTable", en.getEnMap().getPhysicsTable());
+			dr.setValue("Name", en.getEnMap().getEnDesc());
+			dr.setValue("PTable", en.getEnMap().getPhysicsTable());
 			dt.Rows.add(dr);
 		}
 

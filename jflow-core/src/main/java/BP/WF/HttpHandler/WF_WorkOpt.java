@@ -1148,7 +1148,7 @@ public class WF_WorkOpt extends WebContralBase
 			{
 				if (item.getFK_Emp().equals(fk_emp))
 				{
-					dr.set("FK_DeptT", item.getFK_DeptT());
+					dr.setValue("FK_DeptT", item.getFK_DeptT());
 				}
 			}
 		}
@@ -3096,7 +3096,7 @@ public class WF_WorkOpt extends WebContralBase
 		String toAllEmps = "";
 		for (DataRow dr : mydt.Rows)
 		{
-			toAllEmps += dr.get(0).toString() + ",";
+			toAllEmps += dr.getValue(0).toString() + ",";
 		}
 
 		ht.put("CCTo", toAllEmps);
@@ -4053,9 +4053,9 @@ public class WF_WorkOpt extends WebContralBase
 		//把模版名称替换 title. 
 		for (DataRow dr : dtTemplate.Rows)
 		{
-			String str = dr.get(2).toString();
+			String str = dr.getValue(2).toString();
 			BP.DA.AtPara ap = new AtPara(str);
-			dr.set("Title", ap.GetValStrByKey("DBTemplateName"));
+			dr.setValue("Title", ap.GetValStrByKey("DBTemplateName"));
 		}
 
 		ds.Tables.add(dtTemplate);
@@ -4165,7 +4165,7 @@ public class WF_WorkOpt extends WebContralBase
 		DataTable dt = new DataTable("SelectNode");
 		dt.Columns.Add("NodeID");
 		DataRow dr = dt.NewRow();
-		dr.set("NodeID", lastSelectNodeID);
+		dr.setValue("NodeID", lastSelectNodeID);
 		dt.Rows.add(dr);
 		ds.Tables.add(dt);
 		return BP.Tools.Json.ToJson(ds);
@@ -4519,8 +4519,8 @@ public class WF_WorkOpt extends WebContralBase
 		for (GenerWorkerList gwl : gwls.ToJavaList())
 		{
 			dr = dt.NewRow();
-			dr.set("NodeID", gwl.getFK_Node());
-			dr.set("Name", gwl.getFK_NodeText());
+			dr.setValue("NodeID", gwl.getFK_Node());
+			dr.setValue("Name", gwl.getFK_NodeText());
 
 			//计划开始时间
 			String startDt = gwf.GetParaString("PlantStartDt" + gwl.getFK_Node());
@@ -4536,8 +4536,8 @@ public class WF_WorkOpt extends WebContralBase
 				endDt = gwl.getCDT();
 			}
 
-			dr.set("PlantStartDt", startDt);
-			dr.set("SDTOfNode", endDt);
+			dr.setValue("PlantStartDt", startDt);
+			dr.setValue("SDTOfNode", endDt);
 
 			beforeSDTOfNode = gwl.getCDT();
 		}
@@ -4559,29 +4559,29 @@ public class WF_WorkOpt extends WebContralBase
 					for (DataRow drYL : dtYL.Rows)
 					{
 						dr = dt.NewRow();
-						dr.set("NodeID", drYL.get("NodeID"));
-						dr.set("Name", drYL.get("Name"));
+						dr.setValue("NodeID", drYL.get("NodeID"));
+						dr.setValue("Name", drYL.get("Name"));
 						//计划完成时间
 						sdtOfNode = gwf.GetParaString("CH" + Integer.parseInt(drYL.get("NodeID").toString()));
-						dr.set("IsEndSetting", 1);
+						dr.setValue("IsEndSetting", 1);
 						if (DataType.IsNullOrEmpty(sdtOfNode))
 						{
 							sdtOfNode = getSDTOfNode(node, beforeSDTOfNode, gwf);
-							dr.set("IsEndSetting", 0);
+							dr.setValue("IsEndSetting", 0);
 						}
 
-						dr.set("SDTOfNode", sdtOfNode);
+						dr.setValue("SDTOfNode", sdtOfNode);
 
 						//计划开始时间
-						dr.set("IsStartSetting", 1);
+						dr.setValue("IsStartSetting", 1);
 						plantStartDt = gwf.GetParaString("PlantStartDt" + Integer.parseInt(drYL.get("NodeID").toString()));
 						if (DataType.IsNullOrEmpty(plantStartDt))
 						{
 							plantStartDt = beforeSDTOfNode;
-							dr.set("IsStartSetting", 0);
+							dr.setValue("IsStartSetting", 0);
 						}
 
-						dr.set("PlantStartDt", plantStartDt = beforeSDTOfNode);
+						dr.setValue("PlantStartDt", plantStartDt = beforeSDTOfNode);
 
 						beforeSDTOfNode = sdtOfNode;
 						dt.Rows.add(dr);
@@ -4591,29 +4591,29 @@ public class WF_WorkOpt extends WebContralBase
 				continue;
 			}
 			dr = dt.NewRow();
-			dr.set("NodeID", node.getNodeID());
-			dr.set("Name", node.getName());
+			dr.setValue("NodeID", node.getNodeID());
+			dr.setValue("Name", node.getName());
 
 			//计划完成时间
-			dr.set("IsEndSetting", 1);
+			dr.setValue("IsEndSetting", 1);
 			sdtOfNode = gwf.GetParaString("CH" + node.getNodeID());
 			if (DataType.IsNullOrEmpty(sdtOfNode))
 			{
 				sdtOfNode = getSDTOfNode(node, beforeSDTOfNode, gwf);
-				dr.set("IsEndSetting", 0);
+				dr.setValue("IsEndSetting", 0);
 			}
-			dr.set("SDTOfNode", sdtOfNode);
+			dr.setValue("SDTOfNode", sdtOfNode);
 
 			//计划开始时间
-			dr.set("IsStartSetting", 1);
+			dr.setValue("IsStartSetting", 1);
 			plantStartDt = gwf.GetParaString("PlantStartDt" + node.getNodeID());
 			if (DataType.IsNullOrEmpty(plantStartDt))
 			{
 				plantStartDt = beforeSDTOfNode;
-				dr.set("IsStartSetting", 0);
+				dr.setValue("IsStartSetting", 0);
 			}
 
-			dr.set("PlantStartDt", plantStartDt);
+			dr.setValue("PlantStartDt", plantStartDt);
 
 			beforeSDTOfNode = sdtOfNode;
 			dt.Rows.add(dr);
@@ -4665,7 +4665,7 @@ public class WF_WorkOpt extends WebContralBase
 		dt.TableName = "SpanTime";
 		dt.Columns.Add("SpanTime");
 		dr = dt.NewRow();
-		dr.set("SpanTime", spanTime);
+		dr.setValue("SpanTime", spanTime);
 		dt.Rows.add(dr);
 		ds.Tables.add(dt);
 

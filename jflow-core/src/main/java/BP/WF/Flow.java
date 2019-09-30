@@ -2987,7 +2987,7 @@ public class Flow extends BP.En.EntityNoName {
 		String err = "";
 		for (DataRow dr : dt.Rows) {
 			rpt.ResetDefaultVal();
-			int oid = Integer.parseInt(dr.get(0).toString());
+			int oid = Integer.parseInt(dr.getValue(0).toString());
 			rpt.SetValByKey("OID", oid);
 			Work startWork = null;
 			Work endWK = null;
@@ -3194,7 +3194,7 @@ public class Flow extends BP.En.EntityNoName {
 		DataTable dtExits = DBAccess.RunSQLReturnTable(sql);
 		String pks = "@";
 		for (DataRow dr : dtExits.Rows) {
-			pks += dr.get(0) + "@";
+			pks += dr.getValue(0) + "@";
 		}
 
 		// 遍历 - 所有节点表单字段的合集
@@ -4434,7 +4434,7 @@ public class Flow extends BP.En.EntityNoName {
 
 		map.AddTBInt(FlowAttr.DTSTime, FlowDTSTime.AllNodeSend.getValue(), "执行同步时间点", true, true);
 		map.AddTBString(FlowAttr.DTSSpecNodes, null, "指定的节点ID", true, false, 0, 200, 100, false);
-		map.AddTBInt(FlowAttr.DTSField, getDTSField().SameNames.getValue(), "要同步的字段计算方式", true, true);
+		map.AddTBInt(FlowAttr.DTSField, DTSField.SameNames.getValue(), "要同步的字段计算方式", true, true);
 		map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false, false, 0, 900, 100, false);
 
 		/// #endregion 数据同步方案
@@ -4691,7 +4691,7 @@ public class Flow extends BP.En.EntityNoName {
 				}
 				int oldID = (int) gf.getOID();
 				gf.setOID(DBAccess.GenerOID());
-				dr.set("OID", gf.getOID());
+				dr.setValue("OID", gf.getOID());
 
 				// 属性。
 				if (myDTAttr != null && myDTAttr.Columns.contains("GroupID")) {
@@ -6307,19 +6307,19 @@ public class Flow extends BP.En.EntityNoName {
 
 		for (Flow item : fls.ToJavaList()) {
 			DataRow dr = dt.NewRow();
-			dr.set("Ver", item.getVer());
-			dr.set("No", item.getNo());
-			dr.set("Name", item.getName());
+			dr.setValue("Ver", item.getVer());
+			dr.setValue("No", item.getNo());
+			dr.setValue("Name", item.getName());
 
 			if (DataType.IsNullOrEmpty(item.getFK_FlowSort()) == true) {
-				dr.set("IsRel", "0");
+				dr.setValue("IsRel", "0");
 			} else {
-				dr.set("IsRel", "1");
+				dr.setValue("IsRel", "1");
 			}
 
-			dr.set("NumOfRuning", DBAccess.RunSQLReturnValInt(
+			dr.setValue("NumOfRuning", DBAccess.RunSQLReturnValInt(
 					"SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='" + item.getNo() + "' AND WFState=2"));
-			dr.set("NumOfOK", DBAccess.RunSQLReturnValInt(
+			dr.setValue("NumOfOK", DBAccess.RunSQLReturnValInt(
 					"SELECT COUNT(WORKID) FROM WF_GenerWorkFlow WHERE FK_FLOW='" + item.getNo() + "' AND WFState=3"));
 			dt.Rows.add(dr);
 		}

@@ -26,7 +26,7 @@ public class UAC
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
-			String tag = dr.get(0).toString();
+			String tag = dr.getValue(0).toString();
 
 			if (tag.contains("Insert") == true)
 			{

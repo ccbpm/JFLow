@@ -184,7 +184,7 @@ public class CCMobile_WorkOpt extends WebContralBase
 		String toAllEmps = "";
 		for (DataRow dr : mydt.Rows)
 		{
-			toAllEmps += dr.get(0).toString() + ",";
+			toAllEmps += dr.getValue(0).toString() + ",";
 		}
 
 		ht.put("CCTo", toAllEmps);

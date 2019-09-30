@@ -783,18 +783,18 @@ public class WF_RptDfine extends WebContralBase
 			if (attr.getUIContralType() == UIContralType.DDL)
 			{
 				DataRow dr = dt.NewRow();
-				dr.set("Field", attr.getKeyOfEn());
-				dr.set("Name", attr.getHisAttr().getDesc());
+				dr.setValue("Field", attr.getKeyOfEn());
+				dr.setValue("Name", attr.getHisAttr().getDesc());
 
 				// 根据状态 设置信息.
 				if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
 				{
-					dr.set("Checked", "true");
+					dr.setValue("Checked", "true");
 				}
 
 				if (groupUr.getVals().indexOf(attr.getKeyOfEn()) != -1)
 				{
-					dr.set("Checked", "true");
+					dr.setValue("Checked", "true");
 				}
 
 				dt.Rows.add(dr);
@@ -824,9 +824,9 @@ public class WF_RptDfine extends WebContralBase
 		ddlDt.Columns.Add("Name");
 		ddlDt.Columns.Add("Selected");
 		DataRow ddlDr = ddlDt.NewRow();
-		ddlDr.set("No", "SUM");
-		ddlDr.set("Name", "求和");
-		ddlDr.set("Selected", "true");
+		ddlDr.setValue("No", "SUM");
+		ddlDr.setValue("Name", "求和");
+		ddlDr.setValue("Selected", "true");
 		ddlDt.Rows.add(ddlDr);
 		ds.Tables.add(ddlDt);
 
@@ -877,31 +877,31 @@ public class WF_RptDfine extends WebContralBase
 			ddlDt.TableName = attr.getKeyOfEn();
 
 			ddlDr = ddlDt.NewRow();
-			ddlDr.set("No", "SUM");
-			ddlDr.set("Name", "求和");
+			ddlDr.setValue("No", "SUM");
+			ddlDr.setValue("Name", "求和");
 			if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=SUM") != -1)
 			{
-				ddlDr.set("Selected", "true");
+				ddlDr.setValue("Selected", "true");
 			}
 			ddlDt.Rows.add(ddlDr);
 
 			ddlDr = ddlDt.NewRow();
-			ddlDr.set("No", "AVG");
-			ddlDr.set("Name", "求平均");
+			ddlDr.setValue("No", "AVG");
+			ddlDr.setValue("Name", "求平均");
 			if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=AVG") != -1)
 			{
-				ddlDr.set("Selected", "true");
+				ddlDr.setValue("Selected", "true");
 			}
 			ddlDt.Rows.add(ddlDr);
 
 			if (this.getIsContainsNDYF())
 			{
 				ddlDr = ddlDt.NewRow();
-				ddlDr.set("No", "AMOUNT");
-				ddlDr.set("Name", "求累计");
+				ddlDr.setValue("No", "AMOUNT");
+				ddlDr.setValue("Name", "求累计");
 				if (groupUr.getVals().indexOf("@" + attr.getKeyOfEn() + "=AMOUNT") != -1)
 				{
-					ddlDr.set("Selected", "true");
+					ddlDr.setValue("Selected", "true");
 				}
 				ddlDt.Rows.add(ddlDr);
 			}
@@ -1277,10 +1277,10 @@ public class WF_RptDfine extends WebContralBase
 		{
 			myIdx++;
 			DataRow mydr = dt1.NewRow();
-			mydr.set("IDX", myIdx);
+			mydr.setValue("IDX", myIdx);
 			for (DataColumn dc : dt2.Columns)
 			{
-				mydr.set(dc.ColumnName, dr.get(dc.ColumnName));
+				mydr.setValue(dc.ColumnName, dr.get(dc.ColumnName));
 			}
 			dt1.Rows.add(mydr);
 		}
@@ -1412,7 +1412,7 @@ public class WF_RptDfine extends WebContralBase
 					}
 					catch (java.lang.Exception e)
 					{
-						dr.set(attr.getKey() + "T", " ");
+						dr.setValue(attr.getKey() + "T", " ");
 						continue;
 					}
 
@@ -1420,7 +1420,7 @@ public class WF_RptDfine extends WebContralBase
 					{
 						if (se.getIntKey() == val)
 						{
-							dr.set(attr.getKey() + "T", se.getLab());
+							dr.setValue(attr.getKey() + "T", se.getLab());
 						}
 					}
 				}
@@ -1434,29 +1434,29 @@ public class WF_RptDfine extends WebContralBase
 				try
 				{
 					myen.Retrieve();
-					dr.set(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText()));
+					dr.setValue(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText()));
 				}
 				catch (java.lang.Exception e2)
 				{
 					if (val == null || val.length() <= 1)
 					{
-						dr.set(attr.getKey() + "T", val);
+						dr.setValue(attr.getKey() + "T", val);
 					}
 					else if (val.substring(0, 2).equals("63"))
 					{
 						try
 						{
 							BP.Port.Dept Dept = new BP.Port.Dept(val);
-							dr.set(attr.getKey() + "T", Dept.getName());
+							dr.setValue(attr.getKey() + "T", Dept.getName());
 						}
 						catch (java.lang.Exception e3)
 						{
-							dr.set(attr.getKey() + "T", val);
+							dr.setValue(attr.getKey() + "T", val);
 						}
 					}
 					else
 					{
-						dr.set(attr.getKey() + "T", val);
+						dr.setValue(attr.getKey() + "T", val);
 					}
 				}
 			}

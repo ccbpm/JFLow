@@ -207,12 +207,12 @@ public class CCFlowAPI
 						DataRow dr = gf.NewRow();
 
 						nd.WorkID = workID; //为获取表单ID提供参数.
-						dr.set(GroupFieldAttr.OID, 100);
-						dr.set(GroupFieldAttr.FrmID, nd.getNodeFrmID());
-						dr.set(GroupFieldAttr.CtrlType, "FWC");
-						dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
-						dr.set(GroupFieldAttr.Idx, 100);
-						dr.set(GroupFieldAttr.Lab, "审核信息");
+						dr.setValue(GroupFieldAttr.OID, 100);
+						dr.setValue(GroupFieldAttr.FrmID, nd.getNodeFrmID());
+						dr.setValue(GroupFieldAttr.CtrlType, "FWC");
+						dr.setValue(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
+						dr.setValue(GroupFieldAttr.Idx, 100);
+						dr.setValue(GroupFieldAttr.Lab, "审核信息");
 						gf.Rows.add(dr);
 
 						myds.Tables.remove("Sys_GroupField");
@@ -263,12 +263,12 @@ public class CCFlowAPI
 						DataRow dr = gf.NewRow();
 
 						nd.WorkID = workID; //为获取表单ID提供参数.
-						dr.set(GroupFieldAttr.OID, 100);
-						dr.set(GroupFieldAttr.FrmID, nd.getNodeFrmID());
-						dr.set(GroupFieldAttr.CtrlType, "FWC");
-						dr.set(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
-						dr.set(GroupFieldAttr.Idx, 100);
-						dr.set(GroupFieldAttr.Lab, "审核信息");
+						dr.setValue(GroupFieldAttr.OID, 100);
+						dr.setValue(GroupFieldAttr.FrmID, nd.getNodeFrmID());
+						dr.setValue(GroupFieldAttr.CtrlType, "FWC");
+						dr.setValue(GroupFieldAttr.CtrlID, "FWCND" + nd.getNodeID());
+						dr.setValue(GroupFieldAttr.Idx, 100);
+						dr.setValue(GroupFieldAttr.Lab, "审核信息");
 						gf.Rows.add(dr);
 
 						myds.Tables.remove("Sys_GroupField");
@@ -350,7 +350,7 @@ public class CCFlowAPI
 				//遍历查询出来的分组.
 				for (DataRow dr : dtOrder.Rows)
 				{
-					String pkOID = dr.get(0).toString();
+					String pkOID = dr.getValue(0).toString();
 					Entity mygf = gfs.GetEntityByKey(pkOID);
 					gfsNew.AddEntity(mygf); //把分组字段加入里面去.
 				}
@@ -382,7 +382,7 @@ public class CCFlowAPI
 					String nodes = "";
 					for (DataRow dr : dt1.Rows)
 					{
-						nodes += "'" + dr.get(0).toString() + "',";
+						nodes += "'" + dr.getValue(0).toString() + "',";
 					}
 
 					nodes = nodes.substring(0,nodes.length() - 1);
@@ -412,7 +412,7 @@ public class CCFlowAPI
 					String nodes = "";
 					for (DataRow dr : dt1.Rows)
 					{
-						nodes += "'" + dr.get(0).toString() + "',";
+						nodes += "'" + dr.getValue(0).toString() + "',";
 					}
 
 					nodes = nodes.substring(0,nodes.length() - 1);
@@ -442,7 +442,7 @@ public class CCFlowAPI
 					String nodes = "";
 					for (DataRow dr : dt1.Rows)
 					{
-						nodes += "'" + dr.get(0).toString() + "',";
+						nodes += "'" + dr.getValue(0).toString() + "',";
 					}
 
 					nodes = nodes.substring(0,nodes.length() - 1);
@@ -609,10 +609,10 @@ public class CCFlowAPI
 						for (SubFlowYanXu item : ygflows.ToJavaList())
 						{
 							DataRow dr = dtToNDs.NewRow();
-							dr.set("No", item.getSubFlowNo() + "01");
-							dr.set("Name", "启动:" + item.getSubFlowName());
-							dr.set("IsSelectEmps", "1");
-							dr.set("IsSelected", "0");
+							dr.setValue("No", item.getSubFlowNo() + "01");
+							dr.setValue("Name", "启动:" + item.getSubFlowName());
+							dr.setValue("IsSelectEmps", "1");
+							dr.setValue("IsSelected", "0");
 							dtToNDs.Rows.add(dr);
 						}
 					}
@@ -669,27 +669,27 @@ public class CCFlowAPI
 					for (Node item : nds.ToJavaList())
 					{
 						DataRow dr = dtToNDs.NewRow();
-						dr.set("No", item.getNodeID());
-						dr.set("Name", item.getName());
+						dr.setValue("No", item.getNodeID());
+						dr.setValue("Name", item.getName());
 						//if (item.hissel
 
 						if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
 						{
-							dr.set("IsSelectEmps", "1");
+							dr.setValue("IsSelectEmps", "1");
 						}
 						else
 						{
-							dr.set("IsSelectEmps", "0"); //是不是，可以选择接受人.
+							dr.setValue("IsSelectEmps", "0"); //是不是，可以选择接受人.
 						}
 
 						//设置默认选择的节点.
 						if (defalutSelectedNodeID == item.getNodeID())
 						{
-							dr.set("IsSelected", "1");
+							dr.setValue("IsSelected", "1");
 						}
 						else
 						{
-							dr.set("IsSelected", "0");
+							dr.setValue("IsSelected", "0");
 						}
 
 						dtToNDs.Rows.add(dr);
@@ -848,7 +848,7 @@ public class CCFlowAPI
 				if (mydt == null)
 				{
 					DataRow ddldr = ddlTable.NewRow();
-					ddldr.set("No", uiBindKey);
+					ddldr.setValue("No", uiBindKey);
 					ddlTable.Rows.add(ddldr);
 				}
 				else
@@ -1175,7 +1175,7 @@ public class CCFlowAPI
 
 						for (DataRow dr : dtDtl.Rows)
 						{
-							dr.set(attr.getKeyOfEn(), attr.getDefVal());
+							dr.setValue(attr.getKeyOfEn(), attr.getDefVal());
 						}
 					}
 

@@ -207,11 +207,11 @@ public class SysEnum extends EntityMyPK
 
 		for (DataRow dr : dt.Rows)
 		{
-			if (DataType.IsNullOrEmpty(dr.get(0).toString()))
+			if (DataType.IsNullOrEmpty(dr.getValue(0).toString()))
 			{
 				continue;
 			}
-			String fk_mapdata = dr.get(0).toString();
+			String fk_mapdata = dr.getValue(0).toString();
 			String mypk = fk_mapdata + "_" + this.getEnumKey() + "_" + this.getIntKey();
 			FrmRB frmrb = new FrmRB();
 			if (frmrb.IsExit("MyPK", mypk) == true)

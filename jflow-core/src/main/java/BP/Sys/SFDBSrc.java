@@ -668,7 +668,7 @@ public class SFDBSrc extends EntityNoName
 				}
 				if (name != null)
 				{
-					myDR.set("Name", myDR.get("Name").toString() + "-" + name);
+					myDR.setValue("Name", myDR.get("Name").toString() + "-" + name);
 				}
 			}
 				///#endregion 把tables 的英文名称替换为中文.
@@ -692,7 +692,7 @@ public class SFDBSrc extends EntityNoName
 		String filter = "";
 		for (DataRow dr : allTablesExist.Rows)
 		{
-			filter += String.format("No='%1$s' OR ", dr.get(0));
+			filter += String.format("No='%1$s' OR ", dr.getValue(0));
 		}
 
 		if (!filter.equals(""))
@@ -721,8 +721,8 @@ public class SFDBSrc extends EntityNoName
 				}
 
 				DataRow mydr = dt.NewRow();
-				mydr.set("No", dr.get("No"));
-				mydr.set("Name", dr.get("Name"));
+				mydr.setValue("No", dr.get("No"));
+				mydr.setValue("Name", dr.get("Name"));
 				dt.Rows.add(mydr);
 			}
 

@@ -1618,9 +1618,32 @@ public abstract class Entity implements Serializable {
 	 * @throws Exception
 	 */
 	protected void afterInsertUpdateAction() throws Exception {
-		return;
-	}
+		if (this.getEnMap().getHisFKEnumAttrs().size() > 0)
+            this.RetrieveFromDBSources();
 
+        if (this.getEnMap().IsAddRefName)
+        {
+            this.ReSetNameAttrVal();
+            this.DirectUpdate();
+        }
+        return;
+	}
+	 /// <summary>
+    /// 如果一个属性是外键，并且它还有一个字段存储它的名称。
+    /// 设置这个外键名称的属性。
+    /// </summary>
+    protected void ReSetNameAttrVal() throws Exception
+    {
+        Attrs attrs = this.getEnMap().getAttrs();
+        for (Attr attr : attrs)
+        {
+            if (attr.getIsFKorEnum() == false)
+                continue;
+
+            String s = this.GetValRefTextByKey(attr.getKey());
+            this.SetValByKey(attr.getKey() + "Name", s);
+        }
+    }
 	/**
 	 * 从一个副本上copy. 用于两个数性基本相近的 实体 copy.
 	 * 

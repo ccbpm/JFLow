@@ -562,33 +562,33 @@ public class WF_Admin_Cond extends WebContralBase
 			dtOperNumber.Columns.Add("Name", String.class);
 
 			DataRow dr = dtOperNumber.NewRow();
-			dr.set("No", "dengyu");
-			dr.set("Name", "= 等于");
+			dr.setValue("No", "dengyu");
+			dr.setValue("Name", "= 等于");
 			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
-			dr.set("No", "dayu");
-			dr.set("Name", " > 大于");
+			dr.setValue("No", "dayu");
+			dr.setValue("Name", " > 大于");
 			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
-			dr.set("No", "dayudengyu");
-			dr.set("Name", " >= 大于等于");
+			dr.setValue("No", "dayudengyu");
+			dr.setValue("Name", " >= 大于等于");
 			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
-			dr.set("No", "xiaoyu");
-			dr.set("Name", " < 小于");
+			dr.setValue("No", "xiaoyu");
+			dr.setValue("Name", " < 小于");
 			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
-			dr.set("No", "xiaoyudengyu");
-			dr.set("Name", " <= 小于等于");
+			dr.setValue("No", "xiaoyudengyu");
+			dr.setValue("Name", " <= 小于等于");
 			dtOperNumber.Rows.add(dr);
 
 			dr = dtOperNumber.NewRow();
-			dr.set("No", "budengyu");
-			dr.set("Name", " != 不等于");
+			dr.setValue("No", "budengyu");
+			dr.setValue("Name", " != 不等于");
 			dtOperNumber.Rows.add(dr);
 
 			ds.Tables.add(dtOperNumber);
@@ -603,18 +603,18 @@ public class WF_Admin_Cond extends WebContralBase
 			dtOper.Columns.Add("Name", String.class);
 
 			DataRow dr = dtOper.NewRow();
-			dr.set("No", "dengyu");
-			dr.set("Name", "= 等于");
+			dr.setValue("No", "dengyu");
+			dr.setValue("Name", "= 等于");
 			dtOper.Rows.add(dr);
 
 			dr = dtOper.NewRow();
-			dr.set("No", "like");
-			dr.set("Name", " LIKE 包含");
+			dr.setValue("No", "like");
+			dr.setValue("Name", " LIKE 包含");
 			dtOper.Rows.add(dr);
 
 			dr = dtOper.NewRow();
-			dr.set("No", "budengyu");
-			dr.set("Name", " != 不等于");
+			dr.setValue("No", "budengyu");
+			dr.setValue("Name", " != 不等于");
 			dtOper.Rows.add(dr);
 			ds.Tables.add(dtOper);
 

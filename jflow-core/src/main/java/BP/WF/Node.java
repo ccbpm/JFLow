@@ -149,10 +149,10 @@ public class Node extends Entity {
 		if (dtNodeIDs.Rows.size() > 0) {
 			// 把所有的节点字段.
 			for (DataRow dr : dtNodeIDs.Rows) {
-				if (frmIDs.contains("ND" + dr.get(0).toString()) == true) {
+				if (frmIDs.contains("ND" + dr.getValue(0).toString()) == true) {
 					continue;
 				}
-				frmIDs += "'ND" + dr.get(0).toString() + "',";
+				frmIDs += "'ND" + dr.getValue(0).toString() + "',";
 			}
 
 			frmIDs = frmIDs.substring(0, frmIDs.length() - 1);
@@ -482,7 +482,7 @@ public class Node extends Entity {
 			dt = DBAccess.RunSQLReturnTable(sql);
 			String strs = "";
 			for (DataRow dr : dt.Rows) {
-				strs += "@" + dr.get(0).toString();
+				strs += "@" + dr.getValue(0).toString();
 			}
 			nd.setHisStas(strs);
 
@@ -490,7 +490,7 @@ public class Node extends Entity {
 			sql = "SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node=" + nd.getNodeID();
 			dt = DBAccess.RunSQLReturnTable(sql);
 			for (DataRow dr : dt.Rows) {
-				strs += "@" + dr.get(0).toString();
+				strs += "@" + dr.getValue(0).toString();
 			}
 			nd.setHisDeptStrs(strs);
 
@@ -523,7 +523,7 @@ public class Node extends Entity {
 		sql = "SELECT HisStas, COUNT(*) as NUM FROM WF_Node WHERE FK_Flow='" + fl.getNo() + "' GROUP BY HisStas";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows) {
-			String stas = dr.get(0).toString();
+			String stas = dr.getValue(0).toString();
 			String nodes = "";
 			for (Node nd : nds.ToJavaList()) {
 				if (nd.getHisStas().equals(stas)) {

@@ -840,7 +840,7 @@ public class FlowCheckError
 		String pks = "@";
 		for (DataRow dr : dtExits.Rows)
 		{
-			pks += dr.get(0) + "@";
+			pks += dr.getValue(0) + "@";
 		}
 
 		//遍历 - 所有节点表单字段的合集

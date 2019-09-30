@@ -486,7 +486,7 @@ public class CCMobile extends WebContralBase
 			 mydt.Columns.Add("TDTime");
 			 for (DataRow dr : mydt.Rows)
 			 {
-				 dr.set("TDTime", GetTraceNewTime(dr.get("FK_Flow").toString(), Integer.parseInt(dr.get("WorkID").toString()), Integer.parseInt(dr.get("FID").toString())));
+				 dr.setValue("TDTime", GetTraceNewTime(dr.get("FK_Flow").toString(), Integer.parseInt(dr.get("WorkID").toString()), Integer.parseInt(dr.get("FID").toString())));
 			 }
 		}
 

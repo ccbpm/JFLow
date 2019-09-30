@@ -1121,7 +1121,7 @@ public class FindWorker
 				boolean isInit = false;
 				for (DataRow dr : dt.Rows)
 				{
-					if (dr.get(0).toString().equals(WebUser.getNo()))
+					if (dr.getValue(0).toString().equals(WebUser.getNo()))
 					{
 						/* 如果岗位分组不一样，并且结果集合里还有当前的人员，就说明了出现了当前操作员，拥有本节点上的岗位也拥有下一个节点的工作岗位
 						 导致：节点的分组不同，传递到同一个人身上。 */
@@ -1316,8 +1316,8 @@ public class FindWorker
 			mydt.Columns.Add("Name", String.class);
 
 			DataRow dr = mydt.NewRow();
-			dr.set("No", "Guest");
-			dr.set("Name", "外部用户");
+			dr.setValue("No", "Guest");
+			dr.setValue("Name", "外部用户");
 			mydt.Rows.add(dr);
 			return mydt;
 		}

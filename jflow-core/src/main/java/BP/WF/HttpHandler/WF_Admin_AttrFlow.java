@@ -148,51 +148,51 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		for (Node node : nodes.ToJavaList())
 		{
 			dr = dt.NewRow();
-			dr.set("NodeID", node.getNodeID());
-			dr.set("Name", node.getName());
-			dr.set("HisFormType", node.getHisFormType());
-			dr.set("HisFormTypeText", node.getHisFormTypeText());
-			dr.set("HisRunModel", node.getHisRunModel());
-			dr.set("HisRunModelT", node.getHisRunModelT());
-			dr.set("HisDeliveryWay", node.getHisDeliveryWay());
-			dr.set("HisDeliveryWayText", node.getHisDeliveryWayText());
+			dr.setValue("NodeID", node.getNodeID());
+			dr.setValue("Name", node.getName());
+			dr.setValue("HisFormType", node.getHisFormType());
+			dr.setValue("HisFormTypeText", node.getHisFormTypeText());
+			dr.setValue("HisRunModel", node.getHisRunModel());
+			dr.setValue("HisRunModelT", node.getHisRunModelT());
+			dr.setValue("HisDeliveryWay", node.getHisDeliveryWay());
+			dr.setValue("HisDeliveryWayText", node.getHisDeliveryWayText());
 
 			//接收方数量
 			int intHisDeliveryWayCount = 0;
 			if (node.getHisDeliveryWay() == BP.WF.DeliveryWay.ByStation)
 			{
-				dr.set("HisDeliveryWayJsFnPara", "ByStation");
-				dr.set("HisDeliveryWayCountLabel", "岗位");
+				dr.setValue("HisDeliveryWayJsFnPara", "ByStation");
+				dr.setValue("HisDeliveryWayCountLabel", "岗位");
 				BP.WF.Template.NodeStations nss = new BP.WF.Template.NodeStations();
 				intHisDeliveryWayCount = nss.Retrieve(BP.WF.Template.NodeStationAttr.FK_Node, node.getNodeID());
 			}
 			else if (node.getHisDeliveryWay() == BP.WF.DeliveryWay.ByDept)
 			{
-				dr.set("HisDeliveryWayJsFnPara", "ByDept");
-				dr.set("HisDeliveryWayCountLabel", "部门");
+				dr.setValue("HisDeliveryWayJsFnPara", "ByDept");
+				dr.setValue("HisDeliveryWayCountLabel", "部门");
 				BP.WF.Template.NodeDepts nss = new BP.WF.Template.NodeDepts();
 				intHisDeliveryWayCount = nss.Retrieve(BP.WF.Template.NodeDeptAttr.FK_Node, node.getNodeID());
 			}
 			else if (node.getHisDeliveryWay() == BP.WF.DeliveryWay.ByBindEmp)
 			{
-				dr.set("HisDeliveryWayJsFnPara", "ByDept");
-				dr.set("HisDeliveryWayCountLabel", "人员");
+				dr.setValue("HisDeliveryWayJsFnPara", "ByDept");
+				dr.setValue("HisDeliveryWayCountLabel", "人员");
 				BP.WF.Template.NodeEmps nes = new BP.WF.Template.NodeEmps();
 				intHisDeliveryWayCount = nes.Retrieve(BP.WF.Template.NodeStationAttr.FK_Node, node.getNodeID());
 			}
-			dr.set("HisDeliveryWayCount", intHisDeliveryWayCount);
+			dr.setValue("HisDeliveryWayCount", intHisDeliveryWayCount);
 
 			//抄送
-			dr.set("HisCCRole", node.getHisCCRole());
-			dr.set("HisCCRoleText", node.getHisCCRoleText());
+			dr.setValue("HisCCRole", node.getHisCCRole());
+			dr.setValue("HisCCRoleText", node.getHisCCRoleText());
 
 			//消息&事件Count
 			BP.Sys.FrmEvents fes = new BP.Sys.FrmEvents();
-			dr.set("HisFrmEventsCount", fes.Retrieve(BP.Sys.FrmEventAttr.FK_MapData, "ND" + node.getNodeID()));
+			dr.setValue("HisFrmEventsCount", fes.Retrieve(BP.Sys.FrmEventAttr.FK_MapData, "ND" + node.getNodeID()));
 
 			//流程完成条件Count
 			BP.WF.Template.Conds conds = new BP.WF.Template.Conds(BP.WF.Template.CondType.Flow, node.getNodeID());
-			dr.set("HisFinishCondsCount", conds.size());
+			dr.setValue("HisFinishCondsCount", conds.size());
 
 			dt.Rows.add(dr);
 		}

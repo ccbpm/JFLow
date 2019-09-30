@@ -540,28 +540,28 @@ public class Glo {
 
 		String val = "";
 		for (DataRow dr : dt.Rows) {
-			if (key.equals((String) dr.get(0).toString())) {
+			if (key.equals((String) dr.getValue(0).toString())) {
 				switch (WebUser.getSysLang()) {
 				case "zh-cn":
-					val = (String) dr.get(1);
+					val = (String) dr.getValue(1);
 					break;
 				case "zh-tw":
-					val = (String) dr.get(2);
+					val = (String) dr.getValue(2);
 					break;
 				case "zh-hk":
-					val = (String) dr.get(3);
+					val = (String) dr.getValue(3);
 					break;
 				case "en-us":
-					val = (String) dr.get(4);
+					val = (String) dr.getValue(4);
 					break;
 				case "ja-jp":
-					val = (String) dr.get(5);
+					val = (String) dr.getValue(5);
 					break;
 				case "ko-kr":
-					val = (String) dr.get(6);
+					val = (String) dr.getValue(6);
 					break;
 				default:
-					val = (String) dr.get(1);
+					val = (String) dr.getValue(1);
 					break;
 				}
 				break;
@@ -1031,7 +1031,7 @@ public class Glo {
 			for (DataRow dr : dt.Rows) {
 				sql = "UPDATE WF_GenerWorkFlow SET WeekNum="
 						+ DataType.WeekOfYear(DataType.ParseSysDateTime2DateTime(dr.getValue(1).toString()))
-						+ " WHERE WorkID=" + dr.get(0).toString();
+						+ " WHERE WorkID=" + dr.getValue(0).toString();
 				BP.DA.DBAccess.RunSQL(sql);
 			}
 
@@ -1044,7 +1044,7 @@ public class Glo {
 			for (DataRow dr : dt.Rows) {
 				sql = "UPDATE WF_CH SET WeekNum="
 						+ DataType.WeekOfYear(DataType.ParseSysDateTime2DateTime(dr.getValue(1).toString()))
-						+ " WHERE MyPK='" + dr.get(0).toString() + "'";
+						+ " WHERE MyPK='" + dr.getValue(0).toString() + "'";
 				BP.DA.DBAccess.RunSQL(sql);
 			}
 			/// #endregion 增加week字段.
@@ -1904,7 +1904,7 @@ public class Glo {
 
 			DataTable dtStudent = BP.DA.DBAccess.RunSQLReturnTable("SELECT No FROM Demo_Student");
 			for (DataRow dr : dtStudent.Rows) {
-				String no = dr.get(0).toString();
+				String no = dr.getValue(0).toString();
 				for (int myIdx = 0; myIdx < 6; myIdx++) {
 					String sql = "";
 					sql = "INSERT INTO Demo_Resume (OID,RefPK,NianYue,GongZuoDanWei,ZhengMingRen,BeiZhu,QT) ";
@@ -2336,7 +2336,7 @@ public class Glo {
 	}
 
 	public static boolean getIsEnableTrackRec() {
-		String s = BP.Sys.SystemConfig.getAppSettings().get("IsEnableTrackRec").toString();
+		String s = (String) BP.Sys.SystemConfig.getAppSettings().get("IsEnableTrackRec");
 		if (DataType.IsNullOrEmpty(s)) {
 			return false;
 		}
@@ -4034,7 +4034,7 @@ public class Glo {
 	 * 运行模式
 	 */
 	public static OSModel getOSModel() {
-		return getOSModel().OneMore;
+		return OSModel.OneMore;
 
 	}
 

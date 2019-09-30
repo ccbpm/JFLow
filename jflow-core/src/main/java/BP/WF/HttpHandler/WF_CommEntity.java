@@ -186,19 +186,19 @@ public class WF_CommEntity extends WebContralBase {
 
 		/// #region 把外键与枚举放入里面去.
 		for (DataRow dr : sys_MapAttrs.Rows) {
-			String uiBindKey = dr.get("UIBindKey").toString();
-			String lgType = dr.get("LGType").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
+			String lgType = dr.getValue("LGType").toString();
 			if (lgType.equals("2") == false) {
 				continue;
 			}
 
-			String UIIsEnable = dr.get("UIVisible").toString();
+			String UIIsEnable = dr.getValue("UIVisible").toString();
 			if (UIIsEnable.equals("0")) {
 				continue;
 			}
 
 			if (DataType.IsNullOrEmpty(uiBindKey) == true) {
-				String myPK = dr.get("MyPK").toString();
+				String myPK = dr.getValue("MyPK").toString();
 				/* 如果是空的 */
 				// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
 				// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey
@@ -206,8 +206,8 @@ public class WF_CommEntity extends WebContralBase {
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.get("KeyOfEn").toString();
-			String fk_mapData = dr.get("FK_MapData").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
 
 			// 判断是否存在.
 			if (ds.Tables.contains(uiBindKey) == true) {
@@ -414,8 +414,8 @@ public class WF_CommEntity extends WebContralBase {
 				attrFiles.Columns.Add("FileName");
 				for (AttrFile attrFile : map.getHisAttrFiles()) {
 					DataRow dr = attrFiles.NewRow();
-					dr.set("FileNo", attrFile.FileNo);
-					dr.set("FileName", attrFile.FileName);
+					dr.setValue("FileNo", attrFile.FileNo);
+					dr.setValue("FileName", attrFile.FileName);
 					attrFiles.Rows.add(dr);
 				}
 				ds.Tables.add(attrFiles);
@@ -482,10 +482,10 @@ public class WF_CommEntity extends WebContralBase {
 				}
 
 				DataRow dr = dtGroups.NewRow();
-				dr.set("OID", vals[0]);
-				dr.set("Lab", vals[1]);
+				dr.setValue("OID", vals[0].trim());
+				dr.setValue("Lab", vals[1].trim());
 				if (vals.length == 3) {
-					dr.set("Tip", vals[2]);
+					dr.setValue("Tip", vals[2].trim());
 				}
 				dtGroups.Rows.add(dr);
 			}
@@ -496,11 +496,10 @@ public class WF_CommEntity extends WebContralBase {
 			/// #region 字段属性.
 			MapAttrs attrs = en.getEnMap().getAttrs().ToMapAttrs();
 			DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
-			sys_MapAttrs.Columns.remove(MapAttrAttr.GroupID);
-			sys_MapAttrs.Columns.Add("GroupID");
+//			sys_MapAttrs.Columns.remove(MapAttrAttr.GroupID);
+//			sys_MapAttrs.Columns.Add("GroupID");
 
-			// sys_MapAttrs.Columns[MapAttrAttr.GroupID].DataType =
-			// typeof(string); //改变列类型.
+			sys_MapAttrs.Columns.get(MapAttrAttr.GroupID).setDataType(String.class); //改变列类型.
 
 			// 给字段增加分组.
 			String currGroupID = "";
@@ -511,12 +510,12 @@ public class WF_CommEntity extends WebContralBase {
 
 				String keyOfEn = drAttr.get(MapAttrAttr.KeyOfEn).toString();
 				for (DataRow drGroup : dtGroups.Rows) {
-					String field = drGroup.get("OID").toString();
+					String field = drGroup.getValue("OID").toString();
 					if (keyOfEn.equals(field)) {
 						currGroupID = field;
 					}
 				}
-				drAttr.set(MapAttrAttr.GroupID, currGroupID);
+				drAttr.setValue(MapAttrAttr.GroupID, currGroupID);
 			}
 			ds.Tables.add(sys_MapAttrs);
 
@@ -533,20 +532,20 @@ public class WF_CommEntity extends WebContralBase {
 
 			// 加入外键.
 			for (DataRow dr : sys_MapAttrs.Rows) {
-				String uiBindKey = dr.get("UIBindKey").toString();
-				String lgType = dr.get("LGType").toString();
+				String uiBindKey = dr.getValue("UIBindKey").toString();
+				String lgType = dr.getValue("LGType").toString();
 				if (lgType.equals("2") == false) {
 					continue;
 				}
 
-				String UIIsEnable = dr.get("UIVisible").toString();
+				String UIIsEnable = dr.getValue("UIVisible").toString();
 
 				if (UIIsEnable.equals("0") == true) {
 					continue;
 				}
 
 				if (DataType.IsNullOrEmpty(uiBindKey) == true) {
-					String myPK = dr.get("MyPK").toString();
+					String myPK = dr.getValue("MyPK").toString();
 					/* 如果是空的 */
 					// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
 					// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK +
@@ -554,8 +553,8 @@ public class WF_CommEntity extends WebContralBase {
 				}
 
 				// 检查是否有下拉框自动填充。
-				String keyOfEn = dr.get("KeyOfEn").toString();
-				String fk_mapData = dr.get("FK_MapData").toString();
+				String keyOfEn = dr.getValue("KeyOfEn").toString();
+				String fk_mapData = dr.getValue("FK_MapData").toString();
 
 				// 判断是否存在.
 				if (ds.Tables.contains(uiBindKey) == true) {
@@ -667,20 +666,20 @@ public class WF_CommEntity extends WebContralBase {
 
 				DataRow dr = dtM.NewRow();
 
-				dr.set("No", item.Index);
-				dr.set("Title", item.Title);
-				dr.set("Tip", item.ToolTip);
-				dr.set("Visable", item.Visable);
-				dr.set("Warning", item.Warning);
+				dr.setValue("No", item.Index);
+				dr.setValue("Title", item.Title);
+				dr.setValue("Tip", item.ToolTip);
+				dr.setValue("Visable", item.Visable);
+				dr.setValue("Warning", item.Warning);
 
-				dr.set("RefMethodType", item.refMethodType);
-				dr.set("RefAttrKey", item.RefAttrKey);
-				dr.set("Url", myurl);
-				dr.set("W", item.Width);
-				dr.set("H", item.Height);
-				dr.set("Icon", item.Icon);
-				dr.set("IsCanBatch", item.IsCanBatch);
-				dr.set("GroupName", item.GroupName);
+				dr.setValue("RefMethodType", item.refMethodType);
+				dr.setValue("RefAttrKey", item.RefAttrKey);
+				dr.setValue("Url", myurl);
+				dr.setValue("W", item.Width);
+				dr.setValue("H", item.Height);
+				dr.setValue("Icon", item.Icon);
+				dr.setValue("IsCanBatch", item.IsCanBatch);
+				dr.setValue("GroupName", item.GroupName);
 
 				dtM.Rows.add(dr); // 增加到rows.
 			}
@@ -778,7 +777,7 @@ public class WF_CommEntity extends WebContralBase {
 			dtM.Columns.Add("No");
 			dtM.Columns.Add("Title");
 			dtM.Columns.Add("Tip");
-			dtM.Columns.Add("Visable", java.lang.Class.forName("System.Boolean"));
+			dtM.Columns.Add("Visable", Boolean.class);
 
 			dtM.Columns.Add("Url");
 			dtM.Columns.Add("Target");
@@ -818,25 +817,25 @@ public class WF_CommEntity extends WebContralBase {
 
 				DataRow dr = dtM.NewRow();
 
-				dr.set("No", item.Index);
-				dr.set("Title", item.Title);
-				dr.set("Tip", item.ToolTip);
-				dr.set("Visable", item.Visable);
-				dr.set("Warning", item.Warning);
+				dr.setValue("No", item.Index);
+				dr.setValue("Title", item.Title);
+				dr.setValue("Tip", item.ToolTip);
+				dr.setValue("Visable", item.Visable);
+				dr.setValue("Warning", item.Warning);
 
-				dr.set("RefMethodType", item.refMethodType);
-				dr.set("RefAttrKey", item.RefAttrKey);
-				dr.set("Url", myurl);
-				dr.set("W", item.Width);
-				dr.set("H", item.Height);
-				dr.set("Icon", item.Icon);
-				dr.set("IsCanBatch", item.IsCanBatch);
-				dr.set("GroupName", item.GroupName);
+				dr.setValue("RefMethodType", item.refMethodType);
+				dr.setValue("RefAttrKey", item.RefAttrKey);
+				dr.setValue("Url", myurl);
+				dr.setValue("W", item.Width);
+				dr.setValue("H", item.Height);
+				dr.setValue("Icon", item.Icon);
+				dr.setValue("IsCanBatch", item.IsCanBatch);
+				dr.setValue("GroupName", item.GroupName);
 				Attrs attrs = item.getHisAttrs();
 				if (attrs.size() == 0) {
-					dr.set("FunPara", "false");
+					dr.setValue("FunPara", "false");
 				} else {
-					dr.set("FunPara", "true");
+					dr.setValue("FunPara", "true");
 				}
 
 				dtM.Rows.add(dr); // 增加到rows.
@@ -857,7 +856,7 @@ public class WF_CommEntity extends WebContralBase {
 						continue;
 					}
 					DataRow dr = dtM.NewRow();
-					dr.set("No", enMM.toString());
+					dr.setValue("No", enMM.toString());
 					// dr["GroupName"] = vsM.GroupName;
 					if (en.getPKVal() != null) {
 						// 判断模式.
@@ -929,14 +928,14 @@ public class WF_CommEntity extends WebContralBase {
 							// "&RefAttrEnsName=" + vsM.EnsOfM.ToString();
 						}
 
-						dr.set("Url", url + "&" + en.getPK() + "=" + en.getPKVal() + "&PKVal=" + en.getPKVal());
-						dr.set("Icon", "../Img/M2M.png");
+						dr.setValue("Url", url + "&" + en.getPK() + "=" + en.getPKVal() + "&PKVal=" + en.getPKVal());
+						dr.setValue("Icon", "../Img/M2M.png");
 
 					}
 
-					dr.set("W", "900");
-					dr.set("H", "500");
-					dr.set("RefMethodType", RefMethodType.RightFrameOpen);
+					dr.setValue("W", "900");
+					dr.setValue("H", "500");
+					dr.setValue("RefMethodType", RefMethodType.RightFrameOpen);
 
 					// 获得选择的数量.
 					try {
@@ -954,7 +953,7 @@ public class WF_CommEntity extends WebContralBase {
 							vsM.getEnsOfMM().getNewEntity().CheckPhysicsTable();
 						}
 					}
-					dr.set("Title", vsM.getDesc() + "(" + i + ")");
+					dr.setValue("Title", vsM.getDesc() + "(" + i + ")");
 					dtM.Rows.add(dr);
 				}
 			}
@@ -993,12 +992,12 @@ public class WF_CommEntity extends WebContralBase {
 					}
 				}
 
-				dr.set("No", enDtl.getEnsName());
-				dr.set("Title", enDtl.getDesc() + "(" + i + ")");
-				dr.set("Url", url);
-				dr.set("GroupName", enDtl.getGroupName());
+				dr.setValue("No", enDtl.getEnsName());
+				dr.setValue("Title", enDtl.getDesc() + "(" + i + ")");
+				dr.setValue("Url", url);
+				dr.setValue("GroupName", enDtl.getGroupName());
 
-				dr.set("RefMethodType", RefMethodType.RightFrameOpen);
+				dr.setValue("RefMethodType", RefMethodType.RightFrameOpen);
 
 				dtM.Rows.add(dr);
 			}
@@ -1118,7 +1117,7 @@ public class WF_CommEntity extends WebContralBase {
 		if (dt.Columns.contains("ParentNo") == false) {
 			dt.Columns.Add("ParentNo");
 			for (DataRow dr : dt.Rows) {
-				dr.set("ParentNo", rootNo);
+				dr.setValue("ParentNo", rootNo);
 			}
 		}
 		ds.Tables.add(dt);

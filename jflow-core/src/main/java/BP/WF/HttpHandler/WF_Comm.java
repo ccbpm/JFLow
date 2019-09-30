@@ -1119,10 +1119,10 @@ public class WF_Comm extends WebContralBase {
 		AttrSearchs attrs = map.getSearchAttrs();
 		for (AttrSearch item : attrs) {
 			DataRow dr = dt.NewRow();
-			dr.set("Field", item.Key);
-			dr.set("Name", item.HisAttr.getDesc());
-			dr.set("Width", item.Width); // 下拉框显示的宽度.
-			dr.set("UIContralType", item.HisAttr.getUIContralType());
+			dr.setValue("Field", item.Key);
+			dr.setValue("Name", item.HisAttr.getDesc());
+			dr.setValue("Width", item.Width); // 下拉框显示的宽度.
+			dr.setValue("UIContralType", item.HisAttr.getUIContralType());
 
 			dt.Rows.add(dr);
 		}
@@ -1531,20 +1531,20 @@ public class WF_Comm extends WebContralBase {
 
 			DataRow dr = dtM.NewRow();
 
-			dr.set("No", item.Index);
-			dr.set("Title", item.Title);
-			dr.set("Tip", item.ToolTip);
-			dr.set("Visable", item.Visable);
-			dr.set("Warning", item.Warning);
-			dr.set("RefMethodType", item.refMethodType);
-			dr.set("RefAttrKey", item.RefAttrKey);
-			dr.set("URL", myurl);
-			dr.set("W", item.Width);
-			dr.set("H", item.Height);
-			dr.set("Icon", item.Icon);
-			dr.set("IsCanBatch", item.IsCanBatch);
-			dr.set("GroupName", item.GroupName);
-			dr.set("ClassMethodName", item.ClassMethodName);
+			dr.setValue("No", item.Index);
+			dr.setValue("Title", item.Title);
+			dr.setValue("Tip", item.ToolTip);
+			dr.setValue("Visable", item.Visable);
+			dr.setValue("Warning", item.Warning);
+			dr.setValue("RefMethodType", item.refMethodType);
+			dr.setValue("RefAttrKey", item.RefAttrKey);
+			dr.setValue("URL", myurl);
+			dr.setValue("W", item.Width);
+			dr.setValue("H", item.Height);
+			dr.setValue("Icon", item.Icon);
+			dr.setValue("IsCanBatch", item.IsCanBatch);
+			dr.setValue("GroupName", item.GroupName);
+			dr.setValue("ClassMethodName", item.ClassMethodName);
 
 			dtM.Rows.add(dr); // 增加到rows.
 		}
@@ -2087,8 +2087,8 @@ public class WF_Comm extends WebContralBase {
 		dt.Columns.Add("Warning", String.class);
 
 		DataRow mydr = dt.NewRow();
-		mydr.set("Title", rm.Title);
-		mydr.set("Warning", rm.Warning);
+		mydr.setValue("Title", rm.Title);
+		mydr.setValue("Warning", rm.Warning);
 		dt.Rows.add(mydr);
 
 		/// #endregion 增加该方法的信息
@@ -2452,20 +2452,20 @@ public class WF_Comm extends WebContralBase {
 
 			DataRow dr = dt.NewRow();
 
-			dr.set("No", item.Index);
-			dr.set("Title", item.Title);
-			dr.set("Tip", item.ToolTip);
-			dr.set("Visable", item.Visable);
-			dr.set("Warning", item.Warning);
+			dr.setValue("No", item.Index);
+			dr.setValue("Title", item.Title);
+			dr.setValue("Tip", item.ToolTip);
+			dr.setValue("Visable", item.Visable);
+			dr.setValue("Warning", item.Warning);
 
-			dr.set("RefMethodType", item.refMethodType);
-			dr.set("RefAttrKey", item.RefAttrKey);
-			dr.set("URL", myurl);
-			dr.set("W", item.Width);
-			dr.set("H", item.Height);
-			dr.set("Icon", item.Icon);
-			dr.set("IsCanBatch", item.IsCanBatch);
-			dr.set("GroupName", item.GroupName);
+			dr.setValue("RefMethodType", item.refMethodType);
+			dr.setValue("RefAttrKey", item.RefAttrKey);
+			dr.setValue("URL", myurl);
+			dr.setValue("W", item.Width);
+			dr.setValue("H", item.Height);
+			dr.setValue("Icon", item.Icon);
+			dr.setValue("IsCanBatch", item.IsCanBatch);
+			dr.setValue("GroupName", item.GroupName);
 			dt.Rows.add(dr);
 		}
 
@@ -3250,9 +3250,9 @@ public class WF_Comm extends WebContralBase {
 		AttrSearchs attrs = map.getSearchAttrs();
 		for (AttrSearch item : attrs) {
 			DataRow dr = dt.NewRow();
-			dr.set("Field", item.Key);
-			dr.set("Name", item.HisAttr.getDesc());
-			dr.set("MyFieldType", item.HisAttr.getMyFieldType());
+			dr.setValue("Field", item.Key);
+			dr.setValue("Name", item.HisAttr.getDesc());
+			dr.setValue("MyFieldType", item.HisAttr.getMyFieldType());
 			dt.Rows.add(dr);
 		}
 		ds.Tables.add(dt);
@@ -3312,12 +3312,12 @@ public class WF_Comm extends WebContralBase {
 		for (Attr attr : attrs) {
 			if (attr.getUIContralType() == UIContralType.DDL) {
 				DataRow dr = dt.NewRow();
-				dr.set("Field", attr.getKey());
-				dr.set("Name", attr.getDesc());
+				dr.setValue("Field", attr.getKey());
+				dr.setValue("Name", attr.getDesc());
 
 				// 根据状态 设置信息.
 				if (ur.getVals().indexOf(attr.getKey()) != -1) {
-					dr.set("Checked", "true");
+					dr.setValue("Checked", "true");
 					contentFlag = true;
 				}
 				dt.Rows.add(dr);
@@ -3369,9 +3369,9 @@ public class WF_Comm extends WebContralBase {
 		ddlDt.Columns.Add("Name");
 		ddlDt.Columns.Add("Selected");
 		DataRow ddlDr = ddlDt.NewRow();
-		ddlDr.set("No", "SUM");
-		ddlDr.set("Name", "求和");
-		ddlDr.set("Selected", "true");
+		ddlDr.setValue("No", "SUM");
+		ddlDr.setValue("Name", "求和");
+		ddlDr.setValue("Selected", "true");
 		ddlDt.Rows.add(ddlDr);
 		ds.Tables.add(ddlDt);
 
@@ -3435,27 +3435,27 @@ public class WF_Comm extends WebContralBase {
 			ddlDt.TableName = attr.getKey();
 
 			ddlDr = ddlDt.NewRow();
-			ddlDr.set("No", "SUM");
-			ddlDr.set("Name", "求和");
+			ddlDr.setValue("No", "SUM");
+			ddlDr.setValue("Name", "求和");
 			if (ur.getVals().indexOf("@" + attr.getKey() + "=SUM") != -1) {
-				ddlDr.set("Selected", "true");
+				ddlDr.setValue("Selected", "true");
 			}
 			ddlDt.Rows.add(ddlDr);
 
 			ddlDr = ddlDt.NewRow();
-			ddlDr.set("No", "AVG");
-			ddlDr.set("Name", "求平均");
+			ddlDr.setValue("No", "AVG");
+			ddlDr.setValue("Name", "求平均");
 			if (ur.getVals().indexOf("@" + attr.getKey() + "=AVG") != -1) {
-				ddlDr.set("Selected", "true");
+				ddlDr.setValue("Selected", "true");
 			}
 			ddlDt.Rows.add(ddlDr);
 
 			if (this.getIsContainsNDYF()) {
 				ddlDr = ddlDt.NewRow();
-				ddlDr.set("No", "AMOUNT");
-				ddlDr.set("Name", "求累计");
+				ddlDr.setValue("No", "AMOUNT");
+				ddlDr.setValue("Name", "求累计");
 				if (ur.getVals().indexOf("@" + attr.getKey() + "=AMOUNT") != -1) {
-					ddlDr.set("Selected", "true");
+					ddlDr.setValue("Selected", "true");
 				}
 				ddlDt.Rows.add(ddlDr);
 			}
@@ -3495,7 +3495,7 @@ public class WF_Comm extends WebContralBase {
 		DataTable showSum = new DataTable("NoShowSum");
 		showSum.Columns.Add("NoShowSum");
 		DataRow sumdr = showSum.NewRow();
-		sumdr.set("NoShowSum", NoShowSum);
+		sumdr.setValue("NoShowSum", NoShowSum);
 		showSum.Rows.add(sumdr);
 
 		DataTable activeAttr = aas.ToDataTable();
@@ -3787,9 +3787,9 @@ public class WF_Comm extends WebContralBase {
 		for (DataRow dr : dt2.Rows) {
 			myIdx++;
 			DataRow mydr = dt1.NewRow();
-			mydr.set("IDX", myIdx);
+			mydr.setValue("IDX", myIdx);
 			for (DataColumn dc : dt2.Columns) {
-				mydr.set(dc.ColumnName, dr.get(dc.ColumnName));
+				mydr.setValue(dc.ColumnName, dr.get(dc.ColumnName));
 			}
 			dt1.Rows.add(mydr);
 		}
@@ -3862,9 +3862,9 @@ public class WF_Comm extends WebContralBase {
 
 					sql = sql.substring(0, sql.length() - "AND ".length());
 					if (attr.getMyDataType() == DataType.AppInt) {
-						dr.set(attr.getKey() + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
+						dr.setValue(attr.getKey() + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
 					} else {
-						dr.set(attr.getKey() + "Amount",
+						dr.setValue(attr.getKey() + "Amount",
 								DBAccess.RunSQLReturnValDecimal(sql, BigDecimal.valueOf(0), 2));
 					}
 				}
@@ -3884,13 +3884,13 @@ public class WF_Comm extends WebContralBase {
 					try {
 						val = Integer.parseInt(dr.get(attr.getKey()).toString());
 					} catch (java.lang.Exception e) {
-						dr.set(attr.getKey() + "T", " ");
+						dr.setValue(attr.getKey() + "T", " ");
 						continue;
 					}
 
 					for (SysEnum se : ses.ToJavaList()) {
 						if (se.getIntKey() == val) {
-							dr.set(attr.getKey() + "T", se.getLab());
+							dr.setValue(attr.getKey() + "T", se.getLab());
 						}
 					}
 				}
@@ -3902,19 +3902,19 @@ public class WF_Comm extends WebContralBase {
 				myen.SetValByKey(attr.getUIRefKeyValue(), val);
 				try {
 					myen.Retrieve();
-					dr.set(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText()));
+					dr.setValue(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText()));
 				} catch (java.lang.Exception e2) {
 					if (val == null || val.length() <= 1) {
-						dr.set(attr.getKey() + "T", val);
+						dr.setValue(attr.getKey() + "T", val);
 					} else if (val.substring(0, 2).equals("63")) {
 						try {
 							BP.Port.Dept Dept = new BP.Port.Dept(val);
-							dr.set(attr.getKey() + "T", Dept.getName());
+							dr.setValue(attr.getKey() + "T", Dept.getName());
 						} catch (java.lang.Exception e3) {
-							dr.set(attr.getKey() + "T", val);
+							dr.setValue(attr.getKey() + "T", val);
 						}
 					} else {
-						dr.set(attr.getKey() + "T", val);
+						dr.setValue(attr.getKey() + "T", val);
 					}
 				}
 			}
@@ -4018,7 +4018,7 @@ public class WF_Comm extends WebContralBase {
 			DataTable dt = new DataTable("DataCount");
 			dt.Columns.Add("DataCount", Integer.class);
 			DataRow dr = dt.NewRow();
-			dr.set("DataCount", qo.GetCount());
+			dr.setValue("DataCount", qo.GetCount());
 			dt.Rows.add(dr);
 			ds.Tables.add(dt);
 
@@ -4049,7 +4049,7 @@ public class WF_Comm extends WebContralBase {
 			DataTable dt = new DataTable("DataCount");
 			dt.Columns.Add("DataCount", Integer.class);
 			DataRow dr = dt.NewRow();
-			dr.set("DataCount", qo.GetCount());
+			dr.setValue("DataCount", qo.GetCount());
 			dt.Rows.add(dr);
 			ds.Tables.add(dt);
 
@@ -4064,8 +4064,8 @@ public class WF_Comm extends WebContralBase {
 					continue;
 				}
 				dr = newDt.NewRow();
-				dr.set("CurValue", drs.get(AttrKey));
-				dr.set("MyPK", drs.get("OID"));
+				dr.setValue("CurValue", drs.get(AttrKey));
+				dr.setValue("MyPK", drs.get("OID"));
 				newDt.Rows.add(dr);
 			}
 

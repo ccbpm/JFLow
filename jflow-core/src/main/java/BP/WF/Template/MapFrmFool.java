@@ -601,9 +601,9 @@ public class MapFrmFool extends EntityNoName
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
-			String enName = dr.get(0).toString();
-			String ctrlID = dr.get(1).toString();
-			String ctrlType = dr.get(2).toString();
+			String enName = dr.getValue(0).toString();
+			String ctrlID = dr.getValue(1).toString();
+			String ctrlType = dr.getValue(2).toString();
 
 			GroupFields gfs = new GroupFields();
 			gfs.Retrieve(GroupFieldAttr.FrmID, enName, GroupFieldAttr.CtrlID, ctrlID, GroupFieldAttr.CtrlType, ctrlType);

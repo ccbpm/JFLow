@@ -224,7 +224,7 @@ public class FrmTrack extends Entity
 
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
-		map.AddDDLSysEnum(FrmTrackAttr.FrmTrackSta, getFrmTrackSta().Disable.getValue(), "组件状态", true, true, FrmTrackAttr.FrmTrackSta, "@0=禁用@1=显示轨迹图@2=显示轨迹表");
+		map.AddDDLSysEnum(FrmTrackAttr.FrmTrackSta, FrmTrackSta.Disable.getValue(), "组件状态", true, true, FrmTrackAttr.FrmTrackSta, "@0=禁用@1=显示轨迹图@2=显示轨迹表");
 
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_X, 5, "位置X", false, false);
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_Y, 5, "位置Y", false, false);

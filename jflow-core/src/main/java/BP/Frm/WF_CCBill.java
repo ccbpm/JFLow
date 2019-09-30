@@ -383,9 +383,9 @@ public class WF_CCBill extends WebContralBase
 			Object tempVar = attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, ctrl);
 			mapattr = tempVar instanceof MapAttr ? (MapAttr)tempVar : null;
 			dr = dt.NewRow();
-			dr.set("Field", mapattr.getKeyOfEn());
-			dr.set("Name", mapattr.getName());
-			dr.set("Width", mapattr.getUIWidth());
+			dr.setValue("Field", mapattr.getKeyOfEn());
+			dr.setValue("Name", mapattr.getName());
+			dr.setValue("Width", mapattr.getUIWidth());
 			dt.Rows.add(dr);
 
 			Attr attr = mapattr.getHisAttr();

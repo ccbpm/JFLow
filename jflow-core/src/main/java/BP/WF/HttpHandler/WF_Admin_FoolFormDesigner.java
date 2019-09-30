@@ -1008,10 +1008,10 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			}
 
 			DataRow mydr = mydt.NewRow();
-			mydr.set("FName", dr.get("FName"));
-			mydr.set("FType", dr.get("FType"));
-			mydr.set("FLen", dr.get("FLen"));
-			mydr.set("FDesc", dr.get("FDesc"));
+			mydr.setValue("FName", dr.get("FName"));
+			mydr.setValue("FType", dr.get("FType"));
+			mydr.setValue("FLen", dr.get("FLen"));
+			mydr.setValue("FDesc", dr.get("FDesc"));
 			mydt.Rows.add(mydr);
 		}
 

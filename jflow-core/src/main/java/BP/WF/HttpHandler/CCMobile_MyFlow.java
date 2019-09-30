@@ -101,8 +101,8 @@ public class CCMobile_MyFlow extends WebContralBase {
 				break;
 			}
 			DataRow dr = dt.NewRow();
-			dr.set("KeyOfEn", attr.getKeyOfEn());
-			dr.set("NoteVal", text);
+			dr.setValue("KeyOfEn", attr.getKeyOfEn());
+			dr.setValue("NoteVal", text);
 			dt.Rows.add(dr);
 
 		}

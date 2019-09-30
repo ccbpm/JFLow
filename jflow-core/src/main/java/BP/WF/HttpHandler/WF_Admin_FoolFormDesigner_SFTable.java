@@ -72,15 +72,15 @@ public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase
 				}
 
 				DataRow dr = dt.NewRow();
-				dr.set("No", ens.toString());
+				dr.setValue("No", ens.toString());
 
 				if (en.getIsTreeEntity())
 				{
-					dr.set("Name", en.getEnMap().getEnDesc() + "(树结构) " + ens.toString());
+					dr.setValue("Name", en.getEnMap().getEnDesc() + "(树结构) " + ens.toString());
 				}
 				else
 				{
-					dr.set("Name", en.getEnMap().getEnDesc() + " " + ens.toString());
+					dr.setValue("Name", en.getEnMap().getEnDesc() + " " + ens.toString());
 				}
 
 				dt.Rows.add(dr);

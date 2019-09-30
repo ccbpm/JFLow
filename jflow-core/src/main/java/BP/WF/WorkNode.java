@@ -653,7 +653,7 @@ public class WorkNode {
 				/* 检查接收人列表是否发生了变化,如果变化了，就要把有效的接收人清空，让其重新生成. */
 				String emps = "@";
 				for (DataRow dr : dt.Rows) {
-					emps += dr.get(0).toString() + "@";
+					emps += dr.getValue(0).toString() + "@";
 				}
 
 				if (!rm.getEmps().equals(emps)) {
@@ -668,15 +668,15 @@ public class WorkNode {
 			String myemps = "";
 			Emp emp = new Emp();
 			for (DataRow dr : dt.Rows) {
-				String fk_emp = dr.get(0).toString();
+				String fk_emp = dr.getValue(0).toString();
 				if (this.IsHaveSubThreadGroupMark == true) {
 					/* 如果有分组 Mark ,就不处理重复人员的问题. */
 				} else {
 					// 处理人员重复的，不然会导致generworkerlist的pk错误。
-					if (myemps.indexOf("@" + dr.get(0).toString() + ",") != -1) {
+					if (myemps.indexOf("@" + dr.getValue(0).toString() + ",") != -1) {
 						continue;
 					}
-					myemps += "@" + dr.get(0).toString() + ",";
+					myemps += "@" + dr.getValue(0).toString() + ",";
 				}
 
 				GenerWorkerList wl = new GenerWorkerList();
@@ -722,7 +722,7 @@ public class WorkNode {
 				wl.setFK_Flow(town.getHisNode().getFK_Flow());
 				if (this.IsHaveSubThreadGroupMark == true) {
 					// 设置分组信息.
-					Object val = dr.get(2);
+					Object val = dr.getValue(2);
 					if (val == null) {
 						throw new RuntimeException(
 								BP.WF.Glo.multilingual("@分组标志不能为空。", "WorkNode", "empty_group_tags", new String[0]));
@@ -736,8 +736,8 @@ public class WorkNode {
 					wl.setGroupMark(val.toString());
 					if (dt.Columns.size() == 4
 							&& this.town.getHisNode().getHisFormType() == NodeFormType.SheetAutoTree) {
-						wl.setFrmIDs(dr.get(3).toString());
-						if (DataType.IsNullOrEmpty(dr.get(3).toString())) {
+						wl.setFrmIDs(dr.getValue(3).toString());
+						if (DataType.IsNullOrEmpty(dr.getValue(3).toString())) {
 							throw new RuntimeException(BP.WF.Glo.multilingual("@接收人数据源不正确,表单IDs不能为空。", "WorkNode",
 									"invalid_receiver_data_source", new String[0]));
 						}
@@ -746,8 +746,8 @@ public class WorkNode {
 					if (dt.Columns.size() == 3
 							&& this.town.getHisNode().getHisFormType() == NodeFormType.SheetAutoTree) {
 						/* 如果只有三列, 并且是动态表单树. */
-						wl.setFrmIDs(dr.get(2).toString());
-						if (DataType.IsNullOrEmpty(dr.get(2).toString())) {
+						wl.setFrmIDs(dr.getValue(2).toString());
+						if (DataType.IsNullOrEmpty(dr.getValue(2).toString())) {
 							throw new RuntimeException(BP.WF.Glo.multilingual("@接收人数据源不正确,表单IDs不能为空。", "WorkNode",
 									"invalid_receiver_data_source", new String[0]));
 						}
@@ -1499,7 +1499,7 @@ public class WorkNode {
 				boolean isHave = false;
 				for (DataRow dr : dt.Rows) {
 					// 如果出现了 处理人就是发起人的情况.
-					if (dr.get(0).toString().equals(this.getHisGenerWorkFlow().getStarter())) {
+					if (dr.getValue(0).toString().equals(this.getHisGenerWorkFlow().getStarter())) {
 
 						/// #region 处理签名，让签名的人是发起人。
 
@@ -1532,7 +1532,7 @@ public class WorkNode {
 						/// #endregion 处理签名，让签名的人是发起人。
 
 						isHave = true;
-						Executor = dr.get(0).toString();
+						Executor = dr.getValue(0).toString();
 						emp = new Emp(Executor);
 						ExecutorName = emp.getName();
 						break;
@@ -1565,12 +1565,12 @@ public class WorkNode {
 				boolean isHave = false;
 				for (DataRow dr : dt.Rows) {
 					// 如果出现了处理人就是提交人的情况.
-					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.get(0).toString()
+					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.getValue(0).toString()
 							+ "' AND WorkID=" + this.getWorkID();
 					if (DBAccess.RunSQLReturnValInt(sql) == 1) {
 						/* 这里不处理签名. */
 						isHave = true;
-						Executor = dr.get(0).toString();
+						Executor = dr.getValue(0).toString();
 						emp = new Emp(Executor);
 						ExecutorName = emp.getName();
 						break;
@@ -1600,7 +1600,7 @@ public class WorkNode {
 				/* 处理人与上一步相同 */
 				boolean isHave = false;
 				for (DataRow dr : dt.Rows) {
-					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.get(0) + "' AND WorkID="
+					String sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE FK_Emp='" + dr.getValue(0) + "' AND WorkID="
 							+ this.getWorkID() + " AND FK_Node="
 							+ (beforeSkipNodeID > 0 ? beforeSkipNodeID : prvNodeID); // edited
 																						// by
@@ -1608,7 +1608,7 @@ public class WorkNode {
 					if (DBAccess.RunSQLReturnValInt(sql) == 1) {
 						/* 这里不处理签名. */
 						isHave = true;
-						Executor = dr.get(0).toString();
+						Executor = dr.getValue(0).toString();
 						emp = new Emp(Executor);
 						ExecutorName = emp.getName();
 						break;
@@ -1691,8 +1691,8 @@ public class WorkNode {
 								fk_dept, WebUser.getNo());
 						dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 						for (DataRow dr : dt.Rows) {
-							if (fk_station.contains(dr.get(0) + ",")) {
-								stationNo = dr.get(0).toString();
+							if (fk_station.contains(dr.getValue(0) + ",")) {
+								stationNo = dr.getValue(0).toString();
 								break;
 							}
 						}
@@ -5282,7 +5282,7 @@ public class WorkNode {
 
 			String userNo = WebUser.getNo();
 			for (DataRow dr : dt.Rows) {
-				String str = dr.get(0) instanceof String ? (String) dr.get(0) : null;
+				String str = dr.getValue(0) instanceof String ? (String) dr.getValue(0) : null;
 				if (userNo.equals(str)) {
 					return false;
 				}
@@ -6499,7 +6499,7 @@ public class WorkNode {
 					// 删除每个子线程，然后向下运动。
 					for (DataRow dr : dtWL.Rows) {
 						BP.WF.Dev2Interface.Flow_DeleteSubThread(this.getHisFlow().getNo(),
-								Long.parseLong(dr.get(0).toString()),
+								Long.parseLong(dr.getValue(0).toString()),
 								BP.WF.Glo.multilingual("合流点发送时自动删除", "WorkNode", "auto_delete"));
 					}
 				}
@@ -8700,12 +8700,12 @@ public class WorkNode {
 		String emps = "@";
 		String flowEmps = "@";
 		for (DataRow dr : dt.Rows) {
-			if (emps.contains("@" + dr.get(0).toString() + "@")) {
+			if (emps.contains("@" + dr.getValue(0).toString() + "@")) {
 				continue;
 			}
 
-			emps = emps + dr.get(0).toString() + "@";
-			flowEmps = flowEmps + dr.get(1) + "," + dr.get(0).toString() + "@";
+			emps = emps + dr.getValue(0).toString() + "@";
+			flowEmps = flowEmps + dr.getValue(1) + "," + dr.getValue(0).toString() + "@";
 		}
 		// 追加当前操作人
 		if (emps.contains("@" + WebUser.getNo() + "@") == false) {

@@ -468,7 +468,7 @@ public class MapData extends EntityNoName
 
 				for (DataRow dr : dt.Rows)
 				{
-					strs += "'" + dr.get(0).toString() + "',";
+					strs += "'" + dr.getValue(0).toString() + "',";
 				}
 
 				if (dt.Rows.size() >= 1)
@@ -1342,10 +1342,10 @@ public class MapData extends EntityNoName
 			}
 
 			DataRow mydr = mydt.NewRow();
-			mydr.set("FName", dr.get("FName"));
-			mydr.set("FType", dr.get("FType"));
-			mydr.set("FLen", dr.get("FLen"));
-			mydr.set("FDesc", dr.get("FDesc"));
+			mydr.setValue("FName", dr.get("FName"));
+			mydr.setValue("FType", dr.get("FType"));
+			mydr.setValue("FLen", dr.get("FLen"));
+			mydr.setValue("FDesc", dr.get("FDesc"));
 			mydt.Rows.add(mydr);
 		}
 		return mydt;
@@ -1647,25 +1647,30 @@ public class MapData extends EntityNoName
 
 			///#region 检查导入的数据是否完整.
 		String errMsg = "";
-		//if (ds.Tables[0].TableName != "Sys_MapData")
-		//    errMsg += "@非表单模板。";
-
-		if (ds.Tables.contains("WF_Flow") == true)
+		
+		List<DataTable> listD = ds.getTables();
+		ArrayList<String> arr = new ArrayList<String>();
+		for(DataTable dt:listD){
+			arr.add(dt.TableName);
+		}
+		
+		if (arr.contains("WF_Flow") == true)
 		{
 			errMsg += "@此模板文件为流程模板。";
 		}
 
-		if (ds.Tables.contains("Sys_MapAttr") == false)
+		if (arr.contains("Sys_MapAttr") == false)
 		{
 			errMsg += "@缺少表:Sys_MapAttr";
 		}
 
-		if (ds.Tables.contains("Sys_MapData") == false)
+		if (arr.contains("Sys_MapData") == false)
 		{
 			errMsg += "@缺少表:Sys_MapData";
 		}
 
-		DataTable dtCheck = ds.GetTableByName("Sys_MapAttr");
+		int num = arr.indexOf("Sys_MapAttr");
+		DataTable dtCheck = ds.Tables.get(num);
 		boolean isHave = false;
 		for (DataRow dr : dtCheck.Rows)
 		{

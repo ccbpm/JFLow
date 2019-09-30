@@ -95,8 +95,8 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 		for (BuessUnitBase en : al)
 		{
 			DataRow dr = dtBuess.NewRow();
-			dr.set("No", en.toString());
-			dr.set("Name", en.getTitle());
+			dr.setValue("No", en.toString());
+			dr.setValue("Name", en.getTitle());
 			dtBuess.Rows.add(dr);
 		}
 

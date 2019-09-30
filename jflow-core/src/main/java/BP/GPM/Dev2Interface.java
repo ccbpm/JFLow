@@ -80,7 +80,7 @@ public class Dev2Interface
 		String strs = "";
 		for (DataRow dr : dt.Rows)
 		{
-			strs += "@" + dr.get(0) + "=" + dr.get(1).toString();
+			strs += "@" + dr.getValue(0) + "=" + dr.getValue(1).toString();
 		}
 		ps = new Paras();
 		ps.SQL = "UPDATE  sys_sms SET IsAlert=1 WHERE  SendToEmpID=" + SystemConfig.getAppCenterDBVarStr() + "SendToEmpID AND IsAlert=0";

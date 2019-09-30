@@ -1010,10 +1010,10 @@ public class Dev2Interface
 		for (DataRow row : sortTable.Rows)
 		{
 			DataRow newRow = table.NewRow();
-			newRow.set("No", row.get("No"));
-			newRow.set("Name", row.get("Name"));
-			newRow.set("ParentNo", row.get("ParentNo"));
-			newRow.set("ICON", "icon-tree_folder");
+			newRow.setValue("No", row.get("No"));
+			newRow.setValue("Name", row.get("Name"));
+			newRow.setValue("ParentNo", row.get("ParentNo"));
+			newRow.setValue("ICON", "icon-tree_folder");
 			table.Rows.add(newRow);
 		}
 
@@ -1021,11 +1021,11 @@ public class Dev2Interface
 		{
 			if (DataType.IsNullOrEmpty(row.get("ParentNo").toString()))
 			{
-				row.set("ParentNo", row.get("FK_FlowSort"));
+				Row.setValue("ParentNo", row.get("FK_FlowSort"));
 			}
 			if (DataType.IsNullOrEmpty(row.get("ICON").toString()))
 			{
-				row.set("ICON", "icon-4");
+				Row.setValue("ICON", "icon-4");
 			}
 		}
 		return table;
@@ -2359,13 +2359,13 @@ public class Dev2Interface
 				{
 					if (column.ColumnName.equals(dtColumn.ColumnName))
 					{
-						newRow.set(column.ColumnName, row.get(dtColumn.ColumnName));
+						newRow.setValue(column.ColumnName, row.get(dtColumn.ColumnName));
 					}
 
 				}
 
 			}
-			newRow.set("Type", "CC");
+			newRow.setValue("Type", "CC");
 			dt.Rows.add(newRow);
 		}
 		return dt;
@@ -2426,13 +2426,13 @@ public class Dev2Interface
 				{
 					if (column.ColumnName.equals(dtColumn.ColumnName))
 					{
-						newRow.set(column.ColumnName, row.get(dtColumn.ColumnName));
+						newRow.setValue(column.ColumnName, row.get(dtColumn.ColumnName));
 					}
 
 				}
 
 			}
-			newRow.set("Type", "CC");
+			newRow.setValue("Type", "CC");
 			dt.Rows.add(newRow);
 		}
 		return dt;
@@ -3543,7 +3543,7 @@ public class Dev2Interface
 
 		for (DataRow row : dt.Rows)
 		{
-			row.set("Type", "RUNNING");
+			Row.setValue("Type", "RUNNING");
 		}
 
 		return dt;
@@ -3578,11 +3578,11 @@ public class Dev2Interface
 				{
 					if (column.ColumnName.equals(dtColumn.ColumnName))
 					{
-						newRow.set(column.ColumnName, row.get(dtColumn.ColumnName));
+						newRow.setValue(column.ColumnName, row.get(dtColumn.ColumnName));
 					}
 				}
 			}
-			newRow.set("Type", "CC");
+			newRow.setValue("Type", "CC");
 			dt.Rows.add(newRow);
 		}
 		

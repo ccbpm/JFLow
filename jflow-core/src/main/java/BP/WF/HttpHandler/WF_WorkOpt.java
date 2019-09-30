@@ -1582,13 +1582,13 @@ public class WF_WorkOpt extends WebContralBase
 		for (FrmAttachmentDB athDB : frmathdbs.ToJavaList())
 		{
 			row = athDt.NewRow();
-			row.set("NodeID", this.getFK_Node());
-			row.set("MyPK", athDB.getMyPK());
-			row.set("FK_FrmAttachment", athDB.getFK_FrmAttachment());
-			row.set("FK_MapData", athDB.getFK_MapData());
-			row.set("FileName", athDB.getFileName());
-			row.set("FileExts", athDB.getFileExts());
-			row.set("CanDelete", athDB.getRec().equals(WebUser.getNo()) && isReadonly == false);
+			row.setValue("NodeID", this.getFK_Node());
+			row.setValue("MyPK", athDB.getMyPK());
+			row.setValue("FK_FrmAttachment", athDB.getFK_FrmAttachment());
+			row.setValue("FK_MapData", athDB.getFK_MapData());
+			row.setValue("FileName", athDB.getFileName());
+			row.setValue("FileExts", athDB.getFileExts());
+			row.setValue("CanDelete", athDB.getRec().equals(WebUser.getNo()) && isReadonly == false);
 			athDt.Rows.add(row);
 		}
 		ds.Tables.add(athDt);
@@ -1787,9 +1787,9 @@ public class WF_WorkOpt extends WebContralBase
 
 
 				row = tkDt.NewRow();
-				row.set("NodeID", tk.getNDFrom());
+				row.setValue("NodeID", tk.getNDFrom());
 
-				row.set("NodeName", tk.getNDFromT());
+				row.setValue("NodeName", tk.getNDFromT());
 				Object tempVar3 = fwcs.GetEntityByKey(tk.getNDFrom());
 				fwc = tempVar3 instanceof FrmWorkCheck ? (FrmWorkCheck)tempVar3 : null;
 
@@ -1797,18 +1797,18 @@ public class WF_WorkOpt extends WebContralBase
 				if (tk.getNDFrom() == this.getFK_Node() && tk.getEmpFrom().equals(WebUser.getNo()) && isCanDo && isDoc == false)
 				{
 					isDoc = true;
-					row.set("IsDoc", true);
+					row.setValue("IsDoc", true);
 				}
 				else
 				{
-					row.set("IsDoc", false);
+					row.setValue("IsDoc", false);
 				}
 
 
-				row.set("ParentNode", 0);
-				row.set("RDT", DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
-				row.set("T_NodeIndex", tk.getRow().GetValByKey("T_NodeIndex"));
-				row.set("T_CheckIndex", tk.getRow().GetValByKey("T_CheckIndex"));
+				row.setValue("ParentNode", 0);
+				row.setValue("RDT", DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
+				row.setValue("T_NodeIndex", tk.getRow().GetValByKey("T_NodeIndex"));
+				row.setValue("T_CheckIndex", tk.getRow().GetValByKey("T_CheckIndex"));
 
 				if (isReadonly == false && tk.getEmpFrom().equals(WebUser.getNo()) && this.getFK_Node() == tk.getNDFrom() && isExitTb_doc && (wcDesc.getHisFrmWorkCheckType() == FWCType.Check || ((wcDesc.getHisFrmWorkCheckType() == FWCType.DailyLog || wcDesc.getHisFrmWorkCheckType() == FWCType.WeekLog) && DateUtils.format(DateUtils.parse(tk.getRDT()),"yyyy-MM-dd").equals(DateUtils.format(new Date(),"yyyy-MM-dd"))) || (wcDesc.getHisFrmWorkCheckType() == FWCType.MonthLog && DateUtils.format(DateUtils.parse(tk.getRDT()),"yyyy-MM").equals(DateUtils.format(new Date(),"yyyy-MM")))))
 				{
@@ -1825,26 +1825,26 @@ public class WF_WorkOpt extends WebContralBase
 					if (isLast && isDoc == false && gwf.getWFState() != WFState.Complete)
 					{
 						isExitTb_doc = false;
-						row.set("IsDoc", true);
+						row.setValue("IsDoc", true);
 						isDoc = true;
-						row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+						row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 						tkDoc = tk;
 					}
 					else
 					{
-						row.set("Msg", tk.getMsgHtml());
+						row.setValue("Msg", tk.getMsgHtml());
 					}
 				}
 				else
 				{
-					row.set("Msg", tk.getMsgHtml());
+					row.setValue("Msg", tk.getMsgHtml());
 				}
 
-				row.set("EmpFrom", tk.getEmpFrom());
-				row.set("EmpFromT", tk.getEmpFromT());
-				row.set("ActionType", tk.getHisActionType());
-				row.set("Tag", tk.getTag());
-				row.set("FWCView", fwc.getFWCView());
+				row.setValue("EmpFrom", tk.getEmpFrom());
+				row.setValue("EmpFromT", tk.getEmpFromT());
+				row.setValue("ActionType", tk.getHisActionType());
+				row.setValue("Tag", tk.getTag());
+				row.setValue("FWCView", fwc.getFWCView());
 				tkDt.Rows.add(row);
 
 
@@ -1862,13 +1862,13 @@ public class WF_WorkOpt extends WebContralBase
 				for (FrmAttachmentDB athDB : athDBs.ToJavaList())
 				{
 					row = athDt.NewRow();
-					row.set("NodeID", tk.getNDFrom());
-					row.set("MyPK", athDB.getMyPK());
-					row.set("FK_FrmAttachment", athDB.getFK_FrmAttachment());
-					row.set("FK_MapData", athDB.getFK_MapData());
-					row.set("FileName", athDB.getFileName());
-					row.set("FileExts", athDB.getFileExts());
-					row.set("CanDelete", String.valueOf(this.getFK_Node()).equals(athDB.getFK_MapData()) && athDB.getRec() == WebUser.getNo() && isReadonly == false);
+					row.setValue("NodeID", tk.getNDFrom());
+					row.setValue("MyPK", athDB.getMyPK());
+					row.setValue("FK_FrmAttachment", athDB.getFK_FrmAttachment());
+					row.setValue("FK_MapData", athDB.getFK_MapData());
+					row.setValue("FileName", athDB.getFileName());
+					row.setValue("FileExts", athDB.getFileExts());
+					row.setValue("CanDelete", String.valueOf(this.getFK_Node()).equals(athDB.getFK_MapData()) && athDB.getRec() == WebUser.getNo() && isReadonly == false);
 					athDt.Rows.add(row);
 				}
 
@@ -1910,19 +1910,19 @@ public class WF_WorkOpt extends WebContralBase
 								}
 								FrmWorkCheck subFrmCheck = new FrmWorkCheck("ND" + mysubtk.getNDFrom());
 								row = tkDt.NewRow();
-								row.set("NodeID", mysubtk.getNDFrom());
-								row.set("NodeName", String.format("(子流程)%1$s", mysubtk.getNDFromT()));
-								row.set("Msg", mysubtk.getMsgHtml());
-								row.set("EmpFrom", mysubtk.getEmpFrom());
-								row.set("EmpFromT", mysubtk.getEmpFromT());
-								row.set("RDT", mysubtk.getRDT());
-								row.set("IsDoc", false);
-								row.set("ParentNode", tk.getNDFrom());
-								row.set("T_NodeIndex", idx++);
-								row.set("T_CheckIndex", noneEmpIdx++);
-								row.set("ActionType", mysubtk.getHisActionType());
-								row.set("Tag", mysubtk.getTag());
-								row.set("FWCView", subFrmCheck.getFWCView());
+								row.setValue("NodeID", mysubtk.getNDFrom());
+								row.setValue("NodeName", String.format("(子流程)%1$s", mysubtk.getNDFromT()));
+								row.setValue("Msg", mysubtk.getMsgHtml());
+								row.setValue("EmpFrom", mysubtk.getEmpFrom());
+								row.setValue("EmpFromT", mysubtk.getEmpFromT());
+								row.setValue("RDT", mysubtk.getRDT());
+								row.setValue("IsDoc", false);
+								row.setValue("ParentNode", tk.getNDFrom());
+								row.setValue("T_NodeIndex", idx++);
+								row.setValue("T_CheckIndex", noneEmpIdx++);
+								row.setValue("ActionType", mysubtk.getHisActionType());
+								row.setValue("Tag", mysubtk.getTag());
+								row.setValue("FWCView", subFrmCheck.getFWCView());
 								tkDt.Rows.add(row);
 
 								if (mysubtk.getNDFrom() == Integer.parseInt(fk_flow + "01"))
@@ -2003,50 +2003,50 @@ public class WF_WorkOpt extends WebContralBase
 				if (rows.length > 0)
 				{
 					row = rows[0];
-					row.set("IsDoc", true);
+					row.setValue("IsDoc", true);
 
-					row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 					if (row.get("Msg").toString().equals(""))
 					{
-						row.set("RDT", "");
+						row.setValue("RDT", "");
 					}
 
 				}
 				else
 				{
 					row = tkDt.NewRow();
-					row.set("NodeID", this.getFK_Node());
-					row.set("NodeName", nd.getFWCNodeName());
-					row.set("IsDoc", true);
-					row.set("ParentNode", 0);
-					row.set("RDT", "");
+					row.setValue("NodeID", this.getFK_Node());
+					row.setValue("NodeName", nd.getFWCNodeName());
+					row.setValue("IsDoc", true);
+					row.setValue("ParentNode", 0);
+					row.setValue("RDT", "");
 
-					row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
-					row.set("EmpFrom", WebUser.getNo());
-					row.set("EmpFromT", WebUser.getName());
-					row.set("T_NodeIndex", ++idx);
-					row.set("T_CheckIndex", ++noneEmpIdx);
-					row.set("ActionType", ActionType.Forward);
-					row.set("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
+					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+					row.setValue("EmpFrom", WebUser.getNo());
+					row.setValue("EmpFromT", WebUser.getName());
+					row.setValue("T_NodeIndex", ++idx);
+					row.setValue("T_CheckIndex", ++noneEmpIdx);
+					row.setValue("ActionType", ActionType.Forward);
+					row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 					tkDt.Rows.add(row);
 				}
 			}
 			else
 			{
 				row = tkDt.NewRow();
-				row.set("NodeID", this.getFK_Node());
-				row.set("NodeName", nd.getFWCNodeName());
-				row.set("IsDoc", true);
-				row.set("ParentNode", 0);
-				row.set("RDT", "");
+				row.setValue("NodeID", this.getFK_Node());
+				row.setValue("NodeName", nd.getFWCNodeName());
+				row.setValue("IsDoc", true);
+				row.setValue("ParentNode", 0);
+				row.setValue("RDT", "");
 
-				row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
-				row.set("EmpFrom", WebUser.getNo());
-				row.set("EmpFromT", WebUser.getName());
-				row.set("T_NodeIndex", ++idx);
-				row.set("T_CheckIndex", ++noneEmpIdx);
-				row.set("ActionType", ActionType.Forward);
-				row.set("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
+				row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+				row.setValue("EmpFrom", WebUser.getNo());
+				row.setValue("EmpFromT", WebUser.getName());
+				row.setValue("T_NodeIndex", ++idx);
+				row.setValue("T_CheckIndex", ++noneEmpIdx);
+				row.setValue("ActionType", ActionType.Forward);
+				row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 				tkDt.Rows.add(row);
 			}
 		}
@@ -2085,18 +2085,18 @@ public class WF_WorkOpt extends WebContralBase
 			}
 
 			row = tkDt.NewRow();
-			row.set("NodeID", item.getNodeID());
+			row.setValue("NodeID", item.getNodeID());
 
 			Node mynd = (Node)nds.GetEntityByKey(item.getNodeID());
-			row.set("NodeName", mynd.getFWCNodeName());
-			row.set("IsDoc", false);
-			row.set("ParentNode", 0);
-			row.set("RDT", "");
-			row.set("Msg", "&nbsp;");
-			row.set("EmpFrom", "");
-			row.set("EmpFromT", "");
-			row.set("T_NodeIndex", ++idx);
-			row.set("T_CheckIndex", ++noneEmpIdx);
+			row.setValue("NodeName", mynd.getFWCNodeName());
+			row.setValue("IsDoc", false);
+			row.setValue("ParentNode", 0);
+			row.setValue("RDT", "");
+			row.setValue("Msg", "&nbsp;");
+			row.setValue("EmpFrom", "");
+			row.setValue("EmpFromT", "");
+			row.setValue("T_NodeIndex", ++idx);
+			row.setValue("T_CheckIndex", ++noneEmpIdx);
 
 			tkDt.Rows.add(row);
 		}
@@ -2203,13 +2203,13 @@ public class WF_WorkOpt extends WebContralBase
 		for (FrmAttachmentDB athDB : frmathdbs.ToJavaList())
 		{
 			row = athDt.NewRow();
-			row.set("NodeID", this.getFK_Node());
-			row.set("MyPK", athDB.getMyPK());
-			row.set("FK_FrmAttachment", athDB.getFK_FrmAttachment());
-			row.set("FK_MapData", athDB.getFK_MapData());
-			row.set("FileName", athDB.getFileName());
-			row.set("FileExts", athDB.getFileExts());
-			row.set("CanDelete", athDB.getRec() == WebUser.getNo() && isReadonly == false);
+			row.setValue("NodeID", this.getFK_Node());
+			row.setValue("MyPK", athDB.getMyPK());
+			row.setValue("FK_FrmAttachment", athDB.getFK_FrmAttachment());
+			row.setValue("FK_MapData", athDB.getFK_MapData());
+			row.setValue("FileName", athDB.getFileName());
+			row.setValue("FileExts", athDB.getFileExts());
+			row.setValue("CanDelete", athDB.getRec() == WebUser.getNo() && isReadonly == false);
 			athDt.Rows.add(row);
 		}
 		ds.Tables.add(athDt);
@@ -2406,8 +2406,8 @@ public class WF_WorkOpt extends WebContralBase
 					case StartChildenFlow:
 					case FlowOver:
 						row = tkDt.NewRow();
-						row.set("NodeID", tk.getNDFrom());
-						row.set("NodeName", tk.getNDFromT());
+						row.setValue("NodeID", tk.getNDFrom());
+						row.setValue("NodeName", tk.getNDFromT());
 
 						// zhoupeng 增加了判断，在会签的时候最后会签人发送前不能填写意见.
 						if (tk.getNDFrom() == this.getFK_Node() && tk.getEmpFrom().equals(WebUser.getNo()) && isCanDo && isDoc == false)
@@ -2417,27 +2417,27 @@ public class WF_WorkOpt extends WebContralBase
 
 						}
 
-					   row.set("IsDoc", false);
+					   row.setValue("IsDoc", false);
 
-						row.set("ParentNode", 0);
-						row.set("RDT", DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
-						row.set("T_NodeIndex", tk.getRow().GetValByKey("T_NodeIndex"));
-						row.set("T_CheckIndex", tk.getRow().GetValByKey("T_CheckIndex"));
+						row.setValue("ParentNode", 0);
+						row.setValue("RDT", DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
+						row.setValue("T_NodeIndex", tk.getRow().GetValByKey("T_NodeIndex"));
+						row.setValue("T_CheckIndex", tk.getRow().GetValByKey("T_CheckIndex"));
 
 						if (gwf.getWFState() == WFState.Complete)
 						{
-							row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+							row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 						}
 						else
 						{
-							row.set("Msg", tk.getMsgHtml());
+							row.setValue("Msg", tk.getMsgHtml());
 						}
 
-						row.set("EmpFrom", tk.getEmpFrom());
-						row.set("EmpFromT", tk.getEmpFromT());
-						row.set("ActionType", tk.getHisActionType());
-						row.set("Tag", tk.getTag());
-						row.set("FWCView", fwc.getFWCView());
+						row.setValue("EmpFrom", tk.getEmpFrom());
+						row.setValue("EmpFromT", tk.getEmpFromT());
+						row.setValue("ActionType", tk.getHisActionType());
+						row.setValue("Tag", tk.getTag());
+						row.setValue("FWCView", fwc.getFWCView());
 						tkDt.Rows.add(row);
 
 
@@ -2455,13 +2455,13 @@ public class WF_WorkOpt extends WebContralBase
 						for (FrmAttachmentDB athDB : athDBs.ToJavaList())
 						{
 							row = athDt.NewRow();
-							row.set("NodeID", tk.getNDFrom());
-							row.set("MyPK", athDB.getMyPK());
-							row.set("FK_FrmAttachment", athDB.getFK_FrmAttachment());
-							row.set("FK_MapData", athDB.getFK_MapData());
-							row.set("FileName", athDB.getFileName());
-							row.set("FileExts", athDB.getFileExts());
-							row.set("CanDelete", String.valueOf(this.getFK_Node()).equals(athDB.getFK_MapData()) && athDB.getRec() == WebUser.getNo() && isReadonly == false);
+							row.setValue("NodeID", tk.getNDFrom());
+							row.setValue("MyPK", athDB.getMyPK());
+							row.setValue("FK_FrmAttachment", athDB.getFK_FrmAttachment());
+							row.setValue("FK_MapData", athDB.getFK_MapData());
+							row.setValue("FileName", athDB.getFileName());
+							row.setValue("FileExts", athDB.getFileExts());
+							row.setValue("CanDelete", String.valueOf(this.getFK_Node()).equals(athDB.getFK_MapData()) && athDB.getRec() == WebUser.getNo() && isReadonly == false);
 							athDt.Rows.add(row);
 						}
 
@@ -2503,18 +2503,18 @@ public class WF_WorkOpt extends WebContralBase
 										}
 
 										row = tkDt.NewRow();
-										row.set("NodeID", mysubtk.getNDFrom());
-										row.set("NodeName", String.format("(子流程)%1$s", mysubtk.getNDFromT()));
-										row.set("Msg", mysubtk.getMsgHtml());
-										row.set("EmpFrom", mysubtk.getEmpFrom());
-										row.set("EmpFromT", mysubtk.getEmpFromT());
-										row.set("RDT", mysubtk.getRDT());
-										row.set("IsDoc", false);
-										row.set("ParentNode", tk.getNDFrom());
-										row.set("T_NodeIndex", idx++);
-										row.set("T_CheckIndex", noneEmpIdx++);
-										row.set("ActionType", mysubtk.getHisActionType());
-										row.set("Tag", mysubtk.getTag());
+										row.setValue("NodeID", mysubtk.getNDFrom());
+										row.setValue("NodeName", String.format("(子流程)%1$s", mysubtk.getNDFromT()));
+										row.setValue("Msg", mysubtk.getMsgHtml());
+										row.setValue("EmpFrom", mysubtk.getEmpFrom());
+										row.setValue("EmpFromT", mysubtk.getEmpFromT());
+										row.setValue("RDT", mysubtk.getRDT());
+										row.setValue("IsDoc", false);
+										row.setValue("ParentNode", tk.getNDFrom());
+										row.setValue("T_NodeIndex", idx++);
+										row.setValue("T_CheckIndex", noneEmpIdx++);
+										row.setValue("ActionType", mysubtk.getHisActionType());
+										row.setValue("Tag", mysubtk.getTag());
 										tkDt.Rows.add(row);
 
 										if (mysubtk.getNDFrom() == Integer.parseInt(fk_flow + "01"))
@@ -2586,50 +2586,50 @@ public class WF_WorkOpt extends WebContralBase
 				if (rows.length > 0)
 				{
 					row = rows[0];
-					row.set("IsDoc", true);
+					row.setValue("IsDoc", true);
 
-					row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 					if (row.get("Msg").toString().equals(""))
 					{
-						row.set("RDT", "");
+						row.setValue("RDT", "");
 					}
 
 				}
 				else
 				{
 					row = tkDt.NewRow();
-					row.set("NodeID", this.getFK_Node());
-					row.set("NodeName", nd.getFWCNodeName());
-					row.set("IsDoc", true);
-					row.set("ParentNode", 0);
-					row.set("RDT", "");
+					row.setValue("NodeID", this.getFK_Node());
+					row.setValue("NodeName", nd.getFWCNodeName());
+					row.setValue("IsDoc", true);
+					row.setValue("ParentNode", 0);
+					row.setValue("RDT", "");
 
-					row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
-					row.set("EmpFrom", WebUser.getNo());
-					row.set("EmpFromT", WebUser.getName());
-					row.set("T_NodeIndex", ++idx);
-					row.set("T_CheckIndex", ++noneEmpIdx);
-					row.set("ActionType", ActionType.Forward);
-					row.set("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
+					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+					row.setValue("EmpFrom", WebUser.getNo());
+					row.setValue("EmpFromT", WebUser.getName());
+					row.setValue("T_NodeIndex", ++idx);
+					row.setValue("T_CheckIndex", ++noneEmpIdx);
+					row.setValue("ActionType", ActionType.Forward);
+					row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 					tkDt.Rows.add(row);
 				}
 			}
 			else
 			{
 				row = tkDt.NewRow();
-				row.set("NodeID", this.getFK_Node());
-				row.set("NodeName", nd.getFWCNodeName());
-				row.set("IsDoc", true);
-				row.set("ParentNode", 0);
-				row.set("RDT", "");
+				row.setValue("NodeID", this.getFK_Node());
+				row.setValue("NodeName", nd.getFWCNodeName());
+				row.setValue("IsDoc", true);
+				row.setValue("ParentNode", 0);
+				row.setValue("RDT", "");
 
-				row.set("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
-				row.set("EmpFrom", WebUser.getNo());
-				row.set("EmpFromT", WebUser.getName());
-				row.set("T_NodeIndex", ++idx);
-				row.set("T_CheckIndex", ++noneEmpIdx);
-				row.set("ActionType", ActionType.Forward);
-				row.set("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
+				row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
+				row.setValue("EmpFrom", WebUser.getNo());
+				row.setValue("EmpFromT", WebUser.getName());
+				row.setValue("T_NodeIndex", ++idx);
+				row.setValue("T_CheckIndex", ++noneEmpIdx);
+				row.setValue("ActionType", ActionType.Forward);
+				row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 				tkDt.Rows.add(row);
 			}
 		}
@@ -2668,18 +2668,18 @@ public class WF_WorkOpt extends WebContralBase
 			}
 
 			row = tkDt.NewRow();
-			row.set("NodeID", item.getNodeID());
+			row.setValue("NodeID", item.getNodeID());
 
 			Node mynd = (Node)nds.GetEntityByKey(item.getNodeID());
-			row.set("NodeName", mynd.getFWCNodeName());
-			row.set("IsDoc", false);
-			row.set("ParentNode", 0);
-			row.set("RDT", "");
-			row.set("Msg", "&nbsp;");
-			row.set("EmpFrom", "");
-			row.set("EmpFromT", "");
-			row.set("T_NodeIndex", ++idx);
-			row.set("T_CheckIndex", ++noneEmpIdx);
+			row.setValue("NodeName", mynd.getFWCNodeName());
+			row.setValue("IsDoc", false);
+			row.setValue("ParentNode", 0);
+			row.setValue("RDT", "");
+			row.setValue("Msg", "&nbsp;");
+			row.setValue("EmpFrom", "");
+			row.setValue("EmpFromT", "");
+			row.setValue("T_NodeIndex", ++idx);
+			row.setValue("T_CheckIndex", ++noneEmpIdx);
 
 			tkDt.Rows.add(row);
 		}
@@ -2748,13 +2748,13 @@ public class WF_WorkOpt extends WebContralBase
 
 			row = athDt.NewRow();
 
-			row.set("NodeID", this.getFK_Node());
-			row.set("MyPK", athDB.getMyPK());
-			row.set("FK_FrmAttachment", athDB.getFK_FrmAttachment());
-			row.set("FK_MapData", athDB.getFK_MapData());
-			row.set("FileName", athDB.getFileName());
-			row.set("FileExts", athDB.getFileExts());
-			row.set("CanDelete", athDB.getRec() == WebUser.getNo());
+			row.setValue("NodeID", this.getFK_Node());
+			row.setValue("MyPK", athDB.getMyPK());
+			row.setValue("FK_FrmAttachment", athDB.getFK_FrmAttachment());
+			row.setValue("FK_MapData", athDB.getFK_MapData());
+			row.setValue("FileName", athDB.getFileName());
+			row.setValue("FileExts", athDB.getFileExts());
+			row.setValue("CanDelete", athDB.getRec() == WebUser.getNo());
 
 			athDt.Rows.add(row);
 		}

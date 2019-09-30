@@ -115,13 +115,13 @@ public class WF_Comm extends WebContralBase {
 			}
 
 			row = dt.NewRow();
-			row.set("field", attr.getKeyOfEn());
-			row.set("title", attr.getName());
-			row.set("Width", attr.getUIWidthInt() * 2);
-			row.set("UIContralType", attr.getUIContralType());
+			row.setValue("field", attr.getKeyOfEn());
+			row.setValue("title", attr.getName());
+			row.setValue("Width", attr.getUIWidthInt() * 2);
+			row.setValue("UIContralType", attr.getUIContralType());
 
 			if (attr.getHisAttr().getIsFKorEnum()) {
-				row.set("field", attr.getKeyOfEn() + "Text");
+				row.setValue("field", attr.getKeyOfEn() + "Text");
 			}
 			dt.Rows.add(row);
 		}
@@ -1083,7 +1083,7 @@ public class WF_Comm extends WebContralBase {
 		}
 
 		// 按日期查询.
-		ht.put("DTSearchWay", map.DTSearchWay);
+		ht.put("DTSearchWay", map.DTSearchWay.getValue());
 		ht.put("DTSearchLable", map.DTSearchLable);
 		ht.put("DTSearchKey", map.DTSearchKey);
 
@@ -1231,10 +1231,10 @@ public class WF_Comm extends WebContralBase {
 				continue;
 			}
 			row = dtAttrs.NewRow();
-			row.set("KeyOfEn", attr.getKeyOfEn());
-			row.set("Name", attr.getName());
-			row.set("Width", attr.getUIWidthInt());
-			row.set("UIContralType", attr.getUIContralType());
+			row.setValue("KeyOfEn", attr.getKeyOfEn());
+			row.setValue("Name", attr.getName());
+			row.setValue("Width", attr.getUIWidthInt());
+			row.setValue("UIContralType", attr.getUIContralType().getValue());
 
 			dtAttrs.Rows.add(row);
 		}
@@ -1948,31 +1948,31 @@ public class WF_Comm extends WebContralBase {
 		for (MapAttr item : attrs.ToJavaList()) {
 			String v = item.getDefValReal();
 			if (v.indexOf('@') == -1) {
-				mydrMain.set(item.getKeyOfEn(), item.getDefValReal());
+				mydrMain.setValue(item.getKeyOfEn(), item.getDefValReal());
 			}
 			// 替换默认值的@的
 			else {
 				if (v.equals("@WebUser.getNo()")) {
-					mydrMain.set(item.getKeyOfEn(), WebUser.getNo());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getNo());
 				} else if (v.equals("@WebUser.getName()")) {
-					mydrMain.set(item.getKeyOfEn(), WebUser.getName());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getName());
 				} else if (v.equals("@WebUser.getFK_Dept()")) {
-					mydrMain.set(item.getKeyOfEn(), WebUser.getFK_Dept());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_Dept());
 				} else if (v.equals("@WebUser.getFK_DeptName()")) {
-					mydrMain.set(item.getKeyOfEn(), WebUser.getFK_DeptName());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_DeptName());
 				} else if (v.equals("@WebUser.getFK_DeptName()OfFull") || v.equals("@WebUser.getFK_DeptFullName")) {
-					mydrMain.set(item.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
 				} else if (v.equals("@RDT")) {
 					if (item.getMyDataType() == DataType.AppDate) {
-						mydrMain.set(item.getKeyOfEn(), DataType.getCurrentDate());
+						mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDate());
 					}
 					if (item.getMyDataType() == DataType.AppDateTime) {
-						mydrMain.set(item.getKeyOfEn(), DataType.getCurrentDataTime());
+						mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDataTime());
 					}
 				} else {
 					// 如果是EnsName中字段
 					if (en.GetValByKey(v.replace("@", "")) != null) {
-						mydrMain.set(item.getKeyOfEn(), en.GetValByKey(v.replace("@", "")).toString());
+						mydrMain.setValue(item.getKeyOfEn(), en.GetValByKey(v.replace("@", "")).toString());
 					}
 
 				}
@@ -2068,9 +2068,9 @@ public class WF_Comm extends WebContralBase {
 			SysEnums ses = new SysEnums(item.getUIBindKey());
 			for (SysEnum se : ses.ToJavaList()) {
 				DataRow drEnum = dtEnum.NewRow();
-				drEnum.set("Lab", se.getLab());
-				drEnum.set("EnumKey", se.getEnumKey());
-				drEnum.set("IntKey", se.getIntKey());
+				drEnum.setValue("Lab", se.getLab());
+				drEnum.setValue("EnumKey", se.getEnumKey());
+				drEnum.setValue("IntKey", se.getIntKey());
 				dtEnum.Rows.add(drEnum);
 			}
 

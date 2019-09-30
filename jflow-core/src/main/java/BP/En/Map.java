@@ -846,7 +846,7 @@ public class Map {
 	public boolean IsShowSearchKey = true;
 	public BP.Sys.DTSearchWay DTSearchWay = BP.Sys.DTSearchWay.None;
 	public String DTSearchLable = "日期从";
-	public String DTSearchKey = null;
+	public String DTSearchKey = "";
 	/**
 	 * 图片DefaultImageUrl
 	 */

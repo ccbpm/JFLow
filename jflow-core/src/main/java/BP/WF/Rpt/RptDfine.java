@@ -379,7 +379,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoColsChose(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow=" + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 列的次序
@@ -391,7 +391,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoColsOrder(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow=" + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 查询条件设置
@@ -403,7 +403,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoSearchCond(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow=" + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 导出模版设置
@@ -415,7 +415,7 @@ public class RptDfine extends EntityNoName
 	*/
 	public final String DoRptExportTemplate(String rptMark) throws NumberFormatException, Exception
 	{
-		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow= " + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow=" + this.getNo()+ " &RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 重置设置.

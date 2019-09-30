@@ -224,8 +224,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 		for (DataRow row : dt.Rows)
 		{
-			row.set("Code", BP.Tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
-			row.set("Checked", true);
+			row.setValue("Code", BP.Tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
+			row.setValue("Checked", true);
 		}
 
 		//对Oracle数据库做兼容性处理
@@ -616,8 +616,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 		for (DataRow row : dt.Rows)
 		{
-			row.set("Code", BP.Tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
-			row.set("Checked", true);
+			row.setValue("Code", BP.Tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
+			row.setValue("Checked", true);
 		}
 
 		//对Oracle数据库做兼容性处理

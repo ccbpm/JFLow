@@ -5,13 +5,17 @@ import BP.Port.*;
 import BP.DA.*;
 import BP.En.*;
 import BP.Sys.*;
+import BP.Web.WebUser;
 import BP.GPM.*;
 import java.util.*;
+
+import org.apache.poi.hsmf.datatypes.DirectoryChunk;
+import org.apache.poi.poifs.filesystem.DirectoryEntry;
 
 /** 
  同步AD.
 */
-public class Sync extends Method
+public class Sync
 {
 	/** 
 	 同步
@@ -100,7 +104,7 @@ public class Sync extends Method
 
 			BP.GPM.AD.Dept dept = new Dept();
 			dept.Name = name;
-			dept.No = entry.Guid.toString();
+			dept.getNo() = entry.Guid.toString();
 			dept.setNameOfPath(entry.Path);
 			if (dept.IsExits == true)
 			{
@@ -122,7 +126,7 @@ public class Sync extends Method
 
 		BP.GPM.AD.Dept dept = new Dept();
 		dept.Name = rootDE.Name.replace("OU=", "");
-		dept.No = rootDE.Guid.toString();
+		dept.getNo() = rootDE.Guid.toString();
 		dept.setParentNo("0");
 		dept.Idx = idxDept++;
 		dept.setNameOfPath(rootDE.Path);
@@ -141,7 +145,7 @@ public class Sync extends Method
 		//    rootDE  = result.GetDirectoryEntry();
 		//    BP.GPM.AD.Dept dept = new Dept();
 		//    dept.Name = rootDE.Name.Replace("OU=", "");
-		//    dept.No = rootDE.Guid.ToString();
+		//    dept.getNo() = rootDE.Guid.ToString();
 		//    dept.setParentNo("0");
 		//    dept.Idx = idxDept++;
 		//    dept.Insert();
@@ -164,12 +168,12 @@ public class Sync extends Method
 
 			DirectoryEntry deptDE = new DirectoryEntry(mydept.getNameOfPath(), Glo.getADUser(), Glo.getADPassword());
 
-			DirectorySearcher ds = new DirectorySearcher(deptDE);
+			DirectoryChunk ds = new DirectorySearcher(deptDE);
 			ds.SearchScope = SearchScope.OneLevel; //搜索当前..
 			ds.Filter = "(objectClass=user)";
 
 			SearchResultCollection rss = ds.FindAll();
-			DBAccess.RunSQL("DELETE FROM Port_Emp WHERE FK_Dept='" + mydept.No + "'");
+			DBAccess.RunSQL("DELETE FROM Port_Emp WHERE FK_Dept='" + mydept.getNo() + "'");
 			if (rss.size() == 0)
 			{
 				continue;
@@ -197,13 +201,13 @@ public class Sync extends Method
 				emp.SetValByKey("Manager", this.GetValFromDirectoryEntryByKey(entity, "Manager"));
 				emp.SetValByKey("mobile", this.GetValFromDirectoryEntryByKey(entity, "mobile"));
 
-				if (emp.IsExits == true)
+				if (emp.getIsExits() == true)
 				{
 					continue;
 				}
 
-				emp.setFK_Dept(mydept.No); // entity.Parent.Guid.ToString();
-				if (emp.No.Length > 20)
+				emp.setFK_Dept(mydept.getNo()); // entity.Parent.Guid.ToString();
+				if (emp.getNo().length() > 20)
 				{
 					continue;
 				}
@@ -221,16 +225,16 @@ public class Sync extends Method
 		dept.Retrieve(BP.GPM.AD.DeptAttr.ParentNo, "0");
 
 		BP.GPM.AD.Emp empAdmin = new Emp();
-		empAdmin.No = "admin";
-		empAdmin.Name = "admin";
+		empAdmin.setNo("admin");
+		empAdmin.setName("admin");
 		if (empAdmin.RetrieveFromDBSources() == 0)
 		{
-			empAdmin.setFK_Dept(dept.No);
+			empAdmin.setFK_Dept(dept.getNo());
 			empAdmin.Insert();
 		}
 		else
 		{
-			empAdmin.setFK_Dept(dept.No);
+			empAdmin.setFK_Dept(dept.getNo());
 			empAdmin.Update();
 		}
 	}
@@ -378,7 +382,7 @@ public class Sync extends Method
 		if (entry.Name.indexOf("DC=") == 0)
 		{
 			BP.GPM.AD.Dept dept = new Dept();
-			dept.No = entry.Guid.toString();
+			dept.getNo() = entry.Guid.toString();
 			dept.Name = SystemConfig.CustomerShortName;
 			if (dept.Name.equals(""))
 			{
@@ -406,16 +410,16 @@ public class Sync extends Method
 			return;
 		}
 		//组织解构,更新跟目录的.
-		if (entry.Name.indexOf("OU=") == 0)
+		if (entry.getName().indexOf("OU=") == 0)
 		{
 
 			BP.GPM.AD.Dept dept = new Dept();
-			dept.Name = entry.Name.replace("OU=", "");
+			dept.setName(entry.getName().replace("OU=", ""));
 
 
-			dept.No = entry.Guid.toString();
+			dept.setNo(entry.Guid.toString());
 			dept.setParentNo(entry.Parent.Guid.toString());
-			dept.Idx = idxDept++;
+			dept.setIdx(idxDept++);
 			dept.Insert();
 
 			for (DirectoryEntry item : entry.Children)
@@ -448,17 +452,17 @@ public class Sync extends Method
 				//判断是 group 还是 user.
 				BP.GPM.AD.Emp emp = new Emp();
 				// emp.setNo (name;// this.GetValFromDirectoryEntryByKey(entry, "samaccountname");
-				emp.setNo (name; // this.GetValFromDirectoryEntryByKey(entry, "cn");
-				emp.Name = this.GetValFromDirectoryEntryByKey(entry, "displayName");
+				emp.setNo(name); // this.GetValFromDirectoryEntryByKey(entry, "cn");
+				emp.setName(this.GetValFromDirectoryEntryByKey(entry, "displayName"));
 
-				if (emp.IsExits == true)
+				if (emp.getIsExits() == true)
 				{
 					return;
 				}
 
 				emp.setFK_Dept(entry.Parent.Guid.toString());
 
-				if (emp.No.Length > 20)
+				if (emp.getNo().Length > 20)
 				{
 					return;
 				}
@@ -493,7 +497,7 @@ public class Sync extends Method
 		{
 			String entrySchemaClsName = subEntry.SchemaClassName;
 
-			String[] arr = subEntry.Name.split("[=]", -1);
+			String[] arr = subEntry.getName().split("[=]", -1);
 			String categoryStr = arr[0];
 			String nameStr = arr[1];
 			String id = "";

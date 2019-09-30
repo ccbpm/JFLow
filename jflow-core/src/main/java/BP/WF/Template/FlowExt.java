@@ -470,7 +470,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "发起限制规则";
-		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Limit.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/limit.png";
 		rm.ClassMethodName = this.toString() + ".DoLimit()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -723,7 +723,7 @@ public class FlowExt extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "节点表单字段视图";
-		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Field.png";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/field.png";
 		rm.ClassMethodName = this.toString() + ".DoFlowFields()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "流程维护";
@@ -1190,7 +1190,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoAction() throws Exception
 	{
-		return "../../Admin/AttrFlow/Action.htm?FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/Action.htm?FK_Flow=" + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	/** 
 	 流程事件
@@ -1210,7 +1210,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoSDTOfFlow() throws Exception
 	{
-		return "../../Admin/AttrFlow/SDTOfFlow.htm?FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/SDTOfFlow.htm?FK_Flow=" + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	/** 
 	 节点标签
@@ -1220,7 +1220,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoNodesICON() throws Exception
 	{
-		return "../../Admin/AttrFlow/NodesIcon.htm?FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/NodesIcon.htm?FK_Flow=" + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	public final String DoDBSrc()
 	{
@@ -1768,7 +1768,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoRunIt() throws Exception
 	{
-		return "../../Admin/TestFlow.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/TestFlow.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 执行检查
@@ -1778,12 +1778,12 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoCheck() throws Exception
 	{
-		return "../../Admin/AttrFlow/CheckFlow.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/AttrFlow/CheckFlow.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 
 	public final String DoCheck2018Url() throws Exception
 	{
-		return "../../Admin/Testing/FlowCheckError.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/Testing/FlowCheckError.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 启动限制规则
@@ -1793,7 +1793,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoLimit() throws Exception
 	{
-		return "../../Admin/AttrFlow/Limit.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/AttrFlow/Limit.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 设置发起前置导航
@@ -1803,7 +1803,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoStartGuide() throws Exception
 	{
-		return "../../Admin/AttrFlow/StartGuide.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/AttrFlow/StartGuide.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 设置发起前置导航
@@ -1813,7 +1813,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoStartGuideV2019() throws Exception
 	{
-		return "../../Admin/AttrFlow/StartGuide/Default.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/AttrFlow/StartGuide/Default.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 执行数据同步
@@ -1823,7 +1823,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoDTS() throws Exception
 	{
-		return "../../Admin/AttrFlow/DTSBTable.aspx?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/AttrFlow/DTSBTable.aspx?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 导入
@@ -1833,7 +1833,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoImp() throws Exception
 	{
-		return "../../Admin/AttrFlow/Imp.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/AttrFlow/Imp.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 
 	/** 
@@ -1844,7 +1844,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoExps() throws Exception
 	{
-		return "../../Admin/AttrFlow/Exp.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/AttrFlow/Exp.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 执行重新装载数据
@@ -1884,7 +1884,7 @@ public class FlowExt extends EntityNoName
 		{
 			throw new RuntimeException("传入的流程编号为空，请检查流程");
 		}
-		return "../../Admin/RptDfine/Default.htm?FK_Flow= " + this.getNo()+ " &DoType=Edit&FK_MapData=ND" + Integer.parseInt(this.getNo()) + "Rpt";
+		return "../../Admin/RptDfine/Default.htm?FK_Flow=" + this.getNo()+ " &DoType=Edit&FK_MapData=ND" + Integer.parseInt(this.getNo()) + "Rpt";
 	}
 	/** 
 	 更新之后的事情，也要更新缓存。

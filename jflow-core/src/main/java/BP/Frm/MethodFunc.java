@@ -277,7 +277,7 @@ public class MethodFunc extends EntityMyPK {
 		rm.Title = "方法参数"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoParas";
 		rm.Visable = true;
-		rm.refMethodType = getRefMethodType().RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		// rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
@@ -286,7 +286,7 @@ public class MethodFunc extends EntityMyPK {
 		rm.Title = "方法内容"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoDocs";
 		rm.Visable = true;
-		rm.refMethodType = getRefMethodType().RightFrameOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		// rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);

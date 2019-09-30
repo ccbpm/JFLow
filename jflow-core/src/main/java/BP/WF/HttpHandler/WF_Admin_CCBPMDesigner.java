@@ -106,7 +106,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			DataRow rootRow = dt.Select("ParentNo='F0'")[0];
 			DataRow newRootRow = dt.Select("No='F" + aemp.getRootOfFlow() + "'")[0];
 
-			newRootRow.set("ParentNo", "F0");
+			newRootRow.setValue("ParentNo", "F0");
 			DataTable newDt = dt;
 			newDt.Rows.AddDatas(newRootRow.ItemArray);
 			GenerChildRows(dt, newDt, newRootRow);
@@ -1139,7 +1139,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			DataRow rootRow = dt.Select("PARENTNO='F0'")[0];
 			DataRow newRootRow = dt.Select("NO='F" + aemp.getRootOfFlow() + "'")[0];
 
-			newRootRow.set("PARENTNO", "F0");
+			newRootRow.setValue("PARENTNO", "F0");
 			DataTable newDt = dt;
 			newDt.Rows.AddDatas(newRootRow.ItemArray);
 			GenerChildRows(dt, newDt, newRootRow);
@@ -1295,7 +1295,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			DataRow[] rootRows = dtForm.Select("No='" + aemp.getRootOfForm() + "'");
 			DataRow newRootRow = rootRows[0];
 
-			newRootRow.set("ParentNo", "0");
+			newRootRow.setValue("ParentNo", "0");
 			DataTable newDt = dtForm;
 			newDt.Rows.AddDatas(newRootRow.ItemArray);
 

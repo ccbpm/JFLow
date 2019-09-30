@@ -393,7 +393,7 @@ public class CCMobile extends WebContralBase
 			{
 				if (dr.get("No").toString().equals(no))
 				{
-					drEnum.set("Lab", drEnum.get("Lab").toString() + "(" + dr.get("Num") + ")");
+					drEnum.setValue("Lab", drEnum.get("Lab").toString() + "(" + dr.get("Num") + ")");
 					break;
 				}
 			}

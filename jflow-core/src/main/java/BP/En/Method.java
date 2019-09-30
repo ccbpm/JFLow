@@ -185,7 +185,7 @@ public abstract class Method
 	{
 		if (this.Icon == null)
 		{
-			return "<img src='/WF/Img/Btn/Do.gif'  border=0 />";
+			return "<img src='../Img/Btn/Do.gif'  border=0 />";
 		}
 		else
 		{

@@ -83,11 +83,11 @@ public class WF_CCBill_Opt extends WebContralBase {
 				continue;
 			}
 			row = dt.NewRow();
-			row.set("KeyOfEn", attr.getKeyOfEn());
-			row.set("Name", attr.getName());
-			row.set("Width", attr.getUIWidthInt());
-			row.set("UIContralType", attr.getUIContralType());
-			row.set("LGType", attr.getLGType());
+			row.setValue("KeyOfEn", attr.getKeyOfEn());
+			row.setValue("Name", attr.getName());
+			row.setValue("Width", attr.getUIWidthInt());
+			row.setValue("UIContralType", attr.getUIContralType());
+			row.setValue("LGType", attr.getLGType());
 			dt.Rows.add(row);
 		}
 		ds.Tables.add(dt);

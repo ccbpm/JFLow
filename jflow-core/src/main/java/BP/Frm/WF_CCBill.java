@@ -488,12 +488,12 @@ public class WF_CCBill extends WebContralBase
 				continue;
 			}
 			row = dt.NewRow();
-			row.set("KeyOfEn", attr.getKeyOfEn());
-			row.set("Name", attr.getName());
-			row.set("Width", attr.getUIWidthInt());
-			row.set("UIContralType", attr.getUIContralType());
-			row.set("LGType", attr.getLGType());
-			row.set("AtPara", attr.GetValStringByKey("AtPara"));
+			row.setValue("KeyOfEn", attr.getKeyOfEn());
+			row.setValue("Name", attr.getName());
+			row.setValue("Width", attr.getUIWidthInt());
+			row.setValue("UIContralType", attr.getUIContralType());
+			row.setValue("LGType", attr.getLGType());
+			row.setValue("AtPara", attr.GetValStringByKey("AtPara"));
 			dt.Rows.add(row);
 		}
 		ds.Tables.add(dt);
@@ -756,7 +756,7 @@ public class WF_CCBill extends WebContralBase
 			{
 				if (dr.get("No").toString().equals(no))
 				{
-					drEnum.set("Lab", drEnum.get("Lab").toString() + "(" + dr.get("Num") + ")");
+					drEnum.setValue("Lab", drEnum.get("Lab").toString() + "(" + dr.get("Num") + ")");
 					break;
 				}
 			}

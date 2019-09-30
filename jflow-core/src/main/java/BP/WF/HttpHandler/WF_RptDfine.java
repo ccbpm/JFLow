@@ -327,14 +327,14 @@ public class WF_RptDfine extends WebContralBase
 		for (MapAttr attr : attrs.ToJavaList())
 		{
 			row = dt.NewRow();
-			row.set("No", attr.getKeyOfEn());
-			row.set("Name", attr.getName());
-			row.set("Width", attr.getUIWidthInt());
-			row.set("UIContralType", attr.getUIContralType());
+			row.setValue("No", attr.getKeyOfEn());
+			row.setValue("Name", attr.getName());
+			row.setValue("Width", attr.getUIWidthInt());
+			row.setValue("UIContralType", attr.getUIContralType());
 
 			if (attr.getHisAttr().getIsFKorEnum())
 			{
-				row.set("No", attr.getKeyOfEn() + "Text");
+				row.setValue("No", attr.getKeyOfEn() + "Text");
 			}
 
 			dt.Rows.add(row);
@@ -376,26 +376,26 @@ public class WF_RptDfine extends WebContralBase
 			}
 
 			row = dt.NewRow();
-			row.set("Id", ctrl);
-			row.set("Name", ar.getName());
-			row.set("DataType", ar.getMyDataType());
-			row.set("W", ar.getUIWidth()); //宽度.
+			row.setValue("Id", ctrl);
+			row.setValue("Name", ar.getName());
+			row.setValue("DataType", ar.getMyDataType());
+			row.setValue("W", ar.getUIWidth()); //宽度.
 
 			switch (ar.getUIContralType())
 			{
 				case DDL:
-					row.set("Type", "combo");
+					row.setValue("Type", "combo");
 					fcid = "DDL_" + ar.getKeyOfEn();
 					if (vals.containsKey(fcid))
 					{
 						if (vals.get(fcid).equals("mvals"))
 						{
 							AtPara ap = new AtPara(ur.getMVals());
-							row.set("DefaultValue", ap.GetValStrByKey(ar.getKeyOfEn()));
+							row.setValue("DefaultValue", ap.GetValStrByKey(ar.getKeyOfEn()));
 						}
 						else
 						{
-							row.set("DefaultValue", vals.get(fcid));
+							row.setValue("DefaultValue", vals.get(fcid));
 						}
 					}
 
@@ -408,14 +408,14 @@ public class WF_RptDfine extends WebContralBase
 
 							if (treeEns != null)
 							{
-								row.set("Type", "combotree");
+								row.setValue("Type", "combotree");
 								dtNoName = ens.ToDataTableField();
 								dtNoName.TableName = ar.getKeyOfEn();
 								ds.Tables.add(dtNoName);
 
-								row.set("ValueField", "No");
-								row.set("TextField", "Name");
-								row.set("ParentField", "ParentNo");
+								row.setValue("ValueField", "No");
+								row.setValue("TextField", "Name");
+								row.setValue("ParentField", "ParentNo");
 							}
 							else
 							{
@@ -423,14 +423,14 @@ public class WF_RptDfine extends WebContralBase
 
 								if (treeSimpEns != null)
 								{
-									row.set("Type", "combotree");
+									row.setValue("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
 									dtNoName.TableName = ar.getKeyOfEn();
 									ds.Tables.add(dtNoName);
 
-									row.set("ValueField", "No");
-									row.set("TextField", "Name");
-									row.set("ParentField", "ParentNo");
+									row.setValue("ValueField", "No");
+									row.setValue("TextField", "Name");
+									row.setValue("ParentField", "ParentNo");
 								}
 								else
 								{
@@ -444,8 +444,8 @@ public class WF_RptDfine extends WebContralBase
 
 									ds.Tables.add(dtNoName);
 
-									row.set("ValueField", "No");
-									row.set("TextField", "Name");
+									row.setValue("ValueField", "No");
+									row.setValue("TextField", "Name");
 								}
 							}
 							break;
@@ -462,8 +462,8 @@ public class WF_RptDfine extends WebContralBase
 
 							ds.Tables.add(dtNoName);
 
-							row.set("ValueField", "No");
-							row.set("TextField", "Name");
+							row.setValue("ValueField", "No");
+							row.setValue("TextField", "Name");
 							break;
 						default:
 							break;
@@ -945,26 +945,26 @@ public class WF_RptDfine extends WebContralBase
 			}
 
 			row = dt.NewRow();
-			row.set("Field", ctrl);
-			row.set("Name", ar.getName());
-			row.set("DataType", ar.getMyDataType());
-			row.set("W", ar.getUIWidth()); //宽度.
+			row.setValue("Field", ctrl);
+			row.setValue("Name", ar.getName());
+			row.setValue("DataType", ar.getMyDataType());
+			row.setValue("W", ar.getUIWidth()); //宽度.
 
 			switch (ar.getUIContralType())
 			{
 				case DDL:
-					row.set("Type", "combo");
+					row.setValue("Type", "combo");
 					fcid = "DDL_" + ar.getKeyOfEn();
 					if (vals.containsKey(fcid))
 					{
 						if (vals.get(fcid).equals("mvals"))
 						{
 							AtPara ap = new AtPara(ur.getMVals());
-							row.set("DefaultValue", ap.GetValStrByKey(ar.getKeyOfEn()));
+							row.setValue("DefaultValue", ap.GetValStrByKey(ar.getKeyOfEn()));
 						}
 						else
 						{
-							row.set("DefaultValue", vals.get(fcid));
+							row.setValue("DefaultValue", vals.get(fcid));
 						}
 					}
 
@@ -978,14 +978,14 @@ public class WF_RptDfine extends WebContralBase
 
 							if (treeEns != null)
 							{
-								row.set("Type", "combotree");
+								row.setValue("Type", "combotree");
 								dtNoName = ens.ToDataTableField();
 								dtNoName.TableName = ar.getKeyOfEn();
 								ds.Tables.add(dtNoName);
 
-								row.set("ValueField", "No");
-								row.set("TextField", "Name");
-								row.set("ParentField", "ParentNo");
+								row.setValue("ValueField", "No");
+								row.setValue("TextField", "Name");
+								row.setValue("ParentField", "ParentNo");
 							}
 							else
 							{
@@ -993,14 +993,14 @@ public class WF_RptDfine extends WebContralBase
 
 								if (treeSimpEns != null)
 								{
-									row.set("Type", "combotree");
+									row.setValue("Type", "combotree");
 									dtNoName = ens.ToDataTableField();
 									dtNoName.TableName = ar.getKeyOfEn();
 									ds.Tables.add(dtNoName);
 
-									row.set("ValueField", "No");
-									row.set("TextField", "Name");
-									row.set("ParentField", "ParentNo");
+									row.setValue("ValueField", "No");
+									row.setValue("TextField", "Name");
+									row.setValue("ParentField", "ParentNo");
 								}
 								else
 								{
@@ -1014,8 +1014,8 @@ public class WF_RptDfine extends WebContralBase
 
 									ds.Tables.add(dtNoName);
 
-									row.set("ValueField", "No");
-									row.set("TextField", "Name");
+									row.setValue("ValueField", "No");
+									row.setValue("TextField", "Name");
 								}
 							}
 							break;
@@ -1033,8 +1033,8 @@ public class WF_RptDfine extends WebContralBase
 
 							ds.Tables.add(dtNoName);
 
-							row.set("ValueField", "No");
-							row.set("TextField", "Name");
+							row.setValue("ValueField", "No");
+							row.setValue("TextField", "Name");
 							break;
 						default:
 							break;

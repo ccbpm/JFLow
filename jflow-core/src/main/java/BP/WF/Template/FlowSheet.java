@@ -331,7 +331,7 @@ public class FlowSheet extends EntityNoName
 
 
 			///#region 启动方式
-		map.AddDDLSysEnum(FlowAttr.FlowRunWay, getFlowRunWay().HandWork.getValue(), "启动方式", true, true, FlowAttr.FlowRunWay, "@0=手工启动@1=指定人员定时启动@2=定时访问数据集自动启动@3=触发式启动");
+		map.AddDDLSysEnum(FlowAttr.FlowRunWay, FlowRunWay.HandWork.getValue(), "启动方式", true, true, FlowAttr.FlowRunWay, "@0=手工启动@1=指定人员定时启动@2=定时访问数据集自动启动@3=触发式启动");
 
 		map.SetHelperUrl(FlowAttr.FlowRunWay, "http://ccbpm.mydoc.io/?v=5404&t=17088");
 			// map.AddTBString(FlowAttr.RunObj, null, "运行内容", true, false, 0, 100, 10, true);
@@ -1025,7 +1025,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoDataManger() throws Exception
 	{
-		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.htm?FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=", 700, 500);
+		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/Rpt/OneFlow.htm?FK_Flow=" + this.getNo()+ " &ExtType=StartFlow&RefNo=", 700, 500);
 		return "../../Comm/Search.htm?s=d34&EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=";
 	}
 	/** 
@@ -1094,7 +1094,7 @@ public class FlowSheet extends EntityNoName
 	*/
 	public final String DoRunIt() throws Exception
 	{
-		return "../../Admin/TestFlow.htm?FK_Flow= " + this.getNo()+ " &Lang=CH";
+		return "../../Admin/TestFlow.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
 	/** 
 	 执行检查

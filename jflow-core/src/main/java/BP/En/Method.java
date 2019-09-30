@@ -176,7 +176,7 @@ public abstract class Method
 	/** 
 	 操作前提示信息
 	*/
-	public String Warning = null;
+	public String Warning = "";
 	/** 
 	 图标
 	*/

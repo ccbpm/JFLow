@@ -559,7 +559,7 @@ public class Flow extends BP.En.EntityNoName {
 	public final Work NewWork(Emp emp, Hashtable paras) throws Exception {
 		// 检查是否可以发起该流程？
 		if (Glo.CheckIsCanStartFlow_InitStartFlow(this) == false) {
-			throw new RuntimeException("@您违反了该流程的【" + this.getStartLimitRole() + "】限制规则。" + this.getStartLimitAlert());
+			throw new RuntimeException("err@您违反了该流程的【" + this.getStartLimitRole() + "】限制规则。" + this.getStartLimitAlert());
 		}
 
 		// 如果是bs系统.

@@ -1536,7 +1536,7 @@ public class WF_Comm extends WebContralBase {
 			dr.setValue("Tip", item.ToolTip);
 			dr.setValue("Visable", item.Visable);
 			dr.setValue("Warning", item.Warning);
-			dr.setValue("RefMethodType", item.refMethodType);
+			dr.setValue("RefMethodType", item.refMethodType.getValue());
 			dr.setValue("RefAttrKey", item.RefAttrKey);
 			dr.setValue("URL", myurl);
 			dr.setValue("W", item.Width);

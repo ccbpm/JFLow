@@ -2710,6 +2710,8 @@ public class DBAccess {
 		if (byteFile == null) {
 			return null;
 		}
+		if(BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+			   return new String(byteFile);
 		return new String(byteFile,"UTF-8");
 	}
 

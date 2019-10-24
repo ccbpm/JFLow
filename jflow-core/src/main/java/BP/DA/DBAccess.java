@@ -89,8 +89,8 @@ public class DBAccess {
 				pstmt = conn.prepareStatement(sql);
 			}
 
-			// 数据库字段类型不一致增加盘断
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+			// 数据库字段类型不一致增加判断
+			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
 				pstmt.setString(1, line);
 			} else {
 				pstmt.setBytes(1, bytes);
@@ -2703,15 +2703,18 @@ public class DBAccess {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField) throws Exception {
-		byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
-		if (byteFile == null) {
-			return null;
+	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)throws Exception {
+		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL
+		         || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL){
+		      String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
+		      return DBAccess.RunSQLReturnStringIsNull(strSQL,"");
+		   }
+		   byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
+		   if (byteFile == null) {
+		      return null;
+		   }
+		   return new String(byteFile,"UTF-8");
 		}
-		if(BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
-			   return new String(byteFile);
-		return new String(byteFile,"UTF-8");
-	}
 
 	/**
 	 * 从数据库里提取文件

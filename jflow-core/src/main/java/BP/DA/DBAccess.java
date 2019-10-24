@@ -114,8 +114,6 @@ public class DBAccess {
 			}
 		}
 		
-		SaveBytesToDB(bytes,   line,   tableName,   tablePK,   pkVal,
-			  saveToFileField);
 		return; 
 	}
 

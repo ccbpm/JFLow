@@ -836,17 +836,9 @@ public class WF extends WebContralBase {
 			em.Insert();
 		}
 		String sql = "";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-
-			sql = "SELECT dbms_lob.substr(StartFlows) as StartFlows From WF_Emp WHERE No='" + WebUser.getNo() + "'";
-		} else {
-			sql = "SELECT StartFlows as StartFlows From WF_Emp WHERE No='" + WebUser.getNo() + "'";
-		}
-		json = DBAccess.RunSQLReturnString(sql);
-		if (DataType.IsNullOrEmpty(json) == false) {
-			return json;
-		}
-
+		json = BP.DA.DBAccess.GetBigTextFromDB("WF_Emp", "No", WebUser.getNo(), "StartFlows");
+        if (DataType.IsNullOrEmpty(json) == false)
+            return json;
 		// 定义容器.
 		DataSet ds = new DataSet();
 
@@ -865,18 +857,15 @@ public class WF extends WebContralBase {
 
 		// 返回组合
 		json = BP.Tools.Json.ToJson(ds);
+		//把json存入数据表，避免下一次再取.
+        if (json.length() > 40)
+        {
+            BP.DA.DBAccess.SaveBigTextToDB(json, "WF_Emp", "No", WebUser.getNo(), "StartFlows");
 
-		// 把json存入数据表，避免下一次再取.
-		if (json.length() > 40) {
-			Paras ps = new Paras();
-			ps.SQL = "UPDATE WF_Emp SET StartFlows=" + ps.getDBStr() + "StartFlows WHERE No=" + ps.getDBStr() + "No";
-			ps.Add("StartFlows", json);
-			ps.Add("No", WebUser.getNo());
-			DBAccess.RunSQL(ps);
-		}
+        }
 
-		// 返回组合
-		return json;
+        //返回组合
+        return json;
 	}
 
 	/**

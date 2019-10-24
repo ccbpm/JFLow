@@ -184,7 +184,7 @@ public class DBAccess {
 			return;
 		}
 		
-		SaveBytesToDB(docs.getBytes(), docs, tableName, tablePK, pkVal, saveToFileField);
+		SaveBytesToDB(docs.getBytes("UTF-8"), docs, tableName, tablePK, pkVal, saveToFileField);
 		return;
 		 
 
@@ -2703,13 +2703,14 @@ public class DBAccess {
 	 * @param fileSaveField
 	 *            保存字段
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField) {
+	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField) throws Exception {
 		byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
 		if (byteFile == null) {
 			return null;
 		}
-		return new String(byteFile);
+		return new String(byteFile,"UTF-8");
 	}
 
 	/**
@@ -2724,94 +2725,47 @@ public class DBAccess {
 	 * @param fileSaveField
 	 *            字段
 	 */
-	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField) {
-		return null;
-		/*
-		 * if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
-		 * SqlConnection cn = (SqlConnection)((BP.DA.DBAccess.GetAppCenterDBConn
-		 * instanceof SqlConnection) ? BP.DA.DBAccess.GetAppCenterDBConn :
-		 * null); if (cn.State != ConnectionState.Open) { cn.Open(); }
-		 * 
-		 * String strSQL = "SELECT [" + fileSaveField + "] FROM " + tableName +
-		 * " WHERE " + tablePK + "='" + pkVal + "'";
-		 * 
-		 * SqlDataReader dr = null; SqlCommand cm = new SqlCommand();
-		 * cm.Connection = cn; cm.CommandText = strSQL; cm.CommandType =
-		 * CommandType.Text;
-		 * 
-		 * // 执行它. try { dr = cm.ExecuteReader(); } catch (RuntimeException ex)
-		 * { if (!BP.DA.DBAccess.IsExitsTableCol(tableName, fileSaveField)) {
-		 * 如果没有此列，就自动创建此列. String sql = "ALTER TABLE " + tableName + " ADD  " +
-		 * fileSaveField + " image "; BP.DA.DBAccess.RunSQL(sql); } throw new
-		 * RuntimeException("@缺少此字段,有可能系统自动修复." + ex.getMessage()); }
-		 * 
-		 * 
-		 * //ORIGINAL LINE: byte[] byteFile = null; byte[] byteFile = null; if
-		 * (dr.Read()) { if (dr[0] == null ||
-		 * tangible.DataType.IsNullOrEmpty(dr[0].toString())) {
-		 * return null; } byteFile = (byte[])dr[0]; } return byteFile;
-		 * 
-		 * 
-		 * }
-		 * 
-		 * //增加对oracle数据库的逻辑 qin if (BP.Sys.SystemConfig.getAppCenterDBType() ==
-		 * DBType.Oracle) { OracleConnection cn =
-		 * (OracleConnection)((BP.DA.DBAccess.GetAppCenterDBConn instanceof
-		 * OracleConnection) ? BP.DA.DBAccess.GetAppCenterDBConn : null); if
-		 * (cn.State != ConnectionState.Open) { cn.Open(); }
-		 * 
-		 * String strSQL = "SELECT " + fileSaveField + " FROM " + tableName +
-		 * " WHERE " + tablePK + "='" + pkVal + "'";
-		 * 
-		 * OracleDataReader dr = null; OracleCommand cm = new OracleCommand();
-		 * cm.Connection = cn; cm.CommandText = strSQL; cm.CommandType =
-		 * CommandType.Text;
-		 * 
-		 * 
-		 * // 执行它. try { dr = cm.ExecuteReader(); } catch (RuntimeException ex)
-		 * { if (BP.DA.DBAccess.IsExitsTableCol(tableName, fileSaveField) ==
-		 * false) { 如果没有此列，就自动创建此列. String sql = "ALTER TABLE " + tableName +
-		 * " ADD  " + fileSaveField + " blob "; BP.DA.DBAccess.RunSQL(sql); }
-		 * throw new RuntimeException("@缺少此字段,有可能系统自动修复." + ex.getMessage()); }
-		 * byte[] byteFile = null; if (dr.Read()) { if (dr[0] == null ||
-		 * tangible.DataType.IsNullOrEmpty(dr[0].toString())) {
-		 * return null; } byteFile = (byte[])dr[0]; }
-		 * 
-		 * return byteFile; }
-		 * 
-		 * //added by liuxc,2016-12-7,增加对mysql数据库的逻辑 if
-		 * (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
-		 * MySqlConnection cn =
-		 * (MySqlConnection)((BP.DA.DBAccess.GetAppCenterDBConn instanceof
-		 * MySqlConnection) ? BP.DA.DBAccess.GetAppCenterDBConn : null); if
-		 * (cn.State != ConnectionState.Open) { cn.Open(); }
-		 * 
-		 * String strSQL = "SELECT " + fileSaveField + " FROM " + tableName +
-		 * " WHERE " + tablePK + "='" + pkVal + "'";
-		 * 
-		 * MySqlDataReader dr = null; MySqlCommand cm = new MySqlCommand();
-		 * cm.Connection = cn; cm.CommandText = strSQL; cm.CommandType =
-		 * CommandType.Text;
-		 * 
-		 * 
-		 * // 执行它. try { dr = cm.ExecuteReader(); } catch (RuntimeException ex)
-		 * { if (BP.DA.DBAccess.IsExitsTableCol(tableName, fileSaveField) ==
-		 * false) { 如果没有此列，就自动创建此列. String sql = "ALTER TABLE " + tableName +
-		 * " ADD  " + fileSaveField + " LONGBLOB NULL ";
-		 * BP.DA.DBAccess.RunSQL(sql); } throw new
-		 * RuntimeException("@缺少此字段,有可能系统自动修复." + ex.getMessage()); }
-		 * 
-		 * byte[] byteFile = null; if (dr.Read()) { if (dr[0] == null ||
-		 * tangible.DataType.IsNullOrEmpty(dr[0].toString())) {
-		 * return null; }
-		 * 
-		 * byteFile = (byte[])dr[0]; }
-		 * 
-		 * return byteFile; }
-		 * 
-		 * //最后仍然没有找到. throw new RuntimeException("@没有判断的数据库类型.");
-		 */
-	}
+	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception{
+		   Connection conn = null; //数据库连接
+		   PreparedStatement pstmt = null; //数据库SQL执行
+		   ResultSet rs = null; // 执行结果
+		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_MSSQL();
+		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
+		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_MySQL();
+		   String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
+		   pstmt = conn.prepareStatement(strSQL);
+		   // 执行它.
+		   try
+		   {
+		      rs = pstmt.executeQuery();
+		      byte[] byteFile = null;
+		      if (rs.next())
+		      {
+		         byteFile = rs.getBytes(fileSaveField);
+		      }
+		      return byteFile;
+		   }
+		   catch (Exception e)
+		   {
+		      if (!BP.DA.DBAccess.IsExitsTableCol(tableName, fileSaveField))
+		      {
+		         /*如果没有此列，就自动创建此列.*/
+		         String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " image ";
+		         BP.DA.DBAccess.RunSQL(sql);
+		      }
+		      return GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
+		   }finally {
+		      if(rs != null)
+		         rs.close();
+		      if(pstmt!=null)
+		         pstmt.close();
+		      if(conn!=null)
+		         conn.close();
+		   }
+		}
 
 	/**
 	 * 开启事物 @xushuaho

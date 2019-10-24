@@ -3199,13 +3199,13 @@ public class Flow extends BP.En.EntityNoName {
 
 		// 遍历 - 所有节点表单字段的合集
 		for (DataRow dr : dt.Rows) {
-			if (pks.contains("@" + dr.get("KeyOfEn").toString() + "@") == true) {
+			if (pks.contains("@" + dr.getValue("KeyOfEn").toString() + "@") == true) {
 				continue;
 			}
 
-			String mypk = dr.get("MyPK").toString();
+			String mypk = dr.getValue("MyPK").toString();
 
-			pks += dr.get("KeyOfEn").toString() + "@";
+			pks += dr.getValue("KeyOfEn").toString() + "@";
 
 			// 找到这个属性.
 			BP.Sys.MapAttr ma = new BP.Sys.MapAttr(mypk);

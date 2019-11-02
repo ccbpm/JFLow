@@ -458,21 +458,21 @@ public class Dev2Interface
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 		}
 
 
-		titleRole = titleRole.replace("@WebUser.getNo()", WebUser.getNo());
-		titleRole = titleRole.replace("@WebUser.getName()", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		titleRole = titleRole.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		titleRole = titleRole.replace("@WebUser.No", WebUser.getNo());
+		titleRole = titleRole.replace("@WebUser.Name", WebUser.getName());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", DateUtils.format(new Date(),"yy年MM月dd日HH时mm分"));
 		if (titleRole.contains("@"))
 		{

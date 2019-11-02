@@ -174,8 +174,8 @@ public class Bar extends EntityNoName
 
 				String sql = this.getTag1();
 				sql = sql.replace("~", "'");
-				sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-				sql = sql.replace("@WebUser.getName()", WebUser.getName());
+				sql = sql.replace("@WebUser.No", WebUser.getNo());
+				sql = sql.replace("@WebUser.Name", WebUser.getName());
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				for (DataRow dr : dt.Rows)
 				{

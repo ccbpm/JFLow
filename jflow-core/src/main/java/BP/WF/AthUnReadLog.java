@@ -184,7 +184,7 @@ public class AthUnReadLog extends EntityMyPK
 		  //  map.AddSearchAttr(GenerWorkFlowAttr.FK_NY);
 		map.AddSearchAttr(GenerWorkFlowAttr.FK_Flow);
 
-		   // map.AddHidden(FlowDataAttr.FlowEmps, " LIKE ", "'%@@WebUser.getNo()%'");
+		   // map.AddHidden(FlowDataAttr.FlowEmps, " LIKE ", "'%@@WebUser.No%'");
 
 		this.set_enMap(map);
 		return this.get_enMap();

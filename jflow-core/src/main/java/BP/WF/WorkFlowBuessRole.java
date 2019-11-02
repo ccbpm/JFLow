@@ -57,12 +57,12 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 			}
 		}
 
 
-		titleRole = titleRole.replace("WebUser.No", emp.getNo());
+		titleRole = titleRole.replace("@WebUser.No", emp.getNo());
 		titleRole = titleRole.replace("@WebUser.Name", emp.getName());
 		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
 		titleRole = titleRole.replace("@WebUser.FK_DeptName", emp.getFK_DeptText());
@@ -144,16 +144,16 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 		}
 
-		titleRole = titleRole.replace("WebUser.No", wk.getRec());
+		titleRole = titleRole.replace("@WebUser.No", wk.getRec());
 		titleRole = titleRole.replace("@WebUser.Name", wk.getRecText());
 		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
 		titleRole = titleRole.replace("@WebUser.FK_DeptName", wk.getRecOfEmp().getFK_DeptText());
@@ -237,21 +237,21 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 			}
 		}
 
 		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.getFK_DeptName-@WebUser.getNo(),@WebUser.getName()在@RDT发起.";
+			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 		}
 
 
-		titleRole = titleRole.replace("@WebUser.getNo()", wk.getFlowStarter());
-		titleRole = titleRole.replace("@WebUser.getName()", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		titleRole = titleRole.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		titleRole = titleRole.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		titleRole = titleRole.replace("@WebUser.No", wk.getFlowStarter());
+		titleRole = titleRole.replace("@WebUser.Name", WebUser.getName());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		titleRole = titleRole.replace("@RDT", wk.getFlowStartRDT());
 		if (titleRole.contains("@"))
 		{

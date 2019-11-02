@@ -124,9 +124,9 @@ public class FrmEvents extends EntitiesOID
 		}
 
 		doc = doc.replace("~", "'");
-		doc = doc.replace("@WebUser.getNo()", WebUser.getNo());
-		doc = doc.replace("@WebUser.getName()", WebUser.getName());
-		doc = doc.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		doc = doc.replace("@WebUser.No", WebUser.getNo());
+		doc = doc.replace("@WebUser.Name", WebUser.getName());
+		doc = doc.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		doc = doc.replace("@FK_Node", nev.getFK_MapData().replace("ND", ""));
 		doc = doc.replace("@FK_MapData", nev.getFK_MapData());
 		doc = doc.replace("@WorkID", en.GetValStrByKey("OID", "@WorkID"));

@@ -128,7 +128,7 @@ public class FrmTemplate extends EntityNoName
 		String str = this.GetValStrByKey(FrmTemplateAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
-			str = "@WebUser.getFK_DeptName @WebUser.getName() @RDT";
+			str = "@WebUser.FK_DeptName @WebUser.Name @RDT";
 		}
 		return str;
 	}
@@ -214,10 +214,10 @@ public class FrmTemplate extends EntityNoName
 		map.getAttrsOfOneVSM().AddGroupListModel(new StationCreates(), new BP.WF.Port.Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位AddGroupListModel", StationAttr.FK_StationType);
 
 			//节点绑定部门. 节点绑定部门.
-		map.getAttrsOfOneVSM().AddBranches(new FrmDeptCreates(), new BP.Port.Depts(), FrmDeptCreateAttr.FrmID, FrmDeptCreateAttr.FK_Dept, "可以创建的部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
+		map.getAttrsOfOneVSM().AddBranches(new FrmDeptCreates(), new BP.Port.Depts(), FrmDeptCreateAttr.FrmID, FrmDeptCreateAttr.FK_Dept, "可以创建的部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new EmpCreates(), new BP.Port.Emps(), EmpCreateAttr.FrmID, EmpCreateAttr.FK_Emp, "可以创建的人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new EmpCreates(), new BP.Port.Emps(), EmpCreateAttr.FrmID, EmpCreateAttr.FK_Emp, "可以创建的人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
 
 			///#endregion 可以创建的权限
 

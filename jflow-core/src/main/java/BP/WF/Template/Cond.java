@@ -600,9 +600,9 @@ public class Cond extends EntityMyPK
 				//this.MsgOfCond = "@以表单值判断方向，值 " + en.EnDesc + "." + this.AttrKey + " (" + en.GetValStringByKey(this.AttrKey) + ") 操作符:(" + this.FK_Operator + ") 判断值:(" + this.OperatorValue.ToString() + ")";
 			String sql = this.getOperatorValueStr();
 			sql = sql.replace("~", "'");
-			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-			sql = sql.replace("@WebUser.getName()", WebUser.getName());
-			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sql = sql.replace("@WebUser.No", WebUser.getNo());
+			sql = sql.replace("@WebUser.Name", WebUser.getName());
+			sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 				//获取参数值
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
@@ -657,9 +657,9 @@ public class Cond extends EntityMyPK
 
 			String sql = sqltemplate.getDocs();
 			sql = sql.replace("~", "'");
-			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-			sql = sql.replace("@WebUser.getName()", WebUser.getName());
-			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sql = sql.replace("@WebUser.No", WebUser.getNo());
+			sql = sql.replace("@WebUser.Name", WebUser.getName());
+			sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 			if (en.getIsOIDEntity() == true)
 			{

@@ -2585,11 +2585,11 @@ public class Glo {
 	 * @throws Exception 
 	 */
 	public static boolean ExeExp(String exp, Entity en) throws Exception {
-		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
-		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		exp = exp.replace("@WebUser.No", WebUser.getNo());
+		exp = exp.replace("@WebUser.Name", WebUser.getName());
+		exp = exp.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		String[] strs = exp.split("[ ]", -1);
 		boolean isPass = false;
@@ -2681,10 +2681,10 @@ public class Glo {
 
 
 			// 替换变量
-			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-			sql = sql.replace("@WebUser.getName()", WebUser.getName());
-			sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sql = sql.replace("@WebUser.No", WebUser.getNo());
+			sql = sql.replace("@WebUser.Name", WebUser.getName());
+			sql = sql.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+			sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() == 0) {
@@ -3077,16 +3077,16 @@ public class Glo {
 		}
 
 		// 首先替换加; 的。
-		exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
-		exp = exp.replace("@WebUser.getName();", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_DeptName;", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
+		exp = exp.replace("@WebUser.No;", WebUser.getNo());
+		exp = exp.replace("@WebUser.Name;", WebUser.getName());
+		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
+		exp = exp.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
 
 		// 替换没有 ; 的 .
-		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
-		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		exp = exp.replace("@WebUser.No", WebUser.getNo());
+		exp = exp.replace("@WebUser.Name", WebUser.getName());
+		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		if (exp.contains("@") == false) {
 			return exp;
@@ -3174,16 +3174,16 @@ public class Glo {
 		}
 
 		// 首先替换加; 的。
-		exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
-		exp = exp.replace("@WebUser.getName();", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_DeptName;", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.getFK_Dept();", WebUser.getFK_Dept());
+		exp = exp.replace("@WebUser.No;", WebUser.getNo());
+		exp = exp.replace("@WebUser.Name;", WebUser.getName());
+		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
+		exp = exp.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
 
 		// 替换没有 ; 的 .
-		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
-		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		exp = exp.replace("@WebUser.No", WebUser.getNo());
+		exp = exp.replace("@WebUser.Name", WebUser.getName());
+		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		if (exp.contains("@") == false) {
 			return exp;

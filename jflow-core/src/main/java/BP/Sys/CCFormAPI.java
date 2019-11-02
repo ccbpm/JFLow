@@ -600,7 +600,7 @@ public class CCFormAPI {
 		attrN.setMinLen(0);
 		attrN.setUIIsEnable(true);
 		attrN.setUIIsLine(false);
-		attrN.setDefVal("@WebUser.getName()");
+		attrN.setDefVal("@WebUser.Name");
 		attrN.setUIIsEnable(false);
 		attrN.setGroupID(gf.getOID());
 		attrN.setIsSigan(true);
@@ -692,7 +692,7 @@ public class CCFormAPI {
 		attr.setMinLen(0);
 		attr.setUIIsEnable(true);
 		attr.setUIIsLine(false);
-		attr.setDefVal("@WebUser.getNo()");
+		attr.setDefVal("@WebUser.No");
 		attr.setUIIsEnable(false);
 		attr.setGroupID(gf.getOID());
 		attr.setIsSigan(true);

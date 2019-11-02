@@ -1952,15 +1952,15 @@ public class WF_Comm extends WebContralBase {
 			}
 			// 替换默认值的@的
 			else {
-				if (v.equals("@WebUser.getNo()")) {
+				if (v.equals("@WebUser.No")) {
 					mydrMain.setValue(item.getKeyOfEn(), WebUser.getNo());
-				} else if (v.equals("@WebUser.getName()")) {
+				} else if (v.equals("@WebUser.Name")) {
 					mydrMain.setValue(item.getKeyOfEn(), WebUser.getName());
-				} else if (v.equals("@WebUser.getFK_Dept()")) {
+				} else if (v.equals("@WebUser.FK_Dept")) {
 					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_Dept());
-				} else if (v.equals("@WebUser.getFK_DeptName()")) {
+				} else if (v.equals("@WebUser.FK_DeptName")) {
 					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_DeptName());
-				} else if (v.equals("@WebUser.getFK_DeptName()OfFull") || v.equals("@WebUser.getFK_DeptFullName")) {
+				} else if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName")) {
 					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
 				} else if (v.equals("@RDT")) {
 					if (item.getMyDataType() == DataType.AppDate) {
@@ -2857,10 +2857,10 @@ public class WF_Comm extends WebContralBase {
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); // 防止URL编码
 
-		sql = sql.replace("@WebUser.getNo()", WebUser.getNo()); // 替换变量.
-		sql = sql.replace("@WebUser.getName()", WebUser.getName()); // 替换变量.
-		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept()); // 替换变量.
-		sql = sql.replace("@WebUser.getDeptParentNo())", WebUser.getDeptParentNo()); // 替换变量.
+		sql = sql.replace("@WebUser.No", WebUser.getNo()); // 替换变量.
+		sql = sql.replace("@WebUser.Name", WebUser.getName()); // 替换变量.
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept()); // 替换变量.
+		sql = sql.replace("@WebUser.DeptParentNo)", WebUser.getDeptParentNo()); // 替换变量.
 
 		sql = sql.replace("/#", "+"); //
 		sql = sql.replace("/$", "-"); //

@@ -913,9 +913,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		sql = sql.replace("@Val", key);
 		sql = sql.replace("@val", key);
 
-		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sql = sql.replace("@WebUser.No", WebUser.getNo());
+		sql = sql.replace("@WebUser.Name", WebUser.getName());
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		if (oid != null)
 		{
 			sql = sql.replace("@OID", oid);

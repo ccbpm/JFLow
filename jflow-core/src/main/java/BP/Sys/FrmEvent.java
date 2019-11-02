@@ -240,19 +240,19 @@ public class FrmEvent extends EntityMyPK
 		switch (this.getFK_Event())
 		{
 			case EventListOfNode.SendSuccess:
-				return "新工作@Title,发送人@WebUser.getNo(),@WebUser.getName()";
+				return "新工作@Title,发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.ShitAfter:
-				return "移交来的新工作@Title,移交人@WebUser.getNo(),@WebUser.getName()";
+				return "移交来的新工作@Title,移交人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.ReturnAfter:
-				return "被退回来@Title,退回人@WebUser.getNo(),@WebUser.getName()";
+				return "被退回来@Title,退回人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.UndoneAfter:
-				return "工作被撤销@Title,发送人@WebUser.getNo(),@WebUser.getName()";
+				return "工作被撤销@Title,发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.AskerReAfter:
-				return "加签新工作@Title,发送人@WebUser.getNo(),@WebUser.getName()";
+				return "加签新工作@Title,发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.AfterFlowDel:
-				return "工作流程被删除@Title,发送人@WebUser.getNo(),@WebUser.getName()";
+				return "工作流程被删除@Title,发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.FlowOverAfter:
-				return "流程结束@Title,发送人@WebUser.getNo(),@WebUser.getName()";
+				return "流程结束@Title,发送人@WebUser.No,@WebUser.Name";
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
 		}
@@ -296,49 +296,49 @@ public class FrmEvent extends EntityMyPK
 				str += "\t\n您好:";
 				str += "\t\n    有新工作@Title需要您处理, 点击这里打开工作{Url} .";
 				str += "\t\n致! ";
-				str += "\t\n    @WebUser.getNo(), @WebUser.getName()";
+				str += "\t\n    @WebUser.No, @WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.ReturnAfter:
 				str += "\t\n您好:";
 				str += "\t\n    工作@Title被退回来了, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.ShitAfter:
 				str += "\t\n您好:";
 				str += "\t\n    移交给您的工作@Title, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.UndoneAfter:
 				str += "\t\n您好:";
 				str += "\t\n    移交给您的工作@Title, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.AskerReAfter: //加签.
 				str += "\t\n您好:";
 				str += "\t\n    移交给您的工作@Title, 点击这里打开工作{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.AfterFlowDel: //流程删除
 				str += "\t\n您好:";
 				str += "\t\n    被删除的工作@Title.";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.FlowOverAfter: //流程结束
 				str += "\t\n您好:";
 				str += "\t\n    工作@Title已经结束，点击这里查看工作{Url}.";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			default:
@@ -383,19 +383,19 @@ public class FrmEvent extends EntityMyPK
 		switch (this.getFK_Event())
 		{
 			case EventListOfNode.SendSuccess:
-				str = "有新工作@Title需要您处理, 发送人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
+				str = "有新工作@Title需要您处理, 发送人:@WebUser.No, @WebUser.Name,打开{Url} .";
 				break;
 			case EventListOfNode.ReturnAfter:
-				str = "工作@Title被退回,退回人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
+				str = "工作@Title被退回,退回人:@WebUser.No, @WebUser.Name,打开{Url} .";
 				break;
 			case EventListOfNode.ShitAfter:
-				str = "移交工作@Title,移交人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
+				str = "移交工作@Title,移交人:@WebUser.No, @WebUser.Name,打开{Url} .";
 				break;
 			case EventListOfNode.UndoneAfter:
-				str = "工作撤销@Title,撤销人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
+				str = "工作撤销@Title,撤销人:@WebUser.No, @WebUser.Name,打开{Url}.";
 				break;
 			case EventListOfNode.AskerReAfter: //加签.
-				str = "工作加签@Title,加签人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
+				str = "工作加签@Title,加签人:@WebUser.No, @WebUser.Name,打开{Url}.";
 				break;
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());

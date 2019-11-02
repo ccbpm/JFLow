@@ -191,21 +191,21 @@ public class PushMsg extends EntityMyPK
 		switch (this.getFK_Event())
 		{
 			case EventListOfNode.WorkArrive:
-				return "新工作{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
+				return "新工作{{Title}},发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.SendSuccess:
-				return "新工作{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
+				return "新工作{{Title}},发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.ShitAfter:
-				return "移交来的新工作{{Title}},移交人@WebUser.getNo(),@WebUser.getName()";
+				return "移交来的新工作{{Title}},移交人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.ReturnAfter:
-				return "被退回来{{Title}},退回人@WebUser.getNo(),@WebUser.getName()";
+				return "被退回来{{Title}},退回人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.UndoneAfter:
-				return "工作被撤销{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
+				return "工作被撤销{{Title}},发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.AskerReAfter:
-				return "加签新工作{{Title}},发送人@WebUser.getNo(),@WebUser.getName()";
+				return "加签新工作{{Title}},发送人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.FlowOverAfter:
-				return "流程{{Title}}已经结束,处理人@WebUser.getNo(),@WebUser.getName()";
+				return "流程{{Title}}已经结束,处理人@WebUser.No,@WebUser.Name";
 			case EventListOfNode.AfterFlowDel:
-				return "流程{{Title}}已经删除,处理人@WebUser.getNo(),@WebUser.getName()";
+				return "流程{{Title}}已经删除,处理人@WebUser.No,@WebUser.Name";
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
 		}
@@ -261,7 +261,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n致! ";
-				str += "\t\n    @WebUser.getNo(), @WebUser.getName()";
+				str += "\t\n    @WebUser.No, @WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.SendSuccess:
@@ -273,7 +273,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致!! ";
-				str += "\t\n    @WebUser.getNo(), @WebUser.getName()";
+				str += "\t\n    @WebUser.No, @WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.ReturnAfter:
@@ -285,7 +285,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.ShitAfter:
@@ -295,7 +295,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.UndoneAfter:
@@ -305,7 +305,7 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.AskerReAfter: //加签.
@@ -315,14 +315,14 @@ public class PushMsg extends EntityMyPK
 				str += "\t\n ";
 				str += "\t\n ";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			case EventListOfNode.FlowOverAfter: //流程结束后.
 				str += "\t\n您好:";
 				str += "\t\n    工作{{Title}}已经结束, 点击这里打开工作报告{Url} .";
 				str += "\t\n 致! ";
-				str += "\t\n    @WebUser.getNo(),@WebUser.getName()";
+				str += "\t\n    @WebUser.No,@WebUser.Name";
 				str += "\t\n    @RDT";
 				break;
 			default:
@@ -479,22 +479,22 @@ public class PushMsg extends EntityMyPK
 		{
 			case EventListOfNode.WorkArrive:
 			case EventListOfNode.SendSuccess:
-				str = "有新工作{{Title}}需要您处理, 发送人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
+				str = "有新工作{{Title}}需要您处理, 发送人:@WebUser.No, @WebUser.Name,打开{Url} .";
 				break;
 			case EventListOfNode.ReturnAfter:
-				str = "工作{{Title}}被退回,退回人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
+				str = "工作{{Title}}被退回,退回人:@WebUser.No, @WebUser.Name,打开{Url} .";
 				break;
 			case EventListOfNode.ShitAfter:
-				str = "移交工作{{Title}},移交人:@WebUser.getNo(), @WebUser.getName(),打开{Url} .";
+				str = "移交工作{{Title}},移交人:@WebUser.No, @WebUser.Name,打开{Url} .";
 				break;
 			case EventListOfNode.UndoneAfter:
-				str = "工作撤销{{Title}},撤销人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
+				str = "工作撤销{{Title}},撤销人:@WebUser.No, @WebUser.Name,打开{Url}.";
 				break;
 			case EventListOfNode.AskerReAfter: //加签.
-				str = "工作加签{{Title}},加签人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
+				str = "工作加签{{Title}},加签人:@WebUser.No, @WebUser.Name,打开{Url}.";
 				break;
 			case EventListOfNode.FlowOverAfter: //加签.
-				str = "流程{{Title}}已经结束,最后处理人:@WebUser.getNo(), @WebUser.getName(),打开{Url}.";
+				str = "流程{{Title}}已经结束,最后处理人:@WebUser.No, @WebUser.Name,打开{Url}.";
 				break;
 			default:
 				throw new RuntimeException("@该事件类型没有定义默认的消息模版:" + this.getFK_Event());
@@ -743,8 +743,8 @@ public class PushMsg extends EntityMyPK
 			///#region 邮件标题
 		mailTitle = this.getMailTitle();
 		mailTitle = mailTitle.replace("{Title}", title);
-		mailTitle = mailTitle.replace("@WebUser.getNo()", WebUser.getNo());
-		mailTitle = mailTitle.replace("@WebUser.getName()", WebUser.getName());
+		mailTitle = mailTitle.replace("@WebUser.No", WebUser.getNo());
+		mailTitle = mailTitle.replace("@WebUser.Name", WebUser.getName());
 
 
 			///#endregion 邮件标题
@@ -753,8 +753,8 @@ public class PushMsg extends EntityMyPK
 			///#region  处理消息内容
 		smsDoc = smsDoc.replace("{Title}", title);
 		smsDoc = smsDoc.replace("{Url}", openUrl);
-		smsDoc = smsDoc.replace("@WebUser.getNo()", WebUser.getNo());
-		smsDoc = smsDoc.replace("@WebUser.getName()", WebUser.getName());
+		smsDoc = smsDoc.replace("@WebUser.No", WebUser.getNo());
+		smsDoc = smsDoc.replace("@WebUser.Name", WebUser.getName());
 		smsDoc = smsDoc.replace("@WorkID", en.getPKVal().toString());
 		smsDoc = smsDoc.replace("@OID", en.getPKVal().toString());
 
@@ -859,11 +859,11 @@ public class PushMsg extends EntityMyPK
 			}
 			bySQL = bySQL.replace("~", "'");
 			//替换SQL中的参数
-			bySQL = bySQL.replace("@WebUser.getNo()", WebUser.getNo());
-			bySQL = bySQL.replace("@WebUser.getName()", WebUser.getName());
-			bySQL = bySQL.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-			bySQL = bySQL.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-			bySQL = bySQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			bySQL = bySQL.replace("@WebUser.No", WebUser.getNo());
+			bySQL = bySQL.replace("@WebUser.Name", WebUser.getName());
+			bySQL = bySQL.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+			bySQL = bySQL.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+			bySQL = bySQL.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			/*如果仍然有没有替换下来的变量.*/
 			if (bySQL.contains("@") == true)
 			{
@@ -1115,8 +1115,8 @@ public class PushMsg extends EntityMyPK
 	//    mailDocTmp = mailDocTmp.Replace("{Title}", title);
 	//    mailDocTmp = mailDocTmp.Replace("{Title}", title);
 
-	//    mailDocTmp = mailDocTmp.Replace("@WebUser.getNo()", WebUser.getNo());
-	//    mailDocTmp = mailDocTmp.Replace("@WebUser.getName()", WebUser.getName());
+	//    mailDocTmp = mailDocTmp.Replace("@WebUser.No", WebUser.getNo());
+	//    mailDocTmp = mailDocTmp.Replace("@WebUser.Name", WebUser.getName());
 
 	//    /*如果仍然有没有替换下来的变量.*/
 	//    if (mailDocTmp.Contains("@"))
@@ -1367,8 +1367,8 @@ public class PushMsg extends EntityMyPK
 	//    smsDocTmp = this.SMSDoc.Clone() as string;
 	//    smsDocTmp = smsDocTmp.Replace("{Title}", title);
 	//    smsDocTmp = smsDocTmp.Replace("{Url}", openWorkURL);
-	//    smsDocTmp = smsDocTmp.Replace("@WebUser.getNo()", WebUser.getNo());
-	//    smsDocTmp = smsDocTmp.Replace("@WebUser.getName()", WebUser.getName());
+	//    smsDocTmp = smsDocTmp.Replace("@WebUser.No", WebUser.getNo());
+	//    smsDocTmp = smsDocTmp.Replace("@WebUser.Name", WebUser.getName());
 	//    smsDocTmp = smsDocTmp.Replace("@WorkID", en.PKVal.ToString());
 	//    smsDocTmp = smsDocTmp.Replace("@OID", en.PKVal.ToString());
 

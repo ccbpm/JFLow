@@ -237,10 +237,10 @@ public class WF_MyFlow extends WebContralBase {
 			}
 			sql = sql.replace("~", "'");
 			// 替换约定参数
-			sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-			sql = sql.replace("@WebUser.getName()", WebUser.getName());
-			sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
-			sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
+			sql = sql.replace("@WebUser.No", WebUser.getNo());
+			sql = sql.replace("@WebUser.Name", WebUser.getName());
+			sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+			sql = sql.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 
 			if (sql.contains("@") == true) {
 				Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
@@ -1739,9 +1739,9 @@ public class WF_MyFlow extends WebContralBase {
 					}
 					myurl = myurl.replace("@" + attr.getKey(), hisWK.GetValStrByKey(attr.getKey()));
 				}
-				myurl = myurl.replace("@WebUser.getNo()", WebUser.getNo());
-				myurl = myurl.replace("@WebUser.getName()", WebUser.getName());
-				myurl = myurl.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+				myurl = myurl.replace("@WebUser.No", WebUser.getNo());
+				myurl = myurl.replace("@WebUser.Name", WebUser.getName());
+				myurl = myurl.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 				if (myurl.contains("@")) {
 					BP.WF.Dev2Interface.Port_SendMsg("admin",
@@ -1763,9 +1763,9 @@ public class WF_MyFlow extends WebContralBase {
 
 				return msg;
 			default:
-				msg = msg.replace("@WebUser.getNo()", WebUser.getNo());
-				msg = msg.replace("@WebUser.getName()", WebUser.getName());
-				msg = msg.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+				msg = msg.replace("@WebUser.No", WebUser.getNo());
+				msg = msg.replace("@WebUser.Name", WebUser.getName());
+				msg = msg.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 				return msg;
 			}
 		} catch (RuntimeException ex) {
@@ -1850,10 +1850,10 @@ public class WF_MyFlow extends WebContralBase {
 		}
 		// 替换变量
 		sql = sql.replace("~", "'");
-		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
-		sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
+		sql = sql.replace("@WebUser.No", WebUser.getNo());
+		sql = sql.replace("@WebUser.Name", WebUser.getName());
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+		sql = sql.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		// 获取选中的数据源
@@ -2171,9 +2171,9 @@ public class WF_MyFlow extends WebContralBase {
 
 				mysql = mysql.replace("@FK_Flow", this.getFK_Flow());
 
-				mysql = mysql.replace("@WebUser.getNo()", WebUser.getNo());
-				mysql = mysql.replace("@WebUser.getName()", WebUser.getName());
-				mysql = mysql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+				mysql = mysql.replace("@WebUser.No", WebUser.getNo());
+				mysql = mysql.replace("@WebUser.Name", WebUser.getName());
+				mysql = mysql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 				// 替换特殊字符.
 				mysql = mysql.replace("~", "'");

@@ -2724,7 +2724,7 @@ public class Node extends Entity {
 			attr.setUIIsEnable(false);
 			attr.setMaxLen(32);
 			attr.setMinLen(0);
-			attr.setDefVal("@WebUser.getNo()");
+			attr.setDefVal("@WebUser.No");
 			attr.Insert();
 		}
 
@@ -2962,7 +2962,7 @@ public class Node extends Entity {
 		attr.setUIIsEnable(false);
 		attr.setMaxLen(32);
 		attr.setMinLen(0);
-		attr.setDefVal("@WebUser.getNo()");
+		attr.setDefVal("@WebUser.No");
 		attr.Insert();
 
 		attr = new BP.Sys.MapAttr();

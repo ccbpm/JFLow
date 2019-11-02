@@ -128,7 +128,7 @@ public class FrmDict extends EntityNoName
 		String str = this.GetValStrByKey(FrmDictAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
-			str = "@WebUser.getFK_DeptName @WebUser.getName() @RDT";
+			str = "@WebUser.FK_DeptName @WebUser.Name @RDT";
 		}
 		return str;
 	}

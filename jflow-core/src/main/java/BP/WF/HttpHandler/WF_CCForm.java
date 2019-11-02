@@ -362,9 +362,9 @@ public class WF_CCForm extends WebContralBase {
 		sql = sql.replace("\n", "");
 		sql = sql.replace("\n", "");
 
-		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sql = sql.replace("@WebUser.No", WebUser.getNo());
+		sql = sql.replace("@WebUser.Name", WebUser.getName());
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		String oid = this.GetRequestVal("OID");
 		if (oid != null) {
@@ -1551,7 +1551,7 @@ public class WF_CCForm extends WebContralBase {
 
 							// 设置默认值.
 							switch (ff.getDefVal()) {
-							case "@WebUser.getNo()":
+							case "@WebUser.No":
 								if (attr.getUIIsReadonly() == true) {
 									en.SetValByKey(attr.getKey(), WebUser.getNo());
 								} else {
@@ -1560,7 +1560,7 @@ public class WF_CCForm extends WebContralBase {
 									}
 								}
 								continue;
-							case "@WebUser.getName()":
+							case "@WebUser.Name":
 								if (attr.getUIIsReadonly() == true) {
 									en.SetValByKey(attr.getKey(), WebUser.getName());
 								} else {
@@ -1569,7 +1569,7 @@ public class WF_CCForm extends WebContralBase {
 									}
 								}
 								continue;
-							case "@WebUser.getFK_Dept()":
+							case "@WebUser.FK_Dept":
 								if (attr.getUIIsReadonly() == true) {
 									en.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
 								} else {
@@ -1578,7 +1578,7 @@ public class WF_CCForm extends WebContralBase {
 									}
 								}
 								continue;
-							case "@WebUser.getFK_DeptName":
+							case "@WebUser.FK_DeptName":
 								if (attr.getUIIsReadonly() == true) {
 									en.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
 								} else {
@@ -1587,8 +1587,8 @@ public class WF_CCForm extends WebContralBase {
 									}
 								}
 								continue;
-							case "@WebUser.getFK_DeptNameOfFull":
-							case "@WebUser.getFK_DeptFullName":
+							case "@WebUser.FK_DeptNameOfFull":
+							case "@WebUser.FK_DeptFullName":
 								if (attr.getUIIsReadonly() == true) {
 									en.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 								} else {
@@ -2427,9 +2427,9 @@ public class WF_CCForm extends WebContralBase {
 
 		DataSet resultDs = new DataSet();
 		String sqlObjs = me.getPopValTreeSQL();
-		sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
-		sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
-		sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sqlObjs = sqlObjs.replace("@WebUser.No", WebUser.getNo());
+		sqlObjs = sqlObjs.replace("@WebUser.Name", WebUser.getName());
+		sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		sqlObjs = sqlObjs.replace("@ParentNo", parentNo);
 		sqlObjs = this.DealExpByFromVals(sqlObjs);
 
@@ -2448,9 +2448,9 @@ public class WF_CCForm extends WebContralBase {
 		// doubleTree
 		if (me.getPopValWorkModel() == PopValWorkModel.TreeDouble && !parentNo.equals(me.getPopValTreeParentNo())) {
 			sqlObjs = me.getPopValDoubleTreeEntitySQL();
-			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
-			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
-			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sqlObjs = sqlObjs.replace("@WebUser.No", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.Name", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sqlObjs = sqlObjs.replace("@ParentNo", parentNo);
 			sqlObjs = this.DealExpByFromVals(sqlObjs);
 
@@ -2521,9 +2521,9 @@ public class WF_CCForm extends WebContralBase {
 
 		if (me.getPopValWorkModel() == PopValWorkModel.TableOnly) {
 			String sqlObjs = me.getPopValEntitySQL();
-			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
-			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
-			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sqlObjs = sqlObjs.replace("@WebUser.No", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.Name", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 			sqlObjs = this.DealExpByFromVals(sqlObjs);
 
@@ -2541,9 +2541,9 @@ public class WF_CCForm extends WebContralBase {
 
 			String sqlObjs = me.getPopValGroupSQL();
 			if (sqlObjs.length() > 10) {
-				sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
-				sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
-				sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+				sqlObjs = sqlObjs.replace("@WebUser.No", WebUser.getNo());
+				sqlObjs = sqlObjs.replace("@WebUser.Name", WebUser.getName());
+				sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 				sqlObjs = this.DealExpByFromVals(sqlObjs);
 
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
@@ -2554,9 +2554,9 @@ public class WF_CCForm extends WebContralBase {
 
 			sqlObjs = me.getPopValEntitySQL();
 			if (sqlObjs.length() > 10) {
-				sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
-				sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
-				sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+				sqlObjs = sqlObjs.replace("@WebUser.No", WebUser.getNo());
+				sqlObjs = sqlObjs.replace("@WebUser.Name", WebUser.getName());
+				sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 				sqlObjs = this.DealExpByFromVals(sqlObjs);
 
 				DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlObjs);
@@ -2592,9 +2592,9 @@ public class WF_CCForm extends WebContralBase {
 			}
 
 			String sqlObjs = me.getPopValTablePageSQL();
-			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
-			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
-			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sqlObjs = sqlObjs.replace("@WebUser.No", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.Name", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sqlObjs = sqlObjs.replace("@Key", key);
 
 			// 三个固定参数.
@@ -2651,7 +2651,7 @@ public class WF_CCForm extends WebContralBase {
 
 			// 处理查询条件.
 			// $Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE
-			// No='@WebUser.getNo()'
+			// No='@WebUser.No'
 			// $Para=XB#Label=性别#EnumKey=XB
 			// $Para=DTFrom#Label=注册日期从#DefVal=@Now-30
 			// $Para=DTTo#Label=到#DefVal=@Now
@@ -2664,9 +2664,9 @@ public class WF_CCForm extends WebContralBase {
 				String sql = null;
 				if (cond.contains("#ListSQL=") == true) {
 					sql = cond.substring(cond.indexOf("ListSQL") + 8);
-					sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-					sql = sql.replace("@WebUser.getName()", WebUser.getName());
-					sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+					sql = sql.replace("@WebUser.No", WebUser.getNo());
+					sql = sql.replace("@WebUser.Name", WebUser.getName());
+					sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 					sql = this.DealExpByFromVals(sql);
 				}
 
@@ -2754,9 +2754,9 @@ public class WF_CCForm extends WebContralBase {
 			String countSQL = me.getPopValTablePageSQLCount();
 
 			// 固定参数.
-			countSQL = countSQL.replace("@WebUser.getNo()", WebUser.getNo());
-			countSQL = countSQL.replace("@WebUser.getName()", WebUser.getName());
-			countSQL = countSQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			countSQL = countSQL.replace("@WebUser.No", WebUser.getNo());
+			countSQL = countSQL.replace("@WebUser.Name", WebUser.getName());
+			countSQL = countSQL.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			countSQL = countSQL.replace("@Key", key);
 			countSQL = this.DealExpByFromVals(countSQL);
 
@@ -2811,7 +2811,7 @@ public class WF_CCForm extends WebContralBase {
 
 			// 处理查询条件.
 			// $Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE
-			// No='@WebUser.getNo()'
+			// No='@WebUser.No'
 			// $Para=XB#Label=性别#EnumKey=XB
 			// $Para=DTFrom#Label=注册日期从#DefVal=@Now-30
 			// $Para=DTTo#Label=到#DefVal=@Now
@@ -2824,9 +2824,9 @@ public class WF_CCForm extends WebContralBase {
 				String sql = null;
 				if (cond.contains("#ListSQL=") == true) {
 					sql = cond.substring(cond.indexOf("ListSQL") + 8);
-					sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-					sql = sql.replace("@WebUser.getName()", WebUser.getName());
-					sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+					sql = sql.replace("@WebUser.No", WebUser.getNo());
+					sql = sql.replace("@WebUser.Name", WebUser.getName());
+					sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 					sql = this.DealExpByFromVals(sql);
 				}
 
@@ -2922,9 +2922,9 @@ public class WF_CCForm extends WebContralBase {
 			}
 
 			String sqlObjs = me.getPopValTablePageSQL();
-			sqlObjs = sqlObjs.replace("@WebUser.getNo()", WebUser.getNo());
-			sqlObjs = sqlObjs.replace("@WebUser.getName()", WebUser.getName());
-			sqlObjs = sqlObjs.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+			sqlObjs = sqlObjs.replace("@WebUser.No", WebUser.getNo());
+			sqlObjs = sqlObjs.replace("@WebUser.Name", WebUser.getName());
+			sqlObjs = sqlObjs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sqlObjs = sqlObjs.replace("@Key", key);
 
 			// 三个固定参数.
@@ -2980,7 +2980,7 @@ public class WF_CCForm extends WebContralBase {
 
 			// 处理查询条件.
 			// $Para=Dept#Label=所在班级#ListSQL=Select No,Name FROM Port_Dept WHERE
-			// No='@WebUser.getNo()'
+			// No='@WebUser.No'
 			// $Para=XB#Label=性别#EnumKey=XB
 			// $Para=DTFrom#Label=注册日期从#DefVal=@Now-30
 			// $Para=DTTo#Label=到#DefVal=@Now
@@ -2993,9 +2993,9 @@ public class WF_CCForm extends WebContralBase {
 				String sql = null;
 				if (cond.contains("#ListSQL=") == true) {
 					sql = cond.substring(cond.indexOf("ListSQL") + 8);
-					sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-					sql = sql.replace("@WebUser.getName()", WebUser.getName());
-					sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+					sql = sql.replace("@WebUser.No", WebUser.getNo());
+					sql = sql.replace("@WebUser.Name", WebUser.getName());
+					sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 					sql = this.DealExpByFromVals(sql);
 				}
 
@@ -3190,9 +3190,9 @@ public class WF_CCForm extends WebContralBase {
 
 		String sql = dtl.getImpSQLSearch();
 		sql = sql.replace("@Key", this.GetRequestVal("Key"));
-		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sql = sql.replace("@WebUser.No", WebUser.getNo());
+		sql = sql.replace("@WebUser.Name", WebUser.getName());
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		DataSet ds = new DataSet();
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);

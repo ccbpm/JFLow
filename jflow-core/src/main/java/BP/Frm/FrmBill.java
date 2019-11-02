@@ -115,7 +115,7 @@ public class FrmBill extends EntityNoName {
 	public final String getTitleRole() throws Exception {
 		String str = this.GetValStrByKey(FrmBillAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true) {
-			str = "@WebUser.getFK_DeptName @WebUser.getName() @RDT";
+			str = "@WebUser.FK_DeptName @WebUser.Name @RDT";
 		}
 		return str;
 	}

@@ -58,19 +58,19 @@ public class SFTable extends EntityNoName
 			}
 
 			runObj = runObj.replace("~", "'");
-			if (runObj.contains("@WebUser.getNo()"))
+			if (runObj.contains("@WebUser.No"))
 			{
-				runObj = runObj.replace("@WebUser.getNo()", WebUser.getNo());
+				runObj = runObj.replace("@WebUser.No", WebUser.getNo());
 			}
 
-			if (runObj.contains("@WebUser.getName()"))
+			if (runObj.contains("@WebUser.Name"))
 			{
-				runObj = runObj.replace("@WebUser.getName()", WebUser.getName());
+				runObj = runObj.replace("@WebUser.Name", WebUser.getName());
 			}
 
-			if (runObj.contains("@WebUser.getFK_Dept()"))
+			if (runObj.contains("@WebUser.FK_Dept"))
 			{
-				runObj = runObj.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+				runObj = runObj.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			}
 
 			DataTable dt = src.RunSQLReturnTable(runObj);

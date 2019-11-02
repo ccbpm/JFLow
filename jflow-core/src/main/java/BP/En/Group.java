@@ -53,7 +53,7 @@ public class Group extends EntityNoName {
 
 		// 节点绑定人员. 使用树杆与叶子的模式绑定.
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new GroupEmps(), new BP.Port.Emps(), GroupEmpAttr.FK_Group,
-				GroupEmpAttr.FK_Emp, "人员(树)", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.getFK_Dept()");
+				GroupEmpAttr.FK_Emp, "人员(树)", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
 
 		// map.getAttrsOfOneVSM().Add(new GroupEmps(), new Emps(),
 		// GroupEmpAttr.FK_Group, GroupEmpAttr.FK_Emp, EmpAttr.Name, EmpAttr.No,

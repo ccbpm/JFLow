@@ -1091,7 +1091,7 @@ public class WF_CommEntity extends WebContralBase {
 		// 组织数据.
 		DataSet ds = new DataSet();
 		String rootNo = vsM.RootNo;
-		if (rootNo.equals("@WebUser.getFK_Dept()") || rootNo.equals("WebUser.getFK_Dept()")) {
+		if (rootNo.equals("@WebUser.FK_Dept") || rootNo.equals("WebUser.getFK_Dept()")) {
 			rootNo = WebUser.getFK_Dept();
 		}
 

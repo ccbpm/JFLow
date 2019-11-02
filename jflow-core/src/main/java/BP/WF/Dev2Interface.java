@@ -11215,14 +11215,14 @@ public class Dev2Interface
 		DataSet ds = new DataSet();
 		Selector MySelector = new Selector(nodeID);
 		String sqlGroup = MySelector.getSelectorP1();
-		sqlGroup = sqlGroup.replace("@WebUser.getNo()", WebUser.getNo());
-		sqlGroup = sqlGroup.replace("@WebUser.getName()", WebUser.getName());
-		sqlGroup = sqlGroup.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sqlGroup = sqlGroup.replace("@WebUser.No", WebUser.getNo());
+		sqlGroup = sqlGroup.replace("@WebUser.Name", WebUser.getName());
+		sqlGroup = sqlGroup.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		String sqlDB = MySelector.getSelectorP2();
-		sqlDB = sqlDB.replace("@WebUser.getNo()", WebUser.getNo());
-		sqlDB = sqlDB.replace("@WebUser.getName()", WebUser.getName());
-		sqlDB = sqlDB.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sqlDB = sqlDB.replace("@WebUser.No", WebUser.getNo());
+		sqlDB = sqlDB.replace("@WebUser.Name", WebUser.getName());
+		sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		DataTable dtGroup = DBAccess.RunSQLReturnTable(sqlGroup);
 		dtGroup.TableName = "Port_Dept";

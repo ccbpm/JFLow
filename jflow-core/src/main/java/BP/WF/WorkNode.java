@@ -1507,15 +1507,15 @@ public class WorkNode {
 						boolean isUpdate = false;
 						for (Attr attr : attrs) {
 							if (attr.getUIIsReadonly() && attr.getUIVisible() == true) {
-								if (attr.getDefaultValOfReal().equals("@WebUser.getNo()")) {
+								if (attr.getDefaultValOfReal().equals("@WebUser.No")) {
 									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarter());
 									isUpdate = true;
 								}
-								if (attr.getDefaultValOfReal().equals("@WebUser.getName()")) {
+								if (attr.getDefaultValOfReal().equals("@WebUser.Name")) {
 									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarterName());
 									isUpdate = true;
 								}
-								if (attr.getDefaultValOfReal().equals("@WebUser.getFK_Dept()")) {
+								if (attr.getDefaultValOfReal().equals("@WebUser.FK_Dept")) {
 									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getFK_Dept());
 									isUpdate = true;
 								}
@@ -4444,26 +4444,26 @@ public class WorkNode {
 				// continue;
 				// }
 
-				// if (attr.DefaultValOfReal == "@WebUser.getNo()")
+				// if (attr.DefaultValOfReal == "@WebUser.No")
 				// {
 				// geEn.SetValByKey(attr.Key, item.FK_Emp);
 				// continue;
 				// }
 
-				// if (attr.DefaultValOfReal == "@WebUser.getName()")
+				// if (attr.DefaultValOfReal == "@WebUser.Name")
 				// {
 				// geEn.SetValByKey(attr.Key, item.FK_EmpText);
 				// continue;
 				// }
 
-				// if (attr.DefaultValOfReal == "@WebUser.getFK_Dept()")
+				// if (attr.DefaultValOfReal == "@WebUser.FK_Dept")
 				// {
 				// Emp emp = new Emp(item.FK_Emp);
 				// geEn.SetValByKey(attr.Key, emp.FK_Dept);
 				// continue;
 				// }
 
-				// if (attr.DefaultValOfReal == "@WebUser.getFK_DeptName")
+				// if (attr.DefaultValOfReal == "@WebUser.FK_DeptName")
 				// {
 				// Emp emp = new Emp(item.FK_Emp);
 				// geEn.SetValByKey(attr.Key, emp.FK_DeptText);
@@ -8743,10 +8743,10 @@ public class WorkNode {
 		exp = exp.replace("@NodeID", String.valueOf(this.getHisNode().getNodeID()));
 		exp = exp.replace("@FK_Node", String.valueOf(this.getHisNode().getNodeID()));
 
-		exp = exp.replace("@WebUser.getNo()", WebUser.getNo());
-		exp = exp.replace("@WebUser.getName()", WebUser.getName());
-		exp = exp.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		exp = exp.replace("@WebUser.No", WebUser.getNo());
+		exp = exp.replace("@WebUser.Name", WebUser.getName());
+		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 		if (exp.contains("@") == true) {
 			exp = Glo.DealExp(exp, this.getHisWork(), null);

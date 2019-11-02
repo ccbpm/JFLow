@@ -759,8 +759,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		//替换变量
 		String smsstr = this.GetRequestVal("TB_SMS");
 		//扬玉慧 此处是配置界面  不应该把用户名和用户编号转化掉
-		//smsstr = smsstr.Replace("@WebUser.getName()", WebUser.getName());
-		//smsstr = smsstr.Replace("@WebUser.getNo()", WebUser.getNo());
+		//smsstr = smsstr.Replace("@WebUser.Name", WebUser.getName());
+		//smsstr = smsstr.Replace("@WebUser.No", WebUser.getNo());
 
 		DataTable dt = BP.WF.Dev2Interface.DB_GenerEmpWorksOfDataTable();
 		// smsstr = smsstr.Replace("@RDT",);

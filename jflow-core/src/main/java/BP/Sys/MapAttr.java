@@ -464,15 +464,15 @@ public class MapAttr extends EntityMyPK
 
 		switch (s.toLowerCase())
 		{
-			case "@WebUser.getNo()":
+			case "@WebUser.No":
 				return WebUser.getNo();
-			case "@WebUser.getName()":
+			case "@WebUser.Name":
 				return WebUser.getName();
-			case "@WebUser.getFK_Dept()":
+			case "@WebUser.FK_Dept":
 				return WebUser.getFK_Dept();
-			case "@WebUser.getFK_Dept()name":
+			case "@WebUser.FK_Deptname":
 				return WebUser.getFK_DeptName();
-			case "@WebUser.getFK_Dept()fullname":
+			case "@WebUser.FK_Deptfullname":
 				return WebUser.getFK_DeptNameOfFull();
 			case "@fk_ny":
 				return DataType.getCurrentYearMonth();

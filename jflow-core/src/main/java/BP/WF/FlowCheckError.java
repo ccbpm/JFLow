@@ -318,10 +318,10 @@ public class FlowCheckError
 						}
 					}
 
-					sql = sql.replace("@WebUser.getNo()", "'ss'");
-					sql = sql.replace("@WebUser.getName()", "'ss'");
-					sql = sql.replace("@WebUser.getFK_DeptName", "'ss'");
-					sql = sql.replace("@WebUser.getFK_Dept()", "'ss'");
+					sql = sql.replace("@WebUser.No", "'ss'");
+					sql = sql.replace("@WebUser.Name", "'ss'");
+					sql = sql.replace("@WebUser.FK_DeptName", "'ss'");
+					sql = sql.replace("@WebUser.FK_Dept", "'ss'");
 
 
 					sql = sql.replace("''''", "''"); //出现双引号的问题.

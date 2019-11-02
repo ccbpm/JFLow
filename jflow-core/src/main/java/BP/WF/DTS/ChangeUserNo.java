@@ -76,7 +76,7 @@ public class ChangeUserNo extends Method
 			MapAttrs attrs = new MapAttrs(md.getNo());
 			for (MapAttr attr : attrs.ToJavaList())
 			{
-				if (attr.getUIIsEnable() == false && attr.getDefValReal().equals("@WebUser.getNo()"))
+				if (attr.getUIIsEnable() == false && attr.getDefValReal().equals("@WebUser.No"))
 				{
 					sqls += "\t\n UPDATE " + md.getPTable() + " SET ";
 				}

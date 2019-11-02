@@ -2979,9 +2979,9 @@ public class WF_WorkOpt extends WebContralBase
 				break;
 			case JumpSpecifiedNodes:
 				sql = nd.getJumpToNodes();
-				sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-				sql = sql.replace("@WebUser.getName()", WebUser.getName());
-				sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+				sql = sql.replace("@WebUser.No", WebUser.getNo());
+				sql = sql.replace("@WebUser.Name", WebUser.getName());
+				sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 				if (sql.contains("@"))
 				{
 					Work wk = nd.getHisWork();
@@ -4256,9 +4256,9 @@ public class WF_WorkOpt extends WebContralBase
 						}
 						myurl = myurl.replace("@" + attr.getKey(), hisWK.GetValStrByKey(attr.getKey()));
 					}
-					myurl = myurl.replace("@WebUser.getNo()", WebUser.getNo());
-					myurl = myurl.replace("@WebUser.getName()", WebUser.getName());
-					myurl = myurl.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+					myurl = myurl.replace("@WebUser.No", WebUser.getNo());
+					myurl = myurl.replace("@WebUser.Name", WebUser.getName());
+					myurl = myurl.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 
 					if (myurl.contains("@"))
 					{
@@ -4277,9 +4277,9 @@ public class WF_WorkOpt extends WebContralBase
 
 					return msg;
 				default:
-					msg = msg.replace("@WebUser.getNo()", WebUser.getNo());
-					msg = msg.replace("@WebUser.getName()", WebUser.getName());
-					msg = msg.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+					msg = msg.replace("@WebUser.No", WebUser.getNo());
+					msg = msg.replace("@WebUser.Name", WebUser.getName());
+					msg = msg.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 					return msg;
 			}
 

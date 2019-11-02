@@ -101,19 +101,19 @@ public class AttrOfSearch
 		
 		if (_DefaultVal.contains("@"))
 		{
-			if (_DefaultVal.contains("@WebUser.getNo()"))
+			if (_DefaultVal.contains("@WebUser.No"))
 			{
-				return _DefaultVal.replace("@WebUser.getNo()", WebUser.getNo());
+				return _DefaultVal.replace("@WebUser.No", WebUser.getNo());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.getName()"))
+			if (_DefaultVal.contains("@WebUser.Name"))
 			{
-				return _DefaultVal.replace("@WebUser.getName()", WebUser.getName());
+				return _DefaultVal.replace("@WebUser.Name", WebUser.getName());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.getFK_Dept()"))
+			if (_DefaultVal.contains("@WebUser.FK_Dept"))
 			{
-				return _DefaultVal.replace("@WebUser.getFK_Dept()",
+				return _DefaultVal.replace("@WebUser.FK_Dept",
 						WebUser.getFK_Dept());
 			}
 			
@@ -123,15 +123,15 @@ public class AttrOfSearch
 						WebUser.getDeptParentNo());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.getFK_DeptName"))
+			if (_DefaultVal.contains("@WebUser.FK_DeptName"))
 			{
-				return _DefaultVal.replace("@WebUser.getFK_DeptName",
+				return _DefaultVal.replace("@WebUser.FK_DeptName",
 						WebUser.getFK_DeptName());
 			}
 			
-			if (_DefaultVal.contains("@WebUser.getFK_DeptNameOfFull"))
+			if (_DefaultVal.contains("@WebUser.FK_DeptNameOfFull"))
 			{
-				return _DefaultVal.replace("@WebUser.getFK_DeptNameOfFull",
+				return _DefaultVal.replace("@WebUser.FK_DeptNameOfFull",
 						WebUser.getFK_DeptNameOfFull());
 			}
 			

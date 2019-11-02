@@ -387,10 +387,10 @@ public class MapExt extends EntityMyPK
    */
 	public final String AutoFullDLL_SQL_ForDtl(Hashtable htMainEn, Hashtable htDtlEn) throws Exception
 	{
-		String fullSQL = this.getDoc().replace("@WebUser.getNo()", WebUser.getNo());
-		fullSQL = fullSQL.replace("@WebUser.getName()", WebUser.getName());
-		fullSQL = fullSQL.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
-		fullSQL = fullSQL.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
+		String fullSQL = this.getDoc().replace("@WebUser.No", WebUser.getNo());
+		fullSQL = fullSQL.replace("@WebUser.Name", WebUser.getName());
+		fullSQL = fullSQL.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+		fullSQL = fullSQL.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 
 		if (fullSQL.contains("@"))
 		{
@@ -445,22 +445,22 @@ public class MapExt extends EntityMyPK
 		}
 
 		String sql = this.getTag();
-		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sql = sql.replace("@WebUser.No", WebUser.getNo());
+		sql = sql.replace("@WebUser.Name", WebUser.getName());
+		sql = sql.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		sql = sql.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		return sql;
 	}
 
 	public final String getDocOfSQLDeal() throws Exception
 	{
 		String sql = this.getDoc();
-		sql = sql.replace("@WebUser.getNo()", WebUser.getNo());
-		sql = sql.replace("@WebUser.getName()", WebUser.getName());
-		sql = sql.replace("@WebUser.getFK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		sql = sql.replace("@WebUser.getFK_DeptName", WebUser.getFK_DeptName());
-		sql = sql.replace("@WebUser.getFK_Dept()", WebUser.getFK_Dept());
+		sql = sql.replace("@WebUser.No", WebUser.getNo());
+		sql = sql.replace("@WebUser.Name", WebUser.getName());
+		sql = sql.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		sql = sql.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		return sql;
 	}
 	public final String getTag() throws Exception

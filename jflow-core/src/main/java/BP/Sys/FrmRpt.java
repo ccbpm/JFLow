@@ -796,8 +796,8 @@ public class FrmRpt extends EntityNoName {
 			attr.setUIIsEnable(false);
 			attr.setMaxLen(20);
 			attr.setMinLen(0);
-			attr.setDefVal("@WebUser.getNo()");
-			attr.setTag("@WebUser.getNo()");
+			attr.setDefVal("@WebUser.No");
+			attr.setTag("@WebUser.No");
 			attr.Insert();
 		}
 	}

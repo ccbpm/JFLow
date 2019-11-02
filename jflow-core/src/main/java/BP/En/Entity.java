@@ -3151,27 +3151,27 @@ public abstract class Entity implements Serializable {
 				continue;
 
 			// 设置默认值.
-			if (v.equals("@WebUser.getNo()")) {
+			if (v.equals("@WebUser.No")) {
 
 				this.SetValByKey(key, WebUser.getNo());
 
 				continue;
-			} else if (v.equals("@WebUser.getName()")) {
+			} else if (v.equals("@WebUser.Name")) {
 
 				this.SetValByKey(key, WebUser.getName());
 
 				continue;
-			} else if (v.equals("@WebUser.getFK_Dept()")) {
+			} else if (v.equals("@WebUser.FK_Dept")) {
 
 				this.SetValByKey(key, WebUser.getFK_Dept());
 
 				continue;
-			} else if (v.equals("@WebUser.getFK_DeptName")) {
+			} else if (v.equals("@WebUser.FK_DeptName")) {
 
 				this.SetValByKey(key, WebUser.getFK_DeptName());
 
 				continue;
-			} else if (v.equals("@WebUser.getFK_DeptNameOfFull")) {
+			} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
 
 				this.SetValByKey(key, WebUser.getFK_DeptNameOfFull());
 
@@ -3215,7 +3215,7 @@ public abstract class Entity implements Serializable {
 			}
 
 			// 设置默认值.
-			if (v.equals("@WebUser.getNo()")) {
+			if (v.equals("@WebUser.No")) {
 				if (attr.getUIIsEnable()) {
 					this.SetValByKey(attr.getKeyOfEn(), WebUser.getNo());
 				} else {
@@ -3225,7 +3225,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			}
-			if (v.equals("@WebUser.getName()")) {
+			if (v.equals("@WebUser.Name")) {
 				if (attr.getUIIsEnable()) {
 					this.SetValByKey(attr.getKeyOfEn(), WebUser.getName());
 				} else {
@@ -3235,7 +3235,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_Dept()")) {
+			if (v.equals("@WebUser.FK_Dept")) {
 				if (attr.getUIIsEnable()) {
 					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_Dept());
 				} else {
@@ -3245,7 +3245,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_DeptName")) {
+			if (v.equals("@WebUser.FK_DeptName")) {
 				if (attr.getUIIsEnable()) {
 					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptName());
 				} else {
@@ -3255,7 +3255,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_DeptNameOfFull") || v.equals("@WebUser.getFK_DeptFullName")) {
+			if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName")) {
 				if (attr.getUIIsEnable()) {
 					this.SetValByKey(attr.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
 				} else {
@@ -3383,7 +3383,7 @@ public abstract class Entity implements Serializable {
 			}
 
 			// 设置默认值.
-			if (v.equals("@WebUser.getNo()")) {
+			if (v.equals("@WebUser.No")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getNo());
 				} else {
@@ -3393,7 +3393,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			}
-			if (v.equals("@WebUser.getName()")) {
+			if (v.equals("@WebUser.Name")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getName());
 				} else {
@@ -3403,7 +3403,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_Dept()")) {
+			if (v.equals("@WebUser.FK_Dept")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
 				} else {
@@ -3413,7 +3413,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_DeptName")) {
+			if (v.equals("@WebUser.FK_DeptName")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
 				} else {
@@ -3423,7 +3423,7 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			} 
-			if (v.equals("@WebUser.getFK_DeptNameOfFull") || v.equals("@WebUser.getFK_DeptFullName")) {
+			if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName")) {
 				if (attr.getUIIsReadonly()) {
 					this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 				} else {
@@ -3536,16 +3536,16 @@ public abstract class Entity implements Serializable {
 			if (v.equals("WebUser.getNo()")) {
 				this.SetValByKey(attr.getKey(), WebUser.getNo());
 				continue;
-			} else if (v.equals("@WebUser.getName()")) {
+			} else if (v.equals("@WebUser.Name")) {
 				this.SetValByKey(attr.getKey(), WebUser.getName());
 				continue;
-			} else if (v.equals("@WebUser.getFK_Dept()")) {
+			} else if (v.equals("@WebUser.FK_Dept")) {
 				this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
 				continue;
-			} else if (v.equals("@WebUser.getFK_DeptName")) {
+			} else if (v.equals("@WebUser.FK_DeptName")) {
 				this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
 				continue;
-			} else if (v.equals("@WebUser.getFK_DeptNameOfFull")) {
+			} else if (v.equals("@WebUser.FK_DeptNameOfFull")) {
 				this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 				continue;
 			} else if (v.equals("@RDT")) {

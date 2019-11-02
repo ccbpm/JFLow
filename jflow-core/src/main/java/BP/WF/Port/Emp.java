@@ -272,7 +272,7 @@ public class Emp extends EntityNoName
 		attrs.RetrieveAll();
 		for (BP.Sys.MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.getDefValReal().contains("@WebUser.getNo()") == true)
+			if (attr.getDefValReal().contains("@WebUser.No") == true)
 			{
 				try
 				{

@@ -44,12 +44,12 @@ import BP.WF.WFState;
 import BP.WF.WorkFlow;
 import BP.WF.Data.GERpt;
 
-import BP.WF.Template.CondModel;
+//import BP.WF.Template.CondModel;
 import BP.WF.Template.Directions;
 import BP.WF.Template.FlowExt;
 import BP.WF.Template.FrmWorkCheck;
 import BP.WF.Template.Selector;
-import BP.WF.XML.Tools;
+//import BP.WF.XML.Tools;
 import BP.Web.WebUser;
 import WebService.LocalWSI;
 
@@ -668,8 +668,9 @@ public class LocalWS implements LocalWSI {
     */
 	@Override
 	public String DB_WorkCheck(String FK_Flow, int FK_Node, long workId, long fid,boolean isReadonly) throws Exception {
-		DataSet ds =BP.WF.Dev2Interface.DB_WorkCheck(FK_Flow,FK_Node,workId,fid,isReadonly);
-		return BP.Tools.Json.ToJson(ds);
+		return FK_Flow;
+//		DataSet ds =BP.WF.Dev2Interface.DB_WorkCheck(FK_Flow,FK_Node,workId,fid,isReadonly);
+//		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/**
@@ -715,9 +716,10 @@ public class LocalWS implements LocalWSI {
 	@Override
 	public String DB_MyJoinFlows(String userNo) throws Exception {
 		BP.WF.Dev2Interface.Port_Login(userNo);
+		return userNo;
 		
-		DataSet ds = BP.WF.Dev2Interface.DB_CommSearch("BP.WF.Data.MyJoinFlows");
-		return BP.Tools.Json.ToJson(ds);
+//		DataSet ds = BP.WF.Dev2Interface.DB_CommSearch("BP.WF.Data.MyJoinFlows");
+//		return BP.Tools.Json.ToJson(ds);
 	}
 
 	/***

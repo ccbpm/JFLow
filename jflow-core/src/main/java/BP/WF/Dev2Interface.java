@@ -10483,8 +10483,10 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param mypk 流程主键
 	 @return 返回当时的表单json字符串
+	 * @throws Exception 
+	 * @throws NumberFormatException 
 	*/
-	public static String CCFrom_GetFrmDBJson(String flowNo, String mypk)
+	public static String CCFrom_GetFrmDBJson(String flowNo, String mypk) throws NumberFormatException, Exception
 	{
 		return DBAccess.GetBigTextFromDB("ND" + Integer.parseInt(flowNo) + "Track", "MyPK", mypk, "FrmDB");
 	}

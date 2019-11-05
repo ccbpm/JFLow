@@ -2338,26 +2338,45 @@ public class WorkNode {
 
 		// @加入消息集合里。
 		this.SendMsgToThem(current_gwls);
-
 		if (toND.getIsGuestNode() == true) {
-			String htmlInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-					String.valueOf(this.HisRememberMe.getNumOfObjs()),
+			String htmlInfo = String.format("@发送给如下%1$s位处理人,%2$s.",
+					(new Integer(this.HisRememberMe.getNumOfObjs())).toString(),
 					this.getHisGenerWorkFlow().getGuestNo() + " " + this.getHisGenerWorkFlow().getGuestName());
 
-			String textInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.getHisGenerWorkFlow().getGuestName());
+			String textInfo = String.format("@发送给如下%1$s位处理人,%2$s.",
+					(new Integer(this.HisRememberMe.getNumOfObjs())).toString(),
+					this.getHisGenerWorkFlow().getGuestName());
 
 			this.addMsg(SendReturnMsgFlag.ToEmps, textInfo, htmlInfo);
 		} else {
-			String htmlInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getEmpsExt());
+			String htmlInfo = String.format("@发送给如下%1$s位处理人,%2$s.",
+					(new Integer(this.HisRememberMe.getNumOfObjs())).toString(), this.HisRememberMe.getEmpsExt());
 
-			String textInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getObjsExt());
+			String textInfo = String.format("@发送给如下%1$s位处理人,%2$s.",
+					(new Integer(this.HisRememberMe.getNumOfObjs())).toString(), this.HisRememberMe.getObjsExt());
 
 			this.addMsg(SendReturnMsgFlag.ToEmps, textInfo, htmlInfo);
 
 		}
+//		if (toND.getIsGuestNode() == true) {
+//			String htmlInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
+//					String.valueOf(this.HisRememberMe.getNumOfObjs()),
+//					this.getHisGenerWorkFlow().getGuestNo() + " " + this.getHisGenerWorkFlow().getGuestName());
+//
+//			String textInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
+//					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.getHisGenerWorkFlow().getGuestName());
+//
+//			this.addMsg(SendReturnMsgFlag.ToEmps, textInfo, htmlInfo);
+//		} else {
+//			String htmlInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
+//					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getEmpsExt());
+//
+//			String textInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
+//					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getObjsExt());
+//
+//			this.addMsg(SendReturnMsgFlag.ToEmps, textInfo, htmlInfo);
+//
+//		}
 
 		/// #region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
 		try {
@@ -2441,12 +2460,14 @@ public class WorkNode {
 		this.getHisGenerWorkFlow().setFK_Node(toND.getNodeID());
 		this.getHisGenerWorkFlow().setNodeName(toND.getName());
 
-		String str1 = BP.WF.Glo.multilingual("@下一步工作[{0}]成功启动.", "WorkNode", "start_next_node_work_success",
-				toND.getName());
-		String str2 = BP.WF.Glo.multilingual("@下一步工作<font color=blue>[{0}]</font>成功启动.", "WorkNode",
-				"start_next_node_work_success", toND.getName());
-
-		this.addMsg(SendReturnMsgFlag.WorkStartNode, str1, str2);
+////		String str1 = BP.WF.Glo.multilingual("@下一步工作[{0}]成功启动.", "WorkNode", "start_next_node_work_success",
+////				toND.getName());
+////		String str2 = BP.WF.Glo.multilingual("@下一步工作<font color=blue>[{0}]</font>成功启动.", "WorkNode",
+////				"start_next_node_work_success", toND.getName());
+//
+//		this.addMsg(SendReturnMsgFlag.WorkStartNode, str1, str2);
+		this.addMsg(SendReturnMsgFlag.WorkStartNode, "@下一步[" + toND.getName() + "]工作成功启动.",
+				"@下一步<font color=blue>[" + toND.getName() + "]</font>工作成功启动.");
 
 		/// #region 初始化发起的工作节点。
 		if (this.getHisWork().getEnMap().getPhysicsTable() == toWK.getEnMap().getPhysicsTable()) {
@@ -8808,8 +8829,9 @@ public class WorkNode {
 		}
 
 		/// #region 判断节点完成条件
-		this.addMsg(SendReturnMsgFlag.OverCurr, BP.WF.Glo.multilingual("当前工作[{0}]已经完成", "WorkNode",
-				"current_work_completed_para", this.getHisNode().getName()));
+		this.addMsg(SendReturnMsgFlag.OverCurr, String.format("当前工作[%1$s]已经完成", this.getHisNode().getName()));
+//		this.addMsg(SendReturnMsgFlag.OverCurr, BP.WF.Glo.multilingual("当前工作[{0}]已经完成", "WorkNode",
+//				"current_work_completed_para", this.getHisNode().getName()));
 
 		/// #endregion
 

@@ -471,6 +471,7 @@ public class Track extends BP.En.Entity
 		String sql = "INSERT INTO " + ptable;
 		sql += "(";
 		sql += "" + TrackAttr.MyPK + ",";
+		sql += "" + TrackAttr.ActionType + ",";
 		sql += "" + TrackAttr.ActionTypeText + ",";
 		sql += "" + TrackAttr.FID + ",";
 		sql += "" + TrackAttr.WorkID + ",";

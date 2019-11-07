@@ -2309,16 +2309,10 @@ public class WorkNode {
 			toWK.setEmps(emps);
 
 			try {
-				if (this.IsSkip == true) {
-					int count = toWK.RetrieveFromDBSources();
-					if (count > 0) {
-						toWK.DirectUpdate(); // 如果执行了跳转.
-					} else {
-						toWK.DirectInsert();
-					}
-				} else {
+				if(toWK.RetrieveFromDBSources() ==0)
 					toWK.DirectInsert();
-				}
+				else
+					toWK.DirectUpdate(); 
 			} catch (RuntimeException ex) {
 				Log.DefaultLogWriteLineInfo(BP.WF.Glo.multilingual("@出现SQL异常! 可能是没有修复表或者重复发送.详情:{0}.", "WorkNode",
 						"sql_exception_1", ex.getMessage()));

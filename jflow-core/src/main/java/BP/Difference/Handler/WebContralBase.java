@@ -170,7 +170,7 @@ public abstract class WebContralBase {
 				msg = e.getMessage();
 
 			// 如果有url返回.
-			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0))
+			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0 ||(msg.indexOf("err@")==0)))
 				return msg;
 
 			String str = "";
@@ -188,8 +188,6 @@ public abstract class WebContralBase {
 			Log.DebugWriteError("BP.WF.HttpHangerBase.DoMethod()" + errInfo);
 			return errInfo;
 
-			// err @" +
-			// e.getMessage()+str+"@"+e.getStackTrace()+"\t\n@"+myParas;
 
 		}
 		return (String) ((tempVar instanceof String) ? tempVar : null); // 调用由此

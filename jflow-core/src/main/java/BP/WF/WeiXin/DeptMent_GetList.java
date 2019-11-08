@@ -1,13 +1,5 @@
 package BP.WF.WeiXin;
-
-import BP.WF.*;
 import java.util.*;
-
-
-	///#endregion
-
-
-	///#region 组织结构
 
 /** 
  部门列表

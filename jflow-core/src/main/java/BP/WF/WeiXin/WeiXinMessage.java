@@ -16,7 +16,7 @@ public class WeiXinMessage
 	 @param msgText 消息实体类
 	 @return 发送消息结果
 	*/
-	public static MessageErrorModel PostMsgOfText(WX_Msg_Text msgText)
+	public static MessageErrorModel PostMsgOfText(WX_Msg_Text msgText) throws Exception
 	{
 
 		String url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + msgText.getAccess_Token();
@@ -48,8 +48,8 @@ public class WeiXinMessage
 		append_Json.append("}");
 		append_Json.append(",\"safe\":\"" + msgText.getsafe() + "\"");
 		append_Json.append("}");
-		String str = (new HttpWebResponseUtility()).HttpResponsePost_Json(url, append_Json.toString());
-		MessageErrorModel postVal = FormatToJson.<MessageErrorModel>ParseFromJson(str);
+		String str = BP.Tools.HttpClientUtil.doPostJson(url, append_Json.toString());
+		MessageErrorModel postVal = (MessageErrorModel) BP.Tools.FormatToJson.ParseFromJson(str);
 		return postVal;
 	}
 
@@ -59,7 +59,7 @@ public class WeiXinMessage
 	 @param msgNews 消息实体类
 	 @return 发送消息结果
 	*/
-	public static MessageErrorModel PostMsgOfNews(WX_Msg_News msgNews)
+	public static MessageErrorModel PostMsgOfNews(WX_Msg_News msgNews)throws Exception
 	{
 		String url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + msgNews.getAccess_Token();
 
@@ -105,8 +105,8 @@ public class WeiXinMessage
 
 		append_Json.append("]}");
 		append_Json.append("}");
-		String str = (new HttpWebResponseUtility()).HttpResponsePost_Json(url, append_Json.toString());
-		MessageErrorModel postVal = FormatToJson.<MessageErrorModel>ParseFromJson(str);
+		String str = BP.Tools.HttpClientUtil.doPostJson(url, append_Json.toString());
+		MessageErrorModel postVal = (MessageErrorModel) FormatToJson.ParseFromJson(str);
 		return postVal;
 	}
 	/** 
@@ -117,11 +117,12 @@ public class WeiXinMessage
 	 @param msg 发送内容
 	 @param sender 发送人
 	 @return 
+	 * @throws Exception 
 	*/
-	public static MessageErrorModel SendMsgToUsers(String toUsers, String title, String msg, String sender)
+	public static MessageErrorModel SendMsgToUsers(String toUsers, String title, String msg, String sender) throws Exception
 	{
 		//企业应用必须存在
-		String agentId = BP.Sys.SystemConfig.WX_AgentID != null ? BP.Sys.SystemConfig.WX_AgentID : null;
+		String agentId = BP.Sys.SystemConfig.getWX_AgentID() != null ? BP.Sys.SystemConfig.getWX_AgentID() : null;
 		if (BP.DA.DataType.IsNullOrEmpty(agentId) == true)
 		{
 			return null;
@@ -133,17 +134,16 @@ public class WeiXinMessage
 		newArticle.settitle(title);
 		newArticle.setdescription(msg);
 
-		String New_Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + BP.Sys.SystemConfig.WX_CorpID + "&redirect_uri=" + BP.Sys.SystemConfig.WX_MessageUrl + "/CCMobile/action.aspx&response_type=code&scope=snsapi_base&state=Todolist#wechat_redirect";
+		String New_Url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + BP.Sys.SystemConfig.getWX_CorpID() + "&redirect_uri=" + BP.Sys.SystemConfig.getWX_MessageUrl() + "/CCMobile/action.aspx&response_type=code&scope=snsapi_base&state=Todolist#wechat_redirect";
 		newArticle.seturl(New_Url);
 
-		//http://discuz.comli.com/weixin/weather/icon/cartoon.jpg
-		newArticle.setpicurl(BP.Sys.SystemConfig.WX_MessageUrl + "/DataUser/ICON/" + BP.Sys.SystemConfig.SysNo + "/LogBig.png");
+		newArticle.setpicurl(BP.Sys.SystemConfig.getWX_MessageUrl() + "/DataUser/ICON/" + BP.Sys.SystemConfig.getSysNo() + "/LogBig.png");
 
 		toUsers = toUsers.replace(',','|');
 
 		WX_Msg_News wxMsg = new WX_Msg_News();
 		wxMsg.setAccess_Token(accessToken);
-		wxMsg.setagentid(BP.Sys.SystemConfig.WX_AgentID);
+		wxMsg.setagentid(BP.Sys.SystemConfig.getWX_AgentID());
 		wxMsg.settouser(toUsers);
 		wxMsg.getarticles().add(newArticle);
 		//执行发送

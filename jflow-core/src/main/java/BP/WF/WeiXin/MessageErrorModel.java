@@ -1,8 +1,5 @@
 package BP.WF.WeiXin;
 
-import BP.WF.*;
-import java.util.*;
-
 public class MessageErrorModel
 {
 	private String errcode;

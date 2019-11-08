@@ -32,7 +32,6 @@ public class DataSet {
 
 	public Hashtable<String, DataTable> hashTables;
 
-//	private XmlWriteMode xmlWriteMode = XmlWriteMode.IgnoreSchema;
 
 	public DataSet() {
 		if (Tables == null) {
@@ -185,7 +184,6 @@ public class DataSet {
 			return;
 		}
 
-//		XMLWriter writer = null;// 声明写XML的对象
 		SAXReader reader = new SAXReader();
 
 		File file = new File(xmlPath);
@@ -208,8 +206,6 @@ public class DataSet {
 						}
 						dt.Columns.Add(dc);
 						dt.Rows.add(dr);
-						// this.Tables.add(dt);
-						// this.hashTables.put(e.getName(), dt);
 						type = true;
 						break;
 					}

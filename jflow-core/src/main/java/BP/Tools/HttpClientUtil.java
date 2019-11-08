@@ -1,7 +1,12 @@
 package BP.Tools;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +136,75 @@ public class HttpClientUtil {
 		}
 		return resultString;
 	}
+	
+	public static void HttpDownloadFile(String urlPath,String toPath) {
+		 
+		InputStream inputStream = getInputStream(urlPath);
+		byte[] data = new byte[1024];
+		int len = 0;
+		FileOutputStream fileOutputStream = null;
+		try {
+			fileOutputStream = new FileOutputStream(toPath);
+			while ((len = inputStream.read(data)) != -1) {
+				fileOutputStream.write(data, 0, len);
+ 
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+ 
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (fileOutputStream != null) {
+				try {
+					fileOutputStream.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+ 
+		}
+ 
+	}
 
+
+	// 从服务器获得一个输入流(本例是指从服务器获得一个image输入流)
+		public static InputStream getInputStream(String urlPath) {
+			InputStream inputStream = null;
+			HttpURLConnection httpURLConnection = null;
+	 
+			try {
+				URL url = new URL(urlPath);
+				httpURLConnection = (HttpURLConnection) url.openConnection();
+				// 设置网络连接超时时间
+				httpURLConnection.setConnectTimeout(3000);
+				// 设置应用程序要从网络连接读取数据
+				httpURLConnection.setDoInput(true);
+	 
+				httpURLConnection.setRequestMethod("GET");
+				int responseCode = httpURLConnection.getResponseCode();
+				if (responseCode == 200) {
+					// 从服务器返回一个输入流
+					inputStream = httpURLConnection.getInputStream();
+	 
+				}
+	 
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	 
+			return inputStream;
+	 
+		}
 
 }

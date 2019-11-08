@@ -1,5 +1,6 @@
 package BP.Tools;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -9,6 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import BP.DA.DBAccess;
@@ -33,7 +38,6 @@ public class FormatToJson {
 	 * @return DataSet
 	 */
 	public static DataSet JsonToDataSet(String json) {
-		//		System.out.println("保存" + json);
 
 		DataSet ds = new DataSet();
 		JSONObject jsonObject = JSONObject.fromObject(json);
@@ -69,17 +73,6 @@ public class FormatToJson {
 				}
 				ds.Tables.add(dt);
 				ds.hashTables.put(key, dt);
-				//			} else if (value instanceof JSONObject)
-				//			{
-				//				HashMap<String, Object> jsonObj = (HashMap<String, Object>) FormatToJson
-				//						.toHashMap((JSONObject) value);
-				//				for (Map.Entry<String, Object> entry : jsonObj.entrySet())
-				//				{
-				//					System.out.println(entry.getKey() + ": " + entry.getValue());
-				//				}
-				//			} else
-				//			{
-				//				System.out.println(value);
 			}
 		}
 		return ds;
@@ -135,29 +128,6 @@ public class FormatToJson {
 		Json.append("{\"" + jsonName + "\":");
 		JSONArray jsonArray = JSONArray.fromObject(list);
 		Json.append(jsonArray.toString());
-		// if (list.size() > 0) {
-		// for (int i = 0; i < list.size(); i++) {
-		// T obj = Activator.<T> CreateInstance();
-		// PropertyInfo[] pi = obj.getClass().GetProperties();
-		// Json.append("{");
-		// for (int j = 0; j < pi.length; j++) {
-		// java.lang.Class type = pi[j].GetValue(list.get(i), null)
-		// .getClass();
-		// Json.append("\""
-		// + pi[j].getName().toString()
-		// + "\":"
-		// + StringFormat(pi[j].GetValue(list.get(i), null)
-		// .toString(), type));
-		// if (j < pi.length - 1) {
-		// Json.append(",");
-		// }
-		// }
-		// Json.append("}");
-		// if (i < list.size() - 1) {
-		// Json.append(",");
-		// }
-		// }
-		// }
 		Json.append("}");
 		return Json.toString();
 	}
@@ -514,7 +484,6 @@ public class FormatToJson {
 			throw new RuntimeException("发现未知的数据库连接类型！");
 		}
 
-		//		System.out.println(jsonString);
 
 		return jsonString.toString();
 	}
@@ -656,6 +625,16 @@ public class FormatToJson {
 		}
 		return list;
 	}
+	
+	public static Object ParseFromJson(String szJson) throws Exception
+	{
+		com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+
+		Object entiy = mapper.readValue(szJson, Object.class);
+
+		return entiy;
+	}
+
 
 	/**
 	 *测试方法 

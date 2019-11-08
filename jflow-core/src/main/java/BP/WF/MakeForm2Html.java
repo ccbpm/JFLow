@@ -257,18 +257,18 @@ public class MakeForm2Html
                         sealType = img.getTag0().split("^")[2];
                         sealField = img.getTag0().split("^")[3];
                         //如果部门没有设定，就获取部门来源
-                        if (fk_dept.equals("all"))
+                        if (fk_dept == "all")
                         {
                             //默认当前登陆人
                             fk_dept = WebUser.getFK_Dept();
                             //发起人
-                            if (sealType.equals("1"))
+                            if (sealType == "1")
                             {
                                 sql = "SELECT FK_Dept FROM WF_GenerWorkFlow WHERE WorkID=" + en.GetValStrByKey("OID");
                                 fk_dept = BP.DA.DBAccess.RunSQLReturnString(sql);
                             }
                             //表单字段
-                            if (sealType.equals("2") && !DataType.IsNullOrEmpty(sealField))
+                            if (sealType == "2" && !DataType.IsNullOrEmpty(sealField))
                             {
                                 //判断字段是否存在
                                 for (MapAttr attr: mapAttrs.ToJavaList())
@@ -530,7 +530,7 @@ public class MakeForm2Html
             sb.append("<tr>");
             for (MapAttr item :attrsOfDtls.ToJavaList())
             {
-                if (item.getKeyOfEn().equals("OID"))
+                if (item.getKeyOfEn() == "OID")
                     continue;
                 if (item.getUIVisible() == false)
                     continue;
@@ -783,6 +783,7 @@ public class MakeForm2Html
     private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en
     		, String path, String flowNo,String FK_Node,String basePath) throws Exception
     {
+        float width = mapData.getFrmW();
         StringBuilder sb =new StringBuilder();
 
         //字段集合.
@@ -791,7 +792,7 @@ public class MakeForm2Html
 
         //生成表头.
         String frmName = mapData.getName();
-        if (SystemConfig.getCustomerNo().equals("TianYe"))
+        if (SystemConfig.getCustomerNo() == "TianYe")
             frmName = "";
         
         int tableCol = mapData.getTableCol();
@@ -803,14 +804,14 @@ public class MakeForm2Html
         	tableCol = 3;
         else
         	tableCol = 4;
-        sb.append(" <table style='width:1200px;height:auto;' >");
+        sb.append(" <table style='width:"+width+"px;height:auto;' >");
 
         //#region 生成头部信息.
         sb.append("<tr>");
 
         sb.append("<td colspan="+tableCol+" >");
 
-        sb.append("<table border=0 style='width:1200px;'>");
+        sb.append("<table border=0 style='width:"+width+"px;'>");
 
         sb.append("<tr  style='border:0px;' >");
         
@@ -879,13 +880,13 @@ public class MakeForm2Html
 
                 //记录一行已占用的列输
                 int UseColSpan = 0;
-
+                int ewith = (int)width/100;
                 //跨列的字段
                 int colSpan = 1;
                 int rowSpan = 1;
                 int textColSpan = 2;
-                String textWidth = "15%";
-                String colWidth = "35%";
+                String textWidth = "width:"+ewith*15+"px";
+                String colWidth = "width:"+ewith*35+"px";
                 String lab="";
                 
                 String html = "";
@@ -937,7 +938,7 @@ public class MakeForm2Html
                                 imgSrc = DealEnExp(en, url);
                             }
                             // 由于火狐 不支持onerror 所以 判断图片是否存在放到服务器端
-                            if (imgSrc == null || imgSrc.equals(""))
+                            if (imgSrc == "" || imgSrc == null)
                                 imgSrc = "../DataUser/ICON/CCFlow/LogBig.png";
 
                             //＠basePath
@@ -1023,20 +1024,20 @@ public class MakeForm2Html
                     textColSpan = attr.getTextColSpan();
                     if (tableCol == 4) {
                     	if(colSpan ==1)
-                    		colWidth = 40 +"%";
+                    		colWidth = "width:"+ewith*35 +"px";
                     	if(colSpan ==2)
-                    		colWidth = 50 + "%";
+                    		colWidth = "width:"+ewith*85 + "px";
                     	if(colSpan ==3)
-                    		colWidth =90 + "%";
+                    		colWidth ="width:"+ewith*50  + "px";
                     	if(textColSpan == 1)
-                    		textWidth = 10 + "%";
+                    		textWidth = "width:"+ewith*15 + "px";
                     	if(textColSpan == 2)
-                    		textWidth = 50 + "%";
+                    		textWidth = "width:"+ewith*50 + "px";
                     	if(textColSpan == 3)
-                    		textWidth = 65 + "%";
+                    		textWidth = "width:"+ewith*65 + "px";
                     } else {
-                        colWidth = 23 * colSpan + "%";
-                        textWidth = 10 * textColSpan + "%";
+                        colWidth = "width:"+23 * colSpan*ewith + "px";
+                        textWidth = "width:"+10 * textColSpan*ewith + "px";
                     }
                     
                     
@@ -1061,7 +1062,7 @@ public class MakeForm2Html
                             	UseColSpan += colSpan + textColSpan+ruColSpan;
                                 lRowSpan = rowSpan;
                                 luColSpan += colSpan + textColSpan;
-                                html += "<td class='FDesc'  rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                                html += "<td class='FDesc'  rowSpan=" + rowSpan + " colSpan=" + textColSpan + "  style="+textWidth+">" + lab + "</td>";
                                 if (rowSpan != 1) {
                                     IsShowLeft = false;
                                 }
@@ -1102,7 +1103,7 @@ public class MakeForm2Html
                                 UseColSpan += colSpan + textColSpan;
                                 rRowSpan = rowSpan;
                                 ruColSpan += colSpan + textColSpan;
-                                html += "<td class='FDesc'  rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                                html += "<td class='FDesc'  rowSpan=" + rowSpan + " colSpan=" + textColSpan + " style="+textWidth+">" + lab + "</td>";
                                 if (UseColSpan == tableCol) {
                                     isDropTR = true;
                                     if (rowSpan != 1) {
@@ -1159,8 +1160,8 @@ public class MakeForm2Html
 
                         isDropTR = true;
                         html += "<tr >";
-                        html += " <td  class='FDesc' ColSpan="+textColSpan+" >" + lab + "</td>";
-                        html += " <td class='FContext' ColSpan="+colSpan+"  >";
+                        html += " <td  class='FDesc' ColSpan="+textColSpan+" style='"+textWidth+"'>" + lab + "</td>";
+                        html += " <td class='FContext' ColSpan="+colSpan+"  style='"+colWidth+"'>";
                         html += text;
                         html += " </td>";
                         html += "</tr>";
@@ -1179,9 +1180,9 @@ public class MakeForm2Html
                             luColSpan += colSpan + textColSpan;
                             if (attr.getMyDataType() == 4) {
                                 colSpan = colSpan + textColSpan;
-                                colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
+                                colWidth = "width:"+(colSpan * 23*ewith + 10 *textColSpan*ewith) + "px";
                             } else {
-                            	 html += " <td  class='FDesc' colSpan="+colSpan+"   rowSpan=" + rowSpan + " >" + lab + "</td>";
+                            	 html += " <td  class='FDesc' colSpan="+textColSpan+"   rowSpan=" + rowSpan + " style='"+textWidth+"'>" + lab + "</td>";
                             }
                             html += " <td class='FContext' colSpan="+colSpan+"  rowSpan=" + rowSpan + " >";
                             html += text;
@@ -1228,11 +1229,11 @@ public class MakeForm2Html
                             ruColSpan += colSpan + textColSpan;
                             if (attr.getMyDataType() == 4) {
                                 colSpan = colSpan + textColSpan;
-                                colWidth = (colSpan * 23 + 10 *textColSpan) + "%";
+                                colWidth = "width:"+(colSpan * 23*ewith + 10 *textColSpan*ewith) + "px";
                             } else {
-                            	 html += " <td  class='FDesc' colSpan="+colSpan+"  rowSpan=" + rowSpan + " >" + lab + "</td>";
+                            	 html += " <td  class='FDesc' colSpan="+textColSpan+"  rowSpan=" + rowSpan + " style='"+textWidth+"'>" + lab + "</td>";
                             }
-                            html += " <td class='FContext' ColSpan="+colSpan+"  rowSpan=" + rowSpan + " >";
+                            html += " <td class='FContext' ColSpan="+colSpan+"  rowSpan=" + rowSpan + " style='"+colWidth+"'>";
                             html += text;
                             html += " </td>";
                             if (UseColSpan == tableCol) {
@@ -1298,7 +1299,7 @@ public class MakeForm2Html
                 sb.append("<tr>");
                 for (MapAttr item :attrsOfDtls.ToJavaList())
                 {
-                    if (item.getKeyOfEn().equals("OID"))
+                    if (item.getKeyOfEn() == "OID")
                         continue;
                     if (item.getUIVisible() == false)
                         continue;
@@ -1579,13 +1580,13 @@ public class MakeForm2Html
                             }
                         }
 
-                        if (singType.equals("0") || singType.equals("2"))
+                        if (singType == "0" || singType == "2")
                         {
                             empStrs = dr.getValue("EmpFromT").toString();
                         }
 
 
-                        if (singType.equals("1"))
+                        if (singType == "1")
                         {
                             empStrs = "<img src='../../../../../DataUser/Siganture/" + dr.getValue("EmpFrom").toString() + ".jpg' title='" + dr.getValue("EmpFromT").toString() + "' style='height:60px;' border=0 onerror=\"src='../../../../../DataUser/Siganture/UnName.JPG'\" /> " + dr.getValue("EmpFromT").toString();
                         }
@@ -2290,104 +2291,5 @@ public class MakeForm2Html
         	return "<img src='"+path+"' style='border:0px;width:100px;height:30px;'/>";
         }
    
-    }
-    public static String MakeBillToPDF(String frmId, long workid, String basePath, boolean urlIsHostUrl) throws Exception
-    {
-
-    	String resultMsg = "";
-
-        //  获取单据的属性信息
-        BP.Frm.FrmBill bill = new BP.Frm.FrmBill(frmId);
-        String fileNameFormat = null;
-
-        //存放信息地址
-        String hostURL = SystemConfig.GetValByKey("HostURL", "");
-        String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + bill.getNo() + "\\" + workid;
-
-        //处理正确的文件名.
-        if (fileNameFormat == null)
-            fileNameFormat = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM Frm_GenerBill WHERE WorkID=" + workid, "" + workid);
-
-
-        if (DataType.IsNullOrEmpty(fileNameFormat) == true)
-            fileNameFormat = String.valueOf(workid);
-
-        fileNameFormat = BP.DA.DataType.PraseStringToFileName(fileNameFormat);
-
-        Hashtable ht = new Hashtable();
-
-        //生成pdf文件
-        String pdfPath = path + "\\pdf";
-
-
-        DataRow dr = null;
-        resultMsg = setPDFPath(frmId, workid, null, null);
-        if (resultMsg.indexOf("err@") != -1)
-            return resultMsg;
-
-
-
-        //获取表单的信息执行打印
-        String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData\\" + bill.getNo() + "\\" + workid + "\\" + "index.htm";
-        resultMsg = MakeHtmlDocument(bill.getNo(), workid, null, fileNameFormat, urlIsHostUrl, path, billUrl, frmId, basePath);
-
-        if (resultMsg.indexOf("err@") != -1)
-            return resultMsg;
-
-        ht.put("htm", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + frmId + "/" + workid + "/" + "index.htm");
-
-        //#region 把所有的文件做成一个zip文件.
-        if (new File(pdfPath).exists() == false)
-       	 new File(pdfPath).mkdirs();
-        
-        fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
-        String pdfFormFile = pdfPath + "\\" + bill.getName() + ".pdf";
-        String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
-        try
-        {
-            Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-            if (urlIsHostUrl == false)
-                ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
-            else
-                ht.put("pdf", SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
-
-
-        }
-        catch (Exception ex)
-        {
-            /*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
-            fileNameFormat = DBAccess.GenerGUID();
-            pdfFormFile = pdfPath + "\\" + fileNameFormat + ".pdf";
-
-            Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-            ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "") + "/InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
-        }
-      
-
-        //生成压缩文件
-        String zipFile = path + "\\..\\" + fileNameFormat + ".zip";
-
-        File finfo = new File(zipFile);
-        ZipFilePath = finfo.getName(); //文件路径.
-        File zipFileFile = new File(zipFile);
-        try
-        {
-        	while (zipFileFile.exists() == true) {
-				zipFileFile.delete();
-			}
-			// 执行压缩.
-			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
-			fz.zip();
-
-            ht.put("zip", SystemConfig.getHostURLOfBS() + "/DataUser/InstancePacketOfData/" + frmId + "/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
-        }
-        catch (Exception ex)
-        {
-            ht.put("zip", "err@生成zip文件遇到权限问题:" + ex.getMessage() + " @Path:" + pdfPath);
-        }
-
-        return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
-
-
     }
 }

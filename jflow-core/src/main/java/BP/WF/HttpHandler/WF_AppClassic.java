@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.ContextHolderUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
@@ -8,9 +9,26 @@ import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
+import BP.WF.WeiXin.MessageErrorModel;
+import BP.WF.WeiXin.WeiXin;
+import BP.WF.WeiXin.Util.Crypto.AesException;
+import BP.WF.WeiXin.Util.Crypto.WXBizMsgCrypt;
+import BP.WF.WeiXin.Util.Crypto.WeiXinUtil;
 import BP.WF.Data.*;
 import BP.WF.*;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 /** 
  页面功能实体
@@ -260,7 +278,125 @@ public class WF_AppClassic extends WebContralBase
 
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
+	
+	/**
+	 * 微信回调/验证
+	 * @throws Exception
+	 */
+	public void WeiXin_Init() throws Exception{
+		//微信回调
+		//1.获取签名（signature）、时间戳(timestamp)、随机字符串(nonce) 和验证回调的URL
+		String signature = this.GetRequestVal("msg_signature");//url中的签名
+	
+		String timestamp = this.GetRequestVal("timestamp");//url中的时间戳
+	
+		String nonce = this.GetRequestVal("nonce");//url中的随机字符串
+		
+		String echostr = this.GetRequestVal("echostr");// 创建套件时验证回调url有效性时传入
+		WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(SystemConfig.getWX_WeiXinToken(), SystemConfig.getWX_EncodingAESKey(), SystemConfig.getWX_CorpID());
+        
+		String sEchoStr  = wxcpt.VerifyURL(signature, timestamp, nonce, echostr);
+        //必须要返回解密之后的明文
+        getResponse().getWriter().write(sEchoStr);
+        
+        //根据 InfoType得到不同类型的回调数据
+		 String postData = getStringInputstream(getRequest());
+		 String returnMsg = wxcpt.DecryptMsg(signature, timestamp, nonce, postData);
+		 DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	     DocumentBuilder db = dbf.newDocumentBuilder();
+	     StringReader sr = new StringReader(returnMsg);
+	     InputSource is = new InputSource(sr);
+	     Document document = db.parse(is);
+	
+	     Element root = document.getDocumentElement();
+	     String msgType = root.getElementsByTagName("MsgType").item(0).toString();//信息类型
+	     String userID = root.getElementsByTagName("FromUserName").item(0).toString();//员工的ID
+	     String CorpID = root.getElementsByTagName("ToUserName").item(0).toString();//企业的 CorpID
+         
+         String eventStr = "";
+         String sb="";
+         if (msgType.equals("event") || msgType == "event")
+         {
+             eventStr = root.getElementsByTagName("Event").item(0).toString();
+             if (eventStr.equals("subscribe"))
+             {
+                 //关注我
+                 sb = WeiXinUtil.ResponseMsg(userID, null, null, "text", " 关注了");
+             }
+             if (eventStr.equals("unsubscribe"))
+             {
+                 //取消关注了我们
+             }
+             
 
-		///#endregion 登录界面.
+             if (eventStr.equals("enter_agent"))
+             {
+                 sb = WeiXinUtil.ResponseMsg(userID, null, null, "text", "欢迎您：" + userID + "<a href=\"www.baidu.com\">点击跳转</a>");
+             }
+
+         }
+         if(DataType.IsNullOrEmpty(sb)==true){
+        	//发送消息或者登陆信息
+             MessageErrorModel msgModel = new WeiXin().PostWeiXinMsg(sb);
+             if (msgModel.geterrcode().equals("0") || msgModel.geterrcode().equals("ok"))
+            	 getResponse().getWriter().write("数据请求成功");
+             else	 
+            	 getResponse().getWriter().write("err@"+msgModel.geterrmsg());
+         }
+         
+	}
+   
+	
+	public String WeiXin_Login() throws Exception{
+		//获取code
+		String code = this.GetRequestVal("code");
+		if(DataType.IsNullOrEmpty(code) == true)
+			return "err@临时登录凭证code为空";
+		//获取token
+		String access_token = new WeiXin().GenerAccessToken();
+		
+		if(DataType.IsNullOrEmpty(WebUser.getNo()) == true){
+			//根据token获取用户信息(用户名/手机号)
+			String userId = new WeiXin().getUserInfo(code, access_token).getUserId();
+			if(DataType.IsNullOrEmpty(userId)==true)
+				return "err@用户没有权限或者数据请求失败，请联系管理员";
+			Emp emp = new Emp();
+			emp.setNo(userId);
+			if(emp.RetrieveFromDBSources() == 0){ 
+				Emps emps = new Emps();
+				int num = emps.Retrieve(EmpAttr.No, userId);
+				if(num ==0)
+					return "err@在系统中没有找到账号为"+userId+"的信息，请联系管理员";
+				
+				BP.WF.Dev2Interface.Port_Login(emps.getItem(0).getNo());
+				int expiry = 60 * 60 * 24 * 2;
+				ContextHolderUtils.addCookie("Token", expiry, access_token);
+				WebUser.setToken(access_token);
+				return "登陆成功";
+			}
+			BP.WF.Dev2Interface.Port_Login(userId);
+			int expiry = 60 * 60 * 24 * 2;
+			ContextHolderUtils.addCookie("Token", expiry, access_token);
+			WebUser.setToken(access_token);
+		}
+		
+		return "登陆成功";
+		
+	}
+	
+    private  String getStringInputstream(HttpServletRequest request) {
+        StringBuffer strb = new StringBuffer();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+            String str = null;
+            while (null != (str = reader.readLine())) {
+                strb.append(str);
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return strb.toString();
+    }
 
 }

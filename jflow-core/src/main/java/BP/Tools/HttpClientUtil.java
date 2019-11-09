@@ -8,23 +8,61 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import java.util.List;
 import java.util.Map;
-
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.AuthSchemes;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import BP.DA.DataType;
+
 public class HttpClientUtil {
-	public static String doGet(String url, Map<String, String> param) {
+	private static HttpClientContext context = HttpClientContext.create();  
+	 private static RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(120000).setSocketTimeout(60000)  
+	            .setConnectionRequestTimeout(60000).setCookieSpec(CookieSpecs.STANDARD).  
+	                    setExpectContinueEnabled(true).  
+	                    setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST)).  
+	                    setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();  
+	 
+    public static String doGet(String url, String data,String header,String context1) {  
+        CookieStore cookieStore = new BasicCookieStore();  
+        CloseableHttpClient httpClient = HttpClientBuilder.create().  
+                setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy()).  
+                setRedirectStrategy(new DefaultRedirectStrategy()).  
+                setDefaultCookieStore(cookieStore).  
+                setDefaultRequestConfig(requestConfig).build();  
+        String resultString = "";
+        HttpGet httpGet = new HttpGet(url);  
+        if(DataType.IsNullOrEmpty(context1)== false)
+        	httpGet.setHeader(header,context1); 
+        CloseableHttpResponse response = null;  
+        try {  
+            response = httpClient.execute(httpGet, context);  
+            resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+        }catch (Exception e){}  
+        return resultString;  
+    } 
+	public static String doGet1(String url, Map<String, String> param) {
 		// 创建Httpclient对象
 		CloseableHttpClient httpclient = HttpConnectionManager.getHttpClient();
 		String resultString = "";
@@ -48,6 +86,22 @@ public class HttpClientUtil {
 			if (response.getStatusLine().getStatusCode() == 200) {
 				resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
 			}
+			if(response.getStatusLine().getStatusCode()==302){  
+				Header header = response.getFirstHeader("location"); // 跳转的目标地址是在 HTTP-HEAD 中的
+
+	 
+				httpGet = new HttpGet(header.getValue());
+				httpGet.setHeader("Content-Type", "application/json;charset=UTF-8");
+	            
+	 
+	            response = httpclient.execute(httpGet);
+	            int  code = response.getStatusLine().getStatusCode();
+	            System.out.println("login" + EntityUtils.toString(response.getEntity(), "utf-8"));
+
+
+			}  
+		
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -64,17 +118,22 @@ public class HttpClientUtil {
 	}
 
 	public static String doGet(String url) {
-		return doGet(url, null);
+		String resultString  = doGet(url, null,null,null);
+		  System.out.println(resultString);  
+		  return resultString;
 	}
 
-	public static String doPost(String url, Map<String, String> param) {
+	public static String doPost(String url, Map<String, String> param,String header,String context) {
 		// 创建Httpclient对象
-		CloseableHttpClient httpClient = HttpConnectionManager.getHttpClient();
+		CloseableHttpClient httpClient = HttpConnectionManager.getHttpClient();	
 		CloseableHttpResponse response = null;
 		String resultString = "";
 		try {
 			// 创建Http Post请求
 			HttpPost httpPost = new HttpPost(url);
+			
+			if(DataType.IsNullOrEmpty(context)== false)
+				httpPost.setHeader(header,context); 
 			// 创建参数列表
 			if (param != null) {
 				List<NameValuePair> paramList = new ArrayList<>();
@@ -83,10 +142,64 @@ public class HttpClientUtil {
 				}
 				// 模拟表单
 				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramList, "utf-8");
+
 				httpPost.setEntity(entity);
 			}
 			// 执行http请求
 			response = httpClient.execute(httpPost);
+			if(response.getStatusLine().getStatusCode()==302){  
+				return "";
+			}  
+		
+			resultString = EntityUtils.toString(response.getEntity(), "utf-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				response.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return resultString;
+	}
+
+	/**
+	 * http连接
+	 * @param url
+	 * @param param body 参数
+	 * @param headerParam 头部参数
+	 * @return
+	 */
+	public static String doPost(String url, String Json,Map<String,String>headerParam) {
+		// 创建Httpclient对象
+		CloseableHttpClient httpClient = HttpConnectionManager.getHttpClient();
+		CloseableHttpResponse response = null;
+		String resultString = "";
+		try {
+			// 创建Http Post请求
+			HttpPost httpPost = new HttpPost(url);
+
+			//创建Header参数列表
+			if(headerParam!=null) {
+				for (String key : headerParam.keySet()) {
+					httpPost.setHeader(key,headerParam.get(key));
+
+				}
+			}
+			// 创建body参数列表
+			if (Json != null) {
+				StringEntity s = new StringEntity(Json,"utf-8");
+				s.setContentEncoding("utf-8");
+				s.setContentType("application/json"); //发送json数据需要设置contentType  
+				httpPost.setEntity(s);
+			}
+			// 执行http请求
+			response = httpClient.execute(httpPost);
+			if(response.getStatusLine().getStatusCode()==302){
+				return "";
+			}
+
 			resultString = EntityUtils.toString(response.getEntity(), "utf-8");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -101,7 +214,7 @@ public class HttpClientUtil {
 	}
 
 	public static String doPost(String url) {
-		return doPost(url, null);
+		return doPost(url, null,null,null);
 	}
 
 	/**
@@ -136,7 +249,7 @@ public class HttpClientUtil {
 		}
 		return resultString;
 	}
-	
+
 	public static void HttpDownloadFile(String urlPath,String toPath) {
 		 
 		InputStream inputStream = getInputStream(urlPath);
@@ -206,5 +319,6 @@ public class HttpClientUtil {
 			return inputStream;
 	 
 		}
+
 
 }

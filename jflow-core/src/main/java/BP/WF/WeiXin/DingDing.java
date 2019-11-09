@@ -1,15 +1,18 @@
 package BP.WF.WeiXin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import BP.DA.DataType;
 import BP.Sys.SystemConfig;
 import BP.Tools.*;
 import net.sf.json.JSONObject;
 
-public class WeiXin
+public class DingDing
 {
 	public final String GenerAccessToken() throws Exception
 	{
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + BP.Sys.SystemConfig.getWX_CorpID() + "&corpsecret=" + BP.Sys.SystemConfig.getWX_AppSecret() + "";
+		String url = "https://oapi.dingtalk.com/gettoken?appkey="+SystemConfig.getDing_AppKey()+"&appsecret="+ BP.Sys.SystemConfig.getDing_AppSecret() + "";
 		String json = BP.Tools.HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
@@ -26,27 +29,22 @@ public class WeiXin
 	//获取用户ID
     public String getUserInfo(String code, String accessToken) throws Exception
     {
-    	String url = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=" + accessToken + "&code=" + code + "&agentid=2";
+    	String url = "https://oapi.dingtalk.com/user/getuserinfo?access_token=" + accessToken + "&code=" + code;
         String json = BP.Tools.HttpClientUtil.doGet(url);
         
         if(DataType.IsNullOrEmpty(json)==false){
-			JSONObject jd = JSONObject.fromObject(json);
-			if(jd.get("errcode").toString().equals("0")){
-				Object UserId  = jd.get("UserId");
-				return UserId.toString();
-			}
-			
+			return json;
 		}
         return "err@获取UserID失败";
     }
 
 
 	///#region 发送微信信息
-	public final boolean PostWeiXinMsg(String sb) throws Exception
+	public final boolean PostDingDingMsg(String sb,String toSendUser) throws Exception
 	{
 		String wxStr = "";
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?";
-		wxStr = PostForWeiXin(sb, url);
+		String url = "https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?";
+		wxStr = PostForDingDing(sb,toSendUser, url);
 		if(DataType.IsNullOrEmpty(wxStr)==false){
 			JSONObject jd = JSONObject.fromObject(wxStr);
 			if(jd.get("errcode").toString().equals("0"))
@@ -63,11 +61,15 @@ public class WeiXin
 	 @return 返回字符
 	 * @throws Exception 
 	*/
-	public final String PostForWeiXin(String parameters, String URL) throws Exception
+	public final String PostForDingDing(String msg, String toSendUser,String URL) throws Exception
 	{
 		String access_token = GenerAccessToken();
 		URL = URL + "access_token=" + access_token;
-        String str = HttpClientUtil.doPostJson(URL, parameters);
+		JSONObject param=new JSONObject();
+		param.put("agent_id",SystemConfig.getDing_AgentID());
+		param.put("userid_list",toSendUser);
+		param.put("msg",msg);
+        String str = HttpClientUtil.doPostJson(URL, param.toString());
 		return str;
 	}
 
@@ -224,29 +226,24 @@ public class WeiXin
         switch (msgtype)
         {
             case "text":
-                msgTypeStr = " \"text\": { \"content\":\"" + msg + "\"  },";
+                msgTypeStr = " \"text\": { \"content\":\"" + msg + "\"  }";
                 break;
             case "image":
-                msgTypeStr = " \"image\": { \"media_id\":\"" + msg + "\"  },";
+                msgTypeStr = " \"image\": { \"media_id\":\"" + msg + "\"  }";
                 break;
             case "voice":
-                msgTypeStr = " \"voice\": { \"media_id\":\"" + msg + "\"  },";
+                msgTypeStr = " \"voice\": { \"media_id\":\"" + msg + "\"  }";
                 break;
             case "video":
-                msgTypeStr = " \"video\": { \"media_id\":\"" + msg + "\",\"\":'标题',\"description\":'描述'  },";
+                msgTypeStr = " \"video\": { \"media_id\":\"" + msg + "\",\"\":'标题',\"description\":'描述'  }";
                 break;
             default:
-                msgTypeStr = " \"text\": { \"content\":'数据类型错误！'  },";
+                msgTypeStr = " \"text\": { \"content\":'数据类型错误！'  }";
                 break;
         }
         sbStr.append("{");
-        sbStr.append("\"touser\":\"" + touser + "\",");
-        sbStr.append("\"toparty\":\"" + toparty + "\",");
-        sbStr.append("\"totag\":\"" + totag + "\",");
         sbStr.append("\"msgtype\":\"" + msgtype + "\",");
-        sbStr.append("\"agentid\":\"" + SystemConfig.getWX_AgentID() + "\",");
         sbStr.append(msgTypeStr);
-        sbStr.append("\"safe\":\"0\"");
         sbStr.append("}");
         return sbStr.toString();
     }

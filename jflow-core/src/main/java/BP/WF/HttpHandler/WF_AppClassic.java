@@ -5,17 +5,18 @@ import BP.Difference.ContextHolderUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
+import net.sf.json.JSONObject;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Template.*;
-import BP.WF.WeiXin.MessageErrorModel;
+import BP.WF.WeiXin.DingDing;
 import BP.WF.WeiXin.WeiXin;
 import BP.WF.WeiXin.Util.Crypto.AesException;
 import BP.WF.WeiXin.Util.Crypto.WXBizMsgCrypt;
 import BP.WF.WeiXin.Util.Crypto.WeiXinUtil;
 import BP.WF.Data.*;
-import BP.WF.*;
+
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -284,6 +285,7 @@ public class WF_AppClassic extends WebContralBase
 	 * @throws Exception
 	 */
 	public void WeiXin_Init() throws Exception{
+
 		//微信回调
 		//1.获取签名（signature）、时间戳(timestamp)、随机字符串(nonce) 和验证回调的URL
 		String signature = this.GetRequestVal("msg_signature");//url中的签名
@@ -337,11 +339,11 @@ public class WF_AppClassic extends WebContralBase
          }
          if(DataType.IsNullOrEmpty(sb)==true){
         	//发送消息或者登陆信息
-             MessageErrorModel msgModel = new WeiXin().PostWeiXinMsg(sb);
-             if (msgModel.geterrcode().equals("0") || msgModel.geterrcode().equals("ok"))
+             boolean IsSend = new WeiXin().PostWeiXinMsg(sb);
+             if (IsSend == true)
             	 getResponse().getWriter().write("数据请求成功");
              else	 
-            	 getResponse().getWriter().write("err@"+msgModel.geterrmsg());
+            	 getResponse().getWriter().write("err@数据请求失败");
          }
          
 	}
@@ -350,21 +352,71 @@ public class WF_AppClassic extends WebContralBase
 	public String WeiXin_Login() throws Exception{
 		//获取code
 		String code = this.GetRequestVal("code");
+		System.out.println("code="+code);
 		if(DataType.IsNullOrEmpty(code) == true)
 			return "err@临时登录凭证code为空";
 		//获取token
 		String access_token = new WeiXin().GenerAccessToken();
-		
+		if(access_token.contains("err@")==true)
+			return access_token;
 		if(DataType.IsNullOrEmpty(WebUser.getNo()) == true){
 			//根据token获取用户信息(用户名/手机号)
-			String userId = new WeiXin().getUserInfo(code, access_token).getUserId();
+			String userId = new WeiXin().getUserInfo(code, access_token);
 			if(DataType.IsNullOrEmpty(userId)==true)
 				return "err@用户没有权限或者数据请求失败，请联系管理员";
 			Emp emp = new Emp();
 			emp.setNo(userId);
 			if(emp.RetrieveFromDBSources() == 0){ 
-				Emps emps = new Emps();
-				int num = emps.Retrieve(EmpAttr.No, userId);
+				BP.GPM.Emps emps = new BP.GPM.Emps();
+				int num = emps.Retrieve(BP.GPM.EmpAttr.Tel, userId);
+				if(num ==0)
+					return "err@在系统中没有找到账号为"+userId+"的信息，请联系管理员";
+				
+				BP.WF.Dev2Interface.Port_Login(emps.getItem(0).getNo());
+				int expiry = 60 * 60 * 24 * 2;
+				ContextHolderUtils.addCookie("Token", expiry, access_token);
+				WebUser.setToken(access_token);
+				return "登陆成功";
+			}
+			BP.WF.Dev2Interface.Port_Login(userId);
+			int expiry = 60 * 60 * 24 * 2;
+			ContextHolderUtils.addCookie("Token", expiry, access_token);
+			WebUser.setToken(access_token);
+		}
+		
+		return "登陆成功";
+		
+	}
+	
+	public String DingDing_Login() throws Exception{
+		DingDing ding = new DingDing();
+		//获取code
+		String code = this.GetRequestVal("code");
+		System.out.println("code="+code);
+		if(DataType.IsNullOrEmpty(code) == true)
+			return "err@临时登录凭证code为空";
+		//获取token
+		String access_token = ding.GenerAccessToken();
+		if(access_token.contains("err@")==true)
+			return access_token;
+		if(DataType.IsNullOrEmpty(WebUser.getNo()) == true){
+			//根据token获取用户信息(用户名/手机号)
+			String json = ding.getUserInfo(code, access_token);
+			if(DataType.IsNullOrEmpty(json)==true)
+				return "err@用户没有权限或者数据请求失败，请联系管理员";
+			String userId="";
+			JSONObject jd = JSONObject.fromObject(json);
+			if(jd.get("errcode").toString().equals("0") == false)
+				return "err@用户没有权限或者数据请求失败，请联系管理员";
+			
+			userId  = jd.get("userid").toString();
+			Emp emp = new Emp();
+			emp.setNo(userId);
+			if(emp.RetrieveFromDBSources() == 0){ 
+				//获取name
+				String name = jd.get("name").toString();
+				BP.GPM.Emps emps = new BP.GPM.Emps();
+				int num = emps.Retrieve(BP.GPM.EmpAttr.Name, name);
 				if(num ==0)
 					return "err@在系统中没有找到账号为"+userId+"的信息，请联系管理员";
 				

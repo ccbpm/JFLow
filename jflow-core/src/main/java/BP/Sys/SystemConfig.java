@@ -763,10 +763,19 @@ public class SystemConfig {
 	}
 
 	/// <summary>
-	/// 密钥
+	/// 唯一标识key
 	/// </summary>
-	public static String getDing_CorpSecret() {
-		return getAppSettings().get("Ding_CorpSecret").toString();
+	public static String getDing_AppKey() {
+		return getAppSettings().get("Ding_AppKey").toString();
+
+	}
+	
+	/**
+	 * 密钥
+	 * @return
+	 */
+	public static String getDing_AppSecret() {
+		return getAppSettings().get("Ding_AppSecret").toString();
 
 	}
 

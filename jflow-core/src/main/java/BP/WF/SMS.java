@@ -15,6 +15,8 @@ import BP.Difference.Handler.PortalInterface;
 import BP.En.*;
 import BP.Web.*;
 import BP.Sys.*;
+import BP.WF.WeiXin.DingDing;
+import BP.WF.WeiXin.WeiXin;
 
 /** 
  消息
@@ -413,13 +415,20 @@ public class SMS extends EntityMyPK
 			//钉钉
 			if (this.getPushModel().contains("DingDing") == true)
 			{
-
-				service.SendToDingDing(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
+				DingDing dingding = new DingDing();
+				String postJson = dingding.ResponseMsg("17686621838", "", "", "text", this.getMobileInfo());
+				boolean flag = dingding.PostDingDingMsg(postJson,"17686621838");
+				if(flag == false)
+					throw new Exception("发送消息失败");
+				
+				//service.SendToDingDing(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
 			}
 			//微信
 			if (this.getPushModel().contains("WeiXin") == true)
 			{
-				service.SendToWeiXin(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
+				service.SendToDingDing(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
+
+
 			}
 			//WebService
 			if (this.getPushModel().contains("WS") == true)

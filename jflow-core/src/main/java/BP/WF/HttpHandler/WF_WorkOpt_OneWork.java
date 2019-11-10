@@ -540,37 +540,33 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	*/
 	public final String OneWork_GetTabs() throws Exception
 	{
+
 		String re = "[";
-
 		OneWorkXmls xmls = new OneWorkXmls();
-		xmls.RetrieveAll();
-
+		xmls.RetrieveAll();		
+		
 		int nodeID = this.getFK_Node();
-		if (nodeID == 0)
-		{
-			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-			nodeID = gwf.getFK_Node();
-		}
+        if (nodeID == 0)
+        {
+            GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+            nodeID = this.getFK_Node();
+        }
 
-		Node nd = new Node(nodeID);
+        Node nd = new Node(nodeID);
 
-		for (XmlEn en : xmls.ToJavaListXmlEns())
+		for (OneWorkXml item : xmls.ToJavaListXmlEnss())
 		{
-			OneWorkXml item  = (OneWorkXml)en;
 			String url = "";
-			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), String.valueOf(nodeID), this.getWorkID(), this.getFK_Flow(), this.getFID());
+			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), this.getFK_Node(), this.getWorkID(), this.getFK_Flow(), this.getFID());
 			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
-			{
-				if (nd.getFormUrl().contains("?"))
-				{
-					url = "@url=" + nd.getFormUrl() + "&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
-				}
-				else
-				{
-					url = "@url=" + nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
-				}
-			}
-			re += "{" + String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\",\"IsDefault\":\"%4$s\"", item.getNo(), item.getName(), url, item.getIsDefault()) + "},";
+            {
+                if (nd.getFormUrl().contains("?"))
+                    url = "@url="+nd.getFormUrl() +"&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
+                else
+                url = "@url="+nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow()+ "&FID=" + this.getFID() + "&FromWorkOpt=1";
+            }
+			String strx = String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\"", item.getNo(), item.getName(), url);
+			re += "{" + strx + "},";
 		}
 
 		return StringHelper.trimEnd(re, ',') + "]";
@@ -644,9 +640,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 					  + "        INNER JOIN Sys_Enum se"
 					  + "             ON  se.IntKey = wgwf.WFSta"
 					  + "             AND se.EnumKey = 'WFSta'"
-					  + " WHERE  wgwf.WorkID = {0}"
-					  + "        OR  wgwf.FID = {0}"
-					  + "        OR  wgwf.PWorkID = {0}"
+					  + " WHERE  wgwf.WorkID = "+workid
+					  + "        OR  wgwf.FID = "+workid
+					  + "        OR  wgwf.PWorkID = "+workid
 					  + " ORDER BY"
 					  + "        wgwf.RDT DESC";
 

@@ -1,5 +1,7 @@
 package BP.WF.XML;
 
+import java.util.List;
+
 import BP.DA.*;
 import BP.En.*;
 import BP.Sys.XML.*;
@@ -53,6 +55,9 @@ public class OneWorkXmls extends XmlEns
 	{
 		return null;
 	}
-
+	public List<OneWorkXml> ToJavaListXmlEnss()
+	{
+		return (List<OneWorkXml>)(Object)this;
+	}
 		///#endregion
 }

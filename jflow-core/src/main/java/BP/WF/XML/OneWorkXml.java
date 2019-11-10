@@ -14,7 +14,10 @@ public class OneWorkXml extends XmlEnNoName
 {
 
 		///#region 属性.
- 
+	public final String getName()
+	{
+		return this.GetValStringByKey(BP.Web.WebUser.getSysLang());
+	}
 	public final String getURL()
 	{
 		 

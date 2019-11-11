@@ -2026,7 +2026,7 @@ public class WF_WorkOpt extends WebContralBase
 					row.setValue("EmpFromT", WebUser.getName());
 					row.setValue("T_NodeIndex", ++idx);
 					row.setValue("T_CheckIndex", ++noneEmpIdx);
-					row.setValue("ActionType", ActionType.Forward);
+					row.setValue("ActionType", ActionType.Forward.getValue());
 					row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 					tkDt.Rows.add(row);
 				}
@@ -2045,7 +2045,7 @@ public class WF_WorkOpt extends WebContralBase
 				row.setValue("EmpFromT", WebUser.getName());
 				row.setValue("T_NodeIndex", ++idx);
 				row.setValue("T_CheckIndex", ++noneEmpIdx);
-				row.setValue("ActionType", ActionType.Forward);
+				row.setValue("ActionType", ActionType.Forward.getValue());
 				row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 				tkDt.Rows.add(row);
 			}
@@ -2609,7 +2609,7 @@ public class WF_WorkOpt extends WebContralBase
 					row.setValue("EmpFromT", WebUser.getName());
 					row.setValue("T_NodeIndex", ++idx);
 					row.setValue("T_CheckIndex", ++noneEmpIdx);
-					row.setValue("ActionType", ActionType.Forward);
+					row.setValue("ActionType", ActionType.Forward.getValue());
 					row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 					tkDt.Rows.add(row);
 				}
@@ -2628,7 +2628,7 @@ public class WF_WorkOpt extends WebContralBase
 				row.setValue("EmpFromT", WebUser.getName());
 				row.setValue("T_NodeIndex", ++idx);
 				row.setValue("T_CheckIndex", ++noneEmpIdx);
-				row.setValue("ActionType", ActionType.Forward);
+				row.setValue("ActionType", ActionType.Forward.getValue());
 				row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), WebUser.getNo()));
 				tkDt.Rows.add(row);
 			}

@@ -662,10 +662,18 @@ public class WF_Comm extends WebContralBase {
 		String methodName = this.GetRequestVal("MethodName");
 
 		java.lang.Class tp = en.getClass();
-		java.lang.reflect.Method mp = tp.getMethod(methodName);
+		java.lang.reflect.Method mp = null;
+		for (java.lang.reflect.Method m : tp.getMethods()) {
+			if (m.getName().equals(methodName)==true) {
+				mp = m;
+				break;
+			}
+		}
+
 		if (mp == null) {
 			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
 		}
+
 
 		String paras = this.GetRequestVal("paras");
 
@@ -861,10 +869,18 @@ public class WF_Comm extends WebContralBase {
 		String methodName = this.GetRequestVal("MethodName");
 
 		java.lang.Class tp = ens.getClass();
-		java.lang.reflect.Method mp = tp.getMethod(methodName);
-		if (mp == null) {
-			return "err@没有找到类[" + this.getEnsName() + "]方法[" + methodName + "].";
+		java.lang.reflect.Method mp = null;
+		for (java.lang.reflect.Method m : tp.getMethods()) {
+			if (m.getName().equals(methodName)==true) {
+				mp = m;
+				break;
+			}
 		}
+
+		if (mp == null) {
+			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
+		}
+
 
 		String paras = this.GetRequestVal("paras");
 		if ("un".equals(paras) == true) {

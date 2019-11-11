@@ -622,7 +622,7 @@ public class WF_CCForm extends WebContralBase {
 					String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID="
 							+ this.getPWorkID() + ")";
 					String pppworkID = DBAccess.RunSQLReturnString(sql);
-					if (DataType.IsNullOrEmpty(pppworkID) == true || pppworkID.equals("0")) {
+					if (DataType.IsNullOrEmpty(pppworkID) == true || "0".equals(pppworkID)) {
 						throw new RuntimeException("err@不存在太爷孙流程关系，请联系管理员检查流程设计是否正确");
 					}
 
@@ -661,7 +661,7 @@ public class WF_CCForm extends WebContralBase {
 						return "url@../FrmView.htm?1=2" + paras;
 					}
 
-					if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+					if ("1".equals(this.GetRequestVal("Readonly")) || "0".equals(this.GetRequestVal("IsEdit"))) {
 						return "url@FrmGener.htm?1=2" + paras;
 					} else {
 						return "url@FrmGener.htm?1=2" + paras;
@@ -680,7 +680,7 @@ public class WF_CCForm extends WebContralBase {
 					return "url@../FrmView.htm?1=2" + paras;
 				}
 
-				if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+				if ("1".equals(this.GetRequestVal("Readonly")) || "0".equals(this.GetRequestVal("IsEdit"))) {
 					return "url@FrmGener.htm?1=2" + paras;
 				} else {
 					return "url@FrmGener.htm?1=2" + paras;
@@ -696,7 +696,7 @@ public class WF_CCForm extends WebContralBase {
 			if (IsMobile == true) {
 				return "url@../FrmView.htm?1=2" + paras;
 			}
-			if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+			if ("1".equals(this.GetRequestVal("Readonly")) || "0".equals(this.GetRequestVal("IsEdit"))) {
 				return "url@FrmGener.htm?1=2" + paras;
 			} else {
 				return "url@FrmGener.htm?1=2" + paras;
@@ -715,7 +715,7 @@ public class WF_CCForm extends WebContralBase {
 			return "url@../FrmView.htm?1=2" + paras;
 		}
 
-		if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+		if (("1").equals(this.GetRequestVal("Readonly")) || ("0").equals(this.GetRequestVal("IsEdit"))) {
 			return "url@FrmGener.htm?1=2" + paras;
 		} else {
 			return "url@FrmGener.htm?1=2" + paras;

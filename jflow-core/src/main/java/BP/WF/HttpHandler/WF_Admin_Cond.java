@@ -447,7 +447,7 @@ public class WF_Admin_Cond extends WebContralBase
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.NodeForm.getValue());
+		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.StandAloneFrm.getValue());
 
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.StandAloneFrm);

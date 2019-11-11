@@ -155,7 +155,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	public final String MapDefDtlFreeFrm_Init() throws Exception
 	{
 		String isFor = this.GetRequestVal("For");
-		if (!isFor.equals(""))
+		if (DataType.IsNullOrEmpty(isFor) == false)
 		{
 			return "sln@" + isFor;
 		}

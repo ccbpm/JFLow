@@ -21,7 +21,7 @@ public class Glo {
 	public static boolean getIsEnable_DingDing() {
 		// 如果两个参数都不为空说明启用
 		String corpid = BP.Sys.SystemConfig.getDing_CorpID();
-		String corpsecret = BP.Sys.SystemConfig.getDing_CorpSecret();
+		String corpsecret = BP.Sys.SystemConfig.getDing_AppSecret();
 		if (DataType.IsNullOrEmpty(corpid) || DataType.IsNullOrEmpty(corpsecret)) {
 			return false;
 		}

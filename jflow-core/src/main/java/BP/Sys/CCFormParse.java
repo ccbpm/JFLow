@@ -454,26 +454,26 @@ public class CCFormParse
 			switch (type)
 			{
 				case "SingleText":
-					lab.setText(val == null ? "" : val.toString().replace(" ", "&nbsp;").replace("\n", "@"));
+					lab.setText((val == null || val.equals("null")) ? "" : val.toString().replace(" ", "&nbsp;").replace("\n", "@"));
 					break;
 				case "Color":
 					// lab.FontColor = val == null ? "#FF000000" : val.ToString();
-					lab.setFontColor(val == null ? "#000000" : val.toString());
+					lab.setFontColor((val == null || val.equals("null"))  ? "#000000" : val.toString());
 					fontStyle.append(String.format("color:%1$s;", lab.getFontColor()));
 					break;
 				case "TextFontFamily":
-					lab.setFontName(val == null ? "Portable User Interface" : val.toString());
+					lab.setFontName((val == null || val.equals("null"))  ? "Portable User Interface" : val.toString());
 					if (val != null)
 					{
 						fontStyle.append(String.format("font-family:%1$s;", property.optString("PropertyValue")));
 					}
 					break;
 				case "TextFontSize":
-					lab.setFontSize(val == null ? 14 : Integer.parseInt(val.toString()));
+					lab.setFontSize((val == null || val.equals("null"))  ? 14 : Integer.parseInt(val.toString()));
 					fontStyle.append(String.format("font-size:%1$s;", lab.getFontSize()));
 					break;
 				case "FontWeight":
-					if (val == null || val.toString().equals("normal"))
+					if ((val == null || val.equals("null"))  || val.toString().equals("normal"))
 					{
 						lab.setIsBold(false);
 						fontStyle.append(String.format("font-weight:normal;"));

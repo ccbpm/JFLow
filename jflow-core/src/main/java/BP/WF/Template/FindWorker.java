@@ -362,7 +362,7 @@ public class FindWorker
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.setValue(0, row.get(0).toString());
+						dr.setValue(0, row.getValue(0).toString());
 						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
@@ -389,7 +389,7 @@ public class FindWorker
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.setValue(0, row.get(0).toString());
+						dr.setValue(0, row.getValue(0).toString());
 						dt.Rows.add(dr);
 					}
 					continue;
@@ -408,7 +408,7 @@ public class FindWorker
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.setValue(0, row.get(0).toString());
+						dr.setValue(0, row.getValue(0).toString());
 						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
@@ -453,7 +453,7 @@ public class FindWorker
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.setValue(0, row.get(0).toString());
+							dr.setValue(0, row.getValue(0).toString());
 							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
@@ -486,7 +486,7 @@ public class FindWorker
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.setValue(0, row.get(0).toString());
+							dr.setValue(0, row.getValue(0).toString());
 							dt.Rows.add(dr);
 						}
 					}
@@ -1379,13 +1379,13 @@ public class FindWorker
 								for (DataRow empRow : dt_Emps.Rows)
 								{
 									//排除为空编号
-									if (empRow.get(0) == null || DataType.IsNullOrEmpty(empRow.get(0).toString()))
+									if (empRow.getValue(0) == null || DataType.IsNullOrEmpty(empRow.getValue(0).toString()))
 									{
 										continue;
 									}
 
 									DataRow dr = re_dt.NewRow();
-									dr.setValue(0, empRow.get(0));
+									dr.setValue(0, empRow.getValue(0));
 									re_dt.Rows.add(dr);
 								}
 							}
@@ -1419,17 +1419,17 @@ public class FindWorker
 				 * 
 				 */
 				//复制表结构
-				DataTable dt = re_dt;
+				DataTable dt = re_dt.clone();
 				for (DataRow row : re_dt.Rows)
 				{
 					//排除当前登录人
-					if (row.get(0).toString().equals(WebUser.getNo()))
+					if (row.getValue(0).toString().equals(WebUser.getNo()))
 					{
 						continue;
 					}
 
 					DataRow dr = dt.NewRow();
-					dr.setValue(0, row.get(0));
+					dr.setValue(0, row.getValue(0));
 					dt.Rows.add(dr);
 				}
 				return dt;
@@ -1459,12 +1459,12 @@ public class FindWorker
 				DataTable re_dt = dt;
 				for (DataRow row : dt.Rows)
 				{
-					if (row.get(0).toString().equals(WebUser.getNo()))
+					if (row.getValue(0).toString().equals(WebUser.getNo()))
 					{
 						continue;
 					}
 					DataRow dr = re_dt.NewRow();
-					dr.setValue(0, row.get(0));
+					dr.setValue(0, row.getValue(0));
 					re_dt.Rows.add(dr);
 				}
 				return re_dt;

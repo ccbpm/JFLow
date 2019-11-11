@@ -1010,7 +1010,7 @@ public class WorkFlowBuessRole
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.setValue(0, row.get(0).toString());
+						dr.setValue(0, row.getValue(0).toString());
 						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
@@ -1034,7 +1034,7 @@ public class WorkFlowBuessRole
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.setValue(0, row.get(0).toString());
+						dr.setValue(0, row.getValue(0).toString());
 						dt.Rows.add(dr);
 					}
 				}
@@ -1075,7 +1075,7 @@ public class WorkFlowBuessRole
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.setValue(0, row.get(0).toString());
+							dr.setValue(0, row.getValue(0).toString());
 							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
@@ -1107,7 +1107,7 @@ public class WorkFlowBuessRole
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.setValue(0, row.get(0).toString());
+							dr.setValue(0, row.getValue(0).toString());
 							dt.Rows.add(dr);
 						}
 					}

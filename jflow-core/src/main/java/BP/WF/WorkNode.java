@@ -3219,10 +3219,12 @@ public class WorkNode {
 		/// #endregion 复制数据.
 
 		/// #region 处理消息提示
-		String info = BP.WF.Glo.multilingual("@分流节点[{0}]成功启动, 发送给{1}位处理人:{2}.", "WorkNode", "found_node_operator",
-				toNode.getName(), String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getEmpsExt());
+		this.addMsg("FenLiuInfo", "@分流节点:" + toNode.getName() + "成功启动,@发送给如下(" + this.HisRememberMe.getNumOfObjs()
+				+ ")位处理人" + this.HisRememberMe.getEmpsExt() + ".");
+//		String info = BP.WF.Glo.multilingual("@分流节点[{0}]成功启动, 发送给{1}位处理人:{2}.", "WorkNode", "found_node_operator",
+//				toNode.getName(), String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getEmpsExt());
 
-		this.addMsg("FenLiuInfo", info);
+//		this.addMsg("FenLiuInfo", info);
 
 		// 把子线程的 WorkIDs 加入系统变量.
 		this.addMsg(SendReturnMsgFlag.VarTreadWorkIDs, workIDs, workIDs, SendReturnMsgType.SystemMsg);
@@ -7163,7 +7165,7 @@ public class WorkNode {
 				}
 			}
 
-			//DBAccess.DoTransactionCommit();  // 提交事务.
+			//DBAccess.DoTransactionCommit(); // 提交事务.
 
 			/// #endregion 处理主要业务逻辑.
 

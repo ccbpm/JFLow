@@ -616,8 +616,6 @@ public class WorkNode {
 					}
 				}
 
-				// wl.FK_Emp = wl.GuestNo;
-				// wl.GuestName = wl.GuestName;
 			}
 
 			wl.Insert();
@@ -6649,7 +6647,7 @@ public class WorkNode {
 		}
 
 		// 启动事务, 这里没有实现.
-		DBAccess.DoTransactionBegin();
+		//DBAccess.DoTransactionBegin();
 		try {
 			if (this.getHisNode().getIsStartNode()) {
 				InitStartWorkDataV2(); // 初始化开始节点数据, 如果当前节点是开始节点.
@@ -7165,7 +7163,7 @@ public class WorkNode {
 				}
 			}
 
-			DBAccess.DoTransactionCommit(); // 提交事务.
+			//DBAccess.DoTransactionCommit();  // 提交事务.
 
 			/// #endregion 处理主要业务逻辑.
 

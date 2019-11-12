@@ -28,7 +28,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 	public final String FrmEnumeration_NewEnumField() throws Exception
 	{
 		UIContralType ctrl = UIContralType.RadioBtn;
-		String ctrlDoType = GetRequestVal("ctrlDoType");
+		String ctrlDoType = GetRequestVal("CtrlDoType");
 		if (ctrlDoType.equals("DDL"))
 		{
 			ctrl = UIContralType.DDL;

@@ -358,7 +358,7 @@ public class MapFrmWord extends EntityNoName
 	}
 	public final String DoDesignerFool() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &MyPK= " + this.getNo()+ " &IsEditMapData=True&IsFirst=1";
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()+ "&MyPK=" + this.getNo()+ "&IsEditMapData=True&IsFirst=1";
 	}
 	public final String DoEditWordTemplate() throws Exception
 	{
@@ -517,7 +517,7 @@ public class MapFrmWord extends EntityNoName
 	*/
 	public final String DoDFromCol4() throws Exception
 	{
-		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()+ "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -552,16 +552,16 @@ public class MapFrmWord extends EntityNoName
 	}
 	public final String DoWordFrm() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData= " + this.getNo()+ " &ExtType=WordFrm&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData=" + this.getNo()+ "&ExtType=WordFrm&RefNo=";
 	}
 
 	public final String DoPageLoadFull() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoInitScript() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 Word表单属性.
@@ -571,7 +571,7 @@ public class MapFrmWord extends EntityNoName
 	*/
 	public final String DoBodyAttr() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=BodyAttr&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -581,7 +581,7 @@ public class MapFrmWord extends EntityNoName
 	*/
 	public final String DoEvent() throws Exception
 	{
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData= " + this.getNo()+ " &T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo()+ "&T=sd&FK_Node=0";
 	}
 	/** 
 	 导出表单

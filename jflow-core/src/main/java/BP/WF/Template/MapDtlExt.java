@@ -4,10 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
-import BP.WF.*;
 import BP.Web.WebUser;
-
-import java.util.*;
 
 /** 
  明细
@@ -1139,8 +1136,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String OpenAthAttr() throws Exception
 	{
-		String url = "../../Comm/RefFunc/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&PKVal= " + this.getNo()+ " _AthMDtl";
-		// string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData= " + this.getNo()+ " &FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Comm/RefFunc/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&PKVal=" + this.getNo()+ "_AthMDtl";
 		return url;
 	}
 
@@ -1152,8 +1148,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DtlImp() throws Exception
 	{
-		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData= " + this.getNo()+ " &FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
-	   // string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapDtl= " + this.getNo()+ " &FromDtl=1";
+		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData=" + this.getNo()+ "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -1164,8 +1159,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DtlImpV2019() throws Exception
 	{
-		//string url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp.htm?FK_MapData= " + this.getNo()+ " &FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + Web.WebUser.SID + "&AppCenterDBType=" + BP.DA.DBAccess.AppCenterDBType + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
-		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapDtl= " + this.getNo()+ " &FromDtl=1";
+		String url = "../../Admin/FoolFormDesigner/DtlSetting/DtlImp/Default.htm?FK_MapDtl=" + this.getNo()+ "&FromDtl=1";
 		return url;
 	}
 	/** 
@@ -1188,8 +1182,7 @@ public class MapDtlExt extends EntityNoName
 	public final String ImpFields() throws Exception
 	{
 
-		//  http://localhost:18272/WF/Admin/FoolFormDesigner/ImpTableField.htm?FK_MapData=CCFrm_CZBankBXDtl1&reset=true
-		String url = "../../Admin/FoolFormDesigner/ImpTableField.htm?FK_MapData= " + this.getNo()+ " &FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/FoolFormDesigner/ImpTableField.htm?FK_MapData=" + this.getNo()+ "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -1200,7 +1193,7 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DFoolFrm() throws Exception
 	{
-		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()+ "&FromDtl=1&IsFirst=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 
@@ -1297,7 +1290,7 @@ public class MapDtlExt extends EntityNoName
 
 			md.ResetMaxMinXY();
 		}
-		String url = "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData= " + this.getNo()+ " &FromDtl=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getNo()+ "&FromDtl=1&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 
@@ -1320,11 +1313,11 @@ public class MapDtlExt extends EntityNoName
 	*/
 	public final String DoAction() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/ActionForDtl.htm?DoType=Edit&FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/ActionForDtl.htm?DoType=Edit&FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 	public final String HidAttr() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/HidAttr.htm?DoType=Edit&FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/HidAttr.htm?DoType=Edit&FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 
 

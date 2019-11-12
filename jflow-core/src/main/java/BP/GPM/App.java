@@ -70,11 +70,11 @@ public class App extends EntityNoName
 			String SID = DBAccess.RunSQLReturnStringIsNull("SELECT SID FROM Port_Emp WHERE No='" + WebUser.getNo() + "'", null);
 			if (url.contains("?"))
 			{
-				url += "&UserNo=" + WebUser.getNo() + "&SID=" + SID;
+				url +="&UserNo=" + WebUser.getNo() + "&SID=" + SID;
 			}
 			else
 			{
-				url += "?UserNo=" + WebUser.getNo() + "&SID=" + SID;
+				url +="?UserNo=" + WebUser.getNo() + "&SID=" + SID;
 			}
 		}
 		return url;

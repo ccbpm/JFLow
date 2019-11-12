@@ -377,7 +377,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoBill() throws Exception
 	{
-		return "../../Admin/AttrNode/Bill.htm?FK_MapData= " + this.getNo()+ " &NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+		return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.getNo()+ "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
 
 
@@ -425,7 +425,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoDesignerFool() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &MyPK= " + this.getNo()+ " &IsEditMapData=True&DoDesignerFool&IsFirst=1";
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()+ "&MyPK=" + this.getNo()+ "&IsEditMapData=True&DoDesignerFool&IsFirst=1";
 	}
 	/** 
 	 编辑excel模版.
@@ -575,7 +575,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoRegularExpressionBatch() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 批量修改字段
@@ -585,7 +585,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoBatchEditAttr() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 排序字段顺序
@@ -595,7 +595,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoSortingMapAttrs() throws Exception
 	{
-		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 设计表单
@@ -605,7 +605,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoDFrom() throws Exception
 	{
-		String url = "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData= " + this.getNo()+ " &UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" + this.getNo()+ "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -616,7 +616,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoDFromCol4() throws Exception
 	{
-		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		String url = "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()+ "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + BP.DA.DBAccess.getAppCenterDBType() + "&IsFirst=1&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 		return url;
 	}
 	/** 
@@ -627,7 +627,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoSearch() throws Exception
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData= " + this.getNo()+ " &EnsName=" + this.getNo();
+		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo()+ "&EnsName=" + this.getNo();
 	}
 	/** 
 	 调用分析API
@@ -637,7 +637,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoGroup() throws Exception
 	{
-		return "../../Comm/Group.htm?s=34&FK_MapData= " + this.getNo()+ " &EnsName=" + this.getNo();
+		return "../../Comm/Group.htm?s=34&FK_MapData=" + this.getNo()+ "&EnsName=" + this.getNo();
 	}
 	/** 
 	 数据源管理
@@ -647,20 +647,20 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoDBSrc() throws Exception
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData= " + this.getNo()+ " &EnsName=BP.Sys.SFDBSrcs";
+		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo()+ "&EnsName=BP.Sys.SFDBSrcs";
 	}
 	public final String DoWordFrm() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData= " + this.getNo()+ " &ExtType=WordFrm&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/WordFrm.aspx?s=34&FK_MapData=" + this.getNo()+ "&ExtType=WordFrm&RefNo=";
 	}
 
 	public final String DoPageLoadFull() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoInitScript() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 自由表单属性.
@@ -670,7 +670,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoBodyAttr() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=BodyAttr&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -680,7 +680,7 @@ public class MapFrmNode extends EntityNoName
 	*/
 	public final String DoEvent() throws Exception
 	{
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData= " + this.getNo()+ " &T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo()+ "&T=sd&FK_Node=0";
 	}
 
 	/** 

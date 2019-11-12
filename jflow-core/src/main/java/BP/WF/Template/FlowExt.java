@@ -1620,7 +1620,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoFlowFormTree() throws Exception
 	{
-		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/FlowFormTree.aspx?s=d34&FK_Flow=" + this.getNo()+ "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 定义报表
@@ -1754,7 +1754,7 @@ public class FlowExt extends EntityNoName
 			throw new RuntimeException("传入的流程编号为空，请检查流程");
 		}
 		String flowID = this.getNo() + "01";
-		return "../../Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=";
+		return "../../Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" + this.getNo()+ "&ExtType=StartFlow&RefNo=";
 	}
 	public final String DoCCNode() throws Exception
 	{

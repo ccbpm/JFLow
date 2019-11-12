@@ -393,7 +393,7 @@ public class FrmBill extends EntityNoName {
 	 * @throws Exception
 	 */
 	public final String DoCreateRole() throws Exception {
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID= " + this.getNo() + " &ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 
 	/**
@@ -403,7 +403,7 @@ public class FrmBill extends EntityNoName {
 	 * @throws Exception
 	 */
 	public final String DoSearchRole() throws Exception {
-		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID= " + this.getNo() + " &ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 
 	/**
@@ -413,7 +413,7 @@ public class FrmBill extends EntityNoName {
 	 * @throws Exception
 	 */
 	public final String DoDeleteRole() throws Exception {
-		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID= " + this.getNo() + " &ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 
 	/// #endregion 权限控制.
@@ -452,11 +452,11 @@ public class FrmBill extends EntityNoName {
 	/// #endregion 报表定义.
 
 	public final String DoMethod() throws Exception {
-		return "../../CCBill/Admin/Method.htm?s=34&FrmID= " + this.getNo() + " &ExtType=PageLoadFull&RefNo=";
+		return "../../CCBill/Admin/Method.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 
 	public final String DoPageLoadFull() throws Exception {
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData= " + this.getNo()
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo()
 				+ " &ExtType=PageLoadFull&RefNo=";
 	}
 
@@ -467,7 +467,7 @@ public class FrmBill extends EntityNoName {
 	 * @throws Exception
 	 */
 	public final String DoEvent() throws Exception {
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData= " + this.getNo() + " &T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 
 	/**
@@ -676,12 +676,12 @@ public class FrmBill extends EntityNoName {
 	 * @throws Exception
 	 */
 	public final String DoOpenBill() throws Exception {
-		return "../../CCBill/Search.htm?FrmID= " + this.getNo() + " &t="
+		return "../../CCBill/Search.htm?FrmID=" + this.getNo() + "&t="
 				+ DateUtils.format(new Date(), "yyyyMMddHHmmssffffff");
 	}
 
 	public final String DoAPI() throws Exception {
-		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID= " + this.getNo() + " &t="
+		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo() + "&t="
 				+ DateUtils.format(new Date(), "yyyyMMddHHmmssffffff");
 	}
 

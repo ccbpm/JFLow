@@ -495,7 +495,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoBill() throws Exception
 	{
-		return "../../Admin/AttrNode/Bill.htm?FK_MapData= " + this.getNo()+ " &NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
+		return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.getNo()+ "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
 
 	/** 
@@ -506,7 +506,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoDesignerSL() throws Exception
 	{
-		return "../../Admin/CCFormDesigner/CCFormDesignerSL.htm?FK_MapData= " + this.getNo()+ " &UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID();
+		return "../../Admin/CCFormDesigner/CCFormDesignerSL.htm?FK_MapData=" + this.getNo()+ "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID();
 	}
 	/** 
 	 启动自由表单设计器(h5)
@@ -516,8 +516,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoDesignerH5() throws Exception
 	{
-		// WF/Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=ND102&UserNo=admin&SID=44a42h5gcbxnwjof2hv2pw5e
-		return "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData= " + this.getNo()+ " &UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID();
+		return "../../Admin/CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getNo()+ "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID();
 	}
 	/** 
 	 傻瓜表单设计器
@@ -527,7 +526,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoDesignerFool() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &MyPK= " + this.getNo()+ " &IsEditMapData=True&DoDesignerFool&IsFirst=1";
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()+ "&MyPK=" + this.getNo()+ "&IsEditMapData=True&DoDesignerFool&IsFirst=1";
 	}
 	/** 
 	 编辑excel模版.
@@ -678,7 +677,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoRegularExpressionBatch() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 批量修改字段
@@ -688,7 +687,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoBatchEditAttr() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 排序字段顺序
@@ -698,7 +697,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoSortingMapAttrs() throws Exception
 	{
-		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData= " + this.getNo()+ " &t=" + DataType.getCurrentDataTime();
+		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=&FK_MapData=" + this.getNo()+ "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 设计表单
@@ -708,7 +707,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoDFrom() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData= " + this.getNo()+ " &UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		return "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" + this.getNo()+ "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 
 	}
 	/** 
@@ -719,7 +718,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoDFromCol4() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData= " + this.getNo()+ " &UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&IsFirst=1&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
+		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo()+ "&UserNo=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&IsFirst=1&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + BP.Sys.SystemConfig.getCustomerNo();
 	}
 	/** 
 	 查询
@@ -729,7 +728,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoSearch() throws Exception
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData= " + this.getNo()+ " &EnsName=" + this.getNo();
+		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo()+ "&EnsName=" + this.getNo();
 	}
 	/** 
 	 调用分析API
@@ -739,7 +738,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoGroup() throws Exception
 	{
-		return "../../Comm/Group.htm?s=34&FK_MapData= " + this.getNo()+ " &EnsName=" + this.getNo();
+		return "../../Comm/Group.htm?s=34&FK_MapData=" + this.getNo()+ "&EnsName=" + this.getNo();
 	}
 	/** 
 	 数据源管理
@@ -749,16 +748,16 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoDBSrc() throws Exception
 	{
-		return "../../Comm/Search.htm?s=34&FK_MapData= " + this.getNo()+ " &EnsName=BP.Sys.SFDBSrcs";
+		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo()+ "&EnsName=BP.Sys.SFDBSrcs";
 	}
 
 	public final String DoPageLoadFull() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=PageLoadFull&RefNo=";
 	}
 	public final String DoInitScript() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=PageLoadFull&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
 	 自由表单属性.
@@ -768,7 +767,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoBodyAttr() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData= " + this.getNo()+ " &ExtType=BodyAttr&RefNo=";
+		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo()+ "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
 	 表单事件
@@ -778,7 +777,7 @@ public class MapFrmFree extends EntityNoName
 	*/
 	public final String DoEvent() throws Exception
 	{
-		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData= " + this.getNo()+ " &T=sd&FK_Node=0";
+		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo()+ "&T=sd&FK_Node=0";
 	}
 
 	/** 

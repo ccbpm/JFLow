@@ -1264,7 +1264,7 @@ public class FindWorker
 	 获得本部门的人员
 	 
 	 @param deptNo
-	 @param emp1
+	 @param empNo
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1429,7 +1429,9 @@ public class FindWorker
 					}
 
 					DataRow dr = dt.NewRow();
-					dr.setValue(0, row.getValue(0));
+					for(DataColumn dc:re_dt.Columns){
+						dr.setValue(dc.ColumnName,row.getValue(dc));
+					}
 					dt.Rows.add(dr);
 				}
 				return dt;

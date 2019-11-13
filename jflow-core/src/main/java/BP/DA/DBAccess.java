@@ -98,6 +98,39 @@ public class DBAccess {
 			pstmt.setString(2, pkVal);
 			pstmt.execute();
 		} catch (Exception ex) {
+			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL){
+				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
+				{
+					/*如果没有此列，就自动创建此列.*/
+					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " image ";
+					BP.DA.DBAccess.RunSQL(sql);
+					SaveBytesToDB(bytes, line,tableName, tablePK, pkVal, saveToFileField);
+					return;
+				}
+			}
+			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle){
+				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
+				{
+
+					/*如果没有此列，就自动创建此列.*/
+					//修改数据类型   oracle 不存在image类型   edited by qin 16.7.1
+					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " blob ";
+					BP.DA.DBAccess.RunSQL(sql);
+					SaveBytesToDB(bytes,line, tableName, tablePK, pkVal, saveToFileField);
+					return;
+
+				}
+			}
+			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL){
+				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
+				{
+					/*如果没有此列，就自动创建此列.*/
+					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " BLOB NULL ";
+					BP.DA.DBAccess.RunSQL(sql);
+					SaveBytesToDB(bytes,line, tableName, tablePK, pkVal, saveToFileField);
+					return;
+				}
+			}
 			throw new RuntimeException(ex);
 		} finally {
 			try {
@@ -1069,8 +1102,6 @@ public class DBAccess {
 			return 1;
 		}
 
-		// while (lockRunSQL) {
-		// }
 		lockRunSQL = true;
 
 		int result = 0;
@@ -1209,7 +1240,6 @@ public class DBAccess {
 		NamedParameterStatement pstmt = null;
 		boolean isTtrack = false;
 		try {
-
 			// 首先取具有事务的conn. @xushuhao
 			conn = GetConnOfTransactionForMySQL(BP.Web.WebUser.getNo());
 

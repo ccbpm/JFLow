@@ -534,7 +534,7 @@ public class Glo {
 	 */
 	public static String multilingual(String defaultMsg, String className, String key, String[] paramList) {
 		if (WebUser.getSysLang().equals("zh-cn") || WebUser.getSysLang().equals("CH")) {
-			defaultMsg = defaultMsg.replace("{0}","%1$s").replace("{1}","%1$s").replace("{2}","%1$s").replace("{3}","%1$s");
+			defaultMsg = defaultMsg.replace("{0}","%1$s").replace("{1}","%2$s").replace("{2}","%3$s").replace("{3}","%4$s");
 
 			return String.format(defaultMsg, paramList);
 		}

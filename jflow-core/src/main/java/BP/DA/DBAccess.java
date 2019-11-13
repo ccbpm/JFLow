@@ -98,17 +98,17 @@ public class DBAccess {
 			pstmt.setString(2, pkVal);
 			pstmt.execute();
 		} catch (Exception ex) {
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL){
+			if (BP.Sys.SystemConfig.getAppCenterDBType().getValue() == DBType.MSSQL.getValue()){
 				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
 				{
 					/*如果没有此列，就自动创建此列.*/
-					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " image ";
+					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " text ";
 					BP.DA.DBAccess.RunSQL(sql);
 					SaveBytesToDB(bytes, line,tableName, tablePK, pkVal, saveToFileField);
 					return;
 				}
 			}
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle){
+			if (BP.Sys.SystemConfig.getAppCenterDBType().getValue() == DBType.Oracle.getValue()){
 				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
 				{
 
@@ -121,11 +121,11 @@ public class DBAccess {
 
 				}
 			}
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL){
+			if (BP.Sys.SystemConfig.getAppCenterDBType().getValue() == DBType.MySQL.getValue()){
 				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
 				{
 					/*如果没有此列，就自动创建此列.*/
-					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " BLOB NULL ";
+					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " text NULL ";
 					BP.DA.DBAccess.RunSQL(sql);
 					SaveBytesToDB(bytes,line, tableName, tablePK, pkVal, saveToFileField);
 					return;

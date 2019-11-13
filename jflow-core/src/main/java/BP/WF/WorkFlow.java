@@ -514,7 +514,20 @@ public class WorkFlow {
 			Log.DebugWriteInfo(msg);
 		}
 
-		/// #endregion 正常的删除信息.
+		if (isDelSubFlow)
+		{
+			GenerWorkFlows gwfs = new GenerWorkFlows();
+			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workid);
+			if(gwfs.ToJavaList().size()==0){
+				return;
+			}
+			for (GenerWorkFlow item : gwfs.ToJavaList())
+			{
+				BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(item.getFK_Flow(), item.getWorkID(), true);
+			}
+		}
+		BP.DA.Log.DefaultLogWriteLineInfo("@[" + fl.getName() + "]流程被[" + BP.Web.WebUser.getNo() + BP.Web.WebUser.getName() + "]删除，WorkID[" + workid + "]。");
+
 	}
 
 	/**
@@ -1263,7 +1276,7 @@ public class WorkFlow {
 					+ "', WFState=:WFState,WFSta=:WFSta WHERE OID=" + dbstr + "OID";
 		} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= CONCAT(FlowEmps ,'" + emps
-					+ "'), WFState=@WFState,WFSta=@WFSta WHERE OID=" + dbstr + "OID";
+					+ "'), WFState="+dbstr+"WFState,WFSta="+dbstr+"WFSta WHERE OID=" + dbstr + "OID";
 		} else {
 			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= FlowEmps + '" + emps + "', WFState="
 					+ dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";

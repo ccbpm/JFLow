@@ -526,13 +526,16 @@ public class Glo {
 	/**
 	 * 获取多语言
 	 * 
-	 * @param lang
+	 * @param defaultMsg
+	 * @param className
 	 * @param key
 	 * @param paramList
 	 * @return
 	 */
 	public static String multilingual(String defaultMsg, String className, String key, String[] paramList) {
 		if (WebUser.getSysLang().equals("zh-cn") || WebUser.getSysLang().equals("CH")) {
+			defaultMsg = defaultMsg.replace("{0}","%1$s").replace("{1}","%1$s").replace("{2}","%1$s").replace("{3}","%1$s");
+
 			return String.format(defaultMsg, paramList);
 		}
 
@@ -1695,7 +1698,7 @@ public class Glo {
 		/// #region 3, 执行基本的 sql
 		String sqlscript = "";
 
-		sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\Port_Inc_CH_BPM.sql";
+		sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		BP.DA.DBAccess.RunSQLScript(sqlscript);
 
 		BP.Port.Emp empAdmin = new Emp("admin");
@@ -2201,8 +2204,6 @@ public class Glo {
 	 * 
 	 * @param flowMark
 	 *            流程标记
-	 * @param flowNo
-	 *            流程编号
 	 * @return null, 或者流程实体.
 	 */
 	public static String GetFlowEventEntityStringByFlowMark(String flowMark) {
@@ -2218,8 +2219,6 @@ public class Glo {
 	 * 
 	 * @param flowMark
 	 *            流程标记
-	 * @param flowNo
-	 *            流程编号
 	 * @return null, 或者流程实体.
 	 */
 	public static FlowEventBase GetFlowEventEntityByFlowMark(String flowMark) {
@@ -2943,7 +2942,7 @@ public class Glo {
 	 * 
 	 * @param exp
 	 *            表达式
-	 * @param en
+	 * @param ht
 	 *            变量
 	 * @return 是否成立
 	 * @throws Exception 
@@ -3247,11 +3246,11 @@ public class Glo {
 	/**
 	 * 加密MD5
 	 * 
-	 * @param s
+	 * @param wk
 	 * @return
 	 * @throws Exception 
 	 */
-	public static String GenerMD5(BP.WF.Work wk) throws Exception {
+	public static String GenerMD5(Work wk) throws Exception {
 		String s = null;
 		for (Attr attr : wk.getEnMap().getAttrs()) {
 			switch (attr.getKey()) {
@@ -3951,8 +3950,6 @@ public class Glo {
 	 * 
 	 * @param emps
 	 *            人员字符串，类似"duqinglian,杜清莲;wangyihan,王一涵;"
-	 * @param idBefore
-	 *            是否用户id在前面、用户name在后面
 	 * @return
 	 */
 
@@ -4332,7 +4329,7 @@ public class Glo {
 	/**
 	 * 在指定的日期上增加n天n小时，并考虑节假日
 	 * 
-	 * @param sysdt
+	 * @param specDT
 	 *            指定的日期
 	 * @param day
 	 *            天数
@@ -4929,8 +4926,6 @@ public class Glo {
 	 * 
 	 * @param flow
 	 *            流程
-	 * @param wk
-	 *            开始节点工作
 	 * @return
 	 * @throws Exception 
 	 */
@@ -5355,7 +5350,7 @@ public class Glo {
 	/**
 	 * 检查KeyWord是否包涵特殊字符
 	 * 
-	 * @param _sWord
+	 * @param KeyWord
 	 *            需要检查的字符串
 	 * @return
 	 */

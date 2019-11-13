@@ -7318,6 +7318,8 @@ public class Dev2Interface
 			htPara.put(StartFlowParaNameList.PFID, parentFID);
 			htPara.put(StartFlowParaNameList.PFlowNo, parentFlowNo);
 			htPara.put(StartFlowParaNameList.PNodeID, parentNodeID);
+			if(DataType.IsNullOrEmpty(parentEmp) == true)
+				parentEmp = WebUser.getNo();
 			htPara.put(StartFlowParaNameList.PEmp, parentEmp);
 		}
 

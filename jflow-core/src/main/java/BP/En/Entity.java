@@ -432,9 +432,9 @@ public abstract class Entity implements Serializable {
 			Map map = this.getEnMap();
 
 			Attr attr = map.GetAttrByKey(attrKey);
-			if (!attr.getUIIsReadonly()) {
-				throw new RuntimeException("@需要自动生成编号的列(" + attr.getKey() + ")必须为只读。");
-			}
+			//if (!attr.getUIIsReadonly()) {
+			//	throw new RuntimeException("@需要自动生成编号的列(" + attr.getKey() + ")必须为只读。");
+			//}
 
 			String field = map.GetFieldByKey(attrKey);
 			switch (map.getEnDBUrl().getDBType()) {

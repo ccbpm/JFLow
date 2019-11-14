@@ -10,6 +10,8 @@ import BP.WF.Template.*;
 import BP.Frm.*;
 import BP.WF.*;
 
+import java.net.URLDecoder;
+
 public class WF_Admin_CCFormDesigner extends WebContralBase
 {
 	/** 
@@ -150,7 +152,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 	{
 		String isQuanPin = this.GetRequestVal("IsQuanPin");
 		String name = this.GetRequestVal("TB_Name");
-
+		name = URLDecoder.decode(name, "UTF-8");
 		//表单No长度最大100，因有前缀CCFrm_，因此此处设置最大94
 		String str = "";
 		if (isQuanPin.equals("1"))

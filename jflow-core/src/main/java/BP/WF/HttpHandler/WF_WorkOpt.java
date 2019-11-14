@@ -138,7 +138,7 @@ public class WF_WorkOpt extends WebContralBase
 	/** 
 	 打印pdf.
 	 
-	 @param func
+	 @param
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1842,7 +1842,7 @@ public class WF_WorkOpt extends WebContralBase
 
 				row.setValue("EmpFrom", tk.getEmpFrom());
 				row.setValue("EmpFromT", tk.getEmpFromT());
-				row.setValue("ActionType", tk.getHisActionType());
+				row.setValue("ActionType", tk.getHisActionType().getValue());
 				row.setValue("Tag", tk.getTag());
 				row.setValue("FWCView", fwc.getFWCView());
 				tkDt.Rows.add(row);
@@ -1920,7 +1920,7 @@ public class WF_WorkOpt extends WebContralBase
 								row.setValue("ParentNode", tk.getNDFrom());
 								row.setValue("T_NodeIndex", idx++);
 								row.setValue("T_CheckIndex", noneEmpIdx++);
-								row.setValue("ActionType", mysubtk.getHisActionType());
+								row.setValue("ActionType", mysubtk.getHisActionType().getValue());
 								row.setValue("Tag", mysubtk.getTag());
 								row.setValue("FWCView", subFrmCheck.getFWCView());
 								tkDt.Rows.add(row);
@@ -2435,7 +2435,7 @@ public class WF_WorkOpt extends WebContralBase
 
 						row.setValue("EmpFrom", tk.getEmpFrom());
 						row.setValue("EmpFromT", tk.getEmpFromT());
-						row.setValue("ActionType", tk.getHisActionType());
+						row.setValue("ActionType", tk.getHisActionType().getValue());
 						row.setValue("Tag", tk.getTag());
 						row.setValue("FWCView", fwc.getFWCView());
 						tkDt.Rows.add(row);
@@ -2513,7 +2513,7 @@ public class WF_WorkOpt extends WebContralBase
 										row.setValue("ParentNode", tk.getNDFrom());
 										row.setValue("T_NodeIndex", idx++);
 										row.setValue("T_CheckIndex", noneEmpIdx++);
-										row.setValue("ActionType", mysubtk.getHisActionType());
+										row.setValue("ActionType", mysubtk.getHisActionType().getValue());
 										row.setValue("Tag", mysubtk.getTag());
 										tkDt.Rows.add(row);
 

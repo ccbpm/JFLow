@@ -223,7 +223,7 @@ public class SysEnum extends EntityMyPK
 			//获取mapAttr 
 			MapAttr mapAttr = new MapAttr(fk_mapdata + "_" + this.getEnumKey());
 			int RBShowModel = mapAttr.GetParaInt("RBShowModel");
-			FrmRB frmrb1 = new FrmRB(fk_mapdata + "_" + this.getEnumKey() + "_0");
+			FrmRB frmrb1 = new FrmRB(fk_mapdata + "_" + this.getEnumKey() + "_"+this.getIntKey());
 
 
 			frmrb.setFK_MapData(fk_mapdata);

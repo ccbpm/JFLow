@@ -2070,17 +2070,16 @@ public class SqlBuilder {
 													// 是64位的int类型的数值问题.
 				{
 					ps.Add(attr.getKey(), en.GetValInt64ByKey(attr.getKey()));
+					
 				} else {
-					if (IsEnableNull) {
+					 
 						String s = en.GetValStrByKey(attr.getKey());
 						if (StringHelper.isNullOrEmpty(s)) {
 							ps.Add(attr.getKey(), 0);
 						} else {
 							ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
 						}
-					} else {
-						ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
-					}
+					 
 				}
 				break;
 			case DataType.AppFloat:

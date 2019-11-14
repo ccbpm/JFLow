@@ -1074,6 +1074,10 @@ public class MapData extends EntityNoName
 			{
 				continue;
 			}
+			
+
+            if (map.getAttrs().Contains(key) == false)
+                continue;
 
 			map.AddSearchAttr(key);
 		}

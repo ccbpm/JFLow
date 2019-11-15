@@ -378,7 +378,8 @@ public abstract class Entity implements Serializable {
 
 			AtPara ap = this.getatPara();
 			for (String key : ap.getHisHT().keySet())
-				dr.setValue(key, ap.getHisHT().get(key));
+				if(dr.getValue(key)!=null &&DataType.IsNullOrEmpty(dr.getValue(key).toString())==true)
+					dr.setValue(key, ap.getHisHT().get(key));
 		}
 
 		dt.Rows.add(dr);

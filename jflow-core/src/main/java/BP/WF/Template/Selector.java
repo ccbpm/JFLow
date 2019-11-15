@@ -676,4 +676,12 @@ public class Selector extends Entity
 
 		return ds;
 	}
+
+	protected void afterInsertUpdateAction() throws Exception
+	{
+		Node nd = new Node();
+		nd.setNodeID(this.getNodeID());
+		nd.RetrieveFromDBSources();
+		nd.Update();
+	}
 }

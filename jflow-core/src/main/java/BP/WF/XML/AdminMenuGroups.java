@@ -46,7 +46,7 @@ public class AdminMenuGroups extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfWebApp() + "\\DataUser\\XML\\AdminMenu.xml";
+		return SystemConfig.getPathOfWebApp() + "DataUser/XML/AdminMenu.xml";
 	}
 	/** 
 	 物理表名

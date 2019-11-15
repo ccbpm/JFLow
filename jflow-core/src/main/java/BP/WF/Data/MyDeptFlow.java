@@ -2,6 +2,7 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.WF.*;
+import BP.WF.Glo;
 import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
@@ -529,7 +530,7 @@ public class MyDeptFlow extends Entity
 		///#region 执行诊断
 	public final String DoTrack() throws Exception
 	{
-		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+		return Glo.getCCFlowAppPath()+"/WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 
 		///#endregion

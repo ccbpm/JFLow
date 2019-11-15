@@ -2405,6 +2405,8 @@ public class WF_WorkOpt extends WebContralBase
 					case Return:
 					case StartChildenFlow:
 					case FlowOver:
+					case Order:
+					case SubThreadForward:
 						row = tkDt.NewRow();
 						row.setValue("NodeID", tk.getNDFrom());
 						row.setValue("NodeName", tk.getNDFromT());
@@ -2423,16 +2425,7 @@ public class WF_WorkOpt extends WebContralBase
 						row.setValue("RDT", DataType.IsNullOrEmpty(tk.getRDT()) ? "" : tk.getNDFrom() == tk.getNDTo() && DataType.IsNullOrEmpty(tk.getMsg()) ? "" : tk.getRDT());
 						row.setValue("T_NodeIndex", tk.getRow().GetValByKey("T_NodeIndex"));
 						row.setValue("T_CheckIndex", tk.getRow().GetValByKey("T_CheckIndex"));
-
-						if (gwf.getWFState() == WFState.Complete)
-						{
-							row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
-						}
-						else
-						{
-							row.setValue("Msg", tk.getMsgHtml());
-						}
-
+						row.setValue("Msg", tk.getMsgHtml());
 						row.setValue("EmpFrom", tk.getEmpFrom());
 						row.setValue("EmpFromT", tk.getEmpFromT());
 						row.setValue("ActionType", tk.getHisActionType().getValue());

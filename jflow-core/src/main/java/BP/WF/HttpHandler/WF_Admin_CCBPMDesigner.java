@@ -1236,7 +1236,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		//获得表单数据.
 		DataTable dtSort = ds.Tables.get(0); //类别表.
-		DataTable dtForm = ds.Tables.get(1).copy(); //表单表,这个是最终返回的数据.
+		DataTable dtForm = ds.Tables.get(1).clone(); //表单表,这个是最终返回的数据.
 
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{

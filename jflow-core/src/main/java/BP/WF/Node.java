@@ -120,7 +120,7 @@ public class Node extends Entity {
 			return wk;
 		}
 
-		if (this.getFormType() != NodeFormType.FoolTruck || this.WorkID == 0 || this.getIsStartNode() == true) {
+		if (this.getFormType() != NodeFormType.FoolTruck || this.WorkID == 0 ) {
 			wk = new BP.WF.GEWork(this.getNodeID(), this.getNodeFrmID());
 			wk.setHisNode(this);
 			wk.setNodeID(this.getNodeID());

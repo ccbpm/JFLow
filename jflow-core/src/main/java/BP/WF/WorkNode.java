@@ -2350,26 +2350,6 @@ public class WorkNode {
 			this.addMsg(SendReturnMsgFlag.ToEmps, textInfo, htmlInfo);
 
 		}
-//		if (toND.getIsGuestNode() == true) {
-//			String htmlInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-//					String.valueOf(this.HisRememberMe.getNumOfObjs()),
-//					this.getHisGenerWorkFlow().getGuestNo() + " " + this.getHisGenerWorkFlow().getGuestName());
-//
-//			String textInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-//					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.getHisGenerWorkFlow().getGuestName());
-//
-//			this.addMsg(SendReturnMsgFlag.ToEmps, textInfo, htmlInfo);
-//		} else {
-//			String htmlInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-//					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getEmpsExt());
-//
-//			String textInfo = BP.WF.Glo.multilingual("@发送给如下{0}位处理人{1}.", "WorkNode", "send_to_the_following_operators",
-//					String.valueOf(this.HisRememberMe.getNumOfObjs()), this.HisRememberMe.getObjsExt());
-//
-//			this.addMsg(SendReturnMsgFlag.ToEmps, textInfo, htmlInfo);
-//
-//		}
-
 		/// #region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
 		try {
 			Paras ps = new Paras();
@@ -3324,7 +3304,6 @@ public class WorkNode {
 					this.town.getHisWork().getOID());
 		}
 
-		String FK_Emp = "";
 		String toEmpsStr = "";
 		String emps = "";
 		for (GenerWorkerList wl : current_gwls.ToJavaList()) {
@@ -3333,7 +3312,7 @@ public class WorkNode {
 			if (current_gwls.size() == 1) {
 				emps = wl.getFK_Emp();
 			} else {
-				emps += "@" + FK_Emp;
+				emps += "@" +wl.getFK_Emp();
 			}
 		}
 		// 增加变量.
@@ -3358,7 +3337,7 @@ public class WorkNode {
 			mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
 		}
 
-		mainWK.setRec(FK_Emp);
+		mainWK.setRec(WebUser.getNo());
 		mainWK.setEmps(emps);
 		mainWK.setOID(this.getHisWork().getFID());
 		mainWK.Save();
@@ -3437,8 +3416,8 @@ public class WorkNode {
 
 		/// #endregion 设置父流程状态
 
-		this.addMsg("InfoToHeLiu", BP.WF.Glo.multilingual("@流程已经运行到合流节点[{0}]. @您的工作已经发送给如下人员[{1}]. @您是第一个到达此节点的处理人.",
-				"WorkNode", "first_node_person", toNode.getName(), toEmpsStr));
+		this.addMsg("InfoToHeLiu", BP.WF.Glo.multilingual("@流程已经运行到合流节点[{0}]. @您的工作已经发送给如下人员[{1}]. @您是第{2}个到达此节点的处理人.",
+				"WorkNode", "first_node_person", toNode.getName(), toEmpsStr,String.valueOf(count+1)));
 
 		/// #region 处理国机的需求, 把最后一个子线程的主表数据同步到合流节点的Rpt里面去.(不是很合理) 2015.12.30
 		Work towk = town.getHisWork();
@@ -8420,6 +8399,8 @@ public class WorkNode {
 		case ForwardFL:
 		case ForwardHL:
 		case TeampUp:
+		case Order:
+		case SubThreadForward:
 			// 判断是否有焦点字段，如果有就把它记录到日志里。
 			if (this.getHisNode().getFocusField().length() > 1) {
 				String exp = this.getHisNode().getFocusField();
@@ -8564,6 +8545,8 @@ public class WorkNode {
 		case ForwardFL:
 		case ForwardHL:
 		case TeampUp:
+		case Order:
+		case SubThreadForward:
 			// 判断是否有焦点字段，如果有就把它记录到日志里。
 			if (this.getHisNode().getFocusField().length() > 1) {
 				String exp = this.getHisNode().getFocusField();

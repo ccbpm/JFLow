@@ -2,6 +2,7 @@ package BP.WF.Data;
 
 import BP.DA.*;
 import BP.WF.*;
+import BP.WF.Glo;
 import BP.Web.WebUser;
 import BP.Port.*;
 import BP.Sys.*;
@@ -565,8 +566,7 @@ public class MyJoinFlow extends Entity
 		///#region 执行诊断
 	public final String DoTrack() throws Exception
 	{
-		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/WFRpt.htm?WorkID=" + this.WorkID + "&FID=" + this.FID + "&FK_Flow=" + this.FK_Flow, 900, 800);
-		return "/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+		return Glo.getCCFlowAppPath() +"/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 	/** 
 	 打开最后一个节点表单
@@ -585,13 +585,13 @@ public class MyJoinFlow extends Entity
 		if (dt != null && dt.Rows.size() > 0)
 		{
 			String myPk = dt.Rows.get(0).getValue(0).toString();
-			return "/WF/WFRpt.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
+			return Glo.getCCFlowAppPath()+"/WF/WFRpt.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
 		}
 
 		Node nd = new Node(this.getFK_Node());
 		nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 
-		return "/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
+		return Glo.getCCFlowAppPath()+"/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}
 
 		///#endregion

@@ -1,15 +1,6 @@
 package BP.DA;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -300,9 +291,20 @@ public class DataSet {
 		String line = null;
 		StringBuffer strBuffer = new StringBuffer();
 		try {
-			String encoding = "UTF-8"; // 字符编码(可解决中文乱码问题 )
+			String encoding = "UTF-8"; // 字符编码
+			/*InputStream in = BP.Tools.HttpClientUtil.getInputStream(path);
+			if(in!=null){
+				InputStreamReader read = new InputStreamReader(in);
+				BufferedReader bufferedReader = new BufferedReader(read);
+				while ((line = bufferedReader.readLine()) != null) {
+					strBuffer.append(line + "\n");
+				}
+				read.close();
+			}*/
+
 			File file = new File(path);
 			if (file.isFile() && file.exists()) {
+
 				InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);
 				BufferedReader bufferedReader = new BufferedReader(read);
 				while ((line = bufferedReader.readLine()) != null) {
@@ -366,10 +368,7 @@ public class DataSet {
 				// 遍历该DataTable的子元素
 				for (Iterator it = el.elementIterator(); it.hasNext();) {
 					Element at = (Element) it.next();
-//					System.out.println(" ======= " + at.getName());
-					//sunxd 修改
-					//由于"at.getName().toLowerCase()"语句导至  isContains 方法判断永远不成立，会给TABLE插入很多重复列
-					//将at.getName().toLowerCase() 修改为  at.getName()
+
 					if (!isContains(dt.Columns.subList(0, dt.Columns.size()), at.getName())) {
 						dt.Columns.Add(at.getName());
 					}
@@ -490,14 +489,6 @@ public class DataSet {
 		}
 		return name;
 	}
-
-	//	public static void main(String[] args) {
-	//		DataSet set = new DataSet();
-	//		String xml = "<NewDataSet><Table><DATAID>1</DATAID> <XTSJBH>1</XTSJBH><CODE>01</CODE><YYBH>000000000000000001715130000618</YYBH><ZT>1000000000</ZT>"
-	//				+ "<ID>94899</ID><XM>徐宁</XM><CSNY>1983-06-02T00:00:00+08:00</CSNY><JG>411302</JG><MZ>01</MZ><CJGZSJ>2007-09-01T00:00:00+08:00</CJGZSJ><JRBXTGZSJ>2007-09-01T00:00:00+08:00</JRBXTGZSJ></Table></NewDataSet>";
-	//		set.readXml(xml);
-	//		System.out.println("sssssssssss");
-	//	}
 
 	public static void main(String[] args) throws Exception {
 

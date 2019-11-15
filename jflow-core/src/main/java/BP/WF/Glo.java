@@ -15,6 +15,8 @@ import BP.Port.*;
 import BP.WF.Data.*;
 import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.io.*;
 import java.time.*;
@@ -1582,7 +1584,17 @@ public class Glo {
 	 * getCCFlowAppPath()
 	 */
 	public static String getCCFlowAppPath() {
-		return BP.Sys.SystemConfig.GetValByKey("getCCFlowAppPath()", "/");
+		HttpServletRequest request = ContextHolderUtils.getRequest();
+		String basePath = "";
+		if (request == null || request.getServerName() == null) {
+			basePath = BP.WF.Glo.getHostURL();
+		} else if (request.getServerPort() == 80) {
+			basePath = request.getScheme() + "://" + request.getServerName() + request.getContextPath() + "/";
+		} else {
+			basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath() + "/";
+		}
+		return basePath;
 	}
 
 	/** 

@@ -4458,7 +4458,7 @@ public class Flow extends BP.En.EntityNoName {
 		// map.AddRefMethod(rm);
 
 		// rm = new RefMethod();
-		// rm.Title = "删除数据";
+		// rm.Title = "删除数据";7
 		// rm.Warning = "您确定要执行删除流程数据吗？";
 		// rm.ToolTip = "清除历史流程数据。";
 		// rm.ClassMethodName = this.ToString() + ".DoExp";
@@ -4516,16 +4516,16 @@ public class Flow extends BP.En.EntityNoName {
 
 		/// #endregion 删除独立表单的数据.
 
-		String sql = "  WHERE FK_Node in (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo() + " ')";
-		String sql1 = " WHERE NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo() + " ')";
+		String sql = "  WHERE FK_Node in (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
+		String sql1 = " WHERE NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
 
-		DBAccess.RunSQL("DELETE FROM WF_Bill WHERE FK_Flow=' " + this.getNo() + " '");
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE FK_Flow=' " + this.getNo() + " '");
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow=' " + this.getNo() + " '");
+		DBAccess.RunSQL("DELETE FROM WF_Bill WHERE FK_Flow='" + this.getNo() + "'");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE FK_Flow='" + this.getNo() + "'");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getNo() + "'");
 
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow=' " + this.getNo() + " '");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getNo() + "'");
 
-		String sqlIn = " WHERE ReturnNode IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo() + " ')";
+		String sqlIn = " WHERE ReturnNode IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo() + "')";
 		DBAccess.RunSQL("DELETE FROM WF_ReturnWork " + sqlIn);
 		DBAccess.RunSQL("DELETE FROM WF_SelectAccper " + sql);
 		DBAccess.RunSQL("DELETE FROM WF_TransferCustom " + sql);
@@ -4539,7 +4539,7 @@ public class Flow extends BP.En.EntityNoName {
 			DBAccess.RunSQL("DELETE FROM " + this.getPTable());
 		}
 
-		DBAccess.RunSQL("DELETE FROM WF_CH WHERE FK_Flow=' " + this.getNo() + " '");
+		DBAccess.RunSQL("DELETE FROM WF_CH WHERE FK_Flow='" + this.getNo() + "'");
 
 		// 删除节点数据。
 		Nodes nds = new Nodes(this.getNo());

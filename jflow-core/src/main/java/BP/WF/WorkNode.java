@@ -7397,14 +7397,13 @@ public class WorkNode {
 			return this.HisMsgObjs;
 		} catch (RuntimeException ex) {
 			this.WhenTranscactionRollbackError(ex);
-			DBAccess.DoTransactionRollback();
+			//DBAccess.DoTransactionRollback();
 
 			BP.DA.Log.DebugWriteError(ex.getMessage());
 
-			throw new RuntimeException(ex.getMessage());
+			throw new Exception(ex.getMessage());
 
-			// throw new Exception(ex.Message + " tech@info:" +
-			// ex.getStackTrace());
+
 		}
 	}
 

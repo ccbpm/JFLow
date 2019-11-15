@@ -923,7 +923,7 @@ public class Cond extends EntityMyPK
 					}
 				case ">":
 				case "dayu":
-					if (en.GetValStringByKey(this.getAttrKey()).compareTo(this.getOperatorValue().toString()) == 1)
+					if (en.GetValStringByKey(this.getAttrKey()).compareTo(this.getOperatorValue().toString()) >0)
 					{
 						return true;
 					}
@@ -948,7 +948,7 @@ public class Cond extends EntityMyPK
 					}
 				case "<":
 				case "xiaoyu":
-					if (en.GetValStringByKey(this.getAttrKey()).compareTo(this.getOperatorValue().toString()) == -1)
+					if (en.GetValStringByKey(this.getAttrKey()).compareTo(this.getOperatorValue().toString()) <0)
 					{
 						return true;
 					}

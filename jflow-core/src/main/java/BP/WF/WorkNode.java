@@ -7150,7 +7150,8 @@ public class WorkNode {
 
 			/// #region 执行 自动 启动子流程.
 			CallAutoSubFlow(this.getHisNode(), 0); // 启动本节点上的.
-			CallAutoSubFlow(this.town.getHisNode(), 1);
+			if(this.town!=null)
+				CallAutoSubFlow(this.town.getHisNode(), 1);
 
 			/// #endregion 执行启动子流程.
 

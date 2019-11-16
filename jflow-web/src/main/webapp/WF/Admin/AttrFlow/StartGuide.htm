@@ -76,62 +76,35 @@
             $("#TB_GuideLab").val(data.StartGuideLab);
 
 
-            //查询出来数据.
-            var parts = new Entities("BP.WF.Template.Parts");
-            parts.Retrieve("PartType", "ParentSubFlowGuide", "FK_Flow", fk_flow);
-
-            var strs = "<table>";
-            strs += "<tr>";
-            strs += "<th>流程编号</th>";
-            strs += "<th>名称</th>";
-            strs += "<th>操作</th>";
-            strs += "</tr>";
-
-            for (var i = 0; i < parts.length; i++) {
-                var part = parts[i];
-
-                strs += "<tr>";
-                strs += "<td>" + part.Tag0 + "</td>";
-                strs += "<td>" + part.Tag1 + "</td>";
-                strs += "<td><a href=\"javascript:Part('"+part.MyPK+"');\" >编辑</a></td>";
-                strs += "</tr>";
-            }
-            strs += "</table>";
-
-            $("#parts").val(strs);
-
-            //alert(data.StartGuideWay);
-
-            //console.info(data.StartGuidePara1)
-            switch (data.StartGuideWay) {
-                case '0': //无
+            switch (parseInt(data.StartGuideWay)) {
+                case 0: //无
                     //this.RB_None.Checked = true;
                     break;
-                case '5': //从开始节点Copy数据
+                case 5: //从开始节点Copy数据
                     $("#TB_ByHistoryUrl").val(data.StartGuidePara1);
                     break;
-                case '10': //按自定义的Url
+                case 10: //按自定义的Url
                     //console.info(data.StartGuidePara1);
                     $("#TB_SelfURL").val(data.StartGuidePara1);
                     break;
-                case '1': //按照参数.
+                case 1: //按照参数.
                     $("#TB_BySQLOne1").val(data.StartGuidePara1);
                     $("#TB_BySQLOne2").val(data.StartGuidePara2);
                     $("#TB_BySQLOne3").val(data.StartGuidePara3);
                     break;
-                case '6': //SQL多条模式
+                case 6: //SQL多条模式
                     $("#TB_BySQLMulti1").val(data.StartGuidePara1);
                     $("#TB_BySQLMulti2").val(data.StartGuidePara2);
                     $("#TB_BySQLMulti3").val(data.StartGuidePara3);
 
                     break;
-                case '3':
+                case 3:
                     break;
-                case '4': //子父流程多条模式- 合卷审批.
+                case 4: //子父流程多条模式- 合卷审批.
                     $("#TB_SubFlow1").val(data.StartGuidePara1);
                     $("#TB_SubFlow2").val(data.StartGuidePara2);
                     break;
-                case '11':
+                case 11:
 //                    var ens = new Entities("");
 //                    $("#parts").val(data.StartGuidePara2);
                     break;
@@ -193,11 +166,11 @@
             var url = "http://ccbpm.mydoc.io";
             window.open(url);
         }
-        
+
     </script>
 </head>
 <body>
-    <form action="" id="form1">
+<form action="" id="form1">
     <table style="width: 98%">
         <caption>
             发起前置导航</caption>
@@ -406,12 +379,12 @@
                         <input id="RB_StartGuideWay_90" type="radio" name="RB_StartGuideWay" value="90" /><label
                             for="RB_StartGuideWay_90">开始节点绑定的独立表单列表</label>
                     </legend><font color="gray">
-                        <ul>
-                            <li>流程启动的时候，系统会把流程引擎绑定的开始节点表单列出来让操作员去选择。 </li>
-                            <li>选择一个或者n个表单后，系统就会把参数 Frms 带入到工作处理器里，让工作处理器启用这个表单。 </li>
-                            <li>这种工作方式适应的环境是一个流程可以挂接多个表单。 </li>
-                        </ul>
-                    </font>
+                    <ul>
+                        <li>流程启动的时候，系统会把流程引擎绑定的开始节点表单列出来让操作员去选择。 </li>
+                        <li>选择一个或者n个表单后，系统就会把参数 Frms 带入到工作处理器里，让工作处理器启用这个表单。 </li>
+                        <li>这种工作方式适应的环境是一个流程可以挂接多个表单。 </li>
+                    </ul>
+                </font>
                 </fieldset>
             </td>
         </tr>
@@ -442,7 +415,7 @@
             </td>
         </tr>
     </table>
-    </form>
+</form>
 </body>
 <script type="text/javascript">
     //动态修改参数

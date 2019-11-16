@@ -3201,6 +3201,7 @@ public class Glo {
 
 		// 增加对新规则的支持. @MyField; 格式.
 		if (en != null) {
+			Attrs attrs = en.getEnMap().getAttrs();
 			Row row = en.getRow();
 			// 特殊判断.
 			if (row.containsKey("OID") == true) {
@@ -3216,18 +3217,22 @@ public class Glo {
 				if (row.get(key) == null || row.get(key).equals("") == true) {
 					continue;
 				}
+				if (exp.contains("@" + key))
+				{
+					Attr attr = attrs.GetAttrByKey(key);
+					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum
+							|| attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
+						exp = exp.replace("@" + key+"Text", row.GetValByKey(key + "Text").toString());
+					else if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
+						exp = exp.replace("@" + key+"T", row.GetValByKey(key + "T").toString());
 
-				if (exp.contains("@" + key + ";")) {
-					exp = exp.replace("@" + key + ";", row.get(key).toString());
+					exp = exp.replace("@" + key, row.GetValByKey(key).toString());
 				}
-
 				// 不包含@则返回SQL语句
 				if (exp.contains("@") == false) {
 					return exp;
 				}
 			}
-
-			
 		}
 
 		// 处理Para的替换.

@@ -2722,11 +2722,8 @@ public class Glo {
 				case "pworkid":
 					break;
 				default:
-					if (ht.containsKey(row.getTable().Columns.get(i).ColumnName) == true) {
-						ht.put(row.getTable().Columns.get(i).ColumnName, row.get(i)); // @李国文.
-					} else {
-						ht.put(row.getTable().Columns.get(i).ColumnName, row.get(i));
-					}
+					ht.put(row.getTable().Columns.get(i).ColumnName,
+							row.getValue(row.getTable().Columns.get(i).ColumnName));
 					break;
 				}
 			}
@@ -3207,7 +3204,7 @@ public class Glo {
 			Row row = en.getRow();
 			// 特殊判断.
 			if (row.containsKey("OID") == true) {
-				exp = exp.replace("@WorkID", row.get("OID").toString());
+				exp = exp.replace("@WorkID", row.GetValByKey("OID").toString());
 			}
 
 			if (exp.contains("@") == false) {

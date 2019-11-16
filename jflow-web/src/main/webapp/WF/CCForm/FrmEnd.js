@@ -125,7 +125,7 @@
         if (mapAttr.LGType != 1)
             continue;
 
-       // if (mapAttr.UIIsEnable == 0)
+        // if (mapAttr.UIIsEnable == 0)
         //    continue;
 
 
@@ -275,32 +275,45 @@ function AfterBindEn_DealMapExt(frmData) {
     var webUser = new WebUser();
 
     for (var i = 0; i < mapExts.length; i++) {
-        var mapExt = mapExts[i];
+        var mapExt1 = mapExts[i];
 
         //一起转成entity.
-        var mapExt = new Entity("BP.Sys.MapExt", mapExt.MyPK);
+        var mapExt = new Entity("BP.Sys.MapExt", mapExt1);
+        mapExt.MyPK = mapExt1.MyPK;
 
-        if (mapExt.ExtType == 'PageLoadFull' || mapExt.ExtType == 'StartFlow') {
+        if (mapExt.ExtType == "DtlImp"
+            || mapExt.MyPK.indexOf(mapExt.FK_MapData + '_Table') >= 0
+            || mapExt.MyPK.indexOf('PageLoadFull') >= 0
+            || mapExt.ExtType == 'StartFlow')
             continue;
-        }
 
-        var mapAttr = null;
+        if (mapExt.AttrOfOper == '')
+            continue; //如果是不操作字段，就conntinue;
 
+        var mapAttr1 = null;
         for (var j = 0; j < mapAttrs.length; j++) {
             if (mapAttrs[j].FK_MapData == mapExt.FK_MapData && mapAttrs[j].KeyOfEn == mapExt.AttrOfOper) {
-                mapAttr = mapAttrs[j];
+                mapAttr1 = mapAttrs[j];
                 break;
             }
         }
-        if (mapAttr == null) {
-            mapExt.Delete("MyPK", mapExt.MyPK);
-            break;
-        }
-        mapAttr = new Entity("BP.Sys.MapAttr", mapAttr.MyPK);
+        if (mapAttr1 == null)
+            continue;
 
+        var mapAttr = new Entity("BP.Sys.MapAttr", mapAttr1);
+        mapAttr.MyPK = mapAttr1.MyPK;
         //判断MapAttr属性是否可编辑不可以编辑返回
         if (mapAttr.UIVisible == 0)
             continue;
+
+        //var mapAttr = new Entity("BP.Sys.MapAttr");
+        //mapAttr.SetPKVal(mapExt.FK_MapData + "_" + mapExt.AttrOfOper);
+        ////由于客户pop有实效问题，此处暂时注掉
+        //if (mapAttr.RetrieveFromDBSources() == 0) {
+        //    //mapExt.Delete();
+        //    continue;
+        //}
+       
 
         //处理Pop弹出框
         var PopModel = mapAttr.GetPara("PopModel");
@@ -408,16 +421,18 @@ function AfterBindEn_DealMapExt(frmData) {
                         var mapextDoc = mapExt.Doc;
                         $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
                             if (minDate == "" || minDate == undefined)
-                                WdatePicker({ dateFmt: dateFmt, onpicked: function (dp) {
-                                    $(this).blur(); //失去焦点 
-                                    DBAccess.RunFunctionReturnStr(mapextDoc);
-                                }
+                                WdatePicker({
+                                    dateFmt: dateFmt, onpicked: function (dp) {
+                                        $(this).blur(); //失去焦点 
+                                        DBAccess.RunFunctionReturnStr(mapextDoc);
+                                    }
                                 });
                             else
-                                WdatePicker({ dateFmt: dateFmt, minDate: minDate, onpicked: function (dp) {
-                                    $(this).blur(); //失去焦点 
-                                    DBAccess.RunFunctionReturnStr(mapextDoc);
-                                }
+                                WdatePicker({
+                                    dateFmt: dateFmt, minDate: minDate, onpicked: function (dp) {
+                                        $(this).blur(); //失去焦点 
+                                        DBAccess.RunFunctionReturnStr(mapextDoc);
+                                    }
                                 });
 
                         });
@@ -584,7 +599,7 @@ function AfterBindEn_DealMapExt(frmData) {
                             });
                         } else {
                             $('#TB_' + mapExt.AttrOfOper).unbind("focus");
-                            
+
                             var bindFunctionExt = new Entity("BP.Sys.MapExt", functionPK);
                             $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
 
@@ -595,10 +610,10 @@ function AfterBindEn_DealMapExt(frmData) {
                                     }
                                 });
                             });
-                           
+
                         }
 
-                       
+
                     }
 
                 }
@@ -623,7 +638,7 @@ function AfterBindEn_DealMapExt(frmData) {
 /**Pop弹出框的处理**/
 function PopMapExt(mapAttr, mapExt, frmData) {
     switch (mapAttr.GetPara("PopModel")) {
-       
+
         case "PopBranchesAndLeaf": //树干叶子模式.
             var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
             PopBranchesAndLeaf(mapExt, val); //调用 /CCForm/JS/Pop.js 的方法来完成.
@@ -715,7 +730,7 @@ function PopMapExt(mapAttr, mapExt, frmData) {
             tb.width(tb.width() - 40);
             tb.height('auto');
             var eleHtml = ' <div class="input-group form_tree" style="width:' + tb.width() + 'px;height:' + tb.height() + 'px">' + tb.parent().html() +
-                        '<span class="input-group-addon" onclick="' + "ReturnValCCFormPopValGoogle(document.getElementById('TB_" + mapExt.AttrOfOper + "'),'" + mapExt.MyPK + "','" + mapExt.FK_MapData + "', " + mapExt.W + "," + mapExt.H + ",'" + GepParaByName("Title", mapExt.AtPara) + "');" + '"><span class="' + icon + '"></span></span></div>';
+                '<span class="input-group-addon" onclick="' + "ReturnValCCFormPopValGoogle(document.getElementById('TB_" + mapExt.AttrOfOper + "'),'" + mapExt.MyPK + "','" + mapExt.FK_MapData + "', " + mapExt.W + "," + mapExt.H + ",'" + GepParaByName("Title", mapExt.AtPara) + "');" + '"><span class="' + icon + '"></span></span></div>';
             tb.parent().html(eleHtml);
             break;
         default: break;
@@ -724,9 +739,9 @@ function PopMapExt(mapAttr, mapExt, frmData) {
 
 
 function TBHelp(ObjId, MyPK) {
-    var url = basePath+"/WF/CCForm/Pop/HelperOfTBEUIBS.htm?PKVal=" + MyPK + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
-    var W = document.body.clientWidth - 500;
-    var H = document.body.clientHeight - 140;
+    var url = basePath + "/WF/CCForm/Pop/HelperOfTBEUIBS.htm?PKVal=" + MyPK + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
+    var W = document.body.clientWidth / 2.5;//- 500;
+    var H = document.body.clientHeight / 1.5; //- 140;
     //var str = OpenEasyUiDialogExt(url, "词汇选择", W, H, false);
     OpenBootStrapModal(url, "TBHelpIFram", "词汇选择", W, H);
 }

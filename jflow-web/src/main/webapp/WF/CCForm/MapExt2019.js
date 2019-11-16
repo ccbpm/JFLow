@@ -355,12 +355,10 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
                     setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
                 }
             } else if (returnValSetObj[0].PopValWorkModel == "SelfUrl") { //自定义URL
-                //frames["iframePopModalForm"].window.GetTreeReturnVal();
                 if (frames["iframePopModalForm"].window.GetReturnVal != undefined &&
                     typeof (frames["iframePopModalForm"].window.GetReturnVal) == "function") {
                     frames["iframePopModalForm"].window.GetReturnVal()
                 }
-                //$(ctrl).val(returnValObj.Value);
                 setValForPopval(ctrl.id, dtlWin, returnValObj.Value);
             }
         } else {
@@ -927,8 +925,6 @@ function TableFullCtrl(dataObj, ctrlIdBefore) {
 function FullCtrlDDL(selectVal, ctrlID , mapExt) {
 
     var doc = mapExt.Tag;
-    if (doc == "" || doc == null)
-        doc = mapExt.Doc;
     if (doc == "" || doc == null)
         return;
    

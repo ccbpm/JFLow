@@ -285,7 +285,7 @@ public class EntityDBAccess
 				//Entity  en = en1.CreateInstance();
 				for (Attr attr : attrs)
 				{
-					en.getRow().SetValByKey(attr.getKey(), dr.get(attr.getKey()));
+					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 				}
 				ens.AddEntity(en);
 			}

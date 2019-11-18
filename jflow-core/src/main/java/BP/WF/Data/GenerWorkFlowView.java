@@ -623,7 +623,7 @@ public class GenerWorkFlowView extends Entity
 		boolean isHave = false;
 		for (Attr attr : attrs)
 		{
-			String jsonVal = mydr.get(attr.getKey()).toString();
+			String jsonVal = mydr.getValue(attr.getKey()).toString();
 			String enVal = wk.GetValStringByKey(attr.getKey());
 			if (DataType.IsNullOrEmpty(enVal) == true)
 			{
@@ -661,7 +661,7 @@ public class GenerWorkFlowView extends Entity
 			String trackTable = "ND" + Integer.parseInt(fl.getNo()) + "Track";
 			for (DataRow dr : dt.Rows)
 			{
-				long workid = Long.parseLong(dr.get("OID").toString());
+				long workid = Long.parseLong(dr.getValue("OID").toString());
 
 				sql = "SELECT MyPK FROM " + trackTable + " WHERE WorkID=" + workid + " AND ACTIONTYPE=1 and NDFrom=" + nd.getNodeID();
 				String mypk = DBAccess.RunSQLReturnString(sql);
@@ -692,7 +692,7 @@ public class GenerWorkFlowView extends Entity
 				boolean isHave = false;
 				for (Attr attr : attrs)
 				{
-					String jsonVal = mydr.get(attr.getKey()).toString();
+					String jsonVal = mydr.getValue(attr.getKey()).toString();
 					String enVal = wk.GetValStringByKey(attr.getKey());
 					if (DataType.IsNullOrEmpty(enVal) == true)
 					{

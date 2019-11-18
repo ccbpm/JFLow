@@ -1043,19 +1043,19 @@ public abstract class WebContralBase {
 				String str = "";
 				if (attr.getMyDataType() == DataType.AppBoolean) {
 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-						str = dr.get(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
+						str = dr.getValue(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
 					else
-						str = dr.get(attr.getKey()).equals(1) ? "是" : "否";
+						str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
 				} else {
 					String text ="";
 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle){
-						Object obj = dr.get((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
+						Object obj = dr.getValue((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
 						if(obj == null)
 							text = "";
 						else
 							text =  obj.toString();
 					}else{
-						Object obj = dr.get(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
+						Object obj = dr.getValue(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
 						if(obj == null)
 							text = "";
 						else
@@ -1290,13 +1290,13 @@ public abstract class WebContralBase {
 	 * 
 	 * switch (col.DataType.Name) { case "Boolean":
 	 * cell.setCellStyle(cellStyle);
-	 * cell.setCellValue(dr.get(col.ColumnName).equals(true) ? "是" : "否");
+	 * cell.setCellValue(dr.getValue(col.ColumnName).equals(true) ? "是" : "否");
 	 * break; case "DateTime": isDate =
 	 * col.ExtendedProperties.ContainsKey("isdate") ?
 	 * (Boolean)col.ExtendedProperties.get("isdate") : false;
 	 * 
 	 * cell.setCellStyle(isDate ? dateCellStyle : timeCellStyle);
-	 * cell.setCellValue(String.valueOf(dr.get(col.ColumnName))); break; case
+	 * cell.setCellValue(String.valueOf(dr.getValue(col.ColumnName))); break; case
 	 * "Int16": case "Int32": case "Int64": qian =
 	 * col.ExtendedProperties.ContainsKey("k") ?
 	 * (Boolean)col.ExtendedProperties.get("k") : false;
@@ -1306,9 +1306,9 @@ public abstract class WebContralBase {
 	 * cell.setCellValue(((Long)dr.get(col.ColumnName))); break; case "Single":
 	 * case "Double": case "Decimal":
 	 * cell.setCellStyle(cstyles.get(col.ColumnName));
-	 * cell.setCellValue(((Double)dr.get(col.ColumnName))); break; default:
+	 * cell.setCellValue(((Double)dr.getValue(col.ColumnName))); break; default:
 	 * cell.setCellStyle(cellStyle);
-	 * cell.setCellValue(String.valueOf(dr.get(col.ColumnName))); break; } } }
+	 * cell.setCellValue(String.valueOf(dr.getValue(col.ColumnName))); break; } } }
 	 * //合计 if (sumRow != null) { sumRow.setHeightInPoints(DEF_ROW_HEIGHT);
 	 * 
 	 * for (c = 0; c < dt.Columns.size(); c++) { cell = sumRow.getCell(c);

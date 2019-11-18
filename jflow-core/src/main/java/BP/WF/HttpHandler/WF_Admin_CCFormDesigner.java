@@ -543,7 +543,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 		for (DataRow dr : dt.Rows)
 		{
 			//求引用数量.
-			int refNum = BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(KeyOfEn) FROM Sys_MapAttr WHERE UIBindKey='" + dr.get("No") + "'", 0);
+			int refNum = BP.DA.DBAccess.RunSQLReturnValInt("SELECT COUNT(KeyOfEn) FROM Sys_MapAttr WHERE UIBindKey='" + dr.getValue("No") + "'", 0);
 			dr.setValue("RefNum", refNum);
 		}
 		return BP.Tools.Json.ToJson(dt);

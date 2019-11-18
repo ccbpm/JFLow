@@ -652,23 +652,23 @@ public class SFDBSrc extends EntityNoName
 			DataTable myDT = DBAccess.RunSQLReturnTable(mapDT);
 			for (DataRow myDR : allTables.Rows)
 			{
-				String no = myDR.get("No").toString();
+				String no = myDR.getValue("No").toString();
 
 				String name = null;
 				for (DataRow dr : myDT.Rows)
 				{
-					String pTable = dr.get("PTable").toString();
+					String pTable = dr.getValue("PTable").toString();
 					if (pTable.equals(no) == false)
 					{
 						continue;
 					}
 
-					name = dr.get("Name").toString();
+					name = dr.getValue("Name").toString();
 					break;
 				}
 				if (name != null)
 				{
-					myDR.setValue("Name", myDR.get("Name").toString() + "-" + name);
+					myDR.setValue("Name", myDR.getValue("Name").toString() + "-" + name);
 				}
 			}
 				///#endregion 把tables 的英文名称替换为中文.
@@ -713,7 +713,7 @@ public class SFDBSrc extends EntityNoName
 
 			for (DataRow dr : allTables.Rows)
 			{
-				String no = dr.get("No").toString();
+				String no = dr.getValue("No").toString();
 
 				if (no.contains("WF_") || no.contains("Track") || no.contains("Sys_") || no.contains("Demo_"))
 				{
@@ -721,8 +721,8 @@ public class SFDBSrc extends EntityNoName
 				}
 
 				DataRow mydr = dt.NewRow();
-				mydr.setValue("No", dr.get("No"));
-				mydr.setValue("Name", dr.get("Name"));
+				mydr.setValue("No", dr.getValue("No"));
+				mydr.setValue("Name", dr.getValue("Name"));
 				dt.Rows.add(mydr);
 			}
 

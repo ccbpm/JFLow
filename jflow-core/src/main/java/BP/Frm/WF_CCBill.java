@@ -754,9 +754,9 @@ public class WF_CCBill extends WebContralBase
 			String no = drEnum.get("IntKey").toString();
 			for (DataRow dr : dtTSpanNum.Rows)
 			{
-				if (dr.get("No").toString().equals(no))
+				if (dr.getValue("No").toString().equals(no))
 				{
-					drEnum.setValue("Lab", drEnum.get("Lab").toString() + "(" + dr.get("Num") + ")");
+					drEnum.setValue("Lab", drEnum.get("Lab").toString() + "(" + dr.getValue("Num") + ")");
 					break;
 				}
 			}
@@ -1148,8 +1148,8 @@ public class WF_CCBill extends WebContralBase
 
 			for (DataRow dr : dt.Rows)
 			{
-				String no = dr.get(noColName).toString();
-				String name = dr.get(nameColName).toString();
+				String no = dr.getValue(noColName).toString();
+				String name = dr.getValue(nameColName).toString();
 				myen.setOID(0);
 
 				//判断是否是自增序列，序列的格式
@@ -1182,8 +1182,8 @@ public class WF_CCBill extends WebContralBase
 		{
 			for (DataRow dr : dt.Rows)
 			{
-				String no = dr.get(noColName).toString();
-				String name = dr.get(nameColName).toString();
+				String no = dr.getValue(noColName).toString();
+				String name = dr.getValue(nameColName).toString();
 				//判断是否是自增序列，序列的格式
 				if (!DataType.IsNullOrEmpty(codeStruct))
 				{
@@ -1233,7 +1233,7 @@ public class WF_CCBill extends WebContralBase
 			}
 			if (item.getKey().equals("Title"))
 			{
-				en.SetValByKey(item.getKey(), dr.get(item.getDesc()).toString());
+				en.SetValByKey(item.getKey(), dr.getValue(item.getDesc()).toString());
 				continue;
 			}
 
@@ -1245,7 +1245,7 @@ public class WF_CCBill extends WebContralBase
 			//枚举处理.
 			if (item.getMyFieldType() == FieldType.Enum)
 			{
-				String val = dr.get(item.getDesc()).toString();
+				String val = dr.getValue(item.getDesc()).toString();
 
 				SysEnum se = new SysEnum();
 				int i = se.Retrieve(SysEnumAttr.EnumKey, item.getUIBindKey(), SysEnumAttr.Lab, val);
@@ -1263,7 +1263,7 @@ public class WF_CCBill extends WebContralBase
 			//外键处理.
 			if (item.getMyFieldType() == FieldType.FK)
 			{
-				String val = dr.get(item.getDesc()).toString();
+				String val = dr.getValue(item.getDesc()).toString();
 				Entity attrEn = item.getHisFKEn();
 				int i = attrEn.Retrieve("Name", val);
 				if (i == 0)
@@ -1286,7 +1286,7 @@ public class WF_CCBill extends WebContralBase
 			//boolen类型的处理..
 			if (item.getMyDataType() == DataType.AppBoolean)
 			{
-				String val = dr.get(item.getDesc()).toString();
+				String val = dr.getValue(item.getDesc()).toString();
 				if (val.equals("是") || val.equals("有"))
 				{
 					en.SetValByKey(item.getKey(), 1);
@@ -1298,7 +1298,7 @@ public class WF_CCBill extends WebContralBase
 				continue;
 			}
 
-			String myval = dr.get(item.getDesc()).toString();
+			String myval = dr.getValue(item.getDesc()).toString();
 			en.SetValByKey(item.getKey(), myval);
 		}
 

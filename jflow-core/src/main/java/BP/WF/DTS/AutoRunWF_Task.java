@@ -77,27 +77,27 @@ public class AutoRunWF_Task extends Method
 			///#region 自动启动流程
 		for (DataRow dr : dt.Rows)
 		{
-			String mypk = dr.get("MyPK").toString();
-			String taskSta = dr.get("TaskSta").toString();
-			String paras = dr.get("Paras").toString();
-			String starter = dr.get("Starter").toString();
-			String fk_flow = dr.get("FK_Flow").toString();
+			String mypk = dr.getValue("MyPK").toString();
+			String taskSta = dr.getValue("TaskSta").toString();
+			String paras = dr.getValue("Paras").toString();
+			String starter = dr.getValue("Starter").toString();
+			String fk_flow = dr.getValue("FK_Flow").toString();
 
 			//获得到达的节点，与接受人。
-			String toEmps = dr.get("ToEmps").toString();
+			String toEmps = dr.getValue("ToEmps").toString();
 			if (DataType.IsNullOrEmpty(toEmps))
 			{
 				toEmps = null;
 			}
 
-			String toNodeStr = dr.get("ToNode").toString();
+			String toNodeStr = dr.getValue("ToNode").toString();
 			int toNodeID = 0;
 			if (DataType.IsNullOrEmpty(toNodeStr) == false)
 			{
 				toNodeID = Integer.parseInt(toNodeStr);
 			}
 
-			String startDT = dr.get(TaskAttr.StartDT).toString();
+			String startDT = dr.getValue(TaskAttr.StartDT).toString();
 			if (DataType.IsNullOrEmpty(startDT) == false)
 			{
 				/*如果设置了发起时间,就检查当前时间是否与现在的时间匹配.*/

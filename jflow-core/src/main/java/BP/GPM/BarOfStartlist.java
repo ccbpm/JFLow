@@ -80,12 +80,12 @@ public class BarOfStartlist extends BarBase
 		int idx = 0;
 		for (DataRow dr : dt.Rows)
 		{
-			String fk_flow = dr.get("FK_Flow").toString();
-			String workID = dr.get("WorkID").toString();
-			String nodeID = dr.get("FK_Node").toString();
-			String title = dr.get("Title").toString();
-			String sender = dr.get("Sender").toString();
-			String rdt = dr.get("RDT").toString();
+			String fk_flow = dr.getValue("FK_Flow").toString();
+			String workID = dr.getValue("WorkID").toString();
+			String nodeID = dr.getValue("FK_Node").toString();
+			String title = dr.getValue("Title").toString();
+			String sender = dr.getValue("Sender").toString();
+			String rdt = dr.getValue("RDT").toString();
 			idx++;
 
 			html += "<tr>";

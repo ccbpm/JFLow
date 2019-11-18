@@ -84,8 +84,8 @@ public class RelFlowTemplateToSubInc extends Method
 			//把该模版发布到子公司里面去.
 			for (DataRow dr : dtInc.Rows)
 			{
-				String incNo = dr.get("No").toString();
-				String incName = dr.get("Name").toString();
+				String incNo = dr.getValue("No").toString();
+				String incName = dr.getValue("Name").toString();
 
 				//检查该公司是否创建了树节点, 如果没有就插入一个.
 				FlowSort fs = new FlowSort();

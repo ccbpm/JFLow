@@ -145,8 +145,8 @@ public class WF extends WebContralBase {
 		DataTable ddlTable = new DataTable();
 		ddlTable.Columns.Add("No");
 		for (DataRow dr : dtMapAttr.Rows) {
-			String lgType = dr.get("LGType").toString();
-			String uiBindKey = dr.get("UIBindKey").toString();
+			String lgType = dr.getValue("LGType").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
 
 			if (DataType.IsNullOrEmpty(uiBindKey) == true) {
 				continue; // 为空就continue.
@@ -156,7 +156,7 @@ public class WF extends WebContralBase {
 				continue; // 枚举值就continue;
 			}
 
-			String uiIsEnable = dr.get("UIIsEnable").toString();
+			String uiIsEnable = dr.getValue("UIIsEnable").toString();
 			if (uiIsEnable.equals("0") == true && lgType.equals("1") == true) {
 				continue; // 如果是外键，并且是不可以编辑的状态.
 			}
@@ -166,8 +166,8 @@ public class WF extends WebContralBase {
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.get("KeyOfEn").toString();
-			String fk_mapData = dr.get("FK_MapData").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
 
 			/// #region 处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
@@ -186,8 +186,8 @@ public class WF extends WebContralBase {
 				dt_FK_Dll.Columns.Add("Name", String.class);
 				for (DataRow dllRow : dt.Rows) {
 					DataRow drDll = dt_FK_Dll.NewRow();
-					drDll.set("No", dllRow.get("No"));
-					drDll.set("Name", dllRow.get("Name"));
+					drDll.set("No", dllRow.getValue("No"));
+					drDll.set("Name", dllRow.getValue("Name"));
 					dt_FK_Dll.Rows.add(drDll);
 				}
 				myds.Tables.add(dt_FK_Dll);
@@ -539,13 +539,13 @@ public class WF extends WebContralBase {
 		SysEnums stas = new SysEnums("WFSta");
 		String[] tempArr;
 		for (DataRow dr : dt.Rows) {
-			int wfsta = Integer.parseInt(dr.get("WFSta").toString());
+			int wfsta = Integer.parseInt(dr.getValue("WFSta").toString());
 			Object tempVar = stas.GetEntityByKey(SysEnumAttr.IntKey, wfsta);
 			String wfstaT = (tempVar instanceof SysEnum ? (SysEnum) tempVar : null).getLab();
 			String currEmp = "";
 
 			if (wfsta != BP.WF.WFSta.Complete.getValue()) {
-				for (String emp : dr.get("ToDoEmps").toString().split("[;]", -1)) {
+				for (String emp : dr.getValue("ToDoEmps").toString().split("[;]", -1)) {
 					tempArr = emp.split("[,]", -1);
 
 					currEmp += tempArr.length > 1 ? tempArr[1] : tempArr[0] + ",";
@@ -560,7 +560,7 @@ public class WF extends WebContralBase {
 			dr.setValue("FlowNote", wfstaT);
 			dr.setValue("AtPara",
 					(wfsta == BP.WF.WFSta.Complete.getValue() ? StringHelper
-							.trimEnd(StringHelper.trimStart(dr.get("Sender").toString(), '('), ')').split("[,]", -1)[1]
+							.trimEnd(StringHelper.trimStart(dr.getValue("Sender").toString(), '('), ')').split("[,]", -1)[1]
 							: ""));
 		}
 		return BP.Tools.Json.ToJson(dt);
@@ -1619,7 +1619,7 @@ public class WF extends WebContralBase {
 				break;
 			}
 
-			long workid = Long.parseLong(dr.get("WorkID").toString());
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
 			String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
 			if (cb.equals("on")) {
 				cb = "1";
@@ -1683,10 +1683,10 @@ public class WF extends WebContralBase {
 			String checkNote = this.GetValFromFrmByKey("TB_" + workid + "_WorkCheck_Doc", null);
 			if (DataType.IsNullOrEmpty(checkNote) == false) {
 				BP.WF.Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid,
-						Long.parseLong(dr.get("FID").toString()), checkNote, null);
+						Long.parseLong(dr.getValue("FID").toString()), checkNote, null);
 			}
 
-			msg += "@对工作(" + dr.get("Title") + ")处理情况如下";
+			msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下";
 			BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, ht);
 			msg += objs.ToMsgOfHtml();
 			msg += "<br/>";
@@ -1725,14 +1725,14 @@ public class WF extends WebContralBase {
 				break;
 			}
 
-			long workid = Long.parseLong(dr.get("WorkID").toString());
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
 			String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
 			if (cb.equals("0")) // 没有选中
 			{
 				continue;
 			}
 
-			msg += "@对工作(" + dr.get("Title") + ")处理情况如下。<br>";
+			msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下。<br>";
 			BP.WF.SendReturnObjs objs = null; // BP.WF.Dev2Interface.Node_ReturnWork(nd.FK_Flow,
 												// workid,fid,this.FK_Node,"批量退回");
 			msg += objs.ToMsgOfHtml();
@@ -1788,14 +1788,14 @@ public class WF extends WebContralBase {
 				break;
 			}
 
-			long workid = Long.parseLong(dr.get("WorkID").toString());
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
 			String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
 			if (cb.equals("0")) // 没有选中
 			{
 				continue;
 			}
 
-			msg += "@对工作(" + dr.get("Title") + ")处理情况如下。<br>";
+			msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下。<br>";
 			String mes = BP.WF.Dev2Interface.Flow_DoDeleteFlowByFlag(nd.getFK_Flow(), workid, "批量退回", true);
 			msg += mes;
 			msg += "<hr>";

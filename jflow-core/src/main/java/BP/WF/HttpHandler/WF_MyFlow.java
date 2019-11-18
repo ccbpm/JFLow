@@ -1863,7 +1863,7 @@ public class WF_MyFlow extends WebContralBase {
 		String Nos = "";
 		for (int i = 0; i < drArr.length; i++) {
 			DataRow row = drArr[i];
-			Nos += row.get("No") + ",";
+			Nos += row.getValue("No") + ",";
 		}
 		return StringHelper.trimEnd(Nos, ',');
 	}

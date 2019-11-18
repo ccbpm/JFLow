@@ -47,9 +47,9 @@ public class AppClass
 			RunModel model = BP.WF.RunModel.forValue(0);
 			for (DataRow dr : nodes.Rows)
 			{
-				if (Integer.parseInt(dr.get("NodeID").toString()) == currNode)
+				if (Integer.parseInt(dr.getValue("NodeID").toString()) == currNode)
 				{
-					model = RunModel.forValue(Integer.parseInt(dr.get("RunModel").toString()));
+					model = RunModel.forValue(Integer.parseInt(dr.getValue("RunModel").toString()));
 				}
 			}
 
@@ -114,8 +114,8 @@ public class AppClass
 		String strs = "";
 		for (DataRow dr : tracks.Rows)
 		{
-			String nodeID = dr.get("FK_Node").toString();
-			String isPass = dr.get("IsPass").toString();
+			String nodeID = dr.getValue("FK_Node").toString();
+			String isPass = dr.getValue("IsPass").toString();
 			if (strs.contains("," + nodeID) == true)
 			{
 				continue;
@@ -124,15 +124,15 @@ public class AppClass
 			strs += "," + nodeID + ",";
 
 			DataRow drNew = dtNew.NewRow();
-			drNew.setValue("FK_Node", dr.get("FK_Node"));
-			drNew.setValue("NodeName", dr.get("NodeName"));
-			drNew.setValue("RunModel", dr.get("RunModel"));
-			drNew.setValue("EmpNo", dr.get("EmpNo"));
-			drNew.setValue("EmpName", dr.get("EmpName"));
-			drNew.setValue("DeptName", dr.get("DeptName"));
-			drNew.setValue("RDT", dr.get("RDT"));
-			drNew.setValue("SDT", dr.get("SDT"));
-			drNew.setValue("IsPass", dr.get("IsPass"));
+			drNew.setValue("FK_Node", dr.getValue("FK_Node"));
+			drNew.setValue("NodeName", dr.getValue("NodeName"));
+			drNew.setValue("RunModel", dr.getValue("RunModel"));
+			drNew.setValue("EmpNo", dr.getValue("EmpNo"));
+			drNew.setValue("EmpName", dr.getValue("EmpName"));
+			drNew.setValue("DeptName", dr.getValue("DeptName"));
+			drNew.setValue("RDT", dr.getValue("RDT"));
+			drNew.setValue("SDT", dr.getValue("SDT"));
+			drNew.setValue("IsPass", dr.getValue("IsPass"));
 
 			dtNew.Rows.add(drNew);
 		}

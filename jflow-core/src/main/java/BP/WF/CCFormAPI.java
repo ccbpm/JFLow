@@ -415,14 +415,14 @@ public class CCFormAPI extends Dev2Interface {
 			/// #region 从表的 外键表/枚举
 			mes = new MapExts(item.getNo());
 			for (DataRow dr : dtMapAttr.Rows) {
-				String lgType = dr.get("LGType").toString();
+				String lgType = dr.getValue("LGType").toString();
 				// 不是枚举/外键字段
 				if (lgType.equals("0")) {
 					continue;
 				}
 
-				String uiBindKey = dr.get("UIBindKey").toString();
-				String mypk = dr.get("MyPK").toString();
+				String uiBindKey = dr.getValue("UIBindKey").toString();
+				String mypk = dr.getValue("MyPK").toString();
 
 				/// #region 枚举字段
 				if (lgType.equals("1")) {
@@ -441,7 +441,7 @@ public class CCFormAPI extends Dev2Interface {
 
 				/// #endregion
 
-				String UIIsEnable = dr.get("UIIsEnable").toString();
+				String UIIsEnable = dr.getValue("UIIsEnable").toString();
 				if (UIIsEnable.equals("0")) // 字段未启用
 				{
 					continue;
@@ -449,7 +449,7 @@ public class CCFormAPI extends Dev2Interface {
 
 				/// #region 外键字段
 				// 检查是否有下拉框自动填充。
-				String keyOfEn = dr.get("KeyOfEn").toString();
+				String keyOfEn = dr.getValue("KeyOfEn").toString();
 
 				/// #region 处理下拉框数据范围. for 小杨.
 				Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL,
@@ -603,13 +603,13 @@ public class CCFormAPI extends Dev2Interface {
 		dtMapAttr = myds.GetTableByName("Sys_MapAttr");
 		mes = md.getMapExts();
 		for (DataRow dr : dtMapAttr.Rows) {
-			String uiBindKey = dr.get("UIBindKey") instanceof String ? (String) dr.get("UIBindKey") : null;
+			String uiBindKey = dr.getValue("UIBindKey") instanceof String ? (String) dr.getValue("UIBindKey") : null;
 			if (DataType.IsNullOrEmpty(uiBindKey) == true) {
 				continue;
 			}
 
-			String myPK = dr.get("MyPK").toString();
-			String lgType = dr.get("LGType").toString();
+			String myPK = dr.getValue("MyPK").toString();
+			String lgType = dr.getValue("LGType").toString();
 
 			if (lgType.equals("1")) {
 				// 如果是枚举值, 判断是否存在.,
@@ -629,14 +629,14 @@ public class CCFormAPI extends Dev2Interface {
 				continue;
 			}
 
-			String UIIsEnable = dr.get("UIIsEnable").toString();
+			String UIIsEnable = dr.getValue("UIIsEnable").toString();
 			if (UIIsEnable.equals("0")) {
 				continue;
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.get("KeyOfEn").toString();
-			String fk_mapData = dr.get("FK_MapData").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
 
 			/// #region 处理下拉框数据范围. for 小杨.
 			Object tempVar4 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
@@ -739,16 +739,16 @@ public class CCFormAPI extends Dev2Interface {
 		DataTable ddlTable = new DataTable();
 		ddlTable.Columns.Add("No");
 		for (DataRow dr : Sys_MapAttr.Rows) {
-			String lgType = dr.get("LGType").toString();
-			String ctrlType = dr.get(MapAttrAttr.UIContralType).toString();
+			String lgType = dr.getValue("LGType").toString();
+			String ctrlType = dr.getValue(MapAttrAttr.UIContralType).toString();
 
 			// 没有绑定外键
-			String uiBindKey = dr.get("UIBindKey").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
 			if (DataType.IsNullOrEmpty(uiBindKey) == true) {
 				continue;
 			}
 
-			String mypk = dr.get("MyPK").toString();
+			String mypk = dr.getValue("MyPK").toString();
 
 			/// #region 枚举字段
 			if (lgType.equals("1") == true) {
@@ -772,14 +772,14 @@ public class CCFormAPI extends Dev2Interface {
 			/// #endregion
 
 			/// #region 外键字段
-			String UIIsEnable = dr.get("UIIsEnable").toString();
+			String UIIsEnable = dr.getValue("UIIsEnable").toString();
 			if (UIIsEnable.equals("0")) // 字段未启用
 			{
 				continue;
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.get("KeyOfEn").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
 
 			/// #region 处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
@@ -923,8 +923,8 @@ public class CCFormAPI extends Dev2Interface {
 				}
 				for (DataRow dr : dtDtl.Rows) {
 					// 本身是大写的不进行修改
-					if (DataType.IsNullOrEmpty(dr.get(attr.getKeyOfEn()) + "")) {
-						dr.setValue(attr.getKeyOfEn(), dr.get(attr.getKeyOfEn().toUpperCase()));
+					if (DataType.IsNullOrEmpty(dr.getValue(attr.getKeyOfEn()) + "")) {
+						dr.setValue(attr.getKeyOfEn(), dr.getValue(attr.getKeyOfEn().toUpperCase()));
 						dr.setValue(attr.getKeyOfEn().toUpperCase(), null);
 					}
 				}
@@ -950,8 +950,8 @@ public class CCFormAPI extends Dev2Interface {
 				}
 				for (DataRow dr : dtDtl.Rows) {
 					// 本身是大写的不进行修改
-					if (DataType.IsNullOrEmpty(dr.get(attr.getKeyOfEn()) + "")) {
-						dr.setValue(attr.getKeyOfEn(), dr.get(attr.getKeyOfEn().toLowerCase()));
+					if (DataType.IsNullOrEmpty(dr.getValue(attr.getKeyOfEn()) + "")) {
+						dr.setValue(attr.getKeyOfEn(), dr.getValue(attr.getKeyOfEn().toLowerCase()));
 						dr.setValue(attr.getKeyOfEn().toLowerCase(), null);
 					}
 				}

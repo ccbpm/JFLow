@@ -64,10 +64,10 @@ public class AutoRun_WhoExeIt extends Method
 			///#region 自动启动流程B
 		for (DataRow dr : dt.Rows)
 		{
-			long workid = Long.parseLong(dr.get("WorkID").toString());
-			String FK_Emp = dr.get("FK_Emp").toString();
-			int paras = Integer.parseInt(dr.get("FK_Node").toString());
-			String fk_flow = dr.get("FK_Flow").toString();
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
+			String FK_Emp = dr.getValue("FK_Emp").toString();
+			int paras = Integer.parseInt(dr.getValue("FK_Node").toString());
+			String fk_flow = dr.getValue("FK_Flow").toString();
 
 			if (WebUser.getNo().equals(FK_Emp) == false)
 			{

@@ -1016,7 +1016,7 @@ public class Map {
 		for (DataRow dr : dt.Rows) {
 			Attr attr = new Attr();
 			for (DataColumn dc : dt.Columns) {
-				String val = dr.get(dc.ColumnName).toString();
+				String val = dr.getValue(dc.ColumnName).toString();
 				switch (dc.ColumnName) {
 				case "Key":
 					attr.setKey(val);

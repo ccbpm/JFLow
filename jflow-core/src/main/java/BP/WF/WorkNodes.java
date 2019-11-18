@@ -105,7 +105,7 @@ public class WorkNodes extends ArrayList<WorkNode> {
 
 		String nds = "";
 		for (DataRow dr : dt.Rows) {
-			Node nd = new Node(Integer.parseInt(dr.get("NDFrom").toString()));
+			Node nd = new Node(Integer.parseInt(dr.getValue("NDFrom").toString()));
 			Work wk = nd.GetWork(oid);
 			if (wk == null) {
 				wk = nd.getHisWork();
@@ -117,9 +117,9 @@ public class WorkNodes extends ArrayList<WorkNode> {
 			}
 			nds += String.valueOf(nd.getNodeID()) + ",";
 
-			wk.setRec(dr.get("EmpFrom").toString());
-			wk.setRecText(dr.get("EmpFromT").toString());
-			wk.SetValByKey("RDT", dr.get("RDT").toString());
+			wk.setRec(dr.getValue("EmpFrom").toString());
+			wk.setRecText(dr.getValue("EmpFromT").toString());
+			wk.SetValByKey("RDT", dr.getValue("RDT").toString());
 			this.Add(new WorkNode(wk, nd));
 		}
 		return this.size();

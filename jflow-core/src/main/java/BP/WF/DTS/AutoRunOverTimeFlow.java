@@ -71,12 +71,12 @@ public class AutoRunOverTimeFlow extends Method
 		String info = "";
 		for (DataRow row : generTab.Rows)
 		{
-			String fk_flow = row.get("FK_Flow") + "";
-			int fk_node = Integer.parseInt(row.get("FK_Node") + "");
-			long workid = Long.parseLong(row.get("WorkID") + "");
-			String title = row.get("Title") + "";
-			String compleateTime = row.get("SDTOfNode") + "";
-			String starter = row.get("Starter") + "";
+			String fk_flow = row.getValue("FK_Flow") + "";
+			int fk_node = Integer.parseInt(row.getValue("FK_Node") + "");
+			long workid = Long.parseLong(row.getValue("WorkID") + "");
+			String title = row.getValue("Title") + "";
+			String compleateTime = row.getValue("SDTOfNode") + "";
+			String starter = row.getValue("Starter") + "";
 
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, fk_node);

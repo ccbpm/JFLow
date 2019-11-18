@@ -2743,11 +2743,11 @@ public class WorkNode {
 			if (dtWork != null) {
 				/* 用IDX处理是为了解决，人员重复出现在数据源并且还能根据索引对应的上。 */
 				DataRow dr = dtWork.Rows.get(idx);
-				if (dtWork.Columns.contains("UserNo") && dr.get("UserNo").toString().equals(wl.getFK_Emp())) {
+				if (dtWork.Columns.contains("UserNo") && dr.getValue("UserNo").toString().equals(wl.getFK_Emp())) {
 					mywk.Copy(dr);
 				}
 
-				if (dtWork.Columns.contains("No") && dr.get("No").toString().equals(wl.getFK_Emp())) {
+				if (dtWork.Columns.contains("No") && dr.getValue("No").toString().equals(wl.getFK_Emp())) {
 					mywk.Copy(dr);
 				}
 			}
@@ -4811,7 +4811,7 @@ public class WorkNode {
 					for (String str : strs) {
 						boolean isHave = false;
 						for (DataRow dr : dt.Rows) {
-							if (dr.get("MyNote").toString().equals(str)) {
+							if (dr.getValue("MyNote").toString().equals(str)) {
 								isHave = true;
 								break;
 							}
@@ -6104,7 +6104,7 @@ public class WorkNode {
 
 			// 组装到达的人员.
 			for (DataRow dr : dt.Rows) {
-				toEmpIDs += dr.get("No").toString();
+				toEmpIDs += dr.getValue("No").toString();
 			}
 		}
 
@@ -6468,9 +6468,9 @@ public class WorkNode {
 
 					for (DataRow dr : dtWL.Rows) {
 						String op = BP.WF.Glo.multilingual("@操作员编号:{0},{1}", "WorkNode", "current_operator",
-								dr.get("FK_Emp").toString(), dr.get("FK_EmpText").toString());
+								dr.getValue("FK_Emp").toString(), dr.getValue("FK_EmpText").toString());
 						String nd = BP.WF.Glo.multilingual("停留节点:{0}.", "WorkNode", "current_node",
-								dr.get("FK_NodeText").toString());
+								dr.getValue("FK_NodeText").toString());
 						// infoErr += "@操作员编号:" + dr["FK_Emp"] + "," +
 						// dr["FK_EmpText"] + ",停留节点:" + dr["FK_NodeText"];
 						infoErr += op + ";" + nd;
@@ -7827,12 +7827,12 @@ public class WorkNode {
 				boolean isMeetSpecNode = false;
 				GenerWorkerList currWl = new GenerWorkerList();
 				for (DataRow dr : dt.Rows) {
-					int ndFrom = Integer.parseInt(dr.get("NDFrom").toString());
+					int ndFrom = Integer.parseInt(dr.getValue("NDFrom").toString());
 					Node nd = new Node(ndFrom);
 
-					String ndFromT = dr.get("NDFromT").toString();
-					String EmpFrom = dr.get(TrackAttr.EmpFrom).toString();
-					String EmpFromT = dr.get(TrackAttr.EmpFromT).toString();
+					String ndFromT = dr.getValue("NDFromT").toString();
+					String EmpFrom = dr.getValue(TrackAttr.EmpFrom).toString();
+					String EmpFromT = dr.getValue(TrackAttr.EmpFromT).toString();
 
 					// 增加上 工作人员的信息.
 					GenerWorkerList gwl = new GenerWorkerList();
@@ -7858,7 +7858,7 @@ public class WorkNode {
 					Emp emp = new Emp(gwl.getFK_Emp());
 					gwl.setFK_Dept(emp.getFK_Dept());
 
-					gwl.setSDT(dr.get("RDT").toString());
+					gwl.setSDT(dr.getValue("RDT").toString());
 					gwl.setDTOfWarning(gwf.getSDTOfNode());
 
 					gwl.setIsEnable(true);

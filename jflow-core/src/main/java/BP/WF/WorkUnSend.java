@@ -501,11 +501,11 @@ public class WorkUnSend
 				String toEmps = "";
 				for (DataRow dr : dt.Rows)
 				{
-					Node threadnd = new Node(dr.get("FK_Node").toString());
+					Node threadnd = new Node(dr.getValue("FK_Node").toString());
 					// 调用撤消发送前事件。
 					nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneBefore, nd, nd.getHisWork(), null);
 
-					BP.WF.Dev2Interface.Node_FHL_KillSubFlow(threadnd.getFK_Flow(), this.WorkID, Long.parseLong(dr.get("WorkID").toString())); //杀掉子线程.
+					BP.WF.Dev2Interface.Node_FHL_KillSubFlow(threadnd.getFK_Flow(), this.WorkID, Long.parseLong(dr.getValue("WorkID").toString())); //杀掉子线程.
 
 					// 调用撤消发送前事件。
 					Work work = nd.getHisWork();
@@ -513,7 +513,7 @@ public class WorkUnSend
 					work.setNodeID(nd.getNodeID());
 					nd.getHisFlow().DoFlowEventEntity(EventListOfNode.UndoneAfter, nd, work, null);
 
-					toEmps += dr.get("Emps").toString().replace('@',',');
+					toEmps += dr.getValue("Emps").toString().replace('@',',');
 
 				}
 				return "撤销成功";

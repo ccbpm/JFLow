@@ -60,9 +60,9 @@ public class Tool_Repair extends Method
 		String msg = "";
 		for (DataRow dr : dt.Rows)
 		{
-			long workid = Long.parseLong(dr.get("WorkID").toString());
-			String todoEmps = dr.get("TODOEMPS").toString();
-			String nodeID = dr.get("FK_NODE").toString();
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
+			String todoEmps = dr.getValue("TODOEMPS").toString();
+			String nodeID = dr.getValue("FK_NODE").toString();
 
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.IsPass, 0);

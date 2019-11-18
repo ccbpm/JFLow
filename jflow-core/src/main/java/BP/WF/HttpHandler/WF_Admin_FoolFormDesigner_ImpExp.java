@@ -298,7 +298,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 		// 01.添加列
 		DataTable dt = tableColumns.clone();
 		for (DataRow dr : tableColumns.Rows) {
-			if (SColumns.contains(dr.get("no").toString())) {
+			if (SColumns.contains(dr.getValue("no").toString())) {
 				dt.Rows.add(dr);
 				// dt.ImportRow(dr);
 			}

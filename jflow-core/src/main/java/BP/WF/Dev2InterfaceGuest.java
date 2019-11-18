@@ -125,7 +125,7 @@ public class Dev2InterfaceGuest
 						for (DataColumn dc : dt.Columns)
 						{
 							//设置属性.
-							daDtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName));
+							daDtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName));
 						}
 						daDtl.InsertAsOID(DBAccess.GenerOID("Dtl")); //插入数据.
 					}

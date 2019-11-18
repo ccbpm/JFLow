@@ -2003,19 +2003,19 @@ public class WF_Comm extends WebContralBase {
 
 		/// #region 加入该方法的外键.
 		for (DataRow dr : mapAttrs.Rows) {
-			String lgType = dr.get("LGType").toString();
+			String lgType = dr.getValue("LGType").toString();
 			if (lgType.equals("2") == false) {
 				continue;
 			}
 
-			String UIIsEnable = dr.get("UIVisible").toString();
+			String UIIsEnable = dr.getValue("UIVisible").toString();
 			if (UIIsEnable.equals("0")) {
 				continue;
 			}
 
-			String uiBindKey = dr.get("UIBindKey").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
 			if (DataType.IsNullOrEmpty(uiBindKey) == true) {
-				String myPK = dr.get("MyPK").toString();
+				String myPK = dr.getValue("MyPK").toString();
 				/* 如果是空的 */
 				// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
 				// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey
@@ -2023,8 +2023,8 @@ public class WF_Comm extends WebContralBase {
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.get("KeyOfEn").toString();
-			String fk_mapData = dr.get("FK_MapData").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
 			if (ds.Tables.contains(uiBindKey) == false) {
 				ds.Tables.add(BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey));
 			}
@@ -2174,19 +2174,19 @@ public class WF_Comm extends WebContralBase {
 
 		/// #region 把外键与枚举放入里面去.
 		for (DataRow dr : sys_MapAttrs.Rows) {
-			String uiBindKey = dr.get("UIBindKey").toString();
-			String lgType = dr.get("LGType").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
+			String lgType = dr.getValue("LGType").toString();
 			if (lgType.equals("2") == false) {
 				continue;
 			}
 
-			String UIIsEnable = dr.get("UIVisible").toString();
+			String UIIsEnable = dr.getValue("UIVisible").toString();
 			if (UIIsEnable.equals("0")) {
 				continue;
 			}
 
 			if (DataType.IsNullOrEmpty(uiBindKey) == true) {
-				String myPK = dr.get("MyPK").toString();
+				String myPK = dr.getValue("MyPK").toString();
 				/* 如果是空的 */
 				// throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name +
 				// ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey
@@ -2194,8 +2194,8 @@ public class WF_Comm extends WebContralBase {
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.get("KeyOfEn").toString();
-			String fk_mapData = dr.get("FK_MapData").toString();
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
 
 			// 判断是否存在.
 			if (ds.Tables.contains(uiBindKey) == true) {
@@ -3805,7 +3805,7 @@ public class WF_Comm extends WebContralBase {
 			DataRow mydr = dt1.NewRow();
 			mydr.setValue("IDX", myIdx);
 			for (DataColumn dc : dt2.Columns) {
-				mydr.setValue(dc.ColumnName, dr.get(dc.ColumnName));
+				mydr.setValue(dc.ColumnName, dr.getValue(dc.ColumnName));
 			}
 			dt1.Rows.add(mydr);
 		}
@@ -3860,18 +3860,18 @@ public class WF_Comm extends WebContralBase {
 					for (Attr attr1 : AttrsOfGroup) {
 						switch (attr1.getKey()) {
 						case "FK_NY":
-							sql += " FK_NY <= '" + dr.get("FK_NY") + "' AND FK_ND='"
-									+ dr.get("FK_NY").toString().substring(0, 4) + "' AND ";
+							sql += " FK_NY <= '" + dr.getValue("FK_NY") + "' AND FK_ND='"
+									+ dr.getValue("FK_NY").toString().substring(0, 4) + "' AND ";
 							break;
 						case "FK_Dept":
-							sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
+							sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
 							break;
 						case "FK_SJ":
 						case "FK_XJ":
-							sql += attr1.getKey() + " LIKE '" + dr.get(attr1.getKey()) + "%' AND ";
+							sql += attr1.getKey() + " LIKE '" + dr.getValue(attr1.getKey()) + "%' AND ";
 							break;
 						default:
-							sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
+							sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
 							break;
 						}
 					}
@@ -3898,7 +3898,7 @@ public class WF_Comm extends WebContralBase {
 				for (DataRow dr : dt.Rows) {
 					int val = 0;
 					try {
-						val = Integer.parseInt(dr.get(attr.getKey()).toString());
+						val = Integer.parseInt(dr.getValue(attr.getKey()).toString());
 					} catch (java.lang.Exception e) {
 						dr.setValue(attr.getKey() + "T", " ");
 						continue;
@@ -3914,7 +3914,7 @@ public class WF_Comm extends WebContralBase {
 			}
 			for (DataRow dr : dt.Rows) {
 				Entity myen = attr.getHisFKEn();
-				String val = dr.get(attr.getKey()).toString();
+				String val = dr.getValue(attr.getKey()).toString();
 				myen.SetValByKey(attr.getUIRefKeyValue(), val);
 				try {
 					myen.Retrieve();

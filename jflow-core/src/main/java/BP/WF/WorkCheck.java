@@ -119,7 +119,7 @@ public class WorkCheck
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
 				{
-					en.getRow().SetValByKey(attr.getKey(), dr.get(attr.getKey()));
+					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 				}
 
 				_HisWorkChecks.AddEntity(en);
@@ -162,7 +162,7 @@ public class WorkCheck
 				Track en = new Track();
 				for (BP.En.Attr attr : attrs)
 				{
-					en.getRow().SetValByKey(attr.getKey(), dr.get(attr.getKey()));
+					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 				}
 
 				_HisWorkChecks.AddEntity(en);

@@ -579,7 +579,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 
 			for (DataRow dr : dtAttrs.Rows)
 			{
-				if (IsExistInDataRowArray(dtGroups.Rows, GroupFieldAttr.OID, dr.get(MapAttrAttr.GroupID)) == false)
+				if (IsExistInDataRowArray(dtGroups.Rows, GroupFieldAttr.OID, dr.getValue(MapAttrAttr.GroupID)) == false)
 				{
 					dtNoGroupAttrs.Rows.AddDatas(dr.ItemArray);
 				}
@@ -736,7 +736,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 	{
 		for (DataRow row : rows)
 		{
-			int rw = Integer.parseInt(row.get(field).toString());
+			int rw = Integer.parseInt(row.getValue(field).toString());
 			if (rw == Integer.parseInt(value.toString()))
 			{
 				return true;

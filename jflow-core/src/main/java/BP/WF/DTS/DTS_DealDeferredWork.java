@@ -64,11 +64,11 @@ public class DTS_DealDeferredWork extends Method
 		for (DataRow dr : dt.Rows)
 		{
 
-			String FK_Emp = dr.get("FK_Emp").toString();
-			String fk_flow = dr.get("FK_Flow").toString();
-			int fk_node = Integer.parseInt(dr.get("FK_Node").toString());
-			long workid = Long.parseLong(dr.get("WorkID").toString());
-			long fid = Long.parseLong(dr.get("FID").toString());
+			String FK_Emp = dr.getValue("FK_Emp").toString();
+			String fk_flow = dr.getValue("FK_Flow").toString();
+			int fk_node = Integer.parseInt(dr.getValue("FK_Node").toString());
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
+			long fid = Long.parseLong(dr.getValue("FID").toString());
 
 			// 方式两个人同时处理一件工作, 一个人处理后，另外一个人还可以处理的情况.
 			if (dealWorkIDs.contains("," + workid + ","))

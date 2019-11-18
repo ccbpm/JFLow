@@ -214,12 +214,12 @@ public class WF_Setting extends WebContralBase {
 
 		// 设置当前的部门.
 		for (DataRow dr : dt.Rows) {
-			if (dr.get("No").toString().equals(WebUser.getFK_Dept())) {
+			if (dr.getValue("No").toString().equals(WebUser.getFK_Dept())) {
 				dr.setValue("CurrentDept", "1");
 			}
 
-			if (!dr.get("NameOfPath").toString().equals("")) {
-				dr.setValue("Name", dr.get("NameOfPath"));
+			if (!dr.getValue("NameOfPath").toString().equals("")) {
+				dr.setValue("Name", dr.getValue("NameOfPath"));
 			}
 		}
 

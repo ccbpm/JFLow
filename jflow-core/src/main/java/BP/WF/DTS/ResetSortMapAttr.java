@@ -56,7 +56,7 @@ public class ResetSortMapAttr extends Method
 				{
 					MapAttrs attrs = new MapAttrs();
 					QueryObject qo = new QueryObject(attrs);
-					qo.AddWhere(MapAttrAttr.FK_MapData, row.get("NO").toString());
+					qo.AddWhere(MapAttrAttr.FK_MapData, row.getValue("NO").toString());
 					qo.addAnd();
 					qo.AddWhere(MapAttrAttr.UIVisible, true);
 					qo.addOrderBy(MapAttrAttr.Y, MapAttrAttr.X);

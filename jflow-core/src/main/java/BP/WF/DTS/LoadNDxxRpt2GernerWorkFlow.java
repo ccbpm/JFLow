@@ -65,23 +65,23 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 			for (DataRow dr : dt.Rows)
 			{
 				GenerWorkFlow gwf = new GenerWorkFlow();
-				gwf.setWorkID(Long.parseLong(dr.get(NDXRptBaseAttr.OID).toString()));
-				gwf.setFID(Long.parseLong(dr.get(NDXRptBaseAttr.FID).toString()));
+				gwf.setWorkID(Long.parseLong(dr.getValue(NDXRptBaseAttr.OID).toString()));
+				gwf.setFID(Long.parseLong(dr.getValue(NDXRptBaseAttr.FID).toString()));
 
 				gwf.setFK_FlowSort(en.getFK_FlowSort());
 				gwf.setSysType(en.getSysType());
 
 				gwf.setFK_Flow(en.getNo());
 				gwf.setFlowName(en.getName());
-				gwf.setTitle(dr.get(NDXRptBaseAttr.Title).toString());
-				gwf.setWFState(WFState.forValue(Integer.parseInt(dr.get(NDXRptBaseAttr.WFState).toString())));
+				gwf.setTitle(dr.getValue(NDXRptBaseAttr.Title).toString());
+				gwf.setWFState(WFState.forValue(Integer.parseInt(dr.getValue(NDXRptBaseAttr.WFState).toString())));
 			//    gwf.WFSta = WFSta.Complete;
 
-				gwf.setStarter(dr.get(NDXRptBaseAttr.FlowStarter).toString());
-				gwf.setStarterName(dr.get(NDXRptBaseAttr.FlowStarter).toString());
-				gwf.setRDT(dr.get(NDXRptBaseAttr.FlowStartRDT).toString());
-				gwf.setFK_Node(Integer.parseInt(dr.get(NDXRptBaseAttr.FlowEndNode).toString()));
-				gwf.setFK_Dept(dr.get(NDXRptBaseAttr.FK_Dept).toString());
+				gwf.setStarter(dr.getValue(NDXRptBaseAttr.FlowStarter).toString());
+				gwf.setStarterName(dr.getValue(NDXRptBaseAttr.FlowStarter).toString());
+				gwf.setRDT(dr.getValue(NDXRptBaseAttr.FlowStartRDT).toString());
+				gwf.setFK_Node(Integer.parseInt(dr.getValue(NDXRptBaseAttr.FlowEndNode).toString()));
+				gwf.setFK_Dept(dr.getValue(NDXRptBaseAttr.FK_Dept).toString());
 
 				Dept dept = null;
 				try
@@ -96,7 +96,7 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 
 				try
 				{
-					gwf.setPRI(Integer.parseInt(dr.get(NDXRptBaseAttr.PRI).toString()));
+					gwf.setPRI(Integer.parseInt(dr.getValue(NDXRptBaseAttr.PRI).toString()));
 				}
 				catch (java.lang.Exception e2)
 				{
@@ -106,20 +106,20 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 				//  gwf.SDTOfNode = dr[NDXRptBaseAttr.FK_Dept].ToString();
 				// gwf.SDTOfFlow = dr[NDXRptBaseAttr.FK_Dept].ToString();
 
-				gwf.setPFlowNo(dr.get(NDXRptBaseAttr.PFlowNo).toString());
-				gwf.setPWorkID(Long.parseLong(dr.get(NDXRptBaseAttr.PWorkID).toString()));
-				gwf.setPNodeID(Integer.parseInt(dr.get(NDXRptBaseAttr.PNodeID).toString()));
-				gwf.setPEmp(dr.get(NDXRptBaseAttr.PEmp).toString());
+				gwf.setPFlowNo(dr.getValue(NDXRptBaseAttr.PFlowNo).toString());
+				gwf.setPWorkID(Long.parseLong(dr.getValue(NDXRptBaseAttr.PWorkID).toString()));
+				gwf.setPNodeID(Integer.parseInt(dr.getValue(NDXRptBaseAttr.PNodeID).toString()));
+				gwf.setPEmp(dr.getValue(NDXRptBaseAttr.PEmp).toString());
 
 				//gwf.CFlowNo = dr[NDXRptBaseAttr.CFlowNo].ToString();
 				//gwf.CWorkID = Int64.Parse(dr[NDXRptBaseAttr.CWorkID].ToString());
 
-				gwf.setGuestNo(dr.get(NDXRptBaseAttr.GuestNo).toString());
-				gwf.setGuestName(dr.get(NDXRptBaseAttr.GuestName).toString());
-				gwf.setBillNo(dr.get(NDXRptBaseAttr.BillNo).toString());
+				gwf.setGuestNo(dr.getValue(NDXRptBaseAttr.GuestNo).toString());
+				gwf.setGuestName(dr.getValue(NDXRptBaseAttr.GuestName).toString());
+				gwf.setBillNo(dr.getValue(NDXRptBaseAttr.BillNo).toString());
 				//gwf.FlowNote = dr[NDXRptBaseAttr.flowno].ToString();
 
-				gwf.SetValByKey("Emps", dr.get(NDXRptBaseAttr.FlowEmps).toString());
+				gwf.SetValByKey("Emps", dr.getValue(NDXRptBaseAttr.FlowEmps).toString());
 				//   gwf.AtPara = dr[NDXRptBaseAttr.FK_Dept].ToString();
 				//  gwf.GUID = dr[NDXRptBaseAttr.gu].ToString();
 				gwf.Insert();

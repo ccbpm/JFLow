@@ -182,7 +182,7 @@ public class WF_RptSearch extends WebContralBase
 			for (DataRow dr : dt.Rows)
 			{
 
-				dr.setValue("TDTime", BP.WF.HttpHandler.CCMobile.GetTraceNewTime(dr.get("FK_Flow").toString(), Integer.parseInt(dr.get("WorkID").toString()), Integer.parseInt(dr.get("FID").toString())));
+				dr.setValue("TDTime", BP.WF.HttpHandler.CCMobile.GetTraceNewTime(dr.getValue("FK_Flow").toString(), Integer.parseInt(dr.getValue("WorkID").toString()), Integer.parseInt(dr.getValue("FID").toString())));
 			}
 		}
 		return BP.Tools.Json.ToJson(dt);

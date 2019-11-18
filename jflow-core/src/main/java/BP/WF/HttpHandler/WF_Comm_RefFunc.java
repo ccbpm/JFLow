@@ -224,7 +224,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 		for (DataRow row : dt.Rows)
 		{
-			row.setValue("Code", BP.Tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
+			row.setValue("Code", BP.Tools.chs2py.ConvertStr2Code(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null));
 			row.setValue("Checked", true);
 		}
 
@@ -489,12 +489,12 @@ public class WF_Comm_RefFunc extends WebContralBase
 				for (DataRow row : dt.Rows)
 				{
 					node = new EasyuiTreeNode();
-					node.setid("ST_" + row.get("No"));
-					node.settext(row.get("Name") instanceof String ? (String)row.get("Name") : null);
+					node.setid("ST_" + row.getValue("No"));
+					node.settext(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
 					node.seticonCls("icon-department");
 					node.setattributes(new EasyuiTreeNodeAttributes());
-					node.getattributes().setNo(row.get("No") instanceof String ? (String)row.get("No") : null);
-					node.getattributes().setName(row.get("Name") instanceof String ? (String)row.get("Name") : null);
+					node.getattributes().setNo(row.getValue("No") instanceof String ? (String)row.getValue("No") : null);
+					node.getattributes().setName(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
 					node.getattributes().setParentNo("-1");
 					node.getattributes().setTType("ST");
 					node.setstate("closed");
@@ -513,17 +513,17 @@ public class WF_Comm_RefFunc extends WebContralBase
 				for (DataRow row : dt.Rows)
 				{
 					node = new EasyuiTreeNode();
-					node.setid("S_" + parentid + "_" + row.get("No"));
-					node.settext(row.get("Name") instanceof String ? (String)row.get("Name") : null);
+					node.setid("S_" + parentid + "_" + row.getValue("No"));
+					node.settext(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
 					node.seticonCls("icon-user");
-					node.setchecked(sts.GetEntityByKey(BP.WF.Template.NodeStationAttr.FK_Station, row.get("No")) != null);
+					node.setchecked(sts.GetEntityByKey(BP.WF.Template.NodeStationAttr.FK_Station, row.getValue("No")) != null);
 					node.setattributes(new EasyuiTreeNodeAttributes());
-					node.getattributes().setNo(row.get("No") instanceof String ? (String)row.get("No") : null);
-					node.getattributes().setName(row.get("Name") instanceof String ? (String)row.get("Name") : null);
-					node.getattributes().setParentNo(row.get("FK_StationType") instanceof String ? (String)row.get("FK_StationType") : null);
-					node.getattributes().setParentName(row.get("FK_StationTypeName") instanceof String ? (String)row.get("FK_StationTypeName") : null);
+					node.getattributes().setNo(row.getValue("No") instanceof String ? (String)row.getValue("No") : null);
+					node.getattributes().setName(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
+					node.getattributes().setParentNo(row.getValue("FK_StationType") instanceof String ? (String)row.getValue("FK_StationType") : null);
+					node.getattributes().setParentName(row.getValue("FK_StationTypeName") instanceof String ? (String)row.getValue("FK_StationTypeName") : null);
 					node.getattributes().setTType("S");
-					node.getattributes().setCode(BP.Tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
+					node.getattributes().setCode(BP.Tools.chs2py.ConvertStr2Code(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null));
 
 					d.add(node);
 				}
@@ -616,7 +616,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 		for (DataRow row : dt.Rows)
 		{
-			row.setValue("Code", BP.Tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
+			row.setValue("Code", BP.Tools.chs2py.ConvertStr2Code(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null));
 			row.setValue("Checked", true);
 		}
 

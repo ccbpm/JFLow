@@ -1074,10 +1074,6 @@ public class MapData extends EntityNoName
 			{
 				continue;
 			}
-			
-
-            if (map.getAttrs().Contains(key) == false)
-                continue;
 
 			map.AddSearchAttr(key);
 		}
@@ -1334,7 +1330,7 @@ public class MapData extends EntityNoName
 		//排除已经存在的列. 把所有的列都输出给前台，让前台根据类型分拣.
 		for (DataRow dr : dt.Rows)
 		{
-			String key = dr.get("FName").toString();
+			String key = dr.getValue("FName").toString();
 			if (attrs.Contains(MapAttrAttr.KeyOfEn, key) == true)
 			{
 				continue;
@@ -1346,10 +1342,10 @@ public class MapData extends EntityNoName
 			}
 
 			DataRow mydr = mydt.NewRow();
-			mydr.setValue("FName", dr.get("FName"));
-			mydr.setValue("FType", dr.get("FType"));
-			mydr.setValue("FLen", dr.get("FLen"));
-			mydr.setValue("FDesc", dr.get("FDesc"));
+			mydr.setValue("FName", dr.getValue("FName"));
+			mydr.setValue("FType", dr.getValue("FType"));
+			mydr.setValue("FLen", dr.getValue("FLen"));
+			mydr.setValue("FDesc", dr.getValue("FDesc"));
 			mydt.Rows.add(mydr);
 		}
 		return mydt;
@@ -1485,7 +1481,7 @@ public class MapData extends EntityNoName
 				ele.Copy(dr);
 				ele.setEleType(BP.Sys.FrmEle.Label);
 
-				ele.setEleName(dr.get(FrmLabAttr.Text).toString());
+				ele.setEleName(dr.getValue(FrmLabAttr.Text).toString());
 
 				if (ele.getIsExits() == true)
 				{
@@ -1678,7 +1674,7 @@ public class MapData extends EntityNoName
 		boolean isHave = false;
 		for (DataRow dr : dtCheck.Rows)
 		{
-			if (dr.get("KeyOfEn").toString().equals("OID"))
+			if (dr.getValue("KeyOfEn").toString().equals("OID"))
 			{
 				isHave = true;
 				break;
@@ -1718,7 +1714,7 @@ public class MapData extends EntityNoName
 			// 求旧的表单ID.
 			for (DataRow dr : dtMap.Rows)
 			{
-				oldMapID = dr.get("No").toString();
+				oldMapID = dr.getValue("No").toString();
 			}
 
 			if (DataType.IsNullOrEmpty(oldMapID) == true)
@@ -1745,7 +1741,7 @@ public class MapData extends EntityNoName
 						MapDtl dtl = new MapDtl();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1763,7 +1759,7 @@ public class MapData extends EntityNoName
 						MapData md = new MapData();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1813,7 +1809,7 @@ public class MapData extends EntityNoName
 						FrmBtn en = new FrmBtn();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1836,7 +1832,7 @@ public class MapData extends EntityNoName
 						FrmLine en = new FrmLine();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1858,7 +1854,7 @@ public class MapData extends EntityNoName
 						FrmLab en = new FrmLab();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1879,7 +1875,7 @@ public class MapData extends EntityNoName
 						FrmLink en = new FrmLink();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1901,7 +1897,7 @@ public class MapData extends EntityNoName
 						FrmEle en = new FrmEle();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1923,7 +1919,7 @@ public class MapData extends EntityNoName
 						FrmImg en = new FrmImg();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1946,7 +1942,7 @@ public class MapData extends EntityNoName
 						FrmImgAth en = new FrmImgAth();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1970,7 +1966,7 @@ public class MapData extends EntityNoName
 						FrmRB en = new FrmRB();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -1996,7 +1992,7 @@ public class MapData extends EntityNoName
 						FrmAttachment en = new FrmAttachment();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -2023,7 +2019,7 @@ public class MapData extends EntityNoName
 						MapFrame en = new MapFrame();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -2042,7 +2038,7 @@ public class MapData extends EntityNoName
 						MapExt en = new MapExt();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -2065,7 +2061,7 @@ public class MapData extends EntityNoName
 						MapAttr en = new MapAttr();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -2093,7 +2089,7 @@ public class MapData extends EntityNoName
 						GroupField en = new GroupField();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.get(dc.ColumnName) instanceof Object ? (Object)dr.get(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -2119,7 +2115,7 @@ public class MapData extends EntityNoName
 						SysEnum se = new SysEnum();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
 							se.SetValByKey(dc.ColumnName, val);
 						}
 						se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getIntKey());
@@ -2136,7 +2132,7 @@ public class MapData extends EntityNoName
 						SysEnumMain sem = new SysEnumMain();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.get(dc.ColumnName) instanceof String ? (String)dr.get(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
 								continue;
@@ -2179,12 +2175,14 @@ public class MapData extends EntityNoName
 		mdNew.Update();
 		return mdNew;
 	}
-	/** 
+	/**
 	 修复map.
-	 * @throws Exception 
+	 * @throws Exception
 	*/
 	public final void RepairMap() throws Exception
 	{
+		if(DataType.IsNullOrEmpty(this.getNo()))
+			return;
 		GroupFields gfs = new GroupFields(this.getNo());
 		if (gfs.size() == 0)
 		{
@@ -2306,9 +2304,9 @@ public class MapData extends EntityNoName
 		}
 		return super.beforeInsert();
 	}
-	/** 
+	/**
 	 设置Para 参数.
-	 * @throws Exception 
+	 * @throws Exception
 	*/
 	public final void ResetMaxMinXY() throws Exception
 	{
@@ -2401,13 +2399,13 @@ public class MapData extends EntityNoName
 
 		this.DirectUpdate();
 	}
-	/** 
+	/**
 	 求位移.
-	 
+
 	 @param md
 	 @param scrWidth
-	 @return 
-	 * @throws Exception 
+	 @return
+	 * @throws Exception
 	*/
 	public static float GenerSpanWeiYi(MapData md, float scrWidth) throws Exception
 	{
@@ -2444,13 +2442,13 @@ public class MapData extends EntityNoName
 
 		return -(left - space);
 	}
-	/** 
+	/**
 	 求屏幕宽度
-	 
+
 	 @param md
 	 @param scrWidth
-	 @return 
-	 * @throws Exception 
+	 @return
+	 * @throws Exception
 	*/
 	public static float GenerSpanWidth(MapData md, float scrWidth) throws Exception
 	{
@@ -2473,13 +2471,13 @@ public class MapData extends EntityNoName
 		}
 		return scrWidth;
 	}
-	/** 
+	/**
 	 求屏幕高度
-	 
+
 	 @param md
 	 @param scrWidth
-	 @return 
-	 * @throws Exception 
+	 @return
+	 * @throws Exception
 	*/
 	public static float GenerSpanHeight(MapData md, float scrHeight) throws Exception
 	{
@@ -2547,9 +2545,9 @@ public class MapData extends EntityNoName
 
 		return super.beforeUpdateInsertAction();
 	}
-	/** 
+	/**
 	 更新版本
-	 * @throws Exception 
+	 * @throws Exception
 	*/
 	public final void UpdateVer() throws Exception
 	{
@@ -2570,9 +2568,9 @@ public class MapData extends EntityNoName
 		for (DataRow dr : Sys_MapDtl.Rows)
 		{
 			// ids += ",'" + dr["No"] + "'";
-			whereFK_MapData += " OR FK_MapData='" + dr.get("No") + "' ";
-			whereEnsName += " OR FrmID='" + dr.get("No") + "' ";
-			whereNo += " OR No='" + dr.get("No") + "' ";
+			whereFK_MapData += " OR FK_MapData='" + dr.getValue("No") + "' ";
+			whereEnsName += " OR FrmID='" + dr.getValue("No") + "' ";
+			whereNo += " OR No='" + dr.getValue("No") + "' ";
 		}
 
 		//	string where = " FK_MapData IN (" + ids + ")";

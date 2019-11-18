@@ -179,8 +179,8 @@ public class Bar extends EntityNoName
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				for (DataRow dr : dt.Rows)
 				{
-					String no = dr.get("No").toString();
-					String name = dr.get("Name").toString();
+					String no = dr.getValue("No").toString();
+					String name = dr.getValue("Name").toString();
 					String url = this.getTag2().toString();
 					url = url.replace("~", "'");
 

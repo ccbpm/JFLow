@@ -58,12 +58,12 @@ public class DTS_SendMsgToWarningWorker extends Method
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
-			CHAlertWay way = CHAlertWay.forValue(Integer.parseInt(dr.get("WAlertWay").toString())); //提醒方式.
-			long workid = Long.parseLong(dr.get("WorkID").toString());
-			String title = dr.get("Title").toString();
-			String flowName = dr.get("FlowName").toString();
-			String empNo = dr.get("FK_Emp").toString();
-			String empName = dr.get("FK_EmpText").toString();
+			CHAlertWay way = CHAlertWay.forValue(Integer.parseInt(dr.getValue("WAlertWay").toString())); //提醒方式.
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
+			String title = dr.getValue("Title").toString();
+			String flowName = dr.getValue("FlowName").toString();
+			String empNo = dr.getValue("FK_Emp").toString();
+			String empName = dr.getValue("FK_EmpText").toString();
 
 			WFEmp emp = new WFEmp(empNo);
 

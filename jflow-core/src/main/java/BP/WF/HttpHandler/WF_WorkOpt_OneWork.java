@@ -55,10 +55,10 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		Hashtable ht = new Hashtable();
 		for (DataRow dr : dt.Rows)
 		{
-			ActionType at = ActionType.forValue(Integer.parseInt(dr.get(TrackAttr.ActionType).toString()));
+			ActionType at = ActionType.forValue(Integer.parseInt(dr.getValue(TrackAttr.ActionType).toString()));
 
-			String tag = dr.get(TrackAttr.Tag).toString(); //标识.
-			String mypk = dr.get(TrackAttr.MyPK).toString(); //主键.
+			String tag = dr.getValue(TrackAttr.Tag).toString(); //标识.
+			String mypk = dr.getValue(TrackAttr.MyPK).toString(); //主键.
 
 			String msg = "";
 			if (at == ActionType.CallChildenFlow)
@@ -71,11 +71,11 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 					mygwf.setWorkID(ap.GetValInt64ByKey("PWorkID"));
 					if (mygwf.RetrieveFromDBSources() == 1)
 					{
-						msg = "<p>操作员:{" + dr.get(TrackAttr.EmpFromT).toString() + "}在当前节点上，被父流程{" + mygwf.getFlowName() + "},<a target=b" + ap.GetValStrByKey("PWorkID") + " href='Track.aspx?WorkID=" + ap.GetValStrByKey("PWorkID") + "&FK_Flow=" + ap.GetValStrByKey("PFlowNo") + "' >" + msg + "</a></p>";
+						msg = "<p>操作员:{" + dr.getValue(TrackAttr.EmpFromT).toString() + "}在当前节点上，被父流程{" + mygwf.getFlowName() + "},<a target=b" + ap.GetValStrByKey("PWorkID") + " href='Track.aspx?WorkID=" + ap.GetValStrByKey("PWorkID") + "&FK_Flow=" + ap.GetValStrByKey("PFlowNo") + "' >" + msg + "</a></p>";
 					}
 					else
 					{
-						msg = "<p>操作员:{" + dr.get(TrackAttr.EmpFromT).toString() + "}在当前节点上，被父流程调用{" + mygwf.getFlowName() + "}，但是该流程被删除了.</p>" + tag;
+						msg = "<p>操作员:{" + dr.getValue(TrackAttr.EmpFromT).toString() + "}在当前节点上，被父流程调用{" + mygwf.getFlowName() + "}，但是该流程被删除了.</p>" + tag;
 					}
 
 					msg = "<a target=b" + ap.GetValStrByKey("PWorkID") + " href='Track.aspx?WorkID=" + ap.GetValStrByKey("PWorkID") + "&FK_Flow=" + ap.GetValStrByKey("PFlowNo") + "' >" + msg + "</a>";
@@ -99,12 +99,12 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 					mygwf.setWorkID(ap.GetValInt64ByKey("CWorkID"));
 					if (mygwf.RetrieveFromDBSources() == 1)
 					{
-						msg = "<p>操作员:{" + dr.get(TrackAttr.EmpFromT).toString() + "}在当前节点上调用了子流程{" + mygwf.getFlowName() + "}, <a target=b" + ap.GetValStrByKey("CWorkID") + " href='Track.aspx?WorkID=" + ap.GetValStrByKey("CWorkID") + "&FK_Flow=" + ap.GetValStrByKey("CFlowNo") + "' >" + msg + "</a></p>";
+						msg = "<p>操作员:{" + dr.getValue(TrackAttr.EmpFromT).toString() + "}在当前节点上调用了子流程{" + mygwf.getFlowName() + "}, <a target=b" + ap.GetValStrByKey("CWorkID") + " href='Track.aspx?WorkID=" + ap.GetValStrByKey("CWorkID") + "&FK_Flow=" + ap.GetValStrByKey("CFlowNo") + "' >" + msg + "</a></p>";
 						msg += "<p>当前子流程状态：{" + mygwf.getWFStateText() + "}，运转到:{" + mygwf.getNodeName() + "}，最后处理人{" + mygwf.getTodoEmps() + "}，最后处理时间{" + mygwf.getRDT() + "}。</p>";
 					}
 					else
 					{
-						msg = "<p>操作员:{" + dr.get(TrackAttr.EmpFromT).toString() + "}在当前节点上调用了子流程{" + mygwf.getFlowName() + "}，但是该流程被删除了.</p>" + tag;
+						msg = "<p>操作员:{" + dr.getValue(TrackAttr.EmpFromT).toString() + "}在当前节点上调用了子流程{" + mygwf.getFlowName() + "}，但是该流程被删除了.</p>" + tag;
 					}
 
 				}
@@ -540,7 +540,40 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	*/
 	public final String OneWork_GetTabs() throws Exception
 	{
-
+//		String re = "[";
+//
+//		OneWorkXmls xmls = new OneWorkXmls();
+//		xmls.RetrieveAll();
+//
+//		int nodeID = this.getFK_Node();
+//		if (nodeID == 0)
+//		{
+//			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+//			nodeID = gwf.getFK_Node();
+//		}
+//
+//		Node nd = new Node(nodeID);
+//
+//		for (XmlEn en : xmls.ToJavaListXmlEns())
+//		{
+//			OneWorkXml item  = (OneWorkXml)en;
+//			String url = "";
+//			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), String.valueOf(nodeID), this.getWorkID(), this.getFK_Flow(), this.getFID());
+//			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
+//			{
+//				if (nd.getFormUrl().contains("?"))
+//				{
+//					url = "@url=" + nd.getFormUrl() + "&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
+//				}
+//				else
+//				{
+//					url = "@url=" + nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
+//				}
+//			}
+//			re += "{" + String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\",\"IsDefault\":\"%4$s\"", item.getNo(), item.getName(), url, item.getIsDefault()) + "},";
+//		}
+//
+//		return StringHelper.trimEnd(re, ',') + "]";
 		String re = "[";
 		OneWorkXmls xmls = new OneWorkXmls();
 		xmls.RetrieveAll();		

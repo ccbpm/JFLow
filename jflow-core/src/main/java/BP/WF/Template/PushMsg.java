@@ -825,8 +825,8 @@ public class PushMsg extends EntityMyPK
 
 				for (DataRow dr : dt.Rows)
 				{
-					String empName = dr.get("Name").toString();
-					String empNo = dr.get("No").toString();
+					String empName = dr.getValue("Name").toString();
+					String empNo = dr.getValue("No").toString();
 
 
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
@@ -872,8 +872,8 @@ public class PushMsg extends EntityMyPK
 			DataTable dt = DBAccess.RunSQLReturnTable(bySQL);
 			for (DataRow dr : dt.Rows)
 			{
-				String empName = dr.get("Name").toString();
-				String empNo = dr.get("No").toString();
+				String empName = dr.getValue("Name").toString();
+				String empNo = dr.getValue("No").toString();
 
 
 				// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
@@ -1002,8 +1002,9 @@ public class PushMsg extends EntityMyPK
 				String empsStrs = "";
 				for (DataRow dr : dt.Rows)
 				{
-					empsStrs += dr.get("Emps");
-					String todoEmps = dr.get("TodoEmps").toString();
+					if(dr.getValue("Emps")!=null)
+					empsStrs += dr.getValue("Emps").toString();
+					String todoEmps = dr.getValue("TodoEmps").toString();
 					if (DataType.IsNullOrEmpty(todoEmps) == false)
 					{
 						String[] strs = todoEmps.split("[;]", -1);

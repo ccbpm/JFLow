@@ -1152,7 +1152,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 	public final void GenerChildRows(DataTable dt, DataTable newDt, DataRow parentRow)
 	{
-		DataRow[] rows = dt.Select("ParentNo='" + parentRow.get("NO") + "'");
+		DataRow[] rows = dt.Select("ParentNo='" + parentRow.getValue("NO") + "'");
 		for (DataRow r : rows)
 		{
 			newDt.Rows.AddDatas(r.ItemArray);
@@ -1263,12 +1263,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		for (DataRow dr : dtSort.Rows)
 		{
 			DataRow drForm = dtForm.NewRow();
-			drForm.setValue(0, dr.get("No"));
-			drForm.setValue(1, dr.get("ParentNo"));
-			drForm.setValue(2, dr.get("Name"));
-			drForm.setValue(3, dr.get("Idx"));
-			drForm.setValue(4, dr.get("IsParent"));
-			drForm.setValue(5, dr.get("TType"));
+			drForm.setValue(0, dr.getValue("No"));
+			drForm.setValue(1, dr.getValue("ParentNo"));
+			drForm.setValue(2, dr.getValue("Name"));
+			drForm.setValue(3, dr.getValue("Idx"));
+			drForm.setValue(4, dr.getValue("IsParent"));
+			drForm.setValue(5, dr.getValue("TType"));
 			dtForm.Rows.add(drForm); //类别.
 		}
 
@@ -1490,14 +1490,14 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				{
 					DataRow row = rows.get(i);
 
-					String jNo = row.get(idCol) instanceof String ? (String)row.get(idCol) : null;
-					String jText = row.get(txtCol) instanceof String ? (String)row.get(txtCol) : null;
+					String jNo = row.getValue(idCol) instanceof String ? (String)row.getValue(idCol) : null;
+					String jText = row.getValue(txtCol) instanceof String ? (String)row.getValue(txtCol) : null;
 					if (jText.length() > 25)
 					{
 						jText = jText.substring(0, 25) + "<img src='../Scripts/easyUI/themes/icons/add2.png' onclick='moreText(" + jNo + ")'/>";
 					}
 
-					String jIsParent = row.get(IsParent).toString();
+					String jIsParent = row.getValue(IsParent).toString();
 					String jState = "1".equals(jIsParent) ? "open" : "closed";
 					jState = "open".equals(jState) && i == 0 ? "open" : "closed";
 
@@ -1514,16 +1514,16 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 							{
 								continue;
 							}
-							if (DataType.IsNullOrEmpty(row.get(field).toString()))
+							if (DataType.IsNullOrEmpty(row.getValue(field).toString()))
 							{
 								attrs += ",\"" + field + "\":\"\"";
 								continue;
 							}
-							attrs += ",\"" + field + "\":" + (tabel.Columns.get(field).DataType == String.class ? String.format("\"%1$s\"", row.get(field)) : row.get(field));
+							attrs += ",\"" + field + "\":" + (tabel.Columns.get(field).DataType == String.class ? String.format("\"%1$s\"", row.getValue(field)) : row.getValue(field));
 						}
 					}
 
-					if ("0".equals(pId.toString()) || row.get(rela).toString().equals("F0"))
+					if ("0".equals(pId.toString()) || row.getValue(rela).toString().equals("F0"))
 					{
 						tmp += "\",\"attributes\":{\"IsParent\":\"" + jIsParent + "\",\"IsRoot\":\"1\"" + attrs + "}";
 					}

@@ -461,14 +461,14 @@ public class Dev2Interface
 
 		for (DataRow dr : dtMain.Rows)
 		{
-			String mainPK = dr.get("MainPK").toString();
+			String mainPK = dr.getValue("MainPK").toString();
 			String sql = "SELECT OID FROM " + md.getPTable() + " WHERE MainPK='" + mainPK + "'";
 			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 			{
 				continue; //说明已经调度过了
 			}
 
-			String starter = dr.get("Starter").toString();
+			String starter = dr.getValue("Starter").toString();
 			if (!starter.equals(WebUser.getNo()))
 			{
 				WebUser.Exit();
@@ -488,12 +488,12 @@ public class Dev2Interface
 			Work wk = fl.NewWork();
 			for (DataColumn dc : dtMain.Columns)
 			{
-				wk.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
+				wk.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 			}
 
 			if (ds.Tables.size() != 0)
 			{
-				String refPK = dr.get("MainPK").toString();
+				String refPK = dr.getValue("MainPK").toString();
 				MapDtls dtls = wk.getHisNode().getMapData().getMapDtls(); // new MapDtls(nodeTable);
 				for (MapDtl dtl : dtls.ToJavaList())
 				{
@@ -1010,20 +1010,20 @@ public class Dev2Interface
 		for (DataRow row : sortTable.Rows)
 		{
 			DataRow newRow = table.NewRow();
-			newRow.setValue("No", row.get("No"));
-			newRow.setValue("Name", row.get("Name"));
-			newRow.setValue("ParentNo", row.get("ParentNo"));
+			newRow.setValue("No", row.getValue("No"));
+			newRow.setValue("Name", row.getValue("Name"));
+			newRow.setValue("ParentNo", row.getValue("ParentNo"));
 			newRow.setValue("ICON", "icon-tree_folder");
 			table.Rows.add(newRow);
 		}
 
 		for (DataRow row : table.Rows)
 		{
-			if (DataType.IsNullOrEmpty(row.get("ParentNo").toString()))
+			if (DataType.IsNullOrEmpty(row.getValue("ParentNo").toString()))
 			{
-				row.setValue("ParentNo", row.get("FK_FlowSort"));
+				row.setValue("ParentNo", row.getValue("FK_FlowSort"));
 			}
-			if (DataType.IsNullOrEmpty(row.get("ICON").toString()))
+			if (DataType.IsNullOrEmpty(row.getValue("ICON").toString()))
 			{
 				row.setValue("ICON", "icon-4");
 			}
@@ -2359,7 +2359,7 @@ public class Dev2Interface
 				{
 					if (column.ColumnName.equals(dtColumn.ColumnName))
 					{
-						newRow.setValue(column.ColumnName, row.get(dtColumn.ColumnName));
+						newRow.setValue(column.ColumnName, row.getValue(dtColumn.ColumnName));
 					}
 
 				}
@@ -2426,7 +2426,7 @@ public class Dev2Interface
 				{
 					if (column.ColumnName.equals(dtColumn.ColumnName))
 					{
-						newRow.setValue(column.ColumnName, row.get(dtColumn.ColumnName));
+						newRow.setValue(column.ColumnName, row.getValue(dtColumn.ColumnName));
 					}
 
 				}
@@ -3578,7 +3578,7 @@ public class Dev2Interface
 				{
 					if (column.ColumnName.equals(dtColumn.ColumnName))
 					{
-						newRow.setValue(column.ColumnName, row.get(dtColumn.ColumnName));
+						newRow.setValue(column.ColumnName, row.getValue(dtColumn.ColumnName));
 					}
 				}
 			}
@@ -3623,7 +3623,7 @@ public class Dev2Interface
 	 用户登陆,此方法是在开发者校验好用户名与密码后执行
 	 
 	 @param userNo 用户名
-	 @param SID 安全ID,请参考流程设计器操作手册
+	 @param sid 安全ID,请参考流程设计器操作手册
 	 * @throws Exception 
 	*/
 
@@ -3657,9 +3657,6 @@ public class Dev2Interface
 	 登录
 	 
 	 @param userNo 人员编号
-	 @param userName 名称
-	 @param fk_dept 所在部门
-	 @param deptName 部门名称
 	 @return 
 	 * @throws Exception 
 	*/
@@ -3719,7 +3716,6 @@ public class Dev2Interface
 	 
 	 @param userNo 用户编号
 	 @param logDev 设备编号
-	 @param activeMinutes 登录有效时间
 	 @return 返回一个新的SID
 	 * @throws Exception 
 	*/
@@ -3915,7 +3911,6 @@ public class Dev2Interface
 	 @param openUrl 连接URL
 	 @param pushModel 可以接受消息的类型(如邮件、短信、丁丁、微信等)
 	 @param msgPK 唯一标志,防止发送重复.
-	 @param atParas 参数.
 	 * @throws Exception 
 	*/
 
@@ -5699,7 +5694,6 @@ public class Dev2Interface
 	 
 	 @param pWorkID 父流程的workid
 	 @param currWorkID 不包含当前的工作节点ID
-	 @param workID 父流程的workid
 	 @return 获得正在运行中的子流程的数量。如果是0，表示所有的流程的子流程都已经结束。
 	*/
 	public static int Flow_NumOfSubFlowRuning(long pWorkID, long currWorkID)
@@ -6862,7 +6856,7 @@ public class Dev2Interface
 			int runMode = nd.GetValIntByKey(NodeAttr.RunModel);
 			for (DataRow dr : dtHistory.Rows)
 			{
-				if (Integer.parseInt(dr.get("FK_Node").toString()) == nd.getNodeID())
+				if (Integer.parseInt(dr.getValue("FK_Node").toString()) == nd.getNodeID())
 				{
 					dr.setValue("RunModel", runMode);
 				}
@@ -7145,7 +7139,7 @@ public class Dev2Interface
 						for (DataColumn dc : dt.Columns)
 						{
 							//设置属性.
-							daDtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName));
+							daDtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName));
 						}
 
 						daDtl.setRefPK( String.valueOf(wk.getOID()));
@@ -7396,7 +7390,7 @@ public class Dev2Interface
 						for (DataColumn dc : dt.Columns)
 						{
 							//设置属性.
-							daDtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName));
+							daDtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName));
 						}
 						daDtl.InsertAsOID(DBAccess.GenerOID("Dtl")); //插入数据.
 					}
@@ -7669,7 +7663,7 @@ public class Dev2Interface
 						for (DataColumn dc : dt.Columns)
 						{
 							//设置属性.
-							daDtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName));
+							daDtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName));
 						}
 						daDtl.InsertAsOID(DBAccess.GenerOID("Dtl")); //插入数据.
 					}
@@ -9065,7 +9059,7 @@ public class Dev2Interface
 							for (DataColumn dc : dt.Columns)
 							{
 								//设置属性.
-								daDtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName));
+								daDtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName));
 							}
 
 							daDtl.ResetDefaultVal();
@@ -9415,7 +9409,7 @@ public class Dev2Interface
 						for (DataColumn dc : dt.Columns)
 						{
 							//设置属性.
-							daDtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName));
+							daDtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName));
 						}
 						daDtl.InsertAsOID(DBAccess.GenerOID("Dtl")); //插入数据.
 					}
@@ -9547,7 +9541,7 @@ public class Dev2Interface
 			toDoEmpsNum = String.valueOf(toDoEmpsTable.Rows.size());
 			for (DataRow dr : toDoEmpsTable.Rows)
 			{
-				toDoEmps += String.format("%1$s,%2$s", dr.get("FK_Emp").toString(), dr.get("FK_EmpText").toString()) + ";";
+				toDoEmps += String.format("%1$s,%2$s", dr.getValue("FK_Emp").toString(), dr.getValue("FK_EmpText").toString()) + ";";
 			}
 			Paras ps2 = new Paras();
 			//将任务放回后 将WF_GenerWorkFlow 中的 TodoEmps,TodoEmpsNum 修改下  杨玉慧 
@@ -10432,8 +10426,6 @@ public class Dev2Interface
 	}
 	/** 
 	 设置工作未读取
-	 
-	 @param nodeID 节点ID
 	 @param workid 工作ID
 	 * @throws Exception 
 	*/
@@ -11088,7 +11080,7 @@ public class Dev2Interface
 	 发送到节点
 	 
 	 @param flowNo
-	 @param node
+	 @param nodeID
 	 @param workid
 	 @param fid
 	 @param toNodes
@@ -11119,7 +11111,6 @@ public class Dev2Interface
 	 
 	 @param nodeID 指定节点
 	 @param WorkID 工作ID
-	 @param FID 流程ID
 	 @return 
 	 * @throws Exception 
 	*/
@@ -11239,7 +11230,7 @@ public class Dev2Interface
 	/** 
 	 获取接收人选择器，按部门绑定
 	 
-	 @param ToNode
+	 @param nodeID
 	 @return 
 	*/
 	private static DataSet WorkOpt_Accepter_ByDept(int nodeID)
@@ -11323,10 +11314,10 @@ public class Dev2Interface
 	 发送到节点
 	 
 	 @param flowNo
-	 @param node
+	 @param nodeID
 	 @param workid
 	 @param fid
-	 @param toNodes
+	 @param toNodeID
 	 * @throws Exception 
 	*/
 	public static SendReturnObjs WorkOpt_SendToEmps(String flowNo, int nodeID, long workid, long fid, int toNodeID, String toEmps, boolean isRememberMe) throws Exception

@@ -1041,8 +1041,8 @@ public class FlowExt extends EntityNoName
 		String msg = "如下流程ID被删除:";
 		for (DataRow dr : dt.Rows)
 		{
-			long workid = Long.parseLong(dr.get("WorkID").toString());
-			String fk_flow = dr.get("FK_Flow").toString();
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
+			String fk_flow = dr.getValue("FK_Flow").toString();
 			BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(fk_flow, workid, false);
 			msg += " " + workid;
 		}
@@ -1385,12 +1385,12 @@ public class FlowExt extends EntityNoName
 			GenerWorkerList currWl = new GenerWorkerList();
 			for (DataRow dr : dt.Rows)
 			{
-				int ndFrom = Integer.parseInt(dr.get("NDFrom").toString());
+				int ndFrom = Integer.parseInt(dr.getValue("NDFrom").toString());
 				Node nd = new Node(ndFrom);
 
-				String ndFromT = dr.get("NDFromT").toString();
-				String EmpFrom = dr.get(TrackAttr.EmpFrom).toString();
-				String EmpFromT = dr.get(TrackAttr.EmpFromT).toString();
+				String ndFromT = dr.getValue("NDFromT").toString();
+				String EmpFrom = dr.getValue(TrackAttr.EmpFrom).toString();
+				String EmpFromT = dr.getValue(TrackAttr.EmpFromT).toString();
 
 				// 增加上 工作人员的信息.
 				GenerWorkerList gwl = new GenerWorkerList();
@@ -1421,7 +1421,7 @@ public class FlowExt extends EntityNoName
 				Emp emp = new Emp(gwl.getFK_Emp());
 				gwl.setFK_Dept(emp.getFK_Dept());
 
-				gwl.setSDT(dr.get("RDT").toString());
+				gwl.setSDT(dr.getValue("RDT").toString());
 				gwl.setDTOfWarning(gwf.getSDTOfNode());
 
 				gwl.setIsEnable(true);

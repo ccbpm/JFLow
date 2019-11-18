@@ -1652,14 +1652,14 @@ public class Flow extends BP.En.EntityNoName {
 		for (DataRow dr : dtMain.Rows) {
 			idx++;
 
-			String mainPK = dr.get("MainPK").toString();
+			String mainPK = dr.getValue("MainPK").toString();
 			String sql = "SELECT OID FROM " + md.getPTable() + " WHERE MainPK='" + mainPK + "'";
 			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0) {
 				msg += "@" + this.getName() + ",第" + idx + "条,此任务在之前已经完成。";
 				continue; // 说明已经调度过了
 			}
 
-			String starter = dr.get("Starter").toString();
+			String starter = dr.getValue("Starter").toString();
 			if (!starter.equals(WebUser.getNo())) {
 				WebUser.Exit();
 				BP.Port.Emp emp = new BP.Port.Emp();
@@ -1675,7 +1675,7 @@ public class Flow extends BP.En.EntityNoName {
 			/// #region 给值.
 			Work wk = this.NewWork();
 			for (DataColumn dc : dtMain.Columns) {
-				wk.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
+				wk.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 			}
 
 			if (ds.Tables.size() != 0) {
@@ -2265,8 +2265,8 @@ public class Flow extends BP.En.EntityNoName {
 					+ ")  AA GROUP BY  AA.KEYOFEN HAVING COUNT(*) > 1";
 			DataTable dt_Fields = DBAccess.RunSQLReturnTable(checkSQL);
 			for (DataRow row : dt_Fields.Rows) {
-				String keyOfEn = row.get("KEYOFEN").toString();
-				String myNum = row.get("MYNUM").toString();
+				String keyOfEn = row.getValue("KEYOFEN").toString();
+				String myNum = row.getValue("MYNUM").toString();
 				int iMyNum = 0;
 				if (DataType.IsNullOrEmpty(myNum) == false)
 					iMyNum = Integer.parseInt(myNum);
@@ -4693,7 +4693,7 @@ public class Flow extends BP.En.EntityNoName {
 			for (DataRow dr : mydtGF.Rows) {
 				GroupField gf = new GroupField();
 				for (DataColumn dc : mydtGF.Columns) {
-					String val = dr.get(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+					String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 					gf.SetValByKey(dc.ColumnName, val);
 				}
 				int oldID = (int) gf.getOID();
@@ -4769,7 +4769,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					SubFlowYanXu yg = new SubFlowYanXu();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -4803,7 +4803,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					NodeToolbar cd = new NodeToolbar();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -4834,7 +4834,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					FrmField cd = new FrmField();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -4865,7 +4865,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					NodeToolbar cd = new NodeToolbar();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -4898,8 +4898,8 @@ public class Flow extends BP.En.EntityNoName {
 			/*
 			 * for (DataRow dr : dt.Rows) { BillTemplate bt = new
 			 * BillTemplate(); for (DataColumn dc : dt.Columns) { String val =
-			 * dr.get(dc.ColumnName) instanceof String ?
-			 * (String)dr.get(dc.ColumnName) : null; if (val == null) {
+			 * dr.getValue(dc.ColumnName) instanceof String ?
+			 * (String)dr.getValue(dc.ColumnName) : null; if (val == null) {
 			 * continue; } switch (dc.ColumnName.toLowerCase()) { case
 			 * "fk_flow": val = String.valueOf(flowID); break; case "nodeid":
 			 * case "fk_node": if (val.length() < iOldFlowLength) {
@@ -4925,7 +4925,7 @@ public class Flow extends BP.En.EntityNoName {
 					FrmNode fn = new FrmNode();
 					fn.setFK_Flow(fl.getNo());
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -4955,7 +4955,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					FindWorkerRole en = new FindWorkerRole();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -4988,7 +4988,7 @@ public class Flow extends BP.En.EntityNoName {
 					Cond cd = new Cond();
 					cd.setFK_Flow(fl.getNo());
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5041,7 +5041,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					CCDept cd = new CCDept();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5071,7 +5071,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					NodeReturn cd = new NodeReturn();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5103,7 +5103,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					Direction dir = new Direction();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5131,7 +5131,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					LabNote ln = new LabNote();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5147,7 +5147,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					NodeDept dir = new NodeDept();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5175,7 +5175,7 @@ public class Flow extends BP.En.EntityNoName {
 					FrmWorkCheck fwc = new FrmWorkCheck();
 
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5236,13 +5236,13 @@ public class Flow extends BP.En.EntityNoName {
 				// 执行update 触发其他的业务逻辑。
 				for (DataRow dr : dt.Rows) {
 					Node nd = new Node();
-					nd.setNodeID(Integer.parseInt(dr.get(NodeAttr.NodeID).toString()));
+					nd.setNodeID(Integer.parseInt(dr.getValue(NodeAttr.NodeID).toString()));
 					nd.RetrieveFromDBSources();
 					nd.setFK_Flow(fl.getNo());
 					// 获取表单类别
-					String formType = dr.get(NodeAttr.FormType).toString();
+					String formType = dr.getValue(NodeAttr.FormType).toString();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5286,10 +5286,10 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					BP.WF.Template.NodeExt nd = new BP.WF.Template.NodeExt();
 					nd.setNodeID(
-							Integer.parseInt(flowID + dr.get(NodeAttr.NodeID).toString().substring(iOldFlowLength)));
+							Integer.parseInt(flowID + dr.getValue(NodeAttr.NodeID).toString().substring(iOldFlowLength)));
 					nd.RetrieveFromDBSources();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						switch (dc.ColumnName.toLowerCase()) {
 						case "nodeid":
 							if (val.length() < iOldFlowLength) {
@@ -5321,7 +5321,7 @@ public class Flow extends BP.En.EntityNoName {
 					Selector selector = new Selector();
 					for (DataColumn dc : dt.Columns) {
 
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5346,7 +5346,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					NodeStation ns = new NodeStation();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5372,7 +5372,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					SysEnum se = new SysEnum();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						switch (dc.ColumnName.toLowerCase()) {
 						case "fk_node":
 							break;
@@ -5392,7 +5392,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					SysEnumMain sem = new SysEnumMain();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5408,7 +5408,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					MapAttr ma = new MapAttr();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						switch (dc.ColumnName.toLowerCase()) {
 						case "fk_mapdata":
 						case "keyofen":
@@ -5438,7 +5438,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					MapData md = new MapData();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5453,7 +5453,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					MapDtl md = new MapDtl();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5469,7 +5469,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					MapExt md = new MapExt();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5489,7 +5489,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmLine en = new FrmLine();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5508,7 +5508,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmEle en = new FrmEle();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5526,7 +5526,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmImg en = new FrmImg();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5544,7 +5544,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmLab en = new FrmLab();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5564,7 +5564,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmLink en = new FrmLink();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						val = val.replace("ND" + oldFlowID, "ND" + flowID);
 						if (val == null) {
 							continue;
@@ -5582,7 +5582,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmAttachment en = new FrmAttachment();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5601,7 +5601,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmEvent en = new FrmEvent();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5624,7 +5624,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					FrmRB en = new FrmRB();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5641,7 +5641,7 @@ public class Flow extends BP.En.EntityNoName {
 					idx++;
 					MapFrame en = new MapFrame();
 					for (DataColumn dc : dt.Columns) {
-						Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object) dr.get(dc.ColumnName) : null;
+						Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5655,7 +5655,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					NodeEmp ne = new NodeEmp();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5681,7 +5681,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					GroupField gf = new GroupField();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5709,7 +5709,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					CCEmp ne = new CCEmp();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}
@@ -5737,7 +5737,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					CCStation ne = new CCStation();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.get(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
 						}

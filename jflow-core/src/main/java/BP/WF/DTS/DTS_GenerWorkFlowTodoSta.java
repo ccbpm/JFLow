@@ -81,9 +81,9 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 		WFEmp emp = new WFEmp();
 		for (DataRow dr : dt.Rows)
 		{
-			long workid = Long.parseLong(dr.get("WorkID").toString());
-			int fk_node = Integer.parseInt(dr.get("FK_Node").toString());
-			String fk_emp = dr.get("FK_Emp").toString();
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
+			int fk_node = Integer.parseInt(dr.getValue("FK_Node").toString());
+			String fk_emp = dr.getValue("FK_Emp").toString();
 
 			if (nd.getNodeID() != fk_node)
 			{

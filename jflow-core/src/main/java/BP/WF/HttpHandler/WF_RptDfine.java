@@ -1280,7 +1280,7 @@ public class WF_RptDfine extends WebContralBase
 			mydr.setValue("IDX", myIdx);
 			for (DataColumn dc : dt2.Columns)
 			{
-				mydr.setValue(dc.ColumnName, dr.get(dc.ColumnName));
+				mydr.setValue(dc.ColumnName, dr.getValue(dc.ColumnName));
 			}
 			dt1.Rows.add(mydr);
 		}
@@ -1364,17 +1364,17 @@ public class WF_RptDfine extends WebContralBase
 						switch (attr1.getKey())
 						{
 							case "FK_NY":
-								sql += " FK_NY <= '" + dr.get("FK_NY") + "' AND FK_ND='" + dr.get("FK_NY").toString().substring(0, 4) + "' AND ";
+								sql += " FK_NY <= '" + dr.getValue("FK_NY") + "' AND FK_ND='" + dr.getValue("FK_NY").toString().substring(0, 4) + "' AND ";
 								break;
 							case "FK_Dept":
-								sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
+								sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
 								break;
 							case "FK_SJ":
 							case "FK_XJ":
-								sql += attr1.getKey() + " LIKE '" + dr.get(attr1.getKey()) + "%' AND ";
+								sql += attr1.getKey() + " LIKE '" + dr.getValue(attr1.getKey()) + "%' AND ";
 								break;
 							default:
-								sql += attr1.getKey() + "='" + dr.get(attr1.getKey()) + "' AND ";
+								sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
 								break;
 						}
 					}
@@ -1408,7 +1408,7 @@ public class WF_RptDfine extends WebContralBase
 					int val = 0;
 					try
 					{
-						val = Integer.parseInt(dr.get(attr.getKey()).toString());
+						val = Integer.parseInt(dr.getValue(attr.getKey()).toString());
 					}
 					catch (java.lang.Exception e)
 					{
@@ -1429,7 +1429,7 @@ public class WF_RptDfine extends WebContralBase
 			for (DataRow dr : dt.Rows)
 			{
 				Entity myen = attr.getHisFKEn();
-				String val = dr.get(attr.getKey()).toString();
+				String val = dr.getValue(attr.getKey()).toString();
 				myen.SetValByKey(attr.getUIRefKeyValue(), val);
 				try
 				{

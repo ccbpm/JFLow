@@ -702,8 +702,8 @@ public class FlowCheckError
 			DataTable dt_Fields = DBAccess.RunSQLReturnTable(checkSQL);
 			for (DataRow row : dt_Fields.Rows)
 			{
-				String keyOfEn = row.get("KEYOFEN").toString();
-				String myNum = row.get("MYNUM").toString();
+				String keyOfEn = row.getValue("KEYOFEN").toString();
+				String myNum = row.getValue("MYNUM").toString();
 				int iMyNum = Integer.parseInt(myNum);
 				
 
@@ -846,14 +846,14 @@ public class FlowCheckError
 		//遍历 - 所有节点表单字段的合集
 		for (DataRow dr : dt.Rows)
 		{
-			if (pks.contains("@" + dr.get("KeyOfEn").toString() + "@") == true)
+			if (pks.contains("@" + dr.getValue("KeyOfEn").toString() + "@") == true)
 			{
 				continue;
 			}
 
-			String mypk = dr.get("MyPK").toString();
+			String mypk = dr.getValue("MyPK").toString();
 
-			pks += dr.get("KeyOfEn").toString() + "@";
+			pks += dr.getValue("KeyOfEn").toString() + "@";
 
 			//找到这个属性.
 			BP.Sys.MapAttr ma = new BP.Sys.MapAttr(mypk);

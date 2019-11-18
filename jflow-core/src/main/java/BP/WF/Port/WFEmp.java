@@ -337,7 +337,7 @@ public class WFEmp extends EntityNoName {
 		String sql = "select No from Port_Emp where No not in (select No from WF_Emp)";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows) {
-			BP.Port.Emp emp1 = new BP.Port.Emp(dr.get("No").toString());
+			BP.Port.Emp emp1 = new BP.Port.Emp(dr.getValue("No").toString());
 			WFEmp empWF = new WFEmp();
 			empWF.Copy(emp1);
 			try {

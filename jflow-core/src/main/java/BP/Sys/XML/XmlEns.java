@@ -245,16 +245,16 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		{
 			return cdt;
 		}
-		
-		if (this.getFile().toLowerCase().indexOf(".txt") > 0)
+		String filePath = this.getFile();
+		if (filePath.toLowerCase().indexOf(".txt") > 0)
 		{
 			return this.GetTableTxt();
 		}
 		
-		if (this.getFile().toLowerCase().indexOf(".xml") > 0)
+		if (filePath.toLowerCase().indexOf(".xml") > 0)
 		{
 			DataSet ds1 = new DataSet();
-			ds1.readXml(this.getFile());
+			ds1.readXml(filePath);
 			DataTable mdt = ds1.hashTables.get(this.getTableName());
 			/*
 			 * warning DataTable mdt = ds1.Tables[this.getTableName()];
@@ -267,9 +267,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 			BP.DA.Cash.AddObj(this.getTname(), Depositary.Application, mdt);
 			
 			return ds1.hashTables.get(this.getTableName());
-			/*
-			 * warning return ds1.Tables[this.getTableName()];
-			 */
+
 		}
 		
 		// 说明这个是目录

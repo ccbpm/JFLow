@@ -102,10 +102,10 @@ public class ccbpmServices extends Method
 		// 遍历循环,逾期表进行处理.
 		for (DataRow dr : dt.Rows)
 		{
-			String fk_flow = dr.get("FK_Flow") + "";
-			int fk_node = Integer.parseInt(dr.get("FK_Node") + "");
-			long workid = Long.parseLong(dr.get("WorkID") + "");
-			String title = dr.get("Title") + "";
+			String fk_flow = dr.getValue("FK_Flow") + "";
+			int fk_node = Integer.parseInt(dr.getValue("FK_Node") + "");
+			long workid = Long.parseLong(dr.getValue("WorkID") + "");
+			String title = dr.getValue("Title") + "";
 			//判断流程是否设置逾期消息
 			PushMsg pushMsg = new PushMsg();
 			int count = pushMsg.Retrieve(PushMsgAttr.FK_Flow, fk_flow, PushMsgAttr.FK_Node, 0, PushMsgAttr.FK_Event, EventListOfNode.FlowOverDue);
@@ -130,10 +130,10 @@ public class ccbpmServices extends Method
 		// 遍历循环,预警表进行处理.
 		for (DataRow dr : dt.Rows)
 		{
-			String fk_flow = dr.get("FK_Flow") + "";
-			int fk_node = Integer.parseInt(dr.get("FK_Node") + "");
-			long workid = Long.parseLong(dr.get("WorkID") + "");
-			String title = dr.get("Title") + "";
+			String fk_flow = dr.getValue("FK_Flow") + "";
+			int fk_node = Integer.parseInt(dr.getValue("FK_Node") + "");
+			long workid = Long.parseLong(dr.getValue("WorkID") + "");
+			String title = dr.getValue("Title") + "";
 			//判断流程是否设置逾期消息
 			PushMsg pushMsg = new PushMsg();
 			int count = pushMsg.Retrieve(PushMsgAttr.FK_Flow, fk_flow, PushMsgAttr.FK_Node, 0, PushMsgAttr.FK_Event, EventListOfNode.FlowWarning);
@@ -158,12 +158,12 @@ public class ccbpmServices extends Method
 		generTab = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow row : generTab.Rows)
 		{
-			String fk_flow = row.get("FK_Flow") + "";
-			int fk_node = Integer.parseInt(row.get("FK_Node") + "");
-			long workid = Long.parseLong(row.get("WorkID") + "");
-			String title = row.get("Title") + "";
-			String compleateTime = row.get("SDTOfNode") + "";
-			String starter = row.get("Starter") + "";
+			String fk_flow = row.getValue("FK_Flow") + "";
+			int fk_node = Integer.parseInt(row.getValue("FK_Node") + "");
+			long workid = Long.parseLong(row.getValue("WorkID") + "");
+			String title = row.getValue("Title") + "";
+			String compleateTime = row.getValue("SDTOfNode") + "";
+			String starter = row.getValue("Starter") + "";
 			Node node = new Node(fk_node);
 			if (node.getIsStartNode())
 			{
@@ -237,12 +237,12 @@ public class ccbpmServices extends Method
 		String info = "";
 		for (DataRow row : generTab.Rows)
 		{
-			String fk_flow = row.get("FK_Flow") + "";
-			int fk_node = Integer.parseInt(row.get("FK_Node") + "");
-			long workid = Long.parseLong(row.get("WorkID") + "");
-			String title = row.get("Title") + "";
-			String compleateTime = row.get("SDTOfNode") + "";
-			String starter = row.get("Starter") + "";
+			String fk_flow = row.getValue("FK_Flow") + "";
+			int fk_node = Integer.parseInt(row.getValue("FK_Node") + "");
+			long workid = Long.parseLong(row.getValue("WorkID") + "");
+			String title = row.getValue("Title") + "";
+			String compleateTime = row.getValue("SDTOfNode") + "";
+			String starter = row.getValue("Starter") + "";
 
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, fk_node);
@@ -512,12 +512,12 @@ public class ccbpmServices extends Method
 		String msg = "";
 		for (DataRow row : generTab.Rows)
 		{
-			String fk_flow = row.get("FK_Flow") + "";
-			String fk_node = row.get("FK_Node") + "";
-			long workid = Long.parseLong(row.get("WorkID") + "");
-			String title = row.get("Title") + "";
-			String compleateTime = row.get("SDTOfNode") + "";
-			String starter = row.get("Starter") + "";
+			String fk_flow = row.getValue("FK_Flow") + "";
+			String fk_node = row.getValue("FK_Node") + "";
+			long workid = Long.parseLong(row.getValue("WorkID") + "");
+			String title = row.getValue("Title") + "";
+			String compleateTime = row.getValue("SDTOfNode") + "";
+			String starter = row.getValue("Starter") + "";
 			try
 			{
 				Node node = new Node(Integer.parseInt(fk_node));

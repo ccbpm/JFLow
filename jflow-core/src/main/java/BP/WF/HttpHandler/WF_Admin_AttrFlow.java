@@ -272,14 +272,14 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			{
 				for (DataRow dr : dt.Rows)
 				{
-					if (ywDr.get("No").toString().toUpperCase().equals(dr.get("No").toString().toUpperCase()))
+					if (ywDr.getValue("No").toString().toUpperCase().equals(dr.getValue("No").toString().toUpperCase()))
 					{
-						if (dr.get("No").toString().toUpperCase().equals("OID"))
+						if (dr.getValue("No").toString().toUpperCase().equals("OID"))
 						{
 							flow.setDTSBTablePK("OID");
 						}
-						str += dr.get("No").toString() + ",";
-						ywStr += ywDr.get("No").toString() + ",";
+						str += dr.getValue("No").toString() + ",";
+						ywStr += ywDr.getValue("No").toString() + ",";
 					}
 				}
 			}

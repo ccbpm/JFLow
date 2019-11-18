@@ -73,7 +73,7 @@ public class GenerCH extends Method
 				for (DataRow dr : dt.Rows)
 				{
 					//向下发送.
-					int atInt = (Integer)dr.get(BP.WF.TrackAttr.ActionType);
+					int atInt = (Integer)dr.getValue(BP.WF.TrackAttr.ActionType);
 					ActionType at = ActionType.forValue(atInt);
 					switch (at)
 					{
@@ -87,11 +87,11 @@ public class GenerCH extends Method
 					}
 
 					//相关的变量.
-					long workid = Long.parseLong(dr.get(TrackAttr.WorkID).toString());
-					long fid = Long.parseLong(dr.get(TrackAttr.FID).toString());
+					long workid = Long.parseLong(dr.getValue(TrackAttr.WorkID).toString());
+					long fid = Long.parseLong(dr.getValue(TrackAttr.FID).toString());
 
 					//当前的人员，如果不是就让其登录.
-					String fk_emp = dr.get(BP.WF.TrackAttr.EmpFrom) instanceof String ? (String)dr.get(BP.WF.TrackAttr.EmpFrom) : null;
+					String fk_emp = dr.getValue(BP.WF.TrackAttr.EmpFrom) instanceof String ? (String)dr.getValue(BP.WF.TrackAttr.EmpFrom) : null;
 					if (!fk_emp.equals(WebUser.getNo()))
 					{
 						try
@@ -111,7 +111,7 @@ public class GenerCH extends Method
 					//Glo.InitCH2017(nd.HisFlow, nd, workid, fid, title, priRDT, sdt,
 					//    DataType.ParseSysDate2DateTime(dr[TrackAttr.RDT].ToString()));
 
-					priRDT = dr.get(TrackAttr.RDT).toString();
+					priRDT = dr.getValue(TrackAttr.RDT).toString();
 					sdt = "无";
 				}
 			}

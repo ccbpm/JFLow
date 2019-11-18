@@ -243,14 +243,14 @@ public class AutoRunStratFlows extends Method
 		{
 			idx++;
 
-			String mainPK = dr.get("MainPK").toString();
+			String mainPK = dr.getValue("MainPK").toString();
 			String sql = "SELECT OID FROM " + nodeTable + " WHERE MainPK='" + mainPK + "'";
 			if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
 			{
 				continue; //说明已经调度过了
 			}
 
-			String starter = dr.get("Starter").toString();
+			String starter = dr.getValue("Starter").toString();
 			if (!starter.equals(WebUser.getNo()))
 			{
 				WebUser.Exit();
@@ -310,7 +310,7 @@ public class AutoRunStratFlows extends Method
 
 			for (DataColumn dc : dtMain.Columns)
 			{
-				wk.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
+				wk.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 			}
 
 			if (ds.Tables.size() != 0)
@@ -358,7 +358,7 @@ public class AutoRunStratFlows extends Method
 			int toNodeID = 0;
 			try
 			{
-				toNodeID = Integer.parseInt(dr.get("ToNode").toString());
+				toNodeID = Integer.parseInt(dr.getValue("ToNode").toString());
 			}
 			catch (java.lang.Exception e)
 			{

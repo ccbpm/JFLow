@@ -270,7 +270,7 @@ public class WF_CCForm extends WebContralBase {
 						BP.Sys.GEDtl mydtl = new GEDtl(fk_dtl);
 						dtls.AddEntity(mydtl);
 						for (DataColumn dc : dtDtlFull.Columns) {
-							mydtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
+							mydtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 						}
 						mydtl.setRefPKInt(Integer.parseInt(oid));
 						if (mydtl.getOID() > 100) {
@@ -1058,25 +1058,25 @@ public class WF_CCForm extends WebContralBase {
 			DataTable ddlTable = new DataTable();
 			ddlTable.Columns.Add("No");
 			for (DataRow dr : dtMapAttr.Rows) {
-				String lgType = dr.get("LGType").toString();
+				String lgType = dr.getValue("LGType").toString();
 				if (lgType.equals("2") == false) {
 					continue;
 				}
 
-				String UIIsEnable = dr.get("UIVisible").toString();
+				String UIIsEnable = dr.getValue("UIVisible").toString();
 				if (UIIsEnable.equals("0")) {
 					continue;
 				}
 
-				String uiBindKey = dr.get("UIBindKey").toString();
+				String uiBindKey = dr.getValue("UIBindKey").toString();
 				if (DataType.IsNullOrEmpty(uiBindKey) == true) {
-					String myPK = dr.get("MyPK").toString();
+					String myPK = dr.getValue("MyPK").toString();
 			
 				}
 
 				// 检查是否有下拉框自动填充。
-				String keyOfEn = dr.get("KeyOfEn").toString();
-				String fk_mapData = dr.get("FK_MapData").toString();
+				String keyOfEn = dr.getValue("KeyOfEn").toString();
+				String fk_mapData = dr.getValue("FK_MapData").toString();
 
 				/// #region 处理下拉框数据范围. for 小杨.
 				Object tempVar2 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL,
@@ -1285,10 +1285,10 @@ public class WF_CCForm extends WebContralBase {
 
 			for (DataRow dr : dtMapAttr.Rows) {
 
-				String lgType = dr.get("LGType").toString();
-				String uiBindKey = dr.get("UIBindKey").toString();
+				String lgType = dr.getValue("LGType").toString();
+				String uiBindKey = dr.getValue("UIBindKey").toString();
 
-				String uiVisible = dr.get("UIVisible").toString();
+				String uiVisible = dr.getValue("UIVisible").toString();
 				if (uiVisible.equals("0") == true) {
 					continue;
 				}
@@ -1301,7 +1301,7 @@ public class WF_CCForm extends WebContralBase {
 					continue; // 枚举值就continue;
 				}
 
-				String uiIsEnable = dr.get("UIIsEnable").toString();
+				String uiIsEnable = dr.getValue("UIIsEnable").toString();
 				if (uiIsEnable.equals("0") == true && lgType.equals("1") == true) {
 					continue; // 如果是外键，并且是不可以编辑的状态.
 				}
@@ -1311,8 +1311,8 @@ public class WF_CCForm extends WebContralBase {
 				}
 
 				// 检查是否有下拉框自动填充。
-				String keyOfEn = dr.get("KeyOfEn").toString();
-				String fk_mapData = dr.get("FK_MapData").toString();
+				String keyOfEn = dr.getValue("KeyOfEn").toString();
+				String fk_mapData = dr.getValue("FK_MapData").toString();
 
 				/// #region 处理下拉框数据范围. for 小杨.
 				Object tempVar3 = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL,
@@ -1396,7 +1396,7 @@ public class WF_CCForm extends WebContralBase {
 						DataTable gf = ds.GetTableByName("Sys_GroupField");
 						boolean isHave = false;
 						for (DataRow dr : gf.Rows) {
-							String cType = dr.get("CtrlType") instanceof String ? (String) dr.get("CtrlType") : null;
+							String cType = dr.getValue("CtrlType") instanceof String ? (String) dr.getValue("CtrlType") : null;
 							if (cType == null) {
 								continue;
 							}
@@ -1437,7 +1437,7 @@ public class WF_CCForm extends WebContralBase {
 						DataTable gf = ds.GetTableByName("Sys_GroupField");
 						boolean isHave = false;
 						for (DataRow dr : gf.Rows) {
-							String cType = dr.get("CtrlType") instanceof String ? (String) dr.get("CtrlType") : null;
+							String cType = dr.getValue("CtrlType") instanceof String ? (String) dr.getValue("CtrlType") : null;
 							if (cType == null) {
 								continue;
 							}
@@ -1514,7 +1514,7 @@ public class WF_CCForm extends WebContralBase {
 
 					// 遍历属性集合.
 					for (DataRow dr : dtMapAttr.Rows) {
-						String keyOfEn = dr.get(MapAttrAttr.KeyOfEn).toString();
+						String keyOfEn = dr.getValue(MapAttrAttr.KeyOfEn).toString();
 						for (FrmField ff : ffs.ToJavaList()) {
 							if (ff.getKeyOfEn().equals(keyOfEn) == false) {
 								continue;
@@ -1531,7 +1531,7 @@ public class WF_CCForm extends WebContralBase {
 							attr.setDefaultValOfReal(ff.getDefVal());
 							attr.setKey(ff.getKeyOfEn());
 
-							if (dr.get(MapAttrAttr.UIIsEnable).toString().equals("0")) {
+							if (dr.getValue(MapAttrAttr.UIIsEnable).toString().equals("0")) {
 								attr.setUIIsReadonly(true);
 							} else {
 								attr.setUIIsReadonly(false);
@@ -1543,7 +1543,7 @@ public class WF_CCForm extends WebContralBase {
 							}
 
 							// 数据类型.
-							attr.setMyDataType(Integer.parseInt(dr.get(MapAttrAttr.MyDataType).toString()));
+							attr.setMyDataType(Integer.parseInt(dr.getValue(MapAttrAttr.MyDataType).toString()));
 							String v = ff.getDefVal();
 
 							// 设置默认值.
@@ -3562,10 +3562,10 @@ public class WF_CCForm extends WebContralBase {
 				dtlEn.ResetDefaultVal();
 
 				for (BP.En.Attr attr : attrsExp) {
-					if (attr.getUIVisible() == false || dr.get(attr.getDesc()) == null) {
+					if (attr.getUIVisible() == false || dr.getValue(attr.getDesc()) == null) {
 						continue;
 					}
-					String val = dr.get(attr.getDesc()).toString();
+					String val = dr.getValue(attr.getDesc()).toString();
 					if (val == null) {
 						continue;
 					}

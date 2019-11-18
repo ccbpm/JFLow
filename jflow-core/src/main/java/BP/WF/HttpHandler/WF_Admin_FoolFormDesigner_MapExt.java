@@ -775,14 +775,14 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		for (DataRow dr : dt.Rows)
 		{
 			FrmRB rb = new FrmRB();
-			rb.setMyPK( dr.get("MyPK").toString());
+			rb.setMyPK( dr.getValue("MyPK").toString());
 			rb.Retrieve();
 
-			rb.setScript(dr.get("Script").toString());
-			rb.setFieldsCfg(dr.get("FieldsCfg").toString()); //格式为 @字段名1=1@字段名2=0
-			rb.setTip(dr.get("Tip").toString()); //提示信息
+			rb.setScript(dr.getValue("Script").toString());
+			rb.setFieldsCfg(dr.getValue("FieldsCfg").toString()); //格式为 @字段名1=1@字段名2=0
+			rb.setTip(dr.getValue("Tip").toString()); //提示信息
 
-			rb.setSetVal(dr.get("SetVal").toString()); //设置值.
+			rb.setSetVal(dr.getValue("SetVal").toString()); //设置值.
 
 			rb.Update();
 		}

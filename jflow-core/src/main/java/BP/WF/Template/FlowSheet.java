@@ -778,12 +778,12 @@ public class FlowSheet extends EntityNoName
 			int num = 0;
 			for (DataRow dr : dt.Rows)
 			{
-				int ndFrom = Integer.parseInt(dr.get("NDFrom").toString());
+				int ndFrom = Integer.parseInt(dr.getValue("NDFrom").toString());
 				Node nd = new Node(ndFrom);
 
-				String ndFromT = dr.get("NDFromT").toString();
-				String EmpFrom = dr.get(TrackAttr.EmpFrom).toString();
-				String EmpFromT = dr.get(TrackAttr.EmpFromT).toString();
+				String ndFromT = dr.getValue("NDFromT").toString();
+				String EmpFrom = dr.getValue(TrackAttr.EmpFrom).toString();
+				String EmpFromT = dr.getValue(TrackAttr.EmpFromT).toString();
 
 				// 增加上 工作人员的信息.
 				GenerWorkerList gwl = new GenerWorkerList();
@@ -815,7 +815,7 @@ public class FlowSheet extends EntityNoName
 				num++;
 
 
-				gwl.setSDT(dr.get("RDT").toString());
+				gwl.setSDT(dr.getValue("RDT").toString());
 				gwl.setDTOfWarning(gwf.getSDTOfNode());
 				//gwl.WarningHour = nd.WarningHour;
 				gwl.setIsEnable(true);

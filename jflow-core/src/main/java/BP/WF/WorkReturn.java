@@ -169,8 +169,8 @@ public class WorkReturn {
 			dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 			for (DataRow dr : dt.Rows) {
-				ActionType at = ActionType.forValue(Integer.parseInt(dr.get("ActionType").toString()));
-				int nodeid = Integer.parseInt(dr.get("NDFrom").toString());
+				ActionType at = ActionType.forValue(Integer.parseInt(dr.getValue("ActionType").toString()));
+				int nodeid = Integer.parseInt(dr.getValue("NDFrom").toString());
 				if (nodeid == this.ReturnToNode.getNodeID()) {
 					continue;
 				}
@@ -480,7 +480,7 @@ public class WorkReturn {
 			DataTable dt = BP.WF.Dev2Interface.DB_GenerWillReturnNodes(this.HisNode.getNodeID(), this.WorkID, this.FID);
 			boolean isDelBegin = false;
 			for (DataRow dr : dt.Rows) {
-				int nodeID = Integer.parseInt(dr.get("No").toString());
+				int nodeID = Integer.parseInt(dr.getValue("No").toString());
 
 				if (nodeID == this.ReturnToNode.getNodeID()) {
 					isDelBegin = true; // 如果等于当前的节点，就开始把他们删除掉.

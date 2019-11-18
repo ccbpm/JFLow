@@ -1609,7 +1609,7 @@ public class CCFormAPI {
 
 		String ids = String.format("'%1$s'", fk_mapdata);
 		for (DataRow dr : dtMapDtl.Rows) {
-			ids += ",'" + dr.get("No") + "'";
+			ids += ",'" + dr.getValue("No") + "'";
 		}
 		String sqls = "";
 		ArrayList<String> listNames = new ArrayList<String>();

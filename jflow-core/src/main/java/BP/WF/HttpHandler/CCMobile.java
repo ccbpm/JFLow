@@ -391,9 +391,9 @@ public class CCMobile extends WebContralBase
 			String no = drEnum.get("IntKey").toString();
 			for (DataRow dr : dtTSpanNum.Rows)
 			{
-				if (dr.get("No").toString().equals(no))
+				if (dr.getValue("No").toString().equals(no))
 				{
-					drEnum.setValue("Lab", drEnum.get("Lab").toString() + "(" + dr.get("Num") + ")");
+					drEnum.setValue("Lab", drEnum.get("Lab").toString() + "(" + dr.getValue("Num") + ")");
 					break;
 				}
 			}
@@ -486,7 +486,7 @@ public class CCMobile extends WebContralBase
 			 mydt.Columns.Add("TDTime");
 			 for (DataRow dr : mydt.Rows)
 			 {
-				 dr.setValue("TDTime", GetTraceNewTime(dr.get("FK_Flow").toString(), Integer.parseInt(dr.get("WorkID").toString()), Integer.parseInt(dr.get("FID").toString())));
+				 dr.setValue("TDTime", GetTraceNewTime(dr.getValue("FK_Flow").toString(), Integer.parseInt(dr.getValue("WorkID").toString()), Integer.parseInt(dr.getValue("FID").toString())));
 			 }
 		}
 

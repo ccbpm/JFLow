@@ -1317,7 +1317,7 @@ public class NodeExt extends Entity
 	*/
 	public final String SaveHelpAlert(String text) throws Exception
 	{
-		String file = SystemConfig.getPathOfDataUser() + "\\CCForm\\HelpAlert\\" + this.getNodeID() + ".htm";
+		String file = SystemConfig.getPathOfDataUser() + "CCForm/HelpAlert/" + this.getNodeID() + ".htm";
 		String folder = (new File(file)).getParent();
 		//若文件夹不存在，则创建
 		if ((new File(folder)).isDirectory() == false)
@@ -1337,7 +1337,7 @@ public class NodeExt extends Entity
 	public final String ReadHelpAlert() throws Exception
 	{
 		String doc = "";
-		String file = SystemConfig.getPathOfDataUser() + "\\CCForm\\HelpAlert\\" + this.getNodeID() + ".htm";
+		String file = SystemConfig.getPathOfDataUser() + "CCForm/HelpAlert/" + this.getNodeID() + ".htm";
 		String folder = (new File(file)).getParent();
 		if ((new File(folder)).isDirectory() != false)
 		{

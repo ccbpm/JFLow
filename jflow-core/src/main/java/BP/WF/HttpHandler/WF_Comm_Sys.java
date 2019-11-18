@@ -292,7 +292,7 @@ public class WF_Comm_Sys extends WebContralBase {
 				continue;
 			}
 			if (item.getKey().equals("Name")) {
-				en.SetValByKey(item.getKey(), dr.get(item.getDesc()).toString());
+				en.SetValByKey(item.getKey(), dr.getValue(item.getDesc()).toString());
 				continue;
 			}
 
@@ -302,7 +302,7 @@ public class WF_Comm_Sys extends WebContralBase {
 
 			// 枚举处理.
 			if (item.getMyFieldType() == FieldType.Enum) {
-				String val = dr.get(item.getDesc()).toString();
+				String val = dr.getValue(item.getDesc()).toString();
 
 				SysEnum se = new SysEnum();
 				int i = se.Retrieve(SysEnumAttr.EnumKey, item.getUIBindKey(), SysEnumAttr.Lab, val);
@@ -318,7 +318,7 @@ public class WF_Comm_Sys extends WebContralBase {
 
 			// 外键处理.
 			if (item.getMyFieldType() == FieldType.FK) {
-				String val = dr.get(item.getDesc()).toString();
+				String val = dr.getValue(item.getDesc()).toString();
 				Entity attrEn = item.getHisFKEn();
 				int i = attrEn.Retrieve("Name", val);
 				if (i == 0) {
@@ -338,7 +338,7 @@ public class WF_Comm_Sys extends WebContralBase {
 
 			// boolen类型的处理..
 			if (item.getMyDataType() == DataType.AppBoolean) {
-				String val = dr.get(item.getDesc()).toString();
+				String val = dr.getValue(item.getDesc()).toString();
 				if (val.equals("是") || val.equals("有")) {
 					en.SetValByKey(item.getKey(), 1);
 				} else {
@@ -347,7 +347,7 @@ public class WF_Comm_Sys extends WebContralBase {
 				continue;
 			}
 
-			String myval = dr.get(item.getDesc()).toString();
+			String myval = dr.getValue(item.getDesc()).toString();
 			en.SetValByKey(item.getKey(), myval);
 		}
 

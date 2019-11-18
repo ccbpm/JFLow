@@ -996,7 +996,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		//排除已经存在的列.
 		for (DataRow dr : dt.Rows)
 		{
-			String key = dr.get("FName").toString();
+			String key = dr.getValue("FName").toString();
 			if (attrs.Contains(MapAttrAttr.KeyOfEn, key) == true)
 			{
 				continue;
@@ -1008,10 +1008,10 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			}
 
 			DataRow mydr = mydt.NewRow();
-			mydr.setValue("FName", dr.get("FName"));
-			mydr.setValue("FType", dr.get("FType"));
-			mydr.setValue("FLen", dr.get("FLen"));
-			mydr.setValue("FDesc", dr.get("FDesc"));
+			mydr.setValue("FName", dr.getValue("FName"));
+			mydr.setValue("FType", dr.getValue("FType"));
+			mydr.setValue("FLen", dr.getValue("FLen"));
+			mydr.setValue("FDesc", dr.getValue("FDesc"));
 			mydt.Rows.add(mydr);
 		}
 

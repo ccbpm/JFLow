@@ -190,7 +190,7 @@ public class CCFlowAPI
 					boolean isHave = false;
 					for (DataRow dr : gf.Rows)
 					{
-						String cType = dr.get("CtrlType") instanceof String ? (String)dr.get("CtrlType") : null;
+						String cType = dr.getValue("CtrlType") instanceof String ? (String)dr.getValue("CtrlType") : null;
 						if (cType == null)
 						{
 							continue;
@@ -246,7 +246,7 @@ public class CCFlowAPI
 					boolean isHave = false;
 					for (DataRow dr : gf.Rows)
 					{
-						String cType = dr.get("CtrlType") instanceof String ? (String)dr.get("CtrlType") : null;
+						String cType = dr.getValue("CtrlType") instanceof String ? (String)dr.getValue("CtrlType") : null;
 						if (cType == null)
 						{
 							continue;
@@ -780,8 +780,8 @@ public class CCFlowAPI
 
 			for (DataRow dr : dtMapAttr.Rows)
 			{
-				String lgType = dr.get("LGType").toString();
-				String uiBindKey = dr.get("UIBindKey").toString();
+				String lgType = dr.getValue("LGType").toString();
+				String uiBindKey = dr.getValue("UIBindKey").toString();
 
 				if (DataType.IsNullOrEmpty(uiBindKey) == true)
 				{
@@ -793,7 +793,7 @@ public class CCFlowAPI
 					continue; //枚举值就continue;
 				}
 
-				String uiIsEnable = dr.get("UIIsEnable").toString();
+				String uiIsEnable = dr.getValue("UIIsEnable").toString();
 				if (uiIsEnable.equals("0") == true && lgType.equals("1") == true)
 				{
 					continue; //如果是外键，并且是不可以编辑的状态.
@@ -805,8 +805,8 @@ public class CCFlowAPI
 				}
 
 				// 检查是否有下拉框自动填充。
-				String keyOfEn = dr.get("KeyOfEn").toString();
-				String fk_mapData = dr.get("FK_MapData").toString();
+				String keyOfEn = dr.getValue("KeyOfEn").toString();
+				String fk_mapData = dr.getValue("FK_MapData").toString();
 
 
 
@@ -828,8 +828,8 @@ public class CCFlowAPI
 					for (DataRow dllRow : dt.Rows)
 					{
 						DataRow drDll = dt_FK_Dll.NewRow();
-						drDll.set("No", dllRow.get("No"));
-						drDll.set("Name", dllRow.get("Name"));
+						drDll.set("No", dllRow.getValue("No"));
+						drDll.set("Name", dllRow.getValue("Name"));
 						dt_FK_Dll.Rows.add(drDll);
 					}
 					myds.Tables.add(dt_FK_Dll);
@@ -881,10 +881,10 @@ public class CCFlowAPI
 					DataTable mydt = BP.DA.DBAccess.RunSQLReturnTable(mysql);
 					for (DataRow dr : mydt.Rows)
 					{
-						String msgAskFor = dr.get(TrackAttr.Msg).toString();
-						String worker = dr.get(TrackAttr.EmpFrom).toString();
-						String workerName = dr.get(TrackAttr.EmpFromT).toString();
-						String rdt = dr.get(TrackAttr.RDT).toString();
+						String msgAskFor = dr.getValue(TrackAttr.Msg).toString();
+						String worker = dr.getValue(TrackAttr.EmpFrom).toString();
+						String workerName = dr.getValue(TrackAttr.EmpFromT).toString();
+						String rdt = dr.getValue(TrackAttr.RDT).toString();
 
 						DataRow drMsg = dtAlert.NewRow();
 						drMsg.set("Title", worker + "," + workerName + "回复信息:");
@@ -898,10 +898,10 @@ public class CCFlowAPI
 					dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 					for (DataRow dr : dt.Rows)
 					{
-						String msgAskFor = dr.get(TrackAttr.Msg).toString();
-						String worker = dr.get(TrackAttr.EmpFrom).toString();
-						String workerName = dr.get(TrackAttr.EmpFromT).toString();
-						String rdt = dr.get(TrackAttr.RDT).toString();
+						String msgAskFor = dr.getValue(TrackAttr.Msg).toString();
+						String worker = dr.getValue(TrackAttr.EmpFrom).toString();
+						String workerName = dr.getValue(TrackAttr.EmpFromT).toString();
+						String rdt = dr.getValue(TrackAttr.RDT).toString();
 
 						DataRow drMsg = dtAlert.NewRow();
 						drMsg.set("Title", worker + "," + workerName + "请求加签:");
@@ -1191,22 +1191,22 @@ public class CCFlowAPI
 			DataTable dtMapAttr = myds.GetTableByName("Sys_MapAttr");
 			for (DataRow dr : dtMapAttr.Rows)
 			{
-				String lgType = dr.get("LGType").toString();
+				String lgType = dr.getValue("LGType").toString();
 				if (lgType.equals("2") == false)
 				{
 					continue;
 				}
 
-				String UIIsEnable = dr.get("UIIsEnable").toString();
+				String UIIsEnable = dr.getValue("UIIsEnable").toString();
 				if (UIIsEnable.equals("0") == true)
 				{
 					continue;
 				}
 
-				String uiBindKey = dr.get("UIBindKey").toString();
+				String uiBindKey = dr.getValue("UIBindKey").toString();
 				if (DataType.IsNullOrEmpty(uiBindKey) == true)
 				{
-					String myPK = dr.get("MyPK").toString();
+					String myPK = dr.getValue("MyPK").toString();
 					如果是空的
 					throw new RuntimeException("@属性字段数据不完整，流程:" + fl.getNo() + fl.getName() + ",节点:" + nd.getNodeID() + nd.getName() + ",属性:" + myPK + ",的UIBindKey IsNull ");
 				}

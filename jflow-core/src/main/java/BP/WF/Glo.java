@@ -102,7 +102,7 @@ public class Glo {
 				if (nd.GetParaBoolen("IsYouLiTai") == true) {
 					if (isFirstYLT == true) {
 						for (DataRow dr : dtYL.Rows) {
-							nodes.AddEntity(nds.GetEntityByKey(Integer.parseInt(dr.get("NodeID").toString())));
+							nodes.AddEntity(nds.GetEntityByKey(Integer.parseInt(dr.getValue("NodeID").toString())));
 						}
 					}
 
@@ -358,22 +358,22 @@ public class Glo {
 		String startDt = "";
 		String endDt = "";
 		for (DataRow dr : dt.Rows) {
-			int NDFrom = Integer.parseInt(dr.get("NDFrom").toString());
+			int NDFrom = Integer.parseInt(dr.getValue("NDFrom").toString());
 			if (NDFrom == nodeID) {
-				endDt = dr.get("RDT").toString();
+				endDt = dr.getValue("RDT").toString();
 				break;
 			}
 
 		}
 		for (DataRow dr : dt.Rows) {
-			int NDTo = Integer.parseInt(dr.get("NDTo").toString());
+			int NDTo = Integer.parseInt(dr.getValue("NDTo").toString());
 			if (NDTo == nodeID) {
 				if (DataType.IsNullOrEmpty(endDt) == true) {
-					startDt = dr.get("RDT").toString();
+					startDt = dr.getValue("RDT").toString();
 					break;
 				}
-				if (dr.get("RDT").toString().compareTo(endDt) <= 0) {
-					startDt = dr.get("RDT").toString();
+				if (dr.getValue("RDT").toString().compareTo(endDt) <= 0) {
+					startDt = dr.getValue("RDT").toString();
 					break;
 				}
 			}
@@ -926,8 +926,8 @@ public class Glo {
 					DataTable dtCity = DBAccess.RunSQLReturnTable(sql);
 
 					for (DataRow dr : dtCity.Rows) {
-						String no = dr.get("No").toString();
-						String name = dr.get("Names").toString();
+						String no = dr.getValue("No").toString();
+						String name = dr.getValue("Names").toString();
 						String pinyin1 = DataType.ParseStringToPinyin(name);
 						String pinyin2 = DataType.ParseStringToPinyinJianXie(name);
 						String pinyin = "," + pinyin1 + "," + pinyin2 + ",";
@@ -2803,7 +2803,7 @@ public class Glo {
 
 						if (DataType.IsNullOrEmpty(en.GetValStringByKey(dc.ColumnName))
 								|| en.GetValStringByKey(dc.ColumnName).equals("0")) {
-							en.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
+							en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 						}
 					}
 				}
@@ -2875,7 +2875,7 @@ public class Glo {
 				for (DataRow dr : dt.Rows) {
 					GEDtl gedtl = gedtls.getNewEntity() instanceof GEDtl ? (GEDtl) gedtls.getNewEntity() : null;
 					for (DataColumn dc : dt.Columns) {
-						gedtl.SetValByKey(dc.ColumnName, dr.get(dc.ColumnName).toString());
+						gedtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
 					}
 
 					switch (dtl.getDtlOpenType()) {
@@ -3329,10 +3329,10 @@ public class Glo {
 		String info = "";
 
 		for (DataRow dr : dt.Rows) {
-			String flowPK = dr.get("FlowPK").toString();
-			String starter = dr.get("Starter").toString();
-			String executer = dr.get("Executer").toString();
-			int toNode = Integer.parseInt(dr.get("ToNodeID").toString().replace("ND", ""));
+			String flowPK = dr.getValue("FlowPK").toString();
+			String starter = dr.getValue("Starter").toString();
+			String executer = dr.getValue("Executer").toString();
+			int toNode = Integer.parseInt(dr.getValue("ToNodeID").toString().replace("ND", ""));
 			Node nd = new Node();
 			nd.setNodeID(toNode);
 			if (nd.RetrieveFromDBSources() == 0) {
@@ -3382,7 +3382,7 @@ public class Glo {
 					continue;
 				}
 
-				String val = dr.get(dc.ColumnName).toString().trim();
+				String val = dr.getValue(dc.ColumnName).toString().trim();
 				switch (attr.getMyDataType()) {
 				case DataType.AppString:
 				case DataType.AppDate:
@@ -3432,7 +3432,7 @@ public class Glo {
 					continue;
 				}
 
-				String val = dr.get(dc.ColumnName).toString().trim();
+				String val = dr.getValue(dc.ColumnName).toString().trim();
 				switch (attr.getMyDataType()) {
 				case DataType.AppString:
 				case DataType.AppDate:
@@ -3476,14 +3476,14 @@ public class Glo {
 		String info = "";
 		int idx = 0;
 		for (DataRow dr : dt.Rows) {
-			String flowPK = dr.get("FlowPK").toString().trim();
+			String flowPK = dr.getValue("FlowPK").toString().trim();
 			if (DataType.IsNullOrEmpty(flowPK)) {
 				continue;
 			}
 
-			String starter = dr.get("Starter").toString();
-			String executer = dr.get("Executer").toString();
-			int toNode = Integer.parseInt(dr.get("ToNodeID").toString().replace("ND", ""));
+			String starter = dr.getValue("Starter").toString();
+			String executer = dr.getValue("Executer").toString();
+			int toNode = Integer.parseInt(dr.getValue("ToNodeID").toString().replace("ND", ""));
 			Node ndOfEnd = new Node();
 			ndOfEnd.setNodeID(toNode);
 			if (ndOfEnd.RetrieveFromDBSources() == 0) {
@@ -3536,7 +3536,7 @@ public class Glo {
 			Flow fl = ndOfEnd.getHisFlow();
 			Work wk = fl.NewWork();
 			for (DataColumn dc : dt.Columns) {
-				wk.SetValByKey(dc.ColumnName.trim(), dr.get(dc.ColumnName).toString().trim());
+				wk.SetValByKey(dc.ColumnName.trim(), dr.getValue(dc.ColumnName).toString().trim());
 			}
 
 			wk.SetValByKey(WorkAttr.Rec, WebUser.getNo());
@@ -3564,7 +3564,7 @@ public class Glo {
 
 			Work wkEnd = ndOfEnd.GetWork(wk.getOID());
 			for (DataColumn dc : dt.Columns) {
-				wkEnd.SetValByKey(dc.ColumnName.trim(), dr.get(dc.ColumnName).toString().trim());
+				wkEnd.SetValByKey(dc.ColumnName.trim(), dr.getValue(dc.ColumnName).toString().trim());
 			}
 
 			wkEnd.SetValByKey(WorkAttr.Rec, WebUser.getNo());

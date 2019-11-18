@@ -1143,7 +1143,7 @@ public class WF_WorkOpt extends WebContralBase
 		mydt.Columns.Add("FK_DeptT", String.class);
 		for (DataRow dr : mydt.Rows)
 		{
-			String fk_emp = dr.get("FK_Emp").toString();
+			String fk_emp = dr.getValue("FK_Emp").toString();
 			for (GenerWorkerList item : ens.ToJavaList())
 			{
 				if (item.getFK_Emp().equals(fk_emp))
@@ -1646,7 +1646,7 @@ public class WF_WorkOpt extends WebContralBase
 			DataTable checkerPassedDt = DBAccess.RunSQLReturnTable(ps);
 			for (DataRow dr : checkerPassedDt.Rows)
 			{
-				checkerPassed += dr.get("FK_Emp") + ",";
+				checkerPassed += dr.getValue("FK_Emp") + ",";
 			}
 		}
 
@@ -1977,8 +1977,8 @@ public class WF_WorkOpt extends WebContralBase
 		boolean isHaveMyInfo = false;
 		for (DataRow dr : tkDt.Rows)
 		{
-			String fk_node = dr.get("NodeID").toString();
-			String empFrom = dr.get("EmpFrom").toString();
+			String fk_node = dr.getValue("NodeID").toString();
+			String empFrom = dr.getValue("EmpFrom").toString();
 			if (Integer.parseInt(fk_node) == this.getFK_Node() && empFrom.equals(WebUser.getNo()))
 			{
 				isHaveMyInfo = true;
@@ -2006,7 +2006,7 @@ public class WF_WorkOpt extends WebContralBase
 					row.setValue("IsDoc", true);
 
 					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
-					if (row.get("Msg").toString().equals(""))
+					if (row.getValue("Msg").toString().equals(""))
 					{
 						row.setValue("RDT", "");
 					}
@@ -2267,7 +2267,7 @@ public class WF_WorkOpt extends WebContralBase
 			DataTable checkerPassedDt = DBAccess.RunSQLReturnTable(ps);
 			for (DataRow dr : checkerPassedDt.Rows)
 			{
-				checkerPassed += dr.get("FK_Emp") + ",";
+				checkerPassed += dr.getValue("FK_Emp") + ",";
 			}
 		}
 
@@ -2582,7 +2582,7 @@ public class WF_WorkOpt extends WebContralBase
 					row.setValue("IsDoc", true);
 
 					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
-					if (row.get("Msg").toString().equals(""))
+					if (row.getValue("Msg").toString().equals(""))
 					{
 						row.setValue("RDT", "");
 					}

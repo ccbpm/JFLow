@@ -1346,8 +1346,8 @@ public class WorkFlow {
 		default:
 			msg = "@下列(" + dt.Rows.size() + ")位人员发起的流程已经完成。";
 			for (DataRow dr : dt.Rows) {
-				msg += "<br>发起人：" + dr.get("Rec") + " 发起日期：" + dr.get("RDT") + " 标题：" + dr.get("Title")
-						+ "<a href='./../../WF/WFRpt.htm?WorkID=" + dr.get("OID") + "&FK_Flow="
+				msg += "<br>发起人：" + dr.getValue("Rec") + " 发起日期：" + dr.getValue("RDT") + " 标题：" + dr.getValue("Title")
+						+ "<a href='./../../WF/WFRpt.htm?WorkID=" + dr.getValue("OID") + "&FK_Flow="
 						+ this.getHisFlow().getNo() + "' target=_blank>详细...</a>";
 			}
 			break;
@@ -1772,7 +1772,7 @@ public class WorkFlow {
 		// 形成能够处理这件事情的用户几何。
 		Emps emps = new Emps();
 		for (DataRow dr : dt.Rows) {
-			emps.AddEntity(new Emp(dr.get("EmpID").toString()));
+			emps.AddEntity(new Emp(dr.getValue("EmpID").toString()));
 		}
 		return emps;
 	}

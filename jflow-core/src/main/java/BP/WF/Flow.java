@@ -5408,7 +5408,8 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					MapAttr ma = new MapAttr();
 					for (DataColumn dc : dt.Columns) {
-						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
+						String val = dr.getValue(dc.ColumnName) + "";
+//						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						switch (dc.ColumnName.toLowerCase()) {
 						case "fk_mapdata":
 						case "keyofen":
@@ -5701,7 +5702,7 @@ public class Flow extends BP.En.EntityNoName {
 					}
 					int oid = DBAccess.GenerOID();
 					DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID='" + oid + "' WHERE FK_MapData='" + gf.getFrmID()
-							+ "' AND GroupID='" + gf.getOID() + "'");
+							+ "' AND GroupID='" + dr.getValue("OID") + "'");
 					gf.InsertAsOID(oid);
 				}
 				break;

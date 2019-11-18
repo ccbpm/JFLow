@@ -630,8 +630,6 @@ public class PushMsg extends EntityMyPK
 		return DoSendMessage(currNode, en, atPara, objs, null, null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public string DoSendMessage(Node currNode, Entity en, string atPara, SendReturnObjs objs, Node jumpToNode = null, string jumpToEmps = null)
 	public final String DoSendMessage(Node currNode, Entity en, String atPara, SendReturnObjs objs, Node jumpToNode, String jumpToEmps) throws Exception
 	{
 		if (en == null)
@@ -832,7 +830,7 @@ public class PushMsg extends EntityMyPK
 					// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
 					Object tempVar = smsDoc;
 					String smsDocReal = tempVar instanceof String ? (String)tempVar : null;
-					smsDocReal = smsDocReal.replace("{EmpStr}", empName);
+					smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
 
 					String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node();
@@ -879,7 +877,7 @@ public class PushMsg extends EntityMyPK
 				// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
 				Object tempVar2 = smsDoc;
 				String smsDocReal = tempVar2 instanceof String ? (String)tempVar2 : null;
-				smsDocReal = smsDocReal.replace("{EmpStr}", empName);
+				smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 				openUrl = openUrl.replace("{EmpStr}", empNo);
 
 				String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node();
@@ -915,7 +913,7 @@ public class PushMsg extends EntityMyPK
 				// 因为要发给不同的人，所有需要clone 一下，然后替换发送.
 				Object tempVar3 = smsDoc;
 				String smsDocReal = tempVar3 instanceof String ? (String)tempVar3 : null;
-				smsDocReal = smsDocReal.replace("{EmpStr}", emp.getName());
+				smsDocReal = smsDocReal.replace("{EmpStr}", emp.getNo());
 				openUrl = openUrl.replace("{EmpStr}", emp.getNo());
 				//发送消息
 				BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());

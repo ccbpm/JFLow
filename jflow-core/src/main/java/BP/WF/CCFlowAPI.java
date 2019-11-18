@@ -828,8 +828,8 @@ public class CCFlowAPI
 					for (DataRow dllRow : dt.Rows)
 					{
 						DataRow drDll = dt_FK_Dll.NewRow();
-						drDll.set("No", dllRow.getValue("No"));
-						drDll.set("Name", dllRow.getValue("Name"));
+						drDll.setValue("No", dllRow.getValue("No"));
+						drDll.setValue("Name", dllRow.getValue("Name"));
 						dt_FK_Dll.Rows.add(drDll);
 					}
 					myds.Tables.add(dt_FK_Dll);
@@ -887,8 +887,8 @@ public class CCFlowAPI
 						String rdt = dr.getValue(TrackAttr.RDT).toString();
 
 						DataRow drMsg = dtAlert.NewRow();
-						drMsg.set("Title", worker + "," + workerName + "回复信息:");
-						drMsg.set("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt);
+						drMsg.setValue("Title", worker + "," + workerName + "回复信息:");
+						drMsg.setValue("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt);
 						dtAlert.Rows.add(drMsg);
 					}
 					break;
@@ -904,8 +904,8 @@ public class CCFlowAPI
 						String rdt = dr.getValue(TrackAttr.RDT).toString();
 
 						DataRow drMsg = dtAlert.NewRow();
-						drMsg.set("Title", worker + "," + workerName + "请求加签:");
-						drMsg.set("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "<a href='./WorkOpt/AskForRe.htm?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workID + "&FID=" + fid + "' >回复加签意见</a> --");
+						drMsg.setValue("Title", worker + "," + workerName + "请求加签:");
+						drMsg.setValue("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "<a href='./WorkOpt/AskForRe.htm?FK_Flow=" + fk_flow + "&FK_Node=" + fk_node + "&WorkID=" + workID + "&FID=" + fid + "' >回复加签意见</a> --");
 						dtAlert.Rows.add(drMsg);
 
 						//提示信息.
@@ -955,15 +955,15 @@ public class CCFlowAPI
 							str = str.replace("@OID", String.valueOf(workID));
 
 							DataRow drMsg = dtAlert.NewRow();
-							drMsg.set("Title", "退回信息");
-							drMsg.set("Msg", msgInfo + "\t\n" + str);
+							drMsg.setValue("Title", "退回信息");
+							drMsg.setValue("Msg", msgInfo + "\t\n" + str);
 							dtAlert.Rows.add(drMsg);
 						}
 						else
 						{
 							DataRow drMsg = dtAlert.NewRow();
-							drMsg.set("Title", "退回信息");
-							drMsg.set("Msg", msgInfo + "\t\n" + str);
+							drMsg.setValue("Title", "退回信息");
+							drMsg.setValue("Msg", msgInfo + "\t\n" + str);
 							dtAlert.Rows.add(drMsg);
 						}
 					}
@@ -980,7 +980,7 @@ public class CCFlowAPI
 					if (fws.size() >= 1)
 					{
 						DataRow drMsg = dtAlert.NewRow();
-						drMsg.set("Title", "移交历史信息");
+						drMsg.setValue("Title", "移交历史信息");
 						msg = "";
 						for (ShiftWork fw : fws.ToJavaList())
 						{
@@ -993,7 +993,7 @@ public class CCFlowAPI
 							temp = temp.replace("@", "<br>@");
 							msg += temp + "<hr/>";
 						}
-						drMsg.set("Msg", msg);
+						drMsg.setValue("Msg", msg);
 						dtAlert.Rows.add(drMsg);
 					}
 					break;

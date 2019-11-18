@@ -672,7 +672,7 @@ public class WF_CommEntity extends WebContralBase {
 				dr.setValue("Visable", item.Visable);
 				dr.setValue("Warning", item.Warning);
 
-				dr.setValue("RefMethodType", item.refMethodType);
+				dr.setValue("RefMethodType", item.refMethodType.getValue());
 				dr.setValue("RefAttrKey", item.RefAttrKey);
 				dr.setValue("Url", myurl);
 				dr.setValue("W", item.Width);
@@ -823,7 +823,7 @@ public class WF_CommEntity extends WebContralBase {
 				dr.setValue("Visable", item.Visable);
 				dr.setValue("Warning", item.Warning);
 
-				dr.setValue("RefMethodType", item.refMethodType);
+				dr.setValue("RefMethodType", item.refMethodType.getValue());
 				dr.setValue("RefAttrKey", item.RefAttrKey);
 				dr.setValue("Url", myurl);
 				dr.setValue("W", item.Width);

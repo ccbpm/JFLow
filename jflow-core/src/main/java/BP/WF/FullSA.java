@@ -56,7 +56,7 @@ public class FullSA {
 				+ BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID", "WorkID", workid);
 		String passedNodeIDs = "";
 		for (DataRow item : dt.Rows) {
-			passedNodeIDs += item.get(0).toString() + ",";
+			passedNodeIDs += item.getValue(0).toString() + ",";
 		}
 
 		// 遍历当前的节点。

@@ -35,11 +35,11 @@ function GenerFoolFrm(wn) {
     html += "</tr>";
     if (frmShowType == 1) {
         html += "</table>";
-         html += "<div class='tabbable' ><ul class='nav nav-tabs' id='tabDiv'>";
+        html += "<div class='tabbable' ><ul class='nav nav-tabs' id='tabDiv'>";
 
         for (var i = 0; i < Sys_GroupFields.length; i++) {
             var gf = Sys_GroupFields[i];
-            if (i == 0) 
+            if (i == 0)
                 html += "<li class='active'><a data-toggle='tab' href='#" + gf.OID + "'>" + gf.Lab + "</a></li>";
             else
                 html += "<li><a data-toggle='tab' href='#" + gf.OID + "'>" + gf.Lab + "</a></li>";
@@ -247,6 +247,8 @@ function GenerFoolFrm(wn) {
 
             //审核组件..
             if (gf.CtrlType == 'FWC' && node.FWCSta != 0) {
+                if (node.FormType == 10 && gf.FrmID != 'ND' + node.NodeID)
+                    continue;
 
                 html += "<tr>";
                 html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
@@ -333,7 +335,7 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
-       
+
 
         rowSpan = attr.RowSpan;
         colSpan = attr.ColSpan;
@@ -485,7 +487,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
-       
+
         //赋值
         rowSpan = parseInt(attr.RowSpan);
         colSpan = parseInt(attr.ColSpan);
@@ -782,7 +784,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             if (defValue == '' || defValue == null)
                 defValue = '无';
 
-            ctrl += "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "Text'  value='" + defValue + "' disabled='disabled'   class='form-control' type='text'/>";
+            ctrl += "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "T'  value='" + defValue + "' disabled='disabled'   class='form-control' type='text'/>";
             return ctrl;
         }
 
@@ -908,7 +910,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             //如果编辑
             var eleHtml = "<div class='score-star' style='text-align:left;padding-left:3px;height:30px;margin-top:10px' data-type='1' id='SC_" + mapAttr.KeyOfEn + "' >";
             if (mapAttr.UIIsEnable == 1) {
-                eleHtml += "<span class='score-simplestar' id='Star_" + mapAttr.KeyOfEn +"'>";
+                eleHtml += "<span class='score-simplestar' id='Star_" + mapAttr.KeyOfEn + "'>";
             } else {
                 eleHtml += "<span class='score-simplestar'>";
             }
@@ -1008,7 +1010,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             dateFmt = "yyyy-MM-dd";
         } else if (frmDate == 3) {
             dateFmt = "yyyy-MM";
-        } else if (frmDate == 6){
+        } else if (frmDate == 6) {
             dateFmt = "MM-dd";
         }
 
@@ -1094,7 +1096,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         if (attrdefVal != null && attrdefVal !== "" && attrdefVal.indexOf(".") >= 0)
             bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
 
-		return "<input onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");' value='" + defValue + "' style='text-align:right;'class='form-control'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
+        return "<input onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");' value='" + defValue + "' style='text-align:right;'class='form-control'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     if ((mapAttr.MyDataType == 2)) { //AppInt
@@ -1119,11 +1121,11 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             bit = 2;
 
         return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");numberFormat (this, " + bit + ") ' onkeyup=" + '"' +
-			"limitLength(this," + bit + ");" + '"' +
-			" onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' +
-			" maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+            "limitLength(this," + bit + ");" + '"' +
+            " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' +
+            " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
 
-		//return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+        //return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     alert(mapAttr.Name + "的类型没有判断.");
@@ -1131,48 +1133,43 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
 }
 
 //记录改变字段样式 不可编辑，不可见
-var mapAttrs = [];
+var mapAttrs = {};
 function changeEnable(obj, FK_MapData, KeyOfEn, AtPara) {
     if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
         var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-        cleanAll(FK_MapData);
+        cleanAll(KeyOfEn);
         setEnable(FK_MapData, KeyOfEn, selecedval);
     }
 }
 function clickEnable(obj, FK_MapData, KeyOfEn, AtPara) {
     if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
         var selectVal = $(obj).val();
-        cleanAll(FK_MapData);
+        cleanAll(KeyOfEn);
         setEnable(FK_MapData, KeyOfEn, selectVal);
     }
 }
 
 //清空所有的设置
-function cleanAll(FK_MapData) {
+function cleanAll(KeyOfEn) {
     var trs = $("#CCForm  table tr .attr-group"); //如果隐藏就显示
     $.each(trs, function (i, obj) {
         if ($(obj).parent().is(":hidden") == true)
             $(obj).parent().show();
-       
+
     });
 
+    if (mapAttrs.length == 0)
+        return;
 
     //获取他的值
-    var FKMapAttrs = [];
-    var newMapAttrs = mapAttrs;
-    for (var i = 0; i < newMapAttrs.length; i++) {
-        if (FK_MapData == newMapAttrs[i].FK_MapData) {
-            FKMapAttrs.push(newMapAttrs[i].Data);
-            mapAttrs.pop(newMapAttrs[i]);
-        }
-    }
-    for (var i = 0; i < FKMapAttrs[0].length; i++) {
-        SetCtrlShow(FKMapAttrs[0][i]);
-        SetCtrlEnable(FKMapAttrs[0][i]);
-        CleanCtrlVal(FKMapAttrs[0][i]);
+    var FKMapAttrs = mapAttrs[KeyOfEn][0];
+    for (var i = 0; i < FKMapAttrs.length; i++) {
+        SetCtrlShow(FKMapAttrs[i]);
+        SetCtrlEnable(FKMapAttrs[i]);
+        CleanCtrlVal(FKMapAttrs[i]);
     }
 
-    
+
 
 }
 //启用了显示与隐藏.
@@ -1242,11 +1239,18 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
         }
     }
 
-    if (NDMapAttrs.length > 0)
-        mapAttrs.push({ FK_MapData: FK_MapData, Data: NDMapAttrs });
+    if (NDMapAttrs.length > 0) {
+        if (!$.isArray(mapAttrs[KeyOfEn])) {
+            mapAttrs[KeyOfEn] = [];
+        }
+        mapAttrs[KeyOfEn].push(NDMapAttrs);
+    }
 
 
-    //设置是否隐藏分组、获取字段分组所有的tr 
+
+
+
+    //设置是否隐藏分组、获取字段分组所有的tr
     var trs = $("#CCForm  table tr .attr-group");
     var isHidden = false;
     $.each(trs, function (i, obj) {
@@ -1259,15 +1263,15 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
             if (sible.is(":hidden") == false) {
                 isHidden = false;
                 break;
-            } 
+            }
             isHidden = true;
         }
         if (isHidden == true)
             $(obj).parent().hide();
 
     });
-    
-   
+
+
 
 }
 
@@ -1277,16 +1281,19 @@ function SetCtrlEnable(key) {
     var ctrl = $("#TB_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
+        ctrl.addClass("form-control");
     }
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
+        ctrl.addClass("form-control");
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
+        ctrl.addClass("form-control");
     }
 
     ctr = document.getElementsByName('RB_' + key);
@@ -1391,7 +1398,7 @@ function CleanCtrlVal(key) {
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
-        ctrl.attr('checked', false); ;
+        ctrl.attr('checked', false);;
     }
 
     ctrl = $("#RB_" + key + "_" + 0);
@@ -1621,13 +1628,13 @@ function Ele_Attachment(flowData, gf, node, ath) {
     var src = "";
 
     //这里的连接要取 FK_MapData的值.
-    src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=ND" + node.NodeID + "&FromFrm=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
+    src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&PWorkID=" + GetQueryString("PWorkID") + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=ND" + node.NodeID + "&FromFrm=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
     if (isReadonly == true)
         src += "&IsReadOnly=1";
 
     //自定义表单模式.
     if (ath.AthRunModel == 2) {
-        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
+        src = "../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.WorkID + "&PWorkID=" + GetQueryString("PWorkID") + "&FID=" + pageData["FID"] + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
     }
 
     eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' id='Ath1' name='Ath1'  src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
@@ -1850,7 +1857,7 @@ function GetLab(flowData, attr) {
     //超链接
     if (contralType == 9) {
         //URL @ 变量替换
-		var url = attr.Tag2;
+        var url = attr.Tag2;
 
         //替换URL中的参数
         var pageParams = getQueryString();
@@ -1948,5 +1955,4 @@ function GetLab(flowData, attr) {
 }
 
 
-   
- 
+

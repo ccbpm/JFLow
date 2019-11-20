@@ -797,7 +797,7 @@ public class CCFormAPI extends Dev2Interface {
 				dt.TableName = uiBindKey;
 
 				dt.Columns.get(0).ColumnName = "No";
-				dt.Columns.get(0).ColumnName = "Name";
+				dt.Columns.get(1).ColumnName = "Name";
 
 				myds.Tables.add(dt);
 				continue;

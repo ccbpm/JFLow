@@ -3220,12 +3220,13 @@ public class Glo {
 				if (exp.contains("@" + key))
 				{
 					Attr attr = attrs.GetAttrByKey(key);
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum
-							|| attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-						exp = exp.replace("@" + key+"Text", row.GetValByKey(key + "Text").toString());
-					else if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
-						exp = exp.replace("@" + key+"T", row.GetValByKey(key + "T").toString());
-
+					if(attr!=null) {
+						if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum
+								|| attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
+							exp = exp.replace("@" + key + "Text", row.GetValByKey(key + "Text").toString());
+						else if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
+							exp = exp.replace("@" + key + "T", row.GetValByKey(key + "T").toString());
+					}
 					exp = exp.replace("@" + key, row.GetValByKey(key).toString());
 				}
 				// 不包含@则返回SQL语句

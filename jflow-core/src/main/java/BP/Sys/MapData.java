@@ -1377,7 +1377,6 @@ public class MapData extends EntityNoName
 	 
 	 @param eventType
 	 @param en
-	 @param atParas
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1517,7 +1516,6 @@ public class MapData extends EntityNoName
 	 导入数据
 	 
 	 @param ds
-	 @param isSetReadony
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1637,7 +1635,6 @@ public class MapData extends EntityNoName
 	 
 	 @param fk_mapdata 表单ID
 	 @param ds 表单数据
-	 @param isSetReadonly 是否设置只读？
 	 @return 
 	 * @throws Exception 
 	*/
@@ -2106,7 +2103,8 @@ public class MapData extends EntityNoName
 						int beforeID = (int) en.getOID();
 						en.setOID(0);
 						en.DirectInsert();
-						endDoSQL += "@UPDATE Sys_MapAttr SET GroupID=" + en.getOID() + " WHERE FK_MapData='" + fk_mapdata + "' AND GroupID='" + beforeID + "'";
+						endDoSQL += "@UPDATE Sys_MapAttr SET GroupID=" + en.getOID() + " WHERE FK_MapData='" + en.GetValStrByKey("FrmID").toString() + "' AND GroupID='" + beforeID + "'";
+
 					}
 					break;
 				case "Sys_Enum":
@@ -2475,7 +2473,7 @@ public class MapData extends EntityNoName
 	 求屏幕高度
 
 	 @param md
-	 @param scrWidth
+	 @param scrHeight
 	 @return
 	 * @throws Exception
 	*/
@@ -2660,7 +2658,8 @@ public class MapData extends EntityNoName
 	/** 
 	 获得Excel文件流
 	 
-	 @param oid
+	 @param pkValue
+	 @param bytes
 	 @return 
 	 * @throws Exception 
 	*/
@@ -2690,8 +2689,9 @@ public class MapData extends EntityNoName
 	/** 
 	 保存excel文件
 	 
-	 @param oid
+	 @param pkValue
 	 @param bty
+	 @param saveTo
 	 * @throws Exception 
 	 * @throws NumberFormatException 
 	*/
@@ -2707,7 +2707,7 @@ public class MapData extends EntityNoName
 	/** 
 	 获得Excel文件流
 	 
-	 @param oid
+	 @param pkValue
 	 @return 
 	 * @throws Exception 
 	*/
@@ -2735,7 +2735,7 @@ public class MapData extends EntityNoName
 	/** 
 	 保存excel文件
 	 
-	 @param oid
+	 @param pkValue
 	 @param bty
 	 * @throws Exception 
 	*/

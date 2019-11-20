@@ -1102,7 +1102,7 @@ public class WF_MyFlow extends WebContralBase {
 
 			// @李国文.
 			if (btnLab.getPrintDocEnable() == true) {
-				String urlr = appPath + "WF/WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID()
+				String urlr = "./WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID()
 						+ "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
 				toolbar += "<input type=button name='PrintDoc' value='" + btnLab.getPrintDocLab()
 						+ "' enable=true onclick=\"WinOpen('" + urlr + "','dsdd'); \" />";

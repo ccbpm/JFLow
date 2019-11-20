@@ -1320,10 +1320,10 @@ public class WF_Comm extends WebContralBase {
 
 				i++;
 				if (i == 1) {
-					/* 第一次进来。 */
+					// 第一次进来。
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@")
-							|| SystemConfig.getAppCenterDBVarStr().equals("?")) {
+							|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
 						qo.AddWhere(attr.getKey(), " LIKE ",
 								SystemConfig.getAppCenterDBType() == DBType.MySQL
 										? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")
@@ -1337,7 +1337,7 @@ public class WF_Comm extends WebContralBase {
 				qo.addOr();
 
 				if (SystemConfig.getAppCenterDBVarStr().equals("@")
-						|| SystemConfig.getAppCenterDBVarStr().equals("?")) {
+						|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
 					qo.AddWhere(attr.getKey(), " LIKE ",
 							SystemConfig.getAppCenterDBType() == DBType.MySQL
 									? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")

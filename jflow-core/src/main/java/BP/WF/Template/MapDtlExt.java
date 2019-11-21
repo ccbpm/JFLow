@@ -1527,7 +1527,7 @@ public class MapDtlExt extends EntityNoName
 		//更新分组标签.  @fanleiwei. 代码有变化.
 		BP.Sys.GroupField gf = new GroupField();
 		int i = gf.Retrieve(GroupFieldAttr.CtrlType, "Dtl", GroupFieldAttr.CtrlID, this.getNo());
-		if (i == 0)
+		if (i == 0 && this.getFK_Node() ==0)
 		{
 			gf.setCtrlID(this.getNo());
 			gf.setCtrlType("Dtl");
@@ -1557,12 +1557,25 @@ public class MapDtlExt extends EntityNoName
 		dtl.setNo(this.getNo());
 		dtl.Delete();
 
+		//删除分组
+		GroupFields gfs = new GroupFields();
+		gfs.RetrieveByLike(GroupFieldAttr.CtrlID, this.getNo() + "%");
+		gfs.Delete();
+
+		//如果启用了附件也需要删除
+		if (this.getIsEnableAthM() == true)
+		{
+			FrmAttachment ath = new FrmAttachment();
+			ath.Delete(FrmAttachmentAttr.MyPK, this.getNo() + "_AthMDtl");
+		}
+
+
 		super.afterDelete();
 	}
 	/** 
 	 获取个数
 	 
-	 @param fk_val
+	 @param workID
 	 @return 
 	 * @throws Exception 
 	*/

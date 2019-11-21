@@ -952,15 +952,16 @@
 
             //alert(text);
 
-            var node = new Entity("BP.WF.Node", activeId);
+            var node = new Entity("BP.WF.Template.NodeExt", activeId);//新修改的值.
             node.Name = text;
             node.Update();
 
 
             //修改表单名称.
-            var mapData = new Entity("BP.Sys.MapData", "ND" + activeId);
-            mapData.Name = text;
-            mapData.Update();
+            if (mapData.Name == null || mapData.Name == undefined || mapData.Name == "") {
+                mapData.Name = text;
+                mapData.Update();
+            }
 
             //修改分组名称.
             var groups = new Entities("BP.Sys.GroupFields");

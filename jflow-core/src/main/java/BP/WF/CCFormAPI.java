@@ -886,7 +886,8 @@ public class CCFormAPI extends Dev2Interface {
 			String[] strs = dtl.getFilterSQLExp().split("[=]", -1);
 			if (strs.length == 2) {
 				qo.addAnd();
-				qo.AddWhere(strs[0], strs[1]);
+				String value = Glo.DealExp(strs[1],en);
+				qo.AddWhere(strs[0], value);
 			}
 		}
 

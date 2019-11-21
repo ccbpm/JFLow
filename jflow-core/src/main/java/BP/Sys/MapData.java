@@ -1641,7 +1641,8 @@ public class MapData extends EntityNoName
 	public static MapData ImpMapData(String fk_mapdata, DataSet ds) throws Exception
 	{
 
-
+		if(ds==null || ds.Tables.size()==0)
+			throw new Exception("err@导入的表单中内容为空");
 			///#region 检查导入的数据是否完整.
 		String errMsg = "";
 		
@@ -1685,7 +1686,7 @@ public class MapData extends EntityNoName
 
 		if (!errMsg.equals(""))
 		{
-			throw new RuntimeException("@以下错误不可导入，可能的原因是非表单模板文件:" + errMsg);
+			throw new RuntimeException("err@以下错误不可导入，可能的原因是非表单模板文件:" + errMsg);
 		}
 
 			///#endregion

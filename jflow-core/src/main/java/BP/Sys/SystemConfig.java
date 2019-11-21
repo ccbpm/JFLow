@@ -17,6 +17,11 @@ import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.Difference.Handler.CommonUtils;
 import BP.Tools.StringHelper;
+import org.springframework.boot.system.ApplicationHome;
+import org.springframework.http.HttpRequest;
+import org.springframework.util.ResourceUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 系统配置
@@ -100,7 +105,7 @@ public class SystemConfig {
 	/**
 	 * 读取配置文件
 	 * 
-	 * @param cfgFile
+	 * @param
 	 * @throws Exception
 	 */
 	public static void ReadConfigFile(InputStream fis) throws Exception {
@@ -240,26 +245,36 @@ public class SystemConfig {
 	private static Hashtable<String, Object> _CS_AppSettings = null;
 
 	public static Hashtable<String, Object> getCS_AppSettings() {
-
 		if (_CS_AppSettings == null || _CS_AppSettings.size() == 0) {
 			try {
 				_CS_AppSettings = new java.util.Hashtable<String, Object>();
 
-				Properties props = new Properties();
-				InputStream is = null;
-				try {
-					is = BP.Difference.Helper.loadResource();
-					BufferedReader bf = new BufferedReader(new InputStreamReader(is, "UTF-8"));// 解决读取properties文件中产生中文乱码的问题
-					props.load(bf);
-				} finally {
-					IOUtils.closeQuietly(is);
-				}
+				Properties props = BP.Difference.Helper.loadResource();
 				_CS_AppSettings = (Hashtable) props;
 			} catch (Exception e) {
 				throw new RuntimeException("读取配置文件失败", e);
 			}
 		}
 		return _CS_AppSettings;
+//		if (_CS_AppSettings == null || _CS_AppSettings.size() == 0) {
+//			try {
+//				_CS_AppSettings = new java.util.Hashtable<String, Object>();
+//
+//				Properties props = new Properties();
+//				InputStream is = null;
+//				try {
+//					is = BP.Difference.Helper.loadResource();
+//					BufferedReader bf = new BufferedReader(new InputStreamReader(is, "UTF-8"));// 解决读取properties文件中产生中文乱码的问题
+//					props.load(bf);
+//				} finally {
+//					IOUtils.closeQuietly(is);
+//				}
+//				_CS_AppSettings = (Hashtable) props;
+//			} catch (Exception e) {
+//				throw new RuntimeException("读取配置文件失败", e);
+//			}
+//		}
+//		return _CS_AppSettings;
 	}
 
 	/**
@@ -395,16 +410,39 @@ public class SystemConfig {
 	}
 
 	/**
+	 * springBoot启动方式
+	 * @return
+	 */
+	public static boolean getIsStartJarPackage(){
+		String str = (String) SystemConfig.getAppSettings().get("IsStartJarPackage");
+		if(DataType.IsNullOrEmpty(str) == true || str.equals("0"))
+			return false;
+		return true;
+	}
+	/**
 	 * WebApp Path
 	 * 
 	 * @return
 	 */
 	public static String getPathOfWebApp() {
-		// return "D:\\JJFlow\\trunk\\JJFlow";
+		HttpServletRequest request = Glo.getRequest();
 		if (SystemConfig.getIsBSsystem()) {
-			if (Glo.getRequest() == null || Glo.getRequest().getSession() == null) {
+			if (request == null || request.getSession() == null) {
 				return BP.WF.Glo.getHostURL() + "/";
 			} else {
+
+				//如果是jar包发布
+				if(getIsStartJarPackage() == true){
+					ApplicationHome h = new ApplicationHome(SystemConfig.class);
+					File jarF = h.getSource();
+					//获取当前项目的web路径
+					//String contextPath = request.getContextPath();
+					//return request.getScheme()+"://"+request.getServerName()+":"+
+					//		request.getServerPort()+contextPath+"/";
+					return jarF.getParentFile().getParentFile().getPath()+"/src/main/webapp/";
+
+					//return ResourceUtils.getURL("classpath:").getPath();//jar包路径
+				}
 				return Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
 			}
 		} else {
@@ -763,19 +801,10 @@ public class SystemConfig {
 	}
 
 	/// <summary>
-	/// 唯一标识key
+	/// 密钥
 	/// </summary>
-	public static String getDing_AppKey() {
-		return getAppSettings().get("Ding_AppKey").toString();
-
-	}
-	
-	/**
-	 * 密钥
-	 * @return
-	 */
-	public static String getDing_AppSecret() {
-		return getAppSettings().get("Ding_AppSecret").toString();
+	public static String getDing_CorpSecret() {
+		return getAppSettings().get("Ding_CorpSecret").toString();
 
 	}
 

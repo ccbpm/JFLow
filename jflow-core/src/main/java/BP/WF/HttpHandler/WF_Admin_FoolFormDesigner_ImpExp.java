@@ -150,7 +150,11 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 		DataSet ds = new DataSet();
 		ds.readXml(xmlFile.getAbsolutePath());
 		// 执行装载.
-		MapData.ImpMapData(fk_mapData, ds);
+		try{
+			MapData.ImpMapData(fk_mapData, ds);
+		}catch(Exception e){
+			return e.getMessage();
+		}
 
 		if (fk_mapData.contains("ND")) {
 			// 判断是否是节点表单

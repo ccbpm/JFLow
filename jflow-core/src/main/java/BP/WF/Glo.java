@@ -1334,17 +1334,17 @@ public class Glo {
 			// 执行必须的sql.
 			switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
 			case Oracle:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "\\Install\\SQLScript\\InitView_Ora.sql";
+				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_Ora.sql";
 				break;
 			case MSSQL:
 			case Informix:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "\\Install\\SQLScript\\InitView_SQL.sql";
+				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_SQL.sql";
 				break;
 			case MySQL:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "\\Install\\SQLScript\\InitView_MySQL.sql";
+				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_MySQL.sql";
 				break;
 			case PostgreSQL:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "\\Install\\SQLScript\\InitView_PostgreSQL.sql";
+				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_PostgreSQL.sql";
 				break;
 			default:
 				break;
@@ -1850,17 +1850,17 @@ public class Glo {
 		// 执行必须的sql.
 		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
 		case Oracle:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\InitView_Ora.sql";
+			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_Ora.sql";
 			break;
 		case MSSQL:
 		case Informix:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\InitView_SQL.sql";
+			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_SQL.sql";
 			break;
 		case MySQL:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\InitView_MySQL.sql";
+			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_MySQL.sql";
 			break;
 		case PostgreSQL:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "\\WF\\Data\\Install\\SQLScript\\InitView_PostgreSQL.sql";
+			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_PostgreSQL.sql";
 			break;
 		default:
 			break;
@@ -1872,7 +1872,7 @@ public class Glo {
 
 		/// #region 5, 初始化数据.
 		if (isInstallFlowDemo) {
-			sqlscript = SystemConfig.getPathOfData() + "\\Install\\SQLScript\\InitPublicData.sql";
+			sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitPublicData.sql";
 			BP.DA.DBAccess.RunSQLScript(sqlscript);
 		} else {
 			FlowSort fs = new FlowSort();
@@ -2881,15 +2881,15 @@ public class Glo {
 					switch (dtl.getDtlOpenType()) {
 					case ForEmp: // 按人员来控制.
 						gedtl.setRefPK(en.getPKVal().toString());
-						gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+						gedtl.setFID(Long.parseLong(en.GetValStrByKey("FID")));
 						break;
 					case ForWorkID: // 按工作ID来控制
 						gedtl.setRefPK(en.getPKVal().toString());
-						gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+						gedtl.setFID(Long.parseLong(en.GetValStrByKey("FID")));
 						break;
 					case ForFID: // 按流程ID来控制.
-						gedtl.setRefPK(String.valueOf(workID));
-						gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+						gedtl.setRefPK(en.GetValStrByKey("FID"));
+						gedtl.setFID(Long.parseLong(en.GetValStrByKey("FID")));
 						break;
 					}
 					gedtl.setRDT(DataType.getCurrentDataTime());
@@ -3748,7 +3748,7 @@ public class Glo {
 	}
 
 	public static String getNodeImagePath() {
-		return Glo.getIntallPath() + "\\Data\\Node\\";
+		return Glo.getIntallPath() + "/Data/Node/";
 	}
 
 	public static void ClearDBData() {
@@ -3762,7 +3762,7 @@ public class Glo {
 	public static String OEM_Flag = "CCS";
 
 	public static String getFlowFileBill() {
-		return Glo.getIntallPath() + "\\DataUser\\Bill\\";
+		return Glo.getIntallPath() + "/DataUser/Bill/";
 	}
 
 	private static String _IntallPath = null;

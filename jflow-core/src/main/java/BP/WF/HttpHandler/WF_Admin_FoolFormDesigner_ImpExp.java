@@ -125,13 +125,6 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
 	/**
 	 * 从本机装载表单模版
-	 * 
-	 * @param fileByte
-	 *            文件流
-	 * @param fk_mapData
-	 *            表单模版ID
-	 * @param isClear
-	 *            是否清空？
 	 * @return 执行结果
 	 */
 	public String Imp_LoadFrmTempleteFromLocalFile() throws Exception {
@@ -198,15 +191,6 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
 	/**
 	 * 从节点上Copy
-	 * 
-	 * @param fromMapData
-	 *            从表单ID
-	 * @param fk_mapdata
-	 *            到表单ID
-	 * @param isClear
-	 *            是否清楚现有的元素？
-	 * @param isSetReadonly
-	 *            是否设置为只读？
 	 * @return 执行结果
 	 * @throws Exception
 	 */

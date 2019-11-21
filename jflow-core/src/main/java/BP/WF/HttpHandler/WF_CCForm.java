@@ -2047,10 +2047,11 @@ public class WF_CCForm extends WebContralBase {
 		switch (mdtl.getDtlOpenType()) {
 		case ForEmp: // 按人员来控制.
 			dtl.setRefPK(this.getRefPKVal());
+			dtl.setFID(this.getFID());
 			break;
 		case ForWorkID: // 按工作ID来控制
 			dtl.setRefPK(this.getRefPKVal());
-			dtl.setFID(Long.parseLong(this.getRefPKVal()));
+			dtl.setFID(this.getFID());
 			break;
 		case ForFID: // 按流程ID来控制.
 			dtl.setRefPK(this.getRefPKVal());
@@ -2404,8 +2405,6 @@ public class WF_CCForm extends WebContralBase {
 
 	/**
 	 * 初始化树的接口
-	 * 
-	 * @param context
 	 * @return
 	 * @throws Exception
 	 */
@@ -3045,8 +3044,6 @@ public class WF_CCForm extends WebContralBase {
 
 	/**
 	 * 删除附件
-	 * 
-	 * @param MyPK
 	 * @return
 	 * @throws Exception
 	 */

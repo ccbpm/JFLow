@@ -2636,20 +2636,19 @@ public class WorkNode {
 					.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this.getHisFlow(), this.getHisWork()));
 		}
 
-		/// #region 删除到达节点的子线程如果有，防止退回信息垃圾数据问题,如果退回处理了这个部分就不需要处理了.
+		//如果有删除到达节点的子线程，防止退回信息垃圾数据问题,如果退回处理了这个部分就不需要处理了.
 		ps = new Paras();
 		ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE FID=" + dbStr + "FID  AND FK_Node=" + dbStr + "FK_Node";
 		ps.Add("FID", this.getHisWork().getOID());
 		ps.Add("FK_Node", toNode.getNodeID());
 
-		/// #endregion 删除到达节点的子线程如果有，防止退回信息垃圾数据问题，如果退回处理了这个部分就不需要处理了.
-
-		/// #region 产生下一步骤的工作人员
-		// 发起.
+		// 产生下一步骤的工作人员
 		Work wk = toNode.getHisWork();
 		wk.Copy(this.rptGe);
-		wk.Copy(this.getHisWork()); // 复制过来主表基础信息。
-		wk.setFID(this.getHisWork().getOID()); // 把该工作FID设置成干流程上的工作ID.
+		// 复制过来主表基础信息。
+		wk.Copy(this.getHisWork());
+		// 把该工作FID设置成干流程上的工作ID.
+		wk.setFID(this.getHisWork().getOID());
 
 		// 到达的节点.
 		town = new WorkNode(wk, toNode);
@@ -2677,10 +2676,8 @@ public class WorkNode {
 			}
 		}
 
-		/// #endregion 产生下一步骤的工作人员
-
-		/// #region 复制数据.
-		// 获得当前流程数节点数据.
+		/// 复制数据.
+		// 获得当前流程节点数据.
 		FrmAttachmentDBs athDBs = new FrmAttachmentDBs("ND" + this.getHisNode().getNodeID(),
 				String.valueOf(this.getWorkID()));
 
@@ -2701,14 +2698,14 @@ public class WorkNode {
 		String workIDs = "";
 
 		DataTable dtWork = null;
+		/* 如果是按照查询ＳＱＬ，确定明细表的接收人与子线程的数据。 */
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySQLAsSubThreadEmpsAndData) {
-			/* 如果是按照查询ＳＱＬ，确定明细表的接收人与子线程的数据。 */
 			String sql = toNode.getDeliveryParas();
 			sql = Glo.DealExp(sql, this.getHisWork(), null);
 			dtWork = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		}
+		/* 如果是按照明细表，确定明细表的接收人与子线程的数据。 */
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDtlAsSubThreadEmps) {
-			/* 如果是按照明细表，确定明细表的接收人与子线程的数据。 */
 			for (MapDtl dtl : dtlsFrom.ToJavaList()) {
 				// 加上顺序，防止变化，人员编号变化，处理明细表中接收人重复的问题。
 				String sql = "SELECT * FROM " + dtl.getPTable() + " WHERE RefPK=" + this.getWorkID() + " ORDER BY OID";
@@ -2737,9 +2734,8 @@ public class WorkNode {
 			idx++;
 			Work mywk = toNode.getHisWork();
 
-			/// #region 复制数据.
+			//复制数据.
 			mywk.Copy(this.rptGe);
-			// mywk.Copy(this.HisWork); // 复制过来信息。
 			if (dtWork != null) {
 				/* 用IDX处理是为了解决，人员重复出现在数据源并且还能根据索引对应的上。 */
 				DataRow dr = dtWork.Rows.get(idx);
@@ -2752,7 +2748,6 @@ public class WorkNode {
 				}
 			}
 
-			/// #endregion 复制数据.
 
 			boolean isHaveEmp = false;
 
@@ -2922,9 +2917,6 @@ public class WorkNode {
 				}
 			}
 
-			/// #endregion 处理烟台需求,
-			/// 需要合流节点有一个明细表，根据明细表启动子线程任务,并要求把明细表的一行数据copy到下一个子线程的主表上去。
-
 			// 非分组工作人员.
 			if (isGroupMarkWorklist == false) {
 				// 保存主表数据.
@@ -3027,16 +3019,16 @@ public class WorkNode {
 				/// #endregion 复制图片上传附件。
 
 				/// #region 复制从表信息.
-				if (dtlsFrom.size() > 0 && dtlsTo.size() > 0) {
-					int i = -1;
-					for (MapDtl dtl : dtlsFrom.ToJavaList()) {
-						i++;
-						if (dtlsTo.size() <= i) {
-							continue;
-						}
+							if (dtlsFrom.size() > 0 && dtlsTo.size() > 0) {
+								int i = -1;
+								for (MapDtl dtl : dtlsFrom.ToJavaList()) {
+									i++;
+									if (dtlsTo.size() <= i) {
+										continue;
+									}
 
-						MapDtl toDtl = (MapDtl) dtlsTo.get(i);
-						if (toDtl.getIsCopyNDData() == false) {
+									MapDtl toDtl = (MapDtl) dtlsTo.get(i);
+									if (toDtl.getIsCopyNDData() == false) {
 							continue;
 						}
 

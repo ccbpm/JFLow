@@ -1,5 +1,6 @@
 ﻿
 var frmData = null;
+var IsLoadUEditor = false;
 function GenerFoolFrm(mapData, frmData) {
 
     frmData = frmData;
@@ -320,7 +321,7 @@ function InitThreeColMapAttr(Sys_MapAttr, frmData, groupID, tableCol) {
 
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
-       
+
         rowSpan = attr.RowSpan;
         colSpan = attr.ColSpan;
         textColSpan = attr.TextColSpan;
@@ -474,7 +475,7 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID, tableCol) {
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
 
-        
+
         //赋值
         rowSpan = parseInt(attr.RowSpan);
         colSpan = parseInt(attr.ColSpan);
@@ -1012,6 +1013,16 @@ function InitMapAttrOfCtrl(mapAttr) {
                 eleHtml += "<div class='richText'>" + defValue + "</div>";
             } else {
 
+                if (IsLoadUEditor == false) {
+                    //加载UEditor需要的JS
+                    $("<link href='../Comm/umeditor1.2.3-utf8/themes/default/css/umeditor.css' type = 'text/css' rel = 'stylesheet' />").appendTo("head");
+                    $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/third-party/template.min.js'></script>").appendTo("head");
+                    $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/umeditor.config.js'></script>").appendTo("head");
+                    $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/umeditor.min.js'></script>").appendTo("head");
+                    $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/lang/zh-cn/zh-cn.js'></script>").appendTo("head");
+                    IsLoadUEditor = true;
+
+                }
                 document.BindEditorMapAttr = mapAttr; //存到全局备用.
 
                 //设置编辑器的默认样式
@@ -1151,7 +1162,7 @@ function InitMapAttrOfCtrl(mapAttr) {
 
         //return "<input onfocus='removeplaceholder(this,0);' onblur='addplaceholder(this,0);'  style='text-align:right;;width:100%' onkeyup=" + '"' + "limitLength(this," + bit + ");valitationAfter(this, 'int');if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value)) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return "<input  onfocus='removeplaceholder(this,0);' onblur='addplaceholder(this,0);' value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "limitLength(this," + bit + ");valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn +"' placeholder='" + (mapAttr.Tip || '') + "'/>";
-    
+
     }
 
     //AppMoney  AppRate
@@ -1178,45 +1189,68 @@ function InitMapAttrOfCtrl(mapAttr) {
 }
 
 //记录改变字段样式 不可编辑，不可见
-var mapAttrs = [];
+var AllObjSet = {};
+
 function changeEnable(obj, FK_MapData, KeyOfEn, AtPara) {
     if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
         var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-        cleanAll();
+        cleanAll(KeyOfEn);
         setEnable(FK_MapData, KeyOfEn, selecedval);
     }
 }
 function clickEnable(obj, FK_MapData, KeyOfEn, AtPara) {
     if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
         var selectVal = $(obj).val();
-        cleanAll();
+        cleanAll(KeyOfEn);
         setEnable(FK_MapData, KeyOfEn, selectVal);
     }
 }
 
 //清空所有的设置
-function cleanAll() {
+function cleanAll(KeyOfEn) {
     var trs = $("#CCForm  table tr .attr-group"); //如果隐藏就显示
     $.each(trs, function (i, obj) {
         if ($(obj).parent().is(":hidden") == true)
             $(obj).parent().show();
 
     });
-
-    for (var i = 0; i < mapAttrs.length; i++) {
-        SetCtrlShow(mapAttrs[i]);
-        SetCtrlEnable(mapAttrs[i]);
-        CleanCtrlVal(mapAttrs[i]);
+    if (AllObjSet.length == 0)
+        return;
+    if(AllObjSet[KeyOfEn].length>0){
+        var mapAttrs = AllObjSet[KeyOfEn][0];
+        for (var i = 0; i < mapAttrs.length; i++) {
+            SetCtrlShow(mapAttrs[i]);
+            SetCtrlEnable(mapAttrs[i]);
+            CleanCtrlVal(mapAttrs[i]);
+        }
     }
+
 
 }
 //启用了显示与隐藏.
 function setEnable(FK_MapData, KeyOfEn, selectVal) {
-	if(selectVal==undefined)
-		return;
-    var pkval = FK_MapData + "_" + KeyOfEn + "_" + selectVal;
-    var frmRB = new Entity("BP.Sys.FrmRB", pkval);
+    if(selectVal==undefined)
+        return;
 
+    var pkval = FK_MapData + "_" + KeyOfEn + "_" + selectVal;
+
+
+    var frmRBs = frmData["Sys_FrmRB"];
+    if (frmRBs.length <= 0)
+        return;
+
+
+    var frmRB = null;
+    for (var i = 0; i < frmRBs.length; i++) {
+        if (frmRBs[i].MyPK == pkval) {
+            frmRB = frmRBs[i];
+            break;
+        }
+    }
+    if (frmRB == null)
+        return;
+
+    var mapAttrs = [];
 
     //解决字段隐藏显示.
     var cfgs = frmRB.FieldsCfg;
@@ -1272,11 +1306,14 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
             }
 
         }
-
+        if (!$.isArray(AllObjSet[KeyOfEn])) {
+            AllObjSet[KeyOfEn] = [];
+        }
+        AllObjSet[KeyOfEn].push(mapAttrs);
 
     }
 
-    //设置是否隐藏分组、获取字段分组所有的tr 
+    //设置是否隐藏分组、获取字段分组所有的tr
     var trs = $("#CCForm  table tr .attr-group");
     var isHidden = false;
     $.each(trs, function (i, obj) {
@@ -1321,10 +1358,13 @@ function SetCtrlEnable(key) {
 //        ctrl.addClass("form-control");
     }
 
-    ctr = document.getElementsByName('RB_' + key);
-    if (ctrl != null) {
+    ctrl = document.getElementsByName('RB_' + key);
+    if (ctrl != null && ctrl.length !=0 ) {
+
         var ses = new Entities("BP.Sys.SysEnums");
         ses.Retrieve("EnumKey", key);
+
+
         for (var i = 0; i < ses.length; i++)
             $("#RB_" + key + "_" + ses[i].IntKey).removeAttr("disabled");
     }
@@ -1404,7 +1444,7 @@ function SetCtrlVal(key, value) {
         if (value!=0) {
             ctrl.prop("checked", true);
         }
-        
+
     }
 
     ctrl = $("#RB_" + key + "_" + value);
@@ -1443,9 +1483,24 @@ function CleanCtrlVal(key) {
 
 //初始化 框架
 function Ele_Frame(frmData, gf) {
-    var frame = new Entity("BP.Sys.MapFrame", gf.CtrlID);
-    if (frame == null)
+
+
+    var frames = frmData["Sys_MapFrame"];
+    if (frames.length == 0)
         return "没有找到框架的定义，请与管理员联系。";
+
+    var frame = null;
+    for (var i = 0; i < frames.length; i++) {
+
+        if (frames[i].MyPK == gf.CtrlID)
+        {
+            frame = frames[i];
+            break;
+        }
+    }
+
+    if (frame == null)
+        return;
 
     var eleHtml = '';
     //获取框架的类型 0 自定义URL 1 地图开发 2流程轨迹表 3流程轨迹图
@@ -1554,16 +1609,15 @@ function Ele_Attachment(workNode, gf) {
         athUrl = '../CCForm/' + athUrl;
     }
 
-
     //这里的连接要取 FK_MapData的值.
-    src = athUrl + "?PKVal=" + pageData.OID + "&Ath=" + noOfObj + "&FK_MapData=" + GetQueryString("FK_MapData") + "&FromFrm=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
+    src = athUrl + "?PKVal=" + pageData.OID +"&PWorkID="+GetQueryString("PWorkID")+ "&Ath=" + noOfObj + "&FK_MapData=" + ath.FK_MapData + "&FromFrm=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
 
     //自定义表单模式.
     if (ath.AthRunModel == 2) {
-        src = "../../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.OID + "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
+        src = "../../DataUser/OverrideFiles/Ath.htm?PKVal=" + pageData.OID+ "&PWorkID=" + GetQueryString("PWorkID")+ "&Ath=" + noOfObj + "&FK_MapData=" + gf.FrmID + "&FK_FrmAttachment=" + athPK + url + "&M=" + Math.random();
     }
 
-    eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + gf.CtrlID + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    eleHtml += "<iframe style='width:100%;height:" + ath.H + "px;' ID='Attach_" + gf.CtrlID + "' name='Attach'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     return eleHtml;
 
 
@@ -1628,7 +1682,7 @@ function InitRBShowContent(frmData, mapAttr, defValue, RBShowModel, enableAttr) 
         }
 
         if (RBShowModel == 3)
-            //<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
+        //<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
             rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' " + onclickEvent + "  />&nbsp;" + obj.Lab + "</label>";
         else
             rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' " + onclickEvent + "   />&nbsp;" + obj.Lab + "</label><br/>";

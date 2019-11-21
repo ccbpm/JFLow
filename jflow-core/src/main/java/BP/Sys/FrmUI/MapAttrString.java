@@ -302,6 +302,14 @@ public class MapAttrString extends EntityMyPK
 	@Override
 	protected void afterDelete() throws Exception
 	{
+		//如果是附件字段删除附件属性
+		MapAttr attr = new MapAttr(this.getMyPK());
+		if(attr.getUIContralType() == UIContralType.AthShow)
+		{
+			FrmAttachment ath = new FrmAttachment();
+			ath.Delete(FrmAttachmentAttr.MyPK, this.getMyPK());
+		}
+
 		//删除可能存在的关联属性.
 		String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "' AND KeyOfEn='" + this.getKeyOfEn() + "T'";
 		DBAccess.RunSQL(sql);

@@ -925,7 +925,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	protected void afterInsert() throws Exception
 	{
 		GroupField gf = new GroupField();
-		if (gf.IsExit(GroupFieldAttr.CtrlID, this.getMyPK()) == false)
+		if (this.getFK_Node()==0 && gf.IsExit(GroupFieldAttr.CtrlID, this.getMyPK()) == false)
 		{
 			gf.setFrmID(this.getFK_MapData());
 			gf.setCtrlID(this.getMyPK());

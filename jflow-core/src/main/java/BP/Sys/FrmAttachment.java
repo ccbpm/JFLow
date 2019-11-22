@@ -873,7 +873,7 @@ public class FrmAttachment extends EntityMyPK {
 		}
 
 		// 对于流程类的多附件，默认按照WorkID控制. add 2017.08.03 by zhoupeng.
-		if (this.getFK_Node() != 0) {
+		if (this.getFK_MapData().startsWith("ND")==true) {
 			this.setHisCtrlWay(AthCtrlWay.WorkID);
 		}
 

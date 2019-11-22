@@ -757,6 +757,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 							{
 								newdt = dt.copy();
 							}
+						}else
+						{
+							newdt = dt.copy();
 						}
 						
 					}

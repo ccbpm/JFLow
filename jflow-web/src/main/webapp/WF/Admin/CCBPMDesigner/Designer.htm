@@ -958,6 +958,7 @@
 
 
             //修改表单名称.
+            var mapData = new Entity("BP.Sys.MapData", "ND" + activeId);
             if (mapData.Name == null || mapData.Name == undefined || mapData.Name == "") {
                 mapData.Name = text;
                 mapData.Update();

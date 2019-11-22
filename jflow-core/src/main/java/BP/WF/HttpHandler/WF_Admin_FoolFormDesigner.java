@@ -10,6 +10,7 @@ import BP.Sys.*;
 import BP.Sys.FrmUI.MapAttrDT;
 import BP.WF.Template.*;
 import java.util.*;
+import java.util.Map;
 
 /** 
  处理页面的业务逻辑
@@ -614,54 +615,31 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	public final String ImpTableField_Step2() throws Exception
 	{
 
-		HashMap<String, Object> dictionary = new HashMap<String, Object>();
-
+		Map<String, Object> map = new HashMap<String, Object>();
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
-		dictionary.put("SFDBSrc", src.ToDataTableField("SFDBSrc").Rows);
-
+		map.put("SFDBSrc", src.ToDataTableField("SFDBSrc").Rows);
 		DataTable tables = src.GetTables();
-		dictionary.put("tables", tables.Rows);
-
+		map.put("tables", tables.Rows);
+		//
 		DataTable tableColumns = src.GetColumns(this.getSTable());
-		dictionary.put("columns", tableColumns.Rows);
-
+		map.put("columns", tableColumns.Rows);
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
-		dictionary.put("attrs", attrs.ToDataTableField("attrs").Rows);
-		dictionary.put("STable", this.getSTable());
-
-		return BP.Tools.Json.ToJson(dictionary);
+		map.put("attrs", attrs.ToDataTableField("attrs").Rows);
+		map.put("STable", this.getSTable());
+		return BP.Tools.Json.ToJson(map);
 	}
 
-	private ArrayList<String> sCols = null;
-
-	public final ArrayList<String> getSColumns()
-	{
-		if (sCols != null)
-		{
-			return sCols;
+	public final String getSColumns() {
+		String str = this.GetRequestVal("SColumns");
+		if (str == null || str.equals("") || str.equals("null")) {
+			return null;
 		}
-
-		String tempVar = this.GetRequestVal("SColumns");
-		String cols = tempVar != null ? tempVar : "";
-		String[] arr = cols.split("[,]", -1);
-		sCols = new ArrayList<String>();
-
-		for (String s : arr)
-		{
-			if (DataType.IsNullOrEmpty(s))
-			{
-				continue;
-			}
-
-			sCols.add(s);
-		}
-
-		return sCols;
+		return str;
 	}
 
 	public final String ImpTableField_Step3() throws Exception
 	{
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		List<DataRow> list = new LinkedList<DataRow>();
 		map.put("selectedColumns", list);
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
@@ -691,6 +669,23 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		String msg = "导入字段信息:";
 		boolean isLeft = true;
 		float maxEnd = md.getMaxEnd();
+		long iGroupID=0;
+		try
+		{
+			Paras ps = new Paras();
+			ps.SQL = "SELECT OID FROM Sys_GroupField WHERE FrmID=" + SystemConfig.getAppCenterDBVarStr() + "FrmID and (CtrlID is null or ctrlid ='') ORDER BY OID DESC ";
+			ps.Add("FrmID", this.getFK_MapData());
+			DataTable dt = DBAccess.RunSQLReturnTable(ps);
+			if (dt != null && dt.Rows.size() > 0)
+			{
+				iGroupID = Long.parseLong(dt.Rows.get(0).getValue(0).toString());
+			}
+		}
+		catch (RuntimeException ex)
+		{
+
+		}
+
 		@SuppressWarnings("unchecked")
 		Enumeration<String> e = ContextHolderUtils.getRequest().getParameterNames();
 		while (e.hasMoreElements()) {
@@ -706,6 +701,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 				ma.setUIBindKey(this.GetRequestVal("TB_BindKey_" + columnName));
 				ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
 				ma.setLGType(BP.En.FieldTypeS.Normal);
+				ma.setGroupID(iGroupID);
 				//
 				if (!"".equals(ma.getUIBindKey())) {
 					SysEnums se = new SysEnums();

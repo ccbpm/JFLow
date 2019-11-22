@@ -33,7 +33,7 @@ public class WF_WorkOpt extends WebContralBase
 	{
 		BP.WF.DTS.ccbpmServices en = new BP.WF.DTS.ccbpmServices();
 		en.Do();
-		return "执行成功，请检查:\\DataUser\\Log\\下面的执行信息。 ";
+		return "执行成功，请检查:/DataUser/Log/下面的执行信息。 ";
 	}
 	/** 
 	 删除子线程
@@ -228,7 +228,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 						dir.Do();
-						path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+						path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
 						String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 						billInfo += "@<font color=red>" + msgErr + "</font>";
 						throw new RuntimeException(msgErr + "@其它信息:" + ex.getMessage());
@@ -275,15 +275,18 @@ public class WF_WorkOpt extends WebContralBase
 
 			paths = file.split("[_]", -1);
 			path = paths[0] + "/" + paths[1] + "/" + paths[2] + "/";
-
-			String billUrl = "url@" + BP.WF.Glo.getCCFlowAppPath() + "DataUser/Bill/" + path + file;
+			String fileModelT = "rtf";
+			if (func.getTemplateFileModel().getValue() == 1)
+				fileModelT = "word";
+			String billUrl = "url@" + fileModelT+"@"+ BP.WF.Glo.getCCFlowAppPath() + "DataUser/Bill/" + path + file;
+//			String billUrl = "url@" + BP.WF.Glo.getCCFlowAppPath() + "DataUser/Bill/" + path + file;
 
 			if (func.getHisBillFileType() == BillFileType.PDF)
 			{
 				billUrl = billUrl.replace(".doc", ".pdf");
 			}
 
-			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
 			//  path = Server.MapPath(path);
 			if ((new File(path)).isDirectory() == false)
 			{
@@ -362,7 +365,7 @@ public class WF_WorkOpt extends WebContralBase
 		{
 			BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 			dir.Do();
-			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
 			String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 			return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
 		}
@@ -445,7 +448,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 						dir.Do();
-						path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+						path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
 						String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 						billInfo += "@<font color=red>" + msgErr + "</font>";
 						throw new RuntimeException(msgErr + "@其它信息:" + ex.getMessage());
@@ -517,7 +520,7 @@ public class WF_WorkOpt extends WebContralBase
 				billUrl = billUrl.replace(".doc", ".pdf");
 			}
 
-			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
 			//  path = Server.MapPath(path);
 			if ((new File(path)).isDirectory() == false)
 			{
@@ -604,7 +607,7 @@ public class WF_WorkOpt extends WebContralBase
 		{
 			BP.WF.DTS.InitBillDir dir = new BP.WF.DTS.InitBillDir();
 			dir.Do();
-			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "\\" + WebUser.getFK_Dept() + "\\" + func.getNo() + "\\";
+			path = BP.WF.Glo.getFlowFileBill() + DataType.getCurrentYear() + "/" + WebUser.getFK_Dept() + "/" + func.getNo() + "/";
 			String msgErr = "@" + String.format("生成单据失败，请让管理员检查目录设置") + "[" + BP.WF.Glo.getFlowFileBill() + "]。@Err：" + ex.getMessage() + " @File=" + file + " @Path:" + path;
 			return "err@<font color=red>" + msgErr + "</font>" + ex.getMessage();
 		}
@@ -2700,7 +2703,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		String str = BP.Tools.Json.ToJson(ds);
 		//用于jflow数据输出格式对比.
-		//  DataType.WriteFile("c:\\WorkCheck_Init_ccflow.txt", str);
+		//  DataType.WriteFile("c:/WorkCheck_Init_ccflow.txt", str);
 		return str;
 	}
 	/** 

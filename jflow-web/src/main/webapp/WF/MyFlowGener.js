@@ -703,7 +703,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
     var formArr = formss.split('&');
     var formArrResult = [];
-
+    var haseExistStr = ",";
     $.each(formArr, function (i, ele) {
         if (ele.split('=')[0].indexOf('CB_') == 0) {
             if ($('#' + ele.split('=')[0] + ':checked').length == 1) {
@@ -724,6 +724,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
             mystr = ctrlID.replace("DDL_", "TB_") + 'T=' + item;
             formArrResult.push(mystr);
             formArrResult.push(ele);
+            haseExistStr += ctrlID.replace("DDL_", "TB_") + "T" + ",";
         }
         if (ele.split('=')[0].indexOf('RB_') == 0) {
             formArrResult.push(ele);
@@ -733,10 +734,14 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
 
     $.each(formArr, function (i, ele) {
-        if (ele.split('=')[0].indexOf('TB_') == 0) {
-            var index = isExistArray(formArrResult, ele.split('=')[0]);
-            if (index == -1)
+        var ctrID = ele.split('=')[0];
+        if (ctrID.indexOf('TB_') == 0) {
+            if (haseExistStr.indexOf(","+ctrID+",") == -1) {
                 formArrResult.push(ele);
+                haseExistStr += ctrID + ",";
+            }
+
+
         }
     });
 
@@ -768,18 +773,19 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                         break;
                 }
                 break;
-            //下拉框            
+            //下拉框
             case "SELECT":
                 formArrResult.push(name + '=' + encodeURIComponent($(disabledEle).children('option:checked').val()));
                 var tbID = name.replace("DDL_", "TB_") + 'T';
                 if ($("#" + tbID).length == 1) {
-                    var index = isExistArray(formArrResult, tbID);
-                    if (index == -1)
+                    if (haseExistStr.indexOf("," + tbID + ",") == -1) {
                         formArrResult.push(tbID + '=' + $(disabledEle).children('option:checked').text());
+                        haseExistStr += tbID + ",";
+                    }
                 }
                 break;
 
-            //文本区域                    
+            //文本区域
             case "TEXTAREA":
                 formArrResult.push(name + '=' + encodeURIComponent($(disabledEle).val()));
                 break;
@@ -1019,7 +1025,7 @@ function execSend(toNodeID) {
         return;
     }
 
-    if (data.indexOf('TurnUrl@') == 0) {  //发送成功时转到指定的URL 
+    if (data.indexOf('TurnUrl@') == 0) {  //发送成功时转到指定的URL
         var url = data;
         url = url.replace('TurnUrl@', '');
         window.location.href = url;
@@ -1035,11 +1041,11 @@ function execSend(toNodeID) {
 
 
 
-    if (data.indexOf('url@') == 0) {  //发送成功时转到指定的URL 
+    if (data.indexOf('url@') == 0) {  //发送成功时转到指定的URL
 
         if (data.indexOf('Accepter') != 0 && data.indexOf('AccepterGener') == -1) {
 
-            //求出来 url里面的FK_Node=xxxx 
+            //求出来 url里面的FK_Node=xxxx
             var params = data.split("&");
 
             for (var i = 0; i < params.length; i++) {
@@ -1140,7 +1146,7 @@ function InitToNodeDDL(flowData) {
     $('[name=Send]').after(toNodeDDL);
 }
 
-//根据下拉框选定的值，弹出提示信息  绑定那个元素显示，哪个元素不显示  
+//根据下拉框选定的值，弹出提示信息  绑定那个元素显示，哪个元素不显示
 function ShowNoticeInfo() {
     var rbs = flowData.Sys_FrmRB;
     data = rbs;
@@ -1160,7 +1166,7 @@ function ShowNoticeInfo() {
             }
             //if (methodVal == value &&  obj.target.name.indexOf(drdlColName) == (obj.target.name.length - drdlColName.length)) {
             if (methodVal == value && (obj.target.name == drdlColName)) {
-                //高级JS设置;  设置表单字段的  可用 可见 不可用 
+                //高级JS设置;  设置表单字段的  可用 可见 不可用
                 var fieldConfig = data[j].FieldsCfg;
                 var fieldConfigArr = fieldConfig.split('@');
                 for (var k = 0; k < fieldConfigArr.length; k++) {
@@ -1613,7 +1619,7 @@ function GenerWorkNode() {
             }
 
             if (frmNode.FrmSln != 1)
-                //处理下拉框级联等扩展信息
+            //处理下拉框级联等扩展信息
                 AfterBindEn_DealMapExt(flowData);
         }
     } else {
@@ -1636,7 +1642,7 @@ function GenerWorkNode() {
         autoTextarea(item);
     });
 
-    //为 DISABLED 的 TEXTAREA 加TITLE 
+    //为 DISABLED 的 TEXTAREA 加TITLE
     var disabledTextAreas = $('#divCCForm textarea:disabled');
     $.each(disabledTextAreas, function (i, obj) {
         $(obj).attr('title', $(obj).val());
@@ -1699,7 +1705,7 @@ function GenerWorkNode() {
 
 
     $(".pimg").on("dblclick", function () {
-        var _this = $(this); //将当前的pimg元素作为_this传入函数  
+        var _this = $(this); //将当前的pimg元素作为_this传入函数
         imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
     });
 
@@ -1857,7 +1863,7 @@ function dealWithUrl(src) {
 var colVisibleJsonStr = ''
 
 /*
-公共的工作处理器js. 
+公共的工作处理器js.
 1. 该js的方法都是从各个类抽取出来的.
 2. MyFlowFool.htm, MyFlowFree.htm, MyFlowSelfForm.htm 引用它.
 3. 用于处理流程业务逻辑，表单业务逻辑.
@@ -2007,6 +2013,13 @@ function InitToolBar() {
         $('[name=Note').bind('click', function () { initModal("Note"); $('#returnWorkModal').modal().show(); });
     }
 
+    if ($('[name=PR]').length > 0) {
+
+        $('[name=PR]').attr('onclick', '');
+        $('[name=PR]').unbind('click');
+        $('[name=PR').bind('click', function () { initModal("PR"); $('#returnWorkModal').modal().show(); });
+    }
+
 
 }
 
@@ -2044,10 +2057,10 @@ function initModal(modalType, toNode) {
     var html = '<div class="modal fade" id="returnWorkModal" data-backdrop="static">' +
         '<div class="modal-dialog">'
         + '<div class="modal-content" style="border-radius:0px;width:900px;height:450px;text-align:left;">'
-        + '<div class="modal-header">'
+        + '<div class="modal-header" style="background:#1d7dd4;">'
         + '<button type="button" style="color:#0000007a;float: right;background: transparent;border: none;" data-dismiss="modal" aria-hidden="true">&times;</button>'
         + '<button id="MaxSizeBtn" type="button" style="color:#0000007a;float: right;background: transparent;border: none;" aria-hidden="true" >□</button>'
-        + '<h4 class="modal-title" id="modalHeader">提示信息</h4>'
+        + '<h4 class="modal-title" style="color:white;" id="modalHeader">提示信息</h4>'
         + '</div>'
         + '<div class="modal-body" style="margin:0px;padding:0px;height:450px">'
         + '<iframe style="width:100%;border:0px;height:100%;" id="iframeReturnWorkForm" name="iframeReturnWorkForm"></iframe>'
@@ -2141,7 +2154,7 @@ function initModal(modalType, toNode) {
                 modalIframeSrc = "./WorkOpt/Accepter.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random()
                 break;
 
-            //发送选择接收节点和接收人                
+            //发送选择接收节点和接收人
             case "sendAccepter":
                 $('#modalHeader').text("选择接受人");
                 modalIframeSrc = "./WorkOpt/Accepter.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&ToNode=" + toNode + "&s=" + Math.random()
@@ -2157,6 +2170,9 @@ function initModal(modalType, toNode) {
             case "Note":
                 $('#modalHeader').text("备注");
                 modalIframeSrc = "./WorkOpt/Note.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
+            case "PR":
+                $('#modalHeader').text("重要性设置");
+                modalIframeSrc = "./WorkOpt/PRI.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
 
             default:
                 break;

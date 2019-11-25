@@ -430,6 +430,7 @@ public class SystemConfig {
 			if (request == null || request.getSession() == null) {
 				return BP.WF.Glo.getHostURL() + "/";
 			} else {
+
 				return Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
 			}
 		} else {
@@ -464,8 +465,14 @@ public class SystemConfig {
 	 * 
 	 * @return
 	 */
-	public static String getSysName() {
-		String s = getAppSettings().get("SysName").toString();
+	 public static String getSysName() {
+		String s1 = getAppSettings().get("SysName").toString();
+		String s = null;
+		try {
+			s = new String(s1.getBytes("iso-8859-1"),"utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		if (s == null) {
 			s = "请在web.propertoes中配置SysName名称";
 		}

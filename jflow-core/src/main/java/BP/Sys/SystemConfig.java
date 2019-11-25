@@ -430,19 +430,6 @@ public class SystemConfig {
 			if (request == null || request.getSession() == null) {
 				return BP.WF.Glo.getHostURL() + "/";
 			} else {
-
-				//如果是jar包发布
-				if(getIsStartJarPackage() == true){
-					ApplicationHome h = new ApplicationHome(SystemConfig.class);
-					File jarF = h.getSource();
-					//获取当前项目的web路径
-					//String contextPath = request.getContextPath();
-					//return request.getScheme()+"://"+request.getServerName()+":"+
-					//		request.getServerPort()+contextPath+"/";
-					return jarF.getParentFile().getParentFile().getPath()+"/src/main/webapp/";
-
-					//return ResourceUtils.getURL("classpath:").getPath();//jar包路径
-				}
 				return Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
 			}
 		} else {

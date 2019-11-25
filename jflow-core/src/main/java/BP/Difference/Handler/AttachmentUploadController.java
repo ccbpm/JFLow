@@ -382,11 +382,11 @@ public class AttachmentUploadController extends BaseController {
 					throw new Exception("@路径配置错误,变量没有被正确的替换下来." + savePath);
 				return;
 			} else {
-				savePath = athDesc.getSaveTo() + "\\" + getPKVal();
+				savePath = athDesc.getSaveTo() +  getPKVal();
 			}
 
 			// 替换关键的字串.
-			savePath = savePath.replace("\\\\", "\\");
+			savePath = savePath.replace("\\\\", "/");
 			try {
 				if (savePath.indexOf(":") == -1)
 					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
@@ -406,7 +406,7 @@ public class AttachmentUploadController extends BaseController {
 			String guid = BP.DA.DBAccess.GenerGUID();
 			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 			String ext = FileAccess.getExtensionName(item.getOriginalFilename());
-			String realSaveTo = savePath + "\\" + guid + "." + fileName + "." + ext;
+			String realSaveTo = savePath + "/" + guid + "." + fileName + "." + ext;
 
 			realSaveTo = realSaveTo.replace("~", "-");
 			realSaveTo = realSaveTo.replace("'", "-");
@@ -613,7 +613,7 @@ public class AttachmentUploadController extends BaseController {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
 				String ny = sdf.format(new Date());
 
-				String workDir = ny + "\\" + athDesc.getFK_MapData() + "\\";
+				String workDir = ny + "/" + athDesc.getFK_MapData() + "/";
   
 				//特殊处理文件路径.
 				if (SystemConfig.getCustomerNo().equals( "BWDA") ) {

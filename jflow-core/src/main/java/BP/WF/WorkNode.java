@@ -1113,7 +1113,7 @@ public class WorkNode {
 				/* 跳过去的节点也要写入数据，不然会造成签名错误。 */
 				skipWork = nd.getHisWork();
 
-				if (skipWork.getEnMap().getPhysicsTable() != this.rptGe.getEnMap().getPhysicsTable()) {
+				if (skipWork.getEnMap().getPhysicsTable() .equals(this.rptGe.getEnMap().getPhysicsTable()) == false) {
 					skipWork.Copy(this.rptGe);
 					skipWork.Copy(mywork);
 
@@ -1125,6 +1125,7 @@ public class WorkNode {
 					skipWork.setRec(this.getExecer());
 					skipWork.SetValByKey(WorkAttr.RDT, DataType.getCurrentDataTime());
 					skipWork.SetValByKey(WorkAttr.CDT, DataType.getCurrentDataTime());
+
 					skipWork.ResetDefaultVal();
 
 					// 把里面的默认值也copy报表里面去.
@@ -1505,21 +1506,24 @@ public class WorkNode {
 						boolean isUpdate = false;
 						for (Attr attr : attrs) {
 							if (attr.getUIIsReadonly() && attr.getUIVisible() == true) {
-								if (attr.getDefaultValOfReal().equals("@WebUser.No")) {
-									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarter());
-									isUpdate = true;
-								}
-								if (attr.getDefaultValOfReal().equals("@WebUser.Name")) {
-									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarterName());
-									isUpdate = true;
-								}
-								if (attr.getDefaultValOfReal().equals("@WebUser.FK_Dept")) {
-									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getFK_Dept());
-									isUpdate = true;
-								}
-								if (attr.getDefaultValOfReal().equals("@WebUser.DeptName")) {
-									skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getDeptName());
-									isUpdate = true;
+								if(!DataType.IsNullOrEmpty(attr.getDefaultValOfReal()))
+								{
+									if (attr.getDefaultValOfReal().equals("@WebUser.No")) {
+										skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarter());
+										isUpdate = true;
+									}
+									if (attr.getDefaultValOfReal().equals("@WebUser.Name")) {
+										skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getStarterName());
+										isUpdate = true;
+									}
+									if (attr.getDefaultValOfReal().equals("@WebUser.FK_Dept")) {
+										skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getFK_Dept());
+										isUpdate = true;
+									}
+									if (attr.getDefaultValOfReal().equals("@WebUser.DeptName")) {
+										skipWork.SetValByKey(attr.getKey(), this.getHisGenerWorkFlow().getDeptName());
+										isUpdate = true;
+									}
 								}
 							}
 						}

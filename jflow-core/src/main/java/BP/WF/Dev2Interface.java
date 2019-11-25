@@ -1175,12 +1175,12 @@ public class Dev2Interface
 
 	public static DataTable DB_Focus(String flowNo, String userNo) throws Exception
 	{
-		if (flowNo.equals(""))
+		if (DataType.IsNullOrEmpty(flowNo)==true)
 		{
 			flowNo = null;
 		}
 
-		if (userNo == null)
+		if (DataType.IsNullOrEmpty(userNo)==true)
 		{
 			userNo = WebUser.getNo();
 		}

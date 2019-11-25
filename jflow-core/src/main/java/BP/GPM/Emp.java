@@ -276,7 +276,7 @@ public class Emp extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "修改主部门";
 		rm.ClassMethodName = this.toString() + ".DoEditMainDept";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 			// rm.RefAttrKey = EmpAttr.FK_Dept;
 		map.AddRefMethod(rm);
 
@@ -286,18 +286,18 @@ public class Emp extends EntityNoName
 
 	public final String DoEditMainDept() throws Exception
 	{
-		return "../../../GPM/EmpDeptMainDept.htm?FK_Emp=" + this.getNo();
+		return BP.Sys.SystemConfig.getCCFlowWebPath()+"GPM/EmpDeptMainDept.htm?FK_Emp=" + this.getNo();
 	}
 
 
 	public final String DoEmpDepts() throws Exception
 	{
-		return "../../../GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
+		return BP.Sys.SystemConfig.getCCFlowWebPath()+"GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
 	}
 
 	public final String DoSinger() throws Exception
 	{
-		return "../../../GPM/Siganture.htm?EmpNo=" + this.getNo();
+		return BP.Sys.SystemConfig.getCCFlowWebPath()+"GPM/Siganture.htm?EmpNo=" + this.getNo();
 	}
 
 

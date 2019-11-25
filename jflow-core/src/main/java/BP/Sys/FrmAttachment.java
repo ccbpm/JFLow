@@ -325,7 +325,7 @@ public class FrmAttachment extends EntityMyPK {
 		if (this.getAthSaveWay() == AthSaveWay.WebServer) {
 			String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
 			if (s == null || s.equals("")) {
-				s = SystemConfig.getPathOfDataUser() + "\\UploadFile\\" + this.getFK_MapData() + "\\";
+				s = SystemConfig.getPathOfDataUser() + "/UploadFile/" + this.getFK_MapData() + "/";
 			}
 			return s;
 		}

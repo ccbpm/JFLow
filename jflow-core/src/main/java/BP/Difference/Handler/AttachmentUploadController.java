@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import BP.DA.DataType;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.En.ClassFactory;
 import BP.En.Entities;
 import BP.En.Entity;
@@ -34,7 +35,6 @@ import BP.Sys.FrmEventList;
 import BP.Sys.GEEntity;
 import BP.Sys.MapData;
 import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
 import BP.Tools.AesEncodeUtil;
 import BP.Tools.FileAccess;
 import BP.Tools.FtpUtil;

@@ -1,6 +1,7 @@
 package BP.Sys;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 
@@ -344,7 +345,7 @@ public class SysDocFile extends EntityMyPK
 	{
 		try
 		{
-			return BP.DA.DataType.ReadTextFile(BP.Sys.SystemConfig.getPathOfFDB() + enName + "\\" + pkVal + ".fdb");
+			return BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfFDB() + enName + "\\" + pkVal + ".fdb");
 		}
 		catch (java.lang.Exception e)
 		{
@@ -355,7 +356,7 @@ public class SysDocFile extends EntityMyPK
 	{
 		  try
 		  {
-		return BP.DA.DataType.ReadTextFile(BP.Sys.SystemConfig.getPathOfFDB() + enName + "\\" + pkVal + ".fdb");
+		return BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfFDB() + enName + "\\" + pkVal + ".fdb");
 		  }
 		  catch (java.lang.Exception e)
 		  {
@@ -366,7 +367,7 @@ public class SysDocFile extends EntityMyPK
 	{
 		try
 		{
-			String dir = BP.Sys.SystemConfig.getPathOfFDB() + enName + "\\";
+			String dir = SystemConfig.getPathOfFDB() + enName + "\\";
 			if ((new File(dir)).isDirectory() == false)
 			{
 				(new File(dir)).mkdirs();

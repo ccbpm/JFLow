@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.En.*;
 import BP.Port.*;
@@ -869,7 +870,7 @@ public class Node extends Entity {
 	 */
 	public final String getFormUrl() throws Exception {
 		String str = this.GetValStrByKey(NodeAttr.FormUrl);
-		str = str.replace("@SDKFromServHost", BP.Sys.SystemConfig.getAppSettings().get("SDKFromServHost").toString());
+		str = str.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 		return str;
 	}
 
@@ -1362,7 +1363,7 @@ public class Node extends Entity {
 		String str = this.GetValStringByKey(NodeAttr.BatchParas);
 
 		// 替换约定的URL.
-		str = str.replace("@SDKFromServHost", BP.Sys.SystemConfig.getAppSettings().get("SDKFromServHost").toString());
+		str = str.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 		return str;
 	}
 

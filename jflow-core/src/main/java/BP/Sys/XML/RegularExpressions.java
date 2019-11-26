@@ -1,6 +1,7 @@
 package BP.Sys.XML;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Sys.*;
 import BP.Sys.XML.*;
@@ -38,7 +39,7 @@ public class RegularExpressions extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfData() + "\\XML\\RegularExpression.xml";
+		return SystemConfig.getPathOfData() + "XML/RegularExpression.xml";
 	}
 	/** 
 	 物理表名

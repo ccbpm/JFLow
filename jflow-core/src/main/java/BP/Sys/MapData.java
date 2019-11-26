@@ -1,6 +1,7 @@
 package BP.Sys;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Tools.DateUtils;
@@ -2674,7 +2675,7 @@ public class MapData extends EntityNoName
 		}
 		else //说明当前excel文件没有生成.
 		{
-			String tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + this.getNo() + ".xlsx";
+			String tempExcel = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate/" + this.getNo() + ".xlsx";
 			File file = new File(tempExcel);
 			if (file.exists() == true)
 			{
@@ -2722,11 +2723,11 @@ public class MapData extends EntityNoName
 		}
 		else //说明当前excel文件没有生成.
 		{
-			String tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate\\" + this.getNo() + ".docx";
+			String tempExcel = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate\\" + this.getNo() + ".docx";
 
 			if ((new File(tempExcel)).isFile() == false)
 			{
-				tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate\\NDxxxRpt.docx";
+				tempExcel = SystemConfig.getPathOfDataUser() + "FrmOfficeTemplate\\NDxxxRpt.docx";
 			}
 
 			bytes.argvalue = BP.DA.DataType.ConvertFileToByte(tempExcel);

@@ -1,6 +1,7 @@
 package BP.GPM;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -27,7 +28,7 @@ public class Dev2Interface
 	*/
 	public static void Port_Login(String userNo, String sid) throws Exception
 	{
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
+		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			String sql = "SELECT SID FROM Port_Emp WHERE No='" + userNo + "'";
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);

@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Port.*;
 import BP.Web.*;
 import BP.WF.Data.*;
@@ -227,7 +228,7 @@ public class Dev2InterfaceAnonymous
 
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql;
 
 		/*不是授权状态*/
@@ -286,7 +287,7 @@ public class Dev2InterfaceAnonymous
 	*/
 	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName) throws Exception
 	{
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr + "GuestName WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add("GuestNo", guestNo);
@@ -320,7 +321,7 @@ public class Dev2InterfaceAnonymous
 			throw new RuntimeException("@设置外部用户待办信息失败:参数workID不能为0.");
 		}
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr + "GuestName WHERE WorkID=" + dbstr + "WorkID AND IsPass=0";
 		ps.Add("GuestNo", guestNo);

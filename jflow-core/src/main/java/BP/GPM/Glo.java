@@ -2,6 +2,7 @@ package BP.GPM;
 
 import BP.Sys.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import java.io.IOException;
 import java.util.*;
@@ -20,8 +21,8 @@ public class Glo {
 	 */
 	public static boolean getIsEnable_DingDing() {
 		// 如果两个参数都不为空说明启用
-		String corpid = BP.Sys.SystemConfig.getDing_CorpID();
-		String corpsecret = BP.Sys.SystemConfig.getDing_AppSecret();
+		String corpid = SystemConfig.getDing_CorpID();
+		String corpsecret = SystemConfig.getDing_AppSecret();
 		if (DataType.IsNullOrEmpty(corpid) || DataType.IsNullOrEmpty(corpsecret)) {
 			return false;
 		}
@@ -33,8 +34,8 @@ public class Glo {
 	 */
 	public static boolean getIsEnable_WeiXin() {
 		// 如果两个参数都不为空说明启用
-		String corpid = BP.Sys.SystemConfig.getWX_CorpID();
-		String corpsecret = BP.Sys.SystemConfig.getWX_AppSecret();
+		String corpid = SystemConfig.getWX_CorpID();
+		String corpsecret = SystemConfig.getWX_AppSecret();
 		if (DataType.IsNullOrEmpty(corpid) || DataType.IsNullOrEmpty(corpsecret)) {
 			return false;
 		}
@@ -135,12 +136,12 @@ public class Glo {
 		sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MSSQL_GPM_VIEW.sql";
 
 		// MySQL 语法有所区别
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MySQL_GPM_VIEW.sql";
 		}
 
 		// Oracle 语法有所区别
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
 		}
 

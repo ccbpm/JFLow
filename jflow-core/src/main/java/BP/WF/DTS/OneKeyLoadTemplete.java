@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
@@ -146,7 +147,7 @@ public class OneKeyLoadTemplete extends Method
 		}
 
 
-		if (BP.Sys.SystemConfig.getOSModel() == OSModel.OneMore)
+		if (SystemConfig.getOSModel() == OSModel.OneMore)
 		{
 			//EmpDepts.
 			BP.GPM.DeptEmps eds = new BP.GPM.DeptEmps();

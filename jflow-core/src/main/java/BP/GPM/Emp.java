@@ -1,6 +1,7 @@
 package BP.GPM;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Port.*;
@@ -286,18 +287,18 @@ public class Emp extends EntityNoName
 
 	public final String DoEditMainDept() throws Exception
 	{
-		return BP.Sys.SystemConfig.getCCFlowWebPath()+"GPM/EmpDeptMainDept.htm?FK_Emp=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath()+"GPM/EmpDeptMainDept.htm?FK_Emp=" + this.getNo();
 	}
 
 
 	public final String DoEmpDepts() throws Exception
 	{
-		return BP.Sys.SystemConfig.getCCFlowWebPath()+"GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath()+"GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
 	}
 
 	public final String DoSinger() throws Exception
 	{
-		return BP.Sys.SystemConfig.getCCFlowWebPath()+"GPM/Siganture.htm?EmpNo=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath()+"GPM/Siganture.htm?EmpNo=" + this.getNo();
 	}
 
 

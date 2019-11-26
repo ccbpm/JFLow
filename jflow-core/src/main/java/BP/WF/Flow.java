@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.Tools.DateUtils;
 import BP.Tools.FileAccess;
@@ -566,7 +567,7 @@ public class Flow extends BP.En.EntityNoName {
 		if (paras == null) {
 			paras = new Hashtable();
 		}
-		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+		if (SystemConfig.getIsBSsystem() == true) {
 			if (BP.Sys.Glo.getRequest() != null) {
 				Enumeration enu = BP.Sys.Glo.getRequest().getParameterNames();
 				while (enu.hasMoreElements()) {
@@ -4912,7 +4913,7 @@ public class Flow extends BP.En.EntityNoName {
 			 * String.valueOf(i)); i++; }
 			 * 
 			 * try { Files.copy(Paths.get(info.getParent() + "\\" + no + ".rtf
-			 * "), Paths.get(BP.Sys.SystemConfig.getPathOfWebApp() + "
+			 * "), Paths.get(SystemConfig.getPathOfWebApp() + "
 			 * /DataUser/CyclostyleFile/" + bt.getNo() + ".rtf"),
 			 * StandardCopyOption.COPY_ATTRIBUTES,
 			 * StandardCopyOption.REPLACE_EXISTING); } catch (RuntimeException
@@ -6023,7 +6024,7 @@ public class Flow extends BP.En.EntityNoName {
 			md.Save();
 
 			// 装载模版.
-			String file = BP.Sys.SystemConfig.getPathOfDataUser() + "XML\\TempleteSheetOfStartNode.xml";
+			String file = SystemConfig.getPathOfDataUser() + "XML\\TempleteSheetOfStartNode.xml";
 			if ((new File(file)).isFile() == false) {
 				throw new RuntimeException("@开始节点表单模版丢失" + file);
 			}

@@ -3,6 +3,7 @@ package BP.WF.XML;
 import java.util.List;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Sys.XML.*;
 import BP.Sys.*;

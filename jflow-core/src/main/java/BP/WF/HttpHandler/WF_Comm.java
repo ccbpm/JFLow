@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
@@ -2309,7 +2310,7 @@ public class WF_Comm extends WebContralBase {
 			Entities dtls = BP.En.ClassFactory.GetEns(this.getEnsName());
 			Entity en = dtls.getNewEntity();
 			QueryObject qo = new QueryObject(dtls);
-			// qo.DoQuery(en.getPK(), BP.Sys.SystemConfig.PageSize,
+			// qo.DoQuery(en.getPK(), SystemConfig.PageSize,
 			// this.PageIdx, false);
 			qo.DoQuery();
 			Map map = en.getEnMap();
@@ -2970,8 +2971,8 @@ public class WF_Comm extends WebContralBase {
 			ht.put("FK_DeptName", "");
 			ht.put("FK_DeptNameOfFull", "");
 
-			ht.put("CustomerNo", BP.Sys.SystemConfig.getCustomerNo());
-			ht.put("CustomerName", BP.Sys.SystemConfig.getCustomerName());
+			ht.put("CustomerNo", SystemConfig.getCustomerNo());
+			ht.put("CustomerName", SystemConfig.getCustomerName());
 			return BP.Tools.Json.ToJson(ht);
 		}
 
@@ -2980,8 +2981,8 @@ public class WF_Comm extends WebContralBase {
 		ht.put("FK_Dept", WebUser.getFK_Dept());
 		ht.put("FK_DeptName", WebUser.getFK_DeptName());
 		ht.put("FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		ht.put("CustomerNo", BP.Sys.SystemConfig.getCustomerNo());
-		ht.put("CustomerName", BP.Sys.SystemConfig.getCustomerName());
+		ht.put("CustomerNo", SystemConfig.getCustomerNo());
+		ht.put("CustomerName", SystemConfig.getCustomerName());
 		ht.put("SID", WebUser.getSID());
 
 		// 检查是否是授权状态.
@@ -3120,7 +3121,7 @@ public class WF_Comm extends WebContralBase {
 
 		} else {
 
-			String savePath = BP.Sys.SystemConfig.getPathOfDataUser() + className;
+			String savePath = SystemConfig.getPathOfDataUser() + className;
 
 			if (new File(savePath).isDirectory() == false)
 				new File(savePath).mkdirs();
@@ -4103,7 +4104,7 @@ public class WF_Comm extends WebContralBase {
 	private String readTxt() {
 
 		try {
-			String path = BP.Sys.SystemConfig.getPathOfDataUser() + "Fastenter\\" + getFK_MapData() + "\\"
+			String path = SystemConfig.getPathOfDataUser() + "Fastenter\\" + getFK_MapData() + "\\"
 					+ GetRequestVal("AttrKey");
 			File folder = new File(path);
 			if (folder.exists() == false)

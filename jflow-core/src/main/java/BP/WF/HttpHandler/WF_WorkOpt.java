@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.DateUtils;
@@ -4746,7 +4747,7 @@ public class WF_WorkOpt extends WebContralBase
 	public final String Note_Init()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		ps.Add("WorkID", this.getWorkID());
 

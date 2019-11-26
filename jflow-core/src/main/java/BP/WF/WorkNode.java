@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.En.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Port.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -130,7 +131,7 @@ public class WorkNode {
 	 * 虚拟目录的路径
 	 */
 	public final String getVirPath() {
-		if (_VirPath == null && BP.Sys.SystemConfig.getIsBSsystem()) {
+		if (_VirPath == null && SystemConfig.getIsBSsystem()) {
 			_VirPath = Glo.getCCFlowAppPath();
 		}
 		return _VirPath;
@@ -142,11 +143,11 @@ public class WorkNode {
 	 * 虚拟目录的路径
 	 */
 	public final String getAppType() {
-		if (BP.Sys.SystemConfig.getIsBSsystem() == false) {
+		if (SystemConfig.getIsBSsystem() == false) {
 			return "CCFlow";
 		}
 
-		if (_AppType == null && BP.Sys.SystemConfig.getIsBSsystem()) {
+		if (_AppType == null && SystemConfig.getIsBSsystem()) {
 			_AppType = "WF";
 		}
 		return _AppType;
@@ -3437,7 +3438,7 @@ public class WorkNode {
 	 */
 	private void NodeSend_Send_5_5() throws Exception {
 		// 执行设置当前人员的完成时间. for: anhua 2013-12-18.
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerlist SET CDT=" + dbstr + "CDT WHERE WorkID=" + dbstr + "WorkID AND FK_Node="
 				+ dbstr + "FK_Node AND FK_Emp=" + dbstr + "FK_Emp";
@@ -9051,7 +9052,7 @@ public class WorkNode {
 	/**
 	 * 产生合流汇总数据 把子线程的子表主表数据放到合流点的从表上去
 	 * 
-	 * @param nd
+	 * @param
 	 * @throws Exception
 	 */
 	private void GenerHieLiuHuiZhongDtlData_2013(Node ndOfHeLiu) throws Exception {

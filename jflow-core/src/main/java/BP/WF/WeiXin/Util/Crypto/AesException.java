@@ -1,4 +1,4 @@
-﻿package BP.WF.WeiXin.Util.Crypto;
+package BP.WF.WeiXin.Util.Crypto;
 
 @SuppressWarnings("serial")
 public class AesException extends Exception {

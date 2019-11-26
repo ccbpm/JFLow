@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Web.WebUser;
 
@@ -35,7 +36,7 @@ public abstract class StartWorks extends Works {
 	 */
 	public final DataTable RetrieveMyTask(String flow) throws Exception {
 		QueryObject qo = new QueryObject(this);
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 			qo.AddWhere(StartWorkAttr.OID, " in ",
 					" (  SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node IN ( SELECT FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='"
 							+ WebUser.getNo() + "' AND FK_Flow='" + flow + "' AND WORKID=WF_GenerWorkFlow.WORKID ) )");

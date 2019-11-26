@@ -1,6 +1,7 @@
 package BP.GPM;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 
 /** 
@@ -32,7 +33,7 @@ public class BarOfStartlist extends BarBase
 	@Override
 	public boolean getIsCanView()
 	{
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			return true;
 		}
@@ -67,7 +68,7 @@ public class BarOfStartlist extends BarBase
 	public String getDocuments() throws Exception
 	{
 		Paras ps = new Paras();
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			ps.SQL = "SELECT top 9 Title,RDT,FK_Flow,WorkID,FK_Node,Sender FROM WF_GenerWorkFlow WHERE Starter=" + ps.getDBStr() + "FK_Emp ORDER BY WorkID ";
 		}

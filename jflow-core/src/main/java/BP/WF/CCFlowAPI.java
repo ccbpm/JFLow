@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.En.*;
@@ -319,24 +320,24 @@ public class CCFlowAPI
 
 				//按照时间的顺序查找出来 ids .
 				String sqlOrder = "SELECT OID FROM  Sys_GroupField WHERE   FrmID IN (" + myFrmIDs + ")";
-				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "',FrmID) , Idx";
 				}
 
-				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY CHARINDEX(FrmID, '" + myFrmIDs + "'), Idx";
 				}
 
-				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "', FrmID ), Idx";
 				}
-				if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					myFrmIDs = myFrmIDs.replace("'", "");
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "', FrmID ), Idx";
@@ -711,7 +712,7 @@ public class CCFlowAPI
 			wk.ResetDefaultVal();
 
 			//@樊雷伟 把这部分代码搬到jflow上去. CCFlowAPI. 114行出.
-			if (BP.Sys.SystemConfig.getIsBSsystem() == true)
+			if (SystemConfig.getIsBSsystem() == true)
 			{
 				// 处理传递过来的参数。
 				Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
@@ -1272,7 +1273,7 @@ public class CCFlowAPI
 
 			//放入track信息.
 			Paras ps = new Paras();
-			ps.SQL = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+			ps.SQL = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtNode = DBAccess.RunSQLReturnTable(ps);
 			dtNode.TableName = "Track";
@@ -1280,7 +1281,7 @@ public class CCFlowAPI
 
 			//工作人员列表，用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM  WF_GenerWorkerlist WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+			ps.SQL = "SELECT * FROM  WF_GenerWorkerlist WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtGenerWorkerlist = DBAccess.RunSQLReturnTable(ps);
 			dtGenerWorkerlist.TableName = "WF_GenerWorkerlist";
@@ -1288,7 +1289,7 @@ public class CCFlowAPI
 
 			//放入CCList信息. 用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM WF_CCList WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+			ps.SQL = "SELECT * FROM WF_CCList WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtCCList = DBAccess.RunSQLReturnTable(ps);
 			dtCCList.TableName = "WF_CCList";
@@ -1296,7 +1297,7 @@ public class CCFlowAPI
 
 			//放入WF_SelectAccper信息. 用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM WF_SelectAccper WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+			ps.SQL = "SELECT * FROM WF_SelectAccper WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 			ps.Add("WorkID", wfid);
 			DataTable dtSelectAccper = DBAccess.RunSQLReturnTable(ps);
 			dtSelectAccper.TableName = "WF_SelectAccper";
@@ -1304,7 +1305,7 @@ public class CCFlowAPI
 
 			//放入所有的节点信息. 用于审核组件.
 			ps = new Paras();
-			ps.SQL = "SELECT * FROM WF_Node WHERE FK_Flow=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "FK_Flow ORDER BY " + NodeAttr.Step;
+			ps.SQL = "SELECT * FROM WF_Node WHERE FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow ORDER BY " + NodeAttr.Step;
 			ps.Add("FK_Flow", fk_flow);
 			DataTable dtNodes = DBAccess.RunSQLReturnTable(ps);
 			dtNodes.TableName = "Nodes";

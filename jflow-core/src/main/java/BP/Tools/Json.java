@@ -13,7 +13,7 @@ import BP.DA.DataRowCollection;
 import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
-import BP.Sys.SystemConfig;
+import BP.Difference.SystemConfig;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.google.gson.Gson;

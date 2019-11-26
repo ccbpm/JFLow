@@ -4,6 +4,7 @@ import BP.WF.*;
 import BP.Web.*;
 import BP.Sys.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.En.*;
 import BP.WF.Template.*;
@@ -651,7 +652,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 
 		//清空缓存
 		toMapData.RepairMap();
-		BP.Sys.SystemConfig.DoClearCash();
+		SystemConfig.DoClearCash();
 
 
 	}

@@ -22,6 +22,7 @@ import BP.DA.Depositary;
 import BP.DA.Log;
 import BP.DA.LogType;
 import BP.DA.Paras;
+import BP.Difference.SystemConfig;
 import BP.Sys.EnVer;
 import BP.Sys.EnVerDtl;
 import BP.Sys.GEDtlAttr;
@@ -34,7 +35,6 @@ import BP.Sys.SysDocFile;
 import BP.Sys.SysEnum;
 import BP.Sys.SysEnumAttr;
 import BP.Sys.SysEnums;
-import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.Tools.StringUtils;
 import BP.WF.Template.FrmField;
@@ -1961,7 +1961,7 @@ public abstract class Entity implements Serializable {
 
 	// 对文件的处理. add by qin 15/10/31
 	public final void SaveBigTxtToDB(String saveToField, String bigTxt) throws Exception {
-		String temp = BP.Sys.SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable() + this.getPKVal()
+		String temp = SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable() + this.getPKVal()
 				+ ".tmp";
 		DataType.WriteFile(temp, bigTxt);
 
@@ -2028,7 +2028,7 @@ public abstract class Entity implements Serializable {
 	 * @throws Exception 
 	 */
 	public final String GetBigTextFromDB(String imgFieldName) throws Exception {
-		String tempFile = BP.Sys.SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable()
+		String tempFile = SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable()
 				+ this.getPKVals() + ".tmp";
 
 		File file = new File(tempFile);
@@ -2060,7 +2060,7 @@ public abstract class Entity implements Serializable {
 	 * @throws Exception 
 	 */
 	public final String GetBigTextFromDB(String imgFieldName, String codeType) throws Exception {
-		String tempFile = BP.Sys.SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable()
+		String tempFile = SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable()
 				+ this.getPKVals() + ".tmp";
 
 		File file = new File(tempFile);
@@ -2603,7 +2603,7 @@ public abstract class Entity implements Serializable {
 
 		Map map = this.get_enMap();
 		sql = "SELECT character_maximum_length as Len, table_schema as OWNER, column_Name FROM information_schema.columns WHERE TABLE_SCHEMA='"
-				+ BP.Sys.SystemConfig.getAppCenterDBDatabase() + "' AND table_name ='" + map.getPhysicsTable() + "'";
+				+ SystemConfig.getAppCenterDBDatabase() + "' AND table_name ='" + map.getPhysicsTable() + "'";
 
 		DataTable dtScheam = this.RunSQLReturnTable(sql);
 

@@ -1,6 +1,7 @@
 package BP.Sys.XML;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Sys.XML.*;
 import BP.Sys.*;
@@ -35,7 +36,7 @@ public class EnsAppGroupXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "\\Ens\\EnsAppXml\\";
+		return SystemConfig.getPathOfXML() + "Ens/EnsAppXml/";
 	}
 	/** 
 	 物理表名

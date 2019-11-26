@@ -8,10 +8,10 @@ import java.util.Iterator;
 import java.util.Set;
 import BP.DA.DataType;
 import BP.DA.Log;
+import BP.Difference.SystemConfig;
 import BP.Sys.EventBase;
 import BP.Sys.GEDtl;
 import BP.Sys.GEEntity;
-import BP.Sys.SystemConfig;
 import BP.Tools.ClassUtils;
 import BP.Tools.StringUtils;
 

@@ -26,7 +26,7 @@ public class GetTasks extends BP.En.Entities
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GetTaskAttr.FK_Flow, fk_flow);
 		qo.addAnd();
-		qo.AddWhereLen(GetTaskAttr.CheckNodes, " >= ", 3, SystemConfig.getAppCenterDBType());
+		qo.AddWhereLen(GetTaskAttr.CheckNodes, " >= ", 3, BP.Difference.SystemConfig.getAppCenterDBType());
 		qo.DoQuery();
 	}
 	/** 

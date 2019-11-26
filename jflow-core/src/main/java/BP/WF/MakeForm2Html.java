@@ -5,6 +5,7 @@ import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Port.Emp;
 import BP.Sys.*;
@@ -364,7 +365,7 @@ public class MakeForm2Html
                         //如果没有查到记录，控件不显示。说明没有走盖章的一步
                         x =  img.getX() + wtX;
                         sb.append("\t\n<DIV id=" + img.getMyPK() + " style='position:absolute;left:" + x + "px;top:" + y + "px;text-align:left;vertical-align:top' >");
-                        sb.append("\t\n<img src='" + imgSrc + "' onerror='javascript:this.src='" + appPath + "DataUser/ICON/" + BP.Sys.SystemConfig.getCustomerNo() + "/LogBiger.png';' style='padding: 0px;margin: 0px;border-width: 0px;width:" + img.getW() + "px;height:" + img.getH() + "px;' />");
+                        sb.append("\t\n<img src='" + imgSrc + "' onerror='javascript:this.src='" + appPath + "DataUser/ICON/" + SystemConfig.getCustomerNo() + "/LogBiger.png';' style='padding: 0px;margin: 0px;border-width: 0px;width:" + img.getW() + "px;height:" + img.getH() + "px;' />");
                         sb.append("\t\n</DIV>");
                     }
                 }

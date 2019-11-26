@@ -3,6 +3,7 @@ package BP.WF.HttpHandler;
 import BP.En.*;
 import BP.WF.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Sys.XML.XmlEn;
@@ -989,7 +990,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	public final String FlowBBSList()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		ps.Add("WorkID", this.getWorkID());
 
@@ -1002,7 +1003,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	public final String FlowBBS_Check()
 	{
 		Paras pss = new Paras();
-		pss.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID AND  EMPFROMT='" + this.getUserName() + "'";
+		pss.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND  EMPFROMT='" + this.getUserName() + "'";
 		pss.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		pss.Add("WorkID", this.getWorkID());
 
@@ -1019,7 +1020,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		String msg = this.GetValFromFrmByKey("TB_Msg");
 		String mypk = BP.WF.Dev2Interface.Flow_BBSAdd(this.getFK_Flow(), this.getWorkID(), this.getFID(), msg, WebUser.getNo(), WebUser.getName());
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE MyPK=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "MyPK";
+		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK";
 		ps.Add("MyPK", mypk);
 		return BP.Tools.Json.ToJson(BP.DA.DBAccess.RunSQLReturnTable(ps));
 	}
@@ -1051,7 +1052,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	public final String FlowBBS_Count()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT COUNT(ActionType) FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID";
+		ps.SQL = "SELECT COUNT(ActionType) FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
 		ps.Add("WorkID", this.getWorkID());
 		String count = String.valueOf(DBAccess.RunSQLReturnValInt(ps));

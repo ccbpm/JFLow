@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Web.WebUser;
 import BP.Web.Controls.*;
 import BP.Port.*;
@@ -54,7 +55,7 @@ public class UpdatePort_EmpSigantureSta extends Method
 	@Override
 	public Object Do()
 	{
-		String path = BP.Sys.SystemConfig.getPathOfDataUser() + "Siganture";
+		String path = SystemConfig.getPathOfDataUser() + "Siganture";
 		File file1 = new File(path);
 		String[] files = file1.list();
 

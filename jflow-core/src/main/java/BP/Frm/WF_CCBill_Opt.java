@@ -1,6 +1,7 @@
 package BP.Frm;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.DateUtils;

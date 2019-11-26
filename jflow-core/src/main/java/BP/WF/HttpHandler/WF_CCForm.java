@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
@@ -64,7 +65,7 @@ public class WF_CCForm extends WebContralBase {
 			/// #region 执行装载模版.
 			if (dbs.size() == 0 && athDesc.getIsWoEnableTemplete() == true) {
 				/* 如果数量为0,就检查一下是否有模版如果有就加载模版文件. */
-				String templetePath = BP.Sys.SystemConfig.getPathOfDataUser() + "AthTemplete\\"
+				String templetePath = SystemConfig.getPathOfDataUser() + "AthTemplete\\"
 						+ athDesc.getNoOfObj().trim();
 				if ((new File(templetePath)).isDirectory() == false) {
 					(new File(templetePath)).mkdirs();
@@ -404,8 +405,8 @@ public class WF_CCForm extends WebContralBase {
 	private String dealSQL = "";
 
 	public final String JSONTODT(DataTable dt) {
-		if ((BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Informix
-				|| BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) && dealSQL != null) {
+		if ((SystemConfig.getAppCenterDBType() == DBType.Informix
+				|| SystemConfig.getAppCenterDBType() == DBType.Oracle) && dealSQL != null) {
 			/* 如果数据库不区分大小写, 就要按用户输入的sql进行二次处理。 */
 			String mysql = dealSQL.trim();
 			if (mysql.equals("")) {
@@ -513,7 +514,7 @@ public class WF_CCForm extends WebContralBase {
 		if (this.GetRequestVal("IsTest") != null) {
 			MapData mymd = new MapData(this.getEnsName());
 			mymd.RepairMap();
-			BP.Sys.SystemConfig.DoClearCash();
+			SystemConfig.DoClearCash();
 		}
 
 		MapData md = new MapData(this.getEnsName());
@@ -906,7 +907,7 @@ public class WF_CCForm extends WebContralBase {
 		MapDtl dtl = new MapDtl(this.getEnsName());
 
 		GEEntity en = new GEEntity(this.getEnsName());
-		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+		if (SystemConfig.getIsBSsystem() == true) {
 			// 处理传递过来的参数。
 			for (String k : BP.Sys.Glo.getQueryStringKeys()) {
 				en.SetValByKey(k, this.GetRequestVal(k));
@@ -1013,7 +1014,7 @@ public class WF_CCForm extends WebContralBase {
 				}
 			}
 
-			if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+			if (SystemConfig.getIsBSsystem() == true) {
 				// 处理传递过来的参数。
 				for (String k : BP.Sys.Glo.getQueryStringKeys()) {
 					en.SetValByKey(k, this.GetRequestVal(k));
@@ -1218,7 +1219,7 @@ public class WF_CCForm extends WebContralBase {
 				}
 			}
 
-			if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+			if (SystemConfig.getIsBSsystem() == true) {
 				// 处理传递过来的参数。
 				for (String k : BP.Sys.Glo.getQueryStringKeys()) {
 					en.SetValByKey(k, this.GetRequestVal(k));

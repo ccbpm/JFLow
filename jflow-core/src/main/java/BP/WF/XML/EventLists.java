@@ -1,6 +1,7 @@
 package BP.WF.XML;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Sys.XML.*;
 import BP.Sys.*;

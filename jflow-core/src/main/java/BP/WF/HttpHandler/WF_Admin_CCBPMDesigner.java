@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
@@ -28,7 +29,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 "                           union " + "\r\n" +
 "                           SELECT NO, 'F'+FK_FlowSort as ParentNo,(NO + '.' + NAME) as Name,IDX,0 IsParent,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT * FROM (SELECT 'F'||No as No,'F'||ParentNo as ParentNo,Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                        union " + "\r\n" +
@@ -36,7 +37,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT * FROM (SELECT CONCAT('F', No) No, CONCAT('F', ParentNo) ParentNo, Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                           union " + "\r\n" +
@@ -46,7 +47,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("no").ColumnName = "No";
 			dt.Columns.get("name").ColumnName = "Name";
@@ -57,7 +58,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			dt.Columns.get("dtype").ColumnName = "DTYPE";
 		}
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
@@ -329,7 +330,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	public final String DownFormTemplete() throws Exception
 	{
 		DataSet ds = BP.Sys.CCFormAPI.GenerHisDataSet_AllEleInfo(this.getFK_MapData());
-		String file = BP.Sys.SystemConfig.getPathOfTemp() + this.getFK_MapData() + ".xml";
+		String file = SystemConfig.getPathOfTemp() + this.getFK_MapData() + ".xml";
 		ds.WriteXml(file,XmlWriteMode.IgnoreSchema,ds);
 		String docs = DataType.ReadTextFile(file);
 		return docs;
@@ -1072,7 +1073,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 "                           union " + "\r\n" +
 "                           SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) as NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX ";
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT * FROM (SELECT 'F'||No as NO,'F'||ParentNo as PARENTNO,NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                        union " + "\r\n" +
@@ -1080,7 +1081,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT * FROM (SELECT CONCAT('F', No) NO, CONCAT('F', ParentNo) PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                           union " + "\r\n" +
@@ -1090,7 +1091,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("no").ColumnName = "NO";
 			dt.Columns.get("name").ColumnName = "NAME";

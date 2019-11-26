@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.PortalInterface;
 import BP.WF.Data.*;
 import BP.WF.Port.WFEmp;
@@ -756,7 +757,7 @@ public class WorkFlowBuessRole
 		String FK_Emp;
 
 		//变量.
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 
 		Paras ps = new Paras();
 		// 按上一节点发送人处理。
@@ -1503,7 +1504,7 @@ public class WorkFlowBuessRole
 			/* 没有查询到的情况下, 先按照本部门计算。*/
 			if (flowAppType == FlowAppType.Normal)
 			{
-				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
+				if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 				{
 						sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B  WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
 					ps = new Paras();
@@ -1512,7 +1513,7 @@ public class WorkFlowBuessRole
 					ps.Add("FK_Dept", empDept);
 				}
 
-				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
+				if (SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + toNode.getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);
@@ -1693,7 +1694,7 @@ public class WorkFlowBuessRole
 	private static DataTable RequetNextNodeWorkers_DiGui(String deptNo, String empNo, Node toNode) throws Exception
 	{
 		String sql;
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 
 			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
 		Paras ps = new Paras();
@@ -1906,7 +1907,7 @@ public class WorkFlowBuessRole
 		String ccMsg = "@消息自动抄送给";
 		String basePath = BP.WF.Glo.getHostURL();
 
-		String mailTemp = BP.DA.DataType.ReadTextFile2Html(BP.Sys.SystemConfig.getPathOfDataUser() + "/EmailTemplete/CC_" + WebUser.getSysLang() + ".txt");
+		String mailTemp = BP.DA.DataType.ReadTextFile2Html(SystemConfig.getPathOfDataUser() + "/EmailTemplete/CC_" + WebUser.getSysLang() + ".txt");
 		for (Object item : ht.keySet())
 		{
 			ccDoc = ccDoc.replace("@Accepter", ht.get(item).toString());

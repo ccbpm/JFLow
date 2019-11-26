@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Web.*;
 import BP.En.*;
 import BP.En.Map;
@@ -766,7 +767,7 @@ public class PushMsg extends EntityMyPK
 		{
 			//获取退回原因
 			Paras ps = new Paras();
-			ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
+			ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 			ps.Add(ReturnWorkAttr.WorkID, Long.parseLong(en.getPKVal().toString()));
 			DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 			if (retunWdt.Rows.size() != 0)
@@ -1141,7 +1142,7 @@ public class PushMsg extends EntityMyPK
 	//            {
 	//                //获取退回原因
 	//                Paras ps = new Paras();
-	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
+	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//                ps.Add(ReturnWorkAttr.WorkID,Int64.Parse( en.PKVal.ToString()));
 	//                DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 	//                if (retunWdt.Rows.size() != 0)
@@ -1187,7 +1188,7 @@ public class PushMsg extends EntityMyPK
 	//        {
 	//            //获取退回原因
 	//            Paras ps = new Paras();
-	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
+	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//            ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//            DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 	//            if (retunWdt.Rows.size() != 0)
@@ -1406,7 +1407,7 @@ public class PushMsg extends EntityMyPK
 	//            {
 	//                //获取退回原因
 	//                Paras ps = new Paras();
-	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
+	//                ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//                ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//                DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 	//                if (retunWdt.Rows.size() != 0)
@@ -1457,7 +1458,7 @@ public class PushMsg extends EntityMyPK
 	//        {
 	//            //获取退回原因
 	//            Paras ps = new Paras();
-	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
+	//            ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
 	//            ps.Add(ReturnWorkAttr.WorkID, Int64.Parse( en.PKVal.ToString()));
 	//            DataTable dt = DBAccess.RunSQLReturnTable(ps);
 	//            if (dt.Rows.size() != 0)

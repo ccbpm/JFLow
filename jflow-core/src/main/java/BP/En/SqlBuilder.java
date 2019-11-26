@@ -6,10 +6,10 @@ import BP.DA.DBAccess;
 import BP.DA.DBType;
 import BP.DA.DataType;
 import BP.DA.Paras;
+import BP.Difference.SystemConfig;
 import BP.Sys.MapAttr;
 import BP.Sys.SysDocFile;
 import BP.Sys.SysEnums;
-import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 
 public class SqlBuilder {
@@ -2031,7 +2031,7 @@ public class SqlBuilder {
 	}
 
 	public static Paras GenerParas(Entity en, String[] keys) throws Exception {
-		boolean IsEnableNull = BP.Sys.SystemConfig.getIsEnableNull();
+		boolean IsEnableNull = SystemConfig.getIsEnableNull();
 		String mykeys = "@";
 		if (keys != null) {
 			for (String key : keys) {

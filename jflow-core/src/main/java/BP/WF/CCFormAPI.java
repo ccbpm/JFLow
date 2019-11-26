@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.Web.*;
 import BP.WF.Template.*;
 import BP.En.*;
@@ -73,7 +74,7 @@ public class CCFormAPI extends Dev2Interface {
 		en.Retrieve();
 
 		// 设置外部传入的默认值.
-		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+		if (SystemConfig.getIsBSsystem() == true) {
 			// 处理传递过来的参数。
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {
@@ -492,7 +493,7 @@ public class CCFormAPI extends Dev2Interface {
 		/// #endregion 表单模版信息.（含主、从表的，以及从表的枚举/外键相关数据）.
 
 		/// #region 主表数据
-		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+		if (SystemConfig.getIsBSsystem() == true) {
 			// 处理传递过来的参数。
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {
@@ -829,7 +830,7 @@ public class CCFormAPI extends Dev2Interface {
 		/// #endregion 把从表的- 外键表/枚举 加入 DataSet.
 
 		/// #region 把主表数据放入.
-		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+		if (SystemConfig.getIsBSsystem() == true) {
 			// 处理传递过来的参数。
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {

@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.WF.*;
@@ -155,10 +156,10 @@ public class BillTemplate extends EntityNoName
 		}
 
 		//如果没有找到，就看看默认的文件是否有.
-		String tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "CyclostyleFile\\" + this.getNo() + ".rtf";
+		String tempExcel = SystemConfig.getPathOfDataUser() + "CyclostyleFile\\" + this.getNo() + ".rtf";
 		if ((new File(tempExcel)).isFile() == false)
 		{
-			tempExcel = BP.Sys.SystemConfig.getPathOfDataUser() + "CyclostyleFile\\Word单据模版定义演示.docx";
+			tempExcel = SystemConfig.getPathOfDataUser() + "CyclostyleFile\\Word单据模版定义演示.docx";
 		}
 
 		bytes = BP.DA.DataType.ConvertFileToByte(tempExcel);

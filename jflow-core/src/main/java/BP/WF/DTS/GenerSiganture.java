@@ -1,6 +1,7 @@
 package BP.WF.DTS;
 
 import BP.Port.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -26,7 +27,7 @@ public class GenerSiganture extends Method
 	public GenerSiganture()
 	{
 		this.Title = "为没有设置数字签名的用户设置默认的数字签名";
-		this.Help = "此功能需要用户对 " + BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/ 有读写权限，否则会执行失败。";
+		this.Help = "此功能需要用户对 " + SystemConfig.getPathOfDataUser() + "/Siganture/ 有读写权限，否则会执行失败。";
 	}
 	/** 
 	 设置执行变量
@@ -62,30 +63,30 @@ public class GenerSiganture extends Method
 		{
 			BP.Port.Emps emps = new Emps();
 			emps.RetrieveAllFromDBSource();
-			String path = BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/T.JPG";
+			String path = SystemConfig.getPathOfDataUser() + "/Siganture/T.JPG";
 			String fontName = "宋体";
 			String empOKs = "";
 			String empErrs = "";
 			for (Emp emp : emps.ToJavaList())
 			{
-				String pathMe = BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getNo() + ".JPG";
+				String pathMe = SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getNo() + ".JPG";
 				if ((new File(pathMe)).isFile())
 				{
 					continue;
 				}
 
-				Files.copy(Paths.get(BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/Templete.JPG"), Paths.get(path), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/Templete.JPG"), Paths.get(path), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 				
 				paintWaterMarkPhoto(pathMe,emp.getName(),path);
 
 
-				Files.copy(Paths.get(pathMe), Paths.get(BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getName() + ".JPG"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(pathMe), Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getName() + ".JPG"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 			}
 			return "执行成功...";
 		}
 		catch (RuntimeException ex)
 		{
-			return "执行失败，请确认对 " + BP.Sys.SystemConfig.getPathOfDataUser() + "/Siganture/ 目录有访问权限？异常信息:" + ex.getMessage();
+			return "执行失败，请确认对 " + SystemConfig.getPathOfDataUser() + "/Siganture/ 目录有访问权限？异常信息:" + ex.getMessage();
 		}
 	}
 	

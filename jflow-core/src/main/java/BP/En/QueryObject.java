@@ -11,7 +11,7 @@ import BP.DA.GroupWay;
 import BP.DA.OrderWay;
 import BP.DA.Para;
 import BP.DA.Paras;
-import BP.Sys.SystemConfig;
+import BP.Difference.SystemConfig;
 import BP.Tools.StringHelper;
 
 /**
@@ -184,7 +184,7 @@ public class QueryObject {
 	 * @throws Exception 
 	 */
 	public final void AddWhereLen(String attr, String exp, int len, BP.DA.DBType dbtype) throws Exception {
-		this.setSQL("( " + BP.Sys.SystemConfig.getAppCenterDBLengthStr() + "( " + attr2Field(attr) + " ) " + exp + " '"
+		this.setSQL("( " + SystemConfig.getAppCenterDBLengthStr() + "( " + attr2Field(attr) + " ) " + exp + " '"
 				+ (new Integer(len)).toString() + "')");
 	}
 

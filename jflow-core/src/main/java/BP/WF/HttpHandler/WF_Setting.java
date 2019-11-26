@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
@@ -151,7 +152,7 @@ public class WF_Setting extends WebContralBase {
 			HttpServletRequest request = getRequest();
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + empNo + ".jpg";
+				String tempFilePath = SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + empNo + ".jpg";
 				File tempFile = new File(tempFilePath);
 				if (tempFile.exists()) {
 					tempFile.delete();
@@ -176,7 +177,7 @@ public class WF_Setting extends WebContralBase {
 			HttpServletRequest request = getRequest();
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/UserIcon/" + empNo + ".png";
+				String tempFilePath = SystemConfig.getPathOfWebApp() + "/DataUser/UserIcon/" + empNo + ".png";
 				File tempFile = new File(tempFilePath);
 				if (tempFile.exists()) {
 					tempFile.delete();
@@ -289,7 +290,7 @@ public class WF_Setting extends WebContralBase {
 			return "err@旧密码错误.";
 		}
 
-		if (BP.Sys.SystemConfig.getIsEnablePasswordEncryption() == true) {
+		if (SystemConfig.getIsEnablePasswordEncryption() == true) {
 			pass = Cryptos.aesEncrypt(pass);
 		}
 		emp.setPass(pass);

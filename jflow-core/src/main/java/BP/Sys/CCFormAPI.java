@@ -3,6 +3,7 @@ package BP.Sys;
 import BP.En.*;
 import BP.Tools.StringHelper;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -1299,7 +1300,7 @@ public class CCFormAPI {
 		// 清空缓存
 		MapData mymd = new MapData(fk_mapdata);
 		mymd.RepairMap();
-		BP.Sys.SystemConfig.DoClearCash();
+		SystemConfig.DoClearCash();
 	}
 
 	/**

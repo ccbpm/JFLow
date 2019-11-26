@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Port.*;
 import BP.Sys.*;
@@ -57,7 +58,7 @@ public class Dev2Interface
 	public static int getTodolist_Todolist() throws Exception
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		if (WebUser.getIsAuthorize() == false)
 		{
@@ -130,7 +131,7 @@ public class Dev2Interface
 	public static int getTodolist_EmpWorks() throws Exception
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		if (WebUser.getIsAuthorize() == false)
 		{
@@ -248,7 +249,7 @@ public class Dev2Interface
 	public static int getTodolist_Draft() throws Exception
 	{
 			/*获取数据.*/
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		BP.DA.Paras ps = new BP.DA.Paras();
 		ps.SQL = "SELECT count(a.WorkID ) as Num FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter";
 		ps.Add(GenerWorkFlowAttr.Starter, WebUser.getNo());
@@ -260,7 +261,7 @@ public class Dev2Interface
 	public static int getTodolist_HuiQian()throws Exception
 	{
 			/*获取数据.*/
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		BP.DA.Paras ps = new BP.DA.Paras();
 		ps.SQL = "SELECT COUNT(workid) as Num FROM WF_GenerWorkerlist WHERE FK_Emp=" + dbStr + "FK_Emp AND IsPass=90";
 		ps.Add(GenerWorkerListAttr.FK_Emp, WebUser.getNo());
@@ -276,7 +277,7 @@ public class Dev2Interface
 
 			/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT count(WorkID) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' AND WFState=" + WFState.Complete.getValue();
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 
@@ -287,7 +288,7 @@ public class Dev2Interface
 	public static int getTodolist_Sharing()throws Exception
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Sharing.getValue();
 		String sql;
 		String realSql = null;
@@ -334,7 +335,7 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Takeback.getValue();
 		String sql;
 		String realSql;
@@ -632,7 +633,7 @@ public class Dev2Interface
 			///#region 获取track数据.
 		String sqlOfWhere2 = "";
 		String sqlOfWhere1 = "";
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		if (fid == 0)
 		{
@@ -904,7 +905,7 @@ public class Dev2Interface
 	*/
 	public static Flows DB_GenerCanStartFlowsOfEntities(String userNo) throws Exception
 	{
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
+		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			String sql = "";
 			// 采用新算法.
@@ -1112,7 +1113,7 @@ public class Dev2Interface
 	public static DataTable DB_GenerDraftDataTable(String flowNo) throws Exception
 	{
 		/*获取数据.*/
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		BP.DA.Paras ps = new BP.DA.Paras();
 		if (flowNo == null)
 		{
@@ -1431,14 +1432,14 @@ public class Dev2Interface
 			wfStateSql = "  A.WFState=" + showWhat;
 		}
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql;
 		if (WebUser.getIsAuthorize() == false)
 		{
 			/*不是授权状态*/
 			if (fk_node == 0)
 			{
-				if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe"))
+				if (SystemConfig.getCustomerNo().equals("TianYe"))
 				{
 					if (BP.WF.Glo.getIsEnableTaskPool() == true)
 					{
@@ -1735,7 +1736,7 @@ public class Dev2Interface
 	{
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql;
 		if (WebUser.getIsAuthorize() == false)
 		{
@@ -1851,7 +1852,7 @@ public class Dev2Interface
 	{
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql;
 		if (WebUser.getIsAuthorize() == false)
 		{
@@ -1986,7 +1987,7 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + "  OR WFState=" + WFState.AskForReplay.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + " OR WFState=" + WFState.Fix.getValue();
 		/*不是授权状态*/
 		if (BP.WF.Glo.getIsEnableTaskPool() == true)
@@ -2047,7 +2048,7 @@ public class Dev2Interface
 	public static DataTable DB_GenerEmpWorksOfDataTable() throws Exception
 	{
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + "  OR WFState=" + WFState.AskForReplay.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + " OR WFState=" + WFState.Fix.getValue();
 		String sql;
 
@@ -2116,7 +2117,7 @@ public class Dev2Interface
 	{
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT FK_Flow as No,FlowName,COUNT(*) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + userNo + "@%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " GROUP BY FK_Flow,FlowName";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
@@ -2218,7 +2219,7 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
@@ -2249,7 +2250,7 @@ public class Dev2Interface
 	{
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
@@ -2308,7 +2309,7 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + userNo + "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 
@@ -2324,7 +2325,7 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + userNo + "@%' AND T.FK_Flow='" + flowNo + "' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
@@ -2375,7 +2376,7 @@ public class Dev2Interface
 
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		if (DataType.IsNullOrEmpty(fk_flow))
 		{
 			if (DataType.IsNullOrEmpty(title))
@@ -2451,7 +2452,7 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Sharing.getValue();
 		String sql;
 		String realSql = null;
@@ -2482,7 +2483,7 @@ public class Dev2Interface
 		}
 		//@杜. 这里需要翻译.
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("ISREAD").ColumnName = "IsRead";
@@ -2519,7 +2520,7 @@ public class Dev2Interface
 			dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("isread").ColumnName = "IsRead";
@@ -2573,7 +2574,7 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue() + " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue() + ") AND TaskSta=" + TaskSta.Takeback.getValue();
 		String sql;
 		String realSql;
@@ -2606,7 +2607,7 @@ public class Dev2Interface
 
 		//@杜. 这里需要翻译.
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("ISREAD").ColumnName = "IsRead";
@@ -2643,7 +2644,7 @@ public class Dev2Interface
 			dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("isread").ColumnName = "IsRead";
@@ -2793,7 +2794,7 @@ public class Dev2Interface
 	public static DataTable DB_NDxxRpt(String fk_flow, WFState sta)throws Exception
 	{
 		Flow fl = new Flow(fk_flow);
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql = "SELECT OID,Title,RDT,FID FROM " + fl.getPTable() + " WHERE WFState=" + sta.getValue() + " AND Rec=" + dbstr + "Rec";
 		BP.DA.Paras ps = new BP.DA.Paras();
 		ps.SQL = sql;
@@ -4140,7 +4141,7 @@ public class Dev2Interface
 	public static DataTable Port_GetNewMsg(String userNo, String dateLastTime)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "SendTo AND RDT >" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "RDT Group By MsgType";
+		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + SystemConfig.getAppCenterDBVarStr() + "SendTo AND RDT >" + SystemConfig.getAppCenterDBVarStr() + "RDT Group By MsgType";
 		ps.Add(BP.WF.SMSAttr.SendTo, userNo);
 		ps.Add(BP.WF.SMSAttr.RDT, dateLastTime);
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
@@ -4155,7 +4156,7 @@ public class Dev2Interface
 	public static DataTable Port_GetNewMsg(String userNo)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "SendTo  Group By MsgType";
+		ps.SQL = "SELECT MsgType , Count(*) as Num FROM Sys_SMS WHERE SendTo=" + SystemConfig.getAppCenterDBVarStr() + "SendTo  Group By MsgType";
 		ps.Add(BP.WF.SMSAttr.SendTo, userNo);
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		return dt;
@@ -4364,7 +4365,7 @@ public class Dev2Interface
 
 	public static void WriteTrackWorkCheck(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName, String fwcView) throws Exception
 	{
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
@@ -4425,7 +4426,7 @@ public class Dev2Interface
 
 	public static void WriteTrackWorkCheckForTangRenYiYao(String flowNo, int currNodeID, long workid, long fid, String msg, String optionName) throws Exception
 	{
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
@@ -4483,7 +4484,7 @@ public class Dev2Interface
 	*/
 	public static void WriteTrackDailyLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName) throws Exception
 	{
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		String today = BP.DA.DataType.getCurrentDate();
 
 		Paras ps = new Paras();
@@ -4511,7 +4512,7 @@ public class Dev2Interface
 	*/
 	public static void WriteTrackWeekLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName) throws Throwable
 	{
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 
 		Date dTime = new Date();
 		Date startWeek = DateUtils.addDay(dTime,(1 - Integer.parseInt(String.format("%d", DateUtils.dayForWeek(dTime))))); //本周第一天
@@ -4572,7 +4573,7 @@ public class Dev2Interface
 	*/
 	public static void WriteTrackMonthLog(String flowNo, int nodeFrom, String nodeFromName, long workid, long fid, String msg, String optionName) throws Exception
 	{
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		String today = BP.DA.DataType.getCurrentDate();
 
 		Date dTime = new Date();
@@ -4789,7 +4790,7 @@ public class Dev2Interface
 	{
 		String table = "ND" + Integer.parseInt(flowNo) + "Track";
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE " + table + " SET Msg=" + dbstr + "Msg  WHERE ActionType=" + dbstr +
 			"ActionType and WorkID=" + dbstr + "WorkID and NDFrom=" + dbstr + "NDFrom";
@@ -4809,7 +4810,7 @@ public class Dev2Interface
 	*/
 	public static void SetBillNo(String flowNo, long workID, String newBillNo)throws Exception
 	{
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET BillNo=" + dbstr + "BillNo  WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add("BillNo", newBillNo);
@@ -4859,7 +4860,7 @@ public class Dev2Interface
 			parentEmpNo = WebUser.getNo();
 		}
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET PFlowNo=" + dbstr + "PFlowNo, PWorkID=" + dbstr + "PWorkID,PNodeID=" + dbstr + "PNodeID,PEmp=" + dbstr + "PEmp WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.PFlowNo, pgwf.getFK_Flow());
@@ -4976,7 +4977,7 @@ public class Dev2Interface
 		//删除流程。
 		gwf.Delete();
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		Paras ps = new Paras();
 
@@ -5722,7 +5723,7 @@ public class Dev2Interface
 	*/
 	public static boolean Flow_CheckAllSubFlowIsOver(int nodeID, long workID)
 	{
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE  PNodeID=" + dbstr + "PNodeID AND PWorkID=" + dbstr + "PWorkID AND WFState!=" + dbstr + "WFState ";
 		ps.Add(GenerWorkFlowAttr.PNodeID, nodeID);
@@ -5962,7 +5963,7 @@ public class Dev2Interface
 		}
 
 		//先从轨迹里判断.
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT count(MyPK) as Num FROM ND" + Integer.parseInt(flowNo) + "Track WHERE (WorkID=" + dbStr + "WorkID OR FID=" + dbStr + "FID) AND (EmpFrom=" + dbStr + "Emp1 OR EmpTo=" + dbStr + "Emp2)";
 		ps.Add(BP.WF.TrackAttr.WorkID, workid);
@@ -6206,7 +6207,7 @@ public class Dev2Interface
 	*/
 	public static String Flow_Schedule(long workid, int toNodeID, String toEmper) throws Exception
 	{
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		Node nd = new Node(toNodeID);
 		Emp emp = new Emp(toEmper);
@@ -7037,7 +7038,7 @@ public class Dev2Interface
 	*/
 	public static String GetFlowParas(int nodeID, long workid) throws Exception
 	{
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "SELECT Paras FROM WF_GenerWorkerlist WHERE FK_Node=" + dbstr + "FK_Node AND WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkerListAttr.FK_Node, nodeID);
@@ -8802,7 +8803,7 @@ public class Dev2Interface
 		}
 
 		//删除流程.
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Flow fl = new Flow(fk_flow);
 		Paras ps = new Paras();
 		ps.SQL = "DELETE FROM " + fl.getPTable() + " WHERE OID=" + dbstr + "OID ";
@@ -9449,7 +9450,7 @@ public class Dev2Interface
 		gwf.setTaskSta(TaskSta.Takeback);
 		gwf.Update();
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		//设置已经被取走的状态。
 		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsEnable=-1 WHERE IsEnable=1 AND WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node AND FK_Emp!=" + dbstr + "FK_Emp ";
@@ -9511,7 +9512,7 @@ public class Dev2Interface
 		gwf.setTaskSta(TaskSta.Sharing);
 		gwf.Update();
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		//设置已经被取走的状态。
 		ps.SQL = "UPDATE WF_GenerWorkerlist SET IsEnable=1 WHERE IsEnable=-1 AND WorkID=" + dbstr + "WorkID ";
@@ -9686,7 +9687,7 @@ public class Dev2Interface
 	*/
 	public static Date Node_GetHungUpTimeSpan(String flowNo, int nodeID, long workid)
 	{
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		String instr = ActionType.HungUp.getValue() + "," + ActionType.UnHungUp.getValue();
 		Paras ps = new Paras();
@@ -10272,7 +10273,7 @@ public class Dev2Interface
 	{
 		Node nd = new Node(nodeID);
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET IsRead=1 WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + dbstr + "FK_Node AND FK_Emp=" + dbstr + "FK_Emp";
 		ps.Add("WorkID", workid);
@@ -10417,7 +10418,7 @@ public class Dev2Interface
 	*/
 	public static void Node_SetWorkUnRead(long workid, String userNo)
 	{
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET IsRead=0 WHERE WorkID=" + dbstr + "WorkID AND FK_Emp=" + dbstr + "FK_Emp";
 		ps.Add("WorkID", workid);

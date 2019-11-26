@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
@@ -49,7 +50,7 @@ public class GPMPage extends WebContralBase {
 			HttpServletRequest request = getRequest();
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-				String tempFilePath = BP.Sys.SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + this.getFK_Emp()
+				String tempFilePath = SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + this.getFK_Emp()
 						+ ".jpg";
 				File tempFile = new File(tempFilePath);
 				if (tempFile.exists()) {

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import BP.DA.DataType;
-import BP.Sys.SystemConfig;
+import BP.Difference.SystemConfig;
 import BP.Tools.*;
 import net.sf.json.JSONObject;
 
@@ -12,7 +12,7 @@ public class DingDing
 {
 	public final String GenerAccessToken() throws Exception
 	{
-		String url = "https://oapi.dingtalk.com/gettoken?appkey="+SystemConfig.getDing_AppKey()+"&appsecret="+ BP.Sys.SystemConfig.getDing_AppSecret() + "";
+		String url = "https://oapi.dingtalk.com/gettoken?appkey="+SystemConfig.getDing_AppKey()+"&appsecret="+ SystemConfig.getDing_AppSecret() + "";
 		String json = BP.Tools.HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);

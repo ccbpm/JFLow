@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
-import BP.Sys.SystemConfig;
+import BP.Difference.SystemConfig;
 
 
 /**
@@ -25,7 +25,7 @@ public class Paras extends ArrayList<Para>
 	
 	public final String getDBStr()
 	{
-		return BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		return SystemConfig.getAppCenterDBVarStr();
 	}
 	
 	public Paras(String p, Object v)

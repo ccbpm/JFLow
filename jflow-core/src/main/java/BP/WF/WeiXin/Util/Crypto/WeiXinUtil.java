@@ -1,6 +1,6 @@
 package BP.WF.WeiXin.Util.Crypto;
 
-import BP.Sys.SystemConfig;
+import BP.Difference.SystemConfig;
 
 public class WeiXinUtil {
 

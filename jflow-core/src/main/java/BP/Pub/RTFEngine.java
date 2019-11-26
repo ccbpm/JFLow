@@ -25,6 +25,7 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
+import BP.Difference.SystemConfig;
 import BP.En.Attr;
 import BP.En.Entities;
 import BP.En.Entity;
@@ -33,7 +34,6 @@ import BP.Port.Emps;
 import BP.Sys.FrmAttachmentDB;
 import BP.Sys.FrmAttachmentDBs;
 import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
 import BP.Tools.ConvertTools;
 import BP.Tools.StringHelper;
 import BP.WF.Glo;
@@ -457,7 +457,7 @@ public class RTFEngine {
 			String[] strs = key.split("[.]", -1);
 			if (strs.length == 2) {
 				if (strs[1].trim().equals("ImgAth")) {
-					String path1 = BP.Sys.SystemConfig.getPathOfDataUser() + "\\ImgAth\\Data\\" + strs[0].trim() + "_"
+					String path1 = SystemConfig.getPathOfDataUser() + "\\ImgAth\\Data\\" + strs[0].trim() + "_"
 							+ en.getPKVal() + ".png";
 					// 定义rtf中图片字符串.
 					StringBuilder mypict = new StringBuilder();
@@ -509,7 +509,7 @@ public class RTFEngine {
 				} else if (strs[1].trim().equals("RMBDX")) {
 					return DataType.ParseFloatToCash(Float.parseFloat(val));
 				} else if (strs[1].trim().equals("ImgAth")) {
-					String path1 = BP.Sys.SystemConfig.getPathOfDataUser() + "\\ImgAth\\Data\\" + strs[0].trim() + "_"
+					String path1 = SystemConfig.getPathOfDataUser() + "\\ImgAth\\Data\\" + strs[0].trim() + "_"
 							+ this.HisGEEntity.getPKVal() + ".png";
 
 					// 定义rtf中图片字符串.
@@ -540,7 +540,7 @@ public class RTFEngine {
 					mypict.append("\n");
 					return mypict.toString();
 				} else if (strs[1].trim().equals("Siganture")) {
-					String path = BP.Sys.SystemConfig.getPathOfDataUser() + "\\Siganture\\" + val + ".jpg";
+					String path = SystemConfig.getPathOfDataUser() + "\\Siganture\\" + val + ".jpg";
 					// 定义rtf中图片字符串.
 					StringBuilder pict = new StringBuilder();
 					// 获取要插入的图片
@@ -604,7 +604,7 @@ public class RTFEngine {
 			}
 
 			if (strs[1].trim().equals("ImgAth")) {
-				String path1 = BP.Sys.SystemConfig.getPathOfDataUser() + "\\ImgAth\\Data\\" + strs[0].trim() + "_"
+				String path1 = SystemConfig.getPathOfDataUser() + "\\ImgAth\\Data\\" + strs[0].trim() + "_"
 						+ this.HisGEEntity.getPKVal() + ".png";
 
 				// 定义rtf中图片字符串.
@@ -639,7 +639,7 @@ public class RTFEngine {
 			if (strs[1].trim().equals("BPPaint")) {
 				String path1 = DBAccess.RunSQLReturnString("SELECT  Tag2 FROM Sys_FrmEleDB WHERE REFPKVAL="
 						+ this.HisGEEntity.getPKVal() + " AND EleID='" + strs[0].trim() + "'");
-				// string path1 = BP.Sys.SystemConfig.getPathOfDataUser() +
+				// string path1 = SystemConfig.getPathOfDataUser() +
 				// "\\BPPaint\\" + this.HisGEEntity.ToString().Trim() + "\\" +
 				// this.HisGEEntity.PKVal + ".png";
 				// 定义rtf中图片字符串.
@@ -695,7 +695,7 @@ public class RTFEngine {
 				} else if (strs[1].trim().equals("RMBDX")) {
 					return DataType.ParseFloatToCash(Float.parseFloat(val));
 				} else if (strs[1].trim().equals("Siganture")) {
-					String path = BP.Sys.SystemConfig.getPathOfDataUser() + "\\Siganture\\" + val + ".jpg";
+					String path = SystemConfig.getPathOfDataUser() + "\\Siganture\\" + val + ".jpg";
 					// 定义rtf中图片字符串
 					StringBuilder pict = new StringBuilder();
 					// 获取要插入的图片

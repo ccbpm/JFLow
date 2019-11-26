@@ -1,6 +1,7 @@
 package BP.GPM;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 
@@ -128,8 +129,8 @@ public class AppSort extends EntityNoName
 		{
 			/*如果没有root.*/
 			root.setParentNo("0");
-			root.setName( BP.Sys.SystemConfig.getSysName());
-			root.setFK_App(BP.Sys.SystemConfig.getSysNo());
+			root.setName( SystemConfig.getSysName());
+			root.setFK_App(SystemConfig.getSysNo());
 			root.setHisMenuType(MenuType.Root);
 			root.setIdx(0);
 			root.Insert();

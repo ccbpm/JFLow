@@ -3,6 +3,8 @@ package BP.DA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import BP.Difference.SystemConfig;
+
 public class Log {
 
 	private static Logger logger = LoggerFactory.getLogger(Log.class);
@@ -27,7 +29,7 @@ public class Log {
 
 	public static boolean isLoggerDebugEnabled() {
 		
-	    return BP.Sys.SystemConfig.getIsDebug();
+	    return SystemConfig.getIsDebug();
 	    
 		//return logger.isDebugEnabled();
 	}
@@ -286,7 +288,7 @@ public class Log {
 	//	 */
 	// public static void OpenLogDir()
 	// {
-	// String file = BP.Sys.SystemConfig.getPathOfLog();
+	// String file = SystemConfig.getPathOfLog();
 	// try
 	// {
 	// System.Diagnostics.Process.Start(file);
@@ -301,7 +303,7 @@ public class Log {
 	//	 */
 	// public static void OpeLogToday()
 	// {
-	// String file = BP.Sys.SystemConfig.getPathOfLog() + new
+	// String file = SystemConfig.getPathOfLog() + new
 	// java.util.Date().ToString("yyyy_MM_dd") + ".log";
 	// try
 	// {

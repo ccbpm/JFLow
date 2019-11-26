@@ -4,6 +4,7 @@ import BP.WF.*;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
 
@@ -230,7 +231,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 			// 清空缓存
 			MapData mymd = new MapData(fromMapData);
 			mymd.RepairMap();
-			BP.Sys.SystemConfig.DoClearCash();
+			SystemConfig.DoClearCash();
 			return "执行成功.";
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();

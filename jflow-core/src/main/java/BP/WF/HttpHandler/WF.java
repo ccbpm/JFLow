@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.En.QueryObject;
@@ -819,7 +820,7 @@ public class WF extends WebContralBase {
 	 */
 	public final String Start_Init() throws Exception {
 		// 通用的处理器.
-		if (BP.Sys.SystemConfig.getCustomerNo().equals("TianYe")) {
+		if (SystemConfig.getCustomerNo().equals("TianYe")) {
 			return Start_InitTianYe();
 		}
 		String json = "";
@@ -930,7 +931,7 @@ public class WF extends WebContralBase {
 	public final String Complete_Init() throws Exception {
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' and WFState="
 				+ WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);

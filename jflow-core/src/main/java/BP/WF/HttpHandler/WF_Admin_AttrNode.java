@@ -5,6 +5,7 @@ import BP.Web.*;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.En.*;

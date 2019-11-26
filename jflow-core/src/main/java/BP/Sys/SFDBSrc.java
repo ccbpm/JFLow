@@ -1,6 +1,7 @@
 package BP.Sys;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import java.util.*;
@@ -302,7 +303,7 @@ public class SFDBSrc extends EntityNoName
 		switch (this.getDBSrcType())
 		{
 			case Localhost:
-				return BP.Sys.SystemConfig.getAppCenterDSN();
+				return SystemConfig.getAppCenterDSN();
 			case SQLServer:
 				return "password=" + this.getPassword() + ";persist security info=true;user id=" + this.getUserID() + ";initial catalog=" + this.getDBName() + ";data source=" + this.getIP() + ";timeout=999;multipleactiveresultsets=true";
 			case Oracle:

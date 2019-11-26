@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.En.*;
 import BP.En.Map;

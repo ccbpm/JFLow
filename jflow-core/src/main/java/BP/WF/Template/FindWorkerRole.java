@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Web.*;
@@ -279,7 +280,7 @@ public class FindWorkerRole extends EntityOIDName
 	public WorkNode town = null;
 	public WorkNode currWn = null;
 	public Flow fl = null;
-	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+	private String dbStr = SystemConfig.getAppCenterDBVarStr();
 	public Paras ps = null;
 	public long WorkID = 0;
 	public Node HisNode = null;

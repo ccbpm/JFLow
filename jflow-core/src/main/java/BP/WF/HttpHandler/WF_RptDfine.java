@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
@@ -300,7 +301,7 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 		//判断是否含有导出至模板的模板文件，如果有，则显示导出至模板按钮RptExportToTmp
-		String tmpDir = BP.Sys.SystemConfig.getPathOfDataUser() + "TempleteExpEns/" + rptNo;
+		String tmpDir = SystemConfig.getPathOfDataUser() + "TempleteExpEns/" + rptNo;
 		if ((new File(tmpDir)).isDirectory())
 		{
 			
@@ -755,7 +756,7 @@ public class WF_RptDfine extends WebContralBase
 		}
 
 		//判断是否含有导出至模板的模板文件，如果有，则显示导出至模板按钮RptExportToTmp
-		String tmpDir = BP.Sys.SystemConfig.getPathOfDataUser() + "TempleteExpEns/" + rptNo;
+		String tmpDir = SystemConfig.getPathOfDataUser() + "TempleteExpEns/" + rptNo;
 		if ((new File(tmpDir)).isDirectory())
 		{
 			List resultList = new ArrayList();

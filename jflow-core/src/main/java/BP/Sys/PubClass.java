@@ -31,6 +31,7 @@ import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Log;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.ClassFactory;
@@ -407,7 +408,7 @@ public class PubClass {
 		} else {
 			String sql = "";
 
-			switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
 				sql = "SELECT No,Name FROM " + uiBindKey + " where rowNum <= " + topNum;
 				break;
@@ -668,7 +669,7 @@ public class PubClass {
 	}
 
 	public static void AddCommentForTable_MySql(Entity en) throws Exception {
-		String database = BP.Sys.SystemConfig.getAppCenterDBDatabase();
+		String database = SystemConfig.getAppCenterDBDatabase();
 		en.RunSQL("alter table " + database + "." + en.getEnMap().getPhysicsTable() + " comment = '" + en.getEnDesc()
 				+ "'");
 		// 获取当前实体对应表的所有字段结构信息

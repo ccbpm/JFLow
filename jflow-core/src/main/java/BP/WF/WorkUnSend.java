@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.Web.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
@@ -22,7 +23,7 @@ public class WorkUnSend
 	{
 		if (_AppType == null)
 		{
-			if (BP.Sys.SystemConfig.getIsBSsystem() == false)
+			if (SystemConfig.getIsBSsystem() == false)
 			{
 				_AppType = "WF";
 			}
@@ -51,7 +52,7 @@ public class WorkUnSend
 	{
 		if (_VirPath == null)
 		{
-			if (BP.Sys.SystemConfig.getIsBSsystem())
+			if (SystemConfig.getIsBSsystem())
 			{
 				_VirPath = Glo.getCCFlowAppPath(); //BP.Sys.Glo.Request.ApplicationPath;
 			}

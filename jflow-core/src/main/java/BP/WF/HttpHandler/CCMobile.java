@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
@@ -146,8 +147,8 @@ public class CCMobile extends WebContralBase
 		ht.put("UserName", WebUser.getName());
 
 		//系统名称.
-		ht.put("SysName", BP.Sys.SystemConfig.getSysName());
-		ht.put("CustomerName", BP.Sys.SystemConfig.getCustomerName());
+		ht.put("SysName", SystemConfig.getSysName());
+		ht.put("CustomerName", SystemConfig.getCustomerName());
 
 		ht.put("Todolist_EmpWorks", BP.WF.Dev2Interface.getTodolist_EmpWorks());
 		ht.put("Todolist_Runing", BP.WF.Dev2Interface.getTodolist_Runing());
@@ -503,7 +504,7 @@ public class CCMobile extends WebContralBase
 			///#region 获取track数据.
 		String sqlOfWhere2 = "";
 		String sqlOfWhere1 = "";
-		String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		if (fid == 0)
 		{

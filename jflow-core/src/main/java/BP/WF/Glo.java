@@ -8,6 +8,7 @@ import BP.Tools.SftpUtil;
 import BP.Tools.StringHelper;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonUtils;
 import BP.En.*;
 import BP.Web.*;
@@ -458,7 +459,7 @@ public class Glo {
 
 		if (_Multilingual_Cache.containsKey(className) == false) {
 			DataSet ds = DataType
-					.CXmlFileToDataSet(BP.Sys.SystemConfig.getPathOfData() + "/lang/xml/" + className + ".xml");
+					.CXmlFileToDataSet(SystemConfig.getPathOfData() + "/lang/xml/" + className + ".xml");
 			DataTable dt = ds.Tables.get(0);
 
 			_Multilingual_Cache.put(className, dt);
@@ -597,7 +598,7 @@ public class Glo {
 	 * 短消息写入类型
 	 */
 	public static ShortMessageWriteTo getShortMessageWriteTo() {
-		return ShortMessageWriteTo.forValue(BP.Sys.SystemConfig.GetValByKeyInt("ShortMessageWriteTo", 0));
+		return ShortMessageWriteTo.forValue(SystemConfig.GetValByKeyInt("ShortMessageWriteTo", 0));
 	}
 
 
@@ -942,7 +943,7 @@ public class Glo {
 			wfemp.CheckPhysicsTable();
 
 			/// #region 更新wf_emp. 的字段类型. 2019.06.19
-			DBType dbtype = BP.Sys.SystemConfig.getAppCenterDBType();
+			DBType dbtype = SystemConfig.getAppCenterDBType();
 
 			if (dbtype == DBType.Oracle) {
 				if (DBAccess.IsExitsTableCol("WF_EMP", "startFlows_temp") == false) {
@@ -1332,19 +1333,19 @@ public class Glo {
 
 			String sqlscript = "";
 			// 执行必须的sql.
-			switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_Ora.sql";
+				sqlscript = SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_Ora.sql";
 				break;
 			case MSSQL:
 			case Informix:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_SQL.sql";
+				sqlscript = SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_SQL.sql";
 				break;
 			case MySQL:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_MySQL.sql";
+				sqlscript = SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_MySQL.sql";
 				break;
 			case PostgreSQL:
-				sqlscript = BP.Sys.SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_PostgreSQL.sql";
+				sqlscript = SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_PostgreSQL.sql";
 				break;
 			default:
 				break;
@@ -1368,7 +1369,7 @@ public class Glo {
 			/// #endregion
 
 			/// #region 修复 mapattr UIHeight, UIWidth 类型错误.
-			switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
 				msg = "@Sys_MapAttr 修改字段";
 				break;
@@ -1384,7 +1385,7 @@ public class Glo {
 			/// #endregion
 
 			/// #region 升级常用词汇
-			switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
 				int i = DBAccess.RunSQLReturnCOUNT(
 						"SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_DEFVAL' AND COLUMN_NAME = 'PARENTNO'");
@@ -1479,7 +1480,7 @@ public class Glo {
 			/// #endregion 执行admin登陆.
 
 			/// #region 修复 Sys_FrmImg 表字段 ImgAppType Tag0
-			switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
 				int i = DBAccess.RunSQLReturnCOUNT(
 						"SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_FRMIMG' AND COLUMN_NAME = 'TAG0'");
@@ -1605,7 +1606,7 @@ public class Glo {
 			return true;
 		}
 
-		return BP.Sys.SystemConfig.GetValByKeyBoolen("IsEnableHuiQianList", false);
+		return SystemConfig.GetValByKeyBoolen("IsEnableHuiQianList", false);
 	}
 
 	/**
@@ -1710,7 +1711,7 @@ public class Glo {
 		/// #region 3, 执行基本的 sql
 		String sqlscript = "";
 
-		sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
+		sqlscript = SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		BP.DA.DBAccess.RunSQLScript(sqlscript);
 
 		BP.Port.Emp empAdmin = new Emp("admin");
@@ -1848,19 +1849,19 @@ public class Glo {
 
 		sqlscript = "";
 		// 执行必须的sql.
-		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_Ora.sql";
+			sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_Ora.sql";
 			break;
 		case MSSQL:
 		case Informix:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_SQL.sql";
+			sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_SQL.sql";
 			break;
 		case MySQL:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_MySQL.sql";
+			sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_MySQL.sql";
 			break;
 		case PostgreSQL:
-			sqlscript = BP.Sys.SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_PostgreSQL.sql";
+			sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_PostgreSQL.sql";
 			break;
 		default:
 			break;
@@ -2351,7 +2352,7 @@ public class Glo {
 	}
 
 	public static boolean getIsEnableTrackRec() {
-		String s = (String) BP.Sys.SystemConfig.getAppSettings().get("IsEnableTrackRec");
+		String s = (String) SystemConfig.getAppSettings().get("IsEnableTrackRec");
 		if (DataType.IsNullOrEmpty(s)) {
 			return false;
 		}
@@ -2372,7 +2373,7 @@ public class Glo {
 	 */
 	public static String MapDataLikeKeyV1(String flowNo, String colName) {
 		flowNo = String.valueOf(Integer.parseInt(flowNo));
-		String len = BP.Sys.SystemConfig.getAppCenterDBLengthStr();
+		String len = SystemConfig.getAppCenterDBLengthStr();
 		if (flowNo.length() == 1) {
 			return " " + colName + " LIKE 'ND" + flowNo + "%' AND " + len + "(" + colName + ")=5";
 		}
@@ -2388,7 +2389,7 @@ public class Glo {
 
 	public static String MapDataLikeKey(String flowNo, String colName) {
 		flowNo = String.valueOf(Integer.parseInt(flowNo));
-		String len = BP.Sys.SystemConfig.getAppCenterDBLengthStr();
+		String len = SystemConfig.getAppCenterDBLengthStr();
 
 		// edited by liuxc,2016-02-22,合并逻辑，原来分流程编号的位数，现在统一处理
 		return " (" + colName + " LIKE 'ND" + flowNo + "%' AND " + len + "(" + colName + ")="
@@ -2402,7 +2403,7 @@ public class Glo {
 	 */
 	public static int getSMSSendTimeFromHour() {
 		try {
-			return Integer.parseInt(BP.Sys.SystemConfig.getAppSettings().get("SMSSendTimeFromHour").toString());
+			return Integer.parseInt(SystemConfig.getAppSettings().get("SMSSendTimeFromHour").toString());
 		} catch (java.lang.Exception e) {
 			return 8;
 		}
@@ -2413,7 +2414,7 @@ public class Glo {
 	 */
 	public static int getSMSSendTimeToHour() {
 		try {
-			return Integer.parseInt(BP.Sys.SystemConfig.getAppSettings().get("SMSSendTimeToHour").toString());
+			return Integer.parseInt(SystemConfig.getAppSettings().get("SMSSendTimeToHour").toString());
 		} catch (java.lang.Exception e) {
 			return 8;
 		}
@@ -3803,8 +3804,8 @@ public class Glo {
 	 * 全局的安全验证码
 	 */
 	public static String getGloSID() {
-		String s = BP.Sys.SystemConfig.getAppSettings().get("GloSID") instanceof String
-				? (String) BP.Sys.SystemConfig.getAppSettings().get("GloSID") : null;
+		String s = SystemConfig.getAppSettings().get("GloSID") instanceof String
+				? (String) SystemConfig.getAppSettings().get("GloSID") : null;
 		if (DataType.IsNullOrEmpty(s)) {
 			s = "sdfq2erre-2342-234sdf23423-323";
 		}
@@ -3816,8 +3817,8 @@ public class Glo {
 	 * 用，如果禁用了就不能执行任何操作了。启用后，就意味着每次都要 访问数据库。
 	 */
 	public static boolean getIsEnableCheckUseSta() {
-		String s = BP.Sys.SystemConfig.getAppSettings().get("IsEnableCheckUseSta") instanceof String
-				? (String) BP.Sys.SystemConfig.getAppSettings().get("IsEnableCheckUseSta") : null;
+		String s = SystemConfig.getAppSettings().get("IsEnableCheckUseSta") instanceof String
+				? (String) SystemConfig.getAppSettings().get("IsEnableCheckUseSta") : null;
 		if (s == null || s.equals("0")) {
 			return false;
 		}
@@ -3828,8 +3829,8 @@ public class Glo {
 	 * 是否启用显示节点名称
 	 */
 	public static boolean getIsEnableMyNodeName() {
-		String s = BP.Sys.SystemConfig.getAppSettings().get("IsEnableMyNodeName") instanceof String
-				? (String) BP.Sys.SystemConfig.getAppSettings().get("IsEnableMyNodeName") : null;
+		String s = SystemConfig.getAppSettings().get("IsEnableMyNodeName") instanceof String
+				? (String) SystemConfig.getAppSettings().get("IsEnableMyNodeName") : null;
 		if (s == null || s.equals("0")) {
 			return false;
 		}
@@ -3859,7 +3860,7 @@ public class Glo {
 	public static String Language = "CH";
 
 	public static boolean getIsQL() {
-		String s = BP.Sys.SystemConfig.getAppSettings().get("IsQL").toString();
+		String s = SystemConfig.getAppSettings().get("IsQL").toString();
 		if (s == null || s.equals("0")) {
 			return false;
 		}
@@ -3870,21 +3871,21 @@ public class Glo {
 	 * 是否启用共享任务池？
 	 */
 	public static boolean getIsEnableTaskPool() {
-		return BP.Sys.SystemConfig.GetValByKeyBoolen("IsEnableTaskPool", false);
+		return SystemConfig.GetValByKeyBoolen("IsEnableTaskPool", false);
 	}
 
 	/**
 	 * 是否显示标题
 	 */
 	public static boolean getIsShowTitle() {
-		return BP.Sys.SystemConfig.GetValByKeyBoolen("IsShowTitle", false);
+		return SystemConfig.GetValByKeyBoolen("IsShowTitle", false);
 	}
 
 	/**
 	 * 用户信息显示格式
 	 */
 	public static UserInfoShowModel getUserInfoShowModel() {
-		return UserInfoShowModel.forValue(BP.Sys.SystemConfig.GetValByKeyInt("UserInfoShowModel", 0));
+		return UserInfoShowModel.forValue(SystemConfig.GetValByKeyInt("UserInfoShowModel", 0));
 	}
 
 	/**
@@ -3923,18 +3924,18 @@ public class Glo {
 	 * 更新主表的SQL
 	 */
 	public static String getUpdataMainDeptSQL() {
-		return BP.Sys.SystemConfig.GetValByKey("UpdataMainDeptSQL",
-				"UPDATE Port_Emp SET FK_Dept=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "FK_Dept WHERE No="
-						+ BP.Sys.SystemConfig.getAppCenterDBVarStr() + "No");
+		return SystemConfig.GetValByKey("UpdataMainDeptSQL",
+				"UPDATE Port_Emp SET FK_Dept=" + SystemConfig.getAppCenterDBVarStr() + "FK_Dept WHERE No="
+						+ SystemConfig.getAppCenterDBVarStr() + "No");
 	}
 
 	/**
 	 * 更新SID的SQL
 	 */
 	public static String getUpdataSID() {
-		return BP.Sys.SystemConfig.GetValByKey("UpdataSID",
-				"UPDATE Port_Emp SET SID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "SID WHERE No="
-						+ BP.Sys.SystemConfig.getAppCenterDBVarStr() + "No");
+		return SystemConfig.GetValByKey("UpdataSID",
+				"UPDATE Port_Emp SET SID=" + SystemConfig.getAppCenterDBVarStr() + "SID WHERE No="
+						+ SystemConfig.getAppCenterDBVarStr() + "No");
 	}
 
 	/**
@@ -4025,8 +4026,8 @@ public class Glo {
 	 */
 	public static boolean getIsEnable_DingDing() {
 		// 如果两个参数都不为空说明启用
-		String corpid = BP.Sys.SystemConfig.GetValByKey("Ding_CorpID", "");
-		String corpsecret = BP.Sys.SystemConfig.GetValByKey("Ding_CorpSecret", "");
+		String corpid = SystemConfig.GetValByKey("Ding_CorpID", "");
+		String corpsecret = SystemConfig.GetValByKey("Ding_CorpSecret", "");
 		if (StringHelper.isNullOrEmpty(corpid) || StringHelper.isNullOrEmpty(corpsecret)) {
 			return false;
 		}
@@ -4038,8 +4039,8 @@ public class Glo {
 	 * 微信是否启用
 	 */
 	public static boolean getIsEnable_WeiXin() {
-		String corpid = BP.Sys.SystemConfig.GetValByKey("WX_CorpID", "");
-		String corpsecret = BP.Sys.SystemConfig.GetValByKey("WX_AppSecret", "");
+		String corpid = SystemConfig.GetValByKey("WX_CorpID", "");
+		String corpsecret = SystemConfig.GetValByKey("WX_AppSecret", "");
 		if (StringHelper.isNullOrEmpty(corpid) || StringHelper.isNullOrEmpty(corpsecret)) {
 			return false;
 		}
@@ -4058,28 +4059,28 @@ public class Glo {
 	 * 是否检查表单树字段填写是否为空
 	 */
 	public static boolean getIsEnableCheckFrmTreeIsNull() {
-		return BP.Sys.SystemConfig.GetValByKeyBoolen("IsEnableCheckFrmTreeIsNull", true);
+		return SystemConfig.GetValByKeyBoolen("IsEnableCheckFrmTreeIsNull", true);
 	}
 
 	/**
 	 * 是否启用消息系统消息。
 	 */
 	public static boolean getIsEnableSysMessage() {
-		return BP.Sys.SystemConfig.GetValByKeyBoolen("IsEnableSysMessage", true);
+		return SystemConfig.GetValByKeyBoolen("IsEnableSysMessage", true);
 	}
 
 	/**
 	 * 与ccflow流程服务相关的配置: 执行自动任务节点，间隔的时间，以分钟计算，默认为2分钟。
 	 */
 	public static int getAutoNodeDTSTimeSpanMinutes() {
-		return BP.Sys.SystemConfig.GetValByKeyInt("AutoNodeDTSTimeSpanMinutes", 60);
+		return SystemConfig.GetValByKeyInt("AutoNodeDTSTimeSpanMinutes", 60);
 	}
 
 	/**
 	 * ccim集成的数据库. 是为了向ccim写入消息.
 	 */
 	public static String getCCIMDBName() {
-		String baseUrl = (String) BP.Sys.SystemConfig.getAppSettings().get("CCIMDBName");
+		String baseUrl = (String) SystemConfig.getAppSettings().get("CCIMDBName");
 		if (DataType.IsNullOrEmpty(baseUrl) == true) {
 			baseUrl = "ccPort.dbo";
 		}
@@ -4090,11 +4091,11 @@ public class Glo {
 	 * 主机
 	 */
 	public static String getHostURL() {
-		if (BP.Sys.SystemConfig.getIsBSsystem()) {
+		if (SystemConfig.getIsBSsystem()) {
 			/* 如果是BS 就要求 路径. */
 		}
 
-		String baseUrl = (String) BP.Sys.SystemConfig.getAppSettings().get("HostURL");
+		String baseUrl = (String) SystemConfig.getAppSettings().get("HostURL");
 		if (DataType.IsNullOrEmpty(baseUrl) == true) {
 			baseUrl = "http://127.0.0.1:8080/jflow-web";
 		}
@@ -4109,11 +4110,11 @@ public class Glo {
 	 * 移动端主机
 	 */
 	public static String getMobileURL() {
-		if (BP.Sys.SystemConfig.getIsBSsystem()) {
+		if (SystemConfig.getIsBSsystem()) {
 			/* 如果是BS 就要求 路径. */
 		}
 
-		String baseUrl = (String) BP.Sys.SystemConfig.getAppSettings().get("BpmMobileAddress");
+		String baseUrl = (String) SystemConfig.getAppSettings().get("BpmMobileAddress");
 		if (DataType.IsNullOrEmpty(baseUrl) == true) {
 			baseUrl = "http://127.0.0.1:8080/Jflow-web";
 		}
@@ -4620,7 +4621,7 @@ public class Glo {
 	 * 中午时间从
 	 */
 	public static String getAMFrom() {
-		return BP.Sys.SystemConfig.GetValByKey("AMFrom", "08:30");
+		return SystemConfig.GetValByKey("AMFrom", "08:30");
 	}
 
 	/**
@@ -4634,21 +4635,21 @@ public class Glo {
 	 * 一天有效的工作小时数 是中午工作小时+下午工作小时.
 	 */
 	public static float getAMPMHours() {
-		return BP.Sys.SystemConfig.GetValByKeyFloat("AMPMHours", 8);
+		return SystemConfig.GetValByKeyFloat("AMPMHours", 8);
 	}
 
 	/**
 	 * 中午间隔的小时数
 	 */
 	public static float getAMPMTimeSpan() {
-		return BP.Sys.SystemConfig.GetValByKeyFloat("AMPMTimeSpan", 1);
+		return SystemConfig.GetValByKeyFloat("AMPMTimeSpan", 1);
 	}
 
 	/**
 	 * 中午时间到
 	 */
 	public static String getAMTo() {
-		return BP.Sys.SystemConfig.GetValByKey("AMTo", "11:30");
+		return SystemConfig.GetValByKey("AMTo", "11:30");
 	}
 
 	/**
@@ -4662,7 +4663,7 @@ public class Glo {
 	 * 下午时间从
 	 */
 	public static String getPMFrom() {
-		return BP.Sys.SystemConfig.GetValByKey("PMFrom", "13:30");
+		return SystemConfig.GetValByKey("PMFrom", "13:30");
 	}
 
 	/**
@@ -4676,7 +4677,7 @@ public class Glo {
 	 * 到
 	 */
 	public static String getPMTo() {
-		return BP.Sys.SystemConfig.GetValByKey("PMTo", "17:30");
+		return SystemConfig.GetValByKey("PMTo", "17:30");
 	}
 
 	/**
@@ -4694,7 +4695,7 @@ public class Glo {
 	public static void DeleteTempFiles() {
 		try {
 			// 删除目录.
-			String temp = BP.Sys.SystemConfig.getPathOfTemp();
+			String temp = SystemConfig.getPathOfTemp();
 			File file = new File(temp);
 			if(file.exists() == true)
 				file.delete();
@@ -4703,7 +4704,7 @@ public class Glo {
 			file.mkdirs();
 
 			// 删除pdf 目录.
-			temp = BP.Sys.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/";
+			temp = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/";
 			file = new File(temp);
 			File[] dirs = file.listFiles();
 			for (File dir : dirs) {
@@ -5116,7 +5117,7 @@ public class Glo {
 		// 为子流程的时候，该子流程只能被调用一次.
 		if (role == StartLimitRole.OnlyOneSubFlow) {
 
-			if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+			if (SystemConfig.getIsBSsystem() == true) {
 
 				String pflowNo = CommonUtils.getRequest().getParameter("PFlowNo");
 				String pworkid = CommonUtils.getRequest().getParameter("PWorkID");

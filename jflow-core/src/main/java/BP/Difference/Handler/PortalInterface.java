@@ -14,12 +14,12 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
+import BP.Difference.SystemConfig;
 import BP.Port.Emp;
 import BP.Sys.GEDtl;
 import BP.Sys.GEDtlAttr;
 import BP.Sys.GEDtls;
 import BP.Sys.MapDtl;
-import BP.Sys.SystemConfig;
 import BP.WF.Flow;
 import BP.WF.GenerWorkFlowAttr;
 import BP.WF.GenerWorkFlows;
@@ -330,7 +330,7 @@ public class PortalInterface {
 	public static DataTable DB_GenerEmpWorksOfDataTable(String fk_flow, String guestNo) {
 
 		Paras ps = new Paras();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String sql;
 
 		/* 不是授权状态 */
@@ -388,7 +388,7 @@ public class PortalInterface {
 	 * @throws Exception
 	 */
 	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName) throws Exception {
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
 				+ "GuestName WHERE WorkID=" + dbstr + "WorkID";
@@ -425,7 +425,7 @@ public class PortalInterface {
 			throw new RuntimeException("@设置外部用户待办信息失败:参数workID不能为0.");
 		}
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkerList SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
 				+ "GuestName WHERE WorkID=" + dbstr + "WorkID AND IsPass=0";

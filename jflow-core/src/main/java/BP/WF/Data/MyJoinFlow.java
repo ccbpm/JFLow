@@ -1,6 +1,7 @@
 package BP.WF.Data;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.WF.*;
 import BP.WF.Glo;
 import BP.Web.WebUser;
@@ -578,7 +579,7 @@ public class MyJoinFlow extends Entity
 	{
 
 		Paras pss = new Paras();
-		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + BP.Sys.SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
+		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
 		pss.Add("ActionType", BP.WF.ActionType.Forward.getValue());
 		pss.Add("WorkID", this.getWorkID());
 		DataTable dt = DBAccess.RunSQLReturnTable(pss);

@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
@@ -161,7 +162,7 @@ public class WF_Comm_Sys extends WebContralBase {
 
 		String fileNewName = currDate + ext;
 		// 文件存放路径
-		String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "\\" + fileNewName;
+		String filePath = SystemConfig.getPathOfTemp() + "\\" + fileNewName;
 		File tempFile = new File(filePath);
 		if (tempFile.exists()) {
 			tempFile.delete();
@@ -382,7 +383,7 @@ public class WF_Comm_Sys extends WebContralBase {
 		String expFileName = "all-wcprops,dir-prop-base,entries";
 		String expDirName = ".svn";
 
-		String pathDir = BP.Sys.SystemConfig.getPathOfData() + "/JSLib/";
+		String pathDir = SystemConfig.getPathOfData() + "/JSLib/";
 
 		String html = "";
 		html += "<fieldset>";
@@ -413,7 +414,7 @@ public class WF_Comm_Sys extends WebContralBase {
 		}
 		html += "</fieldset>";
 
-		pathDir = BP.Sys.SystemConfig.getPathOfDataUser() + "/JSLib/";
+		pathDir = SystemConfig.getPathOfDataUser() + "/JSLib/";
 		html += "<fieldset>";
 		html += "<legend>" + "用户自定义函数. 位置:" + pathDir + "</legend>";
 
@@ -755,7 +756,7 @@ public class WF_Comm_Sys extends WebContralBase {
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 			fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
 
-			String savePath = BP.Sys.SystemConfig.getPathOfDataUser() + "JSLibData" + "/" + fileName;
+			String savePath = SystemConfig.getPathOfDataUser() + "JSLibData" + "/" + fileName;
 			xmlFile = new File(savePath);
 			if (xmlFile.exists()) {
 				xmlFile.delete();
@@ -779,7 +780,7 @@ public class WF_Comm_Sys extends WebContralBase {
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 			fileName = CommonFileUtils.getOriginalFilename(request, "upfile");
-			savePath = BP.Sys.SystemConfig.getPathOfDataUser() + "RichTextFile";
+			savePath = SystemConfig.getPathOfDataUser() + "RichTextFile";
 			if (new File(savePath).exists() == false)
 				new File(savePath).mkdirs();
 			savePath = savePath + "/" + fileName;
@@ -804,7 +805,7 @@ public class WF_Comm_Sys extends WebContralBase {
 	 * @return
 	 */
 	public final String javaScriptFiles() {
-		String savePath = BP.Sys.SystemConfig.getPathOfDataUser() + "JSLibData";
+		String savePath = SystemConfig.getPathOfDataUser() + "JSLibData";
 		File dirFile = new File(savePath);
 		if (!dirFile.isDirectory())
 			return "";

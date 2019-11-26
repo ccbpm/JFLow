@@ -15,8 +15,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import BP.Sys.SystemConfig;
-
 /**
  * 
  * 文件AES加密

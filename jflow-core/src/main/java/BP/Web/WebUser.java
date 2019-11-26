@@ -16,13 +16,13 @@ import BP.DA.DBAccess;
 import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.En.QueryObject;
 import BP.Port.Current;
 import BP.Port.Emp;
 import BP.Port.Stations;
 import BP.Sys.OSDBSrc;
 import BP.Sys.OSModel;
-import BP.Sys.SystemConfig;
 import BP.Tools.StringHelper;
 import BP.WF.Dev2Interface;
 
@@ -218,12 +218,12 @@ public class WebUser {
 		WebUser.setUserWorkDev(UserWorkDev.PC);
 
 		///#region 解决部门的问题.
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
+		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			if (DataType.IsNullOrEmpty(em.getFK_Dept()) == true)
 			{
 				String sql = "";
-				if (BP.Sys.SystemConfig.getOSModel()== OSModel.OneOne)
+				if (SystemConfig.getOSModel()== OSModel.OneOne)
 				{
 					sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + em.getNo() + "'";
 				}
@@ -252,7 +252,7 @@ public class WebUser {
 			}
 		}
 
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
+		if (SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 		{
 			/*Object ws = DataType.GetPortalInterfaceSoapClientInstance();
 			DataTable dt = ws.GetEmpHisDepts(em.getNo());
@@ -292,7 +292,7 @@ public class WebUser {
 		}
 
 		WebUser.setSysLang(lang);
-		if (BP.Sys.SystemConfig.getIsBSsystem())
+		if (SystemConfig.getIsBSsystem())
 		{
 			//System.Web.HttpContext.Current.Response.Cookies.Clear();
 
@@ -345,7 +345,7 @@ public class WebUser {
 	private static void ChangeMainDept(String no, String deptNo) {
 		//这里要考虑集成的模式下，更新会出现是.
 
-		String sql = BP.Sys.SystemConfig.GetValByKey("UpdataMainDeptSQL", "");
+		String sql = SystemConfig.GetValByKey("UpdataMainDeptSQL", "");
 		if (sql.equals(""))
 		{
 			//如果没有配置, 就取默认的配置.
@@ -885,7 +885,7 @@ public class WebUser {
 	 * 用户工作方式.
 	 */
 	public static UserWorkDev getUserWorkDev() {
-		if (BP.Sys.SystemConfig.getIsBSsystem() == false) {
+		if (SystemConfig.getIsBSsystem() == false) {
 			return getUserWorkDev().PC;
 		}
 
@@ -1052,12 +1052,12 @@ public class WebUser {
 
 
 		///#region 解决部门的问题.
-		if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
+		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 		{
 			if (StringHelper.isNullOrEmpty(deptNo) == true)
 			{
 				String sql = "";
-				if (BP.Sys.SystemConfig.getOSModel() == OSModel.OneOne)
+				if (SystemConfig.getOSModel() == OSModel.OneOne)
 				{
 					sql = "SELECT FK_Dept FROM Port_EmpDept WHERE FK_Emp='" + userNo + "'";
 				}
@@ -1088,7 +1088,7 @@ public class WebUser {
 		WebUser.setHisDeptsStr(null);
 		WebUser.setHisStationsStr(null);
 
-		if (BP.Sys.SystemConfig.getIsBSsystem())
+		if (SystemConfig.getIsBSsystem())
 		{
 			//System.Web.HttpContext.Current.Response.Cookies.Clear();
 			//HttpCookie hc = Glo.getRequest.Cookies["CCS"];

@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
@@ -727,7 +728,7 @@ public class NodeExt extends Entity
 		rm.RefAttrLinkLabel = "";
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-		if (BP.Sys.SystemConfig.getCustomerNo().equals("HCBD"))
+		if (SystemConfig.getCustomerNo().equals("HCBD"))
 		{
 				/* 为海成邦达设置的个性化需求. */
 			rm = new RefMethod();

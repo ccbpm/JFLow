@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
@@ -37,7 +38,7 @@ public class WF_Admin extends WebContralBase
 	*/
 	public final String TestFlow_GetRunOnPlant()
 	{
-		return BP.Sys.SystemConfig.getRunOnPlant();
+		return SystemConfig.getRunOnPlant();
 	}
 	/** 
 	 初始化界面.
@@ -48,7 +49,7 @@ public class WF_Admin extends WebContralBase
 	public final String TestFlow_Init() throws Exception
 	{
 		//清除缓存.
-		BP.Sys.SystemConfig.DoClearCash();
+		SystemConfig.DoClearCash();
 
 		if (1 == 2 && WebUser.getIsAdmin() == false)
 		{

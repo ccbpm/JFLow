@@ -1,6 +1,7 @@
 package BP.Sys.XML;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Sys.XML.*;
 import BP.Sys.*;
@@ -34,7 +35,7 @@ public class SQLLists extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "\\SQLList.xml";
+		return SystemConfig.getPathOfXML() + "SQLList.xml";
 	}
 	/** 
 	 物理表名

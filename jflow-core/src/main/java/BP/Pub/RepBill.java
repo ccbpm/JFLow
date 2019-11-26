@@ -3,8 +3,8 @@ package BP.Pub;
 import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
+import BP.Difference.SystemConfig;
 import BP.Sys.PubClass;
-import BP.Sys.SystemConfig;
 import BP.Tools.ConvertTools;
 
 public class RepBill extends BP.DTS.DataIOEn

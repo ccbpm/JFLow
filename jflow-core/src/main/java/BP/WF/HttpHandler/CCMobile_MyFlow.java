@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Web.*;
@@ -49,7 +50,7 @@ public class CCMobile_MyFlow extends WebContralBase {
 		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
 		wk.ResetDefaultVal();
-		if (BP.Sys.SystemConfig.getIsBSsystem() == true) {
+		if (SystemConfig.getIsBSsystem() == true) {
 			// 处理传递过来的参数。
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {

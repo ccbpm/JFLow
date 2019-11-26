@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.Web.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.Template.*;
@@ -1247,7 +1248,7 @@ public class WorkFlow {
 
 		/// #region 处理后续的业务.
 
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 
 		// 删除子线程产生的 流程注册信息.
@@ -1307,7 +1308,7 @@ public class WorkFlow {
 		// 执行最后一个子流程发送后的检查，不管是否成功，都要结束该流程。
 		stopMsg += this.LetParentFlowAutoSendNextSetp();
 
-		// string dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		// string dbstr = SystemConfig.getAppCenterDBVarStr();
 
 		/// #region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
 		ps = new Paras();
@@ -1391,7 +1392,7 @@ public class WorkFlow {
 		/* 执行 WF_GenerWorkFlow 冻结. */
 
 		int sta = WFState.Fix.getValue();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.WFState, sta);
@@ -1436,7 +1437,7 @@ public class WorkFlow {
 
 		/* 执行 WF_GenerWorkFlow 冻结. */
 		int sta = WFState.Runing.getValue();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.WFState, sta);
@@ -1784,7 +1785,7 @@ public class WorkFlow {
 	 */
 	public final String getAppType() {
 		if (_AppType == null) {
-			if (BP.Sys.SystemConfig.getIsBSsystem() == false) {
+			if (SystemConfig.getIsBSsystem() == false) {
 				_AppType = "WF";
 			} else {
 
@@ -1802,7 +1803,7 @@ public class WorkFlow {
 	 */
 	public final String getVirPath() {
 		if (_VirPath == null) {
-			if (BP.Sys.SystemConfig.getIsBSsystem() && BP.Sys.Glo.getRequest() != null) {
+			if (SystemConfig.getIsBSsystem() && BP.Sys.Glo.getRequest() != null) {
 				_VirPath = BP.Sys.Glo.getRequest().getRemoteAddr();
 			} else {
 				_VirPath = "";
@@ -1876,7 +1877,7 @@ public class WorkFlow {
 
 		/* 执行 WF_GenerWorkFlow 挂起. */
 		int hungSta = WFState.HungUp.getValue();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.WFState, hungSta);
@@ -1923,7 +1924,7 @@ public class WorkFlow {
 
 		/* 执行解除挂起. */
 		int sta = WFState.Runing.getValue();
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.WFState, sta);

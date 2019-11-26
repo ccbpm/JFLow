@@ -2,6 +2,7 @@ package BP.WF;
 
 import BP.En.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Port.*;
 import BP.Web.*;
 import BP.Sys.*;
@@ -49,7 +50,7 @@ public class WorkReturn {
 	 * 退回到节点
 	 */
 	private Work ReurnToWork = null;
-	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+	private String dbStr = SystemConfig.getAppCenterDBVarStr();
 	private Paras ps;
 	public String ReturnToEmp = null;
 	
@@ -1175,7 +1176,7 @@ public class WorkReturn {
 	private String infoLog = "";
 
 	private void ReorderLog(Node fromND, Node toND, ReturnWork rw) throws Exception {
-		String filePath = BP.Sys.SystemConfig.getPathOfDataUser() + "/ReturnLog/" + this.HisNode.getFK_Flow() + "/";
+		String filePath = SystemConfig.getPathOfDataUser() + "/ReturnLog/" + this.HisNode.getFK_Flow() + "/";
 		if ((new File(filePath)).isDirectory() == false) {
 			(new File(filePath)).mkdirs();
 		}

@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.FtpUtil;
@@ -298,14 +299,14 @@ public class WF_CommEntity extends WebContralBase {
 		String filename = refPKVal + "_" + en.toString() + "_" + DataType.getCurrentDate() + "_" + name + ".xls";
 		String filePath = ExportDGToExcel(dtls.ToDataTableField(), en, name, null);
 
-		filePath = BP.Sys.SystemConfig.getPathOfTemp() + filename;
+		filePath = SystemConfig.getPathOfTemp() + filename;
 
-		String tempPath = BP.Sys.SystemConfig.getPathOfTemp() + refPKVal + "/";
+		String tempPath = SystemConfig.getPathOfTemp() + refPKVal + "/";
 		if ((new File(tempPath)).isDirectory() == false) {
 			(new File(tempPath)).mkdirs();
 		}
 
-		String myFilePath = BP.Sys.SystemConfig.getPathOfDataUser()
+		String myFilePath = SystemConfig.getPathOfDataUser()
 				+ this.getEnsName().substring(0, this.getEnsName().length() - 1);
 
 		for (Entity dt : dtls) {
@@ -326,7 +327,7 @@ public class WF_CommEntity extends WebContralBase {
 				StandardCopyOption.REPLACE_EXISTING);
 
 		// 生成压缩文件
-		String zipFile = BP.Sys.SystemConfig.getPathOfTemp() + refPKVal + "_" + en.toString() + "_"
+		String zipFile = SystemConfig.getPathOfTemp() + refPKVal + "_" + en.toString() + "_"
 				+ DataType.getCurrentDate() + "_" + name + ".zip";
 
 		// 执行压缩.

@@ -20,12 +20,12 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.En.Attr;
 import BP.En.Attrs;
 import BP.En.Entities;
 import BP.En.Entity;
 import BP.En.SQLCash;
-import BP.Sys.SystemConfig;
 import BP.Tools.CRC32Helper;
 import BP.Tools.StringHelper;
 
@@ -78,19 +78,19 @@ public class DBAccess {
 
 			String sql = "UPDATE " + tableName + " SET " + saveToFileField + "=?" + " WHERE " + tablePK + " =?";
 
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
+			if (SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
 				conn = BP.DA.DBAccess.getGetAppCenterDBConn_MSSQL();
 				pstmt = conn.prepareStatement(sql);
-			} else if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+			} else if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 				conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
 				pstmt = conn.prepareStatement(sql);
-			} else if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+			} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 				conn = BP.DA.DBAccess.getGetAppCenterDBConn_MySQL();
 				pstmt = conn.prepareStatement(sql);
 			}
 
 			// 数据库字段类型不一致增加判断
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
+			if (SystemConfig.getAppCenterDBType() == DBType.MySQL || SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
 				pstmt.setString(1, line);
 			} else {
 				pstmt.setBytes(1, bytes);
@@ -98,7 +98,7 @@ public class DBAccess {
 			pstmt.setString(2, pkVal);
 			pstmt.execute();
 		} catch (Exception ex) {
-			if (BP.Sys.SystemConfig.getAppCenterDBType().getValue() == DBType.MSSQL.getValue()){
+			if (SystemConfig.getAppCenterDBType().getValue() == DBType.MSSQL.getValue()){
 				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
 				{
 					/*如果没有此列，就自动创建此列.*/
@@ -108,7 +108,7 @@ public class DBAccess {
 					return;
 				}
 			}
-			if (BP.Sys.SystemConfig.getAppCenterDBType().getValue() == DBType.Oracle.getValue()){
+			if (SystemConfig.getAppCenterDBType().getValue() == DBType.Oracle.getValue()){
 				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
 				{
 
@@ -121,7 +121,7 @@ public class DBAccess {
 
 				}
 			}
-			if (BP.Sys.SystemConfig.getAppCenterDBType().getValue() == DBType.MySQL.getValue()){
+			if (SystemConfig.getAppCenterDBType().getValue() == DBType.MySQL.getValue()){
 				if (BP.DA.DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
 				{
 					/*如果没有此列，就自动创建此列.*/
@@ -173,7 +173,7 @@ public class DBAccess {
 		byte[] bytes = null;
 		String line = "";
 		try {
-			if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+			if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 				line = DataType.ReadTextFile(fullFileName);
 			} else {
 				fs = new FileInputStream(fullFileName);
@@ -249,11 +249,11 @@ public class DBAccess {
 
 		String strSQL = "SELECT [" + fileSaveField + "] FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
 			strSQL = strSQL.replace("[", "").replace("]", "");
 		}
 
-		if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			strSQL = strSQL.replace("[", "`").replace("]", "`");
 		}
 
@@ -364,7 +364,7 @@ public class DBAccess {
 	 */
 	public static int RunSP(String spName) {
 		// int i = 0;
-		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 		case MSSQL:
 		case Access:
 			throw new RuntimeException("@没有实现...");
@@ -373,12 +373,12 @@ public class DBAccess {
 		case Informix:
 			throw new RuntimeException("@没有实现...");
 		default:
-			throw new RuntimeException("Error: " + BP.Sys.SystemConfig.getAppCenterDBType());
+			throw new RuntimeException("Error: " + SystemConfig.getAppCenterDBType());
 		}
 	}
 
 	public static int RunSPReturnInt(String spName) {
-		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 		case MSSQL:
 			throw new RuntimeException("@没有实现...");
 		case MySQL:
@@ -389,7 +389,7 @@ public class DBAccess {
 		case Oracle:
 			throw new RuntimeException("@没有实现...");
 		default:
-			throw new RuntimeException("Error: " + BP.Sys.SystemConfig.getAppCenterDBType());
+			throw new RuntimeException("Error: " + SystemConfig.getAppCenterDBType());
 		}
 	}
 
@@ -404,7 +404,7 @@ public class DBAccess {
 	 */
 	public static int RunSP(String spName, Paras paras) {
 		// int i = 0;
-		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 		case MSSQL:
 			throw new RuntimeException("@没有实现...");
 		case MySQL:
@@ -417,7 +417,7 @@ public class DBAccess {
 		case Informix:
 			throw new RuntimeException("@没有实现...");
 		default:
-			throw new RuntimeException("Error " + BP.Sys.SystemConfig.getAppCenterDBType());
+			throw new RuntimeException("Error " + SystemConfig.getAppCenterDBType());
 		}
 	}
 
@@ -430,7 +430,7 @@ public class DBAccess {
 	 * @return DataTable
 	 */
 	public static DataTable RunSPReTable(String spName) {
-		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 		case MSSQL:
 		case Access:
 			throw new RuntimeException("@没有实现...");
@@ -439,7 +439,7 @@ public class DBAccess {
 		case Informix:
 			throw new RuntimeException("@没有实现...");
 		default:
-			throw new RuntimeException("Error " + BP.Sys.SystemConfig.getAppCenterDBType());
+			throw new RuntimeException("Error " + SystemConfig.getAppCenterDBType());
 
 		}
 	}
@@ -454,7 +454,7 @@ public class DBAccess {
 	 * @return DataTable
 	 */
 	public static DataTable RunSPReTable(String spName, Paras paras) {
-		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 		case MSSQL:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
@@ -463,7 +463,7 @@ public class DBAccess {
 			throw new RuntimeException("@没有实现...");
 		case Access:
 		default:
-			throw new RuntimeException("Error " + BP.Sys.SystemConfig.getAppCenterDBType());
+			throw new RuntimeException("Error " + SystemConfig.getAppCenterDBType());
 		}
 	}
 
@@ -933,7 +933,7 @@ public class DBAccess {
 
 	public static DataTable ReadProText(String proName) throws Exception {
 		String sql = "";
-		switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
 			sql = "SELECT text FROM user_source WHERE name=UPPER('" + proName + "') ORDER BY LINE ";
 			break;
@@ -2518,7 +2518,7 @@ public class DBAccess {
 			}
 
 			String sql = "select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='"
-					+ BP.Sys.SystemConfig.getUser().toUpperCase() + "' ";
+					+ SystemConfig.getUser().toUpperCase() + "' ";
 
 			return IsExits(sql, ps);
 
@@ -2535,7 +2535,7 @@ public class DBAccess {
 				obj = obj.split("[.]", -1)[1];
 			}
 			return IsExits("SELECT table_name, table_type FROM information_schema.tables  WHERE table_name = '" + obj
-					+ "' AND   TABLE_SCHEMA='" + BP.Sys.SystemConfig.getAppCenterDBDatabase() + "' ");
+					+ "' AND   TABLE_SCHEMA='" + SystemConfig.getAppCenterDBDatabase() + "' ");
 		default:
 			throw new RuntimeException("没有识别的数据库编号");
 		}
@@ -2567,7 +2567,7 @@ public class DBAccess {
 			break;
 		case MySQL:
 			String sql = "select count(*) FROM information_schema.columns WHERE TABLE_SCHEMA='"
-					+ BP.Sys.SystemConfig.getAppCenterDBDatabase() + "' AND table_name ='" + table
+					+ SystemConfig.getAppCenterDBDatabase() + "' AND table_name ='" + table
 					+ "' and column_Name='" + col + "'";
 			i = DBAccess.RunSQLReturnValInt(sql);
 			break;
@@ -2734,8 +2734,8 @@ public class DBAccess {
 	 * @throws Exception 
 	 */
 	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)throws Exception {
-		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL
-		         || BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL){
+		   if (SystemConfig.getAppCenterDBType() == DBType.MSSQL
+		         || SystemConfig.getAppCenterDBType() == DBType.MySQL){
 		      String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 		      return DBAccess.RunSQLReturnStringIsNull(strSQL,"");
 		   }
@@ -2762,11 +2762,11 @@ public class DBAccess {
 		   Connection conn = null; //数据库连接
 		   PreparedStatement pstmt = null; //数据库SQL执行
 		   ResultSet rs = null; // 执行结果
-		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+		   if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_MSSQL();
-		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		   if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
-		   if (BP.Sys.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		   if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_MySQL();
 		   String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 		   pstmt = conn.prepareStatement(strSQL);
@@ -2849,7 +2849,7 @@ public class DBAccess {
 	 */
 	public static boolean TestIsConnection() {
 		try {
-			switch (BP.Sys.SystemConfig.getAppCenterDBType()) {
+			switch (SystemConfig.getAppCenterDBType()) {
 			case MSSQL:
 				BP.DA.DBAccess.RunSQLReturnString("SELECT 1+2 ");
 				break;

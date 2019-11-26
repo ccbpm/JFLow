@@ -1,6 +1,7 @@
 package BP.En;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Pub.*;
 import BP.Sys.*;
 
@@ -109,7 +110,7 @@ public class EntityDBAccess
 		}
 		catch (RuntimeException ex)
 		{
-			if (BP.Sys.SystemConfig.getIsDebug())
+			if (SystemConfig.getIsDebug())
 			{
 				en.CheckPhysicsTable();
 			}

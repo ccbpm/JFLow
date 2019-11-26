@@ -1,6 +1,7 @@
 package BP.Sys;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 
@@ -54,7 +55,7 @@ public class EnCfg extends EntityNo
 		String str = this.GetValStringByKey(EnCfgAttr.FJSavePath);
 		if (str == null || str.equals(""))
 		{
-			return BP.Sys.SystemConfig.getPathOfDataUser() + this.getNo() + "\\";
+			return SystemConfig.getPathOfDataUser() + this.getNo() + "\\";
 		}
 		return str;
 	}

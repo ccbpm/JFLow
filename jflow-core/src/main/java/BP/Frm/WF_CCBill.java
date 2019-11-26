@@ -1,6 +1,7 @@
 package BP.Frm;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
@@ -1100,7 +1101,7 @@ public class WF_CCBill extends WebContralBase
 		String fileNewName = DateUtils.format(new Date(),"yyyyMMddHHmmssff") + ext;
 
 		//文件存放路径
-		String filePath = BP.Sys.SystemConfig.getPathOfTemp() + "/" + fileNewName;
+		String filePath = SystemConfig.getPathOfTemp() + "/" + fileNewName;
 		File file = new File(filePath);
 		CommonFileUtils.upload(request, "File_Upload", file);
 		//从excel里面获得数据表.

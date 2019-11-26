@@ -663,7 +663,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 	{
 		if (DBAccess.IsExitsTableCol("Port_StationType", "Idx") == false)
 		{
-			if (DBAccess.IsView("Port_StationType", SystemConfig.getAppCenterDBType()) == false)
+			if (DBAccess.IsView("Port_StationType", BP.Difference.SystemConfig.getAppCenterDBType()) == false)
 			{
 				StationType st = new StationType();
 				st.CheckPhysicsTable();

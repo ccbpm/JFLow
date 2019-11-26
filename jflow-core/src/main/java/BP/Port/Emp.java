@@ -1,6 +1,7 @@
 package BP.Port;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.PortalInterface;
 import BP.En.*;
 import BP.En.Map;
@@ -137,7 +138,7 @@ public class Emp extends EntityNoName {
 		try {
 			this.Retrieve();
 		} catch (RuntimeException ex) {
-			if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
+			if (SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
 				// 登陆帐号查询不到用户，使用职工编号查询。
 				QueryObject obj = new QueryObject(this);
 				obj.AddWhere(EmpAttr.No, no);

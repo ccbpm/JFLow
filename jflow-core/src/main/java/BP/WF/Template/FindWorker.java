@@ -3,6 +3,7 @@ package BP.WF.Template;
 import BP.GPM.*;
 import BP.En.*;
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.Difference.Handler.PortalInterface;
 import BP.Web.*;
 import BP.Port.*;
@@ -19,7 +20,7 @@ public class FindWorker
 	public WorkNode town = null;
 	public WorkNode currWn = null;
 	public Flow fl = null;
-	private String dbStr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+	private String dbStr = SystemConfig.getAppCenterDBVarStr();
 	public Paras ps = null;
 	private String JumpToEmp = null;
 	private int JumpToNode = 0;
@@ -1044,7 +1045,7 @@ public class FindWorker
 			/* 没有查询到的情况下, 先按照本部门计算。*/
 			if (flowAppType == FlowAppType.Normal)
 			{
-				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.Database)
+				if (SystemConfig.getOSDBSrc() == OSDBSrc.Database)
 				{
 					sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B         WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
 					ps = new Paras();
@@ -1053,7 +1054,7 @@ public class FindWorker
 					ps.Add("FK_Dept", empDept);
 				}
 
-				if (BP.Sys.SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
+				if (SystemConfig.getOSDBSrc() == OSDBSrc.WebServices)
 				{
 					DataTable dtStas = BP.DA.DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + town.getHisNode().getNodeID());
 					String stas = DBAccess.GenerWhereInPKsString(dtStas);

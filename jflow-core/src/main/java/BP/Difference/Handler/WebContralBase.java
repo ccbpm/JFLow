@@ -9,6 +9,8 @@ import java.text.DecimalFormat;
 import java.util.Enumeration;
 
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
+
 import org.apache.http.protocol.HttpContext;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -30,7 +32,6 @@ import BP.En.Attrs;
 import BP.En.Entity;
 import BP.En.FieldType;
 import BP.Sys.Glo;
-import BP.Sys.SystemConfig;
 import BP.Sys.UIConfig;
 import BP.Tools.StringHelper;
 import BP.Web.WebUser;
@@ -751,8 +752,8 @@ public abstract class WebContralBase {
 		DataTable AttrsOfGroup = ds.GetTableByName("AttrsOfGroup"); 		
 
 		String fileName = title+"Ep" + title + ".xls";
-		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
-		String filePth = BP.Sys.SystemConfig.getPathOfTemp();
+		String fileDir = SystemConfig.getPathOfTemp();
+		String filePth = SystemConfig.getPathOfTemp();
 		// 参数及变量设置
 		// 如果导出目录没有建立，则建立.
 		File file = new File(fileDir);
@@ -929,8 +930,8 @@ public abstract class WebContralBase {
 	protected String ExportDGToExcel(DataTable dt, Entity en, String title, Attrs mapAttrs) throws Exception {
 
 		String fileName = title + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getNo() + ".xls";
-		String fileDir = BP.Sys.SystemConfig.getPathOfTemp();
-		String filePth = BP.Sys.SystemConfig.getPathOfTemp();
+		String fileDir = SystemConfig.getPathOfTemp();
+		String filePth = SystemConfig.getPathOfTemp();
 		// 参数及变量设置
 		// 如果导出目录没有建立，则建立.
 		File file = new File(fileDir);
@@ -1131,9 +1132,9 @@ public abstract class WebContralBase {
 	 * String header, String creator, boolean date, boolean index, boolean
 	 * download) {
 	 * 
-	 * String file = BP.Sys.SystemConfig.getPathOfTemp() + filename;
+	 * String file = SystemConfig.getPathOfTemp() + filename;
 	 * 
-	 * String dir = BP.Sys.SystemConfig.getPathOfTemp(); String name = filename;
+	 * String dir = SystemConfig.getPathOfTemp(); String name = filename;
 	 * long len = 0; HSSFRow row = null, headerRow = null, dateRow = null,
 	 * sumRow = null, creatorRow = null; HSSFCell cell = null; int r = 0; int c
 	 * = 0; int headerRowIndex = 0; //文件标题行序 int dateRowIndex = 0; //日期行序 int

@@ -3,6 +3,7 @@ package BP.Web;
 import BP.En.*;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.Port.*;
 import BP.Pub.*;
 import BP.Sys.*;
@@ -76,7 +77,7 @@ public class GuestUser
 		WebUser.setFK_Dept(em.getFK_Dept());
 		WebUser.setFK_DeptName(em.getFK_DeptText());
 		WebUser.setSysLang(lang);
-		if (BP.Sys.SystemConfig.getIsBSsystem())
+		if (SystemConfig.getIsBSsystem())
 		{
 			int expiry = 60 * 60 * 24 * 2;
 			ContextHolderUtils.addCookie("GuestNo", expiry, guestNo);

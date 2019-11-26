@@ -1,12 +1,15 @@
 package BP.Sys.FrmUI;
 
-import BP.DA.*;
+import BP.DA.DataType;
+import BP.DA.Depositary;
 import BP.Difference.SystemConfig;
-import BP.En.*;
+import BP.En.EnType;
+import BP.En.EntityNoName;
 import BP.En.Map;
-import BP.Sys.*;
-import BP.Sys.*;
-import java.util.*;
+import BP.En.RefMethod;
+import BP.En.RefMethodType;
+import BP.En.UAC;
+import BP.Sys.SFTableAttr;
 
 /** 
  用户自定义表

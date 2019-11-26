@@ -1,6 +1,5 @@
 ﻿
 function InitPage() {
-
     var isMobile = GetQueryString('IsMobile');
     if (isMobile == null || isMobile == undefined || isMobile == "")
         isMobile = 0;
@@ -96,7 +95,11 @@ function InitPage() {
         var isHaveCheck = false;
         if (at == ActionType.Forward || at == ActionType.FlowOver) {
             doc += "<p><span>到达节点:</span><font color=green>" + track.NDToT + "</font><span>到达人员:</span><font color=green>" + track.EmpToT + "</font> </p>";
-            //  doc += "<p><span><a href=\"javascript:OpenFrm('" + track.NDFrom + "')\">表单</a></span></p>";
+
+            //判断是否隐藏
+            if (Hide_IsOpenFrm == true) {
+                doc += "<p><span><a href=\"javascript:OpenFrm('" + workid + "','" + track.NDFrom + "','" + fk_flow + "','" + fid+"','" + track.NDFrom + "')\">查看表单</a></span></p>";
+            }
 
             //找到该节点，该人员的审核track, 如果没有，就输出Msg, 可能是焦点字段。
 
@@ -199,14 +202,17 @@ function InitPage() {
                 var doc = "";
                 doc += "<span>审批人</span>";
                 doc += gwl.FK_EmpText;
+                //判断是否隐藏
+                if (Hide_IsRead == true) {
 
-                doc += "<br>";
-                doc += "<span>阅读状态:</span>";
+                    doc += "<br>";
+                    doc += "<span>阅读状态:</span>";
 
-                if (gwl.IsRead == "1")
-                    doc += "<span><font color=green>已阅读.</font></span>";
-                else
-                    doc += "<span><font color=green>尚未阅读.</font></span>";
+                    if (gwl.IsRead == "1")
+                        doc += "<span><font color=green>已阅读.</font></span>";
+                    else
+                        doc += "<span><font color=green>尚未阅读.</font></span>";
+                }
                 doc += "<br>";
                 doc += "<span>工作到达日期:</span>";
                 doc += gwl.RDT;

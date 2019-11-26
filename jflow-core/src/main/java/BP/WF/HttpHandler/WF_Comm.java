@@ -1893,6 +1893,9 @@ public class WF_Comm extends WebContralBase {
 		if (pk == null) {
 			return "err@错误pkval 没有值。";
 		}
+		
+		en.setPKVal(pk);
+		en.Retrieve();
 
 		// 获取主键集合
 		String[] pks = pk.split("[,]", -1);

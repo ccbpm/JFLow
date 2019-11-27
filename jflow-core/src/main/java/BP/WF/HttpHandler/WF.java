@@ -1,19 +1,59 @@
 package BP.WF.HttpHandler;
 
-import BP.DA.*;
+import java.io.File;
+import java.util.Hashtable;
+
+import BP.DA.AtPara;
+import BP.DA.DBAccess;
+import BP.DA.DBType;
+import BP.DA.DataRow;
+import BP.DA.DataSet;
+import BP.DA.DataTable;
+import BP.DA.DataType;
+import BP.DA.Paras;
 import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.En.QueryObject;
-import BP.Sys.*;
+import BP.Sys.AthCtrlWay;
+import BP.Sys.AthUploadWay;
+import BP.Sys.FrmAttachment;
+import BP.Sys.FrmAttachmentAttr;
+import BP.Sys.FrmAttachmentDBAttr;
+import BP.Sys.FrmAttachments;
+import BP.Sys.FrmEvents;
+import BP.Sys.FrmImgAthDBs;
+import BP.Sys.FrmType;
+import BP.Sys.GEDtl;
+import BP.Sys.GEDtls;
+import BP.Sys.MapAttr;
+import BP.Sys.MapAttrs;
+import BP.Sys.MapData;
+import BP.Sys.MapExt;
+import BP.Sys.MapExtAttr;
+import BP.Sys.MapExtXmlList;
+import BP.Sys.MapExts;
+import BP.Sys.SysEnum;
+import BP.Sys.SysEnumAttr;
+import BP.Sys.SysEnums;
 import BP.Tools.StringHelper;
-import BP.Web.*;
 import BP.WF.*;
-import BP.WF.Data.*;
-import BP.WF.Port.*;
-import BP.WF.Template.*;
-import java.util.*;
-import java.io.*;
+import BP.WF.Data.GERpt;
+import BP.WF.Port.WFEmp;
+import BP.WF.Port.WFEmpAttr;
+import BP.WF.Port.WFEmps;
+import BP.WF.Template.BtnLab;
+import BP.WF.Template.CCList;
+import BP.WF.Template.CCSta;
+import BP.WF.Template.FTCAttr;
+import BP.WF.Template.FlowSortAttr;
+import BP.WF.Template.FlowSorts;
+import BP.WF.Template.FrmNodeComponent;
+import BP.WF.Template.FrmSubFlowAttr;
+import BP.WF.Template.FrmThreadAttr;
+import BP.WF.Template.FrmTrackAttr;
+import BP.WF.Template.FrmWorkCheckAttr;
+import BP.Web.WebUser;
 
 public class WF extends WebContralBase {
 
@@ -908,10 +948,6 @@ public class WF extends WebContralBase {
 	/**
 	 * 运行
 	 * 
-	 * @param UserNo
-	 *            人员编号
-	 * @param fk_flow
-	 *            流程编号
 	 * @return 运行中的流程
 	 * @throws Exception
 	 */
@@ -1381,7 +1417,173 @@ public class WF extends WebContralBase {
 	public final String TodolistOfAuth_Init() {
 		return "err@尚未重构完成.";
 	}
+	/**
+	 初始化
 
+	 @return
+	  * @throws Exception
+	 */
+	public final String Search_Init() throws Exception
+	{
+		DataSet ds = new DataSet();
+		String sql = "";
+
+		String tSpan = this.GetRequestVal("TSpan");
+		if (tSpan.equals(""))
+		{
+			tSpan = null;
+		}
+		//查询关键字
+		String keyWord = this.GetRequestVal("KeyWord");
+		if (("").equals(keyWord))
+		{
+			keyWord = null;
+		}
+		///#region 1、获取时间段枚举/总数.
+		SysEnums ses = new SysEnums("TSpan");
+		DataTable dtTSpan = ses.ToDataTableField();
+		dtTSpan.TableName = "TSpan";
+		ds.Tables.add(dtTSpan);
+
+		if (this.getFK_Flow() == null)
+		{
+			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%@" + WebUser.getNo() + "@%' OR TodoEmps LIKE '%"+BP.Web.WebUser.getNo()+",%' OR Starter='" + WebUser.getNo() + "') AND FID = 0 AND WFState > 1 AND FID = 0 GROUP BY TSpan";
+		}
+		else
+		{
+			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow() + "' AND WFState > 1 AND FID = 0 AND (Emps LIKE '%@" + WebUser.getNo() + "@%' OR TodoEmps LIKE '%"+BP.Web.WebUser.getNo()+",%' OR Starter='" + WebUser.getNo() + "')  GROUP BY TSpan";
+		}
+
+		DataTable dtTSpanNum = BP.DA.DBAccess.RunSQLReturnTable(sql);
+		for (DataRow drEnum : dtTSpan.Rows)
+		{
+			String no = drEnum.getValue("IntKey").toString();
+			for (DataRow dr : dtTSpanNum.Rows)
+			{
+				if (dr.getValue("No").toString().equals(no))
+				{
+					drEnum.setValue2017("Lab", drEnum.getValue("Lab").toString() + "(" + dr.getValue("Num") + ")");
+					break;
+				}
+			}
+		}
+		///#endregion
+
+		///#region 2、处理流程类别列表.
+
+		if (tSpan == null || tSpan.equals("-1"))
+			sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%@" + WebUser.getNo() + "@%' OR TodoEmps LIKE '%" + BP.Web.WebUser.getNo() + ",%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
+		else
+			sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE TSpan=" + tSpan + " AND (Emps LIKE '%@" + WebUser.getNo() + "@%' OR TodoEmps LIKE '%"+BP.Web.WebUser.getNo()+",%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 AND FID = 0 GROUP BY FK_Flow, FlowName";
+
+
+		DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		{
+			dtFlows.Columns.get(0).setColumnName("No");
+			dtFlows.Columns.get(1).setColumnName("Name");
+			dtFlows.Columns.get(2).setColumnName("Num");
+		}
+		dtFlows.TableName = "Flows";
+		ds.Tables.add(dtFlows);
+		///#endregion
+
+		///#region 3、处理流程实例列表.
+		GenerWorkFlows gwfs = new GenerWorkFlows();
+		String sqlWhere = "";
+		//当前页
+		int pageIdx = Integer.parseInt(this.GetRequestVal("pageIdx"));
+		//每页条数
+		int pageSize = Integer.parseInt(this.GetRequestVal("pageSize"));
+		int num = pageSize * (pageIdx-1);
+		sqlWhere = "(((Emps LIKE '%@" + WebUser.getNo() + "@%')OR(TodoEmps LIKE '%" + WebUser.getNo() + ",%')OR(Starter = '" + WebUser.getNo() + "')) AND (FID = 0) AND (WFState > 1)";
+		if (!"-1".equals(tSpan))
+		{
+			sqlWhere += "AND (TSpan = '" + tSpan + "') ";
+		}
+		if (keyWord!=null){
+			sqlWhere += "AND (Title like '%" + keyWord + "%') ";
+		}
+		if (this.getFK_Flow() != null)
+		{
+			sqlWhere += "AND (FK_Flow = '" + this.getFK_Flow() + "')) ";
+		}
+		else
+		{
+			sqlWhere += ")";
+		}
+
+
+		//获取总条数
+		String totalNumSql = "SELECT count(*) from WF_GenerWorkFlow where " + sqlWhere;
+		int totalNum = BP.DA.DBAccess.RunSQLReturnValInt(totalNumSql);
+		int totalPage = 0;
+		//当前页开始索引
+		int startIndex = (pageIdx - 1) * pageSize;
+		//总页数
+		if (totalNum % pageSize != 0)
+		{
+			totalPage = totalNum / pageSize + 1;
+		}
+		else
+		{
+			totalPage = totalNum / pageSize;
+		}
+
+		/*
+		 * 分页信息放到table
+		 */
+		DataTable dtT = new DataTable();
+		dtT.Columns.Add("totalPage");
+		dtT.Columns.Add("totalNum");
+		dtT.Columns.Add("startIndex");
+		dtT.TableName = "PageInfo";
+		DataRow row = dtT.NewRow();
+
+		row.setValue("totalPage",totalPage);
+		row.setValue("totalNum",totalNum);
+		row.setValue("startIndex",startIndex);
+		dtT.Rows.add(row);
+
+
+		ds.Tables.add(dtT);
+		sqlWhere += "ORDER BY RDT DESC";
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps " +
+					"FROM (select A.*, rownum r from (select * from WF_GenerWorkFlow where " + sqlWhere + ") A) where r between "+ (pageIdx * pageSize - pageSize + 1) + " and "+ (pageIdx * pageSize);
+		else if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+			sql = "SELECT  TOP "+ pageSize + " ISNULL(WorkID, 0) WorkID,ISNULL(FID, 0) FID ,FK_Flow,FlowName,Title, ISNULL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,ISNULL(RDT, '2018-05-04 19:29') RDT,ISNULL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow " +
+					"where WorkID not in (select top(" + num + ") WorkID from WF_GenerWorkFlow where " + sqlWhere +") AND" + sqlWhere;
+		else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+			sql = "SELECT IFNULL(WorkID, 0) WorkID,IFNULL(FID, 0) FID ,FK_Flow,FlowName,Title, IFNULL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,IFNULL(RDT, '2018-05-04 19:29') RDT,IFNULL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where (1=1) AND " + sqlWhere + " LIMIT "+ startIndex + "," + pageSize;
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where (1=1) AND " + sqlWhere + " LIMIT "+pageSize+ "offset " + startIndex;
+		DataTable mydt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			mydt.Columns.get(0).setColumnName("WorkID");
+			mydt.Columns.get(1).setColumnName("FID");
+			mydt.Columns.get(2).setColumnName("FK_Flow");
+			mydt.Columns.get(3).setColumnName("FlowName");
+			mydt.Columns.get(4).setColumnName("Title");
+			mydt.Columns.get(5).setColumnName("WFSta");
+			mydt.Columns.get(6).setColumnName("WFState");
+			mydt.Columns.get(7).setColumnName("Starter");
+			mydt.Columns.get(8).setColumnName("StarterName");
+			mydt.Columns.get(9).setColumnName("Sender");
+			mydt.Columns.get(10).setColumnName("RDT");
+			mydt.Columns.get(11).setColumnName("FK_Node");
+			mydt.Columns.get(12).setColumnName("NodeName");
+			mydt.Columns.get(13).setColumnName("TodoEmps");
+
+
+		}
+		mydt.TableName = "WF_GenerWorkFlow";
+
+		ds.Tables.add(mydt);
+
+		return BP.Tools.Json.ToJson(ds);
+	}
 	/**
 	 * 获得挂起.
 	 * 

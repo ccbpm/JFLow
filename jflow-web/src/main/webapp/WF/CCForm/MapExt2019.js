@@ -65,7 +65,7 @@ function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt,TBModel) {
             $("#divinfo").empty();
             //获得对象.
            
-            var dataObj = GenerDB(mapExt.Doc, selectVal, mapExt.DBType);
+            var dataObj = GenerDB(mapExt.Tag4, selectVal, mapExt.DBType);
             if ($.isEmptyObject(dataObj)) {
                 $("#divinfo").hide();
                 return;
@@ -149,7 +149,12 @@ function showDataGrid(sender, tbid, dataObj,mapExt) {
             cardView: false,
             detailView: false,
             uniqueId: "No",
-            columns: searchTableColumns
+            columns: searchTableColumns,
+            rowStyle: function () {
+                var style = {};
+                style = 'active';
+                return { classes: style };
+            }
         };
         options.onClickRow = function (row, element) {
             $("#divinfo").empty();
@@ -320,12 +325,10 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
                 if (returnValSetObj[0].PopValFormat == "OnlyNo") {
                     setValForPopval(ctrl.id, dtlWin, returnValObj.No);
                 } else if (returnValSetObj[0].PopValFormat == "OnlyName") {
-                    //$(ctrl).val(returnValObj.Name);
                     setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
                 } else {
                     //
                     for (var property in returnValObj) {
-                        //$('[id$=_' + property + ']').val(returnValObj[property]);
 
                         SetEleValByName(property, returnValObj[property]);
                     }
@@ -334,8 +337,6 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
                 }
             } else if (returnValSetObj[0].PopValWorkModel == "Group") { //分组模式
                 frames["iframePopModalForm"].window.GetGroupReturnVal();
-                //alert(returnValObj.Value + "|" + ctrl.id);
-                //$(ctrl).val(returnValObj.Value);
                 setValForPopval(ctrl.id, dtlWin, returnValObj.Value);
             } else if (returnValSetObj[0].PopValWorkModel == "TableOnly" ||
                 returnValSetObj[0].PopValWorkModel == "TablePage") { //表格模式
@@ -346,9 +347,7 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
                     //$(ctrl).val(returnValObj.Name);
                     setValForPopval(ctrl.id, dtlWin, returnValObj.Name);
                 } else {
-                    // ??????????
                     for (var property in returnValObj) {
-                        //$('[id$=_' + property + ']').val(returnValObj[property]);
                         SetEleValByName(property, returnValObj[property]);
                     }
 
@@ -1044,6 +1043,9 @@ function GenerDB(dbSrc, selectVal, dbType) {
 }
 
 function DealSQL(dbSrc, key, kvs) {
+
+    if (dbSrc.indexOf('@') == -1)
+        return dbSrc;
 
     dbSrc = dbSrc.replace(/~/g, "'");
 

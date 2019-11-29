@@ -8,6 +8,8 @@
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../../Scripts/config.js" type="text/javascript"></script>
     <script src="../../Comm/Gener.js" type="text/javascript"></script>
+    <script src="../Admin.js" type="text/javascript"></script>
+
     <script src="../../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
     <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
     <base target="_self" />
@@ -149,7 +151,9 @@
 
             //打开方向条件.
             var url = "../SettingTemplate.htm?TemplateType=CondBySQL&CondType=2";
-            WinOpen(url, 'ss');
+            var newWindow = window.open(url, 'SQL模板', 'width=900,height=700,top=100,left=300,scrollbars=yes,resizable=yes,toolbar=false,location=false,center=yes,center: yes;');
+            newWindow.focus();
+
         }
         //返回.
         function Back() {
@@ -195,7 +199,7 @@
                 <li>该SQL参数支持系统的表达式，什么是ccflow的表达式请查看说明书。</li>
                 <li>当前登录信息变量: @WebUser.No, @WebUser.Name, @WebUser.FK_Dept.</li>
                 <li>系统就会获取该返回的值把它转化为decimal类型</li>
-                <li>如果该值大于零，该条件就是成立的否则不成立。</li>
+                <li>如果该值大于零，该条件就是成立的，否则不成立，不成立就不到达这个节点。</li>
             </ul>
     </div>
     </form>

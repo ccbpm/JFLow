@@ -321,7 +321,7 @@ function InitThreeColMapAttr(Sys_MapAttr, frmData, groupID, tableCol) {
 
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
-
+       
         rowSpan = attr.RowSpan;
         colSpan = attr.ColSpan;
         textColSpan = attr.TextColSpan;
@@ -475,7 +475,7 @@ function InitMapAttr(Sys_MapAttr, frmData, groupID, tableCol) {
         if (attr.GroupID != groupID || attr.UIVisible == 0)
             continue;
 
-
+        
         //赋值
         rowSpan = parseInt(attr.RowSpan);
         colSpan = parseInt(attr.ColSpan);
@@ -1021,7 +1021,7 @@ function InitMapAttrOfCtrl(mapAttr) {
                     $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/umeditor.min.js'></script>").appendTo("head");
                     $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/lang/zh-cn/zh-cn.js'></script>").appendTo("head");
                     IsLoadUEditor = true;
-
+                    
                 }
                 document.BindEditorMapAttr = mapAttr; //存到全局备用.
 
@@ -1162,7 +1162,7 @@ function InitMapAttrOfCtrl(mapAttr) {
 
         //return "<input onfocus='removeplaceholder(this,0);' onblur='addplaceholder(this,0);'  style='text-align:right;;width:100%' onkeyup=" + '"' + "limitLength(this," + bit + ");valitationAfter(this, 'int');if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value)) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
         return "<input  onfocus='removeplaceholder(this,0);' onblur='addplaceholder(this,0);' value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "limitLength(this," + bit + ");valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn +"' placeholder='" + (mapAttr.Tip || '') + "'/>";
-
+    
     }
 
     //AppMoney  AppRate
@@ -1216,7 +1216,7 @@ function cleanAll(KeyOfEn) {
     });
     if (AllObjSet.length == 0)
         return;
-    if(AllObjSet[KeyOfEn].length>0){
+    if (AllObjSet[KeyOfEn].length > 0) {
         var mapAttrs = AllObjSet[KeyOfEn][0];
         for (var i = 0; i < mapAttrs.length; i++) {
             SetCtrlShow(mapAttrs[i]);
@@ -1224,12 +1224,12 @@ function cleanAll(KeyOfEn) {
             CleanCtrlVal(mapAttrs[i]);
         }
     }
-
+   
 
 }
 //启用了显示与隐藏.
 function setEnable(FK_MapData, KeyOfEn, selectVal) {
-    if(selectVal==undefined)
+	if(selectVal==undefined)
         return;
 
     var pkval = FK_MapData + "_" + KeyOfEn + "_" + selectVal;
@@ -1313,7 +1313,7 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
 
     }
 
-    //设置是否隐藏分组、获取字段分组所有的tr
+    //设置是否隐藏分组、获取字段分组所有的tr 
     var trs = $("#CCForm  table tr .attr-group");
     var isHidden = false;
     $.each(trs, function (i, obj) {
@@ -1444,7 +1444,7 @@ function SetCtrlVal(key, value) {
         if (value!=0) {
             ctrl.prop("checked", true);
         }
-
+        
     }
 
     ctrl = $("#RB_" + key + "_" + value);
@@ -1497,8 +1497,8 @@ function Ele_Frame(frmData, gf) {
             frame = frames[i];
             break;
         }
-    }
-
+    }   
+     
     if (frame == null)
         return;
 
@@ -1581,7 +1581,7 @@ function Ele_Attachment(workNode, gf) {
     url += "&FK_Node=" + GetQueryString("FK_Node");
     url += "&FK_Flow=" + GetQueryString("FK_Flow");
     url += "&FormType=" + GetQueryString("FormType"); //表单类型，累加表单，傻瓜表单，自由表单.
-    url += "&IsReadonly=" + pageData.IsReadonly;
+	url += "&IsReadonly=" + pageData.IsReadonly;
 
     var nodeID = GetQueryString("FK_Node");
     if (nodeID != null && nodeID.length > 2) {
@@ -1683,7 +1683,7 @@ function InitRBShowContent(frmData, mapAttr, defValue, RBShowModel, enableAttr) 
         }
 
         if (RBShowModel == 3)
-        //<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
+            //<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
             rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' " + onclickEvent + "  />&nbsp;" + obj.Lab + "</label>";
         else
             rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' " + onclickEvent + "   />&nbsp;" + obj.Lab + "</label><br/>";

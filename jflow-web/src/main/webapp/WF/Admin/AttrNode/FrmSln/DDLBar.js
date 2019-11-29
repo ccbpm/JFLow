@@ -5,10 +5,12 @@ function InitBar(optionKey) {
     html += "<select id='changBar' onchange='changeOption()'>";
 
     html += "<option value=null  disabled='disabled'>+内置表单</option>";
-    html += "<option value=" + FormType.FoolForm + ">&nbsp;&nbsp;内置傻瓜表单(默认)</option>";
-    html += "<option value=" + FormType.FreeForm + ">&nbsp;&nbsp;内置自由表单</option>";
-    html += "<option value=" + FormType.FoolTruck + " >&nbsp;&nbsp;内置累加模式表单</option>";
+    html += "<option value=" + FormType.FoolForm + ">&nbsp;&nbsp;傻瓜表单(默认)</option>";
+    html += "<option value=" + FormType.FreeForm + ">&nbsp;&nbsp;自由表单</option>";
+    html += "<option value=" + FormType.FoolTruck + " >&nbsp;&nbsp;累加模式表单</option>";
+    html += "<option value=" + FormType.CTFrm + "  >&nbsp;&nbsp;开发者表单(研发中)</option>";
     html += "<option value=" + FormType.WebOffice + "  >&nbsp;&nbsp;公文表单(weboffice)</option>";
+
 
     html += "<option value=null  disabled='disabled'>+自定义表单</option>";
     html += "<option value=" + FormType.SelfForm + " >&nbsp;&nbsp;嵌入式表单</option>";
@@ -18,6 +20,7 @@ function InitBar(optionKey) {
     html += "<option value=null  disabled='disabled'>+绑定表单库里的表单</option>";
     html += "<option value=" + FormType.RefOneFrmTree + " >&nbsp;&nbsp;绑定表单库的表单</option>";
     html += "<option value=" + FormType.SheetTree + " >&nbsp;&nbsp;绑定多表单(表单树)</option>";
+    html += "<option value=" + FormType.Developer + " >&nbsp;&nbsp;开发者表单</option>";
 
     html += "</select >";
 
@@ -129,6 +132,9 @@ function Help() {
             return;
             //  url = "11.RefOneFrmTree.htm";
             break;
+        case FormType.Developer:
+            url = "12.Developer.htm";
+            break;
         case FormType.DisableIt:
             url = "100.DisableIt.htm";
             break;
@@ -188,6 +194,9 @@ function changeOption() {
         case FormType.RefOneFrmTree:
             url = "11.RefOneFrmTree.htm";
             break;
+        case FormType.Developer:
+            url = "12.Developer.htm";
+            break;
         case FormType.DisableIt:
             url = "100.DisableIt.htm";
             break;
@@ -219,3 +228,15 @@ function OpenEasyUiDialogExt(url, title, w, h, isReload) {
         }
     });
 }
+$(function () {
+
+    jQuery.getScript(basePath + "/WF/Admin/Admin.js")
+        .done(function () {
+            /* 耶，没有问题，这里可以干点什么 */
+            // alert('ok');
+        })
+        .fail(function () {
+            /* 靠，马上执行挽救操作 */
+            //alert('err');
+        });
+});

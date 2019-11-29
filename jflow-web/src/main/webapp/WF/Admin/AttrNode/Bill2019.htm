@@ -23,12 +23,13 @@
 
         //初始化数据.
         function InitPage() {
-
             var nodeID = GetQueryString("FK_Node");
             var frmID = GetQueryString("FrmID");
             var ens = new Entities("BP.WF.Template.BillTemplate2019s");
             ens.Retrieve("MyFrmID", frmID);
 
+            var local = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
+            var urlWS = local + "/WF/CCForm/CCFormAPI.asmx";
             //生成列表.
             //增加处理.
             for (var i = 0; i < ens.length; i++) {
@@ -38,7 +39,7 @@
                 var newRow = "";
                 newRow = "<tr ><td class=Idx>" + i + "</td>";
                 newRow += "<td>" + en.No + "</td>";
-                newRow += "<td><a href='httpccword://App=BillDesinger,BillNo=" + en.No + ",' >" + en.Name + "</a></td>";
+                newRow += "<td><a href='wordform://-fromccflow,App=BillTemplateWordDesigner,BillNo=" + en.No + ",FrmID=" + en.MyFrmID + ",WSUrl="+urlWS+"' >" + en.Name + "</a></td>";
                 newRow += "<td>" + en.TemplateFileModelText + "</td>";
                 newRow += "<td>" + en.QRModelText + "</td>";
 

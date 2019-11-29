@@ -262,8 +262,13 @@
             <li>该表单是傻瓜表单的一种变形展现方式.</li>
             <li>也叫轨迹表单模式,为软通动力定制的一种表单展示类型.</li>
             <li>适合一个节点一个表单模式,简洁流畅，容易追踪历史运动过程.</li>
-            <li><a href="javascript:DFoolFrm()">设计傻瓜表单</a> - <a href="javascript:SetAllNodeFrmUseThisSln()">
-                设置该流程所有的节点都采用此表单方案</a></li>
+            <li>
+                <a href="javascript:DFoolFrm()">设计傻瓜表单</a> - <a href="javascript:SetAllNodeFrmUseThisSln()">
+                    设置该流程所有的节点都采用此表单方案
+                </a>
+            </li>
+            <li><font color="green"><b>该表单风格可以通过改变\DataUser\Style\ccbpm.css文件改变</b></font></li>
+
         </ul>
     </fieldset>
     <fieldset>
@@ -272,15 +277,18 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>说明</legend>
+        <legend id="help">说明</legend>
         <ul>
             <li>该表单是以傻瓜表单展示，也叫累加表单，也叫轨迹表单。</li>
             <li>每个节点上都有自己的一个字段集合, 当前节点的表单是以前表单按照走过的顺序累加（默认字段只读）加上当前节点表单拼接而成的。</li>
             <li>该表单设计简单，思路清晰，适用于在审核组件模式下不能解决的审核节点特殊字段数据的采集。</li>
             <li>该表单是审核组件模式表单的有益补充。</li>
-            <li>
-                <img src='../Img/Col4Frm.JPG' style="width: 70%;" />
-            </li>
+            <li>PC该表单有4个列,设计简单方便.</li>
+            <li><img src='../Img/Col4Frm.JPG' style="width:80%;" class="help" /> </li>
+            <li>PC该表单6列,展示效果</li>
+            <li><img src='../Img/Col6Frm.JPG' style="width:80%;" class="help" /> </li>
+            <li>手机端展现有2个列,手机端自动适应,一次性设计</li>
+            <li><img src='../Img/Col2Frm.JPG' class="help" /> </li>
         </ul>
     </fieldset>
 </body>

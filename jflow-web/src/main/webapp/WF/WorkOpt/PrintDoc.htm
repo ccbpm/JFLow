@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>单据打印</title>
     <meta http-equiv="Access-Control-Allow-Origin" content="*" />
@@ -64,7 +64,7 @@
                 } else {
                     data = data.replace('word@', '');
                     if (plant == 'CCFlow') {
-                        data += "?WSUrl=http://" + window.location.host + "/WF/CCForm/CCFormAPI.asmx";
+                        data += ",WSUrl=http://" + window.location.host + "/WF/CCForm/CCFormAPI.asmx";
                     }
                     if (plant == "JFlow") {
                         alert('还没有翻译.');
@@ -84,7 +84,7 @@
             for (var i = 0; i < ens.length; i++) {
                 var en = ens[i];
                 //  html += "<li ><a href='?FK_Bill=" + en.No + "&FK_Flow=" + flowNo + "&FK_Node=" + nodeID + "&WorkID=" + workID + "'>" + en.Name + "</li>";
-                html += "<li><a href='javascript:void(0);' onclick=PrintIt(\"" + en.No + "\",\"" + flowNo + "\"," + nodeID + "," + workID + "," + fid + ",\"" + en.FK_MapData + "\",\"" + en.TemplateFileModel + "\") >" + en.Name + "</li>";
+                html += "<li><a href='javascript:void(0);' onclick=PrintIt(" + en.No + "," + flowNo + "," + nodeID + "," + workID + "," + fid + ",\"" + en.FK_MapData + "\",\"" + en.TemplateFileModel + "\") >" + en.Name + "</li>";
             }
 
             html += "</ul>";
@@ -114,8 +114,7 @@
             }
 
             html += "</ul>";
-            $("#rtf").html(html);
-
+            $("#rtf").html(html);
         }
 
         //打印.
@@ -154,7 +153,7 @@
 
                 }
             }
-
+            
         }
 
         //取消退回

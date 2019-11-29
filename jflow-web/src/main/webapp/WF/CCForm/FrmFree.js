@@ -1,5 +1,6 @@
 ﻿
 var isSigantureChecked = false;
+var IsLoadUEditor = false;
 function GenerFreeFrm(mapData, frmData) {
 
     //循环FrmRB
@@ -525,9 +526,6 @@ function figure_Template_IFrame(fram) {
                 strs += "&" + str + "=" + paras[str];
         }
 
-
-
-
         url = url + strs + "&IsReadonly=0";
 
         //4.追加GenerWorkFlow AtPara中的参数
@@ -759,7 +757,16 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                 eleHtml = "<div class='richText' style='width:" + mapAttr.UIWidth + "px'>" + defValue + "</div>";
                 return eleHtml;
             }
+            if (IsLoadUEditor == false) {
+                //加载UEditor需要的JS
+                $("<link href='../Comm/umeditor1.2.3-utf8/themes/default/css/umeditor.css' type = 'text/css' rel = 'stylesheet' />").appendTo("head");
+                $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/third-party/template.min.js'></script>").appendTo("head");
+                $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/umeditor.config.js'></script>").appendTo("head");
+                $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/umeditor.min.js'></script>").appendTo("head");
+                $("<script type='text/javascript' src='../Comm/umeditor1.2.3-utf8/lang/zh-cn/zh-cn.js'></script>").appendTo("head");
+                IsLoadUEditor = true;
 
+            }
             document.BindEditorMapAttr = mapAttr; //存到全局备用
 
             //设置编辑器的默认样式
@@ -1175,9 +1182,9 @@ function figure_Template_Attachment(frmAttachment) {
     }
 
     if (pageData.IsReadonly == "1")
-        src = src + "?PKVal=" + pageData.OID + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
+        src = src + "?PKVal=" + pageData.OID + "&PWorkID=" + GetQueryString("PWorkID") + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
     else
-        src = src + "?PKVal=" + pageData.OID + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
+        src = src + "?PKVal=" + pageData.OID + "&PWorkID=" + GetQueryString("PWorkID") + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
 
     var fid = GetQueryString("FID");
     var pWorkID = GetQueryString("PWorkID");
@@ -1185,7 +1192,7 @@ function figure_Template_Attachment(frmAttachment) {
     src += "&FID=" + fid;
     src += "&PWorkID=" + pWorkID;
 
-    eleHtml += '<div>' + "<iframe style='width:" + ath.W + "px;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    eleHtml += '<div>' + "<iframe style='width:" + ath.W + "px;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "' name='Attach'   src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     eleHtml = $(eleHtml);
     eleHtml.css('position', 'absolute').css('top', ath.Y + 'px').css('left', ath.X + 'px').css('width', ath.W).css('height', ath.H);
 

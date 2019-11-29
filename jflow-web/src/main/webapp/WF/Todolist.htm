@@ -9,6 +9,7 @@
     <link href="Style/skin/css/style.css" rel="stylesheet" type="text/css" />
     <link href="Style/skin/css/animate.css" rel="stylesheet" type="text/css" />
     <link href="Style/skin/font/iconfont.css" rel="stylesheet" type="text/css" />
+    <script src="../DataUser/JSLibData/CommonShowConfig.js"></script>
 </head>
 <body class="gray-bg">
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -35,16 +36,22 @@
     <script src="Scripts/config.js" type="text/javascript"></script>
     <script src="Comm/Gener.js" type="text/javascript"></script>
     <script src="Style/skin/layui/layer.js" type="text/javascript"></script>
+    
     <!-- 处理多语言 -->
     <script src="Data/lang/load.js" type="text/javascript"></script>
     <script src="Data/lang/lang.js" type="text/javascript"></script>
     <!--<script src="AppClassic/comm.js" type="text/javascript"></script>-->
     <script type="text/javascript">
-
+        
         var webUser = null;
 
         //页面启动函数.
         $(function () {
+            //Hide_IsTodoList:是否隐藏该条信息,CommonShowConfig.js中定义
+            if ("undefined" == typeof Hide_IsTodoList) {
+                var Hide_IsTodoList = true;
+            }
+
             if (webUser == null)
                 webUser = new WebUser();
             if (webUser.No == null)
@@ -62,7 +69,7 @@
 
         //初始化数据.
         function InitPage() {
-
+            
             document.title = window.lang.daiban;
             //获取参数，FlowNos，为空时显示所有的待办，否则显示参数中的流程
             var flowNos = GetQueryString("FlowNos");
@@ -226,14 +233,18 @@
                     listbox += "<td>" + num + "</td>"; //序号.
 
                     var url = "";
-                    if (paras.indexOf("&IsCC=1") == -1) {
-                        if (isRead == 0)
+                    if (paras.indexOf("&IsCC=1") >= 0
+                        || paras.indexOf("&IsAuto=1") >= 0) {
+                        
+                        var batchUrl = './WFRpt.htm?FK_Flow=' + flowNo + '&FK_Node=' + nodeID + '&WorkID=' + workID + '&FID=' + fid;
+                        url = "<a href='#'  onclick='WinOpenFull(\"" + batchUrl + "\")'>" + data[i].Title + "</a>";
+                      
+                    } else {
+                          if (isRead == 0)
                             url = "<a href=\"javascript:WinOpenIt('MyFlow.htm?FK_Flow=" + flowNo + "&PWorkID=" + pWorkID + "&FK_Node=" + nodeID + "&FID=" + fid + "&WorkID=" + workID + "&IsRead=0&T=" + timeKey + "&Paras=" + paras + "');\" ><img class=Icon align='middle'  src='Img/Mail_UnRead.png' />" + title + "</a>";
                         else
                             url = "<a href=\"javascript:WinOpenIt('MyFlow.htm?FK_Flow=" + flowNo + "&PWorkID=" + pWorkID + "&FK_Node=" + nodeID + "&FID=" + fid + "&WorkID=" + workID + "&IsRead=0&T=" + timeKey + "&Paras=" + paras + "');\" ><img class=Icon align='middle'  src='Img/Mail_Read.png' />" + title + "</a>";
-                    } else {
-                        var batchUrl = './WFRpt.htm?FK_Flow=' + flowNo + '&FK_Node=' + nodeID + '&WorkID=' + workID + '&FID=' + fid;
-                        url = "<a href='#'  onclick='WinOpenFull(\"" + batchUrl + "\")'>" + data[i].Title + "</a>";
+
                     }
 
                     listbox += "<td>" + url + "</td>"; //标题
@@ -265,7 +276,7 @@
                     edt = new Date(Date.parse(edt.replace(/-/g, "/")));
                     passTime = GetSpanTime(date, edt);
                     //判断流程是否逾期
-                    if (cdt > work.SDT && work.WFState == 2 && entStr != "01" && work.RDT != work.SDT && paras.indexOf("&IsCC=1") == -1) {
+                    if (date.getTime() > edt.getTime() && work.WFState == 2 && entStr != "01" && work.RDT != work.SDT && paras.indexOf("&IsCC=1") == -1) {
                         listbox += "<td><font color=red>" + window.lang.yuqi + "</font></td>";
                     }
                     else {
@@ -290,7 +301,8 @@
             $('#Table1').html(listbox);
             $("#Table2").html(window.lang.heji + ": " + realCount + " " + (realCount > 1 ? window.lang.records : window.lang.record));
 
-            if (webUser.IsAuthorize == "0")
+            
+            if (webUser.IsAuthorize == "0" && Hide_IsTodoList == true)
                 $("#Table2").append(", <a href='AuthorList.htm' >查看授权待办</a>");
 
             var div = window.parent.document.getElementById("Todolist_EmpWorks");
@@ -299,9 +311,10 @@
             }
         }
         function GetState(wfState) {
+
             //alert(wfState);
 
-            switch (parseInt(wfState)) {
+            switch (wfState) {
                 case 1:
                     return window.lang.caogao;
                 case 2:

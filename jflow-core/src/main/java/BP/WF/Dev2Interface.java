@@ -5267,8 +5267,17 @@ public class Dev2Interface
 					throw new RuntimeException("父子流程关系配置信息丢失，请联系管理员");
 				}
 				SubFlow subFlow = subFlows.get(0) instanceof SubFlow ? (SubFlow)subFlows.get(0) : null;
+				GenerWorkFlow pgwf = new GenerWorkFlow(gwf.getPWorkID());
 				if (flow.getIsToParentNextNode() == true || subFlow.getIsAutoSendSubFlowOver() == 1)
 				{
+					if (pgwf.getFK_Node() != gwf.getPNodeID())
+						return "";
+
+					if (pgwf.getWFState() == WFState.Complete)
+						return "";
+
+					if (BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(gwf.getPWorkID(), WebUser.getNo()) == false)
+						return "";
 					//主流程自动运行到一下节点
 					SendReturnObjs returnObjs = BP.WF.Dev2Interface.Node_SendWork(gwf.getPFlowNo(), gwf.getPWorkID());
 					String sendSuccess = "父流程自动运行到下一个节点，发送过程如下：\n @接收人" + returnObjs.getVarAcceptersName() + "\n @下一步[" + returnObjs.getVarCurrNodeName() + "]启动";
@@ -9488,7 +9497,7 @@ public class Dev2Interface
 	 @param nodeid 节点编号
 	 @param workid 工作ID
 	 @param empNo 人员ID
-	 * @throws Exception 
+	 * @throws Exception
 	*/
 	public static void Node_TaskPoolPutOne(long workid) throws Exception
 	{

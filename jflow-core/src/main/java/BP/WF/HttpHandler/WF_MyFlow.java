@@ -398,6 +398,7 @@ public class WF_MyFlow extends WebContralBase {
 			case BySelfUrl: // 按照定义的url.
 				return "url@" + this.getcurrFlow().getStartGuidePara1() + this.getRequestParasOfAll() + "&WorkID="
 						+ workid;
+			case ByStartBindForm:
 			case ByFrms: // 选择表单.
 				return "url@" + hostRun + "./WorkOpt/StartGuideFrms.htm?FK_Flow=" + this.getcurrFlow().getNo()
 						+ "&WorkID=" + workid;

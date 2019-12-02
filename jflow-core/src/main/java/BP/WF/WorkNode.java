@@ -6313,13 +6313,19 @@ public class WorkNode {
 
 			// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
 			if (this.getHisGenerWorkFlow().getPWorkID() != 0 && this.getHisFlow().getIsToParentNextNode() == true) {
-				// 主流程自动运行到一下节点
-				SendReturnObjs returnObjs = BP.WF.Dev2Interface.Node_SendWork(this.getHisGenerWorkFlow().getPFlowNo(),
-						this.getHisGenerWorkFlow().getPWorkID());
-
-				sendSuccess = "父流程自动运行到下一个节点，发送过程如下：\n @接收人" + returnObjs.getVarAcceptersName() + "\n @下一步["
-						+ returnObjs.getVarCurrNodeName() + "]启动";
-				this.HisMsgObjs.AddMsg("info", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+				//检查父流程是否运行到了下一个节点？如果没有运行到下一个节点，就让其发送.
+				GenerWorkFlow pgwf = new GenerWorkFlow(this.getHisGenerWorkFlow().getPWorkID());
+				if (pgwf.getFK_Node() == this.getHisGenerWorkFlow().getPNodeID())
+				{
+					//如果可以执行下一步工作，就可以允许向下发送.
+					if (Dev2Interface.Flow_IsCanDoCurrentWork(pgwf.getWorkID(), WebUser.getNo()) == true)
+					{
+						//让主流程自动运行到一下节点.
+						SendReturnObjs returnObjs = BP.WF.Dev2Interface.Node_SendWork(this.getHisGenerWorkFlow().getPFlowNo(), this.getHisGenerWorkFlow().getPWorkID());
+						sendSuccess = "父流程自动运行到下一个节点，发送过程如下：\n @接收人" + returnObjs.getVarAcceptersName() + "\n @下一步[" + returnObjs.getVarCurrNodeName() + "]启动";
+						this.HisMsgObjs.AddMsg("info", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+					}
+				}
 
 			}
 

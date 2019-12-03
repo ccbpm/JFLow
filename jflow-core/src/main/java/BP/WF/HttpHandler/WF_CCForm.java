@@ -4079,7 +4079,7 @@ public class WF_CCForm extends WebContralBase {
 
 		String basePath = SystemConfig.getPathOfDataUser() + "Temp";
 		String tempUserPath = basePath + "/" + WebUser.getNo();
-		String tempFilePath = basePath + "/" + WebUser.getNo() + "/" + this.getOID();
+		String tempFilePath = basePath + "/" + WebUser.getNo() + "/" + this.getWorkID();
 		String zipPath = basePath + "/" + WebUser.getNo();
 		String zipFile = zipPath + "/" + zipName + ".zip";
 		String info = "";
@@ -4113,15 +4113,20 @@ public class WF_CCForm extends WebContralBase {
 
 				// 求出文件路径.
 				String fileTempPath = db.GenerTempFile(athDesc.getAthSaveWay());
+				if(athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
+				{
+					FtpUtil ftpUtil =BP.WF.Glo.getFtpUtil();	
+					ftpUtil.downloadFile(db.getFileFullName(), fileTempPath);
+				}
 
 				if (DataType.IsNullOrEmpty(db.getSort()) == false) {
-					copyToPath = tempFilePath + "//" + db.getSort();
+					copyToPath = tempFilePath + "/" + db.getSort();
 					File copyPath = new File(copyToPath);
 					if (copyPath.exists() == false)
 						copyPath.mkdirs();
 				}
 				// 新文件目录
-				copyToPath = copyToPath + "//" + db.getFileName();
+				copyToPath = copyToPath + "/" + db.getFileName();
 				try {
 					InputStream is = new FileInputStream(fileTempPath);
 					;
@@ -4137,6 +4142,9 @@ public class WF_CCForm extends WebContralBase {
 
 					}
 					fos.close();
+					new File(fileTempPath).delete();
+					if(new File(fileTempPath).exists() == true)
+						new File(fileTempPath).delete();
 				} catch (RuntimeException ex) {
 					ex.getMessage();
 				}

@@ -849,8 +849,7 @@ public class GenerWorkFlow extends Entity {
 	@Override
 	protected void afterDelete() throws Exception {
 		// . clear bad worker .
-		DBAccess.RunSQLReturnTable(
-				"DELETE FROM WF_GenerWorkerlist WHERE WorkID in  ( select WorkID from WF_GenerWorkerlist WHERE WorkID not in (select WorkID from WF_GenerWorkFlow) )");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE WorkID in  ( select WorkID from WF_GenerWorkerlist WHERE WorkID not in (select WorkID from WF_GenerWorkFlow) )");
 
 		WorkFlow wf = new WorkFlow(new Flow(this.getFK_Flow()), this.getWorkID(), this.getFID());
 		wf.DoDeleteWorkFlowByReal(true); // 删除下面的工作。

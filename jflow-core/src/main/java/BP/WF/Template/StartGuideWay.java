@@ -46,7 +46,11 @@ public enum StartGuideWay
 	/** 
 	 父子流程模式
 	*/
-	ByParentFlowModel(12);
+	ByParentFlowModel(12),
+	/**
+	 开始节点绑定的独立表单列表
+	 */
+	ByStartBindForm(90);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

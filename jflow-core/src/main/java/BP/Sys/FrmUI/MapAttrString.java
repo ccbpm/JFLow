@@ -1,8 +1,7 @@
 package BP.Sys.FrmUI;
 
 import BP.DA.*;
-import BP.Difference.SystemConfig;
-import BP.En.*;
+import BP.Difference.SystemConfig;import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
 import BP.Sys.*;
@@ -174,11 +173,11 @@ public class MapAttrString extends EntityMyPK
 		map.AddRefMethod(rm);
 
 
-		rm = new RefMethod();
-		rm.Title = "脚本验证";
-		rm.ClassMethodName = this.toString() + ".DoInputCheck()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+//		rm = new RefMethod();
+//		rm.Title = "脚本验证";
+//		rm.ClassMethodName = this.toString() + ".DoInputCheck()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";

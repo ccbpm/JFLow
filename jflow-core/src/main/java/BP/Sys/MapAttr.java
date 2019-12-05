@@ -1332,7 +1332,7 @@ public class MapAttr extends EntityMyPK
 
 		//added by liuxc,2016-12-2
 		//判断当前属性是否有分组，没有分组，则自动创建一个分组，并关联
-		if (String.valueOf(this.getGroupID()).equals("0"))
+		if (String.valueOf(this.getGroupID()).equals("1"))
 		{
 			//查找分组，查找到的第一个分组，关联当前属性
 			GroupField group = new GroupField();

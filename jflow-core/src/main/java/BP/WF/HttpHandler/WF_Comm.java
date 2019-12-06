@@ -1244,7 +1244,7 @@ public class WF_Comm extends WebContralBase {
 			if (searchVisable.equals("0")) {
 				continue;
 			}
-			if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || attr.getUIVisible() == false) {
+			if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || (count == 0 && attr.getUIVisible() == false)) {
 				continue;
 			}
 			row = dtAttrs.NewRow();

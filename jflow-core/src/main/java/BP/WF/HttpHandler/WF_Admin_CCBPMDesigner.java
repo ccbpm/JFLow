@@ -257,9 +257,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		String sql = "";
 		try
 		{
-			{
-				StringBuilder sBuilder = new StringBuilder();
-
+			 
 				//保存节点位置. @101,2,30@102,3,1
 				String[] nodes = this.GetRequestVal("Nodes").split("[@]", -1);
 				for (String item : nodes)
@@ -269,13 +267,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 						continue;
 					}
 					String[] strs = item.split("[,]", -1);
-					sBuilder.append("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0] + ";");
+					DBAccess.RunSQL("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0] );
 				}
 
-				DBAccess.RunSQLs(sBuilder.toString());
-
+				 
 				//保存方向.
-				sBuilder = new StringBuilder();
+				 
 				String[] dirs = this.GetRequestVal("Dirs").split("[@]", -1);
 				for (String item : dirs)
 				{
@@ -284,14 +281,13 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 						continue;
 					}
 					String[] strs = item.split("[,]", -1);
-					sBuilder.append("DELETE FROM WF_Direction where MyPK='" + strs[0] + "';");
-					sBuilder.append("INSERT INTO WF_Direction(MyPK,FK_Flow,Node,ToNode,IsCanBack) values('" + strs[0] + "','" + strs[1] + "','" + strs[2] + "','" + strs[3] + "'," + "0);");
+					DBAccess.RunSQL("DELETE FROM WF_Direction where MyPK='" + strs[0] + "'");
+					DBAccess.RunSQL("INSERT INTO WF_Direction(MyPK,FK_Flow,Node,ToNode,IsCanBack) values('" + strs[0] + "','" + strs[1] + "','" + strs[2] + "','" + strs[3] + "'," + "0)");
 				}
-
-				DBAccess.RunSQLs(sBuilder.toString());
+ 
 
 				//保存label位置.
-				sBuilder = new StringBuilder();
+			 
 				String[] labs = this.GetRequestVal("Labs").split("[@]", -1);
 				for (String item : labs)
 				{
@@ -300,13 +296,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 						continue;
 					}
 					String[] strs = item.split("[,]", -1);
-					sBuilder.append("UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK='" + strs[0] + "';");
+					DBAccess.RunSQL("UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK='" + strs[0] + "' ");
 				}
-
-				DBAccess.RunSQLs(sBuilder.toString());
+ 
 
 				return "保存成功.";
-			}
+			 
 		}
 		catch (RuntimeException ex)
 		{

@@ -272,7 +272,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					sBuilder.append("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0] + ";");
 				}
 
-				DBAccess.RunSQL(sBuilder.toString());
+				DBAccess.RunSQLs(sBuilder.toString());
 
 				//保存方向.
 				sBuilder = new StringBuilder();
@@ -288,7 +288,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					sBuilder.append("INSERT INTO WF_Direction(MyPK,FK_Flow,Node,ToNode,IsCanBack) values('" + strs[0] + "','" + strs[1] + "','" + strs[2] + "','" + strs[3] + "'," + "0);");
 				}
 
-				DBAccess.RunSQL(sBuilder.toString());
+				DBAccess.RunSQLs(sBuilder.toString());
 
 				//保存label位置.
 				sBuilder = new StringBuilder();
@@ -303,7 +303,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					sBuilder.append("UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK='" + strs[0] + "';");
 				}
 
-				DBAccess.RunSQL(sBuilder.toString());
+				DBAccess.RunSQLs(sBuilder.toString());
 
 				return "保存成功.";
 			}

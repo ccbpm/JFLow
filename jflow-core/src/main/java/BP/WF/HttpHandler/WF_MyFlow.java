@@ -2123,10 +2123,10 @@ public class WF_MyFlow extends WebContralBase {
 					pk = this.getWorkID();
 					break;
 				}
-				if (DBAccess.RunSQLReturnValInt(
-						"SELECT COUNT(*) as Num FROM " + md.getPTable() + " WHERE OID=" + pk) == 0) {
-					continue;
-				}
+				String sql="SELECT COUNT(*) as Num FROM " + md.getPTable() + " WHERE OID=" + pk;
+				BP.DA.Log.DebugWriteInfo(sql);
+				if (DBAccess.RunSQLReturnValInt(sql) == 0) 
+					continue;				
 				break;
 			case WhenHaveFrmPara: // 判断是否有参数.
 

@@ -308,7 +308,7 @@ public class SystemConfig {
 	}
 
 	public static String getPathOfWorkDir() {
-		return "D:/JJFlow/trunk/";
+		return "D:/JFlow/trunk/";
 	}
 
 	public static String getPathOfFDB() {
@@ -364,12 +364,6 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getCCFlowAppPath() {
-		// if (!StringHelper.isNullOrEmpty(SystemConfig
-		// .getAppSettings().get("DataUserDirPath").toString())) {
-		// return getPathOfWebApp()
-		// + SystemConfig.getAppSettings().get("DataUserDirPath")
-		// .toString();
-		// }
 		if (SystemConfig.getAppSettings().get("DataUserDirPath") != null) {
 			return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString();
 		}
@@ -663,13 +657,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static boolean getIsTempCashFail() {
-		/*
-		 * warning if (SystemConfig.getCashFail() == 0){ return false; } if
-		 * (_CashFailDateTime == null){ _CashFailDateTime = new Date(); return
-		 * true; }else{ TimeSpan ts = new Date() - _CashFailDateTime; if
-		 * (ts.Minutes >= SystemConfig.getCashFail()) { _CashFailDateTime = new
-		 * Date(); return true; } return false; }
-		 */
+
 		return true;
 	}
 
@@ -775,7 +763,9 @@ public class SystemConfig {
 		return getAppSettings().get("WeiXin_MessageUrl").toString();
 	}
 	/// #endregion
-
+	public static String getWXGZH_WeiXinToken(){
+		return getAppSettings().get("GZHToken").toString();
+	}
 	/// #region 钉钉配置相关
 	/// <summary>
 	/// 企业标识
@@ -1121,5 +1111,16 @@ public class SystemConfig {
 	public static String getDing_AppSecret() {
 		String str = getAppSettings().get("Ding_AppSecret").toString();
 		return str;
+	}
+
+	/**
+	 * 调用消息的接口
+	 * @return
+	 */
+	public static String getHandlerOfMessage(){
+		Object obj = getAppSettings().get("HandlerOfMessage");
+		if(obj == null)
+			return "";
+		return obj.toString();
 	}
 }

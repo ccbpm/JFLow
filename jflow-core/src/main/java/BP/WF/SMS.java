@@ -1,5 +1,7 @@
 package BP.WF;
 
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -14,6 +16,7 @@ import BP.DA.*;
 import BP.Difference.SystemConfig;
 import BP.Difference.Handler.PortalInterface;
 import BP.En.*;
+import BP.Tools.HttpClientUtil;
 import BP.Web.*;
 import BP.Sys.*;
 import BP.WF.WeiXin.DingDing;
@@ -401,40 +404,48 @@ public class SMS extends EntityMyPK
 			//发送邮件
 			if (this.getPushModel().contains("Email") == true && DataType.IsNullOrEmpty(this.getEmail()) == false)
 				SendEmailNowAsync(this.getEmail(), this.getTitle(), this.getDocOfEmail());
-			
-			PortalInterface service = new PortalInterface();
+			 //发送短消息 调用接口
+
+			String messageUrl = BP.Difference.SystemConfig.getHandlerOfMessage();
+			if (DataType.IsNullOrEmpty(messageUrl) == true)
+				return;
+			String httpUrl = "";
+			HashMap<String,String> msgMap = new HashMap<String,String>();
+			msgMap.put("sender",WebUser.getNo());
+			msgMap.put("sendTo",this.getSendToEmpNo());
+			msgMap.put("tel",this.getMobile());
+			msgMap.put("title",this.getTitle());
+			msgMap.put("content",this.getMobileInfo());
+			msgMap.put("openUrl",this.getOpenURL());
 			//站内消息
 			if (this.getPushModel().contains("CCMsg") == true)
 			{
-				service.SendToCCMSG(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
+				httpUrl =messageUrl+ "?DoType=SendToCCMSG";
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//短信
 			if (this.getPushModel().contains("SMS") == true)
 			{
-				service.SendToWebServices(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
+				httpUrl = messageUrl + "?DoType=SendToWebServices";
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//钉钉
 			if (this.getPushModel().contains("DingDing") == true)
 			{
-				DingDing dingding = new DingDing();
-				String postJson = dingding.ResponseMsg("17686621838", "", "", "text", this.getMobileInfo());
-				boolean flag = dingding.PostDingDingMsg(postJson,"17686621838");
-				if(flag == false)
-					throw new Exception("发送消息失败");
-				
-				//service.SendToDingDing(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
+				httpUrl = messageUrl + "?DoType=SendToDingDing";
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//微信
 			if (this.getPushModel().contains("WeiXin") == true)
 			{
-				service.SendToDingDing(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
-
-
+				httpUrl = messageUrl + "?DoType=SendToWeiXin";
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//WebService
 			if (this.getPushModel().contains("WS") == true)
 			{
-				service.SendToWebServices(this.getMyPK(), WebUser.getNo(), this.getSendToEmpNo(), this.getMobile(), this.getMobileInfo(), this.getTitle(), this.getOpenURL(),this.getMsgType());
+				httpUrl = messageUrl + "?DoType=SendToWebServices";
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			super.afterInsert();
 

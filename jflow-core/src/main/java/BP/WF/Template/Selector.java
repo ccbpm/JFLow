@@ -350,7 +350,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		sql = "SELECT distinct No, Name, FK_Dept FROM Port_Emp ";
+		sql = "SELECT a.FK_Emp as No,b.Name,a.FK_Dept FROM Port_DeptEmpStation a left join Port_Emp b on a.FK_Emp=b.No";
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
 		ds.Tables.add(dtEmp);
@@ -468,7 +468,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		sql = "SELECT distinct a.No, a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeDept b WHERE a.FK_Dept=b.FK_Dept AND B.FK_Node=" + nodeID + " ";
+		sql = "SELECT a.FK_Emp as No, c.Name, a.FK_Dept FROM Port_DeptEmpStation a, WF_NodeDept b.Port_Emp c WHERE a.FK_Dept=b.FK_Dept AND a.FK_Emp=c.No  AND B.FK_Node=" + nodeID + " ";
 		dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		ds.Tables.add(dtEmp);
 		dtEmp.TableName = "Emps";
@@ -493,7 +493,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeEmp b WHERE a.No=b.FK_Emp AND b.FK_Node=" + nodeID + " ";
+		sql = "SELECT a.FK_Emp as No, c.Name, a.FK_Dept FROM Port_DeptEmpStation a, WF_NodeEmp b WHERE a.FK_Emp=b.FK_Emp AND a.FK_Emp=c.No AND b.FK_Node=" + nodeID + "";
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
@@ -586,11 +586,11 @@ public class Selector extends Entity
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
-			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + ")  ";
+			sql = "SELECT * FROM (SELECT a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + ")  ";
 		}
 		else
 		{
-			sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ";
+			sql = "SELECT a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + "  ";
 		}
 
 
@@ -629,16 +629,16 @@ public class Selector extends Entity
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 				{
-					sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d  WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a.No=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "') ORDER BY FK_Dept,Idx,No";
+					sql = "SELECT * FROM (SELECT a.FK_Emp as No,c.Name, a.FK_Dept,a.Idx FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c, WF_PrjEmp d  WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station And a.FK_Emp=d.FK_Emp And C.No=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "') ORDER BY FK_Dept,Idx,No";
 				}
 				else
 				{
-					sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d  WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a.No=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ";
+					sql = "SELECT a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c, WF_PrjEmp d  WHERE a.FK_Emp=c.No AND B.FK_Station=a.FK_Station And a.FK_Emp=d.FK_Emp And C.No=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ";
 				}
 			}
 			else
 			{
-				sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a.No=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ";
+				sql = "SELECT a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c, WF_PrjEmp d WHERE a.FK_Emp=c.No AND B.FK_Station=a.FK_Station And a.FK_Emp=d.FK_Emp And C.No=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ";
 			}
 
 			dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -659,16 +659,16 @@ public class Selector extends Entity
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{
-				sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + ") ";
+				sql = "SELECT * FROM (SELECT  a.FK_Emp as No,c.Name, a.FK_Dept,a.Idx FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + ") ";
 			}
 			else
 			{
-				sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + " ";
+				sql = "SELECT  a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + " ";
 			}
 		}
 		else
 		{
-			sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + " ";
+			sql = "SELECT  a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + " ";
 		}
 
 		dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);

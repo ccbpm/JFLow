@@ -1553,36 +1553,73 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 		return treeJson;
 	}
-	public final String NewFlow() throws Exception
+
+	/**
+	 *  创建一个新流程模版2019版本.
+	 * @return
+	 */
+	public String Defualt_NewFlow()
 	{
 		try
 		{
-			String[] ps = this.GetRequestVal("paras").split("[,]", -1);
-			if (ps.length != 6)
+			int runModel = this.GetRequestValInt("RunModel");
+			String FlowName = this.GetRequestVal("FlowName");
+			String FlowSort = this.GetRequestVal("FlowSort").trim();
+			FlowSort = FlowSort.trim();
+
+			int DataStoreModel = this.GetRequestValInt("DataStoreModel");
+			String PTable = this.GetRequestVal("PTable");
+			String FlowMark = this.GetRequestVal("FlowMark");
+			int flowFrmType = this.GetRequestValInt("FlowFrmType");
+			String FrmUrl = this.GetRequestVal("FrmUrl");
+			String FlowVersion = this.GetRequestVal("FlowVersion");
+
+			String flowNo = BP.WF.Template.TemplateGlo.NewFlow(FlowSort, FlowName,
+					BP.WF.Template.DataStoreModel.SpecTable, PTable, FlowMark, FlowVersion);
+
+			Flow fl = new Flow(flowNo);
+
+            //对极简版特殊处理.
+			//如果是简洁版.
+			if (runModel == 1)
 			{
-				throw new RuntimeException("@创建流程参数错误");
+				fl.setFlowFrmType(BP.WF.FlowFrmType.forValue(flowFrmType));
+				fl.Update(); //更新表单类型.
+
+				//预制权限数据.
+				int nodeID = Integer.parseInt(fl.getNo() + "01");
+				FrmNode fn = new FrmNode();
+				fn.setFK_Frm("ND" + nodeID);
+				fn.setIsEnableFWC(false);
+				fn.setFK_Node(nodeID);
+				fn.setFK_Flow(flowNo);
+				fn.setFrmSln(FrmSln.Default);
+				fn.Insert();
+
+				nodeID = Integer.parseInt(fl.getNo() + "02");
+				fn = new FrmNode();
+				fn.setFK_Frm("ND" + nodeID);
+				fn.setIsEnableFWC(false);
+				fn.setFK_Node(nodeID);
+				fn.setFK_Flow(flowNo);
+				fn.setFrmSln(FrmSln.Default);
+				fn.Insert();
+
+
 			}
+             //对极简版特殊处理.
 
-			String fk_floSort = ps[0]; //类别编号.
-			fk_floSort = fk_floSort.replace("F", ""); //传入的编号多出F符号，需要替换掉
 
-			String flowName = ps[1]; // 流程名称.
-			DataStoreModel dataSaveModel = DataStoreModel.forValue(Integer.parseInt(ps[2])); //数据保存方式。
-			String pTable = ps[3]; // 物理表名.
-			String flowMark = ps[4]; // 流程标记.
-			String flowVer = ps[5]; // 流程版本.
-
-			String flowNo = BP.WF.Template.TemplateGlo.NewFlow(fk_floSort, flowName, dataSaveModel, pTable, flowMark, flowVer);
-
-			//清空WF_Emp 的StartFlows
-			DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
+				//清空WF_Emp 的StartFlows ,让其重新计算.
+						DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
 			return flowNo;
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
+
 	/** 
 	 上移流程
 	 

@@ -528,6 +528,31 @@ public class Flow extends BP.En.EntityNoName {
 	}
 
 	/**
+	 *  url
+	 * @return
+	 * @throws Exception
+	 */
+	public final String getFrmUrl() throws Exception{
+		return this.GetValStrByKey(FlowAttr.FrmUrl);
+	}
+
+	public final void setFrmUrl(String value) throws Exception{
+		this.SetValByKey(FlowAttr.FrmUrl,value);
+	}
+
+	/**
+	 * 流程表单类型
+	 * @return
+	 * @throws Exception
+	 */
+	public final FlowFrmType getFlowFrmType() throws Exception{
+		return FlowFrmType.forValue(this.GetValIntByKey(FlowAttr.FlowFrmType));
+	}
+
+	public final void setFlowFrmType(FlowFrmType value) throws Exception{
+		this.SetValByKey(FlowAttr.FlowFrmType,value.getValue());
+	}
+	/**
 	 * 创建新工作web方式调用的
 	 * 
 	 * @return
@@ -4361,6 +4386,9 @@ public class Flow extends BP.En.EntityNoName {
 
 		// add 2013-01-01.
 		map.AddTBString(FlowAttr.PTable, null, "流程数据存储主表", true, false, 0, 30, 10);
+
+		map.AddTBInt(FlowAttr.FlowFrmType, 0, "流程表单类型", true, true);
+		map.AddTBString(FlowAttr.FrmUrl, null, "表单Url", true, false, 0, 150, 10, true);
 
 		// 草稿规则 "@0=无(不设草稿)@1=保存到待办@2=保存到草稿箱"
 		map.AddTBInt(FlowAttr.Draft, 0, "草稿规则", true, false);

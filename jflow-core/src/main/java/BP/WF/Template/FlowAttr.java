@@ -131,6 +131,16 @@ public class FlowAttr
 	 业务主表
 	*/
 	public static final String PTable = "PTable";
+
+	/**
+	 * 表单连接
+	 */
+	public static final String FrmUrl = "FrmUrl";
+
+	/**
+	 * 流程表单类型
+	 */
+	public static final String FlowFrmType = "FlowFrmType";
 	/** 
 	 流程数据存储模式
 	*/

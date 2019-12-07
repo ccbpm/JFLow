@@ -2589,7 +2589,11 @@ function validate(s) {
     }
     return true;
 }
-
+var loadWebUser = null;
+var url = window.location.href.toLowerCase();
+if (url.indexOf('login.htm') == -1 && url.indexOf('dbinstall.htm') == -1) {
+    loadWebUser = new WebUser();
+}
 //初始化页面
 $(function () {
     //   debugger;
@@ -2601,10 +2605,10 @@ $(function () {
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
     }
     //判断登录权限.
-    var url = window.location.href.toLowerCase();
+
     if (url.indexOf('login.htm') == -1 && url.indexOf('dbinstall.htm') == -1) {
-        var loadWebUser = new WebUser();
-        if (loadWebUser.No == "" || loadWebUser.No == undefined || loadWebUser.No == null) {
+
+        if (loadWebUser != null && (loadWebUser.No == "" || loadWebUser.No == undefined || loadWebUser.No == null)) {
             dynamicHandler = "";
             alert("登录信息丢失,请重新登录.");
             return;

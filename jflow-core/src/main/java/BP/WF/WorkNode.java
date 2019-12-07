@@ -483,8 +483,6 @@ public class WorkNode {
 		default:
 			this.getHisGenerWorkFlow().setFK_Node(town.getHisNode().getNodeID());
 			this.getHisGenerWorkFlow().setSDTOfNode(DateUtils.format(dtOfShould, DataType.getSysDataTimeFormat()));
-			this.getHisGenerWorkFlow().SetPara("CH" + this.town.getHisNode().getNodeID(),
-					this.getHisGenerWorkFlow().getSDTOfNode());
 			this.getHisGenerWorkFlow().setTodoEmpsNum(dt.Rows.size());
 			break;
 		}

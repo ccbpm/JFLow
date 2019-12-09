@@ -678,7 +678,6 @@ public class WebUser {
 		//		String val = GetValFromCookie("No", null, true);
 		String val = GetSessionByKey("No", "");
 		if (val == null) {
-			//val = "admin";
 			throw new RuntimeException("@err-002 No 登录信息丢失。");
 		}
 		return val;

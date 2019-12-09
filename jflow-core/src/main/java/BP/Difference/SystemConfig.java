@@ -41,6 +41,10 @@ public class SystemConfig {
 		return SystemConfig.getAppSettings().get("FTPServerIP").toString();
 	}
 
+	public static String getFTPServerPort(){
+		return SystemConfig.getAppSettings().get("FTPServerPort").toString();
+	}
+
 	public static String getFTPUserNo() throws Exception {
 
 		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();

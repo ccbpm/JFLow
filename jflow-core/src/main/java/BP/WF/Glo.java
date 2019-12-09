@@ -5432,8 +5432,13 @@ public class Glo {
 
 		String userNo = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserNo());
 		String pass = BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPUserPassword());
-
-		FtpUtil ftp = new FtpUtil(ip, 21, userNo, pass);
+		String port=BP.Sys.Glo.String_JieMi_FTP(SystemConfig.getFTPServerPort());
+		
+		if(DataType.IsNullOrEmpty(port)){
+			port="21";
+		}
+		
+		FtpUtil ftp = new FtpUtil(ip, Integer.parseInt(port), userNo, pass);
 		return ftp;
 
 		// return Platform.JFlow;

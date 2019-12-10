@@ -1439,7 +1439,7 @@ public class MapAttr extends EntityMyPK
 		String keyofenC = tempVar instanceof String ? (String)tempVar : null;
 		keyofenC = keyofenC.toLowerCase();
 
-		if (PubClass.getKeyFields().contains("," + keyofenC + ",") == true)
+		if (PubClass.getKeyFields()!=null && PubClass.getKeyFields().contains("," + keyofenC + ",") == true)
 		{
 			throw new RuntimeException("@错误:[" + this.getKeyOfEn() + "]是字段关键字，您不能用它做字段。");
 		}

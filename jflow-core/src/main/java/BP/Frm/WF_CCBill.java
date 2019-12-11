@@ -492,8 +492,8 @@ public class WF_CCBill extends WebContralBase
 			row.setValue("KeyOfEn", attr.getKeyOfEn());
 			row.setValue("Name", attr.getName());
 			row.setValue("Width", attr.getUIWidthInt());
-			row.setValue("UIContralType", attr.getUIContralType());
-			row.setValue("LGType", attr.getLGType());
+			row.setValue("UIContralType", attr.getUIContralType().getValue());
+			row.setValue("LGType", attr.getLGType().getValue());
 			row.setValue("AtPara", attr.GetValStringByKey("AtPara"));
 			dt.Rows.add(row);
 		}

@@ -163,38 +163,46 @@ public class FrmBill extends EntityNoName {
 		map.Java_SetEnType(EnType.Sys);
 		map.Java_SetCodeStruct("4");
 
-		/// #region 基本属性.
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单");
+		//map.AddDDLSysEnum(MapDataAttr.FrmModel, 0, "单据模板", true, true, "BillFrmModel", "@0=系统预置@1=用户新增");
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", true, false, 0, 500, 20, true);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20, true);
 		map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
 
-		map.AddDDLSysEnum(MapDataAttr.TableCol, 0, "表单显示列数", true, true, "傻瓜表单显示方式", "@0=4列@1=6列@2=上下模式3列");
 
-		map.AddDDLSysEnum(FrmAttr.RowOpenModel, 0, "行记录打开模式", true, true, "RowOpenMode",
-				"@0=新窗口打开@1=在本窗口打开@2=弹出窗口打开,关闭后不刷新列表@3=弹出窗口打开,关闭后刷新列表");
+		map.AddDDLSysEnum(MapDataAttr.TableCol, 0, "表单显示列数", true, true, "傻瓜表单显示方式",
+				"@0=4列@1=6列@2=上下模式3列");
+
+		map.AddDDLSysEnum(FrmAttr.RowOpenModel, 0, "行记录打开模式", true, true,
+				"RowOpenMode", "@0=新窗口打开@1=在本窗口打开@2=弹出窗口打开,关闭后不刷新列表@3=弹出窗口打开,关闭后刷新列表");
+
 
 		map.AddDDLSysEnum(FrmBillAttr.EntityType, 0, "业务类型", true, false, FrmBillAttr.EntityType,
 				"@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
 		map.SetHelperAlert(FrmBillAttr.EntityType, "该实体的类型,@0=单据@1=编号名称实体@2=树结构实体.");
 
+		//map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "", "@0=独立表单@1=单据工作模式@2=流程工作模式");
+
 		map.AddTBString(FrmBillAttr.BillNoFormat, null, "单号规则", true, false, 0, 100, 20, true);
 		map.AddTBString(FrmBillAttr.TitleRole, null, "标题生成规则", true, false, 0, 100, 20, true);
 		map.AddTBString(FrmBillAttr.SortColumns, null, "排序字段", true, false, 0, 100, 20, true);
 
-		/// #region 按钮权限.
 		map.AddTBString(FrmBillAttr.BtnNewLable, "新建", "新建", true, false, 0, 50, 20);
-		map.AddBoolean(FrmBillAttr.BtnNewModel, true, "新建模式？", true, true);
+		map.AddDDLSysEnum(FrmDictAttr.BtnNewModel, 0, "新建模式", true, true, FrmDictAttr.BtnNewModel,
+				"@0=表格模式@1=卡片模式@2=不可用", true);
+
 
 		map.AddTBString(FrmBillAttr.BtnSaveLable, "保存", "保存", true, false, 0, 50, 20);
-		map.AddBoolean(FrmBillAttr.BtnSaveEnable, true, "是否可用？", true, true);
+		//map.AddBoolean(FrmBillAttr.BtnSaveEnable, true, "是否可用？", true, true);
+
+		map.AddTBString(FrmBillAttr.BtnSubmitLable, "提交", "提交", true, false, 0, 50, 20);
 
 		map.AddTBString(FrmBillAttr.BtnDelLable, "删除", "删除", true, false, 0, 50, 20);
-		map.AddBoolean(FrmBillAttr.BtnDelEnable, true, "是否可用？", true, true);
+		//map.AddBoolean(FrmBillAttr.BtnDelEnable, true, "是否可用？", true, true);
 
 		map.AddTBString(FrmBillAttr.BtnSearchLabel, "列表", "列表", true, false, 0, 50, 20);
-		map.AddBoolean(FrmBillAttr.BtnSearchEnable, true, "是否可用？", true, true);
+		//map.AddBoolean(FrmBillAttr.BtnSearchEnable, true, "是否可用？", true, true);
 
 		map.AddTBString(FrmBillAttr.BtnGroupLabel, "分析", "分析", true, false, 0, 50, 20);
 		map.AddBoolean(FrmBillAttr.BtnGroupEnable, false, "是否可用？", true, true);
@@ -214,17 +222,15 @@ public class FrmBill extends EntityNoName {
 		map.AddTBString(FrmBillAttr.BtnExpZip, "导出zip文件", "导出zip文件", true, false, 0, 50, 20);
 		map.AddBoolean(FrmBillAttr.BtnExpZipEnable, false, "是否可用？", true, true);
 
+
 		map.AddTBString(FrmBillAttr.BtnRefBill, "关联单据", "关联单据", true, false, 0, 50, 20);
 
-		map.AddDDLSysEnum(FrmAttr.RefBillRole, 0, "关联单据工作模式", true, true, "RefBillRole",
-				"@0=不启用@1=非必须选择关联单据@2=必须选择关联单据");
+		map.AddDDLSysEnum(FrmAttr.RefBillRole, 0, "关联单据工作模式", true, true,
+				"RefBillRole", "@0=不启用@1=非必须选择关联单据@2=必须选择关联单据");
 
 		map.AddTBString(FrmBillAttr.RefBill, null, "关联单据ID", true, false, 0, 100, 20, true);
 		map.SetHelperAlert(FrmBillAttr.RefBill, "请输入单据编号,多个单据编号用逗号分开.\t\n比如:Bill_Sale,Bill_QingJia");
 
-		/// #endregion 按钮权限.
-
-		/// #region 查询按钮权限.
 		map.AddTBString(FrmBillAttr.BtnImpExcel, "导入Excel文件", "导入Excel文件", true, false, 0, 50, 20);
 		map.AddBoolean(FrmBillAttr.BtnImpExcelEnable, true, "是否可用？", true, true);
 
@@ -234,9 +240,7 @@ public class FrmBill extends EntityNoName {
 		map.AddTBString(FrmBillAttr.BtnGroupLabel, "分析", "分析", true, false, 0, 50, 20);
 		map.AddBoolean(FrmBillAttr.BtnGroupEnable, true, "是否可用？", true, true);
 
-		/// #endregion 查询按钮权限.
 
-		/// #region 设计者信息.
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
@@ -245,18 +249,12 @@ public class FrmBill extends EntityNoName {
 		map.AddTBStringDoc(MapDataAttr.Note, null, "备注", true, false, true);
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
 
-		/// #endregion 设计者信息.
-
-		/// #region 扩展参数.
 		map.AddTBString(FrmDictAttr.Tag0, null, "Tag0", false, false, 0, 500, 20);
 		map.AddTBString(FrmDictAttr.Tag1, null, "Tag1", false, false, 0, 4000, 20);
 		map.AddTBString(FrmDictAttr.Tag2, null, "Tag2", false, false, 0, 500, 20);
 
-		/// #endregion 扩展参数.
+		map.AddTBAtParas(800); //参数属性.
 
-		map.AddTBAtParas(800); // 参数属性.
-
-		/// #region 基本功能.
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "设计表单"; // "设计表单";
@@ -264,7 +262,7 @@ public class FrmBill extends EntityNoName {
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
-		// rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -273,7 +271,7 @@ public class FrmBill extends EntityNoName {
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		// rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -282,19 +280,21 @@ public class FrmBill extends EntityNoName {
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
-		// rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
+
 
 		rm = new RefMethod();
 		rm.Title = "绑定到菜单目录"; // "设计表单";
-		rm.getHisAttrs().AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3", true);
+		rm.getHisAttrs().AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3",true);
 		rm.getHisAttrs().AddTBString("Name", "@Name", "菜单名称", true, false, 0, 100, 100);
 		rm.ClassMethodName = this.toString() + ".DoBindMenu";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.Func;
 		rm.Target = "_blank";
-		// rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
+
 
 		rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
@@ -323,14 +323,30 @@ public class FrmBill extends EntityNoName {
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
-		/// #endregion 基本功能.
-
-		/// #region 权限规则.
 		rm = new RefMethod();
 		rm.Title = "创建规则"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoCreateRole";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.LinkModel;
+		rm.RefAttrKey = FrmBillAttr.BtnNewLable;
+		rm.GroupName = "权限规则";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "保存规则"; // "设计表单";
+		rm.ClassMethodName = this.toString() + ".DoSaveRole";
+		rm.Visable = true;
+		rm.refMethodType = RefMethodType.LinkModel;
+		rm.RefAttrKey = FrmBillAttr.BtnSaveLable;
+		rm.GroupName = "权限规则";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "提交规则"; // "设计表单";
+		rm.ClassMethodName = this.toString() + ".DoSubmitRole";
+		rm.Visable = true;
+		rm.refMethodType = RefMethodType.LinkModel;
+		rm.RefAttrKey = FrmBillAttr.BtnSubmitLable;
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
@@ -338,7 +354,8 @@ public class FrmBill extends EntityNoName {
 		rm.Title = "删除规则"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoDeleteRole";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.LinkModel;
+		rm.RefAttrKey = FrmBillAttr.BtnDelLable;
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
@@ -346,13 +363,11 @@ public class FrmBill extends EntityNoName {
 		rm.Title = "查询权限"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoSearchRole";
 		rm.Visable = true;
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.refMethodType = RefMethodType.LinkModel;
+		rm.RefAttrKey = FrmBillAttr.BtnSearchLabel;
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
-		/// #endregion
-
-		/// #region 报表定义.
 		rm = new RefMethod();
 		rm.GroupName = "报表定义";
 		rm.Title = "设置显示的列"; // "设计表单";
@@ -367,7 +382,7 @@ public class FrmBill extends EntityNoName {
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsIdxAndLabel";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-		// map.AddRefMethod(rm);
+		//   map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.GroupName = "报表定义";
@@ -377,87 +392,134 @@ public class FrmBill extends EntityNoName {
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
-		/// #endregion 报表定义.
-
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-	/// #endregion
 
-	/// #region 权限控制.
+	@Override
+	protected void afterInsertUpdateAction()throws Exception
+	{
+		//保存权限表
+		CtrlModel ctrl = new CtrlModel();
+
+		ctrl.setFrmID(this.getNo());
+		ctrl.setCtrlObj("BtnNew");
+		ctrl.setIsEnableAll(true);
+		ctrl.setMyPK(ctrl.getFrmID()+ "_" + ctrl.getCtrlObj());
+		ctrl.Save();
+
+		ctrl = new CtrlModel();
+		ctrl.setFrmID(this.getNo());
+		ctrl.setCtrlObj("BtnSave");
+		ctrl.setIsEnableAll(true);
+		ctrl.setMyPK(ctrl.getFrmID() + "_" + ctrl.getCtrlObj());
+		ctrl.Save();
+
+		ctrl = new CtrlModel();
+		ctrl.setFrmID(this.getNo());
+		ctrl.setCtrlObj("BtnSubmit");
+		ctrl.setIsEnableAll(true);
+		ctrl.setMyPK(ctrl.getFrmID() + "_" + ctrl.getCtrlObj());
+		ctrl.Save();
+
+		ctrl = new CtrlModel();
+		ctrl.setFrmID(this.getNo());
+		ctrl.setCtrlObj("BtnDelete");
+		ctrl.setIsEnableAll(true);
+		ctrl.setMyPK(ctrl.getFrmID() + "_" + ctrl.getCtrlObj());
+		ctrl.Save();
+
+		ctrl = new CtrlModel();
+		ctrl.setFrmID(this.getNo());
+		ctrl.setCtrlObj("BtnSearch");
+		ctrl.setIsEnableAll(true);
+		ctrl.setMyPK(ctrl.getFrmID() + "_" + ctrl.getCtrlObj());
+		ctrl.Save();
+
+		super.afterInsertUpdateAction();
+	}
+
+	public final String DoSaveRole()throws Exception
+	{
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSave";
+	}
 	/**
-	 * 创建权限
-	 * 
-	 * @return
-	 * @throws Exception
+	 提交权限规则
+
+	 @return
 	 */
-	public final String DoCreateRole() throws Exception {
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
+	public final String DoSubmitRole()throws Exception
+	{
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSubmit";
 	}
 
 	/**
-	 * 查询权限
-	 * 
-	 * @return
-	 * @throws Exception
+	 创建权限
+
+	 @return
 	 */
-	public final String DoSearchRole() throws Exception {
-		return "../../CCBill/Admin/SearchRole.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
+	public final String DoCreateRole()throws Exception
+	{
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnNew";
 	}
+	/**
+	 查询权限
+
+	 @return
+	 */
+	public final String DoSearchRole()throws Exception
+	{
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
+	}
+	/**
+	 删除规则.
+
+	 @return
+	 */
+	public final String DoDeleteRole()throws Exception
+	{
+		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnDelete";
+	}
+	///#endregion 权限控制.
+
 
 	/**
-	 * 删除规则.
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public final String DoDeleteRole() throws Exception {
-		return "../../CCBill/Admin/DeleteRole.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
-	}
+	 选择显示的列
 
-	/// #endregion 权限控制.
-
-	/// #region 报表定义
-	/**
-	 * 选择显示的列
-	 * 
-	 * @return
-	 * @throws Exception
+	 @return
 	 */
-	public final String DoRpt_ColsChose() throws Exception {
+	public final String DoRpt_ColsChose()throws Exception
+	{
 		return "../../CCBill/Admin/ColsChose.htm?FrmID=" + this.getNo();
 	}
-
 	/**
-	 * 列的顺序
-	 * 
-	 * @return
-	 * @throws Exception
+	 列的顺序
+
+	 @return
 	 */
-	public final String DoRpt_ColsIdxAndLabel() throws Exception {
+	public final String DoRpt_ColsIdxAndLabel()throws Exception
+	{
 		return "../../CCBill/Admin/ColsIdxAndLabel.htm?FrmID=" + this.getNo();
 	}
-
 	/**
-	 * 查询条件
-	 * 
-	 * @return
-	 * @throws Exception
+	 查询条件
+
+	 @return
 	 */
-	public final String DoRpt_SearchCond() throws Exception {
+	public final String DoRpt_SearchCond()throws Exception
+	{
 		return "../../CCBill/Admin/SearchCond.htm?FrmID=" + this.getNo();
 	}
+	///#endregion 报表定义.
 
-	/// #endregion 报表定义.
-
-	public final String DoMethod() throws Exception {
+	public final String DoMethod()throws Exception
+	{
 		return "../../CCBill/Admin/Method.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
-
-	public final String DoPageLoadFull() throws Exception {
-		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo()
-				+ " &ExtType=PageLoadFull&RefNo=";
+	public final String DoPageLoadFull() throws Exception
+	{
+		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 
 	/**
@@ -677,12 +739,12 @@ public class FrmBill extends EntityNoName {
 	 */
 	public final String DoOpenBill() throws Exception {
 		return "../../CCBill/Search.htm?FrmID=" + this.getNo() + "&t="
-				+ DateUtils.format(new Date(), "yyyyMMddHHmmssffffff");
+				+ DateUtils.format(new Date(), "yyyyMMddHHmmss");
 	}
 
 	public final String DoAPI() throws Exception {
 		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo() + "&t="
-				+ DateUtils.format(new Date(), "yyyyMMddHHmmssffffff");
+				+ DateUtils.format(new Date(), "yyyyMMddHHmmss");
 	}
 
 	/// #endregion 方法操作.

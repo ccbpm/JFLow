@@ -61,6 +61,10 @@ public class FrmAttr extends BP.En.EntityOIDNameAttr
 	 按钮Save标签
 	*/
 	public static final String BtnSaveLable = "BtnSaveLable";
+	/**
+	 * 提交按钮
+	 */
+	public static final String BtnSubmitLable="BtnSubmitLable";
 	/** 
 	 按钮save启用规则
 	*/

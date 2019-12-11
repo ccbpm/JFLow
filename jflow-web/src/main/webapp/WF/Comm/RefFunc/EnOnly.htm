@@ -620,11 +620,13 @@
             var icon = rm.Icon;
             if (rm.Icon == "" || rm.Icon == null) {
                 icon = "../../Img/dot.png";
+            }else{
+                if (rm.Icon != null && rm.Icon.indexOf('http') != 0) {
+                    icon = "../" + rm.Icon;
+                }
             }
 
-            if (rm.Icon != null && rm.Icon.indexOf('http') != 0) {
-                icon = "../" + rm.Icon;
-            }
+
             var html = "";
             var W = document.body.clientWidth-80;
             var H = document.body.clientHeight-20;
@@ -641,9 +643,9 @@
             }
 
             if (parseInt(rm.RefMethodType) == RefMethodType.LinkModel) {
-                 html = "<a href='javascript:OpenEasyUiDialogExt(\"" + rm.Url + "\",\"" + rm.Title + "\",\"" + W + "\",\"" + H + "\",true)'><img src='" + icon + "' border=0 style='width:16px;height:16px;' />" + rm.Title + "</a>";
+                html = "<a href='javascript:OpenEasyUiDialogExt(\"" + rm.Url + "\",\"" + rm.Title + "\",\"" + W + "\",\"" + H + "\",true)'><img src='" + icon + "' border=0 style='width:16px;height:16px;' />" + rm.Title + "</a>";
             }
-               
+
 
             if (parseInt(rm.RefMethodType) == RefMethodType.RightFrameOpen) {
                 // alert('没有实现@代国强, 需要根据窗口大小，弹出模态窗口..');
@@ -1189,31 +1191,31 @@
     </style>
 </head>
 <body class="easyui-layout" data-options="fit:true">
-    <!--<div class="easyui-layout" data-options="region:'center'" border="false">-->
-        <!--<div class="easyui-layout" data-options="fit:true">-->
-            <div id="Btns" data-options="region:'north',noheader:true,split:false,border:false"
-                 style="height: 30px; padding: 2px; background-color: #d3d3d34a">
-                <a id="Btn_New" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-new'"
-                   onclick="New()">新建</a> <a id="Btn_Save" href="javaScript:void(0)" class="easyui-linkbutton"
-                                             data-options="plain:true,iconCls:'icon-save'" onclick="Update()">保存</a>
-                <a id="Btn_Delete" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-delete'"
-                   onclick="Delete()">删除</a>
+<!--<div class="easyui-layout" data-options="region:'center'" border="false">-->
+<!--<div class="easyui-layout" data-options="fit:true">-->
+<div id="Btns" data-options="region:'north',noheader:true,split:false,border:false"
+     style="height: 30px; padding: 2px; background-color: #d3d3d34a">
+    <a id="Btn_New" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-new'"
+       onclick="New()">新建</a> <a id="Btn_Save" href="javaScript:void(0)" class="easyui-linkbutton"
+                                 data-options="plain:true,iconCls:'icon-save'" onclick="Update()">保存</a>
+    <a id="Btn_Delete" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-delete'"
+       onclick="Delete()">删除</a>
 
-                <a id="Btn_Setting" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reset'"
-                   onclick="Setting()">设置</a>
+    <a id="Btn_Setting" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reset'"
+       onclick="Setting()">设置</a>
 
 
 
-            </div>
-            <div class="easyui-layout" data-options="region:'center'" style="margin: 0px;overflow: auto">
-                <div class="easyui-layout" id="CCFormTabs" data-options="region:'center',noheader:true,border:false,fit:true" style="margin: 0px;
+</div>
+<div class="easyui-layout" data-options="region:'center'" style="margin: 0px;overflow: auto">
+    <div class="easyui-layout" id="CCFormTabs" data-options="region:'center',noheader:true,border:false,fit:true" style="margin: 0px;
                     padding: 0px; overflow: auto">
-                    <br />
-                    <img src='./../../Img/loading.gif' />正在初始化表单模板及数据，请耐心等待。。。
-                    <br />
-                </div>
-            </div>
-        <!--</div>-->
-    <!--</div>-->
+        <br />
+        <img src='./../../Img/loading.gif' />正在初始化表单模板及数据，请耐心等待。。。
+        <br />
+    </div>
+</div>
+<!--</div>-->
+<!--</div>-->
 </body>
 </html>

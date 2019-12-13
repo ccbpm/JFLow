@@ -17,14 +17,26 @@ public class Dev2Interface
 {
 	/** 
 	 创建工作ID
-	 
 	 @param frmID 表单ID
 	 @param userNo 用户编号
 	 @param htParas 参数
 	 @return 一个新的WorkID
 	 * @throws Exception 
 	*/
-	public static long CreateBlankBillID(String frmID, String userNo, Hashtable htParas) throws Exception
+	public static long CreateBlankBillID(String frmID, String userNo, Hashtable htParas) throws Exception{
+		return CreateBlankBillID(frmID, userNo,htParas,null);
+	}
+
+	/**
+	 * 创建工作ID
+	 * @param frmID
+	 * @param userNo
+	 * @param htParas
+	 * @param billNo
+	 * @return
+	 * @throws Exception
+	 */
+	public static long CreateBlankBillID(String frmID, String userNo, Hashtable htParas,String billNo) throws Exception
 	{
 		GenerBill gb = new GenerBill();
 		int i = gb.Retrieve(GenerBillAttr.FrmID, frmID, GenerBillAttr.Starter, userNo, GenerBillAttr.BillState, 0);
@@ -54,13 +66,19 @@ public class Dev2Interface
 		if (fb.getEntityType() == EntityType.FrmBill)
 		{
 			gb.setTitle(Dev2Interface.GenerTitle(fb.getTitleRole(), rpt));
-			gb.setBillNo(BP.Frm.Dev2Interface.GenerBillNo(fb.getBillNoFormat(), gb.getWorkID(), null, frmID));
+			if(DataType.IsNullOrEmpty(billNo) == false)
+				gb.setBillNo(billNo);
+			else
+				gb.setBillNo(BP.Frm.Dev2Interface.GenerBillNo(fb.getBillNoFormat(), gb.getWorkID(), null, frmID));
 		}
 
 		if (fb.getEntityType() == EntityType.EntityTree || fb.getEntityType() == EntityType.FrmDict)
 		{
 			rpt.getEnMap().setCodeStruct(fb.getEnMap().getCodeStruct());
-			gb.setBillNo(rpt.GenerNewNoByKey("BillNo"));
+			if(DataType.IsNullOrEmpty(billNo) == false)
+				gb.setBillNo(billNo);
+			else
+				gb.setBillNo(rpt.GenerNewNoByKey("BillNo"));
 			gb.setTitle("");
 		}
 
@@ -79,7 +97,10 @@ public class Dev2Interface
 
 		return gb.getWorkID();
 	}
-	public static long CreateBlankDictID(String frmID, String userNo, Hashtable htParas) throws Exception
+	public static long CreateBlankDictID(String frmID, String userNo, Hashtable htParas) throws Exception{
+		return CreateBlankDictID(frmID,userNo,htParas,null);
+	}
+	public static long CreateBlankDictID(String frmID, String userNo, Hashtable htParas,String billNo) throws Exception
 	{
 
 		FrmBill fb = new FrmBill(frmID);
@@ -102,8 +123,10 @@ public class Dev2Interface
 		rpt.SetValByKey("RDT", DataType.getCurrentDate());
 
 		rpt.getEnMap().setCodeStruct(fb.getEnMap().getCodeStruct());
-
-		rpt.SetValByKey("BillNo", rpt.GenerNewNoByKey("BillNo"));
+		if(DataType.IsNullOrEmpty(billNo) == false)
+			rpt.SetValByKey("BillNo", billNo);
+		else
+			rpt.SetValByKey("BillNo", rpt.GenerNewNoByKey("BillNo"));
 		rpt.setOID(DBAccess.GenerOID(frmID));
 		rpt.InsertAsOID(rpt.getOID());
 		return rpt.getOID();
@@ -234,7 +257,7 @@ public class Dev2Interface
 	 删除实体单据
 	 
 	 @param frmID
-	 @param workID
+	 @param workIds
 	 @return 
 	 * @throws Exception 
 	*/

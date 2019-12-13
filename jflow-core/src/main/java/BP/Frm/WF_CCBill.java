@@ -189,7 +189,8 @@ public class WF_CCBill extends WebContralBase
 	*/
 	public final String MyBill_CreateBlankBillID() throws Exception
 	{
-		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankBillID(this.getFrmID(), WebUser.getNo(), null));
+		String billNo = this.GetRequestVal("BillNo");
+		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankBillID(this.getFrmID(), WebUser.getNo(), null,billNo));
 	}
 	/** 
 	 创建空白的DictID.
@@ -199,7 +200,8 @@ public class WF_CCBill extends WebContralBase
 	*/
 	public final String MyDict_CreateBlankDictID() throws Exception
 	{
-		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankDictID(this.getFrmID(), WebUser.getNo(), null));
+		String billNo = this.GetRequestVal("BillNo");
+		return String.valueOf(BP.Frm.Dev2Interface.CreateBlankDictID(this.getFrmID(), WebUser.getNo(), null,billNo));
 	}
 	/** 
 	 执行保存
@@ -473,7 +475,6 @@ public class WF_CCBill extends WebContralBase
 		dt.Columns.Add("UIContralType", Integer.class);
 		dt.Columns.Add("LGType", Integer.class);
 		dt.Columns.Add("AtPara", String.class);
-
 		//设置标题、单据号位于开始位置
 
 

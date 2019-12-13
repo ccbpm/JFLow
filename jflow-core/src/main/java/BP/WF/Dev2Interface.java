@@ -1099,8 +1099,6 @@ public class Dev2Interface
 		///#region 流程草稿
 	/** 
 	 获取当前操作员的指定流程的流程草稿数据
-	 
-	 @param fk_flow 流程编号
 	 @return 返回草稿数据集合,列信息. OID=工作ID,Title=标题,RDT=记录日期,FK_Flow=流程编号,FID=流程ID, FK_Node=节点ID
 	 * @throws Exception 
 	*/
@@ -1159,7 +1157,6 @@ public class Dev2Interface
 	 获得我关注的流程列表
 	 
 	 @param flowNo 流程编号
-	 @param userNo 操作员编号
 	 @return 返回当前关注的流程列表.
 	 * @throws Exception 
 	*/
@@ -1721,17 +1718,11 @@ public class Dev2Interface
 	/** 
 	 获取当前人员待处理的工作
 	 
+	 @param userNo 人员编号
 	 @param fk_flow 流程编号
-	 @param fk_node 节点编号
 	 @return 共享工作列表
 	 * @throws Exception 
 	*/
-
-	/*public static DataTable DB_GenerEmpWorksOfDataTable(String userNo)
-	{
-		return DB_GenerEmpWorksOfDataTable(userNo, null);
-	}*/
-
 	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, String fk_flow) throws Exception
 	{
 
@@ -2183,11 +2174,9 @@ public class Dev2Interface
 	}
 	/** 
 	 查询指定流程中已完成的公告流程
-	 
-	 @param pageCount 页数
+	 @param strFlow 流程编号
 	 @param pageSize 每页条数
 	 @param pageIdx 页码
-	 @param strFlow 流程编号
 	 @return 
 	 * @throws Exception 
 	*/
@@ -3464,8 +3453,7 @@ public class Dev2Interface
 	}
 	/** 
 	 获取内部系统消息
-	 
-	 @param myPK
+	 @param type
 	 @return 
 	 * @throws Exception 
 	*/
@@ -3798,34 +3786,6 @@ public class Dev2Interface
 	{
 		return true;
 
-		/*if (DataType.IsNullOrEmpty(userNo))
-		{
-			return false;
-		}
-
-		if (DataType.IsNullOrEmpty(SID))
-		{
-			return false;
-		}
-
-		Paras ps = new Paras();
-		ps.SQL = "SELECT SID FROM Port_Emp WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "No";
-		ps.Add("No", userNo);
-
-		String mysid = DBAccess.RunSQLReturnStringIsNull(ps, null);
-		if (mysid == null)
-		{
-			throw new RuntimeException("@没有取得用户(" + userNo + ")的SID.");
-		}
-
-		if (SID.equals(mysid))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}*/
 	}
 	/** 
 	 设置SID
@@ -3992,145 +3952,6 @@ public class Dev2Interface
 		// 先保留本机一份.
 		sms.Insert();
 	}
-
-
-	/** 
-	 发送邮件
-	 
-	 @param mailAddress 邮件地址
-	 @param emilTitle 标题
-	 @param emailBody 内容
-	 @param msgType 消息类型(CC抄送,Todolist待办,Return退回,Etc其他消息...)
-	 @param msgGroupFlag 分组标记
-	 @param sender 发送人
-	 @param msgPK 消息唯一标记，防止发送重复.
-	*/
-	//public static void Port_SendEmail(string mailAddress, string emilTitle, string emailBody,
-	//    string msgType, string msgGroupFlag = null, string sender = null, string msgPK = null, string sendToEmpNo = null, string paras = null)
-	//{
-	//    if (DataType.IsNullOrEmpty(mailAddress))
-	//        return;
-
-	//    SMS sms = new SMS();
-	//    if (DataType.IsNullOrEmpty(msgPK) == false)
-	//    {
-	//        /*如果有唯一标志,就判断是否有该数据，没有该数据就允许插入.*/
-	//        if (sms.IsExit(SMSAttr.MyPK, msgPK) == true)
-	//        {
-	//            return;
-	//        }
-
-	//        sms.setMyPK( msgPK;
-	//    }
-	//    else
-	//    {
-	//        sms.setMyPK( DBAccess.GenerGUID();
-	//    }
-
-	//    sms.HisEmailSta = MsgSta.UnRun;
-	//    if (sender == null)
-	//    {
-	//        sms.Sender = WebUser.getNo();
-	//    }
-	//    else
-	//    {
-	//        sms.Sender = sender;
-	//    }
-
-	//    sms.SendToEmpNo = sendToEmpNo;
-
-	//    //邮件地址.
-	//    sms.Email = mailAddress;
-
-	//    //邮件标题.
-	//    sms.Title = emilTitle;
-	//    sms.DocOfEmail = emailBody;
-
-
-
-
-
-	//    //手机状态禁用.
-	//    sms.HisMobileSta = MsgSta.Disable;
-
-	//    // 其他属性.
-	//    sms.RDT = BP.DA.DataType.getCurrentDataTime();
-
-	//    //消息参数.
-	//    sms.AtPara = paras;
-
-	//    sms.MsgFlag = msgGroupFlag; // 消息标志.
-	//    sms.MsgType = msgType;   // 消息类型(CC抄送,Todolist待办,Return退回,Etc其他消息...).
-	//    sms.Insert();
-	//}
-	/** 
-	 发送短信
-	 
-	 @param tel 电话
-	 @param smsDoc 短信内容
-	 @param msgType 消息类型
-	 @param msgGroupFloag 消息分组
-	 @param sender 发送人
-	 @param msgPK 唯一标志,防止发送重复.
-	 @param sendEmpNo 发送给人员.
-	 @param atParas 参数.
-	*/
-	//public static void Port_SendSMS(string tel, string smsDoc, string msgType, string msgGroupFlag,
-	//    string sender = null, string msgPK = null, string sendToEmpNo = null, string atParas = null, string title = null, string opnUrl = null, string pushModel = null)
-	//{
-	//    //if (DataType.IsNullOrEmpty(tel))
-	//    //    return;
-
-	//    SMS sms = new SMS();
-	//    if (DataType.IsNullOrEmpty(msgPK) == false)
-	//    {
-	//        /*如果有唯一标志,就判断是否有该数据，没有该数据就允许插入.*/
-	//        if (sms.IsExit(SMSAttr.MyPK, msgPK) == true)
-	//        {
-	//            return;
-	//        }
-
-	//        sms.setMyPK( msgPK;
-	//    }
-	//    else
-	//    {
-	//        sms.setMyPK( DBAccess.GenerGUID();
-	//    }
-
-	//    sms.HisEmailSta = MsgSta.Disable;
-	//    sms.HisMobileSta = MsgSta.UnRun;
-
-	//    if (sender == null)
-	//    {
-	//        sms.Sender = WebUser.getNo();
-	//    }
-	//    else
-	//    {
-	//        sms.Sender = sender;
-	//    }
-
-	//    //发送给人员ID , 有可能这个人员空的.
-	//    sms.SendToEmpNo = sendToEmpNo;
-
-	//    sms.Mobile = tel;
-	//    sms.MobileInfo = smsDoc;
-	//    sms.Title = title;
-
-	//    // 其他属性.
-	//    sms.RDT = BP.DA.DataType.getCurrentDataTime();
-
-	//    sms.MsgType = msgType; // 消息类型.
-
-	//    sms.MsgFlag = msgGroupFlag; // 消息分组标志,用于批量删除.
-
-	//    sms.AtPara = atParas;
-
-	//    sms.SetPara("OpenUrl", opnUrl);
-	//    sms.SetPara("PushModel", pushModel);
-
-	//    // 先保留本机一份.
-	//    sms.Insert();
-	//}
 	/** 
 	 获取最新的消息
 	 
@@ -4170,7 +3991,8 @@ public class Dev2Interface
 	 写入日志
 	 
 	 @param flowNo 流程编号
-	 @param nodeFrom 节点从
+	 @param nodeFromID 节点从
+	 @param nodeFromName 节点从
 	 @param workid 工作ID
 	 @param fid FID
 	 @param msg 信息
@@ -4352,7 +4174,7 @@ public class Dev2Interface
 	 @param flowNo 流程编号
 	 @param currNodeID 当前节点ID
 	 @param workid 工作ID
-	 @param FID FID
+	 @param fid FID
 	 @param msg 审核信息
 	 @param optionName 操作名称(比如:科长审核、部门经理审批),如果为空就是"审核".
 	 * @throws Exception 
@@ -4739,11 +4561,8 @@ public class Dev2Interface
 		String sql = "SELECT Msg FROM " + table + " WHERE NDFrom=" + nodeFrom + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND WorkID=" + workId + " ORDER BY RDT DESC ";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0)
-		{
-			//BP.Sys.FrmWorkCheck fwc = new FrmWorkCheck(nodeFrom);
-			//return fwc.FWCDefInfo;
 			return null;
-		}
+
 		String checkinfo = dt.Rows.get(0).getValue(0).toString();
 		return checkinfo;
 	}
@@ -4942,7 +4761,6 @@ public class Dev2Interface
 	 
 	 @param flowNo 流程编号
 	 @param workID 工作ID
-	 @param isDelSubFlow 是否要删除它的子流程
 	 @return 执行信息
 	 * @throws Exception 
 	*/
@@ -5691,7 +5509,7 @@ public class Dev2Interface
 	/** 
 	 获得正在运行中的子流程的数量
 	 
-	 @param workID 父流程的workid
+	 @param pWorkID 父流程的workid
 	 @return 获得正在运行中的子流程的数量。如果是0，表示所有的流程的子流程都已经结束。
 	*/
 	public static int Flow_NumOfSubFlowRuning(long pWorkID)
@@ -5758,6 +5576,7 @@ public class Dev2Interface
 	*/
 	public static boolean Flow_IsCanDoCurrentWork(long workID, String userNo) throws Exception
 	{
+
 		if (workID == 0)
 		{
 			return true;
@@ -5771,6 +5590,7 @@ public class Dev2Interface
 			int inum = gwl.Retrieve(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Emp, userNo, GenerWorkerListAttr.FK_Node, mygwf.getFK_Node());
 			if (inum == 1 && gwl.getIsPassInt() == 0)
 			{
+				//BP.Sys.Glo.WriteUserLog("Send", userNo, "是否可以发送1");
 				return true;
 			}
 		}
@@ -5782,6 +5602,8 @@ public class Dev2Interface
 		String str = String.valueOf(mygwf.getFK_Node());
 		if (str.endsWith("01") == true)
 		{
+			//BP.Sys.Glo.WriteUserLog("Send", userNo, "是否可以发送userNo");
+
 			String mysql = "SELECT FK_Emp, IsPass FROM WF_GenerWorkerList WHERE WorkID=" + workID + " AND FK_Node=" + mygwf.getFK_Node();
 			DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
 			if (mydt.Rows.size() == 0)
@@ -5950,7 +5772,6 @@ public class Dev2Interface
 	 
 	 @param flowNo 流程编号
 	 @param workid 工作ID
-	 @param fid FID
 	 @return 
 	 * @throws Exception 
 	*/
@@ -6036,7 +5857,6 @@ public class Dev2Interface
 	 
 	 @param workID 工作ID
 	 @param msg 催办消息
-	 @param isPressSubFlow 是否催办子流程？
 	 @return 返回执行结果
 	 * @throws Exception 
 	*/
@@ -6816,7 +6636,26 @@ public class Dev2Interface
 		sql += " ORDER BY A.RDT ";
 
 		DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		{
+			dtTrack.Columns.get("NDFROM").ColumnName = "NDFrom";
+			dtTrack.Columns.get("NDFROMT").ColumnName = "NDFromT";
+			dtTrack.Columns.get("EMPFROM").ColumnName = "EmpFrom";
+			dtTrack.Columns.get("EMPFROMT").ColumnName = "EmpFromT";
+			dtTrack.Columns.get("DEPTNAME").ColumnName = "DeptName";
+			dtTrack.Columns.get("RDT").ColumnName = "RDT";
 
+		}
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			dtTrack.Columns.get("ndfrom").ColumnName = "NDFrom";
+			dtTrack.Columns.get("ndfromt").ColumnName = "NDFromT";
+			dtTrack.Columns.get("empfrom").ColumnName = "EmpFrom";
+			dtTrack.Columns.get("empfromt").ColumnName = "EmpFromT";
+			dtTrack.Columns.get("deptname").ColumnName = "DeptName";
+			dtTrack.Columns.get("rdt").ColumnName = "RDT";
+
+		}
 		for (DataRow drTrack : dtTrack.Rows)
 		{
 			DataRow dr = dtHistory.NewRow();
@@ -6892,7 +6731,6 @@ public class Dev2Interface
 	 @param AuthorWay 委托方式：0不授权， 1完全授权，2，指定流程范围授权. 
 	 @param AuthorFlows 委托流程编号，格式：001,002,003
 	 @param AuthorDate 委托开始时间，默认当前时间
-	 @param AuthorToDate 委托结束时间
 	 @return 设置结果：成功true,失败 false
 	 * @throws Exception 
 	*/
@@ -7851,7 +7689,6 @@ public class Dev2Interface
 	 @param fk_flow 工作编号
 	 @param workID 工作ID
 	 @param ht 节点表单数据
-	 @param dsDtl 节点表单从表数据
 	 @return 返回发送结果
 	 * @throws Exception 
 	*/
@@ -7873,7 +7710,7 @@ public class Dev2Interface
 	/** 
 	 发送工作
 	 
-	 @param nodeID 节点编号
+	 @param fk_flow 流程编号
 	 @param workID 工作ID
 	 @param toNodeID 发送到的节点编号，如果是0就让ccflow自动计算.
 	 @param toEmps 发送到的人员,多个人员用逗号分开比如：zhangsan,lisi. 如果是null则表示让ccflow自动计算.
@@ -7923,7 +7760,7 @@ public class Dev2Interface
 	 @param htWork 节点表单数据(Hashtable中的key与节点表单的字段名相同,value 就是字段值)
 	 @param workDtls 节点表单明从表数据(dataset可以包含多个table，每个table的名称与从表名称相同，列名与从表的字段相同, OID,RefPK列需要为空或者null )
 	 @param toNodeID 到达的节点，如果是0表示让ccflow自动寻找，否则就按照该参数发送。
-	 @param nextWorkers 下一步的接受人，如果多个人员用逗号分开，比如:zhangsan,lisi,
+	 @param toEmps 下一步的接受人，如果多个人员用逗号分开，比如:zhangsan,lisi,
 	 如果为空，则标识让ccflow按照节点访问规则自动寻找。
 	 @param execUserNo 执行人编号
 	 @param execUserName 执行人名称
@@ -8138,7 +7975,7 @@ public class Dev2Interface
 	/** 
 	 把抄送写入待办列表
 	 
-	 @param nodeID 节点ID
+	 @param fk_node 节点ID
 	 @param workID 工作ID
 	 @param ccToEmpNo 抄送给
 	 @param ccToEmpName 抄送给名称
@@ -8152,7 +7989,7 @@ public class Dev2Interface
 	/** 
 	 执行抄送
 	 
-	 @param flowNo 流程编号
+	 @param fk_node 节点编号
 	 @param workID 工作IDs
 	 @param toEmpNo 抄送人员编号
 	 @param toEmpName 抄送人员人员名称
@@ -8954,8 +8791,8 @@ public class Dev2Interface
 	}
 	/** 
 	 保存
-	 
-	 @param nodeID 节点ID
+	 @param fk_flow 流程ID
+	 @param fk_node 节点ID
 	 @param workID 工作ID
 	 @return 返回保存的信息
 	 * @throws Exception 
@@ -8979,8 +8816,8 @@ public class Dev2Interface
 	}
 	/** 
 	 保存
-	 
-	 @param nodeID 节点ID
+	 @param fk_flow 流程ID
+	 @param fk_node 节点ID
 	 @param workID 工作ID
 	 @param htWork 工作数据
 	 @return 返回执行信息
@@ -9158,62 +8995,6 @@ public class Dev2Interface
 				wk.Copy(treeWork);
 				wk.Update();
 			}
-
-
-			////获取该节点是是否是绑定表单方案, 如果流程节点中的字段与绑定表单的字段相同时赋值 
-			//if (nd.FormType == NodeFormType.SheetTree || nd.FormType == NodeFormType.RefOneFrmTree)
-			//{
-			//    FrmNodes nds = new FrmNodes(fk_flow, fk_node);
-			//    foreach (FrmNode item in nds)
-			//    {
-			//        if (item.FrmEnableRole == FrmEnableRole.Disable)
-			//            continue;
-			//        if (item.FK_Frm.Equals("ND" + fk_node) == true)
-			//            continue;
-
-			//        GEEntity en = null;
-			//        try
-			//        {
-			//            en = new GEEntity(item.FK_Frm);
-			//            en.PKVal = workID;
-			//            if (en.RetrieveFromDBSources() == 0)
-			//            {
-			//                continue;
-			//            }
-			//        }
-			//        catch (Exception ex)
-			//        {
-			//            continue;
-			//        }
-
-			//        Attrs frmAttrs = en.getEnMap().getAttrs();
-			//        Attrs wkAttrs = wk.getEnMap().getAttrs();
-			//        foreach (Attr wkattr in wkAttrs)
-			//        {
-			//            if (wkattr.Key.Equals(StartWorkAttr.OID) || wkattr.Key.Equals(StartWorkAttr.FID) || wkattr.Key.Equals(StartWorkAttr.CDT)
-			//                || wkattr.Key.Equals(StartWorkAttr.RDT) || wkattr.Key.Equals(StartWorkAttr.MD5) || wkattr.Key.Equals(StartWorkAttr.Emps)
-			//                || wkattr.Key.Equals(StartWorkAttr.FK_Dept) || wkattr.Key.Equals(StartWorkAttr.PRI) || wkattr.Key.Equals(StartWorkAttr.Rec)
-			//                || wkattr.Key.Equals(StartWorkAttr.Title) || wkattr.Key.Equals(GERptAttr.FK_NY) || wkattr.Key.Equals(GERptAttr.FlowEmps)
-			//                || wkattr.Key.Equals(GERptAttr.FlowStarter) || wkattr.Key.Equals(GERptAttr.FlowStartRDT) || wkattr.Key.Equals(GERptAttr.WFState))
-			//            {
-			//                continue;
-			//            }
-
-			//            foreach (Attr attr in frmAttrs)
-			//            {
-			//                if (wkattr.Key.Equals(attr.getKey()))
-			//                {
-			//                    wk.SetValByKey(wkattr.Key, en.GetValStrByKey(attr.getKey()));
-			//                    break;
-			//                }
-
-			//            }
-
-			//        }
-
-			//    }
-			//    wk.Update();
-			//}
 
 
 				///#region 处理保存后事件
@@ -9431,10 +9212,7 @@ public class Dev2Interface
 	}
 	/** 
 	 从任务池里取出来一个子任务
-	 
-	 @param nodeid 节点编号
 	 @param workid 工作ID
-	 @param empNo 取出来的人员编号
 	 * @throws Exception 
 	*/
 	public static boolean Node_TaskPoolTakebackOne(long workid) throws Exception
@@ -9493,10 +9271,7 @@ public class Dev2Interface
 	}
 	/** 
 	 放入一个任务
-	 
-	 @param nodeid 节点编号
 	 @param workid 工作ID
-	 @param empNo 人员ID
 	 * @throws Exception
 	*/
 	public static void Node_TaskPoolPutOne(long workid) throws Exception
@@ -9571,8 +9346,7 @@ public class Dev2Interface
 	 
 	 @param workID 工作ID
 	 @param toNodeID 到达的节点ID
-	 @param emps 如果多个就用逗号分开
-	 @param Del_Selected 是否删除历史选择
+	 @param fk_emp 如果多个就用逗号分开
 	 * @throws Exception 
 	*/
 
@@ -9660,7 +9434,7 @@ public class Dev2Interface
 	 
 	 @param fk_flow 流程编号
 	 @param workid 工作ID
-	 @param way 挂起方式
+	 @param wayInt 挂起方式
 	 @param reldata 解除挂起日期(可以为空)
 	 @param hungNote 挂起原因
 	 @return 返回执行信息
@@ -9731,7 +9505,7 @@ public class Dev2Interface
 	 执行加签
 	 
 	 @param workid 工作ID
-	 @param askfor 加签方式
+	 @param askforSta 加签方式
 	 @param askForEmp 请求人员
 	 @param askForNote 内容
 	 @return 
@@ -9854,11 +9628,7 @@ public class Dev2Interface
 	}
 	/** 
 	 答复加签信息
-	 
-	 @param fk_flow 流程编号
-	 @param fk_node 节点编号
 	 @param workid 工作ID
-	 @param fid FID
 	 @param replyNote 答复信息
 	 @return 
 	 * @throws Exception 
@@ -10102,7 +9872,6 @@ public class Dev2Interface
 	 @param returnToNodeID 退回到的工作ID
 	 @param returnToEmp 退回到人员
 	 @param msg 退回原因
-	 @param isBackToThisNode 退回后是否要原路返回？
 	 @return 执行结果，此结果要提示给用户。
 	 * @throws Exception 
 	*/
@@ -10117,6 +9886,20 @@ public class Dev2Interface
 		return Node_ReturnWork(fk_flow, workID, fid, currentNodeID, returnToNodeID, returnToEmp, "无", false);
 	}
 
+	/**
+	 执行工作退回(退回指定的点)
+
+	 @param fk_flow 流程编号
+	 @param workID 工作ID
+	 @param fid 流程ID
+	 @param currentNodeID 当前节点ID
+	 @param returnToNodeID 退回到的工作ID
+	 @param returnToEmp 退回到人员
+	 @param msg 退回原因
+	 @param isBackToThisNode 退回后是否要原路返回？
+	 @return 执行结果，此结果要提示给用户。
+	  * @throws Exception
+	 */
 	public static String Node_ReturnWork(String fk_flow, long workID, long fid, int currentNodeID, int returnToNodeID, String returnToEmp, String msg, boolean isBackToThisNode) throws Exception
 	{
 		WorkReturn wr = new WorkReturn(fk_flow, workID, fid, currentNodeID, returnToNodeID, returnToEmp, isBackToThisNode, msg);
@@ -10163,7 +9946,13 @@ public class Dev2Interface
 	*/
 	public static int Node_GetCurrentNodeID(String fk_flow, long workid)
 	{
-		int nodeID = BP.DA.DBAccess.RunSQLReturnValInt("SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + workid + " AND FK_Flow='" + fk_flow + "'", 0);
+		Paras ps = new Paras();
+		ps.SQL = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Flow="+ SystemConfig.getAppCenterDBVarStr() +"FK_Flow";
+		ps.Add("WorkID", workid);
+		ps.Add("FK_Flow", fk_flow);
+
+		//String sql = "SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + workid + " AND FK_Flow='" + fk_flow + "'";
+		int nodeID = BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 		if (nodeID == 0)
 		{
 			return Integer.parseInt(fk_flow + "01");
@@ -10420,8 +10209,6 @@ public class Dev2Interface
 	}
 	/** 
 	 设置工作未读取
-	 
-	 @param nodeID 节点ID
 	 @param workid 工作ID
 	 @param userNo 要设置的人
 	*/
@@ -10443,11 +10230,6 @@ public class Dev2Interface
 	{
 		Node_SetWorkUnRead(workid, WebUser.getNo());
 	}
-
-		///#endregion 工作有关接口
-
-
-		///#region 流程属性与节点属性变更接口.
 	/** 
 	 更改流程属性
 	 

@@ -84,6 +84,8 @@ public class WF_CommEntity extends WebContralBase {
 
 			/// #region 保存新加行.
 			int newRowCount = this.GetRequestValInt("NewRowCount");
+			boolean isEntityOID = dtl.getIsOIDEntity();
+			boolean isEntityNo = dtl.getIsNoEntity();
 			for (int i = 0; i < newRowCount; i++) {
 				String val = "";
 				for (Attr attr : map.getAttrs()) {
@@ -125,7 +127,21 @@ public class WF_CommEntity extends WebContralBase {
 				}
 				// dtl.SetValByKey(pkval, 0);
 				dtl.SetValByKey(this.GetRequestVal("RefKey"), this.GetRequestVal("RefVal"));
-				dtl.setPKVal("0");
+
+				if (isEntityOID == true)
+				{
+					dtl.setPKVal("0") ;
+					dtl.Insert();
+					continue;
+				}
+
+				if (isEntityNo == true && dtl.getEnMap().getIsAutoGenerNo()==true)
+				{
+					dtl.setPKVal(dtl.GenerNewNoByKey("No"));
+					dtl.Insert();
+					continue;
+				}
+//				dtl.setPKVal("0");
 				dtl.Insert();
 			}
 

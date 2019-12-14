@@ -306,14 +306,16 @@ public class Glo
 	*/
 	public static void WriteUserLog(String logType, String empNo, String msg, String ip) throws Exception
 	{
-		UserLog ul = new UserLog();
-		ul.setMyPK(DBAccess.GenerGUID());
-		ul.setFK_Emp(empNo);
-		ul.setLogFlag(logType);
-		ul.setDocs(msg);
-		ul.setIP(ip);
-		ul.setRDT(DataType.getCurrentDataTime());
-		ul.Insert();
+		//安装数据库脚本时日志表没有，同步ccflow注掉此处 by sly
+		return；
+		// UserLog ul = new UserLog();
+		// ul.setMyPK(DBAccess.GenerGUID());
+		// ul.setFK_Emp(empNo);
+		// ul.setLogFlag(logType);
+		// ul.setDocs(msg);
+		// ul.setIP(ip);
+		// ul.setRDT(DataType.getCurrentDataTime());
+		// ul.Insert();
 	}
 	/** 
 	 写入用户日志

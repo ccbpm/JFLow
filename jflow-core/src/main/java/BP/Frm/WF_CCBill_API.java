@@ -1,5 +1,6 @@
 package BP.Frm;
 
+import BP.DA.AtPara;
 import BP.DA.DBAccess;
 import BP.DA.DBType;
 import BP.DA.DataTable;
@@ -219,6 +220,51 @@ public class WF_CCBill_API extends WebContralBase {
         }
 
         return BP.Tools.Json.ToJson(dt);
+    }
+    
+  /// <summary>
+    /// 根据单据编号创建或者更新实体信息.
+    /// </summary>
+    /// <returns>返回url：打开该实体的url.</returns>
+    public String CCFrom_NewFrmBillAsSpecBillNo() throws Exception
+    {
+
+    	String billNo = this.GetRequestVal("BillNo");
+    	String title = this.GetRequestVal("Title");
+    	String paras = this.GetRequestVal("Paras");
+
+        if (DataType.IsNullOrEmpty(paras) == true)
+            paras = "";
+        AtPara ap = new AtPara(paras);
+
+        GEEntity en = new GEEntity(this.getFrmID());
+        int i = en.Retrieve("BillNo", billNo);
+        if (i == 0)
+        {
+            long workid = BP.Frm.Dev2Interface.CreateBlankBillID(this.getFrmID(), WebUser.getNo(), ap.getHisHT(), billNo);
+            en = new GEEntity(this.getFrmID(), workid);
+            if (DataType.IsNullOrEmpty(title) == false)
+            {
+                en.SetValByKey("Title", title);
+                en.Update();
+            }
+            return "url@../../WF/CCBill/MyBill.htm?FrmID=" + this.getFrmID() + "&OID=" + workid;
+        }
+        else
+        {
+            if (DataType.IsNullOrEmpty(paras) == false)
+            {
+                en.Copy(ap.getHisHT());
+                en.Update();
+            }
+
+            if (DataType.IsNullOrEmpty(title) == false && en.GetValStrByKey("Title").equals(title)==false)
+            {
+                en.SetValByKey("Title", title);
+                en.Update();
+            }
+        }
+        return "url@../../WF/CCBill/MyBill.htm?FrmID=" + this.getFrmID() + "&OID=" + en.getOID();
     }
 
 }

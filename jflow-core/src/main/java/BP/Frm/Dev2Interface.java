@@ -39,11 +39,18 @@ public class Dev2Interface
 	public static long CreateBlankBillID(String frmID, String userNo, Hashtable htParas,String billNo) throws Exception
 	{
 		GenerBill gb = new GenerBill();
-		int i = gb.Retrieve(GenerBillAttr.FrmID, frmID, GenerBillAttr.Starter, userNo, GenerBillAttr.BillState, 0);
-		if (i == 1)
-		{
-			return gb.getWorkID();
-		}
+
+		   if (DataType.IsNullOrEmpty(billNo) == true)
+           {
+               int i = gb.Retrieve(GenerBillAttr.FrmID, frmID, GenerBillAttr.Starter, userNo, GenerBillAttr.BillState, 0);
+               if (i == 1)
+                   return gb.getWorkID();
+           }else
+           {
+               int i = gb.Retrieve(GenerBillAttr.FrmID, frmID, GenerBillAttr.BillNo, billNo);
+               if (i == 1)
+                   return gb.getWorkID();
+           }
 
 		FrmBill fb = new FrmBill(frmID);
 
@@ -53,6 +60,9 @@ public class Dev2Interface
 		gb.setStarterName(WebUser.getName());
 		gb.setFrmName(fb.getName()); //单据名称.
 		gb.setFrmID(fb.getNo()); //单据ID
+		
+		  if (DataType.IsNullOrEmpty(billNo) == false)
+              gb.setBillNo(billNo) ; //BillNo
 
 		gb.setFK_FrmTree(fb.getFK_FormTree()); //单据类别.
 		gb.setRDT(BP.DA.DataType.getCurrentDataTime());

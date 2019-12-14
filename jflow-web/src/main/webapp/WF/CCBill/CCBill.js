@@ -51,7 +51,14 @@ function CCFrom_FrmOptionUrlByOID(frmID, pkval) {
  * @param {主键} pkval
  */
 function CCFrom_FrmOptionUrlByBillNo(frmID, billNo) {
-    return "../WF/CCBill/MyBill.htm?FrmID=" + frmID + "&BillNo=" + billNo;
+
+    var en = new Entity(frmID);
+    var i = en.Retrieve("BillNo", billNo);
+    if (i == 0) {
+        en.BillNo = billno;
+        en.Insert();
+    }
+    return "../WF/CCBill/MyBill.htm?FrmID=" + frmID + "&OID=" + en.OID;
 }
 
 /**
@@ -98,7 +105,8 @@ function CCForm_SaveAsDraftByOID(frmID,oid) {
     var handler = new HttpHandler("BP.Frm.WF_CCBill");
     handler.AddPara("FrmID", frmID);
     handler.AddPara("OID", oid);
-
+   // var billOID = handler.DoMethodReturnString("MyBill_CreateBlankBillID");
+    //return billOID;
 }
 
 /**
@@ -114,7 +122,7 @@ function CCForm_SaveAsDraftByBillNo(frmID, billNo) {
     //return billOID;
 }
 
-
+ 
 
 /**
  * 创建表单实例. 说明:指定表单的ID, specID,与参数创建表单实例.
@@ -143,25 +151,27 @@ function CCFrom_NewFrmEntityAsSpecOID(frmID, specOID, specTitle, paras) {
  * @param {表单ID} frmID
  * @param {指定的int类型的OID，作为主键} specBillNo
  * @param {指定的Title，可以为空} specTitle
- * @param {主表字段的参数，一个key val 的json格式的数据.} paras
+ * @param {主表字段的参数，一个key val 的strs格式的数据,比如:@Name=zhangsan@Age=12@Add=山东济南} paras
  */
 function CCFrom_NewFrmEntityAsSpecBillNo(frmID, specBillNo, specTitle, paras) {
     var handler = new HttpHandler("BP.Frm.WF_CCBill_API");
     handler.AddPara("FrmID", frmID);
     handler.AddPara("BillNo", specBillNo);
     handler.AddPara("Title", specTitle);
-    handler.AddJson(paras); //把参数加入.
+    handler.AddPara("Paras", paras); //加入参数.
 
-    var data = handler.DoMethodReturnJSON("CCFrom_NewFrmEntityAsSpecBillNo");
-    if (data.indexOf('err@') == -1) {
-        throw Exception(data); // ??是不是这个语法？
+    var data = handler.DoMethodReturnString("CCFrom_NewFrmBillAsSpecBillNo");
+    if (data.indexOf('url@') == -1) {
+        alert(data);
+        return;
+        //throw Exception(data); // ??是不是这个语法？
     }
     return data;
 }
 
 
 /**
- *  创建表单实例： 返回一个 frmJson。
+ *  创建表单实例： 返回一个 frmJson。 
  * @param {表单ID} frmID
  * @param {标题/名称:可以为空} specTitle
  * @param {主表的参数 Key Val 可为空} paras
@@ -183,7 +193,7 @@ function CCFrom_NewFrmEntity(frmID, specTitle, paras) {
 
 /**
  * 删除表单实例. 说明:指定表单的ID,OID删除实例.
- *
+ * 
  * @param {表单ID} frmID
  * @param {单据编号} oid
  * 如果返回 err@xxxx 则表是失败.
@@ -203,7 +213,7 @@ function CCFrom_DeleteFrmEntityByOID(frmID, oid) {
 
 /**
  * 删除表单实例. 说明:指定表单的ID,OID删除实例.
- *
+ * 
  * @param {表单ID} frmID
  * @param {单据编号} BillNo
  * 如果返回 err@xxxx 则表是失败.

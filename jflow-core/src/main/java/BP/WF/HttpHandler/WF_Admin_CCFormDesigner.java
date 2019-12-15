@@ -330,36 +330,34 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 	{
 		//根据不同的表单类型转入不同的表单设计器上去.
 		BP.Sys.MapData md = new BP.Sys.MapData(this.getFK_MapData());
-		if (md.getHisFrmType() == BP.Sys.FrmType.FoolForm)
-		{
-			/* 傻瓜表单 需要翻译. */
-			return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + this.getFK_MapData();
-		}
+        if (md.getHisFrmType() == BP.Sys.FrmType.FoolForm)
+        {
+            /* 傻瓜表单 需要翻译. */
+            return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + this.getFK_MapData();
+        }
 
-		if (md.getHisFrmType() == BP.Sys.FrmType.FreeFrm)
-		{
-			/* 自由表单 */
-			return "url@FormDesigner.htm?FK_MapData=" + this.getFK_MapData() + "&IsFirst=1";
-		}
+        if (md.getHisFrmType() == BP.Sys.FrmType.FreeFrm)
+        {
+            /* 自由表单 */
+            return "url@../CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getFK_MapData() + "&IsFirst=1";
+        }
 
-		if (md.getHisFrmType() == BP.Sys.FrmType.VSTOForExcel)
-		{
-			/* 自由表单 */
-			return "url@FormDesigner.htm?FK_MapData=" + this.getFK_MapData();
-		}
+        if (md.getHisFrmType() == BP.Sys.FrmType.VSTOForExcel)
+        {
+            /* 自由表单 */
+            return "url@../CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getFK_MapData();
+        }
 
-		if (md.getHisFrmType() == BP.Sys.FrmType.Url)
-		{
-			/* 自由表单 */
-			return "url@../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapDataURL&No=" + this.getFK_MapData();
-		}
+        if (md.getHisFrmType() == BP.Sys.FrmType.Url)
+        {
+            /* 自由表单 */
+            return "url@../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapDataURL&No=" + this.getFK_MapData();
+        }
 
-		if (md.getHisFrmType() == BP.Sys.FrmType.Entity)
-		{
-			return "url@../../Comm/Ens.htm?EnsName=" + md.getPTable();
-		}
+        if (md.getHisFrmType() == BP.Sys.FrmType.Entity)
+            return "url@../../Comm/Ens.htm?EnsName=" + md.getPTable();
 
-		return "err@没有判断的表单转入类型" + md.getHisFrmType().toString();
+        return "err@没有判断的表单转入类型" + md.getHisFrmType().toString();
 	}
 
 	public final String PublicNoNameCtrlCreate() throws Exception

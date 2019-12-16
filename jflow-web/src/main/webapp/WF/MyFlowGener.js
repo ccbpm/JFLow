@@ -569,7 +569,10 @@ function Save(saveType) {
         $('#Message').html(data.substring(4, data.length));
         $('#MessageDiv').modal().show();
     }
+    if(saveType==0){//0:保存按钮保存;1:发送时的保存
 
+       alert("保存成功！");
+    }
 
 }
 

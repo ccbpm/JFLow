@@ -259,19 +259,19 @@ public class MapAttrString extends EntityMyPK
 
 
 			///#region 高级设置.
-		rm = new RefMethod();
-		rm.Title = "扩展控件";
-		rm.ClassMethodName = this.toString() + ".DoEditFExtContral()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "扩展控件2019";
-		rm.ClassMethodName = this.toString() + ".DoEditFExtContral2019()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+//		rm = new RefMethod();
+//		rm.Title = "扩展控件";
+//		rm.ClassMethodName = this.toString() + ".DoEditFExtContral()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		rm.GroupName = "高级设置";
+//		map.AddRefMethod(rm);
+//
+//		rm = new RefMethod();
+//		rm.Title = "扩展控件2019";
+//		rm.ClassMethodName = this.toString() + ".DoEditFExtContral2019()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		rm.GroupName = "高级设置";
+//		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批处理";

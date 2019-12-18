@@ -673,7 +673,7 @@ public class MapAttr extends EntityMyPK
 		String str = this.GetValStringByKey(MapAttrAttr.GroupID);
 		if (str.equals("无") || str.equals(""))
 		{
-			return 0;
+			return 1;
 		}
 		return Long.parseLong(str);
 	}

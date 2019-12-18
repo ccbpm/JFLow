@@ -84,6 +84,12 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
+				String temp = wk.GetValStrByKey(attr.getKey());
+				if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
+				{
+					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey() + "T"));
+					titleRole = titleRole.replace("@" + attr.getKey(), temp);
+				}
 				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 			}
 

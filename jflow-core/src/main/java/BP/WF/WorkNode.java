@@ -457,7 +457,7 @@ public class WorkNode {
 								.ParseSysDateTime2DateTime(this.getHisWork().GetValByKey(keyOfEn).toString());
 					}
 
-				}
+				} @fanleiwei
 			}
 
 		}
@@ -6567,7 +6567,13 @@ public class WorkNode {
 			String todoEmps = this.getHisGenerWorkFlow().getTodoEmps();
 			todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
 			todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName(), "");
-
+			// 追加当前操作人
+			String emps = this.getHisGenerWorkFlow().getEmps();
+			if (emps.contains("@" + WebUser.getNo() + "@") == false)
+			{
+				emps = emps + WebUser.getNo() + "@";
+			}
+			this.getHisGenerWorkFlow().setEmps(emps);
 			this.getHisGenerWorkFlow().setTodoEmps(todoEmps);
 			this.getHisGenerWorkFlow().Update(GenerWorkFlowAttr.TodoEmps, todoEmps);
 

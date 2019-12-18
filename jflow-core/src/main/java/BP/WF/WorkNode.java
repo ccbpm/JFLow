@@ -3368,7 +3368,7 @@ public class WorkNode {
 
 		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
 
-		BigDecimal passRate = numPassed.divide(numAll).multiply(new BigDecimal(100));
+		BigDecimal passRate = numPassed.divide(numAll,4,BigDecimal.ROUND_CEILING).multiply(new BigDecimal(100));
 		if (toNode.getPassRate().compareTo(passRate) <= 0) {
 			/* 这时已经通过,可以让主线程看到待办. */
 			ps = new Paras();
@@ -9036,7 +9036,7 @@ public class WorkNode {
 
 		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount"));
 
-		BigDecimal passRate1 = numPassed.divide(numAll1).multiply(new BigDecimal(100));
+		BigDecimal passRate1 = numPassed.divide(numAll1,4,BigDecimal.ROUND_CEILING).multiply(new BigDecimal(100));
 		if (nd.getPassRate().compareTo(passRate1) <= 0) {
 			ps = new Paras();
 			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0,FID=0 WHERE FK_Node=" + dbStr + "FK_Node AND WorkID="

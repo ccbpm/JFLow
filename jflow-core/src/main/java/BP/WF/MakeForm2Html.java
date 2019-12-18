@@ -854,6 +854,25 @@ public class MakeForm2Html
         //#endregion 生成头部信息.
 
         GroupFields gfs = new GroupFields(frmID);
+        if (DataType.IsNullOrEmpty(FK_Node) == false && DataType.IsNullOrEmpty(flowNo) == false)
+        {
+            Node nd = new Node(Integer.parseInt(FK_Node.replace("ND","")));
+            if (frmID.startsWith("ND")==true && nd.getFrmWorkCheckSta() != FrmWorkCheckSta.Disable)
+            {
+                GroupField gf =(GroupField)gfs.GetEntityByKey(GroupFieldAttr.CtrlType, "FWC");
+                if (gf == null)
+                {
+                    gf = new GroupField();
+                    gf.setOID(100);
+                    gf.setFrmID(nd.getNodeFrmID());
+                    gf.setCtrlType("FWC");
+                    gf.setCtrlID("FWCND" + nd.getNodeID());
+                    gf.setIdx(100);
+                    gf.setLab("审核信息");
+                    gfs.AddEntity(gf);
+                }
+            }
+        }
         for (GroupField gf : gfs.ToJavaList())
         {
             //输出标题.

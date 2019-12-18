@@ -837,16 +837,31 @@ public class WF_MyFlow extends WebContralBase {
 
 			/* 判断是否是加签状态，如果是，就判断是否是主持人，如果不是主持人，就让其 isAskFor=true ,屏蔽退回等按钮. */
 			/** 说明：针对于组长模式的会签，协作模式的会签加签人仍可以加签 */
-			if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing) {
-				if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader) {
-					if (btnLab.getHuiQianLeaderRole().getValue() == 0) {
-						if (!gwf.getHuiQianZhuChiRen().equals(WebUser.getNo())) {
-							isAskForOrHuiQian = true;
+			/**  修复会签状态不正确的问题，如果是会签状态，但是WF_GenerWorkerList中只有一个待办，则说明数据不正确 yuanlina*/
+			if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)
+			{
+				GenerWorkerLists gwls = new GenerWorkerLists();
+				String sql = "SELECT Count(*) From WF_GenerWorkerList Where WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND (IsPass=0 OR IsPass=90)";
+				if (DBAccess.RunSQLReturnValInt(sql) == 1 )
+				{
+					//修改流程会签状态
+					gwf.setHuiQianTaskSta(HuiQianTaskSta.None);
+					isAskForOrHuiQian = false;
+				}
+				else
+				{
+					if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader)
+					{
+						if (btnLab.getHuiQianLeaderRole().getValue() == 0)
+						{
+							if (gwf.getHuiQianZhuChiRen() != WebUser.getNo() && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+								isAskForOrHuiQian = true;
 						}
-					} else {
-						// 不是主持人
-						if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false) {
-							isAskForOrHuiQian = true;
+						else
+						{
+							//不是主持人
+							if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+								isAskForOrHuiQian = true;
 						}
 					}
 				}

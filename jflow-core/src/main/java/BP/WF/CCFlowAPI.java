@@ -235,7 +235,7 @@ public class CCFlowAPI
 			{
 				boolean isHaveFWC = false;
 				//绑定表单库中的表单
-				if (count != 0 && frmNode.getIsEnableFWC() == true && nd.getFrmWorkCheckSta() != FrmWorkCheckSta.Disable)
+				if ((count != 0 && frmNode.getIsEnableFWC() == true || nd.getNodeFrmID() == "ND" + nd.getNodeID()) && nd.getFrmWorkCheckSta() != FrmWorkCheckSta.Disable)
 				{
 					isHaveFWC = true;
 				}

@@ -4201,7 +4201,7 @@ public class Dev2Interface
 		Node nd = new Node(currNodeID);
 		if (nd.getIsStartNode() == false)
 		{
-			if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
+			if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing && gwf.getHuiQianZhuChiRen()!=BP.Web.WebUser.getNo())
 			{
 				nodeName = nd.getName() + "(会签)";
 			}

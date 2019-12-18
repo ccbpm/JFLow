@@ -89,8 +89,9 @@ public class WorkFlowBuessRole
 				{
 					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey() + "T"));
 					titleRole = titleRole.replace("@" + attr.getKey(), temp);
+				}else {
+					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 				}
-				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
 			}
 
 			//在考虑其它的字段替换.
@@ -184,8 +185,14 @@ public class WorkFlowBuessRole
 				}
 
 				String temp = wk.GetValStrByKey(attr.getKey());
-				
-				titleRole = titleRole.replace("@" + attr.getKey(), temp);
+				if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
+				{
+					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey() + "T"));
+					titleRole = titleRole.replace("@" + attr.getKey(), temp);
+				}else {
+					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
+				}
+
 			}
 
 			//在考虑其它的字段替换.
@@ -290,7 +297,16 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
+				if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
+				{
+					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey() + "T"));
+					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
+				}
+				else
+				{
+					titleRole = titleRole.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
+				}
+
 			}
 		}
 		titleRole = titleRole.replace('~', '-');
@@ -360,7 +376,15 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-				titleRole = titleRole.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
+				if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
+				{
+					titleRole = titleRole.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey() + "T"));
+					titleRole = titleRole.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
+				}
+				else
+				{
+					titleRole = titleRole.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
+				}
 			}
 
 			//如果全部已经替换完成.
@@ -379,7 +403,6 @@ public class WorkFlowBuessRole
 	/** 
 	 产生单据编号
 	 
-	 @param billFormat
 	 @param en
 	 @return 
 	 * @throws Exception 
@@ -567,7 +590,6 @@ public class WorkFlowBuessRole
 	 @param currNode 当前的节点
 	 @param workid 工作ID
 	 @param currWorkFlow 当前的工作主表信息
-	 @param enPara 参数
 	 @return 返回找到的节点
 	 * @throws Exception 
 	*/

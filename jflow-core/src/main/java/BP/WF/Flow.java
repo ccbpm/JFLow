@@ -79,11 +79,9 @@ import BP.WF.Template.SubFlowYanXuAttr;
 import BP.WF.Template.SubFlowYanXus;
 import BP.WF.Template.SubFlows;
 import BP.Web.*;
-import org.springframework.jdbc.core.metadata.GenericTableMetaDataProvider;
 import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
-import java.time.*;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -538,6 +536,7 @@ public class Flow extends BP.En.EntityNoName {
 
 	public final void setFrmUrl(String value) throws Exception{
 		this.SetValByKey(FlowAttr.FrmUrl,value);
+
 	}
 
 	/**
@@ -665,7 +664,6 @@ public class Flow extends BP.En.EntityNoName {
 					if (nodeID != this.getStartNodeID()) {
 						String error = "@这里出现了blank的状态下流程运行到其它的节点上去了的情况，当前停留节点:" + nodeID;
 						Log.DefaultLogWriteLineError(error);
-						// throw new Exception(error);
 					}
 				}
 			}
@@ -713,8 +711,6 @@ public class Flow extends BP.En.EntityNoName {
 					rpt.setFlowStartRDT(BP.DA.DataType.getCurrentDataTime());
 					rpt.setMyNum(0);
 					rpt.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this, wk));
-					// WebUser.getNo() + "," + WebUser.getName() + "在" +
-					// DataType.CurrentDataCNOfShort + "发起.";
 					rpt.setWFState(WFState.Blank);
 					rpt.setFlowStarter(emp.getNo());
 					rpt.setFK_NY(DataType.getCurrentYearMonth());
@@ -1277,14 +1273,12 @@ public class Flow extends BP.En.EntityNoName {
 		return wk;
 	}
 
-	/// #endregion 创建新工作.
-
-	/// #region 初始化一个工作.
 	/**
 	 * 初始化一个工作
 	 * 
 	 * @param workid
-	 * @param fk_node
+	 * @param nd
+	 * @param isPostBack
 	 * @return
 	 * @throws Exception
 	 */

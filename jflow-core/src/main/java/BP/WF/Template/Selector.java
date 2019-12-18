@@ -610,6 +610,7 @@ public class Selector extends Entity
 	private DataSet ByStation(int nodeID, Entity en) throws Exception
 	{
 		// 定义数据容器.
+		// 定义数据容器.
 		DataSet ds = new DataSet();
 		String sql = null;
 		DataTable dt = null;
@@ -619,7 +620,7 @@ public class Selector extends Entity
 		if (nd.getHisDeliveryWay() == DeliveryWay.BySelectedForPrj)
 		{
 			//部门.
-			sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d, WF_PrjEmp E WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND d.No=e.FK_Emp And C.FK_Emp=E.FK_Emp  AND B.FK_Node=" + nodeID + " AND E.FK_Prj='" + en.GetValStrByKey("PrjNo") + "' ";
+			sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d, WF_PrjEmp E WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND d.No=e.FK_Emp And C.FK_Emp=E.FK_Emp  AND B.FK_Node=" + nodeID + " AND E.FK_Prj='" + en.GetValStrByKey("PrjNo") + "' ORDER BY A.No,A.Idx";
 			dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "Depts";
 			ds.Tables.add(dt);
@@ -628,17 +629,13 @@ public class Selector extends Entity
 			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
-				{
-					sql = "SELECT * FROM (SELECT a.FK_Emp as No,c.Name, a.FK_Dept,a.Idx FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c, WF_PrjEmp d  WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station And a.FK_Emp=d.FK_Emp And C.No=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "') ORDER BY FK_Dept,Idx,No";
-				}
+					sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d  WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a.No=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "') ORDER BY FK_Dept,Idx,No";
 				else
-				{
-					sql = "SELECT a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c, WF_PrjEmp d  WHERE a.FK_Emp=c.No AND B.FK_Station=a.FK_Station And a.FK_Emp=d.FK_Emp And C.No=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ";
-				}
+					sql = "SELECT distinct a.No,a.Name, a.FK_Dept,A.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d  WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a.No=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ORDER BY A.Idx ";
 			}
 			else
 			{
-				sql = "SELECT a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c, WF_PrjEmp d WHERE a.FK_Emp=c.No AND B.FK_Station=a.FK_Station And a.FK_Emp=d.FK_Emp And C.No=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ";
+				sql = "SELECT distinct a.No,a.Name, a.FK_Dept,A.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a.No=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ORDER BY A.Idx ";
 			}
 
 			dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
@@ -649,7 +646,7 @@ public class Selector extends Entity
 
 
 		//部门.
-		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + " ";
+		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + " ORDER BY A.No,A.Idx";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
 		ds.Tables.add(dt);
@@ -658,22 +655,19 @@ public class Selector extends Entity
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
-			{
-				sql = "SELECT * FROM (SELECT  a.FK_Emp as No,c.Name, a.FK_Dept,a.Idx FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + ") ";
-			}
+				sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + ") ORDER BY FK_Dept,Idx,No";
 			else
-			{
-				sql = "SELECT  a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + " ";
-			}
+				sql = "SELECT distinct a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID+"  ORDER BY A.Idx";
 		}
 		else
 		{
-			sql = "SELECT  a.FK_Emp as No,c.Name, a.FK_Dept FROM Port_DeptEmpStation a,  WF_NodeStation b, Port_Emp c WHERE a.FK_Emp=c.No AND a.FK_Station=b.FK_Station AND b.FK_Node=" + nodeID + " ";
+			sql = "SELECT distinct a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
 		}
 
 		dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
 		ds.Tables.add(dtEmp);
+
 
 		return ds;
 	}

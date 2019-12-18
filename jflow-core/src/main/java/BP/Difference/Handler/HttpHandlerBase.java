@@ -288,19 +288,6 @@ public abstract class HttpHandlerBase
         return s;
     }
 
-//	public void setMyPK(String myPK) {
-//		MyPK = myPK;
-//	}
-
-//	@PostConstruct
-//	public void init(){
-//		HttpServletRequest request = ContextHolderUtils.getRequest();
-//		//setFK_Node(request.getParameter("FK_Node"));
-//		//setFID(request.getParameter("FID"));
-//		//setWorkID(request.getParameter("WorkID"));
-//		//setFK_Flow(request.getParameter("FK_Flow"));
-//		//setMyPK(request.getParameter("MyPK"));
-//	}
 
     /**
      * 输出Alert

@@ -787,6 +787,8 @@ public class MapDtl extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.PTable, value);
 	}
+
+
 	/** 
 	 过滤的SQL表达式.
 	*/

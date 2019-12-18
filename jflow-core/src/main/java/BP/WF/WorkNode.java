@@ -5316,53 +5316,61 @@ public class WorkNode {
 
 				/* 只有一个待办,说明自己就是最后的一个人. */
 				if (num == 1) {
-					this.getHisGenerWorkFlow()
-							.setSender(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
-					this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
-
-					// 如果是任意组长可以发送,则需要设置所有的GenerWorkerList待办结束
-
-					if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.EveryOneMain) {
-						String sql = "Delete FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID() + " AND FK_Node="
-								+ this.getHisNode().getNodeID() + " AND IsPass=0";
-						DBAccess.RunSQL(sql);
-
+					if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne) {
+						this.getHisGenerWorkFlow().setSender(BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.getNo(), BP.Web.WebUser.getName()));
+						this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+						return false;
 					}
-					return false;
-				}
+					//说明是原始主持人
+					if (this.getHisGenerWorkFlow().GetParaString("AddLeader").contains(BP.Web.WebUser.getNo() + ",") == false && num == 0) {
+						this.getHisGenerWorkFlow()
+								.setSender(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
+						this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
 
-				// 把当前的待办设置已办，并且提示未处理的人当前节点是主持人。
-				for (GenerWorkerList gwl : gwls.ToJavaList()) {
-					if (!gwl.getFK_Emp().equals(WebUser.getNo())) {
-						continue;
-					}
+						// 如果是任意组长可以发送,则需要设置所有的GenerWorkerList待办结束
 
-					// 设置当前已经完成.
-					gwl.setIsPassInt(1);
-					gwl.Update();
+						if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.EveryOneMain) {
+							String sql = "Delete FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID() + " AND FK_Node="
+									+ this.getHisNode().getNodeID() + " AND IsPass=0";
+							DBAccess.RunSQL(sql);
 
-					// 检查完成条件。
-					if (this.getHisNode().getIsEndNode() == false) {
-						this.CheckCompleteCondition();
-					}
-					// 调用发送成功事件.
-					String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
-							this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
-					this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+						}
+						return false;
 
-					// 执行时效考核.
-					if (this.rptGe == null) {
-						Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
-								this.rptGe.getTitle(), gwl);
 					} else {
-						Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
-								this.getHisGenerWorkFlow().getTitle(), gwl);
+						// 把当前的待办设置已办，并且提示未处理的人当前节点是主持人。
+						for (GenerWorkerList gwl : gwls.ToJavaList()) {
+							if (!gwl.getFK_Emp().equals(WebUser.getNo())) {
+								continue;
+							}
+
+							// 设置当前已经完成.
+							gwl.setIsPassInt(1);
+							gwl.Update();
+
+							// 检查完成条件。
+							if (this.getHisNode().getIsEndNode() == false) {
+								this.CheckCompleteCondition();
+							}
+							// 调用发送成功事件.
+							String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.SendSuccess,
+									this.getHisNode(), this.rptGe, null, this.HisMsgObjs);
+							this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+
+							// 执行时效考核.
+							if (this.rptGe == null) {
+								Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
+										this.rptGe.getTitle(), gwl);
+							} else {
+								Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
+										this.getHisGenerWorkFlow().getTitle(), gwl);
+							}
+
+							this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(),
+									this.getHisNode().getName(), "协作发送");
+						}
 					}
-
-					this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(),
-							this.getHisNode().getName(), "协作发送");
 				}
-
 				if (SystemConfig.getCustomerNo().equals("LIMS")) {
 					this.getHisGenerWorkFlow()
 							.setSender(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
@@ -5393,6 +5401,7 @@ public class WorkNode {
 
 		if (mynum == 1) {
 			this.getHisGenerWorkFlow().setSender(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
+			this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
 			return false; // 只有一个待办,说明自己就是最后的一个人.
 		}
 

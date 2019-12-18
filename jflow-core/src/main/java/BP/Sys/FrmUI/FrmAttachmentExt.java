@@ -861,7 +861,7 @@ public class FrmAttachmentExt extends EntityMyPK
 
 			///#region 处理分组.
 		//更新相关的分组信息.
-		if (this.getIsVisable() == true)
+		if (this.getIsVisable() == true && this.getFK_Node() == 0)
 		{
 			GroupField gf = new GroupField();
 			int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());

@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
+import BP.WF.Node;
 
 /** 
  节点表单
@@ -383,6 +384,12 @@ public class FrmNode extends EntityMyPK
 			//不可以编辑.
 			this.setFrmSln(FrmSln.Default);
 			// this.IsEdit = false;
+			Node node = new Node(fk_node);
+			if (node.getFrmWorkCheckSta() != FrmWorkCheckSta.Disable)
+			{
+				this.setIsEnableFWC(true);
+
+			}
 			return;
 //			throw new RuntimeException("@表单关联信息已被删除。");
 		}

@@ -230,6 +230,28 @@ public class WF_CCBill extends WebContralBase
 		String str = BP.Frm.Dev2Interface.SaveWork(this.getFrmID(), this.getWorkID());
 		return str;
 	}
+	public String MyBill_Submit() throws Exception
+	{
+		//执行保存.
+		GEEntity rpt = new GEEntity(this.getFrmID(), this.getWorkID());
+		Object tempVar = BP.Sys.PubClass.CopyFromRequest(rpt);
+		rpt = tempVar instanceof GEEntity ? (GEEntity)tempVar : null;
+
+		Hashtable ht = GetMainTableHT();
+
+
+		for (Object item : ht.keySet())
+		{
+			rpt.SetValByKey(item.toString(), ht.get(item));
+		}
+
+		rpt.setOID(this.getWorkID());
+		rpt.SetValByKey("BillState", BillState.Over.getValue());
+		rpt.Update();
+
+		String str = BP.Frm.Dev2Interface.SaveWork(this.getFrmID(), this.getWorkID());
+		return str;
+	}
 	/** 
 	 执行保存
 	 
@@ -257,7 +279,29 @@ public class WF_CCBill extends WebContralBase
 		String str = BP.Frm.Dev2Interface.SaveWork(this.getFrmID(), this.getWorkID());
 		return str;
 	}
+	/// <summary>
+	/// 执行保存
+	/// </summary>
+	/// <returns></returns>
+	public String MyDict_Submit() throws Exception
+	{
+		GEEntity rpt = new GEEntity(this.getFrmID(), this.getWorkID());
+		Object tempVar = BP.Sys.PubClass.CopyFromRequest(rpt);
+		rpt = tempVar instanceof GEEntity ? (GEEntity)tempVar : null;
 
+		Hashtable ht = GetMainTableHT();
+		for (Object item : ht.keySet())
+		{
+			rpt.SetValByKey(item.toString(), ht.get(item));
+		}
+
+		rpt.setOID(this.getWorkID());
+		rpt.SetValByKey("BillState", BillState.Over.getValue());
+		rpt.Update();
+
+		String str = BP.Frm.Dev2Interface.SaveWork(this.getFrmID(), this.getWorkID());
+		return str;
+	}
 	public final String GetFrmEntitys() throws Exception
 	{
 		GEEntitys rpts = new GEEntitys(this.getFrmID());

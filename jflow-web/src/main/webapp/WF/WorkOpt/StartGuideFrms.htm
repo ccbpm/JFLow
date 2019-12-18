@@ -13,8 +13,9 @@
 
         $(function () {
 
-        	var workid=GetQueryString("WorkID");
             // 初始化人员.   //开始加载数据.
+
+            var workid = GetQueryString("WorkID");
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
             handler.AddPara("FK_Flow", GetQueryString("FK_Flow"));

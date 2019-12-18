@@ -1636,6 +1636,11 @@ var Entities = (function () {
                 success: function (data) {
 
                     if (data.indexOf("err@") != -1) {
+                        data = data.replace('err@', '');
+                        data += "\t\n参数信息:";
+                        data += "\t\nDoType=Entities_Init";
+                        data += "\t\EnsName=" + self.ensName;
+                        data += "\t\Paras=" + self.Paras;
                         alert(data);
                         return;
                     }
@@ -1791,6 +1796,20 @@ var Entities = (function () {
 
             return string;
 
+        },
+        GetEns: function () {
+            // { data: [{}, {}, {}], length: 3, name: 'xxx' };
+            var result = [];
+            for (const key in this) {
+                console.log(typeof this[key]);
+                if (typeof this[key] === 'object') {
+                    result.push(this[key]);
+                    // delete ens[key];
+                }
+            }
+            this.data = result;
+            console.log('data', this);
+            return this;
         },
 
         DoMethodReturnJSON: function (methodName, params) {

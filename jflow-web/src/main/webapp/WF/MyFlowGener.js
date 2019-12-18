@@ -498,9 +498,12 @@ function Save(saveType) {
         if (f == false)
             return false;
     }
-
-    if (checkAths() == false)
-        return false;
+	var msg = checkAths();
+    if (msg != ""){
+		alert(msg);
+		return false;
+	}
+        
 
 
     //必填项和正则表达式检查
@@ -569,10 +572,7 @@ function Save(saveType) {
         $('#Message').html(data.substring(4, data.length));
         $('#MessageDiv').modal().show();
     }
-    if(saveType==0){//0:保存按钮保存;1:发送时的保存
 
-       alert("保存成功！");
-    }
 
 }
 
@@ -714,7 +714,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
     var formArr = formss.split('&');
     var formArrResult = [];
-
+    var haseExistStr = ",";
     $.each(formArr, function (i, ele) {
         if (ele.split('=')[0].indexOf('CB_') == 0) {
             if ($('#' + ele.split('=')[0] + ':checked').length == 1) {
@@ -735,6 +735,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
             mystr = ctrlID.replace("DDL_", "TB_") + 'T=' + item;
             formArrResult.push(mystr);
             formArrResult.push(ele);
+            haseExistStr += ctrlID.replace("DDL_", "TB_") + "T" + ",";
         }
         if (ele.split('=')[0].indexOf('RB_') == 0) {
             formArrResult.push(ele);
@@ -744,10 +745,14 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
 
 
     $.each(formArr, function (i, ele) {
-        if (ele.split('=')[0].indexOf('TB_') == 0) {
-            var index = isExistArray(formArrResult, ele.split('=')[0]);
-            if (index == -1)
+        var ctrID = ele.split('=')[0];
+        if (ctrID.indexOf('TB_') == 0) {
+            if (haseExistStr.indexOf(","+ctrID+",") == -1) {
                 formArrResult.push(ele);
+                haseExistStr += ctrID + ",";
+            }
+          
+               
         }
     });
 
@@ -784,9 +789,10 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                 formArrResult.push(name + '=' + encodeURIComponent($(disabledEle).children('option:checked').val()));
                 var tbID = name.replace("DDL_", "TB_") + 'T';
                 if ($("#" + tbID).length == 1) {
-                    var index = isExistArray(formArrResult, tbID);
-                    if (index == -1)
+                    if (haseExistStr.indexOf("," + tbID + ",") == -1) {
                         formArrResult.push(tbID + '=' + $(disabledEle).children('option:checked').text());
+                        haseExistStr += tbID + ",";
+                    }
                 }
                 break;
 
@@ -907,8 +913,12 @@ function Send(isHuiQian) {
     if (CheckFWC() == false)
         return false;
 
-    if (checkAths() == false)
+    var msg = checkAths();
+    if (msg != "") {
+        alert(msg);
         return false;
+    }
+        
 
 
     //检查最小最大长度.
@@ -960,8 +970,9 @@ function Send(isHuiQian) {
                 // 不支持火狐浏览器。
                 var frms = contentWidow.document.getElementsByName("Attach");
                 for (var i = 0; i < frms.length; i++) {
-                    if (frms[i].contentWindow.numOfUpload > frms[i].contentWindow.numOfAths) {
-                        msg += "["+tabText+"]表单至少需要上传" + frms[i].contentWindow.numOfUpload + "附件";
+                    msg = frms[i].contentWindow.CheckAthNum();
+                    if (msg!="") {
+                        msg += "["+tabText+"]表单"+msg+";";
                         isSend = false;
                     }
                 }
@@ -1371,12 +1382,11 @@ function checkAths() {
     var frm = document.getElementById('Ath1');
 
     if (frm == null || frm == undefined) {
-        return true;
+        return "";
         //alert('系统错误,没有找到SelfForm的ID.');
     }
-
-    //执行保存.
     return frm.contentWindow.CheckAthNum();
+ 
 }
 
 
@@ -2047,6 +2057,13 @@ function InitToolBar() {
         $('[name=Note').bind('click', function () { initModal("Note"); $('#returnWorkModal').modal().show(); });
     }
 
+    if ($('[name=PR]').length > 0) {
+
+        $('[name=PR]').attr('onclick', '');
+        $('[name=PR]').unbind('click');
+        $('[name=PR').bind('click', function () { initModal("PR"); $('#returnWorkModal').modal().show(); });
+    }
+
 
 }
 
@@ -2238,6 +2255,9 @@ function initModal(modalType, toNode) {
             case "Note":
                 $('#modalHeader').text("备注");
                 modalIframeSrc = "./WorkOpt/Note.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
+            case "PR":
+                $('#modalHeader').text("重要性设置");
+                modalIframeSrc = "./WorkOpt/PRI.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
 
             default:
                 break;
@@ -2288,7 +2308,6 @@ function DoSubFlowReturn(fid, workid, fk_node) {
     window.location.href = window.history.url;
 }
 function To(url) {
-    //window.location.href = url;
     window.name = "dialogPage"; window.open(url, "dialogPage")
 }
 

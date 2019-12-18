@@ -209,6 +209,11 @@
                     if (paras == null)
                         paras = "";
 
+                    var mystrs = "";
+                //    AtPara atap = new AtPara(paras);
+
+                    //if (paras.c)
+
                     paras = paras.replace("'", "\\'");
                     while (true) {
                         paras = paras.replace('@', '&');
@@ -314,7 +319,7 @@
 
             //alert(wfState);
 
-            switch (parseInt(wfState)) {
+            switch (wfState) {
                 case 1:
                     return window.lang.caogao;
                 case 2:

@@ -459,7 +459,7 @@ $(function () {
         }
         , fnRepeat: function () {
             //alert("步骤连接重复1");//可使用 jquery ui 或其它方式提示
-            mAlert("步骤连接重复了，请重新连接");
+            mAlert("步骤连接重复了，请重新连接，或者关闭当前流程，重新打开。");
 
         }
         , fnClick: function () {
@@ -816,6 +816,9 @@ function GenerDrowFlowData() {
                 toNodes += "," + dir.ToNode;
             }
         }
+
+        if (node.Name == null || node.Name == "")
+            node.Name = "节点x";
 
         strs += "{'id':'" + node.NodeID + "',";
         strs += "'flow_id':'" + flowNo + "',";

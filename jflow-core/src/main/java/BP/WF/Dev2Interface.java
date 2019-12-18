@@ -6659,13 +6659,13 @@ public class Dev2Interface
 		for (DataRow drTrack : dtTrack.Rows)
 		{
 			DataRow dr = dtHistory.NewRow();
-			dr.setValue("FK_Node", drTrack.get("NDFrom"));
+			dr.setValue("FK_Node", drTrack.getValue("NDFrom"));
 			//dr["ActionType"] = drTrack["NDFrom"];
-			dr.setValue("NodeName", drTrack.get("NDFromT"));
-			dr.setValue("EmpNo", drTrack.get("EmpFrom"));
-			dr.setValue("EmpName", drTrack.get("EmpFromT"));
-			dr.setValue("DeptName", drTrack.get("DeptName")); //部门名称.
-			dr.setValue("RDT", drTrack.get("RDT"));
+			dr.setValue("NodeName", drTrack.getValue("NDFromT"));
+			dr.setValue("EmpNo", drTrack.getValue("EmpFrom"));
+			dr.setValue("EmpName", drTrack.getValue("EmpFromT"));
+			dr.setValue("DeptName", drTrack.getValue("DeptName")); //部门名称.
+			dr.setValue("RDT", drTrack.getValue("RDT"));
 			dr.setValue("SDT", "");
 			dr.setValue("IsPass", 1); // gwl.IsPassInt; //是否通过.
 			dtHistory.Rows.add(dr);

@@ -377,8 +377,7 @@ public class WorkNode {
 	 *            到达的wn
 	 * @param dt
 	 *            数据源
-	 * @param fid
-	 *            FID
+
 	 * @return GenerWorkerLists
 	 * @throws Exception
 	 */
@@ -8227,9 +8226,13 @@ public class WorkNode {
 
 		/// #region 设置 HisGenerWorkFlow
 
-		// 设置项目名称. @shilianyu.
-		gwf.setPrjNo(this.rptGe.getPrjNo());
-		gwf.setPrjName(this.rptGe.getPrjName());
+		// 设置项目名称.
+		if (this.rptGe.getEnMap().getAttrs().contains("PrjNo") == true)
+		{
+			gwf.setPrjNo(this.rptGe.getPrjNo());
+			if (this.rptGe.getEnMap().getAttrs().contains("PrjName") == true)
+				gwf.setPrjName(this.rptGe.getPrjName());
+		}
 
 		this.setHisGenerWorkFlow(gwf);
 

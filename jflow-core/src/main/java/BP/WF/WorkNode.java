@@ -5279,9 +5279,16 @@ public class WorkNode {
 		}
 
 		if (this.getHisNode().getTeamLeaderConfirmRole() == TeamLeaderConfirmRole.HuiQianLeader) {
-			if (this.getHisGenerWorkFlow().getTodoEmps()
-					.contains(WebUser.getNo() + "," + WebUser.getName() + ";") == true) {
-
+				//当前人员的流程处理信息
+				GenerWorkerList gwlOfMe = new GenerWorkerList();
+				gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(),
+						GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
+				String myhuiQianZhuChiRen = gwlOfMe.GetParaString("HuiQianZhuChiRen");
+				String huiQianType = gwlOfMe.GetParaString("huiQianType");
+				//说明是主持人/第二主持人
+				if (this.getHisGenerWorkFlow().getTodoEmps().contains(WebUser.getNo() + "," + WebUser.getName() + ";") == true
+						&&(this.getHisGenerWorkFlow().getHuiQianZhuChiRen().contains(BP.Web.WebUser.getNo())==true || this.getHisGenerWorkFlow().GetParaString("AddLeader").contains(BP.Web.WebUser.getNo()) == true))
+				{
 				/* 当前人是组长，检查是否可以可以发送,检查自己是否是加签后的最后一个人 ？ */
 				String todoEmps = ""; // 记录没有处理的人.
 				int num = 0;

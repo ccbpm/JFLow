@@ -457,7 +457,7 @@ public class WorkNode {
 								.ParseSysDateTime2DateTime(this.getHisWork().GetValByKey(keyOfEn).toString());
 					}
 
-				} @fanleiwei
+				}
 			}
 
 		}

@@ -854,7 +854,7 @@ public class WF_MyFlow extends WebContralBase {
 					{
 						if (btnLab.getHuiQianLeaderRole().getValue() == 0)
 						{
-							if (gwf.getHuiQianZhuChiRen() != WebUser.getNo() && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+							if (gwf.getHuiQianZhuChiRen().equals(WebUser.getNo()) == false  && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
 								isAskForOrHuiQian = true;
 						}
 						else

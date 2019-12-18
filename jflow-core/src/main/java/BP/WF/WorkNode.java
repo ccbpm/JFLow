@@ -5326,6 +5326,7 @@ public class WorkNode {
 					if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne) {
 						this.getHisGenerWorkFlow().setSender(BP.WF.Glo.DealUserInfoShowModel(BP.Web.WebUser.getNo(), BP.Web.WebUser.getName()));
 						this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+						this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
 						return false;
 					}
 					//说明是原始主持人
@@ -5342,6 +5343,7 @@ public class WorkNode {
 							DBAccess.RunSQL(sql);
 
 						}
+						this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
 						return false;
 
 					} else {
@@ -5382,6 +5384,7 @@ public class WorkNode {
 					this.getHisGenerWorkFlow()
 							.setSender(BP.WF.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
 					this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+					this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
 					return false; // 不处理，未完成的会签人，没有执行会签的人，忽略.
 				}
 

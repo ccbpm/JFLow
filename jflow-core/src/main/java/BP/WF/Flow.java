@@ -4644,6 +4644,7 @@ public class Flow extends BP.En.EntityNoName {
 			fl.setNo(fl.getGenerNewNo());
 			fl.DoDelData();
 			fl.DoDelete(); // 删除可能存在的垃圾.
+			fl.Insert();
 			break;
 		case AsTempleteFlowNo: // 用流程模版中的编号
 			fl.setNo(oldFlowNo);
@@ -4700,7 +4701,12 @@ public class Flow extends BP.En.EntityNoName {
 			fl.SetValByKey(dc.ColumnName, val);
 		}
 		fl.setFK_FlowSort(fk_flowSort);
-		fl.Insert();
+		if(DBAccess.IsExitsObject(fl.getPTable()) == true)
+		{
+			fl.setPTable(null);
+		}
+		fl.Update();
+//		fl.Insert();
 
 		/// #endregion 处理流程表数据
 

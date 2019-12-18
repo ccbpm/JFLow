@@ -232,6 +232,8 @@ public class WF_CCBill_API extends WebContralBase {
     	String billNo = this.GetRequestVal("BillNo");
     	String title = this.GetRequestVal("Title");
     	String paras = this.GetRequestVal("Paras");
+        BP.Frm.FrmBill bill = new FrmBill(this.getFrmID());
+        bill.CheckEnityTypeAttrsFor_Bill();
 
         if (DataType.IsNullOrEmpty(paras) == true)
             paras = "";

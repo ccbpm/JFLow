@@ -964,7 +964,10 @@ public class FrmAttachmentExt extends EntityMyPK
 		//把相关的字段也要删除.
 		MapAttrString attr = new MapAttrString();
 		attr.setMyPK(this.getMyPK());
-		attr.Delete();
+		if (attr.RetrieveFromDBSources() != 0)
+		{
+			attr.Delete();
+		}
 
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());

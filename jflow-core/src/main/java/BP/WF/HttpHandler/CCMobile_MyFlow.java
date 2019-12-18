@@ -6,6 +6,7 @@ import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
 import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
+import BP.En.QueryObject;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.WF.*;
@@ -167,5 +168,35 @@ public class CCMobile_MyFlow extends WebContralBase {
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.AttachmentUpload_Down();
 	}
+	/// <summary>
+	/// 查询
+	/// </summary>
+	/// <param name="enName"></param>
+	/// <returns></returns>
+	public String RetrieveFieldGroup() throws Exception
+	{
+		String FrmID = this.GetRequestVal("FrmID");
+		GroupFields gfs = new GroupFields();
+		QueryObject qo = new QueryObject(gfs);
+		qo.AddWhere(GroupFieldAttr.FrmID, FrmID);
+		qo.addAnd();
+		qo.AddWhereIsNull(GroupFieldAttr.CtrlID);
+		int num = qo.DoQuery();
 
+		if (num == 0)
+		{
+			GroupField gf = new GroupField();
+			gf.setFrmID(FrmID);
+			MapData md = new MapData();
+			md.setNo(FrmID);
+			if (md.RetrieveFromDBSources() == 0)
+				gf.setLab("基础信息");
+			else
+				gf.setLab(md.getName());
+			gf.setIdx(0);
+			gf.Insert();
+			gfs.AddEntity(gf);
+		}
+		return gfs.ToJson();
+	}
 }

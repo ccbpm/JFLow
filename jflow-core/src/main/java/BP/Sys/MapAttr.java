@@ -1313,7 +1313,7 @@ public class MapAttr extends EntityMyPK
 		String sql = "UPDATE Sys_MapAttr SET Idx=Idx+1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='" + this.getFK_MapData() + "' AND GroupID=" + this.getGroupID();
 		DBAccess.RunSQL(sql);
 		this.setIdx(attrTo.getIdx() - 1);
-		this.setGroupID(attrTo.getGroupID());
+		this.setGroupID(attrTo.getGroupID());beforeInsert
 		this.Update();
 		return null;
 	}

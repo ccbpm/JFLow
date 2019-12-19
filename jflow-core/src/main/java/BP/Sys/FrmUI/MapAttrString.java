@@ -370,13 +370,13 @@ public class MapAttrString extends EntityMyPK
 
 			for (MapData item : mds.ToJavaList())
 			{
-				sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "',  MyPK='" + newField + "_" + item.getNo() + " WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + item.getNo() + "'";
+				sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "',  MyPK='" + item.getNo() + "_" +  newField+ "' WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + item.getNo() + "'";
 				DBAccess.RunSQL(sql);
 			}
 		}
 		else
 		{
-			sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "', MyPK='" + newField + "_" + this.getFK_MapData() + "  WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
+			sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "', MyPK='" + this.getFK_MapData() + "_" +  newField+ "'  WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
 			DBAccess.RunSQL(sql);
 		}
 

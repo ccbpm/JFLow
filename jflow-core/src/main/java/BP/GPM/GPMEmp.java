@@ -25,13 +25,13 @@ public class GPMEmp extends EntityNoName
 		}
 
 
-			String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp=' " + this.getNo()+ " '";
+			String sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmpStation WHERE FK_Emp='" + this.getNo()+ "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				return false;
 			}
 
-			sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp=' " + this.getNo()+ " '";
+			sql = "SELECT COUNT(FK_Emp) FROM Port_DeptEmp WHERE FK_Emp='" + this.getNo()+ "'";
 			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 			{
 				return false;

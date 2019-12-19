@@ -198,14 +198,14 @@ public class Emp extends EntityNoName
 		String msg = "";
 		int i = 0;
 		//更新待办.
-		String sql = "update wf_generworkerlist set fk_emp='" + userNo + "' where fk_emp=' " + this.getNo()+ " '";
+		String sql = "update wf_generworkerlist set fk_emp='" + userNo + "' where fk_emp='" + this.getNo()+ "'";
 		i = BP.DA.DBAccess.RunSQL(sql);
 		if (i != 0)
 		{
 			msg += "@待办更新[" + i + "]个。";
 		}
 
-		sql = "UPDATE WF_GENERWORKFLOW  SET STARTER='" + userNo + "'  WHERE STARTER=' " + this.getNo()+ " '";
+		sql = "UPDATE WF_GENERWORKFLOW  SET STARTER='" + userNo + "'  WHERE STARTER='" + this.getNo()+ "'";
 		i = BP.DA.DBAccess.RunSQL(sql);
 		if (i != 0)
 		{
@@ -218,7 +218,7 @@ public class Emp extends EntityNoName
 		fls.RetrieveAll();
 		for (Flow fl : fls.ToJavaList())
 		{
-			sql = "UPDATE " + fl.getPTable() + " SET FlowEnder='" + userNo + "' WHERE FlowEnder=' " + this.getNo()+ " '";
+			sql = "UPDATE " + fl.getPTable() + " SET FlowEnder='" + userNo + "' WHERE FlowEnder='" + this.getNo()+ "'";
 			i = DBAccess.RunSQL(sql);
 
 			if (i != 0)
@@ -226,7 +226,7 @@ public class Emp extends EntityNoName
 				msg += "@流程注册更新[" + i + "]个。";
 			}
 
-			sql = "UPDATE  " + fl.getPTable() + "  SET FlowStarter='" + userNo + "' WHERE FlowStarter=' " + this.getNo()+ " '";
+			sql = "UPDATE  " + fl.getPTable() + "  SET FlowStarter='" + userNo + "' WHERE FlowStarter='" + this.getNo()+ "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -234,7 +234,7 @@ public class Emp extends EntityNoName
 			}
 
 
-			sql = "UPDATE  " + fl.getPTable() + "  SET Rec='" + userNo + "' WHERE Rec=' " + this.getNo()+ " '";
+			sql = "UPDATE  " + fl.getPTable() + "  SET Rec='" + userNo + "' WHERE Rec='" + this.getNo()+ "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -242,7 +242,7 @@ public class Emp extends EntityNoName
 			}
 
 			String trackTable = "ND" + Integer.parseInt(fl.getNo()) + "Track";
-			sql = "UPDATE  " + trackTable + "  SET EmpFrom='" + userNo + "' WHERE EmpFrom=' " + this.getNo()+ " '";
+			sql = "UPDATE  " + trackTable + "  SET EmpFrom='" + userNo + "' WHERE EmpFrom='" + this.getNo()+ "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -250,7 +250,7 @@ public class Emp extends EntityNoName
 			}
 
 
-			sql = "UPDATE  " + trackTable + "  SET EmpTo='" + userNo + "' WHERE EmpTo=' " + this.getNo()+ " '";
+			sql = "UPDATE  " + trackTable + "  SET EmpTo='" + userNo + "' WHERE EmpTo='" + this.getNo()+ "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -258,7 +258,7 @@ public class Emp extends EntityNoName
 			}
 
 
-			sql = "UPDATE  " + trackTable + "  SET Exer='" + userNo + "' WHERE Exer=' " + this.getNo()+ " '";
+			sql = "UPDATE  " + trackTable + "  SET Exer='" + userNo + "' WHERE Exer='" + this.getNo()+ "'";
 			i = DBAccess.RunSQL(sql);
 			if (i != 0)
 			{
@@ -277,7 +277,7 @@ public class Emp extends EntityNoName
 				try
 				{
 					MapData md = new MapData(attr.getFK_MapData());
-					sql = "UPDATE " + md.getPTable() + " SET " + attr.getKeyOfEn() + "='" + userNo + "' WHERE " + attr.getKeyOfEn() + "=' " + this.getNo()+ " '";
+					sql = "UPDATE " + md.getPTable() + " SET " + attr.getKeyOfEn() + "='" + userNo + "' WHERE " + attr.getKeyOfEn() + "='" + this.getNo()+ "'";
 					i = DBAccess.RunSQL(sql);
 					if (i != 0)
 					{

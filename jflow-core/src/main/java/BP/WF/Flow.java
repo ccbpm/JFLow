@@ -1861,8 +1861,8 @@ public class Flow extends BP.En.EntityNoName {
 
 			// 更新计算数据.
 			this.setNumOfBill(DBAccess.RunSQLReturnValInt(
-					"SELECT count(*) FROM WF_BillTemplate WHERE NodeID IN (SELECT NodeID FROM WF_Flow WHERE No=' "
-							+ this.getNo() + " ')"));
+					"SELECT count(*) FROM WF_BillTemplate WHERE NodeID IN (SELECT NodeID FROM WF_Flow WHERE No='"
+							+ this.getNo() + "')"));
 			this.setNumOfDtl(DBAccess.RunSQLReturnValInt(
 					"SELECT count(*) FROM Sys_MapDtl WHERE FK_MapData='ND" + Integer.parseInt(this.getNo()) + "Rpt'"));
 			this.DirectUpdate();
@@ -2482,7 +2482,7 @@ public class Flow extends BP.En.EntityNoName {
 		DataSet ds = new DataSet();
 
 		// 流程信息。
-		String sql = "SELECT * FROM WF_Flow WHERE No=' " + this.getNo() + " '";
+		String sql = "SELECT * FROM WF_Flow WHERE No='" + this.getNo() + "'";
 
 		Flow fl = new Flow(this.getNo());
 		DataTable dtFlow = fl.ToDataTableField("WF_Flow");
@@ -2523,7 +2523,7 @@ public class Flow extends BP.En.EntityNoName {
 		tmps.remove(pks);
 		ds.Tables.add(tmps.ToDataTableField("WF_BillTemplate"));
 
-		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow=' " + this.getNo() + " '";
+		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow='" + this.getNo() + "'";
 
 		// 条件信息
 		Conds cds = new BP.WF.Template.Conds(this.getNo());
@@ -2709,13 +2709,13 @@ public class Flow extends BP.En.EntityNoName {
 		DataSet ds = new DataSet();
 
 		// 流程信息。
-		String sql = "SELECT * FROM WF_Flow WHERE No=' " + this.getNo() + " '";
+		String sql = "SELECT * FROM WF_Flow WHERE No='" + this.getNo() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Flow";
 		ds.Tables.add(dt);
 
 		// 节点信息
-		sql = "SELECT * FROM WF_Node WHERE FK_Flow=' " + this.getNo() + " '";
+		sql = "SELECT * FROM WF_Node WHERE FK_Flow='" + this.getNo() + "'";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Node";
 		ds.Tables.add(dt);
@@ -2739,10 +2739,10 @@ public class Flow extends BP.En.EntityNoName {
 		tmps.remove(pks);
 		ds.Tables.add(tmps.ToDataTableField("WF_BillTemplate"));
 
-		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow=' " + this.getNo() + " '";
+		String sqlin = "SELECT NodeID FROM WF_Node WHERE fk_flow='" + this.getNo() + "'";
 
 		// 条件信息
-		sql = "SELECT * FROM WF_Cond WHERE FK_Flow=' " + this.getNo() + " '";
+		sql = "SELECT * FROM WF_Cond WHERE FK_Flow='" + this.getNo() + "'";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Cond";
 		ds.Tables.add(dt);
@@ -2755,7 +2755,7 @@ public class Flow extends BP.En.EntityNoName {
 		// ds.Tables.add(dt);
 
 		// 节点与表单绑定.
-		sql = "SELECT * FROM WF_FrmNode WHERE FK_Flow=' " + this.getNo() + " '";
+		sql = "SELECT * FROM WF_FrmNode WHERE FK_Flow='" + this.getNo() + "'";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_FrmNode";
 		ds.Tables.add(dt);
@@ -4320,7 +4320,7 @@ public class Flow extends BP.En.EntityNoName {
 			this.setFlowEventEntity(BP.WF.Glo.GetFlowEventEntityStringByFlowMark(this.getFlowMark()));
 		}
 
-		DBAccess.RunSQL("UPDATE WF_Node SET FlowName='" + this.getName() + "' WHERE FK_Flow=' " + this.getNo() + " '");
+		DBAccess.RunSQL("UPDATE WF_Node SET FlowName='" + this.getName() + "' WHERE FK_Flow='" + this.getNo() + "'");
 		DBAccess.RunSQL("UPDATE Sys_MapData SET  Name='" + this.getName() + "' WHERE No='" + this.getPTable() + "'");
 		return super.beforeUpdateInsertAction();
 	}
@@ -6124,82 +6124,82 @@ public class Flow extends BP.En.EntityNoName {
 		String sql = "";
 		// sql = " DELETE FROM WF_chofflow WHERE FK_Flow=' " + this.getNo()+ "
 		// '";
-		sql += "@ DELETE FROM WF_GenerWorkerlist WHERE FK_Flow=' " + this.getNo() + " '";
-		sql += "@ DELETE FROM  WF_GenerWorkFlow WHERE FK_Flow=' " + this.getNo() + " '";
-		sql += "@ DELETE FROM  WF_Cond WHERE FK_Flow=' " + this.getNo() + " '";
+		sql += "@ DELETE FROM WF_GenerWorkerlist WHERE FK_Flow='" + this.getNo() + "'";
+		sql += "@ DELETE FROM  WF_GenerWorkFlow WHERE FK_Flow='" + this.getNo() + "'";
+		sql += "@ DELETE FROM  WF_Cond WHERE FK_Flow='" + this.getNo() + "'";
 
 		// 删除消息配置.
-		sql += "@ DELETE FROM WF_PushMsg WHERE FK_Flow=' " + this.getNo() + " '";
+		sql += "@ DELETE FROM WF_PushMsg WHERE FK_Flow='" + this.getNo() + "'";
 
 		// 删除岗位节点。
-		sql += "@ DELETE FROM WF_NodeStation WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
+		sql += "@ DELETE FROM WF_NodeStation WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
 
 		// 删除方向。
-		sql += "@ DELETE FROM WF_Direction WHERE FK_Flow=' " + this.getNo() + " '";
+		sql += "@ DELETE FROM WF_Direction WHERE FK_Flow='" + this.getNo() + "'";
 
 		// 删除节点绑定信息.
-		sql += "@ DELETE FROM WF_FrmNode WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()
-				+ " ')";
+		sql += "@ DELETE FROM WF_FrmNode WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo()
+				+ "')";
 
-		sql += "@ DELETE FROM WF_NodeEmp  WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
-		sql += "@ DELETE FROM WF_CCEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()
-				+ " ')";
-		sql += "@ DELETE FROM WF_CCDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()
-				+ " ')";
-		sql += "@ DELETE FROM WF_CCStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
+		sql += "@ DELETE FROM WF_NodeEmp  WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
+		sql += "@ DELETE FROM WF_CCEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo()
+				+ "')";
+		sql += "@ DELETE FROM WF_CCDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo()
+				+ "')";
+		sql += "@ DELETE FROM WF_CCStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
 
-		sql += "@ DELETE FROM WF_NodeReturn WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
+		sql += "@ DELETE FROM WF_NodeReturn WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
 
-		sql += "@ DELETE FROM WF_NodeDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
-		sql += "@ DELETE FROM WF_NodeStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
-		sql += "@ DELETE FROM WF_NodeEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' " + this.getNo()
-				+ " ')";
+		sql += "@ DELETE FROM WF_NodeDept WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
+		sql += "@ DELETE FROM WF_NodeStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
+		sql += "@ DELETE FROM WF_NodeEmp WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + this.getNo()
+				+ "')";
 
-		sql += "@ DELETE FROM WF_NodeToolbar WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
-		sql += "@ DELETE FROM WF_SelectAccper WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
+		sql += "@ DELETE FROM WF_NodeToolbar WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
+		sql += "@ DELETE FROM WF_SelectAccper WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
 		// sql += "@ DELETE FROM WF_TurnTo WHERE FK_Node IN (SELECT NodeID FROM
-		// WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		// WF_Node WHERE FK_Flow=' " + this.getNo()+ "')";
 
 		// 删除侦听.
 		// sql += "@ DELETE FROM WF_Listen WHERE FK_Node IN (SELECT NodeID FROM
-		// WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		// WF_Node WHERE FK_Flow=' " + this.getNo()+ "')";
 
 		// 删除d2d数据.
 		// sql += "@GO DELETE WF_M2M WHERE FK_Node IN (SELECT NodeID FROM
-		// WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		// WF_Node WHERE FK_Flow=' " + this.getNo()+ "')";
 		//// 删除配置.
 		// sql += "@ DELETE FROM WF_FAppSet WHERE NodeID IN (SELECT NodeID FROM
-		// WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		// WF_Node WHERE FK_Flow=' " + this.getNo()+ "')";
 
 		//// 外部程序设置
 		// sql += "@ DELETE FROM WF_FAppSet WHERE NodeID in (SELECT NodeID FROM
-		//// WF_Node WHERE FK_Flow=' " + this.getNo()+ " ')";
+		//// WF_Node WHERE FK_Flow=' " + this.getNo()+ "')";
 
 		// 删除单据.
-		sql += "@ DELETE FROM WF_BillTemplate WHERE  NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow=' "
-				+ this.getNo() + " ')";
+		sql += "@ DELETE FROM WF_BillTemplate WHERE  NodeID in (SELECT NodeID FROM WF_Node WHERE FK_Flow='"
+				+ this.getNo() + "')";
 		// 删除权限控制.
-		sql += "@ DELETE FROM Sys_FrmSln WHERE FK_Flow=' " + this.getNo() + " '";
+		sql += "@ DELETE FROM Sys_FrmSln WHERE FK_Flow='" + this.getNo() + "'";
 		// 考核表
-		sql += "@ DELETE FROM WF_CH WHERE FK_Flow=' " + this.getNo() + " '";
+		sql += "@ DELETE FROM WF_CH WHERE FK_Flow='" + this.getNo() + "'";
 		// 删除抄送
-		sql += "@ DELETE FROM WF_CCList WHERE FK_Flow=' " + this.getNo() + " '";
+		sql += "@ DELETE FROM WF_CCList WHERE FK_Flow='" + this.getNo() + "'";
 		Nodes nds = new Nodes(this.getNo());
 		for (Node nd : nds.ToJavaList()) {
 			// 删除节点所有相关的东西.
 			nd.Delete();
 		}
 
-		sql += "@ DELETE  FROM WF_Node WHERE FK_Flow=' " + this.getNo() + " '";
-		sql += "@ DELETE  FROM WF_LabNote WHERE FK_Flow=' " + this.getNo() + " '";
+		sql += "@ DELETE  FROM WF_Node WHERE FK_Flow='" + this.getNo() + "'";
+		sql += "@ DELETE  FROM WF_LabNote WHERE FK_Flow='" + this.getNo() + "'";
 
 		// 删除分组信息
 		sql += "@ DELETE FROM Sys_GroupField WHERE FrmID NOT IN(SELECT NO FROM Sys_MapData)";
@@ -6298,7 +6298,7 @@ public class Flow extends BP.En.EntityNoName {
 		sql = "UPDATE WF_Flow SET FK_FlowSort='',IsCanStart=0 WHERE PTable='" + this.getPTable() + "' ";
 		DBAccess.RunSQL(sql);
 
-		sql = "UPDATE WF_Flow SET FK_FlowSort='" + flowSort + "', IsCanStart=1 WHERE No=' " + this.getNo() + " ' ";
+		sql = "UPDATE WF_Flow SET FK_FlowSort='" + flowSort + "', IsCanStart=1 WHERE No='" + this.getNo() + "' ";
 		DBAccess.RunSQL(sql);
 
 		// 清缓存

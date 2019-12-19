@@ -1016,7 +1016,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @param dtFrom 日期从
 	 @param dtTo 日期到
-	 @param isOk 仅仅删除当前流程？1=删除当前流程, 0=删除全部流程.
+	 @param isDelCurrFlow 仅仅删除当前流程？1=删除当前流程, 0=删除全部流程.
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1030,7 +1030,7 @@ public class FlowExt extends EntityNoName
 		String sql = "";
 		if (isDelCurrFlow.equals("1"))
 		{
-			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "'  AND FK_Flow=' " + this.getNo()+ " ' ";
+			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "'  AND FK_Flow='" + this.getNo()+ "' ";
 		}
 		else
 		{
@@ -1052,8 +1052,8 @@ public class FlowExt extends EntityNoName
 	/** 
 	 批量重命名字段.
 	 
-	 @param FieldOld
-	 @param FieldNew
+	 @param fieldOld
+	 @param fieldNew
 	 @param FieldNewName
 	 @return 
 	 * @throws Exception 
@@ -1900,7 +1900,7 @@ public class FlowExt extends EntityNoName
 
 		if (BP.WF.Glo.getOSModel() == OSModel.OneMore)
 		{
-			// DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.Name + "' WHERE Flag='Flow " + this.getNo()+ " ' AND FK_App='" + SystemConfig.SysNo + "'");
+			// DBAccess.RunSQL("UPDATE  GPM_Menu SET Name='" + this.Name + "' WHERE Flag='Flow " + this.getNo()+ "' AND FK_App='" + SystemConfig.SysNo + "'");
 		}
 	}
 	@Override

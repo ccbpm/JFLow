@@ -484,7 +484,7 @@ public class MapFrmFool extends EntityNoName
 		String str = "";
 
 		//处理失去分组的字段. 
-		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData=' " + this.getNo()+ " ' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID=' " + this.getNo()+ " ' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
+		String sql = "SELECT MyPK FROM Sys_MapAttr WHERE FK_MapData='" + this.getNo()+ " ' AND GroupID NOT IN (SELECT OID FROM Sys_GroupField WHERE FrmID='" + this.getNo()+ " ' AND ( CtrlType='' OR CtrlType IS NULL)  )  OR GroupID IS NULL ";
 		MapAttrs attrs = new MapAttrs();
 		attrs.RetrieveInSQL(sql);
 		if (attrs.size() != 0)

@@ -249,7 +249,7 @@ public class Emp extends EntityNoName
 	public final String DoSetPassword(String password) throws Exception
 	{
 		String str = Cryptos.aesEncrypt(password);
-		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No=' " + this.getNo()+ " '");
+		DBAccess.RunSQLReturnVal("UPDATE Port_Emp SET Pass='" + str + "' WHERE No='" + this.getNo()+ "'");
 		return "设置成功..";
 	}
 	/** 

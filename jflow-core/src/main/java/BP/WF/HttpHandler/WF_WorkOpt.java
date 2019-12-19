@@ -632,10 +632,10 @@ public class WF_WorkOpt extends WebContralBase
 		{
 			String sourceType = this.GetRequestVal("SourceType");
 			//打印单据实体、单据表单
-			/*if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
+			if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
 			{
 				return MakeForm2Html.MakeBillToPDF(this.GetRequestVal("FrmID"), this.getWorkID(), this.GetRequestVal("BasePath"), false);
-			}*/
+			}
 			int nodeID = this.getFK_Node();
 			if (this.getFK_Node() == 0)
 			{

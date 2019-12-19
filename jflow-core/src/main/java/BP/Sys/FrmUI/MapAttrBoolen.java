@@ -137,14 +137,19 @@ public class MapAttrBoolen extends EntityMyPK
 
 		map.AddTBInt(MapAttrAttr.UIWidth, 0, "宽度(对自由表单有效)", true, false);
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
+		//CCS样式
+		map.AddDDLSQL(MapAttrAttr.CSS, 0, "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
-
-			///#endregion 傻瓜表单。
-
-
+		///#endregion 傻瓜表单。
 		RefMethod rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "高级JS设置";
+		rm.ClassMethodName = this.toString() + ".DoCheckboxs()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
@@ -185,13 +190,8 @@ public class MapAttrBoolen extends EntityMyPK
 		super.afterDelete();
 	}
 
-		///#endregion
-
-
-		///#region 基本功能.
 	/** 
 	 绑定函数
-	 
 	 @return 
 	 * @throws Exception 
 	*/
@@ -199,6 +199,14 @@ public class MapAttrBoolen extends EntityMyPK
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
+	/**
+	 高级设置
+	 @return
+	  * @throws Exception
+	 */
+	public final String DoCheckboxs() throws Exception
+	{
+		return "../../Admin/FoolFormDesigner/MapExt/CheckBoxs.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
+	}
 
-		///#endregion
 }

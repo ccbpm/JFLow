@@ -295,6 +295,11 @@ public class MapAttrString extends EntityMyPK
 	{
 		return "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'  AND (CtrlType IS NULL OR CtrlType='')  ";
 	}
+
+	public static String getSQLOfCSSAttr()
+	{
+		return "SELECT No,Name FROM Sys_GloVar WHERE GroupKey='CSS' OR GroupKey='css' ";
+	}
 	/** 
 	 删除
 	 * @throws Exception 

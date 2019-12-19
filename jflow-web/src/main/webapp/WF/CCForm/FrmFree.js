@@ -5,8 +5,10 @@ function GenerFreeFrm(mapData, frmData) {
 
     //循环FrmRB
     for (var i in frmData.Sys_FrmRB) {
-        var frmLab = frmData.Sys_FrmRB[i];
-        var label = figure_Template_Rb(frmLab);
+        var frmRB = frmData.Sys_FrmRB[i];
+        if (frmRB.AtPara.indexOf("@MyDataType=4") != -1)
+            continue;
+        var label = figure_Template_Rb(frmRB);
         $('#CCForm').append(label);
     }
 
@@ -811,7 +813,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
     if (mapAttr.MyDataType == 4) { // AppBoolean = 7
 
 
-        eleHtml += "<div class='checkbox' ><label style='width:100%;' > <input " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'  id='CB_" + mapAttr.KeyOfEn + "' name='CB_" + mapAttr.KeyOfEn + "'/>";
+        eleHtml += "<div class='checkbox' ><label style='width:100%;' > <input " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'  id='CB_" + mapAttr.KeyOfEn + "' name='CB_" + mapAttr.KeyOfEn + "' onchange='changeCBEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'/>";
         eleHtml += mapAttr.Name + '</label></div>';
         return eleHtml;
     }
@@ -820,7 +822,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
     if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) { //AppInt Enum
         if (mapAttr.UIContralType == 1) { //DDL
             //多选下拉框
-            eleHtml += "<select style='padding:0px;'  class='form-control'  data-val='" + ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' id='DDL_" + mapAttr.KeyOfEn + "' name='DDL_" + mapAttr.KeyOfEn + "' >" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
+            eleHtml += "<select style='padding:0px;'  class='form-control'  data-val='" + ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' id='DDL_" + mapAttr.KeyOfEn + "' name='DDL_" + mapAttr.KeyOfEn + "' onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' >" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
         }
         return eleHtml;
     }
@@ -973,11 +975,11 @@ function figure_Template_Btn(frmBtn) {
 function figure_Template_Rb(frmRb) {
     var eleHtml = '<div></div>';
     eleHtml = $(eleHtml);
-    var childRbEle = $('<input id="RB_ChuLiFangShi2" type="radio"/>');
+    var childRbEle = $('<input id="RB_ChuLiFangShi2" type="radio" />');
     var childLabEle = $('<label class="labRb"></label>');
     childLabEle.html(frmRb.Lab).attr('for', 'RB_' + frmRb.KeyOfEn + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
 
-    childRbEle.val(frmRb.IntKey).attr('id', 'RB_' + frmRb.KeyOfEn + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
+    childRbEle.val(frmRb.IntKey).attr('id', 'RB_' + frmRb.KeyOfEn +"_"+ frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
     //    if (frmRb.UIIsEnable == false)
     //        childRbEle.attr('disabled', 'disabled');
 

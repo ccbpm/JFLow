@@ -1032,7 +1032,7 @@ public class PushMsg extends EntityMyPK
 					String smsDoccReal = tempVar6 instanceof String ? (String)tempVar6 : null;
 					smsDoc = smsDoc.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
-					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid;
+					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid+"_"+empNo;
 
 					//发送消息
 					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel(), paras);
@@ -1065,7 +1065,7 @@ public class PushMsg extends EntityMyPK
 					String smsDocReal = tempVar7 instanceof String ? (String)tempVar7 : null;
 					smsDocReal = smsDocReal.replace("{EmpStr}", empA[0]);
 					openUrl = openUrl.replace("{EmpStr}", empA[0]);
-					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid;
+					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid+"_"+empA[0];
 					BP.WF.Dev2Interface.Port_SendMessage(empA[0], smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel(), paras);
 				}
 			}

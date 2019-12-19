@@ -760,6 +760,32 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
 		return BP.Tools.Json.ToJson(ds);
 	}
+
+	public String CheckBoxs_Init() throws Exception
+	{
+		DataSet ds = new DataSet();
+
+		//放入表单字段.
+		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
+		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
+
+		//属性.
+		MapAttr attr = new MapAttr();
+		attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+		attr.Retrieve();
+
+		//把分组加入里面.
+		GroupFields gfs = new GroupFields(this.getFK_MapData());
+		ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
+
+		FrmRBs rbs = new FrmRBs();
+		rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+		//加入单选按钮.
+		ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
+
+
+		return BP.Tools.Json.ToJson(ds);
+	}
 	/** 
 	 执行保存
 	 

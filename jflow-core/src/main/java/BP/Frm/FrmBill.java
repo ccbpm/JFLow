@@ -565,7 +565,10 @@ public class FrmBill extends EntityNoName {
 			attr.setMyDataType(DataType.AppString);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
-			attr.setUIVisible(true);
+			if(this.getFrmType() == FrmType.FreeFrm)
+				attr.setUIVisible(false);
+			else
+				attr.setUIVisible(true);
 			attr.setUIIsEnable(false);
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);

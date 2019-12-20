@@ -632,27 +632,27 @@ public class CCFormAPI extends Dev2Interface {
 
 			String UIIsEnable = dr.getValue("UIIsEnable").toString();
 			if (UIIsEnable.equals("0")) {
-				Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
-						keyOfEn);
-				me = tempVar instanceof MapExt ? (MapExt) tempVar : null;
-				if (me != null) // 有范围限制时
-				{
-					SFTable sftable=new SFTable(uiBindKey);
-					
-					Object tempVar2 = sftable.getSelectStatement();
-					String fullSQL = tempVar2 instanceof String ? (String) tempVar2 : null;
-					fullSQL = fullSQL.replace("~", ",");
-					fullSQL = BP.WF.Glo.DealExp(fullSQL, null, null);
-
-					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
-
-					dt.TableName = uiBindKey;
-
-					dt.Columns.get(0).ColumnName = "No";
-					dt.Columns.get(1).ColumnName = "Name";
-
-					myds.Tables.add(dt);
-				}
+//				Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,keyOfEn);
+//
+//				me = tempVar instanceof MapExt ? (MapExt) tempVar : null;
+//				if (me != null) // 有范围限制时
+//				{
+//					SFTable sftable=new SFTable(uiBindKey);
+//
+//					Object tempVar2 = sftable.getSelectStatement();
+//					String fullSQL = tempVar2 instanceof String ? (String) tempVar2 : null;
+//					fullSQL = fullSQL.replace("~", ",");
+//					fullSQL = BP.WF.Glo.DealExp(fullSQL, null, null);
+//
+//					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
+//
+//					dt.TableName = uiBindKey;
+//
+//					dt.Columns.get(0).ColumnName = "No";
+//					dt.Columns.get(1).ColumnName = "Name";
+//
+//					myds.Tables.add(dt);
+//				}
 				continue;
 			}
 

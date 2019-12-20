@@ -180,16 +180,13 @@ public class MapAttrAttr extends EntityMyPKAttr
 	*/
 	public static final String TBModel = "TBModel";
 
-
+	public static final String CSS = "CSS";
 
 		///#region 参数属性.
 	/** 
 	 是否必填
 	*/
 	public static final String UIIsInput = "UIIsInput";
-
-
-	public static final String CSS="CSS";
 
 		///#endregion 参数属性.
 

@@ -1138,7 +1138,7 @@ public class MapAttr extends EntityMyPK
 
 			//文本跨行
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
-
+		map.AddTBString(MapAttrAttr.CSS, "0", "自定义样式", true, false, 1, 100, 20);
 
 			//显示的分组. @sly.
 		map.AddTBInt(MapAttrAttr.GroupID, 1, "显示的分组", true, false);

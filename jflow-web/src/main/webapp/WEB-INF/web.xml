@@ -11,15 +11,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath*:/spring-context.xml</param-value>
 	</context-param>
-	
-	<!-- Web Context Listener -->
-<!-- 	<listener>
-    	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  	</listener>
-  	
- <listener>
-    	<listener-class>WebServiceListener.WebServicePublishListener</listener-class>
-  	</listener> -->
+
 
 	<servlet>
     <servlet-name>AxisServlet</servlet-name>
@@ -55,13 +47,22 @@
 		<!--过滤器 spring4.1.9以上版本支持
 		<filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>-->
 		<!-- 通用 Filter-->
-		<filter-class>BP.Difference.Context.RequestResponseFilter</filter-class>
+		<filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>requestContextFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+
+	<!--<filter>
+		<filter-name>XSSAttackInterceptor</filter-name>
+		<filter-class>BP.Difference.Context.XSSAttackInterceptor</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>XSSAttackInterceptor</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+-->
 	<!-- Spring MVC Servlet -->
 	<servlet>
 		<servlet-name>springServlet</servlet-name>

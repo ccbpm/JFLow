@@ -1969,7 +1969,7 @@ public class MakeForm2Html
         Hashtable ht = new Hashtable();
 
         //生成pdf文件
-        String pdfPath = path + "\\pdf";
+        String pdfPath = path + "/pdf";
 
 
         DataRow dr = null;
@@ -2063,7 +2063,7 @@ public class MakeForm2Html
             //判断模板文件临时目录是否存在
             File baseFile = new File(templateFilePath);
             if(baseFile.isDirectory() == false)
-            	return "err@不存在模板文件夹";
+            	return "err@不存在模板文件夹:"+baseFile;
             //获取模板文件列表
             File[]  finfos = baseFile.listFiles();
             if(finfos.length ==0)

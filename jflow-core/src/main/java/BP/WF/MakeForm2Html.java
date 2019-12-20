@@ -2063,7 +2063,7 @@ public class MakeForm2Html
             //判断模板文件临时目录是否存在
             File baseFile = new File(templateFilePath);
             if(baseFile.isDirectory() == false)
-            	return "err@不存在模板文件夹:"+baseFile;
+            	return "err@不存在模板文件夹:"+templateFilePath;
             //获取模板文件列表
             File[]  finfos = baseFile.listFiles();
             if(finfos.length ==0)

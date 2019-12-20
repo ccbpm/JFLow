@@ -419,7 +419,18 @@ public class SystemConfig {
 				return BP.WF.Glo.getHostURL() + "/";
 			} else {
 
-				return Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
+				String path = Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
+				if(new File(path).isDirectory()==true){
+					String filePath = path+"DataUser";
+					if(new File(filePath).exists()==false){
+						path = SystemConfig.getAppSettings().get("ServicePath").toString();
+						if(DataType.IsNullOrEmpty(path)==false)
+							return path;
+					}
+					return path;
+
+				}
+				return "";
 			}
 		} else {
 			return "";

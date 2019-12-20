@@ -118,7 +118,8 @@ public class MapAttrBoolen extends EntityMyPK
 
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 		map.AddTBStringDoc(MapAttrAttr.Tip, null, "激活提示", true, false); //@李国文
-
+		//CCS样式
+		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 			///#endregion 基本信息.
 
 

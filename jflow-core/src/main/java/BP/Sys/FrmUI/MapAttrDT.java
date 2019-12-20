@@ -130,7 +130,8 @@ public class MapAttrDT extends EntityMyPK
 
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 400, 20, true);
 
-
+		//CCS样式
+		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 			///#endregion 基本信息.
 
 

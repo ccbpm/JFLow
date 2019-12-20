@@ -133,7 +133,8 @@ public class MapAttrString extends EntityMyPK
 		map.AddBoolean(MapAttrAttr.IsRichText, false, "是否富文本？", true, true);
 		map.AddBoolean(MapAttrAttr.IsSupperText, false, "是否大块文本？(是否该字段存放的超长字节字段)", true, true, true);
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 400, 20, true);
-
+		//CCS样式
+		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 			///#endregion 基本字段信息.
 
 
@@ -295,10 +296,14 @@ public class MapAttrString extends EntityMyPK
 	{
 		return "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'  AND (CtrlType IS NULL OR CtrlType='')  ";
 	}
-
+	/// <summary>
+	/// 字段自定义样式查询
+	/// </summary>
 	public static String getSQLOfCSSAttr()
 	{
-		return "SELECT No,Name FROM Sys_GloVar WHERE GroupKey='CSS' OR GroupKey='css' ";
+
+			return "SELECT No,Name FROM Sys_GloVar WHERE GroupKey='CSS' OR GroupKey='css' ";
+
 	}
 	/** 
 	 删除
@@ -375,13 +380,13 @@ public class MapAttrString extends EntityMyPK
 
 			for (MapData item : mds.ToJavaList())
 			{
-				sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "',  MyPK='" + item.getNo() + "_" +  newField+ "' WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + item.getNo() + "'";
+				sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "',  MyPK='" + newField + "_" + item.getNo() + " WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + item.getNo() + "'";
 				DBAccess.RunSQL(sql);
 			}
 		}
 		else
 		{
-			sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "', MyPK='" + this.getFK_MapData() + "_" +  newField+ "'  WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
+			sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "', MyPK='" + newField + "_" + this.getFK_MapData() + "  WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
 			DBAccess.RunSQL(sql);
 		}
 

@@ -120,7 +120,8 @@ public class MapAttrEnum extends EntityMyPK
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 
 		map.AddBoolean("IsEnableJS", false, "是否启用JS高级设置？", false, true); //参数字段.
-
+		//CCS样式
+		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 			///#endregion 基本信息.
 
 

@@ -313,10 +313,10 @@ public class Map {
 		}
 
 		if (this.toString().contains(".")) {
-			throw new RuntimeException("@[" + this.getEnDesc() + "," + this.getPhysicsTable() + "] 没有找到 key=[" + key
+			throw new RuntimeException("@["+this.toString()+"," + this.getEnDesc() + "," + this.getPhysicsTable() + "] 没有找到 key=[" + key
 					+ "]的属性，请检查Map文件。此问题出错的原因之一是，在设置系统中的一个实体的属性关联这个实体，你在给实体设置信息时没有按照规则书写reftext, refvalue。请核实。");
 		} else {
-			throw new RuntimeException("@[" + this.getEnDesc() + "," + this.getPhysicsTable() + "] 没有找到 key=[" + key
+			throw new RuntimeException("@["+this.toString()+","  + this.getEnDesc() + "," + this.getPhysicsTable() + "] 没有找到 key=[" + key
 					+ "]的属性，请检查Sys_MapAttr表是否有该数据,用SQL执行: SELECT * FROM Sys_MapAttr WHERE FK_MapData='"
 					+ this.toString() + "' AND KeyOfEn='" + key + "' 是否可以查询到数据，如果没有可能该字段属性丢失。");
 		}

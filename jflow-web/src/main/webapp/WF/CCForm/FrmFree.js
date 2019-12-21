@@ -581,7 +581,7 @@ function figure_MapAttr_Template(mapAttr) {
     }
 
 
-    eleHtml.css('position', 'absolute').css('top', mapAttr.Y + 'px').css('left', mapAttr.X + 'px');
+    eleHtml.css('position', 'absolute').css('top', (parseInt(mapAttr.Y)+10) + 'px').css('left', mapAttr.X + 'px');
 
     return eleHtml;
 }
@@ -813,7 +813,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
     if (mapAttr.MyDataType == 4) { // AppBoolean = 7
 
 
-        eleHtml += "<div class='checkbox' ><label style='width:100%;' > <input " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'  id='CB_" + mapAttr.KeyOfEn + "' name='CB_" + mapAttr.KeyOfEn + "'/>";
+        eleHtml += "<div  ><label style='width:100%;' > <input " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'  id='CB_" + mapAttr.KeyOfEn + "' name='CB_" + mapAttr.KeyOfEn + "'/>";
         eleHtml += mapAttr.Name + '</label></div>';
         return eleHtml;
     }
@@ -822,7 +822,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
     if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) { //AppInt Enum
         if (mapAttr.UIContralType == 1) { //DDL
             //多选下拉框
-            eleHtml += "<select style='padding:0px;'  class='form-control " + mapAttr.CSS + "'  data-val='" + ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' id='DDL_" + mapAttr.KeyOfEn + "' name='DDL_" + mapAttr.KeyOfEn + "' >" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
+            eleHtml += "<select style='padding:0px;'  class='form-control " + mapAttr.CSS + "'  data-val='" + ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' id='DDL_" + mapAttr.KeyOfEn + "' name='DDL_" + mapAttr.KeyOfEn + "' onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' >" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
         }
         return eleHtml;
     }
@@ -975,13 +975,19 @@ function figure_Template_Btn(frmBtn) {
 function figure_Template_Rb(frmRb) {
     var eleHtml = '<div></div>';
     eleHtml = $(eleHtml);
-    var childRbEle = $('<input id="RB_ChuLiFangShi2" type="radio" onchange=\'changeEnable(this,\\"" + frmRb.FK_MapData + "\\",\\"" + frmRb.KeyOfEn + "\\",\\"" + frmRb.AtPara + "\\")\'/>');
+    //根据frmRB获取MapAttr的属性
+    var mapAttr = $.grep(frmData.Sys_MapAttr,function(obj,i){
+        if(obj.KeyOfEn == frmRb.KeyOfEn)
+            return obj;
+    })
+    var eventStr="";
+    if(mapAttr!=null && mapAttr.length!=0){
+        eventStr="onchange='clickEnable(this,\"" + frmRb.FK_MapData + "\",\"" + frmRb.KeyOfEn + "\",\"" + mapAttr[0].AtPara + "\")'"
+    }
+    var childRbEle = $("<input id='RB_ChuLiFangShi2' type='radio' "+eventStr+"/>");
     var childLabEle = $('<label class="labRb"></label>');
     childLabEle.html(frmRb.Lab).attr('for', 'RB_' + frmRb.KeyOfEn + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
-
     childRbEle.val(frmRb.IntKey).attr('id', 'RB_' + frmRb.KeyOfEn + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
-    //    if (frmRb.UIIsEnable == false)
-    //        childRbEle.attr('disabled', 'disabled');
 
     var defVal = ConvertDefVal(frmData, '', frmRb.KeyOfEn);
     if (defVal == frmRb.IntKey) {

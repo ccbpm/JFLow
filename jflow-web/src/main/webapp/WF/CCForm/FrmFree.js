@@ -5,7 +5,7 @@ function GenerFreeFrm(mapData, frmData) {
 
     //循环FrmRB
     for (var i in frmData.Sys_FrmRB) {
-        var frmLab = frmData.Sys_FrmRB[i];
+        var frmRB = frmData.Sys_FrmRB[i];
         if (frmRB.AtPara.indexOf("@MyDataType=4") != -1)
             continue;
         var label = figure_Template_Rb(frmRB);
@@ -975,7 +975,7 @@ function figure_Template_Btn(frmBtn) {
 function figure_Template_Rb(frmRb) {
     var eleHtml = '<div></div>';
     eleHtml = $(eleHtml);
-    var childRbEle = $('<input id="RB_ChuLiFangShi2" type="radio"/>');
+    var childRbEle = $('<input id="RB_ChuLiFangShi2" type="radio" onchange=\'changeEnable(this,\\"" + frmRb.FK_MapData + "\\",\\"" + frmRb.KeyOfEn + "\\",\\"" + frmRb.AtPara + "\\")\'/>');
     var childLabEle = $('<label class="labRb"></label>');
     childLabEle.html(frmRb.Lab).attr('for', 'RB_' + frmRb.KeyOfEn + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
 

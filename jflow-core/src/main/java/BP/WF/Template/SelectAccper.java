@@ -263,6 +263,18 @@ public class SelectAccper extends EntityMyPK
 
 		return super.beforeInsert();
 	}
+	
+
+    public String DoUp()
+    {
+        this.DoOrderUp(SelectAccperAttr.WorkID, this.WorkID, SelectAccperAttr.FK_Node, this.FK_Node, SelectAccperAttr.Idx);
+        return "";
+    }
+    public String DoDown()
+    {
+        this.DoOrderDown(SelectAccperAttr.WorkID, this.WorkID, SelectAccperAttr.FK_Node, this.FK_Node, SelectAccperAttr.Idx);
+        return "";
+    }
 
 	public final void ResetPK() throws Exception
 	{

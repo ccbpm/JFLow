@@ -626,7 +626,7 @@ public abstract class Entity implements Serializable {
 
 	}
 
-	protected final void DoOrderUp(String groupKeyAttr, String groupKeyVal, String gKey2, String gVal2,
+	protected final void DoOrderUp(String groupKeyAttr, Object groupKeyVal, String gKey2, Object gVal2,
 			String idxAttr) throws Exception {
 		// string pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
@@ -699,7 +699,7 @@ public abstract class Entity implements Serializable {
 		DBAccess.RunSQL("UPDATE  " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + pkval + "'");
 	}
 
-	protected final void DoOrderDown(String groupKeyAttr, String groupKeyVal, String gKeyAttr2, String gKeyVal2,
+	protected final void DoOrderDown(String groupKeyAttr, Object groupKeyVal, String gKeyAttr2, Object gKeyVal2,
 			String idxAttr) throws Exception {
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();

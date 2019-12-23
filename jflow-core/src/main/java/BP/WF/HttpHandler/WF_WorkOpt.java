@@ -752,7 +752,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		//查询出来,已经选择的人员.
 		SelectAccpers sas = new SelectAccpers();
-		int i = sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID());
+		int i = sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID(),SelectAccperAttr.Idx);
 		if (i == 0)
 		{
 			//获得最近的一个workid.
@@ -854,7 +854,8 @@ public class WF_WorkOpt extends WebContralBase
 
 			//查询出来,已经选择的人员.
 			SelectAccpers sas = new SelectAccpers();
-			sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID());
+			sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID(),
+					SelectAccperAttr.Idx);
 
 			return sas.ToJson();
 		}
@@ -885,7 +886,8 @@ public class WF_WorkOpt extends WebContralBase
 		int toNodeID = this.GetRequestValInt("ToNode");
 		//查询出来,已经选择的人员.
 		SelectAccpers sas = new SelectAccpers();
-		sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID());
+		sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID(),
+				SelectAccperAttr.Idx);
 		return sas.ToJson();
 	}
 	/** 
@@ -4431,7 +4433,7 @@ public class WF_WorkOpt extends WebContralBase
 
 						///#region 计算出来当前节点的工作人员.
 					SelectAccpers sas = new SelectAccpers();
-					sas.Retrieve(SelectAccperAttr.WorkID, this.getWorkID(), SelectAccperAttr.FK_Node, nd.getNodeID());
+					sas.Retrieve(SelectAccperAttr.WorkID, this.getWorkID(), SelectAccperAttr.FK_Node, nd.getNodeID(),SelectAccperAttr.Idx);
 
 					String workerID = "";
 					String workerName = "";

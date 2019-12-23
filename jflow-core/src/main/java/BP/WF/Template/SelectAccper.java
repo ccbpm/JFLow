@@ -269,6 +269,8 @@ public class SelectAccper extends EntityMyPK
 		//注释掉了.
 		// this.setMyPK( this.FK_Node + "_" + this.WorkID + "_" + this.FK_Emp+"_"+this.Idx;
 		this.setMyPK(this.getFK_Node() + "_" + this.getWorkID() + "_" + this.getFK_Emp());
+        this.setIdx( DBAccess.RunSQLReturnValInt("SELECT Max(idx) +1 FROM WF_SelectAccper WHERE FK_Node=" + this.getFK_Node() + " AND WorkID=" + this.getWorkID(), 1));
+
 	}
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception

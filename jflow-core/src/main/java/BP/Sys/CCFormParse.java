@@ -694,7 +694,7 @@ public class CCFormParse
 			else if (property.get("property").toString().equals("ImgAppType"))
 			{
 				//应用类型：0本地图片，1指定路径.
-				img.setImgSrcType(property.get("PropertyValue") == null ? 0 : Integer.parseInt(property.get("PropertyValue").toString()));
+				img.setImgSrcType(property.get("PropertyValue") == null || property.get("PropertyValue").equals("null")  ? 0 : Integer.parseInt(property.get("PropertyValue").toString()));
 			}
 			else if (property.get("property").toString().equals("ImgPath"))
 			{

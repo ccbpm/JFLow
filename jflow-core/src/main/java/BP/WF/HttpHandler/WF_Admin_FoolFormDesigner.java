@@ -2125,7 +2125,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		for (DataRow r : dt.Rows)
 		{
-			r.set("Name", r.get("No") + (r.get("Name") == null || r.get("Name") == null || DataType.IsNullOrEmpty(r.get("Name").toString()) ? "" : String.format("[%1$s]", r.get("Name"))));
+			if(SystemConfig.getAppCenterDBType() == BP.DA.DBType.Oracle){
+				r.setValue("NAME", r.getValue("NO") + (r.getValue("NAME") == null || "".equals(r.getValue("NAME")) || StringUtils.isEmpty(r.getValue("NAME").toString()) ? "" : String.format("[%1$s]", r.getValue("NAME"))));
+			}else{
+				r.setValue("Name", r.getValue("No") + (r.getValue("Name") == null || "".equals(r.getValue("Name")) || StringUtils.isEmpty(r.getValue("Name").toString()) ? "" : String.format("[%1$s]", r.getValue("Name"))));
+			}
 		}
 
 		return BP.Tools.Json.ToJson(dt);

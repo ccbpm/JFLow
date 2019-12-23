@@ -3378,9 +3378,9 @@ public class WF_Comm extends WebContralBase {
 
 		// 如果不存在分析项手动添加一个分析项
 		DataRow dtr = dt.NewRow();
-		dtr.set("Field", "Group_Number");
-		dtr.set("Name", "数量");
-		dtr.set("Checked", "true");
+		dtr.setValue("Field", "Group_Number");
+		dtr.setValue("Name", "数量");
+		dtr.setValue("Checked", "true");
 		dt.Rows.add(dtr);
 
 		DataTable ddlDt = new DataTable();
@@ -3797,7 +3797,7 @@ public class WF_Comm extends WebContralBase {
 
 		DataTable dt2 = DBAccess.RunSQLReturnTable(myps);
 
-		DataTable dt1 = dt2;
+		DataTable dt1 = dt2.clone();
 
 		dt1.Columns.Add("IDX", Integer.class);
 

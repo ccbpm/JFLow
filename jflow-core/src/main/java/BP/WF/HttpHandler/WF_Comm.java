@@ -3817,7 +3817,7 @@ public class WF_Comm extends WebContralBase {
 		/// #endregion
 
 		/// #region 处理 Int 类型的分组列。
-		DataTable dt = dt1;
+		DataTable dt = dt1.clone();
 		dt.TableName = "GroupSearch";
 		dt.Rows.clear();
 		for (Attr attr : AttrsOfGroup) {

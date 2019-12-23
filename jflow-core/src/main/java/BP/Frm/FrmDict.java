@@ -492,7 +492,10 @@ public class FrmDict extends EntityNoName
 			attr.setMyDataType (DataType.AppString);
 			attr.setUIContralType (UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
-			attr.setUIVisible(true);
+			if(this.getFrmType() == FrmType.FreeFrm)
+				attr.setUIVisible(false);
+			else
+				attr.setUIVisible(true);
 			attr.setUIIsEnable(false);
 			attr.setUIIsLine(false);
 			attr.setMinLen(0);
@@ -512,7 +515,10 @@ public class FrmDict extends EntityNoName
 			attr.setMyDataType (DataType.AppString);
 			attr.setUIContralType (UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
-			attr.setUIVisible(true);
+			if(this.getFrmType() == FrmType.FreeFrm)
+				attr.setUIVisible(false);
+			else
+				attr.setUIVisible(true);
 			attr.setUIIsEnable(true);
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);

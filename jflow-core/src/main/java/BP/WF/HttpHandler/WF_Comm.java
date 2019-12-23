@@ -3438,12 +3438,12 @@ public class WF_Comm extends WebContralBase {
 			// continue;
 
 			dtr = dt.NewRow();
-			dtr.set("Field", attr.getKey());
-			dtr.set("Name", attr.getDesc());
+			dtr.setValue("Field", attr.getKey());
+			dtr.setValue("Name", attr.getDesc());
 
 			// 根据状态 设置信息.
 			if (ur.getVals().indexOf(attr.getKey()) != -1) {
-				dtr.set("Checked", "true");
+				dtr.setValue("Checked", "true");
 			}
 
 			dt.Rows.add(dtr);

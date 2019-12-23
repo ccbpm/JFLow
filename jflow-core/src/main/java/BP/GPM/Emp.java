@@ -365,6 +365,12 @@ public class Emp extends EntityNoName
 		}
 		DBAccess.RunSQL(sql);
 
+
+		//修改Port_Emp中的缓存
+		BP.Port.Emp emp = new BP.Port.Emp(this.getNo());
+		emp.setFK_Dept(this.getFK_Dept());
+		emp.Update();
+
 		super.afterInsertUpdateAction();
 	}
 

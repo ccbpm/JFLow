@@ -288,6 +288,7 @@ public class WF_MyFlow extends WebContralBase {
 		}
 
 		GenerWorkFlow gwf = new GenerWorkFlow();
+
 		boolean IsExistGWF = false;
 
 		if (this.getWorkID() != 0) {
@@ -303,6 +304,11 @@ public class WF_MyFlow extends WebContralBase {
 			gwf.setWorkID(this.getWorkID());
 			if (gwf.RetrieveFromDBSources() == 0) {
 				return ("err@该流程ID{" + this.getWorkID() + "}不存在，或者已经被删除.");
+			}
+			String frms = this.GetRequestVal("Frms");
+			if (DataType.IsNullOrEmpty(frms) == false) {
+				gwf.setParas_Frms(frms);
+				gwf.Update();
 			}
 			IsExistGWF = true;
 		}
@@ -2105,11 +2111,9 @@ public class WF_MyFlow extends WebContralBase {
 		MapDatas mds = new MapDatas();
 		mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node());
 
+		GenerWorkFlow gwf = new GenerWorkFlow();
 		String frms = this.GetRequestVal("Frms");
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-		if (DataType.IsNullOrEmpty(frms) == true) {
-			frms = gwf.getParas_Frms();
-		} else {
+		if (DataType.IsNullOrEmpty(frms) == false) {
 			gwf.setParas_Frms(frms);
 			gwf.Update();
 		}

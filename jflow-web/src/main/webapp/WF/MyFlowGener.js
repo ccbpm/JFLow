@@ -1747,25 +1747,30 @@ function GenerWorkNode() {
 
     //给富文本创建编辑器
     if (document.BindEditorMapAttr) {
-        //给富文本 创建编辑器
-        var editor = document.activeEditor = UM.getEditor('editor', {
-            'autoHeightEnabled': false,
-            'fontsize': [10, 12, 14, 16, 18, 20, 24, 36],
-            'initialFrameWidth': '100%'
-        });
-        var height = document.BindEditorMapAttr.UIHeight;
-        $(".edui-container").css("height", height);
+        var EditorDivs = $(".EditorClass");
+        $.each(EditorDivs, function (i,EditorDiv) {
+            var editorId = $(EditorDiv).attr("id");
+            //给富文本 创建编辑器
+            var editor = document.activeEditor = UM.getEditor(editorId, {
+                'autoHeightEnabled': false,
+                'fontsize': [10, 12, 14, 16, 18, 20, 24, 36],
+                'initialFrameWidth': '100%'
+            });
+            var height = document.BindEditorMapAttr[i].UIHeight;
+            $("#Td_" + document.BindEditorMapAttr[i].KeyOfEn).find('div[class = "edui-container"]').css("height", height);
+            //$(".edui-container").css("height", height);
 
-        if (editor) {
+            if (editor) {
 
-            editor.MaxLen = document.BindEditorMapAttr.MaxLen;
-            editor.MinLen = document.BindEditorMapAttr.MinLen;
-            editor.BindField = document.BindEditorMapAttr.KeyOfEn;
-            editor.BindFieldName = document.BindEditorMapAttr.Name;
+                editor.MaxLen = document.BindEditorMapAttr[i].MaxLen;
+                editor.MinLen = document.BindEditorMapAttr[i].MinLen;
+                editor.BindField = document.BindEditorMapAttr[i].KeyOfEn;
+                editor.BindFieldName = document.BindEditorMapAttr[i].Name;
 
-            //调整样式,让必选的红色 * 随后垂直居中
-            $(editor.container).css({ "display": "inline-block", "margin-right": "4px", "vertical-align": "middle" });
-        }
+                //调整样式,让必选的红色 * 随后垂直居中
+                $(editor.container).css({ "display": "inline-block", "margin-right": "4px", "vertical-align": "middle" });
+            }
+        })
     }
     //给富文本创建编辑器
 }
@@ -1898,7 +1903,7 @@ function dealWithUrl(src) {
 }
 
 var colVisibleJsonStr = ''
-
+document.BindEditorMapAttr = [];
 /*
 公共的工作处理器js. 
 1. 该js的方法都是从各个类抽取出来的.
@@ -2115,13 +2120,13 @@ function initModal(modalType, toNode) {
     //初始化退回窗口的SRC.
     var html = '<div style="width:100%; height:auto;" class="modal fade" id="returnWorkModal" data-backdrop="static">' +
         '<div class="modal-dialog">'
-        + '<div class="modal-content" style="border-radius:0px;width:800px;height:450px;text-align:left;">'
+        + '<div class="modal-content" style="border-radius:0px;width:900px;height:560px;text-align:left;">'
         + '<div class="modal-header">'
         + '<button id="ClosePageBtn" type="button" style="color:#000000;float: right;background: transparent;border: none;" data-dismiss="modal" aria-hidden="true">&times;</button>'
         + '<button id="MaxSizeBtn" type="button" style="color:#000000;float: right;background: transparent;border: none;" aria-hidden="true" >□</button>'
         + '<h4 class="modal-title" id="modalHeader">提示信息</h4>'
         + '</div>'
-        + '<div class="modal-body" style="margin:0px;padding:0px;height:450px">'
+        + '<div class="modal-body" style="margin:0px;padding:0px;height:560px">'
         + '<iframe style="width:100%;border:0px;height:100%;" id="iframeReturnWorkForm" name="iframeReturnWorkForm"></iframe>'
         + '</div>'
         + '</div><!-- /.modal-content -->'

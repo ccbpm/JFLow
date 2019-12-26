@@ -265,14 +265,14 @@ public class SelectAccper extends EntityMyPK
 	}
 	
 
-    public String DoUp()
+    public String DoUp() throws Exception
     {
-        this.DoOrderUp(SelectAccperAttr.WorkID, this.WorkID, SelectAccperAttr.FK_Node, this.FK_Node, SelectAccperAttr.Idx);
+        this.DoOrderUp(SelectAccperAttr.WorkID, this.getWorkID(), SelectAccperAttr.FK_Node, this.getFK_Node(), SelectAccperAttr.Idx);
         return "";
     }
-    public String DoDown()
+    public String DoDown()throws Exception
     {
-        this.DoOrderDown(SelectAccperAttr.WorkID, this.WorkID, SelectAccperAttr.FK_Node, this.FK_Node, SelectAccperAttr.Idx);
+        this.DoOrderDown(SelectAccperAttr.WorkID, this.getWorkID(), SelectAccperAttr.FK_Node, this.getFK_Node(), SelectAccperAttr.Idx);
         return "";
     }
 
@@ -308,9 +308,5 @@ public class SelectAccper extends EntityMyPK
 		this.setRec(WebUser.getNo());
 		return super.beforeUpdateInsertAction();
 	}
-	//protected override bool beforeUpdateInsertAction()
-	//{
-	//    this.Rec = WebUser.getNo();
-	//    return base.beforeUpdateInsertAction();
-	//}
+
 }

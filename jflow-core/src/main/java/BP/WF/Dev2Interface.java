@@ -278,7 +278,7 @@ public class Dev2Interface
 			/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		ps.SQL = "SELECT count(WorkID) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + WebUser.getNo() + "@%' AND WFState=" + WFState.Complete.getValue();
+		ps.SQL = "SELECT count(WorkID) Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%@" + WebUser.getNo() + "@%' OR Emps LIKE '%@" + WebUser.getNo() + ",%')  AND WFState=" + WFState.Complete.getValue();
 		return BP.DA.DBAccess.RunSQLReturnValInt(ps, 0);
 
 	}

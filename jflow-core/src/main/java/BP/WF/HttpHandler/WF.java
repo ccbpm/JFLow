@@ -968,7 +968,7 @@ public class WF extends WebContralBase {
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE Emps LIKE '%@" + WebUser.getNo() + ",%' and WFState="
+		ps.SQL = "SELECT  * FROM WF_GenerWorkFlow  WHERE (Emps LIKE '%@" + WebUser.getNo() + "@%' OR Emps LIKE '%@" + WebUser.getNo() + ",%')and WFState="
 				+ WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		// 添加oracle的处理

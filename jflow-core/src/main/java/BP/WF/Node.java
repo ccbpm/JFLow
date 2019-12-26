@@ -591,7 +591,7 @@ public class Node extends Entity {
 		Node.CheckFlow(fl);
 		this.setFlowName(fl.getName());
 
-		DBAccess.RunSQL("UPDATE Sys_MapData SET Name='" + this.getName() + "' WHERE No='ND" + this.getNodeID() + "'");
+		DBAccess.RunSQL("UPDATE Sys_MapData SET Name='" + this.getName() + "' WHERE No='ND" + this.getNodeID() + "' AND Name=''");
 		switch (this.getHisRunModel()) {
 		case Ordinary:
 			if (this.getIsStartNode()) {

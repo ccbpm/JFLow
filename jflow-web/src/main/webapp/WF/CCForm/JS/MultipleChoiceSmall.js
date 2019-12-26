@@ -25,9 +25,14 @@ function MultipleChoiceSmall(mapExt, mapAttr, tbID, rowIndex, OID) {
         case 2:
             var enums = new Entities("BP.Sys.SysEnums");
             enums.Retrieve("EnumKey", mapExt.Tag2);
-            $.each(enums, function (i, o) {
-                data.push({ No: o.EnumKey, Name: o.Lab, IntKey: o.IntKey })
-            });
+            if(mapExt.Tag == "1" || mapExt.Tag == "2")
+                $.each(enums, function (i, o) {
+                    data.push({ No: o.EnumKey, Name: o.Lab, IntKey: o.IntKey })
+                });
+            else
+                $.each(enums, function (i, o) {
+                    data.push({ No: o.IntKey, Name: o.Lab })
+                });
             //data = enums;
             break;
         case 3:

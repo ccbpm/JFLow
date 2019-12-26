@@ -381,6 +381,8 @@ function AfterBindEn_DealMapExt(frmData) {
                             continue;
                         val += ens[k].Tag2 + ",";
                     }
+                    if(val=="")
+                        val = frmData.MainTable[0][mapAttr.KeyOfEn+"T"];
                     $("#TB_" + mapAttr.KeyOfEn).val(val);
                     break;
                 }

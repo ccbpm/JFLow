@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.BindException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -118,7 +119,7 @@ public class AttachmentUploadController extends BaseController {
 			throws Exception {
 		String error = "";
 		MultipartHttpServletRequest multipartRequest = CommonFileUtils.getMultipartHttpServletRequest(request);
-		MultipartFile item = multipartRequest.getFile("file");
+		List<MultipartFile> items = multipartRequest.getFiles("file");
 		int maxSize = 50 * 1024 * 1024; // 单个上传文件大小的上限
 
 		// 获取初始化信息
@@ -128,7 +129,8 @@ public class AttachmentUploadController extends BaseController {
 		en.Retrieve();
 		MapData mapData = new MapData(athDesc.getFK_MapData());
 		String msg = null;
-		uploadFile(item, athDesc, en, msg, mapData, this.getFK_FrmAttachment(), getParasData());
+		for(MultipartFile item : items)
+			uploadFile(item, athDesc, en, msg, mapData, this.getFK_FrmAttachment(), getParasData());
 		return;
 		 
 	}

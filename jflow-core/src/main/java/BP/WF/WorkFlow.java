@@ -1267,7 +1267,7 @@ public class WorkFlow {
 		DBAccess.RunSQL(ps);
 
 		// 把当前的人员字符串加入到参与人里面去,以方便查询.
-		String emps = WebUser.getNo() + "@";
+		String emps = WebUser.getNo()+","+WebUser.getName() + "@";
 
 		// 设置流程完成状态.
 		ps = new Paras();

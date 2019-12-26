@@ -119,7 +119,7 @@ public class WF_Comm extends WebContralBase {
 			row.setValue("field", attr.getKeyOfEn());
 			row.setValue("title", attr.getName());
 			row.setValue("Width", attr.getUIWidthInt() * 2);
-			row.setValue("UIContralType", attr.getUIContralType());
+			row.setValue("UIContralType", attr.getUIContralType().getValue());
 
 			if (attr.getHisAttr().getIsFKorEnum()) {
 				row.setValue("field", attr.getKeyOfEn() + "Text");

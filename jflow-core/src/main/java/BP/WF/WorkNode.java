@@ -5518,8 +5518,9 @@ public class WorkNode {
 						null, SendReturnMsgType.Info);
 
 				// 执行更新.
-				if (this.getHisGenerWorkFlow().getEmps().contains("@" + WebUser.getNo() + "@") == false) {
-					this.getHisGenerWorkFlow().setEmps(this.getHisGenerWorkFlow().getEmps() + WebUser.getNo() + "@");
+				if (this.getHisGenerWorkFlow().getEmps().contains("@" + WebUser.getNo() + "@") == false
+				 	|| this.getHisGenerWorkFlow().getEmps().contains("@" + WebUser.getNo() + ",") == false) {
+					this.getHisGenerWorkFlow().setEmps(this.getHisGenerWorkFlow().getEmps() + WebUser.getNo()+","+WebUser.getName() + "@");
 				}
 
 				this.rptGe.setFlowEmps(this.getHisGenerWorkFlow().getEmps());
@@ -6569,9 +6570,10 @@ public class WorkNode {
 			todoEmps = todoEmps.replace(WebUser.getNo() + "," + WebUser.getName(), "");
 			// 追加当前操作人
 			String emps = this.getHisGenerWorkFlow().getEmps();
-			if (emps.contains("@" + WebUser.getNo() + "@") == false)
+			if (emps.contains("@" + WebUser.getNo() + "@") == false
+				|| emps.contains("@" + WebUser.getNo() + ",") == false)
 			{
-				emps = emps + WebUser.getNo() + "@";
+				emps = emps + WebUser.getNo()+","+WebUser.getName() + "@";
 			}
 			this.getHisGenerWorkFlow().setEmps(emps);
 			this.getHisGenerWorkFlow().setTodoEmps(todoEmps);

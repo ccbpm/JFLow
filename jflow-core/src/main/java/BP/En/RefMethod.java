@@ -46,7 +46,7 @@ public class RefMethod
 	/**
 	 * 是否显示在Ens中?
 	 */
-	public boolean IsForEns = true;
+	public boolean IsForEns = false;
 	
 	/**
 	 * 相关功能

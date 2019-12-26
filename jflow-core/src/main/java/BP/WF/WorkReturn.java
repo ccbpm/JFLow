@@ -615,11 +615,12 @@ public class WorkReturn {
 		gwf.setFK_Node(this.ReturnToNode.getNodeID());
 		// 增加参与的人员
 		String emps = gwf.getEmps();
-		if (emps.contains("@" + WebUser.getNo()) == false) {
+		if (emps.contains("@" + WebUser.getNo()+"@") == false
+			|| emps.contains("@" + WebUser.getNo()+",") == false) {
 			if (DataType.IsNullOrEmpty(emps) == true) {
-				emps = "@" + WebUser.getNo() + "@";
+				emps = "@" + WebUser.getNo()+","+WebUser.getName() + "@";
 			} else {
-				emps += WebUser.getNo() + "@";
+				emps += WebUser.getNo()+","+WebUser.getName() + "@";
 			}
 		}
 		gwf.setEmps(emps);
@@ -755,11 +756,12 @@ public class WorkReturn {
 		gwf.setSender(WebUser.getNo());
 		// 增加参与的人员
 		String emps = gwf.getEmps();
-		if (emps.contains("@" + WebUser.getNo()) == false) {
+		if (emps.contains("@" + WebUser.getNo()+"@") == false
+			|| emps.contains("@" + WebUser.getNo()+",") == false) {
 			if (DataType.IsNullOrEmpty(emps) == true) {
-				emps = "@" + WebUser.getNo() + "@";
+				emps = "@" + WebUser.getNo()+","+WebUser.getName() + "@";
 			} else {
-				emps += WebUser.getNo() + "@";
+				emps += WebUser.getNo()+","+WebUser.getName() + "@";
 			}
 		}
 		gwf.setEmps(emps);
@@ -847,11 +849,12 @@ public class WorkReturn {
 		gwf.setSender(WebUser.getNo());
 		// 增加参与的人员
 		String emps = gwf.getEmps();
-		if (emps.contains("@" + WebUser.getNo()) == false) {
+		if (emps.contains("@" + WebUser.getNo()+"@") == false
+			|| emps.contains("@" + WebUser.getNo()+",") == false) {
 			if (DataType.IsNullOrEmpty(emps) == true) {
-				emps = "@" + WebUser.getNo() + "@";
+				emps = "@" + WebUser.getNo()+","+WebUser.getName() + "@";
 			} else {
-				emps += WebUser.getNo() + "@";
+				emps += WebUser.getNo()+","+WebUser.getName() + "@";
 			}
 		}
 		gwf.setEmps(emps);
@@ -1001,11 +1004,12 @@ public class WorkReturn {
 
 		// 增加参与的人员
 		String emps = gwf.getEmps();
-		if (emps.contains("@" + WebUser.getNo()) == false) {
+		if (emps.contains("@" + WebUser.getNo()+"@") == false
+			|| emps.contains("@" + WebUser.getNo()+",") == false) {
 			if (DataType.IsNullOrEmpty(emps) == true) {
-				emps = "@" + WebUser.getNo() + "@";
+				emps = "@" + WebUser.getNo() +","+WebUser.getName()+ "@";
 			} else {
-				emps += WebUser.getNo() + "@";
+				emps += WebUser.getNo()+","+WebUser.getName() + "@";
 			}
 		}
 

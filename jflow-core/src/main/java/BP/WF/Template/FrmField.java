@@ -236,14 +236,16 @@ public class FrmField extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///#endregion
+	@Override
+	protected  boolean beforeInsert() throws Exception
+	{
+		if (DataType.IsNullOrEmpty(this.getEleType()))
+			this.setEleType(FrmEleType.Field);
 
-	//protected override bool beforeInsert()
-	//{
-	//    if (DataType.IsNullOrEmpty(this.EleType))
-	//        this.EleType = FrmEleType.Field;
+		if(this.getEleType() == FrmEleType.Field)
+			this.setMyPK(this.getFK_MapData() + "_"+ this.getFK_Node() + "_" + this.getKeyOfEn());
 
-	//    this.setMyPK( this.FK_MapData + "_" + this.FK_Flow + "_" + this.FK_Node + "_" + this.KeyOfEn + "_" + this.EleType;
-	//    return base.beforeInsert();
-	//}
+		return super.beforeInsert();
+	}
+
 }

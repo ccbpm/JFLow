@@ -4589,7 +4589,18 @@ public class WorkNode {
 		String err = "";
 		if (this.getHisNode().getHisFormType() == NodeFormType.SheetTree) {
 			// 获取绑定的表单.
-			FrmNodes nds = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
+            String frms = this.getHisGenerWorkFlow().getParas_Frms();
+            FrmNodes nds = null;
+            if (DataType.IsNullOrEmpty(frms) == false)
+            {
+                frms = "'" + frms.replace(",", "','")+"'";
+                nds = new FrmNodes();
+                nds.RetrieveIn(FrmNodeAttr.FK_Frm, frms);
+            }
+               
+            else
+            	nds = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
+//			FrmNodes nds = new FrmNodes(this.getHisNode().getFK_Flow(), this.getHisNode().getNodeID());
 			for (FrmNode item : nds.ToJavaList()) {
 				if (item.getFrmEnableRole() == FrmEnableRole.Disable) {
 					continue;

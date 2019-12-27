@@ -70,15 +70,22 @@ public class MapFrmFool extends EntityNoName
 	 表格显示的列
 	*/
 	public final int getTableCol()
-	{
-		return 4;
+{
+	return 4;
 
-	}
+}
 	public final void setTableCol(int value) throws Exception
 	{
 		this.SetValByKey(MapDataAttr.TableCol, value);
 	}
+	public final String getFK_FormTree() throws Exception {
+		return this.GetValStringByKey(MapDataAttr.FK_FormTree);
 
+	}
+	public final void setFK_FormTree(String value) throws Exception
+	{
+		this.SetValByKey(MapDataAttr.FK_FormTree,value);
+	}
 
 		///#endregion
 
@@ -386,7 +393,8 @@ public class MapFrmFool extends EntityNoName
 		//else
 
 		//    this.FromEventEntity = feb.ToString();
-
+		if (this.getNodeID() != 0)
+			this.setFK_FormTree("");
 		return super.beforeUpdate();
 	}
 	@Override

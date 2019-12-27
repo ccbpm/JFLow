@@ -243,7 +243,7 @@ public class MapAttrSFSQL extends EntityMyPK
 	protected void afterDelete() throws Exception
 	{
 		MapAttr attr = new MapAttr();
-		attr.setMyPK(attr.getFK_MapData() + "_" + this.getKeyOfEn() + "T");
+		attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "T");
 		attr.Delete();
 
 		//删除相对应的rpt表中的字段

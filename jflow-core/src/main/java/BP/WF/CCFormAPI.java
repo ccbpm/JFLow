@@ -2,6 +2,8 @@ package BP.WF;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
+
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
 import BP.Difference.SystemConfig;
@@ -760,6 +762,8 @@ public class CCFormAPI extends Dev2Interface {
 
 		DataTable ddlTable = new DataTable();
 		ddlTable.Columns.Add("No");
+		Hashtable ht = null;
+		boolean isFirst = true;
 		for (DataRow dr : Sys_MapAttr.Rows) {
 			String lgType = dr.getValue("LGType").toString();
 			String ctrlType = dr.getValue(MapAttrAttr.UIContralType).toString();
@@ -832,8 +836,21 @@ public class CCFormAPI extends Dev2Interface {
 				continue;
 			}
 
+			if(isFirst == true)
+			{
+				ht = en.getRow();
+				//获取URL上的参数
+				for (Object key :  ContextHolderUtils.getRequest().getParameterMap().keySet()) {
+					if(key == null)
+						continue;
+					if(key.toString().equals("")==true)
+						continue;
+					ht.put( key, ContextHolderUtils.getRequest().getParameter(key.toString()));
+				}
+			}
+
 			// 获得数据.
-			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey,ht);
 
 			if (mydt == null) {
 				DataRow ddldr = ddlTable.NewRow();

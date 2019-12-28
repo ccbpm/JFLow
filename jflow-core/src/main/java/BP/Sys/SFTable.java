@@ -8,17 +8,23 @@ import BP.Tools.Json;
 import BP.Tools.StringHelper;
 import BP.Web.*;
 
+import java.util.Hashtable;
+
 /** 
  用户自定义表
 */
 public class SFTable extends EntityNoName
 {
 
+	public final DataTable GenerHisDataTable()throws Exception
+	{
+		return GenerHisDataTable(null);
+	}
 	/** 
 	 获得外部数据表
 	 * @throws Exception 
 	*/
-	public final DataTable GenerHisDataTable() throws Exception
+	public final DataTable GenerHisDataTable(Hashtable ht) throws Exception
 	{
 		//创建数据源.
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
@@ -73,6 +79,30 @@ public class SFTable extends EntityNoName
 			{
 				runObj = runObj.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			}
+
+			if (runObj.contains("@") == true && ht == null)
+				throw new RuntimeException("@外键类型SQL错误," + runObj+"部分查询条件没有被替换.");
+
+			if (runObj.contains("@") == true && ht!=null)
+			{
+				for (Object key : ht.keySet()) {
+					// 值为空或者null不替换
+					if (ht.get(key) == null || ht.get(key).equals("") == true) {
+						continue;
+					}
+
+					if (runObj.contains("@" + key) && ht.get(key)!=null)
+						runObj = runObj.replace("@" + key, ht.get(key).toString());
+
+					//不包含@则返回SQL语句
+					if (runObj.contains("@") == false)
+						break;
+				}
+
+			}
+
+			if (runObj.contains("@") == true)
+				throw new RuntimeException("@外键类型SQL错误," + runObj+"部分查询条件没有被替换.");
 
 			DataTable dt = src.RunSQLReturnTable(runObj);
 			return dt;

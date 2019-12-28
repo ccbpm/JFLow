@@ -320,8 +320,17 @@ public class PubClass {
 
 		}
 
-	}	
-
+	}
+	/**
+	 * 获取datatable.
+	 *
+	 * @param uiBindKey
+	 * @return
+	 * @throws Exception
+	 */
+	public static DataTable GetDataTableByUIBineKey(String uiBindKey) throws Exception{
+		return GetDataTableByUIBineKey(uiBindKey,null);
+	}
 	/**
 	 * 获取datatable.
 	 * 
@@ -329,7 +338,7 @@ public class PubClass {
 	 * @return
 	 * @throws Exception
 	 */
-	public static DataTable GetDataTableByUIBineKey(String uiBindKey) throws Exception {
+	public static DataTable GetDataTableByUIBineKey(String uiBindKey,Hashtable ht) throws Exception {
 
 		DataTable dt = new DataTable();
 		if (uiBindKey.contains(".")) {
@@ -353,7 +362,7 @@ public class PubClass {
 		if (sf.RetrieveFromDBSources() != 0) {
 			if (sf.getSrcType() == SrcType.Handler || sf.getSrcType() == SrcType.JQuery)
 				return null;
-			dt = sf.GenerHisDataTable();
+			dt = sf.GenerHisDataTable(ht);
 		}
 		if (dt == null)
 			dt = new DataTable();

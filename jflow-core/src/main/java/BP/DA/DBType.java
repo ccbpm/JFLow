@@ -32,7 +32,12 @@ public enum DBType
 	/** 
 	 Informix
 	*/
-	Informix(6);
+	Informix(6),
+	/*
+	 * 达梦
+	 * */
+	DM(7);
+	
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

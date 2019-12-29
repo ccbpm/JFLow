@@ -2421,6 +2421,7 @@ public abstract class Entity implements Serializable {
 
 	private void CheckPhysicsTable_Informix() throws Exception {
 		// 检查字段是否存在
+		if(StringUtils.isEmpty(this.getEnMap().getPhysicsTable())) return;
 		String sql = "SELECT *  FROM " + this.getEnMap().getPhysicsTable() + " WHERE 1=2";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
@@ -2598,6 +2599,7 @@ public abstract class Entity implements Serializable {
 	private void CheckPhysicsTable_MySQL() throws Exception {
 
 		// 检查字段是否存在
+		if(StringUtils.isEmpty(this.getEnMap().getPhysicsTable())) return;
 		String sql = "SELECT *  FROM " + this.get_enMap().getPhysicsTable() + " WHERE 1=2";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 
@@ -2709,6 +2711,7 @@ public abstract class Entity implements Serializable {
 
 	private void CheckPhysicsTable_Ora() throws Exception {
 		// 检查字段是否存在
+		if(StringUtils.isEmpty(this.getEnMap().getPhysicsTable())) return;
 		String sql = "SELECT *  FROM " + this.getEnMap().getPhysicsTable() + " WHERE 1=2";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 

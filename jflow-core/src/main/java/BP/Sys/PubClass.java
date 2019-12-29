@@ -48,6 +48,7 @@ import BP.Sys.MapData;
 import BP.Sys.MapDatas;
 import BP.Sys.MapDtl;
 import BP.Sys.MapDtls;
+import BP.Tools.StringUtils;
 
 /**
  * PageBase 的摘要说明。
@@ -679,6 +680,7 @@ public class PubClass {
 
 	public static void AddCommentForTable_MySql(Entity en) throws Exception {
 		String database = SystemConfig.getAppCenterDBDatabase();
+		if(StringUtils.isEmpty(en.getEnMap().getPhysicsTable())) return;
 		en.RunSQL("alter table " + database + "." + en.getEnMap().getPhysicsTable() + " comment = '" + en.getEnDesc()
 				+ "'");
 		// 获取当前实体对应表的所有字段结构信息

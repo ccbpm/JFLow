@@ -1,156 +1,13 @@
-﻿
-/*
-说明:
-1.  围绕该文件工作的有两个js文件，分别是。 FrmFool.js
-2.  对于傻瓜表单自由表单的，展现方式不同以外其他的都相同.
-3.  相同的部分写入到了该文件里，不同的部分分别在不同的两个js文件里.
-4.  MapExt2016.js 文件是一个公用的文件，用于处理扩展业务逻辑的，它在多个地方别调用了.
-*/
-//初始化函数
-$(function () {
-    if(webUser == null)
-        webUser = new WebUser();
+﻿/**
+ * 开发者表单的解析
+ * @param {any} mapData 表单属性
+ * @param {any} frmData 表单数据
+ */
+function GenerDevelopFrm(mapData, frmData) {  
 
-    initPageParam(); //初始化参数.
+    $('head').append('<style type="text/css"> .form-control{display: inline; }</style >');
 
-    //时间轴的表单增加打印单据按钮
-    var fromWorkOpt = GetQueryString("FromWorkOpt");
-    if (fromWorkOpt == 2) {
-        var PrintDocHtml = "<input type=button name='PrintDoc' value='打印单据' enable=true onclick='printDoc()' />";
-        $("#topToolBar").append(PrintDocHtml);
-    }
-   
-
-    //构造表单.
-    GenerFrm(); //表单数据.
-
-    if (parent != null && parent.document.getElementById('MainFrames') != undefined) {
-        //计算高度，展示滚动条
-        var height = $(parent.document.getElementById('MainFrames')).height() - 110;
-        $('#topContentDiv').height(height);
-
-        $(window).resize(function () {
-            $("#CCForm").height($(window).height() - 150 + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff"); ;
-        });
-    }
-
-    
-    $('#btnCloseMsg').bind('click', function () {
-        $('.Message').hide();
-    });
-
-   
-});
-//打印单据
-function printDoc() {
-    WinOpen("../WorkOpt/PrintDoc.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.OID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random()+"', 'dsdd'");
-}
-
-
-
-//设置不可以用.
-function SetReadonly() {
-    //设置保存按钮不可以用.
-    $("#Btn_Save").attr("disabled", true);
-    $('#CCForm').find('input,textarea,select').attr('disabled', false);
-    $('#CCForm').find('input,textarea,select').attr('readonly', true);
-    $('#CCForm').find('input,textarea,select').attr('disabled', true);
-}
-
-var frmData = null;
-//将v1版本表单元素转换为v2 杨玉慧  silverlight 自由表单转化为H5表单.
-function GenerFrm() {
-    var isTest = GetQueryString("IsTest");
-    var isReadonly = GetQueryString("IsReadonly");
-
-    var href = window.location.href;
-    var urlParam = href.substring(href.indexOf('?') + 1, href.length);
-    urlParam = urlParam.replace('&DoType=', '&DoTypeDel=xx');
-
-    //隐藏保存按钮.
-    if (href.indexOf('&IsReadonly=1') > 1 || href.indexOf('&IsEdit=0') > 1) {
-        $("#Btn").hide();
-    }
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    handler.AddUrlData(urlParam);
-    handler.AddJson(pageData);
-    var data = handler.DoMethodReturnString("FrmGener_Init");
-
-    if (data.indexOf('err@') == 0) {
-        alert('装载表单出错,请查看控制台console,或者反馈给管理员.');
-        alert(data);
-        console.log(data);
-        return;
-    }
-
-    try {
-        frmData = JSON.parse(data);
-    }
-    catch (err) {
-        alert(" frmData数据转换JSON失败:" + data);
-        console.log(data);
-        return;
-    }
-
-    //获取没有解析的外部数据源
-    var uiBindKeys = frmData["UIBindKey"];
-    if (uiBindKeys.length != 0) {
-        //获取外部数据源 handler/JavaScript
-        var operdata;
-        for (var i = 0; i < uiBindKeys.length; i++) {
-            var sfTable = new Entity("BP.Sys.SFTable", uiBindKeys[i].No);
-            var srcType = sfTable.SrcType;
-            if (srcType != null && srcType != "") {
-                //Handler 获取外部数据源
-                if (srcType == 5) {
-                    var selectStatement = sfTable.SelectStatement;
-                    if (plant == "CCFLow")
-                        selectStatement = basePath + "/DataUser/SFTableHandler.ashx" + selectStatement;
-                    else
-                        selectStatement = basePath + "/DataUser/SFTableHandler" + selectStatement;
-                    operdata = DBAccess.RunDBSrc(selectStatement, 1);
-                }
-                //JavaScript获取外部数据源
-                if (srcType == 6) {
-                    operdata = DBAccess.RunDBSrc(sfTable.FK_Val, 2);
-                }
-                frmData[uiBindKeys[i].No] = operdata;
-            }
-        }
-
-    }
-
-    //获得sys_mapdata.
-    var mapData = frmData["Sys_MapData"][0];
-
-    //初始化Sys_MapData
-    var h = mapData.FrmH;
-    var w = mapData.FrmW;
-    if (h <= 1200)
-        h = 1200;
-    // beign 设置表单标题和表单的布局
-    document.title = mapData.Name;
-    //$('#divCCForm').height(h);
-    //$('#topContentDiv').height(h);
-    $('#topContentDiv').width(w);
-    $('.Bar').width(w + 15);
-    var marginLeft = $('#topContentDiv').css('margin-left');
-    if (undefined == marginLeft)
-        marginLeft = '0px';
-    marginLeft = marginLeft.replace('px', '');
-    marginLeft = parseFloat(marginLeft.substr(0, marginLeft.length - 2)) + 50;
-    $('#topContentDiv i').css('left', marginLeft.toString() + 'px');
-    $('#CCForm').html('');
-
-    //end
-
-    // 加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
-    jQuery.getScript("../../DataUser/JSLibData/" + mapData.No + "_Self.js");
-    jQuery.getScript("../../DataUser/JSLibData/" + mapData.No + ".js");
-
-    
-   //加载开发者表单的内容
-    //先判断DataUser/CCForm / HtmlTemplateFile / FK_MapData.htm是否存在
+    //加载开发者表单的内容
     var filename = basePath + "/DataUser/CCForm/HtmlTemplateFile/" + mapData.No + ".htm";
     var htmlobj = $.ajax({ url: filename, async: false });
     var htmlContent = "";
@@ -167,13 +24,79 @@ function GenerFrm() {
         alert("开发者设计的表单内容丢失，请联系管理员");
         return;
     }
+    
 
     $("#CCForm").html(htmlContent);
 
     //解析表单中的数据
 
-    //1.加载隐藏字段，设置只读，赋初始值
-    LoadFrmDataAndChangeEleStyle(frmData); 
+    //1.加载隐藏字段，设置字段的宽度属性
+    var mapAttrs = frmData.Sys_MapAttr;
+    var html = "";
+    for (var i = 0; i < mapAttrs.length; i++) {
+        var mapAttr = mapAttrs[i];
+        $('#TB_' + mapAttr.KeyOfEn).css('width', mapAttr.UIWidth);
+        $('#CB_' + mapAttr.KeyOfEn).css('width', mapAttr.UIWidth);
+        $('#RB_' + mapAttr.KeyOfEn).css('width', mapAttr.UIWidth);
+        $('#DDL_' + mapAttr.KeyOfEn).css('width', mapAttr.UIWidth);
+
+        if ((mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1)//外部数据源
+            || (mapAttr.LGType == "2" && mapAttr.MyDataType == "1")) {
+            var _html = InitDDLOperation(frmData, mapAttr, null);
+            $("#DDL_" + mapAttr.KeyOfEn).empty();
+            $("#DDL_" + mapAttr.KeyOfEn).append(_html);
+
+        }
+
+        if (mapAttr.UIVisible == 0 && $("#TB_" + mapAttr.KeyOfEn).length == 0) {
+            var defval = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
+            html = "<input type='hidden' id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + defval + "' />";
+            html = $(html);
+            $('#CCForm').append(html);
+            continue;
+        }
+        if (mapAttr.MyDataType == 1) {
+            if (mapAttr.UIContralType == 8)//手写签字版
+            {
+                var element = $("#Img" + mapAttr.KeyOfEn);
+                var defValue = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                var ondblclick = ""
+                if (mapAttr.UIIsEnable == 1) {
+                    ondblclick = " ondblclick='figure_Template_HandWrite(\"" + mapAttr.KeyOfEn + "\",\"" + defValue + "\")'";
+                }
+
+                var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "'  value='" + defValue + "' type=hidden />";
+                var eleHtml = "<img src='" + defValue + "' " + ondblclick + " onerror=\"this.src='../../DataUser/Siganture/UnName.jpg'\"  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                element.after(eleHtml);
+                element.remove(); //移除Imge节点
+            }
+            if (mapAttr.UIContralType == 4)//地图
+            {
+                var obj = $("#TB_" + mapAttr.KeyOfEn);
+                //获取兄弟节点
+                $(obj.prev()).attr("onclick", "figure_Template_Map('" + mapAttr.KeyOfEn + "','" + mapAttr.UIIsEnable + "')");
+            }
+            if (mapAttr.UIContralType == 101)//评分
+            {
+                var scores = $(".simplestar");//获取评分的类
+                $.each(scores, function (score, idx) {
+                    $.each($(this).children("Img"), function () {
+                        $(this).attr("src", $(this).attr("src").replace("../../", "../"));
+                    });
+                });
+
+            }
+        }
+    }
+
+
+    //外键、外部数据源增加选择项option
+    var selects = $("select");
+    $.each(selects, function (obj, i) {
+        var _html = InitDDLOperation(frmData,mapAttr,null)
+    })
+
+
 
     //2.解析控件 从表、附件、附件图片、框架、地图、签字版、父子流程
    var frmDtls = frmData.Sys_MapDtl;
@@ -197,7 +120,12 @@ function GenerFrm() {
 
     }
 
-    var athImgs = frmData.Sys_FrmImgAth;//从表附件 figure_Template_Ath
+    //图片附件
+    var athImgs = frmData.Sys_FrmImgAth;
+    if (athImgs.length > 0) {
+        var imgSrc = "<input type='hidden' id='imgSrc'/>";
+        $('#CCForm').append(imgSrc);
+    }
     for (var i = 0; i < athImgs.length; i++) {
         var athImg = athImgs[i];
         //根据data-key获取从表元素
@@ -205,6 +133,18 @@ function GenerFrm() {
         if (element.length == 0)
             continue;
         figure_Template_ImageAth(element,athImg);
+
+    }
+
+    //图片
+    var imgs = frmData.Sys_FrmImg;
+    for (var i = 0; i < imgs.length; i++) {
+        var img = imgs[i];
+        //根据data-key获取从表元素
+        var element = $("Img[data-key=" + img.MyPK + "]");
+        if (element.length == 0)
+            continue;
+        figure_Template_Image(element, img);
 
     }
     var iframes = frmData.Sys_MapFrame;//框架
@@ -229,31 +169,7 @@ function GenerFrm() {
 
         }
     }
-    
-
-
  
-
-    
-   
-   
-
-    
-
-    
-    //3.处理下拉框级联等扩展信息(小范围多选)
-    AfterBindEn_DealMapExt(frmData);
-
-
-
-    ShowTextBoxNoticeInfo();
-
-    //textarea的高度自适应的设置
-    var textareas = $("textarea");
-    $.each(textareas, function (idex, item) {
-        autoTextarea(item);
-    });
-   
    
 }
 
@@ -302,7 +218,6 @@ function figure_Template_Ath(element,ath) {
 //图片附件
 function figure_Template_ImageAth(element,frmImageAth) {
     var isEdit = frmImageAth.IsEdit;
-    var eleHtml = $("<div></div>");
     var img = $("<img class='pimg'/>");
 
     var imgSrc = basePath + "/WF/Data/Img/LogH.PNG";
@@ -320,23 +235,22 @@ function figure_Template_ImageAth(element,frmImageAth) {
     img.css('width', element.width()).css('height', element.height()).css('padding', "0px").css('margin', "0px").css('border-width', "0px");
     //不可编辑
     if (isEdit == "1" && pageData.IsReadonly != 1) {
-        var fieldSet = $("<fieldset></fieldset>");
+        var fieldSet = $("<fieldset style='display:inline'></fieldset>");
         var length = $("<legend></legend>");
         var a = $("<a></a>");
         var url = basePath + "/WF/CCForm/ImgAth.htm?W=" + frmImageAth.W + "&H=" + frmImageAth.H + "&FK_MapData=" + pageData.FK_MapData + "&RefPKVal=" + refpkVal + "&CtrlID=" + frmImageAth.CtrlID;
 
         a.attr('href', "javascript:ImgAth('" + url + "','" + frmImageAth.MyPK + "');").html("编辑");
-        length.css('font-style', 'inherit').css('font-weight', 'bold').css('font-size', '12px');
+        length.css('font-style', 'inherit').css('font-weight', 'bold').css('font-size', '12px').css('width', frmImageAth.W);
 
         fieldSet.append(length);
         length.append(a);
         fieldSet.append(img);
-        eleHtml.append(fieldSet);
+        $(element).after(fieldSet);
+       
     } else {
-        eleHtml.append(img);
+        $(element).after(img);
     }
-   
-    $(element).after(eleHtml);
     $(element).remove(); //移除Imge节点
 }
 
@@ -344,9 +258,10 @@ function figure_Template_ImageAth(element,frmImageAth) {
 function ImgAth(url, athMyPK) {
     var dgId = "iframDg";
     url = url + "&s=" + Math.random();
-    OpenEasyUiDialog(url, dgId, '图片附件', 900, 580, 'icon-new', false, function () {
 
-    }, null, null, function () {
+    OpenBootStrapModal(url, dgId, '图片附件', 900, 580, 'icon-new', false, function () {
+
+    }, null, function () {
         //关闭也切换图片
         var imgSrc = $("#imgSrc").val();
         if (imgSrc != null && imgSrc != "")
@@ -354,6 +269,60 @@ function ImgAth(url, athMyPK) {
         $("#imgSrc").val("");
     });
 }
+
+//初始化 IMAGE  只初始化了图片类型
+function figure_Template_Image(element,frmImage) {
+    //解析图片
+    if (frmImage.ImgAppType == 0) { //图片类型
+        //数据来源为本地.
+        var imgSrc = '';
+        if (frmImage.ImgSrcType == 0) {
+            //替换参数
+            var frmPath = frmImage.ImgPath;
+            frmPath = frmPath.replace('＠', '@');
+            frmPath = frmPath.replace('@basePath', basePath);
+            frmPath = frmPath.replace('@basePath', basePath);
+            imgSrc = DealJsonExp(frmData.MainTable[0], frmPath);
+        }
+
+        //数据来源为指定路径.
+        if (frmImage.ImgSrcType == 1) {
+            var url = frmImage.ImgURL;
+            url = url.replace('＠', '@');
+            url = url.replace('@basePath', basePath);
+            imgSrc = DealJsonExp(flowData.MainTable[0], url);
+        }
+        // 由于火狐 不支持onerror 所以 判断图片是否存在放到服务器端
+        if (imgSrc == "" || imgSrc == null)
+            imgSrc = "../DataUser/ICON/CCFlow/LogBig.png";
+
+        var a = $("<a></a>");
+        var img = $("<img/>")
+
+        img.attr("src", imgSrc).css('width', frmImage.W).css('height', frmImage.H).attr('onerror', "this.src='../DataUser/ICON/CCFlow/LogBig.png'");
+
+        if (frmImage.LinkURL != undefined && frmImage.LinkURL != '') {
+            a.attr('href', frmImage.LinkTarget).attr('target', frmImage.LinkTarget).css('width', frmImage.W).css('height', frmImage.H);
+            a.append(img);
+            $(element).after(a);
+        } else {
+            $(element).after(img);
+        }
+
+
+
+
+        $(element).remove(); //移除Imge节点
+    } else if (frmImage.ImgAppType == 3)//二维码  手机
+    {
+
+
+    } else if (frmImage.ImgAppType == 1) {//暂不解析
+        //电子签章  写后台
+    }
+}
+
+
 function getMapExt(Sys_MapExt, KeyOfEn) {
     var ext = {};
     for (var p in Sys_MapExt) {
@@ -1112,7 +1081,7 @@ function figure_Template_Siganture(SigantureID, val, type) {
 //签字板
 function figure_Template_HandWrite(HandWriteID, val) {
     var url = basePath+ "/WF/CCForm/HandWriting.htm?WorkID=" + pageData.OID + "&FK_Node=" + pageData.FK_Node + "&KeyOfEn=" + HandWriteID;
-    OpenEasyUiDialogExt(url, '签字板', 400, 300, false);
+    OpenBootStrapModal(url, "eudlgframe", '签字板', 400, 300, false);
 }
 //地图
 function figure_Template_Map(MapID, UIIsEnable) {

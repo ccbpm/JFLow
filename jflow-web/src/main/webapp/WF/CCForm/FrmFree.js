@@ -428,8 +428,8 @@ function figure_Template_Dtl(frmDtl, ext) {
 
     var eleIframe = '<iframe></iframe>';
     eleIframe = $("<iframe ID='Dtl_" + frmDtl.No + "' src='" + src +
-                 "' frameborder=0  style='position:absolute;width:" + frmDtl.W + "px; height:" + frmDtl.H +
-                 "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling='atuo' /></iframe>");
+        "' frameborder=0  style='position:absolute;width:" + frmDtl.W + "px; height:" + frmDtl.H +
+        "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling='atuo' /></iframe>");
     if (pageData.IsReadonly) {
 
     } else {
@@ -548,8 +548,8 @@ function figure_Template_IFrame(fram) {
 
     var eleIframe = '<iframe></iframe>';
     eleIframe = $("<iframe ID='Fdg" + fram.MyPK + "' src='" + url +
-	                 "' frameborder=0  style='position:absolute;width:" + fram.W + "px; height:" + fram.H +
-	                 "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
+        "' frameborder=0  style='position:absolute;width:" + fram.W + "px; height:" + fram.H +
+        "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
 
     eleHtml.append(eleIframe);
 
@@ -581,7 +581,7 @@ function figure_MapAttr_Template(mapAttr) {
     }
 
 
-    eleHtml.css('position', 'absolute').css('top', (parseInt(mapAttr.Y)+10) + 'px').css('left', mapAttr.X + 'px');
+    eleHtml.css('position', 'absolute').css('top', mapAttr.Y + 'px').css('left', mapAttr.X + 'px');
 
     return eleHtml;
 }
@@ -811,10 +811,8 @@ function figure_MapAttr_TemplateEle(mapAttr) {
 
     //checkbox 类型.
     if (mapAttr.MyDataType == 4) { // AppBoolean = 7
-
-
-        eleHtml += "<div  ><label style='width:100%;' > <input " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'  id='CB_" + mapAttr.KeyOfEn + "' name='CB_" + mapAttr.KeyOfEn + "'/>";
-        eleHtml += mapAttr.Name + '</label></div>';
+        eleHtml += "<label style='width:100%;' > <input " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'  id='CB_" + mapAttr.KeyOfEn + "' name='CB_" + mapAttr.KeyOfEn + "'/>";
+        eleHtml += mapAttr.Name + '</label>';
         return eleHtml;
     }
 
@@ -822,7 +820,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
     if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) { //AppInt Enum
         if (mapAttr.UIContralType == 1) { //DDL
             //多选下拉框
-            eleHtml += "<select style='padding:0px;'  class='form-control " + mapAttr.CSS + "'  data-val='" + ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' id='DDL_" + mapAttr.KeyOfEn + "' name='DDL_" + mapAttr.KeyOfEn + "' onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' >" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
+            eleHtml += "<select style='padding:0px;'  class='form-control " + mapAttr.CSS + "'  data-val='" + ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' id='DDL_" + mapAttr.KeyOfEn + "' name='DDL_" + mapAttr.KeyOfEn + "' onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(frmData, mapAttr, defValue) + "</select>";
         }
         return eleHtml;
     }
@@ -975,19 +973,13 @@ function figure_Template_Btn(frmBtn) {
 function figure_Template_Rb(frmRb) {
     var eleHtml = '<div></div>';
     eleHtml = $(eleHtml);
-    //根据frmRB获取MapAttr的属性
-    var mapAttr = $.grep(frmData.Sys_MapAttr,function(obj,i){
-        if(obj.KeyOfEn == frmRb.KeyOfEn)
-            return obj;
-    })
-    var eventStr="";
-    if(mapAttr!=null && mapAttr.length!=0){
-        eventStr="onchange='clickEnable(this,\"" + frmRb.FK_MapData + "\",\"" + frmRb.KeyOfEn + "\",\"" + mapAttr[0].AtPara + "\")'"
-    }
-    var childRbEle = $("<input id='RB_ChuLiFangShi2' type='radio' "+eventStr+"/>");
+    var childRbEle = $('<input id="RB_ChuLiFangShi2" type="radio"/>');
     var childLabEle = $('<label class="labRb"></label>');
     childLabEle.html(frmRb.Lab).attr('for', 'RB_' + frmRb.KeyOfEn + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
-    childRbEle.val(frmRb.IntKey).attr('id', 'RB_' + frmRb.KeyOfEn + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
+
+    childRbEle.val(frmRb.IntKey).attr('id', 'RB_' + frmRb.KeyOfEn + "_" + frmRb.IntKey).attr('name', 'RB_' + frmRb.KeyOfEn);
+    //    if (frmRb.UIIsEnable == false)
+    //        childRbEle.attr('disabled', 'disabled');
 
     var defVal = ConvertDefVal(frmData, '', frmRb.KeyOfEn);
     if (defVal == frmRb.IntKey) {
@@ -1082,7 +1074,7 @@ function figure_Template_Image(frmImage) {
         }
 
         eleHtml.attr("id", frmImage.MyPK);
-        eleHtml.css('position', 'absolute').css('top', frmImage.Y + 'px').css('left', frmImage.X + 'px').css('width', frmImage.W).css('height', frmImage.H); ;
+        eleHtml.css('position', 'absolute').css('top', frmImage.Y + 'px').css('left', frmImage.X + 'px').css('width', frmImage.W).css('height', frmImage.H);;
     } else if (frmImage.ImgAppType == 3)//二维码  手机
     {
 
@@ -1207,21 +1199,40 @@ function figure_Template_Attachment(frmAttachment) {
     return eleHtml;
 }
 
+// function connector_Template_Line(frmLine) {
+//     var eleHtml = '';
+//     eleHtml = '<table><tr><td></td></tr></table>';
+//     eleHtml = $(eleHtml).css('position', 'absolute').css('top', frmLine.Y1 + 'px').css('left', frmLine.X1 + 'px');
+//     eleHtml.find('td').css('padding', '0px')
+//     if (navigator.userAgent.indexOf('Firefox') >= 0) {
+//         eleHtml.find('td').css('padding', '0px')
+//             .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 1 : Math.abs(frmLine.X1 - frmLine.X2))
+//             .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 2 : Math.abs(frmLine.Y1 - frmLine.Y2))
+//             .css("background", frmLine.BorderColor);
+//     } else {
+//         eleHtml.find('td').css('padding', '0px')
+//             .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 0 : Math.abs(frmLine.X1 - frmLine.X2))
+//             .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 1 : Math.abs(frmLine.Y1 - frmLine.Y2))
+//             .css("background", frmLine.BorderColor);
+//     }
+
+//     return eleHtml;
+// }
 function connector_Template_Line(frmLine) {
-    var eleHtml = '';
-    eleHtml = '<table><tr><td></td></tr></table>';
-    eleHtml = $(eleHtml).css('position', 'absolute').css('top', frmLine.Y1 + 'px').css('left', frmLine.X1 + 'px');
-    eleHtml.find('td').css('padding', '0px')
+    var eleHtml = '';    
+    //姜玲 20191219 解决画1个像素宽度问题   
+    eleHtml = '<div><div>';
+    eleHtml = $(eleHtml).css('position', 'absolute').css('top', frmLine.Y1).css('left', frmLine.X1);
     if (navigator.userAgent.indexOf('Firefox') >= 0) {
-        eleHtml.find('td').css('padding', '0px')
+        eleHtml.css('padding', '0px')
         .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 1 : Math.abs(frmLine.X1 - frmLine.X2))
-    .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 2 : Math.abs(frmLine.Y1 - frmLine.Y2))
+    .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 2: Math.abs(frmLine.Y1 - frmLine.Y2))
         .css("background", frmLine.BorderColor);
     } else {
-        eleHtml.find('td').css('padding', '0px')
-        .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 0 : Math.abs(frmLine.X1 - frmLine.X2))
+        eleHtml.css('padding', '0px')
+        .css('width', Math.abs(frmLine.X1 - frmLine.X2) == 0 ? 0.5 : Math.abs(frmLine.X1 - frmLine.X2))
     .css('height', Math.abs(frmLine.Y1 - frmLine.Y2) == 0 ? 1 : Math.abs(frmLine.Y1 - frmLine.Y2))
-        .css("background", frmLine.BorderColor);
+        .css("background", frmLine.BorderColor).css("border-color",frmLine.BorderColor == 'Black'?"":frmLine.BorderColor);
     }
 
     return eleHtml;

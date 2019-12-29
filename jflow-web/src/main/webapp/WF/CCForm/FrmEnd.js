@@ -313,7 +313,7 @@ function AfterBindEn_DealMapExt(frmData) {
         //    //mapExt.Delete();
         //    continue;
         //}
-
+       
 
         //处理Pop弹出框
         var PopModel = mapAttr.GetPara("PopModel");
@@ -380,9 +380,9 @@ function AfterBindEn_DealMapExt(frmData) {
                         if (defaultVal.indexOf(ens[k].Tag1) == -1)
                             continue;
                         val += ens[k].Tag2 + ",";
-                    }
-                    if(val=="")
-                        val = frmData.MainTable[0][mapAttr.KeyOfEn+"T"];
+                    }                
+                    if (val == "")
+                        val = frmData.MainTable[0][mapAttr.KeyOfEn + "T"];
                     $("#TB_" + mapAttr.KeyOfEn).val(val);
                     break;
                 }
@@ -773,8 +773,8 @@ function DynamicBind(mapExt, ctrlType) {
 }
 
 /**
- * 表单计算(包括普通表单以及从表弹出页表单)
- */
+* 表单计算(包括普通表单以及从表弹出页表单)
+*/
 function calculator(o) {
     if (!testExpression(o.Doc)) {
         console.log("MyPk: " + o.MyPK + ", 表达式: '" + o.Doc + "'格式错误");

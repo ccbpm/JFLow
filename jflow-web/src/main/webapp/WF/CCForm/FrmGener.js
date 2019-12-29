@@ -287,6 +287,8 @@ function GenerFrm() {
         var frmType = GetQueryString("FrmType");
         if (frmType == 'FreeFrm')
             GenerFreeFrm(mapData, frmData); //自由表单.
+        else if (frmType == 'Develop')
+            GenerDevelopFrm(mapData, frmData); //开发者表单.
         else {
             GenerFoolFrm(mapData, frmData); //生成傻瓜表单.
             isFloolFrm = true;
@@ -296,6 +298,8 @@ function GenerFrm() {
         if (mapData.FrmType == 0 || mapData.FrmType == 10) {
             GenerFoolFrm(mapData, frmData); //生成傻瓜表单.
             isFloolFrm = true;
+        } else if (mapData.FrmType == 8) {
+            GenerDevelopFrm(mapData, frmData); //开发者表单.
         }
         else
             GenerFreeFrm(mapData, frmData); //自由表单.
@@ -325,13 +329,17 @@ function GenerFrm() {
             $("#Star_" + KeyOfEn + " img:gt(" + index + ")").attr("src", "../Style/Img/star_1.png");
         });
     });
+
     //根据NAME 设置ID的值
-    var inputs = $('[name]');
-    $.each(inputs, function (i, obj) {
-        if ($(obj).attr("id") == undefined || $(obj).attr("id") == '') {
-            $(obj).attr("id", $(obj).attr("name"));
-        }
-    })
+    if (mapData.FrmType != 8) {
+        var inputs = $('[name]');
+        $.each(inputs, function (i, obj) {
+            if ($(obj).attr("id") == undefined || $(obj).attr("id") == '') {
+                $(obj).attr("id", $(obj).attr("name"));
+            }
+        })
+    }
+   
 
 
 
@@ -412,6 +420,11 @@ function GenerFrm() {
                 $('#CB_' + mapAttr.KeyOfEn).attr("checked", false);
         }
 
+        //枚举
+        if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {
+            $("#RB_" + mapAttr.KeyOfEn + "_" + defValue).attr("checked", 'checked');
+        }
+
         //只读或者属性为不可编辑时设置
         if (mapAttr.UIIsEnable == "0" || pageData.IsReadonly == "1") {
 
@@ -422,11 +435,11 @@ function GenerFrm() {
     }
 
     //处理下拉框级联等扩展信息(小范围多选)
-       AfterBindEn_DealMapExt(frmData);
+    AfterBindEn_DealMapExt(frmData);
 
     
-        //表单联动设置
-        Set_Frm_Enable(frmData);
+    //表单联动设置
+    Set_Frm_Enable(frmData);
 
 
     ShowTextBoxNoticeInfo();
@@ -451,7 +464,6 @@ function GenerFrm() {
             });
             var height = document.BindEditorMapAttr[i].UIHeight;
             $("#Td_" + document.BindEditorMapAttr[i].KeyOfEn).find('div[class = "edui-container"]').css("height", height);
-            //$(".edui-container").css("height", height);
 
             if (editor) {
 

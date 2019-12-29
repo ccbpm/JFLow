@@ -32,11 +32,17 @@
     <script src="../../Comm/Gener.js"></script>
     <script src="../../Scripts/PinYin.js"></script>
     <script src="Designer.js"></script>
+    <script src="DesignerTools.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini" style="overflow:hidden;">
     <div>
-        <input type="button" onclick="SaveForm()" value="保存" />
-        <input type="button" onclick="PreviewForm()" value="预览" />
+        <input type="button" onclick="SaveForm()" value="保存" id="Btn_Save" />
+        <input type="button" onclick="SaveAs()" value="另存为" id="Btn_SaveAs" />
+        <input type="button" onclick="PreviewForm()" value="预览" id="Btn_View" />
+        <input type="button" onclick="ImpFrmTemplate()" value="导入表单模版" id="Btn_ImpTemplate" />
+        <input type="button" onclick="leipiFormDesign.exec('ImpFrmFields');" value="插入回收站字段" id="Btn_ImpFields" />
+        <input type="button" onclick="FrmMobile()" value="手机表单" id="Btn_FrmMobile" />
+
     </div>
     <!--左边导航-->
     <div class="main-sidebar">
@@ -57,6 +63,11 @@
                             <li style="cursor: pointer; margin-top: 2px;">
                                 <div id="HyperLink" style="background-image: url(../CCFormDesigner/Controls/basic/HyperLink.png);">
                                     <span class="navlistspan">超链接</span>
+                                </div>
+                            </li>
+                            <li style="cursor: pointer; margin-top: 2px;">
+                                <div id="HyperLink" style="background-image: url(../CCFormDesigner/Controls/basic/Img.png);" onclick="leipiFormDesign.exec('component','Img');">
+                                    <span class="navlistspan">图片</span>
                                 </div>
                             </li>
 
@@ -223,12 +234,12 @@
     <!--中间内容-->
     <div id="content-wrapper" class="content-wrapper">
         <div class="tab-content">
-            <div class="row" style="height:600px">
+            <div class="row" style="height:auto">
                 <script id="myFormDesign" type="text/plain" style="margin-left:20px;margin-right:20px;">
                 </script>
             </div><!--end row-->
         </div>
-        <ul class="nav nav-tabs" id="myTab">
+        <!--<ul class="nav nav-tabs" id="myTab">
             <li class="active">
                 <a data-toggle="tab" href="#designer">设计</a>
             </li>
@@ -240,7 +251,7 @@
                 <a data-toggle="tab" href="#code">后台代码</a>
             </li>
 
-        </ul>
+        </ul>-->
     </div>
 </body>
 <script type="text/javascript">
@@ -264,9 +275,8 @@
     //给富文本赋值
     window.onload = function () {
 
-
         //先判断DataUser/CCForm/HtmlTemplateFile/FK_MapData.htm是否存在
-        var filename = basePath + "/DataUser/CCForm/HtmlTemplateFile/" + pageParam.fk_mapdata + ".htm";
+        var filename = basePath + "/DataUser/CCForm/HtmlTemplateFile/" + pageParam.fk_mapdata + ".htm?r="+Math.random() ;
         var htmlobj = $.ajax({ url: filename, async: false });
         var htmlContent = "";
         if (htmlobj.status == 404) {

@@ -235,6 +235,7 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 			//自由，傻瓜，SL表单不做判断
 			case FreeFrm:
 			case FoolForm:
+			case Develop:
 				break;
 			case Url:
 			case Entity:
@@ -313,6 +314,8 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 			return "url@FormDesigner.htm?FK_MapData=" + md.getNo();
 		}
 
+		if (md.getHisFrmType() == BP.Sys.FrmType.Develop)
+			return "url@../DevelopDesigner/Designer.htm?FK_MapData=" + md.getNo() + "&FrmID="+md.getNo()+"&EntityType=" + this.GetRequestVal("EntityType");
 
 		return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + md.getNo();
 	}

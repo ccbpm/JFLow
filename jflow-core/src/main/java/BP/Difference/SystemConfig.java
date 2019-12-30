@@ -5,13 +5,10 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
 
+import BP.DA.*;
 import BP.Difference.Helper;
 import org.apache.commons.io.IOUtils;
 
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
 import BP.Difference.Handler.CommonUtils;
 import BP.Sys.Glo;
 import BP.Sys.OSDBSrc;
@@ -937,6 +934,8 @@ public class SystemConfig {
 				return BP.DA.DBType.Oracle;
 			} else if (dbType.equalsIgnoreCase("MySQL")) {
 				return BP.DA.DBType.MySQL;
+			} else if(dbType.equalsIgnoreCase("DM")){
+				return BP.DA.DBType.DM;
 			}
 		}
 		throw new RuntimeException("位置的数据库类型，请配置AppCenterDBType属性。");

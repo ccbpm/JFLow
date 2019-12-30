@@ -56,6 +56,13 @@
 			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/ojdbc14-10.2.0.4.0.jar</systemPath>
 		</dependency>
 		<dependency>
+			<groupId>dm.jdbc.driver</groupId>
+			<artifactId>dm</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/dm-1.0.0.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>net.sourceforge.jtds</groupId>
 			<artifactId>jtds</artifactId>
 			<version>1.2.8</version>

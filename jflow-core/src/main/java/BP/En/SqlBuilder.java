@@ -2563,6 +2563,8 @@ public class SqlBuilder {
                 return " IFNULL(" + expression + "," + isNullBack + ")";
             case PostgreSQL:
                 return " COALESCE(" + expression + "," + isNullBack + ")";
+			case DM:
+				return " NVL(" + expression + "," + isNullBack + ")";
             default:
                 throw new Exception("GetIsNullInSQL未涉及的数据库类型");
         }

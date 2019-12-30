@@ -443,6 +443,7 @@ public abstract class Entity implements Serializable {
 				sql = "SELECT CONVERT(INT, MAX(CAST(" + field + " as int)) )+1 AS No FROM " + map.getPhysicsTable();
 				break;
 			case Oracle:
+			case DM:
 				sql = "SELECT MAX(" + field + ") +1 AS No FROM " + map.getPhysicsTable();
 				break;
 			case MySQL:

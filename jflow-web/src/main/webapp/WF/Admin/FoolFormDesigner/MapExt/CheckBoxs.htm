@@ -34,7 +34,7 @@
                 document.getElementById("RB_IsEnableJS_1").checked = true;
                 document.getElementById("RB_Check_" + pageData.selectIntKey).checked = true;
             }
-
+               
 
             //获得的数据.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner_MapExt");
@@ -138,10 +138,10 @@
                     if (configDataArr[i].indexOf("TB_") == -1 && configDataArr[i].indexOf("DDL_") == -1)
                         fieldsCfg += '@' + configDataArr[i];
                     else
-                    if (configDataArr[i].indexOf("TB_") >= 0)
-                        setValue += '@' + configDataArr[i].replace("TB_", "");
-                    else
-                        setValue += '@' + configDataArr[i].replace("DDL_", "");
+                        if (configDataArr[i].indexOf("TB_") >= 0)
+                            setValue += '@' + configDataArr[i].replace("TB_", "");
+                        else
+                            setValue += '@' + configDataArr[i].replace("DDL_", "");
                 }
 
             }
@@ -254,7 +254,7 @@
             attr.Update();
             //启用、增加FrmRB
             if (ctrl.value == 1) {
-                var frmRbs  = new Entities("BP.Sys.FrmRBs");
+                 var frmRbs  = new Entities("BP.Sys.FrmRBs");
                 frmRbs.Retrieve("FK_MapData", pageData.FK_MapData, "KeyOfEn", pageData.KeyOfEn);
                 if (frmRbs.length == 0) {
                     var en = new Entity("BP.Sys.FrmRB");
@@ -270,11 +270,11 @@
 
                     en.IntKey = 1;
                     en.Lab = "是";
-                    en.MyPK = en.FK_MapData + "_" + en.KeyOfEn + "_" + en.IntKey;
+                     en.MyPK = en.FK_MapData + "_" + en.KeyOfEn + "_" + en.IntKey;
                     en.Insert(); //插入数据.
                     initData.Sys_FrmRB.push(JSON.parse(JSON.stringify(en)));
-                }
-
+                } 
+               
             }
 
         }
@@ -289,109 +289,109 @@
     </script>
 </head>
 <body>
-<table style="width: 100%;">
-    <caption>
-        <label id="lb_EnName">
-        </label>
-        字段的高级设置
-    </caption>
-    <tr>
-        <td valign="top">
-            <fieldset>
-                <legend>是否启用？</legend>
-                <input type="radio" value="1" id="RB_IsEnableJS_1" onclick="SaveEnableJS(this)" name="RB_IsEnableJS" />
-                <label for="RB_IsEnableJS_1">
-                    启用
-                </label>
-                <input type="radio" value="0" id="RB_IsEnableJS_0" onclick="SaveEnableJS(this)" name="RB_IsEnableJS" />
-                <label for="RB_IsEnableJS_0">
-                    禁用
-                </label>
-            </fieldset>
-            <fieldset>
-                <legend>列表值 </legend>
-                <ul id="ulListValues" style="margin: 0; border: 0; padding: 0;">
-                    <li style="list-style-type:none;float:left;" >
-                        <input id="RB_Check_0" type="radio" name="RB_Check" value="0" />
-                        <label for="RB_Check_0" >否</label>
-                    </li>
-                    <li style="list-style-type:none;float:left;" >
-                        <input id="RB_Check_1" type="radio" name="RB_Check" value="1" />
-                        <label for="RB_Check_1" >是</label>
-                    </li>
-                </ul>
-            </fieldset>
-            <fieldset>
-                <legend>执行JS脚本(可以为空)</legend>
-                <div id="JS">
-                    <textarea rows="3" cols="50" id="TB_Script"></textarea>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>Tip 提示信息(可以为空)</legend>
-                <div id="Tip">
-                    <textarea rows="3" cols="50" id="TB_Tip"></textarea>
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>联动其他的控件使其属性该表(可见，只读) 注意:<font color=red>被联动的控件在傻瓜表单模式下要占三行</font></legend>
-                <form id="formFields">
-                    <div id="Fields">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>
-                                    #
-                                </th>
-                                <th>
-                                    字段
-                                </th>
-                                <th>
-                                    字段名
-                                </th>
-                                <th>
-                                    不设置
-                                </th>
-                                <th>
-                                    可以编辑
-                                </th>
-                                <th>
-                                    可见？
-                                </th>
-                                <th>
-                                    不可见
-                                </th>
-                                <th>
-                                    设置值
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+    <table style="width: 100%;">
+        <caption>
+            <label id="lb_EnName">
+            </label>
+            字段的高级设置
+        </caption>
+        <tr>
+            <td valign="top">
+                <fieldset>
+                    <legend>是否启用？</legend>
+                    <input type="radio" value="1" id="RB_IsEnableJS_1" onclick="SaveEnableJS(this)" name="RB_IsEnableJS" />
+                    <label for="RB_IsEnableJS_1">
+                        启用
+                    </label>
+                    <input type="radio" value="0" id="RB_IsEnableJS_0" onclick="SaveEnableJS(this)" name="RB_IsEnableJS" />
+                    <label for="RB_IsEnableJS_0">
+                        禁用
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend>列表值 </legend>
+                    <ul id="ulListValues" style="margin: 0; border: 0; padding: 0;">
+                        <li style="list-style-type:none;float:left;" >
+                            <input id="RB_Check_0" type="radio" name="RB_Check" value="0" />
+                            <label for="RB_Check_0" >否</label>
+                        </li>
+                        <li style="list-style-type:none;float:left;" >
+                            <input id="RB_Check_1" type="radio" name="RB_Check" value="1" />
+                            <label for="RB_Check_1" >是</label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <fieldset>
+                    <legend>执行JS脚本(可以为空)</legend>
+                    <div id="JS">
+                        <textarea rows="3" cols="50" id="TB_Script"></textarea>
                     </div>
-                </form>
-            </fieldset>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="Btn_Save" value="保存" onclick="Save()" />
-            <!--<input type="button" value="保存并关闭" onclick="SaveAndClose()" />
-            <input type="button" value="关闭" onclick="Close()" />-->
-            <a href="javascript:ShowHidden('sqlexp')"> <img src="../../../Img/Btn/Help.gif" />帮助:</a>
-        </td>
-    </tr>
-</table>
+                </fieldset>
+                <fieldset>
+                    <legend>Tip 提示信息(可以为空)</legend>
+                    <div id="Tip">
+                        <textarea rows="3" cols="50" id="TB_Tip"></textarea>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>联动其他的控件使其属性该表(可见，只读) 注意:<font color=red>被联动的控件在傻瓜表单模式下要占三行</font></legend>
+                    <form id="formFields">
+                        <div id="Fields">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            #
+                                        </th>
+                                        <th>
+                                            字段
+                                        </th>
+                                        <th>
+                                            字段名
+                                        </th>
+                                        <th>
+                                            不设置
+                                        </th>
+                                        <th>
+                                            可以编辑
+                                        </th>
+                                        <th>
+                                            可见？
+                                        </th>
+                                        <th>
+                                            不可见
+                                        </th>
+                                        <th>
+                                            设置值
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </fieldset>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" id="Btn_Save" value="保存" onclick="Save()" />
+                <!--<input type="button" value="保存并关闭" onclick="SaveAndClose()" />
+                <input type="button" value="关闭" onclick="Close()" />-->
+                <a href="javascript:ShowHidden('sqlexp')"> <img src="../../../Img/Btn/Help.gif" />帮助:</a>
+            </td>
+        </tr>
+    </table>
 
 
-<div id='sqlexp' style='color: Gray; display: none'>
-    <ul>
-        <li>当下拉框或者radionbuttn选择的值改变时,需要联动其他的控件也要跟着隐藏与显示.</li>
-        <li>该功能为每个枚举值的展现都设置为状态.</li>
-    </ul>
-
-</div>
+    <div id='sqlexp' style='color: Gray; display: none'>
+        <ul>
+            <li>当下拉框或者radionbuttn选择的值改变时,需要联动其他的控件也要跟着隐藏与显示.</li>
+            <li>该功能为每个枚举值的展现都设置为状态.</li>
+        </ul>
+         
+    </div>
 
 </body>
 </html>

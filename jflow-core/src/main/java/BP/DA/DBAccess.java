@@ -91,11 +91,9 @@ public class DBAccess {
 			}
 
 			// 数据库字段类型不一致增加判断
-			if (SystemConfig.getAppCenterDBType() == DBType.MySQL || SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
-				pstmt.setString(1, line);
-			} else {
+
 				pstmt.setBytes(1, bytes);
-			}
+
 			pstmt.setString(2, pkVal);
 			pstmt.execute();
 		} catch (Exception ex) {
@@ -162,7 +160,7 @@ public class DBAccess {
 	 *            表主键
 	 * @param pkVal
 	 *            主键值
-	 * @param saveFileField
+	 * @param saveToFileField
 	 *            保存到字段
 	 * @throws Exception
 	 */
@@ -194,26 +192,55 @@ public class DBAccess {
 
 	/**
 	 * 保存文件到数据库
-	 * 
-	 * @param fullFileName
-	 *            完成的文件路径
 	 * @param tableName
 	 *            表名称
 	 * @param tablePK
 	 *            表主键
 	 * @param pkVal
 	 *            主键值
-	 * @param saveFileField
+	 * @param saveToFileField
 	 *            保存到字段
 	 * @throws Exception
 	 */
 	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
-			String saveToFileField) throws Exception {
+									   String saveToFileField) throws Exception {
+		SaveBigTextToDB(docs, tableName, tablePK, pkVal, saveToFileField,false);
+		return;
+	}
+	/**
+	 * 保存文件到数据库
+	 * @param tableName
+	 *            表名称
+	 * @param tablePK
+	 *            表主键
+	 * @param pkVal
+	 *            主键值
+	 * @param saveToFileField
+	 *            保存到字段
+	 * @throws Exception
+	 */
+	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
+			String saveToFileField,boolean isByte) throws Exception {
 		
-		if (SystemConfig.getAppCenterDBType()== DBType.MySQL)
+		if ((SystemConfig.getAppCenterDBType()== DBType.MySQL
+				|| SystemConfig.getAppCenterDBType()==DBType.MSSQL)
+			&& isByte == false)
 		{
-			SaveBytesToDB(null, docs, tableName, tablePK, pkVal, saveToFileField);
-			return;
+			try
+			{
+				String sql = "UPDATE " + tableName + " SET " + saveToFileField + "='" + docs + "' WHERE " + tablePK + "='" + pkVal + "'";
+				DBAccess.RunSQL(sql);
+				return;
+			}catch(Exception ex)
+			{
+				/*如果没有此列，就自动创建此列.*/
+				if (DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
+				{
+					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " text ";
+					BP.DA.DBAccess.RunSQL(sql);
+				}
+				throw ex;
+			}
 		}
 		
 		SaveBytesToDB(docs.getBytes("UTF-8"), docs, tableName, tablePK, pkVal, saveToFileField);
@@ -3067,17 +3094,22 @@ public class DBAccess {
 	 * @throws Exception 
 	 */
 	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)throws Exception {
-		   if (SystemConfig.getAppCenterDBType() == DBType.MSSQL
-		         || SystemConfig.getAppCenterDBType() == DBType.MySQL){
-		      String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
-		      return DBAccess.RunSQLReturnStringIsNull(strSQL,"");
-		   }
-		   byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
-		   if (byteFile == null) {
-		      return null;
-		   }
-		   return new String(byteFile,"UTF-8");
+		  return GetBigTextFromDB(tableName,tablePK,pkVal,fileSaveField,false);
+	}
+
+	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField,boolean isByte)throws Exception {
+		if ((SystemConfig.getAppCenterDBType() == DBType.MSSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.MySQL)
+			    && isByte == false){
+			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
+			return DBAccess.RunSQLReturnStringIsNull(strSQL,"");
 		}
+		byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
+		if (byteFile == null) {
+			return null;
+		}
+		return new String(byteFile,"UTF-8");
+	}
 
 	/**
 	 * 从数据库里提取文件

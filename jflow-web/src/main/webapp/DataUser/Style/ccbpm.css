@@ -132,7 +132,9 @@ table
     font-style: normal;
     color: #333333;
 }
-
+.checkbox{
+    margin:0px !important;
+}
 th
 {
     border-width: 0px;

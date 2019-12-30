@@ -118,6 +118,22 @@ function NodeFrmSln(nodeID) {
     // OpenEasyUiDialogExt(url, "表单方案", 800, 500, false);
 }
 
+//方向条件.
+function CondDir(fromNodeID) {
+
+    var flowNo = GetQueryString("FK_Flow");
+
+    var targetId = fromNodeID;
+
+    var url = "../Cond/ConditionLine.htm?FK_Flow=" + flowNo + "&FK_MainNode=" + fromNodeID + "&FK_Node=" + fromNodeID + "&ToNodeID=" + targetId + "&CondType=2&Lang=CH&t=" + new Date().getTime();
+    $("#LineModal").hide();
+    $(".modal-backdrop").hide();
+    OpenEasyUiDialog(url, flowNo + fromNodeID + "DIRECTION" + targetId, "设置方向条件" + fromNodeID + "->" + targetId, 880, 500, "icon-property", true, null, null, null, function () {
+
+    });
+}
+
+
 
 //设计表单
 function NodeFrmD(nodeID) {
@@ -125,6 +141,10 @@ function NodeFrmD(nodeID) {
     var node = new Entity("BP.WF.Node", nodeID);
     if (node.FormType == 1) {
         NodeFrmFree(nodeID);
+        return;
+    }
+    if (node.FormType == 12) { //开发者表单
+        NodeFrmDevelop(nodeID);
         return;
     }
 
@@ -147,6 +167,14 @@ function NodeFrmFree(nodeID) {
     //WinOpen(url);
 }
 
+function NodeFrmDevelop(nodeID) {
+
+    //开发者表单
+    var url = "../DevelopDesigner/Designer.htm?FK_MapData=ND" + nodeID + "&FK_Flow=" + flowNo + "&FK_Node=" + nodeID;
+    window.parent.addTab(nodeID + "_Develop", "设计表单" + nodeID, url);
+    //(url);
+}
+
 //接受人规则.
 function NodeAccepterRole(nodeID) {
     //接受人规则.
@@ -156,9 +184,11 @@ function NodeAccepterRole(nodeID) {
 }
 
 function Reload() {
+    if (confirm('您确定要刷新吗？刷新将不能保存.') == false)
+        return;
+
     window.location.href = window.location.href;
 }
-
 
 //打开.
 function OpenEasyUiDialogExt(url, title, w, h, isReload) {

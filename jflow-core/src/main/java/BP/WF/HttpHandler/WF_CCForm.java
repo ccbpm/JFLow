@@ -1938,7 +1938,7 @@ public class WF_CCForm extends WebContralBase {
 			}
 		}
 
-		if (this.GetRequestVal("IsReadonly").equals("1")) {
+		if (this.GetRequestVal("IsReadonly")!=null && this.GetRequestVal("IsReadonly").equals("1")) {
 			mdtl.setIsInsert(false);
 			mdtl.setIsDelete(false);
 			mdtl.setIsUpdate(false);

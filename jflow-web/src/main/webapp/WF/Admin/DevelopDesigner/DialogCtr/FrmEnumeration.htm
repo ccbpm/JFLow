@@ -158,7 +158,7 @@
             //单选按钮
             if (dataType == "Radio") {
                 if (strs.length != 0) {
-                    _Html += "<span leipiplugins='enum' id='SR_" + UIBindKey + "' title='单选' name='leipiNewField'  data-key='" + KeyOfEn + "' data-type='" + dataType + "'>";
+                    _Html += "<span leipiplugins='enum' id='SR_" + UIBindKey + "' title='单选' name='leipiNewField'  data-key='" + KeyOfEn + "' data-type='" + dataType + "'  data-bindKey='" + UIBindKey + "'>";
                     for (var i = 0; i < strs.length; i++) {
                         var keyVal = strs[i].split("=")
                         if (keyVal.length == 2)

@@ -53,8 +53,8 @@ function PopBranchesAndLeaf(mapExt, val, targetId, index,oid,objtr) {
 
     var target = $("#" + targetId);
 
-    var width = target.outerWidth();
-    var height = target.outerHeight();
+    var width = target.width;
+    var height = target.height;
     target.hide();
     var container = $("<div></div>");
     target.after(container);

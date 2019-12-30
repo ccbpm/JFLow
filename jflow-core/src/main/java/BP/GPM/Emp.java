@@ -342,6 +342,8 @@ public class Emp extends EntityNoName
 			depts += "@" + dept.getNameOfPath();
 		}
 
+		if (SystemConfig.getIsEnablePasswordEncryption() == true)
+			this.setPass(BP.Tools.Cryptos.aesDecrypt(this.getPass()));
 
 		return super.beforeUpdateInsertAction();
 	}

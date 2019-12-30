@@ -706,16 +706,16 @@ public class WebUser {
 	/**
 	 * 域
 	 */
-	public static String getDomain() {
-		String val = GetSessionByKey("Domain", "");
+	public static String getDoDomain() {
+		String val = GetSessionByKey("DoDomain", "");
 		if (val == null) {
-			throw new RuntimeException("@err-003 Domain 登录信息丢失。");
+			throw new RuntimeException("@err-003 DoDomain 登录信息丢失。");
 		}
 		return val;
 	}
 
-	public static void setDomain(String value) {
-		SetSessionByKey("Domain", value);
+	public static void setDoDomain(String value) {
+		SetSessionByKey("DoDomain", value);
 	}
 
 	/**

@@ -46,6 +46,7 @@ public class DBUrl
 		switch (this.getDBType())
 		{
 			case Oracle:
+			case DM:
 				return ":";
 			case MySQL:
 				return ":";

@@ -1011,7 +1011,7 @@ public class WF extends WebContralBase {
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dt.Columns.get("FK_DEPT").ColumnName = "FK_Dept";
 			dt.Columns.get("EMPS").ColumnName = "Emps";
-			dt.Columns.get("DOMAIN").ColumnName = "Domain";
+			dt.Columns.get("DoDomain").ColumnName = "DoDomain";
 			dt.Columns.get("DEPTNAME").ColumnName = "DeptName";
 			dt.Columns.get("BILLNO").ColumnName = "BillNo";
 		}
@@ -1055,7 +1055,7 @@ public class WF extends WebContralBase {
 			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
 			dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
 			dt.Columns.get("emps").ColumnName = "Emps";
-			dt.Columns.get("domain").ColumnName = "Domain";
+			dt.Columns.get("DoDomain").ColumnName = "DoDomain";
 			dt.Columns.get("deptname").ColumnName = "DeptName";
 			dt.Columns.get("billno").ColumnName = "BillNo";
 		}

@@ -437,6 +437,7 @@ public class Track extends BP.En.Entity
 				sqlRename = "RENAME TABLE WF_Track TO " + ptable;
 				break;
 			case Oracle:
+			case DM:
 				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
 				break;
 			case PostgreSQL:

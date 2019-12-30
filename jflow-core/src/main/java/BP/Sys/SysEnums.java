@@ -92,7 +92,7 @@ public class SysEnums extends Entities {
 		}else if (DBType.PostgreSQL == dbUrl.getDBType()) {
 			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
 		}else if (DBType.DM == dbUrl.getDBType()) {
-			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
+			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK = EnumKey || '_' || Lang || '_' || cast(IntKey  as VARCHAR(5))");
 		}
 		
 		
@@ -223,8 +223,7 @@ public class SysEnums extends Entities {
 			Entity en = this.getNewEntity();
 			Paras ps = new Paras();
 
-			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr()
-					+ "p";
+			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
 		} catch (java.lang.Exception e) {
@@ -232,8 +231,7 @@ public class SysEnums extends Entities {
 			en.CheckPhysicsTable();
 
 			Paras ps = new Paras();
-			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr()
-					+ "p";
+			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
 		}

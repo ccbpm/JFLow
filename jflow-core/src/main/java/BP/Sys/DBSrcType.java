@@ -42,8 +42,12 @@ public enum DBSrcType
 	/** 
 	 海尔的Dubbo服务.
 	*/
-	Dubbo(50);
+	Dubbo(50),
 
+	/**
+	 DM
+	 */
+	DM(7);
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;

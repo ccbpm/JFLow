@@ -145,6 +145,7 @@ public class SFTable extends EntityNoName
 					sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM " + table;
 					break;
 				case Oracle:
+				case DM:
 					sql = "SELECT MAX(" + field + ") +1 AS No FROM " + table;
 					break;
 				case MySQL:

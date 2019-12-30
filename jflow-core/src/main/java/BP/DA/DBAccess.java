@@ -373,6 +373,8 @@ public class DBAccess {
 			throw new RuntimeException("@没有实现...");
 		case Informix:
 			throw new RuntimeException("@没有实现...");
+		case DM:
+			throw new RuntimeException("@没有实现...");
 		default:
 			throw new RuntimeException("Error: " + SystemConfig.getAppCenterDBType());
 		}
@@ -388,6 +390,8 @@ public class DBAccess {
 			throw new RuntimeException("@没有实现...");
 		case Access:
 		case Oracle:
+			throw new RuntimeException("@没有实现...");
+		case DM:
 			throw new RuntimeException("@没有实现...");
 		default:
 			throw new RuntimeException("Error: " + SystemConfig.getAppCenterDBType());
@@ -414,6 +418,7 @@ public class DBAccess {
 			// MySqlConnection(SystemConfig.AppCenterDSN));
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
+		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
 			throw new RuntimeException("@没有实现...");
@@ -436,6 +441,7 @@ public class DBAccess {
 		case Access:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
+		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
 			throw new RuntimeException("@没有实现...");
@@ -459,6 +465,7 @@ public class DBAccess {
 		case MSSQL:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
+		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
 			throw new RuntimeException("@没有实现...");
@@ -936,6 +943,7 @@ public class DBAccess {
 		String sql = "";
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case DM:
 			sql = "SELECT text FROM user_source WHERE name=UPPER('" + proName + "') ORDER BY LINE ";
 			break;
 		default:
@@ -1118,7 +1126,7 @@ public class DBAccess {
 				result = RunSQL_200705_MySQL(sql, paras);
 				break;
 			case DM:
-				result = RunSQL_20191230_DM(sql, paras);
+				result = RunSQL_20191230_DM(sql.replace("]", "").replace("[", ""), paras);
 				break;
 			default:
 				throw new RuntimeException("发现未知的数据库连接类型！");
@@ -1300,51 +1308,41 @@ public class DBAccess {
 	 */
 	private static int RunSQL_20191230_DM(String sql, Paras paras)
 	{
+		ResultSet rs = null;
 		Connection conn = null;
 		Statement stmt = null;
 		NamedParameterStatement pstmt = null;
-		boolean isTtrack = false;
 		try {
-			conn = GetConnOfTransactionForMySQL(BP.Web.WebUser.getNo());
-			if (conn == null)
-				conn = DBAccess.getGetAppCenterDBConn_MySQL();
-			else
-				isTtrack = true;
-
+			conn = DBAccess.getGetAppCenterDBConn_Oracle();
 			int i = 0;
 			if (null != paras && paras.size() > 0) {
 				pstmt = new NamedParameterStatement(conn, sql);
 				PrepareCommand(pstmt, paras);
 				i = pstmt.executeUpdate();
-
 			} else {
 				stmt = conn.createStatement();// 创建用于执行静态sql语句的Statement对象，st属局部变量
 				i = stmt.executeUpdate(sql);
 			}
-
 			if (Log.isLoggerDebugEnabled()) {
 				Log.DefaultLogWriteLineDebug("SQL: " + sql);
 				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + i);
 			}
-			// conn.commit();
 			return i;
 		} catch (Exception ex) {
-			String msg = "@运行更新在(RunSQL_20191230_DM)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
+			String msg = "@运行更新在(RunSQL_200705_Ora)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
 					+ "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
 			Log.DefaultLogWriteLineError(msg);
 			throw new RuntimeException(msg, ex);
 		} finally {
 			try {
-
+				if (rs != null)
+					rs.close();
 				if (stmt != null)
 					stmt.close();
-
 				if (pstmt != null)
 					pstmt.close();
-
-				if (isTtrack == false && conn != null)
+				if (conn != null)
 					conn.close();
-
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
@@ -1365,6 +1363,8 @@ public class DBAccess {
 				return RunSQLReturnResultSet_201809_Ora(sql, paras, en, attrs);
 			case MySQL:
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, en, attrs);
+			case DM:
+				return RunSQLReturnResultSet_201809_DM(sql, paras, en, attrs);
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
 			}
@@ -1388,6 +1388,8 @@ public class DBAccess {
 				return RunSQLReturnResultSet_201809_Ora(sql, paras, ens, attrs);
 			case MySQL:
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, ens, attrs);
+			case DM:
+				return RunSQLReturnResultSet_201809_DM(sql, paras, ens, attrs);
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
 			}
@@ -1412,6 +1414,9 @@ public class DBAccess {
 				break;
 			case MySQL:
 				dt = RunSQLReturnTable_200705_MySQL(sql, paras);
+				break;
+			case DM:
+				dt = RunSQLReturnTable_200705_DM(sql, paras);
 				break;
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
@@ -1817,6 +1822,70 @@ public class DBAccess {
 		}
 	}
 
+	private static int RunSQLReturnResultSet_201809_DM(String sql, Paras paras, Entity en, Attrs attrs) {
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		if (sql.trim().endsWith("WHERE")) {
+			sql = sql.replace("WHERE", "");
+		}
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_Oracle();
+			if (null != paras && paras.size() > 0) {
+				pstmt = new NamedParameterStatement(conn, sql);
+				PrepareCommand(pstmt, paras);
+				rs = pstmt.executeQuery();
+			} else {
+				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				rs = stmt.executeQuery(sql);
+			}
+			if (rs.next() == false)
+				return 0;
+
+			Hashtable ht = en.getRow();
+
+			for (int idx = 0; idx < attrs.size(); idx++) {
+				Attr attr = attrs.get(idx);
+
+				Object val = rs.getObject(idx + 1);
+
+				if (val == null) {
+					if (attr.getIsNum() == true)
+						val = 0;
+					else
+						val = "";
+				}
+
+				ht.put(attr.getKey(), val);
+
+			}
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + rs.getRow());
+			}
+			return 1;
+		} catch (Exception ex) {
+			String msg = "@运行查询在(RunSQLReturnTable_200705_Ora)出错。\n  @SQL: " + sql + "\n  @Param: "
+					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 	private static int RunSQLReturnResultSet_201809_Ora(String sql, Paras paras, Entities ens, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1870,6 +1939,78 @@ public class DBAccess {
 
 		} catch (Exception ex) {
 			String msg = "@运行查询在(RunSQLReturnTable_200705_Ora)出错。\n  @SQL: " + sql + "\n  @Param: "
+					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private static int RunSQLReturnResultSet_201809_DM(String sql, Paras paras, Entities ens, Attrs attrs) {
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		if (sql.trim().endsWith("WHERE")) {
+			sql = sql.replace("WHERE", "");
+		}
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_Oracle();
+			if (null != paras && paras.size() > 0) {
+				pstmt = new NamedParameterStatement(conn, sql);
+				PrepareCommand(pstmt, paras);
+				rs = pstmt.executeQuery();
+			} else {
+				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				rs = stmt.executeQuery(sql);
+			}
+			Attr attr = null;
+			Entity myen = ens.getNewEntity();
+			SQLCash sqlCash = myen.getSQLCash();
+			BP.En.Map map = myen.getEnMap();
+
+			while (rs.next()) {
+
+				Entity en = ens.getNewEntity();
+				en.setSQLCash(sqlCash);
+				en.setMap(map);
+				// en.setRow( sqlCash.CreateNewRow() );
+
+				Hashtable ht = en.getRow();
+				for (int idx = 0; idx < attrs.size(); idx++) {
+					attr = attrs.get(idx);
+					Object val = rs.getObject(idx + 1);
+					if (val == null) {
+						if (attr.getIsNum() == true)
+							val = 0;
+						else
+							val = "";
+					}
+					ht.put(attr.getKey(), val);
+				}
+				ens.add(en); // 加入里面去.
+			}
+
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + ens.size());
+			}
+			return ens.size();
+
+		} catch (Exception ex) {
+			String msg = "@运行查询在(RunSQLReturnResultSet_201809_DM)出错。\n  @SQL: " + sql + "\n  @Param: "
 					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
 			Log.DefaultLogWriteLineError(msg);
 			throw new RuntimeException(msg, ex);
@@ -2658,6 +2799,9 @@ public class DBAccess {
 			sql = "SELECT column_name, table_name, CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_name =:Tab and table_schema='"
 					+ SystemConfig.getAppCenterDBDatabase() + "' ";
 			break;
+		case DM:
+			sql = "SELECT constraint_name, constraint_type,search_condition, r_constraint_name  from user_constraints WHERE table_name = upper(:Tab) AND constraint_type = 'P'";
+			break;
 		default:
 			throw new RuntimeException("数据库连接配置失败！ ");
 		}
@@ -2789,6 +2933,7 @@ public class DBAccess {
 					+ tableName + "'";
 			break;
 		case Oracle:
+		case DM:
 			sql = "SELECT COLUMN_NAME as FName,DATA_TYPE as FType,DATA_LENGTH as FLen,COLUMN_NAME as FDesc FROM all_tab_columns WHERE table_name = upper('"
 					+ tableName + "')";
 			break;
@@ -2850,6 +2995,7 @@ public class DBAccess {
 		String sql = "";
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case DM:
 		case MSSQL:
 			sql = "ALTER TABLE " + table + " DROP CONSTRAINT " + pkName;
 			break;
@@ -2882,6 +3028,7 @@ public class DBAccess {
 					+ table + "'";
 			break;
 		case Oracle:
+		case DM:
 			sql = "SELECT constraint_name, constraint_type,search_condition, r_constraint_name  from user_constraints WHERE table_name = upper('"
 					+ table + "') AND constraint_type = 'P'";
 			break;
@@ -3040,6 +3187,7 @@ public class DBAccess {
 				BP.DA.DBAccess.RunSQLReturnString("SELECT 1+2 ");
 				break;
 			case Oracle:
+			case DM:
 			case MySQL:
 				BP.DA.DBAccess.RunSQLReturnString("SELECT 1+2 FROM DUAL ");
 				break;
@@ -3081,6 +3229,8 @@ public class DBAccess {
 			return RunSQLReturnTable_201612_Ora(sql, pageSize, pageIdx, orderKey, orderType);
 		case MySQL:
 			return RunSQLReturnTable_201612_MySql(sql, pageSize, pageIdx, key, orderKey, orderType);
+		case DM:
+			return RunSQLReturnTable_201612_DM(sql, pageSize, pageIdx, orderKey, orderType);
 		default:
 			throw new RuntimeException("@未涉及的数据库类型！");
 		}
@@ -3164,6 +3314,38 @@ public class DBAccess {
 	}
 
 	/**
+	 * 通用DM查询分页返回DataTable
+	 *
+	 * @param sql
+	 *            SQL语句，不带排序（Order By）语句
+	 * @param pageSize
+	 *            每页记录数量
+	 * @param pageIdx
+	 *            请求页码
+	 * @param orderKey
+	 *            排序字段（此字段必须包含在返回字段中）
+	 * @param orderType
+	 *            排序方式，ASC/DESC
+	 * @return
+	 */
+	private static DataTable RunSQLReturnTable_201612_DM(String sql, int pageSize, int pageIdx, String orderKey,
+														  String orderType) {
+		if (pageIdx < 1) {
+			pageIdx = 1;
+		}
+
+		int start = (pageIdx - 1) * pageSize + 1;
+		int end = pageSize * pageIdx;
+
+		orderType = StringUtils.isEmpty(orderType) ? "ASC" : orderType.toUpperCase();
+
+		String sqlstr = "SELECT * FROM ( SELECT T1.*, ROWNUM RN " + "FROM (SELECT * FROM  (" + sql + ") T2 "
+				+ (StringUtils.isEmpty(orderType) ? "" : String.format("ORDER BY T2.%1$s %2$s", orderKey, orderType))
+				+ ") T1 WHERE ROWNUM <= " + end + " ) WHERE RN >=" + start;
+
+		return RunSQLReturnTable(sqlstr);
+	}
+	/**
 	 * 通用MySql查询分页返回DataTable
 	 * 
 	 * @param sql
@@ -3230,6 +3412,7 @@ public class DBAccess {
 		String sql = "";
 		switch (dbType) {
 		case Oracle:
+		case DM:
 			sql = "SELECT TABTYPE  FROM TAB WHERE UPPER(TNAME)=:v";
 			DataTable oradt = DBAccess.RunSQLReturnTable(sql, "v", tabelOrViewName.toUpperCase());
 			if (oradt.Rows.size() == 0) {

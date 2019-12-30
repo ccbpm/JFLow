@@ -1507,6 +1507,7 @@ public class Flow extends BP.En.EntityNoName {
 				case MSSQL:
 					break;
 				case Oracle:
+				case DM:
 					if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
 						if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
 							values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
@@ -1530,6 +1531,7 @@ public class Flow extends BP.En.EntityNoName {
 			case MySQL:
 				break;
 			case Oracle:
+			case DM:
 				if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
 					if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
 						values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";

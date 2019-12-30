@@ -105,6 +105,8 @@ public class SFDBSrc extends EntityNoName
 				return DBType.MySQL;
 			case Informix:
 				return DBType.Informix;
+			case DM:
+				return DBType.DM;
 			default:
 				throw new RuntimeException("err@HisDBType没有判断的数据库类型.");
 		}
@@ -168,6 +170,8 @@ public class SFDBSrc extends EntityNoName
 				return String.format("OPENQUERY(%1$s,'SELECT * FROM %2$s')", this.getNo(), objName);
 			case Informix:
 				return String.format("OPENQUERY(%1$s,'SELECT * FROM %2$s')", this.getNo(), objName);
+			case DM:
+				return String.format("%1$s..%2$s.%3$s", this.getNo(), this.getUserID().toUpperCase(), objName.toUpperCase());
 			default:
 				throw new RuntimeException("@未涉及的数据库类型。");
 		}
@@ -207,6 +211,10 @@ public class SFDBSrc extends EntityNoName
 				sql = GetIsExitsSQL(DBType.Informix, objName, this.getDBName());
 				dt = RunSQLReturnTable(sql);
 				break;
+			case DM:
+				sql = GetIsExitsSQL(DBType.DM, objName, this.getDBName());
+				dt = RunSQLReturnTable(sql);
+				break;
 			default:
 				throw new RuntimeException("@未涉及的数据库类型。");
 		}
@@ -230,6 +238,7 @@ public class SFDBSrc extends EntityNoName
 			case PostgreSQL:
 				return String.format("SELECT (CASE s.xtype WHEN 'U' THEN 'TABLE' WHEN 'V' THEN 'VIEW' WHEN 'P' THEN 'PROCEDURE' ELSE 'OTHER' END) OTYPE FROM sysobjects s WHERE s.name = '%1$s'", objName);
 			case Oracle:
+			case DM:
 				return String.format("SELECT uo.OBJECT_TYPE OTYPE FROM user_objects uo WHERE uo.OBJECT_NAME = '%1$s'", objName.toUpperCase());
 			case MySQL:
 				return String.format("SELECT (CASE t.TABLE_TYPE WHEN 'BASE TABLE' THEN 'TABLE' ELSE 'VIEW' END) OTYPE FROM information_schema.tables t WHERE t.TABLE_SCHEMA = '%2$s' AND t.TABLE_NAME = '%1$s'", objName, dbName);
@@ -307,6 +316,7 @@ public class SFDBSrc extends EntityNoName
 			case SQLServer:
 				return "password=" + this.getPassword() + ";persist security info=true;user id=" + this.getUserID() + ";initial catalog=" + this.getDBName() + ";data source=" + this.getIP() + ";timeout=999;multipleactiveresultsets=true";
 			case Oracle:
+			case DM:
 				return "user id=" + this.getUserID() + ";data source=" + this.getIP() + ";password=" + this.getPassword() + ";Max Pool Size=200";
 			case MySQL:
 				return "Data Source=" + this.getIP() + ";Persist Security info=True;Initial Catalog=" + this.getDBName() + ";User ID=" + this.getUserID() + ";Password=" + this.getPassword() + ";";
@@ -427,6 +437,9 @@ public class SFDBSrc extends EntityNoName
 				case PostgreSQL:
 					dbType = DBSrcType.PostgreSQL;
 					break;
+				case DM:
+					dbType = DBSrcType.DM;
+					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
@@ -443,6 +456,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       Name" + "\r\n");
 				break;
 			case Oracle:
+			case DM:
 				sql.append("SELECT uo.OBJECT_NAME No," + "\r\n");
 				sql.append("       uo.OBJECT_NAME Name" + "\r\n");
 				sql.append("  FROM user_objects uo" + "\r\n");
@@ -538,6 +552,9 @@ public class SFDBSrc extends EntityNoName
 				case PostgreSQL:
 					dbType = DBSrcType.PostgreSQL;
 					break;
+				case DM:
+					dbType = DBSrcType.DM;
+					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
@@ -561,6 +578,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       NAME" + "\r\n");
 				break;
 			case Oracle:
+			case DM:
 				sql.append("SELECT uo.OBJECT_NAME AS No," + "\r\n");
 				sql.append("       '[' || (CASE uo.OBJECT_TYPE" + "\r\n");
 				sql.append("         WHEN 'TABLE' THEN" + "\r\n");
@@ -774,6 +792,9 @@ public class SFDBSrc extends EntityNoName
 				case PostgreSQL:
 					dbType = DBSrcType.PostgreSQL;
 					break;
+				case DM:
+					dbType = DBSrcType.DM;
+					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
@@ -787,6 +808,7 @@ public class SFDBSrc extends EntityNoName
 				  ";Timeout=999;MultipleActiveResultSets=true";
 				break;
 			case Oracle:
+			case DM:
 				dsn = "user id=" + this.getUserID() + ";data source=" + this.getDBName() + ";password=" + this.getPassword() + ";Max Pool Size=200";
 				break;
 			case MySQL:
@@ -835,6 +857,9 @@ public class SFDBSrc extends EntityNoName
 					break;
 				case Informix:
 					dbType = DBSrcType.Informix;
+					break;
+				case DM:
+					dbType = DBSrcType.DM;
 					break;
 				default:
 					throw new RuntimeException("@没有涉及到的连接测试类型。");
@@ -909,6 +934,24 @@ public class SFDBSrc extends EntityNoName
 			case Informix:
 
 				break;
+			case DM:
+				if (objType.toLowerCase().equals("column"))
+				{
+					RunSQL(String.format("ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s", tableName, oldName, newName));
+				}
+				else if (objType.toLowerCase().equals("table"))
+				{
+					RunSQL(String.format("ALTER TABLE %1$s RENAME TO %2$s", oldName, newName));
+				}
+				else if (objType.toLowerCase().equals("view"))
+				{
+					RunSQL(String.format("RENAME %1$s TO %2$s", oldName, newName));
+				}
+				else
+				{
+					throw new RuntimeException("@未涉及到的DM数据库改名逻辑。");
+				}
+				break;
 			default:
 				throw new RuntimeException("@没有涉及到的数据库类型。");
 		}
@@ -944,6 +987,9 @@ public class SFDBSrc extends EntityNoName
 				case Informix:
 					dbType = DBSrcType.Informix;
 					break;
+				case DM:
+					dbType = DBSrcType.DM;
+					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
@@ -972,6 +1018,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append(String.format("WHERE  sc.id = OBJECT_ID('dbo.%1$s')", tableName) + "\r\n");
 				break;
 			case Oracle:
+			case DM:
 				sql.append("SELECT utc.COLUMN_NAME AS No," + "\r\n");
 				sql.append("       utc.DATA_TYPE   AS DBType," + "\r\n");
 				sql.append("       utc.CHAR_LENGTH AS DBLength," + "\r\n");

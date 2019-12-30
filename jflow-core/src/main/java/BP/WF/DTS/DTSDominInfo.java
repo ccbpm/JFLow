@@ -54,7 +54,7 @@ public class DTSDominInfo extends Method
 	{
 		return "功能未实现。";
 
-//		String domainHost = "127.0.0.1";
+//		String DoDomainHost = "127.0.0.1";
 //
 //		String sqls = "";
 //		sqls += "@DELETE FROM Port_Emp";
@@ -66,7 +66,7 @@ public class DTSDominInfo extends Method
 
 		// 把部门导入里面去。
 
-		//DirectoryEntry de = new DirectoryEntry("LDAP://" + domain, name, pass);
+		//DirectoryEntry de = new DirectoryEntry("LDAP://" + DoDomain, name, pass);
 		//DirectorySearcher srch = new DirectorySearcher();
 		//srch.Filter = ("(objectclass=User)");
 

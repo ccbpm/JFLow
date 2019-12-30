@@ -951,9 +951,9 @@ public class Dev2Interface
 		return DB_StarFlows(userNo, null);
 	}
 
-	public static DataTable DB_StarFlows(String userNo, String domain) throws Exception
+	public static DataTable DB_StarFlows(String userNo, String DoDomain) throws Exception
 	{
-		return DB_GenerCanStartFlowsOfDataTable(userNo, domain);
+		return DB_GenerCanStartFlowsOfDataTable(userNo, DoDomain);
 
 	}
 
@@ -962,14 +962,14 @@ public class Dev2Interface
 		return DB_GenerCanStartFlowsOfDataTable(userNo, null);
 	}
 
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String domain) throws Exception
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String DoDomain) throws Exception
 	{
 		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,A.IsStartInMobile, A.Idx";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
 		sql += " WHERE A.No=B.FK_Flow AND A.IsCanStart=1 AND A.FK_FlowSort=C.No  AND FK_Emp='" + WebUser.getNo() + "' ";
-		if (DataType.IsNullOrEmpty(domain) == false)
+		if (DataType.IsNullOrEmpty(DoDomain) == false)
 		{
-			sql += " AND C.Domain='" + domain + "'";
+			sql += " AND C.DoDomain='" + DoDomain + "'";
 		}
 
 		sql += " ORDER BY C.Idx, A.Idx";
@@ -2281,7 +2281,7 @@ public class Dev2Interface
 			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
 			dt.Columns.get("ATPARA").ColumnName = "AtPara";
 			dt.Columns.get("EMPS").ColumnName = "Emps";
-			dt.Columns.get("DOMAIN").ColumnName = "Domain";
+			dt.Columns.get("DoDomain").ColumnName = "DoDomain";
 			dt.Columns.get("SENDDT").ColumnName = "SendDT";
 			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
 		}
@@ -3185,7 +3185,7 @@ public class Dev2Interface
 		return DB_GenerRuning(userNo, fk_flow, false, null);
 	}
 
-	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter, String domain) throws Exception
+	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter, String DoDomain) throws Exception
 	{
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
@@ -3195,6 +3195,7 @@ public class Dev2Interface
 		switch (DBAccess.getAppCenterDBType())
 		{
 			case Oracle:
+			case DM:
 				currNode = "(SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC ) WHERE rownum=1)";
 				break;
 			case MySQL:
@@ -4955,6 +4956,7 @@ public class Dev2Interface
 				pas.SQL = "SELECT TOP 1 * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + dbstr + "WorkID  AND NDTo=" + dbstr + "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") ORDER BY RDT DESC";
 				break;
 			case Oracle:
+			case DM:
 				pas.SQL = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track  WHERE WorkID=" + dbstr + "WorkID  AND NDTo=" + dbstr + "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") AND ROWNUM=1 ORDER BY RDT DESC ";
 				break;
 			case MySQL:
@@ -10852,6 +10854,7 @@ public class Dev2Interface
 				sql = "SELECT TOP 1 NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
 			case Oracle:
+			case DM:
 				sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  RowNum=1 AND EmpFrom='" + WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType=" + ActionType.SubThreadForward.getValue() + ")  ORDER BY RDT DESC";
 				break;
 			case MySQL:

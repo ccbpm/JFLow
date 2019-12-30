@@ -1332,7 +1332,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		try
 		{
 			//2019-07-26 zyt改造
-			//String webPath = HttpRuntime.AppDomainAppPath.Replace("\\", "/");
+			//String webPath = HttpRuntime.AppDoDomainAppPath.Replace("\\", "/");
 			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
 			String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
 			String content = "";
@@ -1358,7 +1358,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		try
 		{
 			//2019-07-26 zyt改造
-			//String webPath = HttpRuntime.AppDomainAppPath.Replace("\\", "/");
+			//String webPath = HttpRuntime.AppDoDomainAppPath.Replace("\\", "/");
 			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
 			String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
 //			String content = HttpContextHelper.RequestParams("JSDoc"); // this.context.Request.Params["JSDoc"];
@@ -1381,7 +1381,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		try
 		{
 			//2019-07-26 zyt改造
-			//String webPath = HttpRuntime.AppDomainAppPath.Replace("\\", "/");
+			//String webPath = HttpRuntime.AppDoDomainAppPath.Replace("\\", "/");
 			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
 			String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
 

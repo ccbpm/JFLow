@@ -37,7 +37,7 @@ public class RequestResponseFilter implements Filter {
 		((HttpServletResponse) response).setHeader("Access-Control-Max-Age", "0");
 		((HttpServletResponse) response).setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
 		((HttpServletResponse) response).setHeader("Access-Control-Allow-Credentials", "true");
-		((HttpServletResponse) response).setHeader("XDomainRequestAllowed","1");
+		((HttpServletResponse) response).setHeader("XDoDomainRequestAllowed","1");
 		filter.doFilter(request, response);
 	}
 	

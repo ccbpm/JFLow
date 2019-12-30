@@ -698,6 +698,7 @@ public class WF_Comm_Sys extends WebContralBase {
 		switch (src.getDBSrcType()) {
 		case SQLServer:
 		case Oracle:
+		case DM:
 		case MySQL:
 		case Informix:
 			if (src.getDBSrcType() != DBSrcType.Oracle) {

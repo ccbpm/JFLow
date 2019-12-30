@@ -1019,6 +1019,7 @@ public class DataType {
 				case MSSQL:
 					break;
 				case Oracle:
+				case DM:
 					sql = "SELECT  " + exp + " NUM from DUAL ";
 					return DBAccess.RunSQLReturnValDecimal(sql, bigDecimal, 2);
 				default:

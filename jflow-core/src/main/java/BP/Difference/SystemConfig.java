@@ -951,6 +951,7 @@ public class SystemConfig {
 		case MSSQL:
 			return ":";
 		case Oracle:
+		case DM:
 			return ":";
 		case Informix:
 			return "?";
@@ -964,6 +965,7 @@ public class SystemConfig {
 	public static String getAppCenterDBLengthStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case DM:
 			return "Length";
 		case MSSQL:
 			return "LEN";
@@ -984,6 +986,7 @@ public class SystemConfig {
 	public static String getAppCenterDBSubstringStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case DM:
 			return "substr";
 		case MSSQL:
 			return "substring";
@@ -1015,6 +1018,7 @@ public class SystemConfig {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
 		case MySQL:
+		case DM:
 		case Informix:
 			return "||";
 		default:

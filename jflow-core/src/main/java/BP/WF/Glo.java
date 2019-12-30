@@ -1075,6 +1075,7 @@ public class Glo {
 						DBAccess.RunSQL("ALTER TABLE WF_Node ADD FWCIsShowReturnMsg INT NULL");
 						break;
 					case Oracle:
+					case DM:
 					case Informix:
 					case PostgreSQL:
 						DBAccess.RunSQL("ALTER TABLE WF_Node ADD FWCIsShowReturnMsg INTEGER NULL");
@@ -1099,6 +1100,7 @@ public class Glo {
 						DBAccess.RunSQL("ALTER TABLE Sys_FrmRB ADD AtPara NVARCHAR(1000) NULL");
 						break;
 					case Oracle:
+					case DM:
 						DBAccess.RunSQL("ALTER TABLE Sys_FrmRB ADD AtPara NVARCHAR2(1000) NULL");
 						break;
 					case PostgreSQL:
@@ -1347,6 +1349,9 @@ public class Glo {
 			case PostgreSQL:
 				sqlscript = SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_PostgreSQL.sql";
 				break;
+			case DM:
+				sqlscript = SystemConfig.getPathOfData() + "Install"+File.separator+"SQLScript"+File.separator+"InitView_Ora.sql";
+				break;
 			default:
 				break;
 			}
@@ -1371,6 +1376,7 @@ public class Glo {
 			/// #region 修复 mapattr UIHeight, UIWidth 类型错误.
 			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
+			case DM:
 				msg = "@Sys_MapAttr 修改字段";
 				break;
 			case MSSQL:
@@ -1387,6 +1393,7 @@ public class Glo {
 			/// #region 升级常用词汇
 			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
+			case DM:
 				int i = DBAccess.RunSQLReturnCOUNT(
 						"SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_DEFVAL' AND COLUMN_NAME = 'PARENTNO'");
 				if (i == 0) {
@@ -1482,6 +1489,7 @@ public class Glo {
 			/// #region 修复 Sys_FrmImg 表字段 ImgAppType Tag0
 			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
+			case DM:
 				int i = DBAccess.RunSQLReturnCOUNT(
 						"SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_FRMIMG' AND COLUMN_NAME = 'TAG0'");
 				if (i == 0) {
@@ -1700,6 +1708,9 @@ public class Glo {
 			case PostgreSQL:
 				sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
 				break;
+			case DM:
+				sql = "ALTER TABLE  WF_EMP add StartFlows BLOB";
+				break;
 			default:
 				throw new RuntimeException("@没有涉及到的数据库类型");
 			}
@@ -1862,6 +1873,9 @@ public class Glo {
 			break;
 		case PostgreSQL:
 			sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_PostgreSQL.sql";
+			break;
+		case DM:
+			sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_Ora.sql";
 			break;
 		default:
 			break;
@@ -4438,6 +4452,7 @@ public class Glo {
 					ps.SQL = "SELECT TOP 1 SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID ";
 					break;
 				case Oracle:
+				case DM:
 					ps.SQL = "SELECT SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID  ";
 					break;
 				case MySQL:

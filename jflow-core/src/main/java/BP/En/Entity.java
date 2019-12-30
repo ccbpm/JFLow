@@ -1140,6 +1140,9 @@ public abstract class Entity implements Serializable {
 			case Access:
 				selectSQL += SqlBuilder.GetKeyConditionOfOLE(this);
 				break;
+			case DM:
+				selectSQL += SqlBuilder.GetKeyConditionOfOraForParaDM(this);
+				break;
 			default:
 				throw new RuntimeException("@没有设计到。" + this.getEnMap().getEnDBUrl().getDBUrlType());
 			}
@@ -2138,6 +2141,9 @@ public abstract class Entity implements Serializable {
 		case MySQL:
 			DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfMySQL(this));
 			break;
+		case DM:
+			DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfDM_OK(this));
+			break;
 		default:
 			throw new RuntimeException("@未判断的数据库类型。");
 		}
@@ -2410,6 +2416,9 @@ public abstract class Entity implements Serializable {
 			break;
 		case Informix:
 			this.CheckPhysicsTable_Informix();
+			break;
+		case DM:
+			this.CheckPhysicsTable_DM();
 			break;
 		default:
 			break;
@@ -2872,6 +2881,168 @@ public abstract class Entity implements Serializable {
 		this.CreateIndexAndPK();
 	}
 
+	private void CheckPhysicsTable_DM() throws Exception {
+		// 检查字段是否存在
+		if(StringUtils.isEmpty(this.getEnMap().getPhysicsTable())) return;
+		String sql = "SELECT *  FROM " + this.getEnMap().getPhysicsTable() + " WHERE 1=2";
+		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+
+		// 如果不存在.
+		for (Attr attr : this.getEnMap().getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
+				continue;
+			}
+
+			if (attr.getIsPK()) {
+				continue;
+			}
+
+			if (dt.Columns.contains(attr.getKey())) {
+				continue;
+			}
+
+			if (attr.getKey().equals("AID")) {
+				// 自动增长列
+				DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+						+ " INT  Identity(1,1)");
+				continue;
+			}
+
+			// 不存在此列 , 就增加此列。
+			switch (attr.getMyDataType()) {
+				case DataType.AppString:
+				case DataType.AppDate:
+				case DataType.AppDateTime:
+					int len = attr.getMaxLength();
+					if (len == 0) {
+						len = 200;
+					}
+					DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+							+ " VARCHAR(" + len + ") DEFAULT '" + attr.getDefaultVal() + "' NULL");
+					break;
+				case DataType.AppInt:
+				case DataType.AppBoolean:
+					DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+							+ " INT DEFAULT " + attr.getDefaultVal() + "  NULL");
+					break;
+				case DataType.AppFloat:
+				case DataType.AppMoney:
+				case DataType.AppRate:
+				case DataType.AppDouble:
+					DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField()
+							+ " FLOAT DEFAULT '" + attr.getDefaultVal() + "' NULL");
+					break;
+				default:
+					throw new RuntimeException("error MyFieldType= " + attr.getMyFieldType() + " key=" + attr.getKey());
+			}
+		}
+
+		// 检查字段长度是否符合最低要求
+		for (Attr attr : this.getEnMap().getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
+				continue;
+			}
+			if (attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat
+					|| attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney
+					|| attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppRate) {
+				continue;
+			}
+
+
+			dt = new DataTable();
+			// SUNXD 20170714
+			// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
+			// 增加查询条件owner = 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+			sql = "SELECT DATA_LENGTH AS LEN, OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '"
+					+ SystemConfig.getUser().toUpperCase() + "' AND upper(TABLE_NAME)='"
+					+ this.getEnMap().getPhysicsTableExt().toUpperCase() + "' AND UPPER(COLUMN_NAME)='"
+					+ attr.getField().toUpperCase() + "' AND DATA_LENGTH < " + attr.getMaxLength();
+			dt = this.RunSQLReturnTable(sql);
+			if (dt.Rows.size() == 0) {
+				continue;
+			}
+			for (DataRow dr : dt.Rows) {
+				try {
+					this.RunSQL("alter table " + dr.getValue("OWNER") + "." + this.getEnMap().getPhysicsTableExt()
+							+ " modify " + attr.getField() + " varchar2(" + attr.getMaxLength() + ")");
+					/*
+					 * warning this.RunSQL("alter table " + dr["OWNER"] + "." +
+					 * this.getEnMap().getPhysicsTableExt() + " modify " +
+					 * attr.getField() + " varchar2(" + attr.getMaxLength() +
+					 * ")");
+					 */
+				} catch (RuntimeException ex) {
+					BP.DA.Log.DebugWriteWarning(ex.getMessage());
+				}
+			}
+		}
+
+		// 检查枚举类型字段是否是INT 类型
+		Attrs attrs = this.get_enMap().getHisEnumAttrs();
+		for (Attr attr : attrs) {
+			if (attr.getMyDataType() != DataType.AppInt) {
+				continue;
+			}
+			// SUNXD 20170714
+			// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
+			// 增加查询条件owner = 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+
+			sql = "SELECT DATA_TYPE FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
+					+ "' AND upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
+					+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
+			String val = DBAccess.RunSQLReturnString(sql);
+			if (val == null) {
+				Log.DefaultLogWriteLineError("@没有检测到字段eunm" + attr.getKey());
+			}
+			if (val.indexOf("CHAR") != -1) {
+				// 如果它是 varchar 字段
+
+				// SUNXD 20170714
+				// 由于ALL_TAB_COLUMNS表中有可能会出现用户名(owner)不一样，表名(table_name)一样的数据，导至会去修改其它用户下的表
+				// 增加查询条件owner =
+				// 当前系统配置的连接用户(SystemConfig.getUser().toUpperCase())
+				/*sql = "SELECT A.OWNER FROM ALL_TAB_COLUMNS WHERE OWNER = '" + SystemConfig.getUser().toUpperCase()
+						+ "' AND upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase()
+						+ "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
+				String OWNER = DBAccess.RunSQLReturnString(sql);*/
+				try {
+					this.RunSQL("alter table  " + this.getEnMap().getPhysicsTableExt() + " modify " + attr.getField()
+							+ " NUMBER ");
+				} catch (RuntimeException ex) {
+					Log.DefaultLogWriteLineError("运行sql 失败:alter table  " + this.getEnMap().getPhysicsTableExt()
+							+ " modify " + attr.getField() + " NUMBER " + ex.getMessage());
+				}
+			}
+		}
+
+		// 检查枚举类型是否存在.
+		attrs = this.get_enMap().getHisEnumAttrs();
+		for (Attr attr : attrs) {
+			if (attr.getMyDataType() != DataType.AppInt) {
+				continue;
+			}
+			if (attr.UITag == null) {
+				continue;
+			}
+
+			String[] strs = attr.UITag.split("[@]", -1);
+			SysEnums ens = new SysEnums();
+			ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
+			for (String s : strs) {
+				if (DataType.IsNullOrEmpty(s)==true) {
+					continue;
+				}
+
+				String[] vk = s.split("[=]", -1);
+				SysEnum se = new SysEnum();
+				se.setIntKey(Integer.parseInt(vk[0]));
+				se.setLab(vk[1]);
+				se.setEnumKey(attr.getUIBindKey());
+				se.Insert();
+			}
+		}
+		this.CreateIndexAndPK();
+	}
 	 
 
 	public final String ToJson() throws Exception {

@@ -168,6 +168,7 @@ public class GPMPage extends WebContralBase {
 
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
+		case DM:
 			int beginIndex = (pageNumber - 1) * pageSize + 1;
 			int endIndex = pageNumber * pageSize;
 

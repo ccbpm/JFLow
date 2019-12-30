@@ -24,8 +24,8 @@ function GenerDevelopFrm(mapData, frmData) {
         alert("开发者设计的表单内容丢失，请联系管理员");
         return;
     }
-    
 
+    htmlContent = htmlContent.replace(new RegExp("../../../", 'gm'),"../../");
     $("#CCForm").html(htmlContent);
 
     //解析表单中的数据

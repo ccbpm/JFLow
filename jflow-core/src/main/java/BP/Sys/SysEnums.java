@@ -85,27 +85,14 @@ public class SysEnums extends Entities {
 		DBUrl dbUrl = new DBUrl();
 		if (DBType.MSSQL == dbUrl.getDBType()) {
 			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
-			return;
-		}
-
-		if (DBType.Oracle == dbUrl.getDBType()) {
+		}else if (DBType.Oracle == dbUrl.getDBType()) {
 			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK = EnumKey || '_' || Lang || '_' || cast(IntKey  as VARCHAR(5))");
-			return;
-		}
-
-		if (DBType.MySQL == dbUrl.getDBType()) {
+		}else if (DBType.MySQL == dbUrl.getDBType()) {
 			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK = CONCAT (EnumKey,'_', Lang,'_',CAST(IntKey AS CHAR(5)))");
-			return;
-		}
-
-		if (DBType.PostgreSQL == dbUrl.getDBType()) {
+		}else if (DBType.PostgreSQL == dbUrl.getDBType()) {
 			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
-			return;
-		}
-
-		if (DBType.DM == dbUrl.getDBType()) {
+		}else if (DBType.DM == dbUrl.getDBType()) {
 			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
-			return;
 		}
 		
 		

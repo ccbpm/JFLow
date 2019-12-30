@@ -134,7 +134,7 @@ function GenerDevelopFrm(wn, fk_mapData) {
         var element = $("Img[data-key=" + athImg.MyPK + "]");
         if (element.length == 0)
             continue;
-        figure_Develop_ImageAth(element, athImg,fk_mapData);
+        figure_Develop_ImageAth(element, athImg, fk_mapData);
 
     }
 
@@ -164,9 +164,9 @@ function GenerDevelopFrm(wn, fk_mapData) {
         if (nodeComponents != null) {
             var element = $("Img[data-key=" + nodeComponents.NodeID + "]");
             if (element.length != 0)
-                figure_Develop_FigureSubFlowDtl(nodeComponents, element,fk_mapData);
+                figure_Develop_FigureSubFlowDtl(nodeComponents, element, fk_mapData);
             //如果有审核组件，增加审核组件的HTML
-            var _html = figure_Develop_FigureFrmCheck(nodeComponents, flowData,flowData.Sys_MapData[0]);
+            var _html = figure_Develop_FigureFrmCheck(nodeComponents, flowData, flowData.Sys_MapData[0]);
             $("#CCForm").append(_html);
 
         }
@@ -180,11 +180,11 @@ function figure_Develop_Dtl(element, frmDtl, ext) {
     //在Image元素下引入IFrame文件
     var src = "";
     if (frmDtl.ListShowModel == "0")
-    //表格模式
+        //表格模式
         src = "./CCForm/Dtl2017.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.IsReadonly + "Version=1";
 
     if (frmDtl.ListShowModel == "1")
-    //卡片模式
+        //卡片模式
         src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.isReadonly + "&Version=1";
 
     var W = element.width();
@@ -217,7 +217,7 @@ function figure_Develop_Ath(element, ath) {
 }
 
 //图片附件
-function figure_Develop_ImageAth(element, frmImageAth,fk_mapData) {
+function figure_Develop_ImageAth(element, frmImageAth, fk_mapData) {
     var isEdit = frmImageAth.IsEdit;
     var img = $("<img class='pimg'/>");
 
@@ -416,7 +416,7 @@ function figure_Develop_IFrame(element, frame) {
 
 
 //子流程
-function figure_Develop_FigureSubFlowDtl(wf_node,  element ) {
+function figure_Develop_FigureSubFlowDtl(wf_node, element) {
 
     //@这里需要处理, 对于流程表单.
     if (sta == 0 || sta == "0" || sta == undefined)
@@ -460,7 +460,7 @@ function figure_Develop_FigureSubFlowDtl(wf_node,  element ) {
 
 
 //审核组件
-function figure_Develop_FigureFrmCheck(wf_node, flowData,mapData) {
+function figure_Develop_FigureFrmCheck(wf_node, flowData, mapData) {
 
 
 

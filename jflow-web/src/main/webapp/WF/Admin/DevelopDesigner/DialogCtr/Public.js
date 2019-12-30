@@ -72,17 +72,17 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
         _Html += "<span leipiplugins='enum' id='SS_" + uiBindKey + "' title='下拉框' name='leipiNewField' data-type='EnumSelect'   data-bindKey='" + uiBindKey + "'>";
         _Html += "<select id='DDL_" + keyOfEn + "' name='DDL_" + keyOfEn + "' data-type='EnumSelect' data-key='" + keyOfEn + "' class='form-control' >";
         for (var i = 0; i < enums.length; i++) {
-            _Html += "<option value='" + enums[i].IntKey + "'>" + enums[i].Lab + "</option>";
+                _Html += "<option value='" + enums[i].IntKey + "'>" + enums[i].Lab + "</option>";
         }
         _Html += "</select>";
         _Html += "</span>";
     }
     if (dataType == "HandWriting")//手写签字版
-        _Html = "<img src='../../../DataUser/Siganture/admin.jpg' onerror=\"this.src='../../../DataUser/Siganture/UnName.jpg'\"  style='border:0px;height:" + mapAttr.UIHeight + "px;' id='Img" + mapAttr.KeyOfEn + "' data-type='HandWriting' data-key='" + mapAttr.MyPK + "'  leipiplugins='component'/>";
+         _Html = "<img src='../../../DataUser/Siganture/admin.jpg' onerror=\"this.src='../../../DataUser/Siganture/UnName.jpg'\"  style='border:0px;height:" + mapAttr.UIHeight + "px;' id='Img" + mapAttr.KeyOfEn + "' data-type='HandWriting' data-key='" + mapAttr.MyPK + "'  leipiplugins='component'/>";
 
     if (dataType == "Img")//图片
 
-        _Html = "<img src='../CCFormDesigner/Controls/basic/Img.png' style='width:" + mapAttr.UIWidth + "px;height:" + mapAttr.UIHeight + "px'  leipiplugins='component' data-key='" + mapAttr.MyPK + "' data-type='Img'/>"
+         _Html = "<img src='../CCFormDesigner/Controls/basic/Img.png' style='width:" + mapAttr.UIWidth + "px;height:" + mapAttr.UIHeight + "px'  leipiplugins='component' data-key='" + mapAttr.MyPK + "' data-type='Img'/>"
     if (dataType == "Map") { //地图
         _Html = "<div style='text-align:left;padding-left:0px' id='Map_" + mapAttr.KeyOfEn + "' data-type='Map' data-key='" + mapAttr.MyPK + "' leipiplugins='component'>";
         _Html += "<input type='button' name='select' value='选择' style='background: #fff;color: #545454;font - size: 12px;padding: 4px 15px;margin: 5px 3px 5px 3px;border - radius: 3px;border: 1px solid #d2cdcd;'/>";

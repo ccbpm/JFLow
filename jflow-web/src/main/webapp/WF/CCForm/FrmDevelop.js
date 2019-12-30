@@ -178,15 +178,15 @@ function GenerDevelopFrm(mapData, frmData) {
 
 //从表
 function figure_Develop_Dtl(element, frmDtl, ext) {
-    //$("<link href='../Comm/umeditor1.2.3-utf8/themes/default/css/umeditor.css' type = 'text/css' rel = 'stylesheet' />").appendTo("head");
+    //$("<link href='../Comm/umeditor1.2.3-utf8/themes/default/css/umeditor.css' type = 'text/css' rel = 'stylesheet' />").appendTo("head");  
     //在Image元素下引入IFrame文件
     var src = "";
     if (frmDtl.ListShowModel == "0")
-    //表格模式
+        //表格模式
         src = "../CCForm/Dtl2017.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.IsReadonly + "Version=1";
 
     if (frmDtl.ListShowModel == "1")
-    //卡片模式
+        //卡片模式
         src = "../CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.isReadonly + "&Version=1";
 
     var W = element.width();

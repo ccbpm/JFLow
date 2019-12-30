@@ -345,6 +345,12 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
             return "url@../CCFormDesigner/FormDesigner.htm?FK_MapData=" + this.getFK_MapData() + "&IsFirst=1";
         }
 
+		if (md.getHisFrmType() == BP.Sys.FrmType.Develop)
+		{
+			/* 开发者表单 */
+			return "url@../DevelopDesigner/Designer.htm?FK_MapData=" + this.getFK_MapData() + "&FrmID="+this.getFK_MapData()+"&IsFirst=1";
+		}
+
         if (md.getHisFrmType() == BP.Sys.FrmType.VSTOForExcel)
         {
             /* 自由表单 */

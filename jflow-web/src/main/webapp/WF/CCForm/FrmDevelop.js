@@ -13,7 +13,7 @@ function GenerDevelopFrm(mapData, frmData) {
     var htmlContent = "";
     if (htmlobj.status == 404) {
         //数据库中查找
-        htmlContent = mapdata.HtmlTemplateFile;
+        htmlContent = mapData.HtmlTemplateFile;
     } else {
         htmlContent = htmlobj.responseText;
         if (htmlContent == null && htmlContent == "" && htmlContent == undefined) {
@@ -180,11 +180,11 @@ function figure_Template_Dtl(element,frmDtl, ext) {
     var src = "";
     if (frmDtl.ListShowModel == "0")
         //表格模式
-        src = "../../CCForm/Dtl2017.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.IsReadonly + "Version=1";
+        src = "../CCForm/Dtl2017.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.IsReadonly + "Version=1";
 
     if (frmDtl.ListShowModel == "1")
         //卡片模式
-        src = "../../CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.isReadonly + "&Version=1";
+        src = "../CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + pageData.OID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=" + pageData.isReadonly + "&Version=1";
 
     var W =element.width();
     var eleHtml = $("<div id='Fd" + frmDtl.No + "' style='width:" + W + "px; height:auto;' ></div>");
@@ -198,7 +198,7 @@ function figure_Template_Dtl(element,frmDtl, ext) {
 
 //附件
 function figure_Template_Ath(element,ath) {
-    var src = "../../CCForm/Ath.htm?PKVal=" + pageData.OID + "&PWorkID=" + GetQueryString("PWorkID") + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=" + pageData.isReadonly + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
+    var src = "../CCForm/Ath.htm?PKVal=" + pageData.OID + "&PWorkID=" + GetQueryString("PWorkID") + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=" + pageData.isReadonly + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
 
     var fid = GetQueryString("FID");
     var pWorkID = GetQueryString("PWorkID");
@@ -294,12 +294,12 @@ function figure_Template_Image(element,frmImage) {
         }
         // 由于火狐 不支持onerror 所以 判断图片是否存在放到服务器端
         if (imgSrc == "" || imgSrc == null)
-            imgSrc = "../DataUser/ICON/CCFlow/LogBig.png";
+            imgSrc = "../../DataUser/ICON/CCFlow/LogBig.png";
 
         var a = $("<a></a>");
         var img = $("<img/>")
 
-        img.attr("src", imgSrc).css('width', frmImage.W).css('height', frmImage.H).attr('onerror', "this.src='../DataUser/ICON/CCFlow/LogBig.png'");
+        img.attr("src", imgSrc).css('width', frmImage.W).css('height', frmImage.H).attr('onerror', "this.src='../../DataUser/ICON/CCFlow/LogBig.png'");
 
         if (frmImage.LinkURL != undefined && frmImage.LinkURL != '') {
             a.attr('href', frmImage.LinkTarget).attr('target', frmImage.LinkTarget).css('width', frmImage.W).css('height', frmImage.H);
@@ -1057,7 +1057,7 @@ function figure_Template_Siganture(SigantureID, val, type) {
         impParent.removeChild(obj);
     }
     else {
-        var src = '/DataUser/Siganture/' + val + '.jpg';    //新图片地址
+        var src = '../../DataUser/Siganture/' + val + '.jpg';    //新图片地址
         document.getElementById("Img" + SigantureID).src = src;
     }
     isSigantureChecked = true;

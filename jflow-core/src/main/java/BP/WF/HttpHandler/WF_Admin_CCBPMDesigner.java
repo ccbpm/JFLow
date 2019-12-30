@@ -1068,7 +1068,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 "                           union " + "\r\n" +
 "                           SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) as NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX ";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			sql = "SELECT * FROM (SELECT 'F'||No as NO,'F'||ParentNo as PARENTNO,NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
 "                        union " + "\r\n" +
@@ -1215,7 +1215,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		//组织数据源.
 		String sqls = "";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		 || SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			sqls = "SELECT No \"No\", ParentNo \"ParentNo\",Name \"Name\", Idx \"Idx\", 1 \"IsParent\", 'FORMTYPE' \"TType\" FROM Sys_FormTree ORDER BY Idx ASC ; ";
 			sqls += "SELECT No \"No\", FK_FormTree as \"ParentNo\", Name \"Name\",Idx \"Idx\", 0 \"IsParent\", 'FORM' \"TType\" FROM Sys_MapData  WHERE AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree) ORDER BY Idx ASC";

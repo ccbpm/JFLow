@@ -619,6 +619,9 @@ public class PubClass {
 			case MySQL:
 				AddCommentForTable_MySql(en);
 				break;
+			case DM:
+				AddCommentForTable_Ora(en);
+				break;
 			default:
 				AddCommentForTable_MS(en);
 				break;

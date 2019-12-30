@@ -222,9 +222,7 @@ public class DBAccess {
 	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
 			String saveToFileField,boolean isByte) throws Exception {
 		
-		if ((SystemConfig.getAppCenterDBType()== DBType.MySQL
-				|| SystemConfig.getAppCenterDBType()==DBType.MSSQL)
-			&& isByte == false)
+		if (isByte == false)
 		{
 			try
 			{
@@ -3444,13 +3442,23 @@ public class DBAccess {
 		String sql = "";
 		switch (dbType) {
 		case Oracle:
-		case DM:
 			sql = "SELECT TABTYPE  FROM TAB WHERE UPPER(TNAME)=:v";
 			DataTable oradt = DBAccess.RunSQLReturnTable(sql, "v", tabelOrViewName.toUpperCase());
 			if (oradt.Rows.size() == 0) {
 				throw new RuntimeException("@表不存在[" + tabelOrViewName + "]");
 			}
 			if (oradt.Rows.get(0).getValue(0).toString().toUpperCase().trim().equals("VIEW")) {
+				return true;
+			} else {
+				return false;
+			}
+		case DM:
+			sql = "SELECT VIEW_NAME  FROM user_views WHERE VIEW_NAME =:v";
+			oradt = DBAccess.RunSQLReturnTable(sql, "v", tabelOrViewName.toUpperCase());
+			if (oradt.Rows.size() == 0) {
+				return false;
+			}
+			if (oradt.Rows.get(0).getValue(0).toString().toUpperCase().trim().equals(tabelOrViewName.toUpperCase())) {
 				return true;
 			} else {
 				return false;

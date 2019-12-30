@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.UUID;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import org.apache.commons.lang3.StringUtils;
 
 import BP.Difference.ContextHolderUtils;
@@ -1116,6 +1117,9 @@ public class DBAccess {
 			case MySQL:
 				result = RunSQL_200705_MySQL(sql, paras);
 				break;
+			case DM:
+				result = RunSQL_20191230_DM(sql, paras);
+				break;
 			default:
 				throw new RuntimeException("发现未知的数据库连接类型！");
 			}
@@ -1267,6 +1271,65 @@ public class DBAccess {
 			return i;
 		} catch (Exception ex) {
 			String msg = "@运行更新在(RunSQL_200705_MySQL)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
+					+ "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+
+				if (stmt != null)
+					stmt.close();
+
+				if (pstmt != null)
+					pstmt.close();
+
+				if (isTtrack == false && conn != null)
+					conn.close();
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 适配达梦
+	 * @param sql
+	 * @param paras
+	 * @return
+	 */
+	private static int RunSQL_20191230_DM(String sql, Paras paras)
+	{
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		boolean isTtrack = false;
+		try {
+			conn = GetConnOfTransactionForMySQL(BP.Web.WebUser.getNo());
+			if (conn == null)
+				conn = DBAccess.getGetAppCenterDBConn_MySQL();
+			else
+				isTtrack = true;
+
+			int i = 0;
+			if (null != paras && paras.size() > 0) {
+				pstmt = new NamedParameterStatement(conn, sql);
+				PrepareCommand(pstmt, paras);
+				i = pstmt.executeUpdate();
+
+			} else {
+				stmt = conn.createStatement();// 创建用于执行静态sql语句的Statement对象，st属局部变量
+				i = stmt.executeUpdate(sql);
+			}
+
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + i);
+			}
+			// conn.commit();
+			return i;
+		} catch (Exception ex) {
+			String msg = "@运行更新在(RunSQL_20191230_DM)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
 					+ "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
 			Log.DefaultLogWriteLineError(msg);
 			throw new RuntimeException(msg, ex);
@@ -1947,6 +2010,106 @@ public class DBAccess {
 		}
 	}
 
+	/**
+	 * RunSQLReturnTable_200705_DM
+	 *
+	 * @param sql
+	 *            要执行的sql
+	 * @return 返回table
+	 * @throws Exception
+	 */
+	private static DataTable RunSQLReturnTable_200705_DM(String sql, Paras paras) {
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		if (sql.trim().endsWith("WHERE")) {
+			sql = sql.replace("WHERE", "");
+		}
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_Oracle();
+
+			DataTable oratb = new DataTable("otb");
+			if (null != paras && paras.size() > 0) {
+				pstmt = new NamedParameterStatement(conn, sql);
+				PrepareCommand(pstmt, paras);
+				rs = pstmt.executeQuery();
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int size = rsmd.getColumnCount();
+				for (int i = 0; i < size; i++) {
+					oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+				}
+				while (rs.next()) {
+					DataRow dr = oratb.NewRow();// 產生一列DataRow
+					for (int i = 0; i < size; i++) {
+						Object val = rs.getObject(i + 1);
+						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
+							if (val == null) {
+								dr.setValue(i, 0);
+							} else {
+								dr.setValue(i, val);
+							}
+
+						} else {
+							dr.setValue(i, val);
+						}
+					}
+					oratb.Rows.add(dr);// DataTable加入此DataRow
+				}
+			} else {
+				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				rs = stmt.executeQuery(sql);
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int size = rsmd.getColumnCount();
+				for (int i = 0; i < size; i++) {
+					oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+				}
+				while (rs.next()) {
+					DataRow dr = oratb.NewRow();// 產生一列DataRow
+
+					for (int i = 0; i < size; i++) {
+
+						Object val = rs.getObject(i + 1);
+						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
+							if (val == null) {
+								dr.setValue(i, 0);
+							} else {
+								dr.setValue(i, val);
+							}
+
+						} else {
+							dr.setValue(i, val);
+						}
+					}
+					oratb.Rows.add(dr);// DataTable加入此DataRow
+				}
+			}
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + oratb.Rows.size());
+			}
+			return oratb;
+		} catch (Exception ex) {
+			String msg = "@运行查询在(RunSQLReturnTable_200705_DM)出错。\n  @SQL: " + sql + "\n  @Param: "
+					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 	private static int RunSQLReturnResultSet_201809_MySQL(String sql, Paras paras, Entities ens, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -2404,6 +2567,9 @@ public class DBAccess {
 			case MySQL:
 				dt = DBAccess.RunSQLReturnTable_200705_MySQL(sql, paras);
 				break;
+			case DM:
+				dt = DBAccess.RunSQLReturnTable_200705_DM(sql, paras);
+				break;
 			default:
 				throw new RuntimeException("@没有判断的数据库类型");
 			}
@@ -2433,6 +2599,9 @@ public class DBAccess {
 			break;
 		case MySQL:
 			dt = DBAccess.RunSQLReturnTable_200705_MySQL(sql, new Paras());
+			break;
+		case DM:
+			dt = DBAccess.RunSQLReturnTable_200705_DM(sql, new Paras());
 			break;
 		default:
 			throw new RuntimeException("@没有判断的数据库类型");
@@ -2536,6 +2705,15 @@ public class DBAccess {
 			}
 			return IsExits("SELECT table_name, table_type FROM information_schema.tables  WHERE table_name = '" + obj
 					+ "' AND   TABLE_SCHEMA='" + SystemConfig.getAppCenterDBDatabase() + "' ");
+		case DM:
+			if (obj.indexOf(".") != -1) {
+				obj = obj.split("[.]", -1)[1];
+			}
+
+			sql = "select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='"
+					+ SystemConfig.getUser().toUpperCase() + "' ";
+
+			return IsExits(sql, ps);
 		default:
 			throw new RuntimeException("没有识别的数据库编号");
 		}
@@ -2572,6 +2750,14 @@ public class DBAccess {
 			i = DBAccess.RunSQLReturnValInt(sql);
 			break;
 		case Oracle:
+			if (table.indexOf(".") != -1) {
+				table = table.split("[.]", -1)[1];
+			}
+			i = DBAccess.RunSQLReturnValInt(
+					"SELECT COUNT(*) from user_tab_columns  WHERE table_name= upper(:tab) AND column_name= upper(:col) ",
+					ps);
+			break;
+		case DM:
 			if (table.indexOf(".") != -1) {
 				table = table.split("[.]", -1)[1];
 			}

@@ -19,7 +19,7 @@ public class CCFormAPI extends Dev2Interface {
 	/**
 	 * 生成报表
 	 * 
-	 * @param templeteFilePath
+	 * @param templeteFullFile
 	 *            模版路径
 	 * @param ds
 	 *            数据源
@@ -52,7 +52,6 @@ public class CCFormAPI extends Dev2Interface {
 	 * @param enName
 	 * @param pkval
 	 * @param atParas
-	 * @param specDtlFrmID
 	 * @return
 	 * @throws Exception
 	 */
@@ -740,6 +739,17 @@ public class CCFormAPI extends Dev2Interface {
 				}
 			}
 		}
+		/// #region 把主表数据放入.
+		if (SystemConfig.getIsBSsystem() == true) {
+			// 处理传递过来的参数。
+			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+			while (enu.hasMoreElements()) {
+				String k = (String) enu.nextElement();
+				en.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
+			}
+
+
+		}
 
 		/// #region 加载从表表单模版信息.
 
@@ -775,7 +785,6 @@ public class CCFormAPI extends Dev2Interface {
 			}
 
 			String mypk = dr.getValue("MyPK").toString();
-
 			/// #region 枚举字段
 			if (lgType.equals("1") == true) {
 				// 如果是枚举值, 判断是否存在.
@@ -795,15 +804,8 @@ public class CCFormAPI extends Dev2Interface {
 				continue;
 			}
 
-			/// #endregion
-
 			/// #region 外键字段
 			String UIIsEnable = dr.getValue("UIIsEnable").toString();
-			if (UIIsEnable.equals("0")) // 字段未启用
-			{
-				continue;
-			}
-
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.getValue("KeyOfEn").toString();
 
@@ -815,7 +817,7 @@ public class CCFormAPI extends Dev2Interface {
 			{
 				Object tempVar2 = me.getDoc();
 				String fullSQL = tempVar2 instanceof String ? (String) tempVar2 : null;
-				fullSQL = fullSQL.replace("~", ",");
+				fullSQL = fullSQL.replace("~", "'");
 				fullSQL = BP.WF.Glo.DealExp(fullSQL, en, null);
 
 				DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
@@ -829,55 +831,27 @@ public class CCFormAPI extends Dev2Interface {
 				continue;
 			}
 
-			/// #endregion 处理下拉框数据范围.
+			if ( UIIsEnable.equals("0") && myds.Tables.contains(uiBindKey)==false){
+				DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey,en.getRow());
+				mydt.TableName = uiBindKey;
+				if (mydt == null) {
+					DataRow ddldr = ddlTable.NewRow();
+					ddldr.setValue("No", uiBindKey);
+					ddlTable.Rows.add(ddldr);
+				} else {
+					mydt.Columns.get(0).ColumnName = "No";
+					mydt.Columns.get(1).ColumnName = "Name";
+					myds.Tables.add(mydt);
 
-			// 判断是否存在.
-			if (myds.Tables.contains(uiBindKey) == true) {
+				}
 				continue;
 			}
-
-			if(isFirst == true)
-			{
-				ht = en.getRow();
-				//获取URL上的参数
-				for (Object key :  ContextHolderUtils.getRequest().getParameterMap().keySet()) {
-					if(key == null)
-						continue;
-					if(key.toString().equals("")==true)
-						continue;
-					ht.put( key, ContextHolderUtils.getRequest().getParameter(key.toString()));
-				}
-			}
-
-			// 获得数据.
-			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey,ht);
-
-			if (mydt == null) {
-				DataRow ddldr = ddlTable.NewRow();
-				ddldr.setValue("No", uiBindKey);
-				ddlTable.Rows.add(ddldr);
-			} else {
-				myds.Tables.add(mydt);
-			}
-
 			/// #endregion 外键字段
 		}
 		ddlTable.TableName = "UIBindKey";
 		myds.Tables.add(ddlTable);
 
 		/// #endregion 把从表的- 外键表/枚举 加入 DataSet.
-
-		/// #region 把主表数据放入.
-		if (SystemConfig.getIsBSsystem() == true) {
-			// 处理传递过来的参数。
-			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
-			while (enu.hasMoreElements()) {
-				String k = (String) enu.nextElement();
-				en.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
-			}
-			
-			
-		}
 
 		// 重设默认值.
 		en.ResetDefaultVal();
@@ -998,7 +972,6 @@ public class CCFormAPI extends Dev2Interface {
 			}
 
 			/// #endregion 修改区分大小写.
-
 			if (attr.getUIContralType() == UIContralType.TB) {
 				continue;
 			}
@@ -1023,9 +996,6 @@ public class CCFormAPI extends Dev2Interface {
 		dtlBlank.ResetDefaultVal();
 
 		myds.Tables.add(dtlBlank.ToDataTableField("Blank"));
-
-		// myds.WriteXml("c:\\xx.xml");
-
 		return myds;
 	}
 }

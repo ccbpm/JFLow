@@ -301,6 +301,12 @@ public class Emp extends EntityNoName
 		return SystemConfig.getCCFlowWebPath()+"GPM/Siganture.htm?EmpNo=" + this.getNo();
 	}
 
+	@Override
+	protected boolean beforeInsert() throws Exception {
+		if (SystemConfig.getIsEnablePasswordEncryption() == true)
+			this.setPass(BP.Tools.Cryptos.aesDecrypt(this.getPass()));
+		return super.beforeInsert();
+	}
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
@@ -341,9 +347,6 @@ public class Emp extends EntityNoName
 			stas += "@" + dept.getNameOfPath() + "|" + sta.getName();
 			depts += "@" + dept.getNameOfPath();
 		}
-
-		if (SystemConfig.getIsEnablePasswordEncryption() == true)
-			this.setPass(BP.Tools.Cryptos.aesDecrypt(this.getPass()));
 
 		return super.beforeUpdateInsertAction();
 	}

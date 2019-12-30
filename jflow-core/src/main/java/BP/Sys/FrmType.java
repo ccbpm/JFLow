@@ -38,11 +38,19 @@ public enum FrmType
 	/** 
 	 实体类
 	*/
+<<<<<<< .mine
+	Entity(7),
+	/** 
+	 开发者表单
+	*/
+	Develop(8);
+=======
 	Entity(7),
 	/**
 	 * 开发者表单
 	 */
 	Develop(8);
+>>>>>>> .r2518
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

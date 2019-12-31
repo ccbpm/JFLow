@@ -146,7 +146,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		dtFlowSorts.TableName = "FlowSorts";
 		ds.Tables.add(dtFlowSorts);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dtFlowSorts.Columns.get(0).setColumnName("No");
 			dtFlowSorts.Columns.get(1).setColumnName("Name");
@@ -163,7 +164,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtFlows.TableName = "Flows";
 		ds.Tables.add(dtFlows);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");

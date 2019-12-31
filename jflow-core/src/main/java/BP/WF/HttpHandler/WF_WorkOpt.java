@@ -3555,7 +3555,8 @@ public class WF_WorkOpt extends WebContralBase
 		dtDept.TableName = "Depts";
 		ds.Tables.add(dtDept);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dtDept.Columns.get(0).setColumnName("No");
 			dtDept.Columns.get(1).setColumnName("Name");
@@ -3593,7 +3594,8 @@ public class WF_WorkOpt extends WebContralBase
 		DataTable dtEmps = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmps.TableName = "Emps";
 		ds.Tables.add(dtEmps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dtEmps.Columns.get(0).setColumnName("No");
 			dtEmps.Columns.get(1).setColumnName("Name");

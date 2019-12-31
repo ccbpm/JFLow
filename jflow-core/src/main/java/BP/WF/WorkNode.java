@@ -8819,6 +8819,7 @@ public class WorkNode {
 	 */
 	private void CheckCompleteCondition() throws Exception {
 		// 执行初始化人员.
+
 		this.CheckCompleteCondition_IntCompleteEmps();
 
 		// 如果结束流程，就增加如下信息 翻译.

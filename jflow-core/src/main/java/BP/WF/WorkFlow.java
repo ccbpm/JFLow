@@ -1278,6 +1278,9 @@ public class WorkFlow {
 		} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= CONCAT(FlowEmps ,'" + emps
 					+ "'), WFState="+dbstr+"WFState,WFSta="+dbstr+"WFSta WHERE OID=" + dbstr + "OID";
+		} else if (SystemConfig.getAppCenterDBType() == DBType.DM) {
+			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= CONCAT(FlowEmps ,'" + emps
+					+ "'), WFState="+dbstr+"WFState,WFSta="+dbstr+"WFSta WHERE OID=" + dbstr + "OID";
 		} else {
 			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= FlowEmps + '" + emps + "', WFState="
 					+ dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";

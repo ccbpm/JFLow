@@ -205,14 +205,13 @@ public class DBAccess {
 	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
 			String saveToFileField) throws Exception {
 		//对于特殊的数据库进行判断.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		/*if (SystemConfig.getAppCenterDBType() == DBType.Oracle
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
 				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			SaveBytesToDB(docs.getBytes("UTF-8"), docs, tableName, tablePK, pkVal, saveToFileField);
 			return;
-		}
-		//其他数据库.
+		}*/
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE " + tableName + " SET " + saveToFileField + "=" + SystemConfig.getAppCenterDBVarStr() + "MyDocs WHERE " + tablePK + "=" + SystemConfig.getAppCenterDBVarStr() + "PKVal";
 		ps.Add("MyDocs", docs);
@@ -1344,7 +1343,7 @@ public class DBAccess {
 			}
 			return i;
 		} catch (Exception ex) {
-			String msg = "@运行更新在(RunSQL_200705_Ora)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
+			String msg = "@运行更新在(RunSQL_20191230_DM)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
 					+ "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
 			Log.DefaultLogWriteLineError(msg);
 			throw new RuntimeException(msg, ex);
@@ -2199,6 +2198,9 @@ public class DBAccess {
 					DataRow dr = oratb.NewRow();// 產生一列DataRow
 					for (int i = 0; i < size; i++) {
 						Object val = rs.getObject(i + 1);
+						if(dr.columns.get(i).DataType.toString().contains("String")){
+							val = rs.getString(i + 1);
+						}
 						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
 							if (val == null) {
 								dr.setValue(i, 0);
@@ -2226,6 +2228,9 @@ public class DBAccess {
 					for (int i = 0; i < size; i++) {
 
 						Object val = rs.getObject(i + 1);
+						if(dr.columns.get(i).DataType.toString().contains("String")){
+							val = rs.getString(i + 1);
+						}
 						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
 							if (val == null) {
 								dr.setValue(i, 0);
@@ -3083,7 +3088,7 @@ public class DBAccess {
 	 */
 	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)throws Exception {
 		//对于特殊的数据库进行判断.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		/*if (SystemConfig.getAppCenterDBType() == DBType.Oracle
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
 				|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 			byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
@@ -3091,7 +3096,7 @@ public class DBAccess {
 				return null;
 			}
 			return new String(byteFile,"UTF-8");
-		}
+		}*/
 		//其他的数据库类型直接从 text字段去.
 		try {
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
@@ -3100,6 +3105,28 @@ public class DBAccess {
 			if (DBAccess.IsExitsTableCol(tableName, fileSaveField) == false)
 			{
 				String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " text ";
+				switch (SystemConfig.getAppCenterDBType()) {
+					case MSSQL:
+						sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
+						break;
+					case Oracle:
+						sql = "ALTER TABLE  WF_EMP add StartFlows CLOB";
+						break;
+					case MySQL:
+						sql = "ALTER TABLE WF_Emp ADD StartFlows TEXT COMMENT '可以发起的流程'";
+						break;
+					case Informix:
+						sql = "ALTER TABLE WF_Emp ADD StartFlows VARCHAR(4000) DEFAULT  NULL";
+						break;
+					case PostgreSQL:
+						sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
+						break;
+					case DM:
+						sql = "ALTER TABLE  WF_EMP add StartFlows CLOB";
+						break;
+					default:
+						throw new RuntimeException("@没有涉及到的数据库类型");
+				}
 				DBAccess.RunSQL(sql);
 			}
 			String getSql = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + " = '" + pkVal + "'";

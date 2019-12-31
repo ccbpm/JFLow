@@ -945,13 +945,13 @@ public class Glo {
 			/// #region 更新wf_emp. 的字段类型. 2019.06.19
 			DBType dbtype = SystemConfig.getAppCenterDBType();
 
-			if (dbtype == DBType.Oracle) {
+			if (dbtype == DBType.Oracle || dbtype == DBType.DM) {
 				if (DBAccess.IsExitsTableCol("WF_EMP", "startFlows_temp") == false) {
-					DBAccess.RunSQL("ALTER TABLE  WF_EMP add startFlows_temp BLOB");
+					DBAccess.RunSQL("ALTER TABLE  WF_EMP add startFlows_temp CLOB");
 				}
 
 				if (DBAccess.IsExitsTableCol("WF_EMP", "STARTFLOWS") == false) {
-					DBAccess.RunSQL("ALTER TABLE  WF_EMP add STARTFLOWS BLOB");
+					DBAccess.RunSQL("ALTER TABLE  WF_EMP add STARTFLOWS CLOB");
 				}
 
 				// 将需要改成大字段的项内容copy到大字段中
@@ -1127,7 +1127,8 @@ public class Glo {
 				String sqls = "";
 
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+						|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 					sqls += "UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='"
 							+ MapExtXmlList.TBFullCtrl + "'";
 					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='"
@@ -1254,7 +1255,8 @@ public class Glo {
 			}
 
 			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+					|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm||'_'||FK_Node||'_'||FK_Flow");
 			}
 
@@ -1697,7 +1699,7 @@ public class Glo {
 				sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
 				break;
 			case Oracle:
-				sql = "ALTER TABLE  WF_EMP add StartFlows BLOB";
+				sql = "ALTER TABLE  WF_EMP add StartFlows CLOB";
 				break;
 			case MySQL:
 				sql = "ALTER TABLE WF_Emp ADD StartFlows TEXT COMMENT '可以发起的流程'";

@@ -350,6 +350,7 @@ public class QueryObject {
 
 				switch (this.HisDBType) {
 				case Oracle:
+				case DM:
 					this.setSQL(
 							"( " + attr2Field(attr) + " " + exp + " '%'||" + this.getHisVarStr() + "FK_Dept||'%' )");
 					this.getMyParas().Add("FK_Dept", val);
@@ -672,6 +673,7 @@ public class QueryObject {
 			OrderWay ow) throws Exception {
 		switch (en.getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
+		case DM:
 			return DoGroupReturnTableOracle(en, attrsOfGroupKey, attrGroup, gw, ow);
 		default:
 			return DoGroupReturnTableSqlServer(en, attrsOfGroupKey, attrGroup, gw, ow);
@@ -1076,6 +1078,7 @@ public class QueryObject {
 				String pks = "";
 				switch (map.getEnDBUrl().getDBType()) {
 				case Oracle:
+					case DM:
 					toIdx = top + pageSize;
 					if (this._sql == null || this._sql.equals("")) {
 						if (top == 0) {
@@ -1274,6 +1277,7 @@ public class QueryObject {
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
+			case DM:
 			if (this._sql == null || this._sql.equals("")) {
 				sql = "SELECT COUNT(" + ptable + "." + pk + ") as C FROM " + ptable;
 			} else {
@@ -1324,6 +1328,7 @@ public class QueryObject {
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
+			case DM:
 			if (this._sql == null || this._sql.equals(""))
 				sql = selectSQl + " FROM " + ptable + "WHERE " + groupBy + orderBy;
 			else

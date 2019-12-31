@@ -64,6 +64,7 @@ public class EntityDBAccess
 					{
 						case MSSQL:
 						case Oracle:
+						case DM:
 						case MySQL:
 						case PostgreSQL:
 							return DBAccess.RunSQL(sql, paras);

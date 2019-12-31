@@ -976,7 +976,8 @@ public class Dev2Interface
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";

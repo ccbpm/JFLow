@@ -420,6 +420,7 @@ public class PubClass {
 
 			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
+			case DM:
 				sql = "SELECT No,Name FROM " + uiBindKey + " where rowNum <= " + topNum;
 				break;
 			case MSSQL:
@@ -929,6 +930,7 @@ public class PubClass {
 				// 外键的实体是否为空
 				switch (SystemConfig.getAppCenterDBType()) {
 				case Oracle:
+				case DM:
 					sql = "SELECT COUNT(*) FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + attr.getField()
 							+ " is null or length(" + attr.getField() + ") < 1 ";
 					break;

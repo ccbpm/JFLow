@@ -1709,7 +1709,7 @@ public class Glo {
 				sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
 				break;
 			case DM:
-				sql = "ALTER TABLE  WF_EMP add StartFlows BLOB";
+				sql = "ALTER TABLE  WF_EMP add StartFlows CLOB";
 				break;
 			default:
 				throw new RuntimeException("@没有涉及到的数据库类型");

@@ -764,7 +764,8 @@ public class WF_WorkOpt extends WebContralBase
 				ps.Add("NDTo", toNodeID);
 				ps.Add("EmpFrom", WebUser.getNo());
 			}
-			else if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+			|| SystemConfig.getAppCenterDBType() == DBType.DM)
 			{
 				ps.SQL = "SELECT * FROM (SELECT  Tag,EmpTo,WorkID FROM " + trackTable + " A WHERE A.EmpFrom=" + SystemConfig.getAppCenterDBVarStr() + "EmpFrom AND A.NDFrom=" + SystemConfig.getAppCenterDBVarStr() + "NDFrom AND A.NDTo=" + SystemConfig.getAppCenterDBVarStr() + "NDTo AND (ActionType=0 OR ActionType=1) AND EmpFrom=" + SystemConfig.getAppCenterDBVarStr() + "EmpFrom ORDER BY WorkID DESC ) WHERE ROWNUM =1";
 				ps.Add("EmpFrom", WebUser.getNo());
@@ -996,7 +997,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						sql = "SELECT TOP 12 a.No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') ";
 					}
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM)
 					{
 						sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 ";
 					}
@@ -1049,7 +1050,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						sql = "SELECT TOP 12 a.No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and ( a.PinYin LIKE '%," + emp.toLowerCase() + "%')";
 					}
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM)
 					{
 						sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (  a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 ";
 					}
@@ -1066,7 +1067,7 @@ public class WF_WorkOpt extends WebContralBase
 			{
 				sql = "SELECT TOP 12 a.No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%')";
 			}
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM)
 			{
 				sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') and rownum<=12 ";
 			}
@@ -1079,7 +1080,7 @@ public class WF_WorkOpt extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dt.Columns.get(0).ColumnName = "No";
 			dt.Columns.get(1).ColumnName = "Name";

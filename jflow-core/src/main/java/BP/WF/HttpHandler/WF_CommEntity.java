@@ -609,7 +609,8 @@ public class WF_CommEntity extends WebContralBase {
 
 					// @杜. 翻译当前部分.
 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-							|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+							|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+							|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 						dt.Columns.get("NO").ColumnName = "No";
 						dt.Columns.get("NAME").ColumnName = "Name";
 					}
@@ -634,7 +635,8 @@ public class WF_CommEntity extends WebContralBase {
 				dtEnum.TableName = "Sys_Enum";
 
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+						|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 					dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
 					dtEnum.Columns.get("LAB").ColumnName = "Lab";
 					dtEnum.Columns.get("ENUMKEY").ColumnName = "EnumKey";

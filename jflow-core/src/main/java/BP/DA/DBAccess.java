@@ -275,7 +275,8 @@ public class DBAccess {
 
 		String strSQL = "SELECT [" + fileSaveField + "] FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 			strSQL = strSQL.replace("[", "").replace("]", "");
 		}
 
@@ -2236,6 +2237,9 @@ public class DBAccess {
 					for (int i = 0; i < size; i++) {
 
 						Object val = rs.getObject(i + 1);
+						if(dr.columns.get(i).DataType.toString().contains("String")){
+							val = rs.getString(i + 1);
+						}
 						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
 							if (val == null) {
 								dr.setValue(i, 0);
@@ -3096,9 +3100,7 @@ public class DBAccess {
 	}
 
 	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField,boolean isByte)throws Exception {
-		if ((SystemConfig.getAppCenterDBType() == DBType.MSSQL
-				|| SystemConfig.getAppCenterDBType() == DBType.MySQL)
-			    && isByte == false){
+		if (isByte == false){
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 			return DBAccess.RunSQLReturnStringIsNull(strSQL,"");
 		}
@@ -3131,6 +3133,8 @@ public class DBAccess {
 		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
 		   if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_MySQL();
+		   if (SystemConfig.getAppCenterDBType() == DBType.DM)
+			conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
 		   String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 		   pstmt = conn.prepareStatement(strSQL);
 		   // 执行它.

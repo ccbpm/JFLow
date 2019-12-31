@@ -498,6 +498,7 @@ public abstract class Entity implements Serializable {
 					+ attrGroupKey + "='" + attrGroupVal + "'";
 			break;
 		case Oracle:
+			case DM:
 			ps.Add("groupKey", attrGroupKey);
 			ps.Add("groupVal", attrGroupVal);
 			ps.Add("f", attrKey);
@@ -558,6 +559,7 @@ public abstract class Entity implements Serializable {
 		String sql = "";
 		switch (this.getEnMap().getEnDBUrl().getDBType()) {
 		case Oracle:
+			case DM:
 		case Informix:
 			sql = "SELECT   MAX(" + f + ") +1 AS No FROM " + this.getEnMap().getPhysicsTable();
 			break;

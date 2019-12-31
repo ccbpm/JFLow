@@ -621,6 +621,8 @@ public class SqlBuilder {
 		case MSSQL:
 		case Access:
 			return GenerCreateTableSQLOfMS(en);
+		case DM:
+			return GenerCreateTableSQLOfDM_OK(en);
 		default:
 			break;
 		}
@@ -630,6 +632,7 @@ public class SqlBuilder {
 	public static String DeleteSysEnumsSQL(String table, String key) {
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
+		case DM:
 			return "DELETE FROM " + table + " WHERE " + key + "=:p";
 		case MySQL:
 			return "DELETE FROM " + table + " WHERE " + key + "=:p";
@@ -2038,6 +2041,7 @@ public class SqlBuilder {
 					+ SqlBuilder.GenerWhereByPK(en, "?");
 			break;
 		case Oracle:
+		case DM:
 			sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
 					+ SqlBuilder.GenerWhereByPK(en, ":");
 			break;

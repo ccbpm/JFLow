@@ -20,13 +20,13 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
         _Html = "<input type='text' value= '' id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  class='form-control' leipiplugins='text' style='width:120px'/>";
     //日期
     if (dataType == "Date")
-        _Html = "<input type='text' value= '' id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  class='form-control Wdate' onfocus='WdatePicker({dateFmt:yyyy-MM-dd})'  leipiplugins='text' style='width:120px'/>";
+        _Html = '<input type="text" value= ""  id="TB_' + keyOfEn + '" name="TB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-name="' + name + '" data-type="' + dataType + '"  class="form-control Wdate" onfocus="WdatePicker({dateFmt:\'yyyy-MM-dd\'})"  leipiplugins="text" style="width:120px"/>';
     //时间
     if (dataType == "DateTime")
-        _Html = "<input type='text' value= '' id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  class='form-control Wdate' onfocus='WdatePicker({dateFmt:yyyy-MM-dd HH:mm:ss})' leipiplugins='text' style='width:160px'/>";
+        _Html = '<input type="text" value= ""  id="TB_' + keyOfEn + '" name="TB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-name="' + name + '" data-type="' + dataType + '"  class="form-control Wdate" onfocus="WdatePicker({dateFmt:\'yyyy-MM-dd HH:mm:ss\'})" leipiplugins="text" style="width:160px"/>';
     //复选框
     if (dataType == "CheckBox")
-        _Html = "<input type='CheckBox' value= '' id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  class='form-control' leipiplugins='text' style='width:100px'/>" + name;
+        _Html = "<label><input type='CheckBox' value= '' id='CB_" + keyOfEn + "' name='CB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  leipiplugins='text'/>" + name +"</label>";
 
     if (dataType == "Enum") {
         //获取枚举值
@@ -36,7 +36,7 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
             return;
         _Html += "<span leipiplugins='enum' id='SR_" + uiBindKey + "' title='单选' name='leipiNewField'  data-key='" + keyOfEn + "' data-type='" + dataType + "'>";
         for (var i = 0; i < enums.length; i++) {
-            _Html += "<input type='radio' value= '" + enums[i].IntKey + "' id='RB_" + keyOfEn + "_" + enums[i].IntKey + "' name='RB_" + keyOfEn + "' data-key='" + keyOfEn + "'  data-type='" + dataType + "'   data-bindKey='" + uiBindKey + "' class='form-control'  style='width:15px;height:15px;'/>" + enums[i].Lab + "&nbsp;&nbsp;";
+            _Html += "<label><input type='radio' value= '" + enums[i].IntKey + "' id='RB_" + keyOfEn + "_" + enums[i].IntKey + "' name='RB_" + keyOfEn + "' data-key='" + keyOfEn + "'  data-type='" + dataType + "'   data-bindKey='" + uiBindKey + "' class='form-control'  style='width:15px;height:15px;'/>" + enums[i].Lab + "</label>&nbsp;&nbsp;";
         }
         _Html += "</span>";
     }
@@ -81,7 +81,6 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
          _Html = "<img src='../../../DataUser/Siganture/admin.jpg' onerror=\"this.src='../../../DataUser/Siganture/UnName.jpg'\"  style='border:0px;height:" + mapAttr.UIHeight + "px;' id='Img" + mapAttr.KeyOfEn + "' data-type='HandWriting' data-key='" + mapAttr.MyPK + "'  leipiplugins='component'/>";
 
     if (dataType == "Img")//图片
-
          _Html = "<img src='../CCFormDesigner/Controls/basic/Img.png' style='width:" + mapAttr.UIWidth + "px;height:" + mapAttr.UIHeight + "px'  leipiplugins='component' data-key='" + mapAttr.MyPK + "' data-type='Img'/>"
     if (dataType == "Map") { //地图
         _Html = "<div style='text-align:left;padding-left:0px' id='Map_" + mapAttr.KeyOfEn + "' data-type='Map' data-key='" + mapAttr.MyPK + "' leipiplugins='component'>";
@@ -91,16 +90,16 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
     }
 
     if (dataType == "Score") { //评分
-        _Html= "<div style='text-align:left;padding-left:0px'  data-type='Score' data-key='" + mapAttr.MyPK + "' leipiplugins='component'>";
-        _Html += "<span class='simplestar'>";
+        _Html = "<span class='score-star' style='text-align:left;padding-left:0px'   data-key='" + mapAttr.MyPK + "' id='SC_" + mapAttr.KeyOfEn + "'>";
+        _Html += "<span class='simplestar' data-type='Score'  leipiplugins='component'  data-key='" + mapAttr.MyPK + "' id='Star_" + mapAttr.KeyOfEn + "'>";
 
         var num = mapAttr.Tag2;
         for (var i = 0; i < num; i++) {
 
-            _Html += "<img src='../../Style/Img/star_2.png' />";
+            _Html += "<img src='../../Style/Img/star_2.png'  data-type='Score'  leipiplugins='component'  data-key='" + mapAttr.MyPK + "'/>";
         }
         _Html += "&nbsp;&nbsp;<span class='score-tips' style='vertical-align: middle;color:#ff6600;font: 12px/1.5 tahoma,arial,\"Hiragino Sans GB\",宋体,sans-serif;'><strong>" + num + "  分</strong></span>";
-        _Html += "</span></div>";
+        _Html += "</span></span>";
     }
     editor.execCommand('insertHtml', _Html);
 }

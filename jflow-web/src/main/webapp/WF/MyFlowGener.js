@@ -165,12 +165,9 @@ function CCFormLoaded() {
     else {
         //新加
         //计算高度，展示滚动条
-        //var height = $("#CCForm").height($(window).height() - 115 + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff");
         var height = $("#CCForm").height($(window).height() - 115 + "px").css("overflow-y", "auto");
-        // $('#topContentDiv').height(height);
 
         $(window).resize(function () {
-            //$("#CCForm").height($(window).height() - 115 + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff") ;
             $("#CCForm").height($(window).height() - 115 + "px").css("overflow-y", "auto");
         });
     }
@@ -402,6 +399,7 @@ function initPageParam() {
     //FK_Flow=004&FK_Node=402&FID=0&WorkID=232&IsRead=0&T=20160920223812&Paras=
     pageData.FID = GetQueryString("FID") == null ? 0 : GetQueryString("FID");
     pageData.WorkID = GetQueryString("WorkID");
+    pageData.OID = pageData.WorkID;
     pageData.IsRead = GetQueryString("IsRead");
     pageData.T = GetQueryString("T");
     pageData.Paras = GetQueryString("Paras");
@@ -1548,7 +1546,6 @@ function GenerWorkNode() {
 
     var node = flowData.WF_Node[0];
     var gfs = flowData.Sys_MapAttr;
-    //console.log(gfs);
 
     //设置标题.
     document.title = node.FlowName + ',' + node.Name; // "业务流程管理（BPM）平台";
@@ -1609,7 +1606,6 @@ function GenerWorkNode() {
 
     if (node.FormType == 12)
         GenerDevelopFrm(flowData, flowData.Sys_MapData[0].No);
-
 
     //2018.1.1 新增加的类型, 流程独立表单， 为了方便期间都按照自由表单计算了.
     if (node.FormType == 11) {
@@ -2089,9 +2085,9 @@ function OpenOffice(isEdit) {
 
     //是否可以编辑(只读)
     if (isEdit == "True")
-        paras += "IsReadonly=1,";
-    else
         paras += "IsReadonly=0,";
+    else
+        paras += "IsReadonly=1,";
 
 
     var local = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;

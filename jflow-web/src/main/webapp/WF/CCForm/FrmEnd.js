@@ -17,8 +17,7 @@
     for (var i = 0; i < mapAttrs.length; i++) {
         var mapAttr = mapAttrs[i];
         //设置文本框只读.
-        if (mapAttr.UIVisible != 0 && (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0)) {
-            var tb = $('#TB_' + mapAttr.KeyOfEn);
+        if (mapAttr.UIVisible != 0 && (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")) {
             $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
             $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
             $('#RB_' + mapAttr.KeyOfEn).attr('disabled', true);
@@ -64,10 +63,26 @@
                         $('#DDL_' + mapAttr.KeyOfEn).combotree({ disabled: true });
 
                     $('#DDL_' + mapAttr.KeyOfEn).combotree('setValue', val);
+                    continue;
                 }
             }
+            
         }
+        if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
+            // 判断下拉框是否有对应option, 若没有则追加
+            if (val != "" && $("option[value='" + val + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
+                var mainTable = frmData.MainTable[0];
+                var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
+                if (selectText == null || selectText == undefined || selectText == "")
+                    selectText = mainTable[mapAttr.KeyOfEn + "T"];
 
+                if (selectText != null && selectText != undefined && selectText != "")
+                    $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + defValue + "'>" + selectText + "</option>");
+            }
+            if (val != "")
+                $('#DDL_' + mapAttr.KeyOfEn).val(val);
+            continue;
+        }
 
         $('#TB_' + mapAttr.KeyOfEn).val(val);
 
@@ -89,28 +104,20 @@
                 }
                 $('#TB_' + mapAttr.KeyOfEn).val(val);
             }
-        }
-
-        //枚举下拉框.
-        if (mapAttr.UIContralType == 1) {
-
-            // 判断下拉框是否有对应option, 若没有则追加
-            if ($("option[value='" + val + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
-                var mainTable = frmData.MainTable[0];
-                var selectText = mainTable[mapAttr.KeyOfEn + "Text"];
-                if (selectText == null || selectText == undefined || selectText == "")
-                    selectText = mainTable[mapAttr.KeyOfEn + "T"];
-                if (selectText != null && selectText != undefined && selectText != "")
-                    $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + val + "'>" + selectText + "</option>");
-            }
-            $('#DDL_' + mapAttr.KeyOfEn).val(val);
-
+            continue;
         }
 
         //checkbox.
         if (mapAttr.UIContralType == 2) {
             if (val == "1")
                 $('#CB_' + mapAttr.KeyOfEn).attr("checked", "true");
+            else
+                $('#CB_' + mapAttr.KeyOfEn).attr("checked", false);
+        }
+
+        //枚举
+        if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {
+            $("#RB_" + mapAttr.KeyOfEn + "_" + val).attr("checked", 'checked');
         }
     }
 
@@ -122,12 +129,8 @@
         if (mapAttr.UIVisible == 0)
             continue;
 
-        if (mapAttr.LGType != 1)
+        if (mapAttr.LGType != 1 && mapAttr.MyDataType != 4)
             continue;
-
-        // if (mapAttr.UIIsEnable == 0)
-        //    continue;
-
 
         if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {  // AppInt Enum
             if (mapAttr.AtPara && mapAttr.AtPara.indexOf('@IsEnableJS=1') >= 0) {
@@ -150,8 +153,6 @@
 
                 }
                 if (mapAttr.UIContralType == 3) {
-                    /*启用了显示与隐藏.*/
-                    var rb = $("#RB_" + mapAttr.KeyOfEn);
                     //如果现在是隐藏状态就不可以设置
                     var ctrl = $("#Td_" + mapAttr.KeyOfEn);
                     if (ctrl.length > 0) {
@@ -166,6 +167,15 @@
 
                 }
             }
+        }
+
+        //复选框
+        if (mapAttr.MyDataType == 4 && mapAttr.AtPara.indexOf('@IsEnableJS=1') >= 0) {
+            //获取复选框的值
+            if ($("#CB_" + mapAttr.KeyOfEn).checked == true)
+                setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, 1);
+            else
+                setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, 0);
         }
 
     }

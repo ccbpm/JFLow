@@ -33,13 +33,16 @@
     <script src="../../Scripts/PinYin.js"></script>
     <script src="Designer.js"></script>
     <script src="DesignerTools.js"></script>
+    <script src="../../Comm/JS/Calendar/WdatePicker.js"></script>
+    <link href="../../Comm/JS/Calendar/skin/WdatePicker.css" rel="stylesheet" />
 </head>
 <body class="hold-transition skin-blue sidebar-mini" style="overflow:hidden;">
     <div>
+        <input type="button" onclick="FrmAttr()" value="表单属性" id="Btn_FrmAttr" />
         <input type="button" onclick="SaveForm()" value="保存" id="Btn_Save" />
         <input type="button" onclick="SaveAs()" value="另存为" id="Btn_SaveAs" />
         <input type="button" onclick="PreviewForm()" value="预览" id="Btn_View" />
-        <input type="button" onclick="ImpFrmTemplate()" value="导入表单模版" id="Btn_ImpTemplate" />
+        <input type="button" onclick="leipiFormDesign.exec('impfrm')" value="导入表单模版" id="Btn_ImpTemplate" />
         <input type="button" onclick="leipiFormDesign.exec('ImpFrmFields');" value="插入回收站字段" id="Btn_ImpFields" />
         <input type="button" onclick="FrmMobile()" value="手机表单" id="Btn_FrmMobile" />
 
@@ -281,13 +284,9 @@
         var htmlContent = "";
         if (htmlobj.status == 404) {
             //数据库中查找
-            var mapdata = new Entity("BP.Sys.MapData");
-            mapdata.SetPKVal(pageParam.fk_mapdata);
-            if (mapdata.RetrieveFromDBSources() == 0) {
-                alert("在数据库表Sys_MapData不存在No=" + pageParam.fk_mapdata + "的数据，请联系管理员");
-                return;
-            }
-            htmlContent = mapdata.HtmlTemplateFile;
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_DevelopDesigner");
+            handler.AddPara("FK_MapData", pageParam.fk_mapdata);
+            htmlContent = handler.DoMethodReturnString("Designer_Init");
         } else {
             htmlContent = htmlobj.responseText;
             if (htmlContent == null && htmlContent == "" && htmlContent == undefined) {

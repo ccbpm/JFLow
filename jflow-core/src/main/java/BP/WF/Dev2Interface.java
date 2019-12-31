@@ -1480,7 +1480,8 @@ public class Dev2Interface
 			}
 			DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 			//添加oracle的处理
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+			|| SystemConfig.getAppCenterDBType() == DBType.DM)
 			{
 				dt.Columns.get("PRI").ColumnName = "PRI";
 				dt.Columns.get("WORKID").ColumnName = "WorkID";
@@ -1633,7 +1634,8 @@ public class Dev2Interface
 		}
 		DataTable dt2 = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		//添加oracle的处理
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dt2.Columns.get("PRI").ColumnName = "PRI";
 			dt2.Columns.get("WORKID").ColumnName = "WorkID";
@@ -2213,7 +2215,8 @@ public class Dev2Interface
 		ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
@@ -3283,7 +3286,8 @@ public class Dev2Interface
 		}
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+		|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
@@ -3355,7 +3359,8 @@ public class Dev2Interface
 		}
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";

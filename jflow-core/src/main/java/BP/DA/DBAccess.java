@@ -2237,9 +2237,6 @@ public class DBAccess {
 					for (int i = 0; i < size; i++) {
 
 						Object val = rs.getObject(i + 1);
-						if(dr.columns.get(i).DataType.toString().contains("String")){
-							val = rs.getString(i + 1);
-						}
 						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
 							if (val == null) {
 								dr.setValue(i, 0);

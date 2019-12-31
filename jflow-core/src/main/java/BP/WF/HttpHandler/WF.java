@@ -1478,7 +1478,7 @@ public class WF extends WebContralBase {
 
 
 		DataTable dtFlows = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");
@@ -1548,7 +1548,8 @@ public class WF extends WebContralBase {
 
 		ds.Tables.add(dtT);
 		sqlWhere += "ORDER BY RDT DESC";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		|| SystemConfig.getAppCenterDBType() == DBType.DM)
 			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps " +
 					"FROM (select A.*, rownum r from (select * from WF_GenerWorkFlow where " + sqlWhere + ") A) where r between "+ (pageIdx * pageSize - pageSize + 1) + " and "+ (pageIdx * pageSize);
 		else if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
@@ -1559,7 +1560,8 @@ public class WF extends WebContralBase {
 		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where (1=1) AND " + sqlWhere + " LIMIT "+pageSize+ "offset " + startIndex;
 		DataTable mydt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+		|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			mydt.Columns.get(0).setColumnName("WorkID");
 			mydt.Columns.get(1).setColumnName("FID");

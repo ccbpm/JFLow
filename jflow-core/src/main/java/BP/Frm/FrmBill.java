@@ -162,9 +162,8 @@ public class FrmBill extends EntityNoName {
 		Map map = new Map("Sys_MapData", "单据属性");
 		map.Java_SetEnType(EnType.Sys);
 		map.Java_SetCodeStruct("4");
-
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
-		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单");
+		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单@8=开发者表单");
 		//map.AddDDLSysEnum(MapDataAttr.FrmModel, 0, "单据模板", true, true, "BillFrmModel", "@0=系统预置@1=用户新增");
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", true, false, 0, 500, 20, true);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20, true);

@@ -203,54 +203,43 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
-									   String saveToFileField) throws Exception {
-		SaveBigTextToDB(docs, tableName, tablePK, pkVal, saveToFileField,false);
-		return;
-	}
-	/**
-	 * 保存文件到数据库
-	 * @param tableName
-	 *            表名称
-	 * @param tablePK
-	 *            表主键
-	 * @param pkVal
-	 *            主键值
-	 * @param saveToFileField
-	 *            保存到字段
-	 * @throws Exception
-	 */
-	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
-			String saveToFileField,boolean isByte) throws Exception {
-		
-		if (isByte == false)
+			String saveToFileField) throws Exception {
+		//对于特殊的数据库进行判断.
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
-			try
-			{
-				String sql = "UPDATE " + tableName + " SET " + saveToFileField + "='" + docs + "' WHERE " + tablePK + "='" + pkVal + "'";
-				DBAccess.RunSQL(sql);
-				return;
-			}catch(Exception ex)
-			{
-				/*如果没有此列，就自动创建此列.*/
-				if (DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
-				{
-					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " text ";
-					BP.DA.DBAccess.RunSQL(sql);
-				}
-				throw ex;
-			}
+			SaveBytesToDB(docs.getBytes("UTF-8"), docs, tableName, tablePK, pkVal, saveToFileField);
+			return;
 		}
-		
-		SaveBytesToDB(docs.getBytes("UTF-8"), docs, tableName, tablePK, pkVal, saveToFileField);
-		return;
-		 
+		//其他数据库.
+		Paras ps = new Paras();
+		ps.SQL = "UPDATE " + tableName + " SET " + saveToFileField + "=" + SystemConfig.getAppCenterDBVarStr() + "MyDocs WHERE " + tablePK + "=" + SystemConfig.getAppCenterDBVarStr() + "PKVal";
+		ps.Add("MyDocs", docs);
+		ps.Add("PKVal", pkVal);
 
+		try
+		{
+			DBAccess.RunSQL(ps);
+		}
+		catch (Exception ex)
+		{
+			/*如果没有此列，就自动创建此列.*/
+			if (DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
+			{
+				String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " text ";
+				BP.DA.DBAccess.RunSQL(sql);
+				DBAccess.RunSQL(ps);
+				return;
+			}
+			throw ex;
+		}
 	}
 
 	/**
 	 * 从数据库里提取文件
 	 * 
-	 * @param fullFilePath
+	 * @param fullFileName
 	 *            要存储的文件路径
 	 * @param tableName
 	 *            表名
@@ -3080,7 +3069,7 @@ public class DBAccess {
 
 	/**
 	 * 从数据库里获得文本
-	 * 
+	 *
 	 * @param tableName
 	 *            表名
 	 * @param tablePK
@@ -3090,22 +3079,33 @@ public class DBAccess {
 	 * @param fileSaveField
 	 *            保存字段
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)throws Exception {
-		  return GetBigTextFromDB(tableName,tablePK,pkVal,fileSaveField,false);
-	}
-
-	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField,boolean isByte)throws Exception {
-		if (isByte == false){
+		//对于特殊的数据库进行判断.
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType() == DBType.DM) {
+			byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
+			if (byteFile == null) {
+				return null;
+			}
+			return new String(byteFile,"UTF-8");
+		}
+		//其他的数据库类型直接从 text字段去.
+		try {
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
-			return DBAccess.RunSQLReturnStringIsNull(strSQL,"");
+			return DBAccess.RunSQLReturnStringIsNull(strSQL, "");
+		}catch(Exception e){
+			if (DBAccess.IsExitsTableCol(tableName, fileSaveField) == false)
+			{
+				String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " text ";
+				DBAccess.RunSQL(sql);
+			}
+			String getSql = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + " = '" + pkVal + "'";
+			return DBAccess.RunSQLReturnString(getSql);
 		}
-		byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
-		if (byteFile == null) {
-			return null;
-		}
-		return new String(byteFile,"UTF-8");
+
 	}
 
 	/**

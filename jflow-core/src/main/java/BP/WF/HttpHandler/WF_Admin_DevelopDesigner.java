@@ -31,7 +31,7 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	 */
 	public final String Designer_Init()throws Exception
 	{
-		String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile",true);
+		String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
 		String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/";
 		File file = new File(filePath);
         if (file.exists() == false)
@@ -84,7 +84,7 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 			}
 
 			//保存到数据库中
-			BP.DA.DBAccess.SaveBigTextToDB(htmlCode, "Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile",true);
+			BP.DA.DBAccess.SaveBigTextToDB(htmlCode, "Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
 			return "保存成功";
 		}
 		return "保存成功.";
@@ -92,7 +92,7 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 
 	public final String Fields_Init()throws Exception
 	{
-		String html = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFrmID(), "HtmlTemplateFile",true);
+		String html = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFrmID(), "HtmlTemplateFile");
 		return html;
 	}
 

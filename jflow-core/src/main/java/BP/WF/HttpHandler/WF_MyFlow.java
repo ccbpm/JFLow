@@ -846,30 +846,26 @@ public class WF_MyFlow extends WebContralBase {
 			/**  修复会签状态不正确的问题，如果是会签状态，但是WF_GenerWorkerList中只有一个待办，则说明数据不正确 yuanlina*/
 			if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)
 			{
-				GenerWorkerLists gwls = new GenerWorkerLists();
-				String sql = "SELECT Count(*) From WF_GenerWorkerList Where WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND (IsPass=0 OR IsPass=90)";
-				if (DBAccess.RunSQLReturnValInt(sql) == 1 )
+				//协作模式
+				if (btnLab.getHuiQianRole() == HuiQianRole.Teamup)
 				{
-					//修改流程会签状态
-					gwf.setHuiQianTaskSta(HuiQianTaskSta.None);
-					isAskForOrHuiQian = false;
+					if (gwf.getHuiQianZhuChiRen().equals(WebUser.getNo() + ",") == false)
+						isAskForOrHuiQian = true;
 				}
-				else
-				{
-					if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader)
+				if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader){
+					if (btnLab.getHuiQianLeaderRole().getValue() == 0)
 					{
-						if (btnLab.getHuiQianLeaderRole().getValue() == 0)
-						{
-							if (gwf.getHuiQianZhuChiRen().equals(WebUser.getNo()) == false  && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
-								isAskForOrHuiQian = true;
-						}
-						else
-						{
-							//不是主持人
-							if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
-								isAskForOrHuiQian = true;
-						}
+						if (gwf.getHuiQianZhuChiRen().equals(WebUser.getNo()) == false  && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+							isAskForOrHuiQian = true;
 					}
+					else
+					{
+						//不是主持人
+						if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+							isAskForOrHuiQian = true;
+					}
+
+
 				}
 			}
 		}

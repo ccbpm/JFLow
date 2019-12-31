@@ -3630,11 +3630,10 @@ public class WF_WorkOpt extends WebContralBase
 		//判断当前是否是协作模式.
 		if (nd.getTodolistModel() == TodolistModel.Teamup && nd.getIsStartNode() == false)
 		{
-			String mysql = "SELECT COUNT(WORKID) AS Num FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND IsPass=0";
-			int num = DBAccess.RunSQLReturnValInt(mysql);
-			if (num != 1)
-			{
-				/* 如果不是最后一位，返回发送结果. */
+			if (gwf.getTodoEmps().contains(WebUser.getNo() + ",")) {
+				/* 说明我是主持人之一, 我就可以选择接受人,发送到下一个节点上去. */
+			} else {
+				/* 不是主持人就执行发送，返回发送结果. */
 				SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID());
 				return "info@" + objs.ToMsgOfHtml();
 			}

@@ -10091,7 +10091,7 @@ public class Dev2Interface
 		}
 
 		// 判断当前节点的已读回执.
-		if (nd.getReadReceipts() == ReadReceipts.None)
+		if (nd.getReadReceipts() == ReadReceipts.None|| nd.getIsStartNode() == true)
 		{
 			return;
 		}

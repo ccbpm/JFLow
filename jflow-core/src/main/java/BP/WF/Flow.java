@@ -5855,7 +5855,7 @@ public class Flow extends BP.En.EntityNoName {
 		nd.setStep(idx);
 
 		// 增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
-		nd.setCondModel(CondModel.ByLineCond); // 默认的发送方向.
+		nd.setCondModel(CondModel.SendButtonSileSelect); // 默认的发送方向.
 		nd.setHisDeliveryWay(DeliveryWay.BySelected); // 上一步发送人来选择.
 		nd.setFormType(NodeFormType.FoolForm); // 设置为傻瓜表单.
 

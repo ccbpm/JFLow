@@ -12,11 +12,9 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import BP.Difference.Handler.CommonUtils;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * JFlow上下文工具类
@@ -26,6 +24,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 
 	private static ContextHolderUtils contextHolder;
 	private static ApplicationContext springContext;
+
 	
 	// 数据源设置
 	private DataSource dataSource;
@@ -33,11 +32,29 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	// 第三方系统session中的用户编码，设置后将不用再调用登录方法，直接获取当前session进行登录。
 	private String userNoSessionKey;
 
-	public synchronized static ContextHolderUtils getInstance() {
+	private static ApplicationContext context;
+
+
+
+	public synchronized static ContextHolderUtils getInstance() throws Exception{
 		if (contextHolder == null) {
 			if(springContext == null){
-				ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:spring-context.xml");
+				//长沙获取上下文的方法
+				ServletContext servletContext=getRequest().getSession().getServletContext();
+				ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+				if(ctx == null)	{
+					try{
+						ctx = new ClassPathXmlApplicationContext("classpath:spring-context.xml");
+					}catch(Exception e){
+						ctx = null;
+					}
+
+				}
+				if(ctx == null)
+					throw new Exception("获取上下文ApplicationContext失败");
 				springContext = ctx;
+
+
 			}
 				
 			contextHolder = springContext.getBean(ContextHolderUtils.class);
@@ -54,7 +71,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 		return CommonUtils.getRequest();
 	}
 
-	public static HttpServletResponse getResponse() {
+	public static HttpServletResponse getResponse() throws Exception {
         return CommonUtils.getResponse();
 	}
 
@@ -73,7 +90,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 		return session;
 	}
 
-	public static void addCookie(String name, int expiry, String value) {
+	public static void addCookie(String name, int expiry, String value) throws Exception {
 
 		if(getRequest()!= null){
 			Cookie cookies[] = getRequest().getCookies() ;
@@ -109,7 +126,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 		return null;
 	}
 
-	public static void deleteCookie(String name) {
+	public static void deleteCookie(String name) throws Exception{
 		Cookie cookies[] = getRequest().getCookies();
 		if (cookies == null || name == null || name.length() == 0)
 			return;
@@ -122,7 +139,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 		}
 	}
 
-	public static void clearCookie() {
+	public static void clearCookie() throws Exception{
 		Cookie[] cookies = getRequest().getCookies();
 		if (null == cookies)
 			return;

@@ -7,11 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.http.Cookie;
-import javax.sound.sampled.Port;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-
 import BP.DA.DBAccess;
 import BP.DA.DataType;
 import BP.DA.Paras;
@@ -188,7 +185,7 @@ public class WebUser {
 	 
 	 @param em 人员
 	 @param lang 语言
-	 @param auth 授权人
+	 @param authNo 授权人
 	 @param isRememberMe 是否记录cookies
 	 @param IsRecSID 是否记录SID
 	 * @throws Exception 
@@ -586,7 +583,7 @@ public class WebUser {
 
 	/**
 	 * 检查权限控制
-	 * @param sid
+	 * @param SID
 	 * @return
 	 */
 	public static boolean CheckSID(String UserNo, String SID) {
@@ -985,27 +982,27 @@ public class WebUser {
 		SetSessionByKey("HisDeptsStr", value);
 	}
 	
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName, String authNo) throws UnsupportedEncodingException
+	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName, String authNo) throws Exception
 	{
 		SignInOfGener2017(userNo, userName, deptNo, deptName, authNo, null);
 	}
 
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName) throws UnsupportedEncodingException
+	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName) throws Exception
 	{
 		SignInOfGener2017(userNo, userName, deptNo, deptName, null, null);
 	}
 
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo) throws UnsupportedEncodingException
+	public static void SignInOfGener2017(String userNo, String userName, String deptNo) throws Exception
 	{
 		SignInOfGener2017(userNo, userName, deptNo, null, null, null);
 	}
 
-	public static void SignInOfGener2017(String userNo, String userName) throws UnsupportedEncodingException
+	public static void SignInOfGener2017(String userNo, String userName) throws Exception
 	{
 		SignInOfGener2017(userNo, userName, null, null, null, null);
 	}
 
-	public static void SignInOfGener2017(String userNo) throws UnsupportedEncodingException
+	public static void SignInOfGener2017(String userNo) throws Exception
 	{
 		SignInOfGener2017(userNo, null, null, null, null, null);
 	}
@@ -1020,7 +1017,7 @@ public class WebUser {
 	 * @param authName 名称
 	 * @throws UnsupportedEncodingException 
 	 */
-	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName, String authNo, String authName) throws UnsupportedEncodingException
+	public static void SignInOfGener2017(String userNo, String userName, String deptNo, String deptName, String authNo, String authName) throws Exception
 	{
 		if (ContextHolderUtils.getRequest() == null)
 		{

@@ -46,7 +46,7 @@ public class CommonUtils {
 		}
 	}
 
-	public static HttpServletResponse getResponse() {
+	public static HttpServletResponse getResponse() throws Exception {
 		try {
 			RequestAttributes ra = RequestContextHolder.currentRequestAttributes();
 			if (ra instanceof ServletRequestAttributes){
@@ -57,7 +57,7 @@ public class CommonUtils {
 			}
 			return null;
 		} catch (Exception e) {
-			return null;
+			throw new Exception("获取HttpServletResponse失败");
 		}
 	}
 }

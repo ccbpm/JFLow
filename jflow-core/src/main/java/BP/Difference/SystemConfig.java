@@ -4,9 +4,11 @@ import java.io.*;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import BP.DA.*;
 import BP.Difference.Helper;
+import BP.Tools.En3Des;
 import org.apache.commons.io.IOUtils;
 
 import BP.Difference.Handler.CommonUtils;
@@ -15,6 +17,7 @@ import BP.Sys.OSDBSrc;
 import BP.Sys.OSModel;
 import BP.Tools.StringHelper;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpRequest;
 import org.springframework.util.ResourceUtils;
 
@@ -27,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
  * 
  */
 public class SystemConfig {
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(SystemConfig.class);
+
 	private static boolean _IsBSsystem = true;
 
 	public static String getFTPServerType() {
@@ -409,7 +414,7 @@ public class SystemConfig {
 	 * 
 	 * @return
 	 */
-	public static String getPathOfWebApp() {
+	public static String getPathOfWebApp(){
 		HttpServletRequest request = Glo.getRequest();
 		if (SystemConfig.getIsBSsystem()) {
 			if (request == null || request.getSession() == null) {
@@ -420,6 +425,10 @@ public class SystemConfig {
 				if(new File(path).isDirectory()==true){
 					String filePath = path+"DataUser";
 					if(new File(filePath).exists()==false){
+						if(SystemConfig.getAppSettings().get("ServicePath") == null){
+							logger.error("请在配置文件jflow.properties中增加ServicePath配置项");
+							return "";
+						}
 						path = SystemConfig.getAppSettings().get("ServicePath").toString();
 						if(DataType.IsNullOrEmpty(path)==false)
 							return path;
@@ -506,7 +515,6 @@ public class SystemConfig {
 
 	/**
 	 * 到的路径.PageOfAfterAuthorizeLogin
-	 * 
 	 * @return
 	 */
 	public static String getPageOfAfterAuthorizeLogin() {

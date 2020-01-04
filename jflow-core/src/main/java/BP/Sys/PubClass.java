@@ -1028,7 +1028,7 @@ public class PubClass {
 	// HttpContext.Current.Response.Write(tw.toString());
 	// }
 
-	public static void OpenExcel(String filepath, String tempName) throws IOException {
+	public static void OpenExcel(String filepath, String tempName) throws Exception {
 		/*
 		 * tempName = HttpUtility.UrlEncode(tempName);
 		 * HttpContext.Current.Response.Charset = "GB2312";
@@ -1157,7 +1157,7 @@ public class PubClass {
 		out.close();
 	}
 
-	public static void DownloadFileByBuffer(String filepath, String tempName) throws IOException {
+	public static void DownloadFileByBuffer(String filepath, String tempName) throws Exception {
 
 		// 设置文件MIME类型
 		HttpServletResponse response = ContextHolderUtils.getResponse();
@@ -1220,7 +1220,7 @@ public class PubClass {
 
 	}
 
-	public static void OpenWordDocV2(String filepath, String tempName) throws IOException {
+	public static void OpenWordDocV2(String filepath, String tempName) throws Exception {
 		// 设置文件MIME类型
 		HttpServletResponse response = ContextHolderUtils.getResponse();
 		HttpServletRequest request = ContextHolderUtils.getRequest();
@@ -1283,7 +1283,7 @@ public class PubClass {
 	// {
 	// System.Web.HttpContext.Current.Response.Redirect(url,true);
 	// }
-	public static void Print(String url) {
+	public static void Print(String url) throws Exception{
 		try {
 			ContextHolderUtils.getResponse().getWriter()
 					.write("<script language='JavaScript'> var newWindow =window.open('" + url
@@ -1362,7 +1362,7 @@ public class PubClass {
 		return en;
 	}
 
-	public static void WinClose() {
+	public static void WinClose()throws Exception {
 		String clientscript = "<script language='javascript'> window.close(); </script>";
 		try {
 			ContextHolderUtils.getResponse().setContentType("text/html; charset=utf-8");
@@ -1464,7 +1464,7 @@ public class PubClass {
 		}
 	}
 
-	public static void ResponseWriteScript(String script) {
+	public static void ResponseWriteScript(String script)throws Exception {
 		script = "<script language=JavaScript> " + script + "</script>";
 		try {
 			ContextHolderUtils.getResponse().getWriter().write(script);

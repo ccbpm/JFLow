@@ -17,7 +17,7 @@ public class BaseController {
 		return ContextHolderUtils.getRequest();
 	}
 
-	public HttpServletResponse getResponse() {
+	public HttpServletResponse getResponse() throws Exception{
 		return ContextHolderUtils.getResponse();
 	}
 	

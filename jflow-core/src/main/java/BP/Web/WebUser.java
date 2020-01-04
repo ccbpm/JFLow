@@ -143,7 +143,7 @@ public class WebUser {
 			
 			if (SystemConfig.getIsBSsystem()) {
 				try {
-					int expiry = 60 * 60 * 24 * 2;
+					int expiry = 60 * 60 * 24 * 8;
 					ContextHolderUtils.addCookie("No", expiry, em.getNo());
 					ContextHolderUtils.addCookie("Name", expiry, URLEncoder.encode(em.getName(), "UTF-8"));
 					ContextHolderUtils.addCookie("IsRememberMe", expiry, isRememberMe ? "1" : "0");
@@ -300,7 +300,7 @@ public class WebUser {
 				ContextHolderUtils.deleteCookie("CCS");
 			}
 
-			int expiry = 60 * 60 * 24 * 2;
+			int expiry = 60 * 60 * 24 * 8;
 			ContextHolderUtils.addCookie("No", expiry, em.getNo());
 			ContextHolderUtils.addCookie("Name", expiry, URLEncoder.encode(em.getName(), "UTF-8"));
 
@@ -383,7 +383,7 @@ public class WebUser {
 			//WebUser.setUserWorkDev(null);
 			WebUser.setSysLang(null);
 			if (SystemConfig.getIsBSsystem()) {
-				int expiry = 60 * 60 * 24 * 2;
+				int expiry = 60 * 60 * 24 * 8;
 				ContextHolderUtils.addCookie("No", expiry, null);
 				ContextHolderUtils.addCookie("Name", expiry, null);
 				ContextHolderUtils.addCookie("IsRememberMe", expiry, null);
@@ -1094,7 +1094,7 @@ public class WebUser {
 				hc = new Cookie("CCS",null);
 			}
 
-			int expiry = 60 * 60 * 24 * 2;
+			int expiry = 60 * 60 * 24 * 8;
 			ContextHolderUtils.addCookie("No", expiry, userNo);
 			ContextHolderUtils.addCookie("Name", expiry, URLEncoder.encode(userName, "UTF-8"));
 

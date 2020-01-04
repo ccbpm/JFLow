@@ -22,8 +22,8 @@ UE.leipiFormDesignUrl = 'formdesign';
 UE.plugins['impfrmfields'] = function () {
     var me = this, thePlugins = 'impfrmfields';
     var frmID = pageParam.fk_mapdata;
-    var W =   document.body.clientWidth - 120;
-    var H =  document.body.clientHeight - 220;
+    var W = document.body.clientWidth - 120;
+    var H = document.body.clientHeight - 220;
     me.commands[thePlugins] = {
         execCommand: function (method, dataType) {
             var dialog = new UE.ui.Dialog({
@@ -41,7 +41,7 @@ UE.plugins['impfrmfields'] = function () {
     };
 }
 //插入回收站字段.
-UE.plugins['impfrmfields'] = function () {
+UE.plugins['impfrm'] = function () {
     var me = this, thePlugins = 'impfrm';
     var frmID = pageParam.fk_mapdata;
     var W = document.body.clientWidth - 120;
@@ -142,11 +142,17 @@ UE.plugins['text'] = function () {
         }
     });
     me.addListener('keydown', function (t, evt) {
-        switch (evt.keyCode) {
-            case 46:
-                eval(baidu.editor.utils.html(popup.formatHtml('$$._delete()')));
-                break;
-            default:
+        evt = evt || window.event;
+        var el = evt.target || evt.srcElement;
+        var leipiPlugins = el.getAttribute('leipiplugins');
+        if (/input/ig.test(el.tagName) && leipiPlugins == thePlugins) {
+            switch (evt.keyCode) {
+                case 46:
+                    popup.anchorEl = el;
+                    eval(baidu.editor.utils.html(popup.formatHtml('$$._delete()')));
+                    break;
+                default:
+            }
         }
     });
 };
@@ -622,12 +628,14 @@ UE.plugins['select'] = function () {
     var me = this, thePlugins = 'select';
     me.commands[thePlugins] = {
         execCommand: function () {
+            var W = document.body.clientWidth - 120;
+            var H = document.body.clientHeight - 120;
             var dialog = new UE.ui.Dialog({
                 iframeUrl: './DialogCtr/SFList.htm?FK_MapData=' + pageParam.fk_mapdata,
                 name: thePlugins,
                 editor: this,
                 title: '下拉菜单',
-                cssRules: "width:590px;height:370px;",
+                cssRules: "width:" + W + "px;height:" + H + "px;",
                 buttons: [
                     {
                         className: 'edui-okbutton',
@@ -1679,6 +1687,11 @@ pageParam.fk_mapdata = GetQueryString("FK_MapData");
 //保存表单的htm代码
 function SaveForm() {
 
+    //清空MapData的缓存
+    var en = new Entity("BP.Sys.MapData", pageParam.fk_mapdata);
+    en.SetPKVal(pageParam.fk_mapdata);
+    en.DoMethodReturnString("ClearCash");
+
     if (leipiEditor.queryCommandState('source'))
         leipiEditor.execCommand('source');//切换到编辑模式才提交，否则有bug
 
@@ -1831,7 +1844,7 @@ function SaveForm() {
         $.each(enums, function (idx, obj) {
 
             if (leipiEditor.document.getElementById("RB_" + keyOfEn + "_" + obj.IntKey) == null)
-                $(tag).append('<input type="radio" value="0" id="RB_' + keyOfEn + '_' + obj.IntKey + '" name="RB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-type="Radio" data-bindkey="' + uiBindKey + '" class="form-control" style="width: 15px; height: 15px;">' + obj.Lab);
+                $(tag).append('<input type="radio" value="' + obj.IntKey + '" id="RB_' + keyOfEn + '_' + obj.IntKey + '" name="RB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-type="Radio" data-bindkey="' + uiBindKey + '" class="form-control" style="width: 15px; height: 15px;">' + obj.Lab);
         });
 
     }

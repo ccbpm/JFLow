@@ -697,10 +697,12 @@ public class MapData extends EntityNoName
 	*/
 	public final void ClearCash() throws Exception
 	{
-		  //zhoupeng add2020.1.4
+		  //zhoupeng  add2020.1.4
         BP.DA.Cash.getSQL_Cash().remove(this.getNo());
         BP.DA.Cash.getMap_Cash().remove(this.getNo());        
 		BP.DA.CashFrmTemplate.Remove(this.getNo());
+		
+		BP.DA.CashEntity.Delete(this.toString(), this.getNo());
 		
 		CleanObject();
 	}

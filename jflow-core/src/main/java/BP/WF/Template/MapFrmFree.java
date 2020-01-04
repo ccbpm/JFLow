@@ -408,6 +408,8 @@ public class MapFrmFree extends EntityNoName
 
 			this.setFromEventEntity(feb.toString());
 		}
+		
+		
 
 		return super.beforeUpdate();
 	}

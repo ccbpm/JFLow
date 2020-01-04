@@ -1382,9 +1382,10 @@ public class CCFormAPI {
 	 * @throws Exception
 	 */
 	public static void AfterFrmEditAction(String frmID) throws Exception {
-		BP.DA.CashFrmTemplate.Remove(frmID);
-		MapData mapdata = new MapData(frmID);
-		mapdata.CleanObject();
+		 
+		//删除缓存.
+		MapData md = new MapData(frmID);
+		md.ClearCash();
 		return;
 	}
 

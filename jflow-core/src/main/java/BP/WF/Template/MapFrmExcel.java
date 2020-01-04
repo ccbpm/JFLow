@@ -281,24 +281,7 @@ public class MapFrmExcel extends EntityNoName
 		rm.RefAttrLinkLabel = "导出到xml";
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
-
-
-
-
-			//rm = new RefMethod();
-			//rm.Title = "节点表单组件"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoNodeFrmCompent";
-			//rm.Visable = true;
-			//rm.RefAttrLinkLabel = "节点表单组件";
-			//rm.RefMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			//rm.Icon = ../../Img/Components.png";
-			//map.AddRefMethod(rm);
-
-			///#endregion 方法 - 基本功能.
-
-
-			///#region 高级设置.
+ 
 
 			//带有参数的方法.
 		rm = new RefMethod();

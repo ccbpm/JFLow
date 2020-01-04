@@ -386,6 +386,8 @@ public class MapFrmFool extends EntityNoName
 	@Override
 	protected boolean beforeUpdate() throws NumberFormatException, Exception
 	{
+		
+				
 		//注册事件表单实体.
 		//BP.Sys.FormEventBase feb = BP.Sys.Glo.GetFormEventBaseByEnName(this.getNo());
 		//if (feb == null)
@@ -395,6 +397,10 @@ public class MapFrmFool extends EntityNoName
 		//    this.FromEventEntity = feb.ToString();
 		if (this.getNodeID() != 0)
 			this.setFK_FormTree("");
+		
+		//调用frmEditAction, 完成其他的操作.
+		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getNo());
+		
 		return super.beforeUpdate();
 	}
 	@Override

@@ -594,7 +594,7 @@ public class Attrs extends ArrayList<Attr>
 	/**
 	 * 下一个Attr 是否是 Doc 类型.
 	 * 
-	 * @param key
+	 * @param CurrentKey
 	 * @return
 	 */
 	public final Attr NextAttr(String CurrentKey)
@@ -798,6 +798,9 @@ public class Attrs extends ArrayList<Attr>
 	
 	private void AddRefAttrText(Attr attr)
 	{
+		//枚举多选
+		if (attr.getMyFieldType() == FieldType.Enum && attr.getMyDataType() == DataType.AppString)
+			return;
 		if (attr.getMyFieldType() == FieldType.FK
 				|| attr.getMyFieldType() == FieldType.Enum
 				|| attr.getMyFieldType() == FieldType.PKEnum

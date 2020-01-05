@@ -238,6 +238,13 @@ public class MapAttrString extends EntityMyPK
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
+		rm = new RefMethod();
+		rm.GroupName = "输入内容多选";
+		rm.Title = "高级快速录入";
+		rm.ClassMethodName = this.toString() + ".DoFastInput()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
 			///#endregion 输入多选
 
 
@@ -491,6 +498,10 @@ public class MapAttrString extends EntityMyPK
 	public final String DoMultipleChoiceSearch() throws Exception
 	{
 		return "../../Admin/FoolFormDesigner/MapExt/MultipleChoiceSearch.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&m=s";
+	}
+
+	public final String DoFastInput() throws Exception{
+		return "../../Admin/FoolFormDesigner/MapExt/MultipleInputSearch.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&m=s";
 	}
 	/** 
 	 超链接

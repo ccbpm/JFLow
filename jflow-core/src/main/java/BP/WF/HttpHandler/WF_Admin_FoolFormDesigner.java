@@ -333,8 +333,17 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		attr.setGroupID(this.GetRequestValInt("GroupFeid"));
 
-		attr.setUIContralType(UIContralType.DDL);
-		attr.setMyDataType (DataType.AppInt);
+		int uiContralType = this.GetRequestValInt("UIContralType");
+
+		if (uiContralType != 0)
+			attr.setUIContralType(UIContralType.forValue(uiContralType));
+		else
+			attr.setUIContralType(UIContralType.DDL);
+		if (attr.getUIContralType() == UIContralType.CheckBok)
+			attr.setMyDataType(DataType.AppString);
+		else
+			attr.setMyDataType (DataType.AppInt);
+
 		attr.setLGType(FieldTypeS.Enum);
 
 		SysEnumMain sem = new SysEnumMain();
@@ -1071,7 +1080,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		String newNo = DataType.ParseStringForNo(no, 20);
 		String newName = DataType.ParseStringForName(name, 20);
 		int fType = Integer.parseInt(this.GetRequestVal("FType"));
-
+		boolean isSupperText = this.GetRequestValBoolen("IsSupperText");
 		MapAttrs attrs = new MapAttrs();
 		int i = attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.KeyOfEn, newNo);
 		if (i != 0)
@@ -1127,6 +1136,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		if (attr.getMyDataType() == DataType.AppString)
 		{
+			attr.setIsSupperText(isSupperText);
 			attr.setUIWidth(100);
 			attr.setUIHeight(23);
 			attr.setUIVisible(true);

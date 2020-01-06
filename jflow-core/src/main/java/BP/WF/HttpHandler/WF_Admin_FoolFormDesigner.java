@@ -5,6 +5,7 @@ import BP.Difference.ContextHolderUtils;
 import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.En.*;
+import BP.Sys.FrmUI.MapAttrString;
 import BP.Tools.*;
 import BP.WF.*;
 import BP.Sys.*;
@@ -1136,7 +1137,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		if (attr.getMyDataType() == DataType.AppString)
 		{
-			attr.setIsSupperText(isSupperText);
+
 			attr.setUIWidth(100);
 			attr.setUIHeight(23);
 			attr.setUIVisible(true);
@@ -1147,6 +1148,12 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMyDataType(DataType.AppString);
 			attr.setUIContralType(UIContralType.TB);
 			attr.Insert();
+			if (isSupperText == true)
+			{
+				MapAttrString attrString = new MapAttrString(attr.getMyPK());
+				attrString.setIsSupperText(true);
+				attrString.Update();
+			}
 			return "url@../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&MyPK=" + attr.getMyPK();
 		}
 

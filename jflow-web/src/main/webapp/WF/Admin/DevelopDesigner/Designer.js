@@ -1541,7 +1541,7 @@ function ExtHandWriting() {
     mapAttr.Name = name;
     mapAttr.MyDataType = 1;
     mapAttr.LGType = 0;
-    mapAttr.ColSpan = 1; // 
+    mapAttr.ColSpan = 1; //
     mapAttr.UIWidth = 150;
     mapAttr.UIHeight = 170;
     mapAttr.Insert(); //插入字段.
@@ -1713,7 +1713,7 @@ function ExtMap() {
     mapAttr.Name = name;
     mapAttr.MyDataType = 1;
     mapAttr.LGType = 0;
-    mapAttr.ColSpan = 1; // 
+    mapAttr.ColSpan = 1; //
     mapAttr.UIWidth = 800;//宽度
     mapAttr.UIHeight = 500;//高度
     mapAttr.Insert(); //插入字段.
@@ -1727,7 +1727,7 @@ function ExtMap() {
     mapAttr1.Name = "AtPara";
     mapAttr1.MyDataType = 1;
     mapAttr1.LGType = 0;
-    mapAttr1.ColSpan = 1; // 
+    mapAttr1.ColSpan = 1; //
     mapAttr1.UIWidth = 100;
     mapAttr1.UIHeight = 23;
     mapAttr1.Insert(); //插入字段
@@ -1856,55 +1856,58 @@ function SaveForm() {
             var keyOfEn = tag.getAttribute("data-key");
             if (dataType == "Radio")
                 keyOfEn = $($(tag).parent()[0]).parent()[0].getAttribute("data-key");//获取父级的data-key
-            var mapAttr = mapAttrs[pageParam.fk_mapdata + "_" + keyOfEn];
-            if (mapAttr == undefined || mapAttr == null) {
-                if (dataType == "Radio") {
-                    var uiBindKey = tag.getAttribute("data-bindKey");
-                    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
-                    handler.AddPara("KeyOfEn", keyOfEn);
-                    handler.AddPara("FK_MapData", pageParam.fk_mapdata);
-                    handler.AddPara("EnumKey", uiBindKey);
-                    var data = handler.DoMethodReturnString("SysEnumList_SaveEnumField");
-                    if (data.indexOf("err@") >= 0) {
-                        alert(data);
-                        return;
+            if (keyOfEn != null && keyOfEn != undefined && keyOfEn != "") {
+                var mapAttr = mapAttrs[pageParam.fk_mapdata + "_" + keyOfEn];
+                if ((mapAttr == undefined || mapAttr == null) && keyOfEn != "" && uiBindKey != "") {
+                    if (dataType == "Radio") {
+                        var uiBindKey = tag.getAttribute("data-bindKey");
+                        var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
+                        handler.AddPara("KeyOfEn", keyOfEn);
+                        handler.AddPara("FK_MapData", pageParam.fk_mapdata);
+                        handler.AddPara("EnumKey", uiBindKey);
+                        var data = handler.DoMethodReturnString("SysEnumList_SaveEnumField");
+                        if (data.indexOf("err@") >= 0) {
+                            alert(data);
+                            return;
+                        }
                     }
-                }
-                var name = tag.getAttribute("data-name");
-                mapAttr = new Entity("BP.Sys.MapAttr");
+                    var name = tag.getAttribute("data-name");
+                    mapAttr = new Entity("BP.Sys.MapAttr");
 
-                mapAttr.MyPK = pageParam.fk_mapdata + "_" + keyOfEn;
-                mapAttr.FK_MapData = pageParam.fk_mapdata;
-                mapAttr.KeyOfEn = keyOfEn;
-                mapAttr.Name = name;
-                if (dataType == "Text")
-                    dataType = 1;
-                if (dataType == "Int")
-                    dataType = 2;
-                if (dataType == "Float")
-                    dataType = 3
-                if (dataType == "Money")
-                    dataType = 8;
-                if (dataType == "Date")
-                    dataType = 6;
-                if (dataType == "DateTime")
-                    dataType = 7;
-                if (dataType == "CheckBox")
-                    dataType = 4;
-                mapAttr.MyDataType = dataType;
-                if (dataType == 4) {
-                    mapAttr.UIContralType = 2//checkbox
-                    mapAttr.LGType = 0;
+                    mapAttr.MyPK = pageParam.fk_mapdata + "_" + keyOfEn;
+                    mapAttr.FK_MapData = pageParam.fk_mapdata;
+                    mapAttr.KeyOfEn = keyOfEn;
+                    mapAttr.Name = name;
+                    if (dataType == "Text")
+                        dataType = 1;
+                    if (dataType == "Int")
+                        dataType = 2;
+                    if (dataType == "Float")
+                        dataType = 3
+                    if (dataType == "Money")
+                        dataType = 8;
+                    if (dataType == "Date")
+                        dataType = 6;
+                    if (dataType == "DateTime")
+                        dataType = 7;
+                    if (dataType == "CheckBox")
+                        dataType = 4;
+                    mapAttr.MyDataType = dataType;
+                    if (dataType == 4) {
+                        mapAttr.UIContralType = 2//checkbox
+                        mapAttr.LGType = 0;
+                    }
+                    else if (dataType == "Radio" || dataType == "Select") {
+                        mapAttr.UIContralType = 1;//下拉框
+                        mapAttr.LGType = 1;//枚举
+                    } else {
+                        mapAttr.UIContralType = 0;//TB
+                        mapAttr.LGType = 0;
+                    }
+                    mapAttr.Insert();
                 }
-                else if (dataType == "Radio" || dataType == "Select") {
-                    mapAttr.UIContralType = 1;//下拉框
-                    mapAttr.LGType = 1;//枚举
-                } else {
-                    mapAttr.UIContralType = 0;//TB
-                    mapAttr.LGType = 0;
-                }
-                mapAttr.Insert();
             }
+
 
         }
     });

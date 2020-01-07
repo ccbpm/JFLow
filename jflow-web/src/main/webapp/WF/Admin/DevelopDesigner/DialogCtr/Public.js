@@ -6,6 +6,9 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
     //文本
     if (dataType == "Text")
         _Html = "<input type='text' value= ''  id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  class='form-control' leipiplugins='text' style='width:120px'/>";
+    if (dataType == "Textarea") {
+        _Html = "<textarea id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  leipiplugins='textarea' value='' orgrich='0' orgfontsize='12' orgwidth='600' orgheight='80' style='font-size: 12px; width: 528px; height: 59px; margin: 0px;'></textarea>";
+    }
     //int型
     if (dataType == "Int")
         _Html = "<input type='text' value= '' id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "'  data-name='" + name + "' data-type='" + dataType + "'  class='form-control' leipiplugins='text' style='width:120px'/>";
@@ -20,15 +23,15 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
         _Html = "<input type='text' value= '' id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  class='form-control' leipiplugins='text' style='width:120px'/>";
     //日期
     if (dataType == "Date")
-        _Html = '<input type="text" value= ""  id="TB_' + keyOfEn + '" name="TB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-name="' + name + '" data-type="' + dataType + '"  class="form-control Wdate" onfocus="WdatePicker({dateFmt:\'yyyy-MM-dd\'})"  leipiplugins="text" style="width:120px"/>';
+        _Html = '<input type="text" value= ""  id="TB_' + keyOfEn + '" name="TB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-name="' + name + '" data-type="' + dataType + '"  class="form-control Wdate"   leipiplugins="text" style="width:120px"/>';
     //时间
     if (dataType == "DateTime")
-        _Html = '<input type="text" value= ""  id="TB_' + keyOfEn + '" name="TB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-name="' + name + '" data-type="' + dataType + '"  class="form-control Wdate" onfocus="WdatePicker({dateFmt:\'yyyy-MM-dd HH:mm:ss\'})" leipiplugins="text" style="width:160px"/>';
+        _Html = '<input type="text" value= ""  id="TB_' + keyOfEn + '" name="TB_' + keyOfEn + '" data-key="' + keyOfEn + '" data-name="' + name + '" data-type="' + dataType + '"  class="form-control Wdate"  leipiplugins="text" style="width:160px"/>';
     //复选框
     if (dataType == "CheckBox")
         _Html = "<input type='CheckBox' value= '' id='CB_" + keyOfEn + "' name='CB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  leipiplugins='text'/>&nbsp;&nbsp;" + name ;
 
-    if (dataType == "Enum") {
+    if (dataType == "Radio") {
         //获取枚举值
         var enums = new Entities("BP.Sys.SysEnums");
         enums.Retrieve("EnumKey", uiBindKey);
@@ -115,6 +118,9 @@ function GetDataType(mapAttr) {
     if (mapAttr.UIContralType == 0) {
         //控件数据类型
         if (mapAttr.MyDataType == "1") {
+            if (mapAttr.IsSupperText == 1)
+                return "Textarea";
+
             return"Text";
         } else if (mapAttr.MyDataType == "2") {
             return "Int";
@@ -144,7 +150,7 @@ function GetDataType(mapAttr) {
             return "Select";
         }
     }  else if (mapAttr.UIContralType == 3) {//单选框
-        return "Enum";
+        return "Radio";
     }
 
     if (mapAttr.MyDataType == 1) {

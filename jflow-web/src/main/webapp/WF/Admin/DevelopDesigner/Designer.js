@@ -199,7 +199,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata) {
         return;
     }
 
-    
+
     if (shap == 'Date') {
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&PKVal=' + fk_mapdata + '_' + mypk;
         CCForm_ShowDialog(url, '字段Date属性');
@@ -514,6 +514,8 @@ UE.plugins['enum'] = function () {
         _delete: function () {
             if (window.confirm('确认删除该控件吗？')) {
                 //在Sys_MapAttr、Sys_MapExt中删除除控件属性
+                if (this.anchorEl.tagName.toLowerCase() == "label")
+                    this.anchorEl = this.anchorEl.parentNode;
                 var keyOfEn = this.anchorEl.getAttribute("data-key");
                 if (keyOfEn == null || keyOfEn == undefined) {
                     alert('字段没有获取到，请联系管理员');
@@ -886,7 +888,7 @@ UE.plugins['qrcode'] = function () {
         },
         _delete: function () {
             if (window.confirm('确认删除该控件吗？')) {
-               
+
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();
@@ -980,7 +982,7 @@ UE.plugins['dtl'] = function () {
                 }
                 var mapDtl = new Entity("BP.Sys.MapDtl", no);
                 mapDtl.Delete();
-               
+
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();

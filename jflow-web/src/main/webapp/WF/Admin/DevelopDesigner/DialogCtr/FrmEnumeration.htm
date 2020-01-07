@@ -39,10 +39,11 @@
             for (var i = 0; i < enumMains.length; i++) {
 
                 var sysEnumMain = enumMains[i];
+                var cfgVal = sysEnumMain.CfgVal.replace(/ /g, "[]");
 
                 html += "<tr>";
                 html += "<td class=Idx>" + i + "</td>";
-                html += "<td><label onclick=getTr('" + sysEnumMain.No + "','" + sysEnumMain.Name + "','" + sysEnumMain.CfgVal + "'," + i + ") ><input type=Radio name='aa' />" + sysEnumMain.No + "</label></td>";
+                html += "<td><label onclick=getTr('" + sysEnumMain.No + "','" + sysEnumMain.Name + "','" + cfgVal + "'," + i + ") ><input type=Radio name='aa' />" + sysEnumMain.No + "</label></td>";
                 html += "<td>" + sysEnumMain.Name + "</td>";
                 html += "<td><a href=\"javascript:Edit('" + sysEnumMain.No + "');\">" + sysEnumMain.CfgVal + "</a></td>";
 
@@ -59,6 +60,7 @@
 
         var rownum = -1;
         function getTr(No, Name, CfgVal, i) {
+            CfgVal = CfgVal.replace(/[]/g, " ");
             $('#TB_Name').val(Name);
             $('#TB_KeyOfEn').val(No);
             $('#TB_UIBindKey').val(No);
@@ -200,15 +202,15 @@
         };
 
 
-</script>
+    </script>
 </head>
 <body>
-        
 
-        <div id="table"></div>
-                
-        <table style="width:100%;">
-        <tr>
+
+<div id="table"></div>
+
+<table style="width:100%;">
+    <tr>
         <td>中文名 </td>
 
         <td><input id="TB_Name" class="easyui-textbox" style="width: 150px" /> </td>
@@ -220,15 +222,15 @@
         <td><input id="CB_Generate_Tags" type="checkbox" checked="checked" /><label for="CB_Generate_Tags">生成标签</label> </td>
 
         <td> <input type="button" id="Btn_New" class="easyui-button" onclick="NewEnum()" value="新建枚举" /> </td>
-        </tr>
-        </table>
-           
-                             
-        <input id="TB_UIBindKey" class="easyui-textbox" style="width: 200px; visibility:hidden" />
-        <input id="TB_Vals" class="easyui-textbox" style="width: 200px; visibility:hidden" />
+    </tr>
+</table>
 
-                          
-                           
-             
+
+<input id="TB_UIBindKey" class="easyui-textbox" style="width: 200px; visibility:hidden" />
+<input id="TB_Vals" class="easyui-textbox" style="width: 200px; visibility:hidden" />
+
+
+
+
 </body>
 </html>

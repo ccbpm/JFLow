@@ -1077,7 +1077,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			no = "No1";
 		}
 
-		String name = this.GetRequestVal("Name");
+		String name = this.GetRequestVal("name");
 		String newNo = DataType.ParseStringForNo(no, 20);
 		String newName = DataType.ParseStringForName(name, 20);
 		int fType = Integer.parseInt(this.GetRequestVal("FType"));

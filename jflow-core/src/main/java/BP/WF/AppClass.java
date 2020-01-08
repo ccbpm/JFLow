@@ -229,8 +229,10 @@ public class AppClass
 
 			//获得审核信息.
 
+			String fields="A.MyPK,A.ActionType,A.ActionTypeText,A.FID,A.WorkID,A.NDFrom,A.NDFromT,A.NDTo,A.NDToT,A.EmpFrom,A.EmpFromT,A.EmpTo,A.EmpToT,A.RDT,A.WorkTimeSpan,A.Msg,A.NodeData,A.Tag,A.Exer";
+			
 			//历史执行人. 
-			String sql = "SELECT C.Name AS DeptName, A.* FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workid + " AND (A.ActionType=" + ActionType.WorkCheck.getValue() + ") AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
+			String sql = "SELECT C.Name AS DeptName,"+fields+" FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track A, Port_Emp B, Port_Dept C WHERE A.WorkID=" + workid + " AND (A.ActionType=" + ActionType.WorkCheck.getValue() + ") AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ORDER BY A.RDT DESC";
 			DataTable dtTrack = BP.DA.DBAccess.RunSQLReturnTable(sql);
 			dtTrack.TableName = "Track";
 			ds.Tables.add(dtTrack);

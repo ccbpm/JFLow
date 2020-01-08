@@ -4,7 +4,12 @@
 2. 这里方法大多是执行后，返回json ,可以被页面控件调用. 
 */
 function funDemo() {
-    alert("我被执行了。");
+   alert("我被执行了。");
+    return true;
+}
+
+function sendbeforea(){
+	return true;
 }
 
 function setShuZhi3Value(){

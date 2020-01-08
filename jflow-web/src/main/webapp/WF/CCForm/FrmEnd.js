@@ -173,13 +173,13 @@ function InitFoolLink(mapAttr, frmType) {
                 var ctrl = $("#Td_" + mapAttr.KeyOfEn);
                 if (ctrl.length > 0) {
                     if (ctrl.parent('tr').css('display') == "none")
-                        continue;
+                        return;
                 }
 
                 //初始化页面的值
                 var nowKey = ddl.val();
                 if (nowKey == null || nowKey == undefined || nowKey == "")
-                    continue;
+                    return;
 
                 setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey,frmType);
 
@@ -189,12 +189,12 @@ function InitFoolLink(mapAttr, frmType) {
                 var ctrl = $("#Td_" + mapAttr.KeyOfEn);
                 if (ctrl.length > 0) {
                     if (ctrl.parent('tr').css('display') == "none")
-                        continue;
+                    	return;
                 }
 
                 var nowKey = $('input[name="RB_' + mapAttr.KeyOfEn + '"]:checked').val();
                 if (nowKey == null || nowKey == undefined || nowKey == "")
-                    continue;
+                	return;
                 setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey, frmType);
 
             }
@@ -222,12 +222,12 @@ function InitDevelopLink(mapAttr, frmType) {
                 //如果现在是隐藏状态就不可以设置
                 if (ctrl.length > 0) {
                     if (ctrl.css('display') == "none")
-                        continue;
+                        return;
                 }
                 //初始化页面的值
                 var nowKey = ddl.val();
                 if (nowKey == null || nowKey == undefined || nowKey == "")
-                    continue;
+                    return;
 
                 setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey, frmType);
 
@@ -237,12 +237,12 @@ function InitDevelopLink(mapAttr, frmType) {
                 var ctrl = $("#SR_" + mapAttr.KeyOfEn);
                 if (ctrl.length > 0) {
                     if (ctrl.parent('tr').css('display') == "none")
-                        continue;
+                        return;
                 }
 
                 var nowKey = $('input[name="RB_' + mapAttr.KeyOfEn + '"]:checked').val();
                 if (nowKey == null || nowKey == undefined || nowKey == "")
-                    continue;
+                    return;
                 setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey, frmType);
 
             }

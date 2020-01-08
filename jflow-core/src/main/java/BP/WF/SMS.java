@@ -1,7 +1,6 @@
 package BP.WF;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -13,14 +12,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import BP.DA.*;
-import BP.Difference.SystemConfig;
 import BP.Difference.Handler.PortalInterface;
 import BP.En.*;
-import BP.Tools.HttpClientUtil;
+import BP.GPM.Emp;
 import BP.Web.*;
 import BP.Sys.*;
-import BP.WF.WeiXin.DingDing;
-import BP.WF.WeiXin.WeiXin;
+import BP.Tools.HttpClientUtil;
+import BP.WF.Port.WFEmp;
 
 /** 
  消息
@@ -51,6 +49,7 @@ public class SMS extends EntityMyPK
 		sms.setSendToEmpNo(userNo);
 
 		sms.setTitle(msgTitle);
+		
 		sms.setDocOfEmail(msgDoc);
 
 		sms.setSender(WebUser.getNo());
@@ -337,55 +336,59 @@ public class SMS extends EntityMyPK
 	 @param mailTitle
 	 @param mailDoc
 	 @return 
+	 * @throws Exception 
 	*/
-	public static boolean SendEmailNowAsync(String mail, String mailTitle, String mailDoc)
+	public static void SendEmailNowAsync(String mail, String mailTitle, String mailDoc,String sendTo) throws Exception
 	{
-		new Thread(new Runnable(){    
-	         public void run(){  
-	        	 try{
-	        	 if(DataType.IsNullOrEmpty(mail) == true) 
-	    			 return;
-	    		//邮件地址.return
-	            final String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
+		Emp emp=new Emp(sendTo);
+   		
+		//邮件地址.return
+       final String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
 
-	           final String emailPassword = SystemConfig.GetValByKey("SendEmailPass", "ccbpm123");
-	    		// 第一步：配置javax.mail.Session对象  
-	    		Properties props = new Properties(); 
-	    		props.setProperty("mail.transport.protocol", "smtp"); 
-	    		props.put("mail.smtp.host",SystemConfig.GetValByKey("SendEmailHost", "smtp.tom.com"));//发邮件地址
-	    		props.put("mail.smtp.port",SystemConfig.GetValByKeyInt("SendEmailPort", 25)); //端口号
-	    		props.put("mail.smtp.auth","true");//使用 STARTTLS安全连接  
-	    		Authenticator auth = new Authenticator() {
-	    			public PasswordAuthentication getPasswordAuthentication(){
-	    			    return new PasswordAuthentication(emailAddr,emailPassword);
-	    			 }
-	    		};
+      final String emailPassword = SystemConfig.getAppSettings().get("SendEmailPass").toString();
+		// 第一步：配置javax.mail.Session对象  
+		Properties props = new Properties(); 
+		props.setProperty("mail.transport.protocol", "smtp"); 
+		props.put("mail.smtp.host",SystemConfig.GetValByKey("SendEmailHost", "smtp.tom.com"));//发邮件地址
+		props.put("mail.smtp.port",SystemConfig.GetValByKeyInt("SendEmailPort", 25)); //端口号
+		props.put("mail.smtp.auth","true");//使用 STARTTLS安全连接  
+		
+		BP.Sys.Glo.WriteUserLog("EM", "emailAddr", emailAddr);
 
-	    		Session mailSession = Session.getInstance(props,auth);
-	    		InternetAddress fromAddress = new InternetAddress(emailAddr);
-	            InternetAddress toAddress = new InternetAddress(mail);
+		Authenticator auth = new Authenticator() {
+			public PasswordAuthentication getPasswordAuthentication(){
+			    return new PasswordAuthentication(emailAddr,emailPassword);
+			 }
+		};
 
-	    		// 3. 创建一封邮件
-	            MimeMessage message = new MimeMessage(mailSession);
-	            message.setFrom(fromAddress);
-	            message.addRecipient(RecipientType.TO, toAddress);
-	            message.setSentDate(BP.Tools.DateUtils.currentDate());
-	            message.setSubject(mailTitle);
-	            message.setText(mailDoc);
-	            
-	            //4.发送Email,
-	            Transport transport = mailSession.getTransport("smtp");//定义发送协议
-	    		//登录邮箱
-	            transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
-	            
-	            return ;
-	        	 }catch(Exception e){
-	        		 
-	        	 }
-	         }
-				
-		}).start();
-		return true;
+		Session mailSession = Session.getInstance(props,auth);
+		InternetAddress fromAddress = new InternetAddress(emailAddr);
+       InternetAddress toAddress = new InternetAddress(emp.getEmail());
+       
+		BP.Sys.Glo.WriteUserLog("EM", "toAddress", emp.getEmail());
+
+		// 3. 创建一封邮件
+       MimeMessage message = new MimeMessage(mailSession);
+       message.setFrom(fromAddress);
+       message.addRecipient(RecipientType.TO, toAddress);
+       message.setSentDate(BP.Tools.DateUtils.currentDate());
+       message.setSubject(mailTitle);
+       message.setText(mailDoc);
+       
+       //4.发送Email,
+       Transport transport = mailSession.getTransport("smtp");//定义发送协议
+       BP.Sys.Glo.WriteUserLog("EM", "transport", "定义发送协议");
+		//登录邮箱
+       transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
+       BP.Sys.Glo.WriteUserLog("EM", "send", "发送成功");
+		//try
+		//{
+			
+		//}
+		//catch(Exception ex){
+			
+		//}
+		//return true;
 	}
 	/** 
 	 插入之后执行的方法.
@@ -402,17 +405,28 @@ public class SMS extends EntityMyPK
 				return;
 
 			//发送邮件
-			if (this.getPushModel().contains("Email") == true && DataType.IsNullOrEmpty(this.getEmail()) == false)
-				SendEmailNowAsync(this.getEmail(), this.getTitle(), this.getDocOfEmail());
-			 //发送短消息 调用接口
+			if (this.getPushModel().contains("Email") == true)
+				SendEmailNowAsync(this.getEmail(), this.getTitle(), this.getDocOfEmail(),this.getSendToEmpNo());
+			
+			//发送短消息 调用接口
 
-			String messageUrl = BP.Difference.SystemConfig.getHandlerOfMessage();
+			String messageUrl = BP.Sys.SystemConfig.getHandlerOfMessage();
 			if (DataType.IsNullOrEmpty(messageUrl) == true)
 				return;
 			String httpUrl = "";
 			HashMap<String,String> msgMap = new HashMap<String,String>();
-			msgMap.put("sender",WebUser.getNo());
-			msgMap.put("sendTo",this.getSendToEmpNo());
+			
+			String sender="";
+		    String sendTo="";
+		    BP.GPM.Emp emp=new Emp(WebUser.getNo());
+		    sender=emp.getDing_UserID();
+
+		    emp =new Emp(this.getSendToEmpNo());
+		    sendTo=emp.getDing_UserID();
+
+		    msgMap.put("sender",sender);
+		    msgMap.put("sendTo",sendTo);
+			
 			msgMap.put("tel",this.getMobile());
 			msgMap.put("title",this.getTitle());
 			msgMap.put("content",this.getMobileInfo());
@@ -421,31 +435,31 @@ public class SMS extends EntityMyPK
 			if (this.getPushModel().contains("CCMsg") == true)
 			{
 				httpUrl =messageUrl+ "?DoType=SendToCCMSG";
-				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
+				HttpClientUtil.doPost(httpUrl, msgMap);
 			}
 			//短信
 			if (this.getPushModel().contains("SMS") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToWebServices";
-				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
+				HttpClientUtil.doPost(httpUrl, msgMap);
 			}
 			//钉钉
 			if (this.getPushModel().contains("DingDing") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToDingDing";
-				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
+				HttpClientUtil.doPost(httpUrl, msgMap);
 			}
 			//微信
 			if (this.getPushModel().contains("WeiXin") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToWeiXin";
-				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
+				HttpClientUtil.doPost(httpUrl, msgMap);
 			}
 			//WebService
 			if (this.getPushModel().contains("WS") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToWebServices";
-				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
+				HttpClientUtil.doPost(httpUrl, msgMap);
 			}
 			super.afterInsert();
 

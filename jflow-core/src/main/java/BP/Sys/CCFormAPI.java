@@ -1384,8 +1384,14 @@ public class CCFormAPI {
 	public static void AfterFrmEditAction(String frmID) throws Exception {
 		 
 		//删除缓存.
-		MapData md = new MapData(frmID);
-		md.ClearCash();
+		BP.DA.CashFrmTemplate.Remove(frmID);
+		BP.DA.Cash.SetMap(frmID, null);
+
+		MapData mapdata = new MapData();
+		mapdata.setNo(frmID);
+		mapdata.RetrieveFromDBSources();
+		Cash2019.UpdateRow(mapdata.toString(), frmID, mapdata.getRow());
+		mapdata.CleanObject();
 		return;
 	}
 

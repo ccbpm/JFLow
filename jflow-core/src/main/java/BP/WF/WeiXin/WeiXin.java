@@ -1,15 +1,22 @@
 package BP.WF.WeiXin;
 
+import java.util.HashMap;
+
+import BP.DA.DataTable;
 import BP.DA.DataType;
-import BP.Difference.SystemConfig;
+import BP.DA.Paras;
+import BP.Port.Emp;
+import BP.Sys.SystemConfig;
 import BP.Tools.*;
+import BP.WF.WeiXin.Util.Crypto.TemplateMessageUtil;
 import net.sf.json.JSONObject;
 
 public class WeiXin
 {
+	//获取企业号的token
 	public final String GenerAccessToken() throws Exception
 	{
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + SystemConfig.getWX_CorpID() + "&corpsecret=" + SystemConfig.getWX_AppSecret() + "";
+		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + BP.Sys.SystemConfig.getWX_CorpID() + "&corpsecret=" + BP.Sys.SystemConfig.getWX_AppSecret() + "";
 		String json = BP.Tools.HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
@@ -22,7 +29,21 @@ public class WeiXin
 
 		return "err@获取accessToken失败";
 	}
+	//获取公众号token
+	public final String GetGZHToken() throws Exception{
+		String url = "https://api.weixin.qq.com/sns/oauth2/access_token?grant_type=client_credential&appid=" + BP.Sys.SystemConfig.getWXGZH_Appid() + "&secret=" + BP.Sys.SystemConfig.getWXGZH_AppSecret() + "";
+		String json = BP.Tools.HttpClientUtil.doGet(url);
+		if(DataType.IsNullOrEmpty(json)==false){
+			JSONObject jd = JSONObject.fromObject(json);
+			if(jd.get("errcode").toString().equals("0")){
+				Object token  = jd.get("access_token");
+				return token.toString();
+			}
+			
+		}
 
+		return "err@获取accessToken失败";
+	}
 	//获取用户ID
     public String getUserInfo(String code, String accessToken) throws Exception
     {
@@ -55,6 +76,71 @@ public class WeiXin
 		}
 		return false ;
 	}
+	//发送公众号消息
+	public final boolean PostGZHMsg(String title,String sender,String RDT,String senderTo) throws Exception
+	{
+		String wxStr = "";
+		//公众号发送调用的接口地址
+		String url = "https://api.weixin.qq.com/cgi-bin/message/template/send?";
+		
+		//先获取接收人的openid
+		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		Paras ps=new Paras();
+		ps.SQL="SELECT Wei_UserID from Port_Emp where No="+dbstr+"No";
+		ps.Add("No", senderTo);
+        DataTable dt=BP.DA.DBAccess.RunSQLReturnTable(ps);
+        String Wei_UserID=dt.Rows.get(0).getValue("Wei_UserID").toString();
+		
+        System.out.println("Wei_UserID:"+Wei_UserID);
+        //生成消息模版
+		HashMap<String,String> msgMap = new HashMap<String,String>();
+		msgMap.put("template_id",BP.Sys.SystemConfig.getWeiXin_TemplateId());//消息模版的id
+		msgMap.put("touser",Wei_UserID);//接收人的openid
+		msgMap.put("url", BP.Sys.SystemConfig.getWX_MessageUrl());//打开消息的url
+		
+		//消息主体模版
+		HashMap<String,TemplateMessageUtil> mapdata = new HashMap<>();
+		
+		//设置消息标题
+		TemplateMessageUtil first  = new TemplateMessageUtil();        
+        first.setColor("#173177");
+        first.setValue(title);
+        mapdata.put("first", first);
+        
+        //发送人
+        TemplateMessageUtil text2  = new TemplateMessageUtil();    
+        text2.setColor("#173177");
+        Emp emp=new Emp(sender);
+        text2.setValue(emp.getName());
+        mapdata.put("Sender", text2);
+        
+        //发送时间
+        TemplateMessageUtil text3  = new TemplateMessageUtil();    
+        text3.setColor("#173177");
+        text3.setValue(RDT);
+        mapdata.put("SendRDT", text3);
+        
+        //详情
+        TemplateMessageUtil remark = new TemplateMessageUtil();        
+        remark.setColor("#173177");
+        remark.setValue("请进入系统查看");
+        mapdata.put("remark", remark);
+        
+      //将java对象转换为json对象
+        JSONObject json = JSONObject.fromObject(mapdata);
+        System.out.println("data:"+mapdata.toString());
+        msgMap.put("data",mapdata.toString());      
+		
+        //执行发送
+		wxStr = PostFroGZH(msgMap.toString(), url);
+		if(DataType.IsNullOrEmpty(wxStr)==false){
+			JSONObject jd = JSONObject.fromObject(wxStr);
+			if(jd.get("errcode").toString().equals("0"))
+				return true;
+			
+		}
+		return false ;
+	}
 	/** 
 	 POST方式请求 微信返回信息
 	 
@@ -70,152 +156,16 @@ public class WeiXin
         String str = HttpClientUtil.doPostJson(URL, parameters);
 		return str;
 	}
-
-	/** 
-	 下载人员头像
-	 * @throws Exception 
-	*//*
-	public final boolean DownLoadUserIcon(String savePath) throws Exception
+	//公众号发送
+	public final String PostFroGZH(String parameters, String URL) throws Exception
 	{
-		if ((new File(savePath)).isDirectory() == false)
-		{
-			(new File(savePath)).mkdirs();
-		}
-
-		DeptMent_GetList deptMentList = GetDeptMentList();
-		if (deptMentList != null && deptMentList.geterrcode().equals("0"))
-		{
-			for (DeptMentInfo deptMent : deptMentList.getdepartment())
-			{
-				UsersBelongDept users = GetUserListByDeptID(deptMent.getid());
-				if (users != null && users.geterrcode().equals("0"))
-				{
-					for (UserInfoBelongDept userInfo : users.getuserlist())
-					{
-						if (userInfo.getavatar() != null)
-						{
-							//大图标
-							String headimgurl = userInfo.getavatar();
-							String UserIcon = savePath + "\\" + userInfo.getuserid() + "Biger.png";
-							BP.Tools.HttpClientUtil.HttpDownloadFile(headimgurl, UserIcon);
-
-							//小图标
-							String iconSize = userInfo.getavatar().substring(headimgurl.lastIndexOf('/'));
-							if (iconSize.equals("/"))
-							{
-								headimgurl = userInfo.getavatar() + "64";
-							}
-							else
-							{
-								headimgurl = userInfo.getavatar().substring(0, headimgurl.lastIndexOf('/')) + "64";
-							}
-							UserIcon = savePath + "\\" + userInfo.getuserid() + "Smaller.png";
-							BP.Tools.HttpClientUtil.HttpDownloadFile(headimgurl, UserIcon);
-						}
-					}
-				}
-			}
-			return true;
-		}
-		return false;
+		System.out.println("data:"+parameters);
+		String access_token = GetGZHToken();
+		URL = URL + "access_token=" + access_token;
+		System.out.println("data:"+access_token);
+        String str = HttpClientUtil.doPostJson(URL, parameters);
+		return str;
 	}
-	*//** 
-	 获取指定部门下  指定手机号的人员
-	 
-	 @param FK_Dept 部门编号
-	 @param Tel 手机号
-	 @return 
-	 * @throws Exception 
-	*//*
-
-	public final UserInfoBelongDept GetUserListByDeptIDAndTel(String FK_Dept) throws Exception
-	{
-		return GetUserListByDeptIDAndTel(FK_Dept, null);
-	}
-
-	public final UserInfoBelongDept GetUserListByDeptIDAndTel(String FK_Dept, String Tel) throws Exception
-	{
-		String access_token = GenerAccessToken();
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/user/list?access_token= " + access_token + "&department_id=" + FK_Dept + "&status=0";
-		try
-		{
-			String str = BP.Tools.HttpClientUtil.doGet(url);
-			UsersBelongDept users = (UsersBelongDept) FormatToJson.ParseFromJson(str);
-
-			//指定人员
-			if (Tel != null)
-			{
-				for (UserInfoBelongDept user : users.getuserlist())
-				{
-					if (user.getmobile().equals(Tel))
-					{
-						return user;
-					}
-				}
-			}
-
-		}
-		catch (RuntimeException ex)
-		{
-			BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
-		}
-		return null;
-	}
-
-	*//** 
-	 获取部门集合
-	 * @throws Exception 
-	*//*
-	public final DeptMent_GetList GetDeptMentList() throws Exception
-	{
-		String access_token = GenerAccessToken();
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=" + access_token;
-		try
-		{
-			String str = BP.Tools.HttpClientUtil.doGet(url);
-			DeptMent_GetList departMentList = (DeptMent_GetList) FormatToJson.ParseFromJson(str);
-
-			//部门集合
-			if (departMentList != null)
-			{
-				return departMentList;
-			}
-		}
-		catch (RuntimeException ex)
-		{
-			BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
-		}
-		return null;
-	}
-
-	*//** 
-	 获取指定部门下的人员
-	 
-	 @param FK_Dept 部门编号
-	 @return 
-	 * @throws Exception 
-	*//*
-	public final UsersBelongDept GetUserListByDeptID(String FK_Dept) throws Exception
-	{
-		String access_token = GenerAccessToken();
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/user/list?access_token=" + access_token + "&department_id=" + FK_Dept + "&status=0";
-		try
-		{
-			String str = BP.Tools.HttpClientUtil.doGet(url);
-			UsersBelongDept users = (UsersBelongDept) FormatToJson.ParseFromJson(str);
-
-			//人员集合
-			if (users != null)
-			{
-				return users;
-			}
-		}
-		catch (RuntimeException ex)
-		{
-			BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
-		}
-		return null;
-	}*/
 	
 	public static String  ResponseMsg(String touser, String toparty, String totag, String msgtype, String msg)
     {

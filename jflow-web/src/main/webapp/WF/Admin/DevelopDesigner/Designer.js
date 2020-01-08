@@ -199,7 +199,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata) {
         return;
     }
 
-
+    
     if (shap == 'Date') {
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&PKVal=' + fk_mapdata + '_' + mypk;
         CCForm_ShowDialog(url, '字段Date属性');
@@ -888,7 +888,7 @@ UE.plugins['qrcode'] = function () {
         },
         _delete: function () {
             if (window.confirm('确认删除该控件吗？')) {
-
+               
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();
@@ -982,7 +982,7 @@ UE.plugins['dtl'] = function () {
                 }
                 var mapDtl = new Entity("BP.Sys.MapDtl", no);
                 mapDtl.Delete();
-
+               
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();
@@ -1541,7 +1541,7 @@ function ExtHandWriting() {
     mapAttr.Name = name;
     mapAttr.MyDataType = 1;
     mapAttr.LGType = 0;
-    mapAttr.ColSpan = 1; //
+    mapAttr.ColSpan = 1; // 
     mapAttr.UIWidth = 150;
     mapAttr.UIHeight = 170;
     mapAttr.Insert(); //插入字段.
@@ -1713,7 +1713,7 @@ function ExtMap() {
     mapAttr.Name = name;
     mapAttr.MyDataType = 1;
     mapAttr.LGType = 0;
-    mapAttr.ColSpan = 1; //
+    mapAttr.ColSpan = 1; // 
     mapAttr.UIWidth = 800;//宽度
     mapAttr.UIHeight = 500;//高度
     mapAttr.Insert(); //插入字段.
@@ -1727,7 +1727,7 @@ function ExtMap() {
     mapAttr1.Name = "AtPara";
     mapAttr1.MyDataType = 1;
     mapAttr1.LGType = 0;
-    mapAttr1.ColSpan = 1; //
+    mapAttr1.ColSpan = 1; // 
     mapAttr1.UIWidth = 100;
     mapAttr1.UIHeight = 23;
     mapAttr1.Insert(); //插入字段
@@ -1922,7 +1922,7 @@ function Save() {
                     mapAttr.Insert();
                 }
             }
-
+           
 
         }
     });
@@ -1941,7 +1941,7 @@ function Save() {
                 uiBindKey = tag.getAttribute("data-bindKey");
             }
             var mapAttr = mapAttrs[pageParam.fk_mapdata + "_" + keyOfEn];
-            if (mapAttr == undefined || mapAttr == null) {
+            if ((mapAttr == undefined || mapAttr == null) &&  keyOfEn != "" && uiBindKey != "") {
                 if (dataType == "EnumSelect") {
                     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
                     handler.AddPara("KeyOfEn", keyOfEn);

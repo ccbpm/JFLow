@@ -1210,33 +1210,33 @@ function InitMapAttrOfCtrl(mapAttr) {
 //记录改变字段样式 不可编辑，不可见
 var AllObjSet = {};
 
-function changeEnable(obj, FK_MapData, KeyOfEn, AtPara) {
+function changeEnable(obj, FK_MapData, KeyOfEn, AtPara,frmType) {
     if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
         var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-        cleanAll(KeyOfEn);
-        setEnable(FK_MapData, KeyOfEn, selecedval);
+        cleanAll(KeyOfEn, frmType);
+        setEnable(FK_MapData, KeyOfEn, selecedval, frmType);
     }
 }
-function clickEnable(obj, FK_MapData, KeyOfEn, AtPara) {
+function clickEnable(obj, FK_MapData, KeyOfEn, AtPara, frmType) {
     if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
         var selectVal = $(obj).val();
-        cleanAll(KeyOfEn);
-        setEnable(FK_MapData, KeyOfEn, selectVal);
+        cleanAll(KeyOfEn, frmType);
+        setEnable(FK_MapData, KeyOfEn, selectVal, frmType);
     }
 }
 
-function changeCBEnable(obj, FK_MapData, KeyOfEn, AtPara) {
+function changeCBEnable(obj, FK_MapData, KeyOfEn, AtPara, frmType) {
     if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
-        cleanAll(KeyOfEn);
+        cleanAll(KeyOfEn, frmType);
        if(obj.checked == true)
-           setEnable(FK_MapData, KeyOfEn, 1);
+           setEnable(FK_MapData, KeyOfEn, 1, frmType);
         else
-           setEnable(FK_MapData, KeyOfEn, 0);
+           setEnable(FK_MapData, KeyOfEn, 0, frmType);
     }
 }
 
 //清空所有的设置
-function cleanAll(KeyOfEn) {
+function cleanAll(KeyOfEn, frmType) {
     var trs = $("#CCForm  table tr .attr-group"); //如果隐藏就显示
     $.each(trs, function (i, obj) {
         if ($(obj).parent().is(":hidden") == true)
@@ -1245,10 +1245,13 @@ function cleanAll(KeyOfEn) {
     });
     if (AllObjSet.length == 0)
         return;
-    if (AllObjSet[KeyOfEn].length > 0) {
+    if (AllObjSet[KeyOfEn]!=undefined && AllObjSet[KeyOfEn].length > 0) {
         var mapAttrs = AllObjSet[KeyOfEn][0];
         for (var i = 0; i < mapAttrs.length; i++) {
-            SetCtrlShow(mapAttrs[i]);
+            if (frmType != null && frmType !== undefined && frmType == 8)
+                SetDevelopCtrlShow(mapAttrs[i]);
+            else
+                SetCtrlShow(mapAttrs[i]);
             SetCtrlEnable(mapAttrs[i]);
             CleanCtrlVal(mapAttrs[i]);
         }
@@ -1257,7 +1260,7 @@ function cleanAll(KeyOfEn) {
 
 }
 //启用了显示与隐藏.
-function setEnable(FK_MapData, KeyOfEn, selectVal) {
+function setEnable(FK_MapData, KeyOfEn, selectVal, frmType) {
 	if(selectVal==undefined)
         return;
 
@@ -1292,6 +1295,8 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
         for (var i = 0; i < strs.length; i++) {
 
             var str = strs[i];
+            if (str == "")
+                continue;
             var kv = str.split('=');
 
             var key = kv[0];
@@ -1319,18 +1324,28 @@ function setEnable(FK_MapData, KeyOfEn, selectVal) {
 
 
             if (sta == 1) {  //要设置为可编辑.
-                SetCtrlShow(key);
+                if (frmType != null && frmType != undefined && frmType == 8)
+                    SetDevelopCtrlShow(key);
+                else
+                    SetCtrlShow(key);
                 SetCtrlEnable(key);
             }
 
             if (sta == 2) { //要设置为不可编辑.
-                SetCtrlShow(key);
+                if (frmType != null && frmType != undefined && frmType == 8)
+                    SetDevelopCtrlShow(key);
+                else
+                    SetCtrlShow(key);
                 SetCtrlUnEnable(key);
                 mapAttrs.push(key);
             }
 
             if (sta == 3) { //不可见.
-                SetCtrlHidden(key);
+                if (frmType!=null && frmType!=undefined && frmType == 8)
+                    SetDevelopCtrlHidden(key);
+                else
+                    SetCtrlHidden(key); 
+
                 mapAttrs.push(key);
             }
 
@@ -1454,62 +1469,87 @@ function SetCtrlShow(key) {
 
 }
 
-//设置值?
-function SetCtrlVal(key, value) {
+
+//设置隐藏?
+function SetDevelopCtrlHidden(key) {
     var ctrl = $("#TB_" + key);
     if (ctrl.length > 0) {
-        ctrl.val(value);
+        ctrl.hide();
     }
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
-        ctrl.val(value);
-        // ctrl.attr("value",value);
-        //$("#DDL_"+key+" option[value='"+value+"']").attr("selected", "selected");
+        ctrl.hide();
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
-        ctrl.val(value);
-        if (value!=0) {
-            ctrl.prop("checked", true);
+        ctrl.hide();
+        if (ctrl.parent() != undefined && ctrl.parent().length > 0) {
+            if ($(ctrl.parent()[0]).context.nodeName.toLowerCase() == "label")
+                $(ctrl.parent()[0]).hide();
         }
-        
+      
     }
 
-    ctrl = $("#RB_" + key + "_" + value);
+    ctrl = $("#SR_" + key);
     if (ctrl.length > 0) {
-        var checkVal = $('input:radio[name=RB_' + key + ']:checked').val();
-        document.getElementById("RB_" + key + "_" + checkVal).checked = false;
-        document.getElementById("RB_" + key + "_" + value).checked = true;
-        // ctrl.attr('checked', 'checked');
+        ctrl.hide();
     }
-}
 
-//清空值?
-function CleanCtrlVal(key) {
+    ctrl = $("#SC_" + key);
+    if (ctrl.length > 0) {
+        ctrl.show();
+    }
+
+    ctrl = $("#Lab_" + key);
+    if (ctrl.length > 0) {
+        ctrl.hide();
+    }
+
+    CleanCtrlVal(key);
+
+
+}
+//设置显示?
+function SetDevelopCtrlShow(key) {
     var ctrl = $("#TB_" + key);
     if (ctrl.length > 0) {
-        ctrl.val('');
+        ctrl.show();
     }
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
-        //ctrl.attr("value",'');
-        ctrl.val('');
-        // $("#DDL_"+key+" option:first").attr('selected','selected');
+        ctrl.show();
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
-        ctrl.attr('checked', false);
+        ctrl.show();
+        if (ctrl.parent() != undefined && ctrl.parent().length > 0) {
+            if ($(ctrl.parent()[0]).context.nodeName.toLowerCase() == "label")
+                $(ctrl.parent()[0]).show();
+        }
     }
 
-    ctrl = $("#RB_" + key + "_" + 0);
+    ctrl = $("#SR_" + key);
     if (ctrl.length > 0) {
-        ctrl.attr('checked', true);
+        ctrl.show();
+    }
+
+    ctrl = $("#SC_" + key);
+    if (ctrl.length > 0) {
+        ctrl.show();
+    }
+
+    ctrl = $("#Lab_" + key);
+    if (ctrl.length > 0) {
+        ctrl.show();
     }
 }
+
+
+
 
 //初始化 框架
 function Ele_Frame(frmData, gf) {

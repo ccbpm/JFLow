@@ -4,35 +4,46 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>集成跳转页面</title>
+    <title>正在加载</title>
     <script src="../Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
      <!-- 引用通用的js文件. -->
     <script type="text/javascript" src="../Scripts/config.js?v=1.0"></script>
-    <script type="text/javascript" src="../Comm/Gener.js?v=1.0"></script>
+    <script type="text/javascript" src="../../CCMobile/Comm/Gener.js?v=1.0"></script>
     <script src="../Scripts/QueryString.js" type="text/javascript"></script>
 	<script type="text/javascript" src="http://g.alicdn.com/dingding/open-develop/1.9.0/dingtalk.js"></script>    
 	<script type="text/javascript">
 		dd.ready(function() {
-	        dd.runtime.permission.requestAuthCode({
-	            corpId : "dingee00a82521f43e29",
-	            onSuccess : function(result) {
-	                var code = result.code;
-	                var handler = new HttpHandler("BP.WF.HttpHandler.WF_AppClassic");
-					handler.AddUrlData();
-					handler.AddPara("code",code);
-					var data = handler.DoMethodReturnString("DingDing_Login");
-					if(data.indexOf("err@")!=-1){
-						alert(data);
-						window.location.href="./Login.htm";
-						return;
-					}
-					toPage();//页面跳转
-	　　　　　　　　//将code 发往后台处理
-	            },
-	            onFail : function(err) {
-	                alert('出错了, ' + err);
-	            }
-	        });
+			var dingcode = "";
+			var hler = new HttpHandler("BP.WF.HttpHandler.WF_AppClassic");
+			var d = hler.DoMethodReturnString("GetUserDingCode");
+			var ddcode=eval('(' + d + ')');
+			dingcode=ddcode.Msg;
+			if(dingcode.length>0)
+			{
+				console.log(dingcode);
+				dd.runtime.permission.requestAuthCode({
+		            corpId : dingcode,
+		            onSuccess : function(result) {
+		                var code = result.code;
+		                var handler = new HttpHandler("BP.WF.HttpHandler.WF_AppClassic");
+						handler.AddUrlData();
+						handler.AddPara("code",code);
+						var data = handler.DoMethodReturnString("DingDing_Login");
+						if(data.indexOf("err@")!=-1){
+							alert(data);
+							return;
+						}
+						toPage();//页面跳转
+		　　　　　　　　//将code 发往后台处理
+		            },
+		            onFail : function(err) {
+		            	console.log(err);
+		            }
+		        });
+			}
+			else{
+				console.log("code出错了"+dingcode);
+			}
 	    });
 		
 		//页面启动函数.
@@ -55,10 +66,10 @@
 				if(type =="Start")
 					window.location.href="../WF/Start.htm";
 			}else{
-				if(type=="Home")
-					window.location.href="../CCMobile/Home.htm";
 				if(type =="Start")
-					window.location.href="../CCMobile/Start.htm";
+					window.location.href="../../CCMobile/Start.htm";
+				else
+					window.location.href="../../CCMobile/Home.htm";
 			}
 		}
     </script>

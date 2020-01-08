@@ -1808,8 +1808,23 @@ function ExtScore() {
 var pageParam = {};
 pageParam.fk_mapdata = GetQueryString("FK_MapData");
 
-//保存表单的htm代码
 function SaveForm() {
+
+    $("#Btn_Save").val("正在保存请稍后.");
+
+    try {
+        Save();
+    } catch (e) {
+        alert(e);
+        return;
+    }
+
+    $("#Btn_Save").val("保存成功");
+    setTimeout(function () { $("#Btn_Save").val("保存."); }, 1000);
+}
+
+//保存表单的htm代码
+function Save() {
 
     //清空MapData的缓存
     var en = new Entity("BP.Sys.MapData", pageParam.fk_mapdata);

@@ -1,11 +1,14 @@
-package Controller;
+package cn.jflow.boot.controller;
 
+import BP.DA.DataType;
 import BP.Difference.ContextHolderUtils;
 import BP.WF.WeiXin.DingDing;
 import BP.WF.WeiXin.WeiXin;
 import net.sf.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sun.star.util.DateTime;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +90,7 @@ public class ControllerOfMessage {
         //钉钉
         if(this.getDoType().equals("SendToDingDing")) {
             DingDing dingding = new DingDing();
-            String postJson = dingding.ResponseMsg(this.getTel(), "", "", "text", this.getContent());
+            String postJson = dingding.ResponseMsg(this.getTel(), this.getTitle(), "", "text", this.getContent());
             boolean flag = dingding.PostDingDingMsg(postJson,this.getSenderTo());
             if(flag == false)
                 throw new Exception("发送消息失败");
@@ -96,8 +99,16 @@ public class ControllerOfMessage {
         //微信
         if(this.getDoType().equals("SendToWeiXin")){
             WeiXin weiXin = new WeiXin();
-            String postJson = weiXin.ResponseMsg(this.getTel(), "", "", "text", this.getContent());
-            boolean flag = new WeiXin().PostWeiXinMsg(postJson);
+            boolean flag=false;
+            if(!DataType.IsNullOrEmpty(BP.Sys.SystemConfig.getWX_AgentID()))
+            {
+            	String postJson = weiXin.ResponseMsg(this.getTel(), "", "", "text", this.getContent());
+            	flag= new WeiXin().PostWeiXinMsg(postJson);
+            }
+            if(!DataType.IsNullOrEmpty(BP.Sys.SystemConfig.getWXGZH_Appid()))
+            {
+            	flag=new WeiXin().PostGZHMsg(this.getTitle(), this.getSender(),DataType.getCurrentDateTime(),this.getSenderTo());
+            }
             if(flag == false)
                 throw new Exception("发送消息失败");
             return true;

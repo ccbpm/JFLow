@@ -97,8 +97,25 @@ public class MapAttrEnum extends EntityMyPK
 		map.AddTBString(MapAttrAttr.Name, null, "字段中文名", true, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段名", true, true, 1, 200, 20);
 
-			//默认值.
-		map.AddDDLSQL(MapAttrAttr.DefVal, "0", "默认值（选中）", "SELECT  IntKey as No, Lab as Name FROM Sys_Enum where EnumKey='@UIBindKey'", true);
+		//默认值.
+		String sql = "";
+		switch (BP.Difference.SystemConfig.getAppCenterDBType())
+		{
+			case MSSQL:
+			case MySQL:
+				sql = "SELECT '-1' AS No, '-无(不选择)-' as Name ";
+				break;
+			case Oracle:
+				sql = "SELECT '-1' AS No, '-无(不选择)-' as Name FROM DUAL ";
+				break;
+			case PostgreSQL:
+			default:
+				sql = "SELECT '-1' AS No, '-无(不选择)-' as Name FROM Port_Emp WHERE 1=2 ";
+				break;
+		}
+		sql += " union ";
+		sql += "SELECT  IntKey as No, Lab as Name FROM Sys_Enum where EnumKey='@UIBindKey'";
+		map.AddDDLSQL(MapAttrAttr.DefVal, "0", "默认值（选中）", sql, true);
 
 			//  map.AddTBString(MapAttrAttr.DefVal, "0", "默认值", true, true, 0, 3000, 20);
 

@@ -783,8 +783,17 @@ public class SystemConfig {
 		return getAppSettings().get("WeiXin_MessageUrl").toString();
 	}
 	/// #endregion
-	public static String getWXGZH_WeiXinToken(){
-		return getAppSettings().get("GZHToken").toString();
+	public static String getWXGZH_WeiXinToken() {
+		return getAppSettings().get("GZHToKen").toString();
+	}
+	public static String getWXGZH_Appid() {
+		return getAppSettings().get("GZHAppid").toString();
+	}
+	public static String getWXGZH_AppSecret(){
+		return getAppSettings().get("GZHAppSecret").toString();
+	}
+	public static String getWeiXin_TemplateId() {
+		return getAppSettings().get("WeiXin_TemplateId").toString();
 	}
 	/// #region 钉钉配置相关
 	/// <summary>

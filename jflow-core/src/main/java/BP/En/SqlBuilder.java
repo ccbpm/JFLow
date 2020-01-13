@@ -2263,7 +2263,12 @@ public class SqlBuilder {
 						if (StringHelper.isNullOrEmpty(s)) {
 							ps.Add(attr.getKey(), 0);
 						} else {
-							ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
+							if(attr.getDefValType() ==0
+									&& attr.getDefaultVal().equals(MapAttrAttr.DefaultVal) == true
+									&& en.GetValIntByKey(attr.getKey())==Integer.parseInt(MapAttrAttr.DefaultVal))
+								ps.Add(attr.getKey(),null);
+							else
+								ps.Add(attr.getKey(), en.GetValIntByKey(attr.getKey()));
 						}
 					 
 				}
@@ -2282,7 +2287,12 @@ public class SqlBuilder {
 						ps.Add(attr.getKey(), 0);
 					}
 				} else {
-					ps.Add(attr.getKey(), new BigDecimal(str));
+					if(attr.getDefValType() ==0
+							&& attr.getDefaultVal().equals(MapAttrAttr.DefaultVal) == true
+							&& str.equals(MapAttrAttr.DefaultVal)==true)
+						ps.Add(attr.getKey(),null);
+					else
+						ps.Add(attr.getKey(), new BigDecimal(str));
 				}
 				break;
 			case DataType.AppDate: // 如果是日期类型。

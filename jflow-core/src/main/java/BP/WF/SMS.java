@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 import BP.DA.*;
 import BP.Difference.Handler.PortalInterface;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.GPM.Emp;
 import BP.Web.*;
@@ -410,7 +411,7 @@ public class SMS extends EntityMyPK
 			
 			//发送短消息 调用接口
 
-			String messageUrl = BP.Sys.SystemConfig.getHandlerOfMessage();
+			String messageUrl = SystemConfig.getHandlerOfMessage();
 			if (DataType.IsNullOrEmpty(messageUrl) == true)
 				return;
 			String httpUrl = "";
@@ -435,31 +436,31 @@ public class SMS extends EntityMyPK
 			if (this.getPushModel().contains("CCMsg") == true)
 			{
 				httpUrl =messageUrl+ "?DoType=SendToCCMSG";
-				HttpClientUtil.doPost(httpUrl, msgMap);
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//短信
 			if (this.getPushModel().contains("SMS") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToWebServices";
-				HttpClientUtil.doPost(httpUrl, msgMap);
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//钉钉
 			if (this.getPushModel().contains("DingDing") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToDingDing";
-				HttpClientUtil.doPost(httpUrl, msgMap);
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//微信
 			if (this.getPushModel().contains("WeiXin") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToWeiXin";
-				HttpClientUtil.doPost(httpUrl, msgMap);
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			//WebService
 			if (this.getPushModel().contains("WS") == true)
 			{
 				httpUrl = messageUrl + "?DoType=SendToWebServices";
-				HttpClientUtil.doPost(httpUrl, msgMap);
+				HttpClientUtil.doPost(httpUrl, msgMap,null,null);
 			}
 			super.afterInsert();
 

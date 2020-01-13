@@ -249,7 +249,7 @@ public class WF_CCBill extends WebContralBase
 		rpt.SetValByKey("BillState", BillState.Over.getValue());
 		rpt.Update();
 
-		String str = BP.Frm.Dev2Interface.SaveWork(this.getFrmID(), this.getWorkID());
+		String str = BP.Frm.Dev2Interface.SubmitWork(this.getFrmID(), this.getWorkID());
 		return str;
 	}
 	/** 

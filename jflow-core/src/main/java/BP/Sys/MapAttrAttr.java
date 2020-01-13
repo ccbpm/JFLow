@@ -204,4 +204,12 @@ public class MapAttrAttr extends EntityMyPKAttr
 	public static final String IsEnableInAPP = "IsEnableInAPP";
 	public static final String IsSupperText = "IsSupperText";
 	public static final String IsRichText = "IsRichText";
+	/**
+	 * 默认值设定方式
+	 */
+	public static final String DefValType ="DefValType";
+	/**
+	 * 默认值
+	 */
+	public static final String DefaultVal="10002";
 }

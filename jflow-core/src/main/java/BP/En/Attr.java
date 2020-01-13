@@ -26,6 +26,7 @@ public class Attr
 		attr.setUIBindKey(this.getUIBindKey());
 		attr.setUIIsLine(this.UIIsLine);
 		attr.setUIHeight(0);
+		attr.setDefValType(this.getDefValType());
 
 		if (this.getMaxLength() > 3000)
 		{
@@ -120,6 +121,8 @@ public class Attr
 			return false;
 		}
 	}
+
+
 	/** 
 	 是不是能使用默认值。
 	*/
@@ -357,6 +360,17 @@ public class Attr
 	{
 		_defaultVal = value;
 	}
+
+	private int _DefValType = 0;
+	public final int getDefValType(){
+		return this._DefValType;
+	}
+
+	public final void setDefValType(int value)
+	{
+		this._DefValType = value;
+	}
+
 	/** 
 	 字段默认值
 	*/

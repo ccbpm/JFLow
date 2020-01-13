@@ -914,6 +914,7 @@ public class Attrs extends ArrayList<Attr>
             mattr.setMinLen(item.getMinLength());
             mattr.setUIVisible(item.getUIVisible());
             mattr.setDefValReal(item.getDefaultValOfReal());
+            mattr.setDefValType(item.getDefValType());
 
             mattr.setUIIsEnable(item.getUIIsReadonly());
             if (item.getMyFieldType() == FieldType.Normal 

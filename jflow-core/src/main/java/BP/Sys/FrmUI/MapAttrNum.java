@@ -111,7 +111,7 @@ public class MapAttrNum extends EntityMyPK
 		map.AddDDLSysEnum(MapAttrAttr.MyDataType, 2, "数据类型", true, false);
 
 		map.AddTBString(MapAttrAttr.DefVal, "0", "默认值/小数位数", true, false, 0, 200, 20);
-
+		map.AddDDLSysEnum(MapAttrAttr.DefValType,1,"默认值选择方式",true,true,"DefValType","@0=默认值为空@1=按照设置的默认值设置",false);
 		String help = "给该字段设置默认值:\t\r";
 
 		help += "\t\r 1. 如果是整形就设置一个整形的数字作为默认值.";
@@ -202,13 +202,21 @@ public class MapAttrNum extends EntityMyPK
 	{
 		this.SetValByKey(MapAttrAttr.DefVal, value);
 	}
+
+	public final int getDefValType() throws Exception
+	{
+		return this.GetValIntByKey(MapAttrAttr.DefValType);
+	}
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
 		//如果没默认值.
 		if (this.getDefVal().equals(""))
 		{
-			this.setDefVal("0");
+			if(this.getDefValType() == 0)
+				this.setDefVal(MapAttrAttr.DefaultVal);
+			else
+				this.setDefVal("0");
 		}
 
 		MapAttr attr = new MapAttr();

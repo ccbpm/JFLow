@@ -205,6 +205,69 @@ public class Dev2Interface
 
 		return "保存成功...";
 	}
+	/**
+	 提交
+
+	 @param frmID 表单ID
+	 @param workID 工作ID
+	 @return 返回保存结果
+	  * @throws Exception
+	 */
+	public static String SubmitWork(String frmID, long workID) throws Exception
+	{
+		FrmBill fb = new FrmBill(frmID);
+
+		GenerBill gb = new GenerBill();
+		gb.setWorkID(workID);
+		int i = gb.RetrieveFromDBSources();
+		if (i == 0)
+		{
+			return "";
+		}
+		gb.setBillState(BillState.Over);
+
+		//创建rpt.
+		BP.WF.Data.GERpt rpt = new BP.WF.Data.GERpt(gb.getFrmID(), workID);
+
+		if (fb.getEntityType() == EntityType.EntityTree || fb.getEntityType() == EntityType.FrmDict)
+		{
+
+			gb.setTitle(rpt.getTitle());
+			gb.Update();
+			return "提交成功...";
+		}
+
+		//单据编号.
+		if (DataType.IsNullOrEmpty(gb.getBillNo()) == true && !(fb.getEntityType() == EntityType.EntityTree || fb.getEntityType() == EntityType.FrmDict))
+		{
+			gb.setBillNo(BP.Frm.Dev2Interface.GenerBillNo(fb.getBillNoFormat(), workID, null, fb.getPTable()));
+			//更新单据里面的billNo字段.
+			if (DBAccess.IsExitsTableCol(fb.getPTable(), "BillNo") == true)
+			{
+				DBAccess.RunSQL("UPDATE " + fb.getPTable() + " SET BillNo='" + gb.getBillNo() + "' WHERE OID=" + workID);
+			}
+		}
+
+		//标题.
+		if (DataType.IsNullOrEmpty(gb.getTitle()) == true && !(fb.getEntityType() == EntityType.EntityTree || fb.getEntityType() == EntityType.FrmDict))
+		{
+			gb.setTitle(Dev2Interface.GenerTitle(fb.getTitleRole(), rpt));
+			//更新单据里面的 Title 字段.
+			if (DBAccess.IsExitsTableCol(fb.getPTable(), "Title") == true)
+			{
+				DBAccess.RunSQL("UPDATE " + fb.getPTable() + " SET Title='" + gb.getTitle() + "' WHERE OID=" + workID);
+			}
+		}
+
+		gb.Update();
+
+		//把通用的字段更新到数据库.
+		rpt.setTitle(gb.getTitle());
+		rpt.setBillNo(gb.getBillNo());
+		rpt.Update();
+
+		return "提交成功...";
+	}
 	/** 
 	 保存
 	 

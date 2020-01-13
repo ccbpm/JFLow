@@ -8,6 +8,7 @@ import BP.DA.DataType;
 import BP.DA.Paras;
 import BP.Difference.SystemConfig;
 import BP.Sys.MapAttr;
+import BP.Sys.MapAttrAttr;
 import BP.Sys.SysDocFile;
 import BP.Sys.SysEnums;
 import BP.Tools.StringHelper;
@@ -886,11 +887,7 @@ public class SqlBuilder {
 			case DataType.AppDouble:
 				sql += attr.getField() + " double  NULL COMMENT '" + attr.getDesc() + "',";
 				break;
-//			case DataType.AppFloat:
-//			case DataType.AppMoney:
-//			case DataType.AppDouble:
-//				sql += attr.getField() + " float  NULL,";
-//				break;
+
 			case DataType.AppBoolean:
 			case DataType.AppInt:
 				if (attr.getIsPK()) {
@@ -900,7 +897,10 @@ public class SqlBuilder {
 						sql += attr.getField() + " int   NULL,";
 					}
 				} else {
-					sql += attr.getField() + " int ,";
+					if (attr.getDefValType() == 0 && attr.getDefaultVal().toString().equals(MapAttrAttr.DefaultVal)==true)
+						sql += attr.getField() + " INT  NULL COMMENT '" + attr.getDesc() + "',";
+					else
+						sql += attr.getField() + " INT DEFAULT " + attr.getDefaultVal() + " COMMENT '" + attr.getDesc() + "',";
 				}
 				break;
 			default:

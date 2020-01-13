@@ -236,6 +236,7 @@ public class MapAttr extends EntityMyPK
 		attr.setUIBindKey(this.getUIBindKey());
 		attr.UIIsLine = this.getUIIsLine();
 		attr.setUIHeight(0);
+		attr.setDefValType(this.getDefValType());
 		if (this.getUIHeight() > 30)
 		{
 			attr.setUIHeight((int)this.getUIHeight());
@@ -1028,6 +1029,13 @@ public class MapAttr extends EntityMyPK
 		this.SetValByKey(MapAttrAttr.Y, value);
 	}
 
+	public final int getDefValType() throws Exception
+	{
+		return this.GetValIntByKey(MapAttrAttr.DefValType);
+	}
+	public final void setDefValType(int value) throws Exception{
+		this.SetValByKey(MapAttrAttr.DefValType,value);
+	}
 	/** 
 	 实体属性
 	*/
@@ -1084,7 +1092,7 @@ public class MapAttr extends EntityMyPK
 
 		map.AddTBString(MapAttrAttr.Name, null, "描述", true, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.DefVal, null, "默认值", false, false, 0, 400, 20);
-
+		map.AddTBInt(MapAttrAttr.DefValType, 0, "默认值类型", true, false);
 
 		map.AddTBInt(MapAttrAttr.UIContralType, 0, "控件", true, false);
 		map.AddTBInt(MapAttrAttr.MyDataType, 1, "数据类型", true, false);

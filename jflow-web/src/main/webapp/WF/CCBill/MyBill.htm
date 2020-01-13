@@ -259,14 +259,17 @@
 }
         function wprint() {
            // PageSetup_Null();
-            var headstr = "<html><head><title></title></head><body>";
-            var footstr = "</body>";
-            var printData = document.getElementById("divCurrentForm").innerHTML; //获得 div 里的所有 html 数据
-            var oldstr = document.body.innerHTML;
-            document.body.innerHTML = headstr+newstr+footstr;
+            //var headstr = "<html><head><title></title></head><body>";
+            //var footstr = "</body>";
+            //var printData = document.getElementById("divCurrentForm").innerHTML; //获得 div 里的所有 html 数据
+            //var oldstr = document.body.innerHTML;
+            //document.body.innerHTML = headstr+newstr+footstr;
+            //window.print();
+            //document.body.innerHTML = oldstr;
+            //return false;
+
+
             window.print();
-            document.body.innerHTML = oldstr;
-            return false;
             
             
             
@@ -433,19 +436,20 @@
                         }
                         formArrResult.push(ele);
                     } else {
-                        if (mcheckboxs.indexOf(targetId) != -1)
-                            return false;
-                        mcheckboxs += targetId + ",";
-                        var str = "";
-                        $("input[name='" + targetId + "']:checked").each(function (index, item) {
-                            if ($("input[name='" + targetId + "']:checked").length - 1 == index) {
-                                str += $(this).val();
-                            } else {
-                                str += $(this).val() + ",";
-                            }
-                        });
+                        if (mcheckboxs.indexOf(targetId+",") == -1) {
+                            mcheckboxs += targetId + ",";
+                            var str = "";
+                            $("input[name='" + targetId + "']:checked").each(function (index, item) {
+                                if ($("input[name='" + targetId + "']:checked").length - 1 == index) {
+                                    str += $(this).val();
+                                } else {
+                                    str += $(this).val() + ",";
+                                }
+                            });
 
-                        formArrResult.push(targetId + '=' + str);
+                            formArrResult.push(targetId + '=' + str);
+                        }
+                        
                     }
 
                 }
@@ -578,8 +582,7 @@
             }
 
             // 处理没有选择的文本框.
-            //获得checkBoxIDs 格式为: CB_IsXX,CB_IsYY,
-            var ids = GenerCheckIDs();
+           var ids = GenerCheckNames();
 
             if (ids) {
                 var scores = ids.split(",");
@@ -590,7 +593,10 @@
                     var field = scores[i];
                     var index = formdataResultStr.indexOf(field);
                     if (index == -1) {
-                        formdataResultStr += '&' + field + '=0';
+                        if($("input[name='"+field+"'").length == 1)
+                            formdataResultStr += '&' + field + '=0';
+                        else
+                            formdataResultStr += '&' + field + '= ';
                     }
                 }
             }

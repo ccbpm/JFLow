@@ -236,7 +236,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata) {
         return;
     }
 
-    if (shap == 'Radio' || shap == 'EnumSelect') {
+    if (shap == 'Radio' || shap == 'EnumSelect' || shap=='EnumCheckBox') {
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrEnum&PKVal=' + fk_mapdata + '_' + mypk;
         CCForm_ShowDialog(url, '字段Enum属性');
         return;
@@ -473,12 +473,14 @@ UE.plugins['enum'] = function () {
     var me = this, thePlugins = 'enum';
     me.commands[thePlugins] = {
         execCommand: function (method, dataType) {
+            var W = document.body.clientWidth - 160;
+            var H = document.body.clientHeight - 220;
             var dialog = new UE.ui.Dialog({
                 iframeUrl: './DialogCtr/FrmEnumeration.htm?FK_MapData=' + pageParam.fk_mapdata + "&DataType=" + dataType,
                 name: thePlugins,
                 editor: this,
                 title: '单选框',
-                cssRules: "width:590px;height:370px;",
+                cssRules: "width:"+W+"px;height:"+H+"px;",
                 buttons: [
                     {
                         className: 'edui-okbutton',
@@ -508,6 +510,8 @@ UE.plugins['enum'] = function () {
             baidu.editor.plugins[thePlugins].editdom = popup.anchorEl;
             if (this.anchorEl.tagName.toLowerCase() == "label")
                 this.anchorEl = this.anchorEl.parentNode;
+            if (this.anchorEl.tagName.toLowerCase() == "span")
+                this.anchorEl.setAttribute("data-key", this.anchorEl.id.substr(3));
             me.execCommand("edit", this.anchorEl.getAttribute("data-type"), this.anchorEl);
             this.hide();
         },

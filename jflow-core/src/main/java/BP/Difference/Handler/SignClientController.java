@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
-import BP.Sys.SystemConfig;
+import BP.Difference.SystemConfig;
 import net.sf.json.JSONObject;
 
 
@@ -94,7 +94,7 @@ public class SignClientController {
 	        System.out.println("nickname:"+nickname);
 	        
 	        Paras ps=new Paras();
-	        String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+	        String dbstr = SystemConfig.getAppCenterDBVarStr();
 	        ps.SQL="SELECT No,Name from Port_Emp where Wei_UserID="+dbstr+"Wei_UserID ";
 	        ps.Add("Wei_UserID", openid);
 	        DataTable dt=BP.DA.DBAccess.RunSQLReturnTable(ps);

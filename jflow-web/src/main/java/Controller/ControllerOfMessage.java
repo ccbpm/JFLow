@@ -1,7 +1,8 @@
-package cn.jflow.boot.controller;
+package Controller;
 
 import BP.DA.DataType;
 import BP.Difference.ContextHolderUtils;
+import BP.Difference.SystemConfig;
 import BP.WF.WeiXin.DingDing;
 import BP.WF.WeiXin.WeiXin;
 import net.sf.json.JSONObject;
@@ -100,12 +101,12 @@ public class ControllerOfMessage {
         if(this.getDoType().equals("SendToWeiXin")){
             WeiXin weiXin = new WeiXin();
             boolean flag=false;
-            if(!DataType.IsNullOrEmpty(BP.Sys.SystemConfig.getWX_AgentID()))
+            if(!DataType.IsNullOrEmpty(SystemConfig.getWX_AgentID()))
             {
             	String postJson = weiXin.ResponseMsg(this.getTel(), "", "", "text", this.getContent());
             	flag= new WeiXin().PostWeiXinMsg(postJson);
             }
-            if(!DataType.IsNullOrEmpty(BP.Sys.SystemConfig.getWXGZH_Appid()))
+            if(!DataType.IsNullOrEmpty(SystemConfig.getWXGZH_Appid()))
             {
             	flag=new WeiXin().PostGZHMsg(this.getTitle(), this.getSender(),DataType.getCurrentDateTime(),this.getSenderTo());
             }

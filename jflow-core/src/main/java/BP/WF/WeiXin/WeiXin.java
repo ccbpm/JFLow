@@ -5,8 +5,9 @@ import java.util.HashMap;
 import BP.DA.DataTable;
 import BP.DA.DataType;
 import BP.DA.Paras;
+import BP.Difference.SystemConfig;
 import BP.Port.Emp;
-import BP.Sys.SystemConfig;
+
 import BP.Tools.*;
 import BP.WF.WeiXin.Util.Crypto.TemplateMessageUtil;
 import net.sf.json.JSONObject;
@@ -16,7 +17,7 @@ public class WeiXin
 	//获取企业号的token
 	public final String GenerAccessToken() throws Exception
 	{
-		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + BP.Sys.SystemConfig.getWX_CorpID() + "&corpsecret=" + BP.Sys.SystemConfig.getWX_AppSecret() + "";
+		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + SystemConfig.getWX_CorpID() + "&corpsecret=" + SystemConfig.getWX_AppSecret() + "";
 		String json = BP.Tools.HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
@@ -31,7 +32,7 @@ public class WeiXin
 	}
 	//获取公众号token
 	public final String GetGZHToken() throws Exception{
-		String url = "https://api.weixin.qq.com/sns/oauth2/access_token?grant_type=client_credential&appid=" + BP.Sys.SystemConfig.getWXGZH_Appid() + "&secret=" + BP.Sys.SystemConfig.getWXGZH_AppSecret() + "";
+		String url = "https://api.weixin.qq.com/sns/oauth2/access_token?grant_type=client_credential&appid=" + SystemConfig.getWXGZH_Appid() + "&secret=" + SystemConfig.getWXGZH_AppSecret() + "";
 		String json = BP.Tools.HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
@@ -84,7 +85,7 @@ public class WeiXin
 		String url = "https://api.weixin.qq.com/cgi-bin/message/template/send?";
 		
 		//先获取接收人的openid
-		String dbstr = BP.Sys.SystemConfig.getAppCenterDBVarStr();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps=new Paras();
 		ps.SQL="SELECT Wei_UserID from Port_Emp where No="+dbstr+"No";
 		ps.Add("No", senderTo);
@@ -94,9 +95,9 @@ public class WeiXin
         System.out.println("Wei_UserID:"+Wei_UserID);
         //生成消息模版
 		HashMap<String,String> msgMap = new HashMap<String,String>();
-		msgMap.put("template_id",BP.Sys.SystemConfig.getWeiXin_TemplateId());//消息模版的id
+		msgMap.put("template_id",SystemConfig.getWeiXin_TemplateId());//消息模版的id
 		msgMap.put("touser",Wei_UserID);//接收人的openid
-		msgMap.put("url", BP.Sys.SystemConfig.getWX_MessageUrl());//打开消息的url
+		msgMap.put("url", SystemConfig.getWX_MessageUrl());//打开消息的url
 		
 		//消息主体模版
 		HashMap<String,TemplateMessageUtil> mapdata = new HashMap<>();

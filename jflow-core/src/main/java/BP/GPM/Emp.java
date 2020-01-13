@@ -135,6 +135,12 @@ public class Emp extends EntityNoName
 	{
 		this.SetValByKey(EmpAttr.SignType, value);
 	}
+	public final String getDing_UserID() throws Exception{
+		return this.GetValStrByKey(EmpAttr.Ding_UserID);
+	}
+	public final void setDing_UserID(String value) throws Exception{
+		this.SetValByKey(EmpAttr.Ding_UserID, value);
+	}
 
 		///#endregion
 

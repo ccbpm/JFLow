@@ -40,6 +40,8 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	 拼音
 	*/
 	public static final String PinYin = "PinYin";
+	
+	public static final String Ding_UserID="Ding_UserID";
 
 		///#endregion
 	/** 

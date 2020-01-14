@@ -1,6 +1,7 @@
 package BP.GPM;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Port.*;
@@ -256,12 +257,12 @@ public class GPMEmp extends EntityNoName
 
 	public final String DoEmpDepts() throws Exception
 	{
-		return "../../GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath()+"GPM/EmpDepts.htm?FK_Emp=" + this.getNo();
 	}
 
 	public final String DoSinger() throws Exception
 	{
-		return "../../GPM/Siganture.htm?EmpNo=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath()+"GPM/Siganture.htm?EmpNo=" + this.getNo();
 	}
 
 	public static GPMEmp GenerData(GPMEmp en) throws Exception

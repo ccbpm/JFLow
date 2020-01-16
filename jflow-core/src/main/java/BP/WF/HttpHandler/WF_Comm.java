@@ -1280,7 +1280,7 @@ public class WF_Comm extends WebContralBase {
 		// 关键字.
 		String keyWord = ur.getSearchKey();
 		QueryObject qo = new QueryObject(ens);
-
+		boolean isFirst = true;//是否是第一次拼接SQL
 		/// #region 关键字字段.
 		if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1) {
 			Attr attrPK = new Attr();
@@ -1322,6 +1322,8 @@ public class WF_Comm extends WebContralBase {
 				i++;
 				if (i == 1) {
 					// 第一次进来。
+					isFirst = false;
+
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@")
 							|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
@@ -1365,7 +1367,10 @@ public class WF_Comm extends WebContralBase {
 
 			// 按日期查询
 			if (map.DTSearchWay == DTSearchWay.ByDate) {
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				dtTo += " 23:59:59";
 				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
@@ -1394,7 +1399,10 @@ public class WF_Comm extends WebContralBase {
 					dtTo += " 24:00";
 				}
 
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
@@ -1407,7 +1415,10 @@ public class WF_Comm extends WebContralBase {
 		String opkey = ""; // 操作符号。
 		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch()) {
 			if (attr.getIsHidden()) {
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 
 				// 获得真实的数据类型.
@@ -1432,7 +1443,10 @@ public class WF_Comm extends WebContralBase {
 				opkey = attr.getDefaultSymbol();
 			}
 
-			qo.addAnd();
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
 			qo.addLeftBracket();
 
 			if (attr.getDefaultVal().length() >= 8) {
@@ -1467,7 +1481,10 @@ public class WF_Comm extends WebContralBase {
 			if (val.equals("all")) {
 				continue;
 			}
-			qo.addAnd();
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
 			qo.addLeftBracket();
 
 			// 获得真实的数据类型.
@@ -1589,6 +1606,7 @@ public class WF_Comm extends WebContralBase {
 		// 关键字.
 		String keyWord = ur.getSearchKey();
 		QueryObject qo = new QueryObject(ens);
+		boolean isFirst=true;//是否是第一次拼接SQL
 
 		/// #region 关键字字段.
 		if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() > 1) {
@@ -1625,6 +1643,7 @@ public class WF_Comm extends WebContralBase {
 				i++;
 				if (i == 1) {
 					/* 第一次进来。 */
+					isFirst = false;
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@")) {
 						qo.AddWhere(attr.getKey(), " LIKE ",
@@ -1665,7 +1684,10 @@ public class WF_Comm extends WebContralBase {
 										// "-");
 
 			if (map.DTSearchWay == DTSearchWay.ByDate) {
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				// 设置开始查询时间
 				dtFrom += " 00:00:00";
@@ -1695,7 +1717,10 @@ public class WF_Comm extends WebContralBase {
 					dtTo += " 24:00";
 				}
 
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
@@ -1708,7 +1733,10 @@ public class WF_Comm extends WebContralBase {
 		String opkey = ""; // 操作符号。
 		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch()) {
 			if (attr.getIsHidden()) {
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
 				qo.addRightBracket();
@@ -1724,7 +1752,10 @@ public class WF_Comm extends WebContralBase {
 				opkey = attr.getDefaultSymbol();
 			}
 
-			qo.addAnd();
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
 			qo.addLeftBracket();
 
 			if (attr.getDefaultVal().length() >= 8) {
@@ -1760,7 +1791,10 @@ public class WF_Comm extends WebContralBase {
 			if (val.equals("all")) {
 				continue;
 			}
-			qo.addAnd();
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
 			qo.addLeftBracket();
 			qo.AddWhere(str, ap.GetValStrByKey(str));
 			qo.addRightBracket();

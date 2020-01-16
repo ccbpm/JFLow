@@ -1794,6 +1794,119 @@ public class WF extends WebContralBase {
 		}
 
 		ds.Tables.add(realAttr.ToDataTableField("Sys_MapAttr"));
+		
+		DataTable ddlTable = new DataTable();
+		ddlTable.Columns.Add("No");
+		for (DataRow dr : realAttr.ToDataTableField("Sys_MapAttr").Rows) {
+			String lgType = dr.getValue("LGType").toString();
+			String ctrlType = dr.getValue(MapAttrAttr.UIContralType).toString();
+
+			// 没有绑定外键
+			String uiBindKey = dr.getValue("UIBindKey").toString();
+			if (DataType.IsNullOrEmpty(uiBindKey) == true) {
+				continue;
+			}
+
+			String mypk = dr.getValue("MyPK").toString();
+
+			/// #region 枚举字段
+			if (lgType.equals("1") == true) {
+				// 如果是枚举值, 判断是否存在.
+				if (ds.Tables.contains(uiBindKey) == true) {
+					continue;
+				}
+
+				String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + uiBindKey
+						+ "' ORDER BY IntKey ";
+				DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
+				dtEnum.TableName = uiBindKey;
+
+				dtEnum.Columns.get(0).ColumnName = "No";
+				dtEnum.Columns.get(1).ColumnName = "Name";
+
+				ds.Tables.add(dtEnum);
+				continue;
+			}
+
+			/// #endregion
+
+			/// #region 外键字段
+			String UIIsEnable = dr.getValue("UIIsEnable").toString();
+			// 检查是否有下拉框自动填充。
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			if (UIIsEnable.equals("0")) // 字段未启用
+			{
+				if(dr.getValue("UIVisible").toString().equals("0"))
+				{
+					continue;
+				}
+				else{
+					SFTable sftable=new SFTable(uiBindKey);
+					Object tempVar2 = sftable.getSelectStatement();
+					String fullSQL = tempVar2 instanceof String ? (String) tempVar2 : null;
+					fullSQL = fullSQL.replace("~", ",");
+					fullSQL = BP.WF.Glo.DealExp(fullSQL, null, null);
+
+					DataTable dtn = DBAccess.RunSQLReturnTable(fullSQL);
+
+					dtn.TableName = uiBindKey;
+
+					dtn.Columns.get(0).ColumnName = "No";
+					dtn.Columns.get(1).ColumnName = "Name";
+
+					ds.Tables.add(dt);
+					continue;
+				}
+			}
+
+			MapExts mes =new MapExts();
+			mes.Retrieve("FK_MapData", "ND"+nd.getNodeID());
+			MapExt me = null;
+
+			/// #region 处理下拉框数据范围. for 小杨.
+			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper,
+					keyOfEn);
+			me = tempVar instanceof MapExt ? (MapExt) tempVar : null;
+			if (me != null) // 有范围限制时
+			{
+				Object tempVar2 = me.getDoc();
+				String fullSQL = tempVar2 instanceof String ? (String) tempVar2 : null;
+				fullSQL = fullSQL.replace("~", ",");
+				fullSQL = BP.WF.Glo.DealExp(fullSQL, null, null);
+
+				DataTable dtn = DBAccess.RunSQLReturnTable(fullSQL);
+
+				dtn.TableName = uiBindKey;
+
+				dtn.Columns.get(0).ColumnName = "No";
+				dtn.Columns.get(1).ColumnName = "Name";
+
+				ds.Tables.add(dt);
+				continue;
+			}
+
+			/// #endregion 处理下拉框数据范围.
+
+			// 判断是否存在.
+			if (ds.Tables.contains(uiBindKey) == true) {
+				continue;
+			}
+
+			// 获得数据.
+			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+
+			if (mydt == null) {
+				DataRow ddldr = ddlTable.NewRow();
+				ddldr.setValue("No", uiBindKey);
+				ddlTable.Rows.add(ddldr);
+			} else {
+				ds.Tables.add(mydt);
+			}
+
+			/// #endregion 外键字段
+		}
+		ddlTable.TableName = "UIBindKey";
+		ds.Tables.add(ddlTable);
 
 		return BP.Tools.Json.ToJson(ds);
 	}

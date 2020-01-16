@@ -342,7 +342,9 @@ public class SMS extends EntityMyPK
 	public static void SendEmailNowAsync(String mail, String mailTitle, String mailDoc,String sendTo) throws Exception
 	{
 		Emp emp=new Emp(sendTo);
-   		
+   		if(DataType.IsNullOrEmpty(emp.getEmail())){
+   			return;
+		}
 		//邮件地址.return
        final String  emailAddr = SystemConfig.GetValByKey("SendEmailAddress", "ccbpmtester@tom.com");
 

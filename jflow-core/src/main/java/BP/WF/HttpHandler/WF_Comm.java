@@ -1219,9 +1219,6 @@ public class WF_Comm extends WebContralBase {
 		Map map = en.getEnMapInTime();
 
 		MapAttrs attrs = new MapAttrs();
-		;
-		// DataTable dtAttrs = attrs.ToDataTableField();
-		// dtAttrs.TableName = "Attrs";
 
 		MapData md = new MapData();
 		md.setNo(this.getEnsName());
@@ -1281,89 +1278,184 @@ public class WF_Comm extends WebContralBase {
 		String keyWord = ur.getSearchKey();
 		QueryObject qo = new QueryObject(ens);
 		boolean isFirst = true;//是否是第一次拼接SQL
-		/// #region 关键字字段.
-		if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1) {
-			Attr attrPK = new Attr();
-			for (Attr attr : map.getAttrs()) {
-				if (attr.getIsPK()) {
-					attrPK = attr;
-					break;
-				}
-			}
-			int i = 0;
-			String enumKey = ","; // 求出枚举值外键.
-			for (Attr attr : map.getAttrs()) {
-				switch (attr.getMyFieldType()) {
-				case Enum:
-					enumKey = "," + attr.getKey() + "Text,";
-					break;
-				case FK:
-					// case FieldType.PKFK:
-					continue;
-				default:
-					break;
-				}
+		//#region 关键字字段.
+        if (DataType.IsNullOrEmpty(map.SearchFields) == false)
+        {
+            String field = "";//字段名
+            String fieldValue = "";//字段值
+            int idx = 0;
 
-				if (attr.getMyDataType() != DataType.AppString) {
-					continue;
-				}
+            //获取查询的字段
+            String[] searchFields = map.SearchFields.split("@");
+            for(String str : searchFields)
+            {
+                if (DataType.IsNullOrEmpty(str) == true)
+                    continue;
 
-				// 排除枚举值关联refText.
-				if (attr.getMyFieldType() == FieldType.RefText) {
-					if (enumKey.contains("," + attr.getKey() + ",") == true) {
-						continue;
-					}
-				}
+                //字段名
+                field = str.split("=")[1];
+                if (DataType.IsNullOrEmpty(field) == true)
+                    continue;
 
-				if (attr.getKey().equals("FK_Dept")) {
-					continue;
-				}
+                //字段名对应的字段值
+                fieldValue = ur.GetParaString(field);
+                if (DataType.IsNullOrEmpty(fieldValue) == true)
+                    continue;
+                idx++;
+                if (idx == 1)
+                {
+                    isFirst = false;
+                    /* 第一次进来。 */
+                    qo.addLeftBracket();
+                    if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                        qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field+",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field +"+'%'"));
+                    else
+                        qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field +"||'%'");
+                    qo.getMyParas().Add(field, fieldValue);
+                    continue;
+                }
+                qo.addAnd();
 
-				i++;
-				if (i == 1) {
-					// 第一次进来。
-					isFirst = false;
+                if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                    qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field +",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field+ "+'%'"));
+                else
+                    qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() +field+ "||'%'");
+                qo.getMyParas().Add(field, fieldValue);
 
-					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@")
-							|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
-						qo.AddWhere(attr.getKey(), " LIKE ",
-								SystemConfig.getAppCenterDBType() == DBType.MySQL
-										? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")
-										: (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-					} else {
-						qo.AddWhere(attr.getKey(), " LIKE ",
-								" '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
-					}
-					continue;
-				}
-				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@")
-						|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
-					qo.AddWhere(attr.getKey(), " LIKE ",
-							SystemConfig.getAppCenterDBType() == DBType.MySQL
-									? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')")
-									: ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-				} else {
-					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
-				}
+            }
+            if(idx!=0)
+                qo.addRightBracket();
+        }
+        else
+        {
+            if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
+            {
+                Attr attrPK = new Attr();
+                for(Attr attr : map.getAttrs())
+                {
+                    if (attr.getIsPK())
+                    {
+                        attrPK = attr;
+                        break;
+                    }
+                }
+                int i = 0;
+                String enumKey = ","; //求出枚举值外键.
+                for(Attr attr : map.getAttrs())
+                {
+                    switch (attr.getMyFieldType())
+                    {
+                        case Enum:
+                            enumKey = "," + attr.getKey() + "Text,";
+                            break;
+                        case FK:
+                            // case FieldType.PKFK:
+                            continue;
+                        default:
+                            break;
+                    }
 
-			}
-			qo.getMyParas().Add("SKey", keyWord);
-			qo.addRightBracket();
+                    if (attr.getMyDataType() != DataType.AppString)
+                        continue;
 
-		} else {
-			qo.AddHD();
-		}
+                    //排除枚举值关联refText.
+                    if (attr.getMyFieldType() == FieldType.RefText)
+                    {
+                        if (enumKey.contains("," + attr.getKey() + ",") == true)
+                            continue;
+                    }
 
+                    if (attr.getKey().equals("FK_Dept"))
+                        continue;
+
+                    i++;
+                    if (i == 1)
+                    {
+                        isFirst = false;
+                        /* 第一次进来。 */
+                        qo.addLeftBracket();
+                        if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                            qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+                        else
+                            qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+                        continue;
+                    }
+                    qo.addOr();
+
+                    if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                        qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+                    else
+                        qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+
+                }
+                qo.getMyParas().Add("SKey", keyWord);
+                qo.addRightBracket();
+
+            }
+
+        }
 		/// #endregion
+        //#region 增加数值型字段的查询
+        if (DataType.IsNullOrEmpty(map.SearchFieldsOfNum) == false)
+        {
+            String field = "";//字段名
+            String fieldValue = "";//字段值
+            int idx = 0;
+
+            //获取查询的字段
+            String[] searchFieldsOfNum = map.SearchFieldsOfNum.split("@");
+            for(String str : searchFieldsOfNum)
+            {
+                if (DataType.IsNullOrEmpty(str) == true)
+                    continue;
+
+                //字段名
+                field = str.split("=")[1];
+                if (DataType.IsNullOrEmpty(field) == true)
+                    continue;
+
+                //字段名对应的字段值
+                fieldValue = ur.GetParaString(field);
+                if (DataType.IsNullOrEmpty(fieldValue) == true)
+                    continue;
+                String[] strVals = fieldValue.split(",");
+
+                //判断是否是第一次进入
+                if (isFirst == false)
+                    qo.addAnd();
+                else
+                    isFirst = false;
+                qo.addLeftBracket();
+                if (DataType.IsNullOrEmpty(strVals[0]) == false)
+                {
+
+                    if (DataType.IsNullOrEmpty(strVals[1]) == true)
+                        qo.AddWhere(field, ">=", strVals[0]);
+                    else
+                    {
+                        qo.AddWhere(field, ">=", strVals[0], field+"1");
+                        qo.addAnd();
+                        qo.AddWhere(field, "<=", strVals[1], field+"2");
+                    }
+
+                }
+                else
+                {
+                    qo.AddWhere(field, "<=", strVals[1]);
+                }
+
+                qo.addRightBracket();
+
+            }
+        }
+        //#endregion
+
 
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false) {
-			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/",
-											// "-");
-			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().replace("/",
-										// "-");
+			String dtFrom = ur.getDTFrom();
+
+			String dtTo = ur.getDTTo();
 
 			// 按日期查询
 			if (map.DTSearchWay == DTSearchWay.ByDate) {
@@ -2744,9 +2836,9 @@ public class WF_Comm extends WebContralBase {
 	 * 
 	 * @param clsName
 	 *            类名称
-	 * @param monthodName
+	 * @param methodName
 	 *            方法名称
-	 * @param paras
+	 * @param
 	 *            参数，可以为空.
 	 * @return 执行结果
 	 * @throws Exception

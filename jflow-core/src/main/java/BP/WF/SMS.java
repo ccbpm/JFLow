@@ -384,14 +384,7 @@ public class SMS extends EntityMyPK
 		//登录邮箱
        transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
        BP.Sys.Glo.WriteUserLog("EM", "send", "发送成功");
-		//try
-		//{
-			
-		//}
-		//catch(Exception ex){
-			
-		//}
-		//return true;
+
 	}
 	/** 
 	 插入之后执行的方法.

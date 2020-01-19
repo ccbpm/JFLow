@@ -884,7 +884,7 @@ public class WF_Comm extends WebContralBase {
 
 
 		String paras = this.GetRequestVal("paras");
-		if ("un".equals(paras) == true) {
+		if ("un".equals(paras) == true || "undefined".equals(paras) == true) {
 			paras = "";
 		}
 

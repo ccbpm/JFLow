@@ -8853,6 +8853,7 @@ public class Dev2Interface
 
 			if (htWork != null)
 			{
+				Attrs attrs = wk.getEnMap().getAttrs();
 				for (Object str : htWork.keySet())
 				{
 					if(str== null)
@@ -8875,7 +8876,26 @@ public class Dev2Interface
 
 					if (wk.getRow().containsKey(str))
 					{
-						wk.SetValByKey(str.toString(), htWork.get(str));
+						if (nd.getIsStartNode() == true)
+						{
+							Attr attr = attrs.GetAttrByKey(str.toString());
+							String defVal = attrs.GetAttrByKey(str.toString()).getDefaultValOfReal();
+							if (attr.getUIIsReadonly() == true && defVal != null && defVal.equals("@RDT") == true)
+							{
+								if (attr.getMyDataType() == DataType.AppDate)
+									wk.SetValByKey(attr.getKey(), DataType.getCurrentDate());
+
+								if (attr.getMyDataType() == DataType.AppDateTime)
+									wk.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
+							}
+							else
+							{
+								wk.SetValByKey(str.toString(), htWork.get(str));
+							}
+						}
+
+						else
+							wk.SetValByKey(str.toString(), htWork.get(str));
 					}
 					else
 					{

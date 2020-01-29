@@ -4670,8 +4670,8 @@ public class WorkNode {
 							: row.GetValByKey(mapAttr.getKeyOfEn()).toString();
 					/* 如果是检查不能为空 */
 					if (str == null || DataType.IsNullOrEmpty(str) == true || str.trim().equals("")) {
-						err += BP.WF.Glo.multilingual("@表单{0}字段{1},{2}不能为空.", "WorkNode",
-								"form_field_must_not_be_null_1", item.getFK_Frm(), mapAttr.getKeyOfEn(),
+						err += BP.WF.Glo.multilingual("@表单{0}字段 [{1}]不能为空.", "WorkNode",
+								"form_field_must_not_be_null_1", item.getFK_Frm(),
 								mapAttr.getName());
 					}
 				}
@@ -4679,7 +4679,7 @@ public class WorkNode {
 
 			if (!err.equals("")) {
 				throw new RuntimeException(
-						BP.WF.Glo.multilingual("err@提交前检查到如下必填字段填写不完整:{0}.", "WorkNode", "detected_error", err));
+						BP.WF.Glo.multilingual("err@如下字段必填:{0}.", "WorkNode", "detected_error", err));
 			}
 
 			return true;

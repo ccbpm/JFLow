@@ -1806,7 +1806,7 @@ public class WF_MyFlow extends WebContralBase {
 			}
 
 			// 绑定独立表单，表单自定义方案验证错误弹出窗口进行提示.
-			if (ex.getMessage().contains("提交前检查到如下必填字段填写不完整") == true || ex.getMessage().contains("您没有上传附件") == true
+			if (ex.getMessage().contains("如下字段必填") == true || ex.getMessage().contains("您没有上传附件") == true
 					|| ex.getMessage().contains("您没有上传图片附件") == true) {
 				return "err@" + ex.getMessage().replace("@@", "@").replace("@", "<BR>@");
 			}

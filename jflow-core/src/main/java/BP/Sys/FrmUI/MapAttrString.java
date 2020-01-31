@@ -55,6 +55,14 @@ public class MapAttrString extends EntityMyPK
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 
+	public final int getMaxLen() throws Exception
+	{
+		  
+		int i = this.GetValIntByKey(MapAttrAttr.MaxLen);
+		return i;
+		 
+	}
+	
 		///#endregion
 
 
@@ -593,11 +601,12 @@ public class MapAttrString extends EntityMyPK
 			this.SetValByKey(MapAttrAttr.MaxLen, 4000);
 		}
 
-
-
-			///#region 自动扩展字段长度.  @杜. 需要翻译.
-		if (attr.getMaxLen() < 4000)
+ 
+			///#region 自动扩展字段长度. 
+		if (attr.getMaxLen() <   this.getMaxLen() )
 		{
+			this.SetValByKey(MapAttrAttr.MaxLen, this.getMaxLen());
+			
 			String sql = "";
 			MapData md = new MapData();
 			md.setNo(this.getFK_MapData());
@@ -656,7 +665,7 @@ public class MapAttrString extends EntityMyPK
 			this.SetValByKey("GroupID", "0");
 		}
 
-		return super.beforeUpdateInsertAction();
+		return true;
 	}
 
 		///#endregion

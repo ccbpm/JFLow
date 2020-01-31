@@ -2,7 +2,7 @@
 
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
-    //首位可以是字母以及下划线。 
+    //首位可以是字母以及下划线。
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
 
     var flag = false; //用来判断
@@ -491,7 +491,7 @@ function GenerFullAllCtrlsVal(data) {
 
                         $("#DDLPara_" + suffix).val(val); // 操作权限.
 
-                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200); 
+                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200);
                         //  json[kv[0]] = kv[1];
                         //   $("#DDLPara_" + suffix).val("2"); // 操作权限.
 
@@ -538,7 +538,6 @@ function GenerFullAllDivVal(data) {
         var val = json[attr]; //值
 
         var div = document.getElementById(attr);
-
         if (div != null) {
             div.innerHTML = val;
             continue;
@@ -768,7 +767,7 @@ function DBAccess() {
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";  
+var pkval="Demo_DtlExpImpDtl1";
 var EnName="BP.WF.Template.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -910,7 +909,7 @@ var Entity = (function () {
                 params = getParams1(self);
 
             var result = "";
-           
+
             $.ajax({
                 type: 'post',
                 async: false,
@@ -958,7 +957,7 @@ var Entity = (function () {
                 params = getParams1(self);
 
             var result = "";
-           
+
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1003,7 +1002,7 @@ var Entity = (function () {
             var self = this;
             var params = getParams(self);
             var result;
-           
+
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1040,7 +1039,7 @@ var Entity = (function () {
             var self = this;
             var params = getParams(self);
             var result;
-            
+
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1077,7 +1076,7 @@ var Entity = (function () {
 
 
             var result;
-           
+
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1235,7 +1234,7 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal()); 
+            //  alert(self.GetPKVal());
 
             var result;
             $.ajax({
@@ -1269,7 +1268,7 @@ var Entity = (function () {
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     var url = dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl;
-                        ThrowMakeErrInfo("Entity_RetrieveFromDBSources-" + self.enName + " pkval=" + pkavl, textStatus, url);
+                    ThrowMakeErrInfo("Entity_RetrieveFromDBSources-" + self.enName + " pkval=" + pkavl, textStatus, url);
 
                     //alert(JSON.stringify(XMLHttpRequest));
                     //result = "RetrieveFromDBSources err@系统发生异常, status: " + XMLHttpRequest.status + " readyState: " + XMLHttpRequest.readyState;
@@ -1352,8 +1351,8 @@ var Entity = (function () {
                     string = data;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    var url = dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName="+ self.enName + "&PKVal="+ pkval+ "&MethodName=" + methodName + "&t=" + new Date().getTime();
-                    ThrowMakeErrInfo("Entity_DoMethodReturnString-" + self.enName + " pkval=" + pkval + " MethodName=" + methodName, textStatus,url);
+                    var url = dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + pkval + "&MethodName=" + methodName + "&t=" + new Date().getTime();
+                    ThrowMakeErrInfo("Entity_DoMethodReturnString-" + self.enName + " pkval=" + pkval + " MethodName=" + methodName, textStatus, url);
 
                     //    string = "Entity.DoMethodReturnString err@系统发生异常, status: " + XMLHttpRequest.status + " readyState: " + XMLHttpRequest.readyState;
                     //  alert(string);
@@ -1833,7 +1832,7 @@ var Entities = (function () {
 
         DoMethodReturnJSON: function (methodName, params) {
 
-            var jsonString = this.DoMethodReturnString(methodName, params);
+            var jsonString = this.DoMethodReturnString(methodName);
 
             if (jsonString.indexOf("err@") != -1) {
                 alert(jsonString);
@@ -2208,7 +2207,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2264,7 +2263,7 @@ var HttpHandler = (function () {
             var self = this;
             var jsonString;
 
-           
+
             $.ajax({
                 type: 'post',
                 async: false,
@@ -2280,7 +2279,7 @@ var HttpHandler = (function () {
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
-                    ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus,url);
+                    ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
                 }
             });
 
@@ -2373,7 +2372,7 @@ var WebUser = function () {
         dataType: 'html',
         success: function (data) {
 
-            if (data.indexOf("err@") != -1 ) {
+            if (data.indexOf("err@") != -1) {
                 if (data.indexOf('登录信息丢失') != -1) {
                     alert("登录信息丢失，请重新登录。");
                 } else {
@@ -2384,30 +2383,39 @@ var WebUser = function () {
 
             try {
                 webUserJsonString = JSON.parse(data);
-                
+
             } catch (e) {
                 alert("json解析错误: " + data);
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             var url = dynamicHandler + "?DoType=WebUser_Init&t=" + new Date().getTime();
-            ThrowMakeErrInfo("WebUser-WebUser_Init", textStatus,url);
+            ThrowMakeErrInfo("WebUser-WebUser_Init", textStatus, url);
         }
     });
     var self = this;
     $.each(webUserJsonString, function (n, o) {
         self[n] = o;
     });
-   
+
 };
 
-function ThrowMakeErrInfo(funcName, obj,url) {
+function ThrowMakeErrInfo(funcName, obj, url) {
 
     var msg = "1. " + funcName + " err@系统发生异常.";
     msg += "\t\n2.检查请求的URL连接是否错误：" + url;
     msg += "\t\n3.估计是数据库连接错误或者是系统环境问题. ";
     msg += "\t\n4.技术信息:status: " + obj.status + " readyState: " + obj.readyState;
-    msg += "\t\n5 您可以执行一下http://127.0.0.1/WF/Default.aspx/jsp/php 测试一下，动态文件是否可以被执行。";
+    msg += "\t\n5.您要打开执行的handler查看错误吗？ ";
+    // msg += "\t\n5 您可以执行一下http://127.0.0.1/WF/Default.aspx/jsp/php 测试一下，动态文件是否可以被执行。";
+
+    if (url != null) {
+        if (window.confirm(msg) == true) {
+            WinOpen(url);
+            return;
+        }
+        return;
+    }
     alert(msg);
 }
 
@@ -2570,7 +2578,7 @@ function GetPara(atPara, key) {
 
 
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
     var curPath = window.document.location.href;
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
@@ -2655,7 +2663,7 @@ $(function () {
         }
 
         //如果进入了管理员目录.
-        if (url.indexOf("/admin/") != -1 && loadWebUser.No != "admin") {
+        if (url.indexOf("/admin/") != -1 && loadWebUser.IsAdmin != 1) {
             dynamicHandler = "";
             alert("管理员登录信息丢失,请重新登录,当前用户[" + loadWebUser.No + "]不能操作管理员目录功能.");
             return;

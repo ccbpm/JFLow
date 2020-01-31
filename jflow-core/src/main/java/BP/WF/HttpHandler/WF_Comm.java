@@ -3096,7 +3096,7 @@ public class WF_Comm extends WebContralBase {
 			ht.put("FK_Dept", "");
 			ht.put("FK_DeptName", "");
 			ht.put("FK_DeptNameOfFull", "");
-
+			ht.put("IsAdmin", 0);
 			ht.put("CustomerNo", SystemConfig.getCustomerNo());
 			ht.put("CustomerName", SystemConfig.getCustomerName());
 			return BP.Tools.Json.ToJson(ht);
@@ -3110,7 +3110,7 @@ public class WF_Comm extends WebContralBase {
 		ht.put("CustomerNo", SystemConfig.getCustomerNo());
 		ht.put("CustomerName", SystemConfig.getCustomerName());
 		ht.put("SID", WebUser.getSID());
-
+		ht.put("IsAdmin", WebUser.getIsAdmin()==true?1:0);
 		// 检查是否是授权状态.
 		if (WebUser.getIsAuthorize() == true) {
 			ht.put("IsAuthorize", "1");

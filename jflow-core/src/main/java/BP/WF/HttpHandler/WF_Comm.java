@@ -2487,8 +2487,9 @@ public class WF_Comm extends WebContralBase {
 			/// #endregion 查询出来实体数据.
 
 			/// #region 保存新加行.
+			String newPKVal = this.GetRequestVal("NewPKVal");
 			// 没有新增行
-			if (this.GetRequestValBoolen("InsertFlag") == false) {
+			if (this.GetRequestValBoolen("InsertFlag") == false|| DataType.IsNullOrEmpty(newPKVal) == true) {
 				return "保存成功.";
 			}
 
@@ -2501,25 +2502,25 @@ public class WF_Comm extends WebContralBase {
 						continue;
 					}
 
-					valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.getKey(), null);
+					valValue = this.GetValFromFrmByKey("TB_" + newPKVal + "_" + attr.getKey(), null);
 					en.SetValByKey(attr.getKey(), valValue);
 					continue;
 				}
 
 				if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false) {
-					valValue = this.GetValFromFrmByKey("TB_" + 0 + "_" + attr.getKey());
+					valValue = this.GetValFromFrmByKey("TB_" + newPKVal + "_" + attr.getKey());
 					en.SetValByKey(attr.getKey(), valValue);
 					continue;
 				}
 
 				if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true) {
-					valValue = this.GetValFromFrmByKey("DDL_" + 0 + "_" + attr.getKey());
+					valValue = this.GetValFromFrmByKey("DDL_" + newPKVal + "_" + attr.getKey());
 					en.SetValByKey(attr.getKey(), valValue);
 					continue;
 				}
 
 				if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true) {
-					valValue = this.GetValFromFrmByKey("CB_" + 0 + "_" + attr.getKey(), "-1");
+					valValue = this.GetValFromFrmByKey("CB_" + newPKVal + "_" + attr.getKey(), "-1");
 					if (valValue.equals("-1")) {
 						en.SetValByKey(attr.getKey(), 0);
 					} else {
@@ -2543,7 +2544,7 @@ public class WF_Comm extends WebContralBase {
 			} catch (RuntimeException ex) {
 				// 异常处理..
 				Log.DebugWriteInfo(ex.getMessage());
-				// msg += "<hr>" + ex.Message;
+				return ex.getMessage();
 			}
 
 			/// #endregion 保存新加行.
@@ -2838,8 +2839,6 @@ public class WF_Comm extends WebContralBase {
 	 *            类名称
 	 * @param methodName
 	 *            方法名称
-	 * @param
-	 *            参数，可以为空.
 	 * @return 执行结果
 	 * @throws Exception
 	 */

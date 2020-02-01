@@ -6,10 +6,7 @@ import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Sys.XML.*;
-import BP.Tools.DataTableConvertJson;
-import BP.Tools.DateUtils;
-import BP.Tools.FileAccess;
-import BP.Tools.FtpUtil;
+import BP.Tools.*;
 import BP.Web.*;
 import BP.En.*;
 import BP.En.Map;
@@ -3524,7 +3521,7 @@ public class WF_Comm extends WebContralBase {
 			if (attr.getIsPK() || attr.getIsNum() == false) {
 				continue;
 			}
-			if (attr.getUIContralType() == UIContralType.TB == false) {
+			if (attr.getUIContralType() != UIContralType.TB ) {
 				continue;
 			}
 			if (attr.getUIVisible() == false) {
@@ -3680,7 +3677,7 @@ public class WF_Comm extends WebContralBase {
 				dataType = attr.getMyDataType();
 			}
 
-			if (this.GetRequestVal("DDL_" + paras[0]) == null) {
+			if (this.GetRequestVal("DDL_Aly_" + paras[0]) == null) {
 				ActiveAttr aa = (ActiveAttr) aas.GetEnByKey(ActiveAttrAttr.AttrKey, paras[0]);
 				if (aa == null) {
 					continue;
@@ -3898,6 +3895,7 @@ public class WF_Comm extends WebContralBase {
 			where = "" + Condition.replace("and", "");
 			whereOfLJ = "" + Condition.replace("and", "");
 		} else {
+			if(StringUtils.endsWith(where," AND ") ==true)
 			where = where.substring(0, where.length() - " AND ".length()) + Condition;
 			whereOfLJ = whereOfLJ.substring(0, whereOfLJ.length() - " AND ".length()) + Condition;
 		}

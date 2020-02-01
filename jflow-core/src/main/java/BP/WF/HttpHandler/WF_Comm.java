@@ -3883,9 +3883,9 @@ public class WF_Comm extends WebContralBase {
 			if (val.equals("all")) {
 				continue;
 			}
-			where += " " + str + "=" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
+			where += " and " + str + "=" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
 			if (!str.equals("FK_NY")) {
-				whereOfLJ += " " + str + " =" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
+				whereOfLJ += " and " + str + " =" + SystemConfig.getAppCenterDBVarStr() + str + "   AND ";
 			}
 
 			myps.Add(str, val);

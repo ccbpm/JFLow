@@ -49,6 +49,19 @@ public class MapAttrEnum extends EntityMyPK
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
 
+	/**
+	 控件类型
+	 * @throws Exception
+	 */
+	public final UIContralType getUIContralType() throws Exception
+	{
+		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
+	}
+	public final void setUIContralType(UIContralType value) throws Exception
+	{
+		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
+	}
+
 		///#endregion
 
 
@@ -213,6 +226,14 @@ public class MapAttrEnum extends EntityMyPK
 
 		//单选按钮的展现方式.
 		attr.setRBShowModel(this.GetValIntByKey("RBShowModel"));
+
+
+		if (this.getUIContralType() == UIContralType.DDL || this.getUIContralType() == UIContralType.RadioBtn)
+			attr.setMyDataType(DataType.AppInt);
+		else
+			attr.setMyDataType(DataType.AppString);
+
+
 
 		//执行保存.
 		attr.Save();

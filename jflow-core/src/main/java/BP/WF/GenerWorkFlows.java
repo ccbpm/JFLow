@@ -1,6 +1,7 @@
 package BP.WF;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.WF.*;
 import BP.Port.*;
 import BP.Sys.*;
@@ -26,7 +27,31 @@ public class GenerWorkFlows extends Entities
 		return DBAccess.RunSQLReturnTable(sql);
 	}
 
+	/**
+	 * 根据流程编号，标题模糊查询
+	 * @param flowNo 流程编号
+	 * @param likeKey 模糊查询的值
+	 * @return
+	 * @throws Exception
+	 */
+	public String QueryByLike(String flowNo,String likeKey) throws Exception
+	{
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere("FK_Flow", flowNo);
+		if(DataType.IsNullOrEmpty(likeKey) == false)
+		{
+			qo.addAnd();
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				qo.AddWhere("Title", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "Title" + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "Title" + "+'%'"));
+			else
+				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "Title" + "||'%'");
+			qo.getMyParas().Add("Title", likeKey);
+		}
 
+		qo.addOrderBy("WorkID");
+		qo.DoQuery();
+		return BP.Tools.Json.ToJson(this.ToDataTableField("WF_GenerWorkFlow"));
+	}
 		///#region 方法
 	/** 
 	 得到它的 Entity 

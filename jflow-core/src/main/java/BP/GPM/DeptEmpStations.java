@@ -31,10 +31,15 @@ public class DeptEmpStations extends EntitiesMyPK
 		return new DeptEmpStation();
 	}
 
-		///#endregion
+	/**
+	 * 删除不存在与Port_Emp中的数据
+	 */
+	public void DelteNotInEmp()
+	{
+		String sql = "DELETE FROM Port_DeptEmpStation WHERE FK_Emp NOT IN (SELECT No FROM Port_Emp) ";
+		DBAccess.RunSQL(sql);
+	}
 
-
-		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 

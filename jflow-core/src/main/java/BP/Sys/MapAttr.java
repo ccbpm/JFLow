@@ -1189,6 +1189,19 @@ public class MapAttr extends EntityMyPK
 		BP.DA.DataType.WriteFile(file, text);
 		return "保存成功！";
 	}
+
+	public String DeleteBigNoteHtmlText() throws Exception
+	{
+		String file = SystemConfig.getPathOfDataUser() + "/CCForm/BigNoteHtmlText/" + this.getFK_MapData() + ".htm";
+
+		if (new File(file).exists() == true)
+			new File(file).delete();
+
+		this.Delete();
+
+
+		return "删除成功！";
+	}
 	/** 
 	 读取大块html文本
 	 

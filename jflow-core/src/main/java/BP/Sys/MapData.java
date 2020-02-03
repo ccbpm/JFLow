@@ -1255,7 +1255,7 @@ public class MapData extends EntityNoName
 
 			//流程控件.
 		map.AddTBString(MapDataAttr.FlowCtrls, null, "流程控件", true, true, 0, 200, 20);
-
+		map.AddTBInt(MapDataAttr.IsEnableJS,0,"是否启用自定义JS",true,false);
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 
@@ -2079,6 +2079,21 @@ public class MapData extends EntityNoName
 						try
 						{
 							en.DirectInsert();
+							//判断该字段是否是大文本 例如注释、说明
+							if(en.getUIContralType() == UIContralType.BigText)
+							{
+								//判断原文件是否存在
+								String file = SystemConfig.getPathOfDataUser() + "/CCForm/BigNoteHtmlText/" + oldMapID + ".htm";
+								//若文件存在，则复制
+								if (new File(file).exists() == true)
+								{
+									String newFile = SystemConfig.getPathOfDataUser() + "/CCForm/BigNoteHtmlText/" + fk_mapdata + ".htm";
+									if (new File(newFile).exists() == true)
+										new File(newFile).delete();
+									BP.Tools.FileAccess.Copy(file, newFile);
+								}
+
+							}
 						}
 						catch (java.lang.Exception e3)
 						{

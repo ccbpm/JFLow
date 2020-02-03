@@ -62,7 +62,11 @@ public enum UIContralType
 	/** 
 	 流程进度图
 	*/
-	JobSchedule(50);
+	JobSchedule(50),
+	/**
+	 * 大文本
+	 */
+	BigText(60);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

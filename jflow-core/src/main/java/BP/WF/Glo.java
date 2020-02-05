@@ -4992,7 +4992,7 @@ public class Glo {
 					String tFrom = DataType.getCurrentDate() + " " + timeStrs[0].trim();
 					String tTo = DataType.getCurrentDate() + " " + timeStrs[1].trim();
 					if (DataType.ParseSysDateTime2DateTime(tFrom).getTime() <= dtNow.getTime()
-							&& dtNow.compareTo(DataType.ParseSysDateTime2DateTime(tTo)) >= 0) {
+							&&DataType.ParseSysDateTime2DateTime(tTo).getTime()>=dtNow.getTime()){
 						return true;
 					}
 				}

@@ -554,7 +554,7 @@ public class FrmBill extends EntityNoName {
 		MapAttrs attrs = new MapAttrs(this.getNo());
 
 		/// #region 补充上流程字段到 NDxxxRpt.
-		if (attrs.contains(this.getNo() + "_" + GERptAttr.Title) == false) {
+		if (attrs.Contains(this.getNo() + "_" + GERptAttr.Title) == false) {
 			/* 标题 */
 			MapAttr attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(this.getNo());

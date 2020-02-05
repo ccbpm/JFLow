@@ -1703,6 +1703,8 @@ public class MapData extends EntityNoName
 		MapData mdOld = new MapData();
 		mdOld.setNo(fk_mapdata);
 		mdOld.RetrieveFromDBSources();
+		//现在表单的类型
+		FrmType frmType = mdOld.getHisFrmType();
 		mdOld.Delete();
 
 		// 求出dataset的map.
@@ -1799,10 +1801,39 @@ public class MapData extends EntityNoName
 						}
 
 						md.setHisFrmType(mdOld.getHisFrmType());
+						if (frmType == FrmType.Develop)
+							md.setHisFrmType(FrmType.Develop);
 						//表单应用类型保持不变
 						md.setAppType(mdOld.getAppType());
 
 						md.DirectInsert();
+
+						//如果是开发者表单，赋值HtmlTemplateFile数据库的值并保存到DataUser下
+						if (frmType == FrmType.Develop)
+						{
+							String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", oldMapID, "HtmlTemplateFile");
+							if (DataType.IsNullOrEmpty(htmlCode) == false)
+							{
+								//保存到数据库，存储html文件
+								//保存到DataUser/CCForm/HtmlTemplateFile/文件夹下
+								String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/";
+								if (new File(filePath).exists() == false)
+									new File(filePath).mkdir();
+								filePath = filePath + md.getNo() + ".htm";
+								//写入到html 中
+								BP.DA.DataType.WriteFile(filePath, htmlCode);
+								// HtmlTemplateFile 保存到数据库中
+								BP.DA.DBAccess.SaveBigTextToDB(htmlCode, "Sys_MapData", "No", md.getNo(), "HtmlTemplateFile");
+							}
+							else
+							{
+								//如果htmlCode是空的需要删除当前节点的html文件
+								String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/"+md.getNo()+".htm";
+								if (new File(filePath).exists() == true)
+									new File(filePath).delete();
+								BP.DA.DBAccess.SaveBigTextToDB("", "Sys_MapData", "No", md.getNo(), "HtmlTemplateFile");
+							}
+						}
 					}
 					break;
 				case "Sys_FrmBtn":

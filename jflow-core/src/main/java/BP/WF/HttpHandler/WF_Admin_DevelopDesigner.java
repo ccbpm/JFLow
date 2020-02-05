@@ -2,6 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.DBAccess;
 import BP.DA.DataType;
+import BP.DA.Log;
 import BP.Difference.Handler.WebContralBase;
 import BP.Frm.EntityType;
 import BP.Frm.FrmBill;
@@ -33,11 +34,13 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	{
 		String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
 		String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/";
+		Log.DebugWriteInfo("Designer_Init"+filePath);
 		File file = new File(filePath);
         if (file.exists() == false)
         {
             file.mkdir();
         }
+
         filePath =filePath+"HtmlTemplateFile/";
         if (new File(filePath).exists() == false)
         {

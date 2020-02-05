@@ -23,7 +23,7 @@ public abstract class HttpHandlerBase
 	}
 	
 	public void ProcessRequestPost(Object mycontext)
-	{	
+	{
 		PrintWriter out =null;
 		//创建 ctrl 对象.
 		Object tempVar = mycontext;
@@ -48,7 +48,6 @@ public abstract class HttpHandlerBase
 			String data = ctrl.DoMethod(ctrl, ctrl.getDoType());
 
 			//返回执行的结果.
-			//ctrl.context.Response.Write(data);
 			this.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 			this.getResponse().setCharacterEncoding("UTF-8");
 			out = this.getResponse().getWriter();

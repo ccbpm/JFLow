@@ -825,14 +825,17 @@ public class WF_Admin_AttrNode extends WebContralBase
 					att.setIsEnableInAPP(false);
 				}
 				att.Update();
-
-				if (atts.contains("," + getFK_MapData() + "_" + attr.getKeyOfEn() + ",") == true)
-				{
-					FrmAttachment ath = new FrmAttachment(getFK_MapData() + "_" + attr.getKeyOfEn());
+			}
+			//获取附件
+			FrmAttachments aths = new FrmAttachments();
+			aths.Retrieve(FrmAttachmentAttr.FK_MapData, this.getFK_MapData(), FrmAttachmentAttr.FK_Node, 0);
+			for(FrmAttachment ath : aths.ToJavaList())
+			{
+				if (atts.indexOf("," + ath.getMyPK()  + ",") !=-1)
 					ath.SetPara("IsShowMobile", 1);
-					ath.Update();
-
-				}
+				else
+					ath.SetPara("IsShowMobile", 0);
+				ath.Update();
 			}
 			return "保存成功！";
 		}

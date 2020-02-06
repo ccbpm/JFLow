@@ -4672,6 +4672,7 @@ public class Flow extends BP.En.EntityNoName {
 			fl.setNo(SpecialFlowNo.toString());
 			fl.DoDelData();
 			fl.DoDelete(); // 删除可能存在的垃圾.
+			fl.Insert();
 			break;
 		default:
 			throw new RuntimeException("@没有判断");

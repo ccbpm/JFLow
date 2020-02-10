@@ -2244,10 +2244,10 @@ public class Dev2Interface
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
+		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE (T.Emps LIKE '%@" + WebUser.getNo() + "@%' OR T.Emps LIKE '%@" + WebUser.getNo() + ",%') AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
-		//@史连雨,需要翻译.
+		//需要翻译.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			dt.Columns.get("TYPE").ColumnName = "Type";

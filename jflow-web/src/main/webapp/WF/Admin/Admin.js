@@ -22,26 +22,82 @@
  */
 
 $(document).ready(function () {
+    //动态添加新风格  @lz
+    SetNewCSS();
+    
+    //设置帮助页面内容 @lz
+   // SetHelpPage();
+
+    HelpDiv();
 
     //设置自动提示.
     initToggle();
 
-    //设置  class="HelpImg" 的图片给他增加上onclick事件,点击直接可以全屏放大打开.
+    //设置  class="Help" 的图片 点击直接可以全屏放大打开.  @lz
     SetHelpImg();
-
+    //设置放大的img容器   @lz
+    SetBigImgDiv();
     //设置SQL脚本编辑器.
     CheckSQLTextArea();
-
-    //check HelpDiv
-    HelpDiv();
+   
 
 })
+//动态添加新风格  @lz
+function SetNewCSS() {
+    //body下添加一个父Div
+    var div = document.createElement('div');
+    $(div).attr('class', 'cs-content-box');
+    $('#bar').wrap(div);
+    $('fieldset').wrapAll(div);
+    //帮助ul风格
+    div = document.createElement('div');
+    $(div).attr('class', 'cs-help');
+    $('ul').wrap(div);
+   
+    $.each($("legend"), function (i,obj) {
 
+        var _html = $(obj).html();
+        if (obj.id.indexOf("help") != -1) {
+            $(obj).html("");
+            var div2 = "<div id='help1' class='help-title'> <img src='../Img/ico-help.png' alt='帮助' class='ico-help' />" + _html + " </div>";
+            $($(obj).parent().find("ul").parent()[0]).append(div2)
+        } 
+    })
+    
+   
+    //bar风格
+    $('#bar').attr('class', 'cs-tr cs-bar');
+    //删除重复的说明标题
+    var leg = $("legend");
+    for (var i = 0; i < leg.length; i++) {
+        if (leg.eq(i).text() == "说明")
+            leg.eq(i).remove();
+    }
+}
+//设置帮助页面内容 @lz
+function SetHelpPage() {
 
+    var legends = $("legend#help");
+    //隐藏所有兄弟级元素
+    legends.siblings().hide();
+    ////增加font  以便监听单击
+    //var font = document.createElement('font');
+    //$(font).attr('id', 'cl');
+    //legends.wrap('#cl');
+    //legends.wrap(font);
+    $("font").on("click", function () {
+        alert("1234");
+        legends.siblings().show();
+        
+    });
+}
+function showPage() {
+    var legends = $("legend#help");
+    //隐藏所有兄弟级元素
+    legends.siblings().show();
+}
 function HelpDiv() {
-
     $("form").find("div").each(function () {
-
         if (this.className.toLowerCase() == "help") {
 
             //var msg = "请输入SQL语句,支持ccbpm的表达式.";
@@ -56,14 +112,62 @@ function HelpDiv() {
 
         }
     });
-
 }
 
-
+//设置  class="HelpImg" 的图片 点击直接可以全屏放大打开.  @lz
 function SetHelpImg() {
+    $(function () {
+        $(".HelpImg").click(function () {
+            var _this = $(this);//将当前的pimg元素作为_this传入函数  
+            imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
+        });
+    });
 
+    function imgShow(outerdiv, innerdiv, bigimg, _this) {
+        var src = _this.attr("src");//获取当前点击的pimg元素中的src属性  
+        $(bigimg).attr("src", src);//设置#bigimg元素的src属性  
+
+        /*获取当前点击图片的真实大小，并显示弹出层及大图*/
+        $("<img/>").attr("src", src).load(function () {
+            var windowW = $(window).width();//获取当前窗口宽度  
+            var windowH = $(window).height();//获取当前窗口高度  
+            var realWidth = this.width;//获取图片真实宽度  
+            var realHeight = this.height;//获取图片真实高度  
+            var imgWidth, imgHeight;
+            var scale = 0.8;//缩放尺寸，当图片真实宽度和高度大于窗口宽度和高度时进行缩放  
+
+            if (realHeight > windowH * scale) {//判断图片高度  
+                imgHeight = windowH * scale;//如大于窗口高度，图片高度进行缩放  
+                imgWidth = imgHeight / realHeight * realWidth;//等比例缩放宽度  
+                if (imgWidth > windowW * scale) {//如宽度扔大于窗口宽度  
+                    imgWidth = windowW * scale;//再对宽度进行缩放  
+                }
+            } else if (realWidth > windowW * scale) {//如图片高度合适，判断图片宽度  
+                imgWidth = windowW * scale;//如大于窗口宽度，图片宽度进行缩放  
+                imgHeight = imgWidth / realWidth * realHeight;//等比例缩放高度  
+            } else {//如果图片真实高度和宽度都符合要求，高宽不变  
+                imgWidth = realWidth;
+                imgHeight = realHeight;
+            }
+            $(bigimg).css("width", imgWidth);//以最终的宽度对图片缩放  
+
+            var w = (windowW - imgWidth) / 2;//计算图片与窗口左边距  
+            var h = (windowH - imgHeight) / 2;//计算图片与窗口上边距  
+            $(innerdiv).css({ "top": h, "left": w });//设置#innerdiv的top和left属性  
+            $(outerdiv).fadeIn("fast");//淡入显示#outerdiv及.pimg  
+        });
+
+        $(outerdiv).click(function () {//再次点击淡出消失弹出层  
+            $(this).fadeOut("fast");
+        });
+    }
+    
 }
-
+//加载放大的img容器  @lz
+function SetBigImgDiv() {
+    var divs = "<div id='outerdiv' style='position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;'><div id='innerdiv' style='position:absolute;'><img id='bigimg' style='border:5px solid #fff;' src=''/></div ></div >";
+    $(".cs-content-box").append(divs);
+}
 //设置SQL脚本编辑器. 如果遇到 textarea 的className=SQL的，我们就默认为该文本框是
 //要sql的格式，就给他增加上sql的模式.
 function CheckSQLTextArea() {
@@ -166,7 +270,7 @@ function initToggle() {
 
         //   en.toggle();
 
-        en.innerHTML = "<font color=green><b><img src='" + basePath + "/WF/Img/Help.png' >" + en.innerHTML + "</b></font>";
+        en.innerHTML = "<font color=green><b>" + en.innerHTML + "</b></font>";
         en.onclick = function () {
 
             // 绑定事件

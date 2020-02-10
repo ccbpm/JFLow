@@ -3,7 +3,7 @@
     jQuery.getScript(basePath + "/WF/Admin/Admin.js")
         .done(function () {
             /* 耶，没有问题，这里可以干点什么 */
-            // alert('ok');
+             //alert('ok');
         })
         .fail(function () {
             /* 靠，马上执行挽救操作 */
@@ -11,11 +11,32 @@
         });
 });
 
+//Vue.component('model-component', {
+//    template: '\
+//            <div>\
+//                <button @click="handleIncrease">+1</button>\
+//                <button @click="handleReduce">-1</button>\
+//            </div> ',
+//    data: function () {
+//        return {
+//            nodeID: GetQueryString("FK_Node"),
+//        }
+//    },
+//    methods: {
+//        handleIncrease: function () {
+//            this.counter++;
+//            this.$emit('input', this.counter);
+//        },
+//        handleReduce: function () {
+//            this.counter--;
+//            this.$emit('input', this.counter);
+//        }
+//    }
 
+//});
 var optionKey = 0;
-function InitBar(key) {
+function InitBar(optionKey) {
 
-    optionKey = key;
 
     var nodeID = GetQueryString("FK_Node");
     var str = nodeID.substr(nodeID.length - 2);
@@ -24,7 +45,7 @@ function InitBar(key) {
         isSatrtNode = true;
 
     // var html = "<div style='background-color:Silver' > 请选择访问规则: ";
-    var html = "<div style='padding:5px' >访问规则: ";
+    var html = "<div style='padding:5px' >接受人规则: ";
 
     html += "<select id='changBar' onchange='changeOption()'>";
 
@@ -97,9 +118,9 @@ function InitBar(key) {
         html += "<option value=" + DeliveryWay.ByCCFlowBPM + " >&nbsp;&nbsp;&nbsp;&nbsp;按ccBPM的BPM模式处理</option>";
     }
     html += "</select >";
-    html += "<input  id='Btn_Save' type=button onclick='SaveIt()' value='保存' />";
-    html += "<input type=button onclick='AdvSetting()' value='高级设置' />";
-    //  html += "<input type=button onclick='Help()' value='我需要帮助' />";
+    html += "<input  id='Btn_Save' type=button onclick='SaveRole()' value='保存' />";
+    html += "<input id='Btn' type=button onclick='AdvSetting()' value='高级设置' />";
+    html += "<input  id='Btn_Help' type=button onclick='Help()' value='在线帮助' />";
     html += "</div>";
 
     document.getElementById("bar").innerHTML = html;
@@ -107,6 +128,19 @@ function InitBar(key) {
     $("#changBar option[value='" + optionKey + "']").attr("selected", "selected");
 }
 
+function SaveRole() {
+    $("#Btn_Save").val("正在保存请稍后.");
+
+    try {
+        Save();
+    } catch (e) {
+        alert(e);
+        return;
+    }
+
+    $("#Btn_Save").val("保存成功");
+    setTimeout(function () { $("#Btn_Save").val("保存"); }, 1000);
+}
 function OldVer() {
 
     var nodeID = GetQueryString("FK_Node");
@@ -142,10 +176,47 @@ function OpenDot2DotStations() {
     var url = "../../../Comm/RefFunc/Dot2Dot.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeStations";
     url += "&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Station&EnsOfM=BP.WF.Port.Stations";
     url += "&DefaultGroupAttrKey=FK_StationType&NodeID=" + nodeID + "&PKVal=" + nodeID;
+    OpenEasyUiDialogExtCloseFunc(url, '设置岗位', 800, 500,function () {
+        Baseinfo.stas = getStas();
+    });
 
-    OpenEasyUiDialogExt(url, '设置岗位', 800, 500, true);
 }
+/*
+ * 获取节点绑定的岗位
+ */
+function getStas() {
+    var ens = new Entities("BP.WF.Template.NodeStations");
+    ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
+    ens = $.grep(ens, function (obj, i) {
+        return obj.FK_Node != undefined
+    });
+    return ens;
+   
+}
+/*
+ * 获取节点绑定的部门
+ */
+function getDepts() {
+    var ens = new Entities("BP.WF.Template.NodeDepts");
+    ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
+    ens = $.grep(ens, function (obj, i) {
+        return obj.FK_Node != undefined
+    });
+    return ens;
 
+}
+/*
+ * 获取节点绑定的人员
+ */
+function getEmps() {
+    var ens = new Entities("BP.WF.Template.NodeEmps");
+    ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
+    ens = $.grep(ens, function (obj, i) {
+        return obj.FK_Node != undefined
+    });
+    return ens;
+
+}
 function changeOption() {
     var nodeID = GetQueryString("FK_Node");
     var obj = document.getElementById("changBar");
@@ -214,6 +285,9 @@ function changeOption() {
         case DeliveryWay.ByFromEmpToEmp:
             roleName = "18.ByFromEmpToEmp.htm";
             break;
+        case DeliveryWay.FindSpecDeptEmps:
+            roleName = "19.FindSpecDeptEmpsInStationlist.htm";
+            break;
         case DeliveryWay.ByStationForPrj:
             roleName = "20.ByStationForPrj.htm";
             break;
@@ -275,3 +349,4 @@ function AdvSetting() {
     var url = "AdvSetting.htm?FK_Node=" + nodeID + "&M=" + Math.random();
     OpenEasyUiDialogExt(url, "高级设置", 600, 500, false);
 }
+

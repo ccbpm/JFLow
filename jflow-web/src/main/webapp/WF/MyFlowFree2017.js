@@ -644,7 +644,7 @@ function figure_Template_HyperLink(frmLin) {
         SID = "";
     if (url.indexOf("?") == -1)
         url = url + "?1=1";
-    if (url.indexOf("SearchBS.htm") != -1)
+    if (url.indexOf("Search.htm") != -1)
         url = url + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
     else
         url = url + "&OID=" + OID + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
@@ -849,7 +849,7 @@ function figure_Template_Dtl(frmDtl) {
     }
 
     var eleIframe = '<iframe></iframe>';
-    eleIframe = $("<iframe class='Fdtl' ID='Dtl_" + frmDtl.No + "' src='" + src +
+    eleIframe = $("<iframe class='Fdtl' name='Dtl' ID='Dtl_" + frmDtl.No + "' src='" + src +
                  "' frameborder=0  style='position:absolute;width:" + frmDtl.W + "px; height:" + frmDtl.H +
                  "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
     if (pageData.IsReadonly) {

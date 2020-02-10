@@ -40,20 +40,43 @@ UE.plugins['impfrmfields'] = function () {
         }
     };
 }
-//插入回收站字段.
+//导入表单模板..
 UE.plugins['impfrm'] = function () {
     var me = this, thePlugins = 'impfrm';
     var frmID = pageParam.fk_mapdata;
     var W = document.body.clientWidth - 120;
-    var H = document.body.clientHeight - 220;
+    var H = document.body.clientHeight - 80;
     var url = "../FoolFormDesigner/ImpExp/Imp.htm?FK_MapData=" + GetQueryString("FK_MapData") + "&FrmID=" + GetQueryString("FK_MapData") + "&DoType=FunList&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
     me.commands[thePlugins] = {
         execCommand: function (method, dataType) {
             var dialog = new UE.ui.Dialog({
-                iframeUrl: './Fields.html?FrmID=' + frmID,
+                iframeUrl: url,
                 name: thePlugins,
                 editor: this,
-                title: '回收站字段',
+                title: '导入表单模板',
+                cssRules: "width:" + W + "px;height:" + H + "px;",
+
+            });
+            dialog.render();
+            dialog.open();
+
+        }
+    };
+}
+//手机模板..
+UE.plugins['frmmobile'] = function () {
+    var me = this, thePlugins = 'frmmobile';
+    var frmID = pageParam.fk_mapdata;
+    var W = document.body.clientWidth - 120;
+    var H = document.body.clientHeight - 80;
+    var url = '../AttrNode/SortingMapAttrs.htm?FK_Flow=' + GetQueryString("FK_Flow") + '&FK_Node=' + GetQueryString('FK_Node') + '&FK_MapData=' + GetQueryString("FK_MapData");
+    me.commands[thePlugins] = {
+        execCommand: function (method, dataType) {
+            var dialog = new UE.ui.Dialog({
+                iframeUrl: url,
+                name: thePlugins,
+                editor: this,
+                title: '手机模板',
                 cssRules: "width:" + W + "px;height:" + H + "px;",
 
             });
@@ -1191,8 +1214,6 @@ UE.plugins['component'] = function () {
                     imgAth.Delete();
                 }
                 if (dataType == "Img") {
-                    var mapAttr = new Entity("BP.Sys.MapAttr", mypk);
-                    mapAttr.Delete();
                     var en = new Entity("BP.Sys.FrmUI.ExtImg", mypk);
                     en.Delete();
                 }

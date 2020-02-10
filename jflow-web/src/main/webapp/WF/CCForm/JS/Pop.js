@@ -683,7 +683,7 @@ function PopTableList(mapExt, targetId, index, oid) {
 function PopBindEnum(mapExt, targetId, index, oid) {
 
     var mtagsId;
-    if (targetId == null || targetId == undefined  )
+    if (targetId == null || targetId == undefined)
         targetId = "TB_" + mapExt.AttrOfOper;
 
     var target = $("#" + targetId);

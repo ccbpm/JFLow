@@ -370,6 +370,7 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
         if (colSpan == 0) {
 
             if (textColSpan == tableCol) {
+                rowSpan = 1;
                 html += "<td  class='LabelFDesc' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                 isDropTR = true;
                 continue;
@@ -523,8 +524,13 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
         if (colSpan == 0) {
             //占一行
             if (textColSpan == tableCol) {
+                if (isDropTR == false) {
+                    var unUseColSpan = tableCol - UseColSpan;
+                    html += "<td colspan=" + unUseColSpan + "></td>";
+                    html += "</tr>";
+                }
                 isDropTR = true;
-
+                rowSpan = 1;
                 html += "<tr>";
                 html += "<td  colSpan=" + textColSpan + " rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + lab + "</br>";
                 html += "</tr>";
@@ -622,7 +628,15 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         //线性展示并且colspan=4
         if (colSpan == tableCol) {
+            if (isDropTR == false) {
+                var unUseColSpan = tableCol - UseColSpan;
+                html += "<td colspan=" + unUseColSpan + "></td>";
+                html += "</tr>";
+            }
+
             isDropTR = true;
+            rowSpan = 1;
+
             html += "<tr>";
             html += "<td  ColSpan='" + colSpan + "' rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + lab + "</br>";
             html += "</tr>";
@@ -637,7 +651,12 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
         }
         var sumColSpan = colSpan + textColSpan;
         if (sumColSpan == tableCol) {
-
+            if (isDropTR == false) {
+                var unUseColSpan = tableCol - UseColSpan;
+                html += "<td colspan=" + unUseColSpan + "></td>";
+                html += "</tr>";
+            }
+            rowSpan = 1;
             isDropTR = true;
             html += "<tr >";
             html += "<td  id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
@@ -812,6 +831,49 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             }
         }
         return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
+    }
+
+    if (mapAttr.MyDataType == "1" && mapAttr.UIContralType == "2") {//枚举复选框
+
+        var rbHtmls = "";
+        var ses = flowData[mapAttr.KeyOfEn];
+        if (ses == undefined)
+            ses = flowData[mapAttr.UIBindKey];
+        if (ses == undefined) {
+            //枚举类型的.
+            if (mapAttr.LGType == 1) {
+                var ses = flowData.Sys_Enum;
+                ses = $.grep(ses, function (value) {
+                    return value.EnumKey == mapAttr.UIBindKey;
+                });
+            }
+           
+        }
+        var enableAttr = "";
+        if (mapAttr.UIIsEnable == 1)
+            enableAttr = "";
+        else
+            enableAttr = "disabled='disabled'";
+
+        //显示方式,默认为横向展示.
+        var RBShowModel = 0;
+        if (mapAttr.AtPara.indexOf('@RBShowModel=0') > 0)
+            RBShowModel = 1;
+
+        for (var i = 0; i < ses.length; i++) {
+            var se = ses[i];
+
+            var br = "";
+            if (RBShowModel == 1)
+                br = "<br>";
+
+            var checked = "";
+            if (","+defValue+",".indexOf(","+se.IntKey+",") == true)
+                checked = " checked=true";
+
+            rbHtmls += "<label style='font-weight:normal;'><input type=checkbox name='CB_" + mapAttr.KeyOfEn + "' id='CB_" + mapAttr.KeyOfEn + "_" + se.IntKey + "' value='" + se.IntKey + "' " + checked + enableAttr + " onclick='clickEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' />" + se.Lab + " </label>&nbsp;" + br;
+        }
+        return rbHtmls;
     }
 
     //添加文本框 ，日期控件等.
@@ -1777,7 +1839,7 @@ function Ele_Dtl(frmDtl) {
             src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=0&" + urlParam + "&Version=1";
         }
     }
-    return "<iframe style='width:100%;height:" + frmDtl.H + "px;' ID='Dtl_" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    return "<iframe style='width:100%;height:" + frmDtl.H + "px;' name='Dtl' ID='Dtl_" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
 }
 
 function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr) {
@@ -1792,7 +1854,6 @@ function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr)
             onclickEvent = "onclick='clickEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'";
         }
         if (RBShowModel == 3)
-            //<input  " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " /> &nbsp;" + mapAttr.Name + "</label</div>";
             rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' " + onclickEvent + " />&nbsp;" + obj.Lab + "</label>";
         else
             rbHtml += "<label><input " + enableAttr + " " + (obj.IntKey == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.IntKey + "' value='" + obj.IntKey + "' " + onclickEvent + "/>&nbsp;" + obj.Lab + "</label><br/>";
@@ -1897,8 +1958,12 @@ function GetLab(flowData, attr) {
     if (contralType == 3) {//枚举
         forID = "RB_" + attr.KeyOfEn;
     }
+    if (contralType == 2) {//枚举复选框
+        forID = "CB_" + attr.KeyOfEn;
+    }
+
     //文本框，下拉框，单选按钮
-    if (contralType == 0 || contralType == 1 || contralType == 3 || contralType == 4 || contralType == 8 || contralType == 50 || contralType == 101) {
+    if (contralType == 0 || contralType == 1 || contralType == 2 || contralType == 3 || contralType == 4 || contralType == 8 || contralType == 50 || contralType == 101) {
         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {
             lab = " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
         }
@@ -1986,7 +2051,7 @@ function GetLab(flowData, attr) {
         if (url.indexOf("?") == -1)
             url = url + "?1=1";
 
-        if (url.indexOf("SearchBS.htm") != -1)
+        if (url.indexOf("Search.htm") != -1)
             url = url + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
         else
             url = url + "&UserNo=" + userNo + "&SID=" + SID;

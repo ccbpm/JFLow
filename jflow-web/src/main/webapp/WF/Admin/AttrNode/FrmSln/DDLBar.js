@@ -1,4 +1,15 @@
-﻿
+﻿$(function () {
+
+    jQuery.getScript(basePath + "/WF/Admin/Admin.js")
+        .done(function () {
+            /* 耶，没有问题，这里可以干点什么 */
+             //alert('ok');
+        })
+        .fail(function () {
+            /* 靠，马上执行挽救操作 */
+            //alert('err');
+        });
+});
 function InitBar(optionKey) {
 
     var html = "表单方案:";
@@ -24,11 +35,11 @@ function InitBar(optionKey) {
     html += "</select >";
 
     html += "<input  id='Btn_Save' type=button onclick='Save()' value='保存' />";
-    html += "<input  id='Btn_SaveAndClose' type=button onclick='SaveAndClose()' value='保存并关闭' />";
+    //   html += "<input  id='Btn_SaveAndClose' type=button onclick='SaveAndClose()' value='保存并关闭' />";
 
     //  html += "<input type=button onclick='OldVer()' value='使用旧版本' />";
 
-    html += "<input  id='Btn_Help' type=button onclick='Help()' value='视频帮助' />";
+    //  html += "<input  id='Btn_Help' type=button onclick='Help()' value='视频帮助' />";
     html += "<input  id='Btn_Help' type=button onclick='HelpOnline()' value='在线帮助' />";
 
 
@@ -95,71 +106,6 @@ function HelpOnline() {
     window.open(url);
 }
 
-function Help() {
-
-    var url = window.location.href;
-
-    var nodeID = GetQueryString("FK_Node");
-    var obj = document.getElementById("changBar");
-    var sele = obj.options;
-    var index = obj.selectedIndex;
-    var optionKey = optionKey = sele[index].value;
-
-    var roleName = "";
-    switch (parseInt(optionKey)) {
-        case FormSlnType.FoolForm:
-            url = "0.FoolForm.htm";
-            break;
-        case FormSlnType.FreeForm:
-            url = "1.FreeForm.htm";
-            break;
-        case FormSlnType.SelfForm:
-            url = "2.SelfForm.htm";
-            break;
-        case FormSlnType.SDKForm:
-            url = "3.SDKForm.htm";
-            break;
-        case FormSlnType.SLForm:
-            url = "4.SLForm.htm";
-            break;
-        case FormSlnType.SheetTree:
-            url = "5.SheetTree.htm";
-            break;
-        case FormSlnType.SheetAutoTree:
-            url = "6.SheetAutoTree.htm";
-            break;
-        case FormSlnType.WebOffice:
-            url = "7.WebOffice.htm";
-            break;
-        case FormSlnType.ExcelForm:
-            url = "8.ExcelForm.htm";
-            break;
-        case FormSlnType.WordForm:
-            url = "9.WordForm.htm";
-            break;
-        case FormSlnType.FoolTruck:
-            url = "10.FoolTruck.htm";
-            break;
-        case FormSlnType.RefOneFrmTree:
-            alert('该视频尚未提供');
-            return;
-            //  url = "11.RefOneFrmTree.htm";
-            break;
-        case FormSlnType.Developer:
-            url = "12.Developer.htm";
-            break;
-        case FormSlnType.DisableIt:
-            url = "100.DisableIt.htm";
-            break;
-        default:
-            url = "0.FoolForm.htm";
-            break;
-    }
-
-    //if (url.indexOf
-    //var url = "http://ccbpm.mydoc.io";
-    //window.open(url);
-}
 
 
 function changeOption() {
@@ -241,15 +187,3 @@ function OpenEasyUiDialogExt(url, title, w, h, isReload) {
         }
     });
 }
-$(function () {
-
-    jQuery.getScript(basePath + "/WF/Admin/Admin.js")
-        .done(function () {
-            /* 耶，没有问题，这里可以干点什么 */
-            // alert('ok');
-        })
-        .fail(function () {
-            /* 靠，马上执行挽救操作 */
-            //alert('err');
-        });
-});

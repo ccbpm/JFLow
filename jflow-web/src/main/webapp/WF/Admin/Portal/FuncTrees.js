@@ -84,7 +84,7 @@ functrees.push({
             Defines: [{
                 Value: "F0", IconCls: "icon-flowtree", MenuId: "mFlowRoot", Opened: true
             }, {
-                IconCls: "icon-tree_folder", MenuId: "mFlowSort"
+                IconCls: "icon-tree_folder", MenuId: "mFlowSort", HelpTitle: "右键创建流程，修改名称"
             }]
         }, {
             Value: "FLOW", ColDefine: "DTYPE",
@@ -268,10 +268,15 @@ function LoadServiceNode(oNode, oParentNode, oFuncTree) {
             }
 
             var re = $.parseJSON(data);
-
             //将所有获取的数据转换为Node
-
             var roots = Find(re, nd.ColParentId, nd.RootParentId);
+            if (oFuncTree.Id == "flowTree" && oParentNode == null && nd.RootParentId == "F0") {
+                roots = Find(re, nd.ColParentId, roots[0][nd.ColId]);
+            }
+
+            if (oFuncTree.Id == "formTree" && oParentNode == null && nd.RootParentId == "0") {
+                roots = Find(re, nd.ColParentId, roots[0][nd.ColId]);
+            }
 
             //此处如果是惰性加载时，非第一次加载，要去除第一次加载时生成的Nodes
             if (oFuncTree.IsLazyLoading && oParentNode.Nodes && oParentNode.Nodes.length > 0) {
@@ -334,7 +339,8 @@ function LoadServiceNode(oNode, oParentNode, oFuncTree) {
                         Url: nd.ColUrl ? roots[i][nd.ColUrl] : nd.Url,
                         Opened: nd.Opened,
                         Inherits: nd.Inherits,
-                        Target: nd.Target
+                        Target: nd.Target,
+                        HelpTitle: nd.HelpTitle
                     };
 
                     if (oFuncTree.AttrCols && oFuncTree.AttrCols.length > 0) {
@@ -354,6 +360,7 @@ function LoadServiceNode(oNode, oParentNode, oFuncTree) {
                         nextND.ColDefine = nd.ColDefine;
                         nextND.Opened = define.Opened;
                         nextND.Target = define.Target || nd.Target;
+                        nextND.HelpTitle = define.HelpTitle;
 
                         if (define.Inherits) {
                             if (typeof nextND.Inherits == "undefined") {
@@ -756,7 +763,8 @@ function LoadServiceSubNode(aServiceNodes, oNode, oParentNode, oServiceNode, oFu
             Name: this[oServiceNode.ColName],
             Opened: oNode.Opened,
             Inherits: oNode.Inherits,
-            Target: oNode.Target
+            Target: oNode.Target,
+            HelpTitle: oNode.HelpTitle
         };
 
         if (oFuncTree.AttrCols && oFuncTree.AttrCols.length > 0) {
@@ -776,6 +784,7 @@ function LoadServiceSubNode(aServiceNodes, oNode, oParentNode, oServiceNode, oFu
             subNode.ColDefine = oServiceNode.ColDefine;
             subNode.Opened = define.Opened;
             subNode.Target = define.Target || subNode.Target;
+            subNode.HelpTitle = define.HelpTitle;
 
             if (define.Inherits) {
                 if (typeof subNode.Inherits == "undefined") {
@@ -857,7 +866,7 @@ function LoadTreeNode(oNode, oParentNode, oFuncTree) {
         return true;
     }
 
-    var attrs = { MenuId: oNode.MenuId, Url: oNode.Url, Target: oNode.Target, LazyLoad: oNode.LazyLoad, ColDefine: oNode.ColDefine, DefineValue: oNode[oNode.ColDefine], InheritForChild: GetNewInheritForChild(oNode.InheritForChild), Inherits: oNode.Inherits, Node: oNode };
+    var attrs = { MenuId: oNode.MenuId, Url: oNode.Url, Target: oNode.Target, LazyLoad: oNode.LazyLoad, ColDefine: oNode.ColDefine, DefineValue: oNode[oNode.ColDefine], InheritForChild: GetNewInheritForChild(oNode.InheritForChild), Inherits: oNode.Inherits, Node: oNode, HelpTitle: oNode.HelpTitle };
 
     if (oFuncTree.AttrCols) {
         $.each(oFuncTree.AttrCols, function () {
@@ -888,6 +897,21 @@ function LoadTreeNode(oNode, oParentNode, oFuncTree) {
 
     //设置可以继承的属性值
     var node = $("#" + oFuncTree.Id).tree("find", oNode.Id);
+    if (node && node.attributes && node.attributes.HelpTitle && node.attributes.HelpTitle != "undefined") {
+        $(node.target).tooltip({
+            position: 'right',
+            content: '<span style="color:#fff" class="__tooltip"></span>',
+            onShow: function () {
+                var tree_title = this;
+                //设定提示框中的信息为节点中的内容
+                $('.__tooltip').text(node.attributes.HelpTitle);
+                $(this).tooltip('tip').css({
+                    backgroundColor: '#666',
+                    borderColor: '#666'
+                });
+            }
+        });
+    }
     if (node.attributes.InheritForChild) {
         $.each(node.attributes.InheritForChild, function () {
             node.attributes[this.To] = ReplaceParams(this.From, node, oFuncTree);
@@ -1048,28 +1072,17 @@ function CalculateJS(sCode) {
 }
 
 //公共方法
-function ajaxService(param, callback, scope, levPath) { 
-	if(plant=="JFlow")
-		Handler = basePath+"/WF/Admin/CCBPMDesigner/ProcessRequest.do"
-    $.ajax({
-        type: "GET", //使用GET或POST方法访问后台
-        dataType: "text", //返回json格式的数据
-        contentType: "text/plain; charset=utf-8",
-        url: Handler, //要访问的后台地址
-        data: param, //要发送的数据
-        async: true,
-        cache: false,
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        complete: function () { }, //AJAX请求完成时隐藏loading提示
-        error: function (XMLHttpRequest, errorThrown) {
-            callback(XMLHttpRequest);
-        },
-        success: function (msg) {//msg为返回的数据，在这里做数据绑定
-            var data = msg;
-            callback(data, scope);
+function ajaxService(param, callback, scope, levPath) {
+    if (param && param.action && param.action != null && param.action != "" && param.action != undefined) {
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
+        handler.AddJson(param);
+        var data = handler.DoMethodReturnString(param.action);
+        if (data.indexOf('err@') == 0) {
+            alert(data);
+            return;
         }
-    });
+        callback(data, scope);
+    } else {
+        alert("参数错误，缺少action项。");
+    }
 }

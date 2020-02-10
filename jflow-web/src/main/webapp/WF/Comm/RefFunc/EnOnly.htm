@@ -276,11 +276,10 @@
 
                     var uiBindKey = mapAttr.UIBindKey;
 
-                    if (uiBindKey.indexOf("Dept") != -1 && uiBindKey.indexOf(".") != -1) {
+                    if (uiBindKey.toLowerCase().indexOf("select")==-1 && uiBindKey.indexOf("Dept") != -1 && uiBindKey.indexOf(".") != -1) {
 
                         var webUser = new WebUser();
 
-                        //   alert(uiBindKey);
 
                         var ens = new Entities(uiBindKey);
                         ens.RetrieveAll();
@@ -746,8 +745,8 @@
                     if (mapAttr.KeyOfEn.toLowerCase() == "icon") {
                         html += '<div class="input-group">';
                         html += "<span class='input-group-addon' style='border-radius:0;border-color:#d2d6de;background-color:#fff'><i id='menuIconIcon' class='icon-settings'></i></span>";
-                        html += "<input  class='form-control' maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "' style='width:100%;' type='text'  " + enableAttr + " />";
-                        html += "<span class='input-group-btn' style='padding-left:3px'><a id='menuIconButton' href='javascript:void(0)' class='btn btn-default'  onclick='openIconWindow(\"" + mapAttr.KeyOfEn + "\")'><i class='fa fa-search'></i></a></span>";
+                        html += "<input  class='form-control' maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "' style='width:100%;margin:0px 0px' type='text'  " + enableAttr + " />";
+                        html += "<span class='input-group-btn' style='padding-left:3px;border:1px solid #d2d6de;'><a id='menuIconButton' href='javascript:void(0)' class='btn btn-default'  onclick='openIconWindow(\"" + mapAttr.KeyOfEn + "\")'><i class='fa fa-search'></i></a></span>";
                         html += "</div>";
                         return html;
                     }
@@ -1125,7 +1124,8 @@
 
         function CloseIt() {
             parent.$("#eudlg").dialog('close');
-            parent.parent.$("#eudlg").dialog('close');
+            if (parent.parent != undefined && parent.parent.$("#eudlg").length==1 )
+                parent.parent.$("#eudlg").dialog('close');
         }
 
         $(function () {
@@ -1175,6 +1175,10 @@
 
         /**/</script>
     <style type="text/css">
+        /*body.easyui-layout {
+            top: 20px;
+            left: 40px;
+        }*/
         .panel-body {
             padding: 0px;
         }
@@ -1186,25 +1190,186 @@
         .btn-default {
             border: 0px;
         }
-
+        .cs-btn-group {
+            width: auto!important;
+            min-height: 34px;
+            text-align: right;
+            background-color: transparent;
+        }
+        .cs-btn-group .l-btn-icon {
+            display: none;
+        }
+        .cs-btn-group .l-btn-text {
+            margin: 0;
+        }
+        .layout-panel {
+            position: absolute;
+            right: 0;
+            top: 0!important;
+            box-shadow: none;
+        }
+        .layout-panel-north {
+            width: auto!important;
+            left: auto!important;
+            background-color: transparent;
+        }
         .btn {
-            background: white !important;
-            color: #337ab7 !important;
+            /**padding: 0 10px;*/
+            color: #fff!important;
+            border-radius: 0px!important;
+            border: 0;
+            height: 29px;
+            line-height: 24px;
+            box-sizing: border-box;
+        }
+        .btn:hover {
+            padding:0 10px;
+            border: 0;
+        }
+        .btn-light-green {
+            background-color: #50b6ac!important;
+        }
+
+        .btn-light-green:hover {
+            background-color: #50b6ac;
+        }
+
+        .btn-light-blue {
+            background-color: #62cae3!important;
+        }
+
+        .btn-light-blue:hover {
+            background-color: #62cae3;
+        }
+
+        .btn-light-yellow {
+            background-color: #f3ba20!important;
+        }
+
+        .btn-light-yellow:hover {
+            background-color: #f3ba20;
+        }
+
+        .btn-light-red {
+            background-color: #f74f52!important;
+        }
+
+        .btn-light-red:hover {
+            background-color: #f74f52;
+        }
+        .btn-white {
+            border: 1px solid #031f5d;
+            background-color: #fff!important;;
+            color: #031f5d!important;
+        }
+        .btn-white:hover {
+            border: 1px solid #031f5d;
+        }
+        .tabs-wrap .tabs,.tabs-panels,.tabs li a.tabs-inner,.tabs-panels table,td.FDesc, td.FContext,td {
+            border: 0;
+        }
+        .tabs-wrap table {
+            width: 100%!important;
+        }
+        .tabs-wrap .tabs {
+            padding-left: 0;
+            width: auto;
+            border-bottom: 1px solid #0a2561;
+        }
+        .tabs li a.tabs-inner {
+            padding: 0 16px;
+            background: none;
+            border-radius: 5px 5px 0 0;
+        }
+        .tabs li a.tabs-inner:hover {
+            background: none;
+            font-weight: bold;
+        }
+        .tabs li.tabs-selected a.tabs-inner {
+            border: 1px solid #0a2561;
+            border-bottom-color: #fff;
+            background: #fff;
+        }
+        td {
+            box-sizing: border-box;
+        }
+        td a {
+            color: #15398b;
+            font-size: 12px;
+        }
+        td a img {
+            vertical-align: -2px;
+        }
+        td.FContext {
+            width: 30%;
+        }
+        td.FContext:nth-child(2) {
+            padding-right: 30px;
+        }
+        td.FContext > *:only-child {
+            width: 100%!important;
+            font-size: 13px;
+            color: #282828;
+            box-sizing: border-box;
+        }
+        td.FContext[colspan] {
+            padding-right: 0;
+        }
+        
+        select[disabled], input[type=text]:disabled,.form-control,.form-control[disabled], .form-control[readonly], fieldset[disabled] {
+            background-color: #fff;
+            border: 1px solid #ccc!important;
+            text-align: left!important;
+            height: 32px;
+            box-sizing: border-box;
+        }
+        select[disabled], input[type=text]:disabled, .form-control[disabled], .form-control[readonly], fieldset[disabled] {
+            background-color: #f7f6f9;
+        }
+        td input[type="text"],td input[type="number"],td input[type="date"],td input[type="tel"] {
+            height: 32px;
+        }
+        td input[type="checkbox"] {
+            margin-right: 5px;
+            width: 16px;
+            height: 16px;
+        }
+        td label {
+            font-size: 13px;
+        }
+        
+        /*td.FDesc {
+           padding-right: 10px;
+            text-align: right;
+            box-sizing: border-box;
+        }*/
+        /*td.FDesc:first-child {
+            width: 81px!important;
+        }
+        td:nth-child(3)[class="FDesc"] {
+            width: 130px!important;
+        }*/
+        .cs-form-import>.layout-panel-center {
+            padding: 36px 0 0 16px;
+        }
+        .cs-form-import > .layout-panel-north {
+            top: 6px!important;
+            padding-right: 21px;
         }
     </style>
 </head>
-<body class="easyui-layout" data-options="fit:true">
+<body class="easyui-layout cs-form-import" data-options="fit:true">
     <!--<div class="easyui-layout" data-options="region:'center'" border="false">-->
         <!--<div class="easyui-layout" data-options="fit:true">-->
-            <div id="Btns" data-options="region:'north',noheader:true,split:false,border:false"
-                 style="height: 30px; padding: 2px; background-color: #d3d3d34a">
-                <a id="Btn_New" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-new'"
-                   onclick="New()">新建</a> <a id="Btn_Save" href="javaScript:void(0)" class="easyui-linkbutton"
+            <div id="Btns" class="cs-btn-group" data-options="region:'north',noheader:true,split:false,border:false">
+                <a id="Btn_New" href="javaScript:void(0)" class="easyui-linkbutton btn btn-light-blue" data-options="plain:true,iconCls:'icon-new'"
+                   onclick="New()">新建</a> 
+                <a id="Btn_Save" href="javaScript:void(0)" class="easyui-linkbutton btn btn-light-green"
                                              data-options="plain:true,iconCls:'icon-save'" onclick="Update()">保存</a>
-                <a id="Btn_Delete" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-delete'"
+                <a id="Btn_Delete" href="javaScript:void(0)" class="easyui-linkbutton btn btn-light-red" data-options="plain:true,iconCls:'icon-delete'"
                    onclick="Delete()">删除</a>
 
-                <a id="Btn_Setting" href="javaScript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-reset'"
+                <a id="Btn_Setting" href="javaScript:void(0)" class="easyui-linkbutton btn btn-white" data-options="plain:true,iconCls:'icon-reset'"
                    onclick="Setting()">设置</a>
 
 

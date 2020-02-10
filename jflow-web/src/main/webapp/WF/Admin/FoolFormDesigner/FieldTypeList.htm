@@ -395,7 +395,9 @@
                             mapAttr.TextColSpan = 1; //
                             mapAttr.UIWidth = 150;
                             mapAttr.UIHeight = 170;
+                            mapAttr.IsEnableInAPP = 0;
                             mapAttr.Insert(); //插入字段.
+
                             mapAttr.Retrieve();
 
                             var en = new Entity("BP.Sys.FrmAttachment");
@@ -407,6 +409,7 @@
                             en.UploadType = 1; //多附件.
                             en.IsVisable = 0; //让其不可见.
                             en.CtrlWay = 4; // 按流程WorkID计算
+                            en.SetPara("IsShowMobile", 1);
                             en.Insert(); //插入到数据库.
                             window.location.href = "../../Comm/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&MyPK=" + en.MyPK;
                         }
@@ -517,42 +520,10 @@
                         function ExtBigNoteHtmlText() {
 
                             var frmID = GetQueryString("FK_MapData");
-                            var id = "BigNoteHtmlText";
-
-                            var myPK = frmID + "_" + id;
-
-                            var en = new Entity("BP.Sys.MapAttr");
-                            en.SetPKVal(myPK);
-                            var num = en.RetrieveFromDBSources();
-                            if (num != 0) {
-                                //alert('该字段已经存在.');
-                                window.location.href = "./EditFExtContral/60.BigNoteHtmlText.htm?FrmID=" + frmID;
+                            //增加大文本
+                             if (window.confirm('您确认要创建吗？') == false)
                                 return;
-                            }
-
-                            if (window.confirm('您确认要创建吗？') == false)
-                                return;
-
-                            //en.FK_MapData = GetQueryString("FK_MapData");
-                            en.Name = "大块提示文本";
-                            //en.KeyOfEn = "BigNoteHtmlText";
-
-                            en.UIContralType = 60; //大块文本.
-                            en.MyPK = myPK;
-                            en.FK_MapData = frmID;
-                            en.KeyOfEn = id;
-                            //en.Name = name;
-                            en.GroupID = groupID;
-                            en.MyDataType = 1;
-                            en.LGType = 0;
-                            en.ColSpan = 4; //
-                            en.UIWidth = 0;
-                            en.UIHeight = 100;
-                            en.Idx = 0;
-                            en.Insert(); //插入字段.
-                            en.Retrieve();
                             window.location.href = "./EditFExtContral/60.BigNoteHtmlText.htm?FrmID=" + frmID;
-                            // window.location.href; //"../../Comm/EnOnly.htm?EnName=BP.WF.Template.ExtJobSchedule&MyPK=" + mapAttr.MyPK;
                         }
 
                         //手写签名版.

@@ -174,10 +174,10 @@ function CCFormLoaded() {
     else {
         //新加
         //计算高度，展示滚动条
-        var height = $("#CCForm").height($(window).height() - 115 + "px").css("overflow-y", "auto");
+        var height = $("#CCForm").height($(window).height() - 135 + "px").css("overflow-y", "auto");
 
         $(window).resize(function () {
-            $("#CCForm").height($(window).height() - 115 + "px").css("overflow-y", "auto");
+            $("#CCForm").height($(window).height() - 135 + "px").css("overflow-y", "auto");
         });
     }
 
@@ -491,6 +491,14 @@ function CheckMinMaxLength() {
 
 //保存 0单保存 1发送的保存
 function Save(saveType) {
+    //保存从表数据
+    $("[name=Dtl]").each(function (i, obj) {
+        var contentWidow = obj.contentWindow;
+        if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
+            IsSaveTrue = contentWidow.SaveAll();
+
+        }
+    });
     //保存前事件
     if (typeof beforeSave != 'undefined' && beforeSave instanceof Function)
         if (beforeSave() == false)
@@ -734,19 +742,22 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                 }
                 formArrResult.push(ele);
             } else {
-                if (mcheckboxs.indexOf(targetId) != -1)
-                    return false;
-                mcheckboxs += targetId + ",";
-                var str = "";
-                $("input[name='" + targetId + "']:checked").each(function (index, item) {
-                    if ($("input[name='" + targetId + "']:checked").length - 1 == index) {
-                        str += $(this).val();
-                    } else {
-                        str += $(this).val() + ",";
-                    }
-                });
 
-                formArrResult.push(targetId + '=' + str);
+                if (mcheckboxs.indexOf(targetId + ",") == -1) {
+                    mcheckboxs += targetId + ",";
+                    var str = "";
+                    $("input[name='" + targetId + "']:checked").each(function (index, item) {
+                        if ($("input[name='" + targetId + "']:checked").length - 1 == index) {
+                            str += $(this).val();
+                        } else {
+                            str += $(this).val() + ",";
+                        }
+                    });
+
+                    formArrResult.push(targetId + '=' + str);
+                }
+
+               
             }
 
         }
@@ -1060,6 +1071,15 @@ function execSend(toNodeID) {
     var iframe = document.getElementById("FWC");
     if (iframe)
         iframe.contentWindow.SaveWorkCheck();
+
+    //保存从表数据
+    $("[name=Dtl]").each(function (i, obj) {
+        var contentWidow = obj.contentWindow;
+        if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
+            IsSaveTrue = contentWidow.SaveAll();
+
+        }
+    });
 
 
     //组织数据.
@@ -1808,6 +1828,10 @@ function GenerWorkNode() {
 }
 
 
+function resetData() {
+    //装载表单数据与修改表单元素风格.
+    LoadFrmDataAndChangeEleStyle(flowData);
+}
 
 function SetFrmReadonly() {
 
@@ -2190,6 +2214,8 @@ function initModal(modalType, toNode) {
         switch (modalType) {
             case "returnBack":
                 $('#modalHeader').text("提示信息");
+                //按百分比自适应
+                SetPageSize(50, 60);
                 modalIframeSrc = "./WorkOpt/ReturnWork.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random()
                 break;
             case "Send":

@@ -329,14 +329,14 @@ function Login2App() {
 
     //表单引擎.
     var url = window.location.href;
-    if (url.indexOf("DefaultFrm.htm") != 0) {
+    if (url.indexOf("DefaultFrm.htm") != -1) {
         window.location.href = "../../CCBill/Portal/Login.htm?DoType=Logout";
         return;
     }
 
     //简洁版.
-    if (url.indexOf("DefaultSimple.htm") != 0) {
-        window.location.href = "../../CCBill/Portal/Login.htm?DoType=Logout";
+    if (url.indexOf("DefaultSimple.htm") != -1) {
+        window.location.href = "../../AppClassic/Login.htm?DoType=Logout";
         return;
     }
 
@@ -549,21 +549,47 @@ function newFlowSort(isSub) {
     var data = handler.DoMethodReturnString(doWhat);
 
     var parentNode = isSub ? currSort : $('#flowTree').tree('getParent', currSort.target);
-
-    $('#flowTree').tree('append', {
-        parent: parentNode.target,
-        data: [{
-            id: data,
-            text: val,
-            attributes: { ISPARENT: '1', MenuId: "mFlowSort", TType: "FLOWTYPE" },
-            checked: false,
-            iconCls: 'icon-tree_folder',
-            state: 'open',
-            children: []
-        }]
-    });
-
+    if (parentNode) {
+        $('#flowTree').tree('append', {
+            parent: parentNode.target,
+            data: [{
+                id: data,
+                text: val,
+                attributes: { ISPARENT: '1', MenuId: "mFlowSort", TType: "FLOWTYPE" },
+                checked: false,
+                iconCls: 'icon-tree_folder',
+                state: 'open',
+                children: []
+            }]
+        });
+    } else {
+        $('#flowTree').tree('append', {
+            parent: null,
+            data: [{
+                id: data,
+                text: val,
+                attributes: { ISPARENT: '1', MenuId: "mFlowSort", TType: "FLOWTYPE" },
+                checked: false,
+                iconCls: 'icon-tree_folder',
+                state: 'open',
+                children: []
+            }]
+        });
+    }
     $('#flowTree').tree('select', $('#flowTree').tree('find', data).target);
+    $($('#flowTree').tree('find', data).target).tooltip({
+        position: 'right',
+        content: '<span style="color:#fff" class="__tooltip"></span>',
+        onShow: function () {
+            var tree_title = this;
+            //设定提示框中的信息为节点中的内容
+            $('.__tooltip').text("右键创建流程，修改名称");
+            $(this).tooltip('tip').css({
+                backgroundColor: '#666',
+                borderColor: '#666'
+            });
+        }
+    });
 }
 
 //修改流程类别
@@ -843,9 +869,8 @@ function newCCFormSort(isSub) {
         data = en.DoMethodReturnString("DoCreateSameLevelNodeIt", val);
 
     var parentNode = isSub ? currCCFormSort : $('#formTree').tree('getParent', currCCFormSort.target);
-
     $('#formTree').tree('append', {
-        parent: parentNode.target,
+        parent: parentNode == null ? null : parentNode.target,
         data: [{
             id: data,
             text: val,
@@ -882,7 +907,7 @@ function EditCCFormSort() {
         target: currCCFormSort.target,
         text: val
     });
-    $('#formTree').tree('select', $('#formTree').tree('find', data).target);
+    $('#formTree').tree('select', currCCFormSort.target);
 
 }
 //删除表单树类别

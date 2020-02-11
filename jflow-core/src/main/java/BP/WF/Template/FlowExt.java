@@ -809,6 +809,13 @@ public class FlowExt extends EntityNoName
 			//rm.RefMethodType = RefMethodType.RightFrameOpen;
 			//rm.GroupName = "流程监控";
 			//map.AddRefMethod(rm);
+		rm = new RefMethod();
+		rm.Title = "图形分析";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
+		rm.ClassMethodName = this.toString() + ".DoDataManger_DataCharts()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.GroupName = "流程监控";
+		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "综合查询";
@@ -981,7 +988,10 @@ public class FlowExt extends EntityNoName
 
 		///#region 流程监控.
 
-
+	public final String DoDataManger_DataCharts() throws Exception
+	{
+		return "../../Admin/AttrFlow/DataCharts.htm?FK_Flow=" + this.getNo();
+	}
 	public final String DoDataManger_Search() throws Exception
 	{
 		return "../../Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow= " + this.getNo()+ " &WFSta=all";

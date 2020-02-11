@@ -2353,34 +2353,41 @@
   color: #444;
 }
 /*三级菜单的样式，后面可以统一到二级和一级*/
-#mFlow .menu-line, #mFlow .menu-sep {
+#mFlow .menu-line, #mFlow .menu-sep,
+#mFlowSort .menu-line, #mFlowSort .menu-sep,
+#mFormSort .menu-line, #mFormSort .menu-sep,
+#mForm .menu-line, #mForm .menu-sep {
     display: none;
 }
-#mFlow.menu {
+#mFlow, #mFlowSort, #mFormSort, #mForm {
     border: 0;
     padding: 0;
     background-color: #fff;
     box-shadow: 0 0 6px rgba(0,0,0,.2);
 }
-#mFlow .menu-text {
+#mFlow .menu-text, #mFlowSort .menu-text,
+#mFormSort .menu-text, #mForm .menu-text {
     margin-top: 10px;
     float: none;
-    padding:0 0 0 10px;
+    padding: 0 0 0 10px;
     line-height: 38px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
 }
-#mFlow .menu-text img {
+#mFlow .menu-text img, #mFlowSort .menu-text img,
+#mFormSort .menu-text img, #mForm .menu-text img {
     margin-right: 5px;
-    vertical-align:middle;
+    vertical-align: middle;
 }
-#mFlow .menu-item {
+#mFlow .menu-item, #mFlowSort .menu-item,
+#mFormSort .menu-item, #mForm .menu-item {
     height: 38px !important;
     border: 0;
     border-bottom: 1px solid #ccc;
 }
-#mFlow .menu-active {
+#mFlow .menu-active, #mFlowSort .menu-active,
+#mFormSort .menu-active, #mForm .menu-active {
     border-radius: 0;
     border: 0;
     border-bottom: 1px solid #ccc;
@@ -2396,129 +2403,7 @@
     top: 50%;
     margin-top: -8px;
 }
-/*周升雨  把以下样式写成公共的样式则会乱掉*/
-#mFormSort .menu-line, #mFormSort .menu-sep {
-    display: none;
-}
 
-#mFormSort .menu {
-    border: 0;
-    padding: 0;
-    background-color: #fff;
-    box-shadow: 0 0 6px rgba(0,0,0,.2);
-}
-
-#mFormSort .menu-text {
-    margin-left: 20px;
-    margin-top: 10px;
-    float: none;
-    padding: 0 0 0 10px;
-    line-height: 38px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-    #mFormSort .menu-text img {
-        margin-right: 5px;
-        vertical-align: middle;
-    }
-
-#mFormSort .menu-item {
-    height: 38px !important;
-    border: 0;
-    border-bottom: 1px solid #ccc;
-}
-
-#mFormSort .menu-active {
-    border-radius: 0;
-    border: 0;
-    border-bottom: 1px solid #ccc;
-}
-
-
-
-
-#mForm .menu-line, #mForm .menu-sep {
-    display: none;
-}
-
-#mForm .menu {
-    border: 0;
-    padding: 0;
-    background-color: #fff;
-    box-shadow: 0 0 6px rgba(0,0,0,.2);
-}
-
-#mForm .menu-text {
-    margin-left: 20px;
-    margin-top: 10px;
-    float: none;
-    padding: 0 0 0 10px;
-    line-height: 38px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-    #mForm .menu-text img {
-        margin-right: 5px;
-        vertical-align: middle;
-    }
-
-#mForm .menu-item {
-    height: 38px !important;
-    border: 0;
-    border-bottom: 1px solid #ccc;
-}
-
-#mForm .menu-active {
-    border-radius: 0;
-    border: 0;
-    border-bottom: 1px solid #ccc;
-}
-
-
-
-#mFlowSort .menu-line, #mFlowSort .menu-sep {
-    display: none;
-}
-
-#mFlowSort .menu {
-    border: 0;
-    padding: 0;
-    background-color: #fff;
-    box-shadow: 0 0 6px rgba(0,0,0,.2);
-}
-
-#mFlowSort .menu-text {
-    margin-left: 20px;
-    margin-top: 10px;
-    float: none;
-    padding: 0 0 0 10px;
-    line-height: 38px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-    #mFlowSort .menu-text img {
-        margin-right: 5px;
-        vertical-align: middle;
-    }
-
-#mFlowSort .menu-item {
-    height: 38px !important;
-    border: 0;
-    border-bottom: 1px solid #ccc;
-}
-
-#mFlowSort .menu-active {
-    border-radius: 0;
-    border: 0;
-    border-bottom: 1px solid #ccc;
-}
-/*周升雨*/
 .m-btn-active,
 .s-btn-active {
   background: #eaf2ff;
@@ -3174,6 +3059,14 @@
     color: #282828;
     font-size: 13px;
 }
+.cs-bar #Btn, .cs-bar #Btn_Adv {
+    border: 1px solid #888;
+    color: #333;
+}
+
+.cs-bar #Btn:hover, .cs-bar #Btn_Adv:hover {
+    background-color: #fff;
+}
 .cs-bar #Btn_Save {
     background-color: #50b6ac;
 }
@@ -3280,35 +3173,35 @@
 }
 
 .btn-light-green {
-    background-color: #50b6ac!important;
+    background-color: #50b6ac;
 }
 
-.btn-light-green:hover {
-    background-color: #50b6ac !important;
+.btn-light-green:hover, .btn-light-green:active, .btn-light-green:focus {
+    background-color: #50b6ac;
 }
 
 .btn-light-blue {
-    background-color: #62cae3 !important;
+    background-color: #62cae3;
 }
 
-.btn-light-blue:hover {
-    background-color: #62cae3 !important;
+.btn-light-blue:hover, .btn-light-blue:active, .btn-light-blue:focus {
+    background-color: #62cae3;
 }
 
 .btn-light-yellow {
-    background-color: #f3ba20 !important;
+    background-color: #f3ba20;
 }
 
-.btn-light-yellow:hover {
-    background-color: #f3ba20 !important;
+.btn-light-yellow:hover, .btn-light-yellow:active, .btn-light-yellow:focus {
+    background-color: #f3ba20;
 }
 
 .btn-light-red {
-    background-color: #f74f52 !important;
+    background-color: #f74f52;
 }
 
-.btn-light-red:hover {
-    background-color: #f74f52 !important;
+.btn-light-red:hover, .btn-light-red:active, .btn-light-red:focus {
+    background-color: #f74f52;
 }
 
 .navbar .btn-white {
@@ -3317,6 +3210,6 @@
     color: #031f5d;
 }
 
-.btn-white:hover {
+.btn-white:hover, .btn-white:active, .btn-white:focus {
     background-color: white;
 }

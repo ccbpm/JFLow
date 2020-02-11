@@ -2,7 +2,7 @@
 
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
-    //首位可以是字母以及下划线。
+    //首位可以是字母以及下划线。 
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
 
     var flag = false; //用来判断
@@ -491,7 +491,7 @@ function GenerFullAllCtrlsVal(data) {
 
                         $("#DDLPara_" + suffix).val(val); // 操作权限.
 
-                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200);
+                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200); 
                         //  json[kv[0]] = kv[1];
                         //   $("#DDLPara_" + suffix).val("2"); // 操作权限.
 
@@ -767,7 +767,7 @@ function DBAccess() {
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";
+var pkval="Demo_DtlExpImpDtl1";  
 var EnName="BP.WF.Template.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -1234,7 +1234,7 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal());
+            //  alert(self.GetPKVal()); 
 
             var result;
             $.ajax({
@@ -2207,7 +2207,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2578,7 +2578,7 @@ function GetPara(atPara, key) {
 
 
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
     var curPath = window.document.location.href;
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;

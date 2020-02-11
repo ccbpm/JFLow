@@ -1255,7 +1255,7 @@ public class MapData extends EntityNoName
 
 			//流程控件.
 		map.AddTBString(MapDataAttr.FlowCtrls, null, "流程控件", true, true, 0, 200, 20);
-		map.AddTBInt(MapDataAttr.IsEnableJS,0,"是否启用自定义JS",true,false);
+//		map.AddTBInt(MapDataAttr.IsEnableJS,0,"是否启用自定义JS",true,false);
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 

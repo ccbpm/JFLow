@@ -5155,6 +5155,26 @@ public class Glo {
 				return false;
 			}
 		}
+		// 配置的sql,执行后,返回结果是 0 .
+		if (role == StartLimitRole.ResultIsZero) {
+			sql = BP.WF.Glo.DealExp(flow.getStartLimitPara(), null, null);
+			if (DBAccess.RunSQLReturnValInt(sql, 0) == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		// 配置的sql,执行后,返回结果是 <> 0 .
+		if (role == StartLimitRole.ResultIsNotZero) {
+			sql = BP.WF.Glo.DealExp(flow.getStartLimitPara(), null, null);
+			if (DBAccess.RunSQLReturnValInt(sql, 0) != 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		return true;
 	}
 

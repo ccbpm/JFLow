@@ -848,6 +848,18 @@ public class Map {
 	public BP.Sys.DTSearchWay DTSearchWay = BP.Sys.DTSearchWay.None;
 	public String DTSearchLable = "日期从";
 	public String DTSearchKey = "";
+
+	/// <summary>
+	/// 如果是null，就按照通用的查询关键字.
+	/// 如果按照指定的格式查询按照如下格式配置.
+	/// @名称=No@名称=Name@件号=JianHao
+	/// </summary>
+	public String SearchFields = null;
+	/// <summary>
+	/// 查询的数值 @年龄=Age@薪水=XinShui
+	/// </summary>
+	public String SearchFieldsOfNum = null;
+
 	/**
 	 * 图片DefaultImageUrl
 	 */

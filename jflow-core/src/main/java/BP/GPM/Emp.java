@@ -310,7 +310,7 @@ public class Emp extends EntityNoName
 	@Override
 	protected boolean beforeInsert() throws Exception {
 		if (SystemConfig.getIsEnablePasswordEncryption() == true)
-			this.setPass(BP.Tools.Cryptos.aesDecrypt(this.getPass()));
+			this.setPass(BP.Tools.Cryptos.aesEncrypt(this.getPass()));
 		return super.beforeInsert();
 	}
 

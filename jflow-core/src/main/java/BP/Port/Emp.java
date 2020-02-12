@@ -103,7 +103,7 @@ public class Emp extends EntityNoName {
 		} else {
 			// 启用加密
 			if (SystemConfig.getIsEnablePasswordEncryption() == true)
-				pass = Cryptos.aesDecrypt(pass);
+				pass = Cryptos.aesEncrypt(pass);
 
 			/* 使用数据库校验. */
 			if (this.getPass().equals(pass)) {

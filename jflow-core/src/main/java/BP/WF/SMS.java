@@ -412,16 +412,16 @@ public class SMS extends EntityMyPK
 			String httpUrl = "";
 			HashMap<String,String> msgMap = new HashMap<String,String>();
 			
-			String sender="";
-		    String sendTo="";
-		    BP.GPM.Emp emp=new Emp(WebUser.getNo());
-		    sender=emp.getDing_UserID();
+//			String sender="";
+//		    String sendTo="";
+//		    BP.GPM.Emp emp=new Emp(WebUser.getNo());
+//		    sender=emp.getDing_UserID();
+//
+//		    emp =new Emp(this.getSendToEmpNo());
+//		    sendTo=emp.getDing_UserID();
 
-		    emp =new Emp(this.getSendToEmpNo());
-		    sendTo=emp.getDing_UserID();
-
-		    msgMap.put("sender",sender);
-		    msgMap.put("sendTo",sendTo);
+		    msgMap.put("sender",this.getSender());
+		    msgMap.put("sendTo",this.getSendToEmpNo());
 			
 			msgMap.put("tel",this.getMobile());
 			msgMap.put("title",this.getTitle());

@@ -83,15 +83,22 @@ public class ControllerOfMessage {
             tel = jd.get("tel").toString();
             title = jd.get("title").toString();
             openUrl = jd.get("openUrl").toString();
-        }*/
-        //web服务
+        }
+        //web服务*/
         if(this.getDoType().equals("SendToWebServices")){
 
         }
+//        String doType = this.getDoType();
+//        String tel = this.getTel();
+//        String title = this.getTitle();
+//        String msgInfo = this.getContent();
+//        String sender = this.getSender();
+        String sendTo = this.getSenderTo();
+        BP.GPM.Emp emp = new BP.GPM.Emp(sendTo);
         //钉钉
         if(this.getDoType().equals("SendToDingDing")) {
             DingDing dingding = new DingDing();
-            String postJson = dingding.ResponseMsg(this.getTel(), this.getTitle(), "", "text", this.getContent());
+            String postJson = dingding.ResponseMsg(emp.getTel(), this.getTitle(), "", "text", this.getContent());
             boolean flag = dingding.PostDingDingMsg(postJson,this.getSenderTo());
             if(flag == false)
                 throw new Exception("发送消息失败");
@@ -101,9 +108,10 @@ public class ControllerOfMessage {
         if(this.getDoType().equals("SendToWeiXin")){
             WeiXin weiXin = new WeiXin();
             boolean flag=false;
+            this.getSenderTo();
             if(!DataType.IsNullOrEmpty(SystemConfig.getWX_AgentID()))
             {
-            	String postJson = weiXin.ResponseMsg(this.getTel(), "", "", "text", this.getContent());
+            	String postJson = weiXin.ResponseMsg(emp.getTel(), "", "", "text", this.getContent());
             	flag= new WeiXin().PostWeiXinMsg(postJson);
             }
             if(!DataType.IsNullOrEmpty(SystemConfig.getWXGZH_Appid()))

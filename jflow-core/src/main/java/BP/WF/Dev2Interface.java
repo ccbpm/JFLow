@@ -2112,7 +2112,7 @@ public class Dev2Interface
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		ps.SQL = "SELECT FK_Flow as No,FlowName,COUNT(*) Num FROM WF_GenerWorkFlow WHERE Emps LIKE '%@" + userNo + "@%' AND FID=0 AND WFState=" + WFState.Complete.getValue() + " GROUP BY FK_Flow,FlowName";
+		ps.SQL = "SELECT FK_Flow as No,FlowName,COUNT(*) Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%@" + userNo + "@%' OR Emps LIKE '%@" + userNo + ",%') AND FID=0 AND WFState=" + WFState.Complete.getValue() + " GROUP BY FK_Flow,FlowName";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
 	/** 
@@ -2139,7 +2139,11 @@ public class Dev2Interface
 		qo.addAnd();
 		qo.AddWhere(GenerWorkFlowAttr.WFState, WFState.Complete.getValue());
 		qo.addAnd();
+		qo.addLeftBracket();
 		qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", " '%@" + userNo + "@%'");
+		qo.addOr();
+		qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", " '%@" + userNo + ",%'");
+		qo.addRightBracket();
 		/**小周鹏修改-----------------------------START**/
 		// qo.DoQuery(GenerWorkFlowAttr.WorkID,pageSize, pageIdx);
 		qo.DoQuery(GenerWorkFlowAttr.WorkID, pageSize, pageIdx, GenerWorkFlowAttr.RDT, true);
@@ -2168,7 +2172,11 @@ public class Dev2Interface
 		qo.addAnd();
 		qo.AddWhere(GenerWorkFlowAttr.WFState, WFState.Complete.getValue());
 		qo.addAnd();
+		qo.addLeftBracket();
 		qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", " '%@" + userNo + "@%'");
+		qo.addOr();
+		qo.AddWhere(GenerWorkFlowAttr.Emps, " LIKE ", " '%@" + userNo + ",%'");
+		qo.addRightBracket();
 		qo.addAnd();
 		qo.AddWhere(GenerWorkFlowAttr.FK_Flow, strFlow);
 		qo.DoQuery(GenerWorkFlowAttr.WorkID, pageSize, pageIdx);
@@ -2212,7 +2220,7 @@ public class Dev2Interface
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + WebUser.getNo() + "@%' AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
+		ps.SQL = "SELECT T.FK_Flow, T.FlowName, COUNT(T.WorkID) as Num FROM WF_GenerWorkFlow T WHERE (T.Emps LIKE '%@" + WebUser.getNo() + "@%' OR T.Emps LIKE '%@" + WebUser.getNo() + ",%') AND T.FID=0 AND T.WFSta=" + WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
@@ -2303,7 +2311,7 @@ public class Dev2Interface
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + userNo + "@%' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
+		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE (T.Emps LIKE '%@" + userNo + "@%'  OR T.Emps LIKE '%@" + userNo + ",%')AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 
 	}
@@ -2319,7 +2327,7 @@ public class Dev2Interface
 		/* 如果不是删除流程注册表. */
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE T.Emps LIKE '%@" + userNo + "@%' AND T.FK_Flow='" + flowNo + "' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
+		ps.SQL = "SELECT 'RUNNING' AS Type, T.* FROM WF_GenerWorkFlow T WHERE (T.Emps LIKE '%@" + userNo + "@%' OR T.Emps LIKE '%@" + userNo + ",%')AND T.FK_Flow='" + flowNo + "' AND T.FID=0 AND T.WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		return BP.DA.DBAccess.RunSQLReturnTable(ps);
 	}
 	/** 

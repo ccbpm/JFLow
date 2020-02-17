@@ -1032,7 +1032,16 @@ public class WF_Comm extends WebContralBase {
 
 	public final String MethodLink_Init() throws Exception {
 		ArrayList al = BP.En.ClassFactory.GetObjects("BP.En.Method");
+		int i = 1;
 		String html = "";
+
+		DataTable dt = new DataTable();
+		dt.Columns.Add("Name", String.class);
+		dt.Columns.Add("Title",String.class);
+		dt.Columns.Add("Icon", String.class);
+		dt.Columns.Add("Note", String.class);
+
+		DataRow dr;
 		Iterator it1 = al.iterator();
 		while (it1.hasNext()) {
 
@@ -1041,14 +1050,31 @@ public class WF_Comm extends WebContralBase {
 				continue;
 			}
 
-			String str = en.toString();
-
-			str = str.substring(0, str.indexOf('@'));
-
-			html += "<li><a href=\"javascript:ShowIt('" + str + "');\"  >" + en.GetIcon("/") + en.Title
-					+ "</a><br><font size=2 color=Green>" + en.Help + "</font><br><br></li>";
+			dr = dt.NewRow();
+			dr.setValue("Name",en.toString());
+			dr.setValue("Title",en.Title);
+			dr.setValue("Icon",en.Icon);
+			dr.setValue("Note",en.Help);
+			dt.Rows.add(dr);
 		}
-		return html;
+		return BP.Tools.Json.ToJson(dt);
+//		String html = "";
+//		Iterator it1 = al.iterator();
+//		while (it1.hasNext()) {
+//
+//			BP.En.Method en = (Method) it1.next();
+//			if (en.getIsCanDo() == false || en.IsVisable == false) {
+//				continue;
+//			}
+//
+//			String str = en.toString();
+//
+//			str = str.substring(0, str.indexOf('@'));
+//
+//			html += "<li><a href=\"javascript:ShowIt('" + str + "');\"  >" + en.GetIcon("/") + en.Title
+//					+ "</a><br><font size=2 color=Green>" + en.Help + "</font><br><br></li>";
+//		}
+//		return html;
 	}
 
 	/// #endregion

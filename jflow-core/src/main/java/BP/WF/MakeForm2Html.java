@@ -1343,19 +1343,32 @@ public class MakeForm2Html
                         if (item.getKeyOfEn().equals("OID") || item.getUIVisible() == false)
                             continue;
 
-                        if (item.getUIContralType() == UIContralType.DDL)
+                        switch (item.getLGType())
                         {
-                            sb.append("<td>" + dtl.GetValRefTextByKey(item.getKeyOfEn()) + "</td>");
-                            continue;
+                            case Normal:  // 输出普通类型字段.
+                            	if(item.getUIContralType() == UIContralType.AthShow || item.getUIContralType() == UIContralType.HandWriting
+                            	||item.getUIContralType() == UIContralType.HandWriting||item.getUIContralType() == UIContralType.FrmImg 
+                            	||item.getUIContralType() == UIContralType.JobSchedule){
+                            		break;
+                            	}
+                            		
+                            	if(item.getMyDataType() == 1 && item.getUIContralType().getValue() == DataType.AppString){
+                             	   if(dtl.getEnMap().getAttrs().Contains(item.getKeyOfEn()+"Text") ==true)
+                             		  sb.append("<td>" + dtl.GetValRefTextByKey(item.getKeyOfEn()) + "</td>");
+                             	  if(dtl.getEnMap().getAttrs().Contains(item.getKeyOfEn()+"T") ==true)
+                      				sb.append("<td>" + dtl.GetValStrByKey(item.getKeyOfEn()+"T") + "</td>");
+                                }else{
+                                	sb.append("<td>" + dtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
+                                }
+                                	
+                                break;
+                            case Enum:
+                            case FK:
+                            	sb.append("<td>" + dtl.GetValRefTextByKey(item.getKeyOfEn()) + "</td>");
+                                break;
+                            default:
+                                break;
                         }
-
-                        if (item.getIsNum())
-                        {
-                            sb.append("<td style='text-align:right' >" + dtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
-                            continue;
-                        }
-
-                        sb.append("<td>" + dtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
                     }
                     sb.append("</tr>");
                 }

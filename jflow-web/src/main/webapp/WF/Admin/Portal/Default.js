@@ -53,6 +53,8 @@ $(function () {
     if (data.CustomerNo == "TianYe" || data.CustomerNo == "TianYe1") {
         $("#Login2App").html("");
     }
+
+     
 });
 
 function closeTab(title) {
@@ -577,19 +579,7 @@ function newFlowSort(isSub) {
         });
     }
     $('#flowTree').tree('select', $('#flowTree').tree('find', data).target);
-    $($('#flowTree').tree('find', data).target).tooltip({
-        position: 'right',
-        content: '<span style="color:#fff" class="__tooltip"></span>',
-        onShow: function () {
-            var tree_title = this;
-            //设定提示框中的信息为节点中的内容
-            $('.__tooltip').text("右键创建流程，修改名称");
-            $(this).tooltip('tip').css({
-                backgroundColor: '#666',
-                borderColor: '#666'
-            });
-        }
-    });
+    
 }
 
 //修改流程类别
@@ -984,7 +974,7 @@ function newFrm(frmType) {
         } else if (node.attributes.TType == "FORMTYPE") {
             //在表单类别上单击，则传递表单类别
             var pnode = $('#formTree').tree('getParent', node.target);
-            if (pnode != null) {
+            //if (pnode != null) {
                 url += "&FK_FrmSort=" + node.id;
 
                 while (pnode && pnode.attributes) {
@@ -994,7 +984,7 @@ function newFrm(frmType) {
                     }
                     pnode = $('#formTree').tree('getParent', pnode.target);
                 }
-            }
+            //}
         }
     }
     //如果右侧有打开该表单，则关闭
@@ -1285,6 +1275,8 @@ $(function () {
     treesObj.loadTrees();
     $(".mymask").hide();
 
+    //修改流程类别
+    $(".icon-tree_folder").prev().filter(".tree-indent").addClass("tree-hit").removeClass("tree-indent");
 });
 
 

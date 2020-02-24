@@ -945,6 +945,15 @@ public class FrmAttachmentExt extends EntityMyPK
 		ath.setMyPK(this.getMyPK());
 		ath.RetrieveFromDBSources();
 		ath.Update();
+
+		//判断是否是字段附件
+		MapAttr mapAttr = new MapAttr();
+		mapAttr.setMyPK(this.getMyPK());
+		if (mapAttr.RetrieveFromDBSources() != 0 && mapAttr.getName().equals(this.getName()) == false)
+		{
+			mapAttr.setName(this.getName());
+			mapAttr.Update();
+		}
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 

@@ -38,8 +38,23 @@ public class WF_Comm extends WebContralBase {
 			return "err@该实体[" + this.getEnsName() + "]不是一个树形实体.";
 		}
 
-		ens.RetrieveAll(EntityTreeAttr.Idx);
-		// return ens.ToJsonOfTree();
+		//获取ParentNo
+		String parentNo = this.GetRequestVal("ParentNo");
+		if(DataType.IsNullOrEmpty(parentNo) == false)
+		{
+			QueryObject qo = new QueryObject(ens);
+			qo.AddWhere(EntityTreeAttr.ParentNo, parentNo);
+			qo.addOr();
+			qo.AddWhere(EntityTreeAttr.No, parentNo);
+			qo.addOrderBy(EntityTreeAttr.Idx);
+			qo.DoQuery();
+
+		}
+		else
+		{
+			ens.RetrieveAll(EntityTreeAttr.Idx);
+
+		}
 		return BP.Tools.Json.ToJson(ens.ToDataTableField("TreeTable"));
 	}
 

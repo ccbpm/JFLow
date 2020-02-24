@@ -7419,7 +7419,7 @@ public class WorkNode {
 
 			BP.DA.Log.DebugWriteError(ex.getMessage());
 
-			throw new Exception(ex.getMessage());
+			throw new RuntimeException(ex.getMessage());
 
 
 		}

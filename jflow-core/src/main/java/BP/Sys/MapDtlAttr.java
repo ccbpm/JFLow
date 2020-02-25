@@ -160,7 +160,7 @@ public class MapDtlAttr extends EntityNoNameAttr
 	/** 
 	 多表头列
 	*/
-	public static final String MTR = "MTR";
+//	public static final String MTR = "MTR";
 	/** 
 	 GUID
 	*/

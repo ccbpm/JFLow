@@ -353,7 +353,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 				{
 					continue;
 				}
-				dtl.setMTR(sql.trim());
+//				dtl.setMTR(sql.trim());
 			}
 		}
 
@@ -1212,7 +1212,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 				{
 					continue;
 				}
-				dtl.setMTR(sql.trim());
+//				dtl.setMTR(sql.trim());
 			}
 		}
 

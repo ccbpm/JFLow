@@ -792,22 +792,22 @@ public class MapDtlExt extends EntityNoName
 	/** 
 	 多表头
 	*/
-	public final String getMTR() throws Exception
-	{
-		String s = this.GetValStrByKey(MapDtlAttr.MTR);
-		s = s.replace("《", "<");
-		s = s.replace("》", ">");
-		s = s.replace("‘", "'");
-		return s;
-	}
-	public final void setMTR(String value) throws Exception
-	{
-		String s = value;
-		s = s.replace("<", "《");
-		s = s.replace(">", "》");
-		s = s.replace("'", "‘");
-		this.SetValByKey(MapDtlAttr.MTR, value);
-	}
+//	public final String getMTR() throws Exception
+//	{
+//		String s = this.GetValStrByKey(MapDtlAttr.MTR);
+//		s = s.replace("《", "<");
+//		s = s.replace("》", ">");
+//		s = s.replace("‘", "'");
+//		return s;
+//	}
+//	public final void setMTR(String value) throws Exception
+//	{
+//		String s = value;
+//		s = s.replace("<", "《");
+//		s = s.replace(">", "》");
+//		s = s.replace("'", "‘");
+//		this.SetValByKey(MapDtlAttr.MTR, value);
+//	}
 
 		///#endregion
 
@@ -941,7 +941,7 @@ public class MapDtlExt extends EntityNoName
 
 			///#region 多表头.
 			//MTR 多表头列.
-		map.AddTBStringDoc(MapDtlAttr.MTR, null, "请书写html标记,以《TR》开头，以《/TR》结尾。", true, false, true);
+//		map.AddTBStringDoc(MapDtlAttr.MTR, null, "请书写html标记,以《TR》开头，以《/TR》结尾。", true, false, true);
 
 			///#endregion 多表头.
 

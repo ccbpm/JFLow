@@ -821,22 +821,22 @@ public class MapDtl extends EntityNoName
 	/** 
 	 多表头
 	*/
-	public final String getMTR() throws Exception
-	{
-		String s = this.GetValStrByKey(MapDtlAttr.MTR);
-		s = s.replace("《", "<");
-		s = s.replace("》", ">");
-		s = s.replace("‘", "'");
-		return s;
-	}
-	public final void setMTR(String value) throws Exception
-	{
-		String s = value;
-		s = s.replace("<", "《");
-		s = s.replace(">", "》");
-		s = s.replace("'", "‘");
-		this.SetValByKey(MapDtlAttr.MTR, value);
-	}
+//	public final String getMTR() throws Exception
+//	{
+//		String s = this.GetValStrByKey(MapDtlAttr.MTR);
+//		s = s.replace("《", "<");
+//		s = s.replace("》", ">");
+//		s = s.replace("‘", "'");
+//		return s;
+//	}
+//	public final void setMTR(String value) throws Exception
+//	{
+//		String s = value;
+//		s = s.replace("<", "《");
+//		s = s.replace(">", "》");
+//		s = s.replace("'", "‘");
+//		this.SetValByKey(MapDtlAttr.MTR, value);
+//	}
 	/** 
 	 别名
 	*/
@@ -988,7 +988,7 @@ public class MapDtl extends EntityNoName
 		map.AddTBFloat(MapDtlAttr.FrmH, 1200, "表单高度", true, true);
 
 			//MTR 多表头列.
-		map.AddTBString(MapDtlAttr.MTR, null, "多表头列", true, false, 0, 3000, 20);
+//		map.AddTBString(MapDtlAttr.MTR, null, "多表头列", true, false, 0, 3000, 20);
 
 			///#region 超链接.
 		map.AddBoolean(MapDtlAttr.IsEnableLink, false, "是否启用超链接", true, true);

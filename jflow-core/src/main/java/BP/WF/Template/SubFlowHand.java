@@ -230,4 +230,27 @@ public class SubFlowHand extends EntityMyPK
 		this.setMyPK(this.getFK_Node() + "_" + this.getSubFlowNo() + "_0");
 		return super.beforeInsert();
 	}
+	/**
+	 上移
+
+	 @return
+	  * @throws Exception
+	 */
+	public final String DoUp() throws Exception
+	{
+		this.DoOrderUp(SubFlowAutoAttr.FK_Node, String.valueOf(this.getFK_Node()), SubFlowAutoAttr.SubFlowType, "0", SubFlowAutoAttr.Idx);
+		return "执行成功";
+	}
+	/**
+	 下移
+
+	 @return
+	  * @throws Exception
+	 */
+	public final String DoDown() throws Exception
+	{
+		this.DoOrderDown(SubFlowAutoAttr.FK_Node, String.valueOf(this.getFK_Node()), SubFlowAutoAttr.SubFlowType, "0", SubFlowAutoAttr.Idx);
+		return "执行成功";
+	}
+
 }

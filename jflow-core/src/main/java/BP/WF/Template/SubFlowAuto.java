@@ -374,7 +374,7 @@ public class SubFlowAuto extends EntityMyPK
 	*/
 	public final String DoDown() throws Exception
 	{
-		this.DoOrderDown(SubFlowAutoAttr.FK_Node, String.valueOf(this.getFK_Node()), SubFlowAutoAttr.SubFlowType, "2", SubFlowAutoAttr.Idx);
+		this.DoOrderDown(SubFlowAutoAttr.FK_Node, String.valueOf(this.getFK_Node()), SubFlowAutoAttr.SubFlowType, "1", SubFlowAutoAttr.Idx);
 		return "执行成功";
 	}
 

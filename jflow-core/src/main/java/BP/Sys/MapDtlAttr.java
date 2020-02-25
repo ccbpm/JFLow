@@ -226,6 +226,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 
 
 		///#region 导入导出属性.
+	/**
+	 是否可以导出
+	 */
+	public static final String IsImp = "IsImp";
 	/** 
 	 是否可以导出
 	*/

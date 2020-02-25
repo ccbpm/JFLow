@@ -26,8 +26,20 @@ public class MapDtlExt extends EntityNoName
 		uac.IsInsert = false;
 		return uac;
 	}
-	/** 
+	/**
 	 是否可以导出
+	 * @throws Exception
+	 */
+	public final boolean getIsImp() throws Exception
+	{
+		return this.GetValBooleanByKey(MapDtlAttr.IsImp);
+	}
+	public final void setIsImp(boolean value) throws Exception
+	{
+		this.SetValByKey(MapDtlAttr.IsImp, value);
+	}
+	/** 
+	 是否可以导入
 	 * @throws Exception 
 	*/
 	public final boolean getIsExp() throws Exception
@@ -923,7 +935,7 @@ public class MapDtlExt extends EntityNoName
 		map.AddTBStringDoc(MapDtlAttr.ImpSQLSearch, null, "查询SQL(SQL里必须包含@Key关键字.)", true, false, true);
 		map.AddTBStringDoc(MapDtlAttr.ImpSQLFullOneRow, null, "数据填充一行数据的SQL(必须包含@Key关键字,为选择的主键)", true, false, true);
 		map.AddTBString(MapDtlAttr.ImpSQLNames, null, "列的中文名称", true, false, 0, 900, 20, true);
-
+		map.AddBoolean(MapDtlAttr.IsImp, false, "是否可以导出？", true, true);
 			///#endregion 导入导出填充.
 
 

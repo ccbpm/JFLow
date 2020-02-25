@@ -43,8 +43,20 @@ public class MapDtl extends EntityNoName
 	{
 		this.SetValByKey(MapDtlAttr.RowIdx, value);
 	}
-	/** 
+	/**
 	 是否可以导出
+	 * @throws Exception
+	 */
+	public final boolean getIsImp() throws Exception
+	{
+		return this.GetValBooleanByKey(MapDtlAttr.IsImp);
+	}
+	public final void setIsImp(boolean value) throws Exception
+	{
+		this.SetValByKey(MapDtlAttr.IsImp, value);
+	}
+	/** 
+	 是否可以导入
 	 * @throws Exception 
 	*/
 	public final boolean getIsExp() throws Exception
@@ -1010,7 +1022,7 @@ public class MapDtl extends EntityNoName
 		map.AddTBString(MapDtlAttr.ImpSQLInit, null, "初始化SQL", true, false, 0, 500, 20);
 		map.AddTBString(MapDtlAttr.ImpSQLFullOneRow, null, "数据填充SQL", true, false, 0, 500, 20);
 		map.AddTBString(MapDtlAttr.ImpSQLNames, null, "字段中文名", true, false, 0, 900, 20);
-
+		map.AddBoolean(MapDtlAttr.IsImp, false, "IsImp", true, true);
 			///#endregion 导入导出填充.
 
 
@@ -1075,7 +1087,7 @@ public class MapDtl extends EntityNoName
 	/** 
 	 获取个数
 	 
-	 @param fk_val
+	 @param workID
 	 @return 
 	*/
 	public final int GetCountByFK(int workID) throws Exception

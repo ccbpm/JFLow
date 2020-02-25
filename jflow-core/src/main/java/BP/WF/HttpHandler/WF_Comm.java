@@ -1719,7 +1719,21 @@ public class WF_Comm extends WebContralBase {
 		return ds;
 
 	}
+	private DataTable SearchDtl_Data(Entities ens, Entity en,String workId,String fid) throws Exception
+	{
+		//获得.
+		Map map = en.getEnMapInTime();
 
+		MapAttrs attrs = map.getAttrs().ToMapAttrs();
+
+		QueryObject qo = new QueryObject(ens);
+
+		qo.AddWhere("RefPK","=",workId);
+		//qo.addAnd();
+		//qo.AddWhere("FID", "=", fid);
+
+		return qo.DoQueryToTable();
+	}
 	private DataTable Search_Data(Entities ens, Entity en) throws Exception {
 		// 获得.
 		Map map = en.getEnMapInTime();
@@ -2035,7 +2049,23 @@ public class WF_Comm extends WebContralBase {
 
 		return filePath;
 	}
+	/**
+	 * 从表执行导出
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public final String SearchDtl_Exp() throws Exception {
+		Entities ens = ClassFactory.GetEns(this.getEnsName());
+		Entity en = ens.getNewEntity();
+		String workId = this.GetRequestVal("WorkId");
+		String fid = this.GetRequestVal("FID");
+		String name = "从表数据导出";
+		String filename = name + "_" + BP.DA.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getName() + ".xls";
+		String filePath = ExportDGToExcel(SearchDtl_Data(ens, en, workId, fid), en, name, null);
 
+		return filePath;
+	}
 	/// #endregion 查询.
 
 	/// #region Refmethod.htm 相关功能.

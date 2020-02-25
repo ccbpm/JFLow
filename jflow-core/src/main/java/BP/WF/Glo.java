@@ -1574,7 +1574,7 @@ public class Glo {
 
 		String sqlScript = SystemConfig.getPathOfData() + "/UpdataCCFlowVer.sql";
 		File fi = new File(sqlScript);
-		SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(fi.lastModified());
 		String myVer = sdf.format(cal.getTime());

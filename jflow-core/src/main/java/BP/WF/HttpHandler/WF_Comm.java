@@ -1345,7 +1345,8 @@ public class WF_Comm extends WebContralBase {
                     isFirst = false;
                     /* 第一次进来。 */
                     qo.addLeftBracket();
-                    if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                    if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
                         qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field+",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field +"+'%'"));
                     else
                         qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field +"||'%'");
@@ -1354,7 +1355,8 @@ public class WF_Comm extends WebContralBase {
                 }
                 qo.addAnd();
 
-                if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						|| SystemConfig.getAppCenterDBVarStr().equals(":"))
                     qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field +",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field+ "+'%'"));
                 else
                     qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() +field+ "||'%'");
@@ -1413,7 +1415,8 @@ public class WF_Comm extends WebContralBase {
                         isFirst = false;
                         /* 第一次进来。 */
                         qo.addLeftBracket();
-                        if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                        if (SystemConfig.getAppCenterDBVarStr().equals("@")
+								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
                             qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
                         else
                             qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
@@ -1421,7 +1424,8 @@ public class WF_Comm extends WebContralBase {
                     }
                     qo.addOr();
 
-                    if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                    if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
                         qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
                     else
                         qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");

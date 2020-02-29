@@ -13,6 +13,10 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 
 		///#region 基本属性
 	/** 
+	 工号
+	*/
+	public static final String EmpNo = "EmpNo";
+	/** 
 	 部门
 	*/
 	public static final String FK_Dept = "FK_Dept";

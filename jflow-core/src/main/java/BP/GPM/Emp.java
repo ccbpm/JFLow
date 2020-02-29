@@ -5,6 +5,9 @@ import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Port.*;
+import BP.Tools.Cryptos;
+import BP.Tools.Encodes;
+
 import java.util.*;
 
 /** 
@@ -51,6 +54,18 @@ public class Emp extends EntityNoName
 	public final void setPinYin(String value) throws Exception
 	{
 		this.SetValByKey(EmpAttr.PinYin, value);
+	}
+	/** 
+	 工号
+	 * @throws Exception 
+	*/
+	public final String getEmpNo() throws Exception
+	{
+		return this.GetValStrByKey(EmpAttr.EmpNo);
+	}
+	public final void setEmpNo(String value) throws Exception
+	{
+		this.SetValByKey(EmpAttr.EmpNo, value);
 	}
 	/** 
 	 主要的部门。
@@ -235,6 +250,7 @@ public class Emp extends EntityNoName
 			///#region 字段
 			/*关于字段属性的增加 */
 		map.AddTBStringPK(EmpAttr.No, null, "登陆账号", true, false, 1, 50, 90);
+		map.AddTBString(EmpAttr.EmpNo, null, "工号", true, false, 0, 200, 130);
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 200, 130);
 		map.AddTBString(EmpAttr.Pass, "123", "密码", false, false, 0, 100, 10);
 
@@ -310,7 +326,17 @@ public class Emp extends EntityNoName
 	@Override
 	protected boolean beforeInsert() throws Exception {
 		if (SystemConfig.getIsEnablePasswordEncryption() == true)
-			this.setPass(BP.Tools.Cryptos.aesEncrypt(this.getPass()));
+		{
+			if(SystemConfig.getPasswordEncryptionType().equals("0"))
+			{
+				this.setPass(Encodes.encodeBase64(this.getPass())); ;
+			}
+			if(SystemConfig.getPasswordEncryptionType().equals("1"))
+			{
+				this.setPass(BP.Tools.Cryptos.aesEncrypt(this.getPass()));
+			}
+		}
+			
 		return super.beforeInsert();
 	}
 
@@ -451,6 +477,17 @@ public class Emp extends EntityNoName
 			return "两次密码不一致";
 		}
 
+		if(SystemConfig.getIsEnablePasswordEncryption() == true){
+			if(SystemConfig.getPasswordEncryptionType().equals("0"))
+			{
+				pass1 = Encodes.encodeBase64(pass1);
+			}
+			if(SystemConfig.getPasswordEncryptionType().equals("1"))
+			{
+				pass1 = Cryptos.aesDecrypt(pass1);
+			}
+		}
+			
 
 		this.setPass(pass1);
 

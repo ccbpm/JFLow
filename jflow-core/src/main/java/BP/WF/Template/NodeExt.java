@@ -1497,6 +1497,8 @@ public class NodeExt extends Entity
 			///#endregion 审核组件.
 
 
+		BtnLab btnLab = new BtnLab(this.getNodeID());
+		btnLab.RetrieveFromDBSources();
 		//清除所有的缓存.
 		BP.DA.CashEntity.getDCash().clear();
 
@@ -1517,14 +1519,72 @@ public class NodeExt extends Entity
 			fl.SetPara("IsYouLiTai", 0);
 		}
 		fl.Update();
-
-		BtnLab btnLab = new BtnLab(this.getNodeID());
+		BtnLab btnLab = new BtnLab();
+		btnLab.setNodeID(this.getNodeID());
 		btnLab.RetrieveFromDBSources();
 		Cash2019.UpdateRow(btnLab.toString(), String.valueOf(this.getNodeID()), btnLab.getRow());
+
+		BtnLabExtWebOffice btnLabExtWebOffice = new BtnLabExtWebOffice();
+		btnLabExtWebOffice.setNodeID(this.getNodeID());
+		btnLabExtWebOffice.RetrieveFromDBSources();
+		Cash2019.UpdateRow(btnLabExtWebOffice.toString(), String.valueOf(this.getNodeID()), btnLabExtWebOffice.getRow());
+
+		CC cc = new CC();
+		cc.setNodeID(this.getNodeID());
+		cc.RetrieveFromDBSources();
+		Cash2019.UpdateRow(cc.toString(), String.valueOf(this.getNodeID()), cc.getRow());
+
+		FrmNodeComponent frmNodeComponent = new FrmNodeComponent();
+		frmNodeComponent.setNodeID(this.getNodeID());
+		frmNodeComponent.RetrieveFromDBSources();
+		Cash2019.UpdateRow(frmNodeComponent.toString(), String.valueOf(this.getNodeID()), frmNodeComponent.getRow());
+
+		FrmThread frmThread = new FrmThread();
+		frmThread.setNodeID(this.getNodeID());
+		frmThread.RetrieveFromDBSources();
+		Cash2019.UpdateRow(frmThread.toString(), String.valueOf(this.getNodeID()), frmThread.getRow());
+
+		FrmTrack frmTrack = new FrmTrack();
+		frmTrack.setNodeID(this.getNodeID());
+		frmTrack.RetrieveFromDBSources();
+		Cash2019.UpdateRow(frmTrack.toString(), String.valueOf(this.getNodeID()), frmTrack.getRow());
+
+		FrmTransferCustom frmTransferCustom = new FrmTransferCustom();
+		frmTransferCustom.setNodeID(this.getNodeID());
+		frmTransferCustom.RetrieveFromDBSources();
+		Cash2019.UpdateRow(frmTransferCustom.toString(), String.valueOf(this.getNodeID()), frmTransferCustom.getRow());
+
+		FrmWorkCheck frmWorkCheck = new FrmWorkCheck();
+		frmWorkCheck.setNodeID(this.getNodeID());
+		frmWorkCheck.RetrieveFromDBSources();
+		Cash2019.UpdateRow(frmWorkCheck.toString(), String.valueOf(this.getNodeID()), frmWorkCheck.getRow());
+
+		NodeSheet nodeSheet = new NodeSheet();
+		nodeSheet.setNodeID(this.getNodeID());
+		nodeSheet.RetrieveFromDBSources();
+		Cash2019.UpdateRow(nodeSheet.toString(), String.valueOf(this.getNodeID()), nodeSheet.getRow());
+
+		NodeSimple nodeSimple = new NodeSimple();
+		nodeSimple.setNodeID(this.getNodeID());
+		nodeSimple.RetrieveFromDBSources();
+		Cash2019.UpdateRow(nodeSimple.toString(), String.valueOf(this.getNodeID()), nodeSimple.getRow());
+
+		FrmSubFlow frmSubFlow = new FrmSubFlow();
+		frmSubFlow.setNodeID(this.getNodeID());
+		frmSubFlow.RetrieveFromDBSources();
+		Cash2019.UpdateRow(frmSubFlow.toString(), String.valueOf(this.getNodeID()), frmSubFlow.getRow());
+
+		GetTask getTask = new GetTask();
+		getTask.setNodeID(this.getNodeID());
+		getTask.RetrieveFromDBSources();
+		Cash2019.UpdateRow(getTask.toString(), String.valueOf(this.getNodeID()), getTask.getRow());
+
 		//如果是组长会签模式，通用选择器只能单项选择
 		if (this.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && this.getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne)
 		{
-			Selector selector = new Selector(this.getNodeID());
+			Selector selector = new Selector();
+			selector.setNodeID(this.getNodeID());
+			selector.RetrieveFromDBSources();
 			selector.setIsSimpleSelector(true);
 			selector.Update();
 

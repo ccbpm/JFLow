@@ -111,7 +111,7 @@ public class ControllerOfMessage {
             this.getSenderTo();
             if(!DataType.IsNullOrEmpty(SystemConfig.getWX_AgentID()))
             {
-            	String postJson = weiXin.ResponseMsg(emp.getTel(), "", "", "text", this.getContent());
+            	String postJson = weiXin.ResponseMsg(emp.getEmpNo(), "", "", "text", this.getContent());
             	flag= new WeiXin().PostWeiXinMsg(postJson);
             }
             if(!DataType.IsNullOrEmpty(SystemConfig.getWXGZH_Appid()))

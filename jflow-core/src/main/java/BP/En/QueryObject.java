@@ -593,14 +593,14 @@ public class QueryObject {
 
 	public final void addOrderBy(String attr) throws Exception {
 		if (this._orderBy.indexOf("ORDER BY") != -1) {
-			this._orderBy = " , " + attr2Field(attr);
+			this._orderBy = " , " + attr;
 		} else {
-			this._orderBy = " ORDER BY " + attr2Field(attr);
+			this._orderBy = " ORDER BY " + attr;
 		}
 	}
 
 	/**
-	 * @param attr
+	 * @param
 	 */
 	public final void addOrderByRandom() {
 		if (this._orderBy.indexOf("ORDER BY") != -1) {
@@ -614,8 +614,7 @@ public class QueryObject {
 	 * addOrderByDesc
 	 * 
 	 * @param attr
-	 * @param desc
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void addOrderByDesc(String attr) throws Exception {
 		this._orderBy = " ORDER BY " + attr2Field(attr) + " DESC ";

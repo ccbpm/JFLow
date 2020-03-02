@@ -1092,7 +1092,12 @@ public class SystemConfig {
 		}
 		return true;
 	}
-
+	public static String getPasswordEncryptionType(){
+		if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("PasswordEncryptionType")) == false) {
+			return (String) SystemConfig.getAppSettings().get("PasswordEncryptionType");
+		}
+		return "0";
+	}
 	public static String getHostURL() {
 		if (DataType.IsNullOrEmpty(SystemConfig.getAppSettings().get("HostURL")) == false) {
 			return (String) SystemConfig.getAppSettings().get("HostURL");

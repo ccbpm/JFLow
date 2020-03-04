@@ -492,7 +492,21 @@ public class WF_RptDfine extends WebContralBase
 				qo.AddWhere(BP.WF.Data.GERptAttr.FlowStarter, WebUser.getNo());
 				break;
 			case "MyDept": //我部门发起的.
-				qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
+				//只查本部门及兼职部门
+				if (md.GetParaBoolen("IsSearchNextLeavel") == false)
+				{
+					qo.AddWhereInSQL(BP.WF.Data.GERptAttr.FK_Dept, "SELECT FK_Dept From Port_DeptEmp Where FK_Emp='" + WebUser.getNo() + "'");
+				}
+				else
+				{
+					//查本部门及子级
+					String sql = "SELECT FK_Dept From Port_DeptEmp Where FK_Emp='" + WebUser.getNo() + "'";
+					sql += " UNION ";
+					sql += "SELECT No AS FK_Dept From Port_Dept Where ParentNo IN(SELECT FK_Dept From Port_DeptEmp Where FK_Emp='" + WebUser.getNo() + "')";
+					qo.AddWhereInSQL(BP.WF.Data.GERptAttr.FK_Dept, sql);
+
+				}
+				//qo.AddWhere(BP.WF.Data.GERptAttr.FK_Dept, WebUser.getFK_Dept());
 				break;
 			case "MyJoin": //我参与的.
 				qo.AddWhere(BP.WF.Data.GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");

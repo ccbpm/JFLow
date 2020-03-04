@@ -372,6 +372,8 @@ public class WF_Admin_RptDfine extends WebContralBase {
 		// 日期字段.
 		String DTSearchKey = this.GetRequestVal("DTSearchKey");
 		md.setRptDTSearchKey(DTSearchKey);
+		//是否查询自己部门发起
+		md.SetPara("IsSearchNextLeavel", this.GetRequestValBoolen("IsSearchNextLeavel"));
 		md.Save();
 
 		Cash.getMap_Cash().remove(this.getRptNo());

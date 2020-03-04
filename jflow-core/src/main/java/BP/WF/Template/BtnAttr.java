@@ -181,6 +181,12 @@ public class BtnAttr extends BP.Sys.ToolbarExcelAttr
 	*/
 	public static final String HuiQianLeaderRole = "HuiQianLeaderRole";
 
+	/**
+	 * 加主持人
+	 */
+	public static final String AddLeaderLab = "AddLeaderLab";
+	public static final String AddLeaderEnable = "AddLeaderEnable";
+
 	/** 
 	 流转自定义 TransferCustomLab
 	*/

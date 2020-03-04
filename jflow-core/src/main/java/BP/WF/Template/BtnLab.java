@@ -577,6 +577,15 @@ public class BtnLab extends Entity
 		return HuiQianLeaderRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianLeaderRole));
 	}
 
+	public final String getAddLeaderLab() throws Exception
+	{
+		return this.GetValStringByKey(BtnAttr.AddLeaderLab);
+	}
+
+	public final boolean getAddLeaderEnable() throws Exception
+	{
+		return this.GetValBooleanByKey(BtnAttr.AddLeaderEnable);
+	}
 	/** 
 	是否启用文档,@0=不启用@1=按钮方式@2=公文在前@3=表单在前
 	*/
@@ -990,7 +999,10 @@ public class BtnLab extends Entity
 
 		map.AddDDLSysEnum(BtnAttr.HuiQianLeaderRole, 0, "会签组长规则", true, true, BtnAttr.HuiQianLeaderRole, "0=只有一个组长@1=最后一个组长发送@2=任意组长发送",true);
 
-			//map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);
+		map.AddTBString(BtnAttr.AddLeaderLab, "加主持人", "加主持人", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.AddLeaderEnable, false, "是否启用", true, true);
+
+		//map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);
 			//map.AddDDLSysEnum(BtnAttr.HuiQianRole, 0, "会签模式", true, true, BtnAttr.HuiQianRole, "@0=不启用@1=组长模式@2=协作模式");
 
 		   // map.AddTBString(BtnAttr.HuiQianLab, "会签", "会签标签", true, false, 0, 50, 10);

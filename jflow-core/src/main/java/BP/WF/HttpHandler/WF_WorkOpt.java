@@ -1110,22 +1110,24 @@ public class WF_WorkOpt extends WebContralBase
 		//查询出来集合.
 		GenerWorkerLists ens = new GenerWorkerLists(this.getWorkID(), this.getFK_Node());
 		BtnLab btnLab = new BtnLab(this.getFK_Node());
-		if (btnLab.getHuiQianRole() != HuiQianRole.TeamupGroupLeader || (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && btnLab.getHuiQianLeaderRole()!= HuiQianLeaderRole.OnlyOne)) {
-			for(GenerWorkerList item : ens.ToJavaList())
+		if (btnLab.getHuiQianRole() != HuiQianRole.TeamupGroupLeader || (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && btnLab.getHuiQianLeaderRole()!= HuiQianLeaderRole.OnlyOne))
+		{
+			for (GenerWorkerList item : ens.ToJavaList())
 			{
-				if(btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader)
-				{
-					if ((gwf.getTodoEmps().contains(item.getFK_Emp() + ",") == true || gwf.getHuiQianZhuChiRen().contains(item.getFK_Emp() + ",") == true) && item.getFK_Emp() != BP.Web.WebUser.getNo())
-					{
-						item.setFK_EmpText("<img src='../Img/zhuichiren.png' border=0 />" + item.getFK_EmpText());
-						item.setFK_EmpText(item.getFK_EmpText());
-						if (item.getIsPass() == true)
-							item.setIsPassInt(1001);
-						else
-							item.setIsPassInt(100);
-						continue;
-					}
 
+				if ((gwf.getHuiQianZhuChiRen().contains(item.getFK_Emp() + ",") == true ||(DataType.IsNullOrEmpty(gwf.getHuiQianZhuChiRen()) == true && gwf.GetParaString("AddLeader").contains(item.getFK_Emp()+",") == false && gwf.getTodoEmps().contains(item.getFK_Emp() + ",") == true)) && item.getFK_Emp().equals(BP.Web.WebUser.getNo()) == false)
+				{
+					item.setFK_EmpText("<img src='../Img/zhuichiren.png' border=0 />" + item.getFK_EmpText());
+					item.setFK_EmpText(item.getFK_EmpText());
+					if (item.getIsPass() == true)
+					{
+						item.setIsPassInt(1001);
+					}
+					else
+					{
+						item.setIsPassInt(100);
+					}
+					continue;
 				}
 
 				//标记为自己.
@@ -1155,8 +1157,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		//获取当前人员的流程处理信息
 		GenerWorkerList gwlOfMe = new GenerWorkerList();
-		gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(),
-				GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
+		gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
 
 		DataSet ds = new DataSet();
 		ds.Tables.add(mydt);
@@ -1164,6 +1165,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		return BP.Tools.Json.ToJson(ds);
 	}
+
 	/** 
 	 移除
 	 
@@ -1348,7 +1350,52 @@ public class WF_WorkOpt extends WebContralBase
 
 	}
 
-		///#endregion
+	/**
+	 * 增加主持人
+	 * @return
+	 */
+	public  String HuiQian_AddLeader() throws Exception
+	{
+		//生成变量.
+		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+
+		if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianOver)
+		{
+			//只有一个人的情况下, 并且是会签完毕状态，就执行
+			return "info@当前工作已经到您的待办理了,会签工作已经完成.";
+		}
+		String leaders = gwf.GetParaString("AddLeader");
+
+		//获取加签的人
+		GenerWorkerLists gwfs = new GenerWorkerLists();
+		gwfs.Retrieve(GenerWorkerListAttr.WorkID, gwf.getWorkID(), GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.IsPass, -1);
+		String empsLeader = "新增主持人:";
+
+
+		for (GenerWorkerList item : gwfs.ToJavaList())
+		{
+			if(leaders.contains(item.getFK_Emp() + ","))
+			{
+				empsLeader += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
+				//发送消息
+				BP.WF.Dev2Interface.Port_SendMsg(item.getFK_Emp(), "bpm会签邀请", "HuiQian" + gwf.getWorkID() + "_" + gwf.getFK_Node() + "_" + item.getFK_Emp(), BP.Web.WebUser.getName() + "邀请您作为工作｛" + gwf.getTitle() + "｝的主持人,请您在{" + item.getSDT() + "}前完成.", "HuiQian", gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
+			}
+
+		}
+		if (DataType.IsNullOrEmpty(empsLeader) == true)
+		{
+			return "没有增加新的主持人";
+		}
+		leaders = "('" + leaders.substring(0, leaders.length() - 1).replace(",", "','") + "')";
+		//恢复他的状态.
+		String sql = "UPDATE WF_GenerWorkerList SET IsPass=0 WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND IsPass=-1 AND FK_Emp In"+ leaders;
+		DBAccess.RunSQL(sql);
+
+		gwf.setTodoEmps(gwf.getTodoEmps() + empsLeader);
+		gwf.Update();
+		return "主持人增加成功";
+
+	}
 
 
 		///#region 与会签相关的.

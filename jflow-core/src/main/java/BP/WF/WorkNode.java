@@ -5027,6 +5027,8 @@ public class WorkNode {
 				pk = this.getHisWork().getOID();
 				break;
 			case PWorkID:
+				if(this.rptGe == null)
+					this.rptGe = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
 				pk = this.rptGe.getPWorkID();
 				break;
 			default:
@@ -5175,6 +5177,8 @@ public class WorkNode {
 				this.getHisNode().getNodeID());
 
 		if (gwls.size() == 1) {
+			this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+			this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
 			return false; // 让其向下执行,因为只有一个人,就没有顺序的问题.
 		}
 
@@ -5205,6 +5209,8 @@ public class WorkNode {
 				this.getHisGenerWorkFlow().setTodoEmps(WebUser.getName() + ";");
 
 			}
+			this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+			this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
 			return false; // 只有一个待办,说明自己就是最后的一个人.
 		}
 
@@ -6034,7 +6040,7 @@ public class WorkNode {
 	 * 发送到延续子流程.
 	 * 
 	 * @param node
-	 * @param toEmps
+	 * @param toEmpIDs
 	 * @return
 	 * @throws Exception
 	 */
@@ -9303,7 +9309,7 @@ public class WorkNode {
 	/**
 	 * 获取分流与合流之间的子线程节点集合.
 	 * 
-	 * @param toNode
+	 * @param toHLNode
 	 * @return
 	 * @throws Exception
 	 */

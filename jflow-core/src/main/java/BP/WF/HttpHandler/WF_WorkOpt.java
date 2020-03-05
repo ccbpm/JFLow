@@ -1115,7 +1115,7 @@ public class WF_WorkOpt extends WebContralBase
 			for (GenerWorkerList item : ens.ToJavaList())
 			{
 
-				if ((gwf.getHuiQianZhuChiRen().contains(item.getFK_Emp() + ",") == true ||(DataType.IsNullOrEmpty(gwf.getHuiQianZhuChiRen()) == true && gwf.GetParaString("AddLeader").contains(item.getFK_Emp()+",") == false && gwf.getTodoEmps().contains(item.getFK_Emp() + ",") == true)) && item.getFK_Emp().equals(BP.Web.WebUser.getNo()) == false)
+				if ((gwf.getHuiQianZhuChiRen().contains(item.getFK_Emp() + ",") == true ||(DataType.IsNullOrEmpty(gwf.getHuiQianZhuChiRen()) == true && gwf.GetParaString("AddLeader").contains(item.getFK_Emp()+",") == false && gwf.getTodoEmps().contains(item.getFK_Emp() + ",") == true)) && item.getFK_Emp().equals(BP.Web.WebUser.getNo()) == false&& item.getIsHuiQian() == false)
 				{
 					item.setFK_EmpText("<img src='../Img/zhuichiren.png' border=0 />" + item.getFK_EmpText());
 					item.setFK_EmpText(item.getFK_EmpText());

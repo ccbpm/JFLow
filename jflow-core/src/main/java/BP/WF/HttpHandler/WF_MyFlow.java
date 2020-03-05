@@ -846,27 +846,25 @@ public class WF_MyFlow extends WebContralBase {
 			/**  修复会签状态不正确的问题，如果是会签状态，但是WF_GenerWorkerList中只有一个待办，则说明数据不正确 yuanlina*/
 			if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)
 			{
-				//协作模式
-				if (btnLab.getHuiQianRole() == HuiQianRole.Teamup)
+				//初次打开会签节点时
+				if (DataType.IsNullOrEmpty(gwf.getHuiQianZhuChiRen()) == true)
 				{
-					if (gwf.getHuiQianZhuChiRen().equals(WebUser.getNo() + ",") == false)
+					if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
 						isAskForOrHuiQian = true;
 				}
-				if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader){
-					if (btnLab.getHuiQianLeaderRole().getValue() == 0)
-					{
-						if (gwf.getHuiQianZhuChiRen().equals(WebUser.getNo()) == false  && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
-							isAskForOrHuiQian = true;
-					}
-					else
-					{
-						//不是主持人
-						if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
-							isAskForOrHuiQian = true;
-					}
 
-
+				//执行会签后的状态
+				if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && btnLab.getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne)
+				{
+					if (gwf.getHuiQianZhuChiRen().equals(WebUser.getNo())==false && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+						isAskForOrHuiQian = true;
 				}
+				else
+				{
+					if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+						isAskForOrHuiQian = true;
+				}
+
 			}
 		}
 
@@ -1164,6 +1162,14 @@ public class WF_MyFlow extends WebContralBase {
 				toolbar += "<input type=button name='HuiQian'  value='" + btnLab.getHuiQianLab()
 						+ "' enable=true onclick=\"To('" + urlr3 + "'); \" />";
 			}
+
+			//原始会签主持人可以增加组长
+			if (btnLab.getAddLeaderEnable() == true && (btnLab.getHuiQianRole()== HuiQianRole.Teamup || btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader))
+			{
+				/*增加组长 */
+				toolbar += "<input type=button name='AddLeader'  value='" + btnLab.getAddLeaderLab() + "' enable=true  />";
+			}
+
 
 			if (btnLab.getWebOfficeWorkModel() == WebOfficeWorkModel.Button) {
 				/* 公文正文 */

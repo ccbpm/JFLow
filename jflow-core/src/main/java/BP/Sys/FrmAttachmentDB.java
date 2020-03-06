@@ -131,7 +131,7 @@ public class FrmAttachmentDB extends EntityMyPK
 		this.SetValByKey(FrmAttachmentDBAttr.FK_FrmAttachment, value);
 
 			//获取最后"_"的位置
-		int idx = value.lastIndexOf('_');
+		int idx = value.indexOf('_');
 		String val = value.substring(idx + 1);
 		this.SetValByKey(FrmAttachmentDBAttr.NoOfObj, val);
 	}

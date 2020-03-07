@@ -4595,7 +4595,14 @@ public class WorkNode {
             {
                 frms = "'" + frms.replace(",", "','")+"'";
                 nds = new FrmNodes();
-                nds.RetrieveIn(FrmNodeAttr.FK_Frm, frms);
+				QueryObject qury = new QueryObject(nds);
+				qury.AddWhere(FrmNodeAttr.FK_Flow, this.getHisNode().getFK_Flow());
+				qury.addAnd();
+				qury.AddWhere(FrmNodeAttr.FK_Node, this.getHisNode().getNodeID());
+				qury.addAnd();
+				qury.AddWhere(FrmNodeAttr.FK_Frm,"In", "("+frms+")");
+				qury.addOrderBy(FrmNodeAttr.Idx);
+				qury.DoQuery();
             }
                
             else

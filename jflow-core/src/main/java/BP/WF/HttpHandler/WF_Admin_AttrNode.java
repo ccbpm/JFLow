@@ -678,7 +678,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 			}
 
 
-			isDtl.Rows.AddDatas(tddr.ItemArray);
+			isDtl.Rows.add(tddr);
 
 				///#endregion
 

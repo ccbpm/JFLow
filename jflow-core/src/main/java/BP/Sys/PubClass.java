@@ -756,23 +756,25 @@ public class PubClass {
 		if (en.getEnMap().getEnType() == EnType.View || en.getEnMap().getEnType() == EnType.ThirdPartApp) {
 			return;
 		}
-		try {
-			String sql = "execute  sp_dropextendedproperty 'MS_Description','user',dbo,'table','"
-					+ en.getEnMap().getPhysicsTable() + "'";
-			en.RunSQL(sql);
-		} catch (RuntimeException ex) {
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		String sql1 = "SELECT tbs.name,ds.value    \n" +
+				"FROM sys.extended_properties ds \n" +
+				"LEFT JOIN sysobjects tbs ON ds.major_id=tbs.id \n" +
+				"WHERE  ds.minor_id=0 and \n" +
+				"tbs.name='"+en.getEnMap().getPhysicsTable()+"';";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql1);
+		//判断是否已存在表描述，不存在时增加
+		if (dt.Rows.size() == 0){
 
-		try {
-			String sql = "execute  sp_addextendedproperty 'MS_Description', '" + en.getEnDesc()
-					+ "', 'user', dbo, 'table', '" + en.getEnMap().getPhysicsTable() + "'";
-			en.RunSQL(sql);
-		} catch (RuntimeException ex) {
+			try {
+				String sql = "execute  sp_addextendedproperty 'MS_Description', '" + en.getEnDesc()
+						+ "', 'user', dbo, 'table', '" + en.getEnMap().getPhysicsTable() + "'";
+				en.RunSQL(sql);
+			} catch (RuntimeException ex) {
 
-		} catch (Exception e) {
-			e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}
 
 		SysEnums ses = new SysEnums();

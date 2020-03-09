@@ -1066,7 +1066,7 @@ public class WF_Comm extends WebContralBase {
 			}
 
 			dr = dt.NewRow();
-			dr.setValue("Name",en.toString());
+			dr.setValue("Name",en.getClass().getName());
 			dr.setValue("Title",en.Title);
 			dr.setValue("Icon",en.Icon);
 			dr.setValue("Note",en.Help);

@@ -16,7 +16,7 @@
   <Group No="System" Name="系统管理" />
   <Item No="002" GroupNo="System" Name="节假日设置" For="admin" Url="../../Comm/Sys/Holiday.htm"  />
   <Item No="003" GroupNo="System" Name="表结构"    For="admin" Url="../../Comm/Sys/SystemClass.htm"  />
-  <Item No="004" GroupNo="System" Name="二级管理员" For="admin" Url="../../Comm/SearchBS.htm?EnsName=BP.WF.Port.AdminEmps"  />
+  <!--<Item No="004" GroupNo="System" Name="二级管理员" For="admin" Url="../../Comm/SearchBS.htm?EnsName=BP.WF.Port.AdminEmps"  />-->
   <Item No="005" GroupNo="System" Name="工具箱" For="admin" Url="../../Comm/MethodLink.htm"  />
   <Item No="010" GroupNo="System" Name="修改密码" For="admin" Url="../../Setting/ChangePassword.htm"  />
   <Item No="020" GroupNo="System" Name="JavaScript脚本导入" For="" Url="../../Comm/Sys/JavaScriptImp.htm"  />

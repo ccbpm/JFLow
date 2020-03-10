@@ -17,31 +17,31 @@ import java.util.*;
 import java.net.URLDecoder;
 import java.time.*;
 
-/** 
+/**
  初始化函数
-*/
+ */
 public class WF_Admin_CCBPMDesigner extends WebContralBase
 {
 
 	public final String GetFlowTreeTable2019() throws Exception
 	{
 		String sql = "SELECT * FROM (SELECT 'F'+No as No,'F'+ParentNo ParentNo, Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-"                           union " + "\r\n" +
-"                           SELECT NO, 'F'+FK_FlowSort as ParentNo,(NO + '.' + NAME) as Name,IDX,0 IsParent,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
+				"                           union " + "\r\n" +
+				"                           SELECT NO, 'F'+FK_FlowSort as ParentNo,(NO + '.' + NAME) as Name,IDX,0 IsParent,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT * FROM (SELECT 'F'||No as No,'F'||ParentNo as ParentNo,Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-"                        union " + "\r\n" +
-"                        SELECT NO, 'F'||FK_FlowSort as ParentNo,NO||'.'||NAME as Name,IDX,0 IsParent,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
+					"                        union " + "\r\n" +
+					"                        SELECT NO, 'F'||FK_FlowSort as ParentNo,NO||'.'||NAME as Name,IDX,0 IsParent,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
 		}
 
 
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT * FROM (SELECT CONCAT('F', No) No, CONCAT('F', ParentNo) ParentNo, Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-"                           union " + "\r\n" +
-"                           SELECT NO, CONCAT('F', FK_FlowSort) ParentNo, CONCAT(NO, '.', NAME) Name,IDX,0 IsParent,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
+					"                           union " + "\r\n" +
+					"                           SELECT NO, CONCAT('F', FK_FlowSort) ParentNo, CONCAT(NO, '.', NAME) Name,IDX,0 IsParent,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -110,17 +110,17 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			newRootRow.setValue("ParentNo", "F0");
 			DataTable newDt = dt;
 			newDt.Rows.AddDatas(newRootRow.ItemArray);
-			GenerChildRows(dt, newDt, newRootRow);
+			GenerChildRows(dt, newDt, newRootRow,"No");
 			dt = newDt;
 		}
 
 		return BP.Tools.Json.ToJson(dt);
 	}
-	/** 
+	/**
 	 选择器
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String SelectEmps_Init()
 	{
 		String fk_flowsort = this.GetRequestVal("FK_FlowSort").substring(1);
@@ -133,7 +133,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		DataSet ds = new DataSet();
 
 		String sql = "";
-			 sql = "SELECT 'F' + No as No,Name, 'F' + ParentNo as ParentNo FROM WF_FlowSort WHERE No='" + fk_flowsort + "' OR ParentNo='" + fk_flowsort + "' ORDER BY Idx";
+		sql = "SELECT 'F' + No as No,Name, 'F' + ParentNo as ParentNo FROM WF_FlowSort WHERE No='" + fk_flowsort + "' OR ParentNo='" + fk_flowsort + "' ORDER BY Idx";
 
 		DataTable dtFlowSorts = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		//if (dtFlowSort.Rows.size() == 0)
@@ -172,17 +172,17 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			dtFlows.Columns.get(2).setColumnName("FK_FlowSort");
 		}
 
-		//转化为 json 
+		//转化为 json
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-	/** 
+	/**
 	 按照管理员登录.
-	 
-	 @param userNo 管理员编号
+
+	 @param
 	 @return 登录信息
-	 * @throws Exception 
-	*/
+	  * @throws Exception
+	 */
 	public final String AdminerChang_LoginAs() throws Exception
 	{
 		String orgNo = this.GetRequestVal("OrgNo");
@@ -243,67 +243,67 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	/** 
+	/**
 	 构造函数
-	*/
+	 */
 	public WF_Admin_CCBPMDesigner()
 	{
 	}
-	/** 
+	/**
 	 执行流程设计图的保存.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Designer_Save()
 	{
 		String sql = "";
 		try
 		{
-			 
-				//保存节点位置. @101,2,30@102,3,1
-				String[] nodes = this.GetRequestVal("Nodes").split("[@]", -1);
-				for (String item : nodes)
-				{
-					if (item == null || item.equals(""))
-					{
-						continue;
-					}
-					String[] strs = item.split("[,]", -1);
-					DBAccess.RunSQL("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0] );
-				}
 
-				 
-				//保存方向.
-				 
-				String[] dirs = this.GetRequestVal("Dirs").split("[@]", -1);
-				for (String item : dirs)
+			//保存节点位置. @101,2,30@102,3,1
+			String[] nodes = this.GetRequestVal("Nodes").split("[@]", -1);
+			for (String item : nodes)
+			{
+				if (item == null || item.equals(""))
 				{
-					if (item == null || item.equals(""))
-					{
-						continue;
-					}
-					String[] strs = item.split("[,]", -1);
-					DBAccess.RunSQL("DELETE FROM WF_Direction where MyPK='" + strs[0] + "'");
-					DBAccess.RunSQL("INSERT INTO WF_Direction(MyPK,FK_Flow,Node,ToNode,IsCanBack) values('" + strs[0] + "','" + strs[1] + "','" + strs[2] + "','" + strs[3] + "'," + "0)");
+					continue;
 				}
- 
+				String[] strs = item.split("[,]", -1);
+				DBAccess.RunSQL("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE NodeID=" + strs[0] );
+			}
 
-				//保存label位置.
-			 
-				String[] labs = this.GetRequestVal("Labs").split("[@]", -1);
-				for (String item : labs)
+
+			//保存方向.
+
+			String[] dirs = this.GetRequestVal("Dirs").split("[@]", -1);
+			for (String item : dirs)
+			{
+				if (item == null || item.equals(""))
 				{
-					if (item == null || item.equals(""))
-					{
-						continue;
-					}
-					String[] strs = item.split("[,]", -1);
-					DBAccess.RunSQL("UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK='" + strs[0] + "' ");
+					continue;
 				}
- 
+				String[] strs = item.split("[,]", -1);
+				DBAccess.RunSQL("DELETE FROM WF_Direction where MyPK='" + strs[0] + "'");
+				DBAccess.RunSQL("INSERT INTO WF_Direction(MyPK,FK_Flow,Node,ToNode,IsCanBack) values('" + strs[0] + "','" + strs[1] + "','" + strs[2] + "','" + strs[3] + "'," + "0)");
+			}
 
-				return "保存成功.";
-			 
+
+			//保存label位置.
+
+			String[] labs = this.GetRequestVal("Labs").split("[@]", -1);
+			for (String item : labs)
+			{
+				if (item == null || item.equals(""))
+				{
+					continue;
+				}
+				String[] strs = item.split("[,]", -1);
+				DBAccess.RunSQL("UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK='" + strs[0] + "' ");
+			}
+
+
+			return "保存成功.";
+
 		}
 		catch (RuntimeException ex)
 		{
@@ -311,12 +311,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 	}
 
-	/** 
+	/**
 	 下载流程模版
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String ExpFlowTemplete() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
@@ -335,12 +335,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	}
 
 
-		///#region 执行父类的重写方法.
-	/** 
+	///#region 执行父类的重写方法.
+	/**
 	 默认执行的方法
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	@Override
 	protected String DoDefaultMethod()
 	{
@@ -348,35 +348,35 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return "err@没有判断的标记:" + this.getDoType();
 	}
 
-		///#endregion 执行父类的重写方法.
+	///#endregion 执行父类的重写方法.
 
-	/** 
-	 使管理员登录使管理员登录    /// 
-	 @return 
-	 * @throws Exception 
-	*/
+	/**
+	 使管理员登录使管理员登录    ///
+	 @return
+	  * @throws Exception
+	 */
 	public final String LetLogin() throws Exception
 	{
 		LetAdminLogin(this.GetRequestVal("UserNo"), true);
 		return "登录成功.";
 	}
-	/** 
+	/**
 	 获得枚举列表的JSON.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Logout()
 	{
 		BP.WF.Dev2Interface.Port_SigOut();
 		return "您已经安全退出,欢迎使用ccbpm.";
 	}
 
-	/** 
+	/**
 	 根据部门、岗位获取人员列表
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String GetEmpsByStationTable() throws Exception
 	{
 		String deptid = this.GetRequestVal("DeptNo");
@@ -488,12 +488,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	/** 
+	/**
 	 获取指定部门下一级子部门及岗位列表
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String GetSubDeptsTable() throws Exception
 	{
 		DataTable dt = new DataTable();
@@ -563,13 +563,13 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	}
 
 
-		///#region 主页.
-	/** 
+	///#region 主页.
+	/**
 	 初始化登录界面.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String Default_Init() throws Exception
 	{
 		try
@@ -637,10 +637,10 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 	}
 
-		///#endregion
+	///#endregion
 
 
-		///#region 登录窗口.
+	///#region 登录窗口.
 	public final String Login_InitInfo()
 	{
 		Hashtable ht = new Hashtable();
@@ -649,12 +649,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		return BP.Tools.Json.ToJson(ht);
 	}
-	/** 
+	/**
 	 初始化登录界面.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String Login_Init() throws Exception
 	{
 
@@ -745,12 +745,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		return "url@../../AppClassic/Login.htm?DoType=Logout";
 	}
-	/** 
+	/**
 	 提交
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String Login_Submit() throws Exception
 	{
 		String[] para = new String[0];
@@ -798,18 +798,18 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return "url@Default.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getNo();
 	}
 
-		///#endregion 登录窗口.
+	///#endregion 登录窗口.
 
 
 
 
-		///#region 流程相关 Flow
-	/** 
+	///#region 流程相关 Flow
+	/**
 	 获取流程所有元素
-	 
+
 	 @return json data
-	 * @throws Exception 
-	*/
+	  * @throws Exception
+	 */
 	public final String Flow_AllElements_ResponseJson() throws Exception
 	{
 		BP.WF.Flow flow = new BP.WF.Flow();
@@ -834,16 +834,16 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return BP.Tools.Json.ToJson(ds);
 	}
 
-		///#endregion end Flow
+	///#endregion end Flow
 
 
-		///#region 节点相关 Nodes
-	/** 
+	///#region 节点相关 Nodes
+	/**
 	 创建流程节点并返回编号
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CreateNode() throws Exception
 	{
 		try
@@ -880,12 +880,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 gen
-	 
+
 	 @param figureName
-	 @return 
-	*/
+	 @return
+	 */
 	public final BP.WF.RunModel Node_GetRunModelByFigureName(String figureName)
 	{
 		BP.WF.RunModel runModel = BP.WF.RunModel.Ordinary;
@@ -912,12 +912,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 		return runModel;
 	}
-	/** 
+	/**
 	 根据节点编号删除流程节点
-	 
+
 	 @return 执行结果
-	 * @throws Exception 
-	*/
+	  * @throws Exception
+	 */
 	public final String DeleteNode() throws Exception
 	{
 		try
@@ -942,13 +942,13 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 修改节点名称
-	 
-	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
-	*/
+
+	 @return
+	  * @throws Exception
+	 * @throws NumberFormatException
+	 */
 	public final String Node_EditNodeName() throws NumberFormatException, Exception
 	{
 		String FK_Node = this.GetValFromFrmByKey("NodeID");
@@ -967,12 +967,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		return "err@修改节点失败，请确认该节点是否存在？";
 	}
-	/** 
+	/**
 	 修改节点运行模式
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String Node_ChangeRunModel() throws Exception
 	{
 		String runModel = GetValFromFrmByKey("RunModel");
@@ -1001,16 +1001,16 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return "设置成功.";
 	}
 
-		///#endregion end Node
+	///#endregion end Node
 
 
-		///#region CCBPMDesigner
-	/** 
+	///#region CCBPMDesigner
+	/**
 	 获取用户信息
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String GetWebUserInfo() throws Exception
 	{
 		if (WebUser.getNo() == null)
@@ -1058,31 +1058,31 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	}
 
 	private StringBuilder sbJson = new StringBuilder();
-	/** 
+	/**
 	 获取流程树数据
-	 
+
 	 @return 返回结果Json,流程树
-	 * @throws Exception 
-	*/
+	  * @throws Exception
+	 */
 	public final String GetFlowTreeTable() throws Exception
 	{
 		String sql = "SELECT * FROM (SELECT 'F'+No as NO,'F'+ParentNo PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE, -1 DTYPE FROM WF_FlowSort" + "\r\n" +
-"                           union " + "\r\n" +
-"                           SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) as NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX ";
+				"                           union " + "\r\n" +
+				"                           SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) as NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX ";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			sql = "SELECT * FROM (SELECT 'F'||No as NO,'F'||ParentNo as PARENTNO,NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-"                        union " + "\r\n" +
-"                        SELECT NO, 'F'||FK_FlowSort as PARENTNO,NO||'.'||NAME as NAME,IDX,0 ISPARENT,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX";
+					"                        union " + "\r\n" +
+					"                        SELECT NO, 'F'||FK_FlowSort as PARENTNO,NO||'.'||NAME as NAME,IDX,0 ISPARENT,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX";
 		}
 
 
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT * FROM (SELECT CONCAT('F', No) NO, CONCAT('F', ParentNo) PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-"                           union " + "\r\n" +
-"                           SELECT NO, CONCAT('F', FK_FlowSort) PARENTNO, CONCAT(NO, '.', NAME) NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX";
+					"                           union " + "\r\n" +
+					"                           SELECT NO, CONCAT('F', FK_FlowSort) PARENTNO, CONCAT(NO, '.', NAME) NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY DTYPE, IDX";
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -1138,9 +1138,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			DataRow newRootRow = dt.Select("NO='F" + aemp.getRootOfFlow() + "'")[0];
 
 			newRootRow.setValue("PARENTNO", "F0");
-			DataTable newDt = dt;
-			newDt.Rows.AddDatas(newRootRow.ItemArray);
-			GenerChildRows(dt, newDt, newRootRow);
+			DataTable newDt = dt.clone();
+			newDt.Rows.AddRow(newRootRow);
+			GenerChildRows(dt, newDt, newRootRow,"NO");
 			dt = newDt;
 		}
 
@@ -1148,14 +1148,14 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return str;
 	}
 
-	public final void GenerChildRows(DataTable dt, DataTable newDt, DataRow parentRow)
+	public final void GenerChildRows(DataTable dt, DataTable newDt, DataRow parentRow,String coloumns)
 	{
-		List<DataRow> rows = dt.select("ParentNo='" + parentRow.getValue("NO") + "'");
+		List<DataRow> rows = dt.select("ParentNo='" + parentRow.getValue(coloumns) + "'");;
 		for(DataRow r : rows)
 		{
 			newDt.Rows.AddRow(r);
 
-			GenerChildRows(dt, newDt, r);
+			GenerChildRows(dt, newDt, r,coloumns);
 		}
 	}
 
@@ -1191,7 +1191,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	public final String GetFormTreeTable() throws Exception
 	{
 
-			///#region 检查数据是否符合规范.
+		///#region 检查数据是否符合规范.
 		String rootNo = DBAccess.RunSQLReturnStringIsNull("SELECT No FROM Sys_FormTree WHERE ParentNo='' OR ParentNo IS NULL", null);
 		if (DataType.IsNullOrEmpty(rootNo) == false)
 		{
@@ -1213,13 +1213,13 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			ft.Update();
 		}
 
-			///#endregion 检查数据是否符合规范.
+		///#endregion 检查数据是否符合规范.
 
 		//组织数据源.
 		String sqls = "";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-		 || SystemConfig.getAppCenterDBType() == DBType.DM)
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			sqls = "SELECT No \"No\", ParentNo \"ParentNo\",Name \"Name\", Idx \"Idx\", 1 \"IsParent\", 'FORMTYPE' \"TType\" FROM Sys_FormTree ORDER BY Idx ASC ; ";
 			sqls += "SELECT No \"No\", FK_FormTree as \"ParentNo\", Name \"Name\",Idx \"Idx\", 0 \"IsParent\", 'FORM' \"TType\" FROM Sys_MapData  WHERE AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree) ORDER BY Idx ASC";
@@ -1251,12 +1251,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		//增加顶级目录.
 		DataRow[] rowsOfSort = dtSort.Select("ParentNo='0'");
 		DataRow drFormRoot = dtForm.NewRow();
-		drFormRoot.setValue(0, rowsOfSort[0].get("No"));
+		drFormRoot.setValue(0, rowsOfSort[0].getValue("No"));
 		drFormRoot.setValue(1, "0");
-		drFormRoot.setValue(2, rowsOfSort[0].get("Name"));
-		drFormRoot.setValue(3, rowsOfSort[0].get("Idx"));
-		drFormRoot.setValue(4, rowsOfSort[0].get("IsParent"));
-		drFormRoot.setValue(5, rowsOfSort[0].get("TType"));
+		drFormRoot.setValue(2, rowsOfSort[0].getValue("Name"));
+		drFormRoot.setValue(3, rowsOfSort[0].getValue("Idx"));
+		drFormRoot.setValue(4, rowsOfSort[0].getValue("IsParent"));
+		drFormRoot.setValue(5, rowsOfSort[0].getValue("TType"));
 		dtForm.Rows.add(drFormRoot); //增加顶级类别..
 
 		//把类别数据组装到form数据里.
@@ -1296,10 +1296,10 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			DataRow newRootRow = rootRows[0];
 
 			newRootRow.setValue("ParentNo", "0");
-			DataTable newDt = dtForm;
-			newDt.Rows.AddDatas(newRootRow.ItemArray);
+			DataTable newDt = dtForm.clone();
+			newDt.Rows.AddRow(newRootRow);
 
-			GenerChildRows(dtForm, newDt, newRootRow);
+			GenerChildRows(dtForm, newDt, newRootRow,"No");
 			dtForm = newDt;
 		}
 
@@ -1370,13 +1370,13 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return BP.Tools.Json.ToJson(dt);
 	}
 
-	/** 
+	/**
 	 获取设计器 - 系统维护菜单数据
 	 系统维护管理员菜单 需要翻译
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String GetTreeJson_AdminMenu() throws Exception
 	{
 		//查询全部.
@@ -1430,9 +1430,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return BP.Tools.Json.ToJson(newMenus.ToDataTable());
 	}
 
-	/** 
+	/**
 	 根据DataTable生成Json树结构
-	*/
+	 */
 
 	public final String GetTreeJsonByTable(DataTable tabel, Object pId, String rela, String idCol, String txtCol, String IsParent, String sChecked)
 	{
@@ -1464,7 +1464,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return GetTreeJsonByTable(tabel, pId, "ParentNo", "No", "Name", "IsParent", "", null);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+	//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
 //ORIGINAL LINE: public string GetTreeJsonByTable(DataTable tabel, object pId, string rela = "ParentNo", string idCol = "No", string txtCol = "Name", string IsParent = "IsParent", string sChecked = "", string[] attrFields = null)
 	public final String GetTreeJsonByTable(DataTable tabel, Object pId, String rela, String idCol, String txtCol, String IsParent, String sChecked, String[] attrFields)
 	{
@@ -1583,7 +1583,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 			Flow fl = new Flow(flowNo);
 
-            //对极简版特殊处理.
+			//对极简版特殊处理.
 			//如果是简洁版.
 			if (runModel == 1)
 			{
@@ -1611,11 +1611,11 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 
 			}
-             //对极简版特殊处理.
+			//对极简版特殊处理.
 
 
-				//清空WF_Emp 的StartFlows ,让其重新计算.
-						DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
+			//清空WF_Emp 的StartFlows ,让其重新计算.
+			DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
 			return flowNo;
 		}
 		catch (Exception ex)
@@ -1624,36 +1624,36 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		}
 	}
 
-	/** 
+	/**
 	 上移流程
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String MoveUpFlow() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
 		flow.DoUp();
 		return flow.getNo();
 	}
-	/** 
+	/**
 	 下移流程
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String MoveDownFlow() throws Exception
 	{
 		Flow flow = new Flow(this.getFK_Flow());
 		flow.DoDown();
 		return flow.getNo();
 	}
-	/** 
+	/**
 	 删除流程类别.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String DelFlowSort() throws Exception
 	{
 		String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
@@ -1685,12 +1685,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		return "删除成功.";
 	}
-	/** 
+	/**
 	 新建同级流程类别 对照需要翻译
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String NewSameLevelFlowSort() throws Exception
 	{
 		FlowSort fs = null;
@@ -1705,12 +1705,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		fs.Update();
 		return "F" + fs.getNo();
 	}
-	/** 
-	 新建下级类别. 
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+	/**
+	 新建下级类别.
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String NewSubFlowSort() throws Exception
 	{
 		FlowSort fsSub = new FlowSort(this.getNo().replace("F", "")); //传入的编号多出F符号，需要替换掉.
@@ -1723,12 +1723,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		subFlowSort.Update();
 		return "F" + subFlowSort.getNo();
 	}
-	/** 
+	/**
 	 上移流程类别
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String MoveUpFlowSort() throws Exception
 	{
 		String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
@@ -1736,12 +1736,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		fsSub.DoUp();
 		return "F" + fsSub.getNo();
 	}
-	/** 
+	/**
 	 下移流程类别
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String MoveDownFlowSort() throws Exception
 	{
 		String fk_flowSort = this.GetRequestVal("FK_FlowSort").replace("F", "");
@@ -1750,12 +1750,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return "F" + fsSub.getNo();
 	}
 
-	/** 
+	/**
 	 表单树 - 编辑表单类别
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CCForm_EditCCFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
@@ -1763,12 +1763,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		formTree.Update();
 		return this.getNo();
 	}
-	/** 
+	/**
 	 表单树 - 删除表单类别
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CCForm_DelFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
@@ -1796,24 +1796,24 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		formTree.Delete();
 		return "删除成功";
 	}
-	/** 
+	/**
 	 表单树-上移表单类别
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CCForm_MoveUpCCFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
 		formTree.DoUp();
 		return formTree.getNo();
 	}
-	/** 
+	/**
 	 表单树-下移表单类别
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CCForm_MoveDownCCFormSort() throws Exception
 	{
 		SysFormTree formTree = new SysFormTree(this.getNo());
@@ -1821,24 +1821,24 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return formTree.getNo();
 	}
 
-	/** 
+	/**
 	 表单树-上移表单
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CCForm_MoveUpCCFormTree() throws Exception
 	{
 		MapData mapData = new MapData(this.getFK_MapData());
 		mapData.DoUp();
 		return mapData.getNo();
 	}
-	/** 
+	/**
 	 表单树-下移表单
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CCForm_MoveDownCCFormTree() throws Exception
 	{
 		MapData mapData = new MapData(this.getFK_MapData());
@@ -1846,12 +1846,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return mapData.getNo();
 	}
 
-	/** 
+	/**
 	 表单树 - 删除表单
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	public final String CCForm_DeleteCCFormMapData() throws Exception
 	{
 		try
@@ -1874,16 +1874,16 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		fs.setName(this.getName());
 		fs.Update();
 		return fs.getNo();
-		
+
 	}
 
-	/** 
+	/**
 	 让admin 登陆
-	 
-	 @param lang 当前的语言
+
+	 @param empNo 当前的语言
 	 @return 成功则为空，有异常时返回异常信息
-	 * @throws Exception 
-	*/
+	  * @throws Exception
+	 */
 	public final String LetAdminLogin(String empNo, boolean islogin) throws Exception
 	{
 		try
@@ -1901,6 +1901,6 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		return "@登录成功.";
 	}
 
-		///#endregion
+	///#endregion
 
 }

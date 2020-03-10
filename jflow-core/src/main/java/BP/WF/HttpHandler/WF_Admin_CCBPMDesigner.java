@@ -1150,10 +1150,11 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 	public final void GenerChildRows(DataTable dt, DataTable newDt, DataRow parentRow)
 	{
-		DataRow[] rows = dt.Select("ParentNo='" + parentRow.getValue("NO") + "'");
-		for (DataRow r : rows)
+		List<DataRow> rows = dt.select("ParentNo='" + parentRow.getValue("NO") + "'");
+		for(DataRow r : rows)
 		{
-			newDt.Rows.AddDatas(r.ItemArray);
+			newDt.Rows.AddRow(r);
+
 			GenerChildRows(dt, newDt, r);
 		}
 	}

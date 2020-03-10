@@ -2379,11 +2379,11 @@ public class WF_MyFlow extends WebContralBase {
 
 		// 文件夹
 		SysFormTrees formTrees = new SysFormTrees();
-		formTrees.RetrieveAll(SysFormTreeAttr.Name);
+		formTrees.RetrieveAll(SysFormTreeAttr.Idx);
 
 		// 所有表单集合.
 		MapDatas mds = new MapDatas();
-		mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node());
+		mds.RetrieveInSQL_Order("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node()+" order by idx","idx");
 
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		String frms = this.GetRequestVal("Frms");
@@ -2680,7 +2680,7 @@ public class WF_MyFlow extends WebContralBase {
 		// 找到父级目录添加到集合
 		for (BP.WF.Template.FlowFormTree folderapp : parentFolders.ToJavaList()) {
 			if (appFlowFormTree.Contains(folderapp) == false) {
-				appFlowFormTree.AddEntity(folderapp);
+				appFlowFormTree.AddEntity(folderapp,2);
 			}
 		}
 		// 求出没有父节点的文件夹

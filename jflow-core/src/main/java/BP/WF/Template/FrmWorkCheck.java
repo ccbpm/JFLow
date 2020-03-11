@@ -297,6 +297,18 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(FrmWorkCheckAttr.FWCFields, value);
 	}
+	/**
+	 自定义常用短语
+	 * @throws Exception
+	 */
+	public final String getFWCNewDuanYu() throws Exception
+	{
+		return this.GetValStringByKey(FrmWorkCheckAttr.FWCNewDuanYu);
+	}
+	public final void setFWCNewDuanYu(String value) throws Exception
+	{
+		this.SetValByKey(FrmWorkCheckAttr.FWCNewDuanYu, value);
+	}
 	/** 
 	 是否显示数字签名？
 	 * @throws Exception 
@@ -477,7 +489,7 @@ public class FrmWorkCheck extends Entity
 		map.AddTBFloat(FrmWorkCheckAttr.FWC_W, 400, "宽度(0=100%)", true, false);
 
 		map.AddTBString(FrmWorkCheckAttr.FWCFields, null, "审批格式字段", true, false, 0, 50, 10, true);
-
+		map.AddTBString(FrmWorkCheckAttr.FWCNewDuanYu, null, "自定义常用短语(使用@分隔)", true, false, 0, 100, 10, true);
 		map.AddBoolean(FrmWorkCheckAttr.FWCIsShowTruck, false, "是否显示未审核的轨迹？", true, true, true);
 		map.AddBoolean(FrmWorkCheckAttr.FWCIsShowReturnMsg, false, "是否显示退回信息？", true, true, true);
 

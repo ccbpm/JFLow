@@ -81,10 +81,14 @@ public class FrmWorkCheckAttr extends EntityNoAttr
 	 操作人是否显示数字签名
 	*/
 	public static final String SigantureEnabel = "SigantureEnabel";
-	/** 
+	/**
 	 操作字段
 	*/
 	public static final String FWCFields = "FWCFields";
+	/**
+	 自定义常用短语
+	 */
+	public static final String FWCNewDuanYu = "FWCNewDuanYu";
 	/** 
 	 是否显示未审核的轨迹
 	*/

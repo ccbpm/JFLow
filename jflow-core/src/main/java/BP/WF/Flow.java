@@ -2377,7 +2377,7 @@ public class Flow extends BP.En.EntityNoName {
 	/// #region 产生数据模板。
 	private static String PathFlowDesc;
 	static {
-		PathFlowDesc = SystemConfig.getPathOfDataUser() + "FlowDesc\\";
+		PathFlowDesc = SystemConfig.getPathOfDataUser() + "FlowDesc/";
 	}
 
 	/**
@@ -2391,7 +2391,7 @@ public class Flow extends BP.En.EntityNoName {
 		name = BP.Tools.StringExpressionCalculate.ReplaceBadCharOfFileName(name);
 
 		String path = this.getNo() + "." + name;
-		path = PathFlowDesc + path + "\\";
+		path = PathFlowDesc + path + "/";
 
 		this.DoExpFlowXmlTemplete(path);
 
@@ -4657,12 +4657,14 @@ public class Flow extends BP.En.EntityNoName {
 				fl.setNo(oldFlowNo);
 				fl.DoDelData();
 				fl.DoDelete(); // 删除可能存在的垃圾.
+				fl.Insert();
 			}
 			break;
 		case OvrewaiteCurrFlowNo: // 覆盖当前的流程.
 			fl.setNo(oldFlowNo);
 			fl.DoDelData();
 			fl.DoDelete(); // 删除可能存在的垃圾.
+			fl.Insert();
 			break;
 		case AsSpecFlowNo:
 			if (SpecialFlowNo.length() <= 0) {
@@ -4679,8 +4681,6 @@ public class Flow extends BP.En.EntityNoName {
 		}
 
 		/// #endregion 根据不同的流程模式，设置生成不同的流程编号.
-
-		// string timeKey = fl.getNo();
 		int idx = 0;
 		String infoErr = "";
 		String infoTable = "";
@@ -4695,8 +4695,6 @@ public class Flow extends BP.En.EntityNoName {
 			case "fk_flowsort":
 				continue;
 			case "name":
-				// val = "复制:" + val + "_" +
-				// DateTime.Now.ToString("MM月dd日HH时mm分");
 				break;
 			default:
 				break;
@@ -4709,7 +4707,6 @@ public class Flow extends BP.En.EntityNoName {
 			fl.setPTable(null);
 		}
 		fl.Update();
-//		fl.Insert();
 
 		/// #endregion 处理流程表数据
 

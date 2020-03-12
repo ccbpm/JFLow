@@ -1,11 +1,7 @@
 package BP.WF;
 
 import BP.Sys.*;
-import BP.Tools.Cryptos;
-import BP.Tools.DateUtils;
-import BP.Tools.FtpUtil;
-import BP.Tools.SftpUtil;
-import BP.Tools.StringHelper;
+import BP.Tools.*;
 import BP.DA.*;
 import BP.Difference.ContextHolderUtils;
 import BP.Difference.SystemConfig;
@@ -16,14 +12,18 @@ import BP.Port.*;
 import BP.WF.Data.*;
 import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.io.*;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.math.*;
 import java.text.SimpleDateFormat;
+import java.util.jar.JarFile;
 
 /**
  * 全局(方法处理)
@@ -1572,11 +1572,20 @@ public class Glo {
 		String sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey='UpdataCCFlowVer'";
 		String currDBVer = DBAccess.RunSQLReturnStringIsNull(sql, "");
 
-		String sqlScript = SystemConfig.getPathOfData() + "/UpdataCCFlowVer.sql";
-		File fi = new File(sqlScript);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+		String sqlScript = SystemConfig.getPathOfData() + "UpdataCCFlowVer.sql";
+		SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmmss");
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(fi.lastModified());
+		if(SystemConfig.getIsJarRun()){
+			ClassPathResource classPathResource = new ClassPathResource(sqlScript);
+			try {
+				cal.setTimeInMillis(classPathResource.lastModified());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			File fi = new File(sqlScript);
+			cal.setTimeInMillis(fi.lastModified());
+		}
 		String myVer = sdf.format(cal.getTime());
 
 		// 判断是否可以执行，当文件发生变化后，才执行。
@@ -1589,6 +1598,8 @@ public class Glo {
 				DBAccess.RunSQL(sql);
 			}
 		}
+
+
 	}
 
 	/**
@@ -1724,7 +1735,7 @@ public class Glo {
 		/// #region 3, 执行基本的 sql
 		String sqlscript = "";
 
-		sqlscript = SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
+		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		BP.DA.DBAccess.RunSQLScript(sqlscript);
 
 		BP.Port.Emp empAdmin = new Emp("admin");

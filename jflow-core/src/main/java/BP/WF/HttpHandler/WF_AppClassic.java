@@ -253,6 +253,12 @@ public class WF_AppClassic extends WebContralBase
 	@SuppressWarnings("unchecked")
 	public final String Login_Init() throws Exception
 	{
+		String doType = GetRequestVal("LoginType");
+		if(DataType.IsNullOrEmpty(doType) == false && doType.equals("Out") == true)
+		{
+			//清空cookie
+			WebUser.Exit();
+		}
 		Hashtable ht = new Hashtable();
 		ht.put("SysName", SystemConfig.getSysName());
 		ht.put("ServiceTel", SystemConfig.getServiceTel());

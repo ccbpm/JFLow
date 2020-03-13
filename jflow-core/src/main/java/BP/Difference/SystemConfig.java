@@ -292,7 +292,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPhysicalApplicationPath() {
-		return "D:\\JJFlow\\trunk\\JJFlow\\";
+		return "D:/JJFlow/trunk/JJFlow/";
 	}
 
 	/**
@@ -406,6 +406,14 @@ public class SystemConfig {
 	public static boolean getIsStartJarPackage(){
 		String str = (String) SystemConfig.getAppSettings().get("IsStartJarPackage");
 		if(DataType.IsNullOrEmpty(str) == true || str.equals("0"))
+			return false;
+		return true;
+	}
+
+
+	public static boolean getIsJarRun(){
+		Object str =  SystemConfig.getAppSettings().get("IsStartJarPackage");
+		if(str == null || str.toString().equals("0"))
 			return false;
 		return true;
 	}

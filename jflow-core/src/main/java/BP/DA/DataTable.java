@@ -66,8 +66,7 @@ public class DataTable implements Cloneable
 	/**
 	 * 除了初始化DataTable， 可以指定DataTable的名字(沒什麼意義)
 	 * 
-	 * @param dataTableName
-	 *            DataTable的名字
+	 * @param tableName DataTable的名字
 	 */
 	public DataTable(String tableName)
 	{
@@ -108,18 +107,13 @@ public class DataTable implements Cloneable
 	 * 把DataTable當做二維陣列，給列索引和行名稱，設定值的方法 <br/>
 	 * (發佈者自行寫的方法)
 	 * 
-	 * @param rowIndex
-	 *            列索引(從0算起)
-	 * @param columnIndex
-	 *            行名稱
-	 * @param value
-	 *            要給的值
+	 * @param rowIndex 列索引(從0算起)
+	 * @param columnName 行名稱
+	 * @param value 要給的值
 	 */
 	public void setValue(int rowIndex, String columnName, Object value)
 	{
 		this.Rows.get(rowIndex).setValue(columnName.toLowerCase(), value);
-		// this.Rows.get(rowIndex).setValue(columnName, value);
-		
 	}
 	
 	/**
@@ -183,62 +177,62 @@ public class DataTable implements Cloneable
 	
 	/**  
      * 返回符合过滤条件的数据行集合，并返回
-     * @param 过滤字符串，例如  a>1 and a>=2 or a<3 and a<=4 or a!=5 and a=6 or a!='b' and a='c'
+     * @param filterString 过滤字符串，例如  a>1 and a>=2 or a<3 and a<=4 or a!=5 and a=6 or a!='b' and a='c'
      * @return 过滤后的 List<DataRow>    
      */
    public List<DataRow> select(String filterString) {
         List<DataRow> rows = new ArrayList<DataRow>();
-        if (!StringHelper.isNullOrEmpty(filterString)) {
-        	 boolean bl;
-             for (Object row : this.Rows) {
-                 DataRow currentRow = (DataRow) row;
-                 try {
-                     bl = dataRowCompute(filterString, currentRow);
-                 } catch (Exception e) {
-                	 System.err.println("语法错误");
-                	 e.printStackTrace();
-                     continue;
-                 }
-                 if (bl) {
-                     rows.add(currentRow);
-                 }
-             }
-            return rows;
+        if (StringHelper.isNullOrEmpty(filterString) == true)
+			return this.Rows;
 
-        } else {
-            return this.Rows;
-        }
+        boolean bl;
+        for (Object row : this.Rows) {
+			 DataRow currentRow = (DataRow) row;
+			 try {
+				 bl = dataRowCompute(filterString, currentRow);
+			 } catch (Exception e) {
+				 System.err.println("语法错误");
+				 e.printStackTrace();
+				 continue;
+			 }
+			 if (bl) {
+				 rows.add(currentRow);
+			 }
+		 }
+        return rows;
+
+
    }
    
    /**  
     * 返回符合过滤条件的数据行集合，并返回
-    * @param 过滤字符串，例如  a>1 and a>=2 or a<3 and a<=4 or a!=5 and a=6 or a!='b' and a='c'
+    * @param filterString 过滤字符串，例如  a>1 and a>=2 or a<3 and a<=4 or a!=5 and a=6 or a!='b' and a='c'
     * @return 过滤后的 List<DataRow>    
     */
   public List<DataRow> selectx(String filterString) {
        List<DataRow> rows = new ArrayList<DataRow>();
-       if (!StringHelper.isNullOrEmpty(filterString)) {
-       	 boolean bl = false;
-            for (Object row : Rows) {
-                DataRow currentRow = (DataRow) row;
-                try {
-                    //bl = dataRowCompute(filterString, currentRow);
-                	if(filterString.split("=").length>1)
-                		bl = currentRow.getValue(filterString.split("=")[0].trim()).equals(filterString.split("=")[1].trim());
-                } catch (Exception e) {
-               	 System.err.println("语法错误");
-               	 e.printStackTrace();
-                    continue;
-                }
-                if (bl) {
-                    rows.add(currentRow);
-                }
-            }
-           return rows;
+       if (StringHelper.isNullOrEmpty(filterString) == true)
+		   return rows;
 
-       } else {
-           return rows;
-       }
+	 boolean bl = false;
+	 for (Object row : Rows) {
+		DataRow currentRow = (DataRow) row;
+		try {
+			//bl = dataRowCompute(filterString, currentRow);
+			if(filterString.split("=").length>1)
+				bl = currentRow.getValue(filterString.split("=")[0].trim()).equals(filterString.split("=")[1].trim());
+		} catch (Exception e) {
+		 System.err.println("语法错误");
+		 e.printStackTrace();
+			continue;
+		}
+		if (bl) {
+			rows.add(currentRow);
+		}
+	 }
+	 return rows;
+
+
   }
    
    /**
@@ -371,16 +365,13 @@ public class DataTable implements Cloneable
 	 * 把DataTable當做二維陣列，給列索引和行名稱，取得值的方法 <br/>
 	 * (發佈者自行寫的方法)
 	 * 
-	 * @param rowIndex
-	 *            列索引(從0算起)
-	 * @param columnName
-	 *            行名稱
+	 * @param rowIndex 列索引(從0算起)
+	 * @param columnName 行名稱
 	 * @return 回傳該位置的值
 	 */
-	public Object getValue(int rowindex, String columnName)
+	public Object getValue(int rowIndex, String columnName)
 	{
-		return this.Rows.get(rowindex).getValue(columnName);
-		// return this.Rows.get(rowindex).getValue(columnName);
+		return this.Rows.get(rowIndex).getValue(columnName);
 	}
 
 	public DataRow[] Select(String string) {

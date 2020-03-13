@@ -58,18 +58,8 @@ public class DataRowCollection extends ArrayList<DataRow>
 			String valStr=String.valueOf( ap.get(key)); 
 			
 			if (valStr==null)
-			{
 				valStr="";
-				/*				
-				 if (dc.getDataType() == int.class 
-						 ||dc.getDataType() ==  Decimal.class					     
-						 ||dc.getDataType() ==  float.class 
-						 )
-				valStr=0;*/				 
-			}
-			 
-			 row.setValue(key, valStr);
-			 
+			row.setValue(key, valStr);
 		}
        
 		if (idx==-1)

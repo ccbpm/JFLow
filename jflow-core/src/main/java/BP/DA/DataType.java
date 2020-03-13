@@ -1,13 +1,6 @@
 package BP.DA;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DateFormat;
@@ -19,15 +12,13 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import BP.Difference.SystemConfig;
+import BP.Tools.*;
 import org.apache.commons.io.FileUtils;
-import BP.Tools.DealString;
-import BP.Tools.Json;
-import BP.Tools.StringExpressionCalculate;
-import BP.Tools.StringHelper;
-import BP.Tools.StringUtils;
-import BP.Tools.chs2py;
 import BP.WF.Glo;
 import BP.Web.WebUser;
+import org.springframework.core.io.ClassPathResource;
 
 public class DataType {
 	public static boolean IsNullOrEmpty(Object object) {
@@ -223,7 +214,7 @@ public class DataType {
 	/**
 	 * Datatable转换为Json
 	 * 
-	 * @param table
+	 * @param dt
 	 *            Datatable对象
 	 * @return Json字符串
 	 */
@@ -441,7 +432,7 @@ public class DataType {
 	 *            要读取的url
 	 * @param timeOut
 	 *            超时时间
-	 * @param encode
+	 * @param timeOut
 	 *            text code.
 	 * @return 返回读取内容
 	 */
@@ -475,7 +466,7 @@ public class DataType {
 	/**
 	 * 读取文件
 	 * 
-	 * @param file
+	 * @param filePath
 	 *            路径
 	 * @return 内容
 	 * @throws IOException
@@ -487,26 +478,41 @@ public class DataType {
 	/**
 	 * 读取文件
 	 * 
-	 * @param file
+	 * @param filePath
 	 *            路径
 	 * @return 内容
 	 * @throws IOException
 	 */
 	public static String ReadTextFile(String filePath, String codeType) {
+		//需要先判断文件是否是jar包中的文件
+
 		BufferedReader in = null;
 		Reader is = null;
+		String line = "";
 		try {
-
-			is = new InputStreamReader(new FileInputStream(filePath), codeType);
-			in = new BufferedReader(is);
-			String line = in.readLine();
-			StringBuffer content = new StringBuffer();
-			while (line != null) {
-				content.append(line).append("\n");
+			if(SystemConfig.getIsJarRun()){
+				ClassPathResource classPathResource = new ClassPathResource(filePath);
+				InputStream inputStream = classPathResource.getInputStream();
+				StringBuilder stringBuilder = new StringBuilder();
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, codeType));
+				StringBuffer buffer = new StringBuffer();
+				while ((line = bufferedReader.readLine()) != null){
+					buffer.append(line).append("\n");
+					buffer.append(line);
+				}
+				bufferedReader.close();
+				return buffer.toString();
+			}else{
+				is = new InputStreamReader(new FileInputStream(filePath), codeType);
+				in = new BufferedReader(is);
 				line = in.readLine();
+				StringBuffer content = new StringBuffer();
+				while (line != null) {
+					content.append(line).append("\n");
+					line = in.readLine();
+				}
+				return content.toString();
 			}
-			// System.out.println(content.toString());
-			return content.toString();
 		} catch (Exception e) {
 
 			return null;
@@ -660,10 +666,8 @@ public class DataType {
 	/**
 	 * 返回 data1 - data2 的天数.
 	 * 
-	 * @param data1
-	 *            fromday
-	 * @param data2
-	 *            today
+	 * @param fromday
+	 * @param today
 	 * @return 相隔的天数
 	 */
 	public static int SpanDays(String fromday, String today) throws ParseException {
@@ -683,9 +687,9 @@ public class DataType {
 	/**
 	 * 返回 QuarterFrom - QuarterTo 的季度.
 	 * 
-	 * @param QuarterFrom
+	 * @param _APFrom
 	 *            QuarterFrom
-	 * @param QuarterTo
+	 * @param _APTo
 	 *            QuarterTo
 	 * @return 相隔的季度
 	 */
@@ -1134,7 +1138,7 @@ public class DataType {
 	/**
 	 * 把日期对象转换成指定格式的字符串
 	 * 
-	 * @param dDate
+	 * @param date
 	 *            - 日期对象
 	 * @param sFormat
 	 *            - 日期格式@return String yyyy-MM-dd HH:mm:ss

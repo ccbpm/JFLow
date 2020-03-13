@@ -73,14 +73,14 @@ public class ClassFactory {
 
 		ArrayList list = (ArrayList) objects.get(baseEnsName);
 
-		if (list != null) {
+		if (list != null && list.size()!=0) {
 			return list;
 		}
 
 		try {
 			list = new ArrayList();
 			Class parent = Class.forName(baseEnsName);
-			Set<Class<?>> set = ClassUtils.findImplementations(parent, "BP");
+			Set<Class<?>> set = BP.Tools.ClassScaner.scan("BP",parent);
 			for (Iterator<Class<?>> it = set.iterator(); it.hasNext();) {
 				Class<?> clazz = it.next();
 				try {

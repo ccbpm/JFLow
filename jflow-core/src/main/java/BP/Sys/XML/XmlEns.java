@@ -1,12 +1,13 @@
 package BP.Sys.XML;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 import BP.DA.Cash;
 import BP.DA.DataColumn;
@@ -15,9 +16,11 @@ import BP.DA.DataSet;
 import BP.DA.DataTable;
 import BP.DA.Depositary;
 import BP.DA.Log;
+import BP.Difference.SystemConfig;
 import BP.En.Entities;
 import BP.En.Entity;
 import BP.En.Row;
+import org.springframework.util.ResourceUtils;
 
 /**
  * XmlEn 的摘要说明。
@@ -269,23 +272,87 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 			return ds1.hashTables.get(this.getTableName());
 
 		}
-		
+		if(SystemConfig.getIsJarRun()){
+			DataTable dt = new DataTable(this.getTableName());
+			//读取jar包获取jar包中含有filePath的文件
+			List<String> list = new ArrayList<String>();
+			JarFile jFile = null;
+			try {
+				jFile = new JarFile(System.getProperty("java.class.path"));
+				Enumeration<JarEntry> jarEntrys = jFile.entries();
+				while (jarEntrys.hasMoreElements()) {
+					JarEntry entry = jarEntrys.nextElement();
+					String name = entry.getName();
+					if(name.contains(filePath) && name.endsWith(filePath)==false) {
+						list.add(name.replace("BOOT-INF/classes/",""));
+					}
+				}
+
+				if(list.size()==0){
+					return dt;
+				}
+				DataTable tempDT = new DataTable();
+				for(String pathName :list){
+					DataSet ds = new DataSet("myds");
+					ds.readXml(pathName);
+					if (dt.Columns.size() == 0)
+					{
+						try
+						{
+							dt = ds.hashTables.get(this.getTableName());
+						} catch (RuntimeException ex)
+						{
+							throw new RuntimeException("可能是没有在" + pathName
+									+ "文件中找到表:" + this.getTableName()
+									+ " exception=" + ex.getMessage());
+						}
+						tempDT = dt;
+						continue;
+					}
+
+					DataTable mydt = ds.hashTables.get(this.getTableName());
+					if (mydt == null)
+						throw new RuntimeException("无此表:" + this.getTableName());
+
+					if (mydt.Rows.size() == 0)
+						continue;
+
+					for (DataRow mydr : mydt.Rows)
+					{
+						DataRow dr = dt.NewRow();
+						for (DataColumn dc : tempDT.Columns)
+						{
+							if (dc.ColumnName.indexOf("_Id") != -1)
+								continue;
+							try
+							{
+								Object obj = mydr.getValue(dc.ColumnName);
+								dr.put(dc.ColumnName, obj);
+							} catch (RuntimeException ex)
+							{
+								throw new RuntimeException("xml 配置错误，多个文件中的属性不对称。"
+										+ ex.getMessage());
+							}
+						}
+
+						dt.Rows.add(dr);
+					}
+				}
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			BP.DA.Cash.AddObj(this.getTname(), Depositary.Application, dt);
+			return dt;
+		}
 		// 说明这个是目录
 		File di = new File(this.getFile());
 		if (!di.exists())
 		{
 			throw new RuntimeException("文件不存在:" + this.getFile());
 		}
-		/*
-		 * warning System.IO.DirectoryInfo di = new
-		 * System.IO.DirectoryInfo(this.getFile()); if (!di.Exists ) { throw new
-		 * RuntimeException("文件不存在:" + this.getFile()); }
-		 */
-		
-		/*
-		 * warning FileInfo[] fis = di.GetFiles("*.xml"); if (fis.length == 0) {
-		 * fis = di.GetFiles("*.txt"); return this.GetTableTxts(fis); }
-		 */
+
 		List<File> fis = getListFiles(this.getFile(), "xml", true);
 		if (null == fis || fis.size() == 0)
 		{
@@ -294,9 +361,7 @@ public abstract class XmlEns extends ArrayList<XmlEn>
 		}
 		
 		DataTable dt = new DataTable(this.getTableName());
-		/*
-		 * warning if (fis.length == 0) { return dt; }
-		 */
+
 		if (fis.size() == 0)
 		{
 			return dt;

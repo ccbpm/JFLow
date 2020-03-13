@@ -1,10 +1,14 @@
 package BP.DA;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+
+import BP.Difference.SystemConfig;
+import BP.Tools.FileAccess;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -14,6 +18,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
 import BP.Tools.StringHelper;
+import org.springframework.core.io.ClassPathResource;
 
 public class DataSet {
 
@@ -292,28 +297,32 @@ public class DataSet {
 		StringBuffer strBuffer = new StringBuffer();
 		try {
 			String encoding = "UTF-8"; // 字符编码
-			/*InputStream in = BP.Tools.HttpClientUtil.getInputStream(path);
-			if(in!=null){
-				InputStreamReader read = new InputStreamReader(in);
-				BufferedReader bufferedReader = new BufferedReader(read);
-				while ((line = bufferedReader.readLine()) != null) {
-					strBuffer.append(line + "\n");
-				}
-				read.close();
-			}*/
+			if(SystemConfig.getIsJarRun()){
+                ClassPathResource classPathResource = new ClassPathResource(path);
+                InputStream inputStream = classPathResource.getInputStream();
+                StringBuilder stringBuilder = new StringBuilder();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, encoding));
+                StringBuffer buffer = new StringBuffer();
+                while ((line = bufferedReader.readLine()) != null){
+                    buffer.append(line + "\n");
+                }
+                bufferedReader.close();
+                return buffer.toString();
+            }else{
+				File file = new File(path);
+				if (file.isFile() && file.exists()) {
 
-			File file = new File(path);
-			if (file.isFile() && file.exists()) {
-
-				InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);
-				BufferedReader bufferedReader = new BufferedReader(read);
-				while ((line = bufferedReader.readLine()) != null) {
-					strBuffer.append(line + "\n");
+					InputStreamReader read = new InputStreamReader(new FileInputStream(file), encoding);
+					BufferedReader bufferedReader = new BufferedReader(read);
+					while ((line = bufferedReader.readLine()) != null) {
+						strBuffer.append(line + "\n");
+					}
+					read.close();
+				} else {
+					System.out.println("找不到指定的文件！" + path);
 				}
-				read.close();
-			} else {
-				System.out.println("找不到指定的文件！" + path);
 			}
+
 		} catch (Exception e) {
 			System.out.println("读取文件内容操作出错！" + e.getMessage());
 		}
@@ -490,7 +499,7 @@ public class DataSet {
 		return name;
 	}
 
-	public static void main(String[] args) throws Exception {
+	//public static void main(String[] args) throws Exception {
 
 		// List<DataTable> tableList = new ArrayList<DataTable>();
 		// DataTable table = new DataTable("Emp");
@@ -534,12 +543,12 @@ public class DataSet {
 		// set.setTables(tableList);
 		// System.out.println(ConvertDataSetToXml(set));
 		
-		DataSet set = new DataSet();
-		set.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/WF/Data/FlowDemo/Flow/01.线性流程/表单数据copy测试案例.xml");
-		DataSet set2 = new DataSet();
-		set2.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/DataUser/XML/RegularExpression.xml");
-		System.out.println();
+		//DataSet set = new DataSet();
+		//set.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/WF/Data/FlowDemo/Flow/01.线性流程/表单数据copy测试案例.xml");
+		//DataSet set2 = new DataSet();
+		//set2.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/DataUser/XML/RegularExpression.xml");
+		//System.out.println();
 
-	}
+	//}
 
 }

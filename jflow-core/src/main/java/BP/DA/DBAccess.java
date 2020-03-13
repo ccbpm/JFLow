@@ -652,8 +652,8 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static int GenerOID() {
-		while (lock_OID) {
-		}
+		//while (lock_OID) {
+		//}
 
 		lock_OID = true;
 		if (DBAccess.RunSQL("UPDATE Sys_Serial SET IntVal=IntVal+1 WHERE CfgKey='OID'") == 0) {

@@ -370,9 +370,6 @@ public class WebUser {
 	 */
 	public static void Exit() {
 		try {
-//			String token = WebUser.getToken();
-//			ContextHolderUtils.clearCookie();// 不能全部都清除，应只清理本系统数据。
-//			ContextHolderUtils.getSession().invalidate();// 不能全部都清除，应只清理本系统数据。
 			// 清理Session
 			WebUser.setNo(null);
 			WebUser.setName(null);
@@ -394,7 +391,6 @@ public class WebUser {
 				ContextHolderUtils.addCookie("Lang", expiry, null);
 				ContextHolderUtils.addCookie("Auth", expiry, null);
 			}
-//			WebUser.setToken(token);
 		} catch (java.lang.Exception e2) {}
 	}
 

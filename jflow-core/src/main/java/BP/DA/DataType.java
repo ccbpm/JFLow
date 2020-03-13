@@ -498,7 +498,6 @@ public class DataType {
 				StringBuffer buffer = new StringBuffer();
 				while ((line = bufferedReader.readLine()) != null){
 					buffer.append(line).append("\n");
-					buffer.append(line);
 				}
 				bufferedReader.close();
 				return buffer.toString();

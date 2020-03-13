@@ -86,7 +86,14 @@ function InitPage() {
         nodeName = nodeName.replace('(会签)', '<br>(<font color=Gray>会签</font>)');
         html += nodeName;
         html += "</td>";
+        //获取自定义常用短语
+        var DuanYu = fwcs[0].FWCNewDuanYu;
+        if (DuanYu != null && DuanYu != undefined) {
 
+            var NewDuanYu = DuanYu.split("@");  
+        } else {
+            var NewDuanYu = "";
+        }
         //审核意见
         if (this.IsDoc == "1" && isReadonly == false) {
 
@@ -113,6 +120,12 @@ function InitPage() {
             html += "<br>";
             html += "<select id='DuanYu' onchange='SetDocVal();SaveWorkCheck();' >";
             html += "<option value=''>常用短语</option>";
+            for (var i = 0; i < NewDuanYu.length; i++) {
+                if (NewDuanYu[i] == "") {
+                    continue;
+                }
+                html += "<option value='" + NewDuanYu[i] + "'>" + NewDuanYu[i] + "</option>";
+            }
             html += "<option value='同意'>同意</option>";
             html += "<option value='同意办理'>同意办理</option>";
             html += "<option value='同意,请领导批示.'>同意,请领导批示.</option>";

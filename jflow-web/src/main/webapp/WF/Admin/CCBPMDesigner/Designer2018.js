@@ -484,7 +484,7 @@ $(function () {
             windowtext = windowtext.replace(/(^\s*)|(\s*$)/g, "");
 
 
-            var xiuNodename = '修改名称：<input id="TB_' + activeId + '" type="text" value="' + windowtext + '">'
+            var xiuNodename = '<input id="TB_' + activeId + '" type="text" value="' + windowtext + '">'
             var spanaa = $("#window" + activeId + " span").html();
 
             cAlert(xiuNodename);
@@ -499,14 +499,14 @@ $(function () {
     });
 
     /*新建*/
-    
+
     $("#Btn_NewFlow").bind('click', function () {
 
         alert("请在流程树右键菜单新建流程！");
 
 
     });
-   
+
     /*保存*/
     $("#Btn_Save").bind('click', function () {
 
@@ -700,7 +700,7 @@ function saveAndUpdateNodeName(activeId) {
     var mapData = new Entity("BP.Sys.MapData", "ND" + activeId);
     mapData.Name = text;
     mapData.Update();
-    
+
 
 
     //修改分组名称.
@@ -929,6 +929,19 @@ function FlowRun() {
     //WinOpen(url);
     window.parent.addTab(flowNo + "_YXLH", "运行流程" + flowNo, url);
 }
+//运行流程
+function FlowRun2020() {
+
+    //执行流程检查.
+    var flow = new Entity("BP.WF.Flow", flowNo);
+    flow.DoMethodReturnString("ClearCash");
+
+    var url = "../TestingContainer/TestFlow2020.htm?FK_Flow=" + flowNo + "&Lang=CH";
+
+    //WinOpen(url);
+    window.parent.addTab(flowNo + "_YXLH", "运行流程2020" + flowNo, url);
+}
+
 //运行流程
 function FlowRunAdmin() {
 

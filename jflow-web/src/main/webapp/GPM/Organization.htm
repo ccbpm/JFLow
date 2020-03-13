@@ -4,9 +4,6 @@
     <meta charset="UTF-8" />
 
     <link rel="stylesheet" type="text/css" href="themes/default/easyui.css" />
-    <link href="../../DataUser/Style/admin/skins/context.standalone.css" rel="stylesheet"
-          type="text/css" />
-    <script src="../WF/Admin/CCBPMDesigner/js/context.js" type="text/javascript"></script>
     <script type="text/javascript" src="../WF/Scripts/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../WF/Scripts/jquery/jquery.easyui.min.js"></script>
     <script src="../WF/Scripts/jquery/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
@@ -36,66 +33,63 @@
     <style type="text/css">
 
         .small-menu {
+            margin-top: 10px;
             position: absolute;
             width: 120px;
             z-index: 99999;
-            border: solid 1px #CCC;
-            background: #EEE;
+            border: 0px;
+            background: #FFF;
             padding: 0px;
-            margin: 0px;
             display: none;
+            box-shadow: 0 0 6px rgba(0,0,0,.2);
         }
 
-            .small-menu li {
-                list-style: none;
-                padding: 0px;
-                margin: 0px;
-            }
+        .small-menu div {
+            height: 38px !important;
+            padding-left: 20px;
+            margin: 0px;
+            border-bottom: solid 1px #CCC;
+            cursor:pointer;
+            line-height :38px
+        }
+        .small-menu div img{
+            
+            padding-right: 10px;
+            margin: 0px;
+            
+        }
 
-                .small-menu li A {
-                    color: #333;
-                    text-decoration: none;
-                    display: block;
-                    line-height: 20px;
-                    height: 20px;
-                    background-position: 6px center;
-                    background-repeat: no-repeat;
-                    outline: none;
-                    padding: 1px 5px;
-                    padding-left: 28px;
-                }
-
-                    .small-menu li a:hover {
-                        color: #FFF;
-                        background-color: #3399FF;
-                    }
+        .small-menu div:hover {
+            
+            background-color: #EAF2FF;
+        }
 
         .small-menu-separator {
             padding-bottom: 0;
             border-bottom: 1px solid #DDD;
         }
 
-        .small-menu LI.edit A {
+        .small-menu div.edit A {
             background-image: url(images/page_white_edit.png);
         }
 
-        .small-menu LI.cut A {
+        .small-menu div.cut A {
             background-image: url(images/cut.png);
         }
 
-        .small-menu LI.copy A {
+        .small-menu div.copy A {
             background-image: url(images/page_white_copy.png);
         }
 
-        .small-menu LI.paste A {
+        .small-menu div.paste A {
             background-image: url(images/page_white_paste.png);
         }
 
-        .small-menu LI.delete A {
+        .small-menu div.delete A {
             background-image: url(images/page_white_delete.png);
         }
 
-        .small-menu LI.quit A {
+        .small-menu div.quit A {
             background-image: url(images/door.png);
         }
     </style>
@@ -178,14 +172,20 @@
                         if (!options.event) {
                             alert('请传入鼠标事件');
                         }
+                        var height = options.event.clientY;
+                        var height1 = $(document.body).height();
+                        var DValue = height1 - height;
+                        if (DValue<260) {
+                            height = options.event.clientY - 260;
+                        }
                         $currMenu.css({
-                            top: options.event.clientY + "px",
+                            top: height + "px",
                             left: options.event.clientX + "px",
                             display: "block"
                         });
                     },
                     _bindItemClick: function () {
-                        $currMenu.find('li').each(function (index, obj) {
+                        $currMenu.find('div').each(function (index, obj) {
                             var $li = $(obj);
                             var itemIden = $li.attr('class');
                             $li.bind('click', function (event) {
@@ -199,7 +199,7 @@
                     }
                     ,
                     _unBindItemClick: function () {
-                        $currMenu.find('li').each(function (index, obj) {
+                        $currMenu.find('div').each(function (index, obj) {
                             $(obj).unbind();
                         });
                     }
@@ -220,12 +220,14 @@
                             moveUpDept(treeNode, item);
                         } else if (item == "moveDownDept") {
                             moveDownDept(treeNode, item);
-                        }else if (item == "edit") {
+                        } else if (item == "edit") {
                             Edit(treeNode);
-                        }else if (item == "newSameLevel") {
+                        } else if (item == "newSameLevel") {
                             NewSameLevel(treeNode);
-                        }else if (item == "newNextLevel") {
+                        } else if (item == "newNextLevel") {
                             NewNextLevel(treeNode);
+                        }else if (item == "delete") {
+                            Delete(treeNode);
                         }
 
                     }
@@ -238,14 +240,24 @@
         function moveUpDept(treeNode, item) {
             var dept = new Entity("BP.GPM.Dept", treeNode.id);
             var data = dept.DoMethodReturnString("DoUp");
-            window.location.reload();
+            //树节点直接更新
+            var before = $("#"+ treeNode.tId).prev();
+            if (before.length == 0 ) {
+                return;
+            }
+            $("#"+ treeNode.tId).insertBefore(before);
         }
 
         //下移部门
         function moveDownDept(treeNode, item) {
             var dept = new Entity("BP.GPM.Dept", treeNode.id);
             var data = dept.DoMethodReturnString("DoDown");
-            window.location.reload();
+            //树节点直接更新
+            var next = $("#"+ treeNode.tId).next();
+            if (next.length == 0 ) {
+                return;
+            }
+            $("#"+ treeNode.tId).insertAfter(next);
         }
         //增加同级部门
         function NewSameLevel(treeNode) {
@@ -259,13 +271,17 @@
             dept.Name = val;
             dept.ParentNo = treeNode.pid;
             dept.Insert();
-
-            window.location.reload();
+            //更新树节点
+            var treeObj = $.fn.zTree.getZTreeObj("regionZTree");
+            var parentNode = treeObj.getNodeByTId(treeNode.parentTId);
+            var newNode = { name: val };
+            //把这个新节点添加到当前选中的节点下，作为它的子节点
+    	    newNode = treeObj.addNodes(parentNode, newNode);
         }
 
         //增加下级部门
         function NewNextLevel(treeNode) {
-             var val = prompt("请输入部门名称", "");
+            var val = prompt("请输入部门名称", "");
             if (val == null || val == '') {
                 return false;
             }
@@ -274,22 +290,37 @@
             dept.Name = val;
             dept.ParentNo = treeNode.id;
             dept.Insert();
-
-            window.location.reload();
+            //更新树节点
+            var treeObj = $.fn.zTree.getZTreeObj("regionZTree");
+            var newNode = { name: val };
+            //把这个新节点添加到当前选中的节点下，作为它的子节点
+    	    newNode = treeObj.addNodes(treeNode, newNode);
         }
         //编辑部门
         function Edit(treeNode) {
-             var val = prompt("请输入部门名称", treeNode.name);
+            var name = $("#" + treeNode.tId + "_span").text()
+            var val = prompt("请输入部门名称", name);
             if (val == null || val == '') {
                 //alert('必须输入名称.');
                 return false;
             }
 
-            var dept = new Entity("BP.GPM.Dept",treeNode.id);
+            var dept = new Entity("BP.GPM.Dept", treeNode.id);
             dept.Name = val;
             dept.Update();
-
-            window.location.reload();
+            //更新树节点
+            $("#" + treeNode.tId + "_span").text(val);
+        }
+         //删除部门
+        function Delete(treeNode) {
+            if (confirm("你确定删除该部门吗？") == false)
+                    return;
+            var dept = new Entity("BP.GPM.Dept", treeNode.id);
+            dept.Delete();
+            //树节点删除
+            var my = document.getElementById(treeNode.tId);
+            if (my != null)
+                my.parentNode.removeChild(my);
         }
 
         //初始化
@@ -304,7 +335,15 @@
             zTreeObj = $.fn.zTree.init($("#regionZTree"), setting, jsonTree);
             fillter(zTreeObj); //设置展开前三级
             //绑定帮助信息.
-            var html = " <h1 style='padding-left:5px'>请点击左侧节点显示数据。</h1>";
+            var html = "<br><br> <h3 style='padding-left:5px'>驰骋组织结构管理</h3>";
+
+            html += "<ul>";
+            html += "<li>该组织结构可以与您的系统集成,<a href='http://ccbpm.mydoc.io/?v=5404&t=15928' target=_blank >如何集成请参考集成手册.</a></li>";
+            html += "<li>本功能维护了人员信息Port_Emp, 部门信息Port_Dept, 一人多部门(我们成为兼职Port_DeptEmp), 一人多部门多岗位(Port_DeptEmpStation)</li>";
+            html += "<li>维护部门在节点上点击右键,可以新建，保存，修改。</li>";
+            html += "</ul>";
+
+
             $("#Emps").html(html);
             $("#pageloading").hide();
             //鼠标移开时右键菜单消失
@@ -320,10 +359,7 @@
             var nodeList = zTreeObj.getNodes();　　　　　　 //展开第一个根节点
             for (var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
                 zTreeObj.expandNode(nodeList[i], true, false, true);
-                //					var nodespan = nodeList[i].children;
-                //					for(var j = 0; j < nodespan.length; j++) { //设置节点展开第三级节点
-                //						zTreeObj.expandNode(nodespan[j], true, false, true);
-                //					}
+              
             }
         }
         //转换ztree需要的数据格式
@@ -371,6 +407,8 @@
             emps.Retrieve("FK_Dept", dept.No, "Idx");
 
 
+
+
             var empNos = ",";
             html += "<tbody>";
             for (var i = 0; i < emps.length; i++) {
@@ -380,14 +418,29 @@
                 html += "<td>" + emp.No + "</td>";
                 html += "<td><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
                 html += "<td>" + dept.Name + "</td>";
-                html += "<td>" + emp.Email + "</td>";
-                html += "<td>" + emp.Tel + "</td>";
+                if (emp.Email == null || emp.Email == "")
+                    html += "<td>-</td>";
+                else
+                    html += "<td>" + emp.Email + "</td>";
+                 if (emp.Tel == null || emp.Tel == "")
+                    html += "<td>-</td>";
+                else
+                    html += "<td>" + emp.Tel+ "</td>";
                 html += "<td><a href=\"javascript:Del('" + emp.No + "')\" ><img src='../WF/Img/Btn/Delete.gif'>删除</a></td>";
                 html += "<td><img src='../WF/Img/Btn/Up.GIF' onclick=\"Up('" + emp.No + "')\" alt='上移' />-<img src='../WF/Img/Btn/Down.gif' onclick=\"Down('" + emp.No + "')\" alt='下移' /> </td>";
                 html += "</tr>";
                 empNos += emp.No + ',';
             }
 
+            //取消人员部门岗位管理关系. @不能出现sql.
+            var deptEmps = new Entities("BP.GPM.DeptEmps");
+            deptEmps.DoMethodReturnString("DelteNotInEmp");
+             var deptEmpStas = new Entities("BP.GPM.DeptEmpStations");
+            deptEmpStas.DoMethodReturnString("DelteNotInEmp");
+           
+           
+
+            //查询出来兼职人员.
             var deptEmps = new Entities("BP.GPM.DeptEmps");
             deptEmps.Retrieve("FK_Dept", deptNo);
 
@@ -399,15 +452,27 @@
                 if (empNos.indexOf(',' + deptEmp.FK_Emp + ',') != -1)
                     continue;
 
-                var emp = new Entity("BP.GPM.Emp", deptEmp.FK_Emp);
+                var emp = new Entity("BP.GPM.Emp");
+                emp.No = deptEmp.FK_Emp;
+                emp.SetPKVal(emp.No);
+                if (emp.RetrieveFromDBSources() == 0) {
+                //if (emp.Retrieve() == 0) {
+                    continue;
+                }
 
                 html += "<tr ondblclick=\"EditEmp('" + emp.No + "')\" >";
                 html += "<td class='Idx' >" + num + "</td>";
                 html += "<td>" + emp.No + "</td>";
                 html += "<td><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
                 html += "<td>兼职</td>";
-                html += "<td>" + emp.Email + "</td>";
-                html += "<td>" + emp.Tel + "</td>";
+               if (emp.Email == null || emp.Email == "")
+                    html += "<td>-</td>";
+                else
+                    html += "<td>" + emp.Email + "</td>";
+                 if (emp.Tel == null || emp.Tel == "")
+                    html += "<td>-</td>";
+                else
+                    html += "<td>" + emp.Tel+ "</td>";
                 html += "<td><a href=\"javascript:Remove('" + emp.No + "')\" >移除<img src='../WF/Img/Btn/Delete.gif'></a></td>";
                 html += "<td><img src='../WF/Img/Btn/Up.GIF' onclick=\"Up('" + emp.No + "')\" alt='上移' />-<img src='../WF/Img/Btn/Down.gif' onclick=\"Down('" + emp.No + "')\" alt='下移' /> </td>";
                 html += "</tr>";
@@ -420,27 +485,27 @@
 
             //找一下 Port_DeptEmpStation 里面有的数据，但是在 Port_DeptEmp没有的就，插入进去.
 
-            var deptEmpStations = new Entities("BP.GPM.DeptEmpStations");
-            deptEmpStations.Retrieve("FK_Dept", deptNo);
-            var isHave = false;
-            for (var i = 0; i < deptEmpStations.length; i++) {
+            //var deptEmpStations = new Entities("BP.GPM.DeptEmpStations");
+            //deptEmpStations.Retrieve("FK_Dept", deptNo);
+            //var isHave = false;
+            //for (var i = 0; i < deptEmpStations.length; i++) {
 
-                var en = deptEmpStations[i];
+            //    var en = deptEmpStations[i];
 
-                if (empNos.indexOf(',' + en.FK_Emp + ',') == -1) {
-                    /*插入里面去.*/
+            //    if (empNos.indexOf(',' + en.FK_Emp + ',') == -1) {
+            //        /*插入里面去.*/
 
-                    var deptEmp = new Entity("BP.GPM.DeptEmp");
-                    deptEmp.SetPKVal(en.FK_Dept + "_" + en.FK_Emp);
-                    deptEmp.FK_Emp = en.FK_Emp;
-                    deptEmp.FK_Dept = en.FK_Dept;
-                    deptEmp.Insert();
-                    isHave = true;
-                }
-            }
+            //        var deptEmp = new Entity("BP.GPM.DeptEmp");
+            //        deptEmp.SetPKVal(en.FK_Dept + "_" + en.FK_Emp);
+            //        deptEmp.FK_Emp = en.FK_Emp;
+            //        deptEmp.FK_Dept = en.FK_Dept;
+            //        deptEmp.Insert();
+            //        isHave = true;
+            //    }
+            //}
 
-            if (isHave)
-                BindEmps();
+            //if (isHave)
+            //    BindEmps();
 
             html += "</tbody>";
             html += "</table>";
@@ -498,7 +563,7 @@
             en.Delete();
 
             //取消人员部门岗位管理关系
-            var sql = "delete from Port_DeptEmpStation where FK_Emp='"+ no +"' and FK_Dept='"+ deptNo + "'";
+            var sql = "delete from Port_DeptEmpStation where FK_Emp='" + no + "' and FK_Dept='" + deptNo + "'";
             DBAccess.RunSQL(sql);
             //   var en = new Entity("BP.GPM.DeptEmpStation");
             //  en.Delete("FK_Dept",);
@@ -526,20 +591,35 @@
 <body class="easyui-layout">
     <div id="pageloading">
     </div>
-    <div data-options="region:'west',split:true" style="width: 200px; padding: 1px; overflow: hidden;">
+    <div data-options="region:'west',split:true" style="width: 240px; padding: 1px; overflow: hidden;">
         <div style="width: 100%; height: 95%; overflow: auto;">
             <ul id="regionZTree" class="ztree" data-options="animate:false,dnd:false"></ul>
         </div>
-        <ul id="menu" class="small-menu">
-            <li class="moveUpDept"><a href="#">上移</a></li>
-            <li class="moveDownDept"><a href="#">下移</a></li>
-            <li class="newSameLevel"><a href="#">增加同级</a></li>
-            <li class="newNextLevel"><a href="#">增加子级</a></li>
-            <li class="edit"><a href="#">编辑</a></li>
-            <!-- <li class="copy"><a href="#">删除</a></li>
-             <li class="small-menu-separator"></li>
-             <li class="delete"><a href="#"><span class="icon icon-edit"></span>Zoom Out</a></li>-->
-        </ul>
+        <div id="menu" class="small-menu" style="width: 120px;">
+            <div  class="newSameLevel">
+                <img src="../WF/Admin/Portal/Img/ico-flow-pic.png">增加同级
+            </div>
+            
+            <div class="newNextLevel">
+                <img src="../WF/Admin/Portal/Img/ico-flow-import.png">增加子级
+            </div>
+            <div class="edit">
+                <img src="../WF/Admin/Portal/Img/ico-flow-prototype.png">编辑
+            </div>
+            
+            <div class="delete">
+                <img src="../WF/Admin/Portal/Img/ico-flow-delete.png">删除
+            </div>
+            <div class="moveUpDept">
+                <img src="../WF/Admin/Portal/Img/ico-flow-up.png">上移
+            </div>
+            
+            <div class="moveDownDept">
+                <img src="../WF/Admin/Portal/Img/ico-flow-down.png">下移
+            </div>
+            
+        </div>
+        
     </div>
 
 

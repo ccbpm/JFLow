@@ -81,7 +81,6 @@
             //获得枚举值.
             var enumKey = GetQueryString('EnumKey'); // $.trim($("#TB_KeyOfEn").val());
             var enumMain = new Entity("BP.Sys.SysEnumMain", enumKey);
-
             Edit(enumMain.No, enumMain.Name, enumMain.CfgVal);
 
         });

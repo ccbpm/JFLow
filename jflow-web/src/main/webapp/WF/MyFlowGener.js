@@ -91,8 +91,15 @@ function closeWindow() {
         setToobarEnable();
         $("#msgModal").modal("hidden");
     }
-
-    if (window.parent != null && window.parent != undefined) {
+    // 取得父页面URL，用于判断是否是来自测试流程
+    var pareUrl = window.top.document.referrer;
+    if (pareUrl.indexOf("test") != -1 || pareUrl.indexOf("Test") != -1) {
+        // 测试流程时，发送成功刷新测试容器页面右侧
+        window.parent.parent.refreshRight();
+        window.parent.parent.refreshLeft();
+    }
+    if (window.parent != null && window.parent != undefined
+        && pareUrl.indexOf("test") == -1 && pareUrl.indexOf("Test") == -1) {
         window.parent.close();
     }
 }
@@ -459,13 +466,6 @@ function setToobarEnable() {
     //隐藏下方的功能按钮
     $('.Bar input').css('background', '');
     $('.Bar input').removeAttr('disabled');
-}
-//设置表单元素不可用
-function setFormEleDisabled() {
-    //文本框等设置为不可用
-    $('#divCCForm textarea').attr('disabled', 'disabled');
-    $('#divCCForm select').attr('disabled', 'disabled');
-    $('#divCCForm input[type!=button]').attr('disabled', 'disabled');
 }
 
 function CheckMinMaxLength() {
@@ -1689,7 +1689,12 @@ function GenerWorkNode() {
     var h = flowData.Sys_MapData[0].FrmH;
     var w = flowData.Sys_MapData[0].FrmW;
 
-    // $('#topContentDiv').height(h);
+    //傻瓜表单的名称居中的问题
+    if ($(".form-unit-title img").length > 0) {
+        var width = $(".form-unit-title img")[0].width;
+        $(".form-unit-title center h4 b").css("margin-left", "-" + width + "px");
+    }
+
     $('#topContentDiv').width(w);
     $('.Bar').width(w + 15);
     $('#lastOptMsg').width(w + 15);

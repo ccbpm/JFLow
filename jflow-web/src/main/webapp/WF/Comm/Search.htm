@@ -34,38 +34,10 @@
     <script src="../CCForm/MapExt2016.js" type="text/javascript"></script>
     <!--serach页面JS开发接口-->
     <script src="../../DataUser/JSLibData/SearchSelf.js" type="text/javascript"></script>
+    <link href="Style/Search.css" rel="stylesheet" />
     <base target="_self" />
     <style type="text/css">
-        .Wdate {
-            border: 1px solid #e5e6e7;
-            height: 28px;
-        }
-
-        .fixed-table-container thead th .th-inner {
-            padding: 8px;
-            line-height: 24px;
-            vertical-align: top;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap; /**background-color: #eaf2ff;**/
-            width: 100%;
-        }
-
-        .fixed-table-header {
-            background-color: #f2f2f2;
-        }
-
-        td {
-            word-break: keep-all; /* 不换行 */
-            white-space: nowrap; /* 不换行 */
-            overflow: hidden; /* 内容超出宽度时隐藏超出部分的内容 */
-            text-overflow: ellipsis; /* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用*/
-            -o-text-overflow: ellipsis;
-            -icab-text-overflow: ellipsis;
-            -khtml-text-overflow: ellipsis;
-            -moz-text-overflow: ellipsis;
-            -webkit-text-overflow: ellipsis;
-        }
+       
     </style>
     <script language="javascript" type="text/javascript">
         var ensName = GetQueryString("EnsName");
@@ -375,6 +347,7 @@
             } else {
                 var strs = searchFields.split("@");
                 var fieldV = "";
+                var count = 0;
                 for (var i = 0; i < strs.length; i++) {
                     if (strs[i] == "")
                         continue;
@@ -387,9 +360,14 @@
                     fieldV = ur.GetPara(str[1]);
                     if (fieldV == null || fieldV == undefined)
                         fieldV = "";
-
+                    count++;
                     html += "<td align='right'><label  style='text-align: right; margin-top:5px;margin-left:5px;' for='TB_" + str[1] + "'>" + str[0] + ":</label></td>";
                     html += "<td align='left'><input style='width:100%;' type=text id='TB_" + str[1] + "' name='TB_" + str[1] + "' value='" + fieldV + "' class='form-control' /></td>";
+                    if (count == 5) {
+                        count = 0;
+                        html += "</tr>";
+                        html += "<tr>";
+                    }
                 }
             }
 
@@ -585,7 +563,7 @@
             ur.Vals = str;
             ur.FK_MapData = ensName;
             ur.SetPara("RecCount", count);
-            var i = ur.Save();
+            var i = ur.Update();
 
             var url = window.location.href;
             if (url.indexOf("PageIdx") != -1)
@@ -596,14 +574,19 @@
         }
 
 
-        function SearchData() {
+        function SearchData(orderBy, orderWay) {
+             ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
+             ur.RetrieveFromDBSources();
             //创建处理器.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
             handler.AddUrlData()
             handler.AddPara("PageIdx", pageIdx);
             handler.AddPara("PageSize", pageSize);
-            //handler.AddPara("EnsName", GetQueryString("EnsName"));
-
+            if (orderBy != null && orderBy != undefined)
+                ur.OrderBy = orderBy;
+            if (orderWay != null && orderWay != undefined)
+                ur.OrderWay = orderWay;
+            ur.Update();
             //查询集合
             var data = handler.DoMethodReturnString("Search_SearchIt");
             if (data.indexOf('err@') == 0) {
@@ -613,10 +596,10 @@
 
             data = JSON.parse(data);
             //当前用户页面信息.
-            var ur = new Entity("BP.Sys.UserRegedit");
+            
             ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
+            ur.SetPKVal(ur.MyPK);
             ur.RetrieveFromDBSources();
-
             count = ur.GetPara("RecCount");
             if (count % pageSize != 0)
                 pages = parseInt(count / pageSize) + 1;
@@ -643,6 +626,20 @@
                 });
                 return;
             }
+
+            //设置查询总数居的合计、平均等信息
+            var heji = data["Search_HeJi"];
+            var _html = "";
+            if (heji != null && heji != undefined) {
+                $.each(heji, function (i, item) {
+                    if (item.Type == "Sum")
+                        _html += item.Field + "总合计：" + item.Value +" ";
+                    if (item.Type == "Avg")
+                        _html += item.Field + "总平均：" + item.Value+" ";
+                });
+            }
+            
+             $("#JsResult").html("").html(_html);
             return data;
         }
 
@@ -685,6 +682,9 @@
                     return pageSize * (pageIdx - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
                 }
             });
+            //颜色设置
+            var colorSet = cfg.ColorSet;
+           
             for (var i = 0; i < attrs.length; i++) {
                 var attr = attrs[i];
 
@@ -697,7 +697,8 @@
                     keyOfEn = attr.KeyOfEn
                     continue;
                 }
-
+                
+               
 
                 var field = attr.KeyOfEn;
                 
@@ -718,6 +719,7 @@
                         title: title,
                         fixed: false,
                         width: width,
+                        sortable:true,
                         cellStyle: {
                             css: { "white-space": "nowrap", "word-break": "keep-all", "width": "100%" }
                         }
@@ -730,6 +732,7 @@
                         title: title,
                         width: width,
                         fixed: false,
+                        sortable:true,
                         formatter: function (value, row, index) {
                             if (value == "0") return "否";
                             if (value == "1") return "是";
@@ -739,11 +742,26 @@
                 }
                 if (width == null || width == "" || width == undefined)
                     width = 100;
+
                 columns.push({
                     field: field,
                     title: title,
                     width: width,
-                    fixed: false
+                    fixed: false,
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                         var fieldColor = [];
+                         if (colorSet.indexOf("@" + this.field + ":") != -1) {
+                            fieldColor = getFieldColor(colorSet, this.field);
+                        }
+                        if (fieldColor.length == 0)
+                            return value;
+                        for (var i = 0; i < fieldColor.length; i++) {
+                            var color = fieldColor[i];
+                            if (color.From <= value && color.To >= value)
+                                return "<div style='width:20px;height:20px;text-align:center;background:" + color.Color + "'>"+value+"</div>";
+                        }
+                    }
 
                 });
             }
@@ -834,9 +852,17 @@
                 striped: true,
                 height: tableH,
                 singleSelect: true,
-                sidePagination: "server",
+                sidePagination: "client",
                 pageNumber: 1,
                 strictSearch: true,
+                showMultiSort: true, // 多列排序
+                rememberOrder:true,//记住每个列的排序
+                onSort: function (name, order) {
+                    pageIdx = 1;
+                    SearchData(name, order);
+                    Paginator(pages, 1)
+                },
+                showMultiSort: true, // 多列排序
                 //得到查询的参数
                 queryParams: function (params) {
                     //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
@@ -936,7 +962,7 @@
                 cfg.Update();
             }
 
-            url = cfg.Url;
+            url = cfg.UrlExt;
             var urlOpenType = cfg.GetPara("SearchUrlOpenType");
 
             if (urlOpenType == 0 || urlOpenType == undefined)
@@ -968,14 +994,68 @@
             if (windowH == "" || windowH == undefined)
                 windowH = 500;
 
+            var openModel = cfg.GetPara("OpenModel");
+            if (openModel == 0) {
+                OpenBootStrapModal(url, "eudlgframe", mapBase.EnDesc + ' : 详细', windowW, windowH, "icon-property", null, null, null, function () {
+                    if (flag == 0 || cfg.GetPara("IsRefreshParentPage") == 1) {
+                         SearchData();
+                         Paginator(pages);
+                    }
+                   
 
-            OpenBootStrapModal(url, "eudlgframe", mapBase.EnDesc + ' : 详细', windowW, windowH, "icon-property", null, null, null, function () {
-                SearchData(1);
-                Paginator(pages, 1);
+                }, null, 'black');
+            } else {
+                var windowObj = window.open(url);
+                if (flag == 0 || cfg.GetPara("IsRefreshParentPage") == 1) {
+                    var loop = setInterval(function() {
+                          if(windowObj.closed) {
+                             clearInterval(loop);
+                              SearchData();
+                              Paginator(pages);
 
-            }, null, 'black');
+                          }
+
+                    }, 1000);
+                }
+            }
+
+            
         }
 
+        /**
+         * 获取字段的设置
+         * @param colorSet  颜色总体设置
+         * @param keyOfEn 字段
+         */
+        function getFieldColor(colorSet, keyOfEn) {
+            var fieldColor = [];
+            var colorSets = colorSet.split('@');
+            for (var i = 0; i < colorSets.length; i++) {
+                var strs = colorSets[i].split(':');
+                if (strs.length == 0 || strs.length == 1)
+                    continue;
+                if (strs[0] != keyOfEn)
+                    continue;
+                var ss = strs[1].split(';');
+                for (var k = 0; k < ss.length; k++) {
+                    var ts = ss[k].split(',');
+                    if (ts.length < 3) {
+                        alert('字段' + keyOfEn + '范围颜色设置格式错误');
+                        break;
+                    }
+
+                    fieldColor.push({
+                        "From": parseInt(ts[0].replace("From=", "")),
+                        "To": parseInt(ts[1].replace("To=", "")),
+                        "Color":ts[2].replace("Color=", "")
+                    });
+                }
+               
+
+                
+            }
+            return fieldColor;
+        }
         function New() {
             OpenEn("", "", 0);
         }
@@ -1180,120 +1260,7 @@
 
 
     </script>
-    <style type="text/css">
-        body {
-            margin: 0px;
-        }
-
-        .panel-header, .panel-body {
-            border-width: 1px;
-            border-top: 0px;
-            border-left: 0px;
-            border-right: 0px;
-        }
-
-        .table {
-            table-layout: fixed;
-        }
-
-        table > td {
-            width: 100%;
-        }
-
-        .pagination {
-            margin: 8px 0;
-            display: block;
-            font-size: 13px;
-        }
-
-        .pagination .controls {
-            float: left;
-            border: 0;
-            padding: 7px 0 0 15px;
-            color: #777;
-        }
-        .cs-search-html {
-            background-color: #f7f6f9;
-            padding: 0 12px 10px;
-            color: #282828;
-            font-size: 13px;
-        }
-        .cs-table .ibox-content {
-            background-color: transparent;
-        }
-        .cs-shadow-box {
-            background-color: #fff;
-            border-radius: 4px;
-        }
-        .cs-table .panel-default {
-            padding: 3px 30px 3px 10px;
-            margin-bottom: 10px;
-        }
-        .cs-table .panel-default .btn {
-            padding: 4px 15px;
-            background-color: #fff;
-            color: #031f5d;
-            border-color: currentColor;
-            vertical-align: 2px;
-        }
-        .cs-table label {
-            margin: 0 10px 0 20px!important;
-            font-size: 13px;
-            font-weight: normal;
-        }
-        .cs-table input, .cs-table select {
-            min-width: 160px;
-            height: 27px;
-            border-radius: 3px;
-        }
-        .cs-table select {
-            appearance: none;  
-            -moz-appearance: none;  
-            -webkit-appearance: none;
-        }
-        .cs-table tbody td,.JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
-            padding: 4px 0 4px 6px!important;
-        }
-        .cs-table tbody td {
-            border-bottom: 1px solid #ddd!important;
-        }
-        .fixed-table-container thead th .th-inner {
-            padding: 4px 0 6px 4px!important;
-        }
-        .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
-            background-color: #f5f5f5;
-            font-size: 13px;
-        }
-         .bootstrap-table .table,.table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
-            border: 0;
-            border-right: 1px solid #ddd;
-            font-size: 13px;
-        }
-        .cs-pagination {
-            text-align: right;
-        }
-        .cs-pagination ul {
-            display: inline-block;
-        }
-        .cs-pagination .controls {
-            padding: 0 4px;
-            vertical-align: 4px;
-        }
-        .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
-            color: #15398b;
-        }
-        .fixed-table-border {
-            display: none;
-        }
-        .fixed-table-body {
-            height: auto;
-            overflow: hidden;
-        }
-        .fixed-table-container {
-            height: auto!important;
-            padding-bottom: 0!important;
-        }
-    </style>
+  
 </head>
 <body id="SearchHtml" class="cs-search-html">
     <div class="wrapper wrapper-content animated fadeInRight cs-table" style="padding: 0px 10px 0px 10px">
@@ -1308,14 +1275,18 @@
                 <table id="dg" class="table table-hover" style="word-wrap: break-word; word-break: break-all;">
                 </table>
                 <!-- 显示分页信息 -->
-                <div class="row cs-pagination">
-                    <ul class="pagination" id="page_nav">
-                    </ul>
-                    <ul class="pagination controls" id="page_info">
-                    </ul>
-                    <div style="clear: both;">
+                <div>
+                    <div class="row cs-pagination" style="float:left;width:20%;text-align: left;">
+                        <ul class="pagination  controls" style="margin-left:20px"><li class=" controls" id="JsResult">xxx</li></ul>
+                    </div>
+                    <div class="row cs-pagination" style="float:left;width:80%">
+                        <ul class="pagination" id="page_nav"></ul>
+                        <ul class="pagination controls" id="page_info"></ul>
+                        <div style="clear: both;">
+                        </div>
                     </div>
                 </div>
+                
             </div>
         </div>
         <div id="Msg">

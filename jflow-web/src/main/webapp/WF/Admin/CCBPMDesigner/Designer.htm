@@ -214,11 +214,14 @@
                     <button class="btn btn-light-yellow" type="button" id="Btn_Check" onclick="FlowCheck()">
                         检查流程
                     </button>
+                    <button class="btn btn-light-green" type="button" id="Btn_Run" onclick="FlowRun2020()">
+                        测试容器
+                    </button>
                     <button class="btn btn-light-green" type="button" id="Btn_Run" onclick="FlowRun()">
-                        运行测试
+                        测试
                     </button>
                     <button class="btn btn-light-red" type="button" id="Btn_RunIt" onclick="FlowRunAdmin()">
-                        admin运行
+                        admin测试运行
                     </button>
 
                     <button class="btn btn-white" type="button" id="Btn_Frm" onclick="Frm()">
@@ -261,15 +264,15 @@
         </div>
     </div>
     <!-- 修改节点名称 -->
-    <div id="alertModal1" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    <div id="alertModal1" style="width:300px;" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                 ×
             </button>
-            <h3>
+            <h4>
                 修改节点名称
-            </h3>
+            </h4>
         </div>
         <div class="modal-body">
             <p>
@@ -277,10 +280,7 @@
             </p>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary savetext" data-dismiss="modal" aria-hidden="true">
-                保存
-            </button>
-            <button class="btn btn-primary savetext" data-dismiss="modal" aria-hidden="true">
+            <button style="float:left" class="btn btn-primary savetext" data-dismiss="modal" aria-hidden="true">
                 保存&更新节点表单名称
             </button>
         </div>
@@ -375,8 +375,7 @@
     <!-- attributeModal -->
     <div id="attributeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true" style="width: 800px; margin-left: -350px">
-        <div class="modal-body" style="        max-height: 500px;
-">
+        <div class="modal-body" style="max-height: 500px;" >
             <!-- body -->
         </div>
         <div class="modal-footer" style="padding: 5px;">

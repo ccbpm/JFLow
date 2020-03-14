@@ -8,6 +8,7 @@ import BP.Frm.EntityType;
 import BP.Frm.FrmBill;
 import BP.Frm.FrmDict;
 import BP.Sys.FrmType;
+import BP.Sys.GEEntity;
 import BP.Sys.MapData;
 
 import java.io.File;
@@ -88,6 +89,9 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 
 			//保存到数据库中
 			BP.DA.DBAccess.SaveBigTextToDB(htmlCode, "Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
+			//检查数据完整性
+			GEEntity en = new GEEntity(this.getFK_MapData());
+			en.CheckPhysicsTable();
 			return "保存成功";
 		}
 		return "保存成功.";
@@ -130,8 +134,8 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	/**
 	 复制表单属性和表单内容
 
-	 @param frmId 新表单ID
-	 @param frmName 新表单内容
+	 @param
+	 @param
 	 */
 	public final void DoCopyFrm()throws Exception
 	{

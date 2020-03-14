@@ -72,12 +72,12 @@ public class UAC
 	public final void OpenAllForStation(String fk_station) throws Exception
 	{
 		Paras ps = new Paras();
-		ps.Add("user", WebUser.getNo());
-		ps.Add("st", fk_station);
+		ps.Add("FK_Emp", WebUser.getNo());
+		ps.Add("FK_Station", fk_station);
 
 		boolean bl;
 
-			bl = DBAccess.IsExits("SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "user AND FK_Station=" + SystemConfig.getAppCenterDBVarStr() + "st", ps);
+			bl = DBAccess.IsExits("SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp AND FK_Station=" + SystemConfig.getAppCenterDBVarStr() + "FK_Station", ps);
 
 		if (bl)
 		{

@@ -289,6 +289,13 @@ public class MapFrmFool extends EntityNoName
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
+		rm.Title = "Tab顺序键"; // Tab顺序键;
+		rm.ClassMethodName = this.toString() + ".DoTabIdx";
+		rm.Visable = true;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
 		rm.Title = "模板打印";
 		rm.ClassMethodName = this.toString() + ".DoBill";
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
@@ -381,7 +388,10 @@ public class MapFrmFool extends EntityNoName
 	}
 
 		///#endregion 高级设置.
-
+	public final String DoTabIdx() throws Exception
+	{
+		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/TabIdx.htm?FK_MapData=" + this.getNo();
+	}
 
 	@Override
 	protected boolean beforeUpdate() throws NumberFormatException, Exception

@@ -245,6 +245,11 @@ public class WF_CCBill_API extends WebContralBase {
         {
             long workid = BP.Frm.Dev2Interface.CreateBlankBillID(this.getFrmID(), WebUser.getNo(), ap.getHisHT(), billNo);
             en = new GEEntity(this.getFrmID(), workid);
+            if (DataType.IsNullOrEmpty(paras) == false)
+            {
+                en.Copy(ap.getHisHT());
+                en.Update();
+            }
             if (DataType.IsNullOrEmpty(title) == false)
             {
                 en.SetValByKey("Title", title);

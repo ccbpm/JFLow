@@ -112,16 +112,9 @@ public class FrmEvents extends EntitiesOID
 		{
 			if (doc.contains("@" + attr.getKey()) == false)
 			{
-				break;
+				continue ;
 			}
-			if (attr.getMyDataType() == DataType.AppString || attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
-			{
-				doc = doc.replace("@" + attr.getKey(), "'" + en.GetValStrByKey(attr.getKey()) + "'");
-			}
-			else
-			{
-				doc = doc.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
-			}
+			doc = doc.replace("@" + attr.getKey(), en.GetValStrByKey(attr.getKey()));
 		}
 
 		doc = doc.replace("~", "'");

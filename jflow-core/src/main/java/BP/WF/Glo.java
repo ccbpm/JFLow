@@ -2246,12 +2246,12 @@ public class Glo {
 		if (en == null) {
 			return "";
 		}
-		return en.toString();
+		return en.toString().split("@")[0];
 	}
 
 	/**
 	 * 获得事件实体，根据编号或者流程标记.
-	 * 
+	 *
 	 * @param flowMark
 	 *            流程标记
 	 * @return null, 或者流程实体.
@@ -2263,7 +2263,7 @@ public class Glo {
 			ArrayList<FlowEventBase> al = BP.En.ClassFactory.GetObjects("BP.WF.FlowEventBase");
 			Htable_FlowFEE.clear();
 			for (FlowEventBase en : al) {
-				Htable_FlowFEE.put(en.toString(), en);
+				Htable_FlowFEE.put(en.toString().split("@")[0], en);
 			}
 		}
 

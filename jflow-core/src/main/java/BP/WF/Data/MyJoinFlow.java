@@ -519,7 +519,7 @@ public class MyJoinFlow extends Entity
 		map.AddTBInt(MyFlowAttr.FK_Node, 0, "FK_Node", false, false);
 
 
-		map.AddTBMyNum();
+//		map.AddTBMyNum();
 
 		map.DTSearchKey = MyFlowAttr.RDT;
 		map.DTSearchLable = "发起日期";

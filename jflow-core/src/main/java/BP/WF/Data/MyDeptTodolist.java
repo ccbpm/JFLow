@@ -460,7 +460,7 @@ public class MyDeptTodolist extends Entity
 
 			//作为隐藏字段.
 		map.AddTBString(MyDeptTodolistAttr.WorkerDept, null, "工作人员部门编号", false, false, 0, 30, 10);
-		map.AddTBMyNum();
+//		map.AddTBMyNum();
 		map.AddDDLEntities(MyDeptTodolistAttr.FK_Emp, null, "当前处理人", new BP.WF.Data.MyDeptEmps(), false);
 		map.AddTBIntPK(MyDeptTodolistAttr.WorkID, 0, "工作ID", true, true);
 

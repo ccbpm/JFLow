@@ -182,7 +182,7 @@ public class AdminEmp extends EntityNoName
 		map.AddDDLEntities(AdminEmpAttr.RootOfForm, null, "表单权限节点", new BP.WF.Template.SysFormTrees(), true);
 		map.AddDDLEntities(AdminEmpAttr.RootOfDept, null, "组织结构权限节点", new BP.WF.Port.Incs(), true);
 
-		map.AddTBMyNum();
+//		map.AddTBMyNum();
 
 
 			//查询条件.

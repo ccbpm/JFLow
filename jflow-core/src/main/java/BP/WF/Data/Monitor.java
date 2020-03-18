@@ -461,7 +461,7 @@ public class Monitor extends Entity
 		map.AddTBString(MonitorAttr.TodoEmps, null, "处理人", true, false, 0, 100, 10);
 
 		map.AddTBStringDoc(MonitorAttr.FlowNote, null, "备注", true, false,true);
-		map.AddTBMyNum();
+//		map.AddTBMyNum();
 		map.AddTBInt(MonitorAttr.FK_Node, 0, "FK_Node", false, false);
 		map.AddTBString(MonitorAttr.WorkerDept, null, "工作人员部门编号", false, false, 0, 30, 10);
 

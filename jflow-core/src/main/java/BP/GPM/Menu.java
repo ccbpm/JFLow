@@ -251,7 +251,7 @@ public class Menu extends EntityTree
 		map.AddDDLSysEnum(MenuAttr.MenuType, 0, "菜单类型", true, true, MenuAttr.MenuType, "@0=系统根目录@1=系统类别@2=系统@3=目录@4=功能/界面@5=功能控制点");
 
 			// @0=系统根目录@1=系统类别@2=系统.
-		map.AddDDLEntities(MenuAttr.FK_App, null, "系统", new Apps(), false);
+		map.AddDDLEntities(MenuAttr.FK_App, null, "系统", new Apps(), true);
 		map.AddDDLSysEnum(MenuAttr.OpenWay, 1, "打开方式", true, true, MenuAttr.OpenWay, "@0=新窗口@1=本窗口@2=覆盖新窗口");
 
 		map.AddTBString(MenuAttr.Url, null, "连接", false, false, 0, 3900, 200, true);

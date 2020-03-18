@@ -21,6 +21,13 @@ import java.io.*;
  */
 public class GPMPage extends WebContralBase {
 
+
+	/// <summary>
+	/// 构造函数
+	/// </summary>
+	public GPMPage()
+	{
+	}
 	/// #region 签名.
 	/**
 	 * 图片签名初始化
@@ -202,49 +209,95 @@ public class GPMPage extends WebContralBase {
 		return "";
 	}
 
-	/**
-	 * 处理系统编辑菜单.
-	 * 
-	 * @return
-	 */
-	public final String AppMenu_Init() {
-		// BP.GPM.App app = new BP.GPM.App();
-		// app.No = "CCFlowBPM";
-		// if (app.RetrieveFromDBSources() == 0)
-		// {
-		// BP.GPM.App.InitBPMMenu();
-		// app.Retrieve();
-		// }
-		return "";
-	}
+	/// <summary>
+	/// 获得菜单数据.
+	/// </summary>
+	/// <returns></returns>
+	public String GPM_DB_Menus() throws Exception
+	{
+		String appNo = this.GetRequestVal("AppNo");
 
-	/**
-	 * 构造函数
-	 */
-	public GPMPage() {
-	}
+		String sql1 = "SELECT No,Name,FK_Menu,ParentNo,UrlExt,Tag1,Tag2,Tag3,WebPath,Icon,Idx ";
+		sql1 += " FROM V_GPM_EmpMenu ";
+		sql1 += " WHERE FK_Emp = '" + WebUser.getNo()+ "' ";
+		sql1 += " AND MenuType = '3' ";
+		sql1 += " AND FK_App = '" + appNo + "' ";
+		sql1 += " UNION ";  //加入不需要权限控制的菜单.
+		sql1 += "SELECT No,Name, No as FK_Menu,ParentNo,UrlExt,Tag1,Tag2,Tag3,WebPath,Icon,Idx";
+		sql1 += " FROM GPM_Menu ";
+		sql1 += " WHERE MenuCtrlWay=1 ";
+		sql1 += " AND MenuType = '3' ";
+		sql1 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
+		DataTable dirs = DBAccess.RunSQLReturnTable(sql1);
+		dirs.TableName = "Dirs"; //获得目录.
 
-	/// #region 执行父类的重写方法.
-	/**
-	 * 默认执行的方法
-	 * 
-	 * @return
-	 */
-	@Override
-	protected String DoDefaultMethod() {
-		switch (this.getDoType()) {
-		case "DtlFieldUp": // 字段上移
-			return "执行成功.";
-		default:
-			break;
+		String sql2 = "SELECT No,Name,FK_Menu,ParentNo,UrlExt,Tag1,Tag2,Tag3,WebPath,Icon,Idx ";
+		sql2 += " FROM V_GPM_EmpMenu ";
+		sql2 += " WHERE FK_Emp = '" + WebUser.getNo() + "'";
+		sql2 += " AND MenuType = '4' ";
+		sql2 += " AND FK_App = '" + appNo + "' ";
+		sql2 += " UNION ";  //加入不需要权限控制的菜单.
+		sql2 += "SELECT No,Name, No as FK_Menu,ParentNo,UrlExt,Tag1,Tag2,Tag3,WebPath,Icon,Idx ";
+		sql2 += " FROM GPM_Menu "; //加入不需要权限控制的菜单.
+		sql2 += " WHERE MenuCtrlWay=1 ";
+		sql2 += " AND MenuType = '4' ";
+		sql2 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
+
+		DataTable menus = DBAccess.RunSQLReturnTable(sql2);
+		menus.TableName = "Menus"; //获得菜单.
+
+		//组装数据.
+		DataSet ds = new DataSet();
+		ds.Tables.add(dirs);
+		ds.Tables.add(menus);
+
+		return BP.Tools.Json.ToJson(ds);
+	}
+	/// <summary>
+	/// 是否可以执行当前工作
+	/// </summary>
+	/// <returns></returns>
+	public String GPM_IsCanExecuteFunction() throws Exception
+	{
+		DataTable dt = GPM_GenerFlagDB(); //获得所有的标记.
+		String funcNo = this.GetRequestVal("FuncFlag");
+		for (DataRow dr : dt.Rows)
+		{
+			if (dr.get(0).toString().equals(funcNo) == true)
+				return "1";
 		}
-
-		// 找不不到标记就抛出异常.
-		throw new RuntimeException(
-				"@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + CommonUtils.getRequest().getRequestURI());
+		return "0";
 	}
-
-	/// #endregion 执行父类的重写方法.
+	/// <summary>
+	/// 获得所有的权限标记.
+	/// </summary>
+	/// <returns></returns>
+	public DataTable GPM_GenerFlagDB() throws Exception
+	{
+		String appNo = this.GetRequestVal("AppNo");
+		String sql2 = "SELECT  Flag,Idx ";
+		sql2 += " FROM V_GPM_EmpMenu ";
+		sql2 += " WHERE FK_Emp = '" + WebUser.getNo() + "'";
+		sql2 += " AND MenuType = '5' ";
+		sql2 += " AND FK_App = '" + appNo + "' ";
+		sql2 += " UNION ";  //加入不需要权限控制的菜单.
+		sql2 += "SELECT  Flag,Idx ";
+		sql2 += " FROM GPM_Menu "; //加入不需要权限控制的菜单.
+		sql2 += " WHERE MenuCtrlWay=1 ";
+		sql2 += " AND MenuType = '5' ";
+		sql2 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql2);
+		return dt;
+	}
+	/// <summary>
+	/// 获得所有权限的标记
+	/// </summary>
+	/// <returns></returns>
+	public String GPM_AutoHidShowPageElement() throws Exception
+	{
+		DataTable dt = GPM_GenerFlagDB(); //获得所有的标记.
+		return BP.Tools.Json.ToJson(dt);
+	}
 
 	/// #region xxx 界面 .
 

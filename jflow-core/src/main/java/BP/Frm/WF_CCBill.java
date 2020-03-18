@@ -421,21 +421,24 @@ public class WF_CCBill extends WebContralBase {
 				ds.Tables.add(dtEn);
 			}
 			//绑定SQL的外键
-			if (attr.getUIDDLShowType() == DDLShowType.BindSQL) {
+			if (attr.getUIDDLShowType() == BP.En.DDLShowType.BindSQL
+					&& DataType.IsNullOrEmpty(attr.getUIBindKey())==false
+					&& ds.Tables.contains(attr.getKey()) == false) {
 				//获取SQl
-				String sql = attr.getUIBindKey();
-				sql = BP.WF.Glo.DealExp(sql, null, null);
-				DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
+				DataTable dtSQl = BP.Sys.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey());
 				for (DataColumn col : dtSQl.Columns) {
 					String colName = col.ColumnName.toLowerCase();
 					switch (colName) {
 						case "no":
+						case "NO":
 							col.ColumnName = "No";
 							break;
 						case "name":
+						case "NAME":
 							col.ColumnName = "Name";
 							break;
 						case "parentno":
+						case "PARENTNO":
 							col.ColumnName = "ParentNo";
 							break;
 						default:

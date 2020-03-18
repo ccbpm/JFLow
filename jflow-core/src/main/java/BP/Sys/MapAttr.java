@@ -297,7 +297,9 @@ public class MapAttr extends EntityMyPK
 				}
 				break;
 		}
-
+		//外部数据源
+		if (this.getLGType() == FieldTypeS.Normal && this.getMyDataType() == DataType.AppString && this.getUIContralType() == UIContralType.DDL)
+			attr.setUIDDLShowType(BP.En.DDLShowType.BindSQL);
 		return attr;
 	}
 	/** 

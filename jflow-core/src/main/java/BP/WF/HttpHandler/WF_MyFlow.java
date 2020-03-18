@@ -2387,7 +2387,7 @@ public class WF_MyFlow extends WebContralBase {
 
 		// 所有表单集合.
 		MapDatas mds = new MapDatas();
-		mds.RetrieveInSQL_Order("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node()+" order by idx","idx");
+		mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node());
 
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		String frms = this.GetRequestVal("Frms");

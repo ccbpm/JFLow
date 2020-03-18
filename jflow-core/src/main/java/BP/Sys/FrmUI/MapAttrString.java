@@ -139,6 +139,7 @@ public class MapAttrString extends EntityMyPK
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 		map.AddBoolean(MapAttrAttr.IsRichText, false, "是否富文本？", true, true);
+		map.AddBoolean(MapAttrAttr.IsSecret, false, "是否保密？", true, true);
 		map.AddBoolean(MapAttrAttr.IsSupperText, false, "是否大块文本？(是否该字段存放的超长字节字段)", true, true, true);
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 400, 20, true);
 		//CCS样式

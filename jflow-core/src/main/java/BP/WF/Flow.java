@@ -6052,7 +6052,7 @@ public class Flow extends BP.En.EntityNoName {
 			md.Save();
 
 			// 装载模版.
-			String file = SystemConfig.getPathOfDataUser() + "XML/Templete/SheetOfStartNode.xml";
+			String file = SystemConfig.getPathOfDataUser() + "XML/TempleteSheetOfStartNode.xml";
 			if ((new File(file)).isFile() == false) {
 				throw new RuntimeException("@开始节点表单模版丢失" + file);
 			}

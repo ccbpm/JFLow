@@ -71,6 +71,10 @@ public class MapDataAttr extends EntityNoNameAttr
 	 表单类型
 	*/
 	public static final String FrmType = "FrmType";
+	/**
+	 * 业务类型
+	 */
+	public static final String EntityType="EntityType";
 	/** 
 	 表单展示方式
 	*/
@@ -231,6 +235,11 @@ public class MapDataAttr extends EntityNoNameAttr
 
 		///#region 参数属性.
 	public static final String EnsName = "EnsName";
+
+	/**
+	 * 是否启用自定义JS
+	 */
+	public static final String IsEnableJS="IsEnableJS";
 
 		///#endregion 参数属性.
 }

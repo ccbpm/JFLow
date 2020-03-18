@@ -2401,14 +2401,14 @@ public abstract class Entity implements Serializable {
 			return;
 		}
 
-		if(DBAccess.IsView(this.get_enMap().getPhysicsTable()))
-			return;
-
 		if (DBAccess.IsExitsObject(this.get_enMap().getPhysicsTable()) == false) {
 			// 如果物理表不存在就新建立一个物理表。
 			this.CreatePhysicsTable();
 			return;
 		}
+
+		if(DBAccess.IsView(this.get_enMap().getPhysicsTable()))
+			return;
 
 		switch (SystemConfig.getAppCenterDBType()) {
 		case MSSQL:
@@ -4368,7 +4368,6 @@ public abstract class Entity implements Serializable {
 	 */
 	public final boolean getIsTreeEntity() throws Exception {
 		return this.getEnMap().getAttrs().Contains("ParentNo");
-
 	}
 
 	/**

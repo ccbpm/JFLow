@@ -634,7 +634,7 @@ public class WF_WorkOpt extends WebContralBase
 			//打印单据实体、单据表单
 			if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
 			{
-				return MakeForm2Html.MakeBillToPDF(this.GetRequestVal("FrmID"), this.getWorkID(), this.GetRequestVal("BasePath"), false);
+				return MakeForm2Html.MakeBillToPDF(this.GetRequestVal("FrmID"), this.getWorkID(), this.GetRequestVal("BasePath"), false,this.GetRequestVal("html"));
 			}
 			int nodeID = this.getFK_Node();
 			if (this.getFK_Node() == 0)
@@ -655,7 +655,7 @@ public class WF_WorkOpt extends WebContralBase
 			}
 
 
-			return BP.WF.MakeForm2Html.MakeCCFormToPDF(nd, this.getWorkID(), this.getFK_Flow(), null, false, this.GetRequestVal("BasePath"));
+			return BP.WF.MakeForm2Html.MakeCCFormToPDF(nd, this.getWorkID(), this.getFK_Flow(), null, false, this.GetRequestVal("BasePath"),this.GetRequestVal("html"));
 
 		}
 		catch (RuntimeException ex)
@@ -680,7 +680,7 @@ public class WF_WorkOpt extends WebContralBase
 				nodeID = gwf.getFK_Node();
 			}
 			Node nd = new Node(nodeID);
-			return MakeForm2Html.MakeFormToPDF(this.GetRequestVal("FrmID"), this.GetRequestVal("FrmName"), nd, this.getWorkID(), this.getFK_Flow(), null, false, this.GetRequestVal("BasePath"));
+			return MakeForm2Html.MakeFormToPDF(this.GetRequestVal("FrmID"), this.GetRequestVal("FrmName"), nd, this.getWorkID(), this.getFK_Flow(), null, false, this.GetRequestVal("BasePath"),this.GetRequestVal("html"));
 		}
 		catch (RuntimeException ex)
 		{
@@ -706,7 +706,7 @@ public class WF_WorkOpt extends WebContralBase
 
 			Node nd = new Node(nodeID);
 			Work wk = nd.getHisWork();
-			return BP.WF.MakeForm2Html.MakeCCFormToPDF(nd, this.getWorkID(), this.getFK_Flow(), null, false, this.GetRequestVal("BasePath"));
+			return BP.WF.MakeForm2Html.MakeCCFormToPDF(nd, this.getWorkID(), this.getFK_Flow(), null, false, this.GetRequestVal("BasePath"),this.GetRequestVal("html"));
 		}
 		catch (RuntimeException ex)
 		{

@@ -382,8 +382,13 @@ public class SMS extends EntityMyPK
        Transport transport = mailSession.getTransport("smtp");//定义发送协议
        BP.Sys.Glo.WriteUserLog("EM", "transport", "定义发送协议");
 		//登录邮箱
-       transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
-       BP.Sys.Glo.WriteUserLog("EM", "send", "发送成功");
+		try{
+			transport.send(message, message.getRecipients(RecipientType.TO));//发送邮件
+
+		}catch(Exception e){
+			BP.Sys.Glo.WriteUserLog("EM", "send", "邮件发送失败，接收人邮箱["+emp.getEmail()+"],错误信息："+e.getMessage());
+		}
+		BP.Sys.Glo.WriteUserLog("EM", "send", "发送成功");
 
 	}
 	/** 

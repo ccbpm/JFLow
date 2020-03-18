@@ -4765,31 +4765,42 @@ public class Glo {
 			String FK_FrmAttachment, long workid, long fid, long pworkid, boolean isContantSelf) throws Exception {
 
 		BP.Sys.FrmAttachmentDBs dbs = new BP.Sys.FrmAttachmentDBs();
-		if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID) {
-			String pWorkID = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + pkval,"");
-			if (pWorkID == null || pWorkID.equals("0")) {
-				pWorkID = pkval;
-			}
+		//查询使用的workId
+		String ctrlWayId = "";
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.P3WorkID)
+		{
+			String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID=" + pworkid + ")";
+			ctrlWayId = BP.DA.DBAccess.RunSQLReturnStringIsNull(sql, "0");
+			if (ctrlWayId.equals("0")==true)
+				ctrlWayId = pkval;
+		}
 
-			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
-				/* 继承模式 */
-				BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.P2WorkID)
+		{
+			ctrlWayId = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + pworkid, "0");
+			if (ctrlWayId.equals("0")==true)
+				ctrlWayId = pkval;
+		}
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+			ctrlWayId = Long.toString(pworkid);
 
-				if (pWorkID.equals(pkval) == true) {
-					qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
-				} else {
-					qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, '(' + pWorkID + ',' + pkval + ')');
-				}
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.P3WorkID || athDesc.getHisCtrlWay() == AthCtrlWay.P2WorkID || athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+		{
+			/* 继承模式 */
+			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+
+			//workID相同或者是协作模式
+			if (pkval.equals(ctrlWayId) ==true || athDesc.getAthUploadWay() == AthUploadWay.Interwork)
+				dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, ctrlWayId);
+			else if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
+			{
+				qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, "('" + ctrlWayId + "','" + pkval + "')");
 				qo.addOrderBy("RDT");
 				qo.DoQuery();
 			}
-
-			if (athDesc.getAthUploadWay() == AthUploadWay.Interwork) {
-				/* 共享模式 */
-				dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, pWorkID);
-			}
 			return dbs;
 		}
+
 
 		if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID) {
 			/* 继承模式 */

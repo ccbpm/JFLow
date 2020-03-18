@@ -1,5 +1,8 @@
 package BP.WF.HttpHandler;
 
+import BP.Frm.EntityType;
+import BP.Frm.FrmBill;
+import BP.Frm.FrmDict;
 import BP.WF.*;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
@@ -151,25 +154,47 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 		DataSet ds = new DataSet();
 		ds.readXml(xmlFile.getAbsolutePath());
 		// 执行装载.
-		try{
-			MapData.ImpMapData(fk_mapData, ds);
-		}catch(Exception e){
-			return e.getMessage();
+		MapData.ImpMapData(fk_mapData, ds);
+		if (this.getFK_Node() != 0)
+		{
+			Node nd = new Node(this.getFK_Node());
+			nd.RepareMap(nd.getHisFlow());
 		}
+		// 清空缓存
+		MapData mymd = new MapData(this.getFK_MapData());
+		mymd.RepairMap();
+		if (mymd.getHisEntityType() == EntityType.FrmBill.getValue())
+		{
+			BP.Frm.FrmBill bill = new FrmBill(mymd.getNo());
+			bill.setEntityType(EntityType.FrmBill);
+			bill.setBillNoFormat("ccbpm{yyyy}-{MM}-{dd}-{LSH4}");
 
-		if (fk_mapData.contains("ND")) {
-			// 判断是否是节点表单
-			int nodeID = 0;
-			try {
-				nodeID = Integer.parseInt(fk_mapData.replace("ND", ""));
-			} catch (Exception e) {
-				return "执行成功.";
-			}
+			//设置默认的查询条件.
+			bill.SetPara("IsSearchKey", 1);
+			bill.SetPara("DTSearchWay", 0);
 
-			Node nd = new Node(nodeID);
-			Flow flow = new Flow(nd.getFK_Flow());
-			nd.RepareMap(flow);
+			bill.Update();
+			bill.CheckEnityTypeAttrsFor_Bill();
 		}
+		//#endregion 如果是单据.
+
+		//#region 如果是实体 EnityNoName .
+		if (mymd.getHisEntityType() == EntityType.FrmDict.getValue())
+		{
+			BP.Frm.FrmDict entityDict = new FrmDict(mymd.getNo());
+			entityDict.setBillNoFormat("3"); //编码格式.001,002,003.
+			entityDict.setBtnNewModel(0);
+
+			//设置默认的查询条件.
+			entityDict.SetPara("IsSearchKey", 1);
+			entityDict.SetPara("DTSearchWay", 0);
+
+			entityDict.setEntityType(EntityType.FrmDict);
+
+			entityDict.Update();
+			entityDict.CheckEnityTypeAttrsFor_EntityNoName();
+		}
+		SystemConfig.DoClearCash();
 		return "执行成功.";
 	}
 
@@ -229,8 +254,39 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 				nd.RepareMap(nd.getHisFlow());
 			}
 			// 清空缓存
-			MapData mymd = new MapData(fromMapData);
+			MapData mymd = new MapData(this.getFK_MapData());
 			mymd.RepairMap();
+			if (mymd.getHisEntityType() == EntityType.FrmBill.getValue())
+			{
+				BP.Frm.FrmBill bill = new FrmBill(mymd.getNo());
+				bill.setEntityType(EntityType.FrmBill);
+				bill.setBillNoFormat("ccbpm{yyyy}-{MM}-{dd}-{LSH4}");
+
+				//设置默认的查询条件.
+				bill.SetPara("IsSearchKey", 1);
+				bill.SetPara("DTSearchWay", 0);
+
+				bill.Update();
+				bill.CheckEnityTypeAttrsFor_Bill();
+			}
+            //#endregion 如果是单据.
+
+            //#region 如果是实体 EnityNoName .
+			if (mymd.getHisEntityType() == EntityType.FrmDict.getValue())
+			{
+				BP.Frm.FrmDict entityDict = new FrmDict(mymd.getNo());
+				entityDict.setBillNoFormat("3"); //编码格式.001,002,003.
+				entityDict.setBtnNewModel(0);
+
+				//设置默认的查询条件.
+				entityDict.SetPara("IsSearchKey", 1);
+				entityDict.SetPara("DTSearchWay", 0);
+
+				entityDict.setEntityType(EntityType.FrmDict);
+
+				entityDict.Update();
+				entityDict.CheckEnityTypeAttrsFor_EntityNoName();
+			}
 			SystemConfig.DoClearCash();
 			return "执行成功.";
 		} catch (RuntimeException ex) {

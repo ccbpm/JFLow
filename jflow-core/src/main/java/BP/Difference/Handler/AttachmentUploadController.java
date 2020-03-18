@@ -339,6 +339,32 @@ public class AttachmentUploadController extends BaseController {
 
                 if (fn.getWhoIsPK() == WhoIsPK.PWorkID)
                     pkVal = this.getPWorkID();
+				if (fn.getWhoIsPK() == WhoIsPK.OID)
+				{
+					//如果是继承模式(AthUploadWay.Inherit)，上传附件使用本流程的WorkID,pkVal不做处理
+
+					//如果是协作模式(AthUploadWay.Interwork),上传附件就是用控制呈现模式
+					if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
+					{
+						if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+							pkVal = Long.toString(this.getFID());;
+						if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+							pkVal = this.getPWorkID();
+						if (athDesc.getHisCtrlWay() == AthCtrlWay.P2WorkID)
+						{
+							//根据流程的PWorkID获取他的P2流程
+							String pWorkID = BP.DA.DBAccess.RunSQLReturnStringIsNull("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + this.getPWorkID(), "0");
+							pkVal = pWorkID;
+						}
+						if (athDesc.getHisCtrlWay() == AthCtrlWay.P3WorkID)
+						{
+							String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID=" + this.getPWorkID() + ")";
+							//根据流程的PWorkID获取他的P2流程
+							pkVal = BP.DA.DBAccess.RunSQLReturnStringIsNull(sql,"0");
+
+						}
+					}
+				}
             }
 
             //自定义方案.
@@ -568,19 +594,8 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
 			dbUpload.setSort(this.getSort());
 			dbUpload.setFID(this.getFID()); // 流程id.
-			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
-				/* 如果是继承，就让他保持本地的PK. */
-				dbUpload.setRefPKVal(String.valueOf(getPKVal()));
-			}
 
-			if (athDesc.getAthUploadWay() == AthUploadWay.Interwork) {
-				/* 如果是协同，就让他是PWorkID. */
-				String pWorkID = String.valueOf(BP.DA.DBAccess
-						.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + getPKVal(), 0));
-				if (pWorkID == null || pWorkID == "0")
-					pWorkID = getPKVal();
-				dbUpload.setRefPKVal(pWorkID);
-			}
+			dbUpload.setRefPKVal(pkVal);
 			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 			dbUpload.setFK_MapData(athDesc.getFK_MapData());
 			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());

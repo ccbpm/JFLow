@@ -618,7 +618,7 @@ public class WF_CCForm extends WebContralBase {
 
 			if (fn != null && fn.getWhoIsPK() != WhoIsPK.OID) {
 				// 太爷孙关系
-				if (fn.getWhoIsPK() == WhoIsPK.PPPWorkID) {
+				if (fn.getWhoIsPK() == WhoIsPK.P3WorkID) {
 					// 根据PWorkID 获取PPPWorkID
 					String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID="
 							+ this.getPWorkID() + ")";
@@ -633,7 +633,7 @@ public class WF_CCForm extends WebContralBase {
 					paras = paras.replace("&PKVal=" + this.getWorkID(), "&PKVal=" + PPPWorkID);
 				}
 
-				if (fn.getWhoIsPK() == WhoIsPK.PPWorkID) {
+				if (fn.getWhoIsPK() == WhoIsPK.P2WorkID) {
 					// 根据PWorkID 获取PPWorkID
 					GenerWorkFlow gwf = new GenerWorkFlow(this.getPWorkID());
 					if (gwf != null && gwf.getPWorkID() != 0) {
@@ -4012,7 +4012,7 @@ public class WF_CCForm extends WebContralBase {
 			Node nd = new Node(this.getFK_Node());
 			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree) {
 				FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), fk_mapdata);
-				if (fn.getFrmSln() == FrmSln.Default) {
+				/**if (fn.getFrmSln() == FrmSln.Default) {
 					if (fn.getWhoIsPK() == WhoIsPK.FID) {
 						athDesc.setHisCtrlWay(AthCtrlWay.FID);
 					}
@@ -4037,7 +4037,7 @@ public class WF_CCForm extends WebContralBase {
 					athDesc.setIsDownload(true);
 					athDesc.setMyPK(this.getFK_FrmAttachment());
 					return athDesc;
-				}
+				}*/
 
 				if (fn.getFrmSln() == FrmSln.Self) {
 					if (this.getFK_FrmAttachment().contains("AthMDtl") == true) {

@@ -2205,6 +2205,8 @@ public class Node extends Entity {
 		/// #region 考核属性.
 		map.AddTBString(BtnAttr.CHLab, "节点时限", "节点时限", true, false, 0, 50, 10);
 		map.AddTBInt(BtnAttr.CHRole, 0, "时限规则", true, false);
+		map.AddTBString(BtnAttr.HelpLab, "帮助提示", "帮助", true, false, 0, 50, 10);
+		map.AddTBInt(BtnAttr.HelpRole, 0, "帮助提示规则", true, false);
 
 		map.AddTBFloat(NodeAttr.TimeLimit, 2, "限期(天)", true, false); // "限期(天)".
 		// map.AddTBFloat(NodeAttr.TSpanHour, 0, "小时", true, false); //"限期(分钟)".

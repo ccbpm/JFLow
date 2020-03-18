@@ -318,7 +318,11 @@ public class CCFormAPI {
 
 		attr.setUIContralType(BP.En.UIContralType.DDL);
 		attr.setUIBindKey(fk_SFTable); // 绑定信息.
-		// attr.setLGType(FieldTypeS.FK;
+		//如果绑定的外键是树形结构的，在AtPara中增加标识
+		if (sf.getCodeStruct() == CodeStruct.Tree)
+			attr.SetPara("CodeStruct", 1);
+		if(DataType.IsNullOrEmpty(sf.getRootVal())==false)
+			attr.SetPara("ParentNo", sf.getRootVal());
 		attr.setX(x);
 		attr.setY(y);
 
@@ -345,6 +349,8 @@ public class CCFormAPI {
 		if (attr.getLGType() == FieldTypeS.Normal) {
 			MapAttr attrH = new MapAttr();
 			attrH.Copy(attr);
+			attrH.SetPara("CodeStruct", "");
+			attrH.SetPara("ParentNo", "");
 			attrH.setKeyOfEn(attr.getKeyOfEn() + "T");
 			attrH.setName(attr.getName());
 			attrH.setUIContralType(BP.En.UIContralType.TB);

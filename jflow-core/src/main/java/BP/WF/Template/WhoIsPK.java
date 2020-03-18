@@ -31,11 +31,11 @@ public enum WhoIsPK
 	/** 
 	 爷爷流程ID是主键
 	*/
-	PPWorkID,
+	P2WorkID,
 	/** 
 	 太爷爷流程ID是主键
 	*/
-	PPPWorkID;
+	P3WorkID;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

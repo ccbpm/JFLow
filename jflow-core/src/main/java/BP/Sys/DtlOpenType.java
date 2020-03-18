@@ -13,7 +13,10 @@ public enum DtlOpenType
 	/** 
 	 对流程开放
 	*/
-	ForFID;
+	ForFID,
+	ForPWorkID,
+	ForP2WorkID,
+	ForP3WorkID;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

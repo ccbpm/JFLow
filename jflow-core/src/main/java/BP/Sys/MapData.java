@@ -850,6 +850,18 @@ public class MapData extends EntityNoName
 	{
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
+
+	/**
+	 * 业务类型字段
+	 * @return
+	 * @throws Exception
+	 */
+	public final int getHisEntityType() throws Exception{
+		return this.GetValIntByKey(MapDataAttr.EntityType);
+	}
+	public final void setHisEntityType(int value) throws Exception{
+		this.SetValByKey(MapDataAttr.EntityType,value);
+	}
 	/** 
 	 表单类型名称
 	 * @throws Exception 
@@ -1232,7 +1244,9 @@ public class MapData extends EntityNoName
 
 			// enumFrmType  @自由表单，@傻瓜表单，@嵌入式表单.  
 		map.AddDDLSysEnum(MapDataAttr.FrmType, BP.Sys.FrmType.FreeFrm.getValue(), "表单类型", true, false, MapDataAttr.FrmType);
-
+		map.AddDDLSysEnum(MapDataAttr.EntityType, 0, "业务类型", true, false, MapDataAttr.EntityType,
+				"@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
+		map.SetHelperAlert(MapDataAttr.EntityType, "该实体的类型,@0=单据@1=编号名称实体@2=树结构实体.");
 		map.AddTBInt(MapDataAttr.FrmShowType, 0, "表单展示方式", true, true);
 
 			// 应用类型.  0独立表单.1节点表单
@@ -1705,6 +1719,8 @@ public class MapData extends EntityNoName
 		mdOld.RetrieveFromDBSources();
 		//现在表单的类型
 		FrmType frmType = mdOld.getHisFrmType();
+		//现在表单的业务类型
+		int entityType = mdOld.getHisEntityType();
 		mdOld.Delete();
 
 		// 求出dataset的map.
@@ -1803,10 +1819,13 @@ public class MapData extends EntityNoName
 						md.setHisFrmType(mdOld.getHisFrmType());
 						if (frmType == FrmType.Develop)
 							md.setHisFrmType(FrmType.Develop);
+						if (entityType != md.getHisEntityType())
+							md.setHisEntityType(entityType);
+
 						//表单应用类型保持不变
 						md.setAppType(mdOld.getAppType());
-
 						md.DirectInsert();
+						Cash2019.UpdateRow(md.toString(), md.getNo(), md.getRow());
 
 						//如果是开发者表单，赋值HtmlTemplateFile数据库的值并保存到DataUser下
 						if (frmType == FrmType.Develop)

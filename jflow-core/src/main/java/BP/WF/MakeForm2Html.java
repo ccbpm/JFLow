@@ -1647,7 +1647,7 @@ public class MakeForm2Html
      * @return
      * @throws Exception 
      */
-    public static String MakeCCFormToPDF(Node node, long workid,String flowNo,String fileNameFormat,boolean urlIsHostUrl,String basePath) throws Exception{
+    public static String MakeCCFormToPDF(Node node, long workid,String flowNo,String fileNameFormat,boolean urlIsHostUrl,String basePath,String htmlString) throws Exception{
     	//根据节点信息获取表单方案
     	MapData md = new MapData("ND"+node.getNodeID());
     	String resultMsg ="";
@@ -1685,7 +1685,7 @@ public class MakeForm2Html
     		
     		String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\index.htm";
     			
-    		resultMsg = MakeHtmlDocument(node.getNodeFrmID(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,frmID,basePath);
+    		resultMsg = MakeHtmlDocument(node.getNodeFrmID(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,frmID,basePath,htmlString);
     		
     		if(resultMsg.indexOf("err@")!=-1)
     			return resultMsg;
@@ -1751,7 +1751,7 @@ public class MakeForm2Html
     	if(node.getHisFormType().getValue() == NodeFormType.RefOneFrmTree.getValue()){
     		//获取绑定的表单
     		MapData mapData = new MapData(node.getNodeFrmID());
-    		return MakeFormToPDF(node.getNodeFrmID(),mapData.getName(),node, workid,flowNo,fileNameFormat,urlIsHostUrl,basePath);
+    		return MakeFormToPDF(node.getNodeFrmID(),mapData.getName(),node, workid,flowNo,fileNameFormat,urlIsHostUrl,basePath,htmlString);
     	}
     	
     	if(node.getHisFormType().getValue() == NodeFormType.SheetTree.getValue()){
@@ -1777,7 +1777,7 @@ public class MakeForm2Html
     				 workid = gwf.getPWorkID();
     			 //获取表单的信息执行打印
     			 String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\"+item.getFK_Frm()+"index.htm";
-    			 resultMsg= MakeHtmlDocument(item.getFK_Frm(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,"ND"+node.getNodeID(),basePath);
+    			 resultMsg= MakeHtmlDocument(item.getFK_Frm(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,"ND"+node.getNodeID(),basePath,htmlString);
     			
     			 if(resultMsg.indexOf("err@")!=-1)
     	    			return resultMsg;
@@ -1867,7 +1867,7 @@ public class MakeForm2Html
      * @return
      * @throws Exception
      */
-    public static String MakeFormToPDF(String frmId,String frmName,Node node, long workid,String flowNo,String fileNameFormat,boolean urlIsHostUrl,String basePath) throws Exception{
+    public static String MakeFormToPDF(String frmId,String frmName,Node node, long workid,String flowNo,String fileNameFormat,boolean urlIsHostUrl,String basePath,String htmlString) throws Exception{
     	
     	GenerWorkFlow gwf = null;
     	//获取主干流程信息
@@ -1913,7 +1913,7 @@ public class MakeForm2Html
 				 workid = gwf.getPWorkID();
 			 //获取表单的信息执行打印
 			 String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/"+frmNode.getFK_Frm()+"index.htm";
-			 resultMsg= MakeHtmlDocument(frmNode.getFK_Frm(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,"ND"+node.getNodeID(),basePath);
+			 resultMsg= MakeHtmlDocument(frmNode.getFK_Frm(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,"ND"+node.getNodeID(),basePath,htmlString);
 			
 			 if(resultMsg.indexOf("err@")!=-1)
 	    			return resultMsg;
@@ -1956,7 +1956,7 @@ public class MakeForm2Html
      * @param urlIsHostUrl
      * @return
      */
-    public static String MakeBillToPDF(String frmId, long workid, String basePath, boolean urlIsHostUrl)throws Exception
+    public static String MakeBillToPDF(String frmId, long workid, String basePath, boolean urlIsHostUrl,String htmlString)throws Exception
     {
 
         String resultMsg = "";
@@ -1994,7 +1994,7 @@ public class MakeForm2Html
 
         //获取表单的信息执行打印
         String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + bill.getNo() + "/" + workid + "/" + "index.htm";
-        resultMsg = MakeHtmlDocument(bill.getNo(), workid, null, fileNameFormat, urlIsHostUrl, path, billUrl, frmId, basePath);
+        resultMsg = MakeHtmlDocument(bill.getNo(), workid, null, fileNameFormat, urlIsHostUrl, path, billUrl, frmId, basePath,htmlString);
 
         if (resultMsg.indexOf("err@") != -1)
             return resultMsg;
@@ -2129,7 +2129,7 @@ public class MakeForm2Html
 
     public static String CCFlowAppPath = "/";
     public static String MakeHtmlDocument(String frmID, long workid, String flowNo , String fileNameFormat , 
-    		boolean urlIsHostUrl,String path,String indexFile,String nodeID,String basePath){
+    		boolean urlIsHostUrl,String path,String indexFile,String nodeID,String basePath,String htmlString){
         try
         {
             GenerWorkFlow gwf = null;
@@ -2173,6 +2173,16 @@ public class MakeForm2Html
             		docs = docs.replace("@Title", gwf.getTitle());
             	 BP.DA.DataType.WriteFile(indexFile, docs);
             	return indexFile;
+            }
+            if(mapData.getHisFrmType() == FrmType.Develop){
+                String ddocs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexDevelop.htm");
+                ddocs = ddocs.replace("@Docs", htmlString);
+
+                ddocs = ddocs.replace("@Height", mapData.getFrmH() + "px");
+                ddocs = ddocs.replace("@Title", mapData.getName());
+
+                BP.DA.DataType.WriteFile(indexFile, ddocs);
+                return indexFile;
             }
             GEEntity en = new GEEntity(frmID, workid);
             Node nd = null;

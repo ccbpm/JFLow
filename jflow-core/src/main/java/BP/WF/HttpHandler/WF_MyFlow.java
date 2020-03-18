@@ -1959,6 +1959,10 @@ public class WF_MyFlow extends WebContralBase {
 			if (key.contains("TB_")) {
 				if (htMain.containsKey(key.replace("TB_", "")) == false)
 					htMain.put(key.replace("TB_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
+				else{
+					htMain.remove(key.replace("TB_", ""));
+					htMain.put(key.replace("TB_", ""), URLDecoder.decode(this.GetRequestVal(key), "UTF-8"));
+				}
 				continue;
 			}
 

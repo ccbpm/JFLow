@@ -4636,11 +4636,17 @@ public class WorkNode {
 				if (item.getWhoIsPK() == WhoIsPK.PWorkID) {
 					pkVal = this.getHisGenerWorkFlow().getPWorkID();
 				}
-				if (item.getWhoIsPK() == WhoIsPK.PPWorkID) {
+				if (item.getWhoIsPK() == WhoIsPK.P2WorkID) {
 					GenerWorkFlow gwf = new GenerWorkFlow(this.getHisGenerWorkFlow().getPWorkID());
 					if (gwf != null && gwf.getPWorkID() != 0) {
 						pkVal = gwf.getPWorkID();
 					}
+				}
+
+				if (item.getWhoIsPK() == WhoIsPK.P3WorkID)
+				{
+					String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID=" + this.getHisGenerWorkFlow().getPWorkID() + ")";
+					pkVal = BP.DA.DBAccess.RunSQLReturnValInt(sql, 0);
 				}
 
 				MapAttrs mapAttrs = md.getMapAttrs();
@@ -5038,6 +5044,15 @@ public class WorkNode {
 					this.rptGe = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
 				pk = this.rptGe.getPWorkID();
 				break;
+			case P2WorkID:
+				//获取P2WorkID
+				GenerWorkFlow gwf = new GenerWorkFlow(this.getHisGenerWorkFlow().getPWorkID());
+				if (gwf != null && gwf.getPWorkID() != 0)
+					pk = gwf.getPWorkID();
+				break;
+			case P3WorkID:
+				String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID=" + this.getHisGenerWorkFlow().getPWorkID() + ")";
+				pk = BP.DA.DBAccess.RunSQLReturnValInt(sql, 0);
 			default:
 				throw new RuntimeException(BP.WF.Glo.multilingual("@未判断的类型:{0}.", "WorkNode", "not_found_value",
 						item.getWhoIsPK().toString()));

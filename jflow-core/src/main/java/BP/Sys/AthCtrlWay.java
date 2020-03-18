@@ -25,7 +25,9 @@ public enum AthCtrlWay
 	/** 
 	 工作ID,对流程有效.
 	*/
-	WorkID;
+	WorkID,
+	P2WorkID,
+	P3WorkID;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

@@ -190,7 +190,6 @@ public abstract class Method
 		else
 		{
 			return Icon;
-			//return "<img src='" + path + Icon + "'  border=0 />";
 		}
 	}
 	/** 
@@ -211,9 +210,7 @@ public abstract class Method
 	public int Width = 800;
 	/** 
 	 执行
-	 
-	 @param paras
-	 @return 
+	 @return
 	 * @throws Exception 
 	*/
 	public abstract Object Do() throws Exception;

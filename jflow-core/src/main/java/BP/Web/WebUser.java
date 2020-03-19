@@ -132,7 +132,7 @@ public class WebUser {
 			} catch (Exception e) {
 				sid = DBAccess.GenerOID()+"";
 			}
-			//增加他的orgNo @sly.
+			//增加他的orgNo
 			if (SystemConfig.getCCBPMRunModel() != 0)
 				WebUser.setOrgNo(DBAccess.RunSQLReturnString("SELECT OrgNo FROM Port_Emp WHERE No='" + WebUser.getNo() + "'"));
 			if (IsRecSID) {

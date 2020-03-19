@@ -120,6 +120,7 @@ public class WebUser {
 			auth = "";
 		}
 		String sid = null;
+
 		try {
 			WebUser.setNo(em.getNo());
 			WebUser.setName(em.getName());
@@ -131,7 +132,9 @@ public class WebUser {
 			} catch (Exception e) {
 				sid = DBAccess.GenerOID()+"";
 			}
-			
+			//增加他的orgNo @sly.
+			if (SystemConfig.getCCBPMRunModel() != 0)
+				WebUser.setOrgNo(DBAccess.RunSQLReturnString("SELECT OrgNo FROM Port_Emp WHERE No='" + WebUser.getNo() + "'"));
 			if (IsRecSID) {
 				WebUser.setSID(sid);
 				Dev2Interface.Port_SetSID(em.getNo(), sid);
@@ -696,6 +699,26 @@ public class WebUser {
 		SetSessionByKey("Name", value);
 	}
 
+	/**
+	 * 所在的组织
+	 */
+	public static String getOrgNo() throws Exception{
+		String val = GetValFromCookie("OrgNo", null, true);
+		if (val == null)
+		{
+			if (WebUser.getNo() == null)
+				throw new Exception("@err-004 OrgNo 登录信息丢失，或者在 CCBPMRunModel=0 的模式下不能读取该节点.");
+
+			String no = DBAccess.RunSQLReturnString("SELECT OrgNo FROM Port_Emp WHERE No='" + WebUser.getNo() + "'");
+			SetSessionByKey("OrgNo", no);
+			return no;
+		}
+		return val;
+	}
+
+	public static void setOrgNo(String value) {
+		SetSessionByKey("OrgNo", value);
+	}
 	/**
 	 * 域
 	 */

@@ -131,7 +131,13 @@ public class SystemConfig {
 			throw new Exception("读取配置文件失败", e);
 		}
 	}
-
+	/// <summary>
+	/// 运行模式0=单机版，1=集团模式, 2=SAAS模式
+	/// </summary>
+	public static int getCCBPMRunModel()
+	{
+		return SystemConfig.GetValByKeyInt("CCBPMRunModel",0);
+	}
 	/**
 	 * 获取xml中的配置信息 GroupTitle, ShowTextLen, DefaultSelectedAttrs, TimeSpan
 	 * 

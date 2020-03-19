@@ -225,8 +225,8 @@ public class FrmImgAth extends EntityMyPK
 	{
 		//把相关的字段也要删除.
 		MapAttrString attr = new MapAttrString();
-		attr.MyPK = this.MyPK;
-		attr.FK_MapData = this.FK_MapData;
+		attr.setMyPK(this.getMyPK());
+		attr.setFK_MapData(this.getFK_MapData());
 		attr.Delete();
 		//调用frmEditAction, 完成其他的操作.
 		BP.Sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());

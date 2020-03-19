@@ -71,10 +71,10 @@ public class AppSort extends EntityNoName
 		}
 		Map map = new Map("GPM_AppSort", "系统类别");
 		 
-		map.setIsAutoGenerNo( true);
+		map.setIsAutoGenerNo(false);
 
 
-		map.AddTBStringPK(AppSortAttr.No, null, "编号", true, true, 2, 2, 20);
+		map.AddTBStringPK(AppSortAttr.No, null, "编号", true, true, 4, 200, 20);
 		map.AddTBString(AppSortAttr.Name, null, "名称", true, false, 0, 300, 20);
 		map.AddTBInt(AppSortAttr.Idx, 0, "显示顺序", true, false);
 		map.AddTBString(AppSortAttr.RefMenuNo, null, "关联的菜单编号", false, false, 0, 300, 20);
@@ -84,7 +84,15 @@ public class AppSort extends EntityNoName
 	}
 
 		///#endregion
-
+		public void CheckIt() throws Exception
+		{
+			AppSort sort = new AppSort();
+			sort.CheckPhysicsTable();
+			App app = new App();
+			app.CheckPhysicsTable();
+			Menu en = new Menu();
+			en.CheckPhysicsTable();
+		}
 	@Override
 	protected boolean beforeDelete() throws Exception
 	{
@@ -107,6 +115,7 @@ public class AppSort extends EntityNoName
 	@Override
 	protected boolean beforeUpdate() throws Exception
 	{
+		CheckIt();
 		Menu root = new Menu();
 		root.setNo( this.getRefMenuNo());
 		if (root.RetrieveFromDBSources() > 0)
@@ -120,7 +129,7 @@ public class AppSort extends EntityNoName
 	@Override
 	protected boolean beforeInsert() throws Exception
 	{
-		super.beforeInsert();
+		CheckIt();
 
 		// 求root.
 		Menu root = new Menu();
@@ -144,6 +153,7 @@ public class AppSort extends EntityNoName
 		sort1.setFK_App("AppSort");
 		sort1.Update();
 
+		this.setNo(sort1.getNo());
 		this.setRefMenuNo(sort1.getNo());
 		return true;
 	}

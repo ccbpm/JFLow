@@ -59,7 +59,7 @@ public class App extends EntityNoName
 	*/
 	public final String getUrl() throws Exception
 	{
-		String url = this.GetValStrByKey(AppAttr.Url);
+		String url = this.GetValStrByKey(AppAttr.UrlExt);
 		if (DataType.IsNullOrEmpty(url))
 		{
 			return "";
@@ -81,7 +81,7 @@ public class App extends EntityNoName
 	}
 	public final void setUrl(String value) throws Exception
 	{
-		this.SetValByKey(AppAttr.Url, value);
+		this.SetValByKey(AppAttr.UrlExt, value);
 	}
 	/** 
 	 跳转连接
@@ -93,7 +93,7 @@ public class App extends EntityNoName
 	}
 	public final void setSubUrl(String value) throws Exception
 	{
-		this.SetValByKey(AppAttr.Url, value);
+		this.SetValByKey(AppAttr.UrlExt, value);
 	}
 	/** 
 	 是否启用
@@ -203,9 +203,7 @@ public class App extends EntityNoName
 	}
 	/** 
 	 系统
-	 
-	 @param mypk
-	 * @throws Exception 
+	 * @throws Exception
 	*/
 	public App(String no) throws Exception
 	{
@@ -228,25 +226,26 @@ public class App extends EntityNoName
 		map.setEnDesc("系统");
 		map.setEnType(EnType.Sys);
 
-		map.AddTBStringPK(AppAttr.No, null, "编号", true, false, 2, 30, 100);
+		map.AddTBStringPK(AppAttr.No, null, "编号", true, false, 2, 30, 150);
 		map.AddDDLSysEnum(AppAttr.AppModel, 0, "应用类型", true, true, AppAttr.AppModel, "@0=BS系统@1=CS系统");
-		map.AddTBString(AppAttr.Name, null, "名称", true, false, 0, 3900, 150, true);
+		map.AddTBString(AppAttr.Name, null, "名称", true, false, 0, 3900, 300, true);
 		map.AddDDLEntities(AppAttr.FK_AppSort, null, "类别", new AppSorts(), true);
 		map.AddBoolean(AppAttr.IsEnable, true, "是否启用", true, true);
 
-		map.AddTBString(AppAttr.Url, null, "默认连接", true, false, 0, 3900, 100, true);
-		map.AddTBString(AppAttr.SubUrl, null, "第二连接", true, false, 0, 3900, 100, true);
-		map.AddTBString(AppAttr.UidControl, null, "用户名控件", true, false, 0, 100, 100);
-		map.AddTBString(AppAttr.PwdControl, null, "密码控件", true, false, 0, 100, 100);
+		map.AddTBString(AppAttr.UrlExt, null, "默认连接", true, false, 0, 3900, 300, true);
+		map.AddTBString(AppAttr.SubUrl, null, "第二连接", true, false, 0, 3900, 300, true);
+		map.AddTBString(AppAttr.UidControl, null, "用户名控件", true, false, 0, 100, 300);
+		map.AddTBString(AppAttr.PwdControl, null, "密码控件", true, false, 0, 100, 300);
 		map.AddDDLSysEnum(AppAttr.ActionType, 0, "提交类型", true, true, AppAttr.ActionType, "@0=GET@1=POST");
 		map.AddDDLSysEnum(AppAttr.SSOType, 0, "登录方式", true, true, AppAttr.SSOType, "@0=SID验证@1=连接@2=表单提交@3=不传值");
 		map.AddDDLSysEnum(AppAttr.OpenWay, 0, "打开方式", true, true, AppAttr.OpenWay, "@0=新窗口@1=本窗口@2=覆盖新窗口");
 
-		map.AddTBString(AppAttr.RefMenuNo, null, "关联菜单编号", true, false, 0, 3900, 100);
-		map.AddTBString(AppAttr.AppRemark, null, "备注", true, false, 0, 500, 500,true);
+		map.AddTBString(AppAttr.RefMenuNo, null, "关联菜单编号", true, false, 0, 3900, 300);
+		map.AddTBString(AppAttr.AppRemark, null, "备注", true, false, 0, 500, 200,true);
 		map.AddTBInt(AppAttr.Idx, 0, "显示顺序", true, false);
 		map.AddMyFile("ICON");
-
+		//增加查询条件.
+		map.AddSearchAttr(AppAttr.FK_AppSort);
 		RefMethod rm = new RefMethod();
 		rm.Title = "编辑菜单";
 		rm.ClassMethodName = this.toString() + ".DoMenu";
@@ -301,7 +300,7 @@ public class App extends EntityNoName
 	@Override
 	protected boolean beforeUpdate() throws Exception
 	{
-
+		CheckIt();
 		if (DataType.IsNullOrEmpty(this.getRefMenuNo()) == false)
 		{
 			//系统类别
@@ -315,11 +314,23 @@ public class App extends EntityNoName
 
 		return super.beforeUpdate();
 	}
-
+	public void CheckIt() throws Exception
+	{
+		AppSort sort = new AppSort();
+		sort.CheckPhysicsTable();
+		App app = new App();
+		app.CheckPhysicsTable();
+		Menu en = new Menu();
+		en.CheckPhysicsTable();
+	}
 	@Override
 	protected boolean beforeInsert() throws Exception
 	{
-		AppSort sort = new AppSort(this.getFK_AppSort());
+		CheckIt();
+
+		AppSort sort = new AppSort();
+		sort.setNo(this.getFK_AppSort());
+		sort.Retrieve();
 
 		// 求系统类别的菜单 .
 		Menu menu = new Menu(sort.getRefMenuNo());
@@ -335,53 +346,82 @@ public class App extends EntityNoName
 		//设置相关的菜单编号.
 		this.setRefMenuNo(appMenu.getNo());
 
-
-			///#region 为该系统创建几个空白菜单
-		//Menu en = appMenu.DoCreateSubNode() as Menu;
-		//en.FK_App = this.No;
-		//en.setName ( this.Name;
-		//en.MenuType = 2;
-		//en.IsDir = true;
-		//en.Update();
-
+//		Object tempVar2 = appMenu.DoCreateSubNode();
+//		Menu dir = tempVar2 instanceof Menu ? (Menu)tempVar2 : null;
+//		dir.setFK_App(this.getNo());
+//		dir.setName("功能目录1");
+//		dir.setMenuType(MenuType.Dir);
+//		dir.Update();
+//
+//		Object tempVar3 = dir.DoCreateSubNode();
+//		Menu func = tempVar3 instanceof Menu ? (Menu)tempVar3 : null;
+//		func.setName("xxx管理1");
+//		func.setFK_App(this.getNo());
+//		func.setMenuType(MenuType.Menu);
+//		func.setUrl("http://ccflow.org");
+//		func.Update();
 		Object tempVar2 = appMenu.DoCreateSubNode();
 		Menu dir = tempVar2 instanceof Menu ? (Menu)tempVar2 : null;
 		dir.setFK_App(this.getNo());
-		dir.setName("功能目录1");
+		dir.setName("流程管理");
 		dir.setMenuType(MenuType.Dir);
 		dir.Update();
 
-		Object tempVar3 = dir.DoCreateSubNode();
-		Menu func = tempVar3 instanceof Menu ? (Menu)tempVar3 : null;
-		func.setName("xxx管理1");
-		func.setFK_App(this.getNo());
-		func.setMenuType(MenuType.Menu);
-		func.setUrl("http://ccflow.org");
-		func.Update();
+		menu = (Menu)dir.DoCreateSubNode();
+		menu.setName("发起");
+		menu.setFK_App(this.getNo());
+		menu.setMenuType(MenuType.Menu);
+		menu.setUrlExt("/WF/Start.htm");
+		menu.setParentNo(dir.getNo());
+		menu.Update();
 
-		Object tempVar4 = func.DoCreateSubNode();
-		Menu funcDot = tempVar4 instanceof Menu ? (Menu)tempVar4 : null;
-		funcDot.setName("查看");
-		funcDot.setMenuType(MenuType.Function);
-		funcDot.setFK_App(this.getNo());
-		funcDot.Update();
+		menu = (Menu)dir.DoCreateSubNode();
+		menu.setName("待办");
+		menu.setFK_App(this.getNo());
+		menu.setMenuType(MenuType.Menu);
+		menu.setUrlExt("/WF/Todolist.htm");
+		menu.setParentNo(dir.getNo());
+		menu.Update();
 
-		Object tempVar5 = func.DoCreateSubNode();
-		funcDot = tempVar5 instanceof Menu ? (Menu)tempVar5 : null;
-		funcDot.setName("增加");
-		funcDot.setMenuType(MenuType.Function);
-		funcDot.setFK_App(this.getNo());
-		funcDot.Update();
+		menu = (Menu)dir.DoCreateSubNode();
+		menu.setName("在途");
+		menu.setFK_App(this.getNo());
+		menu.setMenuType(MenuType.Menu);
+		menu.setUrlExt("/WF/Runing.htm");
+		menu.setParentNo(dir.getNo());
 
-		Object tempVar6 = func.DoCreateSubNode();
-		funcDot = tempVar6 instanceof Menu ? (Menu)tempVar6 : null;
-		funcDot.setName("删除");
-		funcDot.setMenuType(MenuType.Function);
-		funcDot.setFK_App(this.getNo());
-		funcDot.Update();
+		menu.Update();
 
-			///#endregion
 
+		Menu dir2 = (Menu)appMenu.DoCreateSubNode();
+		dir2.setFK_App(this.getNo());
+		dir2.setName("系统管理");
+		dir2.setMenuType(MenuType.Dir);
+		dir2.Update();
+
+		menu = (Menu)dir2.DoCreateSubNode();
+		menu.setName("部门");
+		menu.setFK_App(this.getNo());
+		menu.setMenuType(MenuType.Menu);
+		menu.setUrlExt("/WF/Comm/Tree.htm?EnsName=BP.GPM.Depts");
+		menu.setParentNo(dir2.getNo());
+		menu.Update();
+
+		menu = (Menu)dir2.DoCreateSubNode();
+		menu.setName("人员");
+		menu.setFK_App(this.getNo());
+		menu.setMenuType(MenuType.Menu);
+		menu.setUrlExt("/WF/Comm/Search.htm?EnsName=BP.GPM.Emps");
+		menu.setParentNo(dir2.getNo());
+		menu.Update();
+
+		menu = (Menu)dir2.DoCreateSubNode();
+		menu.setName("岗位");
+		menu.setFK_App(this.getNo());
+		menu.setMenuType(MenuType.Menu);
+		menu.setUrlExt("/WF/Comm/Search.htm?EnsName=BP.GPM.Stations");
+		menu.setParentNo(dir2.getNo());
+		menu.Update();
 		return super.beforeInsert();
 	}
 

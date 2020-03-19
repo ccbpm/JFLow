@@ -116,7 +116,14 @@ public class EnCfg extends EntityNo
 	{
 		this.SetPara("PageSizeOfSearch", value);
 	}
-
+	public final String getFieldSet() throws Exception
+	{
+		return this.GetValStringByKey(EnCfgAttr.FieldSet);
+	}
+	public final void setFieldSet(int value) throws Exception
+	{
+		this.SetValByKey(EnCfgAttr.FieldSet, value);
+	}
 		///#endregion 参数属性.
 
 
@@ -131,8 +138,7 @@ public class EnCfg extends EntityNo
 	/** 
 	 系统实体
 	 
-	 @param no
-	 * @throws Exception 
+	 * @throws Exception
 	*/
 	public EnCfg(String enName) throws Exception
 	{
@@ -169,7 +175,10 @@ public class EnCfg extends EntityNo
 		map.AddTBString(EnCfgAttr.FJWebPath, null, "附件Web路径", true, false, 0, 100, 60);
 		map.AddTBString(EnCfgAttr.Datan, null, "字段数据分析方式", true, false, 0, 200, 60);
 		map.AddTBString(EnCfgAttr.UI, null, "UI设置", true, false, 0, 2000, 60);
-
+		//字段颜色设置
+		map.AddTBString(EnCfgAttr.ColorSet, null, "颜色设置", true, false, 0, 500, 60);
+		//对字段求总和平均
+		map.AddTBString(EnCfgAttr.FieldSet, null, "字段设置", true, false, 0, 500, 60);
 
 		map.AddTBAtParas(3000); //参数属性.
 		this.set_enMap(map);

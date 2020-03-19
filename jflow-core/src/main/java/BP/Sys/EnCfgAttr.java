@@ -31,8 +31,16 @@ public class EnCfgAttr extends EntityNoAttr
 	 数据分析方式
 	*/
 	public static final String Datan = "Datan";
-	/** 
-	 Search,Group,设置.
+	/**
+	 字段颜色设置
 	*/
 	public static final String UI = "UI";
+	/**
+	 Search,Group,设置.
+	 */
+	public static final String ColorSet = "ColorSet";
+	/**
+	 字段求和求平均设置
+	 */
+	public static final String FieldSet = "FieldSet";
 }

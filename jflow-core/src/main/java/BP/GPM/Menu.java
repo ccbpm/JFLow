@@ -463,39 +463,39 @@ public class Menu extends EntityTree
 		}
 
 		//如果是菜单类别.
-		if (this.getHisMenuType() == MenuType.AppSort)
-		{
-			Menu en = new Menu(this.getParentNo());
-
-			if (en.getHisMenuType() != MenuType.Root)
-				throw new Exception("err@当前菜单类型是系统类别，但是父节点不是root，选择不正确.");
-		}
-
-		if (this.getHisMenuType() == MenuType.App)
-		{
-			Menu en = new Menu(this.getParentNo());
-			if (en.getHisMenuType() != MenuType.AppSort)
-				throw new Exception("err@当前菜单类型是系统，但是父节点不是系统类别，选择不正确.");
-		}
-
-		if (this.getHisMenuType() == MenuType.Dir)
-		{
-			Menu en = new Menu(this.getParentNo());
-			if (en.getHisMenuType() != MenuType.App)
-				throw new Exception("err@当前菜单类型是目录，但是父节点不是系统，选择不正确.");
-		}
-
-		if (this.getHisMenuType() == MenuType.Menu)
-		{
-			if (DataType.IsNullOrEmpty(this.getUrlExt()) == true)
-				throw new Exception("err@请设置页面链接.");
-		}
-
-		if (this.getHisMenuType() == MenuType.Function)
-		{
-			if (DataType.IsNullOrEmpty(this.getFlag()) == true)
-				throw new Exception("err@请设置功能点标记.");
-		}
+//		if (this.getHisMenuType() == MenuType.AppSort)
+//		{
+//			Menu en = new Menu(this.getParentNo());
+//
+//			if (en.getHisMenuType() != MenuType.Root)
+//				throw new Exception("err@当前菜单类型是系统类别，但是父节点不是root，选择不正确.");
+//		}
+//
+//		if (this.getHisMenuType() == MenuType.App)
+//		{
+//			Menu en = new Menu(this.getParentNo());
+//			if (en.getHisMenuType() != MenuType.AppSort)
+//				throw new Exception("err@当前菜单类型是系统，但是父节点不是系统类别，选择不正确.");
+//		}
+//
+//		if (this.getHisMenuType() == MenuType.Dir)
+//		{
+//			Menu en = new Menu(this.getParentNo());
+//			if (en.getHisMenuType() != MenuType.App)
+//				throw new Exception("err@当前菜单类型是目录，但是父节点不是系统，选择不正确.");
+//		}
+//
+//		if (this.getHisMenuType() == MenuType.Menu)
+//		{
+//			if (DataType.IsNullOrEmpty(this.getUrlExt()) == true)
+//				throw new Exception("err@请设置页面链接.");
+//		}
+//
+//		if (this.getHisMenuType() == MenuType.Function)
+//		{
+//			if (DataType.IsNullOrEmpty(this.getFlag()) == true)
+//				throw new Exception("err@请设置功能点标记.");
+//		}
 
 		this.setWebPath(this.getWebPath().replace("//", "/"));
 		//设置他的系统编号.

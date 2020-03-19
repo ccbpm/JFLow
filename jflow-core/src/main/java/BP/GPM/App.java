@@ -486,7 +486,7 @@ public class App extends EntityNoName
 	*/
 	public final String DoMenu() throws Exception
 	{
-		return "../../../GPM/AppMenu.htm?FK_App=" + this.getNo();
+		return "../../../WF/Comm/Tree.htm?EnsName=BP.GPM.Menus&ParentNo=" + this.getRefMenuNo();
 	}
 	/** 
 	 刷新数据.

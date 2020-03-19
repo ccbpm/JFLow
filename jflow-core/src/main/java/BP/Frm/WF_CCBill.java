@@ -112,34 +112,39 @@ public class WF_CCBill extends WebContralBase {
 		String doc = func.getMethodDoc_SQL();
 
 		GEEntity en = new GEEntity(func.getFrmID(), this.getWorkID());
-		doc = BP.WF.Glo.DealExp(doc, en, null); //替换里面的内容.
 
 
 		///#region 替换参数变量.
-		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getMyPK());
-		for (MapAttr item : attrs.ToJavaList()) {
-			if (item.getUIContralType() == UIContralType.TB) {
-				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("TB_" + item.getKeyOfEn()));
-				continue;
-			}
+		if(doc.contains("@") == true){
+			MapAttrs attrs = new MapAttrs();
+			attrs.Retrieve(MapAttrAttr.FK_MapData, this.getMyPK());
+			for (MapAttr item : attrs.ToJavaList()) {
+				if(doc.contains("@")==false)
+					break;
+				if (item.getUIContralType() == UIContralType.TB) {
+					doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("TB_" + item.getKeyOfEn()));
+					continue;
+				}
 
-			if (item.getUIContralType() == UIContralType.DDL) {
-				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("DDL_" + item.getKeyOfEn()));
-				continue;
-			}
+				if (item.getUIContralType() == UIContralType.DDL) {
+					doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("DDL_" + item.getKeyOfEn()));
+					continue;
+				}
 
 
-			if (item.getUIContralType() == UIContralType.CheckBok) {
-				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("CB_" + item.getKeyOfEn()));
-				continue;
-			}
+				if (item.getUIContralType() == UIContralType.CheckBok) {
+					doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("CB_" + item.getKeyOfEn()));
+					continue;
+				}
 
-			if (item.getUIContralType() == UIContralType.RadioBtn) {
-				doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("RB_" + item.getKeyOfEn()));
-				continue;
+				if (item.getUIContralType() == UIContralType.RadioBtn) {
+					doc = doc.replace("@" + item.getKeyOfEn(), this.GetRequestVal("RB_" + item.getKeyOfEn()));
+					continue;
+				}
 			}
 		}
+
+		doc = BP.WF.Glo.DealExp(doc, en, null); //替换里面的内容.
 
 		///#endregion 替换参数变量.
 

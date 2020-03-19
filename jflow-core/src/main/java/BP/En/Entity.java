@@ -1967,12 +1967,7 @@ public abstract class Entity implements Serializable {
 
 	// 对文件的处理. add by qin 15/10/31
 	public final void SaveBigTxtToDB(String saveToField, String bigTxt) throws Exception {
-		String temp = SystemConfig.getPathOfTemp() + "/" + this.getEnMap().getPhysicsTable() + this.getPKVal()
-				+ ".tmp";
-		DataType.WriteFile(temp, bigTxt);
-
-		// 写入数据库.
-		SaveFileToDB(saveToField, temp);
+		DBAccess.SaveBigTextToDB(bigTxt, this.getEnMap().getPhysicsTable(), this.getPK(), this.getPKVal().toString(), saveToField);
 	}
 
 	/**

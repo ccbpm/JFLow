@@ -59,6 +59,10 @@ public enum UIContralType
 	 图片
 	*/
 	FrmImg(11),
+	/**
+	 * 图片附件
+	 */
+	FrmImgAth(12),
 	/** 
 	 流程进度图
 	*/

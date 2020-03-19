@@ -66,13 +66,13 @@ public class EmpApp extends EntityMyPK
 	 超链接
 	 * @throws Exception 
 	*/
-	public final String getUrl() throws Exception
+	public final String getUrlExt() throws Exception
 	{
-		return this.GetValStringByKey(AppAttr.Url);
+		return this.GetValStringByKey(AppAttr.UrlExt);
 	}
 	public final void setUrl(String value) throws Exception
 	{
-		this.SetValByKey(AppAttr.Url, value);
+		this.SetValByKey(AppAttr.UrlExt, value);
 	}
 
 		///#endregion
@@ -118,7 +118,7 @@ public class EmpApp extends EntityMyPK
 
 		map.AddTBString(AppAttr.Name, null, "系统-名称", true, false, 0, 3900, 20);
 
-		map.AddTBString(AppAttr.Url, null, "连接", true, false, 0, 3900, 20, true);
+		map.AddTBString(AppAttr.UrlExt, null, "连接", true, false, 0, 3900, 20, true);
 
 		map.AddMyFile("图标");
 

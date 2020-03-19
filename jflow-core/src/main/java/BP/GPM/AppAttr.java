@@ -21,7 +21,7 @@ public class AppAttr extends EntityNoNameAttr
 	/** 
 	 Url
 	*/
-	public static final String Url = "Url";
+	public static final String UrlExt = "UrlExt";
 	/** 
 	 SubUrl
 	*/

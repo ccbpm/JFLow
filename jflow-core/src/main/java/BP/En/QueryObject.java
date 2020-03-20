@@ -593,7 +593,7 @@ public class QueryObject {
 
 	public final void addOrderBy(String attr) throws Exception {
 		if (this._orderBy.indexOf("ORDER BY") != -1) {
-			this._orderBy = " , " + attr;
+			this._orderBy += " , " + attr;
 		} else {
 			this._orderBy = " ORDER BY " + attr;
 		}

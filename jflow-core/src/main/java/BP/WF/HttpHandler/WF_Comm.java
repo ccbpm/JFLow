@@ -1197,15 +1197,12 @@ public class WF_Comm extends WebContralBase {
 					String colName = col.ColumnName.toLowerCase();
 					switch (colName) {
 						case "no":
-						case "NO":
 							col.ColumnName = "No";
 							break;
 						case "name":
-						case "NAME":
 							col.ColumnName = "Name";
 							break;
 						case "parentno":
-						case "PARENTNO":
 							col.ColumnName = "ParentNo";
 							break;
 						default:
@@ -3464,22 +3461,53 @@ public class WF_Comm extends WebContralBase {
 
 		// 把外键枚举增加到里面.
 		for (AttrSearch item : attrs) {
-			if (item.HisAttr.getIsEnum() == true) {
-				SysEnums ses = new SysEnums(item.HisAttr.getUIBindKey());
+			Attr attr = item.HisAttr;
+			if (attr.getIsEnum() == true) {
+				SysEnums ses = new SysEnums(attr.getUIBindKey());
 				DataTable dtEnum = ses.ToDataTableField();
 				dtEnum.TableName = item.Key;
 				ds.Tables.add(dtEnum);
 				continue;
 			}
 
-			if (item.HisAttr.getIsFK() == true) {
-				Entities ensFK = item.HisAttr.getHisFKEns();
+			if (attr.getIsFK() == true) {
+				Entities ensFK = attr.getHisFKEns();
 				ensFK.RetrieveAll();
 
 				DataTable dtEn = ensFK.ToDataTableField();
 				dtEn.TableName = item.Key;
 
 				ds.Tables.add(dtEn);
+			}
+
+			//绑定SQL的外键
+			if (attr.getUIDDLShowType() == BP.En.DDLShowType.BindSQL
+					&& DataType.IsNullOrEmpty(attr.getUIBindKey()) == false
+					&& ds.Tables.contains(attr.getKey()) == false)
+			{
+				//获取SQl
+				String sql = BP.WF.Glo.DealExp(attr.getUIBindKey(), null, null);
+				DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
+				for(DataColumn col : dtSQl.Columns)
+				{
+					String colName = col.ColumnName.toLowerCase();
+					switch (colName)
+					{
+						case "no":
+							col.ColumnName = "No";
+							break;
+						case "name":
+							col.ColumnName = "Name";
+							break;
+						case "parentno":
+							col.ColumnName = "ParentNo";
+							break;
+						default:
+							break;
+					}
+				}
+				dtSQl.TableName = item.Key;
+				ds.Tables.add(dtSQl);
 			}
 		}
 

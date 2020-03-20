@@ -1660,7 +1660,7 @@ public class DBAccess {
 			return ens.size();
 
 		} catch (Exception ex) {
-			String msg = "@运行查询在(RunSQLReturnTable_200705_Ora)出错。\n  @SQL: " + sql + "\n  @Param: "
+			String msg = "@运行查询在(RunSQLReturnResultSet_201809_SQL)出错。\n  @SQL: " + sql + "\n  @Param: "
 					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
 			Log.DefaultLogWriteLineError(msg);
 			throw new RuntimeException(msg, ex);

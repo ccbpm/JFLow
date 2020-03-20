@@ -17,7 +17,7 @@ public class BarOfStartlist extends BarBase
 	@Override
 	public String getNo()
 	{
-		return this.toString();
+		return this.getClass().getName();
 	}
 	/** 
 	 名称

@@ -134,8 +134,9 @@ public class FrmImgAth extends EntityMyPK
 	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
-		uac.Readonly();
+		uac.IsInsert = false;
 		uac.IsUpdate = true;
+		uac.IsDelete = true;
 		return uac;
 	}
 	/** 

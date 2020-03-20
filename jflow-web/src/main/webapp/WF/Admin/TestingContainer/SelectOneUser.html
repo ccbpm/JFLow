@@ -76,10 +76,7 @@
                 } else {
                     html += "<td>" + en.CDT + "</td>";
                 }
-
-
                 html += "<td>" + en.IsRead + "</td>";
-
 
                 if (en.IsPass == 0) {
                     html += "<td><b><font color=green>待办</font></b></td>";
@@ -100,31 +97,27 @@
             html += "<caption>流程信息</caption>";
             html += "<tr>";
             html += "<th>标题</th>";
-            html += "<td colspan=3>" + gwf.Title + "</td>";
+            html += "<td colspan=6>" + gwf.Title + "</td>";
             html += "</tr>";
-
 
             html += "<tr>";
             html += "<th>工作ID</th>";
             html += "<td>" + gwf.WorkID + "</td>";
-
             html += "<th>状态</th>";
             html += "<td>" + gwf.WFStateText + "</td>";
+            html += "<th>发起人</th>";
+            html += "<td>" + gwf.Starter + "," + gwf.StarterName + "</td>";
             html += "</tr>";
-
-
 
             html += "<tr>";
             html += "<th>停留节点ID</th>";
-            html += "<td>" + gwf.FK_Node + "</td>";
-
-            html += "<th>停留节点</th>";
-            html += "<td>" + gwf.NodeName + "</td>";
+            html += "<td>" + gwf.FK_Node + "," + gwf.NodeName + "</td>";
+            html += "<th>当前待办人员</th>";
+            html += "<td>" + gwf.TodoEmps + "</td>";
             html += "</tr>";
 
             html += "</table>";
             $("#gwf").html(html);
-
 
         });
 
@@ -170,7 +163,6 @@
 
         <!--<fieldset>
             <legend> 其他操作</legend>-->
-
         <!--<ul>
             <li> <a href="javascript:OpenRpt()">  轨迹图/表单/时间轴 </a> </li>
             <li> <a href="javascript:OpenRpt()">  安全退出 </a> </li>

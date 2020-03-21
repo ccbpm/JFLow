@@ -803,7 +803,7 @@ public class WF_Comm extends WebContralBase {
 			}
 
 			QueryObject qo = new QueryObject(ens);
-			String[] myparas = this.getParas().split("[@]", -1);
+			String[] myparas = this.getParas().replace("[%]","%").split("[@]", -1);
 
 			Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 
@@ -829,12 +829,19 @@ public class WF_Comm extends WebContralBase {
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 					typeVal = BP.Sys.Glo.GenerRealType(attrs, key, val);
 				}
-
-				if (idx == 0) {
-					qo.AddWhere(key, oper, typeVal.toString());
-				} else {
-					qo.addAnd();
-					qo.AddWhere(key, oper, typeVal.toString());
+				String[] keys = key.trim().split(",");
+				int count = 0;
+				for(String str : keys) {
+					count++;
+					if (idx == 0 && count == 1) {
+						qo.AddWhere(str, oper, typeVal.toString());
+					} else {
+						if (count != 1)
+							qo.addOr();
+						else
+							qo.addAnd();
+						qo.AddWhere(str, oper, typeVal.toString());
+					}
 				}
 				idx++;
 			}

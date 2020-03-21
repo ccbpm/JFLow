@@ -1324,29 +1324,40 @@ public class WF_Comm extends WebContralBase {
                 fieldValue = ur.GetParaString(field);
                 if (DataType.IsNullOrEmpty(fieldValue) == true)
                     continue;
+				fieldValue = fieldValue.trim();
+				fieldValue = fieldValue.replace(",", ";").replace(" ", ";");
+				String[] fieldValues = fieldValue.split(";");
+				int valIdx = 0;
                 idx++;
-                if (idx == 1)
-                {
-                    isFirst = false;
-                    /* 第一次进来。 */
-                    qo.addLeftBracket();
-                    if (SystemConfig.getAppCenterDBVarStr().equals("@")
+				for(String val : fieldValues) {
+					valIdx++;
+					if (idx == 1&& valIdx == 1) {
+						isFirst = false;
+						/* 第一次进来。 */
+						qo.addLeftBracket();
+						if (SystemConfig.getAppCenterDBVarStr().equals("@")
+								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field+ valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field+ valIdx + "+'%'"));
+						else
+							qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field+ valIdx + "||'%'");
+						qo.getMyParas().Add(field, val);
+						continue;
+					}
+					if (valIdx == 1 && idx != 1)
+					{
+						qo.addAnd();
+						qo.addLeftBracket();
+					}
+					else
+						qo.addOr();
+
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")
 							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-                        qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field+",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field +"+'%'"));
-                    else
-                        qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field +"||'%'");
-                    qo.getMyParas().Add(field, fieldValue);
-                    continue;
-                }
-                qo.addAnd();
-
-                if (SystemConfig.getAppCenterDBVarStr().equals("@")
-						|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-                    qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field +",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field+ "+'%'"));
-                else
-                    qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() +field+ "||'%'");
-                qo.getMyParas().Add(field, fieldValue);
-
+						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field+ valIdx + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field+ valIdx + "+'%'"));
+					else
+						qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field+ valIdx + "||'%'");
+					qo.getMyParas().Add(field, val);
+				}
 
             }
             if(idx!=0)
@@ -1367,6 +1378,8 @@ public class WF_Comm extends WebContralBase {
                 }
                 int i = 0;
                 String enumKey = ","; //求出枚举值外键.
+				keyWord= keyWord.replace(",", ";").replace(" ", ";");
+				String[] strVals = keyWord.split(";");
                 for(Attr attr : map.getAttrs())
                 {
                     switch (attr.getMyFieldType())
@@ -1393,32 +1406,33 @@ public class WF_Comm extends WebContralBase {
 
                     if (attr.getKey().equals("FK_Dept"))
                         continue;
+					int valIdx = 0;
+					for(String val : strVals) {
+						i++;
+						valIdx++;
+						if (i == 1) {
+							isFirst = false;
+							/* 第一次进来。 */
+							qo.addLeftBracket();
+							if (SystemConfig.getAppCenterDBVarStr().equals("@")
+									|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey"+valIdx+",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey"+valIdx+"+'%'"));
+							else
+								qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey"+valIdx+"||'%'");
+							qo.getMyParas().Add("SKey" + valIdx, val);
+							continue;
+						}
+						qo.addOr();
 
-                    i++;
-                    if (i == 1)
-                    {
-                        isFirst = false;
-                        /* 第一次进来。 */
-                        qo.addLeftBracket();
-                        if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						if (SystemConfig.getAppCenterDBVarStr().equals("@")
 								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-                            qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-                        else
-                            qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
-                        continue;
-                    }
-                    qo.addOr();
-
-                    if (SystemConfig.getAppCenterDBVarStr().equals("@")
-							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-                        qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
-                    else
-                        qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
-
+							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey"+valIdx+",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey"+valIdx+"+'%'"));
+						else
+							qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey"+valIdx+"||'%'");
+						qo.getMyParas().Add("SKey" + valIdx, val);
+					}
                 }
-                qo.getMyParas().Add("SKey", keyWord);
                 qo.addRightBracket();
-
             }
 
         }

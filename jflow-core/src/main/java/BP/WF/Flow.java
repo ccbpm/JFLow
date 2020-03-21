@@ -2176,7 +2176,7 @@ public class Flow extends BP.En.EntityNoName {
 					Work wk = nd.getHisWork();
 					String attrKey = "";
 					for (Attr attr : wk.getEnMap().getAttrs()) {
-						if (attr.getUIVisible() == true && attr.getUIIsDoc() && attr.getUIIsReadonly() == false) {
+						if (attr.getUIVisible() == true && attr.getUIIsDoc() && attr.getUIIsReadonly() == false &&(attr.getKey().contains("Check") || attr.getKey().contains("Note"))) {
 							attrKey = attr.getDesc() + ":@" + attr.getKey();
 						}
 					}

@@ -2040,17 +2040,22 @@ public class WF_Comm extends WebContralBase {
 		Entity en = ens.getNewEntity();
 		// 属性集合.
 		MapAttrs mapAttrs = new MapAttrs();
-		Attrs attrs = new Attrs();
+		Attrs attrs = null;
 		MapData md = new MapData();
 		md.setNo(this.getEnsName());
 		int count = md.RetrieveFromDBSources();
-		if (count == 0)
-			attrs = en.getEnMap().getAttrs();
-		else {
+		if (count != 1){
 			mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
-
-			for (MapAttr attr : mapAttrs.ToJavaList())
+			attrs = new Attrs();
+			for (MapAttr attr : mapAttrs.ToJavaList()) {
+				String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
+				if (searchVisable.equals("0"))
+					continue;
+				if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || (count == 0 && attr.getUIVisible() == false))
+					continue;
 				attrs.Add(attr.getHisAttr());
+			}
+
 		}
 
 		String name = "数据导出";

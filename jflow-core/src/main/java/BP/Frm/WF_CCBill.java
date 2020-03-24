@@ -221,8 +221,7 @@ public class WF_CCBill extends WebContralBase {
 	public String MyBill_Submit() throws Exception {
 		//执行保存.
 		GEEntity rpt = new GEEntity(this.getFrmID(), this.getWorkID());
-		Object tempVar = BP.Sys.PubClass.CopyFromRequest(rpt);
-		rpt = tempVar instanceof GEEntity ? (GEEntity) tempVar : null;
+
 
 		Hashtable ht = GetMainTableHT();
 

@@ -157,23 +157,6 @@ public class WebUser {
 						ContextHolderUtils.addCookie("SID", expiry, sid);
 					}
 					ContextHolderUtils.addCookie("Lang", expiry, lang);
-//					String isEnableStyle = SystemConfig.getAppSettings().get("IsEnableStyle").toString();
-//					if (isEnableStyle.equals("1")) {
-//						try {
-//							String sql = "SELECT Style FROM WF_Emp WHERE No='" + em.getNo() + "' ";
-//							int val = DBAccess.RunSQLReturnValInt(sql, 0);
-//							/*
-//							 * warning cookie.Values.Add("Style", (new
-//							 * Integer(val)).toString());
-//							 */
-//							ContextHolderUtils.addCookie("Style", expiry, String.valueOf(val));
-//							WebUser.setStyle(String.valueOf(val));
-//						} catch (java.lang.Exception e) {}
-//					}
-					/*
-					 * warning cookie.Values.Add("Auth", auth); // 授权人.
-					 * BP.Glo.getHttpContextCurrent().Response.AppendCookie(cookie);
-					 */
 					ContextHolderUtils.addCookie("Auth", expiry, auth);
 				} catch (Exception e) {
 				}

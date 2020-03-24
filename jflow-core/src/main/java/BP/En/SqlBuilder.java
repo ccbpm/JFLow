@@ -1489,8 +1489,14 @@ public class SqlBuilder {
 				val = val + "," + mainTable + attr.getField() + " " + attr.getKey() + "";
 
 				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
-					val = val + "," + BP.DA.Cash.getCaseWhenSQL(mainTable, attr.getKey(), attr.getField(),
-							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()), attr.UITag);
+					if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
+						throw new Exception("@" + en.getClass().getName() + "中key=" + attr.getKey() + "绑定的枚举字段不存在");
+					if (attr.getUIBindKey().contains("."))
+						throw new Exception("@" + en.getClass().getName() + " &UIBindKey=" + attr.getUIBindKey() + " @Key=" + attr.getKey());
+					SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
+
+					val = val + "," +  ses.GenerCaseWhenForOracle(mainTable, attr.getKey(), attr.getField(),
+							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
 				}
 
 				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
@@ -1575,8 +1581,14 @@ public class SqlBuilder {
 
 				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum) {
 
-					val = val + "," + BP.DA.Cash.getCaseWhenSQL(mainTable, attr.getKey(), attr.getField(),
-							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()), attr.UITag);
+					if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
+						throw new Exception("@" + en.getClass().getName() + "中key=" + attr.getKey() + "绑定的枚举字段不存在");
+					if (attr.getUIBindKey().contains("."))
+						throw new Exception("@" + en.getClass().getName() + " &UIBindKey=" + attr.getUIBindKey() + " @Key=" + attr.getKey());
+					SysEnums ses = new BP.Sys.SysEnums(attr.getUIBindKey(), attr.UITag);
+
+					val = val + "," +  ses.GenerCaseWhenForOracle(mainTable, attr.getKey(), attr.getField(),
+							attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString()));
 
 				}
 

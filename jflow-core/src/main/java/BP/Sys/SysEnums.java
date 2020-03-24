@@ -70,8 +70,6 @@ public class SysEnums extends Entities {
 			sql += " WHEN NULL THEN '" + se.getLab() + "' END \"" + key + "Text\"";
 		}
 
-		// Cash.AddObj("ESQL" + enName + key + "_" + enumKey,
-		// Depositary.Application, sql);
 		return sql; 
 	}
 
@@ -125,7 +123,7 @@ public class SysEnums extends Entities {
 	/**
 	 * SysEnums
 	 * 
-	 * @param EnumKey
+	 * @param enumKey
 	 * @throws Exception
 	 */
 	public SysEnums(String enumKey) throws Exception {

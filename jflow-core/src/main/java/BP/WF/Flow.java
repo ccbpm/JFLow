@@ -2120,11 +2120,11 @@ public class Flow extends BP.En.EntityNoName {
 			/// #endregion
 
 			/// #region 执行一次保存.(暂时注释，在保存节点的时候已经更新缓存）
-			//NodeExts nes = new NodeExts();
-			//nes.Retrieve(NodeAttr.FK_Flow, this.getNo());
-			//for (NodeExt item : nes.ToJavaList()) {
-			//	item.Update(); // 调用里面的业务逻辑执行检查.
-			//}
+			NodeExts nes = new NodeExts();
+			nes.Retrieve(NodeAttr.FK_Flow, this.getNo());
+			for (NodeExt item : nes.ToJavaList()) {
+				item.Update(); // 调用里面的业务逻辑执行检查.
+			}
 
 			/// #region 检查越轨流程,子流程发起。
 			SubFlowYanXus ygflows = new SubFlowYanXus();

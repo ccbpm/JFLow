@@ -100,13 +100,14 @@ public class MakeForm2Html
         for( FrmLab lab:labs.ToJavaList())
         {
               x = lab.getX() + wtX;
-              sb.append("\t\n<DIV id=u2 style='position:absolute;left:" + x + "px;top:" + lab.getY() + "px;text-align:left;' >");
+              sb.append("\t\n<DIV name=u2 style='position:absolute;left:" + x + "px;top:" + lab.getY() + "px;text-align:left;' >");
               sb.append("\t\n<span style='color:" + lab.getFontColorHtml()+ ";font-family: " + lab.getFontName() + ";font-size: " + lab.getFontSize() + "px;' >" + lab.getTextHtml() + "</span>");
               sb.append("\t\n</DIV>");
         }
-      
 
-        FrmLines lines = mapData.getFrmLines();
+
+        FrmLines lines = new FrmLines();
+        lines.Retrieve(FrmLineAttr.FK_MapData, mapData.getNo(), FrmLineAttr.Y1);
         for(FrmLine line :lines.ToJavaList() )
         {
         	 if (line.getX1() == line.getX2())
@@ -117,12 +118,12 @@ public class MakeForm2Html
                  if (line.getY1() < line.getY2())
                  {
                      x = line.getX1() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "'  style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY1()+ "px; width:" + line.getBorderWidth() + "px; height:" + h + "px;background-color:" + line.getBorderColorHtml() + "\" />");
+                     sb.append("\t\n<img id='" + line.getMyPK() + "'  name='YLine' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY1()+ "px; width:" + line.getBorderWidth() + "px; height:" + h + "px;background-color:" + line.getBorderColorHtml() + "\" />");
                  }
                  else
                  {
                      x = line.getX2() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "'  style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY2() + "px; width:" + line.getBorderWidth() + "px; height:" + h + "px;background-color:" + line.getBorderColorHtml()  + "\" />");
+                     sb.append("\t\n<img id='" + line.getMyPK() + "' name='YLine' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY2() + "px; width:" + line.getBorderWidth() + "px; height:" + h + "px;background-color:" + line.getBorderColorHtml()  + "\" />");
                  }
              }
         	 else
@@ -133,12 +134,12 @@ public class MakeForm2Html
                  if (line.getX1() < line.getX2())
                  {
                      x = line.getX1() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "'  style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY1()+ "px; width:" + w + "px; height:" + line.getBorderWidth() + "px;background-color:" + line.getBorderColorHtml() + "\" />");
+                     sb.append("\t\n<img id='" + line.getMyPK() + "' name='line' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY1()+ "px; width:" + w + "px; height:" + line.getBorderWidth() + "px;background-color:" + line.getBorderColorHtml() + "\" />");
                  }
                  else
                  {
                      x = line.getX2() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "'  style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY2() + "px; width:" + w + "px; height:" + line.getBorderWidth() + "px;background-color:" + line.getBorderColorHtml() + "\" />");
+                     sb.append("\t\n<img id='" + line.getMyPK() + "' name='line' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY2() + "px; width:" + w + "px; height:" + line.getBorderWidth() + "px;background-color:" + line.getBorderColorHtml() + "\" />");
                  }
              }
         }
@@ -401,6 +402,24 @@ public class MakeForm2Html
             sb.append("\t\n</DIV>");
         }
         ////#endregion 输出竖线与标签
+        //#region  输出 rb.
+        BP.Sys.FrmRBs myrbs = mapData.getFrmRBs();
+        for (BP.Sys.FrmRB rb : myrbs.ToJavaList())
+        {
+            x = rb.getX() + wtX;
+            sb.append("<DIV id='F" + rb.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + rb.getY() + "px; height:16px;text-align: left;word-break: keep-all;' >");
+            sb.append("<span style='word-break: keep-all;font-size:12px;'>");
+
+            if (rb.getIntKey() == en.GetValIntByKey(rb.getKeyOfEn()))
+                sb.append("<b>" + rb.getLab() + "</b>");
+            else
+                sb.append(rb.getLab());
+
+            sb.append("</span>");
+            sb.append("</DIV>");
+        }
+        ////#endregion  输出 rb.
+
          ////#region 输出数据控件.
         for (MapAttr attr : mapAttrs.ToJavaList())
         {
@@ -494,23 +513,7 @@ public class MakeForm2Html
             sb.append("</DIV>");
         }
 
-       //  ////#region  输出 rb.
-        BP.Sys.FrmRBs myrbs = mapData.getFrmRBs();
-        for (BP.Sys.FrmRB rb : myrbs.ToJavaList())
-        {
-            x = rb.getX() + wtX;
-            sb.append("<DIV id='F" + rb.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + rb.getY() + "px; height:16px;text-align: left;word-break: keep-all;' >");
-            sb.append("<span style='word-break: keep-all;font-size:12px;'>");
 
-            if (rb.getIntKey() == en.GetValIntByKey(rb.getKeyOfEn()))
-                sb.append("<b>" + rb.getLab() + "</b>");
-            else
-                sb.append(rb.getLab());
-
-            sb.append("</span>");
-            sb.append("</DIV>");
-        }
-        ////#endregion  输出 rb.
 
         ////#endregion 输出数据控件.
 

@@ -141,8 +141,8 @@ public class WF_Admin_TestingContainer extends WebContralBase {
         //判断是否可以测试该流程？
         BP.Port.Emp myEmp = new BP.Port.Emp();
         int i = myEmp.Retrieve("SID", sid);
-        if (i == 0)
-            throw new Exception("err@非法的SID，SID不正确.");
+        if (i == 0&& 1==2)
+            throw new Exception("err@非法的SID:"+sid);
         //组织url发起该流程.
         String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&SID=" + sid + "&UserNo=" + userNo;
         return url;
@@ -162,7 +162,7 @@ public class WF_Admin_TestingContainer extends WebContralBase {
 
         FlowExt fl = new FlowExt(this.getFK_Flow());
 
-        if (1 == 2 && BP.Web.WebUser.getNo() != "admin" && fl.getTester().length() <= 1)
+        if (1 == 2 && BP.Web.WebUser.getNo().equals("admin")  && fl.getTester().length() <= 1)
         {
             String msg = "err@二级管理员[" + BP.Web.WebUser.getName() + "]您好,您尚未为该流程配置测试人员.";
             msg += "您需要在流程属性里的底部[设置流程发起测试人]的属性里，设置可以发起的测试人员,多个人员用逗号分开.";
@@ -221,6 +221,7 @@ public class WF_Admin_TestingContainer extends WebContralBase {
             //region 从设置里获取-测试人员.
         try
         {
+            //region 从设置里获取-测试人员.
             switch (nd.getHisDeliveryWay())
             {
                 case ByStation:
@@ -256,24 +257,33 @@ public class WF_Admin_TestingContainer extends WebContralBase {
                 case BySelected: //所有的人员多可以启动, 2016年11月开始约定此规则.
 
                     if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
-                        sql = "SELECT c.No, c.Name, B.Name as DeptName FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND A.FK_Emp=C.No ";
+                        sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND A.FK_Emp=C.No ";
                     else
-                        sql = "SELECT c.No, c.Name, B.Name as DeptName FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND B.OrgNo='" + BP.Web.WebUser.getOrgNo() + "' AND A.FK_Emp=C.No ";
+                        sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND B.OrgNo='" + BP.Web.WebUser.getOrgNo() + "' AND A.FK_Emp=C.No ";
 
                     dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+                    return BP.Tools.Json.ToJson(dt);
+                case BySelectedOrgs: //按照设置的组织计算: 20202年3月开始约定此规则.
 
-                    if (dt.Rows.size() > 300 && 1==2)
+                    if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+                        throw new Exception("err@非集团版本，不能设置启用此模式.");
+
+                    sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, WF_FlowOrg C  WHERE A.FK_Dept=B.No AND B.OrgNo=C.OrgNo AND C.FlowNo='"+nd.getFK_Flow()+"'";
+
+                    if (dt.Rows.size() > 300 && 1 == 2)
                     {
                         if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.MSSQL)
-                            sql = "SELECT top 300 No as FK_Emp FROM Port_Emp ";
+                            sql = "SELECT Top 200 c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, WF_FlowOrg C  WHERE A.FK_Dept=B.No AND B.OrgNo=C.OrgNo AND C.FlowNo='" + nd.getFK_Flow() + "'";
 
                         if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.Oracle)
-                            sql = "SELECT  No as FK_Emp FROM Port_Emp WHERE ROWNUM <300 ";
+                            sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, WF_FlowOrg C  WHERE A.FK_Dept=B.No AND B.OrgNo=C.OrgNo AND C.FlowNo='" + nd.getFK_Flow() + "' AND ROWNUM <300 ";
 
                         if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.MySQL)
-                            sql = "SELECT  No as FK_Emp FROM Port_Emp   limit 0,300 ";
+                            sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, WF_FlowOrg C  WHERE A.FK_Dept=B.No AND B.OrgNo=C.OrgNo AND C.FlowNo='" + nd.getFK_Flow() + "'    limit 0,200   ";
                     }
-                    break;
+
+                    dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
+                    return BP.Tools.Json.ToJson(dt);
                 case BySQL:
                     if (DataType.IsNullOrEmpty(nd.getDeliveryParas()))
                         return "err@您设置的按SQL访问开始节点，但是您没有设置sql.";
@@ -314,13 +324,6 @@ public class WF_Admin_TestingContainer extends WebContralBase {
                 dtMyEmps.Rows.add(drNew);
             }
 
-            //检查物理表,避免错误.
-            Nodes nds = new Nodes(this.getFK_Flow());
-            for (Node mynd : nds.ToJavaList())
-            {
-                mynd.getHisWork().CheckPhysicsTable();
-            }
-
             //返回数据源.
             return BP.Tools.Json.ToJson(dtMyEmps);
                 //endregion 从设置里获取-测试人员.
@@ -328,7 +331,8 @@ public class WF_Admin_TestingContainer extends WebContralBase {
         }
         catch (Exception ex)
         {
-            return "err@<h2>您没有正确的设置开始节点的访问规则，这样导致没有可启动的人员，<a href='http://bbs.ccflow.org/showtopic-4103.aspx' target=_blank ><font color=red>点击这查看解决办法</font>.</a>。</h2> 系统错误提示:" + ex.getMessage() + "<br><h3>也有可能你你切换了OSModel导致的，什么是OSModel,请查看在线帮助文档 <a href='http://ccbpm.mydoc.io' target=_blank>http://ccbpm.mydoc.io</a>  .</h3>";
+            return "err@您没有正确的设置开始节点的访问规则，这样导致没有可启动的人员 系统错误提示:" + ex.getMessage();
+
         }
     }
 

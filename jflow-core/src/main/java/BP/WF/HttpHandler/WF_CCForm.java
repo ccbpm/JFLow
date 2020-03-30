@@ -2007,6 +2007,7 @@ public class WF_CCForm extends WebContralBase {
 	public final String Dtl_SaveRow() throws Exception {
 		// 从表.
 		String fk_mapDtl = this.getFK_MapDtl();
+		String RowIndex = this.GetRequestVal("RowIndex");
 		MapDtl mdtl = new MapDtl(fk_mapDtl);
 
 		/// #region 处理权限方案。
@@ -2089,6 +2090,37 @@ public class WF_CCForm extends WebContralBase {
 		if (dtl.getOID() == 0) {
 			// dtl.setOID(DBAccess.GenerOID();
 			dtl.Insert();
+			//dtl生成oid后，将pop弹出的FrmEleDB表中的数据用oid替换掉
+			for (BP.En.Attr attr : attrs)
+			{
+				String Refval = this.getRefPKVal() + "_" + RowIndex;
+				FrmEleDBs FrmEleDBs = new FrmEleDBs();
+				QueryObject qo = new QueryObject(FrmEleDBs);
+				qo.AddWhere(FrmEleDBAttr.EleID, attr.getKey());
+				qo.addAnd();
+				qo.AddWhere(FrmEleDBAttr.RefPKVal, Refval);
+				qo.DoQuery();
+				if (FrmEleDBs!=null&& FrmEleDBs.size()==0)
+					continue;
+				for (FrmEleDB FrmEleDB : FrmEleDBs.ToJavaList())
+				{
+					FrmEleDB athDB_N = new FrmEleDB();
+
+					athDB_N.setMyPK(attr.getKey() + "_" + dtl.getOID() + "_"+FrmEleDB.getTag1());
+					athDB_N.setFK_MapData(FrmEleDB.getFK_MapData());
+					athDB_N.setEleID(FrmEleDB.getEleID());
+					athDB_N.setRefPKVal(String.valueOf(dtl.getOID()));
+					athDB_N.setFID(FrmEleDB.getFID());
+					athDB_N.setTag1(FrmEleDB.getTag1());
+					athDB_N.setTag2(FrmEleDB.getTag2());
+					athDB_N.setTag3(FrmEleDB.getTag3());
+					athDB_N.setTag4(FrmEleDB.getTag4());
+					athDB_N.setTag5(FrmEleDB.getTag5());
+					athDB_N.DirectInsert();
+					FrmEleDB.Delete();
+				}
+
+			}
 		} else {
 			dtl.Update();
 		}
@@ -2178,7 +2210,21 @@ public class WF_CCForm extends WebContralBase {
 		}
 
 		/// #endregion 从表 删除 后处理事件.
+		//如果有pop，删除相关存储
+		FrmEleDBs FrmEleDBs = new FrmEleDBs();
+		QueryObject qo = new QueryObject(FrmEleDBs);
+		qo.AddWhere(FrmEleDBAttr.FK_MapData, this.getFK_MapDtl());
+		qo.addAnd();
+		qo.AddWhere(FrmEleDBAttr.RefPKVal, dtl.getOID());
+		qo.DoQuery();
+		if (FrmEleDBs != null && FrmEleDBs.size() > 0)
+		{
 
+			for (FrmEleDB FrmEleDB : FrmEleDBs.ToJavaList())
+			{
+				FrmEleDB.Delete();
+			}
+		}
 		// 如果可以上传附件这删除相应的附件信息
 		FrmAttachmentDBs dbs = new FrmAttachmentDBs();
 		dbs.Delete(FrmAttachmentDBAttr.FK_MapData, this.getFK_MapDtl(), FrmAttachmentDBAttr.RefPKVal, this.getRefOID(),

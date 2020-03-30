@@ -499,6 +499,12 @@ function Save(saveType) {
 
         }
     });
+    //审核组件
+    if ($("#WorkCheck").length == 1) {
+        //保存审核信息
+        SaveWorkCheck();
+    }
+
     //保存前事件
     if (typeof beforeSave != 'undefined' && beforeSave instanceof Function)
         if (beforeSave() == false)
@@ -945,14 +951,21 @@ function GenerCheckIDs() {
 //发送
 function Send(isHuiQian) {
     SetPageSize(80, 80);
+
     //保存前事件
     if (typeof beforeSend != 'undefined' && beforeSend instanceof Function)
         if (beforeSend() == false)
             return false;
 
-    if (CheckFWC() == false)
-        return false;
-
+    //审核组件
+    if ($("#WorkCheck").length == 1) {
+        //保存审核信息
+        SaveWorkCheck();
+        if (isCanSend == false)
+            return false;
+    }
+   
+    //附件检查
     var msg = checkAths();
     if (msg != "") {
         alert(msg);
@@ -1593,6 +1606,7 @@ function GenerWorkNode() {
     var node = flowData.WF_Node[0];
     var gfs = flowData.Sys_MapAttr;
 
+  
     //设置标题.
     document.title = node.FlowName + ',' + node.Name; // "业务流程管理（BPM）平台";
 
@@ -1643,6 +1657,7 @@ function GenerWorkNode() {
     }
 
     if (node.FormType == 0 || node.FormType == 10) {
+        $("#glyphicon").show();//显示换肤按钮
         GenerFoolFrm(flowData); //傻瓜表单.
     }
 
@@ -1736,10 +1751,13 @@ function GenerWorkNode() {
     //原有的
 
     //textarea的高度自适应的设置
-    var textareas = $("textarea");
-    $.each(textareas, function (idex, item) {
-        autoTextarea(item);
-    });
+    if (node.FormType != 1) {
+        var textareas = $("textarea");
+        $.each(textareas, function (idex, item) {
+            autoTextarea(item);
+        });
+    }
+    
 
     //为 DISABLED 的 TEXTAREA 加TITLE 
     var disabledTextAreas = $('#divCCForm textarea:disabled');

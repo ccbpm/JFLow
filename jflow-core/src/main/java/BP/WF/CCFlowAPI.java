@@ -240,7 +240,7 @@ public class CCFlowAPI
 					isHaveFWC = true;
 				}
 
-				if (nd.getFormType() == NodeFormType.FoolForm && isHaveFWC == true)
+				if ((nd.getFormType() == NodeFormType.FoolForm || frmNode.getHisFrmType()== FrmType.FoolForm)&& isHaveFWC == true)
 				{
 					//判断是否是傻瓜表单，如果是，就要判断该傻瓜表单是否有审核组件groupfield ,没有的话就增加上.
 					DataTable gf = myds.GetTableByName("Sys_GroupField");

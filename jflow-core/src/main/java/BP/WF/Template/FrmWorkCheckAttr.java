@@ -109,6 +109,10 @@ public class FrmWorkCheckAttr extends EntityNoAttr
 	 审核意见版本号控制
 	*/
 	public static final String FWCVer = "FWCVer";
+	/**
+	 * 签批字段
+	 */
+	public static final String CheckField="CheckField";
 	/** 
 	 审核意见立场 不同意、不通过、同意、赞成
 	*/

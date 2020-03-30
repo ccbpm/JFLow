@@ -204,6 +204,8 @@ public class WF_CCBill extends WebContralBase {
 		Object tempVar = BP.Sys.PubClass.CopyFromRequest(rpt);
 		rpt = tempVar instanceof GEEntity ? (GEEntity) tempVar : null;
 
+
+
 		Hashtable ht = GetMainTableHT();
 		for (Object item : ht.keySet()) {
 			if (item != null)

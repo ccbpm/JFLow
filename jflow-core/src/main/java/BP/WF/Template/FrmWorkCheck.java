@@ -399,7 +399,7 @@ public class FrmWorkCheck extends Entity
 	/** 
 	 审核组件
 	 
-	 @param no
+	 @param mapData
 	 * @throws Exception 
 	*/
 	public FrmWorkCheck(String mapData) throws Exception
@@ -505,6 +505,7 @@ public class FrmWorkCheck extends Entity
 		map.AddDDLSysEnum(FrmWorkCheckAttr.FWCMsgShow, 0, "审核意见显示方式", true, true, FrmWorkCheckAttr.FWCMsgShow, "@0=都显示@1=仅显示自己的意见");
 
 		map.AddDDLSysEnum(FrmWorkCheckAttr.FWCVer, 0, "审核意见版本号", true, true, FrmWorkCheckAttr.FWCVer, "@0=2018@1=2019");
+		map.AddTBString(FrmWorkCheckAttr.CheckField, null, "签批字段", true, false, 0, 50, 10, false);
 		map.AddTBString(FrmWorkCheckAttr.FWCView, null, "审核意见立场", true, false, 20, 200, 200,true);
 
 

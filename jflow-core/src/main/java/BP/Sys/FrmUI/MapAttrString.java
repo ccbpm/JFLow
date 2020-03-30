@@ -62,7 +62,33 @@ public class MapAttrString extends EntityMyPK
 		return i;
 		 
 	}
-	
+	public UIContralType getUIContralType() throws Exception{
+		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
+	}
+
+	public void setUIContralType(UIContralType value) throws Exception{
+		this.SetValByKey(MapAttrAttr.UIContralType,value);
+	}
+	/// <summary>
+	/// 是否可见
+	/// </summary>
+	public boolean getUIVisible() throws Exception{
+		return this.GetValBooleanByKey(MapAttrAttr.UIVisible);
+	}
+	public void setUIVisible(boolean value) throws Exception
+	{
+		this.SetValByKey(MapAttrAttr.UIVisible, value);
+	}
+	/// <summary>
+	/// 是否可编辑
+	/// </summary>
+	public boolean getUIIsEnable() throws Exception{
+		return this.GetValBooleanByKey(MapAttrAttr.UIIsEnable);
+	}
+	public void setUIIsEnable(boolean value) throws Exception
+	{
+		this.SetValByKey(MapAttrAttr.UIIsEnable, value);
+	}
 		///#endregion
 
 
@@ -299,6 +325,13 @@ public class MapAttrString extends EntityMyPK
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
+		rm = new RefMethod();
+		rm.Title = "转化为签批组件";
+		rm.ClassMethodName = this.toString() + ".DoSetCheck()";
+		rm.Warning = "您确定要设置为签批组件吗？";
+		rm.GroupName = "高级设置";
+		map.AddRefMethod(rm);
+
 
 
 			///#endregion 执行的方法.
@@ -479,7 +512,20 @@ public class MapAttrString extends EntityMyPK
 		///#endregion 方法执行 Pop填充自动完成.
 
 
-		///#region 方法执行.
+	///#region 方法执行.
+
+	/**
+	 * 设置签批组件
+	 * @return
+	 */
+	public String DoSetCheck() throws Exception
+	{
+		this.setUIContralType(UIContralType.SignCheck);
+		this.setUIIsEnable(false);
+		this.setUIVisible(false);
+		this.Update();
+		return "设置成功,当前文本框已经是签批组件了,请关闭掉当前的窗口,并关闭当前的设计器,重新登录.";
+	}
 	/** 
 	 批处理
 	 

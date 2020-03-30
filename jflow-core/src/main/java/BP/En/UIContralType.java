@@ -63,6 +63,14 @@ public enum UIContralType
 	 * 图片附件
 	 */
 	FrmImgAth(12),
+	/**
+	 * 身份证号
+	 */
+	IDCard(13),
+	/**
+	 * 签批组件
+	 */
+	SignCheck(14),
 	/** 
 	 流程进度图
 	*/

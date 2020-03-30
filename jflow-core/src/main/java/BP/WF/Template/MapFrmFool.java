@@ -163,7 +163,7 @@ public class MapFrmFool extends EntityNoName
 		map.AddDDLSysEnum(MapDataAttr.FrmType, FrmType.FreeFrm.getValue(), "表单类型", true, false, MapDataAttr.FrmType);
 			//表单解析 0 普通 1 页签展示
 		map.AddDDLSysEnum(MapDataAttr.FrmShowType, 0, "表单展示方式", true, true, "表单展示方式", "@0=普通方式@1=页签方式");
-
+		map.AddBoolean(MapDataAttr.IsEnableJS,false,"是否启用自定义JS",true,true,false);
 
 			///#endregion 基本属性.
 
@@ -180,6 +180,7 @@ public class MapFrmFool extends EntityNoName
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
+
 
 			///#endregion 设计者信息.
 

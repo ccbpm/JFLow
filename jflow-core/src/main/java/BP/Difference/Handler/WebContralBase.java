@@ -1049,20 +1049,19 @@ public abstract class WebContralBase {
 						str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
 				} else {
 					String text ="";
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle){
-						Object obj = dr.getValue((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
-						if(obj == null)
-							text = "";
-						else
-							text =  obj.toString();
-					}else{
-						Object obj = dr.getValue(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
-						if(obj == null)
-							text = "";
-						else
-							text =  obj.toString();
-					}
-					
+					Object obj;
+					if (attr.getIsFKorEnum() || attr.getIsFK())
+						obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.Oracle?attr.getKey().toUpperCase()+"Text" :attr.getKey() + "Text");
+					else if(attr.getUIDDLShowType() == BP.En.DDLShowType.BindSQL)
+						obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.Oracle?attr.getKey().toUpperCase()+"T" :attr.getKey() + "T");
+					else
+						obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.Oracle?attr.getKey().toUpperCase() :attr.getKey() );
+
+					if(obj == null)
+						text = "";
+					else
+						text =  obj.toString();
+
 					if(DataType.IsNullOrEmpty(text)==false && (text.contains("\n")==true ||text.contains("\r")==true)){
 						str =""+text.replaceAll("\n", "  ");
 					    str =""+text.replaceAll("\r", "  ");

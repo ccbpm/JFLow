@@ -412,7 +412,6 @@ public class Delay extends EntityMyPK
 
 	public final String DoOpenTrack() throws Exception
 	{
-		//@sly
 		return "../WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 }

@@ -78,6 +78,17 @@
             }
             catch (err) {
             }
+            try {
+                ////加载JS文件
+                var s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.src = "../../DataUser/JSLibData/" + ensName + "_Self.js";
+                var tmp = document.getElementsByTagName('script')[0];
+                tmp.parentNode.insertBefore(s, tmp);
+            }
+            catch (err) {
+
+            }
 
             InitPage();
 
@@ -1619,6 +1630,7 @@
                 rowData.FK_Node = GetQueryString("FK_Node");
                 rowData.FK_MapData = GetQueryString("FK_MapData");
                 rowData.FID = GetQueryString("FID");
+                rowData.RowIndex = index;//pop用到，传到后台
 
                 var dbDataRow = $.grep(pageData.DBDtl, function (val) { return val.OID == rowData.OID; });
 
@@ -1849,12 +1861,15 @@
         function AfterBindEn_DealMapExt(tr, rowIndex) {
             var workNode = workNodeData;
             var mapExtArr = workNode.Sys_MapExt; // 扩展信息
+            var WorkId = GetQueryString("WorkId")
             //表示从表还没有数据
             var OID = 0;
             if ($(tr).data().data == undefined)
                 return;
             else
-                OID = $(tr).data().data.OID;
+                OID =$(tr).data().data.OID;
+            if (OID == 0)//数据还未保存
+                OID = WorkId+"_"+rowIndex;
             for (var i = 0; i < mapExtArr.length; i++) {
                 var mapExt = mapExtArr[i];
                 //一起转成entity.

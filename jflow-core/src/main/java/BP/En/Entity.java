@@ -418,7 +418,11 @@ public abstract class Entity implements Serializable {
 		return DBAccess.RunSQLReturnTable(sql);
 
 	}
-	 
+
+	public DataTable RunSQLReturnTable(String sql,Paras paras) {
+		return DBAccess.RunSQLReturnTable(sql,paras);
+
+	}
 
 	// 于编号有关系的处理。
 	/**

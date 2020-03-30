@@ -980,9 +980,9 @@ public class QueryObject {
 	 *            页面大小
 	 * @param pageIdx
 	 *            第x页
-	 * @param orderby
+	 * @param orderBy
 	 *            排序
-	 * @param orderway
+	 * @param orderWay
 	 *            排序方式: 两种情况 Down UP
 	 * @return 查询结果
 	 * @throws Exception
@@ -1004,8 +1004,6 @@ public class QueryObject {
 	 *            页面大小
 	 * @param pageIdx
 	 *            第x页
-	 * @param orderby
-	 *            排序
 	 * @return 查询结果
 	 * @throws Exception
 	 */
@@ -1022,10 +1020,10 @@ public class QueryObject {
 	 *            页面大小
 	 * @param pageIdx
 	 *            第x页
-	 * @param orderby
-	 *            排序
-	 * @param orderway
-	 *            排序方式: 两种情况 desc 或者 为 null.
+	 * @param orderBy
+	 *            排序  排序方式: 两种情况 desc 或者 为 null.
+	 * @param isDesc
+	 *
 	 * @return 查询结果
 	 * @throws Exception
 	 */
@@ -1320,6 +1318,46 @@ public class QueryObject {
 			return -1;
 		}
 	}
+
+	public DataTable GetSumOrAvg(String oper) throws Exception
+	{
+		String sql = this.getSQL();
+		String ptable = this.getEn().getEnMap().getPhysicsTable();
+		String pk = this.getEn().getPKField();
+
+		switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
+		{
+			case Oracle:
+				if (this._sql == "" || this._sql == null)
+					sql = "SELECT "+oper +" FROM " + ptable;
+				else
+					sql = "SELECT "+oper + sql.substring(sql.indexOf("FROM "));
+				break;
+			default:
+				if (this._sql == "" || this._sql == null)
+					sql = "SELECT  " + oper + "  FROM " + ptable;
+				else
+				{
+					sql = sql.substring(sql.indexOf("FROM "));
+					if (sql.indexOf("ORDER BY") >= 0)
+						sql = sql.substring(0, sql.indexOf("ORDER BY") - 1);
+					sql = "SELECT " +oper +" "+ sql;
+				}
+
+				break;
+		}
+		try
+		{
+			return this.getEn().RunSQLReturnTable(sql, this.getMyParas());
+
+		}
+		catch (Exception ex)
+		{
+			this.getEn().CheckPhysicsTable();
+			throw ex;
+		}
+	}
+
 
 	public DataTable DoGroupQueryToTable(String selectSQl, String groupBy, String orderBy) throws Exception {
 		String sql = this.getSQL();

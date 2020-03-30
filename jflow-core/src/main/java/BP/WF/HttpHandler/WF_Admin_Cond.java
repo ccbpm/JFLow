@@ -222,7 +222,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		//string mypk = fk_mainNode + "_" + toNodeID + "_" + condTypeEnum + "_" + ConnDataFrom.SQLTemplate.ToString();
 
-		//增加条件集合.  @sly
+		//增加条件集合.
 		Conds conds = new Conds();
 		conds.Retrieve(CondAttr.FK_Node, Integer.parseInt(fk_mainNode), CondAttr.ToNodeID, Integer.parseInt(toNodeID));
 

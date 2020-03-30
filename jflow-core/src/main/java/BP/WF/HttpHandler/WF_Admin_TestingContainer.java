@@ -97,8 +97,8 @@ public class WF_Admin_TestingContainer extends WebContralBase {
     public String Default_LetAdminerLogin() throws Exception
     {
         String adminer = this.GetRequestVal("Adminer");
-        String sid = this.GetRequestVal("SID");
-        BP.WF.Dev2Interface.Port_LoginBySID(adminer,sid);
+        String SID = this.GetRequestVal("SID");
+        BP.WF.Dev2Interface.Port_LoginBySID(adminer,SID);
 
         return "登录成功.";
         //Int64 workid = BP.WF.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), userNo);
@@ -131,16 +131,20 @@ public class WF_Admin_TestingContainer extends WebContralBase {
     /// <returns></returns>
     public String TestFlow2020_StartIt() throws Exception
     {
+        String sid = this.GetRequestVal("SID");
         if (WebUser.getIsAdmin() == false)
-            return "err@非管理员无法测试";
+            return "err@非管理员无法测试,关闭后重新登录。";
 
         //用户编号.
         String userNo = this.GetRequestVal("UserNo");
 
         //判断是否可以测试该流程？
-
+        BP.Port.Emp myEmp = new BP.Port.Emp();
+        int i = myEmp.Retrieve("SID", sid);
+        if (i == 0)
+            throw new Exception("err@非法的SID，SID不正确.");
         //组织url发起该流程.
-        String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&Adminer=" + WebUser.getNo() + "&SID=" + WebUser.getSID() + "&UserNo=" + userNo;
+        String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&SID=" + sid + "&UserNo=" + userNo;
         return url;
     }
     /// <summary>
@@ -217,56 +221,48 @@ public class WF_Admin_TestingContainer extends WebContralBase {
             //region 从设置里获取-测试人员.
         try
         {
-
             switch (nd.getHisDeliveryWay())
             {
                 case ByStation:
                 case ByStationOnly:
+                    if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+                        sql = "SELECT Port_Emp.No  FROM Port_Emp LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.No) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
+                    else
+                        sql = "SELECT Port_Emp.No FROM Port_Emp WHERE OrgNo='" + BP.Web.WebUser.getOrgNo() + "' LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.No) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
 
-                    sql = "SELECT Port_Emp.No  FROM Port_Emp LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.No)   join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
                     // emps.RetrieveInSQL_Order("select fk_emp from Port_Empstation WHERE fk_station in (select fk_station from WF_NodeStation WHERE FK_Node=" + nodeid + " )", "FK_Dept");
                     break;
                 case ByDept:
-                    sql = "select No,Name from Port_Emp where FK_Dept in (select FK_Dept from WF_NodeDept where FK_Node='" + nodeid + "') ";
-                    //emps.RetrieveInSQL("");
+                    sql = "SELECT No,Name FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node=" + nodeid;
                     break;
                 case ByBindEmp:
-                    sql = "select No,Name from Port_Emp where No in (select FK_Emp from WF_NodeEmp where FK_Node='" + nodeid + "') ";
-                    //emps.RetrieveInSQL("select fk_emp from wf_NodeEmp WHERE fk_node=" + int.Parse(this.getFK_Flow() + "01") + " ");
+                    sql = "SELECT No,Name from Port_Emp WHERE No in (select FK_Emp from WF_NodeEmp where FK_Node='" + nodeid + "') ";
+                    //emps.RetrieveInSQL("select fk_emp from wf_NodeEmp WHERE fk_node=" + int.Parse(this.FK_Flow + "01") + " ");
                     break;
                 case ByDeptAndStation:
-                    //added by liuxc,2015.6.30.
-                    //区别集成与BPM模式
-                    if (BP.WF.Glo.getOSModel() == BP.Sys.OSModel.OneOne)
-                    {
-                        sql = "SELECT No FROM Port_Emp WHERE No IN ";
-                        sql += "(SELECT No as FK_Emp FROM Port_Emp WHERE FK_Dept IN ";
-                        sql += "( SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node=" + nodeid + ")";
-                        sql += ")";
-                        sql += "AND No IN ";
-                        sql += "(";
-                        sql += "SELECT FK_Emp FROM " + BP.WF.Glo.getEmpStation() + " WHERE FK_Station IN ";
-                        sql += "( SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + nodeid + ")";
-                        sql += ") ORDER BY No ";
-                    }
-                    else
-                    {
-                        sql = "SELECT pdes.FK_Emp AS No"
-                                + " FROM   Port_DeptEmpStation pdes"
-                                + "        INNER JOIN WF_NodeDept wnd"
-                                + "             ON  wnd.FK_Dept = pdes.FK_Dept"
-                                + "             AND wnd.FK_Node = " + nodeid
-                                + "        INNER JOIN WF_NodeStation wns"
-                                + "             ON  wns.FK_Station = pdes.FK_Station"
-                                + "             AND wnd.FK_Node =" + nodeid
-                                + " ORDER BY"
-                                + "        pdes.FK_Emp";
-                    }
+
+                    sql = "SELECT pdes.FK_Emp AS No"
+                            + " FROM   Port_DeptEmpStation pdes"
+                            + "        INNER JOIN WF_NodeDept wnd"
+                            + "             ON  wnd.FK_Dept = pdes.FK_Dept"
+                            + "             AND wnd.FK_Node = " + nodeid
+                            + "        INNER JOIN WF_NodeStation wns"
+                            + "             ON  wns.FK_Station = pdes.FK_Station"
+                            + "             AND wnd.FK_Node =" + nodeid
+                            + " ORDER BY"
+                            + "        pdes.FK_Emp";
+
                     break;
                 case BySelected: //所有的人员多可以启动, 2016年11月开始约定此规则.
-                    sql = "SELECT No as FK_Emp FROM Port_Emp ";
+
+                    if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+                        sql = "SELECT c.No, c.Name, B.Name as DeptName FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND A.FK_Emp=C.No ";
+                    else
+                        sql = "SELECT c.No, c.Name, B.Name as DeptName FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND B.OrgNo='" + BP.Web.WebUser.getOrgNo() + "' AND A.FK_Emp=C.No ";
+
                     dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-                    if (dt.Rows.size() > 300)
+
+                    if (dt.Rows.size() > 300 && 1==2)
                     {
                         if (SystemConfig.getAppCenterDBType() == BP.DA.DBType.MSSQL)
                             sql = "SELECT top 300 No as FK_Emp FROM Port_Emp ";

@@ -2430,7 +2430,24 @@ public class Glo {
 			return 8;
 		}
 	}
+	/// <summary>
+	/// 运行模式
+	/// </summary>
+	public static CCBPMRunModel getCCBPMRunModel()
+	{
 
+			int val = SystemConfig.GetValByKeyInt("CCBPMRunModel", 0);
+			if (val == 0)
+				return CCBPMRunModel.Single;
+
+			if (val == 1)
+				return CCBPMRunModel.GroupInc;
+
+			if (val == 2)
+				return CCBPMRunModel.SAAS;
+
+			return CCBPMRunModel.Single;
+	}
 	/**
 	 * 短信时间发送到 默认到 20 点结束.
 	 */

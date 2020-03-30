@@ -230,6 +230,14 @@ public class NodeExt extends Entity
 	{
 		return this.GetValBooleanByKey(NodeAttr.IsYouLiTai);
 	}
+
+	/**
+	 是否是返回节点?
+	 */
+	public boolean getIsSendBackNode() throws Exception
+	{
+		return this.GetValBooleanByKey(NodeAttr.IsSendBackNode);
+	}
 	/** 
 	 主键
 	*/
@@ -415,7 +423,8 @@ public class NodeExt extends Entity
 
 		map.AddBoolean(NodeAttr.AutoRunEnable, false, "是否启用自动运行？(仅当分流点向子线程发送时有效)", true, true, true);
 		map.AddTBString(NodeAttr.AutoRunParas, null, "自动运行SQL", true, false, 0, 100, 10, true);
-
+		//为广西计算中心加.
+		map.AddBoolean(NodeAttr.IsSendBackNode, false, "是否是发送返回节点(发送当前节点,自动发送给该节点的发送人,发送节点.)?", true, true, true);
 			///#endregion 分合流子线程属性
 
 
@@ -1375,6 +1384,13 @@ public class NodeExt extends Entity
 			//this.SetValByKey(BtnAttr.ReturnRole,(int)ReturnRole.CanNotReturn); //开始节点可以退回。
 			this.SetValByKey(BtnAttr.HungEnable, false);
 			this.SetValByKey(BtnAttr.ThreadEnable, false); //子线程.
+		}
+		//是否是发送返回节点？
+		nd.setIsSendBackNode(this.getIsSendBackNode());
+		if (nd.getIsSendBackNode()==true)
+		{
+			//强制设置按照连接线控制.
+			nd.setCondModel(CondModel.ByLineCond);
 		}
 
 		if (nd.getHisRunModel() == RunModel.HL || nd.getHisRunModel() == RunModel.FHL)

@@ -388,7 +388,10 @@ public class NodeAttr
 	 该节点是否是游离状态
 	*/
 	public static final String IsYouLiTai = "IsYouLiTai";
-
+	/**
+	 是否是自动审批返回节点
+	 */
+	public static final String IsSendBackNode = "IsSendBackNode";
 		///#endregion
 
 

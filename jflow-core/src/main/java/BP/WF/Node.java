@@ -66,7 +66,16 @@ public class Node extends Entity {
 	public final int getSubFlowHandNum() throws Exception {
 		return this.GetParaInt("SubFlowHandNum", 0);
 	}
-
+	/**
+	 * 是否是发送返回节点？
+	 */
+	public boolean getIsSendBackNode() throws Exception
+	{
+		return this.GetParaBoolen(NodeAttr.IsSendBackNode, false);
+	}
+	public final void setIsSendBackNode(boolean value) throws Exception {
+		this.SetPara(NodeAttr.IsSendBackNode, value);
+	}
 	/**
 	 * 自动启动的子流程个数
 	 */

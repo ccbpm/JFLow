@@ -1404,7 +1404,7 @@ public class MapDtlExt extends EntityNoName
 		{
 			mapExt = new MapExt();
 			mapExt = ext;
-			mapExt.setMyPK(ext.getMyPK() + "_" + this.getFK_Node());
+			mapExt.setMyPK(ext.getExtType() + "_" + this.getNo()+"_"+ ext.getAttrOfOper());
 			mapExt.setFK_MapData(this.getNo());
 			mapExt.Insert();
 		}

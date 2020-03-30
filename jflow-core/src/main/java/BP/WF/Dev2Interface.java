@@ -9112,8 +9112,6 @@ public class Dev2Interface
 					gwf.setRDT(DataType.getCurrentDataTime());
 					gwf.Insert();
 
-					//@sly 这里在代码移动到下面了.
-
 				}
 				else
 				{
@@ -9124,7 +9122,7 @@ public class Dev2Interface
 					}
 				}
 
-				// 产生工作列表. @sly
+				// 产生工作列表.
 				GenerWorkerList gwl = new GenerWorkerList();
 				gwl.setWorkID(workID);
 				gwl.setFK_Emp(WebUser.getNo());

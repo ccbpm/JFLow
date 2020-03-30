@@ -104,7 +104,6 @@ public class FindWorker
 			sql = sql.replace("@FK_Node", String.valueOf(this.town.getHisNode().getNodeID()));
 			sql = sql.replace("@NodeID", String.valueOf(this.town.getHisNode().getNodeID()));
 
-			//@sly 增加。
 			sql = sql.replace("@WorkID", String.valueOf(this.currWn.getHisWork().getOID()));
 			sql = sql.replace("@FID", String.valueOf(this.currWn.getHisWork().getFID()));
 

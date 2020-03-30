@@ -609,8 +609,9 @@ public class MapFrmFool extends EntityNoName
 
 		if (this.getIsNodeFrm() == true)
 		{
-			FrmNodeComponent conn = new FrmNodeComponent(this.getNodeID());
-			conn.Update();
+			//提高执行效率.
+//			FrmNodeComponent conn = new FrmNodeComponent(this.getNodeID());
+//			conn.Update();
 		}
 
 

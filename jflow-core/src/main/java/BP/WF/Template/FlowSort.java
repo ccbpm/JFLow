@@ -101,7 +101,6 @@ public class FlowSort extends EntityTree
 		String sql = "UPDATE WF_GenerWorkFlow SET DoDomain='" + this.getDoDomain() + "' WHERE FK_FlowSort='" + this.getNo()+ "'";
 		DBAccess.RunSQL(sql);
 
-		//@sly
 		sql = "UPDATE WF_Emp SET StartFlows='' ";
 		DBAccess.RunSQL(sql);
 

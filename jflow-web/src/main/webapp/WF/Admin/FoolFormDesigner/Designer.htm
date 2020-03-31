@@ -23,6 +23,7 @@
     <script language="JavaScript" type="text/javascript" src="../../CCForm/MapExt2019.js"
             defer="defer"></script>
     <script src="Designer.js" type="text/javascript" defer="defer"></script>
+    <script src="../../WorkOpt/WorkCheck.js"></script>
     <base target="_self" />
     <style type="text/css">
         body {
@@ -638,7 +639,7 @@
                     if (athEn[0].IsVisable == "0")
                         return "";
 
-                    var src = "../../CCForm/Ath.htm?PKVal=0&FK_MapData=" + pageParam.fk_mapdata + "&FK_FrmAttachment=" + athEn[0].MyPK + "&IsReadonly=1";
+                    var src = "../../CCForm/Ath.htm?PKVal=0&FK_MapData=" + pageData.fk_mapdata + "&FK_FrmAttachment=" + athEn[0].MyPK + "&IsReadonly=1";
 
                     var frameUrl = "<iframe ID='F" + athEn[0].MyPK + "' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + athEn[0].H + "px;'  leftMargin='0'  topMargin='0' src='" + src + "'  scrolling='auto'  /></iframe>";
                     return "<tr><td colspan=" + tableCol + " id='TD" + athEn[0].MyPK + "' style='width:" + athEn[0].H + "px;'>" + frameUrl + "</td></tr>";
@@ -665,9 +666,9 @@
 
                     var src = frameEn[0].URL;
                     if (src.indexOf('?') == -1)
-                        src = frameEn[0].URL + "?PKVal=0&FK_MapData=" + pageParam.fk_mapdata + "&MapFrame=" + frameEn[0].MyPK;
+                        src = frameEn[0].URL + "?PKVal=0&FK_MapData=" + pageData.fk_mapdata + "&MapFrame=" + frameEn[0].MyPK;
                     else
-                        src = frameEn[0].URL + "&PKVal=0&FK_MapData=" + pageParam.fk_mapdata + "&MapFrame=" + frameEn[0].MyPK;
+                        src = frameEn[0].URL + "&PKVal=0&FK_MapData=" + pageData.fk_mapdata + "&MapFrame=" + frameEn[0].MyPK;
 
                     var frameUrl = "<iframe ID='F" + frameEn[0].MyPK + "' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + frameEn[0].H + "px;'  leftMargin='0'  topMargin='0' src='" + src + "'  scrolling='auto'  /></iframe>";
                     return "<tr><td colspan=" + tableCol + " id='TD" + frameEn[0].MyPK + "' style='width:" + frameEn[0].H + "px;'>" + frameUrl + "</td></tr>";
@@ -675,10 +676,10 @@
                     break;
                 case "FWC":
 
-                    var nodeID = pageParam.fk_mapdata.replace('ND', '');
+                    var nodeID = pageData.fk_mapdata.replace('ND', '');
                     var wf_node = data.WF_Node[0];
                     var fk_flow = GetQueryString("FK_Flow");
-                    ////var src = "../../WorkOpt/WorkCheck.htm?WorkID=0&FK_Flow=" + fk_flow + "&FK_Node=" + nodeID + "&FK_MapData=" + pageParam.fk_mapdata;
+                    ////var src = "../../WorkOpt/WorkCheck.htm?WorkID=0&FK_Flow=" + fk_flow + "&FK_Node=" + nodeID + "&FK_MapData=" + pageData.fk_mapdata;
 
                     //var h = wf_node.FWC_H;
                     //var w = wf_node.FWC_W;
@@ -687,7 +688,7 @@
                     //    h = 400;
 
                     //var frameUrl = "<iframe ID='FWC' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + h + "px;' leftMargin='0' topMargin='0' src='" + src + "' scrolling='auto'  /></iframe>";
-                    return "<tr><td colspan=" + tableCol + " style='width:100%;height:" + h + "px;' id='FWC' >" + WorkCheck_Init() + "</td></tr>";
+                    return "<tr><td colspan=" + tableCol + " style='width:100%;' id='FWC' >" + WorkCheck_InitPage() + "</td></tr>";
                 case "Dtl":
 
                     var dtl = $.grep(data.Sys_MapDtl, function (dtl) { return dtl.No == groupEn.CtrlID });
@@ -696,7 +697,7 @@
                     // alert(dtl.H);
 
                     if (dtl.length == 1) {
-                        var src = "MapDtlDe.htm?DoType=Edit&FK_MapData=" + pageParam.fk_mapdata + "&FK_MapDtl=" + dtl[0].No;
+                        var src = "MapDtlDe.htm?DoType=Edit&FK_MapData=" + pageData.fk_mapdata + "&FK_MapDtl=" + dtl[0].No;
                         var frameUrl = "<iframe ID='F" + dtl[0].No + "' frameborder=0 style='padding:0px;border:0px;width:100%;height:" + dtl[0].H + "px;'  leftMargin='0'  topMargin='0' src='" + src + "'  scrolling='auto'  /></iframe>";
                         return "<tr><td colspan=" + tableCol + " id='TD" + dtl[0].No + "'>" + frameUrl + "</td></tr>";
                     } else {
@@ -844,6 +845,8 @@
 
         var pageData = {};
         pageData.fk_mapdata = GetQueryString("FK_MapData");
+        pageData.FK_Flow = GetQueryString("FK_Flow");
+        pageData.FK_Node = GetQueryString("FK_Node");
 
         function ReLoad(data) {
             window.location.href = window.location.href;
@@ -1042,7 +1045,7 @@
             if (ftype == 1) {
 
 
-                if (uiContralType == 0 || uiContralType==13) {
+                if (uiContralType == 0 || uiContralType == 13) {
                     title = '字段String属性';
                     url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=' + mypk + '&s=' + Math.random();
                 }

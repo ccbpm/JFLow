@@ -457,10 +457,10 @@ public class Node extends Entity {
 
 		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
 			// 删除必要的数据.
-			DBAccess.RunSQL("DELETE FROM WF_NodeEmp WHERE FK_Emp  NOT IN (SELECT No from Port_Emp)");
-			DBAccess.RunSQL("DELETE FROM WF_Emp WHERE NO NOT IN (SELECT No FROM Port_Emp )");
-			DBAccess.RunSQL(
-					"UPDATE WF_Emp SET Name=(SELECT Name From Port_Emp WHERE Port_Emp.No=WF_Emp.No),FK_Dept=(select FK_Dept from Port_Emp where Port_Emp.No=WF_Emp.No)");
+//			DBAccess.RunSQL("DELETE FROM WF_NodeEmp WHERE FK_Emp  NOT IN (SELECT No from Port_Emp)");
+//			DBAccess.RunSQL("DELETE FROM WF_Emp WHERE NO NOT IN (SELECT No FROM Port_Emp )");
+//			DBAccess.RunSQL(
+//					"UPDATE WF_Emp SET Name=(SELECT Name From Port_Emp WHERE Port_Emp.No=WF_Emp.No),FK_Dept=(select FK_Dept from Port_Emp where Port_Emp.No=WF_Emp.No)");
 		}
 
 		Nodes nds = new Nodes();
@@ -1704,11 +1704,13 @@ public class Node extends Entity {
 	 * 是不是结束节点
 	 */
 	public final boolean getIsEndNode() throws Exception {
-		if (this.getHisNodePosType() == NodePosType.End) {
-			return true;
-		} else {
+		if (this.getIsSendBackNode() == true)
 			return false;
-		}
+
+		if (this.getHisNodePosType() == NodePosType.End)
+			return true;
+		else
+			return false;
 	}
 
 	/**

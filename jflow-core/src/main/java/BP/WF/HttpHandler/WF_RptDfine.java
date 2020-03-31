@@ -1891,13 +1891,9 @@ public class WF_RptDfine extends WebContralBase
 			searchKey = ur.getSearchKey();
 		}
 
-		if (DataType.IsNullOrEmpty(searchKey))
-		{
-			qo.addLeftBracket();
-			qo.AddWhere("abc", "all");
-			qo.addRightBracket();
-		}
-		else
+
+		boolean isFirst = true;
+		if (md.getRptIsSearchKey() && DataType.IsNullOrEmpty(searchKey) == false && searchKey.length() >= 1)
 		{
 			int i = 0;
 
@@ -1932,8 +1928,10 @@ public class WF_RptDfine extends WebContralBase
 
 				if (i == 1)
 				{
+					isFirst = false;
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
 					{
 						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
@@ -1946,7 +1944,8 @@ public class WF_RptDfine extends WebContralBase
 
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						|| SystemConfig.getAppCenterDBVarStr().equals(":"))
 				{
 					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
@@ -1959,11 +1958,57 @@ public class WF_RptDfine extends WebContralBase
 			qo.getMyParas().Add("SKey", searchKey);
 			qo.addRightBracket();
 		}
+		else if (DataType.IsNullOrEmpty(md.GetParaString("RptStringSearchKeys")) == false)
+		{
+			String field = "";//字段名
+			String fieldValue = "";//字段值
+			int idx = 0;
 
-			///#endregion
+			//获取查询的字段
+			String[] searchFields = md.GetParaString("RptStringSearchKeys").split("[*]");
+			for(String str : searchFields)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+					continue;
+
+				//字段名
+				String[] items = str.split(",");
+				if (items.length == 2 && DataType.IsNullOrEmpty(items[0]) == true)
+					continue;
+				field = items[0];
+				//字段名对应的字段值
+				fieldValue = ur.GetParaString(field);
+				if (DataType.IsNullOrEmpty(fieldValue) == true)
+					continue;
+				idx++;
+				if (idx == 1)
+				{
+					isFirst = false;
+					/* 第一次进来。 */
+					qo.addLeftBracket();
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+					else
+						qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr()+field + "||'%'");
+					qo.getMyParas().Add(field, fieldValue);
+					continue;
+				}
+				qo.addAnd();
+
+				if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+				else
+					qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr()+field + "||'%'");
+				qo.getMyParas().Add(field, fieldValue);
+			}
+			if (idx != 0)
+				qo.addRightBracket();
+		}
 
 
-			///#region Url传参条件
+		///#region Url传参条件
 		for (Attr attr : attrs)
 		{
 			if (DataType.IsNullOrEmpty(this.GetRequestVal(attr.getKey())))
@@ -1971,7 +2016,10 @@ public class WF_RptDfine extends WebContralBase
 				continue;
 			}
 
-			qo.addAnd();
+			if(isFirst == false)
+				qo.addAnd();
+			if (isFirst == true)
+				isFirst = false;
 			qo.addLeftBracket();
 
 			val = this.GetRequestVal(attr.getKey());
@@ -2072,7 +2120,10 @@ public class WF_RptDfine extends WebContralBase
 							instr = instr.substring(2);
 							instr = instr.substring(0, instr.length() - 2);
 
-							qo.addAnd();
+							if(isFirst == false)
+								qo.addAnd();
+							if (isFirst == true)
+								isFirst = false;
 							qo.addLeftBracket();
 							qo.AddWhereIn(attr.getKey(), "(" + instr + ")");
 							qo.addRightBracket();
@@ -2080,7 +2131,10 @@ public class WF_RptDfine extends WebContralBase
 						}
 					}
 
-					qo.addAnd();
+					if(isFirst == false)
+						qo.addAnd();
+					if (isFirst == true)
+						isFirst = false;
 					qo.addLeftBracket();
 
 					if (attr.getUIBindKey().equals("BP.Port.Depts") || attr.getUIBindKey().equals("BP.Port.Units")) //判断特殊情况。
@@ -2135,7 +2189,10 @@ public class WF_RptDfine extends WebContralBase
 
 			if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
 			{
-				qo.addAnd();
+				if(isFirst == false)
+					qo.addAnd();
+				if (isFirst == true)
+					isFirst = false;
 				qo.addLeftBracket();
 				qo.setSQL(dtKey + " >= '" + dtFrom + "'");
 				qo.addAnd();
@@ -2145,7 +2202,10 @@ public class WF_RptDfine extends WebContralBase
 
 			if (md.getRptDTSearchWay() == DTSearchWay.ByDateTime)
 			{
-				qo.addAnd();
+				if(isFirst == false)
+					qo.addAnd();
+				if (isFirst == true)
+					isFirst = false;
 				qo.addLeftBracket();
 				qo.setSQL(dtKey + " >= '" + dtFrom + " 00:00'");
 				qo.addAnd();

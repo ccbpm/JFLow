@@ -4,8 +4,6 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.WF.*;
-import BP.WF.Port.*;
-import java.util.*;
 
 /** 
   岗位类型

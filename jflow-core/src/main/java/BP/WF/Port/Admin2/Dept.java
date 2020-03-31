@@ -4,9 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.Web.*;
-import BP.WF.*;
-import BP.WF.Port.*;
-import java.util.*;
+
 
 /** 
  部门
@@ -108,7 +106,7 @@ public class Dept extends EntityTree
 	/** 
 	 设置组织
 	 
-	 @param userNo 管理员编号
+	 @param adminer 管理员编号
 	 @return 
 	*/
 	public final String SetOrg(String adminer) throws Exception

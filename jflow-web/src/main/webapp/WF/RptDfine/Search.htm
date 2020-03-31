@@ -76,6 +76,7 @@
         var FilterCtrls = new Array();
         var fk_flow = GetQueryString("FK_Flow");
         var searchType = GetQueryString("SearchType");
+        var fields = []; //字符型字段查询的集合
         var md;
         var refidx = 0;
 
@@ -124,7 +125,7 @@
             //        $("#dg").datagrid({ title: '高级查询' });
             //        break;
             //}
-            
+
 
 
             //调用查询返回数据.
@@ -286,7 +287,7 @@
                     width = 60;
                 }
                 if (field == "Title") {
-                     width = 230;
+                    width = 230;
                 }
                 if (attr.UIContralType == 1) {
                     if (width == null || width == "" || width == undefined)
@@ -351,7 +352,7 @@
                 },
 
                 onDblClickRow: function (row, $element) {
-                    
+
                     var url = '../WorkOpt/OneWork/OneWork.htm?currTab=Frm&WorkID=' + row.OID + '&FK_Flow=' + GetQueryString("FK_Flow") + '&FK_Node=' + row.FlowEndNode + '&FID=' + (row.FID ? row.FID : 0) + '&t=' + Math.random();
                     WinOpen(url);
                 }
@@ -394,18 +395,39 @@
 
             html += "<tr>";
 
-            if (mapBase.RptIsSearchKey == "1") {
+            var rptStringSearchKeys = mapBase.RptStringSearchKeys;
+            if (rptStringSearchKeys == null || rptStringSearchKeys == undefined || rptStringSearchKeys == "") {
+                if (mapBase.RptIsSearchKey == "1") {
 
-                html += "<td ><label  style='text-align: right; margin-top:5px;margin-left:5px;' for='TB_Key'>关键字:</label></td>";
-                html += "<td ><input style='width:100%;' type=text id='TB_Key' name='TB_Key' value='' class='form-control' /></td>";
-                FilterCtrls.push({ type: "text", id: "TB_Key" });
-                //$("#tb_main").prepend("<td align='right'><label  style='text-align: right; margin-top:5px;margin-left:5px;' for='TB_Key'>关键字:</label></td>");
-                //$("#tb_key").textbox().textbox("setText", md.T_SearchKey);
+                    html += "<td ><label  style='text-align: right; margin-top:5px;margin-left:5px;' for='TB_Key'>关键字:</label></td>";
+                    html += "<td ><input style='width:100%;' type=text id='TB_Key' name='TB_Key' value='" + ur.SearchKey +"' class='form-control' /></td>";
+                    FilterCtrls.push({ type: "text", id: "TB_Key" });
+                }
+            }else{
+                var strs = rptStringSearchKeys.split("*");
+                var fieldV=""
+                $.each(strs, function (i, str) {
+                    if (str != "") {
+                        var item = str.split(",");
+                        fieldV = ur.GetPara(item[0]);
+                        if (fieldV == null || fieldV == undefined)
+                            fieldV = "";
+                        if (item.length == 2) {
+
+                            fields.push(item[0]);
+                            html +="<td><label  style='text-align: right; margin-top:5px;margin-left:5px;' for='TB_"+item[0]+"'>" + item[1] + ":&nbsp;&nbsp</label></td>"
+                            html += "<td align='left'><input style='width:100%;' type=text id='TB_"+item[0]+"'  name='TB_"+item[0]+"' value='" + fieldV + "' class='form-control' /></td>";
+
+                            FilterCtrls.push({ type: "text", id: "TB_" + item[0] });
+
+                        }
+                    }
+                });
             }
 
             if (mapBase.RptDTSearchWay && mapBase.RptDTSearchWay != 0) {
 
-                
+
                 if (mapBase.RptDTSearchWay == 1) {
                     html += "<td ><label style='text-align: right; margin-top:5px;padding-left:20px;'>" + mapBase.T_DateLabel + ":&nbsp;&nbsp</label></td >";
                     html += "<td ><input type=text id='TB_DTFrom' name='TB_DTFrom' value='" + mapBase.T_DTFrom + "'  onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\" style='width:140px;' class='form-control Wdate' /></td>";
@@ -452,7 +474,7 @@
                         });
 
                         html += '</select></td>';
-                       
+
 
                         FilterCtrls.push({ type: c.Type, id: fcId });
                         break;
@@ -651,16 +673,35 @@
             var val;
             var dtFrom = "";
             var dtTo = "";
-
-            if ($("#TB_Key").length > 0) {
+            ur = new Entity("BP.Sys.UserRegedit", webUser.No + rptNo + "_SearchAttrs");
+            if ($("#TB_Key") != null && $("#TB_Key").val() != "" && fields.length == 0) {
+                ur.SearchKey = $("#TB_Key").val();
                 key = $("#TB_Key").val();
             }
+            else
+                ur.SearchKey = "";
+            //增加字段查询
+            for (var i = 0; i < fields.length; i++) {
+                var field = fields[i];
+                var strs = $("input[name='TB_" + field + "']");
+                if (strs.length == 1) {
+                    ur.SetPara(field, $("#TB_" + field).val());
+                } else {
+                    if ($("#TB_" + field + "_0").val() == "" && $("#TB_" + field + "_1").val() == "")
+                        ur.SetPara(field, "");
+                    else
+                        ur.SetPara(field, $("#TB_" + field + "_0").val() + "," + $("#TB_" + field + "_1").val());
+                }
+            }
+
 
             if ($("#TB_DTFrom").length > 0) {
                 dtFrom = $("#TB_DTFrom").val();
                 dtTo = $("#TB_DTTo").val();
+                ur.DTFrom = $("#TB_DTFrom").val();
+                ur.DTTo = $("#TB_DTTo").val();
             }
-
+            ur.Update();
             $.each(FilterCtrls, function () {
                 switch (this.type) {
                     case "date":
@@ -718,7 +759,7 @@
             var data = handler.DoMethodReturnString("FlowSearch_Done");
             if (data.indexOf("err@") != -1) {
                 alert( data);
-               // alert("错误", data, "icon-error");
+                // alert("错误", data, "icon-error");
                 return;
             }
 
@@ -832,43 +873,43 @@
             font-size: 13px;
         }
 
-            .pagination .controls {
-                float: left;
-                border: 0;
-                padding: 7px 0 0 15px;
-                color: #777;
-            }
+        .pagination .controls {
+            float: left;
+            border: 0;
+            padding: 7px 0 0 15px;
+            color: #777;
+        }
     </style>
 </head>
 <body id="SearchHtml">
-    <div class="wrapper wrapper-content animated fadeInRight" style="padding: 0px 10px 0px 10px">
-        <div class="ibox-content">
-            <div class="row">
-                <div class="panel panel-default" style="border: 0px; margin-bottom: 3px">
-                    <div id="tb_main" style="width: 100%">
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <table id="dg" class="table table-hover" style="word-wrap: break-word; word-break: break-all;">
-                </table>
-            </div>
-            <!-- 显示分页信息 -->
-            <div class="row" style="text-align: left;">
-                <ul class="pagination" id="page_nav">
-                </ul>
-                <ul class="pagination controls" id="page_info">
-                </ul>
-                <div style="clear: both;">
+<div class="wrapper wrapper-content animated fadeInRight" style="padding: 0px 10px 0px 10px">
+    <div class="ibox-content">
+        <div class="row">
+            <div class="panel panel-default" style="border: 0px; margin-bottom: 3px">
+                <div id="tb_main" style="width: 100%">
+
                 </div>
             </div>
         </div>
-        <div id="Msg">
-            
+        <div class="row">
+            <table id="dg" class="table table-hover" style="word-wrap: break-word; word-break: break-all;">
+            </table>
         </div>
-        
+        <!-- 显示分页信息 -->
+        <div class="row" style="text-align: left;">
+            <ul class="pagination" id="page_nav">
+            </ul>
+            <ul class="pagination controls" id="page_info">
+            </ul>
+            <div style="clear: both;">
+            </div>
+        </div>
     </div>
+    <div id="Msg">
+
+    </div>
+
+</div>
 </body>
 <!--<body class="easyui-layout">
     <div data-options="region:'center',border:false">

@@ -132,6 +132,10 @@ public class FrmBill extends EntityNoName {
 		this.SetValByKey(FrmBillAttr.SortColumns, value);
 	}
 
+	public String getFieldSet() throws Exception{
+		return this.GetValStringByKey(FrmAttr.FieldSet);
+	}
+
 	/// #region 构造方法
 	/**
 	 * 单据属性
@@ -186,6 +190,8 @@ public class FrmBill extends EntityNoName {
 		map.AddTBString(FrmBillAttr.BillNoFormat, null, "单号规则", true, false, 0, 100, 20, true);
 		map.AddTBString(FrmBillAttr.TitleRole, null, "标题生成规则", true, false, 0, 100, 20, true);
 		map.AddTBString(FrmBillAttr.SortColumns, null, "排序字段", true, false, 0, 100, 20, true);
+		map.AddTBString(FrmBillAttr.ColorSet, null, "颜色设置", true, false, 0, 100, 20, true);
+		map.AddTBString(FrmBillAttr.FieldSet, null, "字段求和求平均设置", true, false, 0, 100, 20, true);
 
 		map.AddTBString(FrmBillAttr.BtnNewLable, "新建", "新建", true, false, 0, 50, 20);
 		map.AddDDLSysEnum(FrmDictAttr.BtnNewModel, 0, "新建模式", true, true, FrmDictAttr.BtnNewModel,
@@ -251,7 +257,6 @@ public class FrmBill extends EntityNoName {
 		map.AddTBString(FrmDictAttr.Tag0, null, "Tag0", false, false, 0, 500, 20);
 		map.AddTBString(FrmDictAttr.Tag1, null, "Tag1", false, false, 0, 4000, 20);
 		map.AddTBString(FrmDictAttr.Tag2, null, "Tag2", false, false, 0, 500, 20);
-
 		map.AddTBAtParas(800); //参数属性.
 
 		RefMethod rm = new RefMethod();
@@ -397,7 +402,7 @@ public class FrmBill extends EntityNoName {
 
 
 	@Override
-	protected void afterInsertUpdateAction()throws Exception
+	protected void afterInsert()throws Exception
 	{
 		//保存权限表
 		CtrlModel ctrl = new CtrlModel();
@@ -436,12 +441,19 @@ public class FrmBill extends EntityNoName {
 		ctrl.setMyPK(ctrl.getFrmID() + "_" + ctrl.getCtrlObj());
 		ctrl.Save();
 
+		super.afterInsert();
+	}
+	@Override
+	protected void afterInsertUpdateAction() throws Exception
+	{
+		CheckEnityTypeAttrsFor_Bill();
+
 		super.afterInsertUpdateAction();
 	}
 
 	public final String DoSaveRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSave";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSave";
 	}
 	/**
 	 提交权限规则
@@ -450,7 +462,7 @@ public class FrmBill extends EntityNoName {
 	 */
 	public final String DoSubmitRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSubmit";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSubmit";
 	}
 
 	/**
@@ -460,7 +472,7 @@ public class FrmBill extends EntityNoName {
 	 */
 	public final String DoCreateRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnNew";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnNew";
 	}
 	/**
 	 查询权限
@@ -469,7 +481,7 @@ public class FrmBill extends EntityNoName {
 	 */
 	public final String DoSearchRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
 	}
 	/**
 	 删除规则.
@@ -478,7 +490,7 @@ public class FrmBill extends EntityNoName {
 	 */
 	public final String DoDeleteRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnDelete";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnDelete";
 	}
 	///#endregion 权限控制.
 
@@ -703,6 +715,44 @@ public class FrmBill extends EntityNoName {
 			attr.setUIIsEnable(false);
 			attr.setUIIsLine(false);
 			attr.setIdx(-97);
+			attr.Insert();
+		}
+		if (attrs.Contains(this.getNo() + "_FK_Dept") == false)
+		{
+			/* 创建人部门 */
+			MapAttr attr = new BP.Sys.MapAttr();
+			attr.setFK_MapData(this.getNo());
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn("FK_Dept");
+			attr.setName("创建人部门");
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(32);
+			attr.setIdx(-1);
+			attr.Insert();
+		}
+		if (attrs.Contains(this.getNo() + "_OrgNo") == false)
+		{
+			/* 创建人名称 */
+			MapAttr attr = new BP.Sys.MapAttr();
+			attr.setFK_MapData(this.getNo());
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn("OrgNo");
+			attr.setName("创建人所在的组织");
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(32);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 

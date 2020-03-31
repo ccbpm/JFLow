@@ -527,6 +527,7 @@ public class WF_CCBill extends WebContralBase {
 
 		///#region 关键字字段.
 		String keyWord = ur.getSearchKey();
+		boolean isFirst = true; //是否第一次拼接SQL
 
 		if (md.GetParaBoolen("IsSearchKey") && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1) {
 			Attr attrPK = new Attr();
@@ -566,6 +567,7 @@ public class WF_CCBill extends WebContralBase {
 
 				i++;
 				if (i == 1) {
+					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
@@ -586,8 +588,52 @@ public class WF_CCBill extends WebContralBase {
 			}
 			qo.getMyParas().Add("SKey", keyWord);
 			qo.addRightBracket();
-		} else {
-			qo.AddHD();
+		} else if (DataType.IsNullOrEmpty(md.GetParaString("RptStringSearchKeys")) == false){
+			String field = "";//字段名
+			String fieldValue = "";//字段值
+			int idx = 0;
+
+			//获取查询的字段
+			String[] searchFields = md.GetParaString("RptStringSearchKeys").split("[*]");
+			for(String str : searchFields)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+					continue;
+
+				//字段名
+				String[] items  = str.split(",");
+				if (items.length==2 && DataType.IsNullOrEmpty(items[0]) == true)
+					continue;
+				field = items[0];
+				//字段名对应的字段值
+				fieldValue = ur.GetParaString(field);
+				if (DataType.IsNullOrEmpty(fieldValue) == true)
+					continue;
+				idx++;
+				if (idx == 1)
+				{
+					isFirst = false;
+					/* 第一次进来。 */
+					qo.addLeftBracket();
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
+					else
+						qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+					qo.getMyParas().Add(field, fieldValue);
+					continue;
+				}
+				qo.addAnd();
+
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
+				else
+					qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+				qo.getMyParas().Add(field, fieldValue);
+
+
+			}
+			if (idx != 0)
+				qo.addRightBracket();
 		}
 
 		///#endregion 关键字段查询
@@ -600,7 +646,10 @@ public class WF_CCBill extends WebContralBase {
 
 			//按日期查询
 			if (md.GetParaInt("DTSearchWay") == DTSearchWay.ByDate.getValue()) {
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				dtTo += " 23:59:59";
 				qo.setSQL(md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
@@ -626,7 +675,10 @@ public class WF_CCBill extends WebContralBase {
 					dtTo += " 24:00";
 				}
 
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				qo.setSQL(md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
 				qo.addAnd();
@@ -647,7 +699,10 @@ public class WF_CCBill extends WebContralBase {
 			if (val.equals("all")) {
 				continue;
 			}
-			qo.addAnd();
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
 			qo.addLeftBracket();
 
 
@@ -664,14 +719,112 @@ public class WF_CCBill extends WebContralBase {
 
 		///#endregion 外键或者枚举的查询
 
+		//#region 设置隐藏字段的过滤查询
+		FrmBill frmBill = new FrmBill(this.getFrmID());
+		String hidenField = frmBill.GetParaString("HidenField");
 
+		if(DataType.IsNullOrEmpty(hidenField) == false)
+		{
+			hidenField = hidenField.replace("[%]", "%");
+			for(String field : hidenField.split(";")){
+			if (field == "")
+				continue;
+			if (field.split(",").length != 3)
+				throw new Exception("单据" + frmBill.getName() + "的过滤设置规则错误：" + hidenField + ",请联系管理员检查");
+			String[] str = field.split(",");
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
+			qo.addLeftBracket();
+
+			//获得真实的数据类型.
+			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			{
+				Object valType = BP.Sys.Glo.GenerRealType(attrs,
+						str[0], str[2]);
+				qo.AddWhere(str[0], str[1], valType.toString());
+			}
+			else
+			{
+				qo.AddWhere(str[0], str[1], str[2]);
+			}
+			qo.addRightBracket();
+			continue;
+		}
+
+		}
+
+        //#endregion 设置隐藏字段的查询
 		///#endregion 查询语句
 
-		qo.addAnd();
+		if (isFirst == false)
+			qo.addAnd();
 		qo.AddWhere("BillState", "!=", 0);
+
+		//默认查询本部门的单据
+		if(WebUser.getNo().equals("admin") == false)
+		{
+			qo.addAnd();
+			qo.AddWhere("FK_Dept", "=", WebUser.getFK_Dept());
+		}
+
+
 		//获得行数.
 		ur.SetPara("RecCount", qo.GetCount());
 		ur.Save();
+
+		//获取配置信息
+		String fieldSet = frmBill.getFieldSet();
+		String oper = "";
+		if (DataType.IsNullOrEmpty(fieldSet) == false)
+		{
+			String ptable = rpts.getNewEntity().getEnMap().getPhysicsTable();
+			dt = new DataTable("Search_FieldSet");
+			dt.Columns.Add("Field");
+			dt.Columns.Add("Type");
+			dt.Columns.Add("Value");
+			DataRow dr;
+			String[] strs = fieldSet.split("@");
+			for(String str : strs)
+			{
+				String[] item = str.split("=");
+				if (item.length == 2)
+				{
+					if (item[1].contains(",") == true)
+					{
+						String[] ss = item[1].split(",");
+						for(String s : ss)
+						{
+							dr = dt.NewRow();
+							dr.setValue("Field",attrs.GetAttrByKey(s).getDesc());
+							dr.setValue("Type",item[0]);
+							dt.Rows.add(dr);
+
+							oper += item[0] + "(" + ptable + "." + s + ")" + ",";
+						}
+					}
+					else
+					{
+						dr = dt.NewRow();
+						dr.setValue("Field",attrs.GetAttrByKey(item[1]).getDesc());
+						dr.setValue("Type",item[0]);
+						dt.Rows.add(dr);
+
+						oper += item[0] + "(" + ptable + "." + item[1] + ")" + ",";
+					}
+				}
+			}
+			oper = oper.substring(0, oper.length() - 1);
+			DataTable dd = qo.GetSumOrAvg(oper);
+
+			for (int i = 0; i < dt.Rows.size(); i++)
+			{
+				DataRow ddr = dt.Rows.get(i);
+				ddr.setValue("Value",dd.Rows.get(0).getValue(i));
+			}
+			ds.Tables.add(dt);
+		}
 
 		if (DataType.IsNullOrEmpty(ur.getOrderBy()) == false && DataType.IsNullOrEmpty(ur.getOrderWay()) == false) {
 			qo.DoQuery("OID", this.getPageSize(), this.getPageIdx(), ur.getOrderBy(), ur.getOrderWay());
@@ -855,6 +1008,7 @@ public class WF_CCBill extends WebContralBase {
 
 		///#region 关键字字段.
 		String keyWord = ur.getSearchKey();
+		boolean isFirst = true; //是否第一次拼接SQL
 
 		if (md.GetParaBoolen("IsSearchKey") && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1) {
 			Attr attrPK = new Attr();
@@ -872,7 +1026,6 @@ public class WF_CCBill extends WebContralBase {
 						enumKey = "," + attr.getKey() + "Text,";
 						break;
 					case FK:
-
 						continue;
 					default:
 						break;
@@ -895,6 +1048,7 @@ public class WF_CCBill extends WebContralBase {
 
 				i++;
 				if (i == 1) {
+					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
 					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
@@ -915,9 +1069,52 @@ public class WF_CCBill extends WebContralBase {
 			}
 			qo.getMyParas().Add("SKey", keyWord);
 			qo.addRightBracket();
+		} else if (DataType.IsNullOrEmpty(md.GetParaString("RptStringSearchKeys")) == false){
+			String field = "";//字段名
+			String fieldValue = "";//字段值
+			int idx = 0;
 
-		} else {
-			qo.AddHD();
+			//获取查询的字段
+			String[] searchFields = md.GetParaString("RptStringSearchKeys").split("*");
+			for(String str : searchFields)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+					continue;
+
+				//字段名
+				String[] items  = str.split(",");
+				if (items.length==2 && DataType.IsNullOrEmpty(items[0]) == true)
+					continue;
+				field = items[0];
+				//字段名对应的字段值
+				fieldValue = ur.GetParaString(field);
+				if (DataType.IsNullOrEmpty(fieldValue) == true)
+					continue;
+				idx++;
+				if (idx == 1)
+				{
+					isFirst = false;
+					/* 第一次进来。 */
+					qo.addLeftBracket();
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
+					else
+						qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+					qo.getMyParas().Add(field, fieldValue);
+					continue;
+				}
+				qo.addAnd();
+
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
+				else
+					qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+				qo.getMyParas().Add(field, fieldValue);
+
+
+			}
+			if (idx != 0)
+				qo.addRightBracket();
 		}
 
 		///#endregion 关键字段查询
@@ -925,12 +1122,15 @@ public class WF_CCBill extends WebContralBase {
 
 		///#region 时间段的查询
 		if (md.GetParaInt("DTSearchWay") != DTSearchWay.None.getValue() && DataType.IsNullOrEmpty(ur.getDTFrom()) == false) {
-			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
-			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
+			String dtFrom = ur.getDTFrom();
+			String dtTo = ur.getDTTo();
 
 			//按日期查询
 			if (md.GetParaInt("DTSearchWay") == DTSearchWay.ByDate.getValue()) {
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				dtTo += " 23:59:59";
 				qo.setSQL(md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
@@ -956,7 +1156,10 @@ public class WF_CCBill extends WebContralBase {
 					dtTo += " 24:00";
 				}
 
-				qo.addAnd();
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
 				qo.addLeftBracket();
 				qo.setSQL(md.GetParaString("DTSearchKey") + " >= '" + dtFrom + "'");
 				qo.addAnd();
@@ -977,13 +1180,17 @@ public class WF_CCBill extends WebContralBase {
 			if (val.equals("all")) {
 				continue;
 			}
-			qo.addAnd();
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
 			qo.addLeftBracket();
 
-			//获得真实的数据类型.
+
 			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 				Object typeVal = BP.Sys.Glo.GenerRealType(attrs, str, ap.GetValStrByKey(str));
 				qo.AddWhere(str, typeVal);
+
 			} else {
 				qo.AddWhere(str, ap.GetValStrByKey(str));
 			}
@@ -992,6 +1199,56 @@ public class WF_CCBill extends WebContralBase {
 		}
 
 		///#endregion 外键或者枚举的查询
+
+		//#region 设置隐藏字段的过滤查询
+		FrmBill frmBill = new FrmBill(this.getFrmID());
+		String hidenField = frmBill.GetParaString("HidenField");
+
+		if(DataType.IsNullOrEmpty(hidenField) == false)
+		{
+			hidenField = hidenField.replace("[%]", "%");
+			for(String field : hidenField.split(";")){
+				if (field == "")
+					continue;
+				if (field.split(",").length != 3)
+					throw new Exception("单据" + frmBill.getName() + "的过滤设置规则错误：" + hidenField + ",请联系管理员检查");
+				String[] str = field.split(",");
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
+				qo.addLeftBracket();
+
+				//获得真实的数据类型.
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				{
+					Object valType = BP.Sys.Glo.GenerRealType(attrs,
+							str[0], str[2]);
+					qo.AddWhere(str[0], str[1], valType.toString());
+				}
+				else
+				{
+					qo.AddWhere(str[0], str[1], str[2]);
+				}
+				qo.addRightBracket();
+				continue;
+			}
+
+		}
+
+		//#endregion 设置隐藏字段的查询
+		///#endregion 查询语句
+
+		if (isFirst == false)
+			qo.addAnd();
+		qo.AddWhere("BillState", "!=", 0);
+
+		//默认查询本部门的单据
+		if(WebUser.getNo().equals("admin") == false)
+		{
+			qo.addAnd();
+			qo.AddWhere("FK_Dept", "=", WebUser.getFK_Dept());
+		}
 
 
 		///#endregion 查询语句

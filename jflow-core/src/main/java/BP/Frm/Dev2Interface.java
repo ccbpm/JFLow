@@ -99,6 +99,7 @@ public class Dev2Interface
 		rpt.SetValByKey("BillState", gb.getBillState().getValue());
 		rpt.SetValByKey("Starter", gb.getStarter());
 		rpt.SetValByKey("StarterName", gb.getStarterName());
+		rpt.SetValByKey("FK_Dept", WebUser.getFK_Dept());
 		rpt.SetValByKey("RDT", gb.getRDT());
 		rpt.SetValByKey("Title", gb.getTitle());
 		rpt.SetValByKey("BillNo", gb.getBillNo());
@@ -130,6 +131,7 @@ public class Dev2Interface
 		rpt.SetValByKey("BillState", 0);
 		rpt.SetValByKey("Starter", WebUser.getNo());
 		rpt.SetValByKey("StarterName", WebUser.getName());
+		rpt.SetValByKey("FK_Dept", WebUser.getFK_Dept());
 		rpt.SetValByKey("RDT", DataType.getCurrentDate());
 
 		rpt.getEnMap().setCodeStruct(fb.getEnMap().getCodeStruct());

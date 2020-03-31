@@ -1177,4 +1177,27 @@ public class SystemConfig {
 			return "";
 		return obj.toString();
 	}
+
+	/// <summary>
+	/// 百度云应用AK
+	/// </summary>
+	public static String getAPIKey()
+	{
+		Object obj = getAppSettings().get("APIKey");
+		if(obj == null)
+			return "";
+		return obj.toString();
+
+	}
+	/// <summary>
+	/// 百度云应用SK
+	/// </summary>
+	public static String getSecretKey()
+	{
+		Object obj = getAppSettings().get("SecretKey");
+		if(obj == null)
+			return "";
+		return obj.toString();
+
+	}
 }

@@ -1761,9 +1761,34 @@ public class WorkNode {
 				ccMsg1 = "@没有选择抄送人。";
 			}
 			if (cclist.size() > 0) {
-				ccMsg1 = "@消息自动抄送给";
-				for (CCList cc : cclist.ToJavaList()) {
+				PushMsgs pms = new PushMsgs();
+				pms.Retrieve(PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListOfNode.CCAfter);
+				PushMsg pushMsg = null;
+				if (pms.size() > 0)
+					pushMsg = (PushMsg)pms.get(0);
+
+				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
+				String mytemp = pushMsg.getSMSDoc();
+				mytemp = mytemp.replace("{Title}", title);
+				mytemp = mytemp.replace("@WebUser.No", WebUser.getNo());
+				mytemp = mytemp.replace("@WebUser.Name", WebUser.getName());
+				mytemp = mytemp.replace("@WorkID", String.valueOf(this.getWorkID()));
+				mytemp = mytemp.replace("@OID", String.valueOf(this.getWorkID()));
+
+				/*如果仍然有没有替换下来的变量.*/
+				if (mytemp.contains("@") == true)
+					mytemp = BP.WF.Glo.DealExp(mytemp, this.rptGe, null);
+
+				for(CCList cc : cclist.ToJavaList())
+				{
 					ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
+
+					if (pushMsg != null)
+					{
+
+						BP.WF.Dev2Interface.Port_SendMsg(cc.getCCTo(), title, mytemp, null, BP.WF.SMSMsgType.CC, node.getFK_Flow(), node.getNodeID(), this.getWorkID(), this.getHisWork().getFID(), pushMsg.getSMSPushModel());
+
+					}
 				}
 			}
 		}
@@ -6921,37 +6946,7 @@ public class WorkNode {
 
 				// 执行抄送.
 				if (this.getHisNode().getIsEndNode() == false) {
-					// 执行自动抄送
-					String ccMsg1 = WorkFlowBuessRole.DoCCAuto(this.getHisNode(), this.rptGe, this.getWorkID(),
-							this.getHisWork().getFID());
-
-					// 按照指定的字段抄送.
-					String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(this.getHisNode(), this.rptGe, this.getWorkID(),
-							this.getHisWork().getFID());
-					// 手工抄送
-					if (this.getHisNode().getHisCCRole() == CCRole.HandCC) {
-						// 获取抄送人员列表
-						CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(), this.getWorkID(),
-								this.getHisWork().getFID());
-						if (cclist.size() == 0) {
-							ccMsg1 = "@没有选择抄送人。";
-						}
-						if (cclist.size() > 0) {
-							ccMsg1 = "@消息自动抄送给";
-							for (CCList cc : cclist.ToJavaList()) {
-								ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
-							}
-						}
-					}
-					String ccMsg = ccMsg1 + ccMsg2;
-
-					if (DataType.IsNullOrEmpty(ccMsg) == false) {
-						this.addMsg("CC", BP.WF.Glo.multilingual("@自动抄送给:{0}.", "WorkNode", "cc", ccMsg));
-
-						this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(),
-								this.getHisNode().getNodeID(), this.getHisNode().getName(), ccMsg1 + ccMsg2,
-								this.getHisNode());
-					}
+					CC(this.getHisNode());
 				}
 
 				// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
@@ -7179,35 +7174,7 @@ public class WorkNode {
 			/// #region 执行抄送.
 			// 执行抄送.
 			if (this.getHisNode().getIsEndNode() == false) {
-				// 执行自动抄送
-				String ccMsg1 = WorkFlowBuessRole.DoCCAuto(this.getHisNode(), this.rptGe, this.getWorkID(),
-						this.getHisWork().getFID());
-				// 按照指定的字段抄送.
-				String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(this.getHisNode(), this.rptGe, this.getWorkID(),
-						this.getHisWork().getFID());
-				// 手工抄送
-				if (this.getHisNode().getHisCCRole() == CCRole.HandCC) {
-					// 获取抄送人员列表
-					CCLists cclist = new CCLists(this.getHisNode().getFK_Flow(), this.getWorkID(),
-							this.getHisWork().getFID());
-					if (cclist.size() == 0) {
-						ccMsg1 = "@没有选择抄送人。";
-					}
-					if (cclist.size() > 0) {
-						ccMsg1 = "@消息自动抄送给";
-						for (CCList cc : cclist.ToJavaList()) {
-							ccMsg1 += "(" + cc.getCCTo() + " - " + cc.getCCToName() + ");";
-						}
-					}
-				}
-				String ccMsg = ccMsg1 + ccMsg2;
-
-				if (DataType.IsNullOrEmpty(ccMsg) == false) {
-					this.addMsg("CC", BP.WF.Glo.multilingual("@自动抄送给:{0}.", "WorkNode", "cc", ccMsg));
-
-					this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName(), this.getHisNode().getNodeID(),
-							this.getHisNode().getName(), ccMsg1 + ccMsg2, this.getHisNode());
-				}
+				CC(this.getHisNode());
 			}
 
 			//DBAccess.DoTransactionCommit(); // 提交事务.

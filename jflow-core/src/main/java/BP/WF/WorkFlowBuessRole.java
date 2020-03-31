@@ -1715,7 +1715,7 @@ public class WorkFlowBuessRole
 	 根据部门获取下一步的操作员
 	 
 	 @param deptNo
-	 @param emp1
+	 @param empNo
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1869,19 +1869,31 @@ public class WorkFlowBuessRole
 				list.Update();
 			}
 
-			if (BP.WF.Glo.getIsEnableSysMessage() == true)
+			PushMsgs pms = new PushMsgs();
+			pms.Retrieve(PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListOfNode.CCAfter);
+
+			if (pms.size()>0)
 			{
+				PushMsg pushMsg = (PushMsg)pms.get(0);
 				//     //写入消息提示.
 				//     ccMsg += list.CCTo + "(" + dr[1].ToString() + ");";
-				//     WFEmp wfemp = new Port.WFEmp(list.CCTo);
+				BP.WF.Port.WFEmp wfemp = new BP.WF.Port.WFEmp(list.getCCTo());
 				//     string sid = list.CCTo + "_" + list.WorkID + "_" + list.FK_Node + "_" + list.RDT;
 				//     string url = basePath + "WF/Do.aspx?DoType=OF&SID=" + sid;
 				//     string urlWap = basePath + "WF/Do.aspx?DoType=OF&SID=" + sid + "&IsWap=1";
-				//     string mytemp = mailTemp as string;
-				//     mytemp = string.Format(mytemp, wfemp.Name, WebUser.getName(), url, urlWap);
-				//     string title = string.Format("工作抄送:{0}.工作:{1},发送人:{2},需您查阅",
-				//this.HisNode.FlowName, this.HisNode.Name, WebUser.getName());
-				//     BP.WF.Dev2Interface.Port_SendMsg(wfemp.No, title, mytemp, null, BP.Sys.SMSMsgType.CC, list.FK_Flow, list.FK_Node, list.WorkID, list.FID);
+
+				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
+				String mytemp = pushMsg.getSMSDoc();
+				mytemp = mytemp.replace("{Title}", title);
+				mytemp = mytemp.replace("@WebUser.No", WebUser.getNo());
+				mytemp = mytemp.replace("@WebUser.Name", WebUser.getName());
+				mytemp = mytemp.replace("@WorkID", String.valueOf(list.getWorkID()));
+				mytemp = mytemp.replace("@OID", String.valueOf(list.getWorkID()));
+
+				/*如果仍然有没有替换下来的变量.*/
+				if (mytemp.contains("@") == true)
+					mytemp = BP.WF.Glo.DealExp(mytemp, rpt, null);
+				BP.WF.Dev2Interface.Port_SendMsg(wfemp.getNo(), title, mytemp, null, BP.WF.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), pushMsg.getSMSPushModel());
 			}
 		}
 
@@ -1934,6 +1946,8 @@ public class WorkFlowBuessRole
 		}
 		String ccMsg = "@消息自动抄送给";
 		String basePath = BP.WF.Glo.getHostURL();
+		PushMsgs pms = new PushMsgs();
+		pms.Retrieve(PushMsgAttr.FK_Node, nd.getNodeID(), PushMsgAttr.FK_Event, EventListOfNode.CCAfter);
 
 		String mailTemp = BP.DA.DataType.ReadTextFile2Html(SystemConfig.getPathOfDataUser() + "/EmailTemplete/CC_" + WebUser.getSysLang() + ".txt");
 		for (Object item : ht.keySet())
@@ -1988,17 +2002,17 @@ public class WorkFlowBuessRole
 
 
 				///#region 写入消息机制.
-			if (BP.WF.Glo.getIsEnableSysMessage() == true)
+			if (pms.size() >0)
 			{
 				ccMsg += list.getCCTo() + "(" + ht.get(item).toString() + ");";
 				WFEmp wfemp = new WFEmp(list.getCCTo());
 
 				String sid = list.getCCTo() + "_" + list.getWorkID() + "_" + list.getFK_Node() + "_" + list.getRDT();
-				String url = basePath + "WF/Do.htm?DoType=OF&SID=" + sid;
+				String url = basePath + "WF/Do.htm?DoType=DoOpenCC&SID=" + sid;
 				url = url.replace("//", "/");
 				url = url.replace("//", "/");
 
-				String urlWap = basePath + "WF/Do.htm?DoType=OF&SID=" + sid + "&IsWap=1";
+				String urlWap = basePath + "WF/Do.htm?DoType=DoOpenCC&SID=" + sid + "&IsWap=1";
 				urlWap = urlWap.replace("//", "/");
 				urlWap = urlWap.replace("//", "/");
 

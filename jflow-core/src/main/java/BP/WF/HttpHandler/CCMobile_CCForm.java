@@ -1,14 +1,28 @@
 package BP.WF.HttpHandler;
 
 import BP.DA.*;
+import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.En.Attr;
 import BP.En.Entity;
 import BP.En.Map;
 import BP.En.UIContralType;
 import BP.Sys.*;
+import net.sf.json.JSONObject;
+import org.aspectj.util.FileUtil;
+import sun.misc.BASE64Encoder;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.stream.Stream;
+
 
 /**
  * 页面功能实体
@@ -100,5 +114,80 @@ public class CCMobile_CCForm extends WebContralBase {
 		return "保存成功.";
 
 		/// #endregion 查询出来从表数据.
+	}
+
+	/// <summary>
+	/// 获取百度云token
+	/// </summary>
+	/// <returns></returns>
+	public String getAccessToken()
+	{
+		String ak = BP.Difference.SystemConfig.getAPIKey();
+		String sk = BP.Difference.SystemConfig.getSecretKey();
+
+		// 获取token地址
+		String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
+		String getAccessTokenUrl = authHost
+				// 1. grant_type为固定参数
+				+ "grant_type=client_credentials"
+				// 2. 官网获取的 API Key
+				+ "&client_id=" + ak
+				// 3. 官网获取的 Secret Key
+				+ "&client_secret=" + sk;
+		try {
+			URL realUrl = new URL(getAccessTokenUrl);
+			// 打开和URL之间的连接
+			HttpURLConnection connection = (HttpURLConnection) realUrl.openConnection();
+			connection.setRequestMethod("GET");
+			connection.connect();
+
+			// 定义 BufferedReader输入流来读取URL的响应
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String result = "";
+			String line;
+			while ((line = in.readLine()) != null) {
+				result += line;
+			}
+		} catch (Exception e) {
+			System.err.printf("获取token失败！");
+			e.printStackTrace(System.err);
+		}
+		return null;
+	}
+
+
+	public String GetIDCardInfo() throws Exception
+	{
+		String token = getAccessToken();
+		JSONObject jd = JSONObject.fromObject(token);
+
+		String url = "https://aip.baidubce.com/rest/2.0/ocr/v1/idcard";
+		// 本地文件路径
+		// 图片的base64编码
+		long filesSize = CommonFileUtils.getFilesSize(getRequest(), "file");
+		if (filesSize == 0) {
+			return "err@请选择要上传的身份证件。";
+		}
+
+		InputStream stream = CommonFileUtils.getInputStream(getRequest(), "file");//new MemoryStream();
+		byte[] bytes = new byte[stream.available()];
+		stream.read(bytes);
+		String imgParam = new BASE64Encoder().encode(bytes);
+		stream.close();
+
+		String param = "id_card_side=" + "front" + "&image=" + imgParam;
+
+		// 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+		Hashtable<String,String> map = new Hashtable<String,String>();
+		map.put("access_token",jd.getString("access_token"));
+		map.put("id_card_side","front");
+		map.put("image",imgParam);
+
+		String result =BP.Tools.HttpClientUtil.doPost(url, map, "Content-Type","application/x-www-form-urlencoded");
+		System.out.println(result);
+		return result;
+
+
+
 	}
 }

@@ -3715,6 +3715,10 @@ public class Dev2Interface
 	{
 		Port_SendMsg(userNo, msgTitle, msgDoc, msgFlag, BP.WF.SMSMsgType.Self, null, 0, 0, 0);
 	}
+
+	public static void Port_SendMsg(String userNo, String title, String msgDoc, String msgFlag, String msgType, String flowNo, long nodeID, long workID, long fid)throws Exception{
+		Port_SendMsg(userNo, title, msgDoc, msgFlag, BP.WF.SMSMsgType.Self, null, 0, 0, 0,null);
+	}
 	/** 
 	 获取有效的SID
 	 
@@ -3860,18 +3864,23 @@ public class Dev2Interface
 	 @param fid FID
 	 * @throws Exception 
 	*/
-	public static void Port_SendMsg(String userNo, String title, String msgDoc, String msgFlag, String msgType, String flowNo, long nodeID, long workID, long fid) throws Exception
+	public static void Port_SendMsg(String userNo, String title, String msgDoc, String msgFlag, String msgType, String flowNo, long nodeID, long workID, long fid,String pushModel) throws Exception
 	{
+		String url = "";
 		if (workID != 0)
 		{
-			String url = Glo.getHostURL() + "WF/Do.htm?SID=" + userNo + "_" + workID + "_" + nodeID;
+			url = Glo.getHostURL() + "WF/Do.htm?SID=" + userNo + "_" + workID + "_" + nodeID;
 			url = url.replace("//", "/");
 			url = url.replace("//", "/");
+			if (msgType == BP.WF.SMSMsgType.DoPress)
+				url = url + "&DoType=OF";
+			if (msgType == BP.WF.SMSMsgType.CC)
+				url = url + "&DoType=DoOpenCC";
+
 			msgDoc += " <hr>打开工作: " + url;
 		}
-
 		String para = "@FK_Flow=" + flowNo + "@WorkID=" + workID + "@FK_Node=" + nodeID + "@Sender=" + WebUser.getNo();
-		BP.WF.SMS.SendMsg(userNo, title, msgDoc, msgFlag, msgType, para);
+		BP.WF.SMS.SendMsg(userNo, title, msgDoc, msgFlag, msgType, para, pushModel,url);
 	}
 
 
@@ -5896,6 +5905,9 @@ public class Dev2Interface
 			wls = new GenerWorkerLists(gwf.getFID(), gwf.getFK_Node());
 		}
 
+		PushMsgs pms = new PushMsgs();
+		pms.Retrieve(PushMsgAttr.FK_Node, gwf.getFK_Node(), PushMsgAttr.FK_Event, EventListOfNode.PressAfter);
+
 		for (GenerWorkerList wl : wls.ToJavaList())
 		{
 			if (wl.getIsEnable() == false)
@@ -5907,12 +5919,15 @@ public class Dev2Interface
 			toEmpName += wl.getFK_EmpText() + ",";
 
 			// 发消息.
-			BP.WF.Dev2Interface.Port_SendMsg(wl.getFK_Emp(), mailTitle, msg, null, BP.WF.SMSMsgType.DoPress, gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
+			for(PushMsg push : pms.ToJavaList())
+			{
+				BP.WF.Dev2Interface.Port_SendMsg(wl.getFK_Emp(), mailTitle, msg, null, BP.WF.SMSMsgType.DoPress, gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(),push.getSMSPushModel());
+			}
+
 
 			wl.setPressTimes(wl.getPressTimes() + 1);
 			wl.Update();
 
-			//wl.Update(GenerWorkerListAttr.PressTimes, wl.PressTimes + 1);
 		}
 
 		//写入日志.

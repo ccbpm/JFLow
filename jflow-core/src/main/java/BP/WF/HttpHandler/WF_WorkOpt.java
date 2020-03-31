@@ -1612,7 +1612,7 @@ public class WF_WorkOpt extends WebContralBase
 		int noneEmpIdx = 0;
 
 		fwcs.Retrieve(NodeAttr.FK_Flow, this.getFK_Flow(), NodeAttr.Step);
-		ds.Tables.add(wcDesc.ToDataTableField("wcDesc")); //当前的节点审核组件定义，放入ds.
+		ds.Tables.add(wcDesc.ToDataTableField("WF_FrmWorkCheck")); //当前的节点审核组件定义，放入ds.
 
 		DataTable tkDt = new DataTable("Tracks");
 		tkDt.Columns.Add("NodeID", Integer.class);
@@ -2233,7 +2233,7 @@ public class WF_WorkOpt extends WebContralBase
 		int noneEmpIdx = 0;
 
 		fwcs.Retrieve(NodeAttr.FK_Flow, this.getFK_Flow(), NodeAttr.Step);
-		ds.Tables.add(wcDesc.ToDataTableField("wcDesc")); //当前的节点审核组件定义，放入ds.
+		ds.Tables.add(wcDesc.ToDataTableField("WF_FrmWorkCheck")); //当前的节点审核组件定义，放入ds.
 
 		DataTable tkDt = new DataTable("Tracks");
 		tkDt.Columns.Add("NodeID", Integer.class);
@@ -2797,7 +2797,7 @@ public class WF_WorkOpt extends WebContralBase
 			row.setValue("FK_MapData", athDB.getFK_MapData());
 			row.setValue("FileName", athDB.getFileName());
 			row.setValue("FileExts", athDB.getFileExts());
-			row.setValue("CanDelete", athDB.getRec() == WebUser.getNo());
+			row.setValue("CanDelete", athDB.getRec().equals(WebUser.getNo())?1:0);
 
 			athDt.Rows.add(row);
 		}

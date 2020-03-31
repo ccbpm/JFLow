@@ -56,6 +56,14 @@ public class EventListOfNode extends FrmEventList
 	 当前节点移交后
 	*/
 	public static final String ShitAfter = "ShitAfter";
+	/**
+	 * 节点催办
+	 */
+	public static final String PressAfter = "PressAfter";
+	/**
+	 * 节点抄送
+	 */
+	public static final String CCAfter = "CCAfter";
 	/** 
 	 当节点加签后
 	*/

@@ -21,6 +21,7 @@ public class CtrlModelAttr  extends EntityMyPKAttr
     public static final String IsEnableStation = "IsEnableStation";
     public static final String IsEnableDept = "IsEnableDept";
     public static final String IsEnableUser = "IsEnableUser";
+    public static final String IsEnableMyDept = "IsEnableMyDept";
 
     public static final String IDOfUsers = "IDOfUsers";
     public static final String IDOfStations = "IDOfStations";

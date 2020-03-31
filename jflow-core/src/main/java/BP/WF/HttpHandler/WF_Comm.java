@@ -3656,8 +3656,19 @@ public class WF_Comm extends WebContralBase {
 					&& ds.Tables.contains(attr.getKey()) == false)
 			{
 				//获取SQl
-				String sql = BP.WF.Glo.DealExp(attr.getUIBindKey(), null, null);
-				DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
+				String sql = attr.getUIBindKey();
+				DataTable dtSQl=null;
+				//说明是实体类绑定的外部数据源
+				if (sql.toUpperCase() .contains("SELECT") == true)
+				{
+					//sql数据
+					sql = BP.WF.Glo.DealExp(attr.getUIBindKey(), null, null);
+					dtSQl = DBAccess.RunSQLReturnTable(sql);
+				}
+				else
+				{
+					dtSQl = BP.Sys.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey());
+				}
 				for(DataColumn col : dtSQl.Columns)
 				{
 					String colName = col.ColumnName.toLowerCase();
@@ -4104,6 +4115,9 @@ public class WF_Comm extends WebContralBase {
 			}
 			whereLike += "          ";
 			where += whereLike;
+		} else
+		{
+			where += "1=1";
 		}
 
 		// 其余查询条件
@@ -4304,6 +4318,63 @@ public class WF_Comm extends WebContralBase {
 			dt.Columns.Add(attr.getKey() + "T", String.class);
 		}
 		for (Attr attr : AttrsOfGroup) {
+			/* 说明它是枚举类型 */
+			if (attr.getMyFieldType() == FieldType.Enum && DataType.IsNullOrEmpty(attr.getUIBindKey())==false)
+			{
+				for(DataRow dr : dt.Rows)
+				{
+					int val = 0;
+					try
+					{
+						val = Integer.parseInt(dr.getValue(attr.getKey()).toString());
+					}
+					catch(Exception e) {
+						dr.setValue(attr.getKey()+ "T"," ");
+						continue;
+					}
+					SysEnum se = new SysEnum(attr.getUIBindKey(),val);
+					dr.setValue(attr.getKey() + "T",se.getLab());
+				}
+				continue;
+			}
+			/**是外键*/
+			if (attr.getMyFieldType() == FieldType.FK)
+			{
+				for(DataRow dr : dt.Rows)
+				{
+					Entity myen = attr.getHisFKEn();
+					String val = dr.getValue(attr.getKey()).toString();
+					myen.SetValByKey(attr.getUIRefKeyValue(), val);
+					try
+					{
+						myen.Retrieve();
+						dr.setValue(attr.getKey() + "T",myen.GetValStrByKey(attr.getUIRefKeyText()));
+					}
+					catch(Exception e) {
+						if (val == null || val.length() <= 1)
+						{
+							dr.setValue(attr.getKey() + "T",val);
+						}
+						else if (val.substring(0, 2) == "63")
+						{
+							try
+							{
+								BP.Port.Dept Dept = new BP.Port.Dept(val);
+								dr.setValue(attr.getKey() + "T",Dept.getName());
+							}
+							catch(Exception e1) {
+								dr.setValue(attr.getKey()+ "T",val);
+							}
+						}
+						else
+						{
+							dr.setValue(attr.getKey() + "T",val);
+						}
+					}
+				}
+				continue;
+			}
+
 			if (attr.getUIBindKey().indexOf(".") == -1) {
 				/* 说明它是枚举类型 */
 				SysEnums ses = new SysEnums(attr.getUIBindKey());
@@ -4324,27 +4395,50 @@ public class WF_Comm extends WebContralBase {
 				}
 				continue;
 			}
-			for (DataRow dr : dt.Rows) {
-				Entity myen = attr.getHisFKEn();
-				String val = dr.getValue(attr.getKey()).toString();
-				myen.SetValByKey(attr.getUIRefKeyValue(), val);
-				try {
-					myen.Retrieve();
-					dr.setValue(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText()));
-				} catch (java.lang.Exception e2) {
-					if (val == null || val.length() <= 1) {
-						dr.setValue(attr.getKey() + "T", val);
-					} else if (val.substring(0, 2).equals("63")) {
-						try {
-							BP.Port.Dept Dept = new BP.Port.Dept(val);
-							dr.setValue(attr.getKey() + "T", Dept.getName());
-						} catch (java.lang.Exception e3) {
-							dr.setValue(attr.getKey() + "T", val);
-						}
-					} else {
-						dr.setValue(attr.getKey() + "T", val);
+			/**外部数据源*/
+			if (attr.getUIDDLShowType() == BP.En.DDLShowType.BindSQL && DataType.IsNullOrEmpty(attr.getUIBindKey()) == false) {
+				String sqlKey = attr.getUIBindKey();
+				DataTable dtSQl = null;
+				if (sqlKey.toUpperCase().contains("SELECT") == true) {
+					//sql数据
+					sqlKey = BP.WF.Glo.DealExp(attr.getUIBindKey(), null, null);
+					dtSQl = DBAccess.RunSQLReturnTable(sqlKey);
+				} else {
+					dtSQl = BP.Sys.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey());
+				}
+				for(DataColumn col : dtSQl.Columns)
+				{
+					String colName = col.ColumnName.toLowerCase();
+					switch (colName) {
+						case "no":
+							col.ColumnName = "No";
+							break;
+						case "name":
+							col.ColumnName = "Name";
+							break;
+						case "parentno":
+							col.ColumnName = "ParentNo";
+							break;
+						default:
+							break;
 					}
 				}
+				for(DataRow dr : dt.Rows)
+				{
+					Object val = dr.getValue(attr.getKey());
+					if (val == null || DataType.IsNullOrEmpty(val.toString()) == true) {
+						dr.setValue(attr.getKey() + "T","");
+						continue;
+					}
+					for(DataRow ddr : dtSQl.Rows)
+					{
+						if (ddr.getValue("No").toString().equals(val.toString())) {
+							dr.setValue(attr.getKey() + "T",ddr.getValue("Name"));
+							break;
+						}
+					}
+				}
+				continue;
 			}
 		}
 		ds.Tables.add(dt);

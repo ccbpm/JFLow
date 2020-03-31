@@ -117,6 +117,7 @@ public class CtrlModel extends BP.En.EntityMyPK
         map.AddTBInt(CtrlModelAttr.IsEnableStation, 0, "按照岗位计算", true, false);
         map.AddTBInt(CtrlModelAttr.IsEnableDept, 0, "按照绑定的部门计算", true, false);
         map.AddTBInt(CtrlModelAttr.IsEnableUser, 0, "按照绑定的人员计算", true, false);
+        map.AddTBInt(CtrlModelAttr.IsEnableMyDept, 1, "按照本部门计算", false, false);
         map.AddTBString(CtrlModelAttr.IDOfUsers, null, "绑定的人员ID", true, false, 0, 1000, 300);
         map.AddTBString(CtrlModelAttr.IDOfStations, null, "绑定的岗位ID", true, false, 0, 1000, 300);
         map.AddTBString(CtrlModelAttr.IDOfDepts, null, "绑定的部门ID", true, false, 0, 1000, 300);

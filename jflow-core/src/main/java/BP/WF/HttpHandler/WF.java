@@ -23,17 +23,7 @@ import BP.WF.Glo;
 import BP.WF.Port.WFEmp;
 import BP.WF.Port.WFEmpAttr;
 import BP.WF.Port.WFEmps;
-import BP.WF.Template.BtnLab;
-import BP.WF.Template.CCList;
-import BP.WF.Template.CCSta;
-import BP.WF.Template.FTCAttr;
-import BP.WF.Template.FlowSortAttr;
-import BP.WF.Template.FlowSorts;
-import BP.WF.Template.FrmNodeComponent;
-import BP.WF.Template.FrmSubFlowAttr;
-import BP.WF.Template.FrmThreadAttr;
-import BP.WF.Template.FrmTrackAttr;
-import BP.WF.Template.FrmWorkCheckAttr;
+import BP.WF.Template.*;
 import BP.Web.WebUser;
 
 public class WF extends WebContralBase {
@@ -325,7 +315,7 @@ public class WF extends WebContralBase {
 		if (DataType.IsNullOrEmpty(at) && this.getSID() != null) {
 			at = "Track";
 		}
-
+		String sid = this.getSID();
 		try {
 			switch (at) {
 
@@ -347,6 +337,12 @@ public class WF extends WebContralBase {
 					cc1.Retrieve();
 					cc1.setHisSta(CCSta.Read);
 					cc1.Update();
+				}
+				if(DataType.IsNullOrEmpty(sid) == false)
+				{
+					String[] strss = sid.split("_");
+					GenerWorkFlow gwfl = new GenerWorkFlow(Long.parseLong(strss[1]));
+					return "url@./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + gwfl.getFK_Flow() + "&FK_Node=" + gwfl.getFK_Node() + "&WorkID=" + gwfl.getWorkID() + "&FID=" + gwfl.getFID();
 				}
 				return "url@./WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.getFK_Flow() + "&FK_Node="
 						+ this.getFK_Node() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getFID();
@@ -426,7 +422,6 @@ public class WF extends WebContralBase {
 
 				return "url@" + myurl;
 			case "OF": // 通过一个串来打开一个工作.
-				String sid = this.getSID();
 				String[] strs = sid.split("[_]", -1);
 				GenerWorkerList wl = new GenerWorkerList();
 				int i = wl.Retrieve(GenerWorkerListAttr.FK_Emp, strs[0], GenerWorkerListAttr.WorkID, strs[1],
@@ -1058,6 +1053,15 @@ public class WF extends WebContralBase {
 		} catch (RuntimeException ex) {
 			return "err@" + ex.getMessage();
 		}
+	}
+
+	public String Runing_UnSendCC() throws Exception
+	{
+		String checkboxs = GetRequestVal("CCPKs");
+		CCLists ccs = new CCLists();
+		ccs.RetrieveIn("MyPK", "'"+checkboxs.replace(",","','")+"'");
+		ccs.Delete();
+		return "撤销抄送成功";
 	}
 
 	/**

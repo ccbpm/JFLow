@@ -186,5 +186,13 @@ public class FrmAttr extends BP.En.EntityOIDNameAttr
 	*/
 	public static final String EntityEditModel = "EntityEditModel";
 
+	/// 字段颜色设置
+	/// </summary>
+	public static final String ColorSet = "ColorSet";
+	/// <summary>
+	/// 字段求和求平均设置
+	/// </summary>
+	public static final String FieldSet = "FieldSet";
+
 
 }

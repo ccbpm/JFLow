@@ -412,7 +412,7 @@ public class FrmDict extends EntityNoName
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()throws Exception
+	protected void afterInsert()throws Exception
 	{
 		//保存权限表
 		CtrlModel ctrl = new CtrlModel();
@@ -451,8 +451,17 @@ public class FrmDict extends EntityNoName
 		ctrl.setMyPK(ctrl.getFrmID() + "_" + ctrl.getCtrlObj());
 		ctrl.Save();
 
+		super.afterInsert();
+	}
+
+	@Override
+	protected void afterInsertUpdateAction() throws Exception
+	{
+		CheckEnityTypeAttrsFor_EntityNoName();
+
 		super.afterInsertUpdateAction();
 	}
+
 
 	/** 
 	 检查enittyNoName类型的实体
@@ -623,6 +632,44 @@ public class FrmDict extends EntityNoName
 			attr.setIdx(-97);
 			attr.Insert();
 		}
+		if (attrs.Contains(this.getNo() + "_FK_Dept") == false)
+		{
+			/* 创建人部门 */
+			MapAttr attr = new BP.Sys.MapAttr();
+			attr.setFK_MapData(this.getNo());
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn("FK_Dept");
+			attr.setName("创建人部门");
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(32);
+			attr.setIdx(-1);
+			attr.Insert();
+		}
+		if (attrs.Contains(this.getNo() + "_OrgNo") == false)
+		{
+			/* 创建人名称 */
+			MapAttr attr = new BP.Sys.MapAttr();
+			attr.setFK_MapData(this.getNo());
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn("OrgNo");
+			attr.setName("创建人所在的组织");
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(32);
+			attr.setIdx(-1);
+			attr.Insert();
+		}
 
 			///#endregion 补充上流程字段。
 
@@ -689,7 +736,7 @@ public class FrmDict extends EntityNoName
 	 */
 	public final String DoSaveRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSave";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSave";
 	}
 	/**
 	 提交权限规则
@@ -698,7 +745,7 @@ public class FrmDict extends EntityNoName
 	 */
 	public final String DoSubmitRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSubmit";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSubmit";
 	}
 
 	/**
@@ -708,7 +755,7 @@ public class FrmDict extends EntityNoName
 	 */
 	public final String DoCreateRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnNew";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnNew";
 	}
 	/**
 	 删除权限规则
@@ -717,7 +764,7 @@ public class FrmDict extends EntityNoName
 	 */
 	public final String DoDeleteRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnDelete";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnDelete";
 	}
 
 	/**
@@ -727,7 +774,7 @@ public class FrmDict extends EntityNoName
 	 */
 	public final String DoSearchRole()throws Exception
 	{
-		return "../../CCBill/Admin/CreateRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
+		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
 	}
 
 		///#endregion 权限控制.

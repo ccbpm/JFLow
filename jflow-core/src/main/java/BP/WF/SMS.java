@@ -39,7 +39,10 @@ public class SMS extends EntityMyPK
 	 @param paras 扩展参数
 	 * @throws Exception 
 	*/
-	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras) throws Exception
+	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras) throws Exception{
+		 SendMsg(userNo, msgTitle,msgDoc, msgFlag,msgType,paras,null,null);
+	}
+	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras,String pushModel,String openUrl) throws Exception
 	{
 
 		SMS sms = new SMS();
@@ -52,14 +55,18 @@ public class SMS extends EntityMyPK
 		sms.setTitle(msgTitle);
 		
 		sms.setDocOfEmail(msgDoc);
+		sms.setMobileInfo(msgDoc);
 
 		sms.setSender(WebUser.getNo());
 		sms.setRDT(BP.DA.DataType.getCurrentDataTime());
 
 		sms.setMsgFlag(msgFlag); // 消息标志.
 		sms.setMsgType(msgType); // 消息类型.'
-
 		sms.setAtPara(paras);
+		if(DataType.IsNullOrEmpty(openUrl) == false)
+			sms.SetPara("OpenUrl", openUrl);
+		if (DataType.IsNullOrEmpty(pushModel) == false)
+			sms.SetPara("PushModel", pushModel);
 		sms.Insert();
 	}
 

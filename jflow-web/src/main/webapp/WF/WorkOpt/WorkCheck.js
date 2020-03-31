@@ -54,7 +54,7 @@ function WorkCheck_InitPage(){
         else
             AddUploafFileHtm("uploaddiv", frmWorkCheck.FWCShowModel);
     }
-   
+
 
 }
 
@@ -96,7 +96,7 @@ function GetWorkCheck_Node(checkData,keyOfEn) {
         if (track.NodeID != $("#TB_" + keyOfEn).val())
             continue;
         _Html += WorkCheck_Parse(track, aths,frmWorkCheck, SignType);
-    } 
+    }
     _Html += "</table>";
     return _Html;
 
@@ -439,8 +439,8 @@ function AthDown(fk_ath, pkVal, delPKVal, fk_mapData, fk_flow, ath) {
         Url = path + 'WF/Ath/downLoad.do?DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + '&FK_Node=' + fk_node + '&FK_Flow=' + fk_flow + '&FK_MapData=' + fk_mapData + '&Ath=' + ath;
         window.location.href = Url;
     }
-    
-    
+
+
 }
 
 
@@ -513,18 +513,18 @@ function GetAthHtml(ath) {
 function AddUploadify(divid, fwcShowModel) {
     if ($("#file_upload").length == 0) {
         var html = "<div id='file_upload-queue' class='uploadify-queue'></div>"
-                             + "<div id='s' style='float:right;margin-right:10px;' >"
-                             + "<input type='file' name='file_upload' id='file_upload' width='60' height='30' />"
-                             + "</div>";
+            + "<div id='s' style='float:right;margin-right:10px;' >"
+            + "<input type='file' name='file_upload' id='file_upload' width='60' height='30' />"
+            + "</div>";
 
         $("#" + divid).append(html);
         var url = "";
         if (plant == 'CCFlow')
-            url = basePath + '/WF/CCForm/Handler.ashx?AttachPK=ND' + nodeid + '_FrmWorkCheck&DoType=MoreAttach&EnsName=' + (enName ? enName : '') + '&FK_Flow=' + fk_flow + '&PKVal=' + workid + "&FK_Node=" + GetQueryString("FK_Node");
+            url = basePath + '/WF/CCForm/Handler.ashx?AttachPK=ND' + pageData.FK_Node + '_FrmWorkCheck&DoType=MoreAttach&FK_Flow=' + pageData.FK_Flow + '&PKVal=' + workid + "&FK_Node=" + GetQueryString("FK_Node");
         else {
             var currentPath = window.document.location.href;
             var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
-            url = path + "WF/Ath/AttachmentUpload.do?FK_FrmAttachment=ND" + nodeid + "_FrmWorkCheck&FK_Flow=" + fk_flow + "&PKVal=" + workid+"&FK_Node="+GetQueryString("FK_Node");
+            url = path + "WF/Ath/AttachmentUpload.do?FK_FrmAttachment=ND" + pageData.FK_Node + "_FrmWorkCheck&FK_Flow=" + pageData.FK_Flow + "&PKVal=" + pageData.WorkID+"&FK_Node="+GetQueryString("FK_Node");
         }
 
 
@@ -553,88 +553,88 @@ function AddUploadify(divid, fwcShowModel) {
 }
 
 function AddUploafFileHtm(divid, fwcShowModel) {
- if ($("#file_upload").length == 0) {
-    var html ="<div id='s' style='float:right;margin-right:10px;margin-top:5px;' >"
-        + "<label id='realBtn' class='btn btn-info' style=''><input type='file' name='file' id='file' style='display:inline;left:-9999px;position:absolute;' onchange='UploadChange(" + fwcShowModel+");' ><span>文件上传</span></label>"
-        + "</div>";
+    if ($("#file_upload").length == 0) {
+        var html ="<div id='s' style='float:right;margin-right:10px;margin-top:5px;' >"
+            + "<label id='realBtn' class='btn btn-info' style=''><input type='file' name='file' id='file' style='display:inline;left:-9999px;position:absolute;' onchange='UploadChange(" + fwcShowModel+");' ><span>文件上传</span></label>"
+            + "</div>";
 
-    $("#" + divid).append(html);
-   }
+        $("#" + divid).append(html);
+    }
 }
 
 function UploadChange(fwcShowModel) {
-        var fileObj = document.getElementById("file").files[0]; // js 获取文件对象
-        if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
-            alert("请选择上传的文件.");
-            return;
-        }
-        var fileName = fileObj.name;
-
-
-        //form表单序列话
-        var parasData = $("form").serialize();
-        //form表单序列化时调用了encodeURLComponent方法将数据编码了
-        parasData = decodeURIComponent(parasData, true);
-        parasData = decodeURIComponent(parasData, true);
-        parasData = parasData.replace(/&/g, '@');
-        parasData = parasData.replace(/TB_/g, '');
-        parasData = parasData.replace(/RB_/g, '');
-        parasData = parasData.replace(/CB_/g, '');
-        parasData = parasData.replace(/DDL_/g, '');
-
-        var formData = new FormData();
-        var name = $("input").val();
-        formData.append("file", fileObj);
-        formData.append("name", name);
-        var AttachPK = "ND"+ GetQueryString("FK_Node")+ "_FrmWorkCheck" ;
-        var Url = "";
-        var doMethod = "MoreAttach";
-        var httpHandlerName = "BP.WF.HttpHandler.WF_CCForm";
-
-        if (plant == 'CCFlow')
-            Url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName + "&FK_FrmAttachment=" + AttachPK + "&WorkID=" + pageData.WorkID + "&PKVal=" + pageData.WorkID + "&AttachPK=" + AttachPK + "&FK_Node=" + GetQueryString("FK_Node") + "&parasData=" + parasData + "&t=" + new Date().getTime();
-        else {
-            var currentPath = window.document.location.href;
-            var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
-            Url = path + "WF/Ath/AttachmentUploadS.do/?FK_FrmAttachment=" + AttachPK + "&PKVal=" + workid + "&AttachPK=" + AttachPK + "&parasData=" + parasData;
-        }
-
-        Url += "&FID=" + GetQueryString("FID");
-        Url += "&FK_Node=" + GetQueryString("FK_Node");
-        Url += "&PWorkID=" + GetQueryString("PWorkID");
-        Url += "&FK_MapData=" + GetQueryString("FK_MapData");
-        //获取分组
-        var sort = $("#Sort").val();
-        if (sort != null && sort != "" && sort != undefined)
-            Url += "&Sort=" + sort;
-
-
-        $.ajax({
-            url: Url,
-            type: 'POST',
-            data: formData,
-            async: false,
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            // 告诉jQuery不要去处理发送的数据
-            processData: false,
-            // 告诉jQuery不要去设置Content-Type请求头
-            contentType: false,
-            beforeSend: function () {
-                console.log("正在进行，请稍候");
-            },
-            success: function (responseStr) {
-                GetNewUploadedAths(fileObj, fwcShowModel)
-            },
-            error: function (responseStr) {
-                if (responseStr.indexOf('err@') != -1)
-                    alert(responseStr);
-            }
-        });
-
+    var fileObj = document.getElementById("file").files[0]; // js 获取文件对象
+    if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+        alert("请选择上传的文件.");
+        return;
     }
+    var fileName = fileObj.name;
+
+
+    //form表单序列话
+    var parasData = $("form").serialize();
+    //form表单序列化时调用了encodeURLComponent方法将数据编码了
+    parasData = decodeURIComponent(parasData, true);
+    parasData = decodeURIComponent(parasData, true);
+    parasData = parasData.replace(/&/g, '@');
+    parasData = parasData.replace(/TB_/g, '');
+    parasData = parasData.replace(/RB_/g, '');
+    parasData = parasData.replace(/CB_/g, '');
+    parasData = parasData.replace(/DDL_/g, '');
+
+    var formData = new FormData();
+    var name = $("input").val();
+    formData.append("file", fileObj);
+    formData.append("name", name);
+    var AttachPK = "ND"+ GetQueryString("FK_Node")+ "_FrmWorkCheck" ;
+    var Url = "";
+    var doMethod = "MoreAttach";
+    var httpHandlerName = "BP.WF.HttpHandler.WF_CCForm";
+
+    if (plant == 'CCFlow')
+        Url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName + "&FK_FrmAttachment=" + AttachPK + "&WorkID=" + pageData.WorkID + "&PKVal=" + pageData.WorkID + "&AttachPK=" + AttachPK + "&FK_Node=" + GetQueryString("FK_Node") + "&parasData=" + parasData + "&t=" + new Date().getTime();
+    else {
+        var currentPath = window.document.location.href;
+        var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
+        Url = path + "WF/Ath/AttachmentUploadS.do/?FK_FrmAttachment=" + AttachPK + "&PKVal=" + pageData.WorkID  + "&AttachPK=" + AttachPK + "&parasData=" + parasData;
+    }
+
+    Url += "&FID=" + GetQueryString("FID");
+    Url += "&FK_Node=" + GetQueryString("FK_Node");
+    Url += "&PWorkID=" + GetQueryString("PWorkID");
+    Url += "&FK_MapData=" + GetQueryString("FK_MapData");
+    //获取分组
+    var sort = $("#Sort").val();
+    if (sort != null && sort != "" && sort != undefined)
+        Url += "&Sort=" + sort;
+
+
+    $.ajax({
+        url: Url,
+        type: 'POST',
+        data: formData,
+        async: false,
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        // 告诉jQuery不要去处理发送的数据
+        processData: false,
+        // 告诉jQuery不要去设置Content-Type请求头
+        contentType: false,
+        beforeSend: function () {
+            console.log("正在进行，请稍候");
+        },
+        success: function (responseStr) {
+            GetNewUploadedAths(fileObj, fwcShowModel)
+        },
+        error: function (responseStr) {
+            if (responseStr.indexOf('err@') != -1)
+                alert(responseStr);
+        }
+    });
+
+}
 /**
  * 显示上传的附件
  * @param {any} files
@@ -647,7 +647,7 @@ function GetNewUploadedAths(files, fwcShowModel) {
         WorkID: pageData.WorkID
     };
     var Names = "|" + files.name + "|";
-   
+
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
     handler.AddPara("Names", Names);
     handler.AddJson(params);
@@ -680,7 +680,7 @@ function GetNewUploadedAths(files, fwcShowModel) {
     $.each(naths, function () {
         $("#aths_" + pageData.FK_Node).append(GetAthHtml(this));
     });
-    
+
 }
 
 //当用户点击签名图片的时候，弹出窗体让其输入密码.

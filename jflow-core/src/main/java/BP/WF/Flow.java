@@ -10,74 +10,7 @@ import BP.Tools.StringHelper;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.Data.*;
-import BP.WF.Template.BillTemplate;
-import BP.WF.Template.BillTemplates;
-import BP.WF.Template.CC;
-import BP.WF.Template.CCDept;
-import BP.WF.Template.CCDeptAttr;
-import BP.WF.Template.CCDepts;
-import BP.WF.Template.CCEmp;
-import BP.WF.Template.CCEmpAttr;
-import BP.WF.Template.CCEmps;
-import BP.WF.Template.CCStation;
-import BP.WF.Template.Cond;
-import BP.WF.Template.CondType;
-import BP.WF.Template.Conds;
-import BP.WF.Template.ConnDataFrom;
-import BP.WF.Template.DTSField;
-import BP.WF.Template.DataStoreModel;
-import BP.WF.Template.Direction;
-import BP.WF.Template.DirectionAttr;
-import BP.WF.Template.Directions;
-import BP.WF.Template.DraftRole;
-import BP.WF.Template.FindWorkerRole;
-import BP.WF.Template.FlowAttr;
-import BP.WF.Template.FlowDTSTime;
-import BP.WF.Template.FlowDTSWay;
-import BP.WF.Template.FlowDeptDataRightCtrlType;
-import BP.WF.Template.FlowSort;
-import BP.WF.Template.FlowSorts;
-import BP.WF.Template.FrmField;
-import BP.WF.Template.FrmFieldAttr;
-import BP.WF.Template.FrmFields;
-import BP.WF.Template.FrmNode;
-import BP.WF.Template.FrmNodeAttr;
-import BP.WF.Template.FrmNodes;
-import BP.WF.Template.FrmWorkCheck;
-import BP.WF.Template.LabNote;
-import BP.WF.Template.LabNotes;
-import BP.WF.Template.MapFrmFool;
-import BP.WF.Template.NodeAttr;
-import BP.WF.Template.NodeDept;
-import BP.WF.Template.NodeDeptAttr;
-import BP.WF.Template.NodeDepts;
-import BP.WF.Template.NodeEmp;
-import BP.WF.Template.NodeEmpAttr;
-import BP.WF.Template.NodeEmps;
-import BP.WF.Template.NodeExt;
-import BP.WF.Template.NodeExts;
-import BP.WF.Template.NodeReturn;
-import BP.WF.Template.NodeReturnAttr;
-import BP.WF.Template.NodeReturns;
-import BP.WF.Template.NodeStation;
-import BP.WF.Template.NodeStationAttr;
-import BP.WF.Template.NodeStations;
-import BP.WF.Template.NodeToolbar;
-import BP.WF.Template.NodeToolbarAttr;
-import BP.WF.Template.NodeToolbars;
-import BP.WF.Template.PushMsg;
-import BP.WF.Template.PushMsgAttr;
-import BP.WF.Template.PushMsgs;
-import BP.WF.Template.SDTOfFlowRole;
-import BP.WF.Template.Selector;
-import BP.WF.Template.Selectors;
-import BP.WF.Template.StartGuideWay;
-import BP.WF.Template.SubFlowAttr;
-import BP.WF.Template.SubFlowType;
-import BP.WF.Template.SubFlowYanXu;
-import BP.WF.Template.SubFlowYanXuAttr;
-import BP.WF.Template.SubFlowYanXus;
-import BP.WF.Template.SubFlows;
+import BP.WF.Template.*;
 import BP.Web.*;
 import java.io.*;
 import java.nio.file.*;
@@ -5995,6 +5928,24 @@ public class Flow extends BP.En.EntityNoName {
 			nd.setNodePosType(NodePosType.Start);
 			nd.setICON("前台");
 
+			//如果是集团模式.
+			if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			{
+				if (DataType.IsNullOrEmpty(WebUser.getOrgNo()) == true)
+					throw new Exception("err@登录信息丢失了组织信息,请重新登录.");
+
+				nd.setHisDeliveryWay(DeliveryWay.BySelectedOrgs);
+
+				//把本组织加入进去.
+				FlowOrg fo = new FlowOrg();
+				fo.Delete(FlowOrgAttr.FlowNo, nd.getFK_Flow());
+				fo.setFlowNo(nd.getFK_Flow());
+				fo.setOrgNo(WebUser.getOrgNo());
+				fo.Insert();
+			}
+
+			nd.Insert();
+			nd.CreateMap();
 			// 增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
 			nd.setCondModel(CondModel.SendButtonSileSelect); // 默认的发送方向.
 			nd.setHisDeliveryWay(DeliveryWay.BySelected); // 上一步发送人来选择.

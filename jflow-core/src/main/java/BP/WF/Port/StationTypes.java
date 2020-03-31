@@ -1,6 +1,7 @@
 package BP.WF.Port;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.WF.*;
 import java.util.*;
@@ -51,7 +52,21 @@ public class StationTypes extends EntitiesNoName
 		}
 		return list;
 	}
+	@Override
+	public int RetrieveAll() throws Exception
+	{
+		if (SystemConfig.getCCBPMRunModel() == 0)
+		{
+			return super.RetrieveAll();
+		}
 
+		//按照orgNo查询. 
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere("OrgNo", BP.Web.WebUser.getOrgNo());
+		qo.addOr();
+		qo.AddWhere("OrgNo", "");
+		return qo.DoQuery();
+	}
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

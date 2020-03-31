@@ -27,8 +27,8 @@ public class Cash2019
 	 把实体放入缓存里面
 	 
 	 @param enName
-	 @param ens
-	 @param enPK
+	 @param pkVal
+	 @param row
 	*/
 	public static void PutRow(String enName, String pkVal, Row row)
 	{
@@ -41,7 +41,6 @@ public class Cash2019
 				ht = new Hashtable();
 				gethts().put(enName, ht);
 			}
-			//@sly
 			if (ht.containsKey(pkVal) == true)
 			{
 				ht.put(pkVal, row);

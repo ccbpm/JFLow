@@ -168,15 +168,11 @@ function GenerFoolFrm(mapData, frmData) {
 
     html += "</table>";
 
-    ////加入隐藏控件.
-    //var mapAttrs = frmData.Sys_MapAttr;
-    //for (var i = 0; i < mapAttrs.length; i++) {
-    //    var attr = mapAttrs[i];
-    //    if (attr["UIVisible"] == 0) {
-    //        var defval = ConvertDefVal(frmData, attr["DefVal"], attr["KeyOfEn"]);
-    //        html += "<input type='hidden' id='TB_" + attr["KeyOfEn"] + "' name='TB_" + attr["KeyOfEn"] + "' value='" + defval + "' />";
-    //    }
-    //}
+    if (frmData.Sys_FrmImgAth.length > 0) {
+        html += "<input type='hidden' id='imgSrc'/>";
+    }
+
+
 
     $('#CCForm').html("").append(html);
 
@@ -274,38 +270,13 @@ function Set_Frm_Enable(frmData) {
 //审核组件
 function Ele_FrmCheck(wf_node) {
 
-    //审核组键FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node
-    var sta = wf_node.FWCSta;
-
-    var h = wf_node.FWC_H + 1000;
-
-    var isReadonly = GetQueryString('IsReadonly');
-    if (isReadonly != "1") {
-        isReadonly = "0";
+    if (wf_node.FWCSta != 0) {
+        if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
+            pageData.FWCVer = 0;
+        else
+            pageData.FWCVer = 1;
     }
-    if (sta == 2)//只读
-        isReadonly = "1";
-
-    var src = "";
-
-    if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
-        src = "../WorkOpt/WorkCheck.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
-    else
-        src = "../WorkOpt/WorkCheck2019.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
-
-    var fwcOnload = "";
-    var paras = '';
-
-    paras += "&FID=" + pageData["FID"];
-    paras += "&OID=" + pageData["OID"];
-    paras += '&FK_Flow=' + pageData.FK_Flow;
-    paras += '&FK_Node=' + pageData.FK_Node;
-    paras += '&WorkID=' + pageData.OID;
-
-
-    src += "&r=q" + paras;
-    var eleHtml = "<iframe width='100%' height='" + h + "' id='FWC' src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=no ></iframe>";
-    return eleHtml;
+    return "<div id='WorkCheck'>" + WorkCheck_InitPage() +"</div>";
 }
 
 //解析表单是三列的情况
@@ -1026,6 +997,15 @@ function InitMapAttrOfCtrl(mapAttr) {
             return eleHtml;
         }
 
+        if (mapAttr.UIContralType == 13 && mapAttr.KeyOfEn == "IDCardAddress" && pageData.IsReadonly!="1") {
+            var eleHtml = "<div style='text-align:left;padding-left:0px'  data-type='1'>";
+            eleHtml += "<input type = text style='width:75% !important;display:inline;' class='form-control' maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "'/>";
+            eleHtml += "<label class='image-local' style='margin-left:5px'><input type='file' accept='image/png,image/bmp,image/jpg,image/jpeg' style='width:25% !important;display:none' onchange='GetIDCardInfo()'/>上传身份证</label>";
+            eleHtml += "</div>";
+            return eleHtml;
+        }
+
+
         //进度条
         if (mapAttr.UIContralType == "50") {
 
@@ -1042,7 +1022,7 @@ function InitMapAttrOfCtrl(mapAttr) {
 
     //添加文本框 ，日期控件等
     //AppString
-    if (mapAttr.MyDataType == "1" && mapAttr.UIContralType == 0) {  //不是外键
+    if (mapAttr.MyDataType == "1" && (mapAttr.UIContralType == 0 || mapAttr.UIContralType == 13)) {  //不是外键
 
         if (mapAttr.UIHeight <= 40) //普通的文本框.
         {
@@ -1199,7 +1179,7 @@ function InitMapAttrOfCtrl(mapAttr) {
 
         checkedStr = ConvertDefVal(frmData, '', mapAttr.KeyOfEn);
 
-        return "<input " + enableAttr + " " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'   id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " onchange='clickEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'/><label for='CB_" + mapAttr.KeyOfEn + "' >" + mapAttr.Name + "</label>";
+        return "<input " + enableAttr + " " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox'   id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " onchange='changeCBEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'/><label for='CB_" + mapAttr.KeyOfEn + "' >" + mapAttr.Name + "</label>";
     }
 
     //枚举类型.
@@ -1951,14 +1931,11 @@ function GetLab(frmData, attr) {
         forID = "RB_" + attr.KeyOfEn;
     }
     //文本框，下拉框，单选按钮
-    if (contralType == 0 || contralType == 1 || contralType == 2 || contralType == 3 || contralType == 4 || contralType == 8 || contralType == 101) {
+    if (contralType == 0 || contralType == 1 || contralType == 2 || contralType == 3 || contralType == 4 || contralType == 8 || contralType == 13|| contralType == 101) {
         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {
             lab += " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
         }
         lab += "<label id='Lab_" + attr.KeyOfEn + "' for='" + forID + "' class='" + (attr.UIIsInput == 1 ? "mustInput" : "") + "'>" + attr.Name + "</label>";
-//        if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {
-//            lab += " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
-//        }
         return lab;
     }
     //附件控件
@@ -2081,7 +2058,48 @@ function GetLab(frmData, attr) {
         return "";
 
     }
+    //图片附件
+    if (contralType == 12) {
+        //获取图片控件的信息
+        var frmImgs = $.grep(frmData.Sys_FrmImgAth, function (item, i) {
+            return item.MyPK == attr.MyPK;
+        });
+        if (frmImgs.length == 0) {
+            alert("主键为" + attr.MyPK + "名称为" + attr.Name + "的图片控件信息丢失，请联系管理员");
+            return "";
+        }
 
+        var frmImg = frmImgs[0];
+        var imgSrc = basePath + "/WF/Data/Img/LogH.PNG";
+
+        //获取数据
+        if (frmImg.FK_MapData.indexOf("ND") != -1)
+            imgSrc = basePath + "/DataUser/ImgAth/Data/" + frmImg.CtrlID + "_" + pageData.OID + ".png";
+        else
+            imgSrc = basePath + "/DataUser/ImgAth/Data/" + frmImg.FK_MapData + "_" + frmImg.CtrlID + "_" + pageData.OID + ".png";
+        
+
+        var _html = "";
+        if (frmImg.IsEdit == "1" && pageData.IsReadonly != "1") {
+            var url = basePath + "/WF/CCForm/ImgAth.htm?W=" + frmImg.W + "&H=" + frmImg.H + "&FK_MapData=" + frmData.Sys_MapData[0].No + "&RefPKVal=" + pageData.OID + "&CtrlID=" + frmImg.CtrlID;
+            _html += "<div>";
+            _html += "<fieldset>";
+            _html += "<legend style='margin-bottom:0px'>";
+            _html += "<a href='javaScript:void(0)' onclick='ImgAth(\"" + url + "\",\"" + frmImg.MyPK + "\");'>编辑</a>";
+            _html += "</legend>";
+            _html += "<img class='pimg' id='Img" + frmImg.MyPK + "' name='Img" + frmImg.MyPK + "' src='" + imgSrc + "' onerror=\"this.src='" + basePath +"/DataUser/ICON/CCFlow/LogBig.png'\" style='width:" + frmImg.W + "px;height:" + frmImg.H + "px;'/>";
+            _html += "</fieldset>";
+            _html += "</div>";
+            return _html;
+        } else {
+            _html += "<div>";
+            _html += "<img class='pimg' id='Img" + frmImg.MyPK + "' name='Img" + frmImg.MyPK + "' src='" + imgSrc + "' onerror=\"this.src='" + basePath +"/DataUser/ICON/CCFlow/LogBig.png'\" style='width:" + frmImg.W + "px;height:" + frmImg.H + "px;'/>";
+            _html += "</div>";
+            return _html;
+        }
+
+
+    }
     return lab;
 }
 

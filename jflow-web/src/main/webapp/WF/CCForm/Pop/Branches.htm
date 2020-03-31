@@ -241,9 +241,7 @@
             if (rootNo == "@WebUser.FK_Dept") {
                 rootNo = webUser.FK_Dept;
             }
-            if (rootNo == "")
-                rootNo = "0";
-
+            
             //设置变量.
             global.FK_MapData = mapExt.FK_MapData;
             global.AttrOfOper = mapExt.AttrOfOper;
@@ -262,8 +260,14 @@
                     var val = key.split('=')[1];
                     treeUrl = treeUrl.replace("@" + attrKeyOfEn, val);
                     treeTag1 = treeTag1.replace("@" + attrKeyOfEn, val);
+                    rootNo = rootNo.replace("@" + attrKeyOfEn, val);
                 }
             }
+
+            if (rootNo == "")
+                rootNo = "0";
+
+
             if (treeUrl == "") {
                 alert('配置错误:查询数据源，初始化树的数据源不能为空。');
                 return;

@@ -26,7 +26,7 @@
 
             PageTransfer_value = dataType; //取出页面传至
             //给单选赋值
-            if (PageTransfer_value == "Text" || PageTransfer_value=="Textarea") {
+            if (PageTransfer_value == "Text" || PageTransfer_value == "Textarea") {
                 $("#RB_String").attr("checked", true);
             }
 
@@ -53,6 +53,8 @@
             if (PageTransfer_value == "CheckBox") {
                 $("#RB_Boolen").attr("checked", true);
             }
+            if (PageTransfer_value == "SignCheck")
+                $("#RB_SignCheck").attr("checked", true);
 
             $('#TB_Name').blur(function () //文本失去焦点时触发的事件
             {
@@ -79,6 +81,11 @@
                 var name = document.getElementById("TB_Name").value;
                 ParsePinYin(name, false, "TB_KeyOfEn");
             });
+       
+            var fname = GetQueryString("fname");
+            var name = GetQueryString("name");
+            $("#TB_KeyOfEn").val(fname);
+            $("#TB_Name").val(name);
         });
 
         var oNode = null, thePlugins = 'text';
@@ -103,12 +110,14 @@
                 return false;
             }
 
-             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
             handler.AddPara("FK_MapData", fk_mapData);
             handler.AddPara("KeyOfEn",KeyOfEn);
             handler.AddPara("name",name);
-            handler.AddPara("FType", FieldType);
-            handler.AddPara("IsSupperText",dataType=="Textarea"?1:0 )
+            handler.AddPara("FType", FieldType == 14 ? 1 : FieldType);
+            handler.AddPara("IsSupperText", dataType == "Textarea" ? 1 : 0)
+            if (dataType == "SignCheck" || FieldType == 14)
+                handler.AddPara("UIContralType", 14);
             var data = handler.DoMethodReturnString("FieldTypeSelect_Create");
             if (data.indexOf("err@") != -1) {
                  $.messager.alert('错误', data.replace('err@',''), 'error');
@@ -117,15 +126,17 @@
 
             //插入到html 到编辑器.
             if (dataType!="Textarea") {
-                dataType = GetFieldType(FieldType);
+                dataType = GetFieldType(FieldType, dataType);
             }
             InsertHtmlToEditor(dataType,KeyOfEn,name);
            
         };
         //类型转换
-        function GetFieldType(FieldType) {
+        function GetFieldType(FieldType, dataType) {
             if (FieldType == "1") {
-                return"Text";
+                if (dataType == "SignCheck")
+                    return "SignCheck";
+                return "Text";
             } else if (FieldType == "2") {
                 return "Int";
             } else if (FieldType == "3") {
@@ -140,13 +151,16 @@
                 return "DateTime";
             } else if (FieldType == "8") {
                 return "Money";
+            } else if (FieldType == "14") {
+                return "SignCheck";
             }
+
         }
       
         //在这里把返回值获取到，放入到对应的文本框里.
         function SelectOne() {
 
-            var url = "../../FoolFormDesigner/FieldTypeListChoseOneField.htm?FK_MapData=" + GetQueryString("FK_MapData");
+            var url = "../../FoolFormDesigner/FieldTypeListChoseOneFieldExt.htm?FK_MapData=" + GetQueryString("FK_MapData");
             window.location.href = url;
         }
 
@@ -171,6 +185,7 @@
                 <input id="RB_Date" type="radio" name="Field_Type" value="6" /><label for="RB_Date">日期类型(出生日期、还款日期)</label><br />
                 <input id="RB_DateTime" type="radio" name="Field_Type" value="7" /><label for="RB_DateTime">日期时间类型(发生时间、出发时间)</label><br />
                 <input id="RB_Boolen" type="radio" name="Field_Type" value="4" /><label for="RB_Boolen">Boolen型(是否同意、是否结算)</label><br />
+                <input id="RB_SignCheck" type="radio" name="Field_Type" value="14" /><label for="RB_SignCheck">签批组件</label><br />
             </td>
         </tr>
         <tr>

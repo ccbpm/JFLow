@@ -3,7 +3,7 @@
     jQuery.getScript(basePath + "/WF/Admin/Admin.js")
         .done(function () {
             /* 耶，没有问题，这里可以干点什么 */
-             //alert('ok');
+            //alert('ok');
         })
         .fail(function () {
             /* 靠，马上执行挽救操作 */
@@ -37,15 +37,18 @@
 var optionKey = 0;
 function InitBar(optionKey) {
 
-
     var nodeID = GetQueryString("FK_Node");
+
     var str = nodeID.substr(nodeID.length - 2);
     var isSatrtNode = false;
     if (str == "01")
         isSatrtNode = true;
 
     // var html = "<div style='background-color:Silver' > 请选择访问规则: ";
+
     var html = "<div style='padding:5px' >接受人规则: ";
+    if (isSatrtNode == true)
+        html = "<div style='padding:5px' >发起人范围限定规则: ";
 
     html += "<select id='changBar' onchange='changeOption()'>";
 
@@ -70,6 +73,8 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.BySetDeptAsSubthread + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定部门计算，该部门一人处理标识该工作结束(子线程)</option>";
 
         html += "<option value=" + DeliveryWay.FindSpecDeptEmps + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门范围内的岗位集合里面的人员.</option>";
+        html += "<option value=" + DeliveryWay.ByDeptLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的领导(负责人).</option>";
+
         // 与按照岗位智能计算不同的是，仅仅找本部门的人员.
     }
 
@@ -107,7 +112,8 @@ function InitBar(optionKey) {
 
     if (isSatrtNode == true) {
 
-        html += "<option value=" + DeliveryWay.BySelected + " >&nbsp;&nbsp;&nbsp;&nbsp;所有的人员都可以发起.</option>";
+        html += "<option value=" + DeliveryWay.BySelected_1 + ">&nbsp;&nbsp;&nbsp;&nbsp;所有的人员都可以发起.</option>";
+        html += "<option value=" + DeliveryWay.BySelectedOrgs + ">&nbsp;&nbsp;&nbsp;&nbsp;指定的组织可以发起(对集团版有效).</option>";
 
     } else {
         html += "<option value=" + DeliveryWay.BySelected + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“人员选择器”选择接受人</option>";
@@ -120,7 +126,6 @@ function InitBar(optionKey) {
     html += "</select >";
     html += "<input  id='Btn_Save' type=button onclick='SaveRole()' value='保存' />";
     html += "<input id='Btn' type=button onclick='AdvSetting()' value='高级设置' />";
-    html += "<input  id='Btn_Help' type=button onclick='Help()' value='在线帮助' />";
     html += "</div>";
 
     document.getElementById("bar").innerHTML = html;
@@ -176,7 +181,7 @@ function OpenDot2DotStations() {
     var url = "../../../Comm/RefFunc/Dot2Dot.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeStations";
     url += "&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Station&EnsOfM=BP.WF.Port.Stations";
     url += "&DefaultGroupAttrKey=FK_StationType&NodeID=" + nodeID + "&PKVal=" + nodeID;
-    OpenEasyUiDialogExtCloseFunc(url, '设置岗位', 800, 500,function () {
+    OpenEasyUiDialogExtCloseFunc(url, '设置岗位', 800, 500, function () {
         Baseinfo.stas = getStas();
     });
 
@@ -191,7 +196,7 @@ function getStas() {
         return obj.FK_Node != undefined
     });
     return ens;
-   
+
 }
 /*
  * 获取节点绑定的部门
@@ -201,6 +206,35 @@ function getDepts() {
     ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
     ens = $.grep(ens, function (obj, i) {
         return obj.FK_Node != undefined
+    });
+    return ens;
+
+}
+/*
+ * 获取节点绑定部门的负责人@lz
+ */
+function getDeptLeader() {
+    var ens = getDepts();
+    var depts = new Entities("BP.WF.Port.Depts");
+
+    for (var i = 0; i < ens.length; i++) {
+        var en = ens[i];
+        depts.Retrieve("No", en.FK_Dept);
+    }
+    return depts;
+}
+
+/*
+ * 获取节点绑定的组织@lz
+ */
+function getOrgs() {
+
+    var ens = new Entities("BP.WF.Template.FlowOrgs");
+    ens.Retrieve("FlowNo", GetQueryString("FK_Flow"));
+    return ens;
+
+    ens = $.grep(ens, function (obj, i) {
+        return obj.FlowNo != undefined
     });
     return ens;
 
@@ -219,6 +253,8 @@ function getEmps() {
 }
 function changeOption() {
     var nodeID = GetQueryString("FK_Node");
+    var en = new Entity("BP.WF.Template.NodeSimple", nodeID);
+    var flowNo = en.FK_Flow;
     var obj = document.getElementById("changBar");
     var sele = obj.options;
     var index = obj.selectedIndex;
@@ -242,6 +278,9 @@ function changeOption() {
             break;
         case DeliveryWay.BySelected:
             roleName = "4.BySelected.htm";
+            break;
+        case DeliveryWay.BySelected_1:
+            roleName = "41.BySelected.htm";
             break;
         case DeliveryWay.ByPreviousNodeFormEmpsField:
             roleName = "5.ByPreviousNodeFormEmpsField.htm";
@@ -294,6 +333,12 @@ function changeOption() {
         case DeliveryWay.BySelectedForPrj:
             roleName = "21.BySelectedForPrj.htm";
             break;
+        case DeliveryWay.ByDeptLeader:
+            roleName = "23.ByDeptLeader.htm";
+            break;
+        case DeliveryWay.BySelectedOrgs:
+            roleName = "42.BySelectedOrgs.htm";
+            break;
         case DeliveryWay.ByCCFlowBPM:
             roleName = "100.ByCCFlowBPM.htm";
             break;
@@ -304,7 +349,7 @@ function changeOption() {
 
     // alert(roleName);
 
-    window.location.href = roleName + "?FK_Node=" + nodeID;
+    window.location.href = roleName + "?FK_Node=" + nodeID + "&FK_Flow=" + flowNo;
 }
 function SaveAndClose() {
     Save();

@@ -14,7 +14,8 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
         }
     }
 
- 
+    var isFistQuestWorkCheck = true; //是否是第一次请求审核组件信息
+    var checkData;
     //为控件赋值.
     for (var i = 0; i < mapAttrs.length; i++) {
 
@@ -28,33 +29,34 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             val = "";
         frmAttrData.push({ "KeyOfEn": mapAttr.KeyOfEn, "Val": val });
 
-        if (mapAttr.LGType == "2" && mapAttr.MyDataType == "1") {
-            var uiBindKey = mapAttr.UIBindKey;
-            if (uiBindKey != null && uiBindKey != undefined && uiBindKey != "") {
-                var sfTable = new Entity("BP.Sys.SFTable");
-                sfTable.SetPKVal(uiBindKey);
-                var count = sfTable.RetrieveFromDBSources();
-
-                if (count != 0 && sfTable.CodeStruct == "1") {
-                    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-                    handler.AddPara("EnsName", uiBindKey);  //增加参数.
-                    //获得map基本信息.
-                    var pushData = handler.DoMethodReturnString("Tree_Init");
-                    if (pushData.indexOf("err@") != -1) {
-                        alert(pushData);
-                        continue;
-                    }
-                    pushData = ToJson(pushData);
-                    $('#DDL_' + mapAttr.KeyOfEn).combotree('loadData', pushData);
-                    if (mapAttr.UIIsEnable == 0)
-                        $('#DDL_' + mapAttr.KeyOfEn).combotree({ disabled: true });
-
-                    $('#DDL_' + mapAttr.KeyOfEn).combotree('setValue', val);
-                    continue;
-                }
+        //为树形结构的外键或者外部数据源
+        if (mapAttr.AtPara.indexOf("@CodeStruct=1") != -1) {
+            var parentNo = GetPara(mapAttr.AtPara, "ParentNo");
+            var pushData = frmData[mapAttr.KeyOfEn];
+            if (pushData == undefined)
+                pushData = frmData[mapAttr.UIBindKey];
+            if (pushData == undefined) {
+                pushData = [];
+                var mainTable = frmData.MainTable[0];
+                pushData.push({ "No": val, "Name": mainTable[mapAttr.KeyOfEn + "T"], "ParentNo": "0" });
+            } else {
+                if (parentNo != null && parentNo != undefined)
+                    parentNo = parentNo.replace("WebUser.FK_Dept", webUser.FK_Dept)
+                else
+                    parentNo = "0";
             }
             
+            
+            pushData = findChildren(pushData, parentNo);
+            $('#DDL_' + mapAttr.KeyOfEn).combotree('loadData', pushData);
+            if (mapAttr.UIIsEnable == 0)
+                $('#DDL_' + mapAttr.KeyOfEn).combotree({ disabled: true });
+
+            $('#DDL_' + mapAttr.KeyOfEn).combotree('setValue', val);
+           
+            continue;
         }
+        
         if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
             // 判断下拉框是否有对应option, 若没有则追加
             if (val != "" && $("option[value='" + val + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
@@ -66,8 +68,11 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                 if (selectText != null && selectText != undefined && selectText != "")
                     $('#DDL_' + mapAttr.KeyOfEn).append("<option value='" + val + "'>" + selectText + "</option>");
             }
-            if (val != "")
+            if (val != "") {
                 $('#DDL_' + mapAttr.KeyOfEn).val(val);
+                $('#DDL_' + mapAttr.KeyOfEn).attr("value",val);
+            }
+                
             continue;
         }
 
@@ -89,6 +94,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                     if (bit == 2)
                         val = formatNumber(val, 2, ",");
                 }
+                $('#TB_' + mapAttr.KeyOfEn).attr("value", val);
                 $('#TB_' + mapAttr.KeyOfEn).val(val);
             }
             continue;
@@ -118,7 +124,38 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                 });
             }
         }
+
+       
+
+        if (mapAttr.UIContralType == 14) {//签批组件
+            $("#TB_" + mapAttr.KeyOfEn).hide();
+            //获取审核组件信息
+            if (isFistQuestWorkCheck == true) {
+                $.getScript('./WorkOpt/WorkCheck.js', function () { });
+                isFistQuestWorkCheck = false;
+                checkData = WorkCheck_Init();
+            }
+            var node = frmData.WF_Node == undefined ? null : frmData.WF_Node[0];
+            if (node!=null && node.FWCVer == 0 || node.FWCVer == "" || node.FWCVer == undefined)
+                pageData.FWCVer = 0;
+            else
+                pageData.FWCVer = 1;
+
+            var _Html = "<div>" + GetWorkCheck_Node(checkData,mapAttr.KeyOfEn) + "</div>";
+            $("#TB_" + mapAttr.KeyOfEn).after(_Html);
+        }
+
     }
+
+    //增加审核组件附件上传的功能
+    if ($("#uploaddiv").length > 0) {
+        var explorer = window.navigator.userAgent;
+        if (((explorer.indexOf('MSIE') >= 0) && (explorer.indexOf('Opera') < 0) || (explorer.indexOf('Trident') >= 0)))
+            AddUploadify("uploaddiv", $("#uploaddiv").attr("data-info"));
+        else
+            AddUploafFileHtm("uploaddiv", $("#uploaddiv").attr("data-info"));
+    }
+
 
 
     //设置为只读的字段.
@@ -128,7 +165,8 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
         if (mapAttr.UIVisible != 0 && (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")) {
             $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
             $('#CB_' + mapAttr.KeyOfEn).attr('disabled', true);
-            $('#RB_' + mapAttr.KeyOfEn).attr('disabled', true);
+            $('input[name=CB_' + mapAttr.KeyOfEn + ']').attr("disabled", "disabled");
+            $('input[name=RB_' + mapAttr.KeyOfEn + ']').attr("disabled", "disabled");
             $('#DDL_' + mapAttr.KeyOfEn).attr('disabled', true);
             $('#TB_' + mapAttr.KeyOfEn).removeClass("form-control");
             $('#CB_' + mapAttr.KeyOfEn).removeClass("form-control");
@@ -164,8 +202,6 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
 
         
     }
-
-
 }
 
 //傻瓜表单/累加表单初始化联动
@@ -412,6 +448,7 @@ function AfterBindEn_DealMapExt(frmData) {
         var PopModel = mapAttr.GetPara("PopModel");
 
         if (PopModel != undefined && PopModel != "" && mapExt.ExtType == mapAttr.GetPara("PopModel") && mapAttr.GetPara("PopModel") != "None") {
+            
             PopMapExt(mapAttr, mapExt, frmData);
             continue;
         }
@@ -1186,4 +1223,57 @@ function imgShow(outerdiv, innerdiv, bigimg, _this) {
     $(outerdiv).click(function () {//再次点击淡出消失弹出层  
         $(this).fadeOut("fast");
     });
-}  
+} 
+
+//树形结构
+function findChildren(jsonArray, parentNo) {
+    var appendToTree = function (treeToAppend, o) {
+        $.each(treeToAppend, function (i, child) {
+            if (o.id == child.ParentNo)
+                o.children.push({
+                    "id": child.No,
+                    "text": child.Name,
+                    "children": []
+                });
+        });
+
+        $.each(o.children, function (i, o) {
+            appendToTree(jsonArray, o);
+        });
+
+    };
+
+    var jsonTree = [];
+    var jsonchildTree = [];
+    if (jsonArray.length > 0 && typeof parentNo !== "undefined") {
+        $.each(jsonArray, function (i, o) {
+            if (o.ParentNo == parentNo) {
+                jsonchildTree.push(o);
+                jsonTree.push({
+                    "id": o.No,
+                    "text": o.Name,
+                    "children": []
+                });
+            }
+        });
+
+        $.each(jsonTree, function (i, o) {
+            appendToTree(jsonArray, o);
+        });
+
+    }
+
+    function _(treeArray) {
+        $.each(treeArray, function (i, o) {
+            if ($.isArray(o.children)) {
+                if (o.children.length == 0) {
+                    o.children = undefined;
+                } else {
+                    _(o.children);
+                }
+            }
+        });
+    }
+    _(jsonTree);
+    return jsonTree;
+}

@@ -36,7 +36,7 @@ function GenerDevelopFrm(wn,fk_mapData) {
     $("#CCForm").html(htmlContent);
 
     //解析表单中的数据
-
+   
     //1.加载隐藏字段，
     var mapAttrs = frmData.Sys_MapAttr;
     var html = "";
@@ -61,6 +61,7 @@ function GenerDevelopFrm(wn,fk_mapData) {
                 dateFmt = "MM-dd";
             }
             $('#TB_' + mapAttr.KeyOfEn).attr("onfocus", "WdatePicker({ dateFmt:'" + dateFmt + "' })");
+            continue;
 
         }
         if (mapAttr.MyDataType == 7 && (mapAttr.UIIsEnable != 0 && pageData.IsReadonly != "1")) {
@@ -78,7 +79,7 @@ function GenerDevelopFrm(wn,fk_mapData) {
             
             $('#TB_' + mapAttr.KeyOfEn).attr("onfocus", "WdatePicker({ dateFmt:'" + dateFmt + "' })");
            
-
+            continue;
         }
 
         //外部数据源、外键的选择列表
@@ -87,13 +88,14 @@ function GenerDevelopFrm(wn,fk_mapData) {
             var _html = InitDDLOperation(frmData, mapAttr, null);
             $("#DDL_" + mapAttr.KeyOfEn).empty();
             $("#DDL_" + mapAttr.KeyOfEn).append(_html);
-
+            continue;
         }
       
 
         //为复选框高级设置绑定事件
         if (mapAttr.MyDataType == 4 && mapAttr.AtPara.indexOf('@IsEnableJS=1') >= 0) {
             $("#CB_" + mapAttr.KeyOfEn).attr("onchange", "clickEnable(this, \"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\",8)");
+            continue;
         }
           //为单选按钮高级设置绑定事件
         if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {
@@ -108,6 +110,7 @@ function GenerDevelopFrm(wn,fk_mapData) {
                    
                 }
             }
+            continue;
         } 
 
         if (mapAttr.MyDataType == 1) {
@@ -129,12 +132,14 @@ function GenerDevelopFrm(wn,fk_mapData) {
                 
                 element.after(eleHtml);
                 element.remove(); //移除Imge节点
+                continue;
             }
             if (mapAttr.UIContralType == 4)//地图
             {
                 var obj = $("#TB_" + mapAttr.KeyOfEn);
                 //获取兄弟节点
                 $(obj.prev()).attr("onclick", "figure_Template_Map('" + mapAttr.KeyOfEn + "','" + mapAttr.UIIsEnable + "')");
+                continue;
             }
             if (mapAttr.UIContralType == 101)//评分
             {
@@ -147,19 +152,13 @@ function GenerDevelopFrm(wn,fk_mapData) {
                             $(this).attr("src", $(this).attr("src").replace("../../", "./"));
                     });
                 });
-
+                continue;
             }
         }
     }
 
 
-    //外键、外部数据源增加选择项option
-    var selects = $("select");
-    $.each(selects, function (obj, i) {
-        var _html = InitDDLOperation(frmData, mapAttr, null)
-    })
-
-
+   
 
     //2.解析控件 从表、附件、附件图片、框架、地图、签字版、父子流程
     var frmDtls = frmData.Sys_MapDtl;
@@ -223,13 +222,16 @@ function GenerDevelopFrm(wn,fk_mapData) {
     if (frmData.WF_FrmNodeComponent != null && frmData.WF_FrmNodeComponent != undefined) {
         var nodeComponents = frmData.WF_FrmNodeComponent[0];//节点组件
         if (nodeComponents != null) {
-            var element = $("Img[data-key=" + nodeComponents.NodeID + "]");
-            if (element.length != 0)
-                figure_Develop_FigureSubFlowDtl(nodeComponents,element);
-            //如果有审核组件，增加审核组件的HTML
-            var _html = figure_Develop_FigureFrmCheck(nodeComponents, frmData);
-            $("#CCForm").append(_html);
-
+            var elements = $("Img[data-key=" + nodeComponents.NodeID + "]");
+            $.each(elements, function (i, element) {
+                //父子流程
+                if (element.getAttribute("data-type") == "SubFlow")
+                    figure_Develop_FigureSubFlowDtl(nodeComponents, element);
+                //如果有审核组件，增加审核组件的HTML
+                if (element.getAttribute("data-type") == "WorkCheck")
+                    figure_Develop_FigureFrmCheck(nodeComponents, element, frmData);
+            })
+            
         }
     }
 
@@ -262,7 +264,7 @@ function figure_Develop_Dtl(element, frmDtl, ext) {
     var W = element.width();
     var eleHtml = $("<div id='Fd" + frmDtl.No + "' style='width:" + W + "px; height:auto;' ></div>");
 
-    var eleIframe = $("<iframe class= 'Fdtl' ID = 'Dtl_" + frmDtl.No + "' src = '" + src + "' frameborder=0  style='width:" + W + "px;"
+    var eleIframe = $("<iframe class= 'Fdtl' name='Dtl'  ID = 'Dtl_" + frmDtl.No + "' src = '" + src + "' frameborder=0  style='width:" + W + "px;"
         + "height: auto; text-align: left; '  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
     eleHtml.append(eleIframe);
     $(element).after(eleHtml);
@@ -556,7 +558,7 @@ function figure_Develop_FigureSubFlowDtl(wf_node, element) {
 
 
 //审核组件
-function figure_Develop_FigureFrmCheck(wf_node,frmData) {
+function figure_Develop_FigureFrmCheck(wf_node, element, frmData) {
 
 
 
@@ -572,80 +574,29 @@ function figure_Develop_FigureFrmCheck(wf_node,frmData) {
     if (frmNode != undefined)
         frmNode = frmNode[0];
 
-    if (node == null || frmNode == null)
+    if (node == null)
         return $('');
-    if (node.FormType == 5 && frmNode.IsEnableFWC != 1)
+    if (frmNode !=null && node.FormType == 5 && frmNode.IsEnableFWC != 1)
         return $('');
 
-    var pos = PreaseFlowCtrls(frmData.Sys_MapData[0].FlowCtrls, "FrmCheck");
+    var currentURL = window.location.href;
 
-    var x = 0, y = 0, h = 0, w = 0;
-    if (pos == null) {
-        x = wf_node.FWC_X;
-        y = wf_node.FWC_Y;
-        h = wf_node.FWC_H;
-        w = wf_node.FWC_W;
-    }
-
-    if (pos != null) {
-        x = parseFloat(pos.X);
-        y = parseFloat(pos.Y);
-        h = parseFloat(pos.H);
-        w = parseFloat(pos.W);
-    }
-    if (x <= 10)
-        x = 100;
-    if (y <= 10)
-        y = 100;
-
-    if (h <= 10)
-        h = 100;
-
-    if (w <= 10)
-        w = 300;
-
-    var src = "";
-    if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
-        if (currentURL.indexOf("FrmGener.htm") != -1 || currentURL.indexOf("MyBill.htm") != -1 || currentURL.indexOf("MyDict.htm") != -1)
-            src = "../WorkOpt/WorkCheck.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
+    var url = "./WorkOpt/";
+    if (currentURL.indexOf("FrmGener.htm") != -1 || currentURL.indexOf("MyBill.htm") != -1 || currentURL.indexOf("MyDict.htm") != -1)
+        url = '../WorkOpt/';
+    if (wf_node.FWCSta != 0) {
+        if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
+            pageData.FWCVer = 0;
         else
-            src = "./WorkOpt/WorkCheck.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
-    else
-        if (currentURL.indexOf("FrmGener.htm") != -1 || currentURL.indexOf("MyBill.htm") != -1 || currentURL.indexOf("MyDict.htm") != -1)
-            src = "../WorkOpt/WorkCheck2019.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
-        else
-            src = "./WorkOpt/WorkCheck2019.htm?s=2&IsReadonly=" + GetQueryString("IsReadonly");
-    var paras = '';
-
-    var isReadonly = GetQueryString('IsReadonly');
-    if (isReadonly != "1") {
-        isReadonly = "0";
+            pageData.FWCVer = 1;
+        $.getScript(url + 'WorkCheck.js', function () { });
     }
-    if (sta == 2)//只读
-        isReadonly = "1";
 
+    var eleHtml = $("<div id='WorkCheck'></div>");
 
-    paras += "&FID=" + pageData["FID"];
-    paras += "&WorkID=" + pageData["OID"];
-    paras += '&FK_Flow=' + pageData.FK_Flow;
-    paras += '&FK_Node=' + pageData.FK_Node;
+    $(element).after(eleHtml);
+    $(element).remove(); //移除SubFlow节点
 
-    //  paras += '&WorkID=' + pageData.WorkID;
-    if (sta == 2)//只读
-    {
-        // src += "&DoType=View";
-    }
-    else {
-        fwcOnload = "onload= 'WC" + wf_node.NodeID + "load();'";
-        $('body').append(addLoadFunction("WC" + wf_node.NodeID, "blur", "SaveDtl"));
-    }
-    src += "&r=q" + paras;
-
-    var eleHtml = '<div >' + "<iframe style='width:100%' height=" + h + 800 + "' id='FWC' src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto ></iframe>" + '</div>';
-
-    eleHtml = $(eleHtml);
-    eleHtml.css('position', 'absolute').css('top', y + 'px').css('left', x + 'px').css('width', w + 'px').css('height', h + 'px');
-    return eleHtml;
 }
 
 

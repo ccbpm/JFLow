@@ -162,7 +162,7 @@ UE.plugins['text'] = function () {
         evt = evt || window.event;
         var el = evt.target || evt.srcElement;
         var leipiPlugins = el.getAttribute('leipiplugins');
-        if (/input/ig.test(el.tagName) && leipiPlugins == thePlugins) {
+        if (/input|div/ig.test(el.tagName) && leipiPlugins == thePlugins) {
             var html = popup.formatHtml(
                 '<nobr>文本框: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
             if (html) {
@@ -201,20 +201,27 @@ UE.plugins['edit'] = function () {
                     alert('字段没有获取到，请联系管理员');
                     return false;
                 }
-                showFigurePropertyWin(datatype, keyOfEn, pageParam.fk_mapdata);
+                showFigurePropertyWin(datatype, keyOfEn, pageParam.fk_mapdata, obj);
 
             }
         }
     };
 }
 
-function showFigurePropertyWin(shap, mypk, fk_mapdata) {
+function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
 
     if (shap == 'Text') {
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=' + fk_mapdata + '_' + mypk;
-        CCForm_ShowDialog(url, '字段String属性');
+        CCForm_ShowDialog(url, '字段String属性', null, null, shap, fk_mapdata + '_' + mypk, anchorEl);
         return;
     }
+
+    if (shap == 'SignCheck') {
+        var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrCheck&PKVal=' + fk_mapdata + '_' + mypk;
+        CCForm_ShowDialog(url, '字段签批组件的属性');
+        return;
+    }
+
 
     if (shap == 'Textarea') {
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=' + fk_mapdata + '_' + mypk;
@@ -323,8 +330,8 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata) {
         return;
     }
 
-    if (shap == 'FrmCheck') {
-        var url = '../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.FrmWorkCheck&PKVal=' + fk_mapdata.replace('ND', '') + '&tab=子线程组件';
+    if (shap == 'WorkCheck') {
+        var url = '../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.FrmWorkCheck&PKVal=' + fk_mapdata.replace('ND', '') + '&tab=审核组件';
         CCForm_ShowDialog(url, '审核组件');
         return;
     }
@@ -390,20 +397,30 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata) {
 
 
 //打开窗体
-function CCForm_ShowDialog(url, title, w, h) {
+function CCForm_ShowDialog(url, title, w, h, shap, MyPK, anchorEl) {
 
-    if (w == undefined)
+    if (w==null || w== undefined)
         w = 760;
 
-    if (h == undefined)
+    if (h==null || h == undefined)
         h = 460;
 
-    if (plant == 'JFlow') {
-        url = url.replace('.aspx', '.jsp');
-        OpenEasyUiDialog(url, 'CCForm_ShowDialog', title, w, h, 'icon-library', false);
+    if (shap == "Text" || shap =="Textarea") {
+        OpenEasyUiDialog(url, 'CCForm_ShowDialog', title, w, h, 'icon-library', false, null, null, null, function () {
+
+            var  mapAttr = new Entity("BP.Sys.MapAttr", MyPK);
+            if (mapAttr.UIContralType == 14) {
+                //修改显示的样式
+                UE.dom.domUtils.setAttributes(anchorEl, {
+                    "data-type": "SignCheck"
+                });
+            }
+        });
     } else {
         OpenEasyUiDialog(url, 'CCForm_ShowDialog', title, w, h, 'icon-library', false);
+
     }
+   
 }
 
 
@@ -558,6 +575,17 @@ UE.plugins['enum'] = function () {
 
             }
             this.hide();
+        },
+        _setwidth: function () {
+            var w = prompt("请输入数值：比如25", baidu.editor.dom.domUtils.getStyle(this.anchorEl, 'width').replace("px", ""));
+
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(w) == null && w != "" && w != null) {
+                alert("不合法的输入");
+            } else {
+                var hh = baidu.editor.dom.domUtils.getStyle(this.anchorEl, 'width');
+                baidu.editor.dom.domUtils.setStyle(this.anchorEl, 'width', w + 'px');
+            }
         }
     });
     popup.render();
@@ -573,7 +601,7 @@ UE.plugins['enum'] = function () {
             var html = "";
             if (type == 'EnumSelect')
                 html = popup.formatHtml(
-                    '<nobr>单选下拉菜单: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
+                    '<nobr>单选下拉菜单: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
             else
                 html = popup.formatHtml(
                     '<nobr>单选框组: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
@@ -763,6 +791,17 @@ UE.plugins['select'] = function () {
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();
+        },
+        _setwidth: function () {
+            var w = prompt("请输入数值：比如25", baidu.editor.dom.domUtils.getStyle(this.anchorEl, 'width').replace("px", ""));
+
+            var patrn = /^(-)?\d+(\.\d+)?$/;
+            if (patrn.exec(w) == null && w != "" && w != null) {
+                alert("不合法的输入");
+            } else {
+                var hh = baidu.editor.dom.domUtils.getStyle(this.anchorEl, 'width');
+                baidu.editor.dom.domUtils.setStyle(this.anchorEl, 'width', w + 'px');
+            }
         }
     });
     popup.render();
@@ -774,7 +813,7 @@ UE.plugins['select'] = function () {
             leipiPlugins = $($(el).parent()[0]).attr('leipiplugins');
         if (/select|span/ig.test(el.tagName) && leipiPlugins == thePlugins) {
             var html = popup.formatHtml(
-                '<nobr>下拉菜单: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
+                '<nobr>下拉菜单: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
             if (html) {
                 if (el.tagName == 'SPAN') {
                     var elInput = el.getElementsByTagName("select");
@@ -1171,11 +1210,29 @@ UE.plugins['component'] = function () {
             if (dataType == "HandWriting") {//手写签字版
                 ExtHandWriting();
             }
+            if (dataType == "WorkCheck") { //审核组件
+                var mypk = GetQueryString("FK_Node");
+
+                if (mypk == null || mypk == undefined) {
+                    alert('非节点表单,不能添加审核组件');
+                    return;
+                }
+                var url = '../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmWorkCheck&PKVal=' + mypk + '&tab=审核组件';
+                OpenEasyUiDialog(url, "eudlgframe", '组件', 800, 550, "icon-property", true, null, null, null, function () {
+                    //加载js
+                    // $("<script type='text/javascript' src='../../WorkOpt/SubFlow.js'></script>").appendTo("head");
+                    var _html = "<img src='../CCFormDesigner/Controls/DataView/FrmCheck.png' style='width:67%;height:200px'  leipiplugins='component' data-key='" + mypk + "'  data-type='WorkCheck'/>"
+                    leipiEditor.execCommand('insertHtml', _html);
+                    return;
+
+                });
+
+            }
             if (dataType == "SubFlow") {//父子流程
                 var mypk = GetQueryString("FK_Node");
 
                 if (mypk == null || mypk == undefined) {
-                    alert('非节点表单');
+                    alert('非节点表单,不能添加父子流程');
                     return;
                 }
                 var url = '../../Comm/En.htm?EnName=BP.WF.Template.FrmSubFlow&PKVal=' + mypk + '&tab=父子流程组件';
@@ -1239,6 +1296,13 @@ UE.plugins['component'] = function () {
                     subFlow.SFSta = 0;//禁用
                     subFlow.Update();
                 }
+
+                if (dataType == "WorkCheck") {
+                    var nodeID = GetQueryString("FK_Node");
+                    var frmCheck = new Entity("BP.WF.Template.FrmWorkCheck", nodeID);
+                    frmCheck.FWCSta = 0;//禁用
+                    frmCheck.Update();
+                }
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();
@@ -1276,6 +1340,9 @@ UE.plugins['component'] = function () {
             if (dataType == "HandWriting")
                 _html = popup.formatHtml(
                     '<nobr>手写签名版控件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
+            if (dataType == "WorkCheck")
+                _html = popup.formatHtml(
+                    '<nobr>审核组件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
             if (dataType == "SubFlow")
                 _html = popup.formatHtml(
                     '<nobr>父子流程控件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
@@ -2020,7 +2087,7 @@ function Save() {
     //保存表单的html信息
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_DevelopDesigner");
     handler.AddPara("FK_MapData", pageParam.fk_mapdata);
-    handler.AddPara("HtmlCode", formeditor);
+    handler.AddPara("HtmlCode", encodeURIComponent(formeditor));
 
     var data = handler.DoMethodReturnString("SaveForm");
     if (data.indexOf("err@") != -1) {

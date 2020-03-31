@@ -18,6 +18,7 @@ function SaveSelfFrom() {
     }
 
     //执行保存.
+    //frm.contentWindow.postMessage({ Save:"Save" }, "*");（跨域执行的方法）
     return frm.contentWindow.Save();
 }
 
@@ -224,7 +225,6 @@ function initPageParam() {
 
     pageData.FK_Flow = GetQueryString("FK_Flow");
     pageData.FK_Node = GetQueryString("FK_Node");
-    //FK_Flow=004&FK_Node=402&FID=0&WorkID=232&IsRead=0&T=20160920223812&Paras=
     pageData.FID = GetQueryString("FID") == null ? 0 : GetQueryString("FID");
     pageData.WorkID = GetQueryString("WorkID");
     pageData.IsRead = GetQueryString("IsRead");
@@ -234,7 +234,6 @@ function initPageParam() {
     pageData.IsStartFlow = GetQueryString("IsStartFlow"); //是否是启动流程页面 即发起流程
 
     pageData.DoType1 = GetQueryString("DoType")//View
-    //$('#navIframe').attr('src', 'Admin/CCBPMDesigner/truck/centerTrakNav.html?FK_Flow=' + pageData.FK_Flow + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID);
 }
 
 //将获取过来的URL参数转成URL中的参数形式  &
@@ -1036,7 +1035,7 @@ function GenerWorkNode() {
     }
     url += "&WorkID=" + GetPageParas("WorkID") + "&FK_Flow=" + GetPageParas("FK_Flow") + "&FK_Node=" + GetPageParas("FK_Node");
 
-    var html = "<iframe ID='SelfForm' src='" + url + "' frameborder=0  style='width:100%; height:auto' leftMargin='0' topMargin='0' />";
+    var html = "<iframe ID='SelfForm' src='" + url + "' frameborder=0  style='width:100%; height:100%' leftMargin='0' topMargin='0' />";
 
     var compoents = workNodeData.WF_FrmNodeComponent;
     //增加审核分组
@@ -1092,39 +1091,30 @@ function GenerWorkNode() {
 
     showTbNoticeInfo();
 
+
+    //增加审核组件附件上传的功能
+    if ($("#uploaddiv").length > 0) {
+        var explorer = window.navigator.userAgent;
+        if (((explorer.indexOf('MSIE') >= 0) && (explorer.indexOf('Opera') < 0) || (explorer.indexOf('Trident') >= 0)))
+            AddUploadify("uploaddiv", $("#uploaddiv").attr("data-info"));
+        else
+            AddUploafFileHtm("uploaddiv", $("#uploaddiv").attr("data-info"));
+    }
+
 }
 
 function Ele_FrmCheck(wf_node) {
-
-    //审核组键FWCSta Sta,FWC_X X,FWC_Y Y,FWC_H H, FWC_W W from WF_Node
-    var sta = wf_node.FWCSta;
-
-    var h = wf_node.FWC_H + 1300;
-    var src = "";
-    if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
-        src = "./WorkOpt/WorkCheck.htm?s=2";
-    else
-        src = "./WorkOpt/WorkCheck2019.htm?s=2";
-    var fwcOnload = "";
-    var paras = '';
-
-    paras += "&FID=" + pageData["FID"];
-    paras += "&OID=" + pageData["WorkID"];
-    paras += '&FK_Flow=' + pageData.FK_Flow;
-    paras += '&FK_Node=' + pageData.FK_Node;
-    paras += '&WorkID=' + pageData.WorkID;
-    if (sta == 2)//只读
-    {
-        src += "&DoType=View";
+    //引入WorkCheck.js
+    if (wf_node.FWCSta != 0) {
+        if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
+            pageData.FWCVer = 0;
+        else
+            pageData.FWCVer = 1;
+        
     }
-    src += "&r=q" + paras;
 
-    if (h == 0)
-        h = 400;
+    return "<div id='WorkCheck'>" + WorkCheck_InitPage() +"</div>";
 
-    var eleHtml = "<iframe width='100%' height='" + h + "' id='FWC' src='" + src + "'";
-    eleHtml += " frameborder=0  leftMargin='0'  topMargin='0' scrolling=no ></iframe>";
-    return eleHtml;
 }
 
 

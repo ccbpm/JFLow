@@ -3,16 +3,36 @@
 <head>
     <title>手机屏幕显示字段排序 </title>
     <link href="../../Comm/Style/Table0.css" rel="stylesheet" type="text/css" />
-    <link href="../../Scripts/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
-    <link href="../../Scripts/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
-    <script src="../../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
+    <link href="../../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
+    <link href="../../../Scripts/easyUI145/themes/icon.css" rel="stylesheet" type="text/css" />
+    <link href="../../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/jquery-1.11.0.min.js"></script>
     <script src="../../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
 
     <script src="../../Scripts/config.js" type="text/javascript"></script>
     <script src="../../Comm/Gener.js" type="text/javascript"></script>
+    <script src="../../Scripts/bootstrap/js/bootstrap.js"></script>
+    <script src="../../Scripts/bootstrap/BootstrapUIDialog.js"></script>
+    <link href="../../Scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
     <script type="text/javascript" src="../../Scripts/config.js"></script>
+    <style>
+        select::-ms-expand {
+            display: none;
+        }
+
+        select {
+            padding: 5px 10px;
+            border: 1px solid #dcd8d8;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; /*去掉下拉箭头*/
+        }
+        label{
+            font-weight:normal;
+        }
+    </style>
     <script language="javascript" type="text/javascript">
 
         function ShowEditWindow(field, url) {
@@ -20,7 +40,9 @@
                 return;
             }
 
-            OpenDialogAndCloseRefresh(url, "编辑字段：" + field, 600, 550, "icon-edit");
+            var W = document.body.clientWidth - 240;
+            var H = document.body.clientHeight - 20;
+            OpenBootStrapModal(url, "EditFrame", "编辑字段：" + field, W, H, "icon-edit");
         }
         //新增分组名称
         function GroupFieldNew(ensName) {
@@ -46,7 +68,10 @@
         //编辑分组名称
         function GroupField(fk_mapdata, OID) {
             var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.GroupField&PKVal=' + OID + '&inlayer=1';
-            OpenDialogAndCloseRefresh(url, "编辑分组", 600, 550, "icon-edit");
+            var W = document.body.clientWidth - 240;
+            var H = document.body.clientHeight - 20;
+            OpenBootStrapModal(url, "EditFrame", "编辑分组：" + field, W, H, "icon-edit");
+
         }
         //.net保存并关闭层所用函数
         function closeDlg() {
@@ -54,21 +79,27 @@
         }
         //编辑明细表
         function EditDtl(mypk, dtlKey) {
-            //var url = '../FoolFormDesigner/MapDtl.aspx?DoType=Edit&FK_MapData=' + mypk + '&FK_MapDtl=' + dtlKey;
             var url = "../../Comm/En.htm?EnName=BP.WF.Template.MapDtlExt&PKVal=" + dtlKey;
-
-            OpenDialogAndCloseRefresh(url, "编辑明细表", 720, 550, "icon-edit");
+            var W = document.body.clientWidth - 240;
+            var H = document.body.clientHeight - 20;
+            OpenBootStrapModal(url, "EditFrame", "编辑明细表：" + field, W, H, "icon-edit");
         }
         //编辑多附件
         function EditAthMent(fk_mapdata, athMentKey) {
             var url = '../FoolFormDesigner/Attachment.aspx?FK_MapData=' + fk_mapdata + '&Ath=' + athMentKey;
-            OpenDialogAndCloseRefresh(url, "编辑多附件", 720, 550, "icon-edit");
+            var W = document.body.clientWidth - 240;
+            var H = document.body.clientHeight - 20;
+            OpenBootStrapModal(url, "EditFrame", "编辑多附件：" + field, W, H, "icon-edit");
+
         }
         //预览手机端
         function Form_View(FK_MapData, FK_Flow) {
 
             var url = "../FoolFormDesigner/MobileFrmView/FrmView.htm?IsTest=1&FrmID=" + FK_MapData;
-            OpenDialogAndCloseRefresh(url, "预览手机端表单", 300, 450, "icon-edit", function () { });
+            var W = document.body.clientWidth - 240;
+            var H = document.body.clientHeight - 20;
+            OpenBootStrapModal(url, "EditFrame", "预览手机端表单：" + field, W, H, "icon-edit");
+
         }
         //复制顺序到节点
         function Form_Copy(FK_MapData, FK_Flow) {
@@ -221,14 +252,7 @@
                 });
 
 
-                $('#p').panel({
-                    width: '100%',
-                    style: 'padding:5px;',
-                    title: mapdata[0].Name + '[' + mapdata[0].No + ']字段排序',
-                    iconCls: 'icon-tip',
-                    fit: true
-
-                });
+               
                 //1.1 在面板里添加表格
                 var htmlstr = ""
                 htmlstr += "<table id='t1' class='Table' border='0' cellpadding='0' cellspacing='0' style='width: 100%'>";
@@ -243,8 +267,8 @@
                     tr += "<td colspan='6' class='GroupTitle' nowrap >";
 
                     //分组的下移、上移按钮
-                    var btnDown = "<a onclick=btnDown('" + dtGroups[i].FrmID + "','" + dtGroups[i].OID + "','group','') class='easyui-linkbutton l-btn' data-options='plain:false,iconCls:'icon-down'' href='#' group=''><span class='l-btn-left'><span class='l-btn-text icon-down l-btn-icon-left'>下移</span></span></a>";
-                    var btnUp = "<a onclick=btnUp('" + dtGroups[i].FrmID + "','" + dtGroups[i].OID + "','group','') class='easyui-linkbutton l-btn' data-options='plain:false,iconCls:'icon-up'' href='#' group=''><span class='l-btn-left'><span class='l-btn-text icon-up l-btn-icon-left'>上移</span></span></a>";
+                    var btnDown = "<a style='float:right' onclick=btnDown('" + dtGroups[i].FrmID + "','" + dtGroups[i].OID + "','group','') class='easyui-linkbutton l-btn' data-options='plain:false,iconCls:'icon-down'' href='#' group=''><span class='l-btn-left'><span class='l-btn-text icon-down l-btn-icon-left'>下移</span></span></a>";
+                    var btnUp = "<a style='float:right' onclick=btnUp('" + dtGroups[i].FrmID + "','" + dtGroups[i].OID + "','group','') class='easyui-linkbutton l-btn' data-options='plain:false,iconCls:'icon-up'' href='#' group=''><span class='l-btn-left'><span class='l-btn-text icon-up l-btn-icon-left'>上移</span></span></a>";
                     if (dtGroups[i].CtrlType != "Ath") {
                         if (dtGroups.length == 1) {
                         }
@@ -368,7 +392,7 @@
 
                         //字段的上移与下移的按钮
                         var attrDown = "<a onclick=btnDown('" + dtGroups[i].FrmID + "','" + rows_Attrs[j].KeyOfEn + "','attr','" + rows_Attrs[j].GroupID + "') class='easyui-linkbutton l-btn' data-options='plain:false,iconCls:'icon-down'' href='#' group=''><span class='l-btn-left'><span class='l-btn-text icon-down l-btn-icon-left'>下移</span></span></a>";
-                        var attrUp = "<a onclick=btnUp('" + dtGroups[i].FrmID + "','" + rows_Attrs[j].KeyOfEn + "','attr','" + rows_Attrs[j].GroupID + "') class='easyui-linkbutton l-btn' data-options='plain:false,iconCls:'icon-up'' href='#' group=''><span class='l-btn-left'><span class='l-btn-text icon-up l-btn-icon-left'>上移</span></span></a>";
+                        var attrUp = "<a onclick=btnUp('" + dtGroups[i].FrmID + "','" + rows_Attrs[j].KeyOfEn + "','attr','" + rows_Attrs[j].GroupID + "') class='easyui-linkbutton l-btn' data-options='plain:false,iconCls:'icon-up'' href='#' group=''><span class='l-btn-left'><span class='l-btn-text icon-up l-btn-icon-left'>上移&nbsp&nbsp</span></span></a>";
                         if (attrIdx == 1) {//如果是第一个，只显示下移
                             tda += attrDown;
                         }
@@ -412,7 +436,7 @@
                         //TODO 拼接html
                         tr += "<tr>";
                         tr += "<td style='text-align:center' >" + (j + 1) + "</td>"; //序号
-                        tr += "<td  nowrap='nowrap' ><a href=\"javascript:ShowEditWindow('" + rows_Attrs[j].Name + "','../FoolFormDesigner/EditFieldGuide.htm?DoType=Edit&FK_MapData=" + FK_MapData + "&MyPK=" + rows_Attrs[j].MyPK + "&FType=1&GroupField=0')\">" + rows_Attrs[j].KeyOfEn + "</a></td>";
+                        tr += "<td  nowrap='nowrap' >" + rows_Attrs[j].KeyOfEn + "</a></td>";
                         tr += "<td  nowrap='nowrap' >" + rows_Attrs[j].Name + "</td>"; //名称
                         tr += "<td >";
                         tr += ddl.replace("#DDLID#", rows_Attrs[j].KeyOfEn); //分组字段
@@ -468,7 +492,7 @@
                         tr = "";
                         tr += "<tr>";
                         tr += "<td style='text-align:center'>" + (j + 1) + "</td>";
-                        tr += "<td nowrap=''><a href=\"javascript:ShowEditWindow('" + dtNoGroupAttrs[j].Name + "','../FoolFormDesigner/EditFieldGuide.htm?DoType=Edit&amp;FK_MapData=" + FK_MapData + "&amp;MyPK=" + dtNoGroupAttrs[j].MyPK + "&amp;FType=1&amp;GroupField=0')\">" + dtNoGroupAttrs[j].KeyOfEn + "</a></td>";
+                        tr += "<td nowrap=''>" + dtNoGroupAttrs[j].KeyOfEn + "</a></td>";
                         tr += "<td nowrap=''>" + dtNoGroupAttrs[j].Name + "</td>";
                         tr += "<td>";
                         tr += ddl.replace("#DDLID#", dtNoGroupAttrs[j].KeyOfEn);
@@ -485,12 +509,12 @@
                 var backHtml = "";
                 if (trdtl[0].tdDtl == "1") {
                     backHtml = "<tr><td colspan=6>";
-                    backHtml += "<a href='./SortingMapAttrs.htm?FK_Flow=" + FK_Flow + "&FK_MapData=" + trdtl[0].FK_MapData + "& target='_self' class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:1em;\"><span class='l-btn-left'><span class='l-btn-text icon-undo l-btn-icon-left'>返回</span></span></a>";
+                    backHtml += "<a href='./SortingMapAttrs.htm?FK_Flow=" + FK_Flow + "&FK_MapData=" + trdtl[0].FK_MapData + "& target='_self' class='btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"><span class='l-btn-left'><span class='l-btn-text icon-undo l-btn-icon-left'>返回</span></span></a>";
 
                     //新建分组
-                    backHtml += "<a href='#' onclick=GroupFieldNew('" + trdtl[0].No + "') class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:0.6em;\"><span class='l-btn-left'><span class='l-btn-text icon-addfolder l-btn-icon-left'>新建分组</span></span></a>";
+                    backHtml += "<a href='#' onclick=GroupFieldNew('" + trdtl[0].No + "') class='btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"><span class='l-btn-left'><span class='l-btn-text icon-addfolder l-btn-icon-left'>新建分组</span></span></a>";
                     //保存
-                    backHtml += "<a href='#' onclick=From_Save('" + trdtl[0].No + "') class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:1em;margin-botton:0.5em\"><span class='l-btn-left'><span class='l-btn-text icon-save l-btn-icon-left'>保存</span></span></a>";
+                    backHtml += "<a href='#' onclick=From_Save('" + trdtl[0].No + "') class=btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"><span class='l-btn-left'><span class='l-btn-text icon-save l-btn-icon-left'>保存</span></span></a>";
                     backHtml += "</td></tr>";
                 }
                 else {
@@ -498,19 +522,19 @@
                     backHtml += "<table  class='Table'  border='0' cellpadding='0' cellspacing='0' style='width:100%'>";
                     backHtml += "<tr><td>";
                     //重置
-                    backHtml += "<a href='#' onclick=From_ReSet('" + trdtl[0].FK_MapData + "') class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:0.6em;\"><span class='l-btn-left'><span class='l-btn-text icon-reload l-btn-icon-left'>智能重置顺序</span></span></a>";
+                    backHtml += "<a href='#' onclick=From_ReSet('" + trdtl[0].FK_MapData + "') class='btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"><span class='l-btn-left'><span class='l-btn-text icon-reload l-btn-icon-left'>智能重置顺序</span></span></a>";
 
                     //预览
-                    backHtml += "<a href='#' onclick=Form_View('" + trdtl[0].FK_MapData + "','" + FK_Flow + "') class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:0.6em;margin-botton:0.5em\"> <span class='l-btn-left'><span class='l-btn-text icon-search l-btn-icon-left'>预览</span></span></a>";
+                    backHtml += "<a href='#' onclick=Form_View('" + trdtl[0].FK_MapData + "','" + FK_Flow + "') class='btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"> <span class='l-btn-left'><span class='l-btn-text icon-search l-btn-icon-left'>预览</span></span></a>";
                     //复制排序
                     if (dtNodes != null && dtNodes != undefined && dtNodes.length > 0)
-                        backHtml += "<a href='#' onclick=Form_Copy('" + trdtl[0].FK_MapData + "','" + FK_Flow + "') class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:0.6em;\"><span class='l-btn-left'><span class='l-btn-text icon-copy l-btn-icon-left'>复制排序</span></span></a>";
+                        backHtml += "<a href='#' onclick=Form_Copy('" + trdtl[0].FK_MapData + "','" + FK_Flow + "') class='btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"><span class='l-btn-left'><span class='l-btn-text icon-copy l-btn-icon-left'>复制排序</span></span></a>";
 
                     //新建分组
-                    backHtml += "<a href='#' onclick=GroupFieldNew('" + trdtl[0].FK_MapData + "') class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:0.6em;\"><span class='l-btn-left'><span class='l-btn-text icon-addfolder l-btn-icon-left'>新建分组</span></span></a>";
+                    backHtml += "<a href='#' onclick=GroupFieldNew('" + trdtl[0].FK_MapData + "') class='btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"><span class='l-btn-left'><span class='l-btn-text icon-addfolder l-btn-icon-left'>新建分组</span></span></a>";
 
                     //保存
-                    backHtml += "<a href='#' onclick=From_Save('" + trdtl[0].FK_MapData + "') class='easyui-linkbutton l-btn' data-options=\"iconCls:'icon-back'\" style=\"margin-top:0.6em;margin-botton:0.5em\"><span class='l-btn-left'><span class='l-btn-text icon-save l-btn-icon-left'>保存</span></span></a>";
+                    backHtml += "<a href='#' onclick=From_Save('" + trdtl[0].FK_MapData + "') class='btn btn-primary' data-options=\"iconCls:'icon-back'\" style=\"margin:0.6em 0.2em 0.6em;border-radius:4px !important\"><span class='l-btn-left'><span class='l-btn-text icon-save l-btn-icon-left'>保存</span></span></a>";
                     backHtml += "</td>";
 
                     backHtml += "</tr>";
@@ -539,21 +563,22 @@
             }
         }
     </script>
+
 </head>
 <body class="easyui-layout">
     <form id="form1">
-        <div id="layoutDiv" data-options="region:'center',title:'字段排序',border:false" style="padding:5px">
+        
             <div id="p" style="padding:5px">
             </div>
 
 
-            <div id="nodes" class="easyui-dialog" data-options="title:'选择复制到节点（多选）:',closed:true,buttons:'#btns'" style="width:280px;height:340px">
+            <div id="nodes" class="easyui-dialog" data-options="title:'选择复制到节点（多选）:',closed:true,buttons:'#btns'" style="width:280px;height:340px;background-color:#F5F5F5;">
                 <div id="nodes_panel" style="width:100%;height:100%"></div>
             </div>
 
             <div id="btns" class="dialog-button">
                 <a onclick="BtnCopy()" class="easyui-linkbutton l-btn" data-options="plain:false" href="#" group="">
-                    <span class='l-btn-text icon-copy l-btn-icon-left'>复制</span></span>
+                    <span class='l-btn-text icon-copy l-btn-icon-left'>复制</span>
                 </a>
                 <a onclick="$('#nodes').dialog('close');" class="eeasyui-linkbutton l-btn" data-options="plain:false" href="#" group="">
                     <span class='l-btn-left'><span class='l-btn-text icon-cancel l-btn-icon-left'>取消</span></span>
@@ -561,7 +586,7 @@
             </div>
 
 
-        </div>
+        
     </form>
 </body>
 </html>

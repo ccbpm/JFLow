@@ -1,11 +1,11 @@
 ﻿/*  Table 风格   */
 body {
-  color: #333333;
-  font-family: "Open Sans", sans-serif;
-  padding: 0px !important;
-  margin: 0px !important;
-  font-size: 14px;
-  direction: ltr;
+    color: #333333;
+    font-family: "Open Sans", sans-serif;
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 14px;
+    direction: ltr;
 }
 
 /* 按钮风格 */
@@ -14,7 +14,6 @@ input[type="button"], input[type="submit"],input[type="file"]
     border: 0; /*background: #4D77A7;*/
     background: #009999;
     color: #FFF;
-    font-size: 22px;
     padding: 4px 8px;
     margin: 5px 3px 5px 3px;
     border-radius: 5px;
@@ -22,25 +21,25 @@ input[type="button"], input[type="submit"],input[type="file"]
 
 /*文本框只读风格.*/
 input[disabled],input:disabled{
-border:1px solid #DDD;
-background-color:#F5F5F5;
-color:#009999;
-font-size:22px;}
+    border:1px solid #DDD;
+    background-color:#F5F5F5;
+    color:#009999;
+}
 /*文本框只读风格.*/
 textarea[disabled],input:disabled{
-border:1px solid #DDD;
-background-color:#F5F5F5;
-color:#009999;
-font-size:22px;}
+    border:1px solid #DDD;
+    background-color:#F5F5F5;
+    color:#009999;
+}
 /*文本框只读风格.*/
 select[disabled], input:disabled
 {
     border: 1px solid #DDD;
     background-color: #F5F5F5;
     color: #009999;
-	font-size:22px;
+
 }
-  
+
 /*  table 类型风格 */
 table
 {
@@ -76,13 +75,11 @@ th
     white-space: nowrap;
     padding: 0 2px;
     background-color: #e0ecff;
-
     text-align: left;
-    font-size: 22px;
     font-weight: normal;
 }
- 
- /*  idx 表格左侧的序号列 .*/
+
+/*  idx 表格左侧的序号列 .*/
 .Idx
 {
     font-size: 12px;
@@ -118,14 +115,14 @@ td
 
 
 .DtlTh{
-	border: 1px solid #D0D0D0;
+    border: 1px solid #D0D0D0;
     padding: 1px;
     background-color: #F9F9F9;
     font-weight: normal;
     font-style: normal;
 }
 .DtlTd{
-	border-right-style: none;
+    border-right-style: none;
     border-left-style: none;
     border-style: solid;
     padding: 4px;
@@ -141,14 +138,14 @@ td a
     text-decoration: none;
     font-size: 22px;
 }
- 
+
 
 td input[type="textbox"]
 {
     margin: 0px;
     border: 1px solid #D6DDE6;
     padding: 0px;
-	font-size: 22px;}
+    font-size: 22px;}
 
 .TDNum
 {
@@ -162,7 +159,7 @@ td input
     width: auto;
     word-break: keep-all;
 }
- 
+
 .TBcalendar
 {
     background-position: left center;
@@ -185,15 +182,15 @@ caption
 
 .TBDoc
 {
-   /*border-style: dotted; */
+    /*border-style: dotted; */
     border-width: 1px;
     border-color: #CCCCCC;
-  /*  overflow: visible;*/
+    /*  overflow: visible;*/
     width: 100%;
     margin: 0px;
-    padding: 0px; 
+    padding: 0px;
     display:block;
-    
+
 }
 
 .TB
@@ -375,10 +372,10 @@ Img
 }
 
 #bottomToolBar {
-display:block;
+    display:block;
 }
 
- 
+
 #divCCForm
 {
     position: relative !important;
@@ -400,7 +397,7 @@ display:block;
     /*display: table;*/
     display: none;
     display: block;
-    
+
     font-weight: bold;
     color: red;
     text-align:left;
@@ -446,7 +443,7 @@ display:block;
     margin: 0 auto;
     display: table;
 }
- 
+
 .col-md-2, .col-md-1, .col-md-11,.col-sm-4, .col-sm-2, .col-sm-10 {
     line-height: 40px;
     text-align: left;
@@ -470,7 +467,7 @@ display:block;
     background: url(/image/arrow1.png) no-repeat;
     background-position: 85px 10px;
 }
-    
+
 
 .item1 {
     width: 180px;
@@ -479,10 +476,10 @@ display:block;
     float: left;
 }
 
-    .item1:first-child {
-        background: url(/image/arrow1.png) no-repeat;
-        background-position: 85px 10px;
-    }
+.item1:first-child {
+    background: url(/image/arrow1.png) no-repeat;
+    background-position: 85px 10px;
+}
 
 div .item1:first-child a {
     background: #1555a8;
@@ -495,39 +492,39 @@ div .item1:first-child .active {
     background: #DC143C;
 }
 div .item1 .active{
-background:#a8352c;
+    background:#a8352c;
 }
 
-        #centerNavDiv {
-            display:block;
-            clear:both;
-        
-        }
+#centerNavDiv {
+    display:block;
+    clear:both;
 
-            .item a {
-                background: #2682f9;
-                padding: 10px 20px;
-                border-radius: 30px;
-                font-size: 24px;
-                font-weight: bold;
-                cursor:pointer;
-                color:white;
-                text-decoration:none;
+}
 
-                margin-left:10px;
-            }
+.item a {
+    background: #2682f9;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor:pointer;
+    color:white;
+    text-decoration:none;
 
-                .item a:hover, .item a:focus, .item1 a:hover, .item1 a:focus {
-                    color: white;
-                    text-decoration: none !important;
-                }
+    margin-left:10px;
+}
 
-            .item label {
-                width: 100%;
-                height: 20px;
-                float: left;
-                padding: 15px 0px;
-            }
+.item a:hover, .item a:focus, .item1 a:hover, .item1 a:focus {
+    color: white;
+    text-decoration: none !important;
+}
+
+.item label {
+    width: 100%;
+    height: 20px;
+    float: left;
+    padding: 15px 0px;
+}
 
 .item1 a {
     cursor:pointer;
@@ -550,50 +547,50 @@ background:#a8352c;
     padding: 15px 0px;
 }
 
-        .owl-prev {
-            background: url(/image/arrow_left_1.png) no-repeat;
-            padding: 20px 0px 20px 0px;
-            color: transparent;
-            width: 35px;
-            height: 100%;
-            float:left;
-            cursor:pointer;
+.owl-prev {
+    background: url(/image/arrow_left_1.png) no-repeat;
+    padding: 20px 0px 20px 0px;
+    color: transparent;
+    width: 35px;
+    height: 100%;
+    float:left;
+    cursor:pointer;
 
-            border-style:none;
-            margin:10px 0px 10px 10px;
-        }
+    border-style:none;
+    margin:10px 0px 10px 10px;
+}
 
-        .owl-next {
-            background: url(/image/arrow_right_1.png) no-repeat;
-            padding: 20px 0px 20px 0px;
-            color: transparent;
-            width: 35px;
-            float:right;
-            cursor:pointer;
+.owl-next {
+    background: url(/image/arrow_right_1.png) no-repeat;
+    padding: 20px 0px 20px 0px;
+    color: transparent;
+    width: 35px;
+    float:right;
+    cursor:pointer;
 
-            border-style:none;
-            margin:10px 0px 10px 10px;
-        }
+    border-style:none;
+    margin:10px 0px 10px 10px;
+}
 
-        .owl-prev:hover {
-            background: url(/image/arrow_left_2.png) no-repeat;
-            border-style:none;
-        }
+.owl-prev:hover {
+    background: url(/image/arrow_left_2.png) no-repeat;
+    border-style:none;
+}
 
-        .owl-next:hover {
-            background: url(/image/arrow_right_2.png) no-repeat;
-            border-style:none;
-        }
-        
-        .owl-prev:focus {
-            background: url(/image/arrow_left_2.png) no-repeat;
-            border-style:none;
-        }
+.owl-next:hover {
+    background: url(/image/arrow_right_2.png) no-repeat;
+    border-style:none;
+}
 
-        .owl-next:focus {
-            background: url(/image/arrow_right_2.png) no-repeat;
-            border-style:none;
-        }
+.owl-prev:focus {
+    background: url(/image/arrow_left_2.png) no-repeat;
+    border-style:none;
+}
+
+.owl-next:focus {
+    background: url(/image/arrow_right_2.png) no-repeat;
+    border-style:none;
+}
 
 input[type=text], input[type=password], select
 {
@@ -602,7 +599,7 @@ input[type=text], input[type=password], select
     margin: 1px 1px;
     width: 100%;
     height: 23px;
-	font-size: 22px;}
+}
 
 .FDesc
 {
@@ -677,12 +674,12 @@ textarea,iframe[src*="AttachmentUpload.aspx"] {
 }
 
 .panel {
-border:0px !important;
-margin:0px;
+    border:0px !important;
+    margin:0px;
 }
 
 .topBar {
-display:none;
+    display:none;
 }
 
 #bottomToolBar {
@@ -718,44 +715,44 @@ display:none;
 
 }
 
- html,body {
-            scrollbar-face-color:#2884fa; /*������3D���棨ThreedFace������ɫ*/ 
-            scrollbar-highlight-color:white; /*������3D���������ߣ�ThreedHighlight����ɫ*/ 
-            scrollbar-shadow-color:white; /*������3D�����İ��ߣ�ThreedShadow����ɫ*/ 
-            scrollbar-3dlight-color:white; /*���������߿���ɫ*/ 
-            scrollbar-arrow-color:white; /*������������ͷ����ɫ */ 
-            scrollbar-track-color:white; /*���������϶�����(TrackBar)��ɫ*/
-            scrollbar-darkshadow-color:white; /*���������߿���ThreedDarkShadow����ɫ*/ 
-            
-        }
- /*---������Ĭ����ʾ��ʽ--*/  
-        ::-webkit-scrollbar-thumb{  
-          /**background-color: #2884fa;*/
-          height: 50px;
-          outline-offset: -2px;
-          outline: 2px solid white;
-          -webkit-border-radius: 4px;
-          border: 2px solid white;
-        }  
-        /*---����������������ʾ��ʽ--*/  
-        ::-webkit-scrollbar-thumb:hover{  
-           background-color:#2884fa;  
-           height:50px;  
-           -webkit-border-radius:4px;  
-        }  
-        /*---��������С--*/  
-        ::-webkit-scrollbar{  
-           width:8px;  
-           height:8px;  
-        }  
-        /*---�����򱳾���ʽ--*/  
-        ::-webkit-scrollbar-track-piece{  
-           background-color: white;  
-           -webkit-border-radius:0;  
-        }
+html,body {
+    scrollbar-face-color:#2884fa; /*������3D���棨ThreedFace������ɫ*/
+    scrollbar-highlight-color:white; /*������3D���������ߣ�ThreedHighlight����ɫ*/
+    scrollbar-shadow-color:white; /*������3D�����İ��ߣ�ThreedShadow����ɫ*/
+    scrollbar-3dlight-color:white; /*���������߿���ɫ*/
+    scrollbar-arrow-color:white; /*������������ͷ����ɫ */
+    scrollbar-track-color:white; /*���������϶�����(TrackBar)��ɫ*/
+    scrollbar-darkshadow-color:white; /*���������߿���ThreedDarkShadow����ɫ*/
+
+}
+/*---������Ĭ����ʾ��ʽ--*/
+::-webkit-scrollbar-thumb{
+    /**background-color: #2884fa;*/
+    height: 50px;
+    outline-offset: -2px;
+    outline: 2px solid white;
+    -webkit-border-radius: 4px;
+    border: 2px solid white;
+}
+/*---����������������ʾ��ʽ--*/
+::-webkit-scrollbar-thumb:hover{
+    background-color:#2884fa;
+    height:50px;
+    -webkit-border-radius:4px;
+}
+/*---��������С--*/
+::-webkit-scrollbar{
+    width:8px;
+    height:8px;
+}
+/*---�����򱳾���ʽ--*/
+::-webkit-scrollbar-track-piece{
+    background-color: white;
+    -webkit-border-radius:0;
+}
 
 
-        /*提示框的CSS 设置*/
+/*提示框的CSS 设置*/
 .popover-title {
     background: #213b5d !important;
     color: white;
@@ -791,13 +788,13 @@ display:none;
   margin-bottom: 0;
 }
 [class*="col-"] {
-  
+
   background-color: #eee;
   background-color: rgba(86,61,124,.15);
   border: 1px solid #ddd;
   border: 1px solid rgba(86,61,124,.2);
 
-  
+
 }*/
 
 
@@ -835,11 +832,11 @@ display:none;
     cursor:pointer;
     font-weight: bold;
 
-   /* display:none;*/
+    /* display:none;*/
 }
 #CCForm label {
     font-weight: normal;
-    font-size:22px;
+    font-size:14px;
     margin-bottom:0px;
 }
 .state {
@@ -865,24 +862,24 @@ display:none;
     margin: 8px 0px 8px 0px;
 }
 
-    .form_tree .input-group-addon {
-        border-radius: 0px 15px 15px 0px;
-        border: #2884fa 1px solid;
-        cursor:pointer;
-        border-left: none;
-        color: #2884fa;
-    }
+.form_tree .input-group-addon {
+    border-radius: 0px 15px 15px 0px;
+    border: #2884fa 1px solid;
+    cursor:pointer;
+    border-left: none;
+    color: #2884fa;
+}
 
 #showCol input[type=radio] {
-cursor:pointer;
+    cursor:pointer;
 }
 
 /*radio后边跟着的标签*/
 .labRb {
-cursor:pointer;
+    cursor:pointer;
 }
 input[type=radio] {
-cursor:pointer;
+    cursor:pointer;
 }
 
 .modal-title {
@@ -896,32 +893,32 @@ cursor:pointer;
 
 /*POP窗中的的树*/
 .tree-demo {
-text-align:left;
+    text-align:left;
 }
 
 .divAth {
-background:rgb(235, 235, 228);
-min-width:100px;
-cursor:pointer;
-margin:8px 0;
-line-height:30px;
+    background:rgb(235, 235, 228);
+    min-width:100px;
+    cursor:pointer;
+    margin:8px 0;
+    line-height:30px;
 }
 
 #navIframe {
-width:100%;
-background:transparent;
-border:none;
+    width:100%;
+    background:transparent;
+    border:none;
 }
 
 
 #divTrack, #divCurrentForm {
     margin:0px;
-    float:right;
+
     position:relative;
 }
-    #divTrack iframe {
+#divTrack iframe {
     width:100%;
-    }
+}
 
 .trackDiv {
     background: #E3E7F4;
@@ -929,14 +926,14 @@ border:none;
     position:relative;
 }
 .trackDiv i {
-            display: block;
-            width: 33px;
-            height: 22px;
-            background: url("../../WF/Scripts/bootstrap/css/img/sanjiao_03.png") no-repeat;
-            position: absolute;
-            top: 66px;
-            left: 50px;
-        }
+    display: block;
+    width: 33px;
+    height: 22px;
+    background: url("../../WF/Scripts/bootstrap/css/img/sanjiao_03.png") no-repeat;
+    position: absolute;
+    top: 66px;
+    left: 50px;
+}
 .returnTackDiv {
     font-size: 15px;
     text-align: left;
@@ -964,77 +961,91 @@ border:none;
 
 
 #freeBarDiv {
-display:none;
-text-align:right;
+    display:none;
+    text-align:right;
 }
 
 #freeBarDiv #BtnOk{
-     margin-right:50px;
+    margin-right:50px;
 }
 
 #freeBarDiv #BtnCancel{
-   
+
 }
 
 #orgjstree {
-font-size:14px;display: none;height:90%;overflow:auto;
+    font-size:14px;display: none;height:90%;overflow:auto;
 }
-body table 
+body table
 {
-    
-  /* width: 98% border:0px;
-                        margin: 0px;*/
+
+    /* width: 98% border:0px;
+                          margin: 0px;*/
 }
 body table tr td {
-  text-overflow: ellipsis;
-  /* for IE */
-  -moz-text-overflow: ellipsis;
-  /* for Firefox,mozilla */
+    text-overflow: ellipsis;
+    /* for IE */
+    -moz-text-overflow: ellipsis;
+    /* for Firefox,mozilla */
 }
 body table tr td:first-child {
-  text-overflow: initial;
-  /* for IE */
-  -moz-text-overflow: initial;
-  /* for Firefox,mozilla */
-  overflow: auto;
-  white-space: normal;
+    text-overflow: initial;
+    /* for IE */
+    -moz-text-overflow: initial;
+    /* for Firefox,mozilla */
+    overflow: auto;
+    white-space: normal;
 }
 
 body table tr td label{
-  text-overflow: initial;
-  /* for IE */
-  -moz-text-overflow: initial;
-  /* for Firefox,mozilla */
-  overflow: auto;
-  white-space: normal;
+    text-overflow: initial;
+    /* for IE */
+    -moz-text-overflow: initial;
+    /* for Firefox,mozilla */
+    overflow: auto;
+    white-space: normal;
 }
 
 /*分页表格*/
 .tabPdiv {
-overflow:auto;
+    overflow:auto;
 }
 .tabPdiv table{
-width:100%;
+    width:100%;
 }
 select {
     apperance: none;
--moz-appearance: none;
--ms-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
 }
 
 
 /*让表格显示 ...*/
 body table tr td {
-  text-overflow: ellipsis;
-  /* for IE */
-  -moz-text-overflow: ellipsis;
-  /* for Firefox,mozilla */
- /* overflow: hidden;
-  white-space: nowrap;*/
-  word-wrap:break-word;
-  word-break:break-all;
+    text-overflow: ellipsis;
+    /* for IE */
+    -moz-text-overflow: ellipsis;
+    /* for Firefox,mozilla */
+    /* overflow: hidden;
+     white-space: nowrap;*/
+    word-wrap:break-word;
+    word-break:break-all;
 }
 
 .errorInput {
     border-color: red;
+}
+.only-print-show {
+
+    display: inline-block;
+}
+.only-print-hidden {
+    display: none;
+}
+.drop-down-wrap{
+    display:none
+}
+
+.printClass{
+    height:auto !important;
 }

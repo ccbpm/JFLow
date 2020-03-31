@@ -477,6 +477,11 @@ function Save(scope) {
         }
     });
 
+    //审核组件
+    if ($("#WorkCheck").length == 1) {
+        //保存审核信息
+        SaveWorkCheck();
+    }
 
     //必填项和正则表达式检查
     var formCheckResult = true;
@@ -535,6 +540,7 @@ function initPageParam() {
     if (oid == null)
         oid = GetQueryString("OID");
     pageData.OID = oid;
+    pageData.WorkID = oid;
 
     pageData.IsRead = GetQueryString("IsRead");
     pageData.T = GetQueryString("T");
@@ -654,7 +660,8 @@ function InitDDLOperation(frmData, mapAttr, defVal) {
                 return value.EnumKey == mapAttr.UIBindKey;
             });
 
-
+            if (mapAttr.DefVal == -1)
+                operations += "<option " + (obj.IntKey == mapAttr.DefVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>-无(不选择)-</option>";
             $.each(enums, function (i, obj) {
                 operations += "<option " + (obj.IntKey == mapAttr.DefVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
             });

@@ -62,28 +62,7 @@
             created() {
                 this.delData =  InitData();
 
-                var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_DevelopDesigner");
-                handler.AddPara("FrmID", frmID);
-                var html = handler.DoMethodReturnString("Fields_Init");
-             //   console.log(html);
-
-                var list = ens.GetEns();
-                var deldate = [];
-                list.data.map(function (item, index) {
-                    if (item.KeyOfEn && (html.indexOf('data-key="' + item.KeyOfEn + '"') == -1 && html.indexOf('data-key="' + item.MyPK + '"') == -1) && index > 7) {
-                        item.contralType = GetFieldType(item);
-
-                        if (item.UIVisable != 0
-                            && item.KeyOfEn != 'Emps'
-                            && item.KeyOfEn != 'FK_NY'
-                            && item.KeyOfEn != 'FK_Dept'
-                             && item.KeyOfEn != 'MyNum'
-                            && item.KeyOfEn != 'Rec') {
-                            deldate.push(item);
-                        }
-                    }
-                });
-                this.delData = deldate;
+                
             },
             methods: {
                 Edit: function (myPK) {
@@ -132,7 +111,7 @@
                 var list = ens.GetEns();
                 var deldate = [];
                 list.data.map(function (item, index) {
-                    if (item.KeyOfEn && (html.indexOf('data-key="' + item.KeyOfEn + '"') == -1 && html.indexOf('data-key="' + item.MyPK + '"') == -1) && index > 7) {
+                    if (item.KeyOfEn && (html.indexOf('data-key="' + item.KeyOfEn + '"') == -1 && html.indexOf('data-key="' + item.MyPK + '"') == -1) && index > 6) {
                         item.contralType = GetFieldType(item);
                         deldate.push(item);
                     }
@@ -190,6 +169,8 @@
                     return "地图";
                 if (mapAttr.UIContralType == 101)//评分
                     return "评分";
+                if (mapAttr.UIContralType == 14)//评分
+                    return "签批组件";
             }
             return "其他类型";
         }
@@ -253,6 +234,11 @@
                 if (uiContralType == 101) {
                     title = '评分控件';
                     url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.ExtScore&PKVal=' + mypk + '&s=' + Math.random();
+                }
+
+                if (uiContralType == 14) {
+                    title = '字段S签批组件属性';
+                    url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=' + mypk + '&s=' + Math.random();
                 }
 
             }

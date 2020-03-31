@@ -60,7 +60,7 @@ public class StationTypes extends EntitiesNoName
 			return super.RetrieveAll();
 		}
 
-		//按照orgNo查询. 
+		//按照orgNo查询.
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere("OrgNo", BP.Web.WebUser.getOrgNo());
 		qo.addOr();

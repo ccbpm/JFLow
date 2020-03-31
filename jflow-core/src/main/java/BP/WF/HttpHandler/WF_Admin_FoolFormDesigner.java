@@ -2317,7 +2317,170 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		return BP.Tools.Json.ToJsonUpper(dt);
 	}
 
+	/// <summary>
+	///
+	/// </summary>
+	/// <returns></returns>
+	public String FrmView_Init() throws Exception
+	{
+		String frmID = this.GetRequestVal("FrmID");
 
+		MapData md = new MapData(frmID);
+
+		//获得表单模版.
+		DataSet myds = BP.Sys.CCFormAPI.GenerHisDataSet(md.getNo());
+
+
+           //region 把主从表数据放入里面.
+		//.工作数据放里面去, 放进去前执行一次装载前填充事件.
+		GEEntity wk = new GEEntity(getFrmID());
+
+		DataTable mainTable = wk.ToDataTableField("MainTable");
+		mainTable.TableName = "MainTable";
+		myds.Tables.add(mainTable);
+
+
+            //#region 增加附件信息.
+		BP.Sys.FrmAttachments athDescs = new FrmAttachments();
+
+		athDescs.Retrieve(FrmAttachmentAttr.FK_MapData, this.getFrmID());
+		if (athDescs.size() != 0)
+		{
+			FrmAttachment athDesc = (FrmAttachment)athDescs.get(0);
+
+			//查询出来数据实体.
+			BP.Sys.FrmAttachmentDBs dbs = new BP.Sys.FrmAttachmentDBs();
+			if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+			{
+				Paras ps = new Paras();
+				ps.SQL = "SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
+				ps.Add("WorkID", this.getWorkID());
+				String pWorkID = String.valueOf(BP.DA.DBAccess.RunSQLReturnValInt(ps, 0));
+				if (pWorkID == null || pWorkID == "0")
+				{
+					pWorkID = String.valueOf(this.getWorkID());
+				}
+
+				if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
+				{
+					/* 继承模式 */
+					BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+					qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pWorkID);
+					qo.addOr();
+					qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.getWorkID());
+					qo.addOrderBy("RDT");
+					qo.DoQuery();
+				}
+
+				if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
+				{
+					/*共享模式*/
+					dbs.Retrieve(FrmAttachmentDBAttr.RefPKVal, pWorkID);
+				}
+			}
+			else if (athDesc.getHisCtrlWay() == AthCtrlWay.WorkID)
+			{
+				/* 继承模式 */
+				BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
+				qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
+				qo.addAnd();
+				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, this.getWorkID());
+				qo.addOrderBy("RDT");
+				qo.DoQuery();
+			}
+
+			//增加一个数据源.
+			myds.Tables.add(dbs.ToDataTableField("Sys_FrmAttachmentDB"));
+		}
+
+            //#region 把外键表加入DataSet
+		DataTable dtMapAttr = myds.GetTableByName("Sys_MapAttr");
+		DataTable dt = new DataTable();
+		MapExts mes = md.getMapExts();
+		MapExt me = new MapExt();
+		DataTable ddlTable = new DataTable();
+		ddlTable.Columns.Add("No");
+		for (DataRow dr : dtMapAttr.Rows)
+		{
+			String lgType = dr.getValue("LGType").toString();
+			String uiBindKey = dr.getValue("UIBindKey").toString();
+
+			if (DataType.IsNullOrEmpty(uiBindKey) == true)
+				continue; //为空就continue.
+
+			if (lgType.equals("1") == true)
+				continue; //枚举值就continue;
+
+			String uiIsEnable = dr.getValue("UIIsEnable").toString();
+			if (uiIsEnable.equals("0") == true && lgType.equals("1") == true)
+				continue; //如果是外键，并且是不可以编辑的状态.
+
+			if (uiIsEnable.equals("1") == true && lgType.equals("0") == true)
+				continue; //如果是外部数据源，并且是不可以编辑的状态.
+
+
+
+			// 检查是否有下拉框自动填充。
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
+
+                //#region 处理下拉框数据范围. for 小杨.
+				me = (MapExt)mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
+			if (me != null)
+			{
+				String fullSQL = me.getDoc();
+				fullSQL = fullSQL.replace("~", ",");
+				fullSQL = BP.WF.Glo.DealExp(fullSQL, wk, null);
+				dt = DBAccess.RunSQLReturnTable(fullSQL);
+				//重构新表
+				DataTable dt_FK_Dll = new DataTable();
+				dt_FK_Dll.TableName = keyOfEn;//可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
+				dt_FK_Dll.Columns.Add("No", String.class);
+				dt_FK_Dll.Columns.Add("Name", String.class);
+				for (DataRow dllRow : dt.Rows)
+				{
+					DataRow drDll = dt_FK_Dll.NewRow();
+					drDll.setValue("No",dllRow.getValue("No"));
+					drDll.setValue("Name",dllRow.getValue("Name"));
+					dt_FK_Dll.Rows.add(drDll);
+				}
+				myds.Tables.add(dt_FK_Dll);
+				continue;
+			}
+               // #endregion 处理下拉框数据范围.
+
+			// 判断是否存在.
+			if (myds.Tables.contains(uiBindKey) == true)
+			{
+				continue;
+			}
+
+			DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey);
+			if (mydt == null)
+			{
+				DataRow ddldr = ddlTable.NewRow();
+				ddldr.setValue("No",uiBindKey);
+				ddlTable.Rows.add(ddldr);
+			}
+			else
+			{
+				myds.Tables.add(mydt);
+			}
+		}
+		ddlTable.TableName = "UIBindKey";
+		myds.Tables.add(ddlTable);
+            //#endregion End把外键表加入DataSet
+
+            //#region 图片附件
+		FrmImgAthDBs imgAthDBs = new FrmImgAthDBs(this.getFrmID(), String.valueOf(this.getWorkID()));
+		if (imgAthDBs != null && imgAthDBs.size() > 0)
+		{
+			DataTable dt_ImgAth = imgAthDBs.ToDataTableField("Sys_FrmImgAthDB");
+			myds.Tables.add(dt_ImgAth);
+		}
+
+		return BP.Tools.Json.ToJson(myds);
+	}
 
 	/** 
 	 初始化数据

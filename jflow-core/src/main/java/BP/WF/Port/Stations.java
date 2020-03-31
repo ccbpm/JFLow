@@ -1,6 +1,7 @@
 package BP.WF.Port;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.WF.*;
 import java.util.*;
@@ -35,6 +36,21 @@ public class Stations extends EntitiesNoName
 	public final List<Station> ToJavaList()
 	{
 		return (List<Station>)(Object)this;
+	}
+	@Override
+	public int RetrieveAll() throws Exception
+	{
+		if (SystemConfig.getCCBPMRunModel() == 0)
+		{
+			return super.RetrieveAll();
+		}
+
+		//按照orgNo查询.
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere("OrgNo", BP.Web.WebUser.getOrgNo());
+		qo.addOr();
+		qo.AddWhere("OrgNo", "");
+		return qo.DoQuery();
 	}
 	/** 
 	 转化成list

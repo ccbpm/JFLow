@@ -15,4 +15,6 @@ public class DeptAttr extends EntityNoNameAttr
 	 父节点的编号
 	*/
 	public static final String ParentNo = "ParentNo";
+	public static final String Idx = "Idx";
+	public static final String OrgNo = "OrgNo";
 }

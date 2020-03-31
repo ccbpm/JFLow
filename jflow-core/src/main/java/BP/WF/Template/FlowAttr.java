@@ -298,7 +298,10 @@ public class FlowAttr
 	 子流程结束时，让父流程自动运行到下一步
 	*/
 	public static final String IsToParentNextNode = "IsToParentNextNode";
-
+	/**
+	 OrgNo
+	 */
+	public static final String OrgNo = "OrgNo";
 		///#endregion 父子流程
 
 

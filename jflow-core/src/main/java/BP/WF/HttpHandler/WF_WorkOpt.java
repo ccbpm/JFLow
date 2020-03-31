@@ -1916,7 +1916,7 @@ public class WF_WorkOpt extends WebContralBase
 				QueryObject obj_Ath = new QueryObject(athDBs);
 				obj_Ath.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, "ND" + tk.getNDFrom() + "_FrmWorkCheck");
 				obj_Ath.addAnd();
-				obj_Ath.AddWhere(FrmAttachmentDBAttr.RefPKVal, String.valueOf(this.getWorkID())); //@sly
+				obj_Ath.AddWhere(FrmAttachmentDBAttr.RefPKVal, String.valueOf(this.getWorkID()));
 				obj_Ath.addAnd();
 				obj_Ath.AddWhere(FrmAttachmentDBAttr.Rec, tk.getEmpFrom());
 				obj_Ath.addOrderBy(FrmAttachmentDBAttr.RDT);

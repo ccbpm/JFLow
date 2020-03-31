@@ -257,7 +257,14 @@ public class Flow extends BP.En.EntityNoName {
 	public final void setFlowMark(String value) throws Exception {
 		this.SetValByKey(FlowAttr.FlowMark, value);
 	}
-
+	public String getOrgNo() throws Exception
+	{
+			String str = this.GetValStringByKey(FlowAttr.OrgNo);
+			return str;
+	}
+	public final void setOrgNo(String value) throws Exception {
+		this.SetValByKey(FlowAttr.OrgNo, value);
+	}
 	/**
 	 * 节点图形类型
 	 * 
@@ -5970,6 +5977,7 @@ public class Flow extends BP.En.EntityNoName {
 			Flow fl = new Flow(this.getNo());
 			fl.DoDelData();
 			fl.DoDelete();
+			fl.setOrgNo(WebUser.getOrgNo()); //隶属组织
 			this.Save();
 
 			/// #endregion 删除有可能存在的历史数据.

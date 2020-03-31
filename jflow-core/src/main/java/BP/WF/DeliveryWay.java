@@ -93,6 +93,14 @@ public enum DeliveryWay
 	 按照选择模式计算.
 	*/
 	BySelectedForPrj(21),
+	/**
+	 按照设置的组织计算
+	 */
+	BySelectedOrgs(22),
+	/**
+	 按照部门领导计算
+	 */
+	ByDeptLeader(23),
 	/** 
 	 按照ccflow的BPM模式处理
 	*/

@@ -364,12 +364,20 @@ public abstract class Entity implements Serializable {
 				dr.setValue(attr.getKey(), this.GetValByKey(attr.getKey()).toString().trim());
 				continue;
 			}
+			else
+			{
+				String obj = this.GetValStrByKey(attr.getKey());
+				if (obj == null && attr.getIsNum())
+				{
+					dr.setValue(attr.getKey(),0);
+					continue;
+				}
 
-			String obj = this.GetValStrByKey(attr.getKey());
-			if (obj == null && attr.getIsNum())
-				obj = "0";
-
-			dr.setValue(attr.getKey(), obj);
+				if (attr.getIsNum() == true && DataType.IsNumStr(obj.toString() ) == false)
+					dr.setValue(attr.getKey(),0);
+				else
+					dr.setValue(attr.getKey(),obj);
+			}
 
 		}
 

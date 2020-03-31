@@ -452,7 +452,10 @@ public class FlowSheet extends EntityNoName
 			//查询条件.
 		map.AddSearchAttr(FlowAttr.FK_FlowSort);
 		 //   map.AddSearchAttr(FlowAttr.TimelineRole);
-
+		//绑定组织. @sly
+		map.getAttrsOfOneVSM().Add(new FlowOrgs(), new BP.WF.Port.Admin2.Orgs(),
+				FlowOrgAttr.FlowNo,
+				FlowOrgAttr.OrgNo, FlowAttr.Name, FlowAttr.No, "可以发起的组织");
 
 			//map.AddRefMethod(rm);
 		RefMethod rm = new RefMethod();
@@ -1056,7 +1059,7 @@ public class FlowSheet extends EntityNoName
 	 删除流程
 	 
 	 @param workid
-	 @param sd
+	 @param note
 	 @return 
 	 * @throws Exception 
 	*/

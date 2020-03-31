@@ -261,7 +261,8 @@ public class GenerWorkFlow extends Entity {
 	}
 
 	/**
-	 * 计划开始时间 @sly SDTOfFlow 就是计划完成日期.
+	 * 计划开始时间
+	 * SDTOfFlow 就是计划完成日期.
 	 */
 	public final String getRDTOfSetting() throws Exception {
 		String str = this.GetParaString("RDTOfSetting");

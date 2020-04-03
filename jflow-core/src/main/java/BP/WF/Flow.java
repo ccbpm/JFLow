@@ -5752,7 +5752,13 @@ public class Flow extends BP.En.EntityNoName {
 		}
 
 		/// #endregion
-
+		//处理OrgNo 的导入问题.
+		if (Glo.getCCBPMRunModel() != CCBPMRunModel.GroupInc)
+		{
+			fl.RetrieveFromDBSources();
+			fl.setOrgNo(BP.Web.WebUser.getOrgNo());
+			fl.DirectUpdate();
+		}
 		if (infoErr.equals("")) {
 			infoTable = "";
 			return fl; // "完全成功。";

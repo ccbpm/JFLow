@@ -86,6 +86,9 @@ public class CCListAttr extends EntityMyPKAttr
 	 是否加入待办列表
 	*/
 	public static final String InEmpWorks = "InEmpWorks";
-
+	/**
+	 域
+	 */
+	public static final String Domain = "Domain";
 		///#endregion
 }

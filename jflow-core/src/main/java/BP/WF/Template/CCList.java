@@ -273,7 +273,17 @@ public class CCList extends EntityMyPK
 	{
 		this.SetValByKey(CCListAttr.InEmpWorks, value);
 	}
-
+	/// <summary>
+	/// 域
+	/// </summary>
+	public final String getDomain() throws Exception
+	{
+		return this.GetValStringByKey(CCListAttr.Domain);
+	}
+	public final void setDomain(boolean value) throws Exception
+	{
+		this.SetValByKey(CCListAttr.Domain, value);
+	}
 		///#endregion
 
 
@@ -329,7 +339,8 @@ public class CCList extends EntityMyPK
 		map.AddTBInt(CCListAttr.PWorkID, 0, "父流程WorkID", true, true);
 			//added by liuxc,2015.7.6，标识是否在待办列表里显示
 		map.AddBoolean(CCListAttr.InEmpWorks, false, "是否加入待办列表", true, true);
-
+		//addmy zhoupeng
+		map.AddTBString(CCListAttr.Domain, null, "Domain", true, true, 0, 50, 10, true);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

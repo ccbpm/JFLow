@@ -1391,6 +1391,7 @@ public class NodeExt extends Entity
 		{
 			//强制设置按照连接线控制.
 			nd.setCondModel(CondModel.ByLineCond);
+			nd.DirectUpdate();
 		}
 
 		if (nd.getHisRunModel() == RunModel.HL || nd.getHisRunModel() == RunModel.FHL)
@@ -1416,7 +1417,7 @@ public class NodeExt extends Entity
 			}
 		}
 
-		// @杜. 翻译&测试.
+		// 翻译&测试.
 		if (nd.getCondModel() == CondModel.ByLineCond)
 		{
 			/* 如果当前节点方向条件控制规则是按照连接线决定的, 

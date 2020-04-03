@@ -698,9 +698,28 @@ public class WebUser {
 		}
 		return val;
 	}
-
 	public static void setOrgNo(String value) {
 		SetSessionByKey("OrgNo", value);
+	}
+	/**
+	 * 所在的组织名字
+	 */
+	public static String getOrgName() throws Exception{
+		String val = GetValFromCookie("OrgName", null, true);
+		if (val == null)
+		{
+			if (WebUser.getNo() == null)
+				throw new Exception("@err-006 OrgName 登录信息丢失，或者在 CCBPMRunModel=0 的模式下不能读取该节点.");
+
+			val = DBAccess.RunSQLReturnString("SELECT Name FROM Port_Org WHERE No='" + WebUser.getOrgNo() + "'");
+			SetSessionByKey("OrgName", val);
+			return val;
+		}
+		return val;
+	}
+
+	public static void setOrgName(String value) {
+		SetSessionByKey("OrgName", value);
 	}
 	/**
 	 * 域

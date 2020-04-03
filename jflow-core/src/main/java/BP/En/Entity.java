@@ -3509,11 +3509,11 @@ public abstract class Entity implements Serializable {
                    sql = BP.WF.Glo.DealExp(sql, null, null);
                    if (DataType.IsNullOrEmpty(myval) || myval.equals(v)){
                 	   try{
-                		  v =  DBAccess.RunSQLReturnString(sql); 
+                		  v =  DBAccess.RunSQLReturnString(sql);
                 		  this.SetValByKey(attr.getKeyOfEn(),v);
                 	   }catch(Exception e){
                 		   this.SetValByKey(attr.getKeyOfEn(),e.getMessage()+sql);
-                		   
+
                 	   }
                 	   
                    }
@@ -3621,6 +3621,31 @@ public abstract class Entity implements Serializable {
 				}
 				continue;
 			}
+			if (v.equals("@WebUser.OrgNo")) {
+				if (attr.getUIIsReadonly() == true)
+				{
+					this.SetValByKey(attr.getKey(), BP.Web.WebUser.getOrgNo());
+				}
+				else
+				{
+					if (DataType.IsNullOrEmpty(myval) || myval == v)
+						this.SetValByKey(attr.getKey(), BP.Web.WebUser.getOrgNo());
+				}
+				continue;
+			}
+			if (v.equals("@WebUser.OrgName")) {
+				if (attr.getUIIsReadonly() == true)
+				{
+					this.SetValByKey(attr.getKey(), BP.Web.WebUser.getOrgName());
+				}
+				else
+				{
+					if (DataType.IsNullOrEmpty(myval) || myval == v)
+						this.SetValByKey(attr.getKey(), BP.Web.WebUser.getOrgName());
+				}
+				continue;
+			}
+
 			if (v.equals("@RDT")) {
 				if (attr.getUIIsReadonly()) {
 					if (attr.getMyDataType() == DataType.AppDate || v.equals(myval)) {
@@ -3676,13 +3701,15 @@ public abstract class Entity implements Serializable {
                    String sql = gloVar.getVal();
                    sql = BP.WF.Glo.DealExp(sql, null, null);
                    if (DataType.IsNullOrEmpty(myval) || myval.equals(v)){
-                	   try{
-                		  v =  DBAccess.RunSQLReturnString(sql); 
-                		  this.SetValByKey(attr.getKey(),v);
-                	   }catch(Exception e){
-                		   this.SetValByKey(attr.getKey(),e.getMessage()+sql);
-                		   
-                	   }
+					   String val = DBAccess.RunSQLReturnString(sql);
+					   this.SetValByKey(attr.getKey(), val);
+//                	   try{
+//                		  v =  DBAccess.RunSQLReturnString(sql);
+//                		  this.SetValByKey(attr.getKey(),v);
+//                	   }catch(Exception e){
+//                		   this.SetValByKey(attr.getKey(),e.getMessage()+sql);
+//
+//                	   }
                 	   
                    }
                }

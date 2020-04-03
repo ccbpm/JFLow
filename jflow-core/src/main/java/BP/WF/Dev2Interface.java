@@ -964,13 +964,15 @@ public class Dev2Interface
 
 	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String DoDomain) throws Exception
 	{
-		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,A.IsStartInMobile, A.Idx";
+		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,C.Domain,A.IsStartInMobile, A.Idx";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
-		sql += " WHERE A.No=B.FK_Flow AND A.IsCanStart=1 AND A.FK_FlowSort=C.No  AND FK_Emp='" + WebUser.getNo() + "' ";
-		if (DataType.IsNullOrEmpty(DoDomain) == false)
-		{
-			sql += " AND C.DoDomain='" + DoDomain + "'";
-		}
+		sql += " WHERE A.No=B.FK_Flow AND A.IsCanStart=1 AND A.FK_FlowSort=C.No  AND B.FK_Emp='" + WebUser.getNo() + "' ";
+
+		//if (DataType.IsNullOrEmpty(domain) == false)
+		//    sql += " AND C.Domain='" + domain + "'";
+
+		if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			sql += " AND ( B.OrgNo='" + WebUser.getOrgNo() + "' ) ";
 
 		sql += " ORDER BY C.Idx, A.Idx";
 
@@ -5362,6 +5364,11 @@ public class Dev2Interface
 					break;
 				case BySelected:
 					num = 1;
+					break;
+				case BySelectedOrgs: //按照绑定的组织计算.
+					ps.SQL = "SELECT COUNT(*) AS Num FROM WF_FlowOrg WHERE OrgNo=" + dbstr + "OrgNo ";
+					ps.Add("OrgNo", WebUser.getOrgNo());
+					num = DBAccess.RunSQLReturnValInt(ps);
 					break;
 				default:
 					throw new RuntimeException("@开始节点不允许设置此访问规则：" + nd.getHisDeliveryWay());

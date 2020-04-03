@@ -6416,7 +6416,14 @@ public class WorkNode {
 		// 设置跳转节点，如果有可以为null.
 		this.JumpToNode = jumpToNode;
 		this.JumpToEmp = jumpToEmp;
-
+ 		//#region 为广西计算中心增加自动返回的节点, 发送之后，让其自动返回给发送人.
+		if (this.getHisNode().getIsSendBackNode()==true)
+		{
+			this.JumpToEmp = this.getHisGenerWorkFlow().getSender();
+			int nodeID = DBAccess.RunSQLReturnValInt("SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID() + " AND FK_Emp='" + this.getHisGenerWorkFlow().getSender() + "' ORDER BY RDT,FK_Node");
+			this.JumpToNode = new Node(nodeID);
+		}
+		//#endregion 为广西计算中心增加自动返回的节点.
 		String sql = null;
 		Date dt =new Date();
 		this.getHisWork().setRec(this.getExecer());

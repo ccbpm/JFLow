@@ -859,19 +859,38 @@ public class WF extends WebContralBase {
 		// 定义容器.
 		DataSet ds = new DataSet();
 
-		// 流程类别.
-		FlowSorts fss = new FlowSorts();
-		fss.RetrieveAll();
-
-		DataTable dtSort = fss.ToDataTableField("Sort");
-		dtSort.TableName = "Sort";
-		ds.Tables.add(dtSort);
-
 		// 获得能否发起的流程.
 		DataTable dtStart = Dev2Interface.DB_StarFlows(WebUser.getNo());
 		dtStart.TableName = "Start";
 		ds.Tables.add(dtStart);
+		//#region 动态构造 流程类别.
+		DataTable dtSort = new DataTable("Sort");
+		dtSort.Columns.Add("No", String.class);
+		dtSort.Columns.Add("Name", String.class);
+		dtSort.Columns.Add("Domain", String.class);
 
+
+		String nos = "";
+		for (DataRow dr : dtStart.Rows)
+		{
+			String no = dr.getValue("FK_FlowSort").toString();
+			if (nos.contains(no) == true)
+				continue;
+
+			String name = dr.getValue("FK_FlowSortText").toString();
+			String domain = dr.getValue("Domain").toString();
+
+			nos += "," + no;
+
+			DataRow mydr = dtSort.NewRow();
+			mydr.setValue(0,no);
+			mydr.setValue(1,name);
+			mydr.setValue(2,domain);
+			dtSort.Rows.add(mydr);
+		}
+		dtSort.TableName = "Sort";
+		ds.Tables.add(dtSort);
+          //  #endregion 动态构造 流程类别.
 		// 返回组合
 		json = BP.Tools.Json.ToJson(ds);
 		//把json存入数据表，避免下一次再取.

@@ -5,6 +5,7 @@ import BP.Difference.SystemConfig;
 import BP.Difference.Handler.CommonFileUtils;
 import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
+import BP.En.QueryObject;
 import BP.Tools.DataTableConvertJson;
 import BP.Tools.FileAccess;
 import BP.Web.*;
@@ -105,8 +106,10 @@ public class GPMPage extends WebContralBase {
 
 		BP.GPM.Depts depts = new BP.GPM.Depts();
 		if (WebUser.getNo().equals("admin") == false) {
-			depts.Retrieve("ParentNo", WebUser.getFK_Dept());
-			depts.AddEntity(new Dept(WebUser.getFK_Dept()));
+			QueryObject qo = new QueryObject(depts);
+			qo.addOrderBy(BP.GPM.DeptAttr.Idx);
+			qo.DoQuery();
+
 			return depts.ToJson();
 		}
 

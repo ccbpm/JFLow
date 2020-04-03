@@ -605,7 +605,6 @@ public class FlowCheckError
 			strs = Glo.DealExp(strs, rpt, "err");
 			if (strs.contains("@") == true)
 			{
-				//@shilianyu. 
 				msg = "@警告:焦点字段（" + nd.getFocusField() + "）在节点(step:" + nd.getStep() + " 名称:" + nd.getName() + ")属性里的设置已无效，表单里不存在该字段.";
 				this.AddMsgError(msg, nd);
 			}

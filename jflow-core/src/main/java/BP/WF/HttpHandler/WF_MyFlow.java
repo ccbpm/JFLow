@@ -323,7 +323,7 @@ public class WF_MyFlow extends WebContralBase {
 					// 如果启用审核组件
 					if (nd.getFrmWorkCheckSta() == FrmWorkCheckSta.Enable) {
 						// 判断一下审核意见是否有默认值
-						FrmWorkCheck workCheck = new FrmWorkCheck("ND" + nd.getNodeID());
+						NodeWorkCheck workCheck = new NodeWorkCheck("ND" + nd.getNodeID());
 						String msg = "同意";
 						if (workCheck.getFWCIsFullInfo() == true) {
 							msg = workCheck.getFWCDefInfo();
@@ -913,7 +913,7 @@ public class WF_MyFlow extends WebContralBase {
 						+ this.getFK_Flow() + "&FID=" + this.getFID() + "&FK_Node=" + this.getFK_Node() + "&s=" + tKey
 						+ "','ds'); \" />";
 				// 判断审核组件在当前的表单中是否启用，如果启用了.
-				FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
+				NodeWorkCheck fwc = new NodeWorkCheck(this.getFK_Node());
 				if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Enable) {
 					/* 如果不等于启用, */
 					toolbar += "<input type=button  value='填写审核意见' enable=true onclick=\"WinOpen('" + appPath
@@ -1419,7 +1419,7 @@ public class WF_MyFlow extends WebContralBase {
 				dt.Rows.add(dr);
 
 				// 判断审核组件在当前的表单中是否启用，如果启用了.
-				FrmWorkCheck fwc = new FrmWorkCheck(this.getFK_Node());
+				NodeWorkCheck fwc = new NodeWorkCheck(this.getFK_Node());
 				if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Enable)
 				{
 					dr = dt.NewRow();

@@ -5,8 +5,6 @@ import BP.WF.*;
 import BP.DA.*;
 import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
-import BP.Sys.*;
-import BP.Sys.XML.XmlEn;
 import BP.Tools.StringHelper;
 import BP.WF.XML.*;
 import BP.WF.Template.*;
@@ -141,7 +139,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		}
 
 		//把节点审核配置信息.
-		FrmWorkCheck fwc = new FrmWorkCheck(gwf.getFK_Node());
+		NodeWorkCheck fwc = new NodeWorkCheck(gwf.getFK_Node());
 		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 		//返回结果.
@@ -689,7 +687,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 
 				String fk_Node = dt.Rows.get(0).getValue("FK_Node").toString();
 				//把节点审核配置信息.
-				FrmWorkCheck fwc = new FrmWorkCheck(fk_Node);
+				NodeWorkCheck fwc = new NodeWorkCheck(fk_Node);
 				ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 

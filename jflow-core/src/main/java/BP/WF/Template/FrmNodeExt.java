@@ -127,7 +127,7 @@ public class FrmNodeExt extends EntityMyPK
 		map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, false, 0, 20, 20);
 
 
-			///#region 表单启用规则. @袁丽娜
+			///#region 表单启用规则.
 		map.AddDDLSysEnum(FrmNodeAttr.FrmEnableRole, 0, "启用规则", false, false, FrmNodeAttr.FrmEnableRole, "@0=始终启用@1=有数据时启用@2=有参数时启用@3=按表单的字段表达式@4=按SQL表达式@5=不启用@6=按岗位@7=按部门");
 
 		map.SetHelperAlert(FrmNodeAttr.FrmEnableRole, "用来控制该表单是否显示的规则.");
@@ -138,7 +138,7 @@ public class FrmNodeExt extends EntityMyPK
 			///#endregion 表单启用规则.
 
 		RefMethod rm = new RefMethod();
-			//@袁丽娜
+
 		rm.Title = "启用规则";
 		rm.ClassMethodName = this.toString() + ".DoEnableRole()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -180,18 +180,22 @@ public class FrmNodeExt extends EntityMyPK
 		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "表单启用规则";
-			//rm.ClassMethodName = this.ToString() + ".DoFrmEnableRole()";
-			//rm.RefMethodType = RefMethodType.RightFrameOpen;
-			//map.AddRefMethod(rm);
-
+		rm = new RefMethod();
+		rm.Title = "审核组件设置";
+		//rm.Icon = ../../Img/Mobile.png";
+		rm.ClassMethodName = this.toString() + ".DoFrmNodeWorkCheck";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.GroupName = "表单组件";
+		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///#endregion
+	public String DoFrmNodeWorkCheck() throws Exception
+	{
+		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.WorkCheckFrm&PKVal=" + this.getFK_Node()+"&FK_Frm="+this.getFK_Frm();
+	}
 
 	/** 
 	 改变表单类型

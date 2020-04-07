@@ -10,7 +10,7 @@ import java.util.*;
 /** 
  审核组件
 */
-public class FrmWorkCheckAttr extends EntityNoAttr
+public class NodeWorkCheckAttr extends EntityNoAttr
 {
 	/** 
 	 傻瓜表单审核标签

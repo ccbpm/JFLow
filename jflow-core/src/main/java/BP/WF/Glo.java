@@ -1325,7 +1325,7 @@ public class Glo {
 			/// #endregion
 
 			/// #region 检查必要的升级。
-			FrmWorkCheck fwc = new FrmWorkCheck();
+			NodeWorkCheck fwc = new NodeWorkCheck();
 			fwc.CheckPhysicsTable();
 
 			Flow myfl = new Flow();
@@ -1818,7 +1818,7 @@ public class Glo {
 		CC cc = new CC();
 		cc.CheckPhysicsTable();
 
-		BP.WF.Template.FrmWorkCheck fwc = new FrmWorkCheck();
+		NodeWorkCheck fwc = new NodeWorkCheck();
 		fwc.CheckPhysicsTable();
 
 		MapAttr attr = new MapAttr();

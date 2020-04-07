@@ -570,7 +570,8 @@ public class WF_CCBill extends WebContralBase {
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
 						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					} else {
 						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
@@ -579,7 +580,8 @@ public class WF_CCBill extends WebContralBase {
 				}
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
+				if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
 					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				} else {
 					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
@@ -615,7 +617,8 @@ public class WF_CCBill extends WebContralBase {
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
 					else
 						qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
@@ -624,7 +627,8 @@ public class WF_CCBill extends WebContralBase {
 				}
 				qo.addAnd();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						|| SystemConfig.getAppCenterDBVarStr().equals(":"))
 					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
 				else
 					qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
@@ -738,16 +742,22 @@ public class WF_CCBill extends WebContralBase {
 				isFirst = false;
 			qo.addLeftBracket();
 
+			String val = str[2].replace("WebUser.No", WebUser.getNo());
+			val = val.replace("WebUser.Name", WebUser.getName());
+			val = val.replace("WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+			val = val.replace("WebUser.FK_DeptName", WebUser.getFK_DeptName());
+			val = val.replace("WebUser.FK_Dept", WebUser.getFK_Dept());
+
 			//获得真实的数据类型.
 			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				Object valType = BP.Sys.Glo.GenerRealType(attrs,
-						str[0], str[2]);
+						str[0], val);
 				qo.AddWhere(str[0], str[1], valType.toString());
 			}
 			else
 			{
-				qo.AddWhere(str[0], str[1], str[2]);
+				qo.AddWhere(str[0], str[1], val);
 			}
 			qo.addRightBracket();
 			continue;
@@ -788,6 +798,8 @@ public class WF_CCBill extends WebContralBase {
 			String[] strs = fieldSet.split("@");
 			for(String str : strs)
 			{
+				if(DataType.IsNullOrEmpty(str))
+					continue;
 				String[] item = str.split("=");
 				if (item.length == 2)
 				{
@@ -801,7 +813,7 @@ public class WF_CCBill extends WebContralBase {
 							dr.setValue("Type",item[0]);
 							dt.Rows.add(dr);
 
-							oper += item[0] + "(" + ptable + "." + s + ")" + ",";
+							oper += item[0] + "(" + ptable + "." + s + ") AS "+item[0]+s + ",";
 						}
 					}
 					else
@@ -811,7 +823,7 @@ public class WF_CCBill extends WebContralBase {
 						dr.setValue("Type",item[0]);
 						dt.Rows.add(dr);
 
-						oper += item[0] + "(" + ptable + "." + item[1] + ")" + ",";
+						oper += item[0] + "(" + ptable + "." + item[1] + ")"+item[0]+item[1] + ",";
 					}
 				}
 			}
@@ -1051,7 +1063,8 @@ public class WF_CCBill extends WebContralBase {
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
 						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					} else {
 						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
@@ -1060,7 +1073,8 @@ public class WF_CCBill extends WebContralBase {
 				}
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?")) {
+				if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						|| SystemConfig.getAppCenterDBVarStr().equals(":")) {
 					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				} else {
 					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
@@ -1075,7 +1089,7 @@ public class WF_CCBill extends WebContralBase {
 			int idx = 0;
 
 			//获取查询的字段
-			String[] searchFields = md.GetParaString("RptStringSearchKeys").split("*");
+			String[] searchFields = md.GetParaString("RptStringSearchKeys").split("[*]");
 			for(String str : searchFields)
 			{
 				if (DataType.IsNullOrEmpty(str) == true)
@@ -1096,7 +1110,8 @@ public class WF_CCBill extends WebContralBase {
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
 					else
 						qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
@@ -1105,7 +1120,8 @@ public class WF_CCBill extends WebContralBase {
 				}
 				qo.addAnd();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@")
+						|| SystemConfig.getAppCenterDBVarStr().equals(":"))
 					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr()+ field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr()+ field + "+'%'"));
 				else
 					qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
@@ -1219,16 +1235,22 @@ public class WF_CCBill extends WebContralBase {
 					isFirst = false;
 				qo.addLeftBracket();
 
+				String val = str[2].replace("WebUser.No", WebUser.getNo());
+				val = val.replace("WebUser.Name", WebUser.getName());
+				val = val.replace("WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+				val = val.replace("WebUser.FK_DeptName", WebUser.getFK_DeptName());
+				val = val.replace("WebUser.FK_Dept", WebUser.getFK_Dept());
+
 				//获得真实的数据类型.
 				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					Object valType = BP.Sys.Glo.GenerRealType(attrs,
-							str[0], str[2]);
+							str[0], val);
 					qo.AddWhere(str[0], str[1], valType.toString());
 				}
 				else
 				{
-					qo.AddWhere(str[0], str[1], str[2]);
+					qo.AddWhere(str[0], str[1], val);
 				}
 				qo.addRightBracket();
 				continue;

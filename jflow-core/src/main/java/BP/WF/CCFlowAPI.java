@@ -8,11 +8,9 @@ import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.Web.*;
 import BP.En.*;
-import BP.WF.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
 import BP.Port.*;
-import BP.Tools.*;
 
 public class CCFlowAPI
 {
@@ -136,29 +134,29 @@ public class CCFlowAPI
 
 				BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(refNodeID);
 
-				fnc.SetValByKey(FrmWorkCheckAttr.FWC_H, refFnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_H));
-				fnc.SetValByKey(FrmWorkCheckAttr.FWC_W, refFnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_W));
-				fnc.SetValByKey(FrmWorkCheckAttr.FWC_X, refFnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_X));
-				fnc.SetValByKey(FrmWorkCheckAttr.FWC_Y, refFnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_Y));
+				fnc.SetValByKey(NodeWorkCheckAttr.FWC_H, refFnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_H));
+				fnc.SetValByKey(NodeWorkCheckAttr.FWC_W, refFnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_W));
+				fnc.SetValByKey(NodeWorkCheckAttr.FWC_X, refFnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_X));
+				fnc.SetValByKey(NodeWorkCheckAttr.FWC_Y, refFnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_Y));
 
-				if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_H) <= 10)
+				if (fnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_H) <= 10)
 				{
-					fnc.SetValByKey(FrmWorkCheckAttr.FWC_H, 500);
+					fnc.SetValByKey(NodeWorkCheckAttr.FWC_H, 500);
 				}
 
-				if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_W) <= 10)
+				if (fnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_W) <= 10)
 				{
-					fnc.SetValByKey(FrmWorkCheckAttr.FWC_W, 600);
+					fnc.SetValByKey(NodeWorkCheckAttr.FWC_W, 600);
 				}
 
-				if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_X) <= 10)
+				if (fnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_X) <= 10)
 				{
-					fnc.SetValByKey(FrmWorkCheckAttr.FWC_X, 200);
+					fnc.SetValByKey(NodeWorkCheckAttr.FWC_X, 200);
 				}
 
-				if (fnc.GetValFloatByKey(FrmWorkCheckAttr.FWC_Y) <= 10)
+				if (fnc.GetValFloatByKey(NodeWorkCheckAttr.FWC_Y) <= 10)
 				{
-					fnc.SetValByKey(FrmWorkCheckAttr.FWC_Y, 200);
+					fnc.SetValByKey(NodeWorkCheckAttr.FWC_Y, 200);
 				}
 
 

@@ -11,13 +11,11 @@ import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
 import BP.WF.Glo;
-import BP.WF.Data.*;
 import BP.WF.Port.WFEmp;
 import BP.WF.Template.*;
-import BP.WF.*;
+
 import java.util.*;
 import java.io.*;
-import java.time.*;
 
 /** 
  页面功能实体g
@@ -1584,11 +1582,11 @@ public class WF_WorkOpt extends WebContralBase
 
 
 			///#region 定义变量.
-		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node());
-		FrmWorkCheck frmWorkCheck = null;
+		NodeWorkCheck wcDesc = new NodeWorkCheck(this.getFK_Node());
+		NodeWorkCheck frmWorkCheck = null;
 		FrmAttachmentDBs athDBs = null;
 		Nodes nds = new Nodes(this.getFK_Flow());
-		FrmWorkChecks fwcs = new FrmWorkChecks();
+		NodeWorkChecks fwcs = new NodeWorkChecks();
 		Node nd = null;
 		WorkCheck wc = null;
 		Tracks tks = null;
@@ -1606,7 +1604,7 @@ public class WF_WorkOpt extends WebContralBase
 			isReadonly = true;
 		}
 		DataTable nodeEmps = new DataTable();
-		FrmWorkCheck fwc = null;
+		NodeWorkCheck fwc = null;
 		DataTable dt = null;
 		int idx = 0;
 		int noneEmpIdx = 0;
@@ -1754,7 +1752,7 @@ public class WF_WorkOpt extends WebContralBase
 				}
 
 				Object tempVar2 = fwcs.GetEntityByKey(tk.getNDFrom());
-				fwc = tempVar2 instanceof FrmWorkCheck ? (FrmWorkCheck)tempVar2 : null;
+				fwc = tempVar2 instanceof NodeWorkCheck ? (NodeWorkCheck)tempVar2 : null;
 				//求出主键
 				long pkVal = this.getWorkID();
 				if (nd.getHisRunModel() == RunModel.SubThread)
@@ -1854,7 +1852,7 @@ public class WF_WorkOpt extends WebContralBase
 
 				row.setValue("NodeName", tk.getNDFromT());
 				Object tempVar3 = fwcs.GetEntityByKey(tk.getNDFrom());
-				fwc = tempVar3 instanceof FrmWorkCheck ? (FrmWorkCheck)tempVar3 : null;
+				fwc = tempVar3 instanceof NodeWorkCheck ? (NodeWorkCheck)tempVar3 : null;
 
 				// zhoupeng 增加了判断，在会签的时候最后会签人发送前不能填写意见.
 				if (tk.getNDFrom() == this.getFK_Node() && tk.getEmpFrom().equals(WebUser.getNo()) && isCanDo && isDoc == false)
@@ -1971,7 +1969,7 @@ public class WF_WorkOpt extends WebContralBase
 								{
 									continue;
 								}
-								FrmWorkCheck subFrmCheck = new FrmWorkCheck("ND" + mysubtk.getNDFrom());
+								NodeWorkCheck subFrmCheck = new NodeWorkCheck("ND" + mysubtk.getNDFrom());
 								row = tkDt.NewRow();
 								row.setValue("NodeID", mysubtk.getNDFrom());
 								row.setValue("NodeName", String.format("(子流程)%1$s", mysubtk.getNDFromT()));
@@ -2123,7 +2121,7 @@ public class WF_WorkOpt extends WebContralBase
 			tks = wc.getHisWorkChecks();
 		}
 
-		for (FrmWorkCheck item : fwcs.ToJavaList())
+		for (NodeWorkCheck item : fwcs.ToJavaList())
 		{
 			if (item.getFWCIsShowTruck() == false)
 			{
@@ -2204,11 +2202,11 @@ public class WF_WorkOpt extends WebContralBase
 
 
 			///#region 定义变量.
-		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node()); // 当前节点的审核组件
-		FrmWorkCheck frmWorkCheck = null;
+		NodeWorkCheck wcDesc = new NodeWorkCheck(this.getFK_Node()); // 当前节点的审核组件
+		NodeWorkCheck frmWorkCheck = null;
 		FrmAttachmentDBs athDBs = null; //附件数据
 		Nodes nds = new Nodes(this.getFK_Flow()); //该流程的所有节点
-		FrmWorkChecks fwcs = new FrmWorkChecks();
+		NodeWorkChecks fwcs = new NodeWorkChecks();
 		Node nd = null;
 		WorkCheck wc = null;
 		Tracks tks = null;
@@ -2227,7 +2225,7 @@ public class WF_WorkOpt extends WebContralBase
 		}
 
 		DataTable nodeEmps = new DataTable();
-		FrmWorkCheck fwc = null;
+		NodeWorkCheck fwc = null;
 		DataTable dt = null;
 		int idx = 0;
 		int noneEmpIdx = 0;
@@ -2375,7 +2373,7 @@ public class WF_WorkOpt extends WebContralBase
 				}
 
 				Object tempVar2 = fwcs.GetEntityByKey(tk.getNDFrom());
-				fwc = tempVar2 instanceof FrmWorkCheck ? (FrmWorkCheck)tempVar2 : null;
+				fwc = tempVar2 instanceof NodeWorkCheck ? (NodeWorkCheck)tempVar2 : null;
 				//求出主键
 				long pkVal = this.getWorkID();
 				if (nd.getHisRunModel() == RunModel.SubThread)
@@ -2450,7 +2448,7 @@ public class WF_WorkOpt extends WebContralBase
 				}
 
 				Object tempVar3 = fwcs.GetEntityByKey(tk.getNDFrom());
-				fwc = tempVar3 instanceof FrmWorkCheck ? (FrmWorkCheck)tempVar3 : null;
+				fwc = tempVar3 instanceof NodeWorkCheck ? (NodeWorkCheck)tempVar3 : null;
 
 				//历史审核信息现在存放在流程前进的节点中
 				switch (tk.getHisActionType())
@@ -2686,7 +2684,7 @@ public class WF_WorkOpt extends WebContralBase
 			tks = wc.getHisWorkChecks();
 		}
 
-		for (FrmWorkCheck item : fwcs.ToJavaList())
+		for (NodeWorkCheck item : fwcs.ToJavaList())
 		{
 			if (item.getFWCIsShowTruck() == false)
 			{
@@ -2876,7 +2874,7 @@ public class WF_WorkOpt extends WebContralBase
 		//    return "";
 
 		String val = "";
-		FrmWorkCheck wcDesc = new FrmWorkCheck(this.getFK_Node());
+		NodeWorkCheck wcDesc = new NodeWorkCheck(this.getFK_Node());
 		if (DataType.IsNullOrEmpty(wcDesc.getFWCFields()) == false)
 		{
 			//循环属性获取值

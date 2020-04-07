@@ -500,7 +500,7 @@ public class WorkReturn {
 		}
 
 		// 删除.
-		BP.WF.Template.FrmWorkCheck fwc = new BP.WF.Template.FrmWorkCheck(this.HisNode.getNodeID());
+		NodeWorkCheck fwc = new NodeWorkCheck(this.HisNode.getNodeID());
 		if (fwc.getFWCIsShowReturnMsg() == false) {
 			BP.WF.Dev2Interface.DeleteCheckInfo(this.HisNode.getFK_Flow(), this.WorkID, this.HisNode.getNodeID());
 		}

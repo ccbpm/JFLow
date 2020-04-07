@@ -1,25 +1,21 @@
 package BP.WF.Template;
 
-import BP.DA.DataType;
-import BP.En.EnType;
-import BP.En.Entity;
+import BP.DA.*;
+import BP.Sys.*;
+import BP.En.*;
 import BP.En.Map;
-import BP.En.UAC;
-import BP.Sys.AttachmentUploadType;
-import BP.Sys.FrmAttachment;
-import BP.Sys.FrmAttachmentAttr;
-import BP.WF.Node;
+import BP.WF.*;
 
 /** 
  审核组件
 */
-public class FrmWorkCheck extends Entity
+public class NodeWorkCheck extends Entity
 {
 
 		///#region 属性
-	/**
+	/** 
 	 节点编号
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getNo() throws Exception
 	{
@@ -30,9 +26,9 @@ public class FrmWorkCheck extends Entity
 		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
-	/**
+	/** 
 	 节点ID
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final int getNodeID() throws Exception
 	{
@@ -42,9 +38,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
-	/**
+	/** 
 	 状态
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final FrmWorkCheckSta getHisFrmWorkCheckSta() throws Exception
 	{
@@ -54,9 +50,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCSta, value.getValue());
 	}
-	/**
+	/** 
 	 显示格式(0=表格,1=自由.)
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final FrmWorkShowModel getHisFrmWorkShowModel() throws Exception
 	{
@@ -66,9 +62,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCShowModel, value.getValue());
 	}
-	/**
+	/** 
 	 附件类型
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final FWCAth getFWCAth() throws Exception
 	{
@@ -78,9 +74,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCAth, value.getValue());
 	}
-	/**
+	/** 
 	 组件类型
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final FWCType getHisFrmWorkCheckType() throws Exception
 	{
@@ -90,25 +86,25 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCType, value.getValue());
 	}
-	/**
+	/** 
 	 标签
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getFWCLab() throws Exception
 	{
 		return this.GetValStrByKey(NodeWorkCheckAttr.FWCLab);
 	}
-	/**
+	/** 
 	 组件类型名称
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getFWCTypeT() throws Exception
 	{
 		return this.GetValRefTextByKey(NodeWorkCheckAttr.FWCType);
 	}
-	/**
+	/** 
 	 Y
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final float getFWC_Y() throws Exception
 	{
@@ -118,9 +114,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWC_Y, value);
 	}
-	/**
+	/** 
 	 X
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final float getFWC_X() throws Exception
 	{
@@ -130,9 +126,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWC_X, value);
 	}
-	/**
+	/** 
 	 W
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final float getFWC_W() throws Exception
 	{
@@ -150,9 +146,9 @@ public class FrmWorkCheck extends Entity
 		}
 		return this.getFWC_W() + "px";
 	}
-	/**
+	/** 
 	 H
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final float getFWC_H() throws Exception
 	{
@@ -170,9 +166,9 @@ public class FrmWorkCheck extends Entity
 		}
 		return this.getFWC_H() + "px";
 	}
-	/**
+	/** 
 	 轨迹图是否显示?
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final boolean getFWCTrackEnable() throws Exception
 	{
@@ -182,9 +178,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCTrackEnable, value);
 	}
-	/**
+	/** 
 	 历史审核信息是否显示?
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final boolean getFWCListEnable() throws Exception
 	{
@@ -194,9 +190,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCListEnable, value);
 	}
-	/**
+	/** 
 	 在轨迹表里是否显示所有的步骤？
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final boolean getFWCIsShowAllStep() throws Exception
 	{
@@ -206,9 +202,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCIsShowAllStep, value);
 	}
-	/**
+	/** 
 	 是否显示轨迹在没有走到的节点
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final boolean getFWCIsShowTruck() throws Exception
 	{
@@ -218,9 +214,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCIsShowTruck, value);
 	}
-	/**
+	/** 
 	 是否显示退回信息？
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final boolean getFWCIsShowReturnMsg() throws Exception
 	{
@@ -230,9 +226,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCIsShowReturnMsg, value);
 	}
-	/**
+	/** 
 	 如果用户未审核是否按照默认意见填充?
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final boolean getFWCIsFullInfo() throws Exception
 	{
@@ -242,9 +238,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCIsFullInfo, value);
 	}
-	/**
+	/** 
 	 默认审核信息
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getFWCDefInfo() throws Exception
 	{
@@ -254,17 +250,17 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCDefInfo, value);
 	}
-	/**
+	/** 
 	 节点名称.
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
-	/**
+	/** 
 	 节点意见名称，如果为空则取节点名称.
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getFWCNodeName() throws Exception
 	{
@@ -275,9 +271,9 @@ public class FrmWorkCheck extends Entity
 		}
 		return str;
 	}
-	/**
+	/** 
 	 操作名词(审核，审定，审阅，批示)
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getFWCOpLabel() throws Exception
 	{
@@ -287,9 +283,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCOpLabel, value);
 	}
-	/**
+	/** 
 	 操作字段
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final String getFWCFields() throws Exception
 	{
@@ -311,9 +307,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCNewDuanYu, value);
 	}
-	/**
+	/** 
 	 是否显示数字签名？
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final boolean getSigantureEnabel() throws Exception
 	{
@@ -324,9 +320,9 @@ public class FrmWorkCheck extends Entity
 		this.SetValByKey(NodeWorkCheckAttr.SigantureEnabel, value);
 	}
 
-	/**
+	/** 
 	 协作模式下操作员显示顺序
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final FWCOrderModel getFWCOrderModel() throws Exception
 	{
@@ -336,9 +332,9 @@ public class FrmWorkCheck extends Entity
 	{
 		this.SetValByKey(NodeWorkCheckAttr.FWCOrderModel, value.getValue());
 	}
-	/**
+	/** 
 	 审核组件状态
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	public final FrmWorkCheckSta getFWCSta() throws Exception
 	{
@@ -371,9 +367,9 @@ public class FrmWorkCheck extends Entity
 
 
 		///#region 构造方法
-	/**
+	/** 
 	 控制
-	 * @throws Exception
+	 * @throws Exception 
 	*/
 	@Override
 	public UAC getHisUAC() throws Exception
@@ -384,7 +380,7 @@ public class FrmWorkCheck extends Entity
 		uac.IsInsert = false;
 		return uac;
 	}
-	/**
+	/** 
 	 重写主键
 	*/
 	@Override
@@ -392,19 +388,19 @@ public class FrmWorkCheck extends Entity
 	{
 		return "NodeID";
 	}
-	/**
+	/** 
 	 审核组件
 	*/
-	public FrmWorkCheck()
+	public NodeWorkCheck()
 	{
 	}
-	/**
+	/** 
 	 审核组件
-
+	 
 	 @param mapData
-	 * @throws Exception
+	 * @throws Exception 
 	*/
-	public FrmWorkCheck(String mapData) throws Exception
+	public NodeWorkCheck(String mapData) throws Exception
 	{
 		if (mapData.contains("ND") == false)
 		{
@@ -423,19 +419,19 @@ public class FrmWorkCheck extends Entity
 		{
 			this.setNodeID(Integer.parseInt(mapdata));
 		}
-		catch (Exception e)
+		catch (java.lang.Exception e)
 		{
 			return;
 		}
 		this.Retrieve();
 	}
-	/**
+	/** 
 	 审核组件
-
+	 
 	 @param nodeID
-	 * @throws Exception
+	 * @throws Exception 
 	*/
-	public FrmWorkCheck(int nodeID) throws Exception
+	public NodeWorkCheck(int nodeID) throws Exception
 	{
 		this.setNodeID(nodeID);
 		this.Retrieve();
@@ -463,7 +459,7 @@ public class FrmWorkCheck extends Entity
 
 
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
-		//map.AddDDLSysEnum(NodeWorkCheckAttr.FWCSta, FrmWorkCheckSta.Disable.getValue(), "审核组件状态", true, true, NodeWorkCheckAttr.FWCSta, "@0=禁用@1=启用@2=只读");
+		map.AddDDLSysEnum(NodeWorkCheckAttr.FWCSta, FrmWorkCheckSta.Disable.getValue(), "审核组件状态", true, true, NodeWorkCheckAttr.FWCSta, "@0=禁用@1=启用@2=只读");
 		map.AddDDLSysEnum(NodeWorkCheckAttr.FWCShowModel, FrmWorkShowModel.Free.getValue(), "显示方式", true, true, NodeWorkCheckAttr.FWCShowModel, "@0=表格方式@1=自由模式"); //此属性暂时没有用.
 
 		map.AddDDLSysEnum(NodeWorkCheckAttr.FWCType, FWCType.Check.getValue(), "审核组件", true, true, NodeWorkCheckAttr.FWCType, "@0=审核组件@1=日志组件@2=周报组件@3=月报组件");
@@ -507,8 +503,8 @@ public class FrmWorkCheck extends Entity
 		map.AddDDLSysEnum(NodeWorkCheckAttr.FWCMsgShow, 0, "审核意见显示方式", true, true, NodeWorkCheckAttr.FWCMsgShow, "@0=都显示@1=仅显示自己的意见");
 
 		map.AddDDLSysEnum(NodeWorkCheckAttr.FWCVer, 0, "审核意见版本号", true, true, NodeWorkCheckAttr.FWCVer, "@0=2018@1=2019");
-		//String sql = "SELECT KeyOfEn AS No,Name From Sys_MapAttr Where UIContralType=14 AND FK_MapData='ND@NodeID'";
-		//map.AddDDLSQL(NodeWorkCheckAttr.CheckField, null, "签批字段", sql, true);
+		String sql = "SELECT KeyOfEn AS No,Name From Sys_MapAttr Where UIContralType=14 AND FK_MapData='ND@NodeID'";
+		map.AddDDLSQL(NodeWorkCheckAttr.CheckField, null, "签批字段", sql, true);
 		map.AddTBString(NodeWorkCheckAttr.FWCView, null, "审核意见立场", true, false, 20, 200, 200,true);
 
 

@@ -1348,7 +1348,7 @@ public class QueryObject {
 		}
 		try
 		{
-			return this.getEn().RunSQLReturnTable(sql, this.getMyParas());
+			return DBAccess.RunSQLReturnTable(sql, this.getMyParas());
 
 		}
 		catch (Exception ex)

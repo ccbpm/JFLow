@@ -10,7 +10,7 @@ import BP.Sys.*;
 /** 
  实体属性
 */
-public class MapAttrCheck extends EntityMyPK
+public class MapAttrCard extends EntityMyPK
 {
 	/**
 	 表单ID
@@ -67,14 +67,14 @@ public class MapAttrCheck extends EntityMyPK
 	/**
 	 实体属性
 	*/
-	public MapAttrCheck()
+	public MapAttrCard()
 	{
 	}
 	/**
 	 实体属性
 	 * @throws Exception
 	*/
-	public MapAttrCheck(String myPK) throws Exception
+	public MapAttrCard(String myPK) throws Exception
 	{
 		this.setMyPK(myPK);
 		this.Retrieve();
@@ -91,7 +91,7 @@ public class MapAttrCheck extends EntityMyPK
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Sys_MapAttr", "文本字段");
+		Map map = new Map("Sys_MapAttr", "证件字段");
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
@@ -152,9 +152,9 @@ public class MapAttrCheck extends EntityMyPK
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "转化为文本框组件";
-		rm.ClassMethodName = this.toString() + ".DoSetTextBox()";
-		rm.Warning = "您确定要转化为文本框组件吗？";
+		rm.Title = "填充其他控件";
+		rm.ClassMethodName = this.toString() + ".DoDDLFullCtrl()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		///#endregion 执行的方法.
@@ -163,22 +163,9 @@ public class MapAttrCheck extends EntityMyPK
 		return this.get_enMap();
 	}
 
-	/// <summary>
-	/// 设置签批组件为文本字段
-	/// </summary>
-	/// <returns>执行结果</returns>
-	public String DoSetTextBox() throws Exception
+	public String DoDDLFullCtrl() throws Exception
 	{
-
-		MapAttrString en = new MapAttrString();
-		en.setMyPK(this.getMyPK());
-		en.RetrieveFromDBSources();
-		en.setUIContralType(UIContralType.TB);
-		en.setUIIsEnable(true);
-		en.setUIVisible(true);
-		en.Update();
-
-		return "设置成功,当前签批组件已经是文本框了,请关闭掉当前的窗口.";
+		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 
 	/**
@@ -273,10 +260,6 @@ public class MapAttrCheck extends EntityMyPK
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());
 		attr.RetrieveFromDBSources();
-
-		//强制设置为签批组件.
-		this.setUIContralType(UIContralType.SignCheck);
-
 		///#region 自动扩展字段长度.
 		if (attr.getMaxLen() <   this.getMaxLen() )
 		{

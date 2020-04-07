@@ -858,7 +858,7 @@ public class WorkUnSend
 		wn.AddToTrack(ActionType.UnSend, WebUser.getNo(), WebUser.getName(), cancelToNode.getNodeID(), cancelToNode.getName(), "无");
 
 		//删除审核组件设置"协作模式下操作员显示顺序"为"按照接受人员列表先后顺序(官职大小)"，而生成的待审核轨迹信息
-		FrmWorkCheck fwc = new FrmWorkCheck(nd.getNodeID());
+		NodeWorkCheck fwc = new NodeWorkCheck(nd.getNodeID());
 		if (fwc.getFWCSta() == FrmWorkCheckSta.Enable && fwc.getFWCOrderModel() == FWCOrderModel.SqlAccepter)
 		{
 			BP.DA.DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track WHERE WorkID = " + this.WorkID + " AND ActionType = " + ActionType.WorkCheck.getValue() + " AND NDFrom = " + nd.getNodeID() + " AND NDTo = " + nd.getNodeID() + " AND (Msg = '' OR Msg IS NULL)");

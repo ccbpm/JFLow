@@ -10098,7 +10098,7 @@ public class Dev2Interface
 	*/
 	public static void Node_DoCCCheckNote(String fk_flow, int fk_node, long workid, long fid, String checkNote) throws Exception
 	{
-		FrmWorkCheck fwc = new FrmWorkCheck(fk_node);
+		NodeWorkCheck fwc = new NodeWorkCheck(fk_node);
 
 		BP.WF.Dev2Interface.WriteTrackWorkCheck(fk_flow, fk_node, workid, fid, checkNote, fwc.getFWCOpLabel());
 

@@ -4,8 +4,6 @@ import BP.DA.*;
 import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.En.*;
-import BP.Port.*;
-import BP.WF.Data.*;
 import BP.WF.Template.*;
 import BP.Web.WebUser;
 import java.math.*;
@@ -435,11 +433,11 @@ public class Node extends Entity {
 	}
 
 	public final FWCAth getFWCAth() throws Exception {
-		return FWCAth.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCAth));
+		return FWCAth.forValue(this.GetValIntByKey(NodeWorkCheckAttr.FWCAth));
 	}
 
 	public final void setFWCAth(FWCAth value) throws Exception {
-		this.SetValByKey(FrmWorkCheckAttr.FWCAth, value.getValue());
+		this.SetValByKey(NodeWorkCheckAttr.FWCAth, value.getValue());
 	}
 
 	/**
@@ -714,11 +712,11 @@ public class Node extends Entity {
 	 * 审核组件版本
 	 */
 	public final int getFWCVer() throws Exception {
-		return this.GetValIntByKey(FrmWorkCheckAttr.FWCVer, 0);
+		return this.GetValIntByKey(NodeWorkCheckAttr.FWCVer, 0);
 	}
 
 	public final void setFWCVer(int value) throws Exception {
-		this.SetValByKey(FrmWorkCheckAttr.FWCVer, value);
+		this.SetValByKey(NodeWorkCheckAttr.FWCVer, value);
 	}
 
 	/**
@@ -2140,7 +2138,7 @@ public class Node extends Entity {
 	 * 节点意见名称，如果为空则取节点名称.
 	 */
 	public final String getFWCNodeName() throws Exception {
-		String str = this.GetValStringByKey(FrmWorkCheckAttr.FWCNodeName);
+		String str = this.GetValStringByKey(NodeWorkCheckAttr.FWCNodeName);
 		if (DataType.IsNullOrEmpty(str)) {
 			return this.getName();
 		}
@@ -2151,15 +2149,15 @@ public class Node extends Entity {
 	 * 审核组件里面的工作人员先后顺序排列模式 0= 按照审批时间. 1= 按照接受人员列表(官职大小)
 	 */
 	public final int getFWCOrderModel() throws Exception {
-		return this.GetValIntByKey(FrmWorkCheckAttr.FWCOrderModel);
+		return this.GetValIntByKey(NodeWorkCheckAttr.FWCOrderModel);
 	}
 
 	public final float getFWC_H() throws Exception {
-		return this.GetValFloatByKey(FrmWorkCheckAttr.FWC_H);
+		return this.GetValFloatByKey(NodeWorkCheckAttr.FWC_H);
 	}
 
 	public final float getFWC_W() throws Exception {
-		return this.GetValFloatByKey(FrmWorkCheckAttr.FWC_W);
+		return this.GetValFloatByKey(NodeWorkCheckAttr.FWC_W);
 	}
 
 	/**
@@ -2207,8 +2205,8 @@ public class Node extends Entity {
 		/// #region 审核组件.
 		map.AddTBInt(NodeAttr.FWCSta, 0, "审核组件", false, false);
 		map.AddTBFloat(NodeAttr.FWC_H, 0, "审核组件高度", false, true);
-		map.AddTBInt(FrmWorkCheckAttr.FWCOrderModel, 0, "协作模式下操作员显示顺序", false, false);
-		map.AddTBInt(FrmWorkCheckAttr.FWCVer, 0, "审核组件版本", false, false);
+		map.AddTBInt(NodeWorkCheckAttr.FWCOrderModel, 0, "协作模式下操作员显示顺序", false, false);
+		map.AddTBInt(NodeWorkCheckAttr.FWCVer, 0, "审核组件版本", false, false);
 		map.AddTBInt("FWCAth", 0, "审核附件是否启用", false, false);
 
 		/// #endregion 审核组件.
@@ -2245,7 +2243,7 @@ public class Node extends Entity {
 
 		/// #endregion 考核属性.
 
-		map.AddTBString(FrmWorkCheckAttr.FWCNodeName, null, "节点意见名称", true, false, 0, 100, 10);
+		map.AddTBString(NodeWorkCheckAttr.FWCNodeName, null, "节点意见名称", true, false, 0, 100, 10);
 		map.AddTBString(NodeAttr.Doc, null, "描述", true, false, 0, 100, 10);
 		map.AddBoolean(NodeAttr.IsTask, true, "允许分配工作否?", true, true);
 

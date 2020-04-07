@@ -523,7 +523,11 @@ public class WF_RptDfine extends WebContralBase
 		qo.AddWhere(" AND FID = 0 ");
 
 		md.SetPara("T_total", qo.GetCount());
-		qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), 1);
+		if (DataType.IsNullOrEmpty(ur.getOrderBy()) == false && DataType.IsNullOrEmpty(ur.getOrderWay()) == false)
+			qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), getPageIdx(), ur.getOrderBy(), ur.getOrderWay());
+		else
+			qo.DoQuery("OID", DataType.IsNullOrEmpty(pageSize) ? SystemConfig.getPageSize() : Integer.parseInt(pageSize), getPageIdx());
+
 		ds.Tables.add(ges.ToDataTableField("MainData"));
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 

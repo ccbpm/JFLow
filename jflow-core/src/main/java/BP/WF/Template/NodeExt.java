@@ -5,7 +5,6 @@ import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
-import BP.Port.*;
 import BP.WF.*;
 import BP.Web.WebUser;
 
@@ -146,11 +145,11 @@ public class NodeExt extends Entity
 
 	public final FWCAth getFWCAth() throws Exception
 	{
-		return FWCAth.forValue(this.GetValIntByKey(FrmWorkCheckAttr.FWCAth));
+		return FWCAth.forValue(this.GetValIntByKey(NodeWorkCheckAttr.FWCAth));
 	}
 	public final void setFWCAth(FWCAth value) throws Exception
 	{
-		this.SetValByKey(FrmWorkCheckAttr.FWCAth, value.getValue());
+		this.SetValByKey(NodeWorkCheckAttr.FWCAth, value.getValue());
 	}
 
 	/** 
@@ -1573,7 +1572,7 @@ public class NodeExt extends Entity
 		frmTransferCustom.RetrieveFromDBSources();
 		Cash2019.UpdateRow(frmTransferCustom.toString(), String.valueOf(this.getNodeID()), frmTransferCustom.getRow());
 
-		FrmWorkCheck frmWorkCheck = new FrmWorkCheck();
+		NodeWorkCheck frmWorkCheck = new NodeWorkCheck();
 		frmWorkCheck.setNodeID(this.getNodeID());
 		frmWorkCheck.RetrieveFromDBSources();
 		Cash2019.UpdateRow(frmWorkCheck.toString(), String.valueOf(this.getNodeID()), frmWorkCheck.getRow());

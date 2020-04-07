@@ -5141,7 +5141,7 @@ public class Flow extends BP.En.EntityNoName {
 				for (DataRow dr : dt.Rows) {
 					NodeExt nd = new NodeExt();
 					CC cc = new CC(); // 抄送相关的信息.
-					FrmWorkCheck fwc = new FrmWorkCheck();
+					NodeWorkCheck fwc = new NodeWorkCheck();
 
 					for (DataColumn dc : dt.Columns) {
 						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;

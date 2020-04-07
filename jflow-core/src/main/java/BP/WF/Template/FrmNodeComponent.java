@@ -5,8 +5,6 @@ import BP.Sys.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.WF.*;
-import BP.WF.*;
-import java.util.*;
 
 /** 
  节点表单组件
@@ -128,7 +126,7 @@ public class FrmNodeComponent extends Entity
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true,true, 0, 100, 10);
 
-		FrmWorkCheck fwc = new FrmWorkCheck();
+		NodeWorkCheck fwc = new NodeWorkCheck();
 		map.AddAttrs(fwc.getEnMap().getAttrs());
 
 		FrmSubFlow subflow = new FrmSubFlow();
@@ -156,7 +154,7 @@ public class FrmNodeComponent extends Entity
 
 
 			///#region 审核组件.
-		FrmWorkCheck fwc = new FrmWorkCheck(this.getNodeID());
+		NodeWorkCheck fwc = new NodeWorkCheck(this.getNodeID());
 		fwc.Copy(this);
 		if (fwc.getHisFrmWorkCheckSta() == FrmWorkCheckSta.Disable)
 		{

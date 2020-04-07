@@ -1,22 +1,20 @@
 package BP.WF.Template;
 
-import BP.En.Entities;
-import BP.En.Entity;
+import BP.En.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /** 
  审核组件s
 */
-public class FrmWorkChecks extends Entities
+public class NodeWorkChecks extends Entities
 {
 
 		///#region 构造
-	/**
+	/** 
 	 审核组件s
 	*/
-	public FrmWorkChecks()
+	public NodeWorkChecks()
 	{
 	}
 	/** 
@@ -25,7 +23,7 @@ public class FrmWorkChecks extends Entities
 	@Override
 	public Entity getNewEntity()
 	{
-		return new FrmWorkCheck();
+		return new NodeWorkCheck();
 	}
 
 		///#endregion
@@ -37,21 +35,21 @@ public class FrmWorkChecks extends Entities
 	 
 	 @return List
 	*/
-	public final List<FrmWorkCheck> ToJavaList()
+	public final List<NodeWorkCheck> ToJavaList()
 	{
-		return (List<FrmWorkCheck>)(Object)this;
+		return (List<NodeWorkCheck>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmWorkCheck> Tolist()
+	public final ArrayList<NodeWorkCheck> Tolist()
 	{
-		ArrayList<FrmWorkCheck> list = new ArrayList<FrmWorkCheck>();
+		ArrayList<NodeWorkCheck> list = new ArrayList<NodeWorkCheck>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmWorkCheck)this.get(i));
+			list.add((NodeWorkCheck)this.get(i));
 		}
 		return list;
 	}

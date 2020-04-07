@@ -4,29 +4,22 @@ import BP.DA.DBAccess;
 import BP.DA.DataRow;
 import BP.DA.DataTable;
 import BP.DA.DataType;
-import BP.Difference.ContextHolderUtils;
 import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.Frm.FrmBill;
 import BP.Port.Emp;
 import BP.Sys.*;
-import BP.Sys.FrmUI.ExtImg;
 import BP.Tools.AesEncodeUtil;
 import BP.Tools.BaseFileUtils;
 import BP.Tools.HtmlToPdfInterceptor;
 import BP.Tools.QrCodeUtil;
 import BP.Tools.ZipCompress;
-import BP.WF.ActionType;
-import BP.WF.GenerWorkFlow;
-import BP.WF.Node;
-import BP.WF.NodeFormType;
-import BP.WF.WFState;
 import BP.WF.Template.FrmEnableRole;
 import BP.WF.Template.FrmNode;
 import BP.WF.Template.FrmNodes;
 import BP.WF.Template.FrmSubFlow;
 import BP.WF.Template.FrmSubFlowSta;
-import BP.WF.Template.FrmWorkCheck;
+import BP.WF.Template.NodeWorkCheck;
 import BP.WF.Template.FrmWorkCheckSta;
 import BP.WF.Template.WhoIsPK;
 import BP.Web.WebUser;
@@ -587,7 +580,7 @@ public class MakeForm2Html
          ////#region 审核组件
         if (flowNo != null)
         {
-            FrmWorkCheck fwc = new FrmWorkCheck(frmID);
+            NodeWorkCheck fwc = new NodeWorkCheck(frmID);
             if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Disable)
             {
                 x = fwc.getFWC_X ()+ wtX;
@@ -1535,7 +1528,7 @@ public class MakeForm2Html
             //#region 审核组件
             if (gf.getCtrlType().equals("FWC") && flowNo != null)
             {
-            	FrmWorkCheck fwc =new FrmWorkCheck(frmID);
+            	NodeWorkCheck fwc =new NodeWorkCheck(frmID);
             
                 String sql = "";
                 DataTable dtTrack = null;

@@ -5952,14 +5952,8 @@ public class Flow extends BP.En.EntityNoName {
 
 			nd.Insert();
 			nd.CreateMap();
-			// 增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
-			nd.setCondModel(CondModel.SendButtonSileSelect); // 默认的发送方向.
-			nd.setHisDeliveryWay(DeliveryWay.BySelected); // 上一步发送人来选择.
-			nd.setFormType(NodeFormType.FoolForm); // 设置为傻瓜表单.
-			nd.Insert();
-			nd.CreateMap();
 
-			// 为开始节点增加一个删除按钮. @李国文.
+			// 为开始节点增加一个删除按钮.
 			String sql = "UPDATE WF_Node SET DelEnable=1 WHERE NodeID=" + nd.getNodeID();
 			BP.DA.DBAccess.RunSQL(sql);
 
@@ -5989,7 +5983,7 @@ public class Flow extends BP.En.EntityNoName {
 			nd.setHisDeliveryWay(DeliveryWay.BySelected); // 上一步发送人来选择.
 			nd.setFormType(NodeFormType.FoolForm); // 设置为傻瓜表单.
 
-			// 为创建节点设置默认值 @于庆海.
+			// 为创建节点设置默认值 .
 			String fileNewNode = SystemConfig.getPathOfDataUser() + "\\XML\\DefaultNewNodeAttr.xml";
 			if ((new File(fileNewNode)).isFile() == true) {
 				DataSet ds_NodeDef = new DataSet();

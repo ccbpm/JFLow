@@ -4057,6 +4057,11 @@ public class WF_CCForm extends WebContralBase {
 
 			Node nd = new Node(this.getFK_Node());
 			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree) {
+				//如果是绑定表单树中的表单，重新赋值绑定表单的名字
+				if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+				{
+					fk_mapdata = nd.getNodeFrmID();
+				}
 				FrmNode fn = new FrmNode(nd.getFK_Flow(), nd.getNodeID(), fk_mapdata);
 				/**if (fn.getFrmSln() == FrmSln.Default) {
 					if (fn.getWhoIsPK() == WhoIsPK.FID) {

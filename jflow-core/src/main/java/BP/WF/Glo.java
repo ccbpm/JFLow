@@ -694,7 +694,7 @@ public class Glo {
 		FlowOrg fo = new FlowOrg();
 		fo.CheckPhysicsTable();
 
-		if (DBAccess.IsExitsObject("V_FlowStarterBPM") == true)
+		/*if (DBAccess.IsExitsObject("V_FlowStarterBPM") == true)
 			DBAccess.RunSQL("DROP VIEW V_FlowStarterBPM");
 
 		sql = " ";
@@ -738,7 +738,7 @@ public class Glo {
 		sql += " SELECT  A.FK_Flow, A.FlowName, C.No as FK_Emp, B.OrgNo FROM WF_Node A, WF_FlowOrg B, Port_Emp C ";
 		sql += " WHERE A.FK_Flow=B.FlowNo AND B.OrgNo=C.OrgNo ";
 		sql += " AND  A.DeliveryWay=22 ";
-		DBAccess.RunSQL(sql); //创建视图.
+		DBAccess.RunSQL(sql); //创建视图.*/
 		//#endregion 升级优化集团版的应用
 
 		/// #endregion 检查是否需要升级，并更新升级的业务逻辑.
@@ -1376,9 +1376,9 @@ public class Glo {
 				BP.DA.DBAccess.RunSQL("DROP VIEW V_FlowStarter");
 			}
 
-			/*if (DBAccess.IsExitsObject("V_FlowStarterBPM") == true) {
+			if (DBAccess.IsExitsObject("V_FlowStarterBPM") == true) {
 				BP.DA.DBAccess.RunSQL("DROP VIEW V_FlowStarterBPM");
-			}*/
+			}
 
 			if (DBAccess.IsExitsObject("V_TOTALCH") == true) {
 				BP.DA.DBAccess.RunSQL("DROP VIEW V_TOTALCH");

@@ -20,5 +20,7 @@ public class DeptEmpAttr
 	*/
 	public static final String FK_Emp = "FK_Emp";
 
+	public static final String OrgNo = "OrgNo";
+
 		///#endregion
 }

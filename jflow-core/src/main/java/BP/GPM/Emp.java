@@ -261,6 +261,7 @@ public class Emp extends EntityNoName
 		map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132, true);
 		map.AddTBString(EmpAttr.PinYin, null, "拼音", true, false, 0, 500, 132, true);
 
+		map.AddTBString(EmpAttr.OrgNo, null, "组织编号", true, false, 0, 500, 132, true);
 			// 0=不签名 1=图片签名, 2=电子签名.
 		map.AddDDLSysEnum(EmpAttr.SignType, 0, "签字类型", true, true, EmpAttr.SignType, "@0=不签名@1=图片签名@2=电子签名");
 

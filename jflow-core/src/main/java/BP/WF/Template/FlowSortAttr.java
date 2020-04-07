@@ -19,5 +19,5 @@ public class FlowSortAttr extends EntityTreeAttr
 	/** 
 	 域/系统编号
 	*/
-	public static final String DoDomain = "DoDomain";
+	public static final String Domain = "main";
 }

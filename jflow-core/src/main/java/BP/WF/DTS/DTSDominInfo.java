@@ -66,7 +66,7 @@ public class DTSDominInfo extends Method
 
 		// 把部门导入里面去。
 
-		//DirectoryEntry de = new DirectoryEntry("LDAP://" + DoDomain, name, pass);
+		//DirectoryEntry de = new DirectoryEntry("LDAP://" + Domain, name, pass);
 		//DirectorySearcher srch = new DirectorySearcher();
 		//srch.Filter = ("(objectclass=User)");
 

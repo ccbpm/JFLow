@@ -951,9 +951,9 @@ public class Dev2Interface
 		return DB_StarFlows(userNo, null);
 	}
 
-	public static DataTable DB_StarFlows(String userNo, String DoDomain) throws Exception
+	public static DataTable DB_StarFlows(String userNo, String Domain) throws Exception
 	{
-		return DB_GenerCanStartFlowsOfDataTable(userNo, DoDomain);
+		return DB_GenerCanStartFlowsOfDataTable(userNo, Domain);
 
 	}
 
@@ -962,7 +962,7 @@ public class Dev2Interface
 		return DB_GenerCanStartFlowsOfDataTable(userNo, null);
 	}
 
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String DoDomain) throws Exception
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo, String Domain) throws Exception
 	{
 		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,C.Domain,A.IsStartInMobile, A.Idx";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
@@ -2295,7 +2295,7 @@ public class Dev2Interface
 			dt.Columns.get("TASKSTA").ColumnName = "TaskSta";
 			dt.Columns.get("ATPARA").ColumnName = "AtPara";
 			dt.Columns.get("EMPS").ColumnName = "Emps";
-			dt.Columns.get("DoDomain").ColumnName = "DoDomain";
+			dt.Columns.get("Domain").ColumnName = "Domain";
 			dt.Columns.get("SENDDT").ColumnName = "SendDT";
 			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
 		}
@@ -3199,7 +3199,7 @@ public class Dev2Interface
 		return DB_GenerRuning(userNo, fk_flow, false, null);
 	}
 
-	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter, String DoDomain) throws Exception
+	public static DataTable DB_GenerRuning(String userNo, String fk_flow, boolean isMyStarter, String Domain) throws Exception
 	{
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();

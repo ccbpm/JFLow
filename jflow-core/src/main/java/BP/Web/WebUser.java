@@ -725,15 +725,15 @@ public class WebUser {
 	 * 域
 	 */
 	public static String getDoDomain() {
-		String val = GetSessionByKey("DoDomain", "");
+		String val = GetSessionByKey("Domain", "");
 		if (val == null) {
-			throw new RuntimeException("@err-003 DoDomain 登录信息丢失。");
+			throw new RuntimeException("@err-003 Domain 登录信息丢失。");
 		}
 		return val;
 	}
 
 	public static void setDoDomain(String value) {
-		SetSessionByKey("DoDomain", value);
+		SetSessionByKey("Domain", value);
 	}
 
 	/**

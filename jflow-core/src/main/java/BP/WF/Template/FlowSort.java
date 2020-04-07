@@ -29,11 +29,11 @@ public class FlowSort extends EntityTree
 	}
 	public final String getDoDomain() throws Exception
 	{
-		return this.GetValStrByKey(FlowSortAttr.DoDomain);
+		return this.GetValStrByKey(FlowSortAttr.Domain);
 	}
 	public final void setDoDomain(String value) throws Exception
 	{
-		this.SetValByKey(FlowSortAttr.DoDomain, value);
+		this.SetValByKey(FlowSortAttr.Domain, value);
 	}
 
 		///#endregion 属性.
@@ -87,8 +87,8 @@ public class FlowSort extends EntityTree
 		map.AddTBString(FlowSortAttr.OrgNo, "0", "组织编号(0为系统组织)", true, false, 0, 150, 30);
 		map.SetHelperAlert(FlowSortAttr.OrgNo, "用于区分不同组织的的流程,比如:一个集团有多个子公司,每个子公司都有自己的业务流程.");
 
-		map.AddTBString(FlowSortAttr.DoDomain, null, "域/系统编号", true, false, 0, 100, 30);
-		map.SetHelperAlert(FlowSortAttr.DoDomain, "用于区分不同系统的流程,比如:一个集团有多个子系统每个子系统都有自己的流程,就需要标记那些流程是那个子系统的.");
+		map.AddTBString(FlowSortAttr.Domain, null, "域/系统编号", true, false, 0, 100, 30);
+		map.SetHelperAlert(FlowSortAttr.Domain, "用于区分不同系统的流程,比如:一个集团有多个子系统每个子系统都有自己的流程,就需要标记那些流程是那个子系统的.");
 		map.AddTBInt(FlowSortAttr.Idx, 0, "Idx", false, false);
 
 		this.set_enMap(map);
@@ -98,7 +98,7 @@ public class FlowSort extends EntityTree
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		String sql = "UPDATE WF_GenerWorkFlow SET DoDomain='" + this.getDoDomain() + "' WHERE FK_FlowSort='" + this.getNo()+ "'";
+		String sql = "UPDATE WF_GenerWorkFlow SET Domain='" + this.getDoDomain() + "' WHERE FK_FlowSort='" + this.getNo()+ "'";
 		DBAccess.RunSQL(sql);
 
 		sql = "UPDATE WF_Emp SET StartFlows='' ";

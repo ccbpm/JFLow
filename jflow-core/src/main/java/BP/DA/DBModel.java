@@ -12,7 +12,7 @@ public enum DBModel
 	/** 
 	 域模式
 	*/
-	DoDomain(1);
+	Domain(1);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

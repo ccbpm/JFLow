@@ -35,10 +35,12 @@
 
 //});
 var optionKey = 0;
+var flowNo = null;
 function InitBar(optionKey) {
 
     var nodeID = GetQueryString("FK_Node");
-
+    var en = new Entity("BP.WF.Template.NodeSimple", nodeID);
+    flowNo = en.FK_Flow;
     var str = nodeID.substr(nodeID.length - 2);
     var isSatrtNode = false;
     if (str == "01")
@@ -137,15 +139,31 @@ function SaveRole() {
     $("#Btn_Save").val("正在保存请稍后.");
 
     try {
+
         Save();
+
     } catch (e) {
         alert(e);
         return;
     }
 
+    AccepterRole_ClearStartFlowsCash();
+
     $("#Btn_Save").val("保存成功");
     setTimeout(function () { $("#Btn_Save").val("保存"); }, 1000);
 }
+//清除缓存，本组织的.
+function AccepterRole_ClearStartFlowsCash()
+{
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrNode");
+    var data = handler.DoMethodReturnString("AccepterRole_ClearStartFlowsCash");
+}
+//清除缓存，所有本组织的.
+function AccepterRole_ClearAllOrgStartFlowsCash() {
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrNode");
+    var data = handler.DoMethodReturnString("AccepterRole_ClearAllOrgStartFlowsCash");
+}
+
 function OldVer() {
 
     var nodeID = GetQueryString("FK_Node");
@@ -254,7 +272,7 @@ function getEmps() {
 function changeOption() {
     var nodeID = GetQueryString("FK_Node");
     var en = new Entity("BP.WF.Template.NodeSimple", nodeID);
-    var flowNo = en.FK_Flow;
+    flowNo = en.FK_Flow;
     var obj = document.getElementById("changBar");
     var sele = obj.options;
     var index = obj.selectedIndex;

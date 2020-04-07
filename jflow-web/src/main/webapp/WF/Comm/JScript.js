@@ -1029,53 +1029,69 @@ var autoTextarea = function (elem, extra, maxHeight) {
 };
 
 //身份证信息
-function GetIDCardInfo() {
-    var hander = new HttpHandler("BP.WF.HttpHandler.CCMobile_CCForm");
-    var data = hander.DoMethodReturnJSON("getAccessToken");
+function GetIDCardInfo(event) {
+    var formData = new FormData();
+    formData.append("file", event.target.files[0]);
+    var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=GetIDCardInfo&HttpHandlerName=BP.WF.HttpHandler.CCMobile_CCForm";
+    $.ajax({
+        type: "post",
+        url: url,
+        data: formData,
+        processData: false,
+        contentType: false,
 
-    var imageBase = "";
-    var reader = new FileReader();
-    reader.readAsDataURL(event.target.files[0]);
-    reader.onload = function (e) {
-        imageBase = e.target.result.replace("data:image/png;base64,", "");
-        //imageBase = e.target.result.replace("data:image/jpeg;base64,","");
-        $("#showImg").prop("src", "data:image/png;base64," + imageBase);
-        $.ajax({
-            header: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            type: "post",
-            url: "https://aip.baidubce.com/rest/2.0/ocr/v1/idcard",
-            async: true,
-            data: {
-                access_token: data.access_token,
-                id_card_side: "front",
-                image: imageBase
-            },
-            dataType: "json",
-            timeout: 30000,
-            success: function (data) {
-                if (data.error != undefined) {
-                    console.log(data);
-                    alert('上传身份证解析错误:' + data.error_code + data.error_msg);
-                } else {
-                    //显示给指定的字段赋值
-                    $("#TB_IDCardName").val(data.words_result.姓名.words);
-                    $("#TB_IDCardNo").val(data.words_result.公民身份号码.words);
-                    $("#TB_IDCardAddress").val(data.words_result.住址.words);
+        success: function (data) {
+            data = JSON.parse(data);
+            if (data.error_code != undefined) {
+                console.log(data);
+                alert('上传身份证解析错误:' + data.error_code + data.error_msg);
+            } else {
+                //显示给指定的字段赋值
+                $("#TB_IDCardName").val(data.words_result.姓名.words);
+                $("#TB_IDCardNo").val(data.words_result.公民身份号码.words);
+                $("#TB_IDCardAddress").val(data.words_result.住址.words);
+                $("#TB_IDCardName").html(data.words_result.姓名.words);
+                $("#TB_IDCardNo").html(data.words_result.公民身份号码.words);
+                $("#TB_IDCardAddress").html(data.words_result.住址.words);
+                var mianData;
+                if (flowData != null && flowData != undefined)
+                    mianData = flowData;
+                if ((mianData == null || mianData == undefined) && (frmData != null && frmData != undefined))
+                    mianData = frmData;
 
-                    $("#TB_IDCardName").html(data.words_result.姓名.words);
-                    $("#TB_IDCardNo").html(data.words_result.公民身份号码.words);
-                    $("#TB_IDCardAddress").html(data.words_result.住址.words);
-                    //data.words_result.出生.words   data.words_result.性别.words  data.words_result.民族.words
+                if (mianData != null && mianData != undefined) {
+                    var mapExts = mianData.Sys_MapExt;
+                    var mapAttrs = mianData.Sys_MapAttr;
+                    for (var i = 0; i < mapExts.length; i++) {
+                        var mapExt = mapExts[i];
+                        var mapAttr = null;
+                        for (var j = 0; j < mapAttrs.length; j++) {
+                            if (mapAttrs[j].FK_MapData == mapExt.FK_MapData && mapAttrs[j].KeyOfEn == mapExt.AttrOfOper) {
+                                mapAttr = mapAttrs[j];
+                                break;
+                            }
+                        }
+                        if (mapAttr == null)
+                            continue;
+                        if (mapAttr.UIContralType != 13)
+                            continue;
+
+                        var DDLFull =GetPara(mapAttr.AtPara,"IsFullData");
+                        if (DDLFull != undefined && DDLFull != "" && DDLFull == "1" && (mapExt.MyPK.indexOf("DDLFullCtrl") != -1)) {
+                            FullIt($("#TB_" + mapExt.AttrOfOper).val(), mapExt.MyPK, "TB_" + mapExt.AttrOfOper);
+                        }
+                    }
                 }
-
-            },
-            error: function (xhr) {
-                console.log("请求解析失败");
+                   
+                
             }
-        });
-    }
+
+        },
+        error: function (e) {
+
+        }
+    });
 
 }
+
     

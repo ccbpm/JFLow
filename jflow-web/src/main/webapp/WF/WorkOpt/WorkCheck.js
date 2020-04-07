@@ -30,7 +30,7 @@ function WorkCheck_InitPage(){
     }
 
     $.each(tracks, function (idx,item) {
-        _Html += WorkCheck_Parse(item, aths, frmWorkCheck, SignType,1);
+        _Html += WorkCheck_Parse(item, aths, frmWorkCheck, SignType,1,true);
     });
     _Html += "</table>";
 
@@ -77,11 +77,13 @@ function WorkCheck_Init() {
 
 }
 
-function GetWorkCheck_Node(checkData,keyOfEn) {
+function GetWorkCheck_Node(checkData, keyOfEn, checkField) {
     //当前节点审核组件信息
     var frmWorkCheck = checkData.WF_FrmWorkCheck[0];
-    if (frmWorkCheck.CheckField == keyOfEn && pageData.IsReadonly != "1") {
+    var isShowCheck = false;
+    if (checkField == keyOfEn && pageData.IsReadonly != "1") {
         $("#TB_" + keyOfEn).val(pageData.FK_Node);
+        isShowCheck = true;
     }
 
     var tracks = checkData.Tracks;
@@ -95,13 +97,13 @@ function GetWorkCheck_Node(checkData,keyOfEn) {
         var track = tracks[i];
         if (track.NodeID != $("#TB_" + keyOfEn).val())
             continue;
-        _Html += WorkCheck_Parse(track, aths,frmWorkCheck, SignType,0);
+        _Html += WorkCheck_Parse(track, aths, frmWorkCheck, SignType, 0, isShowCheck);
     } 
     _Html += "</table>";
     return _Html;
 
 }
-function WorkCheck_Parse(track, aths, frmWorkCheck, SignType,showNodeName) {
+function WorkCheck_Parse(track, aths, frmWorkCheck, SignType, showNodeName, isShowCheck) {
     var _Html = "";
     //解析节点上传的附件
     var subaths = GetSubAths(track.NodeID, aths);
@@ -131,7 +133,7 @@ function WorkCheck_Parse(track, aths, frmWorkCheck, SignType,showNodeName) {
 
 
     //可编辑的审核意见
-    if (track.IsDoc == "1" && (pageData.IsReadonly == null || pageData.IsReadonly == false)) {
+    if (track.IsDoc == "1" && (pageData.IsReadonly == null || pageData.IsReadonly == false) && isShowCheck==true) {
 
         _Html += "<td>";
 
@@ -181,6 +183,7 @@ function WorkCheck_Parse(track, aths, frmWorkCheck, SignType,showNodeName) {
             _Html += "<option value='不同意'>不同意</option>";
         }
         _Html += "</select><font color=Gray>内容不要超过2000字</font>";
+        _Html += "<input name='' type='button' value='添加常用短语' onclick='AddDuanYu(\""+pageData.FK_Node+"\");'>"
         _Html += "</div>";
         _Html += "</td>";
 
@@ -705,5 +708,36 @@ function WorkCheck_CheckPass() {
     isCanSend = true;
     //签名成功后，就需要把图片显示出来.
 
+}
+
+
+function AddDuanYu(nodeID) {
+    var url = basePath + "/WF/WorkOpt/UsefulExpres.htm?FK_Node=" + nodeID;
+    var W = document.body.clientWidth/2;
+    var H = document.body.clientHeight-40;
+    OpenBootStrapModal(url, "UsefulExpresIFrame", "常用短语", W, H, null, false, null, null, function () {
+        //修改下来框常用短语
+        var workCheck = new Entity("BP.WF.Template.FrmWorkCheck", nodeID);
+        var str = workCheck.FWCNewDuanYu;
+        var duanYu;
+        if (str == null || str == undefined || DuanYu == "")
+            return;
+        var duanYu = str.split("@");
+        if (duanYu.length > 0) {
+            var _Html = "<option value=''>常用短语</option>";
+            for (var i = 0; i < duanYu.length; i++) {
+                if (duanYu[i] == "") {
+                    continue;
+                }
+                _Html += "<option value='" + duanYu[i] + "'>" + duanYu[i] + "</option>";
+            }
+            $("#DuanYu").html(_Html)
+        }
+    });
+}
+
+function ChangeWorkCheck(str) {
+    $("#WorkCheck_Doc").val(str);
+    $('#bootStrapdlg').modal('hide');
 }
 

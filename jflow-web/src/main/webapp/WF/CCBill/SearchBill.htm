@@ -201,9 +201,8 @@
                 }
             }
 
-            //格式为: @WFSta=0@FK_Dept=02
-            var json = AtParaToJson(ur.Vals);
-
+           
+            //增加外键
             for (var i = 0; i < attrs.length; i++) {
                 var attr = attrs[i];
                 var W = attr.Width;
@@ -221,6 +220,7 @@
                     count = 0;
                 }
             }
+            
 
             //增加按钮.
             html += '<td align="left" colspan=2 style="padding-top:4px"><a href="#"class="btn btn-primary btn-sm" style="margin-left:20px" id="Btn_Search" onclick="Search()">查询</a>  ';
@@ -271,6 +271,19 @@
 
             $("#toolBar").append(html);
 
+            //为查询外键赋值.
+            //格式为: @WFSta=0@FK_Dept=02
+            var json = AtParaToJson(ur.Vals);
+            for (var i = 0; i < attrs.length; i++) {
+                var attr = attrs[i];
+                var selectVal = json[attr.Field];
+
+                if ((selectVal == undefined || selectVal == "") && attr.Field!="FK_Dept")
+                    $("#DDL_" + attr.Field).val("all");
+                else
+                    $("#DDL_" + attr.Field).val(selectVal);
+            }
+
             return true;
         }
 
@@ -278,7 +291,8 @@
         function InitDDLOperation(frmData, mapAttr, defVal) {
 
             var operations = "";
-            operations += "<option value='all' >全部</option>";
+            if (mapAttr.Field!="FK_Dept")
+                operations += "<option value='all' >全部</option>";
 
             var ens = frmData[mapAttr.Field];
             if (ens == null) {
@@ -351,9 +365,9 @@
             if (url.indexOf("PageIdx") != -1)
                 url = replaceParamVal(url, "PageIdx", 1);
 
-            BindTable();
-
-            window.location.href = url;
+            SearchData();
+            pageIdx = 1;
+            Paginator(pages, pageIdx);
         }
 
 
@@ -368,7 +382,13 @@
                 ur.OrderBy = orderBy;
             if (orderWay != null && orderWay != undefined)
                 ur.OrderWay = orderWay;
+
+            if ($("#DDL_FK_Dept").length == 1) {
+                ur.Vals = ur.Vals + "@FK_Dept=" + $("#DDL_FK_Dept").val();
+            }
             ur.Update();
+
+           
 
             //查询集合
             var data = handler.DoMethodReturnString("Search_Init");
@@ -678,7 +698,7 @@
         }
         //分页功能
         function Paginator(pageCount, currentPage) {
-            var selects = "<Select id='DDL_PageSize' onchange='changePageSie()' style='min-width: 10px !important; width: 40px;' class='form-control'><option value=5>5</option><option value=10>10</option><option value=15>15</option><option value=20>20</option><option value=25>25</option></Select>";
+            var selects = "<Select id='DDL_PageSize' onchange='changePageSie()' style='min-width: 40px !important; width: 50px;' class='form-control'><option value=5>5</option><option value=10>10</option><option value=15>15</option><option value=20>20</option><option value=25>25</option></Select>";
             var pageCount = pageCount; //取到pageCount的值(把返回数据转成object类型)
             var options = {
                 bootstrapMajorVersion: 3, //版本
@@ -957,10 +977,10 @@
                 </table>
                 <!-- 显示分页信息 -->
                 <div>
-                    <div class="row cs-pagination" style="float:left;width:65%;text-align: left;">
+                    <div class="row cs-pagination" style="float:left;width:40%;text-align: left;">
                         <ul class="pagination  controls" style="margin-left:20px"><li class=" controls" id="FieldSet"></li></ul>
                     </div>
-                    <div class="row cs-pagination" style="float:right;width:35%">
+                    <div class="row cs-pagination" style="float:right;width:60%">
                         <ul class="pagination" id="page_nav"></ul>
                         <ul class="pagination controls" id="page_info"></ul>
                         <div style="clear: both;">

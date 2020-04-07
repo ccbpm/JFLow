@@ -57,7 +57,7 @@ function InitPage() {
             return true;
         }
 
-        var fwcs = new Entities("BP.WF.Template.FrmWorkChecks");
+        var fwcs = new Entities("BP.WF.Template.NodeWorkChecks");
         fwcs.Retrieve("NodeID", this.NodeID);
 
         if (fwcs[0].FWCSta == 2)

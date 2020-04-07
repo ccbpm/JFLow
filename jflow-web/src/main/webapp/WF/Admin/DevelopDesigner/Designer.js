@@ -163,8 +163,32 @@ UE.plugins['text'] = function () {
         var el = evt.target || evt.srcElement;
         var leipiPlugins = el.getAttribute('leipiplugins');
         if (/input|div/ig.test(el.tagName) && leipiPlugins == thePlugins) {
-            var html = popup.formatHtml(
-                '<nobr>文本框: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            var type = el.getAttribute('data-type');
+            var html = "";
+            if(type == "SignCheck")
+                html = popup.formatHtml(
+                    '<nobr>签批组件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else if(type == "Text")
+                html = popup.formatHtml(
+                    '<nobr>文本框: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else if (type == "Int")
+                html = popup.formatHtml(
+                    '<nobr>整数类型: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else if (type == "Money")
+                html = popup.formatHtml(
+                    '<nobr>金额类型: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else if (type == "Float")
+                html = popup.formatHtml(
+                    '<nobr>浮点类型: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else if (type == "Date")
+                html = popup.formatHtml(
+                    '<nobr>日期类型: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else if (type == "DateTime")
+                html = popup.formatHtml(
+                    '<nobr>日期时间类型: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else if (type == "CheckBox")
+                html = popup.formatHtml(
+                    '<nobr>复选框类型: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
             if (html) {
                 popup.getDom('content').innerHTML = html;
                 popup.anchorEl = el;
@@ -331,7 +355,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
     }
 
     if (shap == 'WorkCheck') {
-        var url = '../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.FrmWorkCheck&PKVal=' + fk_mapdata.replace('ND', '') + '&tab=审核组件';
+        var url = '../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.NodeWorkCheck&PKVal=' + fk_mapdata.replace('ND', '') + '&tab=审核组件';
         CCForm_ShowDialog(url, '审核组件');
         return;
     }
@@ -537,6 +561,8 @@ UE.plugins['enum'] = function () {
         execCommand: function (method, dataType) {
             var W = document.body.clientWidth - 160;
             var H = document.body.clientHeight - 220;
+            if (dataType == null || dataType == undefined)
+                dataType = "Select";
             var dialog = new UE.ui.Dialog({
                 iframeUrl: './DialogCtr/FrmEnumeration.htm?FK_MapData=' + pageParam.fk_mapdata + "&DataType=" + dataType,
                 name: thePlugins,
@@ -721,8 +747,14 @@ UE.plugins['textarea'] = function () {
         evt = evt || window.event;
         var el = evt.target || evt.srcElement;
         if (/textarea/ig.test(el.tagName)) {
-            var html = popup.formatHtml(
-                '<nobr>多行文本框: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            var type = el.getAttribute('data-type');
+            var html = "";
+            if (type == "SignCheck")
+                html = popup.formatHtml(
+                    '<nobr>签批组件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
+            else
+                html = popup.formatHtml(
+                    '<nobr>多行文本框: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
             if (html) {
                 popup.getDom('content').innerHTML = html;
                 popup.anchorEl = el;
@@ -1239,7 +1271,7 @@ UE.plugins['component'] = function () {
                     alert('非节点表单,不能添加审核组件');
                     return;
                 }
-                var url = '../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmWorkCheck&PKVal=' + mypk + '&tab=审核组件';
+                var url = '../../Comm/EnOnly.htm?EnName=BP.WF.Template.NodeWorkCheck&PKVal=' + mypk + '&tab=审核组件';
                 OpenEasyUiDialog(url, "eudlgframe", '组件', 800, 550, "icon-property", true, null, null, null, function () {
                     //加载js
                     // $("<script type='text/javascript' src='../../WorkOpt/SubFlow.js'></script>").appendTo("head");
@@ -1321,7 +1353,7 @@ UE.plugins['component'] = function () {
 
                 if (dataType == "WorkCheck") {
                     var nodeID = GetQueryString("FK_Node");
-                    var frmCheck = new Entity("BP.WF.Template.FrmWorkCheck", nodeID);
+                    var frmCheck = new Entity("BP.WF.Template.NodeWorkCheck", nodeID);
                     frmCheck.FWCSta = 0;//禁用
                     frmCheck.Update();
                 }

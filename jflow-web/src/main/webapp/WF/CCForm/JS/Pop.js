@@ -52,14 +52,14 @@ function PopBranchesAndLeaf(mapExt, val, targetId, index,oid,objtr) {
         targetId = "TB_" + mapExt.AttrOfOper;
 
     var target = $("#" + targetId);
-
-    var width = target.outerWidth();
-    var height = target.outerHeight();
+    
+    //var width = target.outerWidth();
+    //var height = target.outerHeight();
     target.hide();
     var container = $("<div></div>");
     target.after(container);
-    container.width(width);
-    container.height(height);
+    //container.width(width);
+    //container.height(height);
     if (index == null || index == undefined) {
         container.attr("id", mapExt.AttrOfOper + "_mtags");
         mtagsId = mapExt.AttrOfOper + "_mtags";
@@ -165,13 +165,13 @@ function PopBranches(mapExt, val, targetId, index,oid,objtr) {
 
     var target = $("#" + targetId);
   
-    var width = target.outerWidth();
-    var height = target.outerHeight();
+    //var width = target.outerWidth();
+    //var height = target.outerHeight();
     target.hide();
     var container = $("<div></div>");
     target.after(container);
-    container.width(width);
-    container.css("height", height);
+    //container.width(width);
+    //container.css("height", height);
     container.attr("id", mapExt.AttrOfOper + "_mtags");
     var mtags;
     if (index == null || index == undefined) {
@@ -420,7 +420,8 @@ function PopGroupList(mapExt, targetId, index, oid) {
     var height = mapExt.H;
     var iframeId = mapExt.MyPK;
     var title = mapExt.GetPara("Title");
-    var oid = GetPKVal();
+    if (oid == null || oid == undefined)
+        oid = GetPKVal();
 
     var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
     frmEleDBs.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", oid);
@@ -617,7 +618,8 @@ function PopTableList(mapExt, targetId, index, oid) {
     var height = mapExt.H;
     var iframeId = mapExt.MyPK;
     var title = mapExt.GetPara("Title");
-    var oid = GetPKVal();
+    if (oid == null || oid == undefined)
+        oid = GetPKVal();
 
     var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
     frmEleDBs.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", oid);
@@ -719,7 +721,8 @@ function PopBindEnum(mapExt, targetId, index, oid) {
     var height = mapExt.H;
     var iframeId = mapExt.MyPK;
     var title = mapExt.GetPara("Title");
-    var oid = GetPKVal();
+    if (oid == null || oid == undefined)
+        oid = GetPKVal();
 
     var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
     frmEleDBs.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", oid);

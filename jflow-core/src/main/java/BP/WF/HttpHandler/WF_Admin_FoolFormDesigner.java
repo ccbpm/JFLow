@@ -1152,7 +1152,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			attr.setMinLen(0);
 			attr.setMaxLen(50);
 			attr.setMyDataType(DataType.AppString);
-			attr.setUIContralType(UIContralType.TB);
+			attr.setUIContralType(uiContralType);
 			attr.Insert();
 			if (isSupperText == true)
 			{

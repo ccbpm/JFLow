@@ -1431,6 +1431,7 @@ public class MapDtlExt extends EntityNoName
 				athDesc.setFK_MapData(this.getNo());
 				athDesc.setNoOfObj("AthMDtl");
 				athDesc.setName(this.getName());
+				athDesc.setIsVisable(false);
 				athDesc.DirectInsert();
 				//增加分组
 				GroupField group = new GroupField();
@@ -1488,6 +1489,7 @@ public class MapDtlExt extends EntityNoName
 				athDesc.setFK_MapData(this.getNo());
 				athDesc.setNoOfObj("AthMDtl");
 				athDesc.setName(this.getName());
+				athDesc.setIsVisable(false);
 				athDesc.DirectInsert();
 				//增加分组
 				GroupField group = new GroupField();

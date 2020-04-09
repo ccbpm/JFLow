@@ -71,6 +71,10 @@ public enum UIContralType
 	 * 签批组件
 	 */
 	SignCheck(14),
+	/**
+	 * 评论组件
+	 */
+	FlowBBS(15),
 	/** 
 	 流程进度图
 	*/

@@ -10,7 +10,7 @@ import BP.Sys.*;
 /** 
  实体属性
 */
-public class MapAttrCheck extends EntityMyPK
+public class MapAttrFlowBBS extends EntityMyPK
 {
 	/**
 	 表单ID
@@ -67,14 +67,14 @@ public class MapAttrCheck extends EntityMyPK
 	/**
 	 实体属性
 	*/
-	public MapAttrCheck()
+	public MapAttrFlowBBS()
 	{
 	}
 	/**
 	 实体属性
 	 * @throws Exception
 	*/
-	public MapAttrCheck(String myPK) throws Exception
+	public MapAttrFlowBBS(String myPK) throws Exception
 	{
 		this.setMyPK(myPK);
 		this.Retrieve();
@@ -91,7 +91,7 @@ public class MapAttrCheck extends EntityMyPK
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Sys_MapAttr", "签批字段");
+		Map map = new Map("Sys_MapAttr", "评论字段");
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
@@ -164,7 +164,7 @@ public class MapAttrCheck extends EntityMyPK
 	}
 
 	/// <summary>
-	/// 设置签批组件为文本字段
+	/// 设置评论组件为文本字段
 	/// </summary>
 	/// <returns>执行结果</returns>
 	public String DoSetTextBox() throws Exception
@@ -178,7 +178,7 @@ public class MapAttrCheck extends EntityMyPK
 		en.setUIVisible(true);
 		en.Update();
 
-		return "设置成功,当前签批组件已经是文本框了,请关闭掉当前的窗口.";
+		return "设置成功,当前评论组件已经是文本框了,请关闭掉当前的窗口.";
 	}
 
 	/**
@@ -274,8 +274,8 @@ public class MapAttrCheck extends EntityMyPK
 		attr.setMyPK(this.getMyPK());
 		attr.RetrieveFromDBSources();
 
-		//强制设置为签批组件.
-		this.setUIContralType(UIContralType.SignCheck);
+		//强制设置为评论组件.
+		this.setUIContralType(UIContralType.FlowBBS);
 
 		///#region 自动扩展字段长度.
 		if (attr.getMaxLen() <   this.getMaxLen() )

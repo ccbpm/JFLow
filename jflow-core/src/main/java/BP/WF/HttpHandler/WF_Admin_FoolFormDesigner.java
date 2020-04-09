@@ -1140,7 +1140,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			UIContralType uiContralType = UIContralType.forValue(this.GetRequestValInt("UIContralType"));
 			attr.setUIWidth(100);
 			attr.setUIHeight(23);
-			if (uiContralType == UIContralType.SignCheck){
+			if (uiContralType == UIContralType.SignCheck || uiContralType == UIContralType.FlowBBS){
 				attr.setUIVisible(false);
 				attr.setUIIsEnable(false);
 			}else{

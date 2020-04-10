@@ -1157,10 +1157,10 @@ public class WF extends WebContralBase {
 		DataTable ndrpt = DBAccess
 				.RunSQLReturnTable("SELECT PFlowNo,PWorkID FROM " + fl.getPTable() + " WHERE OID=" + workid);
 		if (ndrpt.Rows.size() == 0) {
-			urlExt = "&PFlowNo=0&PWorkID=0&IsToobar=0&IsHidden=true";
+			urlExt = "&PFlowNo=0&PWorkID=0&IsToobar=0&IsHidden=true&CCSta=" + this.GetRequestValInt("CCSta");;
 		} else {
 			urlExt = "&PFlowNo=" + ndrpt.Rows.get(0).getValue("PFlowNo") + "&PWorkID="
-					+ ndrpt.Rows.get(0).getValue("PWorkID") + "&IsToobar=0&IsHidden=true";
+					+ ndrpt.Rows.get(0).getValue("PWorkID") + "&IsToobar=0&IsHidden=true&CCSta=" + this.GetRequestValInt("CCSta");;
 		}
 
 		urlExt += "&From=CCFlow&TruckKey=" + tk.GetValStrByKey("MyPK") + "&DoType=" + this.getDoType() + "&UserNo="
@@ -1249,7 +1249,7 @@ public class WF extends WebContralBase {
 
 		return "url@./CCForm/Frm.htm?FK_MapData=" + nd.getNodeFrmID() + "&OID=" + wk.getOID() + "&FK_Flow="
 				+ this.getFK_Flow() + "&FK_Node=" + nd.getNodeID() + "&PK=OID&PKVal=" + wk.getOID()
-				+ "&IsEdit=0&IsLoadData=0&IsReadonly=1" + endUrl;
+				+ "&IsEdit=0&IsLoadData=0&IsReadonly=1" + endUrl+"&CCSta=" + this.GetRequestValInt("CCSta");
 	}
 
 	/**

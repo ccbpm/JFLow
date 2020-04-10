@@ -2009,6 +2009,10 @@ public class WF_RptDfine extends WebContralBase
 			}
 			if (idx != 0)
 				qo.addRightBracket();
+		}else
+		{
+			qo.AddHD();
+			isFirst = false;
 		}
 
 

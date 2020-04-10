@@ -95,7 +95,9 @@ public class WorkCheck
 
 			if (this.FID != 0)
 			{
-				qo.AddWhereIn(TrackAttr.WorkID, "(" + this.WorkID + "," + this.FID + ")");
+				qo.AddWhere(TrackAttr.WorkID, this.FID);
+				qo.addOr();
+				qo.AddWhere(TrackAttr.FID, this.FID);
 			}
 			else
 			{

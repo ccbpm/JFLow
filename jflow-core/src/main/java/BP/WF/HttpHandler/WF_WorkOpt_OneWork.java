@@ -589,13 +589,13 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 		for (OneWorkXml item : xmls.ToJavaListXmlEnss())
 		{
 			String url = "";
-			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), this.getFK_Node(), this.getWorkID(), this.getFK_Flow(), this.getFID());
+			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1&CCSta="+ this.GetRequestValInt("CCSta"), item.getURL(), this.getFK_Node(), this.getWorkID(), this.getFK_Flow(), this.getFID());
 			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
             {
                 if (nd.getFormUrl().contains("?"))
-                    url = "@url="+nd.getFormUrl() +"&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
+                    url = "@url="+nd.getFormUrl() +"&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1&CCSta="+ this.GetRequestValInt("CCSta");
                 else
-                url = "@url="+nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow()+ "&FID=" + this.getFID() + "&FromWorkOpt=1";
+                url = "@url="+nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow()+ "&FID=" + this.getFID() + "&FromWorkOpt=1&CCSta="+ this.GetRequestValInt("CCSta");
             }
 			String strx = String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\"", item.getNo(), item.getName(), url);
 			re += "{" + strx + "},";
@@ -988,12 +988,48 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	public final String FlowBBSList()
 	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
-		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
-		ps.Add("WorkID", this.getWorkID());
+		String sql = "SELECT E.No As EmpNo,E.Name AS EmpName,E.FK_Dept,D.Name As FK_DeptName ,T.Msg,T.RDT FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track T,Port_Emp E,Port_Dept D WHERE ActionType=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "ActionType";
+		sql += " AND T.EmpFrom = E.No AND E.FK_Dept = D.No";
+		if (this.getFID() != 0)
+		{
+			sql += " AND (WorkID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "FID OR FID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "FID)";
+			ps.Add("FID", this.getFID());
+		}
+		else
+		{
+			sql += " AND (WorkID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "WorkID OR FID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "WorkID)";
+			ps.Add("WorkID", this.getWorkID());
+		}
 
-		//转化成json
-		return BP.Tools.Json.ToJson(BP.DA.DBAccess.RunSQLReturnTable(ps));
+
+
+		ps.SQL = sql;
+		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
+
+		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		{
+			dt.Columns.get("EMPNO").ColumnName="EmpNo";
+			dt.Columns.get("EMPNAME").ColumnName="EmpName";
+			dt.Columns.get("FK_DEPT").ColumnName="FK_Dept";
+			dt.Columns.get("FK_DEPTNAME").ColumnName="FK_DeptName";
+			dt.Columns.get("MSG").ColumnName="Msg";
+			dt.Columns.get("RDT").ColumnName="RDT";
+		}
+
+		if ( SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			dt.Columns.get("empno").ColumnName="EmpNo";
+			dt.Columns.get("empname").ColumnName="EmpName";
+			dt.Columns.get("fk_dept").ColumnName="FK_Dept";
+			dt.Columns.get("fk_deptname").ColumnName="FK_DeptName";
+			dt.Columns.get("msg").ColumnName="Msg";
+			dt.Columns.get("rdt").ColumnName="RDT";
+
+		}
+
+		return BP.Tools.Json.ToJson(dt);
+
 	}
 
 	/** 查看某一用户的评论.

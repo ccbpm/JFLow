@@ -1756,7 +1756,7 @@ public class WorkNode {
 		// 手工抄送
 		if (this.getHisNode().getHisCCRole() == CCRole.HandCC) {
 			// 获取抄送人员列表
-			CCLists cclist = new CCLists(node.getFK_Flow(), this.getWorkID(), this.getHisWork().getFID());
+			CCLists cclist = new CCLists(node.getNodeID(), this.getWorkID(), this.getHisWork().getFID());
 			if (cclist.size() == 0) {
 				ccMsg1 = "@没有选择抄送人。";
 			}
@@ -1764,20 +1764,23 @@ public class WorkNode {
 				PushMsgs pms = new PushMsgs();
 				pms.Retrieve(PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListOfNode.CCAfter);
 				PushMsg pushMsg = null;
+				String mytemp ="";
 				if (pms.size() > 0)
 					pushMsg = (PushMsg)pms.get(0);
+				if(pushMsg == null){
+					String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
+					mytemp = pushMsg.getSMSDoc();
+					mytemp = mytemp.replace("{Title}", title);
+					mytemp = mytemp.replace("@WebUser.No", WebUser.getNo());
+					mytemp = mytemp.replace("@WebUser.Name", WebUser.getName());
+					mytemp = mytemp.replace("@WorkID", String.valueOf(this.getWorkID()));
+					mytemp = mytemp.replace("@OID", String.valueOf(this.getWorkID()));
 
-				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
-				String mytemp = pushMsg.getSMSDoc();
-				mytemp = mytemp.replace("{Title}", title);
-				mytemp = mytemp.replace("@WebUser.No", WebUser.getNo());
-				mytemp = mytemp.replace("@WebUser.Name", WebUser.getName());
-				mytemp = mytemp.replace("@WorkID", String.valueOf(this.getWorkID()));
-				mytemp = mytemp.replace("@OID", String.valueOf(this.getWorkID()));
+					/*如果仍然有没有替换下来的变量.*/
+					if (mytemp.contains("@") == true)
+						mytemp = BP.WF.Glo.DealExp(mytemp, this.rptGe, null);
+				}
 
-				/*如果仍然有没有替换下来的变量.*/
-				if (mytemp.contains("@") == true)
-					mytemp = BP.WF.Glo.DealExp(mytemp, this.rptGe, null);
 
 				for(CCList cc : cclist.ToJavaList())
 				{
@@ -3343,23 +3346,29 @@ public class WorkNode {
 		 */
 
 		/// #region 设置父流程状态 设置当前的节点为:
+		boolean isCopyData = true;
+		//分流节点和子线程的节点绑定的表单相同
+		if (toNode.getHisFormType() == NodeFormType.RefOneFrmTree && toNode.getNodeFrmID().equals(this.getHisNode().getNodeFrmID())==true)
+				isCopyData = false;
+		if(isCopyData == true){
+			Work mainWK = town.getHisWork();
+			mainWK.setOID(this.getHisWork().getFID());
+			mainWK.RetrieveFromDBSources();
 
-		Work mainWK = town.getHisWork();
-		mainWK.setOID(this.getHisWork().getFID());
-		mainWK.RetrieveFromDBSources();
+			// 复制报表上面的数据到合流点上去。
+			DataTable dt = DBAccess.RunSQLReturnTable(
+					"SELECT * FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + dbStr + "OID", "OID",
+					this.getHisWork().getFID());
+			for (DataColumn dc : dt.Columns) {
+				mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
+			}
 
-		// 复制报表上面的数据到合流点上去。
-		DataTable dt = DBAccess.RunSQLReturnTable(
-				"SELECT * FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + dbStr + "OID", "OID",
-				this.getHisWork().getFID());
-		for (DataColumn dc : dt.Columns) {
-			mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
+			mainWK.setRec(WebUser.getNo());
+			mainWK.setEmps(emps);
+			mainWK.setOID(this.getHisWork().getFID());
+			mainWK.Save();
+
 		}
-
-		mainWK.setRec(WebUser.getNo());
-		mainWK.setEmps(emps);
-		mainWK.setOID(this.getHisWork().getFID());
-		mainWK.Save();
 
 		// 产生合流汇总从表数据.
 		this.GenerHieLiuHuiZhongDtlData_2013(toNode);
@@ -8941,7 +8950,15 @@ public class WorkNode {
 			heLiuWK.DirectInsert();
 		}
 
-		heLiuWK.Copy(this.getHisWork()); // 执行copy.
+		//根据Node判断该节点是否绑定表单库的表单
+		boolean isCopyData = true;
+
+		//分流节点和子线程的节点绑定的表单相同
+		if (nd.getHisFormType() == NodeFormType.RefOneFrmTree && nd.getNodeFrmID().equals(this.getHisNode().getNodeFrmID())==true)
+				isCopyData = false;
+
+		if(isCopyData == true)
+			heLiuWK.Copy(this.getHisWork()); // 执行copy.
 
 		heLiuWK.setOID(this.getHisWork().getFID());
 		heLiuWK.setFID(0);

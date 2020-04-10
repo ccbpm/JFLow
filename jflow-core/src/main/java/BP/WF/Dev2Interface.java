@@ -7773,7 +7773,7 @@ public class Dev2Interface
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, int toNodeID, String nextWorkers) throws Exception
 	{
 
-		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null);
+		return Node_SendWork(fk_flow, workID, htWork, null, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null,0,0);
 	}
 	/** 
 	 发送工作
@@ -7790,7 +7790,7 @@ public class Dev2Interface
 	*/
 	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String nextWorkers) throws Exception
 	{
-		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null);
+		return Node_SendWork(fk_flow, workID, htWork, workDtls, toNodeID, nextWorkers, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null,0,0);
 	}
 	/** 
 	 发送工作
@@ -7810,7 +7810,7 @@ public class Dev2Interface
 	 * @throws Exception 
 	 * @throws NumberFormatException 
 	*/
-	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String toEmps, String execUserNo, String execUserName, String execUserDeptNo, String execUserDeptName, String title) throws  Exception
+	public static SendReturnObjs Node_SendWork(String fk_flow, long workID, Hashtable htWork, DataSet workDtls, int toNodeID, String toEmps, String execUserNo, String execUserName, String execUserDeptNo, String execUserDeptName, String title,long fid ,long pworkid) throws  Exception
 	{
 
 		//给临时的发送变量赋值，解决带有参数的转向。
@@ -7819,7 +7819,7 @@ public class Dev2Interface
 		int currNodeId = Dev2Interface.Node_GetCurrentNodeID(fk_flow, workID);
 		if (htWork != null)
 		{
-			BP.WF.Dev2Interface.Node_SaveWork(fk_flow, currNodeId, workID, htWork, workDtls);
+			BP.WF.Dev2Interface.Node_SaveWork(fk_flow, currNodeId, workID, htWork, workDtls,fid,pworkid);
 		}
 
 		// 变量.
@@ -8839,7 +8839,7 @@ public class Dev2Interface
 	*/
 	public static String Node_SaveWork(String fk_flow, int fk_node, long workID) throws Exception
 	{
-		return Node_SaveWork(fk_flow, fk_node, workID, new Hashtable(), null);
+		return Node_SaveWork(fk_flow, fk_node, workID, new Hashtable());
 	}
 	/** 
 	 保存
@@ -8852,7 +8852,7 @@ public class Dev2Interface
 	*/
 	public static String Node_SaveWork(String fk_flow, int fk_node, long workID, Hashtable wk) throws Exception
 	{
-		return Node_SaveWork(fk_flow, fk_node, workID, wk, null);
+		return Node_SaveWork(fk_flow, fk_node, workID, wk, null,0,0);
 	}
 	/** 
 	 保存
@@ -8863,7 +8863,7 @@ public class Dev2Interface
 	 @return 返回执行信息
 	 * @throws Exception 
 	*/
-	public static String Node_SaveWork(String fk_flow, int fk_node, long workID, Hashtable htWork, DataSet dsDtls) throws Exception
+	public static String Node_SaveWork(String fk_flow, int fk_node, long workID, Hashtable htWork, DataSet dsDtls,long fid,long pworkid) throws Exception
 	{
 		if (htWork == null)
 		{
@@ -8873,6 +8873,29 @@ public class Dev2Interface
 		try
 		{
 			Node nd = new Node(fk_node);
+			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+			{
+				FrmNode frmNode = new FrmNode(fk_flow, nd.getNodeID(), nd.getNodeFrmID());
+				switch (frmNode.getWhoIsPK())
+				{
+					case FID:
+						workID = fid;
+						break;
+					case PWorkID:
+						workID = pworkid;
+						break;
+					case P2WorkID:
+						GenerWorkFlow gwf = new GenerWorkFlow(pworkid);
+						workID = gwf.getPWorkID();
+						break;
+					case P3WorkID:
+						String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID=" + pworkid + ")";
+						workID = BP.DA.DBAccess.RunSQLReturnValInt(sql, 0);
+						break;
+					default:
+						break;
+				}
+			}
 			Work wk = nd.getHisWork();
 			if (workID != 0)
 			{

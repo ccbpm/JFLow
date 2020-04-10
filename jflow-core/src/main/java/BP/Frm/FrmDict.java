@@ -383,6 +383,13 @@ public class FrmDict extends EntityNoName
 		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
+		rm = new RefMethod();
+		rm.Title = "数据查询权限规则";
+		rm.ClassMethodName = this.toString() + ".DoSearchDataRole()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.GroupName = "权限规则";
+		map.AddRefMethod(rm);
+
 		///#region 报表定义.
 		rm = new RefMethod();
 		rm.GroupName = "报表定义";
@@ -778,6 +785,15 @@ public class FrmDict extends EntityNoName
 	public final String DoSearchRole()throws Exception
 	{
 		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
+	}
+
+	/// <summary>
+	/// 数据查询权限规则
+	/// </summary>
+	/// <returns></returns>
+	public String DoSearchDataRole() throws Exception
+	{
+		return "../../CCBill/Admin/SearchDataRole.htm?s=34&FrmID=" + this.getNo();
 	}
 
 		///#endregion 权限控制.

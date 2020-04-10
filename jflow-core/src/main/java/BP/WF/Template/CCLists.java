@@ -33,15 +33,15 @@ public class CCLists extends EntitiesMyPK
 	/** 
 	 查询出来所有的抄送信息
 	 
-	 @param flowNo
+	 @param fk_node
 	 @param workid
 	 @param fid
 	 * @throws Exception 
 	*/
-	public CCLists(String flowNo, long workid, long fid) throws Exception
+	public CCLists(int fk_node, long workid, long fid) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(CCListAttr.FK_Flow, flowNo);
+		qo.AddWhere(CCListAttr.FK_Node, fk_node);
 		qo.addAnd();
 		if (fid != 0)
 		{

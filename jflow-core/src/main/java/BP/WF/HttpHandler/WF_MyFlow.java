@@ -2022,7 +2022,7 @@ public class WF_MyFlow extends WebContralBase {
 			}
 
 			objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID(), ht, null, this.getToNode(),
-					null);
+					null, WebUser.getNo(), WebUser.getName(), WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null, this.getFID(),this.getPWorkID());
 			msg = objs.ToMsgOfHtml();
 			BP.WF.Glo.setSessionMsg(msg);
 
@@ -2178,7 +2178,7 @@ public class WF_MyFlow extends WebContralBase {
 	public final String Save() throws Exception {
 		try {
 			String str = BP.WF.Dev2Interface.Node_SaveWork(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(),
-					this.GetMainTableHT(), null);
+					this.GetMainTableHT(), null,this.getFID(),this.getPWorkID());
 
 			if (this.getPWorkID() != 0) {
 				GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -2836,7 +2836,36 @@ public class WF_MyFlow extends WebContralBase {
 		try {
 			DataSet ds = new DataSet();
 
-			ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID(),
+
+			long workID = this.getWorkID();
+			Node nd = new Node(this.getFK_Node());
+			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+			{
+				//获取绑定的表单
+				FrmNode frmnode = new FrmNode(this.getFK_Flow(), this.getFK_Node(), nd.getNodeFrmID());
+				switch (frmnode.getWhoIsPK())
+				{
+					case FID:
+						workID = this.getFID();
+						break;
+					case PWorkID:
+						workID = this.getPWorkID();
+						break;
+					case P2WorkID:
+						GenerWorkFlow gwff = new GenerWorkFlow(this.getPWorkID());
+						workID = gwff.getPWorkID();
+						break;
+					case P3WorkID:
+						String sqlId = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID=" + this.getPWorkID() + ")";
+						workID = BP.DA.DBAccess.RunSQLReturnValInt(sqlId, 0);
+						break;
+					default:
+						break;
+				}
+
+			}
+
+			ds = BP.WF.CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getFK_Node(), workID, this.getFID(),
 					WebUser.getNo());
 
 			/// #region 如果是移动应用就考虑多表单的问题.

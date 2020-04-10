@@ -1005,7 +1005,7 @@ public class WorkFlow {
 	/**
 	 * 结束分流的节点
 	 * 
-	 * @param fid
+	 * @param gwf
 	 * @return
 	 * @throws Exception
 	 */
@@ -1147,7 +1147,7 @@ public class WorkFlow {
 			// 让当前人员向下发送，但是这种发送一定不要检查发送权限，否则的话就出错误，不能发送下去.
 			SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getHisGenerWorkFlow().getPFlowNo(),
 					pGWF.getWorkID(), null, null, 0, null, emp.getNo(), emp.getName(), emp.getFK_Dept(),
-					emp.getFK_DeptText(), null);
+					emp.getFK_DeptText(), null,0,0);
 
 			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
 			this.getHisGenerWorkFlow().DirectUpdate();
@@ -1423,7 +1423,7 @@ public class WorkFlow {
 	/**
 	 * 执行解除冻结
 	 * 
-	 * @param msg
+	 * @param unFixMsg
 	 *            冻结原因
 	 * @throws Exception
 	 */

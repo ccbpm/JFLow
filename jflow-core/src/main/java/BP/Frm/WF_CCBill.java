@@ -386,6 +386,7 @@ public class WF_CCBill extends WebContralBase {
 		dt.Columns.Add("Name", String.class);
 		dt.Columns.Add("Width", Integer.class);
 		dt.TableName = "Attrs";
+		ds.Tables.add(dt);
 
 		String[] ctrls = md.getRptSearchKeys().split("[*]", -1);
 		DataTable dtNoName = null;
@@ -410,6 +411,9 @@ public class WF_CCBill extends WebContralBase {
 			if (mapattr == null) {
 				continue;
 			}
+
+			if (attr.getKey().equals("FK_Dept"))
+				continue;
 
 			if (attr.getIsEnum() == true) {
 				SysEnums ses = new SysEnums(mapattr.getUIBindKey());
@@ -460,11 +464,106 @@ public class WF_CCBill extends WebContralBase {
 
 		}
 
-		ds.Tables.add(dt);
+
+		//数据查询权限除只查看自己创建的数据外增加部门的查询条件
+		SearchDataRole searchDataRole = SearchDataRole.forValue(md.GetParaInt("SearchDataRole"));
+		if (searchDataRole != SearchDataRole.ByOnlySelf)
+		{
+			DataTable dd = GetDeptDataTable(searchDataRole, md);
+			if(dd.Rows.size() ==0 && md.GetParaInt("SearchDataRoleByDeptStation")==1)
+				dd = GetDeptAndSubLevel();
+			if(dd.Rows.size() != 0)
+			{
+				//增加部门的查询条件
+				if (dt.Rows.contains("FK_Dept") == false)
+				{
+					dr = dt.NewRow();
+					dr.setValue("Field","FK_Dept");
+					dr.setValue("Name","部门");
+					dr.setValue("Width",120);
+					dt.Rows.add(dr);
+				}
+
+				dd.TableName = "FK_Dept";
+				ds.Tables.add(dd);
+
+			}
+		}
+
+
 
 		return BP.Tools.Json.ToJson(ds);
 
 	}
+
+	private DataTable GetDeptDataTable(SearchDataRole searchDataRole,MapData md) throws Exception
+	{
+		//增加部门的外键
+		DataTable dt = new DataTable();
+		String sql = "";
+		if (searchDataRole == SearchDataRole.ByDept)
+		{
+			sql = "SELECT D.No,D.Name From Port_Dept D,Port_DeptEmp E WHERE D.No=E.FK_Dept AND E.FK_Emp='" + WebUser.getNo() + "'";
+			dt = DBAccess.RunSQLReturnTable(sql);
+		}
+		if (searchDataRole == SearchDataRole.ByDeptAndSSubLevel)
+		{
+			dt = GetDeptAndSubLevel();
+		}
+		if (searchDataRole == SearchDataRole.ByStationDept)
+		{
+			sql = "SELECT D.No,D.Name From Port_Dept D WHERE D.No IN(SELECT F.FK_Dept FROM Frm_StationDept F,Port_DeptEmpStation P Where F.FK_Station = P.FK_Station AND F.FK_Frm='" + md.getNo() + "' AND P.FK_Emp='" + WebUser.getNo() + "')";
+			dt = DBAccess.RunSQLReturnTable(sql);
+		}
+		for(DataColumn col : dt.Columns)
+		{
+			String colName = col.ColumnName.toLowerCase();
+			switch (colName)
+			{
+				case "no":
+					col.ColumnName = "No";
+					break;
+				case "name":
+					col.ColumnName = "Name";
+					break;
+
+				default:
+					break;
+			}
+
+		}
+		return dt;
+	}
+
+	private DataTable GetDeptAndSubLevel()throws Exception
+	{
+		//获取本部门和兼职部门
+		String sql = "SELECT D.No,D.Name From Port_Dept D,Port_DeptEmp E WHERE D.No=E.FK_Dept AND E.FK_Emp='" + WebUser.getNo() + "'";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		DataTable dd = dt.copy();
+		for(DataRow dr : dd.Rows)
+		{
+			GetSubLevelDeptByParentNo(dt, dr.getValue(0).toString());
+		}
+		return dt;
+	}
+
+	private void GetSubLevelDeptByParentNo( DataTable dt,String parentNo)
+	{
+		String sql = "SELECT No,Name FROM Port_Dept Where ParentNo='" + parentNo + "'";
+		DataTable dd = DBAccess.RunSQLReturnTable(sql);
+
+		for(DataRow dr : dd.Rows)
+		{
+			if (dt.Rows.contains(dr.getValue(0).toString()) == true)
+				continue;
+			dt.Rows.add(dr);
+
+			GetSubLevelDeptByParentNo(dt, dr.getValue(0).toString());
+
+		}
+	}
+
 
 	///#endregion 查询条件
 
@@ -772,13 +871,12 @@ public class WF_CCBill extends WebContralBase {
 			qo.addAnd();
 		qo.AddWhere("BillState", "!=", 0);
 
-		//默认查询本部门的单据
-		if(WebUser.getNo().equals("admin") == false)
+		if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) == SearchDataRole.ByOnlySelf && DataType.IsNullOrEmpty(hidenField) == true
+				||(md.GetParaInt("SearchDataRoleByDeptStation")==0 && DataType.IsNullOrEmpty(ap.GetValStrByKey("FK_Dept"))==true))
 		{
 			qo.addAnd();
-			qo.AddWhere("FK_Dept", "=", WebUser.getFK_Dept());
+			qo.AddWhere("Starter", "=", WebUser.getNo());
 		}
-
 
 		//获得行数.
 		ur.SetPara("RecCount", qo.GetCount());

@@ -373,6 +373,13 @@ public class FrmBill extends EntityNoName {
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
+		rm.Title = "数据查询权限规则";
+		rm.ClassMethodName = this.toString() + ".DoSearchDataRole()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.GroupName = "权限规则";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
 		rm.GroupName = "报表定义";
 		rm.Title = "设置显示的列"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsChose";
@@ -482,6 +489,15 @@ public class FrmBill extends EntityNoName {
 	public final String DoSearchRole()throws Exception
 	{
 		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
+	}
+
+	/// <summary>
+	/// 数据查询权限规则
+	/// </summary>
+	/// <returns></returns>
+	public String DoSearchDataRole() throws Exception
+	{
+		return "../../CCBill/Admin/SearchDataRole.htm?s=34&FrmID=" + this.getNo();
 	}
 	/**
 	 删除规则.

@@ -79,9 +79,7 @@ public class SFTable extends EntityNoName
 			{
 				runObj = runObj.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			}
-
-			if (runObj.contains("@") == true && ht == null)
-				throw new RuntimeException("@外键类型SQL错误," + runObj+"部分查询条件没有被替换.");
+			
 
 			if (runObj.contains("@") == true && ht!=null)
 			{

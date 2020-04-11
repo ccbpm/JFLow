@@ -3306,6 +3306,8 @@ public class WF_Comm extends WebContralBase {
 			ht.put("FK_DeptName", "");
 			ht.put("FK_DeptNameOfFull", "");
 			ht.put("IsAdmin", 0);
+			ht.put("OrgNo", "");
+			ht.put("OrgName","");
 			ht.put("CustomerNo", SystemConfig.getCustomerNo());
 			ht.put("CustomerName", SystemConfig.getCustomerName());
 			return BP.Tools.Json.ToJson(ht);
@@ -3319,6 +3321,8 @@ public class WF_Comm extends WebContralBase {
 		ht.put("CustomerNo", SystemConfig.getCustomerNo());
 		ht.put("CustomerName", SystemConfig.getCustomerName());
 		ht.put("SID", WebUser.getSID());
+		ht.put("OrgNo", WebUser.getOrgNo());
+		ht.put("OrgName", WebUser.getOrgName());
 		ht.put("IsAdmin", WebUser.getIsAdmin()==true?1:0);
 		// 检查是否是授权状态.
 		if (WebUser.getIsAuthorize() == true) {
@@ -3328,6 +3332,9 @@ public class WF_Comm extends WebContralBase {
 		} else {
 			ht.put("IsAuthorize", "0");
 		}
+
+        //增加运行模式. add by zhoupeng 2020.03.10 适应saas模式.
+        ht.put("CCBPMRunModel", SystemConfig.GetValByKey("CCBPMRunModel", "0"));
 		return BP.Tools.Json.ToJson(ht);
 	}
 

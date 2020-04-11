@@ -114,7 +114,11 @@ public class SFTable extends EntityNoName
 			String sql = "SELECT No, Name FROM " + this.getNo();
 			return src.RunSQLReturnTable(sql);
 		}
-
+		if(this.getSrcType() == SrcType.SysDict)
+		{
+			DictDtls dictDtls = new DictDtls(this.getNo());
+			return dictDtls.ToDataTableField();
+		}
 
 		return null;
 
@@ -505,7 +509,7 @@ public class SFTable extends EntityNoName
 		map.AddTBStringPK(SFTableAttr.No, null, "表英文名称", true, false, 1, 200, 20);
 		map.AddTBString(SFTableAttr.Name, null, "表中文名称", true, false, 0, 200, 20);
 
-		map.AddDDLSysEnum(SFTableAttr.SrcType, 0, "数据表类型", true, false, SFTableAttr.SrcType, "@0=本地的类@1=创建表@2=表或视图@3=SQL查询表@4=WebServices@5=微服务Handler外部数据源@6=JavaScript外部数据源@7=动态Json");
+		map.AddDDLSysEnum(SFTableAttr.SrcType, 0, "数据表类型", true, false, SFTableAttr.SrcType, "@0=本地的类@1=创建表@2=表或视图@3=SQL查询表@4=WebServices@5=微服务Handler外部数据源@6=JavaScript外部数据源@7=系统字典表");
 
 		map.AddDDLSysEnum(SFTableAttr.CodeStruct, 0, "字典表类型", true, false, SFTableAttr.CodeStruct);
 		map.AddTBString(SFTableAttr.RootVal, null, "根节点值", false, false, 0, 200, 20);
@@ -570,11 +574,16 @@ public class SFTable extends EntityNoName
 	{
 		if (this.getIsClass())
 		{
+
 			return SystemConfig.getCCFlowWebPath() + "WF/Comm/Ens.htm?EnsName=" + this.getNo();
 		}
-		else
-		{
-			return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo();
+		else {
+			if (this.getSrcType() == BP.Sys.SrcType.SysDict) {
+				return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SysDictEditData.htm?FK_SFTable=" + this.getNo();
+			} else {
+				return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo();
+
+			}
 		}
 	}
 	public final String IsCanDelete() throws Exception
@@ -609,8 +618,80 @@ public class SFTable extends EntityNoName
 		//利用这个时间串进行排序.
 		this.setRDT(DataType.getCurrentDataTime());
 
+		//#region  如果是 系统字典表.
+		if (this.getSrcType() == BP.Sys.SrcType.SysDict &&
+				(SystemConfig.getCCBPMRunModel() == 0 || SystemConfig.getCCBPMRunModel() == 1))
+		{
+			//创建dict.
+			Dict dict = new Dict();
+			dict.setTableID(this.getNo());
+			dict.setTableName(this.getName());
+			dict.setOrgNo(WebUser.getOrgNo());
+			dict.setDictType(String.valueOf(this.GetValIntByKey(SFTableAttr.CodeStruct)));
+			if (SystemConfig.getCCBPMRunModel() == 0)
+			{
+				dict.setMyPK(this.getNo());
+			}
+			else
+			{
+				dict.setMyPK(WebUser.getOrgNo() + "_" + this.getNo());
+			}
+			dict.Insert();
 
-			///#region 如果是本地类. @于庆海.
+			if (this.getCodeStruct() == CodeStruct.NoName)
+			{
+				DictDtl dtl = new DictDtl();
+				dtl.setMyPK(dict.getMyPK() + "_001");
+				dtl.setBH("001");
+				dtl.setName("Item1");
+				dtl.setDictMyPK(dict.getMyPK());
+				dtl.Insert();
+
+				dtl = new DictDtl();
+				dtl.setMyPK(dict.getMyPK() + "_002");
+				dtl.setBH("002");
+				dtl.setName("Item2");
+				dtl.setDictMyPK(dict.getMyPK());
+				dtl.Insert();
+
+				dtl = new DictDtl();
+				dtl.setMyPK(dict.getMyPK() + "_003");
+				dtl.setBH("003");
+				dtl.setName("Item3");
+				dtl.setDictMyPK(dict.getMyPK());
+				dtl.Insert();
+			}
+
+			if (this.getCodeStruct() == CodeStruct.Tree)
+			{
+				DictDtl dtl = new DictDtl();
+				dtl.setMyPK(dict.getMyPK() + "_001");
+				dtl.setBH("001");
+				dtl.setName("Item1");
+				dtl.setDictMyPK(dict.getMyPK());
+				dtl.setParentNo("0");
+				dtl.Insert();
+
+				dtl = new DictDtl();
+				dtl.setMyPK(dict.getMyPK() + "_002");
+				dtl.setBH("002");
+				dtl.setName("Item2");
+				dtl.setDictMyPK(dict.getMyPK());
+				dtl.setParentNo("001");
+				dtl.Insert();
+
+				dtl = new DictDtl();
+				dtl.setMyPK(dict.getMyPK() + "_003");
+				dtl.setBH("003");
+				dtl.setName("Item3");
+				dtl.setDictMyPK(dict.getMyPK());
+				dtl.setParentNo("001");
+				dtl.Insert();
+
+			}
+		}
+           // #endregion  如果是 系统字典表.
+			///#region 如果是本地类.
 		if (this.getSrcType() == SrcType.BPClass)
 		{
 			Entities ens = ClassFactory.GetEns(this.getNo());

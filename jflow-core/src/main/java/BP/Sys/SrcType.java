@@ -37,7 +37,11 @@ public enum SrcType
 	/** 
 	 JS请求数据.
 	*/
-	JQuery(6);
+	JQuery(6),
+	/**
+	 系统字典表.
+	 */
+	SysDict(7);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

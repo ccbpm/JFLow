@@ -29,6 +29,14 @@
                return false; // 保存失败不能发送.
            }
        }
+
+       window.addEventListener('message', function (e) {
+           console.log(e.data);
+           var data=e.data;
+           if(data.Save){
+               Save();
+           }
+       }, false);
     </script>
 
 <!-- 保存按钮让其隐藏 ............................ -->

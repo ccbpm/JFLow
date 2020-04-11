@@ -218,11 +218,15 @@ function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal, filterKey1, fi
             if (json[i][filterKey1] != filterVal1)
                 continue;
         }
+        if (json[i][noCol].toString().indexOf("Port") != -1 || json[i][noCol].toString().indexOf("Pub") != -1 || json[i][noCol].toString().indexOf("V") != -1 || json[i][noCol].toString().indexOf("Frm") != -1) {
 
-        if (json[i][noCol] == undefined)
-            $("#" + ddlCtrlID).append("<option value='" + json[i][0] + "'>" + json[i][1] + "</option>");
-        else
-            $("#" + ddlCtrlID).append("<option value='" + json[i][noCol] + "'>" + json[i][nameCol] + "</option>");
+        }
+        else {
+            if (json[i][noCol] == undefined)
+                $("#" + ddlCtrlID).append("<option value='" + json[i][0] + "'>" + json[i][1] + "</option>");
+            else
+                $("#" + ddlCtrlID).append("<option value='" + json[i][noCol] + "'>" + json[i][nameCol] + "</option>");
+        }
     }
 
     //设置选中的值.
@@ -2720,6 +2724,9 @@ $(function () {
 
     if (url.indexOf('login.htm') == -1
         && url.indexOf('dbinstall.htm') == -1
+        && url.indexOf('registeradminer.htm') == -1
+        && url.indexOf('registerorg.htm') == -1
+        && url.indexOf('reqpassword.htm') == -1
         && url.indexOf('reguser.htm') == -1
         && url.indexOf('port.htm') == -1) {
 

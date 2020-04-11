@@ -45,7 +45,7 @@
 
             //给主键赋值.
             var tag = FormatSQL(mapExt.Tag);
-            $("#TB_Tag").val(tag);
+            $("#TB_SQL").val(tag);
 
             //求从表个数
             var mapDtls = new Entities("BP.Sys.MapDtls");
@@ -119,8 +119,8 @@
 
             var mapExt = new Entity("BP.Sys.MapExt");
             mapExt.SetPKVal(pkval);
-            mapExt.Tag = document.getElementById("TB_SQL").value;
-
+            mapExt.Tag = editor.getValue();
+            
             if (mapExt.Tag != null && mapExt.Tag != "" && CheckIsSQL(mapExt.Tag) == false) {
                 alert('请输入合法的查询SQL\t\n' + mapExt.Tag);
                 return;

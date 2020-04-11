@@ -241,8 +241,8 @@
             box-sizing: border-box;
             outline: none;
         }
-        .NewChild{
-           
+
+        .NewChild {
         }
     </style>
     <script type="text/javascript">
@@ -1024,7 +1024,7 @@
         }
         function ShowNew() {
             $(".NewChild").fadeToggle("slow");
-            
+
         }
         function GroupField(mypk, OID) {
 
@@ -1051,7 +1051,7 @@
             if (ftype == 1) {
 
 
-                if (uiContralType == 0 ) {
+                if (uiContralType == 0) {
                     title = '字段String属性';
                     url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrString&PKVal=' + mypk + '&s=' + Math.random();
                 }
@@ -1439,7 +1439,7 @@
         function EditDtl(mypk) {
             var url = '../../Comm/En.htm?EnName=BP.WF.Template.MapDtlExt&FK_MapData=' + pageData.fk_mapdata + '&No=' + mypk;
 
-            OpenEasyUiDialog(url, "eudlgframe", '从表', 800, 500, "icon-edit", true, null, null, null, function () {
+            OpenEasyUiDialog(url, "eudlgframe", '从表', 950, 600, "icon-edit", true, null, null, null, function () {
                 window.location.href = window.location.href;
             });
         }
@@ -1454,7 +1454,7 @@
         function MapM2M() {
             var url = 'MapM2M.htm?DoType=List&FK_MapData=' + pageData.fk_mapdata;
 
-            OpenEasyUiDialog(url, "eudlgframe", '多选', 800, 500, "icon-edit", true, null, null, null, function () {
+            OpenEasyUiDialog(url, "eudlgframe", '多选', 950, 600, "icon-edit", true, null, null, null, function () {
                 window.location.href = window.location.href;
             });
         }
@@ -1462,7 +1462,7 @@
         function MapM2MM() {
             var url = 'MapM2MM.htm?FK_MapData=' + pageData.fk_mapdata;
 
-            OpenEasyUiDialog(url, "eudlgframe", '多选', 800, 500, "icon-edit", true, null, null, null, function () {
+            OpenEasyUiDialog(url, "eudlgframe", '多选', 950, 600, "icon-edit", true, null, null, null, function () {
                 window.location.href = window.location.href;
             });
         }
@@ -1471,7 +1471,7 @@
         function EditAth(ath) {
             var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&FK_MapData=' + pageData.fk_mapdata + '&MyPK=' + ath;
 
-            OpenEasyUiDialog(url, "eudlgframe", '附件', 800, 500, "icon-edit", true, null, null, null, function () {
+            OpenEasyUiDialog(url, "eudlgframe", '附件', 950, 600, "icon-edit", true, null, null, null, function () {
                 window.location.href = window.location.href;
             });
         }
@@ -1615,19 +1615,19 @@
                 </a>
 
                 <a href="javascript:ShowNew()" class="easyui-linkbutton btn-light-yellow">
-                    新建
+                    新建...
                 </a>
                 <a style="display:none" href="javascript:AddF();" class="NewChild easyui-linkbutton btn-light-yellow">
                     新建字段
                 </a>
                 <!--<a href="javascript:HidAttr();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-hidden'">
-        隐藏字段
-    </a>-->
+                    隐藏字段
+                </a>-->
                 <a href="javascript:GroupFieldNew();" class="NewChild easyui-linkbutton btn-light-green">
                     新建字段分组
                 </a>
                 <a href="javascript:GroupFieldFWCNew();" class="NewChild easyui-linkbutton btn-light-red">
-                    &nbsp;&nbsp;新建审核分组
+                    新建审核分组
                 </a>
                 <a href="javascript:NewMapDtl();" class="NewChild easyui-linkbutton btn-light-blue">
                     新建从表

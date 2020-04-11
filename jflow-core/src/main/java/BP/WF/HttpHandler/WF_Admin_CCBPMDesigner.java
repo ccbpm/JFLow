@@ -1594,7 +1594,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				int nodeID = Integer.parseInt(fl.getNo() + "01");
 				FrmNode fn = new FrmNode();
 				fn.setFK_Frm("ND" + nodeID);
-				fn.setIsEnableFWC(false);
+				fn.setIsEnableFWC(FrmWorkCheckSta.Disable);
 				fn.setFK_Node(nodeID);
 				fn.setFK_Flow(flowNo);
 				fn.setFrmSln(FrmSln.Default);
@@ -1603,7 +1603,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				nodeID = Integer.parseInt(fl.getNo() + "02");
 				fn = new FrmNode();
 				fn.setFK_Frm("ND" + nodeID);
-				fn.setIsEnableFWC(false);
+				fn.setIsEnableFWC(FrmWorkCheckSta.Disable);
 				fn.setFK_Node(nodeID);
 				fn.setFK_Flow(flowNo);
 				fn.setFrmSln(FrmSln.Default);

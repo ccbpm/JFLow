@@ -84,13 +84,13 @@ public class FrmNode extends EntityMyPK
 	/** 
 	 是否启用节点组件?
 	*/
-	public final boolean getIsEnableFWC() throws Exception
+	public final FrmWorkCheckSta getIsEnableFWC() throws Exception
 	{
-		return this.GetValBooleanByKey(FrmNodeAttr.IsEnableFWC);
+		return FrmWorkCheckSta.forValue(this.GetValIntByKey(FrmNodeAttr.IsEnableFWC));
 	}
-	public final void setIsEnableFWC(boolean value) throws Exception
+	public final void setIsEnableFWC(FrmWorkCheckSta value) throws Exception
 	{
-		this.SetValByKey(FrmNodeAttr.IsEnableFWC, value);
+		this.SetValByKey(FrmNodeAttr.IsEnableFWC, value.getValue());
 	}
 	/** 
 	 是否执行1变n
@@ -387,7 +387,7 @@ public class FrmNode extends EntityMyPK
 			Node node = new Node(fk_node);
 			if (node.getFrmWorkCheckSta() != FrmWorkCheckSta.Disable)
 			{
-				this.setIsEnableFWC(true);
+				this.setIsEnableFWC(FrmWorkCheckSta.Enable);
 
 			}
 			return;
@@ -443,7 +443,8 @@ public class FrmNode extends EntityMyPK
 		map.AddTBInt(FrmNodeAttr.IsEnable, 1, "是否显示", true, false);
 
 		map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, true, 0, 20, 20);
-
+		//签批字段不可见
+		map.AddTBString(NodeWorkCheckAttr.CheckField, null, "签批字段", false, false, 0, 50, 10, false);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

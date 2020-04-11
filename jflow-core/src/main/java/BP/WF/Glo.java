@@ -609,7 +609,7 @@ public class Glo {
 	/**
 	 * 当前版本号-为了升级使用.
 	 */
-	public static int Ver = 20200407;
+	public static int Ver = 20200411;
 
 	/**
 	 * 执行升级
@@ -816,7 +816,26 @@ public class Glo {
 			dtlNos = "('" + dtlNos + "')";
 			DBAccess.RunSQL("UPDATE SYS_MAPDTL SET FK_NODE=0 WHERE NO IN " + dtlNos);
 		}
+		 // 绑定表单库中的表单升级审核组件
+		switch(SystemConfig.getAppCenterDBType()){
+			case MySQL:
+				sql = "UPDATE WF_FrmNode F INNER JOIN(SELECT FWCSta,NodeID FROM WF_Node ) N on F.FK_Node = N.NodeID and  F.IsEnableFWC =1 SET F.IsEnableFWC = N.FWCSta;";
+				break;
+			case MSSQL:
+				sql = "UPDATE    F SET IsEnableFWC = N. FWCSta  FROM WF_FrmNode F,WF_Node N    WHERE F.FK_Node = N.NodeID AND F.IsEnableFWC =1";
+				break;
+			case Oracle:
+				sql = "UPDATE WF_FrmNode F  SET (IsEnableFWC)=(SELECT FWCSta FROM WF_Node N WHERE F.FK_Node = N.NodeID AND F.IsEnableFWC =1)";
+				break;
+			case PostgreSQL:
+				sql = "UPDATE WF_FrmNode SET IsEnableFWC=(SELECT FWCSta FROM WF_Node N Where N.NodeID=WF_FrmNode.FK_Node AND WF_FrmNode.IsEnableFWC=1)";
+				break;
+			default:
+				new Exception("暂不支持"+SystemConfig.getAppCenterDBType()+"的数据库类型");
+				break;
+		}
 
+		DBAccess.RunSQL(sql);
 		/// #region 升级填充数据.
 		// pop自动填充
 		MapExts exts = new MapExts();

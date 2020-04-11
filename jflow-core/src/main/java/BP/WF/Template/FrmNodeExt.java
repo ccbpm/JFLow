@@ -1,6 +1,7 @@
 package BP.WF.Template;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
 import BP.Port.*;
@@ -35,6 +36,17 @@ public class FrmNodeExt extends EntityMyPK
 		return this.GetValStringByKey(FrmNodeAttr.FK_Flow);
 	}
 
+	/**
+	 是否启用节点组件?
+	 */
+	public final FrmWorkCheckSta getIsEnableFWC() throws Exception
+	{
+		return FrmWorkCheckSta.forValue(this.GetValIntByKey(FrmNodeAttr.IsEnableFWC));
+	}
+	public final void setIsEnableFWC(FrmWorkCheckSta value) throws Exception
+	{
+		this.SetValByKey(FrmNodeAttr.IsEnableFWC, value.getValue());
+	}
 		///#endregion
 
 
@@ -106,9 +118,30 @@ public class FrmNodeExt extends EntityMyPK
 		map.SetHelperAlert(FrmNodeAttr.FrmSln, "控制该表单数据元素权限的方案，如果是自定义方案，就要设置每个表单元素的权限.");
 
 
-		map.AddBoolean(FrmNodeAttr.IsEnableFWC, false, "是否启用审核组件？", true, true, true);
+		map.AddDDLSysEnum(FrmNodeAttr.IsEnableFWC, FrmWorkCheckSta.Disable.getValue(), "审核组件状态",
+				true, true, NodeWorkCheckAttr.FWCSta, "@0=禁用@1=启用@2=只读");
 		map.SetHelperAlert(FrmNodeAttr.IsEnableFWC, "控制该表单是否启用审核组件？如果启用了就显示在该表单上;显示审核组件的前提是启用了节点表单的审核组件，审核组件的状态也是根据节点审核组件的状态决定的");
 
+		String sql = "";
+		switch (BP.Difference.SystemConfig.getAppCenterDBType())
+		{
+			case MSSQL:
+			case MySQL:
+				sql = "SELECT '' AS No, '-请选择-' as Name ";
+				break;
+			case Oracle:
+				sql = "SELECT '' AS No, '-请选择-' as Name FROM DUAL ";
+				break;
+
+			case PostgreSQL:
+			default:
+				sql = "SELECT '' AS No, '-请选择-' as Name FROM Port_Emp WHERE 1=2 ";
+				break;
+		}
+		sql += " union ";
+
+		sql += " SELECT KeyOfEn AS No,Name From Sys_MapAttr Where UIContralType=14 AND FK_MapData='@FK_Frm'";
+		map.AddDDLSQL(NodeWorkCheckAttr.CheckField, null, "签批字段", sql, true);
 			//map.AddDDLSysEnum( BP.WF.Template.FrmWorkCheckAttr.FWCSta, 0, "审核组件(是否启用审核组件？)", true, true);
 
 			//显示的

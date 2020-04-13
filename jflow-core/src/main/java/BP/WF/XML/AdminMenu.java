@@ -11,8 +11,9 @@ import BP.WF.*;
 */
 public class AdminMenu extends XmlEn
 {
-
-		///#region 属性
+	/**
+	 菜单编号
+	*/
 	public final String getNo()
 	{
 		return this.GetValStringByKey("No");
@@ -21,6 +22,9 @@ public class AdminMenu extends XmlEn
 	{
 		this.SetVal("No", value);
 	}
+	/** 
+	 分组编号
+	*/
 	public final String getGroupNo()
 	{
 		return this.GetValStringByKey("GroupNo");
@@ -29,6 +33,9 @@ public class AdminMenu extends XmlEn
 	{
 		this.SetVal("GroupNo", value);
 	}
+	/** 
+	 名称
+	*/
 	public final String getName()
 	{
 		return this.GetValStringByKey("Name");
@@ -37,6 +44,9 @@ public class AdminMenu extends XmlEn
 	{
 		this.SetVal("Name", value);
 	}
+	/** 
+	 应用范围
+	*/
 	public final String getFor()
 	{
 		return this.GetValStringByKey("For");
@@ -45,6 +55,9 @@ public class AdminMenu extends XmlEn
 	{
 		this.SetVal("For", value);
 	}
+	/** 
+	 Url菜单
+	*/
 	public final String getUrl()
 	{
 		return this.GetValStringByKey("Url");
@@ -54,10 +67,7 @@ public class AdminMenu extends XmlEn
 		this.SetVal("Url", value);
 	}
 
-		///#endregion
-
-
-		///#region 构造
+	///#region 构造
 	/** 
 	 节点扩展信息
 	*/
@@ -70,10 +80,9 @@ public class AdminMenu extends XmlEn
 	@Override
 	public XmlEns getGetNewEntities()
 	{
+
 		return new AdminMenus();
 	}
-
-		///#endregion
 
 	/** 
 	 是否可以使用？
@@ -83,21 +92,6 @@ public class AdminMenu extends XmlEn
 	*/
 	public final boolean IsCanUse(String no)
 	{
-		if (this.getFor().equals(""))
-		{
-			return true;
-		}
-
-		if (this.getFor().equals(no))
-		{
-			return true;
-		}
-
-		if (this.getFor().equals("SecondAdmin"))
-		{
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 }

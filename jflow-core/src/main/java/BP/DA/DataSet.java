@@ -292,7 +292,7 @@ public class DataSet {
 	 * @param path xml文件路径
 	 * @return xml文件内容
 	 */
-	public String xmlToString(String path) {
+	public String xmlToString(String path) throws Exception {
 		String line = null;
 		StringBuffer strBuffer = new StringBuffer();
 		try {
@@ -319,12 +319,12 @@ public class DataSet {
 					}
 					read.close();
 				} else {
-					System.out.println("找不到指定的文件！" + path);
+					throw new Exception("找不到指定的文件"+path+",请联系管理员查看环境配置是否正确，jflow.properties中的配置是否正确");
 				}
 			}
 
 		} catch (Exception e) {
-			System.out.println("读取文件内容操作出错！" + e.getMessage());
+			throw new Exception("读取文件内容操作出错！" + e.getMessage());
 		}
 		return strBuffer.toString();
 	}

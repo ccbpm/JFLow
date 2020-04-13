@@ -254,11 +254,11 @@ public abstract class FlowEventBase {
 	public FlowEventBase() {
 	}
 
-	public String FrmLoadAfter() {
+	public String FrmLoadAfter()throws Exception {
 		return null;
 	}
 
-	public String FrmLoadBefore() {
+	public String FrmLoadBefore()throws Exception {
 		return null;
 	}
 
@@ -268,7 +268,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return 创建WorkID所执行的操作
 	 */
-	public String FlowOnCreateWorkID() {
+	public String FlowOnCreateWorkID()throws Exception {
 		return null;
 	}
 
@@ -277,7 +277,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return 返回null，不提示信息，返回string提示结束信息,抛出异常就阻止流程删除.
 	 */
-	public String FlowOverBefore() {
+	public String FlowOverBefore()throws Exception {
 		return null;
 	}
 
@@ -286,7 +286,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return 返回null，不提示信息，返回string提示结束信息,抛出异常不处理。
 	 */
-	public String FlowOverAfter() {
+	public String FlowOverAfter()throws Exception {
 		return null;
 	}
 
@@ -295,7 +295,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return 返回null,不提示信息,返回信息，提示删除警告/提示信息, 抛出异常阻止删除操作.
 	 */
-	public String BeforeFlowDel() {
+	public String BeforeFlowDel()throws Exception {
 		return null;
 	}
 
@@ -304,7 +304,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return 返回null,不提示信息,返回信息，提示删除警告/提示信息, 抛出异常不处理.
 	 */
-	public String AfterFlowDel() {
+	public String AfterFlowDel()throws Exception {
 		return null;
 	}
 
@@ -314,14 +314,14 @@ public abstract class FlowEventBase {
 	/**
 	 * 保存后
 	 */
-	public String SaveAfter() {
+	public String SaveAfter()throws Exception {
 		return null;
 	}
 
 	/**
 	 * 保存前
 	 */
-	public String SaveBefore() {
+	public String SaveBefore()throws Exception {
 		return null;
 	}
 
@@ -330,14 +330,14 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String CreateWorkID() {
+	public String CreateWorkID()throws Exception {
 		return null;
 	}
 
 	/**
 	 * 发送前
 	 */
-	public String SendWhen() {
+	public String SendWhen()throws Exception {
 		return null;
 	}
 
@@ -353,7 +353,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String SendError() {
+	public String SendError()throws Exception {
 		return null;
 	}
 
@@ -362,7 +362,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String ReturnBefore() {
+	public String ReturnBefore()throws Exception {
 		return null;
 	}
 
@@ -371,7 +371,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String ReturnAfter() {
+	public String ReturnAfter() throws Exception{
 		return null;
 	}
 
@@ -380,7 +380,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String UndoneBefore() {
+	public String UndoneBefore()throws Exception {
 		return null;
 	}
 
@@ -389,7 +389,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String UndoneAfter() {
+	public String UndoneAfter()throws Exception {
 		return null;
 	}
 
@@ -398,7 +398,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String ShiftAfter() {
+	public String ShiftAfter()throws Exception {
 		return null;
 	}
 
@@ -407,7 +407,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String AskerAfter() {
+	public String AskerAfter()throws Exception {
 		return null;
 	}
 
@@ -416,7 +416,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String AskerReAfter() {
+	public String AskerReAfter()throws Exception {
 		return null;
 	}
 
@@ -425,7 +425,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String QueueSendAfter() {
+	public String QueueSendAfter()throws Exception {
 		return null;
 	}
 
@@ -434,7 +434,7 @@ public abstract class FlowEventBase {
 	 * 
 	 * @return
 	 */
-	public String WorkArrive() {
+	public String WorkArrive()throws Exception {
 		return null;
 	}
 

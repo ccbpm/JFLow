@@ -831,8 +831,8 @@ public class Glo {
 				sql = "UPDATE WF_FrmNode SET IsEnableFWC=(SELECT FWCSta FROM WF_Node N Where N.NodeID=WF_FrmNode.FK_Node AND WF_FrmNode.IsEnableFWC=1)";
 				break;
 			default:
-				new Exception("暂不支持"+SystemConfig.getAppCenterDBType()+"的数据库类型");
-				break;
+				throw new Exception("暂不支持"+SystemConfig.getAppCenterDBType()+"的数据库类型");
+
 		}
 
 		DBAccess.RunSQL(sql);

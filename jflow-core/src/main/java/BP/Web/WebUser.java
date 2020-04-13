@@ -713,8 +713,9 @@ public class WebUser {
 
 			val = DBAccess.RunSQLReturnString("SELECT Name FROM Port_Org WHERE No='" + WebUser.getOrgNo() + "'");
 			SetSessionByKey("OrgName", val);
-			return val;
 		}
+		if(val == null)
+			return "";
 		return val;
 	}
 

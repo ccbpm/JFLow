@@ -17,6 +17,8 @@ import java.util.*;
 import java.net.URLDecoder;
 import java.time.*;
 
+import static java.awt.SystemColor.menu;
+
 /**
  初始化函数
  */
@@ -1379,55 +1381,101 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	 */
 	public final String GetTreeJson_AdminMenu() throws Exception
 	{
-		//查询全部.
-		AdminMenuGroups groups = new AdminMenuGroups();
-		groups.RetrieveAll();
-
-		AdminMenus menus = new AdminMenus();
-		menus.RetrieveAll();
-
-		// 定义容器.
-		AdminMenus newMenus = new AdminMenus();
-
-		for (AdminMenuGroup menu : groups.ToJavaList())
+		if (BP.WF.Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 		{
-			//是否可以使用？
-			if (menu.IsCanUse(WebUser.getNo()) == false)
+			//查询全部.
+			Admin2MenuGroups groups = new Admin2MenuGroups();
+			groups.RetrieveAll();
+
+			Admin2Menus menus = new Admin2Menus();
+			menus.RetrieveAll();
+
+			// 定义容器.
+			Admin2Menus newMenus = new Admin2Menus();
+
+			for(Admin2MenuGroup menu : groups.ToJavaList())
 			{
-				continue;
+
+				//是否可以使用？
+				if (menu.IsCanUse(WebUser.getNo()) == false)
+					continue;
+				Admin2Menu newMenu = new Admin2Menu();
+				newMenu.setNo(menu.getNo());
+				newMenu.setName(menu.getName());
+				newMenu.setGroupNo("0");
+				newMenu.setFor(menu.getFor());
+				newMenu.setUrl("");
+				newMenus.Add(newMenu);
 			}
 
-			AdminMenu newMenu = new AdminMenu();
-			newMenu.setNo(menu.getNo());
-			newMenu.setName(menu.getName());
-			newMenu.setGroupNo("0");
-			newMenu.setFor(menu.getFor());
-			newMenu.setUrl("");
-			newMenus.Add(newMenu);
-		}
-
-		for (AdminMenu menu : menus.ToJavaList())
-		{
-			//是否可以使用？
-			if (menu.IsCanUse(WebUser.getNo()) == false)
+			for(Admin2Menu menu : menus.ToJavaList())
 			{
-				continue;
+				newMenus.Add(menu);
+			}
+			//添加默认，无权限
+			if (newMenus.size() == 0)
+			{
+				Admin2Menu menu = new Admin2Menu();
+				menu.setNo("1");
+				menu.setGroupNo("0");
+				menu.setName("无权限");
+				menu.setUrl("");
+				newMenus.Add(menu);
+			}
+			DataTable dt = newMenus.ToDataTable();
+			return BP.Tools.Json.ToJson(newMenus.ToDataTable());
+		}else{
+			//查询全部.
+			AdminMenuGroups groups = new AdminMenuGroups();
+			groups.RetrieveAll();
+
+			AdminMenus menus = new AdminMenus();
+			menus.RetrieveAll();
+
+			// 定义容器.
+			AdminMenus newMenus = new AdminMenus();
+
+			for (AdminMenuGroup menu : groups.ToJavaList())
+			{
+				//是否可以使用？
+				if (menu.IsCanUse(WebUser.getNo()) == false)
+				{
+					continue;
+				}
+
+				AdminMenu newMenu = new AdminMenu();
+				newMenu.setNo(menu.getNo());
+				newMenu.setName(menu.getName());
+				newMenu.setGroupNo("0");
+				newMenu.setFor(menu.getFor());
+				newMenu.setUrl("");
+				newMenus.Add(newMenu);
 			}
 
-			newMenus.Add(menu);
+			for (AdminMenu menu : menus.ToJavaList())
+			{
+				//是否可以使用？
+				if (menu.IsCanUse(WebUser.getNo()) == false)
+				{
+					continue;
+				}
+
+				newMenus.Add(menu);
+			}
+			//添加默认，无权限
+			if (newMenus.size() == 0)
+			{
+				AdminMenu menu = new AdminMenu();
+				menu.setNo("1");
+				menu.setGroupNo("0");
+				menu.setName("无权限");
+				menu.setUrl("");
+				newMenus.Add(menu);
+			}
+			DataTable dt = newMenus.ToDataTable();
+			return BP.Tools.Json.ToJson(newMenus.ToDataTable());
 		}
-		//添加默认，无权限
-		if (newMenus.size() == 0)
-		{
-			AdminMenu menu = new AdminMenu();
-			menu.setNo("1");
-			menu.setGroupNo("0");
-			menu.setName("无权限");
-			menu.setUrl("");
-			newMenus.Add(menu);
-		}
-		DataTable dt = newMenus.ToDataTable();
-		return BP.Tools.Json.ToJson(newMenus.ToDataTable());
+
 	}
 
 	/**

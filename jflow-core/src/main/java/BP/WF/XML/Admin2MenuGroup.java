@@ -1,14 +1,17 @@
 package BP.WF.XML;
 
-import BP.DA.DataType;
+import BP.DA.*;
+import BP.En.*;
 import BP.Sys.XML.*;
-
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  管理员
 */
-public class AdminMenuGroup extends XmlEn
+public class Admin2MenuGroup extends XmlEn
 {
+		///#region 属性
 	public final String getNo()
 	{
 		return this.GetValStringByKey("No");
@@ -43,11 +46,10 @@ public class AdminMenuGroup extends XmlEn
 	}
 
 
-	///#region 构造
-	/** 
+	/**
 	 节点扩展信息
 	*/
-	public AdminMenuGroup()
+	public Admin2MenuGroup()
 	{
 	}
 	/** 
@@ -56,7 +58,7 @@ public class AdminMenuGroup extends XmlEn
 	@Override
 	public XmlEns getGetNewEntities()
 	{
-		return new AdminMenuGroups();
+		return new Admin2MenuGroups();
 	}
 
 	/** 
@@ -65,23 +67,23 @@ public class AdminMenuGroup extends XmlEn
 	 @param no 操作员编号
 	 @return 
 	*/
-	public final boolean IsCanUse(String no)
+	public final boolean IsCanUse(String no) throws Exception
 	{
-		if (DataType.IsNullOrEmpty(this.getFor()))
+		if (BP.Web.WebUser.getNo().equals("admin") == true && this.getFor().equals("admin"))
 		{
 			return true;
 		}
 
-		if (this.getFor().equals(no))
+		if (BP.Web.WebUser.getNo().equals("admin") == true)
+		{
+			return false;
+		}
+
+		if (this.getFor().equals("admin2"))
 		{
 			return true;
 		}
-
-		if (this.getFor().equals("SecondAdmin"))
-		{
-			return true;
-		}
-
 		return false;
+
 	}
 }

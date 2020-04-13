@@ -1,14 +1,19 @@
 package BP.WF.XML;
 
-import BP.DA.DataType;
+import BP.DA.*;
+import BP.En.*;
 import BP.Sys.XML.*;
-
+import BP.Sys.*;
+import BP.WF.*;
 
 /** 
  管理员
 */
-public class AdminMenuGroup extends XmlEn
+public class Admin2Menu extends XmlEn
 {
+	/**
+	 菜单编号
+	*/
 	public final String getNo()
 	{
 		return this.GetValStringByKey("No");
@@ -17,14 +22,20 @@ public class AdminMenuGroup extends XmlEn
 	{
 		this.SetVal("No", value);
 	}
-	public final String getParentNo()
+	/** 
+	 分组编号
+	*/
+	public final String getGroupNo()
 	{
-		return this.GetValStringByKey("ParentNo");
+		return this.GetValStringByKey("GroupNo");
 	}
-	public final void setParentNo(String value)
+	public final void setGroupNo(String value)
 	{
-		this.SetVal("ParentNo", value);
+		this.SetVal("GroupNo", value);
 	}
+	/** 
+	 名称
+	*/
 	public final String getName()
 	{
 		return this.GetValStringByKey("Name");
@@ -33,6 +44,9 @@ public class AdminMenuGroup extends XmlEn
 	{
 		this.SetVal("Name", value);
 	}
+	/** 
+	 应用范围
+	*/
 	public final String getFor()
 	{
 		return this.GetValStringByKey("For");
@@ -41,13 +55,22 @@ public class AdminMenuGroup extends XmlEn
 	{
 		this.SetVal("For", value);
 	}
-
-
-	///#region 构造
 	/** 
+	 Url菜单
+	*/
+	public final String getUrl()
+	{
+		return this.GetValStringByKey("Url");
+	}
+	public final void setUrl(String value)
+	{
+		this.SetVal("Url", value);
+	}
+
+	/**
 	 节点扩展信息
 	*/
-	public AdminMenuGroup()
+	public Admin2Menu()
 	{
 	}
 	/** 
@@ -56,32 +79,6 @@ public class AdminMenuGroup extends XmlEn
 	@Override
 	public XmlEns getGetNewEntities()
 	{
-		return new AdminMenuGroups();
-	}
-
-	/** 
-	 是否可以使用？
-	 
-	 @param no 操作员编号
-	 @return 
-	*/
-	public final boolean IsCanUse(String no)
-	{
-		if (DataType.IsNullOrEmpty(this.getFor()))
-		{
-			return true;
-		}
-
-		if (this.getFor().equals(no))
-		{
-			return true;
-		}
-
-		if (this.getFor().equals("SecondAdmin"))
-		{
-			return true;
-		}
-
-		return false;
+		return new Admin2Menus();
 	}
 }

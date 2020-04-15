@@ -5669,10 +5669,11 @@ public class Flow extends BP.En.EntityNoName {
 						}
 						gf.SetValByKey(dc.ColumnName, val);
 					}
-					int oid = DBAccess.GenerOID();
-					DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID='" + oid + "' WHERE FK_MapData='" + gf.getFrmID()
-							+ "' AND GroupID='" + dr.getValue("OID") + "'");
-					gf.InsertAsOID(oid);
+					gf.InsertAsOID( gf.getOID());
+//					int oid = DBAccess.GenerOID();
+//					DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID='" + oid + "' WHERE FK_MapData='" + gf.getFrmID()
+//							+ "' AND GroupID='" + dr.getValue("OID") + "'");
+//					gf.InsertAsOID(oid);
 				}
 				break;
 			case "WF_CCEmp": // 抄送.

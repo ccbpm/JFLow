@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Difference.SystemConfig;
 import BP.En.Attr;
+import BP.En.QueryObject;
 import BP.Port.Emp;
 import BP.Sys.GEEntity;
 import BP.WF.*;
@@ -89,6 +90,24 @@ public class WF_Admin_TestingContainer extends WebContralBase {
 
         //转化为json ,返回出去.
         return BP.Tools.Json.ToJson(ds);
+    }
+    /// <summary>
+    /// SelectOneUser_Init @sly
+    /// </summary>
+    /// <returns></returns>
+    public String SelectOneUser_Init() throws Exception
+    {
+        Default_LetAdminerLogin();
+
+        BP.WF.GenerWorkerLists ens = new GenerWorkerLists();
+        QueryObject qo = new QueryObject(ens);
+        qo.AddWhere("WorkID", this.getWorkID());
+        qo.addOr();
+        qo.AddWhere("FID", this.getWorkID());
+        qo.addOrderBy(" RDT,CDT ");
+        qo.DoQuery();
+
+        return ens.ToJson();
     }
     /// <summary>
     /// 让adminer登录.
@@ -268,7 +287,8 @@ public class WF_Admin_TestingContainer extends WebContralBase {
                     if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
                         throw new Exception("err@非集团版本，不能设置启用此模式.");
 
-                    sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, WF_FlowOrg C  WHERE A.FK_Dept=B.No AND B.OrgNo=C.OrgNo AND C.FlowNo='"+nd.getFK_Flow()+"'";
+                    sql = " SELECT A.No,A.Name,C.Name as FK_DeptText FROM Port_Emp A, WF_FlowOrg B, port_dept C ";
+                    sql += " WHERE A.OrgNo = B.OrgNo AND B.FlowNo = '"+this.getFK_Flow()+"' AND A.FK_Dept = c.No ";
 
                     if (dt.Rows.size() > 300 && 1 == 2)
                     {

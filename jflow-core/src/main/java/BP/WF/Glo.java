@@ -2085,6 +2085,12 @@ public class Glo {
 			s1.setName("日常办公类");
 			s1.Update();
 
+			//加载一个模版,不然用户不知道如何新建流程. @sly.
+			Flow.DoLoadFlowTemplate(s1.getNo(), SystemConfig.getPathOfData() + "\\Install\\QingJiaFlowDemoInit.xml",
+					ImpFlowTempleteModel.AsTempleteFlowNo);
+			Flow fl = new Flow("001");
+			fl.DoCheck(); //做一下检查.
+
 			s1 = (FlowSort) fs.DoCreateSubNode();
 			s1.setName("财务类");
 			s1.Update();

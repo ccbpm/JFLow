@@ -617,6 +617,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		BP.WF.Flow flow;
 		try {
 			flow = BP.WF.Flow.DoLoadFlowTemplate(FK_FlowSort, xmlFile.getAbsolutePath(), model, flowNo);
+			flow.DoCheck(); //要执行一次检查.
 			Hashtable<String, String> ht = new Hashtable<String, String>();
 			ht.put("FK_Flow", flow.getNo());
 			ht.put("FlowName", flow.getName());

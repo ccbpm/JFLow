@@ -493,7 +493,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		sql = "SELECT a.FK_Emp as No, c.Name, a.FK_Dept FROM Port_DeptEmpStation a, WF_NodeEmp b WHERE a.FK_Emp=b.FK_Emp AND a.FK_Emp=c.No AND b.FK_Node=" + nodeID + "";
+		sql = "SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeEmp b WHERE a.No=b.FK_Emp AND b.FK_Node=" + nodeID;
 
 		DataTable dtEmp = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";

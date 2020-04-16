@@ -831,7 +831,22 @@ public class WF_WorkOpt extends WebContralBase
 				sas.Retrieve(SelectAccperAttr.FK_Node, toNodeID, SelectAccperAttr.WorkID, this.getWorkID());
 			}
 		}
+		//判断人员是否已经删除
+		if (sas.size()!=0)
+		{
+			for (int k = sas.size()-1; k >=0; k--)
+			{
+				SelectAccper sa = (SelectAccper)sas.get(k);
+				Emp emp = new Emp();
+				int j = emp.Retrieve(EmpAttr.No, sa.getFK_Emp());
+				if (j == 0 || emp.getFK_Dept() == "")
+				{
+					sas.RemoveEn(sa);
+					sa.Delete();
+				}
 
+			}
+		}
 		return sas.ToJson();
 	}
 	/** 

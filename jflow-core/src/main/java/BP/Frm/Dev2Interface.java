@@ -374,7 +374,7 @@ public class Dev2Interface
 
 		GenerBill gb = new GenerBill();
 		gb.setWorkID(BP.DA.DBAccess.GenerOID("WorkID"));
-		gb.setBillState(BillState.None); //初始化状态.
+		gb.setBillState(BillState.Editing); //初始化状态.
 		gb.setStarter(WebUser.getNo());
 		gb.setStarterName(WebUser.getName());
 		gb.setFrmName(fb.getName()); //单据名称.

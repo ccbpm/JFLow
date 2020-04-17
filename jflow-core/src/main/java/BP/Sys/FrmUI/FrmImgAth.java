@@ -178,11 +178,11 @@ public class FrmImgAth extends EntityMyPK
 		map.AddTBString(FrmImgAthAttr.CtrlID, null, "控件ID", true, true, 0, 200, 20);
 		map.AddTBString(FrmImgAthAttr.Name, null, "中文名称", true, false, 0, 200, 20);
 
-		map.AddTBFloat(FrmImgAthAttr.X, 5, "X", true, false);
+		map.AddTBFloat(FrmImgAthAttr.X, 5, "X", false, false);
 		map.AddTBFloat(FrmImgAthAttr.Y, 5, "Y", false, false);
 
 		map.AddTBFloat(FrmImgAthAttr.H, 200, "H", true, false);
-		map.AddTBFloat(FrmImgAthAttr.W, 160, "W", false, false);
+		map.AddTBFloat(FrmImgAthAttr.W, 160, "W", true, false);
 
 		map.AddBoolean(FrmImgAthAttr.IsEdit, true, "是否可编辑", true, true);
 			//map.AddTBInt(FrmImgAthAttr.IsEdit, 1, "是否可编辑", true, true);

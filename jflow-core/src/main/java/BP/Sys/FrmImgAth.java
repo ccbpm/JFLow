@@ -162,6 +162,9 @@ public class FrmImgAth extends EntityMyPK {
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
 		this.setMyPK(this.getFK_MapData() + "_" + this.getCtrlID());
+		MapAttr attr = new MapAttr(this.getMyPK());
+		attr.setName(this.getName());
+		attr.Update();
 		return super.beforeUpdateInsertAction();
 	}
 }

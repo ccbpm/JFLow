@@ -374,7 +374,7 @@ public abstract class Entity implements Serializable {
 				}
 
 				if (attr.getIsNum() == true && DataType.IsNumStr(obj.toString() ) == false)
-					dr.setValue(attr.getKey(),0);
+					dr.setValue(attr.getKey(),obj);
 				else
 					dr.setValue(attr.getKey(),obj);
 			}

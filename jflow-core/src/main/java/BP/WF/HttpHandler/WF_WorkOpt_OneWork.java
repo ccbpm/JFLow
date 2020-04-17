@@ -16,7 +16,7 @@ import java.util.*;
 */
 public class WF_WorkOpt_OneWork extends WebContralBase
 {
-	/** 
+	/**
 	 进度图.
 	 
 	 @return 
@@ -539,40 +539,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	*/
 	public final String OneWork_GetTabs() throws Exception
 	{
-//		String re = "[";
-//
-//		OneWorkXmls xmls = new OneWorkXmls();
-//		xmls.RetrieveAll();
-//
-//		int nodeID = this.getFK_Node();
-//		if (nodeID == 0)
-//		{
-//			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-//			nodeID = gwf.getFK_Node();
-//		}
-//
-//		Node nd = new Node(nodeID);
-//
-//		for (XmlEn en : xmls.ToJavaListXmlEns())
-//		{
-//			OneWorkXml item  = (OneWorkXml)en;
-//			String url = "";
-//			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1", item.getURL(), String.valueOf(nodeID), this.getWorkID(), this.getFK_Flow(), this.getFID());
-//			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
-//			{
-//				if (nd.getFormUrl().contains("?"))
-//				{
-//					url = "@url=" + nd.getFormUrl() + "&IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
-//				}
-//				else
-//				{
-//					url = "@url=" + nd.getFormUrl() + "?IsReadonly=1&WorkID=" + this.getWorkID() + "&FK_Node=" + String.valueOf(nodeID) + "&FK_Flow=" + this.getFK_Flow() + "&FID=" + this.getFID() + "&FromWorkOpt=1";
-//				}
-//			}
-//			re += "{" + String.format("\"No\":\"%1$s\",\"Name\":\"%2$s\", \"Url\":\"%3$s\",\"IsDefault\":\"%4$s\"", item.getNo(), item.getName(), url, item.getIsDefault()) + "},";
-//		}
-//
-//		return StringHelper.trimEnd(re, ',') + "]";
+
 		String re = "[";
 		OneWorkXmls xmls = new OneWorkXmls();
 		xmls.RetrieveAll();		
@@ -585,9 +552,35 @@ public class WF_WorkOpt_OneWork extends WebContralBase
         }
 
         Node nd = new Node(nodeID);
-
+		Flow flow = new Flow(nd.getFK_Flow());
 		for (OneWorkXml item : xmls.ToJavaListXmlEnss())
 		{
+			boolean IsShow = true;
+			switch (item.getNo())
+			{
+				case "Frm":
+					if (flow.getIsFrmEnable() == false)
+						IsShow = false;
+					break;
+				case "Truck":
+					if (flow.getIsTruckEnable() == false)
+						IsShow = false;
+					break;
+				case "TimeBase":
+					if (flow.getIsTimeBaseEnable() == false)
+						IsShow = false;
+					break;
+				case "Table":
+					if (flow.getIsTableEnable() == false)
+						IsShow = false;
+					break;
+				case "OP":
+					if (flow.getIsOPEnable()== false)
+						IsShow = false;
+					break;
+			}
+			if (IsShow == false)
+				continue;
 			String url = "";
 			url = String.format("%1$s?FK_Node=%2$s&WorkID=%3$s&FK_Flow=%4$s&FID=%5$s&FromWorkOpt=1&CCSta="+ this.GetRequestValInt("CCSta"), item.getURL(), this.getFK_Node(), this.getWorkID(), this.getFK_Flow(), this.getFID());
 			if (item.getNo().equals("Frm") && (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm))
@@ -985,51 +978,35 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String FlowBBSList()
+	public final String FlowBBSList()throws Exception
 	{
-		Paras ps = new Paras();
-		String sql = "SELECT E.No As EmpNo,E.Name AS EmpName,E.FK_Dept,D.Name As FK_DeptName ,T.Msg,T.RDT FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track T,Port_Emp E,Port_Dept D WHERE ActionType=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "ActionType";
-		sql += " AND T.EmpFrom = E.No AND E.FK_Dept = D.No";
+		BP.Frm.Track track = new BP.Frm.Track();
+		BP.En.QueryObject qo = new BP.En.QueryObject(track);
+		qo.AddWhere(TrackAttr.ActionType, BP.Frm.FrmActionType.BBS.getValue());
+		qo.addAnd();
+		qo.addLeftBracket();
+
 		if (this.getFID() != 0)
 		{
-			sql += " AND (WorkID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "FID OR FID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "FID)";
-			ps.Add("FID", this.getFID());
+			qo.AddWhere(TrackAttr.WorkID, this.getFID());
+			qo.addOr();
+			qo.AddWhere(TrackAttr.FID, this.getFID());
 		}
 		else
 		{
-			sql += " AND (WorkID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "WorkID OR FID=" + BP.Difference.SystemConfig.getAppCenterDBVarStr() + "WorkID)";
-			ps.Add("WorkID", this.getWorkID());
+			qo.AddWhere(TrackAttr.WorkID, this.getWorkID());
+
+			if (this.getWorkID() != 0)
+			{
+				qo.addOr();
+				qo.AddWhere(TrackAttr.FID, this.getWorkID());
+			}
 		}
-
-
-
-		ps.SQL = sql;
-		ps.Add("ActionType", BP.WF.ActionType.FlowBBS.getValue());
-
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			dt.Columns.get("EMPNO").ColumnName="EmpNo";
-			dt.Columns.get("EMPNAME").ColumnName="EmpName";
-			dt.Columns.get("FK_DEPT").ColumnName="FK_Dept";
-			dt.Columns.get("FK_DEPTNAME").ColumnName="FK_DeptName";
-			dt.Columns.get("MSG").ColumnName="Msg";
-			dt.Columns.get("RDT").ColumnName="RDT";
-		}
-
-		if ( SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
-			dt.Columns.get("empno").ColumnName="EmpNo";
-			dt.Columns.get("empname").ColumnName="EmpName";
-			dt.Columns.get("fk_dept").ColumnName="FK_Dept";
-			dt.Columns.get("fk_deptname").ColumnName="FK_DeptName";
-			dt.Columns.get("msg").ColumnName="Msg";
-			dt.Columns.get("rdt").ColumnName="RDT";
-
-		}
-
-		return BP.Tools.Json.ToJson(dt);
-
+		qo.addRightBracket();
+		qo.addOrderBy(TrackAttr.RDT);
+		qo.DoQuery();
+		//转化成json
+		return BP.Tools.Json.ToJson(track.ToDataTableField("Track"));
 	}
 
 	/** 查看某一用户的评论.

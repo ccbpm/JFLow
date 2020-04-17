@@ -388,4 +388,13 @@ public class FlowAttr
 	 流程发起测试人
 	*/
 	public static final String Tester = "Tester";
+
+
+
+	public static final String IsFrmEnable="IsFrmEnable";
+	public static final String IsTruckEnable="IsTruckEnable";
+	public static final String IsTimeBaseEnable="IsTimeBaseEnable";
+	public static final String IsTableEnable="IsTableEnable";
+	public static final String IsOPEnable="IsOPEnable";
+
 }

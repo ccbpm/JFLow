@@ -332,12 +332,12 @@ public class MapAttrString extends EntityMyPK
 		rm.GroupName = "高级设置";
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "转化为评论组件";
-		rm.ClassMethodName = this.toString() + ".DoSetFlowBBS()";
-		rm.Warning = "您确定要设置为评论组件吗？";
-		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "转化为评论组件";
+		//rm.ClassMethodName = this.toString() + ".DoSetFlowBBS()";
+		//rm.Warning = "您确定要设置为评论组件吗？";
+		//rm.GroupName = "高级设置";
+		//map.AddRefMethod(rm);
 
 
 

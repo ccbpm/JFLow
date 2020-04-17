@@ -10,7 +10,7 @@ import BP.Sys.*;
 /** 
  实体属性
 */
-public class MapAttrFlowBBS extends EntityMyPK
+public class MapAttrFixed extends EntityMyPK
 {
 	/**
 	 表单ID
@@ -67,14 +67,14 @@ public class MapAttrFlowBBS extends EntityMyPK
 	/**
 	 实体属性
 	*/
-	public MapAttrFlowBBS()
+	public MapAttrFixed()
 	{
 	}
 	/**
 	 实体属性
 	 * @throws Exception
 	*/
-	public MapAttrFlowBBS(String myPK) throws Exception
+	public MapAttrFixed(String myPK) throws Exception
 	{
 		this.setMyPK(myPK);
 		this.Retrieve();
@@ -91,7 +91,7 @@ public class MapAttrFlowBBS extends EntityMyPK
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Sys_MapAttr", "评论字段");
+		Map map = new Map("Sys_MapAttr", "系统定位字段");
 		map.Java_SetDepositaryOfEntity(Depositary.None);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetEnType(EnType.Sys);
@@ -112,7 +112,7 @@ public class MapAttrFlowBBS extends EntityMyPK
 
 		map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
 		map.SetHelperAlert(MapAttrAttr.UIWidth, "对自由表单,从表有效,显示文本框的宽度.");
-
+		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否启用？", true, true);
 
 		map.AddTBInt(MapAttrAttr.UIContralType, 0, "控件", true, false);
 
@@ -141,12 +141,9 @@ public class MapAttrFlowBBS extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false);
 		map.SetHelperAlert(MapAttrAttr.Idx, "对傻瓜表单有效:用于调整字段在同一个分组中的顺序.");
 
-		///#endregion 执行的方法.
-
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
 
 
 	/**
@@ -172,11 +169,18 @@ public class MapAttrFlowBBS extends EntityMyPK
 	@Override
 	protected void afterDelete() throws Exception
 	{
+		//删除经度纬度的字段
+		MapAttr mapAttr = new MapAttr(this.getFK_MapData() + "_JD");
+		mapAttr.Delete();
+
+		mapAttr = new MapAttr(this.getFK_MapData() + "_WD");
+		mapAttr.Delete();
+
 		//删除相对应的rpt表中的字段
 		if (this.getFK_MapData().contains("ND") == true)
 		{
 			String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
-			String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() + "T' OR KeyOfEn='" + this.getKeyOfEn() + "')";
+			String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() +"' OR KeyOfEn='JD' OR KeyOfEn='WD')";
 			DBAccess.RunSQL(sql);
 		}
 
@@ -195,16 +199,49 @@ public class MapAttrFlowBBS extends EntityMyPK
 		mapAttr.RetrieveFromDBSources();
 		mapAttr.Update();
 
+		//判断表单中是否存在经度、维度字段
+		mapAttr = new MapAttr();
+		mapAttr.setMyPK(this.getFK_MapData() + "_" + "JD");
+		if (mapAttr.RetrieveFromDBSources() == 0)
+		{
+			mapAttr.setFK_MapData(this.getFK_MapData());
+			mapAttr.setKeyOfEn("JD");
+			mapAttr.setName("经度");
+			mapAttr.setGroupID(1);
+			mapAttr.setUIContralType(UIContralType.TB);
+			mapAttr.setMyDataType(1);
+			mapAttr.setLGType(FieldTypeS.Normal);
+			mapAttr.setUIVisible(false);
+			mapAttr.setUIIsEnable(false);
+			mapAttr.setUIIsInput(true);
+			mapAttr.setUIWidth(150);
+			mapAttr.setUIHeight(23);
+			mapAttr.Insert(); //插入字段.
+		}
+
+		mapAttr.setMyPK(this.getFK_MapData() + "_" + "WD");
+		if (mapAttr.RetrieveFromDBSources() == 0)
+		{
+			mapAttr.setFK_MapData(this.getFK_MapData());
+			mapAttr.setKeyOfEn("WD");
+			mapAttr.setName("纬度");
+			mapAttr.setGroupID(1);
+			mapAttr.setUIContralType(UIContralType.TB);
+			mapAttr.setMyDataType(1);
+			mapAttr.setLGType(FieldTypeS.Normal);
+			mapAttr.setUIVisible(false);
+			mapAttr.setUIIsEnable(false);
+			mapAttr.setUIIsInput(true);
+			mapAttr.setUIWidth(150);
+			mapAttr.setUIHeight(23);
+			mapAttr.Insert(); //插入字段.
+		}
+
 		//调用frmEditAction, 完成其他的操作.
 		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 
 		super.afterInsertUpdateAction();
 	}
-
-
-		///#endregion
-
-
 
 
 		///#region 重载.
@@ -214,10 +251,6 @@ public class MapAttrFlowBBS extends EntityMyPK
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());
 		attr.RetrieveFromDBSources();
-
-		//强制设置为评论组件.
-		this.setUIContralType(UIContralType.FlowBBS);
-
 		///#region 自动扩展字段长度.
 		if (attr.getMaxLen() <   this.getMaxLen() )
 		{

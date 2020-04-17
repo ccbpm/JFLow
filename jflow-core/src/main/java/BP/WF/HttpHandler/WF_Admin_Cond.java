@@ -151,10 +151,10 @@ public class WF_Admin_Cond extends WebContralBase
 		String sql = this.GetRequestVal("TB_Docs");
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.Url.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.Url.getValue());
 
 		Cond cond = new Cond();
-		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
+		//cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
 
 		cond.setMyPK(mypk);
 		cond.setHisDataFrom(ConnDataFrom.Url);
@@ -224,7 +224,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		//增加条件集合.
 		Conds conds = new Conds();
-		conds.Retrieve(CondAttr.FK_Node, Integer.parseInt(fk_mainNode), CondAttr.ToNodeID, Integer.parseInt(toNodeID));
+		conds.Retrieve(CondAttr.FK_Node, Integer.parseInt(fk_mainNode), CondAttr.ToNodeID, Integer.parseInt(toNodeID),CondAttr.DataFrom,ConnDataFrom.NodeForm.getValue());
 
 		ds.Tables.add(conds.ToDataTableField("WF_Conds"));
 
@@ -296,7 +296,7 @@ public class WF_Admin_Cond extends WebContralBase
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.NodeForm.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.NodeForm.getValue());
 
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.NodeForm);
@@ -351,27 +351,27 @@ public class WF_Admin_Cond extends WebContralBase
 		sqls += "@UPDATE WF_Node  SET IsCCFlow=1 WHERE NodeID IN (SELECT NODEID FROM WF_Cond a WHERE a.NodeID= NodeID AND CondType=1 )";
 		BP.DA.DBAccess.RunSQLs(sqls);
 
-		String sql = "UPDATE WF_Cond SET DataFrom=" + ConnDataFrom.NodeForm.getValue() + " WHERE NodeID=" + cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node() + " AND ToNodeID=" + toNodeID;
+		//String sql = "UPDATE WF_Cond SET DataFrom=" + ConnDataFrom.NodeForm.getValue() + " WHERE NodeID=" + cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node() + " AND ToNodeID=" + toNodeID;
 		switch (condTypeEnum)
 		{
 			case Flow:
 			case Node:
 				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.Insert();
-				BP.DA.DBAccess.RunSQL(sql);
+				//BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case Dir:
 				// cond.setMyPK( cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
-				BP.DA.DBAccess.RunSQL(sql);
+				//BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case SubFlow: //启动子流程.
 				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
-				BP.DA.DBAccess.RunSQL(sql);
+				//BP.DA.DBAccess.RunSQL(sql);
 				break;
 			default:
 				throw new RuntimeException("未设计的情况。" + condTypeEnum.toString());
@@ -448,7 +448,7 @@ public class WF_Admin_Cond extends WebContralBase
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.StandAloneFrm.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.StandAloneFrm.getValue());
 
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.StandAloneFrm);
@@ -503,27 +503,27 @@ public class WF_Admin_Cond extends WebContralBase
 		sqls += "@UPDATE WF_Node  SET IsCCFlow=1 WHERE NodeID IN (SELECT NODEID FROM WF_Cond a WHERE a.NodeID= NodeID AND CondType=1 )";
 		BP.DA.DBAccess.RunSQLs(sqls);
 
-		String sql = "UPDATE WF_Cond SET DataFrom=" + ConnDataFrom.StandAloneFrm.getValue() + " WHERE NodeID=" + cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node() + " AND ToNodeID=" + toNodeID;
+		//String sql = "UPDATE WF_Cond SET DataFrom=" + ConnDataFrom.StandAloneFrm.getValue() + " WHERE NodeID=" + cond.getNodeID() + "  AND FK_Node=" + cond.getFK_Node() + " AND ToNodeID=" + toNodeID;
 		switch (condTypeEnum)
 		{
 			case Flow:
 			case Node:
 				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.Insert();
-				BP.DA.DBAccess.RunSQL(sql);
+				//BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case Dir:
 				// cond.setMyPK( cond.NodeID +"_"+ this.Request.QueryString["ToNodeID"]+"_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
-				BP.DA.DBAccess.RunSQL(sql);
+				//BP.DA.DBAccess.RunSQL(sql);
 				break;
 			case SubFlow: //启动子流程.
 				cond.setMyPK(String.valueOf(DBAccess.GenerOID())); //cond.NodeID + "_" + cond.FK_Node + "_" + cond.FK_Attr + "_" + cond.OperatorValue;
 				cond.setToNodeID(toNodeID);
 				cond.Insert();
-				BP.DA.DBAccess.RunSQL(sql);
+				//BP.DA.DBAccess.RunSQL(sql);
 				break;
 			default:
 				throw new RuntimeException("未设计的情况。" + condTypeEnum.toString());
@@ -669,7 +669,7 @@ public class WF_Admin_Cond extends WebContralBase
 		String sql = this.GetRequestVal("TB_Docs");
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.SQLTemplate.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.SQLTemplate.getValue());
 
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
@@ -758,7 +758,7 @@ public class WF_Admin_Cond extends WebContralBase
 		String sql = this.GetRequestVal("TB_Docs");
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.SQL.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.SQL.getValue());
 
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());
@@ -859,7 +859,7 @@ public class WF_Admin_Cond extends WebContralBase
 		String mypk = FK_MainNode + "_" + ToNodeID + "_Dir_" + ConnDataFrom.Stas.toString();
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + HisCondType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + ToNodeID + ") AND DataFrom!=" + ConnDataFrom.Stas.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + HisCondType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + ToNodeID + ") AND DataFrom!=" + ConnDataFrom.Stas.getValue());
 
 		// 删除岗位条件.
 		cond.setMyPK(mypk);
@@ -933,7 +933,7 @@ public class WF_Admin_Cond extends WebContralBase
 		Cond cond = new Cond();
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + this.GetRequestValInt("ToNodeID") + ") AND DataFrom!=" + ConnDataFrom.Depts.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condType.getValue() + " AND  NodeID=" + this.getFK_Node() + " AND ToNodeID=" + this.GetRequestValInt("ToNodeID") + ") AND DataFrom!=" + ConnDataFrom.Depts.getValue());
 
 		String mypk = this.GetRequestValInt("FK_MainNode") + "_" + this.GetRequestValInt("ToNodeID") + "_" + condType.toString() + "_" + ConnDataFrom.Depts.toString();
 		cond.setMyPK(mypk);
@@ -1030,7 +1030,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 
 		//把其他的条件都删除掉.
-		DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND   NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.Paras.getValue());
+		//DBAccess.RunSQL("DELETE FROM WF_Cond WHERE (CondType=" + condTypeEnum.getValue() + " AND   NodeID=" + this.getFK_Node() + " AND ToNodeID=" + toNodeID + ") AND DataFrom!=" + ConnDataFrom.Paras.getValue());
 
 		Cond cond = new Cond();
 		cond.Delete(CondAttr.NodeID, fk_mainNode, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condTypeEnum.getValue());

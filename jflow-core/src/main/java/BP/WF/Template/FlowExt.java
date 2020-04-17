@@ -440,7 +440,13 @@ public class FlowExt extends EntityNoName
 
 			///#endregion 表单数据.
 
-
+  		//#region 轨迹信息
+		map.AddBoolean(FlowAttr.IsFrmEnable, true, "是否显示表单", true, true, false);
+		map.AddBoolean(FlowAttr.IsTruckEnable, true, "是否显示轨迹图", true, true, false);
+		map.AddBoolean(FlowAttr.IsTimeBaseEnable, true, "是否显示时间轴", true, true, false);
+		map.AddBoolean(FlowAttr.IsTableEnable, true, "是否显示时间表", true, true, false);
+		map.AddBoolean(FlowAttr.IsOPEnable, true, "是否显示操作", true, true, false);
+        // #endregion 轨迹信息
 			///#region 开发者信息.
 
 		map.AddTBString(FlowAttr.DesignerNo, null, "设计者编号", true, true, 0, 50, 10, false);
@@ -1724,7 +1730,7 @@ public class FlowExt extends EntityNoName
 	 删除流程
 	 
 	 @param workid
-	 @param sd
+	 @param note
 	 @return 
 	 * @throws Exception 
 	*/

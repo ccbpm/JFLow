@@ -4164,6 +4164,26 @@ public class Flow extends BP.En.EntityNoName {
 		this.SetValByKey(NodeAttr.IsToParentNextNode, value);
 	}
 
+	public final boolean getIsFrmEnable()throws Exception {
+		return this.GetValBooleanByKey(FlowAttr.IsFrmEnable);
+	}
+
+	public final boolean getIsTruckEnable()throws Exception {
+		return this.GetValBooleanByKey(FlowAttr.IsTruckEnable);
+	}
+
+	public final boolean getIsTimeBaseEnable()throws Exception {
+		return this.GetValBooleanByKey(FlowAttr.IsTimeBaseEnable);
+	}
+
+	public final boolean getIsTableEnable()throws Exception {
+		return this.GetValBooleanByKey(FlowAttr.IsTableEnable);
+	}
+
+	public final boolean getIsOPEnable()throws Exception {
+		return this.GetValBooleanByKey(FlowAttr.IsOPEnable);
+	}
+
 	/**
 	 * 节点
 	 */
@@ -4305,6 +4325,12 @@ public class Flow extends BP.En.EntityNoName {
 		map.AddTBInt(FlowAttr.NumOfDtl, 0, "NumOfDtl", false, false);
 		map.AddTBInt(FlowAttr.FlowAppType, 0, "流程类型", false, false);
 		map.AddTBInt(FlowAttr.ChartType, 1, "节点图形类型", false, false);
+
+		map.AddTBInt(FlowAttr.IsFrmEnable, 1, "是否显示表单", true, true);
+		map.AddTBInt(FlowAttr.IsTruckEnable, 1, "是否显示轨迹图", true, true);
+		map.AddTBInt(FlowAttr.IsTimeBaseEnable, 1, "是否显示时间轴", true, true);
+		map.AddTBInt(FlowAttr.IsTableEnable, 1, "是否显示时间表", true, true);
+		map.AddTBInt(FlowAttr.IsOPEnable, 1, "是否显示操作", true, true);
 
 		map.AddTBInt(FlowAttr.IsCanStart, 1, "可以独立启动否？", true, true);
 		map.AddTBInt(FlowAttr.IsStartInMobile, 1, "是否可以在手机里发起？", true, true);

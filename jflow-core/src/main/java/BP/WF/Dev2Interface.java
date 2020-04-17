@@ -5109,7 +5109,8 @@ public class Dev2Interface
 				int count = subFlows.Retrieve(SubFlowAttr.FK_Node, gwf.getPNodeID(), SubFlowAttr.SubFlowNo, flow.getNo());
 				if (count == 0)
 				{
-					throw new RuntimeException("父子流程关系配置信息丢失，请联系管理员");
+					//throw new RuntimeException("父子流程关系配置信息丢失，请联系管理员");
+					return "";
 				}
 				SubFlow subFlow = subFlows.get(0) instanceof SubFlow ? (SubFlow)subFlows.get(0) : null;
 				GenerWorkFlow pgwf = new GenerWorkFlow(gwf.getPWorkID());

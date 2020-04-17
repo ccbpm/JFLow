@@ -1904,7 +1904,8 @@ public class WorkNode {
 		/// #region 获取能够通过的节点集合，如果没有设置方向条件就默认通过.
 		Nodes myNodes = new Nodes();
 		for (Node nd : nds.ToJavaList()) {
-			Conds dcs = new Conds();
+
+			java.util.Map<String, Conds> resultMap = new HashMap<String, Conds>();
 			for (Cond dc : dcsAll.ToJavaList()) {
 				if (dc.getToNodeID() != nd.getNodeID()) {
 					continue;
@@ -1914,15 +1915,29 @@ public class WorkNode {
 				dc.setFID(this.getHisWork().getFID());
 
 				dc.en = this.rptGe;
+				if(resultMap.containsKey(dc.getHisDataFrom())){
+					resultMap.get(dc.getHisDataFrom().getValue()+"").AddEntity(dc);
+				}else{//map中不存在，新建key，用来存放数据
+					Conds dcs = new Conds();
+					dcs.AddEntity(dc);
+					resultMap.put(dc.getHisDataFrom().getValue()+"", dcs);
+				}
 
-				dcs.AddEntity(dc);
+				//dcs.AddEntity(dc);
 			}
 
-			if (dcs.size() == 0) {
+			if (resultMap.size() == 0) {
 				continue;
 			}
-
-			if (dcs.getIsPass()) // 如果通过了.
+			boolean ispass = false;
+			for(String key:resultMap.keySet())
+			{
+				if(ispass == true)
+					break;
+				Conds conds = resultMap.get(key);
+				ispass = conds.getIsPass();
+			}
+			if (ispass == true) // 如果通过了.
 			{
 				myNodes.AddEntity(nd);
 			}

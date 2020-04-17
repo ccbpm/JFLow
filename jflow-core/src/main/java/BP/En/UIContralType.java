@@ -75,6 +75,10 @@ public enum UIContralType
 	 * 评论组件
 	 */
 	FlowBBS(15),
+	/**
+	 * 系统定位
+	 */
+	Fixed(16),
 	/** 
 	 流程进度图
 	*/

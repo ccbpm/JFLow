@@ -2350,20 +2350,21 @@ public class WF extends WebContralBase {
 				break;
 			}
 		}
-		String nodeID = String.valueOf(Integer.parseInt(this.getFK_Flow() + "01"));
+
 
 		// 发起流程.
 		if (this.getDoWhat().equals("StartClassic") == true) {
-			if (this.getFK_Flow() == null) {
+			if (DataType.IsNullOrEmpty(this.getFK_Flow()) == true) {
 				return "url@./AppClassic/Home.htm";
 			} else {
+				String nodeID = String.valueOf(Integer.parseInt(this.getFK_Flow() + "01"));
 				return "url@./AppClassic/Home.htm?FK_Flow=" + this.getFK_Flow() + paras + "&FK_Node=" + nodeID;
 			}
 		}
 
 		// 打开工作轨迹。
 		if (this.getDoWhat().equals(DoWhatList.OneWork) == true) {
-			if (this.getFK_Flow() == null || this.getWorkID() == 0) {
+			if (DataType.IsNullOrEmpty(this.getFK_Flow()) == true || this.getWorkID() == 0) {
 				throw new RuntimeException("@参数 FK_Flow 或者 WorkID 为 Null 。");
 			}
 
@@ -2372,9 +2373,10 @@ public class WF extends WebContralBase {
 
 		// 发起页面.
 		if (this.getDoWhat().equals(DoWhatList.Start) == true) {
-			if (this.getFK_Flow() == null) {
+			if (DataType.IsNullOrEmpty(this.getFK_Flow()) == true) {
 				return "url@Start.htm";
 			} else {
+				String nodeID = String.valueOf(Integer.parseInt(this.getFK_Flow() + "01"));
 				return "url@MyFlow.htm?FK_Flow=" + this.getFK_Flow() + paras + "&FK_Node=" + nodeID;
 			}
 		}

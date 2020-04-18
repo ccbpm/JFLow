@@ -12,6 +12,7 @@ import BP.Sys.GEEntity;
 import BP.Sys.MapData;
 
 import java.io.File;
+import java.net.URLDecoder;
 
 
 /** 
@@ -65,6 +66,7 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 		if (DataType.IsNullOrEmpty(htmlCode) == false)
 		{
 			//保存到DataUser/CCForm/HtmlTemplateFile/文件夹下
+			htmlCode = URLDecoder.decode(htmlCode, "UTF-8");
 			String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/";
 			if (new File(filePath).exists() == false)
 			{

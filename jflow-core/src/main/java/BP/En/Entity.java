@@ -3365,13 +3365,31 @@ public abstract class Entity implements Serializable {
 
 				continue;
 			} else if (v.equals("@RDT")) {
-				if (attr.getMyDataType() == DataType.AppDate) {
-					this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
+				String dataFormat="yyyy-MM-dd";
+				switch(attr.getIsSupperText()){
+					case 0:break;
+					case 1:
+						dataFormat="yyyy-MM-dd HH:mm";
+						break;
+					case 2:
+						dataFormat="yyyy-MM-dd HH:mm:ss";
+						break;
+					case 3:
+						dataFormat ="yyyy-MM";
+						break;
+					case 4:
+						dataFormat="HH:mm";
+						break;
+					case 5:
+						dataFormat="HH:mm:ss";
+						break;
+					case 6:
+						dataFormat="MM-dd";
+						break;
+					default:
+						throw new Exception("没有找到指定的时间类型");
 				}
-
-				if (attr.getMyDataType() == DataType.AppDateTime) {
-					this.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
-				}
+				this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(dataFormat));
 				continue;
 			} else {
 				continue;
@@ -3454,21 +3472,37 @@ public abstract class Entity implements Serializable {
 				continue;
 			}
 			if (v.equals("@RDT")) {
+				String dataFormat="yyyy-MM-dd";
+				switch(attr.getIsSupperText()){
+					case 0:break;
+					case 1:
+						dataFormat="yyyy-MM-dd HH:mm";
+						break;
+					case 2:
+						dataFormat="yyyy-MM-dd HH:mm:ss";
+						break;
+					case 3:
+						dataFormat ="yyyy-MM";
+						break;
+					case 4:
+						dataFormat="HH:mm";
+						break;
+					case 5:
+						dataFormat="HH:mm:ss";
+						break;
+					case 6:
+						dataFormat="MM-dd";
+						break;
+						default:
+							throw new Exception("没有找到指定的时间类型");
+				}
 				if (attr.getUIIsEnable()) {
-					if (attr.getMyDataType() == DataType.AppDate || v.equals(myval)) {
-						this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
-					}
-
-					if (attr.getMyDataType() == DataType.AppDateTime || v.equals(myval)) {
-						this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDataTime());
+					if (v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart(dataFormat));
 					}
 				} else {
-					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
-						if (attr.getMyDataType() == DataType.AppDate) {
-							this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
-						} else {
-							this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDataTime());
-						}
+					if (StringHelper.isNullOrEmpty(myval) && v.equals(myval)) {
+						this.SetValByKey(attr.getKeyOfEn(), DataType.getCurrentDateByFormart(dataFormat));
 					}
 				}
 				continue;
@@ -3647,21 +3681,37 @@ public abstract class Entity implements Serializable {
 			}
 
 			if (v.equals("@RDT")) {
+				String dataFormat="yyyy-MM-dd";
+				switch(attr.getIsSupperText()){
+					case 0:break;
+					case 1:
+						dataFormat="yyyy-MM-dd HH:mm";
+						break;
+					case 2:
+						dataFormat="yyyy-MM-dd HH:mm:ss";
+						break;
+					case 3:
+						dataFormat ="yyyy-MM";
+						break;
+					case 4:
+						dataFormat="HH:mm";
+						break;
+					case 5:
+						dataFormat="HH:mm:ss";
+						break;
+					case 6:
+						dataFormat="MM-dd";
+						break;
+					default:
+						throw new Exception("没有找到指定的时间类型");
+				}
 				if (attr.getUIIsReadonly()) {
-					if (attr.getMyDataType() == DataType.AppDate || v.equals(myval)) {
-						this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
-					}
-
-					if (attr.getMyDataType() == DataType.AppDateTime || v.equals(myval)) {
-						this.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
-					}
+					//if (v.equals(myval)) {
+						this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(dataFormat));
+					//}
 				} else {
 					if (StringHelper.isNullOrEmpty(myval) || v.equals(myval)) {
-						if (attr.getMyDataType() == DataType.AppDate) {
-							this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart("yyyy-MM-dd"));
-						} else {
-							this.SetValByKey(attr.getKey(), DataType.getCurrentDataTime());
-						}
+						this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(dataFormat));
 					}
 				}
 				continue;

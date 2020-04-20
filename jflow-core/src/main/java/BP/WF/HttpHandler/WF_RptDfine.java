@@ -139,17 +139,17 @@ public class WF_RptDfine extends WebContralBase
 		RptDfine rd = new RptDfine(this.getFK_Flow());
 		Paras ps = new Paras();
 
-
-			///#region 增加本部门发起流程的查询.
+		//#region 增加本部门发起流程的查询.
 		if (rd.getMyDeptRole() == 0)
 		{
 			/*如果仅仅部门领导可以查看: 检查当前人是否是部门领导人.*/
 			if (DBAccess.IsExitsTableCol("Port_Dept", "Leader") == true)
 			{
 				ps.SQL = "SELECT Leader FROM Port_Dept WHERE No=" + SystemConfig.getAppCenterDBVarStr() + "No";
-				ps.Add("No", WebUser.getFK_Dept());
+				ps.Add("No", BP.Web.WebUser.getFK_Dept());
+				//string sql = "SELECT Leader FROM Port_Dept WHERE No='" + BP.Web.WebUser.FK_Dept + "'";
 				String strs = DBAccess.RunSQLReturnStringIsNull(ps, null);
-				if (strs != null && strs.contains(WebUser.getNo()) == true)
+				if (strs != null && strs.contains(BP.Web.WebUser.getNo()) == true)
 				{
 					ht.put("MyDept", "我本部门发起的流程");
 				}
@@ -167,14 +167,13 @@ public class WF_RptDfine extends WebContralBase
 			/*如果部门下所有的人都可以查看: */
 			ht.put("MyDept", "我本部门发起的流程");
 		}
-
-			///#endregion 增加本部门发起流程的查询.
+		// #endregion 增加本部门发起流程的查询.
 
 		Flow fl = new Flow(this.getFK_Flow());
 		ht.put("FlowName", fl.getName());
 
-		String advEmps = SystemConfig.getAppSettings().get("AdvEmps").toString();
-		if (advEmps != null && advEmps.contains(WebUser.getNo()) == true)
+		String advEmps = (String)SystemConfig.getAppSettings().get("AdvEmps");
+		if (advEmps != null && advEmps.contains(BP.Web.WebUser.getNo()) == true)
 		{
 			ht.put("Adminer", "高级查询");
 		}
@@ -182,7 +181,7 @@ public class WF_RptDfine extends WebContralBase
 		{
 			String data = fl.GetParaString("AdvSearchRight");
 			data = "," + data + ",";
-			if (data.contains(WebUser.getNo() + ",") == true)
+			if (data.contains(BP.Web.WebUser.getNo() + ",") == true)
 			{
 				ht.put("Adminer", "高级查询");
 			}

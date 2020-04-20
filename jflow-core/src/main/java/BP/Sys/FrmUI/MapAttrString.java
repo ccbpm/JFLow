@@ -668,9 +668,9 @@ public class MapAttrString extends EntityMyPK
 		//  attr.UIHeightInt = this.GetValIntByKey("ExtRows") * 23;
 
 		attr.setIsRichText(this.GetValBooleanByKey(MapAttrAttr.IsRichText)); //是否是富文本？
-		attr.setIsSupperText(this.GetValBooleanByKey(MapAttrAttr.IsSupperText)); //是否是大块文本？
+		attr.setIsSupperText(this.GetValIntByKey(MapAttrAttr.IsSupperText)); //是否是大块文本？
 
-		if (attr.getIsRichText() || attr.getIsSupperText())
+		if (attr.getIsRichText() || attr.getIsSupperText()==1)
 		{
 			attr.setMaxLen(4000);
 			this.SetValByKey(MapAttrAttr.MaxLen, 4000);

@@ -871,6 +871,17 @@ public class Attr
 	{
 		this._UIRefText = value;
 	}
+
+	private int _IsSupperText = 0;
+	public final int getIsSupperText()
+	{
+		return this._IsSupperText;
+	}
+	public final void setIsSupperText(int value)
+	{
+		this._IsSupperText = value;
+	}
+
 	public String UITag = null;
 
 		///#endregion

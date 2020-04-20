@@ -22,13 +22,13 @@ public class MapAttr extends EntityMyPK
 	 是否是超大文本？
 	 * @throws Exception 
 	*/
-	public final boolean getIsSupperText() throws Exception
+	public final int getIsSupperText() throws Exception
 	{
-		return this.GetParaBoolen(MapAttrAttr.IsSupperText, false);
+		return this.GetValIntByKey(MapAttrAttr.IsSupperText, 0);
 	}
-	public final void setIsSupperText(boolean value) throws Exception
+	public final void setIsSupperText(int value) throws Exception
 	{
-		this.SetPara(MapAttrAttr.IsSupperText, value);
+		this.SetValByKey(MapAttrAttr.IsSupperText, value);
 	}
 	/** 
 	 是否是富文本？
@@ -237,6 +237,7 @@ public class MapAttr extends EntityMyPK
 		attr.UIIsLine = this.getUIIsLine();
 		attr.setUIHeight(0);
 		attr.setDefValType(this.getDefValType());
+		attr.setIsSupperText(this.getIsSupperText());
 		if (this.getUIHeight() > 30)
 		{
 			attr.setUIHeight((int)this.getUIHeight());
@@ -1119,8 +1120,8 @@ public class MapAttr extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.UIIsInput, 0, "是否必填字段", true, true);
 		map.AddTBInt(MapAttrAttr.IsSecret, 0, "是否保密", true, true);
 		map.AddTBInt(MapAttrAttr.IsRichText, 0, "富文本", true, true);
-		map.AddTBInt(MapAttrAttr.IsSupperText, 0, "富文本", true, true);
-		map.AddTBInt(MapAttrAttr.FontSize, 0, "富文本", true, true);
+		map.AddTBInt(MapAttrAttr.IsSupperText, 0, "是否为大文本", true, true);
+		map.AddTBInt(MapAttrAttr.FontSize, 0, "字体大小", true, true);
 
 			// 是否是签字，操作员字段有效。2010-09-23 增加。 @0=无@1=图片签名@2=CA签名.
 		map.AddTBInt(MapAttrAttr.IsSigan, 0, "签字？", true, false);

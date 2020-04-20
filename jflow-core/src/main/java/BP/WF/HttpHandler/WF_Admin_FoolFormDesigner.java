@@ -1738,7 +1738,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			if (attr.getMyDataType() == BP.DA.DataType.AppString && lgType == FieldTypeS.Normal)
 			{
 				attr.setIsRichText(this.GetValBoolenFromFrmByKey("CB_IsRichText")); //是否是富文本？
-				attr.setIsSupperText(this.GetValBoolenFromFrmByKey("CB_IsSupperText")); //是否是超大文本？
+				attr.setIsSupperText(this.GetValIntFromFrmByKey("CB_IsSupperText")); //是否是超大文本？
 
 				//高度.
 				attr.setUIHeightInt(this.GetValIntFromFrmByKey("DDL_Rows") * 23);

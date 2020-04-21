@@ -1405,7 +1405,7 @@ public class WF_CCBill extends WebContralBase {
 
 
 		//设置文件名
-		String fileNewName = DateUtils.format(new Date(), "yyyyMMddHHmmssff") + ext;
+		String fileNewName = DateUtils.format(new Date(), "yyyyMMddHHmmss") + ext;
 
 		//文件存放路径
 		String filePath = SystemConfig.getPathOfTemp() + "/" + fileNewName;
@@ -1457,18 +1457,22 @@ public class WF_CCBill extends WebContralBase {
 				String name = dr.getValue(nameColName).toString();
 				myen.setOID(0);
 
-				//判断是否是自增序列，序列的格式
 				if (!DataType.IsNullOrEmpty(codeStruct)) {
-					no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
+					if(DataType.IsNullOrEmpty(no)){
+						no =myen.GenerNewNoByKey(noColName);
+					}else{
+						no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
+					}
+
 				}
 
-
-				myen.SetValByKey("BillNo", no);
-				if (myen.Retrieve("BillNo", no) == 1) {
-					errInfo += "err@编号[" + no + "][" + name + "]重复.";
-					continue;
+				if(DataType.IsNullOrEmpty((no)) == false){
+					myen.SetValByKey("BillNo", no);
+					if (myen.Retrieve("BillNo", no) == 1) {
+						errInfo += "err@编号[" + no + "][" + name + "]重复.";
+						continue;
+					}
 				}
-
 				//给实体赋值
 				errInfo += SetEntityAttrVal(no, dr, attrs, myen, dt, 0);
 				count++;

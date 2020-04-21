@@ -725,7 +725,7 @@ public class WebUser {
 	/**
 	 * 域
 	 */
-	public static String getDoDomain() {
+	public static String getDomain() {
 		String val = GetSessionByKey("Domain", "");
 		if (val == null) {
 			throw new RuntimeException("@err-003 Domain 登录信息丢失。");
@@ -733,7 +733,7 @@ public class WebUser {
 		return val;
 	}
 
-	public static void setDoDomain(String value) {
+	public static void setDomain(String value) {
 		SetSessionByKey("Domain", value);
 	}
 

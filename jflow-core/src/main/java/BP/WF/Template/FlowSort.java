@@ -6,6 +6,8 @@ import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
+import BP.WF.Glo;
+
 import java.util.*;
 
 /** 
@@ -27,11 +29,11 @@ public class FlowSort extends EntityTree
 	{
 		this.SetValByKey(FlowSortAttr.OrgNo, value);
 	}
-	public final String getDoDomain() throws Exception
+	public final String getDomain() throws Exception
 	{
 		return this.GetValStrByKey(FlowSortAttr.Domain);
 	}
-	public final void setDoDomain(String value) throws Exception
+	public final void setDomain(String value) throws Exception
 	{
 		this.SetValByKey(FlowSortAttr.Domain, value);
 	}
@@ -94,16 +96,35 @@ public class FlowSort extends EntityTree
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
+	/// <summary>
+	/// 创建的时候，给他增加一个OrgNo。
+	/// </summary>
+	/// <returns></returns>
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
+	protected  boolean beforeInsert() throws Exception
+{
+	if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		this.setOrgNo(BP.Web.WebUser.getOrgNo());
+
+	return super.beforeInsert();
+}
+	/// <summary>
+	///
+	/// </summary>
+	/// <returns></returns>
+	@Override
+	protected  boolean beforeUpdate() throws Exception
 	{
-		String sql = "UPDATE WF_GenerWorkFlow SET Domain='" + this.getDoDomain() + "' WHERE FK_FlowSort='" + this.getNo()+ "'";
-		DBAccess.RunSQL(sql);
+	//更新流程引擎控制表.
+	String sql = "UPDATE WF_GenerWorkFlow SET Domain='" + this.getDomain() + "' WHERE FK_FlowSort='" + this.getNo() + "'";
+	DBAccess.RunSQL(sql);
 
+	if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		sql = "UPDATE WF_Emp SET StartFlows='' ";
-		DBAccess.RunSQL(sql);
+	else
+		sql = "UPDATE WF_Emp SET StartFlows='' ";
 
-		return super.beforeUpdateInsertAction();
+	DBAccess.RunSQL(sql);
+	return super.beforeUpdate();
 	}
 }

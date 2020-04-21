@@ -203,7 +203,7 @@ public class Org extends EntityNoName
 			BP.WF.Template.FlowSort en = tempVar instanceof BP.WF.Template.FlowSort ? (BP.WF.Template.FlowSort)tempVar : null;
 			en.setName("公文类");
 			en.setOrgNo(this.getNo());
-			en.setDoDomain("GongWen");
+			en.setDomain("GongWen");
 			en.Update();
 
 			BP.En.EntityTree tempVar2 = fs.DoCreateSubNode();

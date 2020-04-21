@@ -22,7 +22,12 @@ public enum SearchDataRole
 	/**
 	 *根据岗位设定的部门的集合
 	 */
-	ByStationDept(3);
+	ByStationDept(3),
+
+	/**
+	 * 查询所有的数据
+	 */
+	SearchAll(4);
 
 	public static final int SIZE = Integer.SIZE;
 

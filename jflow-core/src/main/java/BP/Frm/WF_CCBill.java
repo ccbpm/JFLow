@@ -871,12 +871,15 @@ public class WF_CCBill extends WebContralBase {
 			qo.addAnd();
 		qo.AddWhere("BillState", "!=", 0);
 
-		if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) == SearchDataRole.ByOnlySelf && DataType.IsNullOrEmpty(hidenField) == true
-				||(md.GetParaInt("SearchDataRoleByDeptStation")==0 && DataType.IsNullOrEmpty(ap.GetValStrByKey("FK_Dept"))==true))
-		{
-			qo.addAnd();
-			qo.AddWhere("Starter", "=", WebUser.getNo());
+		if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) !=SearchDataRole.SearchAll){
+			if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) == SearchDataRole.ByOnlySelf && DataType.IsNullOrEmpty(hidenField) == true
+					||(md.GetParaInt("SearchDataRoleByDeptStation")==0 && DataType.IsNullOrEmpty(ap.GetValStrByKey("FK_Dept"))==true))
+			{
+				qo.addAnd();
+				qo.AddWhere("Starter", "=", WebUser.getNo());
+			}
 		}
+
 
 		//获得行数.
 		ur.SetPara("RecCount", qo.GetCount());
@@ -1363,15 +1366,14 @@ public class WF_CCBill extends WebContralBase {
 			qo.addAnd();
 		qo.AddWhere("BillState", "!=", 0);
 
-		if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) == SearchDataRole.ByOnlySelf && DataType.IsNullOrEmpty(hidenField) == true
-				||(md.GetParaInt("SearchDataRoleByDeptStation")==0 && DataType.IsNullOrEmpty(ap.GetValStrByKey("FK_Dept"))==true))
-		{
-			qo.addAnd();
-			qo.AddWhere("Starter", "=", WebUser.getNo());
+		if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) !=SearchDataRole.SearchAll){
+			if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) == SearchDataRole.ByOnlySelf && DataType.IsNullOrEmpty(hidenField) == true
+					||(md.GetParaInt("SearchDataRoleByDeptStation")==0 && DataType.IsNullOrEmpty(ap.GetValStrByKey("FK_Dept"))==true))
+			{
+				qo.addAnd();
+				qo.AddWhere("Starter", "=", WebUser.getNo());
+			}
 		}
-
-
-
 		///#endregion 查询语句
 		qo.addOrderBy("OID");
 		return qo.DoQueryToTable();

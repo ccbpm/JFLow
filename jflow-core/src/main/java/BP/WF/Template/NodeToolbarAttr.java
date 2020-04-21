@@ -28,7 +28,7 @@ public class NodeToolbarAttr extends BP.En.EntityOIDNameAttr
 	/** 
 	 url
 	*/
-	public static final String Url = "Url";
+	public static final String UrlExt = "UrlExt";
 	/** 
 	 顺序号
 	*/

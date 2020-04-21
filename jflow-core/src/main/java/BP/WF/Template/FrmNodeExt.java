@@ -7,6 +7,8 @@ import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
+import BP.WF.Glo;
+
 import java.util.*;
 
 /** 
@@ -59,7 +61,12 @@ public class FrmNodeExt extends EntityMyPK
 	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
-		uac.OpenForSysAdmin();
+		//权限控制.
+		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single) {
+			uac.OpenForSysAdmin();
+		}else {
+			uac.OpenAll();
+		}
 		uac.IsInsert = false;
 		return uac;
 	}

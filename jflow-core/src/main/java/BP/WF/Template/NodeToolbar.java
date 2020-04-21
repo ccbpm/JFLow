@@ -47,7 +47,7 @@ public class NodeToolbar extends EntityOID
 	}
 	public final String getUrl() throws Exception
 	{
-		String s = this.GetValStringByKey(NodeToolbarAttr.Url);
+		String s = this.GetValStringByKey(NodeToolbarAttr.UrlExt);
 
 		if (this.getExcType() != 1 && s.contains("?") == false && !this.getTarget().toLowerCase().equals("javascript"))
 		{
@@ -57,7 +57,7 @@ public class NodeToolbar extends EntityOID
 	}
 	public final void setUrl(String value) throws Exception
 	{
-		SetValByKey(NodeToolbarAttr.Url, value);
+		SetValByKey(NodeToolbarAttr.UrlExt, value);
 	}
 	public final String getTarget() throws Exception
 	{
@@ -105,7 +105,7 @@ public class NodeToolbar extends EntityOID
 	/** 
 	 工具栏
 	 
-	 @param _oid 工具栏ID	
+	 @param
 	 * @throws Exception 
 	*/
 	public NodeToolbar(int oid) throws Exception
@@ -132,7 +132,7 @@ public class NodeToolbar extends EntityOID
 			// 执行类型.
 		map.AddDDLSysEnum(NodeToolbarAttr.ExcType, 0, "执行类型", true, true, "ToobarExcType", "@0=超链接@1=函数");
 
-		map.AddTBString(NodeToolbarAttr.Url, null, "连接/函数", true, false, 0, 500, 300, true);
+		map.AddTBString(NodeToolbarAttr.UrlExt, null, "连接/函数", true, false, 0, 500, 300, true);
 		map.AddTBString(NodeToolbarAttr.Target, null, "目标", true, false, 0, 100, 100, true);
 
 			// 显示位置.

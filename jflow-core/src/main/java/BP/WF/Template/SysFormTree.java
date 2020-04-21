@@ -6,6 +6,8 @@ import BP.En.Map;
 import BP.Port.*;
 import BP.Sys.*;
 import BP.WF.*;
+import BP.WF.Glo;
+
 import java.util.*;
 
 /** 
@@ -51,7 +53,17 @@ public class SysFormTree extends EntityTree
 	{
 		this.SetValByKey(SysFormTreeAttr.ParentNo, value);
 	}
-
+	/// <summary>
+	/// 组织编号
+	/// </summary>
+	public final String getOrgNo() throws Exception
+	{
+			return this.GetValStringByKey(SysFormTreeAttr.OrgNo);
+	}
+	public final void setOrgNo(String value) throws Exception
+	{
+		this.SetValByKey(SysFormTreeAttr.OrgNo, value);
+	}
 		///#endregion 属性.
 
 
@@ -98,13 +110,23 @@ public class SysFormTree extends EntityTree
 		map.AddTBString(SysFormTreeAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(SysFormTreeAttr.ParentNo, null, "父节点No", false, false, 0, 100, 30);
 		map.AddTBInt(SysFormTreeAttr.Idx, 0, "Idx", false, false);
-
+		map.AddTBString(SysFormTreeAttr.OrgNo, null, "OrgNo", false, false, 0, 100, 30);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///#endregion 系统方法.
-
+	///#endregion 系统方法.
+	/// <summary>
+	/// 组织编号
+	/// </summary>
+	/// <returns></returns>
+	@Override
+	protected boolean beforeInsert() throws Exception
+	{
+		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+			this.setOrgNo(BP.Web.WebUser.getOrgNo());
+		return super.beforeInsert();
+	}
 	@Override
 	protected boolean beforeDelete() throws Exception
 	{

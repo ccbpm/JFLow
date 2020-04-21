@@ -20,4 +20,8 @@ public class SysFormTreeAttr extends EntityTreeAttr
 	 是否是目录
 	*/
 	public static final String IsDir = "IsDir";
+	/**
+	 组织编号
+	 */
+	public static final String OrgNo = "OrgNo";
 }

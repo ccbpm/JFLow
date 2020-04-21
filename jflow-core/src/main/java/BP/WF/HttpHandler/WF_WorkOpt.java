@@ -3694,8 +3694,13 @@ public class WF_WorkOpt extends WebContralBase
 				/* 说明我是主持人之一, 我就可以选择接受人,发送到下一个节点上去. */
 			} else {
 				/* 不是主持人就执行发送，返回发送结果. */
-				SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID());
-				return "info@" + objs.ToMsgOfHtml();
+				//判断是否有不发送标记？ @sly
+				String isSend = this.GetRequestVal("IsSend");
+				if (isSend.equals("0") == false)
+				{
+					SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID());
+					return "info@" + objs.ToMsgOfHtml();
+				}
 			}
 		}
 
@@ -3745,7 +3750,9 @@ public class WF_WorkOpt extends WebContralBase
 			//TYEmp.AcceptChanges();
 		}
 
-
+		//增加判断.
+		if (ds.GetTableByName("Emps")!=null && ds.GetTableByName("Emps").Rows.size() == 0)
+			return "err@配置接受人范围为空,请联系管理员.";
 			///#region 计算上一次选择的结果, 并把结果返回过去.
 		String sql = "";
 		DataTable dt = new DataTable();

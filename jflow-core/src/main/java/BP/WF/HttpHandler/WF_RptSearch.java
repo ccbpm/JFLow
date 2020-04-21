@@ -4,6 +4,8 @@ import BP.DA.*;
 import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
+import BP.WF.Flow;
+import BP.WF.Rpt.RptDfine;
 import BP.Web.*;
 import BP.WF.Glo;
 import java.util.*;
@@ -86,17 +88,13 @@ public class WF_RptSearch extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Default_Init()
+	public final String Default_Init() throws Exception
 	{
 		Hashtable ht = new Hashtable();
 		ht.put("MyStartFlow", "我发起的流程");
 		ht.put("MyJoinFlow", "我审批的流程");
 
 
-
-		//   ht.Add("MyDeptFlow", "我本部门发起的流程");
-		//  ht.Add("MySubDeptFlow", "我本部门与子部门发起的流程");
-		// ht.Add("AdvFlowsSearch", "高级查询");
 
 		return BP.Tools.Json.ToJsonEntitiesNoNameMode(ht);
 	}

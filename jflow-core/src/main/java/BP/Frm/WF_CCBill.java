@@ -1363,12 +1363,13 @@ public class WF_CCBill extends WebContralBase {
 			qo.addAnd();
 		qo.AddWhere("BillState", "!=", 0);
 
-		//默认查询本部门的单据
-		if(WebUser.getNo().equals("admin") == false)
+		if(SearchDataRole.forValue(md.GetParaInt("SearchDataRole")) == SearchDataRole.ByOnlySelf && DataType.IsNullOrEmpty(hidenField) == true
+				||(md.GetParaInt("SearchDataRoleByDeptStation")==0 && DataType.IsNullOrEmpty(ap.GetValStrByKey("FK_Dept"))==true))
 		{
 			qo.addAnd();
-			qo.AddWhere("FK_Dept", "=", WebUser.getFK_Dept());
+			qo.AddWhere("Starter", "=", WebUser.getNo());
 		}
+
 
 
 		///#endregion 查询语句
@@ -1627,151 +1628,5 @@ public class WF_CCBill extends WebContralBase {
 		return func.getMethodDoc_SQL_Demo();
 	}
 
-	///#endregion 获得demo信息.
-
-	public String PrintPDF() throws Exception {
-		String _html = this.GetRequestVal("html");
-		String httpUrl = this.GetRequestVal("HttpURL");
-		MapData mapData = new MapData(this.getFrmID());
-
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + this.getFrmID() + "/";//+ "/" + this.getWorkID();
-		if (new File(path).exists() == false) {
-			new File(path).mkdir();
-		}
-		path = path + this.getWorkID() + "/";
-		if (new File(path).exists() == false) {
-			new File(path).mkdir();
-		}
-		String billUrl = path + "index.htm";
-		//把模版文件copy过去.
-		String templateFilePath = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
-		//判断模板文件临时目录是否存在
-		File baseFile = new File(templateFilePath);
-		if(baseFile.isDirectory() == false)
-			return "err@不存在模板文件夹:"+templateFilePath;
-		//获取模板文件列表
-		File[]  finfos = baseFile.listFiles();
-		if(finfos.length ==0)
-			return "err@不存在模板文件";
-		for (File fl:finfos)
-		{
-			if (fl.getName().contains("htm"))
-				continue;
-
-			//判断之前是否存在该文件 就删除掉
-			if(new File(path + "/" + fl.getName()).exists())
-				new File(path + "/" + fl.getName()).delete();
-
-			Files.copy( fl.getAbsoluteFile().toPath()
-					, new File(path + "/" + fl.getName()).toPath());
-		}
-
-		//获取单据打印的url
-		//String billUrl = path + "index.htm";
-		String docs = BP.DA.DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexDevelop.htm");
-		docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
-		//String sb="<iframe style='width:100%;height:"+mapData.getFrmH()+"px;' ID='" + mapData.getNo() + "'    src='" + httpUrl + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe></div>";
-
-		docs = docs.replace("@Docs", _html);
-
-		docs = docs.replace("@Height", String.valueOf(mapData.getFrmH())+"px");
-		docs = docs.replace("@Title",mapData.getName());
-		//替换模版尾部的打印说明信息.
-		String pathInfo = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/" + this.getFrmID() + ".txt";
-		if (new File(pathInfo).exists() == false)
-			pathInfo = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/Default.txt";
-
-		docs = docs.replace("@EndInfo", DataType.ReadTextFile(pathInfo));
-
-		Date date = new Date();
-		SimpleDateFormat sy1=new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
-		String dateFormat=sy1.format(date);
-		docs = docs.replace("@PrintDT", dateFormat );
-		BP.DA.DataType.WriteFile(billUrl, docs);
-
-	/*	WebClient wc=new WebClient();
-		wc.setJavaScriptTimeout(5000);
-		wc.getOptions().setUseInsecureSSL(true);//接受任何主机连接 无论是否有有效证书
-		wc.getOptions().setJavaScriptEnabled(true);//设置支持javascript脚本
-		wc.getOptions().setCssEnabled(false);//禁用css支持
-		wc.getOptions().setThrowExceptionOnScriptError(false);//js运行错误时不抛出异常
-		wc.getOptions().setTimeout(100000);//设置连接超时时间
-		wc.getOptions().setDoNotTrackEnabled(false);
-
-		HtmlPage page=wc.getPage(httpUrl);
-		wc.waitForBackgroundJavaScript(30000);//异步JS执行需要耗时,所以这里线程要阻塞30秒,等待异步JS执行结束
-		//page.executeJavaScript(javascript).getNewPage()
-		String res=page.asXml();
-		BP.DA.DataType.WriteFile(billUrl, res);*/
-
-		/*InputStream is = new URL(httpUrl).openStream();
-		try {
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-			StringBuilder sb = new StringBuilder();
-			int cp;
-			while ((cp = rd.read()) != -1) {
-				sb.append((char) cp);
-			}
-
-		} finally {
-			is.close();
-		}
-		BP.DA.DataType.WriteFile(billUrl, HttpClientUtil.doPost(httpUrl));*/
-		String pdfPath = path + "pdf";
-		//#region 把所有的文件做成一个zip文件.
-		if (new File(pdfPath).exists() == false)
-			new File(pdfPath).mkdir();
-
-
-		String pdfFormFile = pdfPath + "/" + mapData.getName() + ".pdf";
-		String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
-		Html2Pdf(pdfFileExe, billUrl, pdfFormFile);
-
-		return pdfFormFile;
-	}
-
-
-
-
-
-	private static boolean Html2Pdf(String pdfFileExe, String htmFile, String pdf) throws Exception
-	{
-		if(new File(pdf).exists() == true)
-			new File(pdf).delete();
-		BP.DA.Log.DebugWriteInfo("@开始生成PDF:" + pdfFileExe + "@pdf=" + pdf + "@htmFile=" + htmFile);
-		StringBuilder cmd = new StringBuilder();
-		if(System.getProperty("os.name").indexOf("Windows") == -1){
-			//非windows 系统
-			pdfFileExe = "/home/ubuntu/wkhtmltox/bin/wkhtmltopdf";
-		}
-		cmd.append(pdfFileExe);
-		cmd.append(" ");
-		cmd.append(" --header-line");//页眉下面的线
-		//cmd.append(" --header-center 这里是页眉这里是页眉这里是页眉这里是页眉 ");//页眉中间内容
-		cmd.append(" --margin-top 3cm ");//设置页面上边距 (default 10mm)
-		//cmd.append(" --header-html file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("\\style\\pdf\\head.html"));// (添加一个HTML页眉,后面是网址)
-		cmd.append(" --header-spacing 5 ");// (设置页眉和内容的距离,默认0)
-		//cmd.append(" --footer-center (设置在中心位置的页脚内容)");//设置在中心位置的页脚内容
-		// cmd.append(" --footer-html file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("\\style\\pdf\\foter.html"));// (添加一个HTML页脚,后面是网址)
-		cmd.append(" --footer-line");//* 显示一条线在页脚内容上)
-		cmd.append(" --footer-spacing 5 ");// (设置页脚和内容的距离)
-
-		cmd.append(htmFile);
-		cmd.append(" ");
-		cmd.append(pdf);
-		boolean result = true;
-		try{
-			Process proc = Runtime.getRuntime().exec(cmd.toString());
-			HtmlToPdfInterceptor error = new HtmlToPdfInterceptor(proc.getErrorStream());
-			HtmlToPdfInterceptor output = new HtmlToPdfInterceptor(proc.getInputStream());
-			error.start();
-			output.start();
-			proc.waitFor();
-		}catch(Exception e){
-			result = false;
-			e.printStackTrace();
-		}
-		return result;
-	}
 
 }

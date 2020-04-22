@@ -157,6 +157,13 @@ public class Emp extends EntityNoName
 		this.SetValByKey(EmpAttr.Ding_UserID, value);
 	}
 
+	public final String getWei_UserID() throws Exception{
+		return this.GetValStrByKey(EmpAttr.Wei_UserID);
+	}
+	public final void setWei_UserID(String value) throws Exception{
+		this.SetValByKey(EmpAttr.Wei_UserID, value);
+	}
+
 		///#endregion
 
 
@@ -170,8 +177,15 @@ public class Emp extends EntityNoName
 	*/
 	public final boolean CheckPass(String pass) throws Exception
 	{
-		if (this.getPass().equals(pass))
-		{
+		// 启用加密
+		if (SystemConfig.getIsEnablePasswordEncryption() == true){
+			if(SystemConfig.getPasswordEncryptionType().equals("0"))
+				pass = Encodes.encodeBase64(pass);
+			if(SystemConfig.getPasswordEncryptionType().equals("1"))
+				pass =Cryptos.aesDecrypt(pass);
+		}
+		/* 使用数据库校验. */
+		if (this.getPass().equals(pass)) {
 			return true;
 		}
 		return false;
@@ -217,7 +231,7 @@ public class Emp extends EntityNoName
 	public UAC getHisUAC() throws Exception
 	{
 		UAC uac = new UAC();
-		uac.OpenForAppAdmin();
+		uac.OpenForSetAdmin();
 		return uac;
 	}
 	/** 
@@ -255,6 +269,8 @@ public class Emp extends EntityNoName
 		map.AddTBString(EmpAttr.Pass, "123", "密码", false, false, 0, 100, 10);
 
 		map.AddDDLEntities(EmpAttr.FK_Dept, null, "主部门", new BP.Port.Depts(), true);
+		map.AddTBString(EmpAttr.Ding_UserID, null, "DING用户ID", true, false, 0, 200, 30, true);
+		map.AddTBString(EmpAttr.Wei_UserID, null, "微信用户ID", true, false, 0, 200, 30, true);
 
 		map.AddTBString(EmpAttr.SID, null, "安全校验码", false, false, 0, 36, 36);
 		map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);

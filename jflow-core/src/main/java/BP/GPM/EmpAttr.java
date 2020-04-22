@@ -47,6 +47,8 @@ public class EmpAttr extends BP.En.EntityNoNameAttr
 	
 	public static final String Ding_UserID="Ding_UserID";
 
+	public  static final String Wei_UserID="Wei_UserID";
+
 
 	public static final String OrgNo="OrgNo";
 

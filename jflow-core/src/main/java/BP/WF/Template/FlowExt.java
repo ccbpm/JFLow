@@ -1000,17 +1000,17 @@ public class FlowExt extends EntityNoName
 	}
 	public final String DoDataManger_Search() throws Exception
 	{
-		return "../../Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow= " + this.getNo()+ " &WFSta=all";
+		return "../../Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo()+ "&WFSta=all";
 	}
 	public final String DoDataManger_Group() throws Exception
 	{
-		return "../../Comm/Group.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow= " + this.getNo()+ " &WFSta=all";
+		return "../../Comm/Group.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo()+ "&WFSta=all";
 	}
 
 
 	public final String DoDataManger_DeleteLog() throws Exception
 	{
-		return "../../Comm/Search.htm?EnsName=BP.WF.WorkFlowDeleteLogs&FK_Flow= " + this.getNo()+ " &WFSta=all";
+		return "../../Comm/Search.htm?EnsName=BP.WF.WorkFlowDeleteLogs&FK_Flow=" + this.getNo()+ "&WFSta=all";
 	}
 
 	/** 
@@ -1217,7 +1217,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoMessage() throws Exception
 	{
-		return "../../Admin/AttrFlow/PushMessage.htm?FK_Node=0&FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/PushMessage.htm?FK_Node=0&FK_Flow=" + this.getNo()+ " &tk=" + (new Random()).nextDouble();
 	}
 	/** 
 	 计划玩成
@@ -1245,7 +1245,7 @@ public class FlowExt extends EntityNoName
 	}
 	public final String DoBTable() throws Exception
 	{
-		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.getNo()) + "01&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
+		return "../../Admin/AttrFlow/DTSBTable.aspx?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.getNo()) + "01&FK_Flow=" + this.getNo()+ "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDataTime();
 	}
 
 	/** 
@@ -1256,11 +1256,11 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoNodeAttrs() throws Exception
 	{
-		return "../../Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow= " + this.getNo()+ " &tk=" + (new Random()).nextDouble();
+		return "../../Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow=" + this.getNo()+ "&tk=" + (new Random()).nextDouble();
 	}
 	public final String DoBindFlowExt() throws Exception
 	{
-		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow";
+		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow=" + this.getNo()+ "&ExtType=StartFlow";
 	}
 	/** 
 	 轨迹查看权限
@@ -1280,7 +1280,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoBatchStartFields() throws Exception
 	{
-		return "../../Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow= " + this.getNo()+ " &ExtType=StartFlow";
+		return "../../Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow=" + this.getNo()+ "&ExtType=StartFlow";
 	}
 	/** 
 	 执行流程数据表与业务表数据手工同步

@@ -54,6 +54,9 @@ public class SystemConfig {
 
 	}
 	public static String getAdmins(){
+		Object obj = getAppSettings().get("admins");
+		if(obj == null)
+			return "";
 		return getAppSettings().get("admins").toString();
 	}
 	public static String getFTPUserPassword() throws Exception {

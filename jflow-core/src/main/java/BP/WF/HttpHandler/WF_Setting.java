@@ -290,8 +290,15 @@ public class WF_Setting extends WebContralBase {
 			return "err@旧密码错误.";
 		}
 
-		if (SystemConfig.getIsEnablePasswordEncryption() == true) {
-			pass = Cryptos.aesEncrypt(pass);
+		if(SystemConfig.getIsEnablePasswordEncryption() == true){
+			if(SystemConfig.getPasswordEncryptionType().equals("0"))
+			{
+				pass = Encodes.encodeBase64(pass);
+			}
+			if(SystemConfig.getPasswordEncryptionType().equals("1"))
+			{
+				pass = Cryptos.aesDecrypt(pass);
+			}
 		}
 		emp.setPass(pass);
 		emp.Update();

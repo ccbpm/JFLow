@@ -109,7 +109,15 @@ public class UAC
 		}
 		return this;
 	}
-
+	public final UAC OpenForSetAdmin() throws Exception
+	{
+		String adminNos= SystemConfig.getAdmins();
+		if (adminNos.contains(WebUser.getNo()) == true)
+		{
+			this.OpenAll();
+		}
+		return this;
+	}
 		///#endregion
 
 

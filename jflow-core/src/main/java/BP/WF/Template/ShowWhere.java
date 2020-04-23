@@ -18,7 +18,11 @@ public enum ShowWhere
 	/** 
 	 工具栏
 	*/
-	Toolbar;
+	Toolbar,
+	/**
+	 * 抄送
+	 */
+	CC;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

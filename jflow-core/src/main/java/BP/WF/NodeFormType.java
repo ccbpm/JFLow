@@ -53,6 +53,10 @@ public enum NodeFormType
 	 节点单表单
 	*/
 	RefOneFrmTree(11),
+	/**
+	 * 开发者表单
+	 */
+	Develop(12),
 	/** 
 	 禁用(对多表单流程有效)
 	*/

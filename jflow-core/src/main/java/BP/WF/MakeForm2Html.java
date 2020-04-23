@@ -1674,12 +1674,14 @@ public class MakeForm2Html
         
          Hashtable ht = new Hashtable();
 		
-    	if(node.getHisFormType().getValue() == NodeFormType.FoolForm.getValue() || node.getHisFormType().getValue() == NodeFormType.FreeForm.getValue()){
+    	if(node.getHisFormType() == NodeFormType.FoolForm || node.getHisFormType() == NodeFormType.FreeForm
+                || node.getHisFormType() == NodeFormType.RefOneFrmTree || node.getHisFormType() == NodeFormType.FoolTruck
+                || node.getHisFormType() == NodeFormType.Develop){
     		resultMsg = setPDFPath(frmID,workid,flowNo,gwf );
     		if(resultMsg.indexOf("err@")!=-1)
     			return resultMsg;
     		
-    		String billUrl = SystemConfig.getPathOfDataUser() + "\\InstancePacketOfData\\" + "ND"+node.getNodeID() + "\\" + workid + "\\index.htm";
+    		String billUrl = SystemConfig.getPathOfDataUser() + "/InstancePacketOfData/" + "ND"+node.getNodeID() + "/" + workid + "/index.htm";
     			
     		resultMsg = MakeHtmlDocument(node.getNodeFrmID(),  workid,  flowNo , fileNameFormat , urlIsHostUrl,path,billUrl,frmID,basePath,htmlString);
     		
@@ -1690,14 +1692,14 @@ public class MakeForm2Html
 
             //#region 把所有的文件做成一个zip文件.
             //生成pdf文件
-            String pdfPath = path + "\\pdf";
+            String pdfPath = path + "/pdf";
             
             if (new File(pdfPath).exists() == false)
             	new File(pdfPath).mkdirs();
 
             fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
-            String pdfFile = pdfPath + "\\" + fileNameFormat + ".pdf";       
-            String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware\\wkhtmltox\\wkhtmltopdf.exe";
+            String pdfFile = pdfPath + "/" + fileNameFormat + ".pdf";
+            String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
             try
             {
                 if(Html2Pdf(pdfFileExe, billUrl, pdfFile)== true)

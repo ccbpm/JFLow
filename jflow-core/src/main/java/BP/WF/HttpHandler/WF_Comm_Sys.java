@@ -755,7 +755,7 @@ public class WF_Comm_Sys extends WebContralBase {
 		HttpServletRequest request = getRequest();
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
+			fileName = CommonFileUtils.getOriginalFilename(request, "file");
 
 			String savePath = SystemConfig.getPathOfDataUser() + "JSLibData" + "/" + fileName;
 			xmlFile = new File(savePath);
@@ -764,7 +764,7 @@ public class WF_Comm_Sys extends WebContralBase {
 			}
 
 			try {
-				CommonFileUtils.upload(request, "File_Upload", xmlFile);
+				CommonFileUtils.upload(request, "file", xmlFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "err@执行失败";

@@ -78,12 +78,13 @@
             var en = new Entity("BP.Sys.FrmEvent");
             en.CopyForm();
             en.FK_Flow = GetQueryString("FK_Flow");
+            en.FK_MapData = GetQueryString("FK_Flow");
 
             //如果是业务单元.
             if (en.EventDoType == 7) {
                 en.DoDoc = $("#DDL_Doc").val();
             } else {
-                en.DoDoc = $("#TB_SQL").val();
+                en.DoDoc = editor.getValue();
             }
 
             if (en.DoDoc == "") {

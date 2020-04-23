@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" />
-    <title>驰骋工作流</title>
+    <title>发送后转向</title>
     <link href="../../Scripts/easyUI145/themes/color.css" rel="stylesheet" />
     <link href="../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
@@ -135,7 +135,7 @@
                 <ul style="color: Gray">
                     <li>按照您定义的信息格式，提示给已经操作完成的用户。</li>
                     <li>比如：您的申请已经发送至XXX用户进行审批。 </li>
-                    <li>该自定义信息支持ccbpm的表达式，具体可参考右侧帮助文档。 </li>
+                    <li>该自定义信息支持ccbpm的表达式，具体可参考右侧帮助文档。比如:@WebUser.No,@WebUser.Name,@WebUser.FK_Dept,@WebUser.OrgNo </li>
                     <li>发送后系统变量如下: </li>
                     <li>您可以设置为: 当前工作提交给:【 @VarAcceptersName 】处理. </li>
                     <li>例如：您的请假申请单，已经提交给 @VarAcceptersName ，提交到：  @VarToNodeName , 请假了@QingJiaTianTianShu天.</li>

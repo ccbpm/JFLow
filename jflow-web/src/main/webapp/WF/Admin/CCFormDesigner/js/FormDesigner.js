@@ -170,7 +170,7 @@ function ondbclickCallBackFun(figure) {
 
 //打开元素的属性窗口
 function showFigurePropertyWin(figure) {
-
+    
     var v = figure.CCForm_Shape;
     var shap = figure.CCForm_Shape;
 
@@ -273,7 +273,7 @@ function showFigurePropertyWin(figure) {
 
         //alert(CCForm_FK_MapData);
 
-        var url = '../../Comm/RefFunc/EnOnly.htm?EnName=BP.Sys.FrmUI.ExtImgAth&PKVal=' + CCForm_FK_MapData + '_' + figure.CCForm_MyPK;
+        var url = '../../Comm/RefFunc/EnOnly.htm?EnName=BP.Sys.FrmUI.FrmImgAth&PKVal=' + CCForm_FK_MapData + '_' + figure.CCForm_MyPK;
         CCForm_ShowDialog(url, '图片附件');
         return;
     }
@@ -343,6 +343,7 @@ function showFigurePropertyWin(figure) {
     }
 
     if (shap == 'Label') {
+        alert('请在右边查看该元素的属性,如果被遮挡您需要全屏打开该设计器进行设计.');
         $('#right').css('display', 'block');
         $('#container').css('right', 'auto');
         return;

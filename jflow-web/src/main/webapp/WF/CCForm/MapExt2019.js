@@ -194,6 +194,7 @@ function openDiv(e, tbID) {
 
         orgObject.style.top = t + 'px';
         orgObject.style.left = l + 'px';
+        orgObject.style.width = $("#" + tbID).width()+"px";
         orgObject.style.display = "block";
         txtObject.focus();
     }
@@ -1048,7 +1049,7 @@ function GenerDB(dbSrc, selectVal, dbType) {
     //处理sql，url参数.
     dbSrc = dbSrc.replace(/~/g, "'");
 
-    dbSrc = dbSrc.replace('@Key', selectVal);
+    dbSrc = dbSrc.replace(/@Key/g, selectVal);
 
     dbSrc = DealExp(dbSrc);
     dbSrc = DealSQL(dbSrc, selectVal, kvs);

@@ -14,14 +14,16 @@
         $(function () {
             var nodeID = GetQueryString("FK_Node");
             var node = new Entity("BP.WF.Node",nodeID);
-          
+            var flowNo = GetQueryString("FK_Flow");
             var str =nodeID.substr(nodeID.length - 2);
             if (str == "01" && node.DeliveryWay==DeliveryWay.BySelected) {
                 node.DeliveryWay = DeliveryWay.BySelected_1;
             }
 
+
             var url = '';
             switch (parseInt(node.DeliveryWay)) {
+                
                 case DeliveryWay.ByStation:
                     //Bind_1_ByStation();
                     url = "0.ByStation.htm";
@@ -100,6 +102,15 @@
                 case DeliveryWay.BySelectedForPrj:
                     url = "21.BySelectedForPrj.htm";
                     break;
+                case DeliveryWay.ByTeamOrgOnly:
+                    url = "24.ByTeamOrgOnly.htm";
+                    break;
+                case DeliveryWay.ByTeamOnly:
+                    url = "25.ByTeamOnly.htm";
+                    break;
+                case DeliveryWay.ByTeamDeptOnly:
+                    url = "26.ByTeamDeptOnly.htm";
+                    break;
                 case DeliveryWay.ByCCFlowBPM:
                     url = "100.ByCCFlowBPM.htm";
                     break;
@@ -107,11 +118,12 @@
                     url = "100.ByCCFlowBPM.htm";
                     break;
                 default:
+                    //alert('错误：没有解析到的' + node.DeliveryWay +" "+parseInt(node.DeliveryWay) );
+                    //return;
                     url = "0.ByStation.htm";
                     break;
             }
-
-            document.location.href = url + "?FK_Node=" + node.NodeID;
+            document.location.href = url + "?FK_Node=" + node.NodeID+"&FK_Flow="+flowNo;
         });
 
         function Bind_1_ByStation() {

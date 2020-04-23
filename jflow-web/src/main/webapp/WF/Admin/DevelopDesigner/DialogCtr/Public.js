@@ -1,13 +1,18 @@
 ﻿
 //插入html.
-function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
+function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr,uicontrolType)
 {
     var _Html = "";
     //文本
     if (dataType == "Text")
         _Html = "<input type='text' value= ''  id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  class='form-control' leipiplugins='text' style='width:120px'/>"+name;
     if (dataType == "Textarea") {
-        _Html = "<textarea id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  leipiplugins='textarea' value='' orgrich='0' orgfontsize='12' orgwidth='600' orgheight='80' style='font-size: 12px; width: 528px; height: 59px; margin: 0px;'></textarea>" + name;
+        if (uicontrolType == 14)
+            _Html = "<textarea id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='SignCheck'  leipiplugins='textarea' value='' orgrich='0' orgfontsize='12' orgwidth='600' orgheight='80' style='font-size: 12px; width: 528px; height: 59px; margin: 0px;'></textarea>" + name;
+        else if (uicontrolType == 15)
+            _Html = "<textarea id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='FlowBBS'  leipiplugins='textarea' value='' orgrich='0' orgfontsize='12' orgwidth='600' orgheight='80' style='font-size: 12px; width: 528px; height: 59px; margin: 0px;'></textarea>" + name;
+        else
+            _Html = "<textarea id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'  leipiplugins='textarea' value='' orgrich='0' orgfontsize='12' orgwidth='600' orgheight='80' style='font-size: 12px; width: 528px; height: 59px; margin: 0px;'></textarea>" + name;
     }
     //int型
     if (dataType == "Int")
@@ -125,6 +130,9 @@ function InsertHtmlToEditor(dataType, keyOfEn, name,uiBindKey,mapAttr)
     if (dataType == "FlowBBS")
         _Html = "<input type='text'  id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'   leipiplugins='text' style='width:98%'/>";
 
+    if (dataType == "DocWord")
+        _Html = "<input type='text'  id='TB_" + keyOfEn + "' name='TB_" + keyOfEn + "' data-key='" + keyOfEn + "' data-name='" + name + "' data-type='" + dataType + "'   leipiplugins='component' style='width:98%'/>";
+
 
     editor.execCommand('insertHtml', _Html);
 }
@@ -192,6 +200,10 @@ function GetDataType(mapAttr) {
 
         if (mapAttr.UIContralType == 15)//评论组件
             return "FlowBBS";
+        if (mapAttr.UIContralType == 16)//评论组件
+            return "Fixed";
+        if (mapAttr.UIContralType == 17)//公文字号
+            return "DocWord";
     }
 
 }

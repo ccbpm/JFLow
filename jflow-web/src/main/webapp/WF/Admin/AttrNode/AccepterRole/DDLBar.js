@@ -56,18 +56,33 @@ function InitBar(optionKey) {
 
     html += "<option value=null  disabled='disabled'>+按组织结构绑定</option>";
 
+    var webUser = new WebUser();
+
     if (isSatrtNode == true) {
 
-        html += "<option value=" + DeliveryWay.ByStation + ">&nbsp;&nbsp;&nbsp;&nbsp;按照岗位智能计算发起人</option>";
-        html += "<option value=" + DeliveryWay.ByDept + " >&nbsp;&nbsp;&nbsp;&nbsp;按节点绑定的部门计算发起人</option>";
-        html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按节点绑定的人员计算发起人</option>";
-        html += "<option value=" + DeliveryWay.ByDeptAndStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位与部门交集计算发起人</option>";
+        html += "<option value=" + DeliveryWay.ByStation + ">&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位计算</option>";
+        html += "<option value=" + DeliveryWay.ByDept + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的部门计算</option>";
+        html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的人员计算</option>";
+        html += "<option value=" + DeliveryWay.ByDeptAndStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位与部门交集计算</option>";
+
+        if (webUser.CCBPMRunModel == 1) {
+            html += "<option value=" + DeliveryWay.ByTeamOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(全集团)</option>";
+            html += "<option value=" + DeliveryWay.ByTeamOrgOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本组织人员)</option>";
+            html += "<option value=" + DeliveryWay.ByTeamDeptOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本部门人员)</option>";
+        }
+
 
     } else {
 
-        html += "<option value=" + DeliveryWay.ByStation + ">&nbsp;&nbsp;&nbsp;&nbsp;按照岗位智能计算</option>";
-        html += "<option value=" + DeliveryWay.ByDept + " >&nbsp;&nbsp;&nbsp;&nbsp;按节点绑定的部门计算</option>";
-        html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按节点绑定的人员计算</option>";
+        html += "<option value=" + DeliveryWay.ByStation + ">&nbsp;&nbsp;&nbsp;&nbsp;按岗位智能计算</option>";
+        html += "<option value=" + DeliveryWay.ByDept + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的部门计算</option>";
+        if (webUser.CCBPMRunModel == 1) {
+            html += "<option value=" + DeliveryWay.ByTeamOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(全集团)</option>";
+            html += "<option value=" + DeliveryWay.ByTeamOrgOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本组织人员)</option>";
+            html += "<option value=" + DeliveryWay.ByTeamDeptOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本部门人员)</option>";
+        }
+
+        html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的人员计算</option>";
         html += "<option value=" + DeliveryWay.ByDeptAndStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位与部门交集计算</option>";
         html += "<option value=" + DeliveryWay.ByStationAndEmpDept + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位计算并且以绑定的部门集合为纬度</option>";
         html += "<option value=" + DeliveryWay.BySpecNodeEmpStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按指定节点的人员岗位计算</option>";
@@ -153,8 +168,7 @@ function SaveRole() {
     setTimeout(function () { $("#Btn_Save").val("保存"); }, 1000);
 }
 //清除缓存，本组织的.
-function AccepterRole_ClearStartFlowsCash()
-{
+function AccepterRole_ClearStartFlowsCash() {
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrNode");
     var data = handler.DoMethodReturnString("AccepterRole_ClearStartFlowsCash");
 }
@@ -197,7 +211,7 @@ function OpenDot2DotStations() {
     var nodeID = GetQueryString("FK_Node");
 
     var url = "../../../Comm/RefFunc/Dot2Dot.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeStations";
-    url += "&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Station&EnsOfM=BP.WF.Port.Stations";
+    url += "&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Station&EnsOfM=BP.Port.Stations";
     url += "&DefaultGroupAttrKey=FK_StationType&NodeID=" + nodeID + "&PKVal=" + nodeID;
     OpenEasyUiDialogExtCloseFunc(url, '设置岗位', 800, 500, function () {
         Baseinfo.stas = getStas();
@@ -214,7 +228,6 @@ function getStas() {
         return obj.FK_Node != undefined
     });
     return ens;
-
 }
 /*
  * 获取节点绑定的部门
@@ -225,6 +238,21 @@ function getDepts() {
     ens = $.grep(ens, function (obj, i) {
         return obj.FK_Node != undefined
     });
+    return ens;
+
+}
+/*
+ * 获取节点绑定的用户组@lz
+ */
+function getGroups() {
+
+    var ens = new Entities("BP.WF.Template.NodeTeams");
+    ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
+
+    ens = $.grep(ens, function (obj, i) {
+        return obj.FK_Node != undefined
+    });
+
     return ens;
 
 }
@@ -248,7 +276,11 @@ function getDeptLeader() {
 function getOrgs() {
 
     var ens = new Entities("BP.WF.Template.FlowOrgs");
+
+    // ens.Retrieve("FlowNo", flowNo);
     ens.Retrieve("FlowNo", GetQueryString("FK_Flow"));
+
+    // alert(ens.length);
     return ens;
 
     ens = $.grep(ens, function (obj, i) {
@@ -353,6 +385,15 @@ function changeOption() {
             break;
         case DeliveryWay.ByDeptLeader:
             roleName = "23.ByDeptLeader.htm";
+            break;
+        case DeliveryWay.ByTeamOrgOnly:
+            roleName = "24.ByTeamOrgOnly.htm";
+            break;
+        case DeliveryWay.ByTeamOnly:
+            roleName = "25.ByTeamOnly.htm";
+            break;
+        case DeliveryWay.ByTeamDeptOnly:
+            roleName = "26.ByTeamDeptOnly.htm";
             break;
         case DeliveryWay.BySelectedOrgs:
             roleName = "42.BySelectedOrgs.htm";

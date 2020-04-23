@@ -339,7 +339,7 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
     for (var i = 0; i < Sys_MapAttr.length; i++) {
         var attr = Sys_MapAttr[i];
 
-        if (attr.GroupID != groupID || attr.UIVisible == 0)
+        if (attr.GroupID != groupID || attr.UIVisible == 0 || attr.UIContralType == 16)
             continue;
 
 
@@ -493,7 +493,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         var attr = Sys_MapAttr[i];
 
-        if (attr.GroupID != groupID || attr.UIVisible == 0)
+        if (attr.GroupID != groupID || attr.UIVisible == 0 || attr.UIContralType == 16)
             continue;
 
         //赋值
@@ -1263,7 +1263,7 @@ function cleanAll(KeyOfEn, frmType) {
         return;
 
     //获取他的值
-    if (mapAttrs[KeyOfEn].length > 0) {
+    if (mapAttrs[KeyOfEn]!=undefined && mapAttrs[KeyOfEn].length > 0) {
         var FKMapAttrs = mapAttrs[KeyOfEn][0];
         for (var i = 0; i < FKMapAttrs.length; i++) {
             if (frmType != null && frmType !== undefined && frmType == 8)

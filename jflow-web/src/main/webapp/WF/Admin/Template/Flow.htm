@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>模版</title>
+    <link href="../../../Scripts/easyUI145/themes/color.css" rel="stylesheet" />
+    <link href="../../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../../Scripts/bootstrap/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <link href="../../Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="../../Scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="../../Scripts/config.js" type="text/javascript"></script>
+    <script src="../../Comm/Gener.js" type="text/javascript"></script>
+    <script src="../../Admin.js"></script>
+    <base target="_self" />
+    <style type="text/css">
+        th, td {
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript">
+        var sortNo;
+        var retrunUrl;
+        $(function () {
+
+            var frmID = GetQueryString("SortNo");
+
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Template");
+            handler.AddUrlData();
+            var data = handler.DoMethodReturnString("Flow_Init");
+            if (data.indexOf('err@') == 0) {
+
+                $("#msg").html(data);
+                return;
+            }
+
+            var html = "";
+            var data = JSON.parse(data);
+            var dirs = data["Dir"];
+            var files = data["File"];
+
+
+            html += " <caption><img style='margin-bottom:8px;' align='middle' src='../../Img/Event.png' />流程模板</caption>";
+
+            html += "<tr>";
+            html += "<th>模板名称</th>";
+            html += "<th>创建日期</th>";
+            html += "</tr>";
+            for (var i = 0; i < dirs.length; i++) {
+                var dir = dirs[i];
+
+                html += "<tr>";
+                html += "<td><a href=\"javascript:ToParent('" + dir.Path + "')\" ><img src='../../Img/Tree/Dir.gif' />" + dir.FileName + "</a></td>";
+                html += "<td>  " + dir.RDT + " </td>";
+                html += "</tr>";
+            }
+
+            for (var i = 0; i < files.length; i++) {
+                var fl = files[i];
+
+                html += "<tr>";
+                html += "<td><input id=" + fl.FileName + " type='checkbox';  /><img src='../../Img/dot.png' style='width:15px;' />" + fl.FileName + "</td>";
+                html += "<td>  " + fl.RDT + " </td>";
+                html += "</tr>";
+            }
+
+            $("#Table1").html(html);
+
+        });
+
+        //他的上一级目录.
+        function ToParent(path) {
+            path = path.replace('//', '/');
+            retrunUrl = "?SortNo=" + this.GetQueryString("SortNo");
+            var url = "?SortNo=" + this.GetQueryString("SortNo") + "&DirName=" + path;
+            window.location.href = url;
+        }
+        //返回上一级
+        function RetrunToParent() {
+           
+            window.history.back();
+        }
+        function Imp() {
+            var fls = "";
+            var inputArray = $("input[type='checkbox']"); //取到所有的input 并且放到一个数组中
+            inputArray.each(//使用数组的循环函数 循环这个input数组
+                function () {
+                    var input = $(this); //循环中的每一个input元素
+                    if (input.is(':checked')) {
+                        if (input.attr("id").indexOf(".xml") > 0)//过滤文件，只选xml的
+                            fls += input.attr("id") + ";"; //查看循环中的每一个input的id
+                    }
+                });
+            if (fls == "") {
+                alert("未选择模板");
+                return
+            }
+            //生成要选择的文件.
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Template");
+            handler.AddPara("Files", fls);
+            var data = handler.DoMethodReturnString("Flow_Imp");
+            if (data.indexOf('err@') == 0) {
+                $("#msg").html(data);
+                return;
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <div style="right:30px; position:absolute; z-index:100; top:-4px">
+        <a href="#" onclick="RetrunToParent()">返回上一级</a><input type="button" value="导入模版" onclick='Imp();' />
+    </div>
+
+
+    <table id="Table1" class="table table-hover " style="width: 100%; padding: 2px;text-align:left">
+        
+    </table>
+    <div id="msg"> </div>
+</body>
+</html>

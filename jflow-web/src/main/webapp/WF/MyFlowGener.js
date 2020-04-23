@@ -281,7 +281,7 @@ function figure_Template_Siganture(SigantureID, val, type) {
         impParent.removeChild(obj);
     }
     else {
-        var src = UserICon + oliId + UserIConExt;    //新图片地址
+        var src = UserICon + val + UserIConExt;    //新图片地址
         document.getElementById("Img" + SigantureID).src = src;
     }
     isSigantureChecked = true;
@@ -855,7 +855,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
         var data = tree.tree('getSelected');
         if (data != null) {
             formArrResult.push(name + '=' + data.id);
-            formArrResult.push(name.replace("DDL_","TB_") + 'T=' + data.text);
+            formArrResult.push(name.replace("DDL_", "TB_") + 'T=' + data.text);
         }
     });
 
@@ -964,7 +964,7 @@ function Send(isHuiQian) {
         if (isCanSend == false)
             return false;
     }
-   
+
     //附件检查
     var msg = checkAths();
     if (msg != "") {
@@ -1164,6 +1164,7 @@ function execSend(toNodeID) {
 
         var url = data;
         url = url.replace('url@', '');
+
         window.location.href = url;
         return;
     }
@@ -1606,7 +1607,7 @@ function GenerWorkNode() {
     var node = flowData.WF_Node[0];
     var gfs = flowData.Sys_MapAttr;
 
-  
+
     //设置标题.
     document.title = node.FlowName + ',' + node.Name; // "业务流程管理（BPM）平台";
 
@@ -1757,7 +1758,7 @@ function GenerWorkNode() {
             autoTextarea(item);
         });
     }
-    
+
 
     //为 DISABLED 的 TEXTAREA 加TITLE 
     var disabledTextAreas = $('#divCCForm textarea:disabled');
@@ -1766,9 +1767,20 @@ function GenerWorkNode() {
     })
 
     ////加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
-    var enName = flowData.Sys_MapData[0].No;
-    var filespec = "../DataUser/JSLibData/" + pageData.FK_Flow + ".js";
-    $.getScript(filespec);
+    try {
+        ////加载JS文件
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.src = "../DataUser/JSLibData/" + pageData.FK_Flow + ".js";
+        var tmp = document.getElementsByTagName('script')[0];
+        tmp.parentNode.insertBefore(s, tmp);
+    }
+    catch (err) {
+
+    }
+    //var enName = flowData.Sys_MapData[0].No;
+    //var filespec = "../DataUser/JSLibData/" + pageData.FK_Flow + ".js";
+    //$.getScript(filespec);
 
     try {
         ////加载JS文件
@@ -2145,124 +2157,15 @@ function InitToolBar() {
         $('[name=PR]').unbind('click');
         $('[name=PR').bind('click', function () { initModal("PR"); $('#returnWorkModal').modal().show(); });
     }
-
-
 }
 
-/* ss */
+
+/* 打开公文表单 */
 function OpenOffice(isEdit) {
-    var nodeId = GetQueryString("FK_Node");
-    var workId = GetQueryString("WorkID");
-    var fk_flow = GetQueryString("FK_Flow");
 
-    //检测与模板上的对应的字段是否都有数据
-    var doMethod = "CheckDocTempFields";
-    var httpHandlerName = "BP.WF.HttpHandler.WF_Admin_AttrNode";
-    $.ajax({
-        url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName +
-            "&workId=" + workId + "&fk_flow=" + fk_flow,//+ "&no=" + no,
-        async: false,
-        success: function (result, status, xhr) {
-            var json = eval('(' + result + ')');
-
-            if (json.Success) {
-                //插件参数
-                var paras = "WorkID=" + workId + ",";
-                paras += "FK_Flow=" + fk_flow + ",";
-                paras += "TempNo=" + json.Data + ",";
-                paras += "FK_Node=" + nodeId + ",";
-
-                var webUser = new WebUser();
-                paras += "UserNo=" + webUser.No + ",";
-                paras += "SID=" + webUser.SID + ",";
-
-                //是否可以编辑(只读)
-                if (isEdit == "True")
-                    paras += "IsReadonly=0,";
-                else
-                    paras += "IsReadonly=1,";
-
-                var local = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
-
-                var urlWS = local + "/WF/CCForm/CCFormAPI.asmx";
-                var url = "httpCCWord://-fromccflow,App=WordDoc," + paras + "WSUrl=" + urlWS;
-
-                doMethod = "FlowDocInit";
-                $.ajax({
-                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName + "&nodeId=" + nodeId +
-                        "&workId=" + workId + "&fk_flow=" + fk_flow,
-                    async: false,
-                    success: function (result, status, xhr) {
-                        var json = eval('(' + result + ')');
-                        var msg = eval('(' + json.Message + ')');
-                        var data = eval('(' + json.Data + ')');
-
-                        if (json.Success) {
-                            if (msg.IsStartNode == 1) {
-                                if (msg.IsExistFlowData == 1) {
-
-                                    if (msg.IsExistTempData > 0) {//数据存在，有模板
-                                        if (confirm("公文数据已经存在，是否重新选择模板？") == true) {
-                                            //重新选择模板，覆盖旧的数据
-                                            WinOpen("Admin/AttrNode/SelectDocTemp.htm?FK_Node=" + nodeId + "&WorkID=" + workId + "&FK_Flow=" + fk_flow + "&op=" + url, "重新模板选择");
-                                        } else {
-                                            OpVsto(url);
-                                        }
-                                    } else {//数据存在，没有模板
-
-                                        OpVsto(url);
-                                    }
-
-                                } else {
-
-                                    if (msg.IsExistTempData > 0) {
-                                        if (confirm("有" + msg.IsExistTempData + "个公文模板可供选择。【确定】打开模板列表，【取消】创建空白公文!") == true) {
-
-                                            //选择模板进行创建
-                                            WinOpen("Admin/AttrNode/SelectDocTemp.htm?FK_Node=" + nodeId + "&WorkID=" + workId + "&FK_Flow=" + fk_flow + "&op=" + url, "模板选择")
-                                        } else {
-                                            //创建空白的模板
-                                            CreateBlankDocTemp(nodeId, workId, fk_flow, url);
-                                        }
-                                    } else {
-                                        if (confirm("公文模板不存在，是否创建空白公文？") == true) {
-                                            //创建空白的模板
-                                            CreateBlankDocTemp(nodeId, workId, fk_flow, url);
-                                        } else {
-                                            return;
-                                        }
-                                    }
-
-                                }
-                            } else {//不是开始节点
-                                doMethod = "IsExitNodeTempData";
-                                $.ajax({
-                                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName +
-                                        "&workId=" + workId + "&fk_flow=" + fk_flow,
-                                    async: false,
-                                    success: function (result, status, xhr) {
-                                        if (result.indexOf('err@') == 0) {
-                                            alert(result);
-                                            return false;
-                                        } else {
-                                            OpVsto(url);
-                                        }
-                                    }
-                                });
-                            }
-
-                        } else {
-                            alert(json.Message);
-                            return;
-                        }
-                    }
-                });
-            } else {
-                alert(json.Message);
-                return false;
-            }
-        }
-    });
+    var url = "./WorkOpt/DocWord.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
+    WinOpen(url);
+    return;
 }
 
 //创建空白模板数据

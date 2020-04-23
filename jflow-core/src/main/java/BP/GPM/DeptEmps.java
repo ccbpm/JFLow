@@ -34,10 +34,11 @@ public class DeptEmps extends EntitiesMyPK
 	/**
 	 * 删除不存在Port_Emp中的数据
 	 */
-	public void DelteNotInEmp()
+	public String DelteNotInEmp()
 	{
 		String sql = "DELETE FROM Port_DeptEmp WHERE FK_Emp NOT IN (SELECT No FROM Port_Emp)";
 		DBAccess.RunSQL(sql);
+		return "";
 	}
 	/** 
 	 转化成 java list,C#不能调用.

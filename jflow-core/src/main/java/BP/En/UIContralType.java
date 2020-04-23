@@ -79,6 +79,10 @@ public enum UIContralType
 	 * 系统定位
 	 */
 	Fixed(16),
+	/**
+	 * 公文字号
+	 */
+	DocWord(17),
 	/** 
 	 流程进度图
 	*/
@@ -86,7 +90,11 @@ public enum UIContralType
 	/**
 	 * 大文本
 	 */
-	BigText(60);
+	BigText(60),
+	/**
+	 * 评分
+	 */
+	Score(101);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

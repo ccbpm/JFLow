@@ -7,6 +7,7 @@ import BP.En.*;
 import BP.En.Map;
 import BP.Sys.*;
 import BP.Tools.Cryptos;
+import BP.Tools.Encodes;
 import BP.Web.WebUser;
 
 /**

@@ -7,6 +7,7 @@ import BP.Difference.Handler.CommonUtils;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.Cryptos;
+import BP.Tools.Encodes;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;

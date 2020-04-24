@@ -2,6 +2,7 @@ package BP.Port;
 
 import BP.DA.*;
 import BP.En.*;
+import BP.En.Map;
 import BP.Port.*;
 import java.util.*;
 
@@ -23,7 +24,7 @@ public class Team extends EntityNoName
 	 
 	 @param mypk
 	*/
-	public Team(String no)
+	public Team(String no) throws Exception
 	{
 		this.setNo(no);
 		this.Retrieve();

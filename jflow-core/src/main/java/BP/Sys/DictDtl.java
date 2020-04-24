@@ -133,7 +133,7 @@ public class DictDtl extends EntityMyPK
 
 	protected  boolean beforeInsert() throws Exception
 {
-	if (SystemConfig.getCCBPMRunModel()!=0)
+	if (SystemConfig.getCCBPMRunModel()!=CCBPMRunModel.Single)
 		this.setOrgNo(BP.Web.WebUser.getOrgNo());
 
 	return super.beforeInsert();

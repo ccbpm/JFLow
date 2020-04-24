@@ -70,17 +70,9 @@ public class Station extends EntityNoName
 		map.Java_SetEnType(EnType.Admin);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
 		map.Java_SetDepositaryOfEntity(Depositary.None);
-
-			// map.Java_SetCodeStruct("4");
-			// map.IsAutoGenerNo = true;
-
 		map.AddTBStringPK(StationAttr.No, null, "编号", true, false, 1, 50, 200);
 		map.AddTBString(StationAttr.Name, null, "名称", true, false, 0, 100, 200);
 		map.AddDDLEntities(StationAttr.FK_StationType, null, "类型", new StationTypes(), true);
-
-			//map.AddTBStringDoc(StationAttr.DutyReq, null, "职责要求", true, false, true);
-			//map.AddTBStringDoc(StationAttr.Makings, null, "素质要求", true, false, true);
-
 		map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, false, 0, 50, 250);
 		map.AddSearchAttr(StationAttr.FK_StationType);
 		this.set_enMap(map);

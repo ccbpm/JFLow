@@ -3,6 +3,7 @@ package BP.WF.Port;
 import BP.DA.*;
 import BP.Difference.SystemConfig;
 import BP.En.*;
+import BP.Sys.CCBPMRunModel;
 import BP.WF.*;
 import java.util.*;
 
@@ -55,7 +56,7 @@ public class StationTypes extends EntitiesNoName
 	@Override
 	public int RetrieveAll() throws Exception
 	{
-		if (SystemConfig.getCCBPMRunModel() == 0)
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			return super.RetrieveAll();
 		}
@@ -66,12 +67,6 @@ public class StationTypes extends EntitiesNoName
 		qo.addOr();
 		qo.AddWhere("OrgNo", "");
 		return qo.DoQuery();
-	}
-	public String GetStationTypes(String OrgNo)
-	{
-		String sql = "select No, Name FROM port_StationType where No in (select Fk_StationType from Port_Station WHERE OrgNo ='" + OrgNo + "') group by No,Name";
-		DataTable ds = DBAccess.RunSQLReturnTable(sql);
-		return BP.Tools.Json.ToJson(ds);
 	}
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 

@@ -4,10 +4,10 @@ import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Difference.SystemConfig;
 import BP.En.Attr;
-import BP.En.QueryObject;
 import BP.Port.Emp;
 import BP.Sys.GEEntity;
 import BP.WF.*;
+import BP.Sys.CCBPMRunModel;
 import BP.WF.Template.FlowExt;
 import BP.Web.WebUser;
 
@@ -90,24 +90,6 @@ public class WF_Admin_TestingContainer extends WebContralBase {
 
         //转化为json ,返回出去.
         return BP.Tools.Json.ToJson(ds);
-    }
-    /// <summary>
-    /// SelectOneUser_Init @sly
-    /// </summary>
-    /// <returns></returns>
-    public String SelectOneUser_Init() throws Exception
-    {
-        Default_LetAdminerLogin();
-
-        BP.WF.GenerWorkerLists ens = new GenerWorkerLists();
-        QueryObject qo = new QueryObject(ens);
-        qo.AddWhere("WorkID", this.getWorkID());
-        qo.addOr();
-        qo.AddWhere("FID", this.getWorkID());
-        qo.addOrderBy(" RDT,CDT ");
-        qo.DoQuery();
-
-        return ens.ToJson();
     }
     /// <summary>
     /// 让adminer登录.
@@ -245,7 +227,7 @@ public class WF_Admin_TestingContainer extends WebContralBase {
             {
                 case ByStation:
                 case ByStationOnly:
-                    if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+                    if (Glo.getCCBPMRunModel() == BP.Sys.CCBPMRunModel.Single)
                         sql = "SELECT Port_Emp.No  FROM Port_Emp LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.No) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
                     else
                         sql = "SELECT Port_Emp.No FROM Port_Emp WHERE OrgNo='" + BP.Web.WebUser.getOrgNo() + "' LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.No) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
@@ -287,8 +269,7 @@ public class WF_Admin_TestingContainer extends WebContralBase {
                     if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
                         throw new Exception("err@非集团版本，不能设置启用此模式.");
 
-                    sql = " SELECT A.No,A.Name,C.Name as FK_DeptText FROM Port_Emp A, WF_FlowOrg B, port_dept C ";
-                    sql += " WHERE A.OrgNo = B.OrgNo AND B.FlowNo = '"+this.getFK_Flow()+"' AND A.FK_Dept = c.No ";
+                    sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, WF_FlowOrg C  WHERE A.FK_Dept=B.No AND B.OrgNo=C.OrgNo AND C.FlowNo='"+nd.getFK_Flow()+"'";
 
                     if (dt.Rows.size() > 300 && 1 == 2)
                     {

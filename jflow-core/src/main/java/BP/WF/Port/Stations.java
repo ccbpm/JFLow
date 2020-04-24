@@ -3,6 +3,7 @@ package BP.WF.Port;
 import BP.DA.*;
 import BP.Difference.SystemConfig;
 import BP.En.*;
+import BP.Sys.CCBPMRunModel;
 import BP.WF.*;
 import java.util.*;
 
@@ -40,7 +41,7 @@ public class Stations extends EntitiesNoName
 	@Override
 	public int RetrieveAll() throws Exception
 	{
-		if (SystemConfig.getCCBPMRunModel() == 0)
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			return super.RetrieveAll();
 		}

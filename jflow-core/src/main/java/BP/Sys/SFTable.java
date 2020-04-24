@@ -618,7 +618,7 @@ public class SFTable extends EntityNoName
 
 		//#region  如果是 系统字典表.
 		if (this.getSrcType() == BP.Sys.SrcType.SysDict &&
-				(SystemConfig.getCCBPMRunModel() == 0 || SystemConfig.getCCBPMRunModel() == 1))
+				(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single || SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS))
 		{
 			//创建dict.
 			Dict dict = new Dict();
@@ -626,7 +626,7 @@ public class SFTable extends EntityNoName
 			dict.setTableName(this.getName());
 			dict.setOrgNo(WebUser.getOrgNo());
 			dict.setDictType(String.valueOf(this.GetValIntByKey(SFTableAttr.CodeStruct)));
-			if (SystemConfig.getCCBPMRunModel() == 0)
+			if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 			{
 				dict.setMyPK(this.getNo());
 			}

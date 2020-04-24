@@ -111,19 +111,6 @@ public class Dict extends EntityMyPK
 	}
        // #endregion
 
-	/// <summary>
-	/// 更新的操作
-	/// </summary>
-	/// <returns></returns>
-	protected boolean beforeUpdate() throws Exception
-{
-	return super.beforeUpdate();
-}
-
-	protected void afterInsertUpdateAction() throws Exception
-{
-	super.afterInsertUpdateAction();
-}
 
 	/// <summary>
 	/// 编辑数据
@@ -135,7 +122,7 @@ public class Dict extends EntityMyPK
 	}
 	protected  boolean beforeInsert() throws Exception
 {
-	if (SystemConfig.getCCBPMRunModel()!=0)
+	if (SystemConfig.getCCBPMRunModel()!=CCBPMRunModel.Single)
 		this.setOrgNo(BP.Web.WebUser.getOrgNo());
 
 	return super.beforeInsert();

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import BP.DA.*;
 import BP.Difference.Helper;
+import BP.Sys.CCBPMRunModel;
 import BP.Tools.En3Des;
 import org.apache.commons.io.IOUtils;
 
@@ -139,9 +140,19 @@ public class SystemConfig {
 	/// <summary>
 	/// 运行模式0=单机版，1=集团模式, 2=SAAS模式
 	/// </summary>
-	public static int getCCBPMRunModel()
+	public static CCBPMRunModel getCCBPMRunModel()
 	{
-		return SystemConfig.GetValByKeyInt("CCBPMRunModel",0);
+		int val = SystemConfig.GetValByKeyInt("CCBPMRunModel", 0);
+		if (val == 0)
+			return CCBPMRunModel.Single;
+
+		if (val == 1)
+			return CCBPMRunModel.GroupInc;
+
+		if (val == 2)
+			return CCBPMRunModel.SAAS;
+
+		return CCBPMRunModel.Single;
 	}
 	/**
 	 * 获取xml中的配置信息 GroupTitle, ShowTextLen, DefaultSelectedAttrs, TimeSpan

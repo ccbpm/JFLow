@@ -1,29 +1,31 @@
 package BP.Port;
 
+import BP.DA.*;
 import BP.En.*;
 import BP.Sys.CCBPMRunModel;
 
 import java.util.*;
 
 /** 
- 岗位s
+ 岗位类型
 */
-public class Stations extends EntitiesNoName
+public class StationTypes extends EntitiesNoName
 {
 	/** 
-	 岗位
+	 岗位类型s
 	*/
-	public Stations()
+	public StationTypes()
 	{
 	}
 	/** 
-	 得到它的 Entity
+	 得到它的 Entity 
 	*/
 	@Override
 	public Entity getNewEntity()
 	{
-		return new Station();
+		return new StationType();
 	}
+
 	/// <summary>
 	/// 查询全部
 	/// </summary>
@@ -45,34 +47,36 @@ public class Stations extends EntitiesNoName
 	@Override
 	public  int RetrieveAll() throws Exception
 	{
-		if (BP.Difference.SystemConfig.getCCBPMRunModel()  == CCBPMRunModel.Single)
+		if (BP.Difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 			return super.RetrieveAll();
 
-		//按照orgNo查询.
+		//按照orgNo查询. @sly
 		return this.Retrieve("OrgNo", BP.Web.WebUser.getOrgNo());
 	}
-
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Station> ToJavaList()
+	public final List<StationType> ToJavaList()
 	{
-		return (List<Station>)(Object)this;
+		return (List<StationType>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Station> Tolist()
+	public final ArrayList<StationType> Tolist()
 	{
-		ArrayList<Station> list = new ArrayList<Station>();
+		ArrayList<StationType> list = new ArrayList<StationType>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Station)this.get(i));
+			list.add((StationType)this.get(i));
 		}
 		return list;
 	}
+
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

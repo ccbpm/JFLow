@@ -133,7 +133,7 @@ public class WebUser {
 				sid = DBAccess.GenerOID()+"";
 			}
 			//增加他的orgNo
-			if (SystemConfig.getCCBPMRunModel() != 0)
+			if (SystemConfig.getCCBPMRunModel().getValue() != 0)
 				WebUser.setOrgNo(DBAccess.RunSQLReturnString("SELECT OrgNo FROM Port_Emp WHERE No='" + WebUser.getNo() + "'"));
 			if (IsRecSID) {
 				WebUser.setSID(sid);
@@ -714,8 +714,8 @@ public class WebUser {
 			val = DBAccess.RunSQLReturnString("SELECT Name FROM Port_Org WHERE No='" + WebUser.getOrgNo() + "'");
 			SetSessionByKey("OrgName", val);
 		}
-		if(val == null)
-			return "";
+		if(val==null)
+			val = "";
 		return val;
 	}
 
@@ -725,7 +725,7 @@ public class WebUser {
 	/**
 	 * 域
 	 */
-	public static String getDomain() {
+	public static String getDoDomain() {
 		String val = GetSessionByKey("Domain", "");
 		if (val == null) {
 			throw new RuntimeException("@err-003 Domain 登录信息丢失。");
@@ -733,7 +733,7 @@ public class WebUser {
 		return val;
 	}
 
-	public static void setDomain(String value) {
+	public static void setDoDomain(String value) {
 		SetSessionByKey("Domain", value);
 	}
 

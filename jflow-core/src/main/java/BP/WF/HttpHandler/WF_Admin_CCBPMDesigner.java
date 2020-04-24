@@ -256,7 +256,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 	 @return
 	 */
-	public final String Designer_Save() throws Exception
+	public final String Designer_Save()
 	{
 		String sql = "";
 		try
@@ -302,17 +302,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				String[] strs = item.split("[,]", -1);
 				DBAccess.RunSQL("UPDATE WF_LabNote SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK='" + strs[0] + "' ");
 			}
-			//更新节点HisToNDs，不然就需要检查一遍.
-			BP.WF.Nodes nds = new Nodes(this.getFK_Flow());
-			for (Node item : nds.ToJavaList())
-			{
-				String strs = "";
-				Directions mydirs = new Directions(item.getNodeID());
-				for (Direction dir : mydirs.ToJavaList())
-				strs += "@" + dir.getToNode();
-				item.setHisToNDs(strs);
-				item.Update();
-			}
+
 
 			return "保存成功.";
 
@@ -1391,7 +1381,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	 */
 	public final String GetTreeJson_AdminMenu() throws Exception
 	{
-		if (BP.WF.Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		if (BP.WF.Glo.getCCBPMRunModel() == BP.Sys.CCBPMRunModel.GroupInc)
 		{
 			//查询全部.
 			Admin2MenuGroups groups = new Admin2MenuGroups();

@@ -1,14 +1,6 @@
 package BP.Sys;
 
 
-import BP.DA.*;
-import BP.En.*;
-import java.util.*;
-
-//using System.Data.OracleClient;
-//using System.ServiceModel.Description;
-//using IBM.Data.Informix;
-
 /** 
  数据源类型
 */

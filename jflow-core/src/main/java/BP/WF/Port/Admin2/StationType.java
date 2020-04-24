@@ -72,7 +72,7 @@ public class StationType extends EntityNoName
 	@Override
 	protected boolean beforeInsert() throws Exception
 	{
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.GroupInc)
+		if (Glo.getCCBPMRunModel() != BP.Sys.CCBPMRunModel.GroupInc)
 		{
 			throw new RuntimeException("err@非GroupInc模式，不能插入. ");
 		}

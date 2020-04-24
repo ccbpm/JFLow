@@ -63,6 +63,7 @@ public class Station extends EntityNoName
 
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 4, 4, 4);
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 100, 100);
+		map.AddDDLEntities(StationAttr.FK_StationType, null, "类型", new StationTypes(), true);
 		map.AddTBString(StationAttr.OrgNo, null, "隶属组织编号", true, false, 0, 100, 100);
 
 		this.set_enMap(map);

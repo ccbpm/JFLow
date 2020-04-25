@@ -262,8 +262,7 @@ public class WF_Admin_TestingContainer extends WebContralBase {
                     else
                         sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND B.OrgNo='" + BP.Web.WebUser.getOrgNo() + "' AND A.FK_Emp=C.No ";
 
-                    dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-                    return BP.Tools.Json.ToJson(dt);
+                   break;
                 case BySelectedOrgs: //按照设置的组织计算: 20202年3月开始约定此规则.
 
                     if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
@@ -283,8 +282,7 @@ public class WF_Admin_TestingContainer extends WebContralBase {
                             sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, WF_FlowOrg C  WHERE A.FK_Dept=B.No AND B.OrgNo=C.OrgNo AND C.FlowNo='" + nd.getFK_Flow() + "'    limit 0,200   ";
                     }
 
-                    dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-                    return BP.Tools.Json.ToJson(dt);
+                   break;
                 case BySQL:
                     if (DataType.IsNullOrEmpty(nd.getDeliveryParas()))
                         return "err@您设置的按SQL访问开始节点，但是您没有设置sql.";

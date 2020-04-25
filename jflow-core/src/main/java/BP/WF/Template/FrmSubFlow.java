@@ -3,10 +3,8 @@ package BP.WF.Template;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
-import BP.WF.Template.*;
 import BP.WF.*;
 import BP.Sys.*;
-import BP.WF.*;
 import java.util.*;
 
 /** 
@@ -353,7 +351,7 @@ public class FrmSubFlow extends Entity
 	/** 
 	 父子流程
 	 
-	 @param no
+	 @param mapData
 	 * @throws Exception 
 	*/
 	public FrmSubFlow(String mapData) throws Exception
@@ -384,7 +382,7 @@ public class FrmSubFlow extends Entity
 	/** 
 	 父子流程
 	 
-	 @param no
+	 @param nodeID
 	 * @throws Exception 
 	*/
 	public FrmSubFlow(int nodeID) throws Exception
@@ -507,6 +505,25 @@ public class FrmSubFlow extends Entity
 		Node nd = new Node(this.getNodeID());
 		nd.RetrieveFromDBSources();
 		Cash2019.UpdateRow(nd.toString(),String.valueOf(this.getNodeID()),nd.getRow());
+
+		GroupField gf = new GroupField();
+		if (this.getSFSta() == FrmSubFlowSta.Disable)
+		{
+			gf.Delete(GroupFieldAttr.CtrlID, "SubFlow" + this.getNo());
+		}
+		else
+		{
+			if (gf.IsExit(GroupFieldAttr.CtrlID, "SubFlow" + this.getNo()) == false)
+			{
+				gf = new GroupField();
+				gf.setFrmID("ND" + this.getNodeID());
+				gf.setCtrlID("SubFlow" + this.getNo());
+				gf.setCtrlType(GroupCtrlType.SubFlow);
+				gf.setLab("父子流程组件");
+				gf.setIdx(0);
+				gf.Insert(); //插入.
+			}
+		}
 
 		super.afterUpdate();
 	}

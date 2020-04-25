@@ -803,7 +803,7 @@ public class FindWorker
 			///#region 仅按岗位计算
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationOnly)
 		{
-			sql = "SELECT A.FK_Emp FROM " + BP.WF.Glo.getEmpStation() + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
+			sql = "SELECT A.FK_Emp FROM " + BP.WF.Glo.getEmpStation() + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node  ORDER BY A.FK_Station desc";
 			ps = new Paras();
 			ps.Add("FK_Node", town.getHisNode().getNodeID());
 			ps.SQL = sql;

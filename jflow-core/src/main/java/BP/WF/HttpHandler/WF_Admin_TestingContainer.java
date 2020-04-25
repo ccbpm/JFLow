@@ -325,6 +325,20 @@ public class WF_Admin_TestingContainer extends WebContralBase {
                 dtMyEmps.Rows.add(drNew);
             }
 
+            if(SystemConfig.getAppCenterDBType() == DBType.Oracle)
+            {
+                dtMyEmps.Columns.get("NO").ColumnName = "No";
+                dtMyEmps.Columns.get("NAME").ColumnName = "Name";
+                dtMyEmps.Columns.get("FK_DEPTTEXT").ColumnName = "FK_DeptText";
+            }
+
+            if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+            {
+                dtMyEmps.Columns.get("no").ColumnName = "No";
+                dtMyEmps.Columns.get("name").ColumnName = "Name";
+                dtMyEmps.Columns.get("fk_depttext").ColumnName = "FK_DeptText";
+            }
+
             //返回数据源.
             return BP.Tools.Json.ToJson(dtMyEmps);
                 //endregion 从设置里获取-测试人员.

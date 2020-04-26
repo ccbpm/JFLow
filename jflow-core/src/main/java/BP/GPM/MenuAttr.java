@@ -26,9 +26,13 @@ public class MenuAttr extends EntityTreeAttr
 	*/
 	public static final String Url = "Url";
 	/** 
-	 连接
+	 连接(pc)
 	*/
 	public static final String UrlExt = "UrlExt";
+	/**
+	  连接（移动端）
+	 */
+	public static final String MobileUrlExt = "MobileUrlExt";
 	/** 
 	 控制内容
 	*/

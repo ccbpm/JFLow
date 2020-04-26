@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
 import BP.GPM.*;
+import BP.Port.StationAttr;
 import BP.WF.*;
 import BP.WF.Data.*;
 import BP.WF.Template.*;
@@ -209,9 +210,9 @@ public class FrmTemplate extends EntityNoName
 
 			///#region 可以创建的权限.
 			//平铺模式.
-		map.getAttrsOfOneVSM().AddGroupPanelModel(new StationCreates(), new BP.WF.Port.Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位", StationAttr.FK_StationType);
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new StationCreates(), new BP.Port.Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位", StationAttr.FK_StationType);
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new StationCreates(), new BP.WF.Port.Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位AddGroupListModel", StationAttr.FK_StationType);
+		map.getAttrsOfOneVSM().AddGroupListModel(new StationCreates(), new BP.Port.Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位AddGroupListModel", StationAttr.FK_StationType);
 
 			//节点绑定部门. 节点绑定部门.
 		map.getAttrsOfOneVSM().AddBranches(new FrmDeptCreates(), new BP.Port.Depts(), FrmDeptCreateAttr.FrmID, FrmDeptCreateAttr.FK_Dept, "可以创建的部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");

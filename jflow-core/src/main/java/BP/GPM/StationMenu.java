@@ -64,7 +64,7 @@ public class StationMenu extends EntityMM
 	/** 
 	 岗位菜单
 	 
-	 @param mypk
+	 @param no
 	 * @throws Exception 
 	*/
 	public StationMenu(String no) throws Exception
@@ -88,7 +88,7 @@ public class StationMenu extends EntityMM
 		map.setEnType(EnType.Sys);
 
 			//map.AddTBStringPK(StationMenuAttr.FK_Station, null, "岗位", false, false, 0, 50, 20);
-		map.AddDDLEntitiesPK(StationMenuAttr.FK_Station, null, "岗位", new Stations(), true);
+		map.AddDDLEntitiesPK(StationMenuAttr.FK_Station, null, "岗位", new BP.Port.Stations(), true);
 		map.AddTBStringPK(StationMenuAttr.FK_Menu, null, "菜单", false, false, 0, 50, 20);
 		map.AddBoolean(StationMenuAttr.IsChecked, true, "是否选中", true, true);
 		this.set_enMap(map);

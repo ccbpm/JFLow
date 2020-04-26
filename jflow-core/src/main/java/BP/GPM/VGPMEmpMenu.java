@@ -129,7 +129,7 @@ public class VGPMEmpMenu extends EntityMyPK
 	/** 
 	 人员菜单功能
 	 
-	 @param mypk
+	 @param no
 	 * @throws Exception 
 	*/
 	public VGPMEmpMenu(String no) throws Exception

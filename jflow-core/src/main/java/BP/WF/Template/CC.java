@@ -401,9 +401,9 @@ public class CC extends Entity
 			// 相关功能。
 
 			//平铺模式.
-		map.getAttrsOfOneVSM().AddGroupPanelModel(new BP.WF.Template.CCStations(), new BP.WF.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "抄送岗位(AddGroupPanelModel)", StationAttr.FK_StationType);
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new BP.WF.Template.CCStations(), new BP.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "抄送岗位(AddGroupPanelModel)", StationAttr.FK_StationType);
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new BP.WF.Template.CCStations(), new BP.WF.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "抄送岗位(AddGroupListModel)", StationAttr.FK_StationType);
+		map.getAttrsOfOneVSM().AddGroupListModel(new BP.WF.Template.CCStations(), new BP.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "抄送岗位(AddGroupListModel)", StationAttr.FK_StationType);
 
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.

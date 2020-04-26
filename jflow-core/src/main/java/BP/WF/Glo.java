@@ -1761,10 +1761,10 @@ public class Glo {
 		BP.GPM.Dept mydept = new BP.GPM.Dept();
 		mydept.CheckPhysicsTable();
 
-		BP.GPM.Station mySta = new BP.GPM.Station();
+		BP.Port.Station mySta = new BP.Port.Station();
 		mySta.CheckPhysicsTable();
 
-		BP.GPM.StationType myStaType = new BP.GPM.StationType();
+		BP.Port.StationType myStaType = new BP.Port.StationType();
 		myStaType.CheckPhysicsTable();
 
 		BP.GPM.DeptEmp myde = new BP.GPM.DeptEmp();

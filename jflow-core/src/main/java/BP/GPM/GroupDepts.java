@@ -1,24 +1,21 @@
-package BP.WF.Port;
+package BP.GPM;
 
 import BP.DA.*;
-import BP.En.*;
-import BP.WF.*;
-import BP.Port.*;
 import BP.Web.*;
-import BP.WF.*;
+import BP.En.*;
 import java.util.*;
 
 /** 
- 管理员s 
+ 权限组部门s
 */
-public class AdminEmps extends EntitiesNoName
+public class GroupDepts extends EntitiesMM
 {
-
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 构造
 	/** 
-	 管理员s
+	 权限组s
 	*/
-	public AdminEmps()
+	public GroupDepts()
 	{
 	}
 	/** 
@@ -27,17 +24,9 @@ public class AdminEmps extends EntitiesNoName
 	@Override
 	public Entity getNewEntity()
 	{
-		return new AdminEmp();
+		return new GroupDept();
 	}
-
-	@Override
-	public int RetrieveAll() throws Exception
-	{
-		return super.RetrieveAll("FK_Dept","Idx");
-	}
-
 		///#endregion
-
 
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
@@ -45,25 +34,23 @@ public class AdminEmps extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final List<AdminEmp> ToJavaList()
+	public final List<GroupDept> ToJavaList()
 	{
-		return (List<AdminEmp>)(Object)this;
+		return (List<GroupDept>) (Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<AdminEmp> Tolist()
+	public final ArrayList<GroupDept> Tolist()
 	{
-		ArrayList<AdminEmp> list = new ArrayList<AdminEmp>();
+		ArrayList<GroupDept> list = new ArrayList<GroupDept>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((AdminEmp)this.get(i));
+			list.add((GroupDept)this.get(i));
 		}
 		return list;
 	}
-
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
-
 }

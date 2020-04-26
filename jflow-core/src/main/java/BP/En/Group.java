@@ -3,6 +3,9 @@ package BP.En;
 import BP.DA.*;
 import BP.En.*;
 import BP.GPM.*;
+import BP.Port.StationAttr;
+import BP.Port.Stations;
+
 import java.util.*;
 
 /**
@@ -20,7 +23,7 @@ public class Group extends EntityNoName {
 	/**
 	 * 权限组
 	 * 
-	 * @param mypk
+	 * @param no
 	 * @throws Exception
 	 */
 	public Group(String no) throws Exception {
@@ -62,7 +65,7 @@ public class Group extends EntityNoName {
 		map.getAttrsOfOneVSM().Add(new GroupStations(), new Stations(), GroupEmpAttr.FK_Group, GroupStationAttr.FK_Station,
 				EmpAttr.Name, EmpAttr.No, "岗位(简单)");
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new GroupStations(), new BP.GPM.Stations(), GroupStationAttr.FK_Group,
+		map.getAttrsOfOneVSM().AddGroupListModel(new GroupStations(), new BP.Port.Stations(), GroupStationAttr.FK_Group,
 				GroupStationAttr.FK_Station, "岗位(平铺)", StationAttr.FK_StationType);
 
 		this.set_enMap(map);

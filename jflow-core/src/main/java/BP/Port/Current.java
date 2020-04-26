@@ -25,10 +25,5 @@ public class Current
 			return isNullAsValue;
 		}
 		return val instanceof String ? (String)val : null;
-		//if (Session.ContainsKey(key))
-		//{
-		//    Session.Remove(key);
-		//}
-		//Session.Add(key, Value);
 	}
 }

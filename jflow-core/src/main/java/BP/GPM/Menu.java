@@ -162,6 +162,14 @@ public class Menu extends EntityTree
 	{
 		this.SetValByKey(MenuAttr.UrlExt, value);
 	}
+	public final String getMobileUrlExt() throws Exception
+	{
+		return this.GetValStringByKey(MenuAttr.MobileUrlExt);
+	}
+	public final void setMobileUrlExt(String value) throws Exception
+	{
+		this.SetValByKey(MenuAttr.MobileUrlExt, value);
+	}
 	public boolean IsCheck = false;
 	/** 
 	 标记
@@ -255,8 +263,8 @@ public class Menu extends EntityTree
 		map.AddDDLSysEnum(MenuAttr.OpenWay, 1, "打开方式", true, true, MenuAttr.OpenWay, "@0=新窗口@1=本窗口@2=覆盖新窗口");
 
 		map.AddTBString(MenuAttr.Url, null, "连接", false, false, 0, 3900, 200, true);
-		map.AddTBString(MenuAttr.UrlExt, null, "连接", true, false, 0, 3900, 200, true);
-
+		map.AddTBString(MenuAttr.UrlExt, null, "PC端连接", true, false, 0, 3900, 200, true);
+		map.AddTBString(MenuAttr.MobileUrlExt, null, "移动端连接", true, false, 0, 3900, 200, true);
 		map.AddBoolean(MenuAttr.IsEnable, true, "是否启用?", true, true);
 		map.AddTBString(MenuAttr.Icon, null, "Icon", true, false, 0, 500, 50, true);
 		map.AddDDLSysEnum(MenuAttr.MenuCtrlWay, 0, "控制方式", true, true, MenuAttr.MenuCtrlWay, "@0=按照设置的控制@1=任何人都可以使用@2=Admin用户可以使用");
@@ -295,10 +303,10 @@ public class Menu extends EntityTree
 
 
 			//可以访问的权限组.
-		map.getAttrsOfOneVSM().Add(new StationMenus(), new BP.GPM.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, EmpAttr.Name, EmpAttr.No, "绑定到岗位-列表模式");
+		map.getAttrsOfOneVSM().Add(new StationMenus(), new BP.Port.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, EmpAttr.Name, EmpAttr.No, "绑定到岗位-列表模式");
 
 			//可以访问的权限组.
-		map.getAttrsOfOneVSM().AddGroupListModel(new StationMenus(), new BP.GPM.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, "绑定到岗位-分组模式", StationAttr.FK_StationType, "Name", EmpAttr.No);
+		map.getAttrsOfOneVSM().AddGroupListModel(new StationMenus(), new BP.Port.Stations(), StationMenuAttr.FK_Menu, StationMenuAttr.FK_Station, "绑定到岗位-分组模式", BP.Port.StationAttr.FK_StationType, "Name", EmpAttr.No);
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new EmpMenus(), new BP.Port.Emps(), EmpMenuAttr.FK_Menu, EmpMenuAttr.FK_Emp, "绑定人员-树结构", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
@@ -395,7 +403,7 @@ public class Menu extends EntityTree
 	*/
 	public final String DoAddRight3() throws Exception
 	{
-		if (this.getUrl().contains("Search.htm") == false && this.getUrl().contains("SearchBS.htm") == false)
+		if (this.getUrlExt().contains("Search.htm") == false && this.getUrlExt().contains("SearchBS.htm") == false)
 		{
 			return "该功能非Search组件，所以您不能增加功能权限.";
 		}
@@ -404,7 +412,7 @@ public class Menu extends EntityTree
 		Menu en = tempVar instanceof Menu ? (Menu)tempVar : null;
 		en.setName("增加权限");
 		en.setMenuType(MenuType.Function); //功能权限.
-		en.setUrl(this.getUrl());
+		en.setUrl(this.getUrlExt());
 		en.setTag1("Insert");
 		en.Update();
 
@@ -412,7 +420,7 @@ public class Menu extends EntityTree
 		en = tempVar2 instanceof Menu ? (Menu)tempVar2 : null;
 		en.setName("修改权限");
 		en.setMenuType(MenuType.Function); //功能权限.
-		en.setUrl(this.getUrl());
+		en.setUrl(this.getUrlExt());
 		en.setTag1("Update");
 		en.Update();
 
@@ -420,7 +428,7 @@ public class Menu extends EntityTree
 		en = tempVar3 instanceof Menu ? (Menu)tempVar3 : null;
 		en.setName("删除权限");
 		en.setMenuType(MenuType.Function); //功能权限.
-		en.setUrl(this.getUrl());
+		en.setUrl(this.getUrlExt());
 		en.setTag1("Delete");
 		en.Update();
 

@@ -3,6 +3,8 @@ package BP.WF.Port.Admin2;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
+import BP.Port.Station;
+import BP.Port.StationType;
 import BP.Web.*;
 
 
@@ -158,13 +160,13 @@ public class Dept extends EntityTree
 		if (DBAccess.IsView("Port_StationType") == false)
 		{
 				///#region 高层岗位.
-			BP.WF.Port.Admin2.StationType st = new StationType();
+			StationType st = new StationType();
 			st.setNo(DBAccess.GenerGUID());
 			st.setName("高层岗");
 			st.setOrgNo(this.getNo());
 			st.DirectInsert();
 
-			BP.WF.Port.Admin2.Station sta = new Station();
+			Station sta = new Station();
 			sta.setNo(DBAccess.GenerGUID());
 			sta.setName("总经理");
 			sta.setOrgNo(this.getNo());

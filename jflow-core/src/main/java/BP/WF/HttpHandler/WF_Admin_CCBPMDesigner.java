@@ -9,7 +9,6 @@ import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
 import BP.WF.*;
-import BP.WF.Port.AdminEmp;
 import BP.WF.Template.*;
 import BP.WF.XML.*;
 import BP.WF.*;
@@ -25,99 +24,6 @@ import static java.awt.SystemColor.menu;
 public class WF_Admin_CCBPMDesigner extends WebContralBase
 {
 
-	public final String GetFlowTreeTable2019() throws Exception
-	{
-		String sql = "SELECT * FROM (SELECT 'F'+No as No,'F'+ParentNo ParentNo, Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-				"                           union " + "\r\n" +
-				"                           SELECT NO, 'F'+FK_FlowSort as ParentNo,(NO + '.' + NAME) as Name,IDX,0 IsParent,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
-
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
-			sql = "SELECT * FROM (SELECT 'F'||No as No,'F'||ParentNo as ParentNo,Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-					"                        union " + "\r\n" +
-					"                        SELECT NO, 'F'||FK_FlowSort as ParentNo,NO||'.'||NAME as Name,IDX,0 IsParent,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
-		}
-
-
-		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
-		{
-			sql = "SELECT * FROM (SELECT CONCAT('F', No) No, CONCAT('F', ParentNo) ParentNo, Name, IDX, 1 IsParent,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort" + "\r\n" +
-					"                           union " + "\r\n" +
-					"                           SELECT NO, CONCAT('F', FK_FlowSort) ParentNo, CONCAT(NO, '.', NAME) Name,IDX,0 IsParent,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow) A  ORDER BY IDX";
-		}
-
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-
-
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
-			dt.Columns.get("no").ColumnName = "No";
-			dt.Columns.get("name").ColumnName = "Name";
-			dt.Columns.get("parentno").ColumnName = "ParentNo";
-			dt.Columns.get("idx").ColumnName = "IDX";
-
-			dt.Columns.get("ttype").ColumnName = "TTYPE";
-			dt.Columns.get("dtype").ColumnName = "DTYPE";
-		}
-
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
-			dt.Columns.get("IDX").ColumnName = "IDX";
-
-			dt.Columns.get("TTYPE").ColumnName = "TTYPE";
-			dt.Columns.get("DTYPE").ColumnName = "DTYPE";
-		}
-
-		//判断是否为空，如果为空，则创建一个流程根结点，added by liuxc,2016-01-24
-		if (dt.Rows.size() == 0)
-		{
-			FlowSort fs = new FlowSort();
-			fs.setNo("99");
-			fs.setParentNo("0");
-			fs.setName("流程树");
-			fs.Insert();
-
-			dt.Rows.AddDatas("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
-		}
-		else
-		{
-			List<DataRow> drs = dt.select("NAME='流程树'");
-			if (drs.size() > 0 && (!"F0".equals(drs.get(0).getValue("PARENTNO"))))
-			{
-				drs.get(0).setValue("PARENTNO", "F0");
-			}
-		}
-
-
-		if (!WebUser.getNo().equals("admin"))
-		{
-			AdminEmp aemp = new AdminEmp();
-			aemp.setNo(WebUser.getNo());
-			if (aemp.RetrieveFromDBSources() == 0)
-			{
-				return "err@登录帐号错误.";
-			}
-
-			if (aemp.getIsAdmin() == false)
-			{
-				return "err@非管理员用户.";
-			}
-
-			DataRow rootRow = dt.Select("ParentNo='F0'")[0];
-			DataRow newRootRow = dt.Select("No='F" + aemp.getRootOfFlow() + "'")[0];
-
-			newRootRow.setValue("ParentNo", "F0");
-			DataTable newDt = dt;
-			newDt.Rows.AddDatas(newRootRow.ItemArray);
-			GenerChildRows(dt, newDt, newRootRow,"No");
-			dt = newDt;
-		}
-
-		return BP.Tools.Json.ToJson(dt);
-	}
 	/**
 	 选择器
 
@@ -188,26 +94,6 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	public final String AdminerChang_LoginAs() throws Exception
 	{
 		String orgNo = this.GetRequestVal("OrgNo");
-
-		BP.WF.Port.AdminEmp ae = new BP.WF.Port.AdminEmp();
-		ae.setNo(WebUser.getNo() + "@" + orgNo);
-		if (ae.RetrieveFromDBSources() == 0)
-		{
-			return "err@您不是该组织的管理员.";
-		}
-
-		BP.WF.Port.AdminEmp ae1 = new BP.WF.Port.AdminEmp();
-		ae1.setNo(WebUser.getNo());
-		ae1.RetrieveFromDBSources();
-
-		if (ae1.getRootOfDept().equals(orgNo) == true)
-		{
-			return "info@当前已经是该组织的管理员了，您不用切换.";
-		}
-
-		ae1.Copy(ae);
-		ae1.setNo(WebUser.getNo());
-		ae1.Update();
 
 		//AdminEmp ad = new AdminEmp();
 		//ad.No = userNo;
@@ -425,17 +311,6 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		String parentrootid = this.GetRequestVal("parentrootid"); // context.Request.QueryString["parentrootid"];
 		String newRootId = "";
 
-		if (!WebUser.getNo().equals("admin"))
-		{
-			BP.WF.Port.AdminEmp aemp = new BP.WF.Port.AdminEmp();
-			aemp.setNo(WebUser.getNo());
-
-			if (aemp.RetrieveFromDBSources() != 0 && aemp.getUserType() == 1 && !DataType.IsNullOrEmpty(aemp.getRootOfDept()))
-			{
-				newRootId = aemp.getRootOfDept();
-			}
-		}
-
 		if (BP.WF.Glo.getOSModel() == OSModel.OneOne)
 		{
 			BP.WF.Port.Dept dept = new BP.WF.Port.Dept();
@@ -509,7 +384,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		BP.GPM.Depts depts = new BP.GPM.Depts();
 		depts.Retrieve(BP.GPM.DeptAttr.ParentNo, rootid);
-		BP.GPM.Stations sts = new BP.GPM.Stations();
+		BP.Port.Stations sts = new BP.Port.Stations();
 		sts.RetrieveAll();
 		BP.GPM.DeptStations dss = new BP.GPM.DeptStations();
 		dss.Retrieve(BP.GPM.DeptStationAttr.FK_Dept, rootid);
@@ -517,7 +392,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		des.Retrieve(BP.GPM.DeptEmpAttr.FK_Dept, rootid);
 		BP.GPM.DeptEmpStations dess = new BP.GPM.DeptEmpStations();
 		dess.Retrieve(BP.GPM.DeptEmpStationAttr.FK_Dept, rootid);
-		BP.GPM.Station stt = null;
+		BP.Port.Station stt = null;
 		BP.GPM.Emp emp = null;
 		ArrayList<String> inemps = new ArrayList<String>();
 
@@ -531,7 +406,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		for (BP.GPM.DeptStation ds : dss.ToJavaList())
 		{
 			Object tempVar = sts.GetEntityByKey(ds.getFK_Station());
-			stt = tempVar instanceof BP.GPM.Station ? (BP.GPM.Station)tempVar : null;
+			stt = tempVar instanceof BP.Port.Station ? (BP.Port.Station)tempVar : null;
 
 			if (stt == null)
 			{
@@ -763,30 +638,6 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			return "err@用户名或密码错误.";
 		}
 		//return BP.WF.Glo.lang("invalid_username_or_pwd", para);
-
-		if (!emp.getNo().equals("admin"))
-		{
-			//检查是否是管理员？
-			BP.WF.Port.AdminEmp adminEmp = new BP.WF.Port.AdminEmp();
-			adminEmp.setNo(emp.getNo());
-			if (adminEmp.RetrieveFromDBSources() == 0)
-			{
-				return "err@您非管理员用户，不能登录.";
-			}
-			//return BP.WF.Glo.lang("no_permission_login_1", para);
-
-			if (adminEmp.getIsAdmin() == false)
-			{
-				return "err@您非管理员用户或已被禁用,不能登录,请联系管理员初始化账户.";
-			}
-			//return BP.WF.Glo.lang("no_permission_login_2", para);
-
-			if (DataType.IsNullOrEmpty(adminEmp.getRootOfFlow()) == true)
-			{
-				return "err@二级管理员用户没有设置流程树的权限..";
-			}
-			//return BP.WF.Glo.lang("secondary_user_no_permission_wf_tree", para);
-		}
 
 		String pass = this.GetRequestVal("TB_PW").trim();
 		if (emp.CheckPass(pass) == false)
@@ -1037,24 +888,6 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			ht.put("RootOfFlow", "F0");
 			ht.put("RootOfForm", "");
 		}
-		else
-		{
-			BP.WF.Port.AdminEmp aemp = new BP.WF.Port.AdminEmp();
-			aemp.setNo(WebUser.getNo());
-
-			if (aemp.RetrieveFromDBSources() == 0)
-			{
-				ht.put("RootOfDept", "-9999");
-				ht.put("RootOfFlow", "-9999");
-				ht.put("RootOfForm", "-9999");
-			}
-			else
-			{
-				ht.put("RootOfDept", aemp.getRootOfDept());
-				ht.put("RootOfFlow", "F" + aemp.getRootOfFlow());
-				ht.put("RootOfForm", aemp.getRootOfForm());
-			}
-		}
 
 		return BP.Tools.Json.ToJsonEntityModel(ht);
 	}
@@ -1119,31 +952,6 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			{
 				drs.get(0).setValue("PARENTNO", "F0");
 			}
-		}
-
-
-		if (!WebUser.getNo().equals("admin"))
-		{
-			AdminEmp aemp = new AdminEmp();
-			aemp.setNo(WebUser.getNo());
-			if (aemp.RetrieveFromDBSources() == 0)
-			{
-				return "err@登录帐号错误.";
-			}
-
-			if (aemp.getIsAdmin() == false)
-			{
-				return "err@非管理员用户.";
-			}
-
-			DataRow rootRow = dt.Select("PARENTNO='F0'")[0];
-			DataRow newRootRow = dt.Select("NO='F" + aemp.getRootOfFlow() + "'")[0];
-
-			newRootRow.setValue("PARENTNO", "F0");
-			DataTable newDt = dt.clone();
-			newDt.Rows.AddRow(newRootRow);
-			GenerChildRows(dt, newDt, newRootRow,"NO");
-			dt = newDt;
 		}
 
 		String str = BP.Tools.Json.ToJson(dt);
@@ -1279,32 +1087,6 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			dtForm.Rows.add(row);
 		}
 
-		if (WebUser.getNo().equals("admin") == false)
-		{
-			BP.WF.Port.AdminEmp aemp = new BP.WF.Port.AdminEmp();
-			aemp.setNo(WebUser.getNo());
-			aemp.RetrieveFromDBSources();
-
-			if (aemp.getUserType() != 1)
-			{
-				return "err@您[" + WebUser.getNo() + "]已经不是二级管理员了.";
-			}
-			if (aemp.getRootOfForm().equals(""))
-			{
-				return "err@没有给二级管理员[" + WebUser.getNo() + "]设置表单树的权限...";
-			}
-
-			DataRow[] rootRows = dtForm.Select("No='" + aemp.getRootOfForm() + "'");
-			DataRow newRootRow = rootRows[0];
-
-			newRootRow.setValue("ParentNo", "0");
-			DataTable newDt = dtForm.clone();
-			newDt.Rows.AddRow(newRootRow);
-
-			GenerChildRows(dtForm, newDt, newRootRow,"No");
-			dtForm = newDt;
-		}
-
 		String str = BP.Tools.Json.ToJson(dtForm);
 		return str;
 	}
@@ -1321,7 +1103,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 
 		BP.GPM.Depts depts = new BP.GPM.Depts();
 		depts.RetrieveAll();
-		BP.GPM.Stations sts = new BP.GPM.Stations();
+		BP.Port.Stations sts = new BP.Port.Stations();
 		sts.RetrieveAll();
 		BP.GPM.Emps emps = new BP.GPM.Emps();
 		emps.RetrieveAll(BP.WF.Port.EmpAttr.Name);
@@ -1329,7 +1111,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		dss.RetrieveAll();
 		BP.GPM.DeptEmpStations dess = new BP.GPM.DeptEmpStations();
 		dess.RetrieveAll();
-		BP.GPM.Station stt = null;
+		BP.Port.Station stt = null;
 		BP.GPM.Emp empt = null;
 
 		for (BP.GPM.Dept dept : depts.ToJavaList())
@@ -1342,7 +1124,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			for (BP.GPM.DeptStation ds : dss.ToJavaList())
 			{
 				Object tempVar = sts.GetEntityByKey(ds.getFK_Station());
-				stt = tempVar instanceof BP.GPM.Station ? (BP.GPM.Station)tempVar : null;
+				stt = tempVar instanceof BP.Port.Station ? (BP.Port.Station)tempVar : null;
 
 				if (stt == null)
 				{

@@ -79,7 +79,7 @@ public class StationCreate extends EntityMM
 		Map map = new Map("Frm_StationCreate", "单据岗位");
 
 		map.AddTBStringPK(StationCreateAttr.FrmID, null, "表单", true, true, 1, 100, 100);
-		map.AddDDLEntitiesPK(StationCreateAttr.FK_Station, null, "可以创建岗位", new BP.GPM.Stations(), true);
+		map.AddDDLEntitiesPK(StationCreateAttr.FK_Station, null, "可以创建岗位", new BP.Port.Stations(), true);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

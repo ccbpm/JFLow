@@ -93,15 +93,15 @@ public class Emp extends EntityNoName {
 	 */
 	public final boolean CheckPass(String pass) throws Exception {
 		// 检查是否与通用密码相符.
-		if (SystemConfig.getOSDBSrc() == OSDBSrc.WebServices) {
-			// 如果是使用webservices校验.
-			PortalInterface ws = new PortalInterface();
-			boolean IsCheck = ws.CheckUserNoPassWord(this.getNo(), pass);
-			if (IsCheck == true) {
-				return true;
-			}
-			return false;
-		} else {
+//		if (SystemConfig.getOSDBSrc() == OSDBSrc.WebServices) {
+//			// 如果是使用webservices校验.
+//			PortalInterface ws = new PortalInterface();
+//			boolean IsCheck = ws.CheckUserNoPassWord(this.getNo(), pass);
+//			if (IsCheck == true) {
+//				return true;
+//			}
+//			return false;
+//		} else {
 			// 启用加密
 			if (SystemConfig.getIsEnablePasswordEncryption() == true)
 			{
@@ -116,7 +116,7 @@ public class Emp extends EntityNoName {
 				return true;
 			}
 
-		}
+//		}
 		return false;
 	}
 
@@ -141,25 +141,7 @@ public class Emp extends EntityNoName {
 		}
 
 		this.setNo(no.trim());
-		try {
 			this.Retrieve();
-		} catch (RuntimeException ex) {
-			if (SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
-				// 登陆帐号查询不到用户，使用职工编号查询。
-				QueryObject obj = new QueryObject(this);
-				obj.AddWhere(EmpAttr.No, no);
-				int i = obj.DoQuery();
-				if (i == 0) {
-					i = this.RetrieveFromDBSources();
-				}
-				if (i == 0) {
-					throw new RuntimeException(
-							"@用户或者密码错误：[" + no + "]，或者帐号被停用。@技术信息(从内存中查询出现错误)：ex1=" + ex.getMessage());
-				}
-			} else {
-				throw ex;
-			}
-		}
 	}
 
 	/**

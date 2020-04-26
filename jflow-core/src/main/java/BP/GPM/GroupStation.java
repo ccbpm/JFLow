@@ -44,7 +44,7 @@ public class GroupStation extends EntityMM
 	/** 
 	 权限组岗位
 	 
-	 @param mypk
+	 @param no
 	 * @throws Exception 
 	*/
 	public GroupStation(String no) throws Exception
@@ -68,7 +68,7 @@ public class GroupStation extends EntityMM
 		map.setEnType(EnType.Sys);
 
 		map.AddTBStringPK(GroupStationAttr.FK_Group, null, "权限组", false, false, 0, 50, 20);
-		map.AddDDLEntitiesPK(GroupStationAttr.FK_Station, null, "岗位", new Stations(), true);
+		map.AddDDLEntitiesPK(GroupStationAttr.FK_Station, null, "岗位", new BP.Port.Stations(), true);
 
 		this.set_enMap(map);
 		return this.get_enMap();

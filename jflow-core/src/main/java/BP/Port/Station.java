@@ -1,9 +1,11 @@
 package BP.Port;
 
 import BP.DA.*;
+import BP.Difference.SystemConfig;
 import BP.En.*;
 import BP.En.Map;
-import BP.Sys.*;
+import BP.Sys.CCBPMRunModel;
+
 import java.util.*;
 
 /** 
@@ -11,6 +13,29 @@ import java.util.*;
 */
 public class Station extends EntityNoName
 {
+		///#region 属性
+	public final String getFK_StationType() throws Exception
+	{
+		return this.GetValStrByKey(StationAttr.FK_StationType);
+	}
+	public final void setFK_StationType(String value) throws Exception
+	{
+		this.SetValByKey(StationAttr.FK_StationType, value);
+	}
+	/** 
+	 组织编码
+	*/
+	public final String getOrgNo() throws Exception
+	{
+		return this.GetValStrByKey(StationAttr.OrgNo);
+	}
+	public final void setOrgNo(String value) throws Exception
+	{
+		this.SetValByKey(StationAttr.OrgNo, value);
+	}
+		///#endregion
+
+		///#region 实现基本的方方法
 	@Override
 	public UAC getHisUAC() throws Exception
 	{
@@ -18,11 +43,9 @@ public class Station extends EntityNoName
 		uac.OpenForSysAdmin();
 		return uac;
 	}
-	public final String getName() throws Exception
-	{
-		return this.GetValStrByKey("Name");
-	}
+		///#endregion
 
+		///#region 构造方法
 	/** 
 	 岗位
 	*/
@@ -32,24 +55,17 @@ public class Station extends EntityNoName
 	/** 
 	 岗位
 	 
-	 @param no 岗位编号
-	 * @throws Exception 
+	 @param _No
 	*/
-	public Station(String no) throws Exception
+	public Station(String _No) throws Exception
 	{
-		this.setNo(no.trim());
-		if (this.getNo().length() == 0)
-		{
-			throw new RuntimeException("@要查询的岗位编号为空。");
-		}
-
-		this.Retrieve();
+		super(_No);
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap()
+	public Map getEnMap() throws Exception
 	{
 		if (this.get_enMap() != null)
 		{
@@ -57,17 +73,28 @@ public class Station extends EntityNoName
 		}
 
 		Map map = new Map("Port_Station", "岗位");
+
 		map.Java_SetEnType(EnType.Admin);
 		map.Java_SetDepositaryOfMap(Depositary.Application);
-		map.Java_SetDepositaryOfEntity(Depositary.Application);
+		map.Java_SetDepositaryOfEntity(Depositary.None);
 
-		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 4, 4, 4);
-		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 100, 100);
+			// map.Java_SetCodeStruct("4");
+			// map.IsAutoGenerNo = true;
+
+		map.AddTBStringPK(StationAttr.No, null, "编号", true, false, 1, 50, 200);
+		map.AddTBString(StationAttr.Name, null, "名称", true, false, 0, 100, 200);
 		map.AddDDLEntities(StationAttr.FK_StationType, null, "类型", new StationTypes(), true);
-		map.AddTBString(StationAttr.OrgNo, null, "隶属组织编号", true, false, 0, 100, 100);
+		map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, false, 0, 50, 250);
+		map.AddSearchAttr(StationAttr.FK_StationType);
+
+
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			map.AddHidden(StationTypeAttr.OrgNo, "=", BP.Web.WebUser.getOrgNo());
+		}
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	
+		///#endregion
 }

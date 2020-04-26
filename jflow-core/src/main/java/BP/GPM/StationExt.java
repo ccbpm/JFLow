@@ -3,6 +3,8 @@ package BP.GPM;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
+import BP.Port.StationAttr;
+import BP.Port.StationTypes;
 
 import java.util.*;
 

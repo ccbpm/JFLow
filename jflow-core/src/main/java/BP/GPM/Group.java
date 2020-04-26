@@ -33,7 +33,7 @@ public class Group extends EntityNoName
 	/** 
 	 权限组
 	 
-	 @param mypk
+	 @param no
 	 * @throws Exception 
 	*/
 	public Group(String no) throws Exception
@@ -71,11 +71,12 @@ public class Group extends EntityNoName
 			//map.getAttrsOfOneVSM().Add(new GroupEmps(), new Emps(),
 			// GroupEmpAttr.FK_Group, GroupEmpAttr.FK_Emp, EmpAttr.Name, EmpAttr.No, "人员(简单)");
 
-		map.getAttrsOfOneVSM().Add(new GroupStations(), new Stations(), GroupEmpAttr.FK_Group, GroupStationAttr.FK_Station, EmpAttr.Name, EmpAttr.No, "岗位(简单)");
+		map.getAttrsOfOneVSM().Add(new GroupStations(), new BP.Port.Stations(), GroupEmpAttr.FK_Group, GroupStationAttr.FK_Station, EmpAttr.Name, EmpAttr.No, "岗位(简单)");
 
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new GroupStations(), new BP.GPM.Stations(), GroupStationAttr.FK_Group, GroupStationAttr.FK_Station, "岗位(平铺)", StationAttr.FK_StationType);
-
+		map.getAttrsOfOneVSM().AddGroupListModel(new GroupStations(), new BP.Port.Stations(), GroupStationAttr.FK_Group, GroupStationAttr.FK_Station, "岗位(平铺)", BP.Port.StationAttr.FK_StationType);
+		map.getAttrsOfOneVSM().AddBranches(new GroupDepts(), new Depts(),
+				GroupEmpAttr.FK_Group, GroupDeptAttr.FK_Dept, "部门(树)", EmpAttr.Name, EmpAttr.No);
 
 			//节点绑定部门. 节点绑定部门.
 		map.getAttrsOfOneVSM().AddBranches(new GroupMenus(), new BP.GPM.Menus(), BP.GPM.GroupMenuAttr.FK_Group, BP.GPM.GroupMenuAttr.FK_Menu, "绑定菜单", EmpAttr.Name, EmpAttr.No, "0");

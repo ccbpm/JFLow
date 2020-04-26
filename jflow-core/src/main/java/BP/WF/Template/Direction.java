@@ -108,7 +108,7 @@ public class Direction extends EntityMyPK
 		map.AddTBString(NodeReturnAttr.Dots, null, "轨迹信息", true, true, 0, 300, 0, false);
 
 			//相关功能。
-		map.getAttrsOfOneVSM().Add(new BP.WF.Template.DirectionStations(), new BP.WF.Port.Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "方向条件与岗位");
+		map.getAttrsOfOneVSM().Add(new BP.WF.Template.DirectionStations(), new BP.Port.Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "方向条件与岗位");
 
 			//map.getAttrsOfOneVSM().Add(new BP.WF.Template.NodeDepts(), new BP.WF.Port.Depts(), NodeDeptAttr.FK_Node, NodeDeptAttr.FK_Dept, DeptAttr.Name,
 			//DeptAttr.No, "节点部门", Dot2DotModel.TreeDept);

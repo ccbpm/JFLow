@@ -2,7 +2,7 @@ package BP.WF.HttpHandler;
 
 import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
-import BP.GPM.StationType;
+import BP.Port.StationType;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
 import BP.WF.Glo;

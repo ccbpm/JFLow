@@ -419,7 +419,7 @@ public class App extends EntityNoName
 		menu.setName("岗位");
 		menu.setFK_App(this.getNo());
 		menu.setMenuType(MenuType.Menu);
-		menu.setUrlExt("/WF/Comm/Search.htm?EnsName=BP.GPM.Stations");
+		menu.setUrlExt("/WF/Comm/Search.htm?EnsName=BP.Port.Stations");
 		menu.setParentNo(dir2.getNo());
 		menu.Update();
 		return super.beforeInsert();

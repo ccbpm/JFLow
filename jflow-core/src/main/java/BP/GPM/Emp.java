@@ -301,10 +301,9 @@ public class Emp extends EntityNoName
 
 			 //节点绑定部门. 节点绑定部门.
 		 map.getAttrsOfOneVSM().AddBranches(new DeptEmps(), new BP.GPM.Depts(), BP.GPM.DeptEmpAttr.FK_Emp, BP.GPM.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
-
-			 ////他的部门权限
-			 //map.getAttrsOfOneVSM().Add(new DeptEmps(), new Depts(), DeptEmpAttr.FK_Emp, DeptEmpAttr.FK_Dept,
-			 //    DeptAttr.Name, DeptAttr.No, "部门权限", Dot2DotModel.TreeDept);
+		//用户组
+		map.getAttrsOfOneVSM().Add(new TeamEmps(), new Teams(), TeamEmpAttr.FK_Emp, TeamEmpAttr.FK_Team,
+				TeamAttr.Name, TeamAttr.No, "用户组", Dot2DotModel.Default);
 
 		rm = new RefMethod();
 		rm.Title = "修改密码";

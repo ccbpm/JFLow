@@ -3,6 +3,8 @@ package BP.GPM;
 import BP.DA.*;
 import BP.En.*;
 import BP.En.Map;
+import BP.Port.StationAttr;
+import BP.Port.Stations;
 import BP.Web.*;
 import java.util.*;
 
@@ -144,7 +146,7 @@ public class Dept extends EntityTree
 
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new BP.Port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new BP.Port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", BP.Port.EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
 
 
 			//平铺模式.
@@ -267,9 +269,9 @@ public class Dept extends EntityTree
 		this.GenerChildNameOfPath(this.getNo());
 
 		//更新人员路径信息.
-		BP.GPM.Emps emps = new Emps();
-		emps.Retrieve(EmpAttr.FK_Dept, this.getNo());
-		for (BP.GPM.Emp emp : emps.ToJavaList())
+		BP.Port.Emps emps = new BP.Port.Emps();
+		emps.Retrieve(BP.Port.EmpAttr.FK_Dept, this.getNo());
+		for (BP.Port.Emp emp : emps.ToJavaList())
 		{
 			emp.Update();
 		}
@@ -278,7 +280,7 @@ public class Dept extends EntityTree
 	/** 
 	 处理子部门全名称
 	 
-	 @param FK_Dept
+	 @param deptNo
 	 * @throws Exception 
 	*/
 	public final void GenerChildNameOfPath(String deptNo) throws Exception
@@ -293,9 +295,9 @@ public class Dept extends EntityTree
 
 
 				//更新人员路径信息.
-				BP.GPM.Emps emps = new Emps();
-				emps.Retrieve(EmpAttr.FK_Dept, this.getNo());
-				for (BP.GPM.Emp emp : emps.ToJavaList())
+				BP.Port.Emps emps = new BP.Port.Emps();
+				emps.Retrieve(BP.Port.EmpAttr.FK_Dept, this.getNo());
+				for (BP.Port.Emp emp : emps.ToJavaList())
 				{
 					emp.Update();
 				}

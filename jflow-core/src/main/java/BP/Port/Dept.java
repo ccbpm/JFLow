@@ -2,8 +2,7 @@ package BP.Port;
 
 import BP.DA.*;
 import BP.En.*;
-import BP.En.Map;
-import BP.Web.*;
+import BP.En.Map;import BP.Web.*;
 import BP.Sys.*;
 import java.util.*;
 
@@ -12,13 +11,11 @@ import java.util.*;
 */
 public class Dept extends EntityNoName
 {
-
 		///#region 属性
 	/** 
 	 父节点的ID
-	 * @throws Exception 
 	*/
-	public final String getParentNo() throws Exception
+	public final String getParentNo()throws Exception
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
@@ -33,7 +30,6 @@ public class Dept extends EntityNoName
 	private Depts _HisSubDepts = null;
 	/** 
 	 它的子节点
-	 * @throws Exception 
 	*/
 	public final Depts getHisSubDepts() throws Exception
 	{
@@ -43,9 +39,7 @@ public class Dept extends EntityNoName
 		}
 		return _HisSubDepts;
 	}
-
 		///#endregion
-
 
 		///#region 构造函数
 	/** 
@@ -58,15 +52,12 @@ public class Dept extends EntityNoName
 	 部门
 	 
 	 @param no 编号
-	 * @throws Exception 
 	*/
 	public Dept(String no) throws Exception
 	{
 		super(no);
 	}
-
 		///#endregion
-
 
 		///#region 重写方法
 	@Override
@@ -100,7 +91,9 @@ public class Dept extends EntityNoName
 		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 50, 20);
 		map.AddTBString(DeptAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, true, 0, 100, 30);
+		map.AddTBString(DeptAttr.OrgNo, null, "OrgNo", true, true, 0, 100, 30);
 
+		map.AddTBInt(DeptAttr.Idx, 0, "序号", false, true);
 
 
 		RefMethod rm = new RefMethod();
@@ -109,17 +102,14 @@ public class Dept extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-
 			///#region 增加点对多属性
 			//他的部门权限
-		   // map.getAttrsOfOneVSM().Add(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "岗位权限");
-
+		   // map.getAttrsOfOneVSM.Add(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "岗位权限");
 			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
 		///#endregion
 
 	public final String History() throws Exception
@@ -127,34 +117,31 @@ public class Dept extends EntityNoName
 		return "EnVerDtl.htm?EnName=" + this.toString() + "&PK=" + this.getNo();
 	}
 
-
 		///#region 重写查询. 2015.09.31 为适应ws的查询.
 	/** 
 	 查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
 	public int Retrieve() throws Exception
 	{
-		 
+
 			return super.Retrieve();
-		 
+
 	}
 	/** 
 	 查询.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
 	public int RetrieveFromDBSources() throws Exception
 	{
-		 
-			return super.RetrieveFromDBSources();
-	}
 
+			return super.RetrieveFromDBSources();
+
+	}
 		///#endregion
 
 }

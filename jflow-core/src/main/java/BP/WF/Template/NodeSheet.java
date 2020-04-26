@@ -75,9 +75,9 @@ public class NodeSheet extends Entity
 
 			///#region 对应关系
 			//平铺模式.
-		map.getAttrsOfOneVSM().AddGroupPanelModel(new BP.WF.Template.NodeStations(), new BP.WF.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "节点绑定岗位", StationAttr.FK_StationType);
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new BP.WF.Template.NodeStations(), new BP.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "节点绑定岗位", StationAttr.FK_StationType);
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new BP.WF.Template.NodeStations(), new BP.WF.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "节点绑定岗位AddGroupListModel", StationAttr.FK_StationType);
+		map.getAttrsOfOneVSM().AddGroupListModel(new BP.WF.Template.NodeStations(), new BP.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "节点绑定岗位AddGroupListModel", StationAttr.FK_StationType);
 
 
 			//节点绑定部门. 节点绑定部门.

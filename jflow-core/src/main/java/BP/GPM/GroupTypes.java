@@ -1,31 +1,28 @@
-package BP.WF.Port;
+package BP.GPM;
 
 import BP.DA.*;
 import BP.En.*;
-import BP.Web.*;
-import BP.WF.*;
 import java.util.*;
 
 /** 
-独立组织集合
+ 用户组类型
 */
-public class Incs extends EntitiesNoName
+public class GroupTypes extends EntitiesNoName
 {
 	/** 
-	 得到一个新实体
+	 用户组类型s
+	*/
+	public GroupTypes()
+	{
+	}
+	/** 
+	 得到它的 Entity 
 	*/
 	@Override
 	public Entity getNewEntity()
 	{
-		return new Inc();
+		return new GroupType();
 	}
-	/** 
-	 create ens
-	*/
-	public Incs()
-	{
-	}
-
 
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
@@ -33,24 +30,23 @@ public class Incs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final List<Inc> ToJavaList()
+	public final List<GroupType> ToJavaList()
 	{
-		return (List<Inc>)(Object)this;
+		return (List<GroupType>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Inc> Tolist()
+	public final ArrayList<GroupType> Tolist()
 	{
-		ArrayList<Inc> list = new ArrayList<Inc>();
+		ArrayList<GroupType> list = new ArrayList<GroupType>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((Inc)this.get(i));
+			list.add((GroupType)this.get(i));
 		}
 		return list;
 	}
-
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

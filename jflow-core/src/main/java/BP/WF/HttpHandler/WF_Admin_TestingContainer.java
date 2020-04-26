@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Difference.SystemConfig;
 import BP.En.Attr;
+import BP.En.QueryObject;
 import BP.Port.Emp;
 import BP.Sys.GEEntity;
 import BP.WF.*;
@@ -90,6 +91,22 @@ public class WF_Admin_TestingContainer extends WebContralBase {
 
         //转化为json ,返回出去.
         return BP.Tools.Json.ToJson(ds);
+    }
+    /// <summary>
+    /// SelectOneUser_Init
+    /// </summary>
+    /// <returns></returns>
+    public String SelectOneUser_Init() throws Exception
+    {
+        BP.WF.GenerWorkerLists ens = new GenerWorkerLists();
+        QueryObject qo = new QueryObject(ens);
+        qo.AddWhere("WorkID", this.getWorkID());
+        qo.addOr();
+        qo.AddWhere("FID", this.getWorkID());
+        qo.addOrderBy(" RDT,CDT ");
+        qo.DoQuery();
+
+        return ens.ToJson();
     }
     /// <summary>
     /// 让adminer登录.

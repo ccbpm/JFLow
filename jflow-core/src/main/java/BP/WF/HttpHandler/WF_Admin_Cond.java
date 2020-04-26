@@ -820,12 +820,12 @@ public class WF_Admin_Cond extends WebContralBase
 		DataSet ds = new DataSet();
 
 		//岗位类型.
-		BP.GPM.StationTypes tps = new BP.GPM.StationTypes();
+		BP.Port.StationTypes tps = new BP.Port.StationTypes();
 		tps.RetrieveAll();
 		ds.Tables.add(tps.ToDataTableField("StationTypes"));
 
 		//岗位.
-		BP.GPM.Stations sts = new BP.GPM.Stations();
+		BP.Port.Stations sts = new BP.Port.Stations();
 		sts.RetrieveAll();
 		ds.Tables.add(sts.ToDataTableField("Stations"));
 
@@ -1086,12 +1086,12 @@ public class WF_Admin_Cond extends WebContralBase
 		DataSet ds = new DataSet();
 
 		//岗位类型.
-		BP.GPM.StationTypes tps = new BP.GPM.StationTypes();
+		BP.Port.StationTypes tps = new BP.Port.StationTypes();
 		tps.RetrieveAll();
 		ds.Tables.add(tps.ToDataTableField("StationTypes"));
 
 		//岗位.
-		BP.GPM.Stations sts = new BP.GPM.Stations();
+		BP.Port.Stations sts = new BP.Port.Stations();
 		sts.RetrieveAll();
 		ds.Tables.add(sts.ToDataTableField("Stations"));
 

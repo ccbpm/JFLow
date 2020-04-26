@@ -831,7 +831,7 @@ public class CCFormAPI extends Dev2Interface {
 				continue;
 			}
 
-			if ( UIIsEnable.equals("0") && myds.Tables.contains(uiBindKey)==false){
+			if ( UIIsEnable.equals("1") && myds.Tables.contains(uiBindKey)==false){
 				DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey,en.getRow());
 				mydt.TableName = uiBindKey;
 				if (mydt == null) {

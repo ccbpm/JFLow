@@ -358,22 +358,22 @@ public class FrmAttachmentExt extends EntityMyPK
 	*/
 	public final boolean getIsHeLiuHuiZong() throws Exception
 	{
-		return this.GetParaBoolen(FrmAttachmentAttr.IsHeLiuHuiZong);
+		return this.GetValBooleanByKey(FrmAttachmentAttr.IsHeLiuHuiZong);
 	}
 	public final void setIsHeLiuHuiZong(boolean value) throws Exception
 	{
-		this.SetPara(FrmAttachmentAttr.IsHeLiuHuiZong, value);
+		this.SetValByKey(FrmAttachmentAttr.IsHeLiuHuiZong, value);
 	}
 	/** 
 	 该附件是否汇总到合流节点上去？
 	*/
 	public final boolean getIsToHeLiuHZ() throws Exception
 	{
-		return this.GetParaBoolen(FrmAttachmentAttr.IsToHeLiuHZ);
+		return this.GetValBooleanByKey(FrmAttachmentAttr.IsToHeLiuHZ);
 	}
 	public final void setIsToHeLiuHZ(boolean value) throws Exception
 	{
-		this.SetPara(FrmAttachmentAttr.IsToHeLiuHZ, value);
+		this.SetValByKey(FrmAttachmentAttr.IsToHeLiuHZ, value);
 	}
 	/** 
 	 文件展现方式
@@ -941,6 +941,8 @@ public class FrmAttachmentExt extends EntityMyPK
 		FrmAttachment ath = new FrmAttachment();
 		ath.setMyPK(this.getMyPK());
 		ath.RetrieveFromDBSources();
+		ath.setIsToHeLiuHZ(this.getIsToHeLiuHZ());
+		ath.setIsHeLiuHuiZong(this.getIsHeLiuHuiZong());
 		ath.Update();
 
 		//判断是否是字段附件

@@ -262,7 +262,7 @@ public class CCFormAPI extends Dev2Interface {
 	 *            主键
 	 * @param atParas
 	 *            参数
-	 * @param specDtlFrmID
+	 * @param
 	 *            指定明细表的参数，如果为空就标识主表数据，否则就是从表数据.
 	 * @return 数据
 	 * @throws Exception 
@@ -702,7 +702,7 @@ public class CCFormAPI extends Dev2Interface {
 	 *            主键
 	 * @param atParas
 	 *            参数
-	 * @param specDtlFrmID
+	 * @param
 	 *            指定明细表的参数，如果为空就标识主表数据，否则就是从表数据.
 	 * @return 数据
 	 * @throws Exception 
@@ -824,12 +824,33 @@ public class CCFormAPI extends Dev2Interface {
 
 				dt.TableName = uiBindKey;
 
-				dt.Columns.get(0).ColumnName = "No";
-				dt.Columns.get(1).ColumnName = "Name";
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+				{
+					if (dt.Columns.contains("NO") == true)
+						dt.Columns.get("NO").ColumnName = "No";
+					if (dt.Columns.contains("NAME") == true)
+						dt.Columns.get("NAME").ColumnName = "Name";
+					if (dt.Columns.contains("PARENTNO") == true)
+						dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+				}
+
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				{
+					if (dt.Columns.contains("no") == true)
+						dt.Columns.get("no").ColumnName = "No";
+					if (dt.Columns.contains("name") == true)
+						dt.Columns.get("name").ColumnName = "Name";
+					if (dt.Columns.contains("parentno") == true)
+						dt.Columns.get("parentno").ColumnName = "ParentNo";
+				}
 
 				myds.Tables.add(dt);
 				continue;
 			}
+
+			// 判断是否存在.
+			if (myds.Tables.contains(uiBindKey) == true)
+				continue;
 
 			if ( UIIsEnable.equals("1") && myds.Tables.contains(uiBindKey)==false){
 				DataTable mydt = BP.Sys.PubClass.GetDataTableByUIBineKey(uiBindKey,en.getRow());

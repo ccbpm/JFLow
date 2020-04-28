@@ -169,7 +169,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		cond.setFK_Flow(this.getFK_Flow());
 		cond.setHisCondType(condTypeEnum);
-		cond.Insert();
+		cond.Save();
 
 		return "保存成功..";
 	}
@@ -687,7 +687,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		cond.setFK_Flow(this.getFK_Flow());
 		cond.setHisCondType(condTypeEnum);
-		cond.Insert();
+		cond.Save();
 
 		return "保存成功..";
 	}
@@ -776,7 +776,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		cond.setFK_Flow(this.getFK_Flow());
 		cond.setHisCondType(condTypeEnum);
-		cond.Insert();
+		cond.Save();
 
 		return "保存成功..";
 	}
@@ -1048,7 +1048,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		cond.setFK_Flow(this.getFK_Flow());
 		cond.setHisCondType(condTypeEnum);
-		cond.Insert();
+		cond.Save();
 
 		return "保存成功..";
 	}

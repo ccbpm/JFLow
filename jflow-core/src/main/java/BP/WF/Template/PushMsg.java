@@ -834,7 +834,7 @@ public class PushMsg extends EntityMyPK
 					smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
 
-					String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node();
+					String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node()+"_"+empNo;
 
 					//发送消息
 					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
@@ -881,7 +881,7 @@ public class PushMsg extends EntityMyPK
 				smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 				openUrl = openUrl.replace("{EmpStr}", empNo);
 
-				String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node();
+				String paras = "@FK_Flow=" + this.getFK_Flow() + "@WorkID=" + workid + "@FK_Node=" + this.getFK_Node()+"_"+empNo;
 
 				//发送消息
 				BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel());
@@ -978,7 +978,7 @@ public class PushMsg extends EntityMyPK
 					String smsDocReal = tempVar5 instanceof String ? (String)tempVar5 : null;
 					smsDocReal = smsDocReal.replace("{EmpStr}", empNo);
 					openUrl = openUrl.replace("{EmpStr}", empNo);
-					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid;
+					String paras = "@FK_Flow=" + currNode.getFK_Flow() + "&FK_Node=" + currNode.getNodeID() + "@WorkID=" + workid+"_"+empNo;
 					BP.WF.Dev2Interface.Port_SendMessage(empNo, smsDoc, mailTitle, this.getFK_Event(), "WKAlt" + currNode.getNodeID() + "_" + workid, WebUser.getNo(), openUrl, this.getSMSPushModel(), paras);
 
 				}

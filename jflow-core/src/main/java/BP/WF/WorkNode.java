@@ -6440,14 +6440,45 @@ public class WorkNode {
 		// 设置跳转节点，如果有可以为null.
 		this.JumpToNode = jumpToNode;
 		this.JumpToEmp = jumpToEmp;
- 		//#region 为广西计算中心增加自动返回的节点, 发送之后，让其自动返回给发送人.
-		if (this.getHisNode().getIsSendBackNode()==true)
+		//#region 为广西计算中心增加自动返回的节点, 发送之后，让其自动返回给发送人.
+		if (this.getHisNode().getIsSendBackNode() == true)
 		{
-			this.JumpToEmp = this.getHisGenerWorkFlow().getSender();
-			int nodeID = DBAccess.RunSQLReturnValInt("SELECT FK_Node FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID() + " AND FK_Emp='" + this.getHisGenerWorkFlow().getSender() + "' ORDER BY RDT,FK_Node");
-			this.JumpToNode = new Node(nodeID);
+			//判断是否是最后一个人？
+			boolean isLastOne = false;
+			GenerWorkerLists gwls = new GenerWorkerLists();
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),
+					GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID(), GenerWorkerListAttr.IsPass, 0);
+			if (gwls.size() == 1)
+				isLastOne=true; //如果只有一个，本人就是lastOne.
+
+			//WorkNode wn= this.GetPreviousWorkNode();
+			//this.JumpToEmp = wn.HisWork.Rec; //对于绑定的表单有问题.
+			//this.JumpToNode = wn.HisNode;
+
+			if (isLastOne == true || this.getHisNode().getTodolistModel()== TodolistModel.QiangBan)
+			{
+				String ptable = "ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Track";
+
+				String mysql = "SELECT NDFrom,EmpFrom FROM " + ptable + " WHERE WorkID =" + this.getWorkID() + " AND NDTo = " + this.getHisNode().getNodeID() + " AND(NDTo != NDFrom) ";
+				//DataTable mydt = DBAccess.RunSQLReturnTable("SELECT FK_Node,FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + this.WorkID + " AND FK_Node!=" + this.HisNode.NodeID + " ORDER BY RDT DESC ");
+				DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
+
+				if (mydt.Rows.size() == 0)
+					throw new Exception("系统错误，没有找到上一个节点.");
+				this.JumpToEmp = mydt.Rows.get(0).getValue(1).toString();
+				int priNodeID =Integer.parseInt(mydt.Rows.get(0).getValue(0).toString());
+				this.JumpToNode = new Node(priNodeID);
+
+				//清除选择，防止在自动发送到该节点上来.
+				this.getHisGenerWorkFlow().setParas_ToNodes("");
+				this.getHisGenerWorkFlow().DirectUpdate();
+
+				//清除上次发送的选择,不然下次还会自动发送到当前的节点上来.
+				mysql = "DELETE FROM WF_SelectAccper WHERE FK_Node="+this.JumpToNode.getNodeID()+" AND WorkID="+this.getWorkID();
+				DBAccess.RunSQL(mysql);
+			}
+
 		}
-		//#endregion 为广西计算中心增加自动返回的节点.
 		String sql = null;
 		Date dt =new Date();
 		this.getHisWork().setRec(this.getExecer());

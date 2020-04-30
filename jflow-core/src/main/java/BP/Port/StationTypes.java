@@ -56,7 +56,7 @@ public class StationTypes extends EntitiesNoName
 			return super.RetrieveAll();
 		}
 
-		//按照orgNo查询. @sly
+		//按照orgNo查询.
 		return this.Retrieve("OrgNo", BP.Web.WebUser.getOrgNo());
 	}
 

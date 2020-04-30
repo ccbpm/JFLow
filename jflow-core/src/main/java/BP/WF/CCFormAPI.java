@@ -1003,7 +1003,8 @@ public class CCFormAPI extends Dev2Interface {
 			}
 
 			for (DataRow dr : dtDtl.Rows) {
-				dr.setValue(attr.getKeyOfEn(), attr.getDefVal());
+				if(dr.getValue(attr.getKeyOfEn())== null || DataType.IsNullOrEmpty(dr.getValue(attr.getKeyOfEn()).toString()) == true)
+					dr.setValue(attr.getKeyOfEn(), attr.getDefVal());
 			}
 		}
 

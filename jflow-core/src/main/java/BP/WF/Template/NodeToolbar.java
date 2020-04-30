@@ -136,7 +136,7 @@ public class NodeToolbar extends EntityOID
 		map.AddTBString(NodeToolbarAttr.Target, null, "目标", true, false, 0, 100, 100, true);
 
 			// 显示位置.
-		map.AddDDLSysEnum(NodeToolbarAttr.ShowWhere, 1, "显示位置", true,true, NodeToolbarAttr.ShowWhere, "@0=树形表单@1=工具栏");
+		map.AddDDLSysEnum(NodeToolbarAttr.ShowWhere, 1, "显示位置", true,true, NodeToolbarAttr.ShowWhere, "@0=树形表单@1=工具栏@2=抄送工具栏");
 
 		map.AddTBInt(NodeToolbarAttr.Idx, 0, "显示顺序", true, false);
 		map.AddTBInt(NodeToolbarAttr.FK_Node, 0, "节点", false,true);

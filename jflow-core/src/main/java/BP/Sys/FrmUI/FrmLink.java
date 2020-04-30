@@ -43,13 +43,13 @@ public class FrmLink extends EntityMyPK
 	{
 		this.SetValByKey(FrmLinkAttr.FontColor, value);
 	}
-	public final String getURL() throws Exception
+	public final String getURLExt() throws Exception
 	{
-		return this.GetValStringByKey(FrmLinkAttr.URL).replace("#", "@");
+		return this.GetValStringByKey(FrmLinkAttr.URLExt).replace("#", "@");
 	}
-	public final void setURL(String value) throws Exception
+	public final void setURLExt(String value) throws Exception
 	{
-		this.SetValByKey(FrmLinkAttr.URL, value);
+		this.SetValByKey(FrmLinkAttr.URLExt, value);
 	}
 	/** 
 	 Font
@@ -199,7 +199,7 @@ public class FrmLink extends EntityMyPK
 		map.AddMyPK();
 		map.AddTBString(FrmLinkAttr.Target, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
 		map.AddTBString(FrmLinkAttr.Text, "New Link", "标签", true, false, 0, 500, 20, true);
-		map.AddTBString(FrmLinkAttr.URL, null, "URL", true, false, 0, 500, 20, true);
+		map.AddTBString(FrmLinkAttr.URLExt, null, "URL", true, false, 0, 500, 20, true);
 		map.AddTBString(FrmLinkAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 
 			//显示的分组.

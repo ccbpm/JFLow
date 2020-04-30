@@ -21,7 +21,7 @@ public class FrmLinkAttr extends EntityMyPKAttr
 	 Target
 	*/
 	public static final String Target = "Target";
-	public static final String URL = "URL";
+	public static final String URLExt = "URLExt";
 	/** 
 	 X
 	*/

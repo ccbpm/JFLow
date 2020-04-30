@@ -35,12 +35,12 @@ public class FrmLink extends EntityMyPK {
 		this.SetValByKey(FrmLinkAttr.FontColor, value);
 	}
 
-	public final String getURL() throws Exception {
-		return this.GetValStringByKey(FrmLinkAttr.URL).replace("#", "@");
+	public final String getURLExt() throws Exception {
+		return this.GetValStringByKey(FrmLinkAttr.URLExt).replace("#", "@");
 	}
 
-	public final void setURL(String value) throws Exception {
-		this.SetValByKey(FrmLinkAttr.URL, value);
+	public final void setURLExt(String value) throws Exception {
+		this.SetValByKey(FrmLinkAttr.URLExt, value);
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class FrmLink extends EntityMyPK {
 		map.AddTBString(FrmLinkAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
 		map.AddTBString(FrmLinkAttr.Text, "New Link", "Label", true, false, 0, 500, 20);
 
-		map.AddTBString(FrmLinkAttr.URL, null, "URL", true, false, 0, 500, 20);
+		map.AddTBString(FrmLinkAttr.URLExt, null, "URL", true, false, 0, 500, 20);
 
 		map.AddTBString(FrmLinkAttr.Target, "_blank", "Target", true, false, 0, 20, 20);
 

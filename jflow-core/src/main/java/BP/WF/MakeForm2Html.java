@@ -141,7 +141,7 @@ public class MakeForm2Html
         FrmLinks links = mapData.getFrmLinks();
         for(FrmLink link :links.ToJavaList())
         {
-        	  String url = link.getURL();
+        	  String url = link.getURLExt();
               if (url.contains("@"))
               {
                   for (MapAttr attr : mapAttrs.ToJavaList())

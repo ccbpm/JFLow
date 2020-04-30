@@ -2052,18 +2052,31 @@ public class FlowExt extends EntityNoName
 	@Override
 	protected void afterInsertUpdateAction() throws Exception
 	{
-		//同步流程数据表.
+     //#region 更新PTale 后的业务处理
+			// 同步流程数据表.
 		String ndxxRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
 		Flow fl = new Flow(this.getNo());
-		if (!fl.getPTable().equals("ND" + Integer.parseInt(this.getNo()) + "Rpt"))
+		MapData md = new MapData(ndxxRpt);
+		if (md.getPTable().equals(fl.getPTable()) == false)
 		{
-			MapData md = new MapData(ndxxRpt);
-			if (!fl.getPTable().equals(md.getPTable()))
-			{
-				md.Update();
-			}
-		}
+			md.setPTable(fl.getPTable());
+			md.Update();
 
+			Nodes nds = new Nodes();
+			nds.Retrieve(NodeAttr.FK_Flow, this.getNo());
+			for (Node nd : nds.ToJavaList())
+			{
+				String sql = "";
+				if (nd.getHisRunModel() == RunModel.SubThread)
+					sql = "UPDATE Sys_MapData SET PTable=No WHERE No='ND" + nd.getNodeID() + "'";
+				else
+					sql = "UPDATE Sys_MapData SET PTable='" + fl.getPTable() + "' WHERE No='ND" + nd.getNodeID() + "'";
+
+				DBAccess.RunSQL(sql);
+			}
+			fl.CheckRpt(); // 检查业务表.
+		}
+           // #endregion 更新PTale 后的业务处理
 
 			///#region 为systype设置，当前所在节点的第2级别目录。
 		FlowSort fs = new FlowSort(fl.getFK_FlowSort());

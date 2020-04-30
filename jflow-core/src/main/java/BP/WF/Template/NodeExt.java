@@ -702,6 +702,17 @@ public class NodeExt extends Entity
 
 			///#region 字段相关功能（不显示在菜单里）
 		rm = new RefMethod();
+		rm.Title = "上传公文模板";
+		rm.ClassMethodName = this.toString() + ".DocTemp";
+		rm.Icon = "../../WF/Img/FileType/doc.gif";
+		//设置相关字段.
+		rm.RefAttrKey = BtnAttr.OfficeBtnEnable;
+		rm.RefAttrLinkLabel = "公文模板维护";
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.Target = "_blank";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
 		rm.Title = "可退回的节点(当退回规则设置可退回指定的节点时,该设置有效.)"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoCanReturnNodes";
 		rm.Icon = "../../WF/Img/Btn/DTS.gif";
@@ -1188,6 +1199,13 @@ public class NodeExt extends Entity
 		//, "节点完成转向处理", "FrmTurn", 800, 500, 200, 300);
 		//BP.WF.Node nd = new BP.WF.Node(this.NodeID);
 		//return nd.DoTurn();
+	}
+	/**
+	 * 公文模板
+	 */
+	public String DocTemp() throws Exception
+	{
+		return "../../Admin/AttrNode/DocTemp.htm?FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 抄送规则

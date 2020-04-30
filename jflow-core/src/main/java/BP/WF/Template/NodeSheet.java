@@ -72,8 +72,18 @@ public class NodeSheet extends Entity
 
 			///#endregion  基础属性
 
+		//#region 对应关系用户组。
+		//平铺模式.
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new BP.WF.Template.NodeTeams(), new BP.Port.Teams(),
+				BP.WF.Template.NodeTeamAttr.FK_Node,
+				BP.WF.Template.NodeTeamAttr.FK_Team, "节点绑定用户组");
 
-			///#region 对应关系
+		//列表模式.
+		map.getAttrsOfOneVSM().AddGroupListModel(new BP.WF.Template.NodeTeams(), new BP.Port.Teams(),
+				BP.WF.Template.NodeTeamAttr.FK_Node,
+				BP.WF.Template.NodeTeamAttr.FK_Team, "节点绑定用户组AddTeamListModel");
+		//  #endregion
+		///#region 对应关系
 			//平铺模式.
 		map.getAttrsOfOneVSM().AddGroupPanelModel(new BP.WF.Template.NodeStations(), new BP.Port.Stations(), BP.WF.Template.NodeStationAttr.FK_Node, BP.WF.Template.NodeStationAttr.FK_Station, "节点绑定岗位", StationAttr.FK_StationType);
 

@@ -65,7 +65,12 @@ public class WF extends WebContralBase {
 		BP.WF.Template.FrmNodeComponent fnc = new FrmNodeComponent(nd.getNodeID());
 		if (!nd.getNodeFrmID().equals("ND" + nd.getNodeID())) {
 			/* 说明这是引用到了其他节点的表单，就需要把一些位置元素修改掉. */
-			int refNodeID = Integer.parseInt(nd.getNodeFrmID().replace("ND", ""));
+			int refNodeID = 0;
+			if (nd.getNodeFrmID().indexOf("ND") == -1) {
+				refNodeID = nd.getNodeID();
+			} else {
+				refNodeID = Integer.parseInt(nd.getNodeFrmID().replace("ND", ""));
+			}
 
 			BP.WF.Template.FrmNodeComponent refFnc = new FrmNodeComponent(refNodeID);
 

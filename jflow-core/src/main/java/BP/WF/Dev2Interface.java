@@ -6560,6 +6560,8 @@ public class Dev2Interface
 			//插入一条信息，让调整的人员显示待办.
 			gwl.setFK_Emp(item.getNo());
 			gwl.setFK_EmpText(item.getName());
+			gwl.setFK_Dept(item.getFK_Dept());
+			gwl.setFK_DeptT(item.getFK_DeptText());
 			gwl.setFK_Node(toNodeID);
 			gwl.setIsPassInt(0);
 			gwl.setIsRead(false);

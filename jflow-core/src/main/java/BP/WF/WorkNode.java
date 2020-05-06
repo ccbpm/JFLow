@@ -40,6 +40,8 @@ public class WorkNode {
 
 				Emp myEmp = new Emp(empId);
 				wl.setFK_EmpText(myEmp.getName());
+				wl.setFK_Dept(myEmp.getFK_Dept());
+				wl.setFK_DeptT(myEmp.getFK_DeptText());
 
 				wl.setFK_Node(this.getHisNode().getNodeID());
 				wl.setFK_NodeText(this.getHisNode().getName());
@@ -706,6 +708,7 @@ public class WorkNode {
 
 				wl.setFK_EmpText(emp.getName());
 				wl.setFK_Dept(emp.getFK_Dept());
+				wl.setFK_DeptT(emp.getFK_DeptText());
 				wl.setSender(WebUser.getNo() + "," + WebUser.getName());
 				if (town.getHisNode().getHisCHWay() == CHWay.None) {
 					wl.setSDT("无");
@@ -1825,6 +1828,7 @@ public class WorkNode {
 		gwl.Update();
 
 		gwl.setFK_Emp(this.JumpToEmp);
+
 		gwl.setFK_Node(this.JumpToNode.getNodeID());
 		gwl.setWorkID(this.getWorkID());
 		if (gwl.RetrieveFromDBSources() == 0) {
@@ -2296,7 +2300,7 @@ public class WorkNode {
 
 		// 初试化他们的工作人员．
 		current_gwls = this.Func_GenerWorkerLists(town);
-		if (town.getHisNode().getTodolistModel() == TodolistModel.TeamupGroupLeader
+		if (town.getHisNode().getHuiQianRole() == HuiQianRole.TeamupGroupLeader && town.getHisNode().getTodolistModel() == TodolistModel.TeamupGroupLeader
 				&& town.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne && current_gwls.size() > 1) {
 			throw new RuntimeException(BP.WF.Glo.multilingual("@接收人出错! 详情:{0}.", "WorkNode", "error_sendToemps_data",
 					"@节点" + town.getHisNode().getNodeID() + "是组长会签模式，接受人只能选择一人"));
@@ -2620,6 +2624,8 @@ public class WorkNode {
 				wl.setFID(this.getWorkID());
 				wl.setFK_Emp(WebUser.getNo());
 				wl.setFK_EmpText(WebUser.getName());
+				wl.setFK_Dept(WebUser.getFK_Dept());
+				wl.setFK_DeptT(WebUser.getFK_DeptName());
 				wl.setIsPassInt(-2);
 				wl.setIsRead(true);
 				wl.setFK_Node(this.getHisNode().getNodeID());
@@ -3211,7 +3217,8 @@ public class WorkNode {
 				flGwl.setFK_EmpText(WebUser.getName());
 				flGwl.setFK_Node(this.getHisNode().getNodeID());
 				flGwl.setSender(WebUser.getNo() + "," + WebUser.getName());
-				// flGwl.GroupMark = "";
+				flGwl.setFK_Dept(WebUser.getFK_Dept());
+				flGwl.setFK_DeptT(WebUser.getFK_DeptName());
 				flGwl.setIsPassInt(-2); // -2; //标志该节点是干流程人员处理的节点.
 				// wl.FID = 0; //如果是干流，
 				flGwl.Insert();
@@ -7952,6 +7959,7 @@ public class WorkNode {
 
 					Emp emp = new Emp(gwl.getFK_Emp());
 					gwl.setFK_Dept(emp.getFK_Dept());
+					gwl.setFK_DeptT(emp.getFK_DeptText());
 
 					gwl.setSDT(dr.getValue("RDT").toString());
 					gwl.setDTOfWarning(gwf.getSDTOfNode());
@@ -8325,6 +8333,7 @@ public class WorkNode {
 		wl.setFK_EmpText(this.getExecerName());
 		wl.setFK_Flow(this.getHisNode().getFK_Flow());
 		wl.setFK_Dept(this.getExecerDeptNo());
+		wl.setFK_Dept(this.getExecerDeptName());
 		// wl.WarningHour = this.HisNode.WarningHour;
 		wl.setSDT("无");
 		wl.setDTOfWarning(DataType.getCurrentDataTime());

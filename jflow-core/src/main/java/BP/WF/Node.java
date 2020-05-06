@@ -88,6 +88,12 @@ public class Node extends Entity {
 		return this.GetParaInt("SubFlowYanXuNum", 0);
 	}
 
+	public HuiQianRole getHuiQianRole()throws Exception{
+		return HuiQianRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianRole));
+	}
+
+
+
 	public final CC getHisCC() throws Exception {
 		Object tempVar = this.GetRefObject("HisCC");
 		CC obj = tempVar instanceof CC ? (CC) tempVar : null;
@@ -2278,6 +2284,7 @@ public class Node extends Entity {
 		map.AddTBInt(NodeAttr.TodolistModel, 0, "多人处理规则", true, true);
 
 		// add.
+		map.AddTBInt(BtnAttr.HuiQianRole, 0, "会签模式", true, true);
 		map.AddTBInt(NodeAttr.TeamLeaderConfirmRole, 0, "组长确认规则", true, true);
 		map.AddTBString(NodeAttr.TeamLeaderConfirmDoc, null, "组长确认设置内容", true, false, 0, 100, 10);
 		map.AddTBInt(BtnAttr.HuiQianLeaderRole, 0, "组长会签规则", true, true);

@@ -358,9 +358,10 @@ public class WorkUnSend
 				wlN.Copy(wl);
 				wlN.setFK_Emp(s);
 
-				WFEmp myEmp = new WFEmp(s);
+				BP.WF.Port.Emp myEmp = new BP.WF.Port.Emp(s);
 				wlN.setFK_EmpText(myEmp.getName());
-
+				wlN.setFK_Dept(myEmp.getFK_Dept());
+				wlN.setFK_DeptT(myEmp.getFK_DeptText());
 				wlN.Insert();
 			}
 		}
@@ -912,8 +913,10 @@ public class WorkUnSend
 				wlN.Copy(wl);
 				wlN.setFK_Emp(s);
 
-				WFEmp myEmp = new WFEmp(s);
+				BP.WF.Port.Emp myEmp = new BP.WF.Port.Emp(s);
 				wlN.setFK_EmpText(myEmp.getName());
+				wlN.setFK_Dept(myEmp.getFK_Dept());
+				wlN.setFK_DeptT(myEmp.getFK_DeptText());
 
 				wlN.Insert();
 			}
@@ -1237,8 +1240,10 @@ public class WorkUnSend
 				wlN.Copy(wl);
 				wlN.setFK_Emp(s);
 
-				WFEmp myEmp = new WFEmp(s);
+				BP.WF.Port.Emp myEmp = new BP.WF.Port.Emp(s);
 				wlN.setFK_EmpText(myEmp.getName());
+				wlN.setFK_Dept(myEmp.getFK_Dept());
+				wlN.setFK_DeptT(myEmp.getFK_DeptText());
 
 				wlN.Insert();
 			}

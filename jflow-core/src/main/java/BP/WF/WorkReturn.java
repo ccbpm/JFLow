@@ -1404,6 +1404,7 @@ public class WorkReturn {
 		wl.setFK_NodeText(nd.getName());
 		// wl.WarningHour = nd.WarningHour;
 		wl.setFK_Dept(emp.getFK_Dept());
+		wl.setFK_DeptT(emp.getFK_DeptText());
 
 		Date dtNew = new Date();
 		// dtNew = dtNew.AddDays(nd.WarningHour);

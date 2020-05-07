@@ -1932,10 +1932,8 @@ public class WorkFlowBuessRole
 
 		//取出抄送人列表
 		String ccers = rptGE.GetValStrByKey("SysCCEmps");
-		if (DataType.IsNullOrEmpty(ccers) == false)
-		{
+		if (DataType.IsNullOrEmpty(ccers) == true)
 			return "";
-		}
 
 		String[] cclist = ccers.split("[|]", -1);
 		Hashtable ht = new Hashtable();

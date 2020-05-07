@@ -190,6 +190,35 @@ public class CC extends Entity
 				dt.Rows.add(dr);
 			}
 		}
+		/**按照表单字段抄送*/
+		if(this.getCCIsAttr() == true)
+		{
+			if (DataType.IsNullOrEmpty(this.getCCFormAttr()) == true)
+				throw new Exception("抄送规则自动抄送选择按照表单字段抄送没有设置抄送人员字段");
+
+			String ccers = rpt.GetValStrByKey(this.getCCFormAttr());
+			if (DataType.IsNullOrEmpty(ccers) == false)
+			{
+				String[] emps = ccers.split(",");
+				for(String empNo : emps)
+				{
+					if (DataType.IsNullOrEmpty(empNo) == true)
+						continue;
+					Emp emp = new Emp();
+					emp.setNo(empNo);
+					if (emp.RetrieveFromDBSources() == 1)
+					{
+						DataRow dr = dt.NewRow();
+						dr.setValue("No",empNo);
+						dr.setValue("Name",emp.getName());
+						dt.Rows.add(dr);
+					}
+
+				}
+			}
+
+
+		}
 		//将dt中的重复数据过滤掉  
 //		DataView myDataView = new DataView(dt);
 //		//此处可加任意数据项组合  
@@ -340,6 +369,13 @@ public class CC extends Entity
 		this.SetValByKey(CCAttr.CCIsSQLs, value);
 	}
 
+	public final boolean getCCIsAttr() throws Exception{
+		return this.GetValBooleanByKey(CCAttr.CCIsAttr);
+	}
+
+	public final String getCCFormAttr() throws Exception{
+		return this.GetValStringByKey(CCAttr.CCFormAttr);
+	}
 
 		///#endregion
 

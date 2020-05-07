@@ -205,13 +205,13 @@ public class DBAccess {
 	public static void SaveBigTextToDB(String docs, String tableName, String tablePK, String pkVal,
 			String saveToFileField) throws Exception {
 		//对于特殊的数据库进行判断.
-		/*if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
 				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 			SaveBytesToDB(docs.getBytes("UTF-8"), docs, tableName, tablePK, pkVal, saveToFileField);
 			return;
-		}*/
+		}
 		Paras ps = new Paras();
 		ps.SQL = "UPDATE " + tableName + " SET " + saveToFileField + "=" + SystemConfig.getAppCenterDBVarStr() + "MyDocs WHERE " + tablePK + "=" + SystemConfig.getAppCenterDBVarStr() + "PKVal";
 		ps.Add("MyDocs", docs);
@@ -3088,7 +3088,7 @@ public class DBAccess {
 	 */
 	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)throws Exception {
 		//对于特殊的数据库进行判断.
-		/*if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
 				|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 			byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
@@ -3096,7 +3096,7 @@ public class DBAccess {
 				return null;
 			}
 			return new String(byteFile,"UTF-8");
-		}*/
+		}
 		//其他的数据库类型直接从 text字段去.
 		try {
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";

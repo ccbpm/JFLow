@@ -785,7 +785,7 @@ public class FrmAttachment extends EntityMyPK {
 		// map.AddTBInt(FrmAttachmentAttr.IsDelete, 1,
 		// "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的)", false, false);
 		map.AddTBInt(FrmAttachmentAttr.FileType, 0, "附件类型", false, false);
-
+		map.AddTBInt(FrmAttachmentAttr.PicUploadType, 0, "图片附件上传方式", true, true);
 		// hzm新增列
 		map.AddTBInt(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的", false, false);
 		map.AddBoolean(FrmAttachmentAttr.IsDownload, true, "是否可以下载", false, false);

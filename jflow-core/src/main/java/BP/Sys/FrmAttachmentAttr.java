@@ -163,6 +163,10 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	附件类型 0 普通附件 1 图片附件
    */
 	public static final String FileType = "FileType";
+	/**
+	 * 移动端图片附件上传的方式
+	 */
+	public static final String PicUploadType="PicUploadType";
 
 	/** 
 	 附件删除方式

@@ -208,6 +208,6 @@ public class GenerWorkFlowAttr
 
 	public static final String PrjNo = "PrjNo";
 	public static final String PrjName = "PrjName";
-
+	public static final String OrgNo = "OrgNo";
 		///#endregion
 }

@@ -126,6 +126,18 @@ public class CCList extends EntityMyPK
 	{
 		this.SetValByKey(CCListAttr.CDT, value);
 	}
+	/**
+	 组织编码
+	 */
+	public final String getOrgNo() throws Exception
+	{
+		return this.GetValStringByKey(CCListAttr.OrgNo);
+	}
+	public final void setOrgNo(String value) throws Exception
+	{
+		this.SetValByKey(CCListAttr.OrgNo, value);
+	}
+
 	/** 
 	 抄送人所在的节点编号
 	*/
@@ -280,7 +292,7 @@ public class CCList extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.Domain);
 	}
-	public final void setDomain(boolean value) throws Exception
+	public final void setDomain(String value) throws Exception
 	{
 		this.SetValByKey(CCListAttr.Domain, value);
 	}

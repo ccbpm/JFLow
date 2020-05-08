@@ -19,6 +19,30 @@ public class GenerWorkFlow extends Entity {
 	}
 
 	/**
+	 * 组织
+	 *
+	 * @throws Exception
+	 */
+	public final String getOrgNo() throws Exception {
+		return this.GetValStrByKey(GenerWorkFlowAttr.OrgNo);
+	}
+
+	public final void setOrgNo(String value) throws Exception {
+		SetValByKey(GenerWorkFlowAttr.OrgNo, value);
+	}
+	/**
+	 * 所在的域
+	 *
+	 * @throws Exception
+	 */
+	public final String getDomain() throws Exception {
+		return this.GetValStrByKey(GenerWorkFlowAttr.Domain);
+	}
+
+	public final void setDomain(String value) throws Exception {
+		SetValByKey(GenerWorkFlowAttr.Domain, value);
+	}
+	/**
 	 * 备注
 	 * 
 	 * @throws Exception

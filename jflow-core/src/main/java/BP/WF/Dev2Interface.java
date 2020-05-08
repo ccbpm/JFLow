@@ -1108,24 +1108,44 @@ public class Dev2Interface
 
 	public static DataTable DB_GenerDraftDataTable() throws Exception
 	{
-		return DB_GenerDraftDataTable(null);
+		return DB_GenerDraftDataTable(null,null);
 	}
 
-	public static DataTable DB_GenerDraftDataTable(String flowNo) throws Exception
+	public static DataTable DB_GenerDraftDataTable(String flowNo, String domain) throws Exception
 	{
 		/*获取数据.*/
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		BP.DA.Paras ps = new BP.DA.Paras();
-		if (flowNo == null)
+		if (DataType.IsNullOrEmpty(domain) == true)
 		{
-			ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter ORDER BY RDT";
-			ps.Add(GenerWorkFlowAttr.Starter, WebUser.getNo());
+			if (flowNo == null)
+			{
+				ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter ORDER BY RDT";
+				ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
+			}
+			else
+			{
+				ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter AND FK_Flow=" + dbStr + "FK_Flow ORDER BY RDT";
+				ps.Add(GenerWorkFlowAttr.FK_Flow, flowNo);
+				ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
+			}
+
 		}
 		else
 		{
-			ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter AND FK_Flow=" + dbStr + "FK_Flow ORDER BY RDT";
-			ps.Add(GenerWorkFlowAttr.FK_Flow, flowNo);
-			ps.Add(GenerWorkFlowAttr.Starter, WebUser.getNo());
+			if (flowNo == null)
+			{
+				ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter AND Domain=" + dbStr + "Domain ORDER BY RDT";
+				ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
+				ps.Add(GenerWorkFlowAttr.Domain, domain);
+			}
+			else
+			{
+				ps.SQL = "SELECT WorkID,Title,FK_Flow,FlowName,RDT,FlowNote,AtPara FROM WF_GenerWorkFlow A WHERE WFState=1 AND Starter=" + dbStr + "Starter AND FK_Flow=" + dbStr + "FK_Flow AND Domain=" + dbStr + "Domain ORDER BY RDT";
+				ps.Add(GenerWorkFlowAttr.FK_Flow, flowNo);
+				ps.Add(GenerWorkFlowAttr.Starter, BP.Web.WebUser.getNo());
+				ps.Add(GenerWorkFlowAttr.Domain, domain);
+			}
 		}
 
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
@@ -1166,15 +1186,15 @@ public class Dev2Interface
 
 	public static DataTable DB_Focus(String flowNo) throws Exception
 	{
-		return DB_Focus(flowNo, null);
+		return DB_Focus(flowNo, null,null);
 	}
 
 	public static DataTable DB_Focus() throws Exception
 	{
-		return DB_Focus(null, null);
+		return DB_Focus(null, null,null);
 	}
 
-	public static DataTable DB_Focus(String flowNo, String userNo) throws Exception
+	public static DataTable DB_Focus(String flowNo, String userNo,String domain) throws Exception
 	{
 		if (DataType.IsNullOrEmpty(flowNo)==true)
 		{
@@ -1193,6 +1213,12 @@ public class Dev2Interface
 		{
 			ps.SQL = "SELECT * FROM WF_GenerWorkFlow WHERE AtPara LIKE  '%F_" + userNo + "=1%' AND FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow";
 			ps.Add("FK_Flow", flowNo);
+		}
+		if (DataType.IsNullOrEmpty(domain)==false && DataType.IsNullOrEmpty(flowNo) == false)
+		{
+			ps.SQL = "SELECT * FROM WF_GenerWorkFlow WHERE AtPara LIKE  '%F_" + userNo + "=1%' AND FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow AND  Domain=" + SystemConfig.getAppCenterDBVarStr() + "Domain";
+			ps.Add("FK_Flow", flowNo);
+			ps.Add("Domain", domain);
 		}
 		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(ps);
 		//添加oracle的处理
@@ -8077,7 +8103,8 @@ public class Dev2Interface
 		list.setPFlowNo(gwf.getPFlowNo());
 		list.setPWorkID(gwf.getPWorkID());
 		//  list.NDFrom = ndFrom;
-
+		list.setDomain(gwf.getDomain());
+		list.setOrgNo(gwf.getOrgNo()); //设置组织编号.
 		//是否要写入待办.
 		if (fromNode.getCCWriteTo() == CCWriteTo.CCList)
 		{

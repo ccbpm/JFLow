@@ -90,5 +90,8 @@ public class CCListAttr extends EntityMyPKAttr
 	 域
 	 */
 	public static final String Domain = "Domain";
-		///#endregion
+	/**
+	 组织编号
+	 */
+	public static final String OrgNo = "OrgNo";
 }

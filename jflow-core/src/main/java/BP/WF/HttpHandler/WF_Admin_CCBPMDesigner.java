@@ -5,6 +5,11 @@ import BP.Difference.SystemConfig;
 import BP.Difference.Handler.WebContralBase;
 import BP.Sys.*;
 import BP.Tools.StringHelper;
+import BP.WF.Glo;
+import BP.WF.Port.Admin2.OrgAdminer;
+import BP.WF.Port.Admin2.OrgAdminerAttr;
+import BP.WF.Port.Admin2.OrgAdminers;
+import BP.WF.Port.Admin2.Orgs;
 import BP.Web.*;
 import BP.Port.*;
 import BP.En.*;
@@ -645,10 +650,73 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			return "err@用户名或密码错误.";
 		}
 		//return BP.WF.Glo.lang("invalid_username_or_pwd", para);
+		//如果是单机版本，仅仅admin登录.
+		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			if (emp.getNo().equals("admin") == false)
+				return "err@非admin不能登录.";
 
+			//让其登录.
+			BP.WF.Dev2Interface.Port_Login(emp.getNo());
+
+			//只有一个组织的情况.
+			if (DBAccess.IsView("Port_Emp") == false)
+			{
+				String sid = BP.DA.DBAccess.GenerGUID();
+				String sql = "UPDATE Port_Emp SET SID='" + sid + "' WHERE No='" + emp.getNo() + "'";
+				BP.DA.DBAccess.RunSQL(sql);
+				emp.setSID(sid);
+			}
+
+			//设置SID.
+			WebUser.setSID(emp.getSID()); //设置SID.
+
+			return "url@Default.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getNo();
+		}
+
+		//获得当前管理员管理的组织数量.
+		OrgAdminers adminers = null;
+		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			//WebUser.OrgNo = orgs[0].GetValStrByKey("No");
+		}
+		else
+		{
+			//查询他管理多少组织.
+			adminers = new OrgAdminers();
+			adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getNo());
+			if (adminers.size() == 0)
+			{
+				BP.WF.Port.Admin2.Orgs orgs = new Orgs();
+				int i = orgs.Retrieve("Adminer", WebUser.getNo());
+				if (i == 0)
+					return "err@非管理员或二级管理员用户，不能登录后台.";
+
+				for (BP.WF.Port.Admin2.Org org : orgs.ToJavaList())
+				{
+					OrgAdminer oa = new OrgAdminer();
+					oa.setFK_Emp(WebUser.getNo());
+					oa.setOrgNo(org.getNo());
+					oa.Save();
+				}
+				adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getNo());
+			}
+
+		}
+
+		//设置他的组织，信息.
+		WebUser.setNo(emp.getNo()); //登录帐号.
+		WebUser.setFK_Dept(emp.getFK_Dept());
+		WebUser.setFK_DeptName(emp.getFK_DeptText());
+
+		WebUser.setSID(DBAccess.GenerGUID()); //设置SID.
 		//让其登录.
 		BP.WF.Dev2Interface.Port_Login(emp.getNo());
-		return "url@Default.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getNo();
+		//判断是否是多个组织的情况.
+		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single || adminers.size() == 1)
+			return "url@Default.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getNo();
+
+		return "url@SelectOneOrg.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getNo();
 	}
 
 	///#endregion 登录窗口.
@@ -957,7 +1025,87 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		String str = BP.Tools.Json.ToJson(dt);
 		return str;
 	}
+	public String GetFlowTreeTable_GroupInc() throws Exception
+	{
+		String sql = "SELECT * FROM ( ";
 
+		sql += "  SELECT 'F'+No as NO,'F'+ParentNo PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE, -1 DTYPE FROM WF_FlowSort WHERE OrgNo ='" + WebUser.getOrgNo() + "' OR No=1 ";
+		sql += "  UNION ";
+		sql += "  SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) as NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow WHERE OrgNo ='" + WebUser.getOrgNo() + "' ";
+		sql += " ) A ";
+		sql += "  ORDER BY DTYPE, IDX ";
+
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			sql = "SELECT * FROM (SELECT 'F'||No as NO,'F'||ParentNo as PARENTNO,NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort " +
+				" WHERE OrgNo ='" + WebUser.getOrgNo() + "' or No = 1 union " +
+				"SELECT NO, 'F'||FK_FlowSort as PARENTNO,NO||'.'||NAME as NAME,IDX,0 ISPARENT,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow WHERE OrgNo ='" + WebUser.getOrgNo() + "') A  ORDER BY DTYPE, IDX";
+		}
+
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		{
+			sql = "SELECT * FROM (SELECT CONCAT('F', No) NO, CONCAT('F', ParentNo) PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort " +
+				" WHERE OrgNo ='" + WebUser.getOrgNo() + "' or No = 1 " +
+				"union " +
+				"SELECT NO, CONCAT('F', FK_FlowSort) PARENTNO, CONCAT(NO, '.', NAME) NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow " +
+				" WHERE OrgNo ='" + WebUser.getOrgNo() + "') A  ORDER BY DTYPE, IDX";
+		}
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			dt.Columns.get("no").ColumnName = "NO";
+			dt.Columns.get("name").ColumnName = "NAME";
+			dt.Columns.get("parentno").ColumnName = "PARENTNO";
+			dt.Columns.get("idx").ColumnName = "IDX";
+			dt.Columns.get("isparent").ColumnName = "ISPARENT";
+			dt.Columns.get("ttype").ColumnName = "TTYPE";
+			dt.Columns.get("dtype").ColumnName = "DTYPE";
+		}
+
+		//判断是否为空，如果为空，则创建一个流程根结点，added by liuxc,2016-01-24
+		if (dt.Rows.size() == 0)
+		{
+			FlowSort fs = new FlowSort();
+			fs.setNo("99");
+			fs.setParentNo("0");
+			fs.setName("流程树");
+			fs.Insert();
+			dt.Rows.AddDatas("F99", "F0", "流程树", 0, 1, "FLOWTYPE", -1);
+		}
+		else
+		{
+			List<DataRow> drs = dt.select("NAME='流程树'");
+			if (drs.size() > 0 && (!"F0".equals(drs.get(0).getValue("PARENTNO"))))
+			{
+				drs.get(0).setValue("PARENTNO", "F0");
+			}
+		}
+
+		//如果为0。
+		if (dt.Rows.size()==0)
+		{
+			BP.WF.Port.Admin2.Org org = new BP.WF.Port.Admin2.Org(WebUser.getOrgNo());
+			org.DoCheck();
+			return "err@系统出现错误，请刷新一次，如果仍然出现错误，请反馈给管理员.";
+		}
+
+
+		DataRow rootRow = dt.Select("PARENTNO='F0'")[0];
+		DataRow newRootRow = dt.Select("NO='F" + WebUser.getOrgNo() + "'")[0];
+
+		newRootRow.setValue("PARENTNO","F0");
+		DataTable newDt = dt.clone();
+		DataRow newdr = newDt.NewRow();
+		newdr.ItemArray = newRootRow.ItemArray;
+		newDt.Rows.add(newdr);
+		GenerChildRows(dt, newDt, newRootRow,"NO");
+		dt = newDt;
+
+		String str = BP.Tools.Json.ToJson(dt);
+		return str;
+	}
 	public final void GenerChildRows(DataTable dt, DataTable newDt, DataRow parentRow,String coloumns)
 	{
 		List<DataRow> rows = dt.select("ParentNo='" + parentRow.getValue(coloumns) + "'");;

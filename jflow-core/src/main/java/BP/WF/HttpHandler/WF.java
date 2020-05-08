@@ -553,10 +553,10 @@ public class WF extends WebContralBase {
 	 */
 	public final String Focus_Init() throws Exception {
 		String flowNo = this.GetRequestVal("FK_Flow");
-
+		String domain = this.GetRequestVal("Domain");
 		int idx = 0;
 		// 获得关注的数据.
-		DataTable dt = BP.WF.Dev2Interface.DB_Focus(flowNo, WebUser.getNo());
+		DataTable dt = BP.WF.Dev2Interface.DB_Focus(flowNo, WebUser.getNo(),domain);
 		SysEnums stas = new SysEnums("WFSta");
 		String[] tempArr;
 		for (DataRow dr : dt.Rows) {

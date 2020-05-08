@@ -551,7 +551,13 @@ public class WF_WorkOpt_OneWork extends WebContralBase
             nodeID = this.getFK_Node();
         }
 
-        Node nd = new Node(nodeID);
+        Node nd = new Node();
+		nd.setNodeID(nodeID);
+		if (nd.RetrieveFromDBSources() == 0)
+		{
+			nd.setNodeID(Integer.parseInt(this.getFK_Flow() + "01"));
+			nd.Retrieve();
+		}
 		Flow flow = new Flow(nd.getFK_Flow());
 		for (OneWorkXml item : xmls.ToJavaListXmlEnss())
 		{

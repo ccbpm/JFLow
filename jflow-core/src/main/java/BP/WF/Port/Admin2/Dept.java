@@ -155,7 +155,11 @@ public class Dept extends EntityTree
 		org.setAdminer(emp.getNo());
 		org.setAdminerName(emp.getName());
 		org.Insert();
-
+		//增加到管理员.
+		OrgAdminer oa = new OrgAdminer();
+		oa.setFK_Emp(emp.getNo());
+		oa.setOrgNo(this.getNo());
+		oa.Insert();
 		//如果不是视图.
 		if (DBAccess.IsView("Port_StationType") == false)
 		{

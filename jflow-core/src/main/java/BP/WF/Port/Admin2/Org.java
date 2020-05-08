@@ -114,6 +114,7 @@ public class Org extends EntityNoName
 
 		map.AddTBString(OrgAttr.Adminer, null, "管理员登录帐号", true, true, 0, 60, 200, true);
 		map.AddTBString(OrgAttr.AdminerName, null, "管理员名称", true, true, 0, 60, 200, true);
+		map.AddTBInt(OrgAttr.Idx, 0, "排序", true, false);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "检查正确性";

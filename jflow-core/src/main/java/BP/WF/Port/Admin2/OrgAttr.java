@@ -28,4 +28,9 @@ public class OrgAttr extends EntityNoNameAttr
 	 父级组织名称
 	*/
 	public static final String ParentName = "ParentName";
+
+	/**
+	 序号
+	 */
+	public static final String Idx = "Idx";
 }

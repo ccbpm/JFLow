@@ -174,7 +174,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                 var url = localHref + "/WF/CCForm/Components/DocWord.htm?FrmID=" + frmData.Sys_MapData[0].No + "&OID=" + pageData.WorkID;
                 $("#TB_DocWord").attr("readonly","readonly");
                 $("#TB_DocWord").on("dblclick", function () {
-                    window.parent.OpenBootStrapModal(url, "DocWordIFrame", "公文字号", 600, 200, "icon-edit", false);
+                    window.OpenBootStrapModal(url, "DocWordIFrame", "公文字号", 600, 200, "icon-edit", false);
                 })
             }
         }
@@ -1173,8 +1173,11 @@ function SetCtrlVal(key, value) {
         ctrl.val(value);
         if (parseInt(value) <= 0)
             ctrl.attr('checked', false);
-        else
+        else {
             ctrl.attr('checked', true);
+            document.getElementById("CB_" + key).checked = true;
+        }
+           
         return;
     }
     if (ctrl.length > 1) {

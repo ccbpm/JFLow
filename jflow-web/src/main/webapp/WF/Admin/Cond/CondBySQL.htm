@@ -63,16 +63,10 @@
             data = JSON.parse(data);
 
             var docs = data.OperatorValue;
-            docs = docs.replace("~", "'");
-            docs = docs.replace("~", "'");
-            docs = docs.replace("~", "'");
-            docs = docs.replace("~", "'");
-            docs = docs.replace("~", "'");
-            docs = docs.replace("~", "'");
-            docs = docs.replace("~", "'");
-
-            editor.setValue(docs);
+            docs = docs.replace(/~/g, "'");
+            document.getElementById("TB_SQL").value = docs;
             document.getElementById("TB_Note").value = data.Note;
+            editor.setValue(document.getElementById("TB_SQL").value);
 
         });
 
@@ -96,14 +90,14 @@
                 alert('请输入备注说明.');
                 return;
             }
-
+ 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Cond");
             handler.AddPara("CondType", condType);
             handler.AddPara("FK_Flow", fk_flow);
             handler.AddPara("FK_MainNode", fk_mainNode);
             handler.AddPara("FK_Node", fk_Node);
             handler.AddPara("ToNodeID", toNodeID);
-            handler.AddPara("TB_SQL", sqlVal);
+            handler.AddPara("TB_Docs", sqlVal);
             handler.AddPara("TB_Note", note);
             var data = handler.DoMethodReturnString("CondBySQL_Save");
             if (data.indexOf('err@') == 0) {

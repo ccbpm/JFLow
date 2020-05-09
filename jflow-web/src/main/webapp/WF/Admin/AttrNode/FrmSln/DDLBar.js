@@ -26,6 +26,7 @@ function InitBar(optionKey) {
     html += "<option value=null  disabled='disabled'>+自定义表单</option>";
     html += "<option value=" + FormSlnType.SelfForm + " >&nbsp;&nbsp;嵌入式表单</option>";
     html += "<option value=" + FormSlnType.SDKForm + " >&nbsp;&nbsp;SDK表单(我自定义的表单)</option>";
+    html += "<option value=" + FormSlnType.SDKFormSmart+ " >&nbsp;&nbsp;智能SDK表单(我自定义的表单)</option>";
 
 
     html += "<option value=null  disabled='disabled'>+绑定表单库里的表单</option>";
@@ -35,12 +36,14 @@ function InitBar(optionKey) {
     html += "</select >";
 
     html += "<input  id='Btn_Save' type=button onclick='Save()' value='保存' />";
+    html += "<input  id='Btn_Save' type=button onclick='Imp()' value='表单导入' />";
     //   html += "<input  id='Btn_SaveAndClose' type=button onclick='SaveAndClose()' value='保存并关闭' />";
 
     //  html += "<input type=button onclick='OldVer()' value='使用旧版本' />";
 
     //  html += "<input  id='Btn_Help' type=button onclick='Help()' value='视频帮助' />";
     html += "<input  id='Btn_Help' type=button onclick='HelpOnline()' value='在线帮助' />";
+    
 
 
     document.getElementById("bar").innerHTML = html;
@@ -54,7 +57,10 @@ function OldVer() {
     var url = '../NodeFromWorkModel.htm?FK_Flow=' + flowNo + '&FK_Node=' + nodeID;
     window.location.href = url;
 }
-
+function Imp() {
+    var url = "../../Template/From.htm";
+    OpenEasyUiDialog(url, 'iframDg', '导入模板', 650, 350, 'icon-new', false);
+}
 ///设置表单类型.
 function SetNDxxRpt_FrmType(flowNo, frmType) {
 
@@ -157,9 +163,13 @@ function changeOption() {
         case FormSlnType.Developer:
             url = "12.Developer.htm";
             break;
+        case FormSlnType.SDKFormSmart:
+            url = "13.SDKFormSmart.htm";
+            break;
         case FormSlnType.DisableIt:
             url = "100.DisableIt.htm";
             break;
+        
         default:
             url = "0.FoolForm.htm";
             break;

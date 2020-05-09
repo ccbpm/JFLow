@@ -44,7 +44,12 @@
 
         //定义公共个变量.
         var webUser = new WebUser();
+
+        //查询的文本字段
         var fields = [];
+
+        //用户查询信息的主键
+        var urMyPK = webUser.No + "_" + ensName + "_SearchAttrs"; 
 
         //页面设置信息
         var cfg = new Entity("BP.Sys.EnCfg");
@@ -52,17 +57,8 @@
         cfg.RetrieveFromDBSources();
 
         //当前用户查询信息.
-        var ur = new Entity("BP.Sys.UserRegedit");
-        ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
-        ur.RetrieveFromDBSources();
-
-        //获取Url传的查询Key值
-        var key = GetQueryString("Key");
-        if (key != null && key != undefined) {
-            ur.SearchKey = key;
-            ur.Update();
-        }
-
+        var ur = GetUserRegedit();
+    
         var count = ur.GetPara("RecCount");//查询总条数
         var mapBase;
         var pageIdx = this.GetQueryString("PageIdx");//当前页
@@ -84,7 +80,22 @@
             fontSize = 13;
 
 
-        var firstLoadTable = false;
+        var firstLoadTable = true;
+
+        //获取用户的查询信息
+        function GetUserRegedit() {
+            var ur = new Entity("BP.Sys.UserRegedit");
+            ur.SetPKVal(urMyPK);
+            ur.RetrieveFromDBSources();
+
+            //获取Url传的查询Key值
+            var key = GetQueryString("Key");
+            if (key != null && key != undefined && firstLoadTable == true) {
+                ur.SearchKey = key;
+                ur.Update();
+            }
+            return ur;
+        }
 
         //页面启动函数.
         $(function () {
@@ -261,6 +272,9 @@
             for (var i = 0; i < attrs.length; i++) {
                 var attr = attrs[i];
                 var selectVal = json[attr.Field];
+
+                if (GetQueryString(attr.Field) != null && GetQueryString(attr.Field) != undefined)
+                    selectVal = GetQueryString(attr.Field);
 
                 if (selectVal == undefined || selectVal == "")
                     selectVal = "all";
@@ -476,6 +490,8 @@
             for (var i = 0; i < attrs.length; i++) {
                 var attr = attrs[i];
                 var selectVal = json[attr.Field];
+                if (GetQueryString(attr.Field) != null && GetQueryString(attr.Field) != undefined)
+                    selectVal = GetQueryString(attr.Field);
 
                 if (selectVal == undefined || selectVal == "")
                     selectVal = "all";
@@ -527,10 +543,7 @@
 
             //保存查询条件.
             var ensName = GetQueryString("EnsName");
-            var ur = new Entity("BP.Sys.UserRegedit");
-            ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
-            ur.FK_Emp = webUser.No;
-
+            ur = GetUserRegedit();
             if ($("#TB_Key") != null && $("#TB_Key").val() != "")
                 ur.SearchKey = $("#TB_Key").val();
             else
@@ -574,19 +587,15 @@
             ur.FK_MapData = ensName;
             ur.SetPara("RecCount", count);
             var i = ur.Update();
-
-            var url = window.location.href;
-            if (url.indexOf("PageIdx") != -1)
-                url = replaceParamVal(url, "PageIdx", 1);
-
-
-            window.location.href = url;
+            pageIdx = 1;
+            SearchData();
+            //分页
+            Paginator(pages, pageIdx);
         }
 
 
         function SearchData(orderBy, orderWay) {
-             ur.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
-             ur.RetrieveFromDBSources();
+            ur = GetUserRegedit()
             //创建处理器.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
             handler.AddUrlData()
@@ -618,7 +627,7 @@
 
             if (pages == 0) pages = 1;
 
-            if (firstLoadTable) {
+            if (firstLoadTable == false) {
                 $('#dg').bootstrapTable("load", data["DT"]);
 
                 $("td").on("mouseover", function () {
@@ -659,7 +668,16 @@
 
         //生成查询页面..
         function BindTable() {
-
+            //获得外键的查询条件,存储里面去.
+            var str = "";
+            $("select[name^='DDL_']").each(function () {
+                var id = $(this).attr("id");
+                id = id.replace("DDL_", "");
+                str += "@" + id + "=" + $(this).val();
+            });
+            ur = GetUserRegedit()
+            ur.Vals = str;
+            ur.Update();
             //获取页面的高度
             var H = document.body.clientHeight;
             var tableH = H - $("#toolbar").outerHeight() - $("#page-nav").outerHeight() - 70;
@@ -932,7 +950,7 @@
                     $('#dg').bootstrapTable("resetView")
                 }
             });
-            firstLoadTable = true;
+            firstLoadTable = false;
 
         }
 

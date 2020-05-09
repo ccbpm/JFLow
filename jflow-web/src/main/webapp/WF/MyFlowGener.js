@@ -96,7 +96,6 @@ function closeWindow() {
     if (pareUrl.indexOf("test") != -1 || pareUrl.indexOf("Test") != -1) {
         // 测试流程时，发送成功刷新测试容器页面右侧
         window.parent.parent.refreshRight();
-        window.parent.parent.refreshLeft();
     }
     if (window.parent != null && window.parent != undefined
         && pareUrl.indexOf("test") == -1 && pareUrl.indexOf("Test") == -1) {
@@ -1778,7 +1777,7 @@ function GenerWorkNode() {
     catch (err) {
 
     }
-    //var enName = flowData.Sys_MapData[0].No;
+    var enName = flowData.Sys_MapData[0].No;
     //var filespec = "../DataUser/JSLibData/" + pageData.FK_Flow + ".js";
     //$.getScript(filespec);
 
@@ -2050,6 +2049,14 @@ function InitToolBar() {
         $('[name=Shift]').bind('click', function () { initModal("shift"); $('#returnWorkModal').modal().show(); });
     }
 
+
+    if ($('[name=DocWord]').length > 0) {
+
+        $('[name=DocWord]').attr('onclick', '');
+        $('[name=DocWord]').unbind('click');
+        $('[name=DocWord]').bind('click', function () { initModal("DocWord"); $('#returnWorkModal').modal().show(); });
+    }
+
     if ($('[name=Btn_WorkCheck]').length > 0) {
 
         $('[name=Btn_WorkCheck]').attr('onclick', '');
@@ -2162,41 +2169,13 @@ function InitToolBar() {
 
 /* 打开公文表单 */
 function OpenOffice(isEdit) {
+    var url = "../DataUser/OverrideFiles/DocWord.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
+    //var url = "./WorkOpt/DocWord.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
 
-    var url = "./WorkOpt/DocWord.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
     WinOpen(url);
     return;
 }
-
-//创建空白模板数据
-function CreateBlankDocTemp(nodeId, workId, fk_flow, vstourl) {
-    var doMethod = "CreateBlankDocTemp";
-    var httpHandlerName = "BP.WF.HttpHandler.WF_Admin_AttrNode";
-
-    $.ajax({
-        url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName + "&nodeId=" + nodeId +
-            "&workId=" + workId + "&fk_flow=" + fk_flow,
-        async: false,
-        success: function (result, status, xhr) {
-            if (result.indexOf('err@') == 0) {
-                alert(result);
-                return false;
-            } else {
-                return true;
-            }
-        }
-    });
-
-    OpVsto(vstourl);
-}
-
-function OpVsto(vstourl) {
-    $('body').append('<a id="opvsto" hidden  href="">vsto操作</a>');
-    $('#opvsto').attr('href', vstourl);
-    $('#opvsto')[0].click();
-
-    $('#opvsto').remove();
-}
+ 
 function setModalMax() {
     //设置bootstrap最大化窗口
     //获取width
@@ -2216,6 +2195,14 @@ function SetPageSize(w, h) {
 }
 //初始化退回、移交、加签窗口
 function initModal(modalType, toNode) {
+    var node = flowData.WF_Node[0];
+    if (node.FormType == 12 || (node.FormType == 11 && flowData.FrmNode[0] != null && flowData.FrmNode[0].FrmType == 8)) {
+        if (modalType == "PackUp_pdf" || modalType == "PackUp_html" || modalType == "PackUp_zip") {
+            PrintPDF();
+            return;
+        }
+    }
+  
 
     //初始化退回窗口的SRC.
     var html = '<div style=" height:auto;" class="modal fade" id="returnWorkModal" data-backdrop="static">' +
@@ -2226,7 +2213,7 @@ function initModal(modalType, toNode) {
         + '<button id="MaxSizeBtn" type="button" style="color:#000000;float: right;background: transparent;border: none;" aria-hidden="true" >□</button>'
         + '<h4 class="modal-title" id="modalHeader">提示信息</h4>'
         + '</div>'
-        + '<div class="modal-body" style="margin:0px;padding:0px;height:560px">'
+        + '<div class="modal-body" style="margin:0px;padding:0px;height:560px;">'
         + '<iframe style="width:100%;border:0px;height:100%;" id="iframeReturnWorkForm" name="iframeReturnWorkForm"></iframe>'
         + '</div>'
         + '</div><!-- /.modal-content -->'
@@ -2255,6 +2242,7 @@ function initModal(modalType, toNode) {
 
     var modalIframeSrc = '';
     if (modalType != undefined) {
+       
         switch (modalType) {
             case "returnBack":
                 $('#modalHeader').text("提示信息");
@@ -2291,6 +2279,12 @@ function initModal(modalType, toNode) {
                 $('#modalHeader').text("工作移交");
                 SetPageSize(80, 80);
                 modalIframeSrc = "./WorkOpt/Forward.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random()
+                break;
+            case "DocWord":
+                $('#modalHeader').text("公文");
+                SetPageSize(40, 80);
+               // modalIframeSrc = "./WorkOpt/DocWord.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
+                modalIframeSrc = "../DataUser/OverrideFiles/DocWord.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
                 break;
             case "askfor":
                 $('#modalHeader').text("加签");
@@ -2338,7 +2332,7 @@ function initModal(modalType, toNode) {
             case "PackUp_pdf":
                 $('#modalHeader').text("打包下载/打印");
                 var url = "./WorkOpt/Packup.htm?FileType=" + modalType.replace('PackUp_', '') + "&FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
-                // alert(url);
+               
                 modalIframeSrc = "./WorkOpt/Packup.htm?FileType=" + modalType.replace('PackUp_', '') + "&FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random()
                 break;
             case "accepter":
@@ -2365,13 +2359,53 @@ function initModal(modalType, toNode) {
                 modalIframeSrc = "./WorkOpt/Note.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
             case "PR":
                 $('#modalHeader').text("重要性设置");
-                modalIframeSrc = "./WorkOpt/PRI.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random();
+                //按百分比自适应
+                SetPageSize(50, 60);
+                modalIframeSrc = "./WorkOpt/PRI.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&PRIEnable=" + node.PRIEnable + "&Info=&s=" + Math.random();
 
             default:
                 break;
         }
     }
     $('#iframeReturnWorkForm').attr('src', modalIframeSrc);
+}
+
+
+function PrintPDF() {
+    var W = document.body.clientWidth;
+    var H = document.body.clientHeight - 40;
+    $("#Btn_PrintPdf").val("PDF打印中...");
+    $("#Btn_PrintPdf").attr("disabled", true);
+    var _html = document.getElementById("divCurrentForm").innerHTML;
+    _html = _html.replace("height: " + $("#topContentDiv").height() + "px", "");
+    _html = _html.replace("height: " + $("#contentDiv").height() + "px", "");
+    _html = _html.replace("height: " + $("#divCCForm").height() + "px", "");
+
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
+    handler.AddPara("html", _html);
+    handler.AddPara("FrmID", flowData.Sys_MapData[0].No);
+    handler.AddPara("WorkID", GetQueryString("WorkID"));
+
+    var data = handler.DoMethodReturnString("Packup_Init");
+    if (data.indexOf("err@") != -1) {
+        alert(data);
+    } else {
+        $("#Btn_PrintPdf").val("PDF打印成功");
+        $("#Btn_PrintPdf").attr("disabled", false);
+        $("#Btn_PrintPdf").val("打印pdf");
+        var urls = JSON.parse(data);
+        for (var i = 0; i < urls.length; i++) {
+            if (urls[i].No == "pdf") {
+                window.open(urls[i].Name.replace("../../DataUser/", "../DataUser/"));
+                break;
+            }
+
+        }
+    }
+
+    //var url = "../WorkOpt/Packup.htm?FrmID=" + GetQueryString("FrmID") + "&WorkID=" + GetQueryString("WorkID") + "&SourceType=Bill&FileType=pdf";
+    // OpenBootStrapModal(url, "eudlgframe", "打印PDF",600, 500, "icon-property", null, null, null, null, null, "black");
+
 }
 
 // 检查审核组件,是否加盖了电子签章？

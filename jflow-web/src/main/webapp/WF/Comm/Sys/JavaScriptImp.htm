@@ -62,13 +62,12 @@
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm_Sys");
             handler.AddFileData();
             var data = handler.DoMethodReturnString("javaScriptImp_Done");
-            if(data.indexOf("err@")!=-1){
+            if (data.indexOf("err@") != -1) {
                 alert(data);
                 return;
             }
 
             init_Page();
-
         }
     </script>
 </head>

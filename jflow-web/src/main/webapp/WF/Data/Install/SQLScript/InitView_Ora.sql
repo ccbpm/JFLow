@@ -39,7 +39,7 @@ TaskSta,
 ListType,
 Sender,
 AtPara,
-MyNum
+Domain
 )
 AS
 
@@ -61,7 +61,7 @@ A.TaskSta,
 0 as ListType,
 A.Sender,
 A.AtPara,
-1 as MyNum
+A.Domain
 FROM  WF_GenerWorkFlow A, WF_GenerWorkerlist B
 WHERE     (B.IsEnable = 1) AND (B.IsPass = 0)
  AND A.WorkID = B.WorkID AND A.FK_Node = B.FK_Node AND A.WFState<>0 AND WhoExeIt<>1
@@ -84,7 +84,7 @@ A.TodoEmpsNum,
 1 as ListType,
 B.Rec as Sender,
 '@IsCC=1'||A.AtPara as AtPara,
-1 as MyNum
+A.Domain
   FROM WF_GenerWorkFlow A, WF_CCList B WHERE A.WorkID=B.WorkID AND  B.Sta <=1 AND B.InEmpWorks = 1 AND A.WFState<>0;
  
 /****** 对象:  View V_FlowStarterBPM    脚本日期:  2015-04-10 ******/;
@@ -173,5 +173,5 @@ CREATE VIEW V_WF_Delay
 AS
 SELECT  WorkID||'_'||FK_Emp||'_'||FK_Node AS MyPK, PRI, WorkID, IsRead, Starter, StarterName, WFState, FK_Dept, DeptName, FK_Flow, 
                       FlowName, PWorkID, PFlowNo, FK_Node, NodeName, WorkerDept, Title, RDT, ADT, SDT, FK_Emp, FID, FK_FlowSort, SysType, SDTOfNode, PressTimes, GuestNo, GuestName, BillNo, FlowNote, 
-                      TodoEmps, TodoEmpsNum, TodoSta, TaskSta, ListType, Sender, AtPara, MyNum
+                      TodoEmps, TodoEmpsNum, TodoSta, TaskSta, ListType, Sender, AtPara, Domain
 FROM   WF_EmpWorks;

@@ -9,7 +9,6 @@ import BP.En.Map;
 import BP.En.UIContralType;
 import BP.Sys.*;
 import net.sf.json.JSONObject;
-import org.aspectj.util.FileUtil;
 import sun.misc.BASE64Encoder;
 
 import java.io.BufferedReader;

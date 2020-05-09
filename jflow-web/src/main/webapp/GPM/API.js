@@ -13,7 +13,7 @@
  * @param {系统编号} appNo 
  * 
  * 返回：两个结果集合的JSON,可以通过下列方式获取到他.
-    var dirs = data["Dirs"]; //获得目录.
+    var dirs = data["Dirs"];   //获得目录.
     var menus = data["Menus"]; //获得菜单.
  
  说明：
@@ -25,7 +25,14 @@
  5. ccbpm提供了两套风格，您可以参考 /Portal/GPMMenus.js ， /Portal20/GPMMenus.js
  */
 function GPM_GenerMenumsDB() {
+
     var handler = new HttpHandler("BP.WF.HttpHandler.GPMPage");
+    // alert(appNo);
+    if (appNo == null) {
+        alert('没有配置appNo,或者没有引入config.js 。');
+        return;
+    }
+
     handler.AddPara("AppNo", appNo);
     var data = handler.DoMethodReturnJSON("GPM_DB_Menus"); //获得菜单.
     return data;
@@ -85,6 +92,6 @@ function GPM_AutoHidShowPageElement(appNo) {
             continue;
         ctl.show(); //让其显示出来.
     }
-    
+
 }
 

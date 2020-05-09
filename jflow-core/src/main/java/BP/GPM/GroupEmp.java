@@ -52,8 +52,11 @@ public class GroupEmp extends EntityMM
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("Port_TeamEmp","权限组人员");
-	  
+		Map map = new Map("GPM_GroupEmp");
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+		map.setEnDesc("权限组人员");
+		map.setEnType(EnType.App);
 		map.AddTBStringPK(GroupEmpAttr.FK_Group, null, "权限组", true, false, 0, 50, 20);
 		map.AddDDLEntitiesPK(GroupEmpAttr.FK_Emp, null, "人员", new Emps(), true);
 

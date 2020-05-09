@@ -333,6 +333,16 @@ public class GenerWorkerList extends Entity {
 	public final void setHungUpTimes(int value) throws Exception {
 		this.SetValByKey(GenerWorkerListAttr.HungUpTimes, value);
 	}
+	/// <summary>
+	/// Idx
+	/// </summary>
+	public final int getIdx() throws Exception {
+		return this.GetValIntByKey(GenerWorkerListAttr.Idx);
+	}
+
+	public final void setIdx(int value) throws Exception {
+		this.SetValByKey(GenerWorkerListAttr.Idx, value);
+	}
 
 	/**
 	 * 主键
@@ -407,7 +417,7 @@ public class GenerWorkerList extends Entity {
 
 		// 优先级，2012-06-15 为青岛用户增加。
 		map.AddTBInt(GenerWorkFlowAttr.PRI, 1, "优先级", true, true);
-
+		map.AddTBInt(GenerWorkerListAttr.Idx, 1, "顺序号", true, true);
 		// 催办次数. 为亿阳信通加.
 		map.AddTBInt(GenerWorkerListAttr.PressTimes, 0, "催办次数", true, false);
 

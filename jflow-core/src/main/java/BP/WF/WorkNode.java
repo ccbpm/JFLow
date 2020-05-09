@@ -665,6 +665,7 @@ public class WorkNode {
 
 			String myemps = "";
 			Emp emp = new Emp();
+			int idx = 0;
 			for (DataRow dr : dt.Rows) {
 				String fk_emp = dr.getValue(0).toString();
 				if (this.IsHaveSubThreadGroupMark == true) {
@@ -678,7 +679,10 @@ public class WorkNode {
 				}
 
 				GenerWorkerList wl = new GenerWorkerList();
-
+				//#region 增加存储的优先级，防止数据库根据FK_Emp的人员编码自动排序，导致查询的结果和接收人的先后顺序不一致
+				idx++;
+				wl.setIdx(idx);
+				//#endregion
 				/// #region 根据记忆是否设置该操作员可用与否。
 				if (rm != null) {
 					if (rm.getObjs().equals("")) {
@@ -6440,6 +6444,7 @@ public class WorkNode {
 				}
 
 			}
+			CC(this.getHisNode());
 
 			return this.HisMsgObjs;
 		}
@@ -7013,12 +7018,13 @@ public class WorkNode {
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
 						this.getHisGenerWorkFlow().getTitle());
 
-				// 执行抄送.
-				if (this.getHisNode().getIsEndNode() == false) {
-					CC(this.getHisNode());
-				}
+				//执行抄送. 2020-04-28 修改只要启动抄送规则就执行抄送
+				CC(this.getHisNode());
+//				if (this.getHisNode().getIsEndNode() == false) {
+//					CC(this.getHisNode());
+//				}
 
-				// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
+				// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点
 				String msg = BP.WF.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(this.getHisGenerWorkFlow(),
 						this.getHisFlow());
 				this.HisMsgObjs.AddMsg("info", msg, msg, SendReturnMsgType.Info);

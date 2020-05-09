@@ -148,4 +148,8 @@ public class GenerWorkerListAttr
 	 是否会签？
 	*/
 	public static final String IsHuiQian = "IsHuiQian";
+	/**
+	顺序号
+	*/
+	public static final String Idx = "Idx";
 }

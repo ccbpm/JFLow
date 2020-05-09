@@ -274,6 +274,29 @@ public class CCList extends EntityMyPK
 	{
 		this.SetValByKey(CCListAttr.RDT, value);
 	}
+	/**
+	 抄送给组织
+	 */
+	public final String getCCToOrgNo() throws Exception
+	{
+		return this.GetValStringByKey(CCListAttr.CCToOrgNo);
+	}
+	public final void setCCToOrgNo(String value) throws Exception
+	{
+		this.SetValByKey(CCListAttr.CCToOrgNo, value);
+	}
+	/**
+	 抄送给组织名称
+	 */
+	public final String getCCToOrgName() throws Exception
+	{
+		return this.GetValStringByKey(CCListAttr.CCToOrgName);
+	}
+	public final void setCCToOrgName(String value) throws Exception
+	{
+		this.SetValByKey(CCListAttr.CCToOrgName, value);
+	}
+
 	/** 
 	 是否加入待办列表
 	*/
@@ -285,9 +308,9 @@ public class CCList extends EntityMyPK
 	{
 		this.SetValByKey(CCListAttr.InEmpWorks, value);
 	}
-	/// <summary>
-	/// 域
-	/// </summary>
+	/**
+	  域
+	 */
 	public final String getDomain() throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.Domain);
@@ -345,6 +368,8 @@ public class CCList extends EntityMyPK
 		map.AddTBString(CCListAttr.CCToDept, null, "抄送到部门", true, false, 0, 50, 10, true);
 		map.AddTBString(CCListAttr.CCToDeptName, null, "抄送给部门名称", true, false, 0, 600, 10, true);
 
+		map.AddTBString(CCListAttr.CCToOrgNo, null, "抄送到组织", true, false, 0, 50, 10, true);
+		map.AddTBString(CCListAttr.CCToOrgName, null, "抄送给组织名称", true, false, 0, 600, 10, true);
 		map.AddTBDateTime(CCListAttr.CDT, null, "打开时间", true, false);
 
 		map.AddTBString(CCListAttr.PFlowNo, null, "父流程编号", true, true, 0, 100, 10, true);

@@ -58,6 +58,14 @@ public class CCListAttr extends EntityMyPKAttr
 	 抄送给部门名称
 	*/
 	public static final String CCToDeptName = "CCToDeptName";
+	/**
+	 抄送到组织编号
+	 */
+	public static final String CCToOrgNo = "CCToOrgNo";
+	/**
+	 抄送给组织名称
+	 */
+	public static final String CCToOrgName = "CCToOrgName";
 	/** 
 	 审核时间
 	*/

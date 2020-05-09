@@ -485,6 +485,8 @@ public class CCFormAPI {
 		ma.setKeyOfEn(field);
 		ma.setName(fieldDesc);
 		ma.setMyDataType(mydataType);
+		if (mydataType==7)
+			ma.setIsSupperText(1);
 		ma.setX(x);
 		ma.setY(y);
 
@@ -1774,8 +1776,6 @@ public class CCFormAPI {
 	 *            标签
 	 * @param cfg
 	 *            配置 @0=xxx@1=yyyy@n=xxxxxc
-	 * @param lang
-	 *            语言
 	 * @return
 	 * @throws Exception
 	 */

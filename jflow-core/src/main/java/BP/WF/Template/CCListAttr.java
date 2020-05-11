@@ -78,6 +78,11 @@ public class CCListAttr extends EntityMyPKAttr
 	 RDT
 	*/
 	public static final String RDT = "RDT";
+
+	/**
+	 * 阅读时间
+	 */
+	public static final String ReadDT="ReadDT";
 	/** 
 	 父流程ID
 	*/

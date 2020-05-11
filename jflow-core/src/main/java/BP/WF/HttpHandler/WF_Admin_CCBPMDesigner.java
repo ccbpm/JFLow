@@ -1156,6 +1156,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			//删除垃圾数据.
 			DBAccess.RunSQL(String.format("DELETE FROM Sys_FormTree WHERE No='%1$s'", rootNo));
 		}
+
 		//检查根目录是否符合规范.
 		FrmTree ft = new FrmTree();
 		ft.setNo("1");

@@ -8590,8 +8590,9 @@ public class Dev2Interface
 		}
 
 		Paras ps = new Paras();
-		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta  WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK";
-		ps.Add(CCListAttr.Sta, CCSta.Read.getValue());
+		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta,ReadDT="+ SystemConfig.getAppCenterDBVarStr() + "ReadDT  WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK";
+		ps.Add(CCListAttr.Sta, CCSta.UnRead.getValue());
+		ps.Add(CCListAttr.ReadDT, DataType.getCurrentDataTime()); //设置读取日期.
 		ps.Add(CCListAttr.MyPK, mypk);
 		BP.DA.DBAccess.RunSQL(ps);
 	}
@@ -8605,8 +8606,9 @@ public class Dev2Interface
 	public static void Node_CC_SetRead(int nodeID, long workid, String empNo)
 	{
 		Paras ps = new Paras();
-		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta  WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND CCTo=" + SystemConfig.getAppCenterDBVarStr() + "CCTo";
-		ps.Add(CCListAttr.Sta, CCSta.Read.getValue());
+		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta,ReadDT=" + SystemConfig.getAppCenterDBVarStr() + "ReadDT  WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND CCTo=" + SystemConfig.getAppCenterDBVarStr() + "CCTo";
+		ps.Add(CCListAttr.Sta, CCSta.UnRead.getValue());
+		ps.Add(CCListAttr.ReadDT, DataType.getCurrentDataTime()); //设置读取日期.
 		ps.Add(CCListAttr.WorkID, workid);
 		ps.Add(CCListAttr.FK_Node, nodeID);
 		ps.Add(CCListAttr.CCTo, empNo);
@@ -8618,6 +8620,21 @@ public class Dev2Interface
 		ps.Add(GenerWorkerListAttr.FK_Emp, empNo);
 
 		DBAccess.RunSQL(ps);
+	}
+
+	/// <summary>
+	/// 设置已回复,由FlowBBS组件调用.
+	/// </summary>
+	/// <param name="workid">工作ID</param>
+	public static void Node_CC_SetCheckOver(long workid) throws Exception
+	{
+		Paras ps = new Paras();
+		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta,CDT=" + SystemConfig.getAppCenterDBVarStr() + "CDT  WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND CCTo=" + SystemConfig.getAppCenterDBVarStr() + "CCTo ";
+		ps.Add(CCListAttr.Sta, CCSta.CheckOver.getValue());
+		ps.Add(CCListAttr.CDT, DataType.getCurrentDataTime()); //设置完成日期.
+		ps.Add(CCListAttr.WorkID, workid);
+		ps.Add(CCListAttr.CCTo, WebUser.getNo());
+		BP.DA.DBAccess.RunSQL(ps);
 	}
 	/** 
 	 执行抄送

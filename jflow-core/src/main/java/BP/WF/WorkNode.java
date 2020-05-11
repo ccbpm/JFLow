@@ -1768,6 +1768,13 @@ public class WorkNode {
 				ccMsg1 = "@没有选择抄送人。";
 			}
 			if (cclist.size() > 0) {
+
+				ps.SQL = "UPDATE WF_CCList SET RDT=" + SystemConfig.getAppCenterDBVarStr() + "RDT  WHERE  WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node ";
+				ps.Add(CCListAttr.RDT, DataType.getCurrentDataTime()); //设置完成日期.
+				ps.Add(CCListAttr.WorkID, this.getWorkID());
+				ps.Add(CCListAttr.FK_Node, node.getNodeID());
+				BP.DA.DBAccess.RunSQL(ps);
+
 				PushMsgs pms = new PushMsgs();
 				pms.Retrieve(PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListOfNode.CCAfter);
 				PushMsg pushMsg = null;

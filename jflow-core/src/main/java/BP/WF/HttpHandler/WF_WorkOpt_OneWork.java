@@ -1,6 +1,7 @@
 package BP.WF.HttpHandler;
 
 import BP.En.*;
+import BP.Sys.MapData;
 import BP.WF.*;
 import BP.DA.*;
 import BP.Difference.SystemConfig;
@@ -1035,11 +1036,17 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 	public final String FlowBBS_Save() throws Exception
 	{
 		String msg = this.GetValFromFrmByKey("TB_Msg");
-		String mypk = BP.WF.Dev2Interface.Flow_BBSAdd(this.getFK_Flow(), this.getWorkID(), this.getFID(), msg, WebUser.getNo(), WebUser.getName());
-		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK";
-		ps.Add("MyPK", mypk);
-		return BP.Tools.Json.ToJson(BP.DA.DBAccess.RunSQLReturnTable(ps));
+		String fk_mapData = this.GetRequestVal("FK_MapData");
+		Node nd = new Node(this.getFK_Node());
+		if (DataType.IsNullOrEmpty(fk_mapData) == true)
+		{
+			fk_mapData = nd.getNodeFrmID();
+		}
+		MapData mapData = new MapData(fk_mapData);
+		BP.WF.Dev2Interface.Track_WriteBBS(fk_mapData, mapData.getName(), this.getWorkID(), msg,
+				this.getFID(), this.getFK_Flow(), null, this.getFK_Node(), nd.getName());
+
+		return "评论信息保存成功";
 	}
 
 	/** 

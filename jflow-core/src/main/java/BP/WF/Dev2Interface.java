@@ -10358,6 +10358,50 @@ public class Dev2Interface
 	{
 		Node_SetWorkUnRead(workid, WebUser.getNo());
 	}
+
+	/**
+	 *写入BBS
+	 * @param frmID 表单ID
+	 * @param frmName 表单名称
+	 * @param workID 流程ID
+	 * @param msg 评论信息
+	 * @param fid
+	 * @param flowNo 流程编号
+	 * @param flowName 流程名称
+	 * @param nodeID 节点编号
+	 * @param nodeName 节点名称
+	 */
+	public static void Track_WriteBBS(String frmID, String frmName, long workID, String msg, long fid,
+									  String flowNo, String flowName, int nodeID , String nodeName) throws Exception
+	{
+		BP.Frm.Track tk = new BP.Frm.Track();
+		tk.setWorkID(workID);
+		tk.setFrmID(frmID);
+		tk.setFrmName(frmName);
+		tk.setFrmActionType(BP.Frm.FrmActionType.BBS);
+		tk.setActionTypeText("评论");
+
+		tk.setRec(WebUser.getNo());
+		tk.setRecName(WebUser.getName());
+		tk.setDeptNo(WebUser.getFK_Dept());
+		tk.setDeptName(WebUser.getFK_DeptName());
+
+		tk.setMyPK(tk.getFrmID() + "_" + tk.getWorkID() + "_" + tk.getRec() + "_" + BP.Frm.FrmActionType.BBS.getValue());
+		tk.setMsg(msg);
+		tk.setRDT(DataType.getCurrentDataTime());
+
+		//流程信息.
+		tk.setNodeID(nodeID);
+		tk.setNodeName(nodeName);
+		tk.setFlowNo(flowNo);
+		tk.setFlowName(flowName);
+		tk.setFID(fid);
+
+		tk.Save();
+
+		//修改抄送状态
+		BP.WF.Dev2Interface.Node_CC_SetCheckOver(workID);
+	}
 	/** 
 	 更改流程属性
 	 

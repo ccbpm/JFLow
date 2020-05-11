@@ -501,6 +501,7 @@ public class MyDeptFlow extends Entity
 			//隐藏字段.
 		map.AddTBInt(MyDeptFlowAttr.FID, 0, "FID", false, false);
 		map.AddTBString(MyDeptFlowAttr.FK_Dept, null, "部门", false, false, 0, 30, 10);
+		map.AddTBString(MyDeptFlowAttr.FK_Node, null, "节点编号", false, false, 0, 30, 10);
 
 
 		map.AddSearchAttr(MyDeptFlowAttr.FK_Flow);
@@ -518,6 +519,7 @@ public class MyDeptFlow extends Entity
 		rm.Title = "流程轨迹";
 		rm.ClassMethodName = this.toString() + ".DoTrack";
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
+		rm.refMethodType=RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -530,7 +532,7 @@ public class MyDeptFlow extends Entity
 		///#region 执行诊断
 	public final String DoTrack() throws Exception
 	{
-		return Glo.getCCFlowAppPath()+"/WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 
 		///#endregion

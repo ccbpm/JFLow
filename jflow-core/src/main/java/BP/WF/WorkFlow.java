@@ -1043,7 +1043,8 @@ public class WorkFlow {
 	 */
 	public final String DoFlowSubOver() throws Exception {
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow   WHERE WorkID=" + this.getWorkID());
+		//子线程设置完成条件时会报错这个workid的流程找不到，所以注释掉了
+//		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow   WHERE WorkID=" + this.getWorkID());
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID());
 
 		String sql = "SELECT count(*) FROM WF_GenerWorkFlow WHERE  FID=" + this.getFID();

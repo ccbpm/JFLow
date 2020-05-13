@@ -1041,21 +1041,21 @@ public class WorkFlow {
 	 * @return
 	 * @throws Exception
 	 */
-	public final String DoFlowSubOver() throws Exception {
+	public final String DoFlowThreadOver() throws Exception {
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		//子线程设置完成条件时会报错这个workid的流程找不到，所以注释掉了
 //		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow   WHERE WorkID=" + this.getWorkID());
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID());
 
-		String sql = "SELECT count(*) FROM WF_GenerWorkFlow WHERE  FID=" + this.getFID();
+		String sql = "SELECT count(*) FROM WF_GenerWorkerlist WHERE  FID=" + this.getFID();
 		int num = DBAccess.RunSQLReturnValInt(sql);
 		if (DBAccess.RunSQLReturnValInt(sql) == 0) {
 			/* 说明这是最后一个 */
 			WorkFlow wf = new WorkFlow(gwf.getFK_Flow(), this.getFID());
-			wf.DoFlowOver(ActionType.FlowOver, "子流程结束", null, null);
-			return "@当前子流程已完成，主流程已完成。";
+			wf.DoFlowOver(ActionType.FlowOver, "子线程结束", null, null);
+			return "@当前子线程已完成，干流程已完成。";
 		} else {
-			return "@当前子流程已完成，主流程还有(" + num + ")个子流程未完成。";
+			return "@当前子线程已完成，干流程还有(" + num + ")个子线程未完成。";
 		}
 	}
 
@@ -1212,7 +1212,7 @@ public class WorkFlow {
 
 		if (this.getIsMainFlow() == false) {
 			/* 处理子流程完成 */
-			stopMsg += this.DoFlowSubOver();
+			stopMsg += this.DoFlowThreadOver();
 		}
 
 		/// #region 处理明细表的汇总.
@@ -1367,8 +1367,7 @@ public class WorkFlow {
 	/**
 	 * 执行冻结
 	 * 
-	 * @param msg
-	 *            冻结原因
+	 * @param fixMsg
 	 * @throws Exception
 	 */
 	public final String DoFix(String fixMsg) throws Exception {

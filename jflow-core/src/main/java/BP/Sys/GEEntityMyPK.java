@@ -200,6 +200,7 @@ public class GEEntityMyPK extends Entity
 				for (FrmAttachmentDB athDBFrom : athDBsFrom.ToJavaList())
 				{
 					athDBFrom.setMyPK(BP.DA.DBAccess.GenerGUID());
+					athDBFrom.setFK_MapData(ath.getFK_MapData());
 					athDBFrom.setFK_FrmAttachment(ath.getMyPK());
 					athDBFrom.setRefPKVal(this.getMyPK().toString());
 					athDBFrom.Insert();

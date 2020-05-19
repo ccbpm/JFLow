@@ -10738,7 +10738,6 @@ public class Dev2Interface
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 			dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
 			dbUpload.setNodeID(String.valueOf(nodeid));
-			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
 			dbUpload.setSort(sort);
 			dbUpload.setFID(fid); // 流程id.
 			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {

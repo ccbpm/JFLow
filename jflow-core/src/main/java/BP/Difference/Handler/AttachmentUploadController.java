@@ -370,14 +370,14 @@ public class AttachmentUploadController extends BaseController {
             //自定义方案.
             if (fn.getFrmSln() == FrmSln.Self)
             {
-                athDesc = new FrmAttachment();
-                athDesc.setMyPK(attachPk + "_" + this.getFK_Node());
-                int count = athDesc.RetrieveFromDBSources();
+				FrmAttachment myathDesc = new FrmAttachment();
+				myathDesc.setMyPK(attachPk + "_" + this.getFK_Node());
+                int count = myathDesc.RetrieveFromDBSources();
                 if(count !=0){
-	                if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+	                if (myathDesc.getHisCtrlWay() == AthCtrlWay.FID)
 	                    pkVal =Long.toString(this.getFID());
 	
-	                if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
+	                if (myathDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
 	                    pkVal = this.getPWorkID();
                 }
             }
@@ -483,7 +483,6 @@ public class AttachmentUploadController extends BaseController {
 
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();			 
-			dbUpload.setFK_FrmAttachment(attachPk);
 			dbUpload.setSort(this.getSort());
 			dbUpload.setFK_MapData(athDesc.getFK_MapData());
 			dbUpload.setFK_FrmAttachment(attachPk);
@@ -591,7 +590,6 @@ public class AttachmentUploadController extends BaseController {
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 			dbUpload.setMyPK(BP.DA.DBAccess.GenerGUID());
 			dbUpload.setNodeID( String.valueOf(getFK_Node()));
-			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
 			dbUpload.setSort(this.getSort());
 			dbUpload.setFID(this.getFID()); // 流程id.
 

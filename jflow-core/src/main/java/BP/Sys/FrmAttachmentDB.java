@@ -125,9 +125,11 @@ public class FrmAttachmentDB extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentDBAttr.FK_FrmAttachment, value);
 
-			//获取最后"_"的位置
-		int idx = value.lastIndexOf('_');
-		String val = value.substring(idx + 1);
+		if (DataType.IsNullOrEmpty(this.getFK_MapData()) == true)
+			throw new Exception("err@错误:请首先给FK_MapData赋值..");
+
+		//获取最后"_"的位置
+		String val = value.replace(this.getFK_MapData() + "_", "");
 		this.SetValByKey(FrmAttachmentDBAttr.NoOfObj, val);
 	}
 	/** 

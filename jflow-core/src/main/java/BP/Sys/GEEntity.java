@@ -201,6 +201,7 @@ public class GEEntity extends Entity
 				{
 					athDBFrom.setMyPK(BP.DA.DBAccess.GenerGUID());
 					athDBFrom.setFK_FrmAttachment(ath.getMyPK());
+					athDBFrom.setFK_MapData(ath.getFK_MapData());
 					athDBFrom.setRefPKVal(String.valueOf(this.getOID()));
 					athDBFrom.Insert();
 				}

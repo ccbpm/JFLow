@@ -124,6 +124,7 @@ public class WF_CCForm extends WebContralBase {
 					dbUpload.setMyPK(athDesc.getFK_MapData() + String.valueOf(oid));
 					dbUpload.setNodeID(String.valueOf(getFK_Node()));
 					dbUpload.setFK_FrmAttachment(this.getFK_FrmAttachment());
+					dbUpload.setFK_MapData(this.getFK_MapData());
 
 					if (athDesc.getAthUploadWay() == AthUploadWay.Inherit) {
 						/* 如果是继承，就让他保持本地的PK. */

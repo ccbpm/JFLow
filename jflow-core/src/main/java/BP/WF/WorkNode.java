@@ -8501,6 +8501,7 @@ public class WorkNode {
 
 		t.setEmpFrom(this.getExecer());
 		t.setEmpFromT(this.getExecerName());
+		t.setNodeData("@DeptNo="+WebUser.getFK_Dept()+"@DeptName=" + WebUser.getFK_DeptName());
 		t.FK_Flow = this.getHisNode().getFK_Flow();
 
 		// t.Tag = tag + "@SendNode=" + this.HisNode.NodeID;
@@ -8643,6 +8644,7 @@ public class WorkNode {
 
 		t.setEmpFrom(this.getExecer());
 		t.setEmpFromT(this.getExecerName());
+		t.setNodeData("@DeptNo="+WebUser.getFK_Dept()+"@DeptName=" + WebUser.getFK_DeptName());
 		t.FK_Flow = this.getHisNode().getFK_Flow();
 		t.setTag(tag + "@SendNode=" + this.getHisNode().getNodeID());
 

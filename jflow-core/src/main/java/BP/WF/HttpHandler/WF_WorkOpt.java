@@ -1633,6 +1633,7 @@ public class WF_WorkOpt extends WebContralBase
 		tkDt.Columns.Add("Msg", String.class);
 		tkDt.Columns.Add("EmpFrom", String.class);
 		tkDt.Columns.Add("EmpFromT", String.class);
+		tkDt.Columns.Add("DeptName", String.class);
 		tkDt.Columns.Add("RDT", String.class);
 		tkDt.Columns.Add("IsDoc", Boolean.class);
 		tkDt.Columns.Add("ParentNode", Integer.class);
@@ -1918,6 +1919,17 @@ public class WF_WorkOpt extends WebContralBase
 
 				row.setValue("EmpFrom", tk.getEmpFrom());
 				row.setValue("EmpFromT", tk.getEmpFromT());
+				//获取部门
+				String DeptName = "";
+				String[] Arrays = tk.getNodeData().split("@");
+				for (String i : Arrays)
+				{
+					if (i.contains("DeptName="))
+					{
+						DeptName = i.split("=")[1];
+					}
+				}
+				row.setValue("DeptName", DeptName);
 				row.setValue("ActionType", tk.getHisActionType().getValue());
 				row.setValue("Tag", tk.getTag());
 				row.setValue("FWCView", fwc.getFWCView());
@@ -1991,6 +2003,16 @@ public class WF_WorkOpt extends WebContralBase
 								row.setValue("Msg", mysubtk.getMsgHtml());
 								row.setValue("EmpFrom", mysubtk.getEmpFrom());
 								row.setValue("EmpFromT", mysubtk.getEmpFromT());
+								DeptName = "";
+								Arrays = tk.getNodeData().split("@");
+								for (String i : Arrays)
+								{
+									if (i.contains("DeptName="))
+									{
+										DeptName = i.split("=")[1];
+									}
+								}
+								row.setValue("DeptName", DeptName);
 								row.setValue("RDT", mysubtk.getRDT());
 								row.setValue("IsDoc", false);
 								row.setValue("ParentNode", tk.getNDFrom());
@@ -2100,6 +2122,7 @@ public class WF_WorkOpt extends WebContralBase
 					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 					row.setValue("EmpFrom", WebUser.getNo());
 					row.setValue("EmpFromT", WebUser.getName());
+					row.setValue("DeptName", WebUser.getFK_DeptName());
 					row.setValue("T_NodeIndex", ++idx);
 					row.setValue("T_CheckIndex", ++noneEmpIdx);
 					row.setValue("ActionType", ActionType.Forward.getValue());
@@ -2119,6 +2142,7 @@ public class WF_WorkOpt extends WebContralBase
 				row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 				row.setValue("EmpFrom", WebUser.getNo());
 				row.setValue("EmpFromT", WebUser.getName());
+				row.setValue("DeptName", WebUser.getFK_DeptName());
 				row.setValue("T_NodeIndex", ++idx);
 				row.setValue("T_CheckIndex", ++noneEmpIdx);
 				row.setValue("ActionType", ActionType.Forward.getValue());
@@ -2171,6 +2195,7 @@ public class WF_WorkOpt extends WebContralBase
 			row.setValue("Msg", "&nbsp;");
 			row.setValue("EmpFrom", "");
 			row.setValue("EmpFromT", "");
+			row.setValue("DeptName", "");
 			row.setValue("T_NodeIndex", ++idx);
 			row.setValue("T_CheckIndex", ++noneEmpIdx);
 
@@ -2254,6 +2279,7 @@ public class WF_WorkOpt extends WebContralBase
 		tkDt.Columns.Add("Msg", String.class);
 		tkDt.Columns.Add("EmpFrom", String.class);
 		tkDt.Columns.Add("EmpFromT", String.class);
+		tkDt.Columns.Add("DeptName", String.class);
 		tkDt.Columns.Add("RDT", String.class);
 		tkDt.Columns.Add("IsDoc", Boolean.class);
 		tkDt.Columns.Add("ParentNode", Integer.class);
@@ -2501,6 +2527,17 @@ public class WF_WorkOpt extends WebContralBase
 						row.setValue("Msg", tk.getMsgHtml());
 						row.setValue("EmpFrom", tk.getEmpFrom());
 						row.setValue("EmpFromT", tk.getEmpFromT());
+						//获取部门
+						String DeptName = "";
+						String[] Arrays = tk.getNodeData().split("@");
+						for (String i : Arrays)
+						{
+							if (i.contains("DeptName="))
+							{
+								DeptName = i.split("=")[1];
+							}
+						}
+						row.setValue("DeptName", DeptName);
 						row.setValue("ActionType", tk.getHisActionType().getValue());
 						row.setValue("Tag", tk.getTag());
 						row.setValue("FWCView", fwc.getFWCView());
@@ -2574,6 +2611,17 @@ public class WF_WorkOpt extends WebContralBase
 										row.setValue("Msg", mysubtk.getMsgHtml());
 										row.setValue("EmpFrom", mysubtk.getEmpFrom());
 										row.setValue("EmpFromT", mysubtk.getEmpFromT());
+										//获取部门
+										DeptName = "";
+										Arrays = tk.getNodeData().split("@");
+										for (String i : Arrays)
+										{
+											if (i.contains("DeptName="))
+											{
+												DeptName = i.split("=")[1];
+											}
+										}
+										row.setValue("DeptName", DeptName);
 										row.setValue("RDT", mysubtk.getRDT());
 										row.setValue("IsDoc", false);
 										row.setValue("ParentNode", tk.getNDFrom());
@@ -2663,6 +2711,7 @@ public class WF_WorkOpt extends WebContralBase
 					row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 					row.setValue("EmpFrom", WebUser.getNo());
 					row.setValue("EmpFromT", WebUser.getName());
+					row.setValue("DeptName", WebUser.getFK_DeptName());
 					row.setValue("T_NodeIndex", ++idx);
 					row.setValue("T_CheckIndex", ++noneEmpIdx);
 					row.setValue("ActionType", ActionType.Forward.getValue());
@@ -2682,6 +2731,7 @@ public class WF_WorkOpt extends WebContralBase
 				row.setValue("Msg", Dev2Interface.GetCheckInfo(this.getFK_Flow(), this.getWorkID(), this.getFK_Node(), wcDesc.getFWCDefInfo()));
 				row.setValue("EmpFrom", WebUser.getNo());
 				row.setValue("EmpFromT", WebUser.getName());
+				row.setValue("DeptName", WebUser.getFK_DeptName());
 				row.setValue("T_NodeIndex", ++idx);
 				row.setValue("T_CheckIndex", ++noneEmpIdx);
 				row.setValue("ActionType", ActionType.Forward.getValue());
@@ -2734,6 +2784,7 @@ public class WF_WorkOpt extends WebContralBase
 			row.setValue("Msg", "&nbsp;");
 			row.setValue("EmpFrom", "");
 			row.setValue("EmpFromT", "");
+			row.setValue("DeptName", "");
 			row.setValue("T_NodeIndex", ++idx);
 			row.setValue("T_CheckIndex", ++noneEmpIdx);
 

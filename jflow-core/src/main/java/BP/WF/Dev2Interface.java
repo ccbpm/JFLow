@@ -4161,7 +4161,7 @@ public class Dev2Interface
 
 
 		t.setMsg(msg);
-
+		t.setNodeData("@DeptNo=" + WebUser.getFK_Dept() + "@DeptName=" + WebUser.getFK_DeptName());
 		if (tag != null)
 		{
 			t.setTag(tag);
@@ -4280,6 +4280,8 @@ public class Dev2Interface
 		ps.Add(TrackAttr.Msg, msg);
 		ps.Add(TrackAttr.Tag, tag);
 		ps.Add(TrackAttr.RDT, DataType.getCurrentDataTime());
+		ps.Add(TrackAttr.NodeData,"@DeptNo="+WebUser.getFK_Dept() + "@DeptName="+WebUser.getFK_DeptName());
+
 		int num = DBAccess.RunSQL(ps);
 
 		if (num > 1)

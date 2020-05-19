@@ -4,6 +4,8 @@ import BP.DA.*;
 import BP.Difference.Handler.WebContralBase;
 import BP.Difference.SystemConfig;
 import BP.Sys.CCBPMRunModel;
+import BP.Sys.SysEnums;
+import BP.WF.Glo;
 import BP.Web.WebUser;
 
 
@@ -17,7 +19,26 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 
 	}
 
+	/// <summary>
+	/// 获得下拉框的值.
+	/// </summary>
+	/// <returns></returns>
+	public String BatchEditSln_InitDDLData() throws Exception
+	{
+		String fk_frm = GetRequestVal("Fk_Frm");
+		DataSet ds = new DataSet();
 
+		SysEnums ses = new SysEnums("FrmSln");
+		ds.Tables.add(ses.ToDataTableField("FrmSln"));
+
+		SysEnums se1s = new SysEnums("FWCSta");
+		ds.Tables.add(se1s.ToDataTableField("FWCSta"));
+
+		DataTable dt = DBAccess.RunSQLReturnTable(Glo.getSQLOfCheckField().replace("@FK_Frm", fk_frm));
+		dt.TableName = "CheckFields";
+		ds.Tables.add(dt);
+		return BP.Tools.Json.ToJson(ds);
+	}
 	public String RefOneFrmTreeFrms_Init() throws Exception
 	{
 		String sql = "";

@@ -25,6 +25,31 @@ import java.text.SimpleDateFormat;
  */
 public class Glo {
 
+	/// <summary>
+	/// 签批组件SQL
+	/// </summary>
+	public static String getSQLOfCheckField()
+	{
+
+			String sql = "";
+			switch (SystemConfig.getAppCenterDBType())
+			{
+				case MSSQL:
+				case MySQL:
+					sql = "SELECT '' AS No, '-请选择-' as Name ";
+					break;
+				case Oracle:
+					sql = "SELECT '' AS No, '-请选择-' as Name FROM DUAL ";
+					break;
+				case PostgreSQL:
+				default:
+					sql = "SELECT '' AS No, '-请选择-' as Name FROM Port_Emp WHERE 1=2 ";
+					break;
+			}
+			sql += " union ";
+			sql += " SELECT KeyOfEn AS No,Name From Sys_MapAttr WHERE UIContralType=14 AND FK_MapData='@FK_Frm'";
+			return sql;
+	}
 	public static String GenerGanttDataOfSubFlows(long workID) throws Exception {
 	
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);

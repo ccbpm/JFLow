@@ -886,55 +886,7 @@ public class CCFormAPI extends Dev2Interface {
 
 		/// #region 把从表的数据放入.
 		GEDtls dtls = new GEDtls(dtl.getNo());
-		QueryObject qo = null;
-		try {
-			qo = new QueryObject(dtls);
-			switch (dtl.getDtlOpenType()) {
-			case ForEmp: // 按人员来控制.
-				qo.AddWhere(GEDtlAttr.RefPK, pkval);
-				qo.addAnd();
-				qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
-				break;
-			case ForWorkID: // 按工作ID来控制
-				qo.addLeftBracket();
-				qo.AddWhere(GEDtlAttr.RefPK, String.valueOf(pkval));
-				qo.addOr();
-				qo.AddWhere(GEDtlAttr.FID, pkval);
-				qo.addRightBracket();
-				break;
-			case ForFID: // 按流程ID来控制.
-				if (fid == 0) {
-					qo.AddWhere(GEDtlAttr.FID, pkval);
-				} else {
-					qo.AddWhere(GEDtlAttr.FID, fid);
-				}
-				break;
-			}
-		} catch (RuntimeException ex) {
-			dtls.getNewEntity().CheckPhysicsTable();
-			throw ex;
-		}
-
-		// 条件过滤.
-		if (!dtl.getFilterSQLExp().equals("")) {
-			String[] strs = dtl.getFilterSQLExp().split("[=]", -1);
-			if (strs.length == 2) {
-				qo.addAnd();
-				String value = Glo.DealExp(strs[1],en);
-				qo.AddWhere(strs[0], value);
-			}
-		}
-
-		// 增加排序.
-		// qo.addOrderByDesc( dtls.getNewEntity().PKField );
-
-		// 从表
-		DataTable dtDtl = qo.DoQueryToTable();
-
-		// 查询所有动态SQL查询类型的字典表记录
-		SFTable sftable = null;
-		DataTable dtsftable = null;
-		DataRow[] drs = null;
+		DataTable dtDtl = GetDtlInfo(dtl, dtls, pkval, fid, en);
 
 		// 为明细表设置默认值.
 		MapAttrs dtlAttrs = new MapAttrs(dtl.getNo());
@@ -1019,5 +971,47 @@ public class CCFormAPI extends Dev2Interface {
 
 		myds.Tables.add(dtlBlank.ToDataTableField("Blank"));
 		return myds;
+	}
+	private static  DataTable GetDtlInfo(MapDtl dtl, GEDtls dtls, long pkval, long fid, GEEntity en) throws Exception{
+		DataTable dt = new DataTable();
+		QueryObject qo = null;
+		try {
+			qo = new QueryObject(dtls);
+			switch (dtl.getDtlOpenType()) {
+				case ForEmp: // 按人员来控制.
+					qo.AddWhere(GEDtlAttr.RefPK, pkval);
+					qo.addAnd();
+					qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
+					break;
+				case ForWorkID: // 按工作ID来控制
+					qo.addLeftBracket();
+					qo.AddWhere(GEDtlAttr.RefPK, String.valueOf(pkval));
+					qo.addOr();
+					qo.AddWhere(GEDtlAttr.FID, pkval);
+					qo.addRightBracket();
+					break;
+				case ForFID: // 按流程ID来控制.
+					if (fid == 0) {
+						qo.AddWhere(GEDtlAttr.FID, pkval);
+					} else {
+						qo.AddWhere(GEDtlAttr.FID, fid);
+					}
+					break;
+			}
+			//条件过滤.
+			if (!dtl.getFilterSQLExp().equals("")) {
+				String[] strs = dtl.getFilterSQLExp().split("[=]", -1);
+				if (strs.length == 2) {
+					qo.addAnd();
+					String value = Glo.DealExp(strs[1],en);
+					qo.AddWhere(strs[0], value);
+				}
+			}
+			// 从表
+			return qo.DoQueryToTable();
+		} catch (RuntimeException ex) {
+			dtls.getNewEntity().CheckPhysicsTable();
+			return GetDtlInfo(dtl, dtls, pkval, fid, en);
+		}
 	}
 }

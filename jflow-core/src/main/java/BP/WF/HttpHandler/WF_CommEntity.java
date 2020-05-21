@@ -868,6 +868,13 @@ public class WF_CommEntity extends WebContralBase {
 			int i = 0;
 			if (oneVsM.size() > 0) {
 				for (AttrOfOneVSM vsM : oneVsM) {
+					String rootNo = vsM.RootNo;
+					if (rootNo!=null && rootNo.contains("@") == true)
+					{
+						rootNo = rootNo.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+						rootNo = rootNo.replace("@WebUser.OrgNo", WebUser.getOrgNo());
+					}
+
 					// 判断该dot2dot是否显示？
 					Entity enMM = vsM.getEnsOfMM().getNewEntity();
 					enMM.SetValByKey(vsM.getAttrOfOneInMM(), this.getPKVal());
@@ -876,21 +883,12 @@ public class WF_CommEntity extends WebContralBase {
 					}
 					DataRow dr = dtM.NewRow();
 					dr.setValue("No", enMM.toString());
-					// dr["GroupName"] = vsM.GroupName;
 					if (en.getPKVal() != null) {
 						// 判断模式.
 						String url = "";
 						if (vsM.dot2DotModel == Dot2DotModel.TreeDept) {
-							// url = "Dot2DotTreeDeptModel.htm?EnsName=" +
-							// en.GetNewEntities.ToString() + "&EnName=" +
-							// this.EnName + "&AttrKey=" +
-							// vsM.getEnsOfMM().ToString();
-							// url = "Branches.htm?EnName=" + en.ToString() +
-							// "&AttrKey=" + vsM.getEnsOfMM().ToString();
-
 							url = "Branches.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName="
 									+ vsM.getEnsOfMM().toString();
-							// url += "&PKVal=" + en.getPKVal();
 							url += "&Dot2DotEnName=" + vsM.getEnsOfMM().getNewEntity().toString(); // 存储实体类.
 							url += "&AttrOfOneInMM=" + vsM.getAttrOfOneInMM(); // 存储表那个与主表关联.
 																				// 比如:
@@ -900,19 +898,12 @@ public class WF_CommEntity extends WebContralBase {
 							url += "&EnsOfM=" + vsM.getEnsOfM().toString(); // 默认的B实体分组依据.
 																			// 比如:FK_Station.
 							url += "&DefaultGroupAttrKey=" + vsM.DefaultGroupAttrKey; // 默认的B实体分组依据.
+							url += "&RootNo=" + rootNo;
 
 						} else if (vsM.dot2DotModel == Dot2DotModel.TreeDeptEmp) {
-							// url = "Dot2DotTreeDeptEmpModel.htm?EnsName=" +
-							// en.GetNewEntities.ToString() + "&EnName=" +
-							// this.EnName + "&AttrKey=" +
-							// vsM.getEnsOfMM().ToString();
-							// url = "Dot2Dot.aspx?EnsName=" +
-							// en.GetNewEntities.ToString() + "&EnName=" +
-							// this.EnName + "&AttrKey=" +
-							// vsM.getEnsOfMM().ToString();
+							
 							url = "BranchesAndLeaf.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName="
 									+ vsM.getEnsOfMM().toString();
-							// url += "&PKVal=" + en.getPKVal();
 							url += "&Dot2DotEnName=" + vsM.getEnsOfMM().getNewEntity().toString(); // 存储实体类.
 							url += "&AttrOfOneInMM=" + vsM.getAttrOfOneInMM(); // 存储表那个与主表关联.
 																				// 比如:
@@ -922,14 +913,8 @@ public class WF_CommEntity extends WebContralBase {
 							url += "&EnsOfM=" + vsM.getEnsOfM().toString(); // 默认的B实体分组依据.
 																			// 比如:FK_Station.
 							url += "&DefaultGroupAttrKey=" + vsM.DefaultGroupAttrKey; // 默认的B实体分组依据.
-																						// 比如:FK_Station.
-							// url += "&RootNo=" + vsM.RootNo; //默认的B实体分组依据.
-							// 比如:FK_Station.
+							url += "&RootNo=" + rootNo;
 						} else {
-							// url = "Dot2Dot.aspx?EnsName=" +
-							// en.GetNewEntities.ToString() + "&EnName=" +
-							// this.EnName + "&AttrKey=" +
-							// vsM.getEnsOfMM().ToString();
 							url = "Dot2Dot.htm?EnName=" + this.getEnName() + "&Dot2DotEnsName="
 									+ vsM.getEnsOfMM().toString(); // 比如:BP.WF.Template.NodeStations
 							url += "&AttrOfOneInMM=" + vsM.getAttrOfOneInMM(); // 存储表那个与主表关联.
@@ -942,9 +927,6 @@ public class WF_CommEntity extends WebContralBase {
 							url += "&DefaultGroupAttrKey=" + vsM.DefaultGroupAttrKey; // 默认的B实体分组依据.
 																						// 比如:FK_Station.
 
-							// +"&RefAttrEnsName=" + vsM.EnsOfM.ToString();
-							// url += "&RefAttrKey=" + vsM.getAttrOfOneInMM() +
-							// "&RefAttrEnsName=" + vsM.EnsOfM.ToString();
 						}
 
 						dr.setValue("Url", url + "&" + en.getPK() + "=" + en.getPKVal() + "&PKVal=" + en.getPKVal());

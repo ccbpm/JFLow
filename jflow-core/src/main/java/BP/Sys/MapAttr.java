@@ -1504,5 +1504,16 @@ public class MapAttr extends EntityMyPK
 		BP.DA.DBAccess.RunSQLs(sqls);
 		return super.beforeDelete();
 	}
+	@Override
+	protected void afterDelete() throws Exception{
+		if(this.getUIContralType() == UIContralType.AthShow)
+		{
+			//删除附件
+			FrmAttachment ath = new FrmAttachment();
+			ath.setMyPK(this.getMyPK());
+			ath.Delete();
+		}
+		super.afterDelete();
+	}
 	
 }

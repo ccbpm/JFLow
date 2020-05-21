@@ -73,7 +73,7 @@ public class FlowCheckError
 	 信息
 	 
 	 @param info
-	 @param nd
+	 @param info
 	 * @throws Exception 
 	*/
 
@@ -90,7 +90,7 @@ public class FlowCheckError
 	 警告
 	 
 	 @param info
-	 @param nd
+	 @param info
 	 * @throws Exception 
 	*/
 
@@ -118,8 +118,7 @@ public class FlowCheckError
 	 
 	 @param type 类型
 	 @param info 消息
-	 @param nd 节点
-	 @return 
+	 @return
 	 * @throws Exception 
 	*/
 
@@ -187,8 +186,6 @@ public class FlowCheckError
 
 			//检查如果是合流节点必须不能是由上一个节点指定接受人员.
 			CheckMode_HeliuAccpterRole();
-
-			Node.CheckFlow(this.flow);
 
 			//创建track.
 			Track.CreateOrRepairTrackTable(this.flow.getNo());

@@ -454,42 +454,13 @@ public class Node extends Entity {
 	 * @return 返回检查信息
 	 * @throws Exception
 	 */
-	public static String CheckFlow(Flow fl) throws Exception {
-		String sqls = "UPDATE WF_Node SET IsCCFlow=0";
-		sqls += "@UPDATE WF_Node  SET IsCCFlow=1 WHERE NodeID IN (SELECT NodeID FROM WF_Cond a WHERE a.NodeID= NodeID AND CondType=1 )";
-		BP.DA.DBAccess.RunSQLs(sqls);
-
-		if (SystemConfig.getOSDBSrc() == OSDBSrc.Database) {
-			// 删除必要的数据.
-//			DBAccess.RunSQL("DELETE FROM WF_NodeEmp WHERE FK_Emp  NOT IN (SELECT No from Port_Emp)");
-//			DBAccess.RunSQL("DELETE FROM WF_Emp WHERE NO NOT IN (SELECT No FROM Port_Emp )");
-//			DBAccess.RunSQL(
-//					"UPDATE WF_Emp SET Name=(SELECT Name From Port_Emp WHERE Port_Emp.No=WF_Emp.No),FK_Dept=(select FK_Dept from Port_Emp where Port_Emp.No=WF_Emp.No)");
-		}
-
-		Nodes nds = new Nodes();
-		nds.Retrieve(NodeAttr.FK_Flow, fl.getNo());
-
-		if (nds.size() == 0) {
-			return "流程[" + fl.getNo() + fl.getName() + "]中没有节点数据，您需要注册一下这个流程。";
-		}
-
-		// 更新是否是有完成条件的节点。
-		BP.DA.DBAccess.RunSQL("UPDATE WF_Node SET IsCCFlow=0  WHERE FK_Flow='" + fl.getNo() + "'");
-		BP.DA.DBAccess.RunSQL("DELETE FROM WF_Direction WHERE Node=0 OR ToNode=0");
-		BP.DA.DBAccess.RunSQL("DELETE FROM WF_Direction WHERE Node  NOT IN (SELECT NODEID FROM WF_Node )");
-		BP.DA.DBAccess.RunSQL("DELETE FROM WF_Direction WHERE ToNode  NOT IN (SELECT NODEID FROM WF_Node) ");
+	public static String CheckFlow(Nodes nds,String flowNo) throws Exception {
 
 		String sql = "";
 		DataTable dt = null;
 
 		// 单据信息，岗位，节点信息。
 		for (Node nd : nds.ToJavaList()) {
-			BP.Sys.MapData md = new BP.Sys.MapData();
-			md.setNo("ND" + nd.getNodeID());
-			if (md.getIsExits() == false) {
-				nd.CreateMap();
-			}
 
 			// 工作岗位。
 			sql = "SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + nd.getNodeID();
@@ -534,7 +505,7 @@ public class Node extends Entity {
 		}
 
 		// 处理岗位分组.
-		sql = "SELECT HisStas, COUNT(*) as NUM FROM WF_Node WHERE FK_Flow='" + fl.getNo() + "' GROUP BY HisStas";
+		sql = "SELECT HisStas, COUNT(*) as NUM FROM WF_Node WHERE FK_Flow='" + flowNo + "' GROUP BY HisStas";
 		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows) {
 			String stas = dr.getValue(0).toString();
@@ -554,14 +525,7 @@ public class Node extends Entity {
 				nd.DirectUpdate();
 			}
 		}
-		/* 判断流程的类型 */
-		sql = "SELECT Name FROM WF_Node WHERE (NodeWorkType=" + NodeWorkType.StartWorkFL.getValue()
-				+ " OR NodeWorkType=" + NodeWorkType.WorkFHL.getValue() + " OR NodeWorkType="
-				+ NodeWorkType.WorkFL.getValue() + " OR NodeWorkType=" + NodeWorkType.WorkHL.getValue()
-				+ ") AND (FK_Flow='" + fl.getNo() + "')";
-		dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		fl.DirectUpdate();
-		return null;
+		return "检查成功.";
 	}
 
 	@Override
@@ -601,7 +565,6 @@ public class Node extends Entity {
 
 		Flow fl = new Flow(this.getFK_Flow());
 
-		Node.CheckFlow(fl);
 		this.setFlowName(fl.getName());
 
 		DBAccess.RunSQL("UPDATE Sys_MapData SET Name='" + this.getName() + "' WHERE No='ND" + this.getNodeID() + "' AND Name=''");

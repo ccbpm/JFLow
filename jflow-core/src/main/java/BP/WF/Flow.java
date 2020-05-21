@@ -1754,130 +1754,72 @@ public class Flow extends BP.En.EntityNoName {
 		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
 		String frms = "";
 		String err = "";
+		MapData md = new MapData();
 		for (FrmNode item : fns.ToJavaList()) {
 			if (frms.contains(item.getFK_Frm() + ",")) {
 				continue;
 			}
 			frms += item.getFK_Frm() + ",";
-			try {
-				MapData md = new MapData(item.getFK_Frm());
-				md.RepairMap();
-				Entity en = md.getHisEn();
-				en.CheckPhysicsTable();
-			} catch (RuntimeException ex) {
-				err += "@节点绑定的表单:" + item.getFK_Frm() + ",已经被删除了.异常信息." + ex.getMessage();
-			}
+			md.setNo(item.getFK_Frm());
+			if (md.getIsExits() == false)
+				err += "@节点" + item.getFK_Node() + "绑定的表单:" + item.getFK_Frm() + ",已经被删除了.";
 		}
 
 		/// #endregion
-
-		/// #region 检查消息推送。
-		PushMsgs pus = new PushMsgs();
-		pus.Retrieve(PushMsgAttr.FK_Flow, this.getNo());
-		for (Node nd : nds.ToJavaList()) {
-			// 创建默认信息.
-			CreatePushMsg(nd);
-		}
 
 		try {
 
 			/// #region 对流程的设置做必要的检查.
 			// 设置流程名称.
-			DBAccess.RunSQL("UPDATE WF_Node SET FlowName = (SELECT Name FROM WF_Flow WHERE NO=WF_Node.FK_Flow)");
+			DBAccess.RunSQL("UPDATE WF_Node SET FlowName = (SELECT Name FROM WF_Flow WHERE NO=WF_Node.FK_Flow) WHERE FK_Flow='" + this.getNo() + "'");
 
 			// 设置单据编号只读格式.
 			DBAccess.RunSQL("UPDATE Sys_MapAttr SET UIIsEnable=0 WHERE KeyOfEn='BillNo' AND UIIsEnable=1");
 
 			// 开始节点不能有会签.
-			DBAccess.RunSQL("UPDATE WF_Node SET HuiQianRole=0 WHERE NodePosType=0 AND HuiQianRole !=0");
+			DBAccess.RunSQL("UPDATE WF_Node SET HuiQianRole=0 WHERE NodePosType=0 AND HuiQianRole !=0 AND FK_Flow='" + this.getNo() + "'");
 
 			// 开始节点不能有退回.
-			DBAccess.RunSQL("UPDATE WF_Node SET ReturnRole=0 WHERE NodePosType=0 AND ReturnRole !=0");
+			//DBAccess.RunSQL("UPDATE WF_Node SET ReturnRole=0 WHERE NodePosType=0 AND ReturnRole !=0");
 
 			/// #endregion 对流程的设置做必要的检查.
 
 			// 删除垃圾,非法数据.
-			String sqls = "DELETE FROM Sys_FrmSln WHERE FK_MapData not in (select No from Sys_MapData)";
+			String sqls = "DELETE FROM Sys_FrmSln WHERE FK_MapData NOT IN (SELECT No from Sys_MapData)";
 			sqls += "@ DELETE FROM WF_Direction WHERE Node=ToNode";
 			DBAccess.RunSQLs(sqls);
 
 			// 更新计算数据.
-			this.setNumOfBill(DBAccess.RunSQLReturnValInt(
-					"SELECT count(*) FROM WF_BillTemplate WHERE NodeID IN (SELECT NodeID FROM WF_Flow WHERE No='"
-							+ this.getNo() + "')"));
-			this.setNumOfDtl(DBAccess.RunSQLReturnValInt(
-					"SELECT count(*) FROM Sys_MapDtl WHERE FK_MapData='ND" + Integer.parseInt(this.getNo()) + "Rpt'"));
-			this.DirectUpdate();
+//			this.setNumOfBill(DBAccess.RunSQLReturnValInt(
+//					"SELECT count(*) FROM WF_BillTemplate WHERE NodeID IN (SELECT NodeID FROM WF_Flow WHERE No='"
+//							+ this.getNo() + "')"));
+//			this.setNumOfDtl(DBAccess.RunSQLReturnValInt(
+//					"SELECT count(*) FROM Sys_MapDtl WHERE FK_MapData='ND" + Integer.parseInt(this.getNo()) + "Rpt'"));
+//			this.DirectUpdate();
 
 			String msg = "@  =======  关于《" + this.getName() + " 》流程检查报告  ============";
 			msg += "@信息输出分为三种: 信息  警告  错误. 如果遇到输出的错误，则必须要去修改或者设置.";
 			msg += "@流程检查目前还不能覆盖100%的错误,需要手工的运行一次才能确保流程设计的正确性.";
 
-			/// #region 检查是否是数据合并模式?
-			if (this.getHisDataStoreModel() == DataStoreModel.SpecTable) {
-				for (Node nd : nds.ToJavaList()) {
-					MapData md = new MapData();
-					md.setNo("ND" + nd.getNodeID());
-					if (md.RetrieveFromDBSources() == 1) {
-						if (!this.getPTable().equals(md.getPTable())) {
-							md.setPTable(this.getPTable());
-							md.Update();
-						}
-					}
-				}
-			}
-
-			/// #endregion 检查是否是数据合并模式?
-
-			// 单据模版.
-			BillTemplates bks = new BillTemplates(this.getNo());
-
 			// 条件集合.
-			Conds conds = new Conds(this.getNo());
+			//Conds conds = new Conds(this.getNo());
 
 			/// #region 对节点进行检查
 			// 节点表单字段数据类型检查--begin---------
-			msg += CheckFormFields();
+			msg += CheckFormFields(nds);
 			// 表单字段数据类型检查-------End-----
+			//获得字段用于校验sql.
+			MapAttrs mattrs = new MapAttrs("ND" + Integer.parseInt(this.getNo()) + "Rpt");
 
+			//查询所有的条件.
+			Conds conds = new Conds();
+			conds.Retrieve(CondAttr.FK_Flow, this.getNo());
 			for (Node nd : nds.ToJavaList()) {
 				// 设置它的位置类型.
 				nd.RetrieveFromDBSources();
 				nd.SetValByKey(NodeAttr.NodePosType, nd.GetHisNodePosType().getValue());
 
 				msg += "@信息: -------- 开始检查节点ID:(" + nd.getNodeID() + ")名称:(" + nd.getName() + ")信息 -------------";
-
-				/// #region 修复数节点表单数据库.
-				msg += "@信息:开始补充&修复节点必要的字段";
-				try {
-					nd.RepareMap(this);
-				} catch (RuntimeException ex) {
-					throw new RuntimeException("@修复节点表必要字段时出现错误:" + nd.getName() + " - " + ex.getMessage());
-				}
-
-				msg += "@信息:开始修复节点物理表.";
-				try {
-					nd.getHisWork().CheckPhysicsTable();
-				} catch (RuntimeException ex) {
-					msg += "@检查节点表字段时出现错误:" + "NodeID" + nd.getNodeID() + " Table:"
-							+ nd.getHisWork().getEnMap().getPhysicsTable() + " Name:" + nd.getName()
-							+ " , 节点类型NodeWorkTypeText=" + nd.getNodeWorkTypeText() + "出现错误.@err=" + ex.getMessage();
-				}
-
-				// 从表检查。
-				MapDtls dtls = new BP.Sys.MapDtls("ND" + nd.getNodeID());
-				for (MapDtl dtl : dtls.ToJavaList()) {
-					msg += "@检查明细表:" + dtl.getName();
-					try {
-						dtl.getHisGEDtl().CheckPhysicsTable();
-					} catch (RuntimeException ex) {
-						msg += "@检查明细表时间出现错误" + ex.getMessage();
-					}
-				}
-
-				/// #endregion 修复数节点表单数据库.
-
-				MapAttrs mattrs = new MapAttrs("ND" + nd.getNodeID());
 
 				/// #region 对节点的访问规则进行检查
 
@@ -1929,14 +1871,7 @@ public class Flow extends BP.En.EntityNoName {
 					} else {
 						try {
 							String sql = nd.getDeliveryParas();
-							for (MapAttr item : mattrs.ToJavaList()) {
-								sql = sql.replace("@" + item.getKeyOfEn(), "0");
-							}
-
-							sql = sql.replace("@WebUser.No", "ss");
-							sql = sql.replace("@WebUser.Name", "ss");
-							sql = sql.replace("@WebUser.FK_DeptName", "ss");
-							sql = sql.replace("@WebUser.FK_Dept", "ss");
+							sql = Glo.DealExp(sql, this.getHisGERpt(), null);
 
 							sql = sql.replace("''''", "''"); // 出现双引号的问题.
 
@@ -2000,27 +1935,9 @@ public class Flow extends BP.En.EntityNoName {
 					for (Cond cond : conds.ToJavaList()) {
 						if (cond.getFK_Node() == nd.getNodeID() && cond.getHisCondType() == CondType.Flow) {
 							nd.setIsCCFlow(true);
-							nd.Update();
+							nd.DirectUpdate();
 						}
 
-						Node ndOfCond = new Node();
-						ndOfCond.setNodeID(ndOfCond.getNodeID());
-						if (ndOfCond.RetrieveFromDBSources() == 0) {
-							continue;
-						}
-
-						try {
-							if (cond.getAttrKey().length() < 2) {
-								continue;
-							}
-							if (ndOfCond.getHisWork().getEnMap().getAttrs().contains(cond.getAttrKey()) == false) {
-								throw new RuntimeException(
-										"@错误:属性:" + cond.getAttrKey() + " , " + cond.getAttrName() + " 不存在。");
-							}
-						} catch (RuntimeException ex) {
-							msg += "@错误:" + ex.getMessage();
-							ndOfCond.Delete();
-						}
 						msg += cond.getAttrKey() + cond.getAttrName() + cond.getOperatorValue() + "、";
 					}
 					msg += "@(" + nd.getName() + ")方向条件检查完成.....";
@@ -2049,7 +1966,7 @@ public class Flow extends BP.En.EntityNoName {
 
 				// @李国文. 如果是子线城，子线程的表单必须是轨迹模式。
 				if (nd.getHisRunModel() == RunModel.SubThread) {
-					MapData md = new MapData("ND" + nd.getNodeID());
+					md = new MapData("ND" + nd.getNodeID());
 					if (!md.getPTable().equals("ND" + nd.getNodeID())) {
 						md.setPTable("ND" + nd.getNodeID());
 						md.Update();
@@ -2059,14 +1976,7 @@ public class Flow extends BP.En.EntityNoName {
 
 			/// #endregion
 
-			/// #region 执行一次保存.(暂时注释，在保存节点的时候已经更新缓存）
-			NodeExts nes = new NodeExts();
-			nes.Retrieve(NodeAttr.FK_Flow, this.getNo());
-			for (NodeExt item : nes.ToJavaList()) {
-				item.Update(); // 调用里面的业务逻辑执行检查.
-			}
-
-			/// #region 检查越轨流程,子流程发起。
+			/// #region 检查延续流程,子流程发起。
 			SubFlowYanXus ygflows = new SubFlowYanXus();
 			ygflows.Retrieve(SubFlowYanXuAttr.SubFlowNo, this.getNo(), SubFlowYanXuAttr.SubFlowType,
 					SubFlowType.YanXuFlow.getValue());
@@ -2110,7 +2020,7 @@ public class Flow extends BP.En.EntityNoName {
 			for (Attr attr : rpt.getEnMap().getAttrs()) {
 				rpt.SetValByKey(attr.getKey(), "0");
 			}
-
+			//处理焦点字段.
 			for (Node nd : nds.ToJavaList()) {
 				if (nd.getFocusField().trim().equals("")) {
 					Work wk = nd.getHisWork();
@@ -2173,7 +2083,7 @@ public class Flow extends BP.En.EntityNoName {
 
 			/// #endregion
 
-			/// #region 检查如果是合流节点必须不能是由上一个节点指定接受人员。 @dudongliang 需要翻译.
+			/// #region 检查如果是合流节点必须不能是由上一个节点指定接受人员。
 			for (Node nd : nds.ToJavaList()) {
 				// 如果是合流节点.
 				if (nd.getHisNodeWorkType() == NodeWorkType.WorkHL || nd.getHisNodeWorkType() == NodeWorkType.WorkFHL) {
@@ -2189,11 +2099,8 @@ public class Flow extends BP.En.EntityNoName {
 
 			msg += "@流程报表检查完成...";
 
-			// 检查流程.
-			Node.CheckFlow(this);
-
-			// 一直没有找到设置3列，自动回到四列的情况.
-			DBAccess.RunSQL("UPDATE Sys_MapAttr SET ColSpan=3 WHERE  UIHeight<=23 AND ColSpan=4");
+			// 检查流程， 处理计算字段.
+			Node.CheckFlow(nds,this.getNo());
 
 			// 创建track.
 			Track.CreateOrRepairTrackTable(this.getNo());
@@ -2205,16 +2112,15 @@ public class Flow extends BP.En.EntityNoName {
 	}
 
 	/**
-	 * 节点表单字段数据类型检查，名字相同的字段出现类型不同的处理方法：依照不同于NDxxRpt表中同名字段类型为基准
-	 * 
+	 * 节点表单字段数据类型检查，名字相同的字段出现类型不同的处理方法：
+	 * 依照不同于NDxxRpt表中同名字段类型为基准
 	 * @return 检查结果
 	 * @throws Exception
 	 */
-	private String CheckFormFields() throws Exception {
+	private String CheckFormFields(Nodes nds) throws Exception {
 		StringBuilder errorAppend = new StringBuilder();
 		errorAppend.append("@信息: -------- 流程节点表单的字段类型检查: ------ ");
 		try {
-			Nodes nds = new Nodes(this.getNo());
 			String fk_mapdatas = "'ND" + Integer.parseInt(this.getNo()) + "Rpt'";
 			for (Node nd : nds.ToJavaList()) {
 				fk_mapdatas += ",'ND" + nd.getNodeID() + "'";
@@ -3158,6 +3064,8 @@ public class Flow extends BP.En.EntityNoName {
 		for (DataRow dr : dtExits.Rows) {
 			pks += dr.getValue(0) + "@";
 		}
+		//查询出来已经有的映射.
+		MapAttrs attrs = new MapAttrs(fk_mapData);
 
 		// 遍历 - 所有节点表单字段的合集
 		for (DataRow dr : dt.Rows) {
@@ -3181,13 +3089,14 @@ public class Flow extends BP.En.EntityNoName {
 				ma.setDefVal("");
 			}
 
-			// 如果不存在.
-			if (ma.getIsExits() == false) {
-				ma.Insert();
-			}
-		}
+			//如果包含他,就说已经存在.
+			if (attrs.Contains("MyPK", ma.getMyPK()) == true)
+				continue;
 
-		MapAttrs attrs = new MapAttrs(fk_mapData);
+			// 如果不存在.
+			ma.Insert();
+
+		}
 
 		// 创建mapData.
 		BP.Sys.MapData md = new BP.Sys.MapData();
@@ -3197,9 +3106,8 @@ public class Flow extends BP.En.EntityNoName {
 			md.setPTable(this.getPTable());
 			md.Insert();
 		} else {
-			md.setName(this.getName());
-			md.setPTable(this.getPTable());
-			md.Update();
+			if (md.getName().equals(this.getName()) || md.getPTable().equals(this.getPTable()) == false)
+				md.Update();
 		}
 
 		/// #endregion 插入字段。
@@ -5852,7 +5760,7 @@ public class Flow extends BP.En.EntityNoName {
 
 		// 设置审核组件的高度
 		DBAccess.RunSQL("UPDATE WF_Node SET FWC_H=300,FTC_H=300 WHERE NodeID='" + nd.getNodeID() + "'");
-
+		//创建默认的推送消息.
 		CreatePushMsg(nd);
 
 		return nd;
@@ -6082,7 +5990,6 @@ public class Flow extends BP.En.EntityNoName {
 	@Override
 	protected boolean beforeUpdate() throws Exception {
 		this.setVer(BP.DA.DataType.getCurrentDataTime());
-		Node.CheckFlow(this);
 		return super.beforeUpdate();
 	}
 

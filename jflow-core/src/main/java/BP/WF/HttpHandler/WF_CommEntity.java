@@ -1070,7 +1070,6 @@ public class WF_CommEntity extends WebContralBase {
 		String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
 
-		// string enName = this.GetRequestVal("EnName");
 		Entity en = ClassFactory.GetEn(this.getEnName());
 		en.setPKVal(this.getPKVal());
 		en.Retrieve();
@@ -1096,6 +1095,9 @@ public class WF_CommEntity extends WebContralBase {
 			rootNo = WebUser.getFK_Dept();
 		}
 
+		if (rootNo.equals("@WebUser.OrgNo") || rootNo.equals("WebUser.OrgNo"))
+			rootNo = WebUser.getOrgNo();
+
 		/// #region 生成树目录.
 		String ensOfM = this.GetRequestVal("EnsOfM"); // 多的实体.
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
@@ -1111,7 +1113,22 @@ public class WF_CommEntity extends WebContralBase {
 		}
 
 		Entities trees = attr.getHisFKEns();
-		trees.RetrieveAll();
+		Entity tree = trees.getNewEntity();
+		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true
+				&& tree.getEnMap().getAttrs().Contains("Idx") == true)
+		{
+			if(rootNo.equals("0"))
+				trees.Retrieve("ParentNo", rootNo, "Idx");
+			else
+				trees.Retrieve("No", rootNo, "Idx");
+		}
+		else
+		{
+			if (rootNo.equals("0"))
+				trees.Retrieve("ParentNo", rootNo);
+			else
+				trees.Retrieve("No", rootNo);
+		}
 
 		DataTable dt = trees.ToDataTableField("DBTrees");
 		// 如果没有parnetNo 列，就增加上, 有可能是分组显示使用这个模式.
@@ -1148,6 +1165,44 @@ public class WF_CommEntity extends WebContralBase {
 		/// #endregion 生成选择的数据.
 
 		return BP.Tools.Json.ToJson(ds);
+	}
+
+	public String BranchesAndLeaf_GetTreesByParentNo() throws Exception
+	{
+		String rootNo = GetRequestVal("RootNo");
+		if (DataType.IsNullOrEmpty(rootNo))
+			rootNo = "0";
+
+		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
+		String ensOfM = this.GetRequestVal("EnsOfM"); //多的实体.
+		Entities ensMen = ClassFactory.GetEns(ensOfM);
+		Entity enMen = ensMen.getNewEntity();
+
+		Attr attr = enMen.getEnMap().GetAttrByKey(defaultGroupAttrKey);
+		if (attr == null)
+			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不存在，请确认是否删除了该属性?";
+
+		if (attr.getMyFieldType() == FieldType.Normal)
+			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不能是普通字段，必须是外键或者枚举.";
+
+		Entities trees = attr.getHisFKEns();
+		//判断改类是否存在Idx
+		Entity tree = trees.getNewEntity();
+		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true
+				&& tree.getEnMap().getAttrs().Contains("Idx") == true)
+			trees.Retrieve("ParentNo",rootNo,"Idx");
+		else
+			trees.Retrieve("ParentNo", rootNo);
+
+		DataTable dt = trees.ToDataTableField("DBTrees");
+		//如果没有parnetNo 列，就增加上, 有可能是分组显示使用这个模式.
+		if (dt.Columns.contains("ParentNo") == false) {
+			dt.Columns.Add("ParentNo");
+			for (DataRow dr : dt.Rows) {
+				dr.setValue("ParentNo", rootNo);
+			}
+		}
+		return BP.Tools.Json.ToJson(dt);
 	}
 
 	/// #endregion 部门人员模式.

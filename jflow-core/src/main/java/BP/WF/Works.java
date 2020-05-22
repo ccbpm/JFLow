@@ -35,16 +35,6 @@ public abstract class Works extends EntitiesOID
 		///#endregion
 
 
-		///#region 查询方法
-	public final int Retrieve(String fromDataTime, String toDataTime) throws Exception
-	{
-		QueryObject qo = new QueryObject(this);
-		qo.setTop( 90000);
-		qo.AddWhere(WorkAttr.RDT, " >=", fromDataTime);
-		qo.addAnd();
-		qo.AddWhere(WorkAttr.RDT, " <= ", toDataTime);
-		return qo.DoQuery();
-	}
 
 		///#endregion
 }

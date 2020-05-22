@@ -1863,19 +1863,7 @@ public class FlowExt extends EntityNoName
 	{
 		return "../../Admin/AttrFlow/Exp.htm?FK_Flow=" + this.getNo()+ "&Lang=CH";
 	}
-	/** 
-	 执行重新装载数据
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String DoReloadRptData() throws Exception
-	{
-		Flow fl = new Flow();
-		fl.setNo(this.getNo());
-		fl.RetrieveFromDBSources();
-		return fl.DoReloadRptData();
-	}
+
 	/** 
 	 删除数据.
 	 

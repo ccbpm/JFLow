@@ -123,4 +123,16 @@ public class GERptAttr
 	 数量
 	*/
 	public static final String MyNum = "MyNum";
+	/**
+	 RDT
+	 */
+	public static final String RDT = "RDT";
+	/// <summary>
+	/// CDT
+	/// </summary>
+	public static final String CDT = "CDT";
+	/// <summary>
+	/// 记录人
+	/// </summary>
+	public static final String Rec = "Rec";
 }

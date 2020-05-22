@@ -1128,8 +1128,8 @@ public class WorkNode {
 					}
 
 					skipWork.setRec(this.getExecer());
-					skipWork.SetValByKey(WorkAttr.RDT, DataType.getCurrentDataTime());
-					skipWork.SetValByKey(WorkAttr.CDT, DataType.getCurrentDataTime());
+//					skipWork.SetValByKey(WorkAttr.RDT, DataType.getCurrentDataTime());
+//					skipWork.SetValByKey(WorkAttr.CDT, DataType.getCurrentDataTime());
 
 					skipWork.ResetDefaultVal();
 

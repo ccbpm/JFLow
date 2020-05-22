@@ -31,6 +31,9 @@ public class StartWorkAttr extends WorkAttr
 	public static final String PFlowNo = "PFlowNo";
 	public static final String PWorkID = "PWorkID";
 	public static final String PNodeID = "PNodeID";
-
+	/// <summary>
+	/// 参与人
+	/// </summary>
+	public static final String Emps = "Emps";
 		///#endregion 父子流程属性
 }

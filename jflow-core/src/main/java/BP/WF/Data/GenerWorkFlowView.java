@@ -637,7 +637,7 @@ public class GenerWorkFlowView extends Entity
 			wk.DirectUpdate();
 			return "不需要更新数据.";
 		}
-		infos += "@WorkID=" + wk.getOID() + " =" + wk.getRec() + "  dt=" + wk.getRDT() + "被修复.";
+		infos += "@WorkID=" + wk.getOID() + " =" + wk.getRec() + "被修复.";
 
 		return infos;
 	}
@@ -706,7 +706,7 @@ public class GenerWorkFlowView extends Entity
 					wk.DirectUpdate();
 					continue;
 				}
-				infos += "@WorkID=" + wk.getOID() + " =" + wk.getRec() + "  dt=" + wk.getRDT() + "被修复.";
+				infos += "@WorkID=" + wk.getOID() + " =" + wk.getRec() + "被修复.";
 			}
 		}
 		return infos;

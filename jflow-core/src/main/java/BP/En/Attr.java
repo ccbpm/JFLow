@@ -304,9 +304,7 @@ public class Attr
 
 		///#region 属性
 	public String HelperUrl = null;
-	public AutoFullWay AutoFullWay ;
-	public String AutoFullDoc = null;
-	/** 
+	/**
 	 属性名称
 	*/
 	private String _key = null;

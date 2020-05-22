@@ -1240,7 +1240,6 @@ public class WorkReturn {
 					infoLog += "\r\n*****************************************************************************************";
 					infoLog += "\r\n节点ID:" + subNd.getNodeID() + "  工作名称:" + subWK.getEnDesc();
 					infoLog += "\r\n处理人:" + subWK.getRec() + " , " + wk.getRecOfEmp().getName();
-					infoLog += "\r\n接收时间:" + subWK.getRDT() + " 处理时间:" + subWK.getCDT();
 					infoLog += "\r\n ------------------------------------------------- ";
 
 					for (Attr attr : wk.getEnMap().getAttrs()) {
@@ -1257,7 +1256,6 @@ public class WorkReturn {
 				infoLog += "\r\n*****************************************************************************************";
 				infoLog += "\r\n节点ID:" + wk.getNodeID() + "  工作名称:" + wk.getEnDesc();
 				infoLog += "\r\n处理人:" + wk.getRec() + " , " + wk.getRecOfEmp().getName();
-				infoLog += "\r\n接收时间:" + wk.getRDT() + " 处理时间:" + wk.getCDT();
 				infoLog += "\r\n ------------------------------------------------- ";
 
 				for (Attr attr : wk.getEnMap().getAttrs()) {

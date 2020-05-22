@@ -430,28 +430,6 @@ public class Map {
 		return _HisFKAttrs;
 	}
 
-	private int _isFull = -1;
-
-	/**
-	 * 是否有自动计算
-	 */
-	public final boolean getIsHaveAutoFull() {
-		if (_isFull == -1) {
-			for (Attr attr : _attrs) {
-				if (attr.AutoFullDoc != null) {
-					_isFull = 1;
-				}
-			}
-			if (_isFull == -1) {
-				_isFull = 0;
-			}
-		}
-		if (_isFull == 0) {
-			return false;
-		}
-		return true;
-	}
-
 	public BPEntityAthType HisBPEntityAthType = BPEntityAthType.None;
 	/**
 	 * 附件存储位置
@@ -461,30 +439,6 @@ public class Map {
 	 * 移动到显示方式
 	 */
 	public String TitleExt = null;
-	private int _isJs = -1;
-
-	public final boolean getIsHaveJS() {
-		if (_isJs == -1) {
-			for (Attr attr : _attrs) {
-				if (attr.AutoFullDoc == null) {
-					continue;
-				}
-				if (attr.AutoFullWay == AutoFullWay.Way1_JS) {
-					_isJs = 1;
-					break;
-				}
-			}
-
-			if (_isJs == -1) {
-				_isJs = 0;
-			}
-		}
-
-		if (_isJs == 0) {
-			return false;
-		}
-		return true;
-	}
 
 	/**
 	 * 是否加入相关联的名称 AttrKey - AttrKeyName

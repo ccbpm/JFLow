@@ -77,18 +77,6 @@ public abstract class Work extends Entity {
 	}
 
 	/**
-	 * 完成时间
-	 */
-	public final String getCDT() throws Exception {
-		String str = this.GetValStringByKey(WorkAttr.CDT);
-		if (str.length() < 5) {
-			this.SetValByKey(WorkAttr.CDT, DataType.getCurrentDataTime());
-		}
-
-		return this.GetValStringByKey(WorkAttr.CDT);
-	}
-
-	/**
 	 * 人员emps
 	 */
 	public final String getEmps() throws Exception {
@@ -111,35 +99,6 @@ public abstract class Work extends Entity {
 
 		}
 		return i;
-	}
-
-	/**
-	 * 记录时间
-	 * 
-	 * @throws Exception
-	 */
-	public final String getRDT() throws Exception {
-		return this.GetValStringByKey(WorkAttr.RDT);
-	}
-
-	public final String getRDT_Date() {
-		try {
-			return DataType.dateToStr(DataType.ParseSysDate2DateTime(this.getRDT()), DataType.getSysDataFormat());
-		} catch (java.lang.Exception e) {
-			return DataType.getCurrentDate();
-		}
-	}
-
-	public final Date getRDT_DateTime() {
-		try {
-			return DataType.ParseSysDate2DateTime(this.getRDT_Date());
-		} catch (java.lang.Exception e) {
-			return new Date();
-		}
-	}
-
-	public final String getRecord_FK_NY() throws Exception {
-		return this.getRDT().substring(0, 7);
 	}
 
 	/**
@@ -167,19 +126,6 @@ public abstract class Work extends Entity {
 	 */
 	public final Emp getRecOfEmp() throws Exception {
 		return new Emp(this.getRec());
-	}
-
-	/**
-	 * 记录人名称
-	 * 
-	 * @throws Exception
-	 */
-	public final String getRecText() throws Exception {
-		try {
-			return this.getHisRec().getName();
-		} catch (java.lang.Exception e) {
-			return this.getRec();
-		}
 	}
 
 	public final void setRecText(String value) throws Exception {
@@ -220,28 +166,6 @@ public abstract class Work extends Entity {
 	 */
 	public final FrmAttachments getHisFrmAttachments() throws Exception {
 		return this.getHisNode().getMapData().getFrmAttachments();
-	}
-
-	/**
-	 * 跨度天数
-	 * 
-	 * @throws Exception
-	 */
-	public final int getSpanDays() throws Exception {
-		if (this.getCDT().equals(this.getRDT())) {
-			return 0;
-		}
-		return DataType.SpanDays(this.getRDT(), this.getCDT());
-	}
-
-	/**
-	 * 得到从工作完成到现在的日期
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public final int GetCDTimeLimits(String todata) throws Exception {
-		return DataType.SpanDays(this.getCDT(), todata);
 	}
 
 	/**
@@ -321,8 +245,7 @@ public abstract class Work extends Entity {
 	@Override
 	public void Copy(DataRow dr) throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs()) {
-			if (WorkAttr.CDT.equals(attr.getKey()) || WorkAttr.RDT.equals(attr.getKey())
-					|| WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey())
+			if ( WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey())
 					|| WorkAttr.OID.equals(attr.getKey()) || attr.getKey().equals("No")
 					|| attr.getKey().equals("Name")) {
 				continue;
@@ -342,8 +265,7 @@ public abstract class Work extends Entity {
 		}
 		Attrs attrs = fromEn.getEnMap().getAttrs();
 		for (Attr attr : attrs) {
-			if (WorkAttr.CDT.equals(attr.getKey()) || WorkAttr.RDT.equals(attr.getKey())
-					|| WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey())
+			if (WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey())
 					|| WorkAttr.OID.equals(attr.getKey()) || WorkAttr.Emps.equals(attr.getKey())
 					|| attr.getKey().equals("No") || attr.getKey().equals("Name")) {
 				continue;
@@ -352,26 +274,6 @@ public abstract class Work extends Entity {
 		}
 	}
 
-	/**
-	 * 删除主表数据也要删除它的明细数据
-	 * 
-	 * @throws Exception
-	 */
-	@Override
-	protected void afterDelete() throws Exception {
-		super.afterDelete();
-	}
-
-	/**
-	 * 更新之前
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	@Override
-	protected boolean beforeUpdate() throws Exception {
-		return super.beforeUpdate();
-	}
 
 	/**
 	 * 直接的保存前要做的工作
@@ -393,7 +295,6 @@ public abstract class Work extends Entity {
 	public final void DirectSave() throws Exception {
 		this.beforeUpdateInsertAction();
 		if (this.DirectUpdate() == 0) {
-			this.SetValByKey(WorkAttr.RDT, DateUtils.getCurrentDate("yyyy-MM-dd"));
 			this.DirectInsert();
 		}
 	}

@@ -19,15 +19,8 @@ public class WorkAttr
 	 工作ID
 	*/
 	public static final String OID = "OID";
-	/** 
-	 完成任务时间
-	*/
-	public static final String CDT = "CDT";
-	/** 
-	 记录时间
-	*/
-	public static final String RDT = "RDT";
-	/** 
+
+	/**
 	 记录人
 	*/
 	public static final String Rec = "Rec";
@@ -43,10 +36,7 @@ public class WorkAttr
 	 流程ID
 	*/
 	public static final String FID = "FID";
-	/** 
-	 MyNum
-	*/
-	public static final String MyNum = "MyNum";
+
 	/** 
 	 MD5
 	*/

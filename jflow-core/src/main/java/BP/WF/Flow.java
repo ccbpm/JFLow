@@ -617,8 +617,8 @@ public class Flow extends BP.En.EntityNoName {
 				wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
 				wk.SetValByKey(StartWorkAttr.Emps, emp.getNo());
 
-				wk.SetValByKey(WorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
-				wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
+//				wk.SetValByKey(WorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
+//				wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
 				wk.SetValByKey(GERptAttr.WFState, WFState.Blank.getValue());
 
 				wk.setOID(DBAccess.GenerOID("WorkID")); // 这里产生WorkID
@@ -1124,14 +1124,14 @@ public class Flow extends BP.En.EntityNoName {
 		/// #region 处理流程之间的数据传递2, 如果是直接要跳转到指定的节点上去.
 		if (paras.containsKey("JumpToNode") == true) {
 			wk.setRec(WebUser.getNo());
-			wk.SetValByKey(StartWorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
-			wk.SetValByKey(StartWorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
-			wk.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
-			wk.setFK_Dept(emp.getFK_Dept());
+//			wk.SetValByKey(StartWorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
+//			wk.SetValByKey(StartWorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
+//			wk.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
+//			wk.setFK_Dept(emp.getFK_Dept());
 			wk.SetValByKey("FK_DeptName", emp.getFK_DeptText());
 			wk.SetValByKey("FK_DeptText", emp.getFK_DeptText());
 			wk.setFID(0);
-			wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
+//			wk.SetValByKey(StartWorkAttr.RecText, emp.getName());
 
 			int jumpNodeID = Integer.parseInt(paras.get("JumpToNode").toString());
 			Node jumpNode = new Node(jumpNodeID);
@@ -1156,8 +1156,8 @@ public class Flow extends BP.En.EntityNoName {
 
 		/// #region 最后整理wk数据.
 		wk.setRec(emp.getNo());
-		wk.SetValByKey(WorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
-		wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
+//		wk.SetValByKey(WorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
+//		wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
 		wk.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
 		wk.setFK_Dept(emp.getFK_Dept());
 		wk.SetValByKey("FK_DeptName", emp.getFK_DeptText());
@@ -1212,153 +1212,6 @@ public class Flow extends BP.En.EntityNoName {
 
 		return wk;
 	}
-
-	/**
-	 * 初始化一个工作
-	 * 
-	 * @param workid
-	 * @param nd
-	 * @param isPostBack
-	 * @return
-	 * @throws Exception
-	 */
-	public final Work GenerWork(long workid, Node nd, boolean isPostBack) throws Exception {
-		Work wk = nd.getHisWork();
-		wk.setOID(workid);
-		if (wk.RetrieveFromDBSources() == 0) {
-			/*
-			 * 2012-10-15 偶然发现一次工作丢失情况, WF_GenerWorkerlist WF_GenerWorkFlow
-			 * 都有这笔数据，没有查明丢失原因。 stone. 用如下代码自动修复，但是会遇到数据copy不完全的问题。
-			 */
-
-			/// #warning 2011-10-15 偶然发现一次工作丢失情况.
-
-			String fk_mapData = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
-			GERpt rpt = new GERpt(fk_mapData);
-			rpt.setOID(Integer.parseInt(String.valueOf(workid)));
-			if (rpt.RetrieveFromDBSources() >= 1) {
-				/* 查询到报表数据. */
-				wk.Copy(rpt);
-				wk.setRec(WebUser.getNo());
-				wk.InsertAsOID(workid);
-			} else {
-				/* 没有查询到报表数据. */
-
-				/// #warning 这里不应该出现的异常信息.
-
-				String msg = "@不应该出现的异常.";
-				msg += "@在为节点NodeID=" + nd.getNodeID() + " workid:" + workid + " 获取数据时.";
-				msg += "@获取它的Rpt表数据时，不应该查询不到。";
-				msg += "@GERpt 信息: table:" + rpt.getEnMap().getPhysicsTable() + "   OID=" + rpt.getOID();
-
-				String sql = "SELECT count(*) FROM " + rpt.getEnMap().getPhysicsTable() + " WHERE OID=" + workid;
-				int num = DBAccess.RunSQLReturnValInt(sql);
-
-				msg += " @SQL:" + sql;
-				msg += " ReturnNum:" + num;
-				if (num == 0) {
-					msg += "已经用sql可以查询出来，但是不应该用类查询不出来.";
-				} else {
-					/* 如果可以用sql 查询出来. */
-					num = rpt.RetrieveFromDBSources();
-					msg += "@从rpt.RetrieveFromDBSources = " + num;
-				}
-
-				Log.DefaultLogWriteLineError(msg);
-
-				MapData md = new MapData("ND" + Integer.parseInt(nd.getFK_Flow()) + "01");
-				sql = "SELECT * FROM " + md.getPTable() + " WHERE OID=" + workid;
-				DataTable dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.size() == 1) {
-					rpt.Copy(dt.Rows.get(0));
-					try {
-						rpt.setFlowStarter(dt.Rows.get(0).getValue(StartWorkAttr.Rec).toString());
-						rpt.setFlowStartRDT(dt.Rows.get(0).getValue(StartWorkAttr.RDT).toString());
-						rpt.setFK_Dept(dt.Rows.get(0).getValue(StartWorkAttr.FK_Dept).toString());
-					} catch (java.lang.Exception e) {
-					}
-
-					rpt.setOID(Integer.parseInt(String.valueOf(workid)));
-					try {
-						rpt.InsertAsOID(rpt.getOID());
-					} catch (RuntimeException ex) {
-						Log.DefaultLogWriteLineError(
-								"@不应该出插入不进去 rpt:" + rpt.getEnMap().getPhysicsTable() + " workid=" + workid);
-						rpt.RetrieveFromDBSources();
-					}
-				} else {
-					Log.DefaultLogWriteLineError("@没有找到开始节点的数据, NodeID:" + nd.getNodeID() + " workid:" + workid);
-					throw new RuntimeException(
-							"@没有找到开始节点的数据, NodeID:" + nd.getNodeID() + " workid:" + workid + " SQL:" + sql);
-				}
-
-				/// #warning 不应该出现的工作丢失.
-				Log.DefaultLogWriteLineError("@工作[" + nd.getNodeID() + " : " + wk.getEnDesc() + "], 报表数据WorkID="
-						+ workid + " 丢失, 没有从NDxxxRpt里找到记录,请联系管理员。");
-
-				wk.Copy(rpt);
-				wk.setRec(WebUser.getNo());
-				wk.ResetDefaultVal();
-				wk.Insert();
-			}
-		}
-
-		/// #region 判断是否有删除草稿的需求.
-		if (SystemConfig.getIsBSsystem() == true && isPostBack == false && nd.getIsStartNode()
-				&& ContextHolderUtils.getRequest().getParameter("IsDeleteDraft").equals("1")) {
-
-			/* 需要删除草稿. */
-			/* 是否要删除Draft */
-			String title = wk.GetValStringByKey("Title");
-			wk.ResetDefaultValAllAttr();
-			wk.setOID(workid);
-			wk.SetValByKey(GenerWorkFlowAttr.Title, title);
-			wk.DirectUpdate();
-
-			MapDtls dtls = wk.getHisMapDtls();
-			for (MapDtl dtl : dtls.ToJavaList()) {
-				DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + wk.getOID());
-			}
-
-			// 删除附件数据。
-			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='ND" + wk.getNodeID() + "' AND RefPKVal='"
-					+ wk.getOID() + "'");
-
-		}
-
-		/// #endregion
-
-		// 设置当前的人员把记录人。
-		wk.setRec(WebUser.getNo());
-		wk.setRecText(WebUser.getName());
-		wk.setRec(WebUser.getNo());
-		wk.SetValByKey(WorkAttr.RDT, BP.DA.DataType.getCurrentDataTime());
-		wk.SetValByKey(WorkAttr.CDT, BP.DA.DataType.getCurrentDataTime());
-		wk.SetValByKey(GERptAttr.WFState, WFState.Runing);
-		wk.SetValByKey("FK_Dept", WebUser.getFK_Dept());
-		wk.SetValByKey("FK_DeptName", WebUser.getFK_DeptName());
-		wk.SetValByKey("FK_DeptText", WebUser.getFK_DeptName());
-		wk.setFID(0);
-		wk.SetValByKey("RecText", WebUser.getName());
-
-		// 处理单据编号.
-		if (nd.getIsStartNode()) {
-			try {
-				String billNo = wk.GetValStringByKey(NDXRptBaseAttr.BillNo);
-				if (DataType.IsNullOrEmpty(billNo) && nd.getHisFlow().getBillNoFormat().length() > 2) {
-					/* 让他自动生成编号 */
-					wk.SetValByKey(NDXRptBaseAttr.BillNo, BP.WF.WorkFlowBuessRole.GenerBillNo(
-							nd.getHisFlow().getBillNoFormat(), wk.getOID(), wk, nd.getHisFlow().getPTable()));
-				}
-			} catch (java.lang.Exception e2) {
-				// 可能是没有billNo这个字段,也不需要处理它.
-			}
-		}
-
-		return wk;
-	}
-
-	/// #endregion 初始化一个工作
 
 	/// #region 其他通用方法.
 	public final String DoBTableDTS() throws Exception {
@@ -2923,23 +2776,17 @@ public class Flow extends BP.En.EntityNoName {
 					.RunSQLReturnStringIsNull("SELECT WFState FROM WF_GenerWorkFlow WHERE WorkID=" + oid, "1");
 			rpt.setWFState(WFState.forValue(Integer.parseInt(wfState)));
 			rpt.setFlowStarter(startWork.getRec());
-			rpt.setFlowStartRDT(startWork.getRDT());
+//			rpt.setFlowStartRDT(startWork.getRDT());
 			rpt.setFID(startWork.GetValIntByKey("FID"));
 			rpt.setFlowEmps(flowEmps);
 			rpt.setFlowEnder(endWK.getRec());
-			rpt.setFlowEnderRDT(endWK.getRDT());
+//			rpt.setFlowEnderRDT(endWK.getRDT());
 			rpt.setFlowEndNode(endWK.getNodeID());
 			rpt.setMyNum(1);
 
 			// 修复标题字段。
 			WorkNode wn = new WorkNode(startWork, this.getHisStartNode());
 			rpt.setTitle(BP.WF.WorkFlowBuessRole.GenerTitle(this, startWork));
-			try {
-				int day = (int) ((endWK.getRDT_DateTime().getTime() - startWork.getRDT_DateTime().getTime())
-						/ (1000 * 60 * 60 * 24));
-				rpt.setFlowDaySpan(day);
-			} catch (java.lang.Exception e2) {
-			}
 			rpt.InsertAsOID(rpt.getOID());
 		} // 结束循环。
 		return err;

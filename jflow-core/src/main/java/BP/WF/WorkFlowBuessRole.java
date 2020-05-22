@@ -161,12 +161,12 @@ public class WorkFlowBuessRole
 			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
 		}
 
-		titleRole = titleRole.replace("@WebUser.No", wk.getRec());
-		titleRole = titleRole.replace("@WebUser.Name", wk.getRecText());
+		titleRole = titleRole.replace("@WebUser.No", WebUser.getNo());
+		titleRole = titleRole.replace("@WebUser.Name", WebUser.getName());
 		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
 		titleRole = titleRole.replace("@WebUser.FK_DeptName", wk.getRecOfEmp().getFK_DeptText());
 		titleRole = titleRole.replace("@WebUser.FK_Dept", wk.getRecOfEmp().getFK_Dept());
-		titleRole = titleRole.replace("@RDT", wk.getRDT());
+		titleRole = titleRole.replace("@RDT", DataType.getCurrentDataTime());
 
 		if (titleRole.contains("@"))
 		{

@@ -2970,8 +2970,6 @@ public class Glo {
 						case WorkAttr.FID:
 						case WorkAttr.Rec:
 						case WorkAttr.MD5:
-						case WorkAttr.MyNum:
-						case WorkAttr.RDT:
 						case "RefPK":
 						case WorkAttr.RecText:
 							continue;
@@ -3448,8 +3446,6 @@ public class Glo {
 		for (Attr attr : wk.getEnMap().getAttrs()) {
 			switch (attr.getKey()) {
 			case WorkAttr.MD5:
-			case WorkAttr.RDT:
-			case WorkAttr.CDT:
 			case WorkAttr.Rec:
 			case StartWorkAttr.Title:
 			case StartWorkAttr.Emps:
@@ -3586,7 +3582,6 @@ public class Glo {
 			wk.SetValByKey(WorkAttr.Rec, WebUser.getNo());
 			wk.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
 			wk.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
-			wk.SetValByKey(WorkAttr.MyNum, 1);
 			wk.Update();
 
 			Node ndStart = nd.getHisFlow().getHisStartNode();
@@ -3719,9 +3714,8 @@ public class Glo {
 			}
 
 			wk.SetValByKey(WorkAttr.Rec, WebUser.getNo());
-			wk.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
-			wk.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
-			wk.SetValByKey(WorkAttr.MyNum, 1);
+//			wk.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
+//			wk.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
 			wk.Update();
 
 			Node ndStart = fl.getHisStartNode();
@@ -3747,9 +3741,8 @@ public class Glo {
 			}
 
 			wkEnd.SetValByKey(WorkAttr.Rec, WebUser.getNo());
-			wkEnd.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
-			wkEnd.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
-			wkEnd.SetValByKey(WorkAttr.MyNum, 1);
+//			wkEnd.SetValByKey(StartWorkAttr.FK_Dept, WebUser.getFK_Dept());
+//			wkEnd.SetValByKey("FK_NY", DataType.getCurrentYearMonth());
 			wkEnd.Update();
 
 			try {

@@ -2932,8 +2932,8 @@ public class Dev2Interface
 				dr.setValue("Name", ndFrom.getName());
 
 				dr.setValue("Rec", wk.getRec());
-				dr.setValue("RecName", wk.getRecText());
-
+				Emp emp = new Emp(wk.getRec());
+				dr.setValue("RecName", emp.getName());
 				if (ndFrom.getIsBackTracking())
 				{
 					dr.setValue("IsBackTracking", "1");
@@ -7013,7 +7013,6 @@ public class Dev2Interface
 				switch (str.toString())
 				{
 					case StartWorkAttr.OID:
-					case StartWorkAttr.CDT:
 					case StartWorkAttr.MD5:
 					case StartWorkAttr.Emps:
 					case StartWorkAttr.FID:
@@ -7264,7 +7263,6 @@ public class Dev2Interface
 				switch (str.toString())
 				{
 					case StartWorkAttr.OID:
-					case StartWorkAttr.CDT:
 					case StartWorkAttr.MD5:
 					case StartWorkAttr.Emps:
 					case StartWorkAttr.FID:
@@ -7536,7 +7534,6 @@ public class Dev2Interface
 				switch (str.toString())
 				{
 					case StartWorkAttr.OID:
-					case StartWorkAttr.CDT:
 					case StartWorkAttr.MD5:
 					case StartWorkAttr.Emps:
 					case StartWorkAttr.FID:
@@ -8963,7 +8960,6 @@ public class Dev2Interface
 					switch (str.toString())
 					{
 						case StartWorkAttr.OID:
-						case StartWorkAttr.CDT:
 						case StartWorkAttr.MD5:
 						case StartWorkAttr.Emps:
 						case StartWorkAttr.FID:

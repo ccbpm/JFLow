@@ -4,6 +4,7 @@ import BP.DA.*;
 import BP.Difference.SystemConfig;
 import BP.Sys.*;
 import BP.En.*;
+import BP.WF.Data.GERptAttr;
 import BP.WF.Template.*;
 import BP.Web.WebUser;
 import java.math.*;
@@ -449,7 +450,7 @@ public class Node extends Entity {
 	/**
 	 * 检查流程，修复必要的计算字段信息.
 	 * 
-	 * @param fl
+	 * @param flowNo
 	 *            流程
 	 * @return 返回检查信息
 	 * @throws Exception
@@ -2640,6 +2641,9 @@ public class Node extends Entity {
 			attr.Insert();
 		}
 
+		if (this.getHisRunModel() != RunModel.SubThread)
+			return "修复成功.";
+
 		if (attrs.Contains(MapAttrAttr.KeyOfEn, "FID", MapAttrAttr.FK_MapData, md.getNo()) == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(md.getNo());
@@ -2655,11 +2659,11 @@ public class Node extends Entity {
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, WorkAttr.RDT, MapAttrAttr.FK_MapData, md.getNo()) == false) {
+		if (attrs.Contains(MapAttrAttr.KeyOfEn, GERptAttr.RDT, MapAttrAttr.FK_MapData, md.getNo()) == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(md.getNo());
 			attr.setHisEditType(BP.En.EditType.UnDel);
-			attr.setKeyOfEn(WorkAttr.RDT);
+			attr.setKeyOfEn(GERptAttr.RDT);
 			attr.setName("接受时间"); // "接受时间";
 			attr.setMyDataType(BP.DA.DataType.AppDateTime);
 			attr.setUIContralType(UIContralType.TB);
@@ -2670,11 +2674,11 @@ public class Node extends Entity {
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, WorkAttr.CDT, MapAttrAttr.FK_MapData, md.getNo()) == false) {
+		if (attrs.Contains(MapAttrAttr.KeyOfEn, GERptAttr.CDT, MapAttrAttr.FK_MapData, md.getNo()) == false) {
 			attr = new BP.Sys.MapAttr();
 			attr.setFK_MapData(md.getNo());
 			attr.setHisEditType(BP.En.EditType.UnDel);
-			attr.setKeyOfEn(WorkAttr.CDT);
+			attr.setKeyOfEn(GERptAttr.CDT);
 			if (this.getIsStartNode())
 				attr.setName("发起时间"); // "发起时间";
 			else
@@ -2788,41 +2792,7 @@ public class Node extends Entity {
 				attr.Insert();
 			}
 
-			if (attrs.Contains(MapAttrAttr.KeyOfEn, "FK_NY", MapAttrAttr.FK_MapData, md.getNo()) == false) {
-				attr = new BP.Sys.MapAttr();
-				attr.setFK_MapData(md.getNo());
-				attr.setHisEditType(BP.En.EditType.UnDel);
-				attr.setKeyOfEn("FK_NY");
-				attr.setName("年月"); // "年月";
-				attr.setMyDataType(BP.DA.DataType.AppString);
-				attr.setUIContralType(UIContralType.TB);
-				attr.setUIVisible(false);
-				attr.setUIIsEnable(false);
-				attr.setLGType(FieldTypeS.Normal);
-				// attr.UIBindKey = "BP.Pub.NYs";
-				attr.setUIVisible(false);
-				attr.setUIIsEnable(false);
-				attr.setMinLen(0);
-				attr.setMaxLen(7);
-				attr.Insert();
-			}
 
-			if (attrs.Contains(MapAttrAttr.KeyOfEn, "MyNum", MapAttrAttr.FK_MapData, md.getNo()) == false) {
-				attr = new BP.Sys.MapAttr();
-				attr.setFK_MapData(md.getNo());
-				attr.setHisEditType(BP.En.EditType.UnDel);
-				attr.setKeyOfEn("MyNum");
-				attr.setName("个数"); // "个数";
-				attr.setDefVal("1");
-				attr.setMyDataType(BP.DA.DataType.AppInt);
-				attr.setUIContralType(UIContralType.TB);
-				attr.setUIVisible(false);
-				attr.setUIIsEnable(false);
-				attr.setLGType(FieldTypeS.Normal);
-				attr.setUIVisible(false);
-				attr.setUIIsEnable(false);
-				attr.Insert();
-			}
 		}
 
 		/// #endregion 增加节点必要的字段.
@@ -2898,7 +2868,7 @@ public class Node extends Entity {
 		attr = new BP.Sys.MapAttr();
 		attr.setFK_MapData(md.getNo());
 		attr.setHisEditType(BP.En.EditType.UnDel);
-		attr.setKeyOfEn(WorkAttr.RDT);
+		attr.setKeyOfEn(GERptAttr.RDT);
 		attr.setName("接受时间"); // "接受时间";
 		attr.setMyDataType(BP.DA.DataType.AppDateTime);
 		attr.setUIContralType(UIContralType.TB);
@@ -2911,7 +2881,7 @@ public class Node extends Entity {
 		attr = new BP.Sys.MapAttr();
 		attr.setFK_MapData(md.getNo());
 		attr.setHisEditType(BP.En.EditType.UnDel);
-		attr.setKeyOfEn(WorkAttr.CDT);
+		attr.setKeyOfEn(GERptAttr.CDT);
 		if (this.getIsStartNode()) {
 			attr.setName("发起时间"); // "发起时间";
 		} else {

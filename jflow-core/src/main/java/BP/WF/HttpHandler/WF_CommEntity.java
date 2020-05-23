@@ -1114,20 +1114,37 @@ public class WF_CommEntity extends WebContralBase {
 
 		Entities trees = attr.getHisFKEns();
 		Entity tree = trees.getNewEntity();
+		int IsExitParentNo = 0; //是否存在ParentNo
+
+		int IsExitIdx = 0; //判断改类是否存在Idx
 		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true
 				&& tree.getEnMap().getAttrs().Contains("Idx") == true)
-		{
-			if(rootNo.equals("0"))
-				trees.Retrieve("ParentNo", rootNo, "Idx");
+			IsExitIdx = 1;
+
+		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "ParentNo") == true
+				&& tree.getEnMap().getAttrs().Contains("ParentNo") == true)
+			IsExitParentNo = 1;
+		if(IsExitParentNo == 1){
+			if (IsExitIdx == 1)
+			{
+				if(rootNo.equals("0"))
+					trees.Retrieve("ParentNo", rootNo, "Idx");
+				else
+					trees.Retrieve("No", rootNo, "Idx");
+			}
 			else
-				trees.Retrieve("No", rootNo, "Idx");
-		}
-		else
-		{
-			if (rootNo.equals("0"))
-				trees.Retrieve("ParentNo", rootNo);
+			{
+				if (rootNo.equals("0"))
+					trees.Retrieve("ParentNo", rootNo);
+				else
+					trees.Retrieve("No", rootNo);
+			}
+
+		}else{
+			if (IsExitIdx == 1)
+				trees.RetrieveAll("Idx");
 			else
-				trees.Retrieve("No", rootNo);
+				trees.RetrieveAll();
 		}
 
 		DataTable dt = trees.ToDataTableField("DBTrees");
@@ -1140,6 +1157,13 @@ public class WF_CommEntity extends WebContralBase {
 		}
 		ds.Tables.add(dt);
 
+		dt = new DataTable();
+		dt.TableName = "Base_Info";
+		dt.Columns.Add("IsExitParentNo", Integer.class);
+		DataRow drr = dt.NewRow();
+		drr.setValue("IsExitParentNo",IsExitParentNo);
+		dt.Rows.add(drr);
+		ds.Tables.add(dt);
 		/// #endregion 生成树目录.
 
 		/// #region 生成选择的数据.

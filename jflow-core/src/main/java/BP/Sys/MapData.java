@@ -1833,6 +1833,7 @@ public class MapData extends EntityNoName
 							String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", oldMapID, "HtmlTemplateFile");
 							if (DataType.IsNullOrEmpty(htmlCode) == false)
 							{
+								htmlCode = htmlCode.replace(oldMapID, fk_mapdata);
 								//保存到数据库，存储html文件
 								//保存到DataUser/CCForm/HtmlTemplateFile/文件夹下
 								String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/";

@@ -524,7 +524,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 		qo = new QueryObject(attrs);
 		qo.AddWhere(MapAttrAttr.FK_MapData, getFK_MapData());
 		qo.addAnd();
-		qo.AddWhere(MapAttrAttr.UIVisible, true);
+		qo.AddWhere(MapAttrAttr.EditType, 0);
 		qo.addOrderBy(MapAttrAttr.GroupID, MapAttrAttr.Idx);
 		qo.DoQuery();
 

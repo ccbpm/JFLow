@@ -1237,7 +1237,7 @@ public class MapAttr extends EntityMyPK
 	}
 	public final String DoUp() throws Exception
 	{
-		this.DoOrderUp(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
+		this.DoOrderUp(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.Idx);
 
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getFK_MapData() + "_Title");
@@ -1267,7 +1267,7 @@ public class MapAttr extends EntityMyPK
 	*/
 	public final String DoDown() throws Exception
 	{
-		this.DoOrderDown(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
+		this.DoOrderDown(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.Idx);
 
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getFK_MapData() + "_Title");

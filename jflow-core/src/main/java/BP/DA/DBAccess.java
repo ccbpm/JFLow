@@ -3102,35 +3102,13 @@ public class DBAccess {
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 			return DBAccess.RunSQLReturnStringIsNull(strSQL, "");
 		}catch(Exception e){
-			if (DBAccess.IsExitsTableCol(tableName, fileSaveField) == false)
-			{
-				String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " text ";
-				switch (SystemConfig.getAppCenterDBType()) {
-					case MSSQL:
-						sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
-						break;
-					case Oracle:
-						sql = "ALTER TABLE  WF_EMP add StartFlows CLOB";
-						break;
-					case MySQL:
-						sql = "ALTER TABLE WF_Emp ADD StartFlows TEXT COMMENT '可以发起的流程'";
-						break;
-					case Informix:
-						sql = "ALTER TABLE WF_Emp ADD StartFlows VARCHAR(4000) DEFAULT  NULL";
-						break;
-					case PostgreSQL:
-						sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
-						break;
-					case DM:
-						sql = "ALTER TABLE  WF_EMP add StartFlows CLOB";
-						break;
-					default:
-						throw new RuntimeException("@没有涉及到的数据库类型");
-				}
-				DBAccess.RunSQL(sql);
-			}
-			String getSql = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + " = '" + pkVal + "'";
-			return DBAccess.RunSQLReturnString(getSql);
+            if (DBAccess.IsExitsTableCol(tableName, fileSaveField) == false)
+            {
+                String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " text ";
+                DBAccess.RunSQL(sql);
+            }
+            String getSql = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + " = '" + pkVal + "'";
+            return DBAccess.RunSQLReturnString(getSql);
 		}
 
 	}
@@ -3147,49 +3125,77 @@ public class DBAccess {
 	 * @param fileSaveField
 	 *            字段
 	 */
-	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception{
-		   Connection conn = null; //数据库连接
-		   PreparedStatement pstmt = null; //数据库SQL执行
-		   ResultSet rs = null; // 执行结果
-		   if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
-		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_MSSQL();
-		   if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
-		   if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
-		      conn = BP.DA.DBAccess.getGetAppCenterDBConn_MySQL();
-		   if (SystemConfig.getAppCenterDBType() == DBType.DM)
-			conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
-		   String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
-		   pstmt = conn.prepareStatement(strSQL);
-		   // 执行它.
-		   try
-		   {
-		      rs = pstmt.executeQuery();
-		      byte[] byteFile = null;
-		      if (rs.next())
-		      {
-		         byteFile = rs.getBytes(fileSaveField);
-		      }
-		      return byteFile;
-		   }
-		   catch (Exception e)
-		   {
-		      if (!BP.DA.DBAccess.IsExitsTableCol(tableName, fileSaveField))
-		      {
-		         /*如果没有此列，就自动创建此列.*/
-		         String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " image ";
-		         BP.DA.DBAccess.RunSQL(sql);
-		      }
-		      return GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
-		   }finally {
-		      if(rs != null)
-		         rs.close();
-		      if(pstmt!=null)
-		         pstmt.close();
-		      if(conn!=null)
-		         conn.close();
-		   }
-		}
+	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception {
+        //增加对oracle数据库的逻辑 qin
+        if (BP.Difference.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+            Connection conn = BP.DA.DBAccess.getGetAppCenterDBConn_Oracle();
+            String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
+            PreparedStatement pstmt = conn.prepareStatement(strSQL);
+            ResultSet rs = null;
+            // 执行它.
+            try {
+                rs = pstmt.executeQuery();
+                byte[] byteFile = null;
+                if (rs.next()) {
+                    byteFile = rs.getBytes(fileSaveField);
+                }
+                return byteFile;
+            } catch (Exception ex) {
+                if (BP.DA.DBAccess.IsExitsTableCol(tableName, fileSaveField) == false) {
+                    /*如果没有此列，就自动创建此列.*/
+                    String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " blob ";
+                    BP.DA.DBAccess.RunSQL(sql);
+                }
+                try{
+                    GetByteFromDB(tableName, tablePK,pkVal, fileSaveField);
+                }catch(Exception e){
+                    throw new Exception("表:"+tableName+"查询字段"+fileSaveField+"失败" + ex.getMessage());
+                }
+
+                throw new Exception("@缺少此字段,有可能系统自动修复." + ex.getMessage());
+            } finally {
+                if (rs != null)
+                    rs.close();
+                if (pstmt != null)
+                    pstmt.close();
+                if (conn != null)
+                    conn.close();
+            }
+        }
+
+        if (BP.Difference.SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
+            Connection conn = BP.DA.DBAccess.getGetAppCenterDBConn_MSSQL();
+            String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
+            PreparedStatement pstmt = conn.prepareStatement(strSQL);
+            ResultSet rs = null;
+            // 执行它.
+            try {
+                rs = pstmt.executeQuery();
+                byte[] byteFile = null;
+                if (rs.next()) {
+                    byteFile = rs.getBytes(fileSaveField);
+                }
+                return byteFile;
+            } catch (Exception ex) {
+                if (BP.DA.DBAccess.IsExitsTableCol(tableName, fileSaveField) == false) {
+                    /*如果没有此列，就自动创建此列.*/
+                    String sql = "ALTER TABLE " + tableName + " ADD  " + fileSaveField + " image ";
+                    BP.DA.DBAccess.RunSQL(sql);
+                }
+                throw new Exception("@缺少此字段,有可能系统自动修复." + ex.getMessage());
+            } finally {
+                if (rs != null)
+                    rs.close();
+                if (pstmt != null)
+                    pstmt.close();
+                if (conn != null)
+                    conn.close();
+            }
+        }
+        return null;
+    }
+
+
 
 	/**
 	 * 开启事物 @xushuaho

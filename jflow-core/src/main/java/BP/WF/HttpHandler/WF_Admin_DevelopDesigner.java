@@ -35,6 +35,8 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	public final String Designer_Init()throws Exception
 	{
 		String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
+		if(DataType.IsNullOrEmpty(htmlCode) ==true)
+			return "";
 		String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/";
 		Log.DebugWriteInfo("Designer_Init"+filePath);
 		File file = new File(filePath);

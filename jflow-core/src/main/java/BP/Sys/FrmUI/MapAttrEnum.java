@@ -116,14 +116,14 @@ public class MapAttrEnum extends EntityMyPK
 		{
 			case MSSQL:
 			case MySQL:
-				sql = "SELECT '-1' AS No, '-无(不选择)-' as Name ";
+				sql = "SELECT -1 AS No, '-无(不选择)-' as Name ";
 				break;
 			case Oracle:
-				sql = "SELECT '-1' AS No, '-无(不选择)-' as Name FROM DUAL ";
+				sql = "SELECT -1 AS No, '-无(不选择)-' as Name FROM DUAL ";
 				break;
 			case PostgreSQL:
 			default:
-				sql = "SELECT '-1' AS No, '-无(不选择)-' as Name FROM Port_Emp WHERE 1=2 ";
+				sql = "SELECT -1 AS No, '-无(不选择)-' as Name FROM Port_Emp WHERE 1=2 ";
 				break;
 		}
 		sql += " union ";

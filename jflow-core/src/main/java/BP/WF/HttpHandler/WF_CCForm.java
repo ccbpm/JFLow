@@ -44,9 +44,9 @@ public class WF_CCForm extends WebContralBase {
 
 			// 查询出来数据实体.
 			String pkVal = this.getPKVal();
-			if (athDesc.getHisCtrlWay() == AthCtrlWay.FID) {
-				pkVal = String.valueOf(this.getFID());
-			}
+//			if (athDesc.getHisCtrlWay() == AthCtrlWay.FID) {
+//				pkVal = String.valueOf(this.getFID());
+//			}
 
 			BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, pkVal, this.getFK_FrmAttachment(),
 					this.getWorkID(), this.getFID(), this.getPWorkID());

@@ -4932,6 +4932,11 @@ public class Glo {
 		if (athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
 			ctrlWayId = Long.toString(pworkid);
 
+		 if (athDesc.getHisCtrlWay() == AthCtrlWay.FID)
+               ctrlWayId = Long.toString(fid);
+
+
+
 		if (athDesc.getHisCtrlWay() == AthCtrlWay.P3WorkID || athDesc.getHisCtrlWay() == AthCtrlWay.P2WorkID || athDesc.getHisCtrlWay() == AthCtrlWay.PWorkID)
 		{
 			/* 继承模式 */
@@ -4968,9 +4973,17 @@ public class Glo {
 		if (athDesc.getHisCtrlWay() == AthCtrlWay.FID) {
 			/* 继承模式 */
 			BP.En.QueryObject qo = new BP.En.QueryObject(dbs);
-			qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK());
-			qo.addAnd();
-			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, Integer.parseInt(pkval));
+			if (athDesc.getAthUploadWay() == AthUploadWay.Inherit)
+			{
+				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal,  Integer.parseInt(ctrlWayId));
+			}
+			else
+			{
+				qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, athDesc.getMyPK());
+				qo.addAnd();
+				qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, "('" + ctrlWayId + "','" + pkval + "')");
+			}
+
 			if (isContantSelf == false) {
 				qo.addAnd();
 				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());

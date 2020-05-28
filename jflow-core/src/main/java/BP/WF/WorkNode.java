@@ -2478,13 +2478,13 @@ public class WorkNode {
 				this.addMsg(SendReturnMsgFlag.ToEmpExt, null,
 						"@<a href='./WorkOpt/UnSend.htm?DoType=UnSend&UserNo=" + WebUser.getNo() + "&SID="
 								+ WebUser.getSID() + "&WorkID=" + this.getHisWork().getOID() + "&FK_Flow="
-								+ toND.getFK_Flow() + "' ><img src='./Img/Action/UnSend.png' border=0/>撤销本次发送</a>",
+								+ toND.getFK_Flow() + "' ><img src='"+SystemConfig.getHostURLOfBS() + "/WF/Img/Action/UnSend.png' border=0/>撤销本次发送</a>",
 						SendReturnMsgType.Info);
 			} else {
 				this.addMsg(SendReturnMsgFlag.ToEmpExt, null,
 						"@<a href='./WorkOpt/UnSend.htm?DoType=UnSend&UserNo=" + WebUser.getNo() + "&SID="
 								+ WebUser.getSID() + "&WorkID=" + this.getHisWork().getOID() + "&FK_Flow="
-								+ toND.getFK_Flow() + "' ><img src='./Img/Action/UnSend.png' border=0 />撤销本次发送</a> ",
+								+ toND.getFK_Flow() + "' ><img src='"+SystemConfig.getHostURLOfBS() + "/WF/Img/Action/UnSend.png' border=0 />撤销本次发送</a> ",
 						SendReturnMsgType.Info);
 			}
 		}
@@ -3278,12 +3278,12 @@ public class WorkNode {
 			this.addMsg("UnDo",
 					"@<a href='./WorkOpt/UnSend.htm?DoType=UnSend&UserNo=" + WebUser.getNo() + "&SID="
 							+ WebUser.getSID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + toNode.getFK_Flow()
-							+ "' ><img src='./Img/Action/UnSend.png' border=0/>撤销本次发送</a>.");
+							+ "' ><img src='"+SystemConfig.getHostURLOfBS() + "/WF/Img/Action/UnSend.png' border=0/>撤销本次发送</a>.");
 		} else {
 			this.addMsg("UnDo",
 					"@<a href='./WorkOpt/UnSend.htm?DoType=UnSend&UserNo=" + WebUser.getNo() + "&SID="
 							+ WebUser.getSID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + toNode.getFK_Flow()
-							+ "' ><img src='./Img/Action/UnSend.png' border=0/>撤销本次发送</a>.");
+							+ "' ><img src='"+SystemConfig.getHostURLOfBS() + "/WF/Img/Action/UnSend.png' border=0/>撤销本次发送</a>.");
 		}
 	}
 

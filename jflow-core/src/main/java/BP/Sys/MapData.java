@@ -1775,11 +1775,17 @@ public class MapData extends EntityNoName
 					}
 					break;
 				case "Sys_MapData":
+
 					for (DataRow dr : dt.Rows)
 					{
+						String htmlCode="";
 						MapData md = new MapData();
 						for (DataColumn dc : dt.Columns)
 						{
+							if(dc.ColumnName.equals("HtmlTemplateFile") == true){
+								htmlCode = dr.getValue(dc.ColumnName) instanceof String ? dr.getValue(dc.ColumnName).toString() : null;
+								continue;
+							}
 							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
 							if (val == null)
 							{
@@ -1830,7 +1836,7 @@ public class MapData extends EntityNoName
 						//如果是开发者表单，赋值HtmlTemplateFile数据库的值并保存到DataUser下
 						if (frmType == FrmType.Develop)
 						{
-							String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", oldMapID, "HtmlTemplateFile");
+							//String htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", oldMapID, "HtmlTemplateFile");
 							if (DataType.IsNullOrEmpty(htmlCode) == false)
 							{
 								htmlCode = htmlCode.replace(oldMapID, fk_mapdata);

@@ -1522,6 +1522,12 @@ public class CCFormAPI {
 
 		// 加入主表信息.
 		DataTable Sys_MapData = md.ToDataTableField("Sys_MapData");
+
+		if(md.getHisFrmType() == FrmType.Develop){
+			Sys_MapData.Columns.Add("HtmlTemplateFile");
+			String htmlCode =  DBAccess.GetBigTextFromDB("Sys_MapData", "No", md.getNo(), "HtmlTemplateFile");
+			Sys_MapData.Rows.get(0).setValue("HtmlTemplateFile",htmlCode);
+		}
 		ds.Tables.add(Sys_MapData);
 
 		// 加入分组表.

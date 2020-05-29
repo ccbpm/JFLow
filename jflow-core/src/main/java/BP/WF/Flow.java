@@ -2293,7 +2293,16 @@ public class Flow extends BP.En.EntityNoName {
 		sql = "SELECT No FROM Sys_MapData WHERE " + Glo.MapDataLikeKey(this.getNo(), "No");
 		MapDatas mds = new MapDatas();
 		mds.RetrieveInSQL(MapDataAttr.No, sql);
-		ds.Tables.add(mds.ToDataTableField("Sys_MapData"));
+		DataTable dt = mds.ToDataTableField("Sys_MapData");
+		dt.Columns.Add("HtmlTemplateFile");
+		for(DataRow dr : dt.Rows)
+		{
+			if (Integer.parseInt(dr.getValue("FrmType").toString()) == FrmType.Develop.getValue()){
+				String htmlCode =  DBAccess.GetBigTextFromDB("Sys_MapData", "No", dr.getValue("No").toString(), "HtmlTemplateFile");
+				dr.setValue("HtmlTemplateFile",htmlCode);
+			}
+		}
+		ds.Tables.add(dt);
 
 		// Sys_MapAttr.
 		sql = "SELECT MyPK FROM Sys_MapAttr WHERE " + Glo.MapDataLikeKey(this.getNo(), "FK_MapData");
@@ -4645,30 +4654,7 @@ public class Flow extends BP.En.EntityNoName {
 				break;
 			case "WF_BillTemplate":
 				continue; // 因为省掉了 打印模板的处理。
-			/*
-			 * for (DataRow dr : dt.Rows) { BillTemplate bt = new
-			 * BillTemplate(); for (DataColumn dc : dt.Columns) { String val =
-			 * dr.getValue(dc.ColumnName) instanceof String ?
-			 * (String)dr.getValue(dc.ColumnName) : null; if (val == null) {
-			 * continue; } switch (dc.ColumnName.toLowerCase()) { case
-			 * "fk_flow": val = String.valueOf(flowID); break; case "nodeid":
-			 * case "fk_node": if (val.length() < iOldFlowLength) {
-			 * //节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理 throw new
-			 * RuntimeException("@导入模板名称：" + oldFlowName +
-			 * "；节点WF_BillTemplate下FK_Node值错误:" + val); } val = flowID +
-			 * val.substring(iOldFlowLength); break; default: break; }
-			 * bt.SetValByKey(dc.ColumnName, val); } int i = 0; String no =
-			 * bt.getNo(); while (bt.getIsExits()) { bt.setNo(no +
-			 * String.valueOf(i)); i++; }
-			 * 
-			 * try { Files.copy(Paths.get(info.getParent() + "\\" + no + ".rtf
-			 * "), Paths.get(SystemConfig.getPathOfWebApp() + "
-			 * /DataUser/CyclostyleFile/" + bt.getNo() + ".rtf"),
-			 * StandardCopyOption.COPY_ATTRIBUTES,
-			 * StandardCopyOption.REPLACE_EXISTING); } catch (RuntimeException
-			 * ex) { // infoErr += "@恢复单据模板时出现错误：" + ex.Message +
-			 * ",有可能是您在复制流程模板时没有复制同目录下的单据模板文件。"; } bt.Insert(); } break;
-			 */
+
 			case "WF_FrmNode": // Conds.xml。
 				DBAccess.RunSQL("DELETE FROM WF_FrmNode WHERE FK_Flow='" + fl.getNo() + "'");
 				for (DataRow dr : dt.Rows) {
@@ -5188,7 +5174,13 @@ public class Flow extends BP.En.EntityNoName {
 			case "Sys_MapData": // RptEmps.xml。
 				for (DataRow dr : dt.Rows) {
 					MapData md = new MapData();
+					String htmlCode = "";
 					for (DataColumn dc : dt.Columns) {
+						if(dc.ColumnName.equals("HtmlTemplateFile")==true)
+						{
+							htmlCode = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
+							continue;
+						}
 						String val = dr.getValue(dc.ColumnName) instanceof String ? (String) dr.getValue(dc.ColumnName) : null;
 						if (val == null) {
 							continue;
@@ -5198,6 +5190,34 @@ public class Flow extends BP.En.EntityNoName {
 						md.SetValByKey(dc.ColumnName, val);
 					}
 					md.Save();
+					//如果是开发者表单，赋值HtmlTemplateFile数据库的值并保存到DataUser下
+					if (md.getHisFrmType() == FrmType.Develop)
+					{
+						//string htmlCode = BP.DA.DBAccess.GetBigTextFromDB("Sys_MapData", "No", "ND" + oldFlowID, "HtmlTemplateFile");
+						if (DataType.IsNullOrEmpty(htmlCode) == false)
+						{
+
+							htmlCode = htmlCode.replace("ND" + oldFlowID, "ND" + Integer.parseInt(fl.getNo()));
+							//保存到数据库，存储html文件
+							//保存到DataUser/CCForm/HtmlTemplateFile/文件夹下
+							String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/";
+							if (new File(filePath).exists() == false)
+								new File(filePath).mkdir();
+							filePath = filePath + md.getNo() + ".htm";
+							//写入到html 中
+							BP.DA.DataType.WriteFile(filePath, htmlCode);
+							// HtmlTemplateFile 保存到数据库中
+							BP.DA.DBAccess.SaveBigTextToDB(htmlCode, "Sys_MapData", "No", md.getNo(), "HtmlTemplateFile");
+						}
+						else
+						{
+							//如果htmlCode是空的需要删除当前节点的html文件
+							String filePath = BP.Difference.SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/" + md.getNo() + ".htm";
+							if (new File(filePath).exists() == false)
+								new File(filePath).mkdir();
+							BP.DA.DBAccess.SaveBigTextToDB("", "Sys_MapData", "No", md.getNo(), "HtmlTemplateFile");
+						}
+					}
 				}
 				break;
 			case "Sys_MapDtl": // RptEmps.xml。

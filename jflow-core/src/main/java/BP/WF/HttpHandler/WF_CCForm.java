@@ -4122,7 +4122,7 @@ public class WF_CCForm extends WebContralBase {
 
 		// 查询出来数据实体.
 		BP.Sys.FrmAttachmentDBs dbs = BP.WF.Glo.GenerFrmAttachmentDBs(athDesc, this.getPKVal(),
-				this.getFK_FrmAttachment());
+				this.getFK_FrmAttachment(),this.getWorkID(), this.getFID(), this.getPWorkID());
 		/// #endregion 处理权限控制.
 
 		if (dbs.size() == 0)

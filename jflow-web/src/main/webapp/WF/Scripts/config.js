@@ -12,11 +12,11 @@ function basePath()
 	 var pathName=window.document.location.pathname;  
 	 var pos=curPath.indexOf(pathName);  
 	 //获取主机地址，如： http://localhost:80  
-	 var localhostPaht=curPath.substring(0,pos);  
+	 var localhostPath=curPath.substring(0,pos);  
 	//获取带"/"的项目名，如：/jflow-web
 	var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);  
 	
-	return localhostPaht+projectName;
+	return localhostPath+projectName;
 	
 }
 

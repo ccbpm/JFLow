@@ -341,17 +341,7 @@ public class Emp extends EntityNoName
 
 	@Override
 	protected boolean beforeInsert() throws Exception {
-		if (SystemConfig.getIsEnablePasswordEncryption() == true)
-		{
-			if(SystemConfig.getPasswordEncryptionType().equals("0"))
-			{
-				this.setPass(Encodes.encodeBase64(this.getPass())); ;
-			}
-			if(SystemConfig.getPasswordEncryptionType().equals("1"))
-			{
-				this.setPass(BP.Tools.Cryptos.aesEncrypt(this.getPass()));
-			}
-		}
+
 			
 		return super.beforeInsert();
 	}
@@ -396,6 +386,17 @@ public class Emp extends EntityNoName
 			depts += "@" + dept.getNameOfPath();
 		}
 
+		if (SystemConfig.getIsEnablePasswordEncryption() == true)
+		{
+			if(SystemConfig.getPasswordEncryptionType().equals("0"))
+			{
+				this.setPass(Encodes.encodeBase64(this.getPass())); ;
+			}
+			if(SystemConfig.getPasswordEncryptionType().equals("1"))
+			{
+				this.setPass(BP.Tools.Cryptos.aesEncrypt(this.getPass()));
+			}
+		}
 		return super.beforeUpdateInsertAction();
 	}
 

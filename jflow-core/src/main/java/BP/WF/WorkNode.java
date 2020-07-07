@@ -7835,8 +7835,8 @@ public class WorkNode {
 		/// #region 处理节点到达事件..
 		// 执行发送到达事件.
 		if (this.town != null) {
-			String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive, this.town.getHisNode(),
-					this.rptGe, null, null);
+			String sendSuccess = this.getHisFlow().DoFlowEventEntity(EventListOfNode.WorkArrive,this.getHisNode(),
+					this.rptGe, null, null, this.town.getHisNode().getNodeID());
 		}
 
 		/// #endregion 处理节点到达事件.

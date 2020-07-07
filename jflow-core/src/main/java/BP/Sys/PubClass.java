@@ -84,6 +84,8 @@ public class PubClass {
 	 * @return
 	 */
 	public static String DealToFieldOrTableNames(String fd) {
+		if(DataType.IsNullOrEmpty(fd) == true)
+			return "";
 		String keys = "~!@#$%^&*()+{}|:<>?`=[];,./～！＠＃￥％……＆×（）——＋｛｝｜：“《》？｀－＝［］；＇，．／";
 		char[] cc = keys.toCharArray();
 		for (char c : cc) {

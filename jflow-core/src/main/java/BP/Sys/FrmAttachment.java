@@ -323,7 +323,7 @@ public class FrmAttachment extends EntityMyPK {
 	 * @throws Exception
 	 */
 	public final String getSaveTo() throws Exception {
-		if (this.getAthSaveWay() == AthSaveWay.WebServer) {
+		if (this.getAthSaveWay() == AthSaveWay.WebServer || this.getAthSaveWay() == AthSaveWay.DB) {
 			String s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
 			if (s == null || s.equals("")) {
 				s = SystemConfig.getPathOfDataUser() + "/UploadFile/" + this.getFK_MapData() + "/";

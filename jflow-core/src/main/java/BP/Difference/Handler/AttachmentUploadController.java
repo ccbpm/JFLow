@@ -150,7 +150,7 @@ public class AttachmentUploadController extends BaseController {
             boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
             boolean isEncrypt = downDB.GetParaBoolen("IsEncrypt");
             
-			if (dbAtt.getAthSaveWay() == AthSaveWay.WebServer) {
+			if (dbAtt.getAthSaveWay() == AthSaveWay.WebServer || dbAtt.getAthSaveWay() == AthSaveWay.DB) {
 				
 				String filepath = downDB.getFileFullName();
 				
@@ -224,10 +224,10 @@ public class AttachmentUploadController extends BaseController {
 					new File(jieMiFile).delete();
 			}
 
-			if (dbAtt.getAthSaveWay() == AthSaveWay.DB) {
+			/*if (dbAtt.getAthSaveWay() == AthSaveWay.DB) {
 
 				PubClass.DownloadFile(downDB.getFileFullName(), downDB.getFileName());
-			}
+			}*/
 
 			return;
 
@@ -390,7 +390,7 @@ public class AttachmentUploadController extends BaseController {
 		// 扩展名
 		String exts = FileAccess.getExtensionName(fileName).toLowerCase().replace(".", "");
 
-		if (athDesc.getAthSaveWay() == AthSaveWay.WebServer) {
+		if (athDesc.getAthSaveWay() == AthSaveWay.WebServer || athDesc.getAthSaveWay() == AthSaveWay.DB) {
 
 			String savePath = athDesc.getSaveTo();
 			if (savePath.contains("@") == true || savePath.contains("*") == true) {
@@ -502,7 +502,7 @@ public class AttachmentUploadController extends BaseController {
 			}
 
 			/// #region 处理文件路径，如果是保存到数据库，就存储pk.
-			if (athDesc.getAthSaveWay() == AthSaveWay.WebServer) {
+			if (athDesc.getAthSaveWay() == AthSaveWay.WebServer || athDesc.getAthSaveWay() == AthSaveWay.DB) {
 				// 文件方式保存
 				dbUpload.setFileFullName(realSaveTo);
 			}
@@ -524,11 +524,11 @@ public class AttachmentUploadController extends BaseController {
 			
 			dbUpload.Insert();
 
-			if (athDesc.getAthSaveWay() == AthSaveWay.DB) {
+			/*if (athDesc.getAthSaveWay() == AthSaveWay.DB) {
 				// 执行文件保存.
 				BP.DA.DBAccess.SaveFileToDB(realSaveTo, dbUpload.getEnMap().getPhysicsTable(), "MyPK",
 						dbUpload.getMyPK(), "FDB");
-			}
+			}*/
 
 			// 执行附件上传后事件，added by liuxc,2017-7-15
 			msg = mapData.DoEvent(FrmEventList.AthUploadeAfter, en,
@@ -540,7 +540,7 @@ public class AttachmentUploadController extends BaseController {
 		/// #endregion 文件上传的iis服务器上 or db数据库里.
 
 		/// #region 保存到数据库 / FTP服务器上.
-		if (athDesc.getAthSaveWay() == AthSaveWay.DB || athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+		if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
 			String guid = BP.DA.DBAccess.GenerGUID();
 
 			// 把文件临时保存到一个位置.

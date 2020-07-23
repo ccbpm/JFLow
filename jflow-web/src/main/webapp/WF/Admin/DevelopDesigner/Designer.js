@@ -67,16 +67,16 @@ UE.plugins['impfrm'] = function () {
 UE.plugins['frmmobile'] = function () {
     var me = this, thePlugins = 'frmmobile';
     var frmID = pageParam.fk_mapdata;
-    var W = document.body.clientWidth - 120;
-    var H = document.body.clientHeight - 80;
-    var url = '../AttrNode/SortingMapAttrs.htm?FK_Flow=' + GetQueryString("FK_Flow") + '&FK_Node=' + GetQueryString('FK_Node') + '&FK_MapData=' + GetQueryString("FK_MapData");
+    var W = 600;
+    var H = 600;
+    var url = '../MobileFrmDesigner/Default.htm?FK_Flow=' + GetQueryString("FK_Flow") + '&FK_Node=' + GetQueryString('FK_Node') + '&FK_MapData=' + GetQueryString("FK_MapData");
     me.commands[thePlugins] = {
         execCommand: function (method, dataType) {
             var dialog = new UE.ui.Dialog({
                 iframeUrl: url,
                 name: thePlugins,
                 editor: this,
-                title: '手机模板',
+                title: '手机表单',
                 cssRules: "width:" + W + "px;height:" + H + "px;",
 
             });
@@ -165,11 +165,11 @@ UE.plugins['text'] = function () {
         if (/input|div/ig.test(el.tagName) && leipiPlugins == thePlugins) {
             var type = el.getAttribute('data-type');
             var html = "";
-            if(type == "SignCheck")
+            if (type == "SignCheck")
                 html = popup.formatHtml(
                     '<nobr>签批组件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
-            else if(type == "FlowBBS")
-                 html = popup.formatHtml(
+            else if (type == "FlowBBS")
+                html = popup.formatHtml(
                     '<nobr>评论组件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
 
             else if (type == "Text")
@@ -263,7 +263,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
         return;
     }
 
-    
+
     if (shap == 'Date') {
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrDT&PKVal=' + fk_mapdata + '_' + mypk;
         CCForm_ShowDialog(url, '字段Date属性', null, null, shap, fk_mapdata + '_' + mypk, anchorEl);
@@ -300,7 +300,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
         return;
     }
 
-    if (shap == 'Radio' || shap == 'EnumSelect' || shap=='EnumCheckBox') {
+    if (shap == 'Radio' || shap == 'EnumSelect' || shap == 'EnumCheckBox') {
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrEnum&PKVal=' + fk_mapdata + '_' + mypk;
         CCForm_ShowDialog(url, '字段Enum属性', null, null, shap, fk_mapdata + '_' + mypk, anchorEl);
         return;
@@ -327,7 +327,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
         var url = '../../Admin/FoolFormDesigner/MapDefDtlFreeFrm.htm?FK_MapData=' + fk_mapdata + '&FK_MapDtl=' + mypk;
         var W = leipiEditor.body.clientWidth - 40;
         var H = leipiEditor.body.clientHeight - 40;
-        CCForm_ShowDialog(url, '从表/明细表', W, H, shap,  mypk, anchorEl);
+        CCForm_ShowDialog(url, '从表/明细表', W, H, shap, mypk, anchorEl);
         return;
     }
 
@@ -337,12 +337,17 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
         return;
     }
 
-    if (shap == 'Button') {
-        var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.FrmBtn&PKVal=' + mypk;
-        CCForm_ShowDialog(url, '按钮' + fmypk + '属性', null, null, shap, mypk, anchorEl);
+    if (shap == 'Btn') {
+        var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.FrmBtn&PKVal=' + fk_mapdata + "_" + mypk;
+        CCForm_ShowDialog(url, '按钮' + mypk + '属性', null, null, shap, fk_mapdata + "_" + mypk, anchorEl);
         return;
     }
 
+    if (shap == 'AthShow') {
+        var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&PKVal=' + fk_mapdata + "_" + mypk;
+        CCForm_ShowDialog(url, '附件' + mypk + '属性', null, null, shap, fk_mapdata + "_" + mypk, anchorEl);
+        return;
+    }
 
 
     if (shap == 'AthMulti') {
@@ -405,7 +410,7 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
 
 
         var url = '../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapFrameExt&PKVal=' + mypk;
-        CCForm_ShowDialog(url, '框架', null, null, shap, mypk, anchorEl);
+        CCForm_ShowDialog(url, '框架组件', null, null, shap, mypk, anchorEl);
         return;
     }
 
@@ -413,26 +418,32 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
 
 
         var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.ExtHandWriting&PKVal=' + mypk;
-        CCForm_ShowDialog(url, '签字版', null, null, shap, mypk, anchorEl);
+        CCForm_ShowDialog(url, '签字版组件', null, null, shap, mypk, anchorEl);
         return;
     }
 
     if (shap == 'Score') {
         var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.ExtScore&PKVal=' + mypk;
-        CCForm_ShowDialog(url, '评分', null, null, shap, mypk, anchorEl);
+        CCForm_ShowDialog(url, '评分组件', null, null, shap, mypk, anchorEl);
 
         return;
     }
 
     if (shap == 'Map') {
         var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.ExtImg&MyPK=' + mypk;
-        CCForm_ShowDialog(url, '地图', null, null, shap, mypk, anchorEl);
+        CCForm_ShowDialog(url, '地图组件', null, null, shap, mypk, anchorEl);
         return;
     }
 
     if (shap == 'DocWord') {
-        var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.MapAttrDocWord&MyPK=' + fk_mapdata+"_" + mypk;
-        CCForm_ShowDialog(url, '公文字号', null, null, shap, mypk, anchorEl);
+        var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.MapAttrDocWord&MyPK=' + fk_mapdata + "_" + mypk;
+        CCForm_ShowDialog(url, '发文字号组件', null, null, shap, mypk, anchorEl);
+        return;
+    }
+
+    if (shap == 'DocWordReceive') {
+        var url = '../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.MapAttrDocWordReceive&MyPK=' + fk_mapdata + "_" + mypk;
+        CCForm_ShowDialog(url, '收文字号组件', null, null, shap, mypk, anchorEl);
         return;
     }
 
@@ -443,12 +454,27 @@ function showFigurePropertyWin(shap, mypk, fk_mapdata, anchorEl) {
 //打开窗体
 function CCForm_ShowDialog(url, title, w, h, shap, MyPK, anchorEl) {
 
-    if (w==null || w== undefined)
+    if (w == null || w == undefined)
         w = 760;
 
-    if (h==null || h == undefined)
+    if (h == null || h == undefined)
         h = 460;
 
+    if (shap == "Dtl") {
+        var self = window.open(url);
+        var loop = setInterval(function () {
+            if (self != null && self.closed) {
+                clearInterval(loop);
+                var en = new Entity("BP.Sys.MapDtl");
+                en.SetPKVal(MyPK);
+                if (en.RetrieveFromDBSources() == 0)
+                    UE.dom.domUtils.remove(anchorEl, false);
+                self = null;
+            }
+        }, 1000);
+        return;
+    }
+        
     //弹出框编辑属性
     OpenEasyUiDialog(url, 'CCForm_ShowDialog', title, w, h, 'icon-library', false, null, null, null, function () {
         switch (shap) {
@@ -475,6 +501,8 @@ function CCForm_ShowDialog(url, title, w, h, shap, MyPK, anchorEl) {
             case "Map":
             case "Score":
             case "HandWriting":
+            case "Btn":
+            case "AthShow":
                 var en = new Entity("BP.Sys.MapAttr");
                 en.SetPKVal(MyPK);
                 if (en.RetrieveFromDBSources() == 0) {
@@ -497,13 +525,19 @@ function CCForm_ShowDialog(url, title, w, h, shap, MyPK, anchorEl) {
                                 "leipiplugins": shap
                             });
                         }
+                        if (en.UIContralType == 0) {//
+                            //修改显示的样式
+                            UE.dom.domUtils.setAttributes(anchorEl, {
+                                "placeholder": en.Tip
+                            });
+                        }
                     }
 
                     if (shap == "SignCheck" || shap == "FlowBBS") {
                         if (en.UIContralType == 0) {
                             var attributes;
                             if (en.UIHeight <= 23) {
-                                attributes = { "data-type": "Text" };
+                                attributes = { "data-type": "Text"};
                             } else {
                                 attributes = {
                                     "data-type": "Textarea",
@@ -521,10 +555,7 @@ function CCForm_ShowDialog(url, title, w, h, shap, MyPK, anchorEl) {
                 }
                 break;
             case "Dtl":
-                var en = new Entity("BP.Sys.MapDtl");
-                en.SetPKVal(mypk);
-                if (en.RetrieveFromDBSources() == 0)
-                    UE.dom.domUtils.remove(anchorEl, false);
+               
                 break;
             case "Img":
                 var en = new Entity("BP.Sys.FrmUI.ExtImg");
@@ -567,18 +598,10 @@ function CCForm_ShowDialog(url, title, w, h, shap, MyPK, anchorEl) {
                 if (en.RetrieveFromDBSources() == 0)
                     UE.dom.domUtils.remove(anchorEl, false);
                 break;
-           
-
-
-
         }
-        
-        
 
     });
 
-   
-   
 }
 
 
@@ -680,7 +703,7 @@ UE.plugins['enum'] = function () {
                 name: thePlugins,
                 editor: this,
                 title: '单选框',
-                cssRules: "width:"+W+"px;height:"+H+"px;",
+                cssRules: "width:" + W + "px;height:" + H + "px;",
                 buttons: [
                     {
                         className: 'edui-okbutton',
@@ -868,7 +891,7 @@ UE.plugins['textarea'] = function () {
                 html = popup.formatHtml(
                     '<nobr>评论组件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
 
-            else 
+            else
                 html = popup.formatHtml(
                     '<nobr>多行文本框: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span>&nbsp;&nbsp;<span onclick=$$._setwidth() class="edui-clickable">宽度</span></nobr>');
             if (html) {
@@ -1124,7 +1147,7 @@ UE.plugins['qrcode'] = function () {
         },
         _delete: function () {
             if (window.confirm('确认删除该控件吗？')) {
-               
+
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();
@@ -1218,7 +1241,7 @@ UE.plugins['dtl'] = function () {
                 }
                 var mapDtl = new Entity("BP.Sys.MapDtl", no);
                 mapDtl.Delete();
-               
+
                 baidu.editor.dom.domUtils.remove(this.anchorEl, false);
             }
             this.hide();
@@ -1405,8 +1428,17 @@ UE.plugins['component'] = function () {
                 ExtImgAth();
             }
 
-            if (dataType == "DocWord") {//公文字号
+            if (dataType == "DocWord") {  //发文字号
                 ExtDocWord();
+            }
+
+            if (dataType == "DocWordReceive") { //收文字号
+                ExtDocWordReceive();
+            }
+
+
+            if (dataType == "Btn") {//按钮
+                ExtBtn();
             }
 
             if (dataType == "HandWriting") {//手写签字版
@@ -1415,10 +1447,10 @@ UE.plugins['component'] = function () {
             if (dataType == "WorkCheck") { //审核组件
                 var mypk = GetQueryString("FK_Node");
 
-                if (mypk == null || mypk == undefined) {
-                    alert('非节点表单,不能添加审核组件');
-                    return;
-                }
+                //if (mypk == null || mypk == undefined) {
+                //    alert('非节点表单,不能添加审核组件');
+                //    return;
+                //}
                 var url = '../../Comm/EnOnly.htm?EnName=BP.WF.Template.NodeWorkCheck&PKVal=' + mypk + '&tab=审核组件';
                 OpenEasyUiDialog(url, "eudlgframe", '组件', 800, 550, "icon-property", true, null, null, null, function () {
                     //加载js
@@ -1490,9 +1522,18 @@ UE.plugins['component'] = function () {
                     mapAttr.Delete();
                 }
 
-                if (dataType == "DocWord") {
-                    var mapAttr = new Entity("BP.Sys.MapAttr", pageParam.fk_mapdata+"_"+mypk);
+                if (dataType == "DocWord" || dataType == "DocWordReceive"  ) {
+                    var mapAttr = new Entity("BP.Sys.MapAttr", pageParam.fk_mapdata + "_" + mypk);
                     mapAttr.Delete();
+                }
+
+                if (dataType == "Btn") {
+                    var mapAttr = new Entity("BP.Sys.MapAttr", pageParam.fk_mapdata + "_" + mypk);
+                    mapAttr.Delete();
+
+                    //删除相关联的按钮
+                    var frmBtn = new Entity("BP.Sys.FrmUI.FrmBtn", pageParam.fk_mapdata + "_" + mypk);
+                    frmBtn.Delete();
                 }
 
                 if (dataType == "HandWriting") {
@@ -1549,7 +1590,19 @@ UE.plugins['component'] = function () {
 
             if (dataType == "DocWord")
                 _html = popup.formatHtml(
-                    '<nobr>公文字号: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
+                    '<nobr>发文字号: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
+
+            if (dataType == "DocWordReceive")
+                _html = popup.formatHtml(
+                    '<nobr>收文字号: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
+
+
+            if (dataType == "Btn")
+                _html = popup.formatHtml(
+                    '<nobr>按钮: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
+            if (dataType == "AthShow")
+                _html = popup.formatHtml(
+                    '<nobr>字段附件: <span onclick=$$._edittext() class="edui-clickable">编辑</span>&nbsp;&nbsp;<span onclick=$$._delete() class="edui-clickable">删除</span></nobr>');
 
             if (dataType == "HandWriting")
                 _html = popup.formatHtml(
@@ -1889,23 +1942,22 @@ function ExtImgAth() {
     });
 }
 
-//公文字号
+//发文字号
 function ExtDocWord() {
     var en = new Entity("BP.Sys.MapAttr");
     en.SetPKVal(pageParam.fk_mapdata + "_DocWord");
     if (en.RetrieveFromDBSources() == 1) {
-        alert("该表单DocWord字段已经存在，公文字号默认的字段DocWord,请确认该字段是否为公文字段");
+        alert("该表单 DocWord 字段已经存在，字号默认的字段 DocWord, 请确认该字段是否为发文字号字段");
         return;
     }
-    
 
     var mypk = pageParam.fk_mapdata + "_DocWord";
     var mapAttr = new Entity("BP.Sys.MapAttr");
-    mapAttr.UIContralType = 17; //公文字号.
+    mapAttr.UIContralType = 17; //发文字号.
     mapAttr.MyPK = mypk;
     mapAttr.FK_MapData = pageParam.fk_mapdata;
     mapAttr.KeyOfEn = "DocWord";
-    mapAttr.Name = "公文字号";
+    mapAttr.Name = "发文字号";
     mapAttr.MyDataType = 1;
     mapAttr.LGType = 0;
     mapAttr.ColSpan = 1; // 
@@ -1914,11 +1966,43 @@ function ExtDocWord() {
     mapAttr.Insert(); //插入字段.
     mapAttr.Retrieve();
     var url = "../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.MapAttrDocWord&MyPK=" + mapAttr.MyPK;
-    OpenEasyUiDialog(url, "eudlgframe", '公文字号', 800, 500, "icon-edit", true, null, null, null, function () {
-        var _Html = "<input type='text'  id='TB_DocWord' name='TB_DocWord' data-key='DocWord' data-name='公文字号' data-type='DocWord'   leipiplugins='component' style='width:98%'  placeholder='公文字号'/>";
+    OpenEasyUiDialog(url, "eudlgframe", '发文字号', 800, 500, "icon-edit", true, null, null, null, function () {
+        var _Html = "<input type='text'  id='TB_DocWord' name='TB_DocWord' data-key='DocWord' data-name='发文字号' data-type='DocWord'   leipiplugins='component' style='width:98%'  placeholder='发文字号'/>";
         leipiEditor.execCommand('insertHtml', _Html);
     });
 }
+
+//收文字号
+function ExtDocWordReceive() {
+
+    var en = new Entity("BP.Sys.MapAttr");
+    en.SetPKVal(pageParam.fk_mapdata + "_DocWordReceive");
+    if (en.RetrieveFromDBSources() == 1) {
+        alert("该表单 DocWordReceive 字段已经存在，收文字号默认的字段 DocWordReceive,请确认该字段是否为收文字号字段");
+        return;
+    }
+
+    var mypk = pageParam.fk_mapdata + "_DocWordReceive";
+    var mapAttr = new Entity("BP.Sys.MapAttr");
+    mapAttr.UIContralType = 170; //收文字号.
+    mapAttr.MyPK = mypk;
+    mapAttr.FK_MapData = pageParam.fk_mapdata;
+    mapAttr.KeyOfEn = "DocWordReceive";
+    mapAttr.Name = "收文字号";
+    mapAttr.MyDataType = 1;
+    mapAttr.LGType = 0;
+    mapAttr.ColSpan = 1; //
+    mapAttr.UIWidth = 150;
+    mapAttr.UIHeight = 170;
+    mapAttr.Insert(); //插入字段.
+    mapAttr.Retrieve();
+    var url = "../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.MapAttrDocWordReceive&MyPK=" + mapAttr.MyPK;
+    OpenEasyUiDialog(url, "eudlgframe", '收文字号', 800, 500, "icon-edit", true, null, null, null, function () {
+        var _Html = "<input type='text'  id='TB_DocWordReceive' name='TB_DocWordReceive' data-key='DocWordReceive' data-name='收文字号' data-type='DocWordReceive'   leipiplugins='component' style='width:98%'  placeholder='收文字号'/>";
+        leipiEditor.execCommand('insertHtml', _Html);
+    });
+}
+
 
 //图片
 function ExtImg() {
@@ -1991,7 +2075,7 @@ function NewFrame() {
         return;
     }
 
-    var en = new Entity("BP.Sys.FrmUI.MapFrameExt");
+    var en = new Entity("BP.Sys.MapFrame");
     en.MyPK = pageParam.fk_mapdata + "_" + val;
     if (en.IsExits() == true) {
         alert("该编号[" + val + "]已经存在");
@@ -2158,10 +2242,9 @@ function SaveForm() {
     $("#Btn_Save").val("保存成功");
     setTimeout(function () { $("#Btn_Save").val("保存."); }, 1000);
 }
-
+var formeditor = "";
 //保存表单的htm代码
 function Save() {
-
     //清空MapData的缓存
     var en = new Entity("BP.Sys.MapData", pageParam.fk_mapdata);
     en.SetPKVal(pageParam.fk_mapdata);
@@ -2227,7 +2310,7 @@ function Save() {
                     mapAttr = new Entity("BP.Sys.MapAttr");
 
                     mapAttr.MyPK = pageParam.fk_mapdata + "_" + keyOfEn;
-                   
+
                     mapAttr.FK_MapData = pageParam.fk_mapdata;
                     mapAttr.KeyOfEn = keyOfEn;
                     mapAttr.Name = name;
@@ -2257,8 +2340,19 @@ function Save() {
 
                     if (dataType == "DocWord") {
                         dataType = 1;
-                        mapAttr.UIContralType = 17;//公文字号
+                        mapAttr.UIContralType = 17;//发文字号
                     }
+
+                    if (dataType == "DocWordReceive") {
+                        dataType = 1;
+                        mapAttr.UIContralType = 170;//收文字号
+                    }
+
+                    if (dataType == "Btn") {
+                        dataType = 1;
+                        mapAttr.UIContralType = 18; //按钮
+                    }
+
 
                     mapAttr.MyDataType = dataType;
                     if (dataType == 4) {
@@ -2271,8 +2365,8 @@ function Save() {
                             mapAttr.UIContralType = 2//checkbox
                             mapAttr.LGType = 0;
                         }
-                           
-                    }else if (dataType == "Radio" || dataType == "Select") {
+
+                    } else if (dataType == "Radio" || dataType == "Select") {
                         mapAttr.UIContralType = 1;//下拉框
                         mapAttr.LGType = 1;//枚举
                     } else {
@@ -2280,10 +2374,10 @@ function Save() {
                     }
                     mapAttr.Insert();
                 }
-                    
-                
+
+
             }
-           
+
 
         }
     });
@@ -2302,7 +2396,7 @@ function Save() {
                 uiBindKey = tag.getAttribute("data-bindKey");
             }
             var mapAttr = mapAttrs[pageParam.fk_mapdata + "_" + keyOfEn];
-            if ((mapAttr == undefined || mapAttr == null) &&  keyOfEn != "" && uiBindKey != "") {
+            if ((mapAttr == undefined || mapAttr == null) && keyOfEn != "" && uiBindKey != "") {
                 if (dataType == "EnumSelect") {
                     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
                     handler.AddPara("KeyOfEn", keyOfEn);
@@ -2337,10 +2431,10 @@ function Save() {
             continue;
         if (tag.getAttribute("data-type") != "Radio")
             continue;
+
         //获取枚举值
-        //获取枚举值
-        var enums = new Entities("BP.Sys.SysEnums");
-        enums.Retrieve("EnumKey", uiBindKey);
+        var enums = GetSysEnums(uiBindKey);
+
         if (enums.length == 0)
             continue;
         var keyOfEn = tag.getAttribute("data-key");
@@ -2352,12 +2446,70 @@ function Save() {
 
     }
 
+    //获取表单的附件，从表，图片附件，审核组件
+    leipiEditor.focus(true);
+    var imgs = leipiEditor.document.getElementsByTagName("Img");
+    var _html=""
+    var aths = new Entities("BP.Sys.FrmAttachments");
+    aths.Retrieve("FK_MapData", pageParam.fk_mapdata,"FK_Node",0);
+    $.each(aths, function (i, ath) {
+        document.getElementsByTagName("Im")
+        var element = getElementByAttr(imgs, "data-key", ath.MyPK);
+        if (element == null)
+            element = leipiEditor.document.getElementById("TB_" + ath.NoOfObj);
+        //增加该元素
+        if (element==null) {
+            _html = "<img src='../CCFormDesigner/Controls/DataView/AthMulti.png' style='width:67%;height:200px'  leipiplugins='ath' data-key='" + ath.MyPK + "' />"
+            leipiEditor.execCommand('insertHtml', _html);
+        }
+    });
+
+    //从表
+    var dtls = new Entities("BP.Sys.MapDtls");
+    dtls.Retrieve("FK_MapData", pageParam.fk_mapdata,"FK_Node",0);
+    $.each(dtls, function (i, dtl) {
+        var element = getElementByAttr(imgs, "data-key", dtl.No);
+        //增加该元素
+        if (element == null) {
+            _html = "<img src='../CCFormDesigner/Controls/DataView/Dtl.png' style='width:67%;height:200px'  leipiplugins='dtl' data-key='" + dtl.No + "'/>"
+            leipiEditor.execCommand('insertHtml', _html);
+        }
+    });
+
+    //图片附件
+    var imgAths = new Entities("BP.Sys.FrmImgAths");
+    imgAths.Retrieve("FK_MapData", pageParam.fk_mapdata);
+    $.each(imgAths, function (i, imgAth) {
+        var element = getElementByAttr(imgs, "data-key", imgAth.MyPK);
+        //增加该元素
+        if (element == null) {
+            _html = "<img src='../CCFormDesigner/Controls/DataView/AthImg.png' style='width:" + imgAth.W + "px;height:" + imgAth.H + "px'  leipiplugins='component' data-key='" + imgAth.MyPK + "' data-type='AthImg'/>"
+            leipiEditor.execCommand('insertHtml', _html);
+        }
+    });
+
+    //审核组件  判断当前是否是节点表单，节点表单才包含审核组件
+    var fk_node = GetQueryString("FK_Node");
+    if (fk_node != null && fk_node != undefined && fk_node != 0) {
+        var element = getElementByAttr(imgs, "data-type", "WorkCheck");
+        if (element == null) {
+            var node = new Entity("BP.WF.Node", fk_node);
+            //并且签批字段为空时增加审核组件
+            if (node.FWCSta != 0 && (node.CheckField == null || node.CheckField == undefined|| node.CheckField == "" )) {
+                var _html = "<img src='../CCFormDesigner/Controls/DataView/FrmCheck.png' style='width:67%;height:200px'  leipiplugins='component' data-key='" + fk_node + "'  data-type='WorkCheck'/>"
+                leipiEditor.execCommand('insertHtml', _html);
+            }
+        }
+        
+    }
+   
+
     formeditor = leipiEditor.getContent();
     //保存表单的html信息
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_DevelopDesigner");
     handler.AddPara("FK_MapData", pageParam.fk_mapdata);
     handler.AddPara("HtmlCode", encodeURIComponent(formeditor));
-
+    
     var data = handler.DoMethodReturnString("SaveForm");
     if (data.indexOf("err@") != -1) {
         alert(data);
@@ -2367,20 +2519,31 @@ function Save() {
     //  alert("保存成功!");
     $("#Btn_Save").val("保存");
 }
-//预览
-function PreviewForm() {
-    debugger
-    if (leipiEditor.queryCommandState('source'))
-        leipiEditor.execCommand('source');//切换到编辑模式才提交，否则有bug
 
-    if (leipiEditor.hasContents()) {
-        leipiEditor.sync();       //同步内容
-        document.saveform.target = "mywin";
-        window.open('', 'mywin', "menubar=0,toolbar=0,status=0,resizable=1,left=0,top=0,scrollbars=1,width=" + (screen.availWidth - 10) + ",height=" + (screen.availHeight - 50) + "\"");
-        SaveForm();
-    } else {
-        alert('表单内容不能为空！');
-        return false;
+var webUser = new WebUser();
+function GetSysEnums(enumKey) {
+
+    if (webUser.CCBPMRunModel == 0 || webUser.CCBPMRunModel == 1) {
+        var ses = new Entities("BP.Sys.SysEnums");
+        ses.Retrieve("EnumKey", enumKey, "IntKey");
+        return ses;
     }
+
+    var ses = new Entities("BP.Cloud.Sys.SysEnums");
+    ses.Retrieve("RefPK", enumKey, "IntKey");
+    return ses;
 }
+
+//根据元素自定义的属性和值获取改元素
+function getElementByAttr(aElements, attr, value) {
+    for (var i = 0; i < aElements.length; i++) {
+        if (aElements[i].getAttribute(attr) == value)
+            return aElements[i];
+    }
+    return null;
+}
+
+
+
+
 

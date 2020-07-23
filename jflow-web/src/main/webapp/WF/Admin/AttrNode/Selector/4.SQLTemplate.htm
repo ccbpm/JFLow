@@ -20,10 +20,11 @@
 
             InitBar(SelectorModel.SQLTemplate);
             var nodeID = GetQueryString("FK_Node");
-            var node = new Entity("BP.WF.Node", nodeID);
+            var node = new Entity("BP.WF.Template.Selector", nodeID);
             var paras = node.DeliveryParas;
 
-            var sqlTemplates = new Entities("BP.WF.Template.SQLTemplates", "SQLType", 1)
+            var sqlTemplates = new Entities("BP.WF.Template.SQLTemplates");
+            sqlTemplates.RetrieveAll();
             var str = "";
             str += "&nbsp;<select id='RB_BySQLTemplate'>" + InitDDLOperation(sqlTemplates) + "</select>";
 
@@ -57,7 +58,7 @@
 
         //装载模版.
         function OpenDialog() {
-            var url = "../../../Comm/Search.htm?EnsName=BP.WF.Template.SQLTemplates&SQLType=1";
+            var url = "../../../Comm/Search.htm?EnsName=BP.WF.Template.SQLTemplates&SQLType=5";
             OpenEasyUiDialogExt(url, 'SQL模板', 800, 500, false);
         }
 
@@ -65,8 +66,9 @@
             var nodeID = GetQueryString("FK_Node");
             var node = new Entity("BP.WF.Template.Selector", nodeID);
             node.SelectorModel = SelectorModel.SQLTemplate;
-            var DeliveryParas = $("#RB_BySQLTemplate ").val();
-            node.DeliveryParas = DeliveryParas;
+            var templateNo = $("#RB_BySQLTemplate").val();
+            node.DeliveryParas = templateNo;
+            node.SelectorP1 = templateNo;
             node.Update();
             alert("保存成功.");
         }
@@ -78,17 +80,18 @@
 
     <fieldset>
         <legend>请选择一个SQLTemplate.</legend>
-        请选择一个SQLTemplate:  <label id="sqlTemSelect"></label>
+        
         <ul>
-            <li><a href="javascript:OpenDialog();">我要配置SQLTemplate</a></li>
+            <li>请选择一个SQLTemplate:  </li>
+            <li> <label id="sqlTemSelect"> </label></li>
         </ul>
     </fieldset>
 
 
     <fieldset>
-        <legend id="help">请选择一个SQLTemplate.</legend>
+        <legend id="help">帮助</legend>
         <ul>
-            <li>该功能不再支持了，请使用按照SQL配置.</li>
+            <li><a href="javascript:OpenDialog();">我要配置SQLTemplate</a></li>
         </ul>
     </fieldset>
 </body>

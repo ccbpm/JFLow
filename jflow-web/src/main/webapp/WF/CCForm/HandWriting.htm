@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,7 @@
     <script src="../Scripts/jq-signature.min.js" type="text/javascript"></script>
     <script src="../Scripts/jq-signature.js" type="text/javascript"></script>
     <!--
-    1. 袁丽娜接手来解析该部分.李世峰做的第1版.
+    1. yln接手来解析该部分.李世峰做的第1版.
     2. 当MapAttr的字段类型为String类型，扩展控件类型为 UIContralType=8 .
     3. 用户点手写签名版的时候，就弹出来一个框，让其手写签名，确定后，就关闭.
     4. 弹窗可以使用easyUI窗口.
@@ -58,16 +58,19 @@
         function saveSignature() {
 
             var pic = $('.js-signature').eq(0).jqSignature('getDataURL');
-            pic = pic.replace(/^data:image\/(png|jpg);base64,/, "");
-            //            var form = new FormData();
-            //            form.append("imageData", pic);
-
-            // Sending the image data to Server
+            var writType = GetQueryString("WritType");
+            if (writType != null && writType != undefined && writType == "WorkCheck") {
+                parent.setHandWriteSrc("WorkCheck", pic, 1);
+                return;
+            }
+            var newpic = pic.replace(/^data:image\/(png|jpg);base64,/, "");
+         
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
             handler.AddPara("FK_Node", GetQueryString("FK_Node"));
             handler.AddPara("WorkID", GetQueryString("WorkID"));
+            handler.AddPara("FK_Flow", GetQueryString("FK_Flow"));
             handler.AddPara("KeyOfEn", GetQueryString("KeyOfEn"));
-            handler.AddPara("imageData", pic);
+            handler.AddPara("imageData", newpic);
             var data = handler.DoMethodReturnString("HandWriting_Save");
             if (data.indexOf('err@') == 0) {
                 alert(data);
@@ -76,8 +79,9 @@
             }
             if (data.indexOf('info@') == 0) {
                 imagePath = data.replace('info@', '');
-                parent.setHandWriteSrc(GetQueryString("KeyOfEn"), imagePath);
-            }
+                parent.setHandWriteSrc(GetQueryString("KeyOfEn"), imagePath,0);
+            } 
+
             alert("图片上传成功.");
         }
 

@@ -4,8 +4,10 @@
     <title></title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
     <script src="../../Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
+
+    <script language="JavaScript" src="../../Comm/JScript.js" type="text/javascript"></script>
     <script type="text/javascript" src="../../Scripts/QueryString.js"></script>
     <script type="text/javascript" src="../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
@@ -44,7 +46,7 @@
             $("#TB_Key").attr("placeholder", tip); //设置查询提示.
 
             //跟节点编号.
-            rootNo = "0";
+            rootNo = GetQueryString("RootNo");
             if (rootNo == "@WebUser.FK_Dept") {
                 var webUser = new WebUser();
                 rootNo = webUser.FK_Dept;
@@ -172,7 +174,7 @@
             //var json = DBAccess.RunDBSrc(treeUrl); // 执行url返回json.
 
             var ens = new Entities(GetQueryString("EnsOfM")); //BP.Port.Depts
-            ens.RetrieveAll();
+            ens.Retrieve("Idx");
             var jsonTree = createJsonToTree(ens, rootNo);
             $('#tree').treeview({
                 data: jsonTree,         // 数据源
@@ -184,10 +186,11 @@
                 multiSelect: false,    //多选
                 onNodeChecked: function (event, node) {
                     var selectNodes = getChildNodeIdArr(node, true); //获取所有子节点
-                    if (selectNodes.length > 0) { //子节点不为空，则选中所有子节点
+                    if (selectNodes) { //子节点不为空，则选中所有子节点
                         $('#tree').treeview('checkNode', [selectNodes, { silent: true }]);
                         saveCheckNodes(selectNodes, 1);
                     }
+
                     var en = new Entity(GetQueryString("Dot2DotEnName"));
                     en[GetQueryString("AttrOfOneInMM")] = GetPKVal();
                     en[GetQueryString("AttrOfMInMM")] = node.id;
@@ -201,7 +204,7 @@
                 onNodeUnchecked: function (event, node) {
 
                     var selectNodes = getChildNodeIdArr(node, false); //获取所有子节点
-                    if (selectNodes.length > 0) { //子节点不为空，则取消选中所有子节点
+                    if (selectNodes) { //子节点不为空，则取消选中所有子节点
                         $('#tree').treeview('uncheckNode', [selectNodes, { silent: true }]);
                         deleteCheckNodes(selectNodes, 1);
                     }
@@ -209,7 +212,7 @@
                     var en = new Entity(GetQueryString("Dot2DotEnName"));
                     en[GetQueryString("AttrOfOneInMM")] = GetPKVal();
                     en[GetQueryString("AttrOfMInMM")] = node.id;
-                    en.Delete(GetQueryString("AttrOfOneInMM"), GetPKVal(), GetQueryString("AttrOfMInMM"), node.id);
+                    en.Delete();
                     //$('#checkable-output').prepend('<p>' + node.text + ' was unchecked</p>');
                 },
                 onNodeSelected: function (event, node) {
@@ -333,6 +336,8 @@
                         }
                     }
                 }
+            } else {
+                ts.push(node.nodeId);
             }
             return ts;
         }
@@ -379,8 +384,7 @@
                     en[GetQueryString("AttrOfMInMM")] = selectNodes[i].id;
                 else
                     en[GetQueryString("AttrOfMInMM")] = $('#tree').treeview('getNode', selectNodes[i]).id;
-
-                en.Delete(GetQueryString("AttrOfOneInMM"), GetPKVal(), GetQueryString("AttrOfMInMM"), en[GetQueryString("AttrOfMInMM")]);
+                en.Delete();
             }
         }
         function CheckAll() {
@@ -405,17 +409,22 @@
         function Close() {
             alert("尚未实现.");
         }
-
-/**/</script>
+    </script>
 </head>
 <body>
-        <div class="row row-margin-top" style="width:96%;">
-                <div id="tree"></div>
+
+    <div class="container-fluid" style=" width:100%;">
+        <div class="pull-center search search-margin" style="text-align:right">
+            <input type="button" value="全选" id="Cancel" onclick="CheckAll()" />
+            <input type="button" value="全不选" id="Button1" onclick="UnCheckAll()" />
         </div>
+    </div>
 
-        <input type="button" value="全选" id="Cancel" onclick="CheckAll()"  />
-        <input type="button" value="全不选" id="Button1" onclick="UnCheckAll()"  />
 
+
+    <div class="row row-margin-top">
+        <div id="tree"></div>
+    </div>
     <!--</div>-->
 </body>
 </html>

@@ -456,7 +456,7 @@ function newFlow() {
             }
         }
 
-        //判断流程标记是否存在  19.10.22 by sly
+        //判断流程标记是否存在  19.10.22 
         if (newFlowInfo.FlowMark != "") {
             var flows = new Entities("BP.WF.Flows");
             flows.Retrieve("FlowMark", newFlowInfo.FlowMark);
@@ -537,7 +537,7 @@ function newFlowSort(isSub) {
     var propName = (isSub ? '子级' : '同级') + '流程类别';
     var val = window.prompt(propName, '');
     if (val == null || val.length == 0) {
-        alert('必须输入名称.');
+        alert('未输入流程类别名称或者取消创建流程类别');
         return false;
     }
 
@@ -613,7 +613,7 @@ function deleteFlowSort() {
     if (currSort == null || currSort.attributes.ISPARENT == undefined)
         return;
 
-    if (window.confirm("你确定要删除名称为“" + currSort.text + "”的流程类别吗？") == false)
+    if (window.confirm("你确定要删除“" + currSort.text + "”的流程类别吗？") == false)
         return;
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
     handler.AddPara("FK_FlowSort", currSort.id);
@@ -1075,17 +1075,17 @@ function Bill_CCForm() {
 
     // alert('sss');
 
-    var en = new Entity("BP.Frm.FrmBill", node.id);
+    var en = new Entity("BP.CCBill.FrmBill", node.id);
 
     //流程单据.
     if (en.EntityType == 0)
         url = '../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=' + node.id;
 
     if (en.EntityType == 1)
-        url = '../../Comm/En.htm?EnName=BP.Frm.FrmBill&PKVal=' + node.id;
+        url = '../../Comm/En.htm?EnName=BP.CCBill.FrmBill&PKVal=' + node.id;
 
     if (en.EntityType == 2 || en.EntityType == 3)
-        url = '../../Comm/En.htm?EnName=BP.Frm.FrmDict&PKVal=' + node.id;
+        url = '../../Comm/En.htm?EnName=BP.CCBill.FrmDict&PKVal=' + node.id;
 
     //   alert(en.EntityType);
     // http: //localhost:2207/WF/Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=CCFrm_GDZC&s=0.635120123659069
@@ -1106,7 +1106,7 @@ function Bill_Open() {
         return;
     }
 
-    var en = new Entity("BP.Frm.FrmTemplate", node.id);
+    var en = new Entity("BP.CCBill.Template.FrmTemplate", node.id);
     if (en.EntityType == 0) {
         alert('独立表单暂不支持列表打开...');
         return;

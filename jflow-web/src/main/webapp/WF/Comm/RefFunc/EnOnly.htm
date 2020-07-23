@@ -101,7 +101,6 @@
 
             document.title = mapData.Name;
 
-
             //获取没有解析的外部数据源
             var uiBindKeys = frmData["UIBindKey"];
             if (uiBindKeys != null && uiBindKeys.length != 0) {
@@ -144,7 +143,7 @@
                 $("#Btns").remove();
 
             } else {
-                $("#CCFormTabs").parent().parent().parent().css("cssText", "top:20px!important");
+                $("#CCFormTabs").parent().parent().parent().css("cssText", "top:35px !important");
             }
 
 
@@ -152,7 +151,7 @@
 
         ///设置.
         function Setting() {
-            var url = GetLocalWFPreHref()+"/WF/Comm/RefFunc/Setting.htm?EnName=" + GetQueryString("EnName") + "&PKVal=" + GetQueryString("PKVal");
+            var url = GetLocalWFPreHref() + "/WF/Comm/RefFunc/Setting.htm?EnName=" + GetQueryString("EnName") + "&PKVal=" + GetQueryString("PKVal");
             //WinOpen(url, "xxs");
             window.parent.OpenEasyUiDialog(url, "eudlgframe", "设置", 600, 470, "icon-reset", true, null, null, null, function () {
                 window.location.href = window.location.href;
@@ -197,12 +196,13 @@
             frmData = frmData;
             var Sys_GroupFields = frmData.Sys_GroupField;
             var mapAtrrs = frmData.Sys_MapAttr;
+
+            var webUser = new WebUser();
             //用户设置
-            var mypk = new WebUser().No + "_Fields_HS_" + GetQueryString("EnName");
+            var mypk = webUser.No + "_Fields_HS_" + GetQueryString("EnName");
             var userRegedit = new Entity("BP.Sys.UserRegedit");
             userRegedit.SetPKVal(mypk);
             var count = userRegedit.RetrieveFromDBSources();
-
             var tabIndex = GetQueryString("tabIndex");
 
             var tableWidth = 800; //  w - 40;
@@ -271,7 +271,7 @@
                 //添加 label
                 //如果是整行的需要添加  style='clear:both'.
                 var defValue = ConvertDefVal(mapAttr);
-                if (mapAttr.DefValType == 0 && mapAttr.DefVal == "10002")
+                if (frmData.MainTable[0].DefValType == 0 && defValue == "10002")
                     defValue = "";
 
                 if ($('#TB_' + mapAttr.KeyOfEn).length == 1) {
@@ -586,18 +586,17 @@
                         html += InitMapAttrOfCtrl(attr);
                         html += "</td>";
                     }
-
+                    html += "</tr>";
 
                     isDropTR = !isDropTR;
 
                     if (rm != null) {
                         html += "<tr>";
-                        html += "<td class='FDesc' style='width:25%;'></td>";
-                        html += "<td colspan=3>";
+                        html += "<td colspan=2>";
                         html += GenerRM(rm);
                         html += "</td>";
-                        html += "</tr>";
-                        isDropTR = true;
+
+                        isDropTR = false;
                     }
                     continue;
                 }
@@ -944,7 +943,9 @@
 
         function Save() {
 
+            $("#Btn_Save").val('正在保存');
             this.Update();
+            $("#Btn_Save").val('保存');
         }
 
         //更新.
@@ -1391,7 +1392,7 @@
             width: 130px!important;
         }*/
         .cs-form-import > .layout-panel-center {
-            padding: 16px 0 0 16px;
+            padding: 50px 0 0 16px;
         }
 
         .cs-form-import > .layout-panel-north {
@@ -1405,28 +1406,43 @@
     <div id="Btns" class="cs-btn-group" data-options="region:'north',noheader:true,split:false,border:false">
         <!--<a id="Btn_New" href="javaScript:void(0)" class="easyui-linkbutton btn btn-light-blue" data-options="plain:true,iconCls:'icon-new'"
     onclick="New()" style="margin-right:5px;">新建</a>-->
-        <input type="button" id="Btn_New" value="新建" onclick="New()" />
+
+
+
+        <button id="Btn_New" onclick="New()">
+            <img src="../../Img/Btn/New.png" style="width:22px;height:22px;" /> 新建
+        </button>
+
+        <!--<input style='background-image: url(../../Img/Btn/New.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;height:30px;' type="button" />-->
         <!--<a id="Btn_Save" href="javaScript:void(0)" class="easyui-linkbutton btn btn-light-green"
     data-options="plain:true,iconCls:'icon-save'" onclick="Update()" style="margin-right:5px;">保存</a>-->
 
-        <input type="button" id="Btn_Save" value="保存" onclick="Update()" />
+        <button id="Btn_Save" onclick="Update()">
+            <img src="../../Img/Btn/Save.png" style="width:22px;height:22px;" />保存
+        </button>
+        
+        <button id="Btn_Delete" onclick="Delete()">
+            <img src="../../Img/Btn/Delete2.png" style="width:22px;height:22px;" />删除
+        </button>
 
-        <!--<a id="Btn_Delete" href="javaScript:void(0)" class="easyui-linkbutton btn btn-light-red" data-options="plain:true,iconCls:'icon-delete'"
-       onclick="Delete()" style="margin-right:5px;">删除</a>-->
-        <input type="button" id="Btn_Delete" value="删除" onclick="Delete()" />
-        <!--<a id="Btn_Setting" href="javaScript:void(0)" class="easyui-linkbutton btn btn-white" data-options="plain:true,iconCls:'icon-reset'"
-           onclick="Setting()" style="margin-right:5px;">设置</a>-->
-        <input type="button" id="Btn_Setting" value="设置" onclick="Setting()" />
+        <button id="Btn_Setting" onclick="Setting()">
+            <img src="../../Img/Btn/setting.png" style="width:22px;height:22px;" />设置
+        </button>
+
+
     </div>
-            <div class="easyui-layout" data-options="region:'center'" style="margin: 0px;overflow: auto">
-                <div class="easyui-layout" id="CCFormTabs" data-options="region:'center',noheader:true,border:false,fit:true" style="margin: 0px;
+    <div class="easyui-layout" data-options="region:'center'" style="margin: 0px;overflow: auto">
+        <div class="easyui-layout" id="CCFormTabs" data-options="region:'center',noheader:true,border:false,fit:true" style="margin: 0px;
                     padding: 0px; overflow: auto">
-                    <br />
-                    <img src='./../../Img/loading.gif' />正在初始化表单模板及数据，请耐心等待。。。
-                    <br />
-                </div>
-            </div>
-        <!--</div>-->
+            <br />
+            <br />
+            <center>
+                <img src='./../../Img/loading.gif' />正在初始化，请耐心等待。。。
+            </center>
+            <br />
+        </div>
+    </div>
+    <!--</div>-->
     <!--</div>-->
 </body>
 </html>

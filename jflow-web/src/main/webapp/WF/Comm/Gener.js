@@ -2,7 +2,7 @@
 
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
-    //首位可以是字母以及下划线。 
+    //首位可以是字母以及下划线。
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
 
     var flag = false; //用来判断
@@ -11,7 +11,6 @@ function CheckID(val) {
     flag = reg.test(val);
     return flag;
 }
-
 
 //去左空格;
 function ltrim(s) {
@@ -222,10 +221,12 @@ function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal, filterKey1, fi
         // var no = json[i][noCol].toString();
         //   var no = json[i][nameCol].toString();
 
+
         if (json[i][noCol] == undefined)
             $("#" + ddlCtrlID).append("<option value='" + json[i][0] + "'>" + json[i][1] + "</option>");
         else
             $("#" + ddlCtrlID).append("<option value='" + json[i][noCol] + "'>" + json[i][nameCol] + "</option>");
+
     }
 
     //设置选中的值.
@@ -244,44 +245,6 @@ function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal, filterKey1, fi
     }
 }
 
-function GenerBindDDLAppend(ddlCtrlID, data, noCol, nameCol) {
-
-    if (noCol == null)
-        noCol = "No";
-
-    if (nameCol == null)
-        nameCol = "Name";
-
-    //判断data是否是一个数组，如果是一个数组，就取第1个对象.
-    var json = data;
-
-    //如果他的数量==0，就return.
-    if (json.length == 0)
-        return;
-
-    if (data[0].length == 1)
-        json = data[0];
-
-    if (json[0][noCol] == undefined) {
-        alert('@在绑定[' + ddlCtrlID + ']错误，No列名' + noCol + '不存在,无法行程期望的下拉框value . ');
-        return;
-    }
-
-    if (json[0][nameCol] == undefined) {
-        alert('@在绑定[' + ddlCtrlID + ']错误，Name列名' + nameCol + '不存在,无法行程期望的下拉框value. ');
-        return;
-    }
-
-    for (var i = 0; i < json.length; i++) {
-
-        if (json[i][noCol] == undefined)
-            $("#" + ddlCtrlID).append("<option value='" + json[i][0] + "'>" + json[i][1] + "</option>");
-        else
-            $("#" + ddlCtrlID).append("<option value='" + json[i][noCol] + "'>" + json[i][nameCol] + "</option>");
-    }
-}
-
-
 /*绑定枚举值.*/
 function GenerBindEnumKey(ctrlDDLId, enumKey, selectVal) {
     if (dynamicHandler == "")
@@ -292,9 +255,9 @@ function GenerBindEnumKey(ctrlDDLId, enumKey, selectVal) {
         type: 'post',
         async: false,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         url: dynamicHandler + "?DoType=EnumList&EnumKey=" + enumKey + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -325,9 +288,9 @@ function GenerBindEntities(ctrlDDLId, ensName, selectVal, filter) {
         type: 'post',
         async: true,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         url: dynamicHandler + "?DoType=EnsData&EnsName=" + ensName + "&Filter=" + filter + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -355,9 +318,9 @@ function GenerBindSFTable(ctrlDDLId, sfTable, selectVal) {
         type: 'post',
         async: true,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         url: dynamicHandler + "?DoType=SFTable&SFTable=" + sfTable + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -389,9 +352,9 @@ function GenerBindSQL(ctrlDDLId, sqlKey, paras, colNo, colName, selectVal) {
         type: 'post',
         async: true,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         url: dynamicHandler + "?DoType=SQLList&SQLKey=" + sqlKey + "&Paras=" + paras + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -431,17 +394,10 @@ function GenerChangeParentValue(data) {
     }
 }
 
-/* 为页面的所有字段属性赋值.
- * 1. 列的字段控件使用 TB_,CB_,DDL,RB_
- * 2. 参数字段控件使用 TBPara_,CBPara_,DDLPara,RBPara_
- * */
+/*为页面的所有字段属性赋值. */
 function GenerFullAllCtrlsVal(data) {
-
-    //  console.log(data);
-
     if (data == null)
         return;
-
     //判断data是否是一个数组，如果是一个数组，就取第1个对象.
     var json = data;
     if ($.isArray(data) && data.length > 0)
@@ -451,25 +407,11 @@ function GenerFullAllCtrlsVal(data) {
     for (var attr in json) {
 
         var val = json[attr]; //值
-        if (attr == 'enName' || attr == 'pkval' || attr === "" || attr == null)
-            continue;
-
-        //if (attr == 'TodolistModel') {
-        //    alert(attr);
-        //    alert(val);
-        //    debugger;
-        //}
-        // if (val == null || val === '')
-        //   continue; //一定加三个等号是强制等于.
 
         var div = document.getElementById(attr);
         if (div != null) {
             div.innerHTML = val;
             continue;
-        }
-
-        if (attr == 'PAnyOne') {
-            var aa = 1;
         }
 
         // textbox
@@ -485,13 +427,14 @@ function GenerFullAllCtrlsVal(data) {
             else {
                 tb.value = val;
             }
+
             continue;
         }
 
         //checkbox.
         var cb = document.getElementById('CB_' + attr);
         if (cb != null) {
-            if (val == "1" || val == 1)
+            if (val == "1")
                 cb.checked = true;
             else
                 cb.checked = false;
@@ -511,7 +454,6 @@ function GenerFullAllCtrlsVal(data) {
 
         // RadioButton. 单选按钮.
         var rb = document.getElementById('RB_' + attr + "_" + val);
-        // alert('RB_' + attr + "_" + val);
         if (rb != null) {
             rb.checked = true;
             continue;
@@ -519,8 +461,6 @@ function GenerFullAllCtrlsVal(data) {
 
         // 处理参数字段.....................
         if (attr == "AtPara") {
-
-            debugger;
             //val=@Title=1@SelectType=0@SearchTip=2@RootTreeNo=0
             $.each(val.split("@"), function (i, o) {
                 if (o == "") {
@@ -550,13 +490,15 @@ function GenerFullAllCtrlsVal(data) {
                             return true;
 
                         // console.log(suffix + "_before_" + val);
+
                         //$("#DDLPara_" + suffix).val(""); // 操作权限.
 
                         $("#DDLPara_" + suffix).val(val); // 操作权限.
 
-                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200); 
+                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200);
                         //  json[kv[0]] = kv[1];
                         //   $("#DDLPara_" + suffix).val("2"); // 操作权限.
+
                         //console.log(suffix + "_" + val);
 
                         return true;
@@ -565,7 +507,7 @@ function GenerFullAllCtrlsVal(data) {
                     //checkbox.
                     cb = document.getElementById('CBPara_' + suffix);
                     if (cb != null) {
-                        if (val == "1" || val == 1)
+                        if (val == "1")
                             cb.checked = true;
                         else
                             cb.checked = false;
@@ -740,9 +682,9 @@ function AjaxServiceGener(param, myUrl, callback, scope) {
         async: true,
         cache: false,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         complete: function () { }, //AJAX请求完成时隐藏loading提示
         error: function (XMLHttpRequest, errorThrown) {
             callback(XMLHttpRequest);
@@ -813,9 +755,9 @@ function DBAccess() {
         async: true,
         cache: false,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         complete: function () { }, //AJAX请求完成时隐藏loading提示
         error: function (XMLHttpRequest, errorThrown) {
             callback(XMLHttpRequest);
@@ -830,7 +772,7 @@ function DBAccess() {
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";  
+var pkval="Demo_DtlExpImpDtl1";
 var EnName="BP.WF.Template.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -876,8 +818,8 @@ var Entity = (function () {
 
     function getParams(self) {
         var params = {};
-        $.each(self, function (n, o) {
-            if (typeof self[n] !== "function" && n != "enName" && n != "ensName") {
+        $.each(jsonString, function (n, o) {
+            if (typeof self[n] !== "function") {
                 params[n] = self[n];
             }
         });
@@ -923,9 +865,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + self.pkval + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -941,8 +883,6 @@ var Entity = (function () {
                         return;
 
                     try {
-                        //处理特殊字符，字段中的值含有双引号
-                        data = data.replace(/\\\\"/g, '\\"');
                         jsonString = JSON.parse(data);
                         setData(self);
                     } catch (e) {
@@ -979,9 +919,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Insert&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -1027,9 +967,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_DirectInsert&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -1072,9 +1012,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Update&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -1109,9 +1049,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Save&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -1146,9 +1086,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Delete&EnName=" + self.enName + "&PKVal=" + this.GetPKVal() + "&Key1=" + key1 + "&Val1=" + val1 + "&Key2=" + key2 + "&Val2=" + val2 + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -1181,9 +1121,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_Retrieve&EnName=" + self.enName + "&" + params,
                 dataType: 'html',
                 success: function (data) {
@@ -1194,8 +1134,6 @@ var Entity = (function () {
                     }
 
                     try {
-                        //处理特殊字符，字段中的值含有双引号
-                        data = data.replace(/\\\\"/g, '\\"');
                         jsonString = JSON.parse(data);
                         setData(self);
                         result = jsonString.Retrieve;
@@ -1233,7 +1171,7 @@ var Entity = (function () {
         GetPKVal: function () {
 
             var val = null;
-            var self = this;
+
 
             if (jsonString != null) {
                 val = jsonString["MyPK"];
@@ -1301,16 +1239,16 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal()); 
+            //  alert(self.GetPKVal());
 
             var result;
             $.ajax({
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl,
                 dataType: 'html',
                 success: function (data) {
@@ -1324,8 +1262,6 @@ var Entity = (function () {
                     if (data == "")
                         return 0;
                     try {
-                        //处理特殊字符，字段中的值含有双引号
-                        data = data.replace(/\\\\"/g, '\\"');
                         jsonString = JSON.parse(data);
                         setData(self);
                         result = jsonString.RetrieveFromDBSources;
@@ -1359,9 +1295,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_IsExits&EnName=" + self.enName + "&" + getParams1(self),
                 dataType: 'html',
                 success: function (data) {
@@ -1410,9 +1346,9 @@ var Entity = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + pkval + "&MethodName=" + methodName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: arguments,
@@ -1716,9 +1652,9 @@ var Entities = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_Init&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1764,9 +1700,9 @@ var Entities = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_Delete&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1812,9 +1748,9 @@ var Entities = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
                 data: { "Paras": self.Paras },
                 dataType: 'html',
@@ -1870,9 +1806,9 @@ var Entities = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&paras=" + params + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1890,11 +1826,13 @@ var Entities = (function () {
             // { data: [{}, {}, {}], length: 3, name: 'xxx' };
             var result = [];
             for (var key in this) {
+                console.log(typeof this[key]);
                 if (typeof this[key] === 'object') {
                     result.push(this[key]);
                 }
             }
             this.data = result;
+            console.log('data', this);
             return this;
         },
 
@@ -1930,9 +1868,9 @@ var Entities = (function () {
                 type: 'post',
                 async: false,
                 xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
+                    withCredentials: true
                 },
-                crossDomain: IsIELower10 == true ? false : true,
+                crossDomain: true,
                 url: pathRe + dynamicHandler + "?DoType=Entities_RetrieveAll&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1975,10 +1913,6 @@ function ToJson(data) {
         data = JSON.parse(data);
         return data;
     } catch (e) {
-
-        console.log(data);
-        console.log(e);
-
         return eval(data);
     }
 
@@ -2007,9 +1941,9 @@ var DBAccess = (function () {
             type: 'post',
             async: false,
             xhrFields: {
-                withCredentials: IsIELower10 == true ? false : true
+                withCredentials: true
             },
-            crossDomain: IsIELower10 == true ? false : true,
+            crossDomain: true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQL&t=" + new Date().getTime(),
             dataType: 'html',
             data: { "SQL": sql },
@@ -2096,9 +2030,7 @@ var DBAccess = (function () {
 
     //执行方法名返回str.
     DBAccess.RunSQLReturnVal = function (sql) {
-        var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-        handler.AddPara("SQL", sql);
-        var dt = handler.DoMethodReturnString("RunSQL_Init");
+        var dt = DBAccess.RunSQLReturnTable(sql);
         if (dt.length == 0)
             return null;
         var firItem = dt[0];
@@ -2116,7 +2048,7 @@ var DBAccess = (function () {
 
         sql = sql.replace(/~/g, "'");
         sql = sql.replace(/[+]/g, "/#");
-        //sql = sql.replace(/-/g, '/$');
+        sql = sql.replace(/-/g, '/$');
 
 
 
@@ -2126,9 +2058,9 @@ var DBAccess = (function () {
             type: 'post',
             async: false,
             xhrFields: {
-                withCredentials: IsIELower10 == true ? false : true
+                withCredentials: true
             },
-            crossDomain: IsIELower10 == true ? false : true,
+            crossDomain: true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQLReturnTable" + "&t=" + new Date().getTime(),
             dataType: 'html',
             data: { "SQL": sql },
@@ -2170,9 +2102,9 @@ var DBAccess = (function () {
             url: url,
             dataType: 'html',
             xhrFields: {
-                withCredentials: IsIELower10 == true ? false : true
+                withCredentials: true
             },
-            crossDomain: IsIELower10 == true ? false : true,
+            crossDomain: true,
             success: function (data) {
                 if (data.indexOf("err@") != -1) {
                     alert(data);
@@ -2221,24 +2153,14 @@ var DBAccess = (function () {
 
 var HttpHandler = (function () {
 
-    var parameters;
-
-
-    if (IsIELower10 == true)
-        parameters = {};
-    else
-        parameters = new FormData();
+    var parameters = new FormData();
 
     var formData;
-    var params = "&";
+    var params="&";
 
     function HttpHandler(handlerName) {
         this.handlerName = handlerName;
-        if (IsIELower10 == true)
-            parameters = {};
-        else
-            parameters = new FormData();
-
+        parameters = new FormData();
         formData = undefined;
         params = "&";
     }
@@ -2293,7 +2215,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2323,12 +2245,9 @@ var HttpHandler = (function () {
 
         },
         AddPara: function (key, value) {
-            if (params.indexOf("&" + key + "=") == -1) {
-                if (IsIELower10 == true)
-                    parameters[key] = value;
-                else
-                    parameters.append(key, value);
-                params += key + "=" + value + "&";
+            if (params.indexOf("&" + key + "=")==-1) {
+                parameters.append(key, value);
+                params +=  key + "=" + value+"&";
             }
 
         },
@@ -2341,12 +2260,8 @@ var HttpHandler = (function () {
         },
 
         Clear: function () {
-            if (IsIELower10 == true)
-                parameters = {};
-            else
-                parameters = new FormData();
+            parameters = new FormData();
             formData = undefined;
-            params = "&";
         },
 
         getParams: function () {
@@ -2386,50 +2301,31 @@ var HttpHandler = (function () {
             var self = this;
             var jsonString;
 
-            if (IsIELower10 == false)
-                $.ajax({
-                    type: 'post',
-                    async: false,
-                    xhrFields: {
-                        withCredentials: IsIELower10 == true ? false : true
-                    },
-                    crossDomain: IsIELower10 == true ? false : true,
-                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
-                    data: parameters,
-                    dataType: 'html',
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        jsonString = data;
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
-                        ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
+
+            $.ajax({
+                type: 'post',
+                async: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
+                data: parameters,
+                dataType: 'html',
+                contentType: false,
+
+                processData: false,
+                success: function (data) {
+                    jsonString = data;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
+                    ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
 
 
-                    }
-                });
-            else
-                $.ajax({
-                    type: 'post',
-                    async: false,
-                    xhrFields: {
-                        withCredentials: false
-                    },
-                    crossDomain: false,
-                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
-                    data: parameters,
-                    dataType: 'html',
-                    success: function (data) {
-                        jsonString = data;
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
-                        ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
+                }
+            });
 
-
-                    }
-                });
             return jsonString;
 
         },
@@ -2509,9 +2405,9 @@ var WebUser = function () {
         type: 'post',
         async: false,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         url: dynamicHandler + "?DoType=WebUser_Init&t=" + new Date().getTime(),
         dataType: 'html',
         success: function (data) {
@@ -2569,9 +2465,9 @@ var GuestUser = function () {
         type: 'post',
         async: false,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         url: dynamicHandler + "?DoType=GuestUser_Init&t=" + new Date().getTime(),
         dataType: 'html',
         success: function (data) {
@@ -2613,9 +2509,6 @@ function ThrowMakeErrInfo(funcName, obj, url) {
     msg += "\t\n5.您要打开执行的handler查看错误吗？ ";
     // msg += "\t\n5 您可以执行一下http://127.0.0.1/WF/Default.aspx/jsp/php 测试一下，动态文件是否可以被执行。";
 
-    if (url.indexOf('WF/WF/') != -1)
-        msg += "您没有配置项目名称,请仔细阅读配置连接";
-
     if (url != null) {
         if (window.confirm(msg) == true) {
             WinOpen(url);
@@ -2629,7 +2522,7 @@ function ThrowMakeErrInfo(funcName, obj, url) {
 //替换全部.
 function replaceAll(str, oldKey, newKey) {
 
-    if (str == null || str == undefined) {
+    if (str == undefined || str == null) {
         alert("要替换的原始字符串为空.");
         return str;
     }
@@ -2742,8 +2635,7 @@ function DealExp(expStr, webUser) {
         } else if (obj == "select") {
             NodeValue = decodeURI(objs[i].value);
         }
-        var key = "@"+NodeID.substring(NodeID.indexOf("_") + 1);
-        expStr = expStr.replace(new RegExp(key, 'g'), NodeValue);
+        expStr = expStr.replace("@" + NodeID.substring(NodeID.indexOf("_") + 1), NodeValue);
     }
 
     return expStr;
@@ -2789,9 +2681,8 @@ function GetPara(atPara, key) {
 }
 
 
-
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
     var curPath = window.document.location.href;
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
@@ -2820,9 +2711,9 @@ function SFTaleHandler(url) {
         async: false,
         url: url,
         xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
+            withCredentials: true
         },
-        crossDomain: IsIELower10 == true ? false : true,
+        crossDomain: true,
         dataType: 'html',
         success: function (data) {
             if (data.indexOf("err@") != -1) {
@@ -2857,18 +2748,6 @@ if (url.indexOf('login.htm') == -1 && url.indexOf('dbinstall.htm') == -1) {
 }
 //初始化页面
 $(function () {
-    var ver = IEVersion();
-    if (ver == 6 || ver == 7 || ver == 8 || ver == 9)
-
-        jQuery.getScript(basePath + "/WF/Scripts/jquery.XDomainRequest.js")
-            .done(function () {
-                /* 耶，没有问题，这里可以干点什么 */
-                //alert('ok');
-            })
-            .fail(function () {
-                /* 靠，马上执行挽救操作 */
-                //alert('err');
-            });
     //   debugger;
     if (plant == "CCFlow") {
         // CCFlow

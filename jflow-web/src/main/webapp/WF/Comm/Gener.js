@@ -459,8 +459,8 @@ function GenerFullAllCtrlsVal(data) {
         //    alert(val);
         //    debugger;
         //}
-       // if (val == null || val === '')
-         //   continue; //一定加三个等号是强制等于.
+        // if (val == null || val === '')
+        //   continue; //一定加三个等号是强制等于.
 
         var div = document.getElementById(attr);
         if (div != null) {
@@ -2613,6 +2613,9 @@ function ThrowMakeErrInfo(funcName, obj, url) {
     msg += "\t\n5.您要打开执行的handler查看错误吗？ ";
     // msg += "\t\n5 您可以执行一下http://127.0.0.1/WF/Default.aspx/jsp/php 测试一下，动态文件是否可以被执行。";
 
+    if (url.indexOf('WF/WF/') != -1)
+        msg += "您没有配置项目名称,请仔细阅读配置连接";
+
     if (url != null) {
         if (window.confirm(msg) == true) {
             WinOpen(url);
@@ -2739,7 +2742,8 @@ function DealExp(expStr, webUser) {
         } else if (obj == "select") {
             NodeValue = decodeURI(objs[i].value);
         }
-        expStr = expStr.replace("@" + NodeID.substring(NodeID.indexOf("_") + 1), NodeValue);
+        var key = "@"+NodeID.substring(NodeID.indexOf("_") + 1);
+        expStr = expStr.replace(new RegExp(key, 'g'), NodeValue);
     }
 
     return expStr;

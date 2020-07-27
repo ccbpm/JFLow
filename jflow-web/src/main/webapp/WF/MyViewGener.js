@@ -8,6 +8,7 @@ function Close() {
 var pageData = {};
 var globalVarList = {};
 var flowData = {};
+document.BindEditorMapAttr = [];
 
 //处理，表单没有加载完，就可以点击发送按钮.
 var isLoadOk = false;
@@ -407,9 +408,10 @@ function InitDDLOperation(flowData, mapAttr, defVal) {
             });
 
             if (mapAttr.DefVal == -1)
-                operations += "<option selected='selected' value='" + mapAttr.DefVal + "'>-无(不选择)-</option>";
+                operations += "<option " + (obj.IntKey == defVal ? " selected = 'selected' " : "") + " value='" + mapAttr.DefVal + "'>-无(不选择)-</option>";
+
             $.each(enums, function (i, obj) {
-                operations += "<option " + (obj.IntKey == mapAttr.DefVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
+                operations += "<option " + (obj.IntKey == defVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
             });
         }
         return operations;

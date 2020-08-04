@@ -12,11 +12,11 @@ function basePath()
 	 var pathName=window.document.location.pathname;  
 	 var pos=curPath.indexOf(pathName);  
 	 //获取主机地址，如： http://localhost:80  
-	 var localhostPaht=curPath.substring(0,pos);  
+	 var localhostPath=curPath.substring(0,pos);  
 	//获取带"/"的项目名，如：/jflow-web
 	var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);  
 	
-	return localhostPaht+projectName;
+	return localhostPath+projectName;
 	
 }
 
@@ -33,7 +33,12 @@ var plant = "JFlow";
 var url = window.location.href;
 var Handler =  url.substring(0,url.lastIndexOf('/')+1)+"ProcessRequest.do";
 var MyFlow = url.substring(0,url.lastIndexOf('/')+1)+"MyFlow/ProcessRequest.do";
-/*var Handler ;*/
+var webUser = null; //定义通用变量用户信息
+var IsIELower10 = false;
+var ver = IEVersion();
+if (ver == 6 || ver == 7 || ver == 8 || ver == 9)
+    IsIELower10 = true;
+
 
 //公共方法
 function Handler_AjaxQueryData(param, callback, scope, method, showErrMsg) {
@@ -65,6 +70,7 @@ function Handler_AjaxQueryData(param, callback, scope, method, showErrMsg) {
 function Handler_AjaxPostData(param, callback, scope) {
     $.post(Handler, param, callback);
 }
+
 /**
 * 动态异步加载JS的方法
 * @param {any} url 加载js的路径
@@ -103,42 +109,43 @@ Skip.getXmlHttpRequest = function () {
     else if (window.ActiveXObject) // IE 
         return new ActiveXObject("MsXml2.XmlHttp");
 },
-    //导入内容
-    Skip.includeJsText = function (rootObject, jsText) {
-        if (rootObject != null) {
-            var oScript = document.createElement("script");
-            oScript.type = "text/javascript";
-            oScript.text = jsText;
-            rootObject.appendChild(oScript);
-        }
-    },
-    //导入文件
-    Skip.includeJsSrc = function (rootObject, fileUrl) {
-        if (rootObject != null) {
-            var oScript = document.createElement("script");
-            oScript.type = "text/javascript";
-            oScript.src = fileUrl;
-            rootObject.appendChild(oScript);
-        }
-    },
-    //同步加载
-    Skip.addJs = function (url) {
-        var oXmlHttp = Skip.getXmlHttpRequest();
-        oXmlHttp.onreadystatechange = function () {//其实当在第二次调用导入js时,因为在浏览器当中存在这个*.js文件了,它就不在访问服务器,也就不在执行这个方法了,这个方法也只有设置成异步时才用到
-            if (oXmlHttp.readyState == 4) { //当执行完成以后(返回了响应)所要执行的
-                if (oXmlHttp.status == 200 || oXmlHttp.status == 304) { //200有读取对应的url文件,404表示不存在这个文件
-                    Skip.includeJsSrc(rootObject, url);
-                } else {
-                    alert('XML request error: ' + oXmlHttp.statusText + ' (' + oXmlHttp.status + ')');
-                }
+//导入内容
+Skip.includeJsText = function (rootObject, jsText) {
+    if (rootObject != null) {
+        var oScript = document.createElement("script");
+        oScript.type = "text/javascript";
+        oScript.text = jsText;
+        rootObject.appendChild(oScript);
+    }
+},
+//导入文件
+Skip.includeJsSrc = function (rootObject, fileUrl) {
+    if (rootObject != null) {
+        var oScript = document.createElement("script");
+        oScript.type = "text/javascript";
+        oScript.src = fileUrl;
+        rootObject.appendChild(oScript);
+    }
+},
+//同步加载
+Skip.addJs = function (url,rootObject) {
+    var oXmlHttp = Skip.getXmlHttpRequest();
+    oXmlHttp.onreadystatechange = function () {//其实当在第二次调用导入js时,因为在浏览器当中存在这个*.js文件了,它就不在访问服务器,也就不在执行这个方法了,这个方法也只有设置成异步时才用到
+        if (oXmlHttp.readyState == 4) { //当执行完成以后(返回了响应)所要执行的
+            if (oXmlHttp.status == 200 || oXmlHttp.status == 304) { //200有读取对应的url文件,404表示不存在这个文件
+                Skip.includeJsSrc(rootObject, url);
+            } else {
+                alert('XML request error: ' + oXmlHttp.statusText + ' (' + oXmlHttp.status + ')');
             }
         }
-        //1.True 表示脚本会在 send() 方法之后继续执行，而不等待来自服务器的响应,并且在open()方法当中有调用到onreadystatechange()这个方法。通过把该参数设置为 "false"，可以省去额外的 onreadystatechange 代码,它表示服务器返回响应后才执行send()后面的方法.
-        //2.同步执行oXmlHttp.send()方法后oXmlHttp.responseText有返回对应的内容,而异步还是为空,只有在oXmlHttp.readyState == 4时才有内容,反正同步的在oXmlHttp.send()后的操作就相当于oXmlHttp.readyState == 4下的操作,它相当于只有了这一种状态.
-        oXmlHttp.open('GET', url, false); //url为js文件时,ie会自动生成 '<script src="*.js" type="text/javascript"> </scr ipt>',ff不会  
-        oXmlHttp.send(null);
-        var rootObject = document.getElementsByTagName('script')[0];
-        Skip.includeJsText(rootObject, oXmlHttp.responseText);
+    }
+    //1.True 表示脚本会在 send() 方法之后继续执行，而不等待来自服务器的响应,并且在open()方法当中有调用到onreadystatechange()这个方法。通过把该参数设置为 "false"，可以省去额外的 onreadystatechange 代码,它表示服务器返回响应后才执行send()后面的方法.
+    //2.同步执行oXmlHttp.send()方法后oXmlHttp.responseText有返回对应的内容,而异步还是为空,只有在oXmlHttp.readyState == 4时才有内容,反正同步的在oXmlHttp.send()后的操作就相当于oXmlHttp.readyState == 4下的操作,它相当于只有了这一种状态.
+    oXmlHttp.open('GET', url, false); //url为js文件时,ie会自动生成 '<script src="*.js" type="text/javascript"> </scr ipt>',ff不会  
+    oXmlHttp.send(null);
+    if (rootObject == null || rootObject==undefined)
+        rootObject = document.getElementsByTagName('script')[0];
+    Skip.includeJsText(rootObject, oXmlHttp.responseText);
     }
 
 
@@ -157,3 +164,5 @@ function IEVersion() {
         return -1;//不是ie浏览器
     }
 }
+
+ 

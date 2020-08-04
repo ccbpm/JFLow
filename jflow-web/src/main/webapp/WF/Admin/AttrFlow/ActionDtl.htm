@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <title>节点-事件</title>
     <!--SQL编辑器-->
-    <link href="../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" />
     <link href="../../Scripts/CodeMirror/lib/codemirror.css" rel="stylesheet" />
     <link href="../../Scripts/CodeMirror/addon/hint/show-hint.css" rel="stylesheet" />
     <script src="../../Scripts/CodeMirror/lib/codemirror.js"></script>
@@ -25,16 +24,7 @@
     <!-- 引用通用的js文件. -->
     <script type="text/javascript" src="../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
-    <script src="../Admin.js"></script>
-    <style>
-        #Btn_Save {
-            background-image: url(../../Img/Btn/Save.png) !important;
-        }
 
-        #Btn_Back {
-            background-image: url(../../Img/Btn/Back.png) !important;
-        }
-    </style>
     <script type="text/javascript">
         //页面启动函数.
         $(function () {
@@ -88,7 +78,7 @@
             var en = new Entity("BP.Sys.FrmEvent");
             en.CopyForm();
             en.FK_Flow = GetQueryString("FK_Flow");
-            en.EventSource = 1;//流程事件
+            en.FK_MapData = GetQueryString("FK_Flow");
 
             //如果是业务单元.
             if (en.EventDoType == 7) {
@@ -104,25 +94,20 @@
 
             en.SetPKVal(en.FK_Event + Math.random());
             en.Insert();
-           
-
             Back();
-            
 
+            //window.location.href = window.location.href;
             return;
         }
 
         function doChangeContent(o) {
-            if ($(o).val() == "7") 
+            if ($(o).val() == "7") {
+                //$("#TB_SQL").hide();
                 $("#DDL_Doc").show();
-            else 
+            } else {
+               // $("#TB_SQL").show();
                 $("#DDL_Doc").hide();
-            
-
-            if ($(o).val() == "8") 
-                $("#sp_webapi").show();
-            else 
-                $("#sp_webapi").hide();
+            }
         }
 
         function Back() {
@@ -135,7 +120,7 @@
     <form id="cc">
         <div style="right:30px; position:absolute; z-index:100; top:-3px">
             <input id="Btn_Save" name="Btn_Save" value="保存" onclick="Save();" type="button" />
-            <input id="Btn_Back" name="Button1" value="返回" onclick="Back();" type="button" />
+            <input id="Button1" name="Button1" value="返回" onclick="Back();" type="button" />
         </div>
         <div style="position:relative;">
             <table style="width:100%;" id="Table2">
@@ -166,7 +151,6 @@
 
                         <textarea id="TB_SQL" name="TB_Doc" style="display: none; width:98%;"></textarea>	<!-- 其它事件 -->
                         <select id="DDL_Doc" name="DDL_Doc" style="display: none;"></select>	<!-- 业务单元 -->
-                        <span id="sp_webapi" style="color:blue">调用事件时，无论成功与否，都不会影响流程正常运行，如果需要阻断流程执行，请自定义方法，比如抛出异常</span>
                     </td>
                 </tr>
 

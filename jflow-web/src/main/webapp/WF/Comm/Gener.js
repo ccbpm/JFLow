@@ -2,7 +2,7 @@
 
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
-    //首位可以是字母以及下划线。
+    //首位可以是字母以及下划线。 
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
 
     var flag = false; //用来判断
@@ -495,7 +495,7 @@ function GenerFullAllCtrlsVal(data) {
 
                         $("#DDLPara_" + suffix).val(val); // 操作权限.
 
-                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200);
+                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200); 
                         //  json[kv[0]] = kv[1];
                         //   $("#DDLPara_" + suffix).val("2"); // 操作权限.
 
@@ -772,7 +772,7 @@ function DBAccess() {
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";
+var pkval="Demo_DtlExpImpDtl1";  
 var EnName="BP.WF.Template.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -1239,7 +1239,7 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal());
+            //  alert(self.GetPKVal()); 
 
             var result;
             $.ajax({
@@ -2215,7 +2215,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2242,14 +2242,14 @@ var HttpHandler = (function () {
                 //parameters["file"] = fileObj;
                 parameters.append("file", fileObj)
             }
-
+           
         },
         AddPara: function (key, value) {
             if (params.indexOf("&" + key + "=")==-1) {
                 parameters.append(key, value);
                 params +=  key + "=" + value+"&";
             }
-
+                
         },
 
         AddJson: function (json) {
@@ -2265,32 +2265,32 @@ var HttpHandler = (function () {
         },
 
         getParams: function () {
-            //    var params = [];
-            //   /* $.each(parameters, function (key, value) {
+        //    var params = [];
+        //   /* $.each(parameters, function (key, value) {
 
-            //        if (value.indexOf('<script') != -1)
-            //            value = '';
+        //        if (value.indexOf('<script') != -1)
+        //            value = '';
 
-            //        params.push(key + "=" + value);
+        //        params.push(key + "=" + value);
 
-            //    });
-            //*/
+        //    });
+        //*/
 
-            //    for (let [name, value] of formData) {
-            //        alert(`${name} = ${value}`); // key1=value1，然后是 key2=value2
-            //        if (value.indexOf('<script') != -1)
-            //            value = '';
-            //        params.push(name + "=" + value);
-            //    }
+        //    for (let [name, value] of formData) {
+        //        alert(`${name} = ${value}`); // key1=value1，然后是 key2=value2
+        //        if (value.indexOf('<script') != -1)
+        //            value = '';
+        //        params.push(name + "=" + value);
+        //    }
 
-            //    //for (var key of parameters.keys()) {
-            //    //    var val = formData.get(key);
-            //    //    if (val.indexOf('<script') != -1)
-            //    //        val = '';
-            //    //    params.push(key + "=" + val);
-
-            //    //}
-
+        //    //for (var key of parameters.keys()) {
+        //    //    var val = formData.get(key);
+        //    //    if (val.indexOf('<script') != -1)
+        //    //        val = '';
+        //    //    params.push(key + "=" + val);
+                
+        //    //}
+           
 
             return params;
         },
@@ -2682,7 +2682,7 @@ function GetPara(atPara, key) {
 
 
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
     var curPath = window.document.location.href;
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
@@ -2763,7 +2763,7 @@ $(function () {
         && url.indexOf('registeradminer.htm') == -1
         && url.indexOf('registerorg.htm') == -1
         && url.indexOf('reqpassword.htm') == -1
-        && url.indexOf('reguser.htm') == -1
+        && url.indexOf('reguser.htm') == -1       
         && url.indexOf('port.htm') == -1) {
 
         if (loadWebUser != null && (loadWebUser.No == "" || loadWebUser.No == undefined || loadWebUser.No == null)) {

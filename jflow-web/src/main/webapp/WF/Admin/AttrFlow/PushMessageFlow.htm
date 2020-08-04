@@ -12,16 +12,6 @@
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
     <base target="_self" />
     <script src="../Admin.js"></script>
-    <style>
-        #Btn_Save {
-            background-image: url(../../Img/Btn/Save.png) !important;
-        }
-
-        #Btn_Back {
-            background-image: url(../../Img/Btn/Back.png) !important;
-        }
-
-    </style>
     <script type="text/javascript">
         function Esc() {
             if (event.keyCode == 27)
@@ -134,13 +124,13 @@
         }
 
         //页面初始化调用
-        function _GetText(EventListNode) {
+        function _GetText(EventListOfNode) {
 
             var ret = {
                 "FlowWarning": "发送给所有处理人",
                 "FlowOverDue": "发送给所有处理人"
             };
-            return ret[EventListNode];
+            return ret[EventListOfNode];
 
         }
 

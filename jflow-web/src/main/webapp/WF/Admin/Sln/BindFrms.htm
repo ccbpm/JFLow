@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -127,19 +127,11 @@
 
             var mapdata = new Entity("BP.Sys.MapData", fk_mapData);
             var url = "";
-
-            //自由表单.
             if (mapdata.FrmType == 1) {
-                url = "../CCFormDesigner/FormDesigner.htm?FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&IsFirst=1";
-            }
-
-            //开发者表单.
-            if (mapdata.FrmType == 8) {
-                url = "../DevelopDesigner/Designer.htm?FrmID="+fk_mapData+"&FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&IsFirst=1";
-            }
-
-            if (url == "")
+                url = "../CCFormDesigner/FormDesigner.htm?FK_MapData=" + fk_mapData+"&FK_Node="+GetQueryString("FK_Node")+"&IsFirst=1";
+            } else {
                 url = "../FoolFormDesigner/Designer.htm?FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&IsFirst=1";
+            }
 
             WinOpen(url);
             //alert(fk_mapData);
@@ -195,6 +187,7 @@
                 <th> 下移</th>
                 <th>删除 </th>
                 <th>设计</th>
+
             </tr>
         </table>
     </div>

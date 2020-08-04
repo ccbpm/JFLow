@@ -331,6 +331,7 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
     if (typeof ctrl == "string") {
         ctrl = document.getElementById(ctrl);
     }
+    debugger
     var wfpreHref = GetLocalWFPreHref();
     var fd;
 

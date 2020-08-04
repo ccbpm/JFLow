@@ -45,9 +45,7 @@ var uploadTools = {
             "size":"-1",//文件大小限制,单位kB
             "ismultiple":true,//是否选择多文件
             "showSummerProgress":true,//显示总进度条
-            "filelSavePath": "",//文件上传地址，后台设置的根目录
-            "FK_FrmAttachment": "",
-            "IsExpCol":false,
+            "filelSavePath":"",//文件上传地址，后台设置的根目录
             "beforeUpload":function(){//在上传前面执行的回调函数
             },
             "onUpload":function(){//在上传之后
@@ -239,7 +237,7 @@ var uploadTools = {
     "addFileList":function(fileList,opt){
         var uploadId = opt.uploadId;
         //var boxJsObj =  $("#"+uploadId+" .box").get(0);
-        var fileListArray=[];
+        var fileListArray=uploadFileList.getFileList(opt);
         var fileNumber = uploadTools.getFileNumber(opt);
         if(fileNumber+fileList.length>opt.maxFileNumber){
             alert("最多只能上传"+opt.maxFileNumber+"个文件");
@@ -293,7 +291,7 @@ var uploadTools = {
      * */
     "cleanFilInputWithSelectFile":function(opt){
         var uploadId = opt.uploadId;
-        $("#file_"+opt.FK_FrmAttachment).remove();
+        $("#"+uploadId+"_file").remove();
     },
     /**
      * 根据制定信息显示
@@ -348,108 +346,53 @@ var uploadTools = {
      */
     "uploadFile":function(opt){
         var uploadUrl = opt.uploadUrl;
-        
-        if (uploadUrl != "#" && uploadUrl != "") {
-            uploadTools.disableFileUpload(opt);//禁用文件上传
-            uploadTools.disableCleanFile(opt);//禁用清除文件
-            if (IsIELower10 == false) {
-                var fileList = uploadFileList.getFileList(opt);
+        var fileList = uploadFileList.getFileList(opt);
 
-                var formData = new FormData();
-                var fileNumber = uploadTools.getFileNumber(opt);
-                if (fileNumber <= 0) {
-                    alert("没有文件，不支持上传");
+        var formData = new FormData();
+        var fileNumber = uploadTools.getFileNumber(opt);
+        if(fileNumber<=0){
+            alert("没有文件，不支持上传");
+            return;
+        }
+
+        for(var i=0;i<fileList.length;i++){
+            if(fileList[i]!=null){
+                formData.append("file", fileList[i]);
+                numOfAths++;
+                //判断附件上传最大数量
+                if (topNumOfUpload < numOfAths) {
+                    alert("您最多上传[" + topNumOfUpload + "]个附件");
                     return;
                 }
-
-                for (var i = 0; i < fileList.length; i++) {
-                    if (fileList[i] != null) {
-                        formData.append("file", fileList[i]);
-                        //numOfAths++;
-                        ////判断附件上传最大数量
-                        //if (topNumOfUpload < numOfAths) {
-                        //    alert("您最多上传[" + topNumOfUpload + "]个附件");
-                        //    return;
-                        //}
-                    }
-                }
-                if (opt.otherData != null && opt.otherData != "") {
-                    for (var j = 0; j < opt.otherData.length; j++) {
-                        formData.append(opt.otherData[j].name, opt.otherData[j].value);
-                    }
-                }
-
-                formData.append("filelSavePath", opt.filelSavePath);
-                $.ajax({
-                    type: "post",
-                    url: uploadUrl,
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (typeof AfterAthUploadOver === 'function')
-                            AfterAthUploadOver(AthParams.FK_MapData, AthParams.PKVal, data);
-                        setTimeout(function () { opt.onUpload(opt, data) }, 500);
-                    },
-                    error: function (e) {
-
-                    }
-                });
-            } else {
-
-                UploadChange(uploadUrl, opt.FK_FrmAttachment);
-                //var fileObj = $("#fileUploadContent_file").val();
-                //if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
-                //    alert("请选择上传的文件.");
-                //    return;
-                //}
-
-            
-
-                ////form表单序列话
-                //var parasData = $("form").serialize();
-                ////form表单序列化时调用了encodeURLComponent方法将数据编码了
-                //parasData = decodeURIComponent(parasData, true);
-                //parasData = decodeURIComponent(parasData, true);
-                //parasData = parasData.replace(/&/g, '@');
-                //parasData = parasData.replace(/TB_/g, '');
-                //parasData = parasData.replace(/RB_/g, '');
-                //parasData = parasData.replace(/CB_/g, '');
-                //parasData = parasData.replace(/DDL_/g, '');
-                
-                //    $("#Ath_Form").ajaxSubmit({
-                //        url: uploadUrl,
-                //        type: 'POST',
-                //        dataType: 'json',
-                //        headers: { "ClientCallMode": "ajax" },
-                //        success: function (data) {
-                           
-                //            if (data != null && data.indexOf("err@") != -1) {
-                //                alert(data.replace("err@", ""));
-                //                return;
-                //            }
-                //            if (typeof AfterAthUploadOver === 'function')
-                //                AfterAthUploadOver(FK_MapData, PKVal, data.substring(0,data.length-1));
-                //            window.location.href = window.location.href; 
-                //        },
-                //        error: function (xhr, status, err) {
-                //            if (xhr.responseText != null && xhr.responseText.indexOf("err@") != -1) {
-                //                alert(xhr.responseText);
-                //                return;
-                //            }
-                //            if (typeof AfterAthUploadOver === 'function')
-                //                AfterAthUploadOver(FK_MapData, PKVal, xhr.responseText.substring(0, xhr.responseText.length - 1));
-                //            window.location.href = window.location.href; 
-                //        },
-                //        resetForm: true
-
-                //    });
-                   
-               
-                
-               
             }
-            
+        }
+        if(opt.otherData!=null&&opt.otherData!=""){
+            for(var j=0;j<opt.otherData.length;j++){
+                formData.append(opt.otherData[j].name,opt.otherData[j].value);
+            }
+        }
+
+        formData.append("filelSavePath",opt.filelSavePath);
+        if(uploadUrl!="#"&&uploadUrl!=""){
+            uploadTools.disableFileUpload(opt);//禁用文件上传
+            uploadTools.disableCleanFile(opt);//禁用清除文件
+
+            $.ajax({
+                type:"post",
+                url:uploadUrl,
+                data:formData,
+                processData : false,
+                contentType : false,
+                /*  beforeSend: function(request) {
+                 request.setRequestHeader("filePath", file_path);
+                 }, */
+                success:function(data){
+                    setTimeout(function(){opt.onUpload(opt,data)},500);
+                },
+                error:function(e){
+
+                }
+            });
 
         }else{
             uploadTools.disableFileUpload(opt);//禁用文件上传
@@ -563,12 +506,11 @@ var uploadEvent = {
      * 选择文件按钮事件
      * @param opt
      */
-    "selectFileEvent": function (opt) {
+    "selectFileEvent":function(opt){
         var uploadId = opt.uploadId;
         var ismultiple = opt.ismultiple;
         var inputObj=document.createElement('input');
-        inputObj.setAttribute('id', "file_"+opt.FK_FrmAttachment);
-        inputObj.setAttribute('name', "file_" + opt.FK_FrmAttachment);
+        inputObj.setAttribute('id',uploadId+'_file');
         inputObj.setAttribute('type','file');
         inputObj.setAttribute("style",'visibility:hidden');
         if(ismultiple){//是否选择多文件
@@ -578,23 +520,19 @@ var uploadEvent = {
         $(inputObj).on("change",function(){
             uploadEvent.selectFileChangeEvent(this.files,opt);
         });
-        document.forms[0].appendChild(inputObj);
+        document.body.appendChild(inputObj);
         inputObj.click();
     },
     /**
      * 选择文件后对文件的回调事件
      * @param opt
      */
-    "selectFileChangeEvent": function (files, opt) {
-        if (IsIELower10 == false) {
-            uploadTools.addFileList(files, opt);
-            uploadTools.cleanFilInputWithSelectFile(opt);
-        }
-      
+    "selectFileChangeEvent":function(files,opt){
+        uploadTools.addFileList(files,opt);
+        uploadTools.cleanFilInputWithSelectFile(opt);
 
         if(opt.autoCommit){
             uploadEvent.uploadFileEvent(opt);
-            uploadTools.cleanFilInputWithSelectFile(opt);
         }
     },
     /**
@@ -616,8 +554,7 @@ var uploadEvent = {
             $("#"+uploadId+" .subberProgress .progress>div").html("0%");
         }
         uploadTools.cleanFilInputWithSelectFile(opt);
-        uploadFileList.setFileList([], opt);
-        this.files = [];
+        uploadFileList.setFileList([],opt);
         $("#"+uploadId+" .box").html("");
         uploadTools.initWithUpload(opt);//初始化上传
     }

@@ -16,8 +16,7 @@ function InitPage() {
 
     var fk_node = GetQueryString("FK_Node");
     var node = new Entity("BP.WF.Node", fk_node);
-    InitBar(parseInt(node.TurnToDeal));
-   
+    InitBar(node.TurnToDeal);
     //调用公共类库的方法:执行批量主表赋值
     GenerFullAllCtrlsVal(node);
    
@@ -56,7 +55,7 @@ function InitBar(optionKey) {
 
     //  html += "<input  id='Btn_Help' type=button onclick='Help()' value='视频帮助' />";
     
-    html += "<input id='Btn_Advanced' type=button onclick='AdvSetting()' value='高级设置' />";
+    html += "<input id='Btn' type=button onclick='AdvSetting()' value='高级设置' />";
 
 
     document.getElementById("bar").innerHTML = html;
@@ -77,10 +76,12 @@ function changeOption() {
     var optionKey = optionKey = sele[index].value;
 
     var url = GetUrl(optionKey);
+    
     window.location.href = url + "?FK_Node=" + nodeID;
 }
 //高级设置.
 function AdvSetting() {
+
     var nodeID = GetQueryString("FK_Node");
     var url = "7.ByOtherBlock.htm?FK_Node=" + nodeID + "&M=" + Math.random();
     OpenEasyUiDialogExt(url, "高级设置", 600, 500, false);

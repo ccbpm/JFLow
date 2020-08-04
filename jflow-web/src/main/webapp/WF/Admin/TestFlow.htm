@@ -35,6 +35,8 @@
 
 
             var fk_flow = GetQueryString("FK_Flow");
+            var doWhat = GetQueryString("DoWhat");
+            var userNo = getQueryStringByName("UserNo");
 
             var webUser = new WebUser();
             if (webUser.No != "admin") {
@@ -46,6 +48,8 @@
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin");
             handler.AddUrlData(); //增加url.传递过来的参数.
+            handler.AddFormData(); //增加表单的form数据。
+            handler.AddJson(myjson); //增加json数据参数。
             handler.AddPara("MyParaKey","ParaVal"); //增加自定义参数.。
             var plant = handler.DoMethodReturnString("TestFlow_GetRunOnPlant");
 
@@ -58,6 +62,7 @@
                 //$("#demoPass").html("&nbsp;&nbsp;");
             }
 
+            debugger;
             handler.AddUrlData();
             var data = handler.DoMethodReturnString(doType);
 

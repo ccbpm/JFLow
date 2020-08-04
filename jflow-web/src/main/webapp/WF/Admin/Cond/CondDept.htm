@@ -236,7 +236,6 @@
             handler.AddUrlData();
             handler.AddPara("FK_Node", GetQueryString("FK_Node"));
             handler.AddPara("depts", depts);
-            handler.AddPara("CondOrAnd", GetQueryString("CondOrAnd"));
             handler.AddFormData();
             var data = handler.DoMethodReturnString("CondByDept_Save");
 
@@ -296,13 +295,10 @@
             $("#span" + idx).siblings().css("display", "none");
         }
 
-         //返回.
+        //返回.
         function Back() {
             var url = window.location.href;
-            if (GetQueryString("CondOrAnd") == null)
-                url = url.replace('CondDept.htm', 'List.htm');
-            else
-                url = url.replace('CondDept.htm', '../Cond2020/DirList.htm');
+            url = url.replace('CondDept.htm', 'List.htm');
             window.location.href = url;
         }
     </script>

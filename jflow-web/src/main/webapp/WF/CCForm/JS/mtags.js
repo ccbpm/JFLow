@@ -1,46 +1,18 @@
 ﻿(function ($) {
-	if ("undefined" == typeof IsPopEnableSelfInput) {
-		IsPopEnableSelfInput = false;
-	} 
+
 	function onUnselect(target, record) {
 		var opts = getOptions(target);
 		opts.onUnselect.call("", record);
-		$("#TB_" + opts.KeyOfEn).val($(target).mtags("getText"));
 	}
 
-	function appendSignalNode(target, data) {
-		var opts = getOptions(target);
-		var containerSpan = $(target).find(".ccflow-input-span-container-span");
-
-		var valueField = opts.valueField;
-		var textField = opts.textField;
-		if (!contains(target, data, valueField)) {
-			
-			var tag = $('<span class="ccflow-tag ccflow-label ccflow-label-primary"></span>');
-			tag.data(data);
-			tag.html(data[textField] + '<i class="fa fa-times" data-role="remove"></i>');
-			containerSpan.append(tag);
-			tag.delegate("i", "click", function (e) {
-				var record = $(this).parent().data();
-				$(this).parent().remove();
-				opts.onUnselect.call("", record);
-				$("#TB_" + opts.KeyOfEn).val($(target).mtags("getText"));
-			});			
-		}
-    }
 	function append(target, datas, remove) {
 		var opts = getOptions(target);
-		var container;
-		if (IsPopEnableSelfInput == false)
-			container = $(target).find(".ccflow-input-span-container");
-		else
-			container = $(target).find(".ccflow-input-span-container-span");
+		var container = $(target).find(".ccflow-input-span-container");
 		if (remove) {
 			container.children("span").remove();
 		}
 		var valueField = opts.valueField;
 		var textField = opts.textField;
-		
 		for (var i = 0; i < datas.length; i++) {
 			var data = datas[i];
 			if (!contains(target, data, valueField)) {
@@ -52,7 +24,6 @@
 					var record = $(this).parent().data();
 					$(this).parent().remove();
 					opts.onUnselect.call("", record);
-					$("#TB_" + opts.KeyOfEn).val($(target).mtags("getText"));
 				});
 			}
 		}
@@ -63,10 +34,7 @@
 	}
 
 	function clear(target) {
-		if (IsPopEnableSelfInput == false)
-			$(target).find(".ccflow-input-span-container span").remove();
-		else
-			$(target).find(".ccflow-input-span-container-span span").remove();
+		$(target).find(".ccflow-input-span-container span").remove();
 	}
 
 	function setValues(target, values) {
@@ -77,14 +45,9 @@
 		var opts = getOptions(target);
 		var textField = opts.textField;
 		var text = [];
-		if (IsPopEnableSelfInput == false)
-			$(target).find(".ccflow-input-span-container span").each(function () {
-				text.push($(this).data()[textField]);
-			});
-		else
-			$(target).find(".ccflow-input-span-container-span span").each(function () {
-				text.push($(this).data()[textField]);
-			});
+		$(target).find(".ccflow-input-span-container span").each(function () {
+			text.push($(this).data()[textField]);
+		});
 		return text.join(",");
 	}
 
@@ -92,14 +55,9 @@
 		var opts = getOptions(target);
 		var valueField = opts.valueField;
 		var text = [];
-		if (IsPopEnableSelfInput == false)
-			$(target).find(".ccflow-input-span-container span").each(function () {
-				text.push($(this).data()[valueField]);
-			});
-		else
-			$(target).find(".ccflow-input-span-container-span span").each(function () {
-				text.push($(this).data()[valueField]);
-			});
+		$(target).find(".ccflow-input-span-container span").each(function () {
+			text.push($(this).data()[valueField]);
+		});
 		return text.join(",");
 	}
 
@@ -109,20 +67,12 @@
 
 	function contains(target, data, valueField) {
 		var flag = false;
-		if (IsPopEnableSelfInput == false)
-			$(target).find(".ccflow-input-span-container span").each(function () {
-				if (data[valueField] == $(this).data()[valueField]) {
-					flag = true;
-					return;
-				}
-			});
-		else
-			$(target).find(".ccflow-input-span-container-span span").each(function () {
-				if (data[valueField] == $(this).data()[valueField]) {
-					flag = true;
-					return;
-				}
-			});
+		$(target).find(".ccflow-input-span-container span").each(function () {
+			if (data[valueField] == $(this).data()[valueField]) {
+				flag = true;
+				return;
+			}
+		});
 		return flag;
 	}
 
@@ -130,35 +80,11 @@
 		var opts = getOptions(target);
 		var html = "";
 		html += '<div class="main-container">';
-		if (IsPopEnableSelfInput == false) {
-			html += '<div class="ccflow-input-span-container">';
-            html += '<div id="stuff" placeholder="请双击选择" style="display: inline; border-left: 1px solid white; width: 1px;"></div>';
-		} else {
-			html += '<div class="ccflow-input-span-container" style="display: flex;flex-wrap: wrap;">';
-			html += '<div id="stuff" style="display: inline; border-left: 1px solid white; width: 1px;"></div>';
-			html += '<span class="ccflow-input-span-container-span" style="display: contents;"></span>';
-            html += '<input type = "text" id = "TB_InputAuto_' + opts.KeyOfEn +'" placeholder="请双击选择" autocomplete = "off"  style = "flex-grow: 1;width: 0.0961538%;max-width: 198px;border: none;outline: none;padding: 0;color: #666;font-size: 14px;appearance: none;height: 28px;background-color: transparent;" >';
-        }
-		html += '</div>';
+		html += 	'<div class="ccflow-input-span-container">';
+		html += 		'<div id="stuff" style="display: inline; border-left: 1px solid white; width: 1px;"></div>';
+		html += 	'</div>';
 		html += '</div>';
 		$(target).html(html);
-		$("#TB_InputAuto_" + opts.KeyOfEn).on('keypress', function (event) {
-			//回车事件
-			if (event.keyCode == 13 && $("#TB_InputAuto_" + opts.KeyOfEn).val() != "") {
-				appendSignalNode(target, { "No": new Date().getTime(), "Name": $("#TB_InputAuto_" + opts.KeyOfEn).val() });
-				SaveVal_FrmEleDB(opts.FK_MapData, opts.KeyOfEn, opts.RefPKVal, new Date().getTime(), $("#TB_InputAuto_" + opts.KeyOfEn).val(), 1);
-				$("#TB_InputAuto_" + opts.KeyOfEn).val("");
-				$("#TB_" + opts.KeyOfEn).val($(target).mtags("getText"));
-			}
-		});
-		$("#TB_InputAuto_" + opts.KeyOfEn).blur(function () {
-			if ($("#TB_InputAuto_" + opts.KeyOfEn).val() != "") {
-				appendSignalNode(target, { "No": new Date().getTime(), "Name": $("#TB_InputAuto_" + opts.KeyOfEn).val() });
-				SaveVal_FrmEleDB(opts.FK_MapData, opts.KeyOfEn, opts.RefPKVal, new Date().getTime(), $("#TB_InputAuto_" + opts.KeyOfEn).val(), 1);
-				$("#TB_InputAuto_" + opts.KeyOfEn).val("");
-				$("#TB_" + opts.KeyOfEn).val($(target).mtags("getText"));
-            }	
-		});
 	}
 
 	function setSize(target) {
@@ -228,10 +154,7 @@
 
 	$.fn.mtags.defaults = {
 		"width" : "100%",
-		"fit": true,
-		"FK_MapData":"FK_MapData",
-		"KeyOfEn": "KeyOfEn",
-		"RefPKVal":"RefPKVal",
+		"fit" : true,
 		"valueField" : "No",
 		"textField" : "Name",
 		"onUnselect" : function (record) {

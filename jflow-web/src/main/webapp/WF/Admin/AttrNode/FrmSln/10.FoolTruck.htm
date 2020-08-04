@@ -40,10 +40,9 @@
             $("#sln").html("正在加载表单方案,请稍后...");
 
             var html = "<ul>";
-
-            //获得节点.
-            var nodes = new Entities("BP.WF.Template.NodeSimples");
+            var nodes = new Entities("BP.WF.Nodes");
             nodes.Retrieve("FK_Flow", node.FK_Flow, "NodeID");
+
             var currentNode = GetQueryString("FK_Node");
 
             for (var i = 0; i < nodes.length; i++) {
@@ -81,7 +80,10 @@
 
                 html += "<li>[" + sln.FrmSlnText + "]<a href=\"javascript:EditSln('" + sln.MyPK + "')\">" + json.NodeID + " - " + json.Name + "</a> " + def + "</li>";
             }
+
+
             html += "</ul>";
+
             $("#sln").html(html);
         }
         function DefField(nodeID, FK_Flow) {
@@ -233,21 +235,6 @@
                 node.NodeFrmID = "ND" + node.NodeID;
                 node.Update();
 
-                $.each(nds, function (index, item) {
-                    if (node.NodeID != item.NodeID) {
-                        var sln = new Entity("BP.WF.Template.FoolTruckNodeFrm");
-                        sln.MyPK = "ND" + item.NodeID + "_" + node.NodeID + "_" + node.FK_Flow;
-
-                        if (sln.RetrieveFromDBSources() == 0) {
-                            sln.FK_Flow = node.FK_Flow;
-                            sln.FK_Frm = "ND" + item.NodeID;
-                            sln.FK_Node = node.NodeID; //节点ID.
-                            sln.FrmSln = 1; //只读方案.
-                            sln.Insert();
-                        }
-                    }
-                   
-                })
 
                 //更新表单类型.
                 var frmID = "ND" + node.NodeID;
@@ -284,9 +271,8 @@
             <li>该表单是傻瓜表单的一种变形展现方式.</li>
             <li>也叫轨迹表单模式,为软通动力定制的一种表单展示类型.</li>
             <li>适合一个节点一个表单模式,简洁流畅，容易追踪历史运动过程.</li>
-            <li> <a href="javascript:DFoolFrm()">设计傻瓜表单</a></li>
             <li>
-                <a href="javascript:SetAllNodeFrmUseThisSln()">
+                <a href="javascript:DFoolFrm()">设计傻瓜表单</a> - <a href="javascript:SetAllNodeFrmUseThisSln()">
                     设置该流程所有的节点都采用此表单方案
                 </a>
             </li>

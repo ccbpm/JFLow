@@ -10,10 +10,6 @@ function numberFormat(obj, decimals) {
     * roundtag:舍入参数，默认 ‘ceil‘ 向上取,‘floor‘向下取,‘round‘ 四舍五入
     * */
     var number = obj.value;
-    //obj不是对象的判断
-    if (number == undefined) {
-        number = obj;
-    }
     number = (number + "").replace(/[^0-9+-Ee.]/g, "");
     number = number.replace(/,/g, "");
     roundtag = "round";  // 四舍五入
@@ -24,6 +20,7 @@ function numberFormat(obj, decimals) {
     var s = "";
     var toFixedFix = function (n, prec) {
         var k = Math.pow(10, prec);
+        console.log();
 
         return "" + parseFloat(Math[roundtag](parseFloat((n * k).toFixed(prec * 2))).toFixed(prec * 2)) / k
     }
@@ -37,10 +34,7 @@ function numberFormat(obj, decimals) {
         s[1] = s[1] || "";
         s[1] += new Array(prec - s[1].length + 1).join("0");
     }
-    //obj不是对象的判断
-    if (obj.value == undefined) {
-        return s.join(dec);
-    }
+
     obj.value = s.join(dec);//给原input框重新赋值
 }
 function RefMethod1(path, index, warning, target, ensName, keys) {
@@ -785,31 +779,31 @@ function valitationAfter(o, validateType) {
     idx = getCursortPosition(o);
     oldCount = getStrCount(o.value.toString().substr(0, idx), ',');
     var value = o.value;
-    if (validateType == "int") {
-        value = value.replace(/[^\d,-]/g, "");
-        o.value = value;
-    } 
-        
+    //    value =   value.replace(/[^\d.-]/g, "");
 
-    //if (isFF()) {
-    var flag = false;
-    switch (validateType) {
-        case "int":
-            flag = (!isNaN(value) && value % 1 === 0);
-            break;
-        case "float":
-        case "money":
-            if (value.indexOf("-") == 0 && value.length == 1)
+    if (isFF()) {
+        var flag = false;
+        switch (validateType) {
+            case "int":
+                flag = (!isNaN(value) && value % 1 === 0);
                 break;
-            else {
-                flag = !isNaN(value);
-                break;
-            }
+            case "float":
+            case "money":
+                if (value.indexOf("-") == 0 && value.length == 1)
+                    break;
+                else {
+                    flag = !isNaN(value);
+                    break;
+                }
+        }
+        if (!flag) {
+            o.value = '';
+        }
     }
-    if (!flag) {
-        o.value = '';
-    }
-  
+    //    else {
+    //        if (isNaN(value)) execCommand('undo');
+    //       
+    //    }
 }
 
 

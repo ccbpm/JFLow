@@ -12,21 +12,12 @@
     <link href="../Scripts/bootstrap/css/components-rounded.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/font-awesome.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/themes/default/style.min.css" rel="stylesheet" />
-    <link href="../Scripts/easyUI145/themes/icon.css" rel="stylesheet" type="text/css" />
-    <link href="../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
-    <link href="../Comm/JS/layer/layer.css" rel="stylesheet" />
-    <script src="../Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+
     <script type="text/javascript" src="../Scripts/QueryString.js"></script>
     <script type="text/javascript" src="../Scripts/bootstrap/js/jquery.min.js"></script>
     <script type="text/javascript" src="../Scripts/bootstrap/js/jquery.cokie.min.js"></script>
-    <script type="text/javascript" src="../Scripts/QueryString.js"></script>
+    <script type="text/javascript" src="../Scripts/QueryString2016.js"></script>
     <script type="text/javascript" src="../Scripts/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../Scripts/EasyUIUtility.js" type="text/javascript"></script>
-    <script src="../Style/skin/layui/layer.js" type="text/javascript"></script>
-    <script src="../../DataUser/JSLibData/CommonShowConfig.js"></script>
-    <script src="../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
-    <script src="../Scripts/QueryString.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../Scripts/DealErrInfo.js"></script>
 
     <link href="../../DataUser/Style/ccbpm.css" rel="Stylesheet" />
     <!-- 导入配置文件. -->
@@ -48,10 +39,11 @@
 
         #SelectEmp {
             position: relative;
-            width: 300px;
+            width: 400px;
             border-top: 0;
             display: none;
-            margin-top: 5px;
+            margin-top: -7px;
+            /*border: solid 2px #3175af;*/
         }
 
         .addbg {
@@ -59,38 +51,17 @@
         }
 
         #next {
-            float: right;
+            float: left;
             position: relative;
-            width: auto;
-            margin-right: 10px;
+            width: 600px;
         }
-
-        button {
-            background: #fff;
-            color: #000;
-            border: 1px solid #ccc !important;
-            border-radius: 3px;
-            margin: 5px 3px 5px 3px;
-            padding: 4px 15px;
-        }
-
-            button:hover {
-                background: #f5f5f5 !important;
-                color: #000;
-                border: 1px solid #ccc !important;
-            }
     </style>
     <script type="text/javascript">
         var param = {};
         var isSigleSelect = false;
-        var selectEmp = "";
-        var IsSend = GetQueryString("IsSend"); //是否发送？该参数是ToNodes.htm 带回来的.
-        //判断读秒关闭的参数是否存在
-        if ("undefined" == typeof WF_WorkOpt_LeftSecond) {
-            var WF_WorkOpt_LeftSecond = 30;
-        }
         $(function () {
 
+            var IsSend = GetQueryString("IsSend"); //是否发送？该参数是ToNodes.htm 带回来的.
             if (IsSend == null || IsSend == undefined || IsSend == "")
                 IsSend = "1";
             if (IsSend == "0")
@@ -114,13 +85,13 @@
 
             //初始化人员选择窗口
             var selectEmpModalHtml = '<div class="modal fade" id="SelectEmpsModal">' +
-                '<div class="modal-dialog" style="width:700px;">'
-                + '<div class="modal-content" style="">'
+                '<div class="modal-dialog">'
+                + '<div class="modal-content" style="border-radius:0px;width:700px;">'
                 + '<div class="modal-header">'
                 + '<button type="button" class="close" style="color:#000;opacity:1;" data-dismiss="modal" aria-hidden="true">&times;</button>'
                 + '<h4 class="modal-title">接受人</h4>'
                 + '</div>'
-                + '<div class="modal-body" style="border-radius: 0px; width:100%;">'
+                + '<div class="modal-body">'
                 + '<iframe style="width:100%;border:0px;height:400px;" id="iframeSelectEmpsForm" name="iframeSelectEmpsForm"></iframe>'
                 + '</div>'
                 + '</div><!-- /.modal-content -->'
@@ -159,7 +130,7 @@
             $(".Msg").hide();
 
 
-
+            
             var int = setInterval("clock()", 1000);
 
         });
@@ -175,7 +146,6 @@
                 isSigleSelect = true;
             }
 
-            selectEmp = "";
             for (var i = 0; i < sas.length; i++) {
                 var sa = sas[i];
                 var row = "";
@@ -195,7 +165,6 @@
                 row += "</tr>";
 
                 $("#Table1 tbody").append(row);
-                selectEmp += sa.EmpName + ",";
             }
         }
 
@@ -296,20 +265,16 @@
             httphandler.AddUrlData(); //FK_Flow,FK_Node,WorkID,FID,ToNode 等参数.
 
             $("#Btn_Send").attr("disabled", "disabled"); //把发送按钮设置不可用.
-            $("#Btn_Send").val("<center>正在发送请稍候...</center>");
+            $("#Btn_Send").val("正在发送请稍候...");
             $("#Btn_Close").attr("disabled", "disabled"); //关闭按钮设置不可以用.
             $("#Btn_SelectEmps").attr("disabled", "disabled"); //选择人按钮不可以用.
 
             var data = httphandler.DoMethodReturnString("AccepterOfGener_Send");
 
             if (data.indexOf('err@') == 0) {  //如果发送失败.
-               
-                DealErrMsg(data);
-                if (msgTech == "") {
-                    $(".Msg").show();
-                    $(".Msg").html(data);
-                    $(".Msg").css("color", "red");
-                }
+                $(".Msg").show();
+                $(".Msg").html(data);
+                $(".Msg").css("color", "red");
 
                 $("#Btn_Send").attr("disabled", false);
                 $("#Btn_Send").val("执行发送");
@@ -317,14 +282,8 @@
                 $("#Btn_SelectEmps").attr("disabled", false);
                 return;
             }
-            if (window.parent != null && window.parent.WindowCloseReloadPage != null && typeof window.parent.WindowCloseReloadPage === "function") {
-                window.parent.WindowCloseReloadPage(data);
-            } else {
-                if (typeof WindowCloseReloadPage != 'undefined' && WindowCloseReloadPage instanceof Function)
-                    WindowCloseReloadPage(data);
-            }
 
-            if (data.indexOf('TurnUrl@') == 0) {  //发送成功时转到指定的URL
+            if (data.indexOf('TurnUrl@') == 0) {  //发送成功时转到指定的URL 
                 var url = data;
                 url = url.replace('TurnUrl@', '');
                 parent.window.location.href = url;
@@ -360,10 +319,7 @@
 
             data = data.replace('@', '<br/>@');
             data = data.replace(/null/g, '');
-            data = data.replace("<br><br/><br/>", '');
-
-            data += " <div style='text-align:right;margin-right:10px;margin-bottom:10px'>";
-            data += " <button id='CloseBtn' type = 'button'  onclick = 'CloseAll();'><img src='../Img/Btn/Close.png' />关  闭(30秒)</button></div> ";
+            data += " <center><input id='CloseBtn' type='button' value='    关    闭(30秒)    ' onclick='CloseAll();'  /></center>";
             $(".Msg").show();
             $(".Msg").html(data);
 
@@ -373,7 +329,7 @@
             //隐藏table.
             document.getElementById("Table1").style.display = "none";
             document.getElementById("TB_Emps").style.display = "none";
-            //document.getElementById("Btn_SelectEmps").style.display = "none";
+            document.getElementById("Btn_SelectEmps").style.display = "none";
 
             var ctrl = document.getElementById("Btn_Send");
             if (ctrl != null)
@@ -386,19 +342,14 @@
             ctrl = document.getElementById("Btn_Close");
             if (ctrl != null)
                 ctrl.style.display = "none";
-
-            ctrl = document.getElementById("Btn_SelectEmps");
-            if (ctrl != null)
-                ctrl.style.display = "none";
         }
-        //var num = 30;
+        var num = 30;
         function clock() {
-
             if ($("#CloseBtn").length == 0)
                 return;
-            WF_WorkOpt_LeftSecond >= 0 ? WF_WorkOpt_LeftSecond-- : clearInterval(int);
-            $("#CloseBtn").html("<img src='../Img/Btn/Close.png' />关  闭(" + WF_WorkOpt_LeftSecond + "秒)");
-            if (WF_WorkOpt_LeftSecond == 0)
+            num >= 0 ? num-- : clearInterval(int);
+            $("#CloseBtn").attr("value", "关    闭(" + num + "秒)");
+            if (num == 0)
                 CloseAll();
         }
 
@@ -406,34 +357,27 @@
         function CloseAll() {
             // 取得父页面URL，用于判断是否是来自测试流程
             var pareUrl = window.top.document.referrer;
-            // alert(pareUrl+"***"+pareUrl.indexOf("test") ==-1 +"&&&&"+ pareUrl.indexOf("Test") ==-1);
-            if (pareUrl.indexOf("test") != -1 || pareUrl.indexOf("Test") != -1) {
+           // alert(pareUrl+"***"+pareUrl.indexOf("test") ==-1 +"&&&&"+ pareUrl.indexOf("Test") ==-1);
+            if (pareUrl.indexOf("test") !=-1 || pareUrl.indexOf("Test") !=-1) {
                 // 测试流程时，发送成功刷新测试容器页面右侧
                 window.parent.parent.refreshRight();
             }
-
+           
             if (window.parent != null && window.parent.returnWorkWindowClose != null) {
                 window.parent.close();
                 if (window.parent.parent != null && window.parent.parent != undefined
-                    && pareUrl.indexOf("test") == -1 && pareUrl.indexOf("Test") == -1)
+                 && pareUrl.indexOf("test") ==-1 && pareUrl.indexOf("Test") ==-1)
                     window.parent.parent.close();
                 window.parent.returnWorkWindowClose();
             }
 
-            window.close();
+             window.close();
         }
 
         //关闭model.
         function CloseModel() {
             if (window.parent != null && window.parent.returnWorkWindowClose != null) {
-                //获取接收人,作用于toNodes.htm页面
-                if (selectEmp != "" && IsSend == "0") {
-                    selectEmp = selectEmp.substring(0, selectEmp.length - 1);
-                    window.parent.returnWorkWindowClose(selectEmp);
-                } else {
-                    window.parent.returnWorkWindowClose();
-                }
-
+                window.parent.returnWorkWindowClose("");
             } else {
                 $('body').append($('<div>' + "已取消操作" + '</div>'));
                 window.close();
@@ -533,19 +477,7 @@
         }
 
         function Help() {
-            var str = "输入要下一步接受人员可以使用人员名称拼音支持全拼简拼。";
-            str += "比如: 查找耿润华您可以输入: grh 或者 gengrh 或者 gengrunhua;"
-            str += " 支持单位名称,比如：耿润华/集团信息中心， 可以输入为 grh/jtxxzx";
-            layer.alert(str, { icon: 6 });
-        }
-
-        //高级选择
-        function AdvSelect() {
-
-            var url = "./Selecter/ByStation.htm?WorkID=" + GetQueryString("WorkID") + "&ToNode=" + GetQueryString("ToNode");
-            url += "&FK_Node=" + GetQueryString("FK_Node");
-            OpenEasyUiDialogExtCloseFunc(url, '设置人员', 780, 380, null);
-
+            $("#HelpInfo").toggle();
         }
     </script>
 
@@ -554,59 +486,11 @@
     <div class="Msg" style="text-align: left;padding-left:25px; display:none;">
         <img src='../Img/loading.gif' alt="" />页面数据正在加载中，请稍候......
     </div>
-    <div class="divFieldly" style="text-align: left;padding-left:25px; display:none;">
-        
-    </div>
-    <div class="divTech" style="text-align: left;padding-left:25px; display:none;">
-    </div>
-    <div class="techMsg" style="text-align: left;padding-left:25px; display:none;">
-    </div>
-    <div style="margin-left:20px">
-        <div style="float:left;margin-top:4px">
-
-            <input type="text" id="TB_Emps" name="TB_Emps"
-                   title="输入: zs或zhangs或zhangsan"
-                   placeholder="查张三,您可输入: zs或zhangs或zhangsan"
-                   value='' style="width:500px;" />
-
-            <div id="SelectEmp"></div>
-            <div style="float:left">
-                <button id="Btn_SelectEmps">
-                    <img src="../Img/Btn/AddLeader.png" /> 选人
-                </button>
-            </div>
-
-        </div>
-        <div id="next">
-            <!--<input type="button" value="增加下一步工作处理人" id="Btn_AddEmps" onclick="AddEmps(false);"/>-->
-            <!--<input type="button" id="Btn_SelectAdv" onclick="AdvSelect()" value='选Bate' />-->
-
-
-            <button onclick="Send();" id="Btn_Send">
-                <img src="../Img/Btn/Send.png" /> 发送
-            </button>
-
-            <button onclick="CloseModel();" id="Btn_Close">
-                <img src="../Img/Btn/Close.png" /> 关闭
-            </button>
-
-            <a href="javascript:Help()">帮助?</a>
-            <!--<div id="HelpInfo">
-                <ul>
-                    <li>输入要下一步接受人员可以使用人员名称拼音支持全拼简拼. </li>
-                    <li>比如:查找耿润华您可以输入: grh 或者 gengrh 或者 gengrunhua </li>
-                    <li>支持单位名称比如：耿润华/集团信息中心， 可以输入为 grh/jtxxzx </li>
-                </ul>
-            </div>-->
-        </div>
-
-    </div>
-
 
     <table class="table table-striped" id="Table1" style="width:98%;padding:5px; margin:10px;">
         <!-- <caption>下一步接受人员列表</caption>-->
         <thead>
-            <tr id="title" class="Sum">
+            <tr id="title">
                 <td style="width:40px; font-weight:bolder">#</td>
                 <!--<th>编号 </th>-->
                 <td style="width:30%; font-weight:bolder">姓名</td>
@@ -619,6 +503,30 @@
     </table>
     <br />
 
+    <div style="margin-left:20px">
 
+        <input type="text" id="TB_Emps" name="TB_Emps"
+               title="查张三,您可输入: zs或zhangs或zhangsan" ;=;
+               placeholder="查张三,您可输入: zs或zhangs或zhangsan" ;=;
+               value='' style=" width:400px; " />
+        <input type="button" id="Btn_SelectEmps" value='选择人员' />
+        <div id="SelectEmp"></div>
+        <!--<select id="SelectEmp"></select>-->
+        <br />
+        <div id="next">
+            <!--<input type="button" value="增加下一步工作处理人" id="Btn_AddEmps" onclick="AddEmps(false);"/>-->
+            <input type="button" value="执行发送" onclick="Send();" id="Btn_Send" />
+            <input type="button" value="关闭" onclick="CloseModel();" id="Btn_Close" />
+
+            <a href="javascript:Help()">查询帮助?</a>
+            <div id="HelpInfo">
+                <ul>
+                    <li>输入要下一步接受人员可以使用人员名称拼音支持全拼简拼. </li>
+                    <li>比如:查找耿润华您可以输入: grh 或者 gengrh 或者 gengrunhua </li>
+                    <li>支持单位名称比如：耿润华/集团信息中心， 可以输入为 grh/jtxxzx </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

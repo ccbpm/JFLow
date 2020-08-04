@@ -89,7 +89,8 @@
             html += "<tr>";
 
             // 输出列名
-            for (var m in track[0]) {
+            for (var m in track[0])
+            {
                 html += "<th>" + m + "</th>";
             }
             html += "</tr>";
@@ -99,7 +100,8 @@
 
             html += "<tr>";
             for (var m in track[0]) {
-                if (m == "FrmDB") {
+                if (m == "FrmDB")
+                {
                     track[0][m] = "...";
                 }
 

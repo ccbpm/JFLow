@@ -53,9 +53,9 @@ function InitBar(key) {
     html += "</select >";
 
     html += "<input  id='Btn_Save' type=button onclick='Save()' value='保存' />";
-    html += "<input  id='Btn_Back' type=button onclick='Back()' value='返回' />";
-    //    html += "<input type=button onclick='AdvSetting()' value='高级设置' />";
-    //   html += "<input type=button onclick='Help()' value='我需要帮助' />";
+    html += "<input  id='Btn_Save' type=button onclick='Back()' value='返回' />";
+//    html += "<input type=button onclick='AdvSetting()' value='高级设置' />";
+ //   html += "<input type=button onclick='Help()' value='我需要帮助' />";
     html += "</div>";
 
     document.getElementById("bar").innerHTML = html;
@@ -70,10 +70,9 @@ function Back() {
 }
 
 /*
-* 获取节点绑定的岗位
-*/
+ * 获取节点绑定的岗位
+ */
 function getStas() {
-
     var ens = new Entities("BP.WF.Template.NodeStations");
     ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
     ens = $.grep(ens, function (obj, i) {
@@ -83,11 +82,9 @@ function getStas() {
 
 }
 /*
-* 获取节点绑定的部门
-*/
-function getDepts(orgNo) {
-
-
+ * 获取节点绑定的部门
+ */
+function getDepts() {
     var ens = new Entities("BP.WF.Template.NodeDepts");
     ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
     ens = $.grep(ens, function (obj, i) {
@@ -95,20 +92,10 @@ function getDepts(orgNo) {
     });
     return ens;
 
-    // var handler = new HttpHandler();
-
-
-    //var ens = new Entities("BP.WF.Template.NodeDepts");
-    //ens.Retrieve("FK_Node", GetQueryString("FK_Node"));
-    ens = $.grep(ens, function (obj, i) {
-        return obj.FK_Node != undefined
-    });
-    return ens;
-
 }
 /*
-* 获取节点绑定的用户组
-*/
+ * 获取节点绑定的用户组@lz
+ */
 function getGroups() {
 
     var ens = new Entities("BP.WF.Template.NodeTeams");
@@ -220,7 +207,7 @@ function changeOption() {
         optionKey = sele[index].value
     }
 
-    var roleName = GenerUrlByOptionKey(optionKey);
+    var roleName = GenerUrlByOptionKey(optionKey); 
     window.location.href = roleName + "?FK_Node=" + nodeID + "&FK_Flow=" + GetQueryString("FK_Flow");
 }
 function SaveAndClose() {

@@ -12,42 +12,11 @@
     <script src="../../Scripts/config.js" type="text/javascript"></script>
     <base target="_self" />
     <script src="../Admin.js"></script>
-    <script type="text/javascript">
-        //新建表单
-        function CreateFrm() {
-            var obj = document.getElementsByName("ss")
-            for (var i = 0; i < obj.length; i++) { //遍历Radio
-                if (obj[i].checked) {
-                    frmType = obj[i].value;
-                }
-            }
-
-            var url = "../CCFormDesigner/NewFrmGuide.htm?Step=0&EntityType=" + frmType + "&FK_FrmSort=" + GetQueryString("FK_FrmSort");
-            window.location.href = url;
-        }
-        function ImpFrmFromFtp() {
-            var url = "../Template/From.htm?SortNo=" + GetQueryString("FK_FrmSort");
-            window.location.href = url;
-        }
-        function ImpFrmFromLocal() {
-            var url = "../Template/ImpFrmLocal.htm?SortNo=" + GetQueryString("FK_FrmSort");
-            window.location.href = url;
-        }
-    </script>
 </head>
 <body>
 
-    <div style=" padding:10px; padding-left:30px;">
-
-        <button onclick="javascript:CreateFrm()"><img src="../../Img/New.gif" style="width:20px;">创建表单</button>
-        <button onclick="javascript:ImpFrmFromFtp()"><img src="../../Img/ftp.png"  style="width:20px;">从ftp服务器导入模板</button>
-        <button onclick="javascript:ImpFrmFromLocal()"><img src="../../Img/dot.png"  style="width:20px;">从本机导入模板</button>
-
-        <!--<input style="margin-left:10px;" onclick="ImpFrmFromLocal()" type="button" value="从本机导入模板" />-->
-    </div>
-
     <fieldset>
-        <legend> <label><input type="radio" id="ss" name="ss" value="0" checked="checked" /> 驰骋BPM独立表单 </label>   </legend>
+        <legend> <label><input type="radio" id="ss" name="ss" value="0" checked="checked"  /> 驰骋BPM独立表单 </label>   </legend>
         <ul>
             <li> 仅为流程绑定表单所用,没有其他的增删改查的填写功能. </li>
             <li> 以下两种类型的表单也可以绑定到节点上. </li>
@@ -67,8 +36,6 @@
             <li> 具有流水号，单据号的性质的字段，比如：学生缴费记录、固定资产维护记录. </li>
         </ul>
     </fieldset>
-
-
     <fieldset>
         <legend id="help"></legend>
         <ul>
@@ -76,6 +43,21 @@
             <li>每种表单类型的表单应用场景不一样.</li>
         </ul>
     </fieldset>
+    <input style="margin-left:30px;" onclick="newFrm()" type="button" value="创建表单" />
+    <script>
 
+        //新建表单
+        function newFrm() {
+            var obj = document.getElementsByName("ss")
+            for (var i = 0; i < obj.length; i++) { //遍历Radio
+                if (obj[i].checked) {
+                    frmType = obj[i].value;
+                }
+            }
+
+            var url = "../CCFormDesigner/NewFrmGuide.htm?Step=0&EntityType="+ frmType +"&FK_FrmSort="+ GetQueryString("FK_FrmSort");
+            window.location.href = url;
+        }
+    </script>
 </body>
 </html>

@@ -60,13 +60,8 @@
             }
             return result;
         }
-        function Search() {
-            BindListModel($('#Search_Key').val());
-        }
-        function BindListModel(KeyVal) {
+        function BindListModel() {
 
-            if (KeyVal == null && KeyVal == undefined)
-                KeyVal = "";
             var enName = GetQueryString("EnName"); // 主表实体. A实体.
             var EnsOfMM = GetQueryString("EnsOfMM"); //存储实体.
             var AttrOfOneInMM = GetQueryString("AttrOfOneInMM"); //存储实体对应主表的外键.
@@ -74,10 +69,7 @@
             //获得列表实体, 查询全部.
             var ensOfM = GetQueryString("EnsOfM"); // 主表实体. A实体.
             var entities = new Entities(ensOfM);
-            if (KeyVal != "")
-                entities.RetrieveCond("No,Name", "Like", "%" + KeyVal + "%");
-            else
-                entities.RetrieveAll();
+            entities.RetrieveAll();
             entities = unique(entities);//去重复的人员
 
             var html = "<table style='width:100%;' >";
@@ -89,7 +81,7 @@
             html += "</div>";
 
             html += "<div style='float:left'>";
-            html += "<input type=text value='" + KeyVal + "'id='Search_Key' placeholder='输入编号或者名称'/><input type=button value='查询' onclick='Search();'  /><input type=button value='保存' onclick='Save()' />";
+            html += "<input type=button value='保存' onclick='Save()' />";
             html += "</div>";
 
             html += "</th>";
@@ -349,28 +341,29 @@
             return array;
         }
 
-        /**/</script>
+/**/</script>
 </head>
 <body>
+ 
+ <table id="Table1" >
+  
+ </table>
 
-    <table id="Table1">
-    </table>
-
-    <input type=button id="Btn_Save" onclick="Save();" style="display: none;" value="Save" />
-    <div id="Msg"> </div>
-    <script type="text/javascript">
-        $(function () {
-            //给全选的复选框添加事件
-            $("#SelectAll").click(function () {
-                // this 全选的复选框
-                var userids = this.checked;
-                //获取name=box的复选框 遍历输出复选框
-                $("input[class='dot2_checkbox']").each(function () {
-                    this.checked = userids;
-                });
-            });
-        });
-
-    </script>
+ <input type=button id="Btn_Save" onclick="Save();" style="display: none;" value="Save"/>
+ <div id="Msg"> </div>
+ <script type="text/javascript">
+     $(function () {
+         //给全选的复选框添加事件
+         $("#SelectAll").click(function () {
+             // this 全选的复选框
+             var userids = this.checked;
+             //获取name=box的复选框 遍历输出复选框
+             $("input[class='dot2_checkbox']").each(function () {
+                 this.checked = userids;
+             });
+         });
+     });
+     
+ </script>
 </body>
 </html>

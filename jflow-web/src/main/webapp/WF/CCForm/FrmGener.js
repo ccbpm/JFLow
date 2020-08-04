@@ -11,7 +11,6 @@ var colVisibleJsonStr = ''
 var jsonStr = '';
 var IsChange = false;
 var webUser = null;
-var pageData = {};
 document.BindEditorMapAttr = [];
 //初始化函数
 $(function () {
@@ -27,11 +26,9 @@ $(function () {
 
     webUser = new WebUser();
 
-    //初始化参数.
-    initPageParam();
-
     //设置不可以用.
-    if (pageData.IsReadonly != 1) {
+    var isReadonly = GetQueryString("IsReadonly");
+    if (isReadonly != 1) {
         $("#CCForm").unbind().on('click', function () {
             Change(frmData);
         });
@@ -40,7 +37,7 @@ $(function () {
         });
     }
 
-
+    initPageParam(); //初始化参数.
     //构造表单.
     GenerFrm(); //表单数据.
 
@@ -58,7 +55,7 @@ $(function () {
         $('#topContentDiv').height(height);
 
         $(window).resize(function () {
-            $("#CCForm").height($(window).height() - 150 + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff");;
+            $("#CCForm").height($(window).height() - 150 + "px").css("overflow-y", "auto").css("scrollbar-face-color", "#fff"); ;
         });
     }
 
@@ -78,7 +75,7 @@ $(function () {
 });
 //打印单据
 function printDoc() {
-    WinOpen("../WorkOpt/PrintDoc.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.OID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random() + "', 'dsdd'");
+    WinOpen("../WorkOpt/PrintDoc.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.OID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random()+"', 'dsdd'");
 }
 
 function numonly(e) {
@@ -192,13 +189,14 @@ function isFileExist(url) {
             }
         }
     }
-}
+} 
 
 
 
 var frmData = null;
 //将v1版本表单元素转换为v2 杨玉慧  silverlight 自由表单转化为H5表单.
 function GenerFrm() {
+
     var href = window.location.href;
     var urlParam = href.substring(href.indexOf('?') + 1, href.length);
     urlParam = urlParam.replace('&DoType=', '&DoTypeDel=xx');
@@ -227,27 +225,6 @@ function GenerFrm() {
         console.log(data);
         return;
     }
-
-    //处理附件的问题 
-    if (frmData.Sys_FrmAttachment.length != 0) {
-        var url = window.location.href;
-        if (url.indexOf("MyBill.htm") != -1 || url.indexOf("MyDict.htm") != -1) {
-            Skip.addJs("../CCForm/Ath.js");
-            Skip.addJs("../CCForm/JS/FileUpload/fileUpload.js");
-            Skip.addJs("../Scripts/jquery-form.js");
-            Skip.addJs("../../DataUser/OverrideFiles/Ath.js");
-            $('head').append("<link href='../CCForm/JS/FileUpload/css/fileUpload.css' rel='stylesheet' type='text/css' />");
-        } else {
-            Skip.addJs("./Ath.js");
-            Skip.addJs("./JS/FileUpload/fileUpload.js");
-            Skip.addJs("../Scripts/jquery-form.js");
-            Skip.addJs("../../DataUser/OverrideFiles/Ath.js");
-            $('head').append("<link href='./JS/FileUpload/css/fileUpload.css' rel='stylesheet' type='text/css' />");
-        }
-
-    }
-
-
 
     //获取没有解析的外部数据源
     var uiBindKeys = frmData["UIBindKey"];
@@ -308,17 +285,17 @@ function GenerFrm() {
     // 加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
     var enName = frmData.Sys_MapData[0].No;
 
-
+  
 
     try {
-
+        
         var s = document.createElement('script');
         s.type = 'text/javascript';
         s.src = "../../DataUser/JSLibData/" + enName + "_Self.js";
         var tmp = document.getElementsByTagName('script')[0];
         tmp.parentNode.insertBefore(s, tmp);
-
-
+        
+       
     }
     catch (err) {
 
@@ -330,7 +307,7 @@ function GenerFrm() {
         s.src = "../../DataUser/JSLibData/" + enName + ".js";
         var tmp = document.getElementsByTagName('script')[0];
         tmp.parentNode.insertBefore(s, tmp);
-
+       
     }
     catch (err) {
 
@@ -358,17 +335,11 @@ function GenerFrm() {
             GenerFoolFrm(mapData, frmData); //生成傻瓜表单.
             isFloolFrm = true;
         } else if (mapData.FrmType == 8) {
-            GenerDevelopFrm(frmData, mapData.No); //开发者表单.
+            GenerDevelopFrm(frmData,mapData.No ); //开发者表单.
         }
         else
             GenerFreeFrm(mapData, frmData); //自由表单.
     }
-    //xu
-    /*var rel = /style='[^=>]*'([(\s+\w+=)|>])/g
-    var rels = /style="[^=>]*"([(\s+\w+=)|>])/g
-
-    $('#CCForm').html($('#CCForm').html().replace(rel, ''));
-    $('#CCForm').html($('#CCForm').html().replace(rels, ''));*/
 
     $.parser.parse("#CCForm");
     var isReadonly = GetQueryString("IsReadonly");
@@ -404,7 +375,7 @@ function GenerFrm() {
             }
         })
     }
-
+   
     //装载表单数据与修改表单元素风格.
     LoadFrmDataAndChangeEleStyle(frmData);
 
@@ -412,9 +383,12 @@ function GenerFrm() {
     if (pageData.IsReadonly == null || pageData.IsReadonly == "0") {
         AfterBindEn_DealMapExt(frmData);
     }
+    
 
+    
     ////表单联动设置
     //Set_Frm_Enable(frmData);
+
 
     ShowTextBoxNoticeInfo();
 
@@ -450,7 +424,7 @@ function GenerFrm() {
                 $(editor.container).css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
             }
         })
-
+       
 
     }
     $(".pimg").on("dblclick", function () {
@@ -459,7 +433,9 @@ function GenerFrm() {
     });
     if (typeof setContentHeight == "function") {
         setContentHeight();
-    }
+     }
+
+
 }
 
 // V
@@ -550,8 +526,14 @@ function Save(scope) {
 //以下是软通写的
 //初始化网页URL参数
 function initPageParam() {
+    //新建独有
+    pageData.UserNo = GetQueryString("UserNo");
+    pageData.DoWhat = GetQueryString("DoWhat");
+    pageData.IsMobile = GetQueryString("IsMobile");
+
     pageData.FK_Flow = GetQueryString("FK_Flow");
     pageData.FK_Node = GetQueryString("FK_Node");
+    //FK_Flow=004&FK_Node=402&FID=0&WorkID=232&IsRead=0&T=20160920223812&Paras=
     pageData.FID = GetQueryString("FID") == null ? 0 : GetQueryString("FID");
 
     var oid = GetQueryString("WorkID");
@@ -560,6 +542,8 @@ function initPageParam() {
     pageData.OID = oid;
     pageData.WorkID = oid;
 
+    pageData.IsRead = GetQueryString("IsRead");
+    pageData.T = GetQueryString("T");
     pageData.Paras = GetQueryString("Paras");
     pageData.IsReadonly = GetQueryString("IsReadonly"); //如果是IsReadonly，就表示是查看页面，不是处理页面
     pageData.IsStartFlow = GetQueryString("IsStartFlow"); //是否是启动流程页面 即发起流程
@@ -569,8 +553,30 @@ function initPageParam() {
 
 
 }
+//将获取过来的URL参数转成URL中的参数形式  &
+function pageParamToUrl() {
+    var paramUrlStr = '';
+    for (var param in pageData) {
 
+        var val = pageData[param];
+        if (val == null || val == undefined)
+            continue;
 
+        paramUrlStr += '&' + (param.indexOf('@') == 0 ? param.substring(1) : param) + '=' + pageData[param];
+    }
+    return paramUrlStr;
+}
+
+//设置附件为只读
+function setAttachDisabled() {
+    //附件设置
+    var attachs = $('iframe[src*="AttachmentUpload.aspx"]');
+    $.each(attachs, function (i, attach) {
+        if (attach.src.indexOf('IsReadonly') == -1) {
+            $(attach).attr('src', $(attach).attr('src') + "&IsReadonly=1");
+        }
+    })
+}
 
 
 //设置表单元素不可用
@@ -583,9 +589,15 @@ function setFormEleDisabled() {
 
 
 //FK_Flow=005&UserNo=zhwj&DoWhat=StartClassic&=&IsMobile=&FK_Node=501
-
+var pageData = {};
 var globalVarList = {};
 
+//刷新子流程
+function refSubSubFlowIframe() {
+    var iframe = $('iframe[src*="SubFlow.aspx"]');
+    //iframe[0].contentWindow.location.reload();
+    iframe[0].contentWindow.location.href = iframe[0].src;
+}
 //回填扩展字段的值
 function SetAth(data) {
     var atParamObj = $('#iframeAthForm').data();
@@ -625,6 +637,15 @@ function ShowViewNodeAth(athLab, atParamObj, src) {
     athModal.modal().show();
 }
 
+//AtPara  @PopValSelectModel=0@PopValFormat=0@PopValWorkModel=0@PopValShowModel=0
+function GepParaByName(name, atPara) {
+    var params = atPara.split('@');
+    var result = $.grep(params, function (value) {
+        return value != '' && value.split('=').length == 2 && value.split('=')[0] == value;
+    })
+    return result;
+}
+
 //初始化下拉列表框的OPERATION
 function InitDDLOperation(frmData, mapAttr, defVal) {
     var operations = '';
@@ -640,10 +661,9 @@ function InitDDLOperation(frmData, mapAttr, defVal) {
             });
 
             if (mapAttr.DefVal == -1)
-                operations += "<option " + (obj.IntKey == defVal ? " selected = 'selected' " : "") + " value='" + mapAttr.DefVal + "'>-无(不选择)-</option>";
-
+                operations += "<option " + (obj.IntKey == mapAttr.DefVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>-无(不选择)-</option>";
             $.each(enums, function (i, obj) {
-                operations += "<option " + (obj.IntKey == defVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
+                operations += "<option " + (obj.IntKey == mapAttr.DefVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
             });
         }
         return operations;
@@ -764,7 +784,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                             formArrResult.push(name + '=' + encodeURIComponent($(disabledEle).val()));
                             haseExistStr += name + ",";
                         }
-
+                       
                         break;
                     case "RADIO": //单选钮
                         name = $(disabledEle).attr('name');
@@ -1209,7 +1229,7 @@ function GetPageParas(sArgName) {
     var sHref = window.location.href;
     var args = sHref.split("?");
     var retval = "";
-    if (args[0] == sHref) /*参数为空*/ {
+    if (args[0] == sHref) /*参数为空*/{
         return retval; /*无需做任何处理*/
     }
     var str = args[1];
@@ -1261,6 +1281,15 @@ function Change(id) {
     }
 }
 
+//然浏览器最大化.
+function ResizeWindow() {
+    if (window.screen) {  //判断浏览器是否支持window.screen判断浏览器是否支持screen     
+        var myw = screen.availWidth;   //定义一个myw，接受到当前全屏的宽     
+        var myh = screen.availHeight;  //定义一个myw，接受到当前全屏的高     
+        window.moveTo(0, 0);           //把window放在左上角     
+        window.resizeTo(myw, myh);     //把当前窗体的长宽跳转为myw和myh     
+    }
+}
 
 
 //双击签名
@@ -1301,7 +1330,7 @@ function figure_Template_Siganture(SigantureID, val, type) {
 
 //签字板
 function figure_Template_HandWrite(HandWriteID, val) {
-    var url = basePath + "/WF/CCForm/HandWriting.htm?WorkID=" + pageData.OID + "&FK_Node=" + pageData.FK_Node + "&KeyOfEn=" + HandWriteID;
+    var url = basePath+ "/WF/CCForm/HandWriting.htm?WorkID=" + pageData.OID + "&FK_Node=" + pageData.FK_Node + "&KeyOfEn=" + HandWriteID;
     OpenEasyUiDialogExt(url, '签字板', 400, 300, false);
 }
 //地图

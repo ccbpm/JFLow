@@ -11,7 +11,7 @@
     <script src="../../Scripts/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
     <script src="../../Scripts/SyntaxHighlighter/shBrushCSharp.js" type="text/javascript"></script>
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
-    <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
+       <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="../../Scripts/QueryString.js"></script>
     <script type="text/javascript" src="../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
@@ -25,37 +25,8 @@
             mapData.RetrieveFromDBSources();
 
             if (mapData != null) {
-                $("#title").html(mapData.Name + "：信息导入");
+                $("#title").html(mapData.Name + "信息导入");
             }
-
-            var mapAttrs = new Entities("BP.Sys.MapAttrs");
-            mapAttrs.Retrieve("FK_MapData", frmID,"Idx");
-
-            var cols = "<table>";
-            cols += "<tr>";
-            for (var i = 0; i < mapAttrs.length; i++) {
-                var attr = mapAttrs[i];
-                if (attr.UIIsVisable == false)
-                    continue;
-
-                cols += "<th>"+ attr.Name + "</th>";
-            }
-            cols += "</tr>";
-
-            for (var idx = 0; idx < 3; idx++) {
-
-                cols += "<tr>";
-
-                for (var i = 0; i < mapAttrs.length; i++) {
-                    var attr = mapAttrs[i];
-                    if (attr.UIIsVisable == false)
-                        continue;
-                    cols += "<td></td>";
-                }
-                cols += "</tr>";
-            }
-
-            $("#cols").html(cols);
 
         });
 
@@ -84,7 +55,7 @@
 
             //URL 路径
             var doMethod = "ImpData_Done";
-            var httpHandlerName = "BP.CCBill.WF_CCBill";
+            var httpHandlerName = "BP.Frm.WF_CCBill";
             var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName + "&ImpWay=" + impWay + "&FrmID=" + frmID;
 
 
@@ -94,7 +65,7 @@
                 dataType: 'html',
                 url: url,
                 onSubmit: function (param) {
-                    //return false; //这里可以做表单的验证，如果验证失败，就return false 来终止表单提交
+                    //return false; //这里可以做表单的验证，如果验证失败，就return false 来终止表单提交  
                 },
                 success: function (data) {
                     $("#Button1").attr("disabled", false);
@@ -137,78 +108,64 @@
             var frmID = GetQueryString("FrmID");
             var EntityType = GetQueryString("EntityType");
             var url = "../Search.htm?EnsName=" + frmID + "&FrmID=" + frmID;
-            if (EntityType == "2")
-                url = "../SearchBill.htm?EnsName=" + frmID + "&FrmID=" + frmID;
             if (EntityType == "1")
+                url = "../SearchBill.htm?EnsName=" + frmID + "&FrmID=" + frmID;
+            if (EntityType == "2")
                 url = "../SearchDict.htm?EnsName=" + frmID + "&FrmID=" + frmID;
             window.location.href = url;
         }
     </script>
 </head>
 <body>
-    <form id="cc" name="cc" action="" enctype="multipart/form-data" method="post">
-        <table style=" width:100%">
-            <caption id="title">设备信息导入 </caption>
-            <tr>
-                <td valign="top">
-                    <fieldset>
-                        <legend> 从本机导入  </legend>
+<form id="cc" name="cc" action="" enctype="multipart/form-data" method="post">
+<table style=" width:100%">
+<caption id="title">设备信息导入 </caption>
+<tr>
+<td  valign="top">
+<fieldset>
+<legend> 从本机导入  </legend>
+<ul>
+<li>从本机导入：请您选择本机的一个Excel文件 点击导入按钮完成导入。</li>
+<li> 请选择文件:  <input type="file" id="File_Upload" name="File_Upload"  /></li>
 
-                        <h3>操作步骤</h3>
-                        <ul>
-                            <li>
-                                第1步:
-                                <a href="#" onclick="downloadFile()">
-                                    <img style="width: 16px; height: 16px;" src="../../../WF/Img/Btn/Save.gif" border="0" />
-                                    下载导入数据模板
-                                </a>
-                                - 如果没有下载到模版，请通知管理员设计一个模版。 <b>请参考帮助设计一个模版</b>
-                            </li>
+<li>导入的方式: 
+<ul>
+<li><input id="Import_0" type="radio" name="RB_ImpType" value="0"  checked="true" /><label for="Import_0">清空方式导入.</label></li>
+<li><input id="Import_1" type="radio" name="RB_ImpType" value="1"  /><label for="Import_1">更新方式导入.</label></li>
+<li><input id="Import_2" type="radio" name="RB_ImpType" value="2"  /><label for="Import_2">追加方式导入.</label></li>
+</ul>
 
-                            <!--<li> 请下载模版<a href=""> </a></li>-->
-                            <li>第2步:选择在模版里组织好要导入的数据. <font color="red">警告:如果要擅自修改表格里列名或修改excel的版本存储格式，就会导致导入错误。</font></li>
-                            
-                            <li>第3步:从本机导入，请您选择Excel文件 点击导入按钮完成导入。</li>
-                            <li> 请选择文件:  <input type="file" id="File_Upload" name="File_Upload" /></li>
+<br />
+ </li>
+</ul>
+<div style=" text-align:center; padding:5px;">
+<input type="button" id="Button1"  value="执行导入" onclick="Imp_Done();" />
+<input type="button" id="Button2"  value="返回列表" onclick="Back();" />
 
-                            <li>
-                                导入的方式:
-                                <ul>
-                                    <li><input id="Import_0" type="radio" name="RB_ImpType" value="0" checked="true" /><label for="Import_0">清空方式导入.</label></li>
-                                    <li><input id="Import_1" type="radio" name="RB_ImpType" value="1" /><label for="Import_1">更新方式导入.</label></li>
-                                    <li><input id="Import_2" type="radio" name="RB_ImpType" value="2" /><label for="Import_2">追加方式导入.</label></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <div style=" text-align:center; padding:5px;">
-                            <input type="button" id="Button1" value="执行导入" onclick="Imp_Done();" />
-                            <input type="button" id="Button2" value="返回列表" onclick="Back();" />
-                        </div>
-                        <ul>
-                            <li>如果导入失败：也许是服务器的环境问题，请在服务器上安装 <font color="red">AccessDatabaseEngine.exe</font>试试看。</li>
-                        </ul>
-                    </fieldset>
+ </div>
+</fieldset>
+<fieldset>
+<legend>说明</legend>
 
-                    <fieldset>
-                        <legend>数据模版制作说明</legend>
-                        <ul>
-                            <li>新建一个Excel文件，比如 AAA.xls,</li>
-                            <li>在excel的工具栏中，找到文件另存为命令，选择 (excel97-2003工作簿)格式. </li>
-                            <li>在第一行数据填入如下列 </li>
-                            <li> <div id="cols"></div></li>
-                            <li>测试该模版是否可用,如果可用就把该文件放到 \DatUser\\TempleteOfImp\\</li>
-                            <li> 如果不可用：请尝试下载一个AccessDatabaseEngine.exe 文件安装到服务器上试试.</li>
-
-                        </ul>
-                    </fieldset>
-                    <fieldset>
-                        <legend>导入结果</legend>
-                        <div id="result"></div>
-                    </fieldset>
-                </td>
-            </tr>
-        </table>
-        <a id="downFileID" href="#" style="display:none"></a>
-    </form>
+<ul>
+<li>
+<a href="#"onclick="downloadFile()">
+    <img style="width: 16px; height: 16px;" src="../../../WF/Img/redo.png" border="0"/>
+    下载导入模板
+ </a></li>
+ 
+<li>该模版存在:D:\ccflow\CCFlow\DataUser\TempleteOfImp\下面.</li>
+<li>比如: :D:\ccflow\CCFlow\DataUser\TempleteOfImp\BP.Demo.BPFramework.Students.xls</li>
+</ul>
+</fieldset>
+<fieldset>
+<legend>导入结果</legend>
+<div id="result"></div>
+</fieldset>
+ </td>
+</tr>
+</table>
+<a id="downFileID" href="#" style="display:none"></a>
+</form>
 </body>
 </html>

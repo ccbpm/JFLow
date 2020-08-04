@@ -22,11 +22,11 @@
  */
 
 $(document).ready(function () {
-    //动态添加新风格 
+    //动态添加新风格  @lz
     SetNewCSS();
-
-    //设置帮助页面内容 
-    // SetHelpPage();
+    
+    //设置帮助页面内容 @lz
+   // SetHelpPage();
 
     HelpDiv();
 
@@ -35,72 +35,14 @@ $(document).ready(function () {
 
     //设置  class="Help" 的图片 点击直接可以全屏放大打开.  @lz
     SetHelpImg();
-    //设置放大的img容器   
+    //设置放大的img容器   @lz
     SetBigImgDiv();
     //设置SQL脚本编辑器.
     CheckSQLTextArea();
+   
 
-    //如何给按钮自动增加标签?
-    AddBtnIcon();
 })
-
-function AddBtnIcon() {
-    //保存按钮icon
-    if ($("#Btn_Save").height() > 25)
-        $("#Btn_Save").attr('style', 'background-image: url(../../../Img/Btn/Save.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-    else
-        $("#Btn_Save").attr('style', 'background-image: url(../../../Img/Btn/Save.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-
-    if ($("#Btn_Delete").height() > 25)
-        $("#Btn_Delete").attr('style', 'background-image: url(../../../Img/Btn/Delete.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-    else
-        $("#Btn_Delete").attr('style', 'background-image: url(../../../Img/Btn/Delete.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-
-    //返回按钮icon
-    if ($("#Btn_Back").height() > 25)
-        $("#Btn_Back").attr('style', 'background-image: url(../../../Img/Btn/Back.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-    else
-        $("#Btn_Back").attr('style', 'background-image: url(../../../Img/Btn/Back.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-
-    //导入按钮icon
-    if ($("#Btn_Imp").height() > 25)
-        $("#Btn_Imp").attr('style', 'background-image: url(../../../Img/Btn/Imp.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-    else
-        $("#Btn_Imp").attr('style', 'background-image: url(../../../Img/Btn/Imp.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-
-    //导出按钮icon
-    if ($("#Btn_Exp").height() > 25)
-        $("#Btn_Exp").attr('style', 'background-image: url(../../../Img/Btn/Exp.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-    else
-        $("#Btn_Exp").attr('style', 'background-image: url(../../../Img/Btn/Exp.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-
-    //帮助按钮icon
-    if ($("#Btn_Help").height() > 25)
-        $("#Btn_Help").attr('style', 'background-image: url(../../../Img/Btn/Help.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-    else
-        $("#Btn_Help").attr('style', 'background-image: url(../../../Img/Btn/Help.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-
-    //高级按钮icon
-    if ($("#Btn_Advanced").height() > 25)
-        $("#Btn_Advanced").attr('style', 'background-image: url(../../../Img/Btn/Advanced.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-    else
-        $("#Btn_Advanced").attr('style', 'background-image: url(../../../Img/Btn/Advanced.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-
-    //批处理按钮
-    $("#Btn_Batch").attr('style', 'background-image: url(../../../Img/Btn/Batch.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-
-    if ($("#Btn_New").height() > 25) {
-        $("#Btn_New").attr('style', 'background-image: url(../../../Img/Btn/New.png); background-repeat: no-repeat; background-size: 14px 14px; background-position: 6px 8px;');
-        $("#Btn_New").attr('height', 50);
-    }
-    else {
-        $("#Btn_New").attr('style', 'background-image: url(../../../Img/Btn/New.png); background-repeat: no-repeat; background-size: 13px 13px; background-position: 1px 6px;');
-        $("#Btn_New").attr('height', 50);
-    }
-}
-
-style = ''
-//动态添加新风格  
+//动态添加新风格  @lz
 function SetNewCSS() {
     //body下添加一个父Div
     var div = document.createElement('div');
@@ -111,18 +53,18 @@ function SetNewCSS() {
     div = document.createElement('div');
     $(div).attr('class', 'cs-help');
     $('ul').wrap(div);
-
-    $.each($("legend"), function (i, obj) {
+   
+    $.each($("legend"), function (i,obj) {
 
         var _html = $(obj).html();
         if (obj.id.indexOf("help") != -1) {
             $(obj).html("");
             var div2 = "<div id='help1' class='help-title'> <img src='../Img/ico-help.png' alt='帮助' class='ico-help' />" + _html + " </div>";
             $($(obj).parent().find("ul").parent()[0]).append(div2)
-        }
+        } 
     })
-
-
+    
+   
     //bar风格
     $('#bar').attr('class', 'cs-tr cs-bar');
     //删除重复的说明标题
@@ -132,7 +74,7 @@ function SetNewCSS() {
             leg.eq(i).remove();
     }
 }
-//设置帮助页面内容 
+//设置帮助页面内容 @lz
 function SetHelpPage() {
 
     var legends = $("legend#help");
@@ -146,7 +88,7 @@ function SetHelpPage() {
     $("font").on("click", function () {
         alert("1234");
         legends.siblings().show();
-
+        
     });
 }
 function showPage() {
@@ -172,7 +114,7 @@ function HelpDiv() {
     });
 }
 
-//设置  class="HelpImg" 的图片 点击直接可以全屏放大打开.  
+//设置  class="HelpImg" 的图片 点击直接可以全屏放大打开.  @lz
 function SetHelpImg() {
     $(function () {
         $(".HelpImg").click(function () {
@@ -219,9 +161,9 @@ function SetHelpImg() {
             $(this).fadeOut("fast");
         });
     }
-
+    
 }
-//加载放大的img容器 
+//加载放大的img容器  @lz
 function SetBigImgDiv() {
     var divs = "<div id='outerdiv' style='position:fixed;top:0;left:0;background:rgba(0,0,0,0.7);z-index:2;width:100%;height:100%;display:none;'><div id='innerdiv' style='position:absolute;'><img id='bigimg' style='border:5px solid #fff;' src=''/></div ></div >";
     $(".cs-content-box").append(divs);
@@ -321,6 +263,7 @@ function initToggle() {
 
     for (var i = 0, len = legends.length; i < len; i++) {
 
+        //  debugger
         var en = legends[i];
         if (en.id.indexOf('help') == -1)
             continue;

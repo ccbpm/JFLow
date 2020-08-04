@@ -1,4 +1,4 @@
-﻿
+﻿var flowData = null;
 var IsCC = false;
 var isSigantureChecked = false;
 function GenerFreeFrm(wn) {
@@ -71,7 +71,6 @@ function GenerFreeFrm(wn) {
             continue;
         var createdFigure = figure_Template_Attachment(frmAttachment);
         $('#CCForm').append(createdFigure);
-        AthTable_Init(frmAttachment, "Div_" + frmAttachment.MyPK);
     }
 
     //循环 从表
@@ -308,7 +307,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                         eleHtml += data + html;
                     }
                     else {
-                        eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' alt='" + val + "'  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                        eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/Templete.JPG'\"  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                     }
                     isSigantureChecked = true;
                 }
@@ -325,7 +324,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                 sealData.Retrieve("OID", GetQueryString("WorkID"), "FK_Node", GetQueryString("FK_Node"), "SealData", mapAttr.DefVal);
 
                 if (sealData.length > 0) {
-                    eleHtml += "<img src='../DataUser/Siganture/" + mapAttr.DefVal + ".jpg' alt='" + mapAttr.DefVal +"' style='border:0px;'  id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    eleHtml += "<img src='../DataUser/Siganture/" + mapAttr.DefVal + ".jpg' style='border:0px;'  id='Img" + mapAttr.KeyOfEn + "' />" + html;
                     isSigantureChecked = true;
                 }
                 else {
@@ -345,7 +344,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                     eleHtml += data + html;
                 }
                 else {
-                    eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg'  alt='" + val + "' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/Templete.JPG'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
 
                 }
                 return eleHtml;
@@ -353,7 +352,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
             if (mapAttr.IsSigan == "4") {
                 //var val = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
                 var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' value='" + mapAttr.DefVal + "' type=hidden />";
-                eleHtml += "<img src='../DataUser/Siganture/" + mapAttr.DefVal + ".jpg' alt='" + mapAttr.DefVal+"' style='border:0px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                eleHtml += "<img src='../DataUser/Siganture/" + mapAttr.DefVal + ".jpg' onerror=\"this.src='../DataUser/Siganture/Templete.JPG'\"  style='border:0px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 //eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/UnName.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 return eleHtml;
             }
@@ -735,6 +734,22 @@ function figure_Template_Image(frmImage) {
     }
     return eleHtml;
 }
+//图片附件编辑
+function ImgAth(url, athMyPK) {
+    var dgId = "iframDg";
+    url = url + "&s=" + Math.random();
+    OpenEasyUiDialog(url, dgId, '图片附件', 900, 580, 'icon-new', false, function () {
+
+    }, null, null, function () {
+        //关闭也切换图片
+        //var obj = document.getElementById(dgId);
+        //var win =(obj.contentWindow || obj.contentDocument); 
+        var imgSrc = $("#imgSrc").val();
+        if (imgSrc != null && imgSrc != "")
+            document.getElementById('Img' + athMyPK).setAttribute('src', imgSrc + "?t=" + Math.random());
+        $("#imgSrc").val("");
+    });
+}
 
 //初始化 IMAGE附件
 function figure_Template_ImageAth(frmImageAth) {
@@ -782,7 +797,13 @@ function figure_Template_Attachment(frmAttachment) {
     if (ath.UploadType == 0) { //单附件上传 L4204
         return $('');
     }
-    eleHtml += '<div id="Div_' + frmAttachment.MyPK+'" name="Ath"></div>';
+    var src = "";
+    if (pageData.IsReadonly)
+        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&PWorkID=" + GetQueryString("PWorkID") + "&FID=" + pageData["FID"] + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
+    else
+        src = "./CCForm/Ath.htm?PKVal=" + pageData.WorkID + "&PWorkID=" + GetQueryString("PWorkID") + "&FID=" + pageData["FID"] + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
+
+    eleHtml += '<div>' + "<iframe style='width:" + ath.W + "px;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
     eleHtml = $(eleHtml);
     eleHtml.css('position', 'absolute').css('top', ath.Y).css('left', ath.X).css('width', ath.W).css('height', ath.H);
 
@@ -925,6 +946,7 @@ function figure_Template_FigureFrmCheck(wf_node) {
     var w = wf_node.FWC_W;
     if (sta == 0)
         return $('');
+    //引入WorkCheck.js
     if (wf_node.FWCSta != 0) {
         if (wf_node.FWCVer == 0 || wf_node.FWCVer == "" || wf_node.FWCVer == undefined)
             pageData.FWCVer = 0;
@@ -932,7 +954,7 @@ function figure_Template_FigureFrmCheck(wf_node) {
             pageData.FWCVer = 1;
     }
 
-    eleHtml = $("<div id='WorkCheck'></div>");
+    eleHtml = $("<div id='WorkCheck'>" + WorkCheck_InitPage()+"</div>");
     eleHtml.css('position', 'absolute').css('top', y).css('left', x).css('width', w).css('height', h);
     return eleHtml;
 }

@@ -35,10 +35,6 @@
 
             var frmID = GetQueryString("SortNo");
 
-            $("#msg").html("正在加载请稍候...");
-            $("#Btn_Imp").hide();
-
-
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Template");
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("Flow_Init");
@@ -55,7 +51,7 @@
 
             html += "<tr>";
             html += "<th>#</th>";
-            html += "<th>模板名称  -  <a href=\"javascript:RetrunToParent()\"><img src='../../Img/ArrUp.gif'>上一级</a></th>";
+            html += "<th>模板名称</th>";
             html += "<th>创建日期</th>";
             html += "</tr>";
 
@@ -83,10 +79,6 @@
 
             $("#Table1").html(html);
 
-            $("#msg").html("");
-            $("#Btn_Imp").show();
-
-
         });
 
         //他的上一级目录.
@@ -113,8 +105,6 @@
         }
         function Imp() {
 
-
-
             var fls = "";
             var inputArray = $("input[type='checkbox']"); //取到所有的input 并且放到一个数组中
             inputArray.each(//使用数组的循环函数 循环这个input数组
@@ -133,50 +123,31 @@
 
             // alert(fls);
 
-            $("#msg").html("<img src='../../Img/loading.gif' />正在导入请稍候，10分钟左右，请不要关闭");
-
             //生成要选择的文件.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Template");
             handler.AddPara("Files", fls);
             handler.AddPara("SortNo", GetQueryString("SortNo"));
             handler.AddPara("DirName", GetQueryString("DirName"));
-
             var data = handler.DoMethodReturnString("Flow_Imp");
             if (data.indexOf('err@') == 0) {
                 $("#msg").html(data);
                 return;
             }
-
-            //    $("#Btn_Imp").hide(); //("正在导入请稍候，10分钟左右，请不要关闭");
-
-            //返回执行结果的数据.
-            var json = eval('(' + data + ')');
-
-            var html = "<table>";
-            html += "<tr>";
-            html += "<th>文件</th>";
-            html += "<th>结果</th>";
-            html += "<th>信息</th>";
-            html += "</tr>";
-
-            for (var i = 0; i < json.length; i++) {
-                var en = json[i];
-                html += "<tr>";
-                html += "<th>" + en.Name + "</th>";
-                html += "<th>" + en.Result + "</th>";
-                html += "<th>" + en.Info + "</th>";
-                html += "</tr>";
+            //若选择的多个模板
+            if (data.indexOf("EndJSON") ==-1) {
+                alert(data);
+                return;
             }
-            html += "/<table>";
-            $("#msg").html(html);
+            //若选择的一个模板，则打开此模板
+            var json = eval('(' + data + ')');
+            $.messager.alert("提示", json.Msg, "icon-info", function () {
+                //打开新建的流程
+                if (typeof window.parent.AppendFlowToFlowSortTree != "undefined") {
+                    window.parent.AppendFlowToFlowSortTree(json.FK_FlowSort, json.FK_Flow, json.FlowName);
+                }
+            });
 
-            //$.messager.alert("提示", json.Msg, "icon-info", function () {
-            //    //打开新建的流程
-            //    if (typeof window.parent.AppendFlowToFlowSortTree != "undefined") {
-            //        window.parent.AppendFlowToFlowSortTree(json.FK_FlowSort, json.FK_Flow, json.FlowName);
-            //    }
-            //});
-            //$("#Btn_Imp").show(); //("导入模板");
+
         }
     </script>
 </head>
@@ -190,12 +161,8 @@
 
     <table id="Table1" class="table table-hover " style="width: 100%; padding: 2px;text-align:left">
     </table>
+    &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="导入模版" onclick='Imp();' />
 
-    &nbsp;&nbsp;<input type="button" id="Btn_Imp" value="导入模版" onclick='Imp();' />
-    <center>
-        <div id="msg"></div>
-        <div id="msg"></div>
-    </center>
-
+    <div id="msg"> </div>
 </body>
 </html>

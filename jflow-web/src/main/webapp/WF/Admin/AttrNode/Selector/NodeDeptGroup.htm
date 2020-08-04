@@ -32,10 +32,8 @@
             var rootNo = "0";
 
             var webUser = new WebUser();
-            if (orgNo == null)
-                orgNo = webUser.OrgNo;
+            rootNo = webUser.OrgNo
 
-            rootNo = orgNo;  
 
             //多对多实体.
             var nodeDepts = new Entities("BP.WF.Template.NodeDepts");
@@ -52,7 +50,7 @@
                 global.selectedNodes.push({
                     "No": no,
                     "Name": name
-                }); 
+                });
             });
 
             loadTree(rootNo, global, orgNo, nodeID);
@@ -111,8 +109,9 @@
                     "checked": checked,
                     "state": 'closed'
                 });
-            } else {
-                 for (var i = 0; i < jsonArray.length; i++) {
+            }
+
+            for (var i = 0; i < jsonArray.length; i++) {
                 var data = jsonArray[i];
                 if (data.ParentNo == parentNo) {
                     var checked = false;
@@ -133,9 +132,6 @@
                     });
                 }
             }
-            }
-
-           
             function _(treeArray) {
                 $.each(treeArray, function (i, o) {
                     if ($.isArray(o.nodes)) {
@@ -185,8 +181,8 @@
             var nodeID = GetQueryString("FK_Node");
             var orgNo = GetQueryString("OrgNo");
 
-            //删除,该组织下已经保存的岗位. 
-            var sql = "DELETE FROM WF_NodeDept WHERE FK_Node=" + nodeID + " AND FK_Dept IN (SELECT No FROM Port_Dept WHERE OrgNo='" + orgNo + "')";
+            //删除,该组织下已经保存的岗位.
+            var sql = "DELETE FROM WF_NodeDept WHERE FK_Dept IN (SELECT No FROM Port_Dept WHERE OrgNo='" + orgNo + "') AND FK_Node=" + nodeID;
             DBAccess.RunSQL(sql);
 
             //获取复选框选中的节点
@@ -199,9 +195,7 @@
                 en.Insert();
 
             }
-            parent.location.reload(); 
-            //self.opener.location.reload(); 
-            //window.opener.document.location.reload();
+            window.close();
         }
 
     </script>

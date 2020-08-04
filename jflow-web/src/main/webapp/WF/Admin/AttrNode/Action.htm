@@ -14,22 +14,6 @@
     <!-- 引用通用的js文件. -->
     <script type="text/javascript" src="../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
-    <script src="../Admin.js"></script>
-    <style>
-        #Btn_New,#Btn_Help{
-            border: 1px solid #031f5d;
-            background-color: #fff;
-            color: #031f5d;
-            background-size: 13px 13px !important;
-            background-position: 1px 6px !important;
-        }
-        #Btn_New{
-            background-image: url(../../Img/Btn/New.png)!important;
-        }
-        #Btn_Help{
-            background-image: url(../../Img/Btn/Help.png)!important;
-        }
-    </style>
     <script type="text/javascript">
         //页面启动函数.
         $(function () {
@@ -41,12 +25,6 @@
 
             var ens = new Entities("BP.Sys.FrmEvents");
             ens.Retrieve("FK_Node", nodeID);
-
-            //修改节点事件数量
-            var node = new Entity("BP.WF.Node", nodeID)
-            node.SetPara("FrmEventsNum", ens.length);
-            node.Update();
-
 
             var html = "<table style='width:98%;'>";
             html += "<caption><img style='margin-bottom:8px;' align='middle' src='../../Img/Event.png' />节点事件 </caption>";
@@ -96,15 +74,15 @@
 
             //事件类型.
             var eventLists = [
-                { No: "WorkArrive", Name: "工作到达", IsHaveMsg: 1, Note: '到达当前的工作的时候.' },
-                { No: "SendWhen", Name: "当节点发送前", IsHaveMsg: 0, Note: '发送前事件，可以抛出异常阻止流程向下发送.' },
-                { No: "SendSuccess", Name: "节点发送成功时", IsHaveMsg: 1, Note: '成功的事件.' },
-                { No: "SendError", Name: "节点发送失败时", IsHaveMsg: 0, Note: '失败后的处理业务.' },
-                { No: "ReturnBefore", Name: "当节点退回前", IsHaveMsg: 0, Note: '退回前的业务逻辑，可以抛出异常阻止退回.' },
-                { No: "ReturnAfter", Name: "当节点退回后", IsHaveMsg: 1, Note: '退回后的业务逻辑.' },
-                { No: "UndoneBefore", Name: "当节点撤销发送前", IsHaveMsg: 0, Note: '可以抛出异常阻止撤销动作.' },
-                { No: "UndoneAfter", Name: "当节点撤销发送后", IsHaveMsg: 1, Note: '.' },
-                { No: "WhenReadWork", Name: "工作打开后", IsHaveMsg: 0, Note: '打开工作的时候，就是接受人阅读的时候.' }
+            { No: "WorkArrive", Name: "工作到达", IsHaveMsg: 1, Note: '到达当前的工作的时候.' },
+            { No: "SendWhen", Name: "当节点发送前", IsHaveMsg: 0, Note: '发送前事件，可以抛出异常阻止流程向下发送.' },
+            { No: "SendSuccess", Name: "节点发送成功时", IsHaveMsg: 1, Note: '成功的事件.' },
+            { No: "SendError", Name: "节点发送失败时", IsHaveMsg: 0, Note: '失败后的处理业务.' },
+            { No: "ReturnBefore", Name: "当节点退回前", IsHaveMsg: 0, Note: '退回前的业务逻辑，可以抛出异常阻止退回.' },
+            { No: "ReturnAfter", Name: "当节点退回后", IsHaveMsg: 1, Note: '退回后的业务逻辑.' },
+            { No: "UndoneBefore", Name: "当节点撤销发送前", IsHaveMsg: 0, Note: '可以抛出异常阻止撤销动作.' },
+            { No: "UndoneAfter", Name: "当节点撤销发送后", IsHaveMsg: 1, Note: '.' },
+            { No: "WhenReadWork", Name: "工作打开后", IsHaveMsg: 0, Note: '打开工作的时候，就是接受人阅读的时候.' }
             ]
 
             for (var i = 0; i < eventLists.length; i++) {
@@ -117,7 +95,7 @@
 
         function GetDoType(doType) {
 
-            var cfg = "@0=禁用@1=执行存储过程@2=执行SQL语句@3=执行URL@4=WebServices(未完成)@5=执行ddl文件的类与方法@6=EventBase类@7=业务单元@8=自定义WebApi";
+            var cfg = "@0=禁用@1=执行存储过程@2=执行SQL语句@3=执行URL@4=WebServices(未完成)@5=执行ddl文件的类与方法@6=EventBase类@7=业务单元";
 
             var cfgs = cfg.split('@');
 
@@ -140,8 +118,8 @@
 <body>
     <form id="cc">
         <div style="right:30px; position:absolute; z-index:100; top:-4px">
-            <input id="Btn_New" type="button" value="新建节点事件" onclick="javascript:New()" />
-            <input id="Btn_Help" type="button" value="什么是节点事件？" onclick="javascript:Help()" />
+            <input type="button" value="新建节点事件" onclick="javascript:New()" />
+            <input type="button" value="什么是节点事件？" onclick="javascript:Help()" />
 
         </div>
         <div style="position:relative;" id="Msg">

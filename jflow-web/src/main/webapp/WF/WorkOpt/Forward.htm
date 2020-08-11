@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>移交</title>
+    <!--
+    1, 退回界面。
+    2，需要 FK_Flow, FK_Node,WorkID, FID.
+    3, 调用方法 ShiftWork.htm?FK_Flow=001&FK_Node=103&WorkID=232&FID=23
+    -->
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <link href="../Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="../Scripts/bootstrap/css/themes/default/style.min.css" rel="stylesheet" />
+
+    <link href="../../DataUser/Style/ccbpm.css" rel="Stylesheet" />
+
+    <script type="text/javascript" src="../Scripts/QueryString.js"></script>
+    <script type="text/javascript" src="../Scripts/bootstrap/js/jquery.min.js"></script>
+    <script src="../Scripts/bootstrap/js/jquery.cokie.min.js"></script>
+    <script src="../Scripts/QueryString2016.js"></script>
+    <script type="text/javascript" src="../Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <!-- 导入配置文件. -->
+    <script type="text/javascript" src="../Scripts/config.js"></script>
+    <script src="../Comm/Gener.js" type="text/javascript"></script>
+    <style type="text/css">
+        body {
+            background: transparent;
+            padding: 10px;
+             text-align:center;
+        }
+
+            body div {
+                text-align: left;
+            }
+
+        #Message {
+            width: 100%;
+        }
+    </style>
+    <script type="text/javascript">
+        var param = {};
+        $(function () {
+            //初始化页面移交页面
+            param = {
+                FK_Node: GetQueryString('FK_Node'),
+                WorkID: GetQueryString('WorkID'),
+                FID: GetQueryString('FID'),
+                Message: GetQueryString('Info'),
+                FK_Flow: GetQueryString("FK_Flow")
+            };
+            $('#Message').val(param.Message);
+            //初始化人员选择窗口
+            var selectEmpModalHtml = '<div class="modal fade" id="selectEmpsModal" style="width: 90%;margin: 10px auto;">' +
+                '<div class="modal-dialog" style="margin: 0px;">'
+                + '<div class="modal-content" style="border-radius:0px;width:700px;">'
+                + '<div class="modal-header">'
+                + '<button type="button" class="close" style="color:white;opacity:1;" data-dismiss="modal" aria-hidden="true">&times;</button>'
+                + '<h4 class="modal-title">选择移交人</h4>'
+                + '</div>'
+                + '<div class="modal-body">'
+                + '<iframe style="width:100%;border:0px;height:800px;" id="iframeSelectEmpsForm" name="iframeSelectEmpsForm"></iframe>'
+                + '</div>'
+                + '</div><!-- /.modal-content -->'
+                + '</div><!-- /.modal-dialog -->'
+                + '</div>';
+
+            $('body').append($(selectEmpModalHtml));
+            var ccs_fk_dept = getQueryStringByNameFromUrl("?" + $.cookie('CCS'), "FK_Dept");
+            if (plant == "JFlow")
+                ccs_fk_dept = $.cookie('FK_Dept');
+            if (ccs_fk_dept == null || ccs_fk_dept == '' || ccs_fk_dept == undefined) {
+                var u = new WebUser();
+                ccs_fk_dept = u.FK_Dept;
+            }
+            $('#iframeSelectEmpsForm').attr('src', "SelectEmps.htm?FK_Dept=" + ccs_fk_dept + "&FK_Node=" + GetQueryString("FK_Node") + "&s=" + Math.random());
+
+            $('#BtnSelectEmps').bind('click', function () { $('#selectEmpsModal').modal().show(); });
+            $("section").show();
+            $(".wait").hide();
+
+        });
+
+        //确定  执行移交操作
+        function ShiftWork() {
+
+            //WorkID, this.FID, this.FK_Node
+            var empNos = frames["iframeSelectEmpsForm"].window.returnVal.No;
+
+            if (empNos == "" || empNos == undefined || empNos == null)
+                return;
+
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
+            handler.AddUrlData();
+            handler.AddPara("ToEmp", empNos);
+            handler.AddPara("Message", $('#Message').val());
+
+            var data = handler.DoMethodReturnString("Shift");
+            data = data.replace("@null", "");
+            $('body').append($('<div>' + data + '</div>'));
+
+            $(".foot").hide();
+
+            setTimeout(function () {
+                if (window.parent != null && window.parent.returnWorkWindowClose != null) {
+                    window.parent.close();
+                    if (window.parent.parent != null && window.parent.parent != undefined)
+                        window.parent.parent.close();
+                    window.parent.returnWorkWindowClose();
+                }
+                window.close();
+
+            }, 3000);
+
+        }
+
+        //取消移交
+        function Close() {
+
+            if (window.parent != null && window.parent.returnWorkWindowClose != null) {
+                window.parent.returnWorkWindowClose("取消");
+            } else {
+                $('body').append($('<div>' + "已取消操作" + '</div>'));
+                window.close();
+            }
+        }
+
+        //设置选中的人员
+        function selectEmpsWindowClose(data) {
+
+            $('#selectEmpsModal').modal('hide');
+            if (data == '取消') {
+                return;
+            }
+
+            $('#ToEmp').val(frames["iframeSelectEmpsForm"].window.returnVal.Name);
+        }
+
+        //撤销移交.
+        function UnShif() {
+
+        }
+    </script>
+
+</head>
+<body style=" padding:10px; text-align:center">
+
+    <div style=" text-align:center">
+        <table style="width:99%; text-align:center;  padding:10px;">
+            <tr>
+                <th> 请选择要移交的人: </th>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type="text" id="ToEmp" name="ToEmp" value='' style="width: 81%;" />
+                    <input type="button" id="BtnSelectEmps" value='选择接受人' />
+                </td>
+            </tr>
+
+            <tr>
+                <th>
+                    移交原因:
+                </th>
+            </tr>
+
+            <tr>
+                <td>
+                    <textarea name="Message" id="Message" style="vertical-align: top; width: 100%;"></textarea>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input type=button value="确定移交" onclick="ShiftWork();" /><input type="button" id="" value="关闭" onclick="Close();" />
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

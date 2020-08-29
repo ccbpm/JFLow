@@ -793,7 +793,7 @@ public class CCFlowAPI
 				}
 
 				String uiIsEnable = dr.getValue("UIIsEnable").toString();
-				if (uiIsEnable.equals("0") == true && lgType.equals("1") == true)
+				if (uiIsEnable.equals("0") == true && lgType.equals("2") == true)
 				{
 					continue; //如果是外键，并且是不可以编辑的状态.
 				}

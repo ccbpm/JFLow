@@ -553,7 +553,7 @@ public class CCFlowAPI
 
 				//把附件放里面
 				myFrmIDs = wk.HisPassedFrmIDs + ",'ND" + fk_node + "'";
-				BP.Sys.FrmAttachment frmAtchs = new FrmAttachment();
+				BP.Sys.FrmAttachments frmAtchs = new FrmAttachments();
 				qo = new QueryObject(frmAtchs);
 				qo.AddWhere(FrmAttachmentAttr.FK_MapData, " IN ", "(" + myFrmIDs + ")");
 				qo.addAnd();

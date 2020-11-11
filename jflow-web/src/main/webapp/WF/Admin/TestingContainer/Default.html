@@ -17,14 +17,11 @@
     <script src="../../Scripts/bootstrap/js/bootstrap.min.js"></script>
     <script src="../../Scripts/bootstrap/BootstrapUIDialog.js"></script>
     <script src="Left.js"></script>
-  
-
-
-
     <script language="javascript" type="text/javascript">
 
         //关闭页面登录admin
         $(window).on('beforeunload', function () {
+
             LetAdminerLogin();
 
         });
@@ -56,11 +53,8 @@
             var url = 'error.htm?err=' + workID;
 
             confirm("测试容器发起错误，请参考以下信息：<\br>" + workID);
-
             // window.open(url, '错误信息', 'height=500,width=600,top=200,left=500,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
-
             window.close();
-
         }
 
         var urlEnd = "&FK_Flow=" + flowNo + "&WorkID=" + workID + "&UserNo=" + userNo + "&SID=" + adminerSID;
@@ -73,9 +67,9 @@
         // 发送成功后刷新页面进入切换用户页面
         function refreshRight() {
             $("#J_iframe").attr('src', "SelectOneUser.html?1=2" + urlEnd);
-            
+
         }
-  
+
         //如果关闭的时候，就让admin登录.
         function LetAdminerLogin() {
             // var adminer = GetQueryString("Adminer"); //管理员.
@@ -87,7 +81,6 @@
             handler.AddPara("SID", sid);
             var data = handler.DoMethodReturnString("Default_LetAdminerLogin");
             window.close();
-
         }
     </script>
     <style type="text/css">
@@ -107,31 +100,39 @@
             min-width: 100%;
             min-height: 500px;
         }
+        #userInfo caption{background-color:#fff!important;text-align:center;border:none!important;height: 45px;text-indent:0!important;color:#000;border-bottom:solid 1px #ccc!important;}
+        .navbar-default table{margin:0!important;border:none!important;}
+        .navbar-default table td{padding:5px 15px;border:none!important;}
+        #Info ul{border:none!important;padding:10px;box-sizing:border-box;}
     </style>
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
     <div id="wrapper">
         <!--左侧导航开始-->
-        <nav class="navbar-default navbar-static-side" role="navigation">
-
+        <nav class="navbar-default navbar-static-side" role="navigation" style="background-color:#f5f5f5!important;border-right:solid 1px #ccc;">
             <div class="sidebar-collapse">
-                <div id="userInfo"></div>
-                <div style="margin-top:15px;text-align:center">操作功能</div>
+                <div id="userInfo" style="box-sizing:border-box;"></div>
+                <div style="background-color:#fff!important;text-align:center;padding:10px;border-top:solid 1px #ccc;border-bottom:solid 1px #ccc;color:#000;font-weight:bold;">
+                    操作功能
+                </div>
                 <div class="sidebar-collapse" id="Info">
+                </div>
+                <div style="background-color:#fff!important;text-align:center;padding:10px;border-top:solid 1px #ccc;border-bottom:solid 1px #ccc;color:#000;font-weight:bold;">
+                    基础功能
+                </div>
+                <div class="sidebar-collapse" id="BaseInfo">
                 </div>
             </div>
         </nav>
         <!--左侧导航结束-->
         <!--右侧部分开始-->
         <div id="page-wrapper" class="gray-bg dashbard-1" style="overflow:hidden">
-
             <div class="row J_mainContent" id="content-main">
                 <iframe id="J_iframe" width="100%" height="100%" frameborder="0" seamless></iframe>
             </div>
         </div>
         <!--右侧部分结束-->
     </div>
-
 
     <!--<body>
         <div id="wrap">
@@ -151,7 +152,5 @@
             </div>
         </div>
     </body>-->
-
-
-
+</body>
 </html>

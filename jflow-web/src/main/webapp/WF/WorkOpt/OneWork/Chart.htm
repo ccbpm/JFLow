@@ -105,19 +105,23 @@
                 return;
 
             }
-
+            var Token=uh["Token"];
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
             handler.AddPara("FK_Flow", fk_Flow);
             handler.AddPara("WorkID", work_ID);
             handler.AddPara("FID", fid);
-            var data = handler.DoMethodReturnString("Chart_Init");
-
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-                return;
+            if(Token!=null&&Token!=undefined&&Token!=""){
+                handler.AddPara("Token", Token);
             }
-
-            jdata = $.parseJSON(data);
+            var data = handler.DoMethodReturnString("Chart_Init");
+            if (typeof(data) === "string") {
+                if (data.indexOf('err@') == 0) {
+                    alert(data);
+                    return;
+                }
+				jdata = JSON.parse(data);
+			}
+            
 
             DrawStart(jdata); //执行绘制信息.
         });
@@ -727,6 +731,8 @@
                 rDir = new RDirection(this.Node, this.ToNode, this.DirType, this.IsCanBack);
                 rDir.FromNode = rFlow.getNode(this.Node);
                 rDir.ToNode = rFlow.getNode(this.ToNode);
+                if (rDir.ToNode == null)
+                    return;
 
                 //计算连线的起始点
                 rDir.rPath = r.drawArr({

@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="../Img/ccbpm.ico" type="image/x-icon" />
     <script type="text/javascript" src="../Scripts/jquery-1.7.2.min.js"></script>
     <script language="JavaScript" src="../Comm/JScript.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../Scripts/QueryString2016.js"></script>
+    <script type="text/javascript" src="../Scripts/QueryString.js"></script>
     <!-- 导入配置文件. -->
     <script type="text/javascript" src="../Scripts/config.js"></script>
     <script type="text/javascript" src="../Comm/Gener.js"></script>
@@ -46,9 +46,7 @@
             //查询出来所有子流程的数据.
             var sf = new Entity("BP.WF.Template.FrmSubFlow", GetQueryString("FK_Node"));
             var node = new Entity("BP.WF.Node", GetQueryString("FK_Node"));
-            if (sf.SFDefInfo.trim().Length == 0)
-                return;
-
+          
             var html = "";
 
             html += "<table width='100%'>";
@@ -155,14 +153,14 @@
 
                     if (item.TodoEmps.indexOf("" + webUser.No + "," + webUser.Name + ";") >= 0) {
                         html += "<td  style='word-break:break-all;' title='" + item.Title + "'>";
-                        html += "<a href=\"javascript:OpenIt('../MyFlow.htm?WorkID=" + item.WorkID + "&FK_Flow=" + item.FK_Flow + "&IsCheckGuide=1&Frms=" + item.Paras_Frms + "&FK_Node=" + item.FK_Node + "&PNodeID=" + item.PNodeID + "&PWorkID=" + item.PWorkID + "')\" ><img src='../Img/Dot.png' width='9px' />&nbsp;" + item.Title + "</a></td>";
+                        html += "<a href=\"javascript:OpenIt('../MyView.htm?WorkID=" + item.WorkID + "&FK_Flow=" + item.FK_Flow + "&IsCheckGuide=1&Frms=" + item.Paras_Frms + "&FK_Node=" + item.FK_Node + "&PNodeID=" + item.PNodeID + "&PWorkID=" + item.PWorkID + "')\" ><img src='../Img/Dot.png' width='9px' />&nbsp;" + item.Title + "</a></td>";
                     } else {
                         if (sf.SFOpenType == 0) {
                             html += "<td  style='word-break:break-all;' title='" + item.Title + "'>";
                             html += "<a href=\"javascript:OpenIt('../WFRpt.htm?WorkID=" + item.WorkID + "&FK_Flow=" + item.FK_Flow + "&PWorkID=" + item.PWorkID + "&PFlowNo=" + item.PFlowNo + "&PNodeID=" + item.PNodeID + "')\" ><img src='../Img/Dot.png' width='9px' />&nbsp;" + item.Title + "</a></td>";
                         } else {
                             html += "<td style='word-break:break-all;' title='" + item.Title + "'>";
-                            html += "<a href=\"javascript:OpenIt('../WorkOpt/FoolFrmTrack.htm?WorkID=" + item.WorkID + "&FK_Flow=" + item.FK_Flow + "')\" ><img src='../Img/Dot.png' width='9px' />&nbsp;" + item.Title + "</a></td>";
+                            html += "<a href=\"javascript:OpenIt('../MyView.htm?WorkID=" + item.WorkID + "&FK_Flow=" + item.FK_Flow + "')\" ><img src='../Img/Dot.png' width='9px' />&nbsp;" + item.Title + "</a></td>";
                         }
                     }
                     //到达节点名称.

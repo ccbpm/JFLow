@@ -23,9 +23,9 @@
     <!-- 导入配置文件. -->
     <script type="text/javascript" src="../Scripts/config.js"></script>
     <script type="text/javascript" src="../Comm/Gener.js"></script>
+    <link href="../Scripts/layui/layui/css/layui.css" rel="stylesheet" />
     <style type="text/css">
-        #TB_Doc
-        {
+        #TB_Doc {
             height: 132px;
             width: 433px;
         }
@@ -238,7 +238,7 @@
                     alert("已到第一级机构");
                     return;
                 }
-                 var webUser = new WebUser();
+                var webUser = new WebUser();
                 // SAAS模式下，限制只可以看到OrgNo级别
                 if (webUser.CCBPMRunModel != 0 && pageData.ParentDept == 100) {
                     alert("已到第一级机构");
@@ -301,28 +301,36 @@
                 return;
             //根据输入的部门编号或者名称获取部门信息
             var ens = new Entities("BP.Port.Depts");
-            ens.RetrieveCond("No,Name", "like", '%'+keyVal+'%');
-           
+            ens.RetrieveCond("No,Name", "like", '%' + keyVal + '%');
+
             //查询到的部门节点就展开
             var $jstree = $('#OrgJSTree').jstree(true);
             for (var i = 0; i < ens.length; i++) {
                 $jstree.open_node($jstree.get_node(ens[i].No));
-                
+
             }
 
         }
     </script>
 </head>
 <body>
-    <label>关键字</label>
-    <!--<input style='width:180px;display:inline' type=text id='TB_Key' name='TB_Key' class='form-control' placeholder="输入部门编号或者名称" />-->
-    <input type="button" onclick="Search()" value="查询" />
-    <input type="button" onclick="Close()" value="取消" /><input type="button" value="上一级"
-                                                               id="toPrevDept" />
-    <input type="button" onclick="SelectEmps()" value="确定" />
-    <div id="OrgJSTree" class="tree-demo jstree jstree-1 jstree-default">
+    <div id="OrgJSTree" class="tree-demo jstree jstree-1 jstree-default" style="position:absolute;bottom:60px;left:0;right:0;top:0; overflow-y:auto;"></div>
+    <div style="position: fixed; bottom: 0; right: 0;">
+        <button type="button" id="toPrevDept" class="layui-btn">
+            <!--<img src="../Img/Btn/JumpWay.png" />--> 上一级
+        </button>
+        <button type="button"  onclick="Close()" class="layui-btn layui-btn-primary">
+            <!--<img src="../Img/Btn/Return.png" />--> 取消
+        </button>
+        <button type="button" onclick="SelectEmps()" class="layui-btn layui-btn-normal">
+            <!--<img src="../Img/Btn/Confirm.png" />--> 确定
+        </button>
+
+        <!--<input type="button" value="上一级" id="toPrevDept" />
+        <input type="button" onclick="Close()" value="取消" />
+        <input type="button" onclick="SelectEmps()" value="确定" />-->
     </div>
-    <input type="button" onclick="Close()" value="取消" /><input type="button" onclick="SelectEmps()"
-                                                               value="确定" />
+    <!--<input type="button" onclick="Close()" value="取消" /><input type="button" onclick="SelectEmps()"
+                                                               value="确定" />-->
 </body>
 </html>

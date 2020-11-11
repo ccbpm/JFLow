@@ -13,7 +13,7 @@
     <link href="../Scripts/bootstrap/css/font-awesome.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/themes/default/style.min.css" rel="stylesheet" />
     <script type="text/javascript" src="../Scripts/QueryString.js"></script>
-    <script type="text/javascript" src="../Scripts/QueryString2016.js"></script>
+    <script type="text/javascript" src="../Scripts/QueryString.js"></script>
 
     <script type="text/javascript" src="../Scripts/bootstrap/js/jquery.min.js"></script>
     <script type="text/javascript" src="../Scripts/bootstrap/js/jquery.cokie.min.js"></script>
@@ -73,6 +73,7 @@
         var param = {};
         var webUser;
         var huiQianType = GetQueryString("HuiQianType");
+        var isFrameCross = GetQueryString("isFrameCross");
         $(function () {
             webUser = new WebUser();
             Help();
@@ -111,7 +112,7 @@
                 var u = new WebUser();
                 dept = u.FK_Dept;
             }
-            var url = "SelectEmps.htm?FK_Dept=" + dept + "&FK_Node=" + GetQueryString("FK_Node") + "&s=" + Math.random();
+            var url = "SelectEmps.htm?IsSelectMore=1&FK_Dept=" + dept + "&FK_Node=" + GetQueryString("FK_Node") + "&s=" + Math.random();
             url = url.replace('=101&', '=10102&');
 
             $('#iframeSelectEmpsForm').attr('src', url);
@@ -324,17 +325,24 @@
             if (data.indexOf('close@') == 0) {
 
                 alert(data.replace('close@', ''));
+                if (isFrameCross == 0) {
+                    if (window.parent != null && window.parent.returnWorkWindowClose != null) {
+                        window.parent.returnWorkWindowClose("");
+                        window.parent.close();
 
-                if (window.parent != null && window.parent.returnWorkWindowClose != null) {
-                    window.parent.returnWorkWindowClose("");
-                    window.parent.close();
+                    } else {
+
+                        $('body').append($('<div>' + "已取消操作" + '</div>'));
+
+                        window.close();
+                    }
 
                 } else {
-
-                    $('body').append($('<div>' + "已取消操作" + '</div>'));
-
-                    window.close();
+                    ChildrenPostMessage("", "returnWorkWindowClose");
+					window.parent.close();
                 }
+
+               
                 return;
             }
 

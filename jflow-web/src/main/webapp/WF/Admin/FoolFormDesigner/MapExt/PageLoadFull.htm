@@ -22,10 +22,7 @@
     <!-- 引用通用的js文件. -->
     <script type="text/javascript" src="../../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../../Comm/Gener.js"></script>
-
     <script src="../../Admin.js"></script>
-
-
     <script type="text/javascript">
         //页面启动函数.
         $(function () {
@@ -40,7 +37,6 @@
             var i = mapExt.RetrieveFromDBSources();
             if (i == 0) {
                 document.getElementById("Btn_Delete").disabled = false;
-                //$("#Btn_Delete").display = false;
             }
 
             //给主键赋值.
@@ -57,7 +53,8 @@
                 var mapDtl = mapDtls[i];
 
                 html += "<tr>";
-                html += "<th>填充从表:" + mapDtl.No + " " + mapDtl.Name + "<br>" + GenerFields(mapDtl.No) + "</th>";
+                html += "<th> 填充从表:" + mapDtl.No + " " + mapDtl.Name +"</th>";
+                html += "<td><font color=green>" + GenerFields(mapDtl.No) + "</font></td>";
                 html += "</tr>";
 
                 var sqlVal = '';
@@ -78,7 +75,7 @@
                 sqlVal = FormatSQL(sqlVal);
 
                 html += "<tr>";
-                html += "<td><textarea  id='TB_" + mapDtl.No + "' style='width:99%;' >" + sqlVal + "</textarea></td>";
+                html += "<td colspan=2><textarea  id='TB_" + mapDtl.No + "' style='width:99%;' >" + sqlVal + "</textarea></td>";
                 html += "</tr>";
 
                 //    html += "<br>填充方式:<select id='DDL_" + mapDtl.No + "' ><option value='0' >每次打开的时候填充</option></select>";
@@ -89,7 +86,6 @@
 
             //给field赋值.
 
-
             $("#fields").html(GenerFields(frmID));
 
         });
@@ -98,7 +94,7 @@
             var mapAttrs = new Entities("BP.Sys.MapAttrs");
             mapAttrs.Retrieve("FK_MapData", frmID);
 
-            var strs = "字段:";
+            var strs = "<b>可用字段</b>:";
             for (var i = 0; i < mapAttrs.length; i++) {
                 var en = mapAttrs[i];
                 if (en.KeyOfEn == "OID" || en.KeyOfEn == "RDT" || en.KeyOfEn == "CDT" || en.KeyOfEn == "FID")
@@ -177,23 +173,25 @@
     <form method="post" action="" id="form1">
         <div id="bar" class="cs-tr cs-bar">
             <label style="float:left;font-size:15px;font-weight:bolder;">装载填充</label>
+
             <input id="Btn_Save" type="button" value="保存" onclick="Save()" />
-           <!--<input id="Btn_Delete" type="button" value="删除" onclick="Delete()" />-->
+            <input id="Btn_Delete" type="button" value="删除" onclick="Delete()" />
+
         </div>
 
-
         <fieldset>
-
             <legend>主表SQL设置</legend>
             <br />
-            <div id="fields"></div>
             <textarea name="TB_SQL" class="SQL" rows="7" cols="70" id="TB_SQL" style="width: 99%;"></textarea>
+            <font color="green"><div id="fields"></div> </font> 
+        </fieldset>
+        <fieldset>
 
+            <legend>从表SQL设置</legend>
             <div id="dtls">
             </div>
-
-
         </fieldset>
+
 
         <fieldset>
             <legend id="Help">帮助</legend>
@@ -206,6 +204,7 @@
                 <!--<li><font color="green">  </font> </li>-->
             </ul>
         </fieldset>
+
 
     </form>
 </body>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>自定义附件组件</title>
-    <script src="../../WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../WF/Scripts/easyUI145/jquery.min.js"></script>
     <script type="text/javascript" src="../../WF/Scripts/config.js"></script>
     <script src="../../WF/Comm/Gener.js"  type="text/javascript" ></script>
     
@@ -10,22 +10,12 @@
         //页面启动函数.
         $(function () {
 
-            /** 如果您要把该页面转入其他页面，请按照如下方式处理.
+        /** 如果您要把该页面转入其他页面，请按照如下方式处理.
             var url = window.location.href;
             url = url.replace('AthSelf.htm', 'XXXX.jsp');
-            window.location.href = url;
-            return;
-            */
-
-            var ath = GetQueryString("FK_FrmAttachment");
-            var flowNo = GetQueryString("FK_Flow");
-
-            if (ath == "ND101_Ath1" || flowNo=="001" ) {
-                var url = window.location.href;
-                url = url.replace('Ath.htm', '/WFExt/CCForm/xxxx.aspx');
                 window.location.href = url;
                 return;
-            }
+                */
 
             var url = window.location.href;
             $("#url").html(url);

@@ -23,7 +23,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 
 	 @param ens 实体集合
 	 @param refKey 查询的外键
-	 @param val 外键值
+	 @param refVal 外键值
 	 @return 返回实体集合
 	 * @throws Exception 
 	*/
@@ -222,8 +222,6 @@ public abstract class Entity extends EnObj implements Serializable
 
 	/** 
 	 把一个实体转化成Json.
-	 
-	 @param isInParaFields 是否转换参数字段
 	 @return 返回该实体的单个json
 	 * @throws Exception 
 	*/
@@ -328,7 +326,7 @@ public abstract class Entity extends EnObj implements Serializable
 	/** 
 	 创建一个空的表
 	 
-	 @param en
+	 @param
 	 @return 
 	*/
 
@@ -484,7 +482,7 @@ public abstract class Entity extends EnObj implements Serializable
 	/** 
 	 在此实体是运行sql 返回结果集合
 	 
-	 @param sql 要运行的sql
+	 @param ps 要运行的sql
 	 @return 执行的结果
 	*/
 	public final int RunSQL(Paras ps)throws Exception
@@ -545,8 +543,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 查询SQL返回int
 	 
 	 @param sql
-	 @param paras
-	 @return 
+	 @return
 	*/
 
 	public final int RunSQLReturnValInt(String sql)throws Exception
@@ -842,7 +839,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 
 	 @param attrKey 要产生的列
 	 @param attrGroupKey 分组的列名
-	 @param FKVal 分组的主键
+	 @param attrGroupVal 分组的主键
 	 @return 		
 	*/
 	public final String GenerNewNoByKey(int nolength, String attrKey, String attrGroupKey, String attrGroupVal)throws Exception
@@ -1150,7 +1147,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @param idxAttr Idx列
 	 @param entityPKVal 要插入的指定实体主键值
 	 @param groupKey 列名
-	 @param groupVal 列值
+	 @param
 	 * @throws Exception 
 	*/
 	protected final void DoOrderInsertTo(String idxAttr, Object entityPKVal, String groupKey) throws Exception
@@ -1441,8 +1438,8 @@ public abstract class Entity extends EnObj implements Serializable
 	/** 
 	 按照属性查询
 	 
-	 @param attr 属性名称
-	 @param val 值
+	 @param attr1 属性名称
+	 @param val1 值
 	 @return 是否查询到
 	 * @throws Exception 
 	*/
@@ -1465,8 +1462,8 @@ public abstract class Entity extends EnObj implements Serializable
 	/** 
 	 按照属性查询
 	 
-	 @param attr 属性名称
-	 @param val 值
+	 @param attr1 属性名称
+	 @param val1 值
 	 @return 是否查询到
 	 * @throws Exception 
 	*/
@@ -2945,7 +2942,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 保存文件到数据库
 	 
 	 @param saveToField 要保存的字段
-	 @param bytes 文件流
+	 @param bytesOfFile 文件流
 	 * @throws Exception 
 	*/
 	public final void SaveFileToDB(String saveToField, byte[] bytesOfFile) throws Exception
@@ -3126,7 +3123,6 @@ public abstract class Entity extends EnObj implements Serializable
 			{
 				case Oracle:
 				case DM:
-				case KingBase:
 					sql = SqlBuilder.GenerCreateTableSQLOfOra(this);
 					break;
 				case Informix:

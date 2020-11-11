@@ -35,7 +35,7 @@
             fontSize: '12px',
             border: '0',
             /*borderLeft:'5px solid #fff',*/
-            padding: '5px 40px 5px 20px'
+            padding: '5px 30px 5px 20px'
         },
         itemHoverStyle: {
             border: '0',
@@ -68,8 +68,8 @@
             jsPlumb.makeSource($(e), {
                 parent: p,
                 anchor: "Continuous",
-                endpoint: ["Dot", { radius: 1}],
-                connector: ["Flowchart", { stub: [5, 5]}],
+                endpoint: ["Dot", { radius: 1 }],
+                connector: ["Flowchart", { stub: [5, 5] }],
                 connectorStyle: defaults.connectorPaintStyle,
                 hoverPaintStyle: defaults.connectorHoverStyle,
                 dragOptions: {},
@@ -132,15 +132,15 @@
         jsPlumb.importDefaults({
             DragOptions: { cursor: 'pointer' },
             EndpointStyle: { fillStyle: '#225588' },
-            Endpoint: ["Dot", { radius: 1}],
+            Endpoint: ["Dot", { radius: 1 }],
             ConnectionOverlays: [
-				["Arrow", { location: 1}],
-				["Label", {
-				    location: 0.1,
-				    id: "label",
-				    cssClass: "aLabel"
-				}]
-			],
+                ["Arrow", { location: 1 }],
+                ["Label", {
+                    location: 0.1,
+                    id: "label",
+                    cssClass: "aLabel"
+                }]
+            ],
             Anchor: 'Continuous',
             ConnectorZIndex: 5,
             HoverPaintStyle: defaults.connectorHoverStyle
@@ -168,40 +168,52 @@
                     icon = row.icon;
                 }
                 $(nodeDiv).attr("id", nodeId)
-					.attr("style", row.style)
-					.attr("process_to", row.process_to)
-					.attr("process_id", row.id)
-					.addClass("process-step btn btn-small")//给节点名称添加一个span元素
-					.html('<span class="process-flag badge ' + badge + '"  alt=' + nodeId + ' ><i class="' + icon + ' icon-white"></i></span>&nbsp;<span id="span_' + row.id + '"  >' + row.process_name + '</span>')
-					.mousedown(function (e) {
-					    if (e.which == 3) { //右键绑定
-					        _canvas.find('#leipi_active_id').val(row.id);
-					        contextmenu.bindings = defaults.processMenus;
-					        var nodeID = document.getElementById("leipi_active_id");
-					        var node = new Entity("BP.WF.Node", nodeID.value);
+                    .attr("style", row.style)
+                    .attr("process_to", row.process_to)
+                    .attr("process_id", row.id)
+                    .addClass("process-step btn btn-small")//给节点名称添加一个span元素
+                    .html('<span class="process-flag badge ' + badge + '"  alt=' + nodeId + ' ><i class="' + icon + ' icon-white"></i></span>&nbsp;<span id="span_' + row.id + '"  >' + row.process_name + '</span>')
+                    .mousedown(function (e) {
+                        if (e.which == 3) { //右键绑定
+                            _canvas.find('#leipi_active_id').val(row.id);
+                            contextmenu.bindings = defaults.processMenus;
 
-					        if (node.RunModel == 0) {
-					            $('#pmfun span').text("普通:" + nodeID.value);
-					        }
-					        else if (node.RunModel == 1) {
-					            $('#pmfun span').text("合流:" + nodeID.value);
-					        }
-					        else if (node.RunModel == 2) {
-					            $('#pmfun span').text("分流:" + nodeID.value);
-					        }
-					        else if (node.RunModel == 3) {
-					            $('#pmfun span').text("分合流:" + nodeID.value);
-					        }
-					        else if (node.RunModel == 4) {
-					            $('#pmfun span').text("子线程:" + nodeID.value);
-					        }
-					        $(this).contextMenu('processMenu', contextmenu);
-					        ////$(this).contextMenu('processMenu3', contextmenu);
-					        //$(this).mouseenter(function () {
-					        //	$(this).contextMenu('processMenu3', contextmenu);
-					        //});
-					    }
-					});
+                            var nodeID = document.getElementById("leipi_active_id");
+                            var node = new Entity("BP.WF.Node", nodeID.value);
+
+                            if (node.RunModel == 0) {
+                                $('#pmfun span').text("普通:" + nodeID.value);
+                            }
+                            if (node.RunModel == 1) {
+                                $('#pmfun span').text("合流:" + nodeID.value);
+                            }
+                            if (node.RunModel == 2) {
+                                $('#pmfun span').text("分流:" + nodeID.value);
+                            }
+                            if (node.RunModel == 3) {
+                                $('#pmfun span').text("分合流:" + nodeID.value);
+                            }
+                            if (node.RunModel == 4) {
+                                $('#pmfun span').text("子线程:" + nodeID.value);
+                            }
+
+                            if (node.FWCSta == 0) {
+                                $('#pmWorkCheck span').text("审核组件-禁用");
+                            }
+                            if (node.FWCSta == 1) {
+                                $('#pmWorkCheck span').text("审核组件-启用");
+                            }
+                            if (node.FWCSta == 2) {
+                                $('#pmWorkCheck span').text("审核组件-只读");
+                            }
+
+                            $(this).contextMenu('processMenu', contextmenu);
+                            ////$(this).contextMenu('processMenu3', contextmenu);
+                            //$(this).mouseenter(function () {
+                            //	$(this).contextMenu('processMenu3', contextmenu);
+                            //});
+                        }
+                    });
                 _canvas.append(nodeDiv);
                 //索引变量
                 lastProcessId = row.id;
@@ -214,17 +226,17 @@
                 var labDiv = document.createElement('div');
                 var labId = "lab" + lab.id, badge = 'badge-inverse';
                 $(labDiv).attr("id", labId)
-					.attr("style", lab.style)
-					.attr("process_id", lab.id)
-					.addClass("process-lab")
-					.html('<span class="process-flag badge ' + badge + '"></span>&nbsp;<span id="lab_span_' + lab.id + '">' + lab.process_name + '</span>')
-					.mousedown(function (e) {
-					    if (e.which == 3) { //右键绑定
-					        _canvas.find('#leipi_active_id').val(lab.id);
-					        contextmenu.bindings = defaults.canvasLabMenu;
-					        $(this).contextMenu('canvasLabMenu', contextmenu);
-					    }
-					});
+                    .attr("style", lab.style)
+                    .attr("process_id", lab.id)
+                    .addClass("process-lab")
+                    .html('<span class="process-flag badge ' + badge + '"></span>&nbsp;<span id="lab_span_' + lab.id + '">' + lab.process_name + '</span>')
+                    .mousedown(function (e) {
+                        if (e.which == 3) { //右键绑定
+                            _canvas.find('#leipi_active_id').val(lab.id);
+                            contextmenu.bindings = defaults.canvasLabMenu;
+                            $(this).contextMenu('canvasLabMenu', contextmenu);
+                        }
+                    });
                 _canvas.append(labDiv);
             });
         }
@@ -234,7 +246,7 @@
         $(".process-step").live('click', function () {
             //激活
             _canvas.find('#leipi_active_id').val($(this).attr("process_id")),
-				clearTimeout(timeout);
+                clearTimeout(timeout);
             var obj = this;
             timeout = setTimeout(defaults.fnClick, 300);
         }).live('dblclick', function () {
@@ -344,7 +356,7 @@
             dropOptions: { hoverClass: "hover", activeClass: "active" },
             anchor: "Continuous",
             maxConnections: -1,
-            endpoint: ["Dot", { radius: 1}],
+            endpoint: ["Dot", { radius: 1 }],
             paintStyle: { fillStyle: "#ec912a", radius: 1 },
             hoverPaintStyle: this.connectorHoverStyle,
             beforeDrop: function (params) {
@@ -422,41 +434,55 @@
                     icon = row.icon;
                 }
                 $(nodeDiv).attr("id", nodeId)
-					.attr("style", row.style)
-					.attr("process_to", row.process_to)
-					.attr("process_id", row.id)
-					.addClass("process-step btn btn-small")
-					.html('<span class="process-flag badge ' + badge + '"><i class="' + icon + ' icon-white"></i></span>&nbsp;<span id="span_' + row.id + '">' + row.process_name + '</span>')
-					.mousedown(function (e) {
-					    if (e.which == 3) { //右键绑定
-					        _canvas.find('#leipi_active_id').val(row.id);
-					        contextmenu.bindings = defaults.processMenus;
-					        var nodeID = document.getElementById("leipi_active_id");
-					        var node = new Entity("BP.WF.Node", nodeID.value);
+                    .attr("style", row.style)
+                    .attr("process_to", row.process_to)
+                    .attr("process_id", row.id)
+                    .addClass("process-step btn btn-small")
+                    .html('<span class="process-flag badge ' + badge + '"><i class="' + icon + ' icon-white"></i></span>&nbsp;<span id="span_' + row.id + '">' + row.process_name + '</span>')
+                    .mousedown(function (e) {
+                        if (e.which == 3) { //右键绑定
+                            _canvas.find('#leipi_active_id').val(row.id);
+                            contextmenu.bindings = defaults.processMenus;
+                            var nodeID = document.getElementById("leipi_active_id");
+                            var node = new Entity("BP.WF.Node", nodeID.value);
 
-					        if (node.RunModel == 0) {
-					            $('#pmfun span').text("普通" + nodeID.value);
-					        }
-					        
-                             if (node.RunModel == 1) {
-					            $('#pmfun span').text("合流");
-					        }
-					        
-                             if (node.RunModel == 2) {
-					            $('#pmfun span').text("分流");
-					        }
-					        
-                             if (node.RunModel == 3) {
-					            $('#pmfun span').text("分合流");
-					        }
-					        
-                             if (node.RunModel == 4) {
-					            $('#pmfun span').text("子线程");
-					        }
 
-					        $(this).contextMenu('processMenu', contextmenu);
-					    }
-					});
+                            $('#pmAttribute span').text("节点" + nodeID.value + "属性");
+
+
+                            if (node.RunModel == 0) {
+                                $('#pmfun span').text("普通" + nodeID.value);
+                            }
+
+                            if (node.RunModel == 1) {
+                                $('#pmfun span').text("合流");
+                            }
+
+                            if (node.RunModel == 2) {
+                                $('#pmfun span').text("分流");
+                            }
+
+                            if (node.RunModel == 3) {
+                                $('#pmfun span').text("分合流");
+                            }
+
+                            if (node.RunModel == 4) {
+                                $('#pmfun span').text("子线程");
+                            }
+
+                            if (node.FWCSta == 0) {
+                                $('#pmWorkCheck span').text("审核组件-禁用");
+                            }
+                            if (node.FWCSta == 1) {
+                                $('#pmWorkCheck span').text("审核组件-启用");
+                            }
+                            if (node.FWCSta == 2) {
+                                $('#pmWorkCheck span').text("审核组件-只读");
+                            }
+
+                            $(this).contextMenu('processMenu', contextmenu);
+                        }
+                    });
 
                 _canvas.append(nodeDiv);
                 //使之可拖动 和 连线
@@ -467,7 +493,7 @@
                     dropOptions: { hoverClass: "hover", activeClass: "active" },
                     anchor: "Continuous",
                     maxConnections: -1,
-                    endpoint: ["Dot", { radius: 1}],
+                    endpoint: ["Dot", { radius: 1 }],
                     paintStyle: { fillStyle: "#ec912a", radius: 1 },
                     hoverPaintStyle: this.connectorHoverStyle,
                     beforeDrop: function (params) {
@@ -499,17 +525,17 @@
                 var labId = "lab" + lab.id, badge = 'badge-inverse';
 
                 $(labDiv).attr("id", labId)
-					.attr("style", lab.style)
-					.attr("process_id", lab.id)
-					.addClass("process-lab")
-					.html('<span class="process-flag badge ' + badge + '"></span>&nbsp;<span id="lab_span_' + lab.id + '">' + lab.process_name + '</span>')
-					.mousedown(function (e) {
-					    if (e.which == 3) { //右键绑定
-					        _canvas.find('#leipi_active_id').val(lab.id);
-					        contextmenu.bindings = defaults.canvasLabMenu;
-					        $(this).contextMenu('canvasLabMenu', contextmenu);
-					    }
-					});
+                    .attr("style", lab.style)
+                    .attr("process_id", lab.id)
+                    .addClass("process-lab")
+                    .html('<span class="process-flag badge ' + badge + '"></span>&nbsp;<span id="lab_span_' + lab.id + '">' + lab.process_name + '</span>')
+                    .mousedown(function (e) {
+                        if (e.which == 3) { //右键绑定
+                            _canvas.find('#leipi_active_id').val(lab.id);
+                            contextmenu.bindings = defaults.canvasLabMenu;
+                            $(this).contextMenu('canvasLabMenu', contextmenu);
+                        }
+                    });
 
                 _canvas.append(labDiv);
                 //使之可拖动 和 连线

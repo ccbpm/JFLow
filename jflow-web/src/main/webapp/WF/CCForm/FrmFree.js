@@ -61,6 +61,7 @@ function GenerFreeFrm(mapData, frmData) {
         var frmImgAth = frmData.Sys_FrmImgAth[i];
         var createdFigure = figure_Template_ImageAth(frmImgAth);
         $('#CCForm').append(createdFigure);
+       
     }
 
 
@@ -71,6 +72,7 @@ function GenerFreeFrm(mapData, frmData) {
             continue;
         var createdFigure = figure_Template_Attachment(frmAttachment);
         $('#CCForm').append(createdFigure);
+        AthTable_Init(frmAttachment, "Div_" + frmAttachment.MyPK);
     }
 
     // 主表扩展(统计从表)
@@ -142,6 +144,12 @@ function GenerFreeFrm(mapData, frmData) {
             $('#CCForm').append(figure_Template_FigureThreadDtl(wf_FrmNodeComponent, mapData));
         }
     }
+    //xu
+    /*var rel = /style='[^=>]*'([(\s+\w+=)|>])/g
+    var rels = /style="[^=>]*"([(\s+\w+=)|>])/g
+    $('#CCForm').html($('#CCForm').html().replace(rel, ''));
+    $('#CCForm').html($('#CCForm').html().replace(rels, ''));*/
+   
 
 }
 
@@ -227,7 +235,7 @@ function figure_Template_FigureFrmCheck(wf_node, mapData, frmData) {
             pageData.FWCVer = 1;
     }
 
-    var eleHtml = $("<div id='WorkCheck'>" + WorkCheck_InitPage() +"</div>");
+    var eleHtml = $("<div id='WorkCheck'></div>");
     eleHtml.css('position', 'absolute').css('top', y + 'px').css('left', x + 'px').css('width', w + 'px').css('height', h + 'px');
     return eleHtml;
 }
@@ -260,16 +268,12 @@ function PreaseFlowCtrls(flowCtrls, ctrlID) {
         });
 
         return jsonObj;
-
-        //alert(jsonObj + " -> " + JSON.stringify(jsonObj));
-
     }
 }
 
 //子线程
 function figure_Template_FigureThreadDtl(wf_node, mapData) {
 
-    //FrmThreadSta Sta,FrmThread_X X,FrmThread_Y Y,FrmThread_H H,FrmThread_W
     var sta = wf_node.FrmThreadSta;
     if (sta == 0 || sta == '0' || sta == undefined)
         return $('');
@@ -665,12 +669,12 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                         eleHtml += data + html;
                     }
                     else {
-                        eleHtml += "<img src='/DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\"  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                        eleHtml += "<img src='/DataUser/Siganture/" + val + ".jpg' alt='" + val + "'  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                     }
                     isSigantureChecked = true;
                 }
                 else {
-                    eleHtml += "<img src='/DataUser/Siganture/siganture.jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\" ondblclick='figure_Template_Siganture(\"" + mapAttr.KeyOfEn + "\",\"" + val + "\",\"0\")' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    eleHtml += "<img src='/DataUser/Siganture/siganture.jpg'   ondblclick='figure_Template_Siganture(\"" + mapAttr.KeyOfEn + "\",\"" + val + "\",\"0\")' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 }
                 return eleHtml;
             }
@@ -683,7 +687,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                 sealData.Retrieve("OID", GetQueryString("OID"), "FK_Node", GetQueryString("FK_Node"), "SealData", mapAttr.DefVal);
 
                 if (sealData.length > 0) {
-                    eleHtml += "<img src='/DataUser/Siganture/" + mapAttr.DefVal + ".jpg' style='border:0px;'  id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    eleHtml += "<img src='/DataUser/Siganture/" + mapAttr.DefVal + ".jpg' alt='" + mapAttr.DefVal +"' style='border:0px;'  id='Img" + mapAttr.KeyOfEn + "' />" + html;
                     isSigantureChecked = true;
                 }
                 else {
@@ -703,7 +707,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
                     eleHtml += data + html;
                 }
                 else {
-                    eleHtml += "<img src='/DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                    eleHtml += "<img src='/DataUser/Siganture/" + val + ".jpg' alt='" + val + "' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
 
                 }
                 return eleHtml;
@@ -711,7 +715,7 @@ function figure_MapAttr_TemplateEle(mapAttr) {
             if (mapAttr.IsSigan == "4") {
                 //var val = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
                 var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + mapAttr.DefVal + "' type=hidden />";
-                eleHtml += "<img src='/DataUser/Siganture/" + mapAttr.DefVal + ".jpg' onerror=\"this.src='/DataUser/Siganture/Templete.JPG'\"  style='border:0px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                eleHtml += "<img src='/DataUser/Siganture/" + mapAttr.DefVal + ".jpg' alt='" + mapAttr.DefVal +"'  style='border:0px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 //eleHtml += "<img src='../DataUser/Siganture/" + val + ".jpg' onerror=\"this.src='../DataUser/Siganture/UnName.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                 return eleHtml;
             }
@@ -1163,26 +1167,9 @@ function figure_Template_Attachment(frmAttachment) {
         return $('');
     }
 
-    var src = "Ath.htm";
-    var local = window.location.href;
-    if (local.indexOf('CCBill') != -1) {
-        src = '../CCForm/' + src;
-    }
-
-    if (pageData.IsReadonly == "1")
-        src = src + "?PKVal=" + pageData.OID + "&PWorkID=" + GetQueryString("PWorkID") + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&IsReadonly=1&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
-    else
-        src = src + "?PKVal=" + pageData.OID + "&PWorkID=" + GetQueryString("PWorkID") + "&Ath=" + ath.NoOfObj + "&FK_MapData=" + ath.FK_MapData + "&FK_FrmAttachment=" + ath.MyPK + "&FK_Node=" + pageData.FK_Node + "&FK_Flow=" + pageData.FK_Flow;
-
-    var fid = GetQueryString("FID");
-    var pWorkID = GetQueryString("PWorkID");
-
-    src += "&FID=" + fid;
-    src += "&PWorkID=" + pWorkID;
-
-    eleHtml += '<div>' + "<iframe style='width:" + ath.W + "px;height:" + ath.H + "px;' ID='Attach_" + ath.MyPK + "' name='Attach'   src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    eleHtml += '<div id="Div_' + frmAttachment.MyPK + '" name="Ath"></div>';
     eleHtml = $(eleHtml);
-    eleHtml.css('position', 'absolute').css('top', ath.Y + 'px').css('left', ath.X + 'px').css('width', ath.W).css('height', ath.H);
+    eleHtml.css('position', 'absolute').css('top', ath.Y).css('left', ath.X).css('width', ath.W).css('height', ath.H);
 
     return eleHtml;
 }

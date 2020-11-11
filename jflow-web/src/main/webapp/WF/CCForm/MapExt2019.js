@@ -280,7 +280,6 @@ function ReturnValCCFormPopValGoogle(ctrl, fk_mapExt, refEnPK, width, height, ti
     if (typeof ctrl == "string") {
         ctrl = document.getElementById(ctrl);
     }
-    debugger
     var wfpreHref = GetLocalWFPreHref();
     var fd;
 
@@ -609,7 +608,7 @@ function CheckInput(oInput, filter) {
 function CheckRegInput(oInput, filter, tipInfo) {
     var mapExt = $('#' + oInput).data();
     var filter = mapExt.Doc.replace(/【/g, '[').replace(/】/g, ']').replace(/（/g, '(').replace(/）/g, ')').replace(/｛/g, '{').replace(/｝/g, '}');
-    var oInputVal = $("[name=" + oInput + ']').val();
+    var oInputVal = $("#" + oInput).val();
     var result = true;
     if (oInput != '') {
         var re = filter;
@@ -625,16 +624,16 @@ function CheckRegInput(oInput, filter, tipInfo) {
         result = re.test(oInputVal);
     }
     if (!result) {
-        $("[name=" + oInput + ']').addClass('errorInput');
+        $("#" + oInput).addClass('errorInput');
         var errorId = oInput+"error";
         if($("#"+errorId).length == 0){
            var span = $("<span id='"+errorId+"' style='color:red'></span>");
-           $("[name=" + oInput + ']').parent().append(span);
+           $("#" + oInput ).parent().append(span);
         }
         $("#"+errorId).html(tipInfo);
 
     } else {
-        $("[name=" + oInput + ']').removeClass('errorInput');
+        $("#" + oInput).removeClass('errorInput');
         var errorId = oInput+"error";
         if ($("#" + errorId).length != 0)
             $("#" + errorId).remove();
@@ -1003,13 +1002,16 @@ function FullDtl(selectVal, mapExt) {
             var fullDtl = dataObj.Head[i][k];
             //  alert('您确定要填充从表吗?，里面的数据将要被删除。' + key + ' ID= ' + fullDtl);
             var frm = document.getElementById('Dtl_' + fullDtl);
+
             var src = frm.src;
-            var idx = src.indexOf("&Key");
-            if (idx == -1)
-                src = src + '&Key=' + selectVal + '&FK_MapExt=' + mapExt.MyPK;
-            else
-                src = src.substring(0, idx) + '&ss=d&Key=' + selectVal + '&FK_MapExt=' + mapExt.MyPK;
-            frm.src = src;
+            if (src != undefined || src != null) {
+                var idx = src.indexOf("&Key");
+                if (idx == -1)
+                    src = src + '&Key=' + selectVal + '&FK_MapExt=' + mapExt.MyPK;
+                else
+                    src = src.substring(0, idx) + '&ss=d&Key=' + selectVal + '&FK_MapExt=' + mapExt.MyPK;
+                frm.src = src;
+            }
         }
     }
 }

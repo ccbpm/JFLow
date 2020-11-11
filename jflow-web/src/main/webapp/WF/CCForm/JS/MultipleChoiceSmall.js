@@ -43,7 +43,7 @@ function MultipleChoiceSmall(mapExt, mapAttr, frmData, tbID, rowIndex, OID) {
                     var en = new Entity("BP.Sys.SFTable", mapExt.Tag3);
                     data = en.DoMethodReturnJSON("GenerDataOfJson");
                     frmData[mapExt.Tag3] = data;
-                } 
+                }
             } else {
                 var en = new Entity("BP.Sys.SFTable", mapExt.Tag3);
                 data = en.DoMethodReturnJSON("GenerDataOfJson");
@@ -51,15 +51,14 @@ function MultipleChoiceSmall(mapExt, mapAttr, frmData, tbID, rowIndex, OID) {
             break;
         case 4:
             var tag4SQL = mapExt.Tag4;
-            tag4SQL = tag4SQL.replace('@WebUser.No', webUser.No);
-            tag4SQL = tag4SQL.replace('@WebUser.Name', webUser.Name);
-            tag4SQL = tag4SQL.replace('@WebUser.FK_DeptName', webUser.FK_DeptName);
-            tag4SQL = tag4SQL.replace('@WebUser.FK_Dept', webUser.FK_Dept);
 
+            tag4SQL = DealExp(tag4SQL, webUser);
             if (tag4SQL.indexOf('@') == 0) {
                 alert('约定的变量错误:' + tag4SQL + ", 没有替换下来.");
                 return;
             }
+            tag4SQL = tag4SQL.replace(/~/g, "'");
+
             data = DBAccess.RunSQLReturnTable(tag4SQL);
             break;
     }
@@ -72,7 +71,7 @@ function MultipleChoiceSmall(mapExt, mapAttr, frmData, tbID, rowIndex, OID) {
         }
 
         var tb = $("#" + tbID);
-        var w = tb.outerWidth();
+        var w = "100%"; //tb.outerWidth();
         var h = tb.outerHeight();
         tb.hide();
 
@@ -110,6 +109,7 @@ function MultipleChoiceSmall(mapExt, mapAttr, frmData, tbID, rowIndex, OID) {
 
         cbx.combobox("loadData", data);
         $(".textbox-text").css("width", w);
+        $(".easyui-fluid").css("width", w);
 
         if (mapAttr != null && mapAttr.UIIsEnable != 1) {
             cbx.combobox('disable');
@@ -286,37 +286,37 @@ function DeptEmpModelAdv0(mapExt) {
 }
 
 
-function MultipleInputSearch(mapExt, defaultVal,tbID) {
+function MultipleInputSearch(mapExt, defaultVal, tbID) {
     if (tbID == null || tbID == undefined) {
         tbID = "TB_" + mapExt.AttrOfOper;
     }
-   var tb= $("#" + tbID);
+    var tb = $("#" + tbID);
     var width = tb.width();
     var height = tb.height();
     tb.hide();
     //获取当前元素是否在P标签内
     var parent;
     var container;
-    if(tb.parent().length == 1 && tb.parent()[0].tagName.toUpperCase()=="P"){
+    if (tb.parent().length == 1 && tb.parent()[0].tagName.toUpperCase() == "P") {
         parent = tb.parent()[0];
         var ptext = $(parent).text();
-        if(ptext.indexOf(tb.attr("data-name"))!=-1){
+        if (ptext.indexOf(tb.attr("data-name")) != -1) {
             var _html = $(parent).html();
-            $(parent).html(_html.replace(ptext,""));
-            tb= $("#" + tbID);
-            tb.before($("<div style='float:left'>"+ptext+"</div>"));
+            $(parent).html(_html.replace(ptext, ""));
+            tb = $("#" + tbID);
+            tb.before($("<div style='float:left'>" + ptext + "</div>"));
 
             container = $("<div style='float:left'></div>");
             tb.before(container);
             tb.before($("<div style='clear:both'></div>"));
 
-        }else{
+        } else {
             container = $("<div></div>");
             tb.before(container);
         }
 
 
-    }else{
+    } else {
         container = $("<div></div>");
         tb.before(container);
     }
@@ -325,14 +325,14 @@ function MultipleInputSearch(mapExt, defaultVal,tbID) {
 
 
     container.attr("id", mapExt.AttrOfOper + "_comboTree");
-   
+
     container.addClass("select-tree-wrap");
 
     var dbSrc = mapExt.Doc; //搜索数据源
     //处理sql，url参数.
     dbSrc = dbSrc.replace(/~/g, "'");
     dbSrc = DealExp(dbSrc);
-  
+
     var listSrc = mapExt.Tag1;//列表数据源
     listSrc = listSrc.replace(/~/g, "'");
     listSrc = DealExp(listSrc);
@@ -344,10 +344,10 @@ function MultipleInputSearch(mapExt, defaultVal,tbID) {
         defaultVal = defaultVal.substr(0, defaultVal.length - 1);
         valArray = defaultVal.split(",");
     }
-    
+
     $('#' + mapExt.AttrOfOper + "_comboTree").comboTree({
         source: dbSrc,
-        listSource:listSrc,
+        listSource: listSrc,
         isMultiple: true,
         isFirstClassSelectable: false, //第一级是否可选
         cascadeSelect: true,

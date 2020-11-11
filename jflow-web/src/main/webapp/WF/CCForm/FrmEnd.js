@@ -6,7 +6,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
     var html = "";
     for (var i = 0; i < mapAttrs.length; i++) {
         var mapAttr = mapAttrs[i];
-        if (mapAttr.UIVisible == 0 && $("#TB_"+mapAttr.KeyOfEn).length ==0) {
+        if (mapAttr.UIVisible == 0 && $("#TB_" + mapAttr.KeyOfEn).length == 0) {
             var defval = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
             html = "<input type='hidden' id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + defval + "' />";
             html = $(html);
@@ -24,13 +24,15 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
         $('#DDL_' + mapAttr.KeyOfEn).attr("name", "DDL_" + mapAttr.KeyOfEn);
         $('#CB_' + mapAttr.KeyOfEn).attr("name", "CB_" + mapAttr.KeyOfEn);
 
+        if (mapAttr.UIContralType == 18)
+            continue;
         var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
-        if (mapAttr.DefValType == 0 && mapAttr.DefVal == "10002" && (val == "10002"||val=="10002.0000"))
+        if (mapAttr.DefValType == 0 && mapAttr.LGType != 1 &&  (val == "0" || val == "0.0000"))
             val = "";
         frmAttrData.push({ "KeyOfEn": mapAttr.KeyOfEn, "Val": val });
 
         //为树形结构的外键或者外部数据源
-        if (mapAttr.AtPara !=null && mapAttr.AtPara.indexOf("@CodeStruct=1") != -1) {
+        if (mapAttr.AtPara != null && mapAttr.AtPara.indexOf("@CodeStruct=1") != -1) {
             var parentNo = GetPara(mapAttr.AtPara, "ParentNo");
             var pushData = frmData[mapAttr.KeyOfEn];
             if (pushData == undefined)
@@ -45,18 +47,18 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                 else
                     parentNo = "0";
             }
-            
-            
+
+
             pushData = findChildren(pushData, parentNo);
             $('#DDL_' + mapAttr.KeyOfEn).combotree('loadData', pushData);
             if (mapAttr.UIIsEnable == 0)
                 $('#DDL_' + mapAttr.KeyOfEn).combotree({ disabled: true });
 
             $('#DDL_' + mapAttr.KeyOfEn).combotree('setValue', val);
-           
+
             continue;
         }
-        
+
         if ($('#DDL_' + mapAttr.KeyOfEn).length == 1) {
             // 判断下拉框是否有对应option, 若没有则追加
             if (val != "" && $("option[value='" + val + "']", '#DDL_' + mapAttr.KeyOfEn).length == 0) {
@@ -70,9 +72,9 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             }
             if (val != "") {
                 $('#DDL_' + mapAttr.KeyOfEn).val(val);
-                $('#DDL_' + mapAttr.KeyOfEn).attr("value",val);
+                $('#DDL_' + mapAttr.KeyOfEn).attr("value", val);
             }
-                
+
             continue;
         }
 
@@ -82,21 +84,32 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
         if (mapAttr.UIContralType == 0) {
             if (mapAttr.AtPara && mapAttr.AtPara.indexOf("@IsRichText=1") >= 0) {
                 $('#editor').val(val);
-            } else {
-                if (mapAttr.MyDataType == 8 && val!="") {
-                    //获取DefVal,根据默认的小数点位数来限制能输入的最多小数位数
-                    var attrdefVal = mapAttr.DefVal;
-                    var bit;
-                    if (attrdefVal != null && attrdefVal !== "" && attrdefVal.indexOf(".") >= 0)
-                        bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
-                    else
-                        bit = 2;
-                    if (bit == 2)
-                        val = formatNumber(val, 2, ",");
-                }
-                $('#TB_' + mapAttr.KeyOfEn).attr("value", val);
-                $('#TB_' + mapAttr.KeyOfEn).val(val);
+                continue;
             }
+            if (mapAttr.MyDataType == 6 || mapAttr.MyDataType == 7) {
+                $('#TB_' + mapAttr.KeyOfEn).attr("value", val);
+                continue;
+            }
+
+            if (mapAttr.IsSupperText == 1) {
+                $('#TB_' + mapAttr.KeyOfEn).html(val);
+                continue;
+            }
+
+            if (mapAttr.MyDataType == 8 && val != "") {
+                //获取DefVal,根据默认的小数点位数来限制能输入的最多小数位数
+                var attrdefVal = mapAttr.DefVal;
+                var bit;
+                if (attrdefVal != null && attrdefVal !== "" && attrdefVal.indexOf(".") >= 0)
+                    bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
+                else
+                    bit = 2;
+                if (bit == 2)
+                    val = formatNumber(val, 2, ",");
+            }
+
+            $('#TB_' + mapAttr.KeyOfEn).attr("value", val);
+            $('#TB_' + mapAttr.KeyOfEn).val(val);
             continue;
         }
 
@@ -125,61 +138,83 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             }
         }
 
-       
+
 
         if (mapAttr.UIContralType == 14) {//签批组件
             $("#TB_" + mapAttr.KeyOfEn).hide();
+            if (window.document.location.href.indexOf("AdminFrm.htm") != -1)
+                continue;
             //获取审核组件信息
             var node = frmData.WF_Node == undefined ? null : frmData.WF_Node[0];
             if (node != null && (node.FWCVer == 0 || node.FWCVer == "" || node.FWCVer == undefined))
-                pageData.FWCVer = 0;
+                FWCVer = 0;
             else
-                pageData.FWCVer = 1;
-            if (isFistQuestWorkCheck == true && node!=null) {
-                $.getScript('./WorkOpt/WorkCheck.js', function () { });
+                FWCVer = 1;
+            if (isFistQuestWorkCheck == true && node != null) {
+                //loadScript('./WorkOpt/WorkCheck.js', function () {
+                //    isFistQuestWorkCheck = false;
+                //    checkData = WorkCheck_Init();
+                //});
+                Skip.addJs(ccbpmPath + "/WF/WorkOpt/WorkCheck.js");
                 isFistQuestWorkCheck = false;
-                checkData = WorkCheck_Init();
+                checkData = WorkCheck_Init(FWCVer );
+
             }
             if (checkData != null && checkData != undefined) {
                 var checkField = ""
-                if (frmData.FrmNode != null && frmData.FrmNode != undefined) {
-                    checkField = frmData.FrmNode[0].CheckField;
+                if (frmData.WF_FrmNode != null && frmData.WF_FrmNode != undefined) {
+                    checkField = frmData.WF_FrmNode[0].CheckField;
                 } else {
                     checkField = checkData.WF_FrmWorkCheck[0].CheckField;
                 }
-                var _Html = "<div>" + GetWorkCheck_Node(checkData, mapAttr.KeyOfEn, checkField) + "</div>";
+                var _Html = "<div>" + GetWorkCheck_Node(checkData, mapAttr.KeyOfEn, checkField,FWCVer ) + "</div>";
                 $("#TB_" + mapAttr.KeyOfEn).after(_Html);
             }
-           
             continue;
         }
 
-        if (mapAttr.UIContralType == 15) {//评论组件
+        if (mapAttr.UIContralType == 15) { //评论组件
             $("#TB_" + mapAttr.KeyOfEn).hide();
-            //获取所有的评论内容
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
-            handler.AddUrlData();
-            var data = handler.DoMethodReturnString("FlowBBSList");
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-                console.log(data);
-            }
+
             $("#TB_" + mapAttr.KeyOfEn).after("<div id='FlowBBS'></div>");
-            ShowFlowBBS(JSON.parse(data), mapAttr.KeyOfEn, frmData.Sys_MapData[0].No, frmData.Sys_MapData[0].Name, frmData.WF_Node[0].NodeName);
             continue;
         }
-        if (mapAttr.UIContralType == 17) { //公文字号
+
+        if (mapAttr.UIContralType == 110) { //公文正文组件
             if (mapAttr.UIIsEnable == 1 && pageData.IsReadonly != "1") {
                 var localHref = GetLocalWFPreHref();
-                var url = localHref + "/WF/CCForm/Components/DocWord.htm?FrmID=" + frmData.Sys_MapData[0].No + "&OID=" + pageData.WorkID;
-                $("#TB_DocWord").attr("readonly","readonly");
-                $("#TB_DocWord").on("dblclick", function () {
-                    window.OpenBootStrapModal(url, "DocWordIFrame", "公文字号", 600, 200, "icon-edit", false);
+                var url = localHref + "/WF/CCForm/Components/GovDocFile.htm?FrmID=" + frmData.Sys_MapData[0].No + "&OID=" + pageData.WorkID + "&FK_Flow=" + GetQueryString("FK_Flow");
+                $("#TB_GovDocFile").attr("readonly", "readonly");
+                $("#TB_GovDocFile").on("click", function () {
+                    window.OpenBootStrapModal(url, "GovDocFileIFrame", "公文正文组件", 600, 200, "icon-edit", false);
                 })
             }
+            continue;
         }
-        
 
+        if (mapAttr.UIContralType == 17) { //发文字号
+            if (mapAttr.UIIsEnable == 1 && pageData.IsReadonly != "1") {
+                var localHref = GetLocalWFPreHref();
+                var url = localHref + "/WF/CCForm/Components/DocWord.htm?FrmID=" + frmData.Sys_MapData[0].No + "&OID=" + pageData.WorkID + "&FK_Flow=" + GetQueryString("FK_Flow");
+                $("#TB_DocWord").attr("readonly", "readonly");
+                $("#TB_DocWord").on("click", function () {
+                    window.OpenBootStrapModal(url, "DocWordIFrame", "发文字号", 600, 200, "icon-edit", false);
+                })
+            }
+            continue;
+        }
+
+        if (mapAttr.UIContralType == 170) { //收文字号
+            if (mapAttr.UIIsEnable == 1 && pageData.IsReadonly != "1") {
+                var localHref = GetLocalWFPreHref();
+                var url = localHref + "/WF/CCForm/Components/DocWordReceive.htm?FrmID=" + frmData.Sys_MapData[0].No + "&OID=" + pageData.WorkID + "&FK_Flow=" + GetQueryString("FK_Flow");
+                $("#TB_DocWordReceive").attr("readonly", "readonly");
+                $("#TB_DocWordReceive").on("click", function () {
+                    window.OpenBootStrapModal(url, "DocWordReceiveIFrame", "收文字号", 600, 200, "icon-edit", false);
+                })
+            }
+            continue;
+        }
     }
 
     //增加审核组件附件上传的功能
@@ -195,7 +230,11 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
 
     //设置为只读的字段.
     for (var i = 0; i < mapAttrs.length; i++) {
+
         var mapAttr = mapAttrs[i];
+        //去掉左右空格.
+        mapAttr.KeyOfEn = mapAttr.KeyOfEn.replace(/(^\s*)|(\s*$)/g, "");
+
         //设置文本框只读.
         if (mapAttr.UIVisible != 0 && (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")) {
             $('#TB_' + mapAttr.KeyOfEn).attr('disabled', true);
@@ -227,7 +266,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
 
         //傻瓜表单/累加表单
         if (frmType == 0 || frmType == 10) {
-            InitFoolLink(mapAttr, frmType); 
+            InitFoolLink(mapAttr, frmType);
             continue;
         }
         //开发者表单
@@ -235,12 +274,30 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             InitDevelopLink(mapAttr, frmType);
         }
 
-        
+
     }
 }
 
 //傻瓜表单/累加表单初始化联动
 function InitFoolLink(mapAttr, frmType) {
+    var AtPara = mapAttr.AtPara;
+    if (AtPara == "" || AtPara == null || AtPara == undefined || AtPara.indexOf('@IsEnableJS=1') ==-1)
+        return;
+
+    if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1 && mapAttr.UIIsEnable != 0) {
+        var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
+        cleanAll(mapAttr.KeyOfEn);
+        setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, selecedval, "");
+        
+    }
+    //外键类型.
+    if (mapAttr.LGType == "2" && mapAttr.MyDataType == "1") {
+        var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
+        cleanAll(mapAttr.KeyOfEn);
+        setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, selecedval, "");
+      
+    }
+
     if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) {  // AppInt Enum
         if (mapAttr.AtPara && mapAttr.AtPara.indexOf('@IsEnableJS=1') >= 0) {
             if (mapAttr.UIContralType == 1) {
@@ -255,10 +312,10 @@ function InitFoolLink(mapAttr, frmType) {
 
                 //初始化页面的值
                 var nowKey = ddl.val();
-                if (nowKey == null || nowKey == undefined || nowKey == "")
+                if (nowKey == null || nowKey == undefined || nowKey == "" || nowKey==-1)
                     return;
 
-                setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey,frmType);
+                setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey, frmType);
 
             }
             if (mapAttr.UIContralType == 3) {
@@ -270,7 +327,7 @@ function InitFoolLink(mapAttr, frmType) {
                 }
 
                 var nowKey = $('input[name="RB_' + mapAttr.KeyOfEn + '"]:checked').val();
-                if (nowKey == null || nowKey == undefined || nowKey == "")
+                if (nowKey == null || nowKey == undefined || nowKey == "" || nowKey == -1)
                     return;
                 setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey, frmType);
 
@@ -318,7 +375,7 @@ function InitDevelopLink(mapAttr, frmType) {
                 }
 
                 var nowKey = $('input[name="RB_' + mapAttr.KeyOfEn + '"]:checked').val();
-                if (nowKey == null || nowKey == undefined || nowKey == "")
+                if (nowKey == null || nowKey == undefined || nowKey == "" || nowKey == -1)
                     return;
                 setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, nowKey, frmType);
 
@@ -487,7 +544,8 @@ function AfterBindEn_DealMapExt(frmData) {
         var PopModel = mapAttr.GetPara("PopModel");
 
         if (PopModel != undefined && PopModel != "" && mapExt.ExtType == mapAttr.GetPara("PopModel") && mapAttr.GetPara("PopModel") != "None") {
-            
+            if (mapAttr.UIVisible == 0 || mapAttr.UIIsEnable==0 || pageData.IsReadonly=="1" || $("#TB_" + mapAttr.KeyOfEn).length == 0)
+                continue;
             PopMapExt(mapAttr, mapExt, frmData);
             continue;
         }
@@ -495,6 +553,8 @@ function AfterBindEn_DealMapExt(frmData) {
         //处理文本自动填充
         var TBModel = mapAttr.GetPara("TBFullCtrl");
         if (TBModel != undefined && TBModel != "" && TBModel != "None" && (mapExt.ExtType == "FullData")) {
+            if (mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")
+                continue;
             var tbAuto = $("#TB_" + mapExt.AttrOfOper);
             if (tbAuto == null)
                 continue;
@@ -507,6 +567,8 @@ function AfterBindEn_DealMapExt(frmData) {
         //下拉框填充其他控件
         var DDLFull = mapAttr.GetPara("IsFullData");
         if (DDLFull != undefined && DDLFull != "" && DDLFull == "1" && (mapExt.MyPK.indexOf("DDLFullCtrl") != -1)) {
+            if (mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")
+                continue;
             //枚举类型
             if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1 && mapAttr.UIContralType == 3) {
                 var ddlOper = $('input:radio[name="RB_' + mapExt.AttrOfOper + '"]');
@@ -538,10 +600,11 @@ function AfterBindEn_DealMapExt(frmData) {
         }
 
         switch (mapExt.ExtType) {
+
             case "MultipleChoiceSmall":
                 if (mapExt.DoWay == 0)
                     break;
-                if (mapAttr.UIIsEnable == 0 && mapExt.Tag == 0) {
+                if ((mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1") && mapExt.Tag == 0) {
                     var oid = (pageData.WorkID || pageData.OID || "");
                     var ens = new Entities("BP.Sys.FrmEleDBs");
                     ens.Retrieve("FK_MapData", mapAttr.FK_MapData, "EleID", mapAttr.KeyOfEn, "RefPKVal", oid);
@@ -551,16 +614,29 @@ function AfterBindEn_DealMapExt(frmData) {
                         if (defaultVal.indexOf(ens[k].Tag1) == -1)
                             continue;
                         val += ens[k].Tag2 + ",";
-                    }                
+                    }
                     if (val == "")
                         val = frmData.MainTable[0][mapAttr.KeyOfEn + "T"];
-                    $("#TB_" + mapAttr.KeyOfEn).val(val);
+                    $("#TB_" + mapAttr.KeyOfEn).hide();
+                    var w = $("#TB_" + mapAttr.KeyOfEn).parent().width();
+                    $("#TB_" + mapAttr.KeyOfEn).after("<label style='color: #666;font-size: 0.95em!important;width:" + w + "px'>" + val + "</label>");
                     break;
                 }
                 MultipleChoiceSmall(mapExt, mapAttr, frmData); //调用 /CCForm/JS/MultipleChoiceSmall.js 的方法来完成.
                 break;
+            case "SingleChoiceSmall":
+                if (mapExt.DoWay == 0)
+                    break;
+                if ((mapAttr.UIIsEnable == 0 || pageData.IsReadonly=="1") && mapExt.Tag == 0) {
+                    var val = frmData.MainTable[0][mapAttr.KeyOfEn + "T"];
+                    $("#TB_" + mapAttr.KeyOfEn).val(val);
+                    break;
+                }
+                SingleChoiceSmall(mapExt, mapAttr, frmData); //调用 /CCForm/JS/MultipleChoiceSmall.js 的方法来完成.
+                break;
+
             case "MultipleChoiceSearch":
-                if (mapAttr.UIIsEnable == 0)
+                if (mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")
                     break;
                 MultipleChoiceSearch(mapExt); //调用 /CCForm/JS/MultipleChoiceSmall.js 的方法来完成.
                 break;
@@ -569,14 +645,16 @@ function AfterBindEn_DealMapExt(frmData) {
                 if (mapAttr.UIIsEnable == 0) {
                     defaultVal = defaultVal.replace(new RegExp("[[]", "gm"), "").replace(/] /g, "");
                     defaultVal = defaultVal.substr(0, defaultVal.length - 1);
-                    $("#TB_" + mapAttr.KeyOfEn).val(vals);
+                    $("#TB_" + mapAttr.KeyOfEn).val(defaultVal);
                     break;
                 }
-                    
-                
+
+
                 MultipleInputSearch(mapExt, defaultVal); //调用 /CCForm/JS/MultipleChoiceSmall.js 的方法来完成.
                 break;
             case "BindFunction": //控件绑定函数
+                if (mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")
+                    continue;
                 if (mapAttr.MyDataType == 6 || mapAttr.MyDataType == 7) {
                     if ($('#TB_' + mapExt.AttrOfOper).length == 1) {
                         var minDate = $('#TB_' + mapExt.AttrOfOper).attr("data-info");
@@ -644,6 +722,27 @@ function AfterBindEn_DealMapExt(frmData) {
                     break;
                 }
                 break;
+            case "ReqDays": //配置自动计算日期天数lz
+                //获取配置的字段
+
+                var ResRDT = mapExt.AttrOfOper;//接收计算天数结果
+                var StarRDT = mapExt.Tag1;//开始日期
+                var EndRDT = mapExt.Tag2;//结束日期
+                var RDTRadio = mapExt.Tag3;//是否包含节假日 0包含，1不包含
+                var res = "";
+                $('#TB_' + EndRDT).focus(function () {
+                    $('#TB_' + ResRDT).val("");
+                });
+                //当结束日期文本框失去焦点时
+                $('#TB_' + EndRDT).blur(function () {
+                    //计算量日期天数
+                    res = CalculateRDT($('#TB_' + StarRDT).val(), $('#TB_' + EndRDT).val(), RDTRadio);
+                    if (res == "" || res == "NaN")
+                        $('#TB_' + EndRDT).val("");
+                    $('#TB_' + ResRDT).val(res);
+                });
+
+                break;
             case "RegularExpression": //正则表达式  统一在保存和提交时检查
 
 
@@ -664,27 +763,31 @@ function AfterBindEn_DealMapExt(frmData) {
                 if (mapAttr.UIIsEnable == false || mapAttr.UIIsEnable == 0 || GetQueryString("IsReadonly") == "1")
                     continue;
                 var tbFastInput = $("#TB_" + mapExt.AttrOfOper);
-               
-                //获取大文本的长度
-                var left = tbFastInput.parent().css('left') == "auto" ? 0 : parseInt(tbFastInput.parent().css('left').replace("px", ""));
-                var width = tbFastInput.width() + left;
-                width = tbFastInput.parent().css('left') == "auto" ? width - 70 : width - 180;
 
-                var content = $("<span style='margin-left:" + width + "px;top: -15px;position: relative;' id='span_" + mapExt.AttrOfOper+"'></span><br/>");
-                tbFastInput.after(content);
+                //获取大文本的长度
+                var left = 0;
+                if (tbFastInput.parent().length!=0)
+                    left = tbFastInput.parent().css('left') == "auto" ? 0 : parseInt(tbFastInput.parent().css('left').replace("px", ""));
+                var width = tbFastInput.width() + left;
+                width = tbFastInput.parent().css('left') == "auto" ? width - 180 : width - 70;
+
+                var content = $("<span style='margin-left:" + width + "px;top: -15px;position: relative;' id='span_" + mapExt.AttrOfOper + "'></span><br/>");
                 content.append("<a href='javascript:void(0)' onclick='TBHelp(\"TB_" + mapExt.AttrOfOper + "\",\"" + mapExt.MyPK + "\")'>常用词汇</a> <a href='javascript:void(0)' onclick='clearContent(\"TB_" + mapExt.AttrOfOper + "\")'>清空<a>");
+                tbFastInput.after(content);
                 tbFastInput.on("mouseover", function () {
-                    $("#span_" + mapExt.AttrOfOper).show();
-                    tbFastInput.focus();
+                    $("#" + this.id.replace("TB_", "span_")).show();
+                    // tbFastInput.focus();
                 });
                 tbFastInput.on("blur", function () {
-                    $("#span_" + mapExt.AttrOfOper).hide();
-                    
+                    $("#" + this.id.replace("TB_", "span_")).hide();
+
                 });
                 $("#span_" + mapExt.AttrOfOper).hide();
                 break;
 
             case "ActiveDDL": /*自动初始化ddl的下拉框数据. 下拉框的级联操作 已经 OK*/
+                if (mapAttr.UIIsEnable == 0 || pageData.IsReadonly == "1")
+                    continue;
                 var ddlPerant = $("#DDL_" + mapExt.AttrOfOper);
                 var ddlChild = $("#DDL_" + mapExt.AttrsOfActive);
                 if (ddlPerant == null || ddlChild == null)
@@ -708,6 +811,30 @@ function AfterBindEn_DealMapExt(frmData) {
                 if (mapExt.Doc == undefined || mapExt.Doc == '')
                     continue;
                 calculator(mapExt);
+                break;
+            case "RMBDaXie": //RMB转换成大写
+
+                if (mapExt.Doc == undefined || mapExt.Doc == '')
+                    continue;
+                //动态加载转大写的js
+                if (location.href.indexOf("CCForm") > 0) {
+
+                    Skip.addJs("../Data/JSLibData/CovertMoneyToDaXie.js");
+                } else if (location.href.indexOf("CCBill") > 0) {
+
+                    Skip.addJs("../Data/JSLibData/CovertMoneyToDaXie.js");
+                } else {
+
+                    Skip.addJs("Data/JSLibData/CovertMoneyToDaXie.js");
+                }
+                var tbDoc = $('#TB_' + mapExt.AttrOfOper);
+                var tb = $('#TB_' + mapExt.Doc);
+                tbDoc.bind("change", function () {
+                    var expVal = $("#" + this.id).val();//获取要转换的值
+                    tb.val(Rmb2DaXie(expVal));//给大写的文本框赋值
+                });
+                var expVal = tbDoc.val();//获取要转换的值
+                tb.val(Rmb2DaXie(expVal));//给大写的文本框赋值
                 break;
             case "AutoFullDtlField": //主表扩展(统计从表)
                 var docs = mapExt.Doc.split("\.");
@@ -763,8 +890,10 @@ function AfterBindEn_DealMapExt(frmData) {
                     });
                 }
                 break;
+
             case "DataFieldInputRole": //时间限制
                 if (mapExt.DoWay == 1) {
+                    //限制历史日期
                     var tag1 = mapExt.Tag1;
                     if (tag1 == 1) {
                         $('#TB_' + mapExt.AttrOfOper).removeAttr("onfocus");
@@ -785,7 +914,6 @@ function AfterBindEn_DealMapExt(frmData) {
                         } else if (frmDate == 6) {
                             dateFmt = "MM-dd";
                         }
-
                         var minDate = '%y-%M-#{%d}';
                         $('#TB_' + mapExt.AttrOfOper).attr("data-info", minDate); //绑定时间大小限制的记录
                         var functionPK = $('#TB_' + mapExt.AttrOfOper).attr("data-funcionPK");
@@ -793,25 +921,79 @@ function AfterBindEn_DealMapExt(frmData) {
                             $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
                                 WdatePicker({ dateFmt: dateFmt, minDate: minDate });
                             });
+
                         } else {
                             $('#TB_' + mapExt.AttrOfOper).unbind("focus");
-
                             var bindFunctionExt = new Entity("BP.Sys.MapExt", functionPK);
                             $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
 
                                 WdatePicker({
                                     dateFmt: dateFmt, minDate: minDate, onpicked: function (dp) {
                                         $(this).blur(); //失去焦点 
+
                                         DBAccess.RunFunctionReturnStr(bindFunctionExt.Doc);
                                     }
                                 });
                             });
 
                         }
-
-
                     }
+                    //限制用户指定选择的日期
+                    var tag2 = mapExt.Tag2;
+                    if (tag2 == 1) {
+                        var frmDate = mapAttr.IsSupperText; //获取日期格式
+                        var dateFmt = '';
+                        if (frmDate == 0) {
+                            dateFmt = "yyyy-MM-dd";
+                        } else if (frmDate == 1) {
+                            dateFmt = "yyyy-MM-dd HH:mm";
+                        } else if (frmDate == 2) {
+                            dateFmt = "yyyy-MM-dd HH:mm:ss";
+                        } else if (frmDate == 3) {
+                            dateFmt = "yyyy-MM";
+                        } else if (frmDate == 4) {
+                            dateFmt = "HH:mm";
+                        } else if (frmDate == 5) {
+                            dateFmt = "HH:mm:ss";
+                        } else if (frmDate == 6) {
+                            dateFmt = "MM-dd";
+                        }
+                        var RDTVal = "";
+                        //根据选择的条件进行日期限制
+                        switch (mapExt.Tag3) {
+                            case "dayu":
+                                RDTVal = $('#TB_' + mapExt.Tag4);
+                                $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
+                                    WdatePicker({ dateFmt: dateFmt, maxDate: RDTVal.val() });
+                                });
+                                break;
+                            case "dayudengyu":
+                                RDTVal = $('#TB_' + mapExt.Tag4);
+                                $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
+                                    WdatePicker({ dateFmt: dateFmt, maxDate: RDTVal.val() });
+                                });
+                                break;
+                            case "xiaoyu":
+                                RDTVal = $('#TB_' + mapExt.Tag4);
+                                $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
+                                    WdatePicker({ dateFmt: dateFmt, minDate: RDTVal.val() });
+                                });
+                                break;
+                            case "xiaoyudengyu":
+                                RDTVal = $('#TB_' + mapExt.Tag4);
+                                $('#TB_' + mapExt.AttrOfOper).bind("focus", function () {
+                                    WdatePicker({ dateFmt: dateFmt, minDate: RDTVal.val() });
+                                });
+                                break;
+                            case "budengyu":
+                                if ($('#TB_' + mapExt.AttrOfOper).val() == $('#TB_' + mapExt.Tag4).val()) {
+                                    alert("所选日期不能等于" + $('#TB_' + mapExt.Tag4).val());
+                                    $('#TB_' + mapExt.AttrOfOper).val("");
 
+                                }
+                                break;
+                        }
+                    }
                 }
                 break;
             default:
@@ -830,7 +1012,40 @@ function AfterBindEn_DealMapExt(frmData) {
 
     });
 }
+//計算日期間隔
+function CalculateRDT(StarRDT, EndRDT, RDTRadio) {
 
+    var res = "";
+    var demoRDT;
+    demoRDT = StarRDT.split("-");
+    StarRDT = new Date(demoRDT[0] + '-' + demoRDT[1] + '-' + demoRDT[2]);  //转换为yyyy-MM-dd格式
+    demoRDT = EndRDT.split("-");
+    EndRDT = new Date(demoRDT[0] + '-' + demoRDT[1] + '-' + demoRDT[2]);
+    res = parseInt((EndRDT - StarRDT) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
+    //判断结束日期是否早于开始日期
+    if (parseInt(EndRDT / 1000 / 60 / 60 / 24) < parseInt(StarRDT / 1000 / 60 / 60 / 24)) {
+        alert("结束日期不能早于开始日期");
+        res = "";
+    }
+    else {
+        //当包含节假日的时候
+        if (RDTRadio == 0) {
+            var holidayEn = new Entity("BP.Sys.GloVar");
+            holidayEn.No = "Holiday";
+            if (holidayEn.RetrieveFromDBSources() == 1) {
+                var holidays = holidayEn.Val.split(",");
+                res = res - (holidays.length - 1);
+                //检查计算的天数
+                if (res <= 0) {
+                    alert("请假时间内均为节假日");
+                    res = "";
+                }
+            }
+        }
+    }
+    return res;
+
+}
 /**Pop弹出框的处理**/
 function PopMapExt(mapAttr, mapExt, frmData) {
     switch (mapAttr.GetPara("PopModel")) {
@@ -864,71 +1079,7 @@ function PopMapExt(mapAttr, mapExt, frmData) {
         case "PopTableSearch": //表格查询.
             PopTableSearch(mapExt); //调用 /CCForm/JS/Pop.js 的方法来完成.
             break;
-        case "PopVal": //PopVal窗返回值.
-            var tb = $('[name$=' + mapExt.AttrOfOper + ']');
-            tb.attr("onclick", "ShowHelpDiv('TB_" + mapExt.AttrOfOper + "','','" + mapExt.MyPK + "','" + mapExt.FK_MapData + "','returnvalccformpopval');");
-            tb.attr("ondblclick", "ReturnValCCFormPopValGoogle(this,'" + mapExt.MyPK + "','" + mapExt.FK_MapData + "', " + mapExt.W + "," + mapExt.H + ",'" + GepParaByName("Title", mapExt.AtPara) + "');");
 
-            tb.attr('readonly', 'true');
-            var icon = '';
-            var popWorkModelStr = '';
-            var popWorkModelIndex = mapExt.AtPara != undefined ? mapExt.AtPara.indexOf('@PopValWorkModel=') : -1;
-            if (popWorkModelIndex >= 0) {
-                popWorkModelIndex = popWorkModelIndex + '@PopValWorkModel='.length;
-                popWorkModelStr = mapExt.AtPara.substring(popWorkModelIndex, popWorkModelIndex + 1);
-            }
-            switch (popWorkModelStr) {
-                /// <summary>                
-                /// 自定义URL                
-                /// </summary>                
-                //SelfUrl =1,                
-                case "1":
-                    icon = "glyphicon glyphicon-th";
-                    break;
-                /// <summary>                
-                /// 表格模式                
-                /// </summary>                
-                // TableOnly,                
-                case "2":
-                    icon = "glyphicon glyphicon-list";
-                    break;
-                /// <summary>                
-                /// 表格分页模式                
-                /// </summary>                
-                //TablePage,                
-                case "3":
-                    icon = "glyphicon glyphicon-list-alt";
-                    break;
-                /// <summary>                
-                /// 分组模式                
-                /// </summary>                
-                // Group,                
-                case "4":
-                    icon = "glyphicon glyphicon-list-alt";
-                    break;
-                /// <summary>                
-                /// 树展现模式                
-                /// </summary>                
-                // Tree,                
-                case "5":
-                    icon = "glyphicon glyphicon-tree-deciduous";
-                    break;
-                /// <summary>                
-                /// 双实体树                
-                /// </summary>                
-                // TreeDouble                
-                case "6":
-                    icon = "glyphicon glyphicon-tree-deciduous";
-                    break;
-                default:
-                    break;
-            }
-            tb.width(tb.width() - 40);
-            tb.height('auto');
-            var eleHtml = ' <div class="input-group form_tree" style="width:' + tb.width() + 'px;height:' + tb.height() + 'px">' + tb.parent().html() +
-                '<span class="input-group-addon" onclick="' + "ReturnValCCFormPopValGoogle(document.getElementById('TB_" + mapExt.AttrOfOper + "'),'" + mapExt.MyPK + "','" + mapExt.FK_MapData + "', " + mapExt.W + "," + mapExt.H + ",'" + GepParaByName("Title", mapExt.AtPara) + "');" + '"><span class="' + icon + '"></span></span></div>';
-            tb.parent().html(eleHtml);
-            break;
         default: break;
     }
 }
@@ -1006,9 +1157,9 @@ function calculator(o) {
     $.each(targets, function (i, o) {
         var target = o.replace("@", "");
         var element = "$(':input[name=TB_" + target + "]')";
-        expression.judgement.push(element + ".length == 0");
-        expression.execute_judgement.push("!isNaN(parseFloat(" + element + ".val()))");
-        expression.calculate = expression.calculate.replace(o, "parseFloat(" + element + ".val())");
+        expression.judgement.push(element + ".length==0");
+        expression.execute_judgement.push("!isNaN(parseFloat(" + element + ".val().replace(/,/g,'')))");
+        expression.calculate = expression.calculate.replace(o, "parseFloat(" + element + ".val().replace(/,/g,''))");
     });
     (function (targets, expression, resultTarget, pk, expDefined) {
         $.each(targets, function (i, o) {
@@ -1017,28 +1168,31 @@ function calculator(o) {
 
             $(":input[name=TB_" + target + "]").bind("change", function () {
 
-                var evalExpression = " var result = ''; ";
+                var evalExpression = "var result = '';";
                 if (expression.judgement.length > 0) {
-                    evalExpression += " if ( " + expression.judgement.join(" || ") + " ) { ";
-                    evalExpression += " 	alert(\"MyPk: " + pk + ", 表达式: '" + expDefined + "' " + "中有对象在当前页面不存在\");"
-                    // evalExpression += " 	console.log(\"MyPk: " + pk + ", 表达式: '" + expDefined + "' " + "中有对象在当前页面不存在\");"
+                    var str = "if(" + expression.judgement.join("||") + "){";
+                    evalExpression += str.replace(/\s|\xA0/g, "");
+                    evalExpression += "alert('MyPk:" + pk + ",表达式:[" + expDefined.replace(/\s|\xA0/g, "") + "]" + "中有对象在当前页面不存在');"
 
-                    evalExpression += " } ";
+                    evalExpression += "} ";
                 }
                 if (expression.execute_judgement.length > 0) {
-                    evalExpression += " else if ( " + expression.execute_judgement.join(" && ") + " ) { ";
+                    evalExpression += "else if(" + expression.execute_judgement.join("&&").replace(/\s|\xA0/g, "") + "){";;
                 }
                 if (expression.calculate.length > 0) {
-                    evalExpression += " 	result = " + expression.calculate + "; ";
+                    evalExpression += "result=" + expression.calculate.replace(/\s|\xA0/g, "") + "; ";
                 }
                 if (expression.execute_judgement.length > 0) {
-                    evalExpression += " } ";
+                    evalExpression += "} ";
                 }
-
                 eval(evalExpression);
 
-
-                $(":input[name=TB_" + resultTarget + "]").val(typeof result == "undefined" ? "" : result);
+                if (typeof result != "undefined") {
+                    result = numberFormat(result, 2);
+                } else {
+                    result = "";
+                }
+                $(":input[name=TB_" + resultTarget + "]").val(result);
             });
             if (i == 0) {
                 $(":input[name=TB_" + target + "]").trigger("change");
@@ -1087,8 +1241,7 @@ function testExpression(exp) {
     return true;
 }
 
-/** 为了保障以前的业务逻辑兼容性，特把旧方法移植到这里. **/
-// 获取DDL值
+/*************************************  以下的方法方便对独立表单模式下的工作处理器，嵌入方式的控件取值与赋值. ***********************************************/// 获取DDL值
 function ReqDDL(ddlID) {
     var v = document.getElementById('DDL_' + ddlID).value;
     if (v == null) {
@@ -1153,6 +1306,16 @@ function ReqCBObj(cbID) {
     return v;
 }
 
+// 获取附件文件名称,如果附件没有上传就返回null.
+function ReqAthFileName(athID) {
+    var v = document.getElementById(athID);
+    if (v == null) {
+        return null;
+    }
+    var fileName = v.alt;
+    return fileName;
+}
+
 //设置值?
 function SetCtrlVal(key, value) {
     var ctrl = $("#TB_" + key);
@@ -1167,7 +1330,7 @@ function SetCtrlVal(key, value) {
         return;
     }
 
-  
+
     ctrl = $("input[name='CB_" + key + "']");
     if (ctrl.length == 1) {
         ctrl.val(value);
@@ -1177,7 +1340,7 @@ function SetCtrlVal(key, value) {
             ctrl.attr('checked', true);
             document.getElementById("CB_" + key).checked = true;
         }
-           
+
         return;
     }
     if (ctrl.length > 1) {
@@ -1195,9 +1358,9 @@ function SetCtrlVal(key, value) {
     ctrl = $('input:radio[name=RB_' + key + ']');
     if (ctrl.length > 0) {
         var checkVal = $('input:radio[name=RB_' + key + ']:checked').val();
-        if(checkVal!=null && checkVal!=undefined)
+        if (checkVal != null && checkVal != undefined)
             document.getElementById("RB_" + key + "_" + checkVal).checked = false;
-        if ($("#RB_" + key + "_" + value).length==1)
+        if ($("#RB_" + key + "_" + value).length == 1)
             document.getElementById("RB_" + key + "_" + value).checked = true;
         return;
     }
@@ -1274,7 +1437,7 @@ function imgShow(outerdiv, innerdiv, bigimg, _this) {
     $(outerdiv).click(function () {//再次点击淡出消失弹出层  
         $(this).fadeOut("fast");
     });
-} 
+}
 
 //树形结构
 function findChildren(jsonArray, parentNo) {
@@ -1329,123 +1492,54 @@ function findChildren(jsonArray, parentNo) {
     return jsonTree;
 }
 
+//修改公文正文组件的值,这里需要处理  todo:yln
+function ChangeGovDocFileVal(docWord) {
 
-function ShowFlowBBS(data, keyOfEn,FrmNo,FrmName,NodeName) {
-    var isHaveMySelf = false;
-    var _Html = "";
-    var str = "";
-    var strT = "";
-   
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].Rec == webUser.No)
-            isHaveMySelf = true;
-        if (str.indexOf('@' + data[i].DeptNo + '@') == -1)
-            str += '@' + data[i].DeptNo + '@';
-            strT += '@' + data[i].DeptName + '@';
+    if ($("#TB_GovDocFile").length == 1) {
+        $("#TB_GovDocFile").val(docWord);
     }
-    _Html += "<div>";
-    var strs = str.split("@"); //生成数组.
-    var strTs = strT.split("@");
-    for (var idx = 0; idx < strs.length; idx++) {
-        var dept = strs[idx];
-        if (dept == "" || dept == null)
-            continue;
-        _Html += "<div class='row' style='margin-left:10px;margin-right:10px'>";
-        _Html += "<label style='font-size:13px;font-weight:bold'>" + strTs[idx] + "</label>";
-        for (var i = 0; i < data.length; i++) {
-            var bbs = data[i];
-            if (bbs.DeptNo != dept)
-                continue;
-            _Html += "<div class='row' style='margin-left:0px;margin-right:0px'>";
-            _Html += "<div col-xs-12 style='margin-top:5px'><font color=green>" + bbs.Msg+"</font>";
-            _Html += "</div>";
-            _Html += "<div col-xs-8 style='text-align:right'>" +bbs.RecName + "&nbsp;&nbsp;" + bbs.RDT;
-            _Html += "</div>";
-            _Html += "</div>";
-        }
-        _Html += "</div>";
-    }
-    _Html += "</div>";
-    //只读状态并且当前登陆人的的抄送列表还未发生评论
-    if (pageData.IsReadonly == "1" && isHaveMySelf == false && GetQueryString("CCSta") == "1") {
-        var en = new Entity("BP.Sys.GloVar");
-        en.SetPKVal("ND" + pageData.FK_Node + "_Comment");
-        var DuanYu = "";
-        if (en.RetrieveFromDBSources() == 0) {
-            DuanYu = en.Val;
-        }
-        if (DuanYu != null && DuanYu != undefined && DuanYu != "") {
 
-            var NewDuanYu = DuanYu.split("@");
-        } else {
-            var NewDuanYu = "";
-        }
-       
-        _Html += "</select>";
-        _Html += "<div style='line-height: 1px;border-top: 2px solid #ddd;margin-top: 4px;margin-bottom: 4px;margin-left: -6px;margin-right: -6px;'></div>";
-        _Html += "<div>";
-        _Html +="<textarea rows='5' id='TB_Msg' name='TB_Msg' cols='60'></textarea>";
-        _Html += "<br/>";
-        //加入常用短语.
-        _Html += "<select id='DuanYu' onchange='SetDocVal()'>";
-        _Html += "<option value=''>常用短语</option>";
-        if (NewDuanYu.length > 0) {
-            for (var i = 0; i < NewDuanYu.length; i++) {
-                if (NewDuanYu[i] == "") {
-                    continue;
-                }
-                _Html += "<option value='" + NewDuanYu[i] + "'>" + NewDuanYu[i] + "</option>";
-            }
-        } else {
-            _Html += "<option value='已阅'>已阅</option>";
-        }
-        _Html += "</select>";
-        _Html += "<a onclick='AddDuanYu(\"" + pageData.FK_Node + "\",\"Comment\");'> <img alt='编辑常用评论语言.' src='../../WF/Img/Btn/Edit.gif' /></a>";
-        _Html += "<input type='button' id='Btn_BBSSave' name='Btn_BBsSave' value='提交评论'style='float:right' onclick='BBSSubmit(\""+FrmNo+"\",\""+FrmName+"\",\""+NodeName+"\");' />";
-        _Html += "</div>";
-         
-    }
-    
-    $("#FlowBBS").html(_Html);
+    $('#bootStrapdlg').modal('hide');
 }
-
-function BBSSubmit(FrmID,FrmName,NodeName) {
-
-    if ($("#TB_Msg").val() == null || $("#TB_Msg").val() == "" || $("#TB_Msg").val().trim().length == 0) {
-        alert("请填写评论内容!");
-        return;
-    }
-  
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
-    handler.AddUrlData();
-    handler.AddFormData();
-    var data = handler.DoMethodReturnString("FlowBBS_Save");
-    if (data.indexOf('err@') == 0) {
-        alert(data);
-        return;
-    }
-    alert("提交评论成功");
-
-    //获取所有的评论内容
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_OneWork");
-    handler.AddUrlData();
-    handler.AddPara("FrmID", FrmID);
-    handler.AddPara("FrmName", FrmName);
-    handler.AddPara("NodeName", NodeName);
-    var data = handler.DoMethodReturnString("FlowBBSList");
-    if (data.indexOf('err@') == 0) {
-        alert(data);
-        console.log(data);
-    }
-    ShowFlowBBS(JSON.parse(data), null, FrmID,FrmName,NodeName);
-   
-}
-
 
 function ChangeDocWordVal(docWord) {
-   
+
     if ($("#TB_DocWord").length == 1) {
         $("#TB_DocWord").val(docWord);
+    }
+
+    $('#bootStrapdlg').modal('hide');
+}
+//此方法用于显示收文编号的值
+function ChangeDocWordReceive(docWord) {
+
+    if ($("#TB_DocWordReceive").length == 1) {
+        $("#TB_DocWordReceive").val(docWord);
+    }
+
+    $('#bootStrapdlg').modal('hide');
+}
+/**
+ * 跳转常用短语页面
+ * @param {any} nodeID 当前节点ID
+ * @param {any} GroupKey 所属短语类型 CYY,FlowBBS,WorkReturn
+ * @param {any} elementID 选择短语后赋值元素
+ */
+function AddCommUseWord(nodeID, GroupKey, elementID) {
+    var url = basePath + "/WF/WorkOpt/UsefulExpres.htm?FK_Node=" + nodeID + "&GroupKey=" + GroupKey + "&ElementID=" + elementID;
+    var W = document.body.clientWidth / 2;
+    var H = 400; // document.body.clientHeight-40;
+    OpenBootStrapModal(url, "UsefulExpresIFrame", "常用短语", W, H, null, false, null, null, function () { });
+}
+
+/**
+ * 给指定的元素赋值
+ * @param {any} elementID 元素ID
+ * @param {any} str 值
+ */
+function ChangeWorkCheck(elementID, str) {
+    if ($("#" + elementID).length == 1) {
+        $("#" + elementID).val(str);
     }
 
     $('#bootStrapdlg').modal('hide');

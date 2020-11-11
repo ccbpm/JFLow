@@ -38,6 +38,7 @@
         //初始化页面函数.....
         $(function () {
 
+          
             if (! +[1,]) {
                 //  alert("这是ie浏览器，您只能使用sliverlight版本浏览器。");
                 // window.location.href = '../XAP/Designer.htm';
@@ -57,7 +58,10 @@
             var doType = GetQueryString("DoType");
             if (doType == null)
                 doType = "Login_Init";
+
             handler.AddUrlData();
+            //handler.AddFormData();
+            //handler.AddPara("ss",val);
             data = handler.DoMethodReturnString(doType);
 
             if (data.indexOf('err@') == 0) {

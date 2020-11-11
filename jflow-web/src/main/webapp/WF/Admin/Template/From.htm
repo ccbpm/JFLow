@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>流程模版</title>
+    <title>表单模版</title>
     <link href="../../Scripts/easyUI145/themes/color.css" rel="stylesheet" />
     <link href="../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
@@ -38,10 +38,9 @@
             $("#msg").html("正在加载请稍候...");
             $("#Btn_Imp").hide();
 
-
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Template");
             handler.AddUrlData();
-            var data = handler.DoMethodReturnString("Flow_Init");
+            var data = handler.DoMethodReturnString("Form_Init");
             if (data.indexOf('err@') == 0) {
                 alert(data);
                 window.history.back();
@@ -55,8 +54,9 @@
 
             html += "<tr>";
             html += "<th>#</th>";
-            html += "<th>模板名称  -  <a href=\"javascript:RetrunToParent()\"><img src='../../Img/ArrUp.gif'>上一级</a></th>";
-            html += "<th>创建日期</th>";
+            html += "<th>模板  - <a href='#' onclick='RetrunToParent()'>上一级</a></th>";
+            html += "<th>导入模式</th>";
+            html += "<th>表单ID</th>";
             html += "</tr>";
 
             var idx = 0;
@@ -77,18 +77,44 @@
                 html += "<tr>";
                 html += "<td class=Idx>  " + idx + " </td>";
                 html += "<td><label><input id=" + fl.FileName + " type='checkbox';  /><img src='../../Img/dot.png' style='width:15px;' />" + fl.FileName + "</label></td>";
-                html += "<td>  " + fl.RDT + " </td>";
+                html += "<td>";
+
+                html += "<select id='DDL_" + fl.FileName + "' onchange=changeOption('" + fl.FileName + "')> ";
+                html += " <option value=0 >按照模版的表单编号导入,如果该编号已经存在就提示错误. </option> ";
+                html += " <option value=1 >按照模版的表单编号导入,如果该编号已经存在就直接覆盖. </option> ";
+                html += " <option value=2 >按照模版的表单编号导入,如果该编号已经存在就增加@WebUser.OrgNo(组织编号)导入. </option> ";
+                html += " <option value=3 >按照指定的模版ID导入 </option > ";
+                html += " </select> ";
+                html += " </td > ";
+                html += "</td>";
+                html += "<td> <input id='TB_" + fl.FileName + "' /> </td>";
+
                 html += "</tr>";
             }
 
             $("#Table1").html(html);
-
             $("#msg").html("");
             $("#Btn_Imp").show();
-
+            //$("input").attr("disabled", "disabled");
 
         });
-
+        function changeOption(id) {
+            var optionID = "DDL_" + id;
+            var inputID="#TB_"+id;
+            var obj = document.getElementById(optionID);
+            var sele = obj.options;
+            var index = obj.selectedIndex;
+            var optionKey = 0;
+            if (index > 0) {
+                optionKey = sele[index].value
+            }
+            if (optionKey != "3") {
+                $("#TB_").attr("disabled", "disabled");
+            }
+            else {
+                $(inputID).attr("disabled", false);
+            }
+        }
         //他的上一级目录.
         function ToParent(path) {
 
@@ -113,8 +139,6 @@
         }
         function Imp() {
 
-
-
             var fls = "";
             var inputArray = $("input[type='checkbox']"); //取到所有的input 并且放到一个数组中
             inputArray.each(//使用数组的循环函数 循环这个input数组
@@ -122,13 +146,19 @@
                     var input = $(this); //循环中的每一个input元素
                     if (input.is(':checked')) {
                         if (input.attr("id").indexOf(".xml") > 0)//过滤文件，只选xml的
-                            fls += input.attr("id") + ";"; //查看循环中的每一个input的id
+                        {
+                            var fileName = input.attr("id");
+                            var getModelID = "DDL_" + fileName;
+                            var model = document.getElementById(getModelID).value;
+                            var getfrmID = "TB_" + fileName;
+                            var frmID = document.getElementById(getfrmID).value;
+                            fls += fileName + "," + model + "," + frmID + " " + ";"; //查看循环中的每一个input的id
+                        }
                     }
                 });
-
             if (fls == "") {
                 alert("未选择模板");
-                return
+                return;
             }
 
             // alert(fls);
@@ -140,16 +170,18 @@
             handler.AddPara("Files", fls);
             handler.AddPara("SortNo", GetQueryString("SortNo"));
             handler.AddPara("DirName", GetQueryString("DirName"));
-
-            var data = handler.DoMethodReturnString("Flow_Imp");
+            var data = handler.DoMethodReturnString("Form_Step1");
             if (data.indexOf('err@') == 0) {
                 $("#msg").html(data);
                 return;
             }
 
-            //    $("#Btn_Imp").hide(); //("正在导入请稍候，10分钟左右，请不要关闭");
-
-            //返回执行结果的数据.
+            //若选择的多个模板
+            if (data.indexOf("EndJSON") == -1) {
+                alert(data);
+                return;
+            }
+            //若选择的一个模板，则打开此模板
             var json = eval('(' + data + ')');
 
             var html = "<table>";
@@ -169,31 +201,21 @@
             }
             html += "/<table>";
             $("#msg").html(html);
-
-            //$.messager.alert("提示", json.Msg, "icon-info", function () {
-            //    //打开新建的流程
-            //    if (typeof window.parent.AppendFlowToFlowSortTree != "undefined") {
-            //        window.parent.AppendFlowToFlowSortTree(json.FK_FlowSort, json.FK_Flow, json.FlowName);
-            //    }
-            //});
-            //$("#Btn_Imp").show(); //("导入模板");
         }
     </script>
 </head>
 <body>
 
-    <div style="float:left;">&nbsp; &nbsp;&nbsp;&nbsp;<img style='margin-bottom:8px;' align='middle' src='../../Img/Event.png' />流程模板</div>
+    <div style="float:left;">&nbsp; &nbsp;&nbsp;&nbsp;<img style='margin-bottom:8px;' align='middle' src='../../Img/Event.png' />表单模版</div>
     <div style=" float:right">
         <a href="#" onclick="RetrunToParent()">返回上一级</a>&nbsp; &nbsp;&nbsp;&nbsp;
     </div>
 
-
     <table id="Table1" class="table table-hover " style="width: 100%; padding: 2px;text-align:left">
     </table>
 
-    &nbsp;&nbsp;<input type="button" id="Btn_Imp" value="导入模版" onclick='Imp();' />
+    &nbsp;&nbsp;<input type="button" id="Btn_Imp" value="导入模板" onclick='Imp();' />
     <center>
-        <div id="msg"></div>
         <div id="msg"></div>
     </center>
 

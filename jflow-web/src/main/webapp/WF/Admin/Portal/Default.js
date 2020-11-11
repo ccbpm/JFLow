@@ -419,67 +419,37 @@ function newFlow() {
 
     var currSort = $('#flowTree').tree('getSelected');
     var currSortId = "99";
-    if (currSort && currSort.attributes["ISPARENT"] != 0) { //edit by qin 2016/2/16
-        currSortId = $('#flowTree').tree('getSelected').id; //liuxc,20150323
+    if (currSort && currSort.attributes["ISPARENT"] != 0) { 
+        currSortId = $('#flowTree').tree('getSelected').id; 
     }
 
     var flowSort = currSortId.replace("F", "");
 
     var dgId = "iframDg";
     if (runModelType == 0)
-        url = "../CCBPMDesigner/NewFlow.htm?sort=" + flowSort + "&s=" + Math.random();
+        url = "../CCBPMDesigner/NewFlow2020.htm?sort=" + flowSort + "&s=" + Math.random();
     else
-        url = "../CCBPMDesigner/NewFlow.htm?sort=" + flowSort + "&RunModel=1&s=" + Math.random();
+        url = "../CCBPMDesigner/NewFlow2020.htm?sort=" + flowSort + "&RunModel=1&s=" + Math.random();
 
     OpenEasyUiDialog(url, dgId, '新建流程', 650, 350, 'icon-new', true, function () {
 
         var win = document.getElementById(dgId).contentWindow;
         var newFlowInfo = win.getNewFlowInfo();
 
-        if (newFlowInfo.FlowName == null || newFlowInfo.FlowName.length == 0
-            || newFlowInfo.TreeFlowSort == null || newFlowInfo.TreeFlowSort.length == 0) {
+        if (newFlowInfo.FlowName == null) {
 
-            alert('信息填写不完整:' + newFlowInfo.FlowName + newFlowInfo.FlowSort);
-            //$.messager.alert('错误', '信息填写不完整', 'error');
+            alert('信息填写不完整:' + newFlowInfo.FlowName);
+
             return false;
         }
-
-        var flowFrmType = newFlowInfo.FlowFrmType;
-        if (newFlowInfo.RunModel == 1) {
-
-            if (flowFrmType == 3 || flowFrmType == 4) {
-                if (newFlowInfo.FrmUrl == "" || newFlowInfo.FrmUrl == null
-                    || newFlowInfo.FrmUrl == undefined) {
-                    alert('请输入url');
-                    return false;
-                }
-            }
-        }
-
-        //判断流程标记是否存在  19.10.22 by sly
-        if (newFlowInfo.FlowMark != "") {
-            var flows = new Entities("BP.WF.Flows");
-            flows.Retrieve("FlowMark", newFlowInfo.FlowMark);
-            if (flows.length > 0) {
-                alert('该流程标记[' + newFlowInfo.FlowMark + ']已经存在系统中');
-                return false;
-            }
-        }
-
-        //var html = $("#ShowMsg").html();
-        //$("#ShowMsg").html(html + " ccbpm 正在创建流程请稍后....");
-        //$("#ShowMsg").css({ "width": "320px" });
         $(".mymask").show();
-
-        newFlowInfo.FlowSort = flowSort;
 
         var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
         handler.AddJson(newFlowInfo);
-        var data = handler.DoMethodReturnString("Defualt_NewFlow");
+        var data = handler.DoMethodReturnString("NewFlow2020_Save");
 
         $(".mymask").hide();
-        //$("#ShowMsg").html(html);
-        //$("#ShowMsg").css({ "width": "32px" });
+
         if (data.indexOf('err@') == 0) {
             alert(data);
             return;
@@ -517,11 +487,6 @@ function newFlow() {
 
         //在右侧流程设计区域打开新建的流程
         RefreshFlowJson();
-
-        //打开流程.
-        //OpenFlowToCanvas(nodeData, flowNo, nodeData.text);
-
-
     }, null);
 }
 
@@ -537,7 +502,7 @@ function newFlowSort(isSub) {
     var propName = (isSub ? '子级' : '同级') + '流程类别';
     var val = window.prompt(propName, '');
     if (val == null || val.length == 0) {
-        alert('必须输入名称.');
+        alert('未输入流程类别名称或者取消创建流程类别');
         return false;
     }
 
@@ -613,7 +578,7 @@ function deleteFlowSort() {
     if (currSort == null || currSort.attributes.ISPARENT == undefined)
         return;
 
-    if (window.confirm("你确定要删除名称为“" + currSort.text + "”的流程类别吗？") == false)
+    if (window.confirm("你确定要删除“" + currSort.text + "”的流程类别吗？") == false)
         return;
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
     handler.AddPara("FK_FlowSort", currSort.id);
@@ -1075,17 +1040,17 @@ function Bill_CCForm() {
 
     // alert('sss');
 
-    var en = new Entity("BP.Frm.FrmBill", node.id);
+    var en = new Entity("BP.CCBill.FrmBill", node.id);
 
     //流程单据.
     if (en.EntityType == 0)
         url = '../../Comm/En.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=' + node.id;
 
     if (en.EntityType == 1)
-        url = '../../Comm/En.htm?EnName=BP.Frm.FrmBill&PKVal=' + node.id;
+        url = '../../Comm/En.htm?EnName=BP.CCBill.FrmBill&PKVal=' + node.id;
 
     if (en.EntityType == 2 || en.EntityType == 3)
-        url = '../../Comm/En.htm?EnName=BP.Frm.FrmDict&PKVal=' + node.id;
+        url = '../../Comm/En.htm?EnName=BP.CCBill.FrmDict&PKVal=' + node.id;
 
     //   alert(en.EntityType);
     // http: //localhost:2207/WF/Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.MapFrmFree&PKVal=CCFrm_GDZC&s=0.635120123659069
@@ -1106,7 +1071,7 @@ function Bill_Open() {
         return;
     }
 
-    var en = new Entity("BP.Frm.FrmTemplate", node.id);
+    var en = new Entity("BP.CCBill.Template.FrmTemplate", node.id);
     if (en.EntityType == 0) {
         alert('独立表单暂不支持列表打开...');
         return;
@@ -1267,7 +1232,7 @@ function CopyFrm() {
     handler.AddPara("FromFrmID", node.id);
     handler.AddPara("ToFrmID", frmID)
     handler.AddPara("ToFrmName", frmName)
-    var data = handler.DoMethodReturnString("DoCopyFrm", frmID, frmName);
+    var data = handler.DoMethodReturnString("DoCopyFrm");
     $(".mymask").hide();
     if (data.indexOf('err@') != -1) {
         alert(data);

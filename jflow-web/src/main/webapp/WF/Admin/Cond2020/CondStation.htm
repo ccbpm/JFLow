@@ -17,8 +17,17 @@
     <script src="../../Comm/Gener.js" type="text/javascript"></script>
     <script src="../../Comm/JScript.js" type="text/javascript"></script>
     <script src="../CCFlowEnum.js" type="text/javascript"></script>
-    
+
     <script src="../Admin.js"></script>
+    <style>
+        #Btn_Back {
+            background-image: url(../../Img/Btn/Back.png) !important;
+        }
+
+        #Btn_Save {
+            background-image: url(../../Img/Btn/Save.png) !important;
+        }
+    </style>
     <script type="text/javascript" language="javascript">
 
         var operatorValue = "";
@@ -32,7 +41,7 @@
             ifm.height = document.documentElement.clientHeight - 67;
 
             InitPage();
-
+            //    document.getElementById("TB_SpecOperPara").style.display='none';
 
             $("#Msg").html("");
         });
@@ -59,6 +68,7 @@
 
             //获取已指定操作员的岗位条件
             operatorValues = operatorValue.split("@");
+
             var operatorValueTs = operatorValueT.split("@");
 
 
@@ -66,7 +76,7 @@
             var user = new WebUser();
             $("#AdminModel").hide();
             $("#OrgModel").hide();
-            
+
 
             if (user.FK_Dept == 0) {
                 /*调用通用的.*/
@@ -77,7 +87,7 @@
 
 
             } else {
-                
+
                 /*调用集团模式的.*/
                 $("#OrgModel").show();
                 var showCondition = InitStation(operatorValues);
@@ -94,22 +104,22 @@
             }
 
             //TODO 条件参数
-            var atpara = cond.AtPara;
-            if (atpara != "") {
+            //var atpara = cond.AtPara;
+            //if (atpara != "") {
 
-                var initDDL_SpecOperWay = atpara.split("@")[2].split("=")[1];
-                document.getElementById("initDDL_SpecOperWay").value = initDDL_SpecOperWay;
-                document.getElementById("DDL_SpecOperWay").value = initDDL_SpecOperWay;
+            //    var initDDL_SpecOperWay = atpara.split("@")[2].split("=")[1];
+            //    document.getElementById("initDDL_SpecOperWay").value = initDDL_SpecOperWay;
+            //    document.getElementById("DDL_SpecOperWay").value = initDDL_SpecOperWay;
 
-                var initTB_SpecOperPara = atpara.split("@")[3].split("=")[1];
-                document.getElementById("TB_SpecOperPara").value = initTB_SpecOperPara;
-                if (initDDL_SpecOperWay != 0) {
-                    document.getElementById("TB_SpecOperPara").disabled = "";
-                }
-                document.getElementById("initTB_SpecOperPara").value = initTB_SpecOperPara;
-                $("#span" + initDDL_SpecOperWay).css("display", "inline-block");
-                $("#span" + initDDL_SpecOperWay).siblings().css("display", "none");
-            }
+            //    var initTB_SpecOperPara = atpara.split("@")[3].split("=")[1];
+            //    document.getElementById("TB_SpecOperPara").value = initTB_SpecOperPara;
+            //    if (initDDL_SpecOperWay != 0) {
+            //        document.getElementById("TB_SpecOperPara").disabled = "";
+            //    }
+            //    document.getElementById("initTB_SpecOperPara").value = initTB_SpecOperPara;
+            //    $("#span" + initDDL_SpecOperWay).css("display", "inline-block");
+            //    $("#span" + initDDL_SpecOperWay).siblings().css("display", "none");
+            //}
 
             //条件参数 end
             //end
@@ -167,7 +177,7 @@
             var url = "SelectStation.htm?OrgNo=" + orgNo + "&FK_Node=" + GetQueryString("FK_Node") + "&emps=" + emps + "&SelectType=" + selectType;
             document.getElementById("stationFrame").style.width = "100%";
             document.getElementById("stationFrame").src = url;
-            
+
             $("#win").window("open");
 
         }
@@ -178,7 +188,7 @@
                 return;
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_Cond");
             handler.AddPara("FK_Node", GetQueryString("FK_Node"));
-            handler.AddPara("FK_MainNode", GetQueryString("FK_MainNode"));
+
             handler.AddPara("ToNodeID", GetQueryString("ToNodeID"));
             handler.AddPara("DirType", GetQueryString("DirType"));
             handler.AddPara("CondType", GetQueryString("CondType"));
@@ -215,33 +225,15 @@
             handler.AddFormData()
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("CondByStation_Save");
-            window.location.href = window.location.href;
+
+            alert("保存成功");
+            Back();
 
         }
 
-        function selChange() {
-            //01.如果 文本框 有初始值就赋初值
-            var idx = document.getElementById("DDL_SpecOperWay").value;
-            var idxinit = document.getElementById("initDDL_SpecOperWay").value;
-            if (idx == idxinit) {
-                document.getElementById("TB_SpecOperPara").value = document.getElementById("initTB_SpecOperPara").value;
-            }
-            else {
-                document.getElementById("TB_SpecOperPara").value = "";
-            }
-
-            //02.处理文本框样式
-            if (idx == 0) {
-                document.getElementById("TB_SpecOperPara").disabled = "disabled";
-            } else {
-                document.getElementById("TB_SpecOperPara").disabled = "";
-            }
-            //03.处理标签
-            $("#span" + idx).css("display", "inline-block");
-            $("#span" + idx).siblings().css("display", "none");
-        }
 
         function getChidrenValue(data) {
+
             $('#win').window('close'); // close a window
             if (data[3] == "1") {
 
@@ -252,6 +244,7 @@
                 $("#groupEmps").html(data[0]);
                 $("#groupStations").html(data[1]);
                 $("#groupCount").html(data[2]);
+
                 var orgCount = $("#orgCount").html();
                 var orgStations = $("#orgStations").html();
                 var orgEmps = $("#orgEmps").html();
@@ -285,7 +278,7 @@
 
             //获取URL参数
             var nodeID = GetQueryString("FK_Node");
-            var FK_MainNode = GetQueryString("FK_MainNode");
+
             var ToNodeID = GetQueryString("ToNodeID");
 
             //条件属性.
@@ -299,13 +292,15 @@
             //cond.Save();
         }
 
-         //返回.
+        //返回.
         function Back() {
             var url = window.location.href;
             if (GetQueryString("CondOrAnd") == null)
                 url = url.replace('CondStation.htm', 'List.htm');
-            else
-                url = url.replace('CondStation.htm', '../Cond2020/DirList.htm');
+            else {
+                url = url.replace('CondStation.htm', 'DirList.htm');
+                url = url.replace('&CondOrAnd=' + GetQueryString("CondOrAnd"), '  ');
+            }
             window.location.href = url;
         }
     </script>
@@ -325,18 +320,7 @@
             width: 200px;
         }
 
-        #Btn_Save1,#Btn_Delete,#Btn_Back {
-            border: 0px solid #031f5d;
-            background-color:#fff;
-            color: #031f5d;
-        }
-        #Btn_Save1:hover,#Btn_Delete:hover,#Btn_Back:hover {
-            border: 0;
-            background: #1d7dd4;
-            color:#fff;
-            cursor:pointer;
-            border: 1px solid #1d7dd4;
-        }
+        
         .lbls span {
             width: 80px;
         }
@@ -345,9 +329,9 @@
 <body>
     <form id="cc">
         <div id="bar" class="cs-tr cs-bar">
-            <input id="Btn_Save1" type=button value="保存"  onclick="Btn_Save_Click()" />
-            <input id="Btn_Delete" type=button value="删除"  onclick="Btn_Delete_Click()" />
-            <input id="Btn_Back" type=button value="返回"  onclick="Back()" />
+            <input id="Btn_Save" style="background-color:#62CAE3" type=button value="保存" onclick="Btn_Save_Click()" />
+            <!--<input id="Btn_Delete" type=button value="删除"  onclick="Btn_Delete_Click()" />-->
+            <input id="Btn_Back" style="background-color:#62CAE3" type=button value="返回" onclick="Back()" />
         </div>
 
         <fieldset id="AdminModel">
@@ -379,8 +363,9 @@
         <label id="groupEmps" style="display:none"></label>
         <label id="orgEmps" style="display:none"></label>
         <br />
+        
         <fieldset>
-            
+
             指定的操作员：<select id="DDL_SpecOperWay" name="DDL_SpecOperWay" onchange="selChange()">
                 <option selected="selected" value="0">当前操作员</option>
                 <option value="1">指定节点的操作员</option>
@@ -398,7 +383,7 @@
                 <span id="span3" style="display: none">操作员编号：</span>
             </span>
             <input id="TB_SpecOperPara" name="TB_SpecOperPara" type="text" disabled="disabled" style="width: 200px;" />&nbsp;&nbsp;多个值请用英文“逗号”来分隔。
-            
+
         </fieldset>
 
         <!--隐藏的文本框-->

@@ -1,0 +1,74 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>按照设置的WebAPI接口获取的数据计算</title>
+
+    <link href="../../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
+    <link href="../../../Scripts/easyUI145/themes/icon.css" rel="stylesheet" type="text/css" />
+    <link href="../../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <script src="../../../Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="../../../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../../Scripts/QueryString.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../../Scripts/config.js"></script>
+    <script type="text/javascript" src="../../../Comm/Gener.js"></script>
+    <script src="DDLBar.js" type="text/javascript"></script>
+    <script src="../../CCFlowEnum.js" type="text/javascript"></script>
+    <script src="../../../Scripts/EasyUIUtility.js" type="text/javascript"></script>
+    <script src="../../../Scripts/vue.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="App">
+        <div id="bar">
+        </div>
+        <fieldset>
+            <legend>输入WebAPI地址</legend>
+            <br />
+            <textarea id="TB_URL" style="width: 95%; height: 50px" v-model="urlExt"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend id="help">说明</legend>
+            <ul>
+                <li>目前只支持WebAPI接口，调用方式为POST.</li>
+                <li>接口返回值类型为json类型,且必须有No,Name,具体返回值格式如下：</li>
+                <li>[{"No","zhangsan","Name","张三"},{"No","lisi","Name","李四"}]</li>
+                <li>接口返回值中，请注意<span style="color:red">Key的大小写区分</span></li>
+                <li>WebAPI的输入格式：@WebApiHost/DataUser/GetEmps?id=51184</li>
+                <li>接口地址支持固定参数，或者ccbpm内置参数，或者流程表单参数，比如:http://demo.ccflow.org/DataUser/GetEmps?id=@FK_Node</li>
+            </ul>
+        </fieldset>
+    </div>
+    <script type="text/javascript">
+        var Baseinfo = new Vue({
+            el: '#App',
+            data: {
+                deliverWay: DeliveryWay.ByAPIUrl,
+                urlExt: '',
+                nodeId: GetQueryString("FK_Node")
+            },
+            created() {
+                InitBar(this.deliverWay);
+                var node = new Entity("BP.WF.Node", this.nodeId);
+                if (node.DeliveryWay == DeliveryWay.ByAPIUrl) {
+
+                    this.urlExt = node.DeliveryParas;
+
+
+                }
+            }
+        });
+        function Save() {
+            var node = new Entity("BP.WF.Node", Baseinfo.nodeId);
+            node.DeliveryWay = Baseinfo.deliverWay;
+            if (Baseinfo.urlExt == "") {
+                alert("请输入的URL.");
+                return;
+            }
+
+            node.DeliveryParas = Baseinfo.urlExt;
+            node.Update();
+        }
+    </script>
+</body>
+</html>

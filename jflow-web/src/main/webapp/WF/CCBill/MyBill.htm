@@ -14,7 +14,7 @@
           type="text/css" />
     <script type="text/javascript" src="../Scripts/config.js"></script>
     <script type="text/javascript" src="../Comm/Gener.js"></script>
-    <script type="text/javascript" src="../Scripts/QueryString2016.js"></script>
+    <script type="text/javascript" src="../Scripts/QueryString.js"></script>
     <link rel="stylesheet" type="text/css" href="../Scripts/easyUI/themes/default/easyui.css" />
     <link rel="stylesheet" type="text/css" href="../Scripts/easyUI145/themes/icon.css" />
     <script src="../Scripts/easyUI145/jquery.easyui.min.js" type="text/javascript"></script>
@@ -63,7 +63,7 @@
 
     <!--配置js-->
     <script src="../../DataUser/JSLibData/CommonShowConfig.js"></script>
-
+    <script src="../Scripts/download.js"></script>
     <style type="text/css">
         @page {
             size: auto; /* auto is the initial value */
@@ -99,26 +99,29 @@
             if (workID == null || workID == undefined)
                 workID = 0;
 
-            if (workID == 0) {
-                var handler = new HttpHandler("BP.Frm.WF_CCBill");
+            if (workID == 0 || workID==="") {
+                var handler = new HttpHandler("BP.CCBill.WF_CCBill");
                 handler.AddUrlData();
                 var workID = handler.DoMethodReturnString("MyBill_CreateBlankBillID");
-                var url = window.location.href + "&WorkID=" + workID + "&OID=" + workID;
+                var url = window.location.href;
+                url = url.replace("&WorkID=", "");
+                url = url.replace("&OID=", "");
+                url = url + "&WorkID=" + workID + "&OID=" + workID;
                 window.location.href = url;
                 return;
             }
 
             var toolBar = "";
-            var generBill = new Entity("BP.Frm.GenerBill");
+            var generBill = new Entity("BP.CCBill.GenerBill");
             generBill.SetPKVal(workID);
-            if (generBill.RetrieveFromDBSources() == 0)
-                return;
+            //if (generBill.RetrieveFromDBSources() == 0)
+            //    var a = 1;
 
             
 
             //获得单据模版信息.
             var frmID = GetQueryString("FrmID");
-            var frmBill = new Entity("BP.Frm.FrmBill", frmID);
+            var frmBill = new Entity("BP.CCBill.FrmBill", frmID);
 
             //if (generBill.ret
             //var i = generBill.ret
@@ -136,7 +139,7 @@
             }
 
             //获取表单的操作权限
-            var handler = new HttpHandler("BP.Frm.WF_CCBill_API");
+            var handler = new HttpHandler("BP.CCBill.WF_CCBill_API");
             handler.AddPara("FrmID", frmID);
             var power = handler.DoMethodReturnString("CCFrom_FrmPower");
             if (power.indexOf("err@") != -1) {
@@ -179,8 +182,8 @@
             if (frmBill.BtnExpZip == "") frmBill.BtnExpZip = "打包zip";
 
             //是初始化状态.
-            if (generBill.BillState == 0 && power.IsSave == 1)
-                toolBar += "<input type=button value='保存为草稿' id='Btn_SaveAsDraft' onclick='SaveAsDraft();' />";
+            //if (generBill.BillState == 0 && power.IsSave == 1)
+            //    toolBar += "<input type=button value='保存为草稿' id='Btn_SaveAsDraft' onclick='SaveAsDraft();' />";
 
             if (generBill.BillState == 1 || generBill.BillState == 2)
                 toolBar += "<input type=button value='删除' onclick='DeleteIt();' />";
@@ -215,7 +218,7 @@
             }
 
             //获得当前的集合.
-            var fms = new Entities("BP.Frm.Methods", "FrmID", frmID);
+            var fms = new Entities("BP.CCBill.Template.Methods", "FrmID", frmID);
             for (var i = 0; i < fms.length; i++) {
                 var fm = fms[i];
 
@@ -233,7 +236,7 @@
         }
 
         function OpenSetting() {
-            var url = "../Comm/RefFunc/En.htm?EnName=BP.Frm.FrmDict&PKVal=" + GetQueryString("FrmID");
+            var url = "../Comm/RefFunc/En.htm?EnName=BP.CCBill.FrmDict&PKVal=" + GetQueryString("FrmID");
             WinOpenFull(url);
         }
 
@@ -286,7 +289,7 @@
         function Done(msg, funMyPK, methodName, afterOper, w, h,methodType) {
             //打开链接
             if (methodType != 0) {
-                var mlink = new Entity("BP.Frm.MethodLink", funMyPK);
+                var mlink = new Entity("BP.CCBill.Template.MethodLink", funMyPK);
                 var linkUrl = mlink.MethodDoc_Url;
                 if (linkUrl != null && linkUrl != undefined && linkUrl != "") {
                     linkUrl = linkUrl.replace("@basePath", basePath);
@@ -371,28 +374,42 @@
         //保存为草稿.
         function SaveAsDraft() {
 
-            var handler = new HttpHandler("BP.Frm.WF_CCBill");
+            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("MyBill_SaveAsDraft");
             var url = "Draft.htm?FrmID=" + GetQueryString("FrmID");
             window.location.href = url;
         }
 
+        /**
+        * 保存，只有保存后的数据才可以在Search页面显示
+        */
         function SaveIt(isClose) {
-               //保存从表数据
-            $("[name=Dtl]").each(function (i, obj) {
-                var contentWidow = obj.contentWindow;
-                if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
-                    IsSaveTrue = contentWidow.SaveAll();
-
-                }
-            });
-            var data = Save(); //保存.
-            if (data != null
-                && data != undefined
-                && data.indexOf('err@') == 0)
+            //需要验证表单必填，正则表达式，附件
+            if (beforeSaveOrSendDel() == false)
                 return;
 
+            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
+            handler.AddUrlData();
+
+            //组织数据.
+            var dataStrs = getFormData(true, true);
+
+            $.each(dataStrs.split("&"), function (i, o) {
+                var param = o.split("=");
+                if (param.length == 2 && validate(param[1])) {
+                    handler.AddPara(param[0], param[1]);
+                } else {
+                    handler.AddPara(param[0], "");
+                }
+            });
+            var data = handler.DoMethodReturnString("MyBill_SaveIt");
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+                console.log(data);
+                return;
+            }
+           
             if (isClose == true) {
                 window.close();
                 return;
@@ -401,39 +418,56 @@
             window.location.href = window.location.href;
         }
 
+        /**
+         * 保存发送前处理的从表保存，附件必填正则表达式的验证
+         */
+        function beforeSaveOrSendDel() {
+            //保存从表数据
+            $("[name=Dtl]").each(function (i, obj) {
+                var contentWidow = obj.contentWindow;
+                if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
+                    IsSaveTrue = contentWidow.SaveAll();
 
-        function Save() {
-
-            var handler = new HttpHandler("BP.Frm.WF_CCBill");
-            handler.AddUrlData();
-
-            //组织数据.
-            var dataStrs = getFormData(true, true);
-
-            $.each(dataStrs.split("&"), function (i, o) {
-                var param = o.split("=");
-                if (param.length == 2 && validate(param[1])) {
-                    handler.AddPara(param[0], param[1]);
-                } else {
-                    handler.AddPara(param[0], "");
                 }
             });
 
-            /*
-            //需要把下拉框的标签,  abc abcT 也要copy到里面去.否则班级的名字就不能存储. 另外单选按钮的值也没有copy里面去.
-            // @yuanlina.
-            */
-
-            var data = handler.DoMethodReturnString("MyBill_SaveIt");
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-                return data;
+            //检查附件上传
+            var msg = checkAths();
+            if (msg != "") {
+                alert(msg);
+                return false;
             }
+
+            //必填项和正则表达式检查
+            var formCheckResult = true;
+
+            //必填
+            if (checkBlanks() == false) {
+                formCheckResult = false;
+            }
+
+            //正则表达式
+            if (checkReg() == false) {
+                formCheckResult = false;
+            }
+
+            if (formCheckResult == false) {
+                alert("请检查表单必填项,正则表达式");
+                return false;
+            }
+            return true;
         }
 
+      
+        /**
+         * 提交，单据结束
+         */
         function Submit() {
+            //需要验证表单必填，正则表达式，附件
+            if (beforeSaveOrSendDel() == false)
+                return;
 
-            var handler = new HttpHandler("BP.Frm.WF_CCBill");
+            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
             handler.AddUrlData();
 
             //组织数据.
@@ -447,11 +481,6 @@
                     handler.AddPara(param[0], "");
                 }
             });
-
-            /*
-            //需要把下拉框的标签,  abc abcT 也要copy到里面去.否则班级的名字就不能存储. 另外单选按钮的值也没有copy里面去.
-            // @yuanlina.
-            */
 
             var data = handler.DoMethodReturnString("MyBill_Submit");
             if (data.indexOf('err@') == 0) {
@@ -674,7 +703,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
         function DeleteIt() {
             if (window.confirm('您确定要删除吗？') == false)
                 return;
-            var handler = new HttpHandler("BP.Frm.WF_CCBill");
+            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("MyBill_Delete");
 
@@ -695,7 +724,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
         }
         function NewIt() {
 
-            var handler = new HttpHandler("BP.Frm.WF_CCBill");
+            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("MyBill_CreateBlankBillID");
             window.location.href = 'MyBill.htm?FrmID=' + GetQueryString("FrmID") + "&WorkID=" + data;
@@ -740,7 +769,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
                         break;
                     case "shift":
                         $('#modalHeader').text("工作移交");
-                        modalIframeSrc = "./WorkOpt/Forward.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random()
+                        modalIframeSrc = "./WorkOpt/Shift.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.WorkID + "&FK_Flow=" + pageData.FK_Flow + "&Info=&s=" + Math.random()
                         break;
                     case "askfor":
                         $('#modalHeader').text("加签");
@@ -1032,14 +1061,14 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
     <script type="text/javascript">
 
         function setContentHeight() {
-            //            $("body").css("overflow", "hidden");
-            //            $("#divCurrentForm").css("overflow", "hidden");
-            //            $("#topContentDiv").css("overflow", "hidden");
-            //            $("#contentDiv").css("overflow", "hidden");
-            //            $("#divCCForm").css("overflow", "auto");
-            //            $("#CCForm").css("overflow", "hidden");
-            //            $("#CCForm").css("overflow-y", "hidden");
-            //            $("#CCForm").css("height", "auto");
+            $("body").css("overflow", "hidden");
+            $("#divCurrentForm").css("overflow", "hidden");
+            $("#topContentDiv").css("overflow", "hidden");
+            $("#contentDiv").css("overflow", "hidden");
+            $("#divCCForm").css("overflow", "auto");
+            $("#CCForm").css("overflow", "hidden");
+            $("#CCForm").css("overflow-y", "hidden");
+            $("#CCForm").css("height", "auto");
             var bodyHeight = $("body").height();
             var bottomHeight = $("#bottomToolBar").height(); // save button
             if (($("#Btn").css("display") || "") != "block") {
@@ -1062,7 +1091,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
             //            $("#CCForm").css("overflow-y", "hidden");
             $("#CCForm").css("height", "auto");
             $(window).bind("resize", function () {
-                setTimeout(setContentHeight, 100);
+                //setTimeout(setContentHeight, 100);
             });
 
 
@@ -1071,25 +1100,19 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
         /**/</script>
 </head>
 <body onclick="hiddenDiv()">
-    <div id="toolbar" style="margin-left: 10px;">
-        <!-- <input type='button' value="新建" id="Btn_New" onclick="New();" />
-        <input type='button' value="保存" id="Btn_Save" onclick="Save();" />
-        <input type='button' value="启动流程" id="Btn_StartFlow" onclick="StartFlow();" />
-        <input type='button' value="关联单据" id="Btn_RefBill" onclick="RefBill();" />
-        <input type='button' value="删除" id="Btn_Del" onclick="DeleteIt();" />
-        <input type='button' value="查询" id="Btn_Sarch" onclick="Search();" />
-        <input type='button' value="分析" id="Btn_Group" onclick="Group();" />
-        <input type='button' value="上一条" id="Button1" onclick="Pri();" />
-        <input type='button' value="下一条" id="Button2" onclick="Next();" />-->
-    </div>
+   
     <div id="divCurrentForm" style="background: #E3E7F4; position: relative;">
+        <!--底部功能按钮 发送、移交-->
+        <div class="CurrentForm-buttom-bar" style="background-color:white">
+            <div id="toolbar" style="margin-left: 10px;"> </div>
+        </div>
         <!--上半部分表单-->
         <div id="topContentDiv" class="row" style="padding: 5px 2px; margin: 0px auto;">
             <!-- <div id="Title">
-            <div style=" float:right ">
-             <img src="../../DataUser/ICON/LogBig.png" style=" width:100%; text-align:center; height:30px;" />
-            </div>
-             </div>-->
+        <div style=" float:right ">
+         <img src="../../DataUser/ICON/LogBig.png" style=" width:100%; text-align:center; height:30px;" />
+        </div>
+         </div>-->
             <i class="topContentDiv-i" style="display: none;"></i>
             <div id="contentDiv">
                 <form id="divCCForm" method="post">

@@ -15,7 +15,7 @@
     <script type="text/javascript" src="../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
 
-    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script src="../../Scripts/layui/layui/layui.js"></script>
     <script type="text/javascript" src="./js/xadmin.js"></script>
 
     <script type="text/javascript" language="javascript">
@@ -25,7 +25,7 @@
             $("#Msg").html("<img src=../../Img/loading.gif />&nbsp;正在加载,请稍后......");
 
             //获得数数量，并把数量绑定.
-            var handler = new HttpHandler("BP.Frm.WF_CCBill_Portal");
+            var handler = new HttpHandler("BP.CCBill.WF_CCBill_Portal");
             var data = handler.DoMethodReturnJSON("Default_Init");
             GenerFullAllDivVal(data);
 

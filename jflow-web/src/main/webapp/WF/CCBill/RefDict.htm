@@ -224,58 +224,6 @@
 
             //增加按钮.
             html += '<td align="left" colspan=2 style="padding-top:4px"><a href="#"class="btn btn-primary btn-sm" style="margin-left:20px" id="Btn_Search" onclick="Search()">查询</a>  ';
-
-            //获得配置的按钮.
-            var fb = new Entity("BP.CCBill.FrmBill", frmID);
-
-            if (fb.BtnNewLable == "") fb.BtnNewLable = "新建";
-            if (fb.BtnDelLable == "") fb.BtnDelLable = "删除";
-            if (fb.BtnImpExcel == "") fb.BtnImpExcel = "导入";
-            if (fb.BtnExpExcel == "") fb.BtnExpExcel = "导出";
-            if (fb.BtnGroupLabel == "") fb.BtnGroupLabel = "分析";
-
-            var handler = new HttpHandler("BP.CCBill.WF_CCBill_API");
-            handler.AddPara("FrmID", frmID);
-            var powerData = handler.DoMethodReturnString("CCFrom_FrmPower");
-            if (powerData.indexOf("err@") != -1) {
-                alert(powerData);
-                return;
-            }
-            powerData = JSON.parse(powerData);
-
-
-            //权限判断按钮.
-            if (parseInt(powerData.IsInsert) == 1)
-                html += '&nbsp;<a href="#" class="btn btn-default btn-sm" id="Btn_New" onclick="New()">' + fb.BtnNewLable + '</a>';
-
-            if (parseInt(powerData.IsDelete) == 1)
-                html += '&nbsp;<a href="#" class="btn btn-default btn-sm" id="Btn_Del" onclick="javascript:Delete();">' + fb.BtnDelLable + '</a>';
-
-            if (fb.BtnImpExcelEnable == 1)
-                html += '&nbsp;<a href="#" class="btn btn-default btn-sm" id="Btn_Imp" onclick="Imp()">' + fb.BtnImpExcel + '</a> ';
-
-            if (fb.BtnExpExcelEnable == 1)
-                html += '&nbsp;<a href="#" class="btn btn-default btn-sm" id="Btn_ExpExcel" onclick="ExpExcel()">' + fb.BtnExpExcel + '</a>';
-
-            if (fb.BtnGroupEnable == 1)
-                html += '&nbsp;<a href="#" class="btn btn-default btn-sm" id="Btn_Group" onclick="Group()">' + fb.BtnGroupLabel + '</a>';
-
-
-            //增加方法.
-            //获得当前的集合.
-            var fms = new Entities("BP.CCBill.Template.Methods", "FrmID", frmID);
-            for (var i = 0; i < fms.length; i++) {
-                var fm = fms[i];
-
-                //   alert( fm.IsSearchBar);
-
-                if (fm.IsSearchBar != 1)
-                    continue;
-
-                html += "<input type='button' value='" + fm.MethodName + "' id='Btn_" + fm.MethodID + "' onclick=\"Done('" + fm.WarningMsg + "','" + fm.MyPK + "');\" />";
-            }
-
-
             html += "</td></tr>";
 
             html += "</table>";
@@ -405,22 +353,7 @@
                 $('#dg').bootstrapTable("load", data["DT"]);
                 return;
             }
-            //设置查询总数居的合计、平均等信息
-            var heji = data["Search_FieldSet"];
-            var _html = "";
-            if (heji != null && heji != undefined) {
-                $.each(heji, function (i, item) {
-                    var val = item.Value;
-                    if (val == null || val == "" || val == undefined)
-                        val = 0;
-                    if (item.Type == "Sum")
-                        _html += item.Field + "总合计：" + val + " ";
-                    if (item.Type == "Avg")
-                        _html += item.Field + "总平均：" + val + " ";
-                });
-            }
-
-            $("#FieldSet").html("").html(_html);
+            
             return data;
         }
 
@@ -452,17 +385,8 @@
             //颜色设置
             var colorSet = frmDict.ColorSet;
 
+          
             var fieldColumns = {
-                field: "ck",
-                fixed: false,
-                checkbox: true,
-                width: 15,
-                singleSelect: false,
-                rowspan: isThrHeader == true ? 3 : isSecHeader == true ? 2 : 1
-
-            };
-            AddColumn(fieldColumns, firstColumns, secondColumns, threeColumns, isThrHeader == true ? 3 : isSecHeader == true ? 2 : 1);
-            fieldColumns = {
                 title: '序',
                 field: '',
                 align: 'center',
@@ -529,10 +453,7 @@
                         fixed: false,
                         sortable: sortable,
                         rowspan: keyRowSpan,
-                        formatter: function (value, row, index) {
-                            var icon = GenerICON(false, row.BillState);
-                            return "<a href=\"javascript:OpenIt('" + row.OID + "','" + frmID + "','" + 0 + "',' ','" + webUser.No + "','" + row.BillState + "',)\"><img src=" + icon + " border=0 width='14px;' />" + value + "</a>";
-                        }
+                        
                     };
                     AddColumn(fieldColumns, firstColumns, secondColumns, threeColumns, keyRowSpan);
                     continue;
@@ -593,20 +514,6 @@
                     fixed: false,
                     sortable: sortable,
                     rowspan: keyRowSpan,
-                    formatter: function (value, row, index) {
-                        var fieldColor = [];
-                        if (colorSet.indexOf("@" + this.field + ":") != -1) {
-                            fieldColor = getFieldColor(colorSet, this.field);
-                        }
-                        if (fieldColor.length == 0)
-                            return value;
-                        for (var i = 0; i < fieldColor.length; i++) {
-                            var color = fieldColor[i];
-                            if (color.From <= value && color.To >= value)
-                                return "<div style='width:20px;height:20px;text-align:center;background:" + color.Color + "'>" + value + "</div>";
-                        }
-                    }
-
                 };
                 AddColumn(fieldColumns, firstColumns, secondColumns, threeColumns, keyRowSpan);
             }
@@ -635,7 +542,6 @@
                 striped: true,
                 height: tableH,
                 singleSelect: false,
-                checkOnSelect: false,
                 selectOnCheck: false,
                 maintainSelected: true,
                 sidePagination: "client",
@@ -658,15 +564,20 @@
                 },
 
                 onDblClickRow: function (row, $element) {
-                    var pkval = row["OID"];
-                    var paras = "&OID" + "=" + pkval;
-                    for (var i = 0; i < attrs.length; i++) {
-                        var attr = attrs[i];
-                        if (attr.UIContralType == 1)
-                            paras += "&" + attr.KeyOfEn + "=" + row[attr.KeyOfEn];
+                   //处理选择实体数据后生成单据信息
+                    var handler = new HttpHandler("BP.CCBill.WF_CCBill");
+                    handler.AddPara("RefOID", row.OID);
+                    handler.AddPara("RefDict", GetQueryString("FrmID"));
+                    handler.AddPara("FrmID", GetQueryString("BillID"));
+                    var data = handler.DoMethodReturnString("RefDict_CreateBillWorkID");
+                    if (data.indexOf("err@") != -1) {
+                        alert(data);
+                        console.log(data);
+                        return;
                     }
 
-                    OpenIt(pkval, frmID);
+                    //打开学生缴费页面
+                    window.location.href = "./MyBill.htm?FrmID=" + GetQueryString("BillID") + "&FK_MapData=" + GetQueryString("BillID") + "&WorkID=" + data;
                 }
 
             });
@@ -891,103 +802,7 @@
             Paginator(pages, pageIdx);
         }
 
-        function Exp() {
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-            handler.AddPara("EnsName", GetQueryString("EnsName"));
-            //查询集合
-            var data = handler.DoMethodReturnString("Search_Exp");
-            var url = "";
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-            }
-            if (plant != 'CCFlow') {
-                var currentPath = window.document.location.href;
-                var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
-                data = path + data;
-            }
-            window.open(data);
-            return;
-        }
-
-        function GenerOper(workID, BillState, frmID, nodeID, fid, isCanDo) {
-
-            if (BillState == 3)
-                return "";
-
-            if (BillState == 2 && isCanDo == true)
-                return "";
-
-            if (BillState == 3)
-                return "<a href=''>轨迹</a>";
-
-            if (BillState == 2)
-                return "<a href=\"javascript:UnSend('" + frmID + "','" + nodeID + "','" + workID + "','" + fid + "');\" >撤销</a>";
-
-            var url = "WFRpt.htm?WorkID=" + workID + "&FrmID=" + frmID;
-
-            return "<a href=\"javascript:WinOpen('" + url + "');\" >轨迹</a>";
-        }
-
-        function New(workid) {
-
-            var frmID = GetQueryString("FrmID");
-
-            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
-            handler.AddUrlData();
-
-            var data = handler.DoMethodReturnString("MyDict_CreateBlankDictID");
-
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-                return;
-            }
-
-            OpenIt(data, frmID);
-            //var url = "MyBill.htm?FK_MapData=" + frmID + "&FrmID=" + frmID + "&WorkID=" + workID;
-            //window.location.href=url;
-            return;
-
-        }
-
-        function Delete() {
-
-            if (confirm("您确定要删除吗？") == false)
-                return;
-            //删除选中的行
-            var selectRow = $('#dg').bootstrapTable('getSelections');
-
-            if (selectRow.length == 0) {
-                alert("没有选择行，不能删除");
-                return;
-            }
-            var workid = "";
-            for (var i = 0; i < selectRow.length; i++) {
-                workid += "'" + selectRow[i]["OID"] + "',";
-            }
-            workid = workid.substring(0, workid.length - 1);
-            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
-            handler.AddPara("FrmID", GetQueryString("FrmID"));
-            handler.AddPara("WorkIDs", workid);
-            var data = handler.DoMethodReturnString("MyBill_Deletes");
-
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-            }
-            pageIdx = 1;
-            SearchData();
-        }
-        function GenerColor(BillState, isCanDo) {
-
-            if (BillState == 100) {
-                return "green";
-            }
-
-            if (BillState == 1) {
-                return "yellow";
-            }
-            return "";
-        }
-
+      
         function GetBillState(BillState, isCanDo) {
             if (BillState == 0)
                 return "空白";
@@ -1003,23 +818,7 @@
 
             return BillState;
         }
-        function GenerICON(isCanDo, BillState) {
-
-            if (BillState == 3)
-                icon = "./Img/BillState/Complete.png";  //已经完成.
-            else if (BillState == 2)
-                icon = "./Img/BillState/Runing.png"; //运行中.
-            else if (BillState == 5)
-                icon = "./Img/BillState/ReturnSta.png"; //退回.
-            else
-                icon = "./Img/BillState/Etc.png"; //其他.
-
-            if (isCanDo == true && BillState != 3)
-                icon = "./Img/BillState/Todo.png"; //其他.
-
-            return icon;
-        }
-
+    
         function OpenIt(workid, frmID, nodeID, emps, userNo, BillState) {
 
             //RowOpenModel  0=新窗口打开 1=在本窗口打开 2=弹出窗口打开,关闭后不刷新列表 3=弹出窗口打开,关闭
@@ -1054,74 +853,6 @@
             return;
 
 
-        }
-
-        /**
-        * 获取字段的设置
-        * @param colorSet  颜色总体设置
-        * @param keyOfEn 字段
-        */
-        function getFieldColor(colorSet, keyOfEn) {
-            var fieldColor = [];
-            var colorSets = colorSet.split('@');
-            for (var i = 0; i < colorSets.length; i++) {
-                if (colorSets[i] == "")
-                    continue;
-                var strs = colorSets[i].split(':');
-                if (strs.length == 0 || strs.length == 1)
-                    continue;
-                if (strs[0] != keyOfEn)
-                    continue;
-                var ss = strs[1].split(';');
-                for (var k = 0; k < ss.length; k++) {
-                    if (ss[k] == "")
-                        continue;
-                    var ts = ss[k].split(',');
-                    if (ts.length < 3) {
-                        alert('字段' + keyOfEn + '范围颜色设置格式错误');
-                        break;
-                    }
-
-                    fieldColor.push({
-                        "From": parseInt(ts[0].replace("From=", "")),
-                        "To": parseInt(ts[1].replace("To=", "")),
-                        "Color": ts[2].replace("Color=", "")
-                    });
-                }
-
-
-
-            }
-            return fieldColor;
-        }
-
-
-        ///导入.
-        function Imp() {
-            var url = "./Opt/Imp.htm?FrmID=" + GetQueryString("FrmID") + "&EntityType=2";
-            window.location.href = url;
-        }
-
-        //导出EXCEL表
-        function ExpExcel() {
-            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
-            handler.AddPara("FrmID", GetQueryString("FrmID"));
-            //查询集合
-            var data = handler.DoMethodReturnString("Search_Exp");
-            var url = "";
-            if (data.indexOf('err@') == 0) {
-                alert(data);
-            }
-
-            data = basePath + data;
-            window.open(data);
-            return;
-
-        }
-
-        function Group() {
-            var url = "Group.htm?FrmID=" + GetQueryString("FrmID");
-            window.location.href = url;
         }
     </script>
 

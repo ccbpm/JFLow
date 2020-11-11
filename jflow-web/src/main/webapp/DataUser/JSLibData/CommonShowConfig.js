@@ -11,4 +11,14 @@ var Hide_IsTodoList = true; //待办列表中是否显示查看授权:true 显�
 var UserICon = "@basePath/DataUser/Siganture/"; //默认的用户签名地址
 var UserIConExt = ".jpg";
 
+/**
+ * 退回窗口的配置信息.
+ * */
+
+//是否强制设置退回并原路返回?
+var ReturnWin_IsBackTracking_Selected = true; //是否默认选中?
+var ReturnWin_IsKillEtcThread_Show = false; //是否显示:全部子线程退回.
+
+
+
 

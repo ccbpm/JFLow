@@ -4,30 +4,55 @@
 2. 这里方法大多是执行后，返回json ,可以被页面控件调用. 
 */
 function funDemo() {
-   alert("我被执行了。");
+    alert("我被执行了。");
+}
+
+//FK_MapData,附件属性，RefPK,FK_Node
+function afterDtlImp(FK_MapData, frmAth, newOID, FK_Node, oldOID,oldFK_MapData) {
+    //处理从表附件导入的事件.
+
+}
+
+function CompareData() {
+    if ($("#TB_StartTime").val() > $("#TB_EndTime").val()) {
+        alert("开始时间不能大于结束时间");
+        return false;
+    }
     return true;
 }
 
-function sendbeforea(){
-	return true;
+function HeJi() {
+    var bmhj = $("#BMHJ").val();
+    var jthj = $("#JTHJ").val();
+    var bzhj = $("#BZHJ").val();
+    $("#HeJj").val(bmhj + jthj + bzhj);
+
+
 }
 
-function setShuZhi3Value(){
-	alert("我被执行了11。");
-}
-/**从表附件导入的固定方法，不可人为删除**/
-//FK_MapData,附件属性，RefPK,FK_Node
-function afterDtlImp(FK_MapData, frmAth, newOID, FK_Node, oldOID,oldFK_MapData) {
-    //处理从表附件导入的事件
+function GetShiJian(keyOfEn) {
+    alert($("#TB_" + keyOfEn + "_0").val());
 }
 
-function ChangeFormValue(form1,form2){
-	//根据WorkID 获取form1表单的数据
-	var handler = new HttpHandler("B")
-	var workID = GetQueryString("WorkID");
-	var en = new Entity("BP.Sys.GEEntity");
-	
-	en.OID = workID;
-	
-	
-}
+
+function IsSaveDtl() {
+    var regInput = true;
+    //获取页面的所有IFrame
+    var frames = $("#divCCForm").find("iframe");
+    var dtlFrames = $.grep(frames, function (frame,idx) {
+        if (frame.id.indexOf("Dtl_") == 0)
+            return frame;
+    });
+
+    //循环从表IFrame，如果有未填的返回false
+    $.each(dtlFrames, function (idx, dtlFrame) {
+        var mustInput = $(this).contents().find(".errorInput");
+
+        if (mustInput.length > 0) {
+            regInput = false;
+            return;
+        }
+    });
+
+return regInput;
+}    

@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 
-import BP.DA.DataTable;
+import bp.da.DataTable;
 
 /**
  * 外部接口
@@ -19,9 +19,10 @@ public interface LocalWSI {
 	 * @param userNo 用户编号
 	 * @param sysNo 系统编号,为空时返回平台所有数据
 	 * @return
+	 * @throws Exception 
 	 */
 
-	public String DB_Todolist(String userNo, String sysNo);
+	public String DB_Todolist(String userNo, String sysNo) throws Exception;
 	
 	/**
 	 * 获得在途
@@ -50,9 +51,10 @@ public interface LocalWSI {
 	 * @param pageSize
 	 * @param pageIdx
 	 * @return
+	 * @throws Exception 
 	 */
 
-	public String DB_MyStartFlowInstance(String userNo, String sysNo, int pageSize, int pageIdx);
+	public String DB_MyStartFlowInstance(String userNo, String sysNo, int pageSize, int pageIdx) throws Exception;
 	/**
 	 * 创建WorkID
 	 * @param flowNo 流程编号
@@ -177,7 +179,7 @@ public interface LocalWSI {
 	 * @throws Exception
 	 */
 
-	public  String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg, String userNo) throws Exception;
+	public  String Flow_DoFlowOverQiangZhi(long workID, String msg, String userNo) throws Exception;
 
 	
 	/**
@@ -360,5 +362,6 @@ public interface LocalWSI {
 	 */
    public String CCForm_AddAth(int fk_node, String fk_flow, long workid, String athNo, String fk_mapData,
 							   String filePath, String fileName, String sort, long fid, long pworkid) throws  Exception;
+
 
 }

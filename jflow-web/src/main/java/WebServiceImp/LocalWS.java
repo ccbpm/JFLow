@@ -1,23 +1,28 @@
 package WebServiceImp;
 import java.util.Hashtable;
 
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.WF.Flow;
-import BP.WF.GenerWorkFlow;
-import BP.WF.GenerWorkerListAttr;
-import BP.WF.GenerWorkerLists;
-import BP.WF.Node;
-import BP.WF.Nodes;
-import BP.WF.WFState;
-import BP.WF.Data.GERpt;
+import bp.da.DBAccess;
+import bp.da.DataRow;
+import bp.da.DataSet;
+import bp.da.DataTable;
+import bp.da.DataType;
+import bp.tools.Json;
+import bp.wf.AppClass;
+import bp.wf.Dev2Interface;
+import bp.wf.Flow;
+import bp.wf.GenerWorkFlow;
+import bp.wf.GenerWorkerListAttr;
+import bp.wf.GenerWorkerLists;
+import bp.wf.Node;
+import bp.wf.Nodes;
+import bp.wf.SendReturnObjs;
+import bp.wf.WFState;
+import bp.wf.data.GERpt;
 
-import BP.WF.Template.Directions;
-import BP.WF.Template.FlowExt;
-import BP.WF.Template.FrmWorkCheck;
-import BP.WF.Template.Selector;
+import bp.wf.template.Directions;
+import bp.wf.template.FlowExt;
+import bp.wf.template.NodeWorkCheck;
+import bp.wf.template.Selector;
 
 import WebService.LocalWSI;
 
@@ -31,12 +36,13 @@ public class LocalWS implements LocalWSI {
 	 * @param sysNo
 	 *            系统编号,为空时返回平台所有数据
 	 * @return
+	 * @throws Exception 
 	 */
 
 	@Override
-	public String DB_Todolist(String userNo, String sysNo) {
+	public String DB_Todolist(String userNo, String sysNo) throws Exception {
 		try {
-			BP.WF.Dev2Interface.Port_Login(userNo);
+			Dev2Interface.Port_Login(userNo);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,8 +53,8 @@ public class LocalWS implements LocalWSI {
 		else
 			sql = "SELECT * FROM WF_EmpWorks WHERE Domain='" + sysNo + "' AND FK_Emp='" + userNo + "'";
 
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		return BP.Tools.Json.ToJson(dt);
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return Json.ToJson(dt);
 	}
 
 	/**
@@ -63,9 +69,9 @@ public class LocalWS implements LocalWSI {
 	 */
 	@Override
 	public String DB_Runing(String userNo, String sysNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		DataTable dt = BP.WF.Dev2Interface.DB_GenerRuning(userNo, null, false);
-		return BP.Tools.Json.ToJson(dt);
+		bp.wf.Dev2Interface.Port_Login(userNo);
+		DataTable dt = Dev2Interface.DB_GenerRuning(userNo, null, false);
+		return Json.ToJson(dt);
 	}
 
 	/**
@@ -81,9 +87,9 @@ public class LocalWS implements LocalWSI {
 
 	@Override
 	public String DB_StarFlows(String userNo, String domain) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		DataTable dt = BP.WF.Dev2Interface.DB_StarFlows(userNo, domain);
-		return BP.Tools.Json.ToJson(dt);
+		Dev2Interface.Port_Login(userNo);
+		DataTable dt = Dev2Interface.DB_StarFlows(userNo, domain);
+		return Json.ToJson(dt);
 	}
 
 	/**
@@ -98,9 +104,9 @@ public class LocalWS implements LocalWSI {
 	 * @return
 	 */
 	@Override
-	public String DB_MyStartFlowInstance(String userNo, String domain, int pageSize, int pageIdx) {
+	public String DB_MyStartFlowInstance(String userNo, String domain, int pageSize, int pageIdx)throws Exception {
 		try {
-			BP.WF.Dev2Interface.Port_Login(userNo);
+			Dev2Interface.Port_Login(userNo);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,8 +117,8 @@ public class LocalWS implements LocalWSI {
 		else
 			sql = "SELECT * FROM WF_GenerWorkFlow WHERE Domain='" + domain + "' AND Starter='" + userNo + "'";
 
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sql);
-		return BP.Tools.Json.ToJson(dt);
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return Json.ToJson(dt);
 	}
 
 	/**
@@ -128,8 +134,8 @@ public class LocalWS implements LocalWSI {
 
 	@Override
 	public long CreateWorkID(String flowNo, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		return BP.WF.Dev2Interface.Node_CreateBlankWork(flowNo, userNo);
+		Dev2Interface.Port_Login(userNo);
+		return Dev2Interface.Node_CreateBlankWork(flowNo, userNo);
 	}
 
 	/**
@@ -152,8 +158,8 @@ public class LocalWS implements LocalWSI {
 	@Override
 	public String SendWork(String flowNo, long workid, Hashtable ht, int toNodeID, String toEmps, String userNo)
 			throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		BP.WF.SendReturnObjs objs = BP.WF.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
+		Dev2Interface.Port_Login(userNo);
+		SendReturnObjs objs = Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
         
 		String msg = objs.ToMsgOfText();
         System.out.println(msg);
@@ -167,7 +173,7 @@ public class LocalWS implements LocalWSI {
 			myht.put("VarToNodeID", objs.getVarToNodeID());
 			myht.put("VarToNodeName", objs.getVarToNodeName() == null ? "" : objs.getVarToNodeName());
 		}
-		return BP.Tools.Json.ToJson(myht);
+		return Json.ToJson(myht);
 	}
 
 	/**
@@ -182,8 +188,8 @@ public class LocalWS implements LocalWSI {
 
 	@Override
 	public void SaveParas(long workid, String paras, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		BP.WF.Dev2Interface.Flow_SaveParas(workid, paras);
+		Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Flow_SaveParas(workid, paras);
 
 	}
 
@@ -202,12 +208,12 @@ public class LocalWS implements LocalWSI {
 
 	@Override
 	public String GenerNextStepNode(String flowNo, long workid, String paras, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		if (paras != null)
-			BP.WF.Dev2Interface.Flow_SaveParas(workid, paras);
+			Dev2Interface.Flow_SaveParas(workid, paras);
 
-		int nodeID = BP.WF.Dev2Interface.Node_GetNextStepNode(flowNo, workid);
-		BP.WF.Node nd = new BP.WF.Node(nodeID);
+		int nodeID = Dev2Interface.Node_GetNextStepNode(flowNo, workid);
+		Node nd = new Node(nodeID);
 
 		// 如果字段 DeliveryWay = 4 就表示到达的接点是由当前节点发送人选择接收人.
 		// 自定义参数的字段是 SelfParas, DeliveryWay
@@ -231,13 +237,13 @@ public class LocalWS implements LocalWSI {
 
 	@Override
 	public String GenerNextStepNodeEmps(String flowNo, int toNodeID, int workid, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		Selector select = new Selector(toNodeID);
 		Node nd = new Node(toNodeID);
 
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(flowNo) + "Rpt", workid);
 		DataSet ds = select.GenerDataSet(toNodeID, rpt);
-		return BP.Tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
 	/**
@@ -253,12 +259,12 @@ public class LocalWS implements LocalWSI {
 
 		try {
 
-			BP.WF.Dev2Interface.Port_Login(userNo);
+			Dev2Interface.Port_Login(userNo);
 
 			GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
-			DataTable dt = BP.WF.Dev2Interface.DB_GenerWillReturnNodes(gwf.getFK_Node(), workID, gwf.getFID());
-			return BP.Tools.Json.ToJson(dt);
+			DataTable dt = Dev2Interface.DB_GenerWillReturnNodes(gwf.getFK_Node(), workID, gwf.getFID());
+			return Json.ToJson(dt);
 		} catch (Exception ex) {
 			return "err@" + ex.getMessage();
 		}
@@ -277,7 +283,7 @@ public class LocalWS implements LocalWSI {
 	public String WillToNodes(int currNodeID, String userNo) throws Exception {
 
 		try {
-			BP.WF.Dev2Interface.Port_Login(userNo);
+			Dev2Interface.Port_Login(userNo);
 			Node nd = new Node(currNodeID);
 
 			Directions dirs = new Directions();
@@ -299,7 +305,7 @@ public class LocalWS implements LocalWSI {
 
 	@Override
 	public String CurrNodeInfo(int currNodeID, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		Node nd = new Node(currNodeID);
 		return nd.ToJson();
 	}
@@ -315,7 +321,7 @@ public class LocalWS implements LocalWSI {
 
 	@Override
 	public String CurrFlowInfo(String flowNo, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		Flow fl = new Flow(flowNo);
 		return fl.ToJson();
 	}
@@ -330,7 +336,7 @@ public class LocalWS implements LocalWSI {
 	 */
 	@Override
 	public String CurrGenerWorkFlowInfo(long workID, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 		return gwf.ToJson();
 	}
@@ -349,9 +355,9 @@ public class LocalWS implements LocalWSI {
 	 */
 	@Override
 	public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
-		return BP.WF.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(),
+		return Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(),
 				returnToNodeID, null, returnMsg, false);
 
 	}
@@ -370,16 +376,16 @@ public class LocalWS implements LocalWSI {
 	 */
 
 	@Override
-	public String Flow_DoFlowOverQiangZhi(String flowNo, long workID, String msg, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		return BP.WF.Dev2Interface.Flow_DoFlowOver(flowNo, workID, msg,1);
+	public String Flow_DoFlowOverQiangZhi(long workID, String msg, String userNo) throws Exception {
+		Dev2Interface.Port_Login(userNo);
+		return Dev2Interface.Flow_DoFlowOver( workID, msg,1);
 
 	}
 
 	@Override
 	public void Port_Login(String userNo) throws Exception {
 
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 	}
 
 	/**
@@ -399,9 +405,9 @@ public class LocalWS implements LocalWSI {
 	public String Runing_UnSend(String userNo, String flowNo, long workID, int unSendToNode, long fid)
 			throws Exception {
 
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 
-		return BP.WF.Dev2Interface.Flow_DoUnSend(flowNo, workID, unSendToNode, fid);
+		return Dev2Interface.Flow_DoUnSend(flowNo, workID, unSendToNode, fid);
 	}
 
 	/**
@@ -421,7 +427,7 @@ public class LocalWS implements LocalWSI {
 	@Override
 	public String DoRebackFlowData(String flowNo, long workId, int backToNodeID, String backMsg, String userNo)
 			throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		FlowExt flow = new FlowExt(flowNo);
 		return flow.DoRebackFlowData(workId, backToNodeID, backMsg);
 	}
@@ -463,8 +469,8 @@ public class LocalWS implements LocalWSI {
 	 */
 	@Override
 	public String WorkProgressBar(long workID, String userNo) throws Exception {
-		DataSet ds = BP.WF.Dev2Interface.DB_JobSchedule(workID);
-		return BP.Tools.Json.ToJson(ds);
+		DataSet ds = Dev2Interface.DB_JobSchedule(workID);
+		return Json.ToJson(ds);
 	}
 
 	/**
@@ -480,17 +486,17 @@ public class LocalWS implements LocalWSI {
 	public String WorkProgressBar20(long  workID, String userNo) throws Exception
     {
 		
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		
-		return BP.WF.AppClass.JobSchedule(workID);
+		return AppClass.JobSchedule(workID);
 		 
     }
 
 	@Override
 	public String SDK_Page_Init(long  workID, String userNo) throws Exception
     {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		return  BP.WF.Dev2Interface.SDK_Page_Init(workID);
+		Dev2Interface.Port_Login(userNo);
+		return  Dev2Interface.SDK_Page_Init(workID);
     }
 
 	// 根据当前节点获得下一个节点.
@@ -531,14 +537,15 @@ public class LocalWS implements LocalWSI {
 	 * @param password
 	 *            用户密码
 	 * @return 返回查询数据
+	 * @throws Exception 
 	 */
 	@Override
-	public String DB_RunSQLReturnJSON(String sqlOfSelect, String password) {
+	public String DB_RunSQLReturnJSON(String sqlOfSelect, String password) throws Exception {
 		if (password.equals(password) == false)
 			return "err@密码错误";
 
-		DataTable dt = BP.DA.DBAccess.RunSQLReturnTable(sqlOfSelect);
-		return BP.Tools.Json.ToJson(dt);
+		DataTable dt = DBAccess.RunSQLReturnTable(sqlOfSelect);
+		return Json.ToJson(dt);
 	}
 
 	/**
@@ -562,8 +569,8 @@ public class LocalWS implements LocalWSI {
 	@Override
 	public String Node_CC_WriteTo_CClist(int fk_node, long workID, String toEmpNo, String toEmpName, String msgTitle,
 			String msgDoc, String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		return BP.WF.Dev2Interface.Node_CC_WriteTo_CClist(fk_node, workID, toEmpNo, toEmpName, msgTitle, msgDoc);
+		Dev2Interface.Port_Login(userNo);
+		return Dev2Interface.Node_CC_WriteTo_CClist(fk_node, workID, toEmpNo, toEmpName, msgTitle, msgDoc);
 	}
 
 
@@ -577,7 +584,7 @@ public class LocalWS implements LocalWSI {
 	@Override
     public Boolean Flow_IsCanView(String flowNo, long workid, String userNo) throws Exception
     {
-        return BP.WF.Dev2Interface.Flow_IsCanViewTruck(flowNo, workid,userNo);
+        return Dev2Interface.Flow_IsCanViewTruck(flowNo, workid,userNo);
     }
     
     /** 
@@ -590,7 +597,7 @@ public class LocalWS implements LocalWSI {
 	@Override
     public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception
     {
-        return BP.WF.Dev2Interface.Flow_IsCanDoCurrentWork(workid, userNo);
+        return Dev2Interface.Flow_IsCanDoCurrentWork(workid, userNo);
     }
 
     
@@ -604,10 +611,10 @@ public class LocalWS implements LocalWSI {
 	 */
 	@Override
 	public String DB_CCList(String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 
-		DataTable dt = BP.WF.Dev2Interface.DB_CCList(userNo);
-		return BP.Tools.Json.ToJson(dt);
+		DataTable dt = Dev2Interface.DB_CCList(userNo);
+		return Json.ToJson(dt);
 	}
 	
 	/** 
@@ -621,7 +628,7 @@ public class LocalWS implements LocalWSI {
     public void Node_WriteWorkCheck(long workid, String msg) throws Exception
     {
         GenerWorkFlow gwf = new GenerWorkFlow(workid);
-          BP.WF.Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), msg,"审核");
+          Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), msg,"审核");
     }
 	
 	/**
@@ -636,9 +643,9 @@ public class LocalWS implements LocalWSI {
     */
 	@Override
 	public String DB_WorkCheck(String FK_Flow, int FK_Node, long workId, long fid,boolean isReadonly) throws Exception {
-		return FK_Flow;
-//		DataSet ds =BP.WF.Dev2Interface.DB_WorkCheck(FK_Flow,FK_Node,workId,fid,isReadonly);
-//		return BP.Tools.Json.ToJson(ds);
+		//DataSet ds =bp.wf.Dev2Interface.DB_WorkCheck(FK_Flow,FK_Node,workId,fid,isReadonly);
+		//return Json.ToJson(ds);
+		return "";
 	}
 
 	/**
@@ -653,7 +660,7 @@ public class LocalWS implements LocalWSI {
 		DataSet ds = new DataSet();
 
 		//获取track.
-		DataTable dt = BP.WF.Dev2Interface.DB_GenerTrackTable(fk_flow, workid, fid);
+		DataTable dt = Dev2Interface.DB_GenerTrackTable(fk_flow, workid, fid);
 		ds.Tables.add(dt);
 		//获取 WF_GenerWorkFlow
 		GenerWorkFlow gwf = new GenerWorkFlow();
@@ -670,11 +677,11 @@ public class LocalWS implements LocalWSI {
 		}
 		
 	    //把节点审核配置信息.
-		FrmWorkCheck fwc = new FrmWorkCheck(gwf.getFK_Node());
+		NodeWorkCheck fwc = new NodeWorkCheck(gwf.getFK_Node());
 		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 		//返回结果.
-		return BP.Tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 		
 	}
 	
@@ -683,11 +690,11 @@ public class LocalWS implements LocalWSI {
 	 */
 	@Override
 	public String DB_MyJoinFlows(String userNo) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		return userNo;
 		
-//		DataSet ds = BP.WF.Dev2Interface.DB_CommSearch("BP.WF.Data.MyJoinFlows");
-//		return BP.Tools.Json.ToJson(ds);
+//		DataSet ds = bp.wf.Dev2Interface.DB_CommSearch("bp.wf.Data.MyJoinFlows");
+//		return Json.ToJson(ds);
 	}
 
 	/***
@@ -700,8 +707,8 @@ public class LocalWS implements LocalWSI {
 	 */
 	@Override
 	public String DeleteFlow(String userNo,long workid,String fk_flow) throws Exception{
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		return BP.WF.Dev2Interface.Flow_DoDeleteFlowByReal(fk_flow, workid, true);
+		Dev2Interface.Port_Login(userNo);
+		return Dev2Interface.Flow_DoDeleteFlowByReal( workid, true);
 	}
 
 	/**
@@ -722,7 +729,7 @@ public class LocalWS implements LocalWSI {
 	@Override
 	public String CCForm_AddAth(int fk_node, String fk_flow, long workid, String athNo, String fk_mapData,
 								String filePath, String fileName, String sort, long fid, long pworkid) throws Exception{
-		BP.WF.Dev2Interface.CCForm_AddAth(fk_node,fk_flow,workid,athNo,fk_mapData,filePath,fileName,sort,fid,pworkid);
+		Dev2Interface.CCForm_AddAth(fk_node,fk_flow,workid,athNo,fk_mapData,filePath,fileName,sort,fid,pworkid);
 		return "附件传递成功";
 	}
 }

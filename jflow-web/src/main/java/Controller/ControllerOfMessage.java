@@ -1,10 +1,9 @@
 package Controller;
 
-import BP.DA.DataType;
-import BP.Difference.ContextHolderUtils;
-import BP.Difference.SystemConfig;
-import BP.WF.WeiXin.DingDing;
-import BP.WF.WeiXin.WeiXin;
+import bp.da.DataType;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
+import bp.gpm.Emp;
 import net.sf.json.JSONObject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,29 +93,29 @@ public class ControllerOfMessage {
 //        String msgInfo = this.getContent();
 //        String sender = this.getSender();
         String sendTo = this.getSenderTo();
-        BP.GPM.Emp emp = new BP.GPM.Emp(sendTo);
+        Emp emp = new Emp(sendTo);
         //钉钉
         if(this.getDoType().equals("SendToDingDing")) {
-            DingDing dingding = new DingDing();
+           /* DingDing dingding = new DingDing();
             String postJson = dingding.ResponseMsg(emp.getTel(), this.getTitle(), "", "text", this.getContent());
             boolean flag = dingding.PostDingDingMsg(postJson,this.getSenderTo());
             if(flag == false)
-                throw new Exception("发送消息失败");
+                throw new Exception("发送消息失败");*/
             return true;
         }
         //微信
         if(this.getDoType().equals("SendToWeiXin")){
-            WeiXin weiXin = new WeiXin();
+            //WeiXin weiXin = new WeiXin();
             boolean flag=false;
             this.getSenderTo();
             if(!DataType.IsNullOrEmpty(SystemConfig.getWX_AgentID()))
             {
-            	String postJson = weiXin.ResponseMsg(emp.getEmpNo(), "", "", "text", this.getContent());
-            	flag= new WeiXin().PostWeiXinMsg(postJson);
+            	//String postJson = weiXin.ResponseMsg(emp.getEmpNo(), "", "", "text", this.getContent());
+            	//flag= new WeiXin().PostWeiXinMsg(postJson);
             }
             if(!DataType.IsNullOrEmpty(SystemConfig.getWXGZH_Appid()))
             {
-            	flag=new WeiXin().PostGZHMsg(this.getTitle(), this.getSender(),DataType.getCurrentDateTime(),this.getSenderTo());
+            	//flag=new WeiXin().PostGZHMsg(this.getTitle(), this.getSender(),DataType.getCurrentDateTime(),this.getSenderTo());
             }
             if(flag == false)
                 throw new Exception("发送消息失败");

@@ -2,8 +2,8 @@ package WebServiceImp;
 
 import java.util.Hashtable;
  
-import org.apache.axis.client.Call;  
-import org.apache.axis.client.Service;  
+import org.apache.axis.client.Call;
+import org.apache.axis.client.Service;
 import javax.xml.namespace.QName;  
 
 

@@ -3,8 +3,6 @@ package WebServiceImp;
 import java.util.HashMap;
 import java.util.Map;
 
-import BP.WF.WeiXin.DingDing;
-import BP.WF.WeiXin.WeiXin;
 import WebService.PortalInterfaceWSI;
 
 /**
@@ -46,11 +44,11 @@ public class PortalInterfaceWS  implements PortalInterfaceWSI{
 	public boolean SendToDingDing(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
 			String msgType) throws Exception {
 		
-		DingDing dingding = new DingDing();
-		String postJson = dingding.ResponseMsg(sendToEmpNo, "", "", "text", msgInfo);
-		boolean flag = dingding.PostDingDingMsg(postJson,sendToEmpNo);
-		if(flag == false)
-			throw new Exception("发送消息失败");
+		//DingDing dingding = new DingDing();
+		//String postJson = dingding.ResponseMsg(sendToEmpNo, "", "", "text", msgInfo);
+		//boolean flag = dingding.PostDingDingMsg(postJson,sendToEmpNo);
+		//if(flag == false)
+		//	throw new Exception("发送消息失败");
 		return true;
 	}
 
@@ -69,11 +67,11 @@ public class PortalInterfaceWS  implements PortalInterfaceWSI{
 	@Override
 	public boolean SendToWeiXin(String sender, String sendToEmpNo, String title, String msgInfo, String OpenUrl,
 			String msgType) throws Exception {
-		WeiXin weiXin = new WeiXin();
+		/*WeiXin weiXin = new WeiXin();
 		String postJson = weiXin.ResponseMsg(sendToEmpNo, "", "", "text", msgInfo);
 		boolean flag = new WeiXin().PostWeiXinMsg(postJson);
 		if(flag == false)
-			throw new Exception("发送消息失败");
+			throw new Exception("发送消息失败");*/
 		return true;
 	}
 

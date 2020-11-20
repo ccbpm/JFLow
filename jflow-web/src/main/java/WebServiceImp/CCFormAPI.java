@@ -4,18 +4,22 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 
-import BP.DA.DataRow;
-import BP.DA.DataSet;
-import BP.DA.DataTable;
-import BP.DA.DataType;
-import BP.En.Attr;
-import BP.En.Attrs;
-import BP.Sys.GEDtlAttr;
-import BP.Sys.GEDtls;
-import BP.Sys.MapData;
-import BP.Sys.MapDtl;
-import BP.Sys.MapDtls;
-import BP.Web.WebUser;
+import bp.da.DataRow;
+import bp.da.DataSet;
+import bp.da.DataTable;
+import bp.da.DataType;
+import bp.en.Attr;
+import bp.en.Attrs;
+import bp.sys.GEDtlAttr;
+import bp.sys.GEDtls;
+import bp.sys.MapData;
+import bp.sys.MapDtl;
+import bp.sys.MapDtls;
+import bp.web.WebUser;
+import bp.wf.Dev2Interface;
+import bp.wf.GenerWorkFlow;
+import bp.wf.data.GERpt;
+import bp.wf.template.BillTemplate;
 import WebService.CCFormAPII;
 
 @WebService
@@ -36,24 +40,24 @@ public class CCFormAPI implements CCFormAPII{
 	@WebMethod
 	public void GenerBillTemplate(String userNo, String sid, long workID, String billTemplateNo, DataSet ds,
 			byte[] bytes) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
 			userNo = WebUser.getNo();
 		}
 
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		BP.WF.GenerWorkFlow gwf = new BP.WF.GenerWorkFlow(workID);
+		Dev2Interface.Port_Login(userNo);
+		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
 		//是否可以查看该工作.
-		boolean b = BP.WF.Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(), userNo);
+		boolean b = Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(), userNo);
 		if (b == false)
 		{
 			throw new RuntimeException("err@无权查看该流程.");
 		}
 
 		String frmID = "ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt";
-		BP.WF.Data.GERpt rpt = new BP.WF.Data.GERpt("ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt", workID);
+		GERpt rpt = new GERpt("ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt", workID);
 		DataTable dt = rpt.ToDataTableField( "Main");
 		ds.Tables.add(dt);
 		Attrs attrs = rpt.getEnMap().getAttrs();
@@ -92,7 +96,7 @@ public class CCFormAPI implements CCFormAPII{
 		}
 
 		//生成模版的文件流.
-		BP.WF.Template.BillTemplate template = new BP.WF.Template.BillTemplate(billTemplateNo);
+		BillTemplate template = new BillTemplate(billTemplateNo);
 		bytes = template.GenerTemplateFile();
 		return;
 
@@ -110,17 +114,17 @@ public class CCFormAPI implements CCFormAPII{
 	*/
 	@Override
 	public void WordFileGener(String userNo, String sid, long workID, byte[] bytes) throws Exception {
-		BP.WF.Dev2Interface.Port_Login(userNo);
+		Dev2Interface.Port_Login(userNo);
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
 			userNo = WebUser.getNo();
 		}
 
 
-		BP.WF.Dev2Interface.Port_Login(userNo);
-		BP.WF.GenerWorkFlow gwf = new BP.WF.GenerWorkFlow(workID);
+		Dev2Interface.Port_Login(userNo);
+		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
-		boolean b = BP.WF.Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(),userNo);
+		boolean b = Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(),userNo);
 		if (b == false)
 		{
 			throw new RuntimeException("err@无权查看该流程.");
@@ -138,8 +142,6 @@ public class CCFormAPI implements CCFormAPII{
 		//md.WordGenerFile((new Long(workID)).toString(), bytes, mfe.DBSave);
 
 		
-	}
-	
-	 
+	} 
 
 }

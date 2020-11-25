@@ -2,6 +2,7 @@ package bp.wf;
 
 import bp.da.DBAccess;
 import bp.da.DataTable;
+import bp.difference.SystemConfig;
 import bp.en.QueryObject;
 
 /** 
@@ -99,10 +100,9 @@ public class WorkCheck
 				workIdStr = this.WorkID;
 			}
 			_HisWorkChecks = new Tracks();
-			
-			String sql ="SELECT	IFNULL( MyPK, 0 ) MyPK,	IFNULL( ActionType, 0 ) ActionType,	ActionTypeText,	IFNULL( FID, 0 ) FID,"
-			+"IFNULL( WorkID, 0 ) WorkID,IFNULL( NDFrom, 0 ) NDFrom,NDFromT,IFNULL( NDTo, 0 ) NDTo,NDToT,"
-			+"EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,IFNULL( WorkTimeSpan, 0.0 ) AS WorkTimeSpan,Msg,NodeData,Tag,Exer"
+
+			String sql ="SELECT MyPK,ActionType,ActionTypeText,FID,WorkID,NDFrom,NDFromT,NDTo,NDToT,"
+			+"EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,WorkTimeSpan,Msg,NodeData,Tag,Exer"
 			+ " FROM ND" + Integer.parseInt(this.FlowNo) + "Track t1, port_emp t2, port_dept t3  "
 			+ "WHERE ( t1.WorkID = " + workIdStr + " OR t1.FID = " + workIdStr + " )"
 			+ " AND t1.empfrom = t2.NO AND t3.NO = t2.FK_Dept ORDER BY t3.idx,t2.idx";

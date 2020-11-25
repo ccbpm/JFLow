@@ -192,13 +192,13 @@ public class Flow extends EntityNoName
 	/** 
 	 流程表单类型
 	*/
-	public final FlowFrmType getFlowFrmType()throws Exception
+	public final FlowFrmModel getFlowFrmModel()throws Exception
 	{
-		return FlowFrmType.forValue(this.GetValIntByKey(FlowAttr.FlowFrmType));
+		return FlowFrmModel.forValue(this.GetValIntByKey(FlowAttr.FlowFrmModel));
 	}
-	public final void setFlowFrmType(FlowFrmType value)throws Exception
+	public final void setFlowFrmModel(FlowFrmModel value)throws Exception
 	{
-		this.SetValByKey(FlowAttr.FlowFrmType, value.getValue());
+		this.SetValByKey(FlowAttr.FlowFrmModel, value.getValue());
 	}
 	/** 
 	 url
@@ -4237,7 +4237,7 @@ public class Flow extends EntityNoName
 		map.AddTBString(FlowAttr.PTable, null, "流程数据存储主表", true, false, 0, 30, 10);
 
 			// add 2019.11.07  @liuqiang.
-		map.AddTBInt(FlowAttr.FlowFrmType, 0, "流程表单类型", true, true);
+		map.AddTBInt(FlowAttr.FlowFrmModel, 0, "流程表单类型", true, true);
 		map.AddTBString(FlowAttr.FrmUrl, null, "表单Url", true, false, 0, 150, 10, true);
 
 			// 草稿规则 "@0=无(不设草稿)@1=保存到待办@2=保存到草稿箱"

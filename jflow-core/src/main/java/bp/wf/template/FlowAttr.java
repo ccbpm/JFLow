@@ -136,7 +136,7 @@ public class FlowAttr
 	/** 
 	 流程表单类型
 	*/
-	public static final String FlowFrmType = "FlowFrmType";
+	public static final String FlowFrmModel = "FlowFrmModel";
 	/** 
 	 流程数据存储模式
 	*/

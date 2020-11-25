@@ -23,6 +23,40 @@ import java.time.*;
 */
 public class WF_Admin_CCBPMDesigner extends WebContralBase
 {
+	public String NewFlow2020_Save()
+	{
+		try
+		{
+			String FlowName = this.GetRequestVal("FlowName");
+			String flowSort = this.GetRequestVal("FlowSort").trim();
+
+			int flowFrmModelval = this.GetRequestValInt("FlowFrmModel");
+
+			String flowNo =bp.wf.template.TemplateGlo.NewFlow(flowSort, FlowName,
+					DataStoreModel.SpecTable, null, null);
+
+			Flow fl = new Flow(flowNo);
+			if (flowFrmModelval == 1)
+			{
+				//设置默认的模式.
+				fl.setFlowFrmModel(FlowFrmModel.TraditionModel);
+				fl.setFrmUrl("ND"+Integer.parseInt(flowNo)+"01");
+			}else
+			{
+				fl.setFlowFrmModel(FlowFrmModel.forValue(flowFrmModelval));
+			}
+			fl.DirectUpdate();
+
+			//清空WF_Emp 的StartFlows ,让其重新计算.
+			// DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
+			return flowNo;
+		}
+		catch (Exception ex)
+		{
+			return "err@" + ex.getMessage();
+		}
+
+	}
 	/** 
 	 选择器
 	 
@@ -1722,7 +1756,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 			//如果是简洁版.
 			if (runModel == 1)
 			{
-				fl.setFlowFrmType(bp.wf.FlowFrmType.forValue(flowFrmType));
+				fl.setFlowFrmModel(bp.wf.FlowFrmModel.forValue(flowFrmType));
 				fl.Update(); //更新表单类型.
 
 				//预制权限数据.

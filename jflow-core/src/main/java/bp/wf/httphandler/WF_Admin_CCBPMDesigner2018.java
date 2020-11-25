@@ -82,7 +82,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 
 				/////2019.11.08 增加如果是极简版, 就设置初始化参数.
 			Flow fl = new Flow(this.getFK_Flow());
-			if (fl.getFlowFrmType() != FlowFrmType.Ver2019Earlier)
+			if (fl.getFlowFrmModel() != FlowFrmModel.Ver2019Earlier)
 			{
 				FrmNode fm = new FrmNode();
 				fm.setFK_Flow(this.getFK_Flow());

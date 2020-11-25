@@ -2168,7 +2168,7 @@ function GetLab(frmData, attr) {
                 doc = doc + "()";
             onclick = "onclick='" + doc + "'";
         }
-        return "<input id='" + btnId + "' type='button' value='" + frmBtn.Text + "'  class='btn' " + onclick + ">";
+        return "<input id='" + btnId + "' type='button' value='" + frmBtn.Lab + "'  class='btn' " + onclick + ">";
     }
     return lab;
 }

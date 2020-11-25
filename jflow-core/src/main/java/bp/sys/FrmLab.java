@@ -130,23 +130,23 @@ public class FrmLab extends EntityMyPK
 	/** 
 	 Text
 	*/
-	public final String getText() throws Exception
+	public final String getLab() throws Exception
 	{
-		return this.GetValStrByKey(FrmLabAttr.Text);
+		return this.GetValStrByKey(FrmLabAttr.Lab);
 	}
-	public final void setText(String value) throws Exception
+	public final void setLab(String value) throws Exception
 	{
-		this.SetValByKey(FrmLabAttr.Text, value);
+		this.SetValByKey(FrmLabAttr.Lab, value);
 	}
 	public final String getTextHtml() throws Exception
 	{
 		if (this.getIsBold())
 		{
-			return "<b>" + this.GetValStrByKey(FrmLabAttr.Text).replace("@","<br>") + "</b>";
+			return "<b>" + this.GetValStrByKey(FrmLabAttr.Lab).replace("@","<br>") + "</b>";
 		}
 		else
 		{
-			return this.GetValStrByKey(FrmLabAttr.Text).replace("@", "<br>");
+			return this.GetValStrByKey(FrmLabAttr.Lab).replace("@", "<br>");
 		}
 	}
 
@@ -188,7 +188,7 @@ public class FrmLab extends EntityMyPK
 
 		map.AddMyPK();
 		map.AddTBString(FrmLabAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
-		map.AddTBString(FrmLabAttr.Text, "New Label", "Label", true, false, 0, 3900, 20);
+		map.AddTBString(FrmLabAttr.Lab, "New Label", "Label", true, false, 0, 3900, 20);
 
 		map.AddTBFloat(FrmLabAttr.X, 5, "X", true, false);
 		map.AddTBFloat(FrmLabAttr.Y, 5, "Y", false, false);
@@ -217,7 +217,7 @@ public class FrmLab extends EntityMyPK
 	*/
 	public final boolean IsExitGenerPK() throws Exception
 	{
-		String sql = "SELECT COUNT(*) FROM " + this.get_enMap().getPhysicsTable() + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND X=" + this.getX() + " AND Y=" + this.getY() + "  and Text='" + this.getText() + "'";
+		String sql = "SELECT COUNT(*) FROM " + this.get_enMap().getPhysicsTable() + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND X=" + this.getX() + " AND Y=" + this.getY() + "  and Lab='" + this.getLab() + "'";
 		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
 		{
 			return false;

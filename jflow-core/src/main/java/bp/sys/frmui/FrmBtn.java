@@ -57,7 +57,7 @@ public class FrmBtn extends EntityMyPK
 
 		map.AddMyPK();
 		map.AddTBString(FrmBtnAttr.FK_MapData, null, "表单ID", true, false, 1, 100, 20);
-		map.AddTBString(FrmBtnAttr.Text, null, "标签", true, false, 0, 3900, 20);
+		map.AddTBString(FrmBtnAttr.Lab, null, "标签", true, false, 0, 3900, 20);
 
 		map.AddTBInt(FrmBtnAttr.IsView, 0, "是否可见", false, false);
 		map.AddTBInt(FrmBtnAttr.IsEnable, 0, "是否起用", false, false);

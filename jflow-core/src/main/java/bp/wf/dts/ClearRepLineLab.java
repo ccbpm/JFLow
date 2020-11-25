@@ -63,7 +63,7 @@ public class ClearRepLineLab extends Method
 		labs.RetrieveAllFromDBSource();
 		for (FrmLab item : labs.ToJavaList())
 		{
-			sql = "DELETE FROM " + item.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + item.getFK_MapData() + "' and x=" + item.getX() + " and y=" + item.getY() + " and Text='" + item.getText() + "'";
+			sql = "DELETE FROM " + item.getEnMap().getPhysicsTable() + " WHERE FK_MapData='" + item.getFK_MapData() + "' and x=" + item.getX() + " and y=" + item.getY() + " and Lab='" + item.getLab() + "'";
 			DBAccess.RunSQL(sql);
 			item.setMyPK(String.valueOf(DBAccess.GenerOIDByGUID()));
 			item.Insert();

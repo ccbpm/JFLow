@@ -144,7 +144,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				if (GetGroupID(fbtn.getMyPK(), groups) == 0)
 				{
 					group = new GroupField();
-					group.setLab(fbtn.getText());
+					group.setLab(fbtn.getLab());
 					group.setFrmID(fbtn.getFK_MapData());
 					group.setCtrlType(GroupCtrlType.Btn);
 					group.setCtrlID(fbtn.getMyPK());

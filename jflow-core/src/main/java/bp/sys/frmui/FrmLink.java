@@ -110,13 +110,13 @@ public class FrmLink extends EntityMyPK
 	/** 
 	 Text
 	*/
-	public final String getText() throws Exception
+	public final String getLab() throws Exception
 	{
-		return this.GetValStrByKey(FrmLinkAttr.Text);
+		return this.GetValStrByKey(FrmLinkAttr.Lab);
 	}
-	public final void setText(String value) throws Exception
+	public final void setLab(String value) throws Exception
 	{
-		this.SetValByKey(FrmLinkAttr.Text, value);
+		this.SetValByKey(FrmLinkAttr.Lab, value);
 	}
 	public final String getTarget() throws Exception
 	{
@@ -191,7 +191,7 @@ public class FrmLink extends EntityMyPK
 			//连接目标.
 		map.AddMyPK();
 		map.AddTBString(FrmLinkAttr.Target, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
-		map.AddTBString(FrmLinkAttr.Text, "New Link", "标签", true, false, 0, 500, 20, true);
+		map.AddTBString(FrmLinkAttr.Lab, "New Link", "标签", true, false, 0, 500, 20, true);
 		map.AddTBString(FrmLinkAttr.URLExt, null, "URL", true, false, 0, 500, 20, true);
 		map.AddTBString(FrmLinkAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 

@@ -133,7 +133,7 @@ public class MakeForm2Html {
               }
               x = link.getX() + wtX;
               sb.append("\t\n<DIV id=u2 style='position:absolute;left:" + x + "px;top:" + link.getY() + "px;text-align:left;' >");
-              sb.append("\t\n<span style='color:" + link.getFontColorHtml() + ";font-family: " + link.getFontName() + ";font-size: " + link.getFontSize() + "px;' > <a href=\"" + url + "\" target='" + link.getTarget() + "'> " + link.getText() + "</a></span>");
+              sb.append("\t\n<span style='color:" + link.getFontColorHtml() + ";font-family: " + link.getFontName() + ";font-size: " + link.getFontSize() + "px;' > <a href=\"" + url + "\" target='" + link.getTarget() + "'> " + link.getLabel() + "</a></span>");
               sb.append("\t\n</DIV>");
         }
        
@@ -304,14 +304,14 @@ public class MakeForm2Html {
             switch (btn.getHisBtnEventType())
             {
                 case Disable:
-                    sb.append("<input type=button class=Btn value='" + btn.getText().replace("&nbsp;", " ") + "' disabled='disabled'/>");
+                    sb.append("<input type=button class=Btn value='" + btn.getLab().replace("&nbsp;", " ") + "' disabled='disabled'/>");
                     break;
                 case RunExe:
                 case RunJS:
-                    sb.append("<input type=button class=Btn value=\"" +btn.getText().replace("&nbsp;", " ") + "\" enable=true onclick=\"" + doDoc + "\" />");
+                    sb.append("<input type=button class=Btn value=\"" +btn.getLab().replace("&nbsp;", " ") + "\" enable=true onclick=\"" + doDoc + "\" />");
                     break;
                 default:
-                    sb.append("<input type=button value='" + btn.getText() + "' />");
+                    sb.append("<input type=button value='" + btn.getLab() + "' />");
                     break;
             }
             sb.append("\t\n</span>");

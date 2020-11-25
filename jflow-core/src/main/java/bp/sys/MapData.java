@@ -437,7 +437,7 @@ public class MapData extends EntityNoName
 
 			labTxt = labTxt.replace("@MyPK", lab.getMyPK());
 
-			labTxt = labTxt.replace("@Label", lab.getText());
+			labTxt = labTxt.replace("@Label", lab.getLab());
 			labTxt = labTxt.replace("@X", String.valueOf(lab.getX()));
 			labTxt = labTxt.replace("@Y", String.valueOf(lab.getY()));
 

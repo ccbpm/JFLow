@@ -1211,7 +1211,7 @@ public class MapDtlExt extends EntityNoName
 					lab = new FrmLab();
 					lab.setMyPK(DBAccess.GenerGUID());
 					lab.setFK_MapData(attr.getFK_MapData());
-					lab.setText(attr.getName());
+					lab.setLab(attr.getName());
 					lab.setFontName("Arial");
 					lab.setX(40);
 					lab.setY(maxEnd);
@@ -1226,7 +1226,7 @@ public class MapDtlExt extends EntityNoName
 					lab = new FrmLab();
 					lab.setMyPK(DBAccess.GenerGUID());
 					lab.setFK_MapData(attr.getFK_MapData());
-					lab.setText(attr.getName());
+					lab.setLab(attr.getName());
 					lab.setFontName("Arial");
 					lab.setX(350);
 					lab.setY(maxEnd);
@@ -1251,7 +1251,7 @@ public class MapDtlExt extends EntityNoName
 				FrmLab lab = new FrmLab();
 				lab.setMyPK(DBAccess.GenerGUID());
 				lab.setFK_MapData(dtl.getFK_MapData());
-				lab.setText(dtl.getName());
+				lab.setLab(dtl.getName());
 				lab.setFontName("Arial");
 				lab.setX(40);
 				lab.setY(maxEnd);

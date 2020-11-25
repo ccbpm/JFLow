@@ -571,7 +571,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 				lab = new FrmLab();
 				lab.setMyPK(DBAccess.GenerGUID());
 				lab.setFK_MapData(this.getFK_MapData());
-				lab.setText(ma.getName());
+				lab.setLab(ma.getName());
 				lab.setX(40);
 				lab.setY(maxEnd);
 				lab.Insert();
@@ -585,7 +585,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase
 				lab = new FrmLab();
 				lab.setMyPK(DBAccess.GenerGUID());
 				lab.setFK_MapData(this.getFK_MapData());
-				lab.setText(ma.getName());
+				lab.setLab(ma.getName());
 				lab.setX(350);
 				lab.setY(maxEnd);
 				lab.Insert();

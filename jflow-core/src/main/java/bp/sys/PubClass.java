@@ -78,7 +78,7 @@ public class PubClass
 		int currX = 0;
 		int currY = 0;
 		FrmLab lab = new FrmLab();
-		lab.setText(md.getName());
+		lab.setLab(md.getName());
 		lab.setFontSize(20);
 		lab.setX(200);
 		currY += 30;
@@ -109,7 +109,7 @@ public class PubClass
 			lab = new FrmLab();
 			lab.setX(0);
 			lab.setY(currY);
-			lab.setText(gf.getLab());
+			lab.setLab(gf.getLab());
 			lab.setFK_MapData(fk_mapdata);
 			lab.setFontWeight("Bold");
 			lab.setMyPK("Lab" + keyID + String.valueOf(i));
@@ -151,7 +151,7 @@ public class PubClass
 					lab = new FrmLab();
 					lab.setX(lin.getX1() + padingLeft);
 					lab.setY(currY);
-					lab.setText(attr.getName());
+					lab.setLab(attr.getName());
 					lab.setFK_MapData(fk_mapdata);
 					lab.setMyPK("Lab" + keyID + String.valueOf(i) + idx);
 					lab.Insert();
@@ -178,7 +178,7 @@ public class PubClass
 					lab = new FrmLab();
 					lab.setX(tableW / 2 + padingLeft);
 					lab.setY(currY);
-					lab.setText(attr.getName());
+					lab.setLab(attr.getName());
 					lab.setFK_MapData(fk_mapdata);
 					lab.setMyPK("Lab" + keyID + String.valueOf(i) + idx);
 					lab.Insert();

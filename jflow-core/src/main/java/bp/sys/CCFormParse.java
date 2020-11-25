@@ -400,7 +400,7 @@ public class CCFormParse
 			switch (type)
 			{
 				case "SingleText":
-					lab.setText((val == null || val.equals("null")) ? "" : val.toString().replace(" ", "&nbsp;").replace("\n", "@"));
+					lab.setLab((val == null || val.equals("null")) ? "" : val.toString().replace(" ", "&nbsp;").replace("\n", "@"));
 					break;
 				case "Color":
 					// lab.FontColor = val == null ? "#FF000000" : val.ToString();
@@ -435,11 +435,11 @@ public class CCFormParse
 			}
 		}
 
-		if (lab.getText() == null || lab.getText().equals(""))
+		if (lab.getLab() == null || lab.getLab().equals(""))
 		{
 			/*如果没有取到标签， 从这里获取，系统有一个. */
 			JSONObject primitives = (JSONObject) control.getJSONArray("primitives").get(0);
-			lab.setText(primitives.get("str").toString().trim());
+			lab.setLab(primitives.get("str").toString().trim());
 			lab.setFontName(primitives.get("font").toString().trim());
 			lab.setFontSize(Integer.parseInt(primitives.get("size").toString().trim()));
 		}
@@ -575,11 +575,11 @@ public class CCFormParse
 		}
 		link.setFontStyle(fontStyle.toString());
 
-		if (link.getText() == null || link.getText().equals(""))
+		if (link.getLabel() == null || link.getLabel().equals(""))
 		{
 			/*如果没有取到标签， 从这里获取，系统有一个. */
 			JSONObject primitives = (JSONObject) control.getJSONArray("primitives").get(0);
-			link.setText(primitives.get("str").toString().trim());
+			link.setLabel(primitives.get("str").toString().trim());
 			link.setFontName(primitives.get("font").toString().trim());
 			link.setFontSize(Integer.parseInt(primitives.get("size").toString().trim()));
 		}

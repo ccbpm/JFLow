@@ -8,7 +8,7 @@ public class FrmBtnAttr extends EntityMyPKAttr
 	/** 
 	 Text
 	*/
-	public static final String Text = "Text";
+	public static final String Lab = "Lab";
 	/** 
 	 主表
 	*/

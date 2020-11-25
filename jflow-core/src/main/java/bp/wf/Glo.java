@@ -1395,6 +1395,33 @@ public class Glo
 			DBAccess.DropTableColumn("WF_NodeToolbar", "ShowWhere");
 		}
 
+		//FrmLab中Text字段在人大金仓是关键字
+		if (DBAccess.IsExitsTableCol("Sys_FrmLab", "Lab") == false){
+			if(SystemConfig.getAppCenterDBType()==DBType.KingBase)
+				DBAccess.RunSQL("ALTER TABLE Sys_FrmLab ADD Label TYPE CHARACTER VARYING(100 CHAR) DEFAULT  NULL");
+			else
+				DBAccess.RunSQL("ALTER TABLE Sys_FrmLab ADD Label NVARCHAR(100) DEFAULT  NULL");
+
+			DBAccess.RunSQL("UPDATE Sys_FrmLab SET Lab=Text ");
+			DBAccess.DropTableColumn("Sys_FrmLab", "Text");
+		}
+		if (DBAccess.IsExitsTableCol("Sys_FrmBtn", "Lab") == false){
+			if(SystemConfig.getAppCenterDBType()==DBType.KingBase)
+				DBAccess.RunSQL("ALTER TABLE Sys_FrmBtn ADD Label TYPE CHARACTER VARYING(100 CHAR) DEFAULT  NULL");
+			else
+				DBAccess.RunSQL("ALTER TABLE Sys_FrmBtn ADD Label NVARCHAR(100) DEFAULT  NULL");
+			DBAccess.RunSQL("UPDATE Sys_FrmBtn SET Lab=Text ");
+			DBAccess.DropTableColumn("Sys_FrmBtn", "Text");
+		}
+		if (DBAccess.IsExitsTableCol("Sys_FrmLink", "Lab") == false){
+			if(SystemConfig.getAppCenterDBType()==DBType.KingBase)
+				DBAccess.RunSQL("ALTER TABLE Sys_FrmLink ADD Label TYPE CHARACTER VARYING(100 CHAR) DEFAULT  NULL");
+			else
+				DBAccess.RunSQL("ALTER TABLE Sys_FrmLink ADD Lab NVARCHAR(100) DEFAULT  NULL");
+			DBAccess.RunSQL("UPDATE Sys_FrmLink SET Label=Text ");
+			DBAccess.DropTableColumn("Sys_FrmLink", "Text");
+		}
+
 		//检查frmTrack.
 		bp.ccbill.Track tk = new bp.ccbill.Track();
 		tk.CheckPhysicsTable();

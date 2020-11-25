@@ -106,13 +106,13 @@ public class FrmLink extends EntityMyPK
 	/** 
 	 Text
 	*/
-	public final String getText() throws Exception
+	public final String getLabel() throws Exception
 	{
-		return this.GetValStrByKey(FrmLinkAttr.Text);
+		return this.GetValStrByKey(FrmLinkAttr.Lab);
 	}
-	public final void setText(String value) throws Exception
+	public final void setLabel(String value) throws Exception
 	{
-		this.SetValByKey(FrmLinkAttr.Text, value);
+		this.SetValByKey(FrmLinkAttr.Lab, value);
 	}
 	public final String getTarget() throws Exception
 	{
@@ -175,7 +175,7 @@ public class FrmLink extends EntityMyPK
 		map.AddMyPK();
 
 		map.AddTBString(FrmLinkAttr.FK_MapData, null, "FK_MapData", true, false, 1, 100, 20);
-		map.AddTBString(FrmLinkAttr.Text, "New Link", "Label", true, false, 0, 500, 20);
+		map.AddTBString(FrmLinkAttr.Lab, "New Link", "Label", true, false, 0, 500, 20);
 
 		map.AddTBString(FrmLinkAttr.URLExt, null, "URLExt", true, false, 0, 500, 20);
 

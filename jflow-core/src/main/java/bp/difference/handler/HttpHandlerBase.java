@@ -46,7 +46,8 @@ public abstract class HttpHandlerBase
 		{
 			//执行方法返回json.
 			String data = ctrl.DoMethod(ctrl, ctrl.getDoType());
-
+			if(data==null)
+			    data="";
 			//返回执行的结果.
 			this.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 			this.getResponse().setCharacterEncoding("UTF-8");

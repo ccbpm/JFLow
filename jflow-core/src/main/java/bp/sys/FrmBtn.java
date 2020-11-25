@@ -150,20 +150,20 @@ public class FrmBtn extends EntityMyPK
 	/** 
 	 Text
 	*/
-	public final String getText() throws Exception
+	public final String getLab() throws Exception
 	{
-		return this.GetValStrByKey(FrmBtnAttr.Text);
+		return this.GetValStrByKey(FrmBtnAttr.Lab);
 	}
-	public final void setText(String value) throws Exception
+	public final void setLab(String value) throws Exception
 	{
-		this.SetValByKey(FrmBtnAttr.Text, value);
+		this.SetValByKey(FrmBtnAttr.Lab, value);
 	}
 	public final String getTextHtml() throws Exception
 	{
 			//if (this.EventType)
 			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).replace("@","<br>") + "</b>";
 			//else
-			return this.GetValStrByKey(FrmBtnAttr.Text).replace("@", "<br>");
+			return this.GetValStrByKey(FrmBtnAttr.Lab).replace("@", "<br>");
 	}
 
 		///
@@ -204,7 +204,7 @@ public class FrmBtn extends EntityMyPK
 
 		map.AddMyPK();
 		map.AddTBString(FrmBtnAttr.FK_MapData, null, "表单ID", true, false, 1, 100, 20);
-		map.AddTBString(FrmBtnAttr.Text, null, "标签", true, false, 0, 3900, 20);
+		map.AddTBString(FrmBtnAttr.Lab, null, "标签", true, false, 0, 3900, 20);
 
 		map.AddTBFloat(FrmBtnAttr.X, 5, "X", true, false);
 		map.AddTBFloat(FrmBtnAttr.Y, 5, "Y", false, false);

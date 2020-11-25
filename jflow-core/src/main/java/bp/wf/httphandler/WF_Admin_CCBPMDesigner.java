@@ -364,7 +364,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		DataSet ds = bp.sys.CCFormAPI.GenerHisDataSet_AllEleInfo(this.getFK_MapData());
 
 		String file = SystemConfig.getPathOfTemp() + this.getFK_MapData() + ".xml";
-		ds.WriteXml(file);
+		ds.WriteXml(file,XmlWriteMode.IgnoreSchema,ds);
 		String docs = DataType.ReadTextFile(file);
 		return docs;
 

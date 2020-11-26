@@ -1807,6 +1807,7 @@ var Entities = (function () {
                 alert("在初始化实体期间EnsName没有赋值");
                 return;
             }
+            var url=dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&t=" + new Date().getTime();
 
             $.ajax({
                 type: 'post',
@@ -1815,7 +1816,7 @@ var Entities = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
+                url: url,
                 data: { "Paras": self.Paras },
                 dataType: 'html',
                 success: function (data) {
@@ -1839,7 +1840,7 @@ var Entities = (function () {
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
 
-                    ThrowMakeErrInfo("Entities_RetrieveCond-" + self.ensName, textStatus);
+                    ThrowMakeErrInfo("Entities_RetrieveCond-" + self.ensName, textStatus,url);
                 }
             });
 

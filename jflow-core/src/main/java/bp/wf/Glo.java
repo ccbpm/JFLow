@@ -1182,7 +1182,61 @@ public class Glo
 		al = ClassFactory.GetObjects(info);
 
 
-			///#region 1, 修复表
+		//删除视图.
+		if (DBAccess.IsExitsObject("V_GPM_EmpMenu") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpMenu");
+		}
+	
+		if (DBAccess.IsExitsObject("V_GPM_EmpGroupMenu") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroupMenu");
+		}
+	
+		if (DBAccess.IsExitsObject("V_GPM_EmpGroup") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroup");
+		}
+	
+	
+		if (DBAccess.IsExitsObject("V_GPM_EmpStationMenu") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpStationMenu");
+		}
+	
+		///#region 6, 创建视图。
+		String sqlscript = "";
+		//MSSQL_GPM_VIEW 语法有所区别
+		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MSSQL_GPM_VIEW.sql";
+		}
+	
+		//MySQL 语法有所区别
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/MySQL_GPM_VIEW.sql";
+		}
+	
+		//Oracle 语法有所区别
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
+		}
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/PostgreSQL_GPM_VIEW.sql";
+		}
+	
+		if (DataType.IsNullOrEmpty(sqlscript) == true)
+		{
+			throw new RuntimeException("err@没有判断的数据库类型:" + SystemConfig.getAppCenterDBType().toString());
+		}
+	
+		DBAccess.RunSQLScriptGo(sqlscript);
+	
+		///#endregion 创建视图
+		///#region 1, 修复表
 		for (Object obj : al)
 		{
 			Entity en = null;
@@ -1258,61 +1312,7 @@ public class Glo
 
 			///#endregion 修复
 
-		//删除视图.
-		if (DBAccess.IsExitsObject("V_GPM_EmpMenu") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpMenu");
-		}
-
-		if (DBAccess.IsExitsObject("V_GPM_EmpGroupMenu") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroupMenu");
-		}
-
-		if (DBAccess.IsExitsObject("V_GPM_EmpGroup") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroup");
-		}
-
-
-		if (DBAccess.IsExitsObject("V_GPM_EmpStationMenu") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpStationMenu");
-		}
-
-
-			///#region 6, 创建视图。
-		String sqlscript = "";
-		//MSSQL_GPM_VIEW 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MSSQL_GPM_VIEW.sql";
-		}
-
-		//MySQL 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/MySQL_GPM_VIEW.sql";
-		}
-
-		//Oracle 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
-		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/PostgreSQL_GPM_VIEW.sql";
-		}
-
-		if (DataType.IsNullOrEmpty(sqlscript) == true)
-		{
-			throw new RuntimeException("err@没有判断的数据库类型:" + SystemConfig.getAppCenterDBType().toString());
-		}
-
-		DBAccess.RunSQLScriptGo(sqlscript);
-
-			///#endregion 创建视图
+		
 
 	}
 
@@ -1370,9 +1370,8 @@ public class Glo
 
 		//检查BPM.
 		CheckGPM();
-
-
-			///#region 升级优化集团版的应用. 2020.04.03
+		
+        ///#region 升级优化集团版的应用. 2020.04.03
 
 		//--2020.05.28 升级方向条件;
 		bp.wf.template.Cond cond = new Cond();
@@ -2951,6 +2950,9 @@ public class Glo
 		MapDtl mapdtl = new MapDtl();
 		mapdtl.CheckPhysicsTable();
 
+		SysEnum sysenum = new SysEnum();
+		sysenum.CheckPhysicsTable();
+		
 		CC cc = new CC();
 		cc.CheckPhysicsTable();
 

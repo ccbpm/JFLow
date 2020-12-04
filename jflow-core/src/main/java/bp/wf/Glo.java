@@ -2950,6 +2950,9 @@ public class Glo
 		MapDtl mapdtl = new MapDtl();
 		mapdtl.CheckPhysicsTable();
 
+		MapData mapData = new MapData();
+		mapData.CheckPhysicsTable();
+		
 		SysEnum sysenum = new SysEnum();
 		sysenum.CheckPhysicsTable();
 		

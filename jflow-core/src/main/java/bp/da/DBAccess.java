@@ -1139,7 +1139,9 @@ public class DBAccess {
 		if (StringHelper.isNullOrEmpty(sql)) {
 			return;
 		}
-
+		if (sql.indexOf(";") > 0)
+             sql = sql.replaceAll(";", "~");
+		
 		sql = sql.replace("@GO", "~");
 		sql = sql.replace("@", "~");
 		String[] strs = sql.split("[~]", -1);

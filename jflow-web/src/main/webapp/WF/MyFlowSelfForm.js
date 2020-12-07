@@ -15,12 +15,15 @@ function SaveSelfFrom() {
     var frm = document.getElementById('SelfForm');
     if (frm == null) {
         alert('系统错误,没有找到SelfForm的ID.');
+        return false;
     }
 
     //审核组件
     if ($("#WorkCheck_Doc").length == 1) {
         //保存审核信息
         SaveWorkCheck();
+        if(isCanSend==false)
+            return false;
     }
 
     //执行保存.
@@ -487,5 +490,3 @@ $(function () {
         $('.Message').hide();
     });
 })
-
-

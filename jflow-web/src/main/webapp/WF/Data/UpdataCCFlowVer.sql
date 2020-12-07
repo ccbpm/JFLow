@@ -146,4 +146,4 @@ INSERT INTO Sys_Enum(MyPK,Lab,EnumKey,IntKey,Lang) VALUES('CondModel_CH_1','按�
 INSERT INTO Sys_Enum(MyPK,Lab,EnumKey,IntKey,Lang) VALUES('CondModel_CH_2','发送按钮旁下拉框选择','CondModel',2,'CH');
  
 --2020.10.15删除WF_Flow表中IsGuestFlow,改成GuestFlowRole ;
---ALTER TABLE WF_Flow DROP COLUMN IsGuestFlow
+ALTER TABLE WF_Flow DROP COLUMN IsGuestFlow

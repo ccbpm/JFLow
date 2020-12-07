@@ -411,7 +411,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 		msg.setSMSPushModel(this.GetRequestVal("PushModel"));
 
 		//邮件标题
-		msg.setMailTitle_Real(this.GetRequestVal("TB_title"));
+		msg.setMailTitle_Real(this.GetRequestVal("TB_Title"));
 
 		//短信内容模版.
 		msg.setSMSDoc_Real(this.GetRequestVal("TB_SMS"));

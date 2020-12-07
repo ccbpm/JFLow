@@ -2123,7 +2123,13 @@ public class WF_WorkOpt extends WebContralBase {
 
 		                    String writeDb =DBAccess.GetBigTextFromDB(trackTable, "MyPK", DBAccess.RunSQLReturnVal(sql) == null ? null : DBAccess.RunSQLReturnVal(sql).toString(), "WriteDB");
 		                	if(DataType.IsNullOrEmpty(writeDb)){
-		                		String sql2="SELECT	WriteDb,Msg FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID = " + this.getWorkID() + " AND ActionType = " + ActionType.Forward.getValue() +" AND NDFrom = " + this.getFK_Node() + " AND EmpFrom = '" + WebUser.getNo() + "' ORDER BY	rdt DESC";
+		                		/*如果没有此列，就自动创建此列.*/
+		        				if (DBAccess.IsExitsTableCol("ND" + Integer.parseInt(this.getFK_Flow()) + "Track", "WriteDB") == false)
+		        				{
+		        					String sqlWriteDB = "ALTER TABLE ND" + Integer.parseInt(this.getFK_Flow()) + "Track ADD  WriteDB BLOB ";
+		        					DBAccess.RunSQL(sqlWriteDB);
+		        				}
+		                		String sql2="SELECT	WriteDB,Msg FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID = " + this.getWorkID() + " AND ActionType = " + ActionType.Forward.getValue() +" AND NDFrom = " + this.getFK_Node() + " AND EmpFrom = '" + WebUser.getNo() + "' ORDER BY	rdt DESC";
 		        				DataTable dtw = DBAccess.RunSQLReturnTable(sql2);
 
 		        				if(dtw.Rows.size() > 0){
@@ -2160,7 +2166,13 @@ public class WF_WorkOpt extends WebContralBase {
                     String sql = "Select MyPK From " + trackTable + "  WHERE ActionType=" + ActionType.WorkCheck.getValue() + " AND  NDFrom=" + this.getFK_Node() + " AND  NDTo=" + this.getFK_Node() + " AND WorkID=" + this.getWorkID() + " AND EmpFrom = '" + WebUser.getNo() + "'";
                     String writeDb =DBAccess.GetBigTextFromDB(trackTable, "MyPK", DBAccess.RunSQLReturnVal(sql) == null ? null : DBAccess.RunSQLReturnVal(sql).toString(), "WriteDB");
                 	if(DataType.IsNullOrEmpty(writeDb)){
-                		String sql2="SELECT	WriteDb,Msg FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID = " + this.getWorkID() + " AND ActionType = " + ActionType.Forward.getValue() +" AND NDFrom = " + this.getFK_Node() + " AND EmpFrom = '" + WebUser.getNo() + "' ORDER BY	rdt DESC";
+                		/*如果没有此列，就自动创建此列.*/
+        				if (DBAccess.IsExitsTableCol("ND" + Integer.parseInt(this.getFK_Flow()) + "Track", "WriteDB") == false)
+        				{
+        					String sqlWriteDB = "ALTER TABLE ND" + Integer.parseInt(this.getFK_Flow()) + "Track ADD  WriteDB BLOB ";
+        					DBAccess.RunSQL(sqlWriteDB);
+        				}
+                		String sql2="SELECT	WriteDB,Msg FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID = " + this.getWorkID() + " AND ActionType = " + ActionType.Forward.getValue() +" AND NDFrom = " + this.getFK_Node() + " AND EmpFrom = '" + WebUser.getNo() + "' ORDER BY	rdt DESC";
         				DataTable dtw = DBAccess.RunSQLReturnTable(sql2);
 
         				if(dtw.Rows.size() > 0){
@@ -3024,7 +3036,13 @@ public class WF_WorkOpt extends WebContralBase {
 				DBAccess.RunSQL(sql);
 			}
 			if(DataType.IsNullOrEmpty(writeImg)){
-				sql="SELECT	WriteDb,Msg FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID = " + this.getWorkID() + " AND ActionType = " + ActionType.Forward.getValue() +" AND NDFrom = " + this.getFK_Node() + " AND EmpFrom = '" + WebUser.getNo() + "' ORDER BY	rdt DESC";
+				/*如果没有此列，就自动创建此列.*/
+				if (DBAccess.IsExitsTableCol("ND" + Integer.parseInt(this.getFK_Flow()) + "Track", "WriteDB") == false)
+				{
+					String sqlWriteDB = "ALTER TABLE ND" + Integer.parseInt(this.getFK_Flow()) + "Track ADD  WriteDB BLOB ";
+					DBAccess.RunSQL(sqlWriteDB);
+				}
+				sql="SELECT	WriteDB,Msg FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE WorkID = " + this.getWorkID() + " AND ActionType = " + ActionType.Forward.getValue() +" AND NDFrom = " + this.getFK_Node() + " AND EmpFrom = '" + WebUser.getNo() + "' ORDER BY	rdt DESC";
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 				if(dt.Rows.size() > 0){

@@ -615,7 +615,7 @@ public class Flow extends EntityNoName
 		try
 		{
 			//从报表里查询该数据是否存在？
-			if (this.getIsGuestFlow() == true && DataType.IsNullOrEmpty(GuestUser.getNo()) == false)
+			if (this.getGuestFlowRole() == true && DataType.IsNullOrEmpty(GuestUser.getNo()) == false)
 			{
 				/*是客户参与的流程，并且具有客户登陆的信息。*/
 				ps.SQL = "SELECT OID,FlowEndNode FROM " + this.getPTable() + " WHERE GuestNo=" + dbstr + "GuestNo AND WFState=" + dbstr + "WFState ";
@@ -3811,13 +3811,13 @@ public class Flow extends EntityNoName
 	/** 
 	 是否启用？
 	*/
-	public final boolean getIsGuestFlow()throws Exception
+	public final boolean getGuestFlowRole()throws Exception
 	{
-		return this.GetValBooleanByKey(FlowAttr.IsGuestFlow);
+		return this.GetValBooleanByKey(FlowAttr.GuestFlowRole);
 	}
-	public final void setIsGuestFlow(boolean value) throws Exception
+	public final void setGuestFlowRole(boolean value) throws Exception
 	{
-		this.SetValByKey(FlowAttr.IsGuestFlow, value);
+		this.SetValByKey(FlowAttr.GuestFlowRole, value);
 	}
 	/** 
 	 是否可以独立启动
@@ -4253,7 +4253,7 @@ public class Flow extends EntityNoName
 		map.AddTBString(FlowAttr.FlowMark, null, "流程标记", true, false, 0, 50, 10);
 		map.AddTBString(FlowAttr.FlowEventEntity, null, "FlowEventEntity", true, false, 0, 100, 10, true);
 		map.AddTBString(FlowAttr.HistoryFields, null, "历史查看字段", true, false, 0, 120, 10, true);
-		map.AddTBInt(FlowAttr.IsGuestFlow, 0, "是否是客户参与流程？", true, false);
+		map.AddTBInt(FlowAttr.GuestFlowRole, 0, "是否是客户参与流程？", true, false);
 		map.AddTBString(FlowAttr.BillNoFormat, null, "单据编号格式", true, false, 0, 50, 10, true);
 		map.AddTBString(FlowAttr.FlowNoteExp, null, "备注表达式", true, false, 0, 90, 10, true);
 

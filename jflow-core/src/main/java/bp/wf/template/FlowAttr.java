@@ -168,7 +168,7 @@ public class FlowAttr
 	/** 
 	 是否是客户参与流程
 	*/
-	public static final String IsGuestFlow = "IsGuestFlow";
+	public static final String GuestFlowRole = "GuestFlowRole";
 	/** 
 	 单据编号格式
 	*/

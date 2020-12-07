@@ -375,9 +375,12 @@ public class FlowExt extends EntityNoName
 			//map.AddDDLSysEnum(FlowAttr.IsAutoSendSubFlowOver, 0, "为子流程时结束规则", true, true,
 			// FlowAttr.IsAutoSendSubFlowOver, "@0=不处理@1=让父流程自动运行下一步@2=结束父流程");
 
-		map.AddBoolean(FlowAttr.IsGuestFlow, false, "是否外部用户参与流程(非组织结构人员参与的流程)", true, true, false);
-		map.SetHelperUrl(FlowAttr.IsGuestFlow, "http://ccbpm.mydoc.io/?v=5404&t=17039");
-
+		//map.AddBoolean(FlowAttr.IsGuestFlow, false, "是否外部用户参与流程(非组织结构人员参与的流程)", true, true, false);
+		//map.SetHelperUrl(FlowAttr.IsGuestFlow, "http://ccbpm.mydoc.io/?v=5404&t=17039");
+		map.AddDDLSysEnum(FlowAttr.GuestFlowRole, (int)GuestFlowRole.None.getValue(), "外部用户参与流程规则",
+                true, true, "GuestFlowRole", "@0=不参与@1=开始节点参与@2=中间节点参与");
+        map.SetHelperUrl(FlowAttr.GuestFlowRole, "http://ccbpm.mydoc.io/?v=5404&t=17039");
+        
 		map.AddDDLSysEnum(FlowAttr.FlowAppType, FlowAppType.Normal.getValue(), "流程应用类型", true, true, "FlowAppType", "@0=业务流程@1=工程类(项目组流程)@2=公文流程(VSTO)");
 		map.SetHelperUrl(FlowAttr.FlowAppType, "http://ccbpm.mydoc.io/?v=5404&t=17035");
 

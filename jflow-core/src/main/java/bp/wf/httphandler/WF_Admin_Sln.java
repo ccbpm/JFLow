@@ -304,19 +304,15 @@ public class WF_Admin_Sln extends WebContralBase
 		for (Entity en : ens)
 		{
 			EntityTree item = (EntityTree)en;
-			if (item.getParentNo() != parentEn.getNo())
+			if (item.getParentNo().equals(parentEn.getNo())==false)
 			{
 				continue;
 			}
 
 			if (checkIds.contains("," + item.getNo() + ","))
-			{
 				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":true");
-			}
 			else
-			{
 				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":false");
-			}
 
 
 			//attributes
@@ -330,9 +326,7 @@ public class WF_Admin_Sln extends WebContralBase
 				appendMenuSb.append(",\"attributes\":{\"NodeType\":\"" + formTree.getNodeType() + "\",\"IsEdit\":\"" + formTree.getIsEdit() + "\",\"Url\":\"" + url + "\"}");
 				//图标
 				if (formTree.getNodeType().equals("form"))
-				{
 					ico = "icon-sheet";
-				}
 				appendMenuSb.append(",\"state\":\"" + treeState + "\"");
 				appendMenuSb.append(",iconCls:\"");
 				appendMenuSb.append(ico);

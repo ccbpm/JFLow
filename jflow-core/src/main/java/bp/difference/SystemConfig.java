@@ -911,7 +911,7 @@ public class SystemConfig {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getUser() throws Exception {
+	public static String getUser() {
 
 		if (SystemConfig.getCustomerNo().equals("BWDA")) {
 			String user = getAppSettings().get("JflowUser.encryption").toString();
@@ -922,7 +922,7 @@ public class SystemConfig {
 		return getAppSettings().get("JflowUser").toString();
 	}
 
-	public static String getPassword() throws Exception {
+	public static String getPassword(){
 
 		if (SystemConfig.getCustomerNo().equals("BWDA")) {
 			String user = getAppSettings().get("JflowPassword.encryption").toString();

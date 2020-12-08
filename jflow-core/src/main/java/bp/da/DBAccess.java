@@ -2984,7 +2984,7 @@ public class DBAccess {
 				{
 					obj = obj.split("[.]", -1)[1];
 				}
-				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + DBAccess.getConnectionUserID().toUpperCase() + "' ", ps);
+				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + SystemConfig.getUser().toUpperCase() + "' ", ps);
 			case MSSQL:
 				return IsExits("SELECT name FROM sysobjects WHERE name = '" + obj + "'");
 			case PostgreSQL:

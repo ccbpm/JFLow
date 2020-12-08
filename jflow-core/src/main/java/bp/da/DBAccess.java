@@ -2957,6 +2957,9 @@ public class DBAccess {
 	 */
 	public static boolean IsExitsObject(String obj)
 	{
+		if(StringHelper.isNullOrEmpty(obj)){
+			return false;
+		}
 		return IsExitsObject(new DBUrl(DBUrlType.AppCenterDSN), obj);
 	}
 

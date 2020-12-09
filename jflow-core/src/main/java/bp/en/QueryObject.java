@@ -1737,55 +1737,47 @@ public class QueryObject
 	*/
 	public static Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) throws Exception
 	{
-		if (fullAttrs != null)
-		{
-			for (DataRow dr : dt.Rows)
-			{
-				Entity enF = ens.getGetNewEntity();
-				for (String str : fullAttrs)
-				{
-					enF.getRow().SetValByKey(str, dr.getValue(str));
+		boolean isUpper = false;
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			isUpper = true;
+		
+		if (fullAttrs == null) {
+			Map enMap = ens.getGetNewEntity().getEnMap();
+			Attrs attrs = enMap.getAttrs();
+			try {
+				for (DataRow dr : dt.Rows) {
+					Entity en = ens.getGetNewEntity();
+					for (Attr attr : attrs)
+					{
+						if (isUpper == true){
+							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
+						} else
+							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+					}
+					ens.AddEntity(en);
 				}
-				ens.AddEntity(enF);
+			} catch (RuntimeException ex) {
+				// warning 不应该出现的错误. 2011-12-03 add
+				String cols = "";
+				for (DataColumn dc : dt.Columns) {
+					cols += " , " + dc.ColumnName;
+				}
+				throw new RuntimeException("Columns=" + cols + "@Ens=" + ens.toString() + " @异常信息:" + ex.getMessage());
 			}
 			return ens;
 		}
-
-		Row row = ens.getGetNewEntity().getRow();
-
-		//首先检查row的可以一定要包含 dataCols.
-		for (DataColumn dc : dt.Columns)
-		{
-			if (row.containsKey(dc.ColumnName) == false)
-			{
-				row.put(dc.ColumnName, "");
-			}
-		}
-
 		//装载数据.
-		for (DataRow dr : dt.Rows)
-		{
-			//克隆一个新的Row.
-			Object tempVar = row.clone();
-			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
+		for (DataRow dr : dt.Rows) {
+			Entity en = ens.getGetNewEntity();
+			for (String str : fullAttrs) {
+				if (isUpper == true){
+				    en.SetValByKey(str, dr.getValue(str.toUpperCase()));
+				}
+				else
+					en.SetValByKey(str, dr.getValue(str));
 
-			//给他赋值.
-			for (DataColumn dc : dt.Columns)
-			{
-				ht.put(dc.ColumnName, dr.getValue(dc.ColumnName));
 			}
-
-			Entity enNew = ens.getGetNewEntity();
-			Row myRow = new Row();
-			for (Object key : ht.keySet())
-			{
-				if(key==null)
-					continue;
-				myRow.put(key.toString(), ht.get(key));
-			}
-
-			enNew.setRow(myRow);
-			ens.AddEntity(enNew);
+			ens.AddEntity(en);
 		}
 		return ens;
 	}

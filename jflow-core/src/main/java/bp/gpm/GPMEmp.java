@@ -296,6 +296,15 @@ public class GPMEmp extends EntityNoName
 		bp.gpm.GPMEmp.GenerData(this);
 		return super.beforeUpdateInsertAction();
 	}
+	@Override
+	protected void afterUpdate() throws Exception
+	{
+		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(this.getNo());
+		
+		emp.setEmail(this.getEmail());
+		emp.DirectUpdate();
+		
+	}
 	/** 
 	 向上移动
 	*/

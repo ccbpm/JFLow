@@ -947,6 +947,9 @@ public class WF extends WebContralBase
 
 		if (em.RetrieveFromDBSources() == 0)
 		{
+			bp.port.Emp emp = new bp.port.Emp(WebUser.getNo());
+			
+			em.setEmail(emp.getEmail());
 			em.setFK_Dept(WebUser.getFK_Dept());
 			em.setName( WebUser.getName());
 			em.Insert();

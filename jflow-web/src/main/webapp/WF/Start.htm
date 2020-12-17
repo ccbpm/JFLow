@@ -275,9 +275,9 @@
                     if (isShowFlows.indexOf(flow.No + ",") != -1)
                         continue;
                     isShowFlows += flow.No + ",";
-                    listbox += "<tr><td><a href=\"javascript:WinOpenStartFlow('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" > &sdot; " + flow.No + "." + flow.Name + "</a></td><td class='chooser'><a class='dropdown-toggle' data-toggle='dropdown' href='#'><i class='icon iconfont icon-gongju1'></i></a><ul class='dropdown-menu dropdown-user'>"
+                    listbox += "<tr><td><a href=\"javascript:WinOpenStartFlow('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" > &sdot; " + flow.No + "." + flow.Name + "</a></td>"
 
-                    listbox += "<li><a href=\"javascript:WinOpenList('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >列表发起</a></li>";
+                   /*  listbox += "<li><a href=\"javascript:WinOpenList('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >列表发起</a></li>";
 
                     if (flow.IsBatchStart == "1")
                         listbox += "<li><a href=\"javascript:WinOpenBatch('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >批量发起</a></li>";
@@ -287,7 +287,8 @@
                     listbox += "<li><a href=\"javascript:WinOpenJoin('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >我审批的流程</a></li>";
                     listbox += "<li><a href=\"javascript:WinOpenMyFlow('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" ><font color=red>*</font>我的流程</a></a></li>";
                     listbox += "<li><a href=\"javascript:WinOpenSearch('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >查询主页</a></li></ul></td></tr>";
-
+ */
+ 					listbox += "</tr>";
                 }
                 listbox += '</tbody></table></div></div></div>';
                 myNum++;

@@ -1393,7 +1393,7 @@ public class MapData extends EntityNoName
 						Cash2019.UpdateRow(md.toString(), md.getNo().toString(), md.getRow());
 
 						//如果是开发者表单，赋值HtmlTemplateFile数据库的值并保存到DataUser下
-						if (frmType == FrmType.Develop)
+						if (md.getHisFrmType() == FrmType.Develop)
 						{
 							// string htmlCode = DBAccess.GetBigTextFromDB("Sys_MapData", "No", oldMapID, "HtmlTemplateFile");
 							if (DataType.IsNullOrEmpty(htmlCode) == false)

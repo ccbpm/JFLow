@@ -5938,6 +5938,40 @@ public class Flow extends EntityNoName
 						ne.Save();
 					}
 					break;
+					case "WF_PushMsg": // 发送消息
+					for (DataRow dr : dt.Rows)
+					{
+						PushMsg pushMsg= new PushMsg();
+						for (DataColumn dc : dt.Columns)
+						{
+							String val = dr.getValue(dc.ColumnName) !=null ? (String)dr.getValue(dc.ColumnName) : null;
+							if (val == null)
+							{
+								continue;
+							}
+
+							switch (dc.ColumnName.toLowerCase())
+							{
+								case "fk_node":
+									if (val.length() < iOldFlowLength)
+									{
+										//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_PushMsg下FK_Node值错误:" + val);
+									}
+									val = flowID + val.substring(iOldFlowLength);
+									break;
+								case "fk_flow":
+									val = fl.getNo();
+									break;
+								default:
+									break;
+							}
+							pushMsg.SetValByKey(dc.ColumnName, val);
+						}
+						pushMsg.setMyPK(DBAccess.GenerGUID());
+						pushMsg.Insert();
+					}
+					break;
 				default:
 					// infoErr += "Error:" + dt.TableName;
 					break;

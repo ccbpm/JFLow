@@ -1240,6 +1240,7 @@ public class MapData extends EntityNoName
 
 		DataTable dtCheck = ds.GetTableByName("Sys_MapAttr");
 		boolean isHave = false;
+		//检查是否存在OID字段.
 		for (DataRow dr : dtCheck.Rows)
 		{
 			if (dr.getValue("KeyOfEn").toString().equals("OID"))
@@ -1250,24 +1251,23 @@ public class MapData extends EntityNoName
 		}
 
 		if (isHave == false)
-		{
 			errMsg += "@表单模版缺少列:OID";
-		}
 
 		if (!errMsg.equals(""))
-		{
 			throw new RuntimeException("@以下错误不可导入，可能的原因是非表单模板文件:" + errMsg);
-		}
 
 			///
 
 		// 定义在最后执行的sql.
 		String endDoSQL = "";
 
-		//检查是否存在OID字段.
+
+
+		//获取原始表单MapData的属性
+		DataRow drr = ds.GetTableByName("Sys_MapData").Rows.get(0);
 		MapData mdOld = new MapData();
-		mdOld.setNo(specFrmID);
-		mdOld.RetrieveFromDBSources();
+		mdOld.setNo(drr.getValue("No").toString());
+		int count = mdOld.RetrieveFromDBSources();
 
 		//现在表单的类型
 		FrmType frmType = mdOld.getHisFrmType();
@@ -1373,17 +1373,19 @@ public class MapData extends EntityNoName
 						{
 							md.setName(mdOld.getName());
 						}
+						if(count!=0){
+							md.setHisFrmType(mdOld.getHisFrmType());
+							if (frmType == FrmType.Develop)
+							{
+								md.setHisFrmType(FrmType.Develop);
+							}
 
-						md.setHisFrmType(mdOld.getHisFrmType());
-						if (frmType == FrmType.Develop)
-						{
-							md.setHisFrmType(FrmType.Develop);
+							if (entityType != md.getHisEntityType())
+							{
+								md.setHisEntityType(entityType);
+							}
 						}
 
-						if (entityType != md.getHisEntityType())
-						{
-							md.setHisEntityType(entityType);
-						}
 
 						//表单应用类型保持不变
 						md.setAppType(mdOld.getAppType());
@@ -1723,6 +1725,7 @@ public class MapData extends EntityNoName
 					}
 					break;
 				case "Sys_Enum":
+				case "Sys_Enums":
 					for (DataRow dr : dt.Rows)
 					{
 						bp.sys.SysEnum se = new bp.sys.SysEnum();

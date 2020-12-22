@@ -8,13 +8,12 @@
 7. 在国内拥有最广泛的研究群体与应用客户群，是大型集团企业IT部门、软件公司、研究院、高校研究与应用的产品。
 8. 驰骋工作流引擎不仅仅能够满足中小企业的需要，也能满足通信级用户的应用，先后在西门子、海南航空、中船、陕汽重卡、山东省国土资源厅、华电国际、江苏测绘院、厦门证券、天业集团、天津港等国内外大型企业政府单位服役。
 9. 驰骋工作流引擎方便与您的开发框架嵌入式集成，与第三方组织机构视图化集成, 既有配置类型的开发适用于业务人员，IT维护人员， 也有面向程序员的高级引擎API开发。
-10. 数据库脚本下载地址http://140.143.236.168:7080/svn/CCBPMDOCS/InstallDataBaseScript 用户名/密码:ccbpm 
+10. 数据库脚本可以用代码自动安装完成。只需要新建一个空的数据库，运行项目后访问流程设计器页面，即可进入脚本自动安装的页面。
  
 ### 驰骋工作流程引擎资源 
-1. 在线文档: http://ccbpm.mydoc.io
-2. 视频/资料教程下载: svn http://140.143.236.168:7080/svn/ccbpmdocs 用户名: ccbpm密码:ccbpm  也可以使用在线浏览.
-3. 官方网站: http://ccflow.org 在线演示: http://demo.ccflow.org
-4. 集成jeesite开发架构版本,  https://gitee.com/thinkgem/jeesite4-jflow
+SDK模式在线验示： http://140.143.236.168:8088/
+
+集成jeesite开发架构版本,  https://gitee.com/thinkgem/jeesite4-jflow
 
 
 ### ccbpm系统概要介绍 (在右上角点:watch,star,fork支持我们,谢谢!!!)
@@ -40,10 +39,12 @@
 
 ### 驰骋工作流程引擎下载资源 
 1. 在线演示: http://demo.ccflow.org
-2. 在线文档: http://ccbpm.mydoc.io
-3. 视频/资料教程下载: svn http://140.143.236.168:7080/svn/ccbpmdocs 用户名: ccbpm密码:ccbpm  也可以使用在线浏览.
-4. 官方网站: http://ccflow.org 
-5. 集成jeesite开发架构版本, 请下载: https://gitee.com/thinkgem/jeesite4-jflow
+1. 流程引擎在线文档: http://ccflow.org/CCBPMFile/default.htm
+1. 表单引擎在线文档：http://ccflow.org/CCFormFile/default.htm
+1. 视频教程下载:http://ccflow.org/ke.htm
+1. 资料下载：http://ccflow.org/docs
+1. 官方网站: http://ccflow.org 
+1. 集成jeesite开发架构版本, 请下载: https://gitee.com/thinkgem/jeesite4-jflow
 
 ## JFlow开源工作流
 
@@ -73,7 +74,7 @@
 ## 驰骋工作流引擎的集成方法
 
 ### 1. 组织机构集成.
-1. 组织机构权限整合. 请参考: http://ccbpm.mydoc.io/?t=15928
+1. 组织机构权限整合. 请参考: http://ccflow.org/CCBPMFile/?page=doc1.3.2.htm
 2. 如果您使用了知名开发框架jeesite 请直接下载. https://gitee.com/thinkgem/jeesite4-jflow 版本.
 
 ### 2. 代码集成(让JFlow以中间件的模式植入到您的开发架构里).

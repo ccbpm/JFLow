@@ -1389,7 +1389,8 @@ public class MapData extends EntityNoName
 
 						//表单应用类型保持不变
 						md.setAppType(mdOld.getAppType());
-						md.DirectInsert();
+						if(md.DirectUpdate()==0)
+							md.DirectInsert();
 						Cash2019.UpdateRow(md.toString(), md.getNo().toString(), md.getRow());
 
 						//如果是开发者表单，赋值HtmlTemplateFile数据库的值并保存到DataUser下

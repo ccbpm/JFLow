@@ -1265,16 +1265,9 @@ public class MapData extends EntityNoName
 
 		//获取原始表单MapData的属性
 		DataRow drr = ds.GetTableByName("Sys_MapData").Rows.get(0);
+
 		MapData mdOld = new MapData();
-		mdOld.setNo(drr.getValue("No").toString());
-		int count = mdOld.RetrieveFromDBSources();
-
-		//现在表单的类型
-		FrmType frmType = mdOld.getHisFrmType();
-
-		//业务类型
-		int entityType = mdOld.getHisEntityType();
-
+		mdOld.setNo(specFrmID);
 		mdOld.Delete();
 
 		// 求出dataset的map.
@@ -1297,6 +1290,14 @@ public class MapData extends EntityNoName
 				oldMapID = dtMap.Rows.get(0).getValue("No").toString();
 			}
 		}
+
+		mdOld.setNo(drr.getValue("No").toString());
+		int count = mdOld.RetrieveFromDBSources();
+		//现在表单的类型
+		FrmType frmType = mdOld.getHisFrmType();
+
+		//业务类型
+		int entityType = mdOld.getHisEntityType();
 		String timeKey = DataType.getCurrentDateByFormart("MMddHHmmss");
 
 
@@ -1385,7 +1386,6 @@ public class MapData extends EntityNoName
 								md.setHisEntityType(entityType);
 							}
 						}
-
 
 						//表单应用类型保持不变
 						md.setAppType(mdOld.getAppType());
@@ -1813,7 +1813,8 @@ public class MapData extends EntityNoName
 		}
 		else
 		{
-			if (SystemConfig.getAppCenterDBType() != DBType.Oracle)
+			if (SystemConfig.getAppCenterDBType() != DBType.Oracle
+					&& SystemConfig.getAppCenterDBType() != DBType.KingBase)
 			{
 				GroupField gfFirst = gfs.get(0) instanceof GroupField ? (GroupField)gfs.get(0) : null;
 

@@ -15,13 +15,13 @@ public class FastInput extends EntityMyPK
 	/** 
 	 字段
 	*/
-	public final String getContrastKey()throws Exception
+	public final String getCfgKey()throws Exception
 	{
-		return this.GetValStringByKey(FastInputAttr.ContrastKey);
+		return this.GetValStringByKey(FastInputAttr.CfgKey);
 	}
-	public final void setContrastKey(String value) throws Exception
+	public final void setCfgKey(String value) throws Exception
 	{
-		this.SetValByKey(FastInputAttr.ContrastKey, value);
+		this.SetValByKey(FastInputAttr.CfgKey, value);
 	}
 	/** 
 	 人员
@@ -42,7 +42,27 @@ public class FastInput extends EntityMyPK
 	{
 		this.SetValByKey(FastInputAttr.Vals, value);
 	}
-
+	 
+	
+	public final String getEnsName()throws Exception
+	{
+		return this.GetValStringByKey(FastInputAttr.EnsName);
+	}
+	public final void setEnsName(String value) throws Exception
+	{
+		this.SetValByKey(FastInputAttr.EnsName, value);
+	}
+	
+	public final String getAttrKey()throws Exception
+	{
+		return this.GetValStringByKey(FastInputAttr.AttrKey);
+	}
+	public final void setAttrKey(String value) throws Exception
+	{
+		this.SetValByKey(FastInputAttr.AttrKey, value);
+	}
+	
+	 
 		///
 
 
@@ -93,20 +113,37 @@ public class FastInput extends EntityMyPK
 
 		Map map = new Map("Sys_UserRegedit", "常用语");
 
-		map.AddMyPK();
 
-			//该表单对应的表单ID
-		map.AddTBString(FastInputAttr.ContrastKey, null, "类型CYY", true, false, 0, 20, 20);
-		map.AddTBString(FastInputAttr.FK_Emp, null, "人员编号", true, false, 0, 100, 4);
-		map.AddTBString(FastInputAttr.Vals, null, "值", true, false, 0, 500, 500);
-			//map.AddTBInt(FastInputAttr.Idx, 0, "Idx", true, false);
+		 /*
+         * 常用语分为两个模式: 流程的常用语，与表单字段的常用语. 
+         * 这两个模式都存储在同一个表里.
+         * 
+         * 流程的常用语存储格式为: 
+         *  CfgKey=Flow,  EnsName=Flow,  AttrKey=WorkCheck,FlowBBS,WorkReturn 三种类型.
+         *  
+         * 表单的常用语为存储格式为:
+         *  CfgKey=Frm,  EnsName=myformID, AttrKey=myFieldName, 
+         * 
+         */
+
+        //该表单对应的表单ID ， 
+        //CfgKey=Flow, EnsName=Flow 是流程的常用语.   Filed
+
+        map.AddMyPK();
+        map.AddTBString(FastInputAttr.CfgKey, null, "类型Flow,Frm", true, false, 0, 20, 20);
+
+        map.AddTBString(FastInputAttr.EnsName, null, "表单ID", true, false, 0, 100, 4);
+        map.AddTBString(FastInputAttr.AttrKey, null, "字段", true, false, 0, 100, 4);
+        map.AddTBString(FastInputAttr.FK_Emp, null, "人员", true, false, 0, 100, 4);
+
+        map.AddTBString(FastInputAttr.Vals, null, "值", true, false, 0, 500, 500);
+        
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
-
+  
 	/** 
 	 上移
 	 
@@ -115,14 +152,22 @@ public class FastInput extends EntityMyPK
 	*/
 	public final String DoUp() throws Exception
 	{
-		  this.DoOrderUp(FastInputAttr.ContrastKey, "CYY", FastInputAttr.FK_Emp, WebUser.getNo(), "Idx");
+		 this.DoOrderUp(FastInputAttr.CfgKey, "CYY", 
+                 FastInputAttr.EnsName,this.getEnsName(), 
+                 FastInputAttr.AttrKey, this.getAttrKey(),
+               FastInputAttr.FK_Emp, WebUser.getNo(), "Idx") ;
+		  
 
 		return "移动成功.";
 	}
 
 	public final String DoDown() throws Exception
 	{
-		this.DoOrderDown(FastInputAttr.ContrastKey, "CYY", FastInputAttr.FK_Emp, WebUser.getNo(), "Idx");
+		 this.DoOrderDown(FastInputAttr.CfgKey, "CYY",
+	                FastInputAttr.EnsName, this.getEnsName(),
+	                FastInputAttr.AttrKey, this.getAttrKey(),
+	              FastInputAttr.FK_Emp, WebUser.getNo(), "Idx");
+		  
 		return "移动成功.";
 	}
 

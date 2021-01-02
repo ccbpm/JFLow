@@ -36,7 +36,7 @@ public class FastInputs extends EntitiesMyPK
 	public int RetrieveAll() throws Exception
 	{
 
-		int val = this.Retrieve(FastInputAttr.ContrastKey, "CYY", FastInputAttr.FK_Emp, WebUser.getNo());
+		int val = this.Retrieve(FastInputAttr.CfgKey, "CYY", FastInputAttr.FK_Emp, WebUser.getNo());
 
 		if (val == 0)
 		{
@@ -70,7 +70,7 @@ public class FastInputs extends EntitiesMyPK
 			en.setFK_Emp(WebUser.getNo());
 			en.Insert();
 
-			val = this.Retrieve(FastInputAttr.ContrastKey, "CYY", FastInputAttr.FK_Emp, WebUser.getNo());
+			val = this.Retrieve(FastInputAttr.CfgKey, "CYY", FastInputAttr.FK_Emp, WebUser.getNo());
 		}
 		return val;
 	}

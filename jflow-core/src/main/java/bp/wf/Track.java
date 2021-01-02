@@ -412,8 +412,15 @@ public class Track extends Entity
 			return;
 		}
 
-		//删除主键.
-		DBAccess.DropTablePK(ptable);
+		try
+		{
+	    	//删除主键.
+	    	DBAccess.DropTablePK(ptable);
+		}
+		catch (RuntimeException ex)
+		{
+			bp.da.Log.DebugWriteError(ex.getMessage() + " @可以容忍的异常....");
+		}
 
 		// 删除主键.
 		DBAccess.DropTablePK("WF_Track");

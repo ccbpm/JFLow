@@ -8302,6 +8302,8 @@ public class WorkNode {
 				if(dt.Rows.size()>0){
 					t.setMsg(t.getMsg() + "WorkCheck@" + dt.Rows.get(0).getValue(0));
 					t.WriteDB = dt.Rows.get(0).getValue(1).toString();
+				}else{
+					t.setMsg(t.getMsg() + "WorkCheck@");
 				}
 
 
@@ -8462,6 +8464,8 @@ public class WorkNode {
 				if(dt.Rows.size()>0){
 					t.setMsg(t.getMsg() + "WorkCheck@" + dt.Rows.get(0).getValue(0));
 					t.WriteDB = dt.Rows.get(0).getValue(1).toString();
+				}else{
+					t.setMsg(t.getMsg() + "WorkCheck@");
 				}
 
 				// 把审核组件的立场信息保存在track表中

@@ -1,4 +1,24 @@
-﻿var frmAttrData = [];
+﻿
+
+/**
+ * 跳转常用短语页面
+ * @param {any} nodeID 当前节点ID
+ * @param {any} GroupKey 所属短语类型 CYY,FlowBBS,WorkReturn
+ * @param {any} elementID 选择短语后赋值元素
+ */
+function UsefulExpresFlow(attrKey, elementID) {
+
+    //var url = basePath + "/WF/WorkOpt/UsefulExpres.htm?FK_Node=" + nodeID + "&GroupKey=" + groupKey + "&ElementID=" + elementID;
+    var url = basePath + "/WF/WorkOpt/UsefulExpresFlow.htm?AttrKey=" + attrKey + "&ElementID=" + elementID + "&m=" + Math.random();
+
+    // var url = basePath + "/WF/WorkOpt/UsefulExpres.htm?EnsName=Flow&AttrKey=" + attrKey + "&ElementID=" + elementID;
+
+    var W = document.body.clientWidth / 2;
+    var H = 400; // document.body.clientHeight-40;
+    OpenBootStrapModal(url, "UsefulExpresIFrame", "常用短语", W, H, null, false, null, null, function () { });
+}
+
+var frmAttrData = [];
 function LoadFrmDataAndChangeEleStyle(frmData) {
 
     //加入隐藏控件.

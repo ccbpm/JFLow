@@ -9018,7 +9018,7 @@ public class Dev2Interface {
 		ps.SQL = "UPDATE WF_CCList SET Sta=" + SystemConfig.getAppCenterDBVarStr() + "Sta,ReadDT="
 				+ SystemConfig.getAppCenterDBVarStr() + "ReadDT  WHERE MyPK=" + SystemConfig.getAppCenterDBVarStr()
 				+ "MyPK";
-		ps.Add(CCListAttr.Sta, CCSta.UnRead.getValue());
+		ps.Add(CCListAttr.Sta, CCSta.Read.getValue());
 		ps.Add(CCListAttr.ReadDT, DataType.getCurrentDataTime()); // 设置读取日期.
 		ps.Add(CCListAttr.MyPK, mypk);
 		DBAccess.RunSQL(ps);

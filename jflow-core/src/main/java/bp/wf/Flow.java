@@ -2369,9 +2369,9 @@ public class Flow extends EntityNoName
 		ds.Tables.add(dtNodeExts);
 
 		//节点消息
-		PushMsg pushMsg = new PushMsg();
-		pushMsg.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
-		ds.Tables.add(pushMsg.ToDataTableField("WF_PushMsg"));
+		PushMsgs pushMsgs = new PushMsgs();
+		pushMsgs.Retrieve(FrmNodeAttr.FK_Flow, this.getNo());
+		ds.Tables.add(pushMsgs.ToDataTableField("WF_PushMsg"));
 		
 		//接收人规则
 		Selectors selectors = new Selectors(this.getNo());

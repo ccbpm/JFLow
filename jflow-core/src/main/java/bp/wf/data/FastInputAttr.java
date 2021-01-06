@@ -9,6 +9,11 @@ public class FastInputAttr extends EntityNoNameAttr
 	
 	public static final String CfgKey = "CfgKey";
 	public static final String EnsName = "EnsName";
+	
+	/** 
+	 类型
+	*/
+    public static final String ContrastKey = "ContrastKey";
 	/** 
 	 类型
 	*/

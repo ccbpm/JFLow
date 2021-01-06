@@ -1141,6 +1141,41 @@ public abstract class Entity extends EnObj implements Serializable
 		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + beforeNo + "'");
 		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + pkval + "'");
 	}
+	
+	protected final void DoOrderUp(String groupKeyAttr, Object gVal1, String gKey2, Object gVal2, String gKey3, Object gVal3,  String gKey4, Object gVal4,String idxAttr) throws Exception
+	{
+		//  string pkval = this.PKVal as string;
+		String pkval = this.getPKVal().toString();
+		String pk = this.getPK();
+		String table = this.getEnMap().getPhysicsTable();
+
+		String sql = "SELECT " + pk + "," + idxAttr + " FROM " + table + " WHERE (" + groupKeyAttr + "='" + gVal1 + "' AND " + gKey2 + "='" + gVal2 + "' AND " + gKey3 + "='" + gVal3 + "' AND \" + gKey4 + \"='\" + gVal4 + \"') ORDER BY " + idxAttr;
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		int idx = 0;
+		String beforeNo = "";
+		String myNo = "";
+		boolean isMeet = false;
+
+		for (DataRow dr : dt.Rows)
+		{
+			idx++;
+			myNo = dr.getValue(pk).toString();
+
+			if (myNo.equals(pkval) == true)
+			{
+				isMeet = true;
+			}
+
+			if (isMeet == false)
+			{
+				beforeNo = myNo;
+			}
+
+			DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idx + " WHERE " + pk + "='" + myNo + "'");
+		}
+		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + beforeNo + "'");
+		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + pkval + "'");
+	}
 	/** 
 	 插队
 	 
@@ -1343,7 +1378,43 @@ public abstract class Entity extends EnObj implements Serializable
 
 		DBAccess.RunSQLs(sqls);
 	}
+	protected final void DoOrderDown(String groupKeyAttr, Object val1, String gKeyAttr2, Object gKeyVal2, String gKeyAttr3, Object gKeyVal3,String gKeyAttr4, Object gKeyVal4,  String idxAttr) throws Exception
+	{
+		String pkval = this.getPKVal().toString();
+		String pk = this.getPK();
+		String table = this.getEnMap().getPhysicsTable();
 
+		String sql = "SELECT " + pk + " ," + idxAttr + " FROM " + table + " WHERE (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "' AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND \" + gKeyAttr4 + \"='\" + gKeyVal4 + \"' ) order by " + idxAttr;
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		int idx = 0;
+		String nextNo = "";
+		String myNo = "";
+		boolean isMeet = false;
+
+		String sqls = "";
+		for (DataRow dr : dt.Rows)
+		{
+			myNo = dr.getValue(pk).toString();
+			if (isMeet == true)
+			{
+				nextNo = myNo;
+				isMeet = false;
+			}
+			idx++;
+
+			if (pkval.equals(myNo))
+			{
+				isMeet = true;
+			}
+
+			sqls += "@UPDATE " + table + " SET " + idxAttr + "=" + idx + " WHERE " + pk + "='" + myNo + "' AND  (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "' ) ";
+		}
+
+		sqls += "@ UPDATE  " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + nextNo + "' AND (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "'  AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND \" + gKeyAttr4 + \"='\" + gKeyVal4 + \"')";
+		sqls += "@ UPDATE  " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + pkval + "' AND (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "'  AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND \" + gKeyAttr4 + \"='\" + gKeyVal4 + \"' )";
+
+		DBAccess.RunSQLs(sqls);
+	}
 		/// 排序操作
 
 

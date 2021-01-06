@@ -24,6 +24,17 @@ public class FastInput extends EntityMyPK
 		this.SetValByKey(FastInputAttr.CfgKey, value);
 	}
 	/** 
+	 类型
+	*/
+	public final String getContrastKey()throws Exception
+	{
+		return this.GetValStringByKey(FastInputAttr.ContrastKey);
+	}
+	public final void setContrastKey(String value) throws Exception
+	{
+		this.SetValByKey(FastInputAttr.ContrastKey, value);
+	}
+	/** 
 	 人员
 	*/
 	public final String getFK_Emp()throws Exception

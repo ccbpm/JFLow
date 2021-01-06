@@ -2655,7 +2655,7 @@ public class Node extends Entity
 		map.AddTBInt(NodeAttr.NodePosType, 0, "位置", false, false);
 		map.AddTBString(NodeAttr.HisStas, null, "岗位", false, false, 0, 300, 10);
 		map.AddTBString(NodeAttr.HisDeptStrs, null, "部门", false, false, 0, 300, 10);
-		map.AddTBString(NodeAttr.HisToNDs, null, "转到的节点", false, false, 0, 50, 10);
+		map.AddTBString(NodeAttr.HisToNDs, null, "转到的节点", false, false, 0, 100, 10);
 		map.AddTBString(NodeAttr.HisBillIDs, null, "单据IDs", false, false, 0, 50, 10);
 			//  map.AddTBString(NodeAttr.HisEmps, null, "HisEmps", false, false, 0, 3000, 10);
 		map.AddTBString(NodeAttr.HisSubFlows, null, "HisSubFlows", false, false, 0, 30, 10);

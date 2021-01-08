@@ -1,20 +1,25 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
+import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.tools.FileAccess;
+import bp.tools.Json;
 import bp.web.*;
 import bp.port.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.wf.*;
+import bp.wf.Glo;
+import bp.wf.data.GERptAttr;
 import bp.wf.rpt.*;
 import bp.wf.template.*;
 import bp.wf.*;
 import java.util.*;
+
 import java.io.*;
 import java.math.*;
 
@@ -24,7 +29,9 @@ import java.math.*;
 public class WF_RptDfine extends WebContralBase
 {
 
-		///属性.
+		private static final boolean MapAttr = false;
+
+	///属性.
 	/** 
 	 查询类型
 	*/
@@ -124,7 +131,533 @@ public class WF_RptDfine extends WebContralBase
 		return bp.tools.Json.ToJson(ds);
 	}
 
+     /// <summary>
+     /// 获取单流程查询条件MyStartFlow.htm 我发起的流程.
+     /// </summary>
+     /// <returns></returns>
+     public String FlowSearch_InitToolBar() throws Exception
+     {
+         if (DataType.IsNullOrEmpty(this.getFK_Flow()))
+             return "err@参数FK_Flow不能为空";
 
+         DataSet ds = new DataSet();
+
+         String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
+
+         UserRegedit ur = new UserRegedit();
+         ur.setAutoMyPK(false);
+         ur.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+         String selectFields = ","+GERptAttr.Title + "," + GERptAttr.FlowStarter + "," + GERptAttr.FlowStartRDT + "," + GERptAttr.FK_Dept + "," + GERptAttr.WFState + ",";
+         if (ur.RetrieveFromDBSources() == 0)
+         {
+             ur.setMyPK(WebUser.getNo() + rptNo + "_SearchAttrs");
+             ur.setFK_Emp(WebUser.getNo());
+             ur.setCfgKey(rptNo + "_SearchAttrs");
+             ur.SetPara("SelectFields", selectFields);
+             ur.Insert();
+         }
+         if(DataType.IsNullOrEmpty(ur.GetParaString("SelectFields")) == true)
+         {
+             ur.SetPara("SelectFields", selectFields);
+             ur.Update();
+         }
+         //用户查询条件
+
+         //报表信息
+         MapData md = new MapData();
+         md.setNo(rptNo);
+         if (md.RetrieveFromDBSources() == 0)
+         {
+             /*如果没有找到，就让其重置一下.*/
+             RptDfine rd = new RptDfine(this.getFK_Flow());
+
+             if ("My".equals(this.getSearchType()))
+                 rd.DoReset(this.getSearchType(), "我发起的流程");
+
+             if ("MyJoin".equals(this.getSearchType()))
+                 rd.DoReset(this.getSearchType(), "我审批的流程");
+
+             if ("MyDept".equals(this.getSearchType()))
+                 rd.DoReset(this.getSearchType(), "本部门发起的流程");
+
+             if ("Adminer".equals(this.getSearchType()))
+                 rd.DoReset(this.getSearchType(), "高级查询");
+
+             md.RetrieveFromDBSources();
+         }
+
+         //关键字 时间查询条件
+         md.SetPara("RptDTSearchWay", md.getRptDTSearchWay().getValue());
+         md.SetPara("RptDTSearchKey", md.getRptDTSearchKey());
+         md.SetPara("RptIsSearchKey", md.getRptIsSearchKey());
+         md.SetPara("RptStringSearchKeys", md.GetParaString("RptStringSearchKeys"));
+
+         md.SetPara("SearchKey", ur.getSearchKey());
+
+         if (md.getRptDTSearchWay() != DTSearchWay.None)
+         {
+             MapAttr mapAttr = new MapAttr(rptNo, md.getRptDTSearchKey());
+             md.SetPara("DTSearchLable", mapAttr.getName());
+
+             if (md.getRptDTSearchWay() == DTSearchWay.ByDate)
+             {
+                 md.SetPara("DTFrom", ur.GetValStringByKey(UserRegeditAttr.DTFrom));
+                 md.SetPara("DTTo", ur.GetValStringByKey(UserRegeditAttr.DTTo));
+             }
+             else
+             {
+                 md.SetPara("DTFrom", ur.GetValStringByKey(UserRegeditAttr.DTFrom));
+                 md.SetPara("DTTo", ur.GetValStringByKey(UserRegeditAttr.DTTo));
+             }
+         }
+         //关键字时间查询条件
+
+         ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+
+         //判断是否含有导出至模板的模板文件，如果有，则显示导出至模板按钮RptExportToTmp
+         String tmpDir = SystemConfig.getPathOfDataUser() + "@TempleteExpEns" + rptNo;
+         File file = new File(tmpDir);
+         if (file.exists() == true)
+         {
+        	 File[] fileList = file.listFiles();
+    	    for (File f:fileList){
+    	        if (f.isFile() && (f.getName().endsWith(".xls") || f.getName().endsWith(".xlsx"))){
+    	        	md.SetPara("RptExportToTmp", "1");
+    	        }
+    	    }
+         }
+
+         //外键枚举的查询条件
+         MapAttrs attrs = new MapAttrs(rptNo);
+         DataTable dt = new DataTable();
+         dt.Columns.Add("Field");
+         dt.Columns.Add("Name");
+         dt.Columns.Add("Width");
+         dt.Columns.Add("UIContralType");
+         dt.TableName = "Attrs";
+
+         String[] ctrls = md.getRptSearchKeys().split("\\*");
+         MapAttr attr;
+         for(String ctrl:ctrls)
+         {
+             //增加判断，如果URL中有传参，则不进行此SearchAttr的过滤条件显示context.Request.QueryString[ctrl]
+             if (DataType.IsNullOrEmpty(ctrl) || !DataType.IsNullOrEmpty(ContextHolderUtils.getRequest().getParameter(ctrl)))
+                 continue;
+
+             attr = (MapAttr) attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, ctrl);
+             if (attr == null)
+                 continue;
+             DataRow dr = dt.NewRow();
+             dr.setValue("Field",attr.getKeyOfEn());
+             dr.setValue("Name",attr.getHisAttr().getDesc());
+             dr.setValue("Width",attr.getUIWidth()); //下拉框显示的宽度.
+             dr.setValue("UIContralType",attr.getHisAttr().getUIContralType());
+             dt.Rows.add(dr);
+
+             Attr ar = attr.getHisAttr();
+             //判读该字段是否是枚举
+             if (ar.getIsEnum() == true)
+             {
+                 SysEnums ses = new SysEnums(attr.getUIBindKey());
+                 DataTable dtEnum = ses.ToDataTableField();
+                 dtEnum.TableName = attr.getKeyOfEn();
+                 ds.Tables.add(dtEnum);
+                 continue;
+             }
+             //判断是否是外键
+             if(ar.getIsFK() == true)
+             {
+                 Entities ensFK = ar.getHisFKEns();
+                 ensFK.RetrieveAll();
+
+                 DataTable dtEn = ensFK.ToDataTableField();
+                 dtEn.TableName = ar.getKey();
+                 ds.Tables.add(dtEn);
+                 continue;
+             }
+
+             if (DataType.IsNullOrEmpty(ar.getUIBindKey()) == false
+                 && ds.getTables().contains(ar.getKey()) == false)
+             {
+                 //获取SQl
+            	 String sql = Glo.DealExp(attr.getUIBindKey(), null, null);
+                 DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
+                 for(DataColumn col:dtSQl.Columns)
+                 {
+                     String colName = col.ColumnName.toLowerCase();
+                     switch (colName)
+                     {
+                         case "no":
+                             col.ColumnName = "No";
+                             break;
+                         case "name":
+                             col.ColumnName = "Name";
+                             break;
+                         case "parentno":
+                             col.ColumnName = "ParentNo";
+                             break;
+                         default:
+                             break;
+                     }
+                 }
+                 dtSQl.TableName = ar.getKey();
+                 ds.Tables.add(dtSQl);
+             }
+
+
+         }
+
+         ds.Tables.add(dt);
+
+         //外键枚举的查询条件
+
+         return Json.ToJson(ds);
+
+     }
+     /// <summary>
+     /// 单流程查询显示的列
+     /// </summary>
+     /// <returns></returns>
+     public String FlowSearch_MapAttrs() throws Exception
+     {
+         DataSet ds = new DataSet();
+         String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
+
+         //查询出单流程的所有字段
+         MapAttrs attrs = new MapAttrs();
+         attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
+
+         ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
+
+         //默认显示的系统字段 标题、创建人、创建时间、部门、状态
+         MapAttrs mattrsOfSystem = new MapAttrs();
+         mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.Title));
+         mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.FlowStarter));
+         mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.FlowStartRDT));
+         mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.FK_Dept));
+         mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.WFState));
+         ds.Tables.add(mattrsOfSystem.ToDataTableField("Sys_MapAttrOfSystem"));
+
+         //系统字段字符串
+         String sysFields = Glo.getFlowFields();
+         DataTable dt = new DataTable();
+         dt.Columns.Add("Field");
+         dt.TableName = "Sys_Fields";
+         DataRow dr = dt.NewRow();
+         dr.setValue("Field", sysFields);
+         dt.Rows.add(dr);
+         ds.Tables.add(dt);
+
+         return Json.ToJson(ds);
+     }
+
+     /// <summary>
+     /// 单流程查询数据集合
+     /// </summary>
+     /// <returns></returns>
+     public String FlowSearch_Data() throws Exception
+     {
+         //表单编号
+         String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt" + this.getSearchType();
+         
+         //当前用户查询信息表
+         UserRegedit ur = new UserRegedit(WebUser.getNo() , rptNo + "_SearchAttrs");
+        
+         //表单属性
+         MapData mapData = new MapData(rptNo);
+         
+         //流程表单对应的所有字段
+         MapAttrs attrs = new MapAttrs();
+         attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
+
+         //流程表单对应的流程数据
+         GEEntitys ens = new GEEntitys(rptNo);
+         QueryObject qo = new QueryObject(ens);
+
+         switch (this.getSearchType())
+         {
+             case "My": //我发起的.
+                 qo.AddWhere(GERptAttr.FlowStarter, WebUser.getNo());
+                 break;
+             case "MyDept": //我部门发起的.  
+                 if (mapData.GetParaBoolen("IsSearchNextLeavel") == false)
+                 {
+                     //只查本部门及兼职部门
+                     qo.AddWhereInSQL(GERptAttr.FK_Dept, "SELECT FK_Dept From Port_DeptEmp Where FK_Emp='" + WebUser.getNo() + "'");
+                 }
+                 else
+                 {
+                     //查本部门及子级
+                     String sql = "SELECT FK_Dept From Port_DeptEmp Where FK_Emp='" + WebUser.getNo() + "'";
+                     sql += " UNION ";
+                     sql += "SELECT No AS FK_Dept From Port_Dept Where ParentNo IN(SELECT FK_Dept From Port_DeptEmp Where FK_Emp='" + WebUser.getNo() + "')";
+                     qo.AddWhereInSQL(GERptAttr.FK_Dept, sql);
+
+                 }
+                 break;
+             case "MyJoin": //我参与的.
+                 qo.AddWhere(GERptAttr.FlowEmps, " LIKE ", "%" + WebUser.getNo() + "%");
+                 break;
+             case "Adminer":
+                 break;
+             default:
+                 return "err@" + this.getSearchType() + "标记错误.";
+         }
+
+         // 关键字查询
+         String searchKey = ""; //关键字查询
+         if (mapData.getRptIsSearchKey())
+             searchKey = ur.getSearchKey();
+
+         if (mapData.getRptIsSearchKey() && DataType.IsNullOrEmpty(searchKey) == false && searchKey.length() >= 1)
+         {
+             int i = 0;
+
+             for (MapAttr attr : attrs.ToJavaList())
+             {
+                 switch (attr.getHisAttr().getMyFieldType())
+                 {
+                     case Enum:
+                     case FK:
+                     case PKFK:
+                         continue;
+                     default:
+                         break;
+                 }
+
+                 if (attr.getMyDataType() != DataType.AppString)
+                     continue;
+
+                 if (attr.getHisAttr().getMyFieldType() == FieldType.RefText)
+                     continue;
+
+                 if (attr.getKeyOfEn() == "FK_Dept")
+                     continue;
+
+                 i++;
+
+                 if (i == 1)
+                 {
+                     qo.addLeftBracket();
+                     if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                         qo.AddWhere(attr.getKeyOfEn(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL  ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+                     else
+                         qo.AddWhere(attr.getKeyOfEn(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+                     continue;
+                 }
+
+                 qo.addOr();
+
+                 if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                     qo.AddWhere(attr.getKeyOfEn(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL  ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+                 else
+                     qo.AddWhere(attr.getKeyOfEn(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+             }
+
+             qo.getMyParas().Add("SKey", searchKey);
+             qo.addRightBracket();
+         }
+         else if (DataType.IsNullOrEmpty(mapData.GetParaString("RptStringSearchKeys")) == false)
+         {
+             String field = "";//字段名
+             String fieldValue = "";//字段值
+             int idx = 0;
+
+             //获取查询的字段
+             String[] searchFields = mapData.GetParaString("RptStringSearchKeys").split("\\*");
+             for (String str:searchFields)
+             {
+                 if (DataType.IsNullOrEmpty(str) == true)
+                     continue;
+
+                 //字段名
+                 String[] items = str.split(",");
+                 if (items.length == 2 && DataType.IsNullOrEmpty(items[0]) == true)
+                     continue;
+                 field = items[0];
+                 //字段名对应的字段值
+                 fieldValue = ur.GetParaString(field);
+                 if (DataType.IsNullOrEmpty(fieldValue) == true)
+                     continue;
+                 idx++;
+                 if (idx == 1)
+                 {
+                     /* 第一次进来。 */
+                     qo.addLeftBracket();
+                     if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                         qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+                     else
+                         qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+                     qo.getMyParas().Add(field, fieldValue);
+                     continue;
+                 }
+                 qo.addAnd();
+
+                 if (SystemConfig.getAppCenterDBVarStr() == "@" || SystemConfig.getAppCenterDBVarStr() == "?")
+                     qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+                 else
+                     qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+                 qo.getMyParas().Add(field, fieldValue);
+
+
+             }
+             if (idx != 0)
+                 qo.addRightBracket();
+         }
+        
+         //end 关键字查询
+
+         // Url传参条件
+         String val = "";
+         List<String> keys = new ArrayList<String>();
+         for(MapAttr attr : attrs.ToJavaList())
+         {
+             if (DataType.IsNullOrEmpty(ContextHolderUtils.getRequest().getParameter(attr.getKeyOfEn())))
+                 continue;
+             qo.addAnd();
+             qo.addLeftBracket();
+             val = ContextHolderUtils.getRequest().getParameter(attr.getKeyOfEn());
+
+             switch (attr.getMyDataType())
+             {
+                 case DataType.AppBoolean:
+                     qo.AddWhere(attr.getKeyOfEn(), Boolean.valueOf(val));
+                     break;
+                 case DataType.AppDate:
+                 case DataType.AppDateTime:
+                 case DataType.AppString:
+                     qo.AddWhere(attr.getKeyOfEn(), val);
+                     break;
+                 case DataType.AppDouble:
+                 case DataType.AppFloat:
+ 				case DataType.AppMoney:
+					qo.AddWhere(attr.getKeyOfEn(), Double.parseDouble(val));
+					break;
+				case DataType.AppInt:
+					qo.AddWhere(attr.getKeyOfEn(), Integer.parseInt(val));
+					break;
+                 default:
+                     break;
+             }
+
+             qo.addRightBracket();
+
+             if (keys.contains(attr.getKeyOfEn()) == false)
+                 keys.add(attr.getKeyOfEn());
+         }
+         //end
+
+         // 过滤条件
+         HashMap<String, String> kvs = ur.GetVals();
+         for (MapAttr attr1 : attrs.ToJavaList())
+         {
+             Attr attr = attr1.getHisAttr();
+             //此处做判断，如果在URL中已经传了参数，则不算SearchAttrs中的设置
+             if (keys.contains(attr.getKey()))
+                 continue;
+
+             if (attr.getMyFieldType() == FieldType.RefText)
+                 continue;
+
+             String selectVal = "";;
+             String cid = "";;
+
+             switch (attr.getUIContralType())
+             {
+                 
+                 case DDL:
+                 case RadioBtn:
+                     cid = "DDL_" + attr.getKey();
+
+                     if (kvs.containsKey(cid) == false || DataType.IsNullOrEmpty(kvs.get(cid)))
+                         continue;
+
+                     selectVal = kvs.get(cid);
+
+                     if (selectVal == "all" || selectVal == "-1")
+                         continue;
+
+                     qo.addAnd();
+                    
+                     qo.addLeftBracket();
+
+
+                     String deptName = bp.sys.Glo.DealClassEntityName("BP.Port.Depts");
+
+                     if (attr.getUIBindKey().equals(deptName) == true)  //判断特殊情况。
+                         qo.AddWhere(attr.getKey(), " LIKE ", selectVal + "%");
+                     else
+                         qo.AddWhere(attr.getKey(), selectVal);
+
+                     qo.addRightBracket();
+                     break;
+                
+                 default:
+                     break;
+             }
+         }
+         //end
+
+         // 日期处理
+         if (mapData.getRptDTSearchWay() != DTSearchWay.None)
+         {
+             String dtKey = mapData.getRptDTSearchKey();
+             String dtFrom = ur.GetValStringByKey(UserRegeditAttr.DTFrom).trim();
+             String dtTo = ur.GetValStringByKey(UserRegeditAttr.DTTo).trim();
+
+             if (DataType.IsNullOrEmpty(dtFrom) == true)
+             {
+                 if (mapData.getRptDTSearchWay() == DTSearchWay.ByDate)
+                     dtFrom = "1900-01-01";
+                 else
+                     dtFrom = "1900-01-01 00:00";
+             }
+
+             if (DataType.IsNullOrEmpty(dtTo) == true)
+             {
+                 if (mapData.getRptDTSearchWay() == DTSearchWay.ByDate)
+                     dtTo = "2999-01-01";
+                 else
+                     dtTo = "2999-12-31 23:59";
+             }
+
+             if (mapData.getRptDTSearchWay() == DTSearchWay.ByDate)
+             {
+                
+                 qo.addAnd();
+                 qo.addLeftBracket();
+                 qo.setSQL(dtKey + " >= '" + dtFrom + "'");
+                 qo.addAnd();
+                 qo.setSQL(dtKey + " <= '" + dtTo + "'");
+                 qo.addRightBracket();
+             }
+
+             if (mapData.getRptDTSearchWay() == DTSearchWay.ByDateTime)
+             {
+                
+                 qo.addAnd();
+                 qo.addLeftBracket();
+                 qo.setSQL(dtKey + " >= '" + dtFrom + " 00:00'");
+                 qo.addAnd();
+                 qo.setSQL(dtKey + " <= '" + dtTo + " 23:59'");
+                 qo.addRightBracket();
+             }
+         }
+         //end 日期处理
+         qo.AddWhere(" AND  WFState > 1 ");
+         qo.AddWhere(" AND FID = 0 ");
+         if (DataType.IsNullOrEmpty(ur.getOrderBy()) == false)
+             if(ur.getOrderWay().toUpperCase().equals("DESC") == true)
+                 qo.addOrderByDesc(ur.getOrderBy());
+             else
+                 qo.addOrderBy(ur.getOrderBy());
+         ur.SetPara("Count", qo.GetCount());
+         ur.Update();
+         qo.DoQuery("OID", this.getPageSize(), this.getPageIdx());
+
+         return bp.tools.Json.ToJson(ens.ToDataTableField("FlowSearch_Data"));
+
+     }
 		///功能列表
 	/** 
 	 功能列表

@@ -3105,8 +3105,8 @@ public class Dev2Interface {
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
-			currNode = "(SELECT FK_Node FROM (SELECT FK_Node FROM WF_GenerWorkerlist G WHERE G.WorkID = A.WorkID AND FK_Emp='" + WebUser.getNo()
-					+ "' Order by RDT DESC ) WHERE RowNum=1)";
+			currNode = "(SELECT FK_Node FROM (SELECT FK_Node,WorkID FROM WF_GenerWorkerlist G WHERE  FK_Emp='" + WebUser.getNo()
+					+ "' Order by RDT DESC )D WHERE D.WorkID = A.WorkID AND RowNum=1)";
 			break;
 		case MySQL:
 		case PostgreSQL:

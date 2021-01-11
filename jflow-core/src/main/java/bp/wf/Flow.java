@@ -2244,6 +2244,9 @@ public class Flow extends EntityNoName
 		String path = this.getNo()+ "." + name;
 		path = PathFlowDesc + path + "/";
 
+		if (path.indexOf(":") == -1)
+			path = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(path);
+
 		this.DoExpFlowXmlTemplete(path);
 
 		name = path + name + ".xml";

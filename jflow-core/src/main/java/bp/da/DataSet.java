@@ -139,7 +139,12 @@ public class DataSet {
 		str.append("</NewDataSet>");
 		String temp = str.toString();
 		// String temp = formatXml(str.toString());
-
+		int pathType=0;
+		if(path.startsWith("resources")==true)
+			pathType = 1;
+		if(SystemConfig.getIsJarRun() && pathType==1){
+			
+		}
 		// 写入文件
 		File file = new File(path);
 		try {
@@ -296,9 +301,12 @@ public class DataSet {
 	public String xmlToString(String path) throws Exception {
 		String line = null;
 		StringBuffer strBuffer = new StringBuffer();
+		int pathType =0;
+		if(path.indexOf("DataUser/")!=-1 || path.indexOf("WF/Data")!=-1)
+			pathType =1;
 		try {
 			String encoding = "UTF-8"; // 字符编码
-			if(SystemConfig.getIsJarRun()){
+			if(SystemConfig.getIsJarRun() && pathType==1){
                 ClassPathResource classPathResource = new ClassPathResource(path);
                 InputStream inputStream = classPathResource.getInputStream();
                 StringBuilder stringBuilder = new StringBuilder();

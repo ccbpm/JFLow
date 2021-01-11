@@ -490,8 +490,11 @@ public class DataType {
 		BufferedReader in = null;
 		Reader is = null;
 		String line = "";
+		int type=0;
+		if(filePath.startsWith("resources")==true)
+			type = 1;
 		try {
-			if(SystemConfig.getIsJarRun()){
+			if(SystemConfig.getIsJarRun() && type==1){
 				ClassPathResource classPathResource = new ClassPathResource(filePath);
 				InputStream inputStream = classPathResource.getInputStream();
 				StringBuilder stringBuilder = new StringBuilder();

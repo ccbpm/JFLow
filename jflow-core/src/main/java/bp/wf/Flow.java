@@ -5761,13 +5761,31 @@ public class Flow extends EntityNoName
 								continue;
 							}
 
-							val = val.replace("ND" + oldFlowID, "ND" + flowID);
+							switch (dc.ColumnName.toLowerCase())
+							{
+								case "fk_node":
+									if (val.length() < iOldFlowLength)
+									{
+										//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
+										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点Sys_FrmEvent下FK_Node值错误:" + val);
+									}
+									val = flowID + val.substring(iOldFlowLength);
+									break;
+								case "fk_flow":
+									val = fl.getNo();
+									break;
+								default:
+									val = val.replace("ND" + oldFlowID, "ND" + flowID);
+									break;
+							}
+							
 							en.SetValByKey(dc.ColumnName, val);
 						}
 
 						//解决保存错误问题. 
 						try
 						{
+							en.setMyPK(DBAccess.GenerGUID());
 							en.Insert();
 						}
 						catch (java.lang.Exception e3)

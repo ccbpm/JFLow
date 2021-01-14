@@ -3886,6 +3886,7 @@ public class Dev2Interface {
 	public static void Port_SendMsg(String userNo, String title, String msgDoc, String msgFlag, String msgType,
 			String flowNo, long nodeID, long workID, long fid, String pushModel) throws Exception {
 		String url = "";
+		String url2="";
 		if (workID != 0) {
 			url = Glo.getHostURL() + "WF/Do.htm?SID=" + userNo + "_" + workID + "_" + nodeID;
 			url = url.replace("//", "/");
@@ -3895,12 +3896,14 @@ public class Dev2Interface {
 			}
 			if (bp.wf.SMSMsgType.CC.equals(msgType)) {
 				url = url + "&DoType=DoOpenCC";
+				url2=Glo.getHostURL() +"WF/MyCCGener.htm?WorkID=" + workID + "&NodeID=" + nodeID + "&FK_Node=" + nodeID+"&FID=0&UserNo="+userNo+"&FK_Flow=" + flowNo + "&IsReadonly=1&CCSta=1";
 			}
 
-			msgDoc += " <hr>打开工作: " + url;
+			//msgDoc += " <hr>打开工作: " + url;
+			msgDoc = msgDoc.replace("{Url}", url2);
 		}
 		String atParas = "@FK_Flow=" + flowNo + "@WorkID=" + workID + "@NodeID=" + nodeID + "@FK_Node=" + nodeID;
-		bp.wf.SMS.SendMsg(userNo, title, msgDoc, msgFlag, msgType, atParas, workID, pushModel, url);
+		bp.wf.SMS.SendMsg(userNo, title, msgDoc, msgFlag, msgType, atParas, workID, pushModel, url2);
 	}
 
 	/**

@@ -119,21 +119,24 @@ public class GPMPage extends WebContralBase
 	{
 
 		bp.gpm.Depts depts = new bp.gpm.Depts();
+		String parentNo = this.GetRequestVal("ParentNo");
 		//QueryObject qo = new QueryObject(depts);
 		//qo.addOrderBy(GPM.DeptAttr.Idx);
 		//qo.DoQuery();
-		if (WebUser.getNo().equals("admin") == false)
-		{
+		//if (WebUser.getNo().equals("admin") == false)
+		//{
 			QueryObject qo = new QueryObject(depts);
+			if(DataType.IsNullOrEmpty(parentNo)==false)
+				qo.AddWhere(DeptAttr.ParentNo,parentNo);
 			qo.addOrderBy(bp.gpm.DeptAttr.Idx);
 			qo.DoQuery();
 
 			return depts.ToJson();
-		}
+		//}
 
-		depts.RetrieveAll();
+		//depts.RetrieveAll();
 
-		return depts.ToJson();
+		//return depts.ToJson();
 	}
 
 	/** 

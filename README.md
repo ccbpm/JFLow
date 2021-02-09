@@ -1,4 +1,42 @@
-﻿### JFlow开源工作流引擎BPM系统介绍 (在右上角点:watch,star,fork支持我们,谢谢!!!)
+﻿**资源下载：** 
+0. http://demo.ccflow.org 在线演示.
+1. http://ccflow.org 官方网站
+2. http://ccflow.org/docs 操作手册下载
+3. http://ccflow.org/ke.htm 视频教程
+4. http://edu.ccflow.org 培训中心
+5. http://app.ccflow.org 案例，appStore.
+
+ ****后台设计器：**** 
+ **登录主页** 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101146_932606b4_980781.png "屏幕截图.png")
+
+ **流程图** 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101224_fec4bcfc_980781.png "屏幕截图.png")
+
+**丰富节点属性配置项**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101249_37a57e4d_980781.png "屏幕截图.png")
+
+**丰富流程属性配置项**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101310_d7d1609d_980781.png "屏幕截图.png")
+
+ **傻瓜表单设计器：** 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101354_7f0fe186_980781.png "屏幕截图.png")
+
+ **开发者表单设计器** 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102312_361bd457_980781.png "屏幕截图.png")
+
+ **** 前端：****
+**流程发起**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102353_93695172_980781.png "屏幕截图.png")
+
+**待办**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102458_c7ce8d11_980781.png "屏幕截图.png")
+
+**查询**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102647_0299d547_980781.png "屏幕截图.png")
+
+
+### JFlow开源工作流引擎BPM系统介绍 (在右上角点:watch,star,fork支持我们,谢谢!!!)
 1. 驰骋工作流引擎研发与2003年，具有.net与java两个版本，这两个版本代码结构，数据库结构，设计思想，功能组成， 操作手册，完全相同。 导入导出的流程模版，表单模版两个版本完全通用。
 2. CCFlow是.net版本的简称，由济南驰骋团队负责研发，JFlow是java版本的简称，在CCFlow的基础上升级改造而来，公司联合易科德软件共同研发。两款产品向社会100%开源，
 3. 十多年来，我们一直践行自己的诺言，真心服务中国IT产业，努力提高产品质量，成为了国内知名的老牌工作流引擎。

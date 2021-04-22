@@ -341,7 +341,7 @@ public class WebUser {
 	 */
 	public static String getFK_DeptName() {
 		try {
-			String val = GetValFromCookie("FK_DeptName", null, true);
+			String val = GetValFromCookie("FK_DeptName", "", true);
 			return val;
 		} catch (java.lang.Exception e) {
 			return "无";

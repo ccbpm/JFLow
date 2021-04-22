@@ -1685,7 +1685,7 @@ public class CCFormAPI
 
 		// Sys_Enum
 		listNames.add("Sys_Enum");
-		sql = "@SELECT * FROM Sys_Enum WHERE EnumKey IN ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + ids + ") ) order By EnumKey,IntKey";
+		sql = "@SELECT * FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN ( SELECT UIBindKey FROM Sys_MapAttr WHERE FK_MapData IN (" + ids + ") ) order By EnumKey,IntKey";
 		sqls += sql;
 
 		// 审核组件

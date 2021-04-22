@@ -49,7 +49,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		ds.Tables.add(dt);
 
 		/// 父子流程数据存储到这里.
-		Hashtable ht = new Hashtable();
+		/*Hashtable ht = new Hashtable();
 		for (DataRow dr : dt.Rows) {
 			ActionType at = ActionType.forValue(Integer.parseInt(dr.getValue(TrackAttr.ActionType).toString()));
 
@@ -108,7 +108,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 				// 放入到ht里面.
 				ht.put(mypk, msg);
 			}
-		}
+		}*/
 
 		///
 
@@ -135,6 +135,11 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		// 把节点审核配置信息.
 		NodeWorkCheck fwc = new NodeWorkCheck(gwf.getFK_Node());
 		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
+
+		//获取启动的子流程信息
+		SubFlows subFlows = new SubFlows(this.getFK_Flow());
+		ds.Tables.add(subFlows.ToDataTableField("WF_SubFlow"));
+
 
 		// 返回结果.
 		return bp.tools.Json.ToJson(ds);
@@ -212,6 +217,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
+		case KingBase:
 			currNode = "(SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo()
 					+ "' Order by RDT DESC ) WHERE rownum=1)";
 			break;
@@ -799,7 +805,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 						+ " wgwf.FK_Flow as \"FK_Flow\"," + " wgwf.FK_Node as \"FK_Node\","
 						+ " wgwf.Title as \"Title\"," + " wgwf.WorkID as \"WorkID\","
 						+ " wgwf.NodeName as \"NodeName\"," + " wf.Name as \"FlowName\"" + " FROM WF_GenerWorkFlow wgwf"
-						+ " INNER JOIN WF_Flow wf" + " ON  wf.No=wgwf.FK_Flow" + " INNER JOIN Sys_Enum se"
+						+ " INNER JOIN WF_Flow wf" + " ON  wf.No=wgwf.FK_Flow" + " INNER JOIN "+bp.wf.Glo.SysEnum()+" se"
 						+ " ON  se.IntKey = wgwf.WFSta" + " AND se.EnumKey = 'WFSta'" + " WHERE  wgwf.WorkID=%1$s"
 						+ " OR  wgwf.FID = %1$s" ;
 				//if(this.getPWorkID()!=0)
@@ -994,7 +1000,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 						+ " wgwf.Title as \"Title\"," + " wgwf.WorkID as \"WorkID\","
 						+ " wgwf.NodeName as \"NodeName\"," + " wf.Name as \"FlowName\""
 						+ " FROM   WF_GenerWorkFlow wgwf" + " INNER JOIN WF_Flow wf" + " ON  wf.No=wgwf.FK_Flow"
-						+ " INNER JOIN Sys_Enum se" + " ON  se.IntKey = wgwf.WFSta" + " AND se.EnumKey = 'WFSta'"
+						+ " INNER JOIN "+bp.wf.Glo.SysEnum()+" se" + " ON  se.IntKey = wgwf.WFSta" + " AND se.EnumKey = 'WFSta'"
 						+ " WHERE  wgwf.WorkID=%1$s" + " OR  wgwf.FID = %1$s" + " OR  wgwf.PWorkID = %1$s" + " ORDER BY"
 						+ " wgwf.RDT DESC";
 

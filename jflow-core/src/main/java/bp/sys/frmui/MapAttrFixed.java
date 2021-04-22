@@ -124,7 +124,7 @@ public class MapAttrFixed extends EntityMyPK
 
 		map.AddTBInt(MapAttrAttr.UIContralType, 0, "控件", true, false);
 
-		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
 			/// 基本字段信息.
 

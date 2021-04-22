@@ -78,7 +78,8 @@ public class WF_Admin_TestingContainer extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Track";
 		//把列大写转化为小写.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			Track tk = new Track();
 			for (Attr attr : tk.getEnMap().getAttrs())
@@ -130,7 +131,7 @@ public class WF_Admin_TestingContainer extends WebContralBase
 	*/
 	public final String Default_LetAdminerLogin() throws Exception
 	{
-		String SID = this.GetRequestVal("SID");
+		String SID = this.GetRequestVal("AdminerSID");
 		bp.wf.Dev2Interface.Port_LoginBySID(SID);
 
 		return "登录成功.";
@@ -145,15 +146,27 @@ public class WF_Admin_TestingContainer extends WebContralBase
 	public final String SelectOneUser_ChangUser() throws Exception
 	{
 
-		String adminer = this.GetRequestVal("Adminer");
-		String SID = this.GetRequestVal("SID");
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			String adminer = this.GetRequestVal("Adminer");
+			String SID = this.GetRequestVal("SID");
+			try
+			{
+				bp.wf.Dev2Interface.Port_Login(this.getFK_Emp());
+				return "登录成功.";
+			}
+			catch (Exception ex)
+			{
+				return "err@" + ex.getMessage();
+			}
+		}
 
 		try
 		{
-			bp.wf.Dev2Interface.Port_Login(this.getFK_Emp());
+			bp.wf.Dev2Interface.Port_Login(this.getFK_Emp(), null, this.getOrgNo());
 			return "登录成功.";
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
@@ -178,11 +191,14 @@ public class WF_Admin_TestingContainer extends WebContralBase
 		String userNo = this.GetRequestVal("UserNo");
 
 		//判断是否可以测试该流程？ 
-		bp.port.Emp myEmp = new bp.port.Emp();
-		int i = myEmp.Retrieve("SID", sid);
+		//bp.port.Emp myEmp = new bp.port.Emp();
+		//int i = myEmp.Retrieve("SID", sid);
 		
 		//组织url发起该流程.
-		String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&SID=" + sid + "&UserNo=" + userNo;
+		String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + userNo;
+		url += "&OrgNo=" + WebUser.getOrgNo();
+		url += "&Adminer=" + WebUser.getNo();
+		url += "&AdminerSID=" + sid;
 		return url;
 	}
 	/** 
@@ -281,7 +297,13 @@ public class WF_Admin_TestingContainer extends WebContralBase
 					}
 					else
 					{
-						sql = "SELECT Port_Emp.No FROM Port_Emp WHERE OrgNo='" + WebUser.getOrgNo() + "' LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.getNo()) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
+						
+						//sql = "SELECT Port_Emp.No FROM Port_Emp WHERE OrgNo='" + WebUser.getOrgNo() + "' LEFT JOIN Port_Dept   Port_Dept_FK_Dept ON  Port_Emp.FK_Dept=Port_Dept_FK_Dept.No  join Port_DeptEmpStation on (fk_emp=Port_Emp.getNo()) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
+						
+						//查询当前组织下所有的该岗位的人员. 
+                        sql = "SELECT a."+  bp.sys.Glo.getUserNo() + " as No FROM Port_Emp A, Port_DeptEmpStation B, WF_NodeStation C ";
+                        sql += " WHERE A.OrgNo='"+WebUser.getOrgNo()+"' AND C.FK_Node="+nd.getNodeID();
+                        sql += " AND A.No=B.FK_Emp AND B.FK_Station=C.FK_Station ";
 					}
 
 					// emps.RetrieveInSQL_Order("select fk_emp from Port_Empstation WHERE fk_station in (select fk_station from WF_NodeStation WHERE FK_Node=" + nodeid + " )", "FK_Dept");
@@ -291,7 +313,7 @@ public class WF_Admin_TestingContainer extends WebContralBase
 					sql = "SELECT A.No,A.Name FROM Port_Emp A, WF_NodeTeam B, Port_TeamEmp C ";
 					sql += " WHERE A.No=C.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nd.getNodeID() + " AND A.OrgNo='" + WebUser.getOrgNo() + "'";
 					break;
-				case ByTeamOnly: //仅按用户组计算. @lizhen.
+				case ByTeamOnly: //仅按用户组计算. 
 
 					sql = "SELECT A.No,A.Name FROM Port_Emp A, WF_NodeTeam B, Port_TeamEmp C ";
 					sql += " WHERE A.No=C.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nd.getNodeID();
@@ -381,7 +403,8 @@ public class WF_Admin_TestingContainer extends WebContralBase
 				dtMyEmps.Rows.add(drNew);
 			}
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 			{
 				dtMyEmps.Columns.get("NO").setColumnName("No");
 				dtMyEmps.Columns.get("NAME").setColumnName("Name");

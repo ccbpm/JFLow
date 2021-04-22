@@ -848,6 +848,7 @@ public class WF_Comm_Sys extends WebContralBase
 		return "脚本" + fileName + "导入成功";
 	}
 	public final String RichUploadFile() throws Exception {
+		
 		File xmlFile = null;
 		String fileName = "";
 		String savePath = "";

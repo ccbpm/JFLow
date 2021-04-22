@@ -51,7 +51,7 @@ public class SMS extends EntityMyPK
 
 	public static void SendMsg(String userNo, String msgTitle, String msgDoc, String msgFlag, String msgType, String paras, long workid, String pushModel, String openUrl) throws Exception
 	{
-		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(userNo);
+
 		SMS sms = new SMS();
 		sms.setMyPK(DBAccess.GenerGUID());
 		sms.setHisEmailSta(MsgSta.UnRun);
@@ -70,8 +70,7 @@ public class SMS extends EntityMyPK
 		sms.setMsgType(msgType); // 消息类型.'
 
 		sms.setAtPara(paras);
-		// 邮件地址.
-		sms.setEmail(emp.getEmail());
+
 		sms.setWorkID(workid);
 
 		if (DataType.IsNullOrEmpty(openUrl) == false)

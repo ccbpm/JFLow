@@ -1,6 +1,7 @@
 package bp.sys;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.tools.StringHelper;
 import bp.web.WebUser;
@@ -37,7 +38,12 @@ public class SysEnums extends Entities
 
 		if (this.size() == 0)
 		{
-			throw new RuntimeException("@枚举值" + enumKey + "已被删除。");
+			SysEnumMain enumMain = new SysEnumMain(enumKey);
+			RegIt(enumKey,enumMain.getCfgVal());
+			new SysEnums(enumKey);
+
+			if (this.size() == 0)
+				throw new RuntimeException("@枚举值" + enumKey + "已被删除。");
 		}
 
 		sql = " CASE NVL(" + mTable + field + "," + def + ")";
@@ -64,6 +70,11 @@ public class SysEnums extends Entities
 	{
 		if (this.size() == 0)
 		{
+			SysEnumMain enumMain = new SysEnumMain(enumKey);
+			RegIt(enumKey,enumMain.getCfgVal());
+			new SysEnums(enumKey);
+
+			if (this.size() == 0)
 			throw new RuntimeException("@枚举值（" + enumKey + "）已被删除，无法形成期望的SQL。");
 		}
 
@@ -95,7 +106,7 @@ public class SysEnums extends Entities
 
 			try
 			{
-				DBAccess.RunSQL("UPDATE Sys_Enum SET Lang='" + WebUser.getSysLang() + "' WHERE LANG IS NULL ");
+				DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET Lang='" + WebUser.getSysLang() + "' WHERE LANG IS NULL ");
 
 				//DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+IntKey");
 
@@ -103,15 +114,16 @@ public class SysEnums extends Entities
 				DBUrl dbUrl = new DBUrl();
 				if (DBType.MSSQL == dbUrl.getDBType())
 				{
-					DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
+					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
 				}
-				else if (DBType.Oracle == dbUrl.getDBType())
+				else if (DBType.Oracle == dbUrl.getDBType()
+						||DBType.KingBase == dbUrl.getDBType())
 				{
-					DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK = EnumKey || '_' || Lang || '_' || cast(IntKey  as VARCHAR(5))");
+					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK = EnumKey || '_' || Lang || '_' || cast(IntKey  as VARCHAR(5))");
 				}
 				else if (DBType.MySQL == dbUrl.getDBType())
 				{
-					DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK = CONCAT (EnumKey,'_', Lang,'_',CAST(IntKey AS CHAR(5)))");
+					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK = CONCAT (EnumKey,'_', Lang,'_',CAST(IntKey AS CHAR(5)))");
 				}
 
 			}
@@ -148,7 +160,7 @@ public class SysEnums extends Entities
 	/** 
 	 SysEnums
 	 
-	 @param EnumKey
+	 @param enumKey
 	 * @throws Exception 
 	*/
 	public SysEnums(String enumKey) throws Exception
@@ -251,22 +263,25 @@ public class SysEnums extends Entities
 	*/
 	public final int Delete(String key, Object val) throws Exception
 	{
+		Entity en = this.getGetNewEntity();
+		String ptable = en.getEnMap().getPhysicsTable();
+		/*if(ptable.equals("Sys_Enum") && SystemConfig.getAppCenterDBType().equals(DBType.KingBase))
+			ptable = "Sys_Enums";*/
 		try
 		{
-			Entity en = this.getGetNewEntity();
+
 			Paras ps = new Paras();
 
-			ps.SQL="DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
+			ps.SQL="DELETE FROM " + ptable + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
 		}
 		catch (java.lang.Exception e)
 		{
-			Entity en = this.getGetNewEntity();
 			en.CheckPhysicsTable();
 
 			Paras ps = new Paras();
-			ps.SQL="DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
+			ps.SQL="DELETE FROM " + ptable + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
 		}

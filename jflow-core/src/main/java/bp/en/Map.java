@@ -794,10 +794,11 @@ public class Map
 		this._EnDesc = value;
 	}
 	/** 
-	 是否版本管理
+	 是否版本管理 IsAllowRepeatName
 	*/
 	public boolean IsEnableVer = false;
 	public boolean IsShowSearchKey = true;
+	public boolean IsAllowRepeatName = true;
 	/** 
 	 如果是null，就按照通用的查询关键字.
 	 如果按照指定的格式查询按照如下格式配置.

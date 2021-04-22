@@ -120,23 +120,21 @@ public class GPMPage extends WebContralBase
 
 		bp.gpm.Depts depts = new bp.gpm.Depts();
 		String parentNo = this.GetRequestVal("ParentNo");
-		//QueryObject qo = new QueryObject(depts);
-		//qo.addOrderBy(GPM.DeptAttr.Idx);
-		//qo.DoQuery();
-		//if (WebUser.getNo().equals("admin") == false)
-		//{
-			QueryObject qo = new QueryObject(depts);
-			if(DataType.IsNullOrEmpty(parentNo)==false)
+		QueryObject qo = new QueryObject(depts);
+		if(DataType.IsNullOrEmpty(parentNo)==false){
+			if (parentNo.equals("0") == true) {
+				qo.AddWhere(DeptAttr.ParentNo, parentNo);
+				qo.addOr();
+				qo.AddWhereInSQL(DeptAttr.ParentNo, "SELECT No From Port_Dept Where ParentNo='0'");
+			}
+			else
 				qo.AddWhere(DeptAttr.ParentNo,parentNo);
-			qo.addOrderBy(bp.gpm.DeptAttr.Idx);
-			qo.DoQuery();
+		}
+		qo.addOrderBy(bp.gpm.DeptAttr.Idx);
+		qo.DoQuery();
 
-			return depts.ToJson();
-		//}
+		return depts.ToJson();
 
-		//depts.RetrieveAll();
-
-		//return depts.ToJson();
 	}
 
 	/** 
@@ -202,6 +200,7 @@ public class GPMPage extends WebContralBase
 		switch (DBAccess.getAppCenterDBType())
 		{
 			case Oracle:
+			case KingBase:
 				int beginIndex = (pageNumber - 1) * pageSize + 1;
 				int endIndex = pageNumber * pageSize;
 
@@ -268,6 +267,36 @@ public class GPMPage extends WebContralBase
 		DataTable menus = DBAccess.RunSQLReturnTable(sql2);
 		menus.TableName = "Menus"; //获得菜单.
 
+		if (SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+
+			// 目录
+			dirs.Columns.get("NO").ColumnName = "No";
+			dirs.Columns.get("NAME").ColumnName = "Name";
+			dirs.Columns.get("FK_MENU").ColumnName = "FK_Menu";
+			dirs.Columns.get("PARENTNO").ColumnName = "ParentNo";
+			dirs.Columns.get("URLEXT").ColumnName = "UrlExt";
+			dirs.Columns.get("TAG1").ColumnName = "Tag1";
+			dirs.Columns.get("TAG2").ColumnName = "Tag2";
+			dirs.Columns.get("TAG3").ColumnName = "Tag3";
+			dirs.Columns.get("WEBPATH").ColumnName = "WebPath";
+			dirs.Columns.get("ICON").ColumnName = "Icon";
+			dirs.Columns.get("IDX").ColumnName = "Idx";
+
+			// 菜单.
+			menus.Columns.get("NO").ColumnName = "No";
+			menus.Columns.get("NAME").ColumnName = "Name";
+			menus.Columns.get("FK_MENU").ColumnName = "FK_Menu";
+			menus.Columns.get("PARENTNO").ColumnName = "ParentNo";
+			menus.Columns.get("URLEXT").ColumnName = "UrlExt";
+			menus.Columns.get("TAG1").ColumnName = "Tag1";
+			menus.Columns.get("TAG2").ColumnName = "Tag2";
+			menus.Columns.get("TAG3").ColumnName = "Tag3";
+			menus.Columns.get("WEBPATH").ColumnName = "WebPath";
+			menus.Columns.get("ICON").ColumnName = "Icon";
+			menus.Columns.get("IDX").ColumnName = "Idx";
+
+		}
 		//组装数据.
 		DataSet ds = new DataSet();
 		ds.Tables.add(dirs);

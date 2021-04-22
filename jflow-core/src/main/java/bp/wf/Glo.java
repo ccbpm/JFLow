@@ -30,12 +30,31 @@ import java.text.SimpleDateFormat;
 */
 public class Glo
 {
+	 public static FtpUtil getTPFtpUtil() throws Exception {
+		  String ip = bp.sys.Glo.String_JieMi_FTP(SystemConfig.GetValByKey("TPFtpServerIP", ""));
+		  String userNo = bp.sys.Glo.String_JieMi_FTP(SystemConfig.GetValByKey("TPFtpUserID", ""));
+		  String pass = bp.sys.Glo.String_JieMi_FTP(SystemConfig.GetValByKey("TPFtpPassword", ""));
+		  String port = bp.sys.Glo.String_JieMi_FTP(SystemConfig.GetValByKey("TPFtpServerPort", ""));
 
+		  if (DataType.IsNullOrEmpty(port)) {
+		   port = "21";
+		  }
+
+		  FtpUtil ftp = new FtpUtil(ip, Integer.parseInt(port), userNo, pass);
+		  return ftp;
+		 }
 		///#region 新建节点-流程-默认值.
 
 
 		///#endregion 默认值.
-
+	 /// <summary>
+    /// 枚举值的数据库.
+    /// </summary>
+    public static String SysEnum(){
+        if (SystemConfig.getAppCenterDBType().equals(DBType.KingBase))
+            return "Sys_Enums";
+        return "Sys_Enum";
+    }
 	/** 
 	 删除垃圾数据
 	*/
@@ -72,6 +91,7 @@ public class Glo
 				sql = "SELECT '' AS No, '-请选择-' as Name ";
 				break;
 			case Oracle:
+			case KingBase:
 				sql = "SELECT '' AS No, '-请选择-' as Name FROM DUAL ";
 				break;
 			case PostgreSQL:
@@ -931,7 +951,7 @@ public class Glo
 
 		if (_Multilingual_Cache.containsKey(className) == false)
 		{
-			DataSet ds = bp.da.DataType.CXmlFileToDataSet(SystemConfig.getPathOfData() + "/lang/xml/" + className + ".xml");
+			DataSet ds = bp.da.DataType.CXmlFileToDataSet(SystemConfig.getPathOfData() + "lang/xml/" + className + ".xml");
 			DataTable dt = ds.Tables.get(0);
 
 			_Multilingual_Cache.put(className, dt);
@@ -994,7 +1014,8 @@ public class Glo
 	/** 
 	 获取多语言
 	 
-	 @param lang
+	 @param defaultMsg
+	 @param className
 	 @param key
 	 @param paramList
 	 @return 
@@ -1129,17 +1150,17 @@ public class Glo
 
 
 			///#region 为了适应云服务的要求.
-		if (bp.da.DBAccess.IsExitsTableCol("Sys_Enum", "OrgNo") == false)
+		if (bp.da.DBAccess.IsExitsTableCol(bp.wf.Glo.SysEnum(), "OrgNo") == false)
 		{
 			//检查数据表.
 			SysEnum se = new SysEnum();
 			se.CheckPhysicsTable();
 
 			//更新值.
-			DBAccess.RunSQL("UPDATE Sys_Enum SET OrgNo='CCS'");
+			DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET OrgNo='CCS'");
 
 			//更新.
-			DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK= EnumKey+'_'+Lang+'_'+IntKey+'_'+OrgNo");
+			DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK= EnumKey+'_'+Lang+'_'+IntKey+'_'+OrgNo");
 		}
 		if (bp.da.DBAccess.IsExitsTableCol("Sys_EnumMain", "OrgNo") == false)
 		{
@@ -1182,61 +1203,7 @@ public class Glo
 		al = ClassFactory.GetObjects(info);
 
 
-		//删除视图.
-		if (DBAccess.IsExitsObject("V_GPM_EmpMenu") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpMenu");
-		}
-	
-		if (DBAccess.IsExitsObject("V_GPM_EmpGroupMenu") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroupMenu");
-		}
-	
-		if (DBAccess.IsExitsObject("V_GPM_EmpGroup") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroup");
-		}
-	
-	
-		if (DBAccess.IsExitsObject("V_GPM_EmpStationMenu") == true)
-		{
-			DBAccess.RunSQL("DROP VIEW V_GPM_EmpStationMenu");
-		}
-	
-		///#region 6, 创建视图。
-		String sqlscript = "";
-		//MSSQL_GPM_VIEW 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MSSQL_GPM_VIEW.sql";
-		}
-	
-		//MySQL 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/MySQL_GPM_VIEW.sql";
-		}
-	
-		//Oracle 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
-		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/PostgreSQL_GPM_VIEW.sql";
-		}
-	
-		if (DataType.IsNullOrEmpty(sqlscript) == true)
-		{
-			throw new RuntimeException("err@没有判断的数据库类型:" + SystemConfig.getAppCenterDBType().toString());
-		}
-	
-		DBAccess.RunSQLScriptGo(sqlscript);
-	
-		///#endregion 创建视图
-		///#region 1, 修复表
+			///#region 1, 修复表
 		for (Object obj : al)
 		{
 			Entity en = null;
@@ -1312,7 +1279,66 @@ public class Glo
 
 			///#endregion 修复
 
-		
+		//删除视图.
+		if (DBAccess.IsExitsObject("V_GPM_EmpMenu") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpMenu");
+		}
+
+		if (DBAccess.IsExitsObject("V_GPM_EmpGroupMenu") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroupMenu");
+		}
+
+		if (DBAccess.IsExitsObject("V_GPM_EmpGroup") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpGroup");
+		}
+
+
+		if (DBAccess.IsExitsObject("V_GPM_EmpStationMenu") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EmpStationMenu");
+		}
+		if (DBAccess.IsExitsObject("V_GPM_EMPMENU_GPM") == true)
+		{
+			DBAccess.RunSQL("DROP VIEW V_GPM_EMPMENU_GPM");
+		}
+
+
+			///#region 6, 创建视图。
+		String sqlscript = "";
+		//MSSQL_GPM_VIEW 语法有所区别
+		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MSSQL_GPM_VIEW.sql";
+		}
+
+		//MySQL 语法有所区别
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/MySQL_GPM_VIEW.sql";
+		}
+
+		//Oracle 语法有所区别
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
+		}
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/PostgreSQL_GPM_VIEW.sql";
+		}
+
+		if (DataType.IsNullOrEmpty(sqlscript) == true)
+		{
+			throw new RuntimeException("err@没有判断的数据库类型:" + SystemConfig.getAppCenterDBType().toString());
+		}
+
+		DBAccess.RunSQLScriptGo(sqlscript);
+
+			///#endregion 创建视图
 
 	}
 
@@ -1320,9 +1346,9 @@ public class Glo
 		///#region 执行安装/升级.
 	/** 
 	 当前版本号-为了升级使用.
-	 20200602:升级方向条件.
+	 20201125:升级方向条件.
 	*/
-	public static int Ver = 20200603;
+	public static int Ver = 20210422;
 	/** 
 	 执行升级
 	 
@@ -1370,8 +1396,12 @@ public class Glo
 
 		//检查BPM.
 		CheckGPM();
-		
-        ///#region 升级优化集团版的应用. 2020.04.03
+
+		 //升级.
+        Auth ath = new Auth();
+        ath.CheckPhysicsTable();
+        
+			///#region 升级优化集团版的应用. 2020.04.03
 
 		//--2020.05.28 升级方向条件;
 		bp.wf.template.Cond cond = new Cond();
@@ -1392,33 +1422,6 @@ public class Glo
 			DBAccess.RunSQL("UPDATE WF_NodeToolbar SET IsMyCC = 1 Where ShowWhere = 2");
 
 			DBAccess.DropTableColumn("WF_NodeToolbar", "ShowWhere");
-		}
-
-		//FrmLab中Text字段在人大金仓是关键字
-		if (DBAccess.IsExitsTableCol("Sys_FrmLab", "Lab") == false){
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBase)
-				DBAccess.RunSQL("ALTER TABLE Sys_FrmLab ADD Label TYPE CHARACTER VARYING(100 CHAR) DEFAULT  NULL");
-			else
-				DBAccess.RunSQL("ALTER TABLE Sys_FrmLab ADD Label NVARCHAR(100) DEFAULT  NULL");
-
-			DBAccess.RunSQL("UPDATE Sys_FrmLab SET Lab=Text ");
-			DBAccess.DropTableColumn("Sys_FrmLab", "Text");
-		}
-		if (DBAccess.IsExitsTableCol("Sys_FrmBtn", "Lab") == false){
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBase)
-				DBAccess.RunSQL("ALTER TABLE Sys_FrmBtn ADD Label TYPE CHARACTER VARYING(100 CHAR) DEFAULT  NULL");
-			else
-				DBAccess.RunSQL("ALTER TABLE Sys_FrmBtn ADD Label NVARCHAR(100) DEFAULT  NULL");
-			DBAccess.RunSQL("UPDATE Sys_FrmBtn SET Lab=Text ");
-			DBAccess.DropTableColumn("Sys_FrmBtn", "Text");
-		}
-		if (DBAccess.IsExitsTableCol("Sys_FrmLink", "Lab") == false){
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBase)
-				DBAccess.RunSQL("ALTER TABLE Sys_FrmLink ADD Label TYPE CHARACTER VARYING(100 CHAR) DEFAULT  NULL");
-			else
-				DBAccess.RunSQL("ALTER TABLE Sys_FrmLink ADD Lab NVARCHAR(100) DEFAULT  NULL");
-			DBAccess.RunSQL("UPDATE Sys_FrmLink SET Label=Text ");
-			DBAccess.DropTableColumn("Sys_FrmLink", "Text");
 		}
 
 		//检查frmTrack.
@@ -1521,7 +1524,22 @@ public class Glo
 		//DBAccess.RunSQL(sql); //创建视图.
 
 			///#endregion 升级优化集团版的应用
-
+		//FrmLab中Text字段在人大金仓是关键字
+		if (DBAccess.IsExitsTableCol("Sys_FrmLab", "Lab") == false){
+			DBAccess.RunSQL("ALTER TABLE Sys_FrmLab ADD Lab NVARCHAR(100) DEFAULT  NULL");
+			DBAccess.RunSQL("UPDATE Sys_FrmLab SET Lab=Text ");
+			DBAccess.DropTableColumn("Sys_FrmLab", "Text");
+		}
+		if (DBAccess.IsExitsTableCol("Sys_FrmBtn", "Lab") == false){
+			DBAccess.RunSQL("ALTER TABLE Sys_FrmBtn ADD Lab NVARCHAR(100) DEFAULT  NULL");
+			DBAccess.RunSQL("UPDATE Sys_FrmBtn SET Lab=Text ");
+			DBAccess.DropTableColumn("Sys_FrmBtn", "Text");
+		}
+		if (DBAccess.IsExitsTableCol("Sys_FrmLink", "Lab") == false){
+			DBAccess.RunSQL("ALTER TABLE Sys_FrmLink ADD Lab NVARCHAR(100) DEFAULT  NULL");
+			DBAccess.RunSQL("UPDATE Sys_FrmLink SET Lab=Text ");
+			DBAccess.DropTableColumn("Sys_FrmLink", "Text");
+		}
 
 		//检查子流程表.
 		if (bp.da.DBAccess.IsExitsObject("WF_NodeSubFlow") == true)
@@ -1689,15 +1707,16 @@ public class Glo
 			bp.wf.Auth Auth = new Auth();
 			Auth.CheckPhysicsTable();
 
-			sql = "CREATE VIEW V_WF_AuthTodolist ";
-			sql += " AS ";
-			sql += " SELECT B.FK_Emp Auther,B.FK_EmpText AuthName,A.PWorkID,A.FK_Node,A.FID,A.WorkID,C.EmpNo,  C.TakeBackDT, A.FK_Flow, A.FlowName,A.Title ";
-			sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Auth C";
-			sql += " WHERE A.WorkID=B.WorkID AND C.AuthType=1 AND B.FK_Emp=C.Auther AND B.IsPass=0 AND B.IsEnable=1 AND A.FK_Node = B.FK_Node AND A.WFState >=2";
-			sql += "    UNION  ";
-			sql += " SELECT B.FK_Emp Auther,B.FK_EmpText AuthName,A.PWorkID,A.FK_Node,A.FID,A.WorkID, C.EmpNo, C.TakeBackDT, A.FK_Flow, A.FlowName,A.Title";
-			sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Auth C";
-			sql += " WHERE A.WorkID=B.WorkID AND C.AuthType=2 AND B.FK_Emp=C.Auther AND B.IsPass=0 AND B.IsEnable=1 AND A.FK_Node = B.FK_Node AND A.WFState >=2 AND A.FK_Flow=C.FlowNo";
+			 sql = "CREATE VIEW V_WF_AuthTodolist ";
+             sql += " AS ";
+             sql += " SELECT B.FK_Emp Auther,B.FK_EmpText AuthName,A.PWorkID,A.FK_Node,A.FID,A.WorkID,C.AutherToEmpNo,  C.TakeBackDT, A.FK_Flow, A.FlowName,A.Title ";
+             sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Auth C";
+             sql += " WHERE A.WorkID=B.WorkID AND C.AuthType=1 AND B.FK_Emp=C.Auther AND B.IsPass=0 AND B.IsEnable=1 AND A.FK_Node = B.FK_Node AND A.WFState >=2";
+             sql += "    UNION  ";
+             sql += " SELECT B.FK_Emp Auther,B.FK_EmpText AuthName,A.PWorkID,A.FK_Node,A.FID,A.WorkID, C.AutherToEmpNo, C.TakeBackDT, A.FK_Flow, A.FlowName,A.Title";
+             sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Auth C";
+             sql += " WHERE A.WorkID=B.WorkID AND C.AuthType=2 AND B.FK_Emp=C.Auther AND B.IsPass=0 AND B.IsEnable=1 AND A.FK_Node = B.FK_Node AND A.WFState >=2 AND A.FK_Flow=C.FlowNo";
+            
 			DBAccess.RunSQL(sql);
 		}
 
@@ -1727,7 +1746,8 @@ public class Glo
 		{
 			sql = "UPDATE    F SET IsEnableFWC = N. FWCSta  FROM WF_FrmNode F,WF_Node N    WHERE F.FK_Node = N.NodeID AND F.IsEnableFWC =1";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			sql = "UPDATE WF_FrmNode F  SET (IsEnableFWC)=(SELECT FWCSta FROM WF_Node N WHERE F.FK_Node = N.NodeID AND F.IsEnableFWC =1)";
 		}
@@ -1884,12 +1904,6 @@ public class Glo
 		try
 		{
 
-				///#region 升级菜单.
-			//if (DBAccess.IsExitsTableCol("GPM_Menu","UrlExt")==false)
-			//{
-			//}
-
-				///#endregion
 
 
 				///#region 创建缺少的视图 Port_Inc.  @fanleiwei 需要翻译.
@@ -1999,7 +2013,7 @@ public class Glo
 			mapData.CheckPhysicsTable();
 
 			//删除枚举.
-			DBAccess.RunSQL("DELETE FROM Sys_Enum WHERE EnumKey IN ('SelectorModel','CtrlWayAth')");
+			DBAccess.RunSQL("DELETE FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN ('SelectorModel','CtrlWayAth')");
 
 			//SysEnum se = new SysEnum("FrmType", 1);//NOTE:此处升级时报错，2017-06-13，liuxc
 
@@ -2101,6 +2115,7 @@ public class Glo
 						DBAccess.RunSQL("ALTER TABLE WF_Node ADD FWCIsShowReturnMsg INT NULL");
 						break;
 					case Oracle:
+					case KingBase:
 					case DM:
 					case Informix:
 					case PostgreSQL:
@@ -2138,6 +2153,7 @@ public class Glo
 						DBAccess.RunSQL("ALTER TABLE Sys_FrmRB ADD AtPara NVARCHAR(1000) NULL");
 						break;
 					case Oracle:
+					case KingBase:
 					case DM:
 						DBAccess.RunSQL("ALTER TABLE Sys_FrmRB ADD AtPara NVARCHAR2(1000) NULL");
 						break;
@@ -2192,16 +2208,15 @@ public class Glo
 			{
 				String sqls = "";
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
-					sqls += "UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.TBFullCtrl + "';";
-					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.PopVal + "';";
-					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.DDLFullCtrl + "';";
-					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrsOfActive WHERE ExtType='" + MapExtXmlList.ActiveDDL + "';";
-				}
-
-
-				if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+					sqls += "UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.TBFullCtrl + "'";
+					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.PopVal + "'";
+					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.DDLFullCtrl + "'";
+					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrsOfActive WHERE ExtType='" + MapExtXmlList.ActiveDDL + "'";
+				}else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
 					sqls += "UPDATE Sys_MapExt SET MyPK=CONCAT(ExtType,'_',FK_Mapdata,'_',AttrOfOper) WHERE ExtType='" + MapExtXmlList.TBFullCtrl + "'";
 					sqls += "@UPDATE Sys_MapExt SET MyPK=CONCAT(ExtType,'_',FK_Mapdata,'_',AttrOfOper) WHERE ExtType='" + MapExtXmlList.PopVal + "'";
@@ -2321,7 +2336,7 @@ public class Glo
 
 
 				///#region 执行sql．
-			bp.da.DBAccess.RunSQL("delete  from Sys_Enum WHERE EnumKey in ('BillFileType','EventDoType','FormType','BatchRole','StartGuideWay','NodeFormType')");
+			bp.da.DBAccess.RunSQL("delete  from "+bp.wf.Glo.SysEnum()+" WHERE EnumKey in ('BillFileType','EventDoType','FormType','BatchRole','StartGuideWay','NodeFormType')");
 			DBAccess.RunSQL("UPDATE Sys_FrmSln SET FK_Flow =(SELECT FK_FLOW FROM WF_Node WHERE NODEID=Sys_FrmSln.FK_Node) WHERE FK_Flow IS NULL");
 
 			if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
@@ -2329,7 +2344,9 @@ public class Glo
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm+'_'+convert(varchar,FK_Node )+'_'+FK_Flow");
 			}
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm||'_'||FK_Node||'_'||FK_Flow");
 			}
@@ -2408,17 +2425,18 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
-					sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitView_Ora.sql";
+				case KingBase:
+					sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitView_Ora.sql";
 					break;
 				case MSSQL:
 				case Informix:
-					sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitView_SQL.sql";
+					sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitView_SQL.sql";
 					break;
 				case MySQL:
-					sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitView_MySQL.sql";
+					sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitView_MySQL.sql";
 					break;
 				case PostgreSQL:
-					sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitView_PostgreSQL.sql";
+					sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitView_PostgreSQL.sql";
 					break;
 				default:
 					break;
@@ -2448,6 +2466,7 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
+				case KingBase:
 					msg = "@Sys_MapAttr 修改字段";
 					break;
 				case MSSQL:
@@ -2466,6 +2485,7 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
+				case KingBase:
 					int i = DBAccess.RunSQLReturnCOUNT("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_DEFVAL' AND COLUMN_NAME = 'PARENTNO'");
 					if (i == 0)
 					{
@@ -2502,7 +2522,7 @@ public class Glo
 
 				///#region 登陆更新错误
 			msg = "@登陆时错误。";
-			DBAccess.RunSQL("DELETE FROM Sys_Enum WHERE EnumKey IN ('DeliveryWay','RunModel','OutTimeDeal','FlowAppType')");
+			DBAccess.RunSQL("DELETE FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN ('DeliveryWay','RunModel','OutTimeDeal','FlowAppType')");
 
 				///#endregion 登陆更新错误
 
@@ -2573,6 +2593,7 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
+				case KingBase:
 					int i = DBAccess.RunSQLReturnCOUNT("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_FRMIMG' AND COLUMN_NAME = 'TAG0'");
 					if (i == 0)
 					{
@@ -2666,6 +2687,8 @@ public class Glo
 		String currDBVer = DBAccess.RunSQLReturnStringIsNull(sql, "");
 
 		String sqlScript = SystemConfig.getPathOfData() + "UpdataCCFlowVer.sql";
+		if(SystemConfig.getAppCenterDBType() == DBType.KingBase)
+			sqlScript = SystemConfig.getPathOfData() + "UpdataCCFlowVerForKingBase.sql";
 		SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmmss");
 		Calendar cal = Calendar.getInstance();
 		if(SystemConfig.getIsJarRun()){
@@ -2901,6 +2924,7 @@ public class Glo
 					sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
 					break;
 				case Oracle:
+				case KingBase:
 					sql = "ALTER TABLE  WF_EMP add StartFlows BLOB";
 					break;
 				case MySQL:
@@ -2927,7 +2951,7 @@ public class Glo
 		bp.gpm.Emp empGPM = new bp.gpm.Emp();
 		empGPM.CheckPhysicsTable();
 
-		sqlscript = SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
+		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		bp.da.DBAccess.RunSQLScript(sqlscript);
 
 		bp.port.Emp empAdmin = new Emp("admin");
@@ -2950,12 +2974,6 @@ public class Glo
 		MapDtl mapdtl = new MapDtl();
 		mapdtl.CheckPhysicsTable();
 
-		MapData mapData = new MapData();
-		mapData.CheckPhysicsTable();
-		
-		SysEnum sysenum = new SysEnum();
-		sysenum.CheckPhysicsTable();
-		
 		CC cc = new CC();
 		cc.CheckPhysicsTable();
 
@@ -3058,6 +3076,7 @@ public class Glo
 					case "WF_GenerEmpWorks":
 						continue;
 					case "Sys_Enum":
+					case "Sys_Enums":
 						en.CheckPhysicsTable();
 						break;
 					default:
@@ -3137,17 +3156,18 @@ public class Glo
 		switch (SystemConfig.getAppCenterDBType())
 		{
 			case Oracle:
-				sqlscript = SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/InitView_Ora.sql";
+			case KingBase:
+				sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_Ora.sql";
 				break;
 			case MSSQL:
 			case Informix:
-				sqlscript = SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/InitView_SQL.sql";
+				sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_SQL.sql";
 				break;
 			case MySQL:
-				sqlscript = SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/InitView_MySQL.sql";
+				sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_MySQL.sql";
 				break;
 			case PostgreSQL:
-				sqlscript = SystemConfig.getCCFlowAppPath() + "/WF/Data/Install/SQLScript/InitView_PostgreSQL.sql";
+				sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_PostgreSQL.sql";
 				break;
 			default:
 				break;
@@ -3161,7 +3181,7 @@ public class Glo
 			///#region 5, 初始化数据.
 		if (isInstallFlowDemo)
 		{
-			sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitPublicData.sql";
+			sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitPublicData.sql";
 			bp.da.DBAccess.RunSQLScript(sqlscript);
 		}
 		// else
@@ -3285,7 +3305,7 @@ public class Glo
 			s1.setName("日常办公类");
 			s1.Update();
 			//加载一个模版,不然用户不知道如何新建流程.
-			Flow.DoLoadFlowTemplate(s1.getNo(), SystemConfig.getPathOfData() + "/Install/QingJiaFlowDemoInit.xml", ImpFlowTempleteModel.AsTempleteFlowNo);
+			Flow.DoLoadFlowTemplate(s1.getNo(), SystemConfig.getPathOfData() + "Install/QingJiaFlowDemoInit.xml", ImpFlowTempleteModel.AsTempleteFlowNo);
 			Flow fl = new Flow("001");
 			fl.DoCheck(); //做一下检查.
 
@@ -6505,6 +6525,7 @@ public class Glo
 					ps.SQL="SELECT TOP 1 SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID ";
 					break;
 				case Oracle:
+				case KingBase:
 					ps.SQL="SELECT SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID  ";
 					break;
 				case MySQL:
@@ -6513,9 +6534,7 @@ public class Glo
 				case PostgreSQL:
 					ps.SQL="SELECT SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID  ";
 					break;
-				case KingBase:
-					ps.SQL="SELECT SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID  ";
-					break;
+				
 				default:
 					throw new RuntimeException("err@没有判断的数据库类型.");
 			}
@@ -6682,14 +6701,15 @@ public class Glo
 		//执行保存.
 		try
 		{
-			ch.DirectInsert();
+			if (ch.getIsExits() == true)
+				ch.Update();
+			else
+				ch.DirectInsert();
 		}
 		catch (java.lang.Exception e)
 		{
 			if (ch.getIsExits() == true)
-			{
 				ch.Update();
-			}
 			else
 			{
 				//如果遇到退回的情况就可能涉及到主键重复的问题.
@@ -6884,7 +6904,7 @@ public class Glo
 				qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, "('" + ctrlWayId + "','" + pkval + "')");
 				qo.addAnd();
 				qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
-				qo.addOrderBy("RDT");
+				qo.addOrderBy("IDX,RDT");
 				qo.DoQuery();
 			}
 			return dbs;
@@ -6911,7 +6931,7 @@ public class Glo
 				qo.addAnd();
 				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
 			}
-			qo.addOrderBy("RDT");
+			qo.addOrderBy("IDX,RDT");
 			qo.DoQuery();
 			return dbs;
 		}
@@ -6929,7 +6949,7 @@ public class Glo
 				qo.addAnd();
 				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
 			}
-			qo.addOrderBy("RDT");
+			qo.addOrderBy("IDX,RDT");
 			qo.DoQuery();
 			return dbs;
 		}
@@ -6959,7 +6979,7 @@ public class Glo
 					qo.addAnd();
 					qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
 				}
-				qo.addOrderBy("RDT");
+				qo.addOrderBy("IDX,RDT");
 				qo.DoQuery();
 
 			}

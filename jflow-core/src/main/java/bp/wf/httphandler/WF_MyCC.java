@@ -670,9 +670,15 @@ public class WF_MyCC extends WebContralBase
 			}
 
 			dt.Rows.add(dr);
+			
+			dr = dt.NewRow();
+			dr.setValue("No", "Track");
+			dr.setValue("Name", "轨迹");
+			dr.setValue("Oper", "");
+			dt.Rows.add(dr);
 
 				///加载流程抄送 - 按钮
-
+			  
 
 			/* 打包下载zip */
 			if (btnLab.getPrintZipMyCC() == true)

@@ -105,6 +105,15 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.GroupKey, value);
 	}
+	
+	public final int getIdx() throws Exception
+	{
+		return this.GetValIntByKey(GloVarAttr.Idx);
+	}
+	public final void setIdx(int value) throws Exception
+	{
+		this.SetValByKey(GloVarAttr.Idx, value);
+	}
 
 		///
 

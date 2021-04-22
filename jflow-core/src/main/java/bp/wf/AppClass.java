@@ -21,6 +21,11 @@ public class AppClass
 	*/
 	public static String JobSchedule(long workid) throws Exception
 	{
+		
+		
+		//bp.wf.httphandler.WF_Comm com=new bp.wf.httphandler.WF_Comm();
+		//com.RichUploadFile();
+		
 		DataSet ds = bp.wf.Dev2Interface.DB_JobSchedule(workid);
 
 		DataTable gwf = ds.GetTableByName("WF_GenerWorkFlow"); //工作记录.

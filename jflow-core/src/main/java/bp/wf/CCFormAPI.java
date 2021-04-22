@@ -134,7 +134,7 @@ public class CCFormAPI extends Dev2Interface
 					//增加枚举字段.
 					if (myds.GetTableByName(attr.getUIBindKey()) == null)
 					{
-						String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
+						String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
 						DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 						dtEnum.TableName = attr.getUIBindKey();
 						myds.Tables.add(dtEnum);
@@ -237,7 +237,7 @@ public class CCFormAPI extends Dev2Interface
 						//增加枚举字段.
 						if (myds.GetTableByName(attr.getUIBindKey()) == null)
 						{
-							String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
+							String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
 							DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 							dtEnum.TableName = attr.getUIBindKey();
 							myds.Tables.add(dtEnum);
@@ -472,7 +472,7 @@ public class CCFormAPI extends Dev2Interface
 						continue;
 					}
 
-					String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
+					String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 					DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 					dtEnum.TableName = uiBindKey;
 					myds.Tables.add(dtEnum);
@@ -688,7 +688,7 @@ public class CCFormAPI extends Dev2Interface
 					continue;
 				}
 
-				String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
+				String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 				dtEnum.TableName = uiBindKey;
 				myds.Tables.add(dtEnum);
@@ -855,7 +855,7 @@ public class CCFormAPI extends Dev2Interface
 					continue;
 				}
 
-				String mysql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
+				String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 				dtEnum.TableName = uiBindKey;
 
@@ -892,7 +892,8 @@ public class CCFormAPI extends Dev2Interface
 
 				dt.TableName = uiBindKey;
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 				{
 					if (dt.Columns.contains("NO") == true)
 					{
@@ -986,7 +987,8 @@ public class CCFormAPI extends Dev2Interface
 		{
 
 				///修改区分大小写. Oracle
-			if (bp.da.DBType.Oracle == SystemConfig.getAppCenterDBType())
+			if (bp.da.DBType.Oracle == SystemConfig.getAppCenterDBType()
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 			{
 				for (DataColumn dr : dtDtl.Columns)
 				{
@@ -1011,8 +1013,9 @@ public class CCFormAPI extends Dev2Interface
 					//本身是大写的不进行修改
 					if (DataType.IsNullOrEmpty(dr.getValue(attr.getKeyOfEn()) + ""))
 					{
-						dr.setValue(attr.getKeyOfEn(), dr.getValue(attr.getKeyOfEn().toUpperCase()));
-						dr.setValue(attr.getKeyOfEn().toUpperCase(), null);
+						dr.setValue(attr.getKeyOfEn(), dr.getValue(attr.getKeyOfEn().toUpperCase()));						
+						//dr.setValue(attr.getKeyOfEn().toUpperCase(), null);
+						
 					}
 				}
 			}

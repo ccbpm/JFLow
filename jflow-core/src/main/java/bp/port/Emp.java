@@ -85,6 +85,14 @@ public class Emp extends EntityNoName {
 		this.SetValByKey(EmpAttr.Email, value);
 	}
 
+	public final String getOrgNo()throws Exception {
+		return this.GetValStrByKey(EmpAttr.OrgNo);
+	}
+
+	public final void setOrgNo(String value) throws Exception{
+		this.SetValByKey(EmpAttr.OrgNo, value);
+	}
+
 	///
 
 	/// 公共方法
@@ -176,6 +184,12 @@ public class Emp extends EntityNoName {
 
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 1, 20, 30);
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 200, 30);
+		//如果是集团模式或者是SAAS模式.
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			map.AddTBString(EmpAttr.UserID, null, "用户ID", true, false, 0, 50, 30);
+			map.AddTBString(EmpAttr.OrgNo, null, "OrgNo", true, false, 0, 50, 30);
+		}
 		map.AddTBString(EmpAttr.Pass, "123", "密码", false, false, 0, 20, 10);
 		map.AddDDLEntities(EmpAttr.FK_Dept, null, "部门", new bp.port.Depts(), true);
 		map.AddTBString(EmpAttr.SID, null, "安全校验码", false, false, 0, 36, 36);

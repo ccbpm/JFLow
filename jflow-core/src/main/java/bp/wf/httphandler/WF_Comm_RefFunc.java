@@ -76,7 +76,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 
         for(String empNo : empNos)
         {
-        	if (DBAccess.getAppCenterDBType() == DBType.Oracle)
+        	if (DBAccess.getAppCenterDBType() == DBType.Oracle
+        			|| DBAccess.getAppCenterDBType() == DBType.KingBase)
             {
         		if (dtEmps.selectx("No=" + empNo).size() + dtEmps.selectx("NO=" + empNo).size() == 0)
             		continue;
@@ -227,7 +228,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 		}
 
 		//对Oracle数据库做兼容性处理
-		if (DBAccess.getAppCenterDBType() == DBType.Oracle)
+		if (DBAccess.getAppCenterDBType() == DBType.Oracle
+				|| DBAccess.getAppCenterDBType() == DBType.KingBase)
 		{
 			for (DataColumn col : dt.Columns)
 			{
@@ -614,7 +616,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 		}
 
 		//对Oracle数据库做兼容性处理
-		if (DBAccess.getAppCenterDBType() == DBType.Oracle)
+		if (DBAccess.getAppCenterDBType() == DBType.Oracle
+				|| DBAccess.getAppCenterDBType() == DBType.KingBase)
 		{
 			for (DataColumn col : dt.Columns)
 			{

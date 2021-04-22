@@ -1,5 +1,6 @@
 package bp.wf.httphandler;
 
+import bp.tools.BaseFileUtils;
 import bp.wf.*;
 import bp.web.*;
 import bp.sys.*;
@@ -8,9 +9,15 @@ import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.en.*;
 import bp.wf.template.*;
+import net.sf.json.JSON;
+import net.sf.json.JSONObject;
 import bp.ccbill.*;
+import org.apache.tools.ant.taskdefs.Length;
+
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.stream.Stream;
 
 public class WF_Admin_DevelopDesigner extends WebContralBase
 {
@@ -143,9 +150,6 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 		///复制表单
 	/** 
 	 复制表单属性和表单内容
-	 
-	 @param frmId 新表单ID
-	 @param frmName 新表单内容
 	 * @throws Exception 
 	*/
 	public final void DoCopyFrm() throws Exception
@@ -206,5 +210,44 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	}
 
 		/// 复制表单
+     ///region 插入模版.
+	/// <summary>
+	/// 获取开发者表单模板目录
+	/// </summary>
+	/// <returns></returns>
+	public String Template_Init() throws Exception {
+		String path = SystemConfig.getPathOfDataUser() + "Style\\TemplateFoolDevelopDesigner\\";
+		String[] fileInFolder= BaseFileUtils.getFiles(path);
+		DataTable dt = new DataTable();
+		dt.Columns.Add("OriginalPath");
+		dt.Columns.Add("FullPath");
+		for (int i =0;i< fileInFolder.length;i++ ) {
+			DataRow newRow = dt.NewRow();
+			String subFile =fileInFolder[i];
+			 if(subFile.endsWith(".htm")) {
+				 newRow.setValue("OriginalPath", subFile.substring(subFile.lastIndexOf("\\")+1,subFile.length()));
+				 newRow.setValue("FullPath", subFile);
+				 dt.Rows.add(newRow);
+			 } else {
+				 continue;
+			 }
+		}
+		return bp.tools.Json.ToJson(dt);
+	}
+	/// <summary>
+	/// 根据名称获取开发者表单文件内容
+	/// </summary>
+	/// <returns></returns>
+	public String Template_GenerHtml()
+	{
+		String fileName = this.GetRequestVal("DevTempName");
+		String path = SystemConfig.getPathOfDataUser() + "Style\\TemplateFoolDevelopDesigner\\";
 
+		String filePath = path + fileName;
+
+		String strHtml = DataType.ReadTextFile(filePath,"UTF-8");
+
+		return strHtml;
+	}
+	//endregion 插入模版.
 }

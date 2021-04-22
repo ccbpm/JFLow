@@ -224,6 +224,10 @@ public class MapDataAttr extends EntityNoNameAttr
 
 		///参数属性.
 	public static final String EnsName = "EnsName";
+	/**
+	 * 是否启用装载填充
+	 */
+	public static final String IsPageLoadFull="IsPageLoadFull";
 
 		/// 参数属性.
 }

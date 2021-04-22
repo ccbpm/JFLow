@@ -461,24 +461,18 @@ public class WorkUnSend
 		this.FlowNo = gwf.getFK_Flow(); //@sly
 
 		if (gwf.getWFState() == WFState.Complete)
-		{
 			return "err@该流程已经完成，您不能撤销。";
-		}
 
 		// 如果停留的节点是分合流。
 		Node nd = new Node(gwf.getFK_Node());
 
 		/*该节点不允许退回.*/
 		if (nd.getHisCancelRole() == CancelRole.None)
-		{
-			throw new RuntimeException("当前节点，不允许撤销。");
-		}
+			return "err@当前节点，不允许撤销。";
 
 
 		if (nd.getIsStartNode() && nd.getHisNodeWorkType() != NodeWorkType.StartWorkFL)
-		{
-			throw new RuntimeException("当前节点是开始节点，所以您不能撤销。");
-		}
+			return "err@当前节点是开始节点，所以您不能撤销。";
 
 		//如果撤销到的节点和当前流程运行到的节点相同，则是分流、或者分河流
 		if (this.UnSendToNode == nd.getNodeID())
@@ -491,9 +485,7 @@ public class WorkUnSend
 				String threadSQL = "SELECT FK_Node,WorkID,Emps FROM WF_GenerWorkFlow  WHERE FID=" + this.WorkID + " AND FK_Node" + " IN(SELECT DISTINCT(NDTo) FROM " + truckTable + "  WHERE ActionType=" + ActionType.ForwardFL.getValue() + " AND WorkID=" + this.WorkID + " AND NDFrom='" + nd.getNodeID() + "'" + "  ) ";
 				DataTable dt = DBAccess.RunSQLReturnTable(threadSQL);
 				if (dt == null || dt.Rows.size() == 0)
-				{
-					throw new RuntimeException("err@流程运行错误：当不存在子线程时,改过程应该处于待办状态");
-				}
+					return "err@流程运行错误：当不存在子线程时,改过程应该处于待办状态";
 
 				String toEmps = "";
 				for (DataRow dr : dt.Rows)
@@ -569,18 +561,15 @@ public class WorkUnSend
 		{
 			String IsEnableUnSendWhenHuiQian = SystemConfig.getAppSettings().get("IsEnableUnSendWhenHuiQian").toString();
 			if (DataType.IsNullOrEmpty(IsEnableUnSendWhenHuiQian) == false && IsEnableUnSendWhenHuiQian.equals("0"))
-			{
 				return "info@当前节点是会签状态，您不能执行撤销.";
-			}
+
 
 			GenerWorkerList gwl = new GenerWorkerList();
 			int numOfmyGwl = gwl.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.WorkID, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
 
 			//如果没有找到当前会签人.
 			if (numOfmyGwl == 0)
-			{
 				return "err@当前节点[" + gwf.getNodeName() + "]是会签状态,[" + gwf.getTodoEmps() + "]在执行会签,您不能执行撤销.";
-			}
 
 			if (gwl.getIsHuiQian() == true)
 			{
@@ -636,9 +625,7 @@ public class WorkUnSend
 			sql = "SELECT FK_Node FROM WF_GenerWorkerList WHERE FK_Emp='" + WebUser.getNo() + "' AND IsPass=1 AND IsEnable=1 AND WorkID=" + wn.getHisWork().getOID() + " ORDER BY RDT DESC ";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() == 0)
-			{
-				throw new RuntimeException("err@撤销流程错误,您没有权限执行撤销发送.");
-			}
+				return "err@撤销流程错误,您没有权限执行撤销发送.";
 
 			// 找到将要撤销到的NodeID.
 			for (DataRow dr : dt.Rows)
@@ -659,9 +646,7 @@ public class WorkUnSend
 			}
 
 			if (cancelToNodeID == 0)
-			{
-				throw new RuntimeException("@撤销流程错误,您没有权限执行撤销发送,当前节点不可以执行撤销.");
-			}
+				return "@撤销流程错误,您没有权限执行撤销发送,当前节点不可以执行撤销.";
 		}
 
 		if (nd.getHisCancelRole() == CancelRole.OnlyNextStep)
@@ -672,16 +657,13 @@ public class WorkUnSend
 			GenerWorkerList wl = new GenerWorkerList();
 			int num = wl.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.FK_Node, wnPri.getHisNode().getNodeID(), GenerWorkerListAttr.WorkID,this.WorkID);
 			if (num == 0)
-			{
-				throw new RuntimeException("err@您不能执行撤消发送，因为当前工作不是您发送的或下一步工作已处理。");
-			}
+				return "err@您不能执行撤消发送，因为当前工作不是您发送的或下一步工作已处理。";
+
 			cancelToNodeID = wnPri.getHisNode().getNodeID();
 		}
 
 		if (cancelToNodeID == 0)
-		{
-			throw new RuntimeException("err@没有求出要撤销到的节点.");
-		}
+			return "err@没有求出要撤销到的节点.";
 
 			/// 求的撤销的节点.
 
@@ -761,7 +743,7 @@ public class WorkUnSend
 				if (at == ActionType.TeampUp)
 				{
 					/*如果是写作人员，就不允许他撤销 */
-					throw new RuntimeException("@您是节点[" + cancelToNode.getName() + "]的会签人，您不能执行撤销。");
+					return "err@您是节点[" + cancelToNode.getName() + "]的会签人，您不能执行撤销。";
 				}
 			}
 		}

@@ -110,7 +110,7 @@ public class MapAttrDocWordReceive extends EntityMyPK
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否启用？", true, true);
 			//map.AddTBInt(MapAttrAttr.UIContralType, 0, "控件", false, false);
 
-		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
 			/// 基本字段信息.
 

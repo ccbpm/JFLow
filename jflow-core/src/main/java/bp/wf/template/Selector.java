@@ -290,7 +290,9 @@ public class Selector extends Entity
 				throw new RuntimeException("@错误:没有判断的选择类型:" + this.getSelectorModel());
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			for (DataTable dt : ds.Tables)
 			{
@@ -390,6 +392,19 @@ public class Selector extends Entity
 		{
 			sqlGroup = bp.wf.Glo.DealExp(sqlGroup, en, null); //@祝梦娟
 			DataTable dt = DBAccess.RunSQLReturnTable(sqlGroup);
+			for (DataColumn col : dt.Columns) {
+				String colName = col.ColumnName.toLowerCase();
+				switch (colName) {
+					case "no":
+						col.ColumnName = "No";
+						break;
+					case "name":
+						col.ColumnName = "Name";
+						break;
+					default:
+						break;
+				}
+			}
 			dt.TableName = "Depts";
 			ds.Tables.add(dt);
 		}
@@ -399,6 +414,22 @@ public class Selector extends Entity
 		sqlDB = bp.wf.Glo.DealExp(sqlDB, en, null); //@祝梦娟
 
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sqlDB);
+		for (DataColumn col : dtEmp.Columns) {
+			String colName = col.ColumnName.toLowerCase();
+			switch (colName) {
+				case "no":
+					col.ColumnName = "No";
+					break;
+				case "name":
+					col.ColumnName = "Name";
+					break;
+				case "fk_dept":
+					col.ColumnName = "FK_Dept";
+					break;
+				default:
+					break;
+			}
+		}
 		dtEmp.TableName = "Emps";
 		ds.Tables.add(dtEmp);
 
@@ -409,6 +440,19 @@ public class Selector extends Entity
 			sqlDB = bp.wf.Glo.DealExp(sqlDB, en, null); //@祝梦娟
 
 			DataTable dtDef = DBAccess.RunSQLReturnTable(sqlDB);
+			for (DataColumn col : dtDef.Columns) {
+				String colName = col.ColumnName.toLowerCase();
+				switch (colName) {
+					case "no":
+						col.ColumnName = "No";
+						break;
+					case "name":
+						col.ColumnName = "Name";
+						break;
+					default:
+						break;
+				}
+			}
 			dtDef.TableName = "DefaultSelected";
 
 			ds.Tables.add(dtDef);
@@ -433,6 +477,19 @@ public class Selector extends Entity
 			}
 
 			DataTable dtForce = DBAccess.RunSQLReturnTable(sqlDB);
+			for (DataColumn col : dtForce.Columns) {
+				String colName = col.ColumnName.toLowerCase();
+				switch (colName) {
+					case "no":
+						col.ColumnName = "No";
+						break;
+					case "name":
+						col.ColumnName = "Name";
+						break;
+					default:
+						break;
+				}
+			}
 			dtForce.TableName = "ForceSelected";
 			ds.Tables.add(dtForce);
 		}
@@ -529,7 +586,8 @@ public class Selector extends Entity
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		//人员.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND b.FK_Node=" + nodeID + ")  ORDER BY A.Idx ";
 		}
@@ -577,7 +635,8 @@ public class Selector extends Entity
 		//部门.
 		String sql = "";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + ")";
 		}
@@ -594,7 +653,8 @@ public class Selector extends Entity
 
 		//人员.
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + ")  ";
 		}
@@ -643,7 +703,9 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (sm == SelectorModel.TeamDeptOnly)
 			{
@@ -696,7 +758,9 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{
@@ -742,7 +806,9 @@ public class Selector extends Entity
 			ds.Tables.add(dt);
 
 			//人员.
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 				{
@@ -772,7 +838,9 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{

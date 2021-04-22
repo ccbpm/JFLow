@@ -560,6 +560,7 @@ public class FlowSheet extends EntityNoName
 			rw.setRDT(DataType.getCurrentDataTime());
 			rw.setIsBackTracking(false);
 			rw.setMyPK(DBAccess.GenerGUID());
+			rw.Insert();
 
 				///   加入退回信息, 让接受人能够看到退回原因.
 

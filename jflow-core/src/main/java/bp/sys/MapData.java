@@ -150,6 +150,15 @@ public class MapData extends EntityNoName
 		this.SetValByKey(MapDataAttr.Idx, value);
 	}
 
+	public final boolean getIsPageLoadFull()throws Exception
+	{
+		return this.GetParaBoolen(MapDataAttr.IsPageLoadFull, true);
+	}
+	public final void setIsPageLoadFull(boolean value) throws Exception
+	{
+		this.SetPara(MapDataAttr.IsPageLoadFull, value);
+	}
+
 	/** 
 	 框架
 	 * @throws Exception 

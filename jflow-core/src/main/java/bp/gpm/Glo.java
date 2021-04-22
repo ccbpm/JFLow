@@ -188,7 +188,8 @@ public class Glo
 		}
 
 		//Oracle 语法有所区别
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				||SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
 		}

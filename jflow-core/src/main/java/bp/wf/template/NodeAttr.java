@@ -67,6 +67,8 @@ public class NodeAttr
 	 是否可以原路返回
 	*/
 	public static final String IsBackTracking = "IsBackTracking";
+	public static final String IsKillEtcThread = "IsKillEtcThread";
+	 
 
 	/**
 	 * 是否删除中间节点信息
@@ -448,6 +450,7 @@ public class NodeAttr
 	public static final String IsFullSAAlert = "IsFullSAAlert";
 
 	public static final String RefOneFrmTreeType = "RefOneFrmTreeType";
+	 
 
 		/// 未来处理人.
 

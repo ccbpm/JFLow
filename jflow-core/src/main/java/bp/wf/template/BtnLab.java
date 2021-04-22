@@ -567,6 +567,10 @@ public class BtnLab extends Entity
 	{
 		return this.GetValBooleanByKey(BtnAttr.PrintPDFMyView);
 	}
+	public final boolean getPrintDocMyView() throws Exception
+	{
+		return this.GetValBooleanByKey(BtnAttr.PrintDocMyView);
+	}
 	/** 
 	 打包下载 标签
 	 * @throws Exception 

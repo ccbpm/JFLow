@@ -61,6 +61,10 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 是否增加
 	*/
 	public static final String IsNote = "IsNote";
+	/// <summary>
+	/// 是否排序？
+	/// </summary>
+	public static final String IsIdx = "IsIdx";
 	/** 
 	 是否启用扩展列
 	*/

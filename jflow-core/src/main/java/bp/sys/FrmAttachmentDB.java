@@ -13,6 +13,24 @@ import java.io.*;
 public class FrmAttachmentDB extends EntityMyPK
 {
 	private static final long serialVersionUID = 1L;
+	  /// <summary>
+    /// 向下移動
+    /// </summary>
+    public void DoDownTabIdx() throws Exception
+    {
+        this.DoOrderDown(FrmAttachmentDBAttr.RefPKVal, this.getRefPKVal(),
+            FrmAttachmentDBAttr.FK_FrmAttachment, this.getFK_FrmAttachment(), FrmAttachmentDBAttr.Idx);
+    }
+    /// <summary>
+    /// 向上移動
+    /// </summary>
+    public void DoUpTabIdx() throws Exception
+    {
+        this.DoOrderUp(FrmAttachmentDBAttr.RefPKVal, this.getRefPKVal(),
+           FrmAttachmentDBAttr.FK_FrmAttachment, this.getFK_FrmAttachment(), FrmAttachmentDBAttr.Idx);
+
+        //  this.DoOrderUp(FrmAttachmentDBAttr.FK_MapData, this.FK_MapData, FrmAttachmentDBAttr.Idx);
+    }
 
 
 	///属性

@@ -21,6 +21,8 @@ public class SubFlowHandGuideAttr extends SubFlowHandAttr
 		 SQL 前置导航列表
 		*/
 		public static final String SubFlowGuideSQL = "SubFlowGuideSQL";
+
+		public static final String SubFlowGuideSQLGroup="SubFlowGuideSQLGroup";
 		/** 
 		 编号字段.
 		*/
@@ -29,6 +31,9 @@ public class SubFlowHandGuideAttr extends SubFlowHandAttr
 		 名称字段
 		*/
 		public static final String SubFlowGuideEnNameFiled = "SubFlowGuideEnNameFiled";
+
+
+		public static final String SubFlowHidTodolist="SubFlowHidTodolist";
 
 
 }

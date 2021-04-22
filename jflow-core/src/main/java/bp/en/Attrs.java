@@ -747,7 +747,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	{
 		if (attr.getField() == null || attr.getField().equals(""))
 		{
-			throw new RuntimeException("@属性设置错误：您不能设置 key='" + attr.getKey() + "', " + attr.getDesc() + ",得字段值为空");
+			throw new RuntimeException("@属性设置错误：您不能设置 key='" + attr.getKey() + "', " + attr.getDesc() + ",得字段值为空,有可能数据库设置的大小写敏感导致的错误。");
 		}
 
 		//boolean k = attr.getIsKeyEqualField();

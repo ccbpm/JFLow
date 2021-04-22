@@ -40,7 +40,9 @@ public class WF_RptSearch extends WebContralBase
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Start";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("FK_FLOW").setColumnName("FK_Flow");
 			dt.Columns.get("FLOWNAME").setColumnName("FlowName");
@@ -55,7 +57,9 @@ public class WF_RptSearch extends WebContralBase
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dtTodolist = DBAccess.RunSQLReturnTable(ps);
 		dtTodolist.TableName = "Todolist";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtTodolist.Columns.get("FK_FLOW").setColumnName("FK_Flow");
 			dtTodolist.Columns.get("FLOWNAME").setColumnName("FlowName");
@@ -161,7 +165,9 @@ public class WF_RptSearch extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "WF_GenerWorkFlow";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("FLOWNAME").setColumnName("FlowName");
 			dt.Columns.get("FK_FLOW").setColumnName("FK_Flow");

@@ -6,6 +6,8 @@ import bp.sys.*;
 import bp.sys.xml.XmlEn;
 import bp.tools.StringHelper;
 import bp.web.*;
+import org.omg.CORBA.TypeCode;
+
 import java.util.*;
 import java.io.*;
 import java.math.*;
@@ -28,17 +30,17 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @throws Exception 
 	*/
 
-	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal, String refKey2) throws Exception
+	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal, String refKey2,Object refVal2) throws Exception
 	{
-		return GetEntitiesAttrFromAutoNumCash(ens, refKey, refVal, refKey2, null);
+		return GetEntitiesAttrFromAutoNumCash(ens, refKey, refVal, refKey2, refVal2,null);
 	}
 
 	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal) throws Exception
 	{
-		return GetEntitiesAttrFromAutoNumCash(ens, refKey, refVal, null, null);
+		return GetEntitiesAttrFromAutoNumCash(ens, refKey, refVal, null, null,null);
 	}
 
-	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal, String refKey2, Object refVal2) throws Exception
+	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal, String refKey2, Object refVal2,String orderBy) throws Exception
 	{
 		//获得段类名.
 		String clsName = ens.getClassIDOfShort();
@@ -56,11 +58,17 @@ public abstract class Entity extends EnObj implements Serializable
 		{
 			if (refKey2 == null)
 			{
-				ens.Retrieve(refKey, refVal);
+				if(DataType.IsNullOrEmpty(orderBy)==false)
+					ens.Retrieve(refKey, refVal,orderBy);
+				else
+					ens.Retrieve(refKey, refVal);
 			}
 			else
 			{
-				ens.Retrieve(refKey, refVal, refKey2, refVal2);
+				if(DataType.IsNullOrEmpty(orderBy)==false)
+					ens.Retrieve(refKey, refVal, refKey2, refVal2,orderBy);
+				else
+					ens.Retrieve(refKey, refVal, refKey2, refVal2);
 			}
 
 			this.SetPara(clsName + "_AutoNum", ens.size()); //设置他的数量.
@@ -120,6 +128,7 @@ public abstract class Entity extends EnObj implements Serializable
 				if (this.GetParaInt(key.toString()) != -1)
 				{
 					this.SetPara(key.toString(), -1);
+					this.SetRefObject(key.toString().replace("_AutoNum", ""),null);
 					isHave = true;
 				}
 			}
@@ -806,6 +815,7 @@ public abstract class Entity extends EnObj implements Serializable
 					sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM " + this.getEnMap().getPhysicsTable();
 					break;
 				case Oracle:
+				case KingBase:
 				case DM:
 					sql = "SELECT MAX(" + field + ") +1 AS No FROM " + this.getEnMap().getPhysicsTable();
 					break;
@@ -863,6 +873,7 @@ public abstract class Entity extends EnObj implements Serializable
 				sql = "SELECT CONVERT(bigint, MAX([" + field + "]))+1 AS Num FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + attrGroupKey + "='" + attrGroupVal + "'";
 				break;
 			case Oracle:
+			case KingBase:
 			case DM:
 			case Informix:
 				sql = "SELECT MAX( :f )+1 AS No FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + this.getHisDBVarStr() + "groupKey=" + this.getHisDBVarStr() + "groupVal ";
@@ -917,6 +928,7 @@ public abstract class Entity extends EnObj implements Serializable
 		switch (this.getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
+			case KingBase:
 			case DM:
 			case Informix:
 				sql = "SELECT   MAX(" + f + ") +1 AS No FROM " + this.getEnMap().getPhysicsTable();
@@ -962,6 +974,7 @@ public abstract class Entity extends EnObj implements Serializable
 		switch (this.getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
+			case KingBase:
 			case DM:
 			case Informix:
 				sql = "SELECT   MAX(" + f + ") +1 AS No FROM " + this.getEnMap().getPhysicsTable();
@@ -1149,7 +1162,7 @@ public abstract class Entity extends EnObj implements Serializable
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
 
-		String sql = "SELECT " + pk + "," + idxAttr + " FROM " + table + " WHERE (" + groupKeyAttr + "='" + gVal1 + "' AND " + gKey2 + "='" + gVal2 + "' AND " + gKey3 + "='" + gVal3 + "' AND \" + gKey4 + \"='\" + gVal4 + \"') ORDER BY " + idxAttr;
+		String sql = "SELECT " + pk + "," + idxAttr + " FROM " + table + " WHERE (" + groupKeyAttr + "='" + gVal1 + "' AND " + gKey2 + "='" + gVal2 + "' AND " + gKey3 + "='" + gVal3 + "' AND " + gKey4 + "='" + gVal4 + "') ORDER BY " + idxAttr;
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		int idx = 0;
 		String beforeNo = "";
@@ -1384,7 +1397,7 @@ public abstract class Entity extends EnObj implements Serializable
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
 
-		String sql = "SELECT " + pk + " ," + idxAttr + " FROM " + table + " WHERE (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "' AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND \" + gKeyAttr4 + \"='\" + gKeyVal4 + \"' ) order by " + idxAttr;
+		String sql = "SELECT " + pk + " ," + idxAttr + " FROM " + table + " WHERE (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "' AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND " + gKeyAttr4 + "='" + gKeyVal4 + "' ) order by " + idxAttr;
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		int idx = 0;
 		String nextNo = "";
@@ -1410,11 +1423,12 @@ public abstract class Entity extends EnObj implements Serializable
 			sqls += "@UPDATE " + table + " SET " + idxAttr + "=" + idx + " WHERE " + pk + "='" + myNo + "' AND  (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "' ) ";
 		}
 
-		sqls += "@ UPDATE  " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + nextNo + "' AND (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "'  AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND \" + gKeyAttr4 + \"='\" + gKeyVal4 + \"')";
-		sqls += "@ UPDATE  " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + pkval + "' AND (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "'  AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND \" + gKeyAttr4 + \"='\" + gKeyVal4 + \"' )";
+		sqls += "@ UPDATE  " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + nextNo + "' AND (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "'  AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND " + gKeyAttr4 + "='" + gKeyVal4 + "')";
+		sqls += "@ UPDATE  " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + pkval + "' AND (" + groupKeyAttr + "='" + val1 + "' AND " + gKeyAttr2 + "='" + gKeyVal2 + "'  AND " + gKeyAttr3 + "='" + gKeyVal3 + "'  AND " + gKeyAttr4 + "='" + gKeyVal4 + "' )";
 
 		DBAccess.RunSQLs(sqls);
 	}
+
 		/// 排序操作
 
 
@@ -1792,6 +1806,7 @@ public abstract class Entity extends EnObj implements Serializable
 					selectSQL += SqlBuilder.GetKeyConditionOfMS(this);
 					break;
 				case Oracle:
+				case KingBase:
 				case DM:
 				case PostgreSQL:
 					selectSQL += SqlBuilder.GetKeyConditionOfOraForPara(this);
@@ -2053,6 +2068,7 @@ public abstract class Entity extends EnObj implements Serializable
 		switch (this.getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
+			case KingBase:
 			case DM:
 			case MSSQL:
 			case MySQL:
@@ -2357,18 +2373,21 @@ public abstract class Entity extends EnObj implements Serializable
 	*/
 	public final void SetRefObject(String key, Object obj) throws Exception
 	{
-		if (obj == null)
+		if (obj == null || obj.equals("")  )
 		{
+			this.getRow().put("_" + key, "");
 			return;
 		}
 
-		this.getRow().SetValByKey("_" + key, obj);
+		if (obj.getClass() == TypeCode.class)
+		{
+			this.getRow().put("_" + key, ((Integer) obj).intValue());
+		} else
+		{
+			this.getRow().put("_" + key, obj);
+		}
+
 	}
-
-		///
-
-
-		///insert
 	/** 
 	 在插入之前要做的工作。
 	 
@@ -3031,7 +3050,8 @@ public abstract class Entity extends EnObj implements Serializable
 				sql = "ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + saveToField + " Image NULL ";
 			}
 
-			if (DBAccess.getAppCenterDBType() == DBType.Oracle)
+			if (DBAccess.getAppCenterDBType() == DBType.Oracle
+					||SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBase)
 			{
 				sql = "ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + saveToField + " Image NULL ";
 			}
@@ -3069,7 +3089,8 @@ public abstract class Entity extends EnObj implements Serializable
 				sql = "ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + saveToField + " Image NULL ";
 			}
 
-			if (DBAccess.getAppCenterDBType() == DBType.Oracle)
+			if (DBAccess.getAppCenterDBType() == DBType.Oracle
+					||SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBase)
 			{
 				sql = "ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + saveToField + " Blob NULL ";
 			}
@@ -3193,6 +3214,7 @@ public abstract class Entity extends EnObj implements Serializable
 			switch (DBAccess.getAppCenterDBType())
 			{
 				case Oracle:
+				case KingBase:
 				case DM:
 					sql = SqlBuilder.GenerCreateTableSQLOfOra(this);
 					break;
@@ -3210,9 +3232,6 @@ public abstract class Entity extends EnObj implements Serializable
 					break;
 				case Access:
 					sql = SqlBuilder.GenerCreateTableSQLOf_OLE(this);
-					break;
-				case KingBase:
-					sql = SqlBuilder.GenerCreateTableSQLOfMySQL(this);
 					break;
 				default:
 					throw new RuntimeException("@未判断的数据库类型。");
@@ -3920,6 +3939,7 @@ public abstract class Entity extends EnObj implements Serializable
 			case MSSQL:
 				return CheckPhysicsTableAutoExtFieldLength_SQL();
 			case Oracle:
+			case KingBase:
 			case DM:
 				break;
 			case MySQL:
@@ -4060,6 +4080,9 @@ public abstract class Entity extends EnObj implements Serializable
 				break;
 			case PostgreSQL:
 				this.CheckPhysicsTable_PostgreSQL();
+				break;
+			case KingBase:
+				this.CheckPhysicsTable_King();
 				break;
 			default:
 				throw new RuntimeException("@没有涉及到的数据库类型");
@@ -4422,7 +4445,8 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 
 
-		String sql = "SELECT WMSYS.WM_CONCAT(DISTINCT(column_name)) AS Column_Name  FROM all_tab_cols WHERE table_name = '" + this.getEnMap().getPhysicsTable().toUpperCase() + "' AND owner='" + SystemConfig.getAppCenterDBDatabase().toUpperCase() + "'";
+		//String sql = "SELECT WMSYS.WM_CONCAT(DISTINCT(column_name)) AS Column_Name  FROM all_tab_cols WHERE table_name = '" + this.getEnMap().getPhysicsTable().toUpperCase() + "' AND owner='" + SystemConfig.getAppCenterDBDatabase().toUpperCase() + "'";
+		String sql = "SELECT WMSYS.WM_CONCAT(DISTINCT(column_name)) AS Column_Name  FROM all_tab_cols WHERE table_name = '" + this.getEnMap().getPhysicsTable().toUpperCase() + "' AND owner='" +  SystemConfig.getUser().toUpperCase() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0)
 		{
@@ -4611,8 +4635,192 @@ public abstract class Entity extends EnObj implements Serializable
 			///
 		this.CreateIndexAndPK();
 	}
+	/*
+	 * 人大金仓检查表字段
+	 */
+	private void CheckPhysicsTable_King() throws Exception
+	{
 
-		///
+		//检查字段是否存在
+		//string sql = "SELECT * FROM " + this.EnMap.PhysicsTable + " WHERE 1=2 ";
+		String sql = "SELECT STRING_AGG(column_name,',') AS Column_Name  FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME) = '" + this.getEnMap().getPhysicsTable().toUpperCase() + "'";
+		// AND owner='" + SystemConfig.getAppCenterDBDatabase().toUpperCase() + "'";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (dt.Rows.size() == 0)
+		{
+			return;
+		}
+
+		String fields = "," + dt.Rows.get(0).getValue(0).toString() + ",";
+		fields = fields.toUpperCase();
+		//如果不存在.
+		for (Attr attr : this.getEnMap().getAttrs())
+		{
+			if (attr.getMyFieldType() == FieldType.RefText)
+			{
+				continue;
+			}
+
+			if (attr.getIsPK())
+			{
+				continue;
+			}
+
+			if (fields.contains("," + attr.getKey().toUpperCase() + ",") == true)
+			{
+				continue;
+			}
+
+			//if (fields.Contains(attr.getKey().ToUpper() + ",") == true)
+			//    continue;
+
+			//if (fields.Contains(","+attr.getKey().ToUpper()) == true)
+			//    continue;
+
+			if (attr.getKey().equals("AID"))
+			{
+				/* 自动增长列 */
+				DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " INT  Identity(1,1)");
+				continue;
+			}
+
+			/*不存在此列 , 就增加此列。*/
+			switch (attr.getMyDataType())
+			{
+				case DataType.AppString:
+				case DataType.AppDate:
+				case DataType.AppDateTime:
+					int len = attr.getMaxLength();
+					if (len == 0)
+					{
+						len = 200;
+					}
+					DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " VARCHAR(" + len + ") DEFAULT '" + attr.getDefaultVal() + "' NULL");
+					break;
+				case DataType.AppInt:
+				case DataType.AppBoolean:
+					if (attr.getIsPK() == true)
+					{
+						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " INT DEFAULT '" + attr.getDefaultVal() + "' NOT NULL");
+					}
+					else
+					{
+						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " INT DEFAULT '" + attr.getDefaultVal() + "'   NULL");
+					}
+					break;
+				case DataType.AppFloat:
+				case DataType.AppMoney:
+				case DataType.AppDouble:
+					DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " FLOAT DEFAULT '" + attr.getDefaultVal() + "' NULL");
+					break;
+				default:
+					throw new RuntimeException("error MyFieldType= " + attr.getMyFieldType() + " Key=" + attr.getKey());
+			}
+		}
+
+		///检查字段长度是否符合最低要求
+		for (Attr attr : this.getEnMap().getAttrs())
+		{
+			if (attr.getMyFieldType() == FieldType.RefText)
+			{
+				continue;
+			}
+			if (attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat || attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney || attr.getMyDataType() == DataType.AppBoolean)
+			{
+				continue;
+			}
+
+			int maxLen = attr.getMaxLength();
+			dt = new DataTable();
+			//sql = "SELECT DATA_LENGTH AS LEN, OWNER FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.EnMap.PhysicsTableExt.ToUpper() 
+			//    + "' AND UPPER(COLUMN_NAME)='" + attr.Field.ToUpper() + "' AND DATA_LENGTH < " + attr.MaxLength;
+
+			//update dgq 2016-5-24 不取所有用户的表列名，只要取自己的就可以了
+			sql = "SELECT DATA_LENGTH AS LEN FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase() + "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' AND DATA_LENGTH < " + attr.getMaxLength();
+			dt = this.RunSQLReturnTable(sql);
+			if (dt.Rows.size() == 0)
+			{
+				continue;
+			}
+
+			for (DataRow dr : dt.Rows)
+			{
+				this.RunSQL("alter table " + this.getEnMap().getPhysicsTableExt() + "  ALTER COLUMN " + attr.getField() + " TYPE varchar2(" + attr.getMaxLength() + ")");
+			}
+		}
+
+		///检查枚举类型字段是否是INT 类型
+		Attrs attrs = this.getEnMap().getHisEnumAttrs();
+		for (Attr attr : attrs)
+		{
+			if (attr.getMyDataType() != DataType.AppInt)
+			{
+				continue;
+			}
+			sql = "SELECT DATA_TYPE FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase() + "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
+			String val = DBAccess.RunSQLReturnString(sql);
+			if (val == null)
+			{
+				Log.DefaultLogWriteLineError("@没有检测到字段eunm" + attr.getKey());
+			}
+			if (val.indexOf("CHAR") != -1)
+			{
+				/*如果它是 varchar 字段*/
+				sql = "SELECT OWNER FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase() + "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' ";
+				String OWNER = DBAccess.RunSQLReturnString(sql);
+				try
+				{
+					this.RunSQL("alter table  " + this.getEnMap().getPhysicsTableExt() + " modify " + attr.getField() + " NUMBER ");
+				}
+				catch (RuntimeException ex)
+				{
+					Log.DefaultLogWriteLineError("运行sql 失败:alter table  " + this.getEnMap().getPhysicsTableExt() + " modify " + attr.getField() + " NUMBER " + ex.getMessage());
+				}
+			}
+		}
+
+		///检查枚举类型是否存在.
+		attrs = this.getEnMap().getHisEnumAttrs();
+		for (Attr attr : attrs)
+		{
+			if (attr.getMyDataType() != DataType.AppInt)
+			{
+				continue;
+			}
+			if (attr.UITag == null)
+			{
+				continue;
+			}
+			try
+			{
+				SysEnums ses = new SysEnums(attr.getUIBindKey(), attr.UITag);
+				continue;
+			}
+			catch (java.lang.Exception e)
+			{
+			}
+			String[] strs = attr.UITag.split("[@]", -1);
+			SysEnums ens = new SysEnums();
+			ens.Delete(SysEnumAttr.EnumKey, attr.getUIBindKey());
+			for (String s : strs)
+			{
+				if (DataType.IsNullOrEmpty(s)==true)
+				{
+					continue;
+				}
+
+				String[] vk = s.split("[=]", -1);
+				SysEnum se = new SysEnum();
+				se.setIntKey(Integer.parseInt(vk[0]));
+				se.setLab(vk[1]);
+				se.setEnumKey(attr.getUIBindKey());
+				se.Insert();
+			}
+		}
+
+		this.CreateIndexAndPK();
+	}
+
 
 	/** 
 	 把entity的实体属性调度到en里面去.

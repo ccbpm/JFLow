@@ -4,10 +4,13 @@ import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
+import bp.tools.HttpClientUtil;
 import bp.web.*;
 import bp.port.*;
 import bp.en.*;
 import bp.wf.*;
+import net.sf.json.JSONObject;
+
 import java.util.*;
 import java.io.*;
 
@@ -179,13 +182,15 @@ public class CCMobile extends WebContralBase
 		DataSet ds = new DataSet();
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		ds.Tables.add(dt);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get(0).setColumnName("TSpan");
 			dt.Columns.get(1).setColumnName("Num");
 		}
 
-		String sql = "SELECT IntKey as No, Lab as Name FROM Sys_Enum WHERE EnumKey='TSpan'";
+		String sql = "SELECT IntKey as No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='TSpan'";
 		DataTable dt1 = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
@@ -418,7 +423,9 @@ public class CCMobile extends WebContralBase
 		}
 
 		DataTable dtFlows = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");
@@ -449,7 +456,8 @@ public class CCMobile extends WebContralBase
 		}
 		sqlWhere += "ORDER BY RDT DESC";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM (select * from WF_GenerWorkFlow where " + sqlWhere + ") where rownum <= 500";
 		}
@@ -466,7 +474,9 @@ public class CCMobile extends WebContralBase
 			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere + " LIMIT 500";
 		}
 		DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			mydt.Columns.get(0).setColumnName("WorkID");
 			mydt.Columns.get(1).setColumnName("FID");
@@ -567,7 +577,9 @@ public class CCMobile extends WebContralBase
 		}
 		qo.setTop(50);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			qo.DoQuery();
 			DataTable dt = gwfs.ToDataTableField("Ens");
@@ -580,6 +592,71 @@ public class CCMobile extends WebContralBase
 		}
 	}
 
+	public String weChatLogin() throws Exception{
+		System.out.println("开始签名校验");
+		//第一步，获取菜单配置url中的code
+		String code=this.GetRequestVal("code");
+		String state=this.GetRequestVal("state");
+		//第二步：通过code获取网页授权access_token
+		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid="+SystemConfig.getWX_CorpID()+"&corpsecret=" + SystemConfig.getWX_AppSecret();
+		String json=HttpClientUtil.doGet(url);
+		JSONObject jsonObject = JSONObject.fromObject(json);
+		String access_token = jsonObject.getString("access_token");
+		if(DataType.IsNullOrEmpty(access_token)){
+			System.out.println("-----access_token获取失败-----");
+			return "err@access_token获取失败-----";
+		}
+		//第三步：获取用户信息
+		String infoUrl = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=" + access_token + "&code=" + code;
+		String info=HttpClientUtil.doGet(infoUrl);
+		JSONObject userInfo = JSONObject.fromObject(info);
+		String errcode=userInfo.getString("errcode");
+		if(errcode.equals("40029")){
+			return "err@获取用户信息失败-----";
+		}
+		//人员在企业号中的ID
+		String userID=userInfo.getString("UserId");
+		//人员设置的手机号
+		String mobile="";
+
+		//第四步：获取人员的完整信息
+		String userInfoDtil="https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=" + access_token + "&userid="+userID;
+		String userJson=HttpClientUtil.doGet(userInfoDtil);
+		JSONObject userJsonInfo = JSONObject.fromObject(userJson);
+		errcode=userJsonInfo.getString("errcode");
+		if(errcode.equals("0")){
+			mobile=userJsonInfo.getString("mobile");
+		}else
+			return "err@获取用户信息详情失败-----";
+
+		//第五步：验证人员是否存在本系统中
+		Paras ps=new Paras();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		ps.SQL="SELECT No,Name from Port_Emp where Tel="+dbstr+"Wei_UserID or No="+dbstr+"No ";
+		ps.Add("Wei_UserID", mobile);
+		ps.Add("No", mobile);
+		DataTable dt=DBAccess.RunSQLReturnTable(ps);
+
+		if(dt.Rows.size()<=0){
+			return "err@不存在此用户信息，userID:"+userID+"-----";
+		}
+		else{
+			//执行登录
+			bp.wf.Dev2Interface.Port_Login(dt.Rows.get(0).getValue("No").toString());
+			if(state.equals("Start"))
+				return "/CCMobile/Start.htm";
+			else if(state.equals("Todolist"))
+				return "/CCMobile/Todolist.htm";
+			else if(state.equals("Runing"))
+				return "/CCMobile/Runing.htm";
+			else if(state.equals("Complete"))
+				return "/CCMobile/Complete.htm";
+			else if(state.equals("Search"))
+				return "/CCMobile/Search.htm";
+			else
+				return "/CCMobilePortal/Home.htm";
+		}
+	}
 
 		///
 

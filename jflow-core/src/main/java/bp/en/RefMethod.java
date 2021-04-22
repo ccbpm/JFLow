@@ -220,33 +220,7 @@ public class RefMethod
 			}
 		}
 		
-		/*
-		 * warning String str = StringHelper.trim(this.ClassMethodName, ' ',
-		 * ';', '.'); int pos = str.lastIndexOf("."); String clas =
-		 * str.substring(0, pos); String meth = str.substring(pos,
-		 * str.length()).Trim('.', ' ', '(', ')'); if (this.HisEn == null) {
-		 * this.HisEn = ClassFactory.GetEn(clas); Attrs attrs =
-		 * this.HisEn.getEnMap().getAttrs();
-		 * 
-		 * //if (SystemConfig.getIsBSsystem()) //{ // //string val =
-		 * bp.sys.Glo.Request.QueryString["No"]; // //if (val == null) // //{ //
-		 * // val = bp.sys.Glo.Request.QueryString["PK"]; // //} //
-		 * this.HisEn.setPKVal(bp.sys.Glo.Request.QueryString[this.HisEn.PK]; //}
-		 * //else // this.HisEn.setPKVal(this.PKVal; //this.HisEn.Retrieve(); }
-		 * 
-		 * java.lang.Class tp = this.HisEn.getClass(); java.lang.reflect.Method
-		 * mp = tp.getMethod(meth); if (mp == null) { throw new
-		 * RuntimeException("@对象实例[" + tp.FullName + "]中没有找到方法[" + meth + "]！");
-		 * }
-		 * 
-		 * try { return mp.invoke(this.HisEn, paras); //调用由此 MethodInfo
-		 * 实例反射的方法或构造函数。 } catch (System.Reflection.TargetException ex) { String
-		 * strs = ""; if (paras == null) { throw new
-		 * RuntimeException(ex.getMessage()); } else { for (Object obj : paras)
-		 * { strs += "para= " + obj.toString() + " type=" +
-		 * obj.getClass().toString() + "\n<br>"; } } throw new
-		 * RuntimeException(ex.getMessage() + "  more info:" + strs); }
-		 */
+
 	}
 
 

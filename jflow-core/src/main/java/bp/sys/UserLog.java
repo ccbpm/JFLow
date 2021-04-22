@@ -1,6 +1,7 @@
 package bp.sys;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
 import bp.*;
@@ -115,7 +116,14 @@ public class UserLog extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+	@Override
+	protected  boolean beforeInsert() throws Exception
+	{
+		this.setMyPK(DBAccess.GenerGUID());
+		this.setRDT( DataType.getCurrentDataTime());
+		return super.beforeInsert();
+	}
+
 
 
 		///重写

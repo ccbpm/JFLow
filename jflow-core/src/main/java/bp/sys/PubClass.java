@@ -706,6 +706,7 @@ public class PubClass
 			switch (en.getEnMap().getEnDBUrl().getDBType())
 			{
 				case Oracle:
+				case KingBase:
 					AddCommentForTable_Ora(en);
 					break;
 				case MySQL:

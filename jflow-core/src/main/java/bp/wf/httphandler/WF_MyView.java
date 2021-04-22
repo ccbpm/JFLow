@@ -26,6 +26,16 @@ public class WF_MyView extends WebContralBase {
 	public WF_MyView() {
 
 	}
+	/// <summary>
+    /// 表单查看
+    /// </summary>
+    /// <returns></returns>
+    public String MyFrm_Init_Data()throws  Exception
+    {
+        //String sql = "SELECT FrmDB FROM ND" + Integer.parseInt(this.getFK_Flow())+ "Track WHERE MyPK='" + this.getMyPK() + "'";
+        return DBAccess.GetBigTextFromDB("ND"+Integer.parseInt(this.getFK_Flow())+ "Track", "MyPK", this.getMyPK(), "FrmDB");
+        //return DBAccess.RunSQLReturnStringIsNull(sql,"err@没有获得数据.");
+    }
 
 	/// 运行变量
 	/**
@@ -412,6 +422,7 @@ public class WF_MyView extends WebContralBase {
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
+		case KingBase:
 			currNode = "SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo()
 					+ "' Order by RDT DESC ) WHERE rownum=1";
 			break;
@@ -489,7 +500,15 @@ public class WF_MyView extends WebContralBase {
 		String toDoEmps = ";" + gwf.getTodoEmps();
 
 		// 当前的流程还是运行中的，并且可以执行当前工作,如果是，就直接转到工作处理器.
-		if (gwf.getWFState() != WFState.Complete && toDoEmps.contains(";" + WebUser.getNo() + ",")) {
+		//如果当前流程是子线程，但是运行到的节点是合流点或者普通节点
+		if(gwf.getFID()!=0){
+			Node nd = new Node(gwf.getFK_Node());
+			if(nd.getHisRunModel()==RunModel.SubThread && toDoEmps.contains(";" + WebUser.getNo() + ",")){
+				WF_MyFlow handler = new WF_MyFlow();
+				return handler.MyFlow_Init();
+			}
+		}
+		if (gwf.getFID()==0 && gwf.getWFState() != WFState.Complete && toDoEmps.contains(";" + WebUser.getNo() + ",")) {
 			WF_MyFlow handler = new WF_MyFlow();
 			return handler.MyFlow_Init();
 		}
@@ -1216,5 +1235,88 @@ public class WF_MyView extends WebContralBase {
 			return "err@" + ex.getMessage();
 		}
 	}
+	public final String MyFrm_InitToolBar() throws Exception {
+		//打开表单只看轨迹 链接加上Track=1
+		// Track为null的异常处理
+		boolean isShowTrackBarOnly = false;
+		if (!DataType.IsNullOrEmpty(this.GetRequestVal("Track")))
+			isShowTrackBarOnly= this.GetRequestVal("Track").toString().equals("1")?true:false;
 
+		DataTable dt = new DataTable("ToolBar");
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
+		dt.Columns.Add("Oper");
+
+		BtnLab btnLab = new BtnLab(this.getFK_Node());
+		try {
+			DataRow dr = dt.NewRow();
+			if(isShowTrackBarOnly==false) {
+				dr.setValue("No", "Close");
+				dr.setValue("Name", "关闭");
+				dr.setValue("Oper", "Close();");
+				dt.Rows.add(dr);
+			}
+
+			dr = dt.NewRow();
+			dr.setValue("No", "Track");
+			dr.setValue("Name", "轨迹");
+			dr.setValue("Oper", "");
+			dt.Rows.add(dr);
+
+			/// 根据流程权限控制规则获取可以操作的按钮功能
+
+			/// 加载流程查看器 - 按钮
+
+			/* 打包下载zip */
+			if (btnLab.getPrintZipMyView() == true) {
+				dr = dt.NewRow();
+				dr.setValue("No", "PackUp_zip");
+				dr.setValue("Name", btnLab.getPrintZipLab());
+				dr.setValue("Oper", "");
+				dt.Rows.add(dr);
+			}
+
+			/* 打包下载html */
+			if (btnLab.getPrintHtmlMyView() == true) {
+				dr = dt.NewRow();
+				dr.setValue("No", "PackUp_html");
+				dr.setValue("Name", btnLab.getPrintHtmlLab());
+				dr.setValue("Oper", "");
+				dt.Rows.add(dr);
+			}
+
+
+			/* 打包下载pdf */
+			if (btnLab.getPrintPDFMyView() == true) {
+				dr = dt.NewRow();
+				dr.setValue("No", "PackUp_pdf");
+				dr.setValue("Name", btnLab.getPrintPDFLab());
+				dr.setValue("Oper", "");
+				dt.Rows.add(dr);
+			}
+			if (btnLab.getPrintDocMyView() == true) {
+				String urlr = "./WorkOpt/PrintDoc.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID()
+						+ "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
+
+				dr = dt.NewRow();
+				dr.setValue("No", "PrintDoc");
+				dr.setValue("Name", btnLab.getPrintDocLab());
+				dr.setValue("Oper", "WinOpen('" + urlr + "','dsdd');");
+				dt.Rows.add(dr);
+
+			}
+			/* 公文标签 */
+			if (btnLab.getOfficeBtnEnable() == true && btnLab.getOfficeBtnLocal()==0) {
+				dr = dt.NewRow();
+				dr.setValue("No", "DocWord");
+				dr.setValue("Name", btnLab.getOfficeBtnLab());
+				dr.setValue("Oper", "");
+				dt.Rows.add(dr);
+			}
+
+		} catch (RuntimeException ex) {
+			bp.da.Log.DefaultLogWriteLineError(ex.getMessage());
+		}
+		return bp.tools.Json.ToJson(dt);
+	}
 }

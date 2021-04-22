@@ -195,7 +195,8 @@ public class WF_Admin_RptDfine extends WebContralBase
 				attr.DirectInsert();
 			}
 		}
-
+		MapData mapData = new MapData(rptNo);
+		mapData.ClearCash();
 		return "保存成功.";
 	}
 

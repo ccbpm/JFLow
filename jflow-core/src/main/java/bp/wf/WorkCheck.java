@@ -1,6 +1,7 @@
 package bp.wf;
 
 import bp.da.DBAccess;
+import bp.da.DBType;
 import bp.da.DataTable;
 import bp.difference.SystemConfig;
 import bp.en.QueryObject;
@@ -106,6 +107,15 @@ public class WorkCheck
 			+ " FROM ND" + Integer.parseInt(this.FlowNo) + "Track t1, port_emp t2, port_dept t3  "
 			+ "WHERE ( t1.WorkID = " + workIdStr + " OR t1.FID = " + workIdStr + " )"
 			+ " AND t1.empfrom = t2.NO AND t3.NO = t2.FK_Dept ORDER BY t3.idx,t2.idx";
+			
+			if(SystemConfig.getAppCenterDBType().equals(DBType.KingBase)) {
+				sql ="SELECT	ISNULL( MyPK, 0 ) MyPK,	ISNULL( ActionType, 0 ) ActionType,	ActionTypeText,	ISNULL( FID, 0 ) FID,"
+						+"ISNULL( WorkID, 0 ) WorkID,ISNULL( NDFrom, 0 ) NDFrom,NDFromT,ISNULL( NDTo, 0 ) NDTo,NDToT,"
+						+"EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,ISNULL( WorkTimeSpan, 0.0 ) AS WorkTimeSpan,Msg,NodeData,Tag,Exer"
+						+ " FROM ND" + Integer.parseInt(this.FlowNo) + "Track t1, port_emp t2, port_dept t3  "
+						+ "WHERE ( t1.WorkID = " + workIdStr + " OR t1.FID = " + workIdStr + " )"
+						+ " AND t1.empfrom = t2.NO AND t3.NO = t2.FK_Dept ORDER BY t3.idx,t2.idx,t1.RDT ASC";
+			}
 			DataTable dt = null;
 			try
 			{

@@ -115,6 +115,7 @@ public class MapAttrEnum extends EntityMyPK
 				sql = "SELECT -1 AS No, '-无(不选择)-' as Name ";
 				break;
 			case Oracle:
+			case KingBase:
 				sql = "SELECT -1 AS No, '-无(不选择)-' as Name FROM DUAL ";
 				break;
 
@@ -127,11 +128,11 @@ public class MapAttrEnum extends EntityMyPK
 
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
-			sql += "SELECT  IntKey as No, Lab as Name FROM Sys_Enum WHERE EnumKey='@UIBindKey'";
+			sql += "SELECT  IntKey as No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='@UIBindKey'";
 		}
 		else
 		{
-			sql += "SELECT  IntKey as No, Lab as Name FROM Sys_Enum WHERE EnumKey='@UIBindKey' ";
+			sql += "SELECT  IntKey as No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='@UIBindKey' ";
 		}
 
 			//默认值.
@@ -156,7 +157,7 @@ public class MapAttrEnum extends EntityMyPK
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 
 			//CCS样式
-		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
 			/// 基本信息.
 
@@ -182,7 +183,7 @@ public class MapAttrEnum extends EntityMyPK
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
-		rm.Title = "设置联动";
+		rm.Title = "级联下拉框";
 		rm.ClassMethodName = this.toString() + ".DoActiveDDL()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -199,12 +200,7 @@ public class MapAttrEnum extends EntityMyPK
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "高级JS设置";
-		rm.ClassMethodName = this.toString() + ".DoRadioBtns()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "高级设置";
-		map.AddRefMethod(rm);
+	
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";
@@ -213,7 +209,12 @@ public class MapAttrEnum extends EntityMyPK
 		map.AddRefMethod(rm);
 
 
-
+		rm = new RefMethod();
+		rm.Title = "选项联动控件";
+		rm.ClassMethodName = this.toString() + ".DoRadioBtns()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.GroupName = "高级设置";
+		map.AddRefMethod(rm);
 			/// 执行的方法.
 
 		this.set_enMap(map);
@@ -284,6 +285,7 @@ public class MapAttrEnum extends EntityMyPK
 						this.RunSQL("alter table  " + en.getEnMap().getPhysicsTable() + " ALTER column " + this.getKeyOfEn() + " VARCHAR(20)");
 						break;
 					case Oracle:
+					case KingBase:
 						//判断数据库当前字段的类型
 						String sql = "SELECT DATA_TYPE FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + en.getEnMap().getPhysicsTable().toUpperCase() + "' AND UPPER(COLUMN_NAME)='" + this.getKeyOfEn().toUpperCase() + "' ";
 						String val = DBAccess.RunSQLReturnString(sql);

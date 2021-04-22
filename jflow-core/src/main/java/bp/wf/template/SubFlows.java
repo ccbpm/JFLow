@@ -43,6 +43,11 @@ public class SubFlows extends EntitiesMyPK
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node);
 	}
 
+	public SubFlows(String fk_flow) throws Exception
+	{
+		this.Retrieve(SubFlowYanXuAttr.FK_Flow, fk_flow);
+	}
+
 		///
 
 

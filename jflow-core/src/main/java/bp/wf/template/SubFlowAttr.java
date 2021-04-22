@@ -59,6 +59,12 @@ public class SubFlowAttr extends bp.en.EntityOIDNameAttr
 	 子流程模式
 	*/
 	public static final String SubFlowModel = "SubFlowModel";
+	
+	public static final String YanXuToNode = "YanXuToNode";
+	public static final String SubFlowSta = "SubFlowSta";
+
+	
+	
 
 		///
 
@@ -120,5 +126,7 @@ public class SubFlowAttr extends bp.en.EntityOIDNameAttr
 	 自动启动子流程：发送规则.
 	*/
 	public static final String SendModel = "SendModel";
+
+	public static final String SubFlowCopyFields="SubFlowCopyFields";
 
 }

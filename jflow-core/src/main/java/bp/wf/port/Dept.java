@@ -27,11 +27,7 @@ public class Dept extends EntityNoName
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
 
-
-		///
-
-
-		///构造函数
+ 
 	/** 
 	 部门
 	*/

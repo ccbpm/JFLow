@@ -481,11 +481,10 @@ public class AttachmentUploadController extends BaseController {
 			File info = new File(realSaveTo);
 
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
-			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();	
+			dbUpload.setMyPK(guid); // athDesc.FK_MapData + oid.ToString();			 
+			dbUpload.setSort(this.getSort());
 			dbUpload.setFK_MapData(athDesc.getFK_MapData());
 			dbUpload.setFK_FrmAttachment(attachPk);
-			dbUpload.setSort(this.getSort());
-			
 			dbUpload.setFileExts(exts);
 			dbUpload.setFID(this.getFID());
 			dbUpload.setNodeID( this.getFK_Node());

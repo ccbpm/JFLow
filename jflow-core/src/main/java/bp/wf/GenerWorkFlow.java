@@ -937,6 +937,7 @@ public class GenerWorkFlow extends Entity
 		{
 			case MSSQL:
 			case Oracle:
+			case KingBase:	
 				DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE WorkID in  ( select WorkID from WF_GenerWorkerlist WHERE WorkID not in (select WorkID from WF_GenerWorkFlow) )");
 				break;
 			case MySQL:

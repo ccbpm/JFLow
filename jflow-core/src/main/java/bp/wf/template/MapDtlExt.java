@@ -1528,6 +1528,8 @@ public class MapDtlExt extends EntityNoName
 	{
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(this.getNo());
+		
+		dtl.setFK_MapData(this.getFK_MapData());
 		dtl.Delete();
 
 		//删除分组

@@ -2,6 +2,7 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.difference.SystemConfig;
+import bp.difference.handler.CommonFileUtils;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.sys.xml.ActiveAttr;
@@ -16,6 +17,9 @@ import bp.wf.*;
 import bp.wf.Glo;
 import bp.wf.port.WFEmp;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.math.*;
@@ -25,6 +29,34 @@ import java.math.*;
 */
 public class WF_Comm extends WebContralBase
 {
+
+public final String RichUploadFile() throws Exception {
+		
+		File xmlFile = null;
+		String fileName = "";
+		String savePath = "";
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+			fileName = CommonFileUtils.getOriginalFilename(request, "upfile");
+			savePath = SystemConfig.getPathOfDataUser() + "RichTextFile";
+			if (new File(savePath).exists() == false)
+				new File(savePath).mkdirs();
+			savePath = savePath + "/" + fileName;
+			xmlFile = new File(savePath);
+			if (xmlFile.exists()) {
+				xmlFile.delete();
+			}
+
+			try {
+				CommonFileUtils.upload(request, "upfile", xmlFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
+			}
+		}
+		return savePath;
+	}
 
 		///树的实体.
 	/** 
@@ -536,10 +568,11 @@ public class WF_Comm extends WebContralBase
 	*/
 	public final String Entity_Init() throws Exception
 	{
+		Entity en = ClassFactory.GetEn(this.getEnName());
 		try
 		{
 			String pkval = this.getPKVal();
-			Entity en = ClassFactory.GetEn(this.getEnName());
+
 
 			if (DataType.IsNullOrEmpty(pkval)== true ||pkval.equals("0")  || pkval.equals("undefined"))
 			{
@@ -565,6 +598,7 @@ public class WF_Comm extends WebContralBase
 		}
 		catch (RuntimeException ex)
 		{
+			en.CheckPhysicsTable();
 			return "err@" + ex.getMessage();
 		}
 	}
@@ -699,10 +733,11 @@ public class WF_Comm extends WebContralBase
 	*/
 	public final String Entity_Retrieve() throws Exception
 	{
+		Entity en = ClassFactory.GetEn(this.getEnName());
+		en = en.CreateInstance();
 		try
 		{
-			Entity en = ClassFactory.GetEn(this.getEnName());
-			en = en.CreateInstance();
+
 			en.setPKVal(this.getPKVal());
 			en.Retrieve();
 
@@ -719,6 +754,7 @@ public class WF_Comm extends WebContralBase
 		}
 		catch (RuntimeException ex)
 		{
+			en.CheckPhysicsTable();
 			return "err@" + ex.getMessage();
 		}
 	}
@@ -1686,8 +1722,9 @@ public class WF_Comm extends WebContralBase
 						/* 第一次进来。 */
 						qo.addLeftBracket();
 						
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") 
+						if ((SystemConfig.getAppCenterDBVarStr().equals("@")
 								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
 						{
 							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 						}
@@ -1714,7 +1751,9 @@ public class WF_Comm extends WebContralBase
 						qo.addOr();
 					}
 
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":"))
+					if ((SystemConfig.getAppCenterDBVarStr().equals("@")
+							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
 					{
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 					}
@@ -1791,7 +1830,9 @@ public class WF_Comm extends WebContralBase
 							isFirst = false;
 							/* 第一次进来。 */
 							qo.addLeftBracket();
-							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":"))
+							if ((SystemConfig.getAppCenterDBVarStr().equals("@")
+									|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+								&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
 							{
 								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 							}
@@ -1806,7 +1847,9 @@ public class WF_Comm extends WebContralBase
 						}
 						qo.addOr();
 
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":"))
+						if ((SystemConfig.getAppCenterDBVarStr().equals("@")
+								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
 						{
 							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 						}
@@ -2104,7 +2147,11 @@ public class WF_Comm extends WebContralBase
 		ur.Save();
 
 		//获取配置信息
-		EnCfg encfg = new EnCfg(this.getEnsName());
+		EnCfg encfg = new EnCfg();
+		encfg.setNo(this.getEnsName());
+		encfg.RetrieveFromDBSources();
+		
+		
 		String fieldSet = encfg.getFieldSet();
 		String oper = "";
 		if (DataType.IsNullOrEmpty(fieldSet) == false)
@@ -2735,8 +2782,11 @@ public class WF_Comm extends WebContralBase
 
 			/// 隐藏字段的查询
 
-		//获取配置信息
-		EnCfg encfg = new EnCfg(this.getEnsName());
+		//获取配置信息	 
+		EnCfg encfg = new EnCfg();
+		encfg.setNo(this.getEnsName());
+		encfg.RetrieveFromDBSources();
+		
 		//增加排序
 		if (encfg != null)
 		{
@@ -3121,7 +3171,9 @@ public class WF_Comm extends WebContralBase
 				dt1.TableName = attr.getKey();
 
 				//@杜. 翻译当前部分.
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					dt1.Columns.get("NO").setColumnName("No");
 					dt1.Columns.get("NAME").setColumnName("Name");
@@ -3307,12 +3359,14 @@ public class WF_Comm extends WebContralBase
 		{
 			enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
 
-			String sqlEnum = "SELECT * FROM Sys_Enum WHERE EnumKey IN (" + enumKeys + ")";
+			String sqlEnum = "SELECT * FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
 			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 
 			dtEnum.TableName = "Sys_Enum";
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				dtEnum.Columns.get("MYPK").setColumnName("MyPK");
 				dtEnum.Columns.get("LAB").setColumnName("Lab");
@@ -3475,10 +3529,8 @@ public class WF_Comm extends WebContralBase
 				///保存新加行.
 			String newPKVal = this.GetRequestVal("NewPKVal");
 			//没有新增行
-			if (this.GetRequestValBoolen("InsertFlag") == false || DataType.IsNullOrEmpty(newPKVal) == true)
-			{
-				return "保存成功.";
-			}
+			if (this.GetRequestValBoolen("InsertFlag") == false ||(en.getEnMap().getIsAutoGenerNo() ==true &&DataType.IsNullOrEmpty(newPKVal) == true) )
+				return "数据更新成功.";
 
 			String valValue = "";
 
@@ -4075,7 +4127,9 @@ public class WF_Comm extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		//暂定
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			//获取SQL的字段
 			//获取 from 的位置
@@ -5577,6 +5631,112 @@ public class WF_Comm extends WebContralBase
 		return bp.tools.Json.ToJson(dt);
 	}
 
-		///
+	public String Ens_Init() throws Exception
+	{
+		//定义容器.
+		DataSet ds = new DataSet();
+
+		//查询出来从表数据.
+		Entities dtls = ClassFactory.GetEns(this.getEnsName());
+		dtls.RetrieveAll();
+		Entity en = dtls.getGetNewEntity();
+		ds.Tables.add(dtls.ToDataTableField("Ens"));
+
+		//实体.
+		Entity dtl = dtls.getGetNewEntity();
+		//定义Sys_MapData.
+		MapData md = new MapData();
+		md.setNo(this.getEnName());
+		md.setName(dtl.getEnDesc());
+
+		//加入权限信息.
+		//把权限加入参数里面.
+		if (dtl.getHisUAC().IsInsert)
+			md.SetPara("IsInsert", "1");
+		if (dtl.getHisUAC().IsUpdate)
+			md.SetPara("IsUpdate", "1");
+		if (dtl.getHisUAC().IsDelete)
+			md.SetPara("IsDelete", "1");
+		// end加入权限信息.
+
+		//判断主键是否为自增长
+
+		if (en.getIsNoEntity() == true && en.getEnMap().getIsAutoGenerNo())
+			md.SetPara("IsNewRow", "0");
+		else
+			md.SetPara("IsNewRow", "1");
+
+		md.SetPara("PK", en.getPK());
+
+		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
+
+		//字段属性.
+		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs();
+		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
+		ds.Tables.add(sys_MapAttrs);
+		// 字段属性.
+
+		//把外键与枚举放入里面去.
+		for(DataRow dr : sys_MapAttrs.Rows)
+		{
+			String uiBindKey = dr.getValue("UIBindKey").toString();
+			String lgType =dr.getValue("LGType").toString();
+			if (lgType.equals("2") == false)
+				continue;
+
+			String UIIsEnable = dr.getValue("UIVisible").toString();
+			if (UIIsEnable == "0")
+				continue;
+
+			if (DataType.IsNullOrEmpty(uiBindKey) == true)
+			{
+				String myPK = dr.getValue("MyPK").toString();
+			}
+
+			// 检查是否有下拉框自动填充。
+			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String fk_mapData = dr.getValue("FK_MapData").toString();
+
+
+			// 判断是否存在.
+			if (ds.Tables.contains(uiBindKey) == true)
+				continue;
+
+			ds.Tables.add(PubClass.GetDataTableByUIBineKey(uiBindKey));
+		}
+
+		String enumKeys = "";
+		for(Attr attr : dtl.getEnMap().getAttrs())
+		{
+			if (attr.getMyFieldType() == FieldType.Enum)
+			{
+				enumKeys += "'" + attr.getUIBindKey() + "',";
+			}
+		}
+
+		if (enumKeys.length() > 2)
+		{
+			enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
+
+			String sqlEnum = "SELECT * FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
+			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
+
+			dtEnum.TableName = "Sys_Enum";
+
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			{
+				dtEnum.Columns.get("MYPK").setColumnName("MyPK");
+				dtEnum.Columns.get("LAB").setColumnName("Lab");
+				dtEnum.Columns.get("ENUMKEY").setColumnName("EnumKey");
+				dtEnum.Columns.get("INTKEY").setColumnName("IntKey");
+				dtEnum.Columns.get("LANG").setColumnName("Lang");
+			}
+			ds.Tables.add(dtEnum);
+		}
+		//把外键与枚举放入里面去.
+
+		return bp.tools.Json.ToJson(ds);
+	}
+
 
 }

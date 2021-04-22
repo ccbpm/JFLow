@@ -143,7 +143,7 @@ public class MapAttrCheck extends EntityMyPK
 			map.SetHelperAlert(MapAttrAttr.Tip, "在文本框输入的时候显示在文本框背景的提示文字,也就是文本框的 placeholder 的值.");
 			//CCS样式
 			*/
-		map.AddDDLSQL(MapAttrAttr.CSS, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
 			/// 基本字段信息.
 
@@ -317,7 +317,10 @@ public class MapAttrCheck extends EntityMyPK
 					{
 						sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR2(" + attr.getMaxLen() + ")";
 					}
-
+					if (SystemConfig.getAppCenterDBType() == DBType.KingBase)
+					{
+						sql = "ALTER table " + md.getPTable() + " ALTER COLUMN " + attr.getField() + " TYPE CHARACTER VARYING(" + attr.getMaxLen() + ")";
+					}
 					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 					{
 						sql = "ALTER table " + md.getPTable() + " alter " + attr.getField() + " type character varying(" + attr.getMaxLen() + ")";

@@ -1451,6 +1451,21 @@ public class WF_MyFlow extends WebContralBase {
 			}
 			ds.Tables.add(dt);
 
+			//发起子流程
+			SubFlowHands subFlows = new SubFlowHands(this.getFK_Node());
+			for(SubFlowHand subFlow: subFlows.ToJavaList())
+			{
+				if(subFlow.getSubFlowStartModel() != 0 && subFlow.getSubFlowSta()==FrmSubFlowSta.Enable)
+				{
+					dr = dt.NewRow();
+					dr.setValue("No","SubFlow");
+					dr.setValue("Name",DataType.IsNullOrEmpty(subFlow.getSubFlowLab())== true? "发起" +subFlow.getSubFlowName(): subFlow.getSubFlowLab());
+					dr.setValue("Oper","SendSubFlow(\'"+subFlow.getSubFlowNo() + "\',\'"+subFlow.getMyPK()+"\')");
+					dt.Rows.add(dr);
+				}
+			}
+            //endregion
+
 			/// //加载自定义的button.
 
 			/// 增加按钮旁的下拉框
@@ -1473,16 +1488,51 @@ public class WF_MyFlow extends WebContralBase {
 					dtToNDs.Columns.Add("DeliveryParas", String.class); // 自定义URL
 
 					/// 增加到达延续子流程节点。
-					if (nd.getSubFlowYanXuNum() >= 0) {
-						SubFlowYanXus ygflows = new SubFlowYanXus(this.getFK_Node());
-						for (SubFlowYanXu item : ygflows.ToJavaList()) {
-							dr = dtToNDs.NewRow();
-							dr.setValue("No", item.getSubFlowNo() + "01");
-							dr.setValue("Name", "启动:" + item.getSubFlowName());
-							dr.setValue("IsSelectEmps", "1");
-							dr.setValue("IsSelected", "0");
-							dtToNDs.Rows.add(dr);
-						}
+					if (nd.getSubFlowYanXuNum() >= 1) {
+						 
+						 
+						 SubFlowYanXus ygflows = new SubFlowYanXus(this.getFK_Node());
+						 for (SubFlowYanXu item : ygflows.ToJavaList()) {
+                         {
+                             String[] yanxuToNDs = item.getYanXuToNode().split(",");
+                             for (String str : yanxuToNDs)
+                             {
+                                 if (DataType.IsNullOrEmpty(str) == true)
+                                     continue;
+
+                                 int toNodeID = Integer.parseInt(str);
+
+                                 Node subNode = new Node(toNodeID);
+
+                                 dr = dtToNDs.NewRow(); //创建行。 @lizhen.
+
+                                 //延续子流程跳转过了开始节点
+                                 if (toNodeID == Integer.parseInt( item.getSubFlowNo() +"01") )
+                                 {
+                                     dr.setValue("No", String.valueOf(toNodeID));
+                                     dr.setValue("Name", "启动:" + item.getSubFlowName()+" - "+ subNode.getName());
+                                     dr.setValue("IsSelectEmps", "1");
+                                     dr.setValue("IsSelected","0");
+                                     dtToNDs.Rows.add(dr);
+                                 }
+                                 else
+                                 {
+
+                                     dr.setValue("No", String.valueOf(toNodeID));
+                                     dr.setValue("Name", "启动:" + item.getSubFlowName() + " - " + subNode.getName());
+                                     if (subNode.getHisDeliveryWay() == DeliveryWay.BySelected)
+                                         dr.setValue("IsSelectEmps", "1");
+                                     else
+                                         dr.setValue("IsSelectEmps","0");
+                                     dr.setValue("IsSelected","0");
+                                     dtToNDs.Rows.add(dr);
+                                 }
+                             }
+                         }
+                         
+                      
+						 }
+						
 					}
 
 					/// 增加到达延续子流程节点。

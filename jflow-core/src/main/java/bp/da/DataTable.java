@@ -308,8 +308,8 @@ public class DataTable implements Cloneable
 						   }
 						   // is number
 						   else{
-							   Integer v = Integer.valueOf(value.toString());
-							   Integer dbVal = Integer.valueOf(val.toString());
+							   int v =  Integer.parseInt(value.toString());
+							   int dbVal = Integer.parseInt(val.toString());
 							   if (a.contains(">=")){
 								   if (!(dbVal >= v)){
 									   andResult = false;

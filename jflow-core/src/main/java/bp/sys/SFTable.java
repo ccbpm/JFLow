@@ -250,6 +250,7 @@ public class SFTable extends EntityNoName
 							sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM Sys_SFTableDtl where FK_SFTable='" + table + "'";
 							break;
 						case Oracle:
+						case KingBase:
 							sql = "SELECT MAX(" + field + ") +1 AS No FROM Sys_SFTableDtl where FK_SFTable='" + table + "'";
 							break;
 						case MySQL:
@@ -290,6 +291,7 @@ public class SFTable extends EntityNoName
 						sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM " + table;
 						break;
 					case Oracle:
+					case KingBase:
 						sql = "SELECT MAX(" + field + ") +1 AS No FROM " + table;
 						break;
 					case MySQL:

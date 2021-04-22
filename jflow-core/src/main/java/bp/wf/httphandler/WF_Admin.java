@@ -161,7 +161,8 @@ public class WF_Admin extends WebContralBase
 							sql = "SELECT top 300 No as FK_Emp FROM Port_Emp ";
 						}
 
-						if (SystemConfig.getAppCenterDBType() == bp.da.DBType.Oracle)
+						if (SystemConfig.getAppCenterDBType() == bp.da.DBType.Oracle
+								||SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBase)
 						{
 							sql = "SELECT  No as FK_Emp FROM Port_Emp WHERE ROWNUM <300 ";
 						}
@@ -388,7 +389,9 @@ public class WF_Admin extends WebContralBase
 
 		String add = "+";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				||SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			add = "||";
 		}

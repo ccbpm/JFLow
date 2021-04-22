@@ -315,7 +315,9 @@ public class WF_CCForm extends WebContralBase {
 	private String dealSQL = "";
 
 	public final String JSONTODT(DataTable dt) {
-		if ((SystemConfig.getAppCenterDBType() == DBType.Informix || SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if ((SystemConfig.getAppCenterDBType() == DBType.Informix 
+				|| SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 				&& dealSQL != null) {
 			/* 如果数据库不区分大小写, 就要按用户输入的sql进行二次处理。 */
 			String mysql = dealSQL.trim();
@@ -1252,7 +1254,8 @@ public class WF_CCForm extends WebContralBase {
 					fullSQL = fullSQL.replace("~", ",");
 					fullSQL = bp.wf.Glo.DealExp(fullSQL, en, null);
 					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+					if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+							|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
 						if (dt.Columns.contains("NO") == true) {
 							dt.Columns.get("NO").setColumnName("No");
 						}
@@ -1896,7 +1899,7 @@ public class WF_CCForm extends WebContralBase {
 			}
 		}
 
-		if (this.GetRequestVal("IsReadonly").equals("1")) {
+		if (this.GetRequestValInt("IsReadonly")==1) {
 			mdtl.setIsInsert(false);
 			mdtl.setIsDelete(false);
 			mdtl.setIsUpdate(false);
@@ -2443,6 +2446,7 @@ public class WF_CCForm extends WebContralBase {
 
 		// 判断是否是oracle.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
@@ -2465,6 +2469,7 @@ public class WF_CCForm extends WebContralBase {
 
 			// 判断是否是oracle.
 			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
 					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 				entityDt.Columns.get("NO").setColumnName("No");
 				entityDt.Columns.get("NAME").setColumnName("Name");
@@ -2676,7 +2681,7 @@ public class WF_CCForm extends WebContralBase {
 
 				if (cond.contains("#EnumKey=") == true) {
 					String enumKey = cond.substring(cond.indexOf("EnumKey") + 8);
-					sql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + enumKey + "'";
+					sql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + enumKey + "'";
 				}
 
 				// 处理日期的默认值
@@ -2835,7 +2840,7 @@ public class WF_CCForm extends WebContralBase {
 
 				if (cond.contains("#EnumKey=") == true) {
 					String enumKey = cond.substring(cond.indexOf("EnumKey") + 8);
-					sql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + enumKey + "'";
+					sql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + enumKey + "'";
 				}
 
 				// 处理日期的默认值
@@ -3003,7 +3008,7 @@ public class WF_CCForm extends WebContralBase {
 
 				if (cond.contains("#EnumKey=") == true) {
 					String enumKey = cond.substring(cond.indexOf("EnumKey") + 8);
-					sql = "SELECT IntKey AS No, Lab as Name FROM Sys_Enum WHERE EnumKey='" + enumKey + "'";
+					sql = "SELECT IntKey AS No, Lab as Name FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey='" + enumKey + "'";
 				}
 
 				// 处理日期的默认值

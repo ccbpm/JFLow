@@ -31,7 +31,11 @@ public enum AthCtrlWay
 	/** 
 	 P3流程
 	*/
-	P3WorkID;
+	P3WorkID,
+	/** 
+	 根流程的WorkID
+	*/
+    RootFlowWorkID;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

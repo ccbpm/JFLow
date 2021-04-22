@@ -5,6 +5,8 @@ package bp.wf.template;
 */
 public class SubFlowHandAttr extends SubFlowAttr
 {
+    public static final String SubFlowLab = "SubFlowLab";
 
-
+    public static final String SubFlowStartModel="SubFlowStartModel";
+    public static final String SubFlowShowModel="SubFlowShowModel" ;
 }

@@ -77,6 +77,8 @@ public class BtnAttr
 	 打印单据是否启用
 	*/
 	public static final String PrintDocEnable = "PrintDocEnable";
+	public static final String PrintDocMyView = "PrintDocMyView";
+	public static final String PrintDocMyCC = "PrintDocMyCC";
 	/** 
 	 移交是否启用
 	*/
@@ -328,7 +330,12 @@ public class BtnAttr
 	 提示方式.
 	*/
 	public static final String HelpRole = "HelpRole";
-
+	
+	public static final String NextLab = "NextLab";
+	public static final String NextRole = "NextRole";
+	public static final String IsKillEtcThread = "IsKillEtcThread";
+	
+	 
 
 
 		///公文2019

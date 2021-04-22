@@ -714,7 +714,9 @@ public class WF extends WebContralBase
 
 		DataTable dtSort = qo.DoQueryToTable();
 		dtSort.TableName = "Sort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtSort.Columns.get("NO").setColumnName("No");
 			dtSort.Columns.get("NAME").setColumnName("Name");
@@ -858,7 +860,9 @@ public class WF extends WebContralBase
 
 		DataTable dtSort = qo.DoQueryToTable();
 		dtSort.TableName = "Sort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtSort.Columns.get("NO").setColumnName("No");
 			dtSort.Columns.get("NAME").setColumnName("Name");
@@ -1039,7 +1043,9 @@ public class WF extends WebContralBase
 		DataTable dtStart = DBAccess.RunSQLReturnTable("SELECT No,Name, FK_FlowSort FROM WF_Flow ORDER BY FK_FlowSort,Idx");
 		dtStart.TableName = "Start";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtStart.Columns.get("NO").setColumnName("No");
 			dtStart.Columns.get("NAME").setColumnName("Name");
@@ -1084,7 +1090,8 @@ public class WF extends WebContralBase
 		ps.SQL="SELECT  * FROM WF_GenerWorkFlow  WHERE (Emps LIKE '%@" + WebUser.getNo() + "@%' OR Emps LIKE '%@" + WebUser.getNo() + ",%') and WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		//添加oracle的处理
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			dt.Columns.get("PRI").setColumnName("PRI");
 			dt.Columns.get("WORKID").setColumnName("WorkID");
@@ -1447,7 +1454,9 @@ public class WF extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL=sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("WORKID").setColumnName("WorkID");
 			dt.Columns.get("TITLE").setColumnName("Title");
@@ -1483,7 +1492,9 @@ public class WF extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL=sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("WORKID").setColumnName("WorkID");
 			dt.Columns.get("TITLE").setColumnName("Title");
@@ -1521,7 +1532,9 @@ public class WF extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL=sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("WORKID").setColumnName("WorkID");
 			dt.Columns.get("TITLE").setColumnName("Title");
@@ -2122,7 +2135,9 @@ public class WF extends WebContralBase
 		ps.Add("AUTHOR", WebUser.getNo());
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
@@ -2300,7 +2315,9 @@ public class WF extends WebContralBase
 		}
 
 		DataTable dtFlows = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");
@@ -2382,7 +2399,8 @@ public class WF extends WebContralBase
 
 		ds.Tables.add(dtT);
 		sqlWhere += "ORDER BY RDT DESC";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps " + "FROM (select A.*, rownum r from (select * from WF_GenerWorkFlow where " + sqlWhere + ") A) where r between " + (pageIdx * pageSize - pageSize + 1) + " and " + (pageIdx * pageSize);
 		}
@@ -2400,7 +2418,9 @@ public class WF extends WebContralBase
 			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where (1=1) AND " + sqlWhere + " LIMIT " + pageSize + "offset " + startIndex;
 		}
 		DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			mydt.Columns.get(0).setColumnName("WorkID");
 			mydt.Columns.get(1).setColumnName("FID");

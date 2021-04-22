@@ -31,11 +31,11 @@ public class AuthAttr
 	/** 
 	 人员编号.
 	*/
-	public static final String EmpNo = "EmpNo";
+	public static final String AutherToEmpNo = "AutherToEmpNo";
 	/** 
 	 人员名称
 	*/
-	public static final String EmpName = "EmpName";
+	public static final String AutherToEmpName = "AutherToEmpName";
 	/** 
 	 记录日期
 	*/

@@ -473,6 +473,8 @@ public class FrmAttachmentExt extends EntityMyPK
 
 			//for tianye group 
 		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay, "@0=保存到web服务器@1=保存到数据库@2=ftp服务器");
+		//@hongyan.
+		map.AddBoolean(FrmAttachmentAttr.IsIdx, false, "是否排序?", true, true);
 
 
 		map.AddTBString(FrmAttachmentAttr.Sort, null, "类别", true, false, 0, 500, 20, true, null);
@@ -650,7 +652,17 @@ public class FrmAttachmentExt extends EntityMyPK
 		{
 			this.setAthUploadWay(AthUploadWay.Interwork);
 		}
-
+		//如果是pworkid. 就不让其删除或者上传.
+        if (this.getHisCtrlWay() == AthCtrlWay.PWorkID
+            || this.getHisCtrlWay() == AthCtrlWay.PWorkID
+            || this.getHisCtrlWay() == AthCtrlWay.P2WorkID
+            || this.getHisCtrlWay() == AthCtrlWay.P3WorkID
+            || this.getHisCtrlWay() == AthCtrlWay.RootFlowWorkID
+            )
+        {
+            this.SetValByKey(FrmAttachmentAttr.DeleteWay, 0);
+            this.SetValByKey(FrmAttachmentAttr.IsUpload, 0);
+        }
 
 
 			///处理分组.

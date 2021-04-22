@@ -6,6 +6,8 @@ public class EmpAttr extends bp.en.EntityNoNameAttr
 {
 
 		///基本属性
+	 public static final String UserID = "FK_Dept";
+	public static final String OrgNo = "FK_Dept";
 	/** 
 	 部门
 	*/

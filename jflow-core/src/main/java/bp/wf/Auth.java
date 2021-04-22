@@ -48,17 +48,17 @@ public class Auth extends EntityMyPK
 	{
 		this.SetValByKey(AuthAttr.Auther, value);
 	}
-	public final String getEmpNo()throws Exception
+	public final String getAutherToEmpNo()throws Exception
 	{
-		return this.GetValStringByKey(AuthAttr.EmpNo);
+		return this.GetValStringByKey(AuthAttr.AutherToEmpNo);
 	}
-	public final void setEmpNo(String value) throws Exception
+	public final void setAutherToEmpNo(String value) throws Exception
 	{
-		this.SetValByKey(AuthAttr.EmpNo, value);
+		this.SetValByKey(AuthAttr.AutherToEmpNo, value);
 	}
 
-	public final int getAuthType() throws Exception{
-		return this.GetValIntByKey(AuthAttr.AuthType);
+	public final AuthorWay getAuthType() throws Exception{
+		return AuthorWay.forValue(this.GetValIntByKey(AuthAttr.AuthType));
 	}
 		///
 
@@ -88,8 +88,8 @@ public class Auth extends EntityMyPK
 		map.AddTBString(AuthAttr.Auther, null, "授权人", true, false, 0, 100, 10);
 		map.AddTBInt(AuthAttr.AuthType, 0, "类型(0=全部流程1=指定流程)", true, false);
 
-		map.AddTBString(AuthAttr.EmpNo, null, "委托给人员编号", true, false, 0, 100, 10);
-		map.AddTBString(AuthAttr.EmpName, null, "委托给人员名称", true, false, 0, 100, 10);
+		map.AddTBString(AuthAttr.AutherToEmpNo, null, "授权给谁?", true, false, 0, 100, 10);
+		map.AddTBString(AuthAttr.AutherToEmpName, null, "授权给谁?", true, false, 0, 100, 10);
 
 		map.AddTBString(AuthAttr.FlowNo, null, "流程编号", true, false, 0, 100, 10);
 		map.AddTBString(AuthAttr.FlowName, null, "流程名称", true, false, 0, 100, 10);
@@ -112,7 +112,7 @@ public class Auth extends EntityMyPK
 	@Override
 	protected void afterInsertUpdateAction() throws Exception{
 		WFEmp emp = new WFEmp(this.getAuther());
-		emp.setAuthorWay(this.getAuthType());
+		emp.setAuthorWay(this.getAuthType().getValue());
 		emp.Update();
 		super.afterInsertUpdateAction();
 	}

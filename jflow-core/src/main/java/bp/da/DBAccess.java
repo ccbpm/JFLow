@@ -41,7 +41,9 @@ public class DBAccess {
 			return "SELECT column_name as FName,data_type as FType,CHARACTER_MAXIMUM_LENGTH as FLen from information_schema.columns where table_name='" + table + "'";
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 		}
 
@@ -98,7 +100,8 @@ public class DBAccess {
 			return "SELECT b.name, a.name FName from sysobjects b join syscolumns a on b.id = a.cdefault where a.id = object_id('" + table + "') ";
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 		{
 
 		}
@@ -163,7 +166,8 @@ public class DBAccess {
 			if (SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
 				conn = DBAccess.getGetAppCenterDBConn_MSSQL();
 				pstmt = conn.prepareStatement(sql);
-			} else if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+			} else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
 				conn = DBAccess.getGetAppCenterDBConn_Oracle();
 				pstmt = conn.prepareStatement(sql);
 			} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
@@ -195,6 +199,19 @@ public class DBAccess {
 					/*如果没有此列，就自动创建此列.*/
 					//修改数据类型   oracle 不存在image类型   edited by qin 16.7.1
 					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " blob ";
+					DBAccess.RunSQL(sql);
+					SaveBytesToDB(bytes,tableName, tablePK, pkVal, saveToFileField);
+					return;
+
+				}
+			}
+			if (SystemConfig.getAppCenterDBType().getValue() == DBType.KingBase.getValue()){
+				if (DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
+				{
+
+					/*如果没有此列，就自动创建此列.*/
+					//修改数据类型   oracle 不存在image类型   edited by qin 16.7.1
+					String sql = "ALTER TABLE " + tableName + " ADD  COLUMN  " + saveToFileField + " blob ";
 					DBAccess.RunSQL(sql);
 					SaveBytesToDB(bytes,tableName, tablePK, pkVal, saveToFileField);
 					return;
@@ -354,7 +371,8 @@ public class DBAccess {
 		String strSQL = "SELECT [" + fileSaveField + "] FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-		|| SystemConfig.getAppCenterDBType() == DBType.DM) {
+			||SystemConfig.getAppCenterDBType() == DBType.KingBase
+			|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 			strSQL = strSQL.replace("[", "").replace("]", "");
 		}
 
@@ -474,6 +492,7 @@ public class DBAccess {
 		case Access:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
+		case KingBase:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
 			throw new RuntimeException("@没有实现...");
@@ -494,6 +513,7 @@ public class DBAccess {
 			throw new RuntimeException("@没有实现...");
 		case Access:
 		case Oracle:
+		case KingBase:
 			throw new RuntimeException("@没有实现...");
 		case DM:
 			throw new RuntimeException("@没有实现...");
@@ -522,6 +542,7 @@ public class DBAccess {
 			// MySqlConnection(SystemConfig.AppCenterDSN));
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
+		case KingBase:
 		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
@@ -545,6 +566,7 @@ public class DBAccess {
 		case Access:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
+		case KingBase:
 		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
@@ -569,6 +591,7 @@ public class DBAccess {
 		case MSSQL:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
+		case KingBase:
 		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
@@ -770,6 +793,31 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static long GenerOID(String cfgKey) {
+		if (SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		{
+			String sql="SELECT COUNT(*) FROM sys_serial WHERE cfgKey='"+cfgKey+"'";
+			int num=DBAccess.RunSQLReturnValInt(sql);
+			if (num==0) {
+				sql="insert into sys_serial(cfgKey,intval) values('"+cfgKey+"',100)";
+				DBAccess.RunSQL(sql);
+			}else{
+				int val=DBAccess.RunSQLReturnValInt("SELECT func_NextSerialVal('"+cfgKey+"') Num");
+				if (val!=0) {
+					return val;
+				}
+			}
+			return 100;
+		}
+		/*int val=DBAccess.RunSQLReturnValInt("SELECT func_NextSerialVal('"+cfgKey+"') Num");
+		if (val==0) {
+			String sql="SELECT COUNT(*) FROM sys_serial WHERE cfgKey='"+cfgKey+"'";
+			int num=DBAccess.RunSQLReturnValInt(sql);
+			if (num==0) {
+				sql="insert into sys_serial(cfgKey,intval) values('"+cfgKey+"',100)";
+				DBAccess.RunSQL(sql);
+			}
+			return 100;
+		}*/
 
 		Paras ps = new Paras();
 		ps.Add("CfgKey", cfgKey);
@@ -787,7 +835,7 @@ public class DBAccess {
 		sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey=" + SystemConfig.getAppCenterDBVarStr() + "CfgKey";
 		num = DBAccess.RunSQLReturnValInt(sql, ps);
 		return num;
-
+		//return val;
 	}
 
 	// 第二版本的生成 OID。
@@ -970,24 +1018,34 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static void CreatePK(String tab, String pk, DBType db) {
-		String sql;
-
 		if (tab == null || "".equals(tab))
 			return;
 
 		if (DBAccess.IsExitsTabPK(tab)) {
 			return;
 		}
-		// //先创建表的主键列.
-		// sql = "ALTER TABLE " + tab.toUpperCase() + " ADD COLUMN " + pk + "
-		// int(11) ";
-		// RunSQL(sql);
+		String sql="";
+		switch (db)
+		{
+			case Informix:
+				sql = "ALTER TABLE " + tab.toUpperCase() + " ADD CONSTRAINT  PRIMARY KEY(" + pk + ") CONSTRAINT " + tab + "pk ";
+				break;
+			case MySQL:
+				sql = "ALTER TABLE " + tab + " ADD CONSTRAINT  " + tab + "px PRIMARY KEY(" + pk + ")";
+				break;
+			default:
+				sql = "ALTER TABLE " + tab.toUpperCase() + " ADD CONSTRAINT " + tab + "pk PRIMARY KEY(" + pk.toUpperCase() + ")";
+				break;
+		}
 
-		// 然后添加主键约束.
-		sql = "ALTER TABLE " + tab.toUpperCase() + " ADD CONSTRAINT " + tab + "pk PRIMARY KEY(" + pk.toUpperCase()
-				+ ")";
-		RunSQL(sql);
-
+		//这个地方不应该出现异常, 需要处理一下在向数据库计划流程中出现.
+		try
+		{
+			DBAccess.RunSQL(sql);
+		}
+		catch (Exception ex)
+		{
+		}
 	}
 
 	public static void CreatePK(String tab, String pk1, String pk2, DBType db) {
@@ -1055,6 +1113,7 @@ public class DBAccess {
 		String sql = "";
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case KingBase:
 		case DM:
 			sql = "SELECT text FROM user_source WHERE name=UPPER('" + proName + "') ORDER BY LINE ";
 			break;
@@ -1139,9 +1198,7 @@ public class DBAccess {
 		if (StringHelper.isNullOrEmpty(sql)) {
 			return;
 		}
-		if (sql.indexOf(";") > 0)
-             sql = sql.replaceAll(";", "~");
-		
+
 		sql = sql.replace("@GO", "~");
 		sql = sql.replace("@", "~");
 		String[] strs = sql.split("[~]", -1);
@@ -1243,7 +1300,7 @@ public class DBAccess {
 				result = RunSQL_20191230_DM(sql.replace("]", "").replace("[", ""), paras);
 				break;
 			case KingBase:
-				result = RunSQL_200705_MySQL(sql, paras);
+				result = RunSQL_200705_Ora(sql.replace("]", "").replace("[", ""), paras);
 				break;
 			default:
 				throw new RuntimeException("发现未知的数据库连接类型！");
@@ -1478,13 +1535,13 @@ public class DBAccess {
 			case MSSQL:
 				return RunSQLReturnResultSet_201809_SQL(sql, paras, en, attrs);
 			case Oracle:
+			case KingBase:
 				return RunSQLReturnResultSet_201809_Ora(sql, paras, en, attrs);
 			case MySQL:
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, en, attrs);
 			case DM:
 				return RunSQLReturnResultSet_201809_DM(sql, paras, en, attrs);
-			case KingBase:
-				return RunSQLReturnResultSet_201809_MySQL(sql, paras, en, attrs);
+			
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
 			}
@@ -1505,13 +1562,12 @@ public class DBAccess {
 			case MSSQL:
 				return RunSQLReturnResultSet_201809_SQL(sql, paras, ens, attrs);
 			case Oracle:
+			case KingBase:
 				return RunSQLReturnResultSet_201809_Ora(sql, paras, ens, attrs);
 			case MySQL:
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, ens, attrs);
 			case DM:
 				return RunSQLReturnResultSet_201809_DM(sql, paras, ens, attrs);
-			case KingBase:
-				return RunSQLReturnResultSet_201809_MySQL(sql, paras, ens, attrs);
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
 			}
@@ -1532,6 +1588,7 @@ public class DBAccess {
 				dt = RunSQLReturnTable_200705_SQL(sql, paras);
 				break;
 			case Oracle:
+			case KingBase:
 				dt = RunSQLReturnTable_200705_Ora(sql, paras);
 				break;
 			case MySQL:
@@ -1539,9 +1596,6 @@ public class DBAccess {
 				break;
 			case DM:
 				dt = RunSQLReturnTable_200705_DM(sql, paras);
-				break;
-			case KingBase:
-				dt = RunSQLReturnTable_200705_MySQL(sql, paras);
 				break;
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
@@ -2379,7 +2433,8 @@ public class DBAccess {
 			}
 		}
 	}
-
+	
+	
 	private static int RunSQLReturnResultSet_201809_MySQL(String sql, Paras paras, Entities ens, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -2829,6 +2884,7 @@ public class DBAccess {
 		try {
 			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
+			case KingBase:
 				dt = DBAccess.RunSQLReturnTable_200705_Ora(sql, paras);
 				break;
 			case MSSQL:
@@ -2839,9 +2895,6 @@ public class DBAccess {
 				break;
 			case DM:
 				dt = DBAccess.RunSQLReturnTable_200705_DM(sql, paras);
-				break;
-			case KingBase:
-				dt = DBAccess.RunSQLReturnTable_200705_MySQL(sql, paras);
 				break;
 			default:
 				throw new RuntimeException("@没有判断的数据库类型");
@@ -2865,6 +2918,7 @@ public class DBAccess {
 		// System.out.print(SystemConfig.getAppCenterDBType());
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case KingBase:
 			dt = DBAccess.RunSQLReturnTable_200705_Ora(sql, new Paras());
 			break;
 		case MSSQL:
@@ -2875,9 +2929,6 @@ public class DBAccess {
 			break;
 		case DM:
 			dt = DBAccess.RunSQLReturnTable_200705_DM(sql, new Paras());
-			break;
-		case KingBase:
-			dt = DBAccess.RunSQLReturnTable_200705_MySQL(sql, new Paras());
 			break;
 		default:
 			throw new RuntimeException("@没有判断的数据库类型");
@@ -2937,6 +2988,9 @@ public class DBAccess {
 		case DM:
 			sql = "SELECT constraint_name, constraint_type,search_condition, r_constraint_name  from user_constraints WHERE table_name = upper(:Tab) AND constraint_type = 'P'";
 			break;
+		case KingBase:
+			sql = "SELECT column_name, table_name, CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE upper(table_name) =upper(:Tab) ";
+			break;
 		default:
 			throw new RuntimeException("数据库连接配置失败！ ");
 		}
@@ -2951,15 +3005,12 @@ public class DBAccess {
 	/**
 	 * 判断系统中是否存在对象.
 	 * 
-	 * @param table
+	 * @param obj
 	 * @return
 	 * @throws Exception
 	 */
 	public static boolean IsExitsObject(String obj)
 	{
-		if(StringHelper.isNullOrEmpty(obj)){
-			return false;
-		}
 		return IsExitsObject(new DBUrl(DBUrlType.AppCenterDSN), obj);
 	}
 
@@ -2987,7 +3038,7 @@ public class DBAccess {
 				{
 					obj = obj.split("[.]", -1)[1];
 				}
-				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + SystemConfig.getUser().toUpperCase() + "' ", ps);
+				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + DBAccess.getConnectionUserID().toUpperCase() + "' ", ps);
 			case MSSQL:
 				return IsExits("SELECT name FROM sysobjects WHERE name = '" + obj + "'");
 			case PostgreSQL:
@@ -3009,15 +3060,12 @@ public class DBAccess {
 				//return false ; //IsExits("SELECT * FROM MSysObjects WHERE (((MSysObjects.getName()) =  '"+obj+"' ))");
 				return IsExits("SELECT * FROM MSysObjects WHERE Name =  '" + obj + "'");
 			case KingBase:
-				/*如果不是检查的PK.*/
 				if (obj.indexOf(".") != -1)
 				{
 					obj = obj.split("[.]", -1)[1];
 				}
-
-				// *** 屏蔽到下面的代码, 不需要从那个数据库里取，jflow 发现的bug  edit by :zhoupeng   2016.01.26 for fuzhou.
-				return IsExits("SELECT table_name, table_type FROM information_schema.tables  WHERE  table_name = '" + obj + "' AND TABLE_SCHEMA='" + SystemConfig.getAppCenterDBDatabase() + "' ");
-
+				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) ", ps);
+			
 			default:
 				throw new RuntimeException("没有识别的数据库编号");
 		}
@@ -3055,6 +3103,7 @@ public class DBAccess {
 			i = DBAccess.RunSQLReturnValInt(sql);
 			break;
 		case Oracle:
+		case KingBase:
 			if (table.indexOf(".") != -1) {
 				table = table.split("[.]", -1)[1];
 			}
@@ -3069,12 +3118,6 @@ public class DBAccess {
 			i = DBAccess.RunSQLReturnValInt(
 					"SELECT COUNT(*) from user_tab_columns  WHERE table_name= upper(:tab) AND column_name= upper(:col) ",
 					ps);
-			break;
-		case KingBase:
-			String sql2 = "select count(*) FROM information_schema.columns WHERE TABLE_SCHEMA='"
-					+ SystemConfig.getAppCenterDBDatabase() + "' AND table_name ='" + table
-					+ "' and column_Name='" + col + "'";
-			i = DBAccess.RunSQLReturnValInt(sql2);
 			break;
 		default:
 			throw new RuntimeException("error");
@@ -3100,6 +3143,7 @@ public class DBAccess {
 					+ tableName + "'";
 			break;
 		case Oracle:
+		case KingBase:
 		case DM:
 			sql = "SELECT COLUMN_NAME as FName,DATA_TYPE as FType,DATA_LENGTH as FLen,COLUMN_NAME as FDesc FROM all_tab_columns WHERE table_name = upper('"
 					+ tableName + "')";
@@ -3108,16 +3152,14 @@ public class DBAccess {
 			sql = "SELECT COLUMN_NAME FName,DATA_TYPE FType,CHARACTER_MAXIMUM_LENGTH FLen,COLUMN_COMMENT FDesc FROM information_schema.columns WHERE table_name='"
 					+ tableName + "' and TABLE_SCHEMA='" + SystemConfig.getAppCenterDBDatabase() + "'";
 			break;
-		case KingBase:
-			sql = "SELECT COLUMN_NAME FName,DATA_TYPE FType,CHARACTER_MAXIMUM_LENGTH FLen,COLUMN_COMMENT FDesc FROM information_schema.columns WHERE table_name='"
-					+ tableName + "' and TABLE_SCHEMA='" + SystemConfig.getAppCenterDBDatabase() + "'";
-			break;
+		
 		default:
 			break;
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+				||SystemConfig.getAppCenterDBType() == DBType.KingBase) {
 			dt.Columns.get("FNAME").ColumnName = "FName";
 			dt.Columns.get("FTYPE").ColumnName = "FType";
 			dt.Columns.get("FLEN").ColumnName = "FLen";
@@ -3168,14 +3210,13 @@ public class DBAccess {
 		case Oracle:
 		case DM:
 		case MSSQL:
+		case KingBase:
 			sql = "ALTER TABLE " + table + " DROP CONSTRAINT " + pkName;
 			break;
 		case MySQL:
 			sql = "ALTER TABLE " + table + " DROP primary key";
 			break;
-		case KingBase:
-			sql = "ALTER TABLE " + table + " DROP primary key";
-			break;
+		
 		default:
 			Log.DebugWriteError("DBAccess DropTablePK " + "@不支持的数据库类型." + SystemConfig.getAppCenterDBType());
 			throw new RuntimeException("@不支持的数据库类型." + SystemConfig.getAppCenterDBType());
@@ -3202,6 +3243,7 @@ public class DBAccess {
 					+ table + "'";
 			break;
 		case Oracle:
+		case KingBase:
 		case DM:
 			sql = "SELECT constraint_name, constraint_type,search_condition, r_constraint_name  from user_constraints WHERE table_name = upper('"
 					+ table + "') AND constraint_type = 'P'";
@@ -3214,10 +3256,7 @@ public class DBAccess {
 			sql = "SELECT * FROM sysconstraints c inner j = lower('"
 					+ table.toLowerCase() + "') and constrtype = 'P'";
 			break;
-		case KingBase:
-			sql = "SELECT CONSTRAINT_NAME , column_name, table_name CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_name ='"
-					+ table + "' and table_schema='" + SystemConfig.getAppCenterDBDatabase() + "' ";
-			break;
+
 		default:
 			Log.DebugWriteError("DBAccess GetTablePKName " + "@没有判断的数据库类型.");
 			throw new RuntimeException("@没有判断的数据库类型.");
@@ -3256,6 +3295,8 @@ public class DBAccess {
 			return new String(byteFile,"UTF-8");
 		}
 		//其他的数据库类型直接从 text字段去.
+		if(DataType.IsNullOrEmpty(pkVal)==true)
+			return "";
 		try {
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 			return DBAccess.RunSQLReturnStringIsNull(strSQL, "");
@@ -3285,7 +3326,8 @@ public class DBAccess {
 	 */
 	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception {
         //增加对oracle数据库的逻辑 qin
-        if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+        if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle
+        		||SystemConfig.getAppCenterDBType() == DBType.KingBase) {
             Connection conn = DBAccess.getGetAppCenterDBConn_Oracle();
             String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
             PreparedStatement pstmt = conn.prepareStatement(strSQL);
@@ -3438,14 +3480,12 @@ public class DBAccess {
 				DBAccess.RunSQLReturnString("SELECT 1+2 ");
 				break;
 			case Oracle:
+			case KingBase:
 			case DM:
 			case MySQL:
 				DBAccess.RunSQLReturnString("SELECT 1+2 FROM DUAL ");
 				break;
 			case Informix:
-				DBAccess.RunSQLReturnString("SELECT 1+2 FROM DUAL ");
-				break;
-			case KingBase:
 				DBAccess.RunSQLReturnString("SELECT 1+2 FROM DUAL ");
 				break;
 			default:
@@ -3480,13 +3520,12 @@ public class DBAccess {
 		case MSSQL:
 			return RunSQLReturnTable_201612_SQL(sql, pageSize, pageIdx, key, orderKey, orderType);
 		case Oracle:
+		case KingBase:
 			return RunSQLReturnTable_201612_Ora(sql, pageSize, pageIdx, orderKey, orderType);
 		case MySQL:
 			return RunSQLReturnTable_201612_MySql(sql, pageSize, pageIdx, key, orderKey, orderType);
 		case DM:
 			return RunSQLReturnTable_201612_DM(sql, pageSize, pageIdx, orderKey, orderType);
-		case KingBase:
-			return RunSQLReturnTable_201612_MySql(sql, pageSize, pageIdx, key, orderKey, orderType);
 		default:
 			throw new RuntimeException("@未涉及的数据库类型！");
 		}
@@ -3634,20 +3673,6 @@ public class DBAccess {
 
 		return RunSQLReturnTable(sqlstr);
 	}
-
-	// public static void main(String[] args) throws Exception {
-	// // Paras ps = new Paras();
-	// // // Para p = new Para("visit_date",Date.class,
-	// // // DataType.stringToDate("2014-09-05"));
-	// // // ps.Add(p);
-	// // DataTable table = RunSQLReturnTable_200705_MySQL(
-	// // "select * from media_control where ip = '192.168.0.2'", ps);
-	// // System.out.println(Json.ToJson(table));
-	//
-	// DataSet ds = new DataSet();
-	// ds.readXmls("D:/android
-	// workspace/jflow/jflow-web/src/main/webapp/DataUser/XML/TempleteSheetOfStartNode.xml");
-	// }
 	/**
 	 * 是否是view
 	 *
@@ -3725,7 +3750,7 @@ public class DBAccess {
 				return false;
 			}
 		case MySQL:
-			sql = "SELECT Table_Type FROM information_schema.TABLES WHERE table_name='" + tabelOrViewName
+			sql = "SELECT Table_Type FROM information_schema.TABLES WHERE UPPER(table_name)='" + tabelOrViewName.toUpperCase()
 					+ "' and table_schema='" + SystemConfig.getAppCenterDBDatabase() + "'";
 			DataTable dt2 = DBAccess.RunSQLReturnTable(sql);
 			if (dt2.Rows.size() == 0) {
@@ -3738,11 +3763,10 @@ public class DBAccess {
 				return false;
 			}
 		case KingBase:
-			sql = "SELECT Table_Type FROM information_schema.TABLES WHERE table_name='" + tabelOrViewName
-			+ "' and table_schema='" + SystemConfig.getAppCenterDBDatabase() + "'";
+			sql = "SELECT Table_Type FROM information_schema.TABLES WHERE UPPER(table_name)='" + tabelOrViewName.toUpperCase() +"'";
 			DataTable dt3 = DBAccess.RunSQLReturnTable(sql);
 			if (dt3.Rows.size() == 0) {
-				throw new RuntimeException("@表不存在[" + tabelOrViewName + "]");
+				throw new RuntimeException("@表不存在[" + tabelOrViewName + "]KingBase");
 			}
 		
 			if (dt3.Rows.get(0).getValue(0).toString().toUpperCase().trim().equals("VIEW")) {

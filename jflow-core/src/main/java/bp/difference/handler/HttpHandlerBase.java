@@ -53,9 +53,7 @@ public abstract class HttpHandlerBase
 			this.getResponse().setCharacterEncoding("UTF-8");
 			out = this.getResponse().getWriter();
 			out.write(data);
-			
-		
-		      
+			 
 		}
 		catch (Exception ex)
 		{

@@ -374,6 +374,7 @@ public class WorkNodePlus {
 				case MSSQL:
 					break;
 				case Oracle:
+				case KingBase:
 					if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
 						if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
 							values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
@@ -754,5 +755,67 @@ public class WorkNodePlus {
 				}
 			}
 		}
+	}
+
+
+	public static SendReturnObjs SubFlowEvent(WorkNode wn) throws Exception
+	{
+		GenerWorkFlow gwf = wn.getHisGenerWorkFlow();
+		//不是子流程
+		if (gwf.getPWorkID() == 0)
+			return wn.HisMsgObjs;
+
+
+		//子流程运行到该节点时主流程自动运行到下一个节点
+		if(gwf.getWFState()!=WFState.Complete && wn.getHisNode().getIsToParentNextNode() == true)
+		{
+			GenerWorkFlow pgwf = new GenerWorkFlow(gwf.getPWorkID());
+			if (pgwf.getFK_Node() == gwf.getPNodeID())
+			{
+				SendReturnObjs returnObjs =bp.wf.Dev2Interface.Node_SendWork(gwf.getPFlowNo(), gwf.getPWorkID());
+				String sendSuccess = "父流程自动运行到下一个节点，" + returnObjs.ToMsgOfHtml();
+				wn.HisMsgObjs.AddMsg("info", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+			}
+			return wn.HisMsgObjs;
+		}
+
+		//判断是不是子流程结束后显示父流程待办
+		if(gwf.getWFState() == WFState.Complete)
+		{
+			//子流程运行结束后父流程是否自动往下运行一步
+			String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(wn.getHisGenerWorkFlow(), wn.getHisFlow());
+			if (DataType.IsNullOrEmpty(msg) == false)
+			{
+				wn.HisMsgObjs.AddMsg("info", msg, msg, SendReturnMsgType.Info);
+				return wn.HisMsgObjs;
+			}
+
+			String mypk = "";
+			long PWorkID = 0;
+			boolean isSameLeavl = false;
+			if (gwf.GetParaInt("SLNodeID") != 0)
+			{
+				mypk = gwf.GetParaInt("SLNodeID") + "_" + wn.getHisFlow().getNo() + "_0";
+				PWorkID = gwf.GetValInt64ByKey("SLWorkID");
+				isSameLeavl = true;
+			}
+			else
+			{
+				mypk = gwf.getPNodeID()+ "_" + wn.getHisFlow().getNo() + "_0";
+				PWorkID = gwf.getPWorkID();
+			}
+
+			SubFlowHandGuide subflow = new SubFlowHandGuide(mypk);
+			if (subflow.getSubFlowHidTodolist() == true)
+			{
+				GenerWorkFlow pgwf = new GenerWorkFlow(PWorkID);
+				String mysql = "SELECT COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE PWorkID=" + gwf.getPWorkID() + " AND FK_Flow='" + wn.getHisFlow().getNo() + "' AND WFState !=3 ";
+				if (DBAccess.RunSQLReturnValInt(mysql, 0) == 0)
+					DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=0 Where WorkID=" + pgwf.getWorkID()+" AND FK_Node="+pgwf.getFK_Node());
+			}
+		}
+
+		return wn.HisMsgObjs;
+
 	}
 }

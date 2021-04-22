@@ -160,7 +160,7 @@ public class SysEnum extends EntityMyPK
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Sys_Enum", "枚举数据");
+		Map map = new Map(bp.wf.Glo.SysEnum(), "枚举数据");
 
 			/*
 			* 为了能够支持 cloud 我们做了如下变更.

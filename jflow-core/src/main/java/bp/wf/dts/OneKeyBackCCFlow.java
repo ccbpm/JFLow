@@ -109,7 +109,7 @@ public class OneKeyBackCCFlow extends Method
 		dsSysTables.Tables.add(dt);
 
 		//Sys_Enum
-		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_Enum");
+		dt = DBAccess.RunSQLReturnTable("SELECT * FROM "+bp.wf.Glo.SysEnum());
 		dt.TableName = "Sys_Enum";
 		dsSysTables.Tables.add(dt);
 

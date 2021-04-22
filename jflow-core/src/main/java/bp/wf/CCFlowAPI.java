@@ -112,6 +112,9 @@ public class CCFlowAPI {
 						}
 					}
 				}
+			}else
+			{
+				frmNode.setIsEnableLoadData(true);
 			}
 
 			/// 处理表单权限控制方案: 如果是绑定单个表单的时候.
@@ -262,7 +265,8 @@ public class CCFlowAPI {
 				// 按照时间的顺序查找出来 ids .
 				String sqlOrder = "SELECT OID FROM  Sys_GroupField WHERE   FrmID IN (" + myFrmIDs + ")";
 				myFrmIDs = myFrmIDs.replace("'", "");
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle) {
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "',FrmID) , Idx";
 				}
 
@@ -547,10 +551,9 @@ public class CCFlowAPI {
 					throw new RuntimeException("err@错误:" + msg);
 
 				// 执行装载填充.
-				String mypk = MapExtXmlList.PageLoadFull + "_" + md.getNo();
-				Object tempVar2 = mes.GetEntityByKey("MyPK", mypk);
-				me = tempVar2 instanceof MapExt ? (MapExt) tempVar2 : null;
-				if (me != null) {
+				if (frmNode.getIsEnableLoadData() == true && md.getIsPageLoadFull()==true) {
+					Object tempVar2 = mes.GetEntityByKey("MyPK", MapExtXmlList.PageLoadFull + "_" + md.getNo());
+					me = tempVar2 instanceof MapExt ? (MapExt) tempVar2 : null;
 					// 执行通用的装载方法.
 					MapAttrs attrs = md.getMapAttrs();
 					MapDtls dtls = md.getMapDtls();

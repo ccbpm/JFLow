@@ -189,9 +189,6 @@ public class SubFlowHandGuide extends EntityMyPK {
 
 		map.AddTBString(SubFlowYanXuAttr.SubFlowNo, null, "子流程编号", false, true, 0, 10, 150, false);
 		map.AddTBString(SubFlowYanXuAttr.SubFlowName, null, "子流程名称", false, true, 0, 200, 150, false);
-
-		map.AddBoolean(SubFlowHandGuideAttr.IsSubFlowGuide, false, "是否启用子流程批量发起前置导航", true, true, true);
-		map.AddBoolean(SubFlowHandGuideAttr.IsTreeConstruct, false, "是否是树形结构", true, true, true);
 		map.AddTBString(SubFlowHandGuideAttr.ParentNo, "0", "父节点的值", true, false, 0, 20, 100, true);
 
 		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideSQL, null, "子流程前置导航配置SQL", true, false, 0, 200, 150, true);
@@ -200,8 +197,21 @@ public class SubFlowHandGuide extends EntityMyPK {
 		msg += "\t\nSQL配置支持ccbpm表达式.";
 		map.SetHelperAlert(SubFlowHandGuideAttr.SubFlowGuideSQL, msg);
 
+		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideSQLGroup, null, "分组的SQL", true, false, 0, 200, 150, true);
+
 		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideEnNoFiled, null, "实体No字段", true, false, 0, 40, 150);
 		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideEnNameFiled, null, "实体Name字段", true, false, 0, 40, 150);
+
+		//@0=单条手工启动, 1=按照简单数据源批量启动. @2=分组数据源批量启动. @3=树形结构批量启动.
+		map.AddTBInt(SubFlowHandAttr.SubFlowStartModel, 0, "启动模式", false, false);
+
+		//@0=表格模式, 1=列表模式.
+		map.AddTBInt(SubFlowHandAttr.SubFlowShowModel, 0, "展现模式", false, false);
+		//  map.Add(SubFlowHandAttr.IsTreeConstruct, 0, "是否是树结构", false, true);
+
+		//批量发送后，是否隐藏父流程的待办. @yln.
+		map.AddBoolean(SubFlowHandGuideAttr.SubFlowHidTodolist, false, "发送后是否隐藏父流程待办",false,false);
+
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -223,13 +233,17 @@ public class SubFlowHandGuide extends EntityMyPK {
 		return this.GetValStringByKey(SubFlowHandGuideAttr.SubFlowGuideSQL);
 	}
 
+	public boolean getSubFlowHidTodolist()throws Exception{
+		return this.GetValBooleanByKey(SubFlowHandGuideAttr.SubFlowHidTodolist);
+	}
+
 	@Override
 	public boolean beforeUpdateInsertAction()throws Exception{
 
-		if(this.getIsTreeConstruct() == true
+		/*if(this.getIsTreeConstruct() == true
 				&& DataType.IsNullOrEmpty(this.getParentNo())==true ){
 			throw new Exception("请配置父节点的编号");
-		}
+		}*/
 		return super.beforeUpdateInsertAction();
 	}
 

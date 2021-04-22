@@ -157,7 +157,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	public final String MapDefDtlFreeFrm_Init() throws Exception
 	{
 		String isFor = this.GetRequestVal("For");
-		if (!isFor.equals(""))
+		if (DataType.IsNullOrEmpty(isFor)==false)
 		{
 			return "sln@" + isFor;
 		}
@@ -628,22 +628,31 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 	public final String ImpTableField_Step2() throws Exception
 	{
 
-		HashMap<String, Object> dictionary = new HashMap<String, Object>();
+		DataSet ds = new DataSet();
 
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
-		dictionary.put("SFDBSrc", src.ToDataTableField());
+		ds.Tables.add( src.ToDataTableField("SFDBSrc"));
 
 		DataTable tables = src.GetTables();
-		dictionary.put("tables", tables);
+		tables.TableName="tables";
+		ds.Tables.add(tables);
 
 		DataTable tableColumns = src.GetColumns(this.getSTable());
-		dictionary.put("columns", tableColumns);
+		tableColumns.TableName="columns";
+		ds.Tables.add(tableColumns);
 
 		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
-		dictionary.put("attrs", attrs.ToDataTableField("attrs"));
-		dictionary.put("STable", this.getSTable());
+		ds.Tables.add( attrs.ToDataTableField("attrs"));
 
-		return bp.tools.Json.ToJson(dictionary);
+		DataTable dt = new DataTable();
+		dt.TableName="STable";
+		dt.Columns.Add("STable",String.class);
+		DataRow dr = dt.NewRow();
+		dr.setValue("STable",this.getSTable());
+		dt.Rows.AddRow(dr);
+		ds.Tables.add(dt);
+
+		return bp.tools.Json.ToJson(ds);
 	}
 
 	private ArrayList<String> sCols = null;
@@ -2236,7 +2245,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		for (DataRow r : dt.Rows)
 		{
-			if(SystemConfig.getAppCenterDBType() ==DBType.Oracle){
+			if(SystemConfig.getAppCenterDBType() ==DBType.Oracle
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBase){
 				r.setValue("NAME", r.getValue("NO") + (r.getValue("NAME") == null || "".equals(r.getValue("NAME")) || StringUtils.isEmpty(r.getValue("NAME").toString()) ? "" : String.format("[%1$s]", r.getValue("NAME"))));
 			}else{
 				r.setValue("Name", r.getValue("No") + (r.getValue("Name") == null || "".equals(r.getValue("Name")) || StringUtils.isEmpty(r.getValue("Name").toString()) ? "" : String.format("[%1$s]", r.getValue("Name"))));

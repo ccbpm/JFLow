@@ -19,11 +19,11 @@ public abstract class EntityNo extends Entity
 	/** 
 	 编号
 	*/
-	public final String getNo()throws Exception
+	public String getNo()throws Exception
 	{
 		return this.GetValStringByKey(EntityNoNameAttr.No);
 	}
-	public final void setNo(String value) throws Exception
+	public void setNo(String value) throws Exception
 	{
 		this.SetValByKey(EntityNoNameAttr.No, value);
 	}

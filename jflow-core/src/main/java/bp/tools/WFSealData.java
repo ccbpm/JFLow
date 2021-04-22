@@ -87,6 +87,7 @@ public class WFSealData extends EntityMyPK
 		switch (DBAccess.getAppCenterDBType())
 		{
 			case Oracle:
+			case KingBase:
 			case DM:
 				sql = String.format("ALTER TABLE %1$s modify(%2$s %3$s)",
 						"Sys_WFSealData", WFSealDataAttr.SealData, "CLOB");
@@ -104,10 +105,6 @@ public class WFSealData extends EntityMyPK
 				break;
 			case Access:
 				// DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOf_OLE(this));
-				break;
-			case KingBase:
-				sql = String.format("ALTER TABLE %1$s MODIFY COLUMN %2$s %3$s",
-						"Sys_WFSealData", WFSealDataAttr.SealData, "text");
 				break;
 			default:
 				throw new RuntimeException("@未判断的数据库类型。");

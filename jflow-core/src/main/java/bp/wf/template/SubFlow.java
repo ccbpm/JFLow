@@ -169,6 +169,9 @@ public class SubFlow extends EntityMyPK
 		return this.GetValIntByKey(FlowAttr.IsAutoSendSLSubFlowOver);
 	}
 
+	public final String getSubFlowCopyFields()throws Exception{
+		return this.GetValStringByKey(SubFlowHandAttr.SubFlowCopyFields);
+	}
 		///
 
 
@@ -230,8 +233,12 @@ public class SubFlow extends EntityMyPK
 		map.AddTBString(SubFlowAttr.ReturnToNode, null, "要退回的节点", true, true, 0, 200, 150, false);
 
 		map.AddTBInt(SubFlowAttr.SendModel, 0, "自动触发的子流程发送方式", false, true);
+		map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowSta, 1, "状态", true, true, SubFlowYanXuAttr.SubFlowSta,
+				"@0=禁用@1=启用@2=只读");
 
 		map.AddTBInt(SubFlowAttr.Idx, 0, "顺序", true, false);
+		map.AddTBString(SubFlowAttr.SubFlowCopyFields, null, "父流程字段对应子流程字段", false, false, 0, 400, 150, true);
+
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

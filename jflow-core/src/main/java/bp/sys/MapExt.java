@@ -624,6 +624,7 @@ public class MapExt extends EntityMyPK
 		switch (this.getExtType())
 		{
 			case MapExtXmlList.FullData:
+			case MapExtXmlList.FullDataDtl:
 				break;
 			case MapExtXmlList.ActiveDDL:
 				this.setMyPK(MapExtXmlList.ActiveDDL + "_" + this.getFK_MapData() + "_" + this.getAttrOfOper());

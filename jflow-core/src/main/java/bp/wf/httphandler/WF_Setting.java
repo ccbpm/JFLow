@@ -223,7 +223,9 @@ public class WF_Setting extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");

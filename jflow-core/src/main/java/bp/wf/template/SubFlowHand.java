@@ -133,6 +133,24 @@ public class SubFlowHand extends EntityMyPK
 	{
 		return this.GetValIntByKey(SubFlowAutoAttr.SendModel);
 	}
+
+	public final String getSubFlowLab() throws Exception{
+		return this.GetValStringByKey(SubFlowHandAttr.SubFlowLab);
+	}
+
+
+	public final int getSubFlowStartModel() throws Exception{
+		return this.GetValIntByKey(SubFlowHandAttr.SubFlowStartModel);
+	}
+
+	public final FrmSubFlowSta getSubFlowSta() throws Exception{
+		return FrmSubFlowSta.forValue(this.GetValIntByKey(SubFlowAttr.SubFlowSta));
+	}
+
+	public final SubFlowModel getSubFlowModel() throws Exception{
+		return SubFlowModel.forValue(this.GetValIntByKey(SubFlowAttr.SubFlowModel));
+	}
+
 	/** 
 	 指定的流程启动后,才能启动该子流程(请在文本框配置子流程).
 	 * @throws Exception 
@@ -162,6 +180,11 @@ public class SubFlowHand extends EntityMyPK
 	public SubFlowHand()
 	{
 	}
+	public SubFlowHand(String mypk) throws Exception
+	{
+		this.setMyPK(mypk);
+		this.Retrieve();
+	}
 	/** 
 	 重写基类方法
 	*/
@@ -185,12 +208,19 @@ public class SubFlowHand extends EntityMyPK
 		map.AddTBString(SubFlowYanXuAttr.SubFlowNo, null, "子流程编号", true, true, 0, 10, 150, false);
 		map.AddTBString(SubFlowYanXuAttr.SubFlowName, null, "子流程名称", true, true, 0, 200, 150, false);
 
+		map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowSta, 1, "状态", true, true, SubFlowYanXuAttr.SubFlowSta,
+				"@0=禁用@1=启用@2=只读");
+		map.AddTBString(SubFlowHandAttr.SubFlowLab, null, "启动文字标签", true, false, 0, 20, 150);
+
+
 		map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowModel, 0, "子流程模式", true, true, SubFlowYanXuAttr.SubFlowModel, "@0=下级子流程@1=同级子流程");
 
 		map.AddDDLSysEnum(FlowAttr.IsAutoSendSubFlowOver, 0, "子流程结束规则", true, true, FlowAttr.IsAutoSendSubFlowOver, "@0=不处理@1=让父流程自动运行下一步@2=结束父流程");
 
 
 		map.AddDDLSysEnum(FlowAttr.IsAutoSendSLSubFlowOver, 0, "同级子流程结束规则", true, true, FlowAttr.IsAutoSendSLSubFlowOver, "@0=不处理@1=让同级子流程自动运行下一步@2=结束同级子流程");
+		//批量发送后，是否隐藏父流程的待办. @yln.
+		map.AddBoolean(SubFlowHandGuideAttr.SubFlowHidTodolist, false, "发送后是否隐藏父流程待办",true,true,true);
 
 		map.AddBoolean(SubFlowHandAttr.StartOnceOnly, false, "仅能被调用1次(不能被重复调用).", true, true, true);
 
@@ -200,23 +230,45 @@ public class SubFlowHand extends EntityMyPK
 		map.AddTBString(SubFlowHandAttr.SpecFlowStart, null, "子流程编号", true, false, 0, 200, 150, true);
 		map.SetHelperAlert(SubFlowHandAttr.SpecFlowStart, "指定的流程启动后，才能启动该子流程，多个子流程用逗号分开. 001,002");
 		map.AddTBString(SubFlowHandAttr.SpecFlowStartNote, null, "备注", true, false, 0, 500, 150, true);
-
 			//启动限制规则.
 		map.AddBoolean(SubFlowHandAttr.IsEnableSpecFlowOver, false, "指定的流程结束后,才能启动该子流程(请在文本框配置子流程).", true, true, true);
 		map.AddTBString(SubFlowHandAttr.SpecFlowOver, null, "子流程编号", true, false, 0, 200, 150, true);
 		map.SetHelperAlert(SubFlowHandAttr.SpecFlowOver, "指定的流程结束后，才能启动该子流程，多个子流程用逗号分开. 001,002");
 		map.AddTBString(SubFlowHandAttr.SpecFlowOverNote, null, "备注", true, false, 0, 500, 150, true);
+		map.AddTBString(SubFlowAttr.SubFlowCopyFields, null, "父流程字段对应子流程字段", true, false, 0, 400, 150, true);
 
 		map.AddTBInt(SubFlowHandAttr.Idx, 0, "显示顺序", true, false);
-		map.AddBoolean(SubFlowHandGuideAttr.IsSubFlowGuide, false, "是否启用子流程批量发起前置导航", false, true, true);
-		RefMethod rm = new RefMethod();
-		rm.Title = "批量发起前置导航";
-		rm.ClassMethodName = this.toString() + ".DoSetGuide";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
 
+
+		//@0=单条手工启动, 1=按照简单数据源批量启动. @2=分组数据源批量启动. @3=树形结构批量启动.
+		map.AddTBInt(SubFlowHandAttr.SubFlowStartModel, 0, "启动模式", false, false);
+
+		//@0=表格模式, 1=列表模式.
+		map.AddTBInt(SubFlowHandAttr.SubFlowShowModel, 0, "展现模式", false, false);
+
+		//map.AddBoolean(SubFlowHandGuideAttr.IsSubFlowGuide, false, "是否启用子流程批量发起前置导航", false, true, true);
+		RefMethod rm = new RefMethod();
+		rm.Title = "发起模式";
+		rm.ClassMethodName = this.toString() + ".DoStartModel";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
+
+		/*rm = new RefMethod();
+		rm.Title = "显示模式";
+		rm.ClassMethodName = this.toString() + ".DoShowModel";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);*/
 		this.set_enMap(map);
 		return this.get_enMap();
+	}
+
+	/// <summary>
+	/// 发起模式.
+	/// </summary>
+	/// <returns></returns>
+	public String DoStartModel()throws Exception
+	{
+		return "../../../WF/Admin/AttrNode/SubFlowStartModel/Default.htm?MyPK=" + this.getMyPK();
 	}
 
 	public String DoSetGuide() throws Exception

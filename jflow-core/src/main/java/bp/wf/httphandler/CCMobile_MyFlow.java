@@ -269,7 +269,8 @@ public class CCMobile_MyFlow extends WebContralBase
 					{
 						mysql = "SELECT  top 1 NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC";
 					}
-					else if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
+					else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+							|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
 					{
 						mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
 					}
@@ -391,7 +392,8 @@ public class CCMobile_MyFlow extends WebContralBase
 
 			if (fl.getDraftRole() == DraftRole.SaveToTodolist)
 			{
-				bp.wf.Dev2Interface.Node_SetDraft2Todolist(this.getFK_Flow(), this.getWorkID());
+				//String fk_flow, long workID,String todoEmpNo, String todoEmpName
+				bp.wf.Dev2Interface.Node_SetDraft2Todolist(this.getFK_Flow(), this.getWorkID(),WebUser.getNo(),WebUser.getName() );
 			}
 		}
 		return str;

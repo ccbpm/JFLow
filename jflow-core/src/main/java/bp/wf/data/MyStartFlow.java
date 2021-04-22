@@ -562,7 +562,7 @@ public class MyStartFlow extends Entity {
 		DataTable dt = DBAccess.RunSQLReturnTable(pss);
 		if (dt != null && dt.Rows.size() > 0) {
 			String myPk = dt.Rows.get(0).getValue(0).toString();
-			return bp.wf.Glo.getCCFlowAppPath()+"/WF/WFRpt.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow()
+			return bp.wf.Glo.getCCFlowAppPath()+"/WF/MyView.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow()
 					+ "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
 		}
 

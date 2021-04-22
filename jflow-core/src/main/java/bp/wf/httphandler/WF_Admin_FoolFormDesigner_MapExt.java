@@ -796,6 +796,23 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
 		ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
 
+		//获取外键值
+		DataTable dt =bp.sys.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey());
+		for (DataColumn col : dt.Columns)
+		{
+			String colName = col.ColumnName.toLowerCase();
+			switch (colName)
+			{
+				case "no":
+					col.ColumnName = "No";
+					break;
+				case "name":
+					col.ColumnName = "Name";
+					break;
+				default:
+					break;
+			}
+		}
 		//字段值.
 		FrmRBs rbs = new FrmRBs();
 		rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
@@ -813,6 +830,41 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 				rb.setLab(se.getLab());
 				rb.setEnumKey(attr.getUIBindKey());
 				rb.Insert(); //插入数据.
+			}
+			//如果是外键类型
+			if (attr.getLGType() == FieldTypeS.Normal)
+			{
+				for(DataRow row : dt.Rows)
+				{
+					FrmRB rb = new FrmRB();
+					rb.setFK_MapData(this.getFK_MapData());
+					rb.setKeyOfEn(this.getKeyOfEn());
+					rb.setIntKey(Integer.parseInt(row.getValue("No").toString()));
+					rb.setLab(row.getValue("Name").toString());
+					rb.setEnumKey(attr.getUIBindKey());
+					rb.Insert(); //插入数据.
+				}
+			}
+
+			//如果是复选框
+			if(attr.getMyDataType() == DataType.AppBoolean && attr.getUIContralType() == UIContralType.CheckBok)
+			{
+				FrmRB rb = new FrmRB();
+				rb.setFK_MapData(this.getFK_MapData());
+				rb.setKeyOfEn(this.getKeyOfEn());
+				rb.setIntKey(0);
+				rb.setLab("否");
+				rb.setEnumKey(attr.getUIBindKey());
+				rb.Insert(); //插入数据.
+
+				rb = new FrmRB();
+				rb.setFK_MapData(this.getFK_MapData());
+				rb.setKeyOfEn(this.getKeyOfEn());
+				rb.setIntKey(1);
+				rb.setLab("是");
+				rb.setEnumKey(attr.getUIBindKey());
+				rb.Insert(); //插入数据.
+
 			}
 
 			rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());

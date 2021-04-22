@@ -1757,7 +1757,7 @@ public class WorkFlowBuessRole
 
 				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
 				String mytemp = pushMsg.getSMSDoc();
-				mytemp = mytemp.replace("{Title}", pushMsg.getMailTitle());
+				mytemp = mytemp.replace("{Title}", title);
 				mytemp = mytemp.replace("@WebUser.No", WebUser.getNo());
 				mytemp = mytemp.replace("@WebUser.Name", WebUser.getName());
 				mytemp = mytemp.replace("@WorkID", String.valueOf(workid));
@@ -1768,7 +1768,7 @@ public class WorkFlowBuessRole
 				{
 					mytemp = bp.wf.Glo.DealExp(mytemp, rpt, null);
 				}
-				bp.wf.Dev2Interface.Port_SendMsg(wfemp.getNo(), pushMsg.getMailTitle(), mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), pushMsg.getSMSPushModel());
+				bp.wf.Dev2Interface.Port_SendMsg(wfemp.getNo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), pushMsg.getSMSPushModel());
 			}
 		}
 

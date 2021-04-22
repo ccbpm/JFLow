@@ -593,7 +593,7 @@ public class FrmAttachment extends EntityMyPK
 		map.AddTBInt(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的", false, false);
 		map.AddBoolean(FrmAttachmentAttr.IsDownload, true, "是否可以下载", false, false);
 		map.AddBoolean(FrmAttachmentAttr.IsOrder, false, "是否可以排序", false, false);
-
+		map.AddBoolean(FrmAttachmentAttr.IsIdx, false, "是否可以排序", false, false);
 
 		map.AddBoolean(FrmAttachmentAttr.IsAutoSize, true, "自动控制大小", false, false);
 		map.AddBoolean(FrmAttachmentAttr.IsNote, true, "是否增加备注", false, false);

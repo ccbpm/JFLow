@@ -289,8 +289,10 @@ public class SubFlowAuto extends EntityMyPK
 			//自动发送方式.
 		map.AddDDLSysEnum(SubFlowHandAttr.SendModel, 0, "自动发送方式", true, true, SubFlowHandAttr.SendModel, "@0=给当前人员设置开始节点待办@1=发送到下一个节点");
 		map.SetHelperAlert(SubFlowHandAttr.SendModel, "如果您选择了[发送到下一个节点]该流程的下一个节点的接受人规则必须是自动计算的,而不能手工选择.");
+		map.AddTBString(SubFlowAttr.SubFlowCopyFields, null, "父流程字段对应子流程字段", true, false, 0, 400, 150, true);
 
 		map.AddTBInt(SubFlowHandAttr.Idx, 0, "显示顺序", true, false);
+
 
 		this.set_enMap(map);
 		return this.get_enMap();

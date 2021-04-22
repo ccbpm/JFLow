@@ -490,11 +490,8 @@ public class DataType {
 		BufferedReader in = null;
 		Reader is = null;
 		String line = "";
-		int type=0;
-		if(filePath.startsWith("resources")==true)
-			type = 1;
 		try {
-			if(SystemConfig.getIsJarRun() && type==1){
+			if(SystemConfig.getIsJarRun()){
 				ClassPathResource classPathResource = new ClassPathResource(filePath);
 				InputStream inputStream = classPathResource.getInputStream();
 				StringBuilder stringBuilder = new StringBuilder();
@@ -1026,6 +1023,7 @@ public class DataType {
 				case MSSQL:
 					break;
 				case Oracle:
+				case KingBase:
 				case DM:
 					sql = "SELECT  " + exp + " NUM from DUAL ";
 					return DBAccess.RunSQLReturnValDecimal(sql, bigDecimal, 2);

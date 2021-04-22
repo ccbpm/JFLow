@@ -5,6 +5,7 @@ public class MapExtXmlList
 	 转载数据
 	*/
 	public static final String FullData = "FullData";
+	public static final String FullDataDtl = "FullDataDtl";
 	/** 
 	 求和
 	*/

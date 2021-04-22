@@ -139,6 +139,15 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 		ds.Tables.add(se1s.ToDataTableField("FWCSta"));
 
 		DataTable dt = DBAccess.RunSQLReturnTable(Glo.getSQLOfCheckField().replace("@FK_Frm", fk_frm));
+		if(SystemConfig.getAppCenterDBType() ==DBType.Oracle
+		|| SystemConfig.getAppCenterDBType() == DBType.KingBase){
+			dt.Columns.get("NO").setColumnName("No");
+			dt.Columns.get("NAME").setColumnName("Name");
+		}
+		if(SystemConfig.getAppCenterDBType() ==DBType.PostgreSQL){
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+		}
 		dt.TableName = "CheckFields";
 		ds.Tables.add(dt);
 		return bp.tools.Json.ToJson(ds);
@@ -153,6 +162,7 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 	public final String RefOneFrmTreeFrms_Init() throws Exception
 	{
 		String sql = "";
+		String key = GetRequestVal("KeyWord");//查询的关键字
 		//单机模式下
 		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
@@ -164,7 +174,10 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 			sql += "Sys_FormTree B ";
 			sql += " WHERE ";
 			sql += " A.FK_FormTree = B.NO ";
-			//sql += " AND B.setOrgNo('" + WebUser.getOrgNo() + "'";
+
+			if (DataType.IsNullOrEmpty(key) == false)
+				sql += " AND A.Name like '%" + key + "%'";
+
 			sql += "ORDER BY B.IDX,A.IDX";
 
 		}
@@ -180,7 +193,11 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 			sql += "Sys_FormTree B ";
 			sql += " WHERE ";
 			sql += " A.FK_FormTree = B.NO ";
-			sql += " AND B.setOrgNo('" + WebUser.getOrgNo() + "' ";
+			sql += " AND B.OrgNo='" + WebUser.getOrgNo() + "' ";
+
+			if (DataType.IsNullOrEmpty(key) == false)
+				sql += " AND A.Name like '%" + key + "%'";
+
 			sql += "ORDER BY B.IDX,A.IDX";
 		}
 
@@ -196,8 +213,10 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 			sql += "Port_Org C ";
 			sql += " WHERE ";
 			sql += " A.FK_FormTree = B.NO ";
-			sql += " AND B.setOrgNo('" + WebUser.getOrgNo() + "' ";
+			sql += " AND B.OrgNo='" + WebUser.getOrgNo() + "' ";
 			sql += " AND C.No =B.OrgNo ";
+			if (DataType.IsNullOrEmpty(key) == false)
+				sql += " AND A.Name like '%" + key + "%'";
 
 			sql += " UNION  ";
 
@@ -207,14 +226,19 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 			sql += " Sys_MapData A,  WF_FrmOrg B, Port_Org C ";
 			sql += " WHERE ";
 			sql += "  A.No=B.FrmID  AND B.OrgNo=C.No ";
-			sql += "  AND B.setOrgNo('" + WebUser.getOrgNo() + "' ";
+			sql += "  AND B.OrgNo='" + WebUser.getOrgNo() + "' ";
+			if (DataType.IsNullOrEmpty(key) == false)
+				sql += " AND A.Name like '%" + key + "%'";
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 
 			///#warning 需要判断不同的数据库类型
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.DM 
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("SORTNAME").setColumnName("SortName");
 			dt.Columns.get("NO").setColumnName("No");

@@ -92,6 +92,7 @@ public class WF_Admin_Cond2020 extends WebContralBase
 				sql = " SELECT No FROM Port_Emp WHERE " + str + "  limit 1 ";
 				break;
 			case Oracle:
+			case KingBase:	
 			case DM:
 				sql = " SELECT No FROM Port_Emp WHERE " + str + "  rownum <=1 ";
 				break;

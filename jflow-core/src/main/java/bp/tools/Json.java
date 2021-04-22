@@ -617,7 +617,8 @@ public class Json
 		}
 		
 		boolean isOracel=false;
-		if (SystemConfig.getAppCenterDBType() ==  DBType.Oracle)
+		if (SystemConfig.getAppCenterDBType() ==  DBType.Oracle
+				||SystemConfig.getAppCenterDBType() == DBType.KingBase)
 			isOracel=true;
 			 
 
@@ -877,7 +878,8 @@ public class Json
 					}
 					String strValue = "";
 					if(!isRowUper){
-						if (SystemConfig.getAppCenterDBType() == DBType.Oracle){//按照大写取值
+						if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+								||SystemConfig.getAppCenterDBType() == DBType.KingBase){//按照大写取值
 							strValue = drc.get(i).get(strKey.toUpperCase()) == null ? "" : drc.get(i).get(strKey.toUpperCase()).toString();
 						}else{
 							strValue = drc.get(i).get(dt.Columns.get(j).ColumnName) == null ? "" : drc.get(i).get(dt.Columns.get(j).ColumnName).toString();

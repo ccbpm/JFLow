@@ -321,6 +321,10 @@ public class FlowAttr
 	*/
 	public static final String DataDTSWay = "DataDTSWay";
 	/** 
+	 流程设计模式.
+	*/
+	public static final String FlowDevModel = "FlowDevModel";
+	/** 
 	 业务表主键
 	*/
 	public static final String DTSBTablePK = "DTSBTablePK";

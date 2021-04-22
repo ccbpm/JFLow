@@ -1114,6 +1114,8 @@ public class WorkNode {
 
 		/// 计算到达的节点.
 		this.setNdFrom(this.getHisNode());
+		String Executor = "";//实际执行人
+		String ExecutorName = "";//实际执行人名称
 		while (true) {
 			// 上一步的工作节点.
 			int prvNodeID = mynd.getNodeID();
@@ -1178,6 +1180,12 @@ public class WorkNode {
 				mywork = skipWork;
 			}
 
+			if (DataType.IsNullOrEmpty(Executor) == false)
+			{
+				this.setExecer(Executor);
+				this.setExecerName(ExecutorName);
+			}
+
 			// 如果没有设置跳转规则，就返回他们.
 			if (nd.getAutoJumpRole0() == false && nd.getAutoJumpRole1() == false && nd.getAutoJumpRole2() == false
 					&& nd.getHisWhenNoWorker() == false) {
@@ -1192,8 +1200,8 @@ public class WorkNode {
 			}
 
 			dt = fw.DoIt(this.getHisFlow(), this, toWn); // 找到下一步骤的接收人.
-			String Executor = ""; // 实际执行人
-			String ExecutorName = ""; // 实际执行人名称
+			Executor = ""; // 实际执行人
+			ExecutorName = ""; // 实际执行人名称
 			Emp emp = new Emp();
 			if (dt == null || dt.Rows.size() == 0) {
 				if (nd.getHisWhenNoWorker() == true) {
@@ -1409,7 +1417,6 @@ public class WorkNode {
 								}
 							}
 						}
-
 						sql = String.format(
 								" select FK_Station from Port_DeptStation where FK_Dept ='%1$s' and FK_Station in (select FK_Station from "
 										+ bp.wf.Glo.getEmpStation() + " where FK_Emp='%2$s')",
@@ -1421,7 +1428,6 @@ public class WorkNode {
 								break;
 							}
 						}
-
 						try {
 							imgSrc = bp.wf.Glo.getCCFlowAppPath() + "DataUser/Seal/" + fk_dept + "_" + stationNo
 									+ ".jpg";
@@ -1447,9 +1453,6 @@ public class WorkNode {
 						} catch (RuntimeException ex) {
 						}
 					}
-
-					///
-
 					this.AddToTrack(ActionType.Skip, Executor, ExecutorName, nd.getNodeID(), nd.getName(),
 							bp.wf.Glo.multilingual("自动跳转(操作人与上一步相同)", "WorkNode", "system_error_jump_automatically_2",
 									new String[0]),
@@ -1460,7 +1463,6 @@ public class WorkNode {
 					CC(nd); // 执行抄送
 					continue;
 				}
-
 				// 没有跳出转的条件，就返回本身.
 				return nd;
 			}
@@ -1483,10 +1485,11 @@ public class WorkNode {
 				ccMsg1 = "@没有选择抄送人。";
 			}
 			if (cclist.size() > 0) {
-				ps.SQL = "UPDATE WF_CCList SET RDT=" + SystemConfig.getAppCenterDBVarStr() + "RDT  WHERE  WorkID="
+				ps.SQL = "UPDATE WF_CCList SET RDT=" + SystemConfig.getAppCenterDBVarStr() + "RDT ,Title=" + SystemConfig.getAppCenterDBVarStr() +"Title  WHERE  WorkID="
 						+ SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Node="
 						+ SystemConfig.getAppCenterDBVarStr() + "FK_Node ";
-				ps.Add(CCListAttr.RDT, DataType.getCurrentDataTime()); // 设置完成日期.
+				ps.Add(CCListAttr.RDT, DataType.getCurrentDataTime()); // 设置完成日期
+                                                                ps.Add(CCListAttr.Title, this.getHisGenerWorkFlow().getTitle());
 				ps.Add(CCListAttr.WorkID, this.getWorkID());
 				ps.Add(CCListAttr.FK_Node, node.getNodeID());
 				DBAccess.RunSQL(ps);
@@ -2097,21 +2100,37 @@ public class WorkNode {
 
 			/// 如果更新失败，可能是由于数据字段大小引起。
 			Flow flow = new Flow(toND.getFK_Flow());
+			if(SystemConfig.getAppCenterDBType() == DBType.KingBase){
+				String updateLengthSql = String.format("  alter table %1$s alter column %2$s TYPE varchar2(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpFromT");
+				DBAccess.RunSQL(updateLengthSql);
 
-			String updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
-					"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpFromT");
-			DBAccess.RunSQL(updateLengthSql);
+				updateLengthSql = String.format("  alter table %1$s alter column %2$s TYPE varchar2(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpFrom");
+				DBAccess.RunSQL(updateLengthSql);
 
-			updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
-					"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpFrom");
-			DBAccess.RunSQL(updateLengthSql);
+				updateLengthSql = String.format("  alter table %1$s alter column %2$s TYPE varchar2(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpTo");
+				DBAccess.RunSQL(updateLengthSql);
+				updateLengthSql = String.format("  alter table %1$s alter column %2$s TYPE varchar2(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpToT");
+				DBAccess.RunSQL(updateLengthSql);
+			}else{
+				String updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpFromT");
+				DBAccess.RunSQL(updateLengthSql);
 
-			updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
-					"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpTo");
-			DBAccess.RunSQL(updateLengthSql);
-			updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
-					"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpToT");
-			DBAccess.RunSQL(updateLengthSql);
+				updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpFrom");
+				DBAccess.RunSQL(updateLengthSql);
+
+				updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpTo");
+				DBAccess.RunSQL(updateLengthSql);
+				updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ",
+						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpToT");
+				DBAccess.RunSQL(updateLengthSql);
+			}
 
 			Paras ps = new Paras();
 			ps.SQL = "UPDATE ND" + Integer.parseInt(toND.getFK_Flow()) + "Track SET NDTo=" + dbStr + "NDTo,NDToT="
@@ -3240,8 +3259,6 @@ public class WorkNode {
 		ps.Add(GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
 		ps.Add(GenerWorkerListAttr.FK_Emp, this.getExecer());
 		DBAccess.RunSQL(ps);
-
-
 			///检查当前的状态是是否是退回,如果是退回的状态，就给他赋值.
 		// 检查当前的状态是是否是退回，.
 	/*	if (this.SendNodeWFState == WFState.ReturnSta)
@@ -5004,32 +5021,32 @@ public class WorkNode {
 	 * @return
 	 * @throws Exception
 	 */
-	private String DealAlertZhuChiRen() throws Exception {
+	private String DealAlertZhuChiRen(String huiQianZhuChiRen) throws Exception {
 
-		/* 有两个待办，就说明当前人员是最后一个会签人，就要把主持人的状态设置为 0 */
-		// 获得主持人信息.
-		GenerWorkerList gwl = new GenerWorkerList();
-		int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.IsPass, 90);
-		if (i != 1) {
-			return bp.wf.Glo.multilingual("@您已经会签完毕.", "WorkNode", "you_have_finished");
-		}
+        /* 有两个待办，就说明当前人员是最后一个会签人，就要把主持人的状态设置为 0 */
+        // 获得主持人信息.
+        GenerWorkerList gwl = new GenerWorkerList();
+        int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(),GenerWorkerListAttr.FK_Emp,huiQianZhuChiRen, GenerWorkerListAttr.IsPass, 90);
+        if (i != 1) {
+            return bp.wf.Glo.multilingual("@您已经会签完毕.", "WorkNode", "you_have_finished");
+        }
 
-		gwl.setIsPassInt(0); // 从会签列表里移动到待办.
-		gwl.setIsRead(false); // 设置为未读.
+        gwl.setIsPassInt(0); // 从会签列表里移动到待办.
+        gwl.setIsRead(false); // 设置为未读.
 
-		String str1 = bp.wf.Glo.multilingual("@工作会签完毕.", "WorkNode", "you_have_finished");
-		String str2 = bp.wf.Glo.multilingual("@{0}工作已经完成,请到待办列表查看.", "WorkNode", "you_have_finished_todo",
-				this.getHisGenerWorkFlow().getTitle());
-		bp.wf.Dev2Interface.Port_SendMsg(gwl.getFK_Emp(), str1, str2,
-				"HuiQian" + this.getWorkID() + "_" + WebUser.getNo(), "HuiQian", getHisGenerWorkFlow().getFK_Flow(),
-				this.getHisGenerWorkFlow().getFK_Node(), this.getWorkID(), 0);
+        String str1 = bp.wf.Glo.multilingual("@工作会签完毕.", "WorkNode", "you_have_finished");
+        String str2 = bp.wf.Glo.multilingual("@{0}工作已经完成,请到待办列表查看.", "WorkNode", "you_have_finished_todo",
+                this.getHisGenerWorkFlow().getTitle());
+        bp.wf.Dev2Interface.Port_SendMsg(gwl.getFK_Emp(), str1, str2,
+                "HuiQian" + this.getWorkID() + "_" + WebUser.getNo(), "HuiQian", getHisGenerWorkFlow().getFK_Flow(),
+                this.getHisGenerWorkFlow().getFK_Node(), this.getWorkID(), 0);
 
-		// 设置为未读.
-		bp.wf.Dev2Interface.Node_SetWorkUnRead(this.getHisGenerWorkFlow().getWorkID());
+        // 设置为未读.
+        bp.wf.Dev2Interface.Node_SetWorkUnRead(this.getHisGenerWorkFlow().getWorkID());
 
-		// 设置最后处理人.
-		this.getHisGenerWorkFlow().setTodoEmps(gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ";");
-		this.getHisGenerWorkFlow().Update();
+        // 设置最后处理人.
+        this.getHisGenerWorkFlow().setTodoEmps(gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ";");
+        this.getHisGenerWorkFlow().Update();
 
 		/// 处理天业集团对主持人的考核.
 		/*
@@ -5251,220 +5268,242 @@ public class WorkNode {
 		}
 
 		if (this.getHisNode().getTeamLeaderConfirmRole() == TeamLeaderConfirmRole.HuiQianLeader) {
-			// 当前人员的流程处理信息
-			GenerWorkerList gwlOfMe = new GenerWorkerList();
-			gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(),
-					GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
-			String myhuiQianZhuChiRen = gwlOfMe.GetParaString("HuiQianZhuChiRen");
-			String huiQianType = gwlOfMe.GetParaString("huiQianType");
-			// 说明是主持人/第二主持人
-			if (this.getHisGenerWorkFlow().getTodoEmps()
-					.contains(WebUser.getNo() + "," + WebUser.getName() + ";") == true
-					&& (this.getHisGenerWorkFlow().getHuiQianZhuChiRen().contains(WebUser.getNo()) == true || this
-							.getHisGenerWorkFlow().GetParaString("AddLeader").contains(WebUser.getNo()) == true)) {
+			//组长模式的会签分为三种方式，分别处理
+            GenerWorkerList gwlOfMe = new GenerWorkerList();
+            gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(),
+                    GenerWorkerListAttr.FK_Node, this.getHisNode().getNodeID());
+            String myhqzcr = gwlOfMe.GetParaString("HuiQianZhuChiRen");
+            String myhqType = gwlOfMe.GetParaString("HuiQianType");
+            myhqType = DataType.IsNullOrEmpty(myhqType)==true?"":myhqType;
 
-				/* 当前人是组长，检查是否可以可以发送,检查自己是否是加签后的最后一个人 ？ */
-				String todoEmps = ""; // 记录没有处理的人.
-				int num = 0; // 主持人自己加签
-				int leaderNum = 0;
-				for (GenerWorkerList item : gwls.ToJavaList()) {
-					if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90) {
-						String huiQianZhuChiRen = item.GetParaString("HuiQianZhuChiRen");
-						if (!item.getFK_Emp().equals(WebUser.getNo()) && (huiQianZhuChiRen.equals(WebUser.getNo())
-								|| item.getFK_Emp().equals(myhuiQianZhuChiRen)
-								|| huiQianZhuChiRen.equals(myhuiQianZhuChiRen))) {
-							todoEmps += bp.wf.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
-						}
+            //只有一个组长的模式
+            if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne){
+                /* 当前人是组长，检查是否可以可以发送,检查自己是否是最后一个人 ？ */
+                if (this.getHisGenerWorkFlow().getTodoEmps().contains(WebUser.getNo() + ",") == true && DataType.IsNullOrEmpty(myhqzcr)==true) {
+                    String todoEmps = ""; // 记录没有处理的人.
+                    int num = 0;
+                    for (GenerWorkerList item : gwls.ToJavaList()) {
+                        if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90) {
+                            if (item.getFK_Emp().equals(WebUser.getNo())==false)
+                                todoEmps += bp.wf.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
+                            num++;
+                        }
+                    }
 
-						if (this.getHisGenerWorkFlow().GetParaString("AddLeader")
-								.contains(WebUser.getNo() + ",") == true) {
-							if (huiQianZhuChiRen.equals(WebUser.getNo()) == true
-									|| item.getFK_Emp().equals(WebUser.getNo())) {
-								num++;
-							}
-						} else {
-							// 仅只有一个组长
-							if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne) {
-								num++;
-							}
+                    if (num == 1) {
+                        this.getHisGenerWorkFlow().setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(),WebUser.getName()));
+                        this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+                        this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
+                        this.getHisGenerWorkFlow().setHuiQianZhuChiRenName("");
+                        return false; /* 只有一个待办,说明自己就是最后的一个人. */
+                    }
 
-							// 任意组长
-							if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.EveryOneMain
-									&& (huiQianZhuChiRen.equals(WebUser.getNo())
-											|| item.getFK_Emp().equals(WebUser.getNo()))) {
-								num++;
-							}
+                    this.addMsg(SendReturnMsgFlag.CondInfo, "@当前工作未处理的会签人有: " + todoEmps + ",您不能执行发送.", null,
+                            SendReturnMsgType.Info);
+                    return true;
+                }
+            }
+            //任意组长都可以发发送，只要该组长加签的人已经处理完，他点击发送其他人的待办消失
+            if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.EveryOneMain){
+                /* 当前人是组长，检查是否可以可以发送,检查自己是不是最后一个待办处理人 ？*/
+                if (this.getHisGenerWorkFlow().getTodoEmps().contains(WebUser.getNo() + ",") == true
+                        && (DataType.IsNullOrEmpty(myhqzcr)==true || myhqType.equals("AddLeader")==true)) {
+                    String todoEmps = ""; // 记录没有处理的人.
+                    String hqzcr="";
+                    String hqType="";
+                    int num = 0;
+                    for (GenerWorkerList item : gwls.ToJavaList()) {
+                        //主持人
+                        hqzcr = item.GetParaString("HuiQianZhuChiRen");
+                        hqzcr = DataType.IsNullOrEmpty(hqzcr)==true?"":hqzcr;
+                        //加签的类型 普通人，主持人
+                        hqType = item.GetParaString("HuiQianType");
+                        hqType = DataType.IsNullOrEmpty(hqType)==true?"":hqType;
 
-							// 最后一个组长
-							if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.LastOneMain) {
-								if (huiQianZhuChiRen.equals(WebUser.getNo())
-										|| item.getFK_Emp().equals(WebUser.getNo())) {
-									num++; // 当前主持人加签的人员及本身
-								}
-								if (DataType.IsNullOrEmpty(huiQianZhuChiRen) == true) // 未通过的主持人
-								{
-									leaderNum++;
-								}
-							}
+                        if ((item.getIsPassInt() == 0 || item.getIsPassInt() == 90)
+                                &&(item.getFK_Emp().equals(WebUser.getNo()) || hqzcr.equals(WebUser.getNo()) && hqType.equals("AddLeader")==false)) {
+                            if (item.getFK_Emp().equals(WebUser.getNo())==false)
+                                todoEmps += bp.wf.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
+                            num++;
+                        }
+                    }
+                    //说明当前自己加签的人员已经处理完成，自己是最后一个人
+                    if (num == 1) {
+                        //删除其他人的待办信息
+                        String sql = "UPDATE  WF_GenerWorkerList  Set IsPass=1 WHERE WorkID=" + this.getWorkID()
+                                + " AND FK_Node=" + this.getHisNode().getNodeID() + " AND IsPass=0 AND FK_Emp!='"+WebUser.getNo()+"'";
+                        DBAccess.RunSQL(sql);
+                        this.getHisGenerWorkFlow().setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(),WebUser.getName()));
+                        this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+                        this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
+                        this.getHisGenerWorkFlow().setHuiQianZhuChiRenName("");
+                        return false;
+                    }
 
-						}
+                    this.addMsg(SendReturnMsgFlag.CondInfo, "@当前工作未处理的会签人有: " + todoEmps + ",您不能执行发送.", null,
+                            SendReturnMsgType.Info);
+                    return true;
+                }
+            }
 
-					}
+            //最后一个组长可以发发送
+            if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.LastOneMain){
+                /* 当前人是组长，检查是否可以可以发送,检查自己加签的人是否都已经处理完成 ？*/
+                if (this.getHisGenerWorkFlow().getTodoEmps().contains(WebUser.getNo() + ",") == true
+                        && (DataType.IsNullOrEmpty(myhqzcr)==true || myhqType.equals("AddLeader")==true)) {
+                    String todoEmps = ""; // 记录没有处理的人.
+                    String todohqzcrEmps="";//记录未处理的主持人
+                    String hqzcr="";
+                    String hqType="";
+                    int num = 0;//自己及自己加签人的待办
+                    int othernum=0;//其它组长的待办
 
-				}
+                    for (GenerWorkerList item : gwls.ToJavaList()) {
+                        //主持人
+                        hqzcr = item.GetParaString("HuiQianZhuChiRen");
+                        hqzcr = DataType.IsNullOrEmpty(hqzcr)==true?"":hqzcr;
+                        //加签的类型 普通人，主持人
+                        hqType = item.GetParaString("HuiQianType");
+                        hqType = DataType.IsNullOrEmpty(hqType)==true?"":hqType;
 
-				/* 只有一个待办,说明自己就是最后的一个人. */
-				if (num == 1) {
-					if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne) {
-						this.getHisGenerWorkFlow()
-								.setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
-						this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
-						return false;
-					}
-					// 说明是原始主持人
-					if (this.getHisGenerWorkFlow().GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false
-							&& leaderNum == 0) {
-						this.getHisGenerWorkFlow()
-								.setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
-						this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+                        if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90){
+                            if(item.getFK_Emp().equals(WebUser.getNo()) || hqzcr.equals(WebUser.getNo())&& hqType.equals("AddLeader")==false) {
+                                if (item.getFK_Emp().equals(WebUser.getNo())==false)
+                                    todoEmps += bp.wf.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
+                                num++;
+                            }
+                            if( item.getFK_Emp().equals(WebUser.getNo())==false &&(DataType.IsNullOrEmpty(hqzcr)==true || hqType.equals("AddLeader")==true )){
+                                todohqzcrEmps += bp.wf.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
+                                othernum++;
+                            }
 
-						// 如果是任意组长可以发送,则需要设置所有的GenerWorkerList待办结束
+                        }
+                    }
+                    //说明当前自己加签的人员已经处理完成，并且是最后一个组长未处理待办
+                    if (num == 1 && othernum==0) {
+                        //删除其他人的待办信息
+                        String sql = "UPDATE  WF_GenerWorkerList  Set IsPass=1 WHERE WorkID=" + this.getWorkID()
+                                + " AND FK_Node=" + this.getHisNode().getNodeID() + " AND IsPass=0 AND FK_Emp!='"+WebUser.getNo()+"'";
+                        DBAccess.RunSQL(sql);
+                        this.getHisGenerWorkFlow().setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(),WebUser.getName()));
+                        this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+                        this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
+                        this.getHisGenerWorkFlow().setHuiQianZhuChiRenName("");
+                        return false;
+                    }
+                    //当前组长加签的人员已经处理完，自己的待办可以结束
+                    if(num==1 &&  othernum!=0){
+                        // 设置当前已经完成.
+                        gwlOfMe.setIsPassInt(1);
+                        gwlOfMe.Update();
 
-						if (this.getHisNode().getHuiQianLeaderRole() == HuiQianLeaderRole.EveryOneMain) {
-							String sql = "Delete FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID()
-									+ " AND FK_Node=" + this.getHisNode().getNodeID() + " AND IsPass=0";
-							DBAccess.RunSQL(sql);
+                        // 检查完成条件。
+                        if (this.getHisNode().getIsEndNode() == false) {
+                            this.CheckCompleteCondition();
+                        }
+                        // 调用发送成功事件.
+                        String sendSuccess = ExecEvent.DoNode(EventListNode.SendSuccess, this);
+                        this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
 
-						}
-						return false;
-					}
-				} else {
-					// 把当前的待办设置已办，并且提示未处理的人当前节点是主持人。
-					for (GenerWorkerList gwl : gwls.ToJavaList()) {
-						if (!gwl.getFK_Emp().equals(WebUser.getNo())) {
-							continue;
-						}
+                        // 执行时效考核.
+                        if (this.rptGe == null) {
+                            Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
+                                    this.rptGe.getTitle(), gwlOfMe);
+                        } else {
+                            Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
+                                    this.getHisGenerWorkFlow().getTitle(), gwlOfMe);
+                        }
 
-						// 设置当前已经完成.
-						gwl.setIsPassInt(1);
-						gwl.Update();
+                        this.AddToTrack(ActionType.TeampUp, gwlOfMe.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(),
+                                this.getHisNode().getName(), "协作发送");
+                        String emps = this.getHisGenerWorkFlow().getTodoEmps();
+                        emps = emps.replaceAll(WebUser.getName() + ";", "");
+                        this.getHisGenerWorkFlow().setTodoEmps(emps);
+                        this.getHisGenerWorkFlow().DirectUpdate();
+                        this.addMsg(SendReturnMsgFlag.CondInfo, "@当前工作未处理的会签人有: "+todohqzcrEmps, null,
+                                SendReturnMsgType.Info);
+                        return true;
+                    }
+                    if(DataType.IsNullOrEmpty(todohqzcrEmps)==false)
+                        this.addMsg(SendReturnMsgFlag.CondInfo, "@当前工作未处理的会签人有: " + todoEmps + ",组长有："+todohqzcrEmps+",您不能执行发送.", null,
+                            SendReturnMsgType.Info);
+                    else
+                        this.addMsg(SendReturnMsgFlag.CondInfo, "@当前工作未处理的会签人有: " + todoEmps + ",您不能执行发送.", null,
+                                SendReturnMsgType.Info);
+                    return true;
+                }
+            }
 
-						// 检查完成条件。
-						if (this.getHisNode().getIsEndNode() == false) {
-							this.CheckCompleteCondition();
-						}
-						// 调用发送成功事件.
-						String sendSuccess = ExecEvent.DoNode(EventListNode.SendSuccess, this);
-						this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+            //当前人是被加签的人
+            int mynum = 0;
+            int num=0;//当前加签人所属主持人下的待办数
+            String todoEmps1 = ""; // 记录没有处理的人.
+            // 当前人员的流程处理信息
+            for (GenerWorkerList item : gwls.ToJavaList()) {
+                String hqzcr = item.GetParaString("HuiQianZhuChiRen");
+                hqzcr = DataType.IsNullOrEmpty(hqzcr)==true?"":hqzcr;
 
-						// 执行时效考核.
-						if (this.rptGe == null) {
-							Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
-									this.rptGe.getTitle(), gwl);
-						} else {
-							Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
-									this.getHisGenerWorkFlow().getTitle(), gwl);
-						}
+                if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90) {
+                    if (item.getFK_Emp().equals(WebUser.getNo())==false )
+                        todoEmps1 += bp.wf.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
+                    if(myhqzcr.equals(hqzcr) || item.getFK_Emp().equals(myhqzcr))
+                        num++;
+                    mynum++;
+                }
+            }
+            /* 只有一个待办,说明自己就是最后的一个人. 这种情况几乎不存在*/
+            if (mynum == 1) {
+                this.getHisGenerWorkFlow()
+                        .setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
+                this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
+                this.getHisGenerWorkFlow().setHuiQianZhuChiRen("");
+                this.getHisGenerWorkFlow().setHuiQianZhuChiRenName("");
+                return false;
+            }
 
-						this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps, this.getHisNode().getNodeID(),
-								this.getHisNode().getName(), "协作发送");
-					}
-				}
+            // 把当前的待办设置已办，并且提示未处理的人。
+            for (GenerWorkerList gwl : gwls.ToJavaList()) {
+                if (gwl.getFK_Emp().equals(WebUser.getNo())==false)
+                    continue;
 
-				if (SystemConfig.getCustomerNo().equals("LIMS")) {
-					this.getHisGenerWorkFlow()
-							.setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
-					this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
-					return false; // 不处理，未完成的会签人，没有执行会签的人，忽略.
-				}
+                // 设置当前已经完成.
+                gwl.setIsPassInt(1);
+                gwl.Update();
 
-				this.addMsg(SendReturnMsgFlag.CondInfo, bp.wf.Glo.multilingual("@当前工作未处理的会签人还有: {0},所以不能发送到下一步.",
-						"WorkNode", "you_have_finished_1", todoEmps), null, SendReturnMsgType.Info);
+                // 检查完成条件。
+                if (this.getHisNode().getIsEndNode() == false)
+                    this.CheckCompleteCondition();
 
-				return true;
-			}
+                // 执行时效考核.
+                if (this.rptGe == null)
+                    Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
+                            this.rptGe.getTitle(), gwl);
+                else
+                    Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
+                            this.getHisGenerWorkFlow().getTitle(), gwl);
 
-			/// 加签人的处理
-			// 查看是否我是最后一个？ 主持人必须是相同的人
-			int mynum = 0;
-			String todoEmps1 = ""; // 记录没有处理的人.
-			for (GenerWorkerList item : gwls.ToJavaList()) {
-				if (item.getIsPassInt() == 0 || item.getIsPassInt() == 90) {
-					if (item.getFK_Emp().equals(WebUser.getNo())) {
-						mynum++;
-					}
-					if (!item.getFK_Emp().equals(WebUser.getNo())
-							&& (item.GetParaString("HuiQianZhuChiRen").equals(myhuiQianZhuChiRen)
-									|| item.getFK_Emp().equals(myhuiQianZhuChiRen))) {
-						todoEmps1 += bp.wf.Glo.DealUserInfoShowModel(item.getFK_Emp(), item.getFK_EmpText()) + " ";
-						mynum++;
-					}
-				}
-			}
+                this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps1, this.getHisNode().getNodeID(),
+                        this.getHisNode().getName(), "协作发送");
 
-			if (mynum == 1) {
-				this.getHisGenerWorkFlow()
-						.setSender(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
-				this.getHisGenerWorkFlow().setHuiQianTaskSta(HuiQianTaskSta.None);
-				return false; // 只有一个待办,说明自己就是最后的一个人.
-			}
+                // cut 当前的人员.
+                String emps = this.getHisGenerWorkFlow().getTodoEmps();
+                emps = emps.replaceAll(WebUser.getName() + ";", "");
+                this.getHisGenerWorkFlow().setTodoEmps(emps);
+                this.getHisGenerWorkFlow().DirectUpdate();
 
-			// 把当前的待办设置已办，并且提示未处理的人。
-			for (GenerWorkerList gwl : gwls.ToJavaList()) {
-				if (!gwl.getFK_Emp().equals(WebUser.getNo())) {
-					continue;
-				}
 
-				// 设置当前已经完成.
-				gwl.setIsPassInt(1);
-				gwl.Update();
+                // 处理会签问题，
+                if (num == 2) {
+                    String msg = this.DealAlertZhuChiRen(myhqzcr);
 
-				// 检查完成条件。
-				if (this.getHisNode().getIsEndNode() == false) {
-					this.CheckCompleteCondition();
-				}
+                    this.addMsg(SendReturnMsgFlag.OverCurr, msg, null, SendReturnMsgType.Info);
+                } else {
+                    this.addMsg(SendReturnMsgFlag.OverCurr, "@会签工作已完成@当前工作未处理的会签人有:" + todoEmps1 + " .", null,
+                            SendReturnMsgType.Info);
+                }
+                return true;
+            }
 
-				// 调用发送成功事件.
-				String sendSuccess = ExecEvent.DoNode(EventListNode.SendSuccess, this, this.HisMsgObjs, null);
-
-				this.HisMsgObjs.AddMsg("info21", sendSuccess, sendSuccess, SendReturnMsgType.Info);
-
-				// 执行时效考核.
-				if (this.rptGe == null) {
-					Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
-							this.rptGe.getTitle(), gwl);
-				} else {
-					Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), 0,
-							this.getHisGenerWorkFlow().getTitle(), gwl);
-				}
-
-				this.AddToTrack(ActionType.TeampUp, gwl.getFK_Emp(), todoEmps1, this.getHisNode().getNodeID(),
-						this.getHisNode().getName(), "协作发送");
-
-				// cut 当前的人员.
-				String emps = this.getHisGenerWorkFlow().getTodoEmps();
-				emps = emps.replace(WebUser.getNo() + "," + WebUser.getName() + ";", "");
-				emps = emps.replace(WebUser.getName() + ";", "");
-				emps = emps.replace(WebUser.getName(), "");
-
-				this.getHisGenerWorkFlow().setTodoEmps(emps);
-				this.getHisGenerWorkFlow().DirectUpdate();
-
-				// 处理会签问题，
-				if (mynum == 2) {
-					String msg = this.DealAlertZhuChiRen();
-					this.addMsg(SendReturnMsgFlag.OverCurr, msg, null, SendReturnMsgType.Info);
-				} else {
-					this.addMsg(SendReturnMsgFlag.OverCurr, bp.wf.Glo.multilingual("@您已经完成签完工作. 当前未处理工作的人还有:{0}.",
-							"WorkNode", "you_have_finished_1", todoEmps1), null, SendReturnMsgType.Info);
-				}
-				return true;
-
-				/// 加签人的处理
-
-			}
-
-			///
 		}
 		throw new RuntimeException("@不应该运行到这里。");
 	}
@@ -6222,10 +6261,12 @@ public class WorkNode {
 				throw new RuntimeException(
 						bp.wf.Glo.multilingual("err@您启动的子流程或者延续流程开始节点没有明确的设置接收人.", "WorkNode", "not_found_receiver"));
 			}
+			
+			 
 
 			// 组装到达的人员.
 			for (DataRow dr : dt.Rows) {
-				toEmpIDs += dr.getValue("No").toString();
+				toEmpIDs +="," + dr.getValue("No").toString();
 			}
 		}
 
@@ -6268,7 +6309,7 @@ public class WorkNode {
 		wk.Update();
 
 		// 为接收人显示待办.
-		bp.wf.Dev2Interface.Node_SetDraft2Todolist(node.getFK_Flow(), workid);
+		bp.wf.Dev2Interface.Node_SetDraft2Todolist(node.getFK_Flow(), workid,WebUser.getNo(),WebUser.getName());
 
 		// 产生工作列表.
 		GenerWorkerList gwl = new GenerWorkerList(workid, node.getNodeID(), toEmpIDs);
@@ -6425,6 +6466,11 @@ public class WorkNode {
 			this.Func_DoSetThisWorkOver(); // 设置工作完成.
 
 			this.rptGe.setWFState(WFState.Complete);
+            this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTimess());
+
+            // 设置当前的流程所有的用时.
+            this.rptGe.setFlowDaySpan(DataType.GetSpanDays(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT),
+                    DataType.getCurrentDataTime()));
 			this.rptGe.Update();
 			this.getHisGenerWorkFlow().Update(); // added by
 													// liuxc,2016-10-24,最后节点更新Sender字段
@@ -6435,19 +6481,24 @@ public class WorkNode {
 
 			// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点 @yuan
 			if (this.getHisGenerWorkFlow().getPWorkID() != 0 && this.getHisFlow().getIsToParentNextNode() == true) {
-				// 检查父流程是否运行到了下一个节点？如果没有运行到下一个节点，就让其发送.
-				GenerWorkFlow pgwf = new GenerWorkFlow(this.getHisGenerWorkFlow().getPWorkID());
-				if (pgwf.getFK_Node() == this.getHisGenerWorkFlow().getPNodeID()) {
-					// 如果可以执行下一步工作，就可以允许向下发送.
-					if (Dev2Interface.Flow_IsCanDoCurrentWork(pgwf.getWorkID(), WebUser.getNo()) == true) {
-						// 让主流程自动运行到一下节点.
-						SendReturnObjs returnObjs = bp.wf.Dev2Interface.Node_SendWork(
-								this.getHisGenerWorkFlow().getPFlowNo(), this.getHisGenerWorkFlow().getPWorkID());
-						String sendSuccess = "父流程自动运行到下一个节点，发送过程如下：\n @接收人" + returnObjs.getVarAcceptersName()
-								+ "\n @下一步[" + returnObjs.getVarCurrNodeName() + "]启动";
-						this.HisMsgObjs.AddMsg("info", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+				//判断当前流程是否是最后一个子流程. @lizhen.
+                String mysql = "SELECT COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE PWorkID=" + this.getHisGenerWorkFlow().getPWorkID() + " AND WFSta != 1 AND WorkID !="+this.getWorkID();
+                if ( DBAccess.RunSQLReturnValInt(mysql, 0) == 0 )
+                {
+	                // 检查父流程是否运行到了下一个节点？如果没有运行到下一个节点，就让其发送.
+					GenerWorkFlow pgwf = new GenerWorkFlow(this.getHisGenerWorkFlow().getPWorkID());
+					if (pgwf.getFK_Node() == this.getHisGenerWorkFlow().getPNodeID()) {
+						// 如果可以执行下一步工作，就可以允许向下发送.
+						if (Dev2Interface.Flow_IsCanDoCurrentWork(pgwf.getWorkID(), WebUser.getNo()) == true) {
+							// 让主流程自动运行到一下节点.
+							SendReturnObjs returnObjs = bp.wf.Dev2Interface.Node_SendWork(
+									this.getHisGenerWorkFlow().getPFlowNo(), this.getHisGenerWorkFlow().getPWorkID());
+							String sendSuccess = "父流程自动运行到下一个节点，发送过程如下：\n @接收人" + returnObjs.getVarAcceptersName()
+									+ "\n @下一步[" + returnObjs.getVarCurrNodeName() + "]启动";
+							this.HisMsgObjs.AddMsg("info", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+						}
 					}
-				}
+                }
 			}
 			CC(this.getHisNode()); // 抄送到其他节点.
 			return this.HisMsgObjs;
@@ -6534,6 +6585,11 @@ public class WorkNode {
 				// 执行时效考核.
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 						this.rptGe.getTitle());
+                this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTimess());
+                // 设置当前的流程所有的用时.
+                this.rptGe.setFlowDaySpan(DataType.GetSpanDays(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT),
+                        DataType.getCurrentDataTime()));
+                this.rptGe.Update();
 				return this.HisMsgObjs;
 			}
 		}
@@ -6585,6 +6641,11 @@ public class WorkNode {
 				// 执行时效考核.
 				Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 						this.rptGe.getTitle());
+                this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTimess());
+                // 设置当前的流程所有的用时.
+                this.rptGe.setFlowDaySpan(DataType.GetSpanDays(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT),
+                        DataType.getCurrentDataTime()));
+                this.rptGe.Update();
 				return this.HisMsgObjs;
 			}
 
@@ -6613,6 +6674,11 @@ public class WorkNode {
 				// 调用发送成功事件.
 				String sendSuccess = ExecEvent.DoNode(EventListNode.SendSuccess, this, this.HisMsgObjs);
 				this.HisMsgObjs.AddMsg("info1", sendSuccess, sendSuccess, SendReturnMsgType.Info);
+                this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTimess());
+                // 设置当前的流程所有的用时.
+                this.rptGe.setFlowDaySpan(DataType.GetSpanDays(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT),
+                        DataType.getCurrentDataTime()));
+                this.rptGe.Update();
 				return this.HisMsgObjs;
 			}
 		}
@@ -6744,6 +6810,12 @@ public class WorkNode {
 					// 执行时效考核.
 					Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 							this.rptGe.getTitle());
+                    this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTimess());
+                    // 设置当前的流程所有的用时.
+                    this.rptGe.setFlowDaySpan(DataType.GetSpanDays(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT),
+                            DataType.getCurrentDataTime()));
+                    this.rptGe.Update();
+
 					return this.HisMsgObjs;
 				}
 
@@ -6810,6 +6882,12 @@ public class WorkNode {
 							// 执行时效考核.
 							Glo.InitCH(this.getHisFlow(), this.getHisNode(), this.getWorkID(), this.rptGe.getFID(),
 									this.rptGe.getTitle());
+
+                            this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTimess());
+                            // 设置当前的流程所有的用时.
+                            this.rptGe.setFlowDaySpan(DataType.GetSpanDays(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT),
+                                    DataType.getCurrentDataTime()));
+                            this.rptGe.Update();
 							return this.HisMsgObjs;
 						}
 					}
@@ -6937,9 +7015,16 @@ public class WorkNode {
 				CC(this.getHisNode());
 
 				// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
-				String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(this.getHisGenerWorkFlow(),
-						this.getHisFlow());
-				this.HisMsgObjs.AddMsg("info", msg, msg, SendReturnMsgType.Info);
+				//String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(this.getHisGenerWorkFlow(),
+				//		this.getHisFlow());
+				//this.HisMsgObjs.AddMsg("info", msg, msg, SendReturnMsgType.Info);
+
+				this.HisMsgObjs = WorkNodePlus.SubFlowEvent(this);
+                this.rptGe.setFlowEnderRDT(DataType.getCurrentDataTimess());
+                // 设置当前的流程所有的用时.
+                this.rptGe.setFlowDaySpan(DataType.GetSpanDays(this.rptGe.GetValStringByKey(GERptAttr.FlowStartRDT),
+                        DataType.getCurrentDataTime()));
+                this.rptGe.Update();
 
 				return HisMsgObjs;
 			}
@@ -6993,9 +7078,10 @@ public class WorkNode {
 				this.getHisGenerWorkFlow().Update(); // added by
 														// liuxc,2016-10=24,最后节点更新Sender字段
 				// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
-				String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(this.getHisGenerWorkFlow(),
-						this.getHisFlow());
-				this.HisMsgObjs.AddMsg("info", msg, msg, SendReturnMsgType.Info);
+				//String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(this.getHisGenerWorkFlow(),
+				//		this.getHisFlow());
+				//this.HisMsgObjs.AddMsg("info", msg, msg, SendReturnMsgType.Info);
+				this.HisMsgObjs = WorkNodePlus.SubFlowEvent(this);
 			}
 
 			if (this.getIsStopFlow() == false) {
@@ -8849,6 +8935,8 @@ public class WorkNode {
 		String toEmpsStr = "";
 		String emps = "";
 		for (GenerWorkerList wl : gwls.ToJavaList()) {
+			if (wl.getFK_Emp()==this.getExecer())
+                continue; //如果当前人员，就排除掉.
 			toEmpsStr += bp.wf.Glo.DealUserInfoShowModel(wl.getFK_Emp(), wl.getFK_EmpText());
 			if (gwls.size() == 1) {
 				emps = toEmpsStr;

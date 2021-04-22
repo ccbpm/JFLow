@@ -109,7 +109,9 @@ public class WF_RptDfine extends WebContralBase
 		String sql = "SELECT No,Name,ParentNo FROM WF_FlowSort ORDER BY No, Idx";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
@@ -120,7 +122,9 @@ public class WF_RptDfine extends WebContralBase
 		sql = "SELECT No,Name,FK_FlowSort FROM WF_Flow WHERE IsCanStart=1 ORDER BY FK_FlowSort, Idx";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Flows";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
@@ -279,29 +283,9 @@ public class WF_RptDfine extends WebContralBase
              if (DataType.IsNullOrEmpty(ar.getUIBindKey()) == false
                  && ds.getTables().contains(ar.getKey()) == false)
              {
-                 //获取SQl
-            	 String sql = Glo.DealExp(attr.getUIBindKey(), null, null);
-                 DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
-                 for(DataColumn col:dtSQl.Columns)
-                 {
-                     String colName = col.ColumnName.toLowerCase();
-                     switch (colName)
-                     {
-                         case "no":
-                             col.ColumnName = "No";
-                             break;
-                         case "name":
-                             col.ColumnName = "Name";
-                             break;
-                         case "parentno":
-                             col.ColumnName = "ParentNo";
-                             break;
-                         default:
-                             break;
-                     }
-                 }
-                 dtSQl.TableName = ar.getKey();
-                 ds.Tables.add(dtSQl);
+            	 EntitiesNoName ens = attr.getHisEntitiesNoName();
+
+                 ds.Tables.add(ens.ToDataTableField(ar.getKey() ) );
              }
 
 
@@ -327,7 +311,7 @@ public class WF_RptDfine extends WebContralBase
          MapAttrs attrs = new MapAttrs();
          attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, MapAttrAttr.Idx);
 
-         ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
+         //ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
          //默认显示的系统字段 标题、创建人、创建时间、部门、状态
          MapAttrs mattrsOfSystem = new MapAttrs();
@@ -337,6 +321,16 @@ public class WF_RptDfine extends WebContralBase
          mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.FK_Dept));
          mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.WFState));
          ds.Tables.add(mattrsOfSystem.ToDataTableField("Sys_MapAttrOfSystem"));
+
+         attrs.RemoveEn(rptNo + "_OID");
+         attrs.RemoveEn(rptNo + "_Title");
+         attrs.RemoveEn(rptNo + "_FlowStarter");
+         attrs.RemoveEn(rptNo + "_FK_Dept");
+         attrs.RemoveEn(rptNo + "_WFState");
+         attrs.RemoveEn(rptNo + "_WFSta");
+         attrs.RemoveEn(rptNo + "_FlowEmps");
+
+         ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
          //系统字段字符串
          String sysFields = Glo.getFlowFields();

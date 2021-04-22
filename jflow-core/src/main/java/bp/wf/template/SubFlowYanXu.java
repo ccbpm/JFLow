@@ -44,6 +44,15 @@ public class SubFlowYanXu extends EntityMyPK
 	{
 		return this.GetValStringByKey(SubFlowYanXuAttr.SubFlowNo);
 	}
+	
+	public final String getYanXuToNode()throws Exception
+	{
+		String str= this.GetValStringByKey(SubFlowYanXuAttr.YanXuToNode);
+		if (DataType.IsNullOrEmpty(str)==true)
+			return this.getSubFlowNo()+"01";
+		return str;
+	}
+	
 	public final void setSubFlowNo(String value) throws Exception
 	{
 		SetValByKey(SubFlowYanXuAttr.SubFlowNo, value);
@@ -93,9 +102,13 @@ public class SubFlowYanXu extends EntityMyPK
 	{
 		return SubFlowModel.forValue(this.GetValIntByKey(SubFlowAutoAttr.SubFlowModel));
 	}
-
+	
+	/*public final String getYanXuToNode()throws Exception
+	{
+		return this.GetValStringByKey(SubFlowYanXuAttr.YanXuToNode);
+	}
 		///
-
+*/
 
 		///构造函数
 	/** 
@@ -115,38 +128,57 @@ public class SubFlowYanXu extends EntityMyPK
 			return this.get_enMap();
 		}
 
-		Map map = new Map("WF_NodeSubFlow", "延续子流程");
+		  Map map = new Map("WF_NodeSubFlow", "延续子流程");
 
-		map.AddMyPK();
+          map.AddMyPK();
 
-		map.AddTBString(SubFlowAttr.FK_Flow, null, "主流程编号", true, false, 0, 5, 100, true);
+          map.AddTBString(SubFlowAttr.FK_Flow, null, "主流程编号", true, true, 0, 5, 100, true);
 
-		map.AddTBInt(SubFlowYanXuAttr.FK_Node, 0, "节点", false, true);
-		map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowType, 2, "子流程类型", true, false, SubFlowYanXuAttr.SubFlowType, "@0=手动启动子流程@1=触发启动子流程@2=延续子流程");
+          map.AddTBInt(SubFlowYanXuAttr.FK_Node, 0, "节点", false, true);
+          map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowType, 2, "子流程类型", true, false, SubFlowYanXuAttr.SubFlowType,
+          "@0=手动启动子流程@1=触发启动子流程@2=延续子流程");
 
-		map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowModel, 0, "子流程模式", true, true, SubFlowYanXuAttr.SubFlowModel, "@0=下级子流程@1=同级子流程");
+          map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowModel, 0, "子流程模式", true, true, SubFlowYanXuAttr.SubFlowModel,
+          "@0=下级子流程@1=同级子流程");
+
+          map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowSta, 1, "状态", true, true, SubFlowYanXuAttr.SubFlowSta,
+         "@0=禁用@1=启用@2=只读");
+
+          map.AddTBString(SubFlowYanXuAttr.SubFlowNo, null, "子流程编号", true, true, 0, 10, 150, false);
+          map.AddTBString(SubFlowYanXuAttr.SubFlowName, null, "子流程名称", true, true, 0, 200, 150, false);
+
+          map.AddDDLSysEnum(FlowAttr.IsAutoSendSubFlowOver, 0, "子流程结束规则", true, true,
+         FlowAttr.IsAutoSendSubFlowOver, "@0=不处理@1=让父流程自动运行下一步@2=结束父流程");
 
 
-		map.AddTBString(SubFlowYanXuAttr.SubFlowNo, null, "子流程编号", true, true, 0, 10, 150, false);
-		map.AddTBString(SubFlowYanXuAttr.SubFlowName, null, "子流程名称", true, true, 0, 200, 150, false);
+          map.AddDDLSysEnum(FlowAttr.IsAutoSendSLSubFlowOver, 0, "同级子流程结束规则", true, true,
+         FlowAttr.IsAutoSendSLSubFlowOver, "@0=不处理@1=让同级子流程自动运行下一步@2=结束同级子流程");
 
-		map.AddDDLSysEnum(FlowAttr.IsAutoSendSubFlowOver, 0, "子流程结束规则", true, true, FlowAttr.IsAutoSendSubFlowOver, "@0=不处理@1=让父流程自动运行下一步@2=结束父流程");
+          map.AddDDLSysEnum(SubFlowYanXuAttr.ExpType, 3, "表达式类型", true, true, SubFlowYanXuAttr.ExpType,
+             "@3=按照SQL计算@4=按照参数计算");
+
+          map.AddTBString(SubFlowYanXuAttr.CondExp, null, "条件表达式", true, false, 0, 500, 150, true);
+
+          map.AddTBString(SubFlowYanXuAttr.YanXuToNode, null, "延续到的节点", true, false, 0, 100, 150);
+          String msg = "允许延续到多个节点上,多个节点用逗号分开 ";
+          msg += "\t\n 比如: 903,904,906";
+          msg += "\t\n 如果为空则标识延续到第一个节点上去.";
+          map.SetHelperAlert(SubFlowYanXuAttr.YanXuToNode, msg);
 
 
-		map.AddDDLSysEnum(FlowAttr.IsAutoSendSLSubFlowOver, 0, "同级子流程结束规则", true, true, FlowAttr.IsAutoSendSLSubFlowOver, "@0=不处理@1=让同级子流程自动运行下一步@2=结束同级子流程");
+          // map.AddDDLSQL(SubFlowYanXuAttr.YanXuToNode, null, "延续到的节点",
+          //   "SELECT NodeID AS No, Name FROM WF_Node WHERE RunModel IN(0,2,3) AND FK_Flow='@SubFlowNo'", true);
 
+          //@du.
+          map.AddDDLSysEnum(SubFlowYanXuAttr.YBFlowReturnRole, 0, "退回方式", true, true, SubFlowYanXuAttr.YBFlowReturnRole,
+            "@0=不能退回@1=退回到父流程的开始节点@2=退回到父流程的任何节点@3=退回父流程的启动节点@4=可退回到指定的节点");
 
-		map.AddDDLSysEnum(SubFlowYanXuAttr.ExpType, 3, "表达式类型", true, true, SubFlowYanXuAttr.ExpType, "@3=按照SQL计算@4=按照参数计算");
+          // map.AddTBString(SubFlowYanXuAttr.ReturnToNode, null, "要退回的节点", true, false, 0, 200, 150, true);
+          map.AddDDLSQL(SubFlowYanXuAttr.ReturnToNode, "0", "要退回的节点",
+              "SELECT NodeID AS No, Name FROM WF_Node WHERE FK_Flow IN (SELECT FK_Flow FROM WF_Node WHERE NodeID=@FK_Node; )", true);
 
-		map.AddTBString(SubFlowYanXuAttr.CondExp, null, "条件表达式", true, false, 0, 500, 150, true);
-
-			//@du.
-		map.AddDDLSysEnum(SubFlowYanXuAttr.YBFlowReturnRole, 0, "退回方式", true, true, SubFlowYanXuAttr.YBFlowReturnRole, "@0=不能退回@1=退回到父流程的开始节点@2=退回到父流程的任何节点@3=退回父流程的启动节点@4=可退回到指定的节点");
-
-			// map.AddTBString(SubFlowYanXuAttr.ReturnToNode, null, "要退回的节点", true, false, 0, 200, 150, true);
-		map.AddDDLSQL(SubFlowYanXuAttr.ReturnToNode, "0", "要退回的节点", "SELECT NodeID AS No, Name FROM WF_Node WHERE FK_Flow IN (SELECT FK_Flow FROM WF_Node WHERE NodeID=@FK_Node; )", true);
-
-		map.AddTBInt(SubFlowYanXuAttr.Idx, 0, "显示顺序", true, false);
+          map.AddTBInt(SubFlowYanXuAttr.Idx, 0, "显示顺序", true, false);
+          
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

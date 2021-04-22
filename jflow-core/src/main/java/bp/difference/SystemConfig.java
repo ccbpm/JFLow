@@ -100,6 +100,11 @@ public class SystemConfig {
 	public static OSModel getOSModel() throws Exception {
 		return OSModel.forValue(SystemConfig.GetValByKeyInt("OSModel", 0));
 	}
+	
+	public static int getGroupStationModel() throws Exception {
+		return  SystemConfig.GetValByKeyInt("GroupStationModel", 0);
+	}
+	
 
 
 	/**
@@ -973,10 +978,10 @@ public class SystemConfig {
 		case MSSQL:
 			return ":";
 		case Oracle:
+		case KingBase:
 		case DM:
 			return ":";
 		case Informix:
-		case KingBase:
 			return "?";
 		case MySQL:
 			return ":";
@@ -988,12 +993,12 @@ public class SystemConfig {
 	public static String getAppCenterDBLengthStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case KingBase:
 		case DM:
 			return "Length";
 		case MSSQL:
 			return "LEN";
 		case Informix:
-		case KingBase:
 			return "Length";
 		case Access:
 			return "Length";
@@ -1010,10 +1015,10 @@ public class SystemConfig {
 	public static String getAppCenterDBSubstringStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case KingBase:
 		case DM:
 			return "substr";
 		case MSSQL:
-		case KingBase:
 			return "substring";
 		case Informix:
 			return "MySubString";

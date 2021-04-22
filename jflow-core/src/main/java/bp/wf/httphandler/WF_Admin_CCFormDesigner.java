@@ -512,7 +512,9 @@ public class WF_Admin_CCFormDesigner extends WebContralBase
 
 				dt.TableName = "FigureCom";
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					//  figureComCols = "Name,No,Sta,X,Y,H,W";
 					dt.Columns.get(0).setColumnName("Name");

@@ -308,7 +308,9 @@ public class SysDocFile extends EntityMyPK
 		map.AddTBString("D3", null, "D3", true, true, 0, 4000, 20);
 
 
-		if (map.getEnDBUrl().getDBType() == DBType.Oracle || map.getEnDBUrl().getDBType() == DBType.MSSQL)
+		if (map.getEnDBUrl().getDBType() == DBType.Oracle 
+				||SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| map.getEnDBUrl().getDBType() == DBType.MSSQL)
 		{
 			map.AddTBString("D4", null, "D4", true, true, 0, 4000, 20);
 			map.AddTBString("D5", null, "D5", true, true, 0, 4000, 20);

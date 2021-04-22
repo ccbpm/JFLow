@@ -2,6 +2,8 @@ package bp.en;
 import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.sys.*;
+import bp.wf.Glo;
+
 import java.math.*;
 
 public class SqlBuilder
@@ -372,6 +374,7 @@ public class SqlBuilder
 				sql = SqlBuilder.SelectSQLOfOLE(en, 1) + "  AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
 				break;
 			case Oracle:
+			case KingBase:
 			case Informix:
 				sql = SqlBuilder.SelectSQLOfOra(en, 1) + "  AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
 				break;
@@ -397,6 +400,7 @@ public class SqlBuilder
 				sql = SqlBuilder.SelectSQLOfMySQL(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, ":");
 				break;
 			case Oracle:
+			case KingBase:
 				sql = SqlBuilder.SelectSQLOfOra(en, 1) + "AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
 				break;
 			case Informix:
@@ -432,6 +436,7 @@ public class SqlBuilder
 					return SqlBuilder.SelectSQLOfMS(en, 1) + "  AND (" + SqlBuilder.GetKeyConditionOfOraForPara(en) + " )";
 				}
 			case Oracle:
+			case KingBase:
 			case Informix:
 				if (en.getEnMap().getHisFKAttrs().size() == 0)
 				{
@@ -481,7 +486,7 @@ public class SqlBuilder
 				continue;
 			}
 			//string enumTable = "Enum_"+attr.getKey();
-			from += " (SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ,";
+			from += " (SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ,";
 		}
 		from = from.substring(0, from.length() - 1);
 		return from;
@@ -601,7 +606,7 @@ public class SqlBuilder
 	{
 		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null)
 		{
-			return "DELETE FROM Sys_enum where enumkey='sdsf44a23'";
+			return "DELETE FROM "+Glo.SysEnum()+" where enumkey='sdsf44a23'";
 		}
 
 		//    throw new Exception(en.ToString() +" map error "+en.GetType() );
@@ -687,7 +692,7 @@ public class SqlBuilder
 	{
 		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null)
 		{
-			return "DELETE FROM Sys_enum where enumkey='sdsf44a23'";
+			return "DELETE FROM "+Glo.SysEnum()+" where enumkey='sdsf44a23'";
 		}
 
 		//    throw new Exception(en.ToString() +" map error "+en.GetType() );
@@ -833,6 +838,7 @@ public class SqlBuilder
 		switch (DBAccess.getAppCenterDBType())
 		{
 			case Oracle:
+			case KingBase:
 				return GenerCreateTableSQLOfOra(en);
 			case PostgreSQL:
 				return GenerCreateTableSQLOfPostgreSQL(en);
@@ -1126,7 +1132,7 @@ public class SqlBuilder
 			{
 				//from= from+ " LEFT OUTER JOIN "+table+" AS "+tableAttr+ " ON "+enTable+"."+attr.Field+"="+tableAttr+"."+en1.getEnMap().getAttrs().GetFieldByKey( attr.UIRefKeyValue );
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON " + enTable + "." + attr.getField() + "=" + tableAttr + ".IntKey ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON " + enTable + "." + attr.getField() + "=" + tableAttr + ".IntKey ";
 				//	where=where+" AND  ("+en.getEnMap().getPhysicsTable()+"."+attr.Field+"= Enum_"+attr.getKey()+".IntKey ) ";
 			}
 		}
@@ -1216,7 +1222,7 @@ public class SqlBuilder
 			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
 			{
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON ISNULL(" + enTable + "." + attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + ".IntKey ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON ISNULL(" + enTable + "." + attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + ".IntKey ";
 			}
 		}
 
@@ -1263,7 +1269,7 @@ public class SqlBuilder
 			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
 			{
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM Sys_Enum WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON IIf( ISNULL(" + enTable + "." + attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + ", " + enTable + "." + attr.getField() + ")=" + tableAttr + ".IntKey ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON IIf( ISNULL(" + enTable + "." + attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + ", " + enTable + "." + attr.getField() + ")=" + tableAttr + ".IntKey ";
 			}
 
 			from = from + ")";
@@ -1502,6 +1508,7 @@ public class SqlBuilder
 			case Access:
 				return SqlBuilder.SelectSQLOfOLE(en, topNum);
 			case Oracle:
+			case KingBase:
 				return SqlBuilder.SelectSQLOfOra(en, topNum);
 			case Informix:
 				return SqlBuilder.SelectSQLOfInformix(en, topNum);
@@ -1526,6 +1533,7 @@ public class SqlBuilder
 			case Access:
 				return SqlBuilder.SelectSQLOfOLE(en, 0);
 			case Oracle:
+			case KingBase:
 			case Informix:
 				return SqlBuilder.SelectSQLOfOra(en, 0);
 			default:
@@ -2548,6 +2556,7 @@ public class SqlBuilder
 						+ SqlBuilder.GenerWhereByPK(en, "?");
 				break;
 			case Oracle:
+			case KingBase:
 			case DM:
 				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
 						+ SqlBuilder.GenerWhereByPK(en, ":");
@@ -3021,6 +3030,7 @@ public class SqlBuilder
 				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val + " WHERE " + SqlBuilder.GenerWhereByPK(en, "?");
 				break;
 			case Oracle:
+			case KingBase:
 				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val + " WHERE " + SqlBuilder.GenerWhereByPK(en, ":");
 				break;
 			default:
@@ -3278,6 +3288,7 @@ public class SqlBuilder
 			case MSSQL:
 				return " ISNULL(" + expression + "," + isNullBack + ")";
 			case Oracle:
+			case KingBase:
 				return " NVL(" + expression + "," + isNullBack + ")";
 			case MySQL:
 				return " IFNULL(" + expression + "," + isNullBack + ")";

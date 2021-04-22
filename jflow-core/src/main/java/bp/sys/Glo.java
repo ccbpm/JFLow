@@ -13,6 +13,18 @@ import java.math.*;
 */
 public class Glo
 {
+	/// <summary>
+    /// 获得真实UserNo,如果是SAAS模式.
+    /// </summary>
+    public static String getUserNo()
+    {
+
+        String empNo = "No";
+        if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+            empNo = "UserID as No";
+        return empNo;
+        
+    }
 	public static String DealClassEntityName(String enName)
 	{
 		if (SystemConfig.Plant == bp.sys.Plant.CSharp)

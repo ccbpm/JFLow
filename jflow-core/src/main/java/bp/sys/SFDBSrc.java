@@ -1291,7 +1291,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append("    ON ucc.table_name = utc.TABLE_NAME" + "\r\n");
 				sql.append("   AND ucc.column_name = utc.COLUMN_NAME" + "\r\n");
 				sql.append(String.format(" WHERE utc.TABLE_NAME = '%1$s'", tableName.toUpperCase()) + "\r\n");
-				sql.append(" ORDER BY colid ASC" + "\r\n");
+				sql.append(" ORDER BY utc.COLUMN_ID ASC" + "\r\n");
 
 				break;
 			case MySQL:

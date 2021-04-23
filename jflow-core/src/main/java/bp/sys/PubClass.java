@@ -760,7 +760,7 @@ public class PubClass
 					break;
 				case FK:
 					Entity myen = attr.getHisFKEn(); // ClassFactory.GetEns(attr.getUIBindKey()).getGetNewEntity();
-					en.RunSQL("comment on column  " + en.getEnMap().getPhysicsTable() + "." + attr.getField() + " IS " + attr.getDesc() + ", 外键:对应物理表:" + myen.getEnMap().getPhysicsTable() + ",表描述:" + myen.getEnDesc());
+					en.RunSQL("comment on column  " + en.getEnMap().getPhysicsTable() + "." + attr.getField() + " IS '" + attr.getDesc() + ", 外键:对应物理表:" + myen.getEnMap().getPhysicsTable() + ",表描述:" + myen.getEnDesc()+"'");
 					break;
 				case PKFK:
 					Entity myen1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.getUIBindKey()).getGetNewEntity();

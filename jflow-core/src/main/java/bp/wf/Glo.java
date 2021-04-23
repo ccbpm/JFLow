@@ -3181,8 +3181,8 @@ public class Glo
 			///#region 5, 初始化数据.
 		if (isInstallFlowDemo)
 		{
-			sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitPublicData.sql";
-			bp.da.DBAccess.RunSQLScript(sqlscript);
+			//sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitPublicData.sql";
+			//bp.da.DBAccess.RunSQLScript(sqlscript);
 		}
 		// else
 		// {

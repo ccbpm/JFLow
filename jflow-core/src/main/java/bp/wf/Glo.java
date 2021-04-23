@@ -1,12 +1,7 @@
 package bp.wf;
 import bp.sys.*;
 import bp.sys.frmui.ExtImg;
-import bp.tools.Cryptos;
-import bp.tools.DateUtils;
-import bp.tools.FtpUtil;
-import bp.tools.SecurityDES;
-import bp.tools.SftpUtil;
-import bp.tools.StringHelper;
+import bp.tools.*;
 import bp.da.*;
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
@@ -18,12 +13,16 @@ import bp.wf.data.*;
 import bp.wf.port.WFEmp;
 import bp.wf.template.*;
 import java.util.*;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.math.*;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 /** 
  全局(方法处理)
@@ -1256,6 +1255,7 @@ public class Glo
 				case "WF_EmpWorks":
 				case "WF_GenerEmpWorkDtls":
 				case "WF_GenerEmpWorks":
+				case "V_GPM_EmpMenu":
 					continue;
 				case "Sys_Enum":
 					en.CheckPhysicsTable();
@@ -2750,6 +2750,7 @@ public class Glo
 	 检查是否可以安装驰骋BPM系统
 	 
 	 @return 
+	 * @throws Exception 
 	*/
 	public static boolean IsCanInstall()
 	{
@@ -2816,6 +2817,15 @@ public class Glo
 			errInfo = " 当前用户没有[删除表]的权限.";
 			sql = "DROP TABLE AA"; //检查是否可以删除表.
 			bp.da.DBAccess.RunSQL(sql);
+			
+			if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+            {
+                sql = " set @@global.sql_mode ='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';";
+                DBAccess.RunSQL(sql);
+            }
+
+            if (SystemConfig.getAppCenterDBDatabase().contains("-") == true)
+                throw new RuntimeException("err@数据库名称不能包含 '-' 号，您可以使用 '_' .");
 			return true;
 		}
 		catch (RuntimeException ex)
@@ -2974,6 +2984,12 @@ public class Glo
 		MapDtl mapdtl = new MapDtl();
 		mapdtl.CheckPhysicsTable();
 
+		MapData mapData = new MapData();
+		mapData.CheckPhysicsTable();
+		
+		SysEnum sysenum = new SysEnum();
+		sysenum.CheckPhysicsTable();
+		
 		CC cc = new CC();
 		cc.CheckPhysicsTable();
 
@@ -3181,7 +3197,7 @@ public class Glo
 			///#region 5, 初始化数据.
 		if (isInstallFlowDemo)
 		{
-			//sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitPublicData.sql";
+			//sqlscript = SystemConfig.getPathOfData() + "/Install/SQLScript/InitPublicData.sql";
 			//bp.da.DBAccess.RunSQLScript(sqlscript);
 		}
 		// else
@@ -4046,7 +4062,6 @@ public class Glo
 	 获得事件实体，根据编号或者流程标记.
 	 
 	 @param flowMark 流程标记
-	 @param flowNo 流程编号
 	 @return null, 或者流程实体.
 	*/
 	public static FlowEventBase GetFlowEventEntityByFlowMark(String flowMark)
@@ -4652,42 +4667,205 @@ public class Glo
 
 		DataTable dt = null;
 		String sql = item.getTag();
-		if (DataType.IsNullOrEmpty(sql) == false)
-		{
-			/* 如果有填充主表的sql  */
+		//填充方式 0=sql，1=webAPI
+		int doWay=item.getDoWay();
+
+		//如果为空，返回
+		if (DataType.IsNullOrEmpty(sql)&&DataType.IsNullOrEmpty(item.getTag1()))
+			return en;
+
+		if(doWay==1){//如果是webapi的方式
+			/* 如果有填充主表 */
 			sql = Glo.DealExp(sql, en, null);
+			String apiUrl=sql;
+			java.util.Map<String, String> headerMap = new Hashtable<String, String>();
+			//增加header参数
+//			WFEmp emp=new WFEmp();
+//			emp.setNo(WebUser.getNo());
+//			emp.Retrieve();
+			String token="";
+//			if(DataType.IsNullOrEmpty(emp.getSID()))
+//			{
+//				token=bp.da.DBAccess.GenerGUID();
+//				emp.setSID(token);
+//			}
+//			else
+//				token=emp.getSID();
 
-			if (DataType.IsNullOrEmpty(sql) == false)
-			{
-				if (sql.contains("@"))
-				{
-					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
-				}
-				dt = DBAccess.RunSQLReturnTable(sql);
-				if (dt.Rows.size() == 1)
-				{
-					DataRow dr = dt.Rows.get(0);
-					for (DataColumn dc : dt.Columns)
-					{
-						//去掉一些不需要copy的字段.
-						switch (dc.ColumnName)
-						{
-							case WorkAttr.OID:
-							case WorkAttr.FID:
-							case WorkAttr.Rec:
-							case WorkAttr.MD5:
-							case "RefPK":
-							case WorkAttr.RecText:
-								continue;
-							default:
-								break;
-						}
+			//加入token
+			headerMap.put("Content-Type", "application/json");
+			headerMap.put("accessToken", token);
+			//执行POST
+			String postData = HttpClientUtil.doPost(apiUrl,"",headerMap);
+			JSONObject j = JSONObject.fromObject(postData);
+			if(!j.get("code").toString().equals("200"))
+				return en;
 
-						if (DataType.IsNullOrEmpty(en.GetValStringByKey(dc.ColumnName)) || en.GetValStringByKey(dc.ColumnName).equals("0"))
-						{
-							en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
-						}
+			String jData=j.get("data").toString();
+			JSONObject jd = JSONObject.fromObject(jData);
+			if(jd.size()==0)
+				return en;
+
+			//主表数据
+			String mainTable=jd.get("mainTable").toString();
+
+			dt=bp.tools.Json.ToDataTable("["+mainTable+"]");
+            //主表中的附件数据
+            JSONArray athsJSON = jd.getJSONArray("aths");
+            for(int i=0;i<athsJSON.size();i++)
+            {
+                JSONObject athDatas = (JSONObject) athsJSON.get(i);
+                //获取附件组件ID
+                String FK_FrmAttachment=athDatas.get("attachmentid").toString();
+                //获取附件数据
+                JSONArray athArryData=athDatas.getJSONArray("attachmentdbs");
+                //执行数据插入
+                for(int k=0;k<athArryData.size();k++)
+                {
+                    JSONObject athData = (JSONObject) athArryData.get(i);
+                    String guid=DBAccess.GenerGUID();
+                    FrmAttachment attachment=new FrmAttachment(FK_FrmAttachment);
+                    FrmAttachmentDB attachmentDB=new FrmAttachmentDB();
+                    attachmentDB.setMyPK(guid);
+                    attachmentDB.setFK_FrmAttachment(FK_FrmAttachment);
+                    attachmentDB.setRefPKVal(String.valueOf(workID));
+                    attachmentDB.setFK_MapData(attachment.getFK_MapData());
+                    attachmentDB.setFID(0);
+                    attachmentDB.setRec(athData.get("rec").toString());
+                    attachmentDB.setFileFullName(athData.get("fileFullName").toString());
+                    attachmentDB.setFileName(athData.get("fileName").toString());
+                    attachmentDB.setFileExts(athData.get("fileExts").toString());
+                    attachmentDB.setSort(athData.get("sort").toString());
+                    attachmentDB.setFK_Dept(athData.get("fk_dept").toString());
+                    attachmentDB.setFK_DeptName(athData.get("fk_deptName").toString());
+                    attachmentDB.setRecName(athData.get("recName").toString());
+                    attachmentDB.setRDT(athData.get("rdt").toString());
+                    attachmentDB.setUploadGUID(guid);
+                }
+            }
+
+			//从表数据集合
+            JSONArray dtlJSON = jd.getJSONArray("dtls");
+
+            //可能有多个从表数据
+            for(int i=0;i<dtlJSON.size();i++){
+                JSONObject dtlDatas = (JSONObject) dtlJSON.get(i);
+                //从表编号
+                String dtlNo=dtlDatas.get("dtlNo").toString();
+                //定义map
+                MapDtl dtl=new MapDtl(dtlNo);
+                //插入之前判断
+                GEDtls gedtls = null;
+                try
+                {
+                    gedtls = new GEDtls(dtl.getNo());
+                    if (dtl.getDtlOpenType() == DtlOpenType.ForFID)
+                    {
+                        if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, workID) > 0)
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, en.getPKVal()) > 0)
+                        {
+                            gedtls.Delete(GEDtlAttr.RefPK, en.getPKVal());
+                        }
+                    }
+                }
+                catch (RuntimeException ex)
+                {
+                    (gedtls.getGetNewEntity() instanceof GEDtl ? (GEDtl)gedtls.getGetNewEntity() : null).CheckPhysicsTable();
+                }
+
+                //从表数据
+                JSONArray dtlArryData=dtlDatas.getJSONArray("dtl");
+                for(int k=0;k<dtlArryData.size();k++){
+
+                    //获取从表数据
+                    JSONObject dtlData = (JSONObject) dtlArryData.get(i);
+                    String dtlDataStr=dtlData.get("dtlData").toString();
+                    //从表附件
+                    JSONArray dtlAthData=dtlData.getJSONArray("dtlAths");
+                    //生成table
+                    DataTable dtlDt=bp.tools.Json.ToDataTable("["+dtlDataStr+"]");
+
+                    //执行数据插入
+                    for (DataRow dr : dtlDt.Rows)
+                    {
+                        GEDtl gedtl = gedtls.getGetNewEntity() instanceof GEDtl ? (GEDtl)gedtls.getGetNewEntity() : null;
+                        for (DataColumn dc : dtlDt.Columns)
+                        {
+                            gedtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+                        }
+
+                        switch (dtl.getDtlOpenType())
+                        {
+                            case ForEmp: // 按人员来控制.
+                                gedtl.setRefPK(en.getPKVal().toString());
+                                gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+                                break;
+                            case ForWorkID: // 按工作ID来控制
+                                gedtl.setRefPK( en.getPKVal().toString());
+                                gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+                                break;
+                            case ForFID: // 按流程ID来控制.
+                                gedtl.setRefPK(String.valueOf(workID));
+                                gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+                                break;
+                        }
+                        gedtl.setRDT(DataType.getCurrentDataTime());
+                        gedtl.setRec(WebUser.getNo());
+                        gedtl.Insert();
+                    }
+                }
+
+            }
+
+		}
+		else{
+			if(!DataType.IsNullOrEmpty(sql)) {
+				/* 如果有填充主表的sql  */
+				sql = Glo.DealExp(sql, en, null);
+
+				if (DataType.IsNullOrEmpty(sql) == false) {
+					if (sql.contains("@")) {
+						throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
 					}
+
+				}
+
+				dt = DBAccess.RunSQLReturnTable(sql);
+			}
+		}
+
+
+		if (dt.Rows.size() == 1)
+		{
+			DataRow dr = dt.Rows.get(0);
+			for (DataColumn dc : dt.Columns)
+			{
+				//去掉一些不需要copy的字段.
+				switch (dc.ColumnName)
+				{
+					case WorkAttr.OID:
+					case WorkAttr.FID:
+					case WorkAttr.Rec:
+					case WorkAttr.MD5:
+					case "RefPK":
+					case WorkAttr.RecText:
+						continue;
+					default:
+						break;
+				}
+				try {
+					if (DataType.IsNullOrEmpty(en.GetValStringByKey(dc.ColumnName)) || en.GetValStringByKey(dc.ColumnName).equals("0")) {
+						en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+					}
+				}
+				catch (Exception ex){
+					continue;
 				}
 			}
 		}

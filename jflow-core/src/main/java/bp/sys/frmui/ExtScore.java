@@ -114,7 +114,7 @@ public class ExtScore extends EntityMyPK
 
 			///个性化属性.
 		map.AddTBString(MapAttrAttr.Name, null, "评分事项", true, false, 0, 500, 20, true);
-		map.AddTBInt(MapAttrAttr.Tag2, 5, "总分", true, false);
+		map.AddTBString(MapAttrAttr.Tag2, "5", "总分",true, false, 0, 100, 20);
 
 			/// 个性化属性.
 

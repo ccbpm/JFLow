@@ -145,7 +145,7 @@ public class ExtContral extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.EditType, 0, "编辑类型", true, false);
 
 			//单元格数量。2013-07-24 增加。
-		map.AddTBString(MapAttrAttr.ColSpan, "1", "单元格数量", true, false, 0, 3, 3);
+		map.AddTBInt(MapAttrAttr.ColSpan, 1, "单元格数量", true, false);
 		 //   map.AddTBInt(MapAttrAttr.ColSpan, 1, "单元格数量", true, false);
 
 		map.AddTBInt(MapAttrAttr.Idx, 0, "序号", true, false);

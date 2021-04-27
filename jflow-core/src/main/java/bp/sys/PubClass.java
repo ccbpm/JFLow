@@ -832,7 +832,7 @@ public class PubClass
 	}
 	private static void AddColNote(Entity en, String table, String col, String note) throws Exception
 	{
-		try
+		/*try
 		{
 			String sql = "execute  sp_dropextendedproperty 'MS_Description','user',dbo,'table','" + table + "','column'," + col;
 			en.RunSQL(sql);
@@ -849,7 +849,7 @@ public class PubClass
 		}
 		catch (RuntimeException ex)
 		{
-		}
+		}*/
 	}
 	/** 
 	 为表增加解释
@@ -865,7 +865,7 @@ public class PubClass
 			return;
 		}
 
-		try
+		/*try
 		{
 			String sql = "execute  sp_dropextendedproperty 'MS_Description','user',dbo,'table','" + en.getEnMap().getPhysicsTable() + "'";
 			en.RunSQL(sql);
@@ -881,7 +881,7 @@ public class PubClass
 		}
 		catch (RuntimeException ex)
 		{
-		}
+		}*/
 
 
 		SysEnums ses = new SysEnums();

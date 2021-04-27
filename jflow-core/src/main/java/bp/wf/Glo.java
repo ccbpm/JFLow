@@ -2471,8 +2471,8 @@ public class Glo
 					break;
 				case MSSQL:
 					msg = "@修改sql server控件高度和宽度字段。";
-					DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIWidth float");
-					DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIHeight float");
+					//DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIWidth float");
+					//DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIHeight float");
 					break;
 				default:
 					break;

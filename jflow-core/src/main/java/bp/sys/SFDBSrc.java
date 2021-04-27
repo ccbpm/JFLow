@@ -1264,7 +1264,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       st.name AS [DBType]," + "\r\n");
 				sql.append("       (" + "\r\n");
 				sql.append("           CASE " + "\r\n");
-				sql.append("                WHEN st.setName( 'nchar' OR st.setName( 'nvarchar' THEN sc.length / 2" + "\r\n");
+				sql.append("                WHEN st.name = 'nchar' OR st.name = 'nvarchar' THEN sc.length / 2" + "\r\n");
 				sql.append("                ELSE sc.length" + "\r\n");
 				sql.append("           END" + "\r\n");
 				sql.append("       ) AS DBLength," + "\r\n");
@@ -1276,7 +1276,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       LEFT OUTER JOIN sys.extended_properties ep" + "\r\n");
 				sql.append("            ON  sc.id = ep.major_id" + "\r\n");
 				sql.append("            AND sc.colid = ep.minor_id" + "\r\n");
-				sql.append("            AND ep.setName( 'MS_Description'" + "\r\n");
+				sql.append("            AND ep.name = 'MS_Description'" + "\r\n");
 				sql.append(String.format("WHERE  sc.id = OBJECT_ID('dbo.%1$s')", tableName) + "\r\n");
 				break;
 			case Oracle:

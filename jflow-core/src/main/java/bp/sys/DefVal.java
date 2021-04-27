@@ -2,6 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
+import bp.wf.data.FastInputAttr;
 import bp.*;
 
 /** 
@@ -145,8 +146,8 @@ public class DefVal extends EntityMyPK
 
 		map.AddTBString(DefValAttr.FK_MapData, null, "实体", false, false, 0, 100, 20);
 		map.AddTBString(DefValAttr.FK_Emp, null, "人员", false, true, 0, 100, 10);
-		map.AddTBString(DefValAttr.AttrKey, null, "节点对应字段", false, false, 0, 50, 20);
-
+		//map.AddTBString(DefValAttr.AttrKey, null, "节点对应字段", false, false, 0, 50, 20);
+		map.AddTBString(DefValAttr.AttrKey, null, "字段", true, false, 0, 100, 4);
 			//map.AddTBInt(DefValAttr.WordsSort, 0, "词汇类型", false, false);//1,2,3... 退回-移交-表单...(暂时)
 		map.AddTBInt(DefValAttr.LB, 0, "类别", false, false); //我的，历史,系统，
 		map.AddTBString(DefValAttr.CurValue, null, "文本", false, true, 0, 4000, 10);

@@ -73,7 +73,7 @@ public class DBAccess {
 			//获得约束.
 			String sql = "select b.name from sysobjects b join syscolumns a on b.id = a.cdefault ";
 			sql += " where a.id = object_id('" + table + "') ";
-			sql += " and a.setName('" + colName + "' ";
+			sql += " and a.name = '" + colName + "' ";
 			//遍历并删除它们.
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 			for (DataRow dr : dt.Rows)

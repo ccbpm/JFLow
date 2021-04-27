@@ -133,7 +133,8 @@ public class MapAttrBoolen extends EntityMyPK
 			//显示的分组.
 		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 
-		map.AddTBInt(MapAttrAttr.UIWidth, 0, "宽度(对自由表单有效)", true, false);
+		//map.AddTBInt(MapAttrAttr.UIWidth, 0, "宽度(对自由表单有效)", true, false);
+		map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
 			//CCS样式

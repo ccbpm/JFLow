@@ -1,4 +1,11 @@
-﻿# 资源下载
+﻿### 生态
+
+0.  springboot-plus  https://gitee.com/xiandafu/springboot-plus 
+1.  jflow-jeesite ： https://gitee.com/thinkgem/jeesite4-jflow
+2.  微同商城 ： https://gitee.com/fuyang_lipengjun/platform
+
+
+### 资源下载
 
 0. http://demo.ccflow.org 在线演示.
 1. http://ccflow.org 官方网站
@@ -7,7 +14,7 @@
 4. http://edu.ccflow.org 培训中心
 5. http://app.ccflow.org 案例，appStore.
 
-# 后台设计器：
+### 后台设计器：
 
  **登录主页** 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/110344_4fe66a4d_980781.png "屏幕截图.png")
@@ -33,7 +40,7 @@
  **开发者表单设计器** 
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102312_361bd457_980781.png "屏幕截图.png")
 
-# 前端流程处理
+### 前端流程处理
 
 **流程发起**
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102353_93695172_980781.png "屏幕截图.png")
@@ -54,18 +61,18 @@
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102647_0299d547_980781.png "屏幕截图.png")
 
 
-## 签批组件
+#### 签批组件
 1. 该组件是表单审核组件的分割化的应用.
 2. 审核组件就是按照节点的审批先后顺序，生成的一个审批列表.
 3. 签批组件，就是对一个单元格要显示指定节点的审批信息.
 
-### 公文表单的签批组件.
+##### 公文表单的签批组件.
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0227/120033_998bbcd0_980781.png "屏幕截图.png")
 
-### 业务表单的签批组件.
+##### 业务表单的签批组件.
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0228/204651_fb708434_980781.png "屏幕截图.png")
 
-## 打印模版设置
+##### 打印模版设置
 
 1. 公文需要打印.
 2. 打印的模版需要与操作的模版相同.
@@ -75,7 +82,7 @@
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0227/113010_a1fc5869_980781.png "屏幕截图.png")
 
 
-### JFlow开源工作流引擎BPM系统介绍 (在右上角点:watch,star,fork支持我们,谢谢!!!)
+##### JFlow开源工作流引擎BPM系统介绍 (在右上角点:watch,star,fork支持我们,谢谢!!!)
 1. 驰骋工作流引擎研发与2003年，具有.net与java两个版本，这两个版本代码结构，数据库结构，设计思想，功能组成， 操作手册，完全相同。 导入导出的流程模版，表单模版两个版本完全通用。
 2. CCFlow是.net版本的简称，由济南驰骋团队负责研发，JFlow是java版本的简称，在CCFlow的基础上升级改造而来，公司联合易科德软件共同研发。两款产品向社会100%开源，
 3. 十多年来，我们一直践行自己的诺言，真心服务中国IT产业，努力提高产品质量，成为了国内知名的老牌工作流引擎。
@@ -87,7 +94,7 @@
 9. 驰骋工作流引擎方便与您的开发框架嵌入式集成，与第三方组织机构视图化集成, 既有配置类型的开发适用于业务人员，IT维护人员， 也有面向程序员的高级引擎API开发。
 10. 数据库脚本可以用代码自动安装完成。只需要新建一个空的数据库，运行项目后访问流程设计器页面，即可进入脚本自动安装的页面。
  
-### 驰骋工作流程引擎资源 
+##### 驰骋工作流程引擎资源 
 SDK模式在线验示： http://140.143.236.168:8088/
 
 集成jeesite开发架构版本,  https://gitee.com/thinkgem/jeesite4-jflow

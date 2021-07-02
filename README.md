@@ -1,8 +1,10 @@
-﻿### 生态
+﻿### 驰骋BPM的生态伙伴.
+
+以下项目都与ccbpm做了集成，加盟集成电话：15001162377(微信同号).
 
 0.  springboot-plus  https://gitee.com/xiandafu/springboot-plus 
 1.  jflow-jeesite ： https://gitee.com/thinkgem/jeesite4-jflow
-2.  微同商城 ： https://gitee.com/fuyang_lipengjun/platform
+2.  微同商城+JFlow ： https://gitee.com/fuyang_lipengjun/platform
 
 
 ### 资源下载

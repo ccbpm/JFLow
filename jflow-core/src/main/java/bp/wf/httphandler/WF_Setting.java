@@ -163,7 +163,7 @@ public class WF_Setting extends WebContralBase
 			HttpServletRequest request = getRequest();
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-				String tempFilePath = SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + empNo + ".jpg";
+				String tempFilePath = SystemConfig.getPathOfWebApp() + "DataUser/Siganture/" + empNo + ".jpg";
 				File tempFile = new File(tempFilePath);
 				if (tempFile.exists()) {
 					tempFile.delete();
@@ -191,7 +191,7 @@ public class WF_Setting extends WebContralBase
 			HttpServletRequest request = getRequest();
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-				String tempFilePath = SystemConfig.getPathOfWebApp() + "/DataUser/UserIcon/" + empNo + ".png";
+				String tempFilePath = SystemConfig.getPathOfWebApp() + "DataUser/UserIcon/" + empNo + ".png";
 				File tempFile = new File(tempFilePath);
 				if (tempFile.exists()) {
 					tempFile.delete();
@@ -223,16 +223,20 @@ public class WF_Setting extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("CURRENTDEPT").setColumnName("CurrentDept");
 			dt.Columns.get("NAMEOFPATH").setColumnName("NameOfPath");
 		}
-
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("currentdept").setColumnName("CurrentDept");
+			dt.Columns.get("nameofpath").setColumnName("NameOfPath");
+		}
 		//设置当前的部门.
 		for (DataRow dr : dt.Rows)
 		{

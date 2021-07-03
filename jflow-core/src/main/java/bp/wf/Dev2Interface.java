@@ -11,6 +11,8 @@ import bp.tools.FtpUtil;
 import bp.tools.SftpUtil;
 import bp.web.*;
 import bp.wf.data.*;
+import bp.wf.port.WFEmp;
+import bp.wf.port.WFEmpAttr;
 import bp.wf.port.admin2.Org;
 import bp.wf.template.*;
 import java.util.*;
@@ -50,7 +52,29 @@ public class Dev2Interface {
 	}
 
 	///
+	   /// <summary>
+    /// 按照token登录 2021.07.01 采用新方式.
+    /// @hongyan 新增的方法.
+    /// </summary>
+    /// <param name="token"></param>
+    public static void Port_LoginByToken(String token) throws Exception
+    {
+        if (DataType.IsNullOrEmpty(token))
+            throw new Exception("err@SID不能为空.");
 
+        token = token.trim();
+
+        if (DataType.IsNullOrEmpty(token) == true)
+            throw new Exception("err@非法的Token.");
+
+        WFEmp emp = new WFEmp();
+        int i = emp.Retrieve(WFEmpAttr.Token, token);
+        if (i == 0)
+            throw new Exception("err@非法或者失效的token:" + token);
+
+        //执行登录.
+        Dev2Interface.Port_Login(emp.getNo());
+    }
 	/**
 	 * 待办工作数量
 	 * 
@@ -271,40 +295,22 @@ public class Dev2Interface {
 			return 0;
 		}
 
+
 		Paras ps = new Paras();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		String wfSql = "  (WFState=" + WFState.Askfor.getValue() + " OR WFState=" + WFState.Runing.getValue()
 				+ " OR WFState=" + WFState.Shift.getValue() + " OR WFState=" + WFState.ReturnSta.getValue()
-				+ ") AND TaskSta=" + TaskSta.Takeback.getValue();
-		String sql;
+				+ ") AND TaskSta=" + TaskSta.Takeback.getValue();		String sql;
 		String realSql;
-		if (WebUser.getIsAuthorize() == false) {
+		//if (WebUser.getIsAuthorize() == false) {
 			/* 不是授权状态 */
 			ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr + "FK_Emp";
 
 			ps.Add("FK_Emp", WebUser.getNo());
 			return DBAccess.RunSQLReturnValInt(ps);
-		}
+		//}
 
-		/* 如果是授权状态, 获取当前委托人的信息. */
-		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getNo());
-		switch (emp.getHisAuthorWay()) {
-		case All:
-			ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
-					+ "FK_Emp AND TaskSta=0";
-			ps.Add("FK_Emp", WebUser.getNo());
-			break;
-		case SpecFlows:
-			ps.SQL = "SELECT COUNT(WorkID) FROM WF_EmpWorks WHERE (" + wfSql + ") AND FK_Emp=" + dbstr
-					+ "FK_Emp AND  FK_Flow IN " + emp.getAuthorFlows() + "";
-			ps.Add("FK_Emp", WebUser.getNo());
-			break;
-		case None:
-			throw new RuntimeException("对方(" + WebUser.getNo() + ")已经取消了授权.");
-		default:
-			throw new RuntimeException("no such way...");
-		}
-		return DBAccess.RunSQLReturnValInt(ps);
+
 	}
 
 	/// 自动执行
@@ -569,9 +575,7 @@ public class Dev2Interface {
 		}
 
 		// 把列名转化成区分大小写.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("MYPK").ColumnName = "MyPK";
 			dt.Columns.get("ACTIONTYPE").ColumnName = "ActionType";
 			dt.Columns.get("ACTIONTYPETEXT").ColumnName = "ActionTypeText";
@@ -591,6 +595,27 @@ public class Dev2Interface {
 			dt.Columns.get("NODEDATA").ColumnName = "NodeData";
 			dt.Columns.get("EXER").ColumnName = "Exer";
 			dt.Columns.get("TAG").ColumnName = "Tag";
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("mypk").ColumnName = "MyPK";
+			dt.Columns.get("actiontype").ColumnName = "ActionType";
+			dt.Columns.get("actiontypetext").ColumnName = "ActionTypeText";
+			dt.Columns.get("fid").ColumnName = "FID";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("ndfrom").ColumnName = "NDFrom";
+			dt.Columns.get("ndfromt").ColumnName = "NDFromT";
+			dt.Columns.get("ndto").ColumnName = "NDTo";
+			dt.Columns.get("ndtot").ColumnName = "NDToT";
+			dt.Columns.get("empfrom").ColumnName = "EmpFrom";
+			dt.Columns.get("empfromt").ColumnName = "EmpFromT";
+			dt.Columns.get("empto").ColumnName = "EmpTo";
+			dt.Columns.get("emptot").ColumnName = "EmpToT";
+			dt.Columns.get("rdt").ColumnName = "RDT";
+			dt.Columns.get("worktimespan").ColumnName = "WorkTimeSpan";
+			dt.Columns.get("msg").ColumnName = "Msg";
+			dt.Columns.get("nodedata").ColumnName = "NodeData";
+			dt.Columns.get("exer").ColumnName = "Exer";
+			dt.Columns.get("tag").ColumnName = "Tag";
 		}
 
 		// 把track加入里面去.
@@ -697,8 +722,7 @@ public class Dev2Interface {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("MYPK").ColumnName = "MyPK";
 			dt.Columns.get("TITLE").ColumnName = "Title";
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
@@ -713,7 +737,7 @@ public class Dev2Interface {
 			dt.Columns.get("WFSTA").ColumnName = "WFSta";
 			dt.Columns.get("STA").ColumnName = "Sta"; // @yuanlina
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("mypk").ColumnName = "MyPK";
 			dt.Columns.get("title").ColumnName = "Title";
 			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
@@ -752,8 +776,7 @@ public class Dev2Interface {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("MYPK").ColumnName = "MyPK";
 			dt.Columns.get("TITLE").ColumnName = "Title";
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
@@ -766,8 +789,7 @@ public class Dev2Interface {
 			dt.Columns.get("RDT").ColumnName = "RDT";
 			dt.Columns.get("FID").ColumnName = "FID";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
-				|| SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("mypk").ColumnName = "MyPK";
 			dt.Columns.get("title").ColumnName = "Title";
 			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
@@ -902,8 +924,7 @@ public class Dev2Interface {
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("ISBATCHSTART").ColumnName = "IsBatchStart";
@@ -912,7 +933,7 @@ public class Dev2Interface {
 			dt.Columns.get("ISSTARTINMOBILE").ColumnName = "IsStartInMobile";
 			dt.Columns.get("IDX").ColumnName = "Idx";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("no").ColumnName = "No";
 			dt.Columns.get("name").ColumnName = "Name";
 			dt.Columns.get("isbatchstart").ColumnName = "IsBatchStart";
@@ -1067,8 +1088,7 @@ public class Dev2Interface {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("TITLE").ColumnName = "Title";
 			dt.Columns.get("RDT").ColumnName = "RDT";
@@ -1077,7 +1097,7 @@ public class Dev2Interface {
 			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 			dt.Columns.get("ATPARA").ColumnName = "AtPara";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("title").ColumnName = "Title";
 			dt.Columns.get("rdt").ColumnName = "RDT";
@@ -1147,8 +1167,7 @@ public class Dev2Interface {
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		// 添加oracle的处理
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
 			dt.Columns.get("TITLE").ColumnName = "Title";
@@ -1193,7 +1212,7 @@ public class Dev2Interface {
 			// dt.Columns.get("CFLOWNO").ColumnName = "CFlowNo";
 			// dt.Columns.get("CWORKID").ColumnName = "CWorkID";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("startername").ColumnName = "StarterName";
 			dt.Columns.get("title").ColumnName = "Title";
@@ -1264,8 +1283,7 @@ public class Dev2Interface {
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		// 添加oracle的处理
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("PRI").ColumnName = "PRI";
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("TITLE").ColumnName = "Title";
@@ -1297,7 +1315,7 @@ public class Dev2Interface {
 			dt.Columns.get("ATPARA").ColumnName = "AtPara";
 			//dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("pri").ColumnName = "PRI";
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("title").ColumnName = "Title";
@@ -1433,15 +1451,14 @@ public class Dev2Interface {
 			}
 			sql += " UNION ";
 			if(ath.getAuthType() == AuthorWay.SpecFlows)
-				sql += "SELECT * FROM WF_EmpWorks WHERE  FK_Emp='" + ath.getAuther() + "' AND FK_Flow='"+ath.getFlowNo()+"' " + whereSQL + "";
+				sql += "SELECT  *,'" + ath.getAuther() + "' as Auther FROM WF_EmpWorks WHERE  FK_Emp='" + ath.getAuther() + "' AND FK_Flow='"+ath.getFlowNo()+"' " + whereSQL + "";
 			else
-				sql += "SELECT * FROM WF_EmpWorks WHERE  FK_Emp='" + ath.getAuther() + "' " + whereSQL + "";
+				sql += "SELECT *,'" + ath.getAuther() + "' as Auther FROM WF_EmpWorks WHERE  FK_Emp='" + ath.getAuther() + "' " + whereSQL + "";
 		}
 		sql += " ORDER BY ADT DESC";
 		// 获得待办.
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("PRI").ColumnName = "PRI";
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("ISREAD").ColumnName = "IsRead";
@@ -1456,7 +1473,6 @@ public class Dev2Interface {
 			dt.Columns.get("PFLOWNO").ColumnName = "PFlowNo";
 			dt.Columns.get("FK_NODE").ColumnName = "FK_Node";
 			dt.Columns.get("NODENAME").ColumnName = "NodeName";
-			dt.Columns.get("WORKERDEPT").ColumnName = "WorkerDept";
 			dt.Columns.get("TITLE").ColumnName = "Title";
 			dt.Columns.get("RDT").ColumnName = "RDT";
 			dt.Columns.get("ADT").ColumnName = "ADT";
@@ -1481,7 +1497,7 @@ public class Dev2Interface {
 			// dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("pri").ColumnName = "PRI";
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("isread").ColumnName = "IsRead";
@@ -1496,7 +1512,6 @@ public class Dev2Interface {
 			dt.Columns.get("pflowno").ColumnName = "PFlowNo";
 			dt.Columns.get("fk_node").ColumnName = "FK_Node";
 			dt.Columns.get("nodename").ColumnName = "NodeName";
-			dt.Columns.get("workerdept").ColumnName = "WorkerDept";
 			dt.Columns.get("title").ColumnName = "Title";
 			dt.Columns.get("rdt").ColumnName = "RDT";
 			dt.Columns.get("adt").ColumnName = "ADT";
@@ -1994,14 +2009,13 @@ public class Dev2Interface {
 				+ WFSta.Complete.getValue() + " GROUP BY T.FK_Flow,T.FlowName";
 		dt = DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 			dt.Columns.get("NUM").ColumnName = "Num";
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
 			dt.Columns.get("flowname").ColumnName = "FlowName";
 			dt.Columns.get("num").ColumnName = "Num";
@@ -2027,8 +2041,7 @@ public class Dev2Interface {
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
 		// 需要翻译.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("TYPE").ColumnName = "Type";
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
@@ -2067,6 +2080,46 @@ public class Dev2Interface {
 			dt.Columns.get("DOMAIN").ColumnName = "Domain";
 			dt.Columns.get("SENDDT").ColumnName = "SendDT";
 			dt.Columns.get("WEEKNUM").ColumnName = "WeekNum";
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("type").ColumnName = "Type";
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("fk_flowsort").ColumnName = "FK_FlowSort";
+			dt.Columns.get("systype").ColumnName = "SysType";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("title").ColumnName = "Title";
+
+			dt.Columns.get("wfsta").ColumnName = "WFSta";
+			dt.Columns.get("wfstate").ColumnName = "WFState";
+			dt.Columns.get("starter").ColumnName = "Starter";
+			dt.Columns.get("startername").ColumnName = "StarterName";
+			dt.Columns.get("sender").ColumnName = "Sender";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("nodename").ColumnName = "NodeName";
+
+			dt.Columns.get("fk_dept").ColumnName = "FK_Dept";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("sdtofnode").ColumnName = "SDTOfNode";
+			dt.Columns.get("sdtofflow").ColumnName = "SDTOfFlow";
+			dt.Columns.get("pflowno").ColumnName = "PflowNo";
+			dt.Columns.get("pworkid").ColumnName = "PWorkID";
+
+			dt.Columns.get("pnodeid").ColumnName = "PNodeID";
+			dt.Columns.get("pemp").ColumnName = "PEmp";
+			dt.Columns.get("guestno").ColumnName = "GuestNo";
+			dt.Columns.get("guestname").ColumnName = "GuestName";
+			dt.Columns.get("billno").ColumnName = "BillNo";
+			dt.Columns.get("flownote").ColumnName = "FlowNote";
+
+			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
+			dt.Columns.get("tasksta").ColumnName = "TaskSta";
+			dt.Columns.get("atpara").ColumnName = "AtPara";
+			dt.Columns.get("emps").ColumnName = "Emps";
+			dt.Columns.get("domain").ColumnName = "Domain";
+			dt.Columns.get("senddt").ColumnName = "SendDT";
+			dt.Columns.get("weeknum").ColumnName = "WeekNum";
 		}
 		return dt;
 	}
@@ -2245,8 +2298,7 @@ public class Dev2Interface {
 		}
 		// @杜. 这里需要翻译.
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("ISREAD").ColumnName = "IsRead";
 			dt.Columns.get("STARTER").ColumnName = "Starter";
@@ -2282,7 +2334,7 @@ public class Dev2Interface {
 			//dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("isread").ColumnName = "IsRead";
 			dt.Columns.get("starter").ColumnName = "Starter";
@@ -2375,8 +2427,7 @@ public class Dev2Interface {
 
 		// @杜. 这里需要翻译.
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("ISREAD").ColumnName = "IsRead";
 			dt.Columns.get("STARTER").ColumnName = "Starter";
@@ -2412,7 +2463,7 @@ public class Dev2Interface {
 			//dt.Columns.get("MYNUM").ColumnName = "MyNum";
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("workid").ColumnName = "WorkID";
 			dt.Columns.get("isread").ColumnName = "IsRead";
 			dt.Columns.get("starter").ColumnName = "Starter";
@@ -2714,15 +2765,14 @@ public class Dev2Interface {
 						+ fid + " AND a.WorkID=" + workid + " AND a.FK_Node!=" + fk_node
 						+ " AND a.IsPass=1 ORDER BY RDT DESC ";
 				dt = DBAccess.RunSQLReturnTable(sql);
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 					dt.Columns.get("NO").ColumnName = "No";
 					dt.Columns.get("NAME").ColumnName = "Name";
 					dt.Columns.get("REC").ColumnName = "Rec";
 					dt.Columns.get("RECNAME").ColumnName = "RecName";
 					dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
 				}
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 					dt.Columns.get("no").ColumnName = "No";
 					dt.Columns.get("name").ColumnName = "Name";
 					dt.Columns.get("rec").ColumnName = "Rec";
@@ -2751,8 +2801,7 @@ public class Dev2Interface {
 
 			dt = DBAccess.RunSQLReturnTable(sql);
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 				dt.Columns.get("NO").ColumnName = "No";
 				dt.Columns.get("NAME").ColumnName = "Name";
 				dt.Columns.get("REC").ColumnName = "Rec";
@@ -2760,7 +2809,7 @@ public class Dev2Interface {
 				dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
 				dt.Columns.get("ATPARA").ColumnName = "AtPara"; // 参数.
 			}
-			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 				dt.Columns.get("no").ColumnName = "No";
 				dt.Columns.get("name").ColumnName = "Name";
 				dt.Columns.get("rec").ColumnName = "Rec";
@@ -2817,15 +2866,21 @@ public class Dev2Interface {
 						+ fid + " AND a.WorkID=" + workid + " AND a.FK_Node=" + mywnP.getHisNode().getNodeID()
 						+ " AND a.IsPass=1 ORDER BY RDT DESC ";
 				dt = DBAccess.RunSQLReturnTable(sql);
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 					dt.Columns.get("NO").ColumnName = "No";
 					dt.Columns.get("NAME").ColumnName = "Name";
 					dt.Columns.get("REC").ColumnName = "Rec";
 					dt.Columns.get("RECNAME").ColumnName = "RecName";
 					dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
 					dt.Columns.get("ATPARA").ColumnName = "AtPara"; // 参数.
+				}
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+					dt.Columns.get("no").ColumnName = "No";
+					dt.Columns.get("name").ColumnName = "Name";
+					dt.Columns.get("rec").ColumnName = "Rec";
+					dt.Columns.get("recname").ColumnName = "RecName";
+					dt.Columns.get("isbacktracking").ColumnName = "IsBackTracking";
+					dt.Columns.get("atpara").ColumnName = "AtPara"; // 参数.
 				}
 				return dt;
 			}
@@ -2842,15 +2897,21 @@ public class Dev2Interface {
 						+ "  AND ( A.AtPara NOT LIKE '%@IsHuiQian=1%' OR a.AtPara IS NULL) ORDER BY a.RDT DESC ";
 				DataTable mydt = DBAccess.RunSQLReturnTable(sql);
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 					dt.Columns.get("NO").ColumnName = "No";
 					dt.Columns.get("NAME").ColumnName = "Name";
 					dt.Columns.get("REC").ColumnName = "Rec";
 					dt.Columns.get("RECNAME").ColumnName = "RecName";
 					dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
 					dt.Columns.get("ATPARA").ColumnName = "AtPara";
+				}
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+					dt.Columns.get("no").ColumnName = "No";
+					dt.Columns.get("name").ColumnName = "Name";
+					dt.Columns.get("rec").ColumnName = "Rec";
+					dt.Columns.get("recname").ColumnName = "RecName";
+					dt.Columns.get("isbacktracking").ColumnName = "IsBackTracking";
+					dt.Columns.get("atpara").ColumnName = "AtPara";
 				}
 
 				if (mydt.Rows.size() != 0) {
@@ -2863,7 +2924,8 @@ public class Dev2Interface {
 					sql = "SELECT top 1 A.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID="
 							+ workid + " AND a.IsEnable=1 AND a.IsPass=1 ORDER BY a.CDT DESC ";
 				} else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 					sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID="
 							+ workid + " AND a.IsEnable=1 AND a.IsPass=1 AND rownum =1  ORDER BY a.CDT DESC ";
 				} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
@@ -2878,15 +2940,21 @@ public class Dev2Interface {
 
 				dt = DBAccess.RunSQLReturnTable(sql);
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 					dt.Columns.get("NO").ColumnName = "No";
 					dt.Columns.get("NAME").ColumnName = "Name";
 					dt.Columns.get("REC").ColumnName = "Rec";
 					dt.Columns.get("RECNAME").ColumnName = "RecName";
 					dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
 					dt.Columns.get("ATPARA").ColumnName = "AtPara";
+				}
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+					dt.Columns.get("no").ColumnName = "No";
+					dt.Columns.get("name").ColumnName = "Name";
+					dt.Columns.get("rec").ColumnName = "Rec";
+					dt.Columns.get("recname").ColumnName = "RecName";
+					dt.Columns.get("isbacktracking").ColumnName = "IsBackTracking";
+					dt.Columns.get("atpara").ColumnName = "AtPara";
 				}
 				return dt;
 			}
@@ -2962,15 +3030,21 @@ public class Dev2Interface {
 			throw new RuntimeException("@没有判断的退回类型。");
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("REC").ColumnName = "Rec";
 			dt.Columns.get("RECNAME").ColumnName = "RecName";
 			dt.Columns.get("ISBACKTRACKING").ColumnName = "IsBackTracking";
 			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("no").ColumnName = "No";
+			dt.Columns.get("name").ColumnName = "Name";
+			dt.Columns.get("rec").ColumnName = "Rec";
+			dt.Columns.get("recname").ColumnName = "RecName";
+			dt.Columns.get("isbacktracking").ColumnName = "IsBackTracking";
+			dt.Columns.get("atpara").ColumnName = "AtPara";
 		}
 
 		if (dt.Rows.size() == 0) {
@@ -3025,7 +3099,8 @@ public class Dev2Interface {
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			currNode = "(SELECT FK_Node FROM (SELECT FK_Node FROM WF_GenerWorkerlist G WHERE G.WorkID = A.WorkID AND FK_Emp='" + WebUser.getNo()
 					+ "' Order by RDT DESC ) WHERE RowNum=1)";
 			break;
@@ -3185,9 +3260,7 @@ public class Dev2Interface {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				||SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("WORKID").ColumnName = "WorkID";
 			dt.Columns.get("STARTERNAME").ColumnName = "StarterName";
 			dt.Columns.get("TITLE").ColumnName = "Title";
@@ -3201,6 +3274,23 @@ public class Dev2Interface {
 			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
 			dt.Columns.get("CURRNODE").ColumnName = "CurrNode";
 			dt.Columns.get("RUNTYPE").ColumnName = "RunType";
+
+
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("workid").ColumnName = "WorkID";
+			dt.Columns.get("startername").ColumnName = "StarterName";
+			dt.Columns.get("title").ColumnName = "Title";
+			dt.Columns.get("nodename").ColumnName = "NodeName";
+			dt.Columns.get("rdt").ColumnName = "RDT";
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("fid").ColumnName = "FID";
+			dt.Columns.get("fk_node").ColumnName = "FK_Node";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("deptname").ColumnName = "DeptName";
+			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
+			dt.Columns.get("currnode").ColumnName = "CurrNode";
+			dt.Columns.get("runtype").ColumnName = "RunType";
 
 
 		}
@@ -3230,12 +3320,15 @@ public class Dev2Interface {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				||SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 			dt.Columns.get("NUM").ColumnName = "Num";
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";
+			dt.Columns.get("flowname").ColumnName = "FlowName";
+			dt.Columns.get("num").ColumnName = "Num";
 		}
 		return dt;
 	}
@@ -5012,7 +5105,8 @@ public class Dev2Interface {
              switch (SystemConfig.getAppCenterDBType())
              {
                  case Oracle:
-                 case KingBase:
+                 case KingBaseR3:
+         		 case KingBaseR6:
                      currNode = "SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC ) WHERE rownum=1";
                      break;
                  case MySQL:
@@ -5060,7 +5154,8 @@ public class Dev2Interface {
 					+ "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") ORDER BY RDT DESC";
 			break;
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			pas.SQL = "SELECT MyPK,ActionType,ActionTypeText,FID,WorkID,NDFrom,NDFromT,NDTo,NDToT,EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,WorkTimeSpan,Msg,NodeData,Tag,Exer FROM ND"
 					+ Integer.parseInt(gwf.getFK_Flow()) + "Track  WHERE WorkID=" + dbstr + "WorkID  AND NDTo=" + dbstr
 					+ "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue()
@@ -5185,7 +5280,11 @@ public class Dev2Interface {
 		rpt.RetrieveFromDBSources();
 		msg = wf.DoFlowOver(ActionType.FlowOver, msg, nd, rpt, stopFlowType);
 
-		msg += FlowOverAutoSendParentOrSameLevelFlow(wf.getHisGenerWorkFlow(), wf.getHisFlow());
+		Work wk = nd.getHisWork();
+		wk.setOID(workID);
+		wk.RetrieveFromDBSources();
+		WorkNode wn = new WorkNode(wk, nd);
+		msg +=WorkNodePlus.SubFlowEvent(wn).OutMessageHtml;
 
 		return msg;
 	}
@@ -5195,20 +5294,12 @@ public class Dev2Interface {
 	 * 
 	 * @throws Exception
 	 */
-	public static String FlowOverAutoSendParentOrSameLevelFlow(GenerWorkFlow gwf, Flow flow) throws Exception {
+	public static String FlowOverAutoSendParentOrSameLevelFlow(GenerWorkFlow gwf, Flow flow,SubFlow subFlow) throws Exception {
 		// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
 		if (gwf.getPWorkID() != 0) {
 			long slWorkID = gwf.GetParaInt("SLWorkID");
 			if (slWorkID == 0) // 启动该流程的是父子流程
 			{
-				SubFlows subFlows = new SubFlows();
-				int count = subFlows.Retrieve(SubFlowAttr.FK_Node, gwf.getPNodeID(), SubFlowAttr.SubFlowNo,
-						flow.getNo());
-				if (count == 0) {
-					// throw new Exception("父子流程关系配置信息丢失，请联系管理员");
-					return "";
-				}
-				SubFlow subFlow = subFlows.get(0) instanceof SubFlow ? (SubFlow) subFlows.get(0) : null;
 				GenerWorkFlow pgwf = new GenerWorkFlow(gwf.getPWorkID());
 				if (flow.getIsToParentNextNode() == true || subFlow.getIsAutoSendSubFlowOver() == 1) {
 					if (pgwf.getFK_Node() != gwf.getPNodeID()) {
@@ -5249,12 +5340,7 @@ public class Dev2Interface {
 				String slFlowNo = gwf.GetParaString("SLFlowNo");
 				int slNodeID = gwf.GetParaInt("SLNodeID");
 
-				SubFlows subFlows = new SubFlows();
-				int count = subFlows.Retrieve(SubFlowAttr.FK_Node, slNodeID, SubFlowAttr.SubFlowNo, flow.getNo());
-				if (count == 0) {
-					throw new RuntimeException("同级子流程关系配置信息丢失，请联系管理员");
-				}
-				SubFlow subFlow = subFlows.get(0) instanceof SubFlow ? (SubFlow) subFlows.get(0) : null;
+
 				Flow fl = new Flow(slFlowNo);
 				GenerWorkFlow subgwf = new GenerWorkFlow(slWorkID);
 				if (subFlow.getIsAutoSendSLSubFlowOver() == 1) {
@@ -5309,6 +5395,18 @@ public class Dev2Interface {
 		wk.Retrieve();
 
 		WorkNode wn = new WorkNode(wk, nd);
+		if(wn.rptGe == null){
+			wn.rptGe = nd.getHisFlow().getHisGERpt();
+			if (wk.getFID() != 0) {
+				wn.rptGe.setOID(wk.getFID());
+			} else {
+				wn.rptGe.setOID(workid);
+			}
+
+			wn.rptGe.RetrieveFromDBSources();
+			wk.setRow(wn.rptGe.getRow());
+		}
+		
 		return wn.NodeSend_GenerNextStepNode().getNodeID();
 	}
 
@@ -5740,6 +5838,36 @@ public class Dev2Interface {
 		ps.Add("WorkID", workID);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		if (dt.Rows.size() == 0) {
+			//#region 判断是否有授权信息？
+			Auths aths = new Auths();
+			if (DataType.IsNullOrEmpty(bp.web.WebUser.getAuth()) == true)
+				aths.Retrieve(AuthAttr.AutherToEmpNo, userNo);
+			else
+				aths.Retrieve(AuthAttr.AutherToEmpNo, userNo, AuthAttr.Auther, bp.web.WebUser.getAuth());
+
+			if (aths.size() == 0)
+				return false;
+			for(Auth item : aths.ToJavaList())
+			{
+				ps = new Paras();
+				ps.SQL = "SELECT c.RunModel,c.IsGuestNode, a.GuestNo, a.TaskSta, a.WFState, IsPass FROM WF_GenerWorkFlow a, WF_GenerWorkerlist b, WF_Node c WHERE  b.FK_Node=c.NodeID AND a.WorkID=b.WorkID AND a.FK_Node=b.FK_Node  AND b.FK_Emp=" + dbstr + "FK_Emp AND (b.IsEnable=1 OR b.IsPass>=70 OR IsPass=0)   AND a.WorkID=" + dbstr + "WorkID ";
+				ps.Add("FK_Emp", item.getAuther());
+				ps.Add("WorkID", workID);
+				dt = DBAccess.RunSQLReturnTable(ps);
+				if (dt.Rows.size() == 0)
+					continue;
+
+				//判断是否是待办.
+				int myisPassTemp = Integer.parseInt(dt.Rows.get(0).getValue("IsPass").toString());
+				//新增加的标记,=90 就是会签主持人执行会签的状态. 翻译.
+				if (myisPassTemp == 90)
+					return true;
+				if (myisPassTemp == 80)
+					return true;
+				if (myisPassTemp == 0)
+					return true;
+			}
+            //#endregion 判断是否有授权信息？
 			return false;
 		}
 
@@ -6746,12 +6874,11 @@ public class Dev2Interface {
 		sql = "SELECT C.Name AS DeptName,A.MyPK,A.ActionType,A.ActionTypeText,A.FID,A.WorkID,A.NDFrom,A.NDFromT,A.NDTo,A.NDToT,A.EmpFrom,A.EmpFromT,A.EmpTo,A.EmpToT,A.RDT,A.WorkTimeSpan,A.Msg,A.NodeData,A.Tag,A.Exer FROM ND"
 				+ Integer.parseInt(gwf.getFK_Flow()) + "Track A, Port_Emp B, Port_Dept C  ";
 		sql += " WHERE (A.WorkID=" + workID + " OR A.FID=" + workID
-				+ ") AND (A.ActionType=1 OR A.ActionType=0  OR A.ActionType=6  OR A.ActionType=7) AND (A.EmpFrom=B.getNo()) AND (B.FK_Dept=C.getNo()) ";
+				+ ") AND (A.ActionType=1 OR A.ActionType=0  OR A.ActionType=6  OR A.ActionType=7) AND (A.EmpFrom=B.No) AND (B.FK_Dept=C.No) ";
 		sql += " ORDER BY A.RDT ";
 
 		DataTable dtTrack = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				||SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dtTrack.Columns.get("NDFROM").ColumnName = "NDFrom";
 			dtTrack.Columns.get("NDFROMT").ColumnName = "NDFromT";
 			dtTrack.Columns.get("EMPFROM").ColumnName = "EmpFrom";
@@ -6760,7 +6887,7 @@ public class Dev2Interface {
 			dtTrack.Columns.get("RDT").ColumnName = "RDT";
 
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dtTrack.Columns.get("ndfrom").ColumnName = "NDFrom";
 			dtTrack.Columns.get("ndfromt").ColumnName = "NDFromT";
 			dtTrack.Columns.get("empfrom").ColumnName = "EmpFrom";
@@ -7512,10 +7639,11 @@ public class Dev2Interface {
 
 		// 给全局变量赋值.
 		bp.wf.Glo.setSendHTOfTemp(ht);
-
+		
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		if (DataType.IsNullOrEmpty(starter)) {
 			starter = WebUser.getNo();
+
 		}
 
 		Flow fl = new Flow(flowNo);
@@ -7523,6 +7651,10 @@ public class Dev2Interface {
 
 		// 下一个工作人员。
 		Emp empStarter = new Emp(starter);
+		if( starter.equals(WebUser.getNo())){
+			empStarter.setFK_Dept(WebUser.getFK_Dept());
+			empStarter.SetValByKey("FK_DeptText",WebUser.getFK_DeptName());
+		}
 		Work wk = fl.NewWork(empStarter, htPara);
 		long workID = wk.getOID();
 
@@ -7545,6 +7677,7 @@ public class Dev2Interface {
 				}
 				wk.SetValByKey(str.toString(), ht.get(str));
 			}
+			wk.Update();
 		}
 		wk.setOID(workID);
 		if (workDtls != null) {
@@ -8118,7 +8251,9 @@ public class Dev2Interface {
 		Glo.setSendHTOfTemp(htWork);
 
 		int currNodeId = Dev2Interface.Node_GetCurrentNodeID(fk_flow, workID);
-		Node nd = new Node(currNodeId);
+		Node nd = new Node();
+		nd.setNodeID(currNodeId);
+		nd.RetrieveFromDBSources();
 		if (htWork != null) {
 			bp.wf.Dev2Interface.Node_SaveWork(fk_flow, currNodeId, workID, htWork, workDtls, fid, pworkid);
 		}
@@ -11676,7 +11811,8 @@ public static void Node_SetDraft2Todolist(String fk_flow, long workID,String tod
 					+ ")  ORDER BY RDT DESC";
 			break;
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			sql = "SELECT NDTo FROM ND" + Integer.parseInt(flowNo) + "Track WHERE  RowNum=1 AND EmpFrom='"
 					+ WebUser.getNo() + "' AND NDFrom=" + nodeID + " AND (ActionType=" + ActionType.Forward.getValue()
 					+ " OR ActionType=" + ActionType.ForwardFL.getValue() + " OR ActionType="
@@ -12113,5 +12249,112 @@ public static void Node_SetDraft2Todolist(String fk_flow, long workID,String tod
 		return "增加成功";
 	}
 
-	///
+	/**
+	 * WhoIsPK
+	 * @param workid
+	 * @param pworkid
+	 * @param fid
+	 * @param fk_node
+	 * @param fk_mapData
+	 * @param athDesc
+	 * @return
+	 */
+	public static String GetAthRefPKVal(long workid, long pworkid, long fid, int fk_node, String fk_mapData, FrmAttachment athDesc)throws Exception
+	{
+		long pkval = 0;
+		if (fk_node == 0 || fk_node == 9999)
+			return "0";
+
+		AthCtrlWay athCtrlWay = athDesc.getHisCtrlWay();
+		Node nd = new Node(fk_node);
+		//表单方案
+		FrmNode fn = new FrmNode(fk_node, fk_mapData);
+		//树形表单
+		if (nd.getHisFormType() == NodeFormType.SheetTree)
+			athCtrlWay = AthCtrlWay.WorkID;
+			//单表单
+		else if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+		{
+			switch (fn.getWhoIsPK())
+			{
+				case OID:
+					athCtrlWay = AthCtrlWay.WorkID;
+					break;
+				case FID:
+					athCtrlWay = AthCtrlWay.FID;
+					break;
+				case PWorkID:
+					athCtrlWay = AthCtrlWay.PWorkID;
+					break;
+				case P2WorkID:
+					athCtrlWay = AthCtrlWay.P2WorkID;
+					break;
+				case P3WorkID:
+					athCtrlWay = AthCtrlWay.P3WorkID;
+					break;
+				case RootFlowWorkID:
+					athCtrlWay = AthCtrlWay.RootFlowWorkID;
+					break;
+				default:
+					athCtrlWay = athDesc.getHisCtrlWay();
+					break;
+			}
+
+		}
+
+		//根据控制权限获取RefPK的值
+		if (athCtrlWay == AthCtrlWay.WorkID)
+			pkval = workid;
+
+		if (athCtrlWay == AthCtrlWay.FID)
+			pkval = fid;
+
+
+		//如果是父流程的数据. @lizhen
+		if (athCtrlWay == AthCtrlWay.PWorkID)
+		{
+			if (pworkid == 0)
+				pworkid = DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + workid, 0);
+
+			pkval = pworkid;
+		}
+
+
+		if (athCtrlWay == AthCtrlWay.P2WorkID)
+		{
+			//根据流程的PWorkID获取他的爷爷流程
+			pkval = DBAccess.RunSQLReturnValInt("SELECT PWorkID FROM WF_GenerWorkFlow WHERE WorkID=" + pworkid, 0);
+		}
+		if (athCtrlWay == AthCtrlWay.P3WorkID)
+		{
+			String sql = "Select PWorkID From WF_GenerWorkFlow Where WorkID=(Select PWorkID From WF_GenerWorkFlow Where WorkID=" + pworkid + ")";
+			//根据流程的PWorkID获取他的P2流程
+			pkval = DBAccess.RunSQLReturnValInt(sql, 0);
+		}
+		if (athCtrlWay == AthCtrlWay.RootFlowWorkID)
+			pkval = bp.wf.Dev2Interface.GetRootWorkIDBySQL(workid, pworkid);
+		return String.valueOf(pkval);
+	}
+
+	/// <summary>
+	/// 根据WorkID获取根节点的WorkID
+	/// </summary>
+	/// <param name="workId"></param>
+	/// <returns></returns>
+	public static long GetRootWorkIDBySQL(long workId, long pworkid) throws Exception
+	{
+		if (pworkid == 0)
+			return workId;
+		GenerWorkFlow gwf = new GenerWorkFlow(pworkid);
+		if (gwf.getPWorkID() == 0)
+			return pworkid;
+		gwf = new GenerWorkFlow(gwf.getPWorkID());
+		if (gwf.getPWorkID() == 0)
+			return gwf.getWorkID();
+		return gwf.getPWorkID();
+
+
+	}
+
+
 }

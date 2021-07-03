@@ -239,7 +239,8 @@ public class WF_Admin_Cond extends WebContralBase
 		//增加字段集合.
 		String sql = "";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			sql = "SELECT KeyOfEn as No, KeyOfEn||' - '||Name as Name FROM Sys_MapAttr WHERE FK_MapData='ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt'";

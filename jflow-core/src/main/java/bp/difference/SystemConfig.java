@@ -961,8 +961,10 @@ public class SystemConfig {
 				return DBType.MySQL;
 			} else if(dbType.equalsIgnoreCase("DM")){
 				return DBType.DM;
-			}else if(dbType.equalsIgnoreCase("KingBase")){
-				return DBType.KingBase;
+			} else if(dbType.equalsIgnoreCase("KingBaseR3")){
+				return DBType.KingBaseR3;
+			} else if(dbType.equalsIgnoreCase("KingBaseR6")){
+				return DBType.KingBaseR6;
 			}
 		}
 		throw new RuntimeException("位置的数据库类型，请配置AppCenterDBType属性。");
@@ -978,7 +980,8 @@ public class SystemConfig {
 		case MSSQL:
 			return ":";
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			return ":";
 		case Informix:
@@ -993,7 +996,8 @@ public class SystemConfig {
 	public static String getAppCenterDBLengthStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			return "Length";
 		case MSSQL:
@@ -1015,7 +1019,8 @@ public class SystemConfig {
 	public static String getAppCenterDBSubstringStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			return "substr";
 		case MSSQL:
@@ -1050,7 +1055,8 @@ public class SystemConfig {
 		case MySQL:
 		case DM:
 		case Informix:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			return "||";
 		default:
 			return "+";
@@ -1199,5 +1205,30 @@ public class SystemConfig {
 			return "";
 		return obj.toString();
 
+	}
+	/**
+	 * 数据库大小写模式
+	 */
+	public static FieldCaseModel AppCenterDBFieldCaseModel()
+	{
+		switch (getAppCenterDBType())
+		{
+			case Oracle:
+				return FieldCaseModel.UpperCase;
+			case KingBaseR3:
+				// R3时，查询敏感设置
+				String sql ="show case_sensitive;";
+				String caseSen = DBAccess.RunSQLReturnString(sql);
+				if("on".equals(caseSen))
+					return FieldCaseModel.UpperCase;
+				else 
+					return FieldCaseModel.None;
+			case KingBaseR6:
+				return FieldCaseModel.Lowercase;
+			case PostgreSQL:
+				return FieldCaseModel.Lowercase;
+			default:
+				return FieldCaseModel.None;
+		}
 	}
 }

@@ -162,7 +162,7 @@ public class Glo
 
 
 			///3, 执行基本的 sql
-		String sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/Port_Inc_CH_BPM.sql";
+		String sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/Port_Inc_CH_BPM.sql";
 		DBAccess.RunSQLScript(sqlscript);
 
 			/// 修复
@@ -171,7 +171,7 @@ public class Glo
 			///5, 初始化数据。
 		if (DBAccess.IsExitsObject("GPM_AppSort") == true)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/InitPublicData.sql";
+			sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/InitPublicData.sql";
 			DBAccess.RunSQLScript(sqlscript);
 		}
 
@@ -179,19 +179,20 @@ public class Glo
 
 
 			///6, 创建视图。
-		sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MSSQL_GPM_VIEW.sql";
+		sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/MSSQL_GPM_VIEW.sql";
 
 		//MySQL 语法有所区别
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MySQL_GPM_VIEW.sql";
+			sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/MySQL_GPM_VIEW.sql";
 		}
 
 		//Oracle 语法有所区别
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				||SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				||SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
+			sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/Oracle_GPM_VIEW.sql";
 		}
 
 		DBAccess.RunSQLScriptGo(sqlscript);

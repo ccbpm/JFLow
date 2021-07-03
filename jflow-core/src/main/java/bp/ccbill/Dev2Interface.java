@@ -344,7 +344,7 @@ public class Dev2Interface
 	 @return 
 	 * @throws Exception 
 	*/
-	public static String MyBill_DeleteDicts(String frmID, String workIds) throws Exception
+	public static String MyDict_DeleteDicts(String frmID, String workIds) throws Exception
 	{
 		FrmBill fb = new FrmBill(frmID);
 		String sql = "DELETE FROM " + fb.getPTable() + " WHERE OID in (" + workIds + ")";

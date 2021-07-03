@@ -137,14 +137,16 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 
 		SysEnums se1s = new SysEnums("FWCSta");
 		ds.Tables.add(se1s.ToDataTableField("FWCSta"));
-
+		
+		//签字类型. @hongyan.
+        SysEnums myses = new SysEnums("SigantureEnabel");
+        ds.Tables.add(myses.ToDataTableField("SigantureEnabel"));
+        
 		DataTable dt = DBAccess.RunSQLReturnTable(Glo.getSQLOfCheckField().replace("@FK_Frm", fk_frm));
-		if(SystemConfig.getAppCenterDBType() ==DBType.Oracle
-		|| SystemConfig.getAppCenterDBType() == DBType.KingBase){
+		if(SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
-		}
-		if(SystemConfig.getAppCenterDBType() ==DBType.PostgreSQL){
+		}else if(SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase){
 			dt.Columns.get("no").setColumnName("No");
 			dt.Columns.get("name").setColumnName("Name");
 		}
@@ -235,16 +237,20 @@ public class WF_Admin_AttrNode_FrmSln extends WebContralBase
 
 
 			///#warning 需要判断不同的数据库类型
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.DM 
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("SORTNAME").setColumnName("SortName");
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("PTABLE").setColumnName("PTable");
 			dt.Columns.get("ORGNO").setColumnName("OrgNo");
+		}else if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("sortname").setColumnName("SortName");
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("ptable").setColumnName("PTable");
+			dt.Columns.get("orgno").setColumnName("OrgNo");
 		}
 
 		return bp.tools.Json.ToJson(dt);

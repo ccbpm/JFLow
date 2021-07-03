@@ -109,26 +109,34 @@ public class WF_RptDfine extends WebContralBase
 		String sql = "SELECT No,Name,ParentNo FROM WF_FlowSort ORDER BY No, Idx";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("PARENTNO").setColumnName("ParentNo");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("parentno").setColumnName("ParentNo");
 		}
 		ds.Tables.add(dt);
 
 		sql = "SELECT No,Name,FK_FlowSort FROM WF_Flow WHERE IsCanStart=1 ORDER BY FK_FlowSort, Idx";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Flows";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("FK_FLOWSORT").setColumnName("FK_FlowSort");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("fk_flowsort").setColumnName("FK_FlowSort");
 		}
 		ds.Tables.add(dt);
 

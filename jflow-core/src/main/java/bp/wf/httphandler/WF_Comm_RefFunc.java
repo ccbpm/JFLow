@@ -1,6 +1,7 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.tools.StringHelper;
 import bp.wf.template.*;
@@ -77,7 +78,8 @@ public class WF_Comm_RefFunc extends WebContralBase
         for(String empNo : empNos)
         {
         	if (DBAccess.getAppCenterDBType() == DBType.Oracle
-        			|| DBAccess.getAppCenterDBType() == DBType.KingBase)
+        			|| DBAccess.getAppCenterDBType() == DBType.KingBaseR3
+        			|| DBAccess.getAppCenterDBType() == DBType.KingBaseR6)
             {
         		if (dtEmps.selectx("No=" + empNo).size() + dtEmps.selectx("NO=" + empNo).size() == 0)
             		continue;
@@ -228,8 +230,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 		}
 
 		//对Oracle数据库做兼容性处理
-		if (DBAccess.getAppCenterDBType() == DBType.Oracle
-				|| DBAccess.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			for (DataColumn col : dt.Columns)
 			{
@@ -616,8 +617,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 		}
 
 		//对Oracle数据库做兼容性处理
-		if (DBAccess.getAppCenterDBType() == DBType.Oracle
-				|| DBAccess.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			for (DataColumn col : dt.Columns)
 			{

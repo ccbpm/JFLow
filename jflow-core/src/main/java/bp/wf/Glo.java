@@ -50,7 +50,8 @@ public class Glo
     /// 枚举值的数据库.
     /// </summary>
     public static String SysEnum(){
-        if (SystemConfig.getAppCenterDBType().equals(DBType.KingBase))
+        if (SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
             return "Sys_Enums";
         return "Sys_Enum";
     }
@@ -90,7 +91,8 @@ public class Glo
 				sql = "SELECT '' AS No, '-请选择-' as Name ";
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql = "SELECT '' AS No, '-请选择-' as Name FROM DUAL ";
 				break;
 			case PostgreSQL:
@@ -1311,24 +1313,25 @@ public class Glo
 		//MSSQL_GPM_VIEW 语法有所区别
 		if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp() + "/GPM/SQLScript/MSSQL_GPM_VIEW.sql";
+			sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/MSSQL_GPM_VIEW.sql";
 		}
 
 		//MySQL 语法有所区别
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/MySQL_GPM_VIEW.sql";
+			sqlscript = SystemConfig.getPathOfWebApp()  + "GPM/SQLScript/MySQL_GPM_VIEW.sql";
 		}
 
 		//Oracle 语法有所区别
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/Oracle_GPM_VIEW.sql";
+			sqlscript = SystemConfig.getPathOfWebApp()  + "GPM/SQLScript/Oracle_GPM_VIEW.sql";
 		}
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			sqlscript = SystemConfig.getPathOfWebApp()  + "/GPM/SQLScript/PostgreSQL_GPM_VIEW.sql";
+			sqlscript = SystemConfig.getPathOfWebApp()  + "GPM/SQLScript/PostgreSQL_GPM_VIEW.sql";
 		}
 
 		if (DataType.IsNullOrEmpty(sqlscript) == true)
@@ -1747,7 +1750,8 @@ public class Glo
 			sql = "UPDATE    F SET IsEnableFWC = N. FWCSta  FROM WF_FrmNode F,WF_Node N    WHERE F.FK_Node = N.NodeID AND F.IsEnableFWC =1";
 		}
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "UPDATE WF_FrmNode F  SET (IsEnableFWC)=(SELECT FWCSta FROM WF_Node N WHERE F.FK_Node = N.NodeID AND F.IsEnableFWC =1)";
 		}
@@ -2115,7 +2119,8 @@ public class Glo
 						DBAccess.RunSQL("ALTER TABLE WF_Node ADD FWCIsShowReturnMsg INT NULL");
 						break;
 					case Oracle:
-					case KingBase:
+					case KingBaseR3:
+					case KingBaseR6:
 					case DM:
 					case Informix:
 					case PostgreSQL:
@@ -2153,7 +2158,8 @@ public class Glo
 						DBAccess.RunSQL("ALTER TABLE Sys_FrmRB ADD AtPara NVARCHAR(1000) NULL");
 						break;
 					case Oracle:
-					case KingBase:
+					case KingBaseR3:
+					case KingBaseR6:
 					case DM:
 						DBAccess.RunSQL("ALTER TABLE Sys_FrmRB ADD AtPara NVARCHAR2(1000) NULL");
 						break;
@@ -2209,7 +2215,8 @@ public class Glo
 				String sqls = "";
 
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 				{
 					sqls += "UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.TBFullCtrl + "'";
@@ -2345,7 +2352,8 @@ public class Glo
 			}
 
 			if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm||'_'||FK_Node||'_'||FK_Flow");
@@ -2425,7 +2433,8 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 					sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitView_Ora.sql";
 					break;
 				case MSSQL:
@@ -2466,13 +2475,14 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 					msg = "@Sys_MapAttr 修改字段";
 					break;
 				case MSSQL:
 					msg = "@修改sql server控件高度和宽度字段。";
-					//DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIWidth float");
-					//DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIHeight float");
+					DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIWidth float");
+					DBAccess.RunSQL("ALTER TABLE Sys_MapAttr ALTER COLUMN UIHeight float");
 					break;
 				default:
 					break;
@@ -2485,7 +2495,8 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 					int i = DBAccess.RunSQLReturnCOUNT("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_DEFVAL' AND COLUMN_NAME = 'PARENTNO'");
 					if (i == 0)
 					{
@@ -2593,7 +2604,8 @@ public class Glo
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 					int i = DBAccess.RunSQLReturnCOUNT("SELECT * FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'SYS_FRMIMG' AND COLUMN_NAME = 'TAG0'");
 					if (i == 0)
 					{
@@ -2687,7 +2699,8 @@ public class Glo
 		String currDBVer = DBAccess.RunSQLReturnStringIsNull(sql, "");
 
 		String sqlScript = SystemConfig.getPathOfData() + "UpdataCCFlowVer.sql";
-		if(SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 			sqlScript = SystemConfig.getPathOfData() + "UpdataCCFlowVerForKingBase.sql";
 		SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmmss");
 		Calendar cal = Calendar.getInstance();
@@ -2934,7 +2947,8 @@ public class Glo
 					sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
 					break;
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 					sql = "ALTER TABLE  WF_EMP add StartFlows BLOB";
 					break;
 				case MySQL:
@@ -3172,7 +3186,8 @@ public class Glo
 		switch (SystemConfig.getAppCenterDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_Ora.sql";
 				break;
 			case MSSQL:
@@ -6703,7 +6718,8 @@ public class Glo
 					ps.SQL="SELECT TOP 1 SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID ";
 					break;
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 					ps.SQL="SELECT SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID  ";
 					break;
 				case MySQL:

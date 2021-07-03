@@ -221,7 +221,55 @@ public class FindWorker
 
 			/// 按节点绑定的人员处理.
 
+ 		//找指定节点的人员直属领导 .
+		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByEmpLeader)
+		{
+			//查找指定节点的人员， 如果没有节点，就是当前的节点.
+			String para = town.getHisNode().getDeliveryParas();
+			if (DataType.IsNullOrEmpty(para) == true)
+				para = String.valueOf(this.currWn.getHisNode().getNodeID());
 
+
+			String[] strs = para.split(",");
+			for(String str : strs)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+					continue;
+
+				ps = new Paras();
+				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node ";
+				ps.Add("OID", this.WorkID);
+				ps.Add("FK_Node", Integer.parseInt(str));
+				dt = DBAccess.RunSQLReturnTable(ps);
+				if (dt.Rows.size() != 1)
+					continue;
+
+				String empNo = dt.Rows.get(0).getValue(0).toString();
+
+				//查找人员的直属leader
+				sql = "";
+				if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+					sql = "SELECT Leader,FK_Dept FROM Port_Emp WHERE No='" + empNo + "'";
+				else
+					sql = "SELECT Leader,FK_Dept FROM Port_Emp WHERE No='" + WebUser.getOrgNo() + "_" + empNo + "'";
+
+				DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
+
+				//查找他的leader, 如果没有就找部门领导.
+				String leader = dtEmp.Rows.get(0).getValue(0).toString();
+				String deptNo = dtEmp.Rows.get(0).getValue(1).toString();
+				if (leader == null)
+				{
+					sql = "SELECT Leader FROM Port_Dept WHERE No='" + deptNo + "'";
+					leader = DBAccess.RunSQLReturnStringIsNull(sql, null);
+					if (leader == null)
+						throw new Exception("@流程设计错误:下一个节点(" + town.getHisNode().getName() + ")设置的按照直属领导计算，没有维护(" + WebUser.getNo() + "," + WebUser.getName() + ")的直属领导 . ");
+				}
+				dt = DBAccess.RunSQLReturnTable(sql);
+				return dt;
+			}
+		}
+         //	按照部门负责人计算
 
 			///按照部门负责人计算. @gaoxin 翻译过去.
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptLeader)
@@ -243,8 +291,7 @@ public class FindWorker
 
 			///按照选择的人员处理。
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected || town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelectedForPrj
-				|| town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByFEE
-				|| town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndEmpField)
+				|| town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByFEE)
 		{
 			ps = new Paras();
 			ps.Add("FK_Node", this.town.getHisNode().getNodeID());
@@ -270,8 +317,6 @@ public class FindWorker
 						{
 							throw new RuntimeException("url@./WorkOpt/Accepter.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + toNode.getNodeID() + "&WorkID=" + this.WorkID);
 						}
-					} else if(town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndEmpField){
-						throw new RuntimeException("url@./WorkOpt/AccepterOfDept.htm?FK_Flow=" + town.getHisNode().getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + town.getHisNode().getNodeID() + "&WorkID=" + this.WorkID);
 					}
 					else
 					{

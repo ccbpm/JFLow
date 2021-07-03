@@ -3,6 +3,10 @@ package bp.da;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import bp.difference.SystemConfig;
+
 public class DataRowCollection extends ArrayList<DataRow>
 {
 	
@@ -55,7 +59,11 @@ public class DataRowCollection extends ArrayList<DataRow>
 		{
 
             String key= dc.ColumnName;
-			String valStr=String.valueOf( ap.get(key)); 
+            String valStr=String.valueOf( ap.get(key)); 
+            if((StringUtils.isEmpty(valStr) ||"null".equals(valStr))
+            		&& SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase){
+            	valStr=String.valueOf( ap.get(key.toLowerCase())); 
+            }
 			
 			if (valStr==null)
 				valStr="";

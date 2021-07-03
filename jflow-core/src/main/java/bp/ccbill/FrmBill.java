@@ -908,11 +908,11 @@ public class FrmBill extends EntityNoName
 	*/
 	public final String DoOpenBill() throws Exception
 	{
-		return "../../CCBill/Search.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmssffffff");
+		return "../../CCBill/Search.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmss");
 	}
 	public final String DoAPI() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmssffffff");
+		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmss");
 	}
 
 		/// 方法操作.

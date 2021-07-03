@@ -893,7 +893,8 @@ public class CCFormAPI extends Dev2Interface
 				dt.TableName = uiBindKey;
 
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+						|| SystemConfig.getAppCenterDBType().equals(DBType.KingBaseR3)
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 				{
 					if (dt.Columns.contains("NO") == true)
 					{
@@ -985,89 +986,13 @@ public class CCFormAPI extends Dev2Interface
 		MapAttrs dtlAttrs = new MapAttrs(dtl.getNo());
 		for (MapAttr attr : dtlAttrs.ToJavaList())
 		{
-
-				///修改区分大小写. Oracle
-			if (bp.da.DBType.Oracle == SystemConfig.getAppCenterDBType()
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
-			{
-				for (DataColumn dr : dtDtl.Columns)
-				{
-					String a = attr.getKeyOfEn();
-					String b = dr.ColumnName;
-					if (attr.getKeyOfEn().toUpperCase().equals(dr.ColumnName))
-					{
-						dr.ColumnName = attr.getKeyOfEn();
-						continue;
-					}
-
-					if (attr.getLGType()==FieldTypeS.Enum || attr.getLGType()== FieldTypeS.FK)
-					{
-						if (dr.ColumnName.equals(attr.getKeyOfEn().toUpperCase() + "TEXT"))
-						{
-							dr.ColumnName = attr.getKeyOfEn() + "Text";
-						}
-					}
-				}
-				for (DataRow dr : dtDtl.Rows)
-				{
-					//本身是大写的不进行修改
-					if (DataType.IsNullOrEmpty(dr.getValue(attr.getKeyOfEn()) + ""))
-					{
-						dr.setValue(attr.getKeyOfEn(), dr.getValue(attr.getKeyOfEn().toUpperCase()));						
-						//dr.setValue(attr.getKeyOfEn().toUpperCase(), null);
-						
-					}
-				}
-			}
-
-				/// 修改区分大小写.
-
-
-				///修改区分大小写. PostgreSQL
-			if (bp.da.DBType.PostgreSQL == SystemConfig.getAppCenterDBType())
-			{
-				for (DataColumn dr : dtDtl.Columns)
-				{
-					String a = attr.getKeyOfEn();
-					String b = dr.ColumnName;
-					if (attr.getKeyOfEn().toLowerCase().equals(dr.ColumnName))
-					{
-						dr.ColumnName = attr.getKeyOfEn();
-						continue;
-					}
-
-					if (attr.getLGType()==FieldTypeS.Enum || attr.getLGType()==FieldTypeS.FK)
-					{
-						if (dr.ColumnName.equals(attr.getKeyOfEn().toLowerCase() + "TEXT"))
-						{
-							dr.ColumnName = attr.getKeyOfEn() + "Text";
-						}
-					}
-				}
-				for (DataRow dr : dtDtl.Rows)
-				{
-					//本身是大写的不进行修改
-					if (DataType.IsNullOrEmpty(dr.getValue(attr.getKeyOfEn()) + ""))
-					{
-						dr.setValue(attr.getKeyOfEn(), dr.getValue(attr.getKeyOfEn().toLowerCase()));
-						dr.setValue(attr.getKeyOfEn().toLowerCase(), null);
-					}
-				}
-			}
-
-				/// 修改区分大小写.
-
 			if (attr.getUIContralType()== UIContralType.TB)
-			{
 				continue;
-			}
 
 
 			//处理它的默认值.
 			if (attr.getDefValReal().contains("@") == false)
-			{
 				continue;
-			}
 
 			for (DataRow dr : dtDtl.Rows)
 			{
@@ -1140,7 +1065,8 @@ public class CCFormAPI extends Dev2Interface
 
 			//增加排序.
 			qo.addOrderBy(GEDtlAttr.OID);
-			return qo.DoQueryToTable();
+			qo.DoQuery();
+			return dtls.ToDataTableField();
 		}
 		catch (RuntimeException ex)
 		{

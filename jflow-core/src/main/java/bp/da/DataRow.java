@@ -183,13 +183,11 @@ public class DataRow extends LinkedHashMap<String, Object>
 		Object obj = this.get(columnName);
 		if (obj == null)
 		{
-			if(!StringUtils.isEmpty(this.get(columnName.toLowerCase()))){
-				obj = this.get(columnName.toLowerCase());
-			}if(!StringUtils.isEmpty(this.get(columnName.toUpperCase()))){
-				obj = this.get(columnName.toUpperCase());
-			}else{
-				obj = "";
-			}
+			if(!StringUtils.isEmpty(this.get(columnName.toLowerCase())))
+				return this.get(columnName.toLowerCase());
+			if(!StringUtils.isEmpty(this.get(columnName.toUpperCase())))
+				return this.get(columnName.toUpperCase());
+			return "";
 		}
 		return obj;
 	}

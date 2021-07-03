@@ -37,7 +37,7 @@ public class EnsAppGroupXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "/Ens/EnsAppXml/";
+		return SystemConfig.getPathOfXML() + "Ens/EnsAppXml/";
 	}
 	/** 
 	 物理表名

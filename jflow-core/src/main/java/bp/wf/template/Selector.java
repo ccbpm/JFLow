@@ -291,7 +291,8 @@ public class Selector extends Entity
 		}
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			for (DataTable dt : ds.Tables)
@@ -587,7 +588,8 @@ public class Selector extends Entity
 
 		//人员.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.getFK_Dept() + "' AND b.FK_Node=" + nodeID + ")  ORDER BY A.Idx ";
 		}
@@ -636,7 +638,8 @@ public class Selector extends Entity
 		String sql = "";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + ")";
 		}
@@ -654,7 +657,8 @@ public class Selector extends Entity
 		//人员.
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + ")  ";
 		}
@@ -704,7 +708,8 @@ public class Selector extends Entity
 
 		//人员.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (sm == SelectorModel.TeamDeptOnly)
@@ -759,7 +764,8 @@ public class Selector extends Entity
 
 		//人员.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
@@ -807,7 +813,8 @@ public class Selector extends Entity
 
 			//人员.
 			if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
@@ -839,7 +846,8 @@ public class Selector extends Entity
 
 		//人员.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)

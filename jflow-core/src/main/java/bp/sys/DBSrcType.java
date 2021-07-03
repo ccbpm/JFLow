@@ -33,10 +33,14 @@ public enum DBSrcType
 	 海尔的Dubbo服务.
 	*/
 	Dubbo(50),
-	/** 
-	 人大金仓
-	*/
-	KingBase(8);
+	/**
+	 * 人大金仓R3
+	 */
+	KingBaseR3(8),
+	/**
+	 * 人大金仓R6
+	 */
+	KingBaseR6(8);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

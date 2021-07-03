@@ -107,8 +107,10 @@ public class SFDBSrc extends EntityNoName
 				return DBType.MySQL;
 			case Informix:
 				return DBType.Informix;
-			case KingBase:
-				return DBType.KingBase;
+			case KingBaseR3:
+				return DBType.KingBaseR3;
+			case KingBaseR6:
+				return DBType.KingBaseR6;
 			default:
 				throw new RuntimeException("err@HisDBType没有判断的数据库类型.");
 		}
@@ -150,7 +152,8 @@ public class SFDBSrc extends EntityNoName
 			case Localhost:
 				return DBAccess.RunSQL(sql);
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case MySQL:
 			case SQLServer:
 				conn =this.getConnection();
@@ -272,7 +275,8 @@ public class SFDBSrc extends EntityNoName
 				dt = RunSQLReturnTable(sql);
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql = GetIsExitsSQL(DBType.Oracle, objName, this.getDBName());
 				dt = RunSQLReturnTable(sql);
 				break;
@@ -307,7 +311,8 @@ public class SFDBSrc extends EntityNoName
 			case PostgreSQL:
 				return String.format("SELECT (CASE s.xtype WHEN 'U' THEN 'TABLE' WHEN 'V' THEN 'VIEW' WHEN 'P' THEN 'PROCEDURE' ELSE 'OTHER' END) OTYPE FROM sysobjects s WHERE s.setName( '%1$s'", objName);
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return String.format("SELECT uo.OBJECT_TYPE OTYPE FROM user_objects uo WHERE uo.OBJECT_NAME = '%1$s'", objName.toUpperCase());
 			case MySQL:
 				return String.format("SELECT (CASE t.TABLE_TYPE WHEN 'BASE TABLE' THEN 'TABLE' ELSE 'VIEW' END) OTYPE FROM information_schema.tables t WHERE t.TABLE_SCHEMA = '%2$s' AND t.TABLE_NAME = '%1$s'", objName, dbName);
@@ -444,7 +449,8 @@ public class SFDBSrc extends EntityNoName
 				}
 				url="jdbc:mysql://"+this.getIP()+"/"+this.getDBName()+"?useUnicode=true&characterEncoding=utf-8&useOldAliasMetadataBehavior=true&allowMultiQueries=true";
 				break;
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				try{
 					//加载MySql的驱动类
 					Class.forName("com.kingbase8.Driver") ;
@@ -569,8 +575,11 @@ public class SFDBSrc extends EntityNoName
 				case PostgreSQL:
 					dbType = DBSrcType.PostgreSQL;
 					break;
-				case KingBase:
-					dbType = DBSrcType.KingBase;
+				case KingBaseR3:
+					dbType = DBSrcType.KingBaseR3;
+					break;
+				case KingBaseR6:
+					dbType = DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -684,8 +693,11 @@ public class SFDBSrc extends EntityNoName
 				case PostgreSQL:
 					dbType = DBSrcType.PostgreSQL;
 					break;
-				case KingBase:
-					dbType = DBSrcType.KingBase;
+				case KingBaseR3:
+					dbType = DBSrcType.KingBaseR3;
+					break;
+				case KingBaseR6:
+					dbType = DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -711,7 +723,8 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       NAME" + "\r\n");
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql.append("SELECT uo.OBJECT_NAME AS \"No\"," + "\r\n");
 				sql.append("       '[' || (CASE uo.OBJECT_TYPE" + "\r\n");
 				sql.append("         WHEN 'TABLE' THEN" + "\r\n");
@@ -925,8 +938,11 @@ public class SFDBSrc extends EntityNoName
 				case PostgreSQL:
 					dbType = DBSrcType.PostgreSQL;
 					break;
-				case KingBase:
-					dbType = DBSrcType.KingBase;
+				case KingBaseR3:
+					dbType = DBSrcType.KingBaseR3;
+					break;
+				case KingBaseR6:
+					dbType = DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -1087,8 +1103,11 @@ public class SFDBSrc extends EntityNoName
 				case Informix:
 					dbType = DBSrcType.Informix;
 					break;
-				case KingBase:
-					dbType = DBSrcType.KingBase;
+				case KingBaseR3:
+					dbType = DBSrcType.KingBaseR3;
+					break;
+				case KingBaseR6:
+					dbType = DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("@没有涉及到的连接测试类型。");
@@ -1196,8 +1215,11 @@ public class SFDBSrc extends EntityNoName
 				case Informix:
 					dbType = DBSrcType.Informix;
 					break;
-				case KingBase:
-					dbType = DBSrcType.KingBase;
+				case KingBaseR3:
+					dbType = DBSrcType.KingBaseR3;
+					break;
+				case KingBaseR6:
+					dbType = DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -1213,7 +1235,8 @@ public class SFDBSrc extends EntityNoName
 				return " IFNULL(" + expression + "," + isNullBack + ")";
 			case PostgreSQL:
 				return " COALESCE(" + expression + "," + isNullBack + ")";
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return " ISNULL(" + expression + "," + isNullBack + ")";
 			default:
 				throw new RuntimeException("GetIsNullInSQL未涉及的数据库类型");
@@ -1249,8 +1272,11 @@ public class SFDBSrc extends EntityNoName
 				case Informix:
 					dbType = DBSrcType.Informix;
 					break;
-				case KingBase:
-					dbType = DBSrcType.KingBase;
+				case KingBaseR3:
+					dbType = DBSrcType.KingBaseR3;
+					break;
+				case KingBaseR6:
+					dbType = DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -1280,7 +1306,8 @@ public class SFDBSrc extends EntityNoName
 				sql.append(String.format("WHERE  sc.id = OBJECT_ID('dbo.%1$s')", tableName) + "\r\n");
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql.append("SELECT utc.COLUMN_NAME AS \"No\"," + "\r\n");
 				sql.append("       utc.DATA_TYPE   AS \"DBType\"," + "\r\n");
 				sql.append("       utc.CHAR_LENGTH AS \"DBLength\"," + "\r\n");

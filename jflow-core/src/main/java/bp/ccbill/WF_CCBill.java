@@ -398,9 +398,9 @@ public class WF_CCBill extends WebContralBase
 		return bp.ccbill.Dev2Interface.MyBill_Delete(this.getFrmID(), this.getWorkID());
 	}
 
-	public final String MyBill_Deletes() throws Exception
+	public final String MyDict_Deletes() throws Exception
 	{
-		return bp.ccbill.Dev2Interface.MyBill_DeleteDicts(this.getFrmID(), this.GetRequestVal("WorkIDs"));
+		return bp.ccbill.Dev2Interface.MyDict_DeleteDicts(this.getFrmID(), this.GetRequestVal("WorkIDs"));
 	}
 
 	//删除实体
@@ -676,8 +676,8 @@ public class WF_CCBill extends WebContralBase
 			row.setValue("KeyOfEn", attr.getKeyOfEn());
 			row.setValue("Name", attr.getName());
 			row.setValue("Width", attr.getUIWidthInt());
-			row.setValue("UIContralType", attr.getUIContralType());
-			row.setValue("LGType", attr.getLGType());
+			row.setValue("UIContralType", attr.getUIContralType().getValue());
+			row.setValue("LGType", attr.getLGType().getValue());
 			row.setValue("AtPara", attr.GetValStringByKey("AtPara"));
 			dt.Rows.add(row);
 		}
@@ -1165,7 +1165,7 @@ public class WF_CCBill extends WebContralBase
 
 
 			///2、处理流程类别列表.
-		sql = " SELECT  A.BillState as No, B.Lab as Name, COUNT(WorkID) as Num FROM Frm_GenerBill A, "+bp.wf.Glo.SysEnum()+" B ";
+		sql = " SELECT  A.BillState as No, B.Lab as Name, COUNT(WorkID) as Num FROM Frm_GenerBill A, Sys_Enum B ";
 		sql += " WHERE A.BillState=B.IntKey AND B.EnumKey='BillState' AND  A.Starter='" + WebUser.getNo() + "' AND BillState >=1";
 		if (tSpan.equals("-1") == false)
 		{
@@ -1175,9 +1175,7 @@ public class WF_CCBill extends WebContralBase
 		sql += "  GROUP BY A.BillState, B.Lab  ";
 
 		DataTable dtFlows = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");
@@ -1209,8 +1207,7 @@ public class WF_CCBill extends WebContralBase
 
 		String fields = " WorkID,FrmID,FrmName,Title,BillState, Starter, StarterName,Sender,RDT ";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			sql = "SELECT " + fields + " FROM (SELECT * FROM Frm_GenerBill WHERE " + sqlWhere + ") WHERE rownum <= 50";
 		}
@@ -1224,9 +1221,7 @@ public class WF_CCBill extends WebContralBase
 		}
 
 		DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase 
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			mydt.Columns.get(0).setColumnName("WorkID");
 			mydt.Columns.get(1).setColumnName("FrmID");

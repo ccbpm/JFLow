@@ -129,4 +129,7 @@ public class SubFlowAttr extends bp.en.EntityOIDNameAttr
 
 	public static final String SubFlowCopyFields="SubFlowCopyFields";
 
+	public static final String BackCopyRole="BackCopyRole";
+	public static final String ParentFlowCopyFields="ParentFlowCopyFields";
+
 }

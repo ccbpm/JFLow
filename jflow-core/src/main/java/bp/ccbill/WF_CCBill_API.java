@@ -73,8 +73,7 @@ public class WF_CCBill_API extends WebContralBase
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			dt.Columns.get(0).setColumnName("No");
 			dt.Columns.get(1).setColumnName("Name");
@@ -305,8 +304,7 @@ public class WF_CCBill_API extends WebContralBase
 		String sql = "";
 		sql = "SELECT No,Name,EntityType,FrmType,PTable FROM Sys_MapData WHERE (EntityType=1 OR EntityType=2) ORDER BY IDX ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
 		{
 			dt.Columns.get(0).setColumnName("No");
 			dt.Columns.get(1).setColumnName("Name");

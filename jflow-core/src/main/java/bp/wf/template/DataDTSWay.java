@@ -12,9 +12,13 @@ public enum DataDTSWay
 	*/
 	None,
 	/** 
-	 同步
+	  数据源方式同步
 	*/
-	Syn;
+	Syn,
+	/**
+	 接口方式同步
+	 */
+	WebAPI;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

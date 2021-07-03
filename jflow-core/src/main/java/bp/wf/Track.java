@@ -449,7 +449,8 @@ public class Track extends Entity
 				sqlRename = "RENAME TABLE WF_Track TO " + ptable;
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
 				break;
 			case PostgreSQL:

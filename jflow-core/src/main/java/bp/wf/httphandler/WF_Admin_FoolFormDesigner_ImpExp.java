@@ -61,19 +61,21 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
 			dt.TableName = "WF_Node";
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 				dt.Columns.get("NODEID").setColumnName("NodeID");
 				dt.Columns.get("NAME").setColumnName("Name");
 			}
-
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+				dt.Columns.get("nodeid").setColumnName("NodeID");
+				dt.Columns.get("name").setColumnName("Name");
+			}
 			ds.Tables.add(dt);
 		}
 
 		/// 加入表单库目录.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 			sql = "SELECT NO as No ,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
 		} else {
 			sql = "SELECT No,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
@@ -81,12 +83,15 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FormTree";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("PARENTNO").setColumnName("ParentNo");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("parentno").setColumnName("ParentNo");
 		}
 		ds.Tables.add(dt);
 
@@ -95,12 +100,15 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapData";
 		ds.Tables.add(dt);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("FK_FORMTREE").setColumnName("FK_FormTree");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("fk_formtree").setColumnName("FK_FormTree");
 		}
 
 		/// 加入表单库目录.
@@ -110,12 +118,14 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_FlowSort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("PARENTNO").setColumnName("ParentNo");
+		}else if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("parentno").setColumnName("ParentNo");
 		}
 		ds.Tables.add(dt);
 
@@ -124,12 +134,14 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends WebContralBase {
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Flow";
 		ds.Tables.add(dt);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("FK_FLOWSORT").setColumnName("FK_FlowSort");
+		}else if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("fk_flowsort").setColumnName("FK_FlowSort");
 		}
 
 		/// 加入流程树目录.

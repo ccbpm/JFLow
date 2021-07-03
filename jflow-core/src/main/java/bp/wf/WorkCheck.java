@@ -108,7 +108,8 @@ public class WorkCheck
 			+ "WHERE ( t1.WorkID = " + workIdStr + " OR t1.FID = " + workIdStr + " )"
 			+ " AND t1.empfrom = t2.NO AND t3.NO = t2.FK_Dept ORDER BY t3.idx,t2.idx";
 			
-			if(SystemConfig.getAppCenterDBType().equals(DBType.KingBase)) {
+			if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+					||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 				sql ="SELECT	ISNULL( MyPK, 0 ) MyPK,	ISNULL( ActionType, 0 ) ActionType,	ActionTypeText,	ISNULL( FID, 0 ) FID,"
 						+"ISNULL( WorkID, 0 ) WorkID,ISNULL( NDFrom, 0 ) NDFrom,NDFromT,ISNULL( NDTo, 0 ) NDTo,NDToT,"
 						+"EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,ISNULL( WorkTimeSpan, 0.0 ) AS WorkTimeSpan,Msg,NodeData,Tag,Exer"

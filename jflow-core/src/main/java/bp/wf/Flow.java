@@ -165,6 +165,14 @@ public class Flow extends EntityNoName
 	{
 		this.SetValByKey(FlowAttr.DTSFields, value);
 	}
+	public final String getDTWebAPI()throws Exception
+	{
+		return this.GetParaString(FlowAttr.DTWebAPI);
+	}
+	public final void setDTWebAPI(String value) throws Exception
+	{
+		this.SetPara(FlowAttr.DTWebAPI, value);
+	}
 
 		/// 业务数据表同步属性.
 
@@ -1731,6 +1739,7 @@ public class Flow extends EntityNoName
 			{
 				err += "@节点" + item.getFK_Node() + "绑定的表单:" + item.getFK_Frm() + ",已经被删除了.";
 			}
+			md.ClearCash();
 		}
 
 			///
@@ -1965,8 +1974,12 @@ public class Flow extends EntityNoName
 					if (!md.getPTable().equals("ND" + nd.getNodeID()))
 					{
 						md.setPTable("ND" + nd.getNodeID());
+						md.ClearCash();
 						md.Update();
 					}
+					//检查数据表.
+					GEEntity geEn = new GEEntity(md.getNo());
+					geEn.CheckPhysicsTable();
 				}
 				nd.Update();
 			}
@@ -2115,6 +2128,14 @@ public class Flow extends EntityNoName
 
 			// 检查流程， 处理计算字段.
 			Node.CheckFlow(nds, this.getNo());
+
+			for(Node nd : nds.ToJavaList())
+			{
+
+				nd.ClearAutoNumCash();
+				nd.setRow(null);
+				bp.da.Cash2019.DeleteRow("BP.WF.Node",nd.getNodeID()+"");
+			}
 
 			//创建track.
 			Track.CreateOrRepairTrackTable(this.getNo());
@@ -4348,9 +4369,11 @@ public class Flow extends EntityNoName
 			///数据同步方案
 			//数据同步方式.
 		map.AddTBInt(FlowAttr.DataDTSWay, DataDTSWay.None.getValue(), "同步方式", true, true);
-			//map.AddTBString(FlowAttr.DTSDBSrc, null, "数据源", true, false, 0, 200, 100, false);
-			//map.AddTBString(FlowAttr.DTSBTable, null, "业务表名", true, false, 0, 200, 100, false);
-			//map.AddTBString(FlowAttr.DTSBTablePK, null, "业务表主键", false, false, 0, 32, 10);
+		map.AddTBInt(FlowAttr.DataDTSWay,DataDTSWay.None.getValue(), "同步方式", true, true);
+		map.AddTBString(FlowAttr.DTSDBSrc, null, "数据源", true, false, 0, 200, 100, false);
+		map.AddTBString(FlowAttr.DTSBTable, null, "业务表名", true, false, 0, 200, 100, false);
+		map.AddTBString(FlowAttr.DTSBTablePK, null, "业务表主键", false, false, 0, 32, 10);
+		map.AddTBString(FlowAttr.DTSSpecNodes, null, "同步字段", false, false, 0, 4000, 10);
 
 		map.AddTBInt(FlowAttr.DTSTime, FlowDTSTime.AllNodeSend.getValue(), "执行同步时间点", true, true);
 		map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false, false, 0, 900, 100, false);

@@ -714,16 +714,20 @@ public class WF extends WebContralBase
 
 		DataTable dtSort = qo.DoQueryToTable();
 		dtSort.TableName = "Sort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dtSort.Columns.get("NO").setColumnName("No");
 			dtSort.Columns.get("NAME").setColumnName("Name");
 			dtSort.Columns.get("PARENTNO").setColumnName("ParentNo");
 			dtSort.Columns.get("ORGNO").setColumnName("OrgNo");
 		}
-
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dtSort.Columns.get("no").setColumnName("No");
+			dtSort.Columns.get("name").setColumnName("Name");
+			dtSort.Columns.get("parentno").setColumnName("ParentNo");
+			dtSort.Columns.get("orgno").setColumnName("OrgNo");
+		}
 		//定义容器.
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtSort); //增加到里面去.
@@ -860,16 +864,21 @@ public class WF extends WebContralBase
 
 		DataTable dtSort = qo.DoQueryToTable();
 		dtSort.TableName = "Sort";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dtSort.Columns.get("NO").setColumnName("No");
 			dtSort.Columns.get("NAME").setColumnName("Name");
 			dtSort.Columns.get("PARENTNO").setColumnName("ParentNo");
 			dtSort.Columns.get("ORGNO").setColumnName("OrgNo");
 		}
-
+		
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dtSort.Columns.get("no").setColumnName("No");
+			dtSort.Columns.get("name").setColumnName("Name");
+			dtSort.Columns.get("parentno").setColumnName("ParentNo");
+			dtSort.Columns.get("orgno").setColumnName("OrgNo");
+		}
 		//定义容器.
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtSort); //增加到里面去.
@@ -925,6 +934,54 @@ public class WF extends WebContralBase
 		}
 
 		return json;
+	}
+	/// <summary>
+	/// 最近发起的流程.
+	/// </summary>
+	/// <returns></returns>
+	public String StartEaryer_Init()throws Exception
+	{
+		//定义容器.
+		DataSet ds = new DataSet();
+
+		//获得能否发起的流程.
+		String sql = "SELECT FK_Flow as No,FlowName as Name, FK_FlowSort,B.Name as FK_FlowSortText,B.Domain, COUNT(WorkID) as Num ";
+		sql += " FROM WF_GenerWorkFlow A, WF_FlowSort B  ";
+		sql += " WHERE Starter='"+bp.web.WebUser.getNo()+"'  AND A.FK_FlowSort=B.No  ";
+		sql += " GROUP BY FK_Flow, FlowName, FK_FlowSort, B.Name,B.Domain ";
+
+		DataTable dtStart = DBAccess.RunSQLReturnTable(sql);
+		dtStart.TableName = "Start";
+		ds.Tables.add(dtStart);
+
+		DataTable dtSort = new DataTable("Sort");
+		dtSort.Columns.Add("No", String.class);
+		dtSort.Columns.Add("Name", String.class);
+		dtSort.Columns.Add("Domain", String.class);
+
+		String nos = "";
+		for(DataRow dr : dtStart.Rows)
+		{
+			String no = dr.getValue("FK_FlowSort").toString();
+			if (nos.contains(no) == true)
+				continue;
+
+			String name =  dr.getValue("FK_FlowSortText").toString();
+			String domain = dr.getValue("Domain").toString();
+
+			nos += "," + no;
+
+			DataRow mydr = dtSort.NewRow();
+			mydr.setValue(0,no);
+			mydr.setValue(1,name);
+			mydr.setValue(2,domain);
+			dtSort.Rows.add(mydr);
+		}
+
+		dtSort.TableName = "Sort";
+		ds.Tables.add(dtSort);
+
+		return bp.tools.Json.ToJson(ds);
 	}
 	/** 
 	 获得发起列表 
@@ -1043,15 +1100,18 @@ public class WF extends WebContralBase
 		DataTable dtStart = DBAccess.RunSQLReturnTable("SELECT No,Name, FK_FlowSort FROM WF_Flow ORDER BY FK_FlowSort,Idx");
 		dtStart.TableName = "Start";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dtStart.Columns.get("NO").setColumnName("No");
 			dtStart.Columns.get("NAME").setColumnName("Name");
 			dtStart.Columns.get("FK_FLOWSORT").setColumnName("FK_FlowSort");
 		}
-
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dtStart.Columns.get("no").setColumnName("No");
+			dtStart.Columns.get("name").setColumnName("Name");
+			dtStart.Columns.get("fk_flowsort").setColumnName("FK_FlowSort");
+		}
 		ds.Tables.add(dtStart);
 
 
@@ -1090,8 +1150,7 @@ public class WF extends WebContralBase
 		ps.SQL="SELECT  * FROM WF_GenerWorkFlow  WHERE (Emps LIKE '%@" + WebUser.getNo() + "@%' OR Emps LIKE '%@" + WebUser.getNo() + ",%') and WFState=" + WFState.Complete.getValue() + " ORDER BY  RDT DESC";
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		//添加oracle的处理
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("PRI").setColumnName("PRI");
 			dt.Columns.get("WORKID").setColumnName("WorkID");
@@ -1135,7 +1194,7 @@ public class WF extends WebContralBase
 			dt.Columns.get("BILLNO").setColumnName("BillNo");
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 		{
 			dt.Columns.get("pri").setColumnName("PRI");
 			dt.Columns.get("workid").setColumnName("WorkID");
@@ -1454,9 +1513,7 @@ public class WF extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL=sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("WORKID").setColumnName("WorkID");
 			dt.Columns.get("TITLE").setColumnName("Title");
@@ -1471,6 +1528,22 @@ public class WF extends WebContralBase
 			dt.Columns.get("NODENAME").setColumnName("NodeName");
 			dt.Columns.get("SDTOFNODE").setColumnName("SDTOfNode");
 			dt.Columns.get("TODOEMPS").setColumnName("TodoEmps");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("workid").setColumnName("WorkID");
+			dt.Columns.get("title").setColumnName("Title");
+			dt.Columns.get("fk_flow").setColumnName("FK_Flow");
+			dt.Columns.get("flowname").setColumnName("FlowName");
+
+			dt.Columns.get("starter").setColumnName("Starter");
+			dt.Columns.get("startername").setColumnName("StarterName");
+
+			dt.Columns.get("sender").setColumnName("Sender");
+			dt.Columns.get("fk_node").setColumnName("FK_Node");
+			dt.Columns.get("nodename").setColumnName("NodeName");
+			dt.Columns.get("sdtofnode").setColumnName("SDTOfNode");
+			dt.Columns.get("todoemps").setColumnName("TodoEmps");
 		}
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -1492,9 +1565,7 @@ public class WF extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL=sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("WORKID").setColumnName("WorkID");
 			dt.Columns.get("TITLE").setColumnName("Title");
@@ -1509,6 +1580,22 @@ public class WF extends WebContralBase
 			dt.Columns.get("NODENAME").setColumnName("NodeName");
 			dt.Columns.get("SDTOFNODE").setColumnName("SDTOfNode");
 			dt.Columns.get("TODOEMPS").setColumnName("TodoEmps");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("workid").setColumnName("WorkID");
+			dt.Columns.get("title").setColumnName("Title");
+			dt.Columns.get("fk_flow").setColumnName("FK_Flow");
+			dt.Columns.get("flowname").setColumnName("FlowName");
+
+			dt.Columns.get("starter").setColumnName("Starter");
+			dt.Columns.get("startername").setColumnName("StarterName");
+
+			dt.Columns.get("sender").setColumnName("Sender");
+			dt.Columns.get("fk_node").setColumnName("FK_Node");
+			dt.Columns.get("nodename").setColumnName("NodeName");
+			dt.Columns.get("sdtofnode").setColumnName("SDTOfNode");
+			dt.Columns.get("todoemps").setColumnName("TodoEmps");
 		}
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -1532,9 +1619,7 @@ public class WF extends WebContralBase
 		ps.Add("FK_Emp", WebUser.getNo());
 		ps.SQL=sql;
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("WORKID").setColumnName("WorkID");
 			dt.Columns.get("TITLE").setColumnName("Title");
@@ -1549,6 +1634,22 @@ public class WF extends WebContralBase
 			dt.Columns.get("NODENAME").setColumnName("NodeName");
 			dt.Columns.get("SDTOFNODE").setColumnName("SDTOfNode");
 			dt.Columns.get("TODOEMPS").setColumnName("TodoEmps");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("workid").setColumnName("WorkID");
+			dt.Columns.get("title").setColumnName("Title");
+			dt.Columns.get("fk_flow").setColumnName("FK_Flow");
+			dt.Columns.get("flowname").setColumnName("FlowName");
+
+			dt.Columns.get("starter").setColumnName("Starter");
+			dt.Columns.get("startername").setColumnName("StarterName");
+
+			dt.Columns.get("sender").setColumnName("Sender");
+			dt.Columns.get("fk_node").setColumnName("FK_Node");
+			dt.Columns.get("nodename").setColumnName("NodeName");
+			dt.Columns.get("sdtofnode").setColumnName("SDTOfNode");
+			dt.Columns.get("todoemps").setColumnName("TodoEmps");
 		}
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -2135,13 +2236,17 @@ public class WF extends WebContralBase
 		ps.Add("AUTHOR", WebUser.getNo());
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("AUTHORDATE").setColumnName("AuthorDate");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("authordate").setColumnName("AuthorDate");
 		}
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -2315,9 +2420,11 @@ public class WF extends WebContralBase
 		}
 
 		DataTable dtFlows = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None
+				/*SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL*/)
 		{
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");
@@ -2400,7 +2507,8 @@ public class WF extends WebContralBase
 		ds.Tables.add(dtT);
 		sqlWhere += "ORDER BY RDT DESC";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps " + "FROM (select A.*, rownum r from (select * from WF_GenerWorkFlow where " + sqlWhere + ") A) where r between " + (pageIdx * pageSize - pageSize + 1) + " and " + (pageIdx * pageSize);
 		}
@@ -2418,9 +2526,11 @@ public class WF extends WebContralBase
 			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where (1=1) AND " + sqlWhere + " LIMIT " + pageSize + "offset " + startIndex;
 		}
 		DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None
+				/*SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL*/)
 		{
 			mydt.Columns.get(0).setColumnName("WorkID");
 			mydt.Columns.get(1).setColumnName("FID");

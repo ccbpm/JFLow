@@ -1,21 +1,37 @@
 package bp.wf.httphandler;
 
-import bp.web.*;
-import bp.sys.*;
-import bp.tools.StringHelper;
-import bp.da.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
+import bp.da.DBAccess;
+import bp.da.DBType;
+import bp.da.DataRow;
+import bp.da.DataSet;
+import bp.da.DataTable;
+import bp.da.DataType;
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
 import bp.difference.handler.WebContralBase;
-import bp.wf.template.*;
-import bp.wf.*;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.io.*;
-import java.time.*;
+import bp.sys.DBSrcType;
+import bp.sys.MapAttr;
+import bp.sys.MapAttrAttr;
+import bp.sys.MapAttrs;
+import bp.sys.PubClass;
+import bp.sys.SFDBSrc;
+import bp.tools.StringHelper;
+import bp.wf.Flow;
+import bp.wf.ImpFlowTempleteModel;
+import bp.wf.Node;
+import bp.wf.Nodes;
+import bp.wf.Platform;
+import bp.wf.template.DataDTSWay;
+import bp.wf.template.StartGuideWay;
 
 public class WF_Admin_AttrFlow extends WebContralBase
 {
@@ -47,11 +63,11 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 		if (bp.wf.Glo.getPlatform() == Platform.CCFlow)
 		{
-			tmpPath = SystemConfig.getPathOfWebApp() + "/WF/Admin/AttrFlow/APICodeFEE.txt.CCFlow";
+			tmpPath = SystemConfig.getPathOfWebApp() + "WF/Admin/AttrFlow/APICodeFEE.txt.CCFlow";
 		}
 		else
 		{
-			tmpPath = SystemConfig.getPathOfWebApp() + "/WF/Admin/AttrFlow/APICodeFEE.txt.JFlow";
+			tmpPath = SystemConfig.getPathOfWebApp() + "WF/Admin/AttrFlow/APICodeFEE.txt.JFlow";
 		}
 
 		if ((new File(tmpPath)).isFile() == false)
@@ -254,39 +270,42 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			return "保存成功.";
 		}
 
-		//保存配置信息
-		flow.setDTSDBSrc(this.GetRequestVal("DDL_DBSrc"));
-		flow.setDTSBTable(this.GetRequestVal("DDL_Table"));
-		flow.setDTSSpecNodes(this.GetRequestVal("CheckBoxIDs"));
-
-
-		SFDBSrc s = new SFDBSrc("local");
-
-		try
+		else if(flow.getDTSWay() == DataDTSWay.Syn)
 		{
-			s = new SFDBSrc("local");
-			String str = flow.getDTSFields();
+			//保存配置信息
+			flow.setDTSDBSrc(this.GetRequestVal("DDL_DBSrc"));
+			flow.setDTSBTable(this.GetRequestVal("DDL_Table"));
+			flow.setDTSSpecNodes(this.GetRequestVal("CheckBoxIDs"));
+			try
+			{
+				SFDBSrc s = new SFDBSrc("local");
+				s = new SFDBSrc("local");
+				String str = flow.getDTSFields();
 
-			String[] arr = str.split("[@]", -1);
+				String[] arr = str.split("[@]", -1);
 
 
-			String sql = "SELECT " + arr[0] + " FROM " + flow.getPTable();
+				String sql = "SELECT " + arr[0] + " FROM " + flow.getPTable();
 
-			s.RunSQL(sql);
+				s.RunSQL(sql);
 
-			s = new SFDBSrc(flow.getDTSDBSrc());
+				s = new SFDBSrc(flow.getDTSDBSrc());
 
-			sql = "SELECT " + arr[1] + ", " + flow.getDTSBTablePK() + " FROM " + flow.getDTSBTable();
+				sql = "SELECT " + arr[1] + ", " + flow.getDTSBTablePK() + " FROM " + flow.getDTSBTable();
 
-			s.RunSQL(sql);
+				s.RunSQL(sql);
 
+			}
+			catch (java.lang.Exception e)
+			{
+				//PubClass.Alert(ex.Message);
+				return "err@设置的字段有误.【" + flow.getDTSFields() + "】";
+			}
 		}
-		catch (java.lang.Exception e)
+		else
 		{
-			//PubClass.Alert(ex.Message);
-			return "err@设置的字段有误.【" + flow.getDTSFields() + "】";
+			flow.setDTWebAPI(this.GetRequestVal("TB_WebAPI"));
 		}
-
 		flow.Update();
 		return "保存成功";
 	}
@@ -629,8 +648,9 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		ds.Tables.add(dt);
 
 		//把文件放入ds.
-		String path = SystemConfig.getPathOfWebApp() + "/WF/Admin/ClientBin/NodeIcon/";
-		String[] strs = (new File(path)).list();
+		String path = SystemConfig.getPathOfWebApp() + "WF/Admin/ClientBin/NodeIcon/";
+		String[] strs = bp.tools.BaseFileUtils.getFiles(path);
+		//String[] strs = (new File(path)).list();
 		DataTable dtIcon = new DataTable();
 		dtIcon.Columns.Add("No");
 		dtIcon.Columns.Add("Name");
@@ -807,7 +827,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 		}
 		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			String sql = "SELECT COUNT(*) from (SELECT *  FROM WF_EMPWORKS WHERE  REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "'";
 
@@ -864,7 +885,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 		}
 		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT  p.name,COUNT (w.WorkID) AS Num from Port_Emp p,WF_EmpWorks w  WHERE p. NO = w.FK_Emp AND WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY p.name,w.FK_Emp ";
 			sql += "UNION SELECT  p.name,COUNT (w.WorkID) AS Num from Port_Emp p,WF_EmpWorks w  WHERE p. NO = w.FK_Emp AND WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY p.name,w.FK_Emp";
@@ -883,7 +905,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 		}
 		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName ";
 			sql += "UNION SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName";
@@ -902,7 +925,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 		}
 		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "Select NodeName,count(*) as Num from WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY NodeName ";
 			sql += "UNION Select NodeName,count(*) as Num from WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY NodeName";

@@ -422,7 +422,8 @@ public class WF_MyView extends WebContralBase {
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			currNode = "SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo()
 					+ "' Order by RDT DESC ) WHERE rownum=1";
 			break;

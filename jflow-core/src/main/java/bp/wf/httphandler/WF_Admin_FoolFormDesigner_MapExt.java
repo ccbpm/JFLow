@@ -792,6 +792,15 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		attr.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
 		attr.Retrieve();
 
+		//加入从表组件
+		MapDtls mapDtls = new MapDtls(this.getFK_MapData());
+		ds.Tables.add(mapDtls.ToDataTableField("MapDtls"));
+
+		//加入多附件组件
+		FrmAttachments frmAttachments = new FrmAttachments(this.getFK_MapData());
+		ds.Tables.add(frmAttachments.ToDataTableField("FrmAttachments"));
+
+
 		//把分组加入里面.
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
 		ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));

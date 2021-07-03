@@ -23,7 +23,6 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 	public WF_Admin_FoolFormDesigner_StyletDfine() {
 	}
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #region GloValStyles.htm
 	public final String GloValStyles_PinYin() throws Exception {
 		String name = this.GetRequestVal("TB_Name");
@@ -54,8 +53,11 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 		// 内容.
 		docs = docs.replace(en.getNo(), "GloValsTemp");
 
+		//要去掉.
+        docs = docs.replace("!important", "");
+        
 		// 保存一个临时文件,
-		String path = SystemConfig.getPathOfDataUser() + "Style\\GloVarsCSSTemp.css";
+		String path = SystemConfig.getPathOfDataUser() + "Style/GloVarsCSSTemp.css";
 		bp.da.DataType.SaveAsFile(path, docs);
 
 		return "风格文件已经生成:" + path;
@@ -78,15 +80,12 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 		}
 
 		// 保存一个临时文件,
-		String path = SystemConfig.getPathOfDataUser() + "Style\\GloVarsCSS.css";
+		String path = SystemConfig.getPathOfDataUser() + "Style/GloVarsCSS.css";
 		bp.da.DataType.SaveAsFile(path, html);
 
 		return "执行成功.";
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #region Default.htm 风格设计页面..
 	/**
 	 * 保存为模版.
@@ -101,7 +100,7 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 
 			String myName = this.GetRequestVal("TemplateName");
 
-			String path = SystemConfig.getPathOfDataUser() + "\\Style\\TemplateFoolFrm\\" + myName + ".xml";
+			String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolFrm/" + myName + ".xml";
 			ens.SaveToXml(path);
 
 			return "模版创建成功.";
@@ -128,7 +127,7 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 	 */
 	public final String Default_GenerGloVars() throws Exception {
 		// 获得标准的配置文件,用于比较缺少或者删除的标记.
-		String path = SystemConfig.getPathOfWebApp() + "\\WF\\Admin\\FoolFormDesigner\\StyletDfine\\DefaultStyle.xml";
+		String path = SystemConfig.getPathOfWebApp() + "WF/Admin/FoolFormDesigner/StyletDfine/DefaultStyle.xml";
 		DataSet ds = new DataSet();
 		ds.readXml(path);
 		DataTable dt = ds.getTables().get(0);
@@ -136,7 +135,6 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 		GloVars ens = new GloVars();
 		ens.Retrieve("GroupKey", "FoolFrmStyle", "Idx");
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		/// #region 检查是否有新增的标签,如果有就 insert 一个。
 		int idx = 0;
 		for (DataRow dr : dt.Rows) {
@@ -155,11 +153,9 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 				ens.AddEntity(myen);
 			}
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #endregion 检查是否有新增的标签,如果有就insert一个。
+		//检查是否有新增的标签,如果有就insert一个。
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		/// #region 检查是否有 多余 的标签,如果有就 Delete .
+		//检查是否有 多余 的标签,如果有就 Delete .
 		boolean isChange = false;
 		for (GloVar item : ens.ToJavaList()) {
 			boolean isHave = false;
@@ -183,7 +179,6 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 		if (isChange == true) {
 			ens.Retrieve("GroupKey", "FoolFrmStyle", "Idx");
 		}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		/// #endregion 检查是否有 多余 的标签,如果有就Delete 。
 
 		Default_App_Ext(ens, false);
@@ -219,9 +214,6 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 		return Default_App_Ext(ens, false);
 	}
 
-	// C# TO JAVA CONVERTER NOTE: Java does not support optional parameters.
-	// Overloaded method(s) are created above:
-	// ORIGINAL LINE: public string Default_App_Ext(GloVars ens, bool isApp = false)
 	public final String Default_App_Ext(GloVars ens, boolean isApp) throws Exception {
 		String docs = "";
 
@@ -231,13 +223,13 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 
 		// 保存.
 		if (isApp == true) {
-			String pathDefault = SystemConfig.getPathOfDataUser() + "Style\\FoolFrmStyle\\Default.css";
+			String pathDefault = SystemConfig.getPathOfDataUser() + "Style/FoolFrmStyle/Default.css";
 			DataType.SaveAsFile(pathDefault, docs);
 		}
 
 		// 保存一个临时文件,
-		String path = SystemConfig.getPathOfDataUser() + "Style\\FoolFrmStyle\\DefaultPreview.css";
-		File file=new File(SystemConfig.getPathOfDataUser() + "Style\\FoolFrmStyle");
+		String path = SystemConfig.getPathOfDataUser() + "Style/FoolFrmStyle/DefaultPreview.css";
+		File file=new File(SystemConfig.getPathOfDataUser() + "Style/FoolFrmStyle");
 		if(!file.exists()){//如果文件夹不存在
 			file.mkdir();//创建文件夹
 		}
@@ -260,16 +252,13 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 				continue;
 			}
 
-			docs += "\t\n " + item + ":" + ap.GetValStrByKey(item).trim().replace(" ", "") + ";";
+			docs += "\t\n " + item + ":" + ap.GetValStrByKey(item).trim().replace(" ", "") + " !important;";
 		}
 		docs += "\t\n }";
 		return docs;
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #endregion 风格设计页面..
+	///风格设计页面..
 
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	/// #region Template.htm 模版页面.
 	/**
 	 * 应用
 	 * 
@@ -288,7 +277,7 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 	 */
 	public final String Default_Template_Delete() {
 
-		String path = SystemConfig.getPathOfDataUser() + "\\Style\\TemplateFoolFrm\\";
+		String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolFrm/";
 
 		(new File(path + this.getName())).delete();
 		return "删除成功.";
@@ -301,9 +290,8 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Default_GenerTemplate() throws Exception {
-		String path = SystemConfig.getPathOfDataUser() + "\\Style\\TemplateFoolFrm\\";
+		String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolFrm/";
 
-		// String[] fls = (new File(path)).list(File::isFile);
 
 		String[] fls = bp.tools.BaseFileUtils.getFiles(path);
 
@@ -342,7 +330,7 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 	 * @throws Exception
 	 */
 	public final String Default_Selected_Ext(boolean isApp) throws Exception {
-		String filePath = SystemConfig.getPathOfDataUser() + "\\Style\\TemplateFoolFrm\\" + this.getName();
+		String filePath = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolFrm/" + this.getName();
 
 		DataSet ds = new DataSet();
 		ds.readXml(filePath);
@@ -376,6 +364,5 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends WebContralBase {
 
 		return "执行成功.";
 	}
-	// C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 	/// #endregion 模版页面.
 }

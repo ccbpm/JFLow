@@ -42,7 +42,8 @@ public class DBAccess {
 		}
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.DM)
 		{
 		}
@@ -100,8 +101,10 @@ public class DBAccess {
 			return "SELECT b.name, a.name FName from sysobjects b join syscolumns a on b.id = a.cdefault where a.id = object_id('" + table + "') ";
 		}
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.DM
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 
 		}
@@ -167,7 +170,8 @@ public class DBAccess {
 				conn = DBAccess.getGetAppCenterDBConn_MSSQL();
 				pstmt = conn.prepareStatement(sql);
 			} else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 				conn = DBAccess.getGetAppCenterDBConn_Oracle();
 				pstmt = conn.prepareStatement(sql);
 			} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
@@ -205,7 +209,8 @@ public class DBAccess {
 
 				}
 			}
-			if (SystemConfig.getAppCenterDBType().getValue() == DBType.KingBase.getValue()){
+			if (SystemConfig.getAppCenterDBType().getValue() == DBType.KingBaseR3.getValue()
+					|| SystemConfig.getAppCenterDBType().getValue() == DBType.KingBaseR6.getValue()){
 				if (DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
 				{
 
@@ -371,7 +376,8 @@ public class DBAccess {
 		String strSQL = "SELECT [" + fileSaveField + "] FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-			||SystemConfig.getAppCenterDBType() == DBType.KingBase
+			||SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+			||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 			|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 			strSQL = strSQL.replace("[", "").replace("]", "");
 		}
@@ -492,7 +498,8 @@ public class DBAccess {
 		case Access:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
 			throw new RuntimeException("@没有实现...");
@@ -513,7 +520,8 @@ public class DBAccess {
 			throw new RuntimeException("@没有实现...");
 		case Access:
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			throw new RuntimeException("@没有实现...");
 		case DM:
 			throw new RuntimeException("@没有实现...");
@@ -542,7 +550,8 @@ public class DBAccess {
 			// MySqlConnection(SystemConfig.AppCenterDSN));
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
@@ -566,7 +575,8 @@ public class DBAccess {
 		case Access:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
@@ -591,7 +601,8 @@ public class DBAccess {
 		case MSSQL:
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			throw new RuntimeException("@没有实现...");
 		case Informix:
@@ -793,7 +804,8 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static long GenerOID(String cfgKey) {
-		if (SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			String sql="SELECT COUNT(*) FROM sys_serial WHERE cfgKey='"+cfgKey+"'";
 			int num=DBAccess.RunSQLReturnValInt(sql);
@@ -1113,7 +1125,8 @@ public class DBAccess {
 		String sql = "";
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			sql = "SELECT text FROM user_source WHERE name=UPPER('" + proName + "') ORDER BY LINE ";
 			break;
@@ -1299,7 +1312,8 @@ public class DBAccess {
 			case DM:
 				result = RunSQL_20191230_DM(sql.replace("]", "").replace("[", ""), paras);
 				break;
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				result = RunSQL_200705_Ora(sql.replace("]", "").replace("[", ""), paras);
 				break;
 			default:
@@ -1535,7 +1549,8 @@ public class DBAccess {
 			case MSSQL:
 				return RunSQLReturnResultSet_201809_SQL(sql, paras, en, attrs);
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return RunSQLReturnResultSet_201809_Ora(sql, paras, en, attrs);
 			case MySQL:
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, en, attrs);
@@ -1562,7 +1577,8 @@ public class DBAccess {
 			case MSSQL:
 				return RunSQLReturnResultSet_201809_SQL(sql, paras, ens, attrs);
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return RunSQLReturnResultSet_201809_Ora(sql, paras, ens, attrs);
 			case MySQL:
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, ens, attrs);
@@ -1588,7 +1604,8 @@ public class DBAccess {
 				dt = RunSQLReturnTable_200705_SQL(sql, paras);
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				dt = RunSQLReturnTable_200705_Ora(sql, paras);
 				break;
 			case MySQL:
@@ -2304,7 +2321,7 @@ public class DBAccess {
 			}
 			if (Log.isLoggerDebugEnabled()) {
 				Log.DefaultLogWriteLineDebug("SQL: " + sql);
-				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + oratb.Rows.size());
+				Log.DefaultLogWriteLineDebug("Param: " + paras!=null?paras.getDebugInfo():"" + ", Result: Rows=" + oratb.Rows.size());
 			}
 			return oratb;
 		} catch (Exception ex) {
@@ -2884,7 +2901,8 @@ public class DBAccess {
 		try {
 			switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				dt = DBAccess.RunSQLReturnTable_200705_Ora(sql, paras);
 				break;
 			case MSSQL:
@@ -2918,7 +2936,8 @@ public class DBAccess {
 		// System.out.print(SystemConfig.getAppCenterDBType());
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			dt = DBAccess.RunSQLReturnTable_200705_Ora(sql, new Paras());
 			break;
 		case MSSQL:
@@ -2988,7 +3007,8 @@ public class DBAccess {
 		case DM:
 			sql = "SELECT constraint_name, constraint_type,search_condition, r_constraint_name  from user_constraints WHERE table_name = upper(:Tab) AND constraint_type = 'P'";
 			break;
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			sql = "SELECT column_name, table_name, CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE upper(table_name) =upper(:Tab) ";
 			break;
 		default:
@@ -3038,7 +3058,7 @@ public class DBAccess {
 				{
 					obj = obj.split("[.]", -1)[1];
 				}
-				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + SystemConfig.getUser().toUpperCase() + "' ", ps);
+				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + SystemConfig.getUser() + "' ", ps);
 			case MSSQL:
 				return IsExits("SELECT name FROM sysobjects WHERE name = '" + obj + "'");
 			case PostgreSQL:
@@ -3059,7 +3079,8 @@ public class DBAccess {
 			case Access:
 				//return false ; //IsExits("SELECT * FROM MSysObjects WHERE (((MSysObjects.getName()) =  '"+obj+"' ))");
 				return IsExits("SELECT * FROM MSysObjects WHERE Name =  '" + obj + "'");
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				if (obj.indexOf(".") != -1)
 				{
 					obj = obj.split("[.]", -1)[1];
@@ -3103,7 +3124,8 @@ public class DBAccess {
 			i = DBAccess.RunSQLReturnValInt(sql);
 			break;
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			if (table.indexOf(".") != -1) {
 				table = table.split("[.]", -1)[1];
 			}
@@ -3143,7 +3165,8 @@ public class DBAccess {
 					+ tableName + "'";
 			break;
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			sql = "SELECT COLUMN_NAME as FName,DATA_TYPE as FType,DATA_LENGTH as FLen,COLUMN_NAME as FDesc FROM all_tab_columns WHERE table_name = upper('"
 					+ tableName + "')";
@@ -3159,7 +3182,8 @@ public class DBAccess {
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				||SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 			dt.Columns.get("FNAME").ColumnName = "FName";
 			dt.Columns.get("FTYPE").ColumnName = "FType";
 			dt.Columns.get("FLEN").ColumnName = "FLen";
@@ -3210,7 +3234,8 @@ public class DBAccess {
 		case Oracle:
 		case DM:
 		case MSSQL:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			sql = "ALTER TABLE " + table + " DROP CONSTRAINT " + pkName;
 			break;
 		case MySQL:
@@ -3243,7 +3268,8 @@ public class DBAccess {
 					+ table + "'";
 			break;
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			sql = "SELECT constraint_name, constraint_type,search_condition, r_constraint_name  from user_constraints WHERE table_name = upper('"
 					+ table + "') AND constraint_type = 'P'";
@@ -3327,7 +3353,8 @@ public class DBAccess {
 	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception {
         //增加对oracle数据库的逻辑 qin
         if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle
-        		||SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+        		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+        		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
             Connection conn = DBAccess.getGetAppCenterDBConn_Oracle();
             String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
             PreparedStatement pstmt = conn.prepareStatement(strSQL);
@@ -3480,7 +3507,8 @@ public class DBAccess {
 				DBAccess.RunSQLReturnString("SELECT 1+2 ");
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 			case MySQL:
 				DBAccess.RunSQLReturnString("SELECT 1+2 FROM DUAL ");
@@ -3520,7 +3548,8 @@ public class DBAccess {
 		case MSSQL:
 			return RunSQLReturnTable_201612_SQL(sql, pageSize, pageIdx, key, orderKey, orderType);
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			return RunSQLReturnTable_201612_Ora(sql, pageSize, pageIdx, orderKey, orderType);
 		case MySQL:
 			return RunSQLReturnTable_201612_MySql(sql, pageSize, pageIdx, key, orderKey, orderType);
@@ -3762,7 +3791,8 @@ public class DBAccess {
 			} else {
 				return false;
 			}
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			sql = "SELECT Table_Type FROM information_schema.TABLES WHERE UPPER(table_name)='" + tabelOrViewName.toUpperCase() +"'";
 			DataTable dt3 = DBAccess.RunSQLReturnTable(sql);
 			if (dt3.Rows.size() == 0) {

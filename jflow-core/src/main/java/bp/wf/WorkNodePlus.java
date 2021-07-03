@@ -4,10 +4,13 @@ import bp.en.*;
 import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.pub.RTFEngine;
+import bp.tools.HttpClientUtil;
 import bp.web.*;
 import bp.sys.*;
 import bp.wf.template.*;
 import bp.wf.data.*;
+import net.sf.json.JSONObject;
+
 import java.util.*;
 import java.io.*;
 
@@ -348,99 +351,259 @@ public class WorkNodePlus {
 
 		/// qinfaliang, 编写同步的业务逻辑,执行错误就抛出异常.
 
-		String[] dtsArray = fl.getDTSFields().split("[@]", -1);
+		if(fl.getDTSWay()==DataDTSWay.Syn) {
+			String[] dtsArray = fl.getDTSFields().split("[@]", -1);
 
-		String[] lcArr = dtsArray[0].split("[,]", -1); // 取出对应的主表字段
-		String[] ywArr = dtsArray[1].split("[,]", -1); // 取出对应的业务表字段
+			String[] lcArr = dtsArray[0].split("[,]", -1); // 取出对应的主表字段
+			String[] ywArr = dtsArray[1].split("[,]", -1); // 取出对应的业务表字段
 
-		String sql = "SELECT " + dtsArray[0] + " FROM " + fl.getPTable().toUpperCase() + " WHERE OID=" + rpt.getOID();
-		DataTable lcDt = DBAccess.RunSQLReturnTable(sql);
-		if (lcDt.Rows.size() == 0) {
-			throw new RuntimeException("没有找到业务表数据.");
-		}
+			String sql = "SELECT " + dtsArray[0] + " FROM " + fl.getPTable().toUpperCase() + " WHERE OID=" + rpt.getOID();
+			DataTable lcDt = DBAccess.RunSQLReturnTable(sql);
+			if (lcDt.Rows.size() == 0) {
+				throw new RuntimeException("没有找到业务表数据.");
+			}
 
-		bp.sys.SFDBSrc src = new bp.sys.SFDBSrc(fl.getDTSDBSrc());
-		sql = "SELECT " + dtsArray[1] + " FROM " + fl.getDTSBTable().toUpperCase();
+			bp.sys.SFDBSrc src = new bp.sys.SFDBSrc(fl.getDTSDBSrc());
+			sql = "SELECT " + dtsArray[1] + " FROM " + fl.getDTSBTable().toUpperCase();
 
-		DataTable ywDt = src.RunSQLReturnTable(sql);
+			DataTable ywDt = src.RunSQLReturnTable(sql);
 
-		String values = "";
-		String upVal = "";
+			String values = "";
+			String upVal = "";
 
-		for (int i = 0; i < lcArr.length; i++) {
-			switch (src.getDBSrcType()) {
-			case Localhost:
-				switch (SystemConfig.getAppCenterDBType()) {
-				case MSSQL:
-					break;
-				case Oracle:
-				case KingBase:
-					if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
-						if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
-							values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
-						} else {
-							values += "'',";
+			for (int i = 0; i < lcArr.length; i++) {
+				switch (src.getDBSrcType()) {
+					case Localhost:
+						switch (SystemConfig.getAppCenterDBType()) {
+							case MSSQL:
+								break;
+							case Oracle:
+								if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
+									if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
+										values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
+									} else {
+										values += "'',";
+									}
+									continue;
+								}
+								values += "'" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "',";
+								continue;
+							case MySQL:
+								break;
+							case Informix:
+								break;
+							default:
+								throw new RuntimeException("没有涉及到的连接测试类型...");
 						}
+						break;
+					case SQLServer:
+						break;
+					case MySQL:
+						break;
+					case Oracle:
+						if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
+							if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
+								values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
+							} else {
+								values += "'',";
+							}
+							continue;
+						}
+						values += "'" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "',";
 						continue;
-					}
-					values += "'" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "',";
-					continue;
-				case MySQL:
-					break;
-				case Informix:
-					break;
-				default:
-					throw new RuntimeException("没有涉及到的连接测试类型...");
-				}
-				break;
-			case SQLServer:
-				break;
-			case MySQL:
-				break;
-			case Oracle:
-				if (ywDt.Columns.get(ywArr[i]).DataType == Date.class) {
-					if (!DataType.IsNullOrEmpty(lcDt.Rows.get(0).getValue(lcArr[i].toString()).toString())) {
-						values += "to_date('" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "','YYYY-MM-DD'),";
-					} else {
-						values += "'',";
-					}
-					continue;
+					default:
+						throw new RuntimeException("暂时不支您所使用的数据库类型!");
 				}
 				values += "'" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "',";
-				continue;
-			default:
-				throw new RuntimeException("暂时不支您所使用的数据库类型!");
+				// 获取除主键之外的其他值
+				if (i > 0) {
+					upVal = upVal + ywArr[i] + "='" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "',";
+				}
 			}
-			values += "'" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "',";
-			// 获取除主键之外的其他值
-			if (i > 0) {
-				upVal = upVal + ywArr[i] + "='" + lcDt.Rows.get(0).getValue(lcArr[i].toString()) + "',";
-			}
-		}
 
-		values = values.substring(0, values.length() - 1);
-		upVal = upVal.substring(0, upVal.length() - 1);
+			values = values.substring(0, values.length() - 1);
+			upVal = upVal.substring(0, upVal.length() - 1);
 
-		// 查询对应的业务表中是否存在这条记录
-		sql = "SELECT * FROM " + fl.getDTSBTable().toUpperCase() + " WHERE " + fl.getDTSBTablePK() + "='"
-				+ lcDt.Rows.get(0).getValue(fl.getDTSBTablePK()) + "'";
-		DataTable dt = src.RunSQLReturnTable(sql);
-		// 如果存在，执行更新，如果不存在，执行插入
-		if (dt.Rows.size() > 0) {
-			sql = "UPDATE " + fl.getDTSBTable().toUpperCase() + " SET " + upVal + " WHERE " + fl.getDTSBTablePK() + "='"
+			// 查询对应的业务表中是否存在这条记录
+			sql = "SELECT * FROM " + fl.getDTSBTable().toUpperCase() + " WHERE " + fl.getDTSBTablePK() + "='"
 					+ lcDt.Rows.get(0).getValue(fl.getDTSBTablePK()) + "'";
-		} else {
-			sql = "INSERT INTO " + fl.getDTSBTable().toUpperCase() + "(" + dtsArray[1] + ") VALUES(" + values + ")";
-		}
+			DataTable dt = src.RunSQLReturnTable(sql);
+			// 如果存在，执行更新，如果不存在，执行插入
+			if (dt.Rows.size() > 0) {
+				sql = "UPDATE " + fl.getDTSBTable().toUpperCase() + " SET " + upVal + " WHERE " + fl.getDTSBTablePK() + "='"
+						+ lcDt.Rows.get(0).getValue(fl.getDTSBTablePK()) + "'";
+			} else {
+				sql = "INSERT INTO " + fl.getDTSBTable().toUpperCase() + "(" + dtsArray[1] + ") VALUES(" + values + ")";
+			}
 
-		try {
-			src.RunSQL(sql);
-		} catch (RuntimeException ex) {
-			throw new RuntimeException(ex.getMessage());
-		}
+			try {
+				src.RunSQL(sql);
+			} catch (RuntimeException ex) {
+				throw new RuntimeException(ex.getMessage());
+			}
 
-		/// qinfaliang, 编写同步的业务逻辑,执行错误就抛出异常.
-		return;
+			/// qinfaliang, 编写同步的业务逻辑,执行错误就抛出异常.
+			return;
+		}
+		if(fl.getDTSWay() == DataDTSWay.WebAPI) {
+			//推送的数据
+			String info = "{";
+			//推送的主表数据
+			String mainTable = "";
+			mainTable += "\"mainTable\":";
+			mainTable += "{";
+			MapAttrs attrs = new MapAttrs(currNode.getNodeFrmID());
+			for (MapAttr attr : attrs.ToJavaList()) {
+				if (attr.getKeyOfEn().equals("Title") || attr.getKeyOfEn().equals("BillNo"))
+					continue;
+				if (attr.getKeyOfEn().equals("AtPara") || attr.getKeyOfEn().equals("BillState"))
+					continue;
+				if (attr.getKeyOfEn().equals("RDT") || attr.getKeyOfEn().equals("OrgNo"))
+					continue;
+				if (attr.getKeyOfEn().equals("FK_Dept") || attr.getKeyOfEn().equals("FID"))
+					continue;
+				if (attr.getKeyOfEn().equals("Starter") || attr.getKeyOfEn().equals("StarterName"))
+					continue;
+				if (attr.getKeyOfEn().equals("OID") || attr.getKeyOfEn().equals("Rec"))
+					continue;
+				mainTable += "\"" + attr.getKeyOfEn() + "\":\"" + rpt.GetValStrByKey(attr.getKeyOfEn()) + "\",";
+			}
+			mainTable += "\"oid\":\"" + gwf.getWorkID() + "\"";
+//			if (!DataType.IsNullOrEmpty(mainTable))
+//				mainTable = mainTable.substring(0, mainTable.length() - 1);
+			mainTable += "}";
+
+			//推送的从表数据
+			String dtls = "[";
+			String dtlData = "";
+
+			MapDtls mapDtls = new MapDtls();
+			mapDtls.Retrieve(MapDtlAttr.FK_MapData, currNode.getNodeFrmID());
+			for (MapDtl dtl : mapDtls.ToJavaList()) {
+				dtlData += "{";
+				dtlData += "\"dtlNo\":\"" + dtl.getNo() + "\",";
+				//多个从表的数据
+				String dtlList = "[";
+				//每一行数据
+				String dtlOne = "";
+				//每一行的字段数据
+				String dtlKeys = "";
+				//从表附件
+				String dtlAths = "[";
+				String dtlAth = "";
+
+				MapAttrs dtlAttrs = new MapAttrs(dtl.getNo());
+				GEDtls geDtls = new GEDtls(dtl.getNo());
+				geDtls.Retrieve(GEDtlAttr.RefPK, gwf.getWorkID());
+				for (GEDtl geDtl : geDtls.ToJavaList()) {
+					dtlKeys = "{";
+					for (MapAttr attr : dtlAttrs.ToJavaList()) {
+						if (attr.getKeyOfEn().equals("OID") || attr.getKeyOfEn().equals("RefPK"))
+							continue;
+						if (attr.getKeyOfEn().equals("FID") || attr.getKeyOfEn().equals("RDT"))
+							continue;
+						if (attr.getKeyOfEn().equals("Rec") || attr.getKeyOfEn().equals("AthNum"))
+							continue;
+						dtlKeys += "\"" + attr.getKeyOfEn() + "\":\"" + geDtl.GetValByKey(attr.getKeyOfEn()) + "\",";
+					}
+					if (!DataType.IsNullOrEmpty(dtlKeys))
+						dtlKeys = dtlKeys.substring(0, dtlKeys.length() - 1);
+					dtlKeys += "}";
+
+					FrmAttachmentDBs attachmentDBs = new FrmAttachmentDBs();
+					attachmentDBs.Retrieve(FrmAttachmentDBAttr.FK_MapData, dtl.getNo(), FrmAttachmentDBAttr.RefPKVal, geDtl.getOID());
+					for (FrmAttachmentDB frmAttachmentDB : attachmentDBs.ToJavaList()) {
+						dtlAth += "{";
+						dtlAth += "\"fileFullName\":\"" + frmAttachmentDB.getFileFullName() + "\",";
+						dtlAth += "\"fileName\":\"" + frmAttachmentDB.getFileName() + "\",";
+						dtlAth += "\"sort\":\"" + frmAttachmentDB.getSort() + "\",";
+						dtlAth += "\"fileExts\":\"" + frmAttachmentDB.getFileExts() + "\",";
+						dtlAth += "\"rdt\":\"" + frmAttachmentDB.getRDT() + "\",";
+						dtlAth += "\"rec\":\"" + frmAttachmentDB.getRec() + "\",";
+						dtlAth += "\"myPK\":\"" + frmAttachmentDB.getMyPK() + "\",";
+						dtlAth += "\"recName\":\"" + frmAttachmentDB.getRecName() + "\",";
+						dtlAth += "\"fk_dept\":\"" + frmAttachmentDB.getFK_Dept() + "\",";
+						dtlAth += "\"fk_deptName\":\"" + frmAttachmentDB.getFK_DeptName() + "\"";
+						dtlAth += "},";
+					}
+					if (!DataType.IsNullOrEmpty(dtlAth))
+						dtlAth = dtlAth.substring(0, dtlAth.length() - 1);
+					dtlAth += "]";
+					dtlOne += "{";
+					dtlOne += "\"dtlData\":" + dtlKeys + ",";
+					dtlOne += "\"dtlAths\":[" + dtlAth + "";
+					dtlOne += "},";
+				}
+				if (!DataType.IsNullOrEmpty(dtlOne))
+					dtlOne = dtlOne.substring(0, dtlOne.length() - 1);
+				dtlList += dtlOne;
+				dtlList += "]";
+
+				dtlData += "\"dtl\":" + dtlList + "";
+				dtlData += "},";
+			}
+			if (!DataType.IsNullOrEmpty(dtlData))
+				dtlData = dtlData.substring(0, dtlData.length() - 1);
+			dtls += dtlData;
+			dtls += "]";
+
+			//附件数据
+			String aths = "[";
+			String ath = "";
+
+			FrmAttachments attachments = new FrmAttachments();
+			attachments.Retrieve(FrmAttachmentAttr.FK_MapData, currNode.getNodeFrmID(), FrmAttachmentAttr.FK_Node, 0);
+			for (FrmAttachment attachment : attachments.ToJavaList()) {
+				FrmAttachmentDBs dbs = new FrmAttachmentDBs();
+				dbs.Retrieve(FrmAttachmentDBAttr.FK_FrmAttachment, attachment.getMyPK(), FrmAttachmentDBAttr.FK_MapData, currNode.getNodeFrmID(), FrmAttachmentDBAttr.RefPKVal, gwf.getWorkID());
+				if (dbs.ToJavaList().size() <= 0)
+					continue;
+				ath += "{";
+				ath += "\"attachmentid\":\"" + attachment.getMyPK() + "\",";
+
+				String athdb = "";
+				for (FrmAttachmentDB db : dbs.ToJavaList()) {
+					athdb += "{";
+					athdb += "\"fileFullName\":\"" + db.getFileFullName() + "\",";
+					athdb += "\"fileName\":\"" + db.getFileName() + "\",";
+					athdb += "\"sort\":\"" + db.getSort() + "\",";
+					athdb += "\"fileExts\":\"" + db.getFileExts() + "\",";
+					athdb += "\"rdt\":\"" + db.getRDT() + "\",";
+					athdb += "\"myPK\":\"" + db.getMyPK() + "\",";
+					athdb += "\"refPKVal\":\"" + db.getRefPKVal() + "\",";
+					athdb += "\"rec\":\"" + db.getRec() + "\",";
+					athdb += "\"recName\":\"" + db.getRecName() + "\",";
+					athdb += "\"fk_dept\":\"" + db.getFK_Dept() + "\",";
+					athdb += "\"fk_deptName\":\"" + db.getFK_DeptName() + "\",";
+					athdb += "},";
+				}
+				if (!DataType.IsNullOrEmpty(athdb))
+					athdb = athdb.substring(0, athdb.length() - 1);
+				ath += "\"athdb\":" + athdb + "";
+				ath += "},";
+			}
+			if (!DataType.IsNullOrEmpty(ath))
+				ath = ath.substring(0, ath.length() - 1);
+			aths += ath;
+			aths += "]";
+
+			info += mainTable;
+			info += ",\"dtls\":" + dtls;
+			info += ",\"aths\":" + aths;
+			info += "}";
+
+			String apiUrl = fl.getDTWebAPI();
+			java.util.Map<String, String> headerMap = new Hashtable<String, String>();
+			headerMap.put("Content-Type", "application/json");
+			headerMap.put("accessToken", "");
+			//执行POST
+			String postData = HttpClientUtil.doPost(apiUrl, info.toString(), headerMap);
+			JSONObject j = JSONObject.fromObject(postData);
+			if (!j.get("code").toString().equals("200"))
+				bp.da.Log.DefaultLogWriteLine(LogType.Info, "同步失败:" + postData.toString());
+
+			return;
+		}
 	}
 
 	/**
@@ -782,8 +945,98 @@ public class WorkNodePlus {
 		//判断是不是子流程结束后显示父流程待办
 		if(gwf.getWFState() == WFState.Complete)
 		{
+			long slWorkID = gwf.GetParaInt("SLWorkID");
+			String slFlowNo = gwf.GetParaString("SLFlowNo");
+			 int slNodeID = gwf.GetParaInt("SLNodeID");
+
+			SubFlows subFlows = new SubFlows();
+			if (slWorkID == 0)
+				subFlows.Retrieve(SubFlowAttr.FK_Node, gwf.getPNodeID(), SubFlowAttr.SubFlowNo, wn.getHisFlow().getNo());
+			else
+				subFlows.Retrieve(SubFlowAttr.FK_Node, slNodeID, SubFlowAttr.SubFlowNo, wn.getHisFlow().getNo());
+
+			if(subFlows.size()==0)
+				return wn.HisMsgObjs;
+
+			SubFlow subFlow =(SubFlow) subFlows.get(0);
+			if (subFlow.getBackCopyRole() != 0 && slWorkID==0)
+			{
+
+				Node pNd = new Node(subFlow.getFK_Node());
+				Work pwork = pNd.getHisWork();
+				pwork.setOID(gwf.getPWorkID());
+				pwork.RetrieveFromDBSources();
+				GERpt prpt = new bp.wf.data.GERpt("ND" + Integer.parseInt(subFlow.getFK_Flow()) + "Rpt");
+				prpt.setOID(gwf.getPWorkID());
+				prpt.RetrieveFromDBSources();
+				//判断是否启用了数据字段反填规则
+				if (subFlow.getBackCopyRole() == 1 || subFlow.getBackCopyRole() == 3)
+				{
+					//子流程数据拷贝到父流程中
+					pwork.Copy(wn.getHisWork());
+					prpt.Copy(wn.getHisWork());
+				}
+				//子流程数据拷贝到父流程中
+				if ((subFlow.getBackCopyRole() == 2 || subFlow.getBackCopyRole() == 3)
+						&& DataType.IsNullOrEmpty(subFlow.getParentFlowCopyFields()) == false)
+				{
+					Work wk = wn.getHisWork();
+					Attrs attrs = wk.getEnMap().getAttrs();
+					//获取子流程的签批字段
+					String keyOfEns = "";
+					String keyVals = ""; //签批字段存储的值
+					for(Attr attr :attrs)
+					{
+						if (attr.getUIContralType() == UIContralType.SignCheck)
+						{
+							keyOfEns += attr.getField()+ ",";
+							continue;
+						}
+
+					}
+
+					//父流程把子流程不同字段进行匹配赋值
+					AtPara ap = new AtPara(subFlow.getParentFlowCopyFields());
+					for(String str : ap.getHisHT().keySet())
+					{
+						Object val = ap.GetValStrByKey(str);
+						if (DataType.IsNullOrEmpty(val.toString()) == true)
+							continue;
+						pwork.SetValByKey(val.toString(), wk.GetValByKey(str));
+						prpt.SetValByKey(val.toString(), wk.GetValByKey(str));
+						if (keyOfEns.contains(str + ",") == true)
+							keyVals += wk.GetValByKey(str);
+					}
+					if (DataType.IsNullOrEmpty(keyVals) == false)
+					{
+						String trackPTable = "ND" + Integer.parseInt(wn.getHisFlow().getNo()) + "Track";
+						//把子流程的签批字段对应的审核信息拷贝到父流程中
+						keyVals = keyVals.substring(1);
+						String sql = "SELECT * FROM " + trackPTable + " WHERE ActionType=22 AND WorkID=" + wn.getWorkID() + " AND NDFrom IN(" + keyVals + ")";
+						DataTable dt = DBAccess.RunSQLReturnTable(sql);
+						Tracks tracks = new Tracks();
+						bp.en.QueryObject.InitEntitiesByDataTable(tracks, dt, null);
+						for(Track t : tracks.ToJavaList())
+						{
+
+							t.setWorkID(pwork.getOID());
+							t.setFID(pwork.getFID());
+							t.FK_Flow = subFlow.getFK_Flow();
+							t.setHisActionType(ActionType.WorkCheck);
+							t.setMyPK(String.valueOf(DBAccess.GenerOIDByGUID()));
+							t.Insert();
+						}
+					}
+
+				}
+				pwork.Update();
+				prpt.Update();
+
+			}
+
+
 			//子流程运行结束后父流程是否自动往下运行一步
-			String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(wn.getHisGenerWorkFlow(), wn.getHisFlow());
+			String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(wn.getHisGenerWorkFlow(), wn.getHisFlow(),subFlow);
 			if (DataType.IsNullOrEmpty(msg) == false)
 			{
 				wn.HisMsgObjs.AddMsg("info", msg, msg, SendReturnMsgType.Info);

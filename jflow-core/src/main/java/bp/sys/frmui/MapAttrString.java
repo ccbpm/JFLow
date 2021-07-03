@@ -690,7 +690,8 @@ public class MapAttrString extends EntityMyPK {
 						sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR2("
 								+ attr.getMaxLen() + ")";
 					}
-					if (SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+					if (SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 						sql = "ALTER table " + md.getPTable() + " ALTER COLUMN " + attr.getField()
 								+ " TYPE CHARACTER VARYING(" + attr.getMaxLen() + ")";
 					}

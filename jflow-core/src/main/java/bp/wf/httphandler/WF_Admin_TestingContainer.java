@@ -79,7 +79,8 @@ public class WF_Admin_TestingContainer extends WebContralBase
 		dt.TableName = "Track";
 		//把列大写转化为小写.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			Track tk = new Track();
 			for (Attr attr : tk.getEnMap().getAttrs())
@@ -403,15 +404,14 @@ public class WF_Admin_TestingContainer extends WebContralBase
 				dtMyEmps.Rows.add(drNew);
 			}
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 			{
 				dtMyEmps.Columns.get("NO").setColumnName("No");
 				dtMyEmps.Columns.get("NAME").setColumnName("Name");
 				dtMyEmps.Columns.get("FK_DEPTTEXT").setColumnName("FK_DeptText");
 			}
 
-			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 			{
 				dtMyEmps.Columns.get("no").setColumnName("No");
 				dtMyEmps.Columns.get("name").setColumnName("Name");

@@ -81,9 +81,9 @@ public enum DeliveryWay
 	 从人员到人员
 	*/
 	ByFromEmpToEmp(18),
-	/** 
-	 本部门内的人员
-	*/
+	/**
+	 * 本部门内的人员
+	 */
 	FindSpecDeptEmpsInStationlist(19),
 	/** 
 	 按照岗位计算-范围内的
@@ -101,6 +101,10 @@ public enum DeliveryWay
 	 按照部门领导计算
 	*/
 	ByDeptLeader(23),
+	/**
+	 * 找自己的直属领导
+	 */
+	ByEmpLeader(50),
 	/** 
 	 按照用户组计算(本组织范围内)
 	*/
@@ -132,7 +136,7 @@ public enum DeliveryWay
 	/**
 	 * 按照绑定部门人员选择器
 	 */
-	ByDeptAndEmpField(46),
+	ByDeptAndEmpField(46),	
 	/** 
 	 按照ccflow的BPM模式处理
 	*/

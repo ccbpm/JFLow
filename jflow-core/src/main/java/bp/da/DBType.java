@@ -40,9 +40,13 @@ public enum DBType
 	*/
 	DM(7),
 	/**
-	 * 人大金仓
+	 * 人大金仓R3
 	 */
-	KingBase(8);
+	KingBaseR3(8),
+	/**
+	 * 人大金仓R6
+	 */
+	KingBaseR6(8);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

@@ -69,12 +69,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		sql = "SELECT 'F' + No as No,Name, 'F' + ParentNo as ParentNo FROM WF_FlowSort WHERE No='" + fk_flowsort
 				+ "' OR ParentNo='" + fk_flowsort + "' ORDER BY Idx";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			sql = "SELECT 'F'||No as No,Name,'F'||ParentNo as ParentNo  FROM WF_FlowSort WHERE No='" + fk_flowsort
 					+ "' OR ParentNo='" + fk_flowsort + "' ORDER BY Idx";
 		}
-
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			sql = "SELECT CONCAT('F', No) No, Name, CONCAT('F', ParentNo) ParentNo  FROM WF_FlowSort WHERE No='"
 					+ fk_flowsort + "' OR ParentNo='" + fk_flowsort + "' ORDER BY Idx";
@@ -85,7 +85,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		ds.Tables.add(dtFlowSorts);
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			dtFlowSorts.Columns.get(0).setColumnName("No");
 			dtFlowSorts.Columns.get(1).setColumnName("Name");
@@ -95,11 +96,12 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		sql = "SELECT  No,(No + '.' + NAME) as Name, 'F'+FK_FlowSort as ParentNo, Idx FROM WF_Flow Where FK_FlowSort='"
 				+ fk_flowsort + "'";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 			sql = "SELECT No as No, No||'.'||Name as Name,'F'||FK_FlowSort as ParentNo, Idx FROM WF_Flow Where FK_FlowSort='"
 					+ fk_flowsort + "'";
-
+		
 		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 			sql = "SELECT No,CONCAT(CONCAT(No,'.'), Name)  Name, CONCAT('F', FK_FlowSort) ParentNo, Idx FROM WF_Flow Where FK_FlowSort='"
 					+ fk_flowsort + "'";
@@ -110,7 +112,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		dtFlows.TableName = "Flows";
 		ds.Tables.add(dtFlows);
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");
@@ -642,7 +645,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 			/*  */
 			try {
 				String str = bp.wf.Glo.UpdataCCFlowVer();
-				bp.wf.Dev2Interface.Port_LoginBySID(sid);
+				bp.wf.Dev2Interface.Port_LoginByToken(sid);
 				if (this.getFK_Flow() == null) {
 					return "url@Default.htm?UserNo=" + userNo + "&Key=" + new Date().getTime();
 				} else {
@@ -997,7 +1000,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 				+ "SELECT NO, 'F'+FK_FlowSort as PARENTNO,(NO + '.' + NAME) as NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow ) A  ORDER BY DTYPE, IDX,NO ";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
 			sql = "SELECT * FROM (SELECT 'F'||No as NO,'F'||ParentNo as PARENTNO,NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort "
 					+ "  union "
@@ -1012,7 +1016,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 			dt.Columns.get("no").setColumnName("NO");
 			dt.Columns.get("name").setColumnName("NAME");
 			dt.Columns.get("parentno").setColumnName("PARENTNO");
@@ -1062,15 +1066,15 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		sql += "  ORDER BY DTYPE, IDX ";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)  {
 			sql = "SELECT * FROM (SELECT 'F'||No as NO,'F'||ParentNo as PARENTNO,NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort "
 					+ " WHERE OrgNo ='" + WebUser.getOrgNo() + "' or No = 1 union "
 					+ "SELECT NO, 'F'||FK_FlowSort as PARENTNO,NO||'.'||NAME as NAME,IDX,0 ISPARENT,'FLOW' TTYPE,0 as DTYPE FROM WF_Flow WHERE OrgNo ='"
 					+ WebUser.getOrgNo() + "') A  ORDER BY DTYPE, IDX";
-		}
-
-		if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+		} 
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL){
 			sql = "SELECT * FROM (SELECT CONCAT('F', No) NO, CONCAT('F', ParentNo) PARENTNO, NAME, IDX, 1 ISPARENT,'FLOWTYPE' TTYPE,-1 DTYPE FROM WF_FlowSort "
 					+ " WHERE OrgNo ='" + WebUser.getOrgNo() + "' or No = 1 " + "union "
 					+ "SELECT NO, CONCAT('F', FK_FlowSort) PARENTNO, CONCAT(NO, '.', NAME) NAME,IDX,0 ISPARENT,'FLOW' TTYPE, 0 as DTYPE FROM WF_Flow "
@@ -1078,9 +1082,10 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
-			dt.Columns.get("no").setColumnName("No");
-			dt.Columns.get("name").setColumnName("Name");
+		
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("no").setColumnName("NO");
+			dt.Columns.get("name").setColumnName("NAME");
 			dt.Columns.get("parentno").setColumnName("PARENTNO");
 			dt.Columns.get("idx").setColumnName("IDX");
 			dt.Columns.get("isparent").setColumnName("ISPARENT");
@@ -1199,7 +1204,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		// 组织数据源.
 		String sqls = "";
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 			sqls = "SELECT No \"No\", ParentNo \"ParentNo\",Name \"Name\", Idx \"Idx\", 1 \"IsParent\", 'FORMTYPE' \"TType\" FROM Sys_FormTree ORDER BY Idx ASC ; ";
 			sqls += "SELECT No \"No\", FK_FormTree as \"ParentNo\", Name \"Name\",Idx \"Idx\", 0 \"IsParent\", 'FORM' \"TType\" FROM Sys_MapData  WHERE  AppType=0 AND FK_FormTree IN (SELECT No FROM Sys_FormTree) ORDER BY Idx ASC";
 		} else {
@@ -1258,7 +1264,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase {
 		String sqls = "";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 			sqls = "SELECT No \"No\", ParentNo \"ParentNo\",Name \"Name\", Idx \"Idx\", 1 \"IsParent\", 'FORMTYPE' \"TType\" FROM Sys_FormTree WHERE OrgNo ='"
 					+ WebUser.getOrgNo() + "'  or No = 1  ORDER BY Idx ASC ; ";
 			sqls += "SELECT No \"No\", FK_FormTree as \"ParentNo\", Name \"Name\",Idx \"Idx\", 0 \"IsParent\", 'FORM' \"TType\" FROM Sys_MapData  WHERE OrgNo ='"

@@ -73,7 +73,8 @@ public class DBUrl
 			case MSSQL:
 				return ":";
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 				return ":";
 			case Informix:

@@ -37,7 +37,7 @@ public class EnumInfoXmls extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "/Enum/";
+		return SystemConfig.getPathOfXML() + "Enum/";
 	}
 	/** 
 	 物理表名

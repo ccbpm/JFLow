@@ -1,24 +1,6 @@
 package bp.pub;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import javax.imageio.ImageIO;
-import bp.da.Cash;
-import bp.da.DBAccess;
-import bp.da.DataRow;
-import bp.da.DataSet;
-import bp.da.DataTable;
-import bp.da.DataType;
-import bp.da.Log;
+import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.en.Attr;
 import bp.en.Entities;
@@ -30,6 +12,18 @@ import bp.sys.FrmAttachmentDBs;
 import bp.sys.PubClass;
 import bp.tools.ConvertTools;
 import bp.tools.StringHelper;
+import bp.wf.ActionType;
+import bp.wf.GenerWorkerLists;
+import bp.wf.httphandler.WF_WorkOpt_OneWork;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
  * WebRtfReport 的摘要说明。
@@ -96,7 +90,7 @@ public class RTFEngine {
 
 	/**
 	 * 增加一个数据实体
-	 * 
+	 *
 	 * @param en
 	 */
 	public final void AddEn(Entity en) throws Exception{
@@ -105,7 +99,7 @@ public class RTFEngine {
 
 	/**
 	 * 增加一个Ens
-	 * 
+	 *
 	 * @param ens
 	 */
 	public final void AddDtlEns(Entities dtlEns) {
@@ -165,10 +159,10 @@ public class RTFEngine {
 
 	/**
 	 * 图片转换
-	 * 
+	 *
 	 * @param image_path
 	 * @return
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static String ImageTo16String(String image_path){
 		/*try{
@@ -191,9 +185,9 @@ public class RTFEngine {
 		}catch(Exception e){
 			e.printStackTrace();
 		}*/
-		
-		
-		
+
+
+
 		FileInputStream fis = null;
 		ByteArrayOutputStream bos = null;
 		try {
@@ -243,7 +237,7 @@ public class RTFEngine {
 
 		return "";
 	}
-	
+
 	/*
 	 * 实现字节数组向十六进制的转换方法一
 	 */
@@ -259,7 +253,7 @@ public class RTFEngine {
 		}
 		return hs.toUpperCase();
 	}
- 
+
 	@SuppressWarnings("unused")
 	private static byte uniteBytes(String src0, String src1) {
 		byte b0 = Byte.decode("0x" + src0).byteValue();
@@ -268,7 +262,7 @@ public class RTFEngine {
 		byte ret = (byte) (b0 | b1);
 		return ret;
 	}
- 
+
 	/*
 	 * 实现字节数组向十六进制的转换的方法二
 	 */
@@ -286,12 +280,12 @@ public class RTFEngine {
 			stringBuilder.append(hv);
 		}
 		return stringBuilder.toString();
- 
+
 	}
 
 
 	public static String GetImgHexString(Image img, Image ext) {
-		
+
 		return "";
 	}
 
@@ -299,7 +293,7 @@ public class RTFEngine {
 
 	/**
 	 * 获取ICON图片的数据。
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -323,7 +317,7 @@ public class RTFEngine {
 
 		// 将要插入的图片转换为16进制字符串
 		String imgHexString;
-		
+
 
 		imgHexString = ImageTo16String(path);
 
@@ -339,10 +333,117 @@ public class RTFEngine {
 		pict.append("\n");
 		return pict.toString();
 	}
+	
+	 /// <summary>
+    /// 输入轨迹表.
+    /// </summary>
+    /// <returns></returns>
+    public StringBuilder GetFlowTrackTable(StringBuilder str)
+    {
+        WF_WorkOpt_OneWork oneWork = new WF_WorkOpt_OneWork();
+        DataTable dt = null;
+        GenerWorkerLists gwls = null;
+        try {
+        	//获取轨迹信息
+        	dt=oneWork.getTimeBase();
+        	// 获取人员信息
+        	gwls = oneWork.getGwf();
 
+        	String shortName = "Track";
+
+			int pos_rowKey = str.indexOf(shortName);
+			int end_rowKey = str.lastIndexOf(shortName);
+			int row_start = -1, row_end = -1;
+			if (pos_rowKey != -1) {
+				row_start = str.substring(0, pos_rowKey).lastIndexOf("\\row");
+				// 获取从表表名出现的最后的位置
+				// int end_rowKey = str.lastIndexOf(shortName);
+				// 获取row的位置
+				row_end = str.substring(end_rowKey).indexOf("\\row");
+			}
+
+			if (row_start != -1 && row_end != -1) {
+				String row = str.substring(row_start, (end_rowKey) + row_end);
+				str = new StringBuilder(str.toString().replace(row, ""));
+
+				int i = dt.Rows.size();
+				//增加等待审核的人员, 在所有的人员循环以后.
+				Entity gwl = new GenerWorkerLists().getGetNewEntity();
+				for (int ii = 0; ii < gwls.size(); ii++) {
+
+					gwl = gwls.get(ii);
+	                if (gwl.GetValStringByKey("IsPass").equals("1"))
+	                    continue;
+
+	                Object tempVar = row;
+					String rowData = (String) ((tempVar instanceof String) ? tempVar : null);
+					//替换序号
+                    rowData = rowData.replace("<" + shortName + "." +"Idx>", i+1+"");
+                    rowData = rowData.replace("<" + shortName + "." +"NDFromT>", gwl.GetValStringByKey("FK_NodeText").toString());
+
+	                if (gwl.GetValStringByKey("IsRead").equals("1")) {
+	                    rowData = rowData.replace("<" + shortName + "." +"Action>", "已阅读");
+	                } else {
+	                    rowData = rowData.replace("<" + shortName + "." +"Action>", "尚未阅读");
+	                }
+	                rowData = rowData.replace("<" + shortName + "." +"ActionTypeText>", "等待审批");
+					rowData = rowData.replace("<" + shortName + "." +"EmpFromT>", gwl.GetValStringByKey("FK_EmpText").toString());
+	                rowData = rowData.replace("<" + shortName + "." +"StartTime>", gwl.GetValStringByKey("RDT").toString());
+					rowData = rowData.replace("<" + shortName + "." +"EndTime>", "");
+					rowData = rowData.replace("<" + shortName + "." +"PassTime>", "");
+					str = str.insert(row_start, rowData);
+	            }
+
+				//增加已审核人员
+				while (i > 0)
+		        {
+					i--;
+					DataRow dr = dt.Rows.get(i);
+					if (String.valueOf(ActionType.FlowBBS.getValue()).equals(dr.get("actiontype").toString()))
+						continue;
+					if (String.valueOf(ActionType.WorkCheck.getValue()).equals(dr.get("actiontype").toString()))
+						continue;
+					Object tempVar = row;
+					String rowData = (String) ((tempVar instanceof String) ? tempVar : null);
+					//替换序号
+                    rowData = rowData.replace("<" + shortName + "." +"Idx>", String.valueOf(i + 1));
+					rowData = rowData.replace("<" + shortName + "." +"NDFromT>", dr.get("ndfromt").toString());
+					rowData = rowData.replace("<" + shortName + "." +"Action>", "已处理");
+					rowData = rowData.replace("<" + shortName + "." +"ActionTypeText>", dr.get("actiontypetext").toString());
+					rowData = rowData.replace("<" + shortName + "." +"EmpFromT>", dr.get("empfromt").toString());
+					String startTime = "";
+					String endTime = "";
+					String passTime = "";
+					//获取轨迹中上一个节点的时间
+			        if (i == 0) {
+			            startTime = dr.get("rdt").toString();
+			            endTime = dr.get("rdt").toString();
+			        } else {
+			            //上一节点的到达时间就是本节点的开始时间
+			        	startTime= dt.Rows.get(i - 1).get("rdt").toString();
+			            endTime = dt.Rows.get(i).get("rdt").toString();
+			        }
+			        //求得历时时间差
+			        SimpleDateFormat sf = new SimpleDateFormat(DataType.getSysDataTimessFormat());
+			        passTime = DataType.getDatePoor(sf.parse(endTime), sf.parse(startTime));
+
+					rowData = rowData.replace("<" + shortName + "." +"StartTime>", startTime);
+					rowData = rowData.replace("<" + shortName + "." +"EndTime>", endTime);
+					rowData = rowData.replace("<" + shortName + "." +"PassTime>", passTime);
+
+					str = str.insert(row_start, rowData);
+				}
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return  str;
+    }
 	/**
 	 * 获取写字版的数据
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -420,10 +521,10 @@ public class RTFEngine {
 
 	/**
 	 * 获取类名+@+字段格式的数据. 比如： Demo_Inc@ABC Emp@Name
-	 * 
+	 *
 	 * @param key
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String GetValueByAtKey(String key) throws Exception {
 		for (Entity en : Entities.convertEntities(this.getHisEns())) {
@@ -575,10 +676,10 @@ public class RTFEngine {
 
 	/**
 	 * 审核节点的表示方法是 节点ID.Attr.
-	 * 
+	 *
 	 * @param key
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final String GetValueByKey(String key) throws Exception {
 		key = key.replace(" ", "");
@@ -761,7 +862,7 @@ public class RTFEngine {
 	// /#region 生成单据
 	/**
 	 * 生成单据
-	 * 
+	 *
 	 * @param cfile
 	 *            模板文件
 	 * @throws Exception
@@ -780,7 +881,7 @@ public class RTFEngine {
 
 	/**
 	 * 单据生成
-	 * 
+	 *
 	 * @param cfile
 	 *            模板文件
 	 * @param path
@@ -789,7 +890,7 @@ public class RTFEngine {
 	 *            生成文件
 	 * @param isOpen
 	 *            是否用IE打开？
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public final void MakeDoc(String cfile, String path, String file,  boolean isOpen) throws Exception {
 		cfile = cfile.replace(".rtf.rtf", ".rtf");
@@ -883,10 +984,11 @@ public class RTFEngine {
 					else if (para.contains(".") == true)
 
 						continue; // 有可能是明细表数据.
-					else {						
+
+					else {
 						  str = new StringBuilder(str.toString().replace("<" +
 						  para + ">", this.GetValueByKey(para)));
-						 
+
 					}
 				} catch (RuntimeException ex) {
 					error += "替换主表标记取参数[" + para
@@ -934,7 +1036,7 @@ public class RTFEngine {
 						Object tempVar = row;
 						String rowData = (String) ((tempVar instanceof String) ? tempVar : null);
 						dtl = dtls.get(i);
-						//替换序号  
+						//替换序号
                         int rowIdx = i + 1;
                         rowData = rowData.replace("<IDX>", String.valueOf(rowIdx));
 						for (Attr attr : map.getAttrs()) {
@@ -1054,6 +1156,8 @@ public class RTFEngine {
 				}
 			}
 
+			// 轨迹信息
+			str = GetFlowTrackTable(str);
 			// 多附件
 
 			for (Object athObjEnsName : this.getEnsDataAths().keySet()) {
@@ -1096,7 +1200,7 @@ public class RTFEngine {
 			throw new RuntimeException(
 					"生成文档失败：单据名称[" + this.CyclostyleFilePath + "] 异常信息：" + ex.getMessage() + " @自动修复单据信息：" + msg);
 		}
-		
+
 	}
 
 	private String GetValueCheckWorkByKey(DataRow row, String key) {
@@ -1124,7 +1228,7 @@ public class RTFEngine {
 	// 生成单据
 	/**
 	 * 生成单据根据
-	 * 
+	 *
 	 * @param templeteFile
 	 *            模板文件
 	 * @param saveToFile
@@ -1147,7 +1251,7 @@ public class RTFEngine {
 	}
 	/**
 	 * 修复线
-	 * 
+	 *
 	 * @param line
 	 * @return
 	 */

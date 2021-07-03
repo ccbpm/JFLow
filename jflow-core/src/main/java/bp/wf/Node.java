@@ -361,6 +361,11 @@ public class Node extends Entity {
 		return obj;
 	}
 
+	public Conds getCondsOfFlowComplete() throws Exception{
+		Entities ens = this.GetEntitiesAttrFromAutoNumCash(new Conds(),
+				CondAttr.FK_Node, this.getNodeID(), CondAttr.CondType, CondType.Flow.getValue(), CondAttr.Idx);
+		return (Conds)ens;
+	}
 	/**
 	 * 他的将要来自的方向集合 如果他没有到来的方向,他就是开始节点.
 	 * 
@@ -605,7 +610,8 @@ public class Node extends Entity {
 						sql = "ALTER TABLE WF_Emp ADD StartFlows text ";
 
 						if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-								|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+								|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+								|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 							sql = "ALTER TABLE WF_Emp ADD StartFlows blob";
 						}
 
@@ -1362,6 +1368,15 @@ public class Node extends Entity {
 
 	public final void setJumpToNodes(String value) throws Exception {
 		SetValByKey(NodeAttr.JumpToNodes, value);
+	}
+
+	/**
+	 * 跳转规则
+	 * @return
+	 * @throws Exception
+	 */
+	public final JumpWay getJumpWay() throws Exception{
+		return JumpWay.forValue(this.GetValIntByKey(NodeAttr.JumpWay));
 	}
 
 	/**
@@ -2500,7 +2515,7 @@ public class Node extends Entity {
 
 		map.AddTBString(NodeAttr.FocusField, null, "焦点字段", false, false, 0, 30, 10);
 		map.AddTBString(NodeAttr.JumpToNodes, null, "可跳转的节点", true, false, 0, 100, 10, true);
-
+		map.AddTBInt(NodeAttr.JumpWay, 0, "跳转规则", false, false);
 		map.AddTBString(NodeAttr.RefOneFrmTreeType, "", "独立表单类型", false, false, 0, 100, 10); // RefOneFrmTree
 
 		map.AddTBString(NodeAttr.DoOutTimeCond, null, "执行超时的条件", false, false, 0, 200, 100);

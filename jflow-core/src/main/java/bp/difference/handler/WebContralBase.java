@@ -1061,7 +1061,8 @@ public abstract class WebContralBase {
 				String str = "";
 				if (attr.getMyDataType() == DataType.AppBoolean) {
 					if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-							|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 						str = dr.getValue(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
 					else
 						str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
@@ -1072,22 +1073,31 @@ public abstract class WebContralBase {
 						obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.Oracle
 								? attr.getKey().toUpperCase() + "Text"
 								: attr.getKey() + "Text");
-					    obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.KingBase
+					    obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 							  ? attr.getKey().toUpperCase() + "Text"
 							  : attr.getKey() + "Text");
+					    obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+								  ? attr.getKey().toUpperCase() + "Text"
+								  : attr.getKey() + "Text");
 				    } else if (attr.getUIContralType() == UIContralType.DDL && attr.getMyDataType() == DataType.AppString){
 						obj = dr.getValue(
 								SystemConfig.getAppCenterDBType() == DBType.Oracle ? attr.getKey().toUpperCase() + "T"
 										: attr.getKey() + "T");
 						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.KingBase ? attr.getKey().toUpperCase() + "T"
+								SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ? attr.getKey().toUpperCase() + "T"
+										: attr.getKey() + "T");
+						obj = dr.getValue(
+								SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 ? attr.getKey().toUpperCase() + "T"
 										: attr.getKey() + "T");
 					}else{
 						obj = dr.getValue(
 								SystemConfig.getAppCenterDBType() == DBType.Oracle ? attr.getKey().toUpperCase()
 										: attr.getKey());
 						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.KingBase ? attr.getKey().toUpperCase()
+								SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ? attr.getKey().toUpperCase()
+										: attr.getKey());
+						obj = dr.getValue(
+								SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 ? attr.getKey().toUpperCase()
 										: attr.getKey());
 					}
 

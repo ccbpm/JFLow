@@ -125,7 +125,7 @@ public class CCMobile extends WebContralBase
 
 		StringBuilder append = new StringBuilder();
 		append.append("{");
-		String userPath = SystemConfig.getPathOfWebApp() + "/DataUser/UserIcon/";
+		String userPath = SystemConfig.getPathOfWebApp() + "DataUser/UserIcon/";
 		String userIcon = userPath + WebUser.getNo() + "Biger.png";
 		if ((new File(userIcon)).isFile())
 		{
@@ -182,9 +182,11 @@ public class CCMobile extends WebContralBase
 		DataSet ds = new DataSet();
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		ds.Tables.add(dt);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None
+				/*SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL*/)
 		{
 			dt.Columns.get(0).setColumnName("TSpan");
 			dt.Columns.get(1).setColumnName("Num");
@@ -423,9 +425,11 @@ public class CCMobile extends WebContralBase
 		}
 
 		DataTable dtFlows = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None
+				/*SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL*/)
 		{
 			dtFlows.Columns.get(0).setColumnName("No");
 			dtFlows.Columns.get(1).setColumnName("Name");
@@ -457,7 +461,8 @@ public class CCMobile extends WebContralBase
 		sqlWhere += "ORDER BY RDT DESC";
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM (select * from WF_GenerWorkFlow where " + sqlWhere + ") where rownum <= 500";
 		}
@@ -474,9 +479,11 @@ public class CCMobile extends WebContralBase
 			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere + " LIMIT 500";
 		}
 		DataTable mydt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None
+				/*SystemConfig.getAppCenterDBType() == DBType.Oracle 
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL*/)
 		{
 			mydt.Columns.get(0).setColumnName("WorkID");
 			mydt.Columns.get(1).setColumnName("FID");
@@ -578,7 +585,8 @@ public class CCMobile extends WebContralBase
 		qo.setTop(50);
 
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
 			qo.DoQuery();

@@ -1009,7 +1009,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		DataTable dt = this.ToDataTableDescField();
 		DataSet ds = new DataSet();
 		ds.Tables.add(dt); //  this.ToDataSet();
-		ds.WriteXml(file);
+		//ds.WriteXml(file);
+		ds.WriteXml(file, XmlWriteMode.IgnoreSchema, ds);
 	}
 
 		///

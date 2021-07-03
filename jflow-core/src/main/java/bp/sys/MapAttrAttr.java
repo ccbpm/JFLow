@@ -175,6 +175,7 @@ public class MapAttrAttr extends EntityMyPKAttr
 	public static final String TBModel = "TBModel";
 
 	public static final String CSSCtrl = "CSSCtrl";
+	public static final String CSSLabel="CSSLabel";
 	public static final String ICON = "ICON";
  
 		///参数属性.

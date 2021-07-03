@@ -2245,12 +2245,12 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		for (DataRow r : dt.Rows)
 		{
-			if(SystemConfig.getAppCenterDBType() ==DBType.Oracle
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase){
+			if(SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
 				r.setValue("NAME", r.getValue("NO") + (r.getValue("NAME") == null || "".equals(r.getValue("NAME")) || StringUtils.isEmpty(r.getValue("NAME").toString()) ? "" : String.format("[%1$s]", r.getValue("NAME"))));
 			}else{
 				r.setValue("Name", r.getValue("No") + (r.getValue("Name") == null || "".equals(r.getValue("Name")) || StringUtils.isEmpty(r.getValue("Name").toString()) ? "" : String.format("[%1$s]", r.getValue("Name"))));
-			}		}
+			}
+		}
 
 		return bp.tools.Json.ToJson(dt);
 	}

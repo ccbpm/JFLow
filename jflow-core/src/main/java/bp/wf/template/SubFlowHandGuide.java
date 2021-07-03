@@ -197,7 +197,7 @@ public class SubFlowHandGuide extends EntityMyPK {
 		msg += "\t\nSQL配置支持ccbpm表达式.";
 		map.SetHelperAlert(SubFlowHandGuideAttr.SubFlowGuideSQL, msg);
 
-		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideSQLGroup, null, "分组的SQL", true, false, 0, 200, 150, true);
+		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideGroup, null, "分组的SQL", true, false, 0, 200, 150, true);
 
 		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideEnNoFiled, null, "实体No字段", true, false, 0, 40, 150);
 		map.AddTBString(SubFlowHandGuideAttr.SubFlowGuideEnNameFiled, null, "实体Name字段", true, false, 0, 40, 150);

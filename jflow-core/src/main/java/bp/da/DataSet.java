@@ -35,38 +35,38 @@ public class DataSet {
 			hashTables = new Hashtable<String, DataTable>();
 		}
 	}
-	
+
 	public boolean removeTableByName(String tableName)
 	{
-		
+
 		for (DataTable dtb : this.Tables)
+		{
+			if( tableName.equals(dtb.getTableName()))
 			{
-				if( tableName.equals(dtb.getTableName()))
-				{
-					this.Tables.remove(dtb);
-					return true;
-							 
-				}
-			}	
-		
+				this.Tables.remove(dtb);
+				return true;
+
+			}
+		}
+
 		return false;
-		 
+
 	}
-	
+
 	public DataTable GetTableByName(String tableName)
 	{
-		
+
 		for (DataTable dtb : this.Tables)
+		{
+			if( tableName.equals(dtb.getTableName()))
 			{
-				if( tableName.equals(dtb.getTableName()))
-				{
-					return dtb;
-				 
-				}
-			}	
-		
+				return dtb;
+
+			}
+		}
+
 		return null;
-	   
+
 	}
 
 	public DataSet(String name) throws Exception {
@@ -79,9 +79,9 @@ public class DataSet {
 
 	/**
 	 * DataSet 以xml形式写入文件
-	 * 
+	 *
 	 * @param file
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void WriteXml(String file) throws Exception {
 		WriteXml(file, XmlWriteMode.IgnoreSchema, new DataSet("NewDataSet"));
@@ -89,7 +89,7 @@ public class DataSet {
 
 	/**
 	 * DataSet 以xml形式写入文件
-	 * 
+	 *
 	 * @param path
 	 * @param mode
 	 *            暂不支持DiffGram格式
@@ -138,8 +138,12 @@ public class DataSet {
 		// }
 		str.append("</NewDataSet>");
 		String temp = str.toString();
-		// String temp = formatXml(str.toString());
+		int pathType=0;
+		if(path.startsWith("resources")==true)
+			pathType = 1;
+		if(SystemConfig.getIsJarRun() && pathType==1){
 
+		}
 		// 写入文件
 		File file = new File(path);
 		try {
@@ -296,20 +300,23 @@ public class DataSet {
 	public String xmlToString(String path) throws Exception {
 		String line = null;
 		StringBuffer strBuffer = new StringBuffer();
+		int pathType =0;
+		if(path.indexOf("DataUser/")!=-1 || path.indexOf("WF/")!=-1)
+			pathType =1;
 		try {
 			String encoding = "UTF-8"; // 字符编码
-			if(SystemConfig.getIsJarRun()){
-                ClassPathResource classPathResource = new ClassPathResource(path);
-                InputStream inputStream = classPathResource.getInputStream();
-                StringBuilder stringBuilder = new StringBuilder();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, encoding));
-                StringBuffer buffer = new StringBuffer();
-                while ((line = bufferedReader.readLine()) != null){
-                    buffer.append(line + "\n");
-                }
-                bufferedReader.close();
-                return buffer.toString();
-            }else{
+			if(SystemConfig.getIsJarRun() && pathType==1){
+				ClassPathResource classPathResource = new ClassPathResource(path);
+				InputStream inputStream = classPathResource.getInputStream();
+				StringBuilder stringBuilder = new StringBuilder();
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, encoding));
+				StringBuffer buffer = new StringBuffer();
+				while ((line = bufferedReader.readLine()) != null){
+					buffer.append(line + "\n");
+				}
+				bufferedReader.close();
+				return buffer.toString();
+			}else{
 				File file = new File(path);
 				if (file.isFile() && file.exists()) {
 
@@ -344,12 +351,12 @@ public class DataSet {
 			String xml = xmlToString(xmlpath);
 			Document document = new SAXReader().read(new ByteArrayInputStream(xml.getBytes("UTF-8")));
 			Element element = document.getRootElement();
-			
+
 			// 遍历 DataTable
 			for (Iterator iterator = element.elementIterator(); iterator.hasNext();) {
 				Element el = (Element) iterator.next();
 //				System.out.println(" ===================== " + el.getName());
-				
+
 				// 如果没有获取到DataTable则新建一个
 				DataTable dt = hashTables.get(el.getName());
 				if (dt == null){
@@ -357,7 +364,7 @@ public class DataSet {
 					hashTables.put(el.getName(), dt);
 					Tables.add(dt);
 				}
-				
+
 				// 新增一行数据
 				DataRow dr = dt.NewRow();
 				dt.Rows.add(dr);
@@ -374,7 +381,7 @@ public class DataSet {
 					}
 					dr.setValue(at.getName(), at.getValue());
 				}
-				
+
 				// 遍历该DataTable的子元素
 				for (Iterator it = el.elementIterator(); it.hasNext();) {
 					Element at = (Element) it.next();
@@ -385,8 +392,8 @@ public class DataSet {
 					String value = at.getText();
 					try {
 						//导出模板进行了转义，现在进行反转 dgq 2018-7-5
-						if (value.toString().contains("&gt;") || value.toString().contains("&lt;") 
-								|| value.toString().contains("&amp;") || value.toString().contains("&apos;") 
+						if (value.toString().contains("&gt;") || value.toString().contains("&lt;")
+								|| value.toString().contains("&amp;") || value.toString().contains("&apos;")
 								|| value.toString().contains("&quot;")) {
 							value = value.toString().replace("&amp;", "&");
 							value = value.toString().replace("&gt;",">");
@@ -502,53 +509,53 @@ public class DataSet {
 
 	//public static void main(String[] args) throws Exception {
 
-		// List<DataTable> tableList = new ArrayList<DataTable>();
-		// DataTable table = new DataTable("Emp");
-		// DataColumn col = new DataColumn("id", Integer.class);
-		// DataColumn col1 = new DataColumn("name", String.class);
-		// DataColumn col2 = new DataColumn("sex", String.class);
-		// DataColumn col3 = new DataColumn("age", Integer.class);
-		// table.Columns.Add(col);
-		// table.Columns.Add(col1);
-		// table.Columns.Add(col2);
-		// table.Columns.Add(col3);
-		// DataRow dr1 = table.NewRow();
-		// dr1.setValue(col, 1);
-		// dr1.setValue(col1, "付强");
-		// dr1.setValue(col2, "男");
-		// dr1.setValue(col3, 21);
-		// DataRow dr2 = table.NewRow();
-		// dr2.setValue(col, 2);
-		// dr2.setValue(col1, "熊伟");
-		// dr2.setValue(col2, "男");
-		// dr2.setValue(col3, 21);
-		// table.Rows.add(dr1);
-		// table.Rows.add(dr2);
-		//
-		// DataTable dept = new DataTable("dept");
-		// DataColumn deptName = new DataColumn("name", String.class);
-		// DataColumn deptDesc = new DataColumn("desc", String.class);
-		// dept.Columns.Add(deptName);
-		// dept.Columns.Add(deptDesc);
-		// DataRow row = dept.NewRow();
-		// row.setValue(deptName, "java开发部");
-		// row.setValue(deptDesc, "开发");
-		// dept.Rows.add(row);
-		// DataRow row1 = dept.NewRow();
-		// row1.setValue(deptName, ".net开发部");
-		// row1.setValue(deptDesc, "开发");
-		// dept.Rows.add(row1);
-		//
-		// tableList.add(table);
-		// tableList.add(dept);
-		// set.setTables(tableList);
-		// System.out.println(ConvertDataSetToXml(set));
-		
-		//DataSet set = new DataSet();
-		//set.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/WF/Data/FlowDemo/Flow/01.线性流程/表单数据copy测试案例.xml");
-		//DataSet set2 = new DataSet();
-		//set2.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/DataUser/XML/RegularExpression.xml");
-		//System.out.println();
+	// List<DataTable> tableList = new ArrayList<DataTable>();
+	// DataTable table = new DataTable("Emp");
+	// DataColumn col = new DataColumn("id", Integer.class);
+	// DataColumn col1 = new DataColumn("name", String.class);
+	// DataColumn col2 = new DataColumn("sex", String.class);
+	// DataColumn col3 = new DataColumn("age", Integer.class);
+	// table.Columns.Add(col);
+	// table.Columns.Add(col1);
+	// table.Columns.Add(col2);
+	// table.Columns.Add(col3);
+	// DataRow dr1 = table.NewRow();
+	// dr1.setValue(col, 1);
+	// dr1.setValue(col1, "付强");
+	// dr1.setValue(col2, "男");
+	// dr1.setValue(col3, 21);
+	// DataRow dr2 = table.NewRow();
+	// dr2.setValue(col, 2);
+	// dr2.setValue(col1, "熊伟");
+	// dr2.setValue(col2, "男");
+	// dr2.setValue(col3, 21);
+	// table.Rows.add(dr1);
+	// table.Rows.add(dr2);
+	//
+	// DataTable dept = new DataTable("dept");
+	// DataColumn deptName = new DataColumn("name", String.class);
+	// DataColumn deptDesc = new DataColumn("desc", String.class);
+	// dept.Columns.Add(deptName);
+	// dept.Columns.Add(deptDesc);
+	// DataRow row = dept.NewRow();
+	// row.setValue(deptName, "java开发部");
+	// row.setValue(deptDesc, "开发");
+	// dept.Rows.add(row);
+	// DataRow row1 = dept.NewRow();
+	// row1.setValue(deptName, ".net开发部");
+	// row1.setValue(deptDesc, "开发");
+	// dept.Rows.add(row1);
+	//
+	// tableList.add(table);
+	// tableList.add(dept);
+	// set.setTables(tableList);
+	// System.out.println(ConvertDataSetToXml(set));
+
+	//DataSet set = new DataSet();
+	//set.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/WF/Data/FlowDemo/Flow/01.线性流程/表单数据copy测试案例.xml");
+	//DataSet set2 = new DataSet();
+	//set2.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/DataUser/XML/RegularExpression.xml");
+	//System.out.println();
 
 	//}
 

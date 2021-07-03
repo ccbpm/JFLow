@@ -41,6 +41,10 @@ public class WFEmpAttr
 	public static final String Style = "Style";
 	public static final String Msg = "Msg";
 	public static final String UseSta = "UseSta";
+	  /// <summary>
+    /// token.
+    /// </summary>
+    public static final String Token = "Token";
 	/** 
 	 授权的人员
 	*/

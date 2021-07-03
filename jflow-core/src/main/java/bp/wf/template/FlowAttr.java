@@ -338,6 +338,7 @@ public class FlowAttr
 	public static final String DTSSpecNodes = "DTSSpecNodes";
 	public static final String DTSField = "DTSField";
 	public static final String DTSFields = "DTSFields";
+	public static final String DTWebAPI = "DTWebAPI";
 	/** 
 	 业务表
 	*/

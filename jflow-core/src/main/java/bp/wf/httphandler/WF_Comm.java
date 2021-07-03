@@ -10,12 +10,16 @@ import bp.sys.xml.ActiveAttrAttr;
 import bp.sys.xml.ActiveAttrs;
 import bp.tools.DataTableConvertJson;
 import bp.tools.DateUtils;
+import bp.tools.HttpClientUtil;
 import bp.web.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.wf.*;
 import bp.wf.Glo;
 import bp.wf.port.WFEmp;
+import net.sf.json.JSONObject;
+
+import java.net.URLDecoder;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -928,56 +932,50 @@ public final String RichUploadFile() throws Exception {
 
 		if (DataType.IsNullOrEmpty(paras) == false)
 		{
-			String[] str = paras.split("[~]", -1);
-			myparas = new Object[str.length];
-			RefMethod rm = null;
-			for (RefMethod item : en.getEnMap().getHisRefMethods())
-			{
-				if (item.ClassMethodName.replace(this.getEnName() + ".", "").equals(methodName + "()"))
-				{
-					rm = item;
-					break;
-				}
-			}
-			if (rm != null)
-			{
-				Attrs attrs = rm.getHisAttrs();
-				int idx = 0;
+			String[] str = paras.split("~");
 
-				for (Attr attr : attrs)
-				{
-					if (idx >= str.length)
-					{
-						break;
-					}
-					myparas[idx] = str[idx];
-					if (attr.getMyDataType() == DataType.AppInt)
-					{
-						myparas[idx] = Integer.parseInt(str[idx]);
-					}
-					if (attr.getMyDataType() == DataType.AppFloat)
-					{
-						myparas[idx] = Float.parseFloat(str[idx]);
-					}
-					if (attr.getMyDataType() == DataType.AppDouble)
-					{
-						myparas[idx] = Double.parseDouble(str[idx]);
-					}
-					if (attr.getMyDataType() == DataType.AppMoney)
-					{
-						myparas[idx] = new BigDecimal(Double.parseDouble(str[idx]));
-					}
-					idx++;
-				}
-			}
-			else
+
+			int idx = 0;
+			Class[] paramTypes =mp.getParameterTypes();
+			myparas = new Object[paramTypes.length];
+
+			for (Class paramInfo : paramTypes)
 			{
-				myparas = str;
+				String val = "";
+				if(idx<str.length)
+					val = str[idx];
+
+				try
+				{
+					if (paramInfo.getName().equals("java.lang.Float"))
+						myparas[idx] = Float.parseFloat(val);
+					if (paramInfo.getName().equals("java.lang.Double"))
+						myparas[idx] = Double.parseDouble(val);
+					if (paramInfo.getName().equals(" java.lang.Integer"))
+						myparas[idx] = Integer.parseInt(val);
+					if (paramInfo.getName().equals("java.lang.Long"))
+						myparas[idx] = Long.parseLong(val);
+					if (paramInfo.getName().equals("java.math.BigDecimal"))
+						myparas[idx] = new BigDecimal(Double.parseDouble(val));
+					if (paramInfo.getName().equals("java.lang.Boolean"))
+					{
+						if (str[idx].toLowerCase().equals("true") || str[idx].equals("1"))
+							myparas[idx] = true;
+						else
+							myparas[idx] = false;
+					}
+
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException("err@类[" + this.getEnName() + "]方法[" + methodName + "]值" + str[idx] + "转换成" + paramInfo.getName()+ "失败");
+				}
+
+				idx++;
 			}
+
 
 		}
-
-
 
 		Object tempVar = mp.invoke(en, myparas);
 		String result = tempVar instanceof String ? (String)tempVar : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
@@ -1213,21 +1211,26 @@ public final String RichUploadFile() throws Exception {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	*/
-	public final String Entities_DoMethodReturnString() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
-	{
+	public final String Entities_DoMethodReturnString() throws Exception{
 
 		//创建类实体.
 		Entities ens = ClassFactory.GetEns(this.getEnsName()); 
-		// Activator.CreateInstance(System.Type.GetType("bp.en.*;
 
 		String methodName = this.GetRequestVal("MethodName");
 
 		java.lang.Class tp = ens.getClass();
-		java.lang.reflect.Method mp = tp.getMethod(methodName);
-		if (mp == null)
-		{
-			return "err@没有找到类[" + this.getEnsName() + "]方法[" + methodName + "].";
+		java.lang.reflect.Method mp = null;
+		for (java.lang.reflect.Method m : tp.getMethods()) {
+			if (m.getName().equals(methodName)==true) {
+				mp = m;
+				break;
+			}
 		}
+
+		if (mp == null) {
+			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
+		}
+
 
 		String paras = this.GetRequestVal("paras");
 		if ("un".equals(paras) == true || "undefined".equals(paras) == true)
@@ -1240,7 +1243,49 @@ public final String RichUploadFile() throws Exception {
 
 		if (DataType.IsNullOrEmpty(paras) == false)
 		{
-			myparas = paras.split("[~]", -1);
+			String[] str = paras.split("~");
+
+
+			int idx = 0;
+			Class[] paramTypes =mp.getParameterTypes();
+			myparas = new Object[paramTypes.length];
+
+			for (Class paramInfo : paramTypes)
+			{
+				String val = "";
+				if(idx<str.length)
+					val = str[idx];
+
+				try
+				{
+					if (paramInfo.getName().equals("java.lang.Float"))
+						myparas[idx] = Float.parseFloat(val);
+					if (paramInfo.getName().equals("java.lang.Double"))
+						myparas[idx] = Double.parseDouble(val);
+					if (paramInfo.getName().equals(" java.lang.Integer"))
+						myparas[idx] = Integer.parseInt(val);
+					if (paramInfo.getName().equals("java.lang.Long"))
+						myparas[idx] = Long.parseLong(val);
+					if (paramInfo.getName().equals("java.math.BigDecimal"))
+						myparas[idx] = new BigDecimal(Double.parseDouble(val));
+					if (paramInfo.getName().equals("java.lang.Boolean"))
+					{
+						if (str[idx].toLowerCase().equals("true") || str[idx].equals("1"))
+							myparas[idx] = true;
+						else
+							myparas[idx] = false;
+					}
+
+				}
+				catch (Exception e)
+				{
+					throw new RuntimeException("err@类[" + this.getEnName() + "]方法[" + methodName + "]值" + str[idx] + "转换成" + paramInfo.getName()+ "失败");
+				}
+
+				idx++;
+			}
+
+
 		}
 
 		Object tempVar = mp.invoke(ens, myparas);
@@ -1724,7 +1769,8 @@ public final String RichUploadFile() throws Exception {
 						
 						if ((SystemConfig.getAppCenterDBVarStr().equals("@")
 								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3 
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
 						{
 							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 						}
@@ -1753,7 +1799,8 @@ public final String RichUploadFile() throws Exception {
 
 					if ((SystemConfig.getAppCenterDBVarStr().equals("@")
 							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
 					{
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 					}
@@ -1832,7 +1879,8 @@ public final String RichUploadFile() throws Exception {
 							qo.addLeftBracket();
 							if ((SystemConfig.getAppCenterDBVarStr().equals("@")
 									|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-								&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
+								&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3
+								&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
 							{
 								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 							}
@@ -1849,7 +1897,8 @@ public final String RichUploadFile() throws Exception {
 
 						if ((SystemConfig.getAppCenterDBVarStr().equals("@")
 								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBase)
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3
+							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
 						{
 							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 						}
@@ -2118,7 +2167,9 @@ public final String RichUploadFile() throws Exception {
 			///获得查询数据.
 		for (String str : ap.getHisHT().keySet())
 		{
-			Object val = ap.GetValStrByKey(str);
+			String val = ap.GetValStrByKey(str);
+			if(DataType.IsNullOrEmpty(val) || val.equals("null"))
+				val="all";
 			if (val.equals("all"))
 			{
 				continue;
@@ -3171,12 +3222,15 @@ public final String RichUploadFile() throws Exception {
 				dt1.TableName = attr.getKey();
 
 				//@杜. 翻译当前部分.
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-						|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
 					dt1.Columns.get("NO").setColumnName("No");
 					dt1.Columns.get("NAME").setColumnName("Name");
+				}
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+				{
+					dt1.Columns.get("no").setColumnName("No");
+					dt1.Columns.get("name").setColumnName("Name");
 				}
 				if (ds.GetTableByName(attr.getKey()) == null)
 				{
@@ -3364,15 +3418,21 @@ public final String RichUploadFile() throws Exception {
 
 			dtEnum.TableName = "Sys_Enum";
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 			{
 				dtEnum.Columns.get("MYPK").setColumnName("MyPK");
 				dtEnum.Columns.get("LAB").setColumnName("Lab");
 				dtEnum.Columns.get("ENUMKEY").setColumnName("EnumKey");
 				dtEnum.Columns.get("INTKEY").setColumnName("IntKey");
 				dtEnum.Columns.get("LANG").setColumnName("Lang");
+			}
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+			{
+				dtEnum.Columns.get("mypk").setColumnName("MyPK");
+				dtEnum.Columns.get("lab").setColumnName("Lab");
+				dtEnum.Columns.get("enumkey").setColumnName("EnumKey");
+				dtEnum.Columns.get("intkey").setColumnName("IntKey");
+				dtEnum.Columns.get("lang").setColumnName("Lang");
 			}
 			ds.Tables.add(dtEnum);
 		}
@@ -4085,11 +4145,18 @@ public final String RichUploadFile() throws Exception {
 	 
 	 @return 返回影响行数
 	*/
-	public final String DBAccess_RunSQL()
+	public final String DBAccess_RunSQL() throws Exception
 	{
 		String sql = this.GetRequestVal("SQL");
+		sql = URLDecoder.decode(sql, "UTF-8");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
+		String dbSrc = this.GetRequestVal("DBSrc");
+		if (DataType.IsNullOrEmpty(dbSrc) == false && dbSrc.equals("local")==false)
+		{
+			SFDBSrc sfdb = new SFDBSrc(dbSrc);
+			return String.valueOf(sfdb.RunSQL(sql));
+		}
 
 		return String.valueOf(DBAccess.RunSQL(sql));
 	}
@@ -4102,6 +4169,8 @@ public final String RichUploadFile() throws Exception {
 	public final String DBAccess_RunSQLReturnTable() throws Exception
 	{
 		String sql = this.GetRequestVal("SQL");
+		sql = URLDecoder.decode(sql, "UTF-8");
+		String dbSrc = this.GetRequestVal("DBSrc");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
 
@@ -4124,12 +4193,17 @@ public final String RichUploadFile() throws Exception {
 		{
 			return "err@查询sql为空";
 		}
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		DataTable dt = null;
+		if (DataType.IsNullOrEmpty(dbSrc) == false && dbSrc.equals("local") == false)
+		{
+			SFDBSrc sfdb = new SFDBSrc(dbSrc);
+			dt = sfdb.RunSQLReturnTable(sql);
+		}
+		else
+		   dt = DBAccess.RunSQLReturnTable(sql);
 
 		//暂定
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			//获取SQL的字段
 			//获取 from 的位置
@@ -4153,6 +4227,30 @@ public final String RichUploadFile() throws Exception {
 			}
 
 		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			//获取SQL的字段
+			//获取 from 的位置
+			sql = sql.replace(" ", "");
+			int index = sql.toUpperCase().indexOf("FROM");
+			int indexAs = 0;
+			sql = sql.substring(6, index);
+			String[] keys = sql.split("[,]", -1);
+			for (String key : keys)
+			{
+				String realkey = key.replace("Case", "").replace("case", "").replace("CASE", "");
+				indexAs = realkey.toLowerCase().indexOf("AS");
+				if (indexAs != -1)
+				{
+					realkey = realkey.substring(indexAs + 2);
+				}
+				if (dt.Columns.get(realkey.toLowerCase()) != null)
+				{
+					dt.Columns.get(realkey.toLowerCase()).setColumnName( realkey);
+				}
+			}
+
+		}
 
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -4162,7 +4260,13 @@ public final String RichUploadFile() throws Exception {
 		String strs = DataType.ReadURLContext(url, 9999);		
 		return strs;
 	}
-
+	public final String RunWebAPIReturnString()
+	{
+		String url = this.GetRequestVal("url");
+		String postData = HttpClientUtil.doPost(url, "", null);
+		JSONObject j = JSONObject.fromObject(postData);
+		return j.get("data").toString();
+	}
 		///
 
 	//执行方法.
@@ -4233,19 +4337,25 @@ public final String RichUploadFile() throws Exception {
 		String userNo = WebUser.getNo();
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
-			ht.put("No", "");
-			ht.put("Name", "");
-			ht.put("FK_Dept", "");
-			ht.put("FK_DeptName", "");
-			ht.put("FK_DeptNameOfFull", "");
-			ht.put("Tel","");
-
-			ht.put("CustomerNo", SystemConfig.getCustomerNo());
-			ht.put("CustomerName", SystemConfig.getCustomerName());
-			ht.put("IsAdmin", 0);
-			ht.put("OrgNo", "");
-			ht.put("OrgName","");
-			return bp.tools.Json.ToJson(ht);
+			String token = this.GetRequestVal("Token");
+			  
+			if (DataType.IsNullOrEmpty(token) == true)
+            {
+				ht.put("No", "");
+				ht.put("Name", "");
+				ht.put("FK_Dept", "");
+				ht.put("FK_DeptName", "");
+				ht.put("FK_DeptNameOfFull", "");
+				ht.put("Tel","");
+	
+				ht.put("CustomerNo", SystemConfig.getCustomerNo());
+				ht.put("CustomerName", SystemConfig.getCustomerName());
+				ht.put("IsAdmin", 0);
+				ht.put("OrgNo", "");
+				ht.put("OrgName","");
+				return bp.tools.Json.ToJson(ht);
+            }
+			Dev2Interface.Port_LoginByToken(token);
 		}
 
 		ht.put("No", WebUser.getNo());
@@ -5626,8 +5736,18 @@ public final String RichUploadFile() throws Exception {
 	public final String RunSQL_Init()throws Exception
 	{
 		String sql = GetRequestVal("SQL");
-		DBAccess.RunSQLReturnTable(sql);
-		DataTable dt = new DataTable();
+		String dbSrc = this.GetRequestVal("DBSrc");
+		DataTable dt = null;
+		if (DataType.IsNullOrEmpty(dbSrc) == false && dbSrc.equals("local") == false)
+		{
+			SFDBSrc sfdb = new SFDBSrc(dbSrc);
+			dt = sfdb.RunSQLReturnTable(sql);
+		}
+		else
+		{
+			dt = DBAccess.RunSQLReturnTable(sql);
+		}
+
 		return bp.tools.Json.ToJson(dt);
 	}
 

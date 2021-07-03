@@ -374,7 +374,8 @@ public class SqlBuilder
 				sql = SqlBuilder.SelectSQLOfOLE(en, 1) + "  AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case Informix:
 				sql = SqlBuilder.SelectSQLOfOra(en, 1) + "  AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
 				break;
@@ -400,7 +401,8 @@ public class SqlBuilder
 				sql = SqlBuilder.SelectSQLOfMySQL(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, ":");
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql = SqlBuilder.SelectSQLOfOra(en, 1) + "AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
 				break;
 			case Informix:
@@ -436,7 +438,8 @@ public class SqlBuilder
 					return SqlBuilder.SelectSQLOfMS(en, 1) + "  AND (" + SqlBuilder.GetKeyConditionOfOraForPara(en) + " )";
 				}
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case Informix:
 				if (en.getEnMap().getHisFKAttrs().size() == 0)
 				{
@@ -838,7 +841,8 @@ public class SqlBuilder
 		switch (DBAccess.getAppCenterDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return GenerCreateTableSQLOfOra(en);
 			case PostgreSQL:
 				return GenerCreateTableSQLOfPostgreSQL(en);
@@ -1508,7 +1512,8 @@ public class SqlBuilder
 			case Access:
 				return SqlBuilder.SelectSQLOfOLE(en, topNum);
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return SqlBuilder.SelectSQLOfOra(en, topNum);
 			case Informix:
 				return SqlBuilder.SelectSQLOfInformix(en, topNum);
@@ -1533,7 +1538,8 @@ public class SqlBuilder
 			case Access:
 				return SqlBuilder.SelectSQLOfOLE(en, 0);
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case Informix:
 				return SqlBuilder.SelectSQLOfOra(en, 0);
 			default:
@@ -2556,7 +2562,8 @@ public class SqlBuilder
 						+ SqlBuilder.GenerWhereByPK(en, "?");
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val.substring(1) + " WHERE "
 						+ SqlBuilder.GenerWhereByPK(en, ":");
@@ -3030,7 +3037,8 @@ public class SqlBuilder
 				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val + " WHERE " + SqlBuilder.GenerWhereByPK(en, "?");
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val + " WHERE " + SqlBuilder.GenerWhereByPK(en, ":");
 				break;
 			default:
@@ -3288,7 +3296,8 @@ public class SqlBuilder
 			case MSSQL:
 				return " ISNULL(" + expression + "," + isNullBack + ")";
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return " NVL(" + expression + "," + isNullBack + ")";
 			case MySQL:
 				return " IFNULL(" + expression + "," + isNullBack + ")";

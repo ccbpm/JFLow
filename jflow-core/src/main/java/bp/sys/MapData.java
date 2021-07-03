@@ -430,13 +430,13 @@ public class MapData extends EntityNoName
 	*/
 	public final String GenerHisFrm()throws Exception
 	{
-		String body = bp.da.DataType.ReadTextFile(SystemConfig.getPathOfWebApp() + "/WF/Admin/CCFormDesigner/EleTemplate/Body.txt");
+		String body = bp.da.DataType.ReadTextFile(SystemConfig.getPathOfWebApp() + "WF/Admin/CCFormDesigner/EleTemplate/Body.txt");
 
 		//替换高度宽度.
 		body = body.replace("@FrmH", String.valueOf(this.getFrmH()));
 		body = body.replace("@FrmW", String.valueOf(this.getFrmW()));
 
-		String labTemplate = bp.da.DataType.ReadTextFile(SystemConfig.getPathOfWebApp() + "/WF/Admin/CCFormDesigner/EleTemplate/Label.txt");
+		String labTemplate = bp.da.DataType.ReadTextFile(SystemConfig.getPathOfWebApp() + "WF/Admin/CCFormDesigner/EleTemplate/Label.txt");
 		String myLabs = "";
 		FrmLabs labs = new FrmLabs(this.getNo());
 		for (FrmLab lab : labs.ToJavaList())
@@ -1823,7 +1823,8 @@ public class MapData extends EntityNoName
 		else
 		{
 			if (SystemConfig.getAppCenterDBType() != DBType.Oracle
-					&& SystemConfig.getAppCenterDBType() != DBType.KingBase)
+					&& SystemConfig.getAppCenterDBType() != DBType.KingBaseR3
+					&& SystemConfig.getAppCenterDBType() != DBType.KingBaseR6)
 			{
 				GroupField gfFirst = gfs.get(0) instanceof GroupField ? (GroupField)gfs.get(0) : null;
 

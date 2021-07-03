@@ -34,7 +34,39 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	 */
 	public WF_WorkOpt_OneWork() {
 	}
+	 /* 时间轴
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public final DataTable getTimeBase() throws Exception {
+		DataSet ds = new DataSet();
 
+		// 获取track.
+		DataTable dt = bp.wf.Dev2Interface.DB_GenerTrackTable(this.getFK_Flow(), this.getWorkID(), this.getFID());
+		return dt;
+	 }
+	public final GenerWorkerLists getGwf() throws Exception{
+		// 获取 WF_GenerWorkFlow
+		GenerWorkFlow gwf = new GenerWorkFlow();
+		GenerWorkerLists gwls = new GenerWorkerLists();
+		gwf.setWorkID(this.getWorkID());
+		gwf.RetrieveFromDBSources();
+
+		if (gwf.getWFState() != WFState.Complete) {
+			
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.Idx);
+
+			// warning 补偿式的更新. 做特殊的判断，当会签过了以后仍然能够看isPass=90的错误数据.
+			for (GenerWorkerList item : gwls.ToJavaList()) {
+				if (item.getIsPassInt() == 90 && gwf.getFK_Node() != item.getFK_Node()) {
+					item.setIsPassInt(0);
+					item.Update();
+				}
+			}
+		}
+		return gwls;
+	}
 	/**
 	 * 时间轴
 	 * 
@@ -217,7 +249,8 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType()) {
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 			currNode = "(SELECT FK_Node FROM (SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo()
 					+ "' Order by RDT DESC ) WHERE rownum=1)";
 			break;

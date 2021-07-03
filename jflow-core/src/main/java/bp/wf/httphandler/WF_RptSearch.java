@@ -40,13 +40,17 @@ public class WF_RptSearch extends WebContralBase
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Start";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("FK_FLOW").setColumnName("FK_Flow");
 			dt.Columns.get("FLOWNAME").setColumnName("FlowName");
 			dt.Columns.get("NUM").setColumnName("Num");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("fk_flow").setColumnName("FK_Flow");
+			dt.Columns.get("flowname").setColumnName("FlowName");
+			dt.Columns.get("num").setColumnName("Num");
 		}
 		ds.Tables.add(dt);
 
@@ -57,15 +61,18 @@ public class WF_RptSearch extends WebContralBase
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dtTodolist = DBAccess.RunSQLReturnTable(ps);
 		dtTodolist.TableName = "Todolist";
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dtTodolist.Columns.get("FK_FLOW").setColumnName("FK_Flow");
 			dtTodolist.Columns.get("FLOWNAME").setColumnName("FlowName");
 			dtTodolist.Columns.get("NUM").setColumnName("Num");
 		}
-
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dtTodolist.Columns.get("fk_flow").setColumnName("FK_Flow");
+			dtTodolist.Columns.get("flowname").setColumnName("FlowName");
+			dtTodolist.Columns.get("num").setColumnName("Num");
+		}
 		ds.Tables.add(dtTodolist);
 
 		//正在运行的流程.
@@ -165,9 +172,7 @@ public class WF_RptSearch extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "WF_GenerWorkFlow";
 
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("FLOWNAME").setColumnName("FlowName");
 			dt.Columns.get("FK_FLOW").setColumnName("FK_Flow");
@@ -181,6 +186,21 @@ public class WF_RptSearch extends WebContralBase
 			dt.Columns.get("EMPS").setColumnName("Emps");
 			dt.Columns.get("TODOEMPS").setColumnName("TodoEmps"); //处理人.
 			dt.Columns.get("WFSTATE").setColumnName("WFState"); //处理人.
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("flowname").setColumnName("FlowName");
+			dt.Columns.get("fk_flow").setColumnName("FK_Flow");
+			dt.Columns.get("fk_node").setColumnName("FK_Node");
+			dt.Columns.get("nodename").setColumnName("NodeName");
+			dt.Columns.get("workid").setColumnName("WorkID");
+			dt.Columns.get("fid").setColumnName("FID");
+			dt.Columns.get("title").setColumnName("Title");
+			dt.Columns.get("startername").setColumnName("StarterName");
+			dt.Columns.get("wfsta").setColumnName("WFSta");
+			dt.Columns.get("emps").setColumnName("Emps");
+			dt.Columns.get("todoemps").setColumnName("TodoEmps"); //处理人.
+			dt.Columns.get("wfstate").setColumnName("WFState"); //处理人.
 		}
 		if (dt != null)
 		{

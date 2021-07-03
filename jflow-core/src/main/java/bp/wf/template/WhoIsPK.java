@@ -28,14 +28,18 @@ public enum WhoIsPK
 	 延续流程ID是主键
 	*/
 	CWorkID,
-	/** 
-	 爷爷流程ID是主键
+	/**
+	 P2WorkID,
 	*/
 	P2WorkID,
 	/** 
-	 太爷爷流程ID是主键
+	 P3WorkID
 	*/
-	P3WorkID;
+	P3WorkID,
+	/**
+	 * 根流程的WORKID
+	 */
+	RootFlowWorkID;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

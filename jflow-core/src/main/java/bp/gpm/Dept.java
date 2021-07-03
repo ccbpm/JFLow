@@ -1,8 +1,12 @@
 package bp.gpm;
 
+import bp.da.DataType;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
 import bp.port.*;
+import bp.sys.CCBPMRunModel;
+import bp.web.WebUser;
 
 /** 
  部门
@@ -123,9 +127,15 @@ public class Dept extends EntityTree
 		map.AddRefMethod(rm);
 
 
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single ){
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new bp.port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", bp.port.EmpAttr.FK_Dept, bp.port.EmpAttr.Name, bp.port.EmpAttr.No, "@WebUser.FK_Dept");
-
+			if(DataType.IsNullOrEmpty(WebUser.getNo())==true || WebUser.getIsAdmin()==true)
+				map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new bp.port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", bp.port.EmpAttr.FK_Dept, bp.port.EmpAttr.Name, bp.port.EmpAttr.No, "0");
+			else
+				map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new bp.port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", bp.port.EmpAttr.FK_Dept, bp.port.EmpAttr.Name, bp.port.EmpAttr.No, "@WebUser.FK_Dept");
+		}
+		else
+			map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new bp.port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", bp.port.EmpAttr.FK_Dept, bp.port.EmpAttr.Name, bp.port.EmpAttr.No, "@WebUser.OrgNo");
 
 			//平铺模式.
 		map.getAttrsOfOneVSM().AddGroupPanelModel(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, "对应岗位(平铺)", StationAttr.FK_StationType);

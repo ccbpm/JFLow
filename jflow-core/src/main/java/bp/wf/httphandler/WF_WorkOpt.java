@@ -896,7 +896,8 @@ public class WF_WorkOpt extends WebContralBase {
                 ps.Add("NDTo", toNodeID);
                 ps.Add("EmpFrom", WebUser.getNo());
             } else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                    || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+            		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+    				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
                 ps.SQL = "SELECT * FROM (SELECT  Tag,EmpTo,WorkID FROM " + trackTable + " A WHERE A.EmpFrom="
                         + SystemConfig.getAppCenterDBVarStr() + "EmpFrom AND A.NDFrom="
                         + SystemConfig.getAppCenterDBVarStr() + "NDFrom AND A.NDTo="
@@ -1139,7 +1140,8 @@ public class WF_WorkOpt extends WebContralBase {
                                 + "%') ";
                     }
                     if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                            || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+                    		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+            				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
                         sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.No) and (a.No like '%"
                                 + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase()
                                 + "%') AND rownum<=12 ";
@@ -1189,7 +1191,8 @@ public class WF_WorkOpt extends WebContralBase {
                                 + emp.toLowerCase() + "%')";
                     }
                     if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                            || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+                    		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+            				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
                         sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.No) and (  a.PinYin LIKE '%,"
                                 + emp.toLowerCase() + "%') AND rownum<=12 ";
                     }
@@ -1206,7 +1209,8 @@ public class WF_WorkOpt extends WebContralBase {
                         + emp + "%' OR a.NAME  LIKE '%" + emp + "%')";
             }
             if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                    || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+            		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+    				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
                 sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.No) and (a.No like '%"
                         + emp + "%' OR a.NAME  LIKE '%" + emp + "%') and rownum<=12 ";
             }
@@ -1221,9 +1225,7 @@ public class WF_WorkOpt extends WebContralBase {
 
         // bp.da.Log.DebugWriteError(sql);
 
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                || SystemConfig.getAppCenterDBType() == DBType.KingBase
-                || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+        if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None) {
             dt.Columns.get(0).setColumnName("No");
             dt.Columns.get(1).setColumnName("Name");
         }
@@ -1706,38 +1708,47 @@ public class WF_WorkOpt extends WebContralBase {
 
         // 表单库审核组件流程编号为null的异常处理
         if (DataType.IsNullOrEmpty(this.getFK_Flow())) {
-            return null;
+            return "err@流程信息丢失,请联系管理员.";
         }
-        String trackTable = "ND" + Integer.parseInt(this.getFK_Flow()) + "Track";
-        /// 定义变量.
-        NodeWorkCheck wcDesc = new NodeWorkCheck(this.getFK_Node());
-        FrmAttachmentDBs athDBs = null;
-        Nodes nds = new Nodes(this.getFK_Flow());
-        NodeWorkChecks fwcs = new NodeWorkChecks();
-        Node nd = null;
-        WorkCheck wc = null;
-        Tracks tks = null;
-        Track tkDoc = null;
-        String nodes = ""; // 可以审核的节点.
-        boolean isCanDo = false;
-        boolean isExitTb_doc = true;
         DataSet ds = new DataSet();
+        String trackTable = "ND" + Integer.parseInt(this.getFK_Flow()) + "Track";
+
+        //当前节点的审核信息
+        NodeWorkCheck wcDesc = new NodeWorkCheck(this.getFK_Node());
+        NodeWorkCheck frmWorkCheck = null;
+        FrmAttachmentDBs athDBs = null; //上传附件集合
+        Nodes nds = new Nodes(this.getFK_Flow());
+
+        Node nd = null;
+
+
+        Track tkDoc = null;
+        String nodes = ""; //可以审核的节点.
+
+        boolean isExitTb_doc = true;
+
         DataRow row = null;
 
-        // 是不是只读?
-        boolean isReadonly = false;
-        if (this.GetRequestVal("IsReadonly") != null && this.GetRequestVal("IsReadonly").equals("1")) {
-            isReadonly = true;
-        }
-        DataTable nodeEmps = new DataTable();
+        //是不是只读?
+        boolean isReadonly = this.GetRequestVal("IsReadonly") != null && this.GetRequestVal("IsReadonly").equals("1") ? true : false;
+
+        //是否可以编辑审核意见
+        boolean isCanDo = false;
+        if (isReadonly == true)
+            isCanDo = false;
+        else
+            isCanDo = bp.wf.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
+
+
         NodeWorkCheck fwc = null;
         DataTable dt = null;
-        int idx = 0;
-        int noneEmpIdx = 0;
 
+        //当前流程的审核组件的定义
+        NodeWorkChecks fwcs = new NodeWorkChecks();
         fwcs.Retrieve(NodeAttr.FK_Flow, this.getFK_Flow(), NodeAttr.Step);
         ds.Tables.add(wcDesc.ToDataTableField("WF_FrmWorkCheck")); // 当前的节点审核组件定义，放入ds.
 
+        //审核意见存储集合
         DataTable tkDt = new DataTable("Tracks");
         tkDt.Columns.Add("NodeID", Integer.class);
         tkDt.Columns.Add("NodeName", String.class);
@@ -1748,14 +1759,12 @@ public class WF_WorkOpt extends WebContralBase {
         tkDt.Columns.Add("RDT", String.class);
         tkDt.Columns.Add("IsDoc", Boolean.class);
         tkDt.Columns.Add("ParentNode", Integer.class);
-        // tkDt.Columns.Add("T_NodeIndex", typeof(int)); //节点排列顺序，用于后面的排序
-        // tkDt.Columns.Add("T_CheckIndex", typeof(int)); //审核人显示顺序，用于后面的排序
         tkDt.Columns.Add("ActionType", Integer.class);
         tkDt.Columns.Add("Tag", String.class);
         tkDt.Columns.Add("FWCView", String.class);
         tkDt.Columns.Add("WritImg", String.class);
 
-        // 流程附件.
+        //流程附件集合.
         DataTable athDt = new DataTable("Aths");
         athDt.Columns.Add("NodeID", Integer.class);
         athDt.Columns.Add("MyPK", String.class);
@@ -1783,63 +1792,43 @@ public class WF_WorkOpt extends WebContralBase {
         }
         ds.Tables.add(athDt);
 
+        //审核组件的定义
+        WorkCheck wc = null;
         if (this.getFID() != 0) {
             wc = new WorkCheck(this.getFK_Flow(), this.getFK_Node(), this.getFID(), 0);
         } else {
             wc = new WorkCheck(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID());
         }
 
-        // 是否只读？
-        if (isReadonly == true) {
-            isCanDo = false;
-        } else {
-            isCanDo = bp.wf.Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
-        }
 
-        // 如果是查看状态, 为了屏蔽掉正在审批的节点, 在查看审批意见中.
+
+        //是否屏蔽正在审批的节点的审批意见(在在途，已完成等查看页面使用)
         boolean isShowCurrNodeInfo = true;
         GenerWorkFlow gwf = new GenerWorkFlow();
-        if (this.getWorkID() != 0) {
+        if (this.getWorkID() != 0)
+        {
             gwf.setWorkID(this.getWorkID());
             gwf.Retrieve();
         }
 
-        if (isCanDo == false && isReadonly == true) {
-            if (gwf.getWFState() == WFState.Runing && gwf.getFK_Node() == this.getFK_Node()) {
-                isShowCurrNodeInfo = false;
-            }
-        }
+        if (isReadonly == true && gwf.getWFState() == WFState.Runing && gwf.getFK_Node() == this.getFK_Node())
+            isShowCurrNodeInfo = false;
 
         /*
          * 获得当前节点已经审核通过的人员. 比如：多人处理规则中的已经审核同意的人员，会签人员,组合成成一个字符串。 格式为: ,zhangsan,lisi,
          * 用于处理在审核列表中屏蔽临时的保存的审核信息. 12 为芒果增加一个非正常完成状态.
          */
         String checkerPassed = ",";
-        nd =(Node)nds.GetEntityByKey(this.getFK_Node());
-        if(nd.getIsSendBackNode() == true){
-            //获取这个节点的审核意见
+        if (gwf.getWFState() != WFState.Complete && gwf.getWFState().getValue() != 12)
+        {
             Paras ps = new Paras();
-            ps.SQL = "SELECT EmpFrom FROM "+trackTable+" WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr()
-                    + "WorkID AND NDFrom=" + SystemConfig.getAppCenterDBVarStr()
-                    + "NDFrom AND ActionType="+ActionType.WorkCheck.getValue()+" Order By RDT";
+            ps.SQL = "SELECT FK_Emp FROM WF_Generworkerlist WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND IsPass=1 AND FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node Order By RDT,CDT";
             ps.Add("WorkID", this.getWorkID());
-            ps.Add("NDFrom", this.getFK_Node());
+            ps.Add("FK_Node", this.getFK_Node());
             DataTable checkerPassedDt = DBAccess.RunSQLReturnTable(ps);
-            for (DataRow dr : checkerPassedDt.Rows) {
-                checkerPassed += dr.getValue(0) + ",";
-            }
-        }else{
-            if (gwf.getWFState() != WFState.Complete && gwf.getWFState().getValue() != 12) {
-                Paras ps = new Paras();
-                ps.SQL = "SELECT FK_Emp FROM WF_Generworkerlist WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr()
-                        + "WorkID AND IsPass=1 AND FK_Node=" + SystemConfig.getAppCenterDBVarStr()
-                        + "FK_Node Order By RDT,CDT";
-                ps.Add("WorkID", this.getWorkID());
-                ps.Add("FK_Node", this.getFK_Node());
-                DataTable checkerPassedDt = DBAccess.RunSQLReturnTable(ps);
-                for (DataRow dr : checkerPassedDt.Rows) {
-                    checkerPassed += dr.getValue("FK_Emp") + ",";
-                }
+            for(DataRow dr : checkerPassedDt.Rows)
+            {
+                checkerPassed += dr.getValue("FK_Emp")+ ",";
             }
         }
 
@@ -1852,74 +1841,24 @@ public class WF_WorkOpt extends WebContralBase {
 
         /// 判断是否显示 - 历史审核信息显示
         boolean isDoc = false;
+        Tracks tks = null;
         if (wcDesc.getFWCListEnable() == true) {
             tks = wc.getHisWorkChecks();
 
-            // 已走过节点
-            int empIdx = 0;
-            int lastNodeId = 0;
-            for (bp.wf.Track tk : tks.ToJavaList()) {
-                if (tk.getHisActionType() == ActionType.FlowBBS) {
-                    continue;
-                }
-
-                if (wcDesc.getFWCMsgShow() == 1 && tk.getEmpFrom().equals(WebUser.getNo()) == false)
-                    continue;
-
-                if (lastNodeId == 0) {
-                    lastNodeId = tk.getNDFrom();
-                }
-
-                if (lastNodeId != tk.getNDFrom()) {
-                    idx++;
-                    lastNodeId = tk.getNDFrom();
-                }
-
-
-                Object tempVar = nds.GetEntityByKey(tk.getNDFrom());
-                nd = tempVar instanceof Node ? (Node) tempVar : null;
-                if (nd == null) {
-                    continue;
-                }
-
-                Object tempVar2 = fwcs.GetEntityByKey(tk.getNDFrom());
-                fwc = tempVar2 instanceof NodeWorkCheck ? (NodeWorkCheck) tempVar2 : null;
-                // 求出主键
-                long pkVal = this.getWorkID();
-                if (nd.getHisRunModel() == RunModel.SubThread) {
-                    pkVal = this.getFID();
-                }
-
-
-                switch (tk.getHisActionType()) {
-                    case WorkCheck:
-                    case StartChildenFlow:
-                        if (nodes.contains(tk.getNDFrom() + ",") == false) {
-                            nodes += tk.getNDFrom() + ",";
-                        }
-                        break;
-                    case Return:
-                        if (wcDesc.getFWCIsShowReturnMsg() == true && tk.getNDTo() == this.getFK_Node()) {
-                            if (nodes.contains(tk.getNDFrom() + ",") == false) {
-                                nodes += tk.getNDFrom() + ",";
-                            }
-                        }
-                        break;
-                    default:
-                        continue;
-                }
-            }
 
             for (Track tk : tks.ToJavaList()) {
-                if (nodes.contains(tk.getNDFrom() + ",") == false) {
+                //评论组件
+                if (tk.getHisActionType() == ActionType.FlowBBS)
                     continue;
-                }
 
                 if (tk.getHisActionType() != ActionType.WorkCheck
                         && tk.getHisActionType() != ActionType.StartChildenFlow
                         && tk.getHisActionType() != ActionType.Return) {
                     continue;
                 }
+                //当前节点只显示自己审核的意见时
+                if (wcDesc.getFWCMsgShow() == 1 && tk.getEmpFrom().equals(WebUser.getNo()) == false)
+                    continue;
 
                 // 退回
                 if (tk.getHisActionType() == ActionType.Return) {
@@ -1930,31 +1869,22 @@ public class WF_WorkOpt extends WebContralBase {
                     }
                 }
 
-                // 如果是当前的节点. 当前人员可以处理, 已经审批通过的人员.
-                if (tk.getNDFrom() == this.getFK_Node() && isCanDo == true
-                        && tk.getEmpFrom().equals(WebUser.getNo()) == false
-                ) {
-                    if(!DataType.IsNullOrEmpty(checkerPassed)) {
-                        if(checkerPassed.contains("," + tk.getEmpFrom() + ",") == false)
-                            continue;
-                    }
-                }
-
-                if (tk.getNDFrom() == this.getFK_Node() && gwf.getHuiQianTaskSta() != HuiQianTaskSta.None) {
-                    // 判断会签, 去掉正在审批的节点.
-                    if (tk.getNDFrom() == this.getFK_Node() && isShowCurrNodeInfo == false) {
-                        continue;
-                    }
-                }
-
-                // 如果是退回状态，就显示之前审核的信息
-
-                // 如果是多人处理，就让其显示已经审核过的意见.
-                if (tk.getNDFrom() == this.getFK_Node() && checkerPassed.indexOf("," + tk.getEmpFrom() + ",") < 0
-                        && (gwf.getWFState() != WFState.Complete && gwf.getWFState() != WFState.ReturnSta
-                        && gwf.getWFState().getValue() != 12)) {
+                //如果是多人处理，流程未运行完成，就让其显示已经审核过的意见.
+                if (tk.getNDFrom() == this.getFK_Node()
+                        && checkerPassed.contains("," + tk.getEmpFrom() + ",") == false
+                        && (gwf.getWFState() != WFState.Complete && gwf.getWFState().getValue() != 12))
+                    continue;
+                if(gwf.getFK_Node()==tk.getNDFrom() && checkerPassed.contains("," + tk.getEmpFrom() + ",") == false
+                        && (gwf.getWFState() != WFState.Complete && gwf.getWFState().getValue() != 12))
                     continue;
 
+                //为false可能为子流程数据
+                if (String.valueOf(tk.getNDFrom()).startsWith(Integer.parseInt(this.getFK_Flow())+"") == true)
+                {
+                    //当前节点在后面设计被删除时也需要屏蔽
+                    nd = (Node)nds.GetEntityByKey(tk.getNDFrom());
+                    if (nd == null)
+                        continue;
                 }
 
                 row = tkDt.NewRow();
@@ -2025,7 +1955,7 @@ public class WF_WorkOpt extends WebContralBase {
                 row.setValue("DeptName", DeptName);
                 row.setValue("ActionType", tk.getHisActionType().getValue());
                 row.setValue("Tag", tk.getTag());
-                row.setValue("FWCView", fwc.getFWCView());
+                row.setValue("FWCView", fwc!=null?fwc.getFWCView():"");
                 if (wcDesc.getSigantureEnabel() != 2)
                     row.setValue("WritImg", "");
                 else
@@ -2109,7 +2039,6 @@ public class WF_WorkOpt extends WebContralBase {
                                 row.setValue("IsDoc", false);
                                 row.setValue("ParentNode", tk.getNDFrom());
                                 // row["T_NodeIndex"] = idx++;
-                                row.setValue("T_CheckIndex", noneEmpIdx++);
                                 row.setValue("ActionType", mysubtk.getHisActionType().getValue());
                                 row.setValue("Tag", mysubtk.getTag());
                                 row.setValue("FWCView", subFrmCheck.getFWCView());
@@ -2183,7 +2112,6 @@ public class WF_WorkOpt extends WebContralBase {
                     row.setValue("EmpFromT", WebUser.getName());
                     row.setValue("DeptName", WebUser.getFK_DeptName());
                     // row["T_NodeIndex"] = ++idx;
-                    row.setValue("T_CheckIndex", ++noneEmpIdx);
                     row.setValue("ActionType", ActionType.Forward.getValue());
                     row.setValue("Tag", Dev2Interface.GetCheckTag(this.getFK_Flow(), this.getWorkID(),
                             this.getFK_Node(), WebUser.getNo()));
@@ -2306,8 +2234,6 @@ public class WF_WorkOpt extends WebContralBase {
             row.setValue("EmpFrom", "");
             row.setValue("EmpFromT", "");
             row.setValue("DeptName", "");
-            // row["T_NodeIndex"] = ++idx;
-            row.setValue("T_CheckIndex", ++noneEmpIdx);
 
             tkDt.Rows.add(row);
         }
@@ -3187,7 +3113,9 @@ public class WF_WorkOpt extends WebContralBase {
         DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
         // 如果是oracle,就转成小写.
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBase
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
+        		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
                 || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
             dt.Columns.get("NODEID").setColumnName("NodeID");
             dt.Columns.get("NAME").setColumnName("Name");
@@ -3702,8 +3630,7 @@ public class WF_WorkOpt extends WebContralBase {
         dtDept.TableName = "Depts";
         ds.Tables.add(dtDept);
 
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBase
-                || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+        if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None) {
             dtDept.Columns.get(0).setColumnName("No");
             dtDept.Columns.get(1).setColumnName("Name");
             dtDept.Columns.get(2).setColumnName("ParentNo");
@@ -3732,8 +3659,7 @@ public class WF_WorkOpt extends WebContralBase {
         DataTable dtEmps = DBAccess.RunSQLReturnTable(sql);
         dtEmps.TableName = "Emps";
         ds.Tables.add(dtEmps);
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBase
-                || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+        if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None) {
             dtEmps.Columns.get(0).setColumnName("No");
             dtEmps.Columns.get(1).setColumnName("Name");
             dtEmps.Columns.get(2).setColumnName("FK_Dept");
@@ -3853,7 +3779,8 @@ public class WF_WorkOpt extends WebContralBase {
                             + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID
                             + " AND ActionType=1 ORDER BY WorkID DESC";
                 } else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                        || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+                		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+        				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
                     sql = "SELECT * FROM (SELECT  Tag,EmpTo,WorkID FROM ND" + Integer.parseInt(nd.getFK_Flow())
                             + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID
                             + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
@@ -3965,7 +3892,8 @@ public class WF_WorkOpt extends WebContralBase {
                             + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID
                             + " AND ActionType=1 ORDER BY WorkID DESC";
                 } else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                        || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+                		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+        				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
                     sql = "SELECT * FROM (SELECT  Tag,EmpTo,WorkID FROM ND" + Integer.parseInt(nd.getFK_Flow())
                             + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID
                             + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
@@ -4172,15 +4100,20 @@ public class WF_WorkOpt extends WebContralBase {
                 + "Track WHERE WorkID=" + this.getWorkID() + " AND(" + andsql + ") Order By RDT DESC";
         DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+        if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
             dt.Columns.get(0).setColumnName("RDT");
             dt.Columns.get(1).setColumnName("NDFrom");
             dt.Columns.get(2).setColumnName("NDFromT");
             dt.Columns.get(3).setColumnName("EmpFrom");
             dt.Columns.get(4).setColumnName("EmpFromT");
         }
-
+        if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+            dt.Columns.get(0).setColumnName("rdt");
+            dt.Columns.get(1).setColumnName("ndfrom");
+            dt.Columns.get(2).setColumnName("ndfromt");
+            dt.Columns.get(3).setColumnName("empfrom");
+            dt.Columns.get(4).setColumnName("empfromt");
+        }
         return bp.tools.Json.ToJson(dt);
     }
 
@@ -4361,8 +4294,7 @@ public class WF_WorkOpt extends WebContralBase {
         ps.Add("Starter", WebUser.getNo());
         DataTable dtTemplate = DBAccess.RunSQLReturnTable(ps);
         dtTemplate.TableName = "DBTemplate";
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBase
-                || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+        if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None) {
             dtTemplate.Columns.get(0).setColumnName("WorkID");
             dtTemplate.Columns.get(1).setColumnName("Title");
         }
@@ -4387,7 +4319,8 @@ public class WF_WorkOpt extends WebContralBase {
             ps.Add("Starter", WebUser.getNo());
         }
         if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-                || SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+        		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
             ps.SQL = "SELECT WorkID,Title FROM WF_GenerWorkFlow WHERE FK_Flow=" + SystemConfig.getAppCenterDBVarStr()
                     + "FK_Flow AND WFState=3 AND Starter=" + SystemConfig.getAppCenterDBVarStr()
                     + "Starter AND ATPARA NOT LIKE '%@DBTemplate=1%' AND rownum<=30 ORDER BY RDT ";
@@ -4404,8 +4337,7 @@ public class WF_WorkOpt extends WebContralBase {
         }
         DataTable dtHistroy = DBAccess.RunSQLReturnTable(ps);
         dtHistroy.TableName = "History";
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBase
-                || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+        if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None) {
             dtHistroy.Columns.get(0).setColumnName("WorkID");
             dtHistroy.Columns.get(1).setColumnName("Title");
         }
@@ -5234,5 +5166,144 @@ public class WF_WorkOpt extends WebContralBase {
 
     }
 
+    /**
+     * 节点跳转的初始化信息
+     * @return
+     * @throws Exception
+     */
+    public String JumpWay_Init()throws Exception
+    {
+        Node node = new Node(this.getFK_Node());
+        String sql = "";
+        switch (node.getJumpWay())
+        {
+            case CanNotJump://不跳转
+                break;
+            case Previous://向前跳转
+                sql = "SELECT NodeID,Name FROM WF_Node WHERE NodeID IN (SELECT FK_Node FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID() + " )";
+                break;
+            case Next://向后跳转
+                sql = "SELECT NodeID,Name FROM WF_Node WHERE NodeID NOT IN (SELECT FK_Node FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID() + " ) AND FK_Flow='" + this.getFK_Flow()+ "'";
+                break;
+            case AnyNode://任意节点
+                sql = "SELECT NodeID,Name FROM WF_Node WHERE FK_Flow='" + this.getFK_Flow() + "' ORDER BY STEP";
+                break;
+            case JumpSpecifiedNodes://指定节点
+                sql = node.getJumpToNodes();
+                sql = sql.replace("@WebUser.No", WebUser.getNo());
+                sql = sql.replace("@WebUser.Name", WebUser.getName());
+                sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+                if (sql.contains("@"))
+                {
+                    Work wk = node.getHisWork();
+                    wk.setOID(this.getWorkID());
+                    wk.RetrieveFromDBSources();
+                    for(Attr attr : wk.getEnMap().getAttrs())
+                    {
+                        if (sql.contains("@") == false)
+                            break;
+                        sql = sql.replace("@" + attr.getKey(), wk.GetValStrByKey(attr.getKey()));
+                    }
+                }
+                break;
+            default:
+                throw new Exception(node.getJumpWay()+"还未增加改类型的判断.");
+        }
+        sql = sql.replace("~", "'");
+        if (DataType.IsNullOrEmpty(sql) == false)
+        {
+            DataTable dt = DBAccess.RunSQLReturnTable(sql);
+            if(SystemConfig.AppCenterDBFieldCaseModel()== FieldCaseModel.UpperCase
+                    || SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+            {
+                for (DataColumn col : dt.Columns)
+                {
+                    String colName = col.ColumnName.toLowerCase();
+                    switch (colName)
+                    {
+                        case "nodeid":
+                            col.ColumnName = "NodeID";
+                            break;
+                        case "name":
+                            col.ColumnName = "Name";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return bp.tools.Json.ToJson(dt);
+        }
+        return "";
+    }
+
+    /**
+     * 节点跳转发送
+     * @return
+     * @throws Exception
+     */
+    public String JumpWay_Send() throws Exception
+    {
+        try
+        {
+            int toNodeID = this.GetRequestValInt("ToNode");
+
+            SendReturnObjs objs =bp.wf.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID(), toNodeID, null);
+            String strs = objs.ToMsgOfHtml();
+            strs = strs.replace("@", "<br>@");
+            //region 处理发送后转向.
+            //当前节点.
+            Node currNode = new Node(this.getFK_Node());
+            /* 处理转向问题 */
+            switch (currNode.getHisTurnToDeal()) {
+                case SpecUrl:
+                    String myurl = currNode.getTurnToDealDoc();
+                    if (myurl.contains("?") == false) {
+                        myurl += "?1=1";
+                    }
+                    Attrs myattrs = currNode.getHisWork().getEnMap().getAttrs();
+                    Work hisWK = currNode.getHisWork();
+                    for (Attr attr : myattrs) {
+                        if (myurl.contains("@") == false) {
+                            break;
+                        }
+                        myurl = myurl.replace("@" + attr.getKey(), hisWK.GetValStrByKey(attr.getKey()));
+                    }
+                    myurl = myurl.replace("@WebUser.No", WebUser.getNo());
+                    myurl = myurl.replace("@WebUser.Name", WebUser.getName());
+                    myurl = myurl.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+
+                    if (myurl.contains("@")) {
+                        bp.wf.Dev2Interface.Port_SendMsg("admin", currNode.getName() + "在" + currNode.getName()
+                                + "节点处，出现错误", "流程设计错误，在节点转向url中参数没有被替换下来。Url:"
+                                + myurl, "Err" + currNode.getNo() + "_" + this.getWorkID(), SMSMsgType.Err, this.getFK_Flow(), this.getFK_Node(), this.getWorkID(), this.getFID());
+                        throw new RuntimeException("流程设计错误，在节点转向url中参数没有被替换下来。Url:" + myurl);
+                    }
+
+                    if (myurl.contains("PWorkID") == false) {
+                        myurl += "&PWorkID=" + this.getWorkID();
+                    }
+
+                    myurl += "&FromFlow=" + this.getFK_Flow() + "&FromNode=" + this.getFK_Node() + "&UserNo="
+                            + WebUser.getNo() + "&SID=" + WebUser.getSID();
+                    return "TurnUrl@" + myurl;
+                case TurnToByCond:
+
+                    return strs;
+                default:
+                    strs = strs.replace("@WebUser.No", WebUser.getNo());
+                    strs = strs.replace("@WebUser.Name", WebUser.getName());
+                    strs = strs.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+                    return strs;
+            }
+
+        } catch (RuntimeException ex) {
+            AthUnReadLog athUnReadLog = new AthUnReadLog();
+            athUnReadLog.CheckPhysicsTable();
+            if (ex.getMessage().indexOf("url@") != -1)
+                return ex.getMessage().replace("/WorkOpt/","/");
+            return "err@" + ex.getMessage();
+        }
+    }
 
 }

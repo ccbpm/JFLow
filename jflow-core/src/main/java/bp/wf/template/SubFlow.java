@@ -172,6 +172,15 @@ public class SubFlow extends EntityMyPK
 	public final String getSubFlowCopyFields()throws Exception{
 		return this.GetValStringByKey(SubFlowHandAttr.SubFlowCopyFields);
 	}
+
+	public final String getParentFlowCopyFields()throws Exception{
+		return this.GetValStringByKey(SubFlowHandAttr.ParentFlowCopyFields);
+	}
+
+	public final int getBackCopyRole()throws Exception
+	{
+		return this.GetValIntByKey(SubFlowAttr.BackCopyRole);
+	}
 		///
 
 
@@ -233,12 +242,14 @@ public class SubFlow extends EntityMyPK
 		map.AddTBString(SubFlowAttr.ReturnToNode, null, "要退回的节点", true, true, 0, 200, 150, false);
 
 		map.AddTBInt(SubFlowAttr.SendModel, 0, "自动触发的子流程发送方式", false, true);
+		map.AddTBInt(SubFlowHandAttr.SubFlowStartModel, 0, "启动模式", false, true);
 		map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowSta, 1, "状态", true, true, SubFlowYanXuAttr.SubFlowSta,
 				"@0=禁用@1=启用@2=只读");
 
 		map.AddTBInt(SubFlowAttr.Idx, 0, "顺序", true, false);
 		map.AddTBString(SubFlowAttr.SubFlowCopyFields, null, "父流程字段对应子流程字段", false, false, 0, 400, 150, true);
-
+		map.AddTBInt(SubFlowAttr.BackCopyRole, 0, "子流程结束后数据字段反填规则", false,true); ;
+		map.AddTBString(SubFlowAttr.ParentFlowCopyFields, null, "子流程字段对应父流程字段", true, false, 0, 400, 150, true);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

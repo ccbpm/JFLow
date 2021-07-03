@@ -70,7 +70,7 @@ public class GPMPage extends WebContralBase
 			HttpServletRequest request = getRequest();
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-				String tempFilePath = SystemConfig.getPathOfWebApp() + "/DataUser/Siganture/" + this.getFK_Emp()
+				String tempFilePath = SystemConfig.getPathOfWebApp() + "DataUser/Siganture/" + this.getFK_Emp()
 						+ ".jpg";
 				File tempFile = new File(tempFilePath);
 				if (tempFile.exists()) {
@@ -200,7 +200,8 @@ public class GPMPage extends WebContralBase
 		switch (DBAccess.getAppCenterDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				int beginIndex = (pageNumber - 1) * pageSize + 1;
 				int endIndex = pageNumber * pageSize;
 
@@ -267,9 +268,7 @@ public class GPMPage extends WebContralBase
 		DataTable menus = DBAccess.RunSQLReturnTable(sql2);
 		menus.TableName = "Menus"; //获得菜单.
 
-		if (SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.Oracle) {
-
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			// 目录
 			dirs.Columns.get("NO").ColumnName = "No";
 			dirs.Columns.get("NAME").ColumnName = "Name";
@@ -295,6 +294,34 @@ public class GPMPage extends WebContralBase
 			menus.Columns.get("WEBPATH").ColumnName = "WebPath";
 			menus.Columns.get("ICON").ColumnName = "Icon";
 			menus.Columns.get("IDX").ColumnName = "Idx";
+
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			// 目录
+			dirs.Columns.get("no").ColumnName = "No";
+			dirs.Columns.get("name").ColumnName = "Name";
+			dirs.Columns.get("fk_menu").ColumnName = "FK_Menu";
+			dirs.Columns.get("parentno").ColumnName = "ParentNo";
+			dirs.Columns.get("urlext").ColumnName = "UrlExt";
+			dirs.Columns.get("tag1").ColumnName = "Tag1";
+			dirs.Columns.get("tag2").ColumnName = "Tag2";
+			dirs.Columns.get("tag3").ColumnName = "Tag3";
+			dirs.Columns.get("webpath").ColumnName = "WebPath";
+			dirs.Columns.get("icon").ColumnName = "Icon";
+			dirs.Columns.get("idx").ColumnName = "Idx";
+
+			// 菜单.
+			menus.Columns.get("no").ColumnName = "No";
+			menus.Columns.get("name").ColumnName = "Name";
+			menus.Columns.get("fk_menu").ColumnName = "FK_Menu";
+			menus.Columns.get("parentno").ColumnName = "ParentNo";
+			menus.Columns.get("urlext").ColumnName = "UrlExt";
+			menus.Columns.get("tag1").ColumnName = "Tag1";
+			menus.Columns.get("tag2").ColumnName = "Tag2";
+			menus.Columns.get("tag3").ColumnName = "Tag3";
+			menus.Columns.get("webpath").ColumnName = "WebPath";
+			menus.Columns.get("icon").ColumnName = "Icon";
+			menus.Columns.get("idx").ColumnName = "Idx";
 
 		}
 		//组装数据.

@@ -1,6 +1,7 @@
 package bp.wf;
 import bp.sys.*;
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.web.*;
 import bp.wf.template.*;
@@ -143,6 +144,40 @@ public class ExecEvent
 		 //如果执行了节点发送成功时间. 
         if (doType.equals(EventListNode.SendSuccess) == true)
             WorkNodePlus.SendSendDraftSubFlow(wn); //执行自动发送子流程.
+        
+
+        //更新授权岗位:为中科软
+        if(doType.equals(EventListNode.SendSuccess) == true && SystemConfig.GetValByKeyBoolen("IsEnableAuthDeptStation",false) == true) {
+        	Node node = new Node(wn.getHisGenerWorkFlow().getFK_Node());
+        	
+        	// 如果这些计算人员的方式有岗位的因素，就需要把当前人员授权岗增加上去.
+        	 if (node.getHisDeliveryWay() == DeliveryWay.ByStation
+                     || node.getHisDeliveryWay() == DeliveryWay.ByStationOnly
+                     || node.getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept
+                     || node.getHisDeliveryWay()== DeliveryWay.ByDeptAndStation
+                     || node.getHisDeliveryWay() == DeliveryWay.FindSpecDeptEmpsInStationlist
+                     || node.getHisDeliveryWay() ==  DeliveryWay.BySpecNodeEmpStation
+                     || node.getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept
+                     )
+                 {
+        		 	String sql = "SELECT A.FK_Dept, A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B ";
+        		 	sql +=" WHERE  A.FK_Station=B.FK_Station AND B.FK_Node="+ node.getNodeID();
+        		 	DataTable dt = DBAccess.RunSQLReturnTable(sql);
+        		 	String emps = wn.getHisGenerWorkFlow().getEmps();
+        		 	for(DataRow dr : dt.Rows){
+        		 		String strs = "@"+ dr.getValue(0).toString() + "_" + dr.getValue(1).toString() +"@";
+        		 		if(emps.contains("@"+strs+"@") == true)
+        		 			continue;
+   		 		
+        		 		emps +=strs;
+        		 	}
+        		 	wn.getHisGenerWorkFlow().setEmps(emps);
+        		    wn.getHisGenerWorkFlow().DirectUpdate();
+                 }
+        	
+        }
+        
+        
 
 		//写入消息之前，删除所有的消息.
 		if (bp.wf.Glo.getIsEnableSysMessage() == true)

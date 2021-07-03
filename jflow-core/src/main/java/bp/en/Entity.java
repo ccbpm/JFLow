@@ -815,7 +815,8 @@ public abstract class Entity extends EnObj implements Serializable
 					sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM " + this.getEnMap().getPhysicsTable();
 					break;
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 				case DM:
 					sql = "SELECT MAX(" + field + ") +1 AS No FROM " + this.getEnMap().getPhysicsTable();
 					break;
@@ -873,7 +874,8 @@ public abstract class Entity extends EnObj implements Serializable
 				sql = "SELECT CONVERT(bigint, MAX([" + field + "]))+1 AS Num FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + attrGroupKey + "='" + attrGroupVal + "'";
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 			case Informix:
 				sql = "SELECT MAX( :f )+1 AS No FROM " + this.getEnMap().getPhysicsTable() + " WHERE " + this.getHisDBVarStr() + "groupKey=" + this.getHisDBVarStr() + "groupVal ";
@@ -928,7 +930,8 @@ public abstract class Entity extends EnObj implements Serializable
 		switch (this.getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 			case Informix:
 				sql = "SELECT   MAX(" + f + ") +1 AS No FROM " + this.getEnMap().getPhysicsTable();
@@ -974,7 +977,8 @@ public abstract class Entity extends EnObj implements Serializable
 		switch (this.getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 			case Informix:
 				sql = "SELECT   MAX(" + f + ") +1 AS No FROM " + this.getEnMap().getPhysicsTable();
@@ -1806,7 +1810,8 @@ public abstract class Entity extends EnObj implements Serializable
 					selectSQL += SqlBuilder.GetKeyConditionOfMS(this);
 					break;
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 				case DM:
 				case PostgreSQL:
 					selectSQL += SqlBuilder.GetKeyConditionOfOraForPara(this);
@@ -2068,7 +2073,8 @@ public abstract class Entity extends EnObj implements Serializable
 		switch (this.getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 			case MSSQL:
 			case MySQL:
@@ -3051,7 +3057,8 @@ public abstract class Entity extends EnObj implements Serializable
 			}
 
 			if (DBAccess.getAppCenterDBType() == DBType.Oracle
-					||SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBase)
+					|| SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBaseR3
+					|| SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBaseR6)
 			{
 				sql = "ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + saveToField + " Image NULL ";
 			}
@@ -3090,7 +3097,8 @@ public abstract class Entity extends EnObj implements Serializable
 			}
 
 			if (DBAccess.getAppCenterDBType() == DBType.Oracle
-					||SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBase)
+					|| SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBaseR3
+					|| SystemConfig.getAppCenterDBType() == bp.da.DBType.KingBaseR6)
 			{
 				sql = "ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + saveToField + " Blob NULL ";
 			}
@@ -3214,7 +3222,8 @@ public abstract class Entity extends EnObj implements Serializable
 			switch (DBAccess.getAppCenterDBType())
 			{
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 				case DM:
 					sql = SqlBuilder.GenerCreateTableSQLOfOra(this);
 					break;
@@ -3939,7 +3948,8 @@ public abstract class Entity extends EnObj implements Serializable
 			case MSSQL:
 				return CheckPhysicsTableAutoExtFieldLength_SQL();
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 			case DM:
 				break;
 			case MySQL:
@@ -4081,7 +4091,8 @@ public abstract class Entity extends EnObj implements Serializable
 			case PostgreSQL:
 				this.CheckPhysicsTable_PostgreSQL();
 				break;
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				this.CheckPhysicsTable_King();
 				break;
 			default:

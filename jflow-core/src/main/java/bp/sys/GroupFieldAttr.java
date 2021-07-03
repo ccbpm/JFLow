@@ -34,4 +34,8 @@ public class GroupFieldAttr extends EntityOIDAttr
 	 手机端是否折叠显示？
 	*/
 	public static final String IsZDMobile = "IsZDMobile";
+	/**
+	 * 分组显示的模式
+	 */
+	public static final String ShowType="ShowType";
 }

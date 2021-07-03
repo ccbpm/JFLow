@@ -11,6 +11,7 @@ import bp.da.DataRowCollection;
 import bp.da.DataSet;
 import bp.da.DataTable;
 import bp.da.DataType;
+import bp.da.FieldCaseModel;
 import bp.difference.SystemConfig;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -504,24 +505,33 @@ public class Json
 		//转换json格式
 		JSONArray json = JSONArray.fromObject(strJson);
 		tb = new DataTable();
-        tb.TableName = "";
+		tb.TableName = "";
+		int idx=0;
 		for(int i = 0;i < json.size();i++) {
 			JSONObject pjson = (JSONObject)json.get(i);
 			@SuppressWarnings("unchecked")
 			Iterator<String> iterator = pjson.keys();
 			row = tb.NewRow();
 			dc = new DataColumn();
+			if(idx == 0){
+				while(iterator.hasNext())
+				{
+					key = (String) iterator.next();
+					dc.ColumnName = key;
+					tb.Columns.Add(dc.ColumnName);
+					value = pjson.getString(key);
+					row.setValue(key, value);
+				}
+			}
+			idx++;
 			while(iterator.hasNext())
 			{
 				key = (String) iterator.next();
 				value = pjson.getString(key);
-				dc.ColumnName = key;
-				tb.Columns.Add(dc.ColumnName);
-				row.setValue(dc.ColumnName, value);
+				row.setValue(key, value);
 			}
 			tb.Rows.add(i, row);
 		}
-		
 		return tb;
 	}
 
@@ -617,10 +627,12 @@ public class Json
 		}
 		
 		boolean isOracel=false;
-		if (SystemConfig.getAppCenterDBType() ==  DBType.Oracle
-				||SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		// 20210426大小写jhy
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+				/*SystemConfig.getAppCenterDBType() ==  DBType.Oracle
+				||SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6*/
 			isOracel=true;
-			 
 
 		jsonString.append("[");
 		DataRowCollection drc = dt.Rows;
@@ -879,7 +891,7 @@ public class Json
 					String strValue = "";
 					if(!isRowUper){
 						if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-								||SystemConfig.getAppCenterDBType() == DBType.KingBase){//按照大写取值
+								||SystemConfig.getAppCenterDBType() == DBType.KingBaseR3){//按照大写取值
 							strValue = drc.get(i).get(strKey.toUpperCase()) == null ? "" : drc.get(i).get(strKey.toUpperCase()).toString();
 						}else{
 							strValue = drc.get(i).get(dt.Columns.get(j).ColumnName) == null ? "" : drc.get(i).get(dt.Columns.get(j).ColumnName).toString();

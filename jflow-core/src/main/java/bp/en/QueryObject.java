@@ -308,7 +308,8 @@ public class QueryObject
 				switch (this.HisDBType)
 				{
 					case Oracle:
-					case KingBase:	
+					case KingBaseR3:
+					case KingBaseR6:
 						this.setSQL("(" + attr2Field(attr) + " " + exp + " '%'||" + this.getHisVarStr() + "FK_Dept||'%' )");
 						this.getMyParas().Add("FK_Dept", valStr);
 						break;
@@ -676,7 +677,8 @@ public class QueryObject
 		if (attr.getIsRefAttr() == true)
 		{
 			//  Entity en = attr.HisFKEn;
-			if (this.HisDBType == DBType.Oracle ||this.HisDBType == DBType.KingBase)
+			if (this.HisDBType == DBType.Oracle ||this.HisDBType == DBType.KingBaseR3 
+					||this.HisDBType == DBType.KingBaseR6)
 			{
 				return "T" + attr.getKey().replace("Text", "") + ".Name";
 			}
@@ -696,7 +698,8 @@ public class QueryObject
 		switch (en.getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				return DoGroupReturnTableOracle(en, attrsOfGroupKey, attrGroup, gw, ow);
 			default:
 				return DoGroupReturnTableSqlServer(en, attrsOfGroupKey, attrGroup, gw, ow);
@@ -1268,7 +1271,8 @@ public class QueryObject
 				switch (map.getEnDBUrl().getDBType())
 				{
 					case Oracle:
-					case KingBase:
+					case KingBaseR3:
+					case KingBaseR6:
 						toIdx = top + pageSize;
 						if (DataType.IsNullOrEmpty(this._sql)==true)
 						{
@@ -1549,7 +1553,8 @@ public class QueryObject
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				if (DataType.IsNullOrEmpty(this._sql)==true)
 				{
 					sql = "SELECT COUNT(" + ptable + "." + pk + ") as C FROM " + ptable;
@@ -1613,7 +1618,8 @@ public class QueryObject
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				if (DataType.IsNullOrEmpty(this._sql)==true)
 				{
 					sql = "SELECT " + oper + " FROM " + ptable;
@@ -1662,7 +1668,8 @@ public class QueryObject
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				if (DataType.IsNullOrEmpty(this._sql)==true)
 				{
 					sql = selectSQl + " FROM " + ptable + "WHERE " + groupBy + orderBy;
@@ -1718,7 +1725,8 @@ public class QueryObject
 		switch (this.HisDBType)
 		{
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				if (this.getTop() != -1)
 				{
 					this.addAnd();
@@ -1743,19 +1751,6 @@ public class QueryObject
 	*/
 	public static Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) throws Exception
 	{
-		boolean isUpper = false;
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-			isUpper = true;
-
-		if (SystemConfig.getAppCenterDBType() == DBType.KingBase){
-			//查询数据库大小写是否敏感，如果显示 on，为大小写敏感；显示 off ，为大小写不敏感。
-			String sql ="show case_sensitive;";
-			String caseSen = DBAccess.RunSQLReturnString(sql);
-			if("on".equals(caseSen)){
-				isUpper = true;
-			}
-		}
-		
 		if (fullAttrs == null) {
 			Map enMap = ens.getGetNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
@@ -1764,12 +1759,12 @@ public class QueryObject
 				for (DataRow dr : dt.Rows) {
 					Entity en = ens.getGetNewEntity();
 					for (Attr attr : attrs) {
-						if (isUpper == true){
-							if(SystemConfig.getAppCenterDBType() == DBType.KingBase
-								&& attr.getMyFieldType() == FieldType.RefText)
-								en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
-							else
-								en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
+						if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
+							if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+									&& attr.getMyFieldType() == FieldType.RefText)
+									en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+								else
+									en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
 						} else
 							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 					}
@@ -1790,8 +1785,8 @@ public class QueryObject
 		for (DataRow dr : dt.Rows) {
 			Entity en = ens.getGetNewEntity();
 			for (String str : fullAttrs) {
-				if (isUpper == true){
-					if(SystemConfig.getAppCenterDBType() == DBType.KingBase
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
+					if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 						&& dt.Columns.contains(str)==true)
 						en.SetValByKey(str, dr.getValue(str));
 					else

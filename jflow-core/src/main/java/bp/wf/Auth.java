@@ -106,7 +106,7 @@ public class Auth extends EntityMyPK
 	@Override
 	protected boolean beforeInsert()throws Exception
 	{
-		this.setMyPK(DBAccess.GenerGUID());
+		//this.setMyPK(DBAccess.GenerGUID());
 		return super.beforeInsert();
 	}
 	@Override

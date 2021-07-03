@@ -137,9 +137,10 @@ public class GroupField extends EntityOID
 		map.AddTBString(GroupFieldAttr.CtrlType, null, "控件类型", true, true, 0, 50, 20);
 		map.AddTBString(GroupFieldAttr.CtrlID, null, "控件ID", true, true, 0, 500, 20);
 
-		map.AddBoolean(GroupFieldAttr.IsZDPC, false, "是否折叠(PC)", true, true);
+		//map.AddBoolean(GroupFieldAttr.IsZDPC, false, "是否折叠(PC)", true, true);
 		map.AddBoolean(GroupFieldAttr.IsZDMobile, false, "是否折叠(Mobile)", true, true);
-
+		map.AddDDLSysEnum(GroupFieldAttr.ShowType, 0, "分组显示模式", true, true,
+				GroupFieldAttr.ShowType, "@0=显示@1=PC折叠@2=隐藏");
 		map.AddTBInt(GroupFieldAttr.Idx, 99, "顺序号", true, false);
 		map.AddTBString(MapAttrAttr.GUID, null, "GUID", true, true, 0, 128, 20, true);
 		map.AddTBAtParas(3000);

@@ -22,7 +22,7 @@ public class LoadTemplete extends Method
 	{
 		this.Title = "装载流程演示模板";
 		this.Help = "为了帮助各位爱好者学习与掌握ccflow, 特提供一些流程模板与表单模板以方便学习。";
-		this.Help += "@这些模板的位于" + SystemConfig.getPathOfWebApp() + "\\SDKFlowDemo\\FlowDemo\\";
+		this.Help += "@这些模板的位于" + SystemConfig.getPathOfWebApp() + "SDKFlowDemo/FlowDemo/";
 		this.GroupName = "流程维护";
 
 	}
@@ -69,7 +69,7 @@ public class LoadTemplete extends Method
 		root.setParentNo("0");
 		root.Insert();
 
-		String frmPath = SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Form/";
+		String frmPath = SystemConfig.getPathOfWebApp() + "SDKFlowDemo/FlowDemo/Form/";
 		File dirInfo = new File(frmPath);
 		File[] dirs = dirInfo.listFiles();
 		int i = 0;
@@ -133,7 +133,7 @@ public class LoadTemplete extends Method
 			///#region 处理流程.
 		FlowSorts sorts = new FlowSorts();
 		sorts.ClearTable();
-		dirInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/");
+		dirInfo = new File(SystemConfig.getPathOfWebApp() + "SDKFlowDemo/FlowDemo/Flow/");
 		dirs = dirInfo.listFiles();
 
 		FlowSort fsRoot = new FlowSort();
@@ -180,7 +180,7 @@ public class LoadTemplete extends Method
 
 
 			//调度它的下一级目录.
-			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "/SDKFlowDemo/FlowDemo/Flow/" + dir.getName());
+			File dirSubInfo = new File(SystemConfig.getPathOfWebApp() + "SDKFlowDemo/FlowDemo/Flow/" + dir.getName());
 			File[] myDirs = dirSubInfo.listFiles();
 			for (File mydir : myDirs)
 			{

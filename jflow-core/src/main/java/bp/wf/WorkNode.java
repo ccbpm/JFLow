@@ -2100,7 +2100,8 @@ public class WorkNode {
 
 			/// 如果更新失败，可能是由于数据字段大小引起。
 			Flow flow = new Flow(toND.getFK_Flow());
-			if(SystemConfig.getAppCenterDBType() == DBType.KingBase){
+			if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6){
 				String updateLengthSql = String.format("  alter table %1$s alter column %2$s TYPE varchar2(2000) ",
 						"ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpFromT");
 				DBAccess.RunSQL(updateLengthSql);
@@ -3141,9 +3142,25 @@ public class WorkNode {
 			DataTable dt = DBAccess.RunSQLReturnTable(
 					"SELECT * FROM " + this.getHisFlow().getPTable() + " WHERE OID=" + dbStr + "OID", "OID",
 					this.getHisWork().getFID());
-			for (DataColumn dc : dt.Columns) {
-				mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
+			if(SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase
+			|| SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase){
+				Attrs attrs = mainWK.getEnMap().getAttrs();
+				for (Attr attr : attrs) {
+					if(dt.Columns.contains(attr.getKey().toUpperCase()) == false
+						&& dt.Columns.contains(attr.getKey().toLowerCase()) == false)
+						continue;
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
+						mainWK.SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey().toUpperCase()));
+					} else
+						mainWK.SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey().toLowerCase()));
+				}
+
+			}else {
+				for (DataColumn dc : dt.Columns) {
+					mainWK.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
+				}
 			}
+
 
 			mainWK.setRec(WebUser.getNo());
 			// mainWK.Emps = emps;
@@ -7014,6 +7031,11 @@ public class WorkNode {
 				// 执行抄送. 2020-04-28 修改只要启动抄送规则就执行抄送
 				CC(this.getHisNode());
 
+				if (this.getHisFlow().getDTSWay() != DataDTSWay.None) {
+					WorkNodePlus.DTSData(this.getHisFlow(), this.getHisGenerWorkFlow(), this.rptGe, this.getHisNode(),
+							this.getIsStopFlow());
+				}
+
 				// 判断当前流程是否子流程，是否启用该流程结束后，主流程自动运行到下一节点@yuan
 				//String msg = bp.wf.Dev2Interface.FlowOverAutoSendParentOrSameLevelFlow(this.getHisGenerWorkFlow(),
 				//		this.getHisFlow());
@@ -8807,8 +8829,8 @@ public class WorkNode {
 				return;
 			}
 
-			if (this.getHisFlow().getCondsOfFlowComplete().size() >= 1
-					&& this.getHisFlow().getCondsOfFlowComplete().GenerResult(this.rptGe)) {
+			if (this.getHisNode().getCondsOfFlowComplete().size() >= 1
+					&& this.getHisNode().getCondsOfFlowComplete().GenerResult(this.rptGe)) {
 				String stopMsg = this.getHisFlow().getCondsOfFlowComplete().getConditionDesc();
 				/* 如果流程完成 */
 				String overMsg = this.getHisWorkFlow().DoFlowOver(ActionType.FlowOver, str + ": " + stopMsg,

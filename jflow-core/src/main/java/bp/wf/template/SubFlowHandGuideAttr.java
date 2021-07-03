@@ -22,7 +22,7 @@ public class SubFlowHandGuideAttr extends SubFlowHandAttr
 		*/
 		public static final String SubFlowGuideSQL = "SubFlowGuideSQL";
 
-		public static final String SubFlowGuideSQLGroup="SubFlowGuideSQLGroup";
+		public static final String SubFlowGuideGroup="SubFlowGuideGroup";
 		/** 
 		 编号字段.
 		*/

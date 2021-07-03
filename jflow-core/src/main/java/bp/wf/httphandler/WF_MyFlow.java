@@ -1133,7 +1133,7 @@ public class WF_MyFlow extends WebContralBase {
 				dt.Rows.add(dr);
 			}
 
-			if (btnLab.getJumpWayEnable() && 1 == 2) {
+			if (btnLab.getJumpWayEnum()!=JumpWay.CanNotJump) {
 				/* 跳转 */
 				dr = dt.NewRow();
 				dr.setValue("No", "JumpWay");
@@ -1452,16 +1452,19 @@ public class WF_MyFlow extends WebContralBase {
 			ds.Tables.add(dt);
 
 			//发起子流程
-			SubFlowHands subFlows = new SubFlowHands(this.getFK_Node());
-			for(SubFlowHand subFlow: subFlows.ToJavaList())
-			{
-				if(subFlow.getSubFlowStartModel() != 0 && subFlow.getSubFlowSta()==FrmSubFlowSta.Enable)
+			boolean isMobile =  this.GetRequestValBoolen("IsMobile");
+			if(isMobile==false){
+				SubFlowHands subFlows = new SubFlowHands(this.getFK_Node());
+				for(SubFlowHand subFlow: subFlows.ToJavaList())
 				{
-					dr = dt.NewRow();
-					dr.setValue("No","SubFlow");
-					dr.setValue("Name",DataType.IsNullOrEmpty(subFlow.getSubFlowLab())== true? "发起" +subFlow.getSubFlowName(): subFlow.getSubFlowLab());
-					dr.setValue("Oper","SendSubFlow(\'"+subFlow.getSubFlowNo() + "\',\'"+subFlow.getMyPK()+"\')");
-					dt.Rows.add(dr);
+					if(subFlow.getSubFlowStartModel() != 0 && subFlow.getSubFlowSta()==FrmSubFlowSta.Enable)
+					{
+						dr = dt.NewRow();
+						dr.setValue("No","SubFlow");
+						dr.setValue("Name",DataType.IsNullOrEmpty(subFlow.getSubFlowLab())== true? "发起" +subFlow.getSubFlowName(): subFlow.getSubFlowLab());
+						dr.setValue("Oper","SendSubFlow(\'"+subFlow.getSubFlowNo() + "\',\'"+subFlow.getMyPK()+"\')");
+						dt.Rows.add(dr);
+					}
 				}
 			}
             //endregion
@@ -1548,7 +1551,8 @@ public class WF_MyFlow extends WebContralBase {
 									+ "Track A WHERE A.NDFrom=" + this.getFK_Node()
 									+ " AND ActionType=1 ORDER BY WorkID DESC";
 						} else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-								|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+								|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+								|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 							mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow())
 									+ "Track A WHERE A.NDFrom=" + this.getFK_Node()
 									+ " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";

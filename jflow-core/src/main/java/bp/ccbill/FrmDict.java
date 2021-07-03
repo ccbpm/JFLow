@@ -898,15 +898,15 @@ public class FrmDict extends EntityNoName
 	*/
 	public final String DoOpenBillDict() throws Exception
 	{
-		return "../../CCBill/SearchDict.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmssffffff");
+		return "../../CCBill/SearchDict.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmss");
 	}
 	public final String DoOpenBillEditer() throws Exception
 	{
-		return "../../CCBill/SearchEditer.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmssffffff");
+		return "../../CCBill/SearchEditer.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmss");
 	}
 	public final String DoAPI() throws Exception
 	{
-		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmssffffff");
+		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo()+ "&t=" + DataType.getCurrentDateByFormart("yyyyMMddHHmmss");
 	}
 
 		/// 方法操作.

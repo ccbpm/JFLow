@@ -74,8 +74,12 @@ public class CCFlowAPI {
 
 			// 这两个变量在累加表单用到.
 			FrmNode frmNode = new FrmNode();
+			Flow flow = new Flow(fk_flow);
+			myds.Tables.add(flow.ToDataTableField("WF_Flow"));
 
-			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree || nd.getHisFormType() == NodeFormType.FoolTruck) {
+			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree
+					|| nd.getHisFormType() == NodeFormType.FoolTruck
+					|| flow.getFlowDevModel() == FlowDevModel.JiJian) {
 				frmNode.Retrieve(FrmNodeAttr.FK_Frm, nd.getNodeFrmID(), FrmNodeAttr.FK_Node, nd.getNodeID());
 				if (DataType.IsNullOrEmpty(frmNode.getMyPK()) == false && frmNode.getFrmSln() != FrmSln.Default) {
 					FrmFields fls = new FrmFields(nd.getNodeFrmID(), frmNode.getFK_Node());
@@ -111,10 +115,21 @@ public class CCFlowAPI {
 							dr.setValue("DefVal", item.getDefVal());
 						}
 					}
+
+					//从表权限的设置
+					MapDtls mapdtls = new MapDtls();
+					mapdtls.Retrieve(MapDtlAttr.FK_MapData, nd.getNodeFrmID() + "_" + frmNode.getFK_Node());
+					for (DataRow dr : myds.GetTableByName("Sys_MapDtl").Rows) {
+						for (MapDtl mapDtl : mapdtls.ToJavaList()) {
+							String no = dr.getValue("No").toString() + "_" + frmNode.getFK_Node();
+							if (no.equals(mapDtl.getNo()) == true) {
+								dr.setValue("IsView", mapDtl.getIsView() == true ? 1 : 0);
+								break;
+							}
+
+						}
+					}
 				}
-			}else
-			{
-				frmNode.setIsEnableLoadData(true);
 			}
 
 			/// 处理表单权限控制方案: 如果是绑定单个表单的时候.
@@ -266,7 +281,8 @@ public class CCFlowAPI {
 				String sqlOrder = "SELECT OID FROM  Sys_GroupField WHERE   FrmID IN (" + myFrmIDs + ")";
 				myFrmIDs = myFrmIDs.replace("'", "");
 				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 					sqlOrder += " ORDER BY INSTR('" + myFrmIDs + "',FrmID) , Idx";
 				}
 
@@ -551,8 +567,10 @@ public class CCFlowAPI {
 					throw new RuntimeException("err@错误:" + msg);
 
 				// 执行装载填充.
+				String mypk = MapExtXmlList.PageLoadFull + "_" + md.getNo();
+
 				if (frmNode.getIsEnableLoadData() == true && md.getIsPageLoadFull()==true) {
-					Object tempVar2 = mes.GetEntityByKey("MyPK", MapExtXmlList.PageLoadFull + "_" + md.getNo());
+					Object tempVar2 = mes.GetEntityByKey("MyPK", mypk);
 					me = tempVar2 instanceof MapExt ? (MapExt) tempVar2 : null;
 					// 执行通用的装载方法.
 					MapAttrs attrs = md.getMapAttrs();
@@ -790,10 +808,10 @@ public class CCFlowAPI {
 			}
  
 			/// 增加流程节点表单绑定信息.
+			myds.Tables.add(frmNode.ToDataTableField("WF_FrmNode"));
 			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree) {
 				/* 独立流程节点表单. */
 				nd.WorkID = workID; // 为获取表单ID ( NodeFrmID )提供参数.
-				myds.Tables.add(frmNode.ToDataTableField("WF_FrmNode"));
 
 				//设置单据编号,对于绑定的表单. @yln.
 				if (nd.getIsStartNode() == true && DataType.IsNullOrEmpty(frmNode.getBillNoField()) == false)

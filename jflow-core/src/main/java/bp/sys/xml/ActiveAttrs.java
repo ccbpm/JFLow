@@ -36,7 +36,7 @@ public class ActiveAttrs extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "/Ens/ActiveAttr.xml";
+		return SystemConfig.getPathOfXML() + "Ens/ActiveAttr.xml";
 	}
 	/** 
 	 物理表名

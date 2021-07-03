@@ -9,10 +9,10 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.Enumeration;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bp.difference.SystemConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -21,6 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.ResourceUtils;
 
 /**
  * 文件操作工具类 实现文件的创建、删除、复制、压缩、解压以及目录的创建、删除、复制、压缩解压等功能
@@ -612,7 +616,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获取待压缩文件在ZIP文件中entry的名字，即相对于根目录的相对路径名
      * 
-     * @param dirPat 目录名
+     * @param dirPath 目录名
      * @param file entry文件名
      * @return 文件在ZIP文件中entry的名字
      */
@@ -1112,7 +1116,19 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     * @return
     * @throws IOException
     */
-    public static String[] getFiles(String folder) throws IOException {        
+    public static String[] getFiles(String folder) throws Exception {
+        if(SystemConfig.getIsJarRun()){
+            if(folder.endsWith("/")==false)
+                folder +="/";
+            Resource[] resources =  new PathMatchingResourcePatternResolver().getResources(ResourceUtils.CLASSPATH_URL_PREFIX+folder + "*.*");
+            String[] retS=new String[resources.length];
+            int i =0;
+            for(Resource resource : resources){
+                retS[i]=folder+resource.getFilename();
+                i++;
+            }
+            return retS;
+        }
          File _folder=new File(folder);
          String[] filesInFolder;
          if(_folder.isDirectory()){

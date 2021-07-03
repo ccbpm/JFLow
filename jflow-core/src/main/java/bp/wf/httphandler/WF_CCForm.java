@@ -124,7 +124,10 @@ public class WF_CCForm extends WebContralBase {
 		key = URLDecoder.decode(key, "GB2312");
 		key = key.trim();
 		key = key.replace("'", ""); // 去掉单引号.
-
+		String dbsrc = me.getFK_DBSrc();
+		SFDBSrc sfdb = null;
+		if (DataType.IsNullOrEmpty(dbsrc) == false && dbsrc.equals("local") == false)
+			sfdb = new SFDBSrc(dbsrc);
 		// key = "周";
 		switch (me.getExtType()) {
 		case MapExtXmlList.ActiveDDL: // 动态填充ddl.
@@ -136,7 +139,10 @@ public class WF_CCForm extends WebContralBase {
 							this.getRequest().getParameter(keys.nextElement().toString()));
 				}
 			}
-			dt = DBAccess.RunSQLReturnTable(sql);
+			if (sfdb != null)
+				dt = sfdb.RunSQLReturnTable(sql);
+			else
+				dt = DBAccess.RunSQLReturnTable(sql);
 			return JSONTODT(dt);
 		case MapExtXmlList.AutoFullDLL: // 填充下拉框
 		case MapExtXmlList.TBFullCtrl: // 自动完成。
@@ -147,7 +153,10 @@ public class WF_CCForm extends WebContralBase {
 				// 获取填充 ctrl 值的信息.
 				sql = this.DealSQL(me.getDocOfSQLDeal(), key);
 				WebUser.SetSessionByKey("DtlKey", key);
-				dt = DBAccess.RunSQLReturnTable(sql);
+				if (sfdb != null)
+					dt = sfdb.RunSQLReturnTable(sql);
+				else
+					dt = DBAccess.RunSQLReturnTable(sql);
 
 				return JSONTODT(dt);
 			case "ReqDtlFullList":
@@ -175,7 +184,19 @@ public class WF_CCForm extends WebContralBase {
 					GEDtls dtls = new GEDtls(fk_dtl);
 					MapDtl dtl = new MapDtl(fk_dtl);
 
-					DataTable dtDtlFull = DBAccess.RunSQLReturnTable(mysql);
+					DataTable dtDtlFull = null;
+
+					try
+					{
+						if (sfdb != null)
+							dtDtlFull = sfdb.RunSQLReturnTable(mysql);
+						else
+							dtDtlFull = DBAccess.RunSQLReturnTable(mysql);
+					}
+					catch (Exception ex)
+					{
+						throw new Exception("err@执行填充从表出现错误,[" + dtl.getNo() + " - " + dtl.getName() + "]设置的SQL" + mysql);
+					}
 					DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK=" + oid);
 					for (DataRow dr : dtDtlFull.Rows) {
 						GEDtl mydtl = new GEDtl(fk_dtl);
@@ -234,14 +255,21 @@ public class WF_CCForm extends WebContralBase {
 						break;
 					}
 				}
-				dt = DBAccess.RunSQLReturnTable(sql);
+				if (sfdb != null)
+					dt = sfdb.RunSQLReturnTable(sql);
+				else
+					dt = DBAccess.RunSQLReturnTable(sql);
 				return JSONTODT(dt);
 			default:
 				key = key.replace("'", "");
 
 				sql = this.DealSQL(me.getDocOfSQLDeal(), key);
 
-				dt = DBAccess.RunSQLReturnTable(sql);
+				if (sfdb != null)
+					dt = sfdb.RunSQLReturnTable(sql);
+				else
+					dt = DBAccess.RunSQLReturnTable(sql);
+
 				return JSONTODT(dt);
 			}
 		default:
@@ -317,7 +345,8 @@ public class WF_CCForm extends WebContralBase {
 	public final String JSONTODT(DataTable dt) {
 		if ((SystemConfig.getAppCenterDBType() == DBType.Informix 
 				|| SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 				&& dealSQL != null) {
 			/* 如果数据库不区分大小写, 就要按用户输入的sql进行二次处理。 */
 			String mysql = dealSQL.trim();
@@ -1254,8 +1283,7 @@ public class WF_CCForm extends WebContralBase {
 					fullSQL = fullSQL.replace("~", ",");
 					fullSQL = bp.wf.Glo.DealExp(fullSQL, en, null);
 					DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-							|| SystemConfig.getAppCenterDBType() == DBType.KingBase) {
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 						if (dt.Columns.contains("NO") == true) {
 							dt.Columns.get("NO").setColumnName("No");
 						}
@@ -1267,7 +1295,7 @@ public class WF_CCForm extends WebContralBase {
 						}
 					}
 
-					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
 						if (dt.Columns.contains("no") == true) {
 							dt.Columns.get("no").setColumnName("No");
 						}
@@ -1872,8 +1900,8 @@ public class WF_CCForm extends WebContralBase {
 		if (this.getFK_Node() != 0 && !mdtl.getFK_MapData().equals("Temp")
 				&& this.getEnsName().contains("ND" + this.getFK_Node()) == false && this.getFK_Node() != 999999) {
 			Node nd = new bp.wf.Node(this.getFK_Node());
-
-			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree
+			Flow flow = new Flow(nd.getFK_Flow());
+			if (flow.getFlowDevModel()==FlowDevModel.JiJian ||  nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree
 					|| nd.getHisFormType() == NodeFormType.FoolTruck) {
 				/*
 				 * 如果 1,传来节点ID, 不等于0. 2,不是节点表单. 就要判断是否是独立表单，如果是就要处理权限方案。
@@ -2445,12 +2473,15 @@ public class WF_CCForm extends WebContralBase {
 		dt.TableName = "DTObjs";
 
 		// 判断是否是oracle.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 			dt.Columns.get("NO").setColumnName("No");
 			dt.Columns.get("NAME").setColumnName("Name");
 			dt.Columns.get("PARENTNO").setColumnName("ParentNo");
+		}
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+			dt.Columns.get("no").setColumnName("No");
+			dt.Columns.get("name").setColumnName("Name");
+			dt.Columns.get("parentno").setColumnName("ParentNo");
 		}
 		resultDs.Tables.add(dt);
 
@@ -2468,14 +2499,16 @@ public class WF_CCForm extends WebContralBase {
 			resultDs.Tables.add(entityDt);
 
 			// 判断是否是oracle.
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-					|| SystemConfig.getAppCenterDBType() == DBType.KingBase
-					|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase) {
 				entityDt.Columns.get("NO").setColumnName("No");
 				entityDt.Columns.get("NAME").setColumnName("Name");
 
 			}
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase) {
+				entityDt.Columns.get("no").setColumnName("No");
+				entityDt.Columns.get("name").setColumnName("Name");
 
+			}
 		}
 
 		return bp.tools.Json.ToJson(resultDs);

@@ -2,7 +2,6 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.wf.data.FastInputAttr;
 import bp.*;
 
 /** 

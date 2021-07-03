@@ -36,7 +36,7 @@ public class Admin2Menus extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfWebApp() + "/DataUser/XML/Admin2Menu.xml";
+		return SystemConfig.getPathOfWebApp() + "DataUser/XML/Admin2Menu.xml";
 	}
 	/** 
 	 物理表名

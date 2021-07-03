@@ -262,13 +262,12 @@ public class WF_CommEntity extends WebContralBase {
 				dt.TableName = attr.getKey();
 
 				// @杜. 翻译当前部分.
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						||SystemConfig.getAppCenterDBType() == DBType.KingBase)
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
 					dt.Columns.get("NO").setColumnName("No");
 					dt.Columns.get("NAME").setColumnName("Name");
 				}
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 				{
 					dt.Columns.get("no").setColumnName("No");
 					dt.Columns.get("name").setColumnName("Name");
@@ -292,8 +291,7 @@ public class WF_CommEntity extends WebContralBase {
 			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 			dtEnum.TableName = "Sys_Enum";
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-					||SystemConfig.getAppCenterDBType() == DBType.KingBase)
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 			{
 				dtEnum.Columns.get("MYPK").setColumnName("MyPK");
 				dtEnum.Columns.get("LAB").setColumnName("Lab");
@@ -301,7 +299,7 @@ public class WF_CommEntity extends WebContralBase {
 				dtEnum.Columns.get("INTKEY").setColumnName("IntKey");
 				dtEnum.Columns.get("LANG").setColumnName("Lang");
 			}
-			if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 			{
 				dtEnum.Columns.get("mypk").setColumnName("MyPK");
 				dtEnum.Columns.get("lab").setColumnName("Lab");
@@ -631,13 +629,12 @@ public class WF_CommEntity extends WebContralBase {
 					dt.TableName = attr.getKey();
 
 					// @杜. 翻译当前部分.
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-							|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 					{
 						dt.Columns.get("NO").setColumnName("No");
 						dt.Columns.get("NAME").setColumnName("Name");
 					}
-					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 					{
 						dt.Columns.get("no").setColumnName("No");
 						dt.Columns.get("name").setColumnName("Name");
@@ -662,17 +659,14 @@ public class WF_CommEntity extends WebContralBase {
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 				dtEnum.TableName = "Sys_Enum";
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
-				{
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
 					dtEnum.Columns.get("MYPK").setColumnName("MyPK");
 					dtEnum.Columns.get("LAB").setColumnName("Lab");
 					dtEnum.Columns.get("ENUMKEY").setColumnName("EnumKey");
 					dtEnum.Columns.get("INTKEY").setColumnName("IntKey");
 					dtEnum.Columns.get("LANG").setColumnName("Lang");
 				}
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-				{
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase){
 					dtEnum.Columns.get("mypk").setColumnName("MyPK");
 					dtEnum.Columns.get("lab").setColumnName("Lab");
 					dtEnum.Columns.get("enumkey").setColumnName("EnumKey");

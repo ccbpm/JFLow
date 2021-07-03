@@ -72,7 +72,38 @@ public class DataType {
 
 		return spanStr;
 	}
+	public static String getDatePoor(Date endDate, Date nowDate) {
+		 
+	    long nd = 1000 * 24 * 60 * 60;
+	    long nh = 1000 * 60 * 60;
+	    long nm = 1000 * 60;
+	    long ns = 1000;
+	    // 获得两个时间的毫秒时间差异
+	    long diff = endDate.getTime() - nowDate.getTime();
+	    // 计算差多少天
+	    long day = diff / nd;
+	    // 计算差多少小时
+	    long hour = diff % nd / nh;
+	    // 计算差多少分钟
+	    long min = diff % nd % nh / nm;
+	    // 计算差多少秒//输出结果
+	    long sec = diff % nd % nh % nm / ns;
+	    String spanStr = "";
+		if (day > 0)
+			spanStr += day + "天";
 
+		if (hour > 0)
+			spanStr += hour + "时";
+
+		if (min > 0)
+			spanStr += min + "分";
+		if (sec > 0)
+			spanStr += sec + "秒";
+		if (spanStr.length() == 0)
+			spanStr = "0分";
+
+		return spanStr;
+	}
 	public static Date WeekOfMonday(java.util.Date dt) {
 		Calendar monday = Calendar.getInstance();
 		monday.setTime(dt);
@@ -1023,7 +1054,8 @@ public class DataType {
 				case MSSQL:
 					break;
 				case Oracle:
-				case KingBase:
+				case KingBaseR3:
+				case KingBaseR6:
 				case DM:
 					sql = "SELECT  " + exp + " NUM from DUAL ";
 					return DBAccess.RunSQLReturnValDecimal(sql, bigDecimal, 2);

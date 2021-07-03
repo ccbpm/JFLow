@@ -393,7 +393,8 @@ public class FormatToJson {
 			jsonString.append("}");
 			break;
 		case Oracle:
-		case KingBase:
+		case KingBaseR3:
+		case KingBaseR6:
 		case DM:
 			for (int j = 0; j < dataSet.Tables.size(); j++) {
 				DataTable table = dataSet.getTables().get(j);

@@ -36,7 +36,7 @@ public class SQLLists extends XmlEns
 	@Override
 	public String getFile()
 	{
-		return SystemConfig.getPathOfXML() + "/SQLList.xml";
+		return SystemConfig.getPathOfXML() + "SQLList.xml";
 	}
 	/** 
 	 物理表名

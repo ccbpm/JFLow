@@ -874,7 +874,35 @@ public class MapExt extends EntityMyPK
 			{
 				return "err@字段" + field + "执行的SQL中有@符号";
 			}
-			return bp.tools.Json.ToJson(DBAccess.RunSQLReturnTable(sql));
+			DataTable dt = null;
+			if(DataType.IsNullOrEmpty(this.getFK_DBSrc()) == false && this.getFK_DBSrc().equals("local")==false)
+			{
+				SFDBSrc sfdb = new SFDBSrc(this.getFK_DBSrc());
+				dt = sfdb.RunSQLReturnTable(sql);
+			}
+			else
+				dt = DBAccess.RunSQLReturnTable(sql);
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+			{
+				dt.Columns.get("NO").ColumnName = "No";
+				dt.Columns.get("NAME").ColumnName = "Name";
+
+				//判断是否存在PARENTNO列，避免转换失败
+				boolean ishave = dt.Columns.contains("PARENTNO");
+				if(ishave)
+					dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+			}
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+			{
+				dt.Columns.get("no").ColumnName = "No";
+				dt.Columns.get("name").ColumnName = "Name";
+
+				//判断是否存在PARENTNO列，避免转换失败
+				boolean ishave = dt.Columns.contains("parentno");
+				if(ishave)
+					dt.Columns.get("parentno").ColumnName = "ParentNo";
+			}
+			return bp.tools.Json.ToJson(dt);
 
 		}
 		String msg = this.getDBType().equals("1") == true ? "执行url返回JSON" : "执行JS返回的JSON";
@@ -920,7 +948,16 @@ public class MapExt extends EntityMyPK
 		{
 			return "err@执行的SQL中" + sql + " 有@符号没有被替换";
 		}
-		return bp.tools.Json.ToJson(DBAccess.RunSQLReturnTable(sql));
+		DataTable dt = null;
+		if (DataType.IsNullOrEmpty(this.getFK_DBSrc()) == false && this.getFK_DBSrc().equals("local") == false)
+		{
+			SFDBSrc sfdb = new SFDBSrc(this.getFK_DBSrc());
+			dt = sfdb.RunSQLReturnTable(sql);
+		}
+		else
+			dt = DBAccess.RunSQLReturnTable(sql);
+
+		return bp.tools.Json.ToJson(dt);
 	}
 
 	private  String DealExp(String exp,String paras, Entity en) throws Exception

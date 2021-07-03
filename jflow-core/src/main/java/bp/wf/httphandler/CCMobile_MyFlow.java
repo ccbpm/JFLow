@@ -270,7 +270,8 @@ public class CCMobile_MyFlow extends WebContralBase
 						mysql = "SELECT  top 1 NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC";
 					}
 					else if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-							|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 					{
 						mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
 					}

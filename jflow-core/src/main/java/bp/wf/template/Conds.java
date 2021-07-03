@@ -102,7 +102,8 @@ public class Conds extends Entities
 				sql = " SELECT No FROM WF_Emp WHERE " + exp + "   limit 1 ";
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql = " SELECT No FROM WF_Emp WHERE " + exp + "   limit 1 ";
 				break;
 			case DM:

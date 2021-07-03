@@ -117,7 +117,8 @@ public class SysEnums extends Entities
 					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
 				}
 				else if (DBType.Oracle == dbUrl.getDBType()
-						||DBType.KingBase == dbUrl.getDBType())
+						||DBType.KingBaseR3 == dbUrl.getDBType()
+						||DBType.KingBaseR6 == dbUrl.getDBType())
 				{
 					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK = EnumKey || '_' || Lang || '_' || cast(IntKey  as VARCHAR(5))");
 				}

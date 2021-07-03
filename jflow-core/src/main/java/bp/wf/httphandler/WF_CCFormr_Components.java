@@ -79,8 +79,7 @@ public class WF_CCFormr_Components extends WebContralBase
 		}
 
 		//处理大小写.
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBase)
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			dt.Columns.get(0).setColumnName("DocWordKey");
 			dt.Columns.get(1).setColumnName("DocWordName");

@@ -115,7 +115,8 @@ public class MapAttrEnum extends EntityMyPK
 				sql = "SELECT -1 AS No, '-无(不选择)-' as Name ";
 				break;
 			case Oracle:
-			case KingBase:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql = "SELECT -1 AS No, '-无(不选择)-' as Name FROM DUAL ";
 				break;
 
@@ -285,7 +286,8 @@ public class MapAttrEnum extends EntityMyPK
 						this.RunSQL("alter table  " + en.getEnMap().getPhysicsTable() + " ALTER column " + this.getKeyOfEn() + " VARCHAR(20)");
 						break;
 					case Oracle:
-					case KingBase:
+					case KingBaseR3:
+					case KingBaseR6:
 						//判断数据库当前字段的类型
 						String sql = "SELECT DATA_TYPE FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + en.getEnMap().getPhysicsTable().toUpperCase() + "' AND UPPER(COLUMN_NAME)='" + this.getKeyOfEn().toUpperCase() + "' ";
 						String val = DBAccess.RunSQLReturnString(sql);

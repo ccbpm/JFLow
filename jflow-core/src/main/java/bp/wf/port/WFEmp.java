@@ -52,6 +52,17 @@ public class WFEmp extends EntityNoName
 		SetValByKey(WFEmpAttr.FK_Dept, value);
 	}
 	/** 
+	token
+	*/
+	public final String getToken()throws Exception
+	{
+		return this.GetValStringByKey(WFEmpAttr.Token);
+	}
+	public final void setToken(String value) throws Exception
+	{
+		SetValByKey(WFEmpAttr.Token, value);
+	}
+	/** 
 	 风格文件
 	*/
 	public final String getStyle()throws Exception
@@ -261,6 +272,8 @@ public class WFEmp extends EntityNoName
 		map.AddTBString(WFEmpAttr.Author, null, "授权人", true, true, 0, 50, 20);
 		map.AddTBString(WFEmpAttr.AuthorDate, null, "授权日期", true, true, 0, 50, 20);
 
+		map.AddTBString(WFEmpAttr.Token, null, "token", true, true, 0, 200, 20);
+		 
 			//0不授权， 1完全授权，2，指定流程范围授权. 
 		map.AddTBInt(WFEmpAttr.AuthorWay, 0, "授权方式", true, true);
 		map.AddTBDate(WFEmpAttr.AuthorToDate, null, "授权到日期", true, true);

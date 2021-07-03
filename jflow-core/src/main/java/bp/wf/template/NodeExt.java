@@ -370,7 +370,7 @@ public class NodeExt extends Entity {
            map.AddDDLSysEnum(NodeAttr.SubThreadType, 0, "子线程类型", true, false, NodeAttr.SubThreadType, "@0=同表单@1=异表单");
            map.SetHelperUrl(NodeAttr.SubThreadType, "http://ccbpm.mydoc.io/?v=5404&t=17944"); //增加帮助
 
-           map.AddTBInt(NodeAttr.PassRate, 100, "完成通过率", true, false);
+           map.AddTBDecimal(NodeAttr.PassRate,new BigDecimal(100), "完成通过率", true, true);
            map.SetHelperUrl(NodeAttr.PassRate, "http://ccbpm.mydoc.io/?v=5404&t=17945"); //增加帮助.
 
            // 启动子线程参数 2013-01-04
@@ -720,7 +720,7 @@ public class NodeExt extends Entity {
 		rm.ClassMethodName = this.toString() + ".DoCondNode";
 		rm.Icon = "../../WF/Admin/AttrNode/Img/Cond.png";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "待办删除规则";
@@ -992,13 +992,13 @@ public class NodeExt extends Entity {
 		rm.refMethodType = RefMethodType.LinkeWinOpen; // 功能类型
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
+		/*rm = new RefMethod();
 		rm.Title = "退回扩展列";
 		rm.ClassMethodName = this.toString() + ".DtlOfReturn";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = NodeAttr.ReturnCHEnable;
-		map.AddRefMethod(rm);
+		map.AddRefMethod(rm);*/
 
 		/// 实验中的功能
 
@@ -1159,8 +1159,8 @@ public class NodeExt extends Entity {
 	 * @return
 	 */
 	public final String DoSortingMapAttrs() throws Exception {
-		return "../../Admin/AttrNode/SortingMapAttrs.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND"
-				+ this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
+		return "../../Admin/MobileFrmDesigner/Default.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" +
+				this.getNodeID()+"&FK_Node="+this.getNodeID() + "&t=" + DataType.getCurrentDataTime();
 	}
 
 	/// 表单相关.
@@ -1696,5 +1696,5 @@ public class NodeExt extends Entity {
 		super.afterInsertUpdateAction();
 	}
 
-	///
+
 }

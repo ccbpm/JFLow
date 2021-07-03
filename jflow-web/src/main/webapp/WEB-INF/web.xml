@@ -25,8 +25,6 @@
     <servlet-name>AxisServlet</servlet-name>
     <url-pattern>/services/*</url-pattern>
   </servlet-mapping>
-	 
-
 	<!-- Encoding Filter -->
 	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -57,7 +55,15 @@
 		<filter-name>requestContextFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
+    <filter>
+		<filter-name>requestResponseFilter</filter-name>
+		<!-- 通用 Filter-->
+		<filter-class>bp.difference.context.RequestResponseFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>requestResponseFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<!--<filter>
 		<filter-name>XSSAttackInterceptor</filter-name>
 		<filter-class>BP.Difference.Context.XSSAttackInterceptor</filter-class>

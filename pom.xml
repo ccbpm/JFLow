@@ -5,7 +5,7 @@
 	<artifactId>jflow</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<modules>   
+	<modules>
 		<module>jflow-core</module>
 		<module>jflow-web</module>
   </modules>
@@ -18,8 +18,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.apache.poi.version>3.11</org.apache.poi.version>
 		<org.apache.ant.version>1.9.7</org.apache.ant.version>
- 		<spring.version>4.1.9.RELEASE</spring.version>
-		<!-- <spring.version>3.2.0.RELEASE</spring.version> -->
+ 		<spring.version>4.2.9.RELEASE</spring.version>
+		<!--<spring.version>3.2.0.RELEASE</spring.version>-->
 		<dom4j.version>1.6.1</dom4j.version>
 		<pinyin4j.version>2.5.0</pinyin4j.version>
 		<commons-lang.version>2.5</commons-lang.version>
@@ -31,7 +31,7 @@
 		<commons-io.version>2.4</commons-io.version>
 		<commons-lang3.version>3.7</commons-lang3.version>
 		<commons-net.version>3.5</commons-net.version>
-		<httpclient.version>4.3.1</httpclient.version>
+		<httpclient.version>4.5.2</httpclient.version>
 		<org.htmlparser.version>2.1</org.htmlparser.version>
 		<org.aspectj.version>1.6.10</org.aspectj.version>
 		<aspectj.version>1.7.4</aspectj.version>
@@ -45,8 +45,8 @@
 		<morph.version>1.1.1</morph.version>
 		<com.jcraft.version>0.1.54</com.jcraft.version>
 		<com.google.auto.version>0.6</com.google.auto.version>
-		
-		<!-- Qrcode 二维码需要的jar包 -->
+
+            <!-- Qrcode 二维码需要的jar包 -->
 		<com.google.zxing.version>2.2</com.google.zxing.version>
 	</properties>
 	<dependencyManagement>
@@ -419,7 +419,11 @@
 			    <artifactId>javase</artifactId>
 			    <version>${com.google.zxing.version}</version>
 			</dependency>
-			
+			<!--<dependency>
+				<groupId>dm</groupId>
+				<artifactId>dm</artifactId>
+				<systemPath>${project.basedir}/jflow-web/src/main/webapp/WEB-INF/lib/dm-1.0.0.jar</systemPath>
+			</dependency>-->
 		</dependencies>
 	</dependencyManagement>
 	
@@ -448,6 +452,7 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
+
 				</configuration>
 			</plugin>
 			<plugin>

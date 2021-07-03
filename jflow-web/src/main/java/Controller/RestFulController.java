@@ -2,11 +2,16 @@ package Controller;
 
 import WebServiceImp.LocalWS;
 import bp.da.*;
+import bp.gpm.DeptEmpAttr;
+import bp.gpm.DeptEmps;
 import bp.port.Emp;
 import bp.wf.port.WFEmp;
+import net.sf.json.JSONObject;
+import org.apache.xerces.impl.dv.util.Base64;
 import org.springframework.web.bind.annotation.*;
 
 import bp.tools.Json;
+import bp.web.WebUser;
 import bp.wf.AppClass;
 import bp.wf.Dev2Interface;
 import bp.wf.Flow;
@@ -19,7 +24,13 @@ import bp.wf.template.Directions;
 import bp.wf.template.FlowExt;
 import bp.wf.template.Selector;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(value = "/restful")
 public class RestFulController {
@@ -30,6 +41,7 @@ public class RestFulController {
 	 * @return token
 	 * @throws Exception
 	 */
+	@CrossOrigin(origins = "*")
 	@RequestMapping("/SSOLogin")
 	public  String  SSOLogin(String userNo,String SecretLv)throws Exception{
 		Hashtable rs = new Hashtable();
@@ -93,6 +105,7 @@ public class RestFulController {
 	 * @return
      * @throws Exception 
 	 */
+	@CrossOrigin(origins = "*")
     @RequestMapping(value = "/DB_Todolist")
 	public String DB_Todolist(String userNo, String sysNo) throws Exception {
 		try {
@@ -121,7 +134,265 @@ public class RestFulController {
          return Json.ToJson(dt);
 	}
 	
+	  /* @CrossOrigin(origins = "*")
+	   @RequestMapping(value = "/TodoAndCC")
+		public String TodoAndCC(String userNo, String ADT) throws Exception {
+			try {
+				Dev2Interface.Port_Login(userNo);
+				
+				DataTable empWorkDt = new DataTable();
+				if (DataType.IsNullOrEmpty(ADT) == true)
+					 empWorkDt= Dev2Interface.DB_GenerEmpWorksOfDataTable(userNo, 0, null, null, null,null);
+				else
+					empWorkDt= Dev2Interface.DB_GenerEmpWorksOfDataTable(userNo, 0, null, null, null," and a.adt>='"+ADT+"'");
+				
+				DataTable ccDt= Dev2Interface.DB_CCList("");
+			      
+				 Map  map = new HashMap();
+				 map.put("CCDataList", bp.tools.Json.ToJson(ccDt));
+				 map.put("CCDataListCount", ccDt.Rows.size());
+				 map.put("EmpWorksDataList",bp.tools.Json.ToJson(empWorkDt));
+				 map.put("EmpWorksDataListCount", empWorkDt.Rows.size());//没有行数属性吗？
+				
+				 return JSONObject.fromObject(map).toString();  
+//				 return bp.tools.Json.ToJson(map);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}*/
+		
+		
 	
+
+
+	/**
+	 * 新增新用户
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/InsertEmp")
+	public String InsertEmp(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String userNo = request.getParameter("userNo");
+		if(DataType.IsNullOrEmpty(userNo)==true)
+			return "err@用户账号不能为空";
+		bp.app.port.Emp emp = new  bp.app.port.Emp();
+		emp.setNo(userNo);
+		if(emp.RetrieveFromDBSources()==1){
+			return "err@账号:"+userNo+"已经存在";
+		}
+		//根据组织编号找部门信息
+		String orgCode = request.getParameter("orgCode");
+		if(DataType.IsNullOrEmpty(orgCode) == true)
+			return "err@账号:"+userNo+"的组织编码不能为空";
+		bp.app.port.Dept dept = new bp.app.port.Dept();
+		int i = dept.Retrieve("OrgCode",orgCode);
+		if(i ==0)
+			return "err@组织编码为"+orgCode+"的部门信息不存在";
+		String userName = request.getParameter("userName");
+		String tel = request.getParameter("tel");
+		String SecretLv = request.getParameter("SecretLv");
+		emp.setName(userName);
+		emp.setFK_Dept(dept.getNo());
+		if (DataType.IsNullOrEmpty(tel) == false)
+			emp.setTel(tel);
+		if (DataType.IsNullOrEmpty(SecretLv) == false)
+			emp.setTel(SecretLv);
+		emp.Insert();
+		return "账号:"+userNo+"插入成功";
+	}
+
+	/**
+	 * 修改用户信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/UpdateEmp")
+	public String UpdateEmp(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		String userNo = request.getParameter("userNo");
+		if(DataType.IsNullOrEmpty(userNo)==true)
+			return "err@用户账号不能为空";
+		bp.app.port.Emp emp = new  bp.app.port.Emp();
+		emp.setNo(userNo);
+		if(emp.RetrieveFromDBSources()==0){
+			return "err@账号:"+userNo+"信息不存在";
+		}
+		//根据组织编号找部门信息
+		String orgCode = request.getParameter("orgCode");
+		if(DataType.IsNullOrEmpty(orgCode) == true)
+			return "err@账号:"+userNo+"的组织编码不能为空";
+		bp.app.port.Dept dept = new bp.app.port.Dept();
+		int i = dept.Retrieve("OrgCode",orgCode);
+		if(i ==0)
+			return "err@组织编码为"+orgCode+"的部门信息不存在";
+
+		String userName = request.getParameter("userName");
+		String tel = request.getParameter("tel");
+		String SecretLv = request.getParameter("SecretLv");
+		emp.setName(userName);
+		emp.setFK_Dept(dept.getNo());
+		if(DataType.IsNullOrEmpty(tel)==false)
+			emp.setTel(tel);
+		if(DataType.IsNullOrEmpty(SecretLv)==false)
+			emp.setTel(SecretLv);
+		emp.Update();
+		return "账号:"+userNo+"更新成功";
+	}
+
+	/**
+	 * 删除用户信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/DeleteEmpByNo")
+	public String DeleteEmpByNo(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		String userNo = request.getParameter("userNo");
+		if(DataType.IsNullOrEmpty(userNo)==true)
+			return "err@用户账号不能为空";
+		bp.app.port.Emp emp = new  bp.app.port.Emp();
+		emp.setNo(userNo);
+		if(emp.RetrieveFromDBSources()==1){
+			emp.SetValByKey("UserType",0);
+			emp.Update();
+			WFEmp wfEmp=new WFEmp();
+			wfEmp.setNo(userNo);
+			wfEmp.Delete();
+		}
+
+		return "账号:"+userNo+"删除成功";
+	}
+
+	/**
+	 * 根据账号查询用户信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/SelectEmpByNo")
+	public String SelectEmpByNo(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		String userNo = request.getParameter("userNo");
+		if(DataType.IsNullOrEmpty(userNo)==true)
+			return "err@用户账号不能为空";
+		bp.app.port.Emp emp = new  bp.app.port.Emp();
+		emp.setNo(userNo);
+		if (emp.RetrieveFromDBSources() == 0)
+			return null;
+		return bp.tools.Json.ToJson(emp.ToDataTableField());
+	}
+
+	/**
+	 * 新增部门信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/InsertDept")
+	public String InsertDept(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String deptNo = request.getParameter("deptNo");
+		if(DataType.IsNullOrEmpty(deptNo)==true)
+			return "err@部门编号不能为空";
+		bp.app.port.Dept dept = new  bp.app.port.Dept();
+		dept.setNo(deptNo);
+		if(dept.RetrieveFromDBSources()==1){
+			return "err@部门:"+deptNo+"已经存在";
+		}
+		String deptName = request.getParameter("deptName");
+		String parentNo = request.getParameter("parentNo");
+		String leader = request.getParameter("leader");
+		String nameOfPath = request.getParameter("nameOfPath");
+		String deptType = request.getParameter("deptType");
+		String orgCode = request.getParameter("orgCode");
+		dept.setName(deptName);
+		dept.setParentNo(parentNo);
+		if(DataType.IsNullOrEmpty(leader)==false)
+			dept.setLeader(leader);
+		dept.setNameOfPath(nameOfPath);
+		if(DataType.IsNullOrEmpty(deptType)==false)
+			dept.setDeptType(Integer.parseInt(deptType));
+		dept.setOrgCode(orgCode);
+		dept.DirectInsert();
+		return "部门编号:"+deptNo+"插入成功";
+	}
+	@RequestMapping(value = "/UpdateDept")
+	public String UpdateDept(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String deptNo = request.getParameter("deptNo");
+		if(DataType.IsNullOrEmpty(deptNo)==true)
+			return "err@部门编号不能为空";
+		bp.app.port.Dept dept = new  bp.app.port.Dept();
+		dept.setNo(deptNo);
+		if(dept.RetrieveFromDBSources()==0){
+			return "err@部门:"+deptNo+"信息不存在";
+		}
+		String deptName = request.getParameter("deptName");
+		String parentNo = request.getParameter("parentNo");
+		String leader = request.getParameter("leader");
+		String nameOfPath = request.getParameter("nameOfPath");
+		String deptType = request.getParameter("deptType");
+		String orgCode = request.getParameter("orgCode");
+		dept.setName(deptName);
+		dept.setParentNo(parentNo);
+		if(DataType.IsNullOrEmpty(leader)==false)
+			dept.setLeader(leader);
+		dept.setNameOfPath(nameOfPath);
+		if(DataType.IsNullOrEmpty(deptType)==false)
+			dept.setDeptType(Integer.parseInt(deptType));
+		dept.setOrgCode(orgCode);
+		dept.DirectUpdate();
+		return "部门编号:"+deptNo+"更新成功";
+	}
+
+	/**
+	 * 根据编码信息删除部门信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/DeleteDeptByNo")
+	public String DeleteDeptByNo(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		String deptNo = request.getParameter("deptNo");
+		if(DataType.IsNullOrEmpty(deptNo)==true)
+			return "err@部门编号不能为空";
+		bp.app.port.Dept dept = new  bp.app.port.Dept();
+		dept.setNo(deptNo);
+		if(dept.RetrieveFromDBSources()==1){
+			dept.SetValByKey("DeptType",0);
+			dept.DirectDelete();
+		}
+
+		return "部门编号:"+deptNo+"删除成功";
+
+	}
+
+	/**
+	 * 根据编号查询部门信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/SelectDeptByNo")
+	public String SelectDeptByNo(HttpServletRequest request, HttpServletResponse response)throws Exception{
+		String deptNo = request.getParameter("deptNo");
+		if(DataType.IsNullOrEmpty(deptNo)==true)
+			return "err@部门编号不能为空";
+		bp.app.port.Dept dept = new  bp.app.port.Dept();
+		dept.setNo(deptNo);
+		if (dept.RetrieveFromDBSources() == 0)
+			return null;
+		return bp.tools.Json.ToJson(dept.ToDataTableField());
+
+	}
+
+
 
 	/**
 	 * 获得在途

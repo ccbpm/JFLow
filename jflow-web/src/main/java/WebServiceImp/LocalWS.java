@@ -643,9 +643,9 @@ public class LocalWS implements LocalWSI {
     */
 	@Override
 	public String DB_WorkCheck(String FK_Flow, int FK_Node, long workId, long fid,boolean isReadonly) throws Exception {
-		//DataSet ds =bp.wf.Dev2Interface.DB_WorkCheck(FK_Flow,FK_Node,workId,fid,isReadonly);
-		//return Json.ToJson(ds);
-		return "";
+		return FK_Flow;
+//		DataSet ds =bp.wf.Dev2Interface.DB_WorkCheck(FK_Flow,FK_Node,workId,fid,isReadonly);
+//		return Json.ToJson(ds);
 	}
 
 	/**

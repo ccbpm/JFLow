@@ -1,16 +1,19 @@
 package Controller;
 
-import WebServiceImp.LocalWS;
-import bp.da.*;
-import bp.gpm.DeptEmpAttr;
-import bp.gpm.DeptEmps;
-import bp.port.Emp;
-import bp.wf.port.WFEmp;
-import net.sf.json.JSONObject;
-import org.springframework.web.bind.annotation.*;
+import java.util.Hashtable;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import WebServiceImp.LocalWS;
+import bp.da.DBAccess;
+import bp.da.DataRow;
+import bp.da.DataSet;
+import bp.da.DataTable;
+import bp.da.DataType;
+import bp.port.Emp;
 import bp.tools.Json;
-import bp.web.WebUser;
 import bp.wf.AppClass;
 import bp.wf.Dev2Interface;
 import bp.wf.Flow;
@@ -19,16 +22,10 @@ import bp.wf.Node;
 import bp.wf.Nodes;
 import bp.wf.SendReturnObjs;
 import bp.wf.data.GERpt;
+import bp.wf.port.WFEmp;
 import bp.wf.template.Directions;
 import bp.wf.template.FlowExt;
 import bp.wf.template.Selector;
-
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 @CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping(value = "/restful")

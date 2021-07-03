@@ -27,22 +27,20 @@
         menuStyle: {
             border: '1px solid #5a6377',
             minWidth: '150px',
-            padding: '5px 10'
         },
         itemStyle: {
-            fontFamily: 'verdana, helvetica, arial, sans-serif',
             color: '#333',
             fontSize: '12px',
             border: '0',
             /*borderLeft:'5px solid #fff',*/
-            padding: '5px 30px 5px 20px'
+            padding: '5px 15px 5px 10px'
         },
         itemHoverStyle: {
             border: '0',
             cursor: 'pointer',
             /*borderLeft:'5px solid #49afcd',*/
             color: '#fff',
-            backgroundColor: '#2980b9'
+            /*backgroundColor: '#2980b9'*/
         },
         mtAfterDrop: function (params) {
 
@@ -180,9 +178,15 @@
 
                             var nodeID = document.getElementById("leipi_active_id");
                             var node = new Entity("BP.WF.Node", nodeID.value);
+                            //如果是第一个节点，把接收人规则文字换成可启动流程的人员
+                            if (nodeID.value.substr(nodeID.value.length - 2) == "01")
+                                $('#pmNodeAccepterRole span').text("设置发起人");
+                            else
+                                $('#pmNodeAccepterRole span').text("设置接受人");
+
 
                             if (node.RunModel == 0) {
-                                $('#pmfun span').text("普通:" + nodeID.value);
+                                $('#pmfun span').text("线型:" + nodeID.value);
                             }
                             if (node.RunModel == 1) {
                                 $('#pmfun span').text("合流:" + nodeID.value);
@@ -255,11 +259,11 @@
         });
 
         //使节点可拖动
-        jsPlumb.draggable(jsPlumb.getSelector(".process-step"));
+        jsPlumb.draggable(jsPlumb.getSelector(".process-step"), { containment: $("#flowdesign_canvas") });
         initEndPoints();
 
         //使标签可拖动
-        jsPlumb.draggable(jsPlumb.getSelector(".process-lab"));
+        jsPlumb.draggable(jsPlumb.getSelector(".process-lab"), { containment: $("#flowdesign_canvas") });
         initEndPoints();
 
         //绑定添加连接操作。画线-input text值  拒绝重复连接
@@ -316,8 +320,12 @@
 
 
                 var flowNo = GetQueryString("FK_Flow");
-
-                var url = "../Cond/ConditionLine.htm?FK_Flow=" + flowNo + "&FK_MainNode=" + fromNodeID + "&FK_Node=" + fromNodeID + "&ToNodeID=" + targetId + "&CondType=2&Lang=CH&t=" + new Date().getTime();
+                var url = "";
+                if (window.location.href.indexOf("/WF/Admin/CCBPMDesigner") == -1)
+                    url = "/WF/Admin/";
+                else
+                    url = "../";
+                url += "Cond/ConditionLine.htm?FK_Flow=" + flowNo + "&FK_MainNode=" + fromNodeID + "&FK_Node=" + fromNodeID + "&ToNodeID=" + targetId + "&CondType=2&Lang=CH&t=" + new Date().getTime();
                 $("#LineModal").hide();
                 $(".modal-backdrop").hide();
                 OpenEasyUiDialog(url, flowNo + fromNodeID + "DIRECTION" + targetId, "设置方向条件" + fromNodeID + "->" + targetId, 880, 500, "icon-property", true, null, null, null, function () {
@@ -447,7 +455,7 @@
                             var node = new Entity("BP.WF.Node", nodeID.value);
 
 
-                            $('#pmAttribute span').text("节点" + nodeID.value + "属性");
+                            $('#pmAttribute span').text("节点属性");
 
 
                             if (node.RunModel == 0) {

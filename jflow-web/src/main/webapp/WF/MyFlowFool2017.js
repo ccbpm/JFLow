@@ -1,7 +1,6 @@
 ﻿
 
 function GenerFoolFrm(wn) {
-
     flowData = wn;
 
     //初始化Sys_MapData
@@ -24,13 +23,23 @@ function GenerFoolFrm(wn) {
     $('#CCForm').html('');
 
     var tableWidth = w - 40;
-    var html = "<table style='width:100%;' >";
+    var html = "<table style='width:100%;' class='FoolFrmTable' >";
 
     var frmName = flowData.Sys_MapData[0].Name;
     var Sys_GroupFields = flowData.Sys_GroupField;
 
-    html += "<tr>";
-    html += "<td colspan='" + tableCol + "' class='TitleFDesc'></div><div class='form-unit-title' style='padding:10px;font-size: 18px;text-align:center'  ><img src='../DataUser/ICON/LogBiger.png'  style='height:50px; float:left;margin-top:-8px;' /><center><h4><b>" + frmName + "</b></h4></center></div></td>";
+    html += "<tr  class='FoolFrmTitleTR' >";
+    html += "<td colspan='" + tableCol + "' class='FoolFrmTitleTD'>";
+
+    html += " <div style='padding:10px;font-size: 18px;text-align:center' class='FoolFrmTitleIcon'  >";
+    html += " <img src='../DataUser/ICON/LogBiger.png'  style='height:50px; float:left;margin-top:-8px;' />";
+    html += " </div>";
+
+    html += " <div id='FoolFrmTitleLable' style='float:right;margin-top:8px' >";
+    html += frmName;
+    html += "  </div>";
+    html += "</td>";
+
     html += "</tr>";
     if (frmShowType == 1) {
         html += "</table>";
@@ -99,8 +108,8 @@ function GenerFoolFrm(wn) {
 
                 if (ath != null && (ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck"))
                     continue;
-                html += "<tr>";
-                html += "  <td colspan='" + tableCol + "' >";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td colspan='" + tableCol + "' class='FoolFrmFieldTD'  >";
                 html += athInfo;
                 html += "  </td>";
                 html += "</tr>";
@@ -113,8 +122,8 @@ function GenerFoolFrm(wn) {
 
             //框架类的控件.
             if (gf.CtrlType == 'Frame') {
-                html += "<tr>";
-                html += "  <td colspan='" + tableCol + "' >";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td colspan='" + tableCol + "' class='FoolFrmFieldTD'  >";
                 html += Ele_Frame(flowData, gf);
                 html += "  </td>";
                 html += "</tr>";
@@ -129,8 +138,8 @@ function GenerFoolFrm(wn) {
                 if (window.document.location.href.indexOf("AdminFrm.htm") != -1)
                     continue;
 
-                html += "<tr>";
-                html += "  <td colspan='" + tableCol + "'>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td colspan='" + tableCol + "' class='FoolFrmFieldTD' >";
 
                 html += Ele_FrmCheck(node);
 
@@ -158,9 +167,8 @@ function GenerFoolFrm(wn) {
             //父子流程
             if (gf.CtrlType == 'SubFlow') {
 
-                html += "<tr>";
-                html += "  <td colspan='" + tableCol + "'>";
-                
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td colspan='" + tableCol + "' class='FoolFrmFieldTD' >";
                 //html += Ele_SubFlow(node);
                 //引入SubFlow.js
                 Skip.addJs(ccbpmPath + "/WF/WorkOpt/SubFlow.js");
@@ -188,8 +196,12 @@ function GenerFoolFrm(wn) {
             //从表..
             if (gf.CtrlType == 'Dtl') {
 
-                html += "<tr>";
-                html += "  <th id='THDtl_" + gf.CtrlID+"' colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "<tr class='FoolFrmGroupBarTR' >";
+                html += "  <th class='FoolFrmGroupBarTD'  id='THDtl_" + gf.CtrlID + "' colspan='" + tableCol + "' >";
+                html += "   <div style='float:left;display:inline'  class='FoolFrmGroupBarTD'>" + gf.Lab + "</div>";
+                html += "   <div style='float:right;display:inline' class='FoolFrmGroupBarTD'><img title='全屏显示' style='width: 30px; padding: 0px 5px; cursor: pointer;' src='./Img/Full.png' onclick='WindowOpenDtl(\"" + gf.CtrlID + "\")' /></div>";
+
+                html += "  </th>";
                 html += "</tr>";
 
                 var dtls = flowData.Sys_MapDtl;
@@ -200,8 +212,8 @@ function GenerFoolFrm(wn) {
                     if (dtl.No != gf.CtrlID)
                         continue;
 
-                    html += "<tr>";
-                    html += "  <td id='TdDtl_" + dtl.No +"' colspan='" + tableCol + "' class='FDesc' >";
+                    html += "<tr class='FoolFrmFieldTR' >";
+                    html += "  <td id='Dtl_" + dtl.No + "' colspan='" + tableCol + "' class='FoolFrmFieldCtrl' >";
 
                     html += Ele_Dtl(dtl);
 
@@ -227,13 +239,13 @@ function GenerFoolFrm(wn) {
                 else
                     athInfo = "<div id='Div_" + ath.MyPK + "' name='Ath'></div>";
 
-                if (ath!=null &&(ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck"))
+                if (ath != null && (ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck"))
                     continue;
-                html += "<tr>";
-                html += "  <th id='THAth_" + ath.MyPK + "' colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td id='THAth_" + ath.MyPK + "' colspan='" + tableCol + "'  class='FoolFrmGroupBarTD' >" + gf.Lab + "</td>";
                 html += "</tr>";
-                html += "<tr>";
-                html += "<td id='Ath_" + ath.MyPK + "' colspan='" + tableCol + "' class='FDesc'>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "<td id='Ath_" + ath.MyPK + "' colspan='" + tableCol + "' class='FoolFrmFieldCtrl'>";
                 html += athInfo;
                 html += "  </td>";
                 html += "</tr>";
@@ -244,15 +256,14 @@ function GenerFoolFrm(wn) {
             //框架类的控件.
             if (gf.CtrlType == 'Frame') {
 
-                html += "<tr>";
-                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "<tr class='FoolFrmGroupBarTR' >";
+                html += "  <td colspan='" + tableCol + "'  class='FoolFrmGroupTD'>" + gf.Lab + "</td>";
                 html += "</tr>";
-                html += "<tr>";
-                html += "  <td colspan='" + tableCol + "' class='FDesc'>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td colspan='" + tableCol + "' class='FoolFrmFieldCtrl'>";
                 html += Ele_Frame(flowData, gf);
                 html += "  </td>";
                 html += "</tr>";
-
                 continue;
             }
 
@@ -261,12 +272,12 @@ function GenerFoolFrm(wn) {
                 if (node.FormType == 10 && gf.FrmID != 'ND' + node.NodeID)
                     continue;
 
-                html += "<tr>";
-                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <th colspan='" + tableCol + "'  class='FoolFrmGroupBarTD'>" + gf.Lab + "</th>";
                 html += "</tr>";
 
-                html += "<tr>";
-                html += "  <td colspan='" + tableCol + "' class='FDesc'>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td colspan='" + tableCol + "' class='FoolFrmFieldCtrl'>";
 
                 html += Ele_FrmCheck(node);
 
@@ -280,8 +291,8 @@ function GenerFoolFrm(wn) {
             //字段类的控件.
             if (gf.CtrlType == '' || gf.CtrlType == null) {
 
-                html += "<tr>";
-                html += "  <th colspan='" + tableCol + "' class='form-unit attr-group' >" + gf.Lab + "</th>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <th colspan='" + tableCol + "' class='FoolFrmGroupBarTD' >" + gf.Lab + "</th>";
                 html += "</tr>";
                 if (tableCol == 4 || tableCol == 6)
                     html += InitMapAttr(flowData.Sys_MapAttr, flowData, gf.OID, tableCol);
@@ -292,16 +303,27 @@ function GenerFoolFrm(wn) {
 
             //父子流程
             if (gf.CtrlType == 'SubFlow') {
-                html += "<tr>";
-                html += "  <th colspan='" + tableCol + "' class='form-unit'>" + gf.Lab + "</th>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <th colspan='" + tableCol + "'  class='FoolFrmGroupBarTD' >" + gf.Lab + "</th>";
                 html += "</tr>";
 
-                html += "<tr>";
-                html += "  <td colspan='" + tableCol + "' class='FDesc'>";
+                html += "<tr class='FoolFrmFieldTR' >";
+                html += "  <td colspan='" + tableCol + "' class='FoolFrmFieldCtrl'>";
 
                 //html += Ele_SubFlow(node);
                 Skip.addJs(ccbpmPath + "/WF/WorkOpt/SubFlow.js");
-                html +="<div id='SubFlow'>"+ SubFlow_Init(node)+"</div>";
+
+
+                //说明是累加表单.
+                if (gf.FrmID.indexOf(node.NodeID) == -1) {
+
+                    var myNodeID = gf.FrmID.substring(2);
+                    var myNode = new Entity("BP.WF.Node", myNodeID);
+                    html += "<div id='SubFlow'>" + SubFlow_Init(myNode) + "</div>";
+                }
+                else {
+                    html += "<div id='SubFlow'>" + SubFlow_Init(node) + "</div>";
+                }
 
                 html += "  </td>";
                 html += "</tr>";
@@ -323,58 +345,17 @@ function GenerFoolFrm(wn) {
         if ($("#Div_" + ath.MyPK).length == 1)
             AthTable_Init(ath, "Div_" + ath.MyPK);
     });
-   
+
     //字段附件
     var aths = $(".athModel");
     $.each(aths, function (idx, ath) {
-        
+
         //获取ID
         var name = $(ath).attr('id');
         var keyOfEn = name.replace("athModel_", "");
         $("#Lab_" + keyOfEn).html("<div style='text-align:left'>" + $("#Lab_" + keyOfEn).text() + "</div>");
     });
-    ////初始化高级JS设置的交互---------还需要优化只读时候的情况
-    //$.each(flowData.Sys_MapAttr, function (idx, mapAttr) {
-    //    //获取字段的atpara
-    //    var AtPara = mapAttr.AtPara;
-    //    if (AtPara == "" || AtPara == null || AtPara == undefined)
-    //        return;
 
-    //    //判断是否存在
-    //    var obj = "";
-    //    var ctrl = $("#DDL_" + mapAttr.KeyOfEn);
-    //    if (ctrl.length > 0)
-    //        obj = ctrl;
-    //    else
-    //        return;
-
-    //    //外部数据源类型.
-    //    if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1 && mapAttr.UIIsEnable != 0) {
-    //        if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
-    //            var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-    //            cleanAll(mapAttr.KeyOfEn);
-    //            setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, selecedval, "");
-    //        }
-    //    }
-    //    //外键类型.
-    //    if (mapAttr.LGType == "2" && mapAttr.MyDataType == "1") {
-    //        if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
-    //            var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-    //            cleanAll(mapAttr.KeyOfEn);
-    //            setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, selecedval, "");
-    //        }
-    //    }
-    //    //枚举类型.
-    //    if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1 && mapAttr.UIContralType == 1) {
-    //        if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
-    //            var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-    //            if (selecedval == null || selecedval == undefined || selecedval == "" || selecedval == -1)
-    //                return;
-    //            cleanAll(mapAttr.KeyOfEn);
-    //            setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, selecedval, "");
-    //        }
-    //    }
-    //});
 
 }
 
@@ -417,8 +398,8 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             var str = htmlobj.responseText;
             if (htmlobj.status == 404)
                 str = filename + "这个文件不存在，请联系管理员";
-            html += "<tr>";
-            html += "<td  ColSpan='" + tableCol + "' class='FDesc' style='text-align:left:height:auto'>" + str + "</td>";
+            html += "<tr class='FoolFrmFieldTR' >";
+            html += "<td  ColSpan='" + tableCol + "' class='FoolFrmFieldCtrl' style='text-align:left:height:auto'>" + str + "</td>";
             html += "</tr>";
             isDropTR = true;
             UseColSpan = 0;
@@ -427,23 +408,23 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         //解析Lab 1、文本类型、DDL类型、RB类型、扩张（图片、附件、超链接）
         lab = GetLab(flowData, attr);
-       
+
         //跨列设置(显示的是文本)
         if (colSpan == 0) {
 
             if (textColSpan == tableCol) {
                 rowSpan = 1;
-                html += "<td  class='LabelFDesc' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                html += "<td  class='FoolFrmFieldName' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                 isDropTR = true;
                 continue;
             }
             //线性展示都跨一个单元格
             //换行的情况
             if (isDropTR == true) {
-                html += "<tr >";
+                html += "<tr class='FoolFrmFieldTR' >";
                 UseColSpan = 0;
                 UseColSpan += colSpan + textColSpan;
-                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                html += "<td class='FoolFrmFieldName' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
 
                 if (UseColSpan == tableCol) {
                     isDropTR = true;
@@ -455,7 +436,7 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
             if (isDropTR == false) {
                 UseColSpan += colSpan + textColSpan;
-                html += "<td class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                html += "<td class='FoolFrmFieldName' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                 if (UseColSpan == tableCol) {
                     html += "</tr>";
                     isDropTR = true;
@@ -467,8 +448,8 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
         }
         //解析占一行的情况
         if (colSpan == tableCol) {
-            html += "<tr>";
-            html += "<td  ColSpan='" + colSpan + "' rowSpan=" + rowSpan + " class='LabelFDesc' style='text-align:left'>" + lab + "</br>";
+            html += "<tr class='FoolFrmFieldTR' >";
+            html += "<td  ColSpan='" + colSpan + "' rowSpan=" + rowSpan + " class='FoolFrmFieldName' style='text-align:left'>" + lab + "</br>";
             html += InitMapAttrOfCtrlFool(flowData, attr);
             html += "</td>";
             html += "</tr>";
@@ -479,11 +460,11 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         //换行的情况
         if (isDropTR == true) {
-            html += "<tr >";
+            html += "<tr class='FoolFrmFieldTR' >";
             UseColSpan = 0;
 
             UseColSpan += colSpan;
-            html += "<td  id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + colSpan + " class='tdSpan'>" + lab + "<br/>";
+            html += "<td  id='TD_" + attr.KeyOfEn + "' class='FoolFrmFieldName' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + colSpan + " class='tdSpan'>" + lab + "<br/>";
             html += InitMapAttrOfCtrlFool(flowData, attr);
             html += "</td>";
             if (UseColSpan == tableCol) {
@@ -499,7 +480,7 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
         if (isDropTR == false) {
 
             UseColSpan += colSpan;
-            html += "<td  id='Td_" + attr.KeyOfEn + "' class='LabelFDesc' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + colSpan + " class='tdSpan'>" + lab + "<br/>";
+            html += "<td  id='TD_" + attr.KeyOfEn + "' class='FoolFrmFieldName' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + colSpan + " class='tdSpan'>" + lab + "<br/>";
             html += InitMapAttrOfCtrlFool(flowData, attr);
             html += "</td>";
 
@@ -514,7 +495,7 @@ function InitThreeColMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             continue;
         }
     }
-  
+
     return html;
 }
 
@@ -574,24 +555,23 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             var str = htmlobj.responseText;
             if (htmlobj.status == 404)
                 str = filename + "这个文件不存在，请联系管理员";
-            html += "<tr>";
-            html += "<td  ColSpan='" + tableCol + "' class='FDesc' style='text-align:left:height:auto'>" + str + "</td>";
+            html += "<tr class='FoolFrmFieldTR' >";
+            html += "<td  ColSpan='" + tableCol + "' class='FoolFrmFieldCtrl' style='text-align:left:height:auto'>" + str + "</td>";
             html += "</tr>";
             isDropTR = true;
             UseColSpan = 0;
             continue;
         }
 
-        var labClass = "LabelFDesc";
+        var labClass = "FoolFrmFieldName";
         if (attr.UIContralType == 18)
             labClass = "FDesc";
-
 
         //解析Lab 1、文本类型、DDL类型、RB类型、扩张（图片、附件、超链接）
         lab = GetLab(flowData, attr);
         if (colSpan == 0) {
             //占一行
-            if (textColSpan == tableCol) {
+            if (textColSpan >= tableCol) {
                 if (isDropTR == false) {
                     var unUseColSpan = tableCol - UseColSpan;
                     html += "<td colspan=" + unUseColSpan + "></td>";
@@ -599,29 +579,29 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
                 }
                 isDropTR = true;
                 rowSpan = 1;
-                html += "<tr>";
-                
-                html += "<td  colSpan=" + textColSpan + " rowSpan=" + rowSpan + " class='" + labClass+"' style='text-align:left'>" + lab + "</br>";
+                html += "<tr class='FoolFrmFieldTR' >";
+
+                html += "<td  colSpan=" + tableCol + " rowSpan=" + rowSpan + " class='" + labClass + "' style='text-align:left'>" + lab + "</br>";
                 html += "</tr>";
                 continue;
 
             }
             //线性展示都跨一个单元格
             if (isDropTR == true) {
-                html += "<tr >";
+                html += "<tr class='FoolFrmFieldTR' >";
                 UseColSpan = 0;
                 luColSpan = 0;
                 if (IsShowLeft == true) {
                     UseColSpan += colSpan + textColSpan + ruColSpan;
                     lRowSpan = rowSpan;
                     luColSpan += colSpan + textColSpan;
-                    html += "<td  class='" + labClass +"' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                    html += "<td  class='" + labClass + "' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                     if (rowSpan != 1) {
                         IsShowLeft = false;
                     }
 
                 }
-                if (UseColSpan == tableCol) {
+                if (UseColSpan >= tableCol) {
                     ruRowSpan++;
                     isDropTR = true;
                 } else {
@@ -639,14 +619,12 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
                     ruColSpan = 0;
                 }
 
-
                 if (IsShowRight == false && (UseColSpan == tableCol)) {
                     html += "</tr>";
                     isDropTR = true;
                     UseColSpan = ruColSpan;
 
                 }
-
                 continue;
             }
 
@@ -654,19 +632,64 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
                 ruColSpan = 0;
                 if (IsShowRight == true) {
                     UseColSpan += colSpan + textColSpan;
-                    rRowSpan = rowSpan;
-                    ruColSpan += colSpan + textColSpan;
-                    html += "<td  class='" + labClass +"' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
-                    if (UseColSpan == tableCol) {
-                        isDropTR = true;
+                    if (UseColSpan > tableCol) {
+                        //需要换行，补齐缺失的空格
+                        var count = tableCol - (UseColSpan - colSpan - textColSpan);
+                        for (var k = 0; k < count; k++) {
+                            html += "<td class='FoolFrmFieldCtrl'></td>";
+                        }
+
+                        html += "</tr>";
+                        html += "<tr>";
+                        UseColSpan = colSpan + textColSpan + ruColSpan;
+                        lRowSpan = rowSpan;
+                        luColSpan = colSpan + textColSpan;
+                        html += "<td  class='" + labClass + "' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
                         if (rowSpan != 1) {
+                            IsShowLeft = false;
+                        }
+                        if (UseColSpan >= tableCol) {
                             ruRowSpan++;
+                            isDropTR = true;
+                        } else {
+                            isDropTR = false;
+                        }
+
+                        //复位右侧信息
+                        if (ruRowSpan == rRowSpan) {
+                            ruRowSpan = 0;
+                            luRowSpan = 0;
+                            rRowSpan = 0;
+                            IsShowRight = true;
+                            if (rowSpan == 1)
+                                luColSpan = 0;
+                            ruColSpan = 0;
+                        }
+
+                        if (IsShowRight == false && (UseColSpan == tableCol)) {
+                            html += "</tr>";
+                            isDropTR = true;
+                            UseColSpan = ruColSpan;
+
+                        }
+                        continue;
+
+                    } else {
+                        rRowSpan = rowSpan;
+                        ruColSpan += colSpan + textColSpan;
+                        html += "<td  class='" + labClass + "' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " colSpan=" + textColSpan + ">" + lab + "</td>";
+                        if (UseColSpan == tableCol) {
+                            isDropTR = true;
+                            if (rowSpan != 1) {
+                                ruRowSpan++;
+                            }
+                        }
+                        if (rowSpan != 1) {
+                            IsShowRight = false;
+                            lRowSpan = rowSpan;
                         }
                     }
-                    if (rowSpan != 1) {
-                        IsShowRight = false;
-                        lRowSpan = rowSpan;
-                    }
+
                 }
 
                 if (UseColSpan == tableCol) {
@@ -685,7 +708,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
                 }
 
                 if (IsShowLeft == false && (UseColSpan == tableCol)) {
-                    html += "<tr>";
+                    html += "<tr class='FoolFrmFieldTR' >";
                     UseColSpan = 0;
                     isDropTR = false;
                     UseColSpan = luColSpan;
@@ -696,7 +719,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
         }
 
         //线性展示并且colspan=4
-        if (colSpan == tableCol) {
+        if (colSpan >= tableCol) {
             if (isDropTR == false) {
                 var unUseColSpan = tableCol - UseColSpan;
                 html += "<td colspan=" + unUseColSpan + "></td>";
@@ -706,11 +729,11 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             isDropTR = true;
             rowSpan = 1;
 
-            html += "<tr>";
-            html += "<td  ColSpan='" + colSpan + "' rowSpan=" + rowSpan + "  class='" + labClass +"' style='text-align:left'>" + lab + "</br>";
+            html += "<tr class='FoolFrmFieldTR' >";
+            html += "<td  ColSpan='" + colSpan + "' rowSpan=" + rowSpan + "  class='" + labClass + "' style='text-align:left'>" + lab + "</br>";
             html += "</tr>";
-            html += "<tr>";
-            html += "<td  id='Td_" + attr.KeyOfEn + "' ColSpan='" + colSpan + "' rowSpan=" + rowSpan + " class='FDesc' style='text-align:left'>";
+            html += "<tr class='FoolFrmFieldTR' >";
+            html += "<td  id='TD_" + attr.KeyOfEn + "' ColSpan='" + colSpan + "' rowSpan=" + rowSpan + " class='FoolFrmFieldCtrl' style='text-align:left'>";
 
             html += InitMapAttrOfCtrlFool(flowData, attr);
 
@@ -727,9 +750,9 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             }
             rowSpan = 1;
             isDropTR = true;
-            html += "<tr >";
-            html += "<td  id='Td_" + attr.KeyOfEn + "'  class='" + labClass +"' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
-            html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "'  style='width:" + colWidth + ";' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " class='tdSpan'>";
+            html += "<tr class='FoolFrmFieldTR' >";
+            html += "<td  id='TD_" + attr.KeyOfEn + "'  class='" + labClass + "' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
+            html += "<td  class='FoolFrmFieldCtrl' id='TD_" + attr.KeyOfEn + "'  style='width:" + colWidth + ";' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " class='tdSpan'>";
             html += InitMapAttrOfCtrlFool(flowData, attr);
             html += "</td>";
             html += "</tr>";
@@ -739,7 +762,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
 
         //换行的情况
         if (isDropTR == true) {
-            html += "<tr >";
+            html += "<tr class='FoolFrmFieldTR' >";
             UseColSpan = 0;
             luColSpan = 0;
             if (IsShowLeft == true) {
@@ -750,9 +773,9 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
                     colSpan = colSpan + textColSpan;
                     colWidth = (parseInt(colSpan) * 23 + 10 * parseInt(textColSpan)) + "%";
                 } else {
-                    html += "<td  id='Td_" + attr.KeyOfEn + "'  class='" + labClass +"' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
+                    html += "<td  id='TD_" + attr.KeyOfEn + "'  class='" + labClass + "' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
                 }
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "'  style='width:" + colWidth + ";' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " class='tdSpan'>";
+                html += "<td  class='FoolFrmFieldCtrl' id='TD_" + attr.KeyOfEn + "'  style='width:" + colWidth + ";' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " class='tdSpan'>";
                 html += InitMapAttrOfCtrlFool(flowData, attr);
                 html += "</td>";
                 if (rowSpan != 1) {
@@ -794,27 +817,82 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             ruColSpan = 0;
             if (IsShowRight == true) {
                 UseColSpan += colSpan + textColSpan;
-                rRowSpan = rowSpan;
-                ruColSpan += colSpan + textColSpan;
-                if (attr.MyDataType == 4) {
-                    colSpan = colSpan + textColSpan;
-                    width = 35 * parseInt(colSpan) + "%";
-                } else {
-                    html += "<td  id='Td_" + attr.KeyOfEn + "'  class='" + labClass +"' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
-                }
-                html += "<td  class='FDesc' id='Td_" + attr.KeyOfEn + "'  style='width:" + colWidth + ";' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " class='tdSpan'>";
-                html += InitMapAttrOfCtrlFool(flowData, attr);
-                html += "</td>";
-                if (UseColSpan == tableCol) {
-                    isDropTR = true;
+                if (UseColSpan > tableCol) {
+                    //需要换行，补齐缺失的空格
+                    var count = tableCol - (UseColSpan - colSpan - textColSpan);
+                    for (var k = 0; k < count; k++) {
+                        html += "<td class='FoolFrmFieldCtrl'></td>";
+                    }
+
+                    html += "</tr>";
+                    html += "<tr>";
+                    UseColSpan = colSpan + textColSpan + ruColSpan;
+                    lRowSpan = rowSpan;
+                    luColSpan = colSpan + textColSpan;
+                    if (attr.MyDataType == 4) {
+                        colSpan = colSpan + textColSpan;
+                        colWidth = (parseInt(colSpan) * 23 + 10 * parseInt(textColSpan)) + "%";
+                    } else {
+                        html += "<td  id='TD_" + attr.KeyOfEn + "'  class='" + labClass + "' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
+                    }
+                    html += "<td  class='FoolFrmFieldCtrl' id='TD_" + attr.KeyOfEn + "'  style='width:" + colWidth + ";' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " class='tdSpan'>";
+                    html += InitMapAttrOfCtrlFool(flowData, attr);
+                    html += "</td>";
                     if (rowSpan != 1) {
+                        IsShowLeft = false;
+                    }
+                    if (UseColSpan >= tableCol) {
                         ruRowSpan++;
+                        isDropTR = true;
+                    } else {
+                        isDropTR = false;
+                    }
+
+                    //复位右侧信息
+                    if (ruRowSpan == rRowSpan) {
+                        ruRowSpan = 0;
+                        rRowSpan = 0;
+                        IsShowRight = true;
+                        if (rowSpan == 1)
+                            luColSpan = 0;
+                        ruColSpan = 0;
+
+                    }
+
+
+                    if (IsShowRight == false && (UseColSpan == tableCol)) {
+                        html += "</tr>";
+                        isDropTR = true;
+                        UseColSpan = ruColSpan;
+
+                    }
+
+                    continue;
+
+                } else {
+                    rRowSpan = rowSpan;
+                    ruColSpan += colSpan + textColSpan;
+                    if (attr.MyDataType == 4) {
+                        colSpan = colSpan + textColSpan;
+                        width = 35 * parseInt(colSpan) + "%";
+                    } else {
+                        html += "<td  id='TD_" + attr.KeyOfEn + "'  class='" + labClass + "' style='width:" + textWidth + ";' rowSpan=" + rowSpan + " ColSpan=" + textColSpan + " class='tdSpan'>" + lab + "</td>";
+                    }
+                    html += "<td  class='FoolFrmFieldCtrl' id='TD_" + attr.KeyOfEn + "'  style='width:" + colWidth + ";' ColSpan=" + colSpan + " rowSpan=" + rowSpan + " class='tdSpan'>";
+                    html += InitMapAttrOfCtrlFool(flowData, attr);
+                    html += "</td>";
+                    if (UseColSpan == tableCol) {
+                        isDropTR = true;
+                        if (rowSpan != 1) {
+                            ruRowSpan++;
+                        }
+                    }
+                    if (rowSpan != 1) {
+                        IsShowRight = false;
+                        lRowSpan = rowSpan;
                     }
                 }
-                if (rowSpan != 1) {
-                    IsShowRight = false;
-                    lRowSpan = rowSpan;
-                }
+
             }
 
             if (UseColSpan == tableCol) {
@@ -833,7 +911,7 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
             }
 
             if (IsShowLeft == false && (UseColSpan == tableCol)) {
-                html += "<tr>";
+                html += "<tr class='FoolFrmFieldTR' >";
                 UseColSpan = 0;
                 isDropTR = false;
                 UseColSpan = luColSpan;
@@ -851,8 +929,123 @@ function InitMapAttr(Sys_MapAttr, flowData, groupID, tableCol) {
     return html;
 }
 
+function Gener_Btn(flowData, mapAttr) {
+
+    var eleHtml = $('<div></div>');
+    var btnId = mapAttr.KeyOfEn;
+    if (btnId == null || btnId == "")
+        btnId = mapAttr.MyPK;
+
+    var doc = mapAttr.Tag;
+    doc = doc.replace("~", "'");
+    var eventType = mapAttr.UIIsEnable;
+    var onclick = "";
+    var style = ""
+    if (eventType == 0) { //禁用
+        onclick = "disabled='disabled' style='background:gray;'";
+    }
+
+    if (eventType == 1) { //运行URL
+
+        var attrs = flowData.Sys_MapAttr;
+
+        for (var i = 0; i < attrs.length; i++) {
+            var attr = attrs[i];
+
+            if (doc.indexOf('@' + attr.KeyOfEn) > 0) {
+                doc = doc.replace('@' + attr.KeyOfEn, frmData.MainTable[0][obj.KeyOfEn]);
+            }
+        }
+
+        var OID = GetQueryString("OID");
+        if (OID == undefined || OID == "");
+        OID = GetQueryString("OID");
+        var FK_Node = GetQueryString("FK_Node");
+        var FK_Flow = GetQueryString("FK_Flow");
+        var webUser = new WebUser();
+        var userNo = webUser.No;
+        var SID = webUser.SID;
+        if (SID == undefined)
+            SID = "";
+        if (doc.indexOf("?") == -1)
+            doc = doc + "?1=1";
+        doc = doc + "&OID=" + pageData.WorkID + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
+        onclick = "onclick='window.open(\"" + doc + ")'";
+    }
+
+    ////运行URL
+    if (eventType == 2) {
+        if (doc.indexOf("(") == -1)
+            doc = doc + "()";
+        onclick = "onclick='" + doc + "'";
+    }
+    return "<input id='" + btnId + "' type='button' value='" + mapAttr.Name + "'  class='btn' " + onclick + ">";
+}
+
+
+function Gener_Link(flowData, mapAttr) {
+
+    var eleHtml = $('<div></div>');
+    var btnId = mapAttr.KeyOfEn;
+    if (btnId == null || btnId == "")
+        btnId = mapAttr.MyPK;
+
+    var doc = mapAttr.Tag;
+    doc = doc.replace("~", "'");
+    var eventType = mapAttr.UIIsEnable;
+    var onclick = "";
+    var style = ""
+    if (eventType == 0) { //禁用
+        onclick = "disabled='disabled' style='background:gray;'";
+    }
+
+    if (eventType == 1) { //运行URL
+
+        var attrs = flowData.Sys_MapAttr;
+
+        for (var i = 0; i < attrs.length; i++) {
+            var attr = attrs[i];
+
+            if (doc.indexOf('@' + attr.KeyOfEn) > 0) {
+                doc = doc.replace('@' + attr.KeyOfEn, frmData.MainTable[0][obj.KeyOfEn]);
+            }
+        }
+
+        var OID = GetQueryString("OID");
+        if (OID == undefined || OID == "");
+        OID = GetQueryString("OID");
+        var FK_Node = GetQueryString("FK_Node");
+        var FK_Flow = GetQueryString("FK_Flow");
+        var webUser = new WebUser();
+        var userNo = webUser.No;
+        var SID = webUser.SID;
+        if (SID == undefined)
+            SID = "";
+        if (doc.indexOf("?") == -1)
+            doc = doc + "?1=1";
+        doc = doc + "&OID=" + pageData.WorkID + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
+        onclick = "onclick='window.open(\"" + doc + ")'";
+    }
+
+    ////运行URL
+    if (eventType == 2) {
+        if (doc.indexOf("(") == -1)
+            doc = doc + "()";
+        onclick = "onclick='" + doc + "'";
+    }
+    return "<input id='" + btnId + "' type='button' value='" + mapAttr.Name + "'  class='btn' " + onclick + ">";
+}
+
 
 function InitMapAttrOfCtrlFool(flowData, mapAttr) {
+
+    //如果是按钮.
+    if (mapAttr.UIContralType == 18)
+        return Gener_Btn(flowData, mapAttr);
+
+    //如果是连接.
+    if (mapAttr.UIContralType == 9)
+        return Gener_Link(flowData, mapAttr);
 
     var str = '';
     var defValue = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
@@ -865,7 +1058,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1) {
 
         //判断外键是否为树形结构
-        if (mapAttr.AtPara!=null && mapAttr.AtPara.indexOf("@CodeStruct=1") != -1)
+        if (mapAttr.AtPara != null && mapAttr.AtPara.indexOf("@CodeStruct=1") != -1)
             return "<select  id='DDL_" + mapAttr.KeyOfEn + "' class='easyui-combotree' style='height:28px;width:60%'></select>";
 
         if (mapAttr.UIIsEnable == 0) {
@@ -876,7 +1069,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             if (defValue == '' || defValue == null)
                 defValue = '无';
 
-            ctrl += "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "T'  value='" + defValue + "' disabled='disabled'   class='form-control' type='text'/>";
+            ctrl += "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "T'  value='" + defValue + "' disabled='disabled'   class='form-control' type='text' style='width:100%'/>";
             return ctrl;
         }
 
@@ -894,7 +1087,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             enableAttr = "disabled='disabled'";
 
         //判断外键是否为树形结构
-        if (mapAttr.AtPara.indexOf("@CodeStruct=1")!=-1)
+        if (mapAttr.AtPara.indexOf("@CodeStruct=1") != -1)
             return "<select  id='DDL_" + mapAttr.KeyOfEn + "' class='easyui-combotree' style='height:28px;width:60%'></select>";
 
         return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
@@ -909,12 +1102,12 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         if (ses == undefined) {
             //枚举类型的.
             if (mapAttr.LGType == 1) {
-               ses = flowData.Sys_Enum;
+                ses = flowData.Sys_Enum;
                 ses = $.grep(ses, function (value) {
                     return value.EnumKey == mapAttr.UIBindKey;
                 });
             }
-           
+
         }
         var enableAttr = "";
         if (mapAttr.UIIsEnable == 1)
@@ -935,7 +1128,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
                 br = "<br>";
 
             var checked = "";
-            if (","+defValue+",".indexOf(","+se.IntKey+",") == true)
+            if ("," + defValue + ",".indexOf("," + se.IntKey + ",") == true)
                 checked = " checked=true";
 
             rbHtmls += "<label style='font-weight:normal;'><input type=checkbox name='CB_" + mapAttr.KeyOfEn + "' id='CB_" + mapAttr.KeyOfEn + "_" + se.IntKey + "' value='" + se.IntKey + "' " + checked + enableAttr + " onclick='clickEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' />" + se.Lab + " </label>&nbsp;" + br;
@@ -947,8 +1140,8 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     //AppString
     if (mapAttr.MyDataType == "1") {  //不是外键
 
-        //附件
-        if (mapAttr.UIContralType == "6") {
+        //附件.
+        if (mapAttr.UIContralType == 6) {
 
             //获取上传附件列表的信息及权限信息
             var nodeID = pageData.FK_Node;
@@ -957,7 +1150,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             if (no == "01")
                 IsStartNode = 1;
 
-            //创建附件描述信息.
+            //创建附件描述信息. 
             var mypk = mapAttr.MyPK;
 
             //获取附件显示的格式
@@ -1007,9 +1200,11 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
                 return "<div style='text-align:left;padding-left:10px' id='athModel_" + mapAttr.KeyOfEn + "' data-type='0'><label >附件(" + dbs.length + ")</label></div>";
 
             eleHtml = "<div style='text-align:left;padding-left:10px' id='athModel_" + mapAttr.KeyOfEn + "' data-type='1'>";
+
+            var workID = GetQueryString("WorkID");
             for (var i = 0; i < dbs.length; i++) {
                 var db = dbs[i];
-                eleHtml += "<label><a style='font-weight:normal;font-size:12px'  href=\"javascript:Down2018('" + mypk + "','" + pageData.WorkID + "','" + db.MyPK + "','" + pageData.FK_Flow + "','" + pageData.FK_Node + "','" + mapAttr.FK_MapData + "','" + mypk + "')\"><img src='./Img/FileType/" + db.FileExts + ".gif' />" + db.FileName + "</a></label>&nbsp;&nbsp;&nbsp;"
+                eleHtml += "<label><a style='font-weight:normal;font-size:12px'  href=\"javascript:Down2018('" + db.MyPK + "','" + workID + "')\"><img src='./Img/FileType/" + db.FileExts + ".gif' />" + db.FileName + "</a></label>&nbsp;&nbsp;&nbsp;"
             }
             eleHtml += "</div>";
             return eleHtml;
@@ -1088,43 +1283,44 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             return "<div id='JobSchedule' >JobSchedule</div>";
         }
 
+
         if (mapAttr.UIHeight <= 40) //普通的文本框.
         {
             if (mapAttr.IsSigan == "1") {
                 var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' type=hidden />";
                 var val = ConvertDefVal(flowData, mapAttr.DefVal, mapAttr.KeyOfEn);
-                return "<img alt='" + val + "' src='../DataUser/Siganture/" + val+ UserIConExt +"'  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                if (webUser.CCBPMRunModel == 2)
+                    val = webUser.OrgNo + "/";
+                return "<img alt='" + val + "' src='../DataUser/Siganture/" + val + UserIConExt + "'  style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
             }
             if (mapAttr.IsSecret)
-                return "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  class='form-control' type='password' placeholder='" + (mapAttr.Tip || '') + "'/>";
+                return "<div  id='TDIV_" + mapAttr.KeyOfEn + "' class='ccbpm-input-group'><input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  class='form-control' type='password' placeholder='" + (mapAttr.Tip || '') + "' style='width:100%'/></div>";
             else
-                return "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  class='form-control' type='text' placeholder='" + (mapAttr.Tip || '') + "'/>";
+                return "<div  id='TDIV_" + mapAttr.KeyOfEn + "'  class='ccbpm-input-group'><input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "'  class='form-control' type='text' placeholder='" + (mapAttr.Tip || '') + "'  style='width:100%'/></div>";
         }
-
-
 
         if (mapAttr.AtPara && mapAttr.AtPara.indexOf("@IsRichText=1") >= 0) {
 
             var eleHtml = "";
             //如果是富文本就使用百度 UEditor
-            if (mapAttr.UIIsEnable == "0" || pageData.IsReadonly=="1") {
+            if (mapAttr.UIIsEnable == "0" || pageData.IsReadonly == "1") {
                 //只读状态直接 div 展示富文本内容
                 defValue = defValue.replace(/white-space: nowrap;/g, "");
                 eleHtml += "<div class='richText' style='width:99%;margin-right:2px'>" + defValue + "</div>";
 
             } else {
                 //设置一个默认高度
-                if (mapAttr.UIHeight<180) {
+                if (mapAttr.UIHeight < 180) {
                     mapAttr.UIHeight = 180;
                 }
-                
+
                 document.BindEditorMapAttr.push(mapAttr); //存到全局备用
 
                 //设置编辑器的默认样式
                 var styleText = "text-align:left;font-size:12px;";
                 styleText += "width:100%;";
                 var height = parseInt(mapAttr.UIHeight) - 54;
-                
+
                 styleText += "height:" + height + "px;";
                 //注意这里 name 属性是可以用来绑定表单提交时的字段名字的 id 是特殊约定的.
                 eleHtml += "<script class='EditorClass' id='editor_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "' type='text/plain' style='" + styleText + "'>" + defValue + "</script>";
@@ -1205,7 +1401,6 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         if (mapAttr.Tip != "" && mapAttr.Tip != null)
             tip = "<span style='color: #C0C0C0;'>(" + mapAttr.Tip + ")</span>";
 
-
         return "<label ><input " + enableAttr + " " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + mapAttr.KeyOfEn + "'  name='CB_" + mapAttr.KeyOfEn + "' " + checkedStr + " onchange='changeCBEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'/> &nbsp;" + mapAttr.Name + tip + "</label>";
     }
 
@@ -1215,6 +1410,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
             enableAttr = "";
         else
             enableAttr = "disabled='disabled'";
+
         if (mapAttr.UIContralType == 1)
             //return "<select " + enableAttr + "  id='DDL_" + mapAttr.KeyOfEn + "' class='form-control' >" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
             return "<select id='DDL_" + mapAttr.KeyOfEn + "' class='form-control'  onchange='changeEnable(this,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")' value='" + defValue + "'>" + InitDDLOperation(flowData, mapAttr, defValue) + "</select>";
@@ -1239,10 +1435,11 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         var type = " type='text'";
         if (mapAttr.IsSecret)
             type = " type='password'";
-        return "<input onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");' value='" + defValue + "' style='text-align:right;'class='form-control'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 +type+ "  id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
+        return "<input onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");' value='" + defValue + "' style='text-align:right;'class='form-control'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + type + "  id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
-    if ((mapAttr.MyDataType == 2)) { //AppInt
+    //AppInt 整数类型.
+    if ( mapAttr.MyDataType == 2 ) { 
         var enableAttr = '';
         if (mapAttr.UIIsEnable != 1) {
             enableAttr = "disabled='disabled'";
@@ -1252,7 +1449,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         if (mapAttr.IsSecret)
             type = " type='password'";
 
-        return "<input  onfocus='removeplaceholder(this,0);' onblur='addplaceholder(this,0);' value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "limitLength(this," + bit + ");valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 +type + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
+        return "<input  onfocus='removeplaceholder(this,0);' onblur='addplaceholder(this,0);' value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "limitLength(this," + bit + ");valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + type + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
 
     //AppMoney  AppRate
@@ -1272,7 +1469,7 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
         return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");numberFormat (this, " + bit + ") ' onkeyup=" + '"' +
             "limitLength(this," + bit + ");" + '"' +
             " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' +
-            " maxlength=" + mapAttr.MaxLen / 2 +type+ "  id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+            " maxlength=" + mapAttr.MaxLen / 2 + type + "  id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
 
         //return "<input value='" + defValue + "' style='text-align:right;' class='form-control' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
     }
@@ -1280,415 +1477,6 @@ function InitMapAttrOfCtrlFool(flowData, mapAttr) {
     alert(mapAttr.Name + "的类型没有判断.");
     return;
 }
-
-//记录改变字段样式 不可编辑，不可见
-var mapAttrs = {};
-function changeEnable(obj, FK_MapData, KeyOfEn, AtPara,frmType) {
-    if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
-        var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-        cleanAll(KeyOfEn);
-        setEnable(FK_MapData, KeyOfEn, selecedval, frmType);
-    }
-}
-function clickEnable(obj, FK_MapData, KeyOfEn, AtPara, frmType) {
-    if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
-        var selectVal = $(obj).val();
-        cleanAll(KeyOfEn);
-        setEnable(FK_MapData, KeyOfEn, selectVal, frmType);
-    }
-}
-
-function changeCBEnable(obj, FK_MapData, KeyOfEn, AtPara, frmType) {
-    if (AtPara.indexOf('@IsEnableJS=1') >= 0) {
-        cleanAll(KeyOfEn);
-        if (obj.checked == true)
-            setEnable(FK_MapData, KeyOfEn, 1, frmType);
-        else
-            setEnable(FK_MapData, KeyOfEn, 0, frmType);
-    }
-}
-
-//清空所有的设置
-function cleanAll(KeyOfEn, frmType) {
-    var trs = $("#CCForm  table tr .attr-group"); //如果隐藏就显示
-    $.each(trs, function (i, obj) {
-        if ($(obj).parent().is(":hidden") == true)
-            $(obj).parent().show();
-
-    });
-
-    if (mapAttrs.length == 0)
-        return;
-
-    //获取他的值
-    if (mapAttrs[KeyOfEn]!=undefined && mapAttrs[KeyOfEn].length > 0) {
-        var FKMapAttrs = mapAttrs[KeyOfEn][0];
-        for (var i = 0; i < FKMapAttrs.length; i++) {
-            if (frmType != null && frmType !== undefined && frmType == 8)
-                SetDevelopCtrlShow(mapAttrs[i]);
-            else
-                SetCtrlShow(FKMapAttrs[i]);
-            SetCtrlEnable(FKMapAttrs[i]);
-            CleanCtrlVal(FKMapAttrs[i]);
-        }
-    }
-
-
-
-
-}
-//启用了显示与隐藏.
-function setEnable(FK_MapData, KeyOfEn, selectVal, frmType) {
-    var NDMapAttrs = [];
-    var pkval = FK_MapData + "_" + KeyOfEn + "_" + selectVal;
-    var frmRB = new Entity("BP.Sys.FrmRB", pkval);
-
-    var Script = frmRB.Script;
-    //解析执行js脚本
-    if (Script != null && Script != "" && Script != undefined)
-        DBAccess.RunDBSrc(Script, 2);
-
-   //提示信息未解析
-    //解决字段隐藏显示.
-    var cfgs = frmRB.FieldsCfg;
-
-    //解决为其他字段设置值.
-    var setVal = frmRB.SetVal;
-    if (setVal) {
-        var strs = setVal.split('@');
-
-        for (var i = 0; i < strs.length; i++) {
-            var str = strs[i];
-            if (str == "")
-                continue;
-            var kv = str.split('=');
-
-            var key = kv[0];
-            var value = kv[1];
-            SetCtrlVal(key, value);
-            NDMapAttrs.push(key);
-
-        }
-    }
-    //@Title=3@OID=2@RDT=1@FID=3@CDT=2@Rec=1@Emps=3@FK_Dept=2@FK_NY=3
-    if (cfgs) {
-
-        var strs = cfgs.split('@');
-
-        for (var i = 0; i < strs.length; i++) {
-
-            var str = strs[i];
-            var kv = str.split('=');
-
-            var key = kv[0];
-            var sta = kv[1];
-
-            if (sta == 0)
-                continue; //什么都不设置.
-
-
-            if (sta == 1) {  //要设置为可编辑.
-                if (frmType != null && frmType != undefined && frmType == 8)
-                    SetDevelopCtrlShow(key);
-                else
-                    SetCtrlShow(key);
-                SetCtrlEnable(key);
-                NDMapAttrs.push(key);
-            }
-
-            if (sta == 2) { //要设置为不可编辑.
-                if (frmType != null && frmType != undefined && frmType == 8)
-                    SetDevelopCtrlShow(key);
-                else
-                    SetCtrlShow(key);
-                SetCtrlUnEnable(key);
-                NDMapAttrs.push(key);
-            }
-
-            if (sta == 3) { //不可见.
-                if (frmType != null && frmType != undefined && frmType == 8)
-                    SetDevelopCtrlHidden(key);
-                else
-                    SetCtrlHidden(key); 
-                NDMapAttrs.push(key);
-            }
-
-        }
-    }
-    if (!$.isArray(mapAttrs[KeyOfEn])) {
-        mapAttrs[KeyOfEn] = [];
-    }
-    mapAttrs[KeyOfEn] = [];
-
-    if (NDMapAttrs.length > 0) {
-        mapAttrs[KeyOfEn].push(NDMapAttrs);
-    }
-
-
-
-
-
-    //设置是否隐藏分组、获取字段分组所有的tr
-    var trs = $("#CCForm  table tr .attr-group");
-    var isHidden = false;
-    $.each(trs, function (i, obj) {
-        //获取所有跟随的同胞元素，其中有不隐藏的tr,就跳出循环
-        var sibles = $(obj).parent().nextAll();
-        for (var k = 0; k < sibles.length; k++) {
-            var sible = $(sibles[k]);
-            if (sible.find(".attr-group").length > 0 || sible.find(".form-unit").length > 0)
-                break;
-            if (sible.is(":hidden") == false) {
-                isHidden = false;
-                break;
-            }
-            isHidden = true;
-        }
-        if (isHidden == true)
-            $(obj).parent().hide();
-
-    });
-
-
-
-}
-
-//设置是否可以用?
-function SetCtrlEnable(key) {
-
-    var ctrl = $("#TB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.removeAttr("disabled");
-        ctrl.addClass("form-control");
-    }
-
-    ctrl = $("#DDL_" + key);
-    if (ctrl.length > 0) {
-        ctrl.removeAttr("disabled");
-        ctrl.addClass("form-control");
-    }
-
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.removeAttr("disabled");
-        //ctrl.addClass("form-control");
-    }
-
-    ctr = document.getElementsByName('RB_' + key);
-    if (ctrl != null) {
-        var ses = new Entities("BP.Sys.SysEnums");
-        ses.Retrieve("EnumKey", key);
-        for (var i = 0; i < ses.length; i++)
-            $("#RB_" + key + "_" + ses[i].IntKey).removeAttr("disabled");
-    }
-}
-function SetCtrlUnEnable(key) {
-
-    var ctrl = $("#TB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.attr("disabled", "true");
-    }
-
-    ctrl = $("#DDL_" + key);
-    if (ctrl.length > 0) {
-        ctrl.attr("disabled", "disabled");
-    }
-
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-
-        ctrl.attr("disabled", "disabled");
-    }
-
-    ctrl = $("#RB_" + key);
-    if (ctrl != null) {
-        $('input[name=RB_' + key + ']').attr("disabled", "disabled");
-        //ctrl.attr("disabled", "disabled");
-    }
-}
-//设置隐藏?
-function SetCtrlHidden(key) {
-    ctrl = $("#Lab_" + key);
-    if (ctrl.length > 0)
-        ctrl.parent('tr').css("visibility","collapse");
-
-    var ctrl = $("#Td_" + key);
-    if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "collapse");
-    }
-
-    //从表隐藏
-    var ctrl = $("#Dtl_" + key);
-    if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "collapse");
-
-        var th = $("#THDtl_" + key);
-        th.parent('tr').css("visibility", "collapse");
-    }
-
-    //附件隐藏
-    var ctrl = $("#Ath_" + key);
-    if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "collapse");
-
-        var th = $("#THAth_" + key);
-        th.parent('tr').css("visibility", "collapse");
-    }
-}
-//设置显示?
-function SetCtrlShow(key) {
-    
-
-    var ctrl = $("#Td_" + key);
-    if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "visible");
-    }
-
-    ctrl = $("#Lab_" + key);
-    if (ctrl.length > 0)
-        ctrl.parent('tr').css("visibility", "visible");
-
-    //从表隐藏
-    var ctrl = $("#Dtl_" + key);
-    if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "visible");
-
-        var th = $("#THDtl_" + key);
-        th.parent('tr').css("visibility", "visible");
-    }
-
-    //附件隐藏
-    var ctrl = $("#Ath_" + key);
-    if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "visible");
-
-        var th = $("#THAth_" + key);
-        th.parent('tr').css("visibility", "visible");
-    }
-
-}
-
-//设置隐藏?
-function SetDevelopCtrlHidden(key) {
-    var ctrl = $("#TB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
-    }
-
-    ctrl = $("#DDL_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
-    }
-
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
-        if (ctrl.parent() != undefined && ctrl.parent().length > 0) {
-            if ($(ctrl.parent()[0]).context.nodeName.toLowerCase() == "label")
-                $(ctrl.parent()[0]).hide();
-        }
-
-    }
-
-    ctrl = $("#SR_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
-    }
-
-    ctrl = $("#Lab_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
-    }
-
-    CleanCtrlVal(key);
-
-
-}
-//设置显示?
-function SetDevelopCtrlShow(key) {
-    var ctrl = $("#TB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-    }
-
-    ctrl = $("#DDL_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-    }
-
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-        if (ctrl.parent() != undefined && ctrl.parent().length > 0) {
-            if ($(ctrl.parent()[0]).context.nodeName.toLowerCase() == "label")
-                $(ctrl.parent()[0]).show();
-        }
-    }
-
-    ctrl = $("#SR_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-    }
-
-    ctrl = $("#Lab_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-    }
-}
-
-
-//设置值?
-function SetCtrlVal(key, value) {
-    var ctrl = $("#TB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.val(value);
-    }
-
-    ctrl = $("#DDL_" + key);
-    if (ctrl.length > 0) {
-        ctrl.val(value);
-    }
-
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.val(value);
-        ctrl.attr('checked', true);
-    }
-
-    ctrl = $("#RB_" + key + "_" + value);
-    if (ctrl.length > 0) {
-        var checkVal = $('input:radio[name=RB_' + key + ']:checked').val();
-        document.getElementById("RB_" + key + "_" + checkVal).checked = false;
-        document.getElementById("RB_" + key + "_" + value).checked = true;
-        // ctrl.attr('checked', 'checked');
-    }
-}
-
-//清空值?
-function CleanCtrlVal(key) {
-    var ctrl = $("#TB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.val('');
-    }
-
-    ctrl = $("#DDL_" + key);
-    if (ctrl.length > 0) {
-        //ctrl.attr("value",'');
-        ctrl.val('');
-        // $("#DDL_"+key+" option:first").attr('selected','selected');
-    }
-
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.attr('checked', false);;
-    }
-
-    ctrl = $("#RB_" + key + "_" + 0);
-    if (ctrl.length > 0) {
-        ctrl.attr('checked', true);
-    }
-}
-
 
 
 //初始化 IMAGE附件
@@ -1741,7 +1529,7 @@ function Ele_FrmCheck(wf_node) {
             pageData.FWCVer = 0;
         else
             pageData.FWCVer = 1;
-      
+
     }
 
     return "<div id='WorkCheck'></div>";
@@ -1928,20 +1716,20 @@ function Ele_Dtl(frmDtl) {
 
         //表格模式
         if (pageData.IsReadonly) {
-            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=1&" + urlParam + "&Version=1";
+            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=1&" + urlParam + "&Version=1&FrmType=0";
         } else {
-            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=0&" + urlParam + "&Version=1";
+            src = "./CCForm/" + dtlUrl + ".htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=0&" + urlParam + "&Version=1&FrmType=0";
         }
     }
     else if (frmDtl.ListShowModel == "1") {
         //卡片模式
         if (pageData.IsReadonly) {
-            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=1&" + urlParam + "&Version=1";
+            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=1&" + urlParam + "&Version=1&FrmType=0";
         } else {
-            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=0&" + urlParam + "&Version=1";
+            src = "./CCForm/DtlCard.htm?EnsName=" + frmDtl.No + "&RefPKVal=" + this.pageData.WorkID + "&FK_MapData=" + frmDtl.FK_MapData + "&IsReadonly=0&" + urlParam + "&Version=1&FrmType=0";
         }
     }
-    return "<iframe style='width:100%;' name='Dtl' ID='Dtl_" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
+    return "<iframe style='width:100%;height:100%' name='Dtl' ID='Dtl_" + frmDtl.No + "'    src='" + src + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe>" + '</div>';
 }
 
 function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr) {
@@ -1963,93 +1751,6 @@ function InitRBShowContent(flowData, mapAttr, defValue, RBShowModel, enableAttr)
     return rbHtml;
 }
 
-//弹出附件
-function OpenAth(url, title, keyOfEn, athMyPK, atPara, FK_MapData,frmType) {
-    var H = document.body.clientHeight - 240;
-
-    OpenBootStrapModalByContent(url, "AthTable_Init('" + athMyPK + "','Div_" + athMyPK + "')",'Div_'+athMyPK, title, flowData.Sys_MapData[0].FrmW, H, "icon-property", null, null, null, function () {
-
-        //获取附件显示的格式
-        var athShowModel = GetPara(atPara, "AthShowModel");
-
-        var ath = new Entity("BP.Sys.FrmAttachment");
-        ath.MyPK = athMyPK;
-        if (ath.RetrieveFromDBSources() == 0) {
-            alert("没有找到附件属性,请联系管理员");
-            return;
-        }
-        var data = Ath_Init(athMyPK, FK_MapData)
-
-        if (data.indexOf('err@') == 0) {
-            alert(data);
-            return;
-        }
-
-        if (data.indexOf('url@') == 0) {
-            var url = data.replace('url@', '');
-            window.location.href = url;
-            return;
-        }
-        data = JSON.parse(data);
-        var dbs = data["DBAths"];
-        if (dbs.length == 0 && frmType!=8) {
-            $("#athModel_" + keyOfEn).html("<label>请点击[" + title + "]执行上传</label>");
-            return;
-        }
-
-        var eleHtml = "";
-        if (athShowModel == "" || athShowModel == 0) {
-            $("#athModel_" + keyOfEn).html("<label >附件(" + dbs.length + ")</label>");
-            return;
-        }
-
-        for (var i = 0; i < dbs.length; i++) {
-            var db = dbs[i];
-            eleHtml += "<label><a style='font-weight:normal;font-size:12px'   href=\"javascript:Down2018('" + athMyPK + "','" + pageData.WorkID + "','" + db.MyPK + "','" + pageData.FK_Flow + "','" + pageData.FK_Node + "','" + FK_MapData + "')\"><img src='./Img/FileType/" + db.FileExts + ".gif' />" + db.FileName + "</a></label>&nbsp;&nbsp;&nbsp;"
-        }
-        if (frmType == 8)
-            $("#athModel_" + keyOfEn).children().last().html(eleHtml);
-        else
-            $("#athModel_" + keyOfEn).html(eleHtml);
-
-    }, null, "black", true);
-
-
-}
-function Ath_Init(mypk, FK_MapData) {
-    var nodeID = pageData.FK_Node;
-    var no = nodeID.toString().substring(nodeID.toString().length - 2);
-    var IsStartNode = 0;
-    if (no == "01")
-        IsStartNode = 1;
-
-    var noOfObj = mypk.replace(FK_MapData + "_", "");
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    handler.AddPara("WorkID", pageData.WorkID);
-    handler.AddPara("FID", pageData.FID);
-    handler.AddPara("FK_Node", nodeID);
-    handler.AddPara("FK_Flow", pageData.FK_Flow);
-    handler.AddPara("IsStartNode", IsStartNode);
-    handler.AddPara("PKVal", pageData.WorkID);
-    handler.AddPara("Ath", noOfObj);
-    handler.AddPara("FK_MapData", FK_MapData);
-    handler.AddPara("FromFrm", FK_MapData);
-    handler.AddPara("FK_FrmAttachment", mypk);
-    data = handler.DoMethodReturnString("Ath_Init");
-    return data;
-}
-
-function Down2018(fk_ath, pkVal, delPKVal, FK_Flow, FK_Node, FK_MapData, Ath) {
-    if (plant == "CCFlow")
-        window.location.href = basePath + '/WF/CCForm/DownFile.aspx?DoType=Down&DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + '&FK_Node=' + FK_Node + '&FK_Flow=' + FK_Flow + '&FK_MapData=' + FK_MapData + '&Ath=' + Ath;
-    else {
-        var currentPath = window.document.location.href;
-        var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
-        Url = path + 'WF/Ath/downLoad.do?DelPKVal=' + delPKVal + '&FK_FrmAttachment=' + fk_ath + '&PKVal=' + pkVal + '&FK_Node=' + FK_Node + '&FK_Flow=' + FK_Flow + '&FK_MapData=' + FK_MapData + '&Ath=' + Ath;
-        window.location.href = Url;
-    }
-
-}
 
 //解析傻瓜表单的字段lab
 function GetLab(flowData, attr) {
@@ -2067,7 +1768,7 @@ function GetLab(flowData, attr) {
     }
 
     //文本框，下拉框，单选按钮
-    if (contralType == 0 || contralType == 1 || contralType == 2 || contralType == 3 || contralType == 4 || contralType == 13  ||contralType == 8 || contralType == 50 || contralType == 101) {
+    if (contralType == 0 || contralType == 1 || contralType == 2 || contralType == 3 || contralType == 4 || contralType == 13 || contralType == 8 || contralType == 50 || contralType == 101) {
         if (attr.UIIsInput == 1 && attr.UIIsEnable == 1) {
             lab = " <span style='color:red' class='mustInput' data-keyofen='" + attr.KeyOfEn + "' >*</span>";
         }
@@ -2166,8 +1867,10 @@ function GetLab(flowData, attr) {
 
     }
 
+
     //图片
     if (contralType == 11) {
+
         //获取图片控件的信息
         var frmImg = new Entity("BP.Sys.FrmUI.ExtImg");
         frmImg.SetPKVal(attr.MyPK);
@@ -2230,7 +1933,7 @@ function GetLab(flowData, attr) {
             alert("主键为" + attr.MyPK + "名称为" + attr.Name + "的图片控件信息丢失，请联系管理员");
             return "";
         }
-        
+
         var frmImg = frmImgs[0];
         var imgSrc = basePath + "/DataUser/ICON/CCFlow/LogBig.png";
 
@@ -2246,77 +1949,26 @@ function GetLab(flowData, attr) {
             _html += "<div>";
             _html += "<fieldset>";
             _html += "<legend style='margin-bottom:0px'>";
-            _html += "<a href='javaScript:void(0)' onclick='ImgAth(\"" + url + "\",\"" + frmImg.MyPK + "\");'>编辑</a>"; 
+            _html += "<a href='javaScript:void(0)' onclick='ImgAth(\"" + url + "\",\"" + frmImg.MyPK + "\");'>编辑</a>";
             _html += "</legend>";
-            _html += "<img class='pimg' id='Img" + frmImg.MyPK + "' name='Img" + frmImg.MyPK + "' src='" + imgSrc + "' onerror=\"this.src='" + basePath+"/DataUser/ICON/CCFlow/LogBig.png'\" style='width:" + frmImg.W + "px;height:" + frmImg.H + "px;'/>";
+            _html += "<img class='pimg' id='Img" + frmImg.MyPK + "' name='Img" + frmImg.MyPK + "' src='" + imgSrc + "' onerror=\"this.src='" + basePath + "/DataUser/ICON/CCFlow/LogBig.png'\" style='width:" + frmImg.W + "px;height:" + frmImg.H + "px;'/>";
             _html += "</fieldset>";
             _html += "</div>";
             return _html;
         } else {
             _html += "<div>";
-            _html += "<img class='pimg' id='Img" + frmImg.MyPK + "' name='Img" + frmImg.MyPK + "' src='" + imgSrc + "' \"this.src='" + basePath +"/DataUser/ICON/CCFlow/LogBig.png'\" style='width:" + frmImg.W + "px;height:" + frmImg.H + "px;'/>";
+            _html += "<img class='pimg' id='Img" + frmImg.MyPK + "' name='Img" + frmImg.MyPK + "' src='" + imgSrc + "' \"this.src='" + basePath + "/DataUser/ICON/CCFlow/LogBig.png'\" style='width:" + frmImg.W + "px;height:" + frmImg.H + "px;'/>";
             _html += "</div>";
             return _html;
         }
-
-        
     }
 
     //按钮
     if (contralType == 18) {
-        //获取按钮控件的信息
-        var frmBtns = $.grep(flowData.Sys_FrmBtn, function (item, i) {
-            return item.MyPK == attr.MyPK;
-        });
-        if (frmBtns.length == 0) {
-            alert("主键为" + attr.MyPK + "名称为" + attr.Name + "的按钮信息丢失，请联系管理员");
-            return "";
-        }
-
-        var frmBtn = frmBtns[0];
-        var eleHtml = $('<div></div>');
-        var btnId = frmBtn.BtnID;
-        if (btnId == null || btnId == "")
-            btnId = frmBtn.MyPK;
-       
-        var doc = frmBtn.EventContext;
-        doc = doc.replace("~", "'");
-        var eventType = frmBtn.EventType;
-        var onclick = "";
-        var style=""
-        if (eventType == 0) {//禁用
-            onclick = "disabled='disabled' style='background:gray;'";
-        } else if (eventType == 1) {//运行URL
-            $.each(frmData.Sys_MapAttr, function (i, obj) {
-                if (doc.indexOf('@' + obj.KeyOfEn) > 0) {
-                    doc = doc.replace('@' + obj.KeyOfEn, frmData.MainTable[0][obj.KeyOfEn]);
-                }
-            });
-            var OID = GetQueryString("OID");
-            if (OID == undefined || OID == "");
-            OID = GetQueryString("OID");
-            var FK_Node = GetQueryString("FK_Node");
-            var FK_Flow = GetQueryString("FK_Flow");
-            var webUser = new WebUser();
-            var userNo = webUser.No;
-            var SID = webUser.SID;
-            if (SID == undefined)
-                SID = "";
-            if (doc.indexOf("?") == -1)
-                doc = doc + "?1=1";
-            doc = doc + "&OID=" + pageData.WorkID + "&FK_Node=" + FK_Node + "&FK_Flow=" + FK_Flow + "&UserNo=" + userNo + "&SID=" + SID;
-            onclick = "onclick='window.open(\""+doc+")'";
-
-        } else {//运行JS
-            if (doc.indexOf("(") == -1)
-                doc = doc + "()";
-            onclick = "onclick='" + doc + "'";
-        }
-        return "<input id='" + btnId + "' type='button' value='" + frmBtn.Lab + "'  class='btn' " + onclick+">";
+        return "";
     }
 
     return lab;
 }
-
 
 

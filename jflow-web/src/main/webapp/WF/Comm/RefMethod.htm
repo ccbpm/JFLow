@@ -236,7 +236,7 @@
                 if (attr.ColSpan == 3) {
                     isDropTR = true;
                     html += "<tr>";
-                    html += "<td  class='FDesc' style='width:120px;'>" + lab + "</td>";
+                    html += "<td  class='FoolFrmFieldCtrl' style='width:120px;'>" + lab + "</td>";
                     html += "<td ColSpan=3>";
                     html += InitMapAttrOfCtrlFool(frmData, attr);
                     html += "</td>";
@@ -257,7 +257,7 @@
 
                 if (isDropTR == true) {
                     html += "<tr>";
-                    html += "<td class='FDesc' style='width:120px;'>" + lab + "</td>";
+                    html += "<td class='FoolFrmFieldCtrl' style='width:120px;'>" + lab + "</td>";
                     html += "<td class='FContext'  >";
                     html += InitMapAttrOfCtrlFool(frmData, attr);
                     html += "</td>";
@@ -266,7 +266,7 @@
                 }
 
                 if (isDropTR == false) {
-                    html += "<td class='FDesc' style='width:120px;'>" + lab + "</td>";
+                    html += "<td class='FoolFrmFieldCtrl' style='width:120px;'>" + lab + "</td>";
                     html += "<td class='FContext'>";
                     html += InitMapAttrOfCtrlFool(frmData, attr);
                     html += "</td>";
@@ -309,7 +309,7 @@
                     if (mapAttr.UIIsEnable == 0)
                         enableAttr = "disabled='disabled'";
 
-                    return "<input maxlength=" + mapAttr.MaxLen + " id='TB_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "' style='width:100%;height:23px;' type='text'  " + enableAttr + " />";
+                    return "<input maxlength=" + mapAttr.MaxLen + " id='TB_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "' style='width:80%;height:23px;' type='text'  " + enableAttr + " />";
                 }
 
 
@@ -484,7 +484,7 @@
 <body>
     <form id="cc">
         <div style="right:30px; position:absolute; z-index:100; ">
-            <input type="button" id="Btn_Done" name="Btn_Done" value="执行" onclick="Done()" />
+            <input type="button" id="Btn_Done" name="Btn_Done" value="执行" onclick="Done()" class="cc-btn-tab" />
         </div>
 
         <div style="position:relative;" id="CCForm">
@@ -559,8 +559,9 @@
                 return;
             }
 
-            $("#Msg").html(data);
+            alert(data);
             document.getElementById("Btn_Done").disabled = true;
+            reload();
         }
 
         function reload() {

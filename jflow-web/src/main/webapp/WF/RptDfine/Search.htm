@@ -98,9 +98,9 @@
             var _html = "";
 
             //指定的文本字段查询
-            var rptStringSearchKeys = mapBase.RptStringSearchKeys;
-            if (rptStringSearchKeys == null || rptStringSearchKeys == undefined || rptStringSearchKeys == "") {
-                if (mapBase.RptIsSearchKey == "1") {
+            var StringSearchKeys = mapBase.StringSearchKeys;
+            if (StringSearchKeys == null || StringSearchKeys == undefined || StringSearchKeys == "") {
+                if (mapBase.IsSearchKey == "1") {
                     _html += '<div class="layui-inline">';
                     _html += '<label class="layui-form-label">关键字:</label>';
                     _html += '<div class="layui-input-inline">';
@@ -110,7 +110,7 @@
                 }
             } else {
                 //按照指定的string字段查询.
-                var strs = rptStringSearchKeys.split("*");
+                var strs = StringSearchKeys.split("*");
                 var fieldV = ""
                 $.each(strs, function (i, str) {
                     if (str != "") {
@@ -135,21 +135,24 @@
             }
 
 
-            if (mapBase.RptDTSearchWay && mapBase.RptDTSearchWay != "0") {
+            if (mapBase.DTSearchWay && mapBase.DTSearchWay != "0") {
                 _html += '<div class="layui-inline">';
                 _html += '<label class="layui-form-label">' + mapBase.DTSearchLable + ':</label>';
                 var onfocus = "onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd'})\"";
+
+               // alert(mapBase.DTSearchWay);
+
                 if (mapBase.DTSearchWay != "1")
                     onfocus = " onfocus=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm'})\"";
 
                 _html += '<div class="layui-input-inline" style="width:145px">';
-                _html += '<input type="text" id="TB_DTFrom" name="TB_DTFrom" value="' + ur.DTFrom + '"' + onfocus + '   class="layui-input" />';
+                _html += '<input type="text" id="TB_DTFrom" name="TB_DTFrom" value="' + ur.DTFrom + '"' + onfocus + '   class="layui-input Wdate" />';
                 _html += '</div>';
                 _html += '</div>';
                 _html += '<div class="layui-inline" ">';
                 _html += '<label class="layui-form-label" style="width:20px">到:</label>';
                 _html += '<div class="layui-input-inline" style="width:145px">';
-                _html += '<input type="text" id="TB_DTTo" name="TB_DTTo" value="' + ur.DTTo + '"' + onfocus + ' class="layui-input" />';
+                _html += '<input type="text" id="TB_DTTo" name="TB_DTTo" value="' + ur.DTTo + '"' + onfocus + ' class="layui-input Wdate" />';
                 _html += '</div>';
                 _html += '</div>';
             }
@@ -160,6 +163,22 @@
             for (var i = 0; i < searchAttrs.length; i++) {
 
                 var attr = searchAttrs[i];
+                if (attr.Field == "FK_NY") {
+                    _html = "";
+                    var fieldV = ur.GetPara(attr.Field);
+                    if (fieldV == undefined)
+                        fieldV = "";
+                    var onfocus = " onfocus=\"WdatePicker({dateFmt:'yyyy-MM'})\"";
+                    _html += '<div class="layui-inline">';
+                    _html += '<label class="layui-form-label">' + attr.Name + ':</label>';
+                    _html += '<div class="layui-input-inline" style="width:120px">';
+                    _html += '<input type="text" id="TB_' + attr.Field + '" name="TB_' + attr.Field + '" value="' + fieldV + '"' + onfocus + '   class="layui-input Wdate" />';
+                    _html += '</div>';
+                    _html += '</div>';
+                    $("#toolBar").append(_html);
+                    fields.push(attr.Field);
+                    continue;
+                }
                 _html = "";
                 _html += '<div class="layui-inline ">';
                 _html += '<label class="layui-form-label">' + attr.Name + ':</label>';
@@ -215,21 +234,24 @@
             var mapAttrOfAll = data["Sys_MapAttr"];
 
             //系统字段字符串
-            var sysFields = "," + data["Sys_Fields"][0].Field;
+            //var sysFields = "," + data["Sys_Fields"][0].Field;
 
             //表单字段
             var mapAttrOfFrm = $.grep(mapAttrOfAll, function (item) {
-                if (item.UIContralType != 0 && item.UIContralType != 1 && item.UIContralType != 2 && item.UIContralType != 3)
-                    return true;
-                if (sysFields.indexOf("," + item.KeyOfEn + ",") != -1)
+                if (item.UIVisible == 0)
+                    return false;
+                //if (item.UIContralType != 0 && item.UIContralType != 1 && item.UIContralType != 2 && item.UIContralType != 3)
+                //    return true;
+                if (item.KeyOfEn!="FK_NY")
                     return true;
 
                 return false;
 
-            }, true);
+            });
 
             //用户选择显示的字段
             var selectFields = ur.GetPara("SelectFields");
+            selectFields = selectFields == null || selectFields == undefined ? "" : selectFields;
 
             //生成表格的Cols数组
             columns.push({
@@ -259,12 +281,12 @@
             }
             //流程状态
             columns.push({
-                field: "WFState",
+                field: "WFSta",
                 title: "状态",
                 width: "100",
                 sort: true,
                 templet: function (data) {
-                    return data["WFStateText"];
+                    return data["WFStaText"];
                 }
             });
         }
@@ -519,11 +541,11 @@
 
 
         function Reset() {
-            if (md.RptIsSearchKey) {
+            if (md.IsSearchKey) {
                 $("#tb_key").textbox("clear");
             }
 
-            if (md.RptDTSearchWay != 0) {
+            if (md.DTSearchWay != 0) {
                 $("#tb_dtFrom").datebox("clear");
                 $("#tb_dtTo").datebox("clear");
             }

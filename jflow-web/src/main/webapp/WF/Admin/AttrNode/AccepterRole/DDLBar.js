@@ -11,32 +11,10 @@
         });
 });
 
-//Vue.component('model-component', {
-//    template: '\
-//            <div>\
-//                <button @click="handleIncrease">+1</button>\
-//                <button @click="handleReduce">-1</button>\
-//            </div> ',
-//    data: function () {
-//        return {
-//            nodeID: GetQueryString("FK_Node"),
-//        }
-//    },
-//    methods: {
-//        handleIncrease: function () {
-//            this.counter++;
-//            this.$emit('input', this.counter);
-//        },
-//        handleReduce: function () {
-//            this.counter--;
-//            this.$emit('input', this.counter);
-//        }
-//    }
-
-//});
 var optionKey = 0;
 var flowNo = null;
 function InitBar(optionKey) {
+
     var nodeID = GetQueryString("FK_Node");
     var en = new Entity("BP.WF.Template.NodeSimple", nodeID);
     flowNo = en.FK_Flow;
@@ -45,11 +23,11 @@ function InitBar(optionKey) {
     if (str == "01")
         isSatrtNode = true;
 
-    // var html = "<div style='background-color:Silver' > 请选择访问规则: ";
+    //var html = "<div style='background-color:Silver' > 请选择访问规则: ";
 
-    var html = "<div style='padding:5px' >接受人规则: ";
+    var html = "<div>接受人规则: ";
     if (isSatrtNode == true)
-        html = "<div style='padding:5px' >发起人范围限定规则: ";
+        html = "<div>发起人范围限定规则: ";
 
     html += "<select id='changBar' onchange='changeOption()'>";
 
@@ -63,6 +41,7 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的人员计算</option>";
 
         html += "<option value=" + DeliveryWay.ByDeptAndStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位与部门交集计算</option>";
+
 
         if (webUser.CCBPMRunModel == 1) {
             html += "<option value=" + DeliveryWay.ByTeamOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(全集团)</option>";
@@ -90,7 +69,8 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.BySetDeptAsSubthread + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定部门计算，该部门一人处理标识该工作结束(子线程)</option>";
 
         html += "<option value=" + DeliveryWay.FindSpecDeptEmps + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门范围内的岗位集合里面的人员.</option>";
-        html += "<option value=" + DeliveryWay.ByDeptLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的领导(负责人).</option>";
+        html += "<option value=" + DeliveryWay.ByDeptLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的领导(主管,负责人).</option>";
+        html += "<option value=" + DeliveryWay.ByEmpLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找自己的直属领导.</option>";
 
         // 与按照岗位智能计算不同的是，仅仅找本部门的人员.
     }
@@ -126,14 +106,17 @@ function InitBar(optionKey) {
             html += "<option value=" + DeliveryWay.BySelectedForPrj + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“项目组人员选择器”选择接受人</option>";
         }
     }
-    debugger
+    //debugger
 
     html += "<option value=null disabled='disabled' >+其他方式</option>";
 
     if (isSatrtNode == true) {
 
         html += "<option value=" + DeliveryWay.BySelected_1 + ">&nbsp;&nbsp;&nbsp;&nbsp;所有的人员都可以发起.</option>";
-        html += "<option value=" + DeliveryWay.BySelectedOrgs + ">&nbsp;&nbsp;&nbsp;&nbsp;指定的组织可以发起(对集团版有效).</option>";
+
+        if (webUser.CCBPMRunModel == 1)
+            html += "<option value=" + DeliveryWay.BySelectedOrgs + ">&nbsp;&nbsp;&nbsp;&nbsp;指定的组织可以发起(对集团版有效).</option>";
+
 
     } else {
         html += "<option value=" + DeliveryWay.BySelected + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“人员选择器”选择接受人</option>";
@@ -151,12 +134,14 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.ByFEE + " >&nbsp;&nbsp;&nbsp;&nbsp;由FEE来决定</option>";
         html += "<option value=" + DeliveryWay.ByFromEmpToEmp + ">&nbsp;&nbsp;&nbsp;&nbsp;按照配置的人员路由列表计算</option>";
         html += "<option value=" + DeliveryWay.ByCCFlowBPM + " >&nbsp;&nbsp;&nbsp;&nbsp;按ccBPM的BPM模式处理</option>";
-        
+
     }
     html += "</select >";
-    html += "<input  id='Btn_Save' type=button onclick='SaveRole()' value='保存' />";
-    html += "<input id='Btn_Advanced' type=button onclick='AdvSetting()' value='高级' />";
-    html += "<input id='Btn_Batch' type=button onclick='Batch()' value='批处理设置' />";
+    html += "<button  id='Btn_Save'type=button  onclick='SaveRole()' value='保存' />保存</button>";
+    if (GetQueryString("FK_Node").substr(GetQueryString("FK_Node").length - 2) != "01")
+        html += "<button id='Btn_Advanced' type=button onclick='AdvSetting()' />更多设置</button>";
+
+    html += "<button id='Btn_Batch' type=button onclick='Batch()' value='批处理设置' />批处理设置</button>";
     html += "</div>";
 
     document.getElementById("bar").innerHTML = html;
@@ -171,7 +156,8 @@ function Batch() {
 }
 
 function SaveRole() {
-    $("#Btn_Save").val("正在保存请稍后.");
+
+    $("#Btn_Save").html("正在保存请稍后.");
 
     try {
 
@@ -184,8 +170,8 @@ function SaveRole() {
 
     AccepterRole_ClearStartFlowsCash();
 
-    $("#Btn_Save").val("保存成功");
-    setTimeout(function () { $("#Btn_Save").val("保存"); }, 1000);
+    $("#Btn_Save").html("保存成功");
+    setTimeout(function () { $("#Btn_Save").html("保存"); }, 1000);
 }
 //清除缓存，本组织的.
 function AccepterRole_ClearStartFlowsCash() {
@@ -277,11 +263,18 @@ function BindDeptTree() {
 function BindDeptTreeGroup() {
 
     var nodeID = GetQueryString("FK_Node");
-    var rootNo = "14819";
+    var webUser = new WebUser();
+    var rootNo = 0;
+    if (webUser.CCBPMRunModel == 0 || webUser.CCBPMRunModel == 2)
+        rootNo = webUser.OrgNo;
+    if (webUser.CCBPMRunModel == 1) {
+        var orgs = new Entities("BP.WF.Port.Admin2.Orgs");
+        orgs.RetrieveCond("No", "=", "ParentNo");
+        if (orgs.length != 0) {
+            rootNo = orgs[0].No;
+        }
 
-    //var webUser = new WebUser();
-    //if (webUser.CCBPMRunModel != 0)
-    //    rootNo = webUser.OrgNo;
+    }
 
     var url = "../../../Comm/RefFunc/Branches.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeDepts&Dot2DotEnName=BP.WF.Template.NodeDept&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Dept&EnsOfM=BP.WF.Port.Depts&DefaultGroupAttrKey=&RootNo=" + rootNo + "&NodeID=" + nodeID + "&PKVal=" + nodeID;
 
@@ -485,6 +478,9 @@ function changeOption() {
         case DeliveryWay.ByDeptLeader:
             roleName = "23.ByDeptLeader.htm";
             break;
+        case DeliveryWay.ByEmpLeader:
+            roleName = "50.ByEmpLeader.htm";
+            break;
         case DeliveryWay.ByTeamOrgOnly:
             roleName = "24.ByTeamOrgOnly.htm";
             break;
@@ -531,7 +527,7 @@ function SaveAndClose() {
 
 function SaveIt() {
 
-    $("#Btn_Save").val("正在保存请稍后.");
+    $("#Btn_Save").html("正在保存请稍后.");
 
     try {
         Save();
@@ -541,8 +537,8 @@ function SaveIt() {
         return;
     }
 
-    $("#Btn_Save").val("保存成功");
-    setTimeout(function () { $("#Btn_Save").val("保存."); }, 1000);
+    $("#Btn_Save").html("保存成功");
+    setTimeout(function () { $("#Btn_Save").html("保存."); }, 1000);
 }
 // 保存之后要做的事情.
 function AfterSave() {

@@ -23,21 +23,25 @@ $(function () {
     }
 
     //动态加载css样式
-    if (webUser == null)
+    if (typeof webUser == "undefined" || webUser == null)
         webUser = new WebUser();
     var theme = webUser.Theme;
     if (theme == null || theme == undefined || theme == "")
         theme = "Default";
 
-    $('head').append('<link href="../DataUser/Style/CSS/' + theme + '/ccbpm.css" rel="stylesheet" type="text/css" />');
     $('head').append('<link href="../DataUser/Style/MyFlow.css" rel="Stylesheet" />');
+
+    //$('head').append('<link href="../DataUser/Style/CSS/' + theme + '.css" rel="stylesheet" type="text/css" />');
+    $('head').append('<link href="../DataUser/Style/FoolFrmStyle/Default.css" rel="stylesheet" type="text/css" />');
+    $('head').append('<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" type="text/css" />');
+
+    //$('head').append('<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" type="text/css" />');
+
+    //<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" />
 
     initPageParam(); //初始化参数
 
-    //InitToolBar(); //工具栏.ajax
-
     GenerWorkNode(); //表单数据.ajax
-
 
     if ($("#Message").html() == "") {
         $(".Message").hide();
@@ -370,7 +374,7 @@ function Save(saveType) {
     //审核组件
     if ($("#WorkCheck_Doc").length == 1) {
         //保存审核信息
-        SaveWorkCheck(0);
+        SaveWorkCheck();
     }
 
     //保存前事件
@@ -448,7 +452,7 @@ function Save(saveType) {
     });
     var data = handler.DoMethodReturnString("Save"); //执行保存方法.
 
-   // alert(data);
+    // alert(data);
 
     layer.close(index);//关闭正在保存
     setToobarEnable();
@@ -473,11 +477,11 @@ function Save(saveType) {
         $("#divTech").html(tech); //技术要显示的信息
         $("#divTech").show();
     }
-    
-   /* if (data.indexOf('保存成功') != 0) {
-        $('#Message').html(data.substring(4, data.length));
-        $('#MessageDiv').modal().show();
-    }*/
+
+    /* if (data.indexOf('保存成功') != 0) {
+         $('#Message').html(data.substring(4, data.length));
+         $('#MessageDiv').modal().show();
+     }*/
 
 
 }
@@ -501,8 +505,8 @@ function InitDDLOperation(flowData, mapAttr, defVal) {
                 return value.EnumKey == mapAttr.UIBindKey;
             });
 
-            if (mapAttr.DefVal == -1) 
-                    operations += "<option "+(obj.IntKey == defVal ? " selected = 'selected' " : "")+" value='" + mapAttr.DefVal + "'>-无(不选择)-</option>";
+            if (mapAttr.DefVal == -1)
+                operations += "<option " + (obj.IntKey == defVal ? " selected = 'selected' " : "") + " value='" + mapAttr.DefVal + "'>-无(不选择)-</option>";
 
             $.each(enums, function (i, obj) {
                 operations += "<option " + (obj.IntKey == defVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
@@ -681,7 +685,7 @@ function getFormData(isCotainTextArea, isCotainUrlParam) {
         }
     });
 
-    
+
 
     if (!isCotainTextArea) {
         formArrResult = $.grep(formArrResult, function (value) {
@@ -1046,7 +1050,9 @@ function SaveDtlAll() {
 
 // 杨玉慧
 function GenerWorkNode() {
-
+    debugger
+    console.log("122");
+    console.log(webUser);
     var href = window.location.href;
     var urlParam = href.substring(href.indexOf('?') + 1, href.length);
     urlParam = urlParam.replace('&DoType=', '&DoTypeDel=xx');
@@ -1070,7 +1076,8 @@ function GenerWorkNode() {
         console.log(flowData);
         return;
     }
-
+    if(webUser==null)
+        webUser = new WebUser();
     //处理附件的问题 
     if (flowData.Sys_FrmAttachment.length != 0) {
         Skip.addJs("./CCForm/Ath.js");
@@ -1079,7 +1086,6 @@ function GenerWorkNode() {
         Skip.addJs("../DataUser/OverrideFiles/Ath.js");
         $('head').append("<link href='./CCForm/JS/FileUpload/css/fileUpload.css' rel='stylesheet' type='text/css' />");
     }
-
 
     //获取没有解析的外部数据源
     var uiBindKeys = flowData["UIBindKey"];
@@ -1153,8 +1159,9 @@ function GenerWorkNode() {
     //            pageData.IsReadonly = 1
     //    }
     //}
-    //判断类型不同的类型不同的解析表单. 处理中间部分的表单展示.
 
+    //判断类型不同的类型不同的解析表单. 处理中间部分的表单展示.
+    var isDevelopForm = false;
     if (node.FormType == 5) {
         GenerTreeFrm(flowData); /*树形表单*/
         return;
@@ -1162,35 +1169,41 @@ function GenerWorkNode() {
 
     if (node.FormType == 0 || node.FormType == 10) {
         $("#glyphicon").show();//显示换肤按钮
+        Skip.addJs("./MyFlowFool2017.js?ver=1");
         GenerFoolFrm(flowData); //傻瓜表单.
     }
 
     if (node.FormType == 1) {
-        Skip.addJs("./MyFlowFree2017.js");
+        Skip.addJs("./MyFlowFree2017.js?ver=1");
         GenerFreeFrm(flowData);  //自由表单.
     }
 
     if (node.FormType == 12) {
-        Skip.addJs("./CCForm/FrmDevelop.js");
+        Skip.addJs("./CCForm/FrmDevelop.js?ver=1");
         $('head').append('<link href="../DataUser/Style/MyFlowGenerDevelop.css" rel="Stylesheet" />');
         GenerDevelopFrm(flowData, flowData.Sys_MapData[0].No);
+        isDevelopForm = true;
     }
 
 
     //2018.1.1 新增加的类型, 流程独立表单， 为了方便期间都按照自由表单计算了.
     if (node.FormType == 11) {
         if (flowData.WF_FrmNode[0] != null && flowData.WF_FrmNode[0] != undefined)
-            if (flowData.WF_FrmNode[0].FrmType == 0)
+            if (flowData.WF_FrmNode[0].FrmType == 0) {
+                Skip.addJs("./MyFlowFool2017.js?ver=1");
                 GenerFoolFrm(flowData); //傻瓜表单.
+            }
+
         if (flowData.WF_FrmNode[0].FrmType == 1) {
-            Skip.addJs("./MyFlowFree2017.js");
+            Skip.addJs("./MyFlowFree2017.js?ver=1");
             GenerFreeFrm(flowData);
         }
 
         if (flowData.WF_FrmNode[0].FrmType == 8) {
-            Skip.addJs("./CCForm/FrmDevelop.js");
+            Skip.addJs("./CCForm/FrmDevelop.js?ver=1");
             $('head').append('<link href="../DataUser/Style/MyFlowGenerDevelop.css" rel="Stylesheet" />');
             GenerDevelopFrm(flowData, flowData.WF_FrmNode[0].FK_Frm);
+            isDevelopForm = true;
         }
 
     }
@@ -1223,8 +1236,8 @@ function GenerWorkNode() {
         var width = $(".form-unit-title img")[0].width;
         $(".form-unit-title center h4 b").css("margin-left", "-" + width + "px");
     }
-
-    $('#topContentDiv').width(w);
+    if (isDevelopForm == false)
+        $('#topContentDiv').width(w);
     $('.Bar').width(w + 15);
     $('#lastOptMsg').width(w + 15);
 
@@ -1265,9 +1278,9 @@ function GenerWorkNode() {
 
     //加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
     var enName = flowData.Sys_MapData[0].No;
-    loadScript("../DataUser/JSLibData/" + pageData.FK_Flow + ".js");
-    loadScript("../DataUser/JSLibData/" + enName + "_Self.js");
-    loadScript("../DataUser/JSLibData/" + enName + ".js");
+    loadScript("../DataUser/JSLibData/" + pageData.FK_Flow + ".js?t=" + Math.random());
+    loadScript("../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random());
+    loadScript("../DataUser/JSLibData/" + enName + ".js?t=" + Math.random());
 
     //星级评分事件
     var scoreDiv = $(".score-star");
@@ -1331,6 +1344,57 @@ function GenerWorkNode() {
         LoadGovDocFile();
     }
 
+
+    //关联面板
+    var mapData = flowData.Sys_MapData[0];
+    //关联面板对应的焦点字段
+    var field = mapData.RefBlurField;
+    if (mapData.RefWorkModel != 0) {
+        InitRefPanel(mapData);
+        if (field != null && field != undefined && field != "") {
+            var item = $("#TB_" + field);
+            if (item.length == 0)
+                item = $("#DDL_" + field);
+            if (item.length != 0) {
+                var $events = item.data("events");
+                item.on("blur", InitRefPanel(mapData))
+            }
+        }
+
+    }
+
+
+
+
+}
+
+function InitRefPanel(mapData) {
+    var _html = "";
+    switch (parseInt(mapData.RefWorkModel)) {
+        case 0: //禁用
+            break;
+        case 1://静态html
+            $("#refPanel").html(mapData.RefHtml);
+            break;
+        case 2://静态URL
+            _html = DBAccess.RunDBSrc(mapData.RefUrl);
+            $("#refPanel").html(_html);
+            break;
+        case 3://动态URL
+            var url = mapData.RefUrl;
+            url = url.replace("@OID", pageData.WorkID).replace("@WorkID", pageData.WorkID);
+            url = DealExp(url);
+            _html = "<iframe style='width:100%;height:100px'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=no></iframe>";
+            $("#refPanel").html(_html);
+            break;
+        case 4://动态HTML脚本
+            var refHtml = mapData.RefHtml;
+            refHtml = refHtml.replace("@OID", pageData.WorkID).replace("@WorkID", pageData.WorkID);
+            refHtml = DealExp(urlrefHtml);
+            $("#refPanel").html(refHtml);
+            break;
+        default: break;
+    }
 }
 
 //图片附件编辑

@@ -21,6 +21,7 @@
     <!-- 导入配置文件. -->
     <script type="text/javascript" src="../Scripts/config.js"></script>
     <script type="text/javascript" src="../Comm/Gener.js"></script>
+
     <script type="text/javascript" language="javascript">
         //页面启动函数.
         var webUser = null;
@@ -32,7 +33,6 @@
 
             var ens = new Entities("BP.WF.Auths");
             ens.Retrieve("Auther", webUser.No);
-
 
             var html = "<div class='container'>";
             html += "<div class='fixed-table-header '>";
@@ -46,13 +46,13 @@
             html += "<th style='background-color:#F2F2F2;'>流程</th>";
             html += "<th style='background-color:#F2F2F2;'>收回日期</th>";
             html += "<th style='background-color:#F2F2F2;'>状态</th>";
-            html += "<th style='background-color:#F2F2F2;'>操作</th>";
+            html += "<th colspan='2' style='background-color:#F2F2F2;text-align:center'>操作</th>";
             html += "</tr></thead>";
-
 
             html += "<tbody>";
             var takeBackDT = "";
             var num = 1;
+
             for (var i = 0; i < ens.length; i++) {
 
                 en = ens[i];
@@ -62,20 +62,8 @@
                         continue;
                     }
                     takeBackDT += en.TakeBackDT + ",";
-
-                    var sql = "SELECT EmpNo, FlowName FROM WF_Auth WHERE AuthType = 2 and Auther = '" + webUser.No + "' and EmpNo = '" + en.EmpNo + "' and TakeBackDT = '" + en.TakeBackDT + "'";
-                    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-                    handler.AddPara("SQL", sql);
-                    var dt = handler.DoMethodReturnString("RunSQL_Init");
-                    
-
-                    var flowName = "";
-                    for (var j = 0; j < dt.length; j++) {
-
-                        var da = dt[j];
-                        flowName += da.FlowName + ",";
-                    }
                 }
+
                 var AuthType = en.AuthType;
                 var AuthTypeName;
                 switch (AuthType) {
@@ -86,24 +74,31 @@
                 }
                 var nowDate = getNowFormatDate();
                 var state = "";
-                if (nowDate <= en.TakeBackDT) {
-                    state = "授权中";
+                if (checkTime(nowDate,en.TakeBackDT)) {
+                    state = "<lable style='color:green'>授权中</lable>";
                 } else {
-                    state = "已收回";
+                    state = "<lable style='color:red'>已收回</lable>";
                 }
 
                 html += "<tr>";
                 html += "<td>" + num + "</td>";
-                html += "<td>" + en.EmpName + "</td>";
+                html += "<td>" + en.AutherToEmpName + "</td>";
                 html += "<td>" + AuthTypeName + "</td>";
+                var flowNames = "";
                 if (en.AuthType == 2) {
-                    html += "<td>" + flowName + "</td>";
+                    flowNames = GetFlowNames(ens, en);
+                    html += "<td>" + flowNames + "</td>";
                 } else {
-                    html += "<td>" + en.FlowName + "</td>";
+                    html += "<td></td>";
                 }
                 html += "<td>" + en.TakeBackDT + "</td>";
                 html += "<td>" + state + "</td>";
-                html += "<td><a href=\"javascript:Del('" + en.Auther + "','" + en.EmpNo + "','" + en.TakeBackDT + "')\">删除</a></td>";
+                var MyPK = en.Auther + "_" + en.AuthType + "_" + en.AutherToEmpNo;
+                if (en.AuthType == 2)
+                    html += "<td style='text-align:center'><a href=\"javascript:Del('" + MyPK + "','" + flowNames +"')\">删除</a></td>";
+                else
+                    html += "<td style='text-align:center'><a href=\"javascript:Del('" + MyPK + "')\">删除</a></td>";
+               // html += "<td style='text-align:center'><a href='AuthorDtl.htm?UpdateInfo=1&AutherToEmpNo=" + en.AutherToEmpNo + "&AutherToEmpName=" + en.AutherToEmpName + "&AuthType=" + en.AuthType + "&TakeBackDT=" + en.TakeBackDT+"' >修改</a></td>";
                 html += "</tr>";
                 num++;
             }
@@ -116,17 +111,55 @@
 
         });
 
+
+        function GetFlowNames(auths,auth) {
+            var items = $.grep(auths, function (item) {
+                return item.AuthType == 2 && auth.TakeBackDT == item.TakeBackDT;
+            });
+            var flowNames = [];
+            items.forEach(function (item) {
+                flowNames.push(item.FlowNo+"."+item.FlowName);
+            });
+            return flowNames.join(",")
+        }
+
         //执行删除.
-        function Del(Auther, EmpNo, TakeBackDT) {
+        function Del(MyPK, flowNames) {
             if (window.confirm('您确定要删除吗？') == false)
                 return;
-            var Auth = new Entity("BP.WF.Auth");
-            Auth.DoMethodReturnString("doDel",Auther, EmpNo, TakeBackDT); 
-            
-            alert("删除成功");
+            if (flowNames == null || flowNames == "") {
+                var Auth = new Entity("BP.WF.Auth", MyPK);
+                var res = Auth.Delete();
+                if (res == 1) {
+                    alert("删除成功");
+                    window.location.href = window.location.href;
+                }
+                else {
+                    alert("删除失败");
+                }
+                return;
+            }
+
+            var auth = new Entity("BP.WF.Auth");
+            var isSuccess = true;;
+
+            flowNames.split(",").forEach(function (item) {
+                if (item != "") {
+                    var strs = item.split(".");
+                    var res = auth.Delete("MyPK", MyPK + "_" + strs[0]);
+                    if (res == 0)
+                        isSuccess = false;
+
+                }
+            });
+            if (isSuccess == false)
+                alert("删除失败");
+
             window.location.href = window.location.href;
+           
 
         }
+
         //获取当前时间
         function getNowFormatDate() {
             var date = new Date();
@@ -146,6 +179,19 @@
 
             return cdt;
         }
+
+        //比较时间
+        function checkTime(startDT,endDT) {
+            var startTime = startDT;
+            var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+            var endTime = endDT;
+            var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+            if (end < start) {
+                return false;
+            }
+            return true;
+        }
+
 
     </script>
 </head>

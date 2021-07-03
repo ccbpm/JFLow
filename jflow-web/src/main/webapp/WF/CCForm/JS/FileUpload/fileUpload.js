@@ -16,13 +16,13 @@ $.fn.extend({
                 opt[key] = value;
             }
         });
-        debugger
         uploadTools.initWithLayout(opt);//初始化布局
         uploadTools.initWithDrag(opt);//初始化拖拽
         uploadTools.initWithSelectFile(opt);//初始化选择文件按钮
         uploadTools.initWithUpload(opt);//初始化上传
         uploadTools.initWithCleanFile(opt);
         uploadFileList.initFileList(opt);
+		AthParams.Opt = opt;
     }
 });
 /**
@@ -355,7 +355,6 @@ var uploadTools = {
             uploadTools.disableCleanFile(opt);//禁用清除文件
             if (IsIELower10 == false) {
                 var fileList = uploadFileList.getFileList(opt);
-                debugger
                 var formData = new FormData();
                 var fileNumber = uploadTools.getFileNumber(opt);
                 if (fileNumber <= 0) {

@@ -30,8 +30,13 @@ $(function () {
     var theme = webUser.Theme;
     if (theme == null || theme == undefined || theme == "")
         theme = "Default";
-    $('head').append('<link href="../DataUser/Style/CSS/' + theme + '/ccbpm.css" rel="stylesheet" type="text/css" />');
+
+    //$('head').append('<link href="../DataUser/Style/CSS/' + theme + '.css" rel="stylesheet" type="text/css" />');
+    $('head').append('<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" type="text/css" />');
     $('head').append('<link href="../DataUser/Style/MyFlow.css" rel="Stylesheet" />');
+
+    //$('head').append('<link href="../DataUser/Style/CSS/' + theme + '.css" rel="stylesheet" type="text/css" />');
+    //$('head').append('<link href="../DataUser/Style/MyFlow.css" rel="Stylesheet" />');
 
     // initToolBar();//初始化按钮
     initPageParam(); //初始化参数
@@ -381,8 +386,6 @@ function returnWorkWindowClose(data) {
 }
 
 
-
-
 //AtPara  @PopValSelectModel=0@PopValFormat=0@PopValWorkModel=0@PopValShowModel=0
 function GepParaByName(name, atPara) {
     var params = atPara.split('@');
@@ -566,9 +569,10 @@ function GenerWorkNode() {
     //   HelpAlter();
 
     //判断类型不同的类型不同的解析表单. 处理中间部分的表单展示.
-
+    var isDevelopForm = false;
     if (node.FormType == 5) {
-        GenerTreeFrm(flowData); /*树形表单*/
+        if (typeof GenerTreeFrm != 'undefined' && GenerTreeFrm instanceof Function)
+            GenerTreeFrm(flowData); /*树形表单*/
         return;
     }
 
@@ -586,6 +590,7 @@ function GenerWorkNode() {
         Skip.addJs("./CCForm/FrmDevelop.js");
         $('head').append('<link href="../DataUser/Style/MyFlowGenerDevelop.css" rel="Stylesheet" />');
         GenerDevelopFrm(flowData, flowData.Sys_MapData[0].No);
+        isDevelopForm = true;
     }
 
     //2018.1.1 新增加的类型, 流程独立表单， 为了方便期间都按照自由表单计算了.
@@ -601,6 +606,7 @@ function GenerWorkNode() {
             Skip.addJs("./CCForm/FrmDevelop.js");
             $('head').append('<link href="../DataUser/Style/MyFlowGenerDevelop.css" rel="Stylesheet" />');
             GenerDevelopFrm(flowData, flowData.WF_FrmNode[0].FK_Frm);
+            isDevelopForm = true;
         }
     }
 
@@ -634,7 +640,8 @@ function GenerWorkNode() {
         $(".form-unit-title center h4 b").css("margin-left", "-" + width + "px");
     }
 
-    $('#topContentDiv').width(w);
+    if (isDevelopForm == false)
+        $('#topContentDiv').width(w);
     $('.Bar').width(w + 15);
     $('#lastOptMsg').width(w + 15);
 
@@ -671,7 +678,7 @@ function GenerWorkNode() {
         ////加载JS文件
         var s = document.createElement('script');
         s.type = 'text/javascript';
-        s.src = "../DataUser/JSLibData/" + enName + "_Self.js";
+        s.src = "../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random();
         var tmp = document.getElementsByTagName('script')[0];
         tmp.parentNode.insertBefore(s, tmp);
     }
@@ -685,7 +692,7 @@ function GenerWorkNode() {
 
         var s = document.createElement('script');
         s.type = 'text/javascript';
-        s.src = "../DataUser/JSLibData/" + enName + ".js";
+        s.src = "../DataUser/JSLibData/" + enName + ".js?t=" + Math.random();
         var tmp = document.getElementsByTagName('script')[0];
         tmp.parentNode.insertBefore(s, tmp);
     }
@@ -720,37 +727,6 @@ function GenerWorkNode() {
         LoadGovDocFile();
     }
 
-
-
-
-    //给富文本创建编辑器
-    //if (document.BindEditorMapAttr) {
-    //    var EditorDivs = $(".EditorClass");
-    //    $.each(EditorDivs, function (i, EditorDiv) {
-    //        var editorId = $(EditorDiv).attr("id");
-    //        //给富文本 创建编辑器
-    //        var editor = document.activeEditor = UM.getEditor(editorId, {
-    //            'autoHeightEnabled': false,
-    //            'fontsize': [10, 12, 14, 16, 18, 20, 24, 36],
-    //            'initialFrameWidth': '100%'
-    //        });
-    //        var height = document.BindEditorMapAttr[i].UIHeight;
-    //        $("#Td_" + document.BindEditorMapAttr[i].KeyOfEn).find('div[class = "edui-container"]').css("height", height);
-    //        //$(".edui-container").css("height", height);
-
-    //        if (editor) {
-
-    //            editor.MaxLen = document.BindEditorMapAttr[i].MaxLen;
-    //            editor.MinLen = document.BindEditorMapAttr[i].MinLen;
-    //            editor.BindField = document.BindEditorMapAttr[i].KeyOfEn;
-    //            editor.BindFieldName = document.BindEditorMapAttr[i].Name;
-
-    //            //调整样式,让必选的红色 * 随后垂直居中
-    //            $(editor.container).css({ "display": "inline-block", "margin-right": "4px", "vertical-align": "middle" });
-    //        }
-    //    })
-    //}
-    ////给富文本创建编辑器
 }
 
 
@@ -804,7 +780,6 @@ function WinOpen(url, winName) {
     newWindow.focus();
     return;
 }
-
 
 function SetHegiht() {
 

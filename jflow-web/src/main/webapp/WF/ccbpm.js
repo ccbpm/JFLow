@@ -10,6 +10,7 @@ var ccbpmPath = GetPath();
 //var ccbpmPath = remotePath;
 var paramData = {};
 var writeImg = "";//审核写字板
+var FWCVer=0;
 $(function () {
     if (window.location.href.indexOf(ccbpmPath) == -1)
         isEqualsDomain = true;
@@ -58,6 +59,8 @@ $(window).load(function () {
                 loadScript(ccbpmPath + "/WF/Toolbar.js", function () { }, "JS_CC");
             else if (type == "MyView")
                 loadScript(ccbpmPath + "/WF/Toolbar.js", function () { }, "JS_MyView");
+            else if (type == "MyFrm")
+                loadScript(ccbpmPath + "/WF/Toolbar.js", function () { }, "JS_MyFrm");
             else if (type = "MyGener")
                 loadScript(ccbpmPath + "/WF/Toolbar.js");
         } else {

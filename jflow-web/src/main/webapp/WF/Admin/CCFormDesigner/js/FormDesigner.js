@@ -1018,7 +1018,7 @@ function figure_Template_Btn(frmBtn) {
     //修改偏移的问题
     // x = t2.getNormalWidth() / 2 + frmBtn.X;
     //y = t2.getNormalHeight() / 2 + frmBtn.Y;
-    //t2 = new Text(frmBtn.Text, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    //t2 = new Text(frmBtn.Lab, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
 
     t2.style.fillStyle = FigureDefaults.textColor;
 

@@ -61,7 +61,13 @@
 
         var frmBill = null;
         var webUser = new WebUser();
-       
+        var isReadonly = GetQueryString("IsReadonly");
+        if (isReadonly == null || isReadonly == undefined || isReadonly == "")
+            isReadonly = "0";
+        var pageFrom = GetQueryString("PageFrom");
+        var isShowDelete = false;
+        if (pageFrom == null || pageFrom == undefined || pageFrom == "" || pageFrom != "FrmSearch")
+            isShowDelete = true;
  
         //初始化函数
         $(function () {
@@ -119,14 +125,14 @@
             //$("#Title").html(html);
 
             //当前是归档状态.
-            if (power.IsInsert == 1) {
+            if (power.IsInsert == 1 && isReadonly==0) {
                 var btnNew = frmBill.BtnNewLable;
                 if (btnNew == null || btnNew == "" || btnNew == undefined)
                     btnNew = "新增";
                 toolBar += "<input type=button value='" + btnNew + "' onclick='NewIt();' />";
             }
 
-            if (power.IsSave == 1) {
+            if (power.IsSave == 1 && isReadonly == 0) {
                 var btnSave = frmBill.BtnSaveLable;
                 if (btnSave == null || btnSave == "" || btnSave == undefined)
                     btnSave = "保存";
@@ -139,7 +145,7 @@
             //    toolBar += "<input type=button value='" + btnSave + "' onclick='SaveItAndNew();' />";
             //}
 
-            if (power.IsSubmit == 1) {
+            if (power.IsSubmit == 1 && isReadonly == 0) {
                 var btnSubmit = frmBill.BtnSubmitLable;
                 if (btnSubmit == null || btnSubmit == "" || btnSubmit == undefined)
                     btnSubmit = "提交";
@@ -156,7 +162,7 @@
             if (frmBill.BtnExpZip == "") frmBill.BtnExpZip = "打包zip";
 
             //是初始化状态.
-            if (power.IsDelete == 1)
+            if (power.IsDelete == 1 && isReadonly == 0 && isShowDelete)
                 toolBar += "<input type=button value='删除' onclick='DeleteIt();' />";
 
             if (frmBill.BtnSearchEnable == 1)

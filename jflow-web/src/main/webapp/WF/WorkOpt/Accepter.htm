@@ -133,6 +133,8 @@
     <script type="text/javascript">
         var doType = GetQueryString("DoType");
         var isFrameCross = GetQueryString("isFrameCross");
+        if (isFrameCross == null || isFrameCross == undefined || isFrameCross == "" || isFrameCross == "null")
+            isFrameCross = 0;
         $(function () {
 
             var IsSend = GetQueryString("IsSend");
@@ -172,9 +174,9 @@
                 var url = data.replace('url@', '');
 
                 if (url.indexOf('ToNode=') > 0)
-                    window.location.href = url + "&IsSend=" + GetQueryString("IsSend") + "&isFrameCross=" + isFrameCross;
+                    window.location.href = url + "&IsSend=" + GetQueryString("IsSend") + "&isFrameCross=" + isFrameCross + "&PageFrom=" + GetQueryString("PageFrom");
                 else
-                    window.location.href = url + "&ToNode=" + GetQueryString("ToNode") + "&IsSend=" + GetQueryString("IsSend") + "&isFrameCross=" + isFrameCross;
+                    window.location.href = url + "&ToNode=" + GetQueryString("ToNode") + "&IsSend=" + GetQueryString("IsSend") +"&PageFrom="+GetQueryString("PageFrom") + "&isFrameCross=" + isFrameCross;
 
                 return;
             }
@@ -183,9 +185,9 @@
                 var url = data.replace('BySelfUrl@', '');
 
                 if (url.indexOf('ToNode=') > 0)
-                    url += "&IsSend=" + GetQueryString("IsSend");
+                    url += "&IsSend=" + GetQueryString("IsSend") + "&PageFrom=" + GetQueryString("PageFrom");
                 else
-                    url += "&ToNode=" + GetQueryString("ToNode") + "&IsSend=" + GetQueryString("IsSend") + "&isFrameCross=" + isFrameCross;
+                    url += "&ToNode=" + GetQueryString("ToNode") + "&IsSend=" + GetQueryString("IsSend") + "&isFrameCross=" + isFrameCross + "&PageFrom=" + GetQueryString("PageFrom");
 
                 $('#returnWorkModal', parent.document).modal('hide');
                 window.parent.initModal("BySelfUrl", null, url); $('#returnWorkModal', parent.document).modal().show();
@@ -339,7 +341,11 @@
             handler.AddUrlData();  //WorkID,FK_Flow,FK_Node,ToNode 参数.
             handler.AddPara("SelectEmps", selectedEmps); //多个人员用逗号分开： 比如 zhangsan,lisi
             var data = handler.DoMethodReturnString("Accepter_Save"); //执行保存
-            Close(false, selectedEmpLab);  //关闭窗口.
+            var pageFrom = GetQueryString("PageFrom");
+            if (pageFrom != null && pageFrom != undefined && pageFrom == "WorkCheckModel")
+                Close(false, selectedEmps);
+            else
+                Close(false, selectedEmpLab);  //关闭窗口.
         }
 
         //复选框全选反选

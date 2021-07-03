@@ -2,6 +2,7 @@
 
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
+
     //首位可以是字母以及下划线。 
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
 
@@ -520,7 +521,7 @@ function GenerFullAllCtrlsVal(data) {
         // 处理参数字段.....................
         if (attr == "AtPara") {
 
-            debugger;
+            // debugger;
             //val=@Title=1@SelectType=0@SearchTip=2@RootTreeNo=0
             $.each(val.split("@"), function (i, o) {
                 if (o == "") {
@@ -535,6 +536,9 @@ function GenerFullAllCtrlsVal(data) {
 
                     // textbox
                     tb = document.getElementById('TBPara_' + suffix);
+                    if (tb == null)
+                        tb = document.getElementById('TB_' + suffix);
+
                     if (tb != null) {
 
                         val = val.replace(new RegExp("~", "gm"), "'");
@@ -544,6 +548,9 @@ function GenerFullAllCtrlsVal(data) {
 
                     //下拉框.
                     ddl = document.getElementById('DDLPara_' + suffix);
+                    if (ddl == null)
+                        ddl = document.getElementById('DDL_' + suffix);
+
                     if (ddl != null) {
 
                         if (ddl.options.length == 0)
@@ -564,6 +571,9 @@ function GenerFullAllCtrlsVal(data) {
 
                     //checkbox.
                     cb = document.getElementById('CBPara_' + suffix);
+                    if (cb == null)
+                        cb = document.getElementById('CB_' + suffix);
+
                     if (cb != null) {
                         if (val == "1" || val == 1)
                             cb.checked = true;
@@ -574,6 +584,9 @@ function GenerFullAllCtrlsVal(data) {
 
                     // RadioButton. 单选按钮.
                     rb = document.getElementById('RBPara_' + suffix + "_" + val);
+                    if (rb == null)
+                        rb = document.getElementById('RB_' + suffix + "_" + val);
+
                     if (rb != null) {
                         rb.checked = true;
                         return true;
@@ -802,35 +815,10 @@ function closeWhileEscUp() {
         }
     });
 }
-function DBAccess() {
-
-    var url = Handler + "?SQL=select * from sss";
-    $.ajax({
-        type: "GET", //使用GET或POST方法访问后台
-        dataType: "json", //返回json格式的数据
-        contentType: "text/plain; charset=utf-8",
-        url: url, //要访问的后台地址
-        async: true,
-        cache: false,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
-        complete: function () { }, //AJAX请求完成时隐藏loading提示
-        error: function (XMLHttpRequest, errorThrown) {
-            callback(XMLHttpRequest);
-        },
-        success: function (data) { //msg为返回的数据，在这里做数据绑定
-            callback(data, scope);
-        }
-    });
-
-}
-
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";  
+var pkval="Demo_DtlExpImpDtl1";
 var EnName="BP.WF.Template.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -849,6 +837,11 @@ var Entity = (function () {
             alert('enName不能为空');
             throw Error('enName不能为空');
             return;
+        }
+
+        if (pkval === "undefined") {
+            alert(' pkval 不能为 undefined ');
+            throw Error('pkval 不能为 undefined ');
         }
 
         this.enName = enName;
@@ -900,8 +893,6 @@ var Entity = (function () {
         });
         return params.join("&");
     }
-
-
 
     if (plant == "CCFlow") {
         // CCFlow
@@ -993,16 +984,29 @@ var Entity = (function () {
                         return 0; //插入失败.
                     }
 
+
                     data = JSON.parse(data);
                     result = data;
 
-                    var self = this;
+                    //alert(result.No);
+                    //alert(data.No);
+                    // setData(result);
+                    // return;
+
+                    //var self = this;
                     $.each(data, function (n, o) {
                         if (typeof self[n] !== "function") {
                             jsonString[n] = o;
                             self[n] = o;
                         }
                     });
+
+                    //alert(result.No);
+                    //alert(data.No);
+                    //alert(" self "+self.No);
+
+                    //alert(result.No);
+                    //alert(this.No);
 
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -1139,7 +1143,6 @@ var Entity = (function () {
             //var params = getParams(self);
             var params = getParams1(this);
 
-
             var result;
 
             $.ajax({
@@ -1158,10 +1161,11 @@ var Entity = (function () {
                         alert(data);
                         return;
                     }
-                    $.each(jsonString, function (n, o) {
-                        jsonString[n] = undefined;
-                    });
-                    setData(self);
+                    //这个位置暂时去掉，保持删除Entity后信息仍然保留
+                    /* $.each(jsonString, function (n, o) {
+                         jsonString[n] = undefined;
+                     });
+                     setData(self);*/
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     alert("Delete 系统发生异常, status: " + XMLHttpRequest.status + " readyState: " + XMLHttpRequest.readyState);
@@ -1301,7 +1305,7 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal()); 
+            //  alert(self.GetPKVal());
 
             var result;
             $.ajax({
@@ -1421,7 +1425,8 @@ var Entity = (function () {
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     var url = dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + pkval + "&MethodName=" + methodName + "&t=" + new Date().getTime();
-                    ThrowMakeErrInfo("Entity_DoMethodReturnString-" + self.enName + " pkval=" + pkval + " MethodName=" + methodName, textStatus, url);
+                    ThrowMakeErrInfo("Entity_DoMethodReturnString-" + self.enName + " pkval=" + pkval + " MethodName=" + methodName, textStatus,
+                        url, XMLHttpRequest, errorThrown);
 
                     //    string = "Entity.DoMethodReturnString err@系统发生异常, status: " + XMLHttpRequest.status + " readyState: " + XMLHttpRequest.readyState;
                     //  alert(string);
@@ -1807,7 +1812,6 @@ var Entities = (function () {
                 alert("在初始化实体期间EnsName没有赋值");
                 return;
             }
-            var url=dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&t=" + new Date().getTime();
 
             $.ajax({
                 type: 'post',
@@ -1816,7 +1820,7 @@ var Entities = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: url,
+                url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
                 data: { "Paras": self.Paras },
                 dataType: 'html',
                 success: function (data) {
@@ -1840,7 +1844,7 @@ var Entities = (function () {
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
 
-                    ThrowMakeErrInfo("Entities_RetrieveCond-" + self.ensName, textStatus,url);
+                    ThrowMakeErrInfo("Entities_RetrieveCond-" + self.ensName, textStatus);
                 }
             });
 
@@ -1999,7 +2003,7 @@ var DBAccess = (function () {
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
     }
 
-    DBAccess.RunSQL = function (sql) {
+    DBAccess.RunSQL = function (sql, dbSrc) {
         if (dynamicHandler == "")
             return;
         var count = 0;
@@ -2013,7 +2017,7 @@ var DBAccess = (function () {
             crossDomain: IsIELower10 == true ? false : true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQL&t=" + new Date().getTime(),
             dataType: 'html',
-            data: { "SQL": sql },
+            data: { "SQL": encodeURIComponent(sql), "DBSrc": dbSrc },
             success: function (data) {
                 count = parseInt(data);
                 if (isNaN(count)) {
@@ -2029,7 +2033,7 @@ var DBAccess = (function () {
 
     };
     //执行数据源返回json.
-    DBAccess.RunDBSrc = function (dbSrc, dbType) {
+    DBAccess.RunDBSrc = function (dbSrc, dbType, dbSource) {
 
         if (dbSrc == "" || dbSrc == null || dbSrc == undefined) {
             alert("数据源为空..");
@@ -2058,7 +2062,7 @@ var DBAccess = (function () {
 
         //执行的SQL
         if (dbType == 0) {
-            return DBAccess.RunSQLReturnTable(dbSrc);
+            return DBAccess.RunSQLReturnTable(dbSrc, dbSource);
         }
 
         //执行URL
@@ -2096,9 +2100,10 @@ var DBAccess = (function () {
     };
 
     //执行方法名返回str.
-    DBAccess.RunSQLReturnVal = function (sql) {
+    DBAccess.RunSQLReturnVal = function (sql, dbSrc) {
         var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
         handler.AddPara("SQL", sql);
+        handler.AddPara("DBSrc", dbSrc);
         var dt = handler.DoMethodReturnString("RunSQL_Init");
         if (dt.length == 0)
             return null;
@@ -2111,7 +2116,7 @@ var DBAccess = (function () {
         return firItem[firAttr];
     };
 
-    DBAccess.RunSQLReturnTable = function (sql) {
+    DBAccess.RunSQLReturnTable = function (sql, dbSrc) {
         if (dynamicHandler == "")
             return;
 
@@ -2132,7 +2137,7 @@ var DBAccess = (function () {
             crossDomain: IsIELower10 == true ? false : true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQLReturnTable" + "&t=" + new Date().getTime(),
             dataType: 'html',
-            data: { "SQL": sql },
+            data: { "SQL": encodeURIComponent(sql), "DBSrc": dbSrc },
             success: function (data) {
                 if (data.indexOf("err@") != -1) {
                     alert(data);
@@ -2159,8 +2164,9 @@ var DBAccess = (function () {
             return;
         }
 
-        if (url.match(/^http:\/\//)) {
-            url = dynamicHandler + "?DoType=RunUrlCrossReturnString&t=" + new Date().getTime() + "&url=" + url
+        if (url.match(/^http:\/\//) == false) {
+            alert("err@url无效");
+            return;
         }
 
         var string;
@@ -2168,7 +2174,8 @@ var DBAccess = (function () {
         $.ajax({
             type: 'post',
             async: false,
-            url: url,
+            url: dynamicHandler + "?DoType=RunUrlCrossReturnString&t=" + new Date().getTime(),
+            data: { urlExt: url },
             dataType: 'html',
             xhrFields: {
                 withCredentials: IsIELower10 == true ? false : true
@@ -2294,7 +2301,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2321,7 +2328,6 @@ var HttpHandler = (function () {
                 //parameters["file"] = fileObj;
                 parameters.append("file", fileObj)
             }
-
         },
         AddPara: function (key, value) {
             if (params.indexOf("&" + key + "=") == -1) {
@@ -2402,6 +2408,7 @@ var HttpHandler = (function () {
                     processData: false,
                     success: function (data) {
                         jsonString = data;
+
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
@@ -2466,6 +2473,7 @@ var HttpHandler = (function () {
 
 var webUserJsonString = null;
 var WebUser = function () {
+
     if (dynamicHandler == "")
         return;
     if (webUserJsonString != null) {
@@ -2485,26 +2493,20 @@ var WebUser = function () {
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
     }
 
-    /*
-    try {
-    if (typeof (eval(webUser)) == "undefined") {
-    console.log("已声明变量,但未初始化");
-    // return false;
-    } else {
-    console.log("已声明变量,且已经初始化");
-    return true;
-    }
-    } catch (e) {
-    console.log("未声明变量");
-    }
 
-    if (webUser != undefined) {
-    var self = this;
-    $.each(jsonString, function (n, o) {
-    self[n] = o;
-    });
-    return;
-    }*/
+    //获得页面上的token. 在登录信息丢失的时候，用token重新登录.
+    var token = GetQueryString("Token");
+    if (token == null || token == undefined) token = GetQueryString("SID");
+    if (token == null || token == undefined) {
+        var parent = window.parent;
+        if (parent == null || parent == undefined) {
+
+        } else {
+            var url = parent.location.href;
+            token = getQueryStringByNameFromUrl(url, "Token");
+            if (token == null || token == undefined) token = getQueryStringByNameFromUrl("SID");
+        }
+    }
 
     $.ajax({
         type: 'post',
@@ -2513,7 +2515,7 @@ var WebUser = function () {
             withCredentials: IsIELower10 == true ? false : true
         },
         crossDomain: IsIELower10 == true ? false : true,
-        url: dynamicHandler + "?DoType=WebUser_Init&t=" + new Date().getTime(),
+        url: dynamicHandler + "?DoType=WebUser_Init&Token=" + token + "&t=" + new Date().getTime(),
         dataType: 'html',
         success: function (data) {
 
@@ -2605,12 +2607,22 @@ var GuestUser = function () {
 
 };
 
-function ThrowMakeErrInfo(funcName, obj, url) {
+function ThrowMakeErrInfo(funcName, textStatus, url, XMLHttpRequest, errorThrown) {
 
     var msg = "1. " + funcName + " err@系统发生异常.";
     msg += "\t\n2.检查请求的URL连接是否错误：" + url;
     msg += "\t\n3.估计是数据库连接错误或者是系统环境问题. ";
-    msg += "\t\n4.技术信息:status: " + obj.status + " readyState: " + obj.readyState;
+    msg += "\t\n4.技术信息";
+
+    if (textStatus != null && textStatus != undefined)
+        msg += " \t\m  textStatus: " + JSON.stringify(textStatus);
+
+    if (errorThrown != null && errorThrown != undefined)
+        msg += " \t\mt  errorThrown: " + JSON.stringify(errorThrown);
+
+    if (XMLHttpRequest != null && XMLHttpRequest != undefined)
+        msg += " \t\m  XMLHttpRequest: " + JSON.stringify(XMLHttpRequest);
+
     msg += "\t\n5.您要打开执行的handler查看错误吗？ ";
     // msg += "\t\n5 您可以执行一下http://127.0.0.1/WF/Default.aspx/jsp/php 测试一下，动态文件是否可以被执行。";
 
@@ -2686,7 +2698,7 @@ function FormatDate(now, mask) {
 }
 
 //表达式的替换.
-function DealExp(expStr, webUser) {
+function DealExp(expStr, webUser, isDtlField) {
 
     if (expStr.indexOf('@') == -1)
         return expStr;
@@ -2706,6 +2718,8 @@ function DealExp(expStr, webUser) {
         return expStr;
 
     var objs = document.all;
+    if (isDtlField != undefined && isDtlField == true)
+        objs = window.parent.document.all;
     var length1;
     for (var i = 0; i < objs.length; i++) {
 
@@ -2726,7 +2740,7 @@ function DealExp(expStr, webUser) {
         if (NodeID == null)
             continue;
         var NodeType = objs[i].getAttribute("type");
-        var NodeValue = "";
+        var NodeValue = objs[i].value;
         if (obj != "input" && (NodeType == "text" || NodeType == "radio" || NodeType == "checkbox")) {
             NodeValue = objs[i].value;
             if (NodeType == "checkbox") {
@@ -2789,10 +2803,24 @@ function GetPara(atPara, key) {
 
 }
 
+//用户处理日志
+function UserLogInsert(logType, logMsg, userNo) {
 
+    if (userNo == null || userNo == undefined) {
+        if (loadWebUser == null)
+            loadWebUser = new WebUser();
+        userNo = loadWebUser.No;
+    }
+    var userLog = new Entity("BP.Sys.UserLog");
+    userLog.FK_Emp = userNo;
+    userLog.LogFlag = logType;
+    userLog.Docs = logMsg;
+    userLog.Insert();
+
+}
 
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
     var curPath = window.document.location.href;
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
@@ -2851,30 +2879,15 @@ function validate(s) {
     }
     return true;
 }
-var loadWebUser = null;
-var url = window.location.href.toLowerCase();
 
-if (url.indexOf('login.htm') == -1
-    && url.indexOf('register') == -1
-    && url.indexOf('default.htm') == -1
-    && url.lastIndexOf('/') == url.length
-    && url.indexOf('dbinstall.htm') == -1) {
-    loadWebUser = new WebUser();
-}
+var loadWebUser = null;
+
 //初始化页面
 $(function () {
     var ver = IEVersion();
-    if (ver == 6 || ver == 7 || ver == 8 || ver == 9)
-
+    if (ver == 6 || ver == 7 || ver == 8 || ver == 9) {
         jQuery.getScript(basePath + "/WF/Scripts/jquery.XDomainRequest.js")
-            .done(function () {
-                /* 耶，没有问题，这里可以干点什么 */
-                //alert('ok');
-            })
-            .fail(function () {
-                /* 靠，马上执行挽救操作 */
-                //alert('err');
-            });
+    }
     //   debugger;
     if (plant == "CCFlow") {
         // CCFlow
@@ -2883,33 +2896,45 @@ $(function () {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
     }
-    //判断登录权限.
 
-    if (url.indexOf('login.htm') == -1
-        && url.indexOf('dbinstall.htm') == -1
-        && url.indexOf('default.htm') == -1
-        && url.indexOf('index.htm') == -1
-        && url.indexOf('registerbywebsite.htm') == -1
-        && url.indexOf('reqpassword.htm') == -1
-        && url.indexOf('reguser.htm') == -1
-        && url.indexOf('port.htm') == -1) {
+    var url = window.location.href.toLowerCase();
 
-        if (loadWebUser != null && (loadWebUser.No == "" || loadWebUser.No == undefined || loadWebUser.No == null)) {
-            dynamicHandler = "";
-            alert("登录信息丢失,请重新登录.");
-            return;
-        }
+    //var i = url.lastIndexOf('.');
+    //  alert(i);
 
-        //要排除的目录.
-        if (url.indexOf("/admin/TestingContainer/") == -1)
-            return;
+    //不需要权限信息..
+    if (url.indexOf('login.htm') != -1
+        || url.indexOf('dbinstall.htm') != -1
+        || url.indexOf('qrcodescan.htm') != -1
+        || url.indexOf('default.htm') != -1
+        || url.indexOf('index.htm') != -1
+        || url.indexOf('registerbywebsite.htm') != -1
+        || url.indexOf('reqpassword.htm') != -1
+        || url.indexOf('reguser.htm') != -1
+        || url.indexOf('port.htm') != -1
+        || url.indexOf('ccbpm.cn/') != -1
+        // || url.lastIndexOf('/') == 0
+        //|| url.lastIndexOf('.') == -1  //这个地方不能增加。
+        //|| url.lastIndexOf('.') >= 4
+        || url.indexOf('loginwebsite.htm') != -1) {
+        return;
+    }
 
-        //如果进入了管理员目录.
-        if (url.indexOf("/admin/") != -1 && loadWebUser.IsAdmin != 1) {
-            dynamicHandler = "";
-            alert("管理员登录信息丢失,请重新登录,当前用户[" + loadWebUser.No + "]不能操作管理员目录功能.");
-            return;
-        }
+    loadWebUser = new WebUser();
+
+    if (loadWebUser != null && (loadWebUser.No == "" || loadWebUser.No == undefined || loadWebUser.No == null)) {
+        dynamicHandler = "";
+        alert("登录信息丢失,请重新登录.");
+        return;
+    }
+    //要排除的目录.
+    if (url.indexOf("/admin/TestingContainer/") == -1)
+        return;
+    //如果进入了管理员目录.
+    if (url.indexOf("/admin/") != -1 && loadWebUser.IsAdmin != 1) {
+        dynamicHandler = "";
+        alert("管理员登录信息丢失,请重新登录,当前用户[" + loadWebUser.No + "]不能操作管理员目录功能.");
+        return;
     }
 
 });
@@ -2921,4 +2946,136 @@ $(function () {
  */
 function ChildrenPostMessage(info, action) {
     parent.postMessage({ action: action, info: info }, "*");
+}
+
+/**
+ * 按照MapAttrs的规范去，处理jsonDT的大小写.
+ * @param {数据集合} jsonDT
+ * @param {属性集合} mapAttrs
+ */
+function DealDataTableColName(jsonDT, mapAttrs) {
+
+    var data = {};
+    //遍历数据源的列.
+    for (colName in jsonDT) {
+
+        var val = jsonDT[colName];
+
+        // alert("colName:[" + colName + "] val:[" + val + "]");
+        //找到。
+        var isHave = false;
+        for (var i = 0; i < mapAttrs.length; i++) {
+
+            var mapAttr = mapAttrs[i];
+
+            if (mapAttr.KeyOfEn.toUpperCase() == colName.toUpperCase()) {
+
+                if (val == null || val == "" || val == " ") {
+
+                    //如果是数值类型的就让其为 0. 不然会填充错误，保存错误。
+                    if (mapAttr.MyDataType == 2 //int
+                        || mapAttr.MyDataType == 3 //AppFloat
+                        || mapAttr.MyDataType == 4 // boolen
+                        || mapAttr.MyDataType == 5) { //AppDouble
+                        val = 0;
+                    }
+
+                    if (mapAttr.MyDataType == 8) //AppMoney
+                        val = "0.00";
+                }
+                data[mapAttr.KeyOfEn] = val; //jsonDT[colName];
+                isHave = true;
+                break;
+            }
+        }
+
+        if (isHave == false) {
+            alert("数据源字段名[" + colName + "]没有匹配到表单字段.");
+        }
+    }
+    return data;
+}
+
+/**
+ * 通用配置的获取
+ * @param {any} key  变量
+ * @param {any} defVal 默认值
+ */
+function getConfigByKey(key, defVal) {
+
+    if (typeof CommonConfig == "undefined") {
+        CommonConfig = {};
+        CommonConfig[key] = defVal;
+        return defVal;
+    }
+    if (CommonConfig[key] == undefined)
+        CommonConfig[key] = defVal;
+
+    return CommonConfig[key];
+}
+/**
+ * 对象数组分组
+ * @param {any} array
+ * @param {any} f
+ */
+function groupBy(array, f) {
+    var groups = {};
+    $.each(array, function (i, o) {
+        var group = f(o);
+        groups[group] = groups[group] || [];
+        groups[group].push(o);
+    });
+    return groups;
+}
+
+/**
+ * 执行跳转到MyFlow/MyView页面的判断方法
+ * @param {any} title
+ * @param {any} workid
+ * @param {any} fk_flow
+ * @param {any} fk_node
+ * @param {any} fid
+ * @param {any} pworkid
+ */
+function JumpFlowPage(pageType, title, workid, fk_flow, fk_node, fid, pworkid, isread, paras) {
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+    if (pageType == "MyView")
+        handler = new HttpHandler("BP.WF.HttpHandler.WF_MyView");
+    if (workid != null && workid != undefined)
+        handler.AddPara("WorkID", workid);
+    handler.AddPara("FK_Flow", fk_flow);
+    if (fk_node != null && fk_node != undefined)
+        handler.AddPara("FK_Node", fk_node);
+    if (fid != null && fid != undefined)
+        handler.AddPara("FID", fid);
+    if (pworkid != null && pworkid != undefined)
+        handler.AddPara("PWorkID", pworkid);
+    if (isread != null && isread != undefined)
+        handler.AddPara("IsRead", isread);
+    if (paras != null && paras != undefined)
+        handler.AddPara("Paras", paras);
+    var data = handler.DoMethodReturnString("MyFlow_Init");
+    if (pageType == "MyView")
+        data = handler.DoMethodReturnString("MyView_Init");
+    if (data.indexOf('err@') == 0) {
+        alert(data);
+        return;
+    }
+
+    if (data.indexOf('url@') == 0) {
+
+        data = data.replace('url@', ''); //如果返回url，就直接转向.
+        data = data.replace('?DoType=HttpHandler', '?');
+        data = data.replace('&DoType=HttpHandler', '');
+        data = data.replace('&DoMethod=MyFlow_Init', '');
+        data = data.replace('&HttpHandlerName=BP.WF.HttpHandler.WF_MyFlow', '');
+        data = data.replace('?&', '?');
+        try {
+            var url = "../" + data;
+            window.top.vm.openTab(title, url);
+        } catch(e)
+        {
+            window.open(data); //打开流程.
+        }
+    }
 }

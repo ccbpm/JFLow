@@ -5,27 +5,31 @@ flow = new Entity("BP.WF.Flow", flowNo);
 
 var webUser = new WebUser();
 var basepath = "";
+var flowDevModel = flow.GetPara("FlowDevModel"); //设计模式.
 $(function () {
+
+    if (flowDevModel == null || flowDevModel == undefined)
+        flowDevModel = 0;
 
     ccbpmRunModel = webUser.CCBPMRunModel;
     var runModel = GetQueryString("RunModel");
     if (runModel != null && runModel != undefined && runModel == "2")
         ccbpmRunModel = 2;
 
-    if (ccbpmRunModel == 2) {
-        basepath = "../../WF/Admin/";
-    } else {
-        basepath = "../";
-    }
-    //设置状态.
+    //if (ccbpmRunModel == 2) {
+    //  basepath = "../../WF/Admin/";
+    //} else {
+    basepath = "../";
+    //}
+    //设置状态. 根据不同的模式来设计.
     SetState();
+    ShowFlowDevModelText();
 
     $("#pmfun,#nodeMenu").hover(function () {
         var mLeft = $("#jqContextMenu").css("left").replace('px', '');
         var mTop = $("#jqContextMenu").css("top").replace('px', '');
         $("#nodeMenu").css({ "left": parseInt(mLeft) + 148 + "px", "top": parseInt(mTop) + 62 + "px" });
         $("#nodeMenu").show();
-
 
     }, function () {
         $("#nodeMenu").hide();
@@ -66,20 +70,203 @@ $(function () {
         SetNodeRunModel(nodeID.value, 4, 1);
     });
 
+    //begin 审核组件状态的设置
+    $("#pmWorkCheck,#fwcMenu").hover(function () {
+        var mLeft = $("#jqContextMenu").css("left").replace('px', '');
+        var mTop = $("#jqContextMenu").css("top").replace('px', '');
+        $("#fwcMenu").css({ "left": parseInt(mLeft) + 148 + "px", "top": parseInt(mTop) + 62 + "px" });
+        $("#fwcMenu").show();
+    }, function () {
+        $("#fwcMenu").hide();
+    });
+
+    //审核状态---禁用
+    $('#FWC_Disable').on('click', function () {
+        var nodeID = document.getElementById("leipi_active_id");
+        SetNodeFWCSta(nodeID.value, 0);
+    });
+    //审核状态---启用
+    $('#FWC_Enable').on('click', function () {
+        var nodeID = document.getElementById("leipi_active_id");
+        SetNodeFWCSta(nodeID.value, 1);
+    });
+
+    //审核状态--只读
+    $('#FWC_ReadOnly').on('click', function () {
+        var nodeID = document.getElementById("leipi_active_id");
+        SetNodeFWCSta(nodeID.value, 2);
+    });
+
+    //批量设置
+    $('#FWC_Batch').on('click', function () {
+        var nodeID = document.getElementById("leipi_active_id").value;
+        var url = "../CCBPMDesigner/BatchFWC.htm?FK_Flow=" + GetQueryString("FK_Flow") + "&NodeID=" + nodeID;
+        //window.parent.addTab(nodeID, "审核组件状态", url);
+        var dgId = "iframDg";
+        OpenEasyUiDialog(url, dgId, '设置审核组件状态', 850, 550, 'icon-new', false)
+    });
+
 });
 
+function EidtFrm() {
+    var flowNo = GetQueryString("FK_Flow");
+    var flow = new Entity("BP.WF.Flow", flowNo);
+
+    // 极简表单. 
+    if (flowDevModel == FlowDevModel.JiJian) {
+        var nodeID = parseInt(GetQueryString("FK_Flow")) + "01";
+        NodeFrmD(nodeID);
+    }
+
+    //绑定单个表单.
+    if (flowDevModel == FlowDevModel.RefOneFrmTree) {
+        var frmID = flow.FrmUrl;
+        var nodeID = parseInt(flowNo + "01");
+        var url = basepath + "FoolFormDesigner/Designer.htm?FrmID=" + frmID + "&FK_Flow=" + flowNo + "&FK_MapData=" + frmID + "&FK_Node=" + nodeID;
+        window.parent.addTab(nodeID, "设计表单" + nodeID, url);
+    }
+
+    //自定义表单.
+    if (flowDevModel == FlowDevModel.SDKFrm || flowDevModel == FlowDevModel.SelfFrm) {
+
+        var flow = new Entity("BP.WF.Flow", flowNo);
+        var url = flow.FrmUrl;
+        url = window.prompt('请输入url', url);
+        if (url == null || url == undefined)
+            return;
+
+        flow.FrmUrl = url;
+        flow.Update();
+
+        WinOpen(url);
+
+    }
+}
+/**
+ * 设置审核组件的状态
+ * @param {any} nodeID 节点ID
+ * @param {any} fwcSta 审核组件的状态值
+ */
+function SetNodeFWCSta(nodeID, fwcSta) {
+
+    // alert(nodeID.indexOf('01'));
+    // alert(nodeID.length );
+
+    if (nodeID.indexOf('01') == nodeID.length - 2) {
+        //获得nodeID.
+        var node = new Entity("BP.WF.Node", nodeID);
+        node.FWCSta = 2;
+        node.Update();
+        alert('开始节点审核组件状态必须为只读,并且不能修改.');
+        return;
+    }
+
+    //获得nodeID.
+    var node = new Entity("BP.WF.Node", nodeID);
+    node.FWCSta = fwcSta;
+    node.Update();
+    //如果是极简模式，修改FrmNode表单权限中审核组件的状态
+    if (flowDevModel == FlowDevModel.JiJian) {
+        var mypk = node.NodeFrmID + "_" + node.NodeID + "_" + node.FK_Flow;
+        var frmNode = new Entity("BP.WF.Template.FrmNode");
+        frmNode.SetPKVal(mypk);
+        if (frmNode.RetrieveFromDBSources() == 1) {
+            frmNode.IsEnableFWC = fwcSta;
+            frmNode.Update();
+        }
+    }
+
+    if (fwcSta == 0)
+        layer.alert("修改成功:已禁用.");
+    if (fwcSta == 1)
+        layer.alert("修改成功:已启用.");
+    if (fwcSta == 2)
+        layer.alert("修改成功:已只读.");
+
+}
+function ShowFlowDevModelText() {
+
+    if (flowDevModel == FlowDevModel.Prefessional) {
+        $("#flowDevModelText").html("专业模式");
+    }
+    if (flowDevModel == FlowDevModel.JiJian) {
+        $("#flowDevModelText").html("极简模式");
+    }
+    if (flowDevModel == FlowDevModel.FoolTruck) {
+        $("#flowDevModelText").html("累加模式");
+    }
+    if (flowDevModel == FlowDevModel.RefOneFrmTree) {
+        $("#flowDevModelText").html("绑定单库表单模式");
+    }
+    if (flowDevModel == FlowDevModel.FrmTree) {
+        $("#flowDevModelText").html("绑定多表单模式");
+    }
+    if (flowDevModel == FlowDevModel.SDKFrm) {
+        $("#flowDevModelText").html("SDK表单模式");
+    }
+    if (flowDevModel == FlowDevModel.SelfFrm) {
+        $("#flowDevModelText").html("嵌入式表单模式");
+    }
+    if (flowDevModel == FlowDevModel.InternetOfThings) {
+        $("#flowDevModelText").html("物联网流程");
+    }
+}
 //设置状态。
 function SetState() {
-    var flowFrmType = flow.FlowFrmType;
-    if (flowFrmType == 0) {
 
-        $("#Btn_Frm").hide(); //如果是旧版本的就隐藏该按钮.
-        $("#pmFrmPower").remove(); //如果是旧版本的就删除该按钮.
+    $("#Btn_Frm").hide();
+
+    if (flowDevModel == FlowDevModel.Prefessional ||
+        flowDevModel == FlowDevModel.FoolTruck ||
+        flowDevModel == FlowDevModel.InternetOfThings) {
+        $("#pmAttribute").after("<li id='pmFrmSln'><i class='iconfont icon-biaodandingzhimoban'></i>&nbsp;<span class='_label'>表单方案</span></li>");
+        $("#pmFrmSln").after("<li id='pmFrmD'><i class='iconfont icon-linshibiaoge'></i>&nbsp;<span class='_label'>设计表单</span></li>");
     }
-    else {
+    if (flowDevModel == FlowDevModel.FrmTree ||
+        flowDevModel == FlowDevModel.SDKFrm ||
+        flowDevModel == FlowDevModel.SelfFrm)
+        $("#pmAttribute").after("<li id='pmFrmSln'><i class='iconfont icon-biaodandingzhimoban'></i>&nbsp;<span class='_label'>表单方案</span></li>");
 
-        $("#Btn_Frm").show(); //新版本显示这个按钮
-        $("#pmFrmD").after("<li id='pmFrmPower'> ★&nbsp;&nbsp;<span class='_label'>表单权限</span></li>");//新版本就追加这个按钮
+    if (flowDevModel == FlowDevModel.JiJian ||
+        flowDevModel == FlowDevModel.RefOneFrmTree) {
+        $("#pmAttribute").after("<li id='pmFrmPower'><i class='iconfont icon-biaoge'></i>&nbsp;<span class='_label'>表单权限</span></li>");
+
+    }
+
+
+    //极简模式下.
+    if (flowDevModel == FlowDevModel.JiJian) {
+        $("#Btn_Frm").show(); //如果是旧版本的就隐藏该按钮.
+        //1.隐藏掉节点右键菜单的，表单方案.
+
+        //$("#pmAttribute").hide();   隐藏无效，因为此方法优先于 元素加载 ，获取不到元素
+        //2.增加审核组件状态的编辑..
+        $("#pmNodeAccepterRole").after("<li id='pmWorkCheck'> &nbsp;&nbsp;<span class='_label'>审核组件</span></li>");
+    }
+
+    //累加模式下.
+    if (flowDevModel == FlowDevModel.FoolTrack) {
+
+        $("#Btn_Frm").hide();
+
+    }
+
+    //绑定单个表单 .
+    if (flowDevModel == FlowDevModel.RefOneFrmTree) {
+
+        $("#Btn_Frm").show();
+
+        //2.增加审核组件状态的编辑..
+        $("#pmNodeAccepterRole").after("<li id='pmWorkCheck'> &nbsp;&nbsp;<span class='_label'>审核组件</span></li>");
+    }
+
+
+    //SDK和嵌入式 模式.
+    if (flowDevModel == FlowDevModel.SDKFrm || flowDevModel == FlowDevModel.SelfFrm) {
+        $("#Btn_Frm").show();
+
+        //2.增加审核组件状态的编辑..
+        $("#pmNodeAccepterRole").after("<li id='pmWorkCheck'> &nbsp;&nbsp;<span class='_label'>审核组件</span></li>");
     }
 
     //隐藏指定的菜单.
@@ -231,6 +418,10 @@ $(function () {
     //新建流程演示
     ShowNewFlowGif = function (s) {
 
+  alert('请在流程树的节点上点击右键.');
+return;
+
+
         if (!s) s = 200000;
 
         alertModal4.modal('toggle');
@@ -307,7 +498,7 @@ $(function () {
                 strs += "'process_name':'" + data.Name + "',";
                 strs += "'process_to':0,";
                 strs += "'icon':'icon-ok',";
-                strs += "'style':'width:auto;height:41px;line-height:41px;color:#0e76a8;left:" + mLeft + "px;top:" + mTop + "px;'";
+                strs += "'style':'width:auto;color:#0e76a8;left:" + mLeft + "px;top:" + mTop + "px;'";
                 strs += "}";
                 strs = eval("(" + strs + ")");
 
@@ -526,10 +717,15 @@ $(function () {
     $("#Btn_Save").bind('click', function () {
 
         $("#Btn_Save").attr("disabled", true);
-        $("#Btn_Save").html("保存中...");
+        $("#Btn_Save").html("<i class='iconfont icon-baocun'></i> 正在保存...");
 
         SaveFlow(_canvas);
-        alert("保存成功！");
+
+        $("#Btn_Save").html("<i class='iconfont icon-baocun'></i> 保存成功");
+
+        setTimeout(function () {
+            $("#Btn_Save").html("<i class='iconfont icon-baocun'></i> 保存");
+        }, 1000);
 
     });
     /*保存*/
@@ -819,7 +1015,7 @@ function GenerDrowFlowData() {
         }
 
 
-        strs += "'style':'width:auto;minWidth:121px;height:41px;line-height:41px;color:#0e76a8;left:" + node.X + "px" + ";top:" + node.Y + "px;'";
+        strs += "'style':'width:auto;minWidth:121px;color:#0e76a8;left:" + node.X + "px" + ";top:" + node.Y + "px;'";
 
         if (i == nodes.length - 1)
             strs += "}";
@@ -914,11 +1110,12 @@ function WinOpen(url) {
 //流程属性.
 function FlowProperty() {
     var baseurl = "";
-    if (ccbpmRunModel == 2) {
-        baseurl = "../../WF/";
+    /*if (ccbpmRunModel == 2) {
+        baseurl = "../../WF";
     } else {
-        baseurl = "../../";
-    }
+       
+    }*/
+    baseurl = "../../";
     var url = baseurl + "Comm/En.htm?EnName=BP.WF.Template.FlowExt&PKVal=" + flowNo + "&Lang=CH";
 
     //OpenEasyUiDialogExt(url, "流程属性", 900, 500, false);
@@ -972,6 +1169,7 @@ function FlowRun() {
 }
 //运行流程
 function FlowRun2020() {
+
     var baseurl = "";
     if (ccbpmRunModel == 2) {
         baseurl = "../../Admin/";
@@ -979,19 +1177,25 @@ function FlowRun2020() {
         baseurl = "../";
     }
 
-    var SID = "";
-    var topUrl = top.location.href;
-    var reg = new RegExp('(^|&?)SID=([^&]*)(&|$)', 'i');
-    var r = topUrl.substr(1).match(reg);
-    if (r != null) {
-        SID = unescape(r[2]);
-    }
+    //var topUrl = top.location.href;
+    //var reg = new RegExp('(^|&?)SID=([^&]*)(&|$)', 'i');
+    //var r = topUrl.substr(1).match(reg);
+    //if (r != null) {
+    //    SID = unescape(r[2]);
+    //}
 
     //执行流程检查.
     var flow = new Entity("BP.WF.Flow", flowNo);
     flow.DoMethodReturnString("ClearCash");
 
-    var url = baseurl + "TestingContainer/TestFlow2020.htm?FK_Flow=" + flowNo + "&Lang=CH&SID=" + SID;
+    var sid = GetQueryString("SID");
+    var orgNo = GetQueryString("OrgNo");
+    var userNo = GetQueryString("UserNo");
+
+    var url = baseurl + "TestingContainer/TestFlow2020.htm?FK_Flow=" + flowNo + "&Lang=CH";
+    url += "&SID=" + sid;
+    url += "&OrgNo=" + orgNo;
+    url += "&UserNo=" + userNo;
 
     WinOpenFull(url);
     //window.parent.addTab(flowNo + "_YXLH", "运行流程2020" + flowNo, url);
@@ -1037,11 +1241,11 @@ function NodeAttr(nodeID) {
 
     //var url = "../../Comm/RefFunc/EnV2.htm?EnName=BP.WF.Template.NodeExt&NodeID=" + nodeID + "&Lang=CH";
     var baseurl = "";
-    if (ccbpmRunModel == 2) {
-        baseurl = "../../WF/";
-    } else {
-        baseurl = "../../";
-    }
+    //if (ccbpmRunModel == 2) {
+    //    baseurl = "../../WF/";
+    //} else {
+    baseurl = "../../";
+    //}
 
     //var url = "../../Comm/RefFunc/EnV2.htm?EnName=BP.WF.Template.NodeExt&NodeID=" + nodeID + "&Lang=CH";
     var url = baseurl + "Comm/En.htm?EnName=BP.WF.Template.NodeExt&NodeID=" + nodeID + "&Lang=CH";
@@ -1063,14 +1267,17 @@ function NodeAttr(nodeID) {
     }
     //OpenEasyUiDialogExt(url, html+"属性", 900, 500, false);
 }
+
 //节点属性
 function NodeAttrOld(nodeID) {
     var baseurl = "";
-    if (ccbpmRunModel == 2) {
-        baseurl = "../../WF/";
-    } else {
-        baseurl = "../../";
-    }
+    baseurl = "../../";
+
+    //if (ccbpmRunModel == 2) {
+    //    baseurl = "../../WF/";
+    //} else {
+    //    baseurl = "../../";
+    //}
     var url = baseurl + "Comm/En.htm?EnName=BP.WF.Template.NodeExt&NodeID=" + nodeID + "&Lang=CH";
     window.parent.addTab(nodeID, "节点属性" + nodeID, url);
     //OpenEasyUiDialogExt(url, "节点属性", 800, 500, false);
@@ -1105,10 +1312,10 @@ function CondDir(fromNodeID) {
 //设计表单
 function NodeFrmD(nodeID) {
 
-    //SAS版本的时候，直接设计开始节点的表单
-    var runModel = GetQueryString("RunModel");
-    if (runModel != null && runModel != undefined && runModel == "2")
-        nodeID = parseInt(GetQueryString("FK_Flow")) + "01";
+    ////SAS版本的时候，直接设计开始节点的表单
+    //var runModel = GetQueryString("RunModel");
+    //if (runModel != null && runModel != undefined && runModel == "2")
+    //    nodeID = parseInt(GetQueryString("FK_Flow")) + "01";
 
     var node = new Entity("BP.WF.Node", nodeID);
     if (node.FormType == 1) { //自由表单
@@ -1135,18 +1342,33 @@ function NodeFrmD(nodeID) {
 function FrmPower(nodeID) {
 
     var frmID = "ND" + parseInt(flowNo + "01");
+    var en = new Entity("BP.WF.Template.FrmNodeJiJian");
     var mypk = frmID + "_" + nodeID + "_" + flowNo;
+    en.SetPKVal(mypk);
+    if (en.IsExits() == false) {
+        en.FK_Frm = frmID;
+        en.FK_Flow = flowNo;
+        en.FK_Node = nodeID;
+        en.FrmSln = 0;
+        en.IsEnableFWC = 0;
+        en.MyPK = mypk;
+        en.Insert();
+    }
+
 
     var baseurl = "";
-    if (ccbpmRunModel == 2) {
-        baseurl = "../../WF/";
-    } else {
-        baseurl = "../../";
-    }
+    baseurl = "../../";
+
+    //if (ccbpmRunModel == 2) {
+    //    baseurl = "../../WF/";
+    //} else {
+    //    baseurl = "../../";
+    //}
 
     //傻瓜表单.
     var url = baseurl + "Comm/En.htm?EnName=BP.WF.Template.FrmNodeJiJian&MyPK=" + mypk + "&Lang=CH";
-    //WinOpen(url);
+    if (flowDevModel == FlowDevModel.RefOneFrmTree)
+        url = baseurl + "Comm/En.htm?EnName=BP.WF.Template.FrmNodeExt&MyPK=" + mypk + "&Lang=CH";
     window.parent.addTab(nodeID + "_Fool", "设计表单" + nodeID, url);
 }
 
@@ -1165,11 +1387,14 @@ function NodeFrmRefOneFrmTree(nodeID) {
     var myPK = frmID + "_" + nodeID + "_" + node.FK_Flow;
     //Frm_WoDeShaGuaBiaoShan_501_005
     var baseurl = "";
-    if (ccbpmRunModel == 2) {
-        baseurl = "../../WF/";
-    } else {
-        baseurl = "../../";
-    }
+    baseurl = "../../";
+
+    //if (ccbpmRunModel == 2) {
+    //    baseurl = "../../WF/";
+    //} else {
+    //    baseurl = "../../";
+    //}
+
     var url = baseurl + "Comm/En.htm?EnName=BP.WF.Template.FrmNodeExt&MyPK=" + myPK + "&Lang=CH";
     //WinOpen(url);
     window.parent.addTab(nodeID + "_Fool", "绑定表单属性:" + nodeID, url);

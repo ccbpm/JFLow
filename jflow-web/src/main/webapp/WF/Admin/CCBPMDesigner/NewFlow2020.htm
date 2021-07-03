@@ -35,6 +35,12 @@
                 FlowVersion: 1
             };
         }
+        function NewFlowMode()
+        {
+            var sort = GetQueryString("sort");
+            var url = "./FlowDevModel/Default.htm?SortNo=" + sort;
+            window.location.href = url;
+        }
     </script>
 
 </head>
@@ -44,12 +50,19 @@
     表单方案:
     <select id="DDL_FrmModel">
         <option value="1"> 推荐(传统-经典)模式</option>
-        <option value="2"> 表单树模式</option>
+        <!--<option value="2"> 表单树模式</option>
         <option value="3"> 嵌入表单模式</option>
         <option value="4"> SDK自定义表单模式</option>
-        <option value="0"> 2019年更早版本</option>
+        <option value="0"> 2019年更早版本</option>-->
     </select>
     <button id="Btn_Save" onclick="Save()">创建流程 </button>
+
+    <br />
+    <br />
+    <br />
+    <center>
+        <input type="button" value="新模式创建流程(实验中)" onclick="NewFlowMode()" />
+    </center>
 
 </body>
 </html>

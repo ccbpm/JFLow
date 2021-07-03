@@ -9,6 +9,7 @@
     <link href="Style/skin/css/style.css" rel="stylesheet" type="text/css" />
     <link href="Style/skin/css/animate.css" rel="stylesheet" type="text/css" />
     <link href="Style/skin/font/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="Scripts/layui/layui/css/modules/layer/default/layer.css" rel="stylesheet" />
     <style type="text/css">
         .pagination {
             margin: 8px 0;
@@ -213,7 +214,6 @@
                 }
             }
 
-
             var sourceData;
             //获取在途总的查询信息
 
@@ -237,11 +237,11 @@
                 });
 
             //生成分组的字符串.
-            var str = "";
+            var str = "@";
             for (var i = 0; i < sourceData.length; i++) {
-                if (str.indexOf('@' + sourceData[i].FlowName) == -1) {
+                if (str.indexOf('@' + sourceData[i].FlowName+"@") == -1) {
                     if (flowNos == null || (flowNos != null && flowNos.indexOf(sourceData[i].FK_Flow) != -1))
-                        str += "@" + sourceData[i].FlowName;
+                        str += sourceData[i].FlowName+"@";
                 }
 
             }

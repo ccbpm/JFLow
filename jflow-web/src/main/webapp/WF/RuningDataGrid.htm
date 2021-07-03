@@ -435,11 +435,11 @@
                 });
 
             //生成分组的字符串.
-            var str = "";
+            var str = "@";
             for (var i = 0; i < sourceData.length; i++) {
-                if (str.indexOf('@' + sourceData[i].FlowName) == -1) {
+                if (str.indexOf('@' + sourceData[i].FlowName+"@") == -1) {
                     if (flowNos == null || (flowNos != null && flowNos.indexOf(sourceData[i].FK_Flow) != -1))
-                        str += "@" + sourceData[i].FlowName;
+                        str += sourceData[i].FlowName+"@";
                 }
 
             }
@@ -489,7 +489,7 @@
                 if (groupName == "" || groupName == null)
                     continue;
 
-                listbox += "<tr  onclick=\"GroupBarClick('" + groupName + "')\" > <th colspan=8 class='table-title'> <i class='fa fa-minus-square' alert='Min'  id='Img" + groupName + "'></i><span>" + groupName + "</span></th> </tr>";
+                listbox += "<tr  onclick=\"GroupBarClick('" + groupName + "')\" > <th colspan=7 class='table-title'> <i class='fa fa-minus-square' alert='Min'  id='Img" + groupName + "'></i><span>" + groupName + "</span></th> </tr>";
                 //增加处理.
                 for (var i = 0; i < data.length; i++) {
 

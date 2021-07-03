@@ -1,5 +1,6 @@
 ﻿
 var wf_node = null;
+var webUser = new WebUser();
 $(function () {
 
     var barHtml = "";
@@ -11,7 +12,7 @@ $(function () {
     //MyCC
     if ($("#JS_CC").length == 1) {
         handler = "BP.WF.HttpHandler.WF_MyCC";
-    } else if ($("#JS_MyView").length == 1) {
+    } else if ($("#JS_MyView").length == 1 || $("#JS_MyFrm").length == 1) {
         handler = "BP.WF.HttpHandler.WF_MyView";
     } else {
         handler = "BP.WF.HttpHandler.WF_MyFlow";
@@ -19,7 +20,10 @@ $(function () {
 
     var handler = new HttpHandler(handler);
     handler.AddUrlData();
-    data = handler.DoMethodReturnString("InitToolBar");
+    if ($("#JS_MyFrm").length == 1)
+        data = handler.DoMethodReturnString("MyFrm_InitToolBar");
+    else
+        data = handler.DoMethodReturnString("InitToolBar");
 
     if (data.indexOf("err@") != -1) {
         alert(data);
@@ -39,6 +43,7 @@ $(function () {
     var sendBtnOper = "";
     $.each(toolBars, function (i, toolBar) {
         var Oper = "";
+    
         if (toolBar.Oper != ""){
             if (wf_node&&(wf_node.FormType == 3 || wf_node.FormType == 2) && toolBar.No=="Send")
 				Oper = "onclick=\"" + toolBar.Oper.replace("SaveDtlAll();","") + "\""; 
@@ -66,10 +71,10 @@ $(function () {
 
         }
         else {
-		    if(toolBar.No=="Send")
-				_html += "<Button type=button name='" + toolBar.No + "Btn' enable=true " + Oper + "><img src='" + basePath + "/WF/Img/Btn/" + toolBar.No + ".png' width='22px' height='22px'>&nbsp;" + toolBar.Name + "</button>";
-			else
-				_html += "<Button type=button name='" + toolBar.No + "' enable=true " + Oper + "><img src='" + basePath + "/WF/Img/Btn/" + toolBar.No + ".png' width='22px' height='22px'>&nbsp;" + toolBar.Name + "</button>";
+            if (toolBar.No == "Send")
+                _html += "<Button type=button name='" + toolBar.No + "Btn' enable=true " + Oper + "><img src='" + basePath + "/WF/Img/Btn/" + toolBar.No + ".png' width='22px' height='22px'>&nbsp;" + toolBar.Name + "</button>";
+            else
+                _html += "<Button type=button name='" + toolBar.No + "' enable=true " + Oper + "><img src='" + basePath + "/WF/Img/Btn/" + toolBar.No + ".png' width='22px' height='22px'>&nbsp;" + toolBar.Name + "</button>";
         }
     });
     $('#ToolBar').html(_html);
@@ -77,7 +82,7 @@ $(function () {
 
     //按钮旁的下来框
     if (wf_node != null && wf_node.IsBackTrack == 0)
-        InitToNodeDDL(data, GetPara(wf_node.AtPara,"CondModel2"));
+        InitToNodeDDL(data, wf_node);
 
 
     if ($('[name=Return]').length > 0) {
@@ -185,10 +190,9 @@ $(function () {
             var myPFlow = GetQueryString("PFlowNo");
             if(myPFlow == null){
             	//取得父流程FK_Flow
-            	 var gwf = new Entity("BP.WF.GenerWorkFlow", workID);
-            	 myPFlow=gwf.FK_Flow;
+            	 var gwf = new Entity("BP.WF.GenerWorkFlow", GetQueryString("WorkID"));
+            	 myPFlow=gwf.PFlowNo;
             }
-            //alert(myPFlow);
             var url = "MyView.htm?WorkID=" + myPWorkID+"&FK_Flow=" + myPFlow;
             window.open(url);
         });
@@ -214,19 +218,23 @@ $(function () {
     }
 
     if ($('[name=Press]').length > 0) {
-        $('[name=Press]').bind('click', function () { initModal("Press"); $('#returnWorkModal').modal().show(); });
+       // $('[name=Press]').bind('click', function () { initModal("Press"); $('#returnWorkModal').modal().show(); });
     }
 
     //回滚 Rollback
     if ($('[name=Rollback]').length > 0) {
         $('[name=Rollback]').bind('click', function () { initModal("Rollback"); $('#returnWorkModal').modal().show(); });
     }
+    //跳转 JumpWay
+    if ($('[name=JumpWay]').length > 0) {
+        $('[name=JumpWay]').bind('click', function () { initModal("JumpWay"); $('#returnWorkModal').modal().show(); });
+    }
 
 });
 //添加保存动态
 function SaveOnly() {
 
-    $("button[name=Save]").html("<img src='"+basePath+"/WF/Img/Btn/Save.png' width='22px' height='22px'>&nbsp;正在保存...");
+    $("button[name=Save]").html("<img src='./Img/Btn/Save.png' width='22px' height='22px'>&nbsp;正在保存...");
 
     try {
         Save();
@@ -234,8 +242,8 @@ function SaveOnly() {
         alert(e);
         return;
     }
-    $("button[name=Save]").html("<img src='"+basePath+"/WF/Img/Btn/Save.png' width='22px' height='22px'>&nbsp;保存成功");
-    setTimeout(function () { $("button[name=Save]").html("<img src='Img/Btn/Save.png' width='22px' height='22px'>&nbsp;保存"); }, 1000);
+    $("button[name=Save]").html("<img src='./Img/Btn/Save.png' width='22px' height='22px'>&nbsp;....");
+    setTimeout(function () { $("button[name=Save]").html("<img src='./Img/Btn/Save.png' width='22px' height='22px'>&nbsp;保存"); }, 300);
 }
 function setModalMax() {
     //设置bootstrap最大化窗口
@@ -291,7 +299,7 @@ function initModal(modalType, toNode, url) {
     var isFrameCross = window.location.href.indexOf(basePath)==-1 ? 1 : 0;
     var modalIframeSrc = '';
     if (modalType != undefined) {
-       
+
 
         switch (modalType) {
             case "returnBack":
@@ -366,7 +374,7 @@ function initModal(modalType, toNode, url) {
                 break;
 
             case "Track": //轨迹.
-                $('#modalHeader').text("处理记录");
+                $('#modalHeader').text("处理记录、轨迹");
                 SetPageSize(80, 80);
                 modalIframeSrc = ccbpmPath + "/WF/WorkOpt/OneWork/OneWork.htm?CurrTab=Truck&FK_Node=" + paramData.FK_Node + "&FID=" + paramData.FID + "&WorkID=" + paramData.WorkID + "&FK_Flow=" + paramData.FK_Flow + "&Info=&s=" + Math.random() + "&isFrameCross=" + isFrameCross;
                 break;
@@ -403,8 +411,8 @@ function initModal(modalType, toNode, url) {
                 modalIframeSrc = ccbpmPath + "/WF/WorkOpt/Packup.htm?FileType=" + modalType.replace('PackUp_', '') + "&FK_Node=" + paramData.FK_Node + "&FID=" + paramData.FID + "&WorkID=" + paramData.WorkID + "&FK_Flow=" + paramData.FK_Flow + "&Info=&s=" + Math.random() + "&isFrameCross=" + isFrameCross;
                 break;
             case "Press":
-                $('#modalHeader').text("催办");
-                modalIframeSrc = ccbpmPath + "/WF/WorkOpt/Press.htm?FK_Node=" + paramData.FK_Node + "&FID=" + paramData.FID + "&WorkID=" + paramData.WorkID + "&FK_Flow=" + paramData.FK_Flow + "&s=" + Math.random() + "&isFrameCross=" + isFrameCross;
+                //$('#modalHeader').text("催办");
+                //modalIframeSrc = ccbpmPath + "/WF/WorkOpt/Press.htm?FK_Node=" + paramData.FK_Node + "&FID=" + paramData.FID + "&WorkID=" + paramData.WorkID + "&FK_Flow=" + paramData.FK_Flow + "&s=" + Math.random() + "&isFrameCross=" + isFrameCross;
                 break;
             case "accepter":
                 $('#modalHeader').text("选择下一个节点及下一个节点接受人");
@@ -498,6 +506,12 @@ function initModal(modalType, toNode, url) {
                 SetPageSize(50, 60);
                 modalIframeSrc = ccbpmPath + "/WF/WorkOpt/Rollback.htm?WorkID=" + paramData.WorkID + "&FK_Flow=" + paramData.FK_Flow + "&Info=&s=" + Math.random();
                 break;
+            case "JumpWay":
+                $('#modalHeader').text("流程节点跳转");
+                //按百分比自适应
+                SetPageSize(50, 60);
+                modalIframeSrc = ccbpmPath + "/WF/WorkOpt/JumpWay.htm?FK_Node=" + paramData.FK_Node + "&FID=" + paramData.FID + "&WorkID=" + paramData.WorkID + "&FK_Flow=" + paramData.FK_Flow + "&Info=&s=" + Math.random() + "&isFrameCross=" + isFrameCross;
+                break;
             default:
                 break;
         }
@@ -531,7 +545,7 @@ function setToobarEnable() {
 }
 
 //初始化发送节点下拉框
-function InitToNodeDDL(JSonData,condModel2) {
+function InitToNodeDDL(JSonData, wf_node) {
 
     if (JSonData.ToNodes == undefined)
         return;
@@ -552,7 +566,7 @@ function InitToNodeDDL(JSonData,condModel2) {
         if (dataType != null && dataType != undefined && dataType == "isAskFor")
             return;
     }
-    //if (condModel2 == 0) {
+    if (wf_node.CondModel == 2|| wf_node.CondModel == 3) {
         var toNodeDDL = $('<select style="width:auto;" id="DDL_ToNode"></select>');
         $.each(JSonData.ToNodes, function (i, toNode) {
             var opt = "";
@@ -569,8 +583,8 @@ function InitToNodeDDL(JSonData,condModel2) {
         });
 
         $('[name=SendBtn]').after(toNodeDDL);
-    //}
-    if (condModel2 == 1) {
+    }
+    if (wf_node.CondModel == 3) {
         var _html = "";
         $.each(JSonData.ToNodes, function (i, toNode) {
             _html += "<Button type=button id='" + toNode.No + "' name='ToNodeBtn' enable=true onclick='ChangeToNodeState(" + toNode.No + ")'><img src='" + basePath + "/WF/Img/Btn/Send.png' width='22px' height='22px'>&nbsp;" + toNode.Name + "</button>";
@@ -624,6 +638,16 @@ function Send(isHuiQian, formType) {
     if (formType == 5)
         if (FromTreeSend() == false)
             return;
+    if ("undefined" == typeof IsRecordUserLog)
+        IsRecordUserLog = false;
+
+    if (IsRecordUserLog == true) {
+        if(pageData.FK_Node==parseInt(pageData.FK_Flow)+"01")
+            UserLogInsert("StartFlow", "发起流程");
+        else
+            UserLogInsert("TodoList", "处理待办");
+    }
+        
 
     /**发送前处理的信息 End**/
     var isShowToNode = true;
@@ -761,7 +785,7 @@ function execSend(toNodeID, formType, isReturnNode) {
     }
     handler.AddPara("ToNode", toNodeID);
     handler.AddUrlData();
-    handler.AddPara("IsRturnNode", isReturnNode);
+    handler.AddPara("IsReturnNode", isReturnNode);
     var data = handler.DoMethodReturnString("Send"); //执行保存方法.
     layer.close(index);//关闭正在发送
     if (data.indexOf('err@') == 0) { //发送时发生错误
@@ -1027,8 +1051,11 @@ function closeWindow() {
     }
     if (window.parent != null && window.parent != undefined
         && pareUrl.indexOf("test") == -1 && pareUrl.indexOf("Test") == -1) {
+        if (window.parent.close)
+            window.parent.close();
+        else
+            window.open("", "_top").close();
 
-        window.parent.close();
     }
 }
 
@@ -1068,7 +1095,7 @@ function NodeFormSend() {
 
     //审核组件
     if ($("#WorkCheck_Doc").length == 1) {
-        if ($("#WorkCheck_Doc").val() == "" && $("#Img_WorkCheck")[0].src =="../DataUser/Siganture/UnSiganture.jpg") {
+        if ($("#WorkCheck_Doc").val() == "" && $("#Img_WorkCheck").length!=0 && $("#Img_WorkCheck")[0].src =="../DataUser/Siganture/UnSiganture.jpg") {
             alert("请填写审核意见!!!!");
             return false;
         }
@@ -1427,8 +1454,39 @@ function UnSend() {
     return;
 }
 /**
- * 发起会签子流程
+ * 发起子流程
+ * @param {any} subFlowNo 子流程编号
  */
+function SendSubFlow(subFlowNo, subFlowMyPK) {
+    var W = document.body.clientWidth - 340;
+    var H = document.body.clientHeight - 340;
+    var url = "./WorkOpt/SubFlowGuid.htm?SubFlowMyPK=" + subFlowMyPK + "&WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node");
+    OpenBootStrapModal(url, "eudlgframe", "选择", W, H,
+        "icon-edit", true, function () {
+            var iframe = document.getElementById("eudlgframe");
+            if (iframe) {
+                var result = iframe.contentWindow.Btn_OK();
+                if(result == true){
+                    var subFlowGuid = new Entity("BP.WF.Template.SubFlowHandGuide", subFlowMyPK);
+                    if (subFlowGuid.SubFlowHidTodolist == 1) {
+                        if (window.parent != null && window.parent != undefined)
+                            window.parent.close();
+                        else
+                            window.close();
+                        
+                    }
+                    //显示子流程信息
+                    var html = window.parent.SubFlow_Init(wf_node);
+                    $("#SubFlow").html("").html(html);
+                }
+               
+            }
+
+        }, null, function () {
+
+        });
+
+}
 function StartThread() {
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
     handler.AddPara("WorkID", GetQueryString("WorkID"));

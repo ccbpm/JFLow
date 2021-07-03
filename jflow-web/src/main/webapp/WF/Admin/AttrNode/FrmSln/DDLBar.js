@@ -20,7 +20,7 @@ function InitBar(optionKey) {
     html += "<option value=" + FormSlnType.FreeForm + ">&nbsp;&nbsp;自由表单</option>";
     html += "<option value=" + FormSlnType.FoolTruck + " >&nbsp;&nbsp;累加模式表单</option>";
     html += "<option value=" + FormSlnType.Developer + " >&nbsp;&nbsp;开发者表单</option>";
-    html += "<option value=" + FormSlnType.WebOffice + "  >&nbsp;&nbsp;公文表单(weboffice)</option>";
+   // html += "<option value=" + FormSlnType.WebOffice + "  >&nbsp;&nbsp;公文表单(weboffice)</option>";
 
 
     html += "<option value=null  disabled='disabled'>+自定义表单</option>";
@@ -35,14 +35,14 @@ function InitBar(optionKey) {
 
     html += "</select >";
 
-    html += "<input id='Btn_Save' type=button onclick='Save()' value='保存' />";
+    html += "<button id='Btn_Save' type=button onclick='Save()' value='保存' />保存</button>";
     //html += "<input  id='Btn_Imp' type=button onclick='Imp()' value='表单导入' />";
     //   html += "<input  id='Btn_SaveAndClose' type=button onclick='SaveAndClose()' value='保存并关闭' />";
 
     //  html += "<input type=button onclick='OldVer()' value='使用旧版本' />";
 
     //  html += "<input  id='Btn_Help' type=button onclick='Help()' value='视频帮助' />";
-    html += "<input  id='Btn_Help' type=button onclick='HelpOnline()' value='在线帮助' />";
+    html += "<button  id='Btn_Help' type=button onclick='HelpOnline()' value='在线帮助' />在线帮助</button>";
     
 
 

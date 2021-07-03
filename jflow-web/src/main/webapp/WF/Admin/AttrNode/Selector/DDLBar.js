@@ -32,6 +32,7 @@ function InitBar(key) {
     html += "<option value=null  disabled='disabled'>+按组织结构限定范围</option>";
 
     html += "<option value=" + SelectorModel.Station + ">&nbsp;&nbsp;&nbsp;&nbsp;按照岗位</option>";
+    html += "<option value=" + SelectorModel.ByStationAI + ">&nbsp;&nbsp;&nbsp;&nbsp;按照岗位智能计算</option>";
     html += "<option value=" + SelectorModel.Dept + " >&nbsp;&nbsp;&nbsp;&nbsp;按部门计算</option>";
     html += "<option value=" + SelectorModel.Emp + " >&nbsp;&nbsp;&nbsp;&nbsp;按人员计算</option>";
     html += "<option value=" + SelectorModel.SQL + " >&nbsp;&nbsp;&nbsp;&nbsp;按SQL计算</option>";
@@ -200,6 +201,9 @@ function GenerUrlByOptionKey(optionKey) {
             break;
         case SelectorModel.TeamDeptOnly:
             roleName = "12.TeamDeptOnly.htm";
+            break;
+        case SelectorModel.ByStationAI:
+            roleName = "13.ByStationAI.htm";
             break;
         default:
 

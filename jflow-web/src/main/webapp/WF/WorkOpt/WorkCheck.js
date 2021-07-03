@@ -7,16 +7,27 @@ var isCanSend = true; //是否可以发送？
 var isChange = false;
 var frmWorkCheck;
 
-//var FWCVer = null;
 
 var checkParam = {
     FK_Flow: GetQueryString("FK_Flow"),
     FK_Node: GetQueryString("FK_Node"),
     WorkID: GetQueryString("WorkID"),
     FID: GetQueryString("FID"),
-    IsReadonly: GetQueryString("IsReadOnly") != null && GetQueryString("IsReadOnly") != undefined && GetQueryString("IsReadOnly") == "1" ? true : false,
+    IsReadonly: IsReadOnly(),
     IsCC: GetQueryString("IsCC")
 };
+
+//是否只读?
+function IsReadOnly() {
+    //如果是MyFlowView 或者是MyCC 就把该控件设置为只读的.
+    var url = window.location.href;
+    if (url.indexOf('MyViewGener') != -1 || url.indexOf('MyCC') != -1 || url.indexOf('MyFrm') != -1) {
+        return true;
+    }
+    var val = GetQueryString("IsReadOnly") != null && GetQueryString("IsReadOnly") != undefined && GetQueryString("IsReadOnly") == "1" ? true : false;
+    return val;
+}
+ 
 
 //审核组件页面初始化
 $(function() {
@@ -208,7 +219,11 @@ function WorkCheck_Parse(track, aths, frmWorkCheck, SignType, showNodeName, isSh
         if (frmWorkCheck.FWCAth == 1) {
             _Html += "<div style='float:right' id='uploaddiv' data-info='" + frmWorkCheck.FWCShowModel + "' onmouseover='UploadFileChange(this)'></div>";
         }
-        _Html += "<div style='float:right'><a onmouseover = 'UsefulExpresFlow(\"WorkCheck\",\"WorkCheck_Doc\");' ><span style='font-size:15px;'>常用短语</span>  <img alt='编辑常用审批语言.' src='../WF/Img/Btn/Edit.gif' /></a></div>";
+        if ("undefined" == typeof IsShowWorkCheckUsefulExpres) {
+            IsShowWorkCheckUsefulExpres = true;
+        }
+        if (IsShowWorkCheckUsefulExpres == true)
+            _Html += "<div style='float:right'><a onmouseover = 'UsefulExpresFlow(\"WorkCheck\",\"WorkCheck_Doc\");' ><span style='font-size:15px;'>常用短语</span>  <img alt='编辑常用审批语言.' src='../WF/Img/Btn/Edit.gif' /></a></div>";
 
         _Html += "<div style='float:left;width:100%;'>";
         var msg = track.Msg;
@@ -338,7 +353,7 @@ function WorkCheck_Parse(track, aths, frmWorkCheck, SignType, showNodeName, isSh
             var dt = new Date();
             rdt = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();  // new Date().toString("yyyy-MM-dd HH:mm");
         }
-        //_Html += "(" + rdt + ")";
+        _Html += "(" + rdt + ")";
         _Html += "</td>";
 
         _Html += "</tr>";
@@ -452,6 +467,7 @@ function SaveWorkCheck(type) {
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
     handler.AddJson(checkParam);
+    handler.AddPara("HandlerName", GetQueryString("HttpHandlerName"));
     handler.AddPara("Doc", doc);
     if (writeImg == null && writeImg == undefined)
         writeImg = "";
@@ -517,6 +533,9 @@ function GetUserSiganture(userNo, userName) {
     var func = " oncontextmenu='return false;' ondragstart='return false;'  onselectstart='return false;' onselect='document.selection.empty();'";
     //先判断，是否存在签名图片
     var handler = new HttpHandler("BP.WF.HttpHandler.WF");
+    if (webUser && webUser.CCBPMRunModel == 2)
+        handler = new HttpHandler("BP.Cloud.HttpHandler.App");
+
     handler.AddPara('No', userNo);
     data = handler.DoMethodReturnString("HasSealPic");
 
@@ -524,7 +543,12 @@ function GetUserSiganture(userNo, userName) {
     if (data.length > 0)
         return userName;
 
-    return "<img src='../../DataUser/Siganture/" + userNo + ".jpg?m=" + Math.random() + "' title='" + userName + "' " + func + " style='height:40px;' border=0 alt='" + userNo + "' />";
+
+    if (webUser && webUser.CCBPMRunModel == 2)
+        return "<img src='../../DataUser/Siganture/"+webUser.OrgNo+"/" + userNo + ".jpg?m=" + Math.random() + "' title='" + userName + "' " + func + " style='height:40px;' border=0 alt='" + userNo + "' />";
+    else
+        return "<img src='../../DataUser/Siganture/" + userNo + ".jpg?m=" + Math.random() + "' title='" + userName + "' " + func + " style='height:40px;' border=0 alt='" + userNo + "' />";
+
 }
 
 

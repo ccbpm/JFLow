@@ -74,7 +74,7 @@
 
             //当前用户查询信息.
             ur = new Entity("BP.Sys.UserRegedit");
-            ur.MyPK = webUser.No + "_" + frmID + "_SearchAttrs";
+            ur.MyPK = webUser.No+ frmID + "_SearchAttrs";
             ur.RetrieveFromDBSources();
 
             pageSize = ur.GetPara("PageSize");
@@ -260,7 +260,7 @@
             //保存查询条件.
 
             ur = new Entity("BP.Sys.UserRegedit");
-            ur.MyPK = webUser.No + "_" + frmID + "_SearchAttrs";
+            ur.MyPK = webUser.No+ frmID + "_SearchAttrs";
             ur.FK_Emp = webUser.No;
 
             if ($("#TB_Key") != null && $("#TB_Key").val() != "" && fields.length == 0)
@@ -337,7 +337,7 @@
             data = JSON.parse(data);
 
             ur = new Entity("BP.Sys.UserRegedit");
-            ur.MyPK = webUser.No + "_" + frmID + "_SearchAttrs";
+            ur.MyPK = webUser.No+ frmID + "_SearchAttrs";
             ur.RetrieveFromDBSources();
 
 
@@ -792,7 +792,7 @@
         function changePageSie() {
             pageSize = $("#DDL_PageSize").val();
             ur = new Entity("BP.Sys.UserRegedit");
-            ur.MyPK = webUser.No + "_" + frmID + "_SearchAttrs";
+            ur.MyPK = webUser.No + frmID + "_SearchAttrs";
             ur.RetrieveFromDBSources();
             ur.SetPara("PageSize", pageSize);
             ur.Update();

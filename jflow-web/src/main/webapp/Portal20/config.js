@@ -3,7 +3,7 @@
 2. 被Home.htm所引用.
 */
 
-var appNo = "CCOA";
+var appNo = "GongWen";
 var appName = "驰骋OA";
 var appNameOfSmall = "驰骋OA";
 var appNameOfSmaller = "驰骋";

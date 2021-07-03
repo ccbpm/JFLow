@@ -195,8 +195,7 @@ $(function(){
             return false;
         } 
     　　 var a = num.match(re); 
-    　　 if (a != null) 
-    　　 { 
+    　　 if (a != null) { 
     　　 if (len==15) 
     　　 { 
     　　 var D = new Date("19"+a[3]+"/"+a[4]+"/"+a[5]); 

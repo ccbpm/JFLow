@@ -6,7 +6,7 @@
 
 function InitLeftMenuComm() {
 
-    webUser = new WebUser(appNo);
+    webUser = new WebUser();
     if (webUser.No == null) {
         window.location.href = 'Login.htm';
         return;
@@ -14,6 +14,7 @@ function InitLeftMenuComm() {
 
     //通过API获得两个数据源.
     var data = GPM_GenerMenumsDB();
+
     var dirs = data["Dirs"]; //获得目录.
     var menus = data["Menus"]; //获得菜单.
 

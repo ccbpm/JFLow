@@ -1,40 +1,120 @@
+ï»¿var subFlowNode = {};
+ 
 /*
-1. ¸ÃJSÎÄ¼ş±»Ç¶Èëµ½ÁËMyFlowGener.htm µÄ¹¤×÷´¦ÀíÆ÷ÖĞ. 
-2. ¿ª·¢Õß¿ÉÒÔÖØĞ´¸ÃÎÄ¼ş´¦ÀíÍ¨ÓÃµÄÓ¦ÓÃ,±ÈÈçÍ¨ÓÃµÄº¯Êı.
-*/
+ * 1. è¯¥JSæ–‡ä»¶è¢«åµŒå…¥åˆ°äº†MyFlowGener.htm çš„å·¥ä½œå¤„ç†å™¨ä¸­. 2. å¼€å‘è€…å¯ä»¥é‡å†™è¯¥æ–‡ä»¶å¤„ç†é€šç”¨çš„åº”ç”¨,æ¯”å¦‚é€šç”¨çš„å‡½æ•°.
+ * 
+ */
 
-function DZ() {
+// è½¬åŒ–æ‹¼éŸ³çš„æ–¹æ³•
+function StrToPinYin(str) {
 
-    alert('sss');
-    var url = 'pop.htm';
-    window.open(url);
+	var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner");
+	handler.AddPara("name", str);
+	handler.AddPara("flag", "false");
+	data = handler.DoMethodReturnString("ParseStringToPinyin");
+	return data;
 }
 
 /*
+ * 
+ * 1. beforeSaveã€beforeSendã€ beforeReturnã€ beforeDelete 2
+ * .MyFlowGenerã€MyFlowTreeçš„å›ºå®šæ–¹æ³•ï¼Œç¦æ­¢åˆ é™¤ 3.ä¸»è¦å†™ä¿å­˜å‰ã€å‘é€å‰ã€é€€å›å‰ã€åˆ é™¤å‰äº‹ä»¶ 4.è¿”å›å€¼ä¸º trueã€false
+ * 
+ */
 
-1. beforeSave¡¢beforeSend¡¢ beforeReturn¡¢ beforeDelete 
-2 .MyFlowGener¡¢MyFlowTreeµÄ¹Ì¶¨·½·¨£¬½ûÖ¹É¾³ı
-3.Ö÷ÒªĞ´±£´æÇ°¡¢·¢ËÍÇ°¡¢ÍË»ØÇ°¡¢É¾³ıÇ°ÊÂ¼ş
-4.·µ»ØÖµÎª true¡¢false
+// ä¿å­˜å‰äº‹ä»¶
+function beforeSave(saveType) {
+return true;
 
-*/
-
-//±£´æÇ°ÊÂ¼ş
-function beforeSave() {
-    return true;
+       
 }
 
-//·¢ÉúÇ°ÊÂ¼ş
+// å‘ç”Ÿå‰äº‹ä»¶
 function beforeSend() {
-    return true;
+	 var FlowNo=GetQueryString("FK_Flow");
+        
+	return true;
 }
 
-//ÍË»ØÇ°ÊÂ¼ş
+// é€€å›å‰äº‹ä»¶
 function beforeReturn() {
-    return true;
+	return true;
 }
 
-//É¾³ıÇ°ÊÂ¼ş
+// åˆ é™¤å‰äº‹ä»¶
 function beforeDelete() {
-    return true;
+	return true;
+}
+
+// æŠ„é€é˜…è¯»é¡µé¢å¢åŠ å…³é—­å‰äº‹ä»¶
+function beforeCCClose() {
+	return true;
+}
+// å‘é€ é€€å› ç§»äº¤ç­‰æ‰§è¡ŒæˆåŠŸåè½¬åˆ° æŒ‡å®šé¡µé¢
+var interval;
+// å…³é—­å¼¹å‡ºçª—åˆ·æ–°é¡µé¢
+function WindowCloseReloadPage(msg) {
+	if ($('#returnWorkModal:hidden').length == 0
+			&& $('#returnWorkModal').length > 0) {
+		$('#returnWorkModal').modal('hide');
+	}
+
+	// å¢åŠ msgçš„æ¨¡æ€çª—å£
+	// åˆå§‹åŒ–é€€å›çª—å£çš„SRC.
+	var html = '<div class="modal fade" id="msgModal" data-backdrop="static">'
+			+ '<div class="modal-dialog">'
+			+ '<div class="modal-content" style="border-radius: 0px;">'
+			+ '<div class="modal-header" style="background:#f2f2f2;">'
+			+ '<button type="button" class="close" id="btnMsgModalOK1" aria-hidden="true" style="color: #0000007a;display: none;">&times;</button>'
+			+ '<h4 class="modal-title" style="color:#000;">æç¤ºä¿¡æ¯</h4>'
+			+ '</div>'
+			+ '<div class="modal-body" style="text-align: left; word-wrap: break-word;">'
+			+ '<div style="width:100%; border: 0px; height: 200px;overflow-y:auto" id="msgModalContent" name="iframePopModalForm"></div>'
+			+ '<div style="text-align: right;">'
+			+ ' <button type="button" id="btnMsgModalOK" class="btn" data-dismiss="modal">ç¡®å®š(30ç§’)</button >'
+			+ '</div>' + '</div>' + '</div><!-- /.modal-content -->'
+			+ '</div><!-- /.modal-dialog -->' + '</div>';
+
+	$('body').append($(html));
+	if (msg == null || msg == undefined)
+		msg = "";
+	msg = msg.replace("@æŸ¥çœ‹<img src='/WF/Img/Btn/PrintWorkRpt.gif' >", '')
+
+	$("#msgModalContent").html(msg.replace(/@/g, '<br/>').replace(/null/g, ''));
+	var trackA = $('#msgModalContent a:contains("å·¥ä½œè½¨è¿¹")');
+	var trackImg = $('#msgModalContent img[src*="PrintWorkRpt.gif"]');
+	trackA.remove();
+	trackImg.remove();
+
+	$('#btnMsgModalOK').bind(
+			'click',
+			function() {
+				var id = window.parent.nthTabs.getActiveId();
+				var idlist = id.split("TLJ");
+				// console.log("==="+idlist);
+				if (idlist.length > 0) {
+					$('#' + idlist[1], parent.document).attr('src',
+							$('#' + idlist[1], parent.document).attr('src'));
+				}
+				window.parent.nthTabs.delTab(id);
+			});
+	$('#btnMsgModalOK1').bind('click', function() {
+		// æç¤ºæ¶ˆæ¯æœ‰é”™è¯¯ï¼Œé¡µé¢ä¸è·³è½¬
+		var msg = $("#msgModalContent").html();
+		if (msg.indexOf("err@") == -1) {
+			window.close();
+		} else {
+			setToobarEnable();
+			$("#msgModal").modal("hidden");
+		}
+
+		if (window.parent != null && window.parent != undefined)
+			window.parent.close();
+		opener.window.focus();
+	});
+
+	$("#msgModal").modal().show();
+
+	interval = setInterval("clock()", 1000);
+
 }

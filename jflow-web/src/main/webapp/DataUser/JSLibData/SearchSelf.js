@@ -1,28 +1,41 @@
 
+function NewFlow(flowNo) {
+    //var url = "../MyFlow.htm?FK_Flow=" + flowNo;
+    //window.open(url);
+	var id= window.parent.nthTabs.getActiveId();
+	var tab=window.parent.nthTabs.getTabList();
+	var work= "#"+flowNo+"TLJ"+id;
+	for (var i=0;i<tab.length;i++){ 
+	    if(tab[i].id==work){
+	    	window.parent.nthTabs.setActTab(tab[i].id);
+	    	return;
+	    }
+	}
+	window.parent.nthTabs.addTab({id:flowNo+"TLJ"+id,title:"èµ·è‰",url:"../WF/MyFlow.htm?FK_Flow=" + flowNo}).setActTab(flowNo+"TLJ"+id);
+    return;
+}
+
+function OpenTab(url)
+{
+
+}
+
 /* 
-Ê¹ÓÃËµÃ÷:
-1. ¸ÃÎÄ¼þ±»×Ô¶¯µÄÔØÈëµ½ /WF/Comm/Search.htm ÖÐ.
-2. Äã¿ÉÒÔÔÚÕâÀïÐ´Èë×Ô¼ºµÄ·½·¨º¯Êý±»¹¤¾ßÀ¸ÉÏµÄ°´Å¥µ÷ÓÃ, À´Íê³É¸ß¼¶µÄjs²Ù×÷.
+
+Ê¹ï¿½ï¿½Ëµï¿½ï¿½:
+
+1. ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ëµ½ /WF/Comm/Search.htm ï¿½ï¿½.
+2. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÏµÄ°ï¿½Å¥ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½É¸ß¼ï¿½ï¿½ï¿½jsï¿½ï¿½ï¿½ï¿½.
 
  */
 
-function NewFlowTemplate() {
-    //   alert();
-   //var url = "/App/FlowDesigner/NewFlow/Default.htm";
-    var url = "/WF/Comm/Search.htm?EnsName=BP.Cloud.Template.FlowExts";
-    var url = "/App/FlowDesigner/NewFlow.htm?EnsName=BP.Cloud.Template.FlowExts";
-
-    window.location.href = url;
-}
-
-function ImpFlowTemplate() {
-
-    //alert();
-    //var url = "/App/FlowDesigner/NewFlow/Default.htm";
-    var url = "/WF/Comm/Search.htm?EnsName=BP.Cloud.Template.FlowExts";
-    var url = "/App/FlowDesigner/Template.htm?EnsName=BP.Cloud.Template.FlowExts";
-    window.location.href = url;
-}
-function DelTodoEmps(str) {
-    return str;
+function DealTodoEmps(str){
+	var result = str.split("@");
+	var reg = /[a-zA-Z\,]+/;
+	while(result = str.match(reg)){
+		str = str.replace(result[0],'');
+	}
+	return str;
+	
+	
 }

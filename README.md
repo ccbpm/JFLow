@@ -20,9 +20,10 @@
 
 以下项目都与ccbpm做了集成，加盟集成电话：15001162377(微信同号).
  
-1.  单点登录 https://gitee.com/dotnetchina/BootstrapAdmin 
+1.  单点登录 https://gitee.com/dotnetchina/BootstrapAdmin  .net版
 1.  jflow-jeesite ： https://gitee.com/thinkgem/jeesite4-jflow
 2.  微同商城+JFlow ： https://gitee.com/fuyang_lipengjun/platform
+1.  单点登录: https://gitee.com/dromara/MaxKey  java版.
 
 ### 资源下载
 

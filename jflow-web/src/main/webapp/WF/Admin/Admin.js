@@ -27,16 +27,17 @@ $(document).ready(function () {
 
     //设置帮助页面内容 
     // SetHelpPage();
-
     HelpDiv();
 
     //设置自动提示.
     initToggle();
 
-    //设置  class="Help" 的图片 点击直接可以全屏放大打开.  @lz
+    //设置  class="Help" class="HelpImg" 的图片 点击直接可以全屏放大打开.  @lz
     SetHelpImg();
+
     //设置放大的img容器   
     SetBigImgDiv();
+
     //设置SQL脚本编辑器.
     CheckSQLTextArea();
 
@@ -114,7 +115,7 @@ function AddBtnIcon() {
     $("#Btn_Advanced").addClass("cc-btn-tab btn-advanced");
     $("#Btn_New").addClass("cc-btn-tab btn-new");
     $("#Btn_Search").addClass("cc-btn-tab btn-search");
-    $("#Btn_App").addClass("cc-btn-tab btn btn_app");
+    $("#Btn_App").addClass("cc-btn-tab btn_app");
 
 
 }
@@ -142,11 +143,13 @@ function SetCSS() {
         var _html = $(obj).html();
         if (obj.id.indexOf("help") != -1) {
             $(obj).html("");
-            var div2 = "<div id='help1' class='help-title'> <img src='../Img/ico-help.png' alt='帮助' class='ico-help' />" + _html + " </div>";
-            $($(obj).parent().find("ul").parent()[0]).append(div2)
+
+            var helpImg = basePath + "/WF/Admin/Img/Help.png";
+
+            var div2 = "<div id='help1' class='help-title'> <img src='" + helpImg + "' alt='帮助' class='ico-help' />" + _html + " </div>";
+            $($(obj).parent().find("ul").parent()[0]).append(div2);
         }
     })
-
 
     //bar风格
     $('#bar').attr('class', 'cs-tr cs-bar');
@@ -198,8 +201,15 @@ function HelpDiv() {
 
 //设置  class="HelpImg" 的图片 点击直接可以全屏放大打开.  
 function SetHelpImg() {
+
     $(function () {
+
         $(".HelpImg").click(function () {
+            var _this = $(this);//将当前的pimg元素作为_this传入函数  
+            imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
+        });
+
+        $(".Help").click(function () {
             var _this = $(this);//将当前的pimg元素作为_this传入函数  
             imgShow("#outerdiv", "#innerdiv", "#bigimg", _this);
         });
@@ -418,12 +428,14 @@ function initToggle() {
     for (var i = 0, len = legends.length; i < len; i++) {
 
         var en = legends[i];
-        if (en.id.indexOf('help') == -1)
+
+        var lengID = en.id + en.name;
+
+        if (lengID.indexOf('help') == -1)
             continue;
 
-        //   en.toggle();
+        en.innerHTML = "<font color=red><b>" + en.innerHTML + "</b></font>";
 
-        en.innerHTML = "<font color=green><b>" + en.innerHTML + "</b></font>";
         en.onclick = function () {
 
             // 绑定事件

@@ -54,7 +54,6 @@ $(function () {
         $("#Login2App").html("");
     }
 
-
 });
 
 function closeTab(title) {
@@ -671,6 +670,7 @@ function CloseAllTabs() {
         }
     });
 }
+
 
 
 

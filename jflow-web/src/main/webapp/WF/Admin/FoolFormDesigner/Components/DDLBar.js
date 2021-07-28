@@ -818,8 +818,8 @@ function ExtHandWriting() {
     mapAttr.MyDataType = 1;
     mapAttr.LGType = 0;
     mapAttr.ColSpan = 1; //
-    mapAttr.UIWidth = 150;
-    mapAttr.UIHeight = 170;
+    mapAttr.UIWidth = 70;
+    mapAttr.UIHeight = 50;
     mapAttr.Insert(); //插入字段.
     mapAttr.Retrieve();
     if (frmType != 8)

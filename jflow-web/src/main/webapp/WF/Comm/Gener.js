@@ -818,7 +818,7 @@ function closeWhileEscUp() {
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";
+var pkval="Demo_DtlExpImpDtl1";  
 var EnName="BP.WF.Template.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -1305,7 +1305,7 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal());
+            //  alert(self.GetPKVal()); 
 
             var result;
             $.ajax({
@@ -2301,7 +2301,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2492,7 +2492,6 @@ var WebUser = function () {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
     }
-
 
     //获得页面上的token. 在登录信息丢失的时候，用token重新登录.
     var token = GetQueryString("Token");
@@ -2820,7 +2819,7 @@ function UserLogInsert(logType, logMsg, userNo) {
 }
 
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
     var curPath = window.document.location.href;
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
@@ -2973,7 +2972,7 @@ function DealDataTableColName(jsonDT, mapAttrs) {
                 if (val == null || val == "" || val == " ") {
 
                     //如果是数值类型的就让其为 0. 不然会填充错误，保存错误。
-                    if (mapAttr.MyDataType == 2 //int
+                    if (mapAttr.MyDataType == 2 //int 
                         || mapAttr.MyDataType == 3 //AppFloat
                         || mapAttr.MyDataType == 4 // boolen
                         || mapAttr.MyDataType == 5) { //AppDouble
@@ -3019,9 +3018,9 @@ function getConfigByKey(key, defVal) {
  * @param {any} f
  */
 function groupBy(array, f) {
-    var groups = {};
+    const groups = {};
     $.each(array, function (i, o) {
-        var group = f(o);
+        const group = f(o);
         groups[group] = groups[group] || [];
         groups[group].push(o);
     });
@@ -3073,9 +3072,11 @@ function JumpFlowPage(pageType, title, workid, fk_flow, fk_node, fid, pworkid, i
         try {
             var url = "../" + data;
             window.top.vm.openTab(title, url);
-        } catch(e)
+            return;
+        } catch
         {
             window.open(data); //打开流程.
+            return;
         }
     }
 }

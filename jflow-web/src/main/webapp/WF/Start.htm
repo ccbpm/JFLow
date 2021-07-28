@@ -36,6 +36,55 @@
     <script src="Data/lang/lang.js" type="text/javascript"></script>
     <script language="javascript" type="text/javascript">
 
+
+        //发起时打开窗口
+        function WinOpenStartFlow(flowNo, title) {
+
+            var showList = GetQueryString("ShowList");
+            var url = "";
+            if (showList == 1) {
+                url = "List.htm?FK_Flow=" + flowNo;
+                window.open(url);
+                return;
+            }
+
+            JumpFlowPage("MyFlow",title,null,flowNo);
+
+          
+            return;
+
+        }
+
+        //查询
+        function WinOpenSearch(flowNo, title) {
+            var intFlowNo = flowNo;
+            var url = "./RptDfine/Default.htm?RptNo=ND" + Number(flowNo) + "RptMy&FK_Flow=" + flowNo;
+            window.open(url);
+            return;
+
+            layer.open({
+                skin: 'layer-class',
+                type: 2,
+                title: title + ' : 查询主页',
+                area: ['96%', '90%'],
+                content: url
+            });
+        }
+
+        //我的流程
+        function WinOpenMyFlow(flowNo, title) {
+            var intFlowNo = flowNo;
+            var url = "Search.htm?RptNo=ND" + Number(flowNo) + "RptMy&FK_Flow=" + flowNo;
+            window.open(url);
+            return;
+            //layer.open({
+            //    skin: 'layer-class',
+            //    type: 2,
+            //    title: title + ' : 我的流程',
+            //    area: ['96%', '90%'],
+            //    content: url
+            //});
+        }
         function GroupBarClick(groupName) {
 
             var alt = document.getElementById('Img' + groupName).alert;
@@ -70,59 +119,6 @@
                 }
             }
         }
-        //发起时打开窗口
-        function WinOpenStartFlow(flowNo, title) {
-
-            var showList = GetQueryString("ShowList");
-            var url = "";
-            if (showList == 1)
-                url = "List.htm?FK_Flow=" + flowNo;
-            else
-                url = "MyFlow.htm?FK_Flow=" + flowNo;
-
-            window.open(url);
-            return;
-
-            layer.open({
-                skin: 'layer-class',
-                type: 2,
-                title: title + ' : 发起申请',
-                area: ['96%', '90%'],
-                content: url
-            });
-        }
-
-        //查询
-        function WinOpenSearch(flowNo, title) {
-            var intFlowNo = flowNo;
-            var url = "./RptDfine/Default.htm?RptNo=ND" + Number(flowNo) + "RptMy&FK_Flow=" + flowNo;
-            window.open(url);
-            return;
-
-            layer.open({
-                skin: 'layer-class',
-                type: 2,
-                title: title + ' : 查询主页',
-                area: ['96%', '90%'],
-                content: url
-            });
-        }
-
-        //我的流程
-        function WinOpenMyFlow(flowNo, title) {
-            var intFlowNo = flowNo;
-            var url = "Search.htm?RptNo=ND" + Number(flowNo) + "RptMy&FK_Flow=" + flowNo;
-            window.open(url);
-            return;
-            //layer.open({
-            //    skin: 'layer-class',
-            //    type: 2,
-            //    title: title + ' : 我的流程',
-            //    area: ['96%', '90%'],
-            //    content: url
-            //});
-        }
-
         //我发起的流程.
         function WinOpenStart(flowNo, title) {
 
@@ -131,13 +127,6 @@
             window.open(url);
             return;
 
-            //layer.open({
-            //    skin: 'layer-class',
-            //    type: 2,
-            //    title: title + ' : 我发起的流程',
-            //    area: ['96%', '90%'],
-            //    content: url
-            //});
         }
 
         function WinOpenList(flowNo, title) {
@@ -146,13 +135,7 @@
             var url = "List.htm?RptNo=ND" + Number(flowNo) + "RptMy&FK_Flow=" + flowNo + "&SearchType=My";
             window.open(url);
             return;
-            //layer.open({
-            //    skin: 'layer-class',
-            //    type: 2,
-            //    title: title + ' : 我发起的流程列表',
-            //    area: ['96%', '90%'],
-            //    content: url
-            //});
+     
         }
 
 
@@ -162,13 +145,7 @@
             var url = "./RptDfine/Search.htm?RptNo=ND" + Number(flowNo) + "RptMyJoin&FK_Flow=" + flowNo + "&SearchType=MyJoin";
             window.open(url);
             return;
-            //layer.open({
-            //    skin: 'layer-class',
-            //    type: 2,
-            //    title: title + ' : 我审批的流程',
-            //    area: ['96%', '90%'],
-            //    content: url
-            //});
+     
         }
 
         //批量发起.

@@ -6,24 +6,18 @@ var pageData = {};
 var globalVarList = {};
 var flowData = {};
 document.BindEditorMapAttr = [];
-
+var webUser = new WebUser();
 
 //处理，表单没有加载完，就可以点击发送按钮.
 var isLoadOk = false;
-
+debugger
+var UserICon = getConfigByKey("UserICon", '../DataUser/Siganture/'); //获取签名图片的地址
+var UserIConExt = getConfigByKey("UserIConExt", '.jpg');  //签名图片的默认后缀
 $(function () {
-
-    if ("undefined" == typeof UserICon) {
-        UserICon = '../DataUser/Siganture/';
-    } else {
-        UserICon = UserICon.replace("@basePath", basePath);
-    }
-    if ("undefined" == typeof UserIConExt) {
-        UserIConExt = '.jpg';
-    }
+    UserICon = UserICon.replace("@basePath", basePath);
 
     //动态加载css样式
-    if (typeof webUser == "undefined" || webUser == null)
+    if (webUser == null)
         webUser = new WebUser();
     var theme = webUser.Theme;
     if (theme == null || theme == undefined || theme == "")
@@ -31,13 +25,8 @@ $(function () {
 
     $('head').append('<link href="../DataUser/Style/MyFlow.css" rel="Stylesheet" />');
 
-    //$('head').append('<link href="../DataUser/Style/CSS/' + theme + '.css" rel="stylesheet" type="text/css" />');
     $('head').append('<link href="../DataUser/Style/FoolFrmStyle/Default.css" rel="stylesheet" type="text/css" />');
     $('head').append('<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" type="text/css" />');
-
-    //$('head').append('<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" type="text/css" />');
-
-    //<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" />
 
     initPageParam(); //初始化参数
 
@@ -314,6 +303,7 @@ function initPageParam() {
     pageData.IsReadonly = 0;
     pageData.IsStartFlow = GetQueryString("IsStartFlow"); //是否是启动流程页面 即发起流程
     pageData.DoType1 = GetQueryString("DoType")//View
+    
 }
 
 
@@ -506,7 +496,7 @@ function InitDDLOperation(flowData, mapAttr, defVal) {
             });
 
             if (mapAttr.DefVal == -1)
-                operations += "<option " + (obj.IntKey == defVal ? " selected = 'selected' " : "") + " value='" + mapAttr.DefVal + "'>-无(不选择)-</option>";
+                operations += "<option " + (defVal==-1 ? " selected = 'selected' " : "") + " value='" + mapAttr.DefVal + "'>-无(不选择)-</option>";
 
             $.each(enums, function (i, obj) {
                 operations += "<option " + (obj.IntKey == defVal ? " selected='selected' " : "") + " value='" + obj.IntKey + "'>" + obj.Lab + "</option>";
@@ -1050,9 +1040,7 @@ function SaveDtlAll() {
 
 // 杨玉慧
 function GenerWorkNode() {
-    debugger
-    console.log("122");
-    console.log(webUser);
+
     var href = window.location.href;
     var urlParam = href.substring(href.indexOf('?') + 1, href.length);
     urlParam = urlParam.replace('&DoType=', '&DoTypeDel=xx');
@@ -1076,8 +1064,7 @@ function GenerWorkNode() {
         console.log(flowData);
         return;
     }
-    if(webUser==null)
-        webUser = new WebUser();
+
     //处理附件的问题 
     if (flowData.Sys_FrmAttachment.length != 0) {
         Skip.addJs("./CCForm/Ath.js");
@@ -1086,6 +1073,7 @@ function GenerWorkNode() {
         Skip.addJs("../DataUser/OverrideFiles/Ath.js");
         $('head').append("<link href='./CCForm/JS/FileUpload/css/fileUpload.css' rel='stylesheet' type='text/css' />");
     }
+
 
     //获取没有解析的外部数据源
     var uiBindKeys = flowData["UIBindKey"];
@@ -1159,7 +1147,6 @@ function GenerWorkNode() {
     //            pageData.IsReadonly = 1
     //    }
     //}
-
     //判断类型不同的类型不同的解析表单. 处理中间部分的表单展示.
     var isDevelopForm = false;
     if (node.FormType == 5) {
@@ -1243,7 +1230,8 @@ function GenerWorkNode() {
 
     //2018.1.1 新增加的类型, 流程独立表单， 为了方便期间都按照自由表单计算了.
     var frmNode = flowData["WF_FrmNode"];
-    if (node.FormType == 11 && frmNode != null && frmNode != undefined) {
+    var flow = flowData["WF_Flow"];
+    if ((flow && flow[0].FlowDevModel==1 || node.FormType == 11) && frmNode != null && frmNode != undefined) {
         frmNode = frmNode[0];
         if (frmNode.FrmSln == 1) {
             /*只读的方案.*/

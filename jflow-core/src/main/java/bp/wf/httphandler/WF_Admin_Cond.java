@@ -54,23 +54,21 @@ public class WF_Admin_Cond extends WebContralBase
 
 		return cds.ToJson();*/
 	}
+	/// <summary>
+    /// 移动.
+    /// </summary>
+    /// <returns></returns>
 	public final String CondPRI_Move() throws Exception
 	{
-		String mtype = this.GetRequestVal("MoveType");
-		if (mtype.equals("Up"))
-		{
-			Direction dir = new Direction(this.getMyPK());
-			dir.DoUp();
-		}
+		String[] ens = this.GetRequestVal("MyPKs").split(",");
+         for (int i = 0; i < ens.length; i++)
+         {
+        	 String enNo = ens[i];
+             String sql = "UPDATE WF_Direction SET Idx=" + i + " WHERE MyPK='" + enNo + "'";
+             DBAccess.RunSQL(sql);
+         }
+         return "顺序移动成功..";
 
-		if (mtype.equals("Down"))
-		{
-			Direction dir = new Direction(this.getMyPK());
-			dir.DoDown();
-		}
-
-
-		return "移动成功.";
 	}
 
 		/// 方向优先级.

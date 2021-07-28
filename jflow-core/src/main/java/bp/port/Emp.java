@@ -92,7 +92,21 @@ public class Emp extends EntityNoName {
 	public final void setOrgNo(String value) throws Exception{
 		this.SetValByKey(EmpAttr.OrgNo, value);
 	}
+	public final String getUserID()throws Exception {
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+            return this.GetValStringByKey(EmpAttr.UserID);
 
+        return this.GetValStringByKey(EmpAttr.No);
+	}
+
+	public final void setUserID(String value) throws Exception{
+		this.SetValByKey(EmpAttr.UserID, value);
+
+        if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+            this.SetValByKey(EmpAttr.No, bp.web.WebUser.getOrgNo() + "_" + value);
+        else
+            this.SetValByKey(EmpAttr.No, value);
+	}
 	///
 
 	/// 公共方法

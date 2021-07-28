@@ -215,6 +215,56 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			return "@err:" + ex.getMessage();
 		}
 	}
+	 public final String Direction_Init() throws Exception
+	 {
+		try
+		{
+			String pk = this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.GetValFromFrmByKey("ToNode");
+
+			Direction dir = new Direction();
+			dir.setMyPK(pk);
+
+			if (dir.RetrieveFromDBSources() > 0)
+			{
+				return dir.getDes();
+			}
+
+			return "";
+		}
+		catch (RuntimeException ex)
+		{
+			return "@err:" + ex.getMessage();
+		}
+	 }
+	/** 
+	 
+	 
+	 @return 
+	 * @throws Exception 
+	*/
+	public final String Direction_Save() throws Exception
+	{
+		try
+		{
+			String pk = this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.GetValFromFrmByKey("ToNode");
+
+			Direction dir = new Direction();
+			dir.setMyPK(pk);
+
+			if (dir.RetrieveFromDBSources() > 0)
+			{
+				dir.setDes(this.GetValFromFrmByKey("Des"));
+				dir.DirectUpdate();
+			}
+
+			return "@保存成功！";
+		}
+		catch (RuntimeException ex)
+		{
+			return "@err:" + ex.getMessage();
+		}
+	}
+
 	/** 
 	 添加标签
 	 

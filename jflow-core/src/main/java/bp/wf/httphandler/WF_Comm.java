@@ -942,9 +942,10 @@ public final String RichUploadFile() throws Exception {
 			for (Class paramInfo : paramTypes)
 			{
 				String val = "";
-				if(idx<str.length)
+				if(idx<str.length){
 					val = str[idx];
-
+					myparas[idx] = str[idx];
+				 }
 				try
 				{
 					if (paramInfo.getName().equals("java.lang.Float"))

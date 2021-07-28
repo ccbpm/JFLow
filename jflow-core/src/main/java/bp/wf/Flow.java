@@ -4300,7 +4300,7 @@ public class Flow extends EntityNoName
 			// add 2019.11.07  @liuqiang.
 		map.AddTBInt(FlowAttr.FlowFrmModel, 0, "流程表单类型", true, true);
 		map.AddTBString(FlowAttr.FrmUrl, null, "表单Url", true, false, 0, 150, 10, true);
-
+		map.AddTBInt(FlowAttr.WorkModel, 0, "工作模式", false, false);
 			// 草稿规则 "@0=无(不设草稿)@1=保存到待办@2=保存到草稿箱"
 		map.AddTBInt(FlowAttr.Draft, 0, "草稿规则", true, false);
 

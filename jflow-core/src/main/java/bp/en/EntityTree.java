@@ -195,6 +195,29 @@ public abstract class EntityTree extends Entity
 		return en;
 	}
 	/** 
+	 新建同级节点
+	 
+	 @return 
+	 * @throws Exception 
+	*/
+	public  EntityTree DoCreateSameLevelNode(String name) throws Exception
+	{
+		bp.en.Entity tempVar = this.CreateInstance();
+		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
+		en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
+		
+		 if (name == null)
+			 en.setName("新建节点" + en.getNo());
+         else
+             en.setName(name);
+		en.setParentNo(this.getParentNo());
+	   // en.MenuType = this.MenuType;
+	  //  en.IsDir = false;
+	   // en.TreeNo = this.GenerNewNoByKey(EntityTreeAttr.TreeNo, EntityTreeAttr.ParentNo, this.ParentNo);
+		en.Insert();
+		return en;
+	}
+	/** 
 	 新建子节点
 	 
 	 @return 
@@ -206,6 +229,29 @@ public abstract class EntityTree extends Entity
 		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
 		en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
 		en.setName("新建节点" + en.getNo());
+		en.setParentNo(this.getNo());
+	 
+		en.Insert();
+
+	
+		return en;
+	}
+	/** 
+	 新建子节点
+	 
+	 @return 
+	 * @throws Exception 
+	*/
+	public  EntityTree DoCreateSubNode(String name) throws Exception
+	{
+		bp.en.Entity tempVar = this.CreateInstance();
+		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
+		en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
+		
+		if (name == null)
+			en.setName("新建节点" + en.getNo());
+        else
+        	en.setName(name);
 		en.setParentNo(this.getNo());
 	 
 		en.Insert();

@@ -6,8 +6,8 @@ public class EmpAttr extends bp.en.EntityNoNameAttr
 {
 
 		///基本属性
-	 public static final String UserID = "FK_Dept";
-	public static final String OrgNo = "FK_Dept";
+	 public static final String UserID = "UserID";
+	public static final String OrgNo = "OrgNo";
 	/** 
 	 部门
 	*/
@@ -32,6 +32,5 @@ public class EmpAttr extends bp.en.EntityNoNameAttr
 	 * 用户状态 0注销 1在职
 	 */
 	public static final String UserType="UserType";
-
 		///
 }

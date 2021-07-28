@@ -1403,7 +1403,7 @@ public class CCFormAPI
 	*/
 	public static void ImpFrmTemplate(String toFrmID, DataSet fromds, boolean isSetReadonly) throws Exception
 	{
-		MapData md = new MapData(toFrmID);
+		//MapData md = new MapData(toFrmID);
 		MapData.ImpMapData(toFrmID, fromds);
 	}
 	/** 

@@ -1384,6 +1384,8 @@ public class DBAccess {
 	}
 
 	private static int RunSQL_200705_Ora(String sql, Paras paras) {
+		if (sql.endsWith(";") == true)
+			sql = "begin " + sql + " end;";
 		ResultSet rs = null;
 		Connection conn = null;
 		Statement stmt = null;
@@ -3058,7 +3060,7 @@ public class DBAccess {
 				{
 					obj = obj.split("[.]", -1)[1];
 				}
-				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + SystemConfig.getUser() + "' ", ps);
+				return IsExits("select object_name from all_objects WHERE  object_name = upper(:obj) and OWNER='" + SystemConfig.getUser().toUpperCase() + "' ", ps);
 			case MSSQL:
 				return IsExits("SELECT name FROM sysobjects WHERE name = '" + obj + "'");
 			case PostgreSQL:

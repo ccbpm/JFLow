@@ -21,4 +21,8 @@ public class DirectionAttr
 	 顺序
 	*/
 	public static final String Idx = "Idx";
+	/** 
+          描述
+   */
+	public static final String Des = "Des";
 }

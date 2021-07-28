@@ -325,7 +325,7 @@ public class Json
 				
 				Object obj = drc.get(i).getValue(column.oldColumnName);
 				
-				if (null == obj )
+				if (DataType.IsNullOrEmpty(obj)==true)
 				{
 					obj = drc.get(i).getValue(column.ColumnName);	//解决构造tabele的问题.				
 					if (obj==null)

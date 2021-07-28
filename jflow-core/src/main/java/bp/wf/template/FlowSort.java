@@ -97,6 +97,69 @@ public class FlowSort extends EntityTree
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	 ///#region 创建节点.
+	/** 
+	 创建同级目录.
+	 
+	 @param name
+	 @return 
+	 * @throws Exception 
+	*/
+	public final String DoCreateSameLevelNodeMy(String name) throws Exception
+	{
+		EntityTree en = this.DoCreateSameLevelNode(name);
+		en.setName(name);
+		en.Update();
+		return en.getNo();
+	}
+	/** 
+	 创建下级目录.
+	 
+	 @param name
+	 @return 
+	 * @throws Exception 
+	*/
+	public final String DoCreateSubNodeMy(String name) throws Exception
+	{
+		EntityTree en = this.DoCreateSubNode(name);
+		en.setName(name);
+		en.Update();
+		return en.getNo();
+	}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+	///#endregion 创建节点.
+	  /** 
+		 删除之前的逻辑  @hongyan
+		 
+		 @return 
+	 * @throws Exception 
+  */
+	@Override
+	protected boolean beforeDelete() throws Exception
+	{
+		//检查是否有流程？
+		Paras ps = new Paras();
+		ps.SQL = "SELECT COUNT(*) FROM WF_Flow WHERE FK_FlowSort=" + SystemConfig.getAppCenterDBVarStr() + "fk_flowSort";
+		ps.Add("fk_flowSort", this.getNo());
+		//string sql = "SELECT COUNT(*) FROM WF_Flow WHERE FK_FlowSort='" + fk_flowSort + "'";
+		if (DBAccess.RunSQLReturnValInt(ps) != 0)
+		{
+			throw new RuntimeException("err@该目录下有流程，您不能删除。");
+		}
+
+		//检查是否有子目录？
+		ps = new Paras();
+		ps.SQL = "SELECT COUNT(*) FROM WF_FlowSort WHERE ParentNo=" + SystemConfig.getAppCenterDBVarStr()  + "ParentNo";
+		ps.Add("ParentNo", this.getNo());
+		//sql = "SELECT COUNT(*) FROM WF_FlowSort WHERE ParentNo='" + fk_flowSort + "'";
+		if (DBAccess.RunSQLReturnValInt(ps) != 0)
+		{
+			throw new RuntimeException("err@该目录下有子目录，您不能删除...");
+		}
+
+		return super.beforeDelete();
+	}
 
 	/** 
 	 创建的时候，给他增加一个OrgNo。

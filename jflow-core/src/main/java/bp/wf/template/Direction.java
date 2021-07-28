@@ -60,6 +60,14 @@ public class Direction extends EntityMyPK
 	{
 		this.SetValByKey(DirectionAttr.Idx, value);
 	}
+	   public final String getDes() throws Exception
+	   {
+		   return this.GetValStringByKey(DirectionAttr.Des);
+	   }
+	   public final void setDes(String value) throws Exception
+	   {
+		   this.SetValByKey(DirectionAttr.Des, value);
+	   }
 
 		///
 
@@ -101,7 +109,7 @@ public class Direction extends EntityMyPK
 
 			//map.AddTBInt(DirectionAttr.CondExpModel, 0, "条件计算方式", false, true);
 		map.AddTBInt(DirectionAttr.Idx, 0, "计算优先级顺序", true, true);
-
+		map.AddTBString(DirectionAttr.Des, null, "流程", true, true, 0, 100, 0, false);
 
 			//相关功能。
 		map.getAttrsOfOneVSM().Add(new bp.wf.template.DirectionStations(), new bp.port.Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "方向条件与岗位");

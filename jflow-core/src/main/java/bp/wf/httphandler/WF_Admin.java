@@ -266,8 +266,9 @@ public class WF_Admin extends WebContralBase
 	 初始化安装包
 	 
 	 @return 
+	 * @throws Exception 
 	*/
-	public final String DBInstall_Init()
+	public final String DBInstall_Init() throws Exception
 	{
 		try
 		{

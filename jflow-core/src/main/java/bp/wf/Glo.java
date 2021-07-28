@@ -1361,6 +1361,8 @@ public class Glo
 	public static String UpdataCCFlowVer() throws Exception
 	{
 
+		if(SystemConfig.getAppCenterDBType() == DBType.MySQL && SystemConfig.getAppCenterDSN().indexOf("allowMultiQueries=true")==-1)
+			throw new RuntimeException("err@给MySQL数据库连接在文件jflow.properties的配置项AppCenterDSN中后面增加allowMultiQueries=true");
 			///#region 检查是否需要升级，并更新升级的业务逻辑.
 		String updataNote = "";
 		/*
@@ -2765,7 +2767,7 @@ public class Glo
 	 @return 
 	 * @throws Exception 
 	*/
-	public static boolean IsCanInstall()
+	public static boolean IsCanInstall() throws Exception
 	{
 		String sql = "";
 
@@ -2789,6 +2791,16 @@ public class Glo
 			sql = "INSERT INTO AA (OID) VALUES(100)";
 			bp.da.DBAccess.RunSQL(sql);
 
+			 try
+	         {
+	             //检查是否可以批量执行sql.
+	             sql = "UPDATE AA SET OID=0 WHERE OID=1;UPDATE AA SET OID=0 WHERE OID=1;";
+	             DBAccess.RunSQL(sql);
+	         }
+	         catch(Exception e){
+	             throw new Exception("err@需要让数据库链接支持批量执行SQL语句，请修改数据库链接配置：&allowMultiQueries=true");
+	         }
+			
 			errInfo = " 当前用户没有[update 表数据]的权限. ";
 			sql = "UPDATE AA SET OID=101";
 			bp.da.DBAccess.RunSQL(sql);

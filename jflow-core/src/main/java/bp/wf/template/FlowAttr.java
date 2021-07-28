@@ -396,7 +396,7 @@ public class FlowAttr
 	 指定的人员可看
 	*/
 	public static final String PSpecEmp = "PSpecEmp";
-
+	public static final String WorkModel = "WorkModel";
 		/// 权限组.
 
 	/** 

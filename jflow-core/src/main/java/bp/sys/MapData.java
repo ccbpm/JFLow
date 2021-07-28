@@ -952,6 +952,22 @@ public class MapData extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	  /** 
+	 执行复制.
+	 
+	 @param copyToFrmID
+	 @param frmName
+	 @param ptable
+	 @return 
+	 * @throws Exception 
+*/
+	public final String DoCopy(String copyToFrmID, String frmName) throws Exception
+	{
+
+		bp.sys.CCFormAPI.CopyFrm(this.getNo(), copyToFrmID, frmName, this.getFK_FormTree());
+
+		return "执行成功";
+	}
 
 	/** 
 	 上移

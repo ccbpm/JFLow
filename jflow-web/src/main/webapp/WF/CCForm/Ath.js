@@ -4,7 +4,8 @@
 var AthParams = {};
 var athRefPKVal = 0;
 AthParams.AthInfo = {};
-
+var IsOnlinePreviewOfAth = getConfigByKey("IsOnlinePreviewOfAth", true);
+var PreviewPathOfAth = getConfigByKey("PreviewPathOfAth", "");
 /**
 * 附件初始化
 * @param athchment 附件属性
@@ -153,7 +154,7 @@ function InitAthPage(athDivID, uploadUrl) {
         $(".athImg").on("click", function () {
             var _this = $(this); //将当前的pimg元素作为_this传入函数  
             var src = _this.parent().css("background-image").replace("url(\"", "").replace("\")", "")
-            imgShow($("#outerdiv"), $("#innerdiv"), $("#bigimg"), src);
+            imgShow(this, src);
         });
     }
     //4.2 普通附件的展示方式（包含图片，word文档，pdf等）
@@ -177,7 +178,7 @@ function InitAthPage(athDivID, uploadUrl) {
 */
 var columnNum = 6;
 function FileShowWayTable(athDesc, dbs, uploadUrl) {
-    var _html = "<table class='table annex-table'>";
+    var _html = "<table class='layui-table'>";
     //1.是否启用扩展列
     var mapAttrs = null;
     if (athDesc.IsExpCol != 0) {
@@ -199,7 +200,7 @@ function FileShowWayTable(athDesc, dbs, uploadUrl) {
         _html += "<tr style='border:0px;'>";
 
         var colstyle = "line-height:30px;border: 1px solid #ddd;background-color:white;";
-
+        colstyle = "background-color:#FAFAFA !important; ";
         _html += "<th  style='" + colstyle + "width:50px;'>序号</th>";
         if (isHaveSort == true)
             _html += "<th style='" + colstyle + "width:120px' nowrap=true >" + sortColoum + "</th>";
@@ -264,6 +265,12 @@ function FileShowWayTable(athDesc, dbs, uploadUrl) {
 
         var isAddSortTD = false; //是否增加类别所在的列
 
+        var imgUrl = "../";
+        var localPath = window.location.href;
+        if (localPath.indexOf("CCBill") != -1 || localPath.indexOf("CCForm") != -1)
+            imgUrl = "../../";
+       
+
         for (var k = 0; k < dbs.length; k++) {
             var db = dbs[k];
             if (isHaveSort == true && db.Sort != sort)
@@ -281,9 +288,13 @@ function FileShowWayTable(athDesc, dbs, uploadUrl) {
                 var rowSpan = GetSortLenth_FromDB(sort, dbs);
                 _html += "<td rowspan=" + rowSpan + " style='text-align:center;vertical-align: middle;'>" + db.Sort + "</td>";
             }
-
+            debugger
+            var filePath = db.FileFullName;
+            var i = filePath.indexOf('\DataUser');
+            var str = '/' + filePath.substring(i);
+            filePath = str.replace(new RegExp("\\\\", "gm"), "/");
             //②附件名称 ，扩展了预览功能，先阶段需要用户自己在DataUser/OverrideFiles/Ath.js重写AthViewOverWrite_Del方法
-            _html += "<td style='text-align:left'><a href=\"javascript:AthView('" + db.MyPK + "');\" ><img src='" + currImgPath + "/FileType/" + db.FileExts + ".gif' border=0 onerror=\"src='" + currImgPath + "/FileType/Undefined.gif'\" style='margin-right:5px;float:left;' />" + db.FileName + "</td>";
+            _html += "<td style='text-align:left'><a href=\"javascript:AthView('" + db.MyPK + "','" + filePath + "');\" ><img src='" + currImgPath + "/FileType/" + db.FileExts + ".gif' border=0 onerror=\"src='" + currImgPath + "/FileType/Undefined.gif'\" style='margin-right:5px;float:left;' />" + db.FileName + "</td>";
 
             //③附件大小
             //_html += "<td>" + db.FileSize + "</td>";
@@ -312,21 +323,21 @@ function FileShowWayTable(athDesc, dbs, uploadUrl) {
             //排序列的增加
             if (athDesc.IsIdx == 1 && athDesc.IsReadonly != 1) {
                 _html += "<td class='operate'>";
-                _html += "<a href=\"javascript:GFDoUp('" + db.MyPK + "' )\"><img src=\"../WF/\Img/\Btn/\Up.GIF\"/></a>";
-                _html += "<a href=\"javascript:GFDoDown('" + db.MyPK + "');\"><img src=\"../WF/\Img/\Btn/\Down.GIF\"/></a>";
+                _html += "<a href=\"javascript:GFDoUp('" + db.MyPK + "' )\"><img src=\"" +imgUrl+"WF/\Img/\Btn/\Up.GIF\"/></a>";
+                _html += "<a href=\"javascript:GFDoDown('" + db.MyPK + "');\"><img src=\"" +imgUrl+"WF/\Img/\Btn/\Down.GIF\"/></a>";
                 _html += "</td>";
             }
 
             //⑦操作列的增加.
             _html += "<td class='operate'>";
             if (athDesc.IsDownload == 1)
-                _html += "<a href=\"javascript:Down2018('" + db.MyPK + "')\"><img src=\"../WF/\Img/\Btn/\Down.gif\"/></a>&nbsp;&nbsp;&nbsp;&nbsp;";
+                _html += "<a href=\"javascript:Down2018('" + db.MyPK + "')\"><img src=\"" + imgUrl +"/WF/\Img/\Btn/\Down.gif\"/></a>&nbsp;&nbsp;&nbsp;&nbsp;";
             if (pageData.IsReadonly != 1) {
                 if (athDesc.DeleteWay == 1)//删除所有
-                    _html += "<a href=\"javascript:Del('" + db.MyPK + "','" + athDesc.MyPK + "','" + db.FileName + "')\"><img src=\"../WF/\Img/\Btn/\Delete.gif\"/></a>";
+                    _html += "<a href=\"javascript:Del('" + db.MyPK + "','" + athDesc.MyPK + "','" + db.FileName + "')\"><img src=\"" + imgUrl +"WF/\Img/\Btn/\Delete.gif\"/></a>";
                 var webuser = new WebUser();
                 if (athDesc.DeleteWay == 2 && db.Rec == webuser.No)//删除自己上传的
-                    _html += "<a href=\"javascript:Del('" + db.MyPK + "','" + athDesc.MyPK + "','" + db.FileName + "')\"><img src=\"../WF/\Img/\Btn/\Delete.gif\"/></a>";
+                    _html += "<a href=\"javascript:Del('" + db.MyPK + "','" + athDesc.MyPK + "','" + db.FileName + "')\"><img src=\"" + imgUrl +"WF/\Img/\Btn/\Delete.gif\"/></a>";
             }
             _html += "</td>";
 
@@ -460,54 +471,6 @@ function FileShowPic(athDesc, dbs, uploadUrl) {
 
     return _Html;
 
-}
-
-/**
-* 图片预览
-* @param outerdiv
-* @param innerdiv
-* @param bigimg
-* @param src
-*/
-function imgShow(outerdiv, innerdiv, bigimg, src) {
-    bigimg.attr("src", src); //设置#bigimg元素的src属性  
-
-    /*获取当前点击图片的真实大小，并显示弹出层及大图*/
-    $("<img/>").attr("src", src).load(function () {
-        var windowW = $(window).width(); //获取当前窗口宽度  
-        var windowH = $(window).height(); //获取当前窗口高度  
-        var realWidth = this.width; //获取图片真实宽度  
-        var realHeight = this.height; //获取图片真实高度  
-        var imgWidth, imgHeight;
-        var scale = 0.8; //缩放尺寸，当图片真实宽度和高度大于窗口宽度和高度时进行缩放  
-
-        if (realHeight > windowH * scale) {//判断图片高度  
-            imgHeight = windowH * scale; //如大于窗口高度，图片高度进行缩放  
-            imgWidth = imgHeight / realHeight * realWidth; //等比例缩放宽度  
-            if (imgWidth > windowW * scale) {//如宽度扔大于窗口宽度  
-                imgWidth = windowW * scale; //再对宽度进行缩放  
-            }
-        } else if (realWidth > windowW * scale) {//如图片高度合适，判断图片宽度  
-            imgWidth = windowW * scale; //如大于窗口宽度，图片宽度进行缩放  
-            imgHeight = imgWidth / realWidth * realHeight; //等比例缩放高度  
-        } if (realHeight > windowH * scale) {
-            imgWidth = windowH * scale;
-            imgHeight = windowH * scale;
-        } else {//如果图片真实高度和宽度都符合要求，高宽不变  
-            imgWidth = realWidth;
-            imgHeight = realHeight;
-        }
-        bigimg.css("width", imgWidth); //以最终的宽度对图片缩放  
-
-        var w = (windowW - imgWidth) / 2; //计算图片与窗口左边距  
-        var h = (windowH - imgHeight) / 2; //计算图片与窗口上边距  
-        innerdiv.css({ "top": h, "left": w }); //设置#innerdiv的top和left属性  
-        outerdiv.fadeIn("fast"); //淡入显示#outerdiv及.pimg  
-    });
-
-    outerdiv.click(function () {//再次点击淡出消失弹出层  
-        $(this).fadeOut("fast");
-    });
 }
 
 
@@ -650,10 +613,31 @@ function Del(delPKVal, fk_framAttachment, name) {
 }
 
 //在线预览，如果需要连接其他的文件预览查看器，就需要在这里重写该方法.
-function AthView(mypk) {
-
+function AthView(mypk, filePath) {
+    debugger;
     if (typeof AthViewOverWrite === 'function') {
         AthViewOverWrite(mypk);
+        return;
+    }
+    if (typeof IsOnlinePreviewOfAth == "undefined")
+        IsOnlinePreviewOfAth = true;
+
+    if (IsOnlinePreviewOfAth == true) {
+
+        //配置的在线预览的方式，待处理.
+        var host = window.location.protocol + "//" + window.location.host;
+
+        var url = host + filePath;
+        //url = 'http://localhost:2296/DataUser/UploadFile/ND18201/838/6456dd46-04ec-4843-a057-31351053cd42.混合 - 副本.docx';
+        url = encodeURIComponent(base64Encode(url));
+        debugger;
+        //预览文件服务器.
+        var fileServerHost = PreviewPathOfAth;
+
+        //  window.open("/home/OA/jflow-web/DataUser/UploadFile" + lujin[1], "_blank");
+        //对它进行编码 .
+        
+        window.open(fileServerHost + '/onlinePreview?url=' + url);
         return;
     }
 
@@ -670,7 +654,50 @@ function AthView(mypk) {
     Url = path + 'WF/Ath/downLoad.do?DelPKVal=' + mypk + '&PKVal=' + mypk + '&FK_Node=' + nodeID + "&WorkID=" + workID;
     window.location.href = Url;
 }
+function base64Encode(input) {
+    let _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    let output = "";
+    let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    let i = 0;
+    input = this.utf8_encode(input);
+    while (i < input.length) {
+        chr1 = input.charCodeAt(i++);
+        chr2 = input.charCodeAt(i++);
+        chr3 = input.charCodeAt(i++);
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
+        if (isNaN(chr2)) {
+            enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+            enc4 = 64;
+        }
+        output = output +
+            _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+            _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+    }
+    return output;
+}
+function utf8_encode(input) {
+    input = input.replace(/\r\n/g, "\n");
+    let utftext = "";
+    for (let n = 0; n < input.length; n++) {
+        let c = input.charCodeAt(n);
+        if (c < 128) {
+            utftext += String.fromCharCode(c);
+        } else if ((c > 127) && (c < 2048)) {
+            utftext += String.fromCharCode((c >> 6) | 192);
+            utftext += String.fromCharCode((c & 63) | 128);
+        } else {
+            utftext += String.fromCharCode((c >> 12) | 224);
+            utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+            utftext += String.fromCharCode((c & 63) | 128);
+        }
 
+    }
+    return utftext;
+}
 /**
  * 更改附件上传的分类类别
  * @param {any} sort

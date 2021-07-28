@@ -181,7 +181,7 @@ function changeCBEnable(obj, FK_MapData, KeyOfEn, AtPara, frmType) {
  * @param {any} frmType
  */
 function cleanAll(KeyOfEn, frmType) {
-    var trs = $("#CCForm  table tr .attr-group"); //如果隐藏就显示
+    var trs = $("#CCForm  div .FoolFrmGroupBar"); //如果隐藏就显示
     $.each(trs, function (i, obj) {
         if ($(obj).parent().is(":hidden") == true)
             $(obj).parent().show();
@@ -299,14 +299,14 @@ function setEnable(FK_MapData, KeyOfEn, selectVal, frmType) {
     }
 
     //设置是否隐藏分组、获取字段分组所有的tr
-    var trs = $("#CCForm  table tr .attr-group");
+    var trs = $("#CCForm  div .FoolFrmGroupBar");
     var isHidden = false;
     $.each(trs, function (i, obj) {
         //获取所有跟随的同胞元素，其中有不隐藏的tr,就跳出循环
         var sibles = $(obj).parent().nextAll();
         for (var k = 0; k < sibles.length; k++) {
             var sible = $(sibles[k]);
-            if (sible.find(".attr-group").length > 0 || sible.find(".form-unit").length > 0)
+            if (sible.find(".FoolFrmGroupBar").length > 0 || sible.find(".form-unit").length > 0)
                 break;
             if (sible.is(":hidden") == false) {
                 isHidden = false;
@@ -377,29 +377,26 @@ function SetCtrlUnEnable(key) {
 function SetCtrlHidden(key) {
     ctrl = $("#Lab_" + key);
     if (ctrl.length > 0)
-        ctrl.parent('tr').css("visibility", "collapse");
+        ctrl.parent().parent('.layui-row').css("display", "none");
 
     var ctrl = $("#TD_" + key);
     if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "collapse");
+        ctrl.parent().parent('.layui-row').css("display", "none");
     }
 
     //从表隐藏
     var ctrl = $("#Dtl_" + key);
     if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "collapse");
-
-        var th = $("#THDtl_" + key);
-        th.parent('tr').css("visibility", "collapse");
+        ctrl.parent().parent('.layui-row').css("display", "none");
+        ctrl.parent().parent('.layui-row').prev().css("display", "none");
+      
     }
 
     //附件隐藏
-    var ctrl = $("#Ath_" + key);
+    var ctrl = $("#Div_" + key);
     if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "collapse");
-
-        var th = $("#THAth_" + key);
-        th.parent('tr').css("visibility", "collapse");
+        ctrl.parent().parent('.layui-row').css("display", "none");
+        ctrl.parent().parent('.layui-row').prev().css("display", "none");
     }
 }
 //设置显示?
@@ -408,29 +405,25 @@ function SetCtrlShow(key) {
 
     var ctrl = $("#TD_" + key);
     if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "visible");
+        ctrl.parent().parent('.layui-row').css("display", "block");
     }
 
     ctrl = $("#Lab_" + key);
     if (ctrl.length > 0)
-        ctrl.parent('tr').css("visibility", "visible");
+        ctrl.parent().parent('.layui-row').css("display", "block");
 
     //从表隐藏
     var ctrl = $("#Dtl_" + key);
     if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "visible");
-
-        var th = $("#THDtl_" + key);
-        th.parent('tr').css("visibility", "visible");
+        ctrl.parent().parent('.layui-row').css("display", "block");
+        ctrl.parent().parent('.layui-row').prev().css("display", "block");
     }
 
     //附件隐藏
     var ctrl = $("#Ath_" + key);
     if (ctrl.length > 0) {
-        ctrl.parent('tr').css("visibility", "visible");
-
-        var th = $("#THAth_" + key);
-        th.parent('tr').css("visibility", "visible");
+        ctrl.parent().parent('.layui-row').css("display", "block");
+        ctrl.parent().parent('.layui-row').prev().css("display", "block");
     }
 
 }

@@ -54,7 +54,7 @@ function beforeCCClose() {
 var interval;
 // 关闭弹出窗刷新页面
 function WindowCloseReloadPage(msg) {
-	if ($('#returnWorkModal:hidden').length == 0
+	/*if ($('#returnWorkModal:hidden').length == 0
 			&& $('#returnWorkModal').length > 0) {
 		$('#returnWorkModal').modal('hide');
 	}
@@ -115,6 +115,6 @@ function WindowCloseReloadPage(msg) {
 
 	$("#msgModal").modal().show();
 
-	interval = setInterval("clock()", 1000);
+	interval = setInterval("clock()", 1000);*/
 
 }

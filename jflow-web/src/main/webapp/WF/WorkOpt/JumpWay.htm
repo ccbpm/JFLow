@@ -16,7 +16,7 @@
     <!--layui的样式-->
     <link href="../Scripts/layui/layui/css/layui.css" rel="stylesheet" />
     <script src="../Scripts/layui/layui/layui.js" type="text/javascript"></script>
-    <script src="../Scripts/layui/layui/lay/modules/layer.js" type="text/javascript"></script>
+    <script src="../Scripts/layui/LayuiDialog.js" type="text/javascript"></script>
 </head>
 <body>
     <div class="layui-fluid">
@@ -46,9 +46,8 @@
         var isFrameCross = GetQueryString("isFrameCross");
         if (isFrameCross == null || isFrameCross == undefined || isFrameCross == "" || isFrameCross == "null")
             isFrameCross = 0;
-        layui.use(["laytpl"], function () {
+        layui.use("laytpl", function () {
             var laytpl = layui.laytpl;
-
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("JumpWay_Init");
@@ -137,7 +136,7 @@
             })
         })
 
-        var WF_WorkOpt_LeftSecond = 30;
+        var WF_WorkOpt_LeftSecond = getConfigByKey("WF_WorkOpt_LeftSecond", 30);
         function clock() {
 
             if ($("#CloseBtn").length == 0)

@@ -29,7 +29,7 @@
 
 0. http://demo.ccflow.org 在线演示
 1. http://ccflow.org 官方网站
-2. http://ccfast.cc  驰骋低代码开发平台
+2. https://ccfast.cc  驰骋低代码开发平台
 3. http://ccflow.org/docs 操作手册下载
 4. http://ccflow.org/ke.htm 视频教程
 5. http://edu.ccflow.org 培训中心

@@ -556,7 +556,7 @@ public class WF_Portal extends WebContralBase
 				DataSet dsAdminMenus = new DataSet();
 
 				//模版
-				String file = SystemConfig.getPathOfWebApp() + "DataUser\\XML\\AdminMenu2021.xml";
+				String file = SystemConfig.getPathOfWebApp() + "DataUser/XML/AdminMenu2021.xml";
 
 				//获得文件.
 				dsAdminMenus.readXml(file);

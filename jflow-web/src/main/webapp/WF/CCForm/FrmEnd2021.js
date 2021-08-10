@@ -1,4 +1,31 @@
-﻿var currentURL = window.document.location.href;
+﻿$(function () {
+    var theme = localStorage.getItem("themeColorInfo");
+    theme = JSON.parse(theme);
+    var styleScope = document.getElementById("theme-data");
+    if (styleScope != null && theme != null) {
+        //按钮
+        styleScope.innerHTML = "\n .layui-btn{\n background-color:" + theme.selectedMenu + ";\n}";
+        if (localStorage.getItem("themeColor") == "rynn") {
+            styleScope.innerHTML += "\n button>img{\n filter: hue-rotate(90deg) brightness(220%);\n}\n .layui-btn-primary{\n color: white;\n}";
+        } else {
+            styleScope.innerHTML += "\n .layui-btn-primary{\n background:0 0 \n}";
+        }
+        //分页信息
+        styleScope.innerHTML += "\n .layui-laypage .layui-laypage-curr .layui-laypage-em{\n background-color:" + theme.selectedMenu + ";\n}\n .layui-laypage input:focus,.layui-laypage select:focus{\n border-color:" + theme.selectedMenu + " !important\n}";
+        //时间
+        styleScope.innerHTML += "\n .layui-laydate .layui-this{\n background-color:" + theme.selectedMenu + " !important;\n}";
+        //复选框
+        styleScope.innerHTML += "\n .layui-form-checked[lay-skin=primary] i{\n background-color:" + theme.selectedMenu + " !important;\n} \n .layui-form-select dl dd.layui-this{\n background-color:" + theme.selectedMenu + " !important;\n}";
+        styleScope.innerHTML += "\n .layui-form-onswitch{\n background-color:" + theme.selectedMenu + " !important;\n border-color:" + theme.selectedMenu + " !important;\n}";
+        //多选
+        styleScope.innerHTML += "\n .layui-form-checked, .layui-form-checked:hover{\n border-color:" + theme.selectedMenu + " !important;\n} \n .layui-form-checked span, .layui-form-checked:hover span{\n background-color:" + theme.selectedMenu + " !important;\n} \n .layui-form-checked i, .layui-form-checked:hover i{\n color:" + theme.selectedMenu + " !important;\n}";
+        //单选
+        styleScope.innerHTML += "\n .layui-form-radio:hover *, .layui-form-radioed, .layui-form-radioed>i{\n color:" + theme.selectedMenu + " !important;\n} \n .layui-form-select dl dd.layui-this{\n background-color:" + theme.selectedMenu + " !important;\n}";
+
+    }
+   
+})
+var currentURL = window.document.location.href;
 var laybase = "./";
 if (currentURL.indexOf("CCForm") != -1 || currentURL.indexOf("CCBill") != -1)
     laybase = "../";
@@ -115,11 +142,11 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             else
                 FWCVer = 1;
             if (checkData == null && node != null) {
-                if(currentURL.indexOf("CCForm")!=-1)
+
+                if (currentURL.indexOf("CCForm") != -1)
                     Skip.addJs("../WorkOpt/WorkCheck.js");
                 else
-                    Skip.addJs("./WorkOpt/WorkCheck.js");
-                isFistQuestWorkCheck = false;
+                    Skip.addJs("./WorkOpt/WorkCheck.js");                isFistQuestWorkCheck = false;
                 checkData = WorkCheck_Init(FWCVer);
 
             }
@@ -431,7 +458,7 @@ function AfterBindEn_DealMapExt(frmData) {
             if (PopModel != undefined && PopModel != "" && mapExt.ExtType == PopModel && PopModel != "None") {
                 if (mapAttr.UIIsEnable == 0 || isReadonly == true || $("#TB_" + mapAttr.KeyOfEn).length == 0)
                     return true;
-                PopMapExt(PopModel,mapAttr, mapExt, frmData,baseUrl);
+                PopMapExt(PopModel, mapAttr, mapExt, frmData, baseUrl, mapExts);
                 return true;
             }
             //处理文本自动填充
@@ -575,6 +602,9 @@ function AfterBindEn_DealMapExt(frmData) {
                         break;
                     }
                     break;
+                case "FullData"://POP返回值的处理，放在了POP2021.js
+                    
+                    break;
                 case "RegularExpression":
                     $('#TB_' + mapExt.AttrOfOper).data(mapExt);
                     $('#TB_' + mapExt.AttrOfOper).on(mapExt.Tag.substring(2), function () {
@@ -627,7 +657,10 @@ function GetMapExtsGroup(mapExts){
         if (mapExt.ExtType == "DtlImp"
             || mapExt.MyPK.indexOf(mapExt.FK_MapData + '_Table') >= 0
             || mapExt.MyPK.indexOf('PageLoadFull') >= 0
-            || mapExt.ExtType == 'StartFlow')
+            || mapExt.ExtType == 'StartFlow'
+            || mapExt.ExtType == 'AutoFullDLL'
+            || mapExt.ExtType == 'ActiveDDLSearchCond'
+            || mapExt.ExtType == 'AutoFullDLLSearchCond')
             return true;
 
         mypk = mapExt.FK_MapData + "_" + mapExt.AttrOfOper;
@@ -1040,28 +1073,41 @@ function SetSelectExt(mapExts, mapAttr) {
  */
 var isHaveLoadPop = false;
 var isHaveLoagMtags = false;
-function PopMapExt(popType, mapAttr, mapExt, frmData, baseUrl) {
+function PopMapExt(popType, mapAttr, mapExt, frmData, baseUrl,mapExts) {
     if (isHaveLoadPop == false) {
         Skip.addJs(baseUrl + "/JS/Pop2021.js");
         isHaveLoadPop = true;
     }
     switch (popType) {
-
-        case "PopBranchesAndLeaf": //树干叶子模式.
         case "PopBranches": //树干简单模式.
+            var showModel = GetPara(mapExt.AtPara, "ShowModel");
+            showModel = showModel == null || showModel == undefined || showModel == "" ? 0 : showModel;
+            if (showModel == "1")
+                CommPop(popType, mapAttr, mapExt, frmData, mapExts);
+            else {
+                if (isHaveLoagMtags == false) {
+                    Skip.addJs(baseUrl + "JS/mtags2021.js");
+                    isHaveLoagMtags = true;
+                }
+                CommPopDialog(popType, mapAttr, mapExt, null, frmData, baseUrl, mapExts);
+            }
+
+            break;
+        case "PopBranchesAndLeaf": //树干叶子模式.
+       
         case "PopTableSearch": //表格查询.
         case "PopSelfUrl": //自定义url.
             if (isHaveLoagMtags == false) {
                 Skip.addJs(baseUrl + "JS/mtags2021.js");
                 isHaveLoagMtags = true;
             }
-            CommPopDialog(popType, mapAttr, mapExt, null, frmData, baseUrl);
+            CommPopDialog(popType, mapAttr, mapExt, null, frmData, baseUrl, mapExts);
             break;
         case "PopBindSFTable": //绑定字典表，外部数据源.
         case "PopBindEnum": //绑定枚举.
         case "PopTableList": //绑定实体表.
         case "PopGroupList": //分组模式.
-            CommPop(popType, mapAttr, mapExt, frmData);
+            CommPop(popType, mapAttr, mapExt, frmData, mapExts);
             break;
        
 
@@ -1763,22 +1809,11 @@ function ChangeDocWordReceive(docWord) {
  */
 function UsefulExpresFlow(attrKey, elementID) {
     var url = basePath + "/WF/WorkOpt/UsefulExpresFlow.htm?AttrKey=" + attrKey + "&ElementID=" + elementID + "&m=" + Math.random();
-    var W = document.body.clientWidth / 2;
-    OpenBootStrapModal(url, "UsefulExpresIFrame", "常用短语", W, H, null, false, null, null, function () { });
+    var W = window.innerWidth / 2;
+    OpenLayuiDialog(url,"常用短语", W, 70, "auto");
 }
 
-/**
- * 给指定的元素赋值
- * @param {any} elementID 元素ID
- * @param {any} str 值
- */
-function ChangeWorkCheck(elementID, str) {
-    if ($("#" + elementID).length == 1) {
-        $("#" + elementID).val(str);
-    }
 
-    $('#bootStrapdlg').modal('hide');
-}
 
 //弹出附件
 function OpenAth(title, keyOfEn, athMyPK, atPara, FK_MapData, frmType) {

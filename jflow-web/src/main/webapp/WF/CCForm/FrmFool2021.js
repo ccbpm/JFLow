@@ -61,7 +61,7 @@ function ShowFoolByTable(frmData, tableCol, Sys_GroupFields, node) {
         var ctrlType = gf.CtrlType;
         ctrlType = ctrlType == null ? "" : ctrlType;
 
-        gfLabHtml = "<div class='layui-row FoolFrmGroupBar'>"
+        gfLabHtml = "<div class='layui-row FoolFrmGroupBar' id='Group_" + gf.CtrlID+"'>"
         gfLabHtml += "<div class='layui-col-xs12'>";
         gfLabHtml += gf.Lab;
         gfLabHtml += "</div>";
@@ -90,8 +90,12 @@ function ShowFoolByTable(frmData, tableCol, Sys_GroupFields, node) {
                 _html += "</div>";
                 break;
             case "Dtl"://从表
-                var dtls = $.grep(frmData.Sys_MapDtl, function (dtl) { return dtl.No == gf.CtrlID });
+                var dtls = $.grep(frmData.Sys_MapDtl, function (dtl) {
+                    return dtl.No == gf.CtrlID && dtl.IsView != 0;
+                });
                 var dtl = dtls.length > 0 ? dtls[0] : null;
+                if (dtl == null)
+                    break;
                 _html += gfLabHtml;
                 _html += "<div class='layui-row'>"
                 _html += "<div class='layui-col-xs12'>";
@@ -377,8 +381,8 @@ function InitMapAttrOfCtrlFool(frmData,mapAttr) {
                 if (RBShowModel == 0)
                     br = "<br>";
                 var checked = "";
-                if (se.IntKey == mapAttr.DefVal)
-                    checked = " checked=true ";
+                //if (se.IntKey == mapAttr.DefVal)
+                //    checked = " checked=true ";
                 rbHtmls += "<input " + ccsCtrl + " type=checkbox name='CB_" + mapAttr.KeyOfEn + "' id='CB_" + mapAttr.KeyOfEn + "_" + se.IntKey + "' value='" + se.IntKey + "' " + checked + " lay-filter='" + mapAttr.KeyOfEn + "'  class='mcheckbox'  value='" + se.IntKey + "' title='" + se.Lab + "'/>";
             }
             return "<div id='DIV_" + mapAttr.KeyOfEn + "'>" + rbHtmls + "</div>";
@@ -414,7 +418,7 @@ function InitMapAttrOfCtrlFool(frmData,mapAttr) {
                     case 4: //地图
                         //如果是地图，并且可以编辑
                         var eleHtml = "<div style='text-align:left;padding-left:0px' id='athModel_" + mapAttr.KeyOfEn + "' data-type='1'>";
-                        if (mapAttr.UIIsEnable == 1) {
+                        if (mapAttr.UIIsEnable == 1&&isReadonly==false) {
                             eleHtml += "<button type='button' class='layui-btn layui-btn-sm layui-btn-primary' style='height:38px' name='select' onclick='figure_Template_Map(\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.UIIsEnable + "\")'>选择</button>";
                             eleHtml += "<input type = text class='layui-input' style='width:75%;display:inline' maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' />";
                         } else {
@@ -425,30 +429,7 @@ function InitMapAttrOfCtrlFool(frmData,mapAttr) {
                         return eleHtml;
                     case 6://字段附件
                        return getFieldAth(mapAttr);
-                        var mypk = mapAttr.MyPK;
-                        //创建附件描述信息.
-                        var ath = $.grep(frmData.Sys_FrmAttachment, function (obj, idx) {
-                            if (obj.MyPK == mypk)
-                                return obj;
-                        });
-                              
-                        eleHtml = "<div class='" + ccsCtrl + "' style='border:solid 1px #eee;line-height:38px' id='athModel_" + mapAttr.KeyOfEn + "'>";
-                        if (ath.length == 0) {
-                            eleHtml += "<label style='font-color:#FF5722'>没有找到附件属性,请联系管理员</label>";
-                            return eleHtml;
-                        }
-                        ath = ath[0];
-                        //判断是否上传
-                        if (ath.IsUpload && isReadonly == false)
-                            eleHtml += "<button type='button' class='layui-btn layui-btn-sm' style='margin:5px' onclick=''><i class='layui-icon layui-icon-upload'></i>上传文件</button>";
-
-                        var athShowModel = GetPara(mapAttr.AtPara, "AthShowModel");
-                        if (athShowModel == "" || athShowModel == 0)
-                            eleHtml += "<div data-type='0'></div>";
-                        else
-                            eleHtml += "<div data-type='1'></div>";
-
-                        return eleHtml;
+                        
                     case 8://写字板
                         var imgSrc = "../";
                         if (currentURL.indexOf("CCBill") != -1 || currentURL.indexOf("CCForm") != -1)
@@ -520,9 +501,24 @@ function InitMapAttrOfCtrlFool(frmData,mapAttr) {
                             if (mapAttr.UIIsEnable == "0" || isReadonly == true) {
                                 //使用div展示
                                 var defValue = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
-                                return "<div style='margin:9px 0px 9px 15px'>"+defValue+"</div>";
+                                defValue = defValue.replace(/white-space: nowrap;/g, "");
+                                return "<div style='margin:9px 0px 9px 15px'>" + defValue + "</div>";
                             }
-                            return "<textarea maxlength=" + mapAttr.MaxLen + "  style='height:" + mapAttr.UIHeight + "px;width:100%;' id='TB_" + mapAttr.KeyOfEn + "'  class='rich'/>"
+                            if (richTextType == "tinymce")
+                                return "<textarea maxlength=" + mapAttr.MaxLen + "  style='height:" + mapAttr.UIHeight + "px;width:100%;' id='TB_" + mapAttr.KeyOfEn + "'  class='rich'/>";
+                            var defValue = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
+                            //设置一个默认高度
+                            if (mapAttr.UIHeight < 180) {
+                                mapAttr.UIHeight = 180;
+                            }
+                            //设置编辑器的默认样式
+                            var styleText = "text-align:left;font-size:12px;";
+                            styleText += "width:100%;";
+                            var height = parseInt(mapAttr.UIHeight) - 54;
+
+                            styleText += "height:" + height + "px;";
+                            //注意这里 name 属性是可以用来绑定表单提交时的字段名字的 id 是特殊约定的.
+                            return "<script class='EditorClass' id='editor_" + mapAttr.KeyOfEn + "'  name='TB_" + mapAttr.KeyOfEn + "' type='text/plain' style='" + styleText + "'>" + defValue + "</script>";
                         }
                         //判断是不是大块文本
                         if (mapAttr.IsSupperText == 1 || mapAttr.UIHeight >40) {

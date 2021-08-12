@@ -1,6 +1,7 @@
 package bp.wf.httphandler;
 
 
+import java.net.URLDecoder;
 import java.util.Hashtable;
 
 import bp.da.DBAccess;
@@ -11,6 +12,7 @@ import bp.da.DataTable;
 import bp.da.DataType;
 import bp.da.FieldCaseModel;
 import bp.da.Paras;
+import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.gpm.home.WindowTemplateAttr;
@@ -33,6 +35,8 @@ import bp.wf.port.admin2.OrgAdminerAttr;
 import bp.wf.port.admin2.OrgAdminers;
 import bp.wf.port.admin2.Orgs;
 import bp.wf.template.FlowSort;
+
+import javax.servlet.http.Cookie;
 
 /** 
  页面功能实体
@@ -121,6 +125,24 @@ public class WF_Portal extends WebContralBase
 
 		return bp.tools.Json.ToJsonEntityModel(ht);
 	}
+
+	public String Login_VerifyState()throws Exception
+	{
+		Cookie cookie = ContextHolderUtils.getCookie(this.getClass().getName() + "_Login_Error");
+		if(cookie ==null)
+			return "无需验证";
+		if (DataType.IsNullOrEmpty(cookie.getValue())==false)
+		{
+			return "err@" + Login_VerifyCode();
+		}
+
+		return "无需验证";
+	}
+
+	public String Login_VerifyCode() throws Exception
+	{
+		return bp.tools.Verify.DrawImage(5, this.getClass().getName() + "_VerifyCode");
+	}
 	 /** 
 	 登录.
 	 
@@ -129,6 +151,25 @@ public class WF_Portal extends WebContralBase
 */
 	public final String Login_Submit() throws Exception
 	{
+		String verifyCode = this.GetRequestVal("VerifyCode");
+		Cookie verifyCookie = ContextHolderUtils.getCookie(this.getClass().getName() + "_VerifyCode");
+		String checkVerifyCode = "";
+		if(verifyCookie==null)
+			checkVerifyCode ="";
+		else
+			checkVerifyCode = URLDecoder.decode(verifyCookie.getValue());
+		String strMd5 = DataType.IsNullOrEmpty(verifyCode) ? "" :bp.tools.Rand.GetMd5Str(verifyCode);
+
+		String login_Error = ContextHolderUtils.getCookie(this.getClass().getName() + "_Login_Error")==null?"":ContextHolderUtils.getCookie(this.getClass().getName() + "_Login_Error").getValue();
+
+		if (DataType.IsNullOrEmpty(login_Error) == true && DataType.IsNullOrEmpty(verifyCode) == false)
+			return "err@错误的验证状态.";
+
+		if (DataType.IsNullOrEmpty(login_Error) == false && checkVerifyCode.equals(strMd5)==false)
+			return "err@验证码错误.";
+		ContextHolderUtils.clearCookie();
+		ContextHolderUtils.addCookie(this.getClass().getName() + "_VerifyCode", "");
+		ContextHolderUtils.addCookie(this.getClass().getName() + "_Login_Error", "");
 		try
 		{
 			String userNo = this.GetRequestVal("TB_No");
@@ -172,6 +213,7 @@ public class WF_Portal extends WebContralBase
 					String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 					if (no == null)
 					{
+						ContextHolderUtils.addCookie(this.getClass().getName() + "_Login_Error", this.getClass().getName() + "_Login_Error");
 						return "err@用户名或者密码错误.";
 					}
 
@@ -179,6 +221,7 @@ public class WF_Portal extends WebContralBase
 					int i = emp.RetrieveFromDBSources();
 					if (i == 0)
 					{
+						ContextHolderUtils.addCookie(this.getClass().getName() + "_Login_Error", this.getClass().getName() + "_Login_Error");
 						return "err@用户名或者密码错误.";
 					}
 				}
@@ -191,6 +234,7 @@ public class WF_Portal extends WebContralBase
 					String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 					if (no == null)
 					{
+						ContextHolderUtils.addCookie(this.getClass().getName() + "_Login_Error", this.getClass().getName() + "_Login_Error");
 						return "err@用户名或者密码错误.";
 					}
 
@@ -198,17 +242,20 @@ public class WF_Portal extends WebContralBase
 					int i = emp.RetrieveFromDBSources();
 					if (i == 0)
 					{
+						ContextHolderUtils.addCookie(this.getClass().getName() + "_Login_Error", this.getClass().getName() + "_Login_Error");
 						return "err@用户名或者密码错误.";
 					}
 				}
 				else
 				{
+					ContextHolderUtils.addCookie(this.getClass().getName() + "_Login_Error", this.getClass().getName() + "_Login_Error");
 					return "err@用户名或者密码错误.";
 				}
 			}
 
 			if (emp.CheckPass(pass) == false)
 			{
+				ContextHolderUtils.addCookie(this.getClass().getName() + "_Login_Error", this.getClass().getName() + "_Login_Error");
 				return "err@用户名或者密码错误.";
 			}
 
@@ -290,27 +337,41 @@ public class WF_Portal extends WebContralBase
 		}
 	}
 
+	/**
+	 * 退出登录
+	 * @return
+	 */
+	public String Default_LogOut()
+	{
+		bp.web.WebUser.Exit();
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			return "http://passport.ccbpm.cn/";
+
+		return "Login.htm?DoType=Logout";
+	}
+
 	/// <summary>
     /// 初始化
     /// </summary>
     /// <returns></returns>
     public String Home_Init() throws Exception
     {
-    	 WindowTemplates ens = new WindowTemplates();
-         ens.Retrieve(WindowTemplateAttr.PageID, this.getPageID(), "Idx");
- 		if (ens.size() == 0)
- 		{
- 			ens.InitHomePageData();
- 			ens.Retrieve(WindowTemplateAttr.PageID, this.getPageID(), "Idx");
- 		}
+        WindowTemplates ens = new WindowTemplates();
+        ens.Retrieve(WindowTemplateAttr.PageID, this.getPageID(), "Idx");
+		if (ens.size() == 0)
+		{
+			ens.InitHomePageData();
+			ens.Retrieve(WindowTemplateAttr.PageID, this.getPageID(), "Idx");
+		}
 
- 		//初始化数据.
- 		ens.InitDocs();
+		//初始化数据.
+		ens.InitDocs();
 
- 		DataTable dt = ens.ToDataTableField();
- 		dt.TableName = "WindowTemplates";
+		DataTable dt = ens.ToDataTableField();
+		dt.TableName = "WindowTemplates";
 
-         return bp.tools.Json.ToJson(dt);
+        return bp.tools.Json.ToJson(dt);
     }
     public String Home_DoMove()
     {

@@ -1459,8 +1459,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		{
 			//2019-07-26 zyt改造
 			//String webPath = HttpRuntime.AppDomainAppPath.replace("\\", "/");
-			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
-			String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+			String filePath = SystemConfig.getPathOfDataUser() + "JSLibData/" + this.getFK_MapData() + "_Self.js";
 			String content = "";
 			if (!(new File(filePath)).isFile())
 				content = "";
@@ -1479,9 +1478,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		try
 		{
 			//2019-07-26 zyt改造
-			//String webPath = HttpRuntime.AppDomainAppPath.replace("\\", "/");
-			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
-			String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+			String filePath = SystemConfig.getPathOfDataUser()  + "JSLibData/" + this.getFK_MapData() + "_Self.js";
 			String content = ContextHolderUtils.getRequest().getParameter("JSDoc");
 
 			//在应用程序当前目录下的File1.txt文件中追加文件内容，如果文件不存在就创建，默认编码

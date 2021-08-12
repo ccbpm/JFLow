@@ -189,6 +189,7 @@ window.onload = function () {
                 var lineChart = echarts.init(el)
                 var data = JSON.parse(item.Docs);
                 var startnum = data[0];
+                if (startnum) {
                 var inf = [];
                 var num = 0;
                 $.each(startnum, function (i) {  
@@ -228,7 +229,8 @@ window.onload = function () {
                    
                     
                 };
-                lineChart.setOption(option)
+                    lineChart.setOption(option)
+                }
             },
             // 初始化饼图
             initPieChart: function (el, item) {
@@ -266,54 +268,55 @@ window.onload = function () {
                 var hChart = echarts.init(el)
                 var data = JSON.parse(item.Docs)
                 var startnum = data[0];
-                var inf = [];
-                var num = 0;
-                $.each(startnum, function (i) {
-                    if (isNaN(startnum[i])) {
-                        xAxis = data.map(function (it) {
-                            return it[i]
-                        })
-                    }
-                    else {
-                        inf[num] = {
-                            name: i,
-                            type: 'bar',
-                            data: data.map(function (it) {
+                if (startnum) {
+                    var inf = [];
+                    var num = 0;
+                    $.each(startnum, function (i) {
+                        if (isNaN(startnum[i])) {
+                            xAxis = data.map(function (it) {
                                 return it[i]
                             })
-
                         }
-                        num++
-                    }                  
-                });
-              
-                option = {
-                    tooltip: {},
-                    legend: {},
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: xAxis
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value',
+                        else {
+                            inf[num] = {
+                                name: i,
+                                type: 'bar',
+                                data: data.map(function (it) {
+                                    return it[i]
+                                })
 
+                            }
+                            num++
                         }
-                    ],
-                    dataZoom: [
-                        {
-                            show: true,
-                            start: 94,
-                            end: 100
-                        },
+                    });
 
-                    ],
-                    series: inf
-                };
-                hChart.setOption(option);
-              
+                    option = {
+                        tooltip: {},
+                        legend: {},
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: xAxis
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+
+                            }
+                        ],
+                        dataZoom: [
+                            {
+                                show: true,
+                                start: 94,
+                                end: 100
+                            },
+
+                        ],
+                        series: inf
+                    };
+                    hChart.setOption(option);
+                }
             },
             //百分比仪表盘
             initGauge: function (el, item) {

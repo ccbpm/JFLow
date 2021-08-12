@@ -37,5 +37,9 @@ public class WinDocModel {
 	 环形图
 	*/
 	public static final String ChartRing = "ChartRing";
+	/// <summary>
+    /// 标签页
+    /// </summary>
+    public static final String Tab = "Tab";
 
 }

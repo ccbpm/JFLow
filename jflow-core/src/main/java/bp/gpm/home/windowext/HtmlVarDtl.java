@@ -78,9 +78,9 @@ public class HtmlVarDtl extends EntityMyPK
 		map.AddDDLSysEnum(DtlAttr.DBType, 0, "数据源类型", true, true, "WindowsDBType", "@0=数据库查询SQL@1=执行Url返回Json@2=执行\\DataUser\\JSLab\\Windows.js的函数.");
 		map.AddDDLEntities(DtlAttr.DBSrc, null, "数据源", new SFDBSrcs(), true);
 
-		map.AddTBString(DtlAttr.Exp0, null, "表达式", true, false, 0, 300, 200, true);
+		map.AddTBString(DtlAttr.Exp0, null, "表达式", true, false, 0, 300, 700, true);
 
-		map.AddTBString(DtlAttr.FontColor, null, "字体风格", true, false, 0, 300, 20, true);
+		map.AddTBString(DtlAttr.FontColor, null, "字体风格", true, false, 0, 300, 100, true);
 
 		this.set_enMap(map);
 		return this.get_enMap();

@@ -11,6 +11,8 @@ import bp.en.Entity;
 import bp.gpm.home.windowext.DtlAttr;
 import bp.gpm.home.windowext.HtmlVarDtl;
 import bp.gpm.home.windowext.HtmlVarDtls;
+import bp.gpm.home.windowext.TabDtl;
+import bp.gpm.home.windowext.TabDtls;
 import bp.sys.CCBPMRunModel;
 
 /** 
@@ -108,6 +110,30 @@ public class WindowTemplates extends EntitiesNoName
 				item.setDocs(dtls.ToJson());
 				continue;
 			}
+			//tab 标签页.
+			if (item.getWinDocModel().equals(WinDocModel.Tab))
+			{
+				TabDtls dtls = new TabDtls();
+				dtls.Retrieve(DtlAttr.RefWindowTemplate, item.getNo());
+
+				for (TabDtl dtl : dtls.ToJavaList())
+				{
+					Object tempVar = dtl.getExp0();
+					String sql = tempVar instanceof String ? (String)tempVar : null;
+					sql = sql.replace("~", "'");
+					sql = bp.wf.Glo.DealExp(sql, null);
+					try
+					{
+						dtl.setExp0( DBAccess.RunSQLReturnStringIsNull(sql, "0"));
+					}
+					catch (RuntimeException ex)
+					{
+						dtl.setExp0("err@" + ex.getMessage());
+					}
+				}
+				item.setDocs(dtls.ToJson());
+				continue;
+			}
 
 
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
@@ -116,6 +142,7 @@ public class WindowTemplates extends EntitiesNoName
 			{
 				try
 				{
+					//分子
 					Object tempVar2 = item.GetValStringByKey(WindowTemplateAttr.SQLOfFZ);
 					String sql = tempVar2 instanceof String ? (String)tempVar2 : null;
 					sql = sql.replace("~", "'");
@@ -123,6 +150,7 @@ public class WindowTemplates extends EntitiesNoName
 					String val = DBAccess.RunSQLReturnString(sql);
 					item.SetValByKey(WindowTemplateAttr.SQLOfFZ, val);
 
+					//分母
 					Object tempVar3 = item.GetValStringByKey(WindowTemplateAttr.SQLOfFM);
 					sql = tempVar3 instanceof String ? (String)tempVar3 : null;
 					sql = sql.replace("~", "'");
@@ -140,10 +168,11 @@ public class WindowTemplates extends EntitiesNoName
 			///#endregion 扇形百分比.
 
 			//SQL列表. 
-			if (item.getWinDocType().equals(WinDocType.SQLList)
-					|| item.getWinDocType().equals(WinDocType.ChatZhuZhuang)
-					|| item.getWinDocType().equals(WinDocType.ChatZheXian )
-					|| item.getWinDocType().equals(WinDocType.ChatPie))
+			if (item.getWinDocModel().equals(WinDocModel.Table) //sql列表.
+                    || item.getWinDocModel().equals(WinDocModel.ChartLine) //sql柱状图
+                    || item.getWinDocModel().equals(WinDocModel.ChartZZT) //折线图.
+                    || item.getWinDocModel().equals(WinDocModel.ChartRing) //环形图.
+                    || item.getWinDocModel().equals(WinDocModel.ChartPie)) //饼图.
 			{
 				try
 				{

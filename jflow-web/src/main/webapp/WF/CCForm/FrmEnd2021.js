@@ -152,7 +152,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             }
             if (checkData != null && checkData != undefined) {
                 var checkField = ""
-                if (frmData.WF_FrmNode != null && frmData.WF_FrmNode != undefined) {
+                if (frmData.WF_FrmNode != null && frmData.WF_FrmNode != undefined && frmData.WF_FrmNode[0].FK_Node!=0) {
                     checkField = frmData.WF_FrmNode[0].CheckField;
                 } else {
                     checkField = checkData.WF_FrmWorkCheck[0].CheckField;
@@ -161,6 +161,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                 var _Html = "<div style='min-height:" + height + ";'>" + GetWorkCheck_Node(checkData, mapAttr.KeyOfEn, checkField, FWCVer) + "</div>";
                 $("#TB_" + mapAttr.KeyOfEn).after(_Html);
             }
+            
             return true;
         }
 

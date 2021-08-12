@@ -8,37 +8,38 @@ function MenuConvertTools(webUser, data) {
 }
 
 var webUser = new WebUser();
-
+var sid = GetQueryString("SID");
 function Start() {
-    if (webUser.CCBPMRunModel != 2)
-        vm.openTab('发起', '../Start.htm');
-    else
+    if (webUser.CCBPMRunModel == 2)
         vm.openTab('发起', '../../App/Start.htm');
+    else
+        vm.openTab('发起', '../Start.htm');
 }
 
 function Todolist() {
-    if (webUser.CCBPMRunModel != 2)
-        vm.openTab('待办', '../Todolist.htm');
-    else
+    if (webUser.CCBPMRunModel == 2)
         vm.openTab('待办', '../../App/Todolist.htm');
+    else
+        vm.openTab('待办', '../Todolist.htm');
 }
 
 function Runing() {
-    if (webUser.CCBPMRunModel != 2)
-        vm.openTab('在途', '../Todolist.htm');
-    else
+    if (webUser.CCBPMRunModel == 2)
         vm.openTab('在途', '../../App/Todolist.htm');
+    else
+        vm.openTab('在途', '../Todolist.htm');
 }
 
 function Search() {
-    if (webUser.CCBPMRunModel != 2)
-        vm.openTab('查询', '../Search.htm');
-    else
+    if (webUser.CCBPMRunModel == 2)
         vm.openTab('查询', '../../App/Search.htm');
+    else
+        vm.openTab('查询', '../Search.htm');
 }
 
 function OpenOrg() {
-    if (webUser.CCBPMRunModel != 2)
+
+    if (webUser.CCBPMRunModel == 2)
         vm.openTab('组织', '../../App/Organization/Organization.htm');
     else
         vm.openTab('组织', '../../GPM/Organization.htm');
@@ -94,7 +95,7 @@ MenuConvertTools.prototype.getFlowMenu = function () {
                     en.type = 'flow'
                     // if (en.WorkType == 1)
                     en.Icon = "icon-heart";
-                    en.Url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + en.No + "&OrgNo=" + this.webUser.OrgNo + "&SID=" + this.webUser.SID + "&UserNo=" + this.webUser.No;
+                    en.Url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + en.No + "&OrgNo=" + this.webUser.OrgNo + "&SID=" + sid + "&UserNo=" + this.webUser.No;
                     en.Url = en.Url + "&From=Ver2021";
                     //alert(en.Url);
                     flowTree[j].type = "flow"
@@ -157,7 +158,7 @@ MenuConvertTools.prototype.getFormMenu = function () {
                         if (parseInt(frm.FrmType) === 1)
                             frm.Icon = "icon-doc";
 
-                        frm.Url = "../Admin/CCFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frm.No + "&From=2021ver";
+                        frm.Url = "../Admin/CCFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frm.No + "&From=2021ver&SID=" + sid;
 
                         formTree[j].children.push(frm);
                         formTree[j].type = "form"
@@ -242,4 +243,17 @@ MenuConvertTools.prototype.convertToTreeData = function () {
     topNodes = topNodes.concat(this.getSystemMenus(this.data))
     // console.log(topNodes)
     return topNodes
+}
+
+function getPortalConfigByKey(key, defVal) {
+
+    if (typeof PortalConfig == "undefined") {
+        PortalConfig = {};
+        PortalConfig[key] = defVal;
+        return defVal;
+    }
+    if (PortalConfig[key] == undefined)
+        PortalConfig[key] = defVal;
+
+    return PortalConfig[key];
 }

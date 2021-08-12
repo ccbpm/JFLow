@@ -1,6 +1,4 @@
-﻿
-
-//检查字段,从表名,附件ID,输入是否合法.
+﻿//检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
 
     //首位可以是字母以及下划线。 
@@ -1789,7 +1787,21 @@ var Entities = (function () {
                 }
             });
         },
+        TurnToArry: function () {
 
+            var ens = this;
+            delete ens.Paras;
+            delete ens.ensName;
+            delete ens.length;
+            var arr = [];
+            for (var key in ens) {
+                if (Object.hasOwnProperty.call(ens, key)) {
+                    var en = ens[key];
+                    arr.push(en);
+                }
+            }
+            return arr
+        },
         Retrieve: function () {
             var args = [""];
             $.each(arguments, function (i, o) {
@@ -2501,9 +2513,9 @@ var WebUser = function () {
         if (parent == null || parent == undefined) {
 
         } else {
-            var url = parent.location.href;
+            /*var url = parent.location.href;
             token = getQueryStringByNameFromUrl(url, "Token");
-            if (token == null || token == undefined) token = getQueryStringByNameFromUrl("SID");
+            if (token == null || token == undefined) token = getQueryStringByNameFromUrl("SID");*/
         }
     }
 
@@ -2524,6 +2536,8 @@ var WebUser = function () {
                 } else {
                     alert(data);
                 }
+                if (window.top.vm != null)
+                    window.top.vm.logoutExt();
                 return;
             }
 
@@ -2904,9 +2918,13 @@ $(function () {
     //不需要权限信息..
     if (url.indexOf('login.htm') != -1
         || url.indexOf('dbinstall.htm') != -1
+        || url.indexOf('scanguide.htm') != -1
+
         || url.indexOf('qrcodescan.htm') != -1
         || url.indexOf('default.htm') != -1
         || url.indexOf('index.htm') != -1
+        || url.indexOf('gotourl.htm') != -1
+        || url.indexOf('invited.htm') != -1
         || url.indexOf('registerbywebsite.htm') != -1
         || url.indexOf('reqpassword.htm') != -1
         || url.indexOf('reguser.htm') != -1

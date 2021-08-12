@@ -50,8 +50,8 @@
             //en.Icon = "icon-control-play";
             en.Icon = "icon-energy";
             en.Insert();
-
-            en.UrlExt = "../CCBill/Sys/Func.htm?No=" + en.No;
+            en.UrlExt = func.No;
+           // en.UrlExt = "../CCBill/Sys/Func.htm?No=" + en.No;
             en.Update();
 
             alert("创建成功，您可以在在菜单里执行高级编辑与授权.");

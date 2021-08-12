@@ -11,7 +11,7 @@
  * @param {any} okBtnFunc 确定执行的方法
  * @param {any} dlgClosedFunc 关闭执行的方法
  */
-function OpenLayuiDialog(url, title, dlgWidth, dlgHeight, offset, isRefresh, isShowOkBtn, IsShowCloseBtn, okBtnFunc, dlgClosedFunc) {
+function OpenLayuiDialog(url, title, dlgWidth, dlgHeight, offset, isRefresh, isShowOkBtn, IsShowCloseBtn, okBtnFunc, dlgClosedFunc,reloadUrl) {
 
     title = title == null || title == undefined ? "" : title;
     var btn = [];
@@ -72,13 +72,25 @@ function OpenLayuiDialog(url, title, dlgWidth, dlgHeight, offset, isRefresh, isS
             if (dlgClosedFunc)
                 dlgClosedFunc();
             if (isRefresh == true)
+{
+            if (reloadUrl==null || reloadUrl=='' )
                 location.reload();
+else
+                location.href= reloadUrl;
+}
+
+
         },
         end: function () {
             if (dlgClosedFunc)
                 dlgClosedFunc();
             if (isRefresh == true)
+{
+if (reloadUrl==null || reloadUrl=='' )
                 location.reload();
+else
+                location.href= reloadUrl;
+}
         }
     });
     if (offset == "r")
@@ -166,6 +178,7 @@ function OpenOtherLayuiDialog(content,title, dlgWidth, dlgHeight,divID, isRefres
         , btn: btn
         ,success: function (layero, index) {
             eval(content);
+            $("#" + this.id).show();
         }
         , yes: function () {
             if (okBtnFunc)

@@ -29,7 +29,14 @@ window.onload = function () {
                 tabDropdownVisible: false,
                 top: 0,
                 left: 0,
-                closeTimeout: null
+                closeTimeout: null,
+                SystemName: "驰骋BPM",
+                SystemLogo: "./image/logo.png",
+                IsShowFast: true,
+                IsShowRefresh: true,
+                IsShowFullScreen: true,
+                IsShowTheme: true,
+                IsShowFlexible: true
             }
         },
         computed: {
@@ -56,12 +63,16 @@ window.onload = function () {
                 if (this.classicalLayout) return
                 this.selectedTopMenuIndex = index
                 this.selectedSubIndex = -1
-                this.subMenuData = this.menuTreeData[index]
-                this.subMenuTitle = this.menuTreeData[index].Name
-                if (this.subMenuTitle.length > 4)
-                    $(".line").css("width", (70 - (this.subMenuTitle.length - 4) * 8) + "px");
+                if (this.menuTreeData.length > 0) {
+                    this.subMenuData = this.menuTreeData[index]
+                    this.subMenuTitle = this.menuTreeData[index].Name
+                    if (this.subMenuTitle.length > 4)
+                        $(".line").css("width", (70 - (this.subMenuTitle.length - 4) * 8) + "px");
+                    this.bindDropdown(this.subMenuData.type)
+                }
+
+
                 this.sideBarOpen = true
-                this.bindDropdown(this.subMenuData.type)
                 this.initChildContextMenu()
 
             },
@@ -242,7 +253,7 @@ window.onload = function () {
                 this.openTab(menu.Name, menu.Url, alignRight);
             },
             openTab: function (name, src, alignRight) {
-                debugger;
+                
 
 
                 //如果发起实体类的流程，是通过一个页面中专过去的.
@@ -398,6 +409,16 @@ window.onload = function () {
                 var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
                 var data = handler.DoMethodReturnString("Default_LogOut");
                 window.location.href = data;// "Login.htm?DoType=Logout";
+
+                //  win
+                //  var url = getPortalConfigByKey("LogoutPath", "./") + data;
+                //window.location.href = url;// "Login.htm?DoType=Logout";
+            },
+            logoutExt: function () {
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
+                var data = handler.DoMethodReturnString("Default_LogOut");
+                var url = getPortalConfigByKey("LogoutPath", "./") + data;
+                window.location.href = url;// "Login.htm?DoType=Logout";
             },
             GoToMobile: function () {
                 var webUser = new WebUser();  //退出
@@ -969,10 +990,18 @@ window.onload = function () {
             }
         },
         mounted: function () {
+            this.SystemName = getPortalConfigByKey("SystemName", "驰骋BPM");
+            this.SystemLogo = getPortalConfigByKey("SystemLogo", "./image/logo.png");
+            this.IsShowFast = getPortalConfigByKey("IsShowFast", true);
+            this.IsShowRefresh = getPortalConfigByKey("IsShowRefresh", true);
+            this.IsShowFullScreen = getPortalConfigByKey("IsShowFullScreen", true);
+            this.IsShowTheme = getPortalConfigByKey("IsShowTheme", true);
+            this.IsShowFlexible = getPortalConfigByKey("IsShowFlexible", true);
             this.webUser = new WebUser();
             this.isAdmin = this.webUser.No === "admin" || parseInt(this.webUser.IsAdmin) === 1;
-            this.initMenus()
-            var _this = this
+            this.initMenus();
+            var _this = this;
+
             setTimeout(function () {
                 _this.bindDropdown('flow')
             }, 500)

@@ -9,7 +9,7 @@ var UserICon = getConfigByKey("UserICon", '../../DataUser/Siganture/'); //获取
 var UserIConExt = getConfigByKey("UserIConExt", '.jpg');  //签名图片的默认后缀
 
 var currentUrl = window.location.href;
-
+var richTextType = getConfigByKey("RichTextType", 'tinymce');
 //初始化函数
 $(function () {
     UserICon = UserICon.replace("@basePath", basePath);
@@ -29,53 +29,33 @@ $(function () {
         $("#topToolBar").append(PrintDocHtml);
     }
 });
-//打印单据
-function printDoc() {
-    WinOpen("../WorkOpt/PrintDoc.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.OID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random() + "', 'dsdd'");
+
+
+/**
+ * 初始化获取网页数据
+ */
+function initPageParam() {
+    pageData.FK_Flow = GetQueryString("FK_Flow");
+    pageData.FK_Node = GetQueryString("FK_Node");
+    pageData.FK_Node = pageData.FK_Node == null || pageData.FK_Node == undefined ? 0 : pageData.FK_Node;
+    pageData.FID = GetQueryString("FID") == null ? 0 : GetQueryString("FID");
+    var oid = GetQueryString("WorkID");
+    if (oid == null || oid == undefined)
+        oid = GetQueryString("OID");
+    oid = oid == null || oid == undefined ? 0 : oid;
+    pageData.OID = oid;
+    pageData.WorkID = oid;
+    pageData.Paras = GetQueryString("Paras");
+    pageData.IsReadonly = GetQueryString("IsReadonly");
+    pageData.IsStartFlow = GetQueryString("IsStartFlow");
+    pageData.FK_MapData = GetQueryString("FK_MapData");
+    isReadonly = pageData.IsReadonly == null || pageData.IsReadonly == undefined || pageData.IsReadonly == "" || pageData.IsReadonly == "0" ? false : true;
 }
 
-
-//设置不可以用.
-function SetReadonly() {
-    //设置保存按钮不可以用.
-    $("#Btn_Save").attr("disabled", true);
-    $('#CCForm').find('input,textarea,select').attr('disabled', false);
-    $('#CCForm').find('input,textarea,select').attr('readonly', true);
-    $('#CCForm').find('input,textarea,select').attr('disabled', true);
-}
-
-
-
-//从表在新建或者在打开行的时候，如果 EditModel 配置了使用卡片的模式显示一行数据的时候，就调用此方法. // IsSave 弹出页面关闭时是否要删除从表
-function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage, FK_MapData, FK_Node, FID, IsSave, H) {
-    // model=1 自由表单, model=2傻瓜表单.
-    var pathName = document.location.pathname;
-    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
-    if (projectName.startsWith("/WF")) {
-        projectName = "";
-    }
-    if (H == undefined || H < 600)
-        H = 600;
-    if (H > 1000)
-        H = 1000;
-
-    var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal + "&FK_MapData=" + FK_MapData + "&FK_Node=" + FK_Node + "&FID=" + FID + "&IsSave=" + IsSave;
-    if (typeof ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal) === "function") {
-        OpenBootStrapModal(url, "editSubGrid", '编辑', 1000, H, "icon-property", false, function () { }, null, function () {
-            if (typeof InitPage === "function") {
-                InitPage.call();
-            } else {
-                alert("请手动刷新表单");
-            }
-        }, "editSubGridDiv", null, false);
-    } else {
-        window.open(url);
-    }
-}
-
-
-
-
+/**
+ * 
+ * 获取表单数据
+ */
 var frmData = null;
 function GenerFrm() {
     var urlParam = currentUrl.substring(currentUrl.indexOf('?') + 1, currentUrl.length);
@@ -179,7 +159,7 @@ function GenerFrm() {
             if (currentUrl.indexOf("/CCBill/") != -1)
                 Skip.addJs("../CCForm/FrmFool2021.js?ver=" + Math.random());
             else
-                Skip.addJs("./CCForm/FrmFool2021.js?ver=" + Math.random());
+                Skip.addJs("./FrmFool2021.js?ver=" + Math.random());
             GenerFoolFrm(frmData);
             isFloolFrm = true;
         }
@@ -190,7 +170,7 @@ function GenerFrm() {
             if (currentUrl.indexOf("/CCBill/") != -1)
                 Skip.addJs("../CCForm/FrmFool2021.js?ver=" + Math.random());
             else
-                Skip.addJs("./CCForm/FrmFool2021.js?ver=" + Math.random());
+                Skip.addJs("./FrmFool2021.js?ver=" + Math.random());
             isFloolFrm = true;
             GenerFoolFrm(frmData);
         }
@@ -205,7 +185,7 @@ function GenerFrm() {
             isDevelopForm = true;
 
         }
-       
+
     }
 
     //表单名称.
@@ -222,7 +202,7 @@ function GenerFrm() {
     loadScript("../../DataUser/JSLibData/" + enName + ".js?t=" + Math.random());
 
     //如果是富文本编辑器
-    if ($(".rich").length > 0) {
+    if ($(".rich").length > 0 && richTextType=="tinymce") {
         var images_upload_url = "";
         var directory = "ND" + pageData.FK_Flow;
         var handlerUrl = "";
@@ -249,9 +229,39 @@ function GenerFrm() {
         });
 
     }
+    if ($(".EditorClass").length > 0 && richTextType == "ueditor") {
+        $('head').append('<link href="../Comm/umeditor1.2.3-utf8/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">');
+        Skip.addJs("../Comm/umeditor1.2.3-utf8/third-party/template.min.js?Version=" + Math.random());
+        Skip.addJs("../Comm/umeditor1.2.3-utf8/umeditor.config.js?Version=" + Math.random());
+        Skip.addJs("../Comm/umeditor1.2.3-utf8/umeditor.js?Version=" + Math.random());
+        Skip.addJs("../Comm/umeditor1.2.3-utf8/lang/zh-cn/zh-cn.js?Version=" + Math.random());
+        $.each($(".EditorClass"), function (i, EditorDiv) {
+            var editorId = $(EditorDiv).attr("id");
+            //给富文本 创建编辑器
+            var editor = document.activeEditor = UM.getEditor(editorId, {
+                'autoHeightEnabled': false, //是否自动长高
+                'fontsize': [10, 12, 14, 16, 18, 20, 24, 36],
+                'initialFrameWidth': '98%'
+            });
+            var mapAttr = $(EditorDiv).data();
+            var height = mapAttr.UIHeight
+            $("#Td_" + mapAttr.KeyOfEn).find('div[class = "edui-container"]').css("height", height);
 
+            if (editor) {
+
+                editor.MaxLen = mapAttr.MaxLen;
+                editor.MinLen = mapAttr.MinLen;
+                editor.BindField = mapAttr.KeyOfEn;
+                editor.BindFieldName = mapAttr.Name;
+
+                //调整样式,让必选的红色 * 随后垂直居中
+                $(editor.container).css({ "display": "inline-block", "margin-right": "10px", "vertical-align": "middle" });
+            }
+        })
+    }
     //3.装载表单数据与修改表单元素风格.
     LoadFrmDataAndChangeEleStyle(frmData);
+
 
     layui.form.render();
     //4.解析表单的扩展功能
@@ -259,11 +269,12 @@ function GenerFrm() {
 
     $.each($(".ccdate"), function (i, item) {
         var format = $(item).attr("data-info");
+        var type = $(item).attr("data-type");
         if (format.indexOf("HH") != -1) {
             layui.laydate.render({
                 elem: '#' + item.id,
                 format: $(item).attr("data-info"), //可任意组合
-                type: 'datetime',
+                type: type,
                 done: function (value, date, endDate) {
                     var data = $(this.elem).data();
                     $(this.elem).val(value);
@@ -286,104 +297,130 @@ function GenerFrm() {
 
     })
 
-    
+
 
     //星级评分事件
     var scoreDiv = $(".score-star");
-    $.each(scoreDiv, function (idex, item) {
-        var divId = $(item).attr("id");
-        var KeyOfEn = divId.substring(3);//获取字段值
-        $("#Star_" + KeyOfEn + " img").click(function () {
-            var index = $(this).index() + 1;
-            $("#Star_" + KeyOfEn + " img:lt(" + index + ")").attr("src", "../Style/Img/star_2.png");
-            $("#SP_" + KeyOfEn + " strong").html(index + "  分");
-            $("#TB_" + KeyOfEn).val(index);//给评分的隐藏input赋值
-            index = index - 1;
-            $("#Star_" + KeyOfEn + " img:gt(" + index + ")").attr("src", "../Style/Img/star_1.png");
+    if (isReadonly == false)
+        $.each(scoreDiv, function (idex, item) {
+            var divId = $(item).attr("id");
+            var KeyOfEn = divId.substring(3);//获取字段值
+            $("#Star_" + KeyOfEn + " img").click(function () {
+                var index = $(this).index() + 1;
+                $("#Star_" + KeyOfEn + " img:lt(" + index + ")").attr("src", "../Style/Img/star_2.png");
+                $("#SP_" + KeyOfEn + " strong").html(index + "  分");
+                $("#TB_" + KeyOfEn).val(index);//给评分的隐藏input赋值
+                index = index - 1;
+                $("#Star_" + KeyOfEn + " img:gt(" + index + ")").attr("src", "../Style/Img/star_1.png");
+            });
         });
-    });
 
 }
 
-
-//打开从表的从表
-function DtlFoolFrm(dtl, refPK, refOID) {
-
-    var url = 'DtlFoolFrm.htm?EnsDtl=' + dtl + '&RefPK=' + refPK + '&RefOID=' + refOID;
-    alert('这里没有实现打开iurl ' + url);
-
-    //引入了刘贤臣写的东西，一直缺少东西.可否改进一下，弄个稳定的？ @代国强.
-    OpenEasyUiDialog(url, "eudlgframe", "编辑", 600, 450, "icon-edit", true, null, null, null, function () {
-        //   window.location.href = window.location.href;
+/**
+ *保存表单数据 
+ */
+function Save() {
+debugger
+    //正在保存弹出层
+    var index = layer.msg('正在保存，请稍后..', {
+        icon: 16
+        , shade: 0.01
     });
-
-}
-
-//保存
-function Save(scope) {
 
     //保存从表数据
     $("[name=Dtl]").each(function (i, obj) {
         var contentWidow = obj.contentWindow;
         if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
-            IsSaveTrue = contentWidow.SaveAll();
-
+            contentWidow.SaveAll();
         }
     });
-
     //审核组件
     if ($("#WorkCheck_Doc").length == 1) {
         //保存审核信息
         SaveWorkCheck();
     }
 
-  
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
-    handler.AddPara("OID", pageData.OID);
-    var params = getFormData(true, true);
-    $.each(params.split("&"), function (i, o) {
-        var param = o.split("=");
-        if (param.length == 2 && validate(param[1])) {
-            handler.AddPara(param[0], decodeURIComponent(param[1], true));
-        } else {
-            handler.AddPara(param[0], "");
+    //保存前事件
+    if (typeof beforeSave != 'undefined' && beforeSave() instanceof Function)
+        if (beforeSave() == false) {
+            layer.close(index);
+            return;
         }
-    });
-    handler.AddPara("FK_MapData", pageData.FK_MapData);
-    var data = handler.DoMethodReturnString("FrmGener_Save");
+           
+    //监听提交
+    layui.form.on('submit(Save)', function (data) {
 
-    if (data.indexOf('err@') == 0) {
-        $('#Message').html(data.substring(4, data.length));
-        $('.Message').show();
+        //保存信息
+        var formData = getFormData(data.field);
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+        handler.AddUrlData();
+        for (var key in formData) {
+            handler.AddPara(key, encodeURIComponent(formData[key]));
+        }
+        var data = handler.DoMethodReturnString("FrmGener_Save");
+        layer.close(index);
+        if (data.indexOf("err@") != -1) {
+            layer.alert(data);
+        }
+        layer.alert("数据保存成功");
+        
         return false;
+    });
+   
+}
+
+//打印单据
+function printDoc() {
+    WinOpen("../WorkOpt/PrintDoc.htm?FK_Node=" + pageData.FK_Node + "&FID=" + pageData.FID + "&WorkID=" + pageData.OID + "&FK_Flow=" + pageData.FK_Flow + "&s=" + Math.random() + "', 'dsdd'");
+}
+
+
+//设置不可以用.
+function SetReadonly() {
+    //设置保存按钮不可以用.
+    $("#Btn_Save").attr("disabled", true);
+    $('#CCForm').find('input,textarea,select').attr('disabled', false);
+    $('#CCForm').find('input,textarea,select').attr('readonly', true);
+    $('#CCForm').find('input,textarea,select').attr('disabled', true);
+}
+
+
+
+//从表在新建或者在打开行的时候，如果 EditModel 配置了使用卡片的模式显示一行数据的时候，就调用此方法. // IsSave 弹出页面关闭时是否要删除从表
+function DtlFrm(ensName, refPKVal, pkVal, frmType, InitPage, FK_MapData, FK_Node, FID, IsSave, H) {
+    // model=1 自由表单, model=2傻瓜表单.
+    var pathName = document.location.pathname;
+    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+    if (projectName.startsWith("/WF")) {
+        projectName = "";
     }
+    if (H == undefined || H < 600)
+        H = 600;
+    if (H > 1000)
+        H = 1000;
 
-    if (scope != "btnsave")
-        window.location.href = window.location.href;
-    return true;
-
-
+    var url = projectName + '/WF/CCForm/DtlFrm.htm?EnsName=' + ensName + '&RefPKVal=' + refPKVal + "&FrmType=" + frmType + '&OID=' + pkVal + "&FK_MapData=" + FK_MapData + "&FK_Node=" + FK_Node + "&FID=" + FID + "&IsSave=" + IsSave;
+    if (typeof ((parent && parent.OpenBootStrapModal) || OpenBootStrapModal) === "function") {
+        OpenBootStrapModal(url, "editSubGrid", '编辑', 1000, H, "icon-property", false, function () { }, null, function () {
+            if (typeof InitPage === "function") {
+                InitPage.call();
+            } else {
+                alert("请手动刷新表单");
+            }
+        }, "editSubGridDiv", null, false);
+    } else {
+        window.open(url);
+    }
 }
 
 
-/**
- * 初始化获取网页数据
- */
-function initPageParam() {
-    pageData.FK_Flow = GetQueryString("FK_Flow");
-    pageData.FK_Node = GetQueryString("FK_Node");
-    pageData.FK_Node = pageData.FK_Node == null || pageData.FK_Node == undefined ? 0 : pageData.FK_Node;
-    pageData.FID = GetQueryString("FID") == null ? 0 : GetQueryString("FID");
-    var oid = GetQueryString("WorkID");
-    if (oid == null || oid==undefined)
-        oid = GetQueryString("OID");
-    pageData.OID = oid;
-    pageData.WorkID = oid;
-    pageData.Paras = GetQueryString("Paras");
-    pageData.IsReadonly = GetQueryString("IsReadonly"); 
-    pageData.IsStartFlow = GetQueryString("IsStartFlow"); 
-    pageData.FK_MapData = GetQueryString("FK_MapData");
-}
+
+
+
+
+
+
 
 
 
@@ -409,69 +446,6 @@ if (plant == "JFlow")
 var DtlsCount = " + dtlsCount + "; //应该加载的明细表数量
 
 
-//处理URL，MainTable URL 参数 替换问题
-function dealWithUrl(src) {
-    var src = src.replace(new RegExp(/(：)/g), ':');
-
-    //替换
-    src = src.replace('@OID', pageData.OID);
-    src = src.replace('@WorkID', pageData.OID);
-
-    var params = '&FID=' + pageData.FID;
-    params += '&WorkID=' + pageData.OID;
-    if (src.indexOf("?") > 0) {
-        var params = getQueryStringFromUrl(src);
-        if (params != null && params.length > 0) {
-            $.each(params, function (i, param) {
-                if (param.indexOf('@') >= 0) {//是需要替换的参数
-                    paramArr = param.split('=');
-                    if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0) {
-                        if (paramArr[1].indexOf('@WebUser.') == 0) {
-                            params[i] = paramArr[0].substring(1) + "=" + frmData.MainTable[0][paramArr[1].substr('@WebUser.'.length)];
-                        }
-                        if (frmData.MainTable[0][paramArr[1].substr(1)] != undefined) {
-                            params[i] = paramArr[0].substring(1) + "=" + frmData.MainTable[0][paramArr[1].substr(1)];
-                        }
-
-                        //使用URL中的参数
-                        var pageParams = getQueryString();
-                        var pageParamObj = {};
-                        $.each(pageParams, function (i, pageParam) {
-                            if (pageParam.indexOf('@') == 0) {
-                                var pageParamArr = pageParam.split('=');
-                                pageParamObj[pageParamArr[0].substring(1, pageParamArr[0].length)] = pageParamArr[1];
-                            }
-                        });
-                        var result = "";
-                        //通过MAINTABLE返回的参数
-                        for (var ele in frmData.MainTable[0]) {
-                            if (paramArr[0].substring(1) == ele) {
-                                result = frmData.MainTable[0][ele];
-                                break;
-                            }
-                        }
-                        //通过URL参数传过来的参数
-                        for (var pageParam in pageParamObj) {
-                            if (pageParam == paramArr[0].substring(1)) {
-                                result = pageParamObj[pageParam];
-                                break;
-                            }
-                        }
-
-                        if (result != '') {
-                            params[i] = paramArr[0].substring(1) + "=" + unescape(result);
-                        }
-                    }
-                }
-            });
-            src = src.substr(0, src.indexOf('?')) + "?" + params.join('&');
-        }
-    }
-    else {
-        src += "?q=1";
-    }
-    return src;
-}
 
 
 //20160106 by 柳辉
@@ -520,26 +494,4 @@ function Change(id) {
             self.parent.ChangTabFormTitle();
         }
     }
-}
-
-
-
-
-
-//地图
-function figure_Template_Map(MapID, UIIsEnable) {
-    var mainTable = frmData.MainTable[0];
-    var AtPara = "";
-    //通过MAINTABLE返回的参数
-    for (var ele in mainTable) {
-        if (ele == "AtPara" && mainTable != '') {
-            AtPara = mainTable[ele];
-            break;
-        }
-    }
-
-    var url = basePath + "/WF/CCForm/Map.htm?WorkID=" + pageData.WorkID + "&FK_Node=" + pageData.FK_Node + "&KeyOfEn=" + MapID + "&UIIsEnable=" + UIIsEnable + "&Paras=" + AtPara;
-    OpenBootStrapModal(url, "eudlgframe", "地图", 800, 500, null, false, function () { }, null, function () {
-
-    });
 }

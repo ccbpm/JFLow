@@ -5,7 +5,7 @@
  * @param {any} mapExt 扩展属性
  * @param {any} frmData 表单数据
  */
-function CommPop(popType, mapAttr, mapExt, frmData) {
+function CommPop(popType, mapAttr, mapExt, frmData, mapExts) {
   
     if (mapAttr.UIIsEnable == 0 || isReadonly == true) {
         //只显示
@@ -23,6 +23,12 @@ function CommPop(popType, mapAttr, mapExt, frmData) {
     var data = [];
     //获取实体信息
     var ens = [];
+    if (popType == "PopBranches") {
+        $("#TB_" + mapAttr.KeyOfEn).hide();
+        $("#TB_" + mapAttr.KeyOfEn).after("<div id='mapExt_" + mapAttr.KeyOfEn + "' style='width:99%'></div>")
+        xmSelectTree("mapExt_" + mapAttr.KeyOfEn, mapExt, selects, popType, selectType);
+        return;
+    }
     if (popType == "PopBindEnum") {
         ens = new Entities("BP.Sys.SysEnums");
         ens.Retrieve("EnumKey", mapExt.Tag2);
@@ -149,7 +155,7 @@ function CommPop(popType, mapAttr, mapExt, frmData) {
  * @param {any} mapExt  扩展属性
  * @param {any} frmData 表单数据
  */
-function CommPopDialog(poptype, mapAttr, mapExt, pkval, frmData,baseUrl) {
+function CommPopDialog(poptype, mapAttr, mapExt, pkval, frmData, baseUrl, mapExts) {
     if (pkval == null || pkval == undefined) {
         pkval = GetQueryString("WorkID");
         if (pkval == null || pkval == undefined)
@@ -176,6 +182,7 @@ function CommPopDialog(poptype, mapAttr, mapExt, pkval, frmData,baseUrl) {
     target.val($("#" + mtagsId).mtags("getText"));
 
     $("#" + mtagsId).on('dblclick', function () {
+        debugger;
         var url = "";
         switch (poptype) {
             case "PopBranchesAndLeaf": //树干叶子模式.
@@ -227,15 +234,145 @@ function CommPopDialog(poptype, mapAttr, mapExt, pkval, frmData,baseUrl) {
                         $.each(selectedRows, function (i, selectedRow) {
                             No += selectedRow.No + ",";
                         });
-                    //执行JS
-                    var backFunc = mapExt.Tag5;
-                    if (backFunc != null && backFunc != "" && backFunc != undefined)
-                        DBAccess.RunFunctionReturnStr(DealSQL(backFunc, No));
 
+                    var attrMyPK = mapExt.FK_MapData + "_" + mapExt.AttrOfOper;
+                    if (mapExts[attrMyPK] == undefined || mapExts[attrMyPK].length == 0) {
+                        //执行JS
+                        var backFunc = mapExt.Tag5;
+                        if (backFunc != null && backFunc != "" && backFunc != undefined)
+                            DBAccess.RunFunctionReturnStr(DealSQL(backFunc, No));
+                    }
+                    else {
+                        $.each(mapExts[attrMyPK], function (idx, mapExt1) {
+                            var mapExtN = new Entity("BP.Sys.MapExt", mapExt1);
+                            mapExtN.MyPK = mapExt1.MyPK;
+                            //填充其他控件
+                            switch (mapExtN.ExtType) {
+                                case "FullData": //填充其他控件
+                                    DDLFullCtrl(No.substring(0, No.length - 1), mapExtN.AttrOfOper, mapExtN.MyPK);
+                                        
+                                    break;
+                            }
+                        });
+                        //执行JS
+                        var backFunc = mapExt.Tag5;
+                        if (backFunc != null && backFunc != "" && backFunc != undefined)
+                            DBAccess.RunFunctionReturnStr(DealSQL(backFunc, No));
+                    }
                 }
             }
         })
     })
+}
+
+function xmSelectTree(eleID, mapExt, frmEleDBs, type, selectType) {
+
+    //获取根目录
+    //跟节点编号.
+    var rootNo = mapExt.Doc;
+    if (rootNo == "@WebUser.FK_Dept") {
+        rootNo = webUser.FK_Dept;
+    }
+    if (rootNo == "@WebUser.OrgNo") {
+        rootNo = webUser.OrgNo;
+    }
+    if (rootNo == null || rootNo == undefined) {
+        rootNo = "0"
+    }
+
+    var treeUrl = mapExt.Tag2.replace(/~/g, "'");
+    var treeTag1 = mapExt.Tag1;
+    if (treeUrl == "") {
+        alert('配置错误:查询数据源，初始化树的数据源不能为空。');
+        return;
+    }
+   
+    var json = GetDataTableByDB(treeUrl, mapExt.DBType, mapExt.FK_DBSrc, rootNo);
+    var data = TreeJson(json, rootNo);
+    layui.use('xmSelect', function () {
+        var xmSelect = layui.xmSelect;
+        var tree = xmSelect.render({
+            el: "#" + eleID,
+            prop: {
+                name: 'Name',
+                value: 'No',
+            },
+            autoRow: true,
+            filterable: true,
+            remoteSearch: true,
+            radio: selectType == 1 ? false : true,
+            clickClose: selectType == 1 ? false : true,
+            remoteMethod: function (val, cb, show) {
+                //这里如果val为空, 则不触发搜索
+                if (!val) {
+                    return cb(data);
+                }
+                setTimeout(function () {
+                    var url = mapExt.Tag1.replace(/~/g, "'") + "";
+                    var json = GetDataTableByDB(url, mapExt.DBType, mapExt.FK_DBSrc, val);
+                    //var data = findChildren(json, item.value);
+                    cb(json);
+
+                }, 500)
+            },
+            tree: {
+                show: true,
+                showFolderIcon: true,
+                showLine: true,
+                lazy: true,
+                strict: false,
+                clickCheck: false,
+                load: function (item, cb) {
+                    setTimeout(function () {
+                        var url = mapExt.Tag2.replace(/~/g, "'") + "";
+                        var json = GetDataTableByDB(url, mapExt.DBType, mapExt.FK_DBSrc, item.No);
+                        var data = findChildren(json, item.No);
+                        cb(data);
+
+                    }, 500)
+                }
+            },
+            on: function (data) {
+                var arr = data.arr;
+                var vals = [];
+                var valTexts = [];
+                var elID = data.el.replace("#mapExt", "TB");
+                if (arr.length == 0) {
+                    $("#" + elID).val("");
+                } else {
+                    $.each(arr, function (i, obj) {
+                        vals[i] = obj.No;
+                        valTexts[i] = obj.Name;
+                    })
+
+                    $("#" + elID).val(valTexts.join(","));
+                }
+
+                SaveFrmEleDBs(arr, elID.replace("TB_", ""), mapExt);
+                //填充其他控件
+                FullIt(vals.join(","), mapExt.MyPK, elID);
+                //确定后执行的方法
+                //执行JS
+                var backFunc = mapExt.Tag5;
+                if (backFunc != null && backFunc != "" && backFunc != undefined)
+                    DBAccess.RunFunctionReturnStr(DealSQL(backFunc, vals.join(",")));
+            },
+            height: 'auto',
+            data() {
+                return data;
+            }
+        });
+        if (frmEleDBs && frmEleDBs.length > 0) {
+            var vals = [];
+            $.each(frmEleDBs, function (i, item) {
+                vals.push({
+                    Name: item.Tag2,
+                    No: item.Tag1
+                })
+            })
+            tree.setValue(vals);
+        }
+    });
 }
 
 /**
@@ -286,4 +423,44 @@ function GetInitJsonData(mapExt, refPKVal, val) {
         });
     });
     return initJsonData;
+}
+
+//树形结构
+function TreeJson(jsonArray, parentNo) {
+ 
+    var jsonTree = [];
+    if (jsonArray.length > 0) {
+        $.each(jsonArray, function (i, o) {
+            if (o.ParentNo == parentNo && parentNo == "0") {
+                jsonTree.push({
+                    "No": o.No,
+                    "Name": o.Name,
+                    "children": findChildren(jsonArray, o.No)
+                });
+                return false;
+            }
+            if (o.No == parentNo) {
+                jsonTree.push({
+                    "No": o.No,
+                    "Name": o.Name,
+                    "children": findChildren(jsonArray, o.No)
+                });
+                return false;
+            }
+        })
+    }
+    return jsonTree;
+}
+function findChildren(jsonArray, parentNo) {
+    var children = [];
+    $.each(jsonArray, function (i, child) {
+        if (parentNo == child.ParentNo)
+            children.push({
+                "No": child.No,
+                "Name": child.Name,
+                "children": []
+            });
+    });
+   
+    return children;
 }

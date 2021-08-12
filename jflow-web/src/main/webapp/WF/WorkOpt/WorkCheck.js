@@ -31,7 +31,10 @@ function IsReadOnly() {
 
 //审核组件页面初始化
 function NodeWorkCheck_Init() {
-    debugger
+    if ($("#WorkCheck_Doc").length == 1) {
+        $("#Group_FWC").hide();
+        return;
+    }
     var FWCVer = null;
     if (FWCVer == null) {
         var node = new Entity("BP.WF.Node", checkParam.FK_Node);

@@ -2,11 +2,21 @@ html {
     font-size: 16px;
     -ms-overflow-style: auto;
 }
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+    outline: none;
+    box-shadow:none;
+}
 
 body {
     color: #797979;
     background: #f1f2f7;
     -webkit-overflow-scrolling: touch;
+    font-family:'Microsoft YaHei';
 }
 a {
     color: #007bff;
@@ -165,15 +175,25 @@ a {
         width: 32px;
         height: 32px;
     }
-
+.login-wrap .form-control {font-weight:bold; padding:8px 10px; height:auto; line-height:24px;
+}
 .btn-login {
     color: #fff;
     background: #fe7300;
+    border: 0px;
 }
 
     .btn-login:hover {
         background: #f38d30;
         color: #fff;
+        outline: none
+    }
+  
+    .btn-login:focus {
+        background: #f38d30;
+        color: #fff;
+        border: 0px;
+        outline: none;
     }
 .forget-password {
     padding: 16px 0;

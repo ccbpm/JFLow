@@ -11,14 +11,14 @@ function InitFoolLink(mapAttr, frmType) {
 
     if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == 1 && mapAttr.UIIsEnable != 0) {
         var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-        cleanAll(mapAttr.KeyOfEn);
+        cleanAll(mapAttr.KeyOfEn, frmType);
         setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, selecedval, "");
 
     }
     //外键类型.
     if (mapAttr.LGType == "2" && mapAttr.MyDataType == "1") {
         var selecedval = $(obj).children('option:selected').val();  //弹出select的值.
-        cleanAll(mapAttr.KeyOfEn);
+        cleanAll(mapAttr.KeyOfEn, frmType);
         setEnable(mapAttr.FK_MapData, mapAttr.KeyOfEn, selecedval, "");
 
     }
@@ -196,10 +196,11 @@ function cleanAll(KeyOfEn, frmType) {
         var FKMapAttrs = mapAttrs[KeyOfEn][0];
         for (var i = 0; i < FKMapAttrs.length; i++) {
             if (frmType != null && frmType !== undefined && frmType == 8)
-                SetDevelopCtrlShow(mapAttrs[i]);
+                SetDevelopCtrlShow(FKMapAttrs[i]);
             else
                 SetCtrlShow(FKMapAttrs[i]);
             SetCtrlEnable(FKMapAttrs[i]);
+            SetCtrlUnMustInput(FKMapAttrs[i]);
             CleanCtrlVal(FKMapAttrs[i]);
         }
     }
@@ -287,6 +288,15 @@ function setEnable(FK_MapData, KeyOfEn, selectVal, frmType) {
                 NDMapAttrs.push(key);
             }
 
+            if (sta == 4) {  //要设置为可编辑且必填.
+                if (frmType != null && frmType != undefined && frmType == 8)
+                    SetDevelopCtrlShow(key);
+                else
+                    SetCtrlShow(key);
+                SetCtrlMustInput(key);
+                NDMapAttrs.push(key);
+            }
+
         }
     }
     if (!$.isArray(mapAttrs[KeyOfEn])) {
@@ -326,19 +336,16 @@ function SetCtrlEnable(key) {
     var ctrl = $("#TB_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
-        ctrl.addClass("form-control");
     }
 
     ctrl = $("#DDL_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
-        ctrl.addClass("form-control");
     }
 
     ctrl = $("#CB_" + key);
     if (ctrl.length > 0) {
         ctrl.removeAttr("disabled");
-        //ctrl.addClass("form-control");
     }
 
     ctr = document.getElementsByName('RB_' + key);
@@ -373,6 +380,97 @@ function SetCtrlUnEnable(key) {
         //ctrl.attr("disabled", "disabled");
     }
 }
+
+//设置是否可用必填?
+function SetCtrlMustInput(key) {
+
+    var ctrl = $("#TB_" + key);
+    if (ctrl.length > 0) {
+        ctrl.removeAttr("disabled");
+        var layVerify = ctrl.attr("lay-verify")
+        if (layVerify == undefined || layVerify == "")
+            ctrl.attr("lay-verify", "required")
+        else
+            ctrl.attr("lay-verify", layVerify + "|required");
+    }
+
+    ctrl = $("#DDL_" + key);
+    if (ctrl.length > 0) {
+        ctrl.removeAttr("disabled");
+        if (layVerify == undefined || layVerify == "")
+            ctrl.attr("lay-verify", "required")
+        else
+            ctrl.attr("lay-verify", layVerify + "|required");
+    }
+
+    ctrl = $("#CB_" + key);
+    if (ctrl.length > 0) {
+        ctrl.removeAttr("disabled");
+        if (layVerify == undefined || layVerify == "")
+            ctrl.attr("lay-verify", "required")
+        else
+            ctrl.attr("lay-verify", layVerify + "|required");
+    }
+
+    ctr = document.getElementsByName('RB_' + key);
+    if (ctrl != null) {
+        var ses = new Entities("BP.Sys.SysEnums");
+        ses.Retrieve("EnumKey", key);
+        for (var i = 0; i < ses.length; i++) {
+            $("#RB_" + key + "_" + ses[i].IntKey).removeAttr("disabled");
+            if (layVerify == undefined || layVerify == "")
+                $("#RB_" + key + "_" + ses[i].IntKey).attr("lay-verify", "required")
+            else
+                $("#RB_" + key + "_" + ses[i].IntKey).attr("lay-verify", layVerify + "|required");
+        }
+           
+    }
+    $("#Lab_" + key).before("<span style='color: red' class='mustInput' data-keyofen='"+key+"'>*</span>");
+}
+
+//设置可不必填?
+function SetCtrlUnMustInput(key) {
+
+    var ctrl = $("#TB_" + key);
+    if (ctrl.length > 0) {
+        var layVerify = ctrl.attr("lay-verify")
+        if (layVerify != undefined && layVerify != "") {
+            layVerify = layVerify.replace("|required", "").replace("required", "");
+            ctrl.attr("lay-verify", layVerify)
+        }
+    }
+
+    ctrl = $("#DDL_" + key);
+    if (ctrl.length > 0) {
+        var layVerify = ctrl.attr("lay-verify")
+        if (layVerify != undefined && layVerify != "") {
+            layVerify = layVerify.replace("|required", "").replace("required", "");
+            ctrl.attr("lay-verify", layVerify)
+        }
+    }
+
+    ctrl = $("#CB_" + key);
+    if (ctrl.length > 0) {
+        var layVerify = ctrl.attr("lay-verify")
+        if (layVerify != undefined && layVerify != "") {
+            layVerify = layVerify.replace("|required", "").replace("required", "");
+            ctrl.attr("lay-verify", layVerify)
+        }
+    }
+
+    ctrl = $("#RB_" + key);
+    if (ctrl != null) {
+        var layVerify = $('input[name=RB_' + key + ']').attr("lay-verify")
+        if (layVerify != undefined && layVerify != "") {
+            layVerify = layVerify.replace("|required", "").replace("required", "");
+            $('input[name=RB_' + key + ']').attr("lay-verify", layVerify)
+        }
+    }
+    if ($("#Lab_" + key).prev().length>0)
+        $("#Lab_" + key).prev().remove();
+}
+
+
 //设置隐藏?
 function SetCtrlHidden(key) {
     ctrl = $("#Lab_" + key);
@@ -420,7 +518,7 @@ function SetCtrlShow(key) {
     }
 
     //附件隐藏
-    var ctrl = $("#Ath_" + key);
+    var ctrl = $("#Div_" + key);
     if (ctrl.length > 0) {
         ctrl.parent().parent('.layui-row').css("display", "block");
         ctrl.parent().parent('.layui-row').prev().css("display", "block");
@@ -430,70 +528,101 @@ function SetCtrlShow(key) {
 
 //设置隐藏?
 function SetDevelopCtrlHidden(key) {
-    var ctrl = $("#TB_" + key);
+    //从表隐藏
+    var ctrl = $("#Fd" + key);
     if (ctrl.length > 0) {
         ctrl.hide();
+        $("#Lab_" + key).hide();
+        return;
     }
-
-    ctrl = $("#DDL_" + key);
+    //附件隐藏
+    ctrl = $("#Div_" + key);
     if (ctrl.length > 0) {
-        ctrl.hide();
+        $("#Div_" + key).hide();
+        $("#Lab_" + key).hide();
+        return;
     }
 
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
-        if (ctrl.parent() != undefined && ctrl.parent().length > 0) {
-            if ($(ctrl.parent()[0]).context.nodeName.toLowerCase() == "label")
-                $(ctrl.parent()[0]).hide();
-        }
-
+    ctrl = $("#TB_" + key);
+    if (ctrl.length == 0) {
+        ctrl = $("#SS_FDBZQ");
+        if (ctrl.length == 0)
+            ctrl = $("#DDL_" + key);
     }
+       
+    if (ctrl.length == 0)
+        ctrl = $("#CB_" + key);
+    if (ctrl.length == 0)
+        ctrl = $("#SR_" + key);
+    if (ctrl.length == 0)
+        ctrl = $("#SC_" + key);
 
-    ctrl = $("#SR_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
+   
+    if (ctrl.length == 0) {
+        layer.alert(key + "的类型判断不正确，请告知开发人员");
+        return;
     }
-
-    ctrl = $("#Lab_" + key);
-    if (ctrl.length > 0) {
-        ctrl.hide();
+    
+    var parent = ctrl.parent()[0];
+    if (parent.tagName.toLowerCase() != "td")
+        parent = $(parent).parent()[0];
+    if (parent.tagName.toLowerCase() == "td") {
+        if (parent.id != "CCForm")
+            $(parent).hide();
+        //当前节点的兄弟节点，如果没有input，select,就隐藏
+        var prev = $(parent).prev();
+        if (prev.find("input").length == 0 && prev.find("select").length == 0)
+            prev.hide();
     }
-
-    CleanCtrlVal(key);
-
-
+        
+    
 }
 //设置显示?
 function SetDevelopCtrlShow(key) {
-    var ctrl = $("#TB_" + key);
+    //从表显示
+    var ctrl = $("#Fd" + key);
     if (ctrl.length > 0) {
         ctrl.show();
+        $("#Lab_" + key).show();
+        return;
+    }
+    //附件显示
+    ctrl = $("#Div_" + key);
+    if (ctrl.length > 0) {
+        $("#Div_" + key).show();
+        $("#Lab_" + key).show();
+        return;
     }
 
-    ctrl = $("#DDL_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
+    ctrl = $("#TB_" + key);
+    if (ctrl.length == 0) {
+        ctrl = $("#SS_FDBZQ");
+        if (ctrl.length == 0)
+            ctrl = $("#DDL_" + key);
     }
+    if (ctrl.length == 0)
+        ctrl = $("#CB_" + key);
+    if (ctrl.length == 0)
+        ctrl = $("#SR_" + key);
+    if (ctrl.length == 0)
+        ctrl = $("#SC_" + key);
+    
+    if (ctrl.length == 0) {
+        layer.alert(key + "的类型判断不正确，请告知开发人员");
+        return;
+    }
+    var parent = ctrl.parent()[0];
+    if (parent.tagName.toLowerCase() != "td")
+        parent = $(parent).parent()[0];
+    $(parent).show();
+    ctrl.show();
 
-    ctrl = $("#CB_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-        if (ctrl.parent() != undefined && ctrl.parent().length > 0) {
-            if ($(ctrl.parent()[0]).context.nodeName.toLowerCase() == "label")
-                $(ctrl.parent()[0]).show();
-        }
-    }
+    //当前节点的兄弟节点，如果没有input，select,就隐藏
+    var prev = $(parent).prev();
+    if (prev.find("input").length == 0 && prev.find("select").length == 0)
+        prev.show();
 
-    ctrl = $("#SR_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-    }
-
-    ctrl = $("#Lab_" + key);
-    if (ctrl.length > 0) {
-        ctrl.show();
-    }
+   
 }
 
 

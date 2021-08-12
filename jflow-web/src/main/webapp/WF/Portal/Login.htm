@@ -12,7 +12,6 @@
     <script src="../Scripts/bootstrap/js/jquery.min.js"></script>
     <script src="../Scripts/config.js" type="text/javascript"></script>
     <script src="../Comm/Gener.js" type="text/javascript"></script>
-    <script src="../Comm/JS/validation.js"></script>
     <script src="../Scripts/bootstrap/js/bootstrap.min.js"></script>
     <script src="layer/layer.js"></script>
     <script type="text/javascript">
@@ -76,15 +75,26 @@
                 }
             });
 
-        });
+            handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
 
+            var data = handler.DoMethodReturnString("Login_VerifyState");
+
+            if (data.indexOf('err@') == 0) {
+                document.getElementById("validate").style.display = "block";
+                document.getElementById("verifycode").src = data.split('@')[1];
+            }
+        });
+        function createCode() {
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
+
+            $("#verifycode").attr('src', handler.DoMethodReturnString("Login_VerifyCode"));
+        }
         function LoginText() {
             window.location.href = "Default.htm";
         }
 
         //执行后台登录.
         function Login() {
-
             //$("#Msg").html("<font> ccbpm 正在登录流程&表单引擎设计器,请稍候... </font>");
             var loading = layer.load(1, { shade: [0.1, '#fff'] });
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
@@ -98,12 +108,12 @@
             }
             //判断验证码是否正确
             var node = $("#validate");
-            if (node.is(':visible')) {
-                if (!validateCode()) {
-                    return;
-                }
+            if (node.is(':visible') && $("#inputCode").val() == '') {
+                alert("请输入验证码");
+                return;
             }
 
+            handler.AddPara("VerifyCode", $("#inputCode").val());
             handler.AddPara("TB_No", userNo);
             handler.AddPara("TB_PW", pass);
 
@@ -112,7 +122,7 @@
             if (data.indexOf('err@') == 0) {
                 layer.msg("<font color=red>" + data + "</font>");
                 $("#validate").show();
-                createCode();
+                $("#verifycode").attr('src', handler.DoMethodReturnString("Login_VerifyCode"));
                 return;
             }
 
@@ -170,8 +180,8 @@
         //手机扫描登录.
         function Mobile() {
 
+            //alert("手机端代码不开放..");
             var url = "LoginGenerQRCodeMobile.htm";
-
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             var data = handler.DoMethodReturnString("LoginGenerQRCodeMobile_Init");
             if (data.indexOf("err@") == true) {
@@ -230,16 +240,16 @@
 
                             <div class="form-group">
 
-                                <input type="text" id="TB_No" name="TB_No" style="font-size:larger" value="admin" placeholder="默认账号:admin" lay-verify="required" class="form-control" />
+                                <input type="text" id="TB_No" name="TB_No" value="admin" placeholder="默认账号:admin" lay-verify="required" class="form-control" />
                             </div>
                             <div class="form-group">
 
-                                <input type="password" id="TB_PW" name="TB_PW" style="font-size:larger" placeholder="默认密码:123" lay-verify="required" class="form-control" />
+                                <input type="password" id="TB_PW" name="TB_PW" placeholder="默认密码:123" lay-verify="required" class="form-control" />
                             </div>
 
                             <div id="validate" class="form-group" style="display: none">
                                 <input type="text" class="form-control" placeholder="验证码" id="inputCode" style="width:50%;display: inline" />
-                                <canvas id="canvas" width="78" height="24"></canvas>
+                                <img id="verifycode" src="" />
                                 <a href="javascript:void(0)" style="margin-left: 10px" onclick="createCode()">看不清</a>
                             </div>
 

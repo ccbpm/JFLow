@@ -158,7 +158,9 @@ function GetDataTableOfTBChoice(mapExt, frmData, defVal) {
  * @param {any} ddlChild
  * @param {any} mapExt
  */
-function DDLAnsc(selectVal, ddlChild, mapExt) {
+function DDLAnsc(selectVal, ddlChild, mapExt, showWay) {
+    //下拉框展示方式 0下拉框 1平铺
+    showWay = showWay == null || showWay == undefined ? 0 : 1;
     selectVal = selectVal == null || selectVal == undefined ? "" : selectVal;
 
     if ($("#" + ddlChild).length==0) {
@@ -168,11 +170,14 @@ function DDLAnsc(selectVal, ddlChild, mapExt) {
     //1.初始值为空或者NULL时，相关联的字段没有数据显示
     if (selectVal == "" || selectVal == "all") {
         $("#" + ddlChild).empty();
-        $("#" + ddlChild).append("<option value='' selected='selected' >" + selectVal==""?"":"全部"+"</option");
+        $("#" + ddlChild).append("<option value='' selected='selected' >" + selectVal==""?"":"全部"+"</option>");
         layui.form.render("select");
         var select = 'dd[lay-value=' + selectVal + ']';
         $("#" + ddlChild).siblings("div.layui-form-select").find('dl').find(select).click();//触发
-
+        if (showWay == 1) {
+            var key = ddlChild.replace("DDL_", "");
+            $("#Tab_" + key).html('<li class="layui-input-span layui-this" id="' + key + '_" onclick="SearchBySelect(\'' + key + '\',\'\')">'+selectVal==""?"":"全部"+'</li>')
+        }
         return;
     }  
    //获得数据源.
@@ -182,13 +187,19 @@ function DDLAnsc(selectVal, ddlChild, mapExt) {
    
     //清空级联字段
     $("#" + ddlChild).empty();
-
+    var key = ddlChild.replace("DDL_", "");
+    if (showWay == 1)
+        $("#Tab_" + key).html("");
     //查询数据为空时为级联字段赋值
     if (dataObj == null || dataObj.length == 0) {
-        $("#" + ddlChild).append("<option value='' selected='selected' ></option");
+        $("#" + ddlChild).append("<option value='' selected='selected' ></option>");
         layui.form.render("select");
         var select = 'dd[lay-value=' + selectVal + ']';
         $("#" + ddlChild).siblings("div.layui-form-select").find('dl').find(select).click();//触发
+        if (showWay == 1) {
+            
+            $("#Tab_" + key).html('<li class="layui-input-span layui-this" id="' + key + '_" onclick="SearchBySelect(\'' + key + '\',\'\')"></li>')
+        }
     }
 
     //不为空的时候赋值
@@ -206,8 +217,9 @@ function DDLAnsc(selectVal, ddlChild, mapExt) {
             name = item.name;
         if (oldVal == no)
             isHaveSelect = true;
-        $("#" + ddlChild).append("<option value='" + no + "'>" + name + "</option");
-
+        $("#" + ddlChild).append("<option value='" + no + "'>" + name + "</option>");
+        if (showWay == 1)
+            $("#Tab_" + key).append('<li class="layui-input-span"  onclick="SearchBySelect(\'' + key + '\',\'' + no+'\')">'+name+'</li>');
     });
 
    
@@ -216,9 +228,18 @@ function DDLAnsc(selectVal, ddlChild, mapExt) {
         layui.form.render("select");
         var select = 'dd[lay-value=' + $('#' + ddlChild).val() + ']';
         $("#" + ddlChild).siblings("div.layui-form-select").find('dl').find(select).click();//触发
-
-    } else
+        if (showWay == 1)
+            $($("#Tab_" + key).find("li")[0]).addClass("layui-this");
+    } else {
         $('#' + ddlChild).val(oldVal);
+        if (showWay == 1) {
+            var idx = $('#' + ddlChild).get(0).options.selectedIndex;
+            $("#Tab_" + key).find("li").removeClass("layui-this");
+            $($("#Tab_" + key).find("li")[idx]).addClass("layui-this");
+        }
+           
+    }
+       
     layui.form.render("select");
 }
 
@@ -274,7 +295,7 @@ function FullIt(selectVal, refPK, elementId) {
     FullCtrlDDL(selectVal, elementId, mapExt);
 
     //执行填充从表.
-    FullDtl(selectVal, mapExt);
+    FullDtl(selectVal, mapExt,oid);
 
     //执行确定后执行的JS
     var backFunc = mapExt.Tag2;
@@ -456,10 +477,11 @@ function FullCtrlDDL(selectVal, ctrlID, mapExt) {
     }
 }
 //填充明细.
-function FullDtl(selectVal, mapExt) {
+function FullDtl(selectVal, mapExt,oid) {
     if (mapExt.Tag1 == "" || mapExt.Tag1 == null)
         return;
 
+    var kvs = "";
     var dbType = mapExt.DBType;
     var dbSrc = mapExt.Tag1;
     var url = GetLocalWFPreHref();
@@ -467,7 +489,7 @@ function FullDtl(selectVal, mapExt) {
 
     if (dbType == 1) {
 
-        dbSrc = DealSQL(DealExp(dbSrc), e, kvs);
+        dbSrc = DealSQL(DealExp(dbSrc), selectVal, kvs);
         dataObj = DBAccess.RunDBSrc(dbSrc, 1);
 
         //JQuery 获取数据源
@@ -498,7 +520,7 @@ function FullDtl(selectVal, mapExt) {
         for (var k in dataObj.Head[i]) {
             var fullDtl = dataObj.Head[i][k];
             //  alert('您确定要填充从表吗?，里面的数据将要被删除。' + key + ' ID= ' + fullDtl);
-            var frm = document.getElementById('Dtl_' + fullDtl);
+            var frm = document.getElementById('Frame_' + fullDtl);
 
             var src = frm.src;
             if (src != undefined || src != null) {
@@ -511,5 +533,37 @@ function FullDtl(selectVal, mapExt) {
             }
         }
     }
+}
+function DealSQL(dbSrc, key, kvs) {
+
+    dbSrc = dbSrc.replace(/~/g, "'");
+
+    dbSrc = dbSrc.replace(/@Key/g, key);
+    dbSrc = dbSrc.replace(/@Val/g, key);
+
+    var oid = GetQueryString("OID");
+    if (oid != null) {
+        dbSrc = dbSrc.replace("@OID", oid);
+    }
+
+    if (kvs != null && kvs != "" && dbSrc.indexOf("@") >= 0) {
+
+        var strs = kvs.split("[~]", -1);
+        for (var i = 0; i < strs.length; i++) {
+            var s = strs[i];
+            if (s == null || s == "" || s.indexOf("=") == -1)
+                continue;
+            var mykv = s.split("[=]", -1);
+            dbSrc = dbSrc.replace("@" + mykv[0], mykv[1]);
+            if (dbSrc.indexOf("@") == -1)
+                break;
+        }
+    }
+
+    if (dbSrc.indexOf("@") >= 0) {
+        alert('系统配置错误有一些变量没有找到:' + dbSrc);
+    }
+
+    return dbSrc;
 }
 

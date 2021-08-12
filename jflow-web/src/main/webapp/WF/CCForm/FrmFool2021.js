@@ -60,8 +60,10 @@ function ShowFoolByTable(frmData, tableCol, Sys_GroupFields, node) {
     Sys_GroupFields.forEach(function (gf) {
         var ctrlType = gf.CtrlType;
         ctrlType = ctrlType == null ? "" : ctrlType;
-
-        gfLabHtml = "<div class='layui-row FoolFrmGroupBar' id='Group_" + gf.CtrlID+"'>"
+        if (ctrlType =="FWC")
+            gfLabHtml = "<div class='layui-row FoolFrmGroupBar' id='Group_FWC'>"
+        else
+            gfLabHtml = "<div class='layui-row FoolFrmGroupBar' id='Group_" + gf.CtrlID + "'>"
         gfLabHtml += "<div class='layui-col-xs12'>";
         gfLabHtml += gf.Lab;
         gfLabHtml += "</div>";
@@ -111,6 +113,8 @@ function ShowFoolByTable(frmData, tableCol, Sys_GroupFields, node) {
                     break;
                 if (window.document.location.href.indexOf("AdminFrm.htm") != -1)
                     break;
+                //如何有签批字段就不解析
+               
                 _html += gfLabHtml;
                 _html += "<div class='layui-row'>"
                 _html += "<div class='layui-col-xs12'>";

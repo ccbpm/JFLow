@@ -53,7 +53,7 @@ function GenerWorkNode() {
     if (data.indexOf('err@') == 0) {
         layer.alert(data);
         console.log(data);
-        layer.close(index);
+        layer.close(index);  
         return;
     }
 
@@ -64,12 +64,12 @@ function GenerWorkNode() {
     } catch (err) {
         layer.alert(" GenerWorkNode转换JSON失败,请查看控制台日志,或者联系管理员.");
         console.log(flowData);
-        layer.close(index);
+        layer.close(index);  
         return;
     }
     if (webUser == null)
         webUser = new WebUser();
-    //处理附件的问题
+    //处理附件的问题 
     if (flowData.Sys_FrmAttachment.length != 0) {
         Skip.addJs("./CCForm/Ath.js");
         Skip.addJs("./CCForm/JS/FileUpload/fileUpload.js");
@@ -118,7 +118,7 @@ function GenerWorkNode() {
     loadScript("../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random());
     loadScript("../DataUser/JSLibData/" + enName + ".js?t=" + Math.random());
 
-    layer.close(index);
+    layer.close(index);  
 }
 
 /**
@@ -130,9 +130,17 @@ function BindFrm() {
     var flowDevModel = flow.FlowDevModel;
     flowDevModel = flowDevModel == null || flowDevModel == undefined || flowDevModel == "" ? 0 : parseInt(flowDevModel);
     var isFool = true;
+    var frmNode = flowData["WF_FrmNode"];
+    var flow = flowData["WF_Flow"];
+    if ((flow && flow[0].FlowDevModel == 1 || node.FormType == 11) && frmNode != null && frmNode != undefined) {
+        frmNode = frmNode[0];
+        if (frmNode.FrmSln == 1) {
+            isReadonly = true;
+        }
+    }
     //根据流程设计模式解析
     switch (flowDevModel) {
-        case FlowDevModel.Prefessional: //专业模式
+        case FlowDevModel.Prefessional: //专业模式 
             //根据节点的表单方案解析
             switch (parseInt(node.FormType)) {
                 case 0: //傻瓜表单
@@ -152,7 +160,6 @@ function BindFrm() {
                     GenerTreeFrm(flowData);
                     break;
                 case 11://表单库单表单
-                    var frmNode = flowData.WF_FrmNode;
                     var mapData = flowData.Sys_MapData[0];
                     if (frmNode != null && frmNode != undefined) {
                         if (mapData.FrmType == 0) { //傻瓜表单
@@ -188,14 +195,13 @@ function BindFrm() {
                 GenerDevelopFrm(flowData, flowData.Sys_MapData[0].No);
                 isFool = false;
             }
-
+            
             break;
         case FlowDevModel.FoolTruck://累加模式
             Skip.addJs("./CCForm/FrmFool2021.js?ver=" + Math.random());
             GenerFoolFrm(flowData); //傻瓜表单.
             break;
         case FlowDevModel.RefOneFrmTree://表单库单表单
-            var frmNode = flowData.WF_FrmNode;
             if (frmNode != null && frmNode != undefined) {
                 frmNode = frmNode[0];
                 if (frmNode.FrmType == 0) { //傻瓜表单
@@ -231,8 +237,8 @@ function BindFrm() {
         $('#ContentDiv').css("margin-left", "auto").css("margin-right", "auto");
     }
 
-
-
+   
+    
     //如果是富文本编辑器
     if ($(".rich").length > 0 && richTextType=="tinymce") {
         var images_upload_url = "";
@@ -257,9 +263,9 @@ function BindFrm() {
                     , images_upload_url: images_upload_url
                 });
             })
-
+            
         });
-
+       
     }
     if ($(".EditorClass").length > 0 && richTextType == "ueditor") {
         $('head').append('<link href="./Comm/umeditor1.2.3-utf8/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">');
@@ -291,18 +297,14 @@ function BindFrm() {
             }
         })
     }
-
+  
     //3.装载表单数据与修改表单元素风格.
     LoadFrmDataAndChangeEleStyle(flowData);
-    var frmNode = flowData["WF_FrmNode"];
-    var flow = flowData["WF_Flow"];
     if ((flow && flow[0].FlowDevModel == 1 || node.FormType == 11) && frmNode != null && frmNode != undefined) {
-        frmNode = frmNode[0];
-        if (frmNode.FrmSln == 1) {
+        if (frmNode.FrmSln == 1)
             /*只读的方案.*/
             SetFrmReadonly();
-            pageData.IsReadonly = 1;
-        }
+        
     }
     layui.form.render();
 
@@ -311,14 +313,15 @@ function BindFrm() {
 
     //4.解析表单的扩展功能
     AfterBindEn_DealMapExt(flowData);
-
+   
     $.each($(".ccdate"), function (i, item) {
         var format = $(item).attr("data-info");
+        var type = $(item).attr("data-type");
         if (format.indexOf("HH") != -1) {
             layui.laydate.render({
                 elem: '#' + item.id,
                 format: $(item).attr("data-info"), //可任意组合
-                type: 'datetime',
+                type: type,
                 done: function (value, date, endDate) {
                     var data = $(this.elem).data();
                     $(this.elem).val(value);
@@ -340,10 +343,10 @@ function BindFrm() {
         }
 
     })
-
+    
 }
 /**
- *保存表单数据
+ *保存表单数据 
  */
 function Save(saveType) {
     //正在保存弹出层
@@ -371,7 +374,7 @@ function Save(saveType) {
             layer.close(index);
             return;
         }
-
+           
     //监听提交
     layui.form.on('submit(Save)', function (data) {
         //保存信息
@@ -387,10 +390,10 @@ function Save(saveType) {
             layer.alert(data);
         }
         layer.alert("数据保存成功");
-
+        
         return false;
     });
-
+   
 }
 
 //获得所有的checkbox 的id组成一个string用逗号分开, 以方便后台接受的值保存.
@@ -490,6 +493,19 @@ function SaveDtlAll() {
     return true;
 }
 
+function SetFrmReadonly() {
+
+
+    $('#CCForm').find('input,textarea,select').attr('disabled', false);
+    $('#CCForm').find('input,textarea,select').attr('readonly', true);
+    $('#CCForm').find('input,textarea,select').attr('disabled', true);
+    if ($("#WorkCheck_Doc").length == 1) {
+        $("#WorkCheck_Doc").removeAttr("readonly");
+        $("#WorkCheck_Doc").removeAttr("disabled");
+    }
+
+    $('#Btn_Save').attr('disabled', true);
+}
 
 
 

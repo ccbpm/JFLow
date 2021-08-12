@@ -5284,7 +5284,8 @@ public class Dev2Interface {
 		wk.setOID(workID);
 		wk.RetrieveFromDBSources();
 		WorkNode wn = new WorkNode(wk, nd);
-		msg +=WorkNodePlus.SubFlowEvent(wn).OutMessageHtml;
+		SendReturnObjs  objs = WorkNodePlus.SubFlowEvent(wn);
+		msg += objs == null ? "" : objs.OutMessageHtml;
 
 		return msg;
 	}

@@ -1520,8 +1520,15 @@ public abstract class WebContralBase {
 		return GetRequestVal("FK_Emp");
 	}
 
-	public final String getPageID() {
-		return GetRequestVal("PageID");
+	public final String getPageID()
+	{
+		String pageID = this.GetRequestVal("PageID");
+		 if (DataType.IsNullOrEmpty(pageID) == true)
+		 {
+			 pageID = "Home";
+		 }
+
+		return pageID;
 	}
 
 	public boolean getIsCC() {

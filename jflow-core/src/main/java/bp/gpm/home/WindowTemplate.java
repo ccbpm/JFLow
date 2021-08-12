@@ -1,12 +1,12 @@
 package bp.gpm.home;
 
+import bp.da.DBAccess;
+import bp.da.DataType;
 import bp.da.Depositary;
 import bp.en.EnType;
 import bp.en.EntityNoName;
 import bp.en.Map;
 import bp.en.UAC;
-import bp.gpm.MenuAttr;
-import bp.gpm.MenuType;
 
 /** 
 信息块
@@ -43,6 +43,18 @@ public final WinDocType getWinDocType() throws Exception{
 public final void setWinDocType(WinDocType value) throws Exception{
 	this.SetValByKey(WindowTemplateAttr.WinDocType, value.getValue());
 }
+/** 
+窗口模式
+*/
+public final String getWinDocModel()throws Exception
+{
+	return this.GetValStringByKey(WindowTemplateAttr.WinDocModel);
+}
+public final void setWinDocModel(String value)throws Exception
+{
+	this.SetValByKey(WindowTemplateAttr.WinDocModel, value);
+}
+
 /** 
  更多的URL
 */
@@ -163,6 +175,14 @@ public final void setDocs(String value) throws Exception
 {
 	this.SetValByKey(WindowTemplateAttr.Docs, value);
 }
+public final String getPageID() throws Exception
+{
+	return this.GetValStrByKey(WindowTemplateAttr.PageID);
+}
+public final void setPageID(String value) throws Exception
+{
+	this.SetValByKey(WindowTemplateAttr.PageID, value);
+}
 
 /** 
  信息块
@@ -205,9 +225,10 @@ public WindowTemplate()
 		map.AddTBInt(WindowTemplateAttr.ColSpan, 1, "占的列数", true, false);
 		map.SetHelperAlert(WindowTemplateAttr.ColSpan, "画布按照4列划分布局，输入的输在在1=4之间.");
 		map.AddTBString(WindowTemplateAttr.Name, null, "标题", true, false, 0, 300, 20, true);
-
+		map.AddTBString(WindowTemplateAttr.WinDocModel, null, "内容类型", true, false, 0, 300, 20, true);
 		map.AddTBString(WindowTemplateAttr.Icon, null, "Icon", true, false, 0, 100, 20, true);
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		map.AddTBString(WindowTemplateAttr.PageID, null, "页面ID", true, true, 0, 40, 20, false);
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 基本信息.
 
 					// map.AddDDLSysEnum(WindowTemplateAttr.ColSpan, 1, "占的列数", true, true, WindowTemplateAttr.ColSpan,
@@ -252,9 +273,37 @@ public WindowTemplate()
 		map.AddDDLSysEnum(WindowTemplateAttr.WindCtrlWay, 0, "控制方式", true, true, WindowTemplateAttr.WindCtrlWay, "@0=任何人都可以使用@1=按照设置的控制@2=Admin用户可以使用");
 	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#endregion 其他
+		//region 扇形图
 
+        map.AddTBString(WindowTemplateAttr.LabOfFZ, null, "分子标签", true, false, 0, 100, 20);
+        map.AddTBStringDoc(WindowTemplateAttr.SQLOfFZ, null, "分子表达式", true, false, true);
+
+        map.AddTBString(WindowTemplateAttr.LabOfFM, null, "分母标签", true, false, 0, 100, 20);
+        map.AddTBStringDoc(WindowTemplateAttr.SQLOfFM, null, "分子表达式", true, false, true);
+        map.AddTBString(WindowTemplateAttr.LabOfRate, null, "率标签", true, false, 0, 100, 20);
+        //endregion 扇形图
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	@Override
+	protected boolean beforeInsert() throws Exception
+	{
+		this.setNo(DBAccess.GenerGUID());
+		if (DataType.IsNullOrEmpty(this.getPageID()) == true)
+		{
+			this.setPageID ("Home");
+		}
 
+		return super.beforeInsert();
+	}
+
+	@Override
+	protected void afterDelete() throws Exception
+	{
+		//删除它的实例.
+		Windows ens = new Windows();
+		ens.Delete(WindowAttr.WindowTemplateNo, this.getNo());
+
+		super.afterDelete();
+	}
 }

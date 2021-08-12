@@ -13,6 +13,7 @@ import bp.da.FieldCaseModel;
 import bp.da.Paras;
 import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
+import bp.gpm.home.WindowTemplateAttr;
 import bp.gpm.home.WindowTemplates;
 import bp.gpm.menu2020.Menus;
 import bp.gpm.menu2020.Modules;
@@ -295,14 +296,21 @@ public class WF_Portal extends WebContralBase
     /// <returns></returns>
     public String Home_Init() throws Exception
     {
-        WindowTemplates ens = new WindowTemplates();
-        ens.RetrieveAll();
+    	 WindowTemplates ens = new WindowTemplates();
+         ens.Retrieve(WindowTemplateAttr.PageID, this.getPageID(), "Idx");
+ 		if (ens.size() == 0)
+ 		{
+ 			ens.InitHomePageData();
+ 			ens.Retrieve(WindowTemplateAttr.PageID, this.getPageID(), "Idx");
+ 		}
 
-        DataTable dt = ens.ToDataTableField();
-        dt.TableName = "WindowTemplates";
-        return bp.tools.Json.ToJson(dt);
+ 		//初始化数据.
+ 		ens.InitDocs();
 
-        //return "移动成功..";
+ 		DataTable dt = ens.ToDataTableField();
+ 		dt.TableName = "WindowTemplates";
+
+         return bp.tools.Json.ToJson(dt);
     }
     public String Home_DoMove()
     {

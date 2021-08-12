@@ -70,4 +70,31 @@ public class WindowTemplateAttr extends EntityNoNameAttr
 	 权限控制方式.
 	*/
 	public static final String WindCtrlWay = "WindCtrlWay";
+	 /// <summary>
+    /// 页面ID.
+    /// </summary>
+    public static final String PageID = "PageID";
+  /// <summary>
+    /// 模式
+    /// </summary>
+    public static final String WinDocModel = "WinDocModel";
+  //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+  ///#region 数据源
+  		public static final String DBType = "DBType";
+  		public static final String DBSrc = "DBSrc";
+  		public static final String DBExp0 = "DBExp0";
+  		public static final String DBExp1 = "DBExp1";
+  		public static final String DBExp2 = "DBExp2";
+  //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+  		///#endregion 数据源
+
+  //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+  		///#region 百分比扇形图
+  		public static final String LabOfFZ = "LabOfFZ";
+  		public static final String SQLOfFZ = "SQLOfFZ";
+  		public static final String LabOfFM = "LabOfFM";
+  		public static final String SQLOfFM = "SQLOfFM";
+  		public static final String LabOfRate = "LabOfRate";
+  //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+  		///#endregion 百分比扇形图
 }

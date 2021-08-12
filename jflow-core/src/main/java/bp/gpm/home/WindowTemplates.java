@@ -8,6 +8,9 @@ import bp.da.DataTable;
 import bp.difference.SystemConfig;
 import bp.en.EntitiesNoName;
 import bp.en.Entity;
+import bp.gpm.home.windowext.DtlAttr;
+import bp.gpm.home.windowext.HtmlVarDtl;
+import bp.gpm.home.windowext.HtmlVarDtls;
 import bp.sys.CCBPMRunModel;
 
 /** 
@@ -68,19 +71,73 @@ public class WindowTemplates extends EntitiesNoName
 		for (WindowTemplate item : this.ToJavaList())
 		{
 			//文本的, 不用转化.
-			if (item.getWinDocType().equals("0"))
+			if (item.getWinDocModel().equals(WinDocModel.Html))
 			{
 				continue;
 			}
 
 			//内置的.
-			if (item.getWinDocType().equals(WinDocType.System))
+			if (item.getWinDocModel().equals(WinDocModel.System))
 			{
 				String tempVar = item.getDocs();
 				String exp = tempVar instanceof String ? (String)tempVar : null;
 				exp = bp.wf.Glo.DealExp(exp, null);
 				item.setDocs(exp);
 			}
+			//HtmlVar 变量字段.
+			if (item.getWinDocModel().equals(WinDocModel.HtmlVar))
+			{
+				HtmlVarDtls dtls = new HtmlVarDtls();
+				dtls.Retrieve(DtlAttr.RefWindowTemplate, item.getNo());
+
+				for (HtmlVarDtl dtl : dtls.ToJavaList())
+				{
+					Object tempVar = dtl.getExp0();
+					String sql = tempVar instanceof String ? (String)tempVar : null;
+					sql = sql.replace("~", "'");
+					sql = bp.wf.Glo.DealExp(sql, null);
+					try
+					{
+						dtl.setExp0(DBAccess.RunSQLReturnStringIsNull(sql, "0"));
+					}
+					catch (RuntimeException ex)
+					{
+						dtl.setExp0("err@" + ex.getMessage());
+					}
+				}
+				item.setDocs(dtls.ToJson());
+				continue;
+			}
+
+
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#region 扇形百分比.
+			if (item.getWinDocModel().equals(WinDocModel.ChartRate)) //sql列表.
+			{
+				try
+				{
+					Object tempVar2 = item.GetValStringByKey(WindowTemplateAttr.SQLOfFZ);
+					String sql = tempVar2 instanceof String ? (String)tempVar2 : null;
+					sql = sql.replace("~", "'");
+					sql = bp.wf.Glo.DealExp(sql, null);
+					String val = DBAccess.RunSQLReturnString(sql);
+					item.SetValByKey(WindowTemplateAttr.SQLOfFZ, val);
+
+					Object tempVar3 = item.GetValStringByKey(WindowTemplateAttr.SQLOfFM);
+					sql = tempVar3 instanceof String ? (String)tempVar3 : null;
+					sql = sql.replace("~", "'");
+					sql = bp.wf.Glo.DealExp(sql, null);
+					val = DBAccess.RunSQLReturnString(sql);
+					item.SetValByKey(WindowTemplateAttr.SQLOfFM, val);
+				}
+				catch (RuntimeException ex)
+				{
+					item.setWinDocModel(WinDocModel.Html);
+					item.setDocs("err@" + ex.getMessage() + " SQL=" + item.getDocs());
+				}
+			}
+//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+			///#endregion 扇形百分比.
 
 			//SQL列表. 
 			if (item.getWinDocType().equals(WinDocType.SQLList)
@@ -113,12 +170,12 @@ public class WindowTemplates extends EntitiesNoName
 		int i = this.RetrieveAllFromDBSource("Idx");
 		if (i >= 1)
 		{
-			InitDocs();
+			InitHomePageData();
 			return i;
 		}
 
 		//初始化模板数据.
-		InitData();
+		InitHomePageData();
 
 		//查询模数据.
 		i = this.RetrieveAllFromDBSource("Idx");
@@ -129,7 +186,7 @@ public class WindowTemplates extends EntitiesNoName
 	 初始化数据
 	 * @throws Exception 
 	*/
-	public final void InitData() throws Exception
+	public final void InitHomePageData() throws Exception
 	{
 		WindowTemplate en = new WindowTemplate();
 
@@ -137,7 +194,8 @@ public class WindowTemplates extends EntitiesNoName
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 关于我们.
 		en.setNo("001");
-		en.setWinDocType(WinDocType.Html);
+		en.setWinDocModel(WinDocModel.Html);
+		en.setPageID("Home");
 		en.setName("关于我们");
 		String html = "";
 		html += "<ul>";
@@ -160,7 +218,8 @@ public class WindowTemplates extends EntitiesNoName
 		en = new WindowTemplate();
 		en.setNo("002");
 		en.setName("登录信息");
-		en.setWinDocType(WinDocType.System); //系统内置的.
+		en.setPageID("Home");
+		en.setWinDocModel(WinDocModel.System); //系统内置的.
 
 		html = "<table>";
 		html += "<tr>";
@@ -188,7 +247,8 @@ public class WindowTemplates extends EntitiesNoName
 		en = new WindowTemplate();
 		en.setNo("003");
 		en.setName("我的待办");
-		en.setWinDocType(WinDocType.ChatZhuZhuang); //柱状图.
+		en.setPageID("Home");
+		en.setWinDocModel(WinDocModel.ChartLine); //柱状图.
 
 		html = "SELECT FK_NodeText AS FlowName, COUNT(WorkID) as Num ";
 		html += " FROM WF_GenerWorkerlist WHERE FK_Emp = '@WebUser.No' AND IsPass=0 GROUP BY FK_NodeText ";
@@ -204,7 +264,8 @@ public class WindowTemplates extends EntitiesNoName
 		en = new WindowTemplate();
 		en.setNo("004");
 		en.setName("全部流程");
-		en.setWinDocType(WinDocType.ChatZhuZhuang); //柱状图.
+		en.setPageID("Home");
+		en.setWinDocModel(WinDocModel.ChartLine); //柱状图.
 
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
@@ -218,11 +279,84 @@ public class WindowTemplates extends EntitiesNoName
 		en.setMoreLinkModel(1);
 		en.setColSpan(2);
 		en.Insert();
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-		///#endregion 我的待办分布.
-
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
 		///#region 我的未完成.
+		en = new WindowTemplate();
+		en.setPageID("Home");
+		en.setWinDocModel(WinDocModel.ChartLine); //.
+		en.setNo("005");
+		en.setName("未完成");
+		html = "SELECT FlowName, COUNT(WorkID) AS Num FROM WF_GenerWorkFlow  WHERE WFState = 2 ";
+		html += "and Emps like '%@WebUser.No%' GROUP BY FlowName";
+		en.setDocs(html);
+		en.setMoreLinkModel(1);
+		en.setColSpan(4);
+
+		en.Insert();
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+					///#endregion 我的未完成.
+
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 我的发起.
+		en = new WindowTemplate();
+		en.setPageID("Home");
+		en.setNo("006");
+		en.setName("我的发起");
+		en.setWinDocModel(WinDocModel.ChartPie); //柱状图.
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			en.setDocs("SELECT FlowName, COUNT(WorkID) AS Num  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No'  GROUP BY FlowName");
+		}
+		else
+		{
+			en.setDocs("SELECT FlowName, COUNT(WorkID) AS Num  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
+		}
+
+		en.setMoreLinkModel(1);
+		en.setColSpan(1);
+		en.Insert();
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+					///#endregion 我的发起.
+
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+					///#region 我参与的.
+		en = new WindowTemplate();
+		en.setPageID("Home");
+		en.setNo("007");
+		en.setName("我参与的");
+		en.setWinDocModel(WinDocModel.ChartPie); //柱状图.
+
+		if (SystemConfig.getCCBPMRunModel() ==CCBPMRunModel.Single)
+		{
+			en.setDocs("SELECT FlowName, COUNT(WorkID) AS Num  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE  '%@WebUser.No,%'  GROUP BY FlowName");
+		}
+		else
+		{
+			en.setDocs("SELECT FlowName, COUNT(WorkID) AS Num  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE '%@WebUser.No,%' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
+		}
+
+		en.setMoreLinkModel(1);
+		en.setColSpan(2);
+
+		en.Insert();
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+					///#endregion 我的发起.
+
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+		///#region 流程实例月份柱状图.
+		en = new WindowTemplate();
+		en.setPageID("Home");
+		en.setNo("008");
+		en.setName("月统计发起");
+		en.setWinDocModel(WinDocModel.ChartLine);
+		html = "SELECT FK_NY AS FlowName, COUNT(WorkID) AS Num  FROM WF_GenerWorkFlow WHERE WFState !=0 GROUP BY FK_NY";
+		en.setDocs(html);
+		en.setMoreLinkModel(1);
+		en.setColSpan(4);
+		en.Insert();
+		//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
+					///#endregion 流程实例月份柱状图.
 		en = new WindowTemplate();
 
 	}

@@ -1,5 +1,8 @@
 package bp.tools;
 
+import bp.da.DBAccess;
+import bp.difference.SystemConfig;
+
 /**
  * 功能：字符串处理函数集
  */
@@ -189,6 +192,7 @@ public class DealString
         }
         return new String(charr);
     }
-	
+
+
 	
 }

@@ -1328,7 +1328,7 @@ public class SqlBuilder
 				case DataType.AppInt:
 					if (attr.getDefValType() == 0 && attr.getDefaultVal().equals("10002") || attr.getDefaultVal().equals("10002.00"))
 					{
-						val = val + ", " + attr.getKey();
+						val = val + ", " +mainTable + attr.getKey();
 					}
 					else
 					{

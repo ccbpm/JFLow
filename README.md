@@ -24,7 +24,6 @@
 2.  jflow-jeesite ： https://gitee.com/thinkgem/jeesite4-jflow
 3.  微同商城+JFlow ： https://gitee.com/fuyang_lipengjun/platform
 4.  单点登录: https://gitee.com/dromara/MaxKey  java版.
-5.  CIM即时通讯-和信: https://gitee.com/farsunset/cim  java版.
 
 ### 资源下载
 

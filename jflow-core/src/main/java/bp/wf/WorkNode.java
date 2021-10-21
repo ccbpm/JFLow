@@ -3553,7 +3553,8 @@ public class WorkNode {
 	public final void CopyData(Work toWK, Node toND, boolean isSamePTable) throws Exception
 	{
 		//如果存储模式为, 合并模式.
-		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable)
+		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable
+				&& toND.getHisRunModel()!= RunModel.SubThread)
 		{
 			return;
 		}

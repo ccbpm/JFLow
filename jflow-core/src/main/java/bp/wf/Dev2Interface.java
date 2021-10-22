@@ -1431,9 +1431,9 @@ public class Dev2Interface {
 		String sql;
 
 		if (bp.wf.Glo.getIsEnableTaskPool() == true)
-			sql = "SELECT *, null as Auther FROM WF_EmpWorks A WHERE  TaskSta=0 AND A.FK_Emp='" + userNo + "' " + whereSQL + "";
+			sql = "SELECT A.*, null as Auther FROM WF_EmpWorks A WHERE  TaskSta=0 AND A.FK_Emp='" + userNo + "' " + whereSQL + "";
 		else
-		 	sql = "SELECT *, null as Auther FROM WF_EmpWorks A WHERE  A.FK_Emp='" + userNo + "' " + whereSQL + "";
+		 	sql = "SELECT A.*, null as Auther FROM WF_EmpWorks A WHERE  A.FK_Emp='" + userNo + "' " + whereSQL + "";
 
 		for (Auth ath : aths.ToJavaList()) {
 			String todata = ath.getTakeBackDT().replace("-", "");
@@ -3125,7 +3125,7 @@ public class Dev2Interface {
 			case MySQL:
 				futureSQL = " UNION SELECT A.WorkID,A.StarterName,A.Title,A.DeptName,D.Name AS NodeName,A.RDT,B.FK_Node,A.FK_Flow,A.FID,A.FlowName,C.EmpName AS TodoEmps,"
 						+ currNode + " AS CurrNode ,1 AS RunType FROM WF_GenerWorkFlow A, WF_SelectAccper B,"
-						+ "(SELECT GROUP_CONCAT(B.EmpName SEPARATOR ';') AS EmpName, B.WorkID,B.FK_Node FROM WF_GenerWorkFlow A, WF_SelectAccper B WHERE A.WorkID=B.WorkID  group By B.FK_Node) C,WF_Node D"
+						+ "(SELECT GROUP_CONCAT(B.EmpName SEPARATOR ';') AS EmpName, B.WorkID,B.FK_Node FROM WF_GenerWorkFlow A, WF_SelectAccper B WHERE A.WorkID=B.WorkID  group By B.FK_Node,B.WorkID) C,WF_Node D"
 						+ " WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND A.WorkID=B.WorkID AND B.WorkID=C.WorkID AND B.FK_Node = C.FK_Node AND A.FK_Node = D.NodeID AND B.FK_Emp = '"
 						+ WebUser.getNo() + "'"
 						+ " AND B.FK_Node Not in(Select DISTINCT FK_Node From WF_GenerWorkerlist G where G.WorkID=B.WorkID)AND A.WFState != 3";
@@ -11147,10 +11147,10 @@ public static void Node_SetDraft2Todolist(String fk_flow, long workID,String tod
 	public static void Track_WriteBBS(String frmID, String frmName, long workID, String msg, long fid, String flowNo,
 			String flowName, int nodeID, String nodeName) throws Exception {
 		bp.ccbill.Track tk = new bp.ccbill.Track();
-		tk.setWorkID(workID);
+		tk.setWorkID(String.valueOf(workID));
 		tk.setFrmID(frmID);
 		tk.setFrmName(frmName);
-		tk.setFrmActionType(bp.ccbill.FrmActionType.BBS);
+		tk.setActionType(bp.ccbill.FrmActionType.BBS);
 		tk.setActionTypeText("评论");
 
 		tk.setRec(WebUser.getNo());
@@ -11159,7 +11159,7 @@ public static void Node_SetDraft2Todolist(String fk_flow, long workID,String tod
 		tk.setDeptName(WebUser.getFK_DeptName());
 
 		tk.setMyPK(tk.getFrmID() + "_" + tk.getWorkID() + "_" + tk.getRec() + "_"
-				+ bp.ccbill.FrmActionType.BBS.getValue());
+				+ bp.ccbill.FrmActionType.BBS);
 		tk.setMsg(msg);
 		tk.setRDT(DataType.getCurrentDataTime());
 

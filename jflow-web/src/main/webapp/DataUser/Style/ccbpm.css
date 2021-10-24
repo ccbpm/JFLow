@@ -1,22 +1,26 @@
-/*  Table ·ç¸ñ   */
+/*  Table ï¿½ï¿½ï¿½ï¿½   */
+
+@import url('../../WF/Style/skin/css/Default.css');
+@import url('../../WF/Style/skin/adminfont/iconfont.css');
+@import url('../../WF/Scripts/bootstrap/css/bootstrap.min.css');
+
 body
 {
-    color: #333333;
-    font-family: "Open Sans" , sans-serif;
+    color: #333333; 
     padding: 0px !important;
     margin: 0px !important;
     font-size: 14px;
-    direction: ltr;
+   
 }
-/* Í¼Æ¬·Å´óÊó±êÑùÊ½ */
+/* Í¼Æ¬ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ */
 .HelpImg:hover {
     cursor: zoom-in;
 }
-/* Í¼Æ¬ËõÐ¡Êó±êÑùÊ½ */
+/* Í¼Æ¬ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ */
 #bigimg {
     cursor: zoom-out;
 }
-/* °´Å¥·ç¸ñ  edit by zhoupeng ÎÒÃÇ¾ÍÊ¹ÓÃ°×É«µÄ±³¾°ÑÕÉ«ÁË£¬²»Òª±ä¶¯ÁË,²»È»Ó°ÏìÈ«¾Ö. */
+/* ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½  edit by zhoupeng ï¿½ï¿½ï¿½Ç¾ï¿½Ê¹ï¿½Ã°ï¿½É«ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½Ë£ï¿½ï¿½ï¿½Òªï¿½ä¶¯ï¿½ï¿½,ï¿½ï¿½È»Ó°ï¿½ï¿½È«ï¿½ï¿½. */
 input[type="button"], input[type="submit"], input[type="file"] {
     border: 0; /*background: #4D77A7;*/
     background-color: #62CAE3;
@@ -27,7 +31,10 @@ input[type="button"], input[type="submit"], input[type="file"] {
     border-radius: 3px;
     border: 1px solid #d2cdcd;
 }
-/*±à¼­Æ÷²å¼þ*/
+select[disabled='disabled']::-ms-value {
+    color: rgba(68, 68, 68, 1);
+}
+/*ï¿½à¼­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
  .CodeMirror {
     border: 1px solid #eee;
     height: auto;
@@ -46,7 +53,7 @@ input[type="button"], input[type="submit"], input[type="file"] {
 
 
 
-/*ÎÄ±¾¿òÖ»¶Á·ç¸ñ.*/
+/*ï¿½Ä±ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.*/
 textarea[disabled], input[type=text]:disabled
 {
     /**border: 1px solid #DDD;
@@ -67,8 +74,8 @@ input[type=checkbox]:disabled
         width:20px;
 }
 
-/*ÎÄ±¾¿òÖ»¶Á·ç¸ñ.*/
-select[disabled], input[type=text]:disabled, input[type=password]:disabled {
+/*ï¿½Ä±ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.*/
+ input[type=text]:disabled, input[type=password]:disabled {
     /**border: 1px solid #DDD;
     background-color: #F5F5F5;
     color: #009999;*/
@@ -104,17 +111,17 @@ input[type="password"]:-ms-input-placeholder {
 }
 
 
-/*  table ÀàÐÍ·ç¸ñ */
+/*  table ï¿½ï¿½ï¿½Í·ï¿½ï¿½ï¿½ */
 table {
-    border: 1px outset #C0C0C0;
+    border: 1px outset #f2f2f2;
     padding: inherit;
     margin: 0;
     border-collapse: collapse;
 }
+thead>tr>th{ text-align: center;}
+/*  Ê±Ñ§Òµï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ê¼Î»ï¿½ï¿½ */
 
-/*  Ê±Ñ§ÒµÌí¼Ó ¿ªÊ¼Î»ÖÃ */
-
-/*À©Õ¹Ó¦ÓÃÃ÷Ï¸±íÓë¶à¸½¼þ.*/
+/*ï¿½ï¿½Õ¹Ó¦ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½à¸½ï¿½ï¿½.*/
 .TitleExt
 {
     background-color: #f4f4f4;
@@ -130,35 +137,35 @@ table {
 
 th {
     border-width: 1px;
-    border-color: #C2D5E3;
+    border-color: #f2f2f2;
     border-style: solid;
     line-height: 25px;
     color: 0a0a0a;
     white-space: nowrap;
     padding: 5px 2px;
-    background-color: #F5F5F5;
+    background-color: #f2f2f2;
     font-size: 14px;
     text-align: left;
-    font-size: 12px;
+   
     font-weight: bolder;
 }
  
- /*  idx ±í¸ñ×ó²àµÄÐòºÅÁÐ .*/
+ /*  idx ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ .*/
 .Idx
 {
     font-size: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #f2f2f2;
     text-align: center;
     font-weight: bold;
-    width: 20px;
+    width: 30px;
 }
 
 /* ss */
 .Sum
 {
-    background-color:InfoBackground;
+    background-color:#f7f7f7;
     font-size: 12px;
-    border: 1px solid #ccc;
+    
     text-align: left;
     font-weight: bold;
 }
@@ -168,19 +175,20 @@ td
     border-right-style: none;
     border-left-style: none;
     border-style: solid;
-    padding: 4px;
+	line-height: 25px;
+    padding:8px 4px;
     text-align: left;
     color: #333333;
-    font-size: 12px;
+    font-size: 13px;
     border-width: 1px;
-    border-color: #C2D5E3;
+    border-color: #f2f2f2;
 }
-
+td label{ padding-right:5px;}
 
 td a
 {
     text-decoration: none;
-    font-size: 12px;
+    font-size: 13px;
 }
  
 
@@ -215,11 +223,10 @@ caption
     height: 30px;
     text-align: left;
     font-size: 14px;
-    background-position: 12px 6px;
-    border-bottom: 1px #CCCCCC solid;
-    text-indent: 1.8em;
+	padding:0px;
+   
     line-height: 30px;
-    color: #336699;
+    color: #009688;
     font-weight: bolder;
 }
 
@@ -260,7 +267,7 @@ caption
     outline: none;
 }
 
-/** ÆäËü  */
+/** ï¿½ï¿½ï¿½ï¿½  */
 .ToolBar
 {
     background-color: #d8edff;
@@ -301,15 +308,14 @@ caption
 }
  
 
-/* ÔÚÊäÈëÐÅÏ¢×Ö¶ÎÃû³Æ£¬µ¥Ôª¸ñÊ½µÄ·ç¸ñ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ê½ï¿½Ä·ï¿½ï¿½ï¿½ */
 .FContext
 {
     padding-left: 4px;
     text-align: left;
     font-size: 12px;
     margin-left: 4px;
-    border: lightgrey 1px solid;
-    border-top: none;
+   
     width: 35%;
 }
 
@@ -531,7 +537,7 @@ display:none;
 
 }
 
-        /*ÌáÊ¾¿òµÄCSS ÉèÖÃ*/
+        /*ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½CSS ï¿½ï¿½ï¿½ï¿½*/
 .popover-title {
     background: #213b5d !important;
     color: white;
@@ -562,7 +568,7 @@ display:none;
 
 #header {
     height: 50px;
-    font: bold 16px "Î¢ÈíÑÅºÚ";
+    font: bold 16px "Î¢ï¿½ï¿½ï¿½Åºï¿½";
     background:rgb(157, 159, 175);
     color: #fff;
     text-align: left;
@@ -632,12 +638,13 @@ display:none;
 cursor:pointer;
 }
 
-/*radioºó±ß¸ú×ÅµÄ±êÇ©*/
+/*radioï¿½ï¿½ï¿½ß¸ï¿½ï¿½ÅµÄ±ï¿½Ç©*/
 .labRb {
 cursor:pointer;
 }
 input[type=radio] {
 cursor:pointer;
+vertical-align:top;
 }
 
 .modal-title {
@@ -650,7 +657,7 @@ cursor:pointer;
     cursor: pointer;
 }
 
-/*POP´°ÖÐµÄµÄÊ÷*/
+/*POPï¿½ï¿½ï¿½ÐµÄµï¿½ï¿½ï¿½*/
 .tree-demo {
 text-align:left;
 }
@@ -708,7 +715,7 @@ border:none;
 
 .returnTackHeader {
     height: 50px;
-    font: bold 16px "Î¢ÈíÑÅºÚ";
+    font: bold 16px "Î¢ï¿½ï¿½ï¿½Åºï¿½";
     background: rgb(157, 159, 175) !important;
     color: #fff;
     text-align: left;
@@ -765,7 +772,7 @@ body table tr td label{
   white-space: normal;
 }
 
-/*·ÖÒ³±í¸ñ*/
+/*ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½*/
 .tabPdiv {
 overflow:auto;
 }
@@ -779,7 +786,7 @@ select {
 }
 
 
-/*ÈÃ±í¸ñÏÔÊ¾ ...*/
+/*ï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ ...*/
 body table tr td {
   text-overflow: ellipsis;
   /* for IE */
@@ -800,7 +807,7 @@ body table tr td {
 
 
 
-/*ÑîÓñ»Û  --ÁÙÊ±Ôö¼Ó  ´¦Àíµ¯´°·µ»ØÖµµÃ±íµ¥²¼¾ÖÂÒµôµÄÎÊÌâ*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  --ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ã±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 
 .FContext div[id*=_mtags],.FContext div[id*=_mtags] .main-container {
     width: 100% !important;
@@ -839,7 +846,7 @@ body table tr td {
     }
 }
 
-/*¹ö¶¯Ìõ*/
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 ::-webkit-scrollbar-thumb {
     background-color: #b5b5b5;
     height: 50px;

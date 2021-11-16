@@ -153,14 +153,35 @@
             var url = "SysEnumDtl.htm?ParentKey=" + en.No + "&EnumKey=" + en.GetPara("DtlEnumKey");
             url += "&DoType=" + GetQueryString("DoType");
             url += "&FK_MapData=" + GetQueryString("FK_MapData");
+            url += "&KeyOfEn=" + GetQueryString("KeyOfEn");
             url += "&Type=" + GetQueryString("Type");
             window.location.href = url;
 
         }
+        function EditUIBindKeyOfAttr(enumID, keyOfEn, fk_mapData) {
+            if (fk_mapData == null || fk_mapData == undefined || fk_mapData == "") {
+                alert("字段"+keyOfEn+"绑定的表单获取到的字段为空")
+            }
+            var attr = new Entity("BP.Sys.MapAttr", fk_mapData + "_" + keyOfEn);
+            attr.LGType = 1;
+            attr.UIContralType = 1;
+            attr.MyDataType = 2;
+            attr.UIBindKey = enumID;
+            attr.RBShowModel = 3; //横向展示.
 
+            attr.Update();
+            url = "../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrEnum&PKVal=" + attr.MyPK;
+            window.location.href = url;
+
+        }
         function AddFrm(enumID, fk_mapdata,enumName,isHaveDtl) {
 
-
+            var keyOfEn = GetQueryString("KeyOfEn");
+            keyOfEn = keyOfEn == null || keyOfEn == undefined ? "" : keyOfEn;
+            if (keyOfEn != "") {
+                EditUIBindKeyOfAttr(enumID,keyOfEn,fk_mapData);
+                return;
+            }
             var url = '';
             var str = prompt("请输入字段名(必须为字母开头、数字或者下划线组合):", enumID);
 
@@ -245,7 +266,7 @@
         }
         function Edit(enumKey, name, cfgKeys) {
 
-            var url = '../CCFormDesigner/DialogCtr/EnumerationNew.htm?EnumKey=' + enumKey + '&Name=' + name + '&CfgKeys=' + cfgKeys + '&DoType=FrmEnumeration_SaveEnum&s=' + Math.random();
+            var url = '../CCFormDesigner/DialogCtr/EnumerationNew.htm?EnumKey=' + enumKey + '&Name=' + name + '&DoType=FrmEnumeration_SaveEnum&s=' + Math.random();
             var W = document.body.clientWidth - 120;
             var H = document.documentElement.clientHeight - 10;
             OpenEasyUiDialog(url, "eudlgframe", "", W, H, "icon-edit", true, null, null, null, function () {
@@ -323,7 +344,7 @@
                 </tr>
             </table>
         </div>
-
+        
         <div id="Msg"></div>
     </div>
 </body>

@@ -1104,7 +1104,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase {
 	public final String FlowBBSList() throws Exception {
 		bp.ccbill.Tracks tracks = new bp.ccbill.Tracks();
 		QueryObject qo = new QueryObject(tracks);
-		qo.AddWhere(TrackAttr.ActionType, bp.ccbill.FrmActionType.BBS.getValue());
+		qo.AddWhere(TrackAttr.ActionType, bp.ccbill.FrmActionType.BBS);
 		qo.addAnd();
 		qo.addLeftBracket();
 

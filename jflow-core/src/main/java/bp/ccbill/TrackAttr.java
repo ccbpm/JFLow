@@ -89,5 +89,6 @@ public class TrackAttr extends EntityMyPKAttr
 	*/
 	public static final String NodeName = "NodeName";
 
+	public static final String WorkIDOfFlow="WorkIDOfFlow";
 		/// 流程相关信息.
 }

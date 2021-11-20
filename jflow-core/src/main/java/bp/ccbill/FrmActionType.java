@@ -5,57 +5,42 @@ import bp.ccbill.template.*;
 /** 
  表单活动类型
 */
-public enum FrmActionType
+public class FrmActionType
 {
-	/** 
-	 创建
-	*/
-	Create(0),
-	/** 
-	 保存
-	*/
-	Save(1),
-	/** 
-	 评论
-	*/
-	BBS(2),
-	/** 
-	 打开
-	*/
-	View(3);
-
-	public static final int SIZE = java.lang.Integer.SIZE;
-
-	private int intValue;
-	private static java.util.HashMap<Integer, FrmActionType> mappings;
-	private static java.util.HashMap<Integer, FrmActionType> getMappings()
-	{
-		if (mappings == null)
-		{
-			synchronized (FrmActionType.class)
-			{
-				if (mappings == null)
-				{
-					mappings = new java.util.HashMap<Integer, FrmActionType>();
-				}
-			}
-		}
-		return mappings;
-	}
-
-	private FrmActionType(int value)
-	{
-		intValue = value;
-		getMappings().put(value, this);
-	}
-
-	public int getValue()
-	{
-		return intValue;
-	}
-
-	public static FrmActionType forValue(int value)
-	{
-		return getMappings().get(value);
-	}
+	/// <summary>
+	/// 创建
+	/// </summary>
+	public static final String Create = "Create";
+	/// <summary>
+	///保存
+	/// </summary>
+	public static final String Save = "Save";
+	/// <summary>
+	/// 提交
+	/// </summary>
+	public static final String Submit = "Submit";
+	/// <summary>
+	/// 评论
+	/// </summary>
+	public static final String BBS = "BBS";
+	/// <summary>
+	/// 打开
+	/// </summary>
+	public static final String View = "View";
+	/// <summary>
+	/// 回滚数据
+	/// </summary>
+	public static final String DataVerReback = "DataVerReback";
+	/// <summary>
+	/// 发起流程
+	/// </summary>
+	public static final String StartFlow = "StartFlow";
+	/// <summary>
+	/// 发起注册流程
+	/// </summary>
+	public final  static String StartRegFlow = "StartRegFlow";
+	/// <summary>
+	/// 其他
+	/// </summary>
+	public static final String Etc = "Etc";
 }

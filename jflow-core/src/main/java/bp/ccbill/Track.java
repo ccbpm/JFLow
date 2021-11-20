@@ -1,9 +1,11 @@
 package bp.ccbill;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
 import bp.sys.*;
+import bp.tools.Encodes;
 import bp.wf.template.*;
 import bp.wf.*;
 import bp.ccbill.template.*;
@@ -50,6 +52,16 @@ public class Track extends EntityMyPK
 	{
 		this.SetValByKey(TrackAttr.FrmName, value);
 	}
+
+	public final String getActionType() throws Exception
+	{
+		return this.GetValStringByKey(TrackAttr.ActionType);
+	}
+	public final void setActionType(String value) throws Exception
+	{
+		this.SetValByKey(TrackAttr.ActionType, value);
+	}
+
 	/** 
 	 记录日期
 	*/
@@ -75,48 +87,16 @@ public class Track extends EntityMyPK
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
+	public final String getWorkID() throws Exception
 	{
-		return this.GetValInt64ByKey(TrackAttr.WorkID);
+		return this.GetValStringByKey(TrackAttr.WorkID);
 	}
-	public final void setWorkID(long value)  throws Exception
+	public final void setWorkID(String value)  throws Exception
 	{
 		this.SetValByKey(TrackAttr.WorkID, value);
 	}
-	/** 
-	 活动类型
-	 * @throws Exception 
-	*/
-	public final bp.ccbill.FrmActionType getFrmActionType() throws Exception
-	{
-		return bp.ccbill.FrmActionType.forValue(this.GetValIntByKey(TrackAttr.ActionType));
-	}
-	public final void setFrmActionType(bp.ccbill.FrmActionType value) throws Exception
-	{
-		this.SetValByKey(TrackAttr.ActionType, value.getValue());
-	}
-	/** 
-	 获取动作文本
-	 
-	 @param at
-	 @return 
-	*/
-	public static String GetActionTypeT(bp.ccbill.FrmActionType at)
-	{
-		switch (at)
-		{
-			case Save:
-				return "保存";
-			case Create:
-				return "提交";
-			case BBS:
-				return "评论";
-			case View:
-				return "打开";
-			default:
-				return "信息" + at.toString();
-		}
-	}
+
+
 	/** 
 	 活动名称
 	 * @throws Exception 
@@ -233,6 +213,16 @@ public class Track extends EntityMyPK
 		this.SetValByKey(TrackAttr.DeptName, value);
 	}
 
+
+	public final long getWorkIDOfFlow()  throws Exception
+	{
+		return this.GetValInt64ByKey(TrackAttr.WorkIDOfFlow);
+	}
+	public final void setWorkIDOfFlow(long value) throws Exception
+	{
+		this.SetValByKey(TrackAttr.WorkIDOfFlow, value);
+	}
+
 		/// 流程属性.
 
 
@@ -258,7 +248,7 @@ public class Track extends EntityMyPK
 		map.AddTBString(TrackAttr.FrmID, null, "表单ID", true, false, 0, 50, 200);
 		map.AddTBString(TrackAttr.FrmName, null, "表单名称(可以为空)", true, false, 0, 200, 200);
 
-		map.AddTBInt(TrackAttr.ActionType, 0, "类型", true, false);
+		map.AddTBString(TrackAttr.ActionType, null, "类型", true, false, 0, 30, 100);
 		map.AddTBString(TrackAttr.ActionTypeText, null, "类型(名称)", true, false, 0, 30, 100);
 
 		map.AddTBInt(TrackAttr.WorkID, 0, "工作ID/OID", true, false);
@@ -297,6 +287,12 @@ public class Track extends EntityMyPK
 	public Track()
 	{
 	}
-
+	@Override
+	protected boolean beforeInsert() throws Exception
+	{
+		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
+			this.setMyPK(DBAccess.GenerGUID());
+		return super.beforeInsert();
+	}
 		/// 构造.
 }

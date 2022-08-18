@@ -1,41 +1,31 @@
 
 function NewFlow(flowNo) {
-    //var url = "../MyFlow.htm?FK_Flow=" + flowNo;
-    //window.open(url);
-	var id= window.parent.nthTabs.getActiveId();
-	var tab=window.parent.nthTabs.getTabList();
-	var work= "#"+flowNo+"TLJ"+id;
-	for (var i=0;i<tab.length;i++){ 
-	    if(tab[i].id==work){
-	    	window.parent.nthTabs.setActTab(tab[i].id);
-	    	return;
-	    }
-	}
-	window.parent.nthTabs.addTab({id:flowNo+"TLJ"+id,title:"起草",url:"../WF/MyFlow.htm?FK_Flow=" + flowNo}).setActTab(flowNo+"TLJ"+id);
+    var url = "../MyFlow.htm?FK_Flow=" + flowNo;
+    window.open(url);
     return;
 }
 
-function OpenTab(url)
-{
-
+function DealFlowEmps(str) {
+    return str;
 }
 
-/* 
 
-ʹ��˵��:
 
-1. ���ļ����Զ������뵽 /WF/Comm/Search.htm ��.
-2. �����������д���Լ��ķ����������������ϵİ�ť����, ����ɸ߼���js����.
+function NewFlowTemplate() {
+    var url = "/WF/Comm/Search.htm?EnsName=BP.Cloud.Template.FlowExts";
+    var url = "/App/FlowDesigner/NewFlow.htm?EnsName=BP.Cloud.Template.FlowExts";
 
- */
+    SetHref(url);
+}
 
-function DealTodoEmps(str){
-	var result = str.split("@");
-	var reg = /[a-zA-Z\,]+/;
-	while(result = str.match(reg)){
-		str = str.replace(result[0],'');
-	}
-	return str;
-	
-	
+function ImpFlowTemplate() {
+
+    //alert();
+    //var url = "/App/FlowDesigner/NewFlow/Default.htm";
+    var url = "/WF/Comm/Search.htm?EnsName=BP.Cloud.Template.FlowExts";
+    var url = "/App/FlowDesigner/Template.htm?EnsName=BP.Cloud.Template.FlowExts";
+    SetHref(url);
+}
+function DelTodoEmps(str) {
+    return str;
 }

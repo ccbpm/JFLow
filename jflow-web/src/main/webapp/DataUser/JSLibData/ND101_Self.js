@@ -1,7 +1,7 @@
-﻿/** 数字金额大写转换(可以处理整数,小数,负数) */
+/** 数字金额大写转换(可以处理整数,小数,负数) */
 function RMBToDX() {
-
-    alert('ss');
+ 
+   // alert('ss');
 
     var n = ctrl.value;
 

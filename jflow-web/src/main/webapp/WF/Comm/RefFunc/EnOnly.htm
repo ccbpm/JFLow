@@ -109,7 +109,7 @@
         var isSameEnName = true;//EnOnly页面和En的EnName是否相同
         var cfg = null;
         $(function () {
-            pkVal = GetPKVal();
+            pkVal = GetPKVal()||null;
             var enName = GetQueryString("EnName");
             //新增时En.htm页面隐藏
             if (window.parent) {
@@ -896,24 +896,24 @@
             var H = document.body.clientHeight - 140;
             if (W > rm.W)
                 W = rm.W;
-
+            var event="if(pkVal== null){ layer.alert(\"请保存后再执行操作\");return;}"
             if (parseInt(rm.RefMethodType) == RefMethodType.LinkeWinOpen) {
-                html = "<a href='javascript:void(0)' onclick='WinOpenFull(\"" + rm.Url + "\",\"" + rm.Title + "\")'>" + img + rm.Title + "</a>";
+                html = "<a href='javascript:void(0)' onclick='"+event+" WinOpenFull(\"" + rm.Url + "\",\"" + rm.Title + "\")'>" + img + rm.Title + "</a>";
             }
 
             if (parseInt(rm.RefMethodType) == RefMethodType.Func) {
-                html = "<a href='javascript:void(0)' onclick='OPenFun(\"" + rm.Url + "\",\"" + rm.Warning + "\",\"" + rm.Title + "\")'>" + img + rm.Title + "</a>";
+                html = "<a href='javascript:void(0)' onclick='"+event+" OPenFun(\"" + rm.Url + "\",\"" + rm.Warning + "\",\"" + rm.Title + "\")'>" + img + rm.Title + "</a>";
             }
 
             if (parseInt(rm.RefMethodType) == RefMethodType.LinkModel) {
-                html = "<a href='javascript:void(0)' onclick='OpenLayuiDialog(\"" + rm.Url + "\",\"" + rm.Title + "\",\"" + W + "\",80,\"auto\",true)'>" + img + rm.Title + "</a>";
+                html = "<a href='javascript:void(0)' onclick='"+event+" OpenLayuiDialog(\"" + rm.Url + "\",\"" + rm.Title + "\",\"" + W + "\",80,\"auto\",true)'>" + img + rm.Title + "</a>";
             }
 
 
             if (parseInt(rm.RefMethodType) == RefMethodType.RightFrameOpen) {
                 // alert('没有实现@代国强, 需要根据窗口大小，弹出模态窗口..');
                 //var html = "<img src='" + icon + "' border=0 style='width:16px;height:16px;' /><a href='javascript:OpenIt(\"" + rm.Url + "\",\"" + rm.Title + "\",\"" + rm.W + "\",\"" + rm.H + "\")'>" + rm.Title + "</a>";
-                html = "<a href='javascript:OpenUrlInRightFrame(this,\"" + rm.Url + "\")'>" + img + rm.Title + "</a>";
+                html = "<a href='javascript:"+event+" OpenUrlInRightFrame(this,\"" + rm.Url + "\")'>" + img + rm.Title + "</a>";
 
             }
             return html;

@@ -1,30 +1,25 @@
 package bp.wf.httphandler;
+
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
 import bp.difference.handler.WebContralBase;
-import bp.sys.*;
-import bp.tools.AesEncodeUtil;
-import bp.tools.FtpUtil;
-import bp.tools.HttpClientUtil;
-import bp.tools.SftpUtil;
-import bp.web.*;
-import bp.port.*;
-import bp.en.*;
 import bp.en.Map;
-import bp.wf.*;
+import bp.sys.*;
+import bp.web.*;
+import bp.en.*;
+import bp.wf.Glo;
 import bp.wf.template.*;
-//import bp.wf.weixin.*;
+import bp.tools.*;
+import bp.difference.*;
+import bp.*;
+import bp.wf.*;
 import net.sf.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Base64.Encoder;
-import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.time.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.io.*;
 
 /** 
  表单
@@ -33,20 +28,16 @@ public class CCMobile_CCForm extends WebContralBase
 {
 	/** 
 	 构造函数
-	 * @throws Exception 
 	*/
-	public CCMobile_CCForm() throws Exception
-	{
-		WebUser.setSheBei("Mobile");
+	public CCMobile_CCForm() throws Exception {
+		WebUser.setSheBei( "Mobile");
 	}
-	public final String HandlerMapExt() throws Exception
-	{
+	public final String HandlerMapExt() throws Exception {
 		WF_CCForm en = new WF_CCForm();
 		return en.HandlerMapExt();
 	}
 
-	public final String AttachmentUpload_Down() throws Exception
-	{
+	public final String AttachmentUpload_Down() throws Exception {
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.AttachmentUpload_Down();
 	}
@@ -54,38 +45,46 @@ public class CCMobile_CCForm extends WebContralBase
 	 表单初始化.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Frm_Init() throws Exception
-	{
+	public final String Frm_Init() throws Exception {
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.Frm_Init();
 	}
 
-	public final String Dtl_Init() throws Exception
-	{
+	public final String FrmGener_Init() throws Exception {
+		WF_CCForm ccform = new WF_CCForm();
+		return ccform.FrmGener_Init();
+	}
+
+	public final String Dtl_Init() throws Exception {
 		WF_CCForm ccform = new WF_CCForm();
 		return ccform.Dtl_Init();
 	}
 
 	//保存从表数据
-	public final String Dtl_SaveRow() throws Exception
-	{
+	public final String Dtl_SaveRow() throws Exception {
 
+			///#region  查询出来从表数据.
 		GEDtls dtls = new GEDtls(this.getEnsName());
-		GEDtl dtl = dtls.getGetNewEntity() instanceof GEDtl ? (GEDtl) dtls.getGetNewEntity() : null;
-		dtls.Retrieve("RefPK", this.GetRequestVal("RefPKVal"));
+		bp.en.Entity tempVar = dtls.getGetNewEntity();
+		GEDtl dtl = tempVar instanceof GEDtl ? (GEDtl)tempVar : null;
+		dtls.Retrieve("RefPK", this.GetRequestVal("RefPKVal"), null);
 		MapDtl mdtl = new MapDtl(this.getEnsName());
 		Map map = dtl.getEnMap();
-		for (Entity item : dtls.ToJavaList()) {
+		for (GEDtl item : dtls.ToJavaList())
+		{
 			String pkval = item.GetValStringByKey(dtl.getPK());
-			for (Attr attr : map.getAttrs()) {
-				if (attr.getIsRefAttr() == true) {
+			for (Attr attr : map.getAttrs())
+			{
+				if (attr.getIsRefAttr() == true)
+				{
 					continue;
 				}
 
-				if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate) {
-					if (attr.getUIIsReadonly() == true) {
+				if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+				{
+					if (attr.getUIIsReadonly() == true)
+					{
 						continue;
 					}
 
@@ -94,117 +93,64 @@ public class CCMobile_CCForm extends WebContralBase
 					continue;
 				}
 
-				if (attr.getUIContralType() == UIContralType.TB ) {
+
+				if (attr.getUIContralType() == UIContralType.TB)
+				{
+
 					String val = this.GetValFromFrmByKey("TB_" + attr.getKey() + "_" + pkval, null);
-					item.SetValByKey(attr.getKey(), URLDecoder.decode(val, "UTF-8"));
+					item.SetValByKey(attr.getKey(), val);
 					continue;
 				}
 
-				if (attr.getUIContralType() == UIContralType.DDL ) {
+				if (attr.getUIContralType() == UIContralType.DDL)
+				{
 					String val = this.GetValFromFrmByKey("DDL_" + attr.getKey() + "_" + pkval);
-					item.SetValByKey(attr.getKey(), URLDecoder.decode(val, "UTF-8"));
+					item.SetValByKey(attr.getKey(), val);
 					continue;
 				}
 
-				if (attr.getUIContralType() == UIContralType.CheckBok) {
+				if (attr.getUIContralType() == UIContralType.CheckBok)
+				{
 					String val = this.GetValFromFrmByKey("CB_" + attr.getKey() + "_" + pkval, "-1");
-					if (val.equals("0")) {
+					if (val.equals("0"))
+					{
 						item.SetValByKey(attr.getKey(), 0);
-					} else {
+					}
+					else
+					{
 						item.SetValByKey(attr.getKey(), 1);
 					}
 					continue;
 				}
 			}
-			item.SetValByKey("OID", pkval);
-			item.Update(); // 执行更新.
+			item.SetValByKey("OID",pkval);
+			//关联主赋值.
+			item.setRefPK(this.getRefPKVal());
+			switch (mdtl.getDtlOpenType())
+			{
+				case ForEmp: // 按人员来控制.
+					item.setRefPK(this.getRefPKVal());
+					break;
+				case ForWorkID: // 按工作ID来控制
+					item.setRefPK(this.getRefPKVal());
+					item.setFID(this.getFID());
+					break;
+				case ForFID: // 按流程ID来控制.
+					item.setRefPK(this.getRefPKVal());
+					item.setFID(this.getFID());
+					break;
+			}
+			item.setRec(WebUser.getNo());
+			item.Update(); //执行更新.
 		}
 		return "保存成功.";
 
-	}
-
-
-	/** 
-	 获取百度云token
-	 
-	 @return 
-	*/
-	public String getAccessToken()
-	{
-		String ak = SystemConfig.getAPIKey();
-		String sk = SystemConfig.getSecretKey();
-
-		// 获取token地址
-		String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
-		String getAccessTokenUrl = authHost
-				// 1. grant_type为固定参数
-				+ "grant_type=client_credentials"
-				// 2. 官网获取的 API Key
-				+ "&client_id=" + ak
-				// 3. 官网获取的 Secret Key
-				+ "&client_secret=" + sk;
-		try {
-			URL realUrl = new URL(getAccessTokenUrl);
-			// 打开和URL之间的连接
-			HttpURLConnection connection = (HttpURLConnection) realUrl.openConnection();
-			connection.setRequestMethod("GET");
-			connection.connect();
-
-			// 定义 BufferedReader输入流来读取URL的响应
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String result = "";
-			String line;
-			while ((line = in.readLine()) != null) {
-				result += line;
-			}
-		} catch (Exception e) {
-			System.err.printf("获取token失败！");
-			e.printStackTrace(System.err);
-		}
-		return null;
-	}
-
-
-	public String GetIDCardInfo() throws Exception
-	{
-		String token = getAccessToken();
-		JSONObject jd = JSONObject.fromObject(token);
-
-		String url = "https://aip.baidubce.com/rest/2.0/ocr/v1/idcard";
-		// 本地文件路径
-		// 图片的base64编码
-		long filesSize = CommonFileUtils.getFilesSize(getRequest(), "file");
-		if (filesSize == 0) {
-			return "err@请选择要上传的身份证件。";
-		}
-
-		InputStream stream = CommonFileUtils.getInputStream(getRequest(), "file");//new MemoryStream();
-		byte[] bytes = new byte[stream.available()];
-		stream.read(bytes);
-		Encoder encoder = Base64.getEncoder();
-		String imgParam = encoder.encodeToString(bytes);
-		stream.close();
-
-		String param = "id_card_side=" + "front" + "&image=" + imgParam;
-
-		// 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
-		Hashtable<String,String> map = new Hashtable<String,String>();
-		map.put("access_token",jd.getString("access_token"));
-		map.put("id_card_side","front");
-		map.put("image",imgParam);
-
-		String result =HttpClientUtil.doPost(url, map, "Content-Type","application/x-www-form-urlencoded");
-		System.out.println(result);
-		return result;
+			///#endregion  查询出来从表数据.
 
 	}
 
-	/**
-	 * IOS附件上传
-	 * @return
-	 */
-	public String UploadIOSAttach() throws Exception
-	{
+	//多附件上传方法
+	public final String UploadIOSAttach() throws Exception {
 
 		String uploadFileM = ""; //上传附件数据的MyPK,用逗号分开
 		String pkVal = this.GetRequestVal("PKVal");
@@ -215,7 +161,7 @@ public class CCMobile_CCForm extends WebContralBase
 		String ext = this.GetRequestVal("Ext");
 
 		// 多附件描述.
-		bp.sys.FrmAttachment athDesc = new bp.sys.FrmAttachment(attachPk);
+		FrmAttachment athDesc = new FrmAttachment(attachPk);
 		MapData mapData = new MapData(athDesc.getFK_MapData());
 		String msg = "";
 		//求出来实体记录，方便执行事件.
@@ -238,18 +184,21 @@ public class CCMobile_CCForm extends WebContralBase
 			FrmNode fn = new FrmNode(this.getFK_Node(), this.getFK_MapData());
 			if (fn.getFrmSln() == FrmSln.Self)
 			{
-				bp.sys.FrmAttachment myathDesc = new FrmAttachment();
+				FrmAttachment myathDesc = new FrmAttachment();
 				myathDesc.setMyPK(attachPk + "_" + this.getFK_Node());
 				if (myathDesc.RetrieveFromDBSources() != 0)
-					athDesc.setHisCtrlWay( myathDesc.getHisCtrlWay());
+				{
+					athDesc.setHisCtrlWay(myathDesc.getHisCtrlWay());
+				}
 			}
-			pkVal = bp.wf.Dev2Interface.GetAthRefPKVal(this.getWorkID(), this.getPWorkID(), this.getFID(), this.getFK_Node(), this.getFK_MapData(), athDesc);
+			pkVal = Dev2Interface.GetAthRefPKVal(this.getWorkID(), this.getPWorkID(), this.getFID(), this.getFK_Node(), this.getFK_MapData(), athDesc);
 		}
 
 		//获取上传文件是否需要加密
 		boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
 
-        //文件上传的iis服务器上 or db数据库里.
+
+			///#region 文件上传的iis服务器上 or db数据库里.
 		if (athDesc.getAthSaveWay() == AthSaveWay.IISServer || athDesc.getAthSaveWay() == AthSaveWay.DB)
 		{
 			String savePath = athDesc.getSaveTo();
@@ -261,14 +210,16 @@ public class CCMobile_CCForm extends WebContralBase
 				if (savePath.contains("@") && this.getFK_Node() != 0)
 				{
 					/*如果包含 @ */
-					bp.wf.Flow flow = new bp.wf.Flow(this.getFK_Flow());
+					Flow flow = new Flow(this.getFK_Flow());
 					bp.wf.data.GERpt myen = flow.getHisGERpt();
 					myen.setOID(this.getWorkID());
 					myen.RetrieveFromDBSources();
-					savePath = bp.wf.Glo.DealExp(savePath, myen, null);
+					savePath = Glo.DealExp(savePath, myen, null);
 				}
 				if (savePath.contains("@") == true)
-					throw new Exception("@路径配置错误,变量没有被正确的替换下来." + savePath);
+				{
+					throw new RuntimeException("@路径配置错误,变量没有被正确的替换下来." + savePath);
+				}
 			}
 			else
 			{
@@ -280,26 +231,30 @@ public class CCMobile_CCForm extends WebContralBase
 			try
 			{
 				if (savePath.contains(SystemConfig.getPathOfWebApp()) == false)
-					savePath = SystemConfig.getPathOfWebApp()+ savePath;
+				{
+					savePath = SystemConfig.getPathOfWebApp() + savePath;
+				}
 			}
-			catch (Exception ex)
+			catch (RuntimeException ex)
 			{
 				savePath = SystemConfig.getPathOfDataUser() + "UploadFile/" + mapData.getNo() + "/";
 				//return "err@获取路径错误" + ex.Message + ",配置的路径是:" + savePath + ",您需要在附件属性上修改该附件的存储路径.";
 			}
-			File file = new File(savePath);
+
 			try
 			{
-				if (file.exists() == false)
-					file.mkdir();
+				if ((new File(savePath)).isDirectory() == false)
+				{
+					(new File(savePath)).mkdirs();
+				}
 			}
-			catch (Exception ex)
+			catch (RuntimeException ex)
 			{
-				throw new Exception("err@创建路径出现错误，可能是没有权限或者路径配置有问题:" + savePath + "@异常信息:" + ex.getMessage());
+				throw new RuntimeException("err@创建路径出现错误，可能是没有权限或者路径配置有问题:" + savePath + "@异常信息:" + ex.getMessage());
 			}
 
 
-			String guid = DBAccess.GenerGUID();
+			String guid = DBAccess.GenerGUID(0, null, null);
 
 
 
@@ -313,8 +268,8 @@ public class CCMobile_CCForm extends WebContralBase
 			{
 				String strtmp = realSaveTo + ".tmp";
 				Base64StrToImage(fileSoruce, strtmp);
-				AesEncodeUtil.encryptFile(strtmp, strtmp.replace(".tmp", ""));//加密
-				new File(strtmp).delete();//删除临时文件
+				AesEncodeUtil.encryptFile(strtmp, strtmp.replace(".tmp", "")); //加密
+				(new File(strtmp)).delete(); //删除临时文件
 			}
 			else
 			{
@@ -345,7 +300,7 @@ public class CCMobile_CCForm extends WebContralBase
 			dbUpload.setFileFullName(realSaveTo);
 			dbUpload.setFileName(fileName);
 			dbUpload.setFileSize((float)info.length());
-			dbUpload.setRDT(DataType.getCurrentDataTimess());
+			dbUpload.setRDT(DataType.getCurrentDateTimess());
 			dbUpload.setRec(bp.web.WebUser.getNo());
 			dbUpload.setRecName(bp.web.WebUser.getName());
 			dbUpload.setFK_Dept(WebUser.getFK_Dept());
@@ -360,12 +315,14 @@ public class CCMobile_CCForm extends WebContralBase
 			if (!DataType.IsNullOrEmpty(msg))
 				bp.sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
 		}
-         //文件上传的iis服务器上 or db数据库里.
 
-        //保存到数据库 / FTP服务器上.
+			///#endregion 文件上传的iis服务器上 or db数据库里.
+
+
+			///#region 保存到数据库 / FTP服务器上.
 		if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer)
 		{
-			String guid = DBAccess.GenerGUID();
+			String guid = DBAccess.GenerGUID(0, null, null);
 
 			//把文件临时保存到一个位置.
 			String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
@@ -374,8 +331,8 @@ public class CCMobile_CCForm extends WebContralBase
 			{
 				String strtmp = SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp";
 				Base64StrToImage(fileSoruce, strtmp);
-				AesEncodeUtil.encryptFile(strtmp, temp);//加密
-				new File(strtmp).delete();//删除临时文件
+				AesEncodeUtil.encryptFile(strtmp, temp); //加密
+				(new File(strtmp)).delete(); //删除临时文件
 			}
 			else
 			{
@@ -406,7 +363,7 @@ public class CCMobile_CCForm extends WebContralBase
 				dbUpload.SetPara("IsEncrypt", 1);
 			dbUpload.setFileName(fileName);
 			dbUpload.setFileSize((float)info.length());
-			dbUpload.setRDT(DataType.getCurrentDataTimess());
+			dbUpload.setRDT(DataType.getCurrentDateTimess());
 			dbUpload.setRec(bp.web.WebUser.getNo());
 			dbUpload.setRecName(bp.web.WebUser.getName());
 			dbUpload.setFK_Dept(WebUser.getFK_Dept());
@@ -483,37 +440,246 @@ public class CCMobile_CCForm extends WebContralBase
 				bp.sys.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
 
 		}
-        //保存到数据库.
+		//保存到数据库.
 		return "上传成功";
 	}
 
-	public  void Base64StrToImage(String base64Str, String savePath)
+
+	public final void Base64StrToImage(String base64Str, String savePath)
 	{
 		try{
-			base64Str = base64Str.replace(" ", "+");
-			String[] str = base64Str.split(",");  //base64Str为base64完整的字符串，先处理一下得到我们所需要的字符串
-			Base64.Decoder decoder = Base64.getDecoder();
-			byte[] imageBytes = decoder.decode(str[1]);
-			InputStream in = new ByteArrayInputStream(imageBytes);
-			byte[] b = new byte[1024];
-			int nRead = 0;
+		base64Str = base64Str.replace(" ", "+");
+		String[] str = base64Str.split(",");  //base64Str为base64完整的字符串，先处理一下得到我们所需要的字符串
+		Base64.Decoder decoder = Base64.getDecoder();
+		byte[] imageBytes = decoder.decode(str[1]);
+		InputStream in = new ByteArrayInputStream(imageBytes);
+		byte[] b = new byte[1024];
+		int nRead = 0;
 
-			OutputStream o = new FileOutputStream(savePath);
+		OutputStream o = new FileOutputStream(savePath);
 
-			while ((nRead = in.read(b)) != -1) {
-				o.write(b, 0, nRead);
-			}
-
-			o.flush();
-			o.close();
-
-			in.close();
-		}catch(Exception e){
-			throw new RuntimeException("err@IOS上传附件失败");
+		while ((nRead = in.read(b)) != -1) {
+			o.write(b, 0, nRead);
 		}
 
+		o.flush();
+		o.close();
+
+		in.close();
+	}catch(Exception e){
+		throw new RuntimeException("err@IOS上传附件失败");
+	}
 
 	}
+
+		/** 
+		 获取百度云token
+		 
+		 @return 
+		*/
+		public final String getAccessToken()  {
+
+			String ak = SystemConfig.getAPIKey();
+			String sk = SystemConfig.getSecretKey();
+
+			// 获取token地址
+			String authHost = "https://aip.baidubce.com/oauth/2.0/token?";
+			String getAccessTokenUrl = authHost
+					// 1. grant_type为固定参数
+					+ "grant_type=client_credentials"
+					// 2. 官网获取的 API Key
+					+ "&client_id=" + ak
+					// 3. 官网获取的 Secret Key
+					+ "&client_secret=" + sk;
+			try {
+				URL realUrl = new URL(getAccessTokenUrl);
+				// 打开和URL之间的连接
+				HttpURLConnection connection = (HttpURLConnection) realUrl.openConnection();
+				connection.setRequestMethod("GET");
+				connection.connect();
+
+				// 定义 BufferedReader输入流来读取URL的响应
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String result = "";
+				String line;
+				while ((line = in.readLine()) != null) {
+					result += line;
+				}
+			} catch (Exception e) {
+				System.err.printf("获取token失败！");
+				e.printStackTrace(System.err);
+			}
+			return null;
+		}
+
+//	public final String GetAccessTokenImgs() throws Exception {
+//		//获取 AccessToken
+//		return bp.gpm.weixin.WeiXinEntity.getAccessToken();
+//	}
+
+	/** 
+	 下载微信服务器图片，上传到应用服务器
+	 
+	 param mideaid
+	*/
+//	public final String MyFlowGener_SaveUploadeImg() throws Exception {
+//		try
+//		{
+//			String media_id = this.GetRequestVal("IDs");
+//			String athMyPK = this.GetRequestVal("AthMyPK"); //图片组件.
+//
+//			FrmAttachment athDesc = new FrmAttachment(athMyPK);
+//
+//			if (DataType.IsNullOrEmpty(media_id))
+//			{
+//				return "media_id为空";
+//			}
+//			String accessToken = GetAccessTokenImgs();
+//			//bp.da.Log.DebugWriteError("accessToken:" + accessToken);
+//			Bitmap img = null;
+//			HttpWebRequest req;
+//			HttpWebResponse res = null;
+//
+//			String url = String.format("https://qyapi.weixin.qq.com/cgi-bin/media/get?access_token=%1$s&media_id=%2$s", accessToken, media_id);
+//
+//			System.Uri httpUrl = new System.Uri(url);
+//			req = (HttpWebRequest)(WebRequest.Create(httpUrl));
+//			req.Timeout = 180000; //设置超时值10秒
+//			req.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)";
+//			req.Method = "GET";
+//			res = (HttpWebResponse)(req.GetResponse());
+//			img = new Bitmap(res.GetResponseStream()); //获取图片流
+//			//bp.da.Log.DebugWriteError(res.GetResponseHeader("Content-Type"));
+//			String fileName = res.GetResponseHeader("Content-Disposition").replace("attachment; filename=", "").replace("\"", "");
+//
+//			img.Save(SystemConfig.getPathOfTemp() + fileName);
+//			Log.DebugWriteError(this.getFK_Node() + ":" + this.getFK_Flow() + ":" + this.getWorkID() + ":" + athDesc.NoOfObj + ":" + athDesc.getFK_MapData() + ":" + SystemConfig.getPathOfTemp() + fileName + ":" + fileName);
+//			CCFormAPI.CCForm_AddAth(this.getFK_Node(),this.getFK_Flow(), this.getWorkID(), athMyPK, athDesc.getFK_MapData(), SystemConfig.getPathOfTemp() + fileName, fileName);
+//
+//			return "执行成功";
+//		}
+//		catch (RuntimeException ex)
+//		{
+//			String msg = "err@GetMedia:" + ex.getMessage() + " -- " + ex.StackTrace;
+//			Log.DebugWriteError(msg);
+//			return msg;
+//
+//		}
+//	}
+
+//ORIGINAL LINE: public static byte[] BitmapToBytes(Bitmap Bitmap)
+//	public static byte[] BitmapToBytes(Bitmap Bitmap)
+//	{
+////C# TO JAVA CONVERTER TODO TASK: C# to Java Converter cannot determine whether this System.IO.MemoryStream is input or output:
+//		MemoryStream ms = null;
+//		try
+//		{
+////C# TO JAVA CONVERTER TODO TASK: C# to Java Converter cannot determine whether this System.IO.MemoryStream is input or output:
+//			ms = new MemoryStream();
+//			Bitmap.Save(ms, Bitmap.RawFormat);
+//
+////ORIGINAL LINE: byte[] byteImage = new Byte[ms.Length];
+//			byte[] byteImage = new byte[ms.Length];
+//			byteImage = ms.ToArray();
+//			return byteImage;
+//		}
+//		catch (NullPointerException ex)
+//		{
+//			throw ex;
+//		}
+//		finally
+//		{
+//			ms.Close();
+//		}
+//	}
+	/** 
+	 调用企业号获取地理位置
+	 
+	 @return 
+	*/
+//	public final String GetWXConfigSetting() throws Exception {
+//		String htmlPage = this.GetRequestVal("htmlPage");
+//		Hashtable ht = new Hashtable();
+//
+//		//生成签名的时间戳
+//		String timestamp = Date.now().toString("yyyyMMDDHHddss");
+//		//生成签名的随机串
+//		String nonceStr = DBAccess.GenerGUID(0, null, null);
+//		//企业号jsapi_ticket
+//		String jsapi_ticket = "";
+//		String url1 = htmlPage;
+//		//获取 AccessToken
+//		String accessToken = bp.gpm.weixin.WeiXinEntity.getAccessToken();
+//
+//		String url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=" + accessToken;
+//
+//
+//		HttpWebResponse response = (new HttpWebResponseUtility()).CreateGetHttpResponse(url, 10000, null, null);
+//		InputStreamReader reader = new InputStreamReader(response.GetResponseStream(), java.nio.charset.StandardCharsets.UTF_8);
+//		String str = reader.ReadToEnd();
+//
+//		//权限签名算法
+//		bp.gpm.weixin.Ticket ticket = new bp.gpm.weixin.Ticket();
+//		ticket = FormatToJson.<bp.gpm.weixin.Ticket>ParseFromJson(str);
+//
+//		if (ticket.getErrcode().equals("0"))
+//		{
+//			jsapi_ticket = ticket.getTicket();
+//		}
+//		else
+//		{
+//			return "err:@获取jsapi_ticket失败+accessToken=" + accessToken;
+//		}
+//
+//		ht.put("timestamp", timestamp);
+//		ht.put("nonceStr", nonceStr);
+//		//企业微信的corpID
+//		ht.put("AppID", SystemConfig.getWX_CorpID());
+//
+//		//生成签名算法
+//		String str1 = "jsapi_ticket=" + jsapi_ticket + "&noncestr=" + nonceStr + "&timestamp=" + timestamp + "&url=" + url1 + "";
+//		String Signature = Sha1Signature(str1);
+//		ht.put("signature", Signature);
+//
+//		return Json.ToJson(ht);
+//	}
+//	public static String Sha1Signature(String str)
+//	{
+//		String s = System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(str, "SHA1").toString();
+//		return s.toLowerCase();
+//	}
+
+
+
+public final String GetIDCardInfo() throws Exception {
+		String token = getAccessToken();
+	    JSONObject jd = JSONObject.fromObject(token);
+	    String url = "https://aip.baidubce.com/rest/2.0/ocr/v1/idcard";
+	    long filesSize = CommonFileUtils.getFilesSize(getRequest(), "file");
+		if (filesSize == 0)
+		{
+			return "err@请选择要上传的身份证件。";
+		}
+		InputStream stream = CommonFileUtils.getInputStream(getRequest(), "file"); //new MemoryStream();
+
+//ORIGINAL LINE: byte[] bytes = new byte[stream.Length];
+	    byte[] bytes = new byte[stream.available()];
+		stream.read(bytes);
+	    Base64.Encoder encoder = Base64.getEncoder();
+	    String imgParam = encoder.encodeToString(bytes);
+		stream.close();
+
+	    String param = "id_card_side=" + "front" + "&image=" + imgParam;
+	// 注意这里仅为了简化编码每一次请求都去获取access_token，线上环境access_token有过期时间， 客户端可自行缓存，过期后重新获取。
+	Hashtable<String,String> map = new Hashtable<String,String>();
+	map.put("access_token",jd.getString("access_token"));
+	map.put("id_card_side","front");
+	map.put("image",imgParam);
+
+	String result =HttpClientUtil.doPost(url, map, "Content-Type","application/x-www-form-urlencoded");
+	System.out.println(result);
+	return result;
+}
 	/**
 	 * 获取文件后缀的方法
 	 *
@@ -533,5 +699,4 @@ public class CCMobile_CCForm extends WebContralBase
 		}
 		return extension;
 	}
-
 }

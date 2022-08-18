@@ -4,6 +4,9 @@ import bp.da.*;
 import bp.en.*;
 import bp.port.*;
 import bp.sys.*;
+import bp.wf.template.sflow.*;
+import bp.wf.template.frm.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,13 +16,11 @@ import java.util.*;
 public class FrmNodes extends EntitiesMyPK
 {
 
-		///属性.
+		///#region 属性.
 	/** 
 	 他的工作节点
-	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes() throws Exception
-	{
+	public final Nodes getHisNodes() throws Exception {
 		Nodes ens = new Nodes();
 		for (FrmNode ns : this.ToJavaList())
 		{
@@ -28,24 +29,21 @@ public class FrmNodes extends EntitiesMyPK
 		return ens;
 	}
 
-		/// 属性.
+		///#endregion 属性.
 
 
-		///构造方法..
+		///#region 构造方法..
 	/** 
 	 节点表单
 	*/
-	public FrmNodes()
-	{
+	public FrmNodes() throws Exception {
 	}
 	/** 
 	 节点表单
 	 
-	 @param NodeID 节点ID
-	 * @throws Exception 
+	 param NodeID 节点ID
 	*/
-	public FrmNodes(String fk_flow, int nodeID) throws Exception
-	{
+	public FrmNodes(String fk_flow, int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Flow, fk_flow);
 		qo.addAnd();
@@ -57,38 +55,33 @@ public class FrmNodes extends EntitiesMyPK
 	/** 
 	 节点表单
 	 
-	 @param NodeNo NodeNo 
-	 * @throws Exception 
+	 param NodeNo NodeNo
 	*/
-	public FrmNodes(int nodeID) throws Exception
-	{
+	public FrmNodes(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Node, nodeID);
 		qo.addOrderBy(FrmNodeAttr.Idx);
 		qo.DoQuery();
 	}
 
-		/// 构造方法..
+		///#endregion 构造方法..
 
 
-		///公共方法.
+		///#region 公共方法.
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmNode();
 	}
 	/** 
 	 节点表单s
 	 
-	 @param sts 节点表单
+	 param sts 节点表单
 	 @return 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts) throws Exception
-	{
+	public final Nodes GetHisNodes(Nodes sts) throws Exception {
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
 		for (Node st : sts.ToJavaList())
@@ -96,7 +89,7 @@ public class FrmNodes extends EntitiesMyPK
 			tmp = this.GetHisNodes(st.getNo());
 			for (Node nd : tmp.ToJavaList())
 			{
-				if (nds.Contains(nd))
+				if (nds.contains(nd))
 				{
 					continue;
 				}
@@ -108,12 +101,10 @@ public class FrmNodes extends EntitiesMyPK
 	/** 
 	 节点表单
 	 
-	 @param NodeNo 工作节点编号
+	 param NodeNo 工作节点编号
 	 @return 节点s
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo) throws Exception
-	{
+	public final Nodes GetHisNodes(String NodeNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Node, NodeNo);
 		qo.DoQuery();
@@ -121,19 +112,17 @@ public class FrmNodes extends EntitiesMyPK
 		Nodes ens = new Nodes();
 		for (FrmNode en : this.ToJavaList())
 		{
-			ens.AddEntity(new Node(en.getFK_Frm()));
+			ens.AddEntity(new Node(en.getFKFrm()));
 		}
 		return ens;
 	}
 	/** 
 	 转向此节点的集合的Nodes
 	 
-	 @param nodeID 此节点的ID
+	 param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID) throws Exception
-	{
+	public final Nodes GetHisNodes(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmNodeAttr.FK_Frm, nodeID);
 		qo.DoQuery();
@@ -146,26 +135,24 @@ public class FrmNodes extends EntitiesMyPK
 		return ens;
 	}
 
-		/// 公共方法.
+		///#endregion 公共方法.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmNode> ToJavaList()
-	{
-		return (List<FrmNode>)(Object)this;
+	public final java.util.List<FrmNode> ToJavaList() {
+		return (java.util.List<FrmNode>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmNode> Tolist()
-	{
+	public final ArrayList<FrmNode> Tolist()  {
 		ArrayList<FrmNode> list = new ArrayList<FrmNode>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -174,6 +161,6 @@ public class FrmNodes extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

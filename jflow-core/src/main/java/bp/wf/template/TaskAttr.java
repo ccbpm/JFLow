@@ -1,12 +1,20 @@
 package bp.wf.template;
-import bp.en.EntityMyPKAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
+
 /** 
  任务 属性
 */
 public class TaskAttr extends EntityMyPKAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 发起人
 	*/
@@ -45,5 +53,5 @@ public class TaskAttr extends EntityMyPKAttr
 	*/
 	public static final String ToEmps = "ToEmps";
 
-		///
+		///#endregion
 }

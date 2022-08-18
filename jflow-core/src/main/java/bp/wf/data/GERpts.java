@@ -1,18 +1,18 @@
 package bp.wf.data;
 
 import bp.en.*;
+
 import java.util.*;
 
 /** 
  报表s
 */
-public class GERpts extends EntitiesOID
+public class GERpts extends bp.en.EntitiesOID
 {
-	private static final long serialVersionUID = 1L;
 	/** 
 	 报表s
 	*/
-	public GERpts()
+	public GERpts()throws Exception
 	{
 	}
 
@@ -26,22 +26,22 @@ public class GERpts extends EntitiesOID
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<GERpt> ToJavaList()
+	public final java.util.List<GERpt> ToJavaList()
 	{
-		return (List<GERpt>)(Object)this;
+		return (java.util.List<GERpt>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<GERpt> Tolist()
+	public final ArrayList<GERpt> Tolist()throws Exception
 	{
 		ArrayList<GERpt> list = new ArrayList<GERpt>();
 		for (int i = 0; i < this.size(); i++)
@@ -51,5 +51,5 @@ public class GERpts extends EntitiesOID
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

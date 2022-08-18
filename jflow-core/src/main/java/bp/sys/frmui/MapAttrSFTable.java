@@ -14,52 +14,50 @@ import java.util.*;
 public class MapAttrSFTable extends EntityMyPK
 {
 
-		///文本字段参数属性.
+		///#region 文本字段参数属性.
 	/** 
 	 表单ID
-	 * @throws Exception 
 	*/
 	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()throws Exception
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 绑定的枚举ID
 	*/
-	public final String getUIBindKey()throws Exception
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value) throws Exception
-	{
+	public final void setUIBindKey(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -69,15 +67,13 @@ public class MapAttrSFTable extends EntityMyPK
 	/** 
 	 外键字段
 	*/
-	public MapAttrSFTable()
-	{
+	public MapAttrSFTable()  {
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -87,7 +83,7 @@ public class MapAttrSFTable extends EntityMyPK
 		map.IndexField = MapAttrAttr.FK_MapData;
 
 
-			///基本信息.
+			///#region 基本信息.
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 
@@ -100,7 +96,7 @@ public class MapAttrSFTable extends EntityMyPK
 
 			//map.AddTBString(MapAttrAttr.DefVal, null, "默认值", true, false, 0, 300, 20);
 
-			//map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
+		map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
 			//map.AddTBFloat(MapAttrAttr.UIHeight, 23, "高度", true, true);
 
 
@@ -113,14 +109,14 @@ public class MapAttrSFTable extends EntityMyPK
 			// map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 			// map.AddBoolean("IsEnableJS", false, "是否启用JS高级设置？", true, true); //参数字段.
 
-			/// 基本信息.
+			///#endregion 基本信息.
 
 
-			///傻瓜表单。
-		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+			///#region 傻瓜表单。
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
 			//文本占单元格数量
-		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
 			//文本跨行
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
@@ -129,10 +125,10 @@ public class MapAttrSFTable extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
 
-			/// 傻瓜表单。
+			///#endregion 傻瓜表单。
 
 
-			///执行的方法.
+			///#region 执行的方法.
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "设置联动";
@@ -161,30 +157,37 @@ public class MapAttrSFTable extends EntityMyPK
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
+		rm.Title = "高级JS设置";
+		rm.ClassMethodName = this.toString() + ".DoRadioBtns()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.GroupName = "高级";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 
-			/// 执行的方法.
+			///#endregion 执行的方法.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
 		mapAttr.RetrieveFromDBSources();
 		mapAttr.Update();
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+
 
 		super.afterInsertUpdateAction();
 	}
@@ -193,22 +196,20 @@ public class MapAttrSFTable extends EntityMyPK
 	 删除后清缓存
 	*/
 	@Override
-	protected void afterDelete()throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterDelete();
 	}
 
 
-		///方法执行.
+		///#region 方法执行.
 	/** 
 	 绑定函数
 	 
 	 @return 
 	*/
-	public final String BindFunction()throws Exception
-	{
+	public final String BindFunction() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -216,9 +217,16 @@ public class MapAttrSFTable extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoSFTable()throws Exception
-	{
+	public final String DoSFTable() throws Exception {
 		return "../../Admin/FoolFormDesigner/GuideSFTableAttr.htm?FK_SFTable=" + this.getUIBindKey();
+	}
+	/** 
+	 高级设置
+	 
+	 @return 
+	*/
+	public final String DoRadioBtns() throws Exception {
+		return "../../Admin/FoolFormDesigner/MapExt/RadioBtns.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 	/** 
 	 设置填充其他下拉框
@@ -226,9 +234,8 @@ public class MapAttrSFTable extends EntityMyPK
 	 @return 
 	*/
 
-	public final String DoDDLFullCtrl2019()throws Exception
-	{
-		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn()+ "&RefNo=" +this.getMyPK();
+	public final String DoDDLFullCtrl2019() throws Exception {
+		return "../../Admin/FoolFormDesigner/MapExt/DDLFullCtrl2019.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn() + "&RefNo=" + this.getMyPK();
 	}
 
 	/** 
@@ -236,8 +243,7 @@ public class MapAttrSFTable extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoAutoFullDLL()throws Exception
-	{
+	public final String DoAutoFullDLL() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDLL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -245,10 +251,9 @@ public class MapAttrSFTable extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoActiveDDL()throws Exception
-	{
+	public final String DoActiveDDL() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/ActiveDDL.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 
-		/// 方法执行.
+		///#endregion 方法执行.
 }

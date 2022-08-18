@@ -2,8 +2,9 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.*;
+import bp.en.Map;
+
 import java.util.*;
 
 /** 
@@ -12,7 +13,7 @@ import java.util.*;
 public class ExtContral extends EntityMyPK
 {
 
-		///基本-属性
+		///#region 基本-属性
 	/** 
 	 表单ID
 	*/
@@ -20,8 +21,8 @@ public class ExtContral extends EntityMyPK
 	{
 		return this.GetValStrByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
@@ -31,67 +32,60 @@ public class ExtContral extends EntityMyPK
 	{
 		return this.GetValStrByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 控件类型
 	*/
-	public final UIContralType getUIContralType() throws Exception
-	{
+	public final UIContralType getUIContralType() throws Exception {
 		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
 	}
-	public final void setUIContralType(UIContralType value) throws Exception
-	{
+	public final void setUIContralType(UIContralType value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
 	}
 
-		///
+		///#endregion
 
 
-		///附件属性
+		///#region 附件属性
 	/** 
 	 关联的字段.
 	*/
-	public final String getAthRefObj() throws Exception
-	{
+	public final String getAthRefObj() throws Exception {
 		return this.GetParaString("AthRefObj");
 	}
-	public final void setAthRefObj(String value) throws Exception
-	{
-		this.SetPara("AthRefObj", value);
+	public final void setAthRefObj(String value)throws Exception
+	{this.SetPara("AthRefObj", value);
 	}
 	/** 
 	 显示方式
 	*/
-	public final AthShowModel getAthShowModel() throws Exception
-	{
+	public final AthShowModel getAthShowModel() throws Exception {
 		return AthShowModel.forValue(this.GetParaInt("AthShowModel"));
 	}
-	public final void setAthShowModel(AthShowModel value) throws Exception
-	{
-		this.SetPara("AthShowModel", value.getValue());
+	public final void setAthShowModel(AthShowModel value)throws Exception
+	{this.SetPara("AthShowModel", value.getValue());
 	}
 
-		/// 附件属性
+		///#endregion 附件属性
 
 
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 扩展控件
 	*/
-	public ExtContral()
-	{
+	public ExtContral()  {
 	}
-	public ExtContral(String fk_mapdata, String keyofEn) throws Exception
-	{
+	public ExtContral(String fk_mapdata, String keyofEn) throws Exception {
 		this.setMyPK(fk_mapdata + "_" + keyofEn);
 		this.Retrieve();
 	}
-	public ExtContral(String mypk) throws Exception
+	public ExtContral(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -100,8 +94,7 @@ public class ExtContral extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -145,8 +138,8 @@ public class ExtContral extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.EditType, 0, "编辑类型", true, false);
 
 			//单元格数量。2013-07-24 增加。
-		map.AddTBString(MapAttrAttr.ColSpan, "1", "单元格数量", true, false, 0, 3, 3);
-		 //   map.AddTBInt(MapAttrAttr.ColSpan, 1, "单元格数量", true, false);
+		map.AddTBInt(MapAttrAttr.ColSpan, 1, "单元格数量", true, false);
+			//   map.AddTBInt(MapAttrAttr.ColSpan, 1, "单元格数量", true, false);
 
 		map.AddTBInt(MapAttrAttr.Idx, 0, "序号", true, false);
 		map.AddTBString(MapAttrAttr.GUID, null, "GUID", true, false, 0, 128, 20);
@@ -158,6 +151,6 @@ public class ExtContral extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 }

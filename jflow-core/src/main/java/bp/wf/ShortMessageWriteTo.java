@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  短消息写入规则（当系统产生短消息的时候，需要写入的方式。）
 */
@@ -31,8 +33,7 @@ public enum ShortMessageWriteTo
 
 	private int intValue;
 	private static java.util.HashMap<Integer, ShortMessageWriteTo> mappings;
-	private static java.util.HashMap<Integer, ShortMessageWriteTo> getMappings()
-	{
+	private static java.util.HashMap<Integer, ShortMessageWriteTo> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (ShortMessageWriteTo.class)
@@ -47,18 +48,15 @@ public enum ShortMessageWriteTo
 	}
 
 	private ShortMessageWriteTo(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue() {
 		return intValue;
 	}
 
-	public static ShortMessageWriteTo forValue(int value)
-	{
-		return getMappings().get(value);
+	public static ShortMessageWriteTo forValue(int value) 
+	{return getMappings().get(value);
 	}
 }

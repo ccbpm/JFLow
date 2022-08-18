@@ -14,7 +14,7 @@ import org.springframework.web.multipart.support.StandardMultipartHttpServletReq
 public class CommonFileUtils {
 	/**
 	 * 上传
-	 * @param request
+	 * param request
 	 */
 	public static void upload(HttpServletRequest request,String fileName,File targetFile) throws Exception{
 		String contentType = request.getContentType();
@@ -22,7 +22,6 @@ public class CommonFileUtils {
 			MultipartHttpServletRequest mrequest = getMultipartHttpServletRequest(request);
 			
 		    Iterator ifiles =  mrequest.getFileNames();
-		    
 		    while(ifiles.hasNext()){
 		    	System.out.println(ifiles.next());
 		    }
@@ -38,17 +37,14 @@ public class CommonFileUtils {
 	
 	/**
 	 * 获取原始的文件名
-	 * @param request
+	 * param request
 	 * @return
-	 * @throws Exception 
 	 */
-	public static String getOriginalFilename(HttpServletRequest request,String fileName) throws Exception{
+	public static String getOriginalFilename(HttpServletRequest request,String fileName){
 		String contentType = request.getContentType();
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 			MultipartHttpServletRequest mrequest = getMultipartHttpServletRequest(request);
 			MultipartFile multipartFile = mrequest.getFile(fileName);
-			if(multipartFile == null)
-				throw new Exception("请选择上传的文件");
 			return multipartFile.getOriginalFilename();
 		}else{
 			return null;
@@ -57,7 +53,7 @@ public class CommonFileUtils {
 	
 	/**
 	 * 获取上传的文件
-	 * @param request
+	 * param request
 	 * @return
 	 */
 	public static long getFilesSize(HttpServletRequest request,String fileName){
@@ -73,8 +69,8 @@ public class CommonFileUtils {
 	
 	/**
 	 * 获取文件对于的输入流
-	 * @param request
-	 * @param fileName
+	 * param request
+	 * param fileName
 	 * @return
 	 * @throws IOException 
 	 */
@@ -91,7 +87,7 @@ public class CommonFileUtils {
 	
 	/**
 	 * 根据httpServletRequest获取MultipartHttpServletRequest
-	 * @param request
+	 * param request
 	 * @return 
 	 */
 	public static MultipartHttpServletRequest getMultipartHttpServletRequest(HttpServletRequest request) {

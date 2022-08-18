@@ -2,8 +2,9 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.*;
+import bp.en.Map;
+
 import java.util.*;
 
 /** 
@@ -12,29 +13,25 @@ import java.util.*;
 public class MapDataTemplate extends EntityNoName
 {
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 映射基础
 	*/
-	public MapDataTemplate()
-	{
+	public MapDataTemplate()  {
 	}
 	/** 
 	 映射基础
 	 
-	 @param no 映射编号
-	 * @throws Exception 
+	 param no 映射编号
 	*/
-	public MapDataTemplate(String no) throws Exception
-	{
+	public MapDataTemplate(String no) throws Exception {
 		super(no);
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -44,25 +41,25 @@ public class MapDataTemplate extends EntityNoName
 		map.setCodeStruct("4");
 
 
-			///基础信息.
+			///#region 基础信息.
 		map.AddTBStringPK(MapDataTemplateAttr.No, null, "编号", true, false, 1, 150, 100);
 		map.AddTBString(MapDataTemplateAttr.Name, null, "描述", true, false, 0, 200, 20);
 		map.AddTBString(MapDataTemplateAttr.PTable, null, "物理表", true, false, 0, 100, 20);
 		map.AddTBInt("IsTemplate", 0, "是否是表单模版", true, false);
 
-			/// 基础信息.
+			///#endregion 基础信息.
 
 
-			///设计者信息.
+			///#region 设计者信息.
 			//增加参数字段.
 		map.AddTBAtParas(4000);
 
-			///
+			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		/// 构造方法
+		///#endregion 构造方法
 
 }

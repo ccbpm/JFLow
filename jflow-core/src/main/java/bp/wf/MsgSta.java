@@ -5,6 +5,7 @@ import bp.en.*;
 import bp.web.*;
 import bp.sys.*;
 import bp.wf.port.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -31,13 +32,11 @@ public enum MsgSta
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static MsgSta forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static MsgSta forValue(int value)
+	{return values()[value];
 	}
 }

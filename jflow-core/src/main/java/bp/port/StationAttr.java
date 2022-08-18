@@ -1,5 +1,11 @@
 package bp.port;
-import bp.en.EntityNoNameAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.sys.*;
+import bp.difference.*;
+import bp.*;
+import java.util.*;
 
 /** 
  岗位属性
@@ -13,4 +19,7 @@ public class StationAttr extends EntityNoNameAttr
 	/** 隶属组织
 	*/
 	public static final String OrgNo = "OrgNo";
+
+	public static final String Idx = "Idx";
+
 }

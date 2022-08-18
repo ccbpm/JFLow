@@ -1,5 +1,5 @@
 package bp.en;
-import bp.*;
+
 
 /** 
  可以被重写的类 
@@ -11,8 +11,8 @@ public class OverrideFile
 	/** 
 	 执行的事件
 	 
-	 @param frmID
-	 @param en
+	 param frmID
+	 param en
 	*/
 	public static void FrmEvent_LoadBefore(String frmID, Entity en)
 	{
@@ -20,8 +20,8 @@ public class OverrideFile
 	/** 
 	 装载填充的事件.
 	 
-	 @param frmID
-	 @param en
+	 param frmID
+	 param en
 	*/
 	public static void FrmEvent_FrmLoadAfter(String frmID, Entity en)
 	{
@@ -30,8 +30,8 @@ public class OverrideFile
 	/** 
 	 保存前事件
 	 
-	 @param frmID
-	 @param en
+	 param frmID
+	 param en
 	*/
 	public static void FrmEvent_SaveBefore(String frmID, Entity en)
 	{
@@ -40,8 +40,8 @@ public class OverrideFile
 	/** 
 	 保存后事件
 	 
-	 @param frmID
-	 @param en
+	 param frmID
+	 param en
 	*/
 	public static void FrmEvent_SaveAfter(String frmID, Entity en)
 	{

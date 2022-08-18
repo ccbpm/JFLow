@@ -9,7 +9,7 @@ public class KeyVal
 	 字段名称
 	*/
 	private String key;
-	public final String getkey()
+	public final String getkey()throws Exception
 	{
 		return key;
 	}
@@ -21,7 +21,7 @@ public class KeyVal
 	 字段值
 	*/
 	private String value;
-	public final String getvalue()
+	public final String getvalue()throws Exception
 	{
 		return value;
 	}
@@ -33,7 +33,7 @@ public class KeyVal
 	 类型
 	*/
 	private String type;
-	public final String gettype()
+	public final String gettype()throws Exception
 	{
 		return type;
 	}

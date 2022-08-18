@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
  排序方式
@@ -23,7 +23,7 @@ public enum OrderWay
 		return this.ordinal();
 	}
 
-	public static OrderWay forValue(int value) throws Exception
+	public static OrderWay forValue(int value) 
 	{
 		return values()[value];
 	}

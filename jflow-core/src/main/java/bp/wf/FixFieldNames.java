@@ -1,4 +1,7 @@
 package bp.wf;
+
+import bp.*;
+
 /** 
  固定字段名称
 */

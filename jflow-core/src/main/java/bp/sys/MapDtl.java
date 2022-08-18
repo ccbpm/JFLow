@@ -1,24 +1,52 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
-import bp.*;
-import java.util.*;
+import bp.sys.MapAttr;
+import bp.sys.base.FormEventBase;
+import bp.sys.base.FormEventBaseDtl;
+
 
 /** 
  明细
 */
 public class MapDtl extends EntityNoName
 {
-	private static final long serialVersionUID = 1L;
-	///导入导出属性.
+
+		///#region 导入导出属性.
+
+	public final float getX() throws Exception
+	{
+		return this.GetValFloatByKey(FrmImgAttr.X);
+	}
+	public final void setX(float value) throws Exception
+	{
+		this.SetValByKey(MapDtlAttr.X, value);
+	}
+
+	public final float getY() throws Exception
+	{
+		return this.GetValFloatByKey(FrmImgAttr.Y);
+	}
+	public final void setY(float value) throws Exception
+	{
+		this.SetValByKey(MapDtlAttr.Y, value);
+	}
+	public final float getW() throws Exception
+	{
+		return this.GetValFloatByKey(FrmImgAttr.W);
+	}
+	public final void setW(float value) throws Exception
+	{
+		this.SetValByKey(MapDtlAttr.W, value);
+	}
+
+
 	/** 
 	 关联主键
 	*/
-	public final String getRefPK() throws Exception
-	{
+	public final String getRefPK()  {
 		String str = this.GetValStrByKey(MapDtlAttr.RefPK);
 		if (DataType.IsNullOrEmpty(str))
 		{
@@ -26,165 +54,155 @@ public class MapDtl extends EntityNoName
 		}
 		return str;
 	}
-	public final void setRefPK(String value) throws Exception
-	{
+	public final void setRefPK(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.RefPK, value);
 	}
 	/** 
 	 Rowid
 	*/
-	public final int getRowIdx() throws Exception
+	public final int getRowIdx()
 	{
 		return this.GetValIntByKey(MapDtlAttr.RowIdx);
 	}
-	public final void setRowIdx(int value) throws Exception
-	{
+	public final void setRowIdx(int value)
+	 {
 		this.SetValByKey(MapDtlAttr.RowIdx, value);
 	}
 	/** 
 	 是否可以导入
 	*/
-	public final boolean getIsImp() throws Exception
+	public final boolean isImp()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsImp);
 	}
-	public final void setIsImp(boolean value) throws Exception
-	{
+	public final void setImp(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsImp, value);
 	}
 	/** 
 	 是否可以导出
 	*/
-	public final boolean getIsExp() throws Exception
+	public final boolean isExp()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsExp);
 	}
-	public final void setIsExp(boolean value) throws Exception
-	{
+	public final void setExp(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsExp, value);
 	}
 	/** 
 	 执行的类
 	*/
-	public final String getFEBD() throws Exception
+	public final String getFEBD()
 	{
 		return this.GetValStringByKey(MapDtlAttr.FEBD);
 	}
-	public final void setFEBD(String value) throws Exception
-	{
+	public final void setFEBD(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.FEBD, value);
 	}
 	/** 
 	 导入模式
 	*/
-	public final int getImpModel() throws Exception
+	public final int getImpModel()
 	{
 		return this.GetValIntByKey(MapDtlAttr.ImpModel);
 	}
-	public final void setImpModel(int value) throws Exception
-	{
+	public final void setImpModel(int value)
+	 {
 		this.SetValByKey(MapDtlAttr.ImpModel, value);
 	}
 	/** 
 	 查询sql
 	*/
-	public final String getImpSQLInit() throws Exception
+	public final String getImpSQLInit()
 	{
 		return this.GetValStringByKey(MapDtlAttr.ImpSQLInit).replace("~", "'");
 	}
-	public final void setImpSQLInit(String value) throws Exception
-	{
+	public final void setImpSQLInit(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.ImpSQLInit, value);
 	}
 	/** 
 	 搜索sql
 	*/
-	public final String getImpSQLSearch() throws Exception
+	public final String getImpSQLSearch()
 	{
 		return this.GetValStringByKey(MapDtlAttr.ImpSQLSearch).replace("~", "'");
 	}
-	public final void setImpSQLSearch(String value) throws Exception
-	{
+	public final void setImpSQLSearch(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.ImpSQLSearch, value);
 	}
 	/** 
 	 填充数据
 	*/
-	public final String getImpSQLFullOneRow() throws Exception
+	public final String getImpSQLFullOneRow()
 	{
 		return this.GetValStringByKey(MapDtlAttr.ImpSQLFullOneRow).replace("~", "'");
 	}
-	public final void setImpSQLFullOneRow(String value) throws Exception
-	{
+	public final void setImpSQLFullOneRow(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.ImpSQLFullOneRow, value);
 	}
 
-		///
+		///#endregion
 
 
-		///基本设置
+		///#region 基本设置
 	/** 
 	 工作模式
 	*/
-	public final DtlModel getDtlModel() throws Exception
-	{
+	public final DtlModel getDtlModel()  {
 		return DtlModel.forValue(this.GetValIntByKey(MapDtlAttr.Model));
 	}
-	public final void setDtlModel(DtlModel value) throws Exception
-	{
+	public final void setDtlModel(DtlModel value)
+	 {
 		this.SetValByKey(MapDtlAttr.Model, value.getValue());
 	}
 	/** 
 	 是否启用行锁定.
 	*/
-	public final boolean getIsRowLock() throws Exception
-	{
+	public final boolean isRowLock()  {
 		return this.GetParaBoolen(MapDtlAttr.IsRowLock, false);
 	}
-	public final void setIsRowLock(boolean value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.IsRowLock, value);
+	public final void setRowLock(boolean value)
+	{this.SetPara(MapDtlAttr.IsRowLock, value);
 	}
 
-		/// 基本设置
+		///#endregion 基本设置
 
 
-		///参数属性
+		///#region 参数属性
 	/** 
 	 记录增加模式
 	*/
-	public final DtlAddRecModel getDtlAddRecModel() throws Exception
-	{
+	public final DtlAddRecModel getDtlAddRecModel()  {
 		return DtlAddRecModel.forValue(this.GetParaInt(MapDtlAttr.DtlAddRecModel));
 	}
-	public final void setDtlAddRecModel(DtlAddRecModel value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.DtlAddRecModel, value.getValue());
+	public final void setDtlAddRecModel(DtlAddRecModel value)
+	{this.SetPara(MapDtlAttr.DtlAddRecModel, value.getValue());
 	}
 	/** 
 	 保存方式
 	*/
-	public final DtlSaveModel getDtlSaveModel() throws Exception
-	{
+	public final DtlSaveModel getDtlSaveModel()  {
 		return DtlSaveModel.forValue(this.GetParaInt(MapDtlAttr.DtlSaveModel));
 	}
-	public final void setDtlSaveModel(DtlSaveModel value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.DtlSaveModel, value.getValue());
+	public final void setDtlSaveModel(DtlSaveModel value)
+	{this.SetPara(MapDtlAttr.DtlSaveModel, value.getValue());
 	}
 	/** 
 	 是否启用Link,在记录的右边.
 	*/
-	public final boolean getIsEnableLink() throws Exception
-	{
+	public final boolean isEnableLink()  {
 		return this.GetParaBoolen(MapDtlAttr.IsEnableLink, false);
 	}
-	public final void setIsEnableLink(boolean value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.IsEnableLink, value);
+	public final void setEnableLink(boolean value)
+	{this.SetPara(MapDtlAttr.IsEnableLink, value);
 	}
-	public final String getLinkLabel() throws Exception
-	{
+	public final String getLinkLabel()  {
 		String s = this.GetParaString(MapDtlAttr.LinkLabel);
 		if (DataType.IsNullOrEmpty(s))
 		{
@@ -192,12 +210,14 @@ public class MapDtl extends EntityNoName
 		}
 		return s;
 	}
-	public final void setLinkLabel(String value) throws Exception
+	public final void setIsEnableLink(boolean value) throws Exception
 	{
-		this.SetPara(MapDtlAttr.LinkLabel, value);
+		this.SetPara(MapDtlAttr.IsEnableLink, value);
 	}
-	public final String getLinkUrl() throws Exception
-	{
+	public final void setLinkLabel(String value)
+	{this.SetPara(MapDtlAttr.LinkLabel, value);
+	}
+	public final String getLinkUrl()  {
 		String s = this.GetValStrByKey(MapDtlAttr.LinkUrl);
 		if (DataType.IsNullOrEmpty(s))
 		{
@@ -205,15 +225,14 @@ public class MapDtl extends EntityNoName
 		}
 		return s;
 	}
-	public final void setLinkUrl(String value) throws Exception
-	{
+	public final void setLinkUrl(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.LinkUrl, value);
 			//string val = value;
-			//val = val.replace("@", "*");
+			//val = val.Replace("@", "*");
 			//this.SetPara(MapDtlAttr.LinkUrl, val);
 	}
-	public final String getLinkTarget() throws Exception
-	{
+	public final String getLinkTarget()  {
 		String s = this.GetParaString(MapDtlAttr.LinkTarget);
 		if (DataType.IsNullOrEmpty(s))
 		{
@@ -221,15 +240,13 @@ public class MapDtl extends EntityNoName
 		}
 		return s;
 	}
-	public final void setLinkTarget(String value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.LinkTarget, value);
+	public final void setLinkTarget(String value)
+	{this.SetPara(MapDtlAttr.LinkTarget, value);
 	}
 	/** 
 	 子线程处理人字段(用于分流节点的明细表分配子线程任务).
 	*/
-	public final String getSubThreadWorker() throws Exception
-	{
+	public final String getSubThreadWorker()  {
 		String s = this.GetParaString(MapDtlAttr.SubThreadWorker);
 		if (DataType.IsNullOrEmpty(s))
 		{
@@ -237,15 +254,13 @@ public class MapDtl extends EntityNoName
 		}
 		return s;
 	}
-	public final void setSubThreadWorker(String value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.SubThreadWorker, value);
+	public final void setSubThreadWorker(String value)
+	{this.SetPara(MapDtlAttr.SubThreadWorker, value);
 	}
 	/** 
 	 子线程分组字段(用于分流节点的明细表分配子线程任务)
 	*/
-	public final String getSubThreadGroupMark() throws Exception
-	{
+	public final String getSubThreadGroupMark()  {
 		String s = this.GetParaString(MapDtlAttr.SubThreadGroupMark);
 		if (DataType.IsNullOrEmpty(s))
 		{
@@ -253,31 +268,34 @@ public class MapDtl extends EntityNoName
 		}
 		return s;
 	}
-	public final void setSubThreadGroupMark(String value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.SubThreadGroupMark, value);
+	public final void setSubThreadGroupMark(String value)
+	{this.SetPara(MapDtlAttr.SubThreadGroupMark, value);
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getFK_Node() throws Exception
+	public final int getFK_Node()
 	{
 		return this.GetValIntByKey(MapDtlAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
+	public final void setFK_Node(int value)
+	 {
 		this.SetValByKey(MapDtlAttr.FK_Node, value);
 	}
 
-		/// 参数属性
+	public final String getInitDBAttrs()
+	{
+		return this.GetValStringByKey(MapDtlAttr.InitDBAttrs);
+	}
+
+		///#endregion 参数属性
 
 
-		///外键属性
+		///#region 外键属性
 	/** 
 	 框架
 	*/
-	public final MapFrames getMapFrames() throws Exception
-	{
+	public final MapFrames getMapFrames() throws Exception {
 		Object tempVar = this.GetRefObject("MapFrames");
 		MapFrames obj = tempVar instanceof MapFrames ? (MapFrames)tempVar : null;
 		if (obj == null)
@@ -290,8 +308,7 @@ public class MapDtl extends EntityNoName
 	/** 
 	 逻辑扩展
 	*/
-	public final MapExts getMapExts() throws Exception
-	{
+	public final MapExts getMapExts() throws Exception {
 		Object tempVar = this.GetRefObject("MapExts");
 		MapExts obj = tempVar instanceof MapExts ? (MapExts)tempVar : null;
 		if (obj == null)
@@ -305,10 +322,8 @@ public class MapDtl extends EntityNoName
 	 事件:
 	 1.该事件与Node,Flow,MapDtl,MapData一样的算法.
 	 2.如果一个业务逻辑有变化，其他的也要变化.
-	 * @throws Exception 
 	*/
-	public final FrmEvents getFrmEvents() throws Exception
-	{
+	public final FrmEvents getFrmEvents() throws Exception {
 			//判断内存是否有？.
 		Object tempVar = this.GetRefObject("FrmEvents");
 		FrmEvents objs = tempVar instanceof FrmEvents ? (FrmEvents)tempVar : null;
@@ -347,8 +362,7 @@ public class MapDtl extends EntityNoName
 	/** 
 	 从表
 	*/
-	public final MapDtls getMapDtls() throws Exception
-	{
+	public final MapDtls getMapDtls() throws Exception {
 		Object tempVar = this.GetRefObject("MapDtls");
 		MapDtls obj = tempVar instanceof MapDtls ? (MapDtls)tempVar : null;
 		if (obj == null)
@@ -358,83 +372,11 @@ public class MapDtl extends EntityNoName
 		}
 		return obj;
 	}
-	/** 
-	 超连接
-	*/
-	public final FrmLinks getFrmLinks() throws Exception
-	{
-		Object tempVar = this.GetRefObject("FrmLinks");
-		FrmLinks obj = tempVar instanceof FrmLinks ? (FrmLinks)tempVar : null;
-		if (obj == null)
-		{
-			obj = new FrmLinks(this.getNo());
-			this.SetRefObject("FrmLinks", obj);
-		}
-		return obj;
-	}
-	/** 
-	 按钮
-	 * @throws Exception 
-	*/
-	public final FrmBtns getFrmBtns() throws Exception
-	{
-		Object tempVar = this.GetRefObject("FrmLinks");
-		FrmBtns obj = tempVar instanceof FrmBtns ? (FrmBtns)tempVar : null;
-		if (obj == null)
-		{
-			obj = new FrmBtns(this.getNo());
-			this.SetRefObject("FrmBtns", obj);
-		}
-		return obj;
-	}
-	/** 
-	 线
-	*/
-	public final FrmLines getFrmLines() throws Exception
-	{
-		Object tempVar = this.GetRefObject("FrmLines");
-		FrmLines obj = tempVar instanceof FrmLines ? (FrmLines)tempVar : null;
-		if (obj == null)
-		{
-			obj = new FrmLines(this.getNo());
-			this.SetRefObject("FrmLines", obj);
-		}
-		return obj;
-	}
-	/** 
-	 标签
-	*/
-	public final FrmLabs getFrmLabs() throws Exception
-	{
-		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
-		if (obj == null)
-		{
-			obj = new FrmLabs(this.getNo());
-			this.SetRefObject("FrmLabs", obj);
-		}
-		return obj;
-	}
-	/** 
-	 图片
-	*/
-	public final FrmImgs getFrmImgs() throws Exception
-	{
-		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmImgs obj = tempVar instanceof FrmImgs ? (FrmImgs)tempVar : null;
-		if (obj == null)
-		{
-			obj = new FrmImgs(this.getNo());
-			this.SetRefObject("FrmLabs", obj);
-		}
-		return obj;
-	}
+
 	/** 
 	 附件
-	 * @throws Exception 
 	*/
-	public final FrmAttachments getFrmAttachments() throws Exception
-	{
+	public final FrmAttachments getFrmAttachments() throws Exception {
 		Object tempVar = this.GetRefObject("FrmAttachments");
 		FrmAttachments obj = tempVar instanceof FrmAttachments ? (FrmAttachments)tempVar : null;
 		if (obj == null)
@@ -447,8 +389,7 @@ public class MapDtl extends EntityNoName
 	/** 
 	 图片附件
 	*/
-	public final FrmImgAths getFrmImgAths() throws Exception
-	{
+	public final FrmImgAths getFrmImgAths() throws Exception {
 		Object tempVar = this.GetRefObject("FrmImgAths");
 		FrmImgAths obj = tempVar instanceof FrmImgAths ? (FrmImgAths)tempVar : null;
 		if (obj == null)
@@ -461,8 +402,7 @@ public class MapDtl extends EntityNoName
 	/** 
 	 单选按钮
 	*/
-	public final FrmRBs getFrmRBs() throws Exception
-	{
+	public final FrmRBs getFrmRBs() throws Exception {
 		Object tempVar = this.GetRefObject("FrmRBs");
 		FrmRBs obj = tempVar instanceof FrmRBs ? (FrmRBs)tempVar : null;
 		if (obj == null)
@@ -475,8 +415,7 @@ public class MapDtl extends EntityNoName
 	/** 
 	 属性
 	*/
-	public final MapAttrs getMapAttrs() throws Exception
-	{
+	public final MapAttrs getMapAttrs() throws Exception {
 		Object tempVar = this.GetRefObject("MapAttrs");
 		MapAttrs obj = tempVar instanceof MapAttrs ? (MapAttrs)tempVar : null;
 		if (obj == null)
@@ -487,276 +426,234 @@ public class MapDtl extends EntityNoName
 		return obj;
 	}
 
-		///
+		///#endregion
 
 
-		///属性
+		///#region 属性
 	public GEDtls HisGEDtls_temp = null;
-	public final EditModel getHisEditModel() throws Exception
-	{
+	public final EditModel getHisEditModel()  {
 		return EditModel.forValue(this.GetValIntByKey(MapDtlAttr.EditModel));
 	}
-	public final void setHisEditModel(EditModel value) throws Exception
-	{
+	public final void setHisEditModel(EditModel value)
+	 {
 		this.SetValByKey(MapDtlAttr.EditModel, value.getValue());
 	}
 	/** 
 	 
 	*/
-	public final WhenOverSize getHisWhenOverSize() throws Exception
-	{
+	public final WhenOverSize getHisWhenOverSize()  {
 		return WhenOverSize.forValue(this.GetValIntByKey(MapDtlAttr.WhenOverSize));
 	}
-	public final void setHisWhenOverSize(WhenOverSize value) throws Exception
-	{
+	public final void setHisWhenOverSize(WhenOverSize value)
+	 {
 		this.SetValByKey(MapDtlAttr.WhenOverSize, value.getValue());
 	}
 	/** 
 	 是否显示数量
 	*/
-	public final boolean getIsShowSum() throws Exception
+	public final boolean isShowSum()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsShowSum);
 	}
-	public final void setIsShowSum(boolean value) throws Exception
-	{
+	public final void setShowSum(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsShowSum, value);
 	}
 	/** 
 	 是否显示Idx
 	*/
-	public final boolean getIsShowIdx() throws Exception
+	public final boolean isShowIdx()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsShowIdx);
 	}
-	public final void setIsShowIdx(boolean value) throws Exception
-	{
+	public final void setShowIdx(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsShowIdx, value);
 	}
 	/** 
 	 是否显示标题
 	*/
-	public final boolean getIsShowTitle() throws Exception
+	public final boolean isShowTitle()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsShowTitle);
 	}
-	public final void setIsShowTitle(boolean value) throws Exception
-	{
+	public final void setShowTitle(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsShowTitle, value);
 	}
 	/** 
 	 是否是合流汇总数据
 	*/
-	public final boolean getIsHLDtl() throws Exception
+	public final boolean isHLDtl()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsHLDtl);
 	}
-	public final void setIsHLDtl(boolean value) throws Exception
-	{
+	public final void setHLDtl(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsHLDtl, value);
 	}
 	/** 
 	 是否是分流
 	*/
-	public final boolean getIsFLDtl() throws Exception
-	{
+	public final boolean isFLDtl()  {
 		return this.GetParaBoolen(MapDtlAttr.IsFLDtl);
 	}
-	public final void setIsFLDtl(boolean value) throws Exception
-	{
-		this.SetPara(MapDtlAttr.IsFLDtl, value);
+	public final void setFLDtl(boolean value)
+	{this.SetPara(MapDtlAttr.IsFLDtl, value);
 	}
-	public int _IsReadonly = 2;
-	public final boolean getIsReadonly() throws Exception
-	{
-		if (_IsReadonly != 2)
-		{
-			if (_IsReadonly == 1)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+	/** 
+	 是否只读？
+	*/
+	public final boolean isReadonly()  {
 
-		if (this.getIsDelete() || this.getIsInsert() || this.getIsUpdate())
+		if (this.getIsInsert() == false && this.getIsUpdate() == false && this.getIsDelete() == false)
 		{
-			_IsReadonly = 0;
-			return false;
+			return true;
 		}
-		_IsReadonly = this.GetValIntByKey(MapDtlAttr.IsReadonly);
 
 		return this.GetValBooleanByKey(MapDtlAttr.IsReadonly);
-
 	}
-	public final void setIsReadonly(boolean value) throws Exception
-	{
+	public final void setReadonly(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsReadonly, value);
 	}
 	/** 
 	 是否可以删除？
 	*/
-	public final boolean getIsDelete() throws Exception
+	public final boolean getIsDelete()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsDelete);
 	}
-	public final void setIsDelete(boolean value) throws Exception
-	{
+	public final void setIsDelete(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsDelete, value);
 	}
-	/** 
+	/**
 	 是否可以新增？
-	*/
-	public final boolean getIsInsert() throws Exception
+	 */
+	public final boolean getIsInsert()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsInsert);
 	}
-	public final void setIsInsert(boolean value) throws Exception
+	public final void setIsInsert(boolean value)
 	{
 		this.SetValByKey(MapDtlAttr.IsInsert, value);
 	}
 	/** 
 	 是否可见
 	*/
-	public final boolean getIsView() throws Exception
+	public final boolean isView()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsView);
 	}
-	public final void setIsView(boolean value) throws Exception
-	{
+	public final void setView(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsView, value);
 	}
 	/** 
 	 是否可以更新？
 	*/
-	public final boolean getIsUpdate() throws Exception
+	public final boolean getIsUpdate()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsUpdate);
 	}
-	public final void setIsUpdate(boolean value) throws Exception
-	{
+	public final void setIsUpdate(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsUpdate, value);
 	}
 	/** 
 	 是否启用多附件
 	*/
-	public final boolean getIsEnableAthM() throws Exception
+	public final boolean getIsEnableAthM()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsEnableAthM);
 	}
-	public final void setIsEnableAthM(boolean value) throws Exception
-	{
+	public final void setIsEnableAthM(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsEnableAthM, value);
 	}
 	/** 
 	 是否启用分组字段
 	*/
-	public final boolean getIsEnableGroupField() throws Exception
+	public final boolean getIsEnableGroupField()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsEnableGroupField);
 	}
-	public final void setIsEnableGroupField(boolean value) throws Exception
-	{
+	public final void setIsEnableGroupField(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsEnableGroupField, value);
 	}
 	/** 
 	 是否起用审核连接
 	*/
-	public final boolean getIsEnablePass() throws Exception
+	public final boolean getIsEnablePass()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsEnablePass);
 	}
-	public final void setIsEnablePass(boolean value) throws Exception
-	{
+	public final void setIsEnablePass(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsEnablePass, value);
 	}
 
 	/** 
 	 是否copy数据？
 	*/
-	public final boolean getIsCopyNDData() throws Exception
+	public final boolean getIsCopyNDData()
 	{
 		return this.GetValBooleanByKey(MapDtlAttr.IsCopyNDData);
 	}
-	public final void setIsCopyNDData(boolean value) throws Exception
-	{
+	public final void setIsCopyNDData(boolean value)
+	 {
 		this.SetValByKey(MapDtlAttr.IsCopyNDData, value);
 	}
-	/** 
-	 是否启用一对多
-	*/
-	public final boolean getIsEnableM2M() throws Exception
-	{
-		return this.GetValBooleanByKey(MapDtlAttr.IsEnableM2M);
-	}
-	public final void setIsEnableM2M(boolean value) throws Exception
-	{
-		this.SetValByKey(MapDtlAttr.IsEnableM2M, value);
-	}
-	/** 
-	 是否启用一对多多
-	*/
-	public final boolean getIsEnableM2MM() throws Exception
-	{
-		return this.GetValBooleanByKey(MapDtlAttr.IsEnableM2MM);
-	}
-	public final void setIsEnableM2MM(boolean value) throws Exception
-	{
-		this.SetValByKey(MapDtlAttr.IsEnableM2MM, value);
-	}
+
 
 	public boolean IsUse = false;
 	/** 
 	 是否检查人员的权限
 	*/
-	public final DtlOpenType getDtlOpenType() throws Exception
-	{
+	public final DtlOpenType getDtlOpenType()  {
 		return DtlOpenType.forValue(this.GetValIntByKey(MapDtlAttr.DtlOpenType));
 	}
-	public final void setDtlOpenType(DtlOpenType value) throws Exception
-	{
+	public final void setDtlOpenType(DtlOpenType value)
+	 {
 		this.SetValByKey(MapDtlAttr.DtlOpenType, value.getValue());
 	}
 	/** 
 	 分组字段
 	*/
-	public final String getGroupField() throws Exception
+	public final String getGroupField()
 	{
 		return this.GetValStrByKey(MapDtlAttr.GroupField);
 	}
-	public final void setGroupField(String value) throws Exception
-	{
+	public final void setGroupField(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.GroupField, value);
 	}
 	/** 
 	 表单ID
 	*/
-	public final String getFK_MapData() throws Exception
+	public final String getFK_MapData()
 	{
 		return this.GetValStrByKey(MapDtlAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
-		this.SetValByKey(MapDtlAttr.FK_MapData, value);
+	public final void setFK_MapData(String val)
+	 {
+		this.SetValByKey(MapDtlAttr.FK_MapData, val);
 	}
 	/** 
 	 从表的模式
 	*/
-	public final int getPTableModel() throws Exception
-	{
+	public final int getPTableModel()  {
 		return this.GetParaInt("PTableModel");
 	}
-	public final void setPTableModel(int value) throws Exception
-	{
-		this.SetPara("PTableModel", value);
+	public final void setPTableModel(int value)
+	{this.SetPara("PTableModel", value);
 	}
 	/** 
 	 数量
 	*/
-	public final int getRowsOfList() throws Exception
-	{
+	public final int getRowsOfList()  {
 			//如果不可以插入，就让其返回0.
 		if (this.getIsInsert() == false)
 		{
@@ -765,17 +662,16 @@ public class MapDtl extends EntityNoName
 
 		return this.GetValIntByKey(MapDtlAttr.RowsOfList);
 	}
-	public final void setRowsOfList(int value) throws Exception
-	{
+	public final void setRowsOfList(int value)
+	 {
 		this.SetValByKey(MapDtlAttr.RowsOfList, value);
 	}
 	/** 
 	 物理表
 	*/
-	public final String getPTable() throws Exception
-	{
+	public final String getPTable()  {
 		String s = this.GetValStrByKey(MapDtlAttr.PTable);
-		if (DataType.IsNullOrEmpty(s)==true)
+		if (DataType.IsNullOrEmpty(s) == true)
 		{
 
 			s = this.getNo();
@@ -800,15 +696,14 @@ public class MapDtl extends EntityNoName
 			}
 		}
 	}
-	public final void setPTable(String value) throws Exception
-	{
+	public final void setPTable(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.PTable, value);
 	}
 	/** 
 	 过滤的SQL表达式.
 	*/
-	public final String getFilterSQLExp() throws Exception
-	{
+	public final String getFilterSQLExp()  {
 		String s = this.GetValStrByKey(MapDtlAttr.FilterSQLExp);
 		if (DataType.IsNullOrEmpty(s) == true)
 		{
@@ -817,9 +712,25 @@ public class MapDtl extends EntityNoName
 		s = s.replace("~", "'");
 		return s.trim();
 	}
-	public final void setFilterSQLExp(String value) throws Exception
-	{
+	public final void setFilterSQLExp(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.FilterSQLExp, value);
+	}
+	/** 
+	 排序字段
+	*/
+	public final String getOrderBySQLExp()  {
+		String s = this.GetValStrByKey(MapDtlAttr.OrderBySQLExp);
+		if (DataType.IsNullOrEmpty(s) == true)
+		{
+			return "";
+		}
+		s = s.replace("~", "'");
+		return s.trim();
+	}
+	public final void setOrderBySQLExp(String value)
+	 {
+		this.SetValByKey(MapDtlAttr.OrderBySQLExp, value);
 	}
 	/** 
 	 多表头
@@ -829,43 +740,42 @@ public class MapDtl extends EntityNoName
 	//    get
 	//    {
 	//        string s = this.GetValStrByKey(MapDtlAttr.MTR);
-	//        s = s.replace("《", "<");
-	//        s = s.replace("》", ">");
-	//        s = s.replace("‘", "'");
+	//        s = s.Replace("《", "<");
+	//        s = s.Replace("》", ">");
+	//        s = s.Replace("‘", "'");
 	//        return s;
 	//    }
 	//    set
 	//    {
 	//        string s = value;
-	//        s = s.replace("<", "《");
-	//        s = s.replace(">", "》");
-	//        s = s.replace("'", "‘");
+	//        s = s.Replace("<", "《");
+	//        s = s.Replace(">", "》");
+	//        s = s.Replace("'", "‘");
 	//        this.SetValByKey(MapDtlAttr.MTR, value);
 	//    }
 	//}
 	/** 
 	 别名
 	*/
-	public final String getAlias() throws Exception
+	public final String getAlias()
 	{
 		return this.GetValStrByKey(MapDtlAttr.Alias);
 	}
-	public final void setAlias(String value) throws Exception
-	{
+	public final void setAlias(String value)
+	 {
 		this.SetValByKey(MapDtlAttr.Alias, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
-	public final Map GenerMap() throws Exception
-	{
-		boolean isdebug = SystemConfig.getIsDebug();
+		///#region 构造方法
+	public final Map GenerMap() throws Exception {
+		boolean isdebug = bp.difference.SystemConfig.getIsDebug();
 
 		if (isdebug == false)
 		{
-			Map m = bp.da.Cash.GetMap(this.getNo());
+			Map m = Cash.GetMap(this.getNo());
 			if (m != null)
 			{
 				return m;
@@ -881,37 +791,32 @@ public class MapDtl extends EntityNoName
 			map.AddAttr(mapAttr.getHisAttr());
 		}
 
-		bp.da.Cash.SetMap(this.getNo(), map);
+		Cash.SetMap(this.getNo(), map);
 		return map;
 	}
-	public final GEDtl getHisGEDtl() throws Exception
-	{
+	public final GEDtl getHisGEDtl()  {
 		GEDtl dtl = new GEDtl(this.getNo());
 		return dtl;
 	}
-	public final GEEntity GenerGEMainEntity(String mainPK) throws Exception
-	{
+	public final GEEntity GenerGEMainEntity(String mainPK) throws Exception {
 		GEEntity en = new GEEntity(this.getFK_MapData(), mainPK);
 		return en;
 	}
 	/** 
 	 明细
 	*/
-	public MapDtl()
-	{
+	public MapDtl()  {
 	}
-	public MapDtl(String no) throws Exception
-	{
+	public MapDtl(String no) throws Exception {
 		this.setNo(no);
-		this._IsReadonly = 2;
+	 //   this.IsReadonly = 2;
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -962,10 +867,8 @@ public class MapDtl extends EntityNoName
 		map.AddBoolean(MapDtlAttr.IsEnablePass, false, "是否启用通过审核功能?", false, false);
 		map.AddBoolean(MapDtlAttr.IsEnableAthM, false, "是否启用多附件", false, false);
 
-		map.AddBoolean(MapDtlAttr.IsEnableM2M, false, "是否启用M2M", false, false);
-		map.AddBoolean(MapDtlAttr.IsEnableM2MM, false, "是否启用M2M", false, false);
-
-
+		map.AddBoolean(MapDtlAttr.IsCopyFirstData, false, "是否复制第一行数据？", false, false);
+		map.AddTBString(MapDtlAttr.InitDBAttrs, null, "行初始化字段", true, false, 0, 40, 20, false);
 			// 超出行数
 		map.AddTBInt(MapDtlAttr.WhenOverSize, 0, "列表数据显示格式", false, false);
 
@@ -974,32 +877,31 @@ public class MapDtl extends EntityNoName
 
 		map.AddTBInt(MapDtlAttr.ListShowModel, 0, "列表数据显示格式", false, false);
 		map.AddTBInt(MapDtlAttr.EditModel, 0, "行数据显示格式", false, false);
+		map.AddTBString(MapDtlAttr.UrlDtl, null, "自定义Url", true, false, 0, 200, 20, true);
 
 		map.AddTBInt(MapDtlAttr.MobileShowModel, 0, "移动端数据显示格式", false, false);
 		map.AddTBString(MapDtlAttr.MobileShowField, null, "移动端列表显示字段", true, false, 0, 100, 20);
 
-		map.AddTBFloat(MapDtlAttr.X, 5, "距左", true, false);
-		map.AddTBFloat(MapDtlAttr.Y, 5, "距上", false, false);
-
 		map.AddTBFloat(MapDtlAttr.H, 150, "高度", true, false);
-		map.AddTBFloat(MapDtlAttr.W, 200, "宽度", false, false);
 
 		map.AddTBFloat(MapDtlAttr.FrmW, 900, "表单宽度", true, true);
 		map.AddTBFloat(MapDtlAttr.FrmH, 1200, "表单高度", true, true);
-
+		map.AddTBInt(MapDtlAttr.NumOfDtl, 0, "最小从表集合", true, false);
 			//MTR 多表头列.
 			//map.AddTBString(MapDtlAttr.MTR, null, "多表头列", true, false, 0, 3000, 20);
 
-			///超链接.
+			///#region 超链接.
 		map.AddBoolean(MapDtlAttr.IsEnableLink, false, "是否启用超链接", true, true);
 		map.AddTBString(MapDtlAttr.LinkLabel, "", "超连接标签", true, false, 0, 50, 100);
 		map.AddTBString(MapDtlAttr.LinkTarget, null, "连接目标", true, false, 0, 10, 100);
 		map.AddTBString(MapDtlAttr.LinkUrl, null, "连接URL", true, false, 0, 200, 200, true);
 
-			/// 超链接.
+			///#endregion 超链接.
 
 			//SQL过滤表达式.
-		map.AddTBString(MapDtlAttr.FilterSQLExp, null, "过滤SQL表达式", true, false, 0, 200, 20, true);
+		map.AddTBString(MapDtlAttr.FilterSQLExp, null, "过滤SQL表达式", true, false, 0, 70, 20, true);
+		map.AddTBString(MapDtlAttr.OrderBySQLExp, null, "排序字段", true, false, 0, 70, 20, true);
+
 
 			//add 2014-02-21.
 		map.AddTBInt(MapDtlAttr.FK_Node, 0, "节点(用户独立表单权限控制)", false, false);
@@ -1011,7 +913,7 @@ public class MapDtl extends EntityNoName
 
 
 
-			///导入导出填充.
+			///#region 导入导出填充.
 			// 2014-07-17 for xinchang bank.
 		map.AddBoolean(MapDtlAttr.IsExp, true, "IsExp", false, false);
 		map.AddTBInt(MapDtlAttr.ImpModel, 0, "导入规则", false, false);
@@ -1024,7 +926,7 @@ public class MapDtl extends EntityNoName
 		map.AddTBString(MapDtlAttr.ImpSQLNames, null, "字段中文名", true, false, 0, 900, 20);
 		map.AddBoolean(MapDtlAttr.IsImp, false, "IsImp", true, true);
 
-			/// 导入导出填充.
+			///#endregion 导入导出填充.
 
 
 			//列自动计算表达式.
@@ -1040,78 +942,50 @@ public class MapDtl extends EntityNoName
 	}
 
 
-		///基本属性.
-	public final float getX() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAttr.X);
-	}
-	public final void setX(float value) throws Exception
-	{
-		this.SetValByKey(MapDtlAttr.X, value);
-	}
+		///#region 基本属性.
 
-	public final float getY() throws Exception
+
+	public final float getH()
 	{
-		return this.GetValFloatByKey(FrmImgAttr.Y);
+		return this.GetValFloatByKey(MapDtlAttr.H);
 	}
-	public final void setY(float value) throws Exception
-	{
-		this.SetValByKey(MapDtlAttr.Y, value);
-	}
-	public final float getW() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAttr.W);
-	}
-	public final void setW(float value) throws Exception
-	{
-		this.SetValByKey(MapDtlAttr.W, value);
-	}
-	public final float getH() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAttr.H);
-	}
-	public final void setH(float value) throws Exception
-	{
+	public final void setH(float value)
+	 {
 		this.SetValByKey(MapDtlAttr.H, value);
 	}
-	public final float getFrmW() throws Exception
+	public final float getFrmW()
 	{
 		return this.GetValFloatByKey(MapDtlAttr.FrmW);
 	}
-	public final float getFrmH() throws Exception
+	public final float getFrmH()
 	{
 		return this.GetValFloatByKey(MapDtlAttr.FrmH);
 	}
 
-		/// 基本属性.
+		///#endregion 基本属性.
 
 	/** 
 	 获取个数
 	 
-	 @param fk_val
+	 param
 	 @return 
 	*/
-	public final int GetCountByFK(int workID) throws Exception
-	{
+	public final int GetCountByFK(int workID)  {
 		return DBAccess.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE WorkID=" + workID);
 	}
-	public final int GetCountByFK(String field, String val) throws Exception
-	{
+	public final int GetCountByFK(String field, String val)  {
 		return DBAccess.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE " + field + "='" + val + "'");
 	}
-	public final int GetCountByFK(String field, long val) throws Exception
-	{
+	public final int GetCountByFK(String field, long val)  {
 		return DBAccess.RunSQLReturnValInt("select COUNT(OID) from " + this.getPTable() + " WHERE " + field + "=" + val);
 	}
-	public final int GetCountByFK(String f1, long val1, String f2, String val2) throws Exception
-	{
+	public final int GetCountByFK(String f1, long val1, String f2, String val2)  {
 		return DBAccess.RunSQLReturnValInt("SELECT COUNT(OID) from " + this.getPTable() + " WHERE " + f1 + "=" + val1 + " AND " + f2 + "='" + val2 + "'");
 	}
 
-		///
+		///#endregion
 
-	public final void IntMapAttrs() throws Exception
-	{
+	public final void IntMapAttrs() throws Exception {
 		bp.sys.MapData md = new bp.sys.MapData();
 		md.setNo(this.getNo());
 		if (md.RetrieveFromDBSources() == 0)
@@ -1121,16 +995,17 @@ public class MapDtl extends EntityNoName
 		}
 
 		MapAttrs attrs = new MapAttrs(this.getNo());
-		MapAttr attr = new MapAttr();
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "OID") == false)
+		bp.sys.MapAttr attr = new bp.sys.MapAttr();
+		if (attrs.contains(MapAttrAttr.KeyOfEn, "OID") == false)
 		{
-			attr = new MapAttr();
+			attr = new bp.sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType(EditType.Readonly);
+			attr.setEditType(EditType.Readonly);
 
 			attr.setKeyOfEn("OID");
 			attr.setName("主键");
-			attr.setMyDataType(bp.da.DataType.AppInt);
+			attr.setMyDataType(DataType.AppInt);
+
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
@@ -1139,15 +1014,20 @@ public class MapDtl extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "RefPK") == false)
+		if (attrs.contains(MapAttrAttr.KeyOfEn, "RefPK") == false)
 		{
-			attr = new MapAttr();
+			attr = new bp.sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType(EditType.Readonly);
+			attr.setEditType(EditType.Readonly);
 
 			attr.setKeyOfEn("RefPK");
 			attr.setName("关联ID");
-			attr.setMyDataType(bp.da.DataType.AppString);
+			attr.setMyDataType(DataType.AppString);
+
+			attr.setMyDataType(DataType.AppString);
+
+			attr.setMyDataType(DataType.AppString);
+
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
@@ -1156,15 +1036,15 @@ public class MapDtl extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "FID") == false)
+		if (attrs.contains(MapAttrAttr.KeyOfEn, "FID") == false)
 		{
-			attr = new MapAttr();
+			attr = new bp.sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType(EditType.Readonly);
+			attr.setEditType(EditType.Readonly);
 
 			attr.setKeyOfEn("FID");
 			attr.setName("FID");
-			attr.setMyDataType(bp.da.DataType.AppInt);
+			attr.setMyDataType(DataType.AppInt);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
@@ -1173,15 +1053,15 @@ public class MapDtl extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "RDT") == false)
+		if (attrs.contains(MapAttrAttr.KeyOfEn, "RDT") == false)
 		{
-			attr = new MapAttr();
+			attr = new bp.sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
 			attr.setHisEditType(EditType.UnDel);
 
 			attr.setKeyOfEn("RDT");
 			attr.setName("记录时间");
-			attr.setMyDataType(bp.da.DataType.AppDateTime);
+			attr.setMyDataType(DataType.AppDateTime);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
@@ -1190,15 +1070,15 @@ public class MapDtl extends EntityNoName
 			attr.Insert();
 		}
 
-		if (attrs.Contains(MapAttrAttr.KeyOfEn, "Rec") == false)
+		if (attrs.contains(MapAttrAttr.KeyOfEn, "Rec") == false)
 		{
-			attr = new MapAttr();
+			attr = new bp.sys.MapAttr();
 			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType(EditType.Readonly);
+			attr.setEditType(EditType.Readonly);
 
 			attr.setKeyOfEn("Rec");
 			attr.setName("记录人");
-			attr.setMyDataType(bp.da.DataType.AppString);
+			attr.setMyDataType(DataType.AppString);
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
@@ -1210,8 +1090,7 @@ public class MapDtl extends EntityNoName
 			attr.Insert();
 		}
 	}
-	private void InitExtMembers() throws Exception
-	{
+	private void InitExtMembers() throws Exception {
 		/* 如果启用了多附件*/
 		if (this.getIsEnableAthM() == true)
 		{
@@ -1235,11 +1114,28 @@ public class MapDtl extends EntityNoName
 		}
 
 	}
-	@Override
-	protected boolean beforeInsert() throws Exception
+
+	public final String ChangeMapAttrIdx(String mypkArr)
 	{
+		String[] mypks = mypkArr.split("[,]", -1);
+		for (int i = 0; i < mypks.length; i++)
+		{
+			String mypk = mypks[i];
+			if (mypk == null || mypk.equals(""))
+			{
+				continue;
+			}
+
+			String sql = "UPDATE Sys_MapAttr SET Idx=" + i + " WHERE MyPK='" + mypk + "' ";
+			DBAccess.RunSQL(sql);
+		}
+		return "移动成功..";
+	}
+
+	@Override
+	protected boolean beforeInsert() throws Exception {
 		//在属性实体集合插入前，clear父实体的缓存.
-		bp.sys.Glo.ClearMapDataAutoNum(this.getFK_MapData());
+		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFK_MapData());
 
 
 		GroupField gf = new GroupField();
@@ -1266,8 +1162,7 @@ public class MapDtl extends EntityNoName
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		this.InitExtMembers();
 
 		bp.sys.MapData md = new bp.sys.MapData();
@@ -1278,11 +1173,11 @@ public class MapDtl extends EntityNoName
 			md.Insert();
 		}
 
-		if (this.getIsRowLock() == true)
+		if (this.isRowLock() == true)
 		{
 			/*检查是否启用了行锁定.*/
 			MapAttrs attrs = new MapAttrs(this.getNo());
-			if (attrs.Contains(MapAttrAttr.KeyOfEn, "IsRowLock") == false)
+			if (attrs.contains(MapAttrAttr.KeyOfEn, "IsRowLock") == false)
 			{
 				throw new RuntimeException("您启用了从表单(" + this.getName() + ")行数据锁定功能，但是该从表里没IsRowLock字段，请参考帮助文档。");
 			}
@@ -1292,7 +1187,7 @@ public class MapDtl extends EntityNoName
 		{
 			/*判断是否有IsPass 字段。*/
 			MapAttrs attrs = new MapAttrs(this.getNo());
-			if (attrs.Contains(MapAttrAttr.KeyOfEn, "IsPass") == false)
+			if (attrs.contains(MapAttrAttr.KeyOfEn, "IsPass") == false)
 			{
 				throw new RuntimeException("您启用了从表单(" + this.getName() + ")条数据审核选项，但是该从表里没IsPass字段，请参考帮助文档。");
 			}
@@ -1300,11 +1195,10 @@ public class MapDtl extends EntityNoName
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception
-	{
-		MapAttrs attrs = new MapAttrs(this.getNo());
+	protected boolean beforeUpdate() throws Exception {
+		MapAttrs mattrs = new MapAttrs(this.getNo());
 		boolean isHaveEnable = false;
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : mattrs.ToJavaList())
 		{
 			if (attr.getUIIsEnable() && attr.getUIContralType() == UIContralType.TB)
 			{
@@ -1319,7 +1213,7 @@ public class MapDtl extends EntityNoName
 		md.setNo(this.getNo());
 
 		//获得事件实体.
-		bp.sys.FormEventBaseDtl febd = bp.sys.Glo.GetFormDtlEventBaseByEnName(this.getNo());
+		FormEventBaseDtl febd = bp.sys.base.Glo.GetFormDtlEventBaseByEnName(this.getNo());
 		if (febd == null)
 		{
 			this.setFEBD("");
@@ -1340,19 +1234,17 @@ public class MapDtl extends EntityNoName
 			md.setPTable(this.getPTable());
 			//避免在表单库中显示
 			md.setFK_FormTree("");
-			md.setFK_FrmSort("");
 			md.Update(); //需要更新到缓存.
 		}
 
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception
-	{
+	protected boolean beforeDelete() throws Exception {
 		String sql = "";
-		sql += "@DELETE FROM Sys_FrmLine WHERE FK_MapData='" + this.getNo() + "'";
-		sql += "@DELETE FROM Sys_FrmLab WHERE FK_MapData='" + this.getNo() + "'";
-		sql += "@DELETE FROM Sys_FrmLink WHERE FK_MapData='" + this.getNo() + "'";
+	  //  sql += "@DELETE FROM Sys_FrmLine WHERE FK_MapData='" + this.No + "'";
+	  //  sql += "@DELETE FROM Sys_FrmLab WHERE FK_MapData='" + this.No + "'";
+	 //   sql += "@DELETE FROM Sys_FrmLink WHERE FK_MapData='" + this.No + "'";
 		sql += "@DELETE FROM Sys_FrmImg WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_FrmImgAth WHERE FK_MapData='" + this.getNo() + "'";
 		sql += "@DELETE FROM Sys_FrmRB WHERE FK_MapData='" + this.getNo() + "'";
@@ -1360,7 +1252,7 @@ public class MapDtl extends EntityNoName
 		sql += "@DELETE FROM Sys_MapFrame WHERE FK_MapData='" + this.getNo() + "'";
 
 
-		if (this.getNo().toUpperCase().contains("BP.") == false)
+		if (this.getNo().contains("BP.") == false)
 		{
 			sql += "@DELETE FROM Sys_MapExt WHERE FK_MapData='" + this.getNo() + "'";
 		}
@@ -1394,10 +1286,10 @@ public class MapDtl extends EntityNoName
 			}
 		}
 
+
 		//执行清空缓存到的AutoNum.
 		MapData md = new MapData(this.getFK_MapData());
 		md.ClearAutoNumCash(true); //更新缓存.
-
 
 		return super.beforeDelete();
 	}

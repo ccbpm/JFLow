@@ -3,48 +3,44 @@ package bp.ccbill.template;
 import bp.da.*;
 import bp.web.*;
 import bp.en.*;
-import bp.port.*;
 import bp.sys.*;
+import bp.*;
 import bp.ccbill.*;
 import java.util.*;
 
 /** 
  功能执行
 */
-public class MethodFuncs extends EntitiesMyPK
+public class MethodFuncs extends EntitiesNoName
 {
 	/** 
 	 功能执行
 	*/
-	public MethodFuncs()
-	{
+	public MethodFuncs()  {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new MethodFunc();
 	}
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<MethodFunc> ToJavaList()
-	{
-		return (List<MethodFunc>)(Object)this;
+	public final java.util.List<MethodFunc> ToJavaList() {
+		return (java.util.List<MethodFunc>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<MethodFunc> Tolist()
-	{
+	public final ArrayList<MethodFunc> Tolist()  {
 		ArrayList<MethodFunc> list = new ArrayList<MethodFunc>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -53,5 +49,5 @@ public class MethodFuncs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

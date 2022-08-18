@@ -1,7 +1,6 @@
 package bp.ccbill.template;
 
 import bp.en.*;
-import bp.en.Map;
 
 /** 
  单据可创建的工作岗位
@@ -11,63 +10,58 @@ import bp.en.Map;
 */
 public class StationCreate extends EntityMM
 {
-	private static final long serialVersionUID = 1L;
-		///基本属性
+
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return uac;
 	}
 	/** 
 	单据
-	 * @throws Exception 
 	*/
-	public final int getFrmID() throws Exception
+	public final int getFrmID()
 	{
 		return this.GetValIntByKey(StationCreateAttr.FrmID);
 	}
-	public final void setFrmID(int value) throws Exception
-	{
+	public final void setFrmID(int value)
+	 {
 		this.SetValByKey(StationCreateAttr.FrmID, value);
 	}
-	public final String getFK_StationT() throws Exception
+	public final String getFKStationT()
 	{
 		return this.GetValRefTextByKey(StationCreateAttr.FK_Station);
 	}
 	/** 
 	 工作岗位
-	 * @throws Exception 
 	*/
-	public final String getFK_Station() throws Exception
+	public final String getFKStation()
 	{
 		return this.GetValStringByKey(StationCreateAttr.FK_Station);
 	}
-	public final void setFK_Station(String value) throws Exception
-	{
+	public final void setFKStation(String value)
+	 {
 		this.SetValByKey(StationCreateAttr.FK_Station, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 单据可创建的工作岗位
 	*/
-	public StationCreate()
-	{
+	public StationCreate()  {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -81,6 +75,6 @@ public class StationCreate extends EntityMM
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 }

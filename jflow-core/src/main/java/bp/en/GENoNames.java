@@ -1,7 +1,7 @@
 package bp.en;
 
 import bp.da.*;
-import bp.*;
+
 import java.util.*;
 
 /** 
@@ -20,7 +20,7 @@ public class GENoNames extends EntitiesNoName
 	/** 
 	 GENoNames
 	*/
-	public GENoNames()
+	public GENoNames()throws Exception
 	{
 	}
 	public GENoNames(String sftable, String tableDesc)
@@ -47,7 +47,7 @@ public class GENoNames extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<GENoName> ToJavaList()
+	public final java.util.List<GENoName> ToJavaList()throws Exception
 	{
 		return (java.util.List<GENoName>)(Object)this;
 	}
@@ -56,7 +56,7 @@ public class GENoNames extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<GENoName> Tolist()
+	public final ArrayList<GENoName> Tolist()throws Exception
 	{
 		ArrayList<GENoName> list = new ArrayList<GENoName>();
 		for (int i = 0; i < this.size(); i++)

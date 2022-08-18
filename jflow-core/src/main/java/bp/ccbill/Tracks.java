@@ -2,10 +2,7 @@ package bp.ccbill;
 
 import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.wf.template.*;
-import bp.wf.*;
-import bp.ccbill.template.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -14,39 +11,35 @@ import java.util.*;
 public class Tracks extends EntitiesMyPK
 {
 
-		///构造方法.
+		///#region 构造方法.
 	/** 
 	 轨迹集合
 	*/
-	public Tracks()
-	{
+	public Tracks()  {
 	}
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new Track();
 	}
 
-		/// 构造方法.
+		///#endregion 构造方法.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Track> ToJavaList()
-	{
-		return (List<Track>)(Object)this;
+	public final java.util.List<Track> ToJavaList() {
+		return (java.util.List<Track>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Track> Tolist()
-	{
+	public final ArrayList<Track> Tolist()  {
 		ArrayList<Track> list = new ArrayList<Track>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -55,6 +48,6 @@ public class Tracks extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

@@ -1,19 +1,13 @@
 package bp.wf.httphandler;
 
-import bp.da.DBAccess;
-import bp.da.DataSet;
-import bp.da.DataTable;
-import bp.da.DataType;
-import bp.difference.SystemConfig;
+import bp.da.*;
 import bp.difference.handler.WebContralBase;
-import bp.gpm.menu2020.Module;
-import bp.gpm.menu2020.MySystem;
-import bp.sys.CCBPMRunModel;
-import bp.sys.FrmTree;
-import bp.sys.FrmTreeAttr;
-import bp.tools.Json;
-import bp.web.WebUser;
-import bp.wf.template.FlowSort;
+import bp.sys.*;
+import bp.web.*;
+import bp.wf.template.*;
+import bp.ccfast.ccmenu.*;
+import bp.*;
+import bp.wf.*;
 
 /** 
  页面功能实体
@@ -23,8 +17,7 @@ public class WF_GPM extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_GPM()
-	{
+	public WF_GPM() throws Exception {
 
 	}
 
@@ -32,16 +25,14 @@ public class WF_GPM extends WebContralBase
 	 清除缓存
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String PowerCenter_DoClearCash() throws Exception
-	{
+	public final String PowerCenter_DoClearCash() throws Exception {
 		String ctrlGroup = this.GetRequestVal("CtrlGroup");
 
 		String sql = "";
 		if (ctrlGroup.equals("Menu") == true)
 		{
-			if (SystemConfig.getCCBPMRunModel().equals(CCBPMRunModel.SAAS))
+			if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 			{
 				sql = "DELETE FROM Sys_UserRegedit WHERE OrgNo='" + WebUser.getOrgNo() + "' AND CfgKey='" + ctrlGroup + "' ";
 			}
@@ -51,81 +42,69 @@ public class WF_GPM extends WebContralBase
 			}
 			DBAccess.RunSQL(sql);
 		}
-
 		return "清除成功.";
 	}
-
-
 	/** 
 	 模块移动.
 	 
 	 @return 
 	*/
-	public final String Module_Move()
-	{
+	public final String Module_Move() throws Exception {
 		String sortNo = this.GetRequestVal("RootNo");
 		String[] EnNos = this.GetRequestVal("EnNos").split("[,]", -1);
 		for (int i = 0; i < EnNos.length; i++)
 		{
 			String enNo = EnNos[i];
-
-			String sql = "UPDATE GPM_Module SET SystemNo ='" + sortNo + "',Idx=" + i + " WHERE No='" + enNo + "'";
+			String sql = "UPDATE GPM_Module SET Idx=" + i + ", SystemNo='" + sortNo + "' WHERE No='" + enNo + "'";
 			DBAccess.RunSQL(sql);
 		}
 		return "模块顺序移动成功..";
 	}
-	public final String System_Move()
-	{
+	public final String System_Move() throws Exception {
 		String[] EnNos = this.GetRequestVal("EnNos").split("[,]", -1);
 		for (int i = 0; i < EnNos.length; i++)
 		{
 			String enNo = EnNos[i];
-
 			String sql = "UPDATE GPM_System SET Idx=" + i + " WHERE No='" + enNo + "'";
 			DBAccess.RunSQL(sql);
 		}
-		return "模块顺序移动成功..";
+		return "系统顺序移动成功..";
 	}
 	/** 
 	 菜单移动
 	 
 	 @return 
 	*/
-	public final String Menu_Move()
-	{
-
+	public final String Menu_Move() throws Exception {
 		String sortNo = this.GetRequestVal("RootNo");
 		String[] EnNos = this.GetRequestVal("EnNos").split("[,]", -1);
 		for (int i = 0; i < EnNos.length; i++)
 		{
 			String enNo = EnNos[i];
 
-			String sql = "UPDATE GPM_Menu SET ModuleNo ='" + sortNo + "',Idx=" + i + " WHERE No='" + enNo + "'";
+			String sql = "UPDATE GPM_Menu SET Idx=" + i + ", ModuleNo='" + sortNo + "' WHERE No='" + enNo + "'";
 			DBAccess.RunSQL(sql);
 		}
 		return "菜单顺序移动成功..";
 	}
 
 
-	public final String Home_Init() throws Exception
-	{
-		String str = SystemConfig.getPathOfData() + "\\XML\\BarTemp.xml";
+	public final String Home_Init() throws Exception {
+		String str = bp.difference.SystemConfig.getPathOfData() + "XML/BarTemp.xml";
 		DataSet ds = new DataSet();
 		ds.readXml(str);
 
 		DataTable dt = ds.Tables.get(0);
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
 	/** 
 	 创建系统
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String NewSystem_Save() throws Exception
-	{
+	public final String NewSystem_Save() throws Exception {
 		String rootNo = "0";
-		if (!SystemConfig.getCCBPMRunModel().equals(CCBPMRunModel.Single))
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			rootNo = WebUser.getOrgNo();
 		}
@@ -162,15 +141,15 @@ public class WF_GPM extends WebContralBase
 		system.setOrgNo(WebUser.getOrgNo());
 		system.Insert();
 
-		FrmTree frmTee = frmTree.DoCreateSubNode();
-		frmTee.setName(name);
+		FrmTree frmTee = (FrmTree) frmTree.DoCreateSubNode();
+		frmTee.setName ( name);
 		// en.ICON = system.Icon;
 		frmTee.setOrgNo(WebUser.getOrgNo());
-		frmTree.setIdx(100);
+		frmTree.setIdx ( 100);
 		frmTee.Update();
 		DBAccess.RunSQL("UPDATE Sys_FormTree SET No='" + system.getNo() + "' WHERE No='" + frmTee.getNo() + "'");
 
-		Object tempVar = fs.DoCreateSubNode();
+		bp.en.EntityTree tempVar = fs.DoCreateSubNode(null);
 		FlowSort myen = tempVar instanceof FlowSort ? (FlowSort)tempVar : null;
 		myen.setName(name);
 		myen.setOrgNo(WebUser.getOrgNo());
@@ -180,7 +159,7 @@ public class WF_GPM extends WebContralBase
 
 		//创建模块.
 		String modelNo = null;
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i <= 5; i++)
 		{
 			name = this.GetRequestVal("TB_" + i);
 			if (DataType.IsNullOrEmpty(name) == true)

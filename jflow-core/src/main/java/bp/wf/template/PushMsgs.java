@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -16,56 +11,50 @@ public class PushMsgs extends EntitiesMyPK
 	/** 
 	 消息推送
 	*/
-	public PushMsgs()
-	{
+	public PushMsgs() {
 	}
 	/** 
 	 消息推送
 	 
-	 @param flowNo 流程编号
-	 * @throws Exception 
+	 param flowNo 流程编号
 	*/
-	public PushMsgs(String flowNo) throws Exception
-	{
-		this.Retrieve(PushMsgAttr.FK_Flow, flowNo);
+	public PushMsgs(String flowNo) throws Exception {
+		//this.RetrieveFromCash(PushMsgAttr.FK_Flow, flowNo);
+		this.Retrieve(PushMsgAttr.FK_Flow, flowNo, null);
 	}
 	/** 
 	 消息推送
 	 
-	 @param nodeid 节点ID
-	 * @throws Exception 
+	 param nodeid 节点ID
 	*/
-	public PushMsgs(int nodeid) throws Exception
-	{
-		this.Retrieve(PushMsgAttr.FK_Node, nodeid);
+	public PushMsgs(int nodeid) throws Exception {
+		// this.RetrieveFromCash(PushMsgAttr.FK_Node, nodeid);
+		this.Retrieve(PushMsgAttr.FK_Node, nodeid, null);
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new PushMsg();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<PushMsg> ToJavaList()
-	{
-		return (List<PushMsg>)(Object)this;
+	public final java.util.List<PushMsg> ToJavaList() {
+		return (java.util.List<PushMsg>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<PushMsg> Tolist()
-	{
+	public final ArrayList<PushMsg> Tolist()  {
 		ArrayList<PushMsg> list = new ArrayList<PushMsg>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -74,5 +63,5 @@ public class PushMsgs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

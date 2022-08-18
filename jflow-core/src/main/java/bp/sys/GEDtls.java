@@ -1,10 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
-import java.math.*;
 
 /** 
  通用从表s
@@ -12,16 +9,16 @@ import java.math.*;
 public class GEDtls extends EntitiesOID
 {
 
-		///重载基类方法
+		///#region 重载基类方法
 	/** 
 	 节点ID
 	*/
 	public String FK_MapDtl = null;
 
-		///
+		///#endregion
 
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity
 	*/
@@ -43,23 +40,27 @@ public class GEDtls extends EntitiesOID
 	/** 
 	 通用从表ID
 	 
-	 @param fk_mapdtl
+	 param fk_mapdtl
 	*/
 	public GEDtls(String fk_mapdtl)
 	{
 		this.FK_MapDtl = fk_mapdtl;
 	}
+	public GEDtls(String fk_mapdtl, Object pkval)
+	{
+		this.FK_MapDtl = fk_mapdtl;
+	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GEDtl> ToJavaList()
+	public final java.util.List<GEDtl> ToJavaList()throws Exception
 	{
 		return (java.util.List<GEDtl>)(Object)this;
 	}
@@ -68,7 +69,7 @@ public class GEDtls extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GEDtl> Tolist()
+	public final ArrayList<GEDtl> Tolist()throws Exception
 	{
 		ArrayList<GEDtl> list = new ArrayList<GEDtl>();
 		for (int i = 0; i < this.size(); i++)
@@ -78,5 +79,5 @@ public class GEDtls extends EntitiesOID
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

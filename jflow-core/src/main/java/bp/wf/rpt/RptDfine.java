@@ -6,10 +6,6 @@ import bp.en.*;
 import bp.en.Map;
 import bp.wf.*;
 import bp.sys.*;
-import bp.web.WebUser;
-import bp.wf.data.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  报表定义
@@ -17,12 +13,11 @@ import java.util.*;
 public class RptDfine extends EntityNoName
 {
 
-
-		///属性
+		///#region 属性
 	/** 
 	 本部门流程查询权限定义
 	*/
-	public final int getMyDeptRole()throws Exception
+	public final int getMyDeptRole()  throws Exception
 	{
 		return this.GetValIntByKey(RptDfineAttr.MyDeptRole);
 	}
@@ -31,15 +26,15 @@ public class RptDfine extends EntityNoName
 		this.SetValByKey(RptDfineAttr.MyDeptRole, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC() 
 	{
 		UAC uac = new UAC();
-		if (WebUser.getIsAdmin())
+		if (bp.web.WebUser.getIsAdmin())
 		{
 			uac.IsUpdate = true;
 			uac.IsDelete = false;
@@ -61,18 +56,18 @@ public class RptDfine extends EntityNoName
 	/** 
 	 报表定义
 	 
-	 @param no 映射编号
+	 param no 映射编号
 	*/
-	public RptDfine(String no) throws Exception
+	public RptDfine(String no) throws Exception 
 	{
-		this.setNo( no);
+		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -83,7 +78,7 @@ public class RptDfine extends EntityNoName
 		map.setCodeStruct("4");
 
 
-			///基本属性.
+			///#region 基本属性.
 		map.AddTBStringPK(RptDfineAttr.No, null, "编号", true, false, 1, 200, 20);
 		map.AddTBString(RptDfineAttr.Name, null, "流程名称", true, false, 0, 500, 20);
 
@@ -92,18 +87,18 @@ public class RptDfine extends EntityNoName
 			//map.AddTBString(RptDfineAttr.PTable, null, "物理表", true, false, 0, 500, 20);
 			//map.AddTBString(RptDfineAttr.Note, null, "备注", true, false, 0, 500, 20);
 
-			/// 基本属性.
+			///#endregion 基本属性.
 
 
-			///绑定的关联关系.
+			///#region 绑定的关联关系.
 		map.getAttrsOfOneVSM().Add(new RptStations(), new Stations(), RptStationAttr.FK_Rpt, RptStationAttr.FK_Station, DeptAttr.Name, DeptAttr.No, "岗位权限");
 		map.getAttrsOfOneVSM().Add(new RptDepts(), new Depts(), RptDeptAttr.FK_Rpt, RptDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "部门权限");
 		map.getAttrsOfOneVSM().Add(new RptEmps(), new Emps(), RptEmpAttr.FK_Rpt, RptEmpAttr.FK_Emp, DeptAttr.Name, DeptAttr.No, "人员权限");
 
-			///
+			///#endregion
 
 
-			///我发起的流程.
+			///#region 我发起的流程.
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "设置显示的列";
@@ -135,6 +130,7 @@ public class RptDfine extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoRptExportTemplate_MyStartFlow()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "我发起的流程";
+		rm.Visable = false;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -162,10 +158,10 @@ public class RptDfine extends EntityNoName
 		rm.GroupName = "我发起的流程";
 		map.AddRefMethod(rm);
 
-			/// 我发起的流程.
+			///#endregion 我发起的流程.
 
 
-			///我审批的流程.
+			///#region 我审批的流程.
 		rm = new RefMethod();
 		rm.Title = "设置显示的列";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SelectCols.png";
@@ -224,10 +220,10 @@ public class RptDfine extends EntityNoName
 		rm.GroupName = "我审批的流程";
 		map.AddRefMethod(rm);
 
-			/// 我发起的流程.
+			///#endregion 我发起的流程.
 
 
-			///我部门发起的流程.
+			///#region 我部门发起的流程.
 		rm = new RefMethod();
 		rm.Title = "设置显示的列";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SelectCols.png";
@@ -258,6 +254,7 @@ public class RptDfine extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoRptExportTemplate_MyDeptFlow()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "本部门发起的流程";
+		rm.Visable = false;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -285,10 +282,10 @@ public class RptDfine extends EntityNoName
 		rm.GroupName = "本部门发起的流程";
 		map.AddRefMethod(rm);
 
-			/// 我部门发起的流程.
+			///#endregion 我部门发起的流程.
 
 
-			///高级查询.
+			///#region 高级查询.
 		rm = new RefMethod();
 		rm.Title = "设置显示的列";
 		rm.Icon = "../../WF/Admin/RptDfine/Img/SelectCols.png";
@@ -319,6 +316,7 @@ public class RptDfine extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoRptExportTemplate_AdminerFlow()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.GroupName = "高级查询";
+		rm.Visable = false;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -355,68 +353,164 @@ public class RptDfine extends EntityNoName
 		rm.GroupName = "高级查询";
 		map.AddRefMethod(rm);
 
-			/// 高级查询.
+			///#endregion 高级查询.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///通用方法.
+		///#region 通用方法.
 	/** 
 	 选择的列
 	 
-	 @param rptMark
+	 param rptMark
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChose(String rptMark) throws NumberFormatException, Exception
-	{
-		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow=" + this.getNo()+ "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+	public final String DoColsChose(String rptMark) throws Exception {
+		return "../../Admin/RptDfine/S2ColsChose.htm?FK_Flow=" + this.getNo() + "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 列的次序
 	 
-	 @param rptMark
+	 param rptMark
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder(String rptMark) throws NumberFormatException, Exception
+	public final String DoColsOrder(String rptMark)throws Exception
 	{
-		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow=" + this.getNo()+ "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S3ColsLabel.htm?FK_Flow=" + this.getNo() + "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 查询条件设置
 	 
-	 @param rptMark
+	 param rptMark
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond(String rptMark) throws NumberFormatException, Exception
+	public final String DoSearchCond(String rptMark)throws Exception
 	{
-		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow=" + this.getNo()+ "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S5SearchCond.htm?FK_Flow=" + this.getNo() + "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
 	/** 
 	 导出模版设置
 	 
-	 @param rptMark
+	 param rptMark
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate(String rptMark) throws NumberFormatException, Exception
+	public final String DoRptExportTemplate(String rptMark)throws Exception
 	{
-		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow=" + this.getNo()+ "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
+		return "../../Admin/RptDfine/S8_RptExportTemplate.htm?FK_Flow=" + this.getNo() + "&RptNo=ND" + Integer.parseInt(this.getNo()) + "Rpt" + rptMark;
 	}
-	/** 
+	public static String PublicFiels = ",OID,FK_Dept,FlowStarter,Title,FlowStartRDT,FlowEmps,WFState,WFSta,";
+	public final void InitBaseAttr(MapData md)throws Exception
+	{
+		// string keys = ",OID,FK_Dept,FlowStarter,WFState,Title,FlowStarter,FlowStartRDT,FlowEmps,FlowDaySpan,FlowEnder,FlowEnderRDT,FK_NY,FlowEndNode,WFSta,";
+
+		//必须的字段.
+		/** string keys = ",OID,FK_Dept,FlowStarter,Title,FlowStartRDT,FlowEmps,";
+		*/
+
+		//string keys = ",OID,Title,WFSta,";
+
+		//查询出来所有的字段.
+		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getNo()) + "Rpt");
+		attrs.Delete(MapAttrAttr.FK_MapData, md.getNo()); // 删除已经有的字段。
+		for (MapAttr attr : attrs.ToJavaList()) 
+		{
+			if (PublicFiels.contains("," + attr.getKeyOfEn() + ",") == false)
+			{
+				continue;
+			}
+
+			attr.setFK_MapData(md.getNo());
+			attr.setUIIsEnable(false);
+			attr.setIdx(0);
+
+
+				///#region 判断特殊的字段.
+			switch (attr.getKeyOfEn())
+			{
+				case GERptAttr.WFSta:
+					attr.setUIBindKey("WFSta");
+					attr.setUIContralType(UIContralType.DDL);
+					attr.setLGType(FieldTypeS.Enum);
+					attr.setUIVisible(false);
+					attr.setDefVal("0");
+					attr.setMaxLen(100);
+					attr.setUIVisible(true);
+					attr.Update();
+					break;
+				case GERptAttr.FK_Dept:
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					attr.setUIVisible(false);
+					attr.setDefVal("");
+					attr.setMaxLen(100);
+					attr.setUIVisible(false);
+					attr.Update();
+					break;
+				case GERptAttr.FK_NY:
+					attr.setUIBindKey("bp.pub.NYs");
+					attr.setUIContralType(UIContralType.DDL);
+					attr.setLGType(FieldTypeS.FK);
+					attr.setUIVisible(true);
+					attr.setUIIsEnable(false);
+					//attr.setGroupID(groupID;
+					attr.Update();
+					break;
+				case GERptAttr.Title:
+					attr.setUIWidth(120) ;
+					attr.setUIVisible(true);
+					attr.setIdx(0);
+					break;
+				case GERptAttr.FlowStarter:
+					attr.setUIIsEnable(false);
+					attr.setUIVisible(false);
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					break;
+				case GERptAttr.FlowEmps:
+					attr.setUIIsEnable(false);
+					attr.setUIVisible(false);
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					break;
+				case GERptAttr.WFState:
+					attr.setUIIsEnable(false);
+					attr.setUIVisible(false);
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					attr.setMyDataType(DataType.AppInt);
+					break;
+				case GERptAttr.FlowEndNode:
+					//attr.setLGType(FieldTypeS.FK);
+					//attr.setUIBindKey("bp.wf.template.NodeExts";
+					//attr.setUIContralType(UIContralType.DDL);
+					break;
+				case "FK_Emp":
+					break;
+				default:
+					break;
+			}
+
+				///#endregion
+
+			attr.Insert();
+		}
+	}
+	/**
 	 重置设置.
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	public final String DoReset(String rptMark, String rptName) throws Exception
 	{
 		MapData md = new MapData();
@@ -428,8 +522,8 @@ public class RptDfine extends EntityNoName
 		}
 
 		md.setRptIsSearchKey(true); //按关键查询.
-		md.setRptDTSearchWay(DTSearchWay.None); //按日期查询.
-		md.setRptDTSearchKey("");
+		md.setDTSearchWay(DTSearchWay.None); //按日期查询.
+		md.setDTSearchKey("");
 
 		//设置查询条件.
 		switch (rptMark)
@@ -440,7 +534,7 @@ public class RptDfine extends EntityNoName
 				//md.RptSearchKeys = "*WFSta*FK_NY*"; //查询条件.
 				break;
 			case "Adminer":
-			   // md.RptSearchKeys = "*WFSta*FK_NY*"; //查询条件.
+				// md.RptSearchKeys = "*WFSta*FK_NY*"; //查询条件.
 				break;
 			default:
 				break;
@@ -468,7 +562,7 @@ public class RptDfine extends EntityNoName
 			attr.setUIIsEnable(false);
 
 
-				///判断特殊的字段.
+			///判断特殊的字段.
 			switch (attr.getKeyOfEn())
 			{
 				case GERptAttr.FK_Dept:
@@ -494,10 +588,10 @@ public class RptDfine extends EntityNoName
 					break;
 				case GERptAttr.FlowStarter:
 					attr.setUIIsEnable(false);
-				
+
 					break;
 				case GERptAttr.FlowEndNode:
-					
+
 					break;
 				case "FK_Emp":
 					break;
@@ -505,25 +599,22 @@ public class RptDfine extends EntityNoName
 					break;
 			}
 
-				///
+			///
 
 			attr.Insert();
 		}
 		return "标记为: " + rptMark + "的报表，重置成功...";
 	}
+		///#endregion
 
-		///
 
-
-		///我发起的流程
+		///#region 我发起的流程
 	/** 
 	 设置选择的列
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_MyStartFlow() throws NumberFormatException, Exception
+	public final String DoColsChoseOf_MyStartFlow()throws Exception
 	{
 		return this.DoColsChose("My");
 	}
@@ -531,10 +622,8 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_MyStartFlow() throws NumberFormatException, Exception
+	public final String DoColsOrder_MyStartFlow()throws Exception
 	{
 		return DoColsOrder("My");
 	}
@@ -542,10 +631,8 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_MyStartFlow() throws NumberFormatException, Exception
+	public final String DoSearchCond_MyStartFlow()throws Exception
 	{
 		return DoSearchCond("My");
 	}
@@ -553,10 +640,8 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_MyStartFlow() throws NumberFormatException, Exception
+	public final String DoRptExportTemplate_MyStartFlow()throws Exception
 	{
 		return DoRptExportTemplate("My");
 	}
@@ -564,19 +649,18 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoReset_MyStartFlow() throws Exception
+	public final String DoReset_MyStartFlow()throws Exception
 	{
 		return DoReset("My", "我发起的流程");
+
 	}
 	/** 
 	 查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoSearch_MyStartFlow() throws Exception
+	public final String DoSearch_MyStartFlow()throws Exception
 	{
 		return "../../RptDfine/Search.htm?SearchType=My&FK_Flow=" + this.getNo();
 	}
@@ -585,25 +669,22 @@ public class RptDfine extends EntityNoName
 	 分析
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoGroup_MyStartFlow() throws Exception
+	public final String DoGroup_MyStartFlow()throws Exception
 	{
 		return "../../RptDfine/Group.htm?GroupType=My&FK_Flow=" + this.getNo();
 	}
 
-		///
+		///#endregion
 
 
-		///我参与的流程
+		///#region 我参与的流程
 	/** 
 	 设置选择的列
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_MyJoinFlow() throws NumberFormatException, Exception
+	public final String DoColsChoseOf_MyJoinFlow()throws Exception
 	{
 		return this.DoColsChose("MyJoin");
 	}
@@ -611,10 +692,8 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_MyJoinFlow() throws NumberFormatException, Exception
+	public final String DoColsOrder_MyJoinFlow()throws Exception
 	{
 		return DoColsOrder("MyJoin");
 	}
@@ -622,10 +701,8 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_MyJoinFlow() throws NumberFormatException, Exception
+	public final String DoSearchCond_MyJoinFlow()throws Exception
 	{
 		return DoSearchCond("MyJoin");
 	}
@@ -633,10 +710,8 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_MyJoinFlow() throws NumberFormatException, Exception
+	public final String DoRptExportTemplate_MyJoinFlow()throws Exception
 	{
 		return DoRptExportTemplate("MyJoin");
 	}
@@ -644,9 +719,8 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoReset_MyJoinFlow() throws Exception
+	public final String DoReset_MyJoinFlow()throws Exception
 	{
 		return DoReset("MyJoin", "我审批的流程");
 	}
@@ -654,30 +728,27 @@ public class RptDfine extends EntityNoName
 	 查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoSearch_MyJoinFlow() throws Exception
+	public final String DoSearch_MyJoinFlow()throws Exception
 	{
 		return "../../RptDfine/Search.htm?SearchType=MyJoin&FK_Flow=" + this.getNo();
 	}
 
-	public final String DoGroup_MyJoinFlow() throws Exception
+	public final String DoGroup_MyJoinFlow()throws Exception
 	{
 		return "../../RptDfine/Group.htm?GroupType=MyJoin&FK_Flow=" + this.getNo();
 	}
 
-		/// 我审批的流程
+		///#endregion 我审批的流程
 
 
-		///本部门发起的流程
+		///#region 本部门发起的流程
 	/** 
 	 设置选择的列
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_MyDeptFlow() throws NumberFormatException, Exception
+	public final String DoColsChoseOf_MyDeptFlow()throws Exception
 	{
 		return this.DoColsChose("MyDept");
 	}
@@ -685,10 +756,8 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_MyDeptFlow() throws NumberFormatException, Exception
+	public final String DoColsOrder_MyDeptFlow()throws Exception
 	{
 		return DoColsOrder("MyDept");
 	}
@@ -696,10 +765,8 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_MyDeptFlow() throws NumberFormatException, Exception
+	public final String DoSearchCond_MyDeptFlow()throws Exception
 	{
 		return DoSearchCond("MyDept");
 	}
@@ -707,10 +774,8 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_MyDeptFlow() throws NumberFormatException, Exception
+	public final String DoRptExportTemplate_MyDeptFlow()throws Exception
 	{
 		return DoRptExportTemplate("MyDept");
 	}
@@ -718,9 +783,8 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoReset_MyDeptFlow() throws Exception
+	public final String DoReset_MyDeptFlow()throws Exception
 	{
 		return DoReset("MyDept", "本部门发起的流程");
 	}
@@ -728,9 +792,8 @@ public class RptDfine extends EntityNoName
 	 查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoSearch_MyDeptFlow() throws Exception
+	public final String DoSearch_MyDeptFlow()throws Exception
 	{
 		return "../../RptDfine/Search.htm?SearchType=MyDept&FK_Flow=" + this.getNo();
 	}
@@ -739,25 +802,22 @@ public class RptDfine extends EntityNoName
 	 分析
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoGroup_MyDeptFlow() throws Exception
+	public final String DoGroup_MyDeptFlow()throws Exception
 	{
 		return "../../RptDfine/Group.htm?GroupType=MyDept&FK_Flow=" + this.getNo();
 	}
 
-		/// 本部门发起的流程
+		///#endregion 本部门发起的流程
 
 
-		///高级查询
+		///#region 高级查询
 	/** 
 	 设置选择的列
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsChoseOf_AdminerFlow() throws NumberFormatException, Exception
+	public final String DoColsChoseOf_AdminerFlow()throws Exception
 	{
 		return this.DoColsChose("Adminer");
 	}
@@ -765,10 +825,8 @@ public class RptDfine extends EntityNoName
 	 列的次序
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoColsOrder_AdminerFlow() throws NumberFormatException, Exception
+	public final String DoColsOrder_AdminerFlow()throws Exception
 	{
 		return DoColsOrder("Adminer");
 	}
@@ -776,10 +834,8 @@ public class RptDfine extends EntityNoName
 	 查询条件
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoSearchCond_AdminerFlow() throws NumberFormatException, Exception
+	public final String DoSearchCond_AdminerFlow()throws Exception
 	{
 		return DoSearchCond("Adminer");
 	}
@@ -787,10 +843,8 @@ public class RptDfine extends EntityNoName
 	 导出模版.
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String DoRptExportTemplate_AdminerFlow() throws NumberFormatException, Exception
+	public final String DoRptExportTemplate_AdminerFlow()throws Exception
 	{
 		return DoRptExportTemplate("Adminer");
 	}
@@ -798,9 +852,8 @@ public class RptDfine extends EntityNoName
 	 重置
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoReset_AdminerFlow() throws Exception
+	public final String DoReset_AdminerFlow()throws Exception
 	{
 		return DoReset("Adminer", "本部门发起的流程");
 	}
@@ -808,9 +861,8 @@ public class RptDfine extends EntityNoName
 	 查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoSearch_AdminerFlow() throws Exception
+	public final String DoSearch_AdminerFlow()throws Exception
 	{
 		return "../../RptDfine/Search.htm?SearchType=Adminer&FK_Flow=" + this.getNo();
 	}
@@ -819,18 +871,17 @@ public class RptDfine extends EntityNoName
 	 分析
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoGroup_AdminerFlow() throws Exception
+	public final String DoGroup_AdminerFlow()throws Exception
 	{
 		return "../../RptDfine/Group.htm?GroupType=Adminer&FK_Flow=" + this.getNo();
 	}
 
-	public final String DoReset_AdminerFlowRight() throws Exception
+	public final String DoReset_AdminerFlowRight()throws Exception
 	{
 		return "../../Admin/RptDfine/AdvSearchRight.htm?FK_Flow=" + this.getNo();
 	}
 
-		/// 高级查询
+		///#endregion 高级查询
 
 }

@@ -1,15 +1,8 @@
 package bp.wf;
 
-import java.util.List;
-
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.sys.*;
-import bp.web.WebUser;
-import bp.port.*;
-import bp.wf.xml.*;
-import bp.wf.template.*;
 
 /** 
  WorkBase 的摘要说明。
@@ -21,10 +14,8 @@ public abstract class Work extends Entity
 	 检查MD5值是否通过
 	 
 	 @return true/false
-	 * @throws Exception 
 	*/
-	public final boolean IsPassCheckMD5() throws Exception
-	{
+	public final boolean IsPassCheckMD5() throws Exception {
 		String md51 = this.GetValStringByKey(WorkAttr.MD5);
 		String md52 = Glo.GenerMD5(this);
 		if (!md51.equals(md52))
@@ -35,28 +26,25 @@ public abstract class Work extends Entity
 	}
 
 
-		///基本属性(必须的属性)
+		///#region 基本属性(必须的属性)
 	/** 
 	 主键
 	*/
 	@Override
-	public String getPK()
-	{
+	public String getPK()  {
 		return "OID";
 	}
 	/** 
 	 classID
 	*/
 	@Override
-	public String getClassID()throws Exception
-	{
+	public String getClassID()  {
 		return "ND" + this.getHisNode().getNodeID();
 	}
 	/** 
 	 流程ID
 	*/
-	public long getFID()throws Exception
-	{
+	public long getFID() throws Exception {
 		if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
 		{
 			return 0;
@@ -66,8 +54,7 @@ public abstract class Work extends Entity
 
 	}
 	public void setFID(long value)throws Exception
-	{
-		if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
+	{if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
 		{
 			this.SetValByKey(WorkAttr.FID, 0);
 		}
@@ -79,33 +66,32 @@ public abstract class Work extends Entity
 	/** 
 	 workid,如果是空的就返回 0 . 
 	*/
-	public long getOID()throws Exception
+	public long getOID()
 	{
 		return this.GetValInt64ByKey(WorkAttr.OID);
 	}
-	public void setOID(long value)throws Exception
-	{
+	public void setOID(long value)  throws Exception
+	 {
 		this.SetValByKey(WorkAttr.OID, value);
 	}
 	/** 
 	 人员emps
 	*/
-	public final String getEmps()throws Exception
+	public final String getEmps() throws Exception
 	{
 		return this.GetValStringByKey(WorkAttr.Emps);
 	}
-	public final void setEmps(String value) throws Exception
-	{
+	public final void setEmps(String value)  throws Exception
+	 {
 		this.SetValByKey(WorkAttr.Emps, value);
 	}
-	public final int RetrieveFID() throws Exception
-	{
+	public final int RetrieveFID() throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhereIn(WorkAttr.OID, "(" + this.getFID() + "," + this.getOID() + ")");
 		int i = qo.DoQuery();
 		if (i == 0)
 		{
-			if (SystemConfig.getIsDebug() == false)
+			if (!bp.difference.SystemConfig.getIsDebug())
 			{
 				this.CheckPhysicsTable();
 				throw new RuntimeException("@节点[" + this.getEnDesc() + "]数据丢失：WorkID=" + this.getOID() + " FID=" + this.getFID() + " sql=" + qo.getSQL());
@@ -115,110 +101,96 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 记录人
-	 * @throws Exception 
 	*/
-	public final String getRec() throws Exception
-	{
+	public final String getRec()  {
 		String str = this.GetValStringByKey(WorkAttr.Rec);
 		if (str.equals(""))
 		{
-			this.SetValByKey(WorkAttr.Rec, WebUser.getNo());
+			this.SetValByKey(WorkAttr.Rec, bp.web.WebUser.getNo());
 		}
 
 		return this.GetValStringByKey(WorkAttr.Rec);
 	}
-	public final void setRec(String value) throws Exception
-	{
+	public final void setRec(String value)
+	 {
 		this.SetValByKey(WorkAttr.Rec, value);
 	}
-	/** 
-	 工作人员
-	 * @throws Exception 
-	*/
-	public final Emp getRecOfEmp() throws Exception
-	{
-		return new Emp(this.getRec());
-	}
 
+	public final int getFrmVer()  {
+		return this.GetParaInt("FrmVer", 0);
+	}
 	private Node _HisNode = null;
 	/** 
 	 工作的节点.
-	 * @throws Exception 
 	*/
-	public final Node getHisNode() throws Exception
-	{
+	public final Node getHisNode()  {
 		if (this._HisNode == null)
 		{
-			this._HisNode = new Node(this.getNodeID());
+			try {
+				this._HisNode = new Node(this.getNodeID());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return _HisNode;
 	}
 	public final void setHisNode(Node value)
-	{
-		_HisNode = value;
+	{_HisNode = value;
 	}
 	/** 
 	 从表.
-	 * @throws Exception 
 	*/
-	public final MapDtls getHisMapDtls() throws Exception
-	{
+	public final MapDtls getHisMapDtls() throws Exception {
 		return this.getHisNode().getMapData().getMapDtls();
 	}
 	/** 
-	 从表.
-	 * @throws Exception 
+	 附件.
 	*/
-	public final FrmAttachments getHisFrmAttachments() throws Exception
-	{
+	public final FrmAttachments getHisFrmAttachments() throws Exception {
 		return this.getHisNode().getMapData().getFrmAttachments();
 	}
 
-		///
+		///#endregion
 
 
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 工作
 	*/
-	protected Work()
-	{
+	protected Work()  {
 	}
 	/** 
 	 工作
 	 
-	 @param oid WFOID		 
-	 * @throws Exception 
+	 param oid WFOID
 	*/
-	protected Work(long oid) throws Exception
-	{
+	protected Work(long oid)  throws Exception
+	 {
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
 	}
 
-		///
+		///#endregion
 
 
-		/// 重写基类的方法。
+		///#region  重写基类的方法。
 	/** 
 	 按照指定的OID Insert.
-	 * @throws Exception 
 	*/
-	public final void InsertAsOID(long oid) throws Exception
-	{
+	public final void InsertAsOID(long oid)  throws Exception
+	 {
 		this.SetValByKey("OID", oid);
 		this.RunSQL(SqlBuilder.Insert(this));
 	}
 	/** 
 	 按照指定的OID 保存
 	 
-	 @param oid
-	 * @throws Exception 
+	 param oid
 	*/
-	public final void SaveAsOID(long oid) throws Exception
-	{
+	public final void SaveAsOID(long oid)  throws Exception
+	 {
 		this.SetValByKey("OID", oid);
 		if (this.RetrieveNotSetValues().Rows.size() == 0)
 		{
@@ -228,10 +200,8 @@ public abstract class Work extends Entity
 	}
 	/** 
 	 保存实体信息
-	 * @throws Exception 
 	*/
-	public final int Save() throws Exception
-	{
+	public final int Save() throws Exception {
 		if (this.getOID() <= 10)
 		{
 			throw new RuntimeException("@没有给WorkID赋值,不能保存.");
@@ -244,11 +214,10 @@ public abstract class Work extends Entity
 		return 1;
 	}
 	@Override
-	public void Copy(DataRow dr) throws Exception
-	{
+	public void Copy(DataRow dr) throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
-			if (WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey()) || WorkAttr.OID.equals(attr.getKey()) || attr.getKey().equals("No") || attr.getKey().equals("Name"))
+			if (attr.getKey().equals(WorkAttr.Rec) || attr.getKey().equals(WorkAttr.FID) || attr.getKey().equals(WorkAttr.OID) || attr.getKey().equals("No") || attr.getKey().equals("Name"))
 			{
 				continue;
 			}
@@ -263,16 +232,15 @@ public abstract class Work extends Entity
 		}
 	}
 	@Override
-	public void Copy(Entity fromEn) throws Exception
-	{
+	public void Copy(Entity fromEn) throws Exception {
 		if (fromEn == null)
 		{
 			return;
 		}
 		Attrs attrs = fromEn.getEnMap().getAttrs();
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
-			if (WorkAttr.Rec.equals(attr.getKey()) || WorkAttr.FID.equals(attr.getKey()) || WorkAttr.OID.equals(attr.getKey()) || WorkAttr.Emps.equals(attr.getKey()) || attr.getKey().equals("No") || attr.getKey().equals("Name"))
+			if (attr.getKey().equals(WorkAttr.Rec) || attr.getKey().equals(WorkAttr.FID) || attr.getKey().equals(WorkAttr.OID) || attr.getKey().equals(WorkAttr.Emps) || attr.getKey().equals("No") || attr.getKey().equals("Name"))
 			{
 				continue;
 			}
@@ -280,16 +248,14 @@ public abstract class Work extends Entity
 		}
 	}
 
-		///
+		///#endregion
 
 
-		/// 公共方法
+		///#region  公共方法
 	/** 
 	 直接的保存
 	*/
-	@Override
-	public final void DirectSave() throws Exception
-	{
+	public final void DirectSave() throws Exception {
 		this.beforeUpdateInsertAction();
 		if (this.DirectUpdate() == 0)
 		{
@@ -298,19 +264,16 @@ public abstract class Work extends Entity
 	}
 	public String NodeFrmID = "";
 	protected int _nodeID = 0;
-	public final int getNodeID()  throws Exception
-	{
+	public final int getNodeID()  {
 		if (_nodeID == 0)
 		{
 			throw new RuntimeException("您没有给_Node给值。");
 		}
 		return this._nodeID;
 	}
-	public final void setNodeID(int value) throws Exception
-	{
-		if (this._nodeID != value)
-		{
-			this._nodeID = value;
+	public final void setNodeID(int value)
+	{if (this._nodeID != value)
+	{this._nodeID = value;
 			this.set_enMap(null);
 		}
 		this._nodeID = value;
@@ -320,5 +283,6 @@ public abstract class Work extends Entity
 	*/
 	public String HisPassedFrmIDs = "";
 
-	
+
+	///#endregion
 }

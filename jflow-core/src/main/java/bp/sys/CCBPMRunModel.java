@@ -1,35 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.web.*;
-import bp.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
-
-
-///Copyright
-//------------------------------------------------------------------------------
-// <copyright file="ConfigReaders.cs" company="BP">
-//     
-//      Copyright (c) 2002 Microsoft Corporation.  All rights reserved.
-//     
-//      BP ZHZS Team
-//      Purpose: config system: finds config files, loads config factories,
-//               filters out relevant config file sections
-//      Date: Oct 14, 2003
-//      Author: peng zhou (pengzhoucn@hotmail.com) 
-//      http://www.BP.com.cn
-//
-// </copyright>                                                                
-//------------------------------------------------------------------------------
-
-///
-
-//using System.Data.OracleClient;
-//using IBM;
-//using IBM.Data;
-//using IBM.Data.Informix;
 
 
 /** 
@@ -57,7 +27,7 @@ public enum CCBPMRunModel
 		return this.ordinal();
 	}
 
-	public static CCBPMRunModel forValue(int value) throws Exception
+	public static CCBPMRunModel forValue(int value) 
 	{
 		return values()[value];
 	}

@@ -2,6 +2,8 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
+import bp.sys.frmui.*;
+import bp.difference.*;
 import bp.web.*;
 import bp.*;
 import java.util.*;
@@ -12,44 +14,40 @@ import java.util.*;
 public class FrmImgs extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 图片s
 	*/
-	public FrmImgs()
-	{
+	public FrmImgs()  {
 	}
 	/** 
 	 图片s
 	 
-	 @param fk_mapdata s
+	 param fk_mapdata s
 	*/
-	public FrmImgs(String fk_mapdata) throws Exception
-	{
+	public FrmImgs(String fk_mapdata) throws Exception {
 
-	   this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
+	   this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
 
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmImg();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmImg> ToJavaList()
-	{
+	public final java.util.List<FrmImg> ToJavaList() {
 		return (java.util.List<FrmImg>)(Object)this;
 	}
 	/** 
@@ -57,8 +55,7 @@ public class FrmImgs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmImg> Tolist()
-	{
+	public final ArrayList<FrmImg> Tolist()  {
 		ArrayList<FrmImg> list = new ArrayList<FrmImg>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -67,5 +64,5 @@ public class FrmImgs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

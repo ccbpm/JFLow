@@ -1,5 +1,7 @@
 package bp.sys;
+
 import bp.en.*;
+
 /** 
  属性
 */

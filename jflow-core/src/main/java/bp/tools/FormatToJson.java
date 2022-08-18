@@ -34,10 +34,11 @@ public class FormatToJson {
 	 * 将JSON解析成DataSet只限标准的JSON数据 例如：Json＝{t1:[{name:'数据name',type:'数据type'}]} 或 Json＝{t1:[{name:
 	 * '数据name',type:'数据type'}],t2:[{id:'数据id',gx:'数据gx',val:'数据val'}]}
 	 * 
-	 * @param Json Json字符串
+	 * param Json Json字符串
 	 * @return DataSet
+	 * @throws Exception 
 	 */
-	public static DataSet JsonToDataSet(String json) {
+	public static DataSet JsonToDataSet(String json) throws Exception {
 
 		DataSet ds = new DataSet();
 		JSONObject jsonObject = JSONObject.fromObject(json);
@@ -82,7 +83,7 @@ public class FormatToJson {
 	/**
 	 * Json 字符串 转换为 DataTable数据集合
 	 * 
-	 * @param json
+	 * param json
 	 * @return
 	 */
 	public static DataTable ToDataTable(String json) {
@@ -116,13 +117,13 @@ public class FormatToJson {
 	 * 
 	 * <typeparam name="T"></typeparam>
 	 * 
-	 * @param jsonName
-	 * @param list
+	 * param jsonName
+	 * param list
 	 * @return
 	 */
 	public static <T> String ListToJson(java.util.List<T> list, String jsonName) {
 		StringBuilder Json = new StringBuilder();
-		if (StringHelper.isNullOrEmpty(jsonName)) {
+		if (DataType.IsNullOrEmpty(jsonName)) {
 			jsonName = list.get(0).getClass().getName();
 		}
 		Json.append("{\"" + jsonName + "\":");
@@ -137,7 +138,7 @@ public class FormatToJson {
 	 * 
 	 * <typeparam name="T"></typeparam>
 	 * 
-	 * @param list
+	 * param list
 	 * @return
 	 */
 	public static <T> String ListToJson(java.util.List<T> list) {
@@ -148,7 +149,7 @@ public class FormatToJson {
 	// /**
 	// 对象转换为Json字符串
 	//
-	// @param jsonObject 对象
+	// param jsonObject 对象
 	// @return Json字符串
 	// */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -198,7 +199,7 @@ public class FormatToJson {
 	/**
 	 * 对象集合转换Json
 	 * 
-	 * @param array 集合对象
+	 * param array 集合对象
 	 * @return Json字符串
 	 */
 	@SuppressWarnings("rawtypes")
@@ -217,7 +218,7 @@ public class FormatToJson {
 	/**
 	 * 普通集合转换Json
 	 * 
-	 * @param array 集合对象
+	 * param array 集合对象
 	 * @return Json字符串
 	 */
 	@SuppressWarnings("rawtypes")
@@ -236,7 +237,7 @@ public class FormatToJson {
 	/**
 	 * Datatable转换为Json
 	 * 
-	 * @param table Datatable对象
+	 * param table Datatable对象
 	 * @return Json字符串
 	 */
 	public static String ToJson(DataTable dt) {
@@ -272,7 +273,7 @@ public class FormatToJson {
 	/**
 	 * Datatable转换为Json
 	 * 
-	 * @param table Datatable对象
+	 * param table Datatable对象
 	 * @return Json字符串
 	 */
 	public static String ToJsonUpper(DataTable dt) {
@@ -308,13 +309,13 @@ public class FormatToJson {
 	/**
 	 * DataTable转成Json
 	 * 
-	 * @param jsonName
-	 * @param dt
+	 * param jsonName
+	 * param dt
 	 * @return
 	 */
 	public static String ToJson(DataTable dt, String jsonName) {
 		StringBuilder Json = new StringBuilder();
-		if (StringHelper.isNullOrEmpty(jsonName)) {
+		if (DataType.IsNullOrEmpty(jsonName)) {
 			jsonName = dt.TableName;
 		}
 		Json.append("{\"" + jsonName + "\":[");
@@ -341,7 +342,7 @@ public class FormatToJson {
 	/**
 	 * DataSet转换为Json
 	 * 
-	 * @param dataSet DataSet对象
+	 * param dataSet DataSet对象
 	 * @return Json字符串
 	 */
 	public static String ToJson(DataSet dataSet) {
@@ -494,7 +495,7 @@ public class FormatToJson {
 	/**  
 	 DataSet转换为Json 
 	  
-	 @param dataSet DataSet对象 
+	 param dataSet DataSet对象
 	 @return Json字符串 
 	*/
 	public static String ToJson1(DataSet dataSet) {
@@ -510,11 +511,11 @@ public class FormatToJson {
 	/**
 	 * String转换为Json
 	 * 
-	 * @param value String对象
+	 * param value String对象
 	 * @return Json字符串
 	 */
 	public static String ToJson(String value) throws Exception {
-		if (StringHelper.isNullOrEmpty(value)) {
+		if (DataType.IsNullOrEmpty(value)) {
 			return "";
 		}
 
@@ -533,7 +534,7 @@ public class FormatToJson {
 	/**
 	 * 过滤特殊字符
 	 * 
-	 * @param s
+	 * param s
 	 * @return
 	 */
 	public static String String2Json(String s) {
@@ -577,8 +578,8 @@ public class FormatToJson {
 	/**
 	 * 格式化字符型、日期型、布尔型
 	 * 
-	 * @param str
-	 * @param type
+	 * param str
+	 * param type
 	 * @return
 	 */
 	private static String StringFormat(String str, Object type) {

@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  文件展现方式
@@ -27,7 +26,7 @@ public enum FileShowWay
 		return this.ordinal();
 	}
 
-	public static FileShowWay forValue(int value) throws Exception
+	public static FileShowWay forValue(int value)
 	{
 		return values()[value];
 	}

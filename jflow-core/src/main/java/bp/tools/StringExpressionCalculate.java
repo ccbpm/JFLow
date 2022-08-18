@@ -7,14 +7,14 @@ import java.util.ArrayList;
  */
 public class StringExpressionCalculate
 {
-	public StringExpressionCalculate()
+	public StringExpressionCalculate()throws Exception
 	{
 	}
 	
 	/**
 	 * 转换到decimal
 	 * 
-	 * @param exp
+	 * param exp
 	 * @return
 	 */
 	public final double TurnToDecimal(String exp)
@@ -234,7 +234,7 @@ public class StringExpressionCalculate
 	
 	/** 
 	 去掉文件名中的无效字符,如 \ / : * ? " < > | 
-	 @param fileName 待处理的文件名
+	 param fileName 待处理的文件名
 	 @return 处理后的文件名
 	*/
 	public static String ReplaceBadCharOfFileName(String fileName)

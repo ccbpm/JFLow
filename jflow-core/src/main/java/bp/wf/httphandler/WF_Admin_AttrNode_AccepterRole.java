@@ -1,39 +1,37 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.web.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.Glo;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_AttrNode_AccepterRole extends WebContralBase
+public class WF_Admin_AttrNode_AccepterRole extends bp.difference.handler.WebContralBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_AttrNode_AccepterRole()
-	{
+	public WF_Admin_AttrNode_AccepterRole() throws Exception {
 	}
 
 
-		/// 界面 .
+		///#region  界面 .
 	/** 
 	 清空缓存
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String AccepterRole_ClearStartFlowsCash() throws Exception
-	{
-		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+	public final String AccepterRole_ClearStartFlowsCash() throws Exception {
+		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows=''");
 		}
 		else
 		{
-			DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows='' WHERE OrgNo='" + WebUser.getOrgNo() + "'");
+			DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows='' WHERE OrgNo='" + bp.web.WebUser.getOrgNo() + "'");
 		}
 		return "执行成功 ";
 	}
@@ -42,12 +40,11 @@ public class WF_Admin_AttrNode_AccepterRole extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String AccepterRole_ClearAllOrgStartFlowsCash()
-	{
+	public final String AccepterRole_ClearAllOrgStartFlowsCash() throws Exception {
 		DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows=''");
 		return "执行成功 ";
 	}
 
-		/// 界面方法.
+		///#endregion 界面方法.
 
 }

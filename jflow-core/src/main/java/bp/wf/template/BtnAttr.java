@@ -1,5 +1,6 @@
 package bp.wf.template;
 
+
 /** 
  Btn属性
 */
@@ -25,6 +26,10 @@ public class BtnAttr
 	 是否可以删除（已经发出去的）子线程.
 	*/
 	public static final String ThreadIsCanDel = "ThreadIsCanDel";
+	/** 
+	 是否可以增加子线程.
+	*/
+	public static final String ThreadIsCanAdd = "ThreadIsCanAdd";
 	/** 
 	 是否可以移交
 	*/
@@ -111,6 +116,16 @@ public class BtnAttr
 	 抄送规则
 	*/
 	public static final String CCRole = "CCRole";
+
+	/** 
+	 二维码
+	*/
+	public static final String QRCodeLab = "QRCodeLab";
+	/** 
+	 二维码规则
+	*/
+	public static final String QRCodeRole = "QRCodeRole";
+
 	/** 
 	 删除
 	*/
@@ -147,6 +162,14 @@ public class BtnAttr
 	 是否启用查看父流程
 	*/
 	public static final String ShowParentFormEnable = "ShowParentFormEnable";
+	/** 
+	 数据批阅标签
+	*/
+	public static final String FrmDBRemarkLab = "FrmDBRemarkLab";
+	/** 
+	 数据批阅
+	*/
+	public static final String FrmDBRemarkEnable = "FrmDBRemarkEnable";
 	/** 
 	 审核
 	*/
@@ -330,15 +353,17 @@ public class BtnAttr
 	 提示方式.
 	*/
 	public static final String HelpRole = "HelpRole";
-	
+	/** 
+	 下一条
+	*/
 	public static final String NextLab = "NextLab";
+	/** 
+	 获得规则
+	*/
 	public static final String NextRole = "NextRole";
-	public static final String IsKillEtcThread = "IsKillEtcThread";
-	
-	 
 
 
-		///公文2019
+		///#region 公文2019
 	/** 
 	 公文标签
 	*/
@@ -347,15 +372,20 @@ public class BtnAttr
 	 公文标签接受人
 	*/
 	public static final String OfficeBtnEnable = "OfficeBtnEnable";
+	/** 
+	 文件类型.
+	*/
+	public static final String OfficeFileType = "OfficeFileType";
+	/** 
+	 显示位置
+	*/
+	public static final String OfficeBtnLocal = "OfficeBtnLocal";
 
-	public static final String OfficeBtnLocal="OfficeBtnLocal";
-	public static final String OfficeFileType="OfficeFileType";
-
-		/// 公文2019
+		///#endregion 公文2019
 
 
 
-		///公文属性
+		///#region 公文属性
 	public static final String DocLeftWord = "DocLeftWord";
 	public static final String DocRightWord = "DocRightWord";
 	/** 
@@ -363,7 +393,7 @@ public class BtnAttr
 	*/
 	public static final String WebOfficeFrmModel = "WebOfficeFrmModel";
 
-		/// 公文属性
+		///#endregion 公文属性
 
 	/** 
 	 列表
@@ -373,4 +403,33 @@ public class BtnAttr
 	 是否启用-列表
 	*/
 	public static final String ListEnable = "ListEnable";
+	/** 
+	 数据版本的控制
+	*/
+	public static final String FrmDBVerLab = "FrmDBVerLab";
+	public static final String FrmDBVerEnable = "FrmDBVerEnable";
+	public static final String FrmDBVerMyView = "FrmDBVerMyView";
+	public static final String FrmDBVerMyCC = "FrmDBVerMyCC";
+
+	/** 
+	 小纸条
+	*/
+	public static final String ScripLab = "ScripLab";
+	public static final String ScripRole = "ScripRole";
+	/** 
+	 评论
+	*/
+	public static final String FlowBBSLab = "FlowBBSLab";
+	public static final String FlowBBSRole = "FlowBBSRole";
+	/** 
+	 即时通讯
+	*/
+	public static final String IMLab = "IMLab";
+	public static final String IMEnable = "IMEnable";
+
+	/** 
+	 是否启用催办
+	*/
+	public static final String PressLab = "PressLab";
+	public static final String PressEnable = "PressEnable";
 }

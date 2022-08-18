@@ -22,10 +22,10 @@ class SHA1 {
 
 	/**
 	 * 用SHA1算法生成安全签名
-	 * @param token 票据
-	 * @param timestamp 时间戳
-	 * @param nonce 随机字符串
-	 * @param encrypt 密文
+	 * param token 票据
+	 * param timestamp 时间戳
+	 * param nonce 随机字符串
+	 * param encrypt 密文
 	 * @return 安全签名
 	 * @throws AesException 
 	 */

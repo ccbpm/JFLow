@@ -1,11 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.sys.*;
-import bp.*;
-import java.time.*;
-import java.math.*;
-
 /** 
  实体附件类型
 */
@@ -31,7 +25,7 @@ public enum BPEntityAthType
 		return this.ordinal();
 	}
 
-	public static BPEntityAthType forValue(int value) throws Exception
+	public static BPEntityAthType forValue(int value) 
 	{
 		return values()[value];
 	}

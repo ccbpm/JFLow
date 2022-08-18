@@ -124,7 +124,7 @@ public final class StringHelper
 	/**
 	 * 判断是否是空字符串 null和"" null返回result,否则返回字符串
 	 * 
-	 * @param s
+	 * param s
 	 * @return
 	 */
 	public static String isEmpty(String s, String result)
@@ -194,9 +194,9 @@ public final class StringHelper
 	 * 将字符串按指定的"分割符"分割成字符串数组(接受连续出现分割符部分) Take a String which is a delimited
 	 * list and convert it to a String array.
 	 * 
-	 * @param s
+	 * param s
 	 *            String
-	 * @param delim
+	 * param delim
 	 *            delim (this will not be returned)
 	 * @return an array of the tokens in the list
 	 *         split("a;b;c;;")={'a','b','c','',''} split(" a;b;c; ; ")={'
@@ -233,8 +233,8 @@ public final class StringHelper
 	/**
 	 * 将字符串按指定的"分割符"分割成数值数组
 	 * 
-	 * @param s
-	 * @param delim
+	 * param s
+	 * param delim
 	 * @return
 	 */
 	public static int[] splitToIntArray(String s, String delim)
@@ -280,7 +280,7 @@ public final class StringHelper
     
     /**
      * This method replaces the .NET static string method 'IsNullOrWhiteSpace'.
-     * @param string
+     * param string
      * @return
      */
   	public static boolean isNullOrWhiteSpace(String string)
@@ -299,8 +299,8 @@ public final class StringHelper
   	
   	/**
   	 * This method replaces the .NET string method 'remove' (1 parameter version).
-  	 * @param string
-  	 * @param start
+  	 * param string
+  	 * param start
   	 * @return
   	 */
   	public static String remove(String string, int start)
@@ -310,9 +310,9 @@ public final class StringHelper
   	
 	/**
 	 * This method replaces the .NET string method 'remove' (2 parameter version).
-	 * @param string
-	 * @param start
-	 * @param count
+	 * param string
+	 * param start
+	 * param count
 	 * @return
 	 */
   	public static String remove(String string, int start, int count)
@@ -322,8 +322,8 @@ public final class StringHelper
   	
   	/**
   	 * This method replaces the .NET string method 'PadRight' (1 parameter version).
-  	 * @param string
-  	 * @param totalWidth
+  	 * param string
+  	 * param totalWidth
   	 * @return
   	 */
   	public static String padRight(String string, int totalWidth)
@@ -333,9 +333,9 @@ public final class StringHelper
 
   	/**
   	 * This method replaces the .NET string method 'PadRight' (2 parameter version).
-  	 * @param string
-  	 * @param totalWidth
-  	 * @param paddingChar
+  	 * param string
+  	 * param totalWidth
+  	 * param paddingChar
   	 * @return
   	 */
   	public static String padRight(String string, int totalWidth, char paddingChar)
@@ -352,8 +352,8 @@ public final class StringHelper
   	
   	/**
   	 * This method replaces the .NET string method 'PadLeft' (1 parameter version).
-  	 * @param string
-  	 * @param totalWidth
+  	 * param string
+  	 * param totalWidth
   	 * @return
   	 */
   	public static String padLeft(String string, int totalWidth)
@@ -363,9 +363,9 @@ public final class StringHelper
 
   	/**
   	 * This method replaces the .NET string method 'PadLeft' (2 parameter version).
-  	 * @param string
-  	 * @param totalWidth
-  	 * @param paddingChar
+  	 * param string
+  	 * param totalWidth
+  	 * param paddingChar
   	 * @return
   	 */
   	public static String padLeft(String string, int totalWidth, char paddingChar)
@@ -383,10 +383,10 @@ public final class StringHelper
   	
   	/**
   	 * This method replaces the .NET string method 'LastIndexOf' (char version).
-  	 * @param string
-  	 * @param value
-  	 * @param startIndex
-  	 * @param count
+  	 * param string
+  	 * param value
+  	 * param startIndex
+  	 * param count
   	 * @return
   	 */
   	public static int lastIndexOf(String string, char value, int startIndex, int count)
@@ -403,10 +403,10 @@ public final class StringHelper
 
 	/**
 	 * This method replaces the .NET string method 'LastIndexOf' (string version).
-	 * @param string
-	 * @param value
-	 * @param startIndex
-	 * @param count
+	 * param string
+	 * param value
+	 * param startIndex
+	 * param count
 	 * @return
 	 */
 	public static int lastIndexOf(String string, String value, int startIndex, int count)
@@ -423,8 +423,8 @@ public final class StringHelper
 
 	/**
 	 * This method replaces the .NET string method 'IndexOfAny' (1 parameter version).
-	 * @param string
-	 * @param anyOf
+	 * param string
+	 * param anyOf
 	 * @return
 	 */
 	public static int indexOfAny(String string, char[] anyOf)
@@ -450,9 +450,9 @@ public final class StringHelper
 
 	/**
 	 * This method replaces the .NET string method 'IndexOfAny' (2 parameter version).
-	 * @param string
-	 * @param anyOf
-	 * @param startIndex
+	 * param string
+	 * param anyOf
+	 * param startIndex
 	 * @return
 	 */
 	public static int indexOfAny(String string, char[] anyOf, int startIndex)
@@ -466,10 +466,10 @@ public final class StringHelper
 
 	/**
 	 * This method replaces the .NET string method 'IndexOfAny' (3 parameter version).
-	 * @param string
-	 * @param anyOf
-	 * @param startIndex
-	 * @param count
+	 * param string
+	 * param anyOf
+	 * param startIndex
+	 * param count
 	 * @return
 	 */
 	public static int indexOfAny(String string, char[] anyOf, int startIndex, int count)
@@ -484,8 +484,8 @@ public final class StringHelper
 
 	/**
 	 * This method replaces the .NET string method 'LastIndexOfAny' (1 parameter version).
-	 * @param string
-	 * @param anyOf
+	 * param string
+	 * param anyOf
 	 * @return
 	 */
 	public static int lastIndexOfAny(String string, char[] anyOf)
@@ -508,9 +508,9 @@ public final class StringHelper
 
 	/**
 	 * This method replaces the .NET string method 'LastIndexOfAny' (2 parameter version).
-	 * @param string
-	 * @param anyOf
-	 * @param startIndex
+	 * param string
+	 * param anyOf
+	 * param startIndex
 	 * @return
 	 */
 	public static int lastIndexOfAny(String string, char[] anyOf, int startIndex)
@@ -525,10 +525,10 @@ public final class StringHelper
 
 	/**
 	 * This method replaces the .NET string method 'LastIndexOfAny' (3 parameter version).
-	 * @param string
-	 * @param anyOf
-	 * @param startIndex
-	 * @param count
+	 * param string
+	 * param anyOf
+	 * param startIndex
+	 * param count
 	 * @return
 	 */
 	public static int lastIndexOfAny(String string, char[] anyOf, int startIndex, int count)
@@ -547,7 +547,7 @@ public final class StringHelper
 	 * 校验字符串是否是数字
 	 * 不能校验带-的数字
 	 * 替换为// -?[0-9]+.?[0-9]+ 即可校验所有数字
-	 * @param str
+	 * param str
 	 * @return
 	 */
 	public static boolean isNumeric(String str){ 

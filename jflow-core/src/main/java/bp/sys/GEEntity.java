@@ -10,17 +10,16 @@ import java.util.*;
 */
 public class GEEntity extends Entity
 {
-	private static final long serialVersionUID = 1L;
-	///构造函数
+
+		///#region 构造函数
 	/** 
 	 设置或者获取主键值.
-	 * @throws Exception 
 	*/
-	public final long getOID() throws Exception
+	public final long getOID()
 	{
 		return this.GetValInt64ByKey("OID");
 	}
-	public final void setOID(long value) throws Exception
+	public final void setOID(long value)
 	{
 		this.SetValByKey("OID", value);
 	}
@@ -35,8 +34,8 @@ public class GEEntity extends Entity
 	/** 
 	  主键字段
 	*/
-	@Override
-	public String getPKField()
+
+	public String getPK_Field()
 	{
 		return "OID";
 	}
@@ -46,8 +45,7 @@ public class GEEntity extends Entity
 	 @return 
 	*/
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.FK_MapData;
 	}
 	@Override
@@ -68,39 +66,34 @@ public class GEEntity extends Entity
 	/** 
 	 通用OID实体
 	 
-	 @param nodeid 节点ID
+	 param fk_mapdata 节点ID
 	*/
-	public GEEntity(String fk_mapdata)
-	{
+	public GEEntity(String fk_mapdata)  {
 		this.FK_MapData=fk_mapdata;
 		this.set_enMap(null);
 	}
 	/** 
 	 通用OID实体
 	 
-	 @param nodeid 节点ID
-	 @param _oid OID
-	 * @throws Exception 
+	 param fk_mapdata 节点ID
+	 param pk
 	*/
-	public GEEntity(String fk_mapdata, Object pk) throws Exception
-	{
+	public GEEntity(String fk_mapdata, Object pk) throws Exception {
 		this.FK_MapData=fk_mapdata;
 		this.setPKVal(pk);
 		this.set_enMap(null);
 		this.Retrieve();
 	}
 
-		///
+		///#endregion
 
 
-		///构造映射.
+		///#region 构造映射.
 	/** 
 	 重写基类方法
-	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -111,9 +104,26 @@ public class GEEntity extends Entity
 			throw new RuntimeException("没有给" + this.FK_MapData + "值，您不能获取它的Map。");
 		}
 
-		this.set_enMap(MapData.GenerHisMap(this.FK_MapData));
+		try {
+			this.set_enMap(MapData.GenerHisMap(this.FK_MapData));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return this.get_enMap();
 	}
+	public void InsertAsOID(long oid) throws Exception {
+		this.SetValByKey("OID", oid);
+		try
+		{
+			this.RunSQL(SqlBuilder.Insert(this));
+		}
+		catch (Exception ex)
+		{
+			this.CheckPhysicsTable();
+			throw ex;
+		}
+	}
+
 	/** 
 	 GEEntitys
 	*/
@@ -127,16 +137,14 @@ public class GEEntity extends Entity
 		return new GEEntitys(this.FK_MapData);
 	}
 
-		///
+		///#endregion
 
 	/** 
 	 从另外的一个实体来copy数据.
 	 
-	 @param en
-	 * @throws Exception 
+	 param en
 	*/
-	public final void CopyFromFrm(GEEntity en) throws Exception
-	{
+	public final void CopyFromFrm(GEEntity en) throws Exception {
 		//先求出来旧的OID.
 		long oldOID = this.getOID();
 
@@ -201,7 +209,7 @@ public class GEEntity extends Entity
 				for (FrmAttachmentDB athDBFrom : athDBsFrom.ToJavaList())
 				{
 					athDBFrom.setMyPK(DBAccess.GenerGUID());
-					athDBFrom.setFK_MapData(this.FK_MapData); //@sly
+					athDBFrom.setFK_MapData(this.FK_MapData);
 					athDBFrom.setFK_FrmAttachment(ath.getMyPK());
 					athDBFrom.setRefPKVal(String.valueOf(this.getOID()));
 					athDBFrom.Insert();
@@ -213,11 +221,9 @@ public class GEEntity extends Entity
 	/** 
 	 把当前实体的数据copy到指定的主键数据表里.
 	 
-	 @param oid 指定的主键
-	 * @throws Exception 
+	 param oid 指定的主键
 	*/
-	public final void CopyToOID(long oid) throws Exception
-	{
+	public final void CopyToOID(long oid) throws Exception {
 		//实例化历史数据表单entity.
 		long oidOID = this.getOID();
 		this.setOID(oid);
@@ -232,6 +238,7 @@ public class GEEntity extends Entity
 
 			GEDtls ensDtl = new GEDtls(dtl.getNo());
 
+		 //   var typeVal = bp.sys.base.Glo.GenerRealType( ensDtl.getGetNewEntity().getEnMap().getAttrs(), GEDtlAttr.RefPK, this.OID);
 
 			ensDtl.Retrieve(GEDtlAttr.RefPK, String.valueOf(this.getOID()));
 

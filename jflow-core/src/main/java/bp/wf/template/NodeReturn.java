@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -16,27 +17,25 @@ import java.util.*;
 public class NodeReturn extends EntityMM
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
 	/** 
 	退回到
-	 * @throws Exception 
 	*/
 	public final int getReturnTo() throws Exception
 	{
 		return this.GetValIntByKey(NodeReturnAttr.ReturnTo);
 	}
-	public final void setReturnTo(int value) throws Exception
-	{
+	public final void setReturnTo(int value)  throws Exception
+	 {
 		this.SetValByKey(NodeReturnAttr.ReturnTo, value);
 	}
 	/** 
@@ -46,27 +45,25 @@ public class NodeReturn extends EntityMM
 	{
 		return this.GetValIntByKey(NodeReturnAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
+	public final void setFK_Node(int value)  throws Exception
+	 {
 		this.SetValByKey(NodeReturnAttr.FK_Node, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 可退回的节点
 	*/
-	public NodeReturn()
-	{
+	public NodeReturn()  {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -82,5 +79,5 @@ public class NodeReturn extends EntityMM
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

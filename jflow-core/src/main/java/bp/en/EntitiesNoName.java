@@ -1,11 +1,8 @@
 package bp.en;
-
-import bp.da.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import bp.*;
+
 
 /** 
  具有编号名称的基类实体s
@@ -17,10 +14,10 @@ public abstract class EntitiesNoName extends EntitiesNo
 	/** 
 	 将对象添加到集合尾处，如果对象已经存在，则不添加.
 	 
-	 @param entity 要添加的对象
+	 param entity 要添加的对象
 	 @return 返回添加到的地方
 	*/
-	public int AddEntity(Entity entity)throws Exception
+	public int AddEntity(Entity entity)
 	{
 		for (Entity en : this)
 		{
@@ -36,7 +33,7 @@ public abstract class EntitiesNoName extends EntitiesNo
 	/** 
 	 将对象添加到集合尾处，如果对象已经存在，则不添加
 	 
-	 @param entity 要添加的对象
+	 param entity 要添加的对象
 	 @return 返回添加到的地方
 	 * @throws Exception 
 	*/
@@ -62,7 +59,7 @@ public abstract class EntitiesNoName extends EntitiesNo
 	/**  
 	 按照名称模糊查询
 	 
-	 @param likeName likeName
+	 param likeName likeName
 	 @return 返回查询的Num
 	 * @throws Exception 
 	*/
@@ -82,7 +79,7 @@ public abstract class EntitiesNoName extends EntitiesNo
 	{
 		return (ArrayList<EntityNoName>) obj;
 	}
-	public List<EntityNoName> ToJavaListEnNo()
+	public List<EntityNoName> ToJavaListEnNo()throws Exception
 	{
 		return (List<EntityNoName>)(Object)this;
 	}

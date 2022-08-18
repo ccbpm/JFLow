@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,42 +14,38 @@ import java.util.*;
 public class NodeWorkChecks extends Entities
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 审核组件s
 	*/
-	public NodeWorkChecks()
-	{
+	public NodeWorkChecks() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new NodeWorkCheck();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<NodeWorkCheck> ToJavaList()
-	{
-		return (List<NodeWorkCheck>)(Object)this;
+	public final java.util.List<NodeWorkCheck> ToJavaList() {
+		return (java.util.List<NodeWorkCheck>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeWorkCheck> Tolist()
-	{
+	public final ArrayList<NodeWorkCheck> Tolist()  {
 		ArrayList<NodeWorkCheck> list = new ArrayList<NodeWorkCheck>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +54,5 @@ public class NodeWorkChecks extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

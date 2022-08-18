@@ -9,9 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import bp.difference.SystemConfig;
 import bp.tools.*;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +18,7 @@ import bp.web.*;
 import org.springframework.core.io.ClassPathResource;
 
 public class DataType {
+
 	public static boolean IsNullOrEmpty(Object object) {
 		if (object == null || object.equals("") == true || object.equals("null") == true)
 			return true;
@@ -72,6 +71,50 @@ public class DataType {
 
 		return spanStr;
 	}
+	/**
+	 比较两个字符串是否有交集
+
+	 param ids1
+	 param ids2
+	 @return
+	 */
+	public static boolean IsHaveIt(String ids1, String ids2)
+	{
+		if (DataType.IsNullOrEmpty(ids1) == true)
+		{
+			return false;
+		}
+		if (DataType.IsNullOrEmpty(ids2) == true)
+		{
+			return false;
+		}
+
+		String[] str1s = ids1.split("[,]", -1);
+		String[] str2s = ids2.split("[,]", -1);
+
+		for (String str1 : str1s)
+		{
+			if (str1.equals("") || str1 == null)
+			{
+				continue;
+			}
+
+			for (String str2 : str2s)
+			{
+				if (str2.equals("") || str2 == null)
+				{
+					continue;
+				}
+
+				if (str2.equals(str1) == true)
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public static String getDatePoor(Date endDate, Date nowDate) {
 		 
 	    long nd = 1000 * 24 * 60 * 60;
@@ -129,8 +172,8 @@ public class DataType {
 	/**
 	 * 去掉周六日
 	 * 
-	 * @param dt
-	 * @param days
+	 * param dt
+	 * param days
 	 * @return
 	 */
 	public static Date AddDays(java.util.Date dt, int days) {
@@ -160,11 +203,11 @@ public class DataType {
 	/**
 	 * 增加日期去掉周末节假日
 	 * 
-	 * @param dt
+	 * param dt
 	 *            日期
-	 * @param days
+	 * param days
 	 *            增加的天数
-	 * @param tway
+	 * param tway
 	 * @return
 	 */
 	public static Date AddDays(String dt, int days, TWay tway) {
@@ -207,7 +250,7 @@ public class DataType {
 	/**
 	 * 取指定日期是一年中的第几周
 	 * 
-	 * @param dtime
+	 * param dtime
 	 *            给定的日期
 	 * @return 数字 一年中的第几周
 	 */
@@ -244,7 +287,7 @@ public class DataType {
 	/**
 	 * Datatable转换为Json
 	 * 
-	 * @param dt
+	 * param dt
 	 *            Datatable对象
 	 * @return Json字符串
 	 */
@@ -286,7 +329,7 @@ public class DataType {
 	 */
 	public static String ToJson(DataTable dt, String jsonName) throws Exception {
 		String jsonString = "";
-		if (StringHelper.isNullOrEmpty(jsonName)) {
+		if (DataType.IsNullOrEmpty(jsonName)) {
 			jsonName = dt.TableName;
 		}
 		jsonString += "{\"" + jsonName + "\":" + Json.ToJson(dt) + "}";
@@ -297,7 +340,7 @@ public class DataType {
 	/**
 	 * 转化成Json. 成为 key value 模式.
 	 * 
-	 * @param ht
+	 * param ht
 	 *            要转换的ht
 	 * @return key value 模式的json
 	 * @throws Exception 
@@ -309,7 +352,7 @@ public class DataType {
 	/**
 	 * 转换成MB
 	 * 
-	 * @param val
+	 * param val
 	 * @return
 	 */
 	public static float PraseToMB(long val) {
@@ -323,7 +366,7 @@ public class DataType {
 	/**
 	 * 处理文件名称
 	 * 
-	 * @param fileNameFormat
+	 * param fileNameFormat
 	 *            文件格式
 	 * @return返回合法的文件名
 	 */
@@ -375,8 +418,8 @@ public class DataType {
 	}
 
 	/**
-	 * @param strs
-	 * @param isNumber
+	 * param strs
+	 * param isNumber
 	 * @return
 	 */
 	public static String PraseAtToInSql(String strs, boolean isNumber) {
@@ -396,7 +439,7 @@ public class DataType {
 	/**
 	 * 把内容里面的东西处理成超连接。
 	 * 
-	 * @param strContent
+	 * param doc
 	 * @return
 	 */
 	public static String DealSuperLink(String doc) {
@@ -409,7 +452,7 @@ public class DataType {
 	/**
 	 * 将文件转化为二进制
 	 * 
-	 * @param fileName
+	 * param fileName
 	 * @return
 	 */
 	public static byte[] ConvertFileToByte(String fileName) {
@@ -439,9 +482,9 @@ public class DataType {
 	/**
 	 * 写文件
 	 * 
-	 * @param file
+	 * param file
 	 *            路径
-	 * @param Doc
+	 * param Doc
 	 *            内容
 	 */
 	public static void WriteFile(String file, String Doc) {
@@ -460,11 +503,11 @@ public class DataType {
 	/**
 	 * 读取URL内容
 	 * 
-	 * @param url
+	 * param url
 	 *            要读取的url
-	 * @param timeOut
+	 * param timeOut
 	 *            超时时间
-	 * @param timeOut
+	 * param timeOut
 	 *            text code.
 	 * @return 返回读取内容
 	 */
@@ -498,7 +541,7 @@ public class DataType {
 	/**
 	 * 读取文件
 	 * 
-	 * @param filePath
+	 * param filePath
 	 *            路径
 	 * @return 内容
 	 * @throws IOException
@@ -510,7 +553,7 @@ public class DataType {
 	/**
 	 * 读取文件
 	 * 
-	 * @param filePath
+	 * param filePath
 	 *            路径
 	 * @return 内容
 	 * @throws IOException
@@ -585,7 +628,7 @@ public class DataType {
 	/**
 	 * 判断是否全部是汉字
 	 * 
-	 * @param htmlstr
+	 * param htmlstr
 	 * @return
 	 */
 	public static boolean CheckIsChinese(String htmlstr) {
@@ -626,8 +669,8 @@ public class DataType {
 	/**
 	 * 取道百分比
 	 * 
-	 * @param a
-	 * @param b
+	 * param a
+	 * param b
 	 * @return
 	 */
 	public static String GetPercent(java.math.BigDecimal a, java.math.BigDecimal b) {
@@ -697,8 +740,8 @@ public class DataType {
 	/**
 	 * 返回 data1 - data2 的天数.
 	 * 
-	 * @param fromday
-	 * @param today
+	 * param fromday
+	 * param today
 	 * @return 相隔的天数
 	 */
 	public static int SpanDays(String fromday, String today) throws ParseException {
@@ -718,9 +761,9 @@ public class DataType {
 	/**
 	 * 返回 QuarterFrom - QuarterTo 的季度.
 	 * 
-	 * @param _APFrom
+	 * param _APFrom
 	 *            QuarterFrom
-	 * @param _APTo
+	 * param _APTo
 	 *            QuarterTo
 	 * @return 相隔的季度
 	 */
@@ -750,7 +793,7 @@ public class DataType {
 	/**
 	 * 到现在的天数。
 	 * 
-	 * @param data1
+	 * param data1
 	 * @return
 	 */
 	public static int SpanDays(String data1) throws ParseException {
@@ -772,7 +815,7 @@ public class DataType {
 	/**
 	 * 检查是否是一个字段或者表名称
 	 * 
-	 * @param str
+	 * param str
 	 *            要检查的字段或者表名称
 	 * @return 是否合法
 	 */
@@ -886,8 +929,8 @@ public class DataType {
 			return fileName;
 		}
 
-		String filePath = fileName.substring(0, fileName.lastIndexOf('\\'));
-		String fName = fileName.substring(fileName.lastIndexOf('\\'));
+		String filePath = fileName.substring(0, fileName.lastIndexOf('/'));
+		String fName = fileName.substring(fileName.lastIndexOf('/'));
 
 		fName = PraseStringToUrlFileNameExt(fName, "%", "%25");
 		fName = PraseStringToUrlFileNameExt(fName, "+", "%2B");
@@ -916,7 +959,7 @@ public class DataType {
 	/**
 	 * 将中文转化成拼音
 	 * 
-	 * @param exp
+	 * param exp
 	 * @return
 	 */
 	public static String ParseStringToPinyin(String exp) {
@@ -965,7 +1008,7 @@ public class DataType {
 	/**
 	 * 转化成拼音第一个字母大字
 	 * 
-	 * @param str
+	 * param str
 	 *            要转化的中文串
 	 * @return 拼音
 	 */
@@ -984,7 +1027,7 @@ public class DataType {
 	/**
 	 * 转化成拼音第一个字母大字
 	 * 
-	 * @param str
+	 * param str
 	 *            要转化的中文串
 	 * @return 拼音
 	 */
@@ -1004,10 +1047,10 @@ public class DataType {
 	/**
 	 * 转化成 decimal
 	 * 
-	 * @param exp
+	 * param exp
 	 * @return
 	 */
-	public static BigDecimal ParseExpToDecimal(String exp) {
+	public static BigDecimal ParseExpToDecimal(String exp) throws Exception {
 		BigDecimal bigDecimal = new BigDecimal(0);
 		if (exp.trim().equals("")) {
 			throw new RuntimeException("DataType.ParseExpToDecimal要转换的表达式为空。");
@@ -1079,6 +1122,8 @@ public class DataType {
 				return bigDecimal;
 			}
 			throw new RuntimeException("表达式(\"" + exp + "\")计算错误：" + ex.getMessage());
+		} catch (Exception e) {
+			throw new Exception(e);
 		}
 	}
 
@@ -1101,11 +1146,40 @@ public class DataType {
 		d.ConvertToChineseNum();
 		return d.getOutString();
 	}
+	public static boolean IsMobile(String input)
+	{
+		if (input.length() == 11 && input.substring(0, 1).equals("1"))
+		{
+			return true;
+		}
+
+		if (input.length() < 11)
+		{
+			return false;
+		}
+
+		//电信手机号码正则
+		String dianxin = "^1[3578][01379]\\d{8}$";
+		Pattern regexDX = Pattern.compile(dianxin);
+		//联通手机号码正则
+		String liantong = "^1[34578][01256]\\d{8}";
+		Pattern regexLT = Pattern.compile(dianxin);
+		//移动手机号码正则
+		String yidong = "^(1[012345678]\\d{8}|1[345678][012356789]\\d{8})$";
+		Pattern regexYD = Pattern.compile(dianxin);
+		if (regexDX.matcher(input.toCharArray().toString()).matches()
+				|| regexLT.matcher(input.toCharArray().toString()).matches()
+				|| regexYD.matcher(input.toCharArray().toString()).matches())
+		{
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 得到一个日期,根据系统
 	 * 
-	 * @param dataStr
+	 * param dataStr
 	 * @return
 	 */
 	public final Date Parse(String dataStr) {
@@ -1122,7 +1196,7 @@ public class DataType {
 	/**
 	 * 当前月份加上指定的月份
 	 * 
-	 * @param month
+	 * param month
 	 * @return
 	 */
 	public static String addMonths(int month) {
@@ -1171,9 +1245,9 @@ public class DataType {
 	/**
 	 * 把日期对象转换成指定格式的字符串
 	 * 
-	 * @param date
+	 * param date
 	 *            - 日期对象
-	 * @param sFormat
+	 * param sFormat
 	 *            - 日期格式@return String yyyy-MM-dd HH:mm:ss
 	 */
 	public static String dateToStr(Date date, String sFormat) {
@@ -1205,7 +1279,7 @@ public class DataType {
 	/**
 	 * 给一个时间，返回一个刻种时间。
 	 * 
-	 * @param time
+	 * param time
 	 * @return
 	 */
 	public static String ParseTime2TimeQuarter(String time) {
@@ -1357,22 +1431,22 @@ public class DataType {
 		return dateStr;
 	}
 
-	public static String getCurrentDataTimeCNOfShort() {
+	public static String getCurrentDateTimeCNOfShort() {
 		SimpleDateFormat matter = new SimpleDateFormat("yy年MM月dd日 HH时mm分");
 		return matter.format(new Date());
 	}
 
-	public static String getCurrentDataTimeCNOfLong() {
+	public static String getCurrentDateTimeCNOfLong() {
 		SimpleDateFormat matter = new SimpleDateFormat("yy年MM月dd日 HH时mm分ss秒");
 		return matter.format(new Date());
 	}
 
-	public static String getCurrentDataCNOfShort() {
+	public static String getCurrentDateCNOfShort() {
 		SimpleDateFormat matter = new SimpleDateFormat("yy年MM月dd日");
 		return matter.format(new Date());
 	}
 
-	public static String getCurrentDataCNOfLong() {
+	public static String getCurrentDateCNOfLong() {
 		SimpleDateFormat matter = new SimpleDateFormat("yyyy年MM月dd日");
 		return matter.format(new Date());
 	}
@@ -1380,8 +1454,8 @@ public class DataType {
 	/**
 	 * 当前的日期时间
 	 */
-	public static String getCurrentDataTimeCN() {
-		SimpleDateFormat matter = new SimpleDateFormat(DataType.getSysDataFormatCN());
+	public static String getCurrentDateTimeCN() {
+		SimpleDateFormat matter = new SimpleDateFormat(DataType.getSysDateFormatCN());
 		Calendar calendar = Calendar.getInstance();
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		return matter.format(new Date()) + "，" + GetWeekName(dayOfWeek);
@@ -1395,7 +1469,7 @@ public class DataType {
 	/**
 	 * 当前的日期时间
 	 */
-	public static String getCurrentDataTimess() {
+	public static String getCurrentDateTimess() {
 		/**
 		 * @update 修改版本时间（java中不支持空格）
 		 * @author xiongwei
@@ -1415,7 +1489,7 @@ public class DataType {
 	/**
 	 * 把chichengsoft本系统日期格式转换为系统日期格式。
 	 * 
-	 * @param sysDateformat
+	 * param sysDateformat
 	 *            yyyy-MM-dd
 	 * @return DateTime
 	 */
@@ -1452,7 +1526,7 @@ public class DataType {
 	/**
 	 * 2005-11-04 09:12
 	 * 
-	 * @param sysDateformat
+	 * param sysDateformat
 	 * @return
 	 * @throws ParseException
 	 */
@@ -1471,8 +1545,8 @@ public class DataType {
 	}
 
 	/**
-	 * @param dtoffrom
-	 * @param dtofto
+	 * param dtoffrom
+	 * param dtofto
 	 * @return
 	 * @throws ParseException
 	 */
@@ -1504,7 +1578,7 @@ public class DataType {
 	/**
 	 * 到现在的时间
 	 * 
-	 * @param fromdatetim
+	 * param fromdatetim
 	 * @return 分中数
 	 */
 	public static int GetSpanMinute(String fromdatetim) throws ParseException {
@@ -1522,22 +1596,22 @@ public class DataType {
 	/**
 	 * 系统定义日期时间格式 yyyy-MM-dd hh:mm
 	 */
-	public static String getSysDataTimeFormat() {
+	public static String getSysDateTimeFormat() {
 		return "yyyy-MM-dd HH:mm";
 	}
 
 	/**
 	 * 系统定义日期时间格式 yyyy-MM-dd hh:mm
 	 */
-	public static String getSysDataTimessFormat() {
+	public static String getSysDateTimessFormat() {
 		return "yyyy-MM-dd HH:mm:ss";
 	}
 
-	public static String getSysDataFormatCN() {
+	public static String getSysDateFormatCN() {
 		return "yyyy年MM月dd日";
 	}
 
-	public static String getSysDatatimeFormatCN() {
+	public static String getSysDatetimeFormatCN() {
 		return "yyyy年MM月dd日 HH时mm分";
 	}
 
@@ -1567,7 +1641,7 @@ public class DataType {
 		}
 	}
 
-	public static String GetDataTypeDese(int datatype) {
+	public static String GetDataTypeDese(int datatype)  {
 		if (WebUser.getSysLang().equals("CH")) {
 			switch (datatype) {
 			case DataType.AppBoolean:
@@ -1796,7 +1870,7 @@ public class DataType {
 	/**
 	 * 转化为友好的日期
 	 * 
-	 * @param sysDateformat
+	 * param sysDateformat
 	 *            日期
 	 * @return
 	 */
@@ -1855,14 +1929,14 @@ public class DataType {
 	/**
 	 * 将文本转换成可用做Name,Text的文本，文本中仅允许含有汉字、字母、数字、下划线
 	 * 
-	 * @param nameStr
+	 * param nameStr
 	 *            待转换的文本
-	 * @param maxLen
+	 * param maxLen
 	 *            文本最大长度，0为不限制，超过maxLen，截取前maxLen字符长度
 	 * @return
 	 */
 	public static String ParseStringForName(String nameStr, int maxLen) {
-		if (StringUtils.isEmpty(nameStr)) {
+		if (DataType.IsNullOrEmpty(nameStr)) {
 			return "";
 		}
 
@@ -1878,14 +1952,14 @@ public class DataType {
 	/**
 	 * 将文本转换成可用做No的文本，文本中仅允许含有字母、数字、下划线，且开头只能是字母
 	 * 
-	 * @param noStr
+	 * param noStr
 	 *            待转换的文本
-	 * @param maxLen
+	 * param maxLen
 	 *            文本最大长度，0为不限制，超过maxLen，截取前maxLen字符长度
 	 * @return
 	 */
 	public static String ParseStringForNo(String noStr, int maxLen) {
-		if (StringUtils.isEmpty(noStr)) {
+		if (DataType.IsNullOrEmpty(noStr)) {
 			return "";
 		}
 

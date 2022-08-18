@@ -1,12 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
 import bp.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
-import java.math.*;
 
 /** 
  数字签名类型
@@ -36,13 +30,11 @@ public enum SignType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static SignType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static SignType forValue(int value)
+	{return values()[value];
 	}
 }

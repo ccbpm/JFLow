@@ -1,6 +1,6 @@
 package bp.en;
+import bp.sys.base.Glo;
 
-import bp.sys.Glo;
 import java.math.*;
 
 /** 
@@ -48,7 +48,7 @@ public abstract class Method
 	/** 
 	 获取Key值
 	 
-	 @param key 键
+	 param key 键
 	 @return 结果
 	*/
 	public final Object GetValByKey(String key)
@@ -58,7 +58,7 @@ public abstract class Method
 	/** 
 	 获取str值
 	 
-	 @param key 键
+	 param key 键
 	 @return 结果
 	*/
 	public final String GetValStrByKey(String key)
@@ -68,7 +68,7 @@ public abstract class Method
 	/** 
 	 获取int值
 	 
-	 @param key 键
+	 param key 键
 	 @return 结果
 	*/
 	public final int GetValIntByKey(String key)
@@ -79,7 +79,7 @@ public abstract class Method
 	/** 
 	 获取decimal值
 	 
-	 @param key 键
+	 param key 键
 	 @return 结果
 	*/
 	public final BigDecimal GetValDecimalByKey(String key)
@@ -89,7 +89,7 @@ public abstract class Method
 	/** 
 	 获取bool值
 	 
-	 @param key 键
+	 param key 键
 	 @return 结果
 	*/
 	public final boolean GetValBoolByKey(String key)
@@ -141,8 +141,7 @@ public abstract class Method
 		return this._row;
 	}
 	public final void setRow(Row value)
-	{
-		this._row = value;
+	{this._row = value;
 	}
 
 		///
@@ -213,18 +212,16 @@ public abstract class Method
 	public int Width = 800;
 	/** 
 	 执行
-	 
-	 @param paras
 	 @return 
 	 * @throws Exception 
 	*/
 	public abstract Object Do() throws Exception;
-	public abstract void Init() throws Exception;
+	public abstract void Init() ;
 	/** 
 	 权限管理
 	 * @throws Exception 
 	*/
-	public abstract boolean getIsCanDo() throws Exception;
+	public abstract boolean getIsCanDo() ;
 	/** 
 	 是否显示在功能列表里
 	*/

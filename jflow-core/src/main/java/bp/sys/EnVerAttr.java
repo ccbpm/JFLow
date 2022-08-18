@@ -1,5 +1,8 @@
 package bp.sys;
-import bp.en.EntityMyPKAttr;
+
+import bp.en.*;
+
+
 /** 
  实体版本号属性
 */
@@ -8,7 +11,7 @@ public class EnVerAttr extends EntityMyPKAttr
 	/** 
 	  实体类
 	*/
-	public static final String No = "No";
+	public static final String FrmID = "FrmID";
 	/** 
 	  实体类名称
 	*/
@@ -20,21 +23,24 @@ public class EnVerAttr extends EntityMyPKAttr
 	/** 
 	 版本号
 	*/
-	public static final String EVer = "EVer";
+	public static final String EnVer = "EnVer";
+	/** 
+	 说明
+	*/
+	public static final String MyNote = "MyNote";
 	/** 
 	 记录人
 	*/
-	public static final String Rec = "Rec";
+	public static final String RecNo = "RecNo";
+	/** 
+	 记录人名字
+	*/
+	public static final String RecName = "RecName";
 	/** 
 	 记录日期
 	*/
 	public static final String RDT = "RDT";
-	public static String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public static String getNo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+	public static final String EnPKValue = "EnPKValue";
+
 }

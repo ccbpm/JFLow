@@ -13,7 +13,7 @@ public class DingDing
 	public final String GenerAccessToken() throws Exception
 	{
 		String url = "https://oapi.dingtalk.com/gettoken?appkey="+SystemConfig.getDing_AppKey()+"&appsecret="+ SystemConfig.getDing_AppSecret() + "";
-		String json = bp.tools.HttpClientUtil.doGet(url);
+		String json = HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
 			if(jd.get("errcode").toString().equals("0")){
@@ -30,7 +30,7 @@ public class DingDing
     public String getUserInfo(String code, String accessToken) throws Exception
     {
     	String url = "https://oapi.dingtalk.com/user/getuserinfo?access_token=" + accessToken + "&code=" + code;
-        String json = bp.tools.HttpClientUtil.doGet(url);
+        String json = HttpClientUtil.doGet(url);
         
         if(DataType.IsNullOrEmpty(json)==false){
 			return json;
@@ -56,8 +56,8 @@ public class DingDing
 	/** 
 	 POST方式请求 微信返回信息
 	 
-	 @param parameters 参数
-	 @param URL 请求地址
+	 param msg 参数
+	 param URL 请求地址
 	 @return 返回字符
 	 * @throws Exception 
 	*/
@@ -124,8 +124,8 @@ public class DingDing
 	*//** 
 	 获取指定部门下  指定手机号的人员
 	 
-	 @param FK_Dept 部门编号
-	 @param Tel 手机号
+	 param FK_Dept 部门编号
+	 param Tel 手机号
 	 @return 
 	 * @throws Exception 
 	*//*
@@ -159,7 +159,7 @@ public class DingDing
 		}
 		catch (RuntimeException ex)
 		{
-			BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
+			bp.da.Log.DefaultLogWriteLineError(ex.getMessage());
 		}
 		return null;
 	}
@@ -185,17 +185,11 @@ public class DingDing
 		}
 		catch (RuntimeException ex)
 		{
-			BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
+			bp.da.Log.DefaultLogWriteLineError(ex.getMessage());
 		}
 		return null;
 	}
 
-	*//** 
-	 获取指定部门下的人员
-	 
-	 @param FK_Dept 部门编号
-	 @return 
-	 * @throws Exception 
 	*//*
 	public final UsersBelongDept GetUserListByDeptID(String FK_Dept) throws Exception
 	{
@@ -214,11 +208,11 @@ public class DingDing
 		}
 		catch (RuntimeException ex)
 		{
-			BP.DA.Log.DefaultLogWriteLineError(ex.getMessage());
+			bp.da.Log.DefaultLogWriteLineError(ex.getMessage());
 		}
 		return null;
 	}*/
-	
+
 	public static String  ResponseMsg(String touser, String toparty, String totag, String msgtype, String msg)
     {
         StringBuilder sbStr = new StringBuilder();

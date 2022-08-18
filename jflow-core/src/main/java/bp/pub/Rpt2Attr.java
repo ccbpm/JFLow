@@ -1,13 +1,10 @@
 package bp.pub;
 
 import bp.da.*;
-import bp.en.*;
+import bp.difference.ContextHolderUtils;
 import bp.web.*;
-import bp.sys.*;
 
 import java.util.Enumeration;
-
-import bp.*;
 
 /** 
  数据报表
@@ -21,7 +18,7 @@ public class Rpt2Attr
 	{
 	}
 
-		///基本属性.
+		///#region 基本属性.
 	/** 
 	 子标题
 	*/
@@ -34,9 +31,8 @@ public class Rpt2Attr
 	private String _Title = "";
 	/** 
 	 标题
-	 * @throws Exception 
 	*/
-	public final String getTitle() throws Exception
+	public final String getTitle()
 	{
 		if (DataType.IsNullOrEmpty(_Title))
 		{
@@ -60,21 +56,25 @@ public class Rpt2Attr
 			return title;
 		}
 
-		
-		if (title.contains("@") == false)
-		{
-			return title;
-		}
+			//foreach (string key in Glo.Request.QueryString)
+			//{
+			//    title = title.Replace("@" + key, Glo.Request.QueryString[key]);
+			//}
 
 		if (title.contains("@") == false)
 		{
 			return title;
 		}
 
-		bp.da.AtPara ap = new AtPara(this.DefaultParas);
-		for (String key : ap.getHisHT().keySet())
+		if (title.contains("@") == false)
 		{
-			title = title.replace("@" + key, ap.GetValStrByKey(key));
+			return title;
+		}
+
+		AtPara ap = new AtPara(this.DefaultParas);
+		for (Object key : ap.getHisHT().keySet())
+		{
+			title = title.replace("@" + key, ap.GetValStrByKey(key.toString()));
 		}
 
 		return title;
@@ -109,7 +109,7 @@ public class Rpt2Attr
 	*/
 	public int W = 900;
 
-		/// 基本属性.
+		///#endregion 基本属性.
 
 	/** 
 	 底部文字.
@@ -144,8 +144,7 @@ public class Rpt2Attr
 		return _ColumnChartShowType;
 	}
 	public final void setColumnChartShowType(ColumnChartShowType value)
-	{
-		_ColumnChartShowType = value;
+	{_ColumnChartShowType = value;
 	}
 	/** 
 	 是否显示饼图
@@ -162,7 +161,7 @@ public class Rpt2Attr
 	/** 
 	 折线图显示类型.
 	*/
-	public LineChartShowType lineChartShowType = LineChartShowType.HengXiang;
+	public LineChartShowType LineChartShowType = bp.pub.LineChartShowType.HengXiang;
 	/** 
 	 默认参数.
 	*/
@@ -217,7 +216,7 @@ public class Rpt2Attr
 	 数据源.
 	*/
 	public DataTable _DBDataTable = null;
-	public final DataTable getDBDataTable() throws Exception
+	public final DataTable getDBDataTable()
 	{
 		if (_DBDataTable == null)
 		{
@@ -227,7 +226,7 @@ public class Rpt2Attr
 			sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 			sql = sql.replace("@WebUser.No", WebUser.getNo());
 			sql = sql.replace("@WebUser.Name", WebUser.getName());
-			Enumeration enu = Glo.getRequest().getParameterNames();
+			Enumeration enu = bp.sys.base.Glo.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {
 				// 判断是否有内容，hasNext()
 				String k = (String) enu.nextElement();
@@ -235,12 +234,12 @@ public class Rpt2Attr
 				{
 					continue;
 				}
-				sql = sql.replace("@" + k, Glo.getRequest().getParameter(k));
+				sql = sql.replace("@" + k, bp.sys.base.Glo.getRequest().getParameter(k));
 			}
-			
+
 			if (sql.contains("@") == true)
 			{
-				bp.da.AtPara ap = new bp.da.AtPara(this.DefaultParas);
+				AtPara ap = new AtPara(this.DefaultParas);
 				for (String k : ap.getHisHT().keySet())
 				{
 					sql = sql.replace("@" + k, ap.getHisHT().get(k).toString());
@@ -252,16 +251,14 @@ public class Rpt2Attr
 		return _DBDataTable;
 	}
 	public final void setDBDataTable(DataTable value)
-	{
-		_DBDataTable = value;
+	{_DBDataTable = value;
 	}
 	/** 
 	 转化成Json
 	 
 	 @return string
-	 * @throws Exception 
 	*/
-	public final String ToJson() throws Exception
+	public final String ToJson()
 	{
 
 		DataTable dt = this.getDBDataTable();
@@ -322,7 +319,7 @@ public class Rpt2Attr
 		str += "  ] ";
 		str += "}; ";
 
-	   // bp.da.DataType.WriteFile("c:\\111.txt", str);
+	   // DataType.WriteFile("c:\\111.txt", str);
 		return str;
 	}
 }

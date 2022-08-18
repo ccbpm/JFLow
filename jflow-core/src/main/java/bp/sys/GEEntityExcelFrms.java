@@ -1,6 +1,7 @@
 package bp.sys;
 
 import bp.en.*;
+import bp.en.Map;
 import bp.*;
 import java.util.*;
 
@@ -10,10 +11,9 @@ import java.util.*;
 public class GEEntityExcelFrms extends EntitiesOID
 {
 
-		///重载基类方法
+		///#region 重载基类方法
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.FK_MapData;
 	}
 	/** 
@@ -21,10 +21,10 @@ public class GEEntityExcelFrms extends EntitiesOID
 	*/
 	public String FK_MapData = null;
 
-		///
+		///#endregion
 
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity
 	*/
@@ -49,23 +49,23 @@ public class GEEntityExcelFrms extends EntitiesOID
 	/** 
 	 通用实体ID
 	 
-	 @param fk_mapdtl
+	 param fk_mapdata
 	*/
 	public GEEntityExcelFrms(String fk_mapdata)
 	{
 		this.FK_MapData=fk_mapdata;
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GEEntityExcelFrm> ToJavaList()
+	public final java.util.List<GEEntityExcelFrm> ToJavaList()throws Exception
 	{
 		return (java.util.List<GEEntityExcelFrm>)(Object)this;
 	}
@@ -74,7 +74,7 @@ public class GEEntityExcelFrms extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GEEntityExcelFrm> Tolist()
+	public final ArrayList<GEEntityExcelFrm> Tolist()throws Exception
 	{
 		ArrayList<GEEntityExcelFrm> list = new ArrayList<GEEntityExcelFrm>();
 		for (int i = 0; i < this.size(); i++)
@@ -84,5 +84,5 @@ public class GEEntityExcelFrms extends EntitiesOID
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

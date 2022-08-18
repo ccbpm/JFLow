@@ -1,6 +1,9 @@
 package bp.wf.template;
 
+import bp.da.*;
 import bp.en.*;
+import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -11,10 +14,8 @@ public class NodeReturns extends EntitiesMM
 {
 	/** 
 	 他的退回到
-	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes() throws Exception
-	{
+	public final Nodes getHisNodes() throws Exception {
 		Nodes ens = new Nodes();
 		for (NodeReturn ns : this.ToJavaList())
 		{
@@ -25,17 +26,14 @@ public class NodeReturns extends EntitiesMM
 	/** 
 	 可退回的节点
 	*/
-	public NodeReturns()
-	{
+	public NodeReturns() throws Exception {
 	}
 	/** 
 	 可退回的节点
 	 
-	 @param NodeID 节点ID
-	 * @throws Exception 
+	 param NodeID 节点ID
 	*/
-	public NodeReturns(int NodeID) throws Exception
-	{
+	public NodeReturns(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.FK_Node, NodeID);
 		qo.DoQuery();
@@ -43,11 +41,9 @@ public class NodeReturns extends EntitiesMM
 	/** 
 	 可退回的节点
 	 
-	 @param NodeNo NodeNo 
-	 * @throws Exception 
+	 param NodeNo NodeNo
 	*/
-	public NodeReturns(String NodeNo) throws Exception
-	{
+	public NodeReturns(String NodeNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.ReturnTo, NodeNo);
 		qo.DoQuery();
@@ -56,19 +52,16 @@ public class NodeReturns extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new NodeReturn();
 	}
 	/** 
 	 可退回的节点s
 	 
-	 @param sts 可退回的节点
+	 param sts 可退回的节点
 	 @return 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts) throws Exception
-	{
+	public final Nodes GetHisNodes(Nodes sts) throws Exception {
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
 		for (Node st : sts.ToJavaList())
@@ -76,7 +69,7 @@ public class NodeReturns extends EntitiesMM
 			tmp = this.GetHisNodes(st.getNo());
 			for (Node nd : tmp.ToJavaList())
 			{
-				if (nds.Contains(nd))
+				if (nds.contains(nd))
 				{
 					continue;
 				}
@@ -88,12 +81,10 @@ public class NodeReturns extends EntitiesMM
 	/** 
 	 可退回的节点
 	 
-	 @param NodeNo 退回到编号
+	 param NodeNo 退回到编号
 	 @return 节点s
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo) throws Exception
-	{
+	public final Nodes GetHisNodes(String NodeNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.ReturnTo, NodeNo);
 		qo.DoQuery();
@@ -108,12 +99,10 @@ public class NodeReturns extends EntitiesMM
 	/** 
 	 转向此节点的集合的Nodes
 	 
-	 @param nodeID 此节点的ID
+	 param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID) throws Exception
-	{
+	public final Nodes GetHisNodes(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeReturnAttr.FK_Node, nodeID);
 		qo.DoQuery();
@@ -127,23 +116,21 @@ public class NodeReturns extends EntitiesMM
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<NodeReturn> ToJavaList()
-	{
-		return (List<NodeReturn>)(Object)this;
+	public final java.util.List<NodeReturn> ToJavaList() {
+		return (java.util.List<NodeReturn>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeReturn> Tolist()
-	{
+	public final ArrayList<NodeReturn> Tolist()  {
 		ArrayList<NodeReturn> list = new ArrayList<NodeReturn>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -152,5 +139,5 @@ public class NodeReturns extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

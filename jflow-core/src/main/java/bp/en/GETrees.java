@@ -1,7 +1,7 @@
 package bp.en;
 
 import bp.da.*;
-import bp.*;
+
 import java.util.*;
 
 /** 
@@ -19,10 +19,10 @@ public class GETrees extends EntitiesNoName
 	/** 
 	 GETrees
 	*/
-	public GETrees()
+	public GETrees()throws Exception
 	{
 	}
-	public GETrees(String sftable, String tableDesc)
+	public GETrees(String sftable, String tableDesc)throws Exception
 	{
 		this.SFTable = sftable;
 		this.Desc = tableDesc;
@@ -45,7 +45,7 @@ public class GETrees extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<GETree> ToJavaList()
+	public final java.util.List<GETree> ToJavaList()throws Exception
 	{
 		return (java.util.List<GETree>)(Object)this;
 	}
@@ -54,7 +54,7 @@ public class GETrees extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<GETree> Tolist()
+	public final ArrayList<GETree> Tolist()throws Exception
 	{
 		ArrayList<GETree> list = new ArrayList<GETree>();
 		for (int i = 0; i < this.size(); i++)

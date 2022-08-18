@@ -1,12 +1,9 @@
 package bp.wf.rpt;
 
-import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.port.*;
-import bp.web.WebUser;
-import bp.wf.*;
-import java.util.*;
+
 
 /** 
  RptDept 的摘要说明。
@@ -14,10 +11,10 @@ import java.util.*;
 public class RptDept extends Entity
 {
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC() 
 	{
 		UAC uac = new UAC();
-		if (WebUser.getNo().equals("admin"))
+		if (bp.web.WebUser.getNo().equals("admin"))
 		{
 			uac.IsView = true;
 			uac.IsDelete = true;
@@ -29,45 +26,44 @@ public class RptDept extends Entity
 	}
 
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 报表ID
-	 * @throws Exception 
 	*/
-	public final String getFK_Rpt() throws Exception
+	public final String getFK_Rpt()  throws Exception
 	{
 		return this.GetValStringByKey(RptDeptAttr.FK_Rpt);
 	}
 	public final void setFK_Rpt(String value) throws Exception
 	{
-		SetValByKey(RptDeptAttr.FK_Rpt,value);
+		SetValByKey(RptDeptAttr.FK_Rpt, value);
 	}
-	public final String getFK_DeptT()throws Exception
+	public final String getFK_DeptT()  throws Exception
 	{
 		return this.GetValRefTextByKey(RptDeptAttr.FK_Dept);
 	}
 	/** 
 	部门
 	*/
-	public final String getFK_Dept()throws Exception
+	public final String getFK_Dept()  throws Exception
 	{
 		return this.GetValStringByKey(RptDeptAttr.FK_Dept);
 	}
 	public final void setFK_Dept(String value) throws Exception
 	{
-		SetValByKey(RptDeptAttr.FK_Dept,value);
+		SetValByKey(RptDeptAttr.FK_Dept, value);
 	}
 
-		///
+		///#endregion
 
 
-		///扩展属性
+		///#region 扩展属性
 
 
-		///
+		///#endregion
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 报表岗位
 	*/
@@ -77,11 +73,10 @@ public class RptDept extends Entity
 	/** 
 	 报表部门对应
 	 
-	 @param _empoid 报表ID
-	 @param wsNo 部门编号 	
+	 param _empoid 报表ID
+	 param wsNo 部门编号
 	*/
-	public RptDept(String _empoid, String wsNo)throws Exception
-	{
+	public RptDept(String _empoid, String wsNo) throws Exception {
 		this.setFK_Rpt(_empoid);
 		this.setFK_Dept(wsNo);
 		if (this.Retrieve() == 0)
@@ -93,7 +88,7 @@ public class RptDept extends Entity
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap() 
 	{
 		if (this.get_enMap() != null)
 		{
@@ -101,7 +96,7 @@ public class RptDept extends Entity
 		}
 
 		Map map = new Map("Sys_RptDept", "报表部门对应信息");
-		map.setEnType( EnType.Dot2Dot);
+		map.setEnType(EnType.Dot2Dot);
 
 		map.AddTBStringPK(RptDeptAttr.FK_Rpt, null, "报表", false, false, 1, 15, 1);
 		map.AddDDLEntitiesPK(RptDeptAttr.FK_Dept,null,"部门",new Depts(),true);
@@ -110,5 +105,5 @@ public class RptDept extends Entity
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

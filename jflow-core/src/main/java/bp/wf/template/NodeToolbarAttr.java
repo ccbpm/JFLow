@@ -1,12 +1,19 @@
 package bp.wf.template;
 
+import bp.da.*;
+import bp.en.*;
+import bp.port.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
+
 /** 
  工具栏属性
 */
 public class NodeToolbarAttr extends bp.en.EntityOIDNameAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 节点
 	*/
@@ -55,5 +62,5 @@ public class NodeToolbarAttr extends bp.en.EntityOIDNameAttr
 	*/
 	public static final String ExcType = "ExcType";
 
-		///
+		///#endregion
 }

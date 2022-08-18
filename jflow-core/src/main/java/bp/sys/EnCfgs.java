@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.*;
 import bp.web.*;
+import bp.difference.*;
 import bp.*;
 import java.util.*;
 
@@ -13,33 +14,30 @@ import java.util.*;
 public class EnCfgs extends EntitiesNo
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 配置信息
 	*/
-	public EnCfgs()
-	{
+	public EnCfgs() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new EnCfg();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<EnCfg> ToJavaList()
-	{
+	public final java.util.List<EnCfg> ToJavaList() {
 		return (java.util.List<EnCfg>)(Object)this;
 	}
 	/** 
@@ -47,8 +45,7 @@ public class EnCfgs extends EntitiesNo
 	 
 	 @return List
 	*/
-	public final ArrayList<EnCfg> Tolist()
-	{
+	public final ArrayList<EnCfg> Tolist()  {
 		ArrayList<EnCfg> list = new ArrayList<EnCfg>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +54,5 @@ public class EnCfgs extends EntitiesNo
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

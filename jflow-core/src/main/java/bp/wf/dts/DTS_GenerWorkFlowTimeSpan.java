@@ -7,47 +7,45 @@ import bp.wf.*;
 import java.time.*;
 import java.util.Date;
 
-/** 
+/**
  同步待办时间戳 的摘要说明
-*/
+ */
 public class DTS_GenerWorkFlowTimeSpan extends Method
 {
-	/** 
+	/**
 	 同步待办时间戳
-	*/
-	public DTS_GenerWorkFlowTimeSpan()
+	 */
+	public DTS_GenerWorkFlowTimeSpan()throws Exception
 	{
 		this.Title = "同步待办时间戳,状态,流程注册表的时间段(本周，上周，2周以前，3其他。).";
 		this.Help = "该方法每周一自动执行，如果不能自动执行就手动执行";
 		this.GroupName = "流程自动执行定时任务";
 
 	}
-	/** 
+	/**
 	 设置执行变量
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	@Override
-	public void Init()
-	{
+	public void Init()  {
 		//this.Warning = "您确定要执行吗？";
 		//HisAttrs.AddTBString("P1", null, "原密码", true, false, 0, 10, 10);
 		//HisAttrs.AddTBString("P2", null, "新密码", true, false, 0, 10, 10);
 		//HisAttrs.AddTBString("P3", null, "确认", true, false, 0, 10, 10);
 	}
-	/** 
+	/**
 	 当前的操纵员是否可以执行这个方法
-	*/
+	 */
 	@Override
-	public boolean getIsCanDo()
-	{
+	public boolean getIsCanDo()  {
 		return true;
 	}
-	/** 
+	/**
 	 执行
-	 
+
 	 @return 返回执行结果
-	*/
+	 */
 	@Override
 	public Object Do() throws Exception
 	{

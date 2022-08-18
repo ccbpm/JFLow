@@ -8,7 +8,7 @@ import java.util.*;
 public class Rows extends ArrayList<Object>
 {
 	private static final long serialVersionUID = 1L;
-	public Rows()
+	public Rows()throws Exception
 	{
 	}
 	public final Row get(int index)
@@ -18,7 +18,7 @@ public class Rows extends ArrayList<Object>
 	/** 
 	 增加一个Row .
 	 
-	 @param r row
+	 param r row
 	*/
 	public final void Add(Row r)
 	{

@@ -1,11 +1,12 @@
 package bp.wf.data;
+
 /** 
  我参与的流程
 */
 public class MyFlowAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -22,10 +23,6 @@ public class MyFlowAttr
 	 流程状态(简单)
 	*/
 	public static final String WFSta = "WFSta";
-	/** 
-	 时间段
-	*/
-	public static final String TSpan = "TSpan";
 	/** 
 	 标题
 	*/
@@ -155,5 +152,5 @@ public class MyFlowAttr
 	*/
 	public static final String GUID = "GUID";
 
-		///
+		///#endregion
 }

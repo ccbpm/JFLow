@@ -1,8 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.*;
-
 /** 
  属性列表
 */

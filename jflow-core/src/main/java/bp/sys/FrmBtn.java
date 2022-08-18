@@ -1,6 +1,11 @@
 package bp.sys;
+
+import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
+import bp.pub.*;
+import bp.*;
+import java.util.*;
 
 /** 
  按钮
@@ -8,33 +13,32 @@ import bp.en.Map;
 public class FrmBtn extends EntityMyPK
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 所在的分组
-	 * @throws Exception 
 	*/
 	public final int getGroupID() throws Exception
 	{
 		return this.GetValIntByKey(FrmBtnAttr.GroupID);
 	}
-	public final void setGroupID(long value) throws Exception
-	{
+	public final void setGroupID(long value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.GroupID, value);
 	}
 	public final String getMsgOK() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.MsgOK);
 	}
-	public final void setMsgOK(String value) throws Exception
-	{
+	public final void setMsgOK(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.MsgOK, value);
 	}
 	public final String getMsgErr() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.MsgErr);
 	}
-	public final void setMsgErr(String value) throws Exception
-	{
+	public final void setMsgErr(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.MsgErr, value);
 	}
 	/** 
@@ -45,58 +49,28 @@ public class FrmBtn extends EntityMyPK
 		return this.GetValStringByKey(FrmBtnAttr.EventContext).replace("#", "@");
 			//return this.GetValStringByKey(FrmBtnAttr.EventContext);
 	}
-	public final void setEventContext(String value) throws Exception
-	{
+	public final void setEventContext(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.EventContext, value);
 	}
-	public final String getIsViewHtml() throws Exception
-	{
-		return PubClass.ToHtmlColor(this.getIsView());
-	}
-	/** 
-	 IsView
-	*/
-	public final String getIsView() throws Exception
-	{
-		return this.GetValStringByKey(FrmBtnAttr.IsView);
-	}
-	public final void setIsView(String value) throws Exception
-	{
-		switch (value)
-		{
-			case "#FF000000":
-				this.SetValByKey(FrmBtnAttr.IsView, "Red");
-				return;
-			default:
-				break;
-		}
-		this.SetValByKey(FrmBtnAttr.IsView, value);
-	}
+
 	public final String getUACContext() throws Exception
 	{
 		return this.GetValStringByKey(FrmBtnAttr.UACContext);
 	}
-	public final void setUACContext(String value) throws Exception
-	{
+	public final void setUACContext(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.UACContext, value);
-	}
-	public final boolean getUAC() throws Exception
-	{
-		return this.GetValBooleanByKey(FrmBtnAttr.UAC);
-	}
-	public final void setUAC(boolean value) throws Exception
-	{
-		this.SetValByKey(FrmBtnAttr.UAC, value);
 	}
 	/** 
 	 IsEnable
 	*/
-	public final boolean getIsEnable() throws Exception
+	public final boolean isEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FrmBtnAttr.IsEnable);
 	}
-	public final void setIsEnable(boolean value) throws Exception
-	{
+	public final void setEnable(boolean value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.IsEnable, value);
 	}
 	/** 
@@ -106,8 +80,8 @@ public class FrmBtn extends EntityMyPK
 	{
 		return this.GetValFloatByKey(FrmBtnAttr.Y);
 	}
-	public final void setY(float value) throws Exception
-	{
+	public final void setY(float value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.Y, value);
 	}
 	/** 
@@ -117,12 +91,11 @@ public class FrmBtn extends EntityMyPK
 	{
 		return this.GetValFloatByKey(FrmBtnAttr.X);
 	}
-	public final void setX(float value) throws Exception
-	{
+	public final void setX(float value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.X, value);
 	}
-	public final BtnEventType getHisBtnEventType() throws Exception
-	{
+	public final BtnEventType getHisBtnEventType() throws Exception {
 		return BtnEventType.forValue(this.GetValIntByKey(FrmBtnAttr.EventType));
 	}
 	/** 
@@ -132,8 +105,8 @@ public class FrmBtn extends EntityMyPK
 	{
 		return this.GetValIntByKey(FrmBtnAttr.EventType);
 	}
-	public final void setEventType(int value) throws Exception
-	{
+	public final void setEventType(int value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.EventType, value);
 	}
 	/** 
@@ -143,8 +116,8 @@ public class FrmBtn extends EntityMyPK
 	{
 		return this.GetValStrByKey(FrmBtnAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.FK_MapData, value);
 	}
 	/** 
@@ -154,35 +127,32 @@ public class FrmBtn extends EntityMyPK
 	{
 		return this.GetValStrByKey(FrmBtnAttr.Lab);
 	}
-	public final void setLab(String value) throws Exception
-	{
+	public final void setLab(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmBtnAttr.Lab, value);
 	}
-	public final String getTextHtml() throws Exception
-	{
+	public final String getTextHtml() throws Exception {
 			//if (this.EventType)
-			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).replace("@","<br>") + "</b>";
+			//    return "<b>" + this.GetValStrByKey(FrmBtnAttr.Text).Replace("@","<br>") + "</b>";
 			//else
 			return this.GetValStrByKey(FrmBtnAttr.Lab).replace("@", "<br>");
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 按钮
 	*/
-	public FrmBtn()
-	{
+	public FrmBtn()  {
 	}
 	/** 
 	 按钮
 	 
-	 @param mypk
-	 * @throws Exception 
+	 param mypk
 	*/
-	public FrmBtn(String mypk) throws Exception
+	public FrmBtn(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -191,8 +161,7 @@ public class FrmBtn extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -200,7 +169,6 @@ public class FrmBtn extends EntityMyPK
 
 		Map map = new Map("Sys_FrmBtn", "按钮");
 		map.IndexField = FrmBtnAttr.FK_MapData;
-
 
 		map.AddMyPK();
 		map.AddTBString(FrmBtnAttr.FK_MapData, null, "表单ID", true, false, 1, 100, 20);
@@ -232,5 +200,5 @@ public class FrmBtn extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

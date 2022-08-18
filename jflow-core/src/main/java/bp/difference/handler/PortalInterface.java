@@ -16,8 +16,10 @@ import bp.da.DataType;
 import bp.da.Paras;
 import bp.difference.SystemConfig;
 import bp.port.Emp;
-import bp.sys.*;
-import bp.web.*;
+import bp.sys.GEDtl;
+import bp.sys.GEDtlAttr;
+import bp.sys.GEDtls;
+import bp.sys.MapDtl;
 import bp.wf.Flow;
 import bp.wf.GenerWorkFlowAttr;
 import bp.wf.GenerWorkFlows;
@@ -26,17 +28,18 @@ import bp.wf.StartFlowParaNameList;
 import bp.wf.WFState;
 import bp.wf.Work;
 import bp.wf.data.GERptAttr;
+import bp.web.WebUser;
 
 public class PortalInterface {
 
 	/**
 	 * 发送消息
 	 * 
-	 * @param sender
-	 * @param sendToEmpNo
-	 * @param title
-	 * @param url
-	 * @param msgType
+	 * param sender
+	 * param sendToEmpNo
+	 * param title
+	 * param OpenUrl
+	 * param msgType
 	 * @return
 	 * @throws Exception
 	 */
@@ -49,11 +52,11 @@ public class PortalInterface {
 	/**
 	 * 站内消息
 	 * 
-	 * @param sender
-	 * @param sendToEmpNo
-	 * @param title
-	 * @param url
-	 * @param msgType
+	 * param sender
+	 * param sendToEmpNo
+	 * param title
+	 * param OpenUrl
+	 * param msgType
 	 * @return
 	 * @throws Exception
 	 */
@@ -66,12 +69,12 @@ public class PortalInterface {
 	/**
 	 * 发送到钉钉
 	 * 
-	 * @param sender
-	 * @param sendToEmpNo
-	 * @param title
-	 * @param msgInfo
-	 * @param OpenUrl
-	 * @param msgType
+	 * param sender
+	 * param sendToEmpNo
+	 * param title
+	 * param msgInfo
+	 * param OpenUrl
+	 * param msgType
 	 * @return
 	 * @throws Exception
 	 */
@@ -83,12 +86,12 @@ public class PortalInterface {
 	/**
 	 * 发送到微信
 	 * 
-	 * @param sender
-	 * @param sendToEmpNo
-	 * @param title
-	 * @param msgInfo
-	 * @param OpenUrl
-	 * @param msgType
+	 * param sender
+	 * param sendToEmpNo
+	 * param title
+	 * param msgInfo
+	 * param OpenUrl
+	 * param msgType
 	 * @return
 	 * @throws Exception
 	 */
@@ -100,12 +103,12 @@ public class PortalInterface {
 	/**
 	 * 发送到即时通
 	 * 
-	 * @param sender
-	 * @param sendToEmpNo
-	 * @param title
-	 * @param msgInfo
-	 * @param OpenUrl
-	 * @param msgType
+	 * param sender
+	 * param sendToEmpNo
+	 * param title
+	 * param msgInfo
+	 * param OpenUrl
+	 * param msgType
 	 * @return
 	 * @throws Exception
 	 */
@@ -117,8 +120,8 @@ public class PortalInterface {
 	/**
 	 * 人員登陸
 	 * 
-	 * @param userNo
-	 * @param password
+	 * param userNo
+	 * param password
 	 * @return
 	 * @throws Exception
 	 */
@@ -129,15 +132,13 @@ public class PortalInterface {
 	/**
 	 * 创建WorkID
 	 * 
-	 * @param flowNo
+	 * param flowNo
 	 *            流程编号
-	 * @param ht
+	 * param ht
 	 *            表单参数，可以为null。
-	 * @param workDtls
+	 * param workDtls
 	 *            明细表参数，可以为null。
-	 * @param nextWorker
-	 *            操作员，如果为null就是当前人员。
-	 * @param title
+	 * param title
 	 *            创建工作时的标题，如果为null，就按设置的规则生成。
 	 * @return 为开始节点创建工作后产生的WorkID.
 	 * @throws Exception
@@ -150,19 +151,17 @@ public class PortalInterface {
 	/**
 	 * 创建WorkID
 	 * 
-	 * @param flowNo
+	 * param flowNo
 	 *            流程编号
-	 * @param ht
+	 * param ht
 	 *            表单参数，可以为null。
-	 * @param workDtls
+	 * param workDtls
 	 *            明细表参数，可以为null。
-	 * @param starter
-	 *            流程的发起人
-	 * @param title
+	 * param title
 	 *            创建工作时的标题，如果为null，就按设置的规则生成。
-	 * @param parentWorkID
+	 * param parentWorkID
 	 *            父流程的WorkID,如果没有父流程就传入为0.
-	 * @param parentFlowNo
+	 * param parentFlowNo
 	 *            父流程的流程编号,如果没有父流程就传入为null.
 	 * @return 为开始节点创建工作后产生的WorkID.
 	 * @throws Exception
@@ -193,7 +192,7 @@ public class PortalInterface {
 		Work wk = fl.NewWork(empStarter, htPara);
 		long workID = wk.getOID();
 
-		/// 给各个属性-赋值
+		/// #region 给各个属性-赋值
 		if (ht != null) {
 			for (Object str : ht.keySet()) {
 				wk.SetValByKey(str.toString(), ht.get(str));
@@ -230,13 +229,13 @@ public class PortalInterface {
 			}
 		}
 
-		///  赋值
+		/// #endregion 赋值
 
 		Paras ps = new Paras();
 		// 执行对报表的数据表WFState状态的更新,让它为runing的状态.
 		if (DataType.IsNullOrEmpty(title) == false) {
 			ps = new Paras();
-			ps.SQL="UPDATE " + fl.getPTable() + " SET WFState=" + dbstr + "WFState,Title=" + dbstr
+			ps.SQL = "UPDATE " + fl.getPTable() + " SET WFState=" + dbstr + "WFState,Title=" + dbstr
 					+ "Title WHERE OID=" + dbstr + "OID";
 			ps.Add(GERptAttr.WFState, WFState.Blank.getValue());
 			ps.Add(GERptAttr.Title, title);
@@ -244,7 +243,7 @@ public class PortalInterface {
 			DBAccess.RunSQL(ps);
 		} else {
 			ps = new Paras();
-			ps.SQL="UPDATE " + fl.getPTable() + " SET WFState=" + dbstr + "WFState,FK_Dept=" + dbstr
+			ps.SQL = "UPDATE " + fl.getPTable() + " SET WFState=" + dbstr + "WFState,FK_Dept=" + dbstr
 					+ "FK_Dept,Title=" + dbstr + "Title WHERE OID=" + dbstr + "OID";
 			ps.Add(GERptAttr.WFState, WFState.Blank.getValue());
 			ps.Add(GERptAttr.FK_Dept, empStarter.getFK_Dept());
@@ -255,13 +254,13 @@ public class PortalInterface {
 
 		// 删除有可能产生的垃圾数据,比如上一次没有发送成功，导致数据没有清除.
 		ps = new Paras();
-		ps.SQL="DELETE FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2";
+		ps.SQL = "DELETE FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2";
 		ps.Add("WorkID1", wk.getOID());
 		ps.Add("WorkID2", wk.getOID());
 		DBAccess.RunSQL(ps);
 
 		ps = new Paras();
-		ps.SQL="DELETE FROM WF_GenerWorkerList  WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2";
+		ps.SQL = "DELETE FROM WF_GenerWorkerList  WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2";
 		ps.Add("WorkID1", wk.getOID());
 		ps.Add("WorkID2", wk.getOID());
 		DBAccess.RunSQL(ps);
@@ -274,53 +273,53 @@ public class PortalInterface {
 		return wk.getOID();
 	}
 
-	/// 门户。
+	/// #region 门户。
 	/**
 	 * 登陆
 	 * 
-	 * @param guestNo
+	 * param guestNo
 	 *            客户编号
-	 * @param guestName
+	 * param guestName
 	 *            客户名称
 	 * @throws Exception
 	 */
 	public static void Port_Login(String guestNo, String guestName) throws Exception {
 		// 登陆.
-		GuestUser.SignInOfGener(guestNo, guestName, "CH", true);
+		bp.web.GuestUser.SignInOfGener(guestNo, guestName, "CH", true);
 	}
 
 	/**
 	 * 登陆
 	 * 
-	 * @param guestNo
+	 * param guestNo
 	 *            客户编号
-	 * @param guestName
+	 * param guestName
 	 *            客户名称
-	 * @param deptNo
+	 * param deptNo
 	 *            客户的部门编号
-	 * @param deptName
+	 * param deptName
 	 *            客户的部门名称
 	 * @throws Exception
 	 */
 	public static void Port_Login(String guestNo, String guestName, String deptNo, String deptName) throws Exception {
 		// 登陆.
-		GuestUser.SignInOfGener(guestNo, guestName, deptNo, deptName, "CH", true);
+		bp.web.GuestUser.SignInOfGener(guestNo, guestName, deptNo, deptName, "CH", true);
 	}
 
 	/**
 	 * 退出登陆.
 	 */
-	public static void Port_LoginOunt() {
+	public static void Port_LoginOunt() throws Exception {
 		// 登陆.
-		GuestUser.Exit();
+		bp.web.GuestUser.Exit();
 	}
 
 	/**
 	 * 获取Guest的待办
 	 * 
-	 * @param fk_flow
+	 * param fk_flow
 	 *            流程编号,流程编号为空表示所有的流程.
-	 * @param guestNo
+	 * param guestNo
 	 *            客户编号
 	 * @return 结果集合
 	 */
@@ -332,22 +331,22 @@ public class PortalInterface {
 
 		/* 不是授权状态 */
 		if (DataType.IsNullOrEmpty(fk_flow)) {
-			ps.SQL="SELECT * FROM WF_EmpWorks WHERE GuestNo=" + dbstr
+			ps.SQL = "SELECT * FROM WF_EmpWorks WHERE GuestNo=" + dbstr
 					+ "GuestNo AND FK_Emp='Guest' ORDER BY FK_Flow,ADT DESC ";
 			ps.Add("GuestNo", guestNo);
 		} else {
-			ps.SQL="SELECT * FROM WF_EmpWorks WHERE GuestNo=" + dbstr + "GuestNo AND FK_Emp='Guest' AND FK_Flow="
+			ps.SQL = "SELECT * FROM WF_EmpWorks WHERE GuestNo=" + dbstr + "GuestNo AND FK_Emp='Guest' AND FK_Flow="
 					+ dbstr + "FK_Flow ORDER BY  ADT DESC ";
 			ps.Add("FK_Flow", fk_flow);
 			ps.Add("GuestNo", guestNo);
 		}
-		return DBAccess.RunSQLReturnTable(ps);
+		return bp.da.DBAccess.RunSQLReturnTable(ps);
 	}
 
 	/**
 	 * 获取未完成的流程(也称为在途流程:我参与的但是此流程未完成)
 	 * 
-	 * @param fk_flow
+	 * param fk_flow
 	 *            流程编号
 	 * @return 返回从数据视图WF_GenerWorkflow查询出来的数据.
 	 * @throws Exception
@@ -374,44 +373,44 @@ public class PortalInterface {
 	/**
 	 * 设置用户信息
 	 * 
-	 * @param flowNo
+	 * param flowNo
 	 *            流程编号
-	 * @param workID
+	 * param workID
 	 *            工作ID
-	 * @param guestNo
+	 * param guestNo
 	 *            客户编号
-	 * @param guestName
+	 * param guestName
 	 *            客户名称
 	 * @throws Exception
 	 */
 	public static void SetGuestInfo(String flowNo, long workID, String guestNo, String guestName) throws Exception {
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
+		ps.SQL = "UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
 				+ "GuestName WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add("GuestNo", guestNo);
 		ps.Add("GuestName", guestName);
 		ps.Add("WorkID", workID);
-		DBAccess.RunSQL(ps);
+		bp.da.DBAccess.RunSQL(ps);
 
 		Flow fl = new Flow(flowNo);
 		ps = new Paras();
-		ps.SQL="UPDATE " + fl.getPTable() + " SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
+		ps.SQL = "UPDATE " + fl.getPTable() + " SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
 				+ "GuestName WHERE OID=" + dbstr + "OID";
 		ps.Add("GuestNo", guestNo);
 		ps.Add("GuestName", guestName);
 		ps.Add("OID", workID);
-		DBAccess.RunSQL(ps);
+		bp.da.DBAccess.RunSQL(ps);
 	}
 
 	/**
 	 * 设置当前用户的待办
 	 * 
-	 * @param workID
+	 * param workID
 	 *            工作ID
-	 * @param guestNo
+	 * param guestNo
 	 *            客户编号
-	 * @param guestName
+	 * param guestName
 	 *            客户名称
 	 */
 	public static void SetGuestToDoList(long workID, String guestNo, String guestName) {
@@ -424,23 +423,23 @@ public class PortalInterface {
 
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkerList SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
+		ps.SQL = "UPDATE WF_GenerWorkerList SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
 				+ "GuestName WHERE WorkID=" + dbstr + "WorkID AND IsPass=0";
 		ps.Add("GuestNo", guestNo);
 		ps.Add("GuestName", guestName);
 		ps.Add("WorkID", workID);
-		int i = DBAccess.RunSQL(ps);
+		int i = bp.da.DBAccess.RunSQL(ps);
 		if (i == 0) {
 			throw new RuntimeException("@设置外部用户待办信息失败:参数workID不能为空.");
 		}
 
 		ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
+		ps.SQL = "UPDATE WF_GenerWorkFlow SET GuestNo=" + dbstr + "GuestNo, GuestName=" + dbstr
 				+ "GuestName WHERE WorkID=" + dbstr + "WorkID ";
 		ps.Add("GuestNo", guestNo);
 		ps.Add("GuestName", guestName);
 		ps.Add("WorkID", workID);
-		i = DBAccess.RunSQL(ps);
+		i = bp.da.DBAccess.RunSQL(ps);
 		if (i == 0) {
 			throw new RuntimeException("@WF_GenerWorkFlow - 设置外部用户待办信息失败:参数WorkID不能为空.");
 		}
@@ -466,13 +465,13 @@ public class PortalInterface {
 	/**
 	 * 调用Jflow-web中WebService接口
 	 * 
-	 * @param sender
-	 * @param sendToEmpNo
-	 * @param title
-	 * @param msgInfo
-	 * @param OpenUrl
-	 * @param msgType
-	 * @param method
+	 * param sender
+	 * param sendToEmpNo
+	 * param title
+	 * param msgInfo
+	 * param OpenUrl
+	 * param msgType
+	 * param method
 	 * @return
 	 */
 	private boolean HttpRequest(String mypk, String sender, String sendToEmpNo, String tel, String title,
@@ -505,7 +504,7 @@ public class PortalInterface {
 		try {
 			String sql = "SELECT a.No,a.Name,a.FK_Dept FROM Port_Emp A, Port_DeptEmpStation B WHERE A.No=B.FK_Emp AND B.FK_Station IN ("
 					+ stas + ") AND A.FK_Dept='" + empDept + "'";
-			return DBAccess.RunSQLReturnTable(sql);
+			return bp.da.DBAccess.RunSQLReturnTable(sql);
 		} catch (Exception ex) {
 			throw new Exception("@ 指定部门与一个岗位集合，获得他们的人员:" + ex.getMessage()); // 连接错误，直接抛出异常.
 		}

@@ -13,7 +13,7 @@ public class StringUtils {
 	/**
 	 * 判断是否为空
 	 * 
-	 * @param str
+	 * param str
 	 * @return
 	 */
 	public static boolean isEmpty(String str) {
@@ -295,7 +295,7 @@ public class StringUtils {
 	        }
 	        return Pattern.compile(regex, Pattern.DOTALL).matcher(source).replaceAll(replacement);
 	    }
-	  
+
 	  public static String[] toStringArray(Enumeration<String> enumeration) {
 			if (enumeration == null) {
 				return null;

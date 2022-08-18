@@ -1,4 +1,10 @@
 package bp.sys;
+
+import bp.da.*;
+import bp.en.*;
+import bp.sys.xml.*;
+import bp.*;
+
 public class MapExtXmlList
 {
 	/** 
@@ -19,6 +25,10 @@ public class MapExtXmlList
 	*/
 	public static final String ActiveDDL = "ActiveDDL";
 	/** 
+	 查询条件级联关系.
+	*/
+	public static final String ActiveDDLSearchCond = "ActiveDDLSearchCond";
+	/** 
 	 输入验证
 	*/
 	public static final String InputCheck = "InputCheck";
@@ -38,6 +48,10 @@ public class MapExtXmlList
 	 (动态的)填充下拉框
 	*/
 	public static final String AutoFullDLL = "AutoFullDLL";
+	/** 
+	 查询条件的自动填充
+	*/
+	public static final String AutoFullDLLSearchCond = "AutoFullDLLSearchCond";
 	/** 
 	 下拉框自动填充
 	*/

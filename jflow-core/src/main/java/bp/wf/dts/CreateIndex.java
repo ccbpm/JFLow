@@ -1,6 +1,7 @@
 package bp.wf.dts;
+
 import bp.en.*;
-import bp.web.WebUser;
+
 import bp.wf.*;
 
 /** 
@@ -11,7 +12,7 @@ public class CreateIndex extends Method
 	/** 
 	 创建索引
 	*/
-	public CreateIndex()
+	public CreateIndex()throws Exception
 	{
 		this.Title = "创建索引（为所有的流程,NDxxxTrack, NDxxRpt, 创建索引.）";
 		this.Help = "创建索引字段,调高流程的运行效率.";
@@ -27,12 +28,11 @@ public class CreateIndex extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -42,11 +42,9 @@ public class CreateIndex extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
 	@Override
-	public Object Do() throws NumberFormatException, Exception
+	public Object Do()throws Exception
 	{
 		String info = "开始为Track表创建索引.";
 

@@ -3,6 +3,7 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -12,49 +13,44 @@ import java.util.*;
 public class NodeToolbars extends EntitiesOID
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new NodeToolbar();
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 工具栏集合
 	*/
-	public NodeToolbars()
-	{
+	public NodeToolbars()  {
 	}
 	/** 
 	 工具栏集合.
 	 
-	 @param fk_node
-	 * @throws Exception 
+	 param fk_node
 	*/
-	public NodeToolbars(String fk_node) throws Exception
-	{
-		this.Retrieve(NodeToolbarAttr.FK_Node, fk_node);
+	public NodeToolbars(String fk_node) throws Exception {
+		this.Retrieve(NodeToolbarAttr.FK_Node, fk_node, null);
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List
+		///#region 为了适应自动翻译成java的需要,把实体转换成List
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<NodeToolbar> ToJavaList()
-	{
-		return (List<NodeToolbar>)(Object)this;
+	public final java.util.List<NodeToolbar> ToJavaList() {
+		return (java.util.List<NodeToolbar>)(Object)this;
 	}
 
 	/** 
@@ -62,8 +58,7 @@ public class NodeToolbars extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeToolbar> Tolist()
-	{
+	public final ArrayList<NodeToolbar> Tolist()  {
 		ArrayList<NodeToolbar> list = new ArrayList<NodeToolbar>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -72,5 +67,5 @@ public class NodeToolbars extends EntitiesOID
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,5 +1,7 @@
 package bp.sys;
+
 import bp.en.*;
+
 /** 
  数据源
 */
@@ -25,4 +27,5 @@ public class SFDBSrcAttr extends EntityNoNameAttr
 	 数据库名称
 	*/
 	public static final String DBName = "DBName";
+	public static final String ConnString = "ConnString";
 }

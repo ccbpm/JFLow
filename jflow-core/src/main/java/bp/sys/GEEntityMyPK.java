@@ -3,7 +3,6 @@ package bp.sys;
 import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -12,12 +11,11 @@ import java.util.*;
 public class GEEntityMyPK extends Entity
 {
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 设置或者获取主键值.
-	 * @throws Exception 
 	*/
-	public final String getMyPK() throws Exception
+	public final String getMyPK()  throws Exception
 	{
 		return this.GetValStrByKey("MyPK");
 	}
@@ -37,7 +35,7 @@ public class GEEntityMyPK extends Entity
 	  主键字段
 	*/
 	@Override
-	public String getPKField()
+	public String getPK_Field()throws Exception
 	{
 		return "MyPK";
 	}
@@ -47,8 +45,7 @@ public class GEEntityMyPK extends Entity
 	 @return 
 	*/
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.FK_MapData;
 	}
 	@Override
@@ -69,7 +66,7 @@ public class GEEntityMyPK extends Entity
 	/** 
 	 通用OID实体
 	 
-	 @param nodeid 节点ID
+	 param fk_mapdata
 	*/
 	public GEEntityMyPK(String fk_mapdata)
 	{
@@ -78,28 +75,24 @@ public class GEEntityMyPK extends Entity
 	/** 
 	 通用OID实体
 	 
-	 @param nodeid 节点ID
-	 @param _oid OID
-	 * @throws Exception 
+	 param fk_mapdata
+	 param pk
 	*/
-	public GEEntityMyPK(String fk_mapdata, String pk) throws Exception
-	{
+	public GEEntityMyPK(String fk_mapdata, String pk) throws Exception {
 		this.FK_MapData=fk_mapdata;
 		this.setPKVal(pk);
 		this.Retrieve();
 	}
 
-		///
+		///#endregion
 
 
-		///构造映射.
+		///#region 构造映射.
 	/** 
 	 重写基类方法
-	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -110,7 +103,11 @@ public class GEEntityMyPK extends Entity
 			throw new RuntimeException("没有给" + this.FK_MapData + "值，您不能获取它的Map。");
 		}
 
-		this.set_enMap(bp.sys.MapData.GenerHisMap(this.FK_MapData));
+		try {
+			this.set_enMap(MapData.GenerHisMap(this.FK_MapData));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return this.get_enMap();
 	}
 	/** 
@@ -126,16 +123,14 @@ public class GEEntityMyPK extends Entity
 		return new GEEntityMyPKs(this.FK_MapData);
 	}
 
-		///
+		///#endregion
 
 	/** 
 	 从另外的一个实体来copy数据.
 	 
-	 @param en
-	 * @throws Exception 
+	 param en
 	*/
-	public final void CopyFromFrm(GEEntityMyPK en) throws Exception
-	{
+	public final void CopyFromFrm(GEEntityMyPK en) throws Exception {
 		//先求出来旧的OID.
 		String oldOID = this.getMyPK();
 
@@ -200,7 +195,7 @@ public class GEEntityMyPK extends Entity
 				for (FrmAttachmentDB athDBFrom : athDBsFrom.ToJavaList())
 				{
 					athDBFrom.setMyPK(DBAccess.GenerGUID());
-					athDBFrom.setFK_MapData(this.FK_MapData); //@sly
+					athDBFrom.setFK_MapData(this.FK_MapData);
 					athDBFrom.setFK_FrmAttachment(ath.getMyPK());
 					athDBFrom.setRefPKVal(this.getMyPK().toString());
 					athDBFrom.Insert();
@@ -212,11 +207,9 @@ public class GEEntityMyPK extends Entity
 	/** 
 	 把当前实体的数据copy到指定的主键数据表里.
 	 
-	 @param oid 指定的主键
-	 * @throws Exception 
+	 param oid 指定的主键
 	*/
-	public final void CopyToOID(String oid) throws Exception
-	{
+	public final void CopyToOID(String oid) throws Exception {
 		//实例化历史数据表单entity.
 		String oidOID = this.getMyPK();
 		this.setMyPK(oid);
@@ -275,7 +268,7 @@ public class GEEntityMyPK extends Entity
 		}
 	}
 	private ArrayList _Dtls = null;
-	public final ArrayList getDtls()
+	public final ArrayList getDtls()throws Exception
 	{
 		if (_Dtls == null)
 		{

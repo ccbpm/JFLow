@@ -1,8 +1,11 @@
 package bp.tools;
 
 import bp.en.*;
+import bp.en.Map;
 import bp.en.*;
+import bp.en.Map;
 import bp.en.*;
+import bp.en.Map;
 
 /**
  * 用户日志s
@@ -15,7 +18,7 @@ public class WFSealDatas extends EntitiesMyPK
 	}
 	
 	/**
-	 * @param emp
+	 * param workID
 	 * @throws Exception 
 	 */
 	public WFSealDatas(String workID, String node) throws Exception
@@ -31,9 +34,8 @@ public class WFSealDatas extends EntitiesMyPK
 	 * 得到它的 Entity
 	 */
 	@Override
-	public Entity getGetNewEntity()
-	{
-		return new WFSealData();
+	public Entity getGetNewEntity()  {
+		return new bp.tools.WFSealData();
 	}
 
 	

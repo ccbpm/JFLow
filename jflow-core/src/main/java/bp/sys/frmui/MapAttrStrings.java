@@ -13,33 +13,30 @@ import java.util.*;
 public class MapAttrStrings extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 实体属性s
 	*/
-	public MapAttrStrings()
-	{
+	public MapAttrStrings() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapAttrString();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrString> ToJavaList()
-	{
+	public final java.util.List<MapAttrString> ToJavaList() {
 		return (java.util.List<MapAttrString>)(Object)this;
 	}
 	/** 
@@ -47,8 +44,7 @@ public class MapAttrStrings extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrString> Tolist()
-	{
+	public final ArrayList<MapAttrString> Tolist()  {
 		ArrayList<MapAttrString> list = new ArrayList<MapAttrString>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +53,5 @@ public class MapAttrStrings extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

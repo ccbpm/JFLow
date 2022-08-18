@@ -1,6 +1,5 @@
 package bp.difference;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +13,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import bp.difference.handler.CommonUtils;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * JFlow上下文工具类
@@ -24,37 +22,18 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 
 	private static ContextHolderUtils contextHolder;
 	private static ApplicationContext springContext;
-
 	
 	// 数据源设置
 	private DataSource dataSource;
 	
 	// 第三方系统session中的用户编码，设置后将不用再调用登录方法，直接获取当前session进行登录。
-	private String userNoSessionKey;
+	private static String userNoSessionKey;
 
-	private static ApplicationContext context;
-
-
-
-	public synchronized static ContextHolderUtils getInstance() throws Exception{
+	public synchronized static ContextHolderUtils getInstance() {
 		if (contextHolder == null) {
 			if(springContext == null){
-				//长沙获取上下文的方法
-				ServletContext servletContext=getRequest().getSession().getServletContext();
-				ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-				if(ctx == null)	{
-					try{
-						ctx = new ClassPathXmlApplicationContext("classpath:spring-context.xml");
-					}catch(Exception e){
-						ctx = null;
-					}
-
-				}
-				if(ctx == null)
-					throw new Exception("获取上下文ApplicationContext失败");
+				ApplicationContext ctx = new ClassPathXmlApplicationContext("classpath:spring-context.xml");
 				springContext = ctx;
-
-
 			}
 				
 			contextHolder = springContext.getBean(ContextHolderUtils.class);
@@ -71,7 +50,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 		return CommonUtils.getRequest();
 	}
 
-	public static HttpServletResponse getResponse() throws Exception {
+	public static HttpServletResponse getResponse() {
         return CommonUtils.getResponse();
 	}
 
@@ -81,12 +60,11 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	 */
 	public static HttpSession getSession() {
 		HttpSession session = getRequest().getSession();
-
 		return session;
 	}
 
-	public static void addCookie(String name, String value) throws Exception {
-		int expiry = 60 * 60 * 24 * 8;
+	public static void addCookie(String name, int expiry, String value) {
+
 		if(getRequest()!= null){
 			Cookie cookies[] = getRequest().getCookies() ;
 			if (cookies == null) {
@@ -105,13 +83,40 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 				}
 				Cookie cookie = new Cookie(name, value);
 				cookie.setMaxAge(expiry);
-				cookie.setPath("/");//所有的路径都可以访问cookie
+				cookie.setPath("/");
 				getResponse().addCookie(cookie);
 			}
 		}
 	}
 
-	public static Cookie getCookie(String name) throws Exception {
+	public static void addCookie(String name, String value)  {
+		int expiry = 60 * 60 * 24 * 8;
+		if(getRequest()!= null){
+			Cookie cookies[] = getRequest().getCookies() ;
+			if (cookies == null) {
+				Cookie cookie = new Cookie(name, value);
+				cookie.setPath("/");
+				cookie.setMaxAge(expiry);
+				getResponse().addCookie(cookie);
+			} else {
+				for (Cookie cookie : cookies) {
+					if (name.equals(cookie.getName())) {
+						cookie.setValue(value);
+						cookie.setMaxAge(expiry);
+						cookie.setPath("/");
+						getResponse().addCookie(cookie);
+						return;
+					}
+				}
+				Cookie cookie = new Cookie(name, value);
+				cookie.setMaxAge(expiry);
+				cookie.setPath("/");
+				getResponse().addCookie(cookie);
+			}
+		}
+	}
+
+	public static Cookie getCookie(String name) {
 		Cookie cookies[] = getRequest().getCookies();
 		if (cookies == null || name == null || name.length() == 0)
 			return null;
@@ -123,7 +128,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 		return null;
 	}
 
-	public static void deleteCookie(String name) throws Exception{
+	public static void deleteCookie(String name) {
 		Cookie cookies[] = getRequest().getCookies();
 		if (cookies == null || name == null || name.length() == 0)
 			return;
@@ -136,7 +141,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 		}
 	}
 
-	public static void clearCookie() throws Exception{
+	public static void clearCookie() {
 		Cookie[] cookies = getRequest().getCookies();
 		if (null == cookies)
 			return;
@@ -172,9 +177,9 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 
 	/**
 	 * 设置第三方系统session中的用户编码
-	 * @param userNoSessionKey
+	 * param userNoSessionKey
 	 */
-	public void setUserNoSessionKey(String userNoSessionKey) {
+	public void   setUserNoSessionKey(String userNoSessionKey) {
 		this.userNoSessionKey = userNoSessionKey;
 	}
 
@@ -182,7 +187,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	 * 从静态变量applicationContext中取得Bean, 自动转型为所赋值对象的类型.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T getBean(String name) throws Exception {
+	public static <T> T getBean(String name) {
 		return (T) springContext.getBean(name);
 	}
 

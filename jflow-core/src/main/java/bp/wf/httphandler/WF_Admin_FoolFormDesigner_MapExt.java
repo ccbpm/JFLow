@@ -1,15 +1,17 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.sys.xml.RegularExpressionDtls;
-import bp.sys.xml.RegularExpressions;
 import bp.web.*;
 import bp.en.*;
+import bp.difference.*;
+import bp.*;
+import bp.wf.*;
 import java.io.*;
+import java.nio.file.*;
+import java.time.*;
+import java.util.Date;
 
 /** 
  初始化函数
@@ -17,15 +19,14 @@ import java.io.*;
 public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 {
 
-		///执行父类的重写方法.
+		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
 	 
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod()
-	{
+	protected String DoDefaultMethod() throws Exception {
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -41,22 +42,19 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_FoolFormDesigner_MapExt()
-	{
+	public WF_Admin_FoolFormDesigner_MapExt() throws Exception {
 	}
 
-		/// 执行父类的重写方法.
+		///#endregion 执行父类的重写方法.
 
 
-		///AutoFullDtlField 自动计算 a*b  功能界面 .
+		///#region AutoFullDtlField 自动计算 a*b  功能界面 .
 	/** 
 	 保存(自动计算: @单价*@数量 模式.)
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String AutoFullDtlField_Save() throws Exception
-	{
+	public final String AutoFullDtlField_Save() throws Exception {
 		MapExt me = new MapExt();
 		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.AutoFullDtlField, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
@@ -112,15 +110,13 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 		return "保存成功.";
 	}
-	public final String AutoFullDtlField_Delete() throws Exception
-	{
+	public final String AutoFullDtlField_Delete() throws Exception {
 		MapExt me = new MapExt();
 		me.Delete(MapExtAttr.ExtType, MapExtXmlList.AutoFullDtlField, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
 		return "删除成功.";
 	}
-	public final String AutoFullDtlField_Init() throws Exception
-	{
+	public final String AutoFullDtlField_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 加载mapext 数据.
@@ -141,13 +137,13 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		//去掉 ' 号.
 		me.SetValByKey("Doc", me.getDoc());
 
-		DataTable dt = me.ToDataTableField();
+		DataTable dt = me.ToDataTableField("Main");
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
 		//把从表放入里面.
 		MapDtls dtls = new MapDtls();
-		dtls.Retrieve(MapDtlAttr.FK_MapData, this.getFK_MapData(), MapDtlAttr.FK_Node, 0);
+		dtls.Retrieve(MapDtlAttr.FK_MapData, this.getFK_MapData(), MapDtlAttr.FK_Node, 0, null);
 		ds.Tables.add(dtls.ToDataTableField("Dtls"));
 
 		//把从表的字段放入.
@@ -163,29 +159,27 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		}
 
 		//把主表的字段放入
-		 String mainsql = "SELECT KeyOfEn as \"No\",Name as \"Name\" FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "' AND MyDataType=1 AND UIIsEnable = 0 ";
-		 mainsql += " AND KeyOfEn !='OID' AND KeyOfEn!='FID' AND KeyOfEn!='WorkID' AND KeyOfEn!='NodeID' AND KeyOfEn!='RefPK'  AND KeyOfEn!='RDT' AND KeyOfEn!='Rec' ";
+		String mainsql = "SELECT KeyOfEn as \"No\",Name as \"Name\" FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "' AND MyDataType=1 AND UIIsEnable = 0 ";
+		mainsql += " AND KeyOfEn !='OID' AND KeyOfEn!='FID' AND KeyOfEn!='WorkID' AND KeyOfEn!='NodeID' AND KeyOfEn!='RefPK'  AND KeyOfEn!='RDT' AND KeyOfEn!='Rec' ";
 
 		//把从表增加里面去.
-		 DataTable maindt = DBAccess.RunSQLReturnTable(mainsql);
-		 maindt.TableName = "main_Attr";
-		 ds.Tables.add(maindt);
+		DataTable maindt = DBAccess.RunSQLReturnTable(mainsql);
+		maindt.TableName = "main_Attr";
+		ds.Tables.add(maindt);
 
 		return bp.tools.Json.ToJson(ds);
 	}
 
-		/// AutoFullDtlField  功能界面.
+		///#endregion AutoFullDtlField  功能界面.
 
 
-		///AutoFull 自动计算 a*b  功能界面 .
+		///#region AutoFull 自动计算 a*b  功能界面 .
 	/** 
 	 保存(自动计算: @单价*@数量 模式.)
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String AutoFull_Save() throws Exception
-	{
+	public final String AutoFull_Save() throws Exception {
 		MapExt me = new MapExt();
 		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.AutoFull, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
@@ -205,8 +199,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		return "保存成功.";
 	}
 
-	public final String AutoFull_Init() throws Exception
-	{
+	public final String AutoFull_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		// 加载mapext 数据.
@@ -227,36 +220,34 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		//去掉 ' 号.
 		me.SetValByKey("Doc", me.getDoc());
 
-		DataTable dt = me.ToDataTableField();
+		DataTable dt = me.ToDataTableField("Main");
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
 		return bp.tools.Json.ToJson(ds);
 	}
 
-		/// ActiveDDL 功能界面.
+		///#endregion ActiveDDL 功能界面.
 
 
-		///TBFullCtrl 功能界面 .
+		///#region TBFullCtrl 功能界面 .
 	/** 
 	 保存
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String TBFullCtrl_Save() throws Exception
-	{
+	public final String TBFullCtrl_Save() throws Exception {
 		try
 		{
 			MapExt me = new MapExt();
 			int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.TBFullCtrl, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
 			me.setFK_MapData(this.getFK_MapData());
-			me.setAttrOfOper( this.getKeyOfEn());
+			me.setAttrOfOper(this.getKeyOfEn());
 			me.setFK_DBSrc(this.GetValFromFrmByKey("FK_DBSrc"));
 			me.setDoc(this.GetValFromFrmByKey("TB_Doc")); //要执行的SQL.
 
-			me.setExtType( MapExtXmlList.TBFullCtrl);
+			me.setExtType(MapExtXmlList.TBFullCtrl);
 
 			//执行保存.
 			me.InitPK();
@@ -273,21 +264,19 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	public final String TBFullCtrl_Delete() throws Exception
-	{
+	public final String TBFullCtrl_Delete() throws Exception {
 		MapExt me = new MapExt();
 		me.Delete(MapExtAttr.ExtType, MapExtXmlList.TBFullCtrl, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
 		return "删除成功.";
 	}
-	public final String TBFullCtrl_Init() throws Exception
-	{
+	public final String TBFullCtrl_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//加载数据源.
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
-		DataTable dtSrc = srcs.ToDataTableField();
+		DataTable dtSrc = srcs.ToDataTableField("dt");
 		dtSrc.TableName = "Sys_SFDBSrc";
 		ds.Tables.add(dtSrc);
 
@@ -298,7 +287,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		if (i == 0)
 		{
 			me.setFK_MapData(this.getFK_MapData());
-			me.setAttrOfOper( this.getKeyOfEn());
+			me.setAttrOfOper(this.getKeyOfEn());
 			me.setFK_DBSrc("local");
 		}
 
@@ -312,7 +301,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		//去掉 ' 号.
 		me.SetValByKey("Doc", me.getDoc());
 
-		DataTable dt = me.ToDataTableField();
+		DataTable dt = me.ToDataTableField("Main");
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
@@ -322,17 +311,15 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	 填充从表
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String TBFullCtrlDtl_Init() throws Exception
-	{
+	public final String TBFullCtrlDtl_Init() throws Exception {
 		MapExt me = new MapExt(this.getMyPK());
 
 		String[] strs = me.getTag1().split("[$]", -1);
 		// 格式为: $ND101Dtl2:SQL.
 
 		MapDtls dtls = new MapDtls();
-		dtls.Retrieve(MapDtlAttr.FK_MapData, me.getFK_MapData());
+		dtls.Retrieve(MapDtlAttr.FK_MapData, me.getFK_MapData(), null);
 		for (String str : strs)
 		{
 			if (DataType.IsNullOrEmpty(str) || str.contains(":") == false)
@@ -346,7 +333,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 			for (MapDtl dtl : dtls.ToJavaList())
 			{
-				if (!fk_mapdtl.equals(dtl.getNo()))
+				if (!dtl.getNo().equals(fk_mapdtl))
 				{
 					continue;
 				}
@@ -357,8 +344,8 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String cols = "";
-			MapAttrs attrs = new MapAttrs(dtl.getNo());
-			for (MapAttr item : attrs.ToJavaList())
+			MapAttrs mattrs = new MapAttrs(dtl.getNo());
+			for (MapAttr item : mattrs.ToJavaList())
 			{
 				if (item.getKeyOfEn().equals("OID") || item.getKeyOfEn().equals("RefPKVal") || item.getKeyOfEn().equals("RefPK"))
 				{
@@ -369,11 +356,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 			}
 			dtl.setAlias(cols); //把ptable作为一个数据参数.
 		}
-		return dtls.ToJson();
+		return dtls.ToJson("dt");
 	}
 
-	public final String TBFullCtrlDtl_Save() throws Exception
-	{
+	public final String TBFullCtrlDtl_Save() throws Exception {
 		MapDtls dtls = new MapDtls(this.getFK_MapData());
 		MapExt me = new MapExt(this.getMyPK());
 
@@ -382,8 +368,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		{
 			String sql = this.GetRequestVal("TB_" + dtl.getNo());
 			sql = sql.trim();
-			if (DataType.IsNullOrEmpty(sql)==true)
+			if (DataType.IsNullOrEmpty(sql) == true)
+			{
 				continue;
+			}
 
 			if (sql.contains("@Key") == false)
 			{
@@ -398,16 +386,15 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		return "保存成功.";
 	}
 
-	public final String TBFullCtrlDDL_Init() throws Exception
-	{
+	public final String TBFullCtrlDDL_Init() throws Exception {
 		MapExt myme = new MapExt();
 		myme.setMyPK(this.getMyPK());
 		myme.RetrieveFromDBSources();
-		MapAttrs attrs = new MapAttrs(myme.getFK_MapData());
-		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue());
+		MapAttrs mattrs = new MapAttrs(myme.getFK_MapData());
+		mattrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue(), null);
 
 		String[] strs = myme.getTag().split("[$]", -1);
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : mattrs.ToJavaList())
 		{
 			for (String s : strs)
 			{
@@ -421,27 +408,35 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 				}
 
 				String[] ss = s.split("[:]", -1);
-				attr.setDefVal(ss[1]); //使用这个字段作为对应设置的sql.
+				attr.setDefVal( ss[1]); //使用这个字段作为对应设置的sql.
 			}
 		}
 
-		return attrs.ToJson();
+		return mattrs.ToJson("dt");
 	}
-	public final String TBFullCtrlDDL_Save() throws Exception
-	{
-		MapExt myme = new MapExt(this.getMyPK());
+	public final String TBFullCtrlDDL_Save() throws Exception {
+		MapExt me = new MapExt();
+		me.setMyPK(this.getMyPK());
+		if (me.RetrieveFromDBSources() == 0)
+		{
+			me.setMyPK(this.getMyPK());
+			me.setAttrOfOper(GetRequestVal("AttrOfOper"));
+			me.setFK_MapData(this.getFK_MapData());
+			me.setExtType(MapExtXmlList.FullData);
+			//me.DoWay = this.GetRequestVal("DDL_" + attr.getKeyOfEn());
+			me.Insert();
+		}
 
-		MapAttrs attrs = new MapAttrs(myme.getFK_MapData());
-		attrs.Retrieve(MapAttrAttr.FK_MapData, myme.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue());
 
-		MapExt me = new MapExt(this.getMyPK());
+		MapAttrs attrs = new MapAttrs(me.getFK_MapData());
+		attrs.Retrieve(MapAttrAttr.FK_MapData, me.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue(), null);
 
 		String str = "";
 		for (MapAttr attr : attrs.ToJavaList())
 		{
 
 			String sql = this.GetRequestVal("TB_" + attr.getKeyOfEn());
-			if (DataType.IsNullOrEmpty(sql)==true)
+			if (DataType.IsNullOrEmpty(sql) == true)
 			{
 				continue;
 			}
@@ -455,58 +450,24 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 			str += "$" + attr.getKeyOfEn() + ":" + sql;
 		}
 		me.setTag(str);
-		me.setAttrOfOper( GetRequestVal("AttrOfOper"));
+		me.setAttrOfOper(GetRequestVal("AttrOfOper"));
 		me.Update();
 
 		return "保存成功.";
 	}
 
-		/// TBFullCtrl 功能界面.
+		///#endregion TBFullCtrl 功能界面.
 
 
-		///AutoFullDLL 功能界面 .
-	/** 
-	 保存
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String AutoFullDLL_Save() throws Exception
-	{
-		MapExt me = new MapExt();
-		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
+		///#region AutoFullDLL 功能界面 .
 
-		me.setFK_MapData(this.getFK_MapData());
-		me.setAttrOfOper( this.getKeyOfEn());
-		me.setFK_DBSrc(this.GetValFromFrmByKey("FK_DBSrc"));
-		me.setDoc(this.GetValFromFrmByKey("TB_Doc")); //要执行的SQL.
-		me.setExtType( MapExtXmlList.AutoFullDLL);
-
-		//执行保存.
-		me.InitPK();
-
-		if (me.Update() == 0)
-		{
-			me.Insert();
-		}
-
-		return "保存成功.";
-	}
-	public final String AutoFullDLL_Delete() throws Exception
-	{
-		MapExt me = new MapExt();
-		me.Delete(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
-
-		return "删除成功.";
-	}
-	public final String AutoFullDLL_Init() throws Exception
-	{
+	public final String AutoFullDLL_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//加载数据源.
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
-		DataTable dtSrc = srcs.ToDataTableField();
+		DataTable dtSrc = srcs.ToDataTableField("dt");
 		dtSrc.TableName = "Sys_SFDBSrc";
 		ds.Tables.add(dtSrc);
 
@@ -517,11 +478,11 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		if (i == 0)
 		{
 			me.setFK_MapData(this.getFK_MapData());
-			me.setAttrOfOper( this.getKeyOfEn());
+			me.setAttrOfOper(this.getKeyOfEn());
 			me.setFK_DBSrc("local");
 		}
 
-		if (me.getFK_DBSrc().equals(""))
+		if (DataType.IsNullOrEmpty(me.getFK_DBSrc()) == true)
 		{
 			me.setFK_DBSrc("local");
 		}
@@ -529,34 +490,71 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		//去掉 ' 号.
 		me.SetValByKey("Doc", me.getDoc());
 
-		DataTable dt = me.ToDataTableField();
+		DataTable dt = me.ToDataTableField("Main");
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
-
 		return bp.tools.Json.ToJson(ds);
 	}
 
-		/// AutoFullDLL 功能界面.
+	/** 
+	 查询条件的自动填充
+	 
+	 @return 
+	*/
+	public final String AutoFullDLL_Init_SearchCond() throws Exception {
+		DataSet ds = new DataSet();
+
+		//加载数据源.
+		SFDBSrcs srcs = new SFDBSrcs();
+		srcs.RetrieveAll();
+		DataTable dtSrc = srcs.ToDataTableField("dt");
+		dtSrc.TableName = "Sys_SFDBSrc";
+		ds.Tables.add(dtSrc);
+
+		// 加载 mapext 数据.
+		MapExt me = new MapExt();
+		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLLSearchCond, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
+
+		if (i == 0)
+		{
+			me.setFK_MapData(this.getFK_MapData());
+			me.setAttrOfOper( this.getKeyOfEn());
+			me.setFK_DBSrc( "local");
+		}
+
+		if (DataType.IsNullOrEmpty(me.getFK_DBSrc()) == true)
+		{
+			me.setFK_DBSrc( "local");
+		}
+
+		//去掉 ' 号.
+		me.SetValByKey("Doc", me.getDoc());
+
+		DataTable dt = me.ToDataTableField("Main");
+		dt.TableName = "Sys_MapExt";
+		ds.Tables.add(dt);
+		return bp.tools.Json.ToJson(ds);
+	}
+
+		///#endregion AutoFullDLL 功能界面.
 
 
-		///DDLFullCtrl 功能界面 .
+		///#region DDLFullCtrl 功能界面 .
 	/** 
 	 保存
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DDLFullCtrl_Save() throws Exception
-	{
+	public final String DDLFullCtrl_Save() throws Exception {
 		MapExt me = new MapExt();
 		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.DDLFullCtrl, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
 		me.setFK_MapData(this.getFK_MapData());
 		me.setAttrOfOper( this.getKeyOfEn());
-		me.setFK_DBSrc(this.GetValFromFrmByKey("FK_DBSrc"));
+		me.setFK_DBSrc( this.GetValFromFrmByKey("FK_DBSrc"));
 		me.setDoc(this.GetValFromFrmByKey("TB_Doc")); //要执行的SQL.
 
-		me.setExtType( MapExtXmlList.DDLFullCtrl);
+		me.setExtType(MapExtXmlList.DDLFullCtrl);
 
 		//执行保存.
 		me.InitPK();
@@ -567,21 +565,19 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 		return "保存成功.";
 	}
-	public final String DDLFullCtrl_Delete() throws Exception
-	{
+	public final String DDLFullCtrl_Delete() throws Exception {
 		MapExt me = new MapExt();
 		me.Delete(MapExtAttr.ExtType, MapExtXmlList.DDLFullCtrl, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
 		return "删除成功.";
 	}
-	public final String DDLFullCtrl_Init() throws Exception
-	{
+	public final String DDLFullCtrl_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//加载数据源.
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
-		DataTable dtSrc = srcs.ToDataTableField();
+		DataTable dtSrc = srcs.ToDataTableField("dt");
 		dtSrc.TableName = "Sys_SFDBSrc";
 		ds.Tables.add(dtSrc);
 
@@ -593,71 +589,40 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		{
 			me.setFK_MapData(this.getFK_MapData());
 			me.setAttrOfOper( this.getKeyOfEn());
-			me.setFK_DBSrc("local");
+			me.setFK_DBSrc( "local");
 		}
 
 		me.setW(i);
 
 		if (me.getFK_DBSrc().equals(""))
 		{
-			me.setFK_DBSrc("local");
+			me.setFK_DBSrc( "local");
 		}
 
 		//去掉 ' 号.
 		me.SetValByKey("Doc", me.getDoc());
 
-		DataTable dt = me.ToDataTableField();
+		DataTable dt = me.ToDataTableField("Main");
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
 		return bp.tools.Json.ToJson(ds);
 	}
 
-		/// DDLFullCtrl 功能界面.
+		///#endregion DDLFullCtrl 功能界面.
 
 
-		///ActiveDDL 功能界面 .
-	/** 
-	 保存
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String ActiveDDL_Save() throws Exception
-	{
-		MapExt me = new MapExt();
-		me.Delete(MapExtAttr.ExtType, MapExtXmlList.ActiveDDL, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
+		///#region ActiveDDL 功能界面 .
 
-		me.setFK_MapData(this.getFK_MapData());
-		me.setAttrOfOper( this.getKeyOfEn());
-		me.setAttrsOfActive(this.GetValFromFrmByKey("DDL_AttrsOfActive"));
-		me.setFK_DBSrc(this.GetValFromFrmByKey("FK_DBSrc"));
-		me.setDoc(this.GetValFromFrmByKey("TB_Doc")); //要执行的SQL.
-		me.setExtType( MapExtXmlList.ActiveDDL);
-
-		//执行保存.
-		me.setMyPK(MapExtXmlList.ActiveDDL + "_" + me.getFK_MapData() + "_" + me.getAttrOfOper());
-		me.Save();
-
-		return "保存成功.";
-	}
-	public final String ActiveDDL_Delete() throws Exception
-	{
-		MapExt me = new MapExt();
-		me.Delete(MapExtAttr.ExtType, MapExtXmlList.ActiveDDL, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
-
-		return "删除成功.";
-	}
-	public final String ActiveDDL_Init() throws Exception
-	{
+	public final String ActiveDDL_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//加载外键字段.
 		Paras ps = new Paras();
-		ps.SQL="SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData AND KeyOfEn!=" + SystemConfig.getAppCenterDBVarStr() + "KeyOfEn";
-		ps.Add("FK_MapData", this.getFK_MapData());
-		ps.Add("KeyOfEn",this.getKeyOfEn());
-		//var sql = "SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData='" + this.FK_MapData + "' AND KeyOfEn!='" + this.KeyOfEn + "'";
+		ps.SQL = "SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData AND KeyOfEn!=" + SystemConfig.getAppCenterDBVarStr() + "KeyOfEn";
+		ps.Add("FK_MapData", this.getFK_MapData(), false);
+		ps.Add("KeyOfEn", this.getKeyOfEn(), false);
+		//String sql = "SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData='" + this.FK_MapData + "' AND KeyOfEn!='" + this.KeyOfEn + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Sys_MapAttr";
 
@@ -673,7 +638,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		//加载数据源.
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
-		DataTable dtSrc = srcs.ToDataTableField();
+		DataTable dtSrc = srcs.ToDataTableField("dt");
 		dtSrc.TableName = "Sys_SFDBSrc";
 		ds.Tables.add(dtSrc);
 
@@ -684,44 +649,99 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		{
 			me.setFK_MapData(this.getFK_MapData());
 			me.setAttrOfOper( this.getKeyOfEn());
-			me.setFK_DBSrc("local");
+			me.setFK_DBSrc( "local");
 		}
 
 		if (me.getFK_DBSrc().equals(""))
 		{
-			me.setFK_DBSrc("local");
+			me.setFK_DBSrc( "local");
 		}
 
 		//去掉 ' 号.
 		me.SetValByKey("Doc", me.getDoc());
 
-		dt = me.ToDataTableField();
+		dt = me.ToDataTableField("Main");
+		dt.TableName = "Sys_MapExt";
+		ds.Tables.add(dt);
+
+		return bp.tools.Json.ToJson(ds);
+	}
+	/** 
+	 查询条件
+	 
+	 @return 
+	*/
+	public final String ActiveDDL_Init_SearchCond() throws Exception {
+		DataSet ds = new DataSet();
+
+		//加载外键字段.
+		Paras ps = new Paras();
+		ps.SQL = "SELECT KeyOfEn AS No, Name FROM Sys_MapAttr WHERE UIContralType=1 AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData AND KeyOfEn!=" + SystemConfig.getAppCenterDBVarStr() + "KeyOfEn";
+		ps.Add("FK_MapData", this.getFK_MapData(), false);
+		ps.Add("KeyOfEn", this.getKeyOfEn(), false);
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+		dt.TableName = "Sys_MapAttr";
+
+		dt.Columns.get(0).setColumnName("No");
+		dt.Columns.get(1).setColumnName("Name");
+		ds.Tables.add(dt);
+
+		if (dt.Rows.size() == 0)
+		{
+			return "err@表单中没有要级联的下拉框.";
+		}
+
+		//加载数据源.
+		SFDBSrcs srcs = new SFDBSrcs();
+		srcs.RetrieveAll();
+		DataTable dtSrc = srcs.ToDataTableField("dt");
+		dtSrc.TableName = "Sys_SFDBSrc";
+		ds.Tables.add(dtSrc);
+
+		// 加载mapext 数据.
+		MapExt me = new MapExt();
+		int i = me.Retrieve(MapExtAttr.ExtType, MapExtXmlList.ActiveDDLSearchCond, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
+		if (i == 0)
+		{
+			me.setFK_MapData(this.getFK_MapData());
+			me.setAttrOfOper( this.getKeyOfEn());
+			me.setFK_DBSrc( "local");
+		}
+
+		if (me.getFK_DBSrc().equals(""))
+		{
+			me.setFK_DBSrc( "local");
+		}
+
+		//去掉 ' 号.
+		me.SetValByKey("Doc", me.getDoc());
+
+		dt = me.ToDataTableField("Main");
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
 		return bp.tools.Json.ToJson(ds);
 	}
 
-		/// ActiveDDL 功能界面.
+		///#endregion ActiveDDL 功能界面.
 
 
-		///配置自动计算日期天数lz
+		///#region 配置自动计算日期天数
 	/** 
 	 初始化
 	 
 	 @return 
 	*/
-	public final String LoadRDTClo_Init() throws Exception
-	{
+	public final String LoadRDTClo_Init() throws Exception {
 		DataSet ds = new DataSet();
 		String FK_MapData = GetRequestVal("FK_MapData");
 		String KeyOfEn = GetRequestVal("KeyOfEn");
 		String sql = "";
-		//if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		//if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL)
 		//{
 		//    sql = "SELECT  Name FROM Sys_MapAttr WHERE (MyDataType=6 OR MyDataType=7) AND FK_MapData='" + FK_MapData + "'";
 		//}
-		//else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		//else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
 		//{
 		//    sql = "SELECT  Name FROM Sys_MapAttr WHERE (MyDataType=6 OR MyDataType=7) AND FK_MapData='" + FK_MapData + "'";
 		//}
@@ -737,8 +757,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 		return bp.tools.Json.ToJson(dt);
 	}
-	public final String LoadRDTClo_Save() throws Exception
-	{
+	public final String LoadRDTClo_Save() throws Exception {
 		String FK_MapData = GetRequestVal("FK_MapData");
 		String KeyOfEn = GetRequestVal("KeyOfEn");
 		String StarRDT = GetRequestVal("DDL_StarRDT"); //开始日期
@@ -750,37 +769,35 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		if (mapExt.RetrieveFromDBSources() == 0)
 		{
 			mapExt.setFK_MapData(FK_MapData);
-			mapExt.setExtType("ReqDays");
-			mapExt.setAttrOfOper(KeyOfEn);
-			mapExt.setTag1(StarRDT);
-			mapExt.setTag2(EndRDT);
+			mapExt.setExtType( "ReqDays");
+			mapExt.setAttrOfOper( KeyOfEn);
+			mapExt.setTag1( StarRDT);
+			mapExt.setTag2( EndRDT);
 			mapExt.setTag3(RDTRadio);
 			mapExt.Insert();
 		}
 		else
 		{
 			mapExt.setFK_MapData(FK_MapData);
-			mapExt.setExtType("ReqDays");
-			mapExt.setAttrOfOper(KeyOfEn);
-			mapExt.setTag1(StarRDT);
-			mapExt.setTag2(EndRDT);
+			mapExt.setExtType( "ReqDays");
+			mapExt.setAttrOfOper( KeyOfEn);
+			mapExt.setTag1( StarRDT);
+			mapExt.setTag2( EndRDT);
 			mapExt.setTag3(RDTRadio);
 			mapExt.Update();
 		}
 		return "保存成功！！";
 	}
 
-		///
+		///#endregion
 
-		///单选按钮事件
+		///#region 单选按钮事件
 	/** 
 	 返回信息。
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String RadioBtns_Init() throws Exception
-	{
+	public final String RadioBtns_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//放入表单字段.
@@ -800,50 +817,58 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		FrmAttachments frmAttachments = new FrmAttachments(this.getFK_MapData());
 		ds.Tables.add(frmAttachments.ToDataTableField("FrmAttachments"));
 
-
 		//把分组加入里面.
 		GroupFields gfs = new GroupFields(this.getFK_MapData());
 		ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
 
 		//获取外键值
-		DataTable dt =bp.sys.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey());
-		for (DataColumn col : dt.Columns)
+		DataTable dt = bp.pub.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey(), null);
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
-			String colName = col.ColumnName.toLowerCase();
-			switch (colName)
-			{
-				case "no":
-					col.ColumnName = "No";
-					break;
-				case "name":
-					col.ColumnName = "Name";
-					break;
-				default:
-					break;
-			}
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
 		}
+
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("no").ColumnName = "No";
+			dt.Columns.get("name").ColumnName = "Name";
+		}
+
 		//字段值.
 		FrmRBs rbs = new FrmRBs();
-		rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
-		if (rbs.size() == 0)
+		rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn(), null);
+		if (rbs.isEmpty())
 		{
-			/*初始枚举值变化.
-			 */
-			SysEnums ses = new SysEnums(attr.getUIBindKey());
-			for (SysEnum se : ses.ToJavaList())
+			//如果是枚举类型
+			if (attr.getLGType() == FieldTypeS.Enum)
 			{
+				/*初始枚举值变化.
+				 */
 				FrmRB rb = new FrmRB();
 				rb.setFK_MapData(this.getFK_MapData());
 				rb.setKeyOfEn(this.getKeyOfEn());
-				rb.setIntKey(se.getIntKey());
-				rb.setLab(se.getLab());
+				rb.setIntKey(-1);
+				rb.setLab("--无(不选择)--");
 				rb.setEnumKey(attr.getUIBindKey());
 				rb.Insert(); //插入数据.
+
+				SysEnums ses = new SysEnums(attr.getUIBindKey());
+				for (SysEnum se : ses.ToJavaList())
+				{
+					rb = new FrmRB();
+					rb.setFK_MapData(this.getFK_MapData());
+					rb.setKeyOfEn(this.getKeyOfEn());
+					rb.setIntKey(se.getIntKey());
+					rb.setLab(se.getLab());
+					rb.setEnumKey(attr.getUIBindKey());
+					rb.Insert(); //插入数据.
+				}
 			}
 			//如果是外键类型
-			if (attr.getLGType() == FieldTypeS.Normal)
+			if (attr.getLGType() == FieldTypeS.FK)
 			{
-				for(DataRow row : dt.Rows)
+				for (DataRow row : dt.Rows)
 				{
 					FrmRB rb = new FrmRB();
 					rb.setFK_MapData(this.getFK_MapData());
@@ -856,7 +881,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 			}
 
 			//如果是复选框
-			if(attr.getMyDataType() == DataType.AppBoolean && attr.getUIContralType() == UIContralType.CheckBok)
+			if (attr.getMyDataType() == DataType.AppBoolean && attr.getUIContralType() == UIContralType.CheckBok)
 			{
 				FrmRB rb = new FrmRB();
 				rb.setFK_MapData(this.getFK_MapData());
@@ -876,7 +901,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 			}
 
-			rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+			rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn(), null);
 		}
 
 		//加入单选按钮.
@@ -888,10 +913,8 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	 复选框选择事件
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String CheckBoxs_Init() throws Exception
-	{
+	public final String CheckBoxs_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//放入表单字段.
@@ -908,7 +931,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
 
 		FrmRBs rbs = new FrmRBs();
-		rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn());
+		rbs.Retrieve(FrmRBAttr.FK_MapData, this.getFK_MapData(), FrmRBAttr.KeyOfEn, this.getKeyOfEn(), null);
 		//加入单选按钮.
 		ds.Tables.add(rbs.ToDataTableField("Sys_FrmRB"));
 
@@ -919,10 +942,8 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	 执行保存
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String RadioBtns_Save() throws Exception
-	{
+	public final String RadioBtns_Save() throws Exception {
 		//string json = context.Request.Form["data"];
 		//if (DataType.IsNullOrEmpty(json))
 		String json = GetRequestVal("data");
@@ -938,37 +959,35 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 			rb.setFieldsCfg(dr.getValue("FieldsCfg").toString()); //格式为 @字段名1=1@字段名2=0
 			rb.setTip(dr.getValue("Tip").toString()); //提示信息
 
-			rb.setSetVal(dr.getValue("SetVal").toString()); //设置值.
+			rb.setVal(dr.getValue("SetVal").toString()); //设置值.
 
-			rb.Update();
+			rb.DirectUpdate();
 		}
 
 		return "保存成功.";
 	}
 
-		///
+		///#endregion
 
 
-		///xxx 界面
+		///#region xxx 界面
 	/** 
 	 初始化正则表达式界面
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String RegularExpression_Init() throws Exception
-	{
+	public final String RegularExpression_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		Paras ps = new Paras();
-		ps.SQL="SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.getAppCenterDBVarStr() + "AttrOfOper AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-		ps.Add("AttrOfOper",this.getKeyOfEn());
-		ps.Add("FK_MapData",this.getFK_MapData());
+		ps.SQL = "SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.getAppCenterDBVarStr() + "AttrOfOper AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
+		ps.Add("AttrOfOper", this.getKeyOfEn(), false);
+		ps.Add("FK_MapData", this.getFK_MapData(), false);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
-		RegularExpressions res = new RegularExpressions();
+		bp.sys.xml.RegularExpressions res = new bp.sys.xml.RegularExpressions();
 		res.Retrieve("ForCtrl", "TB");
 
 		DataTable myDT = res.ToDataTable();
@@ -976,7 +995,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		ds.Tables.add(myDT);
 
 
-		RegularExpressionDtls dtls = new RegularExpressionDtls();
+		bp.sys.xml.RegularExpressionDtls dtls = new bp.sys.xml.RegularExpressionDtls();
 		dtls.RetrieveAll();
 		DataTable myDTDtls = dtls.ToDataTable();
 		myDTDtls.TableName = "REDtl";
@@ -984,19 +1003,14 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 		return bp.tools.Json.ToJson(ds);
 	}
-	public final String RegularExpressionNum_Init() throws Exception
-	{
+	public final String RegularExpressionNum_Init() throws Exception {
 		DataSet ds = new DataSet();
 
-		Paras ps = new Paras();
-		ps.SQL="SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.getAppCenterDBVarStr() + "AttrOfOper AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-		ps.Add("AttrOfOper", this.getKeyOfEn());
-		ps.Add("FK_MapData", this.getFK_MapData());
-		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		dt.TableName = "Sys_MapExt";
-		ds.Tables.add(dt);
+		MapExts mes = new MapExts();
+		mes.Retrieve("AttrOfOper", this.getKeyOfEn(), "FK_MapData", this.getFK_MapData(), null);
+		ds.Tables.add(mes.ToDataTableField("Sys_MapExt"));
 
-		RegularExpressions res = new RegularExpressions();
+		bp.sys.xml.RegularExpressions res = new bp.sys.xml.RegularExpressions();
 		res.Retrieve("ForCtrl", "TBNum");
 
 		DataTable myDT = res.ToDataTable();
@@ -1004,7 +1018,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		ds.Tables.add(myDT);
 
 
-		RegularExpressionDtls dtls = new RegularExpressionDtls();
+		bp.sys.xml.RegularExpressionDtls dtls = new bp.sys.xml.RegularExpressionDtls();
 		dtls.RetrieveAll();
 		DataTable myDTDtls = dtls.ToDataTable();
 		myDTDtls.TableName = "REDtl";
@@ -1012,8 +1026,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 		return bp.tools.Json.ToJson(ds);
 	}
-	private void RegularExpression_Save_Tag(String tagID) throws Exception
-	{
+	private void RegularExpression_Save_Tag(String tagID) throws Exception {
 		String val = this.GetValFromFrmByKey("TB_Doc_" + tagID);
 		if (DataType.IsNullOrEmpty(val))
 		{
@@ -1027,7 +1040,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		me.setExtType( "RegularExpression");
 		me.setTag(tagID);
 		me.setDoc(val);
-		me.setTag1(this.GetValFromFrmByKey("TB_Tag1_" + tagID));
+		me.setTag1( this.GetValFromFrmByKey("TB_Tag1_" + tagID));
 		me.Save();
 	}
 
@@ -1036,10 +1049,8 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	 执行 保存.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String RegularExpression_Save() throws Exception
-	{
+	public final String RegularExpression_Save() throws Exception {
 		//删除该字段的全部扩展设置. 
 		MapExt me = new MapExt();
 		me.Delete(MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.ExtType, MapExtXmlList.RegularExpression, MapExtAttr.AttrOfOper, this.getKeyOfEn());
@@ -1053,7 +1064,6 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		RegularExpression_Save_Tag("onkeyup");
 		RegularExpression_Save_Tag("onsubmit");
 
-
 		return "保存成功...";
 	}
 
@@ -1063,7 +1073,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	private String fk_dept;
 	private String oid;
 	private String kvs;
-	public final String DealSQL(String sql, String key) throws Exception
+	public final String DealSQL(String sql, String key)
 	{
 		sql = sql.replace("@Key", key);
 		sql = sql.replace("@key", key);
@@ -1103,14 +1113,13 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	 返回
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String PopVal_Init() throws Exception
-	{
+	public final String PopVal_Init() throws Exception {
 		MapExt ext = new MapExt();
 		ext.setMyPK(this.getMyPK());
 		if (ext.RetrieveFromDBSources() == 0)
 		{
+			// throw new Exception("err@主键=" + ext.MyPK + "的配置数据丢失");
 			ext.setPopValSelectModel(PopValSelectModel.One);
 			ext.setPopValWorkModel(PopValWorkModel.TableOnly);
 		}
@@ -1122,10 +1131,8 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	 保存设置.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String PopVal_Save() throws Exception
-	{
+	public final String PopVal_Save() throws Exception {
 		try
 		{
 			MapExt me = new MapExt();
@@ -1148,29 +1155,29 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 					break;
 				case "TableOnly": //表格模式.
 					me.setPopValWorkModel(PopValWorkModel.TableOnly);
-					me.setPopValEntitySQL( this.GetValFromFrmByKey("TB_Table_SQL"));
+					me.setPopValEntitySQL(this.GetValFromFrmByKey("TB_Table_SQL"));
 					break;
 				case "TablePage": //分页模式.
-					me.setPopValWorkModel(PopValWorkModel.TablePage);
-					me.setPopValTablePageSQL( this.GetValFromFrmByKey("TB_TablePage_SQL"));
-					me.setPopValTablePageSQLCount(this.GetValFromFrmByKey("TB_TablePage_SQLCount"));
+					me.setPopValWorkModel( PopValWorkModel.TablePage);
+					me.setPopValTablePageSQL ( this.GetValFromFrmByKey("TB_TablePage_SQL"));
+					me.setPopValTablePageSQLCount ( this.GetValFromFrmByKey("TB_TablePage_SQLCount"));
 					break;
 				case "Group": //分组模式.
-					me.setPopValWorkModel(PopValWorkModel.Group);
+					me.setPopValWorkModel( PopValWorkModel.Group);
 
-					me.setPopValGroupSQL( this.GetValFromFrmByKey("TB_GroupModel_Group"));
-					me.setPopValEntitySQL( this.GetValFromFrmByKey("TB_GroupModel_Entity"));
+					me.setPopValGroupSQL(this.GetValFromFrmByKey("TB_GroupModel_Group"));
+					me.setPopValEntitySQL(this.GetValFromFrmByKey("TB_GroupModel_Entity"));
 
-					//me.setPopValUrl(this.GetValFromFrmByKey("TB_Url");
+					//me.setPopValUrl = this.GetValFromFrmByKey("TB_Url");
 					break;
 				case "Tree": //单实体树.
-					me.setPopValWorkModel(PopValWorkModel.Tree);
-					me.setPopValTreeSQL( this.GetValFromFrmByKey("TB_TreeSQL"));
+					me.setPopValWorkModel( PopValWorkModel.Tree);
+					me.setPopValTreeSQL(this.GetValFromFrmByKey("TB_TreeSQL"));
 					me.setPopValTreeParentNo(this.GetValFromFrmByKey("TB_TreeParentNo"));
 					break;
 				case "TreeDouble": //双实体树.
-					me.setPopValWorkModel(PopValWorkModel.TreeDouble);
-					me.setPopValTreeSQL( this.GetValFromFrmByKey("TB_DoubleTreeSQL")); // 树SQL
+					me.setPopValWorkModel( PopValWorkModel.TreeDouble);
+					me.setPopValTreeSQL(this.GetValFromFrmByKey("TB_DoubleTreeSQL")); // 树SQL
 					me.setPopValTreeParentNo(this.GetValFromFrmByKey("TB_DoubleTreeParentNo"));
 
 					me.setPopValDoubleTreeEntitySQL(this.GetValFromFrmByKey("TB_DoubleTreeEntitySQL")); //实体SQL
@@ -1225,18 +1232,16 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		}
 	}
 
-		/// xxx 界面方法.
+		///#endregion xxx 界面方法.
 
 
-		///PopFullCtrl 功能界面 .
+		///#region PopFullCtrl 功能界面 .
 	/** 
 	 保存
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String PopFullCtrl_Save() throws Exception
-	{
+	public final String PopFullCtrl_Save() throws Exception {
 		try
 		{
 			MapExt me = new MapExt();
@@ -1244,7 +1249,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 			me.setFK_MapData(this.getFK_MapData());
 			me.setAttrOfOper( this.getKeyOfEn());
-			me.setFK_DBSrc(this.GetValFromFrmByKey("FK_DBSrc"));
+			me.setFK_DBSrc( this.GetValFromFrmByKey("FK_DBSrc"));
 			me.setDoc(this.GetValFromFrmByKey("TB_Doc")); //要执行的SQL.
 
 			me.setExtType( MapExtXmlList.PopFullCtrl);
@@ -1264,21 +1269,19 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	public final String PopFullCtrl_Delete() throws Exception
-	{
+	public final String PopFullCtrl_Delete() throws Exception {
 		MapExt me = new MapExt();
 		me.Delete(MapExtAttr.ExtType, MapExtXmlList.PopFullCtrl, MapExtAttr.FK_MapData, this.getFK_MapData(), MapExtAttr.AttrOfOper, this.getKeyOfEn());
 
 		return "删除成功.";
 	}
-	public final String PopFullCtrl_Init() throws Exception
-	{
+	public final String PopFullCtrl_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//加载数据源.
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
-		DataTable dtSrc = srcs.ToDataTableField();
+		DataTable dtSrc = srcs.ToDataTableField("dt");
 		dtSrc.TableName = "Sys_SFDBSrc";
 		ds.Tables.add(dtSrc);
 
@@ -1289,21 +1292,21 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		if (i == 0)
 		{
 			me.setFK_MapData(this.getFK_MapData());
-			me.setAttrOfOper(this.getKeyOfEn());
-			me.setFK_DBSrc("local");
+			me.setAttrOfOper( this.getKeyOfEn());
+			me.setFK_DBSrc( "local");
 		}
 
 		//这个属性没有用.
 		me.setW(i); //用于标记该数据是否保存?  从而不现实填充从表，填充下拉框.按钮是否可以用.
 		if (me.getFK_DBSrc().equals(""))
 		{
-			me.setFK_DBSrc("local");
+			me.setFK_DBSrc( "local");
 		}
 
 		//去掉 ' 号.
 		me.SetValByKey("Doc", me.getDoc());
 
-		DataTable dt = me.ToDataTableField();
+		DataTable dt = me.ToDataTableField("Main");
 		dt.TableName = "Sys_MapExt";
 		ds.Tables.add(dt);
 
@@ -1313,17 +1316,15 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	 填充从表
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String PopFullCtrlDtl_Init() throws Exception
-	{
+	public final String PopFullCtrlDtl_Init() throws Exception {
 		MapExt me = new MapExt(this.getMyPK());
 
 		String[] strs = me.getTag1().split("[$]", -1);
 		// 格式为: $ND101Dtl2:SQL.
 
 		MapDtls dtls = new MapDtls();
-		dtls.Retrieve(MapDtlAttr.FK_MapData, me.getFK_MapData());
+		dtls.Retrieve(MapDtlAttr.FK_MapData, me.getFK_MapData(), null);
 		for (String str : strs)
 		{
 			if (DataType.IsNullOrEmpty(str) || str.contains(":") == false)
@@ -1337,7 +1338,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 			for (MapDtl dtl : dtls.ToJavaList())
 			{
-				if (!fk_mapdtl.equals(dtl.getNo()))
+				if (!dtl.getNo().equals(fk_mapdtl))
 				{
 					continue;
 				}
@@ -1348,8 +1349,8 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String cols = "";
-			MapAttrs attrs = new MapAttrs(dtl.getNo());
-			for (MapAttr item : attrs.ToJavaList())
+			MapAttrs mattrs = new MapAttrs(dtl.getNo());
+			for (MapAttr item : mattrs.ToJavaList())
 			{
 				if (item.getKeyOfEn().equals("OID") || item.getKeyOfEn().equals("RefPKVal") || item.getKeyOfEn().equals("RefPK"))
 				{
@@ -1360,11 +1361,10 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 			}
 			dtl.setAlias(cols); //把ptable作为一个数据参数.
 		}
-		return dtls.ToJson();
+		return dtls.ToJson("dt");
 	}
 
-	public final String PopFullCtrlDtl_Save() throws Exception
-	{
+	public final String PopFullCtrlDtl_Save() throws Exception {
 		MapDtls dtls = new MapDtls(this.getFK_MapData());
 		MapExt me = new MapExt(this.getMyPK());
 
@@ -1372,33 +1372,32 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			String sql = this.GetRequestVal("TB_" + dtl.getNo());
-
-			if (DataType.IsNullOrEmpty(sql)==true)
-				continue;
 			sql = sql.trim();
-
-			if(sql.equals("")==true)
+			if (DataType.IsNullOrEmpty(sql) == true)
+			{
 				continue;
+			}
 
 			if (sql.contains("@Key") == false)
+			{
 				return "err@在配置从表:" + dtl.getNo() + " sql填写错误, 必须包含@Key列, @Key就是当前文本框输入的值. ";
+			}
 
 			str += "$" + dtl.getNo() + ":" + sql;
 		}
-		me.setTag1(str);
+		me.setTag1( str);
 		me.Update();
 
 		return "保存成功.";
 	}
 
-	public final String PopFullCtrlDDL_Init() throws Exception
-	{
+	public final String PopFullCtrlDDL_Init() throws Exception {
 		MapExt myme = new MapExt(this.getMyPK());
-		MapAttrs attrs = new MapAttrs(myme.getFK_MapData());
-		attrs.Retrieve(MapAttrAttr.FK_MapData, myme.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue());
+		MapAttrs mattrs = new MapAttrs(myme.getFK_MapData());
+		mattrs.Retrieve(MapAttrAttr.FK_MapData, myme.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue(), null);
 
 		String[] strs = myme.getTag().split("[$]", -1);
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : mattrs.ToJavaList())
 		{
 			for (String s : strs)
 			{
@@ -1412,33 +1411,35 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 				}
 
 				String[] ss = s.split("[:]", -1);
-				attr.setDefVal(ss[1]); //使用这个字段作为对应设置的sql.
+				attr.setDefVal( ss[1]); //使用这个字段作为对应设置的sql.
 			}
 		}
 
-		return attrs.ToJson();
+		return mattrs.ToJson("dt");
 	}
-	public final String PopFullCtrlDDL_Save() throws Exception
-	{
+	public final String PopFullCtrlDDL_Save() throws Exception {
 		MapExt myme = new MapExt(this.getMyPK());
 
-		MapAttrs attrs = new MapAttrs(myme.getFK_MapData());
-		attrs.Retrieve(MapAttrAttr.FK_MapData, myme.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue());
+		MapAttrs mattrs = new MapAttrs(myme.getFK_MapData());
+		mattrs.Retrieve(MapAttrAttr.FK_MapData, myme.getFK_MapData(), MapAttrAttr.UIIsEnable, 1, MapAttrAttr.UIContralType, UIContralType.DDL.getValue(), null);
 
 		MapExt me = new MapExt(this.getMyPK());
 
 		String str = "";
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : mattrs.ToJavaList())
 		{
 
 			String sql = this.GetRequestVal("TB_" + attr.getKeyOfEn());
-			if (DataType.IsNullOrEmpty(sql)==true)
-				continue;
 			sql = sql.trim();
-			if(sql.equals("")==true)
+			if (DataType.IsNullOrEmpty(sql) == true)
+			{
 				continue;
+			}
+
 			if (sql.contains("@Key") == false)
+			{
 				return "err@在配置从表:" + attr.getKeyOfEn() + " sql填写错误, 必须包含@Key列, @Key就是当前文本框输入的值. ";
+			}
 
 			str += "$" + attr.getKeyOfEn() + ":" + sql;
 		}
@@ -1448,23 +1449,18 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		return "保存成功.";
 	}
 
-		/// PopFullCtrl 功能界面.
+		///#endregion PopFullCtrl 功能界面.
 
 
 
-		///杨玉慧  表单设计--表单属性   JS编程
-	public final String InitScript_Init()
-	{
+		///#region 杨玉慧  表单设计--表单属性   JS编程
+	public final String InitScript_Init() throws Exception {
 		try
 		{
 			//2019-07-26 zyt改造
 			//String webPath = HttpRuntime.AppDomainAppPath.replace("\\", "/");
 			String filePath = SystemConfig.getPathOfDataUser() + "JSLibData/" + this.getFK_MapData() + "_Self.js";
-			String content = "";
-			if (!(new File(filePath)).isFile())
-				content = "";
-			else
-				content =DataType.ReadTextFile(filePath);
+			String content =DataType.ReadTextFile(filePath);
 			return content;
 		}
 		catch (RuntimeException ex)
@@ -1473,13 +1469,14 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		}
 	}
 
-	public final String InitScript_Save()
-	{
+	public final String InitScript_Save() throws Exception {
 		try
 		{
 			//2019-07-26 zyt改造
-			String filePath = SystemConfig.getPathOfDataUser()  + "JSLibData/" + this.getFK_MapData() + "_Self.js";
-			String content = ContextHolderUtils.getRequest().getParameter("JSDoc");
+			//String webPath = HttpRuntime.AppDomainAppPath.Replace("\\", "/");
+			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
+			String filePath = webPath + "DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+			String content = this.GetRequestVal("JSDoc"); // this.context.Request.Params["JSDoc"];
 
 			//在应用程序当前目录下的File1.txt文件中追加文件内容，如果文件不存在就创建，默认编码
 			DataType.WriteFile(filePath, content);
@@ -1493,14 +1490,13 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 	}
 
-	public final String InitScript_Delete()
-	{
+	public final String InitScript_Delete() throws Exception {
 		try
 		{
 			//2019-07-26 zyt改造
-			//String webPath = HttpRuntime.AppDomainAppPath.replace("\\", "/");
+			//String webPath = HttpRuntime.AppDomainAppPath.Replace("\\", "/");
 			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
-			String filePath = webPath + "/DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+			String filePath = webPath + "DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
 
 			if ((new File(filePath)).isFile())
 			{
@@ -1515,10 +1511,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		}
 	}
 
-		///
+		///#endregion
 
-	public final String NRCMaterielDtlSave() throws Exception
-	{
+	public final String NRCMaterielDtlSave() throws Exception {
 		String fk_Template = this.GetRequestVal("FK_Template");
 		String workid = this.GetRequestVal("WorkId");
 		String sql = "SELECT * FROM STARCO_TemplateNRCMaterielDtl WHERE FK_Template='" + fk_Template + "'";
@@ -1554,7 +1549,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 				String workId = workid;
 				String shuLiang = dt.Rows.get(i).getValue("Qty").toString();
 				String piCiHao = dt.Rows.get(i).getValue("PCH").toString();
-				String rdt = DataType.getCurrentDate();
+				String rdt = String.valueOf(new Date());
 				String userNo = WebUser.getNo();
 
 				String sql2 = "INSERT INTO ND105Dtl1(MingChen,JianHao,RefPK,ShuLiang,PiCiHao,RDT,Rec) VALUES('" + name + "','" + jianHao + "','" + workId + "','" + shuLiang + "','" + piCiHao + "','" + rdt + "','" + userNo + "')";

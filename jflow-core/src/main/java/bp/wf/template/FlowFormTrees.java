@@ -3,6 +3,7 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -14,16 +15,13 @@ public class FlowFormTrees extends EntitiesTree
 	/** 
 	 独立表单树s
 	*/
-	public FlowFormTrees()
-	{
+	public FlowFormTrees() throws Exception {
 	}
 	/** 
 	 独立表单树
-	 * @throws Exception 
 	*/
-	public FlowFormTrees(String flowNo) throws Exception
-	{
-	   int i = this.Retrieve(FlowFormTreeAttr.FK_Flow, flowNo);
+	public FlowFormTrees(String flowNo) throws Exception {
+	   int i = this.Retrieve(FlowFormTreeAttr.FK_Flow, flowNo, null);
 	   if (i == 0)
 	   {
 		   FlowFormTree tree = new FlowFormTree();
@@ -35,37 +33,34 @@ public class FlowFormTrees extends EntitiesTree
 		   tree.Insert();
 
 		   //创建一个节点.
-		   tree.DoCreateSubNode();
+		   tree.DoCreateSubNode(null);
 	   }
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FlowFormTree();
 	}
 
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FlowFormTree> ToJavaList()
-	{
-		return (List<FlowFormTree>)(Object)this;
+	public final java.util.List<FlowFormTree> ToJavaList() {
+		return (java.util.List<FlowFormTree>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FlowFormTree> Tolist()
-	{
+	public final ArrayList<FlowFormTree> Tolist()  {
 		ArrayList<FlowFormTree> list = new ArrayList<FlowFormTree>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -74,5 +69,5 @@ public class FlowFormTrees extends EntitiesTree
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

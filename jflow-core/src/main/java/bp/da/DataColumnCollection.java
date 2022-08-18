@@ -17,7 +17,7 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 	/**
 	 * DataColumnCollection被建立時，一定要指定所屬的DataTable
 	 * 
-	 * @param table
+	 * param table
 	 */
 	public DataColumnCollection(DataTable table)
 	{
@@ -29,7 +29,7 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 	 * 
 	 * @return DataTable
 	 */
-	public DataTable getTable()
+	public DataTable getTable()throws Exception
 	{
 		return this.Table;
 	}
@@ -38,7 +38,7 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 	 * 加入一個DataColumn物件，程式碼會設定該DataColumn的DataTable和呼叫Add()
 	 * 方法的DataColumnCollection同一個DataTable
 	 * 
-	 * @param column
+	 * param column
 	 */
 	public void Add(DataColumn column)
 	{
@@ -51,7 +51,7 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 	 * 加入一個DataColumn物件，程式碼會設定該DataColumn的DataTable和呼叫Add()
 	 * 方法的DataColumnCollection同一個DataTable
 	 * 
-	 * @param columnName
+	 * param columnName
 	 * @return
 	 */
 	public DataColumn Add(String columnName)
@@ -83,7 +83,7 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 	/**
 	 * 依據欄名，取得DataColumn
 	 * 
-	 * @param columnName
+	 * param columnName
 	 *            欄名
 	 * @return DataColumn
 	 */

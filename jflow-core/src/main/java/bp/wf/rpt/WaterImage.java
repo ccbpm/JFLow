@@ -1,6 +1,5 @@
 package bp.wf.rpt;
 
-
 /** 
  装载水印图片的相关信息
 */
@@ -9,7 +8,7 @@ public class WaterImage
 	/** 
 	 水文
 	*/
-	public WaterImage()
+	public WaterImage()throws Exception
 	{
 	}
 
@@ -18,7 +17,7 @@ public class WaterImage
 	 源图片地址名字(带后缀)
 	*/
 
-	public final String getSourcePicture()
+	public final String getSourcePicture()throws Exception
 	{
 		return m_sourcePicture;
 	}
@@ -31,7 +30,7 @@ public class WaterImage
 	/** 
 	 水印图片名字(带后缀)
 	*/
-	public final String getWaterPicture()
+	public final String getWaterPicture()throws Exception
 	{
 		return m_waterImager;
 	}
@@ -44,33 +43,31 @@ public class WaterImage
 	/** 
 	 水印图片文字的透明度
 	*/
-	public final float getAlpha()
+	public final float getAlpha()throws Exception
 	{
 		return m_alpha;
 	}
-	public final void setAlpha(float value) throws Exception
-	{
-		m_alpha = value;
+	public final void setAlpha(float value)throws Exception
+	{m_alpha = value;
 	}
 
 	private ImagePosition m_postition = ImagePosition.values()[0];
 	/** 
 	 水印图片或文字在图片中的位置
 	*/
-	public final ImagePosition getPosition()
+	public final ImagePosition getPosition()throws Exception
 	{
 		return m_postition;
 	}
-	public final void setPosition(ImagePosition value)
-	{
-		m_postition = value;
+	public final void setPosition(ImagePosition value)throws Exception
+	{m_postition = value;
 	}
 
 	private String m_words;
 	/** 
 	 水印文字的内容
 	*/
-	public final String getWords()
+	public final String getWords()throws Exception
 	{
 		return m_words;
 	}

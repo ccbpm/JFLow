@@ -1,5 +1,7 @@
 package bp.sys;
-import bp.en.EntityOIDAttr;
+
+import bp.en.*;
+
 /** 
  通用从表
 */

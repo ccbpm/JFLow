@@ -2,11 +2,7 @@ package bp.sys.frmui;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.sys.*;
-import bp.*;
-import bp.sys.*;
-import java.util.*;
 
 /** 
  图片附件
@@ -14,111 +10,89 @@ import java.util.*;
 public class FrmImgAth extends EntityMyPK
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 名称
 	*/
-	public final String getName()throws Exception
+	public final String getName()
 	{
 		return this.GetValStringByKey(FrmImgAthAttr.Name);
 	}
-	public final void setName(String value) throws Exception
-	{
+	public final void setName(String value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.Name, value);
 	}
 	/** 
 	 控件ID
 	*/
-	public final String getCtrlID()throws Exception
+	public final String getCtrlID()
 	{
 		return this.GetValStringByKey(FrmImgAthAttr.CtrlID);
 	}
-	public final void setCtrlID(String value) throws Exception
-	{
+	public final void setCtrlID(String value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.CtrlID, value);
 	}
-	/** 
-	 Y
-	*/
-	public final float getY()throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAthAttr.Y);
-	}
-	public final void setY(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.Y, value);
-	}
-	/** 
-	 X
-	*/
-	public final float getX()throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAthAttr.X);
-	}
-	public final void setX(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.X, value);
-	}
+
 	/** 
 	 H
 	*/
-	public final float getH()throws Exception
+	public final float getH()
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.H);
 	}
-	public final void setH(float value) throws Exception
-	{
+	public final void setH(float value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.H, value);
 	}
 	/** 
 	 W
 	*/
-	public final float getW()throws Exception
+	public final float getW()
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.W);
 	}
-	public final void setW(float value) throws Exception
-	{
+	public final void setW(float value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.W, value);
 	}
 	/** 
 	 FK_MapData
 	*/
-	public final String getFK_MapData()throws Exception
+	public final String getFKMapData()
 	{
 		return this.GetValStrByKey(FrmImgAthAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.FK_MapData, value);
 	}
 	/** 
 	 是否可编辑
 	*/
-	public final boolean getIsEdit()throws Exception
+	public final boolean isEdit()
 	{
 		return this.GetValBooleanByKey(FrmImgAthAttr.IsEdit);
 	}
-	public final void setIsEdit(boolean value) throws Exception
-	{
+	public final void setEdit(boolean value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.IsEdit, value);
 	}
 	/** 
 	 是否必填，2016-11-1
 	*/
-	public final boolean getIsRequired()throws Exception
+	public final boolean isRequired()
 	{
 		return this.GetValBooleanByKey(FrmImgAthAttr.IsRequired);
 	}
-	public final void setIsRequired(boolean value) throws Exception
-	{
+	public final void setRequired(boolean value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.IsRequired, value);
 	}
 	/** 
 	 所在的分组
 	*/
-	public final int getGroupID()throws Exception
-	{
+	public final int getGroupID() {
 		String str = this.GetValStringByKey(FrmImgAthAttr.GroupID);
 		if (str.equals("无") || str.equals(""))
 		{
@@ -126,21 +100,20 @@ public class FrmImgAth extends EntityMyPK
 		}
 		return Integer.parseInt(str);
 	}
-	public final void setGroupID(int value) throws Exception
-	{
+	public final void setGroupID(int value)
+	 {
 		this.SetValByKey(FrmImgAthAttr.GroupID, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	*/
 
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -150,13 +123,12 @@ public class FrmImgAth extends EntityMyPK
 	/** 
 	 图片附件
 	*/
-	public FrmImgAth()
-	{
+	public FrmImgAth() {
 	}
 	/** 
 	 图片附件
 	 
-	 @param mypk
+	 param mypk
 	*/
 	public FrmImgAth(String mypk)throws Exception
 	{
@@ -167,8 +139,7 @@ public class FrmImgAth extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -182,8 +153,6 @@ public class FrmImgAth extends EntityMyPK
 		map.AddTBString(FrmImgAthAttr.CtrlID, null, "控件ID", true, true, 0, 200, 20);
 		map.AddTBString(FrmImgAthAttr.Name, null, "中文名称", true, false, 0, 200, 20);
 
-		map.AddTBFloat(FrmImgAthAttr.X, 5, "X", true, false);
-		map.AddTBFloat(FrmImgAthAttr.Y, 5, "Y", false, false);
 
 		map.AddTBFloat(FrmImgAthAttr.H, 200, "H", true, false);
 		map.AddTBFloat(FrmImgAthAttr.W, 160, "W", false, false);
@@ -196,7 +165,7 @@ public class FrmImgAth extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.ColSpan, 0, "单元格数量", false, true);
 
 			//跨单元格
-		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 			//跨行
 		map.AddDDLSysEnum(MapAttrAttr.RowSpan, 1, "行数", true, true, "RowSpanAttrString", "@1=跨1个行@2=跨2行@3=跨3行");
 			//map.AddTBInt(FrmImgAthAttr.IsRequired, 0, "是否必填项", true, true);
@@ -206,32 +175,47 @@ public class FrmImgAth extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction()throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		//this.setMyPK(this.FK_MapData + "_" + this.CtrlID;
 		return super.beforeUpdateInsertAction();
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		//在属性实体集合插入前，clear父实体的缓存.
-		bp.sys.Glo.ClearMapDataAutoNum(this.getFK_MapData());
+		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFKMapData());
 
-		bp.sys.FrmImgAth imgAth = new bp.sys.FrmImgAth();
+		FrmImgAth imgAth = new FrmImgAth();
 		imgAth.setMyPK(this.getMyPK());
 		imgAth.RetrieveFromDBSources();
 		imgAth.Update();
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFKMapData());
 
-		MapAttr attr = new MapAttr(this.getFK_MapData(), imgAth.getCtrlID());
-		attr.setGroupID(this.getGroupID());
-		attr.DirectUpdate();
+		MapAttr attr = new MapAttr();
+		attr.setMyPK(this.getFKMapData() + "_" + imgAth.getCtrlID());
+		if (attr.RetrieveFromDBSources() == 0)
+		{
+			attr.setFK_MapData(this.getFKMapData());
+			attr.setName(this.getName());
+			attr.setKeyOfEn(imgAth.getCtrlID());
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.FrmImgAth);
+			attr.setGroupID(this.getGroupID());
+			attr.setEnableInAPP(true);
+			attr.setUIVisible(true);
+			attr.DirectInsert();
+		}
+		else
+		{
+			attr.setGroupID(this.getGroupID());
+			attr.DirectUpdate();
+		}
+
 
 		super.afterInsertUpdateAction();
 	}
@@ -240,15 +224,14 @@ public class FrmImgAth extends EntityMyPK
 	 删除后清缓存
 	*/
 	@Override
-	protected void afterDelete()throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//把相关的字段也要删除.
 		MapAttrString attr = new MapAttrString();
 		attr.setMyPK(this.getMyPK());
-		attr.setFK_MapData(this.getFK_MapData());
+		attr.setFK_MapData(this.getFKMapData());
 		attr.Delete();
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFKMapData());
 		super.afterDelete();
 	}
 

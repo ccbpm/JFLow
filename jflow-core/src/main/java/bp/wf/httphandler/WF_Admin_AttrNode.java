@@ -1,43 +1,36 @@
 package bp.wf.httphandler;
 
-import bp.wf.*;
-import bp.web.*;
-import bp.sys.*;
-import bp.tools.StringHelper;
-import bp.da.*;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
-import bp.difference.handler.WebContralBase;
+import bp.sys.*;
+import bp.da.*;
 import bp.en.*;
 import bp.wf.template.*;
-import bp.wf.xml.*;
+import bp.difference.*;
+import bp.tools.*;
 import bp.wf.*;
-import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
+import java.util.*;
 import java.io.*;
 
-public class WF_Admin_AttrNode extends WebContralBase
+import static bp.difference.handler.WebContralBase.getRequest;
+
+
+public class WF_Admin_AttrNode extends bp.difference.handler.WebContralBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_AttrNode()
-	{
+	public WF_Admin_AttrNode() throws Exception {
 	}
 
 
-		///事件基类.
+		///#region 事件基类.
 	/** 
 	 事件类型
 	*/
-	public final String getShowType()
-	{
+	public final String getShowType() throws Exception {
 		if (this.getFK_Node() != 0)
 		{
 			return "Node";
@@ -59,16 +52,14 @@ public class WF_Admin_AttrNode extends WebContralBase
 	 获得该节点下已经绑定该类型的实体.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String ActionDtl_Init() throws Exception
-	{
+	public final String ActionDtl_Init() throws Exception {
 		//业务单元集合.
 		DataTable dtBuess = new DataTable();
 		dtBuess.Columns.Add("No", String.class);
 		dtBuess.Columns.Add("Name", String.class);
 		dtBuess.TableName = "BuessUnits";
-		ArrayList<BuessUnitBase> al =ClassFactory.GetObjects("bp.sys.BuessUnitBase");
+		ArrayList<BuessUnitBase> al = bp.en.ClassFactory.GetObjects("bp.sys.BuessUnitBase");
 		for (BuessUnitBase en : al)
 		{
 			DataRow dr = dtBuess.NewRow();
@@ -77,21 +68,19 @@ public class WF_Admin_AttrNode extends WebContralBase
 			dtBuess.Rows.add(dr);
 		}
 
-		return bp.tools.Json.ToJson(dtBuess);
+		return Json.ToJson(dtBuess);
 	}
 
-		/// 事件基类.
+		///#endregion 事件基类.
 
 
-		///  公文维护
+		///#region   公文维护
 	/** 
 	 选择一个模版
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String SelectDocTemp_Save() throws Exception
-	{
+	public final String SelectDocTemp_Save() throws Exception {
 		String docTempNo = this.GetRequestVal("no");
 
 		DocTemplate docTemplate = new DocTemplate(docTempNo);
@@ -108,14 +97,24 @@ public class WF_Admin_AttrNode extends WebContralBase
 		Flow fl = new Flow(this.getFK_Flow());
 		DBAccess.SaveBytesToDB(bytes, fl.getPTable(), "OID", String.valueOf(this.getWorkID()), "WordFile");
 
-		
+		////模板与业务的绑定.
+		//DocTempFlow dtf = new DocTempFlow();
+		//dtf.CheckPhysicsTable();
+
+		//if (dtf.IsExit(DocTempFlowAttr.WorkID, workId))
+		//{
+		//    dtf.Delete();
+		//}
+		//dtf.WorkID = workId;
+		//dtf.TempNo = docTempNo;
+		//dtf.setMyPK(workId + "_" + docTempNo;
+		//dtf.Insert();
+
 		return "模板导入成功.";
 	}
 
-	public final String FlowDocInit() throws Exception
-	{
+	public final String FlowDocInit() throws Exception {
 		Hashtable<String, Object>  msg = new Hashtable<String, Object>();
-		
 		msg.put("Success", true);
 
 		try
@@ -131,7 +130,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 				/*如果没有此列，就自动创建此列.*/
 				String sql = "ALTER TABLE " + tableName + " ADD  " + str + " image ";
 
-				if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+				if (SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 				{
 					sql = "ALTER TABLE " + tableName + " ADD  " + str + " image ";
 				}
@@ -139,14 +138,15 @@ public class WF_Admin_AttrNode extends WebContralBase
 				DBAccess.RunSQL(sql);
 			}
 
+
+//ORIGINAL LINE: byte[] bytes = DBAccess.GetByteFromDB(tableName, "OID", workId.ToString(), "WordFile");
 			byte[] bytes = DBAccess.GetByteFromDB(tableName, "OID", String.valueOf(workId), "WordFile");
 			Node node = new Node(nodeId);
 
-			if (!node.getIsStartNode())
+			if (!node.isStartNode())
 			{
 				if (bytes == null)
 				{
-					
 					msg.put("Message", "{\"IsStartNode\":0,\"IsExistFlowData\":0,\"IsExistTempData\":0}");
 				}
 				else
@@ -157,7 +157,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 			else //开始节点
 			{
 				DocTemplates dts = new DocTemplates();
-				int count = dts.Retrieve(DocTemplateAttr.FK_Node, nodeId);
+				int count = dts.Retrieve(DocTemplateAttr.FK_Node, nodeId, null);
 
 				if (bytes == null)
 				{
@@ -200,13 +200,11 @@ public class WF_Admin_AttrNode extends WebContralBase
 	 删除
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DocTemp_Del() throws Exception
-	{
+	public final String DocTemp_Del() throws Exception {
 		int no = Integer.parseInt(this.GetRequestVal("no"));
 
-		bp.wf.template.DocTemplate dt = new DocTemplate();
+		DocTemplate dt = new DocTemplate();
 		dt.Retrieve(DocTemplateAttr.No, no);
 		dt.Delete();
 
@@ -216,11 +214,11 @@ public class WF_Admin_AttrNode extends WebContralBase
 	 模版文件上传
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DocTemp_Upload() throws Exception
-	{
+	public final String DocTemp_Upload() throws Exception {
+
 		Node nd = new Node(this.getFK_Node());
+
 		HttpServletRequest request = getRequest();
 		String contentType = request.getContentType();
 		String fileName="";
@@ -235,7 +233,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 			{
 				(new File(path)).mkdirs();
 			}
-			
+
 			try {
 				CommonFileUtils.upload(request, "file", new File(fileFullPath));
 			} catch (Exception e) {
@@ -243,8 +241,8 @@ public class WF_Admin_AttrNode extends WebContralBase
 				return "err@执行失败";
 			}
 		}
-		
-		
+
+
 
 		//插入模版.
 		DocTemplate dt = new DocTemplate();
@@ -260,119 +258,30 @@ public class WF_Admin_AttrNode extends WebContralBase
 		return dt.ToJson();
 	}
 
-		///
 
 
-		/// 单据模版维护
-	/** 
-	 @李国文.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Bill_Save() throws Exception
-	{
-		BillTemplate bt = new BillTemplate();
-		HttpServletRequest request = getRequest();
-		// 上传附件
-		String fileName = CommonFileUtils.getOriginalFilename(request,"bill");
-		String filepath = SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + fileName;
-		filepath = filepath.replace("\\", "/");
-		
-		try{
-			CommonFileUtils.upload(request, "bill",new File(filepath));
-		}catch(Exception e){
-			e.printStackTrace();
-			return "err@执行失败";		
-		}
-
-		bt.setNodeID(this.getFK_Node());
-		bt.setFK_MapData(this.getFK_MapData());
-		bt.setNo(request.getParameter("TB_No"));
-		if (StringHelper.isNullOrEmpty(bt.getNo())) {
-			bt.setNo(String.valueOf(DBAccess.GenerOID("Template")));
-		}
-		bt.setName(request.getParameter("TB_Name"));
-		bt.setTempFilePath(fileName);
-		
-		bt.setHisBillFileType(Integer.parseInt(request.getParameter("DDL_BillFileType")));
-		bt.setBillOpenModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
-		bt.setQRModel(Integer.parseInt(request.getParameter("DDL_BillOpenModel")));
-		
-		//模版类型.rtf / VSTOForWord / VSTOForExcel .
-        if (fileName.contains(".doc"))
-            bt.setTemplateFileModel(TemplateFileModel.VSTOForWord);
-
-        if (fileName.contains(".xls"))
-            bt.setTemplateFileModel(TemplateFileModel.VSTOForExcel);
-
-        if (fileName.contains(".rtf"))
-            bt.setTemplateFileModel(TemplateFileModel.RTF);
-
-        bt.Save();
-
-        bt.SaveFileToDB("DBFile", filepath); //把文件保存到数据库里. 
-
-		return "保存成功";
-	}
-	
-	private HttpServletResponse response;
-	public void setHttpServletResp(HttpServletResponse response) {
-
-		this.response = response;
-	}
-	/** 
-	 下载文件.
-	*/
-	public final void Bill_Download() throws Exception
-	{
-		BillTemplate en = new BillTemplate(this.getNo());
-		String MyFilePath = en.getTempFilePath();
-		String fileName = MyFilePath.substring(MyFilePath.lastIndexOf("/") + 1);
-
-		// 设置响应头和客户端保存文件名
-		response.setCharacterEncoding("utf-8");
-		response.setContentType("multipart/form-data");
-		response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
-
-		InputStream inputStream = new FileInputStream(MyFilePath);
-
-		OutputStream os = response.getOutputStream();
-
-		long downloadedLength = 0l;
-		byte[] b = new byte[2048];
-		int length;
-		while ((length = inputStream.read(b)) > 0) {
-			os.write(b, 0, length);
-			downloadedLength += b.length;
-		}
-
-		os.close();
-		inputStream.close();
-		
-	}
-		///
+		///#endregion
 
 
-		/// 节点消息
-	public final String PushMsg_Init() throws Exception
-	{
+
+
+		///#region  节点消息
+	public final String PushMsg_Init() throws Exception {
 		//增加上单据模版集合.
 		int nodeID = this.GetRequestValInt("FK_Node");
-		bp.wf.template.PushMsgs ens = new bp.wf.template.PushMsgs(nodeID);
-		return ens.ToJson();
+		PushMsgs ens = new PushMsgs(nodeID);
+		return ens.ToJson("dt");
 	}
-	public final String PushMsg_Save() throws Exception
-	{
-		bp.wf.template.PushMsg msg = new bp.wf.template.PushMsg();
+	public final String PushMsg_Save() throws Exception {
+		PushMsg msg = new PushMsg();
 		msg.setMyPK(this.getMyPK());
 		msg.RetrieveFromDBSources();
 
-		msg.setFK_Event(this.getFK_Event());
+		msg.setFKEvent(this.getFK_Event());
 		msg.setFK_Node(this.getFK_Node());
 
-		bp.wf.Node nd = new bp.wf.Node(this.getFK_Node());
-		bp.wf.Nodes nds = new bp.wf.Nodes(nd.getFK_Flow());
+		Node nd = new Node(this.getFK_Node());
+		Nodes nds = new Nodes(nd.getFK_Flow());
 		msg.setFK_Flow(nd.getFK_Flow());
 
 		//推送方式。
@@ -382,10 +291,11 @@ public class WF_Admin_AttrNode extends WebContralBase
 		msg.setSMSField(this.GetRequestVal("DDL_SMS_Fields"));
 
 
-			///其他节点的处理人方式（求选择的节点）
+			///#region 其他节点的处理人方式（求选择的节点）
 		String nodesOfSMS = "";
-		for (bp.wf.Node mynd : nds.ToJavaList())
+		for (Node mynd : nds.ToJavaList())
 		{
+
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {
 				String key = (String) enu.nextElement();
@@ -399,7 +309,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 		}
 		msg.setSMSNodes(nodesOfSMS);
 
-			/// 其他节点的处理人方式（求选择的节点）
+			///#endregion 其他节点的处理人方式（求选择的节点）
 
 		//按照SQL
 		msg.setBySQL(this.GetRequestVal("TB_SQL"));
@@ -411,33 +321,33 @@ public class WF_Admin_AttrNode extends WebContralBase
 		msg.setSMSPushModel(this.GetRequestVal("PushModel"));
 
 		//邮件标题
-		msg.setMailTitle_Real(this.GetRequestVal("TB_Title"));
+		msg.setMailTitleReal(this.GetRequestVal("TB_title"));
 
 		//短信内容模版.
-		msg.setSMSDoc_Real(this.GetRequestVal("TB_SMS"));
+		msg.setSMSDocReal(this.GetRequestVal("TB_SMS"));
 
 		//节点预警
-		if (this.getFK_Event().equals(bp.sys.EventListNode.NodeWarning))
+		if (this.getFK_Event().equals(EventListNode.NodeWarning))
 		{
-			int noticeType =Integer.parseInt(this.GetRequestVal("RB_NoticeType").replace("RB_NoticeType", ""));
+			int noticeType = Integer.parseInt(this.GetRequestVal("RB_NoticeType").replace("RB_NoticeType", ""));
 			msg.SetPara("NoticeType", noticeType);
-			int hour = this.GetRequestValInt("TB_NoticeHour");
+			int hour = Integer.parseInt(this.GetRequestVal("TB_NoticeHour"));
 			msg.SetPara("NoticeHour", hour);
 		}
 
 		//节点逾期
-		if (this.getFK_Event().equals(bp.sys.EventListNode.NodeOverDue))
+		if (this.getFK_Event().equals(EventListNode.NodeOverDue))
 		{
 			int noticeType = Integer.parseInt(this.GetRequestVal("RB_NoticeType").replace("RB_NoticeType", ""));
 			msg.SetPara("NoticeType", noticeType);
-			int day = this.GetRequestValInt("TB_NoticeDay");
+			int day = Integer.parseInt(this.GetRequestVal("TB_NoticeDay"));
 			msg.SetPara("NoticeDay", day);
 		}
 
 		//保存.
 		if (DataType.IsNullOrEmpty(msg.getMyPK()) == true)
 		{
-			msg.setMyPK(DBAccess.GenerGUID());
+			msg.setMyPK(DBAccess.GenerGUID(0, null, null));
 			msg.Insert();
 		}
 		else
@@ -448,24 +358,24 @@ public class WF_Admin_AttrNode extends WebContralBase
 		return "保存成功..";
 	}
 
-	public final String PushMsgEntity_Init() throws Exception
-	{
+	public final String PushMsgEntity_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//字段下拉框.
+		//select * from Sys_MapAttr where FK_MapData='ND102' and LGType = 0 AND MyDataType =1
 
 		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.FK_MapData, "ND" + this.getFK_Node(), "LGType", 0, "MyDataType", 1);
+		attrs.Retrieve(MapAttrAttr.FK_MapData, "ND" + this.getFK_Node(), "LGType", 0, "MyDataType", 1, null);
 		ds.Tables.add(attrs.ToDataTableField("FrmFields"));
 
 		//节点 
 		//TODO 数据太多优化一下
-		bp.wf.Node nd = new bp.wf.Node(this.getFK_Node());
-		bp.wf.Nodes nds = new bp.wf.Nodes(nd.getFK_Flow());
+		Node nd = new Node(this.getFK_Node());
+		Nodes nds = new Nodes(nd.getFK_Flow());
 		ds.Tables.add(nds.ToDataTableField("Nodes"));
 
 		//mypk
-		bp.wf.template.PushMsg msg = new bp.wf.template.PushMsg();
+		PushMsg msg = new PushMsg();
 		msg.setMyPK(this.getMyPK());
 		msg.RetrieveFromDBSources();
 		ds.Tables.add(msg.ToDataTableField("PushMsgEntity"));
@@ -475,25 +385,23 @@ public class WF_Admin_AttrNode extends WebContralBase
 
 
 
-		///
+		///#endregion
 
 
-		///表单模式
+		///#region 表单模式
 	/** 
 	 表单模式
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String NodeFromWorkModel_Init() throws Exception
-	{
+	public final String NodeFromWorkModel_Init() throws Exception {
 		//数据容器.
 		DataSet ds = new DataSet();
 
 		// 当前节点信息.
 		Node nd = new Node(this.getFK_Node());
 
-		nd.WorkID=this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
+		nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 		nd.setNodeFrmID(nd.getNodeFrmID());
 		// nd.FormUrl = nd.FormUrl;
 
@@ -510,16 +418,14 @@ public class WF_Admin_AttrNode extends WebContralBase
 		//节点s
 		ds.Tables.add(nds.ToDataTableField("Nodes"));
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 	/** 
 	 表单模式
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String NodeFromWorkModel_Save() throws Exception
-	{
+	public final String NodeFromWorkModel_Save() throws Exception {
 		Node nd = new Node(this.getFK_Node());
 
 		MapData md = new MapData("ND" + this.getFK_Node());
@@ -535,10 +441,10 @@ public class WF_Admin_AttrNode extends WebContralBase
 			if (frmModel.equals("0"))
 			{
 				//自由表单
-				nd.setFormType(NodeFormType.FreeForm);
+				nd.setFormType(NodeFormType.Develop);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(FrmType.FreeFrm);
+				md.setHisFrmType( FrmType.Develop);
 				md.Update();
 			}
 			else
@@ -547,7 +453,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 				nd.setFormType(NodeFormType.FoolForm);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(FrmType.FoolForm);
+				md.setHisFrmType( FrmType.FoolForm);
 				md.Update();
 			}
 			//表单引用
@@ -572,7 +478,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 			nd.setFormType(NodeFormType.FoolTruck);
 			nd.DirectUpdate();
 
-			md.setHisFrmType(FrmType.FoolForm); //同时更新表单表住表.
+			md.setHisFrmType( FrmType.FoolForm); //同时更新表单表住表.
 			md.Update();
 		}
 
@@ -583,8 +489,8 @@ public class WF_Admin_AttrNode extends WebContralBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_CustomURL"));
 			nd.DirectUpdate();
 
-			md.setHisFrmType(FrmType.Url); //同时更新表单表住表.
-			md.setUrl(this.GetValFromFrmByKey("TB_CustomURL"));
+			md.setHisFrmType( FrmType.Url); //同时更新表单表住表.
+			md.setUrlExt(this.GetValFromFrmByKey("TB_CustomURL"));
 			md.Update();
 
 		}
@@ -595,8 +501,8 @@ public class WF_Admin_AttrNode extends WebContralBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_FormURL"));
 			nd.DirectUpdate();
 
-			md.setHisFrmType(FrmType.Url);
-			md.setUrl(this.GetValFromFrmByKey("TB_FormURL"));
+			md.setHisFrmType( FrmType.Url);
+			md.setUrlExt(this.GetValFromFrmByKey("TB_FormURL"));
 			md.Update();
 
 		}
@@ -611,7 +517,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 				nd.setFormType(NodeFormType.SheetTree);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
+				md.setHisFrmType( FrmType.FoolForm); //同时更新表单表住表.
 				md.Update();
 			}
 			else
@@ -619,7 +525,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 				nd.setFormType(NodeFormType.DisableIt);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(FrmType.FreeFrm); //同时更新表单表住表.
+				md.setHisFrmType( FrmType.FoolForm); //同时更新表单表住表.
 				md.Update();
 			}
 		}
@@ -627,25 +533,23 @@ public class WF_Admin_AttrNode extends WebContralBase
 		return "保存成功...";
 	}
 
-		/// 表单模式
+		///#endregion 表单模式
 
 
-		///节点属性（列表）的操作
+		///#region 节点属性（列表）的操作
 	/** 
 	 初始化节点属性列表.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String NodeAttrs_Init() throws Exception
-	{
+	public final String NodeAttrs_Init() throws Exception {
 		String strFlowId = GetRequestVal("FK_Flow");
 		if (DataType.IsNullOrEmpty(strFlowId))
 		{
 			return "err@参数错误！";
 		}
 		Nodes nodes = new Nodes();
-		nodes.Retrieve("FK_Flow", strFlowId);
+		nodes.Retrieve("FK_Flow", strFlowId, null);
 		//因直接使用nodes.ToJson()无法获取某些字段（e.g.HisFormTypeText,原因：Node没有自己的Attr类）
 		//故此处手动创建前台所需的DataTable
 		DataTable dt = new DataTable();
@@ -681,26 +585,26 @@ public class WF_Admin_AttrNode extends WebContralBase
 
 			//接收方数量
 			int intHisDeliveryWayCount = 0;
-			if (node.getHisDeliveryWay() == bp.wf.DeliveryWay.ByStation)
+			if (node.getHisDeliveryWay() == DeliveryWay.ByStation)
 			{
 				dr.setValue("HisDeliveryWayJsFnPara", "ByStation");
 				dr.setValue("HisDeliveryWayCountLabel", "岗位");
-				bp.wf.template.NodeStations nss = new bp.wf.template.NodeStations();
-				intHisDeliveryWayCount = nss.Retrieve(bp.wf.template.NodeStationAttr.FK_Node, node.getNodeID());
+				NodeStations nss = new NodeStations();
+				intHisDeliveryWayCount = nss.Retrieve(NodeStationAttr.FK_Node, node.getNodeID(), null);
 			}
-			else if (node.getHisDeliveryWay() == bp.wf.DeliveryWay.ByDept)
+			else if (node.getHisDeliveryWay() == DeliveryWay.ByDept)
 			{
 				dr.setValue("HisDeliveryWayJsFnPara", "ByDept");
 				dr.setValue("HisDeliveryWayCountLabel", "部门");
-				bp.wf.template.NodeDepts nss = new bp.wf.template.NodeDepts();
-				intHisDeliveryWayCount = nss.Retrieve(bp.wf.template.NodeDeptAttr.FK_Node, node.getNodeID());
+				NodeDepts nss = new NodeDepts();
+				intHisDeliveryWayCount = nss.Retrieve(NodeDeptAttr.FK_Node, node.getNodeID(), null);
 			}
-			else if (node.getHisDeliveryWay() == bp.wf.DeliveryWay.ByBindEmp)
+			else if (node.getHisDeliveryWay() == DeliveryWay.ByBindEmp)
 			{
 				dr.setValue("HisDeliveryWayJsFnPara", "ByDept");
 				dr.setValue("HisDeliveryWayCountLabel", "人员");
-				bp.wf.template.NodeEmps nes = new bp.wf.template.NodeEmps();
-				intHisDeliveryWayCount = nes.Retrieve(bp.wf.template.NodeStationAttr.FK_Node, node.getNodeID());
+				NodeEmps nes = new NodeEmps();
+				intHisDeliveryWayCount = nes.Retrieve(NodeStationAttr.FK_Node, node.getNodeID(), null);
 			}
 			dr.setValue("HisDeliveryWayCount", intHisDeliveryWayCount);
 
@@ -709,24 +613,23 @@ public class WF_Admin_AttrNode extends WebContralBase
 			dr.setValue("HisCCRoleText", node.getHisCCRoleText());
 
 			//消息&事件Count
-			bp.sys.FrmEvents fes = new bp.sys.FrmEvents();
-			dr.setValue("HisFrmEventsCount", fes.Retrieve(bp.sys.FrmEventAttr.FK_MapData, "ND" + node.getNodeID()));
+			FrmEvents fes = new FrmEvents();
+			dr.setValue("HisFrmEventsCount", fes.Retrieve(FrmEventAttr.FK_MapData, "ND" + node.getNodeID(), null));
 
 			//流程完成条件Count
-			bp.wf.template.Conds conds = new bp.wf.template.Conds(bp.wf.template.CondType.Flow, node.getNodeID());
+			Conds conds = new Conds(CondType.Flow, node.getNodeID());
 			dr.setValue("HisFinishCondsCount", conds.size());
 
 			dt.Rows.add(dr);
 		}
-		return bp.tools.Json.ToJson(dt);
+		return Json.ToJson(dt);
 	}
 
-		///
+		///#endregion
 
 
-		///特别控件特别用户权限
-	public final String SepcFiledsSepcUsers_Init()
-	{
+		///#region 特别控件特别用户权限
+	public final String SepcFiledsSepcUsers_Init() throws Exception {
 
 		/*string fk_mapdata = this.GetRequestVal("FK_MapData");
 		if (DataType.IsNullOrEmpty(fk_mapdata))
@@ -737,45 +640,44 @@ public class WF_Admin_AttrNode extends WebContralBase
 		    fk_mapdata = "101";
 
 
-		MapAttrs attrs = new MapAttrs(fk_mapdata);
+		BP.Sys.MapAttrs attrs = new BP.Sys.MapAttrs(fk_mapdata);
 
-		bp.sys.FrmImgs imgs = new bp.sys.FrmImgs(fk_mapdata);
+		BP.Sys.FrmImgs imgs = new BP.Sys.FrmImgs(fk_mapdata);
 
-		bp.sys.MapExts exts = new bp.sys.MapExts();
-		int mecount = exts.Retrieve(bp.sys.MapExtAttr.FK_MapData, fk_mapdata,
-		    bp.sys.MapExtAttr.Tag, this.GetRequestVal("FK_Node"),
-		    bp.sys.MapExtAttr.ExtType, "SepcFiledsSepcUsers");
+		BP.Sys.MapExts exts = new BP.Sys.MapExts();
+		int mecount = exts.Retrieve(BP.Sys.MapExtAttr.FK_MapData, fk_mapdata,
+		    BP.Sys.MapExtAttr.Tag, this.GetRequestVal("FK_Node"),
+		    BP.Sys.MapExtAttr.ExtType, "SepcFiledsSepcUsers");
 
-		bp.sys.FrmAttachments aths = new bp.sys.FrmAttachments(fk_mapdata);
+		BP.Sys.FrmAttachments aths = new BP.Sys.FrmAttachments(fk_mapdata);
 
-		exts = new bp.sys.MapExts();
-		exts.Retrieve(bp.sys.MapExtAttr.FK_MapData, fk_mapdata,
-		    bp.sys.MapExtAttr.Tag, this.GetRequestVal("FK_Node"),
-		    bp.sys.MapExtAttr.ExtType, "SepcAthSepcUsers");
+		exts = new BP.Sys.MapExts();
+		exts.Retrieve(BP.Sys.MapExtAttr.FK_MapData, fk_mapdata,
+		    BP.Sys.MapExtAttr.Tag, this.GetRequestVal("FK_Node"),
+		    BP.Sys.MapExtAttr.ExtType, "SepcAthSepcUsers");
 		*/
 		return ""; //toJson
 	}
 
-		///
+		///#endregion
 
 
-		///批量发起规则设置
-	public final String BatchStartFields_Init() throws Exception
-	{
+		///#region 批量发起规则设置
+	public final String BatchStartFields_Init() throws Exception {
 		int nodeID = Integer.parseInt(String.valueOf(this.getFK_Node()));
 		//获取节点字段集合
 		MapAttrs attrs = new MapAttrs("ND" + nodeID);
 		//获取节点对象
-		bp.wf.Node nd = new bp.wf.Node(nodeID);
+		Node nd = new Node(nodeID);
 		//获取批量发起设置规则
-		bp.sys.SysEnums ses = new bp.sys.SysEnums(bp.wf.template.NodeAttr.BatchRole);
+		SysEnums ses = new SysEnums(NodeAttr.BatchRole);
 		//获取当前节点设置的批处理规则
 		String srole = "";
 		if (nd.getHisBatchRole() == BatchRole.None)
 		{
 			srole = "0";
 		}
-		else if (nd.getHisBatchRole() == BatchRole.Ordinary)
+		else if (nd.getHisBatchRole() == BatchRole.WorkCheckModel)
 		{
 			srole = "1";
 		}
@@ -783,96 +685,56 @@ public class WF_Admin_AttrNode extends WebContralBase
 		{
 			srole = "2";
 		}
-		return "{\"nd\":" + nd.ToJson() + ",\"ses\":" + ses.ToJson() + ",\"attrs\":" + attrs.ToJson() + ",\"BatchRole\":" + srole + "}";
+		return "{\"nd\":" + nd.ToJson(true) + ",\"ses\":" + ses.ToJson("dt") + ",\"attrs\":" + attrs.ToJson("dt") + ",\"BatchRole\":" + srole + "}";
 	}
 
-		///
+		///#endregion
 
 
-		///批量发起规则设置save
-	public final String BatchStartFields_Save() throws Exception
-	{
-		int nodeID = Integer.parseInt(String.valueOf(this.getFK_Node()));
-		MapAttrs attrs = new MapAttrs("ND" + nodeID);
-		bp.wf.Node nd = new bp.wf.Node(nodeID);
-
-		//给变量赋值.
-		//批处理的类型
-		int selectval = Integer.parseInt(this.GetRequestVal("DDL_BRole"));
-		switch (selectval)
-		{
-			case 0:
-				nd.setHisBatchRole(bp.wf.BatchRole.None);
-				break;
-			case 1:
-				nd.setHisBatchRole(bp.wf.BatchRole.Ordinary);
-				break;
-			default:
-				nd.setHisBatchRole(bp.wf.BatchRole.Group);
-				break;
-		}
-		//批处理的数量
-		nd.setBatchListCount(Integer.parseInt(this.GetRequestVal("TB_BatchListCount")));
-		//批处理的参数 
-		String sbatchparas = "";
-		if (this.GetRequestVal("CheckBoxIDs") != null)
-		{
-			sbatchparas = this.GetRequestVal("CheckBoxIDs");
-		}
-		nd.setBatchParas(sbatchparas);
-		nd.Update();
-
-		return "保存成功.";
-	}
-
-		///
-
-
-		///发送阻塞模式
-	public final String BlockModel_Save() throws Exception
-	{
-		bp.wf.Node nd = new bp.wf.Node(this.getFK_Node());
+		///#region 发送阻塞模式
+	public final String BlockModel_Save() throws Exception {
+		Node nd = new Node(this.getFK_Node());
 
 		nd.setBlockAlert(this.GetRequestVal("TB_Alert")); //提示信息.
 
 		int val = this.GetRequestValInt("RB_BlockModel");
-		nd.SetValByKey(bp.wf.template.NodeAttr.BlockModel, val);
-		if (nd.getBlockModel() == bp.wf.BlockModel.None)
+		nd.SetValByKey(NodeAttr.BlockModel, val);
+		if (nd.getBlockModel() == BlockModel.None)
 		{
-			nd.setBlockModel(bp.wf.BlockModel.None);
+			nd.setBlockModel(BlockModel.None);
 		}
 
-		if (nd.getBlockModel() == bp.wf.BlockModel.CurrNodeAll)
+		if (nd.getBlockModel() == BlockModel.CurrNodeAll)
 		{
-			nd.setBlockModel(bp.wf.BlockModel.CurrNodeAll);
+			nd.setBlockModel(BlockModel.CurrNodeAll);
 		}
 
-		if (nd.getBlockModel() == bp.wf.BlockModel.SpecSubFlow)
+		if (nd.getBlockModel() == BlockModel.SpecSubFlow)
 		{
-			nd.setBlockModel(bp.wf.BlockModel.SpecSubFlow);
+			nd.setBlockModel(BlockModel.SpecSubFlow);
 			nd.setBlockExp(this.GetRequestVal("TB_SpecSubFlow"));
 		}
 
-		if (nd.getBlockModel() == bp.wf.BlockModel.BySQL)
+		if (nd.getBlockModel() == BlockModel.BySQL)
 		{
-			nd.setBlockModel(bp.wf.BlockModel.BySQL);
+			nd.setBlockModel(BlockModel.BySQL);
 			nd.setBlockExp(this.GetRequestVal("TB_SQL"));
 		}
 
-		if (nd.getBlockModel() == bp.wf.BlockModel.ByExp)
+		if (nd.getBlockModel() == BlockModel.ByExp)
 		{
-			nd.setBlockModel(bp.wf.BlockModel.ByExp);
+			nd.setBlockModel(BlockModel.ByExp);
 			nd.setBlockExp(this.GetRequestVal("TB_Exp"));
 		}
 
-		if (nd.getBlockModel() == bp.wf.BlockModel.SpecSubFlowNode)
+		if (nd.getBlockModel() == BlockModel.SpecSubFlowNode)
 		{
-			nd.setBlockModel(bp.wf.BlockModel.SpecSubFlowNode);
+			nd.setBlockModel(BlockModel.SpecSubFlowNode);
 			nd.setBlockExp(this.GetRequestVal("TB_SpecSubFlowNode"));
 		}
-		if (nd.getBlockModel() == bp.wf.BlockModel.SameLevelSubFlow)
+		if (nd.getBlockModel() == BlockModel.SameLevelSubFlow)
 		{
-			nd.setBlockModel(bp.wf.BlockModel.SameLevelSubFlow);
+			nd.setBlockModel(BlockModel.SameLevelSubFlow);
 			nd.setBlockExp(this.GetRequestVal("TB_SameLevelSubFlow"));
 		}
 
@@ -882,20 +744,19 @@ public class WF_Admin_AttrNode extends WebContralBase
 		return "保存成功.";
 	}
 
-		///
+		///#endregion
 
 
-		///可以撤销的节点
-	public final String CanCancelNodes_Save() throws Exception
-	{
-		bp.wf.template.NodeCancels rnds = new bp.wf.template.NodeCancels();
-		rnds.Delete(bp.wf.template.NodeCancelAttr.FK_Node, this.getFK_Node());
+		///#region 可以撤销的节点
+	public final String CanCancelNodes_Save() throws Exception {
+		NodeCancels rnds = new NodeCancels();
+		rnds.Delete(NodeCancelAttr.FK_Node, this.getFK_Node());
 
-		bp.wf.Nodes nds = new Nodes();
-		nds.Retrieve(bp.wf.template.NodeAttr.FK_Flow, this.getFK_Flow());
+		Nodes nds = new Nodes();
+		nds.Retrieve(NodeAttr.FK_Flow, this.getFK_Flow(), null);
 
 		int i = 0;
-		for (bp.wf.Node nd : nds.ToJavaList())
+		for (Node nd : nds.ToJavaList())
 		{
 			String cb = this.GetRequestVal("CB_" + nd.getNodeID());
 			if (cb == null || cb.equals(""))
@@ -917,13 +778,12 @@ public class WF_Admin_AttrNode extends WebContralBase
 		return "设置成功.";
 	}
 
-		///
+		///#endregion
 
 
-		///表单检查(CheckFrm.htm)
-	public final String CheckFrm_Check() throws Exception
-	{
-		if (!WebUser.getNo().equals("admin"))
+		///#region 表单检查(CheckFrm.htm)
+	public final String CheckFrm_Check() throws Exception {
+		if (!bp.web.WebUser.getNo().equals("admin"))
 		{
 			return "err@只有管理员有权限进行此项操作！";
 		}
@@ -990,7 +850,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 
 		//2.检查字段权限
 		FrmFields ffs = new FrmFields();
-		ffs.Retrieve(FrmFieldAttr.FK_MapData, this.getFK_MapData());
+		ffs.Retrieve(FrmFieldAttr.FK_MapData, this.getFK_MapData(), null);
 
 		//2.1主表
 		for (FrmField ff : ffs.ToJavaList())
@@ -1008,7 +868,7 @@ public class WF_Admin_AttrNode extends WebContralBase
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			ffs = new FrmFields();
-			ffs.Retrieve(FrmFieldAttr.FK_MapData, dtl.getNo());
+			ffs.Retrieve(FrmFieldAttr.FK_MapData, dtl.getNo(), null);
 			attrs = new MapAttrs(dtl.getNo());
 
 			for (FrmField ff : ffs.ToJavaList())
@@ -1028,6 +888,6 @@ public class WF_Admin_AttrNode extends WebContralBase
 		return msg;
 	}
 
-		///
+		///#endregion
 
 }

@@ -1,18 +1,21 @@
 package bp.wf.data;
-import bp.en.EnType;
-import bp.en.EntityNoName;
+
+import bp.en.*;
 import bp.en.Map;
 
 /** 
  报表
 */
-public class MyDeptEmp extends EntityNoName
+public class MyDeptEmp extends bp.en.EntityNoName
 {
 
-		///attrs - attrs
 	public String RptName = null;
+
+	public MyDeptEmp()  {
+	}
+
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -30,6 +33,6 @@ public class MyDeptEmp extends EntityNoName
 		return this.get_enMap();
 	}
 
-		/// attrs
+		///#endregion attrs
 
 }

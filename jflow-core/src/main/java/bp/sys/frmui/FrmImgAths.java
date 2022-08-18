@@ -1,10 +1,7 @@
 package bp.sys.frmui;
 
-import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.sys.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -12,50 +9,46 @@ import java.util.*;
 */
 public class FrmImgAths extends EntitiesMyPK
 {
-	private static final long serialVersionUID = 1L;
-		///构造
+
+		///#region 构造
 	/** 
 	 图片附件s
 	*/
-	public FrmImgAths()
-	{
+	public FrmImgAths() {
 	}
 	/** 
 	 图片附件s
 	 
-	 @param fk_mapdata s
+	 param fk_mapdata s
 	*/
-	public FrmImgAths(String fk_mapdata)throws Exception
-	{
-		if (SystemConfig.getIsDebug())
+	public FrmImgAths(String fk_mapdata) throws Exception {
+		if (bp.difference.SystemConfig.getIsDebug())
 		{
-			this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
+			this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
 		}
 		else
 		{
-			this.RetrieveFromCash(FrmLineAttr.FK_MapData, (Object)fk_mapdata);
+			this.RetrieveFromCash(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
 		}
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmImgAth();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmImgAth> ToJavaList()
-	{
+	public final java.util.List<FrmImgAth> ToJavaList() {
 		return (java.util.List<FrmImgAth>)(Object)this;
 	}
 	/** 
@@ -63,8 +56,7 @@ public class FrmImgAths extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmImgAth> Tolist()
-	{
+	public final ArrayList<FrmImgAth> Tolist()  {
 		ArrayList<FrmImgAth> list = new ArrayList<FrmImgAth>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -73,5 +65,5 @@ public class FrmImgAths extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

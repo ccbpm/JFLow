@@ -1,11 +1,4 @@
 package bp.en;
-
-import bp.da.*;
-import bp.sys.*;
-import bp.*;
-import java.time.*;
-import java.math.*;
-
 /** 
  实体类型
 */
@@ -63,7 +56,7 @@ public enum EnType
 		return this.ordinal();
 	}
 
-	public static EnType forValue(int value) throws Exception
+	public static EnType forValue(int value) 
 	{
 		return values()[value];
 	}

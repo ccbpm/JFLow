@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.wf.port.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  方向与工作岗位对应
@@ -16,62 +11,57 @@ import java.util.*;
 public class DirectionStation extends EntityMM
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return uac;
 	}
 	/** 
 	节点
-	 * @throws Exception 
 	*/
-	public final int getFK_Direction() throws Exception
+	public final int getFKDirection() throws Exception
 	{
 		return this.GetValIntByKey(DirectionStationAttr.FK_Direction);
 	}
-	public final void setFK_Direction(int value) throws Exception
-	{
+	public final void setFKDirection(int value)  throws Exception
+	 {
 		this.SetValByKey(DirectionStationAttr.FK_Direction, value);
 	}
-	public final String getFK_StationT() throws Exception
+	public final String getFKStationT() throws Exception
 	{
 		return this.GetValRefTextByKey(DirectionStationAttr.FK_Station);
 	}
 	/** 
 	 工作岗位
-	 * @throws Exception 
 	*/
-	public final String getFK_Station() throws Exception
+	public final String getFKStation() throws Exception
 	{
 		return this.GetValStringByKey(DirectionStationAttr.FK_Station);
 	}
-	public final void setFK_Station(String value) throws Exception
-	{
+	public final void setFKStation(String value)  throws Exception
+	 {
 		this.SetValByKey(DirectionStationAttr.FK_Station, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 方向与工作岗位对应
 	*/
-	public DirectionStation()
-	{
+	public DirectionStation() {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -88,5 +78,5 @@ public class DirectionStation extends EntityMM
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

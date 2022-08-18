@@ -1,11 +1,6 @@
 package bp.wf.data;
 
-import bp.da.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -13,21 +8,8 @@ import java.util.*;
 */
 public class MyStartFlows extends Entities
 {
-	/** 
-	 根据工作流程,工作人员 ID 查询出来他当前的能做的工作.
-	 
-	 @param flowNo 流程编号
-	 @param empId 工作人员ID
-	 @return 
-	*/
-	public static DataTable QuByFlowAndEmp(String flowNo, int empId)
-	{
-		String sql = "SELECT A.WorkID FROM WF_MyStartFlow a, WF_GenerWorkerlist b WHERE a.WorkID=b.WorkID   AND b.FK_Node=a.FK_Node  AND b.FK_Emp='" + String.valueOf(empId) + "' AND a.FK_Flow='" + flowNo + "'";
-		return DBAccess.RunSQLReturnTable(sql);
-	}
 
-
-		///方法
+		///#region 方法.
 	/** 
 	 得到它的 Entity 
 	*/
@@ -39,31 +21,31 @@ public class MyStartFlows extends Entities
 	/** 
 	 我发起的流程集合
 	*/
-	public MyStartFlows()
+	public MyStartFlows()throws Exception
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<MyStartFlow> ToJavaList()
+	public final java.util.List<MyStartFlow> ToJavaList()
 	{
-		return (List<MyStartFlow>)(Object)this;
+		return (java.util.List<MyStartFlow>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<MyStartFlow> Tolist()
+	public final ArrayList<MyStartFlow> Tolist()throws Exception
 	{
-		ArrayList<MyStartFlow> list = new ArrayList<MyStartFlow>();
+		ArrayList<MyStartFlow> list = new ArrayList<>();
 		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MyStartFlow)this.get(i));
@@ -71,5 +53,5 @@ public class MyStartFlows extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

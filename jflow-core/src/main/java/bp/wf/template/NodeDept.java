@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.wf.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,56 +14,53 @@ import java.util.*;
  记录了从一个节点到其他的多个节点.
  也记录了到这个节点的其他的节点.
 */
-public class NodeDept extends EntityMM
+public class NodeDept extends EntityMyPK
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	节点
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeDeptAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
-		this.SetValByKey(NodeDeptAttr.FK_Node,value);
+	public final void setFK_Node(int value)  throws Exception
+	 {
+		this.SetValByKey(NodeDeptAttr.FK_Node, value);
 	}
 	/** 
 	 工作部门
 	*/
-	public final String getFK_Dept()throws Exception
+	public final String getFK_Dept() throws Exception
 	{
 		return this.GetValStringByKey(NodeDeptAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value) throws Exception
-	{
-		this.SetValByKey(NodeDeptAttr.FK_Dept,value);
+	public final void setFK_Dept(String value)  throws Exception
+	 {
+		this.SetValByKey(NodeDeptAttr.FK_Dept, value);
 	}
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC() {
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return super.getHisUAC();
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 节点部门
 	*/
-	public NodeDept()
-	{
+	public NodeDept()  {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -71,23 +69,24 @@ public class NodeDept extends EntityMM
 		Map map = new Map("WF_NodeDept", "节点部门");
 
 		map.setDepositaryOfEntity( Depositary.None);
-		map.setDepositaryOfMap(Depositary.Application);
+		map.setDepositaryOfMap( Depositary.Application);
 
 		map.IndexField = NodeEmpAttr.FK_Node;
 
+		map.AddMyPK();
+		map.AddTBInt(NodeStationAttr.FK_Node, 0, "节点", false, false);
 
-		map.AddTBIntPK(NodeStationAttr.FK_Node, 0, "节点", false, false);
-
-			//map.AddDDLEntitiesPK(NodeDeptAttr.FK_Node,0,DataType.AppInt,"节点",new Nodes(),
-			//    NodeAttr.NodeID,NodeAttr.Name,true);
-
-		map.AddDDLEntitiesPK(NodeDeptAttr.FK_Dept,null,"部门",new bp.port.Depts(),true);
+		map.AddDDLEntities(NodeDeptAttr.FK_Dept,null,"部门",new bp.port.Depts(),true);
 
 		this.set_enMap(map);
 
 		return this.get_enMap();
 	}
-
-		///
+	@Override
+	protected  boolean beforeUpdateInsertAction() throws Exception
+	{
+		this.setMyPK(this.getFK_Node() + "_" + this.getFK_Dept());
+		return super.beforeUpdateInsertAction();
+	}
 
 }

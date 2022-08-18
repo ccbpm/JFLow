@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  流程状态(详)
  ccflow根据是否启用草稿分两种工作模式,它的设置是在web.config 是 IsEnableDraft 节点来配置的.
@@ -58,8 +60,7 @@ public enum WFState
 
 	private int intValue;
 	private static java.util.HashMap<Integer, WFState> mappings;
-	private static java.util.HashMap<Integer, WFState> getMappings()
-	{
+	private static java.util.HashMap<Integer, WFState> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (WFState.class)
@@ -74,18 +75,15 @@ public enum WFState
 	}
 
 	private WFState(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static WFState forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

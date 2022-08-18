@@ -1,72 +1,62 @@
 package bp.port;
 
+import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
+import bp.web.*;
+import bp.sys.*;
 
 /** 
  部门
 */
-public class Dept extends EntityNoName
+public class Dept extends EntityTree
 {
-	private static final long serialVersionUID = 1L;
-	///属性
+
+		///#region 属性
 	/** 
 	 父节点的ID
 	*/
-	public final String getParentNo()throws Exception
+	public final String getParentNo()
 	{
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	public final void setParentNo(String value) throws Exception
-	{
+	public final void setParentNo(String value)
+	 {
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
-	public final int getGrade()
+	public final String getNameOfPath()
 	{
-		return 1;
+		return this.GetValStrByKey(DeptAttr.NameOfPath);
 	}
-	private Depts _HisSubDepts = null;
-	/** 
-	 它的子节点
-	 * @throws Exception 
-	*/
-	public final Depts getHisSubDepts() throws Exception
-	{
-		if (_HisSubDepts == null)
-		{
-			_HisSubDepts = new Depts(this.getNo());
-		}
-		return _HisSubDepts;
+	public final void setNameOfPath(String value)
+	 {
+		this.SetValByKey(DeptAttr.NameOfPath, value);
 	}
 
-		///
+
+		///#endregion
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 部门
 	*/
-	public Dept()
-	{
+	public Dept()  {
 	}
 	/** 
 	 部门
 	 
-	 @param no 编号
-	 * @throws Exception 
+	 param no 编号
 	*/
-	public Dept(String no) throws Exception
-	{
+	public Dept(String no) throws Exception {
 		super(no);
 	}
 
-		///
+		///#endregion
 
 
-		///重写方法
+		///#region 重写方法
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
@@ -75,8 +65,7 @@ public class Dept extends EntityNoName
 	 Map
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -87,67 +76,206 @@ public class Dept extends EntityNoName
 
 		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 50, 20);
 		map.AddTBString(DeptAttr.Name, null, "名称", true, false, 0, 100, 30);
-		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, true, 0, 100, 30);
-		map.AddTBString(DeptAttr.OrgNo, null, "OrgNo", true, true, 0, 50, 30);
-		map.AddTBString(DeptAttr.Leader, null, "部门领导", true, true, 0, 50, 30);
+		map.AddTBString(DeptAttr.NameOfPath, null, "部门路径", true, false, 0, 100, 30);
 
+		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, false, 0, 100, 30);
+		map.AddTBString(DeptAttr.OrgNo, null, "OrgNo", true, true, 0, 50, 30);
+		map.AddDDLEntities(DeptAttr.Leader, null, "部门领导", new bp.port.Emps(), true);
 		map.AddTBInt(DeptAttr.Idx, 0, "序号", false, true);
-		map.AddTBInt(DeptAttr.DeptType,1,"部门状态",false,true);
-		map.AddHidden(DeptAttr.DeptType,"=","1");
 
 		RefMethod rm = new RefMethod();
-		rm.Title = "历史变更";
-		rm.ClassMethodName = this.toString() + ".History";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
+			//rm.Title = "历史变更";
+			//rm.ClassMethodName = this.ToString() + ".History";
+			//rm.refMethodType = RefMethodType.RightFrameOpen;
+			//map.AddRefMethod(rm);
+
+
+			///#region 增加点对多属性
+		rm.Title = "重置该部门一下的部门路径";
+		rm.ClassMethodName = this.toString() + ".DoResetPathName";
+		rm.refMethodType = RefMethodType.Func;
+
+		String msg = "当该部门名称变化后,该部门与该部门的子部门名称路径(Port_Dept.NameOfPath)将发生变化.";
+		msg += "\t\n 该部门与该部门的子部门的人员路径也要发生变化Port_Emp列DeptDesc.StaDesc.";
+		msg += "\t\n 您确定要执行吗?";
+		rm.Warning = msg;
+
 		map.AddRefMethod(rm);
 
+			//rm = new RefMethod();
+			//rm.Title = "增加同级部门";
+			//rm.ClassMethodName = this.ToString() + ".DoSameLevelDept";
+			//rm.HisAttrs.AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+			//rm.HisAttrs.AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+			//map.AddRefMethod(rm);
 
-			///增加点对多属性
-			//他的部门权限
-		   // map.getAttrsOfOneVSM().Add(new DeptStations(), new Stations(), DeptStationAttr.FK_Dept, DeptStationAttr.FK_Station, StationAttr.Name, StationAttr.No, "岗位权限");
+			//rm = new RefMethod();
+			//rm.Title = "增加下级部门";
+			//rm.ClassMethodName = this.ToString() + ".DoSubDept";
+			//rm.HisAttrs.AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+			//rm.HisAttrs.AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+			//map.AddRefMethod(rm);
 
-			///
+
+			//节点绑定人员. 使用树杆与叶子的模式绑定.
+		String rootNo = "0";
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single && (DataType.IsNullOrEmpty(WebUser.getNo()) == true || WebUser.getIsAdmin() == false))
+		{
+			rootNo = "@WebUser.FK_Dept";
+		}
+		else
+		{
+			rootNo = "@WebUser.OrgNo";
+		}
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new bp.port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", bp.port.EmpAttr.FK_Dept, bp.port.EmpAttr.Name, bp.port.EmpAttr.No, rootNo);
+
+
+
+			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
-	public final String History()throws Exception
+	/** 
+	 重置部门
+	 
+	 @return 
+	*/
+	public final String DoResetPathName() throws Exception {
+		this.GenerNameOfPath();
+		return "重置成功.";
+	}
+
+	/** 
+	 生成部门全名称.
+	*/
+	public final void GenerNameOfPath() throws Exception {
+		String name = this.getName();
+
+		//根目录不再处理
+		if (this.getIsRoot() == true)
+		{
+			this.setNameOfPath(name);
+			this.DirectUpdate();
+			this.GenerChildNameOfPath(this.getNo());
+			return;
+		}
+
+		Dept dept = new Dept();
+		dept.setNo(this.getParentNo());
+		if (dept.RetrieveFromDBSources() == 0)
+		{
+			return;
+		}
+
+		while (true)
+		{
+			if (dept.getIsRoot())
+			{
+				break;
+			}
+
+			name = dept.getName() + "\\" + name;
+			dept = new Dept(dept.getParentNo());
+		}
+		//根目录
+		name = dept.getName() + "\\" + name;
+		this.setNameOfPath(name);
+		this.DirectUpdate();
+
+		this.GenerChildNameOfPath(this.getNo());
+
+		//更新人员路径信息.
+		Emps emps = new bp.port.Emps();
+		emps.Retrieve(bp.port.EmpAttr.FK_Dept, this.getNo());
+		for (Emp emp : emps.ToJavaList())
+		{
+			emp.Update();
+		}
+	}
+
+	/** 
+	 处理子部门全名称
+	 
+	 param
+	*/
+	public final void GenerChildNameOfPath(String deptNo) throws Exception {
+		Depts depts = new Depts(deptNo);
+		if (depts != null && depts.size() > 0)
+		{
+			for (Dept dept : depts.ToJavaList())
+			{
+				dept.GenerNameOfPath();
+				GenerChildNameOfPath(dept.getNo());
+
+
+				//更新人员路径信息.
+				Emps emps = new bp.port.Emps();
+				emps.Retrieve(bp.port.EmpAttr.FK_Dept, this.getNo());
+				for (Emp emp : emps.ToJavaList())
+				{
+					emp.Update();
+				}
+			}
+		}
+	}
+	/** 
+	 执行排序
+	 
+	 param deptIDs
+	 @return 
+	*/
+	public final String DoOrder(String deptIDs)
 	{
+		String[] ids = deptIDs.split("[,]", -1);
+
+		for (int i = 0; i < ids.length; i++)
+		{
+			String id = ids[i];
+			if (DataType.IsNullOrEmpty(id) == true)
+			{
+				continue;
+			}
+			DBAccess.RunSQL("UPDATE Port_Dept SET Idx=" + i + " WHERE No='" + id + "'");
+		}
+		return "排序成功.";
+	}
+
+	public final String History() throws Exception {
 		return "EnVerDtl.htm?EnName=" + this.toString() + "&PK=" + this.getNo();
 	}
 
 
-		///重写查询. 2015.09.31 为适应ws的查询.
+		///#region 重写查询. 2015.09.31 为适应ws的查询.
 	/** 
 	 查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	public int Retrieve() throws Exception
-	{
+	public int Retrieve()  {
 
+		try {
 			return super.Retrieve();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+		return 0;
 	}
 	/** 
 	 查询.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	public int RetrieveFromDBSources() throws Exception
-	{
-
-			return super.RetrieveFromDBSources();
-
+	public int RetrieveFromDBSources() throws Exception {
+		return super.RetrieveFromDBSources();
 	}
 
-		///
+		///#endregion
 
 }

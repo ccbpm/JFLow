@@ -66,7 +66,7 @@ public class ConvertTools
 		return val.toString();
 	}
 	
-	public static String getPorjectPath()
+	public static String getPorjectPath()throws Exception
 	{
 		String nowpath;
 		String tempdir;
@@ -76,7 +76,7 @@ public class ConvertTools
 		return tempdir;
 	}
 	
-	public static String getSysPath()
+	public static String getSysPath()throws Exception
 	{
 		String path = Thread.currentThread().getContextClassLoader()
 				.getResource("").toString();
@@ -90,7 +90,7 @@ public class ConvertTools
 	/**
 	 * 转换 exception getStackTrace 为字符串
 	 * 
-	 * @param elements
+	 * param elements
 	 * @return
 	 */
 	public static String getStackTraceString(StackTraceElement[] elements)
@@ -108,11 +108,11 @@ public class ConvertTools
 	/**
 	 * 补全
 	 * 
-	 * @param oriStr
+	 * param oriStr
 	 *            当前数据
-	 * @param len
+	 * param len
 	 *            小于位数
-	 * @param alexin
+	 * param alexin
 	 *            补全数
 	 * @return
 	 */

@@ -1,56 +1,73 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.tools.StringHelper;
 import bp.en.*;
+import bp.*;
+import bp.tools.StringHelper;
 import bp.wf.*;
 import java.util.*;
 
 /** 
  手机表单设计器
 */
-public class WF_Admin_MobileFrmDesigner extends WebContralBase
+public class WF_Admin_MobileFrmDesigner extends bp.difference.handler.WebContralBase
 {
-	public final String Default_Init() throws Exception
-	{
-		MapDatas mapdatas;
-		MapAttrs attrs;
-		GroupFields groups;
-		MapDtls dtls;
-		FrmAttachments athMents;
-		FrmBtns btns;
+	public final String Default_Init() throws Exception {
+		//分组.
+		GroupFields gfs = new GroupFields();
+		gfs.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.Idx);
 
+		MapAttrs attrs = new MapAttrs();
+		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), GroupFieldAttr.Idx);
+
+		MapDtls mapDtls = new MapDtls();
+		mapDtls.Retrieve(MapDtlAttr.FK_MapData, this.getFK_MapData(), null);
+
+		FrmAttachments aths = new FrmAttachments(this.getFK_MapData());
+
+		DataSet ds = new DataSet();
+
+		//分组.
+		ds.Tables.add(gfs.ToDataTableField("Sys_GroupFields"));
+
+		//字段.
+		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttrs"));
+
+		//从表.
+		ds.Tables.add(mapDtls.ToDataTableField("Sys_MapDtls"));
+
+		//附件.
+		ds.Tables.add(aths.ToDataTableField("Sys_FrmAttachments"));
+
+		return bp.tools.Json.ToJson(ds);
+	}
+
+	public final String Default_Init_bak() throws Exception {
 		Nodes nodes = null;
 
 
-			///获取数据
-		mapdatas = new MapDatas();
+			///#region 获取数据
+		MapDatas mapdatas = new MapDatas();
 		QueryObject qo = new QueryObject(mapdatas);
 		qo.AddWhere(MapDataAttr.No, "Like", getFK_MapData() + "%");
 		qo.addOrderBy(MapDataAttr.Idx);
 		qo.DoQuery();
 
-		attrs = new MapAttrs();
-		qo = new QueryObject(attrs);
-		qo.AddWhere(MapAttrAttr.FK_MapData, getFK_MapData());
-		qo.addAnd();
-		qo.AddWhere(MapAttrAttr.EditType, 0);
-		qo.addOrderBy(MapAttrAttr.GroupID, MapAttrAttr.Idx);
-		qo.DoQuery();
+		MapAttrs attrs = new MapAttrs();
+		attrs.Retrieve(MapDtlAttr.FK_MapData, getFK_MapData(), MapAttrAttr.EditType, 0, GroupFieldAttr.Idx);
 
-		btns = new FrmBtns(this.getFK_MapData());
-		athMents = new FrmAttachments(this.getFK_MapData());
-		dtls = new MapDtls(this.getFK_MapData());
+		FrmBtns btns = new FrmBtns(this.getFK_MapData());
 
-		groups = new GroupFields();
-		qo = new QueryObject(groups);
-		qo.AddWhere(GroupFieldAttr.FrmID, getFK_MapData());
-		qo.addOrderBy(GroupFieldAttr.Idx);
-		qo.DoQuery();
+		FrmAttachments athMents = new FrmAttachments(this.getFK_MapData());
 
-			///
+		MapDtls dtls = new MapDtls();
+		dtls.Retrieve(MapDtlAttr.FK_MapData, getFK_MapData(), GroupFieldAttr.Idx);
+
+		GroupFields groups = new GroupFields();
+		groups.Retrieve(GroupFieldAttr.FrmID, getFK_MapData(), GroupFieldAttr.Idx);
+
+			///#endregion
 
 		DataSet ds = new DataSet();
 
@@ -67,8 +84,8 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 		return bp.tools.Json.ToJson(ds);
 	}
 
-	private void BindData4Default_Init(MapDatas mapdatas, MapAttrs attrs, GroupFields groups, MapDtls dtls, FrmAttachments athMents, FrmBtns btns, Nodes nodes, DataSet ds) throws Exception
-	{
+	private void BindData4Default_Init(MapDatas mapdatas, MapAttrs attrs, GroupFields groups, MapDtls dtls, FrmAttachments athMents, FrmBtns btns, Nodes nodes, DataSet ds) throws Exception {
+
 		Object tempVar = mapdatas.GetEntityByKey(getFK_MapData());
 		MapData mapdata = tempVar instanceof MapData ? (MapData)tempVar : null;
 		DataTable dtAttrs = attrs.ToDataTableField("dtAttrs");
@@ -83,10 +100,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 		if (mapdata != null)
 		{
 
-				///一、面板1、 分组数据+未分组数据
+			///一、面板1、 分组数据+未分组数据
 
 
-				///A、构建数据dtNoGroupAttrs，这个放在前面
+			///A、构建数据dtNoGroupAttrs，这个放在前面
 			//检索全部字段，查找出没有分组或分组信息不正确的字段，存入"无分组"集合
 			dtNoGroupAttrs = dtAttrs.clone();
 
@@ -98,12 +115,12 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				}
 			}
 
-				///
+			///
 
 
-				///B、构建数据dtGroups，这个放在后面(！！涉及更新数据库)
+			///B、构建数据dtGroups，这个放在后面(！！涉及更新数据库)
 
-				///如果没有，则创建分组（1.明细2.多附件3.按钮）
+			///如果没有，则创建分组（1.明细2.多附件3.按钮）
 			//01、未分组明细表,自动创建一个
 			for (MapDtl mapDtl : dtls.ToJavaList())
 			{
@@ -157,18 +174,18 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				}
 			}
 
-				///
+			///
 
 			dtGroups = groups.ToDataTableField("dtGroups");
 
-				///
+			///
 
 
 
-				///
+			///
 
 
-				///三、其他。如果是明细表的字段排序，则增加"返回"按钮；否则增加"复制排序"按钮,2016-03-21
+			///三、其他。如果是明细表的字段排序，则增加"返回"按钮；否则增加"复制排序"按钮,2016-03-21
 			DataTable isDtl = new DataTable();
 			isDtl.Columns.Add("tdDtl", Integer.class);
 			isDtl.Columns.Add("FK_MapData", String.class);
@@ -195,10 +212,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 
 			isDtl.Rows.AddDatas(tddr.ItemArray);
 
-				///
+			///
 
 
-				///增加节点信息
+			///增加节点信息
 			if (DataType.IsNullOrEmpty(getFK_Flow()) == false)
 			{
 				nodes = new Nodes();
@@ -220,7 +237,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				ds.Tables.add(dtNodes);
 			}
 
-				///
+			///
 
 			ds.Tables.add(mapdatas.ToDataTableField("mapdatas"));
 			dtGroups.TableName = "dtGroups";
@@ -246,14 +263,13 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 	/** 
 	 判断在DataRow数组中，是否存在指定列指定值的行
 	 
-	 @param rows DataRow数组
-	 @param field 指定列名
-	 @param value 指定值
+	 param rows DataRow数组
+	 param field 指定列名
+	 param value 指定值
 	 @return 
 	*/
-	private boolean IsExistInDataRowArray(DataRowCollection rows, String field, Object value)
-	{
-		for (DataRow row : rows)
+	private boolean IsExistInDataRowArray(DataRowCollection rows, String field, Object value)throws Exception
+	{for (DataRow row : rows)
 		{
 			int rw = Integer.parseInt(row.getValue(field).toString());
 			if (rw == Integer.parseInt(value.toString()))
@@ -266,17 +282,14 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 	/** 
 	 手机表单设计器
 	*/
-	public WF_Admin_MobileFrmDesigner()
-	{
+	public WF_Admin_MobileFrmDesigner() throws Exception {
 	}
 	/** 
 	 保存需要在手机端表单显示的字段
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Default_From_Save() throws Exception
-	{
+	public final String Default_From_Save() throws Exception {
 		//获取需要显示的字段集合
 		String atts = this.GetRequestVal("attrs");
 		try
@@ -290,11 +303,11 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				att = tempVar instanceof MapAttr ? (MapAttr)tempVar : null;
 				if (atts.contains("," + attr.getKeyOfEn() + ","))
 				{
-					att.setIsEnableInAPP(true);
+					att.setEnableInAPP(true);
 				}
 				else
 				{
-					att.setIsEnableInAPP(false);
+					att.setEnableInAPP(false);
 				}
 				att.Update();
 			}
@@ -324,10 +337,9 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 	 将分组、字段排序复制到其他节点
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Default_Copy() throws Exception
-	{
+	public final String Default_Copy() throws Exception {
+
 		try
 		{
 			String[] nodeids = this.GetRequestVal("NodeIDs").split("[,]", -1);
@@ -378,7 +390,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				tmd = "ND" + nodeid;
 
 
-					///获取数据
+				///获取数据
 				tmapdatas = new MapDatas();
 				QueryObject qo = new QueryObject(tmapdatas);
 				qo.AddWhere(MapDataAttr.No, "Like", tmd + "%");
@@ -407,13 +419,13 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				//qo.addOrderBy(MapDtlAttr.RowIdx);
 				qo.DoQuery();
 
-					///
+				///
 
 
-					///复制排序逻辑
+				///复制排序逻辑
 
 
-					/////分组排序复制
+				/////分组排序复制
 				for (GroupField grp : groups.ToJavaList())
 				{
 					//通过分组名称来确定是同一个组，同一个组在不同的节点分组编号是不一样的
@@ -442,14 +454,14 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 					grp.DirectUpdate();
 				}
 
-					///
+				///
 
 
-					/////字段排序复制
+				/////字段排序复制
 				for (MapAttr attr : attrs.ToJavaList())
 				{
 					//排除主键
-					if (attr.getIsPK() == true)
+					if (attr.isPK() == true)
 					{
 						continue;
 					}
@@ -505,7 +517,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				for (MapAttr attr : tattrs.ToJavaList())
 				{
 					//排除主键
-					if (attr.getIsPK() == true)
+					if (attr.isPK() == true)
 					{
 						continue;
 					}
@@ -518,10 +530,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 					attr.DirectUpdate();
 				}
 
-					///
+				///
 
 
-					/////明细表排序复制
+				/////明细表排序复制
 				String dtlIdx = "";
 				GroupField tgroup = null;
 				int groupidx = 0;
@@ -559,7 +571,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 					}
 
 
-						///1.明细表排序
+					///1.明细表排序
 					if (tgroupidx != groupidx && group != null)
 					{
 						tgroup.setIdx( groupidx);
@@ -578,10 +590,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 					maxDtlIdx = Math.max(tgroupidx, maxDtlIdx);
 					idxDtls.add(dtl.getNo());
 
-						///
+					///
 
 
-						///2.获取源节点明细表中的字段分组、字段信息
+					///2.获取源节点明细表中的字段分组、字段信息
 					oattrs = new MapAttrs();
 					qo = new QueryObject(oattrs);
 					qo.AddWhere(MapAttrAttr.FK_MapData, dtl.getNo());
@@ -596,10 +608,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 					qo.addOrderBy(GroupFieldAttr.Idx);
 					qo.DoQuery();
 
-						///
+					///
 
 
-						///3.获取目标节点明细表中的字段分组、字段信息
+					///3.获取目标节点明细表中的字段分组、字段信息
 					tarattrs = new MapAttrs();
 					qo = new QueryObject(tarattrs);
 					qo.AddWhere(MapAttrAttr.FK_MapData, tdtl.getNo());
@@ -614,10 +626,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 					qo.addOrderBy(GroupFieldAttr.Idx);
 					qo.DoQuery();
 
-						///
+					///
 
 
-						///4.明细表字段分组排序
+					///4.明细表字段分组排序
 					maxGrpIdx = 0;
 					idxGrps = new ArrayList<String>();
 
@@ -649,10 +661,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 						grp.DirectUpdate();
 					}
 
-						///
+					///
 
 
-						///5.明细表字段排序
+					///5.明细表字段排序
 					maxAttrIdx = 0;
 					idxAttrs = new ArrayList<String>();
 
@@ -717,7 +729,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 						attr.DirectUpdate();
 					}
 
-						///
+					///
 				}
 
 				//确定目标节点中，源节点没有的明细表的排序
@@ -759,10 +771,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 					}
 				}
 
-					///
+				///
 
 
-					///
+				///
 
 			}
 			return "复制成功！";
@@ -773,16 +785,15 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 		}
 	}
 
-	private GroupField GetGroup(String ctrlID, GroupFields gfs) throws Exception
+	private GroupField GetGroup(String ctrlID, GroupFields gfs)
 	{
 		Object tempVar = gfs.GetEntityByKey(GroupFieldAttr.CtrlID, ctrlID);
 		return tempVar instanceof GroupField ? (GroupField)tempVar : null;
 	}
-	public final String Default_Save() throws Exception
-	{
+	public final String Default_Save() throws Exception {
 		Node nd = new Node(this.getFK_Node());
 
-		bp.sys.MapData md = new bp.sys.MapData("ND" + this.getFK_Node());
+		MapData md = new MapData("ND" + this.getFK_Node());
 
 		//用户选择的表单类型.
 		String selectFModel = this.GetValFromFrmByKey("FrmS");
@@ -793,10 +804,10 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 			String frmModel = this.GetValFromFrmByKey("RB_Frm");
 			if (frmModel.equals("0"))
 			{
-				nd.setFormType(NodeFormType.FreeForm);
+				nd.setFormType(NodeFormType.Develop);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(bp.sys.FrmType.FreeFrm);
+				md.setHisFrmType( FrmType.Develop);
 				md.Update();
 			}
 			else
@@ -804,7 +815,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				nd.setFormType(NodeFormType.FoolForm);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(bp.sys.FrmType.FoolForm);
+				md.setHisFrmType( FrmType.FoolForm);
 				md.Update();
 			}
 
@@ -829,7 +840,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 			nd.setFormType(NodeFormType.FoolTruck);
 			nd.DirectUpdate();
 
-			md.setHisFrmType(bp.sys.FrmType.FoolForm); //同时更新表单表住表.
+			md.setHisFrmType( FrmType.FoolForm); //同时更新表单表住表.
 			md.Update();
 		}
 
@@ -840,10 +851,9 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_CustomURL"));
 			nd.DirectUpdate();
 
-			md.setHisFrmType(bp.sys.FrmType.Url); //同时更新表单表住表.
-			md.setUrl(this.GetValFromFrmByKey("TB_CustomURL"));
+			md.setHisFrmType( FrmType.Url); //同时更新表单表住表.
+			md.setUrlExt(this.GetValFromFrmByKey("TB_CustomURL"));
 			md.Update();
-
 		}
 		//使用SDK表单
 		if (selectFModel.equals("SDKForm"))
@@ -852,8 +862,8 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 			nd.setFormUrl(this.GetValFromFrmByKey("TB_FormURL"));
 			nd.DirectUpdate();
 
-			md.setHisFrmType(bp.sys.FrmType.Url);
-			md.setUrl(this.GetValFromFrmByKey("TB_FormURL"));
+			md.setHisFrmType( FrmType.Url);
+			md.setUrlExt(this.GetValFromFrmByKey("TB_FormURL"));
 			md.Update();
 
 		}
@@ -868,7 +878,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				nd.setFormType(NodeFormType.SheetTree);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(bp.sys.FrmType.FreeFrm); //同时更新表单表住表.
+				md.setHisFrmType( FrmType.FoolForm); //同时更新表单表住表.
 				md.Update();
 			}
 			else
@@ -876,7 +886,7 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 				nd.setFormType(NodeFormType.DisableIt);
 				nd.DirectUpdate();
 
-				md.setHisFrmType(bp.sys.FrmType.FreeFrm); //同时更新表单表住表.
+				md.setHisFrmType( FrmType.FoolForm); //同时更新表单表住表.
 				md.Update();
 			}
 		}
@@ -886,14 +896,12 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 	 重置字段顺序
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Default_ReSet() throws Exception
-	{
+	public final String Default_ReSet() throws Exception {
 		try
 		{
-			MapAttrs attrs = new MapAttrs();
-			QueryObject qo = new QueryObject(attrs);
+			MapAttrs mattrs = new MapAttrs();
+			QueryObject qo = new QueryObject(mattrs);
 			qo.AddWhere(MapAttrAttr.FK_MapData, getFK_MapData()); //添加查询条件
 			qo.addAnd();
 			qo.AddWhere(MapAttrAttr.UIVisible, true);
@@ -901,9 +909,9 @@ public class WF_Admin_MobileFrmDesigner extends WebContralBase
 			qo.DoQuery(); //执行查询
 			int rowIdx = 0;
 			//执行更新
-			for (MapAttr mapAttr : attrs.ToJavaList())
+			for (MapAttr mapAttr : mattrs.ToJavaList())
 			{
-				mapAttr.setIdx( rowIdx);
+				mapAttr.setIdx(rowIdx);
 				mapAttr.DirectUpdate();
 				rowIdx++;
 			}

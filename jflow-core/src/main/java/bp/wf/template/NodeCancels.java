@@ -3,6 +3,7 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -12,13 +13,11 @@ import java.util.*;
 public class NodeCancels extends EntitiesMM
 {
 
-		///构造与属性.
+		///#region 构造与属性.
 	/** 
 	 他的撤销到
-	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes() throws Exception
-	{
+	public final Nodes getHisNodes() throws Exception {
 		Nodes ens = new Nodes();
 		for (NodeCancel ns : this.ToJavaList())
 		{
@@ -29,17 +28,14 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 可撤销的节点
 	*/
-	public NodeCancels()
-	{
+	public NodeCancels() throws Exception {
 	}
 	/** 
 	 可撤销的节点
 	 
-	 @param NodeID 节点ID
-	 * @throws Exception 
+	 param NodeID 节点ID
 	*/
-	public NodeCancels(int NodeID) throws Exception
-	{
+	public NodeCancels(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.FK_Node, NodeID);
 		qo.DoQuery();
@@ -47,11 +43,9 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 可撤销的节点
 	 
-	 @param NodeNo NodeNo 
-	 * @throws Exception 
+	 param NodeNo NodeNo
 	*/
-	public NodeCancels(String NodeNo) throws Exception
-	{
+	public NodeCancels(String NodeNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.CancelTo, NodeNo);
 		qo.DoQuery();
@@ -60,24 +54,21 @@ public class NodeCancels extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new NodeCancel();
 	}
 
-		/// 构造与属性.
+		///#endregion 构造与属性.
 
 
-		///公共方法.
+		///#region 公共方法.
 	/** 
 	 可撤销的节点s
 	 
-	 @param sts 可撤销的节点
+	 param sts 可撤销的节点
 	 <Cancels></Cancels>
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(Nodes sts) throws Exception
-	{
+	public final Nodes GetHisNodes(Nodes sts) throws Exception {
 		Nodes nds = new Nodes();
 		Nodes tmp = new Nodes();
 		for (Node st : sts.ToJavaList())
@@ -85,7 +76,7 @@ public class NodeCancels extends EntitiesMM
 			tmp = this.GetHisNodes(st.getNo());
 			for (Node nd : tmp.ToJavaList())
 			{
-				if (nds.Contains(nd))
+				if (nds.contains(nd))
 				{
 					continue;
 				}
@@ -97,12 +88,10 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 可撤销的节点
 	 
-	 @param NodeNo 撤销到编号
+	 param NodeNo 撤销到编号
 	 <Cancels>节点s</Cancels>
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(String NodeNo) throws Exception
-	{
+	public final Nodes GetHisNodes(String NodeNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.CancelTo, NodeNo);
 		qo.DoQuery();
@@ -117,12 +106,10 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 转向此节点的集合的Nodes
 	 
-	 @param nodeID 此节点的ID
+	 param nodeID 此节点的ID
 	 <Cancels>转向此节点的集合的Nodes (FromNodes)</Cancels> 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisNodes(int nodeID) throws Exception
-	{
+	public final Nodes GetHisNodes(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeCancelAttr.FK_Node, nodeID);
 		qo.DoQuery();
@@ -135,26 +122,24 @@ public class NodeCancels extends EntitiesMM
 		return ens;
 	}
 
-		/// 公共方法.
+		///#endregion 公共方法.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<NodeCancel> ToJavaList()
-	{
-		return (List<NodeCancel>)(Object)this;
+	public final java.util.List<NodeCancel> ToJavaList() {
+		return (java.util.List<NodeCancel>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeCancel> Tolist()
-	{
+	public final ArrayList<NodeCancel> Tolist()  {
 		ArrayList<NodeCancel> list = new ArrayList<NodeCancel>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -163,5 +148,5 @@ public class NodeCancels extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

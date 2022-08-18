@@ -1,8 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
+
 import java.util.*;
 
 /** 
@@ -13,7 +12,7 @@ public class CFields extends EntitiesMyPK
 	/** 
 	 列选择s
 	*/
-	public CFields()
+	public CFields()throws Exception
 	{
 	}
 	/** 
@@ -26,13 +25,13 @@ public class CFields extends EntitiesMyPK
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<CField> ToJavaList()
+	public final java.util.List<CField> ToJavaList()throws Exception
 	{
 		return (java.util.List<CField>)(Object)this;
 	}
@@ -41,7 +40,7 @@ public class CFields extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<CField> Tolist()
+	public final ArrayList<CField> Tolist()throws Exception
 	{
 		ArrayList<CField> list = new ArrayList<CField>();
 		for (int i = 0; i < this.size(); i++)
@@ -51,5 +50,5 @@ public class CFields extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

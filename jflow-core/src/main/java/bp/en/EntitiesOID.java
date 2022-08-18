@@ -1,7 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.*;
 
 public abstract class EntitiesOID extends Entities
 {
@@ -19,16 +17,14 @@ public abstract class EntitiesOID extends Entities
 	 查询出来, 所有中文的实例 . 
 	 * @throws Exception 
 	*/
-	public final void RetrieveAllCNEntities() throws Exception
-	{
+	public final void RetrieveAllCNEntities() throws Exception {
 		this.RetrieveByLanguageNo("CH");
 	}
 	/** 
 	 按语言查询。 
 	 * @throws Exception 
 	*/
-	public final void RetrieveByLanguageNo(String LanguageNo) throws Exception
-	{
+	public final void RetrieveByLanguageNo(String LanguageNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere("LanguageNo", LanguageNo);
 		qo.DoQuery();

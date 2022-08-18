@@ -1,11 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.*;
-import java.io.*;
-import java.time.*;
-import java.math.*;
-
 /** 
  编辑类型
 */
@@ -31,7 +25,7 @@ public enum EditType
 		return this.ordinal();
 	}
 
-	public static EditType forValue(int value) throws Exception
+	public static EditType forValue(int value)
 	{
 		return values()[value];
 	}

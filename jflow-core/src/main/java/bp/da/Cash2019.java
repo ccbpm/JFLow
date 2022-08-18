@@ -18,10 +18,9 @@ public class Cash2019
 	/** 
 	 清除指定的缓存数据.
 	 
-	 @param enName 实体名称
+	 param enName 实体名称
 	*/
-	public static void ClearCashSpecEnName(String enName)
-	{
+	public static void ClearCashSpecEnName(String enName) throws Exception {
 		Object tempVar = getHts().get(enName);
 		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 		if (ht != null)
@@ -49,12 +48,11 @@ public class Cash2019
 	/** 
 	 把实体放入缓存里面
 	 
-	 @param enName
-	 @param ens
-	 @param enPK
+	 param enName
+	 param pkVal
+	 param row
 	*/
-	public static void PutRow(String enName, String pkVal, Row row)
-	{
+	public static void PutRow(String enName, String pkVal, Row row)  {
 		synchronized (lockObj)
 		{
 			Object tempVar = getHts().get(enName);
@@ -74,8 +72,7 @@ public class Cash2019
 			}
 		}
 	}
-	public static void UpdateRow(String enName, String pkVal, Row row)
-	{
+	public static void UpdateRow(String enName, String pkVal, Row row)  {
 		synchronized (lockObj)
 		{
 			Object tempVar = getHts().get(enName);
@@ -88,8 +85,7 @@ public class Cash2019
 			ht.put(pkVal, row);
 		}
 	}
-	public static void DeleteRow(String enName, String pkVal)
-	{
+	public static void DeleteRow(String enName, String pkVal)  {
 		synchronized (lockObj)
 		{
 			Object tempVar = getHts().get(enName);
@@ -106,12 +102,11 @@ public class Cash2019
 	/** 
 	 获得实体类
 	 
-	 @param enName 实体名字
-	 @param pkVal 键
+	 param enName 实体名字
+	 param pkVal 键
 	 @return row
 	*/
-	public static Row GetRow(String enName, String pkVal)
-	{
+	public static Row GetRow(String enName, String pkVal)  {
 		synchronized (lockObj)
 		{
 			Object tempVar = getHts().get(enName);
@@ -135,8 +130,8 @@ public class Cash2019
 	/** 
 	 把集合放入缓存.
 	 
-	 @param ensName 集合实体类名
-	 @param ens 实体集合
+	 param ensName 集合实体类名
+	 param ens 实体集合
 	*/
 	public static void PutEns(String ensName, Entities ens)
 	{
@@ -145,8 +140,8 @@ public class Cash2019
 	/** 
 	 获取实体集合类
 	 
-	 @param ensName 集合类名
-	 @param pkVal 主键
+	 param ensName 集合类名
+	 param pkVal 主键
 	 @return 实体集合
 	*/
 	public static Entities GetEns(String ensName, Object pkVal)

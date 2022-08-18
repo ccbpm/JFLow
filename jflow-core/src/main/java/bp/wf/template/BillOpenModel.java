@@ -14,7 +14,7 @@ public enum BillOpenModel
 	*/
 	WebOffice(1);
 
-	public static final int SIZE = java.lang.Integer.SIZE;
+	public static final int SIZE = Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, BillOpenModel> mappings;

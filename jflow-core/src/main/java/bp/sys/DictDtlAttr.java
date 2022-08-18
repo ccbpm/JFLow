@@ -1,4 +1,6 @@
 package bp.sys;
+
+
 /** 
  属性
 */
@@ -18,13 +20,9 @@ public class DictDtlAttr extends bp.en.EntityMyPKAttr
 	/** 
 	 列选择
 	*/
-	//public const string OrgNo = "OrgNo";
+	public static final String OrgNo = "OrgNo";
 	/** 
 	 顺序号
 	*/
 	public static final String Idx = "Idx";
-	public static String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

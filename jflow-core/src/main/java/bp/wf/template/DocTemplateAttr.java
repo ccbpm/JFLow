@@ -1,4 +1,6 @@
 package bp.wf.template;
+
+
 /** 
  属性
 */

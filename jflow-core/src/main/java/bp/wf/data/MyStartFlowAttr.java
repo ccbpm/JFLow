@@ -1,11 +1,13 @@
 package bp.wf.data;
+
+
 /** 
  我发起的流程
 */
 public class MyStartFlowAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -155,5 +157,5 @@ public class MyStartFlowAttr
 	*/
 	public static final String GUID = "GUID";
 
-		///
+		///#endregion
 }

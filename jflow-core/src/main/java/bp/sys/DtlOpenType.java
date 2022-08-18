@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 public enum DtlOpenType
 {
@@ -23,7 +22,11 @@ public enum DtlOpenType
 
 	ForP2WorkID,
 
-	ForP3WorkID;
+	ForP3WorkID,
+	/** 
+	 根流程的WorkID
+	*/
+	RootFlowWorkID;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
@@ -32,7 +35,7 @@ public enum DtlOpenType
 		return this.ordinal();
 	}
 
-	public static DtlOpenType forValue(int value) throws Exception
+	public static DtlOpenType forValue(int value)
 	{
 		return values()[value];
 	}

@@ -1,10 +1,9 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.tools.StringHelper;
-import bp.web.WebUser;
+import bp.difference.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -12,14 +11,11 @@ import java.util.*;
 */
 public class SysEnums extends Entities
 {
-
-	private static final long serialVersionUID = 1L;
 	/** 
 	 此枚举类型的个数
 	*/
 	public int Num = -1;
-	public final String ToDesc() throws Exception
-	{
+	public final String ToDesc() throws Exception {
 		String strs = "";
 		for (SysEnum se : this.ToJavaList())
 		{
@@ -27,8 +23,7 @@ public class SysEnums extends Entities
 		}
 		return strs;
 	}
-	public final String GenerCaseWhenForOracle(String enName, String mTable, String key, String field, String enumKey, int def) throws Exception
-	{
+	public final String GenerCaseWhenForOracle(String enName, String mTable, String key, String field, String enumKey, int def) throws Exception {
 		String sql = (String)Cash.GetObjFormApplication("ESQL" + enName + mTable + key + "_" + enumKey, null);
 		// string sql = "";
 		if (sql != null)
@@ -39,12 +34,15 @@ public class SysEnums extends Entities
 		if (this.size() == 0)
 		{
 			SysEnumMain enumMain = new SysEnumMain(enumKey);
-			RegIt(enumKey,enumMain.getCfgVal());
+			RegIt(enumKey, enumMain.getCfgVal());
 			new SysEnums(enumKey);
 
 			if (this.size() == 0)
+			{
 				throw new RuntimeException("@枚举值" + enumKey + "已被删除。");
+			}
 		}
+
 
 		sql = " CASE NVL(" + mTable + field + "," + def + ")";
 		for (SysEnum se1 : this.ToJavaList())
@@ -66,18 +64,18 @@ public class SysEnums extends Entities
 		return sql;
 	}
 
-	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def) throws Exception
-	{
+	public final String GenerCaseWhenForOracle(String mTable, String key, String field, String enumKey, int def) throws Exception {
 		if (this.size() == 0)
 		{
 			SysEnumMain enumMain = new SysEnumMain(enumKey);
-			RegIt(enumKey,enumMain.getCfgVal());
+			RegIt(enumKey, enumMain.getCfgVal());
 			new SysEnums(enumKey);
 
 			if (this.size() == 0)
-			throw new RuntimeException("@枚举值（" + enumKey + "）已被删除，无法形成期望的SQL。");
+			{
+				throw new RuntimeException("@枚举值（" + enumKey + "）已被删除，无法形成期望的SQL。");
+			}
 		}
-
 
 		String sql = "";
 		sql = " CASE " + mTable + field;
@@ -99,57 +97,27 @@ public class SysEnums extends Entities
 		// Cash.AddObj("ESQL" + enName + key + "_" + enumKey, Depositary.Application, sql);
 		return sql;
 	}
-	public final void LoadIt(String enumKey) throws Exception
+	public final void LoadIt(String enumKey)throws Exception
 	{
-		if (this.Full(enumKey) == false)
+		if (this.Full(enumKey) == true)
 		{
+			return;
+		}
 
-			try
-			{
-				DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET Lang='" + WebUser.getSysLang() + "' WHERE LANG IS NULL ");
-
-				//DBAccess.RunSQL("UPDATE Sys_Enum SET MyPK=EnumKey+'_'+Lang+'_'+IntKey");
-
-				//增加数据库类型判断
-				DBUrl dbUrl = new DBUrl();
-				if (DBType.MSSQL == dbUrl.getDBType())
-				{
-					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK=EnumKey+'_'+Lang+'_'+cast(IntKey as NVARCHAR )");
-				}
-				else if (DBType.Oracle == dbUrl.getDBType()
-						||DBType.KingBaseR3 == dbUrl.getDBType()
-						||DBType.KingBaseR6 == dbUrl.getDBType())
-				{
-					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK = EnumKey || '_' || Lang || '_' || cast(IntKey  as VARCHAR(5))");
-				}
-				else if (DBType.MySQL == dbUrl.getDBType())
-				{
-					DBAccess.RunSQL("UPDATE "+bp.wf.Glo.SysEnum()+" SET MyPK = CONCAT (EnumKey,'_', Lang,'_',CAST(IntKey AS CHAR(5)))");
-				}
-
-			}
-			catch (java.lang.Exception e)
-			{
-
-			}
-
-			try
-			{
-				bp.sys.xml.EnumInfoXml xml = new bp.sys.xml.EnumInfoXml(enumKey);
-				this.RegIt(enumKey, xml.getVals());
-			}
-			catch (RuntimeException ex)
-			{
-				throw new RuntimeException("@你没有预制[" + enumKey + "]枚举值。@在修复枚举值出现错误:" + ex.getMessage());
-			}
+		try
+		{
+			bp.sys.xml.EnumInfoXml xml = new bp.sys.xml.EnumInfoXml(enumKey);
+			this.RegIt(enumKey, xml.getVals());
+		}
+		catch (RuntimeException ex)
+		{
+			throw new RuntimeException("@你没有预制[" + enumKey + "]枚举值。@在修复枚举值出现错误:" + ex.getMessage());
 		}
 	}
 	/** 
 	 把所有的枚举注册一遍.
-	 * @throws Exception 
 	*/
-	public static void RegAll() throws Exception
-	{
+	public static void RegAll() throws Exception {
 		bp.sys.xml.EnumInfoXmls xmls = new bp.sys.xml.EnumInfoXmls();
 		xmls.RetrieveAll();
 		SysEnums ses = new SysEnums();
@@ -161,15 +129,12 @@ public class SysEnums extends Entities
 	/** 
 	 SysEnums
 	 
-	 @param enumKey
-	 * @throws Exception 
+	 param EnumKey
 	*/
-	public SysEnums(String enumKey) throws Exception
-	{
+	public SysEnums(String enumKey) throws Exception {
 		this.LoadIt(enumKey);
 	}
-	public SysEnums(String enumKey, String vals) throws Exception
-	{
+	public SysEnums(String enumKey, String vals) throws Exception {
 		if (vals == null || vals.equals(""))
 		{
 			this.LoadIt(enumKey);
@@ -181,7 +146,7 @@ public class SysEnums extends Entities
 			this.RegIt(enumKey, vals);
 		}
 	}
-	public final void RegIt(String EnumKey, String vals) throws Exception
+	public final void RegIt(String EnumKey, String vals)throws Exception
 	{
 		try
 		{
@@ -192,8 +157,10 @@ public class SysEnums extends Entities
 
 			for (String s : strs)
 			{
-				if (DataType.IsNullOrEmpty(s)==true)
+				if (DataType.IsNullOrEmpty(s) == true)
+				{
 					continue;
+				}
 
 				String[] vk = s.split("[=]", -1);
 				SysEnum se = new SysEnum();
@@ -207,8 +174,9 @@ public class SysEnums extends Entities
 				}
 				se.setLab(StringHelper.join("=", kvsValues));
 				se.setEnumKey(EnumKey);
-				se.setLang(WebUser.getSysLang());
-				se.Insert();
+				se.setLang(bp.web.WebUser.getSysLang());
+				se.setMyPK(EnumKey + "_" + se.getLang() + "_" + se.getIntKey());
+				se.DirectInsert();
 				this.AddEntity(se);
 			}
 		}
@@ -218,9 +186,8 @@ public class SysEnums extends Entities
 		}
 		//  this.Full(EnumKey);
 	}
-	public final boolean Full(String enumKey) throws Exception
-	{
-		Entities ens = (Entities)Cash.GetObjFormApplication("EnumOf" + enumKey + WebUser.getSysLang(), null);
+	public final boolean Full(String enumKey) throws Exception {
+		Entities ens = (Entities)Cash.GetObjFormApplication("EnumOf" + enumKey + bp.web.WebUser.getSysLang(), null);
 		if (ens != null)
 		{
 			this.AddEntities(ens);
@@ -228,9 +195,43 @@ public class SysEnums extends Entities
 		}
 
 		QueryObject qo = new QueryObject(this);
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			//如果是自定义的枚举.
+			if (enumKey.contains(bp.web.WebUser.getOrgNo() + "_"))
+			{
+				String mykey = enumKey.replace(bp.web.WebUser.getOrgNo() + "_", "");
+
+				/* 看看xml配置里面是否有?*/
+				qo.AddWhere(SysEnumAttr.OrgNo, bp.web.WebUser.getOrgNo());
+				qo.addAnd();
+				qo.AddWhere(SysEnumAttr.EnumKey, mykey);
+				qo.addOrderBy(SysEnumAttr.IntKey);
+				if (qo.DoQuery() == 0)
+				{
+					return false;
+				}
+
+				Cash.AddObj("EnumOf" + enumKey + bp.web.WebUser.getSysLang(), Depositary.Application, this);
+				return true;
+			}
+
+			qo.AddWhere(SysEnumAttr.EnumKey, enumKey);
+			qo.addOrderBy(SysEnumAttr.IntKey);
+			if (qo.DoQuery() == 0)
+			{
+				return false;
+			}
+
+			Cash.AddObj("EnumOf" + enumKey + bp.web.WebUser.getSysLang(), Depositary.Application, this);
+			return true;
+		}
+
+
 		qo.AddWhere(SysEnumAttr.EnumKey, enumKey);
 		qo.addAnd();
-		qo.AddWhere(SysEnumAttr.Lang, WebUser.getSysLang());
+		qo.AddWhere(SysEnumAttr.Lang, bp.web.WebUser.getSysLang());
 		qo.addOrderBy(SysEnumAttr.IntKey);
 		if (qo.DoQuery() == 0)
 		{
@@ -238,7 +239,7 @@ public class SysEnums extends Entities
 			return false;
 		}
 
-		Cash.AddObj("EnumOf" + enumKey + WebUser.getSysLang(), Depositary.Application, this);
+		Cash.AddObj("EnumOf" + enumKey + bp.web.WebUser.getSysLang(), Depositary.Application, this);
 		return true;
 	}
 	///// <summary>
@@ -257,32 +258,27 @@ public class SysEnums extends Entities
 	/** 
 	 
 	 
-	 @param key
-	 @param val
+	 param key
+	 param val
 	 @return 
-	 * @throws Exception 
 	*/
-	public final int Delete(String key, Object val) throws Exception
-	{
-		Entity en = this.getGetNewEntity();
-		String ptable = en.getEnMap().getPhysicsTable();
-		/*if(ptable.equals("Sys_Enum") && SystemConfig.getAppCenterDBType().equals(DBType.KingBase))
-			ptable = "Sys_Enums";*/
+	public final int Delete(String key, Object val) throws Exception {
 		try
 		{
-
+			Entity en = this.getGetNewEntity();
 			Paras ps = new Paras();
 
-			ps.SQL="DELETE FROM " + ptable + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
+			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
 		}
 		catch (java.lang.Exception e)
 		{
+			Entity en = this.getGetNewEntity();
 			en.CheckPhysicsTable();
 
 			Paras ps = new Paras();
-			ps.SQL="DELETE FROM " + ptable + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
+			ps.SQL = "DELETE FROM " + en.getEnMap().getPhysicsTable() + " WHERE " + key + "=" + en.getHisDBVarStr() + "p";
 			ps.Add("p", val);
 			return en.RunSQL(ps);
 		}
@@ -290,26 +286,22 @@ public class SysEnums extends Entities
 	/** 
 	 SysEnums
 	*/
-	public SysEnums()
-	{
+	public SysEnums()  {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new SysEnum();
 	}
 	/** 
 	 通过int 得到Lab
 	 
-	 @param val val
+	 param val val
 	 @return string val
-	 * @throws Exception 
 	*/
-	public final String GetLabByVal(int val) throws Exception
-	{
+	public final String GetLabByVal(int val) throws Exception {
 		for (SysEnum en : this.ToJavaList())
 		{
 			if (en.getIntKey() == val)
@@ -321,14 +313,13 @@ public class SysEnums extends Entities
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<SysEnum> ToJavaList()
-	{
+	public final java.util.List<SysEnum> ToJavaList() {
 		return (java.util.List<SysEnum>)(Object)this;
 	}
 	/** 
@@ -336,8 +327,7 @@ public class SysEnums extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<SysEnum> Tolist()
-	{
+	public final ArrayList<SysEnum> Tolist()  {
 		ArrayList<SysEnum> list = new ArrayList<SysEnum>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -346,5 +336,5 @@ public class SysEnums extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,5 +1,13 @@
 package bp.wf;
+
+import bp.da.*;
 import bp.en.*;
+import bp.web.*;
+import bp.sys.*;
+import bp.wf.port.*;
+import bp.*;
+import java.util.*;
+
 /** 
  消息属性
 */

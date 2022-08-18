@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-import bp.wf.*;
 
 /** 
  数据同步方案
@@ -12,23 +11,21 @@ public enum DataDTSWay
 	*/
 	None,
 	/** 
-	  数据源方式同步
+	 按数据源同步
 	*/
 	Syn,
-	/**
-	 接口方式同步
-	 */
+	/** 
+	 按WebAPI方式同步
+	*/
 	WebAPI;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static DataDTSWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static DataDTSWay forValue(int value)
+	{return values()[value];
 	}
 }

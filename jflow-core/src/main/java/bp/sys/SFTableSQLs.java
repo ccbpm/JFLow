@@ -11,33 +11,30 @@ import java.util.*;
 public class SFTableSQLs extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 用户自定义表s
 	*/
-	public SFTableSQLs()
-	{
+	public SFTableSQLs() {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new SFTableSQL();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<SFTableSQL> ToJavaList()
-	{
+	public final java.util.List<SFTableSQL> ToJavaList() {
 		return (java.util.List<SFTableSQL>)(Object)this;
 	}
 	/** 
@@ -45,8 +42,7 @@ public class SFTableSQLs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SFTableSQL> Tolist()
-	{
+	public final ArrayList<SFTableSQL> Tolist()  {
 		ArrayList<SFTableSQL> list = new ArrayList<SFTableSQL>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -55,5 +51,5 @@ public class SFTableSQLs extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

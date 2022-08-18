@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  位置类型
 */
@@ -20,13 +22,11 @@ public enum NodePosType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static NodePosType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static NodePosType forValue(int value)
+	{return values()[value];
 	}
 }

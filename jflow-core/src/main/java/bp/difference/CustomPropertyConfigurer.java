@@ -36,7 +36,7 @@ public class CustomPropertyConfigurer extends PropertyPlaceholderConfigurer
 		super.processProperties(beanFactoryToProcess, props);
 	}
 	
-	public static Map<String, String> getProperties()
+	public static Map<String, String> getProperties()throws Exception
 	{
 		return properties;
 	}

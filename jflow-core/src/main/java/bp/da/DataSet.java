@@ -1,14 +1,14 @@
 package bp.da;
 
 import java.io.*;
-import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
 import bp.difference.SystemConfig;
-import bp.tools.FileAccess;
+
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -17,7 +17,6 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
-import bp.tools.StringHelper;
 import org.springframework.core.io.ClassPathResource;
 
 public class DataSet {
@@ -69,29 +68,46 @@ public class DataSet {
 
 	}
 
-	public DataSet(String name) throws Exception {
+	/**
+	 * 判断DataSet中是否包含指定的名称的DataTable数据
+	 * @param tableName
+	 * @return
+	 */
+	public boolean contains(String tableName){
+		boolean isHave=false;
+		for (DataTable dtb : this.Tables)
+		{
+			if( tableName.equals(dtb.getTableName()))
+			{
+				isHave = true;
+				break;
+			}
+		}
+		return isHave;
+	}
+
+	public DataSet(String name)  {
 		if (Tables == null) {
 			Tables = new ArrayList<DataTable>();
 			hashTables = new Hashtable<String, DataTable>();
 		}
-		this.name = name;
 	}
 
 	/**
 	 * DataSet 以xml形式写入文件
 	 *
-	 * @param file
+	 * param file
 	 * @throws Exception
 	 */
-	public void WriteXml(String file) throws Exception {
+	public void WriteXml(String file)  {
 		WriteXml(file, XmlWriteMode.IgnoreSchema, new DataSet("NewDataSet"));
 	}
 
 	/**
 	 * DataSet 以xml形式写入文件
 	 *
-	 * @param path
-	 * @param mode
+	 * param path
+	 * param mode
 	 *            暂不支持DiffGram格式
 	 * @throws Exception
 	 */
@@ -103,7 +119,7 @@ public class DataSet {
 			DataTable dt = ds.Tables.get(i);
 			for (int k = 0; k < dt.Rows.size(); k++) {
 				str.append("<");
-				str.append(dt.TableName);
+				str.append(dt.getTableName());
 				str.append(">");
 				for (int j = 0; j < dt.Columns.size(); j++) {
 					DataColumn dc = dt.Columns.get(j);
@@ -131,7 +147,7 @@ public class DataSet {
 
 				}
 				str.append("</");
-				str.append(dt.TableName);
+				str.append(dt.getTableName());
 				str.append(">");
 			}
 		}
@@ -181,7 +197,7 @@ public class DataSet {
 	}
 
 	public void readXmls(String xmlPath) throws Exception {
-		if (StringHelper.isNullOrEmpty(xmlPath)) {
+		if (DataType.IsNullOrEmpty(xmlPath)) {
 			return;
 		}
 
@@ -231,7 +247,7 @@ public class DataSet {
 	}
 
 	public void readXmlm(String xml) {
-		if (StringHelper.isNullOrEmpty(xml))
+		if (DataType.IsNullOrEmpty(xml))
 			return;
 		try {
 			xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n <NewDataSets>" + xml + "</NewDataSets>";
@@ -294,7 +310,7 @@ public class DataSet {
 
 	/**
 	 * 获取文件的XML文件内容。
-	 * @param path xml文件路径
+	 * param path xml文件路径
 	 * @return xml文件内容
 	 */
 	public String xmlToString(String path) throws Exception {
@@ -339,12 +355,12 @@ public class DataSet {
 
 	/**
 	 * 读取XML文件
-	 * @param xmlpath xml文件路径
+	 * param xmlpath xml文件路径
 	 * @author ThinkGem
 	 */
 	@SuppressWarnings("rawtypes")
 	public void readXml(String xmlpath) {
-		if (StringHelper.isNullOrEmpty(xmlpath)){
+		if (DataType.IsNullOrEmpty(xmlpath)){
 			return;
 		}
 		try {
@@ -376,7 +392,7 @@ public class DataSet {
 					//sunxd 修改
 					//由于"at.getName().toLowerCase()"语句导至  isContains 方法判断永远不成立，会给TABLE插入很多重复列
 					//将at.getName().toLowerCase() 修改为  at.getName()
-					if (!isContains(dt.Columns.subList(0, dt.Columns.size()), at.getName())) {
+					if (!iscontains(dt.Columns.subList(0, dt.Columns.size()), at.getName())) {
 						dt.Columns.Add(at.getName());
 					}
 					dr.setValue(at.getName(), at.getValue());
@@ -386,7 +402,7 @@ public class DataSet {
 				for (Iterator it = el.elementIterator(); it.hasNext();) {
 					Element at = (Element) it.next();
 
-					if (!isContains(dt.Columns.subList(0, dt.Columns.size()), at.getName())) {
+					if (!iscontains(dt.Columns.subList(0, dt.Columns.size()), at.getName())) {
 						dt.Columns.Add(at.getName());
 					}
 					String value = at.getText();
@@ -412,7 +428,7 @@ public class DataSet {
 		}
 	}
 
-	public boolean isContains(List<DataColumn> dcList, String column) {
+	public boolean iscontains(List<DataColumn> dcList, String column) {
 		for (DataColumn dc : dcList) {
 			if (dc.ColumnName.equals(column)) {
 				return true;
@@ -506,57 +522,5 @@ public class DataSet {
 		}
 		return name;
 	}
-
-	//public static void main(String[] args) throws Exception {
-
-	// List<DataTable> tableList = new ArrayList<DataTable>();
-	// DataTable table = new DataTable("Emp");
-	// DataColumn col = new DataColumn("id", Integer.class);
-	// DataColumn col1 = new DataColumn("name", String.class);
-	// DataColumn col2 = new DataColumn("sex", String.class);
-	// DataColumn col3 = new DataColumn("age", Integer.class);
-	// table.Columns.Add(col);
-	// table.Columns.Add(col1);
-	// table.Columns.Add(col2);
-	// table.Columns.Add(col3);
-	// DataRow dr1 = table.NewRow();
-	// dr1.setValue(col, 1);
-	// dr1.setValue(col1, "付强");
-	// dr1.setValue(col2, "男");
-	// dr1.setValue(col3, 21);
-	// DataRow dr2 = table.NewRow();
-	// dr2.setValue(col, 2);
-	// dr2.setValue(col1, "熊伟");
-	// dr2.setValue(col2, "男");
-	// dr2.setValue(col3, 21);
-	// table.Rows.add(dr1);
-	// table.Rows.add(dr2);
-	//
-	// DataTable dept = new DataTable("dept");
-	// DataColumn deptName = new DataColumn("name", String.class);
-	// DataColumn deptDesc = new DataColumn("desc", String.class);
-	// dept.Columns.Add(deptName);
-	// dept.Columns.Add(deptDesc);
-	// DataRow row = dept.NewRow();
-	// row.setValue(deptName, "java开发部");
-	// row.setValue(deptDesc, "开发");
-	// dept.Rows.add(row);
-	// DataRow row1 = dept.NewRow();
-	// row1.setValue(deptName, ".net开发部");
-	// row1.setValue(deptDesc, "开发");
-	// dept.Rows.add(row1);
-	//
-	// tableList.add(table);
-	// tableList.add(dept);
-	// set.setTables(tableList);
-	// System.out.println(ConvertDataSetToXml(set));
-
-	//DataSet set = new DataSet();
-	//set.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/WF/Data/FlowDemo/Flow/01.线性流程/表单数据copy测试案例.xml");
-	//DataSet set2 = new DataSet();
-	//set2.readXml("D:/JFlow/JFlow/jflow-web/src/main/webapp/DataUser/XML/RegularExpression.xml");
-	//System.out.println();
-
-	//}
 
 }

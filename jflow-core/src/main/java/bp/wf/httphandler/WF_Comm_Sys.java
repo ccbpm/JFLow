@@ -1,19 +1,17 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
-import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
-import bp.en.*;
+import bp.en.Map;
 import bp.sys.*;
-import bp.tools.StringHelper;
+import bp.en.*;
+import bp.difference.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
+import java.io.*;
 
 /** 
  页面功能实体
@@ -21,72 +19,22 @@ import java.util.Date;
 public class WF_Comm_Sys extends WebContralBase
 {
 	/** 
-	 单元测试
+	 加密字符串
 	 
 	 @return 
 	*/
-	public final String UnitTesting_Init()throws Exception
-	{
-		DataTable dt = new DataTable();
-		dt.Columns.Add("No");
-		dt.Columns.Add("Name");
-		dt.Columns.Add("Note");
-
-		ArrayList al = null;
-		al =ClassFactory.GetObjects("bp.unittesting.TestBase");
-		for (Object obj : al)
-		{
-			bp.unittesting.TestBase en = null;
-			try
-			{
-				en = obj instanceof bp.unittesting.TestBase ? (bp.unittesting.TestBase)obj : null;
-				if (en == null)
-				{
-					continue;
-				}
-				String s = en.Title;
-				if (en == null)
-				{
-					continue;
-				}
-			}
-			catch (java.lang.Exception e)
-			{
-				continue;
-			}
-
-			if (en.toString() == null)
-			{
-				continue;
-			}
-
-			DataRow dr = dt.NewRow();
-			dr.setValue("No", en.toString());
-			dr.setValue("Name", en.Title);
-			dr.setValue("Note", en.Note);
-			dt.Rows.add(dr);
-		}
-		return bp.tools.Json.ToJson(dt);
-	}
-	public final String UnitTesting_Done()throws Exception
-	{
-		try
-		{
-			bp.unittesting.TestBase tc = bp.unittesting.Glo.GetTestEntity(this.getEnName());
-			tc.Do();
-			return "执行成功.<hr>" + tc.Note.replace("\t\n", "@<br>");
-		}
-		catch (RuntimeException ex)
-		{
-			return "err@" + ex.getMessage();
-		}
-	}
-	public final String ImpData_Init()
-	{
+//	public final String JiaMi_Init() throws Exception {
+//		String str = "ssss";
+//		DecryptAndEncryptionHelper.DecryptAndEncryptionHelper en = new DecryptAndEncryptionHelper.DecryptAndEncryptionHelper();
+//		return en.Encrypto(str);
+//
+//	   // DecryptAndEncryptionHelper.Encrypto decode = new DecryptAndEncryptionHelper.decode();
+//		//eturn decode.decode_exe(str);
+//	}
+	public final String ImpData_Init() throws Exception {
 		return "";
 	}
-	private String ImpData_DoneMyPK(Entities ens, DataTable dt) throws Exception
-	{
+	private String ImpData_DoneMyPK(Entities ens, DataTable dt) throws Exception {
 		//错误信息
 		String errInfo = "";
 		EntityMyPK en = (EntityMyPK)ens.getGetNewEntity();
@@ -96,7 +44,7 @@ public class WF_Comm_Sys extends WebContralBase
 		int impWay = this.GetRequestValInt("ImpWay");
 
 
-			///清空方式导入.
+			///#region 清空方式导入.
 		//清空方式导入.
 		int count = 0; //导入的行数
 		int changeCount = 0; //更新数据的行数
@@ -122,10 +70,10 @@ public class WF_Comm_Sys extends WebContralBase
 		}
 
 
-			/// 清空方式导入.
+			///#endregion 清空方式导入.
 
 
-			///更新方式导入
+			///#region 更新方式导入
 		if (impWay == 1 || impWay == 2)
 		{
 			for (DataRow dr : dt.Rows)
@@ -146,12 +94,12 @@ public class WF_Comm_Sys extends WebContralBase
 				{
 					changeCount++;
 					SetEntityAttrVal("", dr, attrs, en, dt, 1);
-					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal()+ "的更新成功</span><br/>";
+					successInfo += "&nbsp;&nbsp;<span>MyPK=" + en.getPKVal() + "的更新成功</span><br/>";
 				}
 			}
 		}
 
-			///
+			///#endregion
 
 		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
 	}
@@ -159,16 +107,9 @@ public class WF_Comm_Sys extends WebContralBase
 	 执行导入
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String ImpData_Done() throws Exception
-	{
-
+	public final String ImpData_Done() throws Exception {
 		HttpServletRequest request = getRequest();
-		// MultipartFile multiFile =
-		// ((DefaultMultipartHttpServletRequest)request).getFile("File_Upload");
-		// if (multiFile==null)
-		// return "err@请选择要导入的数据信息。";
 		long filesSize = CommonFileUtils.getFilesSize(request, "File_Upload");
 		if (filesSize == 0) {
 			return "err@请选择要导入的数据信息。";
@@ -177,18 +118,18 @@ public class WF_Comm_Sys extends WebContralBase
 		String errInfo = "";
 
 		String ext = ".xls";
-		// String fileName = multiFile.getOriginalFilename();
 		String fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
 		if (fileName.contains(".xlsx"))
+		{
 			ext = ".xlsx";
+		}
 
-		// 设置文件名
+		//设置文件名
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String currDate = sdf.format(new Date());
-
 		String fileNewName = currDate + ext;
-		// 文件存放路径
-		String filePath = SystemConfig.getPathOfTemp() + "/" + fileNewName;
+		//文件存放路径
+		String filePath = SystemConfig.getPathOfTemp() + fileNewName;
 		File tempFile = new File(filePath);
 		if (tempFile.exists()) {
 			tempFile.delete();
@@ -200,10 +141,8 @@ public class WF_Comm_Sys extends WebContralBase
 			e.printStackTrace();
 			return "err@执行失败";
 		}
-
-		// 从excel里面获得数据表.
+		//从excel里面获得数据表.
 		DataTable dt = bp.da.DBLoad.GetTableByExt(filePath);
-
 
 		//删除临时文件
 		(new File(filePath)).delete();
@@ -243,7 +182,7 @@ public class WF_Comm_Sys extends WebContralBase
 		int impWay = this.GetRequestValInt("ImpWay");
 
 
-			///清空方式导入.
+			///#region 清空方式导入.
 		//清空方式导入.
 		int count = 0; //导入的行数
 		int changeCount = 0; //更新的行数
@@ -262,7 +201,8 @@ public class WF_Comm_Sys extends WebContralBase
 					no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
 				}
 
-				EntityNoName myen = ens.getGetNewEntity() instanceof EntityNoName ? (EntityNoName)ens.getGetNewEntity() : null;
+				bp.en.Entity tempVar = ens.getGetNewEntity();
+				EntityNoName myen = tempVar instanceof EntityNoName ? (EntityNoName)tempVar : null;
 				myen.setNo(no);
 				if (myen.getIsExits() == true)
 				{
@@ -270,7 +210,7 @@ public class WF_Comm_Sys extends WebContralBase
 					continue;
 				}
 
-				myen.setName( name);
+				myen.setName(name);
 
 				en = ens.getGetNewEntity();
 
@@ -282,10 +222,10 @@ public class WF_Comm_Sys extends WebContralBase
 		}
 
 
-			/// 清空方式导入.
+			///#endregion 清空方式导入.
 
 
-			///更新方式导入
+			///#region 更新方式导入
 		if (impWay == 1 || impWay == 2)
 		{
 			for (DataRow dr : dt.Rows)
@@ -297,7 +237,8 @@ public class WF_Comm_Sys extends WebContralBase
 				{
 					no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
 				}
-				EntityNoName myen = ens.getGetNewEntity() instanceof EntityNoName ? (EntityNoName)ens.getGetNewEntity() : null;
+				bp.en.Entity tempVar2 = ens.getGetNewEntity();
+				EntityNoName myen = tempVar2 instanceof EntityNoName ? (EntityNoName)tempVar2 : null;
 				myen.setNo(no);
 				if (myen.getIsExits() == true)
 				{
@@ -307,7 +248,7 @@ public class WF_Comm_Sys extends WebContralBase
 					successInfo += "&nbsp;&nbsp;<span>" + noColName + "为" + no + "," + nameColName + "为" + name + "的更新成功</span><br/>";
 					continue;
 				}
-				myen.setName( name);
+				myen.setName(name);
 
 				//给实体赋值
 				errInfo += SetEntityAttrVal(no, dr, attrs, en, dt, 0);
@@ -316,16 +257,15 @@ public class WF_Comm_Sys extends WebContralBase
 			}
 		}
 
-			///
+			///#endregion
 
 		return "errInfo=" + errInfo + "@Split" + "count=" + count + "@Split" + "successInfo=" + successInfo + "@Split" + "changeCount=" + changeCount;
 	}
 
-	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType) throws Exception
-	{
+	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType) throws Exception {
 		String errInfo = "";
 		//按照属性赋值.
-		for (Attr item : attrs)
+		for (Attr item : attrs.ToJavaList())
 		{
 			if (item.getKey().equals("No"))
 			{
@@ -363,7 +303,7 @@ public class WF_Comm_Sys extends WebContralBase
 			}
 
 			//外键处理.
-			if (item.getMyFieldType()== FieldType.FK)
+			if (item.getMyFieldType() == FieldType.FK)
 			{
 				String val = dr.getValue(item.getDesc()).toString();
 				Entity attrEn = item.getHisFKEn();
@@ -431,70 +371,73 @@ public class WF_Comm_Sys extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_Comm_Sys()
-	{
+	public WF_Comm_Sys() throws Exception {
 	}
 	/** 
 	 函数库
 	 
 	 @return 
 	*/
-	public final String SystemClass_FuncLib() {
+	public final String SystemClass_FuncLib() throws Exception {
 		String expFileName = "all-wcprops,dir-prop-base,entries";
 		String expDirName = ".svn";
 
-		String pathDir = SystemConfig.getPathOfData() + "/JSLib/";
+		String pathDir = SystemConfig.getPathOfData() + "JSLib/";
 
 		String html = "";
 		html += "<fieldset>";
 		html += "<legend>" + "系统自定义函数. 位置:" + pathDir + "</legend>";
 
-		// .AddFieldSet();
+
+		//.AddFieldSet();
 		File dir = new File(pathDir);
 		File[] dirs = new File(pathDir).listFiles();
-		for (File mydir : dirs) {
-			if (expDirName.contains(mydir.getName())) {
+		for (File mydir : dirs)
+		{
+			if (expDirName.contains(mydir.getName()))
+			{
 				continue;
 			}
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			if (mydir.isDirectory()) {
-				File[] fls = mydir.listFiles();
-				for (File fl : fls) {
-					if (expFileName.contains(fl.getName())) {
-						continue;
-					}
-
-					html += "<li>" + fl.getName() + "</li>";
+			File[] fls = mydir.listFiles();
+			for (File fl : fls)
+			{
+				if (expFileName.contains(fl.getName()))
+				{
+					continue;
 				}
 
+				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
 		html += "</fieldset>";
 
-		pathDir = SystemConfig.getPathOfDataUser() + "/JSLib/";
+		pathDir = SystemConfig.getPathOfDataUser() + "JSLib/";
 		html += "<fieldset>";
 		html += "<legend>" + "用户自定义函数. 位置:" + pathDir + "</legend>";
 
 		dir = new File(pathDir);
-		dirs = dir.listFiles();
-		for (File mydir : dirs) {
-			if (expDirName.contains(mydir.getName())) {
+		dirs = new File(pathDir).listFiles();
+		for (File mydir : dirs)
+		{
+			if (expDirName.contains(mydir.getName()))
+			{
 				continue;
 			}
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			if (mydir.isDirectory()) {
-				File[] fls = mydir.listFiles();
-				for (File fl : fls) {
-					if (expFileName.contains(fl.getName())) {
-						continue;
-					}
-					html += "<li>" + fl.getName() + "</li>";
+			File[] fls = mydir.listFiles();
+			for (File fl : fls)
+			{
+				if (expFileName.contains(fl.getName()))
+				{
+					continue;
 				}
+				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
@@ -503,9 +446,10 @@ public class WF_Comm_Sys extends WebContralBase
 	}
 
 
-		///系统实体属性.
+		///#region 系统实体属性.
 	public final String SystemClass_EnsCheck() throws Exception {
-		try {
+		try
+		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
 			Map map = en.getEnMap();
 			en.CheckPhysicsTable();
@@ -520,8 +464,10 @@ public class WF_Comm_Sys extends WebContralBase
 
 			DataTable dt = new DataTable();
 			Entity refen = null;
-			for (Attr attr : map.getAttrs()) {
-				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+			for (Attr attr : map.getAttrs())
+			{
+				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
+				{
 					refen = ClassFactory.GetEns(attr.getUIBindKey()).getGetNewEntity();
 					table = refen.getEnMap().getPhysicsTable();
 					sql1 = "SELECT COUNT(*) FROM " + table;
@@ -532,58 +478,65 @@ public class WF_Comm_Sys extends WebContralBase
 					COUNT1 = DBAccess.RunSQLReturnValInt(sql1);
 					COUNT2 = DBAccess.RunSQLReturnValInt(sql2);
 
-					if (COUNT1 != COUNT2) {
-						msg += "<BR>@关联表(" + refen.getEnMap().getEnDesc() + ")主键不唯一，它会造成数据查询不准确或者意向不到的错误：<BR>sql1="
-								+ sql1 + " <BR>sql2=" + sql2;
-						msg += "@SQL= SELECT * FROM (  select " + refen.getPK() + ",  COUNT(*) AS NUM  from " + table
-								+ " GROUP BY " + refen.getPK() + " ) WHERE NUM!=1";
+					if (COUNT1 != COUNT2)
+					{
+						msg += "<BR>@关联表(" + refen.getEnMap().getEnDesc() + ")主键不唯一，它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
+						msg += "@SQL= SELECT * FROM (  select " + refen.getPK() + ",  COUNT(*) AS NUM  from " + table + " GROUP BY " + refen.getPK() + " ) WHERE NUM!=1";
 					}
 
-					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField()
-							+ " NOT IN (SELECT " + pkAttr.getField() + " FROM " + table + " )";
+					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN (SELECT " + pkAttr.getField() + " FROM " + table + " )";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.size() == 0) {
+					if (dt.Rows.size() == 0)
+					{
 						continue;
-					} else {
+					}
+					else
+					{
 						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.getDesc() + " sql= " + sql;
 					}
 				}
-				if (attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.Enum) {
-					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField()
-							+ " NOT IN ( select Intkey from sys_enum WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
+				if (attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.Enum)
+				{
+					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN ( select Intkey from "+bp.sys.base.Glo.SysEnum()+" WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
 					dt = DBAccess.RunSQLReturnTable(sql);
-					if (dt.Rows.size() == 0) {
+					if (dt.Rows.size() == 0)
+					{
 						continue;
-					} else {
+					}
+					else
+					{
 						msg += "<BR>:有" + dt.Rows.size() + "个错误。" + attr.getDesc() + " sql= " + sql;
 					}
 				}
 			}
 
 			// 检查pk是否一致。
-			if (en.getPKs().length == 1) {
+			if (en.getPKs().length == 1)
+			{
 				sql1 = "SELECT COUNT(*) FROM " + map.getPhysicsTable();
 				COUNT1 = DBAccess.RunSQLReturnValInt(sql1);
 
 				Attr attrMyPK = en.getEnMap().GetAttrByKey(en.getPK());
 				sql2 = "SELECT COUNT(DISTINCT " + attrMyPK.getField() + ") FROM " + map.getPhysicsTable();
 				COUNT2 = DBAccess.RunSQLReturnValInt(sql2);
-				if (COUNT1 != COUNT2) {
-					msg += "@物理表(" + map.getEnDesc() + ")中主键不唯一;它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2="
-							+ sql2;
-					msg += "@SQL= SELECT * FROM (  select " + en.getPK() + ",  COUNT(*) AS NUM  from "
-							+ map.getPhysicsTable() + " GROUP BY " + en.getPK() + " ) WHERE NUM!=1";
+				if (COUNT1 != COUNT2)
+				{
+					msg += "@物理表(" + map.getEnDesc() + ")中主键不唯一;它会造成数据查询不准确或者意向不到的错误：<BR>sql1=" + sql1 + " <BR>sql2=" + sql2;
+					msg += "@SQL= SELECT * FROM (  select " + en.getPK() + ",  COUNT(*) AS NUM  from " + map.getPhysicsTable() + " GROUP BY " + en.getPK() + " ) WHERE NUM!=1";
 				}
 			}
 
-			if (msg.equals("")) {
+			if (msg.equals(""))
+			{
 				return map.getEnDesc() + ":数据体检成功,完全正确.";
 			}
 
 			String info = map.getEnDesc() + ":数据体检信息：体检失败" + msg;
 			return info;
 
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex)
+		{
 			return "err@" + ex.getMessage();
 		}
 	}
@@ -611,8 +564,10 @@ public class WF_Comm_Sys extends WebContralBase
 		html += "</tr>";
 
 		int i = 0;
-		for (Attr attr : map.getAttrs()) {
-			if (attr.getMyFieldType() == FieldType.RefText) {
+		for (Attr attr : map.getAttrs())
+		{
+			if (attr.getMyFieldType() == FieldType.RefText)
+			{
 				continue;
 			}
 			i++;
@@ -621,41 +576,47 @@ public class WF_Comm_Sys extends WebContralBase
 			html += "<td>" + attr.getDesc() + "</td>";
 			html += "<td>" + attr.getKey() + "</td>";
 			html += "<td>" + attr.getField() + "</td>";
-			html += "<td>" + attr.getMyDataTypeStr() + "</td>";
+			html += "<td>" + attr.getMyDataType() + "</td>";
 			html += "<td>" + attr.getMyFieldType().toString() + "</td>";
 
-			if (attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppDouble
-					|| attr.getMyDataType() == DataType.AppFloat || attr.getMyDataType() == DataType.AppInt
-					|| attr.getMyDataType() == DataType.AppMoney) {
+			if (attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat || attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney)
+			{
 				html += "<td>无</td>";
-			} else {
+			}
+			else
+			{
 				html += "<td>" + attr.getMaxLength() + "</td>";
 			}
 
-			switch (attr.getMyFieldType()) {
-			case Enum:
-			case PKEnum:
-				try {
-					SysEnums ses = new SysEnums(attr.getUIBindKey());
-					String str = "";
-					for (SysEnum se : ses.ToJavaList()) {
-						str += se.getIntKey() + "&nbsp;" + se.getLab() + ",";
-					}
-					html += "<td>" + str + "</td>";
-				} catch (java.lang.Exception e) {
-					html += "<td>未使用</td>";
 
-				}
-				break;
-			case FK:
-			case PKFK:
-				Entities myens = ClassFactory.GetEns(attr.getUIBindKey());
-				html += "<td>表/视图:" + myens.getGetNewEntity().getEnMap().getPhysicsTable() + " 关联字段:"
-						+ attr.getUIRefKeyValue() + "," + attr.getUIRefKeyText() + "</td>";
-				break;
-			default:
-				html += "<td>无</td>";
-				break;
+			switch (attr.getMyFieldType())
+			{
+				case Enum:
+				case PKEnum:
+					try
+					{
+						SysEnums ses = new SysEnums(attr.getUIBindKey());
+						String str = "";
+						for (SysEnum se : ses.ToJavaList())
+						{
+							str += se.getIntKey() + "&nbsp;" + se.getLab() + ",";
+						}
+						html += "<td>" + str + "</td>";
+					}
+					catch (java.lang.Exception e)
+					{
+						html += "<td>未使用</td>";
+
+					}
+					break;
+				case FK:
+				case PKFK:
+					Entities myens = ClassFactory.GetEns(attr.getUIBindKey());
+					html += "<td>表/视图:" + myens.getGetNewEntity().getEnMap().getPhysicsTable() + " 关联字段:" + attr.getUIRefKeyValue() + "," + attr.getUIRefKeyText() + "</td>";
+					break;
+				default:
+					html += "<td>无</td>";
+					break;
 			}
 
 			html += "<td>" + attr.getDefaultVal().toString() + "</td>";
@@ -672,28 +633,40 @@ public class WF_Comm_Sys extends WebContralBase
 		dt.Columns.Add("Name");
 		dt.Columns.Add("PTable");
 
-		ArrayList al = ClassFactory.GetObjects("bp.en.Entity");
-		for (Object obj : al) {
+		ArrayList al = null;
+		al = ClassFactory.GetObjects("bp.en.Entity");
+		for (Object obj : al)
+		{
 			Entity en = null;
-			try {
-				en = obj instanceof Entity ? (Entity) obj : null;
-				if (en == null || en.equals("")) {
+			try
+			{
+				en = obj instanceof Entity ? (Entity)obj : null;
+				String s = en.getEnDesc();
+				if (en == null)
+				{
 					continue;
 				}
-			} catch (java.lang.Exception e) {
+			}
+			catch (java.lang.Exception e)
+			{
 				continue;
 			}
 
-			if (en.toString() == null || en.toString().equals("")) {
+			if (en.toString() == null || en.toString().equals(""))
+			{
 				continue;
 			}
+
 
 			DataRow dr = dt.NewRow();
 
 			dr.setValue("No", en.toString());
-			try {
+			try
+			{
 				dr.setValue("EnsName", en.getGetNewEntities().toString());
-			} catch (java.lang.Exception e2) {
+			}
+			catch (java.lang.Exception e2)
+			{
 				dr.setValue("EnsName", en.toString() + "s");
 			}
 			dr.setValue("Name", en.getEnMap().getEnDesc());
@@ -703,20 +676,24 @@ public class WF_Comm_Sys extends WebContralBase
 
 		return bp.tools.Json.ToJson(dt);
 	}
-		///
+
+		///#endregion
 
 
 
-		///执行父类的重写方法.
+		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
 	 
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod()
-	{
-		
+	protected String DoDefaultMethod() throws Exception {
+		String sfno = this.GetRequestVal("sfno");
+		SFTable sftable = null;
+		DataTable dt = null;
+		StringBuilder s = null;
+
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -728,24 +705,22 @@ public class WF_Comm_Sys extends WebContralBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" +CommonUtils.getRequest().getRequestURI());
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + ContextHolderUtils.getRequest().getRequestURI());
 	}
 
-		/// 执行父类的重写方法.
+		///#endregion 执行父类的重写方法.
 
 
-		///数据源管理
-	public final String SFDBSrcNewGuide_GetList() throws Exception
-	{
+		///#region 数据源管理
+	public final String SFDBSrcNewGuide_GetList() throws Exception {
 		//SysEnums enums = new SysEnums(SFDBSrcAttr.DBSrcType);
 		SFDBSrcs srcs = new SFDBSrcs();
 		srcs.RetrieveAll();
 
-		return srcs.ToJson();
+		return srcs.ToJson("dt");
 	}
 
-	public final String SFDBSrcNewGuide_LoadSrc() throws Exception
-	{
+	public final String SFDBSrcNewGuide_LoadSrc() throws Exception {
 		DataSet ds = new DataSet();
 
 		SFDBSrc src = new SFDBSrc();
@@ -762,58 +737,14 @@ public class WF_Comm_Sys extends WebContralBase
 		return bp.tools.Json.ToJson(ds);
 	}
 
-	public final String SFDBSrcNewGuide_SaveSrc() throws Exception {
-		SFDBSrc src = new SFDBSrc();
-		src.setNo(this.GetRequestVal("TB_No"));
-		if (src.RetrieveFromDBSources() > 0 && this.GetRequestVal("NewOrEdit").equals("New")) {
-			return ("已经存在数据源编号为“" + src.getNo() + "”的数据源，编号不能重复！");
-		}
-		src.setName(this.GetRequestVal("TB_Name"));
-		src.setDBSrcType(DBSrcType.forValue(this.GetRequestValInt("DDL_DBSrcType")));
-		switch (src.getDBSrcType()) {
-		case SQLServer:
-		case Oracle:
-		//case DM:
-		case MySQL:
-		case Informix:
-			if (src.getDBSrcType() != DBSrcType.Oracle) {
-				src.setDBName(this.GetRequestVal("TB_DBName"));
-			} else {
-				src.setDBName("");
-			}
-			src.setIP(this.GetRequestVal("TB_IP"));
-			src.setUserID(this.GetRequestVal("TB_UserID"));
-			src.setPassword(this.GetRequestVal("TB_PWword"));
-			break;
-		case WebServices:
-			src.setDBName("");
-			src.setIP(this.GetRequestVal("TB_IP"));
-			src.setUserID("");
-			src.setPassword("");
-			break;
-		default:
-			break;
-		}
-		// 测试是否连接成功，如果连接不成功，则不允许保存。
-		String testResult = src.DoConn();
-
-		if (testResult.indexOf("连接配置成功") == -1) {
-			return (testResult + ".保存失败！");
-		}
-
-		src.Save();
-
-		return "保存成功..";
-	}
-	public final String SFDBSrcNewGuide_DelSrc() throws Exception
-	{
+	public final String SFDBSrcNewGuide_DelSrc() throws Exception {
 		String no = this.GetRequestVal("No");
 
 		//检验要删除的数据源是否有引用
 		SFTables sfs = new SFTables();
-		sfs.Retrieve(SFTableAttr.FK_SFDBSrc, no);
+		sfs.Retrieve(SFTableAttr.FK_SFDBSrc, no, null);
 
-		if (sfs.size() > 0)
+		if (!sfs.isEmpty())
 		{
 			//Alert("当前数据源已经使用，不能删除！");
 			return "当前数据源已经使用，不能删除！";
@@ -824,39 +755,44 @@ public class WF_Comm_Sys extends WebContralBase
 		return "删除成功..";
 	}
 
+	//javaScript 脚本上传
 	public final String javaScriptImp_Done() throws Exception {
 		File xmlFile = null;
 		String fileName = "";
 		HttpServletRequest request = getRequest();
 		String contentType = request.getContentType();
-		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1)
+		{
 			fileName = CommonFileUtils.getOriginalFilename(request, "file");
-
 			String savePath = SystemConfig.getPathOfDataUser() + "JSLibData" + "/" + fileName;
 			xmlFile = new File(savePath);
 			if (xmlFile.exists()) {
 				xmlFile.delete();
 			}
-
-			try {
-				CommonFileUtils.upload(request, "file", xmlFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "err@执行失败";
+				try {
+					CommonFileUtils.upload(request, "file", xmlFile);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return "err@执行失败";
+				}
 			}
-		}
-		return "脚本" + fileName + "导入成功";
+			return "脚本" + fileName + "导入成功";
 	}
+
 	public final String RichUploadFile() throws Exception {
-		
 		File xmlFile = null;
 		String fileName = "";
 		String savePath = "";
 		HttpServletRequest request = getRequest();
 		String contentType = request.getContentType();
+		String frmID = this.getFrmID();
+		if (DataType.IsNullOrEmpty(frmID) == true)
+			frmID = this.getEnName();
+		String directory = frmID + "/" + this.getWorkID() + "/";
+
 		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			fileName = CommonFileUtils.getOriginalFilename(request, "upfile");
-			savePath = SystemConfig.getPathOfDataUser() + "RichTextFile";
+			fileName = DBAccess.GenerGUID(4) + ".jpg";
+			savePath = SystemConfig.getPathOfDataUser()  + "UploadFile" + "/" + directory;;
 			if (new File(savePath).exists() == false)
 				new File(savePath).mkdirs();
 			savePath = savePath + "/" + fileName;
@@ -866,38 +802,49 @@ public class WF_Comm_Sys extends WebContralBase
 			}
 
 			try {
-				CommonFileUtils.upload(request, "upfile", xmlFile);
+				CommonFileUtils.upload(request, "edit", xmlFile);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "err@执行失败";
 			}
 		}
-		return savePath;
+		Hashtable ht = new Hashtable();
+		ht.put("code", 0);
+		ht.put("msg","success");
+		savePath =  "DataUser/" + "UploadFile" + "/" + directory  + fileName;
+		ht.put("data", savePath);
+		return bp.tools.Json.ToJson(ht);
 	}
+
 	/**
 	 * 获取已知目录下的文件列表
 	 * @return
 	 */
-	public final String javaScriptFiles()throws Exception {
+	public final String javaScriptFiles() throws Exception {
 		String savePath = SystemConfig.getPathOfDataUser() + "JSLibData";
-		File dirFile = new File(savePath);
-		if (!dirFile.isDirectory())
-			return "";
-		File[] fileList = dirFile.listFiles();
+
+		File di = new File(savePath);
+		//找到该目录下的文件 
+		File[] fileList = di.listFiles();
+
 		if (fileList == null || fileList.length == 0)
+		{
 			return "";
+		}
 		DataTable dt = new DataTable();
 		dt.Columns.Add("FileName");
 		dt.Columns.Add("ChangeTime");
-		for (File file : fileList) {
+		for (File file : fileList)
+		{
 			DataRow dr = dt.NewRow();
 			dr.setValue("FileName", file.getName());
-			dr.setValue("ChangeTime",
-					new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(file.lastModified())));
+			dr.setValue("ChangeTime",new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date(file.lastModified())));
+
 			dt.Rows.add(dr);
 		}
 		return bp.tools.Json.ToJson(dt);
 
 	}
-		///
+
+		///#endregion
 }

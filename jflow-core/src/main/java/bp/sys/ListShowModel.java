@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  从表显示模式
@@ -23,7 +22,7 @@ public enum ListShowModel
 		return this.ordinal();
 	}
 
-	public static ListShowModel forValue(int value) throws Exception
+	public static ListShowModel forValue(int value) 
 	{
 		return values()[value];
 	}

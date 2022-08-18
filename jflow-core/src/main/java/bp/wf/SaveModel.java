@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  保存模式
 */
@@ -16,13 +18,11 @@ public enum SaveModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static SaveModel forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static SaveModel forValue(int value)
+	{return values()[value];
 	}
 }

@@ -1,9 +1,5 @@
 package bp.en;
 
-import bp.en.*;
-import bp.da.*;
-import bp.*;
-
 public class EntityNoMyFileAttr extends EntityNoAttr
 {
 	/** 

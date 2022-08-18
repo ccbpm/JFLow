@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
  分组方式
@@ -23,7 +23,7 @@ public enum GroupWay
 		return this.ordinal();
 	}
 
-	public static GroupWay forValue(int value) throws Exception
+	public static GroupWay forValue(int value) 
 	{
 		return values()[value];
 	}

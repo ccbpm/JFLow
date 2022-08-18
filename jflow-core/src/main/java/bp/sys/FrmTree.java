@@ -14,8 +14,7 @@ import java.util.*;
 public class FrmTree extends EntityTree
 {
 
-		///属性.
-
+		///#region 属性.
 	/** 
 	 父节点编号
 	*/
@@ -23,42 +22,38 @@ public class FrmTree extends EntityTree
 	{
 		return this.GetValStringByKey(FrmTreeAttr.OrgNo);
 	}
-	public final void setOrgNo(String value) throws Exception
-	{
+	public final void setOrgNo(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmTreeAttr.OrgNo, value);
 	}
 
-		/// 属性.
+		///#endregion 属性.
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 独立表单树
 	*/
-	public FrmTree()
-	{
+	public FrmTree()  {
 	}
 	/** 
 	 独立表单树
 	 
-	 @param _No
-	 * @throws Exception 
+	 param _No
 	*/
-	public FrmTree(String _No) throws Exception
-	{
+	public FrmTree(String _No) throws Exception {
 		super(_No);
 	}
 
-		///
+		///#endregion
 
 
-		///系统方法.
+		///#region 系统方法.
 	/** 
 	 独立表单树Map
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -70,21 +65,20 @@ public class FrmTree extends EntityTree
 		map.IndexField = FrmTreeAttr.ParentNo;
 
 
-		map.AddTBStringPK(FrmTreeAttr.No, null, "编号", true, true, 1, 10, 20);
+		map.AddTBStringPK(FrmTreeAttr.No, null, "编号", true, true, 1, 10, 40);
 		map.AddTBString(FrmTreeAttr.Name, null, "名称", true, false, 0, 100, 30);
-		map.AddTBString(FrmTreeAttr.ParentNo, null, "父节点No", false, false, 0, 100, 30);
-		map.AddTBString(FrmTreeAttr.OrgNo, null, "组织编号", false, false, 0, 50, 30);
+		map.AddTBString(FrmTreeAttr.ParentNo, null, "父节点No", false, false, 0, 100, 40);
+		map.AddTBString(FrmTreeAttr.OrgNo, null, "组织编号", false, false, 0, 50, 40);
 		map.AddTBInt(FrmTreeAttr.Idx, 0, "Idx", false, false);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		/// 系统方法.
+		///#endregion 系统方法.
 
 	@Override
-	protected boolean beforeDelete() throws Exception
-	{
+	protected boolean beforeDelete() throws Exception {
 		if (!DataType.IsNullOrEmpty(this.getNo()))
 		{
 			DeleteChild(this.getNo());
@@ -94,11 +88,9 @@ public class FrmTree extends EntityTree
 	/** 
 	 删除子项
 	 
-	 @param parentNo
-	 * @throws Exception 
+	 param parentNo
 	*/
-	private void DeleteChild(String parentNo) throws Exception
-	{
+	private void DeleteChild(String parentNo) throws Exception {
 		FrmTrees formTrees = new FrmTrees();
 		formTrees.Retrieve(FrmTreeAttr.ParentNo, parentNo);
 		for (FrmTree item : formTrees.ToJavaList())
@@ -109,8 +101,7 @@ public class FrmTree extends EntityTree
 			DeleteChild(item.getNo());
 		}
 	}
-	public final FrmTree DoCreateSameLevelNode() throws Exception
-	{
+	public final FrmTree DoCreateSameLevelNode() throws Exception {
 		FrmTree en = new FrmTree();
 		en.Copy(this);
 		en.setNo(String.valueOf(DBAccess.GenerOID()));
@@ -118,8 +109,15 @@ public class FrmTree extends EntityTree
 		en.Insert();
 		return en;
 	}
-	public final FrmTree DoCreateSubNode() throws Exception
-	{
+	public final FrmTree DoCreateSameLevelNodeMy(String dirName) throws Exception {
+		FrmTree en = new FrmTree();
+		en.Copy(this);
+		en.setNo(String.valueOf(DBAccess.GenerOID()));
+		en.setName(dirName);
+		en.Insert();
+		return en;
+	}
+	public final FrmTree DoCreateSubNode() throws Exception {
 		FrmTree en = new FrmTree();
 		en.Copy(this);
 		en.setNo(String.valueOf(DBAccess.GenerOID()));
@@ -129,13 +127,12 @@ public class FrmTree extends EntityTree
 		return en;
 	}
 	/** 
-	 创建子目录 @lilzhen
+	 创建子目录 
 	 
-	 @param dirName 要创建的子目录名字
+	 param dirName 要创建的子目录名字
 	 @return 返回子目录编号
 	*/
-	public final String CreateSubNode(String dirName) throws Exception
-	{
+	public final String CreateSubNode(String dirName) throws Exception {
 		FrmTree en = new FrmTree();
 		en.Copy(this);
 		en.setNo(String.valueOf(DBAccess.GenerOID()));
@@ -145,24 +142,20 @@ public class FrmTree extends EntityTree
 		return en.getNo();
 	}
 	/** 
-	 上移 @lizhen
+	 上移
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoUp() throws Exception
-	{
+	public final String DoUp() throws Exception {
 		this.DoOrderUp(FrmTreeAttr.ParentNo, this.getParentNo(), FrmTreeAttr.Idx);
 		return "移动成功";
 	}
 	/** 
-	 下移@lizhen
+	 下移
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoDown() throws Exception
-	{
+	public final String DoDown() throws Exception {
 		this.DoOrderDown(FrmTreeAttr.ParentNo, this.getParentNo(), FrmTreeAttr.Idx);
 		return "移动成功";
 	}

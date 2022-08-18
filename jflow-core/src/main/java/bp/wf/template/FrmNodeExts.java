@@ -4,6 +4,8 @@ import bp.da.*;
 import bp.en.*;
 import bp.port.*;
 import bp.sys.*;
+import bp.wf.template.sflow.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,47 +15,57 @@ import java.util.*;
 public class FrmNodeExts extends EntitiesMyPK
 {
 
-		///构造方法..
+		///#region 构造方法..
 	/** 
 	 节点表单
 	*/
-	public FrmNodeExts()
-	{
+	public FrmNodeExts() throws Exception {
+	}
+	/** 
+	 节点表单
+	 
+	 param NodeID 节点ID
+	*/
+	public FrmNodeExts(String fk_flow, int nodeID) throws Exception {
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere(FrmNodeAttr.FK_Flow, fk_flow);
+		qo.addAnd();
+		qo.AddWhere(FrmNodeAttr.FK_Node, nodeID);
+
+		qo.addOrderBy(FrmNodeAttr.Idx);
+		qo.DoQuery();
 	}
 
-		/// 构造方法..
+		///#endregion 构造方法..
 
 
-		///公共方法.
+		///#region 公共方法.
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmNodeExt();
 	}
 
-		/// 公共方法.
+		///#endregion 公共方法.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmNodeExt> ToJavaList()
-	{
-		return (List<FrmNodeExt>)(Object)this;
+	public final java.util.List<FrmNodeExt> ToJavaList() {
+		return (java.util.List<FrmNodeExt>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmNodeExt> Tolist()
-	{
+	public final ArrayList<FrmNodeExt> Tolist()  {
 		ArrayList<FrmNodeExt> list = new ArrayList<FrmNodeExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -62,6 +74,6 @@ public class FrmNodeExts extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

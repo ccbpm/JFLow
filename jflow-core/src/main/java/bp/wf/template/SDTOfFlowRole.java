@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-import bp.wf.*;
 
 /** 
  流程计划完成日期计算规则
@@ -26,17 +25,27 @@ public enum SDTOfFlowRole
 	/** 
 	 按照设置的天数
 	*/
-	ByDays;
+	ByDays,
+	/** 
+	 按照时间规则计算
+	*/
+	TimeDT,
+	/** 
+	 为子流程时的规则
+	*/
+	ChildFlowDT,
+	/** 
+	 按照发起字段不能重复规则
+	*/
+	AttrNonredundant;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static SDTOfFlowRole forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static SDTOfFlowRole forValue(int value)
+	{return values()[value];
 	}
 }

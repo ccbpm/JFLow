@@ -13,33 +13,30 @@ import java.util.*;
 public class MapAttrFlowBBSs extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 评论(抄送)组件s
 	*/
-	public MapAttrFlowBBSs()
-	{
+	public MapAttrFlowBBSs() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapAttrFlowBBS();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrFlowBBS> ToJavaList()
-	{
+	public final java.util.List<MapAttrFlowBBS> ToJavaList() {
 		return (java.util.List<MapAttrFlowBBS>)(Object)this;
 	}
 	/** 
@@ -47,8 +44,7 @@ public class MapAttrFlowBBSs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrFlowBBS> Tolist()
-	{
+	public final ArrayList<MapAttrFlowBBS> Tolist()  {
 		ArrayList<MapAttrFlowBBS> list = new ArrayList<MapAttrFlowBBS>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +53,5 @@ public class MapAttrFlowBBSs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,11 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.web.*;
-import bp.*;
-import java.util.*;
-
 /** 
  编码表类型
 */
@@ -31,7 +25,7 @@ public enum CodeStruct
 		return this.ordinal();
 	}
 
-	public static CodeStruct forValue(int value) throws Exception
+	public static CodeStruct forValue(int value) 
 	{
 		return values()[value];
 	}

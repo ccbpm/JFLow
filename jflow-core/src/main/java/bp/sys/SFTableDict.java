@@ -1,7 +1,11 @@
 package bp.sys;
-import bp.difference.SystemConfig;
+
+import bp.da.*;
 import bp.en.*;
+import bp.*;
 import bp.en.Map;
+
+import java.util.*;
 
 /** 
  系统字典表
@@ -9,11 +13,10 @@ import bp.en.Map;
 public class SFTableDict extends EntityNoName
 {
 
-	private static final long serialVersionUID = 1L;
-		///构造方法
+
+		///#region 构造方法
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
@@ -22,15 +25,13 @@ public class SFTableDict extends EntityNoName
 	/** 
 	 系统字典表
 	*/
-	public SFTableDict()
-	{
+	public SFTableDict()  {
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -57,33 +58,29 @@ public class SFTableDict extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	/** 
 	 编辑数据
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoEdit() throws Exception
-	{
-		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo() + "&&QueryType=Dict";
+	public final String DoEdit() throws Exception {
+		return bp.difference.SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo() + "&&QueryType=Dict";
 	}
 	/** 
 	 删除之前要做的工作
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete() throws Exception
-	{
-		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
-		if (attrs.size() != 0)
+	protected boolean beforeDelete() throws Exception {
+		MapAttrs mattrs = new MapAttrs();
+		mattrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
+		if (mattrs.size() != 0)
 		{
 			String err = "";
-			for (MapAttr item : attrs.ToJavaList())
+			for (MapAttr item : mattrs.ToJavaList())
 			{
 				err += " @ " + item.getMyPK() + " " + item.getName();
 			}

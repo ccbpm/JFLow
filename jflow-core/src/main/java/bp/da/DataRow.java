@@ -1,7 +1,6 @@
 package bp.da;
 
 import java.util.LinkedHashMap;
-
 import bp.tools.StringUtils;
 
 public class DataRow extends LinkedHashMap<String, Object>
@@ -36,7 +35,7 @@ public class DataRow extends LinkedHashMap<String, Object>
 	/**
 	 * DataRow被建立時，必須指定所屬的DataTable
 	 * 
-	 * @param DataRow所屬的DataTable
+	 * param table
 	 */
 	public DataRow(DataTable table)
 	{
@@ -49,7 +48,7 @@ public class DataRow extends LinkedHashMap<String, Object>
 	 * 
 	 * @return DataTable
 	 */
-	public DataTable getTable()
+	public DataTable getTable()throws Exception
 	{
 		return this.table;
 	}
@@ -57,14 +56,13 @@ public class DataRow extends LinkedHashMap<String, Object>
 	/**
 	 * 設定該列該行的值
 	 * 
-	 * @param columnindex
+	 * param columnIndex
 	 *            行索引(從0算起)
-	 * @param value
+	 * param value
 	 *            要設定的值
 	 */
 	public void setValue(int columnIndex, Object value)
-	{
-		setValue(this.columns.get(columnIndex), value);
+	{setValue(this.columns.get(columnIndex), value);
 	}
 	
 	public void setDataType(int columnIndex, Object dataType)
@@ -75,20 +73,18 @@ public class DataRow extends LinkedHashMap<String, Object>
 	/**
 	 * 設定該列該行的值
 	 * 
-	 * @param columnName
+	 * param columnName
 	 *            行名稱
-	 * @param value
+	 * param value
 	 *            要設定的值
 	 */
 	public void setValue(String columnName, Object value)
-	{
-		this.put(columnName, value);
+	{this.put(columnName, value);
 		// this.put(columnName, value);
 	}
 	
 	public void setValue(String columnName, Boolean value)
-	{
-		if (value==true)
+	{if (value==true)
 		this.put(columnName, 1);
 		else
 			this.put(columnName, 0);	
@@ -97,34 +93,31 @@ public class DataRow extends LinkedHashMap<String, Object>
 	}
 	
 	public void setValueStr(String columnName, String value)
-	{
-		this.put(columnName, "\""+value+"\"");
+	{this.put(columnName, "\""+value+"\"");
 		// this.put(columnName, value);
 	}
 	/**
 	 * 設定該列該行的值 区分大小写
 	 * 
-	 * @param columnName
+	 * param columnName
 	 *            行名稱
-	 * @param value
+	 * param value
 	 *            要設定的值
 	 */
 	public void setValue2017(String columnName, Object value)
-	{
-		this.put(columnName, value);
+	{this.put(columnName, value);
 	}
 	
 	/**
 	 * 設定該列該行的值
 	 * 
-	 * @param column
+	 * param column
 	 *            DataColumn物件
-	 * @param value
+	 * param value
 	 *            要設定的值
 	 */
 	public void setValue(DataColumn column, Object value)
-	{
-		if (column != null)
+	{if (column != null)
 		{
 			String lowerColumnName = column.ColumnName;
 			if (this.containsKey(lowerColumnName))
@@ -136,12 +129,11 @@ public class DataRow extends LinkedHashMap<String, Object>
 	/**
 	 * 区分大小写
 	 * 
-	 * @param column
-	 * @param value
+	 * param column
+	 * param value
 	 */
-	public void setValue_UL(DataColumn column, Object value)
-	{
-		if (column != null)
+	public void setValue_UL(DataColumn column, Object value)throws Exception
+	{if (column != null)
 		{
 			String lowerColumnName = column.ColumnName;
 			// String lowerColumnName = column.ColumnName;
@@ -154,7 +146,7 @@ public class DataRow extends LinkedHashMap<String, Object>
 	/**
 	 * 取得該列該行的值
 	 * 
-	 * @param columnIndex
+	 * param columnIndex
 	 *            行索引(從0算起)
 	 * @return Object
 	 */
@@ -173,7 +165,7 @@ public class DataRow extends LinkedHashMap<String, Object>
 	/**
 	 * 取得該列該行的值
 	 * 
-	 * @param columnName
+	 * param columnName
 	 *            行名稱
 	 * @return Object
 	 */
@@ -183,9 +175,9 @@ public class DataRow extends LinkedHashMap<String, Object>
 		Object obj = this.get(columnName);
 		if (obj == null)
 		{
-			if(!StringUtils.isEmpty(this.get(columnName.toLowerCase())))
+			if(!DataType.IsNullOrEmpty(this.get(columnName.toLowerCase())))
 				return this.get(columnName.toLowerCase());
-			if(!StringUtils.isEmpty(this.get(columnName.toUpperCase())))
+			if(!DataType.IsNullOrEmpty(this.get(columnName.toUpperCase())))
 				return this.get(columnName.toUpperCase());
 			return "";
 		}
@@ -195,7 +187,7 @@ public class DataRow extends LinkedHashMap<String, Object>
 	/**
 	 * 取得該列該行的值
 	 * 
-	 * @param column
+	 * param column
 	 *            DataColumn物件
 	 * @return Object
 	 */

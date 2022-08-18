@@ -1,15 +1,10 @@
 package bp.wf.data;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.wf.*;
-import bp.port.*;
 import bp.sys.*;
-import bp.web.WebUser;
 import bp.en.*;
 import bp.en.Map;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  我参与的流程
@@ -17,14 +12,15 @@ import java.util.*;
 public class MyJoinFlow extends Entity
 {
 
-		///基本属性
+		///#region 基本属性
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 			//uac.LoadRightFromCCGPM(this);
 			//return uac;
 		uac.Readonly();
+		uac.IsExp = true;
 		return uac;
 	}
 	/** 
@@ -38,33 +34,33 @@ public class MyJoinFlow extends Entity
 	/** 
 	 备注
 	*/
-	public final String getFlowNote()throws Exception
+	public final String getFlowNote()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.FlowNote);
 	}
-	public final void setFlowNote(String value)throws Exception
+	public final void setFlowNote(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.FlowNote, value);
 	}
 	/** 
 	 工作流程编号
 	*/
-	public final String getFK_Flow()throws Exception
+	public final String getFK_Flow()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)throws Exception
+	public final void setFK_Flow(String value) throws Exception
 	{
-		SetValByKey(MyFlowAttr.FK_Flow,value);
+		SetValByKey(MyFlowAttr.FK_Flow, value);
 	}
 	/** 
 	 BillNo
 	*/
-	public final String getBillNo()throws Exception
+	public final String getBillNo()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.BillNo);
 	}
-	public final void setBillNo(String value)throws Exception
+	public final void setBillNo(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.BillNo, value);
 	}
@@ -75,51 +71,51 @@ public class MyJoinFlow extends Entity
 	{
 		return this.GetValStrByKey(MyFlowAttr.FlowName);
 	}
-	public final void setFlowName(String value)throws Exception
+	public final void setFlowName(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.FlowName, value);
 	}
 	/** 
 	 优先级
 	*/
-	public final int getPRI()throws Exception
+	public final int getPRI()  throws Exception
 	{
 		return this.GetValIntByKey(MyFlowAttr.PRI);
 	}
-	public final void setPRI(int value)throws Exception
+	public final void setPRI(int value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.PRI, value);
 	}
 	/** 
 	 待办人员数量
 	*/
-	public final int getTodoEmpsNum()throws Exception
+	public final int getTodoEmpsNum()  throws Exception
 	{
 		return this.GetValIntByKey(MyFlowAttr.TodoEmpsNum);
 	}
-	public final void setTodoEmpsNum(int value)throws Exception
+	public final void setTodoEmpsNum(int value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.TodoEmpsNum, value);
 	}
 	/** 
 	 待办人员列表
 	*/
-	public final String getTodoEmps()throws Exception
+	public final String getTodoEmps()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.TodoEmps);
 	}
-	public final void setTodoEmps(String value)throws Exception
+	public final void setTodoEmps(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.TodoEmps, value);
 	}
 	/** 
 	 参与人
 	*/
-	public final String getEmps()throws Exception
+	public final String getEmps()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.Emps);
 	}
-	public final void setEmps(String value)throws Exception
+	public final void setEmps(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.Emps, value);
 	}
@@ -137,106 +133,106 @@ public class MyJoinFlow extends Entity
 	/** 
 	 类别编号
 	*/
-	public final String getFK_FlowSort()throws Exception
+	public final String getFK_FlowSort()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.FK_FlowSort);
 	}
-	public final void setFK_FlowSort(String value)throws Exception
+	public final void setFK_FlowSort(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.FK_FlowSort, value);
 	}
 	/** 
 	 部门编号
 	*/
-	public final String getFK_Dept()throws Exception
+	public final String getFK_Dept()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)throws Exception
+	public final void setFK_Dept(String value) throws Exception
 	{
-		SetValByKey(MyFlowAttr.FK_Dept,value);
+		SetValByKey(MyFlowAttr.FK_Dept, value);
 	}
 	/** 
 	 标题
 	*/
-	public final String getTitle()throws Exception
+	public final String getTitle()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.Title);
 	}
-	public final void setTitle(String value)throws Exception
+	public final void setTitle(String value) throws Exception
 	{
-		SetValByKey(MyFlowAttr.Title,value);
+		SetValByKey(MyFlowAttr.Title, value);
 	}
 	/** 
 	 客户编号
 	*/
-	public final String getGuestNo()throws Exception
+	public final String getGuestNo()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.GuestNo);
 	}
-	public final void setGuestNo(String value)throws Exception
+	public final void setGuestNo(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.GuestNo, value);
 	}
 	/** 
 	 客户名称
 	*/
-	public final String getGuestName()throws Exception
+	public final String getGuestName()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.GuestName);
 	}
-	public final void setGuestName(String value)throws Exception
+	public final void setGuestName(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.GuestName, value);
 	}
 	/** 
 	 产生时间
 	*/
-	public final String getRDT() throws Exception
+	public final String getRDT()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.RDT);
 	}
-	public final void setRDT(String value)throws Exception
+	public final void setRDT(String value) throws Exception
 	{
-		SetValByKey(MyFlowAttr.RDT,value);
+		SetValByKey(MyFlowAttr.RDT, value);
 	}
 	/** 
 	 节点应完成时间
 	*/
-	public final String getSDTOfNode()throws Exception
+	public final String getSDTOfNode()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.SDTOfNode);
 	}
-	public final void setSDTOfNode(String value)throws Exception
+	public final void setSDTOfNode(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.SDTOfNode, value);
 	}
 	/** 
 	 流程应完成时间
 	*/
-	public final String getSDTOfFlow()throws Exception
+	public final String getSDTOfFlow()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.SDTOfFlow);
 	}
-	public final void setSDTOfFlow(String value)throws Exception
+	public final void setSDTOfFlow(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.SDTOfFlow, value);
 	}
 	/** 
 	 流程ID
 	*/
-	public final long getWorkID() throws Exception
+	public final long getWorkID()  throws Exception
 	{
 		return this.GetValInt64ByKey(MyFlowAttr.WorkID);
 	}
-	public final void setWorkID(long value)  throws Exception
+	public final void setWorkID(long value) throws Exception
 	{
-		SetValByKey(MyFlowAttr.WorkID,value);
+		SetValByKey(MyFlowAttr.WorkID, value);
 	}
 	/** 
 	 主线程ID
 	*/
-	public final long getFID() throws Exception
+	public final long getFID()  throws Exception
 	{
 		return this.GetValInt64ByKey(MyFlowAttr.FID);
 	}
@@ -247,66 +243,66 @@ public class MyJoinFlow extends Entity
 	/** 
 	 父节点流程编号.
 	*/
-	public final long getPWorkID()throws Exception
+	public final long getPWorkID()  throws Exception
 	{
 		return this.GetValInt64ByKey(MyFlowAttr.PWorkID);
 	}
-	public final void setPWorkID(long value)throws Exception
+	public final void setPWorkID(long value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.PWorkID, value);
 	}
 	/** 
 	 父流程调用的节点
 	*/
-	public final int getPNodeID()throws Exception
+	public final int getPNodeID()  throws Exception
 	{
 		return this.GetValIntByKey(MyFlowAttr.PNodeID);
 	}
-	public final void setPNodeID(int value)throws Exception
+	public final void setPNodeID(int value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.PNodeID, value);
 	}
 	/** 
 	 PFlowNo
 	*/
-	public final String getPFlowNo()throws Exception
+	public final String getPFlowNo()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value)throws Exception
+	public final void setPFlowNo(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.PFlowNo, value);
 	}
 	/** 
 	 吊起子流程的人员
 	*/
-	public final String getPEmp()throws Exception
+	public final String getPEmp()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.PEmp);
 	}
-	public final void setPEmp(String value)throws Exception
+	public final void setPEmp(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.PEmp, value);
 	}
 	/** 
 	 发起人
 	*/
-	public final String getStarter()throws Exception
+	public final String getStarter()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.Starter);
 	}
-	public final void setStarter(String value)throws Exception
+	public final void setStarter(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.Starter, value);
 	}
 	/** 
 	 发起人名称
 	*/
-	public final String getStarterName()throws Exception
+	public final String getStarterName()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.StarterName);
 	}
-	public final void setStarterName(String value)throws Exception
+	public final void setStarterName(String value) throws Exception
 	{
 		this.SetValByKey(MyFlowAttr.StarterName, value);
 	}
@@ -317,7 +313,7 @@ public class MyJoinFlow extends Entity
 	{
 		return this.GetValStrByKey(MyFlowAttr.DeptName);
 	}
-	public final void setDeptName(String value)throws Exception
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(MyFlowAttr.DeptName, value);
 	}
@@ -328,18 +324,18 @@ public class MyJoinFlow extends Entity
 	{
 		return this.GetValStrByKey(MyFlowAttr.NodeName);
 	}
-	public final void setNodeName(String value)throws Exception
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(MyFlowAttr.NodeName, value);
 	}
 	/** 
 	 当前工作到的节点
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node()  throws Exception
 	{
 		return this.GetValIntByKey(MyFlowAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)throws Exception
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.FK_Node, value);
 	}
@@ -350,19 +346,18 @@ public class MyJoinFlow extends Entity
 	{
 		return WFState.forValue(this.GetValIntByKey(MyFlowAttr.WFState));
 	}
-	public final void setWFState(WFState value)throws Exception
-	{
+	public final void setWFState(WFState value) throws Exception {
 		if (value == WFState.Complete)
 		{
-			SetValByKey(MyFlowAttr.WFSta, getWFSta().Complete.getValue());
+			SetValByKey(MyFlowAttr.WFSta, WFSta.Complete.getValue());
 		}
 		else if (value == WFState.Delete)
 		{
-			SetValByKey(MyFlowAttr.WFSta, getWFSta().Etc.getValue());
+			SetValByKey(MyFlowAttr.WFSta, WFSta.Etc.getValue());
 		}
 		else
 		{
-			SetValByKey(MyFlowAttr.WFSta, getWFSta().Runing.getValue());
+			SetValByKey(MyFlowAttr.WFSta, WFSta.Runing.getValue());
 		}
 
 		SetValByKey(MyFlowAttr.WFState, value.getValue());
@@ -380,7 +375,7 @@ public class MyJoinFlow extends Entity
 	}
 	public final String getWFStateText()throws Exception
 	{
-		WFState ws = this.getWFState();
+		WFState ws =this.getWFState();
 		switch (ws)
 		{
 			case Complete:
@@ -398,26 +393,26 @@ public class MyJoinFlow extends Entity
 	/** 
 	 GUID
 	*/
-	public final String getGUID()throws Exception
+	public final String getGUID()  throws Exception
 	{
 		return this.GetValStrByKey(MyFlowAttr.GUID);
 	}
-	public final void setGUID(String value)throws Exception
+	public final void setGUID(String value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.GUID, value);
 	}
 
-		///
+		///#endregion
 
 
-		///参数属性.
+		///#region 参数属性.
 
-	public final String getParasToNodes()throws Exception
+	public final String getParasToNodes() throws Exception
 	{
 		return this.GetParaString("ToNodes");
 	}
 
-	public final void setParasToNodes(String value)throws Exception
+	public final void setParasToNodes(String value) throws Exception
 	{
 		this.SetPara("ToNodes", value);
 	}
@@ -425,28 +420,27 @@ public class MyJoinFlow extends Entity
 	 加签信息
 	*/
 
-	public final String getParasAskForReply()throws Exception
+	public final String getParasAskForReply() throws Exception
 	{
 		return this.GetParaString("AskForReply");
 	}
 
-	public final void setParasAskForReply(String value)throws Exception
+	public final void setParasAskForReply(String value) throws Exception
 	{
 		this.SetPara("AskForReply", value);
 	}
 
-		/// 参数属性.
+		///#endregion 参数属性.
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 产生的工作流程
 	*/
 	public MyJoinFlow()
 	{
 	}
-	public MyJoinFlow(long workId)throws Exception
-	{
+	public MyJoinFlow(long workId) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MyFlowAttr.WorkID, workId);
 		if (qo.DoQuery() == 0)
@@ -457,14 +451,14 @@ public class MyJoinFlow extends Entity
 	/** 
 	 执行修复
 	*/
-	public final void DoRepair()
+	public final void DoRepair()throws Exception
 	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -472,7 +466,7 @@ public class MyJoinFlow extends Entity
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "我审批的流程");
-		map.setEnType( EnType.View);
+		map.setEnType(EnType.View);
 
 		map.AddTBIntPK(MyFlowAttr.WorkID, 0, "WorkID", false, false);
 		map.AddTBInt(MyFlowAttr.FID, 0, "FID", false, false);
@@ -485,7 +479,7 @@ public class MyJoinFlow extends Entity
 
 		map.AddTBDateTime(MyFlowAttr.RDT, "发起日期", true, true);
 		map.AddDDLSysEnum(MyFlowAttr.WFSta, 0, "状态", true, false, MyFlowAttr.WFSta, "@0=运行中@1=已完成@2=其他");
-		map.AddDDLSysEnum(MyFlowAttr.TSpan, 0, "时间段", true, false, MyFlowAttr.TSpan, "@0=本周@1=上周@2=两周以前@3=三周以前@4=更早");
+			//map.AddDDLSysEnum(MyFlowAttr.TSpan, 0, "时间段", true, false, MyFlowAttr.TSpan, "@0=本周@1=上周@2=两周以前@3=三周以前@4=更早");
 		map.AddTBString(MyFlowAttr.NodeName, null, "当前节点", true, false, 0, 100, 100, true);
 		map.AddTBString(MyStartFlowAttr.TodoEmps, null, "当前处理人", true, false, 0, 100, 100, true);
 
@@ -497,33 +491,27 @@ public class MyJoinFlow extends Entity
 		map.AddTBInt(MyFlowAttr.FK_Node, 0, "FK_Node", false, false);
 
 
-		map.DTSearchKey = MyFlowAttr.RDT;
-		map.DTSearchLable = "发起日期";
-		map.DTSearchWay = DTSearchWay.ByDate;
-
-		map.DTSearchKey = GenerWorkFlowAttr.SDTOfNode;
+		map.DTSearchKey= GenerWorkFlowAttr.SDTOfNode;
 		map.DTSearchLable = "节点应完成时间";
-		map.DTSearchWay = DTSearchWay.ByDate;
+		map.DTSearchWay=DTSearchWay.ByDate;
 
-
-		 //   map.AddSearchAttr(MyFlowAttr.FK_Flow);
-		map.AddSearchAttr(MyFlowAttr.WFSta);
-		map.AddSearchAttr(MyFlowAttr.TSpan, 4000);
+			//   map.AddSearchAttr(MyFlowAttr.FK_Flow);
+		map.AddSearchAttr(MyFlowAttr.WFSta, 130);
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 			//map.IsShowSearchKey = false;
 
 			//增加隐藏的查询条件. 我参与的流程.
-		AttrOfSearch search = new AttrOfSearch(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%" + WebUser.getNo() + "%", 0, true);
-		map.getAttrsOfSearch().Add(search);
+		AttrOfSearch search = new AttrOfSearch(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%" + bp.web.WebUser.getNo() + "%", 0, true);
+		map.getAttrsOfSearch().add(search);
 
 
 		RefMethod rm = new RefMethod();
-		rm.Title = "轨迹";
-		rm.ClassMethodName = this.toString() + ".DoTrack";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.Icon = "../../WF/Img/Track.png";
-		rm.IsForEns = true;
-		map.AddRefMethod(rm);
+		   /* rm.Title = "轨迹";
+		    rm.ClassMethodName = this.ToString() + ".DoTrack";
+		    rm.refMethodType = RefMethodType.LinkeWinOpen;
+		    rm.Icon = "../../WF/Img/Track.png";
+		    rm.IsForEns = true;
+		    map.AddRefMethod(rm);*/
 
 		rm = new RefMethod();
 		rm.Title = "表单";
@@ -537,14 +525,14 @@ public class MyJoinFlow extends Entity
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///执行诊断
+		///#region 执行诊断
 	public final String DoTrack()throws Exception
 	{
-		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/WFRpt.htm?WorkID=" + this.WorkID + "&FID=" + this.getFID() + "&FK_Flow=" + this.FK_Flow, 900, 800);
-		return bp.wf.Glo.getCCFlowAppPath()+"/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/WFRpt.htm?WorkID=" + this.WorkID + "&FID=" + this.FID + "&FK_Flow=" + this.FK_Flow, 900, 800);
+		return "/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 	/** 
 	 打开最后一个节点表单
@@ -555,21 +543,21 @@ public class MyJoinFlow extends Entity
 	{
 
 		Paras pss = new Paras();
-		pss.SQL="SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
-		pss.Add("ActionType", bp.wf.ActionType.Forward.getValue());
+		pss.SQL = "SELECT MYPK FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "WorkID ORDER BY RDT DESC";
+		pss.Add("ActionType", ActionType.Forward.getValue());
 		pss.Add("WorkID", this.getWorkID());
 		DataTable dt = DBAccess.RunSQLReturnTable(pss);
 		if (dt != null && dt.Rows.size() > 0)
 		{
 			String myPk = dt.Rows.get(0).getValue(0).toString();
-			return bp.wf.Glo.getCCFlowAppPath()+"/WF/WFMyView.htm?CurrTab=Frm&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
+			return "/WF/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
 		}
 
 		Node nd = new Node(this.getFK_Node());
 
-		return bp.wf.Glo.getCCFlowAppPath()+"/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
+		return "/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}
 
-		///
+		///#endregion
 
 }

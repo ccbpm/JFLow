@@ -18,4 +18,9 @@ public class SFTableHandler_Controller{
          return emps.ToJson();
      }
 
+    @RequestMapping(value = "/Demo_CCFlow")
+     public int  Demo_CCFlow(){
+	    return 1;
+     }
+
 }

@@ -1,10 +1,8 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.port.*;
 import bp.en.*;
 import bp.sys.*;
-import bp.wf.*;
 
 /** 
  根据坐标排序字段
@@ -14,7 +12,7 @@ public class ResetSortMapAttr extends Method
 	/** 
 	 根据坐标排序字段
 	*/
-	public ResetSortMapAttr()
+	public ResetSortMapAttr()throws Exception
 	{
 		this.Title = "根据坐标排序MapAttr字段-用于手机端";
 		this.Help = "重置MapAttr表中Idx字段，根据坐标y,x排序";
@@ -40,10 +38,9 @@ public class ResetSortMapAttr extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		try
 		{
@@ -53,17 +50,17 @@ public class ResetSortMapAttr extends Method
 			{
 				for (DataRow row : dt.Rows)
 				{
-					MapAttrs attrs = new MapAttrs();
-					QueryObject qo = new QueryObject(attrs);
+					MapAttrs mattrs = new MapAttrs();
+					QueryObject qo = new QueryObject(mattrs);
 					qo.AddWhere(MapAttrAttr.FK_MapData, row.getValue("NO").toString());
 					qo.addAnd();
 					qo.AddWhere(MapAttrAttr.UIVisible, true);
 					qo.addOrderBy(MapAttrAttr.Y, MapAttrAttr.X);
 					qo.DoQuery();
 					int rowIdx = 0;
-					for (MapAttr mapAttr : attrs.ToJavaList())
+					for (MapAttr mapAttr : mattrs.ToJavaList())
 					{
-						mapAttr.setIdx( rowIdx);
+						mapAttr.setIdx(rowIdx);
 						mapAttr.DirectUpdate();
 						rowIdx++;
 					}

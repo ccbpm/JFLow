@@ -1,5 +1,10 @@
 package bp.sys;
+
+import bp.da.*;
 import bp.en.*;
+import bp.*;
+import java.util.*;
+
 /** 
  附件
 */
@@ -22,21 +27,14 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	*/
 	public static final String FK_Node = "FK_Node";
 	/** 
-	 X
-	*/
-	public static final String X = "X";
-	/** 
-	 Y
-	*/
-	public static final String Y = "Y";
-	/** 
-	 宽度
-	*/
-	public static final String W = "W";
-	/** 
 	 高度
 	*/
 	public static final String H = "H";
+	/**
+	 宽度
+	 */
+	public static final String W = "W";
+	
 	/** 
 	 要求上传的格式
 	*/
@@ -61,10 +59,6 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 是否增加
 	*/
 	public static final String IsNote = "IsNote";
-	/// <summary>
-	/// 是否排序？
-	/// </summary>
-	public static final String IsIdx = "IsIdx";
 	/** 
 	 是否启用扩展列
 	*/
@@ -80,11 +74,23 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	/** 
 	 是否可以排序
 	*/
-	public static final String IsOrder = "IsOrder";
+	public static final String IsOrder11 = "IsOrder";
 	/** 
 	 数据存储方式
 	*/
 	public static final String AthSaveWay = "AthSaveWay";
+	/** 
+	 单附件模板使用规则
+	*/
+	public static final String AthSingleRole = "AthSingleRole";
+	/** 
+	 单附件编辑模式
+	*/
+	public static final String AthEditModel = "AthEditModel";
+	/** 
+	 是否排序？
+	*/
+	public static final String IsIdx = "IsIdx";
 	/** 
 	 是否要转换成html，方便在线浏览.
 	*/
@@ -167,9 +173,16 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 附件删除方式
 	*/
 	public static final String DeleteWay = "DeleteWay";
+	/**
+	 X
+	 */
+	public static final String X = "X";
+	/**
+	 Y
+	 */
+	public static final String Y = "Y";
 
-
-		///数据引用.
+		///#region 数据引用.
 	/** 
 	 数据引用
 	*/
@@ -179,10 +192,10 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	*/
 	public static final String ReadRole = "ReadRole";
 
-		/// 数据引用.
+		///#endregion 数据引用.
 
 
-		///快捷键.
+		///#region 快捷键.
 	/** 
 	 是否启用快捷键
 	*/
@@ -192,5 +205,5 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	*/
 	public static final String FastKeyGenerRole = "FastKeyGenerRole";
 
-		///
+		///#endregion
 }

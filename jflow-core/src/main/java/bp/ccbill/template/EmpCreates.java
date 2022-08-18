@@ -1,5 +1,8 @@
 package bp.ccbill.template;
+
 import bp.en.*;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
@@ -7,22 +10,19 @@ import java.util.*;
 */
 public class EmpCreates extends EntitiesMM
 {
-	private static final long serialVersionUID = 1L;
-		///构造函数.
+
+		///#region 构造函数.
 	/** 
 	 单据可创建的人员
 	*/
-	public EmpCreates()
-	{
+	public EmpCreates()  {
 	}
 	/** 
 	 单据可创建的人员
 	 
-	 @param NodeID 表单IDID
-	 * @throws Exception 
+	 param NodeID 表单IDID
 	*/
-	public EmpCreates(int NodeID) throws Exception
-	{
+	public EmpCreates(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(EmpCreateAttr.FrmID, NodeID);
 		qo.DoQuery();
@@ -30,11 +30,9 @@ public class EmpCreates extends EntitiesMM
 	/** 
 	 单据可创建的人员
 	 
-	 @param EmpNo EmpNo 
-	 * @throws Exception 
+	 param EmpNo EmpNo
 	*/
-	public EmpCreates(String EmpNo) throws Exception
-	{
+	public EmpCreates(String EmpNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(EmpCreateAttr.FK_Emp, EmpNo);
 		qo.DoQuery();
@@ -43,31 +41,28 @@ public class EmpCreates extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new EmpCreate();
 	}
 
-		/// 构造函数.
+		///#endregion 构造函数.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<EmpCreate> ToJavaList()
-	{
-		return (List<EmpCreate>)(Object)this;
+	public final java.util.List<EmpCreate> ToJavaList()  {
+		return (java.util.List<EmpCreate>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<EmpCreate> Tolist()
-	{
+	public final ArrayList<EmpCreate> Tolist()  {
 		ArrayList<EmpCreate> list = new ArrayList<EmpCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -76,5 +71,5 @@ public class EmpCreates extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

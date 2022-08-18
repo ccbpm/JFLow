@@ -1,4 +1,6 @@
 package bp.wf.data;
+
+
 /** 
   报表基类属性
 */
@@ -48,11 +50,6 @@ public class NDXRptBaseAttr
 	 流程
 	*/
 	public static final String WFSta = "WFSta";
-
-	/** 
-	 数量
-	*/
-	public static final String MyNum = "MyNum";
 	/** 
 	 结束人
 	*/
@@ -83,7 +80,7 @@ public class NDXRptBaseAttr
 	public static final String BillNo = "BillNo";
 
 
-		///项目相关.
+		///#region 项目相关.
 	/** 
 	 项目编号
 	*/
@@ -93,10 +90,10 @@ public class NDXRptBaseAttr
 	*/
 	public static final String PrjName = "PrjName";
 
-		/// 项目相关.
+		///#endregion 项目相关.
 
 
-		///父子流程属性.
+		///#region 父子流程属性.
 	/** 
 	 父流程WorkID
 	*/
@@ -118,5 +115,5 @@ public class NDXRptBaseAttr
 	*/
 	public static final String AtPara = "AtPara";
 
-		/// 父子流程属性.
+		///#endregion 父子流程属性.
 }

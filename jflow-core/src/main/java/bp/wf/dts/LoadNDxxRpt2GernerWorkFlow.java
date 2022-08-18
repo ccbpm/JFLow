@@ -1,9 +1,7 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.port.*;
 import bp.en.*;
-import bp.web.WebUser;
 import bp.wf.data.*;
 import bp.wf.*;
 
@@ -15,7 +13,7 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 	/** 
 	 装载已经完成的流程数据到WF_GenerWorkflow
 	*/
-	public LoadNDxxRpt2GernerWorkFlow()
+	public LoadNDxxRpt2GernerWorkFlow()throws Exception
 	{
 		this.Title = "装载已经完成的流程数据到WF_GenerWorkflow（升级扩展流程数据完成模式下的旧数据查询不到的问题）";
 		this.Help = "升级扩展流程数据完成模式下的旧数据查询不到的问题。";
@@ -34,12 +32,11 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -49,14 +46,12 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
 	@Override
-	public Object Do() throws NumberFormatException, Exception
+	public Object Do()throws Exception
 	{
-		bp.wf.Flows ens = new Flows();
-		for (bp.wf.Flow en : ens.ToJavaList())
+		Flows ens = new Flows();
+		for (Flow en : ens.ToJavaList())
 		{
 			String sql = "SELECT * FROM " + en.getPTable() + " WHERE OID NOT IN (SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Flow='" + en.getNo() + "')";
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -82,10 +77,10 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 				gwf.setFK_Node(Integer.parseInt(dr.getValue(NDXRptBaseAttr.FlowEndNode).toString()));
 				gwf.setFK_Dept(dr.getValue(NDXRptBaseAttr.FK_Dept).toString());
 
-				Dept dept = null;
+				bp.port.Dept dept = null;
 				try
 				{
-					dept = new Dept(gwf.getFK_Dept());
+					dept = new bp.port.Dept(gwf.getFK_Dept());
 					gwf.setDeptName(dept.getName());
 				}
 				catch (java.lang.Exception e)
@@ -102,8 +97,6 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 
 				}
 
-				//  gwf.SDTOfNode = dr[NDXRptBaseAttr.FK_Dept].ToString();
-				// gwf.SDTOfFlow = dr[NDXRptBaseAttr.FK_Dept].ToString();
 
 				gwf.setPFlowNo(dr.getValue(NDXRptBaseAttr.PFlowNo).toString());
 				gwf.setPWorkID(Long.parseLong(dr.getValue(NDXRptBaseAttr.PWorkID).toString()));
@@ -119,7 +112,7 @@ public class LoadNDxxRpt2GernerWorkFlow extends Method
 				//gwf.FlowNote = dr[NDXRptBaseAttr.flowno].ToString();
 
 				gwf.SetValByKey("Emps", dr.getValue(NDXRptBaseAttr.FlowEmps).toString());
-				//   gwf.AtPara = dr[NDXRptBaseAttr.FK_Dept].ToString();
+				//   gwf.setAtPara(dr[NDXRptBaseAttr.FK_Dept].ToString();
 				//  gwf.GUID = dr[NDXRptBaseAttr.gu].ToString();
 				gwf.Insert();
 			}

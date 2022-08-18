@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  撤销规则
 */
@@ -24,13 +26,11 @@ public enum CancelRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static CancelRole forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static CancelRole forValue(int value)
+	{return values()[value];
 	}
 }

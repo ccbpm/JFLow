@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.*;
 import bp.web.*;
+import bp.difference.*;
 import bp.*;
 import java.util.*;
 
@@ -14,17 +15,14 @@ public class UIConfig
 {
 	public Entity HisEn;
 	public AtPara HisAP;
-	public UIConfig()
-	{
+	public UIConfig() throws Exception {
 	}
 	/** 
 	 UI的设置.Search. Card, Group信息.
 	 
-	 @param enName
-	 * @throws Exception 
+	 param enName
 	*/
-	public UIConfig(Entity en) throws Exception
-	{
+	public UIConfig(Entity en) throws Exception {
 		this.HisEn = en;
 		EnCfg cfg = new EnCfg(en.toString());
 		String paraStr = cfg.getUI();
@@ -37,8 +35,7 @@ public class UIConfig
 	/** 
 	 获取显示列数组，中间用,隔开
 	*/
-	public final String[] getShowColumns()
-	{
+	public final String[] getShowColumns() {
 		String colstr = this.HisAP.GetValStrByKey("ShowColumns");
 
 		if (DataType.IsNullOrEmpty(colstr))
@@ -50,102 +47,85 @@ public class UIConfig
 	}
 
 
-		///移动.
+		///#region 移动.
 	/** 
 	 移动到方式.
-	 * @throws Exception 
 	*/
-	public final MoveToShowWay getMoveToShowWay() throws Exception
-	{
+	public final MoveToShowWay getMoveToShowWay() throws Exception {
 		return MoveToShowWay.forValue(this.HisAP.GetValIntByKey("MoveToShowWay"));
 	}
-	public final EditerType getEditerType() throws Exception
-	{
-		return EditerType.forValue(this.HisAP.GetValIntByKey("EditerType"));
-	}
+
 
 	/** 
 	 移动到字段
 	*/
-	public final String getMoveTo()
-	{
+	public final String getMoveTo() throws Exception {
 		String s = this.HisAP.GetValStrByKey("MoveTo");
 		return s;
 	}
 
-		/// 移动.
+		///#endregion 移动.
 
 	/** 
 	 风格类型
 	*/
-	public final int getUIRowStyleGlo()
-	{
+	public final int getUIRowStyleGlo() throws Exception {
 		return this.HisAP.GetValIntByKey("UIRowStyleGlo");
 	}
 	/** 
 	 是否启用双击打开？
 	*/
-	public final boolean getIsEnableDouclickGlo()
-	{
+	public final boolean isEnableDouclickGlo() throws Exception {
 		return this.HisAP.GetValBoolenByKey("IsEnableDouclickGlo");
 	}
 	/** 
 	 是否显示相关功能?
 	*/
-	public final boolean getIsEnableRefFunc()
-	{
+	public final boolean isEnableRefFunc() throws Exception {
 		return this.HisAP.GetValBoolenByKey("IsEnableRefFunc");
 	}
 	/** 
 	 是否启用焦点字段
 	*/
-	public final boolean getIsEnableFocusField()
-	{
+	public final boolean isEnableFocusField() throws Exception {
 		return this.HisAP.GetValBoolenByKey("IsEnableFocusField");
 	}
 	/** 
 	 是否打开ICON
 	*/
-	public final boolean getIsEnableOpenICON()
-	{
+	public final boolean isEnableOpenICON() throws Exception {
 		return this.HisAP.GetValBoolenByKey("IsEnableOpenICON");
 	}
 	/** 
 	 焦点字段
-	 * @throws Exception 
 	*/
-	public final String getFocusField() throws Exception
-	{
+	public final String getFocusField() throws Exception {
 		String s = this.HisAP.GetValStrByKey("FocusField");
 		if (DataType.IsNullOrEmpty(s))
 		{
-			if (this.HisEn.getEnMap().getAttrs().Contains("Name"))
+			if (this.HisEn.getEnMap().getAttrs().contains("Name"))
 			{
 				return "Name";
 			}
-			if (this.HisEn.getEnMap().getAttrs().Contains("Title"))
+			if (this.HisEn.getEnMap().getAttrs().contains("Title"))
 			{
 				return "Title";
 			}
 		}
 		return s;
 	}
-	public final int getWinCardW()
-	{
+	public final int getWinCardW() throws Exception {
 		return this.HisAP.GetValIntByKey("WinCardW");
 	}
-	public final int getWinCardH()
-	{
+	public final int getWinCardH() throws Exception {
 		return this.HisAP.GetValIntByKey("WinCardH");
 	}
 	/** 
 	 保存
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final int Save() throws Exception
-	{
+	public final int Save() throws Exception {
 		EnCfg cfg = new EnCfg(this.HisEn.toString());
 		cfg.setUI(this.HisAP.GenerAtParaStrs());
 		return cfg.Save();

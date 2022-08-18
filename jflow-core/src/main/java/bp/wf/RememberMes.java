@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.wf.*;
 import bp.port.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -12,42 +13,38 @@ import java.util.*;
 public class RememberMes extends Entities
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new RememberMe();
 	}
 	/** 
 	 RememberMe
 	*/
-	public RememberMes()
-	{
+	public RememberMes() throws Exception {
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<RememberMe> ToJavaList()
-	{
-		return (List<RememberMe>)(Object)this;
+	public final java.util.List<RememberMe> ToJavaList() {
+		return (java.util.List<RememberMe>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<RememberMe> Tolist()
-	{
+	public final ArrayList<RememberMe> Tolist()  {
 		ArrayList<RememberMe> list = new ArrayList<RememberMe>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -56,5 +53,5 @@ public class RememberMes extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

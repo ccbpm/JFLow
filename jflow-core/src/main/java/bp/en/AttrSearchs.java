@@ -13,13 +13,11 @@ public class AttrSearchs extends ArrayList<AttrSearch>
 	{
 	}
 
-	public final void Add(Attr attr, boolean isShowSelectedAll, String relationalDtlKey)
-	{
+	public final void Add(Attr attr, boolean isShowSelectedAll, String relationalDtlKey)  {
 		Add(attr, isShowSelectedAll, relationalDtlKey, 120);
 	}
 
-	public final void Add(Attr attr, boolean isShowSelectedAll, String relationalDtlKey, int width)
-	{
+	public final void Add(Attr attr, boolean isShowSelectedAll, String relationalDtlKey, int width)  {
 		AttrSearch en = new AttrSearch();
 		en.HisAttr = attr;
 		en.IsShowAll = isShowSelectedAll;

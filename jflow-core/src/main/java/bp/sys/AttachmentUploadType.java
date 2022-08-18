@@ -1,6 +1,6 @@
 package bp.sys;
 
-import bp.*;
+
 
 /** 
  附件上传类型
@@ -27,7 +27,7 @@ public enum AttachmentUploadType
 		return this.ordinal();
 	}
 
-	public static AttachmentUploadType forValue(int value) throws Exception
+	public static AttachmentUploadType forValue(int value)
 	{
 		return values()[value];
 	}

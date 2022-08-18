@@ -14,8 +14,7 @@ public class Paras extends ArrayList<Para>
 {
 	private static final long serialVersionUID = 1L;
 	
-	public Paras()
-	{
+	public Paras()  {
 	}
 	
 	public Paras(Object o)
@@ -23,7 +22,7 @@ public class Paras extends ArrayList<Para>
 		this.Add("p", o);
 	}
 	
-	public final String getDBStr()
+	public final String getDBStr()throws Exception
 	{
 		return SystemConfig.getAppCenterDBVarStr();
 	}
@@ -95,56 +94,67 @@ public class Paras extends ArrayList<Para>
 			this.Add(_name, (String) obj);
 			return;
 		}
-		
+
 		if (clazzType == Integer.class || clazzType == Byte.class
 				|| clazzType == Short.class)
 		{
 			this.Add(_name, (Integer) obj);
 			return;
 		}
-		
+
 		if (clazzType == Long.class)
 		{
 			this.Add(_name, (Long) obj);
 			return;
 		}
-		
+
 		if (clazzType == Float.class)
 		{
 			this.Add(_name, (Float) obj);
 			return;
 		}
-		
+
 		if (clazzType == java.math.BigDecimal.class)
 		{
 			this.Add(_name, (java.math.BigDecimal) obj);
 			return;
 		}
-		
+
 		if (clazzType == Double.class)
 		{
 			this.Add(_name, (Double) obj);
 			return;
 		}
-		
+
 		if (clazzType == Date.class)
 		{
 			this.Add(_name, (java.util.Date) obj);
 			return;
 		}
-		
+
+		//null值暂时定义为数组类型
+		this.AddDBNull(_name);
 	
 	}
-	
+
+	public void AddDBNull(String _name)
+	{
+		Para en = new Para();
+		en.DAType = ArrayList.class;
+		en.val =new ArrayList<String>();
+		en.ParaName = _name;
+		this.Add(en);
+	}
+
 	public void Add(String _name, String _val)
 	{
 		Add(_name, _val,false);
 	}
 	/**
 	 * 是否是大块文本?
-	 * @param _name 名称
-	 * @param _val 值
-	 * @param isBigTxt 是否是大文本?
+	 * param _name 名称
+	 * param _val 值
+	 * param isBigTxt 是否是大文本?
 	 */
 	public void Add(String _name, String _val,boolean isBigTxt)
 	{
@@ -249,7 +259,7 @@ public class Paras extends ArrayList<Para>
 		this.Add("FK_NY", fk_ny);
 	}
 	
-	public final void AddFK_NY()
+	public final void AddFK_NY()throws Exception
 	{
 		this.Add("FK_NY", DataType.getCurrentYearMonth());
 	}
@@ -259,7 +269,7 @@ public class Paras extends ArrayList<Para>
 		this.Add("FK_Dept", val);
 	}
 	
-	public final String ToDesc()
+	public final String ToDesc()throws Exception
 	{
 		String msg = "";
 		for (Para p : this)
@@ -271,11 +281,11 @@ public class Paras extends ArrayList<Para>
 	
 	public String SQL = null;
 	
-	public final String getSQLNoPara()
+	public final String getSQLNoPara()throws Exception
 	{
 		Object tempVar = this.SQL;
 		/*
-		 * warning Object tempVar = this.SQL.clone();
+		 * warning Object tempVar = this.SQL;
 		 */
 		String mysql = (String) ((tempVar instanceof String) ? tempVar : null);
 		if (mysql == null){

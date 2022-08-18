@@ -1,4 +1,5 @@
 package bp.sys;
+
 /** 
  按钮类型
 */
@@ -29,8 +30,7 @@ public enum BtnType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, BtnType> mappings;
-	private static java.util.HashMap<Integer, BtnType> getMappings()
-	{
+	private static java.util.HashMap<Integer, BtnType> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (BtnType.class)
@@ -44,9 +44,8 @@ public enum BtnType
 		return mappings;
 	}
 
-	private BtnType(int value) 
-	{
-		intValue = value;
+	private BtnType(int value)
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 

@@ -1,11 +1,14 @@
 package bp.sys;
+
+import bp.*;
+
 /** 
  事件标记列表
 */
 public class EventListFlow
 {
 
-		///流程事件
+		///#region 流程事件
 	/** 
 	 当创建workid的时候.
 	*/
@@ -27,5 +30,5 @@ public class EventListFlow
 	*/
 	public static final String AfterFlowDel = "AfterFlowDel";
 
-		/// 流程事件
+		///#endregion 流程事件
 }

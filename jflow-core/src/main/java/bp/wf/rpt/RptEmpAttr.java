@@ -1,11 +1,12 @@
 package bp.wf.rpt;
+
 /** 
  报表人员
 */
 public class RptEmpAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 报表ID
 	*/
@@ -15,5 +16,5 @@ public class RptEmpAttr
 	*/
 	public static final String FK_Emp = "FK_Emp";
 
-		///
+		///#endregion
 }

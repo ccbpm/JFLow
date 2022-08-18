@@ -1,15 +1,9 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
-import bp.gpm.Dept;
-import bp.gpm.DeptEmp;
-import bp.web.*;
-import bp.sys.*;
+import bp.port.*;
 import bp.wf.*;
-import java.util.*;
 
 /** 
  找人规则
@@ -17,58 +11,48 @@ import java.util.*;
 public class FindWorkerRole extends EntityOIDName
 {
 
-		/// 找同事
+		///#region  找同事
 	/** 
 	 找同事规则
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final FindColleague getHisFindColleague() throws NumberFormatException, Exception
-	{
+	public final FindColleague getHisFindColleague() throws Exception {
 		return FindColleague.forValue(Integer.parseInt(this.getTagVal3()));
 	}
 
-		///  找同事
+		///#endregion  找同事
 
 
-		/// 找领导类型
+		///#region  找领导类型
 	/** 
 	 寻找领导类型
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final FindLeaderType getHisFindLeaderType() throws NumberFormatException, Exception
-	{
+	public final FindLeaderType getHisFindLeaderType() throws Exception {
 		return FindLeaderType.forValue(Integer.parseInt(this.getSortVal1()));
 	}
 	/** 
 	 模式
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final FindLeaderModel getHisFindLeaderModel() throws NumberFormatException, Exception
-	{
+	public final FindLeaderModel getHisFindLeaderModel() throws Exception {
 		return FindLeaderModel.forValue(Integer.parseInt(this.getSortVal2()));
 	}
 
-		///
+		///#endregion
 
 
-		///基本属性
-	public final boolean getIsEnable() throws Exception
+		///#region 基本属性
+	public final boolean isEnable() throws Exception
 	{
 		return this.GetValBooleanByKey(FindWorkerRoleAttr.IsEnable);
 	}
-	public final void setIsEnable(boolean value) throws Exception
-	{
+	public final void setEnable(boolean value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.IsEnable, value);
 	}
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
 		return uac;
@@ -80,8 +64,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValIntByKey(FindWorkerRoleAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
+	public final void setFK_Node(int value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.FK_Node, value);
 	}
 
@@ -92,8 +76,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal0);
 	}
-	public final void setSortVal0(String value) throws Exception
-	{
+	public final void setSortVal0(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortVal0, value);
 	}
 	/** 
@@ -103,8 +87,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText0);
 	}
-	public final void setSortText0(String value) throws Exception
-	{
+	public final void setSortText0(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortText0, value);
 	}
 
@@ -112,8 +96,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText3);
 	}
-	public final void setSortText3(String value) throws Exception
-	{
+	public final void setSortText3(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortText3, value);
 	}
 
@@ -124,8 +108,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal1);
 	}
-	public final void setSortVal1(String value) throws Exception
-	{
+	public final void setSortVal1(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortVal1, value);
 	}
 	/** 
@@ -135,8 +119,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText1);
 	}
-	public final void setSortText1(String value) throws Exception
-	{
+	public final void setSortText1(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortText1, value);
 	}
 
@@ -147,8 +131,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal2);
 	}
-	public final void setSortVal2(String value) throws Exception
-	{
+	public final void setSortVal2(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortVal2, value);
 	}
 	/** 
@@ -158,8 +142,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText2);
 	}
-	public final void setSortText2(String value) throws Exception
-	{
+	public final void setSortText2(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortText2, value);
 	}
 	/** 
@@ -169,8 +153,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortVal3);
 	}
-	public final void setSortVal3(String value) throws Exception
-	{
+	public final void setSortVal3(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortVal3, value);
 	}
 	/** 
@@ -180,8 +164,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.SortText4);
 	}
-	public final void setSortText4(String value) throws Exception
-	{
+	public final void setSortText4(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.SortText4, value);
 	}
 	/** 
@@ -191,8 +175,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal0);
 	}
-	public final void setTagVal0(String value) throws Exception
-	{
+	public final void setTagVal0(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagVal0, value);
 	}
 	/** 
@@ -202,8 +186,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal1);
 	}
-	public final void setTagVal1(String value) throws Exception
-	{
+	public final void setTagVal1(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagVal1, value);
 	}
 	/** 
@@ -213,8 +197,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal2);
 	}
-	public final void setTagVal2(String value) throws Exception
-	{
+	public final void setTagVal2(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagVal2, value);
 	}
 	/** 
@@ -224,8 +208,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagVal3);
 	}
-	public final void setTagVal3(String value) throws Exception
-	{
+	public final void setTagVal3(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagVal3, value);
 	}
 	/** 
@@ -235,8 +219,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText0);
 	}
-	public final void setTagText0(String value) throws Exception
-	{
+	public final void setTagText0(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagText0, value);
 	}
 	/** 
@@ -246,8 +230,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText1);
 	}
-	public final void setTagText1(String value) throws Exception
-	{
+	public final void setTagText1(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagText1, value);
 	}
 
@@ -258,8 +242,8 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText2);
 	}
-	public final void setTagText2(String value) throws Exception
-	{
+	public final void setTagText2(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagText2, value);
 	}
 	/** 
@@ -269,39 +253,37 @@ public class FindWorkerRole extends EntityOIDName
 	{
 		return this.GetValStringByKey(FindWorkerRoleAttr.TagText3);
 	}
-	public final void setTagText3(String value) throws Exception
-	{
+	public final void setTagText3(String value)  throws Exception
+	 {
 		this.SetValByKey(FindWorkerRoleAttr.TagText3, value);
 	}
 
-		///
+		///#endregion
 
 
-		///变量
+		///#region 变量
 	public WorkNode town = null;
 	public WorkNode currWn = null;
 	public Flow fl = null;
-	private String dbStr = SystemConfig.getAppCenterDBVarStr();
+	private String dbStr = bp.difference.SystemConfig.getAppCenterDBVarStr();
 	public Paras ps = null;
 	public long WorkID = 0;
 	public Node HisNode = null;
 
-		/// 变量
+		///#endregion 变量
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 找人规则
 	*/
-	public FindWorkerRole()
-	{
+	public FindWorkerRole()  {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -349,38 +331,32 @@ public class FindWorkerRole extends EntityOIDName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///内部方法.
+		///#region 内部方法.
 	/** 
 	 上移
-	 * @throws Exception 
 	*/
-	public final void DoUp() throws Exception
-	{
+	public final void DoUp() throws Exception {
 		this.DoOrderUp(FindWorkerRoleAttr.FK_Node, String.valueOf(this.getFK_Node()), FindWorkerRoleAttr.Idx);
 	}
 	/** 
 	 下移
-	 * @throws Exception 
 	*/
-	public final void DoDown() throws Exception
-	{
+	public final void DoDown() throws Exception {
 		this.DoOrderDown(FindWorkerRoleAttr.FK_Node, String.valueOf(this.getFK_Node()), FindWorkerRoleAttr.Idx);
 	}
 	private String sql = "";
 
-		/// 内部方法
+		///#endregion 内部方法
 
 	/** 
 	 生成数据
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final DataTable GenerWorkerOfDataTable() throws Exception
-	{
+	public final DataTable GenerWorkerOfDataTable() throws Exception {
 		DataTable dt = new DataTable();
 		// 首先判断第一类别
 		switch (this.getSortVal0())
@@ -391,14 +367,14 @@ public class FindWorkerRole extends EntityOIDName
 			case "SpecEmps":
 
 
-					///  首先找到2级参数，就是当事人是谁？
+					///#region   首先找到2级参数，就是当事人是谁？
 				String empNo = null;
 				String empDept = null;
 				switch (this.getHisFindLeaderType())
 				{
 					case Submiter: // 当前提交人的直线领导
-						empNo = WebUser.getNo();
-						empDept = WebUser.getFK_Dept();
+						empNo = bp.web.WebUser.getNo();
+						empDept = bp.web.WebUser.getFK_Dept();
 						break;
 					case SpecNodeSubmiter: // 指定节点提交人的直线领导.
 						sql = "SELECT FK_Emp,FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + this.WorkID + " AND FK_Node=" + this.getTagVal1();
@@ -419,8 +395,8 @@ public class FindWorkerRole extends EntityOIDName
 							throw new RuntimeException("@指定的节点字段(" + this.getTagVal1() + ")的值为空.");
 						}
 						//指定它
-						bp.port.Emp emp = new bp.port.Emp();
-						emp.setNo(empNo);
+						Emp emp = new Emp();
+						emp.setUserID(empNo);
 						if (emp.RetrieveFromDBSources() == 0)
 						{
 							throw new RuntimeException("@指定的节点字段(" + this.getTagVal1() + ")的值(" + empNo + ")是非法的人员编号...");
@@ -428,14 +404,15 @@ public class FindWorkerRole extends EntityOIDName
 						empDept = emp.getFK_Dept();
 						break;
 					default:
-						throw new RuntimeException("@尚未处理的Case:" + this.getHisFindLeaderType());
+						//throw new RuntimeException("@尚未处理的Case:" + this.getHisFindLeaderType());
+						break;
 				}
 				if (DataType.IsNullOrEmpty(empNo))
 				{
 					throw new RuntimeException("@遗漏的判断步骤，没有找到指定的工作人员.");
 				}
 
-					///
+					///#endregion
 
 				if (this.getSortVal0().equals("Leader"))
 				{
@@ -452,9 +429,8 @@ public class FindWorkerRole extends EntityOIDName
 	}
 
 
-		///按部门查找
-	private DataTable GenerByDept() throws Exception
-	{
+		///#region 按部门查找
+	private DataTable GenerByDept() throws Exception {
 		//部门编号.
 		String deptNo = this.getTagVal1();
 
@@ -467,13 +443,13 @@ public class FindWorkerRole extends EntityOIDName
 		switch (way)
 		{
 			case "0": //按职务找.
-				sql = "SELECT B.No,B.Name FROM Port_DeptEmp A, Port_Emp B WHERE A.FK_Dept='" + deptNo + "'  AND A.FK_Duty='" + objVal + "' AND B.No=A.FK_Emp";
+				sql = "SELECT B." + bp.sys.base.Glo.getUserNo() + ",B.Name FROM Port_DeptEmp A, Port_Emp B WHERE A.FK_Dept='" + deptNo + "'  AND A.FK_Duty='" + objVal + "' AND B." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=A.FK_Emp";
 				break;
 			case "1": //按岗位找.
-				sql = "SELECT B.No,B.Name FROM Port_DeptEmpStation A, Port_Emp B WHERE A.FK_Dept='" + deptNo + "'  AND A.FK_Station='" + objVal + "' AND B.No=A.FK_Emp";
+				sql = "SELECT B." + bp.sys.base.Glo.getUserNo() + ",B.Name FROM Port_DeptEmpStation A, Port_Emp B WHERE A.FK_Dept='" + deptNo + "'  AND A.FK_Station='" + objVal + "' AND B." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=A.FK_Emp";
 				break;
 			case "2": //所有该部门的人员.
-				sql = "SELECT B.No,B.Name FROM Port_DeptEmp A, Port_Emp B WHERE A.FK_Dept='" + deptNo + "' AND B.No=A.FK_Emp";
+				sql = "SELECT B." + bp.sys.base.Glo.getUserNo() + ",B.Name FROM Port_DeptEmp A, Port_Emp B WHERE A.FK_Dept='" + deptNo + "' AND B." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=A.FK_Emp";
 				break;
 			default:
 				break;
@@ -481,18 +457,16 @@ public class FindWorkerRole extends EntityOIDName
 		return DBAccess.RunSQLReturnTable(sql);
 	}
 
-		///
+		///#endregion
 
 
-		///找同事
+		///#region 找同事
 	/** 
 	 当前提交人的直线领导
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	private DataTable GenerHisSpecEmps(String empNo, String empDept) throws Exception
-	{
+	private DataTable GenerHisSpecEmps(String empNo, String empDept) throws Exception {
 		DeptEmp de = new DeptEmp();
 
 		DataTable dt = new DataTable();
@@ -563,18 +537,16 @@ public class FindWorkerRole extends EntityOIDName
 	}
 	public String ErrMsg = null;
 
-		/// 直线领导
+		///#endregion 直线领导
 
 
-		///直线领导
+		///#region 直线领导
 	/** 
 	 当前提交人的直线领导
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	private DataTable GenerHisLeader(String empNo, String empDept) throws Exception
-	{
+	private DataTable GenerHisLeader(String empNo, String empDept) throws Exception {
 		DeptEmp de = new DeptEmp();
 
 		DataTable dt = new DataTable();
@@ -662,10 +634,9 @@ public class FindWorkerRole extends EntityOIDName
 		return dt;
 	}
 
-		/// 直线领导
+		///#endregion 直线领导
 
-	public final String getDBStr()
-	{
-		return SystemConfig.getAppCenterDBVarStr();
+	public final String getDBStr() throws Exception {
+		return bp.difference.SystemConfig.getAppCenterDBVarStr();
 	}
 }

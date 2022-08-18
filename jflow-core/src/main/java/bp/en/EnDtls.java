@@ -12,11 +12,10 @@ public class EnDtls extends ArrayList<EnDtl> implements Serializable
 	/** 
 	 是不是包含className
 	 
-	 @param className
+	 param className
 	 @return 
 	*/
-	public final boolean IsContainKey(String className)
-	{
+	public final boolean IsContainKey(String className) throws Exception {
 		for (EnDtl ed : this)
 		{
 			if (ed.getEnsName().equals(className))
@@ -29,7 +28,7 @@ public class EnDtls extends ArrayList<EnDtl> implements Serializable
 	/** 
 	 加入
 	 
-	 @param attr attr
+	 param en
 	*/
 	public final void Add(EnDtl en)
 	{
@@ -42,11 +41,10 @@ public class EnDtls extends ArrayList<EnDtl> implements Serializable
 	/** 
 	 是不是存在集合里面
 	 
-	 @param en 要检查的EnDtl
+	 param en 要检查的EnDtl
 	 @return true/false
 	*/
-	public final boolean getIsExits(EnDtl en)
-	{
+	public final boolean getIsExits(EnDtl en) {
 		for (EnDtl dtl : this)
 		{
 			if (dtl.getEns() == en.getEns())
@@ -60,10 +58,10 @@ public class EnDtls extends ArrayList<EnDtl> implements Serializable
 	/** 
 	 通过一个key 得到它的属性值。
 	 
-	 @param key key
+	 param key key
 	 @return EnDtl
 	*/
-	public final EnDtl GetEnDtlByKey(String key)
+	public final EnDtl GetEnDtlByKey(String key)throws Exception
 	{
 		for (EnDtl dtl : this)
 		{
@@ -78,10 +76,10 @@ public class EnDtls extends ArrayList<EnDtl> implements Serializable
 	/** 
 	 className
 	 
-	 @param className 类名称
+	 param className 类名称
 	 @return 
 	*/
-	public final EnDtl GetEnDtlByEnsName(String className)
+	public final EnDtl GetEnDtlByEnsName(String className)throws Exception
 	{
 		for (EnDtl en : this)
 		{

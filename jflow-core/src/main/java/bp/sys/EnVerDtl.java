@@ -12,34 +12,50 @@ import java.util.*;
 public class EnVerDtl extends EntityMyPK
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC() 
 	{
+
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 
 	}
+	public final String getRefPK()  throws Exception
+	{
+		return this.GetValStringByKey(EnVerDtlAttr.RefPK);
+	}
+	public final void setRefPK(String value) throws Exception
+	{
+		SetValByKey(EnVerDtlAttr.RefPK, value);
+	}
 	/** 
 	 实体名称
 	*/
-	public final String getEnName() throws Exception
+	public final String getFrmID()  throws Exception
 	{
-		return this.GetValStringByKey(EnVerDtlAttr.EnName);
+		return this.GetValStringByKey(EnVerDtlAttr.FrmID);
 	}
-	public final void setEnName(String value) throws Exception
+	public final void setFrmID(String value) throws Exception
 	{
-		SetValByKey(EnVerDtlAttr.EnName, value);
+		SetValByKey(EnVerDtlAttr.FrmID, value);
+	}
+	public final String getEnPKValue()  throws Exception
+	{
+		return this.GetValStringByKey(EnVerDtlAttr.EnPKValue);
+	}
+	public final void setEnPKValue(String value) throws Exception
+	{
+		SetValByKey(EnVerDtlAttr.EnPKValue, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getAttrKey() throws Exception
+	public final String getAttrKey()  throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.AttrKey);
 	}
@@ -51,19 +67,18 @@ public class EnVerDtl extends EntityMyPK
 	/** 
 	 版本主表PK
 	*/
-	public final String getEnVerPK() throws Exception
+	public final String getBindKey()  throws Exception
 	{
-		return this.GetValStringByKey(EnVerDtlAttr.EnVerPK);
+		return this.GetValStringByKey(EnVerDtlAttr.BindKey);
 	}
-
-	public final void setEnVerPK(String value) throws Exception
+	public final void setBindKey(String value) throws Exception
 	{
-		SetValByKey(EnVerDtlAttr.EnVerPK, value);
+		SetValByKey(EnVerDtlAttr.BindKey, value);
 	}
 	/** 
 	字段名
 	*/
-	public final String getAttrName() throws Exception
+	public final String getAttrName()  throws Exception
 	{
 		return this.GetValStringByKey(EnVerDtlAttr.AttrName);
 	}
@@ -71,74 +86,45 @@ public class EnVerDtl extends EntityMyPK
 	{
 		SetValByKey(EnVerDtlAttr.AttrName, value);
 	}
-
-
-
+	public final int getLGType()  throws Exception
+	{
+		return this.GetValIntByKey(EnVerDtlAttr.LGType);
+	}
+	public final void setLGType(int value) throws Exception
+	{
+		SetValByKey(EnVerDtlAttr.LGType, value);
+	}
 	/** 
 	 旧值
 	*/
-	public final String getOldVal() throws Exception
+	public final String getMyVal()  throws Exception
 	{
-		return this.GetValStringByKey(EnVerDtlAttr.OldVal);
+		return this.GetValStringByKey(EnVerDtlAttr.MyVal);
 	}
-	public final void setOldVal(String value) throws Exception
+	public final void setMyVal(String value) throws Exception
 	{
-		SetValByKey(EnVerDtlAttr.OldVal, value);
-	}
+		if (value == null)
+		{
+		SetValByKey(EnVerDtlAttr.MyVal, "");
+		}
+		else
+		{
+			SetValByKey(EnVerDtlAttr.MyVal, value);
+		}
 
-	/** 
-	 新值
-	*/
-	public final String getNewVal() throws Exception
-	{
-		return this.GetValStringByKey(EnVerDtlAttr.NewVal);
-	}
-	public final void setNewVal(String value) throws Exception
-	{
-		SetValByKey(EnVerDtlAttr.NewVal, value);
+
 	}
 
-	/** 
-	 版本号
-	*/
-	public final int getEnVer() throws Exception
-	{
-		return this.GetValIntByKey(EnVerDtlAttr.EnVer);
-	}
-	public final void setEnVer(int value) throws Exception
-	{
-		SetValByKey(EnVerDtlAttr.EnVer, value);
-	}
+		///#endregion
 
 
-	public final String getRDT() throws Exception 
-	{
-		return this.GetValStringByKey(EnVerDtlAttr.RDT);
-	}
-	public final void setRDT(String value) throws Exception
-	{
-		SetValByKey(EnVerDtlAttr.RDT, value);
-	}
-	public final String getRec() throws Exception 
-	{
-		return this.GetValStringByKey(EnVerDtlAttr.Rec);
-	}
-	public final void setRec(String value) throws Exception
-	{
-		SetValByKey(EnVerDtlAttr.Rec, value);
-	}
+		///#region 扩展属性
 
 
-		///
+		///#endregion
 
 
-		///扩展属性
-
-
-		///
-
-
-		///构造函数
+		///#region 构造函数
 	/** 
 	 工作部门岗位对应
 	*/
@@ -150,33 +136,33 @@ public class EnVerDtl extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Sys_EnVerDtl", "实体修改明细");
+		Map map = new Map("Sys_EnVerDtl", "版本明细");
 		map.setEnType(EnType.Dot2Dot); //实体类型，admin 系统管理员表，PowerAble 权限管理表,也是用户表,你要想把它加入权限管理里面请在这里设置。。
-		map.IndexField = EnVerDtlAttr.EnName;
+		map.IndexField = EnVerDtlAttr.FrmID;
 
 		map.AddMyPK();
-		map.AddTBString(EnVerDtlAttr.EnName, null, "实体名", true, false, 0, 200, 30);
-		map.AddTBString(EnVerDtlAttr.EnVerPK, null, "版本主表PK", false, false, 0, 100, 100);
-		map.AddTBString(EnVerDtlAttr.AttrKey, null, "字段", false, false, 0, 100, 1);
-		map.AddTBString(EnVerDtlAttr.AttrName, null, "字段名", true, false, 0, 200, 30);
-		map.AddTBString(EnVerDtlAttr.OldVal, null, "旧值", true, false, 0, 100, 30);
-		map.AddTBString(EnVerDtlAttr.NewVal, null, "新值", true, false, 0, 100, 30);
-			//map.AddTBString(EnVerDtlAttr.EnNo, null, "选中行编号", true, false, 0, 100, 30);
-		map.AddTBInt(EnVerDtlAttr.EnVer, 1, "版本号(日期)", true, false);
+		map.AddTBString(EnVerDtlAttr.RefPK, null, "关联版本主键", true, false, 0, 50, 30);
 
-		map.AddTBDateTime(EnVerDtlAttr.RDT, null, "日期", true, false);
-		map.AddTBString(EnVerDtlAttr.Rec, null, "版本号", true, false, 0, 100, 30);
+		map.AddTBString(EnVerDtlAttr.FrmID, null, "FrmID", false, false, 0, 200, 1);
+		map.AddTBString(EnVerDtlAttr.EnPKValue, null, "EnPKValue", true, false, 0, 50, 30);
+
+		map.AddTBString(EnVerDtlAttr.AttrKey, null, "字段", false, false, 0, 200, 1);
+		map.AddTBString(EnVerDtlAttr.AttrName, null, "字段名", true, false, 0, 200, 30);
+		map.AddTBInt(EnVerDtlAttr.LGType, 0, "逻辑类型", true, false);
+		map.AddTBString(EnVerDtlAttr.BindKey, null, "外部数据源", true, false, 0, 200, 30);
+
+		map.AddTBString(EnVerDtlAttr.MyVal, null, "数据值", true, false, 0, 4000, 30);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

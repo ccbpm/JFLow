@@ -1,4 +1,13 @@
 package bp.wf;
+
+import bp.da.*;
+import bp.en.*;
+import bp.web.*;
+import bp.sys.*;
+import bp.wf.port.*;
+import bp.*;
+import java.util.*;
+
 /** 
  消息类型
 */
@@ -35,11 +44,15 @@ public class SMSMsgType
 	/** 
 	 挂起消息
 	*/
-	public static final String HungUp = "HangUp";
+	public static final String Hungup = "HangUp";
 	/** 
 	 催办消息
 	*/
 	public static final String DoPress = "DoPress";
+	/** 
+	 拒绝挂起的信息
+	*/
+	public static final String RejectHungup = "RejectHungup";
 	/** 
 	 错误信息
 	*/

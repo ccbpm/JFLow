@@ -1,13 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.port.*;
-import bp.sys.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  权限模型
@@ -15,48 +8,45 @@ import java.util.*;
 public class PowerModel extends EntityMyPK
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 流程编号
-	 * @throws Exception 
 	*/
 	public final String getFlowNo() throws Exception
 	{
 		return this.GetValStringByKey(PowerModelAttr.FlowNo);
 	}
-	public final void setFlowNo(String value) throws Exception
-	{
+	public final void setFlowNo(String value)  throws Exception
+	 {
 		this.SetValByKey(PowerModelAttr.FlowNo, value);
 	}
 	/** 
 	 权限标记
 	*/
-	public final String getPowerFlag()throws Exception
+	public final String getPowerFlag() throws Exception
 	{
 		return this.GetValStringByKey(PowerModelAttr.PowerFlag);
 	}
-	public final void setPowerFlag(String value) throws Exception
-	{
+	public final void setPowerFlag(String value)  throws Exception
+	 {
 		this.SetValByKey(PowerModelAttr.PowerFlag, value);
 	}
 
-		///
+		///#endregion
 
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 权限模型
 	*/
-	public PowerModel()
-	{
+	public PowerModel() {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -64,7 +54,7 @@ public class PowerModel extends EntityMyPK
 
 		Map map = new Map("WF_PowerModel", "权限模型");
 
-		map.AddMyPK();
+		map.AddMyPK(true);
 
 			//比如： FlowData , FrmData
 		map.AddTBString(PowerModelAttr.Model, null, "模块", true, false, 0, 100, 10);
@@ -91,5 +81,5 @@ public class PowerModel extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

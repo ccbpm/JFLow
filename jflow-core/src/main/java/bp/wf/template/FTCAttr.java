@@ -1,5 +1,13 @@
 package bp.wf.template;
-import bp.en.EntityNoAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.wf.template.*;
+import bp.wf.*;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
 
 /** 
  流转自定义组件
@@ -18,20 +26,10 @@ public class FTCAttr extends EntityNoAttr
 	 工作模式
 	*/
 	public static final String FTCWorkModel = "FTCWorkModel";
-	/** 
-	 X
-	*/
-	public static final String FTC_X = "FTC_X";
-	/** 
-	 Y
-	*/
-	public static final String FTC_Y = "FTC_Y";
+
 	/** 
 	 H
 	*/
 	public static final String FTC_H = "FTC_H";
-	/** 
-	 W
-	*/
-	public static final String FTC_W = "FTC_W";
+
 }

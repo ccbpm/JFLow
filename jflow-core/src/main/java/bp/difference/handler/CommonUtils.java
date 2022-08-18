@@ -1,6 +1,8 @@
 package bp.difference.handler;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -35,7 +37,7 @@ public class CommonUtils {
 				if(request.getAttribute("multipartRequest") != null){
 					return (DefaultMultipartHttpServletRequest)(request.getAttribute("multipartRequest"));
 				}else{
-					return ((bp.difference.context.ServletRequestAttributes)ra).getRequest(); 
+					return ((bp.difference.context.ServletRequestAttributes)ra).getRequest();
 				}
 			}
 			return null;
@@ -44,22 +46,18 @@ public class CommonUtils {
 		}
 	}
 
-	public static HttpServletResponse getResponse() throws Exception {
+	public static HttpServletResponse getResponse() {
 		try {
 			RequestAttributes ra = RequestContextHolder.currentRequestAttributes();
 			if (ra instanceof ServletRequestAttributes){
-				HttpServletResponse response= (HttpServletResponse)ra.getClass().getMethod("getResponse").invoke(ra);
-				response.setHeader("P3P","CP=CAO PSA OUR");
-				return response;
+				return (HttpServletResponse)ra.getClass().getMethod("getResponse").invoke(ra);
 			}
 			else if (ra instanceof bp.difference.context.ServletRequestAttributes){
-				HttpServletResponse response= ((bp.difference.context.ServletRequestAttributes)ra).getResponse();
-				response.setHeader("P3P","CP=CAO PSA OUR");
-				return response;
+				return ((bp.difference.context.ServletRequestAttributes)ra).getResponse();
 			}
 			return null;
 		} catch (Exception e) {
-			throw new Exception("获取HttpServletResponse失败");
+			return null;
 		}
 	}
 }

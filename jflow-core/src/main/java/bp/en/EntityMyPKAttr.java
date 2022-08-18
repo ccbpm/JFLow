@@ -1,7 +1,7 @@
 package bp.en;
 
 import bp.da.*;
-import bp.*;
+
 
 /** 
  EntityMyPKAttr

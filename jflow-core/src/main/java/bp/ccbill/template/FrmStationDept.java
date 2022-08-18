@@ -1,7 +1,6 @@
 package bp.ccbill.template;
 
 import bp.en.*;
-import bp.en.Map;
 
 /** 
  单据查询岗位
@@ -9,69 +8,64 @@ import bp.en.Map;
 */
 public class FrmStationDept extends EntityMM
 {
-	private static final long serialVersionUID = 1L;
-		///基本属性
+
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC() {
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return uac;
 	}
 	/** 
 	单据
-	 * @throws Exception 
 	*/
-	public final String getFK_Frm() throws Exception
+	public final String getFKFrm()
 	{
 		return this.GetValStringByKey(FrmStationDeptAttr.FK_Frm);
 	}
-	public final void setFK_Frm(String value) throws Exception
-	{
+	public final void setFKFrm(String value)
+	 {
 		this.SetValByKey(FrmStationDeptAttr.FK_Frm, value);
 	}
 
 	/** 
 	 工作岗位
-	 * @throws Exception 
 	*/
-	public final String getFK_Station() throws Exception
+	public final String getFKStation()
 	{
 		return this.GetValStringByKey(FrmStationDeptAttr.FK_Station);
 	}
-	public final void setFK_Station(String value) throws Exception
-	{
+	public final void setFKStation(String value)
+	 {
 		this.SetValByKey(FrmStationDeptAttr.FK_Station, value);
 	}
-	public final String getFK_Dept() throws Exception
+	public final String getFK_Dept()
 	{
 		return this.GetValStringByKey(FrmStationDeptAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value) throws Exception
-	{
+	public final void setFK_Dept(String value)
+	 {
 		this.SetValByKey(FrmStationDeptAttr.FK_Dept, value);
 	}
 
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 单据工作岗位
 	*/
-	public FrmStationDept()
-	{
+	public FrmStationDept() {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -83,7 +77,7 @@ public class FrmStationDept extends EntityMM
 
 		map.AddDDLEntitiesPK(FrmStationDeptAttr.FK_Station, null, "工作岗位", new bp.port.Stations(), true);
 
-		map.AddDDLEntitiesPK(FrmStationDeptAttr.FK_Dept, null, "部门", new bp.gpm.Depts(), true);
+		map.AddDDLEntitiesPK(FrmStationDeptAttr.FK_Dept, null, "部门", new bp.port.Depts(), true);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -91,6 +85,6 @@ public class FrmStationDept extends EntityMM
 
 
 
-		///
+		///#endregion
 
 }

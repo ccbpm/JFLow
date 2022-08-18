@@ -1,5 +1,12 @@
 package bp.wf.template;
-import bp.en.EntityNoNameAttr;
+
+import bp.da.*;
+import bp.sys.*;
+import bp.en.*;
+import bp.wf.port.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
 
 /** 
  流程轨迹权限属性
@@ -7,7 +14,7 @@ import bp.en.EntityNoNameAttr;
 public class TruckViewPowerAttr extends EntityNoNameAttr
 {
 
-		///权限组.
+		///#region 权限组.
 	/** 
 	 发起人可看
 	*/
@@ -20,6 +27,10 @@ public class TruckViewPowerAttr extends EntityNoNameAttr
 	 被抄送人可看
 	*/
 	public static final String PCCer = "PCCer";
+	/** 
+	 任何人可见
+	*/
+	public static final String PAnyOne = "PAnyOne";
 	/** 
 	 本部门人可看
 	*/
@@ -70,5 +81,5 @@ public class TruckViewPowerAttr extends EntityNoNameAttr
 	*/
 	public static final String PSpecEmpExt = "PSpecEmpExt";
 
-		/// 权限组.
+		///#endregion 权限组.
 }

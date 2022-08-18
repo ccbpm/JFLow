@@ -1,6 +1,7 @@
 package bp.wf.data;
 
 import bp.en.*;
+
 import java.util.*;
 
 /** 
@@ -9,20 +10,23 @@ import java.util.*;
 public class CHNodes extends Entities
 {
 
-	private static final long serialVersionUID = 1L;
-	///构造方法属性
+		///#region 构造方法属性
 	/** 
 	 节点时限s
 	*/
-	public CHNodes()
+	public CHNodes()throws Exception
 	{
 	}
 
-	public CHNodes(long WorkID) throws Exception
-	{
-		this.Retrieve(CHNodeAttr.WorkID, WorkID);
+	public CHNodes(long WorkID) throws Exception {
+		this.Retrieve(CHNodeAttr.WorkID, WorkID, null);
 		return;
 	}
+
+		///#endregion
+
+
+		///#region 属性
 	/** 
 	 节点时限
 	*/
@@ -32,25 +36,25 @@ public class CHNodes extends Entities
 		return new CHNode();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<CHNode> ToJavaList()
+	public final java.util.List<CHNode> ToJavaList()throws Exception
 	{
-		return (List<CHNode>)(Object)this;
+		return (java.util.List<CHNode>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<CHNode> Tolist()
+	public final ArrayList<CHNode> Tolist()throws Exception
 	{
 		ArrayList<CHNode> list = new ArrayList<CHNode>();
 		for (int i = 0; i < this.size(); i++)
@@ -60,5 +64,5 @@ public class CHNodes extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

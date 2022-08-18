@@ -3,7 +3,8 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.sys.*;
-import bp.sys.*;
+import bp.sys.frmui.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,42 +14,38 @@ import java.util.*;
 public class ExtJobSchedules extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 流程进度图s
 	*/
-	public ExtJobSchedules()
-	{
+	public ExtJobSchedules() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new ExtJobSchedule();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<ExtJobSchedule> ToJavaList()
-	{
-		return (List<ExtJobSchedule>)(Object)this;
+	public final java.util.List<ExtJobSchedule> ToJavaList() {
+		return (java.util.List<ExtJobSchedule>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtJobSchedule> Tolist()
-	{
+	public final ArrayList<ExtJobSchedule> Tolist()  {
 		ArrayList<ExtJobSchedule> list = new ArrayList<ExtJobSchedule>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +54,5 @@ public class ExtJobSchedules extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

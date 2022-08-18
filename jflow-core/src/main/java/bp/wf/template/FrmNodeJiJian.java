@@ -5,6 +5,7 @@ import bp.en.*;
 import bp.en.Map;
 import bp.port.*;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -17,8 +18,8 @@ import java.util.*;
 public class FrmNodeJiJian extends EntityMyPK
 {
 
-		///属性.
-	public final String getFK_Frm() throws Exception
+		///#region 属性.
+	public final String getFKFrm() throws Exception
 	{
 		return this.GetValStrByKey(FrmNodeAttr.FK_Frm);
 	}
@@ -34,16 +35,15 @@ public class FrmNodeJiJian extends EntityMyPK
 		return this.GetValStringByKey(FrmNodeAttr.FK_Flow);
 	}
 
-		///
+		///#endregion
 
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
@@ -51,23 +51,21 @@ public class FrmNodeJiJian extends EntityMyPK
 	}
 
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 节点表单
 	*/
-	public FrmNodeJiJian()
-	{
+	public FrmNodeJiJian()  {
 	}
 	/** 
 	 节点表单
 	 
-	 @param mypk
-	 * @throws Exception 
+	 param mypk
 	*/
-	public FrmNodeJiJian(String mypk) throws Exception
+	public FrmNodeJiJian(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -76,8 +74,7 @@ public class FrmNodeJiJian extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -85,7 +82,7 @@ public class FrmNodeJiJian extends EntityMyPK
 
 		Map map = new Map("WF_FrmNode", "节点表单");
 
-		map.AddMyPK();
+		map.AddMyPK(true);
 
 		map.AddDDLEntities(FrmNodeAttr.FK_Frm, null, "表单", new MapDatas(), false);
 
@@ -125,17 +122,17 @@ public class FrmNodeJiJian extends EntityMyPK
 			//   map.AddTBString(FrmNodeAttr.TempleteFile, null, "模版文件", true, false, 0, 500, 20);
 
 			//是否显示
-		map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, false, 0, 20, 20);
+			//map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, false, 0, 20, 20);
 
 
-			///表单启用规则. @袁丽娜
+			///#region 表单启用规则.
 			//   map.AddDDLSysEnum(FrmNodeAttr.FrmEnableRole, 0, "启用规则", false, false, FrmNodeAttr.FrmEnableRole,
 			//    "@0=始终启用@1=有数据时启用@2=有参数时启用@3=按表单的字段表达式@4=按SQL表达式@5=不启用@6=按岗位@7=按部门");
 
 			//  map.SetHelperAlert(FrmNodeAttr.FrmEnableRole, "用来控制该表单是否显示的规则.");
 			//   map.AddTBStringDoc(FrmNodeAttr.FrmEnableExp, null, "启用的表达式", false, false, true);
 
-			/// 表单启用规则.
+			///#endregion 表单启用规则.
 
 
 		map.AddTBString(FrmNodeAttr.FrmNameShow, null, "表单显示名字", true, false, 0, 100, 20);
@@ -143,7 +140,7 @@ public class FrmNodeJiJian extends EntityMyPK
 
 
 		RefMethod rm = new RefMethod();
-			////@袁丽娜
+
 			//rm.Title = "启用规则";
 			//rm.ClassMethodName = this.ToString() + ".DoEnableRole()";
 			//rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -152,7 +149,7 @@ public class FrmNodeJiJian extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "字段权限";
 		rm.ClassMethodName = this.toString() + ".DoFields()";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -176,13 +173,13 @@ public class FrmNodeJiJian extends EntityMyPK
 		rm = new RefMethod();
 		rm.Title = "从其他节点Copy权限设置";
 		rm.ClassMethodName = this.toString() + ".DoCopyFromNode()";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 			//rm = new RefMethod();
 			//rm.Title = "改变表单类型";
 			//rm.ClassMethodName = this.ToString() + ".DoChangeFrmType()";
-			//rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
+			//rm.HisAttrs.AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
 			//map.AddRefMethod(rm);
 
 			//rm = new RefMethod();
@@ -195,37 +192,31 @@ public class FrmNodeJiJian extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///表单元素权限.
-	public final String DoDtls() throws Exception
-	{
-		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+		///#region 表单元素权限.
+	public final String DoDtls() throws Exception {
+		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoFields() throws Exception
-	{
-		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoFields() throws Exception {
+		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoAths() throws Exception
-	{
-		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoAths() throws Exception {
+		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
-	public final String DoImgAths() throws Exception
-	{
-		return "../../Admin/Sln/ImgAths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoImgAths() throws Exception {
+		return "../../Admin/Sln/ImgAths.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
-	public final String DoCopyFromNode() throws Exception
-	{
-		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoCopyFromNode() throws Exception {
+		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoEnableRole() throws Exception
-	{
+	public final String DoEnableRole() throws Exception {
 		return "../../Admin/AttrNode/BindFrmsNodeEnableRole.htm?MyPK=" + this.getMyPK();
 	}
 
-		/// 表单元素权限.
+		///#endregion 表单元素权限.
 
 }

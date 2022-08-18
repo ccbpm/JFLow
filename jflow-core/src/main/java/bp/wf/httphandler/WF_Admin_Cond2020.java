@@ -1,9 +1,10 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.wf.template.*;
+import bp.*;
+import bp.wf.*;
 
 /** 
  页面功能实体
@@ -14,29 +15,35 @@ public class WF_Admin_Cond2020 extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Cond2020()
-	{
+	public WF_Admin_Cond2020() throws Exception {
 	}
 	/** 
 	 初始化列表
 	 
 	 @return 
 	*/
-	public final String List_Init()
-	{
+	public final String List_Init() throws Exception {
 		// BP.WF.Template.CondAttr.ToNodeID
 		// Conds condes = new Conds();
 		// condes.RetrieveAll();
 		return "";
 	}
+	public final String List_Move() throws Exception {
+		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
+		for (int i = 0; i < ens.length; i++)
+		{
+			String enNo = ens[i];
+			String sql = "UPDATE WF_Cond SET Idx=" + i + " WHERE MyPK='" + enNo + "'";
+			DBAccess.RunSQL(sql);
+		}
+		return "顺序移动成功..";
+	}
 	/** 
 	 校验是否正确
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String List_DoCheck() throws Exception
-	{
+	public final String List_DoCheck() throws Exception {
 		String str = "";
 
 		String mystr = this.GetRequestVal("ToNodeID");
@@ -52,8 +59,9 @@ public class WF_Admin_Cond2020 extends WebContralBase
 
 		if (conds.size() == 0)
 		{
-			return "";
+			return " 没有条件. ";
 		}
+
 		if (conds.size() == 1)
 		{
 			for (Cond item : conds.ToJavaList())
@@ -83,13 +91,13 @@ public class WF_Admin_Cond2020 extends WebContralBase
 		}
 
 		String sql = "";
-		switch (SystemConfig.getAppCenterDBType())
+		switch (bp.difference.SystemConfig.getAppCenterDBType( ))
 		{
 			case MSSQL:
 				sql = " SELECT TOP 1 No FROM Port_Emp WHERE " + str;
 				break;
 			case MySQL:
-				sql = " SELECT No FROM Port_Emp WHERE " + str + "  limit 1 ";
+				sql = " SELECT No FROM Port_Emp WHERE " + str + "   limit 1 ";
 				break;
 			case Oracle:
 			case KingBaseR3:

@@ -1,37 +1,54 @@
 package bp.pub;
 
-import bp.da.DBUrl;
-import bp.da.DBUrlType;
-import bp.da.Depositary;
+import bp.da.*;
 import bp.en.*;
+import bp.en.Map;
 
-/**
- * 年月
- */
+/** 
+ 年月
+*/
 public class NY extends EntityNoName
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
+		///#region 基本属性
+
+		///#endregion
+
+
+		///#region 构造函数
+	@Override
+	public UAC getHisUAC()
+	{
+		UAC uac = new UAC();
+		uac.OpenForSysAdmin();
+		return uac;
+	}
+	/** 
+	 年月
+	*/
 	public NY()
 	{
 	}
-	
-	public NY(String _No) throws Exception
+	public NY(String no) throws Exception 
 	{
-		super(_No);
+		super(no);
 	}
 
-	@Override
-	public Map getEnMap() throws Exception {
 
-		if (this.get_enMap() != null) {
+	/** 
+	 Map
+	*/
+	@Override
+	public bp.en.Map getEnMap()
+	{
+		if (this.get_enMap() != null)
+		{
 			return this.get_enMap();
 		}
 		Map map = new Map("Pub_NY", "年月");
 
-		//#region 基本属性
+
+			///#region 基本属性
 		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN));
 		map.setAdjunctType(AdjunctType.AllType);
 		map.setDepositaryOfMap(Depositary.Application);
@@ -39,14 +56,24 @@ public class NY extends EntityNoName
 		map.setIsCheckNoLength(false);
 		map.setEnType(EnType.App);
 		map.setCodeStruct("4");
-		//#endregion
 
-		//#region 字段
-		map.AddTBStringPK(EntityNoNameAttr.No, null, "编号", true, false, 0, 50, 50);
-		map.AddTBString(EntityNoNameAttr.Name, null, "名称", true, false, 0, 50, 200);
-		//#endregion
+			///#endregion
+
+
+			///#region 字段
+		map.AddTBStringPK(NYAttr.No, null, "编号", true, false, 0, 50, 50);
+		map.AddTBString(NYAttr.Name, null, "名称", true, false, 0, 50, 200);
+
+			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	@Override
+	public Entities getGetNewEntities()
+	{
+		return new NYs();
+	}
+
+		///#endregion
 }

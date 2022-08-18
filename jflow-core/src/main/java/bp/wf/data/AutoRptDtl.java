@@ -1,41 +1,41 @@
 package bp.wf.data;
-
-import bp.en.EntityOIDName;
+import bp.en.*;
 import bp.en.Map;
-import bp.wf.Glo;
+import bp.wf.*;
+/** 
+ 自动报表-数据项
+*/
+public class AutoRptDtl extends EntityOIDName
+{
 
-public class AutoRptDtl extends EntityOIDName {
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#region 属性
+		///#region 属性
 	/** 
 	 对应的任务.
 	*/
-	public final String getAutoRptNo()throws Exception
+	public final String getAutoRptNo()  throws Exception
 	{
 		return this.GetValStringByKey(AutoRptDtlAttr.AutoRptNo);
 	}
-	public final void setAutoRptNo(String value)throws Exception
+	public final void setAutoRptNo(String value) throws Exception
 	{
 		this.SetValByKey(AutoRptDtlAttr.AutoRptNo, value);
 	}
 	/** 
 	 到达的人员
 	*/
-	public final String getSQLExp()throws Exception
-	{
+	public final String getSQLExp() throws Exception {
 		String str = this.GetValStringByKey(AutoRptDtlAttr.SQLExp);
 		return Glo.DealExp(str, null);
 	}
-	public final void setSQLExp(String value)throws Exception
+	public final void setSQLExp(String value) throws Exception
 	{
 		this.SetValByKey(AutoRptDtlAttr.SQLExp, value);
 	}
-	public final String getUrlExp()throws Exception
-	{
+	public final String getUrlExp() throws Exception {
 		String str = this.GetValStringByKey(AutoRptDtlAttr.UrlExp);
 		return Glo.DealExp(str, null);
 	}
-	public final void setUrlExp(String value)throws Exception
+	public final void setUrlExp(String value) throws Exception
 	{
 		this.SetValByKey(AutoRptDtlAttr.UrlExp, value);
 	}
@@ -43,33 +43,30 @@ public class AutoRptDtl extends EntityOIDName {
 	/** 
 	 发起时间（可以为空）
 	*/
-	public final String getBeiZhu()throws Exception
+	public final String getBeiZhu()  throws Exception
 	{
 		return this.GetValStringByKey(AutoRptDtlAttr.BeiZhu);
 	}
-	public final void setBeiZhu(String value)throws Exception
+	public final void setBeiZhu(String value) throws Exception
 	{
 		this.SetValByKey(AutoRptDtlAttr.BeiZhu, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#region 构造函数
+		///#endregion
+
+
+		///#region 构造函数
 	/** 
 	 AutoRptDtl
 	*/
-//C# TO JAVA CONVERTER WARNING: The following constructor is declared outside of its associated class:
-//ORIGINAL LINE: public AutoRptDtl()
 	public AutoRptDtl()
 	{
 	}
 	/** 
 	 重写基类方法
-	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -78,6 +75,7 @@ public class AutoRptDtl extends EntityOIDName {
 
 		Map map = new Map("WF_AutoRptDtl", "自动报表-数据项");
 		map.setCodeStruct("3");
+
 
 			//主键.
 		map.AddTBIntPKOID();
@@ -102,7 +100,6 @@ public class AutoRptDtl extends EntityOIDName {
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-			///#endregion
 
+		///#endregion
 }

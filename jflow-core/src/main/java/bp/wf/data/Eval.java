@@ -3,45 +3,46 @@ package bp.wf.data;
 import bp.en.*;
 import bp.en.Map;
 
+
 /** 
  工作质量评价
 */
 public class Eval extends EntityMyPK
 {
-	private static final long serialVersionUID = 1L;
-		///基本属性
+
+		///#region 基本属性
 	/** 
 	 流程标题
 	*/
-	public final String getTitle()throws Exception
+	public final String getTitle()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.Title);
 	}
-	public final void setTitle(String value)throws Exception
+	public final void setTitle(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.Title, value);
 	}
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
+	public final long getWorkID()  throws Exception
 	{
 		return this.GetValInt64ByKey(EvalAttr.WorkID);
 	}
-	public final void setWorkID(long value)  throws Exception
+	public final void setWorkID(long value) throws Exception
 	{
-		this.SetValByKey(EvalAttr.WorkID,value);
+		this.SetValByKey(EvalAttr.WorkID, value);
 	}
 	/** 
 	 节点编号
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node()  throws Exception
 	{
 		return this.GetValIntByKey(EvalAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)throws Exception
+	public final void setFK_Node(int value) throws Exception
 	{
-		this.SetValByKey(EvalAttr.FK_Node,value);
+		this.SetValByKey(EvalAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
@@ -50,42 +51,42 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.NodeName);
 	}
-	public final void setNodeName(String value)throws Exception
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.NodeName, value);
 	}
 	/** 
 	 被评估人员名称
 	*/
-	public final String getEvalEmpName()throws Exception
+	public final String getEvalEmpName()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.EvalEmpName);
 	}
-	public final void setEvalEmpName(String value)throws Exception
+	public final void setEvalEmpName(String value) throws Exception
 	{
-		this.SetValByKey(EvalAttr.EvalEmpName,value);
+		this.SetValByKey(EvalAttr.EvalEmpName, value);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT() throws Exception
+	public final String getRDT()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.RDT);
 	}
-	public final void setRDT(String value)throws Exception
+	public final void setRDT(String value) throws Exception
 	{
-		this.SetValByKey(EvalAttr.RDT,value);
+		this.SetValByKey(EvalAttr.RDT, value);
 	}
 	/** 
 	 流程隶属部门
 	*/
-	public final String getFK_Dept()throws Exception
+	public final String getFK_Dept()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)throws Exception
+	public final void setFK_Dept(String value) throws Exception
 	{
-		this.SetValByKey(EvalAttr.FK_Dept,value);
+		this.SetValByKey(EvalAttr.FK_Dept, value);
 	}
 	/** 
 	 部门名称
@@ -94,29 +95,29 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.DeptName);
 	}
-	public final void setDeptName(String value)throws Exception
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.DeptName, value);
 	}
 	/** 
 	 隶属年月
 	*/
-	public final String getFK_NY()throws Exception
+	public final String getFK_Ny()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.FK_NY);
 	}
-	public final void setFK_NY(String value)throws Exception
+	public final void setFK_Ny(String value) throws Exception
 	{
-		this.SetValByKey(EvalAttr.FK_NY,value);
+		this.SetValByKey(EvalAttr.FK_NY, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()throws Exception
+	public final String getFK_Flow()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)throws Exception
+	public final void setFK_Flow(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.FK_Flow, value);
 	}
@@ -127,20 +128,20 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.FlowName);
 	}
-	public final void setFlowName(String value)throws Exception
+	public final void setFlowName(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.FlowName, value);
 	}
 	/** 
 	 评价人
 	*/
-	public final String getRec() throws Exception
+	public final String getRec()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.Rec);
 	}
-	public final void setRec(String value)throws Exception
+	public final void setRec(String value) throws Exception
 	{
-		this.SetValByKey(EvalAttr.Rec,value);
+		this.SetValByKey(EvalAttr.Rec, value);
 	}
 	/** 
 	 评价人名称
@@ -149,48 +150,48 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.RecName);
 	}
-	public final void setRecName(String value)throws Exception
+	public final void setRecName(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.RecName, value);
 	}
 	/** 
 	 评价内容
 	*/
-	public final String getEvalNote()throws Exception
+	public final String getEvalNote()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.EvalNote);
 	}
-	public final void setEvalNote(String value)throws Exception
+	public final void setEvalNote(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.EvalNote, value);
 	}
 	/** 
 	 被考核的人员编号
 	*/
-	public final String getEvalEmpNo()throws Exception
+	public final String getEvalEmpNo()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.EvalEmpNo);
 	}
-	public final void setEvalEmpNo(String value)throws Exception
+	public final void setEvalEmpNo(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.EvalEmpNo, value);
 	}
 	/** 
 	 评价分值
 	*/
-	public final String getEvalCent()throws Exception
+	public final String getEvalCent()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.EvalCent);
 	}
-	public final void setEvalCent(String value)throws Exception
+	public final void setEvalCent(String value) throws Exception
 	{
 		this.SetValByKey(EvalAttr.EvalCent, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 工作质量评价
 	*/
@@ -200,12 +201,10 @@ public class Eval extends EntityMyPK
 	/** 
 	 工作质量评价
 	 
-	 @param workid
-	 @param FK_Node
-	 * @throws Exception 
+	 param workid
+	 param FK_Node
 	*/
-	public Eval(int workid, int FK_Node) throws Exception
-	{
+	public Eval(int workid, int FK_Node) throws Exception {
 		this.setWorkID(workid);
 		this.setFK_Node(FK_Node);
 		this.Retrieve();
@@ -214,7 +213,7 @@ public class Eval extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -223,7 +222,7 @@ public class Eval extends EntityMyPK
 		Map map = new Map("WF_CHEval", "工作质量评价");
 
 
-		map.AddMyPK();
+		map.AddMyPK(true);
 		map.AddTBString(EvalAttr.Title, null, "标题", false, true, 0, 500, 10);
 		map.AddTBString(EvalAttr.FK_Flow, null, "流程编号", false, true, 0, 4, 10);
 		map.AddTBString(EvalAttr.FlowName, null, "流程名称", false, true, 0, 100, 10);
@@ -250,5 +249,5 @@ public class Eval extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

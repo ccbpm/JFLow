@@ -1,5 +1,13 @@
 package bp.sys;
-import bp.en.EntityMyPKAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.sys.frmui.*;
+import bp.difference.*;
+import bp.web.*;
+import bp.*;
+import java.util.*;
+
 /** 
  图片
 */
@@ -13,21 +21,21 @@ public class FrmImgAttr extends EntityMyPKAttr
 	 主表
 	*/
 	public static final String FK_MapData = "FK_MapData";
-	/** 
+	/**
 	 X
-	*/
+	 */
 	public static final String X = "X";
-	/** 
+	/**
 	 Y
-	*/
+	 */
 	public static final String Y = "Y";
-	/** 
+	/**
 	 W
-	*/
+	 */
 	public static final String W = "W";
-	/** 
+	/**
 	 H
-	*/
+	 */
 	public static final String H = "H";
 	/** 
 	 URL

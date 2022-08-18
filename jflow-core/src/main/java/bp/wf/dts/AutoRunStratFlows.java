@@ -1,53 +1,47 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.port.*;
 import bp.web.*;
 import bp.en.*;
 import bp.sys.*;
-import bp.wf.data.*;
-import bp.wf.template.*;
 import bp.wf.*;
-import java.time.*;
 
-/** 
+/**
  Method 的摘要说明
-*/
+ */
 public class AutoRunStratFlows extends Method
 {
-	/** 
+	/**
 	 不带有参数的方法
-	*/
-	public AutoRunStratFlows()
+	 */
+	public AutoRunStratFlows()throws Exception
 	{
 		this.Title = "自动启动流程";
 		this.Help = "在流程属性上配置的信息,自动发起流程,按照时间规则....";
 		this.GroupName = "流程自动执行定时任务";
 
 	}
-	/** 
+	/**
 	 设置执行变量
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	@Override
-	public void Init()
-	{
+	public void Init()  {
 	}
-	/** 
+	/**
 	 当前的操纵员是否可以执行这个方法
-	*/
+	 */
 	@Override
-	public boolean getIsCanDo()
-	{
+	public boolean getIsCanDo() {
 		return true;
 	}
-	/** 
+	/**
 	 执行
-	 
+
 	 @return 返回执行结果
-	 * @throws Exception 
-	*/
+	  * @throws Exception
+	 */
 	@Override
 	public Object Do() throws Exception
 	{
@@ -55,7 +49,7 @@ public class AutoRunStratFlows extends Method
 		fls.RetrieveAll();
 
 
-			///自动启动流程
+		///自动启动流程
 		for (bp.wf.Flow fl : fls.ToJavaList())
 		{
 			if (fl.getHisFlowRunWay() == bp.wf.FlowRunWay.HandWork)
@@ -76,7 +70,7 @@ public class AutoRunStratFlows extends Method
 			}
 
 
-				///判断当前时间是否可以运行它。
+			///判断当前时间是否可以运行它。
 			String nowStr = DataType.getCurrentDateByFormart("yyyy-MM-dd,HH:mm");
 			String[] strs = fl.getRunObj().split("[@]", -1); //破开时间串。
 			boolean IsCanRun = false;
@@ -100,7 +94,7 @@ public class AutoRunStratFlows extends Method
 			// 设置时间.
 			fl.Tag = DataType.getCurrentDateByFormart("HH:mm");
 
-				/// 判断当前时间是否可以运行它。
+			/// 判断当前时间是否可以运行它。
 
 			// 以此用户进入.
 			switch (fl.getHisFlowRunWay())
@@ -153,15 +147,15 @@ public class AutoRunStratFlows extends Method
 			WebUser.SignInOfGener(empadmin);
 		}
 
-			/// 发送消息
+		/// 发送消息
 
 		return "调度完成..";
 	}
-	/** 
+	/**
 	 触发模式
-	 
-	 @param fl
-	*/
+
+	 param fl
+	 */
 	public final void WF_TaskTableInsertModel(bp.wf.Flow fl)
 	{
 	}
@@ -169,7 +163,7 @@ public class AutoRunStratFlows extends Method
 	public final void SelectSQLModel(bp.wf.Flow fl) throws Exception
 	{
 
-			///读取数据.
+		///读取数据.
 		bp.sys.MapExt me = new MapExt();
 		me.setMyPK(MapExtXmlList.StartFlow + "_ND" + Integer.parseInt(fl.getNo()) + "01");
 		int i = me.RetrieveFromDBSources();
@@ -201,10 +195,10 @@ public class AutoRunStratFlows extends Method
 			ds.Tables.add(dtlTable);
 		}
 
-			/// 读取数据.
+		/// 读取数据.
 
 
-			///检查数据源是否正确.
+		///检查数据源是否正确.
 		String errMsg = "";
 		// 获取主表数据.
 		DataTable dtMain = DBAccess.RunSQLReturnTable(me.getTag());
@@ -230,10 +224,10 @@ public class AutoRunStratFlows extends Method
 			return;
 		}
 
-			/// 检查数据源是否正确.
+		/// 检查数据源是否正确.
 
 
-			///处理流程发起.
+		///处理流程发起.
 		String nodeTable = "ND" + Integer.parseInt(fl.getNo()) + "01";
 		int idx = 0;
 		for (DataRow dr : dtMain.Rows)
@@ -262,14 +256,14 @@ public class AutoRunStratFlows extends Method
 			}
 
 
-				/// 给值.
+			/// 给值.
 			//System.Collections.Hashtable ht = new Hashtable();
 
 			Work wk = fl.NewWork();
 
 			String err = "";
 
-				///检查用户拼写的sql是否正确？
+			///检查用户拼写的sql是否正确？
 			for (DataColumn dc : dtMain.Columns)
 			{
 				String f = dc.ColumnName.toLowerCase();
@@ -303,7 +297,7 @@ public class AutoRunStratFlows extends Method
 			}
 
 
-				/// 检查用户拼写的sql是否正确？
+			/// 检查用户拼写的sql是否正确？
 
 			for (DataColumn dc : dtMain.Columns)
 			{
@@ -348,7 +342,7 @@ public class AutoRunStratFlows extends Method
 				}
 			}
 
-				///  给值.
+			///  给值.
 
 
 			int toNodeID = 0;
@@ -395,6 +389,6 @@ public class AutoRunStratFlows extends Method
 			}
 		}
 
-			/// 处理流程发起.
+		/// 处理流程发起.
 	}
 }

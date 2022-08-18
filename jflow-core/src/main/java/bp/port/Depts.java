@@ -1,6 +1,5 @@
 package bp.port;
 
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.web.*;
 import bp.sys.*;
@@ -9,85 +8,85 @@ import java.util.*;
 /** 
 部门s
 */
-public class Depts extends bp.en.EntitiesNoName
+public class Depts extends EntitiesTree
 {
-	private static final long serialVersionUID = 1L;
-	///初始化实体.
+
+		///#region 初始化实体.
 	/** 
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new Dept();
 	}
 	/** 
 	 部门集合
 	*/
-	public Depts()
-	{
+	public Depts()  {
 	}
 	/** 
 	 部门集合
 	 
-	 @param parentNo 父部门No
-	 * @throws Exception 
+	 param parentNo 父部门No
 	*/
-	public Depts(String parentNo) throws Exception
-	{
-
-			this.Retrieve(DeptAttr.ParentNo, parentNo);
-
+	public Depts(String parentNo) throws Exception {
+		this.Retrieve(DeptAttr.ParentNo, parentNo);
 	}
-		/// 初始化实体.
- 
-		///重写查询,add by stone 2015.09.30 为了适应能够从webservice数据源查询数据.
-	/** 
-	     重写查询全部适应从WS取数据需要。	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+
+		///#endregion 初始化实体.
+
+
+		///#region 重写查询,add by zhoupeng 2015.09.30 为了适应能够从webservice数据源查询数据.
 	@Override
-	public int RetrieveAll() throws Exception
-	{
-		if (SystemConfig.getCCBPMRunModel() ==CCBPMRunModel.Single || WebUser.getNo().equals("admin"))
+	public int RetrieveAll() throws Exception {
+
+		if (WebUser.getNo().equals("admin") == true)
 		{
-			return super.RetrieveAll();
+			QueryObject qo = new QueryObject(this);
+			qo.addOrderBy(DeptAttr.Idx);
+			return qo.DoQuery();
 		}
 
-		//按照orgNo查询.
-	   return this.Retrieve("OrgNo", WebUser.getOrgNo());
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			QueryObject qo = new QueryObject(this);
+			qo.AddWhere(DeptAttr.No, " = ", WebUser.getFK_Dept());
+			qo.addOr();
+			qo.AddWhere(DeptAttr.ParentNo, " = ", WebUser.getFK_Dept());
+			qo.addOrderBy(DeptAttr.Idx);
+			return qo.DoQuery();
+		}
+
+		return this.Retrieve("OrgNo", WebUser.getOrgNo(), DeptAttr.Idx);
 	}
 	/** 
 	 重写重数据源查询全部适应从WS取数据需要
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	public int RetrieveAllFromDBSource() throws Exception
-	{
+	public int RetrieveAllFromDBSource() throws Exception {
 
-		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			return super.RetrieveAllFromDBSource();
 		}
 
 		//按照orgNo查询.
-	   return this.Retrieve("OrgNo", WebUser.getOrgNo());
+		return this.Retrieve("OrgNo", WebUser.getOrgNo());
 	}
 
-		/// 重写查询.
+		///#endregion 重写查询.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<Dept> ToJavaList()
-	{
+	public final java.util.List<Dept> ToJavaList() {
 		return (java.util.List<Dept>)(Object)this;
 	}
 	/** 
@@ -95,8 +94,7 @@ public class Depts extends bp.en.EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Dept> Tolist()
-	{
+	public final ArrayList<Dept> Tolist()  {
 		ArrayList<Dept> list = new ArrayList<Dept>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -105,5 +103,5 @@ public class Depts extends bp.en.EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

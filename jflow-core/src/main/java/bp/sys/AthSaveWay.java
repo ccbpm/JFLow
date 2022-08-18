@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  文件保存方式
@@ -27,7 +26,7 @@ public enum AthSaveWay
 		return this.ordinal();
 	}
 
-	public static AthSaveWay forValue(int value) throws Exception
+	public static AthSaveWay forValue(int value)
 	{
 		return values()[value];
 	}

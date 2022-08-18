@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -12,47 +9,42 @@ import java.util.*;
 public class UserLogs extends EntitiesMyPK
 {
 
-		///构造
-	public UserLogs()
-	{
+		///#region 构造
+	public UserLogs()  {
 	}
 	/** 
 	 
 	 
-	 @param emp
-	 * @throws Exception 
+	 param emp
 	*/
-	public UserLogs(String emp) throws Exception
-	{
+	public UserLogs(String emp) throws Exception {
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(UserLogAttr.FK_Emp, emp);
+		qo.AddWhere(UserLogAttr.EmpNo, emp);
 		qo.DoQuery();
 	}
 
-		///
+		///#endregion
 
 
-		///重写
+		///#region 重写
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new UserLog();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<UserLog> Tolist()
-	{
+	public final ArrayList<UserLog> Tolist()  {
 		ArrayList<UserLog> list = new ArrayList<UserLog>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -61,20 +53,19 @@ public class UserLogs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
+		///#region 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final java.util.List<UserLog> ToJavaList()
-	{
+	public final java.util.List<UserLog> ToJavaList() {
 		return (java.util.List<UserLog>)(Object)this;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成IList, c#代码调用会出错误。
 
 }

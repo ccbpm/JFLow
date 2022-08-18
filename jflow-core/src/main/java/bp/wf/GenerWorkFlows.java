@@ -1,12 +1,12 @@
 package bp.wf;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.wf.*;
 import bp.port.*;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.template.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -17,8 +17,8 @@ public class GenerWorkFlows extends Entities
 	/** 
 	 根据工作流程,工作人员 ID 查询出来他当前的能做的工作.
 	 
-	 @param flowNo 流程编号
-	 @param empId 工作人员ID
+	 param flowNo 流程编号
+	 param empId 工作人员ID
 	 @return 
 	*/
 	public static DataTable QuByFlowAndEmp(String flowNo, int empId)
@@ -30,27 +30,25 @@ public class GenerWorkFlows extends Entities
 	/** 
 	 根据流程编号，标题模糊查询
 	 
-	 @param flowNo
-	 @param likeKey
+	 param flowNo
+	 param likeKey
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String QueryByLike(String flowNo, String likeKey) throws Exception
-	{
+	public final String QueryByLike(String flowNo, String likeKey) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere("FK_Flow", flowNo);
 		if (DataType.IsNullOrEmpty(likeKey) == false)
 		{
 			qo.addAnd();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
 			{
-				qo.AddWhere("Title", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "Title" + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "Title" + "+'%'"));
+				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + ",'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + "+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "Title" + "||'%'");
+				qo.AddWhere("Title", " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + "||'%'");
 			}
-			qo.getMyParas().Add("Title", likeKey);
+			qo.getMyParas().Add("Title", likeKey, false);
 		}
 
 		qo.addOrderBy("WorkID");
@@ -58,49 +56,46 @@ public class GenerWorkFlows extends Entities
 		return bp.tools.Json.ToJson(this.ToDataTableField("WF_GenerWorkFlow"));
 	}
 
-		///方法
+
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new GenerWorkFlow();
 	}
 	/** 
 	 流程实例集合
 	*/
-	public GenerWorkFlows()
-	{
+	public GenerWorkFlows()  {
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List
+		///#region 为了适应自动翻译成java的需要,把实体转换成List
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<GenerWorkFlow> ToJavaList()
-	{
-		return (List<GenerWorkFlow>)(Object)this;
+	public final java.util.List<GenerWorkFlow> ToJavaList() {
+		return (java.util.List<GenerWorkFlow>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<GenerWorkFlow> Tolist()
-	{
-		ArrayList<bp.wf.GenerWorkFlow> list = new ArrayList<bp.wf.GenerWorkFlow>();
+	public final ArrayList<GenerWorkFlow> Tolist()  {
+		ArrayList<GenerWorkFlow> list = new ArrayList<GenerWorkFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((bp.wf.GenerWorkFlow)this.get(i));
+			list.add((GenerWorkFlow)this.get(i));
 		}
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

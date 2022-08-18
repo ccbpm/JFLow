@@ -26,8 +26,7 @@ public enum LogType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, LogType> mappings;
-	private static java.util.HashMap<Integer, LogType> getMappings()
-	{
+	private static java.util.HashMap<Integer, LogType> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (LogType.class)
@@ -42,18 +41,15 @@ public enum LogType
 	}
 
 	private LogType(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static LogType forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

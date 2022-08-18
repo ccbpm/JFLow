@@ -31,7 +31,7 @@ public class Encodes {
 	/**
 	 * Hex编码.
 	 * 
-	 * @param input
+	 * param input
 	 *            输入
 	 * @return 解码结果
 	 */
@@ -42,7 +42,7 @@ public class Encodes {
 	/**
 	 * Hex解码.
 	 * 
-	 * @param input
+	 * param input
 	 *            输入
 	 * @return 解码结果
 	 * @throws DecoderException
@@ -55,7 +55,7 @@ public class Encodes {
 	/**
 	 * Base64编码.
 	 * 
-	 * @param input
+	 * param input
 	 *            输入
 	 * @return 编码结果
 	 */
@@ -70,7 +70,7 @@ public class Encodes {
 	/**
 	 * Base64编码.
 	 * 
-	 * @param input
+	 * param input
 	 *            输入
 	 * @return 编码结果
 	 */
@@ -85,7 +85,7 @@ public class Encodes {
 	/**
 	 * Base64解码.
 	 * 
-	 * @param input
+	 * param input
 	 *            输入
 	 * @return 解码结果
 	 * @throws UnsupportedEncodingException
@@ -99,7 +99,7 @@ public class Encodes {
 	/**
 	 * Base64解码.
 	 * 
-	 * @param input
+	 * param input
 	 *            输入
 	 * @return 解码结果
 	 */
@@ -114,7 +114,7 @@ public class Encodes {
 	/**
 	 * Base62编码。
 	 * 
-	 * @param input
+	 * param input
 	 *            输入
 	 * @return 编码结果
 	 */
@@ -129,7 +129,7 @@ public class Encodes {
 	/**
 	 * Html 转码.
 	 * 
-	 * @param html
+	 * param html
 	 *            待转码字符串
 	 * @return 转码结果
 	 */
@@ -140,8 +140,8 @@ public class Encodes {
 	/**
 	 * Html 解码.
 	 * 
-	 * @param xmlEscaped
-	 *            带解码字符串
+	 * param
+	 *
 	 * @return 解码结果
 	 */
 	public static String unescapeHtml(String htmlEscaped) {
@@ -151,7 +151,7 @@ public class Encodes {
 	/**
 	 * Xml 转码.
 	 * 
-	 * @param xml
+	 * param xml
 	 *            待转码字符串
 	 * @return 转码结果
 	 */
@@ -162,7 +162,7 @@ public class Encodes {
 	/**
 	 * Xml 解码.
 	 * 
-	 * @param xmlEscaped
+	 * param xmlEscaped
 	 *            待解码字符串
 	 * @return 解码结果
 	 */
@@ -173,7 +173,7 @@ public class Encodes {
 	/**
 	 * URL 编码, Encode默认为UTF-8.
 	 * 
-	 * @param part
+	 * param part
 	 *            字符串
 	 * @return 编码结果
 	 * @throws UnsupportedEncodingException
@@ -187,7 +187,7 @@ public class Encodes {
 	/**
 	 * URL 解码, Encode默认为UTF-8.
 	 * 
-	 * @param part
+	 * param part
 	 *            字符串
 	 * @return 解码结果
 	 * @throws UnsupportedEncodingException

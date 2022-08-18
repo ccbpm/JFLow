@@ -1,6 +1,6 @@
 package bp.en;
 
-import bp.*;
+
 
 /** 
  查询属性

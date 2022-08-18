@@ -70,8 +70,8 @@ public class HttpClientUtil {
 			// 创建uri
 			URIBuilder builder = new URIBuilder(url);
 			if (param != null) {
-				for (String key : param.keySet()) {
-					builder.addParameter(key, param.get(key));
+				for (Object key : param.keySet()) {
+					builder.addParameter(key.toString(), param.get(key));
 				}
 			}
 			URI uri = builder.build();
@@ -136,8 +136,8 @@ public class HttpClientUtil {
 			// 创建参数列表
 			if (param != null) {
 				List<NameValuePair> paramList = new ArrayList<>();
-				for (String key : param.keySet()) {
-					paramList.add(new BasicNameValuePair(key, param.get(key)));
+				for (Object key : param.keySet()) {
+					paramList.add(new BasicNameValuePair(key.toString(), param.get(key)));
 				}
 				// 模拟表单
 				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(paramList, "utf-8");
@@ -165,9 +165,9 @@ public class HttpClientUtil {
 
 	/**
 	 * http连接
-	 * @param url
-	 * @param param body 参数
-	 * @param headerParam 头部参数
+	 * param url
+	 * param param body 参数
+	 * param headerParam 头部参数
 	 * @return
 	 */
 	public static String doPost(String url, String Json,Map<String,String>headerParam) {
@@ -181,8 +181,8 @@ public class HttpClientUtil {
 
 			//创建Header参数列表
 			if(headerParam!=null) {
-				for (String key : headerParam.keySet()) {
-					httpPost.setHeader(key,headerParam.get(key));
+				for (Object key : headerParam.keySet()) {
+					httpPost.setHeader(key.toString(),headerParam.get(key));
 
 				}
 			}
@@ -219,8 +219,8 @@ public class HttpClientUtil {
 	/**
 	 * 请求的参数类型为json 
 	 * 
-	 * @param url 
-	 * @param json 
+	 * param url
+	 * param json
 	 * @return {username:"",pass:""} 1
 	 */
 	public static String doPostJson(String url, String json) {

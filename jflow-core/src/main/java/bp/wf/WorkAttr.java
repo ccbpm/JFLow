@@ -1,11 +1,20 @@
 package bp.wf;
+
+import bp.da.*;
+import bp.en.*;
+import bp.sys.*;
+import bp.port.*;
+import bp.wf.xml.*;
+import bp.wf.template.*;
+import bp.*;
+
 /** 
  工作属性
 */
 public class WorkAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -31,5 +40,5 @@ public class WorkAttr
 	*/
 	public static final String MD5 = "MD5";
 
-		///
+		///#endregion
 }

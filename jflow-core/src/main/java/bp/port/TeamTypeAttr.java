@@ -1,5 +1,6 @@
 package bp.port;
-import bp.en.EntityNoNameAttr;
+
+import bp.en.*;
 
 /** 
  用户组类型

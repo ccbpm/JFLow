@@ -1,13 +1,13 @@
 package bp.wf;
 
-import bp.en.*;
 import bp.web.*;
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.port.*;
 import bp.sys.*;
 import bp.wf.template.*;
-import bp.wf.data.*;
+import bp.difference.*;
+import org.apache.axis2.databinding.types.xsd._byte;
+
 import java.math.*;
 
 /** 
@@ -20,7 +20,7 @@ import java.math.*;
 public class WorkFlow
 {
 
-		///当前工作统计信息
+		///#region 当前工作统计信息
 	/** 
 	 正常范围的运行的个数。
 	*/
@@ -46,71 +46,67 @@ public class WorkFlow
 		return DBAccess.RunSQLReturnValInt(sql);
 	}
 
-		///
+		///#endregion
 
 
-		/// 权限管理
+		///#region  权限管理
 	/** 
 	 是不是能够作当前的工作。
 	 
-	 @param empId 工作人员ID
+	 param empId 工作人员ID
 	 @return 是不是能够作当前的工作
-	 * @throws Exception 
 	*/
-	public final boolean IsCanDoCurrentWork(String empId) throws Exception
-	{
+	public final boolean IsCanDoCurrentWork(String empId) throws Exception {
 		WorkNode wn = this.GetCurrentWorkNode();
 		return bp.wf.Dev2Interface.Flow_IsCanDoCurrentWork(wn.getWorkID(), empId);
 
-			///使用dev2InterFace 中的算法
-		/*//return true;
+			///#region 使用dev2InterFace 中的算法
+		//return true;
 		// 找到当前的工作节点
 
 		// 判断是不是开始工作节点..
-		if (wn.getHisNode().getIsStartNode())
-		{
-			// 从物理上判断是不是有这个权限。
-			// return WorkFlow.IsCanDoWorkCheckByEmpStation(wn.HisNode.NodeID, empId);
-			return true;
-		}
+//		if (wn.getHisNode().isStartNode())
+//		{
+//			// 从物理上判断是不是有这个权限。
+//			// return WorkFlow.IsCanDoWorkCheckByEmpStation(wn.HisNode.NodeID, empId);
+//			return true;
+//		}
 
 		// 判断他的工作生成的工作者.
-		GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID(), wn.getHisNode().getNodeID());
-		if (gwls.size() == 0)
-		{
-			//return true;
-			//throw new Exception("@工作流程定义错误,没有找到能够执行此项工作的人员.相关信息:工作ID="+this.WorkID+",节点ID="+wn.HisNode.NodeID );
-			throw new RuntimeException("@工作流程定义错误,没有找到能够执行此项工作的人员.相关信息:WorkID=" + this.getWorkID() + ",NodeID=" + wn.getHisNode().getNodeID());
-		}
+//		GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID(), wn.getHisNode().getNodeID());
+//		if (gwls.size() == 0)
+//		{
+//			//return true;
+//			//throw new Exception("@工作流程定义错误,没有找到能够执行此项工作的人员.相关信息:工作ID="+this.WorkID+",节点ID="+wn.HisNode.NodeID );
+//			throw new RuntimeException("@工作流程定义错误,没有找到能够执行此项工作的人员.相关信息:WorkID=" + this.getWorkID() + ",NodeID=" + wn.getHisNode().getNodeID());
+//		}
+//
+//		for (GenerWorkerList en : gwls.ToJavaList())
+//		{
+//			if (en.getFK_Emp().equals(empId))
+//			{
+//				return true;
+//			}
+//		}
+//		return false;
 
-		for (GenerWorkerList en : gwls.ToJavaList())
-		{
-			if (en.getFK_Emp().equals(empId))
-			{
-				return true;
-			}
-		}
-		return false;
-*/
-			///
+			///#endregion
 	}
 
-		///
+		///#endregion
 
 
-		///流程公共方法
+		///#region 流程公共方法
 	/** 
 	 执行驳回
 	 应用场景:子流程向分合点驳回时
 	 
-	 @param fid
-	 @param fk_node 被驳回的节点
-	 @param msg
+	 param fid
+	 param fk_node 被驳回的节点
+	 param msg
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoReject(long fid, int fk_node, String msg) throws Exception
-	{
+	public final String DoHungupReject(long fid, int fk_node, String msg) throws Exception {
 		GenerWorkerList wl = new GenerWorkerList();
 		int i = wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fk_node);
 
@@ -140,8 +136,7 @@ public class WorkFlow
 	/** 
 	 逻辑删除流程
 	 
-	 @param msg 逻辑删除流程原因，可以为空。
-	 * @throws Exception 
+	 param msg 逻辑删除流程原因，可以为空。
 	*/
 	public final void DoDeleteWorkFlowByFlag(String msg) throws Exception
 	{
@@ -160,12 +155,8 @@ public class WorkFlow
 			//调用结束前事件.
 			ExecEvent.DoFlow(EventListFlow.BeforeFlowDel, wn, null);
 
-			//设置产生的工作流程为.
-			gwf.setWFState(WFState.Delete);
-			gwf.Update();
-
-			//记录日志 感谢 itdos and 888 , 提出了这个bug.
-			wn.AddToTrack(ActionType.DeleteFlowByFlag, WebUser.getNo(), WebUser.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), msg);
+			//记录日志 感谢 itdos and 888 , 提出了这个问题..
+			wn.AddToTrack(ActionType.DeleteFlowByFlag, WebUser.getNo(), WebUser.getName() , wn.getHisNode().getNodeID(), wn.getHisNode().getName(), msg);
 
 			//更新-流程数据表的状态. 
 			String sql = "UPDATE  " + this.getHisFlow().getPTable() + " SET WFState=" + WFState.Delete.getValue() + " WHERE OID=" + this.getWorkID();
@@ -175,21 +166,25 @@ public class WorkFlow
 			sql = "DELETE FROM WF_GenerWorkerList WHERE WorkID=" + this.getWorkID();
 			DBAccess.RunSQL(sql);
 
+			//设置产生的工作流程为.
+			gwf.setWFState(bp.wf.WFState.Delete);
+			gwf.Update();
+
+
 			//调用结束后事件.
 			ExecEvent.DoFlow(EventListFlow.AfterFlowDel, wn, null);
 
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DefaultLogWriteLine(LogType.Error, "@逻辑删除出现错误:" + ex.getMessage());
+			Log.DebugWriteError("@逻辑删除出现错误:" + ex.getMessage());
 			throw new RuntimeException("@逻辑删除出现错误:" + ex.getMessage());
 		}
 	}
 	/** 
 	 恢复逻辑删除流程
 	 
-	 @param msg 回复原因,可以为空.
-	 * @throws Exception 
+	 param msg 回复原因,可以为空.
 	*/
 	public final void DoUnDeleteWorkFlowByFlag(String msg) throws Exception
 	{
@@ -199,36 +194,36 @@ public class WorkFlow
 
 			//设置产生的工作流程为.
 			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-			gwf.setWFState(WFState.Runing);
-			gwf.Update();
+
+			//回复数据.
+			bp.wf.Dev2Interface.Flow_DoRebackWorkFlow(gwf.getFK_Flow(), gwf.getWorkID(), gwf.getFK_Node(), msg);
+
 
 			WorkNode wn = new WorkNode(getWorkID(), gwf.getFK_Node());
-			wn.AddToTrack(ActionType.UnDeleteFlowByFlag, WebUser.getNo(), WebUser.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), msg);
+			wn.AddToTrack(ActionType.UnDeleteFlowByFlag, WebUser.getNo(), WebUser.getName() , wn.getHisNode().getNodeID(), wn.getHisNode().getName(), msg);
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DefaultLogWriteLine(LogType.Error, "@逻辑删除出现错误:" + ex.getMessage());
+			Log.DebugWriteError("@逻辑删除出现错误:" + ex.getMessage());
 			throw new RuntimeException("@逻辑删除出现错误:" + ex.getMessage());
 		}
 	}
 	/** 
 	 删除已经完成的流程
 	 
-	 @param flowNo 流程编号
-	 @param workID 工作ID
-	 @param isDelSubFlow 是否要删除子流程
-	 @param note 删除原因
+	 param flowNo 流程编号
+	 param workID 工作ID
+	 param isDelSubFlow 是否要删除子流程
+	 param note 删除原因
 	 @return 删除信息
-	 * @throws Exception 
 	*/
-	public static String DoDeleteWorkFlowAlreadyComplete(String flowNo, long workID, boolean isDelSubFlow, String note) throws Exception
-	{
+	public static Object DoDeleteWorkFlowAlreadyComplete(String flowNo, long workID, boolean isDelSubFlow, String note) throws Exception {
 		Log.DebugWriteInfo("开始删除流程:流程编号:" + flowNo + "-WorkID:" + workID + "-" + ". 是否要删除子流程:" + isDelSubFlow + ";删除原因:" + note);
 
 		Flow fl = new Flow(flowNo);
 
 
-			///记录流程删除日志
+			///#region 记录流程删除日志
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(flowNo) + "Rpt");
 		rpt.SetValByKey(GERptAttr.OID, workID);
 		rpt.Retrieve();
@@ -237,7 +232,7 @@ public class WorkFlow
 		try
 		{
 			log.Copy(rpt);
-			log.setDeleteDT(DataType.getCurrentDataTime());
+			log.setDeleteDT(DataType.getCurrentDateTime());
 			log.setOperDept(WebUser.getFK_Dept());
 			log.setOperDeptName(WebUser.getFK_DeptName());
 			log.setOper(WebUser.getNo());
@@ -251,10 +246,10 @@ public class WorkFlow
 		{
 			log.CheckPhysicsTable();
 			log.Delete();
-			return ex.getMessage();
+			return ex.getStackTrace();
 		}
 
-			/// 记录流程删除日志
+			///#endregion 记录流程删除日志
 
 		DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(flowNo) + "Track WHERE WorkID=" + workID);
 		DBAccess.RunSQL("DELETE FROM " + fl.getPTable() + " WHERE OID=" + workID);
@@ -263,15 +258,13 @@ public class WorkFlow
 		String info = "";
 
 
-			///正常的删除信息.
+			///#region 正常的删除信息.
 		String msg = "";
 		try
 		{
 			// 删除单据信息.
 			DBAccess.RunSQL("DELETE FROM WF_CCList WHERE WorkID=" + workID);
 
-			// 删除单据信息.
-			DBAccess.RunSQL("DELETE FROM WF_Bill WHERE WorkID=" + workID);
 			// 删除退回.
 			DBAccess.RunSQL("DELETE FROM WF_ReturnWork WHERE WorkID=" + workID);
 			// 删除移交.
@@ -302,43 +295,77 @@ public class WorkFlow
 		catch (RuntimeException ex)
 		{
 			String err = "@删除工作流程 Err " + ex.getStackTrace();
-			Log.DefaultLogWriteLine(LogType.Error, err);
+			Log.DebugWriteError(err);
 			throw new RuntimeException(err);
 		}
 		info = "@删除流程删除成功";
 
-			/// 正常的删除信息.
+			///#endregion 正常的删除信息.
 
 
-			///删除该流程下面的子流程.
+			///#region 删除该流程下面的子流程.
 		if (isDelSubFlow)
 		{
 			GenerWorkFlows gwfs = new GenerWorkFlows();
-			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workID);
+			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, workID, null);
 			for (GenerWorkFlow item : gwfs.ToJavaList())
 			{
 				bp.wf.Dev2Interface.Flow_DoDeleteFlowByReal(item.getWorkID(), true);
 			}
 		}
 
-			/// 删除该流程下面的子流程.
+			///#endregion 删除该流程下面的子流程.
 
-		bp.da.Log.DefaultLogWriteLineInfo("@[" +fl.getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + workID + "]。");
+		Log.DebugWriteInfo("@[" + fl.getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + workID + "]。");
 		return "已经完成的流程被您删除成功.";
+	}
+	/** 
+	 执行驳回
+	 应用场景:子流程向分合点驳回时
+	 
+	 param fid
+	 param fk_node 被驳回的节点
+	 param msg
+	 @return 
+	*/
+	public final String DoReject(long fid, int fk_node, String msg) throws Exception {
+		GenerWorkerList wl = new GenerWorkerList();
+		int i = wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fk_node);
+
+		//if (i == 0)
+		//    throw new Exception("系统错误，没有找到应该找到的数据。");
+
+		i = wl.Delete();
+		//if (i == 0)
+		//    throw new Exception("系统错误，没有删除应该删除的数据。");
+
+		wl = new GenerWorkerList();
+		i = wl.Retrieve(GenerWorkerListAttr.FID, fid, GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.IsPass, 3);
+
+		//if (i == 0)
+		//    throw new Exception("系统错误，想找到退回的原始起点没有找到。");
+
+		Node nd = new Node(fk_node);
+		// 更新当前流程管理表的设置当前的节点。
+		DBAccess.RunSQL("UPDATE WF_GenerWorkFlow SET FK_Node=" + fk_node + ", NodeName='" + nd.getName() + "' WHERE WorkID=" + this.getWorkID());
+
+		wl.setIsPass(false);
+		wl.Update();
+
+		return "工作已经驳回到(" + wl.getFK_Emp() + " , " + wl.getFK_EmpText() + ")";
+		// wl.HisNode
 	}
 	/** 
 	 删除子线程
 	 
 	 @return 返回删除结果.
-	 * @throws Exception 
 	*/
-	private String DoDeleteSubThread() throws Exception
-	{
+	private String DoDeleteSubThread() throws Exception {
 		WorkNode wn = this.GetCurrentWorkNode();
-		Emp empOfWorker = wn.getHisWork().getRecOfEmp();
+		Emp empOfWorker = new Emp(WebUser.getNo());
 
 
-			///正常的删除信息.
+			///#region 正常的删除信息.
 		String msg = "";
 		try
 		{
@@ -358,8 +385,6 @@ public class WorkFlow
 			// 删除抄送信息.
 			DBAccess.RunSQL("DELETE FROM WF_CCList WHERE WorkID=" + this.getWorkID());
 
-			// 删除单据信息.
-			DBAccess.RunSQL("DELETE FROM WF_Bill WHERE WorkID=" + this.getWorkID());
 			// 删除退回.
 			DBAccess.RunSQL("DELETE FROM WF_ReturnWork WHERE WorkID=" + this.getWorkID());
 			// 删除移交.
@@ -377,15 +402,15 @@ public class WorkFlow
 		catch (RuntimeException ex)
 		{
 			String err = "@删除工作流程[" + this.getHisGenerWorkFlow().getWorkID() + "," + this.getHisGenerWorkFlow().getTitle() + "] Err " + ex.getMessage();
-			Log.DefaultLogWriteLine(LogType.Error, err);
+			Log.DebugWriteError(err);
 			throw new RuntimeException(err);
 		}
 		String info = "@删除流程删除成功";
 
-			/// 正常的删除信息.
+			///#endregion 正常的删除信息.
 
 
-			///处理分流程删除的问题完成率的问题。
+			///#region 处理分流程删除的问题完成率的问题。
 		if (1 == 2)
 		{
 			/* 目前还没有必要，因为在分流点,才有计算完成率的需求. */
@@ -399,7 +424,7 @@ public class WorkFlow
 			{
 				/* 说明它是待命的状态 */
 				Node nextNode = new Node(fk_node);
-				if (nextNode.getPassRate().compareTo(new BigDecimal(0)) > 0)
+				if (nextNode.getPassRate().compareTo(BigDecimal.valueOf(0)) > 0)
 				{
 					/* 找到等待处理节点的上一个点 */
 					Nodes priNodes = nextNode.getFromNodes();
@@ -411,7 +436,7 @@ public class WorkFlow
 					Node priNode = (Node)priNodes.get(0);
 
 
-						///处理完成率
+						///#region 处理完成率
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + this.getFID() + " AND IsPass=1";
 					BigDecimal ok = new BigDecimal(DBAccess.RunSQLReturnValInt(sql));
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + this.getFID();
@@ -425,15 +450,14 @@ public class WorkFlow
 						info += "@" + wf.DoFlowOver(ActionType.FlowOver, "合流点流程结束", null, null);
 					}
 
-					BigDecimal passRate = ok.divide(all,4,BigDecimal.ROUND_CEILING).multiply(new BigDecimal(100));;
-
+					BigDecimal passRate = ok.divide(all.multiply(BigDecimal.valueOf(100)));
 					if (nextNode.getPassRate().compareTo(passRate) <= 0)
 					{
 						/*说明全部的人员都完成了，就让合流点显示它。*/
 						DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0  WHERE IsPass=3  AND WorkID=" + this.getFID() + " AND FK_Node=" + fk_node);
 					}
 
-						/// 处理完成率
+						///#endregion 处理完成率
 				}
 			} // 结束有待命的状态判断。
 
@@ -448,13 +472,12 @@ public class WorkFlow
 						break;
 					default:
 						/*** 解决删除最后一个子流程时要把干流程也要删除。*/
-						
-						//sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" +this.HisGenerWorkFlow +" AND FID=" + this.getFID();
+						//sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" +this.HisGenerWorkFlow +" AND FID=" + this.FID;
 						//int num = DBAccess.RunSQLReturnValInt(sql);
 						//if (num == 0)
 						//{
 						//    /*说明没有子进程，就要把这个流程执行完成。*/
-						//    WorkFlow wf = new WorkFlow(this.HisFlow, this.getFID());
+						//    WorkFlow wf = new WorkFlow(this.HisFlow, this.FID);
 						//    info += "@所有的子线程已经结束。";
 						//    info += "@结束主流程信息。";
 						//    info += "@" + wf.DoFlowOver(ActionType.FlowOver, "主流程结束");
@@ -464,26 +487,24 @@ public class WorkFlow
 			}
 		}
 
-			///
+			///#endregion
 
 
-			///写入删除日志.
-		wn.AddToTrack(ActionType.DeleteSubThread, empOfWorker.getNo(), empOfWorker.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), "子线程被:" + WebUser.getName() + "删除.");
+			///#region 写入删除日志.
+		wn.AddToTrack(ActionType.DeleteSubThread, empOfWorker.getUserID(), empOfWorker.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), "子线程被:" + WebUser.getName() + "删除.");
 
-			/// 写入删除日志.
+			///#endregion 写入删除日志.
 
 		return "子线程被删除成功.";
 	}
 	/** 
 	 删除已经完成的流程
 	 
-	 @param workid 工作ID
-	 @param isDelSubFlow 是否删除子流程
+	 param workid 工作ID
+	 param isDelSubFlow 是否删除子流程
 	 @return 删除错误会抛出异常
-	 * @throws Exception 
 	*/
-	public static void DeleteFlowByReal(long workid, boolean isDelSubFlow) throws Exception
-	{
+	public static void DeleteFlowByReal(long workid, boolean isDelSubFlow) throws Exception {
 		//检查流程是否完成，如果没有完成就调用workflow流程删除.
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(workid);
@@ -500,9 +521,9 @@ public class WorkFlow
 			if (gwf.getWFState() != WFState.Complete)
 			{
 				WorkFlow wf = new WorkFlow(workid);
-				//发送退回消息 @yuanlina
+				//发送退回消息 
 				PushMsgs pms1 = new PushMsgs();
-				pms1.Retrieve(PushMsgAttr.FK_Node, gwf.getFK_Node(), PushMsgAttr.FK_Event, EventListFlow.AfterFlowDel);
+				pms1.Retrieve(PushMsgAttr.FK_Node, gwf.getFK_Node(), PushMsgAttr.FK_Event, EventListFlow.AfterFlowDel, null);
 				Node node = new Node(gwf.getFK_Node());
 				for (PushMsg pm : pms1.ToJavaList())
 				{
@@ -519,21 +540,21 @@ public class WorkFlow
 		}
 
 
-			///删除独立表单的数据.
+			///#region 删除独立表单的数据.
 		FrmNodes fns = new FrmNodes();
-		fns.Retrieve(FrmNodeAttr.FK_Flow, gwf.getFK_Flow());
+		fns.Retrieve(FrmNodeAttr.FK_Flow, gwf.getFK_Flow(), null);
 		String strs = "";
 		for (FrmNode frmNode : fns.ToJavaList())
 		{
-			if (strs.contains("@" + frmNode.getFK_Frm()) == true)
+			if (strs.contains("@" + frmNode.getFKFrm()) == true)
 			{
 				continue;
 			}
 
-			strs += "@" + frmNode.getFK_Frm() + "@";
+			strs += "@" + frmNode.getFKFrm() + "@";
 			try
 			{
-				MapData md = new MapData(frmNode.getFK_Frm());
+				MapData md = new MapData(frmNode.getFKFrm());
 				DBAccess.RunSQL("DELETE FROM " + md.getPTable() + " WHERE OID=" + workid);
 			}
 			catch (java.lang.Exception e)
@@ -542,7 +563,7 @@ public class WorkFlow
 			}
 		}
 
-			/// 删除独立表单的数据.
+			///#endregion 删除独立表单的数据.
 
 		//删除流程数据.
 		DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workid);
@@ -550,20 +571,18 @@ public class WorkFlow
 		DBAccess.RunSQL("DELETE FROM WF_CHEval WHERE  WorkID=" + workid); // 删除质量考核数据。
 
 
-			///正常的删除信息.
-		bp.da.Log.DefaultLogWriteLineInfo("@[" +fl.getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + workid + "]。");
+			///#region 正常的删除信息.
+		Log.DebugWriteInfo("@[" + fl.getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + workid + "]。");
 		String msg = "";
 
 		// 删除单据信息.
 		DBAccess.RunSQL("DELETE FROM WF_CCList WHERE WorkID=" + workid);
-		// 删除单据信息.
-		DBAccess.RunSQL("DELETE FROM WF_Bill WHERE WorkID=" + workid);
 		// 删除退回.
 		DBAccess.RunSQL("DELETE FROM WF_ReturnWork WHERE WorkID=" + workid);
 
-		//发送退回消息 @yuanlina
+		//发送退回消息 
 		PushMsgs pms = new PushMsgs();
-		pms.Retrieve(PushMsgAttr.FK_Node, gwf.getFK_Node(), PushMsgAttr.FK_Event, EventListFlow.AfterFlowDel);
+		pms.Retrieve(PushMsgAttr.FK_Node, gwf.getFK_Node(), PushMsgAttr.FK_Event, EventListFlow.AfterFlowDel, null);
 		Node pnd = new Node(gwf.getFK_Node());
 		for (PushMsg pm : pms.ToJavaList())
 		{
@@ -596,6 +615,30 @@ public class WorkFlow
 			{
 				msg += "@ delete data error " + ex.getMessage();
 			}
+
+			MapDtls dtls = new MapDtls("ND" + node.getNodeID());
+			for (MapDtl dtl : dtls.ToJavaList())
+			{
+				try
+				{
+					DBAccess.RunSQL("DELETE FROM " + dtl.getPTable());
+				}
+				catch (java.lang.Exception e2)
+				{
+				}
+			}
+		}
+
+		MapDtls mydtls = new MapDtls("ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt");
+		for (MapDtl dtl : mydtls.ToJavaList())
+		{
+			try
+			{
+				DBAccess.RunSQL("DELETE FROM " + dtl.getPTable());
+			}
+			catch (java.lang.Exception e3)
+			{
+			}
 		}
 
 		if (!msg.equals(""))
@@ -604,23 +647,21 @@ public class WorkFlow
 		}
 
 
-			/// 正常的删除信息.
+			///#endregion 正常的删除信息.
 	}
 	/** 
 	 删除子线程
 	 
 	 @return 删除的消息
-	 * @throws Exception 
 	*/
-	public final String DoDeleteSubThread2015() throws Exception
-	{
+	public final String DoDeleteSubThread2015() throws Exception {
 		if (this.getFID() == 0)
 		{
 			throw new RuntimeException("@该流程非子线程流程实例，不能执行该方法。");
 		}
 
 
-			///正常的删除信息.
+			///#region 正常的删除信息.
 		String msg = "";
 		try
 		{
@@ -640,8 +681,6 @@ public class WorkFlow
 			// 删除抄送信息.
 			DBAccess.RunSQL("DELETE FROM WF_CCList WHERE WorkID=" + this.getWorkID());
 
-			// 删除单据信息.
-			DBAccess.RunSQL("DELETE FROM WF_Bill WHERE WorkID=" + this.getWorkID());
 			// 删除退回.
 			DBAccess.RunSQL("DELETE FROM WF_ReturnWork WHERE WorkID=" + this.getWorkID());
 			// 删除移交.
@@ -659,15 +698,15 @@ public class WorkFlow
 		catch (RuntimeException ex)
 		{
 			String err = "@删除工作流程[" + this.getHisGenerWorkFlow().getWorkID() + "," + this.getHisGenerWorkFlow().getTitle() + "] Err " + ex.getMessage();
-			Log.DefaultLogWriteLine(LogType.Error, err);
+			Log.DebugWriteError(err);
 			throw new RuntimeException(err);
 		}
 		String info = "@删除流程删除成功";
 
-			/// 正常的删除信息.
+			///#endregion 正常的删除信息.
 
 
-			///处理分流程删除的问题完成率的问题。
+			///#region 处理分流程删除的问题完成率的问题。
 		if (1 == 2)
 		{
 			/*
@@ -692,7 +731,7 @@ public class WorkFlow
 			{
 				/* 说明它是待命的状态 */
 				Node nextNode = new Node(fk_node);
-				if (nextNode.getPassRate().compareTo(new BigDecimal(0)) > 0)
+				if (nextNode.getPassRate().compareTo(BigDecimal.valueOf(0)) > 0)
 				{
 					/* 找到等待处理节点的上一个点 */
 					Nodes priNodes = nextNode.getFromNodes();
@@ -704,12 +743,12 @@ public class WorkFlow
 					Node priNode = (Node)priNodes.get(0);
 
 
-						///处理完成率
+						///#region 处理完成率
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + this.getFID() + " AND IsPass=1";
 					BigDecimal ok = new BigDecimal(DBAccess.RunSQLReturnValInt(sql));
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + this.getFID();
 					BigDecimal all = new BigDecimal(DBAccess.RunSQLReturnValInt(sql));
-					if (all.compareTo(new BigDecimal(0)) == 0)
+					if (all.compareTo(BigDecimal.valueOf(0)) == 0)
 					{
 						/*说明:所有的子线程都被杀掉了, 就应该整个流程结束。*/
 						WorkFlow wf = new WorkFlow(this.getHisFlow(), this.getFID());
@@ -718,14 +757,14 @@ public class WorkFlow
 						info += "@" + wf.DoFlowOver(ActionType.FlowOver, "合流点流程结束", null, null);
 					}
 
-					BigDecimal passRate = ok.divide(all,4,BigDecimal.ROUND_CEILING).multiply(new BigDecimal(100));;
+					BigDecimal passRate = ok.divide(all.multiply(BigDecimal.valueOf(100)));
 					if (nextNode.getPassRate().compareTo(passRate) <= 0)
 					{
 						/* 说明: 全部的人员都完成了，就让合流点显示它。*/
 						DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0  WHERE IsPass=3  AND WorkID=" + this.getFID() + " AND FK_Node=" + fk_node);
 					}
 
-						/// 处理完成率
+						///#endregion 处理完成率
 				}
 			} // 结束有待命的状态判断。
 
@@ -740,13 +779,12 @@ public class WorkFlow
 						break;
 					default:
 						/*** 解决删除最后一个子流程时要把干流程也要删除。*/
-						
-						//sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" +this.HisGenerWorkFlow +" AND FID=" + this.getFID();
+						//sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" +this.HisGenerWorkFlow +" AND FID=" + this.FID;
 						//int num = DBAccess.RunSQLReturnValInt(sql);
 						//if (num == 0)
 						//{
 						//    /*说明没有子进程，就要把这个流程执行完成。*/
-						//    WorkFlow wf = new WorkFlow(this.HisFlow, this.getFID());
+						//    WorkFlow wf = new WorkFlow(this.HisFlow, this.FID);
 						//    info += "@所有的子线程已经结束。";
 						//    info += "@结束主流程信息。";
 						//    info += "@" + wf.DoFlowOver(ActionType.FlowOver, "主流程结束");
@@ -756,7 +794,7 @@ public class WorkFlow
 			}
 		}
 
-			///
+			///#endregion
 
 
 
@@ -782,7 +820,7 @@ public class WorkFlow
 			if (i == 0)
 			{
 				Node ndMain = new Node(gwfMain.getFK_Node());
-				if (ndMain.getIsHL() == true)
+				if (ndMain.isHL() == true)
 				{
 					/* 有可能是当前节点已经到了合流节点上去了, 要判断合流节点是否有代办？如果没有代办，就撤销到分流节点上去.
 					 * 
@@ -800,18 +838,18 @@ public class WorkFlow
 						int fenLiuNodeID = DBAccess.RunSQLReturnValInt(mysql);
 
 						Node nd = new Node(fenLiuNodeID);
-						if (nd.getIsFL() == false)
+						if (nd.isFL() == false)
 						{
 							throw new RuntimeException("@程序错误，没有找到最近的一个分流节点.");
 						}
 
 						GenerWorkerLists gwls = new GenerWorkerLists();
-						gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fenLiuNodeID);
+						gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, fenLiuNodeID, null);
 						for (GenerWorkerList item : gwls.ToJavaList())
 						{
-							item.setIsRead(false);
+							item.setRead(false);
 							item.setIsPassInt(0);
-							item.setSDT(DataType.getCurrentDataTimess());
+							item.setSDT(DataType.getCurrentDateTimess());
 							item.Update();
 						}
 					}
@@ -819,9 +857,9 @@ public class WorkFlow
 			}
 			else
 			{
-				gwl.setIsRead(false);
+				gwl.setRead(false);
 				gwl.setIsPassInt(0);
-				gwl.setSDT(DataType.getCurrentDataTimess());
+				gwl.setSDT(DataType.getCurrentDateTimess());
 				gwl.Update();
 				return "子线程被删除成功,这是最后一个删除的子线程已经为您在{" + gwfMain.getNodeName() + "}产生了待办,<a href='/WF/MyFlow.htm?WorkID=" + gwfMain.getWorkID() + "&FK_Flow=" + gwfMain.getFK_Flow() + "'>点击处理工作</a>.";
 
@@ -833,11 +871,10 @@ public class WorkFlow
 	/** 
 	 彻底的删除流程
 	 
-	 @param isDelSubFlow 是否要删除子流程
+	 param isDelSubFlow 是否要删除子流程
 	 @return 删除的消息
-	 * @throws Exception 
 	*/
-	public final String DoDeleteWorkFlowByReal(boolean isDelSubFlow) throws Exception
+	public final String DoDeleteWorkFlowByReal(boolean isDelSubFlow)throws Exception
 	{
 		if (this.getFID() != 0)
 		{
@@ -858,21 +895,21 @@ public class WorkFlow
 		ExecEvent.DoFlow(EventListFlow.BeforeFlowDel, wn, null);
 
 
-			///删除独立表单的数据.
+			///#region 删除独立表单的数据.
 		FrmNodes fns = new FrmNodes();
-		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getHisFlow().getNo());
+		fns.Retrieve(FrmNodeAttr.FK_Flow, this.getHisFlow().getNo(), null);
 		String strs = "";
 		for (FrmNode nd : fns.ToJavaList())
 		{
-			if (strs.contains("@" + nd.getFK_Frm()) == true)
+			if (strs.contains("@" + nd.getFKFrm()) == true)
 			{
 				continue;
 			}
 
-			strs += "@" + nd.getFK_Frm() + "@";
+			strs += "@" + nd.getFKFrm() + "@";
 			try
 			{
-				MapData md = new MapData(nd.getFK_Frm());
+				MapData md = new MapData(nd.getFKFrm());
 				DBAccess.RunSQL("DELETE FROM " + md.getPTable() + " WHERE OID=" + this.getWorkID());
 			}
 			catch (java.lang.Exception e)
@@ -880,7 +917,7 @@ public class WorkFlow
 			}
 		}
 
-			/// 删除独立表单的数据.
+			///#endregion 删除独立表单的数据.
 
 		//删除流程数据.
 		DBAccess.RunSQL("DELETE FROM ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Track WHERE WorkID=" + this.getWorkID());
@@ -888,8 +925,8 @@ public class WorkFlow
 		DBAccess.RunSQL("DELETE FROM WF_CHEval WHERE  WorkID=" + this.getWorkID()); // 删除质量考核数据。
 
 
-			///正常的删除信息.
-		bp.da.Log.DefaultLogWriteLineInfo("@[" + this.getHisFlow().getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + this.getWorkID() + "]。");
+			///#region 正常的删除信息.
+		Log.DebugWriteInfo("@[" + this.getHisFlow().getName() + "]流程被[" + WebUser.getNo() + WebUser.getName() + "]删除，WorkID[" + this.getWorkID() + "]。");
 		String msg = "";
 		try
 		{
@@ -905,8 +942,6 @@ public class WorkFlow
 		{
 			// 删除单据信息.
 			DBAccess.RunSQL("DELETE FROM WF_CCList WHERE WorkID=" + this.getWorkID());
-			// 删除单据信息.
-			DBAccess.RunSQL("DELETE FROM WF_Bill WHERE WorkID=" + this.getWorkID());
 			// 删除退回.
 			DBAccess.RunSQL("DELETE FROM WF_ReturnWork WHERE WorkID=" + this.getWorkID());
 
@@ -918,6 +953,17 @@ public class WorkFlow
 			Nodes nds = this.getHisFlow().getHisNodes();
 			for (Node nd : nds.ToJavaList())
 			{
+				MapDtls dtls = new MapDtls("ND" + nd.getNodeID());
+				for (MapDtl dtl : dtls.ToJavaList())
+				{
+					try
+					{
+						DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPk = " + this.getWorkID());
+					}
+					catch (java.lang.Exception e2)
+					{
+					}
+				}
 				try
 				{
 					if (DBAccess.IsExitsObject("ND" + nd.getNodeID()) == false)
@@ -931,6 +977,8 @@ public class WorkFlow
 				{
 					msg += "@ delete data error " + ex.getMessage();
 				}
+
+
 			}
 			if (!msg.equals(""))
 			{
@@ -940,15 +988,15 @@ public class WorkFlow
 		catch (RuntimeException ex)
 		{
 			String err = "@删除工作流程[" + this.getHisGenerWorkFlow().getWorkID() + "," + this.getHisGenerWorkFlow().getTitle() + "] Err " + ex.getMessage();
-			Log.DefaultLogWriteLine(LogType.Error, err);
+			Log.DebugWriteError(err);
 			throw new RuntimeException(err);
 		}
 		info = "@删除流程删除成功";
 
-			/// 正常的删除信息.
+			///#endregion 正常的删除信息.
 
 
-			///处理分流程删除的问题完成率的问题。
+			///#region 处理分流程删除的问题完成率的问题。
 		if (this.getFID() != 0)
 		{
 			String sql = "";
@@ -961,7 +1009,7 @@ public class WorkFlow
 			{
 				/* 说明它是待命的状态 */
 				Node nextNode = new Node(fk_node);
-				if (nextNode.getPassRate().compareTo(new BigDecimal(0)) > 0)
+				if (nextNode.getPassRate().compareTo(BigDecimal.valueOf(0)) > 0)
 				{
 					/* 找到等待处理节点的上一个点 */
 					Nodes priNodes = nextNode.getFromNodes();
@@ -973,12 +1021,12 @@ public class WorkFlow
 					Node priNode = (Node)priNodes.get(0);
 
 
-						///处理完成率
+						///#region 处理完成率
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + wn.getHisWork().getFID() + " AND IsPass=1";
 					BigDecimal ok = new BigDecimal(DBAccess.RunSQLReturnValInt(sql));
 					sql = "SELECT COUNT(*) AS Num FROM WF_GenerWorkerList WHERE FK_Node=" + priNode.getNodeID() + " AND FID=" + wn.getHisWork().getFID();
 					BigDecimal all = new BigDecimal(DBAccess.RunSQLReturnValInt(sql));
-					if (all.compareTo(new BigDecimal(0)) == 0)
+					if (all.compareTo(BigDecimal.valueOf(0)) == 0)
 					{
 						/*说明:所有的子线程都被杀掉了, 就应该整个流程结束。*/
 						WorkFlow wf = new WorkFlow(this.getHisFlow(), this.getFID());
@@ -987,21 +1035,21 @@ public class WorkFlow
 						info += "@" + wf.DoFlowOver(ActionType.FlowOver, "合流点流程结束", null, null);
 					}
 
-					BigDecimal passRate = ok.divide(all,4,BigDecimal.ROUND_CEILING).multiply(new BigDecimal(100));
+					BigDecimal passRate = ok.divide(all.multiply(BigDecimal.valueOf(100)));
 					if (nextNode.getPassRate().compareTo(passRate) <= 0)
 					{
 						/*说明全部的人员都完成了，就让合流点显示它。*/
 						DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=0  WHERE IsPass=3  AND WorkID=" + wn.getHisWork().getFID() + " AND FK_Node=" + fk_node);
 					}
 
-						/// 处理完成率
+						///#endregion 处理完成率
 				}
 			} // 结束有待命的状态判断。
 
 			if (fk_node == 0)
 			{
 				/* 说明:没有找到等待启动工作的合流节点. */
-				 gwf = new GenerWorkFlow(this.getFID());
+				gwf = new GenerWorkFlow(this.getFID());
 				Node fND = new Node(gwf.getFK_Node());
 				switch (fND.getHisNodeWorkType())
 				{
@@ -1024,14 +1072,14 @@ public class WorkFlow
 			}
 		}
 
-			///
+			///#endregion
 
 
-			///删除该流程下面的子流程.
+			///#region 删除该流程下面的子流程.
 		if (isDelSubFlow)
 		{
 			GenerWorkFlows gwfs = new GenerWorkFlows();
-			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, this.getWorkID());
+			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, this.getWorkID(), null);
 
 			for (GenerWorkFlow item : gwfs.ToJavaList())
 			{
@@ -1039,7 +1087,7 @@ public class WorkFlow
 			}
 		}
 
-			/// 删除该流程下面的子流程.
+			///#endregion 删除该流程下面的子流程.
 
 		// 处理删除hou事件。
 		ExecEvent.DoFlow(EventListFlow.AfterFlowDel, wn, null);
@@ -1050,19 +1098,17 @@ public class WorkFlow
 	/** 
 	 删除工作流程记录日志，并保留运动轨迹.
 	 
-	 @param isDelSubFlow 是否要删除子流程
+	 param isDelSubFlow 是否要删除子流程
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoDeleteWorkFlowByWriteLog(String info, boolean isDelSubFlow) throws Exception
-	{
+	public final String DoDeleteWorkFlowByWriteLog(String info, boolean isDelSubFlow) throws Exception {
 		GERpt rpt = new GERpt("ND" + Integer.parseInt(this.getHisFlow().getNo()) + "Rpt", this.getWorkID());
 		WorkFlowDeleteLog log = new WorkFlowDeleteLog();
 		log.setOID(this.getWorkID());
 		try
 		{
 			log.Copy(rpt);
-			log.setDeleteDT(DataType.getCurrentDataTime());
+			log.setDeleteDT(DataType.getCurrentDateTime());
 			log.setOperDept(WebUser.getFK_Dept());
 			log.setOperDeptName(WebUser.getFK_DeptName());
 			log.setOper(WebUser.getNo());
@@ -1076,17 +1122,16 @@ public class WorkFlow
 		{
 			log.CheckPhysicsTable();
 			log.Delete();
-			return ex.getMessage();
+			throw new RuntimeException(String.valueOf(ex.getStackTrace()));
 		}
 	}
 
 
-		///流程的强制终止\删除 或者恢复使用流程,
+		///#region 流程的强制终止\删除 或者恢复使用流程,
 	/** 
 	 恢复流程.
 	 
-	 @param msg 回复流程的原因
-	 * @throws Exception 
+	 param msg 回复流程的原因
 	*/
 	public final void DoComeBackWorkFlow(String msg) throws Exception
 	{
@@ -1112,21 +1157,19 @@ public class WorkFlow
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DefaultLogWriteLine(LogType.Error, "@恢复流程出现错误." + ex.getMessage());
+			Log.DebugWriteError("@恢复流程出现错误." + ex.getMessage());
 			throw new RuntimeException("@恢复流程出现错误." + ex.getMessage());
 		}
 	}
 
-		///
+		///#endregion
 
 	/** 
 	 得到当前的进行中的工作。
 	 
 	 @return 		 
-	 * @throws Exception 
 	*/
-	public final WorkNode GetCurrentWorkNode() throws Exception
-	{
+	public final WorkNode GetCurrentWorkNode() throws Exception {
 		int currNodeID = 0;
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(this.getWorkID());
@@ -1143,7 +1186,7 @@ public class WorkFlow
 		work.SetValByKey("FK_Dept", WebUser.getFK_Dept());
 		if (work.RetrieveFromDBSources() == 0)
 		{
-			Log.DefaultLogWriteLineError("@WorkID=" + this.getWorkID() + ",FK_Node=" + gwf.getFK_Node() + ".不应该出现查询不出来工作."); // 没有找到当前的工作节点的数据，流程出现未知的异常。
+			Log.DebugWriteError("@WorkID=" + this.getWorkID() + ",FK_Node=" + gwf.getFK_Node() + ".不应该出现查询不出来工作."); // 没有找到当前的工作节点的数据，流程出现未知的异常。
 			work.setRec(WebUser.getNo());
 			try
 			{
@@ -1151,7 +1194,7 @@ public class WorkFlow
 			}
 			catch (RuntimeException ex)
 			{
-				Log.DefaultLogWriteLineError("@没有找到当前的工作节点的数据，流程出现未知的异常" + ex.getMessage() + ",不应该出现"); // 没有找到当前的工作节点的数据
+				Log.DebugWriteError("@没有找到当前的工作节点的数据，流程出现未知的异常" + ex.getMessage() + ",不应该出现"); // 没有找到当前的工作节点的数据
 			}
 		}
 		work.setFID(gwf.getFID());
@@ -1162,12 +1205,10 @@ public class WorkFlow
 	/** 
 	 结束分流的节点
 	 
-	 @param fid
+	 param fid
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoFlowOverFeiLiu(GenerWorkFlow gwf) throws Exception
-	{
+	public final String DoFlowOverFeiLiu(GenerWorkFlow gwf) throws Exception {
 		// 查询出来有少没有完成的流程。
 		int i = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkFlow WHERE FID=" + gwf.getFID() + " AND WFState!=1");
 		switch (i)
@@ -1193,13 +1234,11 @@ public class WorkFlow
 	 处理子线程完成.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoFlowThreadOver() throws Exception
-	{
+	public final String DoFlowThreadOver() throws Exception {
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		Node nd = new Node(gwf.getFK_Node());
-		//@sly
+
 		//DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow   WHERE WorkID=" + this.WorkID);
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID());
 
@@ -1217,146 +1256,34 @@ public class WorkFlow
 			return "@当前子线程已完成，干流程还有(" + num + ")个子线程未完成。";
 		}
 	}
-	/** 
-	 让父亲流程自动发送到下一步骤上去.
-	 * @throws Exception 
-	*/
-	public final String LetParentFlowAutoSendNextSetp() throws Exception
-	{
-		if (this.getHisGenerWorkFlow().getPWorkID() == 0)
-		{
-			return "";
-		}
-
-		if (this.getHisFlow().getSubFlowOver() == SubFlowOver.None)
-		{
-			/*让父流程显示待办.*/
-			DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=0 WHERE IsPass=80 AND WorkID=" + this.getHisGenerWorkFlow().getPWorkID());
-			return "";
-			//return "父流程已经显示待办.";
-		}
-
-		//如果是结束子流程.
-		if (this.getHisFlow().getSubFlowOver() == SubFlowOver.OverParentFlow)
-		{
-			bp.wf.Dev2Interface.Flow_DoFlowOver(this.getHisGenerWorkFlow().getPWorkID(), "子流程完成自动结束父流程.");
-			return "父流程自动结束.";
-		}
-
-		// 检查是否是最后的一个.
-		int num = bp.wf.Dev2Interface.Flow_NumOfSubFlowRuning(this.getHisGenerWorkFlow().getPWorkID(), this.getHisGenerWorkFlow().getWorkID());
-		if (num != 0)
-		{
-			return "";
-		}
-
-		//检查父流程是否存在?
-		GenerWorkFlow pGWF = new GenerWorkFlow();
-		pGWF.setWorkID(this.getHisGenerWorkFlow().getPWorkID());
-		if (pGWF.RetrieveFromDBSources() == 0)
-		{
-			return ""; // 父流程被删除了也不能执行。
-		}
-
-		if (pGWF.getWFState() == WFState.Complete)
-		{
-			return ""; //父流程已经完成也不能执行.
-		}
-
-		//检查父流程的当前停留的节点是否还是发起子流程的节点？
-		if (this.getHisGenerWorkFlow().getPNodeID() != pGWF.getFK_Node())
-		{
-			return "";
-		}
-
-		//找到调用该流程的人，这里判断不严禁，如果有多个人处理该节点，就只能找到当前人处理了。
-		//  string pEmp = DBAccess.RunSQLReturnStringIsNull("SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + this.HisGenerWorkFlow.PWorkID + " AND FK_Node=" + this.HisGenerWorkFlow.FK_Node + " AND IsPass=0", null);
-		//NDXRptBaseAttr
-
-		// 因为前面已经对他进行个直接更新所以这里需要进行查询之后在执行更新.
-		this.getHisGenerWorkFlow().RetrieveFromDBSources();
-
-		//当前登录用户.
-		String currUserNo = WebUser.getNo();
-		try
-		{
-			//取得调起子流程的人员.
-			String pEmp = this.getHisGenerWorkFlow().getPEmp();
-			if (DataType.IsNullOrEmpty(pEmp) == true)
-			{
-				throw new RuntimeException("@没有找到调起子流程的工作人员.");
-			}
-
-			Emp emp = new Emp();
-			emp.setNo(pEmp);
-			if (emp.RetrieveFromDBSources() == 0)
-			{
-				throw new RuntimeException("@吊起子流程上的人员编号(" + pEmp + ")已不存在,无法启动父流程.");
-			}
-
-			//改变当前节点的状态，不然父流程如果做了让所有的子流程发送完成后才能运行的设置后，不能不能让其发送了.
-			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
-			this.getHisGenerWorkFlow().DirectUpdate();
 
 
-			//让父流程的userNo登录.
-			bp.wf.Dev2Interface.Port_Login(emp.getNo());
-
-			//@袁丽娜.
-			if (bp.wf.Dev2Interface.Flow_IsCanDoCurrentWork(pGWF.getWorkID(), WebUser.getNo()) == false)
-			{
-				/*没有权限的情况下，就移交给当前人员，让其在发送. */
-				bp.wf.Dev2Interface.Node_Shift(pGWF.getWorkID(), WebUser.getNo(), "工作自动移交，让其运行到下一步。");
-			}
-
-			// GERpt rpt = new GERpt("ND" + int.Parse(this.HisGenerWorkFlow.PFlowNo) + "Rpt", this.HisGenerWorkFlow.PWorkID);
-
-			// 让当前人员向下发送，但是这种发送一定不要检查发送权限，否则的话就出错误，不能发送下去.
-			SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(this.getHisGenerWorkFlow().getPFlowNo(), pGWF.getWorkID(), null, null, 0, null, emp.getNo(), emp.getName(), emp.getFK_Dept(), emp.getFK_DeptText(), null, this.getHisGenerWorkFlow().getFID(), this.getHisGenerWorkFlow().getPWorkID());
-
-			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
-			this.getHisGenerWorkFlow().DirectUpdate();
-
-			//切换到当前流程节点.
-			bp.wf.Dev2Interface.Port_Login(currUserNo);
-
-			return "@成功让父流程运行到下一个节点." + objs.ToMsgOfHtml();
-		}
-		catch (RuntimeException ex)
-		{
-			this.getHisGenerWorkFlow().setWFState(WFState.Complete);
-			this.getHisGenerWorkFlow().DirectUpdate();
-
-			//切换到当前流程节点.
-			bp.wf.Dev2Interface.Port_Login(currUserNo);
-
-			String info = "这个错误";
-			if (ex.getMessage().contains("WorkOpt/") == true)
-			{
-				info += "@流程设计错误:自动运行到的下一个节点的接收人规则是由上一个人员来选择的,导致到不能自动运行到下一步骤.";
-				return info;
-			}
-
-			return "@在最后一个子流程完成后，让父流程的节点自动发送时，出现错误:" + ex.getMessage();
-		}
-	}
 	/** 
 	 执行流程完成
 	 
-	 @param at
-	 @param stopMsg
+	 param at
+	 param stopMsg
+	 param currNode
+	 param rpt
+	 param stopFlowType 结束类型:自定义参数
+	 param empNo
+	 param empName
 	 @return 
-	 * @throws Exception 
 	*/
 
-	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, GERpt rpt) throws Exception
-	{
-		return DoFlowOver(at, stopMsg, currNode, rpt, 0);
+	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, bp.wf.data.GERpt rpt, int stopFlowType, String empNo) throws Exception {
+		return DoFlowOver(at, stopMsg, currNode, rpt, stopFlowType, empNo, "");
 	}
 
+	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, bp.wf.data.GERpt rpt, int stopFlowType) throws Exception {
+		return DoFlowOver(at, stopMsg, currNode, rpt, stopFlowType, "", "");
+	}
 
-	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, GERpt rpt, int stopFlowType) throws Exception
-	{
+	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, bp.wf.data.GERpt rpt) throws Exception {
+		return DoFlowOver(at, stopMsg, currNode, rpt, 1, "", "");
+	}
+
+	public final String DoFlowOver(ActionType at, String stopMsg, Node currNode, bp.wf.data.GERpt rpt, int stopFlowType, String empNo, String empName) throws Exception {
 		if (null == currNode)
 		{
 			return "err@当前节点为空..";
@@ -1369,10 +1296,11 @@ public class WorkFlow
 
 		//获得当前的节点.
 		WorkNode wn = this.GetCurrentWorkNode();
+		wn.rptGe = rpt;
 
 		//调用结束前事件.
 		String mymsg = ExecEvent.DoFlow(EventListFlow.FlowOverBefore, wn, null);
-		if (mymsg != null)
+		if (DataType.IsNullOrEmpty(mymsg)==false && mymsg.equals("null")==false)
 		{
 			stopMsg += "@" + mymsg;
 		}
@@ -1387,20 +1315,20 @@ public class WorkFlow
 		}
 
 		//IsMainFlow== false 这个位置是子线程
-		if (this.getIsMainFlow() == false)
+		if (this.isMainFlow() == false)
 		{
 			/* 处理子线程完成*/
 			stopMsg += this.DoFlowThreadOver();
 		}
 
 
-			///处理明细表的汇总.
+			///#region 处理明细表的汇总.
 		this._IsComplete = 1;
 
-			/// 处理明细表的汇总.
+			///#endregion 处理明细表的汇总.
 
 
-			///处理后续的业务.
+			///#region 处理后续的业务.
 
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
@@ -1408,7 +1336,7 @@ public class WorkFlow
 		{
 			// 是否删除流程注册表的数据？
 			ps = new Paras();
-			ps.SQL="DELETE FROM WF_GenerWorkFlow WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2 ";
+			ps.SQL = "DELETE FROM WF_GenerWorkFlow WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2 ";
 			ps.Add("WorkID1", this.getWorkID());
 			ps.Add("WorkID2", this.getWorkID());
 			DBAccess.RunSQL(ps);
@@ -1419,14 +1347,14 @@ public class WorkFlow
 		if (this.getFID() == 0)
 		{
 			ps = new Paras();
-			ps.SQL="DELETE FROM WF_GenerWorkFlow WHERE FID=" + dbstr + "WorkID";
+			ps.SQL = "DELETE FROM WF_GenerWorkFlow WHERE FID=" + dbstr + "WorkID";
 			ps.Add("WorkID", this.getWorkID());
 			DBAccess.RunSQL(ps);
 		}
 
 		// 清除工作者.
 		ps = new Paras();
-		ps.SQL="DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2 ";
+		ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + dbstr + "WorkID1 OR FID=" + dbstr + "WorkID2 ";
 		ps.Add("WorkID1", this.getWorkID());
 		ps.Add("WorkID2", this.getWorkID());
 		DBAccess.RunSQL(ps);
@@ -1436,20 +1364,18 @@ public class WorkFlow
 
 		// 设置流程完成状态.
 		ps = new Paras();
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX
+			|| SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
 		{
-			ps.SQL="UPDATE " + this.getHisFlow().getPTable() + " SET  FlowEmps= FlowEmps ||'" + emps + "', WFState=:WFState,WFSta=:WFSta WHERE OID=" + dbstr + "OID";
+			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET  FlowEmps= FlowEmps ||'" + emps + "', WFState=:WFState,WFSta=:WFSta WHERE OID=" + dbstr + "OID";
 		}
-		else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		else if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
 		{
-			ps.SQL="UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= CONCAT(FlowEmps ,'" + emps + "'), WFState=:WFState,WFSta=:WFSta WHERE OID=" + dbstr + "OID";
+			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= CONCAT(FlowEmps ,'" + emps + "'), WFState="+dbstr+"WFState,WFSta="+dbstr+"WFSta WHERE OID=" + dbstr + "OID";
 		}
 		else
 		{
-			ps.SQL="UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= FlowEmps + '" + emps + "', WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";
+			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET FlowEmps= FlowEmps + '" + emps + "', WFState=" + dbstr + "WFState,WFSta=" + dbstr + "WFSta WHERE OID=" + dbstr + "OID";
 		}
 
 		ps.Add("WFState", WFState.Complete.getValue());
@@ -1458,7 +1384,12 @@ public class WorkFlow
 		DBAccess.RunSQL(ps);
 
 		//加入轨迹.
-		wn.AddToTrack(at, WebUser.getNo(), WebUser.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), stopMsg);
+		if (DataType.IsNullOrEmpty(empNo) == true)
+		{
+			empNo = WebUser.getNo();
+			empName = WebUser.getName();
+		}
+		wn.AddToTrack(at, empNo, empName, wn.getHisNode().getNodeID(), wn.getHisNode().getName(), stopMsg);
 
 		//执行流程结束.
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -1475,33 +1406,45 @@ public class WorkFlow
 		//调用结束后事件.
 		stopMsg += ExecEvent.DoFlow(EventListFlow.FlowOverAfter, wn, null);
 
-			/// 处理后续的业务.
+			///#endregion 处理后续的业务.
 
 		//执行最后一个子流程发送后的检查，不管是否成功，都要结束该流程。
-		stopMsg += this.LetParentFlowAutoSendNextSetp();
+		stopMsg += WorkNodePlus.SubFlowEvent(wn);
 
-		//string dbstr = SystemConfig.getAppCenterDBVarStr();
+		//string dbstr =  bp.difference.SystemConfig.getAppCenterDBVarStr();
 
 
-			///处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
+			///#region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
 		ps = new Paras();
-		ps.SQL="UPDATE ND" + Integer.parseInt(currNode.getFK_Flow()) + "Track SET NDTo=" + dbstr + "NDTo,NDToT=" + dbstr + "NDToT,EmpTo=" + dbstr + "EmpTo,EmpToT=" + dbstr + "EmpToT WHERE NDFrom=" + dbstr + "NDFrom AND EmpFrom=" + dbstr + "EmpFrom AND WorkID=" + dbstr + "WorkID AND ActionType=" + ActionType.WorkCheck.getValue();
+		ps.SQL = "UPDATE ND" + Integer.parseInt(currNode.getFK_Flow()) + "Track SET NDTo=" + dbstr + "NDTo,NDToT=" + dbstr + "NDToT,EmpTo=" + dbstr + "EmpTo,EmpToT=" + dbstr + "EmpToT WHERE NDFrom=" + dbstr + "NDFrom AND EmpFrom=" + dbstr + "EmpFrom AND WorkID=" + dbstr + "WorkID AND ActionType=" + ActionType.WorkCheck.getValue();
 		ps.Add(TrackAttr.NDTo, currNode.getNodeID());
-		ps.Add(TrackAttr.NDToT, "");
-		ps.Add(TrackAttr.EmpTo, "");
-		ps.Add(TrackAttr.EmpToT, "");
+		ps.Add(TrackAttr.NDToT, "", false);
+		ps.Add(TrackAttr.EmpTo, "", false);
+		ps.Add(TrackAttr.EmpToT, "", false);
 
 		ps.Add(TrackAttr.NDFrom, currNode.getNodeID());
-		ps.Add(TrackAttr.EmpFrom, WebUser.getNo());
+		ps.Add(TrackAttr.EmpFrom, WebUser.getNo(), false);
 		ps.Add(TrackAttr.WorkID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
-			/// 处理审核问题.
+			///#endregion 处理审核问题.
 
+		//如果存在 BillState列，执行更新, 让其可见.
+		if (rpt.getEnMap().getAttrs().contains("BillState") == true)
+		{
+			rpt.SetValByKey("BillState", 100);
+		}
+		else
+		{
+			String ptable = "ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt";
+			if (rpt.getEnMap().getPhysicsTable().equals(ptable) == false && DBAccess.IsExitsTableCol(rpt.getEnMap().getPhysicsTable(), "BillState") == true)
+			{
+				DBAccess.RunSQL("UPDATE " + rpt.getEnMap().getPhysicsTable() + " SET BillState=100 WHERE OID=" + this.getWorkID());
+			}
+		}
 		return stopMsg;
 	}
-	public final String GenerFHStartWorkInfo() throws Exception
-	{
+	public final String GenerFHStartWorkInfo() throws Exception {
 		String msg = "";
 		DataTable dt = DBAccess.RunSQLReturnTable("SELECT Title,RDT,Rec,OID FROM ND" + this.getStartNodeID() + " WHERE FID=" + this.getFID());
 		switch (dt.Rows.size())
@@ -1522,19 +1465,16 @@ public class WorkFlow
 		}
 		return msg;
 	}
-	public final int getStartNodeID() throws Exception
-	{
+	public final int getStartNodeID() throws Exception {
 		return Integer.parseInt(this.getHisFlow().getNo() + "01");
 	}
 
 	/** 
 	 执行冻结
 	 
-	 @param msg 冻结原因
-	 * @throws Exception 
+	 param msg 冻结原因
 	*/
-	public final String DoFix(String fixMsg) throws Exception
-	{
+	public final String DoFix(String fixMsg) throws Exception {
 		if (this.getHisGenerWorkFlow().getWFState() == WFState.Fix)
 		{
 			throw new RuntimeException("@当前已经是冻结的状态您不能执行再冻结.");
@@ -1552,7 +1492,7 @@ public class WorkFlow
 
 		for (GenerWorkerList wl : wls.ToJavaList())
 		{
-			if (wl.getIsEnable() == false)
+			if (wl.isEnable() == false)
 			{
 				continue; //不发送给禁用的人。
 			}
@@ -1565,13 +1505,13 @@ public class WorkFlow
 		int sta = WFState.Fix.getValue();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
+		ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.WFState, sta);
 		ps.Add(GenerWorkFlowAttr.WorkID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
 		ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkerList SET IsPass=" + dbstr + "IsPass WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + this.getHisGenerWorkFlow().getFK_Node();
+		ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=" + dbstr + "IsPass WHERE WorkID=" + dbstr + "WorkID AND FK_Node=" + this.getHisGenerWorkFlow().getFK_Node();
 		ps.Add(GenerWorkerListAttr.IsPass, 9);
 		ps.Add(GenerWorkerListAttr.WorkID, this.getWorkID());
 		DBAccess.RunSQL(ps);
@@ -1579,25 +1519,23 @@ public class WorkFlow
 
 		// 更新流程报表的状态。 
 		ps = new Paras();
-		ps.SQL="UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState WHERE OID=" + dbstr + "OID";
+		ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState WHERE OID=" + dbstr + "OID";
 		ps.Add(GERptAttr.WFState, sta);
 		ps.Add(GERptAttr.OID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
 		// 记录日志..
 		//WorkNode wn = new WorkNode(this.WorkID, this.HisGenerWorkFlow.FK_Node);
-		//wn.AddToTrack(ActionType.Info, WebUser.getNo(), WebUser.getName(), wn.HisNode.NodeID, wn.HisNode.Name, fixMsg,);
+		//wn.AddToTrack(ActionType.Info, WebUser.getNo(), WebUser.getName() , wn.HisNode.NodeID, wn.HisNode.Name, fixMsg,);
 
 		return this.getWorkID() + "-" + this.getHisFlow().getName() + "已经成功执行冻结";
 	}
 	/** 
 	 执行解除冻结
 	 
-	 @param msg 冻结原因
-	 * @throws Exception 
+	 param msg 冻结原因
 	*/
-	public final String DoUnFix(String unFixMsg) throws Exception
-	{
+	public final String DoUnFix(String unFixMsg) throws Exception {
 		if (this.getHisGenerWorkFlow().getWFState() != WFState.Fix)
 		{
 			throw new RuntimeException("@当前非冻结的状态您不能执行解除冻结.");
@@ -1610,12 +1548,11 @@ public class WorkFlow
 
 
 		/*** 获取它的工作者，向他们发送消息。*/
-		
-		//GenerWorkerLists wls = new GenerWorkerLists(this.WorkID, this.HisFlow.getNo());
+		//GenerWorkerLists wls = new GenerWorkerLists(this.WorkID, this.HisFlow.No);
 
-		//string url = Glo.ServerIP + "/" + this.VirPath + this.AppType + "/WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.HisFlow.getNo() + "&WorkID=" + this.WorkID + "&FID=" + this.HisGenerWorkFlow.getFID() + "&FK_Node=" + this.HisGenerWorkFlow.FK_Node;
+		//string url = Glo.ServerIP + "/" + this.VirPath + this.AppType + "/WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.HisFlow.No + "&WorkID=" + this.WorkID + "&FID=" + this.HisGenerWorkFlow.FID + "&FK_Node=" + this.HisGenerWorkFlow.FK_Node;
 		//string mailDoc = "详细信息:<A href='" + url + "'>打开流程轨迹</A>.";
-		//string title = "工作:" + this.HisGenerWorkFlow.getTitle() + " 被" + WebUser.getName() + "冻结" + unFixMsg;
+		//string title = "工作:" + this.HisGenerWorkFlow.Title + " 被" + WebUser.getName() + "冻结" + unFixMsg;
 		//string emps = "";
 		//foreach (GenerWorkerList wl in wls)
 		//{
@@ -1625,46 +1562,44 @@ public class WorkFlow
 		//    emps += wl.FK_Emp + "," + wl.FK_EmpText + ";";
 
 		//    //写入消息。
-		//    BP.WF.Dev2Interface.Port_SendMsg(wl.FK_Emp, title, mailDoc, "Fix" + wl.WorkID, bp.sys.SMSMsgType.Self, wl.FK_Flow, wl.FK_Node, wl.WorkID, wl.getFID());
+		//    BP.WF.Dev2Interface.Port_SendMsg(wl.FK_Emp, title, mailDoc, "Fix" + wl.WorkID, BP.Sys.SMSMsgType.Self, wl.FK_Flow, wl.FK_Node, wl.WorkID, wl.FID);
 		//}
 
 		/* 执行 WF_GenerWorkFlow 冻结. */
 		int sta = WFState.Runing.getValue();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
+		ps.SQL = "UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
 		ps.Add(GenerWorkFlowAttr.WFState, sta);
 		ps.Add(GenerWorkFlowAttr.WorkID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
 		// 更新流程报表的状态。 
 		ps = new Paras();
-		ps.SQL="UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState WHERE OID=" + dbstr + "OID";
+		ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState WHERE OID=" + dbstr + "OID";
 		ps.Add(GERptAttr.WFState, sta);
 		ps.Add(GERptAttr.OID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
 		// 记录日志..
 		WorkNode wn = new WorkNode(this.getWorkID(), this.getHisGenerWorkFlow().getFK_Node());
-		//wn.AddToTrack(ActionType.Info, WebUser.getNo(), WebUser.getName(), wn.HisNode.NodeID, wn.HisNode.Name, unFixMsg);
+		//wn.AddToTrack(ActionType.Info, WebUser.getNo(), WebUser.getName() , wn.HisNode.NodeID, wn.HisNode.Name, unFixMsg);
 
 		return "已经成功执行解除冻结:";
 	}
 
-		///
+		///#endregion
 
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 他的节点
 	*/
 	private Nodes _HisNodes = null;
 	/** 
 	 节点s
-	 * @throws Exception 
 	*/
-	public final Nodes getHisNodes() throws Exception
-	{
+	public final Nodes getHisNodes() throws Exception {
 		if (this._HisNodes == null)
 		{
 			this._HisNodes = this.getHisFlow().getHisNodes();
@@ -1677,11 +1612,8 @@ public class WorkFlow
 	private WorkNodes _HisWorkNodesOfWorkID = null;
 	/** 
 	 工作节点s
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final WorkNodes getHisWorkNodesOfWorkID() throws NumberFormatException, Exception
-	{
+	public final WorkNodes getHisWorkNodesOfWorkID() throws Exception {
 		if (this._HisWorkNodesOfWorkID == null)
 		{
 			this._HisWorkNodesOfWorkID = new WorkNodes();
@@ -1695,10 +1627,8 @@ public class WorkFlow
 	private WorkNodes _HisWorkNodesOfFID = null;
 	/** 
 	 工作节点s
-	 * @throws Exception 
 	*/
-	public final WorkNodes getHisWorkNodesOfFID() throws Exception
-	{
+	public final WorkNodes getHisWorkNodesOfFID() throws Exception {
 		if (this._HisWorkNodesOfFID == null)
 		{
 			this._HisWorkNodesOfFID = new WorkNodes();
@@ -1713,22 +1643,19 @@ public class WorkFlow
 	/** 
 	 工作流程
 	*/
-	public final Flow getHisFlow()
-	{
+	public final Flow getHisFlow() throws Exception {
 		return this._HisFlow;
 	}
 	private GenerWorkFlow _HisGenerWorkFlow = null;
-	public final GenerWorkFlow getHisGenerWorkFlow() throws Exception
-	{
+	public final GenerWorkFlow getHisGenerWorkFlow() throws Exception {
 		if (_HisGenerWorkFlow == null)
 		{
 			_HisGenerWorkFlow = new GenerWorkFlow(this.getWorkID());
 		}
 		return _HisGenerWorkFlow;
 	}
-	public final void setHisGenerWorkFlow(GenerWorkFlow value)
-	{
-		_HisGenerWorkFlow = value;
+	public final void setHisGenerWorkFlow(GenerWorkFlow value)throws Exception
+	{_HisGenerWorkFlow = value;
 	}
 	/** 
 	 工作ID
@@ -1737,8 +1664,7 @@ public class WorkFlow
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
-	{
+	public final long getWorkID() throws Exception {
 		return this._WorkID;
 	}
 	/** 
@@ -1748,20 +1674,16 @@ public class WorkFlow
 	/** 
 	 工作ID
 	*/
-	public final long getFID() throws Exception
-	{
+	public final long getFID() throws Exception {
 		return this._FID;
 	}
-	public final void setFID(long value) throws Exception
-	{
-		this._FID = value;
+	public final void setFID(long value)throws Exception
+	{this._FID = value;
 	}
 	/** 
 	 是否是干流
-	 * @throws Exception 
 	*/
-	public final boolean getIsMainFlow() throws Exception
-	{
+	public final boolean isMainFlow() throws Exception {
 		if (this.getFID() != 0 && this.getFID() != this.getWorkID())
 		{
 			return false;
@@ -1772,12 +1694,11 @@ public class WorkFlow
 		}
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
-	public WorkFlow(long wkid) throws Exception
-	{
+		///#region 构造方法
+	public WorkFlow(long wkid) throws Exception {
 		this.setHisGenerWorkFlow(new GenerWorkFlow());
 		this.getHisGenerWorkFlow().RetrieveByAttr(GenerWorkerListAttr.WorkID, wkid);
 		this._FID = this.getHisGenerWorkFlow().getFID();
@@ -1792,8 +1713,7 @@ public class WorkFlow
 
 	}
 
-	public WorkFlow(Flow flow, long wkid) throws Exception
-	{
+	public WorkFlow(Flow flow, long wkid) throws Exception {
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(wkid);
 		gwf.RetrieveFromDBSources();
@@ -1810,8 +1730,8 @@ public class WorkFlow
 	/** 
 	 建立一个工作流事例
 	 
-	 @param flow 流程No
-	 @param wkid 工作ID
+	 param flow 流程No
+	 param wkid 工作ID
 	*/
 	public WorkFlow(Flow flow, long wkid, long fid)
 	{
@@ -1824,8 +1744,7 @@ public class WorkFlow
 		this._HisFlow = flow;
 		this._WorkID = wkid;
 	}
-	public WorkFlow(String FK_flow, long wkid, long fid) throws Exception
-	{
+	public WorkFlow(String FK_flow, long wkid, long fid) throws Exception {
 		this._FID = fid;
 
 		Flow flow = new Flow(FK_flow);
@@ -1838,19 +1757,17 @@ public class WorkFlow
 		this._WorkID = wkid;
 	}
 
-		///
+		///#endregion
 
 
-		///运算属性
+		///#region 运算属性
 	public int _IsComplete = -1;
 	/** 
 	 是不是完成
-	 * @throws Exception 
 	*/
-	public final boolean getIsComplete() throws Exception
-	{
+	public final boolean isComplete() throws Exception {
 
-			//  bool s = !DBAccess.IsExits()("select workid from WF_GenerWorkFlow WHERE WorkID=" + this.WorkID + " AND FK_Flow='" + this.HisFlow.getNo() + "'");
+			//  bool s = !DBAccess.IsExits("select workid from WF_GenerWorkFlow WHERE WorkID=" + this.WorkID + " AND FK_Flow='" + this.HisFlow.No + "'");
 
 		GenerWorkFlow generWorkFlow = new GenerWorkFlow(this.getWorkID());
 		if (generWorkFlow.getWFState() == WFState.Complete)
@@ -1865,11 +1782,9 @@ public class WorkFlow
 	}
 	/** 
 	 是不是完成
-	 * @throws Exception 
 	*/
-	public final String getIsCompleteStr() throws Exception
-	{
-		if (this.getIsComplete())
+	public final String isCompleteStr() throws Exception {
+		if (this.isComplete())
 		{
 			return "已";
 		}
@@ -1879,37 +1794,37 @@ public class WorkFlow
 		}
 	}
 
-		///
+		///#endregion
 
 
-		///静态方法
+		///#region 静态方法
 
 	/** 
 	 是否这个工作人员能执行这个工作
 	 
-	 @param nodeId 节点
-	 @param empId 工作人员
+	 param nodeId 节点
+	 param empId 工作人员
 	 @return 能不能执行 
 	*/
 	public static boolean IsCanDoWorkCheckByEmpStation(int nodeId, String empId)
 	{
 		boolean isCan = false;
 		// 判断岗位对应关系是不是能够执行.
-		String sql = "SELECT a.FK_Node FROM WF_NodeStation a,  " + bp.wf.Glo.getEmpStation() + " b WHERE (a.FK_Station=b.FK_Station) AND (a.FK_Node=" + nodeId + " AND b.FK_Emp='" + empId + "' )";
+		String sql = "SELECT a.FK_Node FROM WF_NodeStation a,  Port_DeptEmpStation b WHERE (a.FK_Station=b.FK_Station) AND (a.FK_Node=" + nodeId + " AND b.FK_Emp='" + empId + "' )";
 		isCan = DBAccess.IsExits(sql);
 		if (isCan)
 		{
 			return true;
 		}
 		// 判断他的主要工作岗位能不能执行它.
-		sql = "select FK_Node from WF_NodeStation WHERE FK_Node=" + nodeId + " AND ( FK_Station in (select FK_Station from " + bp.wf.Glo.getEmpStation() + " WHERE FK_Emp='" + empId + "') ) ";
+		sql = "select FK_Node from WF_NodeStation WHERE FK_Node=" + nodeId + " AND ( FK_Station in (select FK_Station from Port_DeptEmpStation WHERE FK_Emp='" + empId + "') ) ";
 		return DBAccess.IsExits(sql);
 	}
 	/** 
 	 是否这个工作人员能执行这个工作
 	 
-	 @param nodeId 节点
-	 @param dutyNo 工作人员
+	 param nodeId 节点
+	 param dutyNo 工作人员
 	 @return 能不能执行 
 	*/
 	public static boolean IsCanDoWorkCheckByEmpDuty(int nodeId, String dutyNo)
@@ -1927,23 +1842,21 @@ public class WorkFlow
 	/** 
 	 在物理上能构作这项工作的人员。
 	 
-	 @param nodeId 节点ID		 
+	 param nodeId 节点ID
 	 @return 
 	*/
 	public static DataTable CanDoWorkEmps(int nodeId)
 	{
-		String sql = "select a.FK_Node, b.EmpID from WF_NodeStation  a,  " + bp.wf.Glo.getEmpStation() + " b WHERE (a.FK_Station=b.FK_Station) AND (a.FK_Node=" + nodeId + " )";
+		String sql = "select a.FK_Node, b.EmpID from WF_NodeStation  a,  Port_DeptEmpStation b WHERE (a.FK_Station=b.FK_Station) AND (a.FK_Node=" + nodeId + " )";
 		return DBAccess.RunSQLReturnTable(sql);
 	}
 	/** 
 	 GetEmpsBy
 	 
-	 @param dt
+	 param dt
 	 @return 
-	 * @throws Exception 
 	*/
-	public final Emps GetEmpsBy(DataTable dt) throws Exception
-	{
+	public final Emps GetEmpsBy(DataTable dt) throws Exception {
 		// 形成能够处理这件事情的用户几何。
 		Emps emps = new Emps();
 		for (DataRow dr : dt.Rows)
@@ -1954,17 +1867,16 @@ public class WorkFlow
 	}
 
 
-		///
+		///#endregion
 
 
-		///流程方法
+		///#region 流程方法
 
 	private String _AppType = null;
 	/** 
 	 虚拟目录的路径
 	*/
-	public final String getAppType()
-	{
+	public final String getAppType() throws Exception {
 		if (_AppType == null)
 		{
 			if (SystemConfig.getIsBSsystem() == false)
@@ -1985,9 +1897,9 @@ public class WorkFlow
 	/** 
 	 虚拟目录的路径
 	*/
-	public final String getVirPath()
-	{
-		if (_VirPath == null) {
+	public final String getVirPath() throws Exception {
+		if (_VirPath == null)
+		{
 			if (SystemConfig.getIsBSsystem() && bp.sys.Glo.getRequest() != null) {
 				_VirPath = bp.sys.Glo.getRequest().getRemoteAddr();
 			} else {
@@ -1999,29 +1911,27 @@ public class WorkFlow
 	/** 
 	 执行挂起
 	 
-	 @param way 挂起方式
-	 @param relData 释放日期
-	 @param hungNote 挂起原因
+	 param way 挂起方式
+	 param relData 释放日期
+	 param hungNote 挂起原因
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoHungUp(HungUpWay way, String relData, String hungNote) throws Exception
-	{
+	public final String DoHungup(HungupWay way, String relData, String hungNote) throws Exception {
 		if (this.getHisGenerWorkFlow().getWFState() == WFState.HungUp)
 		{
-			throw new RuntimeException("@当前已经是挂起的状态您不能执行在挂起.");
+			throw new RuntimeException("err@当前已经是挂起的状态您不能执行在挂起.");
 		}
 
-		if (DataType.IsNullOrEmpty(hungNote))
+		if (DataType.IsNullOrEmpty(hungNote) == true)
 		{
 			hungNote = "无";
 		}
 
-		if (way == HungUpWay.SpecDataRel)
+		if (way == HungupWay.SpecDataRel)
 		{
 			if (relData.length() < 10)
 			{
-				throw new RuntimeException("@解除挂起的日期不正确(" + relData + ")");
+				throw new RuntimeException("err@解除挂起的日期不正确(" + relData + ")");
 			}
 		}
 		if (relData == null)
@@ -2029,135 +1939,166 @@ public class WorkFlow
 			relData = "";
 		}
 
-		HungUp hu = new HungUp();
-		hu.setFK_Node(this.getHisGenerWorkFlow().getFK_Node());
-		hu.setWorkID(this.getWorkID());
-		hu.setMyPK(hu.getFK_Node() + "_" + hu.getWorkID());
-		hu.setHungUpWay(way); //挂起方式.
-		hu.setDTOfHungUp(DataType.getCurrentDataTime()); // 挂起时间
-		hu.setRec(WebUser.getNo()); //挂起人
-		hu.setDTOfUnHungUp(relData); // 解除挂起时间。
-		hu.setNote(hungNote);
-		hu.Insert();
 
 		/* 获取它的工作者，向他们发送消息。*/
 		GenerWorkerLists wls = new GenerWorkerLists(this.getWorkID(), this.getHisFlow().getNo());
-		String url = Glo.getServerIP() + "/" + this.getVirPath() + this.getAppType() + "/WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.getHisFlow().getNo() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getHisGenerWorkFlow().getFID() + "&FK_Node=" + this.getHisGenerWorkFlow().getFK_Node();
+		String url = Glo.getServerIP() + "/" + this.getVirPath() + this.getAppType() + "/MyView.htm?FK_Flow=" + this.getHisFlow().getNo() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getHisGenerWorkFlow().getFID() + "&FK_Node=" + this.getHisGenerWorkFlow().getFK_Node();
 		String mailDoc = "详细信息:<A href='" + url + "'>打开流程轨迹</A>.";
 		String title = "工作:" + this.getHisGenerWorkFlow().getTitle() + " 被" + WebUser.getName() + "挂起" + hungNote;
 		String emps = "";
 		for (GenerWorkerList wl : wls.ToJavaList())
 		{
-			if (wl.getIsEnable() == false)
+			if (wl.isEnable() == false)
 			{
 				continue; //不发送给禁用的人。
 			}
 
-			//BP.WF.Port.WFEmp emp = new Port.WFEmp(wl.FK_Emp);
+			//BP.WF.Port.WFEmp emp = new bp.port.WFEmp(wl.FK_Emp);
 			emps += wl.getFK_Emp() + "," + wl.getFK_EmpText() + ";";
 
 			//写入消息。
-			bp.wf.Dev2Interface.Port_SendMsg(wl.getFK_Emp(), title, mailDoc, "HungUp" + wl.getWorkID(), bp.wf.SMSMsgType.HungUp, wl.getFK_Flow(), wl.getFK_Node(), wl.getWorkID(), wl.getFID());
+			bp.wf.Dev2Interface.Port_SendMsg(wl.getFK_Emp(), title, mailDoc, "Hungup" + wl.getWorkID(), bp.wf.SMSMsgType.Hungup, wl.getFK_Flow(), wl.getFK_Node(), wl.getWorkID(), wl.getFID());
 		}
 
 		/* 执行 WF_GenerWorkFlow 挂起. */
 		int hungSta = WFState.HungUp.getValue();
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		Paras ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
-		ps.Add(GenerWorkFlowAttr.WFState, hungSta);
-		ps.Add(GenerWorkFlowAttr.WorkID, this.getWorkID());
-		DBAccess.RunSQL(ps);
+
+		//更新挂起状态.
+		this.getHisGenerWorkFlow().setWFState(WFState.HungUp);
+		this.getHisGenerWorkFlow().SetPara("Hunguper", WebUser.getNo());
+		this.getHisGenerWorkFlow().SetPara("HunguperName", WebUser.getName());
+		this.getHisGenerWorkFlow().SetPara("HungupWay", way.getValue());
+		this.getHisGenerWorkFlow().SetPara("HungupRelDate", relData);
+		this.getHisGenerWorkFlow().SetPara("HungupNote", hungNote);
+		this.getHisGenerWorkFlow().SetPara("HungupSta", HungupSta.Apply.getValue()); //设置申请状态.
+		this.getHisGenerWorkFlow().setHungupTime(DataType.getCurrentDateTime());
+		this.getHisGenerWorkFlow().Update();
 
 		// 更新流程报表的状态。 
-		ps = new Paras();
-		ps.SQL="UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState WHERE OID=" + dbstr + "OID";
+		Paras ps = new Paras();
+		ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState WHERE OID=" + dbstr + "OID";
 		ps.Add(GERptAttr.WFState, hungSta);
+		ps.Add(GERptAttr.OID, this.getWorkID());
+		DBAccess.RunSQL(ps);
+
+		// 记录日志..
+		WorkNode wn = new WorkNode(this.getWorkID(), this.getHisGenerWorkFlow().getFK_Node());
+		wn.AddToTrack(ActionType.Hungup, WebUser.getNo(), WebUser.getName() , wn.getHisNode().getNodeID(), wn.getHisNode().getName(), hungNote);
+		return "已经成功执行挂起,并且已经通知给:" + emps;
+	}
+	/** 
+	 同意挂起
+	 
+	 @return 
+	*/
+	public final String HungupWorkAgree() throws Exception {
+		if (this.getHisGenerWorkFlow().getWFState() != WFState.HungUp)
+		{
+			throw new RuntimeException("@非挂起状态,您不能解除挂起.");
+		}
+
+		this.getHisGenerWorkFlow().SetPara("HungupSta", HungupSta.Agree.getValue()); //同意.
+		this.getHisGenerWorkFlow().SetPara("HungupChecker", WebUser.getNo());
+		this.getHisGenerWorkFlow().SetPara("HungupCheckerName", WebUser.getName());
+		this.getHisGenerWorkFlow().SetPara("HungupCheckRDT", DataType.getCurrentDateTime());
+		this.getHisGenerWorkFlow().Update();
+
+		//如果是按照指定的日期解除挂起.
+		int way = this.getHisGenerWorkFlow().GetParaInt("HungupWay", 0);
+		if (way == 1)
+		{
+			String relDT = this.getHisGenerWorkFlow().GetParaString("HungupRelDate");
+			DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET SDT='" + relDT + "' WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getHisGenerWorkFlow().getFK_Node());
+		}
+		return "已经同意挂起.";
+	}
+
+	/** 
+	 新增取消挂起的API
+	 
+	 @return 
+	 @exception Exception
+	*/
+	public final String CancelHungupWork() throws Exception {
+		if (this.getHisGenerWorkFlow().getWFState() != WFState.HungUp)
+		{
+			throw new RuntimeException("@非挂起状态,您不能取消挂起.");
+		}
+
+		/* 执行解除挂起. */
+		this.getHisGenerWorkFlow().setWFState(WFState.Runing); //这里仅仅更新大的状态就好，不在处理AtPara的参数状态.
+		this.getHisGenerWorkFlow().Update();
+
+		// 更新流程报表的状态。 
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		Paras ps = new Paras();
+		ps = new Paras();
+		ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET WFState=2 WHERE OID=" + dbstr + "OID";
 		ps.Add(GERptAttr.OID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
 		// 更新工作者的挂起时间。
 		ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkerlist SET DTOfHungUp=" + dbstr + "DTOfHungUp,DTOfUnHungUp=" + dbstr + "DTOfUnHungUp, HungUpTimes=HungUpTimes+1 WHERE FK_Node=" + dbstr + "FK_Node AND WorkID=" + dbstr + "WorkID";
-		ps.Add(GenerWorkerListAttr.DTOfHungUp, DataType.getCurrentDataTime());
-		ps.Add(GenerWorkerListAttr.DTOfUnHungUp, relData);
-
+		ps.SQL = "UPDATE WF_GenerWorkerlist SET  DTOfUnHungup=" + dbstr + "DTOfUnHungup WHERE FK_Node=" + dbstr + "FK_Node AND WorkID=" + dbstr + "WorkID";
+		ps.Add(GenerWorkerListAttr.DTOfUnHungup, DataType.getCurrentDateTime(), false);
 		ps.Add(GenerWorkerListAttr.FK_Node, this.getHisGenerWorkFlow().getFK_Node());
 		ps.Add(GenerWorkFlowAttr.WorkID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
 		// 记录日志..
 		WorkNode wn = new WorkNode(this.getWorkID(), this.getHisGenerWorkFlow().getFK_Node());
-		wn.AddToTrack(ActionType.HungUp, WebUser.getNo(), WebUser.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), hungNote);
-		return "已经成功执行挂起,并且已经通知给:" + emps;
+		wn.AddToTrack(ActionType.UnHungup, WebUser.getNo(), WebUser.getName() , wn.getHisNode().getNodeID(), wn.getHisNode().getName(), "");
+		return "您已经取消挂起，该流程实例已经进入了正常运行状态.";
 	}
 	/** 
-	 取消挂起
+	 拒绝挂起
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoUnHungUp() throws Exception
-	{
+	public final String HungupWorkReject(String msg) throws Exception {
 		if (this.getHisGenerWorkFlow().getWFState() != WFState.HungUp)
 		{
 			throw new RuntimeException("@非挂起状态,您不能解除挂起.");
 		}
 
 		/* 执行解除挂起. */
-		int sta = WFState.Runing.getValue();
-		String dbstr = SystemConfig.getAppCenterDBVarStr();
-		Paras ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkFlow SET WFState=" + dbstr + "WFState WHERE WorkID=" + dbstr + "WorkID";
-		ps.Add(GenerWorkFlowAttr.WFState, sta);
-		ps.Add(GenerWorkFlowAttr.WorkID, this.getWorkID());
-		DBAccess.RunSQL(ps);
+		this.getHisGenerWorkFlow().setWFState(WFState.Runing);
+
+		this.getHisGenerWorkFlow().SetPara("HungupSta", HungupSta.Reject.getValue()); //不同意.
+		this.getHisGenerWorkFlow().SetPara("HungupNodeID", this.getHisGenerWorkFlow().getFK_Node()); //不同意.
+		this.getHisGenerWorkFlow().SetPara("HungupCheckMsg", msg); //拒绝原因.
+		this.getHisGenerWorkFlow().Update();
 
 		// 更新流程报表的状态。 
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		Paras ps = new Paras();
 		ps = new Paras();
-		ps.SQL="UPDATE " + this.getHisFlow().getPTable() + " SET WFState=" + dbstr + "WFState WHERE OID=" + dbstr + "OID";
-		ps.Add(GERptAttr.WFState, sta);
+		ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET WFState=2 WHERE OID=" + dbstr + "OID";
 		ps.Add(GERptAttr.OID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
 		// 更新工作者的挂起时间。
 		ps = new Paras();
-		ps.SQL="UPDATE WF_GenerWorkerlist SET  DTOfUnHungUp=" + dbstr + "DTOfUnHungUp WHERE FK_Node=" + dbstr + "FK_Node AND WorkID=" + dbstr + "WorkID";
-		ps.Add(GenerWorkerListAttr.DTOfUnHungUp, DataType.getCurrentDataTime());
+		ps.SQL = "UPDATE WF_GenerWorkerlist SET  DTOfUnHungup=" + dbstr + "DTOfUnHungup WHERE FK_Node=" + dbstr + "FK_Node AND WorkID=" + dbstr + "WorkID";
+		ps.Add(GenerWorkerListAttr.DTOfUnHungup, DataType.getCurrentDateTime(), false);
 		ps.Add(GenerWorkerListAttr.FK_Node, this.getHisGenerWorkFlow().getFK_Node());
 		ps.Add(GenerWorkFlowAttr.WorkID, this.getWorkID());
 		DBAccess.RunSQL(ps);
 
-		//更新 HungUp
-		HungUp hu = new HungUp();
-		hu.setFK_Node(this.getHisGenerWorkFlow().getFK_Node());
-		hu.setWorkID(this.getHisGenerWorkFlow().getWorkID());
-		hu.setMyPK(hu.getFK_Node() + "_" + hu.getWorkID());
-		if (hu.RetrieveFromDBSources() == 0)
-		{
-			throw new RuntimeException("@系统错误，没有找到挂起点");
-		}
-
-		hu.setDTOfUnHungUp(DataType.getCurrentDataTime()); // 挂起时间
-		hu.Update();
-
-		//更新他的主键。
-		ps = new Paras();
-		ps.SQL="UPDATE WF_HungUp SET MyPK=" + SystemConfig.getAppCenterDBVarStr() + "MyPK WHERE MyPK=" + dbstr + "MyPK1";
-		ps.Add("MyPK", DBAccess.GenerGUID());
-		ps.Add("MyPK1", hu.getMyPK());
-		DBAccess.RunSQL(ps);
-
 
 		/* 获取它的工作者，向他们发送消息。*/
-		GenerWorkerLists wls = new GenerWorkerLists(this.getWorkID(), this.getHisFlow().getNo());
-		String url = Glo.getServerIP() + "/" + this.getVirPath() + this.getAppType() + "/WorkOpt/OneWork/OneWork.htm?CurrTab=Track&FK_Flow=" + this.getHisFlow().getNo() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getHisGenerWorkFlow().getFID() + "&FK_Node=" + this.getHisGenerWorkFlow().getFK_Node();
-		String mailDoc = "详细信息:<A href='" + url + "'>打开流程轨迹</A>.";
-		String title = "工作:" + this.getHisGenerWorkFlow().getTitle() + " 被" + WebUser.getName() + "解除挂起.";
+		GenerWorkerLists wls = new GenerWorkerLists(this.getWorkID());
+		wls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getHisGenerWorkFlow().getFK_Node(), null);
+
+		String url = Glo.getServerIP() + "/" + this.getVirPath() + this.getAppType() + "/MyFlow.htm?FK_Flow=" + this.getHisFlow().getNo() + "&WorkID=" + this.getWorkID() + "&FID=" + this.getHisGenerWorkFlow().getFID() + "&FK_Node=" + this.getHisGenerWorkFlow().getFK_Node();
+		String mailDoc = "详细信息:<A href='" + url + "'>打开流程</A>.";
+		mailDoc += " 拒绝原因:" + msg;
+		String title = "工作:" + this.getHisGenerWorkFlow().getTitle() + " 被" + WebUser.getName() + "拒绝挂起.";
 		String emps = "";
 		for (GenerWorkerList wl : wls.ToJavaList())
 		{
-			if (wl.getIsEnable() == false)
+			if (wl.isEnable() == false)
 			{
 				continue; //不发送给禁用的人。
 			}
@@ -2165,96 +2106,14 @@ public class WorkFlow
 			emps += wl.getFK_Emp() + "," + wl.getFK_EmpText() + ";";
 
 			//写入消息。
-			bp.wf.Dev2Interface.Port_SendMsg(wl.getFK_Emp(), title, mailDoc, "HungUp" + wl.getFK_Node() + this.getWorkID(), bp.wf.SMSMsgType.Self, getHisGenerWorkFlow().getFK_Flow(), getHisGenerWorkFlow().getFK_Node(), this.getWorkID(), this.getFID());
-
-			//写入消息。
-			//Glo.SendMsg(wl.FK_Emp, title, mailDoc);
+			bp.wf.Dev2Interface.Port_SendMsg(wl.getFK_Emp(), title, msg, "RejectHungup" + wl.getFK_Node() + this.getWorkID(), bp.wf.SMSMsgType.RejectHungup, getHisGenerWorkFlow().getFK_Flow(), getHisGenerWorkFlow().getFK_Node(), this.getWorkID(), this.getFID());
 		}
-
 
 		// 记录日志..
 		WorkNode wn = new WorkNode(this.getWorkID(), this.getHisGenerWorkFlow().getFK_Node());
-		wn.AddToTrack(ActionType.UnHungUp, WebUser.getNo(), WebUser.getName(), wn.getHisNode().getNodeID(), wn.getHisNode().getName(), "解除挂起,已经通知给:" + emps);
-		return null;
-	}
-	/** 
-	 撤消移交
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String DoUnShift() throws Exception
-	{
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-		GenerWorkerLists wls = new GenerWorkerLists();
-		wls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
-		if (wls.size() == 0)
-		{
-			return "移交失败没有当前的工作。";
-		}
-
-		Node nd = new Node(gwf.getFK_Node());
-		Work wk1 = nd.getHisWork();
-		wk1.setOID(this.getWorkID());
-		wk1.Retrieve();
-
-		// 记录日志.
-		WorkNode wn = new WorkNode(wk1, nd);
-		wn.AddToTrack(ActionType.UnShift, WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), "撤消移交");
-
-		//删除撤销信息.
-		DBAccess.RunSQL("DELETE FROM WF_ShiftWork WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + gwf.getFK_Node());
-
-		//更新流程主表字段信息
-		gwf.setWFState(WFState.Runing);
-		gwf.Update();
-
-		if (wls.size() == 1)
-		{
-			GenerWorkerList wl = (GenerWorkerList)wls.get(0);
-			wl.setFK_Emp(WebUser.getNo());
-			wl.setFK_EmpText(WebUser.getName());
-			wl.setIsEnable(true);
-			wl.setIsPass(false);
-			wl.Update();
-			return "@撤消移交成功，<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlow.htm?FK_Flow=" + this.getHisFlow().getNo() + "&FK_Node=" + wl.getFK_Node() + "&FID=" + wl.getFID() + "&WorkID=" + this.getWorkID() + "'><img src='" + Glo.getCCFlowAppPath() + "WF/Img/Btn/Do.gif' border=0/>执行工作</A>";
-		}
-
-		GenerWorkerList mywl = null;
-		for (GenerWorkerList wl : wls.ToJavaList())
-		{
-			if (wl.getFK_Emp().equals(WebUser.getNo()))
-			{
-				wl.setFK_Emp(WebUser.getNo());
-				wl.setFK_EmpText(WebUser.getName());
-				wl.setIsEnable(true);
-				wl.setIsPass(false);
-				wl.Update();
-				mywl = wl;
-			}
-			else
-			{
-				wl.Delete();
-			}
-		}
-		if (mywl != null)
-		{
-			return "@撤消移交成功，<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlow.htm?FK_Flow=" + this.getHisFlow().getNo() + "&FK_Node=" + mywl.getFK_Node() + "&FID=" + mywl.getFID() + "&WorkID=" + this.getWorkID() + "'><img src='" + Glo.getCCFlowAppPath() + "WF/Img/Btn/Do.gif' border=0/>执行工作</A>";
-		}
-
-		GenerWorkerList wk = (GenerWorkerList)wls.get(0);
-		GenerWorkerList wkNew = new GenerWorkerList();
-		wkNew.Copy(wk);
-		wkNew.setFK_Emp(WebUser.getNo());
-		wkNew.setFK_EmpText(WebUser.getName());
-		wkNew.setIsEnable(true);
-		wkNew.setIsPass(false);
-		wkNew.Insert();
-
-
-
-		return "@撤消移交成功，<a href='" + Glo.getCCFlowAppPath() + "WF/MyFlow.htm?FK_Flow=" + this.getHisFlow().getNo() + "&FK_Node=" + wk.getFK_Node() + "&FID=" + wk.getFID() + "&WorkID=" + this.getWorkID() + "'><img src='" + Glo.getCCFlowAppPath() + "WF/Img/Btn/Do.gif' border=0/>执行工作</A>";
+		wn.AddToTrack(ActionType.UnHungup, WebUser.getNo(), WebUser.getName() , wn.getHisNode().getNodeID(), wn.getHisNode().getName(), "拒绝挂起，通知给:" + emps);
+		return "您不同意对方挂起，该流程实例已经进入了正常运行状态.";
 	}
 
-		///
+		///#endregion
 }

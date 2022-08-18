@@ -1,11 +1,4 @@
 package bp.en;
-
-import bp.da.*;
-import bp.sys.*;
-import bp.*;
-import java.time.*;
-import java.math.*;
-
 /** 
  移动到显示方式
 */
@@ -31,7 +24,7 @@ public enum MoveToShowWay
 		return this.ordinal();
 	}
 
-	public static MoveToShowWay forValue(int value) throws Exception
+	public static MoveToShowWay forValue(int value)
 	{
 		return values()[value];
 	}

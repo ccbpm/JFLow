@@ -1,10 +1,12 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
 import bp.sys.*;
+import bp.*;
+import bp.sys.*;
+import java.util.*;
 
 /** 
  用户自定义表
@@ -13,10 +15,9 @@ public class SFTable extends EntityNoName
 {
 
 
-		///构造方法
+		///#region 构造方法
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
@@ -25,15 +26,13 @@ public class SFTable extends EntityNoName
 	/** 
 	 用户自定义表
 	*/
-	public SFTable()
-	{
+	public SFTable()  {
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -52,7 +51,7 @@ public class SFTable extends EntityNoName
 		map.AddTBString(SFTableAttr.DefVal, null, "默认值", true, false, 0, 200, 20);
 
 			//数据源.
-		map.AddDDLEntities(SFTableAttr.FK_SFDBSrc, "local", "数据源", new bp.sys.SFDBSrcs(), true);
+		map.AddDDLEntities(SFTableAttr.FK_SFDBSrc, "local", "数据源", new SFDBSrcs(), true);
 		map.AddTBString(SFTableAttr.SrcTable, null, "表/视图", true, false, 0, 200, 20);
 
 		map.AddTBString(SFTableAttr.ColumnValue, null, "显示的值(编号列/默认为No)", true, false, 0, 200, 20);
@@ -75,7 +74,7 @@ public class SFTable extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	/** 
 	 更新的操作
@@ -83,8 +82,7 @@ public class SFTable extends EntityNoName
 	 @return 
 	*/
 	@Override
-	protected boolean beforeUpdate()throws Exception
-	{
+	protected boolean beforeUpdate() throws Exception {
 		bp.sys.SFTable sf = new bp.sys.SFTable(this.getNo());
 		sf.Copy(this);
 		sf.Update();
@@ -93,8 +91,7 @@ public class SFTable extends EntityNoName
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		SFTable sftable = new SFTable();
 		sftable.setNo(this.getNo());
 		sftable.RetrieveFromDBSources();
@@ -109,9 +106,8 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoEdit()throws Exception
-	{
-		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo();
+	public final String DoEdit() throws Exception {
+		return bp.difference.SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo();
 	}
 	/** 
 	 执行删除.
@@ -119,17 +115,15 @@ public class SFTable extends EntityNoName
 	 @return 
 	*/
 	@Override
-	protected boolean beforeDelete()throws Exception
-	{
+	protected boolean beforeDelete() throws Exception {
 		bp.sys.SFTable sf = new bp.sys.SFTable(this.getNo());
 		sf.Delete();
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert()throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		//利用这个时间串进行排序.
-		this.SetValByKey("RDT", DataType.getCurrentDataTime());
+		this.SetValByKey("RDT", DataType.getCurrentDateTime());
 		return super.beforeInsert();
 	}
 }

@@ -6,6 +6,7 @@ import bp.sys.*;
 import bp.*;
 import bp.sys.*;
 import java.util.*;
+import java.math.*;
 
 /** 
  实体属性s
@@ -13,33 +14,30 @@ import java.util.*;
 public class MapAttrNums extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 实体属性s
 	*/
-	public MapAttrNums()
-	{
+	public MapAttrNums() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapAttrNum();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrNum> ToJavaList()
-	{
+	public final java.util.List<MapAttrNum> ToJavaList() {
 		return (java.util.List<MapAttrNum>)(Object)this;
 	}
 	/** 
@@ -47,8 +45,7 @@ public class MapAttrNums extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrNum> Tolist()
-	{
+	public final ArrayList<MapAttrNum> Tolist()  {
 		ArrayList<MapAttrNum> list = new ArrayList<MapAttrNum>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +54,5 @@ public class MapAttrNums extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

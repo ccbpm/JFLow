@@ -1,12 +1,20 @@
 package bp.wf.template;
 
+import bp.da.*;
+import bp.en.*;
+import bp.wf.template.*;
+import bp.port.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
+
 /** 
  标签属性
 */
 public class LabNoteAttr extends bp.en.EntityMyPKAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 流程
 	*/
@@ -20,5 +28,5 @@ public class LabNoteAttr extends bp.en.EntityMyPKAttr
 	*/
 	public static final String Y = "Y";
 
-		///
+		///#endregion
 }

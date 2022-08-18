@@ -1,11 +1,8 @@
 package bp.ccbill;
 
-import bp.da.*;
 import bp.en.*;
 import bp.wf.*;
-import bp.wf.template.*;
-import bp.sys.*;
-import bp.ccbill.template.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -14,7 +11,7 @@ import java.util.*;
 public class GenerBillAttr
 {
 
-		///基本属性1
+		///#region 基本属性1
 	/** 
 	 工作ID
 	*/
@@ -28,10 +25,10 @@ public class GenerBillAttr
 	*/
 	public static final String FrmName = "FrmName";
 
-		///
+		///#endregion
 
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 TSpan
 	*/
@@ -168,5 +165,5 @@ public class GenerBillAttr
 	*/
 	public static final String TodoSta = "TodoSta";
 
-		///
+		///#endregion
 }

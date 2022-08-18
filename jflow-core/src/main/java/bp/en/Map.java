@@ -6,75 +6,71 @@ import bp.sys.*;
 import bp.web.*;
 import java.math.*;
 
-/** 
+/**
  EnMap 的摘要说明。
-*/
+ */
 public class Map
 {
 
-		///帮助.
-	/** 
+	///帮助.
+	/**
 	 增加帮助
-	 
-	 @param key 字段
-	 @param url
-	*/
-	public final void SetHelperUrl(String key, String url)
-	{
+
+	 param key 字段
+	 param url
+	 */
+	public final void SetHelperUrl(String key, String url)  {
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = url;
 	}
-	/** 
+	/**
 	 增加帮助
-	 
-	 @param key 字段
-	*/
-	public final void SetHelperBaidu(String key)
-	{
+
+	 param key 字段
+	 */
+	public final void SetHelperBaidu(String key)  {
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "http://www.baidu.com/s?word=ccflow " + attr.getDesc();
 	}
-	/** 
+	/**
 	 增加帮助
-	 
-	 @param key 字段
-	 @param keyword 关键字
-	*/
-	public final void SetHelperBaidu(String key, String keyword)
-	{
+
+	 param key 字段
+	 param keyword 关键字
+	 */
+	public final void SetHelperBaidu(String key, String keyword)  {
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "http://www.baidu.com/s?word=" + keyword;
 	}
-	/** 
+	/**
 	 增加帮助
-	 
-	 @param key 字段
-	 @param context 连接
-	*/
-	public final void SetHelperAlert(String key, String context)
-	{
+
+	 param key 字段
+	 param context 连接
+	 */
+	public final void SetHelperAlert(String key, String context)  {
 		context = context.replace("@", "＠");
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "javascript:alert('" + context + "')";
 	}
 
-		/// 帮助.
+	/// 帮助.
 
 
-		///与xml 文件操作有关系
-	/** 
+	///与xml 文件操作有关系
+	/**
 	 xml 文件的位置
-	*/
+	 */
 	public String XmlFile = null;
 
-		/// 与xml 文件操作有关系
-
+	/// 与xml 文件操作有关系
+	public boolean IsJM = false;
 	private boolean _IsAllowRepeatNo;
 	public final boolean getIsAllowRepeatNo()
 	{
 		return _IsAllowRepeatNo;
 	}
-	public final void setIsAllowRepeatNo(boolean value) throws Exception
+	public final void setIsAllowRepeatNo(boolean value)
 	{
 		_IsAllowRepeatNo = value;
 	}
@@ -82,21 +78,21 @@ public class Map
 
 
 
-		///chuli
-	/** 
+	///chuli
+	/**
 	 查询语句(为了避免过多的资源浪费,一次性生成多次使用)
-	*/
+	 */
 	public String SelectSQL = null;
-	/** 
+	/**
 	 是否是简单的属性集合
 	 这里是处理外键的问题，在系统的批量运行过程中太多的外键就会影响效率。
-	*/
+	 */
 	public boolean IsSimpleAttrs = false;
-	/** 
+	/**
 	 设置为简单的
-	 * @throws Exception 
-	*/
-	public final Attrs SetToSimple() throws Exception
+	 * @
+	 */
+	public final Attrs SetToSimple()
 	{
 		Attrs attrs = new Attrs();
 		for (Attr attr : this._attrs)
@@ -113,12 +109,12 @@ public class Map
 		return attrs;
 	}
 
-		///
+	///
 
 
-		///关于缓存问题
+	///关于缓存问题
 	public String _FK_MapData = null;
-	public final String getFKMapData()
+	public final String getFK_MapData()
 	{
 		if (_FK_MapData == null)
 		{
@@ -126,52 +122,50 @@ public class Map
 		}
 		return _FK_MapData;
 	}
-	public final void setFK_MapData(String value) throws Exception
+	public final void setFK_MapData(String value)
 	{
 		_FK_MapData = value;
 	}
-	/** 
+	/**
 	 存放位置
-	*/
+	 */
 	private Depositary _DepositaryOfEntity = Depositary.None;
-	/** 
+	/**
 	 存放位置OfEntity
-	*/
+	 */
 	public final Depositary getDepositaryOfEntity()
 	{
 		return _DepositaryOfEntity;
 	}
 	public final void setDepositaryOfEntity(Depositary value)
-	{
-		_DepositaryOfEntity = value;
+	{_DepositaryOfEntity = value;
 	}
-	/** 
-	 
-	*/
+	/**
+
+	 */
 	private Depositary _DepositaryOfMap = Depositary.Application;
-	/** 
+	/**
 	 存放位置
-	*/
+	 */
 	public final Depositary getDepositaryOfMap()
 	{
 		return _DepositaryOfMap;
 	}
 	public final void setDepositaryOfMap(Depositary value)
-	{
-		_DepositaryOfMap = value;
+	{_DepositaryOfMap = value;
 	}
 
-		///
+	///
 
 
-		///查询属性处理
+	///查询属性处理
 
 
-		///非枚举值与外键条件查询
+	///非枚举值与外键条件查询
 	private AttrsOfSearch _attrsOfSearch = null;
-	/** 
+	/**
 	 查找属性
-	*/
+	 */
 	public final AttrsOfSearch getAttrsOfSearch()
 	{
 		if (this._attrsOfSearch == null)
@@ -180,31 +174,30 @@ public class Map
 		}
 		return this._attrsOfSearch;
 	}
-	/** 
+	/**
 	 得到全部的Attrs
-	 
-	 @return 
-	*/
-	public final Attrs GetChoseAttrs(Entity en)throws Exception
-	{
+
+	 @return
+	 */
+	public final Attrs GetChoseAttrs(Entity en) throws Exception {
 		return CField.GetMyAttrs(en.getGetNewEntities(), en.getEnMap());
 	}
-	public final Attrs GetChoseAttrs(Entities ens) throws Exception
+	public final Attrs GetChoseAttrs(Entities ens)
 	{
 		return CField.GetMyAttrs(ens, this);
 	}
- 
-		///
+
+	///
 
 
-		///关于枚举值与外键查找条件
-	/** 
-	 查找的attrs 
-	*/
-	private AttrSearchs _SearchAttrs = null;
-	/** 
+	///关于枚举值与外键查找条件
+	/**
 	 查找的attrs
-	*/
+	 */
+	private AttrSearchs _SearchAttrs = null;
+	/**
+	 查找的attrs
+	 */
 	public final AttrSearchs getSearchAttrs()
 	{
 		if (this._SearchAttrs == null)
@@ -213,24 +206,22 @@ public class Map
 		}
 		return this._SearchAttrs;
 	}
-	public final void AddHidden(String refKey, String symbol, String val) throws Exception
+	public final void AddHidden(String refKey, String symbol, String val)
 	{
 		AttrOfSearch aos = new AttrOfSearch("K" + this.getAttrsOfSearch().size(), refKey, refKey, symbol, val, 0, true);
 		this.getAttrsOfSearch().Add(aos);
 	}
-	/** 
+	/**
 	 加入查找属性.必须是外键盘/枚举类型/boolen.
-	 
-	 @param key key
-	*/
 
-	public final void AddSearchAttr(String key)
-	{
+	 param key key
+	 */
+
+	public final void AddSearchAttr(String key)  {
 		AddSearchAttr(key, 130);
 	}
 
-	public final void AddSearchAttr(String key, int width)
-	{
+	public final void AddSearchAttr(String key, int width)  {
 		Attr attr = this.GetAttrByKey(key);
 		if (attr.getKey().equals("FK_Dept"))
 		{
@@ -241,48 +232,44 @@ public class Map
 			this.getSearchAttrs().Add(attr, true, null, width);
 		}
 	}
-	/** 
+	/**
 	 加入查找属性.必须是外键盘/枚举类型/boolen.
-	 
-	 @param key 键值
-	 @param isShowSelectedAll 是否显示全部
-	 @param relationalDtlKey 级联子菜单字段
-	*/
-	public final void AddSearchAttr(String key, boolean isShowSelectedAll, String relationalDtlKey)
-	{
+
+	 param key 键值
+	 param isShowSelectedAll 是否显示全部
+	 param relationalDtlKey 级联子菜单字段
+	 */
+	public final void AddSearchAttr(String key, boolean isShowSelectedAll, String relationalDtlKey)  {
 		Attr attr = this.GetAttrByKey(key);
 		this.getSearchAttrs().Add(attr, isShowSelectedAll, relationalDtlKey);
 	}
 
 
-	/** 
+	/**
 	 取得字段
-	 
-	 @param key key
-	 @return field name 
-	*/
-	public final String GetFieldByKey(String key)
-	{
+
+	 param key key
+	 @return field name
+	 */
+	public final String GetFieldByKey(String key)  {
 		return GetAttrByKey(key).getField();
 	}
-	/** 
+	/**
 	 取得描述
-	 
-	 @param key key
+
+	 param key key
 	 @return val
-	*/
-	public final String GetDescByKey(String key)
-	{
+	 */
+	public final String GetDescByKey(String key)  {
 		return GetAttrByKey(key).getDesc();
 	}
-	/** 
+	/**
 	 通过一个key 得到它的属性值。
-	 
-	 @param key key
+
+	 param key key
 	 @return attr
-	*/
-	public final Attr GetAttrByKey(String key)
-	{
+	 */
+	public final Attr GetAttrByKey(String key)  {
 		for (Attr attr : this.getAttrs())
 		{
 			if (attr.getKey().toUpperCase().equals(key.toUpperCase()))
@@ -305,14 +292,13 @@ public class Map
 			throw new RuntimeException("@[" + this.toString() + "," + this.getEnDesc() + "," + this.getPhysicsTable() + "] 没有找到 key=[" + key + "]的属性，请检查Sys_MapAttr表是否有该数据,用SQL执行: SELECT * FROM Sys_MapAttr WHERE FK_MapData='" + this.toString() + "' AND KeyOfEn='" + key + "' 是否可以查询到数据，如果没有可能该字段属性丢失。");
 		}
 	}
-	/** 
+	/**
 	 获得属性.
-	 
-	 @param key
-	 @return 
-	*/
-	public final Attr GetAttrByBindKey(String key)
-	{
+
+	 param key
+	 @return
+	 */
+	public final Attr GetAttrByBindKey(String key) throws Exception {
 		for (Attr attr : this.getAttrs())
 		{
 			if (attr.getUIBindKey().equals(key))
@@ -334,14 +320,13 @@ public class Map
 			throw new RuntimeException("@[" + this.toString() + "," + this.getEnDesc() + "," + this.toString() + "] 没有找到 key=[" + key + "]的属性，请检查Sys_MapAttr表是否有该数据,用SQL执行: SELECT * FROM Sys_MapAttr WHERE FK_MapData='" + this.toString() + "' AND KeyOfEn='" + key + "' 是否可以查询到数据，如果没有可能该字段属性丢失。");
 		}
 	}
-	/** 
+	/**
 	 通过一个key 得到它的属性值。
-	 
-	 @param key key
+
+
 	 @return attr
-	*/
-	public final Attr GetAttrByDesc(String desc)
-	{
+	 */
+	public final Attr GetAttrByDesc(String desc) throws Exception {
 		for (Attr attr : this.getAttrs())
 		{
 			if (attr.getDesc().equals(desc))
@@ -357,17 +342,17 @@ public class Map
 		throw new RuntimeException("@[" + this.toString() + "," + this.getEnDesc() + "] 没有找到 desc=[" + desc + "]的属性，请检查Map文件。此问题出错的原因之一是，在设置系统中的一个实体的属性关联这个实体，你在给实体设置信息时没有按照规则书写reftext, refvalue。请核实。");
 	}
 
-		///
+	///
 
 
-		///计算属性
-	/** 
+	///计算属性
+	/**
 	 取道最大的TB宽度。
-	*/
+	 */
 	private int _MaxTBLength = 0;
-	/** 
+	/**
 	 最大的TB宽度。
-	*/
+	 */
 	public final float getMaxTBLength()
 	{
 		if (_MaxTBLength == 0)
@@ -382,15 +367,15 @@ public class Map
 		}
 		return _MaxTBLength;
 	}
-	/** 
+	/**
 	 物理键盘集合
-	*/
+	 */
 	private Attrs _HisPhysicsAttrs = null;
-	/** 
+	/**
 	 物理键盘集合
-	 * @throws Exception 
-	*/
-	public final Attrs getHisPhysicsAttrs() throws Exception
+	 * @throws Exception
+	 */
+	public final Attrs getHisPhysicsAttrs()
 	{
 		if (_HisPhysicsAttrs == null)
 		{
@@ -406,14 +391,14 @@ public class Map
 		}
 		return _HisPhysicsAttrs;
 	}
-	/** 
+	/**
 	 他的外键集合
-	*/
+	 */
 	private Attrs _HisFKAttrs = null;
-	/** 
+	/**
 	 他的外键集合
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	public final Attrs getHisFKAttrs() throws Exception
 	{
 		if (_HisFKAttrs == null)
@@ -430,27 +415,27 @@ public class Map
 		return _HisFKAttrs;
 	}
 	public BPEntityAthType HisBPEntityAthType = BPEntityAthType.None;
-	/** 
+	/**
 	 附件存储位置
-	*/
+	 */
 	public String FJSavePath = null;
-	/** 
+	/**
 	 移动到显示方式
-	*/
+	 */
 	public String TitleExt = null;
-	/** 
+	/**
 	 是否加入相关联的名称
-	 AttrKey -  AttrKeyName 
-	*/
+	 AttrKey -  AttrKeyName
+	 */
 	public boolean IsAddRefName = false;
-	/** 
+	/**
 	 他的外键Enum集合
-	*/
+	 */
 	private Attrs _HisEnumAttrs = null;
-	/** 
+	/**
 	 他的外键Enum集合
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	public final Attrs getHisEnumAttrs() throws Exception
 	{
 		if (_HisEnumAttrs == null)
@@ -466,14 +451,14 @@ public class Map
 		}
 		return _HisEnumAttrs;
 	}
-	/** 
+	/**
 	 他的外键EnumandPk集合
-	*/
+	 */
 	private Attrs _HisFKEnumAttrs = null;
-	/** 
+	/**
 	 他的外键EnumandPk集合
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	public final Attrs getHisFKEnumAttrs() throws Exception
 	{
 		if (_HisFKEnumAttrs == null)
@@ -490,12 +475,12 @@ public class Map
 		return _HisFKEnumAttrs;
 	}
 
-		///
+	///
 
 
-		///他的实体配置信息
+	///他的实体配置信息
 	private Attrs _HisCfgAttrs = null;
-	public final Attrs getHisCfgAttrs() throws Exception
+	public final Attrs getHisCfgAttrs()
 	{
 		if (this._HisCfgAttrs == null)
 		{
@@ -517,16 +502,16 @@ public class Map
 				this._HisCfgAttrs.AddTBInt("WinCardH", 480, "弹出窗口高度", true, false);
 				this._HisCfgAttrs.AddDDLSysEnum("EditerType", 0, "大块文本编辑器", true, false, "EditerType", "@0=无@1=sina编辑器@2=FKCEditer@3=KindEditor@4=UEditor");
 				this._HisCfgAttrs.AddTBString("ShowColumns", "", "选择列", false, false, 0, 1000, 100); //added by liuxc,2015-8-7,增加选择列存储字段
-																											//  this._HisCfgAttrs.AddDDLSysEnum("UIRowStyleGlo", 2, "表格数据行风格(应用全局)", true, false, "UIRowStyleGlo", "@0=无风格@1=交替风格@2=鼠标移动@3=交替并鼠标移动");
+				//  this._HisCfgAttrs.AddDDLSysEnum("UIRowStyleGlo", 2, "表格数据行风格(应用全局)", true, false, "UIRowStyleGlo", "@0=无风格@1=交替风格@2=鼠标移动@3=交替并鼠标移动");
 			}
 		}
 		return _HisCfgAttrs;
 	}
 
-		///
+	///
 
 
-		///他的关连信息.
+	///他的关连信息.
 	private Attrs _HisRefAttrs = null;
 	public final Attrs getHisRefAttrs() throws Exception
 	{
@@ -545,19 +530,18 @@ public class Map
 		return _HisRefAttrs;
 	}
 
-	/** 
+	/**
 	 增加一个相关功能
-	 
-	 @param title 标题
-	 @param classMethodName 连接
-	 @param icon 图标
-	 @param tooltip 提示信息
-	 @param target 连接到
-	 @param width 宽度
-	 @param height 高度
-	*/
-	public final void AddRefMethod(String title, String classMethodName, Attrs attrs, String warning, String icon, String tooltip, String target, int width, int height)
-	{
+
+	 param title 标题
+	 param classMethodName 连接
+	 param icon 图标
+	 param tooltip 提示信息
+	 param target 连接到
+	 param width 宽度
+	 param height 高度
+	 */
+	public final void AddRefMethod(String title, String classMethodName, Attrs attrs, String warning, String icon, String tooltip, String target, int width, int height) throws Exception {
 		RefMethod func = new RefMethod();
 		func.Title = title;
 		func.Warning = warning;
@@ -577,46 +561,54 @@ public class Map
 		func.Icon = SystemConfig.getCCFlowWebPath() + "WF/Img/Btn/Edit.gif";
 		this.getHisRefMethods().Add(func);
 	}
-	/** 
+	/**
 	 增加
-	 
-	 @param func
-	*/
-	public final void AddRefMethod(RefMethod rm)
-	{
+
+
+	 */
+	public final void AddRefMethod(RefMethod rm)  {
 		this.getHisRefMethods().Add(rm);
 	}
 
-	
-	/** 
+
+	/**
 	 增加明细
-	 
-	 @param ens 集合信息
-	 @param refKey 属性
-	 @param groupName 显示到分组
-	 * @throws Exception 
-	*/
+
+	 param ens 集合信息
+	 param refKey 属性
+
+	 * @throws Exception
+	 */
 
 	public final void AddDtl(Entities ens, String refKey) throws Exception
 	{
 		AddDtl(ens, refKey, null);
 	}
 
-	public final void AddDtl(Entities ens, String refKey, String groupName) throws Exception
+	public final void AddDtl(Entities ens, String refKey, String groupName)
 	{
+		AddDtl(ens, refKey,groupName,DtlEditerModel.DtlBatch,null);
+	}
+	public final void AddDtl(Entities ens, String refKey, String groupName,DtlEditerModel model )
+	{
+		AddDtl(ens, refKey,groupName,model,null);
+	}
+	public final void AddDtl(Entities ens, String refKey, String groupName,DtlEditerModel model,String icon ){
 		EnDtl dtl = new EnDtl();
 		dtl.setEns(ens);
 		dtl.setRefKey(refKey);
 		dtl.setGroupName(groupName);
+		dtl.setDtlEditerModel(model);
+		dtl.Icon = icon;
 		this.getDtls().Add(dtl);
 	}
-	/** 
+	/**
 	 相关功能s
-	*/
+	 */
 	private RefMethods _RefMethods = null;
-	/** 
+	/**
 	 相关功能
-	*/
+	 */
 	public final RefMethods getHisRefMethods()
 	{
 		if (this._RefMethods == null)
@@ -625,13 +617,13 @@ public class Map
 		}
 		return _RefMethods;
 	}
-	/** 
+	/**
 	 明细s
-	*/
+	 */
 	private EnDtls _Dtls = null;
-	/** 
+	/**
 	 他的明细
-	*/
+	 */
 	public final EnDtls getDtls()
 	{
 		if (this._Dtls == null)
@@ -641,28 +633,27 @@ public class Map
 
 		return _Dtls;
 	}
-	/** 
+	/**
 	 所有的明细
-	*/
+	 */
 	private EnDtls _DtlsAll = null;
-	/** 
+	/**
 	 所有的明细
-	 * @throws Exception 
-	*/
-	public final EnDtls getDtlsAll() throws Exception
-	{
+	 * @
+	 */
+	public final EnDtls getDtlsAll() throws Exception {
 		if (this._DtlsAll == null)
 		{
 			_DtlsAll = this.getDtls();
 
-				// 加入他的多选。
+			// 加入他的多选。
 			for (AttrOfOneVSM en : this.getAttrsOfOneVSM())
 			{
 				EnDtl dtl = new EnDtl();
 				dtl.setEns(en.getEnsOfMM());
 				dtl.setRefKey(en.getAttrOfOneInMM());
-					//dtl.Desc =en.Desc;
-					//dtl.Desc = en.Desc ;
+				//dtl.Desc =en.Desc;
+				//dtl.Desc = en.Desc ;
 				_DtlsAll.Add(dtl);
 			}
 
@@ -671,67 +662,62 @@ public class Map
 	}
 
 
-	/** 
+	/**
 	 构造涵数 
-	 
-	 @param dburl 数据库连接
-	 @param physicsTable 物理table.
-	 * @throws Exception 
-	*/
-	public Map(DBUrl dburl, String physicsTable) throws Exception
-	{
+
+	 param dburl 数据库连接
+	 param physicsTable 物理table.
+	 * @
+	 */
+	public Map(DBUrl dburl, String physicsTable) throws Exception {
 		this.setEnDBUrl(dburl);
 		this.setPhysicsTable(physicsTable);
 	}
-	/** 
+	/**
 	 构造涵数
-	 
-	 @param physicsTable 物理table
-	 * @throws Exception 
-	*/
-	public Map(String physicsTable) throws Exception
-	{
+
+	 param physicsTable 物理table
+	 * @
+	 */
+	public Map(String physicsTable) {
 		this.setPhysicsTable(physicsTable);
 	}
-	/** 
+	/**
 	 构造涵数
-	 
-	 @param physicsTable 表
-	 @param enDesc 中文描述
-	 * @throws Exception 
-	*/
-	public Map(String physicsTable, String enDesc) throws Exception
-	{
+
+	 param physicsTable 表
+	 param enDesc 中文描述
+	 * @
+	 */
+	public Map(String physicsTable, String enDesc)  {
 		this.setPhysicsTable(physicsTable);
 		this._EnDesc = enDesc;
 	}
-	/** 
+	/**
 	 构造涵数
-	 
-	 @param DBUrlKeyList 连接的Key 你可以用  DBUrlKeyList 得到
-	 @param physicsTable 物理表
-	 * @throws Exception 
-	*/
-	public Map(DBUrlType dburltype, String physicsTable) throws Exception
-	{
+
+
+	 param physicsTable 物理表
+	 * @
+	 */
+	public Map(DBUrlType dburltype, String physicsTable)  {
 		this.setEnDBUrl(new DBUrl(dburltype));
 		this.setPhysicsTable(physicsTable);
 	}
-	/** 
+	/**
 	 构造涵数
-	*/
-	public Map()
-	{
+	 */
+	public Map()  {
 	}
 
 
-	/** 
+	/**
 	 多对多的关联
-	*/
+	 */
 	private AttrsOfOneVSM _AttrsOfOneVSM = new AttrsOfOneVSM();
-	/** 
+	/**
 	 点对多的关联
-	*/
+	 */
 	public final AttrsOfOneVSM getAttrsOfOneVSM()
 	{
 		if (this._AttrsOfOneVSM == null)
@@ -741,17 +727,15 @@ public class Map
 		return this._AttrsOfOneVSM;
 	}
 	public final void setAttrsOfOneVSM(AttrsOfOneVSM value)
-	{
-		this._AttrsOfOneVSM = value;
+	{this._AttrsOfOneVSM = value;
 	}
-	/** 
+	/**
 	 通过多实体的类名称取出他的OneVSM属性.
-	 
-	 @param ensOfMMclassName
-	 @return 
-	*/
-	public final AttrOfOneVSM GetAttrOfOneVSM(String ensOfMMclassName)
-	{
+
+	 param ensOfMMclassName
+	 @return
+	 */
+	public final AttrOfOneVSM GetAttrOfOneVSM(String ensOfMMclassName)  {
 		for (AttrOfOneVSM attr : this.getAttrsOfOneVSM())
 		{
 			if (attr.getEnsOfMM().toString().equals(ensOfMMclassName))
@@ -761,99 +745,96 @@ public class Map
 		}
 		throw new RuntimeException("error param:  " + ensOfMMclassName);
 	}
-	/** 
+	/**
 	 文件类型
-	*/
+	 */
 	private AdjunctType _AdjunctType = AdjunctType.None;
-	/** 
+	/**
 	 文件类型
-	*/
+	 */
 	public final AdjunctType getAdjunctType()
 	{
 		return this._AdjunctType;
 	}
 	public final void setAdjunctType(AdjunctType value)
-	{
-		this._AdjunctType = value;
+	{this._AdjunctType = value;
 	}
 	public String MoveTo = null;
-	/** 
-	 
-	*/
+	/**
+
+	 */
 	public String IndexField = null;
-	/** 
+	/**
 	 实体描述
-	*/
+	 */
 	private String _EnDesc = "";
 	public final String getEnDesc()
 	{
 		return this._EnDesc;
 	}
-	public final void setEnDesc(String value) throws Exception
+	public final void setEnDesc(String value)
 	{
 		this._EnDesc = value;
 	}
-	/** 
+	/**
 	 是否版本管理 IsAllowRepeatName
-	*/
+	 */
 	public boolean IsEnableVer = false;
 	public boolean IsShowSearchKey = true;
 	public boolean IsAllowRepeatName = true;
-	/** 
+	/**
 	 如果是null，就按照通用的查询关键字.
 	 如果按照指定的格式查询按照如下格式配置.
 	 @名称=No@名称=Name@件号=JianHao
-	*/
+	 */
 	public String SearchFields = "";
-	/** 
+	/**
 	 查询的数值 @年龄=Age@薪水=XinShui
-	*/
+	 */
 	public String SearchFieldsOfNum = "";
-	/** 
+	/**
 	 数值查询范围.
-	*/
+	 */
 	public bp.sys.DTSearchWay DTSearchWay = bp.sys.DTSearchWay.None;
 	public String DTSearchLable = "日期从";
 	public String DTSearchKey = "";
-	/** 
+	/**
 	 图片DefaultImageUrl
-	*/
+	 */
 	public String Icon = "../Images/En/Default.gif";
-	/** 
+	/**
 	 实体类型
-	*/
+	 */
 	private EnType _EnType = EnType.App;
-	/** 
+	/**
 	 实体类型 默认为0(用户应用).
-	*/
+	 */
 	public final EnType getEnType()
 	{
 		return this._EnType;
 	}
 	public final void setEnType(EnType value)
-	{
-		this._EnType = value;
+	{this._EnType = value;
 	}
-	/** 
+	/**
 	 为方便java转换设置
-	 
-	 @param val
-	*/
+
+	 param val
+	 */
 	public final void Java_SetEnType11(EnType val)
 	{
 		this._EnType = val;
 	}
 
 
-		/// 生成属性根据xml.
+	/// 生成属性根据xml.
 	private String PKs = "";
-	public final void GenerMap(String xml) throws Exception
-	{
+	public final void GenerMap(String xml) throws Exception {
 		DataSet ds = new DataSet("");
 		ds.readXml(xml);
 		for (DataTable dt : ds.Tables)
 		{
-			switch (dt.TableName)
+			switch (dt.getTableName())
 			{
 				case "Base":
 					this.DealDT_Base(dt);
@@ -878,8 +859,7 @@ public class Map
 
 	}
 
-	private void DealDT_Base(DataTable dt) throws Exception
-	{
+	private void DealDT_Base(DataTable dt) throws Exception {
 		if (dt.Rows.size() != 1)
 		{
 			throw new RuntimeException("基础信息配置错误，不能多于或者少于1行记录。");
@@ -887,10 +867,10 @@ public class Map
 		for (DataColumn dc : dt.Columns)
 		{
 			Object obj = dt.Rows.get(0).getValue(dc.ColumnName);
-			
+
 			if(DataType.IsNullOrEmpty(obj) == true)
 				continue;
-			
+
 			String val = obj.toString();
 
 			switch (dc.ColumnName)
@@ -914,33 +894,33 @@ public class Map
 					break;
 				case "EnType":
 					switch (val) {
-					case "Admin":
-						this.setEnType(bp.en.EnType.Admin);
-						break;
-					case "App":
-						this.setEnType(bp.en.EnType.App);
-						break;
-					case "Dot2Dot":
-						this.setEnType(bp.en.EnType.Dot2Dot);
-						break;
-					case "Dtl":
-						this.setEnType(bp.en.EnType.Dtl);
-						break;
-					case "Etc":
-						this.setEnType(bp.en.EnType.Etc);
-						break;
-					case "PowerAble":
-						this.setEnType(bp.en.EnType.PowerAble);
-						break;
-					case "Sys":
-						this.setEnType(bp.en.EnType.Sys);
-						break;
-					case "View":
-						this.setEnType(bp.en.EnType.View);
-						break;
-					case "XML":
-						this.setEnType(bp.en.EnType.XML);
-						break;
+						case "Admin":
+							this.setEnType(bp.en.EnType.Admin);
+							break;
+						case "App":
+							this.setEnType(bp.en.EnType.App);
+							break;
+						case "Dot2Dot":
+							this.setEnType(bp.en.EnType.Dot2Dot);
+							break;
+						case "Dtl":
+							this.setEnType(bp.en.EnType.Dtl);
+							break;
+						case "Etc":
+							this.setEnType(bp.en.EnType.Etc);
+							break;
+						case "PowerAble":
+							this.setEnType(bp.en.EnType.PowerAble);
+							break;
+						case "Sys":
+							this.setEnType(bp.en.EnType.Sys);
+							break;
+						case "View":
+							this.setEnType(bp.en.EnType.View);
+							break;
+						case "XML":
+							this.setEnType(bp.en.EnType.XML);
+							break;
 						default:
 							throw new RuntimeException("没有约定的标记:EnType =  " + val);
 					}
@@ -983,8 +963,7 @@ public class Map
 			}
 		}
 	}
-	private void DealDT_Attr(DataTable dt) throws Exception
-	{
+	private void DealDT_Attr(DataTable dt) throws Exception {
 		for (DataRow dr : dt.Rows)
 		{
 			Attr attr = new Attr();
@@ -1036,7 +1015,7 @@ public class Map
 			if (attr.getUIBindKey() == null)
 			{
 				/* 说明没有设置外键或者枚举类型。*/
-				//if (attr.MyDataType
+				//if (attr.getMyDataType()
 			}
 			else
 			{
@@ -1088,9 +1067,9 @@ public class Map
 	}
 
 
-	/** 
+	/**
 	 生成字串的字段的长度。
-	*/
+	 */
 	private int _GenerNoLength = 0;
 	public final int getGenerNoLength()
 	{
@@ -1100,40 +1079,40 @@ public class Map
 		}
 		return this._GenerNoLength;
 	}
-	public final void setGenerNoLength(int value) throws Exception
+	public final void setGenerNoLength(int value)
 	{
 		this._GenerNoLength = value;
 	}
-	/** 
+	/**
 	 编码结构
 	 例如： 0， 2322;
-	*/
+	 */
 	private String _CodeStruct = "2";
-	/** 
+	/**
 	 编码的结构
-	*/
+	 */
 	public final String getCodeStruct()
 	{
 		return this._CodeStruct;
 	}
-	public final void setCodeStruct(String value) throws Exception
+	public final void setCodeStruct(String value)
 	{
 		this._CodeStruct = value;
 		this.setIsAutoGenerNo(true);
 	}
-	/** 
+	/**
 	 设置编码规则，为方便java转换使用.
-	 
-	 @param val
-	 * @throws Exception 
-	*/
-	public final void Java_SetCodeStruct(String val) throws Exception
+
+	 param val
+	 * @
+	 */
+	public final void Java_SetCodeStruct(String val)
 	{
 		setCodeStruct(val);
 	}
-	/** 
+	/**
 	 编号的总长度。
-	*/
+	 */
 	public final int getCodeLength()
 	{
 		int i = 0;
@@ -1152,59 +1131,59 @@ public class Map
 
 		return i;
 	}
-	/** 
+	/**
 	 是否允许重复的名称(默认不允许重复。)
-	*/
+	 */
 	private boolean _IsAllowRepeatName = true;
-	/** 
+	/**
 	 是否允许重复的名称.
 	 在insert，update 前检查。
-	*/
+	 */
 	public final boolean getIsAllowRepeatName()
 	{
 		return _IsAllowRepeatName;
 	}
-	public final void setIsAllowRepeatName(boolean value) throws Exception
+	public final void setIsAllowRepeatName(boolean value)
 	{
 		_IsAllowRepeatName = value;
 	}
-	/** 
+	/**
 	 是否自动编号
-	*/
+	 */
 	private boolean _IsAutoGenerNo = false;
-	/** 
+	/**
 	 是否自动编号.		 
-	*/
+	 */
 	public final boolean getIsAutoGenerNo()
 	{
 		return _IsAutoGenerNo;
 	}
-	public final void setIsAutoGenerNo(boolean value) throws Exception
+	public final void setIsAutoGenerNo(boolean value)
 	{
 		_IsAutoGenerNo = value;
 	}
-	/** 
+	/**
 	 是否检查编号长度。（默认的false）
-	*/
+	 */
 	private boolean _IsCheckNoLength = false;
-	/** 
+	/**
 	 是否检查编号长度.
 	 在insert 前检查。
-	*/
+	 */
 	public final boolean getIsCheckNoLength()
 	{
 		return _IsCheckNoLength;
 	}
-	public final void setIsCheckNoLength(boolean value) throws Exception
+	public final void setIsCheckNoLength(boolean value)
 	{
 		_IsCheckNoLength = value;
 	}
 
 
 	private DBUrl _EnDBUrl = null;
-	/** 
+	/**
 	 数据库连接
-	*/
+	 */
 	public final DBUrl getEnDBUrl()
 	{
 		if (this._EnDBUrl == null)
@@ -1214,15 +1193,14 @@ public class Map
 		return this._EnDBUrl;
 	}
 	public final void setEnDBUrl(DBUrl value)
-	{
-		this._EnDBUrl = value;
+	{this._EnDBUrl = value;
 	}
 	private String _PhysicsTable = null;
-	/** 
+	/**
 	 是否是视图
-	 * @throws Exception 
-	*/
-	public final boolean getIsView() throws Exception
+	 * @
+	 */
+	public final boolean getIsView()
 	{
 		return DBAccess.IsView(this.getPhysicsTableExt(), this.getEnDBUrl().getDBType());
 	}
@@ -1239,19 +1217,19 @@ public class Map
 			return this.getPhysicsTable();
 		}
 	}
-	/** 
+	/**
 	 物理表名称
-	 
+
 	 @return Table name
-	*/
+	 */
 	public final String getPhysicsTable()
 	{
 		return this._PhysicsTable;
 
 	}
-	public final void setPhysicsTable(String value) throws Exception
+	public final void setPhysicsTable(String value)
 	{
-			// 因为组成的select 语句放入了内存,修改它的时间也要修改内存的数据。
+		// 因为组成的select 语句放入了内存,修改它的时间也要修改内存的数据。
 
 		Cash.RemoveObj(this.toString() + "SQL", Depositary.Application);
 		Cash.RemoveObj("MapOf" + this.toString(), this.getDepositaryOfMap()); // RemoveObj
@@ -1269,7 +1247,7 @@ public class Map
 		}
 		return this._attrs;
 	}
-	public final void setAttrs(Attrs value) throws Exception
+	public final void setAttrs(Attrs value)
 	{
 		if (this._attrs == null) {
 			this._attrs = new Attrs();
@@ -1282,26 +1260,26 @@ public class Map
 	}
 
 
-	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl) throws Exception
+	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl)
 	{
 		AddBoolean(key, key, defaultVal, desc, isUIVisable, isUIEnable, isLine, null);
 	}
-	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine) throws Exception
+	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine)
 	{
 		AddBoolean(key, field, defaultVal, desc, isUIVisable, isUIEnable, isLine, null);
 	}
-	/** 
+	/**
 	 增加与boolen 有关系的操作.
-	 
-	 @param key key
-	 @param field field
-	 @param defaultVal defaultVal
-	 @param desc desc
-	 @param isUIEnable isUIEnable
-	 @param isUIVisable isUIVisable
-	 * @throws Exception 
-	*/
-	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl) throws Exception
+
+	 param key key
+	 param field field
+	 param defaultVal defaultVal
+	 param desc desc
+	 param isUIEnable isUIEnable
+	 param isUIVisable isUIVisable
+	 * @
+	 */
+	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -1321,40 +1299,40 @@ public class Map
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.CheckBok);
 
-		attr.setUIIsReadonly(isUIEnable);
+		attr.setUIIsReadonly(isUIEnable?false:true);
 
 		attr.setUIVisible(isUIVisable);
-		attr.UIIsLine = isLine;
+		attr.UIIsLine=isLine;
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 增加与boolen 有关系的操作.
-	 
-	 @param key key
-	 @param field field
-	 @param defaultVal defaultVal
-	 @param desc desc
-	 @param isUIEnable isUIEnable
-	 @param isUIVisable isUIVisable
-	 * @throws Exception 
-	*/
-	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable) throws Exception
+
+	 param key key
+
+	 param defaultVal defaultVal
+	 param desc desc
+	 param isUIEnable isUIEnable
+	 param isUIVisable isUIVisable
+	 * @
+	 */
+	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable)
 	{
 		AddBoolean(key, key, defaultVal, desc, isUIVisable, isUIEnable, false);
 	}
 
-	/** 
+	/**
 	 增加与boolen 有关系的操作.
-	 
-	 @param key key
-	 @param field field
-	 @param defaultVal defaultVal
-	 @param desc desc
-	 @param isUIEnable isUIEnable
-	 @param isUIVisable isUIVisable
-	 * @throws Exception 
-	*/
-	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine) throws Exception
+
+	 param key key
+
+	 param defaultVal defaultVal
+	 param desc desc
+	 param isUIEnable isUIEnable
+	 param isUIVisable isUIVisable
+	 * @
+	 */
+	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine)
 	{
 		AddBoolean(key, key, defaultVal, desc, isUIVisable, isUIEnable, isLine);
 	}
@@ -1363,8 +1341,8 @@ public class Map
 
 
 
-		///于帮定自定义,枚举类型有关系的操作。
-	public final void AddDDLSysEnumPK(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey) throws Exception
+	///于帮定自定义,枚举类型有关系的操作。
+	public final void AddDDLSysEnumPK(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -1379,21 +1357,21 @@ public class Map
 		attr.setUIIsReadonly(!isUIEnable);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine) throws Exception
+	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine)
 	{
 		AddDDLSysEnum(key, field, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, cfgVal, isLine, null);
 	}
-	/** 
+	/**
 	 自定义枚举类型
-	 
-	 @param key 键
-	 @param field 字段
-	 @param defaultVal 默认
-	 @param desc 描述
-	 @param sysEnumKey Key
-	 * @throws Exception 
-	*/
-	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine, String helpUrl) throws Exception
+
+	 param key 键
+	 param field 字段
+	 param defaultVal 默认
+	 param desc 描述
+	 param sysEnumKey Key
+	 * @
+	 */
+	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine, String helpUrl)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -1407,52 +1385,52 @@ public class Map
 		attr.setUIBindKey(sysEnumKey);
 		attr.UITag = cfgVal;
 		attr.setUIVisible(isUIVisable);
-		attr.setUIIsReadonly(isUIEnable);
+		attr.setUIIsReadonly(!isUIEnable);
 		attr.UIIsLine = isLine;
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 自定义枚举类型
-	 
-	 @param key 键		
-	 @param defaultVal 默认
-	 @param desc 描述
-	 @param sysEnumKey Key
-	 * @throws Exception 
-	*/
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey) throws Exception
+
+	 param key 键
+	 param defaultVal 默认
+	 param desc 描述
+	 param sysEnumKey Key
+	 * @
+	 */
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
 	{
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, null, false);
 	}
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine) throws Exception
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine)
 	{
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, cfgVal, isLine);
 	}
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal) throws Exception
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal)
 	{
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, cfgVal, false);
 	}
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable) throws Exception
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable)
 	{
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, key, null, false);
 	}
 
-		///
+	///
 
 
 
-		///于帮定自定义,枚举类型有关系的操作。
-	/** 
+	///于帮定自定义,枚举类型有关系的操作。
+	/**
 	 自定义枚举类型
-	 
-	 @param key 键
-	 @param field 字段
-	 @param defaultVal 默认
-	 @param desc 描述
-	 @param sysEnumKey Key
-	 * @throws Exception 
-	*/
-	public final void AddRadioBtnSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey) throws Exception
+
+	 param key 键
+	 param field 字段
+	 param defaultVal 默认
+	 param desc 描述
+	 param sysEnumKey Key
+	 * @
+	 */
+	public final void AddRadioBtnSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -1467,33 +1445,33 @@ public class Map
 		attr.setUIIsReadonly(!isUIEnable);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 自定义枚举类型
-	 
-	 @param key 键		
-	 @param defaultVal 默认
-	 @param desc 描述
-	 @param sysEnumKey Key
-	 * @throws Exception 
-	*/
-	public final void AddRadioBtnSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey) throws Exception
+
+	 param key 键
+	 param defaultVal 默认
+	 param desc 描述
+	 param sysEnumKey Key
+	 * @
+	 */
+	public final void AddRadioBtnSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
 	{
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, null, false);
 	}
 
-		///
+	///
 
 
 
-		///DDLSQL
+	///DDLSQL
 
-	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql) throws Exception
+	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql)
 	{
 		AddDDLSQL(key, defaultVal, desc, sql, true);
 	}
 
 
-	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable) throws Exception
+	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable)
 	{
 		if (defaultVal == null)
 		{
@@ -1542,56 +1520,56 @@ public class Map
 		this.getAttrs().Add(attr);
 	}
 
-		/// DDLSQL
+	/// DDLSQL
 
 
 
-		///与实体由关系的操作。
+	///与实体由关系的操作。
 
 
-		///entityNoName
-	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable) throws Exception
+	///entityNoName
+	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, field, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
 
-		///
+	///
 
 
-		///EntitiesOIDName
-	public final void AddDDLEntities(String key, int defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable) throws Exception
+	///EntitiesOIDName
+	public final void AddDDLEntities(String key, int defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppInt, desc, ens, "OID", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, field, defaultVal, DataType.AppInt, desc, ens, "OID", "Name", uiIsEnable);
 	}
 
-		///
+	///
 
-	/** 
+	/**
 	 于实体有关系的操作。
-	 
-	 @param key 健值
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param dataType DataType类型
-	 @param desc 描述
-	 @param ens 实体集合
-	 @param refKey 关联的建
-	 @param refText 关联的Text
-	 * @throws Exception 
-	*/
-	private void AddDDLEntities(String key, String field, Object defaultVal, int dataType, FieldType _fildType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+
+	 param key 健值
+	 param field 字段
+	 param defaultVal 默认值
+	 param dataType DataType类型
+	 param desc 描述
+	 param ens 实体集合
+	 param refKey 关联的建
+	 param refText 关联的Text
+	 * @throws Exception
+	 */
+	private void AddDDLEntities(String key, String field, Object defaultVal, int dataType, FieldType _fildType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -1604,7 +1582,7 @@ public class Map
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
 		attr.setUIBindKey(ens.toString());
-		// attr.UIBindKeyOfEn = ens.getGetNewEntity().ToString();
+		// attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
 
 		attr.setHisFKEns(ens);
 
@@ -1612,100 +1590,100 @@ public class Map
 		attr.setHisFKEns(ens);
 		attr.setUIRefKeyText(refText);
 		attr.setUIRefKeyValue(refKey);
-		attr.setUIIsReadonly(uiIsEnable);
+		attr.setUIIsReadonly(!uiIsEnable);
 
 		this.getAttrs().Add(attr, true, this.IsAddRefName);
 	}
-	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, field, defaultVal, dataType, FieldType.FK, desc, ens, refKey, refText, uiIsEnable);
 	}
-	/** 
+	/**
 	 于实体有关系的操作。字段与属性名称相同。
-	 
-	 @param key 健值
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param dataType DataType类型
-	 @param desc 描述
-	 @param ens 实体集合
-	 @param refKey 关联的建
-	 @param refText 关联的Text
-	 * @throws Exception 
-	*/
-	public final void AddDDLEntities(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+
+	 param key 健值
+
+	 param defaultVal 默认值
+	 param dataType DataType类型
+	 param desc 描述
+	 param ens 实体集合
+	 param refKey 关联的建
+	 param refText 关联的Text
+	 * @throws Exception
+	 */
+	public final void AddDDLEntities(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, key, defaultVal, dataType, desc, ens, refKey, refText, uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, EntitiesTree ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, EntitiesTree ens, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, key, defaultVal, dataType, FieldType.PKFK, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, key, defaultVal, dataType, FieldType.PKFK, desc, ens, refKey, refText, uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntitiesPK(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, field, defaultVal, dataType, FieldType.PKFK, desc, ens, refKey, refText, uiIsEnable);
 	}
 
 
-		///关于EntitiesNoName 有关系的操作。
-	/** 
+	///关于EntitiesNoName 有关系的操作。
+	/**
 	 关于EntitiesNoName 有关系的操作
-	 
-	 @param key
-	 @param field
-	 @param defaultVal
-	 @param desc
-	 @param ens
-	 @param uiIsEnable
-	 * @throws Exception 
-	*/
-	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable) throws Exception
+
+	 param key
+	 param field
+	 param defaultVal
+	 param desc
+	 param ens
+	 param uiIsEnable
+	 * @
+	 */
+	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, field, (Object)defaultVal, DataType.AppString, FieldType.PKFK, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, field, (Object)defaultVal, DataType.AppString, FieldType.PKFK, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
 	{
 		AddDDLEntitiesPK(key, key, defaultVal, desc, ens, uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)
 	{
 		AddDDLEntitiesPK(key, key, defaultVal, desc, ens, uiIsEnable);
 	}
 
-		///
+	///
 
 
-		///
-
-
-
+	///
 
 
 
 
-		///
 
 
-		///TB
+
+	///
 
 
-		///string 有关系的操作。
+	///TB
 
 
-		///关于
-	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine) throws Exception
+	///string 有关系的操作。
+
+
+	///关于
+	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine)
 	{
 		AddTBString(key, field, defaultVal, _FieldType, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine, null);
 	}
-	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl) throws Exception
+	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -1721,28 +1699,26 @@ public class Map
 		attr.setMaxLength(maxLength);
 		attr.setMinLength(minLength);
 		attr.setMyFieldType(_FieldType);
-		attr.UIIsLine = isUILine;
+		attr.UIIsLine=isUILine;
 		this.getAttrs().Add(attr);
 	}
 
-		///
+	///
 
 
-		///公共的。
-	/** 
+	///公共的。
+	/**
 	 同步两个实体属性.
-	 * @throws Exception 
-	*/
+	 * @
+	 */
 
-	public final void AddAttrsFromMapData() throws Exception
-	{
+	public final void AddAttrsFromMapData() throws Exception {
 		AddAttrsFromMapData(null);
 	}
 
 
-	public final void AddAttrsFromMapData(String FK_MapData) throws Exception
-	{
-		if (DataType.IsNullOrEmpty(this.getFKMapData()) && DataType.IsNullOrEmpty(FK_MapData))
+	public final void AddAttrsFromMapData(String FK_MapData) throws Exception {
+		if (DataType.IsNullOrEmpty(this.getFK_MapData()) && DataType.IsNullOrEmpty(FK_MapData))
 		{
 			throw new RuntimeException("@您没有为map的 FK_MapData 赋值.");
 		}
@@ -1752,22 +1728,22 @@ public class Map
 		}
 		MapData md = null;
 		md = new MapData();
-		md.setNo(this.getFKMapData());
+		md.setNo(this.getFK_MapData());
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			md.setName(this.getFKMapData());
+			md.setName(this.getFK_MapData());
 			md.setPTable(this.getPhysicsTable());
 			md.setEnPK(this.PKs);
 			md.Insert();
 			md.RepairMap();
 		}
 		md.Retrieve();
-		MapAttrs attrs = new MapAttrs(this.getFKMapData());
+		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
 
 		/*把 手工编写的attr 放入 mapattrs里面去. */
 		for (Attr attr : this.getAttrs())
 		{
-			if (attrs.Contains(MapAttrAttr.KeyOfEn, attr.getKey()))
+			if (attrs.contains(MapAttrAttr.KeyOfEn, attr.getKey()))
 			{
 				continue;
 			}
@@ -1779,7 +1755,7 @@ public class Map
 
 			//把文件实体类的属性放入关系实体类中去。
 			MapAttr mapattrN = attr.getToMapAttr();
-			mapattrN.setFK_MapData(this.getFKMapData());
+			mapattrN.setFK_MapData(this.getFK_MapData());
 			if (mapattrN.getUIHeight() == 0)
 			{
 				mapattrN.setUIHeight(23);
@@ -1791,16 +1767,16 @@ public class Map
 		//把关系实体类的属性放入文件实体类中去。
 		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (this.getAttrs().Contains(attr.getKeyOfEn()) == true)
+			if (this.getAttrs().contains(attr.getKeyOfEn()) == true)
 			{
 				continue;
 			}
 			this.AddAttr(attr.getHisAttr());
 		}
 	}
-	public final void AddAttrs(Attrs attrs) throws Exception
+	public final void AddAttrs(Attrs attrs)
 	{
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			if (attr.getIsRefAttr())
 			{
@@ -1809,11 +1785,11 @@ public class Map
 			this.getAttrs().Add(attr);
 		}
 	}
-	public final void AddAttr(Attr attr) throws Exception
+	public final void AddAttr(Attr attr)
 	{
 		this.getAttrs().Add(attr);
 	}
-	public final void AddAttr(String key, Object defaultVal, int dbtype, boolean isPk, String desc) throws Exception
+	public final void AddAttr(String key, Object defaultVal, int dbtype, boolean isPk, String desc)
 	{
 		if (isPk)
 		{
@@ -1824,71 +1800,71 @@ public class Map
 			AddTBString(key, key, defaultVal.toString(), FieldType.Normal, desc, true, false, 0, 1000, 100, false);
 		}
 	}
-	/** 
+	/**
 	 增加一个textbox 类型的属性。
-	 
-	 @param key 健值
-	 @param field 字段值
-	 @param defaultVal 默认值
-	 @param _FieldType 字段类型
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param uiVisable 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度 
-	 * @throws Exception 
-	*/
-	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 健值
+
+	 param defaultVal 默认值
+
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param uiVisable 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		AddTBString(key, key, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
-	public final void AddTBString(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+	public final void AddTBString(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		AddTBString(key, field, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
-	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine) throws Exception
+	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine)
 	{
 		AddTBString(key, key, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine);
 	}
-	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl) throws Exception
+	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl)
 	{
 		AddTBString(key, key, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine, helpUrl);
 	}
-	/** 
+	/**
 	 附件集合
-	 * @throws Exception 
-	*/
-	public final void AddMyFileS() throws Exception
+	 * @
+	 */
+	public final void AddMyFileS()
 	{
 		this.AddTBInt(EntityNoMyFileAttr.MyFileNum, 0, "附件", false, false);
 		this.HisBPEntityAthType = BPEntityAthType.Multi;
 	}
-	/** 
+	/**
 	 附件集合
-	 
-	 @param desc
-	 * @throws Exception 
-	*/
-	public final void AddMyFileS(String desc) throws Exception
+
+	 param desc
+	 * @
+	 */
+	public final void AddMyFileS(String desc)
 	{
 		this.AddTBInt(EntityNoMyFileAttr.MyFileNum, 0, desc, false, false);
 		this.HisBPEntityAthType = BPEntityAthType.Multi;
 	}
-	
-	public final void AddMyFile(String fileDesc) throws Exception
+
+	public final void AddMyFile(String fileDesc)
 	{
 		AddMyFile(fileDesc, null, null);
 	}
 
-	public final void AddMyFile() throws Exception
+	public final void AddMyFile()
 	{
 		AddMyFile(null, null, null);
 	}
 
 
 
-	public final void AddMyFile(String fileDesc, String ext, String savePath) throws Exception
+	public final void AddMyFile(String fileDesc, String ext, String savePath)
 	{
 		if (fileDesc == null)
 		{
@@ -1916,15 +1892,15 @@ public class Map
 		}
 		return _HisAttrFiles;
 	}
-	/** 
+	/**
 	 增加一个特定的附件,可以利用它增加多个？
 	 比如：增加简历，增加论文。
-	 
-	 @param fileDesc
-	 @param fExt
-	 * @throws Exception 
-	*/
-	public final void AddMyFile(String fileDesc, String fExt) throws Exception
+
+	 param fileDesc
+	 param fExt
+	 * @
+	 */
+	public final void AddMyFile(String fileDesc, String fExt)
 	{
 		getHisAttrFiles().Add(fExt, fileDesc);
 		this.HisBPEntityAthType = BPEntityAthType.Single;
@@ -1933,25 +1909,42 @@ public class Map
 	}
 
 
-		///增加大块文本输入
-	public final void AddTBStringDoc() throws Exception
+	///增加大块文本输入
+	public final void AddTBStringDoc()
 	{
-		AddTBStringDoc("Doc", "Doc", null, "内容", true, false, 0, 4000, 300, 300, true);
+		AddTBStringDoc("Doc", "Doc", null, "内容", true, false, 0, 4000, 10, true);
 	}
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean isUILine) throws Exception
+
+
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean isUILine)
 	{
-		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0, 4000, 300, 10, isUILine);
+		AddTBStringDoc(key, defaultVal, desc, uiVisable, isReadonly, isUILine, 10);
 	}
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	//ORIGINAL LINE: public void AddTBStringDoc(string key, string defaultVal, string desc, bool uiVisable, bool isReadonly, bool isUILine, int rows = 10)
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean isUILine, int rows)
 	{
-		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0, 4000, 300, 10, false);
+		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0, 4000, rows, isUILine);
 	}
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, int rows) throws Exception
+
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
-		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, rows, false);
+		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0, 4000, 300, false);
 	}
-	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, int rows, boolean isUILine) throws Exception
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows)
 	{
+		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, minLength, maxLength, rows, false);
+	}
+
+	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows, boolean isUILine)
+	{
+		AddTBStringDoc(key, field, defaultVal, desc, uiVisable, isReadonly, minLength, maxLength, rows, isUILine, false);
+	}
+
+	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows, boolean isUILine, boolean isRichText)
+	{
+
+
 		if (field == null)
 		{
 			field = key;
@@ -1970,51 +1963,60 @@ public class Map
 		attr.setMinLength(minLength);
 		attr.setMyFieldType(FieldType.Normal);
 		attr.setUIHeight(rows);
-		attr.UIIsLine = isUILine;
+		if (isRichText == true)
+		{
+			attr.setIsSupperText(1); //是富文本. 都要解析为上下结构.
+			isUILine = true; //必须是上下结构.
+		}
+		else
+		{
+			attr.setIsSupperText(0); //不是富文本. 根据 isUILine 解析是否上下结构.
+		}
+		attr.UIIsLine=isUILine;
 		this.getAttrs().Add(attr);
 	}
 
-		///
+	///
 
 
-		/// PK
-	public final void AddTBStringPK(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+	/// PK
+	public final void AddTBStringPK(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		this.PKs = key;
 		AddTBString(key, key, defaultVal, FieldType.PK, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
-	public final void AddTBStringPK(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+	public final void AddTBStringPK(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		this.PKs = key;
 		AddTBString(key, field, defaultVal, FieldType.PK, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
 
-		///
+	///
 
 
-		///PKNo
+	///PKNo
 
 
-		///
+	///
 
 
-		/// 外键于 Ens 有关系的操作。
-	/** 
+	/// 外键于 Ens 有关系的操作。
+	/**
 	 外键于 Ens 有关系的操作。
-	 
-	 @param key 属性
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param ens 实体		 
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringFKEns(String key, String field, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param field 字段
+	 param defaultVal 默认值
+	 param desc 描述
+	 param ens 实体
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringFKEns(String key, String field, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2024,7 +2026,7 @@ public class Map
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIBindKey(ens.toString());
 		attr.setHisFKEns(ens);
-		// attr.UIBindKeyOfEn = ens.getGetNewEntity().ToString();
+		// attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
 		attr.setDesc(desc);
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
@@ -2036,45 +2038,45 @@ public class Map
 		attr.setMyFieldType(FieldType.FK);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 外键于 Ens 有关系的操作。
-	 
-	 @param key 属性
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param ens 实体		 
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringFKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param defaultVal 默认值
+	 param desc 描述
+	 param ens 实体
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringFKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		this.AddTBStringFKEns(key, key, defaultVal, desc, ens, refKey, refText, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
-		///
+	///
 
 
-		///于多值有关系的操作
-	/** 
+	///于多值有关系的操作
+	/**
 	 于多值有关系的操作
-	 
-	 @param key
-	 @param field
-	 @param defaultVal
-	 @param desc
-	 @param ens
-	 @param uiVisable
-	 @param isReadonly
-	 @param minLength
-	 @param maxLength
-	 @param tbWith
-	 * @throws Exception 
-	*/
-	public final void AddTBMultiValues(String key, String field, Object defaultVal, String desc, Entities ens, String refValue, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key
+	 param field
+	 param defaultVal
+	 param desc
+	 param ens
+	 param uiVisable
+	 param isReadonly
+	 param minLength
+	 param maxLength
+	 param tbWith
+	 * @
+	 */
+	public final void AddTBMultiValues(String key, String field, Object defaultVal, String desc, Entities ens, String refValue, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2084,7 +2086,7 @@ public class Map
 		attr.setUIBindKey(ens.toString());
 		attr.setHisFKEns(ens);
 
-		// attr.UIBindKeyOfEn = ens.getGetNewEntity().ToString();
+		// attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
 
 		attr.setDesc(desc);
 		attr.setUIVisible(uiVisable);
@@ -2099,27 +2101,27 @@ public class Map
 		this.getAttrs().Add(attr);
 	}
 
-		///
+	///
 
 
-		/// 主键于 Ens 有关系的操作。
-	/** 
+	/// 主键于 Ens 有关系的操作。
+	/**
 	 外键于 Ens 有关系的操作。
 	 主键
-	 
-	 @param key 属性
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param ens 实体		 
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringPKEns(String key, String field, Object defaultVal, String desc, Entities ens, String refVal, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param field 字段
+	 param defaultVal 默认值
+	 param desc 描述
+	 param ens 实体
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringPKEns(String key, String field, Object defaultVal, String desc, Entities ens, String refVal, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2128,7 +2130,7 @@ public class Map
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIBindKey(ens.toString());
 		attr.setHisFKEns(attr.getHisFKEns());
-		//attr.UIBindKeyOfEn = ens.getGetNewEntity().ToString();
+		//attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
 		attr.setDesc(desc);
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
@@ -2142,45 +2144,45 @@ public class Map
 		attr.setMyFieldType(FieldType.PKFK);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 外键于 Ens 有关系的操作。
-	 
-	 @param key 属性
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param ens 实体		 
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringPKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param defaultVal 默认值
+	 param desc 描述
+	 param ens 实体
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringPKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		this.AddTBStringPKEns(key, key, defaultVal, desc, ens, refKey, refText, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
-		///
+	///
 
 
-		/// 主键于 DataHelpKey 有关系的操作。
-	/** 
+	/// 主键于 DataHelpKey 有关系的操作。
+	/**
 	 外键于 DataHelpKey 有关系的操作, 用与自定义的右键帮助系统.
-	 
-	 @param key 属性
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param DataHelpKey 在TB 里定义的右健帮助Key </param>		 
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringPKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param field 字段
+	 param defaultVal 默认值
+	 param desc 描述
+	 param DataHelpKey 在TB 里定义的右健帮助Key </param>
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringPKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2197,45 +2199,45 @@ public class Map
 		attr.setMyFieldType(FieldType.PK);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 外键于 Ens 有关系的操作。用与自定义的右键帮助系统.
-	 
-	 @param key 属性
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param DataHelpKey 在TB 里定义的右健帮助Key </param>
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringPKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param defaultVal 默认值
+	 param desc 描述
+	 param DataHelpKey 在TB 里定义的右健帮助Key </param>
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringPKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		this.AddTBStringPKSelf(key, key, defaultVal, desc, DataHelpKey, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
-		///
+	///
 
 
-		/// 外键于 DataHelpKey 有关系的操作。
-	/** 
+	/// 外键于 DataHelpKey 有关系的操作。
+	/**
 	 外键于 DataHelpKey 有关系的操作。用与自定义的右键帮助系统.
-	 
-	 @param key 属性
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param DataHelpKey 在TB 里定义的右健帮助Key </param>		 
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringFKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param field 字段
+	 param defaultVal 默认值
+	 param desc 描述
+	 param DataHelpKey 在TB 里定义的右健帮助Key </param>
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringFKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2252,46 +2254,46 @@ public class Map
 		attr.setMyFieldType(FieldType.Normal);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 外键于 Ens 有关系的操作。用与 Ens 右键帮助系统.
-	 
-	 @param key 属性
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param DataHelpKey 在TB 里定义的右健帮助Key </param>
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 @param minLength 最小长度
-	 @param maxLength 最大长度
-	 @param tbWith 宽度
-	 * @throws Exception 
-	*/
-	public final void AddTBStringFKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+
+	 param key 属性
+	 param defaultVal 默认值
+	 param desc 描述
+	 param DataHelpKey 在TB 里定义的右健帮助Key </param>
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 param minLength 最小长度
+	 param maxLength 最大长度
+	 param tbWith 宽度
+	 * @
+	 */
+	public final void AddTBStringFKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		this.AddTBStringFKSelf(key, key, defaultVal, desc, DataHelpKey, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
-		///
+	///
 
 
-		/// 增加外键植
+	/// 增加外键植
 	public final void AddTBStringFKValue(String refKey, String key, String desc, boolean IsVisable, int with)
 	{
 
 	}
 
 
-		///
+	///
 
 
-		///
+	///
 
 
-		///
+	///
 
 
-		///日期类型
-	public final void AddTBDate(String key) throws Exception
+	///日期类型
+	public final void AddTBDate(String key)
 	{
 		switch (key)
 		{
@@ -2306,17 +2308,17 @@ public class Map
 				break;
 		}
 	}
-	/** 
+	/**
 	 增加日期类型的控健
-	 
-	 @param key 健值
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
-	*/
-	public final void AddTBDate(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	 param key 健值
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
+	 */
+	public final void AddTBDate(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2329,49 +2331,49 @@ public class Map
 		attr.setMaxLength(50);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 增加日期类型的控健
-	 
-	 @param key key
-	 @param defaultVal defaultVal/如果你想用当天的信息,请选择后面的方法加入
-	 @param desc desc
-	 @param uiVisable uiVisable
-	 @param isReadonly isReadonly
-	 * @throws Exception 
-	*/
-	public final void AddTBDate(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	 param key key
+	 param defaultVal defaultVal/如果你想用当天的信息,请选择后面的方法加入
+	 param desc desc
+	 param uiVisable uiVisable
+	 param isReadonly isReadonly
+	 * @
+	 */
+	public final void AddTBDate(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		AddTBDate(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
-	/** 
+	/**
 	 增加日期类型的控健(默认日期是当前日期)
-	 
-	 @param key key
-	 @param desc desc
-	 @param uiVisable uiVisable
-	 @param isReadonly isReadonly
-	 * @throws Exception 
-	*/
-	public final void AddTBDate(String key, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	 param key key
+	 param desc desc
+	 param uiVisable uiVisable
+	 param isReadonly isReadonly
+	 * @
+	 */
+	public final void AddTBDate(String key, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		AddTBDate(key, key, DataType.getCurrentDateByFormart(DataType.getSysDataFormat()), desc, uiVisable, isReadonly);
 	}
 
-		///
+	///
 
 
-		///日期时间类型。
-	/** 
+	///日期时间类型。
+	/**
 	 增加日期类型的控健
-	 
-	 @param key 健值
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
-	*/
-	public final void AddTBDateTime(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	 param key 健值
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
+	 */
+	public final void AddTBDateTime(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2385,20 +2387,20 @@ public class Map
 		attr.setUIWidth(100);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBDateTime(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDateTime(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBDateTime(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
-	public final void AddTBDateTime(String key, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDateTime(String key, String desc, boolean uiVisable, boolean isReadonly)
 	{
-		this.AddTBDateTime(key, key, DataType.getCurrentDateByFormart(DataType.getSysDataTimeFormat()), desc, uiVisable, isReadonly);
+		this.AddTBDateTime(key, key, DataType.getCurrentDateByFormart(DataType.getSysDateTimeFormat()), desc, uiVisable, isReadonly);
 	}
 
-		///
+	///
 
 
-		///资金类型
-	public final void AddTBMoney(String key, String field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	///资金类型
+	public final void AddTBMoney(String key, String field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2410,27 +2412,27 @@ public class Map
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBMoney(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBMoney(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBMoney(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 
-		///
+	///
 
 
-		///Int类型
-	/** 
+	///Int类型
+	/**
 	 增加一个普通的类型。
-	 
-	 @param key 键
-	 @param _Field 字段
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
-	*/
-	public final void AddTBInt(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	 param key 键
+	 param _Field 字段
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
+	 */
+	public final void AddTBInt(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2443,32 +2445,32 @@ public class Map
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 增加一个普通的类型。字段值与属性相同。
-	 
-	 @param key 键		 
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
-	*/
-	public final void AddTBInt(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	 param key 键
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
+	 */
+	public final void AddTBInt(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBInt(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
-	/** 
+	/**
 	 增加一个PK的类型。
-	 
-	 @param key 键
-	 @param _Field 字段
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
-	*/
-	public final void AddTBIntPK(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey) throws Exception
+
+	 param key 键
+	 param _Field 字段
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
+	 */
+	public final void AddTBIntPK(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey)
 	{
 		this.PKs = key;
 		Attr attr = new Attr();
@@ -2486,46 +2488,43 @@ public class Map
 		}
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 增加一个PK的类型。字段值与属性相同。
-	 
-	 @param key 键		 
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
-	*/
-	public final void AddTBIntPKOID(String _field, String desc) throws Exception
+
+	 param _field 键
+	 param desc 描述
+	 * @
+	 */
+	public final void AddTBIntPKOID(String _field, String desc)
 	{
 		this.AddTBIntPK("OID", _field, 0, "OID", false, true, false);
 	}
-	public final void AddTBIntPKOID() throws Exception
+	public final void AddTBIntPKOID()
 	{
 		this.AddTBIntPKOID("OID", "OID");
 	}
-	/** 
+	/**
 	 增加  AtParas字段.
-	 
-	 @param fieldLength
-	 * @throws Exception 
-	*/
-	public final void AddTBAtParas(int fieldLength) throws Exception
+
+	 param fieldLength
+	 * @
+	 */
+	public final void AddTBAtParas(int fieldLength)
 	{
 		this.AddTBString("AtPara", null, "AtPara", false, true, 0, fieldLength, 10);
 	}
-	/** 
+	/**
 	 主键
-	 * @throws Exception 
-	*/
+	 * @
+	 */
 
-	public final void AddMyPK() throws Exception
+	public final void AddMyPK()
 	{
 		AddMyPK(true);
 	}
 
 
-	public final void AddMyPK(boolean uiVisable) throws Exception
+	public final void AddMyPK(boolean uiVisable)
 	{
 		this.PKs = "MyPK";
 		this.AddTBStringPK("MyPK", null, "主键MyPK", uiVisable, true, 1, 100, 10);
@@ -2534,8 +2533,8 @@ public class Map
 		//attr.Field = "MyPK";
 		//attr.getDefaultVal() = null;
 		//attr.setMyDataType(DataType.AppString);
-		//attr.MyFieldType = FieldType.PK;
-		//attr.Desc = "MyPK";
+		//attr.getMyFieldType() = FieldType.PK;
+		//attr.getDesc() = "MyPK";
 		//attr.UITBShowType = TBType.TB;
 		//attr.setUIVisible( false);
 		//attr.getUIIsReadonly() = true;
@@ -2543,11 +2542,11 @@ public class Map
 		//attr.MaxLength = 100;
 		//this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 增加自动增长列
-	 * @throws Exception 
-	*/
-	public final void AddAID() throws Exception
+	 * @
+	 */
+	public final void AddAID()
 	{
 		Attr attr = new Attr();
 		attr.setKey("AID");
@@ -2560,35 +2559,35 @@ public class Map
 		attr.setUIIsReadonly(true);
 		this.getAttrs().Add(attr);
 	}
-	/** 
+	/**
 	 增加一个PK的类型。字段值与属性相同。
-	 
-	 @param key 键		 
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
-	*/
-	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+
+	 param key 键
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
+	 */
+	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBIntPK(key, key, defaultVal, desc, uiVisable, isReadonly, false);
 	}
 
-	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey) throws Exception
+	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey)
 	{
 		this.AddTBIntPK(key, key, defaultVal, desc, uiVisable, isReadonly, identityKey);
 	}
-	public final void AddTBIntMyNum() throws Exception
+	public final void AddTBIntMyNum()
 	{
 		this.AddTBInt("MyNum", "MyNum", 1, "个数", true, true);
 	}
 
-		///
+	///
 
 
-		///Float类型
-	public final void AddTBFloat(String key, String _Field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	///Float类型
+	public final void AddTBFloat(String key, String _Field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2600,16 +2599,16 @@ public class Map
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBFloat(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBFloat(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBFloat(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 
-		///
+	///
 
 
-		///Decimal类型
-	public final void AddTBDecimal(String key, String _Field, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	///Decimal类型
+	public final void AddTBDecimal(String key, String _Field, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2621,15 +2620,15 @@ public class Map
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBDecimal(String key, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDecimal(String key, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBDecimal(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 
-		///
+	///
 
-		///
+	///
 
 
-		///
+	///
 }

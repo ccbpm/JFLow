@@ -5,6 +5,7 @@ import bp.en.*;
 import bp.en.Map;
 import bp.wf.*;
 import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -14,91 +15,88 @@ import java.util.*;
 public class Task extends EntityMyPK
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 参数
-	 * @throws Exception 
 	*/
 	public final String getParas() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.Paras);
 	}
-	public final void setParas(String value) throws Exception
-	{
+	public final void setParas(String value)  throws Exception
+	 {
 		this.SetValByKey(TaskAttr.Paras, value);
 	}
 	/** 
 	 发起人
 	*/
-	public final String getStarter()throws Exception
+	public final String getStarter() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.Starter);
 	}
-	public final void setStarter(String value) throws Exception
-	{
+	public final void setStarter(String value)  throws Exception
+	 {
 		this.SetValByKey(TaskAttr.Starter, value);
 	}
 	/** 
 	 到达的人员
 	*/
-	public final String getToEmps()throws Exception
+	public final String getToEmps() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.ToEmps);
 	}
-	public final void setToEmps(String value) throws Exception
-	{
+	public final void setToEmps(String value)  throws Exception
+	 {
 		this.SetValByKey(TaskAttr.ToEmps, value);
 	}
 	/** 
 	 到达节点（可以为0）
 	*/
-	public final int getToNode()throws Exception
+	public final int getToNode() throws Exception
 	{
 		return this.GetValIntByKey(TaskAttr.ToNode);
 	}
-	public final void setToNode(int value) throws Exception
-	{
+	public final void setToNode(int value)  throws Exception
+	 {
 		this.SetValByKey(TaskAttr.ToNode, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()throws Exception
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value) throws Exception
-	{
+	public final void setFK_Flow(String value)  throws Exception
+	 {
 		this.SetValByKey(TaskAttr.FK_Flow, value);
 	}
 	/** 
 	 发起时间（可以为空）
 	*/
-	public final String getStartDT()throws Exception
+	public final String getStartDT() throws Exception
 	{
 		return this.GetValStringByKey(TaskAttr.StartDT);
 	}
-	public final void setStartDT(String value) throws Exception
-	{
+	public final void setStartDT(String value)  throws Exception
+	 {
 		this.SetValByKey(TaskAttr.StartDT, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 Task
 	*/
-	public Task()
-	{
+	public Task()  {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -106,7 +104,7 @@ public class Task extends EntityMyPK
 		Map map = new Map("WF_Task", "任务");
 
 
-		map.AddMyPK(); //唯一的主键.
+		map.AddMyPK(true); //唯一的主键.
 		map.AddTBString(TaskAttr.FK_Flow, null, "流程编号", true, false, 0, 5, 10);
 		map.AddTBString(TaskAttr.Starter, null, "发起人", true, false, 0, 200, 10);
 
@@ -127,5 +125,5 @@ public class Task extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

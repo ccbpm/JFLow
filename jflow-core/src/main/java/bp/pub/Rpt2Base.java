@@ -1,12 +1,20 @@
 package bp.pub;
 
+import bp.da.*;
+import bp.en.*;
+import bp.en.Map;
+import bp.web.*;
+import bp.sys.*;
+import bp.difference.*;
+import bp.*;
+
 /** 
  报表基类
 */
 public abstract class Rpt2Base
 {
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 报表基类
 	*/
@@ -14,10 +22,10 @@ public abstract class Rpt2Base
 	{
 	}
 
-		/// 构造方法
+		///#endregion 构造方法
 
 
-		///要求子类强制重写的属性.
+		///#region 要求子类强制重写的属性.
 	/** 
 	 显示的标题.
 	*/
@@ -31,10 +39,10 @@ public abstract class Rpt2Base
 	*/
 	public abstract Rpt2Attrs getAttrsOfGroup();
 
-		/// 要求子类重写的属性.
+		///#endregion 要求子类重写的属性.
 
 
-		///提供给操作者的方法.
+		///#region 提供给操作者的方法.
 
-		/// 提供给操作者的方法
+		///#endregion 提供给操作者的方法
 }

@@ -1,5 +1,6 @@
 package bp.wf.template;
 
+
 /** 
  节点表单属性	  
 */
@@ -70,10 +71,6 @@ public class FrmNodeAttr
 	*/
 	public static final String IsEnable = "IsEnable";
 	/** 
-	 关键字段
-	*/
-	public static final String GuanJianZiDuan = "GuanJianZiDuan";
-	/** 
 	 汇总
 	*/
 	public static final String HuiZong = "HuiZong";
@@ -89,4 +86,8 @@ public class FrmNodeAttr
 	 表单显示的名字
 	*/
 	public static final String FrmNameShow = "FrmNameShow";
+	/** 
+	 父子流程组件
+	*/
+	public static final String SFSta = "SFSta";
 }

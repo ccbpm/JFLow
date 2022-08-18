@@ -33,6 +33,7 @@ import org.springframework.web.context.request.DestructionCallbackBindingListene
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.util.WebUtils;
 
+import bp.da.DataType;
 import bp.tools.StringUtils;
 
 /**
@@ -83,7 +84,7 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	/**
 	 * Create a new ServletRequestAttributes instance for the given request.
-	 * @param request current HTTP request
+	 * param request current HTTP request
 	 */
 	public ServletRequestAttributes(HttpServletRequest request) {
 		Assert.notNull(request, "Request must not be null");
@@ -92,8 +93,8 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	/**
 	 * Create a new ServletRequestAttributes instance for the given request.
-	 * @param request current HTTP request
-	 * @param response current HTTP response (for optional exposure)
+	 * param request current HTTP request
+	 * param response current HTTP response (for optional exposure)
 	 */
 	public ServletRequestAttributes(HttpServletRequest request, HttpServletResponse response) {
 		this(request);
@@ -117,7 +118,7 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 
 	/**
 	 * Exposes the {@link HttpSession} that we're wrapping.
-	 * @param allowCreate whether to allow creation of a new session if none exists yet
+	 * param allowCreate whether to allow creation of a new session if none exists yet
 	 */
 	protected final HttpSession getSession(boolean allowCreate) {
 		if (isRequestActive()) {
@@ -291,8 +292,8 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 	 * since its value cannot meaningfully change internally.
 	 * <p>The default implementation returns {@code true} for {@code String},
 	 * {@code Character}, {@code Boolean} and standard {@code Number} values.
-	 * @param name the name of the attribute
-	 * @param value the corresponding value to check
+	 * param name the name of the attribute
+	 * param value the corresponding value to check
 	 * @return {@code true} if the value is to be considered as immutable for the
 	 * purposes of session attribute management; {@code false} otherwise
 	 * @see #updateAccessedSessionAttributes()
@@ -305,8 +306,8 @@ public class ServletRequestAttributes extends AbstractRequestAttributes {
 	 * Register the given callback as to be executed after session termination.
 	 * <p>Note: The callback object should be serializable in order to survive
 	 * web app restarts.
-	 * @param name the name of the attribute to register the callback for
-	 * @param callback the callback to be executed for destruction
+	 * param name the name of the attribute to register the callback for
+	 * param callback the callback to be executed for destruction
 	 */
 	protected void registerSessionDestructionCallback(String name, Runnable callback) {
 		HttpSession session = getSession(true);

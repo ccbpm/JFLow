@@ -1,4 +1,12 @@
 package bp.wf.template;
+
+import bp.da.*;
+import bp.en.*;
+import bp.wf.port.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
+
 /** 
  方向与工作岗位对应属性	  
 */

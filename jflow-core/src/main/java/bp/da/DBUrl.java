@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 import bp.difference.SystemConfig;
 
 /** 
@@ -17,7 +17,7 @@ public class DBUrl
 	/** 
 	 连接
 	 
-	 @param type 连接type
+	 param type 连接type
 	*/
 	public DBUrl(DBUrlType type)
 	{
@@ -26,11 +26,10 @@ public class DBUrl
 	/** 
 	 创建数据库连接
 	 
-	 @param type 连接type
+	 param dbSrc
 	 * @throws Exception 
 	*/
-	public DBUrl(String dbSrc) throws Exception
-	{
+	public DBUrl(String dbSrc) throws Exception {
 		//数据库类型.
 		this.setDBUrlType(DBUrlType.DBSrc);
 
@@ -46,8 +45,7 @@ public class DBUrl
 		return _HisDBSrc;
 	}
 	public final void setHisDBSrc(bp.sys.SFDBSrc value)
-	{
-		_HisDBSrc = value;
+	{_HisDBSrc = value;
 	}
 
 		/// 其他数据源.
@@ -64,10 +62,9 @@ public class DBUrl
 		return _DBUrlType;
 	}
 	public final void setDBUrlType(DBUrlType value)
-	{
-		_DBUrlType = value;
+	{_DBUrlType = value;
 	}
-	public final String getDBVarStr() throws Exception
+	public final String getDBVarStr()
 	{
 		switch (this.getDBType()) {
 			case MSSQL:
@@ -90,7 +87,7 @@ public class DBUrl
 	 数据库类型
 	 * @throws Exception 
 	*/
-	public final DBType getDBType() throws Exception
+	public final DBType getDBType()
 	{
 		switch (this.getDBUrlType())
 		{

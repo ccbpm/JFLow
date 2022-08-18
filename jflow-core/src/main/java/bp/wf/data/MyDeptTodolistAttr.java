@@ -1,11 +1,13 @@
 package bp.wf.data;
+
+
 /** 
  我部门的待办
 */
 public class MyDeptTodolistAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -127,10 +129,6 @@ public class MyDeptTodolistAttr
 	*/
 	public static final String FlowNote = "FlowNote";
 	/** 
-	 我部门
-	*/
-	public static final String WorkerDept = "WorkerDept";
-	/** 
 	 待办人员
 	*/
 	public static final String TodoEmps = "TodoEmps";
@@ -155,5 +153,5 @@ public class MyDeptTodolistAttr
 	*/
 	public static final String GUID = "GUID";
 
-		///
+		///#endregion
 }

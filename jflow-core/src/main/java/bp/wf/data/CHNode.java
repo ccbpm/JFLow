@@ -3,22 +3,22 @@ package bp.wf.data;
 import bp.en.*;
 import bp.en.Map;
 
+
 /** 
  节点时限
 */
 public class CHNode extends EntityMyPK
 {
-	private static final long serialVersionUID = 1L;
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
+	public final long getWorkID()  throws Exception
 	{
 		return this.GetValInt64ByKey(CHAttr.WorkID);
 	}
-	public final void setWorkID(long value)  throws Exception
+	public final void setWorkID(long value) throws Exception
 	{
 		this.SetValByKey(CHAttr.WorkID, value);
 	}
@@ -28,11 +28,11 @@ public class CHNode extends EntityMyPK
 	/** 
 	 节点ID
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node()  throws Exception
 	{
 		return this.GetValIntByKey(CHAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)throws Exception
+	public final void setFK_Node(int value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_Node, value);
 	}
@@ -43,7 +43,7 @@ public class CHNode extends EntityMyPK
 	{
 		return this.GetValStrByKey(CHNodeAttr.NodeName);
 	}
-	public final void setNodeName(String value)throws Exception
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(CHNodeAttr.NodeName, value);
 	}
@@ -51,22 +51,22 @@ public class CHNode extends EntityMyPK
 	/** 
 	 操作人员
 	*/
-	public final String getFK_Emp()throws Exception
+	public final String getFK_Emp()  throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)throws Exception
+	public final void setFK_Emp(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_Emp, value);
 	}
 	/** 
 	 人员
 	*/
-	public final String getFK_EmpT()throws Exception
+	public final String getFK_EmpT()  throws Exception
 	{
 		return this.GetValStringByKey(CHAttr.FK_EmpT);
 	}
-	public final void setFK_EmpT(String value)throws Exception
+	public final void setFK_EmpT(String value) throws Exception
 	{
 		this.SetValByKey(CHAttr.FK_EmpT, value);
 	}
@@ -74,22 +74,22 @@ public class CHNode extends EntityMyPK
 	/** 
 	 计划开始时间
 	*/
-	public final String getStartDT()throws Exception
+	public final String getStartDT()  throws Exception
 	{
 		return this.GetValStringByKey(CHNodeAttr.StartDT);
 	}
-	public final void setStartDT(String value)throws Exception
+	public final void setStartDT(String value) throws Exception
 	{
 		this.SetValByKey(CHNodeAttr.StartDT, value);
 	}
 	/** 
 	 计划完成时间
 	*/
-	public final String getEndDT()throws Exception
+	public final String getEndDT()  throws Exception
 	{
 		return this.GetValStringByKey(CHNodeAttr.EndDT);
 	}
-	public final void setEndDT(String value)throws Exception
+	public final void setEndDT(String value) throws Exception
 	{
 		this.SetValByKey(CHNodeAttr.EndDT, value);
 	}
@@ -97,22 +97,22 @@ public class CHNode extends EntityMyPK
 	/** 
 	 工天
 	*/
-	public final int getGT()throws Exception
+	public final int getGT()  throws Exception
 	{
 		return this.GetValIntByKey(CHNodeAttr.GT);
 	}
-	public final void setGT(int value)throws Exception
+	public final void setGT(int value) throws Exception
 	{
 		this.SetValByKey(CHNodeAttr.GT, value);
 	}
 	/** 
 	 阶段占比
 	*/
-	public final float getScale()throws Exception
+	public final float getScale()  throws Exception
 	{
 		return this.GetValFloatByKey(CHNodeAttr.Scale);
 	}
-	public final void setScale(float value)throws Exception
+	public final void setScale(float value) throws Exception
 	{
 		this.SetValByKey(CHNodeAttr.Scale, value);
 	}
@@ -120,41 +120,41 @@ public class CHNode extends EntityMyPK
 	/** 
 	 总体进度
 	*/
-	public final float getTotalScale()throws Exception
+	public final float getTotalScale()  throws Exception
 	{
 		return this.GetValFloatByKey(CHNodeAttr.TotalScale);
 	}
-	public final void setTotalScale(float value)throws Exception
+	public final void setTotalScale(float value) throws Exception
 	{
 		this.SetValByKey(CHNodeAttr.TotalScale, value);
 	}
 	/** 
 	 产值
 	*/
-	public final float getChanZhi()throws Exception
+	public final float getChanZhi()  throws Exception
 	{
 		return this.GetValFloatByKey(CHNodeAttr.ChanZhi);
 	}
-	public final void setChanZhi(float value)throws Exception
+	public final void setChanZhi(float value) throws Exception
 	{
 		this.SetValByKey(CHNodeAttr.ChanZhi, value);
 	}
 
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
 		uac.IsInsert = false;
-		uac.IsUpdate = false;
+		uac.IsUpdate=false;
 		uac.IsView = true;
 		return uac;
 	}
@@ -167,19 +167,23 @@ public class CHNode extends EntityMyPK
 	/** 
 	 
 	 
-	 @param pk
-	 * @throws Exception 
+	 param pk
 	*/
-	public CHNode(String pk) throws Exception
+	public CHNode(String pk) throws Exception 
 	{
 		super(pk);
 	}
 
+
+		///#endregion
+
+
+		///#region Map
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -211,7 +215,7 @@ public class CHNode extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{

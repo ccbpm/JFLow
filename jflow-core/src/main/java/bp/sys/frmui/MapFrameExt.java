@@ -14,36 +14,31 @@ import java.util.*;
 public class MapFrameExt extends EntityMyPK
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 连接
-	 * @throws Exception 
 	*/
-	public final String getUrl() throws Exception
-	{
-		return this.GetValStrByKey("Tag1");
-	}
-	public final String getFK_MapData()throws Exception
+
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStrByKey(MapFrameAttr.FK_MapData);
 	}
-	public final String getName()throws Exception
+	public final String getName() throws Exception
 	{
 		return this.GetValStrByKey(MapFrameAttr.Name);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
-			//if (WebUser.getNo().Equals("admin"))
+			//if (bp.web.WebUser.getNo().Equals("admin"))
 			//{
 		uac.IsUpdate = true;
 		uac.IsDelete = true;
@@ -54,14 +49,13 @@ public class MapFrameExt extends EntityMyPK
 	/** 
 	 框架
 	*/
-	public MapFrameExt()
-	{
+	public MapFrameExt()  {
 
 	}
 	/** 
 	 框架
 	 
-	 @param mypk
+	 param mypk
 	*/
 	public MapFrameExt(String mypk)throws Exception
 	{
@@ -72,8 +66,7 @@ public class MapFrameExt extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -87,13 +80,12 @@ public class MapFrameExt extends EntityMyPK
 
 		map.AddDDLSysEnum(MapFrameAttr.UrlSrcType, 0, "URL来源", true, true, MapFrameAttr.UrlSrcType, "@0=自定义@1=地图@2=流程轨迹表@3=流程轨迹图");
 		map.AddTBString(MapFrameAttr.FrameURL, null, "URL", true, false, 0, 3000, 20, true);
-		map.AddTBString(MapFrameAttr.URL, null, "URL", false, false, 0, 3000, 20, true);
 
+		map.AddTBString(MapFrameAttr.URL, null, "URL", false, false, 0, 3000, 20, true);
 			//显示的分组.
 			// map.AddDDLSQL(MapFrameAttr.FrmID, "0", "表单表单","SELECT No, Name FROM Sys_Mapdata  WHERE  FrmType=3 ", true);
 
-		map.AddTBString(MapFrameAttr.Y, null, "Y", true, false, 0, 20, 20);
-		map.AddTBString(MapFrameAttr.X, null, "x", true, false, 0, 20, 20);
+
 
 		map.AddTBString(MapFrameAttr.W, null, "宽度", true, false, 0, 20, 20);
 		map.AddTBString(MapFrameAttr.H, null, "高度", true, false, 0, 20, 20);
@@ -104,10 +96,10 @@ public class MapFrameExt extends EntityMyPK
 
 		map.AddTBString(MapFrameAttr.GUID, null, "GUID", false, false, 0, 128, 20);
 
-		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
+		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文.
 
 
-			///执行的方法.
+			///#region 执行的方法.
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -116,47 +108,43 @@ public class MapFrameExt extends EntityMyPK
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
-			/// 执行的方法.
+			///#endregion 执行的方法.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///框架扩展.
+		///#region 框架扩展.
 	/** 
 	 框架扩展
 	 
 	 @return 
 	*/
-	public final String DoFrameExt()throws Exception
-	{
+	public final String DoFrameExt() throws Exception {
 		return "../../Admin/FoolFormDesigner/FrameExt/Default.htm?MyPK=" + this.getMyPK();
 	}
 
-		/// 框架扩展.
+		///#endregion 框架扩展.
 
 
 	@Override
-	protected void afterDelete()throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//删除分组信息.
 		GroupField gf = new GroupField();
 		gf.Delete(GroupFieldAttr.CtrlID, this.getMyPK());
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterDelete();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		//在属性实体集合插入前，clear父实体的缓存.
-		bp.sys.Glo.ClearMapDataAutoNum(this.getFK_MapData());
-
+		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFK_MapData());
 
 		int val = this.GetValIntByKey(MapFrameAttr.UrlSrcType, 0);
 		if (val == 1)
@@ -184,15 +172,14 @@ public class MapFrameExt extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		MapFrame mapframe = new MapFrame();
 		mapframe.setMyPK(this.getMyPK());
 		mapframe.RetrieveFromDBSources();
 		mapframe.Update();
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 
 		super.afterInsertUpdateAction();
 	}

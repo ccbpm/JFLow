@@ -1,8 +1,5 @@
 package bp.wf.dts;
 
-import bp.da.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
 import bp.wf.*;
 
@@ -14,7 +11,7 @@ public class RepariNodeFrmMap extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public RepariNodeFrmMap()
+	public RepariNodeFrmMap()throws Exception
 	{
 		this.Title = "修复节点表单";
 		this.Help = "检查节点表单系统字段是否被非法删除，如果非法删除自动增加上它，这些字段包括:Rec,Title,OID,FID,WFState,RDT,CDT";
@@ -44,10 +41,9 @@ public class RepariNodeFrmMap extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		Nodes nds = new Nodes();
 		nds.RetrieveAllFromDBSource();

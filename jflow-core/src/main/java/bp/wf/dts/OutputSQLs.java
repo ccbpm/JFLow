@@ -6,22 +6,16 @@ import bp.dts.DoType;
 import bp.dts.RunTimeType;
 import bp.en.*;
 import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.tools.DateUtils;
 import bp.web.WebUser;
-import bp.wf.data.*;
-import bp.wf.template.*;
-import java.io.*;
-import java.time.*;
 import java.util.Date;
 
 public class OutputSQLs extends DataIOEn
 {
-	/** 
+	/**
 	 流程时效考核
-	*/
-	public OutputSQLs()
+	 */
+	public OutputSQLs()throws Exception
 	{
 		this.HisDoType = DoType.UnName;
 		this.Title = "OutputSQLs for produces DTSCHofNode";
@@ -44,8 +38,6 @@ public class OutputSQLs extends DataIOEn
 
 		String fromDateTime = DataType.getCurrentYear() + "-01-01";
 		fromDateTime = "2004-01-01 00:00";
-		//string fromDateTime=DateTime.Now.Year+"-01-01 00:00";
-		//string fromDateTime=DateTime.Now.Year+"-01-01 00:00";
 		String insertSql = "";
 		String delSQL = "";
 		String updateSQL = "";
@@ -54,7 +46,7 @@ public class OutputSQLs extends DataIOEn
 		int i = 0;
 		for (Node nd : nds.ToJavaList())
 		{
-			if (nd.getIsPCNode()) // 如果是计算机节点.
+			if (nd.isPCNode()) // 如果是计算机节点.
 			{
 				continue;
 			}

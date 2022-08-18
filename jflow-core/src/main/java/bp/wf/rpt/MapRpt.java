@@ -4,11 +4,8 @@ import bp.da.*;
 import bp.port.*;
 import bp.en.*;
 import bp.en.Map;
-import bp.wf.*;
 import bp.sys.*;
-import bp.tools.StringHelper;
-import bp.wf.*;
-import java.util.*;
+
 
 /** 
  报表设计
@@ -16,12 +13,11 @@ import java.util.*;
 public class MapRpt extends EntityNoName
 {
 
-		///报表权限控制方式
+		///#region 报表权限控制方式
 	/** 
 	 报表查看权限控制.
-	 * @throws Exception 
 	*/
-	public final RightViewWay getRightViewWay() throws Exception
+	public final RightViewWay getRightViewWay()throws Exception
 	{
 		return RightViewWay.forValue(this.GetValIntByKey(MapRptAttr.RightViewWay));
 	}
@@ -31,9 +27,8 @@ public class MapRpt extends EntityNoName
 	}
 	/** 
 	 报表查看权限控制-数据
-	 * @throws Exception 
 	*/
-	public final String getRightViewTag() throws Exception
+	public final String getRightViewTag()  throws Exception
 	{
 		return this.GetValStringByKey(MapRptAttr.RightViewTag);
 	}
@@ -43,9 +38,8 @@ public class MapRpt extends EntityNoName
 	}
 	/** 
 	 报表部门权限控制.
-	 * @throws Exception 
 	*/
-	public final RightDeptWay getRightDeptWay() throws Exception
+	public final RightDeptWay getRightDeptWay()throws Exception
 	{
 		return RightDeptWay.forValue(this.GetValIntByKey(MapRptAttr.RightDeptWay));
 	}
@@ -55,9 +49,8 @@ public class MapRpt extends EntityNoName
 	}
 	/** 
 	 报表部门权限控制-数据
-	 * @throws Exception 
 	*/
-	public final String getRightDeptTag() throws Exception
+	public final String getRightDeptTag()  throws Exception
 	{
 		return this.GetValStringByKey(MapRptAttr.RightDeptTag);
 	}
@@ -66,10 +59,10 @@ public class MapRpt extends EntityNoName
 		this.SetValByKey(MapRptAttr.RightDeptTag, value);
 	}
 
-		/// 报表权限控制方式
+		///#endregion 报表权限控制方式
 
 
-		///外键属性
+		///#region 外键属性
 	/** 
 	 框架
 	*/
@@ -85,20 +78,7 @@ public class MapRpt extends EntityNoName
 		return obj;
 	}
 
-	/** 
-	 标签
-	*/
-	public final FrmLabs getFrmLabs()throws Exception
-	{
-		Object tempVar = this.GetRefObject("FrmLabs");
-		FrmLabs obj = tempVar instanceof FrmLabs ? (FrmLabs)tempVar : null;
-		if (obj == null)
-		{
-			obj = new FrmLabs(this.getNo());
-			this.SetRefObject("FrmLabs", obj);
-		}
-		return obj;
-	}
+
 	/** 
 	 图片
 	*/
@@ -170,26 +150,16 @@ public class MapRpt extends EntityNoName
 		return obj;
 	}
 
-		///
+		///#endregion
 
 
-		///属性
+		///#region 属性
 	/** 
 	 流程编号
 	*/
 	public final String getFK_Flow()throws Exception
 	{
 	   String str = this.GetValStrByKey(MapRptAttr.FK_Flow);
-		if (DataType.IsNullOrEmpty(str)==true)
-	   {
-		   str = this.getNo().replace("ND", "");
-		   str = str.replace("MyRpt", "");
-		   str = StringHelper.padLeft(str, 3, '0');
-		   this.SetValByKey(MapRptAttr.FK_Flow, str);
-
-
-		   this.Update(MapRptAttr.FK_Flow, str);
-	   }
 	   return str;
 	}
 	public final void setFK_Flow(String value) throws Exception
@@ -202,7 +172,7 @@ public class MapRpt extends EntityNoName
 	public final String getPTable()throws Exception
 	{
 		String s = this.GetValStrByKey(MapRptAttr.PTable);
-		if (DataType.IsNullOrEmpty(s)==true)
+		if (DataType.IsNullOrEmpty(s) == true)
 		{
 			return this.getNo();
 		}
@@ -215,7 +185,7 @@ public class MapRpt extends EntityNoName
 	/** 
 	 备注
 	*/
-	public final String getNote()throws Exception
+	public final String getNote()  throws Exception
 	{
 		return this.GetValStrByKey(MapRptAttr.Note);
 	}
@@ -224,23 +194,23 @@ public class MapRpt extends EntityNoName
 		this.SetValByKey(MapRptAttr.Note, value);
 	}
 	private Entities _HisEns = null;
-	public final Entities getHisEns() throws Exception
+	public final Entities getHisEns()throws Exception
 	{
 		if (_HisEns == null)
 		{
-			_HisEns = bp.en.ClassFactory.GetEns(this.getNo());
+			_HisEns = ClassFactory.GetEns(this.getNo());
 		}
 		return _HisEns;
 	}
-	public final Entity getHisEn() throws Exception
+	public final Entity getHisEn()throws Exception
 	{
 		return this.getHisEns().getGetNewEntity();
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	private GEEntity _HisEn = null;
 	public final GEEntity getHisGEEn()throws Exception
 	{
@@ -260,19 +230,18 @@ public class MapRpt extends EntityNoName
 	/** 
 	 报表设计
 	 
-	 @param no 映射编号
-	 * @throws Exception 
+	 param no 映射编号
 	*/
-	public MapRpt(String no) throws Exception
-	{
-		this.setNo( no);
+	public MapRpt(String no, String flowNo) throws Exception {
+		this.setNo(no);
 		this.Retrieve();
+		this.setFK_Flow(flowNo);
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -299,7 +268,7 @@ public class MapRpt extends EntityNoName
 
 
 
-			///权限控制. 2014-12-18
+			///#region 权限控制. 2014-12-18
 		map.AddTBInt(MapRptAttr.RightViewWay, 0, "报表查看权限控制方式", true, false);
 		map.AddTBString(MapRptAttr.RightViewTag, null, "报表查看权限控制Tag", true, false, 0, 4000, 20);
 		map.AddTBInt(MapRptAttr.RightDeptWay, 0, "部门数据查看控制方式", true, false);
@@ -309,7 +278,7 @@ public class MapRpt extends EntityNoName
 		map.getAttrsOfOneVSM().Add(new RptDepts(), new Depts(), RptDeptAttr.FK_Rpt, RptDeptAttr.FK_Dept, DeptAttr.Name, DeptAttr.No, "部门权限");
 		map.getAttrsOfOneVSM().Add(new RptEmps(), new Emps(), RptEmpAttr.FK_Rpt, RptEmpAttr.FK_Emp, DeptAttr.Name, DeptAttr.No, "人员权限");
 
-			/// 权限控制.
+			///#endregion 权限控制.
 
 			//增加参数字段.
 		map.AddTBAtParas(1000);
@@ -318,65 +287,30 @@ public class MapRpt extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///其他方法.
+		///#region 其他方法.
 	/** 
 	 显示的列.
-	 * @throws Exception 
 	*/
-	public final MapAttrs getHisShowColsAttrs() throws Exception
+	public final MapAttrs getHisShowColsAttrs()throws Exception
 	{
 		MapAttrs mattrs = new MapAttrs(this.getNo());
 		return mattrs;
-	}
-	@Override
-	protected boolean beforeInsert() throws Exception
-	{
-		this.ResetIt();
-		return super.beforeInsert();
-	}
-
-	/** 
-	 重置设置.
-	 */
-	public final void ResetIt() throws Exception {
-		MapData md = new MapData(this.getNo());
-		md.setRptIsSearchKey(true);
-		md.setRptDTSearchWay(DTSearchWay.None);
-		md.setRptDTSearchKey("");
-		md.setRptSearchKeys("*FK_Dept*WFSta*FK_NY*");
-
-		Flow fl = new Flow(this.getFK_Flow());
-		this.setPTable(fl.getPTable());
-		this.Update();
-
-		String keys = "'OID','FK_Dept','FlowStarter','WFState','Title','FlowStartRDT','FlowEmps','FlowDaySpan','FlowEnder','FlowEnderRDT','FK_NY','FlowEndNode','WFSta'";
-		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt");
-
-		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo()); // 删除已经有的字段。
-		for (MapAttr attr : attrs.ToJavaList()) {
-			if (keys.contains("'" + attr.getKeyOfEn() + "'") == false) {
-				continue;
-			}
-			attr.setFK_MapData(this.getNo());
-			attr.Insert();
-		}
 	}
 	/** 
 	 删除之前.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeDelete() throws Exception
+	protected boolean beforeDelete() throws Exception 
 	{
 		MapAttrs attrs = new MapAttrs();
 		attrs.Delete(MapAttrAttr.FK_MapData, this.getNo());
 		return super.beforeDelete();
 	}
 
-		/// 其他方法.
+		///#endregion 其他方法.
 }

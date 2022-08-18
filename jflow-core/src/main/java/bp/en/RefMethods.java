@@ -17,7 +17,7 @@ public class RefMethods extends ArrayList<RefMethod>
 	/**
 	 * 加入
 	 * 
-	 * @param attr
+	 * param en
 	 *            attr
 	 */
 	public final void Add(RefMethod en)
@@ -34,7 +34,7 @@ public class RefMethods extends ArrayList<RefMethod>
 	/**
 	 * 是不是存在集合里面
 	 * 
-	 * @param en
+	 * param en
 	 *            要检查的RefMethod
 	 * @return true/false
 	 */
@@ -53,7 +53,7 @@ public class RefMethods extends ArrayList<RefMethod>
 	/**
 	 * 能够看到的属性
 	 */
-	public final int getCountOfVisable()
+	public final int getCountOfVisable()throws Exception
 	{
 		int i = 0;
 		for (RefMethod rm : this)
@@ -77,7 +77,7 @@ public class RefMethods extends ArrayList<RefMethod>
 		 */
 	}
 	
-	public List<RefMethod> ToJavaList()
+	public List<RefMethod> ToJavaList()throws Exception
 	{
 		return (List<RefMethod>)(Object)this;
 	}

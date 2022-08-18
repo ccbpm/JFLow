@@ -13,8 +13,8 @@ import java.math.*;
 public class GloVarExt extends EntityNoName
 {
 
-		///属性
-	public final Object getValOfObject() throws Exception
+		///#region 属性
+	public final Object getValOfObject()  throws Exception
 	{
 		return this.GetValByKey(GloVarAttr.Val);
 	}
@@ -22,7 +22,7 @@ public class GloVarExt extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final String getVal() throws Exception
+	public final String getVal()  throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.Val);
 	}
@@ -30,7 +30,7 @@ public class GloVarExt extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final float getValOfFloat()
+	public final float getValOfFloat()throws Exception
 	{
 		try
 		{
@@ -45,7 +45,7 @@ public class GloVarExt extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final int getValOfInt() throws Exception
+	public final int getValOfInt()throws Exception
 	{
 		try
 		{
@@ -60,11 +60,11 @@ public class GloVarExt extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final BigDecimal getValOfDecimal()
+	public final BigDecimal getValOfDecimal()throws Exception
 	{
 		try
 		{
-			return this.GetValDecimalByKey(GloVarAttr.Val,4);
+			return this.GetValDecimalByKey(GloVarAttr.Val,0);
 		}
 		catch (java.lang.Exception e)
 		{
@@ -75,7 +75,7 @@ public class GloVarExt extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final boolean getValOfBoolen() throws Exception
+	public final boolean getValOfBoolen()  throws Exception
 	{
 		return this.GetValBooleanByKey(GloVarAttr.Val);
 	}
@@ -86,7 +86,7 @@ public class GloVarExt extends EntityNoName
 	/** 
 	 note
 	*/
-	public final String getNote() throws Exception
+	public final String getNote()  throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.Note);
 	}
@@ -97,7 +97,7 @@ public class GloVarExt extends EntityNoName
 	/** 
 	 分组值
 	*/
-	public final String getGroupKey() throws Exception
+	public final String getGroupKey()  throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.GroupKey);
 	}
@@ -106,10 +106,10 @@ public class GloVarExt extends EntityNoName
 		this.SetValByKey(GloVarAttr.GroupKey, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 全局变量
 	*/
@@ -119,9 +119,9 @@ public class GloVarExt extends EntityNoName
 	/** 
 	 全局变量
 	 
-	 @param mypk
+	 param no
 	*/
-	public GloVarExt(String no) throws Exception
+	public GloVarExt(String no) throws Exception 
 	{
 		this.setNo(no);
 		this.Retrieve();
@@ -130,7 +130,7 @@ public class GloVarExt extends EntityNoName
 	 全局变量s
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -150,5 +150,5 @@ public class GloVarExt extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

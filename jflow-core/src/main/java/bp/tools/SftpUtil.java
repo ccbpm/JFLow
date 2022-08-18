@@ -175,9 +175,9 @@ public class SftpUtil {
 	/**
 	 * 设置登陆后转到的目标文件夹
 	 * 
-	 * @param strWorkingDirectory
+	 * param strWorkingDirectory
 	 *            工作目录路径
-	 * @param booAutoCreate
+	 * param booAutoCreate
 	 *            自动创建目录
 	 * @return boolean true 成功 false 失败
 	 */
@@ -189,7 +189,7 @@ public class SftpUtil {
 			try {
 				this.openConnection();
 				if (null != sftp) {
-					booResult = innerChangeDirectory(strWorkingDirectory, booAutoCreate);
+					booResult = innerChangeDirectory("/bpm/"+strWorkingDirectory, booAutoCreate);
 				}
 			} catch (Exception e) {
 				booResult = false;
@@ -206,9 +206,9 @@ public class SftpUtil {
 	/**
 	 * innerChangeDirectory:(切换工作目录内部方法).
 	 * 
-	 * @param strWorkingDirectory
+	 * param strWorkingDirectory
 	 *            工作目录路径
-	 * @param booAutoCreate
+	 * param booAutoCreate
 	 *            自动创建目录
 	 * @return boolean true 成功 false 失败
 	 * @throws SftpException 
@@ -229,12 +229,13 @@ public class SftpUtil {
                 }
                 for (String strDir : strArrayDirs) {
                     try {
-                        sftp.ls(strDir);
+						sftp.cd(strDir);
                     }
                     catch (Exception e1) {
                         sftp.mkdir(strDir);
+						sftp.cd(strDir);
                     }
-                    sftp.cd(strDir);
+
                 }
                 sftp.cd(strWorkingDirectory);
                 booResult = true;
@@ -246,9 +247,9 @@ public class SftpUtil {
 	/**
 	 * 上传文件,并按照strRemoteFile 文件名称修改上传之后的文件名
 	 * 
-	 * @param strRemoteFile
+	 * param strRemoteFile
 	 *            远程文件名
-	 * @param strLocalFile
+	 * param strLocalFile
 	 *            本地文件路径（含文件名）
 	 * @return boolean true 上传成功 false 上传失败
 	 * @throws Exception
@@ -284,9 +285,9 @@ public class SftpUtil {
 	/**
 	 * 上传文件,并按照strRemoteFile 文件名称修改上传之后的文件名
 	 * 
-	 * @param strRemoteFile
+	 * param strRemoteFile
 	 *            远程文件名
-	 * @param inputStreamLocal
+	 * param inputStreamLocal
 	 *            本地文件输入流
 	 * @return boolean true 上传成功 false 上传失败
 	 */
@@ -320,7 +321,7 @@ public class SftpUtil {
 	/**
 	 * 上传文件,不修改上传之后的文件名
 	 * 
-	 * @param strLocalFile
+	 * param strLocalFile
 	 *            本地文件路径（含文件名）
 	 * @return true 上传成功 false 上传失败
 	 * @throws Exception
@@ -333,9 +334,9 @@ public class SftpUtil {
 	/**
 	 * 下载文件(并用strLocalFile命名)
 	 * 
-	 * @param strRemoteFile
+	 * param strRemoteFile
 	 *            远程文件名
-	 * @param strLocalFile
+	 * param strLocalFile
 	 *            本地文件路径（含文件名）
 	 * @return boolean true 下载成功 false 下载失败
 	 */
@@ -370,7 +371,7 @@ public class SftpUtil {
 	/**
 	 * 下载文件(不修改文件名)
 	 * 
-	 * @param strRemoteFile
+	 * param strRemoteFile
 	 *            远程文件名
 	 * @return boolean true 下载成功 false 下载失败
 	 */
@@ -381,7 +382,7 @@ public class SftpUtil {
 	/**
 	 * 下载文件(不修改文件名)
 	 * 
-	 * @param strRemoteFile
+	 * param strRemoteFile
 	 *            远程文件名
 	 * @return 文件二进制流
 	 */
@@ -409,7 +410,7 @@ public class SftpUtil {
 	/**
 	 * 根据指定的文件名称查询SFTP上面的文件
 	 * 
-	 * @param strFileName
+	 * param strFileName
 	 *            远程文件名
 	 * @return SFTP上面的文件
 	 */
@@ -464,7 +465,7 @@ public class SftpUtil {
 	/**
 	 * 删除服务器端文件
 	 * 
-	 * @param strFileName
+	 * param strFileName
 	 *            远程文件名
 	 * @return boolean 操作结果 true 成功 false 失败
 	 * @throws SftpException
@@ -515,9 +516,9 @@ public class SftpUtil {
 	/**
 	 * 文件重命名
 	 * 
-	 * @param oldName
+	 * param oldName
 	 *            原名称
-	 * @param newName
+	 * param newName
 	 *            新名称
 	 * @return boolean 操作结果 true 成功 false 失败
 	 */
@@ -544,9 +545,9 @@ public class SftpUtil {
 	/**
 	 * 创建或删除目录
 	 * 
-	 * @param strWorkingDirectory
+	 * param strWorkingDirectory
 	 *            工作目录
-	 * @param enumFtpUtil
+	 * param enumFtpUtil
 	 *            枚举目录操作
 	 * @return boolean 操作结果 true 成功 false 失败
 	 */
@@ -583,7 +584,7 @@ public class SftpUtil {
 	/**
 	 * 删除目录
 	 *
-	 * @param folderDir
+	 * param folderDir
 	 *            目录
 	 * @return boolean 操作结果 true 成功 false 失败
 	 */
@@ -612,7 +613,7 @@ public class SftpUtil {
 	/**
 	 * 获得远程文件的文件头信息，前4个字节
 	 * 
-	 * @param strRemoteFile
+	 * param strRemoteFile
 	 *            远程文件名
 	 * @return byte[] 文件的文件头信息，前4个字节
 	 */
@@ -640,9 +641,9 @@ public class SftpUtil {
 	/**
 	 * 在SFTP内部复制文件
 	 * 
-	 * @param sourceFile
+	 * param sourceFile
 	 *            源文件名
-	 * @param targetFile
+	 * param targetFile
 	 *            目标文件名
 	 * @return boolean 操作结果 true 成功 false 失败
 	 */
@@ -689,9 +690,9 @@ public class SftpUtil {
 	/**
 	 * 在SFTP内部移动文件
 	 * 
-	 * @param sourceFile
+	 * param sourceFile
 	 *            源文件名
-	 * @param targetFile
+	 * param targetFile
 	 *            目标文件名
 	 * @return boolean 操作结果 true 成功 false 失败
 	 */
@@ -719,9 +720,9 @@ public class SftpUtil {
 	/**
 	 * 上传目录
 	 *
-	 * @param sPath
+	 * param sPath
 	 *            上传源目录
-	 * @param dPath
+	 * param dPath
 	 *            上传目的目录
 	 */
 	public void upLoadDir(String sPath, String dPath) {
@@ -754,9 +755,9 @@ public class SftpUtil {
 	/**
 	 * 上传文件(目录)到当前目录
 	 *
-	 * @param file
+	 * param file
 	 *            要上传的目录或文件
-	 * @param pwd
+	 * param pwd
 	 *            ftp当前目录
 	 */
 	private void uploadFile(File file, String pwd) {
@@ -840,9 +841,9 @@ public class SftpUtil {
 	/**
 	 * 下载目录
 	 *
-	 * @param sPath
+	 * param sPath
 	 *            下载源目录
-	 * @param dPath
+	 * param dPath
 	 *            下载目的目录
 	 */
 	public void downLoadDir(String sPath, String dPath) {
@@ -904,7 +905,7 @@ public class SftpUtil {
 	/**
 	 * 设置：是否关闭SFTP链接，默认为否。
 	 * 
-	 * @param closeConnection
+	 * param closeConnection
 	 *            是否关闭连接
 	 */
 	public final void setCloseConnection(boolean closeConnection) {
@@ -923,7 +924,7 @@ public class SftpUtil {
 	/**
 	 * 设置默认控制编码,默认为GB2312，支持中文目录及中文文件名传输
 	 * 
-	 * @param controlEncoding
+	 * param controlEncoding
 	 *            获得控制编码,
 	 */
 	public void setControlEncoding(String controlEncoding) {
@@ -935,7 +936,7 @@ public class SftpUtil {
 	/**
 	 * 设置：连接超时时间
 	 * 
-	 * @param timeout
+	 * param timeout
 	 *            连接超时时间
 	 */
 

@@ -1,4 +1,13 @@
 package bp.wf;
+
+import bp.da.*;
+import bp.web.*;
+import bp.en.*;
+import bp.port.*;
+import bp.sys.*;
+import bp.*;
+import java.util.*;
+
 /** 
  授权属性
 */

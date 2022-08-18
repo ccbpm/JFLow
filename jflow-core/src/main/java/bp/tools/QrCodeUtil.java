@@ -16,17 +16,17 @@ public class QrCodeUtil {
         String url = "http://www.baidu.com";
         String path = "C:/Users/Administrator/"+ "testQrcode";
         String fileName = "temp.jpg";
-        createQrCode(url, path, fileName);
+        createQrCode(url, path, fileName,"jpg");
     }
  
-    public static String createQrCode(String url, String path, String fileName) {
+    public static String createQrCode(String url, String path, String fileName,String ext) {
         try {
             Map<EncodeHintType, String> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             BitMatrix bitMatrix = new MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, 400, 400, hints);
             File file = new File(path, fileName);
             if (file.exists() || ((file.getParentFile().exists() || file.getParentFile().mkdirs()) && file.createNewFile())) {
-                writeToFile(bitMatrix, "jpg", file);
+                writeToFile(bitMatrix, ext, file);
                 System.out.println("搞定：" + file);
             }
  

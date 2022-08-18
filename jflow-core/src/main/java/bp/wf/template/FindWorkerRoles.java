@@ -2,8 +2,8 @@ package bp.wf.template;
 
 import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.sys.*;
+import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,57 +13,51 @@ import java.util.*;
 public class FindWorkerRoles extends EntitiesOID
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FindWorkerRole();
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 找人规则集合
 	*/
-	public FindWorkerRoles()
-	{
+	public FindWorkerRoles() throws Exception {
 	}
 	/** 
 	 找人规则集合
 	 
-	 @param nodeID
-	 * @throws Exception 
+	 param nodeID
 	*/
-	public FindWorkerRoles(int nodeID) throws Exception
-	{
+	public FindWorkerRoles(int nodeID) throws Exception {
 		this.Retrieve(FindWorkerRoleAttr.FK_Node, nodeID, FindWorkerRoleAttr.Idx);
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FindWorkerRole> ToJavaList()
-	{
-		return (List<FindWorkerRole>)(Object)this;
+	public final java.util.List<FindWorkerRole> ToJavaList() {
+		return (java.util.List<FindWorkerRole>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FindWorkerRole> Tolist()
-	{
+	public final ArrayList<FindWorkerRole> Tolist()  {
 		ArrayList<FindWorkerRole> list = new ArrayList<FindWorkerRole>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -72,5 +66,5 @@ public class FindWorkerRoles extends EntitiesOID
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

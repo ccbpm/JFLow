@@ -2,9 +2,7 @@ package bp.en;
 
 import bp.da.*;
 import bp.difference.SystemConfig;
-import bp.sys.*;
 import java.io.*;
-import java.time.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +22,9 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 查询全部
 	 
 	 @return 
-	 * @throws Exception 
+	 * throws Exception
 	*/
-	public int RetrieveAllFromDBSource() throws Exception
-	{
+	public int RetrieveAllFromDBSource() throws Exception {
 		QueryObject qo = new QueryObject(this);
 		return qo.DoQuery();
 	}
@@ -41,7 +38,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 
 
 		///过滤
-	public final Entity Filter(String key, String val) throws Exception
+	public final Entity Filter(String key, String val)
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -52,7 +49,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		return null;
 	}
-	public final Entity Filter(String key1, String val1, String key2, String val2)throws Exception
+	public final Entity Filter(String key1, String val1, String key2, String val2)
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -63,7 +60,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		return null;
 	}
-	public final Entity Filter(String key1, String val1, String key2, String val2, String key3, String val3)throws Exception
+	public final Entity Filter(String key1, String val1, String key2, String val2, String key3, String val3)
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -79,8 +76,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 按照属性查询
 	 
-	 @param attr 属性名称
-	 @param val 值
+	 param attr 属性名称
+	 param val 值
 	 @return 是否查询到
 	 * @throws Exception 
 	*/
@@ -124,27 +121,25 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 写入到xml.
 	 
-	 @param file
+	 param file
 	 @return 
 	*/
-	public int ExpDataToXml(String file)throws Exception
-	{
+	public int ExpDataToXml(String file) throws Exception {
 		DataTable dt = this.ToDataTableField();
 		DataSet ds = new DataSet();
 		ds.Tables.add(dt);
-		ds.WriteXml(file);
+		ds.WriteXml(file,XmlWriteMode.WriteSchema, ds);
 		return dt.Rows.size();
 	}
 
 	/** 
 	 通过datatable 转换为实体集合这个Table其中一个列名称是主键
 	 
-	 @param dt Table
-	 @param fieldName 字段名称，这个字段时包含在table 中的主键 
+	 param dt Table
+	 param fieldName 字段名称，这个字段时包含在table 中的主键
 	 * @throws Exception 
 	*/
-	public final void InitCollectionByTable(DataTable dt, String fieldName) throws Exception
-	{
+	public final void InitCollectionByTable(DataTable dt, String fieldName) throws Exception {
 		Entity en = this.getGetNewEntity();
 		String pk = en.getPK();
 		for (DataRow dr : dt.Rows)
@@ -159,7 +154,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 通过datatable 转换为实体集合.
 	 这个Table 的结构需要与属性结构相同。
 	 
-	 @param dt 转换为Table
+	 param dt 转换为Table
 	*/
 	public final void InitCollectionByTable(DataTable dt)throws Exception
 	{
@@ -196,7 +191,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 判断两个实体集合是不是相同.
 	 
-	 @param ens
+	 param ens
 	 @return 
 	*/
 	public final boolean equals(Entities ens)throws Exception
@@ -240,8 +235,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 是否存在key= val 的实体。
 	 
-	 @param key
-	 @param val
+	 param key
+	 param val
 	 @return 
 	*/
 	public final boolean getIsExits(String key, Object val)throws Exception
@@ -262,16 +257,16 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 @return 
 	 * @throws Exception 
 	*/
-	public abstract Entity getGetNewEntity() throws Exception;
+	public abstract Entity getGetNewEntity() ;
 
 	/** 
 	 将对象添加到集合尾处，如果对象已经存在，则不添加
 	 
-	 @param entity 要添加的对象
+	 param entity 要添加的对象
 	 @return 返回添加到的地方
 	 * @throws Exception 
 	*/
-	public int AddEntity(Entity entity) throws Exception
+	public int AddEntity(Entity entity)
 	{
 		this.add(entity);
 		return this.size();
@@ -281,7 +276,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		this.add(idx, entity);
 		return idx;
 	}
-	public void AddEntities(Entities ens)throws Exception
+	public void AddEntities(Entities ens)
 	{
 		for (Entity en : convertEntities(ens))
 		{
@@ -291,11 +286,10 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 增加entities
 	 
-	 @param pks 主键的值，中间用@符号隔开
+	 param pks 主键的值，中间用@符号隔开
 	 * @throws Exception 
 	*/
-	public void AddEntities(String pks) throws Exception
-	{
+	public void AddEntities(String pks) throws Exception {
 		this.clear();
 		if (pks == null || pks.equals(""))
 		{
@@ -326,24 +320,24 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 判断是不是包含指定的Entity .
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
-	public final boolean Contains(Entity en)throws Exception
+	public final boolean contains(Entity en)throws Exception
 	{
-		return this.Contains(en.getPKVal());
+		return this.contains(en.getPKVal());
 	}
 	/** 
 	 是否包含这个集合
 	 
-	 @param ens
+	 param ens
 	 @return true / false 
 	*/
-	public final boolean Contains(Entities ens)throws Exception
+	public final boolean contains(Entities ens)throws Exception
 	{
-		return this.Contains(ens, ens.getGetNewEntity().getPK());
+		return this.contains(ens, ens.getGetNewEntity().getPK());
 	}
-	public final boolean Contains(Entities ens, String key)throws Exception
+	public final boolean contains(Entities ens, String key)throws Exception
 	{
 		if (ens.size() == 0)
 		{
@@ -351,14 +345,14 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		for (Entity en : convertEntities(ens))
 		{
-			if (this.Contains(key, en.GetValByKey(key)) == false)
+			if (this.contains(key, en.GetValByKey(key)) == false)
 			{
 				return false;
 			}
 		}
 		return true;
 	}
-	public final boolean Contains(Entities ens, String key1, String key2)throws Exception
+	public final boolean contains(Entities ens, String key1, String key2)throws Exception
 	{
 		if (ens.size() == 0)
 		{
@@ -366,7 +360,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		for (Entity en : convertEntities(ens))
 		{
-			if (this.Contains(key1, en.GetValByKey(key1), key2, en.GetValByKey(key2)) == false)
+			if (this.contains(key1, en.GetValByKey(key1), key2, en.GetValByKey(key2)) == false)
 			{
 				return false;
 			}
@@ -376,22 +370,22 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 是不是包含指定的PK
 	 
-	 @param pkVal
+	 param pkVal
 	 @return 
 	*/
-	public final boolean Contains(Object pkVal)throws Exception
+	public final boolean contains(Object pkVal)
 	{
 		String pk = this.getGetNewEntity().getPK();
-		return this.Contains(pk, pkVal);
+		return this.contains(pk, pkVal);
 	}
 	/** 
 	 指定的属性里面是否包含指定的值.
 	 
-	 @param attr 指定的属性
-	 @param pkVal 指定的值
+	 param attr 指定的属性
+	 param pkVal 指定的值
 	 @return 返回是否等于
 	*/
-	public final boolean Contains(String attr, Object pkVal)throws Exception
+	public final boolean contains(String attr, Object pkVal)
 	{
 		for (Entity myen : convertEntities(this))
 		{
@@ -402,7 +396,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		return false;
 	}
-	public final boolean Contains(String attr1, Object pkVal1, String attr2, Object pkVal2)throws Exception
+	public final boolean contains(String attr1, Object pkVal1, String attr2, Object pkVal2)throws Exception
 	{
 		for (Entity myen : convertEntities(this))
 		{
@@ -413,7 +407,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		return false;
 	}
-	public final boolean Contains(String attr1, Object pkVal1, String attr2, Object pkVal2, String attr3, Object pkVal3)throws Exception
+	public final boolean contains(String attr1, Object pkVal1, String attr2, Object pkVal2, String attr3, Object pkVal3)throws Exception
 	{
 		for (Entity myen : convertEntities(this))
 		{
@@ -427,7 +421,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 取得当前集合于传过来的集合交集.
 	 
-	 @param ens 一个实体集合
+	 param ens 一个实体集合
 	 @return 比较后的集合
 	*/
 	public final Entities GainIntersection(Entities ens)throws Exception
@@ -451,7 +445,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 
 	 @return Entities
 	*/
-	public final Entities CreateInstance()
+	public final Entities CreateInstance()throws Exception
 	{
 		return ClassFactory.GetEns(this.toString());
 	}
@@ -459,11 +453,10 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		///
 
 
-		///获取一个实体
-	/** 
+	/**
 	 获取一个实体
 	 
-	 @param val 值
+	 param val 值
 	 @return 
 	*/
 	public final Entity GetEntityByKey(Object val)throws Exception
@@ -481,11 +474,11 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 获取一个实体
 	 
-	 @param attr 属性
-	 @param val 值
+	 param attr 属性
+	 param val 值
 	 @return 
 	*/
-	public final Entity GetEntityByKey(String attr, Object val)throws Exception
+	public final Entity GetEntityByKey(String attr, Object val)
 	{
 		for (Entity en : convertEntities(this))
 		{
@@ -529,15 +522,24 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		return null;
 	}
-
-		///
-
-
-		/// 对一个属性操作
+	public Entities GetEntitiesByKey(String attr, String val)throws Exception
+	{
+		Entities ens = this.getGetNewEntity().getGetNewEntities();
+		ens.clear();
+		for(Entity en : convertEntities(this))
+		{
+			if (en.GetValStrByKey(attr).equals(val) == false)
+				continue;
+			ens.AddEntity(en);
+		}
+		if (ens.size() == 0)
+			return null;
+		return ens;
+	}
 	/** 
 	 求和
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
 	public final BigDecimal GetSumDecimalByKey(String key)throws Exception
@@ -590,7 +592,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 求和
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
 	public final int GetSumIntByKey(String key)throws Exception
@@ -605,7 +607,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 求和
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
 	public final float GetSumFloatByKey(String key)throws Exception
@@ -621,10 +623,10 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 求个数
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final int GetsizeByKey(String key, String val)throws Exception
+	public final int GetCountByKey(String key, String val)throws Exception
 	{
 		int sum = 0;
 		for (Entity en : convertEntities(this))
@@ -636,7 +638,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		}
 		return sum;
 	}
-	public final int GetsizeByKey(String key, int val)throws Exception
+	public final int GetCountByKey(String key, int val)throws Exception
 	{
 		int sum = 0;
 		for (Entity en : convertEntities(this))
@@ -661,7 +663,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	*/
 	public final int FlodInCash() throws Exception
 	{
-		//this.Clear();
+		//this.clear();
 		QueryObject qo = new QueryObject(this);
 
 		// qo.Top = 2000;
@@ -679,12 +681,12 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	*/
 	public final String DoDBCheck(DBCheckLevel level) throws Exception
 	{
-		return PubClass.DBRpt1(level, this);
+		return bp.pub.PubClass.DBRpt1(level, this);
 	}
 	/** 
 	 从集合中删除该对象
 	 
-	 @param entity
+	 param entity
 	*/
 	public void RemoveEn(Entity entity)
 	{
@@ -693,7 +695,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 移除
 	 
-	 @param pk
+	 param pk
 	 * @throws Exception 
 	*/
 	public void RemoveEn(String pk) throws Exception
@@ -1006,7 +1008,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 			}
 		}
 
-		DataTable dt = this.ToDataTableDescField();
+		DataTable dt = this.ToDataTableField();
 		DataSet ds = new DataSet();
 		ds.Tables.add(dt); //  this.ToDataSet();
 		//ds.WriteXml(file);
@@ -1036,8 +1038,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 按照关键字查询。
 	 说明这里是用Attrs接受
 	 
-	 @param key 关键字
-	 @param al 实体
+	 param key 关键字
+	 param attrs
 	 @return 返回Table
 	 * @throws Exception 
 	*/
@@ -1073,7 +1075,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 按照KEY 查找。
 	 
-	 @param keyVal KEY
+	 param keyVal KEY
 	 @return 返回朝找出来的个数。
 	 * @throws Exception 
 	*/
@@ -1088,7 +1090,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		{
 			qo.AddWhere(this.getGetNewEntity().getPK(), " LIKE ", keyVal);
 		}
-		for (Attr en : attrs)
+		for (Attr en : attrs.ToJavaList())
 		{
 
 			if (en.getUIContralType() == UIContralType.DDL || en.getUIContralType() == UIContralType.CheckBok)
@@ -1125,8 +1127,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 按LIKE 去查.
 	 
-	 @param key
-	 @param vals
+	 param key
+	 param vals
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1154,8 +1156,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 按照IDs查询并且排序
 	 比如: FrmID  IN  '001','002' 
 	 
-	 @param key
-	 @param vals
+	 param key
+	 param vals
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1179,8 +1181,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 按照IDs查询
 	 比如: FrmID  IN  '001','002' 
 	 
-	 @param key
-	 @param vals
+	 param key
+	 param vals
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1255,7 +1257,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			qo.AddWhere(key, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
+			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 		}
 		else
 		{
@@ -1281,9 +1283,9 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			qo.AddWhere(key, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
+			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 			qo.addAnd();
-			qo.AddWhere(key2, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key2, val2));
+			qo.AddWhere(key2, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key2, val2));
 		}
 		else
 		{
@@ -1311,13 +1313,13 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			qo.AddWhere(key, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
+			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 			qo.addAnd();
-			qo.AddWhere(key2, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key2, val2));
+			qo.AddWhere(key2, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key2, val2));
 			qo.addAnd();
-			qo.AddWhere(key3, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key3, val3));
+			qo.AddWhere(key3, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key3, val3));
 			qo.addAnd();
-			qo.AddWhere(key4, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key4, val4));
+			qo.AddWhere(key4, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key4, val4));
 		}
 		else
 		{
@@ -1349,11 +1351,11 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 
 		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
 		{
-			qo.AddWhere(key, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
+			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 			qo.addAnd();
-			qo.AddWhere(key2, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key2, val2));
+			qo.AddWhere(key2, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key2, val2));
 			qo.addAnd();
-			qo.AddWhere(key3, bp.sys.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key3, val3));
+			qo.AddWhere(key3, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key3, val3));
 		}
 		else
 		{
@@ -1387,21 +1389,21 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	public int RetrieveAllOrderByRandom(int topNum)throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.setTop(topNum);
+		qo.Top = topNum;
 		qo.addOrderByRandom();
 		return qo.DoQuery();
 	}
 	public int RetrieveAll(int topNum, String orderby)throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.setTop(topNum);
+		qo.Top = topNum;
 		qo.addOrderBy(orderby);
 		return qo.DoQuery();
 	}
 	public int RetrieveAll(int topNum, String orderby, boolean isDesc)throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.setTop(topNum);
+		qo.Top = topNum;
 		if (isDesc)
 		{
 			qo.addOrderByDesc(orderby);
@@ -1443,13 +1445,13 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 按照最大个数查询。
 	 
-	 @param MaxNum 最大NUM
+	 param MaxNum 最大NUM
 	 @return 
 	*/
 	public final int RetrieveAll(int MaxNum)throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.setTop(MaxNum);
+		qo.Top = MaxNum;
 		return qo.DoQuery();
 	}
 	/** 
@@ -1485,7 +1487,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 					}
 				}
 				dt.Columns.remove(attr.getKey());
-				dt.Columns.get("tmp" + attr.getKey()).ColumnName = attr.getKey();
+				dt.Columns.get("tmp" + attr.getKey()).setColumnName(attr.getKey());
 				continue;
 			}
 			if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
@@ -1515,7 +1517,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 
 				}
 				dt.Columns.remove(attr.getKey());
-				dt.Columns.get("tmp" + attr.getKey()).ColumnName = attr.getKey();
+				dt.Columns.get("tmp" + attr.getKey()).setColumnName(attr.getKey());
 				continue;
 			}
 		}
@@ -1552,11 +1554,11 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		Entity en = this.getGetNewEntity();
 		Attrs attrs = en.getEnMap().getAttrs();
 
-		dt.TableName = tableName;
+		dt.setTableName(tableName);
 		for (Entity myen : convertEntities(this))
 		{
 			DataRow dr = dt.NewRow();
-			for (Attr attr : attrs)
+			for (Attr attr : attrs.ToJavaList())
 			{
 				if (attr.getMyDataType() == DataType.AppBoolean)
 				{
@@ -1592,26 +1594,24 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 @return DataTable
 	*/
 
-	public final DataTable ToDataTableField()throws Exception
-	{
+	public final DataTable ToDataTableField() throws Exception {
 		return ToDataTableField("dt");
 	}
 
 
-	public final DataTable ToDataTableField(String tableName)throws Exception
-	{
+	public final DataTable ToDataTableField(String tableName) throws Exception {
 		DataTable dt = this.ToEmptyTableField();
 
 		Entity en = this.getGetNewEntity();
 		Attrs attrs = en.getEnMap().getAttrs();
 
-		dt.TableName = tableName;
+		dt.setTableName(tableName);
 
 		for (int i = 0; i < this.size(); i++)
 		{
 			Entity myen = this.get(i);
 			DataRow dr = dt.NewRow();
-			for (Attr attr : attrs)
+			for (Attr attr : attrs.ToJavaList())
 			{
 				if (attr.getMyDataType() == DataType.AppBoolean)
 				{
@@ -1652,7 +1652,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		DataTable dt = this.ToEmptyTableDesc();
 		Entity en = this.getGetNewEntity();
 
-		dt.TableName = en.getEnMap().getPhysicsTable();
+		dt.setTableName(en.getEnMap().getPhysicsTable());
 		for (Entity myen : convertEntities(this))
 		{
 			DataRow dr = dt.NewRow();
@@ -1735,11 +1735,11 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	public final DataTable ToDataTableDescField(String tableName)throws Exception
 	{
 		DataTable dt = this.ToEmptyTableDescField();
-		dt.TableName = tableName;
+		dt.setTableName(tableName);
 
 		Entity en = this.getGetNewEntity();
 
-		dt.TableName = en.getEnMap().getPhysicsTable();
+		dt.setTableName(en.getEnMap().getPhysicsTable());
 		for (Entity myen : convertEntities(this))
 		{
 			DataRow dr = dt.NewRow();
@@ -1769,7 +1769,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 把系统的实体的PK转换为string
 	 比如: "001,002,003,"。
 	 
-	 @param flag 分割符号, 一般来说用 ' ; '
+	 param flag 分割符号, 一般来说用 ' ; '
 	 @return 转化后的string / 实体集合为空就 return null
 	*/
 	public final String ToStringOfPK(String flag, boolean isCutEndFlag)throws Exception
@@ -1831,21 +1831,19 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	 @return 
 	*/
 
-	public final DataTable ToEmptyTableField()throws Exception
-	{
+	public final DataTable ToEmptyTableField() throws Exception {
 		return ToEmptyTableField(null);
 	}
 
 
-	public final DataTable ToEmptyTableField(Entity en)throws Exception
-	{
+	public final DataTable ToEmptyTableField(Entity en) throws Exception {
 		DataTable dt = new DataTable();
 		if (en == null)
 		{
 			en = this.getGetNewEntity();
 		}
 
-		dt.TableName = en.getEnMap().getPhysicsTable();
+		dt.setTableName(en.getEnMap().getPhysicsTable());
 
 		for (Attr attr : en.getEnMap().getAttrs())
 		{
@@ -1885,7 +1883,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	{
 		DataTable dt = new DataTable();
 		Entity en = this.getGetNewEntity();
-		dt.TableName = en.getEnMap().getPhysicsTable();
+		dt.setTableName(en.getEnMap().getPhysicsTable());
 		for (Attr attr : en.getEnMap().getAttrs())
 		{
 			dt.Columns.Add(new DataColumn(attr.getKey(), String.class));
@@ -1944,8 +1942,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 缓存查询: 根据 in sql 方式进行。
 	 
-	 @param cashKey 指定的缓存Key，全局变量不要重复。
-	 @param inSQL sql 语句
+	 param cashKey 指定的缓存Key，全局变量不要重复。
+	 param inSQL sql 语句
 	 @return 返回放在缓存里面的结果集合
 	 * @throws Exception 
 	*/
@@ -1970,11 +1968,11 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 缓存查询: 根据相关的条件
 	 
-	 @param attrKey 属性: 比如 FK_Sort
-	 @param val 值: 比如:01 
-	 @param top 最大的取值信息
-	 @param orderBy 排序字段
-	 @param isDesc
+	 param attrKey 属性: 比如 FK_Sort
+	 param val 值: 比如:01
+	 param top 最大的取值信息
+	 param orderBy 排序字段
+	 param isDesc
 	 @return 返回放在缓存里面的结果集合
 	 * @throws Exception 
 	*/
@@ -1986,7 +1984,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		if (ens == null)
 		{
 			QueryObject qo = new QueryObject(this);
-			qo.setTop(top);
+			qo.Top = top;
 
 			if (attrKey.equals("") || attrKey == null)
 			{
@@ -2020,8 +2018,8 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 缓存查询: 根据相关的条件
 	 
-	 @param attrKey
-	 @param val
+	 param attrKey
+	 param val
 	 @return 
 	 * @throws Exception 
 	*/
@@ -2032,9 +2030,9 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 缓存查询: 根据相关的条件
 	 
-	 @param attrKey
-	 @param val
-	 @param orderby
+	 param attrKey
+	 param val
+	 param orderby
 	 @return 
 	*/
 	public final int RetrieveFromCash(String attrKey, Object val, String orderby)throws Exception
@@ -2044,9 +2042,9 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 缓存查询: 根据相关的条件
 	 
-	 @param top
-	 @param orderBy
-	 @param isDesc
+	 param top
+	 param orderBy
+	 param isDesc
 	 @return 
 	*/
 	public final int RetrieveFromCash(String orderBy, boolean isDesc, int top)throws Exception
@@ -2061,7 +2059,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 是否包含任意一个实体主键编号
 	 
-	 @param keys 多个主键用,符合分开
+	 param keys 多个主键用,符合分开
 	 @return true包含任意一个，fale 一个都不包含.
 	*/
 	public final boolean ContainsAnyOnePK(String keys)throws Exception
@@ -2079,7 +2077,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	/** 
 	 包含所有的主键
 	 
-	 @param keys 多个主键用,符合分开
+	 param keys 多个主键用,符合分开
 	 @return true全部包含.
 	*/
 	public final boolean ContainsAllPK(String keys)throws Exception
@@ -2117,7 +2115,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 
 	/**
 	 * 把Object转换成List实体集合
-	 * @param obj
+	 * param obj
 	 * @return
 	 */
 	public static ArrayList<Entity> convertEntities(Object obj)
@@ -2130,8 +2128,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		return (List<Entity>)(Object)this;
 	}
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.getClass().getName();
 	}
 

@@ -2,10 +2,6 @@ package bp.wf.template;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.wf.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  公文模板
@@ -13,81 +9,84 @@ import java.util.*;
 public class DocTemplate extends EntityNoName
 {
 
-		/// 属性
+		///#region  属性
 	/** 
 	 文件
-	 * @throws Exception 
 	*/
-	public final byte[] getFileBytes() throws Exception
-	{
+
+	public final byte[] getFileBytes() throws Exception {
 			//转化为字节.
+
 		byte[] bytes = null;
-		bytes = bp.da.DataType.ConvertFileToByte(this.getFilePath());
+		bytes = DataType.ConvertFileToByte(this.getFilePath());
 		return bytes;
 	}
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
-
+	/** 
+	 编号
+	*/
+	public final String getNo()
+	{
+		return this.GetValStrByKey(DocTemplateAttr.No);
+	}
+	public final void setNo(String value)
+	 {
+		this.SetValByKey(DocTemplateAttr.No, value);
+	}
 	/** 
 	 路径
-	 * @throws Exception 
 	*/
 	public final String getFilePath() throws Exception
 	{
 		return this.GetValStrByKey(DocTemplateAttr.FilePath);
 	}
-	public final void setFilePath(String value) throws Exception
-	{
+	public final void setFilePath(String value)  throws Exception
+	 {
 		this.SetValByKey(DocTemplateAttr.FilePath, value);
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(DocTemplateAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
+	public final void setFK_Node(int value)  throws Exception
+	 {
 		this.SetValByKey(DocTemplateAttr.FK_Node, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()throws Exception
+	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStrByKey(DocTemplateAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value) throws Exception
-	{
+	public final void setFK_Flow(String value)  throws Exception
+	 {
 		this.SetValByKey(DocTemplateAttr.FK_Flow, value);
 	}
 
-		///
-
-
-		///构造函数
+		///#region 构造函数
 	/** 
 	 公文模板
 	*/
-	public DocTemplate()
-	{
+	public DocTemplate() {
 	}
 	/** 
 	 公文模板
 	 
-	 @param no
+	 param no
 	*/
-	public DocTemplate(String no) throws Exception
+	public DocTemplate(String no)
 	{
 		super(no);
 	}
@@ -95,15 +94,14 @@ public class DocTemplate extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_DocTemplate", "公文模板");
-			//map.Java_SetCodeStruct("6");
+			//map.setCodeStruct("6");
 
 		map.AddTBStringPK(DocTemplateAttr.No, null, "No", true, true, 1, 50, 20);
 		map.AddTBString(DocTemplateAttr.Name, null, "名称", true, false, 0, 200, 20);
@@ -114,5 +112,5 @@ public class DocTemplate extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

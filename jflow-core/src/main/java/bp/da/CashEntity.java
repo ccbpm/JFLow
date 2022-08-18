@@ -7,7 +7,7 @@ public class CashEntity
 
 		///Hashtable 属性
 	private static Hashtable _Cash;
-	public static Hashtable getDCash()
+	public static Hashtable getDCash()throws Exception
 	{
 		if (_Cash == null)
 		{
@@ -21,9 +21,9 @@ public class CashEntity
 	/** 
 	 把实体放入缓存里面
 	 
-	 @param enName
-	 @param ens
-	 @param enPK
+	 param enName
+	 param ens
+	 param enPK
 	 * @throws Exception 
 	*/
 	public static void PubEns(String enName, Entities ens, String enPK) throws Exception
@@ -44,8 +44,7 @@ public class CashEntity
 		// 把实体集合放入.
 		CashEntity.getDCash().put(enName + "Ens", ens);
 	}
-	public static Entities GetEns(String enName)
-	{
+	public static Entities GetEns(String enName) throws Exception {
 		Object tempVar = CashEntity.getDCash().get(enName + "Ens");
 		Entities ens = tempVar instanceof Entities ? (Entities)tempVar : null;
 		return ens;
@@ -53,12 +52,11 @@ public class CashEntity
 	/** 
 	 更新对象
 	 
-	 @param enName
-	 @param key
-	 @param en
+	 param enName
+	 param key
+	 param en
 	*/
-	public static void Update(String enName, String key, Entity en)
-	{
+	public static void Update(String enName, String key, Entity en) throws Exception {
 		Object tempVar = CashEntity.getDCash().get(enName);
 		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 		if (ht == null)
@@ -74,12 +72,11 @@ public class CashEntity
 	/** 
 	 获取一个实体
 	 
-	 @param enName 实体Name
-	 @param pkVal 主键值
+	 param enName 实体Name
+	 param pkVal 主键值
 	 @return 返回这个实体
 	*/
-	public static Entity Select(String enName, String pkVal)
-	{
+	public static Entity Select(String enName, String pkVal) throws Exception {
 		Object tempVar = CashEntity.getDCash().get(enName);
 		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 		if (ht == null)
@@ -92,11 +89,10 @@ public class CashEntity
 	/** 
 	 删除
 	 
-	 @param enName
-	 @param pkVal
+	 param enName
+	 param pkVal
 	*/
-	public static void Delete(String enName, String pkVal)
-	{
+	public static void Delete(String enName, String pkVal) throws Exception {
 		Object tempVar = CashEntity.getDCash().get(enName);
 		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 		if (ht == null)
@@ -111,12 +107,11 @@ public class CashEntity
 	/** 
 	 插入
 	 
-	 @param enName
-	 @param en
-	 @param pkVal
+	 param enName
+	 param en
+	 param pkVal
 	*/
-	public static void Insert(String enName, String pkVal, Entity en)
-	{
+	public static void Insert(String enName, String pkVal, Entity en) throws Exception {
 		Object tempVar = CashEntity.getDCash().get(enName);
 		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 		if (ht == null)

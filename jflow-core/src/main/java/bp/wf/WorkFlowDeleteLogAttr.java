@@ -1,12 +1,20 @@
 package bp.wf;
 
+import bp.da.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.wf.data.*;
+import bp.*;
+import java.util.*;
+
 /** 
  流程删除日志
 */
 public class WorkFlowDeleteLogAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -52,10 +60,10 @@ public class WorkFlowDeleteLogAttr
 	*/
 	public static final String IsBackTracking = "IsBackTracking";
 
-		///
+		///#endregion
 
 
-		///流程属性
+		///#region 流程属性
 	/** 
 	 标题
 	*/
@@ -85,10 +93,6 @@ public class WorkFlowDeleteLogAttr
 	*/
 	public static final String FK_Dept = "FK_Dept";
 	/** 
-	 数量
-	*/
-	public static final String MyNum = "MyNum";
-	/** 
 	 结束人
 	*/
 	public static final String FlowEnder = "FlowEnder";
@@ -113,5 +117,5 @@ public class WorkFlowDeleteLogAttr
 	*/
 	public static final String PFlowNo = "PFlowNo";
 
-		///
+		///#endregion
 }

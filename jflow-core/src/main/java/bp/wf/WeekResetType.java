@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  周末休息类型
 */
@@ -20,13 +22,11 @@ public enum WeekResetType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static WeekResetType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static WeekResetType forValue(int value) 
+	{return values()[value];
 	}
 }

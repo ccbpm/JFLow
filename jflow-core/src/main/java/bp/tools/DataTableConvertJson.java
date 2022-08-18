@@ -12,7 +12,7 @@ public class DataTableConvertJson
 	/**
 	 * dataTable转换成Json格式
 	 * 
-	 * @param dt
+	 * param dt
 	 * @return
 	 */
 	public static String DataTable2Json(DataTable dt)
@@ -45,9 +45,9 @@ public class DataTableConvertJson
 	/**
 	 * dataTable转换成Json格式 秦2014年06月23日 17:11
 	 * 
-	 * @param dt
+	 * param dt
 	 *            表
-	 * @param totalRows
+	 * param totalRows
 	 *            总行数
 	 * @return
 	 */
@@ -92,7 +92,7 @@ public class DataTableConvertJson
 	/**
 	 * DataSet转换成Json格式
 	 * 
-	 * @param ds
+	 * param ds
 	 *            DataSet
 	 * @return
 	 */
@@ -103,7 +103,7 @@ public class DataTableConvertJson
 		for (DataTable dt : ds.Tables)
 		{
 			json.append("{\"");
-			json.append(dt.TableName);
+			json.append(dt.getTableName());
 			json.append("\":");
 			json.append(DataTable2Json(dt));
 			json.append("}");
@@ -114,8 +114,8 @@ public class DataTableConvertJson
 	/**
 	 * Msdn
 	 * 
-	 * @param jsonName
-	 * @param dt
+	 * param jsonName
+	 * param dt
 	 * @return
 	 */
 	public static String DataTableToJson(String jsonName, DataTable dt)
@@ -150,15 +150,15 @@ public class DataTableConvertJson
 	/**
 	 * 根据DataTable生成Json树结构
 	 * 
-	 * @param tabel
+	 * param tabel
 	 *            数据源
-	 * @param idCol
+	 * param idCol
 	 *            ID列
-	 * @param txtCol
+	 * param txtCol
 	 *            Text列
-	 * @param rela
+	 * param rela
 	 *            关系字段
-	 * @param pId
+	 * param pId
 	 *            父ID
 	 * @return easyui tree json格式
 	 * @throws Exception
@@ -174,15 +174,15 @@ public class DataTableConvertJson
 	/**
 	 * 根据DataTable生成Json树结构
 	 * 
-	 * @param tabel
+	 * param tabel
 	 *            数据源
-	 * @param idCol
+	 * param idCol
 	 *            ID列
-	 * @param txtCol
+	 * param txtCol
 	 *            Text列
-	 * @param rela
+	 * param rela
 	 *            关系字段
-	 * @param pId
+	 * param pId
 	 *            父ID
 	 * @return easyui tree json格式
 	 */
@@ -248,7 +248,7 @@ public class DataTableConvertJson
 	/**
 	 * @Description: 替换特殊字符，避免json解析时报错
 	 * @Title: GetFilteredStrForJSON
-	 * @param getText 需要替换的原始字符串
+	 * param getText 需要替换的原始字符串
 	 * @author peixiaofeng
 	 * @date 2016年5月31日
 	 */

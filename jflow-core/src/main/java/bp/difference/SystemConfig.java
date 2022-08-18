@@ -1,14 +1,15 @@
 package bp.difference;
+
 import java.io.*;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
 import bp.da.*;
-import bp.sys.*;
-import org.apache.commons.io.IOUtils;
 import bp.difference.handler.CommonUtils;
-import bp.tools.StringHelper;
+import bp.sys.CCBPMRunModel;
+import bp.sys.OSModel;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.io.IOUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,27 +20,27 @@ import javax.servlet.http.HttpServletRequest;
  * 
  */
 public class SystemConfig {
+	public static String AppCenterDBFieldCaseModel;
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(SystemConfig.class);
 
 	private static boolean _IsBSsystem = true;
 
 	public static String getFTPServerType() {
 
-		return SystemConfig.GetValByKey("FTPServerType","");
+		return SystemConfig.getAppSettings().get("FTPServerType").toString();
 	}
 
 	public static String getFTPServerIP() {
-
-	    return SystemConfig.GetValByKey("FTPServerIP","");
+		return SystemConfig.getAppSettings().get("FTPServerIP").toString();
 	}
 
-	public static String getFTPServerPort(){
-		return SystemConfig.GetValByKey("FTPServerPort","");
+	public static int getFTPServerPort(){
+		return SystemConfig.GetValByKeyInt("FTPServerPort",0);
 	}
 
-	public static String getFTPUserNo() throws Exception {
+	public static String getFTPUserNo()  {
 
-		String str = SystemConfig.GetValByKey("FTPUserNo","");
+		String str = SystemConfig.getAppSettings().get("FTPUserNo").toString();
 		return str;
 
 	}
@@ -49,12 +50,12 @@ public class SystemConfig {
 			return "";
 		return getAppSettings().get("admins").toString();
 	}
-	public static String getFTPUserPassword() throws Exception {
-		String str = SystemConfig.GetValByKey("FTPUserPassword","");
+	public static String getFTPUserPassword() {
+		String str = SystemConfig.getAppSettings().get("FTPUserPassword").toString();
 		return str;
 	}
 
-	public static Plant Plant = bp.sys.Plant.Java;
+	public static bp.sys.Plant Plant = bp.sys.Plant.Java;
 	/// <summary>
 	/// 附件上传加密
 	/// </summary>
@@ -69,7 +70,7 @@ public class SystemConfig {
 		if (DataType.IsNullOrEmpty(IsEnableAthEncrypt) == true)
 			return false;
 
-		if (IsEnableAthEncrypt.equals("1"))
+		if (SystemConfig.getAppSettings().get("IsEnableAthEncrypt").toString().equals("1"))
 			return true;
 		return false;
 
@@ -79,38 +80,37 @@ public class SystemConfig {
 	/// 附件上传位置
 	/// </summary>
 	public static boolean getIsUploadFileToFTP() {
-		String IsUploadFileToFTP = SystemConfig.GetValByKey("IsUploadFileToFTP","");
+		String IsUploadFileToFTP = SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString();
 
 		if (DataType.IsNullOrEmpty(IsUploadFileToFTP) == true)
 			return false;
 
-		if (IsUploadFileToFTP.equals("1"))
+		if (SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString().equals("1"))
 			return true;
 		return false;
 	}
 
 	public static String getAttachWebSite() {
-		return SystemConfig.GetValByKey("AttachWebSite","");
+		return SystemConfig.getAppSettings().get("AttachWebSite").toString();
 	}
 
 	/**
 	 * OS结构
-	 * @throws Exception 
 	 */
-	public static OSModel getOSModel() throws Exception {
+	public static OSModel getOSModel()  {
 		return OSModel.forValue(SystemConfig.GetValByKeyInt("OSModel", 0));
 	}
-	
-	public static int getGroupStationModel() throws Exception {
+
+	public static int getGroupStationModel()  {
 		return  SystemConfig.GetValByKeyInt("GroupStationModel", 0);
 	}
-	
+
 
 
 	/**
 	 * 读取配置文件
 	 * 
-	 * @param
+	 * param
 	 * @throws Exception
 	 */
 	public static void ReadConfigFile(InputStream fis) throws Exception {
@@ -130,9 +130,9 @@ public class SystemConfig {
 			throw new Exception("读取配置文件失败", e);
 		}
 	}
-	/// <summary>
-	/// 运行模式0=单机版，1=集团模式, 2=SAAS模式
-	/// </summary>
+	/**
+	* 运行模式0=单机版，1=集团模式, 2=SAAS模式
+	*/
 	public static CCBPMRunModel getCCBPMRunModel()
 	{
 		int val = SystemConfig.GetValByKeyInt("CCBPMRunModel", 0);
@@ -148,10 +148,25 @@ public class SystemConfig {
 		return CCBPMRunModel.Single;
 	}
 	/**
+	 传入的参数，是否需要类型
+	 */
+	public static boolean getAppCenterDBFieldIsParaDBType()
+	{
+		switch (getAppCenterDBType())
+		{
+			case UX:
+			case PostgreSQL:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
 	 * 获取xml中的配置信息 GroupTitle, ShowTextLen, DefaultSelectedAttrs, TimeSpan
 	 * 
-	 * @param key
-	 * @param ensName
+	 * param key
+	 * param ensName
 	 * @return
 	 */
 	public static String GetConfigXmlEns(String key, String ensName) {
@@ -183,19 +198,35 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getVer() {
-        return SystemConfig.GetValByKey("Ver","1.0.0");
+		try {
+			return getAppSettings().get("Ver").toString();
+		} catch (java.lang.Exception e) {
+			return "1.0.0";
+		}
 	}
 
 	public static String getTouchWay() {
-	    return SystemConfig.GetValByKey("TouchWay",SystemConfig.getCustomerTel() + " 地址:" + SystemConfig.getCustomerAddr());
+		try {
+			return getAppSettings().get("TouchWay").toString();
+		} catch (java.lang.Exception e) {
+			return SystemConfig.getCustomerTel() + " 地址:" + SystemConfig.getCustomerAddr();
+		}
 	}
 
 	public static String getCopyRight() {
-		return SystemConfig.GetValByKey("CopyRight","版权所有@" + getCustomerName());
+		try {
+			return getAppSettings().get("CopyRight").toString();
+		} catch (java.lang.Exception e) {
+			return "版权所有@" + getCustomerName();
+		}
 	}
 
 	public static String getCompanyID() {
-        return SystemConfig.GetValByKey("CompanyID","CCFlow");
+		String s = getAppSettings().get("CompanyID").toString();
+		if (DataType.IsNullOrEmpty(s)) {
+			return "CCFlow";
+		}
+		return s;
 	}
 
 	/**
@@ -204,8 +235,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getDeveloperName() {
-
-        return SystemConfig.GetValByKey("DeveloperName","");
+		return getAppSettings().get("DeveloperName").toString();
 	}
 
 	/**
@@ -214,7 +244,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getDeveloperShortName() {
-        return SystemConfig.GetValByKey("DeveloperShortName","");
+		return getAppSettings().get("DeveloperShortName").toString();
 	}
 
 	/**
@@ -223,7 +253,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getDeveloperTel() {
-        return SystemConfig.GetValByKey("DeveloperTel","");
+		return getAppSettings().get("DeveloperTel").toString();
 	}
 
 	/**
@@ -232,7 +262,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getDeveloperAddr() {
-        return SystemConfig.GetValByKey("DeveloperAddr","");
+		return (String) getAppSettings().get("DeveloperAddr");
 
 	}
 
@@ -267,6 +297,7 @@ public class SystemConfig {
 					}
 					_CS_AppSettings = (Hashtable) props;
 				} catch (Exception e) {
+					//ogger.error("读取配置文件失败");
 					throw new RuntimeException("读取配置文件失败", e);
 				}
 			}
@@ -292,7 +323,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPhysicalApplicationPath() {
-		return "D:/JJFlow/trunk/JJFlow/";
+		return "D:\\JJFlow\\trunk\\JJFlow\\";
 	}
 
 	/**
@@ -329,12 +360,11 @@ public class SystemConfig {
 	public static String getPathOfData() {
 
 		bp.da.Log.DebugWriteInfo(getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()
-				+ File.separator + "Data" + File.separator);
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + File.separator + "Data"
-				+ File.separator;
+				+"/Data/");
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()  + "/Data/";
 	}
 
-	public static String getPathOfDataUser() {
+	public static String getPathOfDataUser(){
 		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString() + "DataUser/";
 	}
 
@@ -343,15 +373,15 @@ public class SystemConfig {
 	 * 
 	 * @return
 	 */
-	public static String getPathOfXML() {
+	public static String getPathOfXML()throws Exception {
 		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/XML/";
 	}
 
-	public static String getPathOfAppUpdate() {
+	public static String getPathOfAppUpdate()throws Exception {
 		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/AppUpdate/";
 	}
 
-	public static String getPathOfCyclostyleFile() {
+	public static String getPathOfCyclostyleFile()throws Exception {
 		return getPathOfWebApp() + "DataUser/CyclostyleFile/";
 	}
 
@@ -399,51 +429,28 @@ public class SystemConfig {
 		return bp.wf.Glo.getCCFlowAppPath();
 	}
 
-	/**
-	 * springBoot启动方式
-	 * @return
-	 */
-	public static boolean getIsStartJarPackage(){
-		String str = (String) SystemConfig.getAppSettings().get("IsStartJarPackage");
-		if(DataType.IsNullOrEmpty(str) == true || str.equals("0"))
-			return false;
-		return true;
-	}
 
 
 	public static boolean getIsJarRun(){
-		Object str =  SystemConfig.getAppSettings().get("IsStartJarPackage");
-		if(str == null || str.toString().equals("0"))
-			return false;
-		return true;
-	}
+        Object str =  SystemConfig.getAppSettings().get("IsStartJarPackage");
+        if(str == null || str.toString().equals("0"))
+            return false;
+        return true;
+    }
 	/**
 	 * WebApp Path
 	 * 
 	 * @return
 	 */
 	public static String getPathOfWebApp(){
-		HttpServletRequest request = Glo.getRequest();
+		HttpServletRequest request = bp.sys.base.Glo.getRequest();
 		if (SystemConfig.getIsBSsystem()) {
 			if (request == null || request.getSession() == null) {
-				return  bp.wf.Glo.getHostURL() + "/";
+				return bp.wf.Glo.getHostURL() + "/";
 			} else {
-				if(getIsJarRun() == true ){
-					return "resources/";
-                    /*ApplicationHome home = new ApplicationHome(SystemConfig.class.getClass());
-                 //File jarFile = home.getSource();
-                    File jarFile = null;
-                    try {
-                        jarFile = new File(ResourceUtils.getURL("classpath:").getPath()).getParentFile().getParentFile();
-                    } catch (FileNotFoundException e) {
-
-                    }
-
-                    return jarFile.getPath()+"/META-INF/resources/";*/
-				}
-
-
-				String path = Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
+			    if(getIsJarRun() == true )
+			        return "resources/";
+				String path = bp.sys.base.Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
 				return path;
 			}
 		} else {
@@ -455,7 +462,7 @@ public class SystemConfig {
 		return SystemConfig.GetValByKeyBoolen("IsBSsystem", true);
 	}
 
-	public static void setIsBSsystem(boolean value) throws Exception {
+	public static void setIsBSsystem(boolean value) {
 		SystemConfig._IsBSsystem = value;
 	}
 
@@ -530,7 +537,7 @@ public class SystemConfig {
 		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
 		 * + "" + getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
 		 */
-		return Glo.class.getClass().getResource("/").getPath() + ""
+		return bp.sys.base.Glo.class.getClass().getResource("/").getPath() + ""
 				+ getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
 	}
 
@@ -544,7 +551,7 @@ public class SystemConfig {
 		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
 		 * + "" + getAppSettings().get("PageOfLostSession").toString();
 		 */
-		return Glo.class.getClass().getResource("/").getPath() + ""
+		return bp.sys.base.Glo.class.getClass().getResource("/").getPath() + ""
 				+ getAppSettings().get("PageOfLostSession").toString();
 	}
 
@@ -553,7 +560,7 @@ public class SystemConfig {
 	 * 
 	 * @return
 	 */
-	public static String getPathOfLog() {
+	public static String getPathOfLog() throws Exception{
 		return getPathOfWebApp() + "/DataUser/Log/";
 	}
 
@@ -741,7 +748,7 @@ public class SystemConfig {
 		return getAppSettings().get("CustomerTel").toString();
 	}
 
-	/// 微信相关配置信息
+	/// #region 微信相关配置信息
 	/// <summary>
 	/// 企业标识
 	/// </summary>
@@ -790,7 +797,7 @@ public class SystemConfig {
 	public static String getWX_MessageUrl() {
 		return getAppSettings().get("WeiXin_MessageUrl").toString();
 	}
-	/// 
+	/// #endregion
 	public static String getWXGZH_WeiXinToken() {
 		return getAppSettings().get("GZHToKen").toString();
 	}
@@ -803,7 +810,7 @@ public class SystemConfig {
 	public static String getWeiXin_TemplateId() {
 		return getAppSettings().get("WeiXin_TemplateId").toString();
 	}
-	/// 钉钉配置相关
+	/// #region 钉钉配置相关
 	/// <summary>
 	/// 企业标识
 	/// </summary>
@@ -843,7 +850,7 @@ public class SystemConfig {
 		return getAppSettings().get("Ding_AgentID").toString();
 
 	}
-	/// 
+	/// #endregion
 
 	public static String GetValByKey(String key, String isNullas) {
 
@@ -916,22 +923,22 @@ public class SystemConfig {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getUser() {
+	public static String getUser()  {
 
 		if (SystemConfig.getCustomerNo().equals("BWDA")) {
 			String user = getAppSettings().get("JflowUser.encryption").toString();
-			user = Glo.String_JieMi(user);
+			user = bp.sys.base.Glo.String_JieMi(user);
 			return user;
 		}
 
 		return getAppSettings().get("JflowUser").toString();
 	}
 
-	public static String getPassword(){
+	public static String getPassword() throws Exception {
 
 		if (SystemConfig.getCustomerNo().equals("BWDA")) {
 			String user = getAppSettings().get("JflowPassword.encryption").toString();
-			user = Glo.String_JieMi(user);
+			user =  bp.sys.base.Glo.String_JieMi(user);
 			return user;
 		}
 
@@ -939,7 +946,7 @@ public class SystemConfig {
 
 	}
 
-	public static void setAppCenterDSN(String value) throws Exception {
+	public static void setAppCenterDSN(String value) {
 
 		getAppSettings().put("AppCenterDSN", value);
 	}
@@ -954,13 +961,13 @@ public class SystemConfig {
 		if (jdbcType != null) {
 			String dbType = jdbcType.toString();
 			if (dbType.equalsIgnoreCase("MSMSSQL") || dbType.equalsIgnoreCase("MSSQL")) {
-				return DBType.MSSQL;
+				return bp.da.DBType.MSSQL;
 			} else if (dbType.equalsIgnoreCase("Oracle")) {
-				return DBType.Oracle;
+				return bp.da.DBType.Oracle;
 			} else if (dbType.equalsIgnoreCase("MySQL")) {
-				return DBType.MySQL;
+				return bp.da.DBType.MySQL;
 			} else if(dbType.equalsIgnoreCase("DM")){
-				return DBType.DM;
+				return bp.da.DBType.DM;
 			} else if(dbType.equalsIgnoreCase("KingBaseR3")){
 				return DBType.KingBaseR3;
 			} else if(dbType.equalsIgnoreCase("KingBaseR6")){
@@ -1052,11 +1059,11 @@ public class SystemConfig {
 	public static String getAppCenterDBAddStringStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case Oracle:
+		case KingBaseR3:
+		case KingBaseR6:
 		case MySQL:
 		case DM:
 		case Informix:
-		case KingBaseR3:
-		case KingBaseR6:
 			return "||";
 		default:
 			return "+";
@@ -1070,14 +1077,14 @@ public class SystemConfig {
 
 	public static Hashtable<String, Object> CS_DBConnctionDic;
 
-	public static void DoClearCash_del() {
+	public static void DoClearCash_del()throws Exception {
 		DoClearCash();
 	}
 
 	/**
 	 * 执行清空
 	 */
-	public static void DoClearCash() {
+	public static void DoClearCash() throws Exception{
 		bp.da.Cash.getMap_Cash().clear();
 		bp.da.Cash.getSQL_Cash().clear();
 		bp.da.Cash.getEnsData_Cash().clear();
@@ -1124,7 +1131,9 @@ public class SystemConfig {
 		}
 		return getHostURLOfBS();
 	}
-
+	public static String getAPIHostURL() {
+		return getAppSettings().get("APIHostURL").toString();
+	}
 	public static String getHostURLOfBS() {
 
 		String url = "http://" + CommonUtils.getRequest().getServerName() + ":"
@@ -1183,7 +1192,10 @@ public class SystemConfig {
 			return "";
 		return obj.toString();
 	}
-
+	public static String getSecondAppAdmins(){
+		String str = getAppSettings().get("SecondAppAdmins").toString();
+		return str;
+	}
 	/// <summary>
 	/// 百度云应用AK
 	/// </summary>
@@ -1206,11 +1218,47 @@ public class SystemConfig {
 		return obj.toString();
 
 	}
+
+	/**
+	 组织结构集成模式
+	 */
+	public static boolean getOrganizationIsView()throws Exception
+	{
+		String val = SystemConfig.GetValByKey("OrganizationIsView","0");
+		if (val.equals("0"))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	public static String getDateType()throws Exception
+	{
+		return SystemConfig.GetValByKey("DateType", "varchar");
+	}
+	public static String getAppID()throws Exception
+	{
+		return SystemConfig.GetValByKey("AppID", "");
+	}
+
+	public static String getSaasHost()throws Exception
+	{
+		String str = bp.difference.SystemConfig.getAppSettings().get("SaasHost").toString();
+		if (DataType.IsNullOrEmpty(str) == true)
+		{
+			return "ccbpm.cn";
+		}
+		return str;
+	}
+
+
 	/**
 	 * 数据库大小写模式
 	 */
-	public static FieldCaseModel AppCenterDBFieldCaseModel()
-	{
+	public static FieldCaseModel AppCenterDBFieldCaseModel()  {
 		switch (getAppCenterDBType())
 		{
 			case Oracle:
@@ -1218,11 +1266,24 @@ public class SystemConfig {
 			case KingBaseR3:
 				// R3时，查询敏感设置
 				String sql ="show case_sensitive;";
-				String caseSen = DBAccess.RunSQLReturnString(sql);
+				String caseSen="";
+				try{
+					caseSen = DBAccess.RunSQLReturnString(sql);
+				}catch(Exception ex){
+					sql="show enable_ci;";
+					caseSen = DBAccess.RunSQLReturnString(sql);
+					if("on".equals(caseSen))
+						return FieldCaseModel.None;
+					else
+						return FieldCaseModel.UpperCase;
+				}
 				if("on".equals(caseSen))
 					return FieldCaseModel.UpperCase;
-				else 
+				else
 					return FieldCaseModel.None;
+
+
+
 			case KingBaseR6:
 				return FieldCaseModel.Lowercase;
 			case PostgreSQL:
@@ -1231,4 +1292,5 @@ public class SystemConfig {
 				return FieldCaseModel.None;
 		}
 	}
+
 }

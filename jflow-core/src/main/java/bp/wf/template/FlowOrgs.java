@@ -3,6 +3,7 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.wf.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -14,17 +15,14 @@ public class FlowOrgs extends EntitiesMM
 	/** 
 	 流程对应组织
 	*/
-	public FlowOrgs()
-	{
+	public FlowOrgs()  {
 	}
 	/** 
 	 流程对应组织
 	 
-	 @param orgNo orgNo 
-	 * @throws Exception 
+	 param orgNo orgNo 
 	*/
-	public FlowOrgs(String orgNo) throws Exception
-	{
+	public FlowOrgs(String orgNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowOrgAttr.OrgNo, orgNo);
 		qo.DoQuery();
@@ -33,29 +31,26 @@ public class FlowOrgs extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new FlowOrg();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FlowOrg> ToJavaList()
-	{
-		return (List<FlowOrg>)(Object)this;
+	public final java.util.List<FlowOrg> ToJavaList() {
+		return (java.util.List<FlowOrg>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FlowOrg> Tolist()
-	{
+	public final ArrayList<FlowOrg> Tolist()  {
 		ArrayList<FlowOrg> list = new ArrayList<FlowOrg>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -64,5 +59,5 @@ public class FlowOrgs extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

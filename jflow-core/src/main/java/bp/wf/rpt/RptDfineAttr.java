@@ -1,5 +1,7 @@
 package bp.wf.rpt;
-import bp.en.EntityNoNameAttr;
+
+import bp.en.*;
+
 /** 
  报表定义
 */

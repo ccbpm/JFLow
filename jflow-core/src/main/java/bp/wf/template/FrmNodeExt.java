@@ -2,10 +2,11 @@ package bp.wf.template;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.sys.*;
-import bp.wf.*;
 import bp.wf.Glo;
+import bp.wf.template.sflow.*;
+import bp.wf.*;
+
 /** 
  节点表单
  节点的工作节点有两部分组成.	 
@@ -15,8 +16,8 @@ import bp.wf.Glo;
 public class FrmNodeExt extends EntityMyPK
 {
 
-		///属性.
-	public final String getFK_Frm() throws Exception
+		///#region 属性.
+	public final String getFKFrm()
 	{
 		return this.GetValStrByKey(FrmNodeAttr.FK_Frm);
 	}
@@ -35,12 +36,11 @@ public class FrmNodeExt extends EntityMyPK
 	/** 
 	 是否启用节点组件?
 	*/
-	public final FrmWorkCheckSta getIsEnableFWC() throws Exception
-	{
+	public final FrmWorkCheckSta isEnableFWC() throws Exception {
 		return FrmWorkCheckSta.forValue(this.GetValIntByKey(FrmNodeAttr.IsEnableFWC));
 	}
-	public final void setIsEnableFWC(FrmWorkCheckSta value) throws Exception
-	{
+	public final void setEnableFWC(FrmWorkCheckSta value)  throws Exception
+	 {
 		this.SetValByKey(FrmNodeAttr.IsEnableFWC, value.getValue());
 	}
 
@@ -52,17 +52,23 @@ public class FrmNodeExt extends EntityMyPK
 		return this.GetValStringByKey(NodeWorkCheckAttr.CheckField);
 	}
 
-		///
+	public final FrmSubFlowSta getSFSta() throws Exception {
+		return FrmSubFlowSta.forValue(this.GetValIntByKey(FrmSubFlowAttr.SFSta));
+	}
+	public final void setSFSta(FrmSubFlowSta value)  throws Exception
+	 {
+		this.SetValByKey(FrmSubFlowAttr.SFSta, value.getValue());
+	}
+
+		///#endregion
 
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
-	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 
 			//权限控制.
@@ -81,23 +87,21 @@ public class FrmNodeExt extends EntityMyPK
 	}
 
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 节点表单
 	*/
-	public FrmNodeExt()
-	{
+	public FrmNodeExt()  {
 	}
 	/** 
 	 节点表单
 	 
-	 @param mypk
-	 * @throws Exception 
+	 param mypk
 	*/
-	public FrmNodeExt(String mypk) throws Exception
+	public FrmNodeExt(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -106,8 +110,7 @@ public class FrmNodeExt extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -115,12 +118,13 @@ public class FrmNodeExt extends EntityMyPK
 
 		Map map = new Map("WF_FrmNode", "节点表单");
 
-		map.AddMyPK();
 
-		map.AddDDLEntities(FrmNodeAttr.FK_Frm, null, "表单", new MapDatas(), false);
-
-		map.AddTBString(FrmNodeAttr.FK_Flow, null, "流程编号", true, true, 0, 4, 20);
+			///#region 基本信息.
+		map.AddMyPK(true);
+			//map.AddTBString(FrmNodeAttr.FK_Frm, null, "表单", true, true, 0, 300, 20);
+		 map.AddDDLEntities(FrmNodeAttr.FK_Frm, null, "表单", new MapDatas(), false);
 		map.AddTBInt(FrmNodeAttr.FK_Node, 0, "节点ID", true, true);
+
 
 		map.AddBoolean(FrmNodeAttr.IsPrint, false, "是否可以打印", true, true);
 		map.AddBoolean(FrmNodeAttr.IsEnableLoadData, false, "是否启用装载填充事件", true, true);
@@ -136,12 +140,12 @@ public class FrmNodeExt extends EntityMyPK
 
 			//map.AddBoolean(FrmNodeAttr.IsEnableFWC, false, "是否启用审核组件？", true, true, true);
 
-		map.AddDDLSysEnum(FrmNodeAttr.IsEnableFWC, FrmWorkCheckSta.Disable.getValue(), "审核组件状态", true, true, NodeWorkCheckAttr.FWCSta, "@0=禁用@1=启用@2=只读");
-		map.SetHelperAlert(FrmNodeAttr.IsEnableFWC, "控制该表单是否启用审核组件？如果启用了就显示在该表单上;");
+			//单据编号对应字段
+		map.AddDDLSQL(NodeWorkCheckAttr.BillNoField, null, "单据编号对应字段", Glo.getSQLOfBillNo(), true);
 
 
-		map.AddDDLSQL(NodeWorkCheckAttr.CheckField, null, "签批字段", Glo.getSQLOfCheckField(), true);
-
+		map.AddTBString(FrmNodeAttr.FrmNameShow, null, "表单显示名字", true, false, 0, 100, 20);
+		map.SetHelperAlert(FrmNodeAttr.FrmNameShow, "显示在表单树上的名字,默认为空,表示与表单的实际名字相同.多用于节点表单的名字在表单树上显示.");
 
 			//map.AddDDLSysEnum(BP.WF.Template.FrmWorkCheckAttr.FWCSta, 0, "审核组件(是否启用审核组件？)", true, true);
 
@@ -153,73 +157,51 @@ public class FrmNodeExt extends EntityMyPK
 			//模版文件，对于office表单有效.
 		map.AddTBString(FrmNodeAttr.TempleteFile, null, "模版文件", true, false, 0, 500, 20);
 
-			//是否显示
-		map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, false, 0, 20, 20);
-
-
-			///表单启用规则. @袁丽娜
-		map.AddDDLSysEnum(FrmNodeAttr.FrmEnableRole, 0, "启用规则", false, false, FrmNodeAttr.FrmEnableRole, "@0=始终启用@1=有数据时启用@2=有参数时启用@3=按表单的字段表达式@4=按SQL表达式@5=不启用@6=按岗位@7=按部门");
-
-		map.SetHelperAlert(FrmNodeAttr.FrmEnableRole, "用来控制该表单是否显示的规则.");
-		map.AddTBStringDoc(FrmNodeAttr.FrmEnableExp, null, "启用的表达式", false, false, true);
-
-			/// 表单启用规则.
-
-		map.AddTBString(FrmNodeAttr.FrmNameShow, null, "表单显示名字", true, false, 0, 100, 20);
-		map.SetHelperAlert(FrmNodeAttr.FrmNameShow, "显示在表单树上的名字,默认为空,表示与表单的实际名字相同.多用于节点表单的名字在表单树上显示.");
+			//是否显示.
+			//  map.AddTBString(FrmNodeAttr.GuanJianZiDuan, null, "关键字段", true, false, 0, 20, 20);
 
 			//显示的
 		map.AddTBInt(FrmNodeAttr.Idx, 0, "顺序号", true, false);
 		map.SetHelperAlert(FrmNodeAttr.Idx, "在表单树上显示的顺序,可以通过列表调整.");
 
-		RefMethod rm = new RefMethod();
 
+			///#endregion 基本信息.
+
+
+			///#region 组件属性.
+		map.AddDDLSysEnum(FrmNodeAttr.IsEnableFWC, FrmWorkCheckSta.Disable.getValue(), "审核组件状态", true, true, NodeWorkCheckAttr.FWCSta, "@0=禁用@1=启用@2=只读");
+		map.SetHelperAlert(FrmNodeAttr.IsEnableFWC, "控制该表单是否启用审核组件？如果启用了就显示在该表单上;");
+
+			//签批字段
+		map.AddDDLSQL(NodeWorkCheckAttr.CheckField, null, "签批字段", Glo.getSQLOfCheckField(), true);
+
+		map.AddDDLSysEnum(FrmSubFlowAttr.SFSta, FrmSubFlowSta.Disable.getValue(), "父子流程组件状态", true, true, FrmSubFlowAttr.SFSta, "@0=禁用@1=启用@2=只读");
+
+			///#endregion
+
+
+			///#region 隐藏字段.
+			//@0=始终启用@1=有数据时启用@2=有参数时启用@3=按表单的字段表达式@4=按SQL表达式@5=不启用@6=按岗位@7=按部门.
+		map.AddTBInt(FrmNodeAttr.FrmEnableRole, 0, "启用规则", false, false);
+		map.AddTBString(FrmNodeAttr.FrmEnableExp, null, "启用的表达式", true, false, 0, 900, 20);
+		map.AddTBString(FrmNodeAttr.FK_Flow, null, "流程编号", false, false, 0, 4, 20);
+
+			///#endregion 隐藏字段.
+
+
+			///#region 相关功能..
+		RefMethod rm = new RefMethod();
+		rm.Title = "设计表单";
+		rm.ClassMethodName = this.toString() + ".DoDFrm()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings"; //正则表达式
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
 		rm.Title = "启用规则";
 		rm.ClassMethodName = this.toString() + ".DoEnableRole()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "字段权限";
-		rm.ClassMethodName = this.toString() + ".DoFields()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-			//@sly
-		rm = new RefMethod();
-		rm.Title = "组件权限";
-		rm.ClassMethodName = this.toString() + ".DoComponents()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "从表权限";
-		rm.ClassMethodName = this.toString() + ".DoDtls()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "附件权限";
-		rm.ClassMethodName = this.toString() + ".DoAths()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "图片附件权限";
-		rm.ClassMethodName = this.toString() + ".DoImgAths()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "从其他节点Copy权限设置";
-		rm.ClassMethodName = this.toString() + ".DoCopyFromNode()";
-		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "改变表单类型";
-		rm.ClassMethodName = this.toString() + ".DoChangeFrmType()";
-		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
+		rm.Icon = "icon-settings"; //正则表达式
 		map.AddRefMethod(rm);
 
 			//rm = new RefMethod();
@@ -233,36 +215,127 @@ public class FrmNodeExt extends EntityMyPK
 			//rm.Icon = ../../Img/Mobile.png";
 		rm.ClassMethodName = this.toString() + ".DoFrmNodeWorkCheck";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单组件";
+			// rm.GroupName = "表单组件";
+		rm.Icon = "icon-settings"; //正则表达式
 		map.AddRefMethod(rm);
 
+			//rm = new RefMethod();
+			//rm.Title = "表单列表";
+			//rm.ClassMethodName = this.ToString() + ".DoBindFrms()";
+			//rm.refMethodType = RefMethodType.RightFrameOpen;
+			//map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "批量设置";
+		rm.ClassMethodName = this.toString() + ".DoBatchSetting()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings"; //正则表达式
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "改变表单类型";
+		rm.ClassMethodName = this.toString() + ".DoChangeFrmType()";
+		rm.getHisAttrs().AddDDLSysEnum("FrmType", 0, "修改表单类型", true, true);
+		rm.Icon = "icon-settings"; //正则表达式
+		map.AddRefMethod(rm);
+
+			///#endregion 基本设置.
+
+
+			///#region 表单元素权限.
+		rm = new RefMethod();
+		rm.GroupName = "表单元素权限";
+		rm.Title = "字段权限";
+		rm.ClassMethodName = this.toString() + ".DoFields()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+			//rm = new RefMethod();
+			//rm.GroupName = "表单元素权限";
+			//rm.Title = "组件权限";
+			//rm.ClassMethodName = this.ToString() + ".DoComponents()";
+			//rm.refMethodType = RefMethodType.RightFrameOpen;
+			//rm.Visable = false;
+			//map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.GroupName = "表单元素权限";
+		rm.Title = "从表权限";
+		rm.ClassMethodName = this.toString() + ".DoDtls()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.GroupName = "表单元素权限";
+		rm.Title = "附件权限";
+		rm.ClassMethodName = this.toString() + ".DoAths()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.GroupName = "表单元素权限";
+		rm.Title = "图片附件权限";
+		rm.ClassMethodName = this.toString() + ".DoImgAths()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.GroupName = "表单元素权限";
+		rm.Title = "从其他节点Copy权限设置";
+		rm.ClassMethodName = this.toString() + ".DoCopyFromNode()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings"; //正则表达式
+		map.AddRefMethod(rm);
+
+
+			///#endregion 表单元素权限.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
+
+
+	public final String DoBatchSetting() throws Exception {
+		//return "../../Admin/Sln/BindFrms.htm?FK_Node=" + this.FK_Node + "&FK_Flow=" + this.FK_Flow;
+		return "../../Admin/AttrNode/FrmSln/BatchEditSln.htm?NodeID=" + this.getFK_Node();
+
+	}
+	/** 
+	 设计表单
+	 
+	 @return 
+	*/
+	public final String DoDFrm() throws Exception {
+		return "../../Admin/Sln/BindFrms.htm?FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow();
+	}
+	/** 
+	 打开绑定表单
+	 
+	 @return 
+	*/
+	public final String DoBindFrms() throws Exception {
+		return "../../Admin/Sln/BindFrms.htm?FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow();
+	}
+
 	/** 
 	 审核组件
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoFrmNodeWorkCheck() throws Exception
-	{
-		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmWorkCheck&PKVal=" + this.getFK_Node() + "&CheckField=" + this.getCheckField() + "&FK_Frm=" + this.getFK_Frm() + "&t=" + DataType.getCurrentDataTime();
+	public final String DoFrmNodeWorkCheck() throws Exception {
+		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmWorkCheck&PKVal=" + this.getFK_Node() + "&CheckField=" + this.getCheckField() + "&FK_Frm=" + this.getFKFrm() + "&t=" + DataType.getCurrentDateTime();
 	}
 
 	/** 
 	 改变表单类型
 	 
-	 @param val 要改变的类型
+	 param val 要改变的类型
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoChangeFrmType(int val) throws Exception
-	{
-		MapData md = new MapData(this.getFK_Frm());
+	public final String DoChangeFrmType(int val) throws Exception {
+		MapData md = new MapData(this.getFKFrm());
 		String str = "原来的是:" + md.getHisFrmTypeText() + "类型，";
 		md.setHisFrmTypeInt(val);
 		str += "现在修改为：" + md.getHisFrmTypeText() + "类型";
@@ -272,50 +345,48 @@ public class FrmNodeExt extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		Node node = new Node();
 		node.setNodeID(this.getFK_Node());
-		node.RetrieveFromDBSources();
-		node.setFrmWorkCheckSta(this.getIsEnableFWC());
-		node.Update();
+		int i = node.RetrieveFromDBSources();
+		if(i!=0 && (node.getHisFormType() ==NodeFormType.RefOneFrmTree
+			|| node.getHisFormType() == NodeFormType.FoolTruck)){
+			node.setFrmWorkCheckSta(this.isEnableFWC());
+			node.Update();
+		}
+
+		FrmSubFlow frmSubFlow = new FrmSubFlow(this.getFK_Node());
+		frmSubFlow.setSFSta(this.getSFSta());
 		super.afterInsertUpdateAction();
 	}
 
 
-		///表单元素权限.
-	public final String DoDtls() throws Exception
-	{
-		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+		///#region 表单元素权限.
+	public final String DoDtls() throws Exception {
+		return "../../Admin/Sln/Dtls.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoFields() throws Exception
-	{
-		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoFields() throws Exception {
+		return "../../Admin/Sln/Fields.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
-	public final String DoComponents() throws Exception
-	{
-		return "../../Admin/Sln/Components.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoComponents() throws Exception {
+		return "../../Admin/Sln/Components.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoAths() throws Exception
-	{
-		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoAths() throws Exception {
+		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
-	public final String DoImgAths() throws Exception
-	{
-		return "../../Admin/Sln/ImgAths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoImgAths() throws Exception {
+		return "../../Admin/Sln/ImgAths.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
 
-	public final String DoCopyFromNode() throws Exception
-	{
-		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFK_Frm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
+	public final String DoCopyFromNode() throws Exception {
+		return "../../Admin/Sln/Aths.htm?FK_MapData=" + this.getFKFrm() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow() + "&DoType=Field";
 	}
-	public final String DoEnableRole() throws Exception
-	{
+	public final String DoEnableRole() throws Exception {
 		return "../../Admin/AttrNode/BindFrmsNodeEnableRole.htm?MyPK=" + this.getMyPK();
 	}
 
-		/// 表单元素权限.
+		///#endregion 表单元素权限.
 
 }

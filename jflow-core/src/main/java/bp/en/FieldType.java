@@ -1,11 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.*;
-import java.io.*;
-import java.time.*;
-import java.math.*;
-
 /** 
  字段类型
 */
@@ -55,7 +49,7 @@ public enum FieldType
 		return this.ordinal();
 	}
 
-	public static FieldType forValue(int value) throws Exception
+	public static FieldType forValue(int value) 
 	{
 		return values()[value];
 	}

@@ -1,4 +1,6 @@
 package bp.wf;
+
+
 /** 
  系统约定字段列表
 */
@@ -43,7 +45,7 @@ public class WorkSysFieldAttr
 	public static final String SysIsReadReceipts = "SysIsReadReceipts";
 
 
-		///与质量考核相关的字段
+		///#region 与质量考核相关的字段
 	/** 
 	 编号
 	*/
@@ -61,5 +63,5 @@ public class WorkSysFieldAttr
 	*/
 	public static final String EvalNote = "EvalNote";
 
-		/// 与质量考核相关的字段
+		///#endregion 与质量考核相关的字段
 }

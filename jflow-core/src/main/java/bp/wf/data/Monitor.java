@@ -1,14 +1,9 @@
 package bp.wf.data;
 
-import bp.da.*;
 import bp.wf.*;
-import bp.wf.template.FlowSheet;
 import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
 import bp.en.Map;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  流程监控
@@ -16,9 +11,9 @@ import java.util.*;
 public class Monitor extends Entity
 {
 
-		///基本属性
+		///#region 基本属性
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC() 
 	{
 		UAC uac = new UAC();
 		uac.Readonly();
@@ -34,24 +29,23 @@ public class Monitor extends Entity
 	}
 	/** 
 	 工作流程编号
-	 * @throws Exception 
 	*/
-	public final String getFK_Flow() throws Exception
+	public final String getFK_Flow()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)throws Exception
+	public final void setFK_Flow(String value) throws Exception
 	{
-		SetValByKey(MonitorAttr.FK_Flow,value);
+		SetValByKey(MonitorAttr.FK_Flow, value);
 	}
 	/** 
 	 BillNo
 	*/
-	public final String getBillNo()throws Exception
+	public final String getBillNo()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.BillNo);
 	}
-	public final void setBillNo(String value)throws Exception
+	public final void setBillNo(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.BillNo, value);
 	}
@@ -62,51 +56,51 @@ public class Monitor extends Entity
 	{
 		return this.GetValStrByKey(MonitorAttr.FlowName);
 	}
-	public final void setFlowName(String value)throws Exception
+	public final void setFlowName(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.FlowName, value);
 	}
 	/** 
 	 优先级
 	*/
-	public final int getPRI()throws Exception
+	public final int getPRI()  throws Exception
 	{
 		return this.GetValIntByKey(MonitorAttr.PRI);
 	}
-	public final void setPRI(int value)throws Exception
+	public final void setPRI(int value) throws Exception
 	{
 		SetValByKey(MonitorAttr.PRI, value);
 	}
 	/** 
 	 待办人员数量
 	*/
-	public final int getTodoEmpsNum()throws Exception
+	public final int getTodoEmpsNum()  throws Exception
 	{
 		return this.GetValIntByKey(MonitorAttr.TodoEmpsNum);
 	}
-	public final void setTodoEmpsNum(int value)throws Exception
+	public final void setTodoEmpsNum(int value) throws Exception
 	{
 		SetValByKey(MonitorAttr.TodoEmpsNum, value);
 	}
 	/** 
 	 待办人员列表
 	*/
-	public final String getTodoEmps()throws Exception
+	public final String getTodoEmps()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.TodoEmps);
 	}
-	public final void setTodoEmps(String value)throws Exception
+	public final void setTodoEmps(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.TodoEmps, value);
 	}
 	/** 
 	 参与人
 	*/
-	public final String getEmps()throws Exception
+	public final String getEmps()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.Emps);
 	}
-	public final void setEmps(String value)throws Exception
+	public final void setEmps(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.Emps, value);
 	}
@@ -124,106 +118,106 @@ public class Monitor extends Entity
 	/** 
 	 类别编号
 	*/
-	public final String getFK_Emp()throws Exception
+	public final String getFK_Emp()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)throws Exception
+	public final void setFK_Emp(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.FK_Emp, value);
 	}
 	/** 
 	 部门编号
 	*/
-	public final String getFK_Dept()throws Exception
+	public final String getFK_Dept()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)throws Exception
+	public final void setFK_Dept(String value) throws Exception
 	{
-		SetValByKey(MonitorAttr.FK_Dept,value);
+		SetValByKey(MonitorAttr.FK_Dept, value);
 	}
 	/** 
 	 标题
 	*/
-	public final String getTitle()throws Exception
+	public final String getTitle()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.Title);
 	}
-	public final void setTitle(String value)throws Exception
+	public final void setTitle(String value) throws Exception
 	{
-		SetValByKey(MonitorAttr.Title,value);
+		SetValByKey(MonitorAttr.Title, value);
 	}
 	/** 
 	 客户编号
 	*/
-	public final String getGuestNo()throws Exception
+	public final String getGuestNo()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.GuestNo);
 	}
-	public final void setGuestNo(String value)throws Exception
+	public final void setGuestNo(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.GuestNo, value);
 	}
 	/** 
 	 客户名称
 	*/
-	public final String getGuestName()throws Exception
+	public final String getGuestName()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.GuestName);
 	}
-	public final void setGuestName(String value)throws Exception
+	public final void setGuestName(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.GuestName, value);
 	}
 	/** 
 	 产生时间
 	*/
-	public final String getRDT() throws Exception
+	public final String getRDT()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.RDT);
 	}
-	public final void setRDT(String value)throws Exception
+	public final void setRDT(String value) throws Exception
 	{
-		SetValByKey(MonitorAttr.RDT,value);
+		SetValByKey(MonitorAttr.RDT, value);
 	}
 	/** 
 	 节点应完成时间
 	*/
-	public final String getSDTOfNode()throws Exception
+	public final String getSDTOfNode()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.SDTOfNode);
 	}
-	public final void setSDTOfNode(String value)throws Exception
+	public final void setSDTOfNode(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.SDTOfNode, value);
 	}
 	/** 
 	 流程应完成时间
 	*/
-	public final String getSDTOfFlow()throws Exception
+	public final String getSDTOfFlow()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.SDTOfFlow);
 	}
-	public final void setSDTOfFlow(String value)throws Exception
+	public final void setSDTOfFlow(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.SDTOfFlow, value);
 	}
 	/** 
 	 流程ID
 	*/
-	public final long getWorkID() throws Exception
+	public final long getWorkID()  throws Exception
 	{
 		return this.GetValInt64ByKey(MonitorAttr.WorkID);
 	}
-	public final void setWorkID(long value)  throws Exception
+	public final void setWorkID(long value) throws Exception
 	{
-		SetValByKey(MonitorAttr.WorkID,value);
+		SetValByKey(MonitorAttr.WorkID, value);
 	}
 	/** 
 	 主线程ID
 	*/
-	public final long getFID() throws Exception
+	public final long getFID()  throws Exception
 	{
 		return this.GetValInt64ByKey(MonitorAttr.FID);
 	}
@@ -234,66 +228,66 @@ public class Monitor extends Entity
 	/** 
 	 父节点流程编号.
 	*/
-	public final long getPWorkID()throws Exception
+	public final long getPWorkID()  throws Exception
 	{
 		return this.GetValInt64ByKey(MonitorAttr.PWorkID);
 	}
-	public final void setPWorkID(long value)throws Exception
+	public final void setPWorkID(long value) throws Exception
 	{
 		SetValByKey(MonitorAttr.PWorkID, value);
 	}
 	/** 
 	 父流程调用的节点
 	*/
-	public final int getPNodeID()throws Exception
+	public final int getPNodeID()  throws Exception
 	{
 		return this.GetValIntByKey(MonitorAttr.PNodeID);
 	}
-	public final void setPNodeID(int value)throws Exception
+	public final void setPNodeID(int value) throws Exception
 	{
 		SetValByKey(MonitorAttr.PNodeID, value);
 	}
 	/** 
 	 PFlowNo
 	*/
-	public final String getPFlowNo()throws Exception
+	public final String getPFlowNo()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value)throws Exception
+	public final void setPFlowNo(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.PFlowNo, value);
 	}
 	/** 
 	 吊起子流程的人员
 	*/
-	public final String getPEmp()throws Exception
+	public final String getPEmp()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.PEmp);
 	}
-	public final void setPEmp(String value)throws Exception
+	public final void setPEmp(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.PEmp, value);
 	}
 	/** 
 	 发起人
 	*/
-	public final String getStarter()throws Exception
+	public final String getStarter()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.Starter);
 	}
-	public final void setStarter(String value)throws Exception
+	public final void setStarter(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.Starter, value);
 	}
 	/** 
 	 发起人名称
 	*/
-	public final String getStarterName()throws Exception
+	public final String getStarterName()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.StarterName);
 	}
-	public final void setStarterName(String value)throws Exception
+	public final void setStarterName(String value) throws Exception
 	{
 		this.SetValByKey(MonitorAttr.StarterName, value);
 	}
@@ -304,7 +298,7 @@ public class Monitor extends Entity
 	{
 		return this.GetValStrByKey(MonitorAttr.DeptName);
 	}
-	public final void setDeptName(String value)throws Exception
+	public final void setDeptName(String value) throws Exception
 	{
 		this.SetValByKey(MonitorAttr.DeptName, value);
 	}
@@ -315,18 +309,18 @@ public class Monitor extends Entity
 	{
 		return this.GetValStrByKey(MonitorAttr.NodeName);
 	}
-	public final void setNodeName(String value)throws Exception
+	public final void setNodeName(String value) throws Exception
 	{
 		this.SetValByKey(MonitorAttr.NodeName, value);
 	}
 	/** 
 	 当前工作到的节点
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node()  throws Exception
 	{
 		return this.GetValIntByKey(MonitorAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)throws Exception
+	public final void setFK_Node(int value) throws Exception
 	{
 		SetValByKey(MonitorAttr.FK_Node, value);
 	}
@@ -337,19 +331,18 @@ public class Monitor extends Entity
 	{
 		return WFState.forValue(this.GetValIntByKey(MonitorAttr.WFState));
 	}
-	public final void setWFState(WFState value)throws Exception
-	{
+	public final void setWFState(WFState value) throws Exception {
 		if (value == WFState.Complete)
 		{
-			SetValByKey(MonitorAttr.WFSta, getWFSta().Complete.getValue());
+			SetValByKey(MonitorAttr.WFSta, WFSta.Complete.getValue());
 		}
 		else if (value == WFState.Delete)
 		{
-			SetValByKey(MonitorAttr.WFSta, getWFSta().Etc.getValue());
+			SetValByKey(MonitorAttr.WFSta, WFSta.Etc.getValue());
 		}
 		else
 		{
-			SetValByKey(MonitorAttr.WFSta, getWFSta().Runing.getValue());
+			SetValByKey(MonitorAttr.WFSta, WFSta.Runing.getValue());
 		}
 
 		SetValByKey(MonitorAttr.WFState, value.getValue());
@@ -365,7 +358,7 @@ public class Monitor extends Entity
 	{
 		SetValByKey(MonitorAttr.WFSta, value.getValue());
 	}
-	public final String getWFStateText() throws Exception
+	public final String getWFStateText()throws Exception
 	{
 		WFState ws = this.getWFState();
 		switch (ws)
@@ -385,32 +378,31 @@ public class Monitor extends Entity
 	/** 
 	 GUID
 	*/
-	public final String getGUID()throws Exception
+	public final String getGUID()  throws Exception
 	{
 		return this.GetValStrByKey(MonitorAttr.GUID);
 	}
-	public final void setGUID(String value)throws Exception
+	public final void setGUID(String value) throws Exception
 	{
 		SetValByKey(MonitorAttr.GUID, value);
 	}
 
-		///
+		///#endregion
 
 
-		///参数属性.
+		///#region 参数属性.
 
-		/// 参数属性.
+		///#endregion 参数属性.
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 工作实例
 	*/
 	public Monitor()
 	{
 	}
-	public Monitor(long workId)throws Exception
-	{
+	public Monitor(long workId) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MonitorAttr.WorkID, workId);
 		if (qo.DoQuery() == 0)
@@ -421,14 +413,14 @@ public class Monitor extends Entity
 	/** 
 	 执行修复
 	*/
-	public final void DoRepair()
+	public final void DoRepair()throws Exception
 	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -436,14 +428,14 @@ public class Monitor extends Entity
 		}
 
 		Map map = new Map("WF_EmpWorks", "流程监控");
-		map.setEnType( EnType.View);
+		map.setEnType(EnType.View);
 
 		map.AddTBIntPK(MonitorAttr.WorkID, 0, "工作ID", true, true);
 		map.AddTBInt(MonitorAttr.FID, 0, "FID", false, false);
 		map.AddTBString(MonitorAttr.Title, null, "流程标题", true, false, 0, 300, 10,true);
 		map.AddTBString(MonitorAttr.FK_Emp, null, "当前处理人员", true, false, 0, 30, 10);
 		map.AddDDLEntities(MonitorAttr.FK_Flow, null, "流程", new Flows(), false);
-		map.AddDDLEntities(MonitorAttr.FK_Dept, null, "发起部门", new bp.port.Depts(), false);
+		map.AddDDLEntities(MonitorAttr.FK_Dept, null, "发起部门", new Depts(), false);
 		map.AddTBString(MonitorAttr.Starter, null, "发起人编号", true, false, 0, 30, 10);
 		map.AddTBString(MonitorAttr.StarterName, null, "名称", true, false, 0, 30, 10);
 		map.AddTBString(MonitorAttr.NodeName, null, "停留节点", true, false, 0, 100, 10);
@@ -452,16 +444,18 @@ public class Monitor extends Entity
 		map.AddTBStringDoc(MonitorAttr.FlowNote, null, "备注", true, false,true);
 
 		map.AddTBInt(MonitorAttr.FK_Node, 0, "FK_Node", false, false);
-		map.AddTBString(MonitorAttr.WorkerDept, null, "工作人员部门编号", false, false, 0, 30, 10);
+
+			//map.AddTBString(MonitorAttr.WorkerDept, null, "工作人员部门编号", 
+			//    false, false, 0, 30, 10);
 
 			//查询条件.
-		map.AddSearchAttr(MonitorAttr.FK_Dept);
-		map.AddSearchAttr(MonitorAttr.FK_Flow);
+		map.AddSearchAttr(MonitorAttr.FK_Dept, 130);
+		map.AddSearchAttr(MonitorAttr.FK_Flow, 130);
 
 			////增加隐藏的查询条件.
 			//AttrOfSearch search = new AttrOfSearch(MonitorAttr.WorkerDept, "部门",
-			//    MonitorAttr.WorkerDept, "=", WebUser.getFK_Dept(), 0, true);
-			//map.getAttrs()OfSearch.Add(search);
+			//    MonitorAttr.WorkerDept, "=", bp.web.WebUser.getFK_Dept(), 0, true);
+			//map.AttrsOfSearch.Add(search);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "流程轨迹";
@@ -498,10 +492,10 @@ public class Monitor extends Entity
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///执行功能.
+		///#region 执行功能.
 	public final String DoTrack()throws Exception
 	{
 		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
@@ -509,20 +503,19 @@ public class Monitor extends Entity
 	/** 
 	 执行移交
 	 
-	 @param ToEmp
-	 @param Note
+	 param ToEmp
+	 param Note
 	 @return 
 	*/
-	public final String DoShift(String ToEmp, String Note)throws Exception
-	{
-		if (bp.wf.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
+	public final String DoShift(String ToEmp, String Note) throws Exception {
+		if (Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
 		{
 			return "您没有操作该流程数据的权限.";
 		}
 
 		try
 		{
-			bp.wf.Dev2Interface.Node_Shift(this.getWorkID(), ToEmp, Note);
+			Dev2Interface.Node_Shift(this.getWorkID(), ToEmp, Note);
 			return "移交成功";
 		}
 		catch (RuntimeException ex)
@@ -537,14 +530,14 @@ public class Monitor extends Entity
 	*/
 	public final String DoDelete()throws Exception
 	{
-		if (bp.wf.Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
+		if (Dev2Interface.Flow_IsCanViewTruck(this.getFK_Flow(), this.getWorkID()) == false)
 		{
 			return "您没有操作该流程数据的权限.";
 		}
 
 		try
 		{
-			bp.wf.Dev2Interface.Flow_DoDeleteFlowByReal(this.getWorkID(), true);
+			Dev2Interface.Flow_DoDeleteFlowByReal(this.getWorkID(), true);
 			return "删除成功";
 		}
 		catch (RuntimeException ex)
@@ -556,15 +549,14 @@ public class Monitor extends Entity
 	/** 
 	 回滚
 	 
-	 @param nodeid 节点ID
-	 @param note 回滚原因
+	 param nodeid 节点ID
+	 param note 回滚原因
 	 @return 回滚的结果
 	*/
-	public final String DoComeBack(int nodeid, String note)throws Exception
-	{
-		FlowSheet fl = new FlowSheet(this.getFK_Flow());
+	public final String DoComeBack(int nodeid, String note) throws Exception {
+		bp.wf.template.FlowSheet fl = new bp.wf.template.FlowSheet(this.getFK_Flow());
 		return fl.DoRebackFlowData(this.getWorkID(), nodeid, note);
 	}
 
-		///
+		///#endregion
 }

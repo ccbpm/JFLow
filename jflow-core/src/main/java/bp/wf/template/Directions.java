@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.port.*;
 import bp.wf.template.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -15,17 +16,14 @@ public class Directions extends Entities
 	/** 
 	 节点方向
 	*/
-	public Directions()
-	{
+	public Directions()  {
 	}
 	/** 
 	 方向
 	 
-	 @param flowNo
-	 * @throws Exception 
+	 param flowNo
 	*/
-	public Directions(String flowNo) throws Exception
-	{
+	public Directions(String flowNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DirectionAttr.FK_Flow, flowNo);
 		qo.addOrderBy("Node,Idx");
@@ -35,34 +33,29 @@ public class Directions extends Entities
 	/** 
 	 节点方向
 	 
-	 @param NodeID 节点ID
-	 * @throws Exception 
+	 param NodeID 节点ID
 	*/
-	public Directions(int NodeID) throws Exception
-	{
+	public Directions(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DirectionAttr.Node, NodeID);
-		qo.addOrderBy(DirectionAttr.Idx); //方向条件的优先级. @sly
+		qo.addOrderBy(DirectionAttr.Idx); //方向条件的优先级.
 		qo.DoQuery();
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new Direction();
 	}
 	/** 
 	 此节点的转向方向集合
 	 
-	 @param nodeID 此节点的ID
-	 @param isLifecyle 是不是判断在节点的生存期内		 
+	 param nodeID 此节点的ID
+	 param isLifecyle 是不是判断在节点的生存期内
 	 @return 转向方向集合(ToNodes) 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisToNodes(int nodeID, boolean isLifecyle) throws Exception
-	{
+	public final Nodes GetHisToNodes(int nodeID, boolean isLifecyle) throws Exception {
 		Nodes nds = new Nodes();
 		QueryObject qo = new QueryObject(nds);
 		qo.AddWhereInSQL(NodeAttr.NodeID, "SELECT ToNode FROM WF_Direction WHERE Node=" + nodeID);
@@ -72,12 +65,10 @@ public class Directions extends Entities
 	/** 
 	 转向此节点的集合的Nodes
 	 
-	 @param nodeID 此节点的ID
+	 param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
-	 * @throws Exception 
 	*/
-	public final Nodes GetHisFromNodes(int nodeID) throws Exception
-	{
+	public final Nodes GetHisFromNodes(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DirectionAttr.ToNode, nodeID);
 		qo.DoQuery();
@@ -90,23 +81,21 @@ public class Directions extends Entities
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Direction> ToJavaList()
-	{
-		return (List<Direction>)(Object)this;
+	public final java.util.List<Direction> ToJavaList() {
+		return (java.util.List<Direction>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Direction> Tolist()
-	{
+	public final ArrayList<Direction> Tolist()  {
 		ArrayList<Direction> list = new ArrayList<Direction>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -115,6 +104,6 @@ public class Directions extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

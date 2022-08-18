@@ -1,10 +1,5 @@
 package bp.ccbill.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.port.*;
-import bp.ccbill.*;
-import java.util.*;
 
 /** 
  单据可创建的工作岗位属性	  

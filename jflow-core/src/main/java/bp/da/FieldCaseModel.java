@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
  时间计算方式
@@ -27,7 +27,7 @@ public enum FieldCaseModel
 		return this.ordinal();
 	}
 
-	public static FieldCaseModel forValue(int value) throws Exception
+	public static FieldCaseModel forValue(int value) 
 	{
 		return values()[value];
 	}

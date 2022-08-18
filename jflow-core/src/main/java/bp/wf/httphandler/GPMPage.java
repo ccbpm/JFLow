@@ -1,24 +1,21 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
 import bp.difference.handler.WebContralBase;
-import bp.sys.*;
-import bp.tools.DataTableConvertJson;
 import bp.tools.FileAccess;
+import bp.wf.port.*;
 import bp.web.*;
-import bp.port.*;
+import bp.sys.*;
 import bp.en.*;
+import bp.difference.*;
+import bp.*;
 import bp.wf.*;
-import bp.wf.template.*;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 import java.io.*;
 
 /** 
@@ -27,33 +24,30 @@ import java.io.*;
 public class GPMPage extends WebContralBase
 {
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 构造函数
 	*/
-	public GPMPage()
-	{
+	public GPMPage() throws Exception {
 	}
 
-		/// 构造函数
+		///#endregion 构造函数
 
 
-		///签名.
+		///#region 签名.
 	/** 
 	 图片签名初始化
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Siganture_Init() throws Exception
-	{
+	public final String Siganture_Init() throws Exception {
 		if (WebUser.getNoOfRel() == null)
 		{
 			return "err@登录信息丢失";
 		}
 		Hashtable ht = new Hashtable();
 		ht.put("No", WebUser.getNo());
-		ht.put("Name",WebUser.getName());
+		ht.put("Name", WebUser.getName());
 		ht.put("FK_Dept", WebUser.getFK_Dept());
 		ht.put("FK_DeptName", WebUser.getFK_DeptName());
 		return bp.tools.Json.ToJson(ht);
@@ -64,8 +58,7 @@ public class GPMPage extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Siganture_Save()
-	{
+	public final String Siganture_Save() throws Exception {
 		try {
 			HttpServletRequest request = getRequest();
 			String contentType = request.getContentType();
@@ -105,46 +98,88 @@ public class GPMPage extends WebContralBase
 		return "上传成功！";
 	}
 
-		///
+		///#endregion
 
 
-		///组织结构维护.
+		///#region 组织结构维护.
 	/** 
 	 初始化组织结构部门表维护.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Organization_Init() throws Exception
-	{
+	public final String Organization_Init() throws Exception {
 
-		bp.gpm.Depts depts = new bp.gpm.Depts();
+		bp.port.Depts depts = new bp.port.Depts();
 		String parentNo = this.GetRequestVal("ParentNo");
 		QueryObject qo = new QueryObject(depts);
-		if(DataType.IsNullOrEmpty(parentNo)==false){
-			if (parentNo.equals("0") == true) {
-				qo.AddWhere(DeptAttr.ParentNo, parentNo);
+		if (DataType.IsNullOrEmpty(parentNo) == false)
+		{
+			if (parentNo.equals("0") == true)
+			{
+				qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
 				qo.addOr();
-				qo.AddWhereInSQL(DeptAttr.ParentNo, "SELECT No From Port_Dept Where ParentNo='0'");
+				qo.AddWhereInSQL(bp.port.DeptAttr.ParentNo, "SELECT No From Port_Dept WHERE ParentNo='0'");
 			}
 			else
-				qo.AddWhere(DeptAttr.ParentNo,parentNo);
+			{
+				qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
+				//qo.addOr();
+				//qo.AddWhere(bp.port.DeptAttr.No, parentNo);
+			}
+
 		}
-		qo.addOrderBy(bp.gpm.DeptAttr.Idx);
+		qo.addOrderBy(bp.port.DeptAttr.Idx);
 		qo.DoQuery();
 
-		return depts.ToJson();
+		return depts.ToJson("dt");
+
+	}
+	/** 
+	 获取本部门及人员信息
+	 
+	 @return 
+	*/
+	public final String DeptEmp_Init() throws Exception {
+
+		bp.port.Depts depts = new bp.port.Depts();
+		bp.port.Emps emps = new bp.port.Emps();
+		String parentNo = this.GetRequestVal("ParentNo");
+		QueryObject qo = new QueryObject(depts);
+		if (DataType.IsNullOrEmpty(parentNo) == false)
+		{
+			if (parentNo.equals("0") == true)
+			{
+				emps.RetrieveIn(bp.port.EmpAttr.FK_Dept, "SELECT No From Port_Dept Where ParentNo='0'");
+				qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
+				qo.addOr();
+				qo.AddWhereInSQL(bp.port.DeptAttr.ParentNo, "SELECT No From Port_Dept Where ParentNo='0'");
+
+			}
+			else
+			{
+				emps.Retrieve(bp.port.EmpAttr.FK_Dept, parentNo, null);
+				qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
+				qo.addOr();
+				qo.AddWhere(bp.port.DeptAttr.No, parentNo);
+			}
+
+
+		}
+		qo.addOrderBy(bp.port.DeptAttr.Idx);
+		qo.DoQuery();
+		DataSet ds = new DataSet();
+		ds.Tables.add(depts.ToDataTableField("Depts"));
+		ds.Tables.add(emps.ToDataTableField("Emps"));
+		return bp.tools.Json.ToJson(ds);
 
 	}
 
 	/** 
 	 获取该部门的所有人员
 	 
-	 @return 
-	 
+	 @return         
 	*/
-	public final String LoadDatagridDeptEmp_Init()
-	{
+	public final String LoadDatagridDeptEmp_Init() throws Exception {
 		String deptNo = this.GetRequestVal("deptNo");
 		if (DataType.IsNullOrEmpty(deptNo))
 		{
@@ -170,7 +205,7 @@ public class GPMPage extends WebContralBase
 		String pageSize = this.GetRequestVal("pageSize");
 		int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
-		String sql = "(select pe.*,pd.name FK_DutyText from port_emp pe left join port_duty pd on pd.setNo(pe.fk_duty where pe.no in (select fk_emp from Port_DeptEmp where fk_dept='" + deptNo + "') " + addQue + " ) dbSo ";
+		String sql = "(select pe.*,pd.name FK_DutyText from port_emp pe left join port_duty pd on pd.no = pe.fk_duty where pe.no in (select fk_emp from Port_DeptEmp where fk_dept='" + deptNo + "') " + addQue + " ) dbSo ";
 
 
 		return DBPaging(sql, iPageNumber, iPageSize, "No", orderBy);
@@ -180,11 +215,11 @@ public class GPMPage extends WebContralBase
 	/** 
 	 以下算法只包含 oracle mysql sqlserver 三种类型的数据库 qin
 	 
-	 @param dataSource 表名
-	 @param pageNumber 当前页
-	 @param pageSize 当前页数据条数
-	 @param key 计算总行数需要
-	 @param orderKey 排序字段
+	 param dataSource 表名
+	 param pageNumber 当前页
+	 param pageSize 当前页数据条数
+	 param key 计算总行数需要
+	 param orderKey 排序字段
 	 @return 
 	*/
 	public final String DBPaging(String dataSource, int pageNumber, int pageSize, String key, String orderKey)
@@ -225,18 +260,16 @@ public class GPMPage extends WebContralBase
 		return DataTableConvertJson.DataTable2Json(DTable, totalCount);
 	}
 
-		///
+		///#endregion
 
 
-		///获取菜单权限.
+		///#region 获取菜单权限.
 	/** 
 	 获得菜单数据.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GPM_DB_Menus() throws Exception
-	{
+	public final String GPM_DB_Menus() throws Exception {
 		String appNo = this.GetRequestVal("AppNo");
 
 		String sql1 = "SELECT No,Name,FK_Menu,ParentNo,UrlExt,Tag1,Tag2,Tag3,WebPath,Icon,Idx ";
@@ -335,10 +368,8 @@ public class GPMPage extends WebContralBase
 	 获得OA菜单数据.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GPM_OA_Menus() throws Exception
-	{
+	public final String GPM_OA_Menus() throws Exception {
 		String appNo = this.GetRequestVal("AppNo");
 
 		Paras ps = new Paras();
@@ -394,10 +425,9 @@ public class GPMPage extends WebContralBase
 	 是否可以执行当前工作
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GPM_IsCanExecuteFunction() throws Exception
-	{
+	public final String GPM_IsCanExecuteFunction() throws Exception {
+
 		DataTable dt = GPM_GenerFlagDB(); //获得所有的标记.
 		String funcNo = this.GetRequestVal("FuncFlag");
 		for (DataRow dr : dt.Rows)
@@ -413,10 +443,8 @@ public class GPMPage extends WebContralBase
 	 获得所有的权限标记.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final DataTable GPM_GenerFlagDB() throws Exception
-	{
+	public final DataTable GPM_GenerFlagDB() throws Exception {
 		String appNo = this.GetRequestVal("AppNo");
 		String sql2 = "SELECT Flag,Idx";
 		sql2 += " FROM V_GPM_EmpMenu ";
@@ -436,10 +464,8 @@ public class GPMPage extends WebContralBase
 	 获得所有权限的标记
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GPM_AutoHidShowPageElement() throws Exception
-	{
+	public final String GPM_AutoHidShowPageElement() throws Exception {
 		DataTable dt = GPM_GenerFlagDB(); //获得所有的标记.
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -447,17 +473,583 @@ public class GPMPage extends WebContralBase
 	 组织结构查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GPM_Search() throws Exception
-	{
+	public final String GPM_Search() throws Exception {
 		String searchKey = this.GetRequestVal("searchKey");
-	
 		String sql = "SELECT e.No AS No,e.Name AS Name,d.Name AS deptName,e.Email AS Email,e.Tel AS Tel from Port_Dept d,Port_Emp e " + "where d.No=e.FK_Dept AND (e.No LIKE '%" + searchKey + "%' or e.NAME LIKE '%" + searchKey + "%' or d.Name LIKE '%" + searchKey + "%' or e.Tel LIKE '%" + searchKey + "%')";
+		if (DataType.IsNullOrEmpty(WebUser.getOrgNo()) == false)
+		{
+			sql += " AND e.OrgNo='" + WebUser.getOrgNo() + "'";
+		}
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return bp.tools.Json.ToJson(dt);
 	}
 
-		///
+		///#endregion
+
+	public final String Template_Save() throws Exception {
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			throw new RuntimeException("err@仅仅导入单组织版.");
+		}
+		//var files = HttpContextHelper.RequestFiles();
+		//string ext = ".xls";
+		//string fileName = System.IO.Path.GetFileName(files[0].FileName);
+		//if (fileName.contains(".xlsx"))
+		//    ext = ".xlsx";
+
+		////设置文件名
+		//string fileNewName = DateTime.Now.ToString("yyyyMMddHHmmssff") + ext;
+
+		////文件存放路径
+		//string filePath =  bp.difference.SystemConfig.getPathOfTemp() +  fileNewName;
+		//HttpContextHelper.UploadFile(files[0], filePath);
+
+		String filePath = "D:\\ccflow组织结构批量导入模板.xls";
+
+
+			///#region 获得数据源.
+		List sheetNameList = Arrays.asList(DBLoad.GenerTableNames(filePath));
+		if (sheetNameList.size() < 3 || sheetNameList.contains("部门$") == false || sheetNameList.contains("岗位$") == false || sheetNameList.contains("人员$") == false)
+		{
+			throw new RuntimeException("excel不符合要求");
+		}
+
+		//获得部门数据.
+		DataTable dtDept = DBLoad.ReadExcelFileToDataTable(filePath, sheetNameList.indexOf("部门$"));
+		for (int i = 0; i < dtDept.Columns.size(); i++)
+		{
+			String name = dtDept.Columns.get(i).ColumnName;
+			name = name.replace(" ", "");
+			name = name.replace("*", "");
+			dtDept.Columns.get(i).ColumnName = name;
+		}
+
+		//获得岗位数据.
+		DataTable dtStation = DBLoad.ReadExcelFileToDataTable(filePath, sheetNameList.indexOf("岗位$"));
+		for (int i = 0; i < dtStation.Columns.size(); i++)
+		{
+			String name = dtStation.Columns.get(i).ColumnName;
+			name = name.replace(" ", "");
+			name = name.replace("*", "");
+			dtStation.Columns.get(i).ColumnName = name;
+		}
+
+		//获得人员数据.
+		DataTable dtEmp = DBLoad.ReadExcelFileToDataTable(filePath, sheetNameList.indexOf("人员$"));
+		for (int i = 0; i < dtEmp.Columns.size(); i++)
+		{
+			String name = dtEmp.Columns.get(i).ColumnName;
+			name = name.replace(" ", "");
+			name = name.replace("*", "");
+			dtEmp.Columns.get(i).ColumnName = name;
+		}
+
+
+
+			///#endregion 获得数据源.
+
+
+			///#region 检查是否有根目录为 0 的数据?
+		//检查数据的完整性.
+		//1.检查是否有根目录为0的数据?
+		int num = 0;
+		boolean isHave = false;
+		for (DataRow dr : dtDept.Rows)
+		{
+			String str1 = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+			if (DataType.IsNullOrEmpty(str1) == true)
+			{
+				continue;
+			}
+
+			num++;
+			String str = dr.getValue(1) instanceof String ? (String)dr.getValue(1) : null;
+			if (str == null )//|| str.equals(DBNull.Value))
+			{
+				return "err@导入出现数据错误:" + str1 + "的.上级部门名称-不能用空行的数据， 第[" + num + "]行数据.";
+			}
+
+			if (str.equals("0") == true || str.equals("root") == true)
+			{
+				isHave = true;
+				break;
+			}
+		}
+		if (isHave == false)
+		{
+			return "err@导入数据没有找到部门根目录节点.";
+		}
+
+			///#endregion 检查是否有根目录为0的数据
+
+
+			///#region 检查部门名称是否重复?
+		String deptStrs = "";
+		for (DataRow dr : dtDept.Rows)
+		{
+			String deptName = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+			if (DataType.IsNullOrEmpty(deptName) == true)
+			{
+				continue;
+			}
+
+			if (deptStrs.contains("," + deptName + ",") == true)
+			{
+				return "err@部门名称:" + deptName + "重复.";
+			}
+
+			//加起来..
+			deptStrs += "," + deptName + ",";
+		}
+
+			///#endregion 检查部门名称是否重复?
+
+
+			///#region 检查人员帐号是否重复?
+		String emps = "";
+		for (DataRow dr : dtEmp.Rows)
+		{
+			String empNo = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+			if (DataType.IsNullOrEmpty(empNo) == true)
+			{
+				continue;
+			}
+
+			if (emps.contains("," + empNo + ",") == true)
+			{
+				return "err@人员帐号:" + empNo + "重复.";
+			}
+
+			//加起来..
+			emps += "," + empNo + ",";
+		}
+
+			///#endregion 检查人员帐号是否重复?
+
+
+			///#region 检查岗位名称是否重复?
+		String staStrs = "";
+		for (DataRow dr : dtStation.Rows)
+		{
+			String staName = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+			if (DataType.IsNullOrEmpty(staName) == true)
+			{
+				continue;
+			}
+
+			if (staStrs.contains("," + staName + ",") == true)
+			{
+				return "err@岗位名称:" + staName + "重复.";
+			}
+
+			//加起来..
+			staStrs += "," + staName + ",";
+		}
+
+			///#endregion 检查岗位名称是否重复?
+
+
+			///#region 检查人员的部门名称是否存在于部门数据里?
+		int idx = 0;
+		for (DataRow dr : dtEmp.Rows)
+		{
+			String emp = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+			if (DataType.IsNullOrEmpty(emp) == true)
+			{
+				continue;
+			}
+
+			idx++;
+			//去的部门编号.
+			String strs = dr.getValue("部门名称") instanceof String ? (String)dr.getValue("部门名称") : null;
+			if (DataType.IsNullOrEmpty(strs) == true)
+			{
+				return "err@第[" + idx + "]行,人员[" + emp + "]部门不能为空:" + strs + ".";
+			}
+
+			String[] mystrs = strs.split("[,]", -1);
+			for (String str : mystrs)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+				{
+					continue;
+				}
+
+				if (str.equals("0") || str.equals("root") == true)
+				{
+					continue;
+				}
+
+				//先看看数据是否有?
+				Dept dept = new Dept();
+				if (dept.Retrieve("Name", str) == 1)
+				{
+					continue;
+				}
+
+				//从xls里面判断.
+				isHave = false;
+				for (DataRow drDept : dtDept.Rows)
+				{
+					if (str.equals(drDept.get(0).toString()) == true)
+					{
+						isHave = true;
+						break;
+					}
+				}
+				if (isHave == false)
+				{
+					return "err@第[" + idx + "]行,人员[" + emp + "]部门名[" + str + "]，不存在模版里。";
+				}
+			}
+		}
+
+			///#endregion 检查人员的部门名称是否存在于部门数据里
+
+
+			///#region 检查人员的岗位名称是否存在于岗位数据里?
+		idx = 0;
+		for (DataRow dr : dtEmp.Rows)
+		{
+			String emp = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+			if (DataType.IsNullOrEmpty(emp) == true)
+			{
+				continue;
+			}
+
+			idx++;
+
+			//岗位名称..
+			String strs = dr.getValue("岗位名称") instanceof String ? (String)dr.getValue("岗位名称") : null;
+			if (DataType.IsNullOrEmpty(strs) == true)
+			{
+				continue;
+			}
+
+			//判断岗位.
+			String[] mystrs = strs.split("[,]", -1);
+			for (String str : mystrs)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+				{
+					continue;
+				}
+
+				//先看看数据是否有?
+			  bp.port.Station stationEn = new bp.port.Station();
+				if (stationEn.Retrieve("Name", str) == 1)
+				{
+					continue;
+				}
+
+				//从 xls 判断.
+				isHave = false;
+				for (DataRow drSta : dtStation.Rows)
+				{
+					if (str.equals(drSta.get(0).toString()) == true)
+					{
+						isHave = true;
+						break;
+					}
+				}
+				if (isHave == false)
+				{
+					return "err@第[" + idx + "]行,人员[" + emp + "]岗位名称[" + str + "]，不存在模版里。";
+				}
+			}
+		}
+
+			///#endregion 检查人员的部门名称是否存在于部门数据里
+
+
+			///#region 检查部门负责人是否存在于人员列表里?
+		String empStrs = ",";
+		for (DataRow item : dtEmp.Rows)
+		{
+			empStrs += item.get(0).toString() + ",";
+		}
+		idx = 0;
+		for (DataRow dr : dtDept.Rows)
+		{
+			String empNo = dr.getValue(2) instanceof String ? (String)dr.getValue(2) : null;
+			if (DataType.IsNullOrEmpty(empNo) == true)
+			{
+				continue;
+			}
+
+			idx++;
+			if (empStrs.contains("," + empNo + ",") == false)
+			{
+				return "err@部门负责人[" + empNo + "]不存在与人员表里，第[" + idx + "]行.";
+			}
+		}
+
+			///#endregion 检查部门负责人是否存在于人员列表里
+
+
+			///#region 检查直属领导帐号是否存在于人员列表里?
+		idx = 0;
+		for (DataRow dr : dtEmp.Rows)
+		{
+			String empNo = dr.getValue(6) instanceof String ? (String)dr.getValue(6) : null;
+			if (DataType.IsNullOrEmpty(empNo) == true)
+			{
+				continue;
+			}
+
+			idx++;
+			if (empStrs.contains("," + empNo + ",") == false)
+			{
+				return "err@部门负责人[" + empNo + "]不存在与人员表里，第[" + idx + "]行.";
+			}
+		}
+
+			///#endregion 检查部门负责人是否存在于人员列表里
+
+
+			///#region 插入数据到 Port_StationType.
+		idx = -1;
+		for (DataRow dr : dtStation.Rows)
+		{
+			idx++;
+			String str = dr.getValue(1) instanceof String ? (String)dr.getValue(1) : null;
+
+			//判断是否是空.
+			if (DataType.IsNullOrEmpty(str) == true)
+			{
+				continue;
+			}
+
+			if (str.equals("岗位类型") == true)
+			{
+				continue;
+			}
+
+			str = str.trim();
+
+			//看看数据库是否存在.
+			bp.port.StationType st = new bp.port.StationType();
+			if (st.IsExit("Name", str) == false)
+			{
+				st.setName(str);
+				st.setOrgNo(WebUser.getOrgNo());
+				st.setNo(DBAccess.GenerGUID(0, null, null));
+				st.Insert();
+			}
+		}
+
+			///#endregion 插入数据到 Port_StationType.
+
+
+			///#region 插入数据到 Port_Station.
+		idx = -1;
+		for (DataRow dr : dtStation.Rows)
+		{
+			idx++;
+			String str = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+
+			//判断是否是空.
+			if (DataType.IsNullOrEmpty(str) == true)
+			{
+				continue;
+			}
+
+			if (str.equals("岗位名称") == true)
+			{
+				continue;
+			}
+
+
+			//获得类型的外键的编号.
+			String stationTypeName = dr.getValue(1).toString().trim();
+			bp.port.StationType st = new bp.port.StationType();
+			if (st.Retrieve("Name", stationTypeName) == 0)
+			{
+				return "err@系统出现错误,没有找到岗位类型[" + stationTypeName + "]的数据.";
+			}
+
+			//看看数据库是否存在.
+			bp.port.Station sta = new bp.port.Station();
+			sta.setName(str);
+			sta.setIdx(idx);
+
+			//不存在就插入.
+			if (sta.IsExit("Name", str) == false)
+			{
+				sta.setOrgNo(WebUser.getOrgNo());
+				sta.setFK_StationType(st.getNo());
+				sta.setNo(DBAccess.GenerGUID(0, null, null));
+				sta.Insert();
+			}
+			else
+			{
+				//存在就更新.
+				sta.setFK_StationType(st.getNo());
+				sta.Update();
+			}
+		}
+
+			///#endregion 插入数据到 Port_Station.
+
+
+			///#region 插入数据到 Port_Dept.
+		idx = -1;
+		for (DataRow dr : dtDept.Rows)
+		{
+			//获得部门名称.
+			String deptName = dr.getValue(0) instanceof String ? (String)dr.getValue(0) : null;
+			if (deptName.equals("部门名称") == true)
+			{
+				continue;
+			}
+
+			String parentDeptName = dr.getValue(1) instanceof String ? (String)dr.getValue(1) : null;
+			String leader = dr.getValue(2) instanceof String ? (String)dr.getValue(2) : null;
+
+			//说明是根目录.
+			if (parentDeptName.equals("0") == true || parentDeptName.equals("root") == true)
+			{
+				Dept root = new Dept();
+				root.setNo(WebUser.getFK_Dept());
+				if (root.RetrieveFromDBSources() == 0)
+				{
+					return "err@没有找到根目录节点，请联系管理员。";
+				}
+
+				root.setName(deptName);
+				root.Update();
+				continue;
+			}
+
+
+			//先求出来父节点.
+		  Dept parentDept = new Dept();
+			int i = parentDept.Retrieve("Name", parentDeptName);
+			if (i == 0)
+			{
+				return "err@没有找到当前部门[" + deptName + "]的上一级部门[" + parentDeptName + "]";
+			}
+
+			Dept myDept = new Dept();
+
+			//如果数据库存在.
+			i = parentDept.Retrieve("Name", deptName);
+			if (i >= 1)
+			{
+				continue;
+			}
+
+			//插入部门.
+			myDept.setName(deptName);
+		 //   myDept.OrgNo = bp.web.WebUser.getOrgNo();
+			myDept.setNo(DBAccess.GenerGUID(0, null, null));
+			myDept.setParentNo(parentDept.getNo());
+			myDept.setLeader(leader); //领导.
+			myDept.setIdx(idx);
+			myDept.Insert();
+		}
+
+			///#endregion 插入数据到 Port_Dept.
+
+
+			///#region 插入到 Port_Emp.
+		idx = 0;
+		for (DataRow dr : dtEmp.Rows)
+		{
+			String empNo = dr.getValue("人员帐号").toString();
+			String empName = dr.getValue("人员姓名").toString();
+			String deptNames = dr.getValue("部门名称").toString();
+			String deptPaths = dr.getValue("部门路径").toString();
+
+			String stationNames = dr.getValue("岗位名称").toString();
+			String tel = dr.getValue("电话").toString();
+			String email = dr.getValue("邮箱").toString();
+			String leader = dr.getValue("直属领导").toString(); //部门领导.
+
+			bp.port.Emp emp = new bp.port.Emp();
+			int i = emp.Retrieve("No", empNo);
+			if (i >= 1)
+			{
+				emp.setTel (tel);
+				emp.setName (empName);
+				emp.Update();
+				continue;
+			}
+
+			//找到人员的部门.
+			String[] myDeptStrs = deptNames.split("[,]", -1);
+			Dept dept = new Dept();
+			for (String deptName : myDeptStrs)
+			{
+				if (DataType.IsNullOrEmpty(deptName) == true)
+				{
+					continue;
+				}
+
+				i = dept.Retrieve("Name", deptName);
+				if (i <= 0)
+				{
+					return "err@部门名称不存在." + deptName;
+				}
+
+				bp.port.DeptEmp de = new bp.port.DeptEmp();
+				de.setFK_Dept(dept.getNo());
+				de.setFK_Emp(empNo);
+				de.setOrgNo(WebUser.getOrgNo());
+				de.setMyPK(de.getFK_Dept() + "_" + de.getFK_Emp());
+				de.Delete();
+				de.Insert();
+			}
+
+			//插入岗位.
+			String[] staNames = stationNames.split("[,]", -1);
+		  bp.port.Station sta = new bp.port.Station();
+			for (String staName : staNames)
+			{
+				if (DataType.IsNullOrEmpty(staName) == true)
+				{
+					continue;
+				}
+
+				i = sta.Retrieve("Name", staName);
+				if (i == 0)
+				{
+					return "err@岗位名称不存在." + staName;
+				}
+
+				bp.port.DeptEmpStation des = new bp.port.DeptEmpStation();
+				des.setFK_Dept(dept.getNo());
+				des.setFK_Emp(empNo);
+				des.setFK_Station(sta.getNo());
+			 //   des.OrgNo = WebUser.getOrgNo();
+				des.setMyPK(des.getFK_Dept() + "_" + des.getFK_Emp() + "_" + des.getFK_Station());
+				des.Delete();
+				des.Insert();
+			}
+
+			//插入到数据库.
+			emp.setNo(empNo);
+		 //   emp.setUserID (empNo;
+			emp.setName (empName);
+			emp.setFK_Dept  (dept.getNo());
+		   // emp.setOrgNo( WebUser.getOrgNo();
+			emp.setTel (tel);
+			//emp.Email = email;
+			//emp.Leader = leader;
+			//emp.Idx = idx;
+
+			emp.Insert();
+		}
+
+			///#endregion 插入到 Port_Emp.
+
+
+		//删除临时文件
+	  //  System.IO.File.Delete(filePath);
+
+		return "执行完成.";
+	}
+
 
 }

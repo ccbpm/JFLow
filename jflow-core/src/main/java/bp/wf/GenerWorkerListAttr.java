@@ -1,11 +1,19 @@
 package bp.wf;
+
+import bp.da.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.*;
+import java.util.*;
+
 /** 
  工作人员集合
 */
 public class GenerWorkerListAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作节点
 	*/
@@ -109,15 +117,15 @@ public class GenerWorkerListAttr
 	/** 
 	 挂起时间
 	*/
-	public static final String DTOfHungUp = "DTOfHungUp";
+	public static final String DTOfHungup = "DTOfHungup";
 	/** 
 	 解除挂起时间
 	*/
-	public static final String DTOfUnHungUp = "DTOfUnHungUp";
+	public static final String DTOfUnHungup = "DTOfUnHungup";
 	/** 
 	 挂起次数
 	*/
-	public static final String HungUpTimes = "HungUpTimes";
+	public static final String HungupTimes = "HungupTimes";
 	/** 
 	 外部用户编号
 	*/
@@ -127,7 +135,7 @@ public class GenerWorkerListAttr
 	*/
 	public static final String GuestName = "GuestName";
 
-		///
+		///#endregion
 
 	/** 
 	 分组标记

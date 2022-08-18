@@ -1,12 +1,5 @@
 package bp.wf.data;
-import bp.da.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.en.*;
-import bp.wf.template.*;
-import bp.wf.*;
-import java.util.*;
+
 
 /** 
  流程实例
@@ -14,7 +7,7 @@ import java.util.*;
 public class GenerWorkFlowViewAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -164,5 +157,5 @@ public class GenerWorkFlowViewAttr
 	*/
 	public static final String GUID = "GUID";
 
-		///
+		///#endregion
 }

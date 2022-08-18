@@ -2,10 +2,7 @@ package bp.wf.template;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.wf.*;
-import bp.wf.*;
-import java.util.*;
+
 
 /** 
  SQL模板
@@ -13,44 +10,40 @@ import java.util.*;
 public class SQLTemplate extends EntityNoName
 {
 
-		/// 属性
+		///#region  属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
 	/** 
 	 打开的连接
-	 * @throws Exception 
 	*/
-	public final String getDocs() throws Exception
-	{
+	public final String getDocs() throws Exception {
 		String s = this.GetValStrByKey(SQLTemplateAttr.Docs);
-		if (DataType.IsNullOrEmpty(s)==true)
+		if (DataType.IsNullOrEmpty(s) == true)
 		{
 			return this.getNo();
 		}
 		return s;
 	}
-	public final void setDocs(String value) throws Exception
-	{
+	public final void setDocs(String value)  throws Exception
+	 {
 		this.SetValByKey(SQLTemplateAttr.Docs, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 SQL模板
 	*/
-	public SQLTemplate()
-	{
+	public SQLTemplate()  {
 	}
 	public SQLTemplate(String no) throws Exception
 	{
@@ -60,8 +53,7 @@ public class SQLTemplate extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -75,15 +67,15 @@ public class SQLTemplate extends EntityNoName
 
 		map.AddTBString(SQLTemplateAttr.Name, null, "SQL说明", true, false, 0, 200, 20,true);
 
-		map.AddTBStringDoc(SQLTemplateAttr.Docs, null, "SQL模版", true, false,true);
+		map.AddTBStringDoc(SQLTemplateAttr.Docs, null, "SQL模版", true, false, true, 10);
 
 
 			//查询条件.
-		map.AddSearchAttr(SQLTemplateAttr.SQLType);
+		map.AddSearchAttr(SQLTemplateAttr.SQLType, 130);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

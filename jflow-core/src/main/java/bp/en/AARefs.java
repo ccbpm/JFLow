@@ -9,16 +9,16 @@ public class AARefs extends ArrayList<Object>
 	private static final long serialVersionUID = 1L;
 
 	///构造
-	public AARefs()
+	public AARefs()throws Exception
 	{
 	}
 
 	/** 
 	 增加一个查询属性
 	 
-	 @param lab 标签
-	 @param refKey 实体的属性
-	 @param defaultvalue 默认值
+	 param lab 标签
+	 param refKey 实体的属性
+	 param defaultvalue 默认值
 	 * @throws Exception 
 	*/
 	public final void Add(String lab, String key, String refKey, String defaultSymbol, String defaultvalue, int tbWidth) throws Exception

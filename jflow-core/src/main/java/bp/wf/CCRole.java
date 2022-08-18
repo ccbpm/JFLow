@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  抄送规则
 */
@@ -32,13 +34,11 @@ public enum CCRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static CCRole forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static CCRole forValue(int value)
+	{return values()[value];
 	}
 }

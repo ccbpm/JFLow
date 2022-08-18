@@ -3,30 +3,28 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.wf.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
 /** 
  节点工作岗位s
 */
-public class NodeStations extends EntitiesMM
+public class NodeStations extends EntitiesMyPK
 {
 
-		///构造函数.
+		///#region 构造函数.
 	/** 
 	 节点工作岗位
 	*/
-	public NodeStations()
-	{
+	public NodeStations()  {
 	}
 	/** 
 	 节点工作岗位
 	 
-	 @param nodeID 节点ID
-	 * @throws Exception 
+	 param nodeID 节点ID
 	*/
-	public NodeStations(int nodeID) throws Exception
-	{
+	public NodeStations(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeStationAttr.FK_Node, nodeID);
 		qo.DoQuery();
@@ -34,11 +32,9 @@ public class NodeStations extends EntitiesMM
 	/** 
 	 节点工作岗位
 	 
-	 @param StationNo StationNo 
-	 * @throws Exception 
+	 param StationNo StationNo
 	*/
-	public NodeStations(String StationNo) throws Exception
-	{
+	public NodeStations(String StationNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeStationAttr.FK_Station, StationNo);
 		qo.DoQuery();
@@ -47,31 +43,28 @@ public class NodeStations extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new NodeStation();
 	}
 
-		/// 构造函数.
+		///#endregion 构造函数.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<NodeStation> ToJavaList()
-	{
-		return (List<NodeStation>)(Object)this;
+	public final java.util.List<NodeStation> ToJavaList() {
+		return (java.util.List<NodeStation>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeStation> Tolist()
-	{
+	public final ArrayList<NodeStation> Tolist()  {
 		ArrayList<NodeStation> list = new ArrayList<NodeStation>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -80,5 +73,5 @@ public class NodeStations extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

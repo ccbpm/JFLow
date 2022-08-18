@@ -1,5 +1,13 @@
 package bp.wf.template;
 
+import bp.da.*;
+import bp.sys.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
+
 /** 
  协作模式下操作员显示顺序
 */
@@ -18,8 +26,7 @@ public enum FWCOrderModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FWCOrderModel> mappings;
-	private static java.util.HashMap<Integer, FWCOrderModel> getMappings()
-	{
+	private static java.util.HashMap<Integer, FWCOrderModel> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (FWCOrderModel.class)
@@ -34,18 +41,15 @@ public enum FWCOrderModel
 	}
 
 	private FWCOrderModel(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static FWCOrderModel forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

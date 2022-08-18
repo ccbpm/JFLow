@@ -1,4 +1,8 @@
 package bp.wf.template;
+
+import bp.*;
+import bp.wf.*;
+
 /** 
  流程发起导航方式
 */
@@ -13,7 +17,7 @@ public enum StartGuideWay
 	*/
 	BySQLOne(1),
 	/** 
-	 按系统的URL-(子父流程)多条模式
+	 按系统的URL-(子父流程)多条模式.
 	*/
 	SubFlowGuide(2),
 	/** 
@@ -39,18 +43,17 @@ public enum StartGuideWay
 	/** 
 	 按照用户选择的表单.
 	*/
-	ByFrms(11),
+	ByFrms(8),
 	/** 
 	 父子流程模式
 	*/
-	ByParentFlowModel(12);
+	ByParentFlowModel(9);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, StartGuideWay> mappings;
-	private static java.util.HashMap<Integer, StartGuideWay> getMappings()
-	{
+	private static java.util.HashMap<Integer, StartGuideWay> getMappings() {
 		if (mappings == null)
 		{
 			synchronized (StartGuideWay.class)
@@ -65,18 +68,15 @@ public enum StartGuideWay
 	}
 
 	private StartGuideWay(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
-	public static StartGuideWay forValue(int value) 
-	{
-		return getMappings().get(value);
+	public static StartGuideWay forValue(int value)
+	{return getMappings().get(value);
 	}
 }

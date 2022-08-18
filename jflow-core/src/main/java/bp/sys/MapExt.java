@@ -1,12 +1,12 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.web.*;
 import bp.en.*;
-import bp.en.Map;
-import java.util.*;
+import bp.difference.*;
+import bp.wf.template.SQLTemplateAttr;
+
+import java.util.Hashtable;
 
 /** 
  扩展
@@ -14,19 +14,16 @@ import java.util.*;
 public class MapExt extends EntityMyPK
 {
 
-		///关于 Pop at 参数
+		///#region 关于 Pop at 参数
 	/** 
 	 转化JSON
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String PopValToJson() throws Exception
-	{
+	public final String PopValToJson() throws Exception {
 		return bp.tools.Json.ToJsonEntityModel(this.PopValToHashtable());
 	}
-	public final Hashtable PopValToHashtable() throws Exception
-	{
+	public final Hashtable PopValToHashtable() throws Exception {
 
 		//创建一个ht, 然后把他转化成json返回出去。
 		Hashtable ht = new Hashtable();
@@ -80,194 +77,155 @@ public class MapExt extends EntityMyPK
 	}
 	/** 
 	 连接
-	 * @throws Exception 
 	*/
-	public final String getPopValUrl() throws Exception
-	{
+	public final String getPopValUrl()  {
 		return this.getDoc();
 	}
-	public final void setPopValUrl(String value) throws Exception
-	{
-		this.setDoc(value);
+	public final void setPopValUrl(String value)
+	{this.setDoc(value);
 	}
 	/** 
 	 实体SQL
-	 * @throws Exception 
 	*/
-	public final String getPopValEntitySQL() throws Exception
-	{
+	public final String getPopValEntitySQL()  {
 		return this.getTag2();
 	}
-	public final void setPopValEntitySQL(String value) throws Exception
-	{
-		this.setTag2(value);
+	public final void setPopValEntitySQL(String value)
+	{this.setTag2(value);
 	}
 	/** 
 	 分组SQL
-	 * @throws Exception 
 	*/
-	public final String getPopValGroupSQL() throws Exception
-	{
+	public final String getPopValGroupSQL()  {
 		return this.getTag1();
 	}
-	public final void setPopValGroupSQL(String value) throws Exception
-	{
-		this.setTag1(value);
+	public final void setPopValGroupSQL(String value)
+	{this.setTag1(value);
 	}
 	/** 
 	 分页SQL带有关键字
-	 * @throws Exception 
 	*/
-	public final String getPopValTablePageSQL() throws Exception
-	{
+	public final String getPopValTablePageSQL()  {
 		return this.getTag();
 	}
-	public final void setPopValTablePageSQL(String value) throws Exception
-	{
-		this.setTag(value);
+	public final void setPopValTablePageSQL(String value)
+	{this.setTag(value);
 	}
 	/** 
 	 分页SQL获取总行数
-	 * @throws Exception 
 	*/
-	public final String getPopValTablePageSQLCount() throws Exception
-	{
+	public final String getPopValTablePageSQLCount()  {
 		return this.getTag1();
 	}
-	public final void setPopValTablePageSQLCount(String value) throws Exception
-	{
-		this.setTag1(value);
+	public final void setPopValTablePageSQLCount(String value)
+	{this.setTag1(value);
 	}
 	/** 
 	 标题
 	*/
-	public final String getPopValTitle() throws Exception
-	{
+	public final String getPopValTitle()  {
 		return this.GetParaString("PopValTitle");
 	}
-	public final void setPopValTitle(String value) throws Exception
-	{
-		this.SetPara("PopValTitle", value);
+	public final void setPopValTitle(String value)
+	{this.SetPara("PopValTitle", value);
 	}
 
-	public final String getPopValTreeSQL() throws Exception
-	{
+	public final String getPopValTreeSQL()  {
 		return this.getPopValEntitySQL();
 	}
-	public final void setPopValTreeSQL(String value) throws Exception
-	{
-		  this.setPopValEntitySQL(value);
+	public final void setPopValTreeSQL(String value)
+	{  this.setPopValEntitySQL(value);
 	}
 	/** 
 	 根目录
 	*/
-	public final String getPopValTreeParentNo() throws Exception
-	{
+	public final String getPopValTreeParentNo()  {
 		return this.GetParaString("PopValTreeParentNo");
 	}
-	public final void setPopValTreeParentNo(String value) throws Exception
-	{
-		this.SetPara("PopValTreeParentNo", value);
+	public final void setPopValTreeParentNo(String value)
+	{this.SetPara("PopValTreeParentNo", value);
 	}
 	/** 
 	 Pop 返回值的格式.
 	*/
-	public final PopValFormat getPopValFormat() throws Exception
-	{
+	public final PopValFormat getPopValFormat()  {
 		return PopValFormat.forValue(this.GetParaInt("PopValFormat"));
 	}
-	public final void setPopValFormat(PopValFormat value) throws Exception
-	{
-		this.SetPara("PopValFormat", value.getValue());
+	public final void setPopValFormat(PopValFormat value)
+	{this.SetPara("PopValFormat", value.getValue());
 	}
 	/** 
 	 双实体树的实体
-	 * @throws Exception 
 	*/
-	public final String getPopValDoubleTreeEntitySQL() throws Exception
-	{
+	public final String getPopValDoubleTreeEntitySQL()  {
 		return this.getTag1();
 	}
-	public final void setPopValDoubleTreeEntitySQL(String value) throws Exception
-	{
-		this.setTag1(value);
+	public final void setPopValDoubleTreeEntitySQL(String value)
+	{this.setTag1(value);
 	}
 	/** 
 	 pop 选择方式
 	 0,多选,1=单选.
 	*/
-	public final PopValSelectModel getPopValSelectModel() throws Exception
-	{
+	public final PopValSelectModel getPopValSelectModel()  {
 		return PopValSelectModel.forValue(this.GetParaInt("PopValSelectModel"));
 	}
-	public final void setPopValSelectModel(PopValSelectModel value) throws Exception
-	{
-		this.SetPara("PopValSelectModel", value.getValue());
+	public final void setPopValSelectModel(PopValSelectModel value)
+	{this.SetPara("PopValSelectModel", value.getValue());
 	}
 	/** 
 	 PopVal工作模式
 	*/
-	public final PopValWorkModel getPopValWorkModel() throws Exception
-	{
+	public final PopValWorkModel getPopValWorkModel()  {
 		return PopValWorkModel.forValue(this.GetParaInt("PopValWorkModel"));
 	}
-	public final void setPopValWorkModel(PopValWorkModel value) throws Exception
-	{
-		this.SetPara("PopValWorkModel", value.getValue());
+	public final void setPopValWorkModel(PopValWorkModel value)
+	{this.SetPara("PopValWorkModel", value.getValue());
 	}
 	/** 
 	 开窗的列中文名称.
-	 * @throws Exception 
 	*/
-	public final String getPopValColNames() throws Exception
-	{
+	public final String getPopValColNames()  {
 	  return this.getTag3();
 	}
-	public final void setPopValColNames(String value) throws Exception
-	{
-		this.setTag3(value);
+	public final void setPopValColNames(String value)
+	{this.setTag3(value);
 	}
 	/** 
 	 查询条件
-	 * @throws Exception 
 	*/
-	public final String getPopValSearchCond() throws Exception
-	{
+	public final String getPopValSearchCond()  {
 	  return this.getTag4();
 	}
-	public final void setPopValSearchCond(String value) throws Exception
-	{
-		this.setTag4(value);
+	public final void setPopValSearchCond(String value)
+	{this.setTag4(value);
 	}
 	/** 
 	 搜索提示关键字
 	*/
-	public final String getPopValSearchTip() throws Exception
-	{
+	public final String getPopValSearchTip()  {
 		return this.GetParaString("PopValSearchTip", "请输入关键字");
 	}
-	public final void setPopValSearchTip(String value) throws Exception
-	{
-		this.SetPara("PopValSearchTip", value);
+	public final void setPopValSearchTip(String value)
+	{this.SetPara("PopValSearchTip", value);
 	}
 	/** 
 	 数据源
 	*/
-	public final String getFK_DBSrc() throws Exception
+	public final String getFK_DBSrc()
 	{
 		return this.GetValStrByKey(MapExtAttr.FK_DBSrc);
 	}
-	public final void setFK_DBSrc(String value) throws Exception
-	{
+	public final void setFK_DBSrc(String value)
+	 {
 		this.SetValByKey(MapExtAttr.FK_DBSrc, value);
 	}
 
-		///
+		///#endregion
 
 
-		///属性
-	public final String getExtDesc() throws Exception
-	{
+		///#region 属性
+	public final String getExtDesc()  {
 		String dec = "";
 		switch (this.getExtType())
 		{
@@ -294,107 +252,105 @@ public class MapExt extends EntityMyPK
 	/** 
 	 是否自适应大小
 	*/
-	public final boolean getIsAutoSize() throws Exception
+	public final boolean isAutoSize()
 	{
 		return this.GetValBooleanByKey(MapExtAttr.IsAutoSize);
 	}
-	public final void setIsAutoSize(boolean value) throws Exception
-	{
+	public final void setAutoSize(boolean value)
+	 {
 		this.SetValByKey(MapExtAttr.IsAutoSize, value);
 	}
 	/** 
 	 数据格式
-	 * @throws Exception 
 	*/
-	public final String getDBType() throws Exception
+	public final String getDBType()
 	{
 		return this.GetValStrByKey(MapExtAttr.DBType);
 	}
-	public final void setDBType(String value) throws Exception
-	{
+	public final void setDBType(String value)
+	 {
 		this.SetValByKey(MapExtAttr.DBType, value);
 	}
-	public final String getAtPara() throws Exception
+	public final String getAtPara()
 	{
 		return this.GetValStrByKey(MapExtAttr.AtPara);
 	}
-	public final void setAtPara(String value) throws Exception
-	{
+	public final void setAtPara(String value)
+	 {
 		this.SetValByKey(MapExtAttr.AtPara, value);
 	}
 
-	public final String getExtType() throws Exception
+	public final String getExtType()
 	{
 		return this.GetValStrByKey(MapExtAttr.ExtType);
 	}
-	public final void setExtType(String value) throws Exception
-	{
+	public final void setExtType(String value)
+	 {
 		this.SetValByKey(MapExtAttr.ExtType, value);
 	}
-	public final int getDoWay() throws Exception
+	public final int getDoWay()
 	{
 		return this.GetValIntByKey(MapExtAttr.DoWay);
 	}
-	public final void setDoWay(int value) throws Exception
-	{
+	public final void setDoWay(int value)
+	 {
 		this.SetValByKey(MapExtAttr.DoWay, value);
 	}
 	/** 
 	 操作的attrs
-	 * @throws Exception 
 	*/
-	public final String getAttrOfOper() throws Exception
+	public final String getAttrOfOper()
 	{
 		return this.GetValStrByKey(MapExtAttr.AttrOfOper);
 	}
-	public final void setAttrOfOper(String value) throws Exception
-	{
+	public final void setAttrOfOper(String value)
+	 {
 		this.SetValByKey(MapExtAttr.AttrOfOper, value);
 	}
 	/** 
 	 激活的attrs
-	 * @throws Exception 
 	*/
-	public final String getAttrsOfActive() throws Exception
-	{
+	public final String getAttrsOfActive()  {
+		  //  return this.GetValStrByKey(MapExtAttr.AttrsOfActive).Replace("~", "'");
 		return this.GetValStrByKey(MapExtAttr.AttrsOfActive);
 	}
-	public final void setAttrsOfActive(String value) throws Exception
-	{
+	public final void setAttrsOfActive(String value)
+	 {
 		this.SetValByKey(MapExtAttr.AttrsOfActive, value);
 	}
-	public final String getFK_MapData() throws Exception
+	public final String getFK_MapData()
 	{
 		return this.GetValStrByKey(MapExtAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)
+	 {
 		this.SetValByKey(MapExtAttr.FK_MapData, value);
+	}
+	public final void setFK_MapData(String val)
+	 {
+		this.SetValByKey(MapExtAttr.FK_MapData, val);
+
 	}
 	/** 
 	 Doc
-	 * @throws Exception 
 	*/
-	public final String getDoc() throws Exception
-	{
+	public final String getDoc()  {
 		String str = this.GetValStrByKey("Doc").replace("~","'");
 		str = str.replace("~", "'");
 		return str;
 	}
-	public final void setDoc(String value) throws Exception
-	{
-		String str = value.replace("'", "~");
+	public final void setDoc(String value)
+	{String str = value.replace("'", "~");
 		this.SetValByKey("Doc", str);
 	}
 
    /** 
 	 处理自动填充SQL
 	
-	@param htMainEn
+	param htMainEn
 	@return 
- * @throws Exception 
    */
-	public final String AutoFullDLL_SQL_ForDtl(Hashtable htMainEn, Hashtable htDtlEn) throws Exception
+	public final String AutoFullDLL_SQL_ForDtl(Hashtable htMainEn, Hashtable htDtlEn)
 	{
 		String fullSQL = this.getDoc().replace("@WebUser.No", WebUser.getNo());
 		fullSQL = fullSQL.replace("@WebUser.Name", WebUser.getName());
@@ -405,20 +361,18 @@ public class MapExt extends EntityMyPK
 		{
 			for (Object key : htDtlEn.keySet())
 			{
-				if(key == null)
-					continue;
 				if (fullSQL.contains("@") == false)
 				{
 					break;
 				}
-				if (fullSQL.contains("@" + key.toString() + ";") == true)
+				if (fullSQL.contains("@" + key + ";") == true)
 				{
-					fullSQL = fullSQL.replace("@" + key.toString() + ";", htDtlEn.get(key) instanceof String ? (String)htDtlEn.get(key) : null);
+					fullSQL = fullSQL.replace("@" + key + ";", htDtlEn.get(key) instanceof String ? (String)htDtlEn.get(key) : null);
 				}
 
-				if (fullSQL.contains("@" + key.toString()) == true)
+				if (fullSQL.contains("@" + key) == true)
 				{
-					fullSQL = fullSQL.replace("@" + key.toString(), htDtlEn.get(key) instanceof String ? (String)htDtlEn.get(key) : null);
+					fullSQL = fullSQL.replace("@" + key, htDtlEn.get(key) instanceof String ? (String)htDtlEn.get(key) : null);
 				}
 			}
 		}
@@ -427,29 +381,26 @@ public class MapExt extends EntityMyPK
 		{
 			for (Object key : htMainEn.keySet())
 			{
-				if(key == null)
-					continue;
 				if (fullSQL.contains("@") == false)
 				{
 					break;
 				}
 
-				if (fullSQL.contains("@" + key.toString() + ";") == true)
+				if (fullSQL.contains("@" + key + ";") == true)
 				{
-					fullSQL = fullSQL.replace("@" + key.toString() + ";", htMainEn.get(key) instanceof String ? (String)htMainEn.get(key) : null);
+					fullSQL = fullSQL.replace("@" + key + ";", htMainEn.get(key) instanceof String ? (String)htMainEn.get(key) : null);
 				}
 
-				if (fullSQL.contains("@" + key.toString()) == true)
+				if (fullSQL.contains("@" + key) == true)
 				{
-					fullSQL = fullSQL.replace("@" + key.toString(), htMainEn.get(key) instanceof String ? (String)htMainEn.get(key) : null);
+					fullSQL = fullSQL.replace("@" + key, htMainEn.get(key) instanceof String ? (String)htMainEn.get(key) : null);
 				}
 			}
 		}
 		return fullSQL;
 	}
 
-	public final String getTagOfSQLAutoFullTB() throws Exception
-	{
+	public final String getTagOfSQLAutoFullTB()  {
 		if (DataType.IsNullOrEmpty(this.getTag()))
 		{
 			return this.getDocOfSQLDeal();
@@ -464,8 +415,7 @@ public class MapExt extends EntityMyPK
 		return sql;
 	}
 
-	public final String getDocOfSQLDeal() throws Exception
-	{
+	public final String getDocOfSQLDeal()  {
 		String sql = this.getDoc();
 		sql = sql.replace("@WebUser.No", WebUser.getNo());
 		sql = sql.replace("@WebUser.Name", WebUser.getName());
@@ -474,88 +424,84 @@ public class MapExt extends EntityMyPK
 		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
 		return sql;
 	}
-	public final String getTag() throws Exception
-	{
+	public final String getTag()  {
 		String s = this.GetValStrByKey("Tag").replace("~", "'");
 
-		s = s.replace("\\\\", "\\");
-		s = s.replace("\\\\", "\\");
+		s = s.replace("\\\\", "/");
+		s = s.replace("\\\\", "/");
 
-		s = s.replace("CCFlow\\Data\\", "CCFlow\\WF\\Data\\");
+		s = s.replace("CCFlow/Data/", "CCFlow/WF/Data/");
 
 		return s;
 	}
-	public final void setTag(String value) throws Exception
-	{
+	public final void setTag(String value)
+	 {
 		this.SetValByKey("Tag", value);
 	}
-	public final String getTag1() throws Exception
+	public final String getTag1()
 	{
 		return this.GetValStrByKey("Tag1").replace("~", "'");
 	}
-	public final void setTag1(String value) throws Exception
-	{
+	public final void setTag1(String value)
+	 {
 		this.SetValByKey("Tag1", value);
 	}
-	public final String getTag2() throws Exception
+	public final String getTag2()
 	{
 		return this.GetValStrByKey("Tag2").replace("~", "'");
 	}
-	public final void setTag2(String value) throws Exception
-	{
+	public final void setTag2(String value)
+	 {
 		this.SetValByKey("Tag2", value);
 	}
-	public final String getTag3() throws Exception
+	public final String getTag3()
 	{
 		return this.GetValStrByKey("Tag3").replace("~", "'");
 	}
-	public final void setTag3(String value) throws Exception
-	{
+	public final void setTag3(String value)
+	 {
 		this.SetValByKey("Tag3", value);
 	}
-	public final String getTag4() throws Exception
+	public final String getTag4()
 	{
 		return this.GetValStrByKey("Tag4").replace("~", "'");
 	}
-	public final void setTag4(String value) throws Exception
-	{
+	public final void setTag4(String value)
+	 {
 		this.SetValByKey("Tag4", value);
 	}
-	public final int getH() throws Exception
+	public final int getH()
 	{
 		return this.GetValIntByKey(MapExtAttr.H);
 	}
-	public final void setH(int value) throws Exception
-	{
+	public final void setH(int value)
+	 {
 		this.SetValByKey(MapExtAttr.H, value);
 	}
-	public final int getW() throws Exception
+	public final int getW()
 	{
 		return this.GetValIntByKey(MapExtAttr.W);
 	}
-	public final void setW(int value) throws Exception
-	{
+	public final void setW(int value)
+	 {
 		this.SetValByKey(MapExtAttr.W, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 扩展
 	*/
-	public MapExt()
-	{
+	public MapExt()  {
 	}
 	/** 
 	 扩展
 	 
-	 @param mypk
-	 * @throws Exception 
+	 param mypk
 	*/
-	public MapExt(String mypk) throws Exception
-	{
+	public MapExt(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
@@ -563,8 +509,7 @@ public class MapExt extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -600,9 +545,9 @@ public class MapExt extends EntityMyPK
 
 			// 数据类型 @0=SQL@1=URLJSON@2=FunctionJSON.
 		map.AddTBInt(MapExtAttr.DBType, 0, "数据类型", true, false);
-		map.AddTBString(MapExtAttr.FK_DBSrc, null, "数据源", true, false, 0, 100, 20);
+		map.AddTBString(MapExtAttr.FK_DBSrc, "local", "数据源", true, false, 0, 100, 20);
 
-			// add by stone 2013-12-21 计算的优先级,用于js的计算. 
+			// add by zhoupeng 2013-12-21 计算的优先级,用于js的计算. 
 			// 也可以用于 字段之间的计算 优先级.
 		map.AddTBInt(MapExtAttr.PRI, 0, "PRI/顺序号", false, false);
 		map.AddTBString(MapExtAttr.AtPara, null, "参数", true, false, 0, 3999, 20);
@@ -611,16 +556,14 @@ public class MapExt extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///其他方法.
+		///#region 其他方法.
 	/** 
 	 统一生成主键的规则.
-	 * @throws Exception 
 	*/
-	public final void InitPK() throws Exception
-	{
+	public final void InitPK() throws Exception {
 		switch (this.getExtType())
 		{
 			case MapExtXmlList.FullData:
@@ -677,21 +620,19 @@ public class MapExt extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		if (this.getMyPK().equals(""))
 		{
 			this.setMyPK(DBAccess.GenerGUID()); //@李国文
 		}
 
-		bp.sys.Glo.ClearMapDataAutoNum(this.getFK_MapData());
+		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFK_MapData());
 
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdate() throws Exception
-	{
+	protected boolean beforeUpdate() throws Exception {
 		this.InitPK();
 
 		switch (this.getExtType())
@@ -726,9 +667,8 @@ public class MapExt extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
-		if (this.getExtType().equals("MultipleChoiceSmall") == true)
+	protected void afterInsertUpdateAction() throws Exception {
+		if (this.getExtType().equals("MultipleChoiceSmall") == true || this.getExtType().equals("SingleChoiceSmall") == true)
 		{
 			//给该字段增加一个KeyOfEnT
 			String mypk = this.getFK_MapData() + "_" + this.getAttrOfOper() + "T";
@@ -743,7 +683,7 @@ public class MapExt extends EntityMyPK
 				attrH.setUIContralType(UIContralType.TB);
 				attrH.setMinLen(0);
 				attrH.setMaxLen(500);
-				attrH.setMyDataType(bp.da.DataType.AppString);
+				attrH.setMyDataType(DataType.AppString);
 				attrH.setUIVisible(false);
 				attrH.setUIIsEnable(true);
 				attrH.setMyPK(attrH.getFK_MapData() + "_" + attrH.getKeyOfEn());
@@ -754,19 +694,17 @@ public class MapExt extends EntityMyPK
 		super.afterInsertUpdateAction();
 	}
 
-		///
+		///#endregion
 
 	/** 
 	 删除垃圾数据.
-	 * @throws Exception 
 	*/
-	public static void DeleteDB() throws Exception
-	{
+	public static void DeleteDB() throws Exception {
 		MapExts exts = new MapExts();
 		exts.RetrieveAll();
 		return;
-/*
-		for (MapExt ext : exts.ToJavaList())
+
+		/*for(MapExt ext : exts.ToJavaList())
 		{
 			if (ext.getExtType().equals(MapExtXmlList.ActiveDDL))
 			{
@@ -838,14 +776,12 @@ public class MapExt extends EntityMyPK
 	/** 
 	 根据字段，参数返回查询数据的DataTable
 	 
-	 @param field 字段名
-	 @param paras 参数
-	 @param sqlWhere 增加的查询条件的SQL
+	 param field 字段名
+	 param paras 参数
+	 param sqlWhere 增加的查询条件的SQL
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GetDataTableByField(String field, String paras, String sqlWhere,String oid) throws Exception
-	{
+	public final String GetDataTableByField(String field, String paras, String sqlWhere, String oid) throws Exception {
 		//执行SQL获取
 		if (this.getDBType().equals("0") == true && this.getRow().containsKey(field) == true)
 		{
@@ -863,45 +799,54 @@ public class MapExt extends EntityMyPK
 
 				sql += sqlWhere;
 			}
-
-
 			GEEntity en = null;
-			if(DataType.IsNullOrEmpty(oid) == false)
-				en = new GEEntity(this.getFK_MapData(), Long.parseLong(oid));
-			sql = DealExp(sql,paras, en);
-
-			if (sql.contains("@") == true)
+			if (DataType.IsNullOrEmpty(oid) == false && oid.contains("_") == false)
 			{
-				return "err@字段" + field + "执行的SQL中有@符号";
+				en = new GEEntity(this.getFK_MapData(), Long.parseLong(oid));
 			}
+
+			sql = DealExp(sql, paras, en);
+
+		   if (sql.contains("@") == true)
+		   {
+				return "err@字段" + field + "执行的SQL中有@符号";
+		   }
+
 			DataTable dt = null;
-			if(DataType.IsNullOrEmpty(this.getFK_DBSrc()) == false && this.getFK_DBSrc().equals("local")==false)
+			if (DataType.IsNullOrEmpty(this.getFK_DBSrc()) == false && this.getFK_DBSrc().equals("local") == false)
 			{
 				SFDBSrc sfdb = new SFDBSrc(this.getFK_DBSrc());
 				dt = sfdb.RunSQLReturnTable(sql);
 			}
 			else
+			{
 				dt = DBAccess.RunSQLReturnTable(sql);
+			}
+
 			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 			{
 				dt.Columns.get("NO").ColumnName = "No";
 				dt.Columns.get("NAME").ColumnName = "Name";
 
 				//判断是否存在PARENTNO列，避免转换失败
-				boolean ishave = dt.Columns.contains("PARENTNO");
-				if(ishave)
+				if (dt.Columns.contains("PARENTNO") == true)
+				{
 					dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+				}
 			}
+
 			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 			{
 				dt.Columns.get("no").ColumnName = "No";
 				dt.Columns.get("name").ColumnName = "Name";
 
 				//判断是否存在PARENTNO列，避免转换失败
-				boolean ishave = dt.Columns.contains("parentno");
-				if(ishave)
+				if (dt.Columns.contains("parentno") == true)
+				{
 					dt.Columns.get("parentno").ColumnName = "ParentNo";
+				}
 			}
+
 			return bp.tools.Json.ToJson(dt);
 
 		}
@@ -911,8 +856,7 @@ public class MapExt extends EntityMyPK
 
 
 
-	public final String GetDataTableByTag1(String key, String paras,String oid) throws Exception
-	{
+	public final String GetDataTableByTag1(String key, String paras, String oid) throws Exception {
 		String sql = "";
 	   if (DataType.IsNullOrEmpty(this.getTag1()) == false)
 	   {
@@ -939,10 +883,11 @@ public class MapExt extends EntityMyPK
 		}
 
 		GEEntity en = null;
-		if(DataType.IsNullOrEmpty(oid) == false && oid.contains("_") == false)
+		if (DataType.IsNullOrEmpty(oid) == false)
+		{
 			en = new GEEntity(this.getFK_MapData(), Long.parseLong(oid));
-		sql = DealExp(sql,paras, en);
-
+		}
+		sql = DealExp(sql, paras, en);
 
 		if (sql.contains("@") == true)
 		{
@@ -955,18 +900,21 @@ public class MapExt extends EntityMyPK
 			dt = sfdb.RunSQLReturnTable(sql);
 		}
 		else
+		{
 			dt = DBAccess.RunSQLReturnTable(sql);
+		}
 
 		return bp.tools.Json.ToJson(dt);
 	}
 
-	private  String DealExp(String exp,String paras, Entity en) throws Exception
-	{
+	private String DealExp(String exp, String paras, Entity en) throws Exception {
 		//替换字符
 		exp = exp.replace("~", "'");
 
 		if (exp.contains("@") == false)
+		{
 			return exp;
+		}
 
 		//首先替换加; 的。
 		exp = exp.replace("@WebUser.No;", WebUser.getNo());
@@ -988,11 +936,13 @@ public class MapExt extends EntityMyPK
 		exp = exp.replace("@WebUser.OrgName", WebUser.getOrgName());
 
 		if (exp.contains("@") == false)
-			return exp;
-
-		if (DataType.IsNullOrEmpty(paras) == false && paras.equals("undefined")==false )
 		{
-			if(paras.contains("@") == true)
+			return exp;
+		}
+
+		if (DataType.IsNullOrEmpty(paras) == false && paras.equals("undefined") == false)
+		{
+			if (paras.contains("@") == true)
 			{
 				String[] strs = paras.split("[@]", -1);
 				for (String key : strs)
@@ -1005,7 +955,10 @@ public class MapExt extends EntityMyPK
 					String val = key.split("[=]", -1)[1];
 					exp = exp.replace("@" + attrKeyOfEn, val);
 					if (exp.contains("@") == false)
-						return exp;
+					{
+						break;
+					}
+
 				}
 			}
 			else
@@ -1017,7 +970,9 @@ public class MapExt extends EntityMyPK
 		}
 
 		if (exp.contains("@") == false)
+		{
 			return exp;
+		}
 
 		//增加对新规则的支持. @MyField; 格式.
 		if (en != null)
@@ -1027,7 +982,7 @@ public class MapExt extends EntityMyPK
 			//特殊判断.
 			if (row.containsKey("OID") == true)
 			{
-				exp = exp.replace("@WorkID", row.GetValByKey("OID")==null?"0":row.GetValByKey("OID").toString());
+				exp = exp.replace("@WorkID", row.get("OID").toString());
 			}
 
 			if (exp.contains("@") == false)
@@ -1035,34 +990,42 @@ public class MapExt extends EntityMyPK
 				return exp;
 			}
 
-			for (String key : row.keySet())
+			for (Object key : row.keySet())
 			{
 				//值为空或者null不替换
-				if (row.GetValByKey(key) == null || row.GetValByKey(key).equals("") == true)
+				if (row.get(key) == null || row.get(key).equals("") == true)
+				{
 					exp = exp.replace("@" + key, "");
+				}
 				if (exp.contains("@" + key))
-					exp = exp.replace("@" + key, row.GetValByKey(key).toString());
+				{
+					exp = exp.replace("@" + key, row.get(key).toString());
+				}
 
 				//不包含@则返回SQL语句
 				if (exp.contains("@") == false)
+				{
 					return exp;
+				}
 			}
 
 		}
 
-		if (exp.contains("@") && SystemConfig.getIsBSsystem() == true) {
-			/* 如果是bs */
-			for (Object key :  ContextHolderUtils.getRequest().getParameterMap().keySet()) {
-				if(key == null)
+		if (exp.contains("@") && SystemConfig.getIsBSsystem() == true)
+		{
+			/*如果是bs*/
+			for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet())
+			{
+				if (DataType.IsNullOrEmpty(key))
+				{
 					continue;
-				if(key.toString().equals("")==true)
-					continue;
+				}
 				exp = exp.replace("@" + key, ContextHolderUtils.getRequest().getParameter(key.toString()));
 			}
+
 		}
 
 		exp = exp.replace("~", "'");
 		return exp;
 	}
-
 }

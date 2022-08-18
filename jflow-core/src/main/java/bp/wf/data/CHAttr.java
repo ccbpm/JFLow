@@ -1,16 +1,20 @@
 package bp.wf.data;
+
+
 /** 
  时效考核属性
 */
 public class CHAttr
 {
 
-		///属性
+		///#region 属性
 	public static final String MyPK = "MyPK";
 	/** 
 	 工作ID
 	*/
 	public static final String WorkID = "WorkID";
+
+	public static final String OrgNo = "OrgNo";
 	/** 
 	 流程编号
 	*/
@@ -135,5 +139,5 @@ public class CHAttr
 	*/
 	public static final String Points = "Points";
 
-		///
+		///#endregion
 }

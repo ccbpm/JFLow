@@ -1,15 +1,27 @@
 package bp.wf;
+
+import bp.da.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.*;
+import java.util.*;
+
 /** 
  退回轨迹
 */
 public class ReturnWorkAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
 	public static final String WorkID = "WorkID";
+	/** 
+	 fid
+	*/
+	public static final String FID = "FID";
 	/** 
 	 工作人员
 	*/
@@ -55,5 +67,5 @@ public class ReturnWorkAttr
 	*/
 	public static final String FrmDB = "FrmDB";
 
-		///
+		///#endregion
 }

@@ -1,4 +1,7 @@
 package bp.sys;
+
+import bp.*;
+
 /** 
  表单事件类的常量
 */

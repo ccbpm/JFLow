@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  工作提醒方式
 */
@@ -20,13 +22,11 @@ public enum CHAlertWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static CHAlertWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static CHAlertWay forValue(int value)
+	{return values()[value];
 	}
 }

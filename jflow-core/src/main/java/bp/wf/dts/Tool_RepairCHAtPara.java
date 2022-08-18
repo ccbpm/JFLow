@@ -1,8 +1,6 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.port.*;
-import bp.web.WebUser;
 import bp.en.*;
 import bp.wf.*;
 
@@ -14,7 +12,7 @@ public class Tool_RepairCHAtPara extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public Tool_RepairCHAtPara()
+	public Tool_RepairCHAtPara()throws Exception
 	{
 		this.Title = "修改加签状态，不正确.";
 		this.Help = "如果仍然出现，请反馈给开发人员，属于系统错误..";
@@ -30,12 +28,11 @@ public class Tool_RepairCHAtPara extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -48,10 +45,9 @@ public class Tool_RepairCHAtPara extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		String sql = "SELECT AtPara,WorkID FROM WF_GENERWORKFLOW WHERE WFState !=3 AND atpara like '%@HuiQianTaskSta=1%' ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -64,7 +60,7 @@ public class Tool_RepairCHAtPara extends Method
 
 			GenerWorkFlow gwf = new GenerWorkFlow(workid);
 			GenerWorkerLists gwls = new GenerWorkerLists(workid);
-			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), null);
 			if (gwls.size() == 1)
 			{
 				if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)
@@ -77,7 +73,7 @@ public class Tool_RepairCHAtPara extends Method
 		return "执行成功.";
 	}
 
-	public final String ssdd() throws Exception
+	public final String ssdd()throws Exception
 	{
 		String sql = "SELECT WORKID FROM WF_GenerWorkFlow A WHERE WFSta <>1 AND WFState =2  AND WorkID Not IN (Select WorkID From WF_GENERWORKERLIST) ORDER BY RDT desc";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -131,7 +127,7 @@ public class Tool_RepairCHAtPara extends Method
 
 	}
 
-	public final String ss() throws Exception
+	public final String ss()throws Exception
 	{
 		String sql = "SELECT AtPara,WorkID FROM WF_GENERWORKFLOW WHERE WFState !=3 AND atpara like '%@HuiQianTaskSta=1%' ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -144,7 +140,7 @@ public class Tool_RepairCHAtPara extends Method
 
 			GenerWorkFlow gwf = new GenerWorkFlow(workid);
 			GenerWorkerLists gwls = new GenerWorkerLists(workid);
-			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), null);
 			if (gwls.size() == 1)
 			{
 				if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)

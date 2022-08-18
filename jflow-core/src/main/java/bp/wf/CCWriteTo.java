@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  抄送数据写入规则
 */
@@ -20,13 +22,11 @@ public enum CCWriteTo
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static CCWriteTo forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static CCWriteTo forValue(int value)
+	{return values()[value];
 	}
 }

@@ -1,5 +1,12 @@
 package bp.sys;
-import bp.en.EntityMyPKAttr;
+
+import bp.da.*;
+import bp.difference.*;
+import bp.en.*;
+import bp.*;
+import java.util.*;
+import java.io.*;
+
 /** 
  附件数据存储 - 属性
 */

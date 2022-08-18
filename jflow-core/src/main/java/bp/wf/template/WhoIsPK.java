@@ -4,6 +4,9 @@ import bp.da.*;
 import bp.en.*;
 import bp.port.*;
 import bp.sys.*;
+import bp.wf.template.sflow.*;
+import bp.wf.template.frm.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -28,28 +31,27 @@ public enum WhoIsPK
 	 延续流程ID是主键
 	*/
 	CWorkID,
-	/**
-	 P2WorkID,
+	/** 
+	 爷爷流程ID是主键
 	*/
 	P2WorkID,
 	/** 
-	 P3WorkID
+	 太爷爷流程ID是主键
 	*/
 	P3WorkID,
-	/**
-	 * 根流程的WORKID
-	 */
+	/** 
+	 根流程的WorkID
+	*/
 	RootFlowWorkID;
+
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static WhoIsPK forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static WhoIsPK forValue(int value) 
+	{return values()[value];
 	}
 }

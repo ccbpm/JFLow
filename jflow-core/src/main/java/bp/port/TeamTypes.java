@@ -8,31 +8,27 @@ import java.util.*;
 */
 public class TeamTypes extends EntitiesNoName
 {
-	private static final long serialVersionUID = 1L;
 	/** 
 	 用户组类型s
 	*/
-	public TeamTypes()
-	{
+	public TeamTypes()  {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new TeamType();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<TeamType> ToJavaList()
-	{
+	public final java.util.List<TeamType> ToJavaList() {
 		return (java.util.List<TeamType>)(Object)this;
 	}
 	/** 
@@ -40,8 +36,7 @@ public class TeamTypes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<TeamType> Tolist()
-	{
+	public final ArrayList<TeamType> Tolist()  {
 		ArrayList<TeamType> list = new ArrayList<TeamType>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -50,5 +45,5 @@ public class TeamTypes extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

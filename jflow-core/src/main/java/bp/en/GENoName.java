@@ -8,12 +8,11 @@ public class GENoName extends EntityNoName
 
 		///构造
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.PhysicsTable;
 	}
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -26,13 +25,11 @@ public class GENoName extends EntityNoName
 	/** 
 	 编号
 	 
-	 @param no 编号
+	 param no 编号
 	 * @throws Exception 
 	*/
-	public GENoName(String no) throws Exception
+	public GENoName(String no)
 	{
-		super(no);
-
 	}
 	public GENoName(String sftable, String tableDesc)
 	{
@@ -40,7 +37,7 @@ public class GENoName extends EntityNoName
 		this.Desc = tableDesc;
 	}
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{

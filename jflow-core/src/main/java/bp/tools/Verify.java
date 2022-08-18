@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class Verify
 {
@@ -16,10 +17,9 @@ public class Verify
     /**
      随机码认证
 
-     @param code 生成认证长度
+     param code 生成认证长度
      */
-    public static String DrawImage(int code, String sessionName) throws Exception
-    {
+    public static String DrawImage(int code, String sessionName) throws IOException, InterruptedException {
         String str = Rand.Number(5);
 
         ContextHolderUtils.addCookie(sessionName, Rand.GetMd5Str(str));
@@ -30,10 +30,9 @@ public class Verify
     /**
      /// 生成验证图片
      ///
-     /// @param checkCode 验证字符
+     /// param checkCode 验证字符
      */
-    private static String CreateImages(String checkCode) throws Exception
-    {
+    private static String CreateImages(String checkCode) throws IOException {
         StringBuffer sb = new StringBuffer();
         int iwidth = 80;
         // 1.创建空白图片

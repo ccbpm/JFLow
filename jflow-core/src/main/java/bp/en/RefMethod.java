@@ -2,6 +2,7 @@ package bp.en;
 
 import java.lang.reflect.Method;
 
+import bp.da.DataType;
 import bp.tools.StringHelper;
 
 /**
@@ -75,8 +76,7 @@ public class RefMethod
 	}
 	
 	public final void setHisAttrs(Attrs value)
-	{
-		_HisAttrs = value;
+	{_HisAttrs = value;
 	}
 	
 	/**
@@ -103,6 +103,7 @@ public class RefMethod
 	 * 连接
 	 */
 	public String ClassMethodName = null;
+
 	/**
 	 * 图标
 	 */
@@ -151,7 +152,7 @@ public class RefMethod
 	/**
 	 * 执行
 	 * 
-	 * @param paras
+	 * param paras
 	 * @return
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
@@ -202,7 +203,7 @@ public class RefMethod
 		{
 			String cause = e.getCause().getMessage();
 			String msg = e.getMessage();
-			if (!StringHelper.isNullOrEmpty(msg))
+			if (!DataType.IsNullOrEmpty(msg))
 			{
 				cause = msg + "\n" + cause;
 			}

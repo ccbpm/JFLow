@@ -1,12 +1,10 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
-import bp.tools.StringHelper;
 import bp.web.*;
+import bp.difference.*;
 import java.util.*;
 
 /** 
@@ -14,26 +12,23 @@ import java.util.*;
 */
 public class SFTable extends EntityNoName
 {
-	private static final long serialVersionUID = 1L;
-		///数据源属性.
+
+		///#region 数据源属性.
 	/** 
 	 获得外部数据表
-	 * @throws Exception 
 	*/
 
-	public final DataTable GenerHisDataTable() throws Exception
-	{
+	public final DataTable GenerHisDataTable() throws Exception {
 		return GenerHisDataTable(null);
 	}
 
-
-	public final DataTable GenerHisDataTable(Hashtable ht) throws Exception
-	{
+//ORIGINAL LINE: public DataTable GenerHisDataTable(Hashtable ht = null)
+	public final DataTable GenerHisDataTable(Hashtable ht) throws Exception {
 		//创建数据源.
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
 
 
-			///BP类
+		///BP类
 		if (this.getSrcType() == SrcType.BPClass)
 		{
 			Entities ens = ClassFactory.GetEns(this.getNo());
@@ -52,7 +47,7 @@ public class SFTable extends EntityNoName
 			sql += " FROM " + this.getSrcTable();
 			return src.RunSQLReturnTable(sql);
 		}
-		
+
 		///动态SQL，edited by liuxc,2016-12-29
 		if (this.getSrcType() == SrcType.SQL)
 		{
@@ -144,7 +139,7 @@ public class SFTable extends EntityNoName
 
 
 
-			///自定义表.
+		///自定义表.
 		if (this.getSrcType() == SrcType.CreateTable)
 		{
 			String sql = "SELECT No, Name FROM " + this.getNo();
@@ -153,7 +148,7 @@ public class SFTable extends EntityNoName
 
 		if (this.getSrcType() == SrcType.SysDict)
 		{
-			String sql = "SELECT MyPK, BH, Name FROM Sys_SFTableDtl where FK_SFTable='" + this.getNo() + "'";
+			String sql = "SELECT MyPK, BH AS \"No\", \"Name\" FROM Sys_SFTableDtl where FK_SFTable='" + this.getNo() + "'";
 			return src.RunSQLReturnTable(sql);
 		}
 
@@ -166,10 +161,10 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final void UpdateData(String No, String Name, String FK_SFTable) throws Exception
+	public final void UpdateData(String No, String Name, String FK_SFTable)
 	{
 		String sql = "";
-		if (this.getSrcType() == SrcType.SysDict)
+		if (this.getSrcType() == bp.sys.SrcType.SysDict)
 		{
 			sql = "update Sys_SFTableDtl set Name = '" + Name + "' where MyPK='" + FK_SFTable + "_" + No + "'";
 		}
@@ -184,10 +179,10 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final void InsertData(String No, String Name, String FK_SFTable) throws Exception
+	public final void InsertData(String No, String Name, String FK_SFTable)
 	{
 		String sql = "";
-		if (this.getSrcType() == SrcType.SysDict)
+		if (this.getSrcType() == bp.sys.SrcType.SysDict)
 		{
 			sql = "insert into  Sys_SFTableDtl(MyPK,FK_SFTable,BH,Name) values('" + FK_SFTable + "_" + No + "','" + FK_SFTable + "','" + No + "','" + Name + "')";
 		}
@@ -202,10 +197,10 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final void DeleteData(String No, String FK_SFTable) throws Exception
+	public final void DeleteData(String No, String FK_SFTable)
 	{
 		String sql = "";
-		if (this.getSrcType() == SrcType.SysDict)
+		if (this.getSrcType() == bp.sys.SrcType.SysDict)
 		{
 			sql = "delete from Sys_SFTableDtl where MyPK='" + FK_SFTable + "_" + No + "'";
 		}
@@ -215,8 +210,7 @@ public class SFTable extends EntityNoName
 		}
 		DBAccess.RunSQL(sql);
 	}
-	public final String GenerHisJson() throws Exception
-	{
+	public final String GenerHisJson() throws Exception {
 		return bp.tools.Json.ToJson(this.GenerHisDataTable());
 	}
 	/** 
@@ -224,8 +218,7 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String GenerSFTableNewNo() throws Exception
-	{
+	public final String GenerSFTableNewNo()  {
 		String table = this.getSrcTable();
 		NoGenerModel NoGenerModel = this.getNoGenerModel();
 		if (NoGenerModel == NoGenerModel.ByGUID) //编号按guid生成
@@ -241,12 +234,13 @@ public class SFTable extends EntityNoName
 				{
 					String sql = null;
 					String field = "BH";
-					switch (this.get_enMap().getEnDBUrl().getDBType())
+					switch (this.getEnMap().getEnDBUrl().getDBType())
 					{
 						case MSSQL:
 							sql = "SELECT CONVERT(INT, MAX(CAST(" + field + " as int)) )+1 AS No FROM Sys_SFTableDtl where FK_SFTable='" + table + "'";
 							break;
 						case PostgreSQL:
+						case UX:
 							sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM Sys_SFTableDtl where FK_SFTable='" + table + "'";
 							break;
 						case Oracle:
@@ -283,12 +277,13 @@ public class SFTable extends EntityNoName
 			{
 				String sql = null;
 				String field = "No";
-				switch (this.get_enMap().getEnDBUrl().getDBType())
+				switch (this.getEnMap().getEnDBUrl().getDBType())
 				{
 					case MSSQL:
 						sql = "SELECT CONVERT(INT, MAX(CAST(" + field + " as int)) )+1 AS No FROM " + table;
 						break;
 					case PostgreSQL:
+					case UX:
 						sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM " + table;
 						break;
 					case Oracle:
@@ -328,9 +323,9 @@ public class SFTable extends EntityNoName
 	/** 
 	 实例化 WebServices
 	 
-	 @param url WebServices地址
-	 @param methodname 调用的方法
-	 @param args 把webservices里需要的参数按顺序放到这个object[]里
+	 param url WebServices地址
+	 param methodname 调用的方法
+	 param args 把webservices里需要的参数按顺序放到这个object[]里
 	*/
 	public final Object InvokeWebService(String url, String methodname, Object[] args)
 	{
@@ -349,7 +344,7 @@ public class SFTable extends EntityNoName
 		                WebClient wc = new WebClient();
 		                Stream stream = wc.OpenRead(url);
 		                ServiceDescription sd = ServiceDescription.Read(stream);
-		                string classname = sd.Services[0].getName();
+		                string classname = sd.Services[0].Name;
 		                ServiceDescriptionImporter sdi = new ServiceDescriptionImporter();
 		                sdi.AddServiceDescription(sd, "", "");
 		                CodeNamespace cn = new CodeNamespace(@namespace);
@@ -398,130 +393,138 @@ public class SFTable extends EntityNoName
 		*/
 	}
 
-		///
+		///#endregion
 
 
-		///链接到其他系统获取数据的属性
+		///#region 链接到其他系统获取数据的属性
+	/** 
+	 组织编号
+	*/
+	public final String getOrgNo() 
+	{
+		return this.GetValStringByKey(SFTableAttr.OrgNo);
+	}
+	public final void setOrgNo(String value)  
+	 {
+		this.SetValByKey(SFTableAttr.OrgNo, value);
+	}
 	/** 
 	 数据源
 	*/
-	public final String getFK_SFDBSrc() throws Exception
+	public final String getFK_SFDBSrc() 
 	{
 		return this.GetValStringByKey(SFTableAttr.FK_SFDBSrc);
 	}
-	public final void setFK_SFDBSrc(String value) throws Exception
-	{
+	public final void setFK_SFDBSrc(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.FK_SFDBSrc, value);
 	}
-	public final String getFK_SFDBSrcT() throws Exception
+	public final String getFK_SFDBSrcT() 
 	{
 		return this.GetValRefTextByKey(SFTableAttr.FK_SFDBSrc);
 	}
 	/** 
 	 数据缓存时间
 	*/
-	public final String getRootVal() throws Exception
+	public final String getRootVal() 
 	{
 		return this.GetValStringByKey(SFTableAttr.RootVal);
 	}
-	public final void setRootVal(String value) throws Exception
-	{
+	public final void setRootVal(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.RootVal, value);
 	}
 	/** 
 	 同步间隔
 	*/
-	public final int getCashMinute() throws Exception
+	public final int getCashMinute() 
 	{
 		return this.GetValIntByKey(SFTableAttr.CashMinute);
 	}
-	public final void setCashMinute(int value) throws Exception
-	{
+	public final void setCashMinute(int value)  
+	 {
 		this.SetValByKey(SFTableAttr.CashMinute, value);
 	}
 
 	/** 
 	 物理表名称
 	*/
-	public final String getSrcTable() throws Exception
-	{
+	public final String getSrcTable()  {
 		String str = this.GetValStringByKey(SFTableAttr.SrcTable);
-		if (str.equals("") || str == null)
+		if (DataType.IsNullOrEmpty(str) == true)
 		{
 			return this.getNo();
 		}
 		return str;
 	}
-	public final void setSrcTable(String value) throws Exception
-	{
+	public final void setSrcTable(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.SrcTable, value);
 	}
 	/** 
 	 值/主键字段名
 	*/
-	public final String getColumnValue() throws Exception
+	public final String getColumnValue() 
 	{
 		return this.GetValStringByKey(SFTableAttr.ColumnValue);
 	}
-	public final void setColumnValue(String value) throws Exception
-	{
+	public final void setColumnValue(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.ColumnValue, value);
 	}
 	/** 
 	 显示字段/显示字段名
 	*/
-	public final String getColumnText() throws Exception
+	public final String getColumnText() 
 	{
 		return this.GetValStringByKey(SFTableAttr.ColumnText);
 	}
-	public final void setColumnText(String value) throws Exception
-	{
+	public final void setColumnText(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.ColumnText, value);
 	}
 	/** 
 	 父结点字段名
 	*/
-	public final String getParentValue() throws Exception
+	public final String getParentValue() 
 	{
 		return this.GetValStringByKey(SFTableAttr.ParentValue);
 	}
-	public final void setParentValue(String value) throws Exception
-	{
+	public final void setParentValue(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.ParentValue, value);
 	}
 	/** 
 	 查询语句
 	*/
-	public final String getSelectStatement() throws Exception
+	public final String getSelectStatement() 
 	{
 		return this.GetValStringByKey(SFTableAttr.SelectStatement);
 	}
-	public final void setSelectStatement(String value) throws Exception
-	{
+	public final void setSelectStatement(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.SelectStatement, value);
 	}
 	/** 
 	 加入日期
 	*/
-	public final String getRDT() throws Exception
+	public final String getRDT() 
 	{
 		return this.GetValStringByKey(SFTableAttr.RDT);
 	}
-	public final void setRDT(String value) throws Exception
-	{
+	public final void setRDT(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.RDT, value);
 	}
 
-		///
+		///#endregion
 
 
-		///属性
+		///#region 属性
 	/** 
 	 是否是类
-	 * @throws Exception 
 	*/
-	public final boolean getIsClass() throws Exception
-	{
+	public final boolean isClass()  {
 		if (this.getNo().contains("."))
 		{
 			return true;
@@ -534,9 +537,8 @@ public class SFTable extends EntityNoName
 	/** 
 	 是否是树形实体?
 	*/
-	public final boolean getIsTree() throws Exception
-	{
-		if (this.getCodeStruct() == CodeStruct.NoName)
+	public final boolean isTree()  {
+		if (this.getCodeStruct() == bp.sys.CodeStruct.NoName)
 		{
 			return false;
 		}
@@ -544,38 +546,34 @@ public class SFTable extends EntityNoName
 	}
 	/** 
 	 数据源类型
-	 * @throws Exception 
 	*/
-	public final SrcType getSrcType() throws Exception
-	{
-		if (this.getNo().toUpperCase().contains("BP.") == true)
+	public final SrcType getSrcType()  {
+		if (this.getNo().contains("BP.") == true)
 		{
 			return SrcType.BPClass;
 		}
 		else
 		{
 			SrcType src = SrcType.forValue(this.GetValIntByKey(SFTableAttr.SrcType));
-			if (src == SrcType.BPClass)
+			if (src == bp.sys.SrcType.BPClass)
 			{
 				return SrcType.CreateTable;
 			}
 			return src;
 		}
 	}
-	public final void setSrcType(SrcType value) throws Exception
-	{
+	public final void setSrcType(SrcType value)  
+	 {
 		this.SetValByKey(SFTableAttr.SrcType, value.getValue());
 	}
 	/** 
 	 数据源类型名称
-	 * @throws Exception 
 	*/
-	public final String getSrcTypeText() throws Exception
-	{
+	public final String getSrcTypeText()  {
 		switch (this.getSrcType())
 		{
 			case TableOrView:
-				if (this.getIsClass())
+				if (this.isClass())
 				{
 					return "<img src='/WF/Img/Class.png' width='16px' broder='0' />实体类";
 				}
@@ -587,6 +585,8 @@ public class SFTable extends EntityNoName
 				return "<img src='/WF/Img/SQL.png' width='16px' broder='0' />SQL表达式";
 			case WebServices:
 				return "<img src='/WF/Img/WebServices.gif' width='16px' broder='0' />WebServices";
+			case WebApi:
+				return "WebApi接口";
 			default:
 				return "";
 		}
@@ -596,105 +596,93 @@ public class SFTable extends EntityNoName
 	 <p>0：NoName类型</p>
 	 <p>1：NoNameTree类型</p>
 	 <p>2：NoName行政区划类型</p>
-	 * @throws Exception 
 	*/
-	public final CodeStruct getCodeStruct() throws Exception
-	{
+	public final CodeStruct getCodeStruct()  {
 		return CodeStruct.forValue(this.GetValIntByKey(SFTableAttr.CodeStruct));
 	}
-	public final void setCodeStruct(CodeStruct value) throws Exception
-	{
+	public final void setCodeStruct(CodeStruct value)  
+	 {
 		this.SetValByKey(SFTableAttr.CodeStruct, value.getValue());
 	}
 	/** 
 	编号生成规则
-	 * @throws Exception 
 	*/
-	public final NoGenerModel getNoGenerModel() throws Exception
-	{
+	public final NoGenerModel getNoGenerModel()  {
 		return NoGenerModel.forValue(this.GetValIntByKey(SFTableAttr.NoGenerModel));
 	}
-	public final void setNoGenerModel(NoGenerModel value) throws Exception
-	{
+	public final void setNoGenerModel(NoGenerModel value)  
+	 {
 		this.SetValByKey(SFTableAttr.NoGenerModel, value.getValue());
 	}
 	/** 
 	 编码类型
-	 * @throws Exception 
 	*/
-	public final String getCodeStructT() throws Exception
+	public final String getCodeStructT() 
 	{
 		return this.GetValRefTextByKey(SFTableAttr.CodeStruct);
 	}
 	/** 
 	 值
-	 * @throws Exception 
 	*/
-	public final String getFKVal() throws Exception
+	public final String getFK_Val() 
 	{
 		return this.GetValStringByKey(SFTableAttr.FK_Val);
 	}
-	public final void setFK_Val(String value) throws Exception
-	{
+	public final void setFK_Val(String value)
+	 {
 		this.SetValByKey(SFTableAttr.FK_Val, value);
 	}
 	/** 
 	 描述
-	 * @throws Exception 
 	*/
-	public final String getTableDesc() throws Exception
+	public final String getTableDesc() 
 	{
 		return this.GetValStringByKey(SFTableAttr.TableDesc);
 	}
-	public final void setTableDesc(String value) throws Exception
-	{
+	public final void setTableDesc(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.TableDesc, value);
 	}
 	/** 
 	 默认值
 	*/
-	public final String getDefVal() throws Exception
+	public final String getDefVal() 
 	{
 		return this.GetValStringByKey(SFTableAttr.DefVal);
 	}
-	public final void setDefVal(String value) throws Exception
-	{
+	public final void setDefVal(String value)  
+	 {
 		this.SetValByKey(SFTableAttr.DefVal, value);
 	}
-	
-	public final EntitiesNoName getHisEns() throws Exception
-	{
-		if (this.getIsClass())
+	public final EntitiesNoName getHisEns() throws Exception {
+		if (this.isClass())
 		{
-			EntitiesNoName ens = (EntitiesNoName)bp.en.ClassFactory.GetEns(this.getNo());
+			EntitiesNoName ens = (EntitiesNoName)ClassFactory.GetEns(this.getNo());
 			ens.RetrieveAll();
 			return ens;
 		}
 
-		bp.en.GENoNames ges = new GENoNames(this.getNo(), this.getName());
+		GENoNames ges = new GENoNames(this.getNo(), this.getName());
 		ges.RetrieveAll();
 		return ges;
 	}
 
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
-		uac.IsInsert = false;
 		return uac;
 	}
 	/** 
 	 用户自定义表
 	*/
-	public SFTable()
-	{
+	public SFTable()  {
 	}
-	public SFTable(String mypk) throws Exception
-	{
+	public SFTable(String mypk) throws Exception {
 		this.setNo(mypk);
 		try
 		{
@@ -704,22 +692,22 @@ public class SFTable extends EntityNoName
 		{
 			switch (this.getNo())
 			{
-				case "bp.pub.NYs":
+				case "BP.Pub.NYs":
 					this.setName("年月");
 					this.setFK_Val("FK_NY");
 					this.Insert();
 					break;
-				case "bp.pub.YFs":
+				case "BP.Pub.YFs":
 					this.setName("月");
 					this.setFK_Val("FK_YF");
 					this.Insert();
 					break;
-				case "bp.pub.Days":
+				case "BP.Pub.Days":
 					this.setName("天");
 					this.setFK_Val("FK_Day");
 					this.Insert();
 					break;
-				case "bp.pub.NDs":
+				case "BP.Pub.NDs":
 					this.setName("年");
 					this.setFK_Val("FK_ND");
 					this.Insert();
@@ -733,8 +721,7 @@ public class SFTable extends EntityNoName
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -744,7 +731,7 @@ public class SFTable extends EntityNoName
 		map.AddTBStringPK(SFTableAttr.No, null, "表英文名称", true, false, 1, 200, 20);
 		map.AddTBString(SFTableAttr.Name, null, "表中文名称", true, false, 0, 200, 20);
 
-		map.AddDDLSysEnum(SFTableAttr.SrcType, 0, "数据表类型", true, false, SFTableAttr.SrcType, "@0=本地的类@1=创建表@2=表或视图@3=SQL查询表@4=WebServices@5=微服务Handler外部数据源@6=JavaScript外部数据源@7=系统字典表");
+		map.AddDDLSysEnum(SFTableAttr.SrcType, 0, "数据表类型", true, false, SFTableAttr.SrcType, "@0=本地的类@1=创建表@2=表或视图@3=SQL查询表@4=WebServices@5=微服务Handler外部数据源@6=JavaScript外部数据源@7=系统字典表@8=WebApi接口");
 
 		map.AddDDLSysEnum(SFTableAttr.CodeStruct, 0, "字典表类型", true, false, SFTableAttr.CodeStruct);
 		map.AddTBString(SFTableAttr.RootVal, null, "根节点值", false, false, 0, 200, 20);
@@ -763,6 +750,9 @@ public class SFTable extends EntityNoName
 		map.AddTBString(SFTableAttr.SelectStatement, null, "查询语句", true, false, 0, 1000, 600, true);
 		map.AddTBDateTime(SFTableAttr.RDT, null, "加入日期", false, false);
 
+
+		map.AddTBString(SFTableAttr.OrgNo, null, "组织编号", false, false, 0, 100, 20);
+
 			//查找.
 		map.AddSearchAttr(SFTableAttr.FK_SFDBSrc);
 
@@ -772,6 +762,21 @@ public class SFTable extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.IsForEns = false;
 		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "修改属性";
+		rm.ClassMethodName = this.toString() + ".DoAttr";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.IsForEns = true;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "新建字典";
+		rm.ClassMethodName = this.toString() + ".DoNew";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.IsForEns = true;
+		map.AddRefMethod(rm);
+
 
 			//rm = new RefMethod();
 			//rm.Title = "创建Table向导";
@@ -791,15 +796,20 @@ public class SFTable extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
+	public final String DoAttr()  {
+		return SystemConfig.getCCFlowWebPath() + "WF/Comm/EnOnly.htm?EnsName=BP.Sys.SFTable&No=" + this.getNo();
+	}
+	public final String DoNew()  {
+		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTable/Default.htm?DoType=New&FromApp=SL&s=0.3256071044807922";
+	}
 	/** 
 	 数据源管理
 	 
 	 @return 
 	*/
-	public final String DoMangDBSrc()
-	{
+	public final String DoMangDBSrc()  {
 		return SystemConfig.getCCFlowWebPath() + "WF/Comm/Sys/SFDBSrcNewGuide.htm";
 	}
 	/** 
@@ -807,8 +817,7 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoGuide()
-	{
+	public final String DoGuide()  {
 		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/CreateSFGuide.htm";
 	}
 	/** 
@@ -816,9 +825,8 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoEdit() throws Exception
-	{
-		if (this.getIsClass())
+	public final String DoEdit()  {
+		if (this.isClass())
 		{
 
 			return SystemConfig.getCCFlowWebPath() + "WF/Comm/Ens.htm?EnsName=" + this.getNo();
@@ -828,14 +836,18 @@ public class SFTable extends EntityNoName
 			return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo();
 		}
 	}
-	public final String IsCanDelete() throws Exception
-	{
-		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
-		if (attrs.size() != 0)
+	/** 
+	 检查是否有依赖的引用？
+	 
+	 @return 
+	*/
+	public final String IsCanDelete() throws Exception {
+		MapAttrs mattrs = new MapAttrs();
+		mattrs.Retrieve(MapAttrAttr.UIBindKey, this.getNo());
+		if (mattrs.size() != 0)
 		{
 			String err = "";
-			for (MapAttr item : attrs.ToJavaList())
+			for (MapAttr item : mattrs.ToJavaList())
 			{
 				err += " @ " + item.getMyPK() + " " + item.getName();
 			}
@@ -844,8 +856,7 @@ public class SFTable extends EntityNoName
 		return null;
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception
-	{
+	protected boolean beforeDelete() throws Exception {
 		String delMsg = this.IsCanDelete();
 		if (delMsg != null)
 		{
@@ -855,16 +866,20 @@ public class SFTable extends EntityNoName
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
-		//利用这个时间串进行排序.
-		this.setRDT(DataType.getCurrentDataTime());
-
-
-			/// 如果是 系统字典表.
-		if (this.getSrcType() == SrcType.SysDict && (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single || SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc))
+	protected boolean beforeInsert() throws Exception {
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
-			
+			this.setOrgNo(WebUser.getOrgNo());
+			this.setNo(this.getOrgNo() + "_" + this.getNo());
+		}
+
+		//利用这个时间串进行排序.
+		this.setRDT(DataType.getCurrentDateTime());
+
+
+			///#region  如果是 系统字典表.
+		if (this.getSrcType() == bp.sys.SrcType.SysDict && SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
 			if (this.getCodeStruct() == CodeStruct.NoName)
 			{
 				DictDtl dtl = new DictDtl();
@@ -917,14 +932,11 @@ public class SFTable extends EntityNoName
 			}
 		}
 
-			///  如果是 系统字典表.
+			///#endregion  如果是 系统字典表.
 
 
-
-
-
-			///如果是本地类.
-		if (this.getSrcType() == SrcType.BPClass)
+			///#region 如果是本地类.
+		if (this.getSrcType() == bp.sys.SrcType.BPClass)
 		{
 			Entities ens = ClassFactory.GetEns(this.getNo());
 			Entity en = ens.getGetNewEntity();
@@ -933,28 +945,28 @@ public class SFTable extends EntityNoName
 			//检查是否是树结构.
 			if (en.getIsTreeEntity() == true)
 			{
-				this.setCodeStruct(CodeStruct.Tree);
+				this.setCodeStruct(bp.sys.CodeStruct.Tree);
 			}
 			else
 			{
-				this.setCodeStruct(CodeStruct.NoName);
+				this.setCodeStruct(bp.sys.CodeStruct.NoName);
 			}
 		}
 
-			/// 如果是本地类.
+			///#endregion 如果是本地类.
 
 
-			///本地类，物理表..
-		if (this.getSrcType() == SrcType.CreateTable)
+			///#region 本地类，物理表..
+		if (this.getSrcType() == bp.sys.SrcType.CreateTable)
 		{
 			if (DBAccess.IsExitsObject(this.getNo()) == true)
 			{
 				return super.beforeInsert();
-				//throw new Exception("err@表名[" + this.getNo()+ "]已经存在，请使用其他的表名.");
+				//throw new Exception("err@表名[" + this.No + "]已经存在，请使用其他的表名.");
 			}
 
 			String sql = "";
-			if (this.getCodeStruct() == CodeStruct.NoName || this.getCodeStruct() == CodeStruct.GradeNoName)
+			if (this.getCodeStruct() == bp.sys.CodeStruct.NoName || this.getCodeStruct() == bp.sys.CodeStruct.GradeNoName)
 			{
 				sql = "CREATE TABLE " + this.getNo() + " (";
 				sql += "No varchar(30) NOT NULL,";
@@ -962,7 +974,7 @@ public class SFTable extends EntityNoName
 				sql += ")";
 			}
 
-			if (this.getCodeStruct() == CodeStruct.Tree)
+			if (this.getCodeStruct() == bp.sys.CodeStruct.Tree)
 			{
 				sql = "CREATE TABLE " + this.getNo() + " (";
 				sql += "No varchar(30) NOT NULL,";
@@ -970,31 +982,31 @@ public class SFTable extends EntityNoName
 				sql += "ParentNo varchar(3900)  NULL";
 				sql += ")";
 			}
+
 			this.RunSQL(sql);
 
 			//初始化数据.
 			this.InitDataTable();
 		}
 
-			/// 如果是本地类.
+			///#endregion 如果是本地类.
 
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected void afterInsert() throws Exception
-	{
+	protected void afterInsert()  throws Exception{
 		try
 		{
-			if (this.getSrcType() == SrcType.TableOrView)
+			if (this.getSrcType() == bp.sys.SrcType.TableOrView)
 			{
 				//暂时这样处理
 				String sql = "CREATE VIEW " + this.getNo() + " (";
 				sql += "[No],";
 				sql += "[Name]";
-				sql += (this.getCodeStruct() == CodeStruct.Tree ? ",[ParentNo])" : ")");
+				sql += (this.getCodeStruct() == bp.sys.CodeStruct.Tree ? ",[ParentNo])" : ")");
 				sql += " AS ";
-				sql += "SELECT " + this.getColumnValue() + " No," + this.getColumnText() + " Name" + (this.getCodeStruct() == CodeStruct.Tree ? ("," + this.getParentValue() + " ParentNo") : "") + " FROM " + this.getSrcTable() + (DataType.IsNullOrEmpty(this.getSelectStatement()) ? "" : (" WHERE " + this.getSelectStatement()));
+				sql += "SELECT " + this.getColumnValue() + " No," + this.getColumnText() + " Name" + (this.getCodeStruct() == bp.sys.CodeStruct.Tree ? ("," + this.getParentValue() + " ParentNo") : "") + " FROM " + this.getSrcTable() + (DataType.IsNullOrEmpty(this.getSelectStatement()) ? "" : (" WHERE " + this.getSelectStatement()));
 
 				if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
@@ -1022,17 +1034,16 @@ public class SFTable extends EntityNoName
 	 
 	 @return 
 	*/
-	public final DataTable GenerData_bak() throws Exception
-	{
+	public final DataTable GenerData_bak()  {
 		String sql = "";
 		DataTable dt = null;
-		if (this.getSrcType() == SrcType.CreateTable)
+		if (this.getSrcType() == bp.sys.SrcType.CreateTable)
 		{
 			sql = "SELECT No,Name FROM " + this.getSrcTable();
 			dt = this.RunSQLReturnTable(sql);
 		}
 
-		if (this.getSrcType() == SrcType.TableOrView)
+		if (this.getSrcType() == bp.sys.SrcType.TableOrView)
 		{
 			sql = "SELECT No,Name FROM " + this.getSrcTable();
 			dt = this.RunSQLReturnTable(sql);
@@ -1043,8 +1054,8 @@ public class SFTable extends EntityNoName
 			throw new RuntimeException("@没有判断的数据.");
 		}
 
-		dt.Columns.get(0).ColumnName = "No";
-		dt.Columns.get(1).ColumnName = "Name";
+		dt.Columns.get(0).setColumnName("No");
+		dt.Columns.get(1).setColumnName("Name");
 
 		return dt;
 	}
@@ -1052,25 +1063,22 @@ public class SFTable extends EntityNoName
 	 返回json.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String GenerDataOfJson() throws Exception
-	{
+	public final String GenerDataOfJson() throws Exception {
 		return bp.tools.Json.ToJson(this.GenerHisDataTable());
 	}
+
 	/** 
 	 初始化数据.
-	 * @throws Exception 
 	*/
-	public final void InitDataTable() throws Exception
-	{
+	public final void InitDataTable() throws Exception {
 		DataTable dt = this.GenerHisDataTable();
 
 		String sql = "";
 		if (dt.Rows.size() == 0)
 		{
 			/*初始化数据.*/
-			if (this.getCodeStruct() == CodeStruct.Tree)
+			if (this.getCodeStruct() == bp.sys.CodeStruct.Tree)
 			{
 				sql = "INSERT INTO " + this.getSrcTable() + " (No,Name,ParentNo) VALUES('1','" + this.getName() + "','0') ";
 				this.RunSQL(sql);
@@ -1085,7 +1093,7 @@ public class SFTable extends EntityNoName
 				}
 			}
 
-			if (this.getCodeStruct() == CodeStruct.NoName)
+			if (this.getCodeStruct() == bp.sys.CodeStruct.NoName)
 			{
 				for (int i = 1; i < 4; i++)
 				{

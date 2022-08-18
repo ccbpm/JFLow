@@ -1,12 +1,13 @@
 package bp.wf.template;
 
+
 /** 
  找人规则属性
 */
 public class FindWorkerRoleAttr extends bp.en.EntityOIDNameAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 节点ID
 	*/
@@ -100,5 +101,5 @@ public class FindWorkerRoleAttr extends bp.en.EntityOIDNameAttr
 	*/
 	public static final String IsEnable = "IsEnable";
 
-		///
+		///#endregion
 }

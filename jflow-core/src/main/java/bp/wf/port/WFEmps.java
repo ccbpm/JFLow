@@ -9,48 +9,42 @@ import java.util.*;
 public class WFEmps extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 操作员s
 	*/
-	public WFEmps()
-	{
+	public WFEmps() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new WFEmp();
 	}
-
 	@Override
-	public int RetrieveAll() throws Exception
-	{
+	public int RetrieveAll() throws Exception {
 		return super.RetrieveAll("FK_Dept", "Idx");
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<WFEmp> ToJavaList()
-	{
-		return (List<WFEmp>)(Object)this;
+	public final java.util.List<WFEmp> ToJavaList() {
+		return (java.util.List<WFEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<WFEmp> Tolist()
-	{
+	public final ArrayList<WFEmp> Tolist()  {
 		ArrayList<WFEmp> list = new ArrayList<WFEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -59,6 +53,6 @@ public class WFEmps extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

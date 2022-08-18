@@ -1,19 +1,17 @@
 package bp.wf;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
-import bp.web.GuestUser;
-import bp.web.WebUser;
+import java.time.*;
+import java.util.Date;
 
 /** 
  轨迹
 */
-public class Track extends Entity
+public class Track extends bp.en.Entity
 {
 
-		///基本属性.
+		///#region 基本属性.
 	/** 
 	 表单数据
 	*/
@@ -21,86 +19,84 @@ public class Track extends Entity
 	public String WriteDB = null;
 	/** 
 	 主键值
-	 * @throws Exception 
 	*/
 	public final String getMyPK() throws Exception
 	{
 		return this.GetValStrByKey(TrackAttr.MyPK);
 	}
-	public final void setMyPK(String value)throws Exception
-	{
+	public final void setMyPK(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.MyPK, value);
 	}
+
 	@Override
-	public String getPK()
-	{
+	public String getPK()  {
 		return "MyPK";
 	}
 
 	@Override
-	public String getPKField()
-	{
+	public String getPK_Field() throws Exception {
 		return "MyPK";
 	}
 	public String FK_Flow = null;
 
-		/// 基本属性.
+		///#endregion 基本属性.
 
 
-		///字段属性.
+		///#region 字段属性.
 	/** 
 	 节点从
 	*/
-	public final int getNDFrom()throws Exception
+	public final int getNDFrom() throws Exception
 	{
 		return this.GetValIntByKey(TrackAttr.NDFrom);
 	}
-	public final void setNDFrom(int value)throws Exception
-	{
+	public final void setNDFrom(int value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.NDFrom, value);
 	}
 	/** 
 	 节点到
 	*/
-	public final int getNDTo()throws Exception
+	public final int getNDTo() throws Exception
 	{
 		return this.GetValIntByKey(TrackAttr.NDTo);
 	}
-	public final void setNDTo(int value)throws Exception
-	{
+	public final void setNDTo(int value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.NDTo, value);
 	}
 	/** 
 	 从人员
 	*/
-	public final String getEmpFrom()throws Exception
+	public final String getEmpFrom() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpFrom);
 	}
-	public final void setEmpFrom(String value)throws Exception
-	{
+	public final void setEmpFrom(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.EmpFrom, value);
 	}
 	/** 
 	 到人员
 	*/
-	public final String getEmpTo()throws Exception
+	public final String getEmpTo() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpTo);
 	}
-	public final void setEmpTo(String value)throws Exception
-	{
+	public final void setEmpTo(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.EmpTo, value);
 	}
 	/** 
 	 参数数据.
 	*/
-	public final String getTag()throws Exception
+	public final String getTag() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Tag);
 	}
-	public final void setTag(String value)throws Exception
-	{
+	public final void setTag(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.Tag, value);
 	}
 	/** 
@@ -110,8 +106,8 @@ public class Track extends Entity
 	{
 		return this.GetValStringByKey(TrackAttr.RDT);
 	}
-	public final void setRDT(String value)throws Exception
-	{
+	public final void setRDT(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.RDT, value);
 	}
 	/** 
@@ -121,8 +117,8 @@ public class Track extends Entity
 	{
 		return this.GetValInt64ByKey(TrackAttr.FID);
 	}
-	public final void setFID(long value) throws Exception
-	{
+	public final void setFID(long value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.FID, value);
 	}
 	/** 
@@ -133,35 +129,34 @@ public class Track extends Entity
 		return this.GetValInt64ByKey(TrackAttr.WorkID);
 	}
 	public final void setWorkID(long value)  throws Exception
-	{
+	 {
 		this.SetValByKey(TrackAttr.WorkID, value);
 	}
 	/** 
 	 CWorkID
 	*/
-	public final long getCWorkID()throws Exception
+	public final long getCWorkID() throws Exception
 	{
 		return this.GetValInt64ByKey(TrackAttr.CWorkID);
 	}
-	public final void setCWorkID(long value)throws Exception
-	{
+	public final void setCWorkID(long value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.CWorkID, value);
 	}
 	/** 
 	 活动类型
 	*/
-	public final ActionType getHisActionType()throws Exception
-	{
+	public final ActionType getHisActionType() throws Exception {
 		return ActionType.forValue(this.GetValIntByKey(TrackAttr.ActionType));
 	}
-	public final void setHisActionType(ActionType value)throws Exception
-	{
+	public final void setHisActionType(ActionType value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.ActionType, value.getValue());
 	}
 	/** 
 	 获取动作文本
 	 
-	 @param at
+	 param at
 	 @return 
 	*/
 	public static String GetActionTypeT(ActionType at)
@@ -198,9 +193,9 @@ public class Track extends Entity
 				return "恢复已完成的流程";
 			case FlowOverByCoercion:
 				return "强制结束流程";
-			case HungUp:
+			case Hungup:
 				return "挂起";
-			case UnHungUp:
+			case UnHungup:
 				return "取消挂起";
 			case Press:
 				return "催办";
@@ -224,6 +219,8 @@ public class Track extends Entity
 				return "评论";
 			case TeampUp:
 				return "协作";
+			case Adjust:
+				return "调整";
 			default:
 				return "信息" + at.toString();
 		}
@@ -231,34 +228,34 @@ public class Track extends Entity
 	/** 
 	 活动名称
 	*/
-	public final String getActionTypeText()throws Exception
+	public final String getActionTypeText() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.ActionTypeText);
 	}
-	public final void setActionTypeText(String value)throws Exception
-	{
+	public final void setActionTypeText(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.ActionTypeText, value);
 	}
 	/** 
 	 节点数据
 	*/
-	public final String getNodeData()throws Exception
+	public final String getNodeData() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NodeData);
 	}
-	public final void setNodeData(String value)throws Exception
-	{
+	public final void setNodeData(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.NodeData, value);
 	}
 	/** 
 	 实际执行人
 	*/
-	public final String getExer()throws Exception
+	public final String getExer() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.Exer);
 	}
-	public final void setExer(String value)throws Exception
-	{
+	public final void setExer(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.Exer, value);
 	}
 	/** 
@@ -268,70 +265,69 @@ public class Track extends Entity
 	{
 		return this.GetValStringByKey(TrackAttr.Msg);
 	}
-	public final void setMsg(String value)throws Exception
-	{
+	public final void setMsg(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.Msg, value);
 	}
 	/** 
 	 消息
 	*/
-	public final String getMsgHtml()throws Exception
+	public final String getMsgHtml() throws Exception
 	{
 		return this.GetValHtmlStringByKey(TrackAttr.Msg);
 	}
 	/** 
 	 人员到
 	*/
-	public final String getEmpToT()throws Exception
+	public final String getEmpToT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpToT);
 	}
-	public final void setEmpToT(String value)throws Exception
-	{
+	public final void setEmpToT(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.EmpToT, value);
 	}
 	/** 
 	 人员从
 	*/
-	public final String getEmpFromT()throws Exception
+	public final String getEmpFromT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.EmpFromT);
 	}
-	public final void setEmpFromT(String value)throws Exception
-	{
+	public final void setEmpFromT(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.EmpFromT, value);
 	}
 	/** 
 	 节点从
 	*/
-	public final String getNDFromT()throws Exception
+	public final String getNDFromT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NDFromT);
 	}
-	public final void setNDFromT(String value)throws Exception
-	{
+	public final void setNDFromT(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.NDFromT, value);
 	}
 	/** 
 	 节点到
 	*/
-	public final String getNDToT()throws Exception
+	public final String getNDToT() throws Exception
 	{
 		return this.GetValStringByKey(TrackAttr.NDToT);
 	}
-	public final void setNDToT(String value)throws Exception
-	{
+	public final void setNDToT(String value)  throws Exception
+	 {
 		this.SetValByKey(TrackAttr.NDToT, value);
 	}
 
-		/// attrs
+		///#endregion attrs
 
 
-		///构造.
+		///#region 构造.
 	public String RptName = null;
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -340,7 +336,7 @@ public class Track extends Entity
 		Map map = new Map("WF_Track", "轨迹表");
 
 
-			///字段
+			///#region 字段
 			//增加一个自动增长的列.
 		map.AddTBIntPK(TrackAttr.MyPK, 0, "MyPK", true, false);
 
@@ -363,14 +359,14 @@ public class Track extends Entity
 		map.AddTBString(TrackAttr.EmpToT, null, "到人员(名称)", true, false, 0, 2000, 100);
 
 		map.AddTBString(TrackAttr.RDT, null, "日期", true, false, 0, 20, 100);
-		map.AddTBFloat(TrackAttr.WorkTimeSpan, 0, "时间跨度(天)", true, false);
+		map.AddTBFloat(TrackAttr.WorkTimeSpan, 0, "时间流程时长(天)", true, false);
 		map.AddTBStringDoc(TrackAttr.Msg, null, "消息", true, false);
 		map.AddTBStringDoc(TrackAttr.NodeData, null, "节点数据(日志信息)", true, false);
 		map.AddTBString(TrackAttr.Tag, null, "参数", true, false, 0, 300, 3000);
 		map.AddTBString(TrackAttr.Exer, null, "执行人", true, false, 0, 200, 100);
 			//   map.AddTBString(TrackAttr.InnerKey, null, "内部的Key,用于防止插入重复", true, false, 0, 200, 100);
 
-			/// 字段
+			///#endregion 字段
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -378,17 +374,15 @@ public class Track extends Entity
 	/** 
 	 轨迹
 	*/
-	public Track()
-	{
+	public Track()  {
 	}
 	/** 
 	 轨迹
 	 
-	 @param flowNo 流程编号
-	 @param mypk 主键
-	 * @throws Exception 
+	 param flowNo 流程编号
+	 param mypk 主键
 	*/
-	public Track(String flowNo, String mypk) throws Exception
+	public Track(String flowNo, String mypk)throws Exception
 	{
 		String sql = "SELECT * FROM ND" + Integer.parseInt(flowNo) + "Track WHERE MyPK='" + mypk + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -401,46 +395,36 @@ public class Track extends Entity
 	/** 
 	 创建track.
 	 
-	 @param fk_flow 流程编号
-	 * @throws Exception 
+	 param fk_flow 流程编号
 	*/
-	public static void CreateOrRepairTrackTable(String fk_flow) throws Exception
-	{
+	public static void CreateOrRepairTrackTable(String fk_flow) throws Exception {
 		String ptable = "ND" + Integer.parseInt(fk_flow) + "Track";
 		if (DBAccess.IsExitsObject(ptable) == true)
 		{
 			return;
 		}
 
-		try
-		{
-	    	//删除主键.
-	    	DBAccess.DropTablePK(ptable);
-		}
-		catch (RuntimeException ex)
-		{
-			bp.da.Log.DebugWriteError(ex.getMessage() + " @可以容忍的异常....");
-		}
+		//删除主键.
+		DBAccess.DropTablePK(ptable);
 
 		// 删除主键.
-		DBAccess.DropTablePK("WF_Track");
+		//DBAccess.DropTablePK("WF_Track");
 
 		//创建表.
 		Track tk = new Track();
 		try
 		{
 			tk.CheckPhysicsTable();
+			// 删除主键.
+			DBAccess.DropTablePK("WF_Track");
 		}
 		catch (RuntimeException ex)
 		{
-			bp.da.Log.DebugWriteError(ex.getMessage() + " @可以容忍的异常....");
+			Log.DebugWriteError(ex.getMessage() + " @可以容忍的异常....");
 		}
 
-		// 删除主键.
-		DBAccess.DropTablePK("WF_Track");
-
 		String sqlRename = "";
-		switch (SystemConfig.getAppCenterDBType())
+		switch (bp.difference.SystemConfig.getAppCenterDBType( ))
 		{
 			case MSSQL:
 				sqlRename = "EXEC SP_RENAME WF_Track, " + ptable;
@@ -449,11 +433,10 @@ public class Track extends Entity
 				sqlRename = "RENAME TABLE WF_Track TO " + ptable;
 				break;
 			case Oracle:
+			case PostgreSQL:
+			case UX:
 			case KingBaseR3:
 			case KingBaseR6:
-				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
-				break;
-			case PostgreSQL:
 				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
 				break;
 			case MySQL:
@@ -467,22 +450,16 @@ public class Track extends Entity
 		//重命名.
 		DBAccess.RunSQL(sqlRename);
 
-		//删除主键.
-		DBAccess.DropTablePK(ptable);
-
-		//创建主键. @yln 这里创建主键的时候提示错误。提示该主键应存在.
-		DBAccess.CreatePK(ptable, TrackAttr.MyPK, tk.getEnMap().getEnDBUrl().getDBType());
 	}
 	/** 
 	 插入
 	 
-	 @param mypk
-	 * @throws Exception 
+	 param mypk
 	*/
-	public final void DoInsert(long mypk) throws Exception
+	public final void DoInsert(long mypk)throws Exception
 	{
 		String ptable = "ND" + Integer.parseInt(this.FK_Flow) + "Track";
-		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		String dbstr = bp.difference.SystemConfig.getAppCenterDBVarStr();
 		String sql = "INSERT INTO " + ptable;
 		sql += "(";
 		sql += "" + TrackAttr.MyPK + ",";
@@ -545,15 +522,30 @@ public class Track extends Entity
 			this.SetValByKey(TrackAttr.MyPK, mypk);
 		}
 
-		this.setRDT(DataType.getCurrentDataTimess());
+		//HttpWebResponse.
+		//if (HttpHandler.)
+		this.setTag(this.getTag() + "@SheBei=" + bp.web.WebUser.getSheBei());
 
-			///执行保存
+//		Date d = new Date();
+//		Date tempOut_d = new Date();
+//		if (DataType.IsNullOrEmpty(getRDT()) || Date.TryParse(this.getRDT(), tempOut_d) == false)
+//		{
+//		d = tempOut_d.outArgValue;
+//			this.setRDT(DataType.getCurrentDateTimess());
+//		}
+//	else
+//	{
+//		d = tempOut_d.outArgValue;
+//	}
+
+
+			///#region 执行保存
 		try
 		{
 			Paras ps = SqlBuilder.GenerParas(this, null);
-			ps.SQL=sql;
+			ps.SQL = sql;
 
-			switch (SystemConfig.getAppCenterDBType())
+			switch (bp.difference.SystemConfig.getAppCenterDBType( ))
 			{
 				case MSSQL:
 					this.RunSQL(ps);
@@ -564,58 +556,79 @@ public class Track extends Entity
 				case MySQL:
 				case Informix:
 				default:
-					ps.SQL=ps.SQL.replace("[", "").replace("]", "");
+					ps.SQL = ps.SQL.replace("[", "").replace("]", "");
 					this.RunSQL(ps); // 运行sql.
-					//  this.RunSQL(sql.replace("[", "").replace("]", ""), SqlBuilder.GenerParas(this, null));
+					//  this.RunSQL(sql.Replace("[", "").Replace("]", ""), SqlBuilder.GenerParas(this, null));
 					break;
 			}
 		}
 		catch (RuntimeException ex)
 		{
 			// 写入日志.
-			Log.DefaultLogWriteLineError(ex.getMessage());
+			Log.DebugWriteError(ex.getMessage());
 
 			//创建track.
 			//Track.CreateOrRepairTrackTable(this.FK_Flow);
 			throw ex;
 		}
 
+
+			///#region 增加,日志.
 		//把frm日志写入到数据里.
 		if (this.FrmDB != null)
 		{
-			DBAccess.SaveBigTextToDB(this.FrmDB, ptable, "MyPK", this.getMyPK(), "FrmDB");
-		}
-
-		if (DataType.IsNullOrEmpty(this.WriteDB ) == false )
-		{
-			if(this.WriteDB.contains("data:image/png;base64,")==true)
-				DBAccess.SaveBigTextToDB(this.WriteDB, ptable, "MyPK", this.getMyPK(), "WriteDB");
-			else
+			if (this.getHisActionType() == ActionType.SubThreadForward || this.getHisActionType() == ActionType.StartChildenFlow || this.getHisActionType() == ActionType.Start || this.getHisActionType() == ActionType.Forward || this.getHisActionType() == ActionType.SubThreadForward || this.getHisActionType() == ActionType.ForwardHL || this.getHisActionType() == ActionType.FlowOver)
 			{
 
-				sql = "SELECT WriteDB From " + ptable + " WHERE MyPK='" + this.WriteDB + "'";
-				DBAccess.SaveBigTextToDB(DBAccess.RunSQLReturnStringIsNull(sql,""), ptable, "MyPK", this.getMyPK(), "WriteDB");
+				Flow fl = new Flow(this.FK_Flow);
+				Node nd = new Node(this.getNDFrom());
+
+				Work wk = nd.getHisWork();
+				wk.setOID(this.getWorkID());
+				wk.RetrieveFromDBSources();
+
+				WorkNodePlus.AddNodeFrmTrackDB(fl, nd, this, wk);
+				//t.FrmDB = this.HisWork.ToJson();
+			}
+
+			//  DBAccess.SaveBigTextToDB(this.FrmDB, ptable, "MyPK", this.MyPK, "FrmDB");
+		}
+
+			///#endregion 增加.
+
+
+		if (DataType.IsNullOrEmpty(this.WriteDB) == false && DBAccess.IsExitsTableCol(ptable, "WriteDB") == true)
+		{
+			if (this.WriteDB.contains("data:image/png;base64,") == true)
+			{
+				DBAccess.SaveBigTextToDB(this.WriteDB, ptable, "MyPK", this.getMyPK(), "WriteDB");
+			}
+			else
+			{
+				if(DBAccess.IsExitsTableCol(ptable,"WriteDB")==true){
+					sql = "SELECT WriteDB From " + ptable + " WHERE MyPK='" + this.getMyPK() + "'";
+					DBAccess.SaveBigTextToDB(this.WriteDB, ptable, "MyPK", this.getMyPK(), "WriteDB");
+				}
 			}
 
 
 		}
 
 
-
-		/// 执行保存
+			///#endregion 执行保存
 
 		//解决流程的开始日期计算错误的问题.
 		if (this.getHisActionType() == ActionType.Start || this.getHisActionType() == ActionType.StartChildenFlow)
 		{
 			Paras ps = new Paras();
-			ps.SQL="UPDATE WF_GenerWorkerlist SET RDT=" + SystemConfig.getAppCenterDBVarStr() + "RDT WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID ";
-			ps.Add("RDT", this.getRDT());
+			ps.SQL = "UPDATE WF_GenerWorkerlist SET RDT=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "RDT WHERE WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "WorkID ";
+			ps.Add("RDT", this.getRDT(), false);
 			ps.Add("WorkID", this.getWorkID());
 			DBAccess.RunSQL(ps);
 
 			ps = new Paras();
-			ps.SQL="UPDATE WF_GenerWorkFlow SET RDT=" + SystemConfig.getAppCenterDBVarStr() + "RDT WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID ";
-			ps.Add("RDT", this.getRDT());
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET RDT=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "RDT WHERE WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "WorkID ";
+			ps.Add("RDT", this.getRDT(), false);
 			ps.Add("WorkID", this.getWorkID());
 			DBAccess.RunSQL(ps);
 		}
@@ -624,33 +637,31 @@ public class Track extends Entity
 	 增加授权人
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
-		if (WebUser.getNo().equals("Guest"))
+	protected boolean beforeInsert() throws Exception {
+		if (bp.web.WebUser.getNo().equals("Guest"))
 		{
-			this.setExer(GuestUser.getNo() + "," + GuestUser.getName());
+			this.setExer(bp.web.GuestUser.getNo() + "," + bp.web.GuestUser.getName());
 		}
 		else
 		{
-			if (WebUser.getIsAuthorize())
+			if (bp.web.WebUser.getIsAuthorize())
 			{
-				this.setExer(bp.wf.Glo.DealUserInfoShowModel(WebUser.getAuth(), WebUser.getAuthName()));
+				this.setExer(bp.wf.Glo.DealUserInfoShowModel(bp.web.WebUser.getAuth(), bp.web.WebUser.getAuthName()));
 			}
 			else
 			{
-				this.setExer(bp.wf.Glo.DealUserInfoShowModel(WebUser.getNo(), WebUser.getName()));
+				this.setExer(bp.wf.Glo.DealUserInfoShowModel(bp.web.WebUser.getNo(), bp.web.WebUser.getName()));
 			}
 		}
 
-		this.setRDT(DataType.getCurrentDataTimess());
+
 
 
 		this.DoInsert(0);
 		return false;
 	}
 
-		/// 构造.
+		///#endregion 构造.
 }

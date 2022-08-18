@@ -2,28 +2,26 @@ package bp.wf.httphandler;
 
 import bp.sys.*;
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
-import bp.en.*;
 import bp.wf.xml.*;
+import bp.*;
+import bp.wf.*;
 import java.util.*;
 
-public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
+public class WF_Admin_CCFormDesigner_FrmEvent extends bp.difference.handler.WebContralBase
 {
 
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_CCFormDesigner_FrmEvent()
-	{
+	public WF_Admin_CCFormDesigner_FrmEvent() throws Exception {
 	}
 
 
-		///事件基类.
+		///#region 事件基类.
 	/** 
 	 事件类型
 	*/
-	public final String getShowType()
-	{
+	public final String getShowType() throws Exception {
 		if (this.getFK_Node() != 0)
 		{
 			return "Node";
@@ -41,50 +39,18 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 
 		return "Node";
 	}
-	/** 
-	 事件基类
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Action_Init() throws Exception
-	{
-		DataSet ds = new DataSet();
 
-		//事件实体.
-		FrmEvents ndevs = new FrmEvents();
-		if (bp.da.DataType.IsNullOrEmpty(this.getFK_MapData()) == false)
-		{
-			ndevs.Retrieve(FrmEventAttr.FK_MapData, this.getFK_MapData());
-		}
-
-		////已经配置的事件类实体.
-		//DataTable dtFrm = ndevs.ToDataTableField("FrmEvents");
-		//ds.Tables.add(dtFrm);
-
-		//把事件类型列表放入里面.（发送前，发送成功时.）
-		EventLists xmls = new EventLists();
-		xmls.Retrieve("EventType", this.getShowType());
-
-		DataTable dt = xmls.ToDataTable();
-		dt.TableName = "EventLists";
-		ds.Tables.add(dt);
-
-		return bp.tools.Json.ToJson(ds);
-	}
 	/** 
 	 获得该节点下已经绑定该类型的实体.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String ActionDtl_Init() throws Exception
-	{
+	public final String ActionDtl_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 		//事件实体.
 		FrmEvents ndevs = new FrmEvents();
-		ndevs.Retrieve(FrmEventAttr.FK_MapData, this.getFK_MapData());
+		ndevs.Retrieve(FrmEventAttr.FK_MapData, this.getFK_MapData(), null);
 
 		DataTable dt = ndevs.ToDataTableField("FrmEvents");
 		ds.Tables.add(dt);
@@ -94,7 +60,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 		dtBuess.Columns.Add("No", String.class);
 		dtBuess.Columns.Add("Name", String.class);
 		dtBuess.TableName = "BuessUnits";
-		ArrayList<BuessUnitBase> al = ClassFactory.GetObjects("bp.sys.BuessUnitBase");
+		ArrayList<BuessUnitBase> al = bp.en.ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
 		for (BuessUnitBase en : al)
 		{
 			DataRow dr = dtBuess.NewRow();
@@ -111,18 +77,16 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 	 执行删除
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String ActionDtl_Delete() throws Exception
-	{
+	public final String ActionDtl_Delete() throws Exception {
 		//事件实体.
 		FrmEvent en = new FrmEvent();
 		en.setMyPK(this.getMyPK());
 		en.Delete();
 		return "删除成功.";
 	}
-	public final String ActionDtl_Save() throws Exception
-	{
+	public final String ActionDtl_Save() throws Exception {
+
 		//事件实体.
 		FrmEvent en = new FrmEvent();
 
@@ -150,6 +114,6 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends WebContralBase
 		return "保存成功.";
 	}
 
-		/// 事件基类.
+		///#endregion 事件基类.
 
 }

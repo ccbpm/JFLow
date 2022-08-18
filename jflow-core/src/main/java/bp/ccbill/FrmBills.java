@@ -3,12 +3,11 @@ package bp.ccbill;
 import bp.da.*;
 import bp.en.*;
 import bp.wf.*;
-import bp.wf.data.*;
 import bp.wf.template.*;
 import bp.sys.*;
 import bp.ccbill.template.*;
+import bp.*;
 import java.util.*;
-import java.time.*;
 
 /** 
  单据属性s
@@ -16,33 +15,30 @@ import java.time.*;
 public class FrmBills extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 单据属性s
 	*/
-	public FrmBills()
-	{
+	public FrmBills()  {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new FrmBill();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmBill> ToJavaList()
-	{
+	public final java.util.List<FrmBill> ToJavaList() {
 		return (List<FrmBill>)(Object)this;
 	}
 	/** 
@@ -50,8 +46,7 @@ public class FrmBills extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmBill> Tolist()
-	{
+	public final ArrayList<FrmBill> Tolist()  {
 		ArrayList<FrmBill> list = new ArrayList<FrmBill>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -60,5 +55,5 @@ public class FrmBills extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

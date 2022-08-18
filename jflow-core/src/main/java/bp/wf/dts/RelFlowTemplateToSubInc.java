@@ -1,10 +1,8 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.web.WebUser;
 import bp.en.*;
 import bp.wf.*;
-import bp.wf.template.FlowSort;
 
 /** 
  升级ccflow6 要执行的调度
@@ -14,7 +12,7 @@ public class RelFlowTemplateToSubInc extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public RelFlowTemplateToSubInc()
+	public RelFlowTemplateToSubInc()throws Exception
 	{
 		this.Title = "发布流程模版到子公司";
 		this.Help = "集团公司的流程模版发布到子公司里面去.";
@@ -30,12 +28,11 @@ public class RelFlowTemplateToSubInc extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -48,10 +45,9 @@ public class RelFlowTemplateToSubInc extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		//找到根目录.
 		String sql = "SELECT No FROM WF_FlowSort where ParentNo='0'";
@@ -86,11 +82,11 @@ public class RelFlowTemplateToSubInc extends Method
 				String incName = dr.getValue("Name").toString();
 
 				//检查该公司是否创建了树节点, 如果没有就插入一个.
-				FlowSort fs = new FlowSort();
+				bp.wf.template.FlowSort fs = new bp.wf.template.FlowSort();
 				fs.setNo(incNo);
 				if (fs.RetrieveFromDBSources() == 0)
 				{
-					fs.setName( incName);
+					fs.setName(incName);
 					fs.setOrgNo(incNo);
 					fs.setParentNo(rootNo);
 					fs.Insert();
@@ -107,7 +103,7 @@ public class RelFlowTemplateToSubInc extends Method
 				String filePath = fl.GenerFlowXmlTemplete();
 
 				//作为一个新的流程编号，导入该流程树的子节点下.
-				bp.wf.Flow.DoLoadFlowTemplate(incNo, filePath, ImpFlowTempleteModel.AsNewFlow);
+				bp.wf.template.TemplateGlo.LoadFlowTemplate(incNo, filePath, ImpFlowTempleteModel.AsNewFlow);
 
 				infos += "@模版:" + fl.getName() + " 标记:" + fl.getFlowMark() + " 已经发布到子公司:" + incName;
 			}

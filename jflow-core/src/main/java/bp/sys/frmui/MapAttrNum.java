@@ -7,6 +7,7 @@ import bp.sys.*;
 import bp.*;
 import bp.sys.*;
 import java.util.*;
+import java.math.*;
 
 /** 
  数值字段
@@ -14,63 +15,84 @@ import java.util.*;
 public class MapAttrNum extends EntityMyPK
 {
 
-		///文本字段参数属性.
+		///#region 属性.
+	/** 
+	 默认值
+	*/
+	public final String getDefVal() throws Exception {
+		String str = this.GetValStrByKey(MapAttrAttr.DefVal);
+		if (DataType.IsNullOrEmpty(str) == true)
+		{
+			return "0";
+		}
+		return str;
+	}
+	public final void setDefVal(String value)  throws Exception
+	 {
+		this.SetValByKey(MapAttrAttr.DefVal, value);
+	}
+	public final int getDefValType() throws Exception
+	{
+		return this.GetValIntByKey(MapAttrAttr.DefValType);
+	}
+	public final void setDefValType(int value)  throws Exception
+	 {
+		this.SetValByKey(MapAttrAttr.DefValType, value);
+	}
 	/** 
 	 表单ID
-	 * @throws Exception 
 	*/
 	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()throws Exception
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 绑定的枚举ID
 	*/
-	public final String getUIBindKey()throws Exception
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value) throws Exception
-	{
+	public final void setUIBindKey(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
 	/** 
 	 数据类型
 	*/
-	public final int getMyDataType()throws Exception
+	public final int getMyDataType() throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.MyDataType);
 	}
-	public final void setMyDataType(int value) throws Exception
-	{
+	public final void setMyDataType(int value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -80,15 +102,13 @@ public class MapAttrNum extends EntityMyPK
 	/** 
 	 数值字段
 	*/
-	public MapAttrNum()
-	{
+	public MapAttrNum()  {
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -98,7 +118,7 @@ public class MapAttrNum extends EntityMyPK
 		map.IndexField = MapAttrAttr.FK_MapData;
 
 
-			///基本信息.
+			///#region 基本信息.
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "实体标识", false, false, 1, 100, 20);
 
@@ -116,28 +136,25 @@ public class MapAttrNum extends EntityMyPK
 		help += "\t\r 2. 对于float,decimal数据类型，如果设置0.0000就是标识要保留4位小数,如果是1.0000 标识保留4位小数,默认值为1.";
 		map.SetHelperAlert("DefVal", help);
 
-		map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
-		map.AddTBFloat(MapAttrAttr.UIHeight, 23, "高度", true, true);
-
 		map.AddBoolean(MapAttrAttr.UIVisible, true, "是否可见？", true, true);
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 		map.AddBoolean(MapAttrAttr.IsSecret, false, "是否保密？", true, true);
 		map.AddBoolean("ExtIsSum", false, "是否显示合计(对从表有效)", true, true);
 		map.SetHelperAlert("ExtIsSum", "如果是从表，就需要显示该从表的合计,在从表的底部.");
-
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 400, 20, true);
-			//CCS样式
-		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
-			/// 基本信息.
+			///#endregion 基本信息.
 
 
-			///傻瓜表单。
-		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+			///#region 傻瓜表单
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
 			//文本占单元格数量
-		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "Label文本单元格数", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+
+		map.AddTBFloat(MapAttrAttr.UIWidth, 80, "宽度", true, false);
+		map.AddTBFloat(MapAttrAttr.UIHeight, 23, "高度", true, true);
 
 			//文本跨行
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
@@ -145,81 +162,123 @@ public class MapAttrNum extends EntityMyPK
 		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
-			/// 傻瓜表单。
+		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
+
+			///#endregion 傻瓜表单
 
 
-			///执行的方法.
+			///#region 执行的方法.
 		RefMethod rm = new RefMethod();
-
-
 		rm = new RefMethod();
 		rm.Title = "正则表达式";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpression()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings"; //正则表达式
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-puzzle"; //事件绑定函数。
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "取多个字段计算结果";
+		rm.Title = "字段计算";
 		rm.ClassMethodName = this.toString() + ".DoAutoFull()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-energy"; //取多个字段计算结果.
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "对从表列自动计算";
+		rm.Title = "对从表列计算";
 		rm.ClassMethodName = this.toString() + ".DoAutoFullDtlField()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-energy"; //取多个字段计算结果.
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "设置只读文本框RMB大写";
-		rm.ClassMethodName = this.toString() + ".DoRMBDaXie()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "对两个日期求天数";
+		rm.Title = "求两个日期天数";
 		rm.ClassMethodName = this.toString() + ".DoReqDays()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-energy"; //取多个字段计算结果.
 		map.AddRefMethod(rm);
 
-			/// 执行的方法.
+		rm = new RefMethod();
+		rm.Title = "设置文本框RMB大写";
+		rm.ClassMethodName = this.toString() + ".DoRMBDaXie()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-wrench";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "输入范围限制";
+		rm.ClassMethodName = this.toString() + ".DoLimit()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-wrench";
+		map.AddRefMethod(rm);
+
+
+		rm = new RefMethod();
+		rm.Title = "全局风格定义";
+		rm.ClassMethodName = this.toString() + ".DoGloValStyles()";
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		rm.Icon = "icon-wrench";
+		rm.RefAttrKey = MapAttrAttr.CSSCtrl;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "帮助弹窗显示";
+		rm.ClassMethodName = this.toString() + ".DoFieldBigHelper()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings";
+		map.AddRefMethod(rm);
+
+
+			///#endregion 执行的方法.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-	/** 
-	 默认值
-	*/
-	public final String getDefVal()throws Exception
-	{
-		return this.GetValStrByKey(MapAttrAttr.DefVal);
+	public final String DoFieldBigHelper() throws Exception {
+		return "../../Admin/FoolFormDesigner/MapExt/FieldBigHelper.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
-	public final void setDefVal(String value) throws Exception
-	{
-		this.SetValByKey(MapAttrAttr.DefVal, value);
-	}
-	public final int getDefValType()throws Exception
-	{
-		return this.GetValIntByKey(MapAttrAttr.DefValType);
-	}
-	public final void setDefValType(int value) throws Exception
-	{
-		this.SetValByKey(MapAttrAttr.DefValType, value);
-	}
+
 	@Override
-	protected boolean beforeUpdateInsertAction()throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
+
+			///#region 修改默认值.
 		//如果没默认值.
-		if (this.getDefVal().equals("") && this.getDefValType() == 0)
+		if (DataType.IsNullOrEmpty(this.getDefVal()) && this.getDefValType() == 0)
 		{
 			this.setDefVal(MapAttrAttr.DefaultVal);
 		}
+
+		MapData md = new MapData();
+		md.setNo(this.getFK_MapData());
+
+		if (md.RetrieveFromDBSources() == 1)
+		{
+			//修改默认值.
+			if (this.getMyDataType() == DataType.AppInt)
+			{
+				DBAccess.UpdateTableColumnDefaultVal(md.getPTable(), this.getKeyOfEn(), Integer.parseInt(this.getDefVal()));
+			}
+			if (this.getMyDataType() == DataType.AppDouble)
+			{
+				DBAccess.UpdateTableColumnDefaultVal(md.getPTable(), this.getKeyOfEn(), Double.parseDouble(this.getDefVal()));
+			}
+			if (this.getMyDataType() == DataType.AppFloat)
+			{
+				DBAccess.UpdateTableColumnDefaultVal(md.getPTable(), this.getKeyOfEn(), Float.parseFloat(this.getDefVal()));
+			}
+			if (this.getMyDataType() == DataType.AppMoney)
+			{
+				DBAccess.UpdateTableColumnDefaultVal(md.getPTable(), this.getKeyOfEn(),  new BigDecimal(this.getDefVal()));
+			}
+		}
+
+			///#endregion 修改默认值.
 
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());
@@ -227,22 +286,20 @@ public class MapAttrNum extends EntityMyPK
 
 		//是否显示合计
 		attr.setIsSum(this.GetValBooleanByKey("ExtIsSum"));
-
 		attr.Update();
 
 		return super.beforeUpdateInsertAction();
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
 		mapAttr.RetrieveFromDBSources();
 		mapAttr.Update();
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 
 		super.afterInsertUpdateAction();
 	}
@@ -251,8 +308,7 @@ public class MapAttrNum extends EntityMyPK
 	 删除后清缓存
 	*/
 	@Override
-	protected void afterDelete()throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//删除相对应的rpt表中的字段
 		if (this.getFK_MapData().contains("ND") == true)
 		{
@@ -262,21 +318,20 @@ public class MapAttrNum extends EntityMyPK
 		}
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterDelete();
 	}
 
-		///
+		///#endregion
 
 
-		///基本功能.
+		///#region 基本功能.
 	/** 
 	 人民币大写
 	 
 	 @return 
 	*/
-	public final String DoRMBDaXie()throws Exception
-	{
+	public final String DoRMBDaXie() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/RMBDaXie.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -284,8 +339,7 @@ public class MapAttrNum extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoReqDays()throws Exception
-	{
+	public final String DoReqDays() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/ReqDays.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -293,17 +347,20 @@ public class MapAttrNum extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String BindFunction()throws Exception
-	{
+	public final String BindFunction() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 
-		///
+		///#endregion
 
 
-		///方法执行.
-	public final String DoAutoFullDtlField()throws Exception
-	{
+		///#region 方法执行.
+
+	public final String DoLimit() throws Exception {
+		return "../../Admin/FoolFormDesigner/MapExt/NumEnterLimit.htm?&MyPK=" + this.getMyPK() + "&FrmID=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
+	}
+
+	public final String DoAutoFullDtlField() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/AutoFullDtlField.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -311,8 +368,7 @@ public class MapAttrNum extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoAutoFull()throws Exception
-	{
+	public final String DoAutoFull() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -320,40 +376,36 @@ public class MapAttrNum extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoPopVal()throws Exception
-	{
+	public final String DoPopVal() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/PopVal.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
-
 	/** 
 	 正则表达式
 	 
 	 @return 
 	*/
-	public final String DoRegularExpression()throws Exception
-	{
+	public final String DoRegularExpression() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionNum.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 	/** 
 	 文本框自动完成
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DoTBFullCtrl() throws Exception
-	{
+	public final String DoTBFullCtrl() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/TBFullCtrl.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
-
 	/** 
 	 扩展控件
 	 
 	 @return 
 	*/
-	public final String DoEditFExtContral()throws Exception
-	{
+	public final String DoEditFExtContral() throws Exception {
 		return "../../Admin/FoolFormDesigner/EditFExtContral.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
+	public final String DoGloValStyles() throws Exception {
+		return "../../Admin/FoolFormDesigner/StyletDfine/GloValStyles.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
+	}
 
-		/// 方法执行.
+		///#endregion 方法执行.
 }

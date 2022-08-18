@@ -11,33 +11,30 @@ import java.util.*;
 public class ExtContrals extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 扩展控件s
 	*/
-	public ExtContrals()
-	{
+	public ExtContrals() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new ExtContral();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtContral> ToJavaList()
-	{
+	public final java.util.List<ExtContral> ToJavaList() {
 		return (java.util.List<ExtContral>)(Object)this;
 	}
 	/** 
@@ -45,8 +42,7 @@ public class ExtContrals extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtContral> Tolist()
-	{
+	public final ArrayList<ExtContral> Tolist()  {
 		ArrayList<ExtContral> list = new ArrayList<ExtContral>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -55,5 +51,5 @@ public class ExtContrals extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

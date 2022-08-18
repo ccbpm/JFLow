@@ -7,7 +7,6 @@ import bp.en.Entity;
 import bp.en.QueryObject;
 import bp.wf.Node;
 
-import java.io.*;
 
 /** 
  单据模板s
@@ -38,14 +37,14 @@ public class BillTemplates extends EntitiesNoName
 	/** 
 	 按节点查询
 	 
-	 @param nd
+	 param nd
 	 * @throws Exception 
 	*/
 	public BillTemplates(Node nd) throws Exception
 	{
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(BillTemplateAttr.NodeID, nd.getNodeID());
-		if (nd.getIsStartNode())
+		if (nd.isStartNode())
 		{
 			qo.addOr();
 			qo.AddWhere("No", "SLHZ");
@@ -55,7 +54,7 @@ public class BillTemplates extends EntitiesNoName
 	/** 
 	 按流程查询
 	 
-	 @param fk_flow 流程编号
+	 param fk_flow 流程编号
 	 * @throws Exception 
 	*/
 	public BillTemplates(String fk_flow) throws Exception
@@ -67,7 +66,7 @@ public class BillTemplates extends EntitiesNoName
 	/** 
 	 按节点查询
 	 
-	 @param fk_node 节点ID
+	 param fk_node 节点ID
 	 * @throws Exception 
 	*/
 	public BillTemplates(int fk_node) throws Exception

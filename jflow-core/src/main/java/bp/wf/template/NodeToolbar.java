@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,13 +14,12 @@ import java.util.*;
 public class NodeToolbar extends EntityOID
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 			//  uac.OpenForSysAdmin();
 		uac.OpenForAdmin(); // 2020.5.15zsy修改
@@ -27,26 +27,22 @@ public class NodeToolbar extends EntityOID
 	}
 	/** 
 	 工具栏的事务编号
-	 * @throws Exception 
 	*/
 	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeToolbarAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.FK_Node, value);
+	public final void setFK_Node(int value)throws Exception
+	{SetValByKey(NodeToolbarAttr.FK_Node, value);
 	}
 	public final String getTitle() throws Exception
 	{
 		return this.GetValStringByKey(NodeToolbarAttr.Title);
 	}
-	public final void setTitle(String value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.Title, value);
+	public final void setTitle(String value)throws Exception
+	{SetValByKey(NodeToolbarAttr.Title, value);
 	}
-	public final String getUrl() throws Exception
-	{
+	public final String getUrl() throws Exception {
 		String s = this.GetValStringByKey(NodeToolbarAttr.UrlExt);
 
 		if (this.getExcType() != 1 && s.contains("?") == false && !this.getTarget().toLowerCase().equals("javascript"))
@@ -55,28 +51,24 @@ public class NodeToolbar extends EntityOID
 		}
 		return s;
 	}
-	public final void setUrl(String value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.UrlExt, value);
+	public final void setUrl(String value)throws Exception
+	{SetValByKey(NodeToolbarAttr.UrlExt, value);
 	}
 	public final String getTarget() throws Exception
 	{
 		return this.GetValStringByKey(NodeToolbarAttr.Target);
 	}
-	public final void setTarget(String value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.Target, value);
+	public final void setTarget(String value)throws Exception
+	{SetValByKey(NodeToolbarAttr.Target, value);
 	}
 	/** 
 	 显示在那里？
 	*/
-	public final ShowWhere getShowWhere() throws Exception
-	{
+	public final ShowWhere getShowWhere() throws Exception {
 		return ShowWhere.forValue(this.GetValIntByKey(NodeToolbarAttr.ShowWhere));
 	}
-	public final void setShowWhere(ShowWhere value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.ShowWhere, value.getValue());
+	public final void setShowWhere(ShowWhere value)throws Exception
+	{SetValByKey(NodeToolbarAttr.ShowWhere, value.getValue());
 	}
 	/** 
 	 执行类型
@@ -85,76 +77,68 @@ public class NodeToolbar extends EntityOID
 	{
 		return this.GetValIntByKey(NodeToolbarAttr.ExcType);
 	}
-	public final void setExcType(int value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.ExcType, value);
+	public final void setExcType(int value)throws Exception
+	{SetValByKey(NodeToolbarAttr.ExcType, value);
 	}
 	/** 
 	 显示在工具栏中
 	*/
-	public final boolean getIsMyFlow() throws Exception
+	public final boolean isMyFlow() throws Exception
 	{
 		return this.GetValBooleanByKey(NodeToolbarAttr.IsMyFlow);
 	}
-	public final void setIsMyFlow(boolean value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.IsMyFlow, value);
+	public final void setMyFlow(boolean value)throws Exception
+	{SetValByKey(NodeToolbarAttr.IsMyFlow, value);
 	}
 	//显示在流程树中
-	public final boolean getIsMyTree() throws Exception
+	public final boolean isMyTree() throws Exception
 	{
 		return this.GetValBooleanByKey(NodeToolbarAttr.IsMyTree);
 	}
-	public final void setIsMyTree(boolean value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.IsMyTree, value);
+	public final void setMyTree(boolean value)throws Exception
+	{SetValByKey(NodeToolbarAttr.IsMyTree, value);
 	}
 	//显示在工作查看器
-	public final boolean getIsMyView() throws Exception
+	public final boolean isMyView() throws Exception
 	{
 		return this.GetValBooleanByKey(NodeToolbarAttr.IsMyView);
 	}
-	public final void setIsMyView(boolean value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.IsMyView, value);
+	public final void setMyView(boolean value)throws Exception
+	{SetValByKey(NodeToolbarAttr.IsMyView, value);
 	}
 
 	//显示在抄送工具栏中
-	public final boolean getIsMyCC() throws Exception
+	public final boolean isMyCC() throws Exception
 	{
 		return this.GetValBooleanByKey(NodeToolbarAttr.IsMyCC);
 	}
-	public final void setIsMyCC(boolean value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.IsMyCC, value);
+	public final void setMyCC(boolean value)throws Exception
+	{SetValByKey(NodeToolbarAttr.IsMyCC, value);
 	}
 	//图片附件路径
 	public final String getIconPath() throws Exception
 	{
 		return this.GetValStringByKey(NodeToolbarAttr.IconPath);
 	}
-	public final void setIconPath(String value) throws Exception
-	{
-		SetValByKey(NodeToolbarAttr.IconPath, value);
+	public final void setIconPath(String value)throws Exception
+	{SetValByKey(NodeToolbarAttr.IconPath, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 工具栏
 	*/
-	public NodeToolbar()
-	{
+	public NodeToolbar() {
 	}
 	/** 
 	 工具栏
 	 
-	 @param _oid 工具栏ID	
+	 param _oid 工具栏ID	
 	*/
-	public NodeToolbar(int oid) throws Exception
-	{
+	public NodeToolbar(int oid) throws Exception {
 		this.setOID(oid);
 		this.Retrieve();
 	}
@@ -162,8 +146,7 @@ public class NodeToolbar extends EntityOID
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -198,11 +181,11 @@ public class NodeToolbar extends EntityOID
 
 
 		map.AddTBInt(NodeToolbarAttr.Idx, 0, "显示顺序", true, false);
-		map.AddMyFile("图标");
+		map.AddMyFile("图标", null, null);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

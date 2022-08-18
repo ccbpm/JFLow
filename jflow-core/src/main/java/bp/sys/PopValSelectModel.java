@@ -3,6 +3,7 @@ package bp.sys;
 import bp.da.*;
 import bp.web.*;
 import bp.en.*;
+import bp.difference.*;
 import bp.*;
 import java.util.*;
 
@@ -22,13 +23,11 @@ public enum PopValSelectModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static PopValSelectModel forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static PopValSelectModel forValue(int value)
+	{return values()[value];
 	}
 }

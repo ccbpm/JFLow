@@ -2,7 +2,6 @@ package bp.sys;
 
 import bp.en.*;
 import bp.en.Map;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -11,11 +10,11 @@ import java.util.*;
 public class GEEntityExcelFrm extends EntityOID
 {
 
-		///属性。
+		///#region 属性。
 	/** 
 	 最后修改人
 	*/
-	public final String getLastEditer() throws Exception
+	public final String getLastEditer()  throws Exception
 	{
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.LastEditer);
 	}
@@ -26,7 +25,7 @@ public class GEEntityExcelFrm extends EntityOID
 	/** 
 	 记录时间
 	*/
-	public final String getRDT() throws Exception
+	public final String getRDT()  throws Exception
 	{
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.RDT);
 	}
@@ -37,7 +36,7 @@ public class GEEntityExcelFrm extends EntityOID
 	/** 
 	 文件路径
 	*/
-	public final String getFilePath() throws Exception
+	public final String getFilePath()  throws Exception
 	{
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.FilePath);
 	}
@@ -46,23 +45,22 @@ public class GEEntityExcelFrm extends EntityOID
 		this.SetValByKey(GEEntityExcelFrmAttr.FilePath, value);
 	}
 
-		/// 属性。
+		///#endregion 属性。
 
 
-		///构造函数
+		///#region 构造函数
 	@Override
 	public String getPK()
 	{
 		return "OID";
 	}
 	@Override
-	public String getPKField()
+	public String getPK_Field()throws Exception
 	{
 		return "OID";
 	}
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.FK_MapData;
 	}
 	@Override
@@ -83,7 +81,7 @@ public class GEEntityExcelFrm extends EntityOID
 	/** 
 	 通用实体
 	 
-	 @param nodeid 节点ID
+	 param fk_mapdata
 	*/
 	public GEEntityExcelFrm(String fk_mapdata)
 	{
@@ -92,27 +90,25 @@ public class GEEntityExcelFrm extends EntityOID
 	/** 
 	 通用实体
 	 
-	 @param nodeid 节点ID
-	 @param _oid OID
-	 * @throws Exception 
+	 param fk_mapdata
+	 param oid
 	*/
-	public GEEntityExcelFrm(String fk_mapdata, int oid) throws Exception
+	public GEEntityExcelFrm(String fk_mapdata, int oid)throws Exception
 	{
 		this.FK_MapData=fk_mapdata;
 		this.setOID(oid);
 		int i = this.RetrieveFromDBSources();
 	}
 
-		///
+		///#endregion
 
 
-		///Map
+		///#region Map
 	/** 
 	 重写基类方法=
-	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -124,7 +120,11 @@ public class GEEntityExcelFrm extends EntityOID
 			throw new RuntimeException("没有给" + this.FK_MapData + "值，您不能获取它的Map。");
 		}
 
-		this.set_enMap(bp.sys.MapData.GenerHisMap(this.FK_MapData));
+		try {
+			this.set_enMap(MapData.GenerHisMap(this.FK_MapData));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return this.get_enMap();
 	}
 	/** 
@@ -140,12 +140,12 @@ public class GEEntityExcelFrm extends EntityOID
 		return new GEEntityExcelFrms(this.FK_MapData);
 	}
 
-		///
+		///#endregion
 
 
-		///其他属性.
+		///#region 其他属性.
 	private ArrayList _Dtls = null;
-	public final ArrayList getDtls()
+	public final ArrayList getDtls()throws Exception
 	{
 		if (_Dtls == null)
 		{
@@ -154,5 +154,5 @@ public class GEEntityExcelFrm extends EntityOID
 		return _Dtls;
 	}
 
-		/// 其他属性.
+		///#endregion 其他属性.
 }

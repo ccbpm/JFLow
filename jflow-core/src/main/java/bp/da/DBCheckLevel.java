@@ -23,8 +23,7 @@ public enum DBCheckLevel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, DBCheckLevel> mappings;
-	private static java.util.HashMap<Integer, DBCheckLevel> getMappings()
-	{
+	private static java.util.HashMap<Integer, DBCheckLevel> getMappings() {
 		if (mappings == null)
 		{
 			synchronized (DBCheckLevel.class)
@@ -39,19 +38,16 @@ public enum DBCheckLevel
 	}
 
 	private DBCheckLevel(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static DBCheckLevel forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 
 }

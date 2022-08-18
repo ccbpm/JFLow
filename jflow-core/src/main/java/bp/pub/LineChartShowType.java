@@ -25,7 +25,7 @@ public enum LineChartShowType
 		return this.ordinal();
 	}
 
-	public static LineChartShowType forValue(int value) throws Exception
+	public static LineChartShowType forValue(int value)
 	{
 		return values()[value];
 	}

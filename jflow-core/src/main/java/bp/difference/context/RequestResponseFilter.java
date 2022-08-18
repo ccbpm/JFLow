@@ -31,14 +31,6 @@ public class RequestResponseFilter implements Filter {
 		request.setAttribute(REQUEST_ATTRIBUTES_ATTRIBUTE, attributes);
 		LocaleContextHolder.setLocale(request.getLocale());
 		RequestContextHolder.setRequestAttributes(attributes);
-		response.setContentType("textml;charset=UTF-8");
-		((HttpServletResponse) response).setHeader("P3P","CP=CAO PSA OUR");
-		((HttpServletResponse) response).setHeader("Access-Control-Allow-Origin", ((HttpServletRequest) request).getHeader("Origin"));
-		((HttpServletResponse) response).setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-		((HttpServletResponse) response).setHeader("Access-Control-Max-Age", "0");
-		((HttpServletResponse) response).setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
-		((HttpServletResponse) response).setHeader("Access-Control-Allow-Credentials", "true");
-		((HttpServletResponse) response).setHeader("XDoDomainRequestAllowed","1");
 		filter.doFilter(request, response);
 	}
 	

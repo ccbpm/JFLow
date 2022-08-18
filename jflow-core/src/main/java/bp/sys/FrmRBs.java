@@ -11,54 +11,48 @@ import java.util.*;
 public class FrmRBs extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 单选框s
 	*/
-	public FrmRBs()
-	{
+	public FrmRBs() throws Exception {
 	}
 	/** 
 	 单选框s
 	 
-	 @param fk_mapdata s
+	 param fk_mapdata s
 	*/
-	public FrmRBs(String fk_mapdata) throws Exception
-	{
-	   this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
+	public FrmRBs(String fk_mapdata) throws Exception {
+		this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
 
 	}
 	/** 
 	 单选框s
 	 
-	 @param fk_mapdata 表单ID
-	 @param keyOfEn 字段
-	 * @throws Exception 
+	 param fk_mapdata 表单ID
+	 param keyOfEn 字段
 	*/
-	public FrmRBs(String fk_mapdata, String keyOfEn) throws Exception
-	{
+	public FrmRBs(String fk_mapdata, String keyOfEn) throws Exception {
 		this.Retrieve(FrmRBAttr.FK_MapData, fk_mapdata, FrmRBAttr.KeyOfEn, keyOfEn);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmRB();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmRB> ToJavaList()
-	{
+	public final java.util.List<FrmRB> ToJavaList() {
 		return (java.util.List<FrmRB>)(Object)this;
 	}
 	/** 
@@ -66,8 +60,7 @@ public class FrmRBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmRB> Tolist()
-	{
+	public final ArrayList<FrmRB> Tolist()  {
 		ArrayList<FrmRB> list = new ArrayList<FrmRB>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -76,5 +69,5 @@ public class FrmRBs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

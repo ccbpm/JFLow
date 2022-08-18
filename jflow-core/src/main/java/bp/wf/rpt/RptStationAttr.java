@@ -1,11 +1,13 @@
 package bp.wf.rpt;
+
+
 /** 
  报表岗位
 */
 public class RptStationAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 报表ID
 	*/
@@ -15,5 +17,5 @@ public class RptStationAttr
 	*/
 	public static final String FK_Station = "FK_Station";
 
-		///
+		///#endregion
 }

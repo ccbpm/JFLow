@@ -1,11 +1,12 @@
 package bp.wf.data;
+
 /** 
  流程监控
 */
 public class MonitorAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -126,10 +127,7 @@ public class MonitorAttr
 	 备注
 	*/
 	public static final String FlowNote = "FlowNote";
-	/** 
-	 我部门
-	*/
-	public static final String WorkerDept = "WorkerDept";
+
 	/** 
 	 待办人员
 	*/
@@ -155,5 +153,5 @@ public class MonitorAttr
 	*/
 	public static final String GUID = "GUID";
 
-		///
+		///#endregion
 }

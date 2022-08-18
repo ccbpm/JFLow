@@ -1,13 +1,5 @@
 package bp.wf.rpt;
 
-import bp.da.*;
-import bp.port.*;
-import bp.en.*;
-import bp.wf.*;
-import bp.sys.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  报表查看权限控制方式
 */
@@ -28,13 +20,11 @@ public enum RightViewWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static RightViewWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static RightViewWay forValue(int value) 
+	{return values()[value];
 	}
 }

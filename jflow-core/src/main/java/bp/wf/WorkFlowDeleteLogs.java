@@ -1,5 +1,11 @@
 package bp.wf;
+
+import bp.da.*;
 import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.wf.data.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -7,43 +13,39 @@ import java.util.*;
 */
 public class WorkFlowDeleteLogs extends Entities
 {
-	private static final long serialVersionUID = 1L;
-	///构造
+
+		///#region 构造
 	/** 
 	 流程删除日志s
 	*/
-	public WorkFlowDeleteLogs()
-	{
+	public WorkFlowDeleteLogs() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new WorkFlowDeleteLog();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<WorkFlowDeleteLog> ToJavaList()
-	{
-		return (List<WorkFlowDeleteLog>)(Object)this;
+	public final java.util.List<WorkFlowDeleteLog> ToJavaList() {
+		return (java.util.List<WorkFlowDeleteLog>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<WorkFlowDeleteLog> Tolist()
-	{
+	public final ArrayList<WorkFlowDeleteLog> Tolist()  {
 		ArrayList<WorkFlowDeleteLog> list = new ArrayList<WorkFlowDeleteLog>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -52,5 +54,5 @@ public class WorkFlowDeleteLogs extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

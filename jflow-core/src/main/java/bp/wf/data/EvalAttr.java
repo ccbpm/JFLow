@@ -1,11 +1,13 @@
 package bp.wf.data;
+
+
 /** 
  工作质量评价
 */
 public class EvalAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 流程编号
 	*/
@@ -71,5 +73,5 @@ public class EvalAttr
 	*/
 	public static final String RecName = "RecName";
 
-		///
+		///#endregion
 }

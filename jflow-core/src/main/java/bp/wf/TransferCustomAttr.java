@@ -1,12 +1,20 @@
 package bp.wf;
+
+import bp.da.*;
 import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.wf.template.*;
+import bp.*;
+import java.util.*;
+
 /** 
  自定义运行路径 属性
 */
 public class TransferCustomAttr extends EntityMyPKAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -52,5 +60,5 @@ public class TransferCustomAttr extends EntityMyPKAttr
 	*/
 	public static final String IsEnable = "IsEnable";
 
-		///
+		///#endregion
 }

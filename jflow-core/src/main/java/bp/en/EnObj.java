@@ -17,8 +17,7 @@ public abstract class EnObj implements Serializable
 	private static final long serialVersionUID = 1L;
 		///访问控制.
 	private String _DBVarStr = null;
-	public final String getHisDBVarStr()throws Exception
-	{
+	public final String getHisDBVarStr()  {
 		if (_DBVarStr != null)
 		{
 			return _DBVarStr;
@@ -37,8 +36,7 @@ public abstract class EnObj implements Serializable
 	 @return 
 	 * @throws Exception 
 	*/
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		if (_HisUAC == null)
 		{
 			_HisUAC = new UAC();
@@ -62,11 +60,10 @@ public abstract class EnObj implements Serializable
 	 取出Map 的扩展属性。
 	 用于第3方的扩展属性开发。
 	 
-	 @param key 属性Key
+	 param key 属性Key
 	 @return 设置的属性
 	*/
-	public final String GetMapExtAttrByKey(String key)
-	{
+	public final String GetMapExtAttrByKey(String key) throws Exception {
 		Paras ps = new Paras();
 		ps.Add("enName", this.toString());
 		ps.Add("key", key);
@@ -80,7 +77,7 @@ public abstract class EnObj implements Serializable
 	 
 	 @return 自身的实例
 	*/
-	public final Entity CreateInstance()
+	public final Entity CreateInstance()throws Exception
 	{
 		Object tempVar = null;
 		try {
@@ -100,8 +97,7 @@ public abstract class EnObj implements Serializable
 	 设置默认值.
 	 * @throws Exception 
 	*/
-	public final void ResetDefaultValRowValues() throws Exception
-	{
+	public final void ResetDefaultValRowValues() throws Exception {
 		if (this.getEnMap() == null)
 		{
 			return;
@@ -196,14 +192,12 @@ public abstract class EnObj implements Serializable
 		ResetDefaultVal(fk_mapdata, null, 0);
 	}
 
-	public final void ResetDefaultVal() throws Exception
-	{
+	public final void ResetDefaultVal() throws Exception {
 		ResetDefaultVal(null, null, 0);
 	}
 
 
-	public final void ResetDefaultVal(String fk_mapdata, String fk_flow, int fk_node) throws Exception
-	{
+	public final void ResetDefaultVal(String fk_mapdata, String fk_flow, int fk_node) throws Exception {
 
 		ResetDefaultValRowValues();
 
@@ -215,7 +209,7 @@ public abstract class EnObj implements Serializable
 		}
 
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			if (attr.getIsRefAttr())
 			{
@@ -454,13 +448,13 @@ public abstract class EnObj implements Serializable
 	/** 
 	 处理表达式
 	 
-	 @param exp 表达式
-	 @param en 数据源
-	 @param errInfo 错误
+	 param exp 表达式
+	 param row 数据源
+	 param errInfo 错误
 	 @return 
-	 * @throws Exception 
+	 * @
 	*/
-	private static String DealExp(String exp, Row row, String errInfo) throws Exception
+	private static String DealExp(String exp, Row row, String errInfo)
 	{
 		if (exp.contains("@") == false)
 		{
@@ -470,7 +464,7 @@ public abstract class EnObj implements Serializable
 		exp = exp.replace("~", "'");
 
 		//首先替换加; 的。
-		exp = exp.replace("@WebUser.No;", WebUser.getNo());
+		exp = exp.replace("@= WebUser.getNo();", WebUser.getNo());
 		exp = exp.replace("@WebUser.Name;", WebUser.getName());
 		exp = exp.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
 		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
@@ -547,7 +541,7 @@ public abstract class EnObj implements Serializable
 			for (DataRow dr : dt.Rows)
 			{
 				String key = dr.getValue(0).toString();
-				boolean isStr = key.contains(",");
+				boolean isStr = key.toString().contains(",");
 				if (isStr == true)
 				{
 					key = key.replace(",", "");
@@ -600,12 +594,11 @@ public abstract class EnObj implements Serializable
 
 	/** 
 	 把所有的值都设置成默认值，但是主键除外。
-	 * @throws Exception 
+	 * @
 	*/
-	public final void ResetDefaultValAllAttr() throws Exception
-	{
+	public final void ResetDefaultValAllAttr() throws Exception {
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			if (attr.getUIIsReadonly() == false && attr.getDefaultValOfReal() != null)
 			{
@@ -683,11 +676,11 @@ public abstract class EnObj implements Serializable
 		if (_tmpEnMap == null)
 		{
 			_tmpEnMap = Cash.GetMap(this.toString());
+
 		}
 		return _tmpEnMap;
 	}
-	public final void set_enMap(Map value)
-	{
+	public final void set_enMap(Map value)  {
 		if (value == null)
 		{
 			_tmpEnMap = null;
@@ -711,14 +704,14 @@ public abstract class EnObj implements Serializable
 	}
 	/** 
 	 子类需要继承
-	 * @throws Exception 
+	 * @
 	*/
-	public abstract Map getEnMap() throws Exception;
+	public abstract Map getEnMap() ;
 	/** 
 	 动态的获取map
-	 * @throws Exception 
+	 * @
 	*/
-	public final Map getEnMapInTime() throws Exception
+	public final Map getEnMapInTime()
 	{
 		_tmpEnMap = null;
 		Cash.SetMap(this.toString(), null);
@@ -734,7 +727,7 @@ public abstract class EnObj implements Serializable
 	*/
 	//public abstract void EnMap();		
 	private Row _row = null;
-	public final Row getRow() throws Exception
+	public final Row getRow()
 	{
 		if (this._row == null)
 		{
@@ -743,9 +736,11 @@ public abstract class EnObj implements Serializable
 		}
 		return this._row;
 	}
+
+
+ 
 	public final void setRow(Row value)
-	{
-		this._row = value;
+	{this._row = value;
 	}
 
 		///
@@ -758,38 +753,37 @@ public abstract class EnObj implements Serializable
 	/** 
 	 设置object类型的值
 	 
-	 @param attrKey attrKey
-	 @param val val
+	 param attrKey attrKey
+	 param val val
 	*/
-	public final void SetValByKey(String attrKey, String val)throws Exception
+	public final void SetValByKey(String attrKey, String val)
 	{
 		if(val == null)
 			val="";
 		this.getRow().SetValByKey(attrKey, val);
 	}
-	public final void SetValByKey(String attrKey, int val)throws Exception
+	public final void SetValByKey(String attrKey, int val)
 	{
 		this.getRow().SetValByKey(attrKey, val);
 	}
-	public final void SetValByKey(String attrKey, long val) throws Exception
+	public final void SetValByKey(String attrKey, long val)
 	{
 		this.getRow().SetValByKey(attrKey, val);
 	}
-	public final void SetValByKey(String attrKey, float val)throws Exception
+	public final void SetValByKey(String attrKey, float val)
 	{
 		this.getRow().SetValByKey(attrKey, val);
 	}
-	public final void SetValByKey(String attrKey, BigDecimal val)throws Exception
+	public final void SetValByKey(String attrKey, BigDecimal val)
 	{
 		this.getRow().SetValByKey(attrKey, val);
 	}
-	public final void SetValByKey(String attrKey, Object val)throws Exception
+	public final void SetValByKey(String attrKey, Object val)
 	{
 		this.getRow().SetValByKey(attrKey, val);
 	}
 
-	public final void SetValByDesc(String attrDesc, Object val)throws Exception
-	{
+	public final void SetValByDesc(String attrDesc, Object val) throws Exception {
 		if (val == null)
 		{
 			throw new RuntimeException("@不能设置属性[" + attrDesc + "]null 值。");
@@ -800,20 +794,20 @@ public abstract class EnObj implements Serializable
 	/** 
 	 设置关联类型的值
 	 
-	 @param attrKey attrKey
-	 @param val val
+	 param attrKey attrKey
+	 param val val
 	*/
-	public final void SetValRefTextByKey(String attrKey, Object val)throws Exception
+	public final void SetValRefTextByKey(String attrKey, Object val)
 	{
 		this.SetValByKey(attrKey + "Text", val);
 	}
 	/** 
 	 设置bool类型的值
 	 
-	 @param attrKey attrKey
-	 @param val val
+	 param attrKey attrKey
+	 param val val
 	*/
-	public final void SetValByKey(String attrKey, boolean val)throws Exception
+	public final void SetValByKey(String attrKey, boolean val)
 	{
 		if (val)
 		{
@@ -827,8 +821,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 设置默认值
 	*/
-	public final void SetDefaultVals()throws Exception
-	{
+	public final void SetDefaultVals() throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
 			this.SetValByKey(attr.getKey(), attr.getDefaultVal());
@@ -837,10 +830,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 设置日期类型的值
 	 
-	 @param attrKey attrKey
-	 @param val val
+	 param attrKey attrKey
+	 param val val
 	*/
-	public final void SetDateValByKey(String attrKey, String val)throws Exception
+	public final void SetDateValByKey(String attrKey, String val)
 	{
 		try
 		{
@@ -859,16 +852,16 @@ public abstract class EnObj implements Serializable
 	/** 
 	 取得Object
 	 
-	 @param attrKey
+	 param attrKey
 	 @return 
 	*/
-	public final Object GetValByKey(String attrKey)throws Exception
+	public final Object GetValByKey(String attrKey)
 	{
 		return this.getRow().GetValByKey(attrKey);
 
 		//try
 		//{
-		//    return this.Row.GetValByKey(attrKey);				
+		//    return this.getRow().GetValByKey(attrKey);				
 		//}
 		//catch(Exception ex)
 		//{
@@ -878,10 +871,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 GetValDateTime
 	 
-	 @param attrKey
+	 param attrKey
 	 @return 
 	*/
-	public final Date GetValDateTime(String attrKey)throws Exception
+	public final Date GetValDateTime(String attrKey)
 	{
 		try
 		{
@@ -895,10 +888,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 在确定  attrKey 存在 map 的情况下才能使用它
 	 
-	 @param attrKey
+	 param key
 	 @return 
 	*/
-	public final String GetValStrByKey(String key)throws Exception
+	public final String GetValStrByKey(String key)
 	{
 		if (this.getRow().GetValByKey(key) != null)
 		{
@@ -928,10 +921,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 取得String
 	 
-	 @param attrKey
+	 param attrKey
 	 @return 
 	*/
-	public final String GetValStringByKey(String attrKey)throws Exception
+	public final String GetValStringByKey(String attrKey)
 	{
 		
 
@@ -949,7 +942,7 @@ public abstract class EnObj implements Serializable
 			throw new RuntimeException("@获取值期间出现如下异常：" + ex.getMessage() + "  " + attrKey + " 您没有在类增加这个属性，EnsName=" + this.toString());
 		}
 	}
-	public final String GetValStringByKey(String attrKey, String defVal)throws Exception
+	public final String GetValStringByKey(String attrKey, String defVal)
 	{
 		String val = this.GetValStringByKey(attrKey);
 		if (val == null || val.equals(""))
@@ -966,7 +959,7 @@ public abstract class EnObj implements Serializable
 	 
 	 @return 
 	*/
-	public final String GetValDocText()throws Exception
+	public final String GetValDocText()
 	{
 		String s = this.GetValStrByKey("Doc");
 		if (s.trim().length() != 0)
@@ -978,7 +971,7 @@ public abstract class EnObj implements Serializable
 		this.SetValByKey("Doc", s);
 		return s;
 	}
-	public final String GetValDocHtml()throws Exception
+	public final String GetValDocHtml()
 	{
 		String s = this.GetValHtmlStringByKey("Doc");
 		if (s.trim().length() != 0)
@@ -993,14 +986,14 @@ public abstract class EnObj implements Serializable
 	/** 
 	 取到Html 信息。
 	 
-	 @param attrKey attr
+	 param attrKey attr
 	 @return html.
 	*/
-	public final String GetValHtmlStringByKey(String attrKey)throws Exception
+	public final String GetValHtmlStringByKey(String attrKey)
 	{
 		return DataType.ParseText2Html(this.GetValStringByKey(attrKey));
 	}
-	public final String GetValHtmlStringByKey(String attrKey, String defval)throws Exception
+	public final String GetValHtmlStringByKey(String attrKey, String defval)
 	{
 		return DataType.ParseText2Html(this.GetValStringByKey(attrKey, defval));
 	}
@@ -1009,10 +1002,10 @@ public abstract class EnObj implements Serializable
 	 如果是枚举就获取枚举标签.
 	 如果是外键就获取为外键的名称.
 	 
-	 @param attrKey
+	 param attrKey
 	 @return 
 	*/
-	public final String GetValRefTextByKey(String attrKey)throws Exception
+	public final String GetValRefTextByKey(String attrKey)
 	{
 		String str = "";
 		try
@@ -1034,12 +1027,12 @@ public abstract class EnObj implements Serializable
 		}
 		return str;
 	}
-	public final long GetValInt64ByKey(String key)throws Exception
+	public final long GetValInt64ByKey(String key)
 	{
 		return Long.parseLong(this.GetValStringByKey(key, "0"));
 	}
 
-	public final int GetValIntByKey(String key, int isNullAsVal)throws Exception
+	public final int GetValIntByKey(String key, int isNullAsVal)
 	{
 		String str = this.GetValStrByKey(key);
 		if (str == null || str.equals("") || str.equals("null"))
@@ -1056,10 +1049,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 根据key 得到int val
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final int GetValIntByKey(String key)throws Exception
+	public final int GetValIntByKey(String key)
 	{
 		try
 		{
@@ -1111,10 +1104,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 根据key 得到 bool val
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final boolean GetValBooleanByKey(String key)throws Exception
+	public final boolean GetValBooleanByKey(String key)
 	{
 		String s = this.GetValStrByKey(key);
 		if (DataType.IsNullOrEmpty(s))
@@ -1173,7 +1166,7 @@ public abstract class EnObj implements Serializable
 			return defval;
 		}
 	}
-	public final String GetValBoolStrByKey(String key)throws Exception
+	public final String GetValBoolStrByKey(String key)
 	{
 		if (Integer.parseInt(this.GetValStringByKey(key)) == 0)
 		{
@@ -1187,10 +1180,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 根据key 得到flaot val
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final float GetValFloatByKey(String key, int blNum)throws Exception
+	public final float GetValFloatByKey(String key, int blNum)
 	{
 		String val = this.getRow().GetValByKey(key).toString();
 		if (DataType.IsNullOrEmpty(val))
@@ -1203,10 +1196,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 根据key 得到flaot val
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final float GetValFloatByKey(String key)throws Exception
+	public final float GetValFloatByKey(String key)
 	{
 		try
 		{
@@ -1223,7 +1216,7 @@ public abstract class EnObj implements Serializable
 			return 0;
 		}
 	}
-	public final BigDecimal GetValMoneyByKey(String key)throws Exception
+	public final BigDecimal GetValMoneyByKey(String key)
 	{
 		try
 		{
@@ -1245,10 +1238,10 @@ public abstract class EnObj implements Serializable
 	/** 
 	 根据key 得到flaot val
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final BigDecimal GetValDecimalByKey(String key,int scaleN)throws Exception
+	public final BigDecimal GetValDecimalByKey(String key,int scaleN)
 	{
 		try
 		{
@@ -1265,7 +1258,7 @@ public abstract class EnObj implements Serializable
 			throw new RuntimeException("@表[" + this.getEnDesc() + "]在获取属性[" + key + "]值,出现错误，不能将[" + this.GetValStrByKey(key) + "]转换为float类型.错误信息：" + ex.getMessage());
 		}
 	}
-	public final BigDecimal GetValDecimalByKeyIsNullAsVal(String key, BigDecimal val)throws Exception
+	public final BigDecimal GetValDecimalByKeyIsNullAsVal(String key, BigDecimal val)
 	{
 		try
 		{
@@ -1295,7 +1288,7 @@ public abstract class EnObj implements Serializable
 
 	}
 	
-	public final double GetValDoubleByKey(String key)throws Exception
+	public final double GetValDoubleByKey(String key)
 	{
 		try
 		{
@@ -1306,7 +1299,7 @@ public abstract class EnObj implements Serializable
 			throw new RuntimeException("@表[" + this.getEnDesc() + "]在获取属性[" + key + "]值,出现错误，不能将[" + this.GetValStringByKey(key) + "]转换为double类型.错误信息：" + ex.getMessage());
 		}
 	}
-	public final String GetValAppDateByKey(String key)throws Exception
+	public final String GetValAppDateByKey(String key)
 	{
 		try
 		{
@@ -1328,7 +1321,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 是否是空白的实体？
 	*/
-	public final boolean getIsBlank()throws Exception
+	public final boolean getIsBlank()
 	{
 		if (this._row == null)
 		{
@@ -1336,7 +1329,7 @@ public abstract class EnObj implements Serializable
 		}
 
 		Attrs attrs = this.getEnMap().getAttrs();
-	    for (Attr attr : attrs)
+	    for (Attr attr : attrs.ToJavaList())
 	    {
 	     if (attr.getUIIsReadonly() && attr.getIsFKorEnum() == false)
 	     {
@@ -1391,7 +1384,7 @@ public abstract class EnObj implements Serializable
 	 获取或者设置
 	 是不是空的实体.
 	*/
-	public final boolean getIsEmpty()throws Exception{
+	public final boolean getIsEmpty(){
 		if (this._row == null)
 		{
 			return true;
@@ -1405,15 +1398,15 @@ public abstract class EnObj implements Serializable
 			return false;
 		}
 	}
-	public final void setIsEmpty(boolean value) throws Exception
+	public final void setIsEmpty(boolean value)
 	{
 		this._row = null;
 	}
 	/** 
 	 对这个实体的描述
-	 * @throws Exception 
+	 * @
 	*/
-	public final String getEnDesc() throws Exception
+	public final String getEnDesc()
 	{
 		return this.getEnMap().getEnDesc();
 	}
@@ -1421,19 +1414,17 @@ public abstract class EnObj implements Serializable
 	 取到主健值。如果它的主健不唯一，就返回第一个值。
 	 获取或设置
 	*/
-	public final Object getPKVal()throws Exception
-	{
+	public final Object getPKVal()  {
 		return this.GetValByKey(this.getPK());
 	}
-	public final void setPKVal(Object value)throws Exception
+	public final void setPKVal(Object value)
 	{
 		this.SetValByKey(this.getPK(), value);
 	}
 	/** 
 	 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
 	*/
-	public final int getPKCount()throws Exception
-	{
+	public final int getPKCount()  {
 		switch (this.getPK())
 		{
 			case "OID":
@@ -1464,7 +1455,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 是不是OIDEntity
 	*/
-	public final boolean getIsOIDEntity()throws Exception
+	public final boolean getIsOIDEntity()
 	{
 		if (this.getPK().equals("OID"))
 		{
@@ -1475,7 +1466,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 是不是OIDEntity
 	*/
-	public final boolean getIsNoEntity()throws Exception
+	public final boolean getIsNoEntity()
 	{
 		if (this.getPK().equals("No"))
 		{
@@ -1497,7 +1488,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 是不是IsMIDEntity
 	*/
-	public final boolean getIsMIDEntity()throws Exception
+	public final boolean getIsMIDEntity()
 	{
 		if (this.getPK().equals("MID"))
 		{
@@ -1508,8 +1499,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
 	*/
-	public String getPK()throws Exception
-	{
+	public String getPK()  {
 		String pks = "";
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
@@ -1537,8 +1527,7 @@ public abstract class EnObj implements Serializable
 		pks = pks.substring(0, pks.length() - 1);
 		return pks;
 	}
-	public String getPKField()throws Exception
-	{
+	public String getPK_Field() throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
 			switch (attr.getKey())
@@ -1564,7 +1553,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 如果只有一个主键,就返回PK,如果有多个就返回第一个.PK
 	*/
-	public final String[] getPKs()throws Exception
+	public final String[] getPKs()
 	{
 		String[] strs1 = new String[this.getPKCount()];
 		int i = 0;
@@ -1581,7 +1570,7 @@ public abstract class EnObj implements Serializable
 	/** 
 	 取到主健值。
 	*/
-	public final Hashtable getPKVals()throws Exception
+	public final Hashtable getPKVals()
 	{
 		Hashtable ht = new Hashtable();
 		String[] strs = this.getPKs();

@@ -4,12 +4,12 @@ import bp.da.Log;
 
 public class chs2py
 {
-	public chs2py()
+	public chs2py()throws Exception
 	{
 	}
 	/**
 	 * 将中文字符串转换成助记码形式，如将“中国”转换成ZG
-	 * @param str
+	 * param str
 	 * @return
 	 */
     public static String ConvertStr2Code(String str)
@@ -59,7 +59,7 @@ public class chs2py
 	/**
 	 * 获取拼音
 	 * 
-	 * @param chrstr
+	 * param chrstr
 	 * @return
 	 */
 	public static String convert(String chrstr)

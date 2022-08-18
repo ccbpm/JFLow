@@ -5,6 +5,7 @@ import bp.web.*;
 import bp.en.*;
 import bp.port.*;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -16,35 +17,31 @@ public class PowerModels extends EntitiesMyPK
 	/** 
 	 权限模型
 	*/
-	public PowerModels()
-	{
+	public PowerModels() throws Exception {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new PowerModel();
 	}
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<PowerModel> ToJavaList()
-	{
-		return (List<PowerModel>)(Object)this;
+	public final java.util.List<PowerModel> ToJavaList() {
+		return (java.util.List<PowerModel>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<PowerModel> Tolist()
-	{
+	public final ArrayList<PowerModel> Tolist()  {
 		ArrayList<PowerModel> list = new ArrayList<PowerModel>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -53,5 +50,5 @@ public class PowerModels extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

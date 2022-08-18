@@ -2,6 +2,8 @@ package bp.difference.handler;
 
 import javax.servlet.http.HttpServletRequest;
 
+import bp.da.DataType;
+import bp.web.WebUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,21 +22,45 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 	 * @return
 	 */
 	@RequestMapping(value = "/ProcessRequest")
-	public final void ProcessRequest(HttpServletRequest request) {
-		
+	public final void ProcessRequest(HttpServletRequest request) throws Exception {
+		//处理Token信息
+		DealToken();
 		WF_Comm CommHandler = new WF_Comm();
 		if (request instanceof DefaultMultipartHttpServletRequest) {
 			//如果是附件上传Request，则将该Request放入全局Request。为了解决springmvc中全局Request无法转化为附件Request
 			HttpServletRequest request1 = CommonUtils.getRequest();
 			request1.setAttribute("multipartRequest", request);
 		}
-
 		super.ProcessRequestPost(CommHandler);
 	}
 
 	@Override
 	public Class<WF_Comm> getCtrlType() {
 		return WF_Comm.class;
+	}
+
+	private void DealToken() throws Exception {
+		String doMethod = this.GetRequestVal("DoMethod");
+		String doType= this.getDoType();
+		if(doType.equals("HttpHandler")==true)
+			doType = doMethod;
+		if(DataType.IsNullOrEmpty(doType)==true)
+			throw new Exception("err@没有获取到执行的方法");
+
+		doType = doType.toLowerCase();
+		if(doType.contains("login")==true
+			|| doType.contains("index")
+			|| doType.contains("admiin")
+			|| doType.contains("dbinstall"))
+			return;
+		String token = WebUser.getToken();
+		if(DataType.IsNullOrEmpty(token))
+			token = this.GetRequestVal("Token");
+
+		if (DataType.IsNullOrEmpty(token)==true)
+			throw new Exception("err@登录信息丢失，请重新登录");
+		if(DataType.IsNullOrEmpty(WebUser.getNo())==true)
+			bp.wf.Dev2Interface.Port_LoginByToken(token);
 	}
 
 }

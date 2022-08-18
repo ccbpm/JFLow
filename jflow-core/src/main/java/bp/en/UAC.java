@@ -12,9 +12,9 @@ public class UAC
 {
 	/** 
 	 从权限管理系统里装载数据.
-	 * @throws Exception 
+	 * @ 
 	*/
-	public final void LoadRightFromCCGPM(Entity en) throws Exception
+	public final void LoadRightFromCCGPM(Entity en) 
 	{
 		String sql = "SELECT Tag1  FROM V_GPM_EmpMenu WHERE  FK_Emp='" + WebUser.getNo() + "'  AND Url LIKE '%" + en.toString() + "%'  ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -39,9 +39,9 @@ public class UAC
 	}
 	public final void Readonly()
 	{
-		this.IsUpdate = false;
-		this.IsDelete = false;
-		this.IsInsert = false;
+		this.IsUpdate=false;
+		this.IsDelete=false;
+		this.IsInsert=false;
 		this.IsAdjunct = false;
 		this.IsView = true;
 	}
@@ -59,10 +59,10 @@ public class UAC
 	/** 
 	 为一个岗位设置全部的权限
 	 
-	 @param fk_station
-	 * @throws Exception 
+	 param fk_station
+	 * @ 
 	*/
-	public final void OpenAllForStation(String fk_station) throws Exception
+	public final void OpenAllForStation(String fk_station) 
 	{
 		Paras ps = new Paras();
 		ps.Add("FK_Emp", WebUser.getNo());
@@ -83,9 +83,9 @@ public class UAC
 	}
 	/** 
 	 仅仅对管理员
-	 * @throws Exception 
+	 * @ 
 	*/
-	public final UAC OpenForSysAdmin() throws Exception
+	public final UAC OpenForSysAdmin() 
 	{
 		if (WebUser.getNo().equals("admin") == true)
 		{
@@ -94,7 +94,7 @@ public class UAC
 
 		return this;
 	}
-	public final UAC OpenForAppAdmin() throws Exception
+	public final UAC OpenForAppAdmin() 
 	{
 		if (WebUser.getNo() != null && WebUser.getNo().contains("admin") == true)
 		{
@@ -103,8 +103,7 @@ public class UAC
 		return this;
 	}
 
-	public final UAC OpenForAdmin() throws Exception
-	{
+	public final UAC OpenForAdmin()  {
 		if (WebUser.getNo() != null && WebUser.getIsAdmin() == true)
 		{
 			this.OpenAll();

@@ -1,5 +1,6 @@
 package bp.ccbill;
 
+
 /** 
  单据状态
 */
@@ -26,8 +27,7 @@ public enum BillState
 
 	private int intValue;
 	private static java.util.HashMap<Integer, BillState> mappings;
-	private static java.util.HashMap<Integer, BillState> getMappings()
-	{
+	private static java.util.HashMap<Integer, BillState> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (BillState.class)
@@ -42,18 +42,15 @@ public enum BillState
 	}
 
 	private BillState(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue() {
 		return intValue;
 	}
 
 	public static BillState forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

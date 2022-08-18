@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -16,47 +17,44 @@ import java.util.*;
 public class NodeCancel extends EntityMM
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	撤销到
-	 * @throws Exception 
 	*/
 	public final int getCancelTo() throws Exception
 	{
 		return this.GetValIntByKey(NodeCancelAttr.CancelTo);
 	}
-	public final void setCancelTo(int value) throws Exception
-	{
+	public final void setCancelTo(int value)  throws Exception
+	 {
 		this.SetValByKey(NodeCancelAttr.CancelTo, value);
 	}
 	/** 
 	 工作流程
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node() throws Exception
 	{
 		return this.GetValIntByKey(NodeCancelAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
+	public final void setFK_Node(int value)  throws Exception
+	 {
 		this.SetValByKey(NodeCancelAttr.FK_Node, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 可撤销的节点
 	*/
-	public NodeCancel()
-	{
+	public NodeCancel()  {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -74,5 +72,5 @@ public class NodeCancel extends EntityMM
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 }

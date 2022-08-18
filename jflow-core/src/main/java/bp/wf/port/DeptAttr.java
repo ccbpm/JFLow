@@ -1,5 +1,6 @@
 package bp.wf.port;
-import bp.en.EntityNoNameAttr;
+
+import bp.en.*;
 
 /** 
  部门属性
@@ -14,4 +15,8 @@ public class DeptAttr extends EntityNoNameAttr
 	 隶属组织
 	*/
 	public static final String OrgNo = "OrgNo";
+	public static final String Leader = "Leader";
+	public static final String LeaderName = "LeaderName";
+	public static final String Idx = "Idx";
+
 }

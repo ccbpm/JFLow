@@ -16,10 +16,9 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	/** 
 	 增加一个SearchKey .
 	 
-	 @param r SearchKey
+	 param attr SearchKey
 	*/
-	public final void Add(AttrOfOneVSM attr)
-	{
+	public final void Add(AttrOfOneVSM attr)  {
 		if (this.getIsExits(attr))
 		{
 			return;
@@ -30,11 +29,10 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	/** 
 	 是不是存在集合里面
 	 
-	 @param en 要检查的EnDtl
+	 param en 要检查的EnDtl
 	 @return true/false
 	*/
-	public final boolean getIsExits(AttrOfOneVSM en)
-	{
+	public final boolean getIsExits(AttrOfOneVSM en)  {
 		for (AttrOfOneVSM attr : this)
 		{
 			if (attr.getEnsOfMM() == en.getEnsOfMM())
@@ -48,33 +46,33 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	/** 
 	 增加一个属性
 	 
-	 @param _ensOfMM 多对多的实体
-	 @param _ensOfM 多实体
-	 @param AttrOfOneInMM 点实体,在MM中的属性
-	 @param AttrOfMInMM 多实体主键在MM中的属性
-	 @param AttrOfMText
-	 @param AttrOfMValue
-	 @param desc 描述
+	 param _ensOfMM 多对多的实体
+	 param _ensOfM 多实体
+	 param AttrOfOneInMM 点实体,在MM中的属性
+	 param AttrOfMInMM 多实体主键在MM中的属性
+	 param AttrOfMText
+	 param AttrOfMValue
+	 param desc 描述
 	 * @throws Exception 
 	*/
 
-	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc, Dot2DotModel model, EntitiesTree ensTree) throws Exception
+	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc, Dot2DotModel model, EntitiesTree ensTree)
 	{
 		Add(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc, model, ensTree, null);
 	}
 
-	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc, Dot2DotModel model) throws Exception
+	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc, Dot2DotModel model)
 	{
 		Add(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc, model, null, null);
 	}
 
-	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc) throws Exception
+	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc)
 	{
 		Add(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc, Dot2DotModel.Default, null, null);
 	}
 
 
-	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc, Dot2DotModel model, EntitiesTree ensTree, String refTreeAttr) throws Exception
+	public final void Add(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc, Dot2DotModel model, EntitiesTree ensTree, String refTreeAttr)
 	{
 
 		//属性.
@@ -90,40 +88,40 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	/** 
 	 绑定树模式
 	 
-	 @param _ensOfMM 比如 BP.WF.NodeDepts 
-	 @param _ensOfM 比如: bp.port.Depts
-	 @param rootNo 跟节点
-	 @param AttrOfOneInMM 比如:FK_Node
-	 @param AttrOfMInMM 比如:FK_Dept
-	 @param desc 比如:节点绑定部门
-	 @param AttrOfMText 一般是Name
-	 @param AttrOfMValue 一般是No
-	 @param rootNo 根目录节点
+	 param _ensOfMM 比如 bp.wf.NodeDepts
+	 param _ensOfM 比如: bp.port.Depts
+	 param rootNo 跟节点
+	 param AttrOfOneInMM 比如:FK_Node
+	 param AttrOfMInMM 比如:FK_Dept
+	 param desc 比如:节点绑定部门
+	 param AttrOfMText 一般是Name
+	 param AttrOfMValue 一般是No
+	 param rootNo 根目录节点
 	 * @throws Exception 
 	*/
 
-	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText, String AttrOfMValue, String rootNo) throws Exception
+	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText, String AttrOfMValue, String rootNo)
 	{
 		AddBranches(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, AttrOfMText, AttrOfMValue, rootNo, null);
 	}
 
-	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText, String AttrOfMValue) throws Exception
+	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText, String AttrOfMValue)
 	{
 		AddBranches(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, AttrOfMText, AttrOfMValue, "0", null);
 	}
 
-	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText) throws Exception
+	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText)
 	{
 		AddBranches(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, AttrOfMText, "No", "0", null);
 	}
 
-	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc) throws Exception
+	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc)
 	{
 		AddBranches(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, "Name", "No", "0", null);
 	}
 
 
-	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText, String AttrOfMValue, String rootNo, String expShowCols) throws Exception
+	public final void AddBranches(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String AttrOfMText, String AttrOfMValue, String rootNo, String expShowCols)
 	{
 		//属性.
 		AttrOfOneVSM en = new AttrOfOneVSM(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc);
@@ -138,35 +136,34 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	/** 
 	 增加树杆叶子类型
 	 
-	 @param _ensOfMM
-	 @param _ensOfM
-	 @param AttrOfOneInMM
-	 @param AttrOfMInMM
-	 @param desc
-	 @param defaultGroupKey
-	 @param AttrOfMText
-	 @param AttrOfMValue
-	 @param rootNo 根目录编号
-	 @param extShowCols 显示的扩展列 , @FK_DeptName=部门名称@OrgName=组织名称
-	 * @throws Exception 
+	 param _ensOfMM
+	 param _ensOfM
+	 param AttrOfOneInMM
+	 param AttrOfMInMM
+	 param desc
+	 param defaultGroupKey
+	 param AttrOfMText
+	 param AttrOfMValue
+	 param rootNo 根目录编号
+	 * @throws Exception
 	*/
 
-	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue, String rootNo) throws Exception
+	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue, String rootNo)
 	{
 		AddBranchesAndLeaf(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, AttrOfMText, AttrOfMValue, rootNo, null);
 	}
 
-	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue) throws Exception
+	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue)
 	{
 		AddBranchesAndLeaf(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, AttrOfMText, AttrOfMValue, "0", null);
 	}
 
-	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText) throws Exception
+	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText)
 	{
 		AddBranchesAndLeaf(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, AttrOfMText, "No", "0", null);
 	}
 
-	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey) throws Exception
+	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey)
 	{
 		AddBranchesAndLeaf(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, "Name", "No", "0", null);
 	}
@@ -177,7 +174,7 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	}
 
 
-	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue, String rootNo, String extShowCols) throws Exception
+	public final void AddBranchesAndLeaf(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue, String rootNo, String extShowCols)
 	{
 		//属性.
 		AttrOfOneVSM en = new AttrOfOneVSM(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc);
@@ -195,15 +192,13 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	/** 
 	 增加分组列表模式
 	 
-	 @param _ensOfMM
-	 @param _ensOfM
-	 @param AttrOfOneInMM
-	 @param AttrOfMInMM
-	 @param desc
-	 @param defaultGroupKey
-	 @param AttrOfMText
-	 @param AttrOfMValue
-	 @param rootNo
+	 param _ensOfMM
+	 param _ensOfM
+	 param AttrOfOneInMM
+	 param AttrOfMInMM
+	 param desc
+	 param defaultGroupKey
+	 param AttrOfMText
 	 * @throws Exception 
 	*/
 
@@ -223,7 +218,7 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	}
 
 
-	public final void AddGroupListModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue) throws Exception
+	public final void AddGroupListModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue)
 	{
 		//属性.
 		AttrOfOneVSM en = new AttrOfOneVSM(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc);
@@ -240,14 +235,13 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	/** 
 	 绑定分组列表平铺模式
 	 
-	 @param _ensOfMM
-	 @param _ensOfM
-	 @param AttrOfOneInMM
-	 @param AttrOfMInMM
-	 @param desc 标签或者描述
-	 @param AttrOfMText 显示的标签,一般为 Name
-	 @param AttrOfMValue 存储的值字段,一般为 No
-	 @param defaultGroupKey 默认的分组外键或者枚举,如果为空就不分组.
+	 param _ensOfMM
+	 param _ensOfM
+	 param AttrOfOneInMM
+	 param AttrOfMInMM
+	 param desc 标签或者描述
+	 param AttrOfMText 显示的标签,一般为 Name
+	 param defaultGroupKey 默认的分组外键或者枚举,如果为空就不分组.
 	 * @throws Exception 
 	*/
 
@@ -267,7 +261,7 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 	}
 
 
-	public final void AddGroupPanelModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue) throws Exception
+	public final void AddGroupPanelModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue)
 	{
 		//属性.
 		AttrOfOneVSM en = new AttrOfOneVSM(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, AttrOfMText, AttrOfMValue, desc);

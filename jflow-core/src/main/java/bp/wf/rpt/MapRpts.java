@@ -1,11 +1,5 @@
 package bp.wf.rpt;
-
-import bp.da.*;
-import bp.port.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.sys.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -14,11 +8,11 @@ import java.util.*;
 public class MapRpts extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 报表设计s
 	*/
-	public MapRpts()
+	public MapRpts()throws Exception
 	{
 	}
 	/** 
@@ -30,25 +24,25 @@ public class MapRpts extends EntitiesNoName
 		return new MapRpt();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<MapRpt> ToJavaList()
+	public final java.util.List<MapRpt> ToJavaList()throws Exception
 	{
-		return (List<MapRpt>)(Object)this;
+		return (java.util.List<MapRpt>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<MapRpt> Tolist()
+	public final ArrayList<MapRpt> Tolist()throws Exception
 	{
 		ArrayList<MapRpt> list = new ArrayList<MapRpt>();
 		for (int i = 0; i < this.size(); i++)
@@ -58,5 +52,5 @@ public class MapRpts extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

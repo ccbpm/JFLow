@@ -1,9 +1,5 @@
 package bp.en;
 
-import bp.en.*;
-import bp.web.*;
-import bp.*;
-
 /** 
  属性属性关联
 */
@@ -24,9 +20,9 @@ public class AARef
 	/** 
 	 属性属性关联
 	 
-	 @param CataAttr 属性
-	 @param RefKey
-	 @param SubAttr
+	 param cataAttr 属性
+	 param subAttr
+	 param refKey
 	*/
 	public AARef(String cataAttr, String subAttr, String refKey)
 	{

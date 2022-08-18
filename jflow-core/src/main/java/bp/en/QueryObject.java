@@ -13,8 +13,7 @@ public class QueryObject
 	private Entity _en = null;
 	private Entities _ens = null;
 	private String _sql = "";
-	private Entity getEn() throws Exception
-	{
+	private Entity getEn() throws Exception {
 		if (this._en == null)
 		{
 			return this.getEns().getGetNewEntity();
@@ -25,16 +24,14 @@ public class QueryObject
 		}
 	}
 	private void setEn(Entity value)
-	{
-		this._en = value;
+	{this._en = value;
 	}
 	private Entities getEns()
 	{
 		return this._ens;
 	}
 	private void setEns(Entities value)
-	{
-		this._ens = value;
+	{this._ens = value;
 	}
 	/** 
 	 处理Order by , group by . 
@@ -44,10 +41,9 @@ public class QueryObject
 	 要得到的查询sql 。
 	 * @throws Exception 
 	*/
-	public final String getSQL() throws Exception
-	{
+	public final String getSQL() throws Exception {
 		String sql = "";
-		String selecSQL = SqlBuilder.SelectSQL(this.getEn(), this.getTop());
+		String selecSQL = SqlBuilder.SelectSQL(this.getEn(), this.Top);
 		if (this._sql == null || this._sql.length() == 0)
 		{
 			sql = selecSQL + this._groupBy + this._orderBy;
@@ -80,12 +76,11 @@ public class QueryObject
 
 		return sql;
 	}
-	public final void setSQL(String value) throws Exception
+	public final void setSQL(String value)
 	{
 		this._sql = this._sql + " " + value;
 	}
-	public final String getSQLWithOutPara() throws Exception
-	{
+	public final String getSQLWithOutPara() throws Exception {
 		String sql = this.getSQL();
 		for (Para en : this.getMyParas())
 		{
@@ -100,15 +95,8 @@ public class QueryObject
 	/** 
 	 修改于2009 -05-12 
 	*/
-	private int _Top = -1;
-	public final int getTop()
-	{
-		return _Top;
-	}
-	public final void setTop(int value) throws Exception
-	{
-		this._Top = value;
-	}
+	public int Top = -1;
+	 
 	private Paras _Paras = null;
 	public final Paras getMyParas()
 	{
@@ -119,8 +107,7 @@ public class QueryObject
 		return _Paras;
 	}
 	public final void setMyParas(Paras value)
-	{
-		_Paras = value;
+	{_Paras = value;
 	}
 	private Paras _ParasR = null;
 	public final Paras getMyParasR()
@@ -131,17 +118,16 @@ public class QueryObject
 		}
 		return _ParasR;
 	}
-	public final void AddPara(String key, Object v)
-	{
+	public final void AddPara(String key, Object v) throws Exception {
 		key = "P" + key;
 		this.getMyParas().Add(key, v);
 	}
-	public QueryObject()
+	public QueryObject()throws Exception
 	{
 	}
 	/** DictBase
 	*/
-	public QueryObject(Entity en)throws Exception
+	public QueryObject(Entity en)
 	{
 		this.getMyParas().clear();
 		this._en = en;
@@ -149,8 +135,7 @@ public class QueryObject
 		this.HisDBType = this._en.getEnMap().getEnDBUrl().getDBType();
 		this.HisDBUrlType = this._en.getEnMap().getEnDBUrl().getDBUrlType();
 	}
-	public QueryObject(Entities ens)throws Exception
-	{
+	public QueryObject(Entities ens) throws Exception {
 		this.getMyParas().clear();
 		ens.clear();
 		this._ens = ens;
@@ -181,9 +166,9 @@ public class QueryObject
 	/** 
 	 增加函数查寻．
 	 
-	 @param attr 属性
-	 @param exp 表达格式 大于，等于，小于
-	 @param len 长度
+	 param attr 属性
+	 param exp 表达格式 大于，等于，小于
+	 param len 长度
 	 * @throws Exception 
 	*/
 	public final void AddWhereLen(String attr, String exp, int len, bp.da.DBType dbtype) throws Exception
@@ -193,8 +178,8 @@ public class QueryObject
 	/** 
 	 增加查询条件，条件用 IN 表示．sql必须是一个列的集合．
 	 
-	 @param attr 属性
-	 @param sql 此sql,必须是有一个列的集合．
+	 param attr 属性
+	 param sql 此sql,必须是有一个列的集合．
 	 * @throws Exception 
 	*/
 	public final void AddWhereInSQL(String attr, String sql) throws Exception
@@ -204,8 +189,8 @@ public class QueryObject
 	/** 
 	 增加查询条件，条件用 IN 表示．sql必须是一个列的集合．
 	 
-	 @param attr 属性
-	 @param sql 此sql,必须是有一个列的集合．
+	 param attr 属性
+	 param sql 此sql,必须是有一个列的集合．
 	 * @throws Exception 
 	*/
 	public final void AddWhereInSQL(String attr, String sql, String orderBy) throws Exception
@@ -216,8 +201,8 @@ public class QueryObject
 	/** 
 	 增加查询条件，条件用 IN 表示．sql必须是一个列的集合．
 	 
-	 @param attr 属性
-	 @param sql 此sql,必须是有一个列的集合．
+	 param attr 属性
+	 param sql 此sql,必须是有一个列的集合．
 	 * @throws Exception 
 	*/
 	public final void AddWhereNotInSQL(String attr, String sql) throws Exception
@@ -231,8 +216,8 @@ public class QueryObject
 	/** 
 	 增加条件, DataTable 第一列的值．
 	 
-	 @param attr 属性
-	 @param dt 第一列是要组合的values
+	 param attr 属性
+	 param dt 第一列是要组合的values
 	 * @throws Exception 
 	*/
 	public final void AddWhereIn(String attr, DataTable dt) throws Exception
@@ -248,8 +233,8 @@ public class QueryObject
 	/** 
 	 增加条件,vals 必须是sql可以识别的字串．
 	 
-	 @param attr 属性
-	 @param vals 用 , 分开的．
+	 param attr 属性
+	 param vals 用 , 分开的．
 	 * @throws Exception 
 	*/
 	public final void AddWhereIn(String attr, String vals) throws Exception
@@ -259,9 +244,9 @@ public class QueryObject
 	/** 
 	 
 	 
-	 @param attr
-	 @param exp
-	 @param val
+	 param attr
+	 param exp
+	 param val
 	 * @throws Exception 
 	*/
 	public final void AddWhere(String attr, String exp, Object val) throws Exception
@@ -271,14 +256,13 @@ public class QueryObject
 	/** 
 	 增加条件
 	 
-	 @param attr 属性
-	 @param exp 操作符号（根据不同的数据库）
-	 @param val 值
-	 @param paraName 参数名称，可以为null, 如果查询中有多个参数中有相同属性名的需要，分别给他们起一个参数名。
+	 param attr 属性
+	 param exp 操作符号（根据不同的数据库）
+	 param val 值
+	 param paraName 参数名称，可以为null, 如果查询中有多个参数中有相同属性名的需要，分别给他们起一个参数名。
 	 * @throws Exception 
 	*/
-	public final void AddWhere(String attr, String exp, Object val, String paraName) throws Exception
-	{
+	public final void AddWhere(String attr, String exp, Object val, String paraName) throws Exception {
 		if (val == null)
 		{
 			val = "";
@@ -376,12 +360,16 @@ public class QueryObject
 	/** 
 	 是空的
 	 
-	 @param attr
+	 param attr
 	 * @throws Exception 
 	*/
 	public final void AddWhereIsNull(String attr) throws Exception
 	{
 		this.setSQL("(" + attr2Field(attr) + "  IS NULL OR  " + attr2Field(attr) + "='' )");
+	}
+	public final void AddWhereIsNotNull(String attr) throws Exception
+	{
+		this.setSQL("(" + attr2Field(attr) + "  IS NOT NULL AND  " + attr2Field(attr) + "!='' )");
 	}
 	public final void AddWhereField(String attr, String exp, String val) throws Exception
 	{
@@ -434,9 +422,9 @@ public class QueryObject
 	/** 
 	 增加条件
 	 
-	 @param attr 属性
-	 @param exp 操作符号（根据不同的数据库）
-	 @param val 值
+	 param attr 属性
+	 param exp 操作符号（根据不同的数据库）
+	 param val 值
 	 * @throws Exception 
 	*/
 	public final void AddWhere(String attr, String exp, int val) throws Exception
@@ -474,9 +462,9 @@ public class QueryObject
 	/** 
 	 增加条件
 	 
-	 @param attr 属性
-	 @param exp 操作符号（根据不同的数据库）
-	 @param val 值
+	 param attr 属性
+	 param exp 操作符号（根据不同的数据库）
+	 param val 值
 	*/
 	public final void AddWhere(String attr, String exp, float val)throws Exception
 	{
@@ -493,28 +481,26 @@ public class QueryObject
 	/** 
 	 增加条件(默认的是= )
 	 
-	 @param attr 属性
-	 @param val 值
+	 param attr 属性
+	 param val 值
 	*/
-	public final void AddWhere(String attr, String val)throws Exception
-	{
+	public final void AddWhere(String attr, String val) throws Exception {
 		this.AddWhere(attr, "=", val);
 	}
 	/** 
 	 增加条件(默认的是= )
 	 
-	 @param attr 属性
-	 @param val 值
+	 param attr 属性
+	 param val 值
 	*/
-	public final void AddWhere(String attr, int val)throws Exception
-	{
+	public final void AddWhere(String attr, int val) throws Exception {
 		this.AddWhere(attr, "=", val, null);
 	}
 	/** 
 	 增加条件
 	 
-	 @param attr 属性
-	 @param val 值 true/false
+	 param attr 属性
+	 param val 值 true/false
 	*/
 	public final void AddWhere(String attr, boolean val)throws Exception
 	{
@@ -559,16 +545,20 @@ public class QueryObject
 		this.setSQL(" ) ");
 	}
 
-	public final void addAnd() throws Exception
+	public final void addAnd()
 	{
 		this.setSQL(" AND ");
 	}
 
-	public final void addOr() throws Exception
+	public final void addOr()
 	{
 		this.setSQL(" OR ");
 	}
 
+	public void addSQL(String sql)
+	{
+		this.setSQL("("+sql+")");
+	}
 
 		///关于endsql
 	public final void addGroupBy(String attr)throws Exception
@@ -596,11 +586,9 @@ public class QueryObject
 	}
 
 	/** 
-	 
-	 
-	 @param attr
+
 	*/
-	public final void addOrderByRandom()
+	public final void addOrderByRandom()throws Exception
 	{
 		if (this._orderBy.indexOf("ORDER BY") != -1)
 		{
@@ -614,8 +602,8 @@ public class QueryObject
 	/** 
 	 addOrderByDesc
 	 
-	 @param attr
-	 @param desc
+	 param attr
+
 	*/
 	public final void addOrderByDesc(String attr)throws Exception
 	{
@@ -640,12 +628,12 @@ public class QueryObject
 
 		///
 
-	public final void addHaving()
+	public final void addHaving()throws Exception
 	{
 	}
 	/** 清除查询条件
 	*/
-	public final void clear()
+	public final void clear()throws Exception
 	{
 		this._sql = "";
 		this._groupBy = "";
@@ -653,8 +641,7 @@ public class QueryObject
 		this.getMyParas().clear();
 	}
 	private Map _HisMap;
-	public final Map getHisMap()throws Exception
-	{
+	public final Map getHisMap() throws Exception {
 		if (_HisMap == null)
 		{
 			_HisMap = this.getEn().getEnMap();
@@ -662,21 +649,19 @@ public class QueryObject
 		return _HisMap;
 	}
 	public final void setHisMap(Map value)
-	{
-		_HisMap = value;
+	{_HisMap = value;
 	}
 	/** 
 	 增加字段.
 	 
-	 @param attr
+	 param attrKey
 	 @return 
 	*/
-	private String attr2Field(String attrKey)throws Exception
-	{
+	private String attr2Field(String attrKey) throws Exception {
 		Attr attr = this.getHisMap().GetAttrByKey(attrKey);
 		if (attr.getIsRefAttr() == true)
 		{
-			//  Entity en = attr.HisFKEn;
+			//  Entity en = attr.getHisFKEn();
 			if (this.HisDBType == DBType.Oracle ||this.HisDBType == DBType.KingBaseR3 
 					||this.HisDBType == DBType.KingBaseR6)
 			{
@@ -890,9 +875,9 @@ public class QueryObject
 	/** 
 	 分组查询，返回datatable.
 	 
-	 @param attrsOfGroupKey
-	 @param attrGroup
-	 @param gw
+	 param attrsOfGroupKey
+	 param attrGroup
+	 param gw
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1060,7 +1045,7 @@ public class QueryObject
 		}
 		return strs.substring(1);
 	}
-	public final String GenerPKsByTableWithPara(String pk, String sql, int from, int to)
+	public final String GenerPKsByTableWithPara(String pk, String sql, int from, int to)throws Exception
 	{
 		//Log.DefaultLogWriteLineWarning(" ***************************** From= " + from + "  T0" + to);
 		DataTable dt = DBAccess.RunSQLReturnTable(sql, this.getMyParas());
@@ -1138,16 +1123,16 @@ public class QueryObject
 	 删除当前查询的排序字段，然后可以再次增加其他的排序字段
 	 <p>added by liuxc,2015.3.18,为解决默认增加的是主键字段排序，但此排序字段未提供删除方法的问题</p>
 	*/
-	public final void ClearOrderBy()
+	public final void ClearOrderBy()throws Exception
 	{
 		this._orderBy = "";
 	}
 	/** 
 	 
 	 
-	 @param pk
-	 @param pageSize
-	 @param pageIdx
+	 param pk
+	 param pageSize
+	 param pageIdx
 	 @return 
 	 * @throws Exception 
 	*/
@@ -1165,11 +1150,11 @@ public class QueryObject
 	/** 
 	 分页查询方法
 	 
-	 @param pk 主键
-	 @param pageSize 页面大小
-	 @param pageIdx 第x页
-	 @param orderby 排序
-	 @param orderway 排序方式: 两种情况 Down UP 
+	 param pk 主键
+	 param pageSize 页面大小
+	 param pageIdx 第x页
+	 param orderBy 排序
+	 param orderWay 排序方式: 两种情况 Down UP
 	 @return 查询结果
 	 * @throws Exception 
 	*/
@@ -1187,10 +1172,9 @@ public class QueryObject
 	/** 
 	 分页查询方法
 	 
-	 @param pk 主键
-	 @param pageSize 页面大小
-	 @param pageIdx 第x页
-	 @param orderby 排序
+	 param pk 主键
+	 param pageSize 页面大小
+	 param pageIdx 第x页
 	 @return 查询结果
 	 * @throws Exception 
 	*/
@@ -1201,11 +1185,10 @@ public class QueryObject
 	/** 
 	 分页查询方法
 	 
-	 @param pk 主键
-	 @param pageSize 页面大小
-	 @param pageIdx 第x页
-	 @param orderby 排序
-	 @param orderway 排序方式: 两种情况 desc 或者 为 null. 
+	 param pk 主键
+	 param pageSize 页面大小
+	 param pageIdx 第x页
+	 param orderBy 排序
 	 @return 查询结果
 	 * @throws Exception 
 	*/
@@ -1298,7 +1281,7 @@ public class QueryObject
 							{
 								sql = "SELECT * FROM ( SELECT " + map.getPhysicsTable() + "." + pk + " " + mysql + " ) ";
 							}
-							//sql = "SELECT * FROM ( SELECT  " + pk + " FROM " + map.PhysicsTable + " WHERE " + this._sql + " " + this._orderBy + "   ) ";
+							//sql = "SELECT * FROM ( SELECT  " + pk + " FROM " + map.getPhysicsTable() + " WHERE " + this._sql + " " + this._orderBy + "   ) ";
 						}
 
 						sql = sql.replace("AND ( ( 1=1 ) )", " ");
@@ -1315,7 +1298,7 @@ public class QueryObject
 							this.AddHD();
 						}
 
-						this.setTop(pageSize);
+						this.Top= pageSize;
 						return this.doEntitiesQuery();
 					case Informix:
 						toIdx = top + pageSize;
@@ -1323,11 +1306,11 @@ public class QueryObject
 						{
 							if (top == 0)
 							{
-								sql = " SELECT first " + pageSize + "  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
+								sql = " SELECT first " + pageSize + "  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
 							}
 							else
 							{
-								sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
+								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
 							}
 						}
 						else
@@ -1336,11 +1319,11 @@ public class QueryObject
 							mysql = mysql.substring(mysql.indexOf("FROM "));
 							if (top == 0)
 							{
-								sql = "SELECT first " + pageSize + " " + this.getEn().getPKField() + "  " + mysql;
+								sql = "SELECT first " + pageSize + " " + this.getEn().getPK_Field() + "  " + mysql;
 							}
 							else
 							{
-								sql = "SELECT  " + this.getEn().getPKField() + " " + mysql;
+								sql = "SELECT  " + this.getEn().getPK_Field() + " " + mysql;
 							}
 						}
 
@@ -1359,7 +1342,7 @@ public class QueryObject
 							this.AddWhereIn(pk, "(" + pks + ")");
 						}
 
-						this.setTop(pageSize);
+						this.Top= pageSize;
 						return this.doEntitiesQuery();
 					case MySQL:
 						toIdx = top + pageSize;
@@ -1367,11 +1350,11 @@ public class QueryObject
 						{
 							if (top == 0)
 							{
-								sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " " + this._orderBy + " LIMIT " + pageSize;
+								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy + " LIMIT " + pageSize;
 							}
 							else
 							{
-								sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
+								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
 							}
 						}
 						else
@@ -1381,11 +1364,11 @@ public class QueryObject
 
 							if (top == 0)
 							{
-								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " " + mysql + " LIMIT " + pageSize;
+								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql + " LIMIT " + pageSize;
 							}
 							else
 							{
-								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " " + mysql;
+								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql;
 							}
 						}
 
@@ -1404,7 +1387,7 @@ public class QueryObject
 							this.AddWhereIn(pk, "(" + pks + ")");
 						}
 
-						this.setTop(pageSize);
+						this.Top=pageSize;
 						return this.doEntitiesQuery();
 					case PostgreSQL:
 						toIdx = top + pageSize;
@@ -1412,11 +1395,11 @@ public class QueryObject
 						{
 							if (top == 0)
 							{
-								sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " " + this._orderBy + " LIMIT " + pageSize;
+								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy + " LIMIT " + pageSize;
 							}
 							else
 							{
-								sql = " SELECT  " + this.getEn().getPKField() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
+								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
 							}
 						}
 						else
@@ -1426,11 +1409,11 @@ public class QueryObject
 
 							if (top == 0)
 							{
-								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " " + mysql + " LIMIT " + pageSize;
+								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql + " LIMIT " + pageSize;
 							}
 							else
 							{
-								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " " + mysql;
+								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql;
 							}
 						}
 
@@ -1449,7 +1432,7 @@ public class QueryObject
 							this.AddWhereIn(pk, "(" + pks + ")");
 						}
 
-						this.setTop(pageSize);
+						this.Top=pageSize;
 						return this.doEntitiesQuery();
 					case MSSQL:
 					default:
@@ -1458,13 +1441,13 @@ public class QueryObject
 						{
 							//此处去掉原有的第1页时用top pagesize的写法，会导致第1页数据查询出来的不准确，统一都用下面的写法，edited by liuxc,2017-8-30
 							//此处查询数据，除第1页外，有可能会造排序不正确，但每一页的数据是准确的，限于原有写法，没法改动此处逻辑解决这个问题
-							sql = " SELECT  [" + this.getEn().getPKField() + "] FROM " + map.getPhysicsTable() + " " + this._orderBy;
+							sql = " SELECT  [" + this.getEn().getPK_Field() + "] FROM " + map.getPhysicsTable() + " " + this._orderBy;
 						}
 						else
 						{
 							String mysql = this.getSQL();
 							mysql = mysql.substring(mysql.indexOf("FROM "));
-							sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPKField() + " as  [" + this.getEn().getPKField() + "]  " + mysql;
+							sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " as  [" + this.getEn().getPK_Field() + "]  " + mysql;
 						}
 
 						sql = sql.replace("AND ( ( 1=1 ) )", " ");
@@ -1482,7 +1465,7 @@ public class QueryObject
 							this.AddWhereIn(pk, "(" + pks + ")");
 						}
 
-						this.setTop(pageSize);
+						this.Top=pageSize;
 						return this.doEntitiesQuery();
 				}
 			}
@@ -1548,7 +1531,7 @@ public class QueryObject
 	{
 		String sql = this.getSQL();
 		String ptable = this.getEn().getEnMap().getPhysicsTable();
-		String pk = this.getEn().getPKField();
+		String pk = this.getEn().getPK_Field();
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
 		{
@@ -1588,18 +1571,18 @@ public class QueryObject
 		try
 		{
 			int i = this.getEn().RunSQLReturnValInt(sql, this.getMyParas());
-			if (this.getTop() == -1)
+			if (this.Top == -1)
 			{
 				return i;
 			}
 
-			if (this.getTop() >= i)
+			if (this.Top >= i)
 			{
 				return i;
 			}
 			else
 			{
-				return this.getTop();
+				return this.Top;
 			}
 		}
 		catch (RuntimeException ex)
@@ -1613,7 +1596,7 @@ public class QueryObject
 	{
 		String sql = this.getSQL();
 		String ptable = this.getEn().getEnMap().getPhysicsTable();
-		String pk = this.getEn().getPKField();
+		String pk = this.getEn().getPK_Field();
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
 		{
@@ -1663,7 +1646,7 @@ public class QueryObject
 	{
 		String sql = this.getSQL();
 		String ptable = this.getEn().getEnMap().getPhysicsTable();
-		String pk = this.getEn().getPKField();
+		String pk = this.getEn().getPK_Field();
 
 		switch (this.getEn().getEnMap().getEnDBUrl().getDBType())
 		{
@@ -1706,13 +1689,13 @@ public class QueryObject
 	/** 
 	 最大的数量
 	 
-	 @param topNum 最大的数量
+	 param topNum 最大的数量
 	 @return 要查询的信息
 	 * @throws Exception 
 	*/
 	public final DataTable DoQueryToTable(int topNum) throws Exception
 	{
-		this.setTop(topNum);
+		this.Top = topNum;
 		return this.getEn().RunSQLReturnTable(this.getSQL(), this.getMyParas());
 	}
 
@@ -1720,17 +1703,16 @@ public class QueryObject
 	{
 		return EntityDBAccess.Retrieve(this.getEn(), this.getSQL(), this.getMyParas());
 	}
-	private int doEntitiesQuery() throws Exception
-	{
+	private int doEntitiesQuery() throws Exception {
 		switch (this.HisDBType)
 		{
 			case Oracle:
 			case KingBaseR3:
 			case KingBaseR6:
-				if (this.getTop() != -1)
+				if (this.Top != -1)
 				{
 					this.addAnd();
-					this.AddWhereField("RowNum", "<=", this.getTop());
+					this.AddWhereField("RowNum", "<=", this.Top);
 				}
 				break;
 			case MSSQL:
@@ -1743,14 +1725,15 @@ public class QueryObject
 	/** 
 	 根据data初始化entiies.   
 	 
-	 @param ens 实体s
-	 @param dt 数据表
-	 @param fullAttrs 要填充的树形
+	 param ens 实体s
+	 param dt 数据表
+	 param fullAttrs 要填充的树形
 	 @return 初始化后的ens
 	 * @throws Exception 
 	*/
 	public static Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) throws Exception
 	{
+		FieldCaseModel caseModel =SystemConfig.AppCenterDBFieldCaseModel();
 		if (fullAttrs == null) {
 			Map enMap = ens.getGetNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
@@ -1758,14 +1741,17 @@ public class QueryObject
 
 				for (DataRow dr : dt.Rows) {
 					Entity en = ens.getGetNewEntity();
-					for (Attr attr : attrs) {
-						if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
+					for (Attr attr : attrs.ToJavaList()) {
+						if (caseModel == FieldCaseModel.UpperCase){
 							if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 									&& attr.getMyFieldType() == FieldType.RefText)
 									en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 								else
 									en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
-						} else
+						}else if(caseModel == FieldCaseModel.Lowercase) {
+							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toLowerCase()));
+						}
+						else
 							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 					}
 					ens.AddEntity(en);
@@ -1785,12 +1771,14 @@ public class QueryObject
 		for (DataRow dr : dt.Rows) {
 			Entity en = ens.getGetNewEntity();
 			for (String str : fullAttrs) {
-				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
+				if (caseModel== FieldCaseModel.UpperCase){
 					if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 						&& dt.Columns.contains(str)==true)
 						en.SetValByKey(str, dr.getValue(str));
 					else
 						en.SetValByKey(str, dr.getValue(str.toUpperCase()));
+				}else if(caseModel == FieldCaseModel.Lowercase) {
+					en.SetValByKey(str, dr.getValue(str.toLowerCase()));
 				}
 				else
 					en.SetValByKey(str, dr.getValue(str));

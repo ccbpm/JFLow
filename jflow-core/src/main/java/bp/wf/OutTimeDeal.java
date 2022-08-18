@@ -1,5 +1,6 @@
 package bp.wf;
 
+
 /** 
  待办工作超时处理方式
 */
@@ -38,8 +39,7 @@ public enum OutTimeDeal
 
 	private int intValue;
 	private static java.util.HashMap<Integer, OutTimeDeal> mappings;
-	private static java.util.HashMap<Integer, OutTimeDeal> getMappings()
-	{
+	private static java.util.HashMap<Integer, OutTimeDeal> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (OutTimeDeal.class)
@@ -54,18 +54,15 @@ public enum OutTimeDeal
 	}
 
 	private OutTimeDeal(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static OutTimeDeal forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

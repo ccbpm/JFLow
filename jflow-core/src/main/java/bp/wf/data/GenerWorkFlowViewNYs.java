@@ -1,5 +1,6 @@
 package bp.wf.data;
 
+
 import bp.en.*;
 import java.util.*;
 
@@ -9,11 +10,11 @@ import java.util.*;
 public class GenerWorkFlowViewNYs extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 月份s
 	*/
-	public GenerWorkFlowViewNYs()
+	public GenerWorkFlowViewNYs()throws Exception
 	{
 	}
 	/** 
@@ -25,10 +26,10 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 		return new GenerWorkFlowViewNY();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	public int RetrieveAll() throws Exception
+	public int RetrieveAll() throws Exception 
 	{
 		String sql = "SELECT DISTINCT FK_NY, FK_NY FROM WF_GenerWorkFlow";
 
@@ -36,22 +37,22 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<GenerWorkFlowViewNY> ToJavaList()
+	public final java.util.List<GenerWorkFlowViewNY> ToJavaList()throws Exception
 	{
-		return (List<GenerWorkFlowViewNY>)(Object)this;
+		return (java.util.List<GenerWorkFlowViewNY>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<GenerWorkFlowViewNY> Tolist()
+	public final ArrayList<GenerWorkFlowViewNY> Tolist()throws Exception
 	{
 		ArrayList<GenerWorkFlowViewNY> list = new ArrayList<GenerWorkFlowViewNY>();
 		for (int i = 0; i < this.size(); i++)
@@ -61,5 +62,5 @@ public class GenerWorkFlowViewNYs extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

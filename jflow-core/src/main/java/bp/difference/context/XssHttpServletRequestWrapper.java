@@ -84,7 +84,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /**
      * 屏蔽页面注入的所有html事件攻击
      *
-     * @param value
+     * param value
      * @return
      */
     public String cleanEventAttact(String value) {

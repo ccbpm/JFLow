@@ -1,11 +1,5 @@
 package bp.pub;
 
-import bp.da.*;
-import bp.en.*;
-import bp.web.*;
-import bp.sys.*;
-import bp.*;
-
 /** 
  显示类型.
 */
@@ -23,7 +17,7 @@ public enum DBAChartType
 		return this.ordinal();
 	}
 
-	public static DBAChartType forValue(int value) throws Exception
+	public static DBAChartType forValue(int value)
 	{
 		return values()[value];
 	}

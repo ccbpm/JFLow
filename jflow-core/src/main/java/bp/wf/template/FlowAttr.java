@@ -1,12 +1,15 @@
 package bp.wf.template;
 
+import bp.*;
+import bp.wf.*;
+
 /** 
  流程属性
 */
 public class FlowAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 编号
 	*/
@@ -56,17 +59,21 @@ public class FlowAttr
 	*/
 	public static final String TitleRole = "TitleRole";
 	/** 
+	 生成标题的节点
+	*/
+	public static final String TitleRoleNodes = "TitleRoleNodes";
+	/** 
 	 流程类型
 	*/
 	public static final String FlowType = "FlowType";
 	/** 
-	 平均用天
-	*/
-	public static final String AvgDay = "AvgDay";
-	/** 
 	 流程运行类型
 	*/
 	public static final String FlowRunWay = "FlowRunWay";
+	/** 
+	 工作模式
+	*/
+	public static final String WorkModel = "WorkModel";
 	/** 
 	 运行的设置
 	*/
@@ -96,10 +103,7 @@ public class FlowAttr
 	 类型
 	*/
 	public static final String FlowAppType = "FlowAppType";
-	/** 
-	 HelpUrl帮助.
-	*/
-	public static final String HelpUrl = "HelpUrl";
+
 	/** 
 	 图像类型
 	*/
@@ -166,7 +170,7 @@ public class FlowAttr
 	*/
 	public static final String HistoryFields = "HistoryFields";
 	/** 
-	 是否是客户参与流程
+	 外部客户参与流程规则
 	*/
 	public static final String GuestFlowRole = "GuestFlowRole";
 	/** 
@@ -197,6 +201,10 @@ public class FlowAttr
 	 是否是MD5
 	*/
 	public static final String IsMD5 = "IsMD5";
+	/** 
+	 是否是数据加密
+	*/
+	public static final String IsJM = "IsJM";
 	public static final String CCStas = "CCStas";
 	public static final String Note = "Note";
 	/** 
@@ -212,11 +220,15 @@ public class FlowAttr
 	public static final String IsTimeBaseEnable = "IsTimeBaseEnable";
 	public static final String IsTableEnable = "IsTableEnable";
 	public static final String IsOPEnable = "IsOPEnable";
+	/** 
+	 排序方式
+	*/
+	public static final String TrackOrderBy = "TrackOrderBy";
 
-		/// 基本属性
+		///#endregion 基本属性
 
 
-		///发起限制规则.
+		///#region 发起限制规则.
 	/** 
 	 发起限制规则
 	*/
@@ -234,10 +246,10 @@ public class FlowAttr
 	*/
 	public static final String StartLimitWhen = "StartLimitWhen";
 
-		/// 发起限制规则.
+		///#endregion 发起限制规则.
 
 
-		///开始节点数据导入规则.
+		///#region 开始节点数据导入规则.
 	/** 
 	 发起前置规则
 	*/
@@ -283,18 +295,11 @@ public class FlowAttr
 	*/
 	public static final String SysType = "SysType";
 
-		/// 开始节点数据导入规则.
+		///#endregion 开始节点数据导入规则.
 
 
-		///父子流程
-	/** 
-	 (当前节点为子流程时)是否检查所有子流程完成后父流程自动发送
-	*/
-	public static final String IsAutoSendSubFlowOver = "IsAutoSendSubFlowOver";
-	/** 
-	 当前节点为子流程时，所有子流程完成后启动他的同级子流程自动运行或者结束
-	*/
-	public static final String IsAutoSendSLSubFlowOver = "IsAutoSendSLSubFlowOver";
+		///#region 父子流程
+
 	/** 
 	 版本号
 	*/
@@ -311,19 +316,19 @@ public class FlowAttr
 	 OrgNo
 	*/
 	public static final String OrgNo = "OrgNo";
+	/** 
+	 创建日期
+	*/
+	public static final String RDT = "RDT";
 
-		/// 父子流程
+		///#endregion 父子流程
 
 
-		///数据同步方式.
+		///#region 数据同步方式.
 	/** 
 	 数据同步方式.
 	*/
 	public static final String DataDTSWay = "DataDTSWay";
-	/** 
-	 流程设计模式.
-	*/
-	public static final String FlowDevModel = "FlowDevModel";
 	/** 
 	 业务表主键
 	*/
@@ -338,7 +343,6 @@ public class FlowAttr
 	public static final String DTSSpecNodes = "DTSSpecNodes";
 	public static final String DTSField = "DTSField";
 	public static final String DTSFields = "DTSFields";
-	public static final String DTWebAPI = "DTWebAPI";
 	/** 
 	 业务表
 	*/
@@ -347,15 +351,21 @@ public class FlowAttr
 	 数据源
 	*/
 	public static final String DTSDBSrc = "DTSDBSrc";
+	/** 
+	 webapi
+	*/
+	public static final String DTSWebAPI = "DTSWebAPI";
 
-		///
+		///#endregion
 
 
-		///权限组.
+		///#region 权限组.
 	/** 
 	 发起人可看
 	*/
 	public static final String PStarter = "PStarter";
+	/// 是否启用数据版本控制
+	public static final String IsEnableDBVer = "IsEnableDBVer";
 	/** 
 	 参与人可看
 	*/
@@ -396,8 +406,8 @@ public class FlowAttr
 	 指定的人员可看
 	*/
 	public static final String PSpecEmp = "PSpecEmp";
-	public static final String WorkModel = "WorkModel";
-		/// 权限组.
+
+		///#endregion 权限组.
 
 	/** 
 	 流程发起测试人

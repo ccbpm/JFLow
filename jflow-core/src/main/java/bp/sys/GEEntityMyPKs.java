@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -11,10 +9,9 @@ import java.util.*;
 public class GEEntityMyPKs extends Entities
 {
 
-		///重载基类方法
+		///#region 重载基类方法
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		//if (this.FK_MapData == null)
 		//    throw new Exception("@没有能 FK_MapData 给值。");
 		return this.FK_MapData;
@@ -24,10 +21,10 @@ public class GEEntityMyPKs extends Entities
 	*/
 	public String FK_MapData = null;
 
-		///
+		///#endregion
 
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity
 	*/
@@ -49,23 +46,23 @@ public class GEEntityMyPKs extends Entities
 	/** 
 	 通用OID实体ID
 	 
-	 @param fk_mapdtl
+	 param fk_mapdata
 	*/
 	public GEEntityMyPKs(String fk_mapdata)
 	{
 		this.FK_MapData=fk_mapdata;
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GEEntityMyPK> ToJavaList()
+	public final java.util.List<GEEntityMyPK> ToJavaList()throws Exception
 	{
 		return (java.util.List<GEEntityMyPK>)(Object)this;
 	}
@@ -74,7 +71,7 @@ public class GEEntityMyPKs extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<GEEntityMyPK> Tolist()
+	public final ArrayList<GEEntityMyPK> Tolist()throws Exception
 	{
 		ArrayList<GEEntityMyPK> list = new ArrayList<GEEntityMyPK>();
 		for (int i = 0; i < this.size(); i++)
@@ -84,5 +81,5 @@ public class GEEntityMyPKs extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

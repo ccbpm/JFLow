@@ -1,9 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.*;
-import java.util.*;
 
 /** 
  附件在扩展控件里的显示方式
@@ -26,7 +22,7 @@ public enum AthShowModel
 		return this.ordinal();
 	}
 
-	public static AthShowModel forValue(int value) throws Exception
+	public static AthShowModel forValue(int value) 
 	{
 		return values()[value];
 	}

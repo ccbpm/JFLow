@@ -2,8 +2,7 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.en.*;
-import bp.web.WebUser;
-
+import bp.wf.*;
 
 /** 
  Method 的摘要说明
@@ -13,42 +12,20 @@ public class AutoRun_WhoExeIt extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public AutoRun_WhoExeIt()
+	public AutoRun_WhoExeIt()throws Exception
 	{
 		this.Title = "执行节点的自动任务.";
 		this.Help = "对于节点属性里配置的自动执行或者机器执行的节点上的任务自动发送下去。";
 		this.GroupName = "流程自动执行定时任务";
 	}
-	/** 
-	 设置执行变量
-	 
-	 @return 
-	*/
-	@Override
-	public void Init()
-	{
-	}
-	/** 
-	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
-	*/
-	@Override
-	public boolean getIsCanDo() throws Exception
-	{
-		if (WebUser.getIsAdmin() == true)
-		{
-			return true;
-		}
-		return false;
-	}
+
 	/** 
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		String info = "";
 		String sql = "SELECT WorkID,FID,FK_Emp,FK_Node,FK_Flow FROM WF_GenerWorkerList WHERE WhoExeIt!=0 AND IsPass=0 AND IsEnable=1 ORDER BY FK_Emp";
@@ -61,23 +38,23 @@ public class AutoRun_WhoExeIt extends Method
 		}
 
 
-			///自动启动流程B
+			///#region 自动启动流程 whoExIt.
 		for (DataRow dr : dt.Rows)
 		{
 			long workid = Long.parseLong(dr.getValue("WorkID").toString());
 			long fid = Long.parseLong(dr.getValue("FID").toString());
-			String FK_Emp = dr.getValue("FK_Emp").toString();
+			String empNo = dr.getValue("FK_Emp").toString();
 			int paras = Integer.parseInt(dr.getValue("FK_Node").toString());
 			String fk_flow = dr.getValue("FK_Flow").toString();
 
-			if (WebUser.getNo().equals(FK_Emp) == false)
+			if (bp.web.WebUser.getNo().equals(empNo) == false)
 			{
-				bp.wf.Dev2Interface.Port_Login(FK_Emp);
+				Dev2Interface.Port_Login(empNo);
 			}
 
 			try
 			{
-				info += "发送成功:" + WebUser.getNo() + bp.wf.Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
+				info += "发送成功:" + bp.web.WebUser.getNo() + Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
 			}
 			catch (RuntimeException ex)
 			{
@@ -85,13 +62,40 @@ public class AutoRun_WhoExeIt extends Method
 			}
 		}
 
-			/// 自动启动流程
+			///#endregion 自动启动流程
 
-		if (WebUser.getNo().equals("admin") == false)
+		if (bp.web.WebUser.getNo().equals("admin") == false)
 		{
-			bp.wf.Dev2Interface.Port_Login("admin");
+			Dev2Interface.Port_Login("admin");
 		}
 
 		return info;
 	}
+
+
+		///#region 重写。
+	/** 
+	 设置执行变量
+	 
+	 @return 
+	*/
+	@Override
+	public void Init()
+	{
+	}
+	/** 
+	 当前的操纵员是否可以执行这个方法
+	*/
+	@Override
+	public boolean getIsCanDo()
+	{
+		if (bp.web.WebUser.getIsAdmin() == true)
+		{
+			return true;
+		}
+		return false;
+	}
+
+		///#endregion 重写。
+
 }

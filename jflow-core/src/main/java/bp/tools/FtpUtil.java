@@ -124,10 +124,10 @@ public final class FtpUtil {
     /**
      * 构造函数
      *
-     * @param ip 服务器地址
-     * @param port 服务器端口
-     * @param user 用户名
-     * @param pass 密码
+     * param ip 服务器地址
+     * param port 服务器端口
+     * param user 用户名
+     * param pass 密码
      */
     public FtpUtil(String ip, int port, String user, String pass) {
         this.ip = ip;
@@ -207,8 +207,8 @@ public final class FtpUtil {
     /**
      * 设置登陆后转到的目标文件夹
      * 
-     * @param strWorkingDirectory 工作目录路径
-     * @param booAutoCreate 自动创建目录
+     * param strWorkingDirectory 工作目录路径
+     * param booAutoCreate 自动创建目录
      * @return boolean true 成功  false 失败
      * @throws SftpException 
      */
@@ -228,8 +228,8 @@ public final class FtpUtil {
     /**
      * 切换工作目录
      *
-     * @param strWorkingDirectory 工作目录路径
-     * @param booAutoCreate 自动创建目录
+     * param strWorkingDirectory 工作目录路径
+     * param booAutoCreate 自动创建目录
      * @return boolean true 成功  false 失败
      * @throws SftpException 
      */
@@ -263,8 +263,8 @@ public final class FtpUtil {
     /**
      * 上传文件,并按照strRemoteFile 文件名称修改上传之后的文件名
      * 
-     * @param strRemoteFile 远程文件名
-     * @param strLocalFile 本地文件路径（含文件名）
+     * param strRemoteFile 远程文件名
+     * param strLocalFile 本地文件路径（含文件名）
      * @return boolean true 上传成功 false 上传失败
      * @throws Exception 
      */
@@ -283,8 +283,8 @@ public final class FtpUtil {
     /**
      * 上传文件到FTP
      *
-     * @param strRemoteFile 远程文件名
-     * @param strLocalFile 本地文件路径（含文件名）
+     * param strRemoteFile 远程文件名
+     * param strLocalFile 本地文件路径（含文件名）
      * @return boolean true 上传成功 false 上传失败
      */
     private final boolean uploadFileToFtp(String strRemoteFile, String strLocalFile) {
@@ -318,8 +318,8 @@ public final class FtpUtil {
     /**
      * 上传文件,并按照strRemoteFile 文件名称修改上传之后的文件名
      * 
-     * @param strRemoteFile 远程文件名
-     * @param inputStreamLocal 本地文件输入流
+     * param strRemoteFile 远程文件名
+     * param inputStreamLocal 本地文件输入流
      * @return boolean true 上传成功 false 上传失败
      */
     public final boolean uploadFile(String strRemoteFile, InputStream inputStreamLocal) {
@@ -337,8 +337,8 @@ public final class FtpUtil {
     /**
      * 上传文件,并按照strRemoteFile 文件名称修改上传之后的文件名
      * 
-     * @param strRemoteFile 远程文件名
-     * @param inputStreamLocal 本地文件输入流
+     * param strRemoteFile 远程文件名
+     * param inputStreamLocal 本地文件输入流
      * @return true 上传成功  false 上传失败
      */
     private final boolean uploadFileToFtp(String strRemoteFile, InputStream inputStreamLocal) {
@@ -374,7 +374,7 @@ public final class FtpUtil {
     /**
      * 上传文件,不修改上传之后的文件名
      * 
-     * @param strLocalFile 本地文件路径（含文件名）
+     * param strLocalFile 本地文件路径（含文件名）
      * @return true 上传成功 false 上传失败
      * @throws Exception 
      */
@@ -392,7 +392,7 @@ public final class FtpUtil {
     /**
      * 上传文件,不修改上传之后的文件名
      * 
-     * @param strLocalFile 本地文件路径（含文件名）
+     * param strLocalFile 本地文件路径（含文件名）
      * @return true 上传成功 false 上传失败
      * @throws Exception 
      */
@@ -404,8 +404,8 @@ public final class FtpUtil {
     /**
      * 下载文件(并用strLocalFile命名)
      * 
-     * @param strRemoteFile 远程文件名
-     * @param strLocalFile 本地文件路径（含文件名）
+     * param strRemoteFile 远程文件名
+     * param strLocalFile 本地文件路径（含文件名）
      * @return boolean true 下载成功 false 下载失败
      */
     public final boolean downloadFile(String strRemoteFile, String strLocalFile) {
@@ -424,8 +424,8 @@ public final class FtpUtil {
     /**
      * 下载文件(并用strLocalFile命名)
      * 
-     * @param strRemoteFile 远程文件名
-     * @param strLocalFile 本地文件路径（含文件名）
+     * param strRemoteFile 远程文件名
+     * param strLocalFile 本地文件路径（含文件名）
      * @return boolean true 下载成功 false 下载失败
      */
     private final boolean downloadFileToFtp(String strRemoteFile, String strLocalFile) {
@@ -461,7 +461,7 @@ public final class FtpUtil {
     /**
      * 下载文件(不修改文件名)
      * 
-     * @param strRemoteFile 远程文件名
+     * param strRemoteFile 远程文件名
      * @return boolean true 下载成功 false 下载失败
      */
     public final boolean downloadFile(String strRemoteFile) {
@@ -479,7 +479,7 @@ public final class FtpUtil {
     /**
      * 下载文件(不修改文件名)
      * 
-     * @param strRemoteFile 远程文件名
+     * param strRemoteFile 远程文件名
      * @return boolean true 下载成功 false 下载失败
      */
     private final boolean downloadFileToFtp(String strRemoteFile) {
@@ -489,7 +489,7 @@ public final class FtpUtil {
     /**
      * 获得下载文件二进制流
      * 
-     * @param strRemoteFile 远程文件名
+     * param strRemoteFile 远程文件名
      * @return 文件二进制流
      */
     public final ByteArrayInputStream downloadFileAsStream(String strRemoteFile) {
@@ -507,7 +507,7 @@ public final class FtpUtil {
     /**
      * 获得下载文件二进制流
      * 
-     * @param strRemoteFile 远程文件名
+     * param strRemoteFile 远程文件名
      * @return 件二进制流
      */
     public final ByteArrayInputStream downloadFileAsStreamToFtp(String strRemoteFile) {
@@ -581,8 +581,8 @@ public final class FtpUtil {
     /**
      * 克隆文件属性
      *
-     * @param ftpFile ftp文件
-     * @param lsEntry 属性
+     * param ftpFile ftp文件
+     * param lsEntry 属性
      */
     private void cloneFile(FTPFile ftpFile, LsEntry lsEntry) {
         long date = 0;
@@ -637,7 +637,7 @@ public final class FtpUtil {
     /**
      * 根据指定的文件名称查询FTP上面的文件
      * 
-     * @param strFileName 文件名
+     * param strFileName 文件名
      * @return FTP文件
      */
     public final FTPFile file(String strFileName) {
@@ -659,7 +659,7 @@ public final class FtpUtil {
     /**
      * 根据指定的文件名称查询FTP上面的文件
      * 
-     * @param strFileName 文件名
+     * param strFileName 文件名
      * @return FTP文件
      */
     private final FTPFile fileToFtp(String strFileName) {
@@ -685,7 +685,7 @@ public final class FtpUtil {
     /**
      * 删除服务器端文件
      * 
-     * @param strFileName 文件名
+     * param strFileName 文件名
      * @return boolean 删除结果
      * @throws SftpException 
      */
@@ -704,7 +704,7 @@ public final class FtpUtil {
     /**
      * 删除服务器端文件
      * 
-     * @param strFileName 文件名
+     * param strFileName 文件名
      * @return boolean 删除结果
      */
     private final boolean deleteFileToFtp(String strFileName) {
@@ -736,8 +736,8 @@ public final class FtpUtil {
     /**
      * 文件重命名
      * 
-     * @param oldName 原名称
-     * @param newName 新名称
+     * param oldName 原名称
+     * param newName 新名称
      * @return boolean 操作结果 true 成功 false 失败
      */
     public final boolean rename(String oldName, String newName) {
@@ -756,8 +756,8 @@ public final class FtpUtil {
     /**
      * 文件重命名
      * 
-     * @param oldName 原名称
-     * @param newName 新名称
+     * param oldName 原名称
+     * param newName 新名称
      * @return boolean 操作结果 true 成功 false 失败
      */
     private final boolean renameToFtp(String oldName, String newName) {
@@ -784,8 +784,8 @@ public final class FtpUtil {
     /**
      * 创建或删除目录
      * 
-     * @param strWorkingDirectory 工作目录
-     * @param enumFtpUtil 操作类型
+     * param strWorkingDirectory 工作目录
+     * param enumFtpUtil 操作类型
      * @return boolean 操作结果 true 成功 false 失败
      * @throws SftpException 
      */
@@ -809,8 +809,8 @@ public final class FtpUtil {
     /**
      * 创建或删除目录
      * 
-     * @param strWorkingDirectory 工作目录
-     * @param enumFtpUtil 操作类型
+     * param strWorkingDirectory 工作目录
+     * param enumFtpUtil 操作类型
      * @return boolean 操作结果 true 成功 false 失败
      * @throws SftpException 
      */
@@ -853,7 +853,7 @@ public final class FtpUtil {
     /**
      * 删除目录
      *
-     * @param folderDir 目录
+     * param folderDir 目录
       * @return boolean 操作结果 true 成功 false 失败
      * @throws SftpException 
      */
@@ -882,7 +882,7 @@ public final class FtpUtil {
     /**
      * 获得远程文件的文件头信息，前4个字节
      * 
-     * @param strRemoteFile 远程文件名
+     * param strRemoteFile 远程文件名
      * @return boolean 操作结果 true 成功  false 失败
      */
     public final byte[] getFileHeader(String strRemoteFile) {
@@ -900,7 +900,7 @@ public final class FtpUtil {
     /**
      * 获得远程文件的文件头信息，前4个字节
      * 
-     * @param strRemoteFile 远程文件名
+     * param strRemoteFile 远程文件名
      * @return boolean 操作结果 true 成功  false 失败
      */
     private final byte[] getFileHeaderToFtp(String strRemoteFile) {
@@ -929,8 +929,8 @@ public final class FtpUtil {
     /**
      * 在FTP内部复制文件
      * 
-     * @param sourceFile 源文件名
-     * @param targetFile 目标文件名
+     * param sourceFile 源文件名
+     * param targetFile 目标文件名
      * @return boolean 操作结果 true 成功  false 失败
      */
     public final boolean copyFile(String sourceFile, String targetFile) {
@@ -949,8 +949,8 @@ public final class FtpUtil {
     /**
      * 在FTP内部复制文件
      * 
-     * @param sourceFile 源文件名
-     * @param targetFile 目标文件名
+     * param sourceFile 源文件名
+     * param targetFile 目标文件名
      * @return boolean 操作结果 true 成功  false 失败
      */
     private final boolean copyFileToFtp(String sourceFile, String targetFile) {
@@ -1000,8 +1000,8 @@ public final class FtpUtil {
     /**
      * 在FTP内部移动文件
      * 
-     * @param sourceFile 源文件名
-     * @param targetFile 目标文件名
+     * param sourceFile 源文件名
+     * param targetFile 目标文件名
      * @return boolean 操作结果 true 成功  false 失败
      */
     public final boolean moveFile(String sourceFile, String targetFile) {
@@ -1020,8 +1020,8 @@ public final class FtpUtil {
     /**
      * 在FTP内部移动文件
      * 
-     * @param sourceFile 源文件名
-     * @param targetFile 目标文件名
+     * param sourceFile 源文件名
+     * param targetFile 目标文件名
      * @return boolean 操作结果 true 成功  false 失败
      */
     private final boolean moveFileToFtp(String sourceFile, String targetFile) {
@@ -1051,8 +1051,8 @@ public final class FtpUtil {
     /**
      * 上传目录
      *
-     * @param sPath 上传源目录
-     * @param dPath 上传目的目录
+     * param sPath 上传源目录
+     * param dPath 上传目的目录
      */
     public void upLoadDir(String sPath, String dPath) {
         
@@ -1067,8 +1067,8 @@ public final class FtpUtil {
     /**
      * 上传目录
      *
-     * @param sPath 上传源目录
-     * @param dPath 上传目的目录
+     * param sPath 上传源目录
+     * param dPath 上传目的目录
      */
     public void upLoadDirToFtp(String sPath, String dPath) {
         
@@ -1094,8 +1094,8 @@ public final class FtpUtil {
     /**
      * 上传文件(目录)到当前目录
      *
-     * @param file 要上传的目录或文件
-     * @param workingDirectory ftp当前目录
+     * param file 要上传的目录或文件
+     * param workingDirectory ftp当前目录
      * @throws SftpException 
      */
     private void uploadFile(File file, String workingDirectory) throws SftpException {
@@ -1155,8 +1155,8 @@ public final class FtpUtil {
     /**
      * 下载目录
      *
-     * @param sPath 下载源目录
-     * @param dPath 下载目的目录
+     * param sPath 下载源目录
+     * param dPath 下载目的目录
      */
     public void downLoadDir(String sPath, String dPath) {
         
@@ -1226,7 +1226,7 @@ public final class FtpUtil {
     /**
      * 设置：是否关闭FTP链接，默认为是。
      * 
-     * @param closeConnection 是否关闭连接
+     * param closeConnection 是否关闭连接
      */
     public final void setCloseConnection(boolean closeConnection) {
         this.closeConnection = closeConnection;
@@ -1244,7 +1244,7 @@ public final class FtpUtil {
     /**
      * 设置默认控制编码,默认为GBK，支持中文目录及中文文件名传输
      * 
-     * @param controlEncoding 获得控制编码,
+     * param controlEncoding 获得控制编码,
      */
     public void setControlEncoding(String controlEncoding) {
         if (StringUtils.isNotBlank(controlEncoding)) {
@@ -1264,7 +1264,7 @@ public final class FtpUtil {
     /**
      * 是否使用SFTP,默认为false
      * 
-     * @param isSFTP true SFTP  fasle FTP
+     * param isSFTP true SFTP  fasle FTP
      */
     public final void setSFTP(boolean isSFTP) {
         this.isSFTP = isSFTP;
@@ -1284,7 +1284,7 @@ public final class FtpUtil {
     /**
      * 设置：路径
      * 
-     * @param ftpPath 路径
+     * param ftpPath 路径
      */
     
     public final void setFtpPath(String ftpPath) {
@@ -1296,7 +1296,7 @@ public final class FtpUtil {
     /**
      * 设置：连接超时时间
      * 
-     * @param timeout 连接超时时间
+     * param timeout 连接超时时间
      */
     public final void setTimeout(int timeout) {
         this.timeout = timeout;

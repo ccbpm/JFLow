@@ -1,5 +1,6 @@
 package bp.wf.dts;
 
+import bp.da.*;
 import bp.en.*;
 import bp.sys.*;
 import bp.wf.*;
@@ -12,12 +13,11 @@ public class RepariDB extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public RepariDB()
+	public RepariDB()throws Exception
 	{
 		this.Title = "修复数据库";
 		this.Help = "把最新的版本的与当前的数据表结构，做一个自动修复, 修复内容：缺少列，缺少列注释，列注释不完整或者有变化。";
 		this.Help += "<br>因为表单设计器的错误，丢失了字段，通过它也可以自动修复。";
-		this.Help += "<br><a href='/'>进入流程设计器</a>";
 	}
 	/** 
 	 设置执行变量
@@ -44,18 +44,18 @@ public class RepariDB extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
-		String rpt = PubClass.DBRpt(bp.da.DBCheckLevel.High);
+		String rpt = bp.pub.PubClass.DBRpt(DBCheckLevel.High);
+
 
 		//// 手动升级. 2011-07-08 补充节点字段分组.
-		//string sql = "DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.NodeSheet'";
+		//string sql = "DELETE FROM Sys_EnCfg WHERE No='bp.wf.template.NodeSheet'";
 		//DBAccess.RunSQL(sql);
 
-		//sql = "INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.WF.Template.NodeSheet','NodeID=基本配置@WarningHour=考核属性@SendLab=功能按钮标签与状态')";
+		//sql = "INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('bp.wf.template.NodeSheet','NodeID=基本配置@WarningHour=考核属性@SendLab=功能按钮标签与状态')";
 		//DBAccess.RunSQL(sql);
 
 		// 修复因bug丢失的字段.
@@ -66,13 +66,12 @@ public class RepariDB extends Method
 			String nodeid = md.getNo().replace("ND","");
 			try
 			{
-				bp.wf.Node nd = new Node(Integer.parseInt(nodeid));
+				Node nd = new Node(Integer.parseInt(nodeid));
 				nd.RepareMap(nd.getHisFlow());
 				continue;
 			}
 			catch (RuntimeException ex)
 			{
-
 			}
 
 			MapAttr attr = new MapAttr();
@@ -81,10 +80,10 @@ public class RepariDB extends Method
 				attr.setFK_MapData(md.getNo());
 				attr.setKeyOfEn("OID");
 				attr.setName("OID");
-				attr.setMyDataType(bp.da.DataType.AppInt);
-				attr.setUIContralType( UIContralType.TB);
-				attr.setLGType( FieldTypeS.Normal);
-				attr.setUIVisible( false);
+				attr.setMyDataType(DataType.AppInt);
+				attr.setUIContralType(UIContralType.TB);
+				attr.setLGType(FieldTypeS.Normal);
+				attr.setUIVisible(false);
 				attr.setUIIsEnable(false);
 				attr.setDefVal("0");
 				attr.setHisEditType(EditType.Readonly);

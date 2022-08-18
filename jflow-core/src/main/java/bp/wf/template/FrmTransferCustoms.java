@@ -1,11 +1,11 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.wf.template.*;
 import bp.wf.*;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -15,24 +15,21 @@ import java.util.*;
 public class FrmTransferCustoms extends Entities
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 流转自定义组件s
 	*/
-	public FrmTransferCustoms()
-	{
+	public FrmTransferCustoms() throws Exception {
 	}
 	/** 
 	 流转自定义组件s
 	 
-	 @param fk_mapdata s
-	 * @throws Exception 
+	 param fk_mapdata s
 	*/
-	public FrmTransferCustoms(String fk_mapdata) throws Exception
-	{
-		if (SystemConfig.getIsDebug())
+	public FrmTransferCustoms(String fk_mapdata) throws Exception {
+		if (bp.difference.SystemConfig.getIsDebug())
 		{
-			this.Retrieve("No", fk_mapdata);
+			this.Retrieve("No", fk_mapdata, null);
 		}
 		else
 		{
@@ -43,22 +40,20 @@ public class FrmTransferCustoms extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmTransferCustom();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List
+		///#region 为了适应自动翻译成java的需要,把实体转换成List
 	/** 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmTransferCustom> ToJavaList()
-	{
-		return (List<FrmTransferCustom>)(Object)this;
+	public final java.util.List<FrmTransferCustom> ToJavaList() {
+		return (java.util.List<FrmTransferCustom>)(Object)this;
 	}
 
 	/** 
@@ -66,8 +61,7 @@ public class FrmTransferCustoms extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmTransferCustom> Tolist()
-	{
+	public final ArrayList<FrmTransferCustom> Tolist()  {
 		ArrayList<FrmTransferCustom> list = new ArrayList<FrmTransferCustom>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -76,5 +70,5 @@ public class FrmTransferCustoms extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

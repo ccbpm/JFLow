@@ -1,19 +1,18 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
+import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
+import bp.en.Map;
 import bp.sys.*;
-import bp.sys.xml.ActiveAttr;
-import bp.sys.xml.ActiveAttrAttr;
-import bp.sys.xml.ActiveAttrs;
+import bp.sys.xml.*;
 import bp.tools.DataTableConvertJson;
-import bp.tools.DateUtils;
-import bp.tools.HttpClientUtil;
 import bp.web.*;
 import bp.en.*;
-import bp.en.Map;
+import bp.difference.*;
+import bp.tools.*;
+import bp.*;
 import bp.wf.*;
 import bp.wf.Glo;
 import bp.wf.port.WFEmp;
@@ -21,56 +20,24 @@ import net.sf.json.JSONObject;
 
 import java.net.URLDecoder;
 import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.nio.file.*;
+import java.time.*;
 import java.math.*;
 
-/** 
+/**
  页面功能实体
-*/
+ */
 public class WF_Comm extends WebContralBase
 {
 
-public final String RichUploadFile() throws Exception {
-		
-		File xmlFile = null;
-		String fileName = "";
-		String savePath = "";
-		HttpServletRequest request = getRequest();
-		String contentType = request.getContentType();
-		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-			fileName = CommonFileUtils.getOriginalFilename(request, "upfile");
-			savePath = SystemConfig.getPathOfDataUser() + "RichTextFile";
-			if (new File(savePath).exists() == false)
-				new File(savePath).mkdirs();
-			savePath = savePath + "/" + fileName;
-			xmlFile = new File(savePath);
-			if (xmlFile.exists()) {
-				xmlFile.delete();
-			}
-
-			try {
-				CommonFileUtils.upload(request, "upfile", xmlFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "err@执行失败";
-			}
-		}
-		return savePath;
-	}
-
-		///树的实体.
-	/** 
+	///#region 树的实体.
+	/**
 	 获得树的结构
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Tree_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Tree_Init() throws Exception {
 		Object tempVar = ClassFactory.GetEns(this.getEnsName());
 		EntitiesTree ens = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
 		if (ens == null)
@@ -78,52 +45,48 @@ public final String RichUploadFile() throws Exception {
 			return "err@该实体[" + this.getEnsName() + "]不是一个树形实体.";
 		}
 		//获取ParentNo
-		 ens.RetrieveAll(EntityTreeAttr.Idx);
+		ens.RetrieveAll(EntityTreeAttr.Idx);
 
-		return bp.tools.Json.ToJson(ens.ToDataTableField("TreeTable"));
+		return Json.ToJson(ens.ToDataTableField("TreeTable"));
 	}
 
-		/// 树的实体
+	///#endregion 树的实体
 
 
-		///部门-人员关系.
+	///#region 部门-人员关系.
 
-	public final String Tree_MapBaseInfo() throws Exception
-	{
+	public final String Tree_MapBaseInfo() throws Exception {
 		Object tempVar = ClassFactory.GetEns(this.getTreeEnsName());
 		EntitiesTree enTrees = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
-		EntityTree enenTree = enTrees.getGetNewEntity() instanceof EntityTree ? (EntityTree)enTrees.getGetNewEntity() : null;
+		bp.en.Entity tempVar2 = enTrees.getGetNewEntity();
+		EntityTree enenTree = tempVar2 instanceof EntityTree ? (EntityTree)tempVar2 : null;
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
 		Hashtable ht = new Hashtable();
 		ht.put("TreeEnsDesc", enenTree.getEnDesc());
 		ht.put("EnsDesc", en.getEnDesc());
 		ht.put("EnPK", en.getPK());
-		return bp.tools.Json.ToJson(ht);
+		return Json.ToJson(ht);
 	}
 
-	/** 
+	/**
 	 获得树的结构
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String TreeEn_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String TreeEn_Init() throws Exception {
 		Object tempVar = ClassFactory.GetEns(this.getTreeEnsName());
 		EntitiesTree ens = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
 		ens.RetrieveAll(EntityTreeAttr.Idx);
-		return ens.ToJsonOfTree();
+		return ens.ToJsonOfTree("0");
 	}
 
-	/** 
+	/**
 	 获取树关联的集合
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String TreeEmp_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String TreeEmp_Init() throws Exception {
 		DataSet ds = new DataSet();
 		String RefPK = this.GetRequestVal("RefPK");
 		String FK = this.GetRequestVal("FK");
@@ -138,7 +101,7 @@ public final String RichUploadFile() throws Exception {
 		Map map = en.getEnMapInTime();
 		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 		//属性集合.
-		DataTable dtAttrs = attrs.ToDataTableField();
+		DataTable dtAttrs = attrs.ToDataTableField("dt");
 		dtAttrs.TableName = "Sys_MapAttrs";
 
 		dt = new DataTable("Sys_MapAttr");
@@ -149,7 +112,7 @@ public final String RichUploadFile() throws Exception {
 		DataRow row = null;
 		for (MapAttr attr : attrs.ToJavaList())
 		{
-			if (attr.getUIVisible()== false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
@@ -174,22 +137,20 @@ public final String RichUploadFile() throws Exception {
 
 		ds.Tables.add(dt);
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
-		/// 部门-人员关系
-	/** 
+	///#endregion 部门-人员关系
+	/**
 	 构造函数
-	*/
-	public WF_Comm()
-	{
+	 */
+	public WF_Comm() throws Exception {
 	}
 
-	/** 
+	/**
 	 部门编号
-	*/
-	public final String getFK_Dept()
-	{
+	 */
+	public final String getFK_Dept()  {
 		String str = this.GetRequestVal("FK_Dept");
 		if (str == null || str.equals("") || str.equals("null"))
 		{
@@ -197,9 +158,8 @@ public final String RichUploadFile() throws Exception {
 		}
 		return str;
 	}
-	public final void setFK_Dept(String value) throws Exception
-	{
-		String val = value;
+	public final void setFK_Dept(String value)throws Exception
+	{String val = value;
 		if (val.equals("all"))
 		{
 			return;
@@ -214,15 +174,13 @@ public final String RichUploadFile() throws Exception {
 
 
 
-		///统计分析组件.
-	/** 
+	///#region 统计分析组件.
+	/**
 	 初始化数据
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String ContrastDtl_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String ContrastDtl_Init() throws Exception {
 		//获得.
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
@@ -231,7 +189,7 @@ public final String RichUploadFile() throws Exception {
 		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 
 		//属性集合.
-		DataTable dtAttrs = attrs.ToDataTableField();
+		DataTable dtAttrs = attrs.ToDataTableField("dt");
 		dtAttrs.TableName = "Sys_MapAttrs";
 
 		DataSet ds = new DataSet();
@@ -241,23 +199,23 @@ public final String RichUploadFile() throws Exception {
 		QueryObject qo = new QueryObject(ens);
 
 		Enumeration enu = getRequest().getParameterNames();
-		while (enu.hasMoreElements()) 
+		while (enu.hasMoreElements())
 		{
-			String key = (String) enu.nextElement();
-			if (key.indexOf("EnsName") != -1)
+			String mykey = (String) enu.nextElement();
+			if (mykey.indexOf("EnsName") != -1)
 			{
 				continue;
 			}
 
-		
-			if (key.equals("OID") || key.equals("MyPK"))
+
+			if (mykey.equals("OID") || mykey.equals("MyPK"))
 			{
 				continue;
 			}
 
-			if (key.equals("FK_Dept"))
+			if (mykey.equals("FK_Dept"))
 			{
-				this.setFK_Dept(getRequest().getParameter(key));
+				this.setFK_Dept(getRequest().getParameter(mykey));
 				continue;
 			}
 			boolean isExist = false;
@@ -267,7 +225,7 @@ public final String RichUploadFile() throws Exception {
 			boolean IsMoney = false;
 			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				if (attr.getKey().equals(key))
+				if (attr.getKey().equals(mykey))
 				{
 					isExist = true;
 					if (attr.getMyDataType() == DataType.AppInt)
@@ -295,7 +253,7 @@ public final String RichUploadFile() throws Exception {
 				continue;
 			}
 
-			if (getRequest().getParameter(key).equals("mvals"))
+			if (getRequest().getParameter(mykey).equals("mvals"))
 			{
 				//如果用户多项选择了，就要找到它的选择项目.
 
@@ -306,13 +264,13 @@ public final String RichUploadFile() throws Exception {
 				/* 如果是多选值 */
 				String cfgVal = sUr.getMVals();
 				AtPara ap = new AtPara(cfgVal);
-				String instr = ap.GetValStrByKey(key);
+				String instr = ap.GetValStrByKey(mykey);
 				String val = "";
 				if (instr == null || instr.equals(""))
 				{
-					if (key.equals("FK_Dept") || key.equals("FK_Unit"))
+					if (mykey.equals("FK_Dept") || mykey.equals("FK_Unit"))
 					{
-						if (key.equals("FK_Dept"))
+						if (mykey.equals("FK_Dept"))
 						{
 							val = WebUser.getFK_Dept();
 						}
@@ -328,31 +286,31 @@ public final String RichUploadFile() throws Exception {
 					instr = instr.replace(".", "','");
 					instr = instr.substring(2);
 					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(key, instr);
+					qo.AddWhereIn(mykey, instr);
 				}
 			}
 			else
 			{
-				String val = getRequest().getParameter(key);
+				String val = getRequest().getParameter(mykey);
 				if (IsInt == true && DataType.IsNullOrEmpty(val) == false)
 				{
-					qo.AddWhere(key, Integer.parseInt(val));
+					qo.AddWhere(mykey, Integer.parseInt(val));
 				}
 				else if (IsDouble == true && DataType.IsNullOrEmpty(val) == false)
 				{
-					qo.AddWhere(key, Double.parseDouble(val));
+					qo.AddWhere(mykey, Double.parseDouble(val));
 				}
 				else if (IsFloat == true && DataType.IsNullOrEmpty(val) == false)
 				{
-					qo.AddWhere(key, Float.parseFloat(val));
+					qo.AddWhere(mykey, Float.parseFloat(val));
 				}
 				else if (IsMoney == true && DataType.IsNullOrEmpty(val) == false)
 				{
-					qo.AddWhere(key, new BigDecimal(val));
+					qo.AddWhere(mykey, new BigDecimal(val));
 				}
 				else
 				{
-					qo.AddWhere(key, val);
+					qo.AddWhere(mykey, val);
 				}
 			}
 			qo.addAnd();
@@ -382,203 +340,178 @@ public final String RichUploadFile() throws Exception {
 
 		qo.AddHD();
 		qo.DoQuery();
-		DataTable dt = ens.ToDataTableField();
+		DataTable dt = ens.ToDataTableField("dt");
 		dt.TableName = "Group_Dtls";
 		ds.Tables.add(dt);
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
-	/** 
+	/**
 	 执行导出
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String GroupDtl_Exp() throws Exception
-	{
-		//获得.
-		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
 
-		//查询结果
-		QueryObject qo = new QueryObject(ens);
+	 @return
+	 */
+	//public string GroupDtl_Exp()
+	//{
+	//    //获得.
+	//    Entities ens = ClassFactory.GetEns(this.EnsName);
+	//    Entity en = ens.getGetNewEntity();
 
-		Enumeration enu = getRequest().getParameterNames();
-		while (enu.hasMoreElements()) 
-		{
-			String key = (String) enu.nextElement();
-			if (key.indexOf("EnsName") != -1)
-			{
-				continue;
-			}
+	//    //查询结果
+	//    QueryObject qo = new QueryObject(ens);
+	//    string[] strs = HttpContextHelper.Request.Form.ToString().Split('&');
+	//    foreach (string str in strs)
+	//    {
+	//        if (str.IndexOf("EnsName") != -1)
+	//            continue;
 
-		
-			if (key.equals("OID") || key.equals("MyPK"))
-			{
-				continue;
-			}
+	//        string[] mykey = str.Split('=');
+	//        string key = mykey[0];
 
-			if (key.equals("FK_Dept"))
-			{
-				this.setFK_Dept(getRequest().getParameter(key));
-				continue;
-			}
-			boolean isExist = false;
-			boolean IsInt = false;
-			boolean IsDouble = false;
-			boolean IsFloat = false;
-			boolean IsMoney = false;
-			for (Attr attr : en.getEnMap().getAttrs())
-			{
-				if (attr.getKey().equals(key))
-				{
-					isExist = true;
-					if (attr.getMyDataType() == DataType.AppInt)
-					{
-						IsInt = true;
-					}
-					if (attr.getMyDataType() == DataType.AppDouble)
-					{
-						IsDouble = true;
-					}
-					if (attr.getMyDataType() == DataType.AppFloat)
-					{
-						IsFloat = true;
-					}
-					if (attr.getMyDataType() == DataType.AppMoney)
-					{
-						IsMoney = true;
-					}
-					break;
-				}
-			}
+	//        if (key == "OID" || key == "MyPK")
+	//            continue;
 
-			if (isExist == false)
-			{
-				continue;
-			}
+	//        if (key == "FK_Dept")
+	//        {
+	//            this.FK_Dept = mykey[1];
+	//            continue;
+	//        }
 
-			if (getRequest().getParameter(key).equals("mvals"))
-			{
-				//如果用户多项选择了，就要找到它的选择项目.
+	//        bool isExist = false;
+	//        bool IsInt = false;
+	//        bool IsDouble = false;
+	//        bool IsFloat = false;
+	//        bool IsMoney = false;
+	//        foreach (Attr attr in en.getEnMap().getAttrs())
+	//        {
+	//            if (attr.getKey().Equals(key))
+	//            {
+	//                isExist = true;
+	//                if (attr.getMyDataType() == DataType.AppInt)
+	//                    IsInt = true;
+	//                if (attr.getMyDataType() == DataType.AppDouble)
+	//                    IsDouble = true;
+	//                if (attr.getMyDataType() == DataType.AppFloat)
+	//                    IsFloat = true;
+	//                if (attr.getMyDataType() == DataType.AppMoney)
+	//                    IsMoney = true;
+	//                break;
+	//            }
+	//        }
 
-				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK(WebUser.getNo() + this.getEnsName() + "_SearchAttrs");
-				sUr.RetrieveFromDBSources();
+	//        if (isExist == false)
+	//            continue;
 
-				/* 如果是多选值 */
-				String cfgVal = sUr.getMVals();
-				AtPara ap = new AtPara(cfgVal);
-				String instr = ap.GetValStrByKey(key);
-				String val = "";
-				if (instr == null || instr.equals(""))
-				{
-					if (key.equals("FK_Dept") || key.equals("FK_Unit"))
-					{
-						if (key.equals("FK_Dept"))
-						{
-							val = WebUser.getFK_Dept();
-						}
-					}
-					else
-					{
-						continue;
-					}
-				}
-				else
-				{
-					instr = instr.replace("..", ".");
-					instr = instr.replace(".", "','");
-					instr = instr.substring(2);
-					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(key, instr);
-				}
-			}
-			else
-			{
-				String val = getRequest().getParameter(key);
-				if (IsInt == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(key, Integer.parseInt(val));
-				}
-				else if (IsDouble == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(key, Double.parseDouble(val));
-				}
-				else if (IsFloat == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(key, Float.parseFloat(val));
-				}
-				else if (IsMoney == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(key, new BigDecimal(val));
-				}
-				else
-				{
-					qo.AddWhere(key, val);
-				}
-			}
-			qo.addAnd();
-		}
+	//        if (mykey[1] == "mvals")
+	//        {
+	//            //如果用户多项选择了，就要找到它的选择项目.
 
-		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
-		{
-			if (this.getFK_Dept().length() == 2)
-			{
-				qo.AddWhere("FK_Dept", " = ", "all");
-				qo.addAnd();
-			}
-			else
-			{
-				if (this.getFK_Dept().length() == 8)
-				{
-					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
-				}
-				else
-				{
-					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
-				}
+	//            UserRegedit sUr = new UserRegedit();
+	//            sUr.setMyPK(WebUser.getNo() + this.EnsName + "_SearchAttrs";
+	//            sUr.RetrieveFromDBSources();
 
-				qo.addAnd();
-			}
-		}
-		qo.AddHD();
+	//            /* 如果是多选值 */
+	//            string cfgVal = sUr.MVals;
+	//            AtPara ap = new AtPara(cfgVal);
+	//            string instr = ap.GetValStrByKey(key);
+	//            string val = "";
+	//            if (instr == null || instr == "")
+	//            {
+	//                if (key == "FK_Dept" || key == "FK_Unit")
+	//                {
+	//                    if (key == "FK_Dept")
+	//                        val = WebUser.getFK_Dept();
+	//                }
+	//                else
+	//                {
+	//                    continue;
+	//                }
+	//            }
+	//            else
+	//            {
+	//                instr = instr.Replace("..", ".");
+	//                instr = instr.Replace(".", "','");
+	//                instr = instr.Substring(2);
+	//                instr = instr.Substring(0, instr.Length - 2);
+	//                qo.AddWhereIn(mykey[0], instr);
+	//            }
+	//        }
+	//        else
+	//        {
+	//            if (IsInt == true && DataType.IsNullOrEmpty(mykey[1]) == false)
+	//                qo.AddWhere(mykey[0], Int32.Parse(mykey[1]));
+	//            else if (IsDouble == true && DataType.IsNullOrEmpty(mykey[1]) == false)
+	//                qo.AddWhere(mykey[0], double.Parse(mykey[1]));
+	//            else if (IsFloat == true && DataType.IsNullOrEmpty(mykey[1]) == false)
+	//                qo.AddWhere(mykey[0], float.Parse(mykey[1]));
+	//            else if (IsMoney == true && DataType.IsNullOrEmpty(mykey[1]) == false)
+	//                qo.AddWhere(mykey[0], decimal.Parse(mykey[1]));
+	//            else
+	//                qo.AddWhere(mykey[0], mykey[1]);
+	//        }
+	//        qo.addAnd();
+	//    }
 
-		DataTable dt = qo.DoQueryToTable();
+	//    if (this.FK_Dept != null && (this.GetRequestVal("FK_Emp") == null
+	//        || this.GetRequestVal("FK_Emp") == "all"))
+	//    {
+	//        if (this.FK_Dept.Length == 2)
+	//        {
+	//            qo.AddWhere("FK_Dept", " = ", "all");
+	//            qo.addAnd();
+	//        }
+	//        else
+	//        {
+	//            if (this.FK_Dept.Length == 8)
+	//            {
+	//                qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+	//            }
+	//            else
+	//            {
+	//                qo.AddWhere("FK_Dept", " like ", this.FK_Dept + "%");
+	//            }
 
-		String filePath = ExportDGToExcel(dt, en, en.getEnDesc(), null);
+	//            qo.addAnd();
+	//        }
+	//    }
+
+	//    qo.AddHD();
+
+	//    DataTable dt = qo.DoQueryToTable();
+
+	//    string filePath = ExportDGToExcel(dt, en, en.EnDesc);
 
 
-		return filePath;
-	}
+	//    return filePath;
+	//}
 
-		/// 统计分析组件.
+	///#endregion 统计分析组件.
 
 
-		///Entity 公共类库.
-	/** 
+	///#region Entity 公共类库.
+	/**
 	 实体类名
-	*/
-	public final String getEnName()
-	{
+	 */
+	public final String getEnName() throws Exception {
 		return this.GetRequestVal("EnName");
 	}
-	/** 
+	/**
 	 获得实体
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_Init() throws Exception {
 		Entity en = ClassFactory.GetEn(this.getEnName());
 		try
 		{
 			String pkval = this.getPKVal();
 
-
-			if (DataType.IsNullOrEmpty(pkval)== true ||pkval.equals("0")  || pkval.equals("undefined"))
+			if (en == null)
+			{
+				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+			}
+			if (DataType.IsNullOrEmpty(pkval) == true || pkval.equals("0") || pkval.equals("undefined"))
 			{
 				Map map = en.getEnMap();
 				for (Attr attr : en.getEnMap().getAttrs())
@@ -586,7 +519,7 @@ public final String RichUploadFile() throws Exception {
 					en.SetValByKey(attr.getKey(), attr.getDefaultVal());
 				}
 				//设置默认的数据.
-				en.ResetDefaultVal();
+				en.ResetDefaultVal(null, null, 0);
 			}
 			else
 			{
@@ -597,7 +530,6 @@ public final String RichUploadFile() throws Exception {
 				//if (i == 0)
 				//  return "err@实体:["+"]";
 			}
-
 			return en.ToJson(false);
 		}
 		catch (RuntimeException ex)
@@ -606,20 +538,21 @@ public final String RichUploadFile() throws Exception {
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 删除
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_Delete() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_Delete() throws Exception {
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
+			if (en == null)
+			{
+				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+			}
 
-
-				///首先判断参数删除.
+			///#region 首先判断参数删除.
 			String key1 = this.GetRequestVal("Key1");
 			String val1 = this.GetRequestVal("Val1");
 
@@ -640,40 +573,57 @@ public final String RichUploadFile() throws Exception {
 				return String.valueOf(num);
 			}
 
-				/// 首先判断参数删除.
+			///#endregion 首先判断参数删除.
+
+			/* 不管是个主键，还是单个主键，都需要循环赋值。*/
+			for (Attr attr : en.getEnMap().getAttrs())
+			{
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
+			}
 
 			if (en.getPKCount() != 1)
 			{
-				/*多个主键的情况. 遍历属性，循环赋值.*/
-				for (Attr attr : en.getEnMap().getAttrs())
-				{
-					en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
-				}
+				int i = en.RetrieveFromDBSources(); //查询出来再删除.
+				return String.valueOf(en.Delete()); //返回影响行数.
 			}
 			else
 			{
-				en.setPKVal(this.getPKVal());
+				String pkval = en.getPKVal().toString();
+				if (DataType.IsNullOrEmpty(pkval) == true)
+				{
+					en.setPKVal(this.getPKVal());
+				}
+
+				int num = en.RetrieveFromDBSources();
+				en.Delete();
+
+				return "删除成功.";
+				// int i = en.RetrieveFromDBSources(); //查询出来再删除.
+				//return en.Delete().ToString(); //返回影响行数.
 			}
 
-			int i = en.RetrieveFromDBSources(); //查询出来再删除.
-			return String.valueOf(en.Delete()); //返回影响行数.
+
+			// int i = en.RetrieveFromDBSources(); //查询出来再删除.
+			//return en.Delete().ToString(); //返回影响行数.
 		}
 		catch (RuntimeException ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 更新
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_Update() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_Update() throws Exception {
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
+			if (en == null)
+			{
+				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+			}
 			en.setPKVal(this.getPKVal());
 			en.RetrieveFromDBSources();
 
@@ -693,29 +643,31 @@ public final String RichUploadFile() throws Exception {
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 从数据源查询.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_RetrieveFromDBSources() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_RetrieveFromDBSources() throws Exception {
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
+			if (en == null)
+			{
+				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+			}
 			en.setPKVal(this.getPKVal());
 			int i = en.RetrieveFromDBSources();
 
 			if (i == 0)
 			{
-				en.ResetDefaultVal();
+				en.ResetDefaultVal(null, null, 0);
 				en.setPKVal(this.getPKVal());
 			}
 
 			if (en.getRow().containsKey("RetrieveFromDBSources") == true)
 			{
-				en.getRow().SetValByKey("RetrieveFromDBSources",i);
+				en.getRow().SetValByKey("RetrieveFromDBSources", i);
 			}
 			else
 			{
@@ -729,25 +681,27 @@ public final String RichUploadFile() throws Exception {
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 从数据源查询.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_Retrieve() throws Exception
-	{
-		Entity en = ClassFactory.GetEn(this.getEnName());
-		en = en.CreateInstance();
+
+	 @return
+	 */
+	public final String Entity_Retrieve() throws Exception {
 		try
 		{
+			Entity en = ClassFactory.GetEn(this.getEnName());
+			if (en == null)
+			{
+				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+			}
 
+			en = en.CreateInstance();
 			en.setPKVal(this.getPKVal());
 			en.Retrieve();
 
 			if (en.getRow().containsKey("Retrieve") == true)
 			{
-				en.getRow().SetValByKey("Retrieve","1");
+				en.getRow().SetValByKey("Retrieve", "1");
 			}
 			else
 			{
@@ -758,21 +712,23 @@ public final String RichUploadFile() throws Exception {
 		}
 		catch (RuntimeException ex)
 		{
-			en.CheckPhysicsTable();
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 是否存在
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_IsExits() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_IsExits() throws Exception {
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
+			if (en == null)
+			{
+				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+			}
+
 			en.setPKVal(this.getPKVal());
 			boolean isExit = en.getIsExits();
 			if (isExit == true)
@@ -786,14 +742,12 @@ public final String RichUploadFile() throws Exception {
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 执行保存
-	 
+
 	 @return 返回保存影响的行数
-	 * @throws Exception 
-	*/
-	public final String Entity_Save() throws Exception
-	{
+	 */
+	public final String Entity_Save() throws Exception {
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -829,14 +783,12 @@ public final String RichUploadFile() throws Exception {
 			return "err@保存错误:" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 执行插入.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_Insert() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_Insert() throws Exception {
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -863,18 +815,19 @@ public final String RichUploadFile() throws Exception {
 		}
 	}
 
-	/** 
+	/**
 	 执行插入.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_DirectInsert() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_DirectInsert() throws Exception {
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
-
+			if (en == null)
+			{
+				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+			}
 			//遍历属性，循环赋值.
 			for (Attr attr : en.getEnMap().getAttrs())
 			{
@@ -896,16 +849,18 @@ public final String RichUploadFile() throws Exception {
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 查询
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entity_DoMethodReturnString() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entity_DoMethodReturnString() throws Exception {
 		//创建类实体.
 		Entity en = ClassFactory.GetEn(this.getEnName());
+		if (en == null)
+		{
+			return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
+		}
 		en.setPKVal(this.getPKVal());
 		en.RetrieveFromDBSources();
 
@@ -919,11 +874,10 @@ public final String RichUploadFile() throws Exception {
 				break;
 			}
 		}
-
-		if (mp == null) {
+		if (mp == null)
+		{
 			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
 		}
-
 
 		String paras = this.GetRequestVal("paras");
 
@@ -945,20 +899,20 @@ public final String RichUploadFile() throws Exception {
 				if(idx<str.length){
 					val = str[idx];
 					myparas[idx] = str[idx];
-				 }
+				}
 				try
 				{
-					if (paramInfo.getName().equals("java.lang.Float"))
+					if (paramInfo.getName().equals("float"))
 						myparas[idx] = Float.parseFloat(val);
-					if (paramInfo.getName().equals("java.lang.Double"))
+					if (paramInfo.getName().equals("double"))
 						myparas[idx] = Double.parseDouble(val);
-					if (paramInfo.getName().equals(" java.lang.Integer"))
+					if (paramInfo.getName().equals("int"))
 						myparas[idx] = Integer.parseInt(val);
-					if (paramInfo.getName().equals("java.lang.Long"))
+					if (paramInfo.getName().equals("long"))
 						myparas[idx] = Long.parseLong(val);
 					if (paramInfo.getName().equals("java.math.BigDecimal"))
 						myparas[idx] = new BigDecimal(Double.parseDouble(val));
-					if (paramInfo.getName().equals("java.lang.Boolean"))
+					if (paramInfo.getName().equals("boolean"))
 					{
 						if (str[idx].toLowerCase().equals("true") || str[idx].equals("1"))
 							myparas[idx] = true;
@@ -978,52 +932,57 @@ public final String RichUploadFile() throws Exception {
 
 		}
 
+
+
 		Object tempVar = mp.invoke(en, myparas);
 		String result = tempVar instanceof String ? (String)tempVar : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
 		return result;
 	}
 
-		///
+	///#endregion
 
 
-		///Entities 公共类库.
-	/** 
+	///#region Entities 公共类库.
+	/**
 	 调用参数.
-	*/
-	public final String getParas()
-	{
+	 */
+	public final String getParas() throws Exception {
 		return this.GetRequestVal("Paras");
 	}
-	/** 
+	/**
 	 查询全部
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entities_RetrieveAll() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entities_RetrieveAll() throws Exception {
 		try
 		{
 			Entities ens = ClassFactory.GetEns(this.getEnsName());
+			if (ens == null)
+			{
+				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
+			}
 			ens.RetrieveAll();
-			return ens.ToJson();
+			return ens.ToJson("dt");
 		}
 		catch (RuntimeException e)
 		{
 			return "err@[Entities_RetrieveAll][" + this.getEnsName() + "]类名错误，或者其他异常:" + e.getMessage();
 		}
 	}
-	/** 
+	/**
 	 获得实体集合s
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entities_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entities_Init() throws Exception {
 		try
 		{
 			Entities ens = ClassFactory.GetEns(this.getEnsName());
+			if (ens == null)
+			{
+				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
+			}
 			if (this.getParas() == null)
 			{
 				return "0";
@@ -1090,9 +1049,9 @@ public final String RichUploadFile() throws Exception {
 
 				Object valObj = val;
 
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
 				{
-					valObj = bp.sys.Glo.GenerRealType(en.getEnMap().getAttrs(), key, val);
+					valObj = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), key, val);
 				}
 
 				if (idx == 0)
@@ -1108,7 +1067,7 @@ public final String RichUploadFile() throws Exception {
 			}
 
 			qo.DoQuery();
-			return ens.ToJson();
+			return ens.ToJson("dt");
 		}
 		catch (RuntimeException ex)
 		{
@@ -1116,24 +1075,26 @@ public final String RichUploadFile() throws Exception {
 		}
 	}
 
-	/** 
+	/**
 	 获得实体集合s
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entities_RetrieveCond() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entities_RetrieveCond() throws Exception {
 		try
 		{
 			Entities ens = ClassFactory.GetEns(this.getEnsName());
+			if (ens == null)
+			{
+				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
+			}
 			if (this.getParas() == null)
 			{
 				return "0";
 			}
 
 			QueryObject qo = new QueryObject(ens);
-			String[] myparas = this.getParas().replace("[%]","%").split("[@]", -1);
+			String[] myparas = this.getParas().replace("[%]", "%").split("[@]", -1);
 
 			Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
 
@@ -1159,9 +1120,9 @@ public final String RichUploadFile() throws Exception {
 
 				//获得真实的数据类型.
 				Object typeVal = val;
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
 				{
-					typeVal = bp.sys.Glo.GenerRealType(attrs, key, val);
+					typeVal = bp.sys.base.Glo.GenerRealType(attrs, key, val);
 				}
 
 				String[] keys = key.trim().split("[,]", -1);
@@ -1195,30 +1156,28 @@ public final String RichUploadFile() throws Exception {
 			}
 
 			qo.DoQuery();
-			return ens.ToJson();
+			return ens.ToJson("dt");
 		}
 		catch (RuntimeException ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/** 
+	/**
 	 执行方法
-	 
-	 @return 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	*/
-	public final String Entities_DoMethodReturnString() throws Exception{
+
+	 @return
+	 */
+	public final String Entities_DoMethodReturnString() throws Exception {
 
 		//创建类实体.
-		Entities ens = ClassFactory.GetEns(this.getEnsName()); 
+		Entities ens = ClassFactory.GetEns(this.getEnsName());
 
 		String methodName = this.GetRequestVal("MethodName");
-
+		if (ens == null)
+		{
+			return "err@没有找到实体类";
+		}
 		java.lang.Class tp = ens.getClass();
 		java.lang.reflect.Method mp = null;
 		for (java.lang.reflect.Method m : tp.getMethods()) {
@@ -1227,11 +1186,10 @@ public final String RichUploadFile() throws Exception {
 				break;
 			}
 		}
-
-		if (mp == null) {
-			return "err@没有找到类[" + this.getEnName() + "]方法[" + methodName + "].";
+		if (mp == null)
+		{
+			return "err@没有找到类[" + this.getEnsName() + "]方法[" + methodName + "].";
 		}
-
 
 		String paras = this.GetRequestVal("paras");
 		if ("un".equals(paras) == true || "undefined".equals(paras) == true)
@@ -1241,46 +1199,63 @@ public final String RichUploadFile() throws Exception {
 
 		//执行该方法.
 		Object[] myparas = new Object[0];
+		String atPara = GetRequestVal("atPara");
 
 		if (DataType.IsNullOrEmpty(paras) == false)
 		{
-			String[] str = paras.split("~");
-
-
-			int idx = 0;
-			Class[] paramTypes =mp.getParameterTypes();
-			myparas = new Object[paramTypes.length];
-
-			for (Class paramInfo : paramTypes)
+			String[] str = paras.split("[~]", -1);
+			if (DataType.IsNullOrEmpty(atPara) == true)
 			{
-				String val = "";
-				if(idx<str.length)
-					val = str[idx];
-
+				myparas = new Object[str.length];
+			}
+			else
+			{
+				myparas = new Object[str.length + 1];
+			}
+			Class[] paramInfos =mp.getParameterTypes();
+			int idx = 0;
+			//	ParameterInfo[] paramInfos = mp.GetParameters();
+			for (Class paramInfo : paramInfos)
+			{
+				myparas[idx] = str[idx];
 				try
 				{
-					if (paramInfo.getName().equals("java.lang.Float"))
-						myparas[idx] = Float.parseFloat(val);
-					if (paramInfo.getName().equals("java.lang.Double"))
-						myparas[idx] = Double.parseDouble(val);
-					if (paramInfo.getName().equals(" java.lang.Integer"))
-						myparas[idx] = Integer.parseInt(val);
-					if (paramInfo.getName().equals("java.lang.Long"))
-						myparas[idx] = Long.parseLong(val);
-					if (paramInfo.getName().equals("java.math.BigDecimal"))
-						myparas[idx] = new BigDecimal(Double.parseDouble(val));
-					if (paramInfo.getName().equals("java.lang.Boolean"))
+					if (paramInfo.getSimpleName().equals("Single"))
+					{
+						myparas[idx] = Float.parseFloat(str[idx]);
+					}
+					if (paramInfo.getSimpleName().equals("Double"))
+					{
+						myparas[idx] = Double.parseDouble(str[idx]);
+					}
+					if (paramInfo.getSimpleName().equals("Int32"))
+					{
+						myparas[idx] = Integer.parseInt(str[idx]);
+					}
+					if (paramInfo.getSimpleName().equals("Int64"))
+					{
+						myparas[idx] = Long.parseLong(str[idx]);
+					}
+					if (paramInfo.getSimpleName().equals("Decimal"))
+					{
+						myparas[idx] = new BigDecimal(Double.parseDouble(str[idx]));
+					}
+					if (paramInfo.getSimpleName().equals("Boolean"))
 					{
 						if (str[idx].toLowerCase().equals("true") || str[idx].equals("1"))
+						{
 							myparas[idx] = true;
+						}
 						else
+						{
 							myparas[idx] = false;
+						}
 					}
 
 				}
-				catch (Exception e)
+				catch (RuntimeException e)
 				{
-					throw new RuntimeException("err@类[" + this.getEnName() + "]方法[" + methodName + "]值" + str[idx] + "转换成" + paramInfo.getName()+ "失败");
+					throw new RuntimeException("err@类[" + this.getEnName() + "]方法[" + methodName + "]值" + str[idx] + "转换成" + paramInfo.getSimpleName() + "失败");
 				}
 
 				idx++;
@@ -1289,24 +1264,36 @@ public final String RichUploadFile() throws Exception {
 
 		}
 
+		if (DataType.IsNullOrEmpty(atPara) == false)
+		{
+			if (myparas.length == 0)
+			{
+				myparas = new Object[1];
+				myparas[0] = atPara;
+			}
+			else
+			{
+				myparas[myparas.length - 1] = atPara;
+			}
+		}
+
+
 		Object tempVar = mp.invoke(ens, myparas);
 		String result = tempVar instanceof String ? (String)tempVar : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
 		return result;
 
 	}
 
-		///
+	///#endregion
 
 
-		///功能执行.
-	/** 
+	///#region 功能执行.
+	/**
 	 初始化.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Method_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Method_Init() throws Exception {
 		String ensName = this.GetRequestVal("M");
 		Method rm = ClassFactory.GetMethod(ensName);
 		if (rm == null)
@@ -1320,8 +1307,8 @@ public final String RichUploadFile() throws Exception {
 			ht.put("No", ensName);
 			ht.put("Title", rm.Title);
 			ht.put("Help", rm.Help);
-			ht.put("Warning", rm.Warning==null?"":rm.Warning);
-			return bp.tools.Json.ToJson(ht);
+			ht.put("Warning", rm.Warning == null ? "" : rm.Warning);
+			return Json.ToJson(ht);
 		}
 
 		DataTable dt = new DataTable();
@@ -1331,10 +1318,9 @@ public final String RichUploadFile() throws Exception {
 
 		return "";
 	}
-	public final String Method_Done() throws Exception
-	{
+	public final String Method_Done() throws Exception {
 		String ensName = this.GetRequestVal("M");
-		Method rm =ClassFactory.GetMethod(ensName);
+		Method rm = ClassFactory.GetMethod(ensName);
 		// rm.Init();
 		int mynum = 0;
 		for (Attr attr : rm.getHisAttrs())
@@ -1363,32 +1349,32 @@ public final String RichUploadFile() throws Exception {
 					case TB:
 						switch (attr.getMyDataType())
 						{
-							case bp.da.DataType.AppString:
-							case bp.da.DataType.AppDate:
-							case bp.da.DataType.AppDateTime:
+							case DataType.AppString:
+							case DataType.AppDate:
+							case DataType.AppDateTime:
 								String str1 = this.GetValFromFrmByKey(attr.getKey());
 								rm.SetValByKey(attr.getKey(), str1);
 								break;
-							case bp.da.DataType.AppInt:
+							case DataType.AppInt:
 								int myInt = this.GetValIntFromFrmByKey(attr.getKey()); //int.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
-								rm.getRow().SetValByKey(String.valueOf(idx), Integer.valueOf(myInt));
+								rm.getRow().SetValByKey(String.valueOf(idx), myInt);
 								rm.SetValByKey(attr.getKey(), myInt);
 								break;
-							case bp.da.DataType.AppFloat:
+							case DataType.AppFloat:
 								float myFloat = this.GetValFloatFromFrmByKey(attr.getKey()); // float.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.SetValByKey(attr.getKey(), myFloat);
 								break;
-							case bp.da.DataType.AppDouble:
-							case bp.da.DataType.AppMoney:
+							case DataType.AppDouble:
+							case DataType.AppMoney:
 								BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.SetValByKey(attr.getKey(), myDoub);
 								break;
-							case bp.da.DataType.AppBoolean:
+							case DataType.AppBoolean:
 								boolean myBool = this.GetValBoolenFromFrmByKey(attr.getKey()); // decimal.Parse(this.UCEn1.GetTBByID("TB_" + attr.getKey()).Text);
 								rm.SetValByKey(attr.getKey(), myBool);
 								break;
 							default:
-								return "err@没有判断的数据类型．";
+								return "err@没有判断的字段数据类型．";
 						}
 						break;
 					case DDL:
@@ -1435,9 +1421,8 @@ public final String RichUploadFile() throws Exception {
 			return "err@执行错误:" + ex.getMessage();
 		}
 	}
-	public final String MethodLink_Init() throws Exception
-	{
-		ArrayList<Method> al =ClassFactory.GetObjects("bp.en.Method");
+	public final String MethodLink_Init() throws Exception {
+		ArrayList<Method> al = ClassFactory.GetObjects("bp.en.Method");
 		int i = 1;
 		String html = "";
 
@@ -1456,8 +1441,8 @@ public final String RichUploadFile() throws Exception {
 				continue;
 			}
 
-			 dr = dt.NewRow();
-			dr.setValue("Name",en.getClass().getName());
+			dr = dt.NewRow();
+			dr.setValue("Name", en.toString());
 			dr.setValue("Title", en.Title);
 			dr.setValue("GroupName", en.GroupName);
 			dr.setValue("Icon", en.Icon);
@@ -1466,21 +1451,19 @@ public final String RichUploadFile() throws Exception {
 
 		}
 
-		return bp.tools.Json.ToJson(dt);
+		return Json.ToJson(dt);
 	}
 
-		///
+	///#endregion
 
 
-		///查询.
-	/** 
+	///#region 查询.
+	/**
 	 获得查询的基本信息.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Search_MapBaseInfo() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Search_MapBaseInfo() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		if (ens == null)
@@ -1489,7 +1472,7 @@ public final String RichUploadFile() throws Exception {
 		}
 
 		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
+		Map map = en.getEnMapInTime();
 
 		Hashtable ht = new Hashtable();
 
@@ -1529,20 +1512,18 @@ public final String RichUploadFile() throws Exception {
 		ht.put("DTSearchLable", map.DTSearchLable);
 		ht.put("DTSearchKey", map.DTSearchKey);
 
-
 		//把实体类中的主键放在hashtable中
-		ht.put("EntityPK", en.getPKField());
+		ht.put("EntityPK", en.getPK_Field());
 
-		return bp.tools.Json.ToJson(ht);
+
+		return Json.ToJson(ht);
 	}
-	/** 
+	/**
 	 外键或者枚举的查询.
-	   
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Search_SearchAttrs() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Search_SearchAttrs() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		if (ens == null)
@@ -1561,17 +1542,23 @@ public final String RichUploadFile() throws Exception {
 		dt.Columns.Add("Name");
 		dt.Columns.Add("Width");
 		dt.Columns.Add("UIContralType");
+		dt.Columns.Add("IsTree");
 		dt.TableName = "Attrs";
 
 		AttrSearchs attrs = map.getSearchAttrs();
+		Attr attr = null;
 		for (AttrSearch item : attrs)
 		{
+			attr = item.HisAttr;
 			DataRow dr = dt.NewRow();
 			dr.setValue("Field", item.Key);
 			dr.setValue("Name", item.HisAttr.getDesc());
 			dr.setValue("Width", item.Width); //下拉框显示的宽度.
-			dr.setValue("UIContralType", item.HisAttr.getUIContralType());
-
+			dr.setValue("UIContralType", item.HisAttr.getUIContralType().getValue());
+			if (attr.getIsFK() && attr.getHisFKEn().getIsTreeEntity() == true)
+				dr.setValue("IsTree",1);
+			else
+				dr.setValue("IsTree",0);
 			dt.Rows.add(dr);
 		}
 		ds.Tables.add(dt);
@@ -1579,11 +1566,11 @@ public final String RichUploadFile() throws Exception {
 		//把外键枚举增加到里面.
 		for (AttrSearch item : attrs)
 		{
-			Attr attr = item.HisAttr;
+			attr = item.HisAttr;
 			if (attr.getIsEnum() == true)
 			{
 				SysEnums ses = new SysEnums(attr.getUIBindKey());
-				DataTable dtEnum = ses.ToDataTableField();
+				DataTable dtEnum = ses.ToDataTableField("dt");
 				dtEnum.TableName = item.Key;
 				ds.Tables.add(dtEnum);
 				continue;
@@ -1594,16 +1581,16 @@ public final String RichUploadFile() throws Exception {
 				Entities ensFK = attr.getHisFKEns();
 				ensFK.RetrieveAll();
 
-				DataTable dtEn = ensFK.ToDataTableField();
+				DataTable dtEn = ensFK.ToDataTableField("dt");
 				dtEn.TableName = item.Key;
 				ds.Tables.add(dtEn);
 				continue;
 			}
 			//绑定SQL的外键
-			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.GetTableByName(attr.getKey()) == null)
+			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.contains(attr.getKey()) == false)
 			{
 				//获取SQl
-				String sql = bp.wf.Glo.DealExp(attr.getUIBindKey(), null, null);
+				String sql = Glo.DealExp(attr.getUIBindKey(), null, null);
 				DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
 				for (DataColumn col : dtSQl.Columns)
 				{
@@ -1628,34 +1615,31 @@ public final String RichUploadFile() throws Exception {
 			}
 
 		}
+		//获取查询条件的扩展属性
+		MapExts exts = new MapExts(this.getEnsName());
+		if (exts.size() != 0)
+			ds.Tables.add(exts.ToDataTableField("Sys_MapExt"));
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
-	/** 
+	/**
 	 执行查询 - 初始化查找数据
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Search_SearchIt() throws Exception
-	{
-		return bp.tools.Json.ToJson(Search_Search());
-	}
-	/** 
-	 执行查询.这个方法也会被导出调用.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final DataSet Search_Search() throws Exception
-	{
-		//获得.
+
+	 @return
+	 */
+	public final String Search_SearchIt() throws Exception {
+		//取出来查询条件.
+		UserRegedit ur = new UserRegedit();
+		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
+		ur.RetrieveFromDBSources();
+
+		DataSet ds = new DataSet();
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
 		Map map = en.getEnMapInTime();
 
 		MapAttrs attrs = new MapAttrs();
-
+		;
 
 
 		MapData md = new MapData();
@@ -1677,6 +1661,8 @@ public final String RichUploadFile() throws Exception {
 		dtAttrs.Columns.Add("Name", String.class);
 		dtAttrs.Columns.Add("Width", Integer.class);
 		dtAttrs.Columns.Add("UIContralType", Integer.class);
+		dtAttrs.Columns.Add("IsRichText", Integer.class);
+		dtAttrs.Columns.Add("MyDataType", Integer.class);
 		for (MapAttr attr : attrs.ToJavaList())
 		{
 			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
@@ -1693,11 +1679,11 @@ public final String RichUploadFile() throws Exception {
 			row.setValue("Name", attr.getName());
 			row.setValue("Width", attr.getUIWidthInt());
 			row.setValue("UIContralType", attr.getUIContralType().getValue());
-
+			row.setValue("IsRichText", attr.getTextModel() == 3?1:0);
+			row.setValue("MyDataType",attr.getMyDataType());
 			dtAttrs.Rows.add(row);
 		}
 
-		DataSet ds = new DataSet();
 		ds.Tables.add(dtAttrs); //把描述加入.
 
 		md.setName( map.getEnDesc());
@@ -1710,490 +1696,7 @@ public final String RichUploadFile() throws Exception {
 
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
-		//取出来查询条件.
-		bp.sys.UserRegedit ur = new UserRegedit();
-		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
-		ur.RetrieveFromDBSources();
-
-		//获得关键字.
-		AtPara ap = new AtPara(ur.getVals());
-
-		//关键字.
-		String keyWord = ur.getSearchKey();
-		QueryObject qo = new QueryObject(ens);
-		boolean isFirst = true; //是否第一次拼接SQL
-
-
-			///关键字字段.
-		if (DataType.IsNullOrEmpty(map.SearchFields) == false)
-		{
-			String field = ""; //字段名
-			String fieldValue = ""; //字段值
-			int idx = 0;
-
-			//获取查询的字段
-			String[] searchFields = map.SearchFields.split("[@]", -1);
-			for (String str : searchFields)
-			{
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					continue;
-				}
-
-				//字段名
-				field = str.split("[=]", -1)[1];
-				if (DataType.IsNullOrEmpty(field) == true)
-				{
-					continue;
-				}
-
-				//字段名对应的字段值
-				fieldValue = ur.GetParaString(field);
-				if (DataType.IsNullOrEmpty(fieldValue) == true)
-				{
-					continue;
-				}
-				fieldValue = fieldValue.trim();
-				fieldValue = fieldValue.replace(",", ";").replace(" ", ";");
-				String[] fieldValues = fieldValue.split("[;]", -1);
-				int valIdx = 0;
-				idx++;
-				for (String val : fieldValues)
-				{
-					valIdx++;
-
-					if (idx == 1 && valIdx == 1)
-					{
-						isFirst = false;
-						/* 第一次进来。 */
-						qo.addLeftBracket();
-						
-						if ((SystemConfig.getAppCenterDBVarStr().equals("@")
-								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3 
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
-						{
-							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
-						}
-						else
-						{
-							qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
-						}
-						qo.getMyParas().Add(field + valIdx, val);
-
-						if (valIdx == fieldValues.length)
-						{
-							qo.addRightBracket();
-						}
-
-						continue;
-					}
-					if (valIdx == 1 && idx != 1)
-					{
-						qo.addAnd();
-						qo.addLeftBracket();
-					}
-					else
-					{
-						qo.addOr();
-					}
-
-					if ((SystemConfig.getAppCenterDBVarStr().equals("@")
-							|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
-					{
-						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
-					}
-					else
-					{
-						qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
-					}
-					qo.getMyParas().Add(field + valIdx, val);
-
-					if (valIdx == fieldValues.length)
-					{
-						qo.addRightBracket();
-					}
-				}
-			}
-
-		}
-		else
-		{
-			if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
-			{
-				Attr attrPK = new Attr();
-				for (Attr attr : map.getAttrs())
-				{
-					if (attr.getIsPK())
-					{
-						attrPK = attr;
-						break;
-					}
-				}
-				int i = 0;
-				String enumKey = ","; //求出枚举值外键.
-				keyWord = keyWord.replace(",", ";").replace(" ", ";");
-				String[] strVals = keyWord.split("[;]", -1);
-				for (Attr attr : map.getAttrs())
-				{
-					switch (attr.getMyFieldType())
-					{
-						case Enum:
-							enumKey = "," + attr.getKey() + "Text,";
-							break;
-						case FK:
-							// case FieldType.PKFK:
-							continue;
-						default:
-							break;
-					}
-
-					if (attr.getMyDataType() != DataType.AppString)
-					{
-						continue;
-					}
-
-					//排除枚举值关联refText.
-					if (attr.getMyFieldType() == FieldType.RefText)
-					{
-						if (enumKey.contains("," + attr.getKey() + ",") == true)
-						{
-							continue;
-						}
-					}
-
-					if (attr.getKey().equals("FK_Dept"))
-					{
-						continue;
-					}
-					int valIdx = 0;
-					for (String val : strVals)
-					{
-						i++;
-						valIdx++;
-						if (i == 1)
-						{
-							isFirst = false;
-							/* 第一次进来。 */
-							qo.addLeftBracket();
-							if ((SystemConfig.getAppCenterDBVarStr().equals("@")
-									|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-								&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3
-								&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
-							{
-								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
-							}
-							else
-							{
-								qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
-							}
-
-							qo.getMyParas().Add("SKey" + valIdx, val);
-
-							continue;
-						}
-						qo.addOr();
-
-						if ((SystemConfig.getAppCenterDBVarStr().equals("@")
-								|| SystemConfig.getAppCenterDBVarStr().equals(":"))
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3
-							&& SystemConfig.getAppCenterDBType()!=DBType.KingBaseR6)
-						{
-							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
-						}
-						else
-						{
-							qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
-						}
-
-						qo.getMyParas().Add("SKey" + valIdx, val);
-					}
-
-				}
-
-				qo.addRightBracket();
-
-			}
-
-		}
-
-
-			///
-
-			///增加数值型字段的查询
-		if (DataType.IsNullOrEmpty(map.SearchFieldsOfNum) == false)
-		{
-			String field = ""; //字段名
-			String fieldValue = ""; //字段值
-			int idx = 0;
-
-			//获取查询的字段
-			String[] searchFieldsOfNum = map.SearchFieldsOfNum.split("[@]", -1);
-			for (String str : searchFieldsOfNum)
-			{
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					continue;
-				}
-
-				//字段名
-				field = str.split("[=]", -1)[1];
-				if (DataType.IsNullOrEmpty(field) == true)
-				{
-					continue;
-				}
-
-				//字段名对应的字段值
-				fieldValue = ur.GetParaString(field);
-				if (DataType.IsNullOrEmpty(fieldValue) == true)
-				{
-					continue;
-				}
-				String[] strVals = fieldValue.split("[,]", -1);
-
-				//判断是否是第一次进入
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-				qo.addLeftBracket();
-				if (DataType.IsNullOrEmpty(strVals[0]) == false)
-				{
-
-					if (DataType.IsNullOrEmpty(strVals[1]) == true)
-					{
-						qo.AddWhere(field, ">=", strVals[0]);
-					}
-					else
-					{
-						qo.AddWhere(field, ">=", strVals[0], field + "1");
-						qo.addAnd();
-						qo.AddWhere(field, "<=", strVals[1], field + "2");
-					}
-
-				}
-				else
-				{
-					qo.AddWhere(field, "<=", strVals[1]);
-				}
-
-				qo.addRightBracket();
-
-			}
-
-
-		}
-
-			///
-
-		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
-		{
-			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
-			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
-
-			if (DataType.IsNullOrEmpty(dtTo) == true)
-			{
-				dtTo = DataType.getCurrentDate();
-			}
-
-			//按日期查询
-			if (map.DTSearchWay == DTSearchWay.ByDate)
-			{
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-				if (DataType.IsNullOrEmpty(dtFrom) == true)
-				{
-					qo.addLeftBracket();
-					qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
-					qo.addRightBracket();
-				}
-				else
-				{
-					qo.addLeftBracket();
-					dtTo += " 23:59:59";
-					qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
-					qo.addAnd();
-					qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
-					qo.addRightBracket();
-				}
-
-			}
-
-			if (map.DTSearchWay == DTSearchWay.ByDateTime)
-			{
-				//取前一天的24：00
-				if (dtFrom.trim().length() == 10) //2017-09-30
-				{
-					dtFrom += " 00:00:00";
-				}
-				if (dtFrom.trim().length() == 16) //2017-09-30 00:00
-				{
-					dtFrom += ":00";
-				}
-
-				Date date = DateUtils.addDay(new Date(), -1);
-				String dttime = DateUtils.format(date, "yyyy-MM-dd");
-				dtFrom = dttime + " 24:00";
-				
-				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
-				{
-					dtTo += " 24:00";
-				}
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-				if (DataType.IsNullOrEmpty(dtFrom) == true)
-				{
-					qo.addLeftBracket();
-					qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
-					qo.addRightBracket();
-				}
-				else
-				{
-					qo.addLeftBracket();
-					qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
-					qo.addAnd();
-					qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
-					qo.addRightBracket();
-				}
-
-			}
-		}
-
-
-
-			///普通属性
-		String opkey = ""; // 操作符号。
-		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch())
-		{
-			if (attr.getIsHidden())
-			{
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-				qo.addLeftBracket();
-
-				//获得真实的数据类型.
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-				{
-					Object valType = bp.sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun());
-					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), valType);
-				}
-				else
-				{
-					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
-				}
-				qo.addRightBracket();
-				continue;
-			}
-
-			if (attr.getSymbolEnable() == true)
-			{
-				opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
-				if (opkey.equals("all"))
-				{
-					continue;
-				}
-			}
-			else
-			{
-				opkey = attr.getDefaultSymbol();
-			}
-
-			if (isFirst == false)
-			{
-				qo.addAnd();
-			}
-			else
-			{
-				isFirst = false;
-			}
-			qo.addLeftBracket();
-
-			if (attr.getDefaultVal().length() >= 8)
-			{
-				String date = "2005-09-01";
-				try
-				{
-					/* 就可能是年月日。 */
-					String y = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Year");
-					String m = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Month");
-					String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
-					date = y + "-" + m + "-" + d;
-
-					if (opkey.equals("<="))
-					{
-						Date dt = DateUtils.addDay(DateUtils.parse(date), 1);
-						date = DateUtils.format(dt, DataType.getSysDataFormat());
-					}
-				}
-				catch (java.lang.Exception e)
-				{
-				}
-
-				qo.AddWhere(attr.getRefAttrKey(), opkey, date);
-			}
-			else
-			{
-				qo.AddWhere(attr.getRefAttrKey(), opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
-			}
-			qo.addRightBracket();
-		}
-
-			///
-
-
-			///获得查询数据.
-		for (String str : ap.getHisHT().keySet())
-		{
-			String val = ap.GetValStrByKey(str);
-			if(DataType.IsNullOrEmpty(val) || val.equals("null"))
-				val="all";
-			if (val.equals("all"))
-			{
-				continue;
-			}
-
-			if (isFirst == false)
-			{
-				qo.addAnd();
-			}
-			else
-			{
-				isFirst = false;
-			}
-			isFirst = false;
-			qo.addLeftBracket();
-
-			//获得真实的数据类型.
-			Object valType = bp.sys.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
-
-			qo.AddWhere(str, valType);
-			qo.addRightBracket();
-		}
-
+		QueryObject qo = Search_Data(ens, en, map, ur);
 		//获得行数.
 		ur.SetPara("RecCount", qo.GetCount());
 		ur.Save();
@@ -2202,8 +1705,7 @@ public final String RichUploadFile() throws Exception {
 		EnCfg encfg = new EnCfg();
 		encfg.setNo(this.getEnsName());
 		encfg.RetrieveFromDBSources();
-		
-		
+
 		String fieldSet = encfg.getFieldSet();
 		String oper = "";
 		if (DataType.IsNullOrEmpty(fieldSet) == false)
@@ -2217,26 +1719,28 @@ public final String RichUploadFile() throws Exception {
 			String[] strs = fieldSet.split("[@]", -1);
 			for (String str : strs)
 			{
+				if (DataType.IsNullOrEmpty(str) == true)
+					continue;
 				String[] item = str.split("[=]", -1);
 				if (item.length == 2)
 				{
-				   if (item[1].contains(",") == true)
-				   {
+					if (item[1].contains(",") == true)
+					{
 						String[] ss = item[1].split("[,]", -1);
 						for (String s : ss)
 						{
 							dr = dt.NewRow();
-							dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey(s)).getName());
+							dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey("KeyOfEn",s)).getName());
 							dr.setValue("Type", item[0]);
 							dt.Rows.add(dr);
 
 							oper += item[0] + "(" + ptable + "." + s + ")" + ",";
 						}
-				   }
+					}
 					else
 					{
 						dr = dt.NewRow();
-						dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey(item[1])).getName());
+						dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey("KeyOfEn",item[1])).getName());
 						dr.setValue("Type", item[0]);
 						dt.Rows.add(dr);
 
@@ -2247,56 +1751,68 @@ public final String RichUploadFile() throws Exception {
 			oper = oper.substring(0, oper.length() - 1);
 			DataTable dd = qo.GetSumOrAvg(oper);
 
-			for (int i = 0;i < dt.Rows.size();i++)
+			for (int i = 0; i < dt.Rows.size(); i++)
 			{
 				DataRow ddr = dt.Rows.get(i);
-				ddr.setValue("Value", dd.Rows.get(0).getValue(i).toString());
+				ddr.setValue("Value", dd.Rows.get(0).getValue(i));
 			}
 			ds.Tables.add(dt);
 		}
 
-
-		//
-
-
 		//增加排序
-		if (encfg != null)
+		String orderBy = "";
+		boolean isDesc = false;
+		if (DataType.IsNullOrEmpty(ur.getOrderBy()) == false)
 		{
-			String orderBy = encfg.GetParaString("OrderBy");
-			boolean isDesc = encfg.GetParaBoolen("IsDeSc");
+			orderBy = ur.getOrderBy();
+			isDesc = ur.getOrderWay().equals("desc") == true ? true : false;
+		}
 
-			if (DataType.IsNullOrEmpty(orderBy) == false)
+		if (DataType.IsNullOrEmpty(ur.getOrderBy()) == true && encfg != null)
+		{
+			orderBy = encfg.GetValStrByKey("OrderBy");
+			if (orderBy.indexOf(",") != -1)
+			{
+				String[] str = orderBy.split(",");
+				orderBy = str[0];
+			}
+			isDesc = encfg.GetValBooleanByKey("IsDeSc");
+		}
+
+		if (DataType.IsNullOrEmpty(orderBy) == false)
+		{
+			try
 			{
 				if (isDesc)
-				{
-					qo.addOrderByDesc(encfg.GetParaString("OrderBy"));
-				}
+					qo.addOrderByDesc(orderBy);
 				else
-				{
-					qo.addOrderBy(encfg.GetParaString("OrderBy"));
-				}
+					qo.addOrderBy(orderBy);
 			}
-
+			catch (Exception ex)
+			{
+				encfg.SetValByKey("OrderBy", orderBy);
+			}
 		}
 
-		if (GetRequestVal("DoWhat") != null && GetRequestVal("DoWhat").equals("Batch"))
-		{
-			qo.DoQuery(en.getPK(), 500, 1);
-		}
-		else
-		{
-			qo.DoQuery(en.getPK(), this.getPageSize(), this.getPageIdx());
-		}
 
-			/// 获得查询数据.
+//		if (GetRequestVal("DoWhat") != null && GetRequestVal("DoWhat").equals("Batch"))
+//		{
+//			qo.DoQuery(en.getPK(), 500, 1);
+//		}
+//		else
+//		{
+		qo.DoQuery(en.getPK(), this.getPageSize(), this.getPageIdx());
+//		}
 
-		DataTable mydt = ens.ToDataTableField();
+		///#endregion 获得查询数据.
+
+		DataTable mydt = ens.ToDataTableField("dt");
 		mydt.TableName = "DT";
 
 		ds.Tables.add(mydt); //把数据加入里面.
 
 
-			///获得方法的集合
+		///#region 获得方法的集合
 		DataTable dtM = new DataTable("dtM");
 		dtM.Columns.Add("No");
 		dtM.Columns.Add("Title");
@@ -2314,6 +1830,8 @@ public final String RichUploadFile() throws Exception {
 		dtM.Columns.Add("IsCanBatch");
 		dtM.Columns.Add("RefAttrKey");
 		dtM.Columns.Add("ClassMethodName");
+		dtM.Columns.Add("IsShowForEnsCondtion");
+		dtM.Columns.Add("IsHaveFuncPara");
 
 		RefMethods rms = map.getHisRefMethods();
 		for (RefMethod item : rms)
@@ -2348,53 +1866,34 @@ public final String RichUploadFile() throws Exception {
 			dr.setValue("IsCanBatch", item.IsCanBatch);
 			dr.setValue("GroupName", item.GroupName);
 			dr.setValue("ClassMethodName", item.ClassMethodName);
+			dr.setValue("IsShowForEnsCondtion", item.IsShowForEnsCondtion);
+			dr.setValue("IsHaveFuncPara", item.getHisAttrs().isEmpty() ? 0 : 1);
 
 			dtM.Rows.add(dr); //增加到rows.
 		}
 		ds.Tables.add(dtM); //把数据加入里面.
 
-			///
+		///#endregion
 
-		return ds;
-
+		return Json.ToJson(ds);
 	}
-	private DataTable SearchDtl_Data(Entities ens, Entity en, String workId, String fid) throws Exception
-	{
-		//获得.
-		Map map = en.getEnMapInTime();
+	/**
+	 执行查询.这个方法也会被导出调用.
 
-		MapAttrs attrs = map.getAttrs().ToMapAttrs();
-
-		QueryObject qo = new QueryObject(ens);
-
-		qo.AddWhere("RefPK","=",workId);
-		//qo.addAnd();
-		//qo.AddWhere("FID", "=", fid);
-
-
-			/// 获得查询数据.
-		return qo.DoQueryToTable();
-	}
-		private DataTable Search_Data(Entities ens, Entity en) throws Exception
-		{
-		//获得.
-		Map map = en.getEnMapInTime();
-
-		MapAttrs attrs = map.getAttrs().ToMapAttrs();
-		//取出来查询条件.
-		bp.sys.UserRegedit ur = new UserRegedit();
-		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
-		ur.RetrieveFromDBSources();
+	 @return
+	 */
+	public final QueryObject Search_Data(Entities ens, Entity en, Map map, UserRegedit ur) throws Exception {
 
 		//获得关键字.
 		AtPara ap = new AtPara(ur.getVals());
+
 		//关键字.
 		String keyWord = ur.getSearchKey();
 		QueryObject qo = new QueryObject(ens);
 		boolean isFirst = true; //是否第一次拼接SQL
 
 
-			///关键字字段.
+		///#region 关键字字段.
 		if (DataType.IsNullOrEmpty(map.SearchFields) == false)
 		{
 			String field = ""; //字段名
@@ -2439,13 +1938,13 @@ public final String RichUploadFile() throws Exception {
 						qo.addLeftBracket();
 						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 						{
-							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
+							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 						}
 						else
 						{
 							qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
 						}
-						qo.getMyParas().Add(field + valIdx, val);
+						qo.getMyParas().Add(field + valIdx, val, false);
 
 						if (valIdx == fieldValues.length)
 						{
@@ -2466,13 +1965,13 @@ public final String RichUploadFile() throws Exception {
 
 					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 					{
-						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
+						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 					}
 					else
 					{
 						qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
 					}
-					qo.getMyParas().Add(field + valIdx, val);
+					qo.getMyParas().Add(field + valIdx, val, false);
 
 					if (valIdx == fieldValues.length)
 					{
@@ -2507,6 +2006,7 @@ public final String RichUploadFile() throws Exception {
 							enumKey = "," + attr.getKey() + "Text,";
 							break;
 						case FK:
+							//enumKey = "," + attr.getKey() + "Text,";
 							// case FieldType.PKFK:
 							continue;
 						default:
@@ -2541,31 +2041,31 @@ public final String RichUploadFile() throws Exception {
 							isFirst = false;
 							/* 第一次进来。 */
 							qo.addLeftBracket();
-							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":"))
+							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 							{
-								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 							}
 							else
 							{
 								qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
 							}
 
-							qo.getMyParas().Add("SKey" + valIdx, val);
+							qo.getMyParas().Add("SKey" + valIdx, val, false);
 
 							continue;
 						}
 						qo.addOr();
 
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals(":"))
+						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
 						{
-							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 						}
 						else
 						{
 							qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
 						}
 
-						qo.getMyParas().Add("SKey" + valIdx, val);
+						qo.getMyParas().Add("SKey" + valIdx, val, false);
 					}
 
 				}
@@ -2577,9 +2077,10 @@ public final String RichUploadFile() throws Exception {
 		}
 
 
-			///
+		///#endregion
 
-			///增加数值型字段的查询
+
+		///#region 增加数值型字段的查询
 		if (DataType.IsNullOrEmpty(map.SearchFieldsOfNum) == false)
 		{
 			String field = ""; //字段名
@@ -2647,12 +2148,621 @@ public final String RichUploadFile() throws Exception {
 
 		}
 
-			///
+		///#endregion
 
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
-			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
-			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
+			String dtFrom = ur.getDTFrom();
+			String dtTo = ur.getDTTo();
+
+			if (map.DTSearchWay == DTSearchWay.ByYearMonth || map.DTSearchWay == DTSearchWay.ByYear)
+			{
+				if (isFirst == false)
+					qo.addAnd();
+				else
+					isFirst = false;
+				qo.AddWhere(map.DTSearchKey, dtFrom);
+			}
+
+			if (DataType.IsNullOrEmpty(dtTo) == true)
+			{
+				dtTo = DataType.getCurrentDate();
+			}
+
+
+			//按日期查询
+			if (map.DTSearchWay == DTSearchWay.ByDate)
+			{
+				if (isFirst == false)
+				{
+					qo.addAnd();
+				}
+				else
+				{
+					isFirst = false;
+				}
+				if (DataType.IsNullOrEmpty(dtFrom) == true)
+				{
+					qo.addLeftBracket();
+					qo.setSQL(map.getPhysicsTable() + "." + map.DTSearchKey + " <= '" + dtTo + "'");
+					qo.addRightBracket();
+				}
+				else
+				{
+
+					qo.addLeftBracket();
+					dtTo += " 23:59:59";
+					qo.setSQL(map.getPhysicsTable() + "." + map.DTSearchKey + " >= '" + dtFrom + "'");
+					qo.addAnd();
+					qo.setSQL(map.getPhysicsTable() + "." + map.DTSearchKey + " <= '" + dtTo + "'");
+					qo.addRightBracket();
+				}
+
+			}
+
+			if (map.DTSearchWay == DTSearchWay.ByDateTime)
+			{
+				//取前一天的24：00
+				if (dtFrom.trim().length() == 10) //2017-09-30
+				{
+					dtFrom += " 00:00:00";
+				}
+				if (dtFrom.trim().length() == 16) //2017-09-30 00:00
+				{
+					dtFrom += ":00";
+				}
+
+				dtFrom = DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"), -1) + " 24:00";
+
+				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
+				{
+					dtTo += " 24:00";
+				}
+				if (isFirst == false)
+				{
+					qo.addAnd();
+				}
+				else
+				{
+					isFirst = false;
+				}
+				if (DataType.IsNullOrEmpty(dtFrom) == true)
+				{
+					qo.addLeftBracket();
+					qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
+					qo.addRightBracket();
+				}
+				else
+				{
+					qo.addLeftBracket();
+					qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
+					qo.addAnd();
+					qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
+					qo.addRightBracket();
+				}
+
+			}
+		}
+
+		ArrayList<String> keys = new ArrayList<String>();
+
+		///#region 普通属性
+		String opkey = ""; // 操作符号。
+		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch())
+		{
+
+
+			if (attr.getIsHidden())
+			{
+				if (isFirst == false)
+				{
+					qo.addAnd();
+				}
+				else
+				{
+					isFirst = false;
+				}
+				qo.addLeftBracket();
+				if (attr.getDefaultSymbol().equals("exp") == true)
+				{
+					qo.addSQL(Glo.DealExp(attr.getRefAttrKey(), null));
+					qo.addRightBracket();
+					continue;
+
+				}
+
+				//获得真实的数据类型.
+				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
+				{
+					String valType = String.valueOf(bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun()));
+					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), valType);
+				}
+				else
+				{
+					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
+				}
+				qo.addRightBracket();
+				if (keys.contains(attr.getRefAttrKey()) == false)
+				{
+					keys.add(attr.getRefAttrKey());
+				}
+				continue;
+			}
+
+			if (attr.getSymbolEnable() == true)
+			{
+				opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
+				if (opkey.equals("all"))
+				{
+					continue;
+				}
+			}
+			else
+			{
+				opkey = attr.getDefaultSymbol();
+			}
+
+			if (isFirst == false)
+			{
+				qo.addAnd();
+			}
+			else
+			{
+				isFirst = false;
+			}
+			qo.addLeftBracket();
+
+			if (attr.getDefaultVal().length() >= 8)
+			{
+				String date = "2005-09-01";
+				try
+				{
+					/* 就可能是年月日。 */
+					String y = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Year");
+					String m = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Month");
+					String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
+					date = y + "-" + m + "-" + d;
+
+					if (opkey.equals("<="))
+					{
+						Date dt = DateUtils.addDay(DataType.ParseSysDate2DateTime(date), 1);
+						date = DateUtils.format(dt, DataType.getSysDataFormat());
+					}
+				}
+				catch (java.lang.Exception e)
+				{
+				}
+
+				qo.AddWhere(attr.getRefAttrKey(), opkey, date);
+			}
+			else
+			{
+				qo.AddWhere(attr.getRefAttrKey(), opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
+			}
+			qo.addRightBracket();
+			if (keys.contains(attr.getRefAttrKey()) == false)
+			{
+				keys.add(attr.getRefAttrKey());
+			}
+		}
+
+		///#endregion
+
+
+		///#region 获得查询数据.
+		Attrs attrs = en.getEnMap().getAttrs();
+		for (String str : ap.getHisHT().keySet())
+		{
+			if (keys.contains(str) == false)
+				keys.add(str);
+			String val = ap.GetValStrByKey(str);
+			if (DataType.IsNullOrEmpty(val) == true || val.equals("null") == true)
+				val = "all";
+			if (val.equals("all"))
+				continue;
+
+			if (isFirst == false)
+				qo.addAnd();
+			else
+				isFirst = false;
+			isFirst = false;
+			qo.addLeftBracket();
+			Attr attr = attrs.GetAttrByKeyOfEn(str);
+			//树形结构，获取该节点及子节点的数据
+			if (attr != null && attr.getIsFK() && attr.getHisFKEn().getIsTreeEntity() == true)
+			{
+				//需要获取当前数据选中的数据和子级(先阶段只处理部门信息)
+				DataTable dt = DBAccess.RunSQLReturnTable(bp.wf.Dev2Interface.GetDeptNoSQLByParentNo(val));
+				qo.AddWhereIn(attr.getKey(), dt);
+				qo.addRightBracket();
+				continue;
+			}
+			//多选
+			if (val.indexOf(",") != -1)
+			{
+				if (attr.getIsNum() == true)
+				{
+					qo.AddWhere(str, "IN", "(" + val + ")");
+					qo.addRightBracket();
+					continue;
+				}
+				val = "('" + val.replace(",", "','") + "')";
+				qo.AddWhere(str, "IN", val);
+				qo.addRightBracket();
+				continue;
+			}
+			//获得真实的数据类型.
+			Object valType = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
+
+			qo.AddWhere(str, valType);
+			qo.addRightBracket();
+
+
+		}
+
+
+
+		for (Attr attr : map.getAttrs())
+		{
+			if (DataType.IsNullOrEmpty(this.GetRequestVal(attr.getField())))
+				continue;
+
+			if (keys.contains(attr.getField()))
+				continue;
+
+			String val = this.GetRequestVal(attr.getField());
+
+			switch (attr.getMyDataType())
+			{
+				case DataType.AppBoolean:
+					if (isFirst == false)
+						qo.addAnd();
+					else
+						isFirst = false;
+					qo.addLeftBracket();
+					qo.AddWhere(attr.getField(), Integer.parseInt(val));
+					qo.addRightBracket();
+					break;
+				case DataType.AppDate:
+				case DataType.AppDateTime:
+				case DataType.AppString:
+					if (isFirst == false)
+						qo.addAnd();
+					else
+						isFirst = false;
+					qo.addLeftBracket();
+					qo.AddWhere(attr.getField(), val);
+					qo.addRightBracket();
+					break;
+				case DataType.AppDouble:
+				case DataType.AppFloat:
+				case DataType.AppMoney:
+					if (isFirst == false)
+						qo.addAnd();
+					else
+						isFirst = false;
+					qo.addLeftBracket();
+					qo.AddWhere(attr.getField(), Double.parseDouble(val));
+					qo.addRightBracket();
+					break;
+				case DataType.AppInt:
+					if (val.equals("all") || val.equals("-1"))
+					{
+						continue;
+					}
+					if (isFirst == false)
+						qo.addAnd();
+					else
+						isFirst = false;
+					qo.addLeftBracket();
+					qo.AddWhere(attr.getField(), Integer.parseInt(val));
+					qo.addRightBracket();
+					break;
+				default:
+					break;
+			}
+
+
+
+			if (keys.contains(attr.getField()) == false)
+			{
+				keys.add(attr.getField());
+			}
+		}
+
+		return qo;
+
+	}
+	private DataTable SearchDtl_Data(Entities ens, Entity en, String workId, String fid) throws Exception {
+		//获得.
+		Map map = en.getEnMapInTime();
+
+		MapAttrs attrs = map.getAttrs().ToMapAttrs();
+
+		QueryObject qo = new QueryObject(ens);
+
+		qo.AddWhere("RefPK", "=", workId);
+		//qo.addAnd();
+		//qo.AddWhere("FID", "=", fid);
+
+
+		///#endregion 获得查询数据.
+		return qo.DoQueryToTable();
+	}
+
+	private DataTable Search_Data(Entities ens, Entity en) throws Exception {
+		//获得.
+		Map map = en.getEnMapInTime();
+
+		MapAttrs attrs = map.getAttrs().ToMapAttrs();
+		//取出来查询条件.
+		UserRegedit ur = new UserRegedit();
+		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
+		ur.RetrieveFromDBSources();
+
+		//获得关键字.
+		AtPara ap = new AtPara(ur.getVals());
+		//关键字.
+		String keyWord = ur.getSearchKey();
+		QueryObject qo = new QueryObject(ens);
+		boolean isFirst = true; //是否第一次拼接SQL
+
+
+		///#region 关键字字段.
+		if (DataType.IsNullOrEmpty(map.SearchFields) == false)
+		{
+			String field = ""; //字段名
+			String fieldValue = ""; //字段值
+			int idx = 0;
+
+			//获取查询的字段
+			String[] searchFields = map.SearchFields.split("[@]", -1);
+			for (String str : searchFields)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+				{
+					continue;
+				}
+
+				//字段名
+				field = str.split("[=]", -1)[1];
+				if (DataType.IsNullOrEmpty(field) == true)
+				{
+					continue;
+				}
+
+				//字段名对应的字段值
+				fieldValue = ur.GetParaString(field);
+				if (DataType.IsNullOrEmpty(fieldValue) == true)
+				{
+					continue;
+				}
+				fieldValue = fieldValue.trim();
+				fieldValue = fieldValue.replace(",", ";").replace(" ", ";");
+				String[] fieldValues = fieldValue.split("[;]", -1);
+				int valIdx = 0;
+				idx++;
+				for (String val : fieldValues)
+				{
+					valIdx++;
+
+					if (idx == 1 && valIdx == 1)
+					{
+						isFirst = false;
+						/* 第一次进来。 */
+						qo.addLeftBracket();
+						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						{
+							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
+						}
+						else
+						{
+							qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
+						}
+						qo.getMyParas().Add(field + valIdx, val, false);
+
+						if (valIdx == fieldValues.length)
+						{
+							qo.addRightBracket();
+						}
+
+						continue;
+					}
+					if (valIdx == 1 && idx != 1)
+					{
+						qo.addAnd();
+						qo.addLeftBracket();
+					}
+					else
+					{
+						qo.addOr();
+					}
+
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					{
+						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
+					}
+					else
+					{
+						qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
+					}
+					qo.getMyParas().Add(field + valIdx, val, false);
+
+					if (valIdx == fieldValues.length)
+					{
+						qo.addRightBracket();
+					}
+				}
+			}
+		}
+
+		if (DataType.IsNullOrEmpty(map.SearchFields) == true)
+		{
+			if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
+			{
+				Attr attrPK = new Attr();
+				for (Attr attr : map.getAttrs())
+				{
+					if (attr.getIsPK())
+					{
+						attrPK = attr;
+						break;
+					}
+				}
+				int i = 0;
+				String enumKey = ","; //求出枚举值外键.
+				keyWord = keyWord.replace(",", ";").replace(" ", ";");
+				String[] strVals = keyWord.split("[;]", -1);
+				for (Attr attr : map.getAttrs())
+				{
+					switch (attr.getMyFieldType())
+					{
+						case Enum:
+							enumKey = "," + attr.getKey() + "Text,";
+							break;
+						case FK:
+							// case FieldType.PKFK:
+							continue;
+						default:
+							break;
+					}
+
+					if (attr.getMyDataType() != DataType.AppString)
+					{
+						continue;
+					}
+
+					//排除枚举值关联refText.
+					if (attr.getMyFieldType() == FieldType.RefText)
+					{
+						if (enumKey.contains("," + attr.getKey() + ",") == true)
+						{
+							continue;
+						}
+					}
+
+					if (attr.getKey().equals("FK_Dept"))
+					{
+						continue;
+					}
+					int valIdx = 0;
+					for (String val : strVals)
+					{
+						i++;
+						valIdx++;
+						if (i == 1)
+						{
+							isFirst = false;
+							/* 第一次进来。 */
+							qo.addLeftBracket();
+							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+							{
+								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+							}
+							else
+							{
+								qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
+							}
+
+							qo.getMyParas().Add("SKey" + valIdx, val, false);
+
+							continue;
+						}
+						qo.addOr();
+
+						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						{
+							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+						}
+						else
+						{
+							qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
+						}
+
+						qo.getMyParas().Add("SKey" + valIdx, val, false);
+					}
+				}
+				qo.addRightBracket();
+			}
+		}
+
+		///#endregion
+
+
+		///#region 增加数值型字段的查询
+		if (DataType.IsNullOrEmpty(map.SearchFieldsOfNum) == false)
+		{
+			String field = ""; //字段名
+			String fieldValue = ""; //字段值
+			int idx = 0;
+
+			//获取查询的字段
+			String[] searchFieldsOfNum = map.SearchFieldsOfNum.split("[@]", -1);
+			for (String str : searchFieldsOfNum)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+				{
+					continue;
+				}
+
+				//字段名
+				field = str.split("[=]", -1)[1];
+				if (DataType.IsNullOrEmpty(field) == true)
+				{
+					continue;
+				}
+
+				//字段名对应的字段值
+				fieldValue = ur.GetParaString(field);
+				if (DataType.IsNullOrEmpty(fieldValue) == true)
+				{
+					continue;
+				}
+				String[] strVals = fieldValue.split("[,]", -1);
+
+				//判断是否是第一次进入
+				if (isFirst == false)
+				{
+					qo.addAnd();
+				}
+				else
+				{
+					isFirst = false;
+				}
+				qo.addLeftBracket();
+				if (DataType.IsNullOrEmpty(strVals[0]) == false)
+				{
+
+					if (DataType.IsNullOrEmpty(strVals[1]) == true)
+					{
+						qo.AddWhere(field, ">=", strVals[0]);
+					}
+					else
+					{
+						qo.AddWhere(field, ">=", strVals[0], field + "1");
+						qo.addAnd();
+						qo.AddWhere(field, "<=", strVals[1], field + "2");
+					}
+
+				}
+				else
+				{
+					qo.AddWhere(field, "<=", strVals[1]);
+				}
+
+				qo.addRightBracket();
+
+			}
+
+
+		}
+
+		///#endregion
+
+		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
+		{
+			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
+			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
 
 			if (DataType.IsNullOrEmpty(dtTo) == true)
 			{
@@ -2690,10 +2800,7 @@ public final String RichUploadFile() throws Exception {
 					dtFrom += ":00";
 				}
 
-				
-				Date date = DateUtils.parse(dtFrom);
-				date = DateUtils.addDay(date, -1);
-				dtFrom = DateUtils.format(date, "yyyy-MM-dd") + " 24:00";
+				dtFrom = DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"), -1) + " 24:00";
 
 				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
 				{
@@ -2717,8 +2824,7 @@ public final String RichUploadFile() throws Exception {
 		}
 
 
-
-			///普通属性
+		///#region 普通属性
 		String opkey = ""; // 操作符号。
 		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch())
 		{
@@ -2735,9 +2841,9 @@ public final String RichUploadFile() throws Exception {
 				qo.addLeftBracket();
 
 				//获得真实的数据类型.
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
 				{
-					Object valType = bp.sys.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun());
+					Object valType = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun());
 					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), valType);
 				}
 				else
@@ -2786,7 +2892,6 @@ public final String RichUploadFile() throws Exception {
 					{
 						Date dt = DateUtils.addDay(DataType.ParseSysDate2DateTime(date), 1);
 						date = DateUtils.format(dt, DataType.getSysDataFormat());
-
 					}
 				}
 				catch (java.lang.Exception e)
@@ -2802,13 +2907,13 @@ public final String RichUploadFile() throws Exception {
 			qo.addRightBracket();
 		}
 
-			///
+		///#endregion
 
 
-			///隐藏字段的查询.
+		///#region 隐藏字段的查询.
 		for (String str : ap.getHisHT().keySet())
 		{
-			Object val = ap.GetValStrByKey(str);
+			String val = ap.GetValStrByKey(str);
 			if (val.equals("all"))
 			{
 				continue;
@@ -2826,52 +2931,47 @@ public final String RichUploadFile() throws Exception {
 			qo.addLeftBracket();
 
 			//获得真实的数据类型.
-			Object valType = bp.sys.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
+			Object valType = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
 
 			qo.AddWhere(str, valType);
 			qo.addRightBracket();
 		}
 
-			/// 隐藏字段的查询
+		///#endregion 隐藏字段的查询
 
-		//获取配置信息	 
-		EnCfg encfg = new EnCfg();
-		encfg.setNo(this.getEnsName());
-		encfg.RetrieveFromDBSources();
-		
+		//获取配置信息
+		EnCfg encfg = new EnCfg(this.getEnsName());
 		//增加排序
 		if (encfg != null)
 		{
-			String orderBy = encfg.GetParaString("OrderBy");
-			boolean isDesc = encfg.GetParaBoolen("IsDeSc");
+			String orderBy = encfg.GetValStrByKey("OrderBy");
+			boolean isDesc = encfg.GetValBooleanByKey("IsDeSc");
 
 			if (DataType.IsNullOrEmpty(orderBy) == false)
 			{
 				if (isDesc)
 				{
-					qo.addOrderByDesc(encfg.GetParaString("OrderBy"));
+					qo.addOrderByDesc(orderBy);
 				}
 				else
 				{
-					qo.addOrderBy(encfg.GetParaString("OrderBy"));
+					qo.addOrderBy(orderBy);
 				}
 			}
 
 		}
 		return qo.DoQueryToTable();
+	}
 
+	public final String Search_GenerPageIdx() throws Exception {
 
-		}
-	public final String Search_GenerPageIdx() throws Exception
-	{
-
-		bp.sys.UserRegedit ur = new UserRegedit();
+		UserRegedit ur = new UserRegedit();
 		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
 		String url = "?EnsName=" + this.getEnsName();
 		int pageSpan = 10;
-		int recNum = ur.GetParaInt("RecCount"); //获得查询数量.
+		int recNum = ur.GetParaInt("RecCount", 0); //获得查询数量.
 		int pageSize = 12;
 		if (recNum <= pageSize)
 		{
@@ -2932,73 +3032,110 @@ public final String RichUploadFile() throws Exception {
 		html += "</div>";
 		return html;
 	}
-	/** 
+	/**
 	 执行导出
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Search_Exp() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Search_Exp() throws Exception {
+		bp.sys.UserRegedit ur = new UserRegedit();
+		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
+		ur.RetrieveFromDBSources();
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
-		String name = "数据导出";
-		MapAttrs mapAttrs = new MapAttrs();
-		Attrs attrs = null;
-		MapData md = new MapData();
-		md.setNo(this.getEnsName());
-		int count = md.RetrieveFromDBSources();
-		if (count == 1)
+		QueryObject qo = Search_Data(ens, en, en.getEnMap(), ur);
+		EnCfg encfg = new EnCfg();
+		encfg.setNo( this.getEnsName());
+		//增加排序
+		if (encfg.RetrieveFromDBSources() != 0)
 		{
-			mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
-			attrs = new Attrs();
-			for (MapAttr attr : mapAttrs.ToJavaList())
+			String orderBy = encfg.GetValStrByKey("OrderBy");
+			boolean isDesc = encfg.GetValBooleanByKey("IsDeSc");
+
+			if (DataType.IsNullOrEmpty(orderBy) == false)
 			{
-				String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
-				if (searchVisable.equals("0"))
+				try
 				{
-					continue;
+					if (isDesc)
+						qo.addOrderByDesc(orderBy);
+					else
+						qo.addOrderBy(orderBy);
 				}
-				if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || (count == 0 && attr.getUIVisible()== false))
+				catch (Exception ex)
 				{
-					continue;
+					encfg.SetValByKey("OrderBy", orderBy);
 				}
-				attrs.Add(attr.getHisAttr());
-
 			}
-
 		}
+		if (encfg.RetrieveFromDBSources() != 0)
+			qo.addOrderBy(en.getPK());
+		qo.DoQuery();
+		return bp.tools.Json.ToJson(ens.ToDataTableField());
 
-		String filename = name + "_" + DataType.getCurrentDataTimeCNOfLong() + "_" + WebUser.getName() + ".xls";
-		String filePath = ExportDGToExcel(Search_Data(ens, en), en, name, attrs);
-
-		return filePath;
+		//取出来查询条件.
+//		bp.sys.UserRegedit ur = new UserRegedit();
+//		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
+//		ur.RetrieveFromDBSources();
+//
+//		Entities ens = ClassFactory.GetEns(this.getEnsName());
+//		Entity en = ens.getGetNewEntity();
+//		String name = "数据导出";
+//		MapAttrs mapAttrs = new MapAttrs();
+//		Attrs attrs = null;
+//		MapData md = new MapData();
+//		md.setNo(this.getEnsName());
+//		int count = md.RetrieveFromDBSources();
+//		if (count == 1)
+//		{
+//			mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
+//			attrs = new Attrs();
+//			Attr attr = null;
+//			for (MapAttr mapAttr : mapAttrs.ToJavaList())
+//			{
+//				String searchVisable = mapAttr.getatPara().GetValStrByKey("SearchVisable");
+//				if (searchVisable.equals("0"))
+//				{
+//					continue;
+//				}
+//				if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || (count == 0 && mapAttr.getUIVisible() == false))
+//				{
+//					continue;
+//				}
+//				attr = mapAttr.getHisAttr();
+//				attr.setUIVisible( true);
+//				attrs.add(attr);
+//
+//			}
+//
+//		}
+//
+//		//String filename = name + "_" + DataType.getCurrentDateTimeCNOfLong() + "_" + WebUser.getName() + ".xls";
+//		String filePath = bp.tools.ExportExcelUtil.ExportDGToExcel(Search_Data(ens, en), en,  en.getEnDesc(), attrs);
+//
+//		return filePath;
 	}
-	/** 
+	/**
 	 从表执行导出
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String SearchDtl_Exp() throws Exception
-	{
+
+	 @return
+	 */
+	public final String SearchDtl_Exp() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
 
 		String workId = this.GetRequestVal("WorkId");
 		String fid = this.GetRequestVal("FID");
 		String name = "从表数据导出";
-		String filename = name + "_" + DataType.getCurrentDataTimeCNOfLong() + "_" + WebUser.getName() + ".xls";
-		String filePath = ExportDGToExcel(SearchDtl_Data(ens, en, workId, fid), en, name,null);
+		String filename = name + "_" + DataType.getCurrentDateTimeCNOfLong() + "_" + WebUser.getName() + ".xls";
+		String filePath = bp.tools.ExportExcelUtil.ExportTempToExcel(SearchDtl_Data(ens, en, workId, fid), en, name,null);
 
 		return filePath;
 	}
 
 
 
-		///Refmethod.htm 相关功能.
-	public final String Refmethod_Init() throws Exception
-	{
+	///#region Refmethod.htm 相关功能.
+	public final String Refmethod_Init() throws Exception {
 		String ensName = this.getEnsName();
 		int index = this.getIndex();
 		Entities ens = ClassFactory.GetEns(ensName);
@@ -3022,16 +3159,15 @@ public final String RichUploadFile() throws Exception {
 		}
 
 		en.setPKVal(pk);
-		en.Retrieve();
+		en.RetrieveFromDBSources();
 
 		//获取主键集合
 		String[] pks = pk.split("[,]", -1);
 
 
-			///处理无参数的方法.
-		if (rm.getHisAttrs() == null || rm.getHisAttrs().size() == 0)
+		///#region 处理无参数的方法.
+		if (rm.getHisAttrs() == null || rm.getHisAttrs().isEmpty())
 		{
-
 			String infos = "";
 			for (String mypk : pks)
 			{
@@ -3080,7 +3216,8 @@ public final String RichUploadFile() throws Exception {
 			return infos;
 		}
 
-			/// 处理无参数的方法.
+		///#endregion 处理无参数的方法.
+
 		DataSet ds = new DataSet();
 
 		//转化为json 返回到前台解析. 处理有参数的方法.
@@ -3091,7 +3228,7 @@ public final String RichUploadFile() throws Exception {
 		ds.Tables.add(mapAttrs);
 
 
-			///该方法的默认值.
+		///#region 该方法的默认值.
 		DataTable dtMain = new DataTable();
 		dtMain.TableName = "MainTable";
 		for (MapAttr attr : attrs.ToJavaList())
@@ -3105,30 +3242,33 @@ public final String RichUploadFile() throws Exception {
 			String v = item.getDefValReal();
 			if (v.indexOf('@') == -1)
 			{
-				mydrMain.setValue(item.getKeyOfEn(), item.getDefValReal());
+				if(en.getRow().containsKey(item.getKeyOfEn()) == true)
+					mydrMain.setValue(item.getKeyOfEn(), en.GetValByKey(item.getKeyOfEn()));
+				else
+					mydrMain.setValue(item.getKeyOfEn(), item.getDefValReal());
 			}
 			//替换默认值的@的
 			else
 			{
 				if (v.equals("@WebUser.No"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), WebUser.getNo());
+					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getNo());
 				}
 				else if (v.equals("@WebUser.Name"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), WebUser.getName());
+					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getName());
 				}
 				else if (v.equals("@WebUser.FK_Dept"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_Dept());
+					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getFK_Dept());
 				}
 				else if (v.equals("@WebUser.FK_DeptName"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_DeptName());
+					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getFK_DeptName());
 				}
 				else if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), WebUser.getFK_DeptNameOfFull());
+					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getFK_DeptNameOfFull());
 				}
 				else if (v.equals("@RDT"))
 				{
@@ -3138,7 +3278,7 @@ public final String RichUploadFile() throws Exception {
 					}
 					if (item.getMyDataType() == DataType.AppDateTime)
 					{
-						mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDataTime());
+						mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDateTime());
 					}
 				}
 				else
@@ -3158,10 +3298,10 @@ public final String RichUploadFile() throws Exception {
 		dtMain.Rows.add(mydrMain);
 		ds.Tables.add(dtMain);
 
-			/// 该方法的默认值.
+		///#endregion 该方法的默认值.
 
 
-			///加入该方法的外键.
+		///#region 加入该方法的外键.
 		for (DataRow dr : mapAttrs.Rows)
 		{
 			String lgType = dr.getValue("LGType").toString();
@@ -3181,15 +3321,15 @@ public final String RichUploadFile() throws Exception {
 			{
 				String myPK = dr.getValue("MyPK").toString();
 				/*如果是空的*/
-				//   throw new Exception("@属性字段数据不完整，流程:" + fl.getNo() + fl.Name + ",节点:" + nd.getNodeID() + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
+				//   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
 			}
 
 			// 检查是否有下拉框自动填充。
 			String keyOfEn = dr.getValue("KeyOfEn").toString();
 			String fk_mapData = dr.getValue("FK_MapData").toString();
-			if (ds.GetTableByName(uiBindKey) == null)
+			if (ds.contains(uiBindKey) == false)
 			{
-				ds.Tables.add(PubClass.GetDataTableByUIBineKey(uiBindKey));
+				ds.Tables.add(bp.pub.PubClass.GetDataTableByUIBineKey(uiBindKey, null));
 			}
 
 		}
@@ -3217,7 +3357,7 @@ public final String RichUploadFile() throws Exception {
 				/*是一个sql*/
 				Object tempVar2 = attr.getUIBindKey();
 				String sqlBindKey = tempVar2 instanceof String ? (String)tempVar2 : null;
-				sqlBindKey = bp.wf.Glo.DealExp(sqlBindKey, en, null);
+				sqlBindKey = Glo.DealExp(sqlBindKey, en, null);
 
 				DataTable dt1 = DBAccess.RunSQLReturnTable(sqlBindKey);
 				dt1.TableName = attr.getKey();
@@ -3225,15 +3365,16 @@ public final String RichUploadFile() throws Exception {
 				//@杜. 翻译当前部分.
 				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
-					dt1.Columns.get("NO").setColumnName("No");
-					dt1.Columns.get("NAME").setColumnName("Name");
+					dt1.Columns.get("NO").ColumnName = "No";
+					dt1.Columns.get("NAME").ColumnName = "Name";
 				}
 				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 				{
-					dt1.Columns.get("no").setColumnName("No");
-					dt1.Columns.get("name").setColumnName("Name");
+					dt1.Columns.get("no").ColumnName = "No";
+					dt1.Columns.get("name").ColumnName = "Name";
 				}
-				if (ds.GetTableByName(attr.getKey()) == null)
+
+				if (ds.contains(attr.getKey()) == false)
 				{
 					ds.Tables.add(dt1);
 				}
@@ -3242,10 +3383,10 @@ public final String RichUploadFile() throws Exception {
 		}
 
 
-			/// 加入该方法的外键.
+		///#endregion 加入该方法的外键.
 
 
-			///加入该方法的枚举.
+		///#region 加入该方法的枚举.
 		DataTable dtEnum = new DataTable();
 		dtEnum.Columns.Add("Lab", String.class);
 		dtEnum.Columns.Add("EnumKey", String.class);
@@ -3273,10 +3414,10 @@ public final String RichUploadFile() throws Exception {
 
 		ds.Tables.add(dtEnum);
 
-			/// 加入该方法的枚举.
+		///#endregion 加入该方法的枚举.
 
 
-			///增加该方法的信息
+		///#region 增加该方法的信息
 		DataTable dt = new DataTable();
 		dt.TableName = "RM";
 		dt.Columns.Add("Title", String.class);
@@ -3287,25 +3428,25 @@ public final String RichUploadFile() throws Exception {
 		mydr.setValue("Warning", rm.Warning);
 		dt.Rows.add(mydr);
 
-			/// 增加该方法的信息
+		///#endregion 增加该方法的信息
 
 		//增加到里面.
 		ds.Tables.add(dt);
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
-	public final String Entitys_Init() throws Exception
-	{
+	public final String Ens_Init() throws Exception {
 		//定义容器.
 		DataSet ds = new DataSet();
 
 		//查询出来从表数据.
 		Entities dtls = ClassFactory.GetEns(this.getEnsName());
+		dtls.RetrieveAll();
 		Entity en = dtls.getGetNewEntity();
-		QueryObject qo = new QueryObject(dtls);
-		qo.addOrderBy(en.getPK());
-		qo.DoQuery();
+		//QueryObject qo = new QueryObject(dtls);
+		//qo.addOrderBy(en.getPK());
+		//qo.DoQuery();
 		ds.Tables.add(dtls.ToDataTableField("Ens"));
 
 		//实体.
@@ -3316,7 +3457,7 @@ public final String RichUploadFile() throws Exception {
 		md.setName( dtl.getEnDesc());
 
 
-			///加入权限信息.
+		///#region 加入权限信息.
 		//把权限加入参数里面.
 		if (dtl.getHisUAC().IsInsert)
 		{
@@ -3331,11 +3472,10 @@ public final String RichUploadFile() throws Exception {
 			md.SetPara("IsDelete", "1");
 		}
 
-			/// 加入权限信息.
+		///#endregion 加入权限信息.
 
 
-			///判断主键是否为自增长
-
+		///#region 判断主键是否为自增长
 		if (en.getIsNoEntity() == true && en.getEnMap().getIsAutoGenerNo())
 		{
 			md.SetPara("IsNewRow", "0");
@@ -3345,60 +3485,68 @@ public final String RichUploadFile() throws Exception {
 			md.SetPara("IsNewRow", "1");
 		}
 
-			///
+		///#endregion
 
 
-			///添加EN的主键
+		///#region 添加EN的主键
 		md.SetPara("PK", en.getPK());
 
-			///
+
+		///#endregion
 
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
 
-			///字段属性.
+		///#region 字段属性.
 		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs();
 		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
 		ds.Tables.add(sys_MapAttrs);
 
-			/// 字段属性.
+		///#endregion 字段属性.
 
 
-			///把外键与枚举放入里面去.
-		for (DataRow dr : sys_MapAttrs.Rows)
+		///#region 把外键与枚举放入里面去.
+		for (MapAttr mapAttr : attrs.ToJavaList())
 		{
-			String uiBindKey = dr.getValue("UIBindKey").toString();
-			String lgType = dr.getValue("LGType").toString();
-			if (lgType.equals("2") == false)
+			String uiBindKey = mapAttr.getUIBindKey();
+
+			if (DataType.IsNullOrEmpty(uiBindKey) == true || mapAttr.getUIIsEnable() == false)
 			{
 				continue;
 			}
-
-			String UIIsEnable = dr.getValue("UIVisible").toString();
-			if (UIIsEnable.equals("0"))
-			{
-				continue;
-			}
-
-			if (DataType.IsNullOrEmpty(uiBindKey) == true)
-			{
-				String myPK = dr.getValue("MyPK").toString();
-				/*如果是空的*/
-				//   throw new Exception("@属性字段数据不完整，流程:" + fl.getNo() + fl.Name + ",节点:" + nd.getNodeID() + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
-			}
-
-			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.getValue("KeyOfEn").toString();
-			String fk_mapData = dr.getValue("FK_MapData").toString();
-
 
 			// 判断是否存在.
-			if (ds.GetTableByName(uiBindKey) !=null)
+			if (ds.contains(uiBindKey) == true)
+			{
+				continue;
+			}
+			if (uiBindKey.toUpperCase().trim().startsWith("SELECT") == true)
+			{
+				String sqlBindKey = Glo.DealExp(uiBindKey, en, null);
+
+				DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
+				dt.TableName = mapAttr.getKeyOfEn();
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+				{
+					dt.Columns.get("NO").ColumnName = "No";
+					dt.Columns.get("NAME").ColumnName = "Name";
+				}
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+				{
+					dt.Columns.get("no").ColumnName = "No";
+					dt.Columns.get("name").ColumnName = "Name";
+				}
+
+				ds.Tables.add(dt);
+				continue;
+			}
+
+			if (mapAttr.getLGType() != FieldTypeS.FK)
 			{
 				continue;
 			}
 
-			ds.Tables.add(PubClass.GetDataTableByUIBineKey(uiBindKey));
+			ds.Tables.add(bp.pub.PubClass.GetDataTableByUIBineKey(uiBindKey, null));
 		}
 
 		String enumKeys = "";
@@ -3414,46 +3562,43 @@ public final String RichUploadFile() throws Exception {
 		{
 			enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
 
-			String sqlEnum = "SELECT * FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
+			String sqlEnum = "SELECT * FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
 			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 
 			dtEnum.TableName = "Sys_Enum";
 
 			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 			{
-				dtEnum.Columns.get("MYPK").setColumnName("MyPK");
-				dtEnum.Columns.get("LAB").setColumnName("Lab");
-				dtEnum.Columns.get("ENUMKEY").setColumnName("EnumKey");
-				dtEnum.Columns.get("INTKEY").setColumnName("IntKey");
-				dtEnum.Columns.get("LANG").setColumnName("Lang");
+				dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
+				dtEnum.Columns.get("LAB").ColumnName = "Lab";
+				dtEnum.Columns.get("ENUMKEY").ColumnName = "EnumKey";
+				dtEnum.Columns.get("INTKEY").ColumnName = "IntKey";
+				dtEnum.Columns.get("LANG").ColumnName = "Lang";
 			}
 			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 			{
-				dtEnum.Columns.get("mypk").setColumnName("MyPK");
-				dtEnum.Columns.get("lab").setColumnName("Lab");
-				dtEnum.Columns.get("enumkey").setColumnName("EnumKey");
-				dtEnum.Columns.get("intkey").setColumnName("IntKey");
-				dtEnum.Columns.get("lang").setColumnName("Lang");
+				dtEnum.Columns.get("mypk").ColumnName = "MyPK";
+				dtEnum.Columns.get("lab").ColumnName = "Lab";
+				dtEnum.Columns.get("enumkey").ColumnName = "EnumKey";
+				dtEnum.Columns.get("intkey").ColumnName = "IntKey";
+				dtEnum.Columns.get("lang").ColumnName = "Lang";
 			}
 			ds.Tables.add(dtEnum);
 		}
 
-			/// 把外键与枚举放入里面去.
+		///#endregion 把外键与枚举放入里面去.
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
 
-
-		///实体集合的保存.
-	/** 
+	///#region 实体集合的保存.
+	/**
 	 实体集合的删除
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entities_Delete() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entities_Delete() throws Exception {
 		try
 		{
 			if (this.getParas() == null)
@@ -3463,7 +3608,10 @@ public final String RichUploadFile() throws Exception {
 			String[] myparas = this.getParas().split("[@]", -1);
 
 			Entities ens = ClassFactory.GetEns(this.getEnsName());
-
+			if (ens == null)
+			{
+				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
+			}
 			ArrayList<String[]> paras = new ArrayList<String[]>();
 			int idx = 0;
 			for (int i = 0; i < myparas.length; i++)
@@ -3511,22 +3659,25 @@ public final String RichUploadFile() throws Exception {
 		}
 
 	}
-	/** 
+	/**
 	 初始化
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Entities_Save() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Entities_Save() throws Exception {
 		try
 		{
 
-				/// 查询出来s实体数据.
+			///#region  查询出来s实体数据.
 			Entities dtls = ClassFactory.GetEns(this.getEnsName());
+			if (dtls == null)
+			{
+				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
+			}
+
+			dtls.RetrieveAll();
 			Entity en = dtls.getGetNewEntity();
-			QueryObject qo = new QueryObject(dtls);
-			qo.DoQuery();
+
 			Map map = en.getEnMap();
 			for (Entity item : dtls)
 			{
@@ -3538,37 +3689,36 @@ public final String RichUploadFile() throws Exception {
 					{
 						continue;
 					}
-
+					if (attr.getUIVisible()== false || attr.getUIIsReadonly() == true)
+					{
+						continue;
+					}
+					String key = pkval + "_" + attr.getKey();
 					if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
 					{
-						if (attr.getUIIsReadonly() == false)
-						{
-							continue;
-						}
-
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						String val = this.GetValFromFrmByKey("TB_" + key, null);
 						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
 
-					if (attr.getUIContralType()== UIContralType.TB && attr.getUIIsReadonly() == false)
+					if (attr.getUIContralType() == UIContralType.TB)
 					{
-						String val = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						String val = this.GetValFromFrmByKey("TB_" + key, null);
 						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.getUIContralType()== UIContralType.DDL && attr.getUIIsReadonly() == true)
+					if (attr.getUIContralType() == UIContralType.DDL)
 					{
-						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
+						String val = this.GetValFromFrmByKey("DDL_" + key);
 						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.getUIContralType()== UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
 					{
-						String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
+						String val = this.GetValFromFrmByKey("CB_" + key, "-1");
 						if (val.equals("-1"))
 						{
 							item.SetValByKey(attr.getKey(), 0);
@@ -3584,91 +3734,100 @@ public final String RichUploadFile() throws Exception {
 				item.Update(); //执行更新.
 			}
 
-				///  查询出来实体数据.
+			///#endregion  查询出来实体数据.
 
 
-				///保存新加行.
-			String newPKVal = this.GetRequestVal("NewPKVal");
+			///#region 保存新加行.
+			String strs = this.GetRequestVal("NewPKVals");
 			//没有新增行
-			if (this.GetRequestValBoolen("InsertFlag") == false ||(en.getEnMap().getIsAutoGenerNo() ==true &&DataType.IsNullOrEmpty(newPKVal) == true) )
-				return "数据更新成功.";
+			if (this.GetRequestValBoolen("InsertFlag") == false || (en.getEnMap().getIsAutoGenerNo() == true && DataType.IsNullOrEmpty(strs) == true))
+			{
+				return "更新成功.";
+			}
 
 			String valValue = "";
-
-
-			for (Attr attr : map.getAttrs())
+			String[] pkVals = strs.split("[,]", -1);
+			for (String pkval : pkVals)
 			{
-
-				if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
+				if (DataType.IsNullOrEmpty(pkval) == true)
 				{
-					if (attr.getUIIsReadonly() == false)
+					continue;
+				}
+				for (Attr attr : map.getAttrs())
+				{
+
+					if (attr.getMyDataType() == DataType.AppDateTime || attr.getMyDataType() == DataType.AppDate)
 					{
+						if (attr.getUIIsReadonly() == false)
+						{
+							continue;
+						}
+
+						valValue = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey(), null);
+						en.SetValByKey(attr.getKey(), valValue);
 						continue;
 					}
 
-					valValue = this.GetValFromFrmByKey("TB_" + newPKVal + "_" + attr.getKey(), null);
-					en.SetValByKey(attr.getKey(), valValue);
-					continue;
-				}
-
-				if (attr.getUIContralType()== UIContralType.TB && attr.getUIIsReadonly() == false)
-				{
-					valValue = this.GetValFromFrmByKey("TB_" + newPKVal + "_" + attr.getKey());
-					en.SetValByKey(attr.getKey(), valValue);
-					continue;
-				}
-
-				if (attr.getUIContralType()== UIContralType.DDL && attr.getUIIsReadonly() == true)
-				{
-					valValue = this.GetValFromFrmByKey("DDL_" + newPKVal + "_" + attr.getKey());
-					en.SetValByKey(attr.getKey(), valValue);
-					continue;
-				}
-
-				if (attr.getUIContralType()== UIContralType.CheckBok && attr.getUIIsReadonly() == true)
-				{
-					valValue = this.GetValFromFrmByKey("CB_" + newPKVal + "_" + attr.getKey(), "-1");
-					if (valValue.equals("-1"))
+					if (attr.getUIContralType() == UIContralType.TB && attr.getUIIsReadonly() == false)
 					{
-						en.SetValByKey(attr.getKey(), 0);
+						valValue = this.GetValFromFrmByKey("TB_" + pkval + "_" + attr.getKey());
+						en.SetValByKey(attr.getKey(), valValue);
+						continue;
+					}
+
+					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
+					{
+						valValue = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
+						en.SetValByKey(attr.getKey(), valValue);
+						continue;
+					}
+
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+					{
+						valValue = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
+						if (valValue.equals("-1"))
+						{
+							en.SetValByKey(attr.getKey(), 0);
+						}
+						else
+						{
+							en.SetValByKey(attr.getKey(), 1);
+						}
+						continue;
+					}
+				}
+
+				if (en.getIsNoEntity())
+				{
+					if (en.getEnMap().getIsAutoGenerNo())
+					{
+						en.SetValByKey("No", en.GenerNewNoByKey("No", null));
+					}
+				}
+
+				try
+				{
+					if (en.getPKVal().toString().equals("0"))
+					{
 					}
 					else
 					{
-						en.SetValByKey(attr.getKey(), 1);
+						en.Insert();
 					}
-					continue;
 				}
-			}
-
-			if (en.getIsNoEntity())
-			{
-				if (en.getEnMap().getIsAutoGenerNo())
+				catch (RuntimeException ex)
 				{
-					en.SetValByKey("No", en.GenerNewNoByKey("No"));
+					//异常处理..
+					Log.DebugWriteError(ex.getMessage());
+					return ex.getMessage();
 				}
-			}
 
-			try
-			{
-				if (en.getPKVal().toString().equals("0"))
-				{
-				}
-				else
-				{
-					en.Insert();
-				}
-			}
-			catch (RuntimeException ex)
-			{
-				//异常处理..
-				Log.DebugWriteInfo(ex.getMessage());
-				return ex.getMessage();
 			}
 
 
 
 
-				/// 保存新加行.
+			///#endregion 保存新加行.
 
 			return "保存成功.";
 		}
@@ -3678,11 +3837,11 @@ public final String RichUploadFile() throws Exception {
 		}
 	}
 
-		///
+	///#endregion
 
-		///获取批处理的方法.
-	public final String Refmethod_BatchInt() throws Exception
-	{
+
+	///#region 获取批处理的方法.
+	public final String Refmethod_BatchInt() throws Exception {
 		String ensName = this.getEnsName();
 		Entities ens = ClassFactory.GetEns(ensName);
 		Entity en = ens.getGetNewEntity();
@@ -3745,13 +3904,12 @@ public final String RichUploadFile() throws Exception {
 			dt.Rows.add(dr);
 		}
 
-		return bp.tools.Json.ToJson(dt);
+		return Json.ToJson(dt);
 	}
 
-		///
+	///#endregion
 
-	public final String Refmethod_Done() throws Exception
-	{
+	public final String Refmethod_Done() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		Entity en = ens.getGetNewEntity();
 		String msg = "";
@@ -3803,8 +3961,7 @@ public final String RichUploadFile() throws Exception {
 			return "info@" + msg;
 		}
 	}
-	public final String DoOneEntity(Entity en, int rmIdx) throws Exception
-	{
+	public final String DoOneEntity(Entity en, int rmIdx) throws Exception {
 		RefMethod rm = en.getEnMap().getHisRefMethods().get(rmIdx);
 		rm.HisEn = en;
 		int mynum = 0;
@@ -3832,35 +3989,35 @@ public final String RichUploadFile() throws Exception {
 				case TB:
 					switch (attr.getMyDataType())
 					{
-						case bp.da.DataType.AppString:
-						case bp.da.DataType.AppDate:
-						case bp.da.DataType.AppDateTime:
+						case DataType.AppString:
+						case DataType.AppDate:
+						case DataType.AppDateTime:
 							String str1 = this.GetValFromFrmByKey(attr.getKey());
 							objs[idx] = str1;
 							//attr.getDefaultVal()=str1;
 							break;
-						case bp.da.DataType.AppInt:
+						case DataType.AppInt:
 							int myInt = this.GetValIntFromFrmByKey(attr.getKey());
 							objs[idx] = myInt;
 							//attr.getDefaultVal()=myInt;
 							break;
-						case bp.da.DataType.AppFloat:
+						case DataType.AppFloat:
 							float myFloat = this.GetValFloatFromFrmByKey(attr.getKey());
 							objs[idx] = myFloat;
 							//attr.getDefaultVal()=myFloat;
 							break;
-						case bp.da.DataType.AppDouble:
-						case bp.da.DataType.AppMoney:
+						case DataType.AppDouble:
+						case DataType.AppMoney:
 							BigDecimal myDoub = this.GetValDecimalFromFrmByKey(attr.getKey());
 							objs[idx] = myDoub;
 							//attr.getDefaultVal()=myDoub;
 							break;
-						case bp.da.DataType.AppBoolean:
+						case DataType.AppBoolean:
 							objs[idx] = this.GetValBoolenFromFrmByKey(attr.getKey());
 							attr.setDefaultVal(false);
 							break;
 						default:
-							throw new RuntimeException("没有判断的数据类型．");
+							throw new RuntimeException("没有判断的字段 - 数据类型．");
 
 					}
 					break;
@@ -3920,24 +4077,21 @@ public final String RichUploadFile() throws Exception {
 		}
 	}
 
-		/// 相关功能.
+	///#endregion 相关功能.
 
 
-		/// 公共方法。
-	public final String SFTable() throws Exception
-	{
+	///#region  公共方法。
+	public final String SFTable() throws Exception {
 		SFTable sftable = new SFTable(this.GetRequestVal("SFTable"));
-		DataTable dt = sftable.GenerHisDataTable();
-		return bp.tools.Json.ToJson(dt);
+		DataTable dt = sftable.GenerHisDataTable(null);
+		return Json.ToJson(dt);
 	}
-	/** 
+	/**
 	 获得一个实体的数据
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String EnsData() throws Exception
-	{
+
+	 @return
+	 */
+	public final String EnsData() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 
 		String filter = this.GetRequestVal("Filter");
@@ -3953,21 +4107,19 @@ public final String RichUploadFile() throws Exception {
 			qo.AddWhere(strs[0], strs[1]);
 			qo.DoQuery();
 		}
-		return ens.ToJson();
+		return ens.ToJson("dt");
 	}
-	/** 
+	/**
 	 执行一个SQL，然后返回一个列表.
 	 用于gener.js 的公共方法.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String SQLList() throws Exception
-	{
+
+	 @return
+	 */
+	public final String SQLList() throws Exception {
 		String sqlKey = this.GetRequestVal("SQLKey"); //SQL的key.
 		String paras = this.GetRequestVal("Paras"); //参数. 格式为 @para1=paraVal@para2=val2
 
-		bp.sys.xml.SQLList sqlXml = new bp.sys.xml.SQLList(sqlKey);
+		SQLList sqlXml = new SQLList(sqlKey);
 
 		//获得SQL
 		String sql = sqlXml.getSQL();
@@ -3985,175 +4137,117 @@ public final String RichUploadFile() throws Exception {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		return bp.tools.Json.ToJson(dt);
+		return Json.ToJson(dt);
 	}
-	public final String EnumList() throws Exception
-	{
+	public final String EnumList() throws Exception {
 		SysEnums ses = new SysEnums(this.getEnumKey());
-		return ses.ToJson();
+		return ses.ToJson("dt");
 	}
 
-		///  公共方法。
+	///#endregion  公共方法。
 
 
-		///执行方法.
-	/** 
+	///#region 执行方法.
+	/**
 	 执行方法
-	 
-	 @param clsName 类名称
-	 @param monthodName 方法名称
-	 @param paras 参数，可以为空.
-	 @return 执行结果
-	 * @throws Exception 
-	*/
 
-	public final String Exec(String clsName, String methodName) throws Exception
-	{
+	 param clsName 类名称
+	 param monthodName 方法名称
+	 param paras 参数，可以为空.
+	 @return 执行结果
+	 */
+
+	public final String Exec(String clsName, String methodName) throws Exception {
 		return Exec(clsName, methodName, null);
 	}
 
-
+	//ORIGINAL LINE: public string Exec(string clsName, string methodName, string paras = null)
 	public final String Exec(String clsName, String methodName, String paras) throws Exception {
 
-		/// #region 处理 HttpHandler 类.
-		if (clsName.contains(".HttpHandler.") == true) {
-			// 创建类实体.
-			Object tempVar = null;
-			try {
-				tempVar = java.lang.Class.forName("BP.WF.HttpHandler.DirectoryPageBase").newInstance();
-			} catch (InstantiationException e) {
-				String parasStr = "";
-				while (getRequest().getParameterNames().hasMoreElements()) {
-					String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-					String val = bp.sys.Glo.getRequest().getParameter(key);
-					parasStr += "@" + key + "=" + val;
-				}
-				e.printStackTrace();
-				return "err@" + e.getMessage() + " 参数:" + parasStr;
-			} catch (IllegalAccessException e) {
-				String parasStr = "";
-				while (getRequest().getParameterNames().hasMoreElements()) {
-					String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-					String val = bp.sys.Glo.getRequest().getParameter(key);
-					parasStr += "@" + key + "=" + val;
-				}
-				e.printStackTrace();
-				return "err@" + e.getMessage() + " 参数:" + parasStr;
-			} catch (ClassNotFoundException e) {
-				String parasStr = "";
-				while (getRequest().getParameterNames().hasMoreElements()) {
-					String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-					String val = bp.sys.Glo.getRequest().getParameter(key);
-					parasStr += "@" + key + "=" + val;
-				}
-				e.printStackTrace();
-				return "err@" + e.getMessage() + " 参数:" + parasStr;
-			}
-			WebContralBase ctrl = (WebContralBase) ((tempVar instanceof WebContralBase) ? tempVar : null);
-			ctrl.context = this.context;
+		///#region 处理 HttpHandler 类.
+		if (clsName.toUpperCase().contains(".HttpHa" +
+				"ndler.") == true)
+		{
+			//创建类实体.
+			String baseName = bp.sys.base.Glo.DealClassEntityName("bp.difference.handler.WebContralBase");
 
-			try {
-				// 执行方法返回json.
+			Object tempVar = java.lang.Class.forName(baseName).newInstance();
+			DirectoryPageBase ctrl = tempVar instanceof DirectoryPageBase ? (DirectoryPageBase)tempVar : null;
+			//ctrl.context = this.context;
+
+			try
+			{
+				//执行方法返回json.
 				String data = ctrl.DoMethod(ctrl, methodName);
 				return data;
-			} catch (RuntimeException ex) {
+			}
+			catch (RuntimeException ex)
+			{
 				String parasStr = "";
-				while (getRequest().getParameterNames().hasMoreElements()) {
-					String key = (String)bp.sys.Glo.getRequest().getParameterNames().nextElement();
-					String val =bp.sys.Glo.getRequest().getParameter(key);
-					parasStr += "@" + key + "=" + val;
+				for (Object key : CommonUtils.getRequest().getParameterMap().keySet())
+				{
+					parasStr += "@" + key + "=" + ContextHolderUtils.getRequest().getParameter(String.valueOf(key));
 				}
 				return "err@" + ex.getMessage() + " 参数:" + parasStr;
 			}
 		}
 
-		/// #endregion 处理 page 类.
+		///#endregion 处理 page 类.
 
-		/// #region 执行entity类的方法.
-		try {
-			// 创建类实体.
+
+		///#region 执行entity类的方法.
+		try
+		{
+			//创建类实体.
 			Object tempVar2 = java.lang.Class.forName("bp.en.Entity").newInstance();
-			Entity en = (Entity) ((tempVar2 instanceof Entity) ? tempVar2 : null);
+			Entity en = tempVar2 instanceof Entity ? (Entity)tempVar2 : null;
 			en.setPKVal(this.getPKVal());
 			en.RetrieveFromDBSources();
 
 			java.lang.Class tp = en.getClass();
-			java.lang.reflect.Method mp = tp.getMethod(methodName);
-			if (mp == null) {
+			java.lang.reflect.Method mp = null;
+			for (java.lang.reflect.Method m : tp.getMethods()) {
+				if (m.getName().equals(methodName)==true) {
+					mp = m;
+					break;
+				}
+			}
+			if (mp == null)
+			{
 				return "err@没有找到类[" + clsName + "]方法[" + methodName + "].";
 			}
 
-			// 执行该方法.
+			//执行该方法.
 			Object[] myparas = null;
 			Object tempVar3 = mp.invoke(this, myparas);
-			String result = (String) ((tempVar3 instanceof String) ? tempVar3 : null); // 调用由此
-																						// MethodInfo
-																						// 实例反射的方法或构造函数。
+			String result = tempVar3 instanceof String ? (String)tempVar3 : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
 			return result;
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex)
+		{
 			return "err@执行实体类的方法错误:" + ex.getMessage();
-		} catch (InstantiationException e) {
-			String parasStr = "";
-			while (getRequest().getParameterNames().hasMoreElements()) {
-				String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-				String val = bp.sys.Glo.getRequest().getParameter(key);
-				parasStr += "@" + key + "=" + val;
-			}
-			return "err@" + e.getMessage() + " 参数:" + parasStr;
-		} catch (IllegalAccessException e) {
-			String parasStr = "";
-			while (getRequest().getParameterNames().hasMoreElements()) {
-				String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-				String val = bp.sys.Glo.getRequest().getParameter(key);
-				parasStr += "@" + key + "=" + val;
-			}
-			return "err@" + e.getMessage() + " 参数:" + parasStr;
-		} catch (ClassNotFoundException e) {
-			String parasStr = "";
-			while (getRequest().getParameterNames().hasMoreElements()) {
-				String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-				String val = bp.sys.Glo.getRequest().getParameter(key);
-				parasStr += "@" + key + "=" + val;
-			}
-			return "err@" + e.getMessage() + " 参数:" + parasStr;
-		} catch (NoSuchMethodException e) {
-			String parasStr = "";
-			while (getRequest().getParameterNames().hasMoreElements()) {
-				String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-				String val = bp.sys.Glo.getRequest().getParameter(key);
-				parasStr += "@" + key + "=" + val;
-			}
-			return "err@" + e.getMessage() + " 参数:" + parasStr;
-		} catch (InvocationTargetException e) {
-			String parasStr = "";
-			while (getRequest().getParameterNames().hasMoreElements()) {
-				String key = (String) bp.sys.Glo.getRequest().getParameterNames().nextElement();
-				String val = bp.sys.Glo.getRequest().getParameter(key);
-				parasStr += "@" + key + "=" + val;
-			}
-			return "err@" + e.getMessage() + " 参数:" + parasStr;
 		}
 
-		/// #endregion 执行entity类的方法.
+		///#endregion 执行entity类的方法.
 	}
 
-		///
+	///#endregion
 
 
-		///数据库相关.
-	/** 
+	///#region 数据库相关.
+	/**
 	 运行SQL
-	 
+
 	 @return 返回影响行数
-	*/
-	public final String DBAccess_RunSQL() throws Exception
-	{
+	 */
+	public final String DBAccess_RunSQL() throws Exception {
 		String sql = this.GetRequestVal("SQL");
-		sql = URLDecoder.decode(sql, "UTF-8");
+		sql = URLDecoder.decode(sql,"UTF8");
+
+		String dbSrc = this.GetRequestVal("DBSrc");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
-		String dbSrc = this.GetRequestVal("DBSrc");
-		if (DataType.IsNullOrEmpty(dbSrc) == false && dbSrc.equals("local")==false)
+		if (DataType.IsNullOrEmpty(dbSrc) == false && dbSrc.equals("local") == false)
 		{
 			SFDBSrc sfdb = new SFDBSrc(dbSrc);
 			return String.valueOf(sfdb.RunSQL(sql));
@@ -4161,16 +4255,14 @@ public final String RichUploadFile() throws Exception {
 
 		return String.valueOf(DBAccess.RunSQL(sql));
 	}
-	/** 
+	/**
 	 运行SQL返回DataTable
-	 
+
 	 @return DataTable转换的json
-	 * @throws Exception 
-	*/
-	public final String DBAccess_RunSQLReturnTable() throws Exception
-	{
+	 */
+	public final String DBAccess_RunSQLReturnTable() throws Exception {
 		String sql = this.GetRequestVal("SQL");
-		sql = URLDecoder.decode(sql, "UTF-8");
+		sql = URLDecoder.decode(sql, "UTF8");
 		String dbSrc = this.GetRequestVal("DBSrc");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
@@ -4182,13 +4274,12 @@ public final String RichUploadFile() throws Exception {
 
 
 
-
 ///#warning zhoupeng把这个去掉了. 2018.10.24
-		// sql = sql.replace("-", "%"); //为什么？
+
+		// sql = sql.Replace("-", "%"); //为什么？
 
 		sql = sql.replace("/#", "+"); //为什么？
 		sql = sql.replace("/$", "-"); //为什么？
-
 
 		if (sql.equals(null) || sql.equals(""))
 		{
@@ -4201,10 +4292,12 @@ public final String RichUploadFile() throws Exception {
 			dt = sfdb.RunSQLReturnTable(sql);
 		}
 		else
-		   dt = DBAccess.RunSQLReturnTable(sql);
+		{
+			dt = DBAccess.RunSQLReturnTable(sql);
+		}
 
 		//暂定
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
 		{
 			//获取SQL的字段
 			//获取 from 的位置
@@ -4228,88 +4321,69 @@ public final String RichUploadFile() throws Exception {
 			}
 
 		}
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-		{
-			//获取SQL的字段
-			//获取 from 的位置
-			sql = sql.replace(" ", "");
-			int index = sql.toUpperCase().indexOf("FROM");
-			int indexAs = 0;
-			sql = sql.substring(6, index);
-			String[] keys = sql.split("[,]", -1);
-			for (String key : keys)
-			{
-				String realkey = key.replace("Case", "").replace("case", "").replace("CASE", "");
-				indexAs = realkey.toLowerCase().indexOf("AS");
-				if (indexAs != -1)
-				{
-					realkey = realkey.substring(indexAs + 2);
-				}
-				if (dt.Columns.get(realkey.toLowerCase()) != null)
-				{
-					dt.Columns.get(realkey.toLowerCase()).setColumnName( realkey);
-				}
-			}
 
-		}
-
-		return bp.tools.Json.ToJson(dt);
+		return Json.ToJson(dt);
 	}
-	public final String RunUrlCrossReturnString()
-	{
-		String url = this.GetRequestVal("url");
-		String strs = DataType.ReadURLContext(url, 9999);		
+	public final String RunUrlCrossReturnString() throws Exception {
+		String url = this.GetRequestVal("urlExt");
+		String strs = DataType.ReadURLContext(url, 9999);
 		return strs;
 	}
-	public final String RunWebAPIReturnString()
-	{
+	/**
+	 通过接口返回JSON数据
+
+	 @return
+	 */
+	public final String RunWebAPIReturnString() throws Exception {
+
+
 		String url = this.GetRequestVal("url");
 		String postData = HttpClientUtil.doPost(url, "", null);
 		JSONObject j = JSONObject.fromObject(postData);
 		return j.get("data").toString();
 	}
-		///
+
+	///#endregion
 
 	//执行方法.
-	public final String HttpHandler() throws Exception
-	{
+	public final String HttpHandler() throws Exception {
+
 		//@樊雷伟 , 这个方法需要同步.
 
 		//获得两个参数.
 		String httpHandlerName = this.GetRequestVal("HttpHandlerName");
 		httpHandlerName = httpHandlerName.replace("BP.WF.HttpHandler","bp.wf.httphandler");
 		httpHandlerName = httpHandlerName.replace("BP.CCBill","bp.ccbill");
+		//httpHandlerName = httpHandlerName.replace("BP.IC","bp.ic");
 		String methodName = this.GetRequestVal("DoMethod");
 
-		Object type = java.lang.Class.forName(httpHandlerName);
-		if (type == null)
-		{
-			Object tempVar = ClassFactory.GetHandlerPage(httpHandlerName);
+		Object tempVar = ClassFactory.GetHandlerPage(httpHandlerName);
+		if(tempVar!=null){
 			WebContralBase en = tempVar instanceof WebContralBase ? (WebContralBase)tempVar : null;
 			if (en == null)
 			{
 				return "err@页面处理类名[" + httpHandlerName + "],没有获取到，请检查拼写错误？";
 			}
 			en.context = this.context;
+			en.setWorkID(0); //从缓存中获取时，WorkID的初始值有可能不为0
 			return en.DoMethod(en, methodName);
 		}
-		else
-		{
-			Object tempVar2 = ((Class) type).newInstance();
-			WebContralBase en = tempVar2 instanceof WebContralBase ? (WebContralBase)tempVar2 : null;
-			//en.context = this.context;
-			return en.DoMethod(en, methodName);
-		}
+
+
+		Object type = java.lang.Class.forName(httpHandlerName);
+		Object tempVar2 = ((Class) type).newInstance();
+		WebContralBase en = tempVar2 instanceof WebContralBase ? (WebContralBase)tempVar2 : null;
+		//en.context = this.context;
+		return en.DoMethod(en, methodName);
+
 	}
 
-	/** 
+	/**
 	 当前登录人员信息
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String GuestUser_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String GuestUser_Init() throws Exception {
 		Hashtable ht = new Hashtable();
 
 		String userNo = GuestUser.getNo();
@@ -4317,45 +4391,46 @@ public final String RichUploadFile() throws Exception {
 		{
 			ht.put("No", "");
 			ht.put("Name", "");
-			return bp.tools.Json.ToJson(ht);
+			return Json.ToJson(ht);
 		}
 
 		ht.put("No", GuestUser.getNo());
 		ht.put("Name", GuestUser.getName());
-		return bp.tools.Json.ToJson(ht);
+		return Json.ToJson(ht);
 	}
 
-	/** 
+	/**
 	 当前登录人员信息
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String WebUser_Init() throws Exception
-	{
+
+	 @return
+	 */
+	public final String WebUser_Init() throws Exception {
 		Hashtable ht = new Hashtable();
 
-		String userNo = WebUser.getNo();
+		//需要同步.
+		String userNo = bp.web.WebUser.getNo();
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
-			String token = this.GetRequestVal("Token");
-			  
+			String token = WebUser.getToken();
+			if(DataType.IsNullOrEmpty(token))
+				token = this.GetRequestVal("Token");
 			if (DataType.IsNullOrEmpty(token) == true)
-            {
+			{
 				ht.put("No", "");
 				ht.put("Name", "");
 				ht.put("FK_Dept", "");
 				ht.put("FK_DeptName", "");
 				ht.put("FK_DeptNameOfFull", "");
-				ht.put("Tel","");
-	
+				ht.put("Tel", "");
+
 				ht.put("CustomerNo", SystemConfig.getCustomerNo());
 				ht.put("CustomerName", SystemConfig.getCustomerName());
 				ht.put("IsAdmin", 0);
 				ht.put("OrgNo", "");
-				ht.put("OrgName","");
-				return bp.tools.Json.ToJson(ht);
-            }
+				ht.put("OrgName", "");
+				return Json.ToJson(ht);
+			}
+
 			Dev2Interface.Port_LoginByToken(token);
 		}
 
@@ -4367,8 +4442,9 @@ public final String RichUploadFile() throws Exception {
 		ht.put("CustomerNo", SystemConfig.getCustomerNo());
 		ht.put("CustomerName", SystemConfig.getCustomerName());
 		ht.put("IsAdmin", WebUser.getIsAdmin() == true ? 1 : 0);
-		ht.put("SID", WebUser.getSID());
-		ht.put("Tel",WebUser.getTel());
+		ht.put("Token", WebUser.getToken()); //token.
+
+		ht.put("Tel", WebUser.getTel());
 		ht.put("OrgNo", WebUser.getOrgNo());
 		ht.put("OrgName", WebUser.getOrgName());
 
@@ -4388,32 +4464,25 @@ public final String RichUploadFile() throws Exception {
 		WFEmp emp = new WFEmp(WebUser.getNo());
 		ht.put("Theme", emp.GetParaString("Theme"));
 
+
 		//增加运行模式. add by zhoupeng 2020.03.10 适应saas模式.
 		ht.put("CCBPMRunModel", SystemConfig.GetValByKey("CCBPMRunModel", "0"));
 
-		return bp.tools.Json.ToJson(ht);
+		return Json.ToJson(ht);
 	}
 
-	public final String WebUser_BackToAuthorize() throws Exception
-	{
-		bp.wf.Dev2Interface.Port_Login(WebUser.getAuth());
+	public final String WebUser_BackToAuthorize() throws Exception {
+		Dev2Interface.Port_Login(WebUser.getAuth());
 		return "登录成功";
 	}
 
-
-
-
-	
-
-		///分组统计.
-	/** 
+	///#region 分组统计.
+	/**
 	 获得分组统计的查询条件.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Group_MapBaseInfo() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Group_MapBaseInfo() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		if (ens == null)
@@ -4453,16 +4522,16 @@ public final String RichUploadFile() throws Exception {
 		MapData mapData = new MapData();
 		mapData.setNo(this.getEnsName());
 
-			///查询条件
+		///#region 查询条件
 		//单据，实体单据
 		if (mapData.RetrieveFromDBSources() != 0 && DataType.IsNullOrEmpty(mapData.getFK_FormTree()) == false)
 		{
 			//查询条件.
-			ht.put("IsShowSearchKey", mapData.GetParaInt("IsSearchKey"));
-			ht.put("SearchFields", mapData.GetParaString("RptStringSearchKeys"));
+			ht.put("IsShowSearchKey", mapData.GetParaInt("IsSearchKey", 0));
+			ht.put("SearchFields", mapData.GetParaString("StringSearchKeys"));
 
 			//按日期查询.
-			ht.put("DTSearchWay", mapData.GetParaInt("DTSearchWay"));
+			ht.put("DTSearchWay", mapData.GetParaInt("DTSearchWay", 0));
 			ht.put("DTSearchLable", mapData.GetParaString("DTSearchLabel"));
 
 		}
@@ -4486,26 +4555,24 @@ public final String RichUploadFile() throws Exception {
 			ht.put("DTSearchKey", map.DTSearchKey);
 		}
 
-			///  查询条件
+		///#endregion  查询条件
 
 		//把map信息放入
 		ht.put("PhysicsTable", map.getPhysicsTable());
 		ht.put("CodeStruct", map.getCodeStruct());
 		ht.put("CodeLength", map.getCodeLength());
 
-		return bp.tools.Json.ToJson(ht);
+		return Json.ToJson(ht);
 	}
 
-		///
+	///#endregion
 
-	/** 
+	/**
 	 外键或者枚举的分组查询条件.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Group_SearchAttrs() throws Exception
-	{
+
+	 @return
+	 */
+	public final String Group_SearchAttrs() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		if (ens == null)
@@ -4543,7 +4610,7 @@ public final String RichUploadFile() throws Exception {
 			if (attr.getIsEnum() == true)
 			{
 				SysEnums ses = new SysEnums(attr.getUIBindKey());
-				DataTable dtEnum = ses.ToDataTableField();
+				DataTable dtEnum = ses.ToDataTableField("dt");
 				dtEnum.TableName = item.Key;
 				ds.Tables.add(dtEnum);
 				continue;
@@ -4554,13 +4621,13 @@ public final String RichUploadFile() throws Exception {
 				Entities ensFK = item.HisAttr.getHisFKEns();
 				ensFK.RetrieveAll();
 
-				DataTable dtEn = ensFK.ToDataTableField();
+				DataTable dtEn = ensFK.ToDataTableField("dt");
 				dtEn.TableName = item.Key;
 
 				ds.Tables.add(dtEn);
 			}
 			//绑定SQL的外键
-			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.GetTableByName(attr.getKey()) == null)
+			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.contains(attr.getKey()) == false)
 			{
 				String sql = attr.getUIBindKey();
 				DataTable dtSQl = null;
@@ -4568,12 +4635,12 @@ public final String RichUploadFile() throws Exception {
 				if (sql.toUpperCase().contains("SELECT") == true)
 				{
 					//sql数据
-					sql = bp.wf.Glo.DealExp(attr.getUIBindKey(), null, null);
+					sql = Glo.DealExp(attr.getUIBindKey(), null, null);
 					dtSQl = DBAccess.RunSQLReturnTable(sql);
 				}
 				else
 				{
-					dtSQl = PubClass.GetDataTableByUIBineKey(attr.getUIBindKey());
+					dtSQl = bp.pub.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey(), null);
 				}
 				for (DataColumn col : dtSQl.Columns)
 				{
@@ -4600,17 +4667,15 @@ public final String RichUploadFile() throws Exception {
 
 		}
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
-	/** 
-	获取分组的外键、枚举
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Group_ContentAttrs() throws Exception
-	{
+	/**
+	 获取分组的外键、枚举
+
+	 @return
+	 */
+	public final String Group_ContentAttrs() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		if (ens == null)
@@ -4629,13 +4694,12 @@ public final String RichUploadFile() throws Exception {
 
 		//获取注册信心表
 		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
-		String reAttrs = this.GetRequestVal("Attrs");
 
 		//判断是否已经选择分组
 		boolean contentFlag = false;
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
-			if (attr.getUIContralType()== UIContralType.DDL)
+			if (attr.getUIContralType() == UIContralType.DDL || attr.getUIContralType() == UIContralType.RadioBtn)
 			{
 				DataRow dr = dt.NewRow();
 				dr.setValue("Field", attr.getKey());
@@ -4657,11 +4721,10 @@ public final String RichUploadFile() throws Exception {
 			dt.Rows.get(0).setValue("Checked","true");
 		}
 
-		return bp.tools.Json.ToJson(dt);
+		return Json.ToJson(dt);
 	}
 
-	public final String Group_Analysis() throws Exception
-	{
+	public final String Group_Analysis() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		if (ens == null)
@@ -4672,9 +4735,7 @@ public final String RichUploadFile() throws Exception {
 		Entity en = ens.getGetNewEntity();
 		Map map = ens.getGetNewEntity().getEnMapInTime();
 		DataSet ds = new DataSet();
-		//// 查询出来关于它的活动列配置。
-		//ActiveAttrs aas = new ActiveAttrs();
-		//aas.RetrieveBy(ActiveAttrAttr.For, this.EnsName);
+
 
 		//获取注册信息表
 		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
@@ -4686,7 +4747,7 @@ public final String RichUploadFile() throws Exception {
 
 		dt.TableName = "Attrs";
 
-		//如果不存在分析项手动添加一个分析项
+		//默认手动添加一个求数量的分析项
 		DataRow dtr = dt.NewRow();
 		dtr.setValue("Field", "Group_Number");
 		dtr.setValue("Name", "数量");
@@ -4707,7 +4768,7 @@ public final String RichUploadFile() throws Exception {
 
 		for (Attr attr : map.getAttrs())
 		{
-			if (attr.getIsPK()|| attr.getIsNum() == false)
+			if (attr.getIsPK() || attr.getIsNum() == false)
 			{
 				continue;
 			}
@@ -4732,28 +4793,6 @@ public final String RichUploadFile() throws Exception {
 				continue;
 			}
 
-
-			//bool isHave = false;
-			//// 有没有配置抵消它的属性。
-			//foreach (ActiveAttr aa in aas)
-			//{
-			//    if (aa.AttrKey != attr.getKey())
-			//        continue;
-			//    DataRow dr = dt.NewRow();
-			//    dr["Field"] = attr.getKey();
-			//    dr["Name"] = attr.getDesc();
-
-			//    // 根据状态 设置信息.
-			//    if (ur.Vals.IndexOf(attr.getKey()) != -1)
-			//        dr["Checked"] = "true";
-
-			//    dt.Rows.add(dr);
-
-			//    isHave = true;
-			//}
-
-			//if (isHave)
-			//    continue;
 
 
 			dtr = dt.NewRow();
@@ -4793,7 +4832,7 @@ public final String RichUploadFile() throws Exception {
 			}
 			ddlDt.Rows.add(ddlDr);
 
-			if (this.getIsContainsNDYF())
+			if (this.isContainsNDYF())
 			{
 				ddlDr = ddlDt.NewRow();
 				ddlDr.setValue("No", "AMOUNT");
@@ -4809,12 +4848,12 @@ public final String RichUploadFile() throws Exception {
 
 
 		}
+
 		ds.Tables.add(dt);
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
-	public final String Group_Search() throws Exception
-	{
+	public final String Group_Search() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 		if (ens == null)
@@ -4839,690 +4878,280 @@ public final String RichUploadFile() throws Exception {
 			return "info@<img src='../Img/Warning.gif' /><b><font color=red> 您没有选择显示内容/分析项目</font></b>";
 		}
 
-		//不显示合计列。
-		String NoShowSum = SystemConfig.GetConfigXmlEns("NoShowSum", this.getEnsName());
+		////不显示合计列。
+		/*string NoShowSum =  bp.difference.SystemConfig.GetConfigXmlEns("NoShowSum", this.EnsName);
 		DataTable showSum = new DataTable("NoShowSum");
 		showSum.Columns.Add("NoShowSum");
 		DataRow sumdr = showSum.NewRow();
-		sumdr.setValue("NoShowSum", NoShowSum);
+		sumdr["NoShowSum"] = NoShowSum;
 		showSum.Rows.add(sumdr);
 
 		DataTable activeAttr = aas.ToDataTable();
 		activeAttr.TableName = "ActiveAttr";
 		ds.Tables.add(activeAttr);
-		ds.Tables.add(showSum);
+		ds.Tables.add(showSum);*/
 
-		return bp.tools.Json.ToJson(ds);
+		return Json.ToJson(ds);
 	}
 
-	private DataSet GroupSearchSet(Entities ens, Entity en, Map map, UserRegedit ur, DataSet ds, ActiveAttrs aas) throws Exception
-	{
+	private DataSet GroupSearchSet(Entities ens, Entity en, Map map, UserRegedit ur, DataSet ds, ActiveAttrs aas) throws Exception {
 
 		//查询条件
 		//分组
-		String groupKey = "";
-		Attrs AttrsOfNum = new Attrs(); //列
 		String Condition = ""; //处理特殊字段的条件问题。
 
+		AtPara atPara = new AtPara(ur.getVals());
+		//获取分组的条件
+		String groupKey = atPara.GetValStrByKey("SelectedGroupKey");
+		//分析项
+		String analyKey = atPara.GetValStrByKey("StateNumKey");
 
-		//根据注册表信息获取里面的分组信息
-		String StateNumKey = ur.getVals().substring(ur.getVals().indexOf("@StateNumKey") + 1);
+		//设置显示的列
+		Attrs mapAttrOfShows = new Attrs();
 
-		String[] statNumKeys = StateNumKey.split("[@]", -1);
-		for (String ct : statNumKeys)
-		{
-			if (ct.split("[=]", -1).length != 2)
-			{
-				continue;
-			}
-			String[] paras = ct.split("[=]", -1);
-
-			//判断paras[0]的类型
-			int dataType = 2;
-			if (paras[0].equals("Group_Number"))
-			{
-				AttrsOfNum.Add(new Attr("Group_Number", "Group_Number", 1, DataType.AppInt, false, "数量"));
-			}
-			else
-			{
-				Attr attr = map.GetAttrByKey(paras[0]);
-				AttrsOfNum.Add(attr);
-				dataType = attr.getMyDataType();
-			}
-
-			if (this.GetRequestVal("DDL_Aly_" + paras[0]) == null)
-			{
-				ActiveAttr aa = (ActiveAttr)aas.GetEnByKey(ActiveAttrAttr.AttrKey, paras[0]);
-				if (aa == null)
-				{
-					continue;
-				}
-
-				Condition += aa.getCondition();
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-				{
-					groupKey += " round ( cast (" + aa.getExp() + " as  numeric), 4)  \"" + paras[0] + "\",";
-				}
-				else
-				{
-					groupKey += " round (" + aa.getExp() + ", 4)  \"" + paras[0] + "\",";
-				}
-				StateNumKey += paras[0] + "=Checked@"; // 记录状态
-				continue;
-			}
-
-			if (paras[0].equals("Group_Number"))
-			{
-				groupKey += " count(*) \"" + paras[0] + "\",";
-			}
-			else
-			{
-				switch (paras[1])
-				{
-					case "SUM":
-						if (dataType == 2)
-						{
-							groupKey += " SUM(" + paras[0] + ") \"" + paras[0] + "\",";
-						}
-						else
-						{
-							if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-							{
-								groupKey += " round ( cast (SUM(" + paras[0] + ") as  numeric), 4)  \"" + paras[0] + "\",";
-							}
-							else
-							{
-								groupKey += " round ( SUM(" + paras[0] + "), 4) \"" + paras[0] + "\",";
-							}
-						}
-
-						break;
-					case "AVG":
-						if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-						{
-							groupKey += " round ( cast (AVG(" + paras[0] + ") as  numeric), 4)  \"" + paras[0] + "\",";
-						}
-						else
-						{
-							groupKey += " round (AVG(" + paras[0] + "), 4)  \"" + paras[0] + "\",";
-						}
-						break;
-					case "AMOUNT":
-						if (dataType == 2)
-						{
-							groupKey += " SUM(" + paras[0] + ") \"" + paras[0] + "\",";
-						}
-						else
-						{
-							if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-							{
-								groupKey += " round ( cast (SUM(" + paras[0] + ") as  numeric), 4)  \"" + paras[0] + "\",";
-							}
-							else
-							{
-								groupKey += " round ( SUM(" + paras[0] + "), 4) \"" + paras[0] + "\",";
-							}
-						}
-
-						break;
-					default:
-						throw new RuntimeException("没有判断的情况.");
-				}
-
-			}
-
-		}
-		boolean isHaveLJ = false; // 是否有累计字段。
-		if (StateNumKey.indexOf("AMOUNT@") != -1)
-		{
-			isHaveLJ = true;
-		}
+		//查询语句定义
+		String sql = "";
+		String selectSQL = "SELECT "; //select部分的组合
+		String groupBySQL = " GROUP BY "; //分组的组合
 
 
-		if (groupKey.equals(""))
-		{
-			return null;
-		}
+		///#region SelectSQL语句的组合
 
-		/* 如果包含累计数据，那它一定需要一个月份字段。业务逻辑错误。*/
-		groupKey = groupKey.substring(0, groupKey.length() - 1);
-		bp.da.Paras ps = new Paras();
-		// 生成 sql.
-		String selectSQL = "SELECT ";
-		String groupBy = " GROUP BY ";
-		Attrs AttrsOfGroup = new Attrs();
 
-		String SelectedGroupKey = ur.getVals().substring(0, ur.getVals().indexOf("@StateNumKey")); // 为保存操作状态的需要。
-		if (!DataType.IsNullOrEmpty(SelectedGroupKey))
+		///#region 分组条件的整合
+		if (DataType.IsNullOrEmpty(groupKey) == false)
 		{
 			boolean isSelected = false;
-			String[] SelectedGroupKeys = SelectedGroupKey.split("[@]", -1);
-			for (String key : SelectedGroupKeys)
+			String[] SelectedGroupKeys = groupKey.split("[,]", -1);
+			for (Object key : SelectedGroupKeys)
 			{
-				if (key.contains("=") == true)
+				if (DataType.IsNullOrEmpty(key) == true)
 				{
 					continue;
 				}
-				//if (key.Equals("Group_Number"))
-
-				selectSQL += key + " \"" + key + "\",";
-				groupBy += key + ",";
+				Attr attr = map.GetAttrByKey(String.valueOf(key));
 				// 加入组里面。
-				AttrsOfGroup.Add(map.GetAttrByKey(key), false, false);
+				mapAttrOfShows.add(map.GetAttrByKey(String.valueOf(key)));
+
+				selectSQL += map.getPhysicsTable() + "." + key + " \"" + key + "\",";
+
+				groupBySQL += map.getPhysicsTable() + "." + key + ",";
+
+				if (attr.getMyFieldType() == FieldType.FK)
+				{
+					Map fkMap = attr.getHisFKEn().getEnMap();
+					String refText = fkMap.getPhysicsTable() + "_" + attr.getKey() + "." + fkMap.GetFieldByKey(attr.getUIRefKeyText());
+					selectSQL += refText + "  AS " + key + "Text" + ",";
+					groupBySQL += refText + ",";
+					continue;
+				}
+
+				if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
+				{
+					//增加枚举字段
+					if (DataType.IsNullOrEmpty(attr.getUIBindKey()))
+					{
+						throw new RuntimeException("@" + en.toString() + " key=" + attr.getKey() + " UITag=" + attr.UITag + "");
+					}
+
+					SysEnums ses = new SysEnums(attr.getUIBindKey(), attr.UITag);
+					selectSQL += ses.GenerCaseWhenForOracle(en.getEnMap().getPhysicsTable() + ".", attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString())) + ",";
+					continue;
+				}
+
+				//不是外键、枚举，就是外部数据源
+				selectSQL += key + "T" + " \"" + key + "T\",";
+
+
+
 
 			}
 		}
 
-		String groupList = this.GetRequestVal("GroupList");
-		if (!DataType.IsNullOrEmpty(SelectedGroupKey))
+		///#endregion 分组条件的整合
+
+
+		///#region 分析项的整合
+		Attrs AttrsOfNum = new Attrs();
+		String[] analyKeys = analyKey.split("[,]", -1);
+		for (String key : analyKeys)
 		{
-			/* 如果是年月 分组， 并且如果内部有 累计属性，就强制选择。*/
-			if (groupList.indexOf("FK_NY") != -1 && isHaveLJ)
+			if (DataType.IsNullOrEmpty(key) == true)
 			{
-				selectSQL += "FK_NY,";
-				groupBy += "FK_NY,";
-				SelectedGroupKey += "@FK_NY";
-				// 加入组里面。
-				AttrsOfGroup.Add(map.GetAttrByKey("FK_NY"), false, false);
+				continue;
 			}
+			String[] strs = key.split("[=]", -1);
+			if (strs.length != 2)
+			{
+				continue;
+			}
+
+			//求数据的总和
+			if (strs[0].equals("Group_Number"))
+			{
+				selectSQL += " count(*) \"" + strs[0] + "\",";
+				mapAttrOfShows.add(new Attr("Group_Number", "Group_Number", 1, DataType.AppInt, false, "数量(合计)"));
+				AttrsOfNum.add(new Attr("Group_Number", "Group_Number", 1, DataType.AppInt, false, "数量"));
+				continue;
+			}
+
+			//判断分析项的数据类型
+			Attr attr = map.GetAttrByKey(strs[0]);
+			AttrsOfNum.add(attr);
+
+			int dataType = attr.getMyDataType();
+			switch (strs[1])
+			{
+				case "SUM":
+					if (dataType == 2)
+					{
+						selectSQL += " SUM(" + strs[0] + ") \"" + strs[0] + "\",";
+					}
+					else
+					{
+						if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+						{
+							selectSQL += " round ( cast (SUM(" + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
+						}
+						else
+						{
+							selectSQL += " round ( SUM(" + strs[0] + "), 4) \"" + strs[0] + "\",";
+						}
+					}
+					attr.setDesc(attr.getDesc() + "(合计)");
+
+					break;
+				case "AVG":
+					if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+					{
+						selectSQL += " round ( cast (AVG(" + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
+					}
+					else
+					{
+						selectSQL += " round (AVG(" + strs[0] + "), 4)  \"" + strs[0] + "\",";
+					}
+					attr.setDesc(attr.getDesc() + "(平均)");
+					break;
+				case "AMOUNT":
+					if (dataType == 2)
+					{
+						selectSQL += " SUM(" + strs[0] + ") \"" + strs[0] + "\",";
+					}
+					else
+					{
+						if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+						{
+							selectSQL += " round ( cast (SUM(" + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
+						}
+						else
+						{
+							selectSQL += " round ( SUM(" + strs[0] + "), 4) \"" + strs[0] + "\",";
+						}
+					}
+					attr.setDesc(attr.getDesc() + "(累计)");
+					break;
+				default:
+					throw new RuntimeException("没有判断的情况.");
+			}
+			mapAttrOfShows.add(attr);
+
 		}
 
-		groupBy = groupBy.substring(0, groupBy.length() - 1);
-
-		if (groupBy.trim().equals("GROUP BY"))
+		///#endregion 分析项的整合
+		if (DataType.IsNullOrEmpty(selectSQL) == true || selectSQL.equals("SELECT ") == true)
 		{
 			return null;
 		}
+		selectSQL = selectSQL.substring(0, selectSQL.length() - 1);
 
-		// 查询语句的生成
-		String where = " WHERE ";
-		String whereOfLJ = " WHERE "; // 累计的where.
-		String url = "";
-		Paras myps = new Paras();
+
+		///#endregion SelectSQL语句的组合
+
+
+		///#region WhereSQL语句的组合
+
 		//获取查询的注册表
-		bp.sys.UserRegedit searchUr = new UserRegedit();
+		UserRegedit searchUr = new UserRegedit();
 		searchUr.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
 		searchUr.RetrieveFromDBSources();
 
+		QueryObject qo = Search_Data(ens, en, map, searchUr);
 
-			///查询条件
-		//关键字查询
-		String keyWord = searchUr.getSearchKey();
-		AtPara ap = new AtPara(searchUr.getVals());
-		MapData mapData = new MapData();
-		mapData.setNo(this.getEnsName());
-		boolean IsShowSearchKey = en.getEnMap().IsShowSearchKey;
-		DTSearchWay dtSearchWay = map.DTSearchWay;
-		String DTSearchKey = map.DTSearchKey;
+		String whereSQL = " " + qo.getSQL().substring(qo.getSQL().indexOf("FROM "));
 
-		//单据，实体单据
-		if (mapData.RetrieveFromDBSources() != 0 && DataType.IsNullOrEmpty(mapData.getFK_FormTree()) == false)
+
+		///#endregion WhereSQL语句的组合
+
+
+		///#region OrderBy语句组合
+
+		String orderbySQL = "";
+		String orderByKey = this.GetRequestVal("OrderBy");
+		if (DataType.IsNullOrEmpty(orderByKey) == false && selectSQL.contains(orderByKey) == true)
 		{
-			IsShowSearchKey = mapData.GetParaBoolen("IsSearchKey");
-			dtSearchWay = DTSearchWay.forValue(mapData.GetParaInt("DTSearchWay"));
-			DTSearchKey = mapData.GetParaString("DTSearchKey");
-		}
-
-		if (IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
-		{
-			String whereLike = "";
-			boolean isAddAnd = false;
-			for (Attr attr : map.getAttrs())
-			{
-				if (attr.getIsNum())
-				{
-					continue;
-				}
-				if (attr.getIsRefAttr())
-				{
-					continue;
-				}
-
-				switch (attr.getField())
-				{
-					case "MyFileExt":
-					case "MyFilePath":
-					case "WebPath":
-						continue;
-					default:
-						break;
-				}
-				if (isAddAnd == false)
-				{
-					isAddAnd = true;
-					whereLike += "     (" + attr.getField() + " LIKE '%" + keyWord + "%' ";
-				}
-				else
-				{
-					whereLike += "   OR   " + attr.getField() + " LIKE '%" + keyWord + "%'";
-				}
-			}
-			whereLike += ")          ";
-			where += whereLike;
-		}
-		else
-		{
-			where += "1=1";
-		}
-
-
-
-		//其余查询条件
-		//时间
-		if (dtSearchWay != DTSearchWay.None)
-		{
-			String dtFrom = searchUr.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().replace("/", "-");
-			String dtTo = searchUr.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().replace("/", "-");
-
-			if (DataType.IsNullOrEmpty(dtTo) == true)
-			{
-				dtTo = DataType.getCurrentDate();
-			}
-
-			//按日期查询
-			if (dtSearchWay == DTSearchWay.ByDate)
-			{
-				dtTo += " 23:59:59";
-				if (DataType.IsNullOrEmpty(dtFrom) == true)
-				{
-					where += " and (" + DTSearchKey + " <= '" + dtTo + "')";
-				}
-				else
-				{
-					where += " and (" + DTSearchKey + " >= '" + dtFrom + "'";
-					where += " and " + DTSearchKey + " <= '" + dtTo + "'";
-					where += ")";
-				}
-
-			}
-
-			if (dtSearchWay == DTSearchWay.ByDateTime)
-			{
-				//取前一天的24：00
-				if (dtFrom.trim().length() == 10) //2017-09-30
-				{
-					dtFrom += " 00:00:00";
-				}
-				if (dtFrom.trim().length() == 16) //2017-09-30 00:00
-				{
-					dtFrom += ":00";
-				}
-				
-				Date date = DateUtils.parse(dtFrom);
-				date = DateUtils.addDay(date, -1);
-				dtFrom = DateUtils.format(date, "yyyy-MM-dd") + " 24:00";
-
-
-
-				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
-				{
-					dtTo += " 24:00";
-				}
-				if (DataType.IsNullOrEmpty(dtFrom) == true)
-				{
-					where += " and (" + DTSearchKey + " <= '" + dtTo + "')";
-				}
-				else
-				{
-					where += " and (" + DTSearchKey + " >= '" + dtFrom + "'";
-					where += " and " + DTSearchKey + " <= '" + dtTo + "'";
-					where += ")";
-				}
-
-
-			}
-		}
-		/** 获得查询数据.
-		*/
-		if (ap.getHisHT().keySet().size() > 0)
-		{
-			for (String str : ap.getHisHT().keySet())
-			{
-				Object val = ap.GetValStrByKey(str);
-				if (val.equals("all"))
-				{
-					continue;
-				}
-				where += "  and " + str + "=" + SystemConfig.getAppCenterDBVarStr() + str;
-				if (!str.equals("FK_NY"))
-				{
-					whereOfLJ += "  and " + str + " =" + SystemConfig.getAppCenterDBVarStr() + str;
-				}
-
-				myps.Add(str, val);
-
-			}
-			if (where.endsWith(" AND ") == true)
-			{
-				where = where.substring(0, where.length() - " AND ".length());
-			}
-			whereOfLJ = whereOfLJ.substring(0, whereOfLJ.length() - " AND ".length());
-		}
-
-
-
-			///
-
-		if (where.equals(" WHERE "))
-		{
-			where = "" + Condition.replace("and", "");
-			whereOfLJ = "" + Condition.replace("and", "");
-		}
-		else
-		{
-			where = where + Condition;
-			whereOfLJ = whereOfLJ + Condition;
-		}
-
-		String orderByReq = this.GetRequestVal("OrderBy");
-
-		String orderby = "";
-
-		if (orderByReq != null && (selectSQL.contains(orderByReq) || groupKey.contains(orderByReq)))
-		{
-			orderby = " ORDER BY " + orderByReq;
+			orderbySQL = " ORDER BY" + orderByKey;
 			String orderWay = this.GetRequestVal("OrderWay");
-			if (!DataType.IsNullOrEmpty(orderWay) && !orderWay.equals("Up"))
+			if (DataType.IsNullOrEmpty(orderWay) == false && orderWay.equals("Up") == false)
 			{
-				orderby += " DESC ";
-			}
-		}
-
-		// 组装成需要的 sql 
-		String sql = selectSQL + groupKey + " FROM " + map.getPhysicsTable() + where + groupBy + orderby;
-
-
-		myps.SQL=sql;
-		//  物理表。
-
-		DataTable dt2 = DBAccess.RunSQLReturnTable(myps);
-
-		DataTable dt1 = dt2.clone();
-
-		dt1.Columns.Add("IDX", Integer.class);
-
-
-			///对他进行分页面
-
-		int myIdx = 0;
-		for (DataRow dr : dt2.Rows)
-		{
-			myIdx++;
-			DataRow mydr = dt1.NewRow();
-			mydr.setValue("IDX", myIdx);
-			for (DataColumn dc : dt2.Columns)
-			{
-				mydr.setValue(dc.ColumnName, dr.getValue(dc.ColumnName));
-			}
-			dt1.Rows.add(mydr);
-		}
-
-			///
-
-
-			///处理 Int 类型的分组列。
-		DataTable dt = dt1.clone();
-		dt.TableName = "GroupSearch";
-		dt.Rows.clear();
-		for (Attr attr : AttrsOfGroup)
-		{
-			dt.Columns.get(attr.getKey()).DataType = String.class;
-		}
-		for (DataRow dr : dt1.Rows)
-		{
-			dt.Rows.add(dr);
-		}
-
-			///
-
-		// 处理这个物理表 , 如果有累计字段, 就扩展它的列。
-		if (isHaveLJ)
-		{
-			// 首先扩充列.
-			for (Attr attr : AttrsOfNum)
-			{
-				if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
-				{
-					continue;
-				}
-
-				switch (attr.getMyDataType())
-				{
-					case DataType.AppInt:
-						dt.Columns.Add(attr.getKey() + "Amount", Integer.class);
-						break;
-					default:
-						dt.Columns.Add(attr.getKey() + "Amount", BigDecimal.class);
-						break;
-				}
+				orderbySQL += " DESC ";
 			}
 
-			// 添加累计汇总数据.
-			for (DataRow dr : dt.Rows)
-			{
-				for (Attr attr : AttrsOfNum)
-				{
-					if (StateNumKey.indexOf(attr.getKey() + "=AMOUNT") == -1)
-					{
-						continue;
-					}
-
-					//形成查询sql.
-					if (whereOfLJ.length() > 10)
-					{
-						sql = "SELECT SUM(" + attr.getKey() + ") FROM " + map.getPhysicsTable() + whereOfLJ + " AND ";
-					}
-					else
-					{
-						sql = "SELECT SUM(" + attr.getKey() + ") FROM " + map.getPhysicsTable() + " WHERE ";
-					}
-
-					for (Attr attr1 : AttrsOfGroup)
-					{
-						switch (attr1.getKey())
-						{
-							case "FK_NY":
-								sql += " FK_NY <= '" + dr.getValue("FK_NY") + "' AND FK_ND='" + dr.getValue("FK_NY").toString().substring(0, 4) + "' AND ";
-								break;
-							case "FK_Dept":
-								sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
-								break;
-							case "FK_SJ":
-							case "FK_XJ":
-								sql += attr1.getKey() + " LIKE '" + dr.getValue(attr1.getKey()) + "%' AND ";
-								break;
-							default:
-								sql += attr1.getKey() + "='" + dr.getValue(attr1.getKey()) + "' AND ";
-								break;
-						}
-					}
-
-					sql = sql.substring(0, sql.length() - "AND ".length());
-					if (attr.getMyDataType() == DataType.AppInt)
-					{
-						dr.setValue(attr.getKey() + "Amount", DBAccess.RunSQLReturnValInt(sql, 0));
-					}
-					else
-					{
-						dr.setValue(attr.getKey() + "Amount", DBAccess.RunSQLReturnValDecimal(sql,new BigDecimal(0), 2));
-					}
-				}
-			}
 		}
 
-		// 为表扩充外键
-		for (Attr attr : AttrsOfGroup)
-		{
-			dt.Columns.Add(attr.getKey() + "T", String.class);
-		}
-		for (Attr attr : AttrsOfGroup)
-		{
-			/* 说明它是枚举类型 */
-			if (attr.getMyFieldType() == FieldType.Enum && DataType.IsNullOrEmpty(attr.getUIBindKey()) == false)
-			{
-				for (DataRow dr : dt.Rows)
-				{
-					int val = 0;
-					try
-					{
-						val = Integer.parseInt(dr.getValue(attr.getKey()).toString());
-					}
-					catch (java.lang.Exception e)
-					{
-						dr.setValue(attr.getKey() + "T", " ");
-						continue;
-					}
-					SysEnum se = new SysEnum(attr.getUIBindKey(),val);
-					dr.setValue(attr.getKey() + "T", se.getLab());
-				}
-				continue;
-			}
-			/**是外键*/
-			if (attr.getMyFieldType() == FieldType.FK)
-			{
-				for (DataRow dr : dt.Rows)
-				{
-					Entity myen = attr.getHisFKEn();
-					String val = dr.getValue(attr.getKey()).toString();
-					myen.SetValByKey(attr.getUIRefKeyValue(), val);
-					try
-					{
-						myen.Retrieve();
-						dr.setValue(attr.getKey() + "T", myen.GetValStrByKey(attr.getUIRefKeyText()));
-					}
-					catch (java.lang.Exception e2)
-					{
-						if (val == null || val.length() <= 1)
-						{
-							dr.setValue(attr.getKey() + "T", val);
-						}
-						else if (val.substring(0, 2).equals("63"))
-						{
-							try
-							{
-								bp.port.Dept Dept = new bp.port.Dept(val);
-								dr.setValue(attr.getKey() + "T", Dept.getName());
-							}
-							catch (java.lang.Exception e3)
-							{
-								dr.setValue(attr.getKey() + "T", val);
-							}
-						}
-						else
-						{
-							dr.setValue(attr.getKey() + "T", val);
-						}
-					}
-				}
-				continue;
-			}
-			/**外部数据源*/
-		   if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false)
-		   {
-				String sqlKey = attr.getUIBindKey();
-				DataTable dtSQl = null;
-				if (sqlKey.toUpperCase().contains("SELECT") == true)
-				{
-					//sql数据
-					sqlKey = bp.wf.Glo.DealExp(attr.getUIBindKey(), null, null);
-					dtSQl = DBAccess.RunSQLReturnTable(sqlKey);
-				}
-				else
-				{
-					dtSQl =PubClass.GetDataTableByUIBineKey(attr.getUIBindKey());
-				}
-				for (DataColumn col : dtSQl.Columns)
-				{
-					String colName = col.ColumnName.toLowerCase();
-					switch (colName)
-					{
-						case "no":
-							col.ColumnName = "No";
-							break;
-						case "name":
-							col.ColumnName = "Name";
-							break;
-						case "parentno":
-							col.ColumnName = "ParentNo";
-							break;
-						default:
-							break;
-					}
-				}
-				for (DataRow dr : dt.Rows)
-				{
-					Object val = dr.getValue(attr.getKey());
-					if (val == null || DataType.IsNullOrEmpty(val.toString()) == true)
-					{
-						dr.setValue(attr.getKey() + "T", "");
-						continue;
-					}
-					for (DataRow ddr : dtSQl.Rows)
-					{
-						if (ddr.getValue("No").toString().equals(val.toString()))
-						{
-							dr.setValue(attr.getKey() + "T", ddr.getValue("Name"));
-							break;
-						}
-					}
-				}
-				continue;
-		   }
 
-		}
+		///#endregion OrderBy语句组合
+		sql = selectSQL + whereSQL + groupBySQL.substring(0, groupBySQL.length() - 1) + orderbySQL;
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
+		dt.TableName = "MainData";
+
 		ds.Tables.add(dt);
+		ds.Tables.add(mapAttrOfShows.ToMapAttrs().ToDataTableField("Sys_MapAttr"));
 		ds.Tables.add(AttrsOfNum.ToMapAttrs().ToDataTableField("AttrsOfNum"));
-		ds.Tables.add(AttrsOfGroup.ToMapAttrs().ToDataTableField("AttrsOfGroup"));
+
 		return ds;
 	}
-	public final String ParseExpToDecimal()
-	{
+	public final String ParseExpToDecimal() throws Exception {
 		String exp = this.GetRequestVal("Exp");
 
 		BigDecimal d = DataType.ParseExpToDecimal(exp);
 		return d.toString();
 	}
 
-	/** 
+	/**
 	 执行导出
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String Group_Exp() throws Exception
-	{
-		//获得
-		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		if (ens == null)
-		{
-			return "err@类名错误:" + this.getEnsName();
-		}
 
-		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
-		DataSet ds = new DataSet();
+	 @return
+	 */
+	//public string Group_Exp()
+	//{
+	//    //获得
+	//    Entities ens = ClassFactory.GetEns(this.EnsName);
+	//    if (ens == null)
+	//        return "err@类名错误:" + this.EnsName;
 
-		//获取注册信息表
-		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getEnsName() + "_Group");
+	//    Entity en = ens.getGetNewEntity();
+	//    Map map = ens.getGetNewEntity().EnMapInTime;
+	//    DataSet ds = new DataSet();
 
-		// 查询出来关于它的活动列配置.
-		ActiveAttrs aas = new ActiveAttrs();
-		aas.RetrieveBy(ActiveAttrAttr.For, this.getEnsName());
+	//    //获取注册信息表
+	//    UserRegedit ur = new UserRegedit(WebUser.getNo(), this.EnsName + "_Group");
 
-		ds = GroupSearchSet(ens, en, map, ur, ds, aas);
-		if (ds == null)
-		{
-			return "err@您没有选择分析的数据";
-		}
+	//    // 查询出来关于它的活动列配置.
+	//    ActiveAttrs aas = new ActiveAttrs();
+	//    aas.RetrieveBy(ActiveAttrAttr.For, this.EnsName);
 
-		String filePath = ExportDGToExcel(ds, en.getEnDesc(), ur.getVals());
+	//    ds = GroupSearchSet(ens, en, map, ur, ds, aas);
+	//    if (ds == null)
+	//        return "err@您没有选择分析的数据";
+
+	//    string filePath = BP.Tools.ExportExcelUtil.ExportGroupExcel(ds, en.EnDesc, ur.Vals);
 
 
-		return filePath;
-	}
+	//    return filePath;
+	//}
 
-	public final boolean getIsContainsNDYF()
-	{
+	public final boolean isContainsNDYF() throws Exception {
 		if (this.GetValFromFrmByKey("IsContainsNDYF").toString().toUpperCase().equals("TRUE"))
 		{
 			return true;
@@ -5535,15 +5164,13 @@ public final String RichUploadFile() throws Exception {
 
 
 
-		///常用词汇功能开始
-	/** 
+	///#region 常用词汇功能开始
+	/**
 	 常用词汇
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final String HelperWordsData() throws Exception
-	{
+
+	 @return
+	 */
+	public final String HelperWordsData() throws Exception {
 
 		String FK_MapData = this.GetRequestVal("FK_MapData");
 		String AttrKey = this.GetRequestVal("AttrKey");
@@ -5589,7 +5216,7 @@ public final String RichUploadFile() throws Exception {
 			qo.DoQuery("MyPK", iPageSize, iPageNumber);
 
 
-			//bp.tools.Json.ToJson(dvs.ToDataTableField("MainTable"));
+			String gg = Json.ToJson(dvs.ToDataTableField("MainTable"));
 			ds.Tables.add(dvs.ToDataTableField("MainTable")); //把描述加入.
 		}
 		if (lb.equals("hisWords"))
@@ -5624,19 +5251,19 @@ public final String RichUploadFile() throws Exception {
 
 			qo.DoQuery("OID", iPageSize, iPageNumber);
 
-			dt = ges.ToDataTableField();
+			dt = ges.ToDataTableField("dt");
 			DataTable newDt = new DataTable("MainTable");
 			newDt.Columns.Add("CurValue");
 			newDt.Columns.Add("MyPk");
 			for (DataRow drs : dt.Rows)
 			{
-				if (DataType.IsNullOrEmpty(drs.getValue(AttrKey).toString()))
+				if (DataType.IsNullOrEmpty(drs.get(AttrKey).toString()))
 				{
 					continue;
 				}
 				dr = newDt.NewRow();
-				dr.setValue("CurValue", drs.getValue(AttrKey));
-				dr.setValue("MyPK", drs.getValue("OID"));
+				dr.setValue("CurValue", drs.get(AttrKey));
+				dr.setValue("MyPK", drs.get("OID"));
 				newDt.Rows.add(dr);
 			}
 
@@ -5646,25 +5273,27 @@ public final String RichUploadFile() throws Exception {
 		}
 
 		return DataTableConvertJson.DataTable2Json(ds.GetTableByName("MainTable"), Integer.parseInt(ds.GetTableByName("DataCount").Rows.get(0).getValue(0).toString()));
-		//return bp.tools.Json.ToJson(ds);
+		//return BP.Tools.Json.ToJson(ds);
 	}
 
-	/** 
+	/**
 	 注意特殊字符的处理
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	private String readTxt() throws Exception {
+		try
+		{
+			String path = SystemConfig.getPathOfDataUser() + "Fastenter/" + getFK_MapData() + "/" + GetRequestVal("AttrKey");
+			;
+			if (!(new File(path)).isDirectory())
+			{
+				(new File(path)).mkdirs();
+			}
 
-		try {
-			String path = SystemConfig.getPathOfDataUser() + "Fastenter\\" + getFK_MapData() + "\\"
-					+ GetRequestVal("AttrKey");
-			File folder = new File(path);
-			if (folder.exists() == false)
-				folder.mkdirs();
-
-			File[] folderArray = folder.listFiles();
-			if (folderArray.length == 0) {
+			File[] folderArray = (new File(path)).listFiles();
+			if (folderArray.length == 0)
+			{
 				return "";
 			}
 
@@ -5685,12 +5314,15 @@ public final String RichUploadFile() throws Exception {
 			String liStr = "";
 			int count = 0;
 			int index = iPageSize * (iPageNumber - 1);
-			for (File file : folderArray) {
-				if (count >= index && count < iPageSize * iPageNumber) {
-					dt.Rows.get(count).setValue("MyPk", DBAccess.GenerGUID());
+			for (File file : folderArray)
+			{
+
+				if (count >= index && count < iPageSize * iPageNumber)
+				{
+					dt.Rows.get(count).setValue("MyPk",DBAccess.GenerGUID(0, null, null));
+
 
 					fileName = file.getName().replace("\"", "").replace("'", "");
-
 					BufferedReader reader = null;
 					String tempString = null;
 					try {
@@ -5723,19 +5355,19 @@ public final String RichUploadFile() throws Exception {
 			dr.setValue("DataCount", folderArray.length);
 			dt.Rows.add(dr);
 			ds.Tables.add(dt);
-			return bp.tools.Json.ToJson(ds);
-		} catch (RuntimeException e) {
+			return Json.ToJson(ds);
+		}
+		catch (RuntimeException e)
+		{
 			return "";
 		}
-
 	}
 
-		/// 常用词汇结束
+	///#endregion 常用词汇结束
 
 
-		///前台SQL转移处理
-	public final String RunSQL_Init()throws Exception
-	{
+	///#region 前台SQL转移处理
+	public final String RunSQL_Init() throws Exception {
 		String sql = GetRequestVal("SQL");
 		String dbSrc = this.GetRequestVal("DBSrc");
 		DataTable dt = null;
@@ -5748,116 +5380,9 @@ public final String RichUploadFile() throws Exception {
 		{
 			dt = DBAccess.RunSQLReturnTable(sql);
 		}
-
-		return bp.tools.Json.ToJson(dt);
+		return Json.ToJson(dt);
 	}
 
-	public String Ens_Init() throws Exception
-	{
-		//定义容器.
-		DataSet ds = new DataSet();
-
-		//查询出来从表数据.
-		Entities dtls = ClassFactory.GetEns(this.getEnsName());
-		dtls.RetrieveAll();
-		Entity en = dtls.getGetNewEntity();
-		ds.Tables.add(dtls.ToDataTableField("Ens"));
-
-		//实体.
-		Entity dtl = dtls.getGetNewEntity();
-		//定义Sys_MapData.
-		MapData md = new MapData();
-		md.setNo(this.getEnName());
-		md.setName(dtl.getEnDesc());
-
-		//加入权限信息.
-		//把权限加入参数里面.
-		if (dtl.getHisUAC().IsInsert)
-			md.SetPara("IsInsert", "1");
-		if (dtl.getHisUAC().IsUpdate)
-			md.SetPara("IsUpdate", "1");
-		if (dtl.getHisUAC().IsDelete)
-			md.SetPara("IsDelete", "1");
-		// end加入权限信息.
-
-		//判断主键是否为自增长
-
-		if (en.getIsNoEntity() == true && en.getEnMap().getIsAutoGenerNo())
-			md.SetPara("IsNewRow", "0");
-		else
-			md.SetPara("IsNewRow", "1");
-
-		md.SetPara("PK", en.getPK());
-
-		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
-
-		//字段属性.
-		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs();
-		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
-		ds.Tables.add(sys_MapAttrs);
-		// 字段属性.
-
-		//把外键与枚举放入里面去.
-		for(DataRow dr : sys_MapAttrs.Rows)
-		{
-			String uiBindKey = dr.getValue("UIBindKey").toString();
-			String lgType =dr.getValue("LGType").toString();
-			if (lgType.equals("2") == false)
-				continue;
-
-			String UIIsEnable = dr.getValue("UIVisible").toString();
-			if (UIIsEnable == "0")
-				continue;
-
-			if (DataType.IsNullOrEmpty(uiBindKey) == true)
-			{
-				String myPK = dr.getValue("MyPK").toString();
-			}
-
-			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.getValue("KeyOfEn").toString();
-			String fk_mapData = dr.getValue("FK_MapData").toString();
-
-
-			// 判断是否存在.
-			if (ds.Tables.contains(uiBindKey) == true)
-				continue;
-
-			ds.Tables.add(PubClass.GetDataTableByUIBineKey(uiBindKey));
-		}
-
-		String enumKeys = "";
-		for(Attr attr : dtl.getEnMap().getAttrs())
-		{
-			if (attr.getMyFieldType() == FieldType.Enum)
-			{
-				enumKeys += "'" + attr.getUIBindKey() + "',";
-			}
-		}
-
-		if (enumKeys.length() > 2)
-		{
-			enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
-
-			String sqlEnum = "SELECT * FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
-			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
-
-			dtEnum.TableName = "Sys_Enum";
-
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-			{
-				dtEnum.Columns.get("MYPK").setColumnName("MyPK");
-				dtEnum.Columns.get("LAB").setColumnName("Lab");
-				dtEnum.Columns.get("ENUMKEY").setColumnName("EnumKey");
-				dtEnum.Columns.get("INTKEY").setColumnName("IntKey");
-				dtEnum.Columns.get("LANG").setColumnName("Lang");
-			}
-			ds.Tables.add(dtEnum);
-		}
-		//把外键与枚举放入里面去.
-
-		return bp.tools.Json.ToJson(ds);
-	}
-
+	///#endregion
 
 }

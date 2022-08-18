@@ -1,10 +1,6 @@
 package bp.sys.frmui;
 
-import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.sys.*;
-import bp.*;
 import bp.sys.*;
 import java.util.*;
 
@@ -14,50 +10,45 @@ import java.util.*;
 public class ExtImgs extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 装饰图片s
 	*/
-	public ExtImgs()
-	{
+	public ExtImgs() {
 	}
 	/** 
 	 装饰图片s
 	 
-	 @param fk_mapdata s
-	 * @throws Exception 
+	 param fk_mapdata s
 	*/
-	public ExtImgs(String fk_mapdata) throws Exception
-	{
-		if (SystemConfig.getIsDebug())
+	public ExtImgs(String fk_mapdata) throws Exception {
+		if (bp.difference.SystemConfig.getIsDebug())
 		{
-			this.Retrieve(FrmLineAttr.FK_MapData, fk_mapdata);
+			this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
 		}
 		else
 		{
-			this.RetrieveFromCash(FrmLineAttr.FK_MapData, (Object)fk_mapdata);
+			this.RetrieveFromCash(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
 		}
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmImg();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtImg> ToJavaList()
-	{
+	public final java.util.List<ExtImg> ToJavaList() {
 		return (java.util.List<ExtImg>)(Object)this;
 	}
 	/** 
@@ -65,8 +56,7 @@ public class ExtImgs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtImg> Tolist()
-	{
+	public final ArrayList<ExtImg> Tolist()  {
 		ArrayList<ExtImg> list = new ArrayList<ExtImg>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -75,5 +65,5 @@ public class ExtImgs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

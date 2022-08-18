@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -31,13 +32,11 @@ public enum FWCType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static FWCType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FWCType forValue(int value)
+	{return values()[value];
 	}
 }

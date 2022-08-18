@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  从表显示方式
@@ -27,7 +26,7 @@ public enum EditModel
 		return this.ordinal();
 	}
 
-	public static EditModel forValue(int value) throws Exception
+	public static EditModel forValue(int value)
 	{
 		return values()[value];
 	}

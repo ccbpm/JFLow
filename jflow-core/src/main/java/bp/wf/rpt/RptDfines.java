@@ -1,12 +1,6 @@
 package bp.wf.rpt;
 
-import bp.da.*;
-import bp.port.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.sys.*;
-import bp.wf.data.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -15,11 +9,11 @@ import java.util.*;
 public class RptDfines extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 报表定义s
 	*/
-	public RptDfines()
+	public RptDfines()throws Exception
 	{
 	}
 	/** 
@@ -31,25 +25,25 @@ public class RptDfines extends EntitiesNoName
 		return new RptDfine();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<RptDfine> ToJavaList()
+	public final java.util.List<RptDfine> ToJavaList()throws Exception
 	{
-		return (List<RptDfine>)(Object)this;
+		return (java.util.List<RptDfine>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<RptDfine> Tolist()
+	public final ArrayList<RptDfine> Tolist()throws Exception
 	{
 		ArrayList<RptDfine> list = new ArrayList<RptDfine>();
 		for (int i = 0; i < this.size(); i++)
@@ -59,5 +53,5 @@ public class RptDfines extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -12,13 +12,13 @@ public class SQLCash
 	public String Update = null;
 	public String Delete = null;
 	public String Select = null;
-	public SQLCash()
+	public SQLCash() throws Exception
 	{
 
 	}
 	public SQLCash(Entity en) throws Exception
 	{
-		this.EnName = en.toString();
+		this.EnName=en.toString();
 		this.Insert = SqlBuilder.InsertForPara(en);
 		this.Update = SqlBuilder.UpdateForPara(en, null);
 		this.Delete = SqlBuilder.DeleteForPara(en);
@@ -27,7 +27,7 @@ public class SQLCash
 	/** 
 	 获取指定的key, 返回更新的语句。
 	 
-	 @param keys
+	 param keys
 	 @return 
 	 * @throws Exception 
 	*/
@@ -65,7 +65,7 @@ public class SQLCash
 
 		///UpdateSQLs
 	private Hashtable _UpdateSQLs;
-	public final Hashtable getUpdateSQLs()
+	public final Hashtable getUpdateSQLs()throws Exception
 	{
 		if (_UpdateSQLs == null)
 		{

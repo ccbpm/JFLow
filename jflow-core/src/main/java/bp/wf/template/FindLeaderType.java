@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-import bp.wf.*;
 
 /** 
  找领导类型
@@ -22,13 +21,11 @@ public enum FindLeaderType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static FindLeaderType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FindLeaderType forValue(int value) 
+	{return values()[value];
 	}
 }

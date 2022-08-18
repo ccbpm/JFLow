@@ -1,46 +1,46 @@
 package bp.ccbill;
 
-import bp.ccbill.template.*;
+import bp.*;
 
 /** 
  表单活动类型
 */
 public class FrmActionType
 {
-	/// <summary>
-	/// 创建
-	/// </summary>
+	/** 
+	 创建
+	*/
 	public static final String Create = "Create";
-	/// <summary>
-	///保存
-	/// </summary>
+	/** 
+	保存 
+	*/
 	public static final String Save = "Save";
-	/// <summary>
-	/// 提交
-	/// </summary>
+	/** 
+	 提交
+	*/
 	public static final String Submit = "Submit";
-	/// <summary>
-	/// 评论
-	/// </summary>
+	/** 
+	 评论
+	*/
 	public static final String BBS = "BBS";
-	/// <summary>
-	/// 打开
-	/// </summary>
+	/** 
+	 打开
+	*/
 	public static final String View = "View";
-	/// <summary>
-	/// 回滚数据
-	/// </summary>
+	/** 
+	 回滚数据
+	*/
 	public static final String DataVerReback = "DataVerReback";
-	/// <summary>
-	/// 发起流程
-	/// </summary>
+	/** 
+	 发起流程
+	*/
 	public static final String StartFlow = "StartFlow";
-	/// <summary>
-	/// 发起注册流程
-	/// </summary>
-	public final  static String StartRegFlow = "StartRegFlow";
-	/// <summary>
-	/// 其他
-	/// </summary>
+	/** 
+	 发起注册流程
+	*/
+	public static final String StartRegFlow = "StartRegFlow";
+	/** 
+	 其他
+	*/
 	public static final String Etc = "Etc";
 }

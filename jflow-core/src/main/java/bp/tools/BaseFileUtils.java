@@ -1,30 +1,23 @@
 package bp.tools;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
-import java.util.Enumeration;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import bp.difference.SystemConfig;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * 文件操作工具类 实现文件的创建、删除、复制、压缩、解压以及目录的创建、删除、复制、压缩解压等功能
@@ -38,8 +31,8 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 复制单个文件，如果目标文件存在，则不覆盖
      * 
-     * @param srcFileName 待复制的文件名
-     * @param descFileName 目标文件名
+     * param srcFileName 待复制的文件名
+     * param descFileName 目标文件名
      * @return 如果复制成功，则返回true，否则返回false
      */
     public static boolean copyFile(String srcFileName, String descFileName) {
@@ -49,9 +42,9 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 复制单个文件
      * 
-     * @param srcFileName 待复制的文件名
-     * @param descFileName 目标文件名
-     * @param coverlay 如果目标文件已存在，是否覆盖
+     * param srcFileName 待复制的文件名
+     * param descFileName 目标文件名
+     * param coverlay 如果目标文件已存在，是否覆盖
      * @return 如果复制成功，则返回true，否则返回false
      */
     public static boolean copyFileCover(String srcFileName, String descFileName, boolean coverlay) {
@@ -141,8 +134,8 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 复制整个目录的内容，如果目标目录存在，则不覆盖
      * 
-     * @param srcDirName 源目录名
-     * @param descDirName 目标目录名
+     * param srcDirName 源目录名
+     * param descDirName 目标目录名
      * @return 如果复制成功返回true，否则返回false
      */
     public static boolean copyDirectory(String srcDirName, String descDirName) {
@@ -152,9 +145,9 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 复制整个目录的内容
      * 
-     * @param srcDirName 源目录名
-     * @param descDirName 目标目录名
-     * @param coverlay 如果目标目录存在，是否覆盖
+     * param srcDirName 源目录名
+     * param descDirName 目标目录名
+     * param coverlay 如果目标目录存在，是否覆盖
      * @return 如果复制成功返回true，否则返回false
      */
     public static boolean copyDirectoryCover(String srcDirName, String descDirName, boolean coverlay) {
@@ -235,7 +228,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      * 
      * 删除文件，可以删除单个文件或文件夹
      * 
-     * @param fileName 被删除的文件名
+     * param fileName 被删除的文件名
      * @return 如果删除成功，则返回true，否是返回false
      */
     public static boolean delFile(String fileName) {
@@ -258,7 +251,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      * 
      * 删除单个文件
      * 
-     * @param fileName 被删除的文件名
+     * param fileName 被删除的文件名
      * @return 如果删除成功，则返回true，否则返回false
      */
     public static boolean deleteFile(String fileName) {
@@ -283,7 +276,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      * 
      * 删除目录及目录下的文件
      * 
-     * @param dirName 被删除的目录所在的文件路径
+     * param dirName 被删除的目录所在的文件路径
      * @return 如果目录删除成功，则返回true，否则返回false
      */
     public static boolean deleteDirectory(String dirName) {
@@ -337,7 +330,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 创建单个文件
      * 
-     * @param descFileName 文件名，包含路径
+     * param descFileName 文件名，包含路径
      * @return 如果创建成功，则返回true，否则返回false
      */
     public static boolean createFile(String descFileName) {
@@ -379,7 +372,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 创建目录
      * 
-     * @param descDirName 目录名,包含路径
+     * param descDirName 目录名,包含路径
      * @return 如果创建成功，则返回true，否则返回false
      */
     public static boolean createDirectory(String descDirName) {
@@ -408,9 +401,9 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      * 
      * 写入文件. <br/>
      *
-     * @param fileName 文件名
-     * @param content 内容
-     * @param append 追加模式
+     * param fileName 文件名
+     * param content 内容
+     * param append 追加模式
      */
     public static void writeToFile(String fileName, String content, boolean append) {
         try {
@@ -426,10 +419,10 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      * 
      * 写入文件. <br/>
      *
-     * @param fileName 文件名
-     * @param content 内容
-     * @param encoding 编码
-     * @param append 追加模式
+     * param fileName 文件名
+     * param content 内容
+     * param encoding 编码
+     * param append 追加模式
      */
     public static void writeToFile(String fileName, String content, String encoding, boolean append) {
         try {
@@ -444,9 +437,9 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 压缩文件或目录
      * 
-     * @param srcDirName 压缩的根目录
-     * @param fileName 根目录下的待压缩的文件名或文件夹名，其中*或""表示跟目录下的全部文件
-     * @param descFileName 目标zip文件
+     * param srcDirName 压缩的根目录
+     * param fileName 根目录下的待压缩的文件名或文件夹名，其中*或""表示跟目录下的全部文件
+     * param descFileName 目标zip文件
      */
     public static void zipFiles(String srcDirName, String fileName, String descFileName) {
         // 判断目录是否存在
@@ -487,8 +480,8 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 解压缩ZIP文件，将ZIP文件里的内容解压到descFileName目录下
      * 
-     * @param zipFileName 需要解压的ZIP文件
-     * @param descFileName 目标文件
+     * param zipFileName 需要解压的ZIP文件
+     * param descFileName 目标文件
      */
     public static boolean unZipFiles(String zipFileName, String descFileName) {
         String descFileNames = descFileName;
@@ -545,9 +538,9 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 将目录压缩到ZIP输出流
      * 
-     * @param dirPath 目录路径
-     * @param fileDir 文件信息
-     * @param zouts 输出流
+     * param dirPath 目录路径
+     * param fileDir 文件信息
+     * param zouts 输出流
      */
     public static void zipDirectoryToZipFile(String dirPath, File fileDir, ZipOutputStream zouts) {
         if (fileDir.isDirectory()) {
@@ -582,9 +575,9 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 将文件压缩到ZIP输出流
      * 
-     * @param dirPath 目录路径
-     * @param file 文件
-     * @param zouts 输出流
+     * param dirPath 目录路径
+     * param file 文件
+     * param zouts 输出流
      */
     public static void zipFilesToZipFile(String dirPath, File file, ZipOutputStream zouts) {
         FileInputStream fin = null;
@@ -616,8 +609,8 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获取待压缩文件在ZIP文件中entry的名字，即相对于根目录的相对路径名
      * 
-     * @param dirPath 目录名
-     * @param file entry文件名
+     * param dirPath 目录名
+     * param file entry文件名
      * @return 文件在ZIP文件中entry的名字
      */
     private static String getEntryName(String dirPath, File file) {
@@ -638,7 +631,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 根据“文件名的后缀”获取文件内容类型（而非根据File.getContentType()读取的文件类型）
      * 
-     * @param returnFileName 带验证的文件名
+     * param returnFileName 带验证的文件名
      * @return 返回文件类型
      */
     public static String getContentType(String returnFileName) {
@@ -817,9 +810,9 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 向浏览器发送文件下载，支持断点续传
      * 
-     * @param file 要下载的文件
-     * @param request 请求对象
-     * @param response 响应对象
+     * param file 要下载的文件
+     * param request 请求对象
+     * param response 响应对象
      * @return 返回错误信息，无错误信息返回null
      */
     public static String downFile(File file, HttpServletRequest request, HttpServletResponse response) {
@@ -829,10 +822,10 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 向浏览器发送文件下载，支持断点续传
      * 
-     * @param file 要下载的文件
-     * @param request 请求对象
-     * @param response 响应对象
-     * @param fileName 指定下载的文件名
+     * param file 要下载的文件
+     * param request 请求对象
+     * param response 响应对象
+     * param fileName 指定下载的文件名
      * @return 返回错误信息，无错误信息返回null
      */
     public static String downFile(File file, HttpServletRequest request, HttpServletResponse response,
@@ -1033,7 +1026,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 修正路径，将 \\ 或 / 等替换为 File.separator
      * 
-     * @param path 待修正的路径
+     * param path 待修正的路径
      * @return 修正后的路径
      */
     public static String path(String path) {
@@ -1055,8 +1048,8 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获目录下的文件列表
      * 
-     * @param dir 搜索目录
-     * @param searchDirs 是否是搜索目录
+     * param dir 搜索目录
+     * param searchDirs 是否是搜索目录
      * @return 文件列表
      */
     public static List<String> findChildrenList(File dir, boolean searchDirs) {
@@ -1075,7 +1068,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获取文件扩展名(返回小写)
      * 
-     * @param fileName 文件名
+     * param fileName 文件名
      * @return 例如：test.jpg 返回： jpg
      */
     public static String getFileExtension(String fileName) {
@@ -1089,7 +1082,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     /**
      * 获取文件名，不包含扩展名
      * 
-     * @param fileName 文件名
+     * param fileName 文件名
      * @return 例如：d:\files\test.jpg 返回：d:\files\test
      */
     public static String getFileNameWithoutExtension(String fileName) {
@@ -1101,7 +1094,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     
     /**
      * 格式化路径分隔符
-     * @param filePath 路径
+     * param filePath 路径
      * @return  格式化路径
      */
     public static String formatSeparator(String filePath) {
@@ -1112,7 +1105,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     
     /**
     * 获取指定文件夹下的所有文件列表
-    * @param folder
+    * param folder
     * @return
     * @throws IOException
     */
@@ -1142,6 +1135,64 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
              throw new IOException("路径不是文件夹！");
          }
      }
-   
-   
+
+    /***
+     * 获取指定目录下的所有的文件（不包括文件夹），采用了递归
+     *
+     * param obj
+     * @return
+     */
+    public static ArrayList<File> getListFiles(Object obj,String fileType) {
+        File directory = null;
+        if (obj instanceof File) {
+            directory = (File) obj;
+        } else {
+            directory = new File(obj.toString());
+        }
+        ArrayList<File> files = new ArrayList<File>();
+        if (directory.isFile()) {
+            //获取最后一个.的位置
+            int lastIndexOf = directory.getName().lastIndexOf(".");
+            //获取文件的后缀名 .jpg
+            String suffix = directory.getName().substring(lastIndexOf);
+
+            if(fileType.equals("*.*")==true
+                || fileType.toLowerCase().equals("*"+suffix.toLowerCase())==true
+                ||(fileType.equals("*.xls*")==true &&suffix.toLowerCase().startsWith("*.xls")==true ))
+                files.add(directory);
+            return files;
+        } else if (directory.isDirectory()) {
+            File[] fileArr = directory.listFiles();
+            for (int i = 0; i < fileArr.length; i++) {
+                File fileOne = fileArr[i];
+                files.addAll(getListFiles(fileOne,fileType));
+            }
+        }
+        return files;
+    }
+
+    /**
+     * 获取目录下的子目录
+     * param obj
+     * @return
+     */
+    public static ArrayList<File>GetDirectories(Object obj){
+        File directory = null;
+        if (obj instanceof File) {
+            directory = (File) obj;
+        } else {
+            directory = new File(obj.toString());
+        }
+        ArrayList<File> files = new ArrayList<File>();
+        if (directory.isDirectory()) {
+            File[] fileArr = directory.listFiles();
+            for (int i = 0; i < fileArr.length; i++) {
+                File fileOne = fileArr[i];
+                if(fileOne.isDirectory())
+                    files.add(fileOne);
+            }
+        }
+        return files;
+    }
+
 }

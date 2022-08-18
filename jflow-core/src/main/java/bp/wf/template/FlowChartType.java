@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-import bp.wf.*;
 
 /** 
  图像类型
@@ -18,13 +17,11 @@ public enum FlowChartType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static FlowChartType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FlowChartType forValue(int value)
+	{return values()[value];
 	}
 }

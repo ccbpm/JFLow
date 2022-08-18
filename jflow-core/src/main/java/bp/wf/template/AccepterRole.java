@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.port.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  这里存放每个接受人规则的信息.	 
@@ -13,48 +8,42 @@ import java.util.*;
 public class AccepterRole extends EntityOID
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
 		return uac;
 	}
 	/** 
 	 节点编号
-	 * @throws Exception 
 	*/
 	public final String getFK_Node() throws Exception
 	{
 		return this.GetValStringByKey(AccepterRoleAttr.FK_Node);
 	}
-	public final void setFK_Node(String value) throws Exception
-	{
-		SetValByKey(AccepterRoleAttr.FK_Node, value);
+	public final void setFK_Node(String value)throws Exception
+	{SetValByKey(AccepterRoleAttr.FK_Node, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 接受人规则
 	*/
-	public AccepterRole()
-	{
+	public AccepterRole()  {
 	}
 	/** 
 	 接受人规则
 	 
-	 @param oid 接受人规则ID	
-	 * @throws Exception 
+	 param oid 接受人规则ID	
 	*/
-	public AccepterRole(int oid) throws Exception
-	{
+	public AccepterRole(int oid) throws Exception {
 		this.setOID(oid);
 		this.Retrieve();
 	}
@@ -62,8 +51,7 @@ public class AccepterRole extends EntityOID
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -88,6 +76,6 @@ public class AccepterRole extends EntityOID
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 }

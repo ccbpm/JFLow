@@ -1,20 +1,27 @@
 package bp.wf;
+
+import bp.wf.*;
+import bp.web.*;
+import bp.en.*;
+import bp.da.*;
+import bp.*;
+
 /** 
  发起流程参数列表,为了防止参数错误.
 */
 public class StartFlowParaNameList
 {
 
-		///功能的参数标记.
+		///#region 功能的参数标记.
 	/** 
 	 是否删除草稿
 	*/
 	public static final String IsDeleteDraft = "IsDeleteDraft";
 
-		/// 功能的参数标记.
+		///#endregion 功能的参数标记.
 
 
-		///从一个指定表里向开始节点copy数据.
+		///#region 从一个指定表里向开始节点copy数据.
 	/** 
 	 指定的表名称.
 	*/
@@ -28,17 +35,17 @@ public class StartFlowParaNameList
 	*/
 	public static final String FromTablePKVal = "FromTablePKVal";
 
-		///
+		///#endregion
 
 
-		///从一个指定的节点里copy数据到开始节点表里.
+		///#region 从一个指定的节点里copy数据到开始节点表里.
 	public static final String CopyFormWorkID = "CopyFormWorkID";
 	public static final String CopyFormNode = "CopyFormNode";
 
-		///
+		///#endregion
 
 
-		///父子流程相关.
+		///#region 父子流程相关.
 	public static final String PFlowNo = "PFlowNo";
 	public static final String PNodeID = "PNodeID";
 	public static final String PWorkID = "PWorkID";
@@ -49,12 +56,12 @@ public class StartFlowParaNameList
 	public static final String PEmp = "PEmp";
 
 
-		///.
+		///#endregion.
 
 
-		///流程跳转相关.
+		///#region 流程跳转相关.
 	public static final String JumpToNode = "JumpToNode";
 	public static final String JumpToEmp = "JumpToEmp";
 
-		/// 流程跳转相关.
+		///#endregion 流程跳转相关.
 }

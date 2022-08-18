@@ -3,6 +3,7 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.wf.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -14,36 +15,32 @@ public class DirectionStations extends EntitiesMM
 	/** 
 	 方向与工作岗位对应
 	*/
-	public DirectionStations()
-	{
+	public DirectionStations()  {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new DirectionStation();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<DirectionStation> ToJavaList()
-	{
-		return (List<DirectionStation>)(Object)this;
+	public final java.util.List<DirectionStation> ToJavaList() {
+		return (java.util.List<DirectionStation>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<DirectionStation> Tolist()
-	{
+	public final ArrayList<DirectionStation> Tolist()  {
 		ArrayList<DirectionStation> list = new ArrayList<DirectionStation>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -52,5 +49,5 @@ public class DirectionStations extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

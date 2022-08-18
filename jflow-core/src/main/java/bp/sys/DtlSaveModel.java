@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 public enum DtlSaveModel
 {
@@ -20,7 +19,7 @@ public enum DtlSaveModel
 		return this.ordinal();
 	}
 
-	public static DtlSaveModel forValue(int value) throws Exception
+	public static DtlSaveModel forValue(int value)
 	{
 		return values()[value];
 	}

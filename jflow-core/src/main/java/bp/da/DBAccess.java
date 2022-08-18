@@ -7,12 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.UUID;
@@ -20,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.en.*;
+import bp.en.Map;
 import bp.tools.CRC32Helper;
 import bp.tools.StringHelper;
 import bp.web.*;
@@ -29,7 +26,57 @@ import bp.web.*;
  * 数据库访问。 这个类负责处理了 实体信息
  */
 public class DBAccess {
-	
+
+	public static void UpdateTableColumnDefaultVal(String table, String colName, Object defaultVal) throws Exception {
+		String sql = "";
+
+		//是否存在该列?
+		if (DBAccess.IsExitsTableCol(table, colName) == false)
+		{
+			return;
+		}
+
+		switch (SystemConfig.getAppCenterDBType())
+		{
+			case MySQL:
+				if (defaultVal.getClass() == Integer.class || defaultVal.getClass() == Float.class || defaultVal.getClass() == BigDecimal.class)
+				{
+					sql = "ALTER TABLE " + table + " ALTER COLUMN " + colName + " SET DEFAULT " + defaultVal.toString();
+				}
+				else
+				{
+					sql = "ALTER TABLE " + table + " ALTER COLUMN " + colName + " SET DEFAULT '" + defaultVal.toString() + "'";
+				}
+				break;
+			case MSSQL:
+				sql = "SELECT  b.name FROM sysobjects b join syscolumns a on b.id = a.cdefault WHERE a.id = object_id('" + table + "') AND a.name = '" + colName + "'";
+				String yueShu = DBAccess.RunSQLReturnStringIsNull(sql, null);
+				if (yueShu != null)
+				{
+					sql = "ALTER TABLE " + table + " DROP constraint " + yueShu;
+					DBAccess.RunSQL(sql); //删除约束.
+				}
+				if (defaultVal.getClass() == Integer.class || defaultVal.getClass() == Float.class || defaultVal.getClass() == BigDecimal.class)
+				{
+					sql = "ALTER TABLE " + table + " ADD DEFAULT " + defaultVal.toString() + " FOR  " + colName;
+				}
+				else
+				{
+					sql = "ALTER TABLE " + table + " ADD DEFAULT '" + defaultVal.toString() + "' FOR  " + colName;
+				}
+				break;
+			default:
+				break;
+		}
+
+		if (DataType.IsNullOrEmpty(sql) == true)
+		{
+			throw new RuntimeException("err@没有判断的数据库类型.");
+		}
+
+		//设置默认值.
+		bp.da.DBAccess.RunSQL(sql);
+	}
 	
 	/** 
 	 获得数据表字段描述的SQL
@@ -62,8 +109,8 @@ public class DBAccess {
 	/** 
 	 删除指定字段的约束
 	 
-	 @param table 表名
-	 @param colName 列名
+	 param table 表名
+	 param colName 列名
 	 @return 返回删除约束的个数
 	*/
 	public static int DropConstraintOfSQL(String table, String colName)
@@ -74,7 +121,7 @@ public class DBAccess {
 			//获得约束.
 			String sql = "select b.name from sysobjects b join syscolumns a on b.id = a.cdefault ";
 			sql += " where a.id = object_id('" + table + "') ";
-			sql += " and a.name = '" + colName + "' ";
+			sql += " and a.Name='" + colName + "' ";
 			//遍历并删除它们.
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
 			for (DataRow dr : dt.Rows)
@@ -91,7 +138,7 @@ public class DBAccess {
 	/** 
 	 获得约束
 	 
-	 @param table
+	 param table
 	 @return 
 	*/
 	public static String SQLOfTableFieldYueShu(String table)
@@ -265,15 +312,15 @@ public class DBAccess {
 	/**
 	 * 保存文件到数据库
 	 * 
-	 * @param fullFileName
+	 * param fullFileName
 	 *            完成的文件路径
-	 * @param tableName
+	 * param tableName
 	 *            表名称
-	 * @param tablePK
+	 * param tablePK
 	 *            表主键
-	 * @param pkVal
+	 * param pkVal
 	 *            主键值
-	 * @param saveToFileField
+	 * param saveToFileField
 	 *            保存到字段
 	 * @throws Exception
 	 */
@@ -304,13 +351,13 @@ public class DBAccess {
 
 	/**
 	 * 保存文件到数据库
-	 * @param tableName
+	 * param tableName
 	 *            表名称
-	 * @param tablePK
+	 * param tablePK
 	 *            表主键
-	 * @param pkVal
+	 * param pkVal
 	 *            主键值
-	 * @param saveToFileField
+	 * param saveToFileField
 	 *            保存到字段
 	 * @throws Exception
 	 */
@@ -319,7 +366,9 @@ public class DBAccess {
 		//对于特殊的数据库进行判断.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
-				|| SystemConfig.getAppCenterDBType() == DBType.DM)
+				|| SystemConfig.getAppCenterDBType() == DBType.DM
+				||  SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				||  SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			SaveBytesToDB(docs.getBytes("UTF-8"),tableName, tablePK, pkVal, saveToFileField);
 			return;
@@ -350,15 +399,15 @@ public class DBAccess {
 	/**
 	 * 从数据库里提取文件
 	 * 
-	 * @param fullFileName
+	 * param fullFileName
 	 *            要存储的文件路径
-	 * @param tableName
+	 * param tableName
 	 *            表名
-	 * @param tablePK
+	 * param tablePK
 	 *            表主键
-	 * @param pkVal
+	 * param pkVal
 	 *            主键值
-	 * @param fileSaveField
+	 * param fileSaveField
 	 *            字段
 	 * @throws IOException
 	 */
@@ -389,7 +438,7 @@ public class DBAccess {
 		DataTable dt = DBAccess.RunSQLReturnTable(strSQL);
 		byte[] byteFile = null;
 		try {
-			if (dt.Rows.get(0).size() > 0) {
+			if (dt.Rows.size() > 0) {
 				if (dt.Rows.get(0).getValue(0) != null && !"".equals(dt.Rows.get(0).getValue(0))) {
 					Object a = dt.Rows.get(0).getValue(0);
 					if (a instanceof java.sql.Blob) {
@@ -423,15 +472,15 @@ public class DBAccess {
 	/**
 	 * 从数据库一个表里把img字段读取出来，转化成string返回.
 	 * 
-	 * @param fullFileName
+	 * param fullFileName
 	 *            要存储的文件路径名称
-	 * @param tableName
+	 * param tableName
 	 *            表名称
-	 * @param tablePK
+	 * param tablePK
 	 *            表主键
-	 * @param pkVal
+	 * param pkVal
 	 *            主键值
-	 * @param fileSaveField
+	 * param fileSaveField
 	 *            表字段
 	 * @return 读取出来的文本文件
 	 * @throws IOException
@@ -445,17 +494,17 @@ public class DBAccess {
 	/**
 	 * 从数据库一个表里把img字段读取出来，转化成string返回.
 	 * 
-	 * @param fullFileName
+	 * param fullFileName
 	 *            要存储的文件路径名称
-	 * @param tableName
+	 * param tableName
 	 *            表名称
-	 * @param tablePK
+	 * param tablePK
 	 *            表主键
-	 * @param pkVal
+	 * param pkVal
 	 *            主键值
-	 * @param fileSaveField
+	 * param fileSaveField
 	 *            表字段
-	 * @param codeType
+	 * param codeType
 	 *            编码格式
 	 * @return 读取出来的文本文件
 	 * @throws IOException
@@ -478,7 +527,7 @@ public class DBAccess {
 		return myps;
 	}
 
-	public static int RunSP(String spName, String paraKey, Object paraVal) {
+	public static int RunSP(String spName, String paraKey, Object paraVal){
 		Paras pas = new Paras();
 		pas.Add(paraKey, paraVal);
 		return DBAccess.RunSP(spName, pas);
@@ -487,7 +536,7 @@ public class DBAccess {
 	/**
 	 * 运行存储过程
 	 * 
-	 * @param spName
+	 * param spName
 	 *            名称
 	 * @return 返回影响的行数
 	 */
@@ -533,9 +582,9 @@ public class DBAccess {
 	/**
 	 * 运行存储过程
 	 * 
-	 * @param spName
+	 * param spName
 	 *            名称
-	 * @param paras
+	 * param paras
 	 *            参数
 	 * @return 返回影响的行数
 	 */
@@ -545,9 +594,7 @@ public class DBAccess {
 		case MSSQL:
 			throw new RuntimeException("@没有实现...");
 		case MySQL:
-			// case Access:
-			// return DBProcedure.RunSP(spName, paras, new
-			// MySqlConnection(SystemConfig.AppCenterDSN));
+
 			throw new RuntimeException("@没有实现...");
 		case Oracle:
 		case KingBaseR3:
@@ -565,7 +612,7 @@ public class DBAccess {
 	/**
 	 * 运行存储过程
 	 * 
-	 * @param spName
+	 * param spName
 	 *            名称
 	 * @return DataTable
 	 */
@@ -590,9 +637,9 @@ public class DBAccess {
 	/**
 	 * 运行存储过程
 	 * 
-	 * @param spName
+	 * param spName
 	 *            名称
-	 * @param paras
+	 * param paras
 	 *            参数
 	 * @return DataTable
 	 */
@@ -657,7 +704,7 @@ public class DBAccess {
 	/**
 	 * 根据标识产生的序列号
 	 * 
-	 * @param type
+	 * param type
 	 *            OID
 	 * @return
 	 * @throws Exception
@@ -710,7 +757,7 @@ public class DBAccess {
 	/**
 	 * 通过table的第1列，组成一个查询的where in 字符串.
 	 * 
-	 * @param dt
+	 * param dt
 	 * @return
 	 */
 	public static String GenerWhereInPKsString(DataTable dt) {
@@ -758,12 +805,26 @@ public class DBAccess {
 	 * @return
 	 */
 	public static String GenerGUID() {
-		/*
-		 * warning return Guid.NewGuid().toString();
-		 */
-		return UUID.randomUUID().toString().replace("-", "");
+		return GenerGUID(0,null,null);
+	}
+	public static String GenerGUID(int length) {
+		return GenerGUID(length,null,null);
 	}
 
+	public static String GenerGUID(int length,String ptable,String colName) {
+		String guid = UUID.randomUUID().toString().replace("-", "");
+		if(length==0)
+			return guid;
+		if(ptable ==null)
+			return guid.substring(0,length);
+		while (true)
+		{
+			String str = guid.substring(0,length);
+			String sql = "SELECT COUNT(" + colName + ") as Num FROM " + ptable + " WHERE " + colName + " ='" + str + "'";
+			if (DBAccess.RunSQLReturnValInt(sql) == 0)
+				return str;
+		}
+	}
 	/**
 	 * 锁定OID
 	 */
@@ -798,13 +859,13 @@ public class DBAccess {
 	/**
 	 * 生成唯一的序列号
 	 * 
-	 * @param cfgKey
+	 * param cfgKey
 	 *            配置信息
 	 * @return 唯一的序列号
 	 * @throws Exception
 	 */
 	public static long GenerOID(String cfgKey) {
-		if (SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+		/*if (SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			String sql="SELECT COUNT(*) FROM sys_serial WHERE cfgKey='"+cfgKey+"'";
@@ -856,8 +917,8 @@ public class DBAccess {
 	 * 获取一个从OID, 更新到OID. 用例: 我已经明确知道要用到260个OID, 但是为了避免多次取出造成效率浪费，就可以一次性取出
 	 * 260个OID.
 	 * 
-	 * @param cfgKey
-	 * @param getOIDNum
+	 * param cfgKey
+	 * param getOIDNum
 	 *            要获取的OID数量.
 	 * @return 从OID
 	 * @throws Exception
@@ -918,23 +979,7 @@ public class DBAccess {
 
 	// 取得连接对象 ，CS、BS共用属性【关键属性】
 	public static Connection getGetAppCenterDBConn_MSSQL() throws Exception {
-		// Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		// Connection conn =
-		// DriverManager.getConnection(SystemConfig.getAppCenterDSN(),
-		// SystemConfig.getUser(), SystemConfig.getPassword());
-		// // // Connection conn =
-		// // //
-		// //
-		// DriverManager.getConnection("jdbc:sqlserver://192.168.0.213:1433;DatabaseName=VIS",
-		// // // "username", "password");
-		// //
-		// /*
-		// * warning SqlConnection conn = new
-		// * SqlConnection(SystemConfig.getAppCenterDSN()); if (conn.State !=
-		// * System.Data.ConnectionState.Open) { conn.ConnectionString =
-		// * SystemConfig.getAppCenterDSN(); conn.Open(); } return conn;
-		// */
-		// return conn;
+
 		return ContextHolderUtils.getInstance().getDataSource().getConnection();
 	}
 
@@ -998,7 +1043,7 @@ public class DBAccess {
 	/** 
 	 连接用户的ID
 	*/
-	public static String getConnectionUserID()
+	public static String getConnectionUserID()throws Exception
 	{
 		if (_connectionUserID == null)
 		{
@@ -1023,9 +1068,9 @@ public class DBAccess {
 	/**
 	 * 建立主键
 	 * 
-	 * @param tab
+	 * param tab
 	 *            物理表
-	 * @param pk
+	 * param pk
 	 *            主键
 	 * @throws Exception
 	 */
@@ -1093,33 +1138,16 @@ public class DBAccess {
 	}
 
 	public static void CreatIndex(String table, String pk1, String pk2) {
-		// try {
-		// DBAccess.RunSQL("CREATE INDEX " + table + "ID ON " + table + " (" +
-		// pk1 + "," + pk2 + ")");
-		// } catch (java.lang.Exception e) {}
+
 	}
 
 	public static void CreatIndex(String table, String pk1, String pk2, String pk3) {
-		// DBAccess.RunSQL("CREATE INDEX " + table + "ID ON " + table + " (" +
-		// pk1 + "," + pk2 + "," + pk3 + ")");
 	}
 
 	public static void CreatIndex(String table, String pk1, String pk2, String pk3, String pk4) {
-		// DBAccess.RunSQL("CREATE INDEX " + table + "ID ON " + table + " (" +
-		// pk1 + "," + pk2 + "," + pk3 + "," + pk4 + ")");
+
 	}
 
-	// public static int RunSQL(String sql, Object obj, String dsn, Object...
-	// pars) {
-	// return 0;
-	// object oconn = GetAppCenterDBConn;
-	// if (oconn is SqlConnection)
-	// return RunSQL(sql, (SqlConnection)oconn, sqlType, dsn);
-	// else if (oconn is OracleConnection)
-	// return RunSQL(sql, (OracleConnection)oconn, sqlType, dsn);
-	// else
-	// throw new Exception("获取数据库连接[GetAppCenterDBConn]失败！");
-	// }
 
 	public static DataTable ReadProText(String proName) throws Exception {
 		String sql = "";
@@ -1149,10 +1177,10 @@ public class DBAccess {
 		String[] strs = str.split("[;]", -1);
 		for (String s : strs) {
 			/*
-			 * warning if (StringHelper.isNullOrEmpty(s) ||
+			 * warning if (DataType.IsNullOrEmpty(s) ||
 			 * StringHelper.isNullOrWhiteSpace(s)) { continue; }
 			 */
-			if (StringHelper.isNullOrEmpty(s)) {
+			if (DataType.IsNullOrEmpty(s)) {
 				continue;
 			}
 
@@ -1171,7 +1199,7 @@ public class DBAccess {
 	/**
 	 * 执行具有Go的sql 文本。
 	 * 
-	 * @param sqlOfScriptFilePath
+	 * param sqlOfScriptFilePath
 	 * @throws IOException
 	 * @throws Exception
 	 */
@@ -1184,14 +1212,14 @@ public class DBAccess {
 		String[] strs = str.split("--GO--");
 		for (String s : strs) {
 			/*
-			 * warning if (StringHelper.isNullOrEmpty(s) ||
+			 * warning if (DataType.IsNullOrEmpty(s) ||
 			 * StringHelper.isNullOrWhiteSpace(s)) { continue; }
 			 */
-			if (StringHelper.isNullOrEmpty(s)) {
+			if (DataType.IsNullOrEmpty(s)) {
 				continue;
 			}
 
-			// if (s.Contains("--"))
+			// if (s.contains("--"))
 			// continue;
 
 			if (s.contains("/**")) {
@@ -1199,7 +1227,7 @@ public class DBAccess {
 			}
 
 			String mysql = s.replace("--GO--", "");
-			if (StringHelper.isNullOrEmpty(mysql.trim())) {
+			if (DataType.IsNullOrEmpty(mysql.trim())) {
 				continue;
 			}
 
@@ -1208,7 +1236,7 @@ public class DBAccess {
 	}
 
 	public static void RunSQLs(String sql) {
-		if (StringHelper.isNullOrEmpty(sql)) {
+		if (DataType.IsNullOrEmpty(sql)) {
 			return;
 		}
 
@@ -1216,7 +1244,7 @@ public class DBAccess {
 		sql = sql.replace("@", "~");
 		String[] strs = sql.split("[~]", -1);
 		for (String str : strs) {
-			if (StringHelper.isNullOrEmpty(str)) {
+			if (DataType.IsNullOrEmpty(str)) {
 				continue;
 			}
 
@@ -1231,7 +1259,7 @@ public class DBAccess {
 	/**
 	 * 运行带有参数的sql
 	 * 
-	 * @param ps
+	 * param ps
 	 * @return
 	 * @throws Exception
 	 */
@@ -1242,7 +1270,7 @@ public class DBAccess {
 	/**
 	 * 运行sql
 	 * 
-	 * @param sql
+	 * param sql
 	 * @return
 	 * @throws Exception
 	 */
@@ -1285,8 +1313,8 @@ public class DBAccess {
 	/**
 	 * 执行sql
 	 * 
-	 * @param sql
-	 * @param paras
+	 * param sql
+	 * param paras
 	 * @return
 	 * @throws Exception
 	 */
@@ -1330,9 +1358,9 @@ public class DBAccess {
 	/**
 	 * 运行sql返回结果
 	 * 
-	 * @param sql
+	 * param sql
 	 *            sql
-	 * @param paras
+	 * param paras
 	 *            参数
 	 * @return 执行的结果
 	 * @throws Exception
@@ -1384,7 +1412,7 @@ public class DBAccess {
 	}
 
 	private static int RunSQL_200705_Ora(String sql, Paras paras) {
-		if (sql.endsWith(";") == true)
+		if (sql.endsWith(";") == true && SystemConfig.getAppCenterDBType()!=DBType.KingBaseR3)
 			sql = "begin " + sql + " end;";
 		ResultSet rs = null;
 		Connection conn = null;
@@ -1430,8 +1458,8 @@ public class DBAccess {
 	/**
 	 * RunSQL_200705_MySQL
 	 * 
-	 * @param sql
-	 * @param paras
+	 * param sql
+	 * param paras
 	 * @return
 	 * @throws Exception
 	 */
@@ -1493,8 +1521,8 @@ public class DBAccess {
 
 	/**
 	 * 适配达梦
-	 * @param sql
-	 * @param paras
+	 * param sql
+	 * param paras
 	 * @return
 	 */
 	private static int RunSQL_20191230_DM(String sql, Paras paras)
@@ -1542,7 +1570,7 @@ public class DBAccess {
 
 	public static int RunSQLReturnResultSet(String sql, Paras paras, Entity en, Attrs attrs) {
 
-		if (StringHelper.isNullOrEmpty(sql)) {
+		if (DataType.IsNullOrEmpty(sql)) {
 			throw new RuntimeException("要执行的 sql =null ");
 		}
 
@@ -1569,7 +1597,7 @@ public class DBAccess {
 
 	public static int RunSQLReturnResultSet(String sql, Paras paras, Entities ens, Attrs attrs) {
 
-		if (StringHelper.isNullOrEmpty(sql)) {
+		if (DataType.IsNullOrEmpty(sql)) {
 			throw new RuntimeException("要执行的 sql =null ");
 		}
 
@@ -1596,7 +1624,7 @@ public class DBAccess {
 	}
 
 	public static DataTable RunSQLReturnTable(String sql, Paras paras) {
-		if (StringHelper.isNullOrEmpty(sql)) {
+		if (DataType.IsNullOrEmpty(sql)) {
 			throw new RuntimeException("要执行的 sql =null ");
 		}
 		try {
@@ -2229,7 +2257,7 @@ public class DBAccess {
 	/**
 	 * RunSQLReturnTable_200705_MySQL
 	 * 
-	 * @param sql
+	 * param sql
 	 *            要执行的sql
 	 * @return 返回table
 	 * @throws Exception
@@ -2350,7 +2378,7 @@ public class DBAccess {
 	/**
 	 * RunSQLReturnTable_200705_DM
 	 *
-	 * @param sql
+	 * param sql
 	 *            要执行的sql
 	 * @return 返回table
 	 * @throws Exception
@@ -2613,6 +2641,50 @@ public class DBAccess {
 				} else if (para.DAType == Long.class) {
 					ps.setLong(para.ParaName, (Long) para.val);
 				} else if (para.DAType == Integer.class) {
+					ps.setInt(para.ParaName, (int)para.val);
+				} else if (para.DAType == Float.class) {
+					ps.setFloat(para.ParaName, (Float) para.val);
+				} else if (para.DAType == Double.class) {
+					ps.setDouble(para.ParaName, (Double) para.val);
+				} else if (para.DAType == BigDecimal.class) {
+					ps.setBigDecimal(para.ParaName, (BigDecimal) para.val);
+				} else if (para.DAType == Date.class) {
+					Date date = (Date) para.val;
+					if (date == null) {
+						ps.setDate(para.ParaName, null);
+					} else {
+						ps.setDate(para.ParaName, new java.sql.Date(date.getTime()));
+					}
+				} else if (para.DAType == Boolean.class) {
+					ps.setBoolean(para.ParaName, (Boolean) para.val);
+				}else if (para.DAType == ArrayList.class){
+					ps.setNull(para.ParaName,Types.NULL);
+				}
+			}
+		} catch (SQLException ex) {
+			String msg = "@运行查询在(PrepareCommand)出错  @异常信息：" + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg, ex);
+		}
+	}
+	private static void PrepareCallProCommand(CallableStatement ps, Paras params) throws Exception {
+		if (null == params || params.size() <= 0) {
+			return;
+		}
+		try {
+			for (Para para : params) {
+				if (para.DAType == String.class) {
+					try {
+						if (para.val != null && !para.val.equals("")) {
+							ps.setString(para.ParaName, String.valueOf(para.val));
+						} else {
+							ps.setString(para.ParaName, "");
+						}
+					} catch (Exception e) {
+						ps.setString(para.ParaName, "");
+					}
+				} else if (para.DAType == Long.class) {
+					ps.setLong(para.ParaName, (Long) para.val);
+				} else if (para.DAType == Integer.class) {
 					// if ("".equals(para.val))
 					// para.val = "0";
 					ps.setInt(para.ParaName,
@@ -2632,6 +2704,8 @@ public class DBAccess {
 					}
 				} else if (para.DAType == Boolean.class) {
 					ps.setBoolean(para.ParaName, (Boolean) para.val);
+				}else if (para.DAType == ArrayList.class){
+					ps.setNull(para.ParaName,Types.NULL);
 				}
 			}
 		} catch (SQLException ex) {
@@ -2639,7 +2713,6 @@ public class DBAccess {
 			Log.DefaultLogWriteLineError(msg, ex);
 		}
 	}
-
 	// 在当前Connection上执行
 	public static DataTable RunSQLReturnTable(Paras ps) {
 		return RunSQLReturnTable(ps.SQL, ps);
@@ -2650,7 +2723,7 @@ public class DBAccess {
 	/**
 	 * 传递一个select 语句返回一个查询结果集合。
 	 * 
-	 * @param sql
+	 * param sql
 	 *            select sql
 	 * @return 查询结果集合DataTable
 	 * @throws Exception
@@ -2713,9 +2786,9 @@ public class DBAccess {
 	/**
 	 * 运行sql返回float
 	 * 
-	 * @param sql
+	 * param sql
 	 *            要执行的sql,返回一行一列.
-	 * @param isNullAsVal
+	 * param isNullAsVal
 	 *            如果是空值就返回的默认值
 	 * @return float的返回值
 	 * @throws Exception
@@ -2797,7 +2870,7 @@ public class DBAccess {
 			str = str.substring(0, str.indexOf("."));
 		}
 		try {
-			if (StringHelper.isNullOrEmpty(str)) {
+			if (DataType.IsNullOrEmpty(str)) {
 				return 0;
 			}
 			return Integer.parseInt(str);
@@ -2851,7 +2924,7 @@ public class DBAccess {
 	/**
 	 * 执行查询返回结果,如果为dbNull 返回 null.
 	 * 
-	 * @param sql
+	 * param sql
 	 *            will run sql.
 	 * @return ,如果为dbNull 返回 null.
 	 * @throws Exception
@@ -2873,8 +2946,8 @@ public class DBAccess {
 	/**
 	 * 运行sql返回一个值
 	 * 
-	 * @param sql
-	 * @param isNullAsVal
+	 * param sql
+	 * param isNullAsVal
 	 * @return
 	 * @throws Exception
 	 */
@@ -2964,7 +3037,7 @@ public class DBAccess {
 	/**
 	 * 检查是不是存在
 	 * 
-	 * @param sql
+	 * param sql
 	 *            sql
 	 * @return 检查是不是存在
 	 * @throws Exception
@@ -2986,7 +3059,7 @@ public class DBAccess {
 	/**
 	 * 判断是否存在主键pk .
 	 * 
-	 * @param tab
+	 * param tab
 	 *            物理表
 	 * @return 是否存在
 	 * @throws Exception
@@ -3027,7 +3100,7 @@ public class DBAccess {
 	/**
 	 * 判断系统中是否存在对象.
 	 * 
-	 * @param obj
+	 * param obj
 	 * @return
 	 * @throws Exception
 	 */
@@ -3039,7 +3112,7 @@ public class DBAccess {
 	/** 
 	 判断系统中是否存在对象.
 	 
-	 @param
+	 param
 	 @return 
 	*/
 	public static boolean IsExitsObject(DBUrl dburl, String obj)
@@ -3098,9 +3171,9 @@ public class DBAccess {
 	/**
 	 * 表中是否存在指定的列
 	 * 
-	 * @param table
+	 * param table
 	 *            表名
-	 * @param col
+	 * param col
 	 *            列名
 	 * @return 是否存在
 	 * @throws Exception
@@ -3156,7 +3229,7 @@ public class DBAccess {
 	/**
 	 * 获得表的基础信息，返回如下列: 1, 字段名称，字段描述，字段类型，字段长度.
 	 * 
-	 * @param tableName
+	 * param tableName
 	 *            表名
 	 */
 	public static DataTable GetTableSchema(String tableName) {
@@ -3183,13 +3256,11 @@ public class DBAccess {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
-			dt.Columns.get("FNAME").ColumnName = "FName";
-			dt.Columns.get("FTYPE").ColumnName = "FType";
-			dt.Columns.get("FLEN").ColumnName = "FLen";
-			dt.Columns.get("FDESC").ColumnName = "FDesc";
+		if (SystemConfig.AppCenterDBFieldCaseModel()!=FieldCaseModel.None ) {
+			dt.Columns.get(0).setColumnName("FName");
+			dt.Columns.get(1).setColumnName("FType");
+			dt.Columns.get(2).setColumnName("FLen");
+			dt.Columns.get(3).setColumnName("FDesc");
 		}
 		return dt;
 	}
@@ -3222,7 +3293,7 @@ public class DBAccess {
 	/**
 	 * 删除表的主键
 	 * 
-	 * @param table
+	 * param table
 	 *            表名称
 	 */
 	public static void DropTablePK(String table) {
@@ -3254,7 +3325,7 @@ public class DBAccess {
 	/**
 	 * 获得table的主键
 	 * 
-	 * @param table
+	 * param table
 	 *            表名称
 	 * @return 主键名称、没有返回为空.
 	 */
@@ -3300,13 +3371,13 @@ public class DBAccess {
 	/**
 	 * 从数据库里获得文本
 	 *
-	 * @param tableName
+	 * param tableName
 	 *            表名
-	 * @param tablePK
+	 * param tablePK
 	 *            主键
-	 * @param pkVal
+	 * param pkVal
 	 *            主键值
-	 * @param fileSaveField
+	 * param fileSaveField
 	 *            保存字段
 	 * @return
 	 * @throws Exception
@@ -3315,10 +3386,12 @@ public class DBAccess {
 		//对于特殊的数据库进行判断.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
 				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
-				|| SystemConfig.getAppCenterDBType() == DBType.DM) {
+				|| SystemConfig.getAppCenterDBType() == DBType.DM
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
+				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 			byte[] byteFile = GetByteFromDB(tableName, tablePK, pkVal, fileSaveField);
 			if (byteFile == null) {
-				return null;
+				return "";
 			}
 			return new String(byteFile,"UTF-8");
 		}
@@ -3343,13 +3416,13 @@ public class DBAccess {
 	/**
 	 * 从数据库里提取文件
 	 * 
-	 * @param tableName
+	 * param tableName
 	 *            表名
-	 * @param tablePK
+	 * param tablePK
 	 *            表主键
-	 * @param pkVal
+	 * param pkVal
 	 *            主键值
-	 * @param fileSaveField
+	 * param fileSaveField
 	 *            字段
 	 */
 	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception {
@@ -3492,7 +3565,7 @@ public class DBAccess {
 	public static DataTable ToLower(DataTable dt) {
 		// 把列名转成小写.
 		for (int i = 0; i < dt.Columns.size(); i++) {
-			dt.Columns.get(i).ColumnName = dt.Columns.get(i).ColumnName.toLowerCase();
+			dt.Columns.get(i).setColumnName(dt.Columns.get(i).ColumnName.toLowerCase());
 		}
 		return dt;
 	}
@@ -3530,17 +3603,17 @@ public class DBAccess {
 	/**
 	 * 通用SQL查询分页返回DataTable
 	 * 
-	 * @param sql
+	 * param sql
 	 *            SQL语句，不带排序（Order By）语句
-	 * @param pageSize
+	 * param pageSize
 	 *            每页记录数量
-	 * @param pageIdx
+	 * param pageIdx
 	 *            请求页码
-	 * @param key
+	 * param key
 	 *            记录主键（不能为空，不能有重复，必须包含在返回字段中）
-	 * @param orderKey
+	 * param orderKey
 	 *            排序字段（此字段必须包含在返回字段中）
-	 * @param orderType
+	 * param orderType
 	 *            排序方式，ASC/DESC
 	 * @return
 	 */
@@ -3565,17 +3638,17 @@ public class DBAccess {
 	/**
 	 * 通用SqlServer查询分页返回DataTable
 	 * 
-	 * @param sql
+	 * param sql
 	 *            SQL语句，不带排序（Order By）语句
-	 * @param pageSize
+	 * param pageSize
 	 *            每页记录数量
-	 * @param pageIdx
+	 * param pageIdx
 	 *            请求页码
-	 * @param key
+	 * param key
 	 *            记录主键（不能为空，不能有重复，必须包含在返回字段中）
-	 * @param orderKey
+	 * param orderKey
 	 *            排序字段（此字段必须包含在返回字段中）
-	 * @param orderType
+	 * param orderType
 	 *            排序方式，ASC/DESC
 	 * @return
 	 */
@@ -3583,23 +3656,23 @@ public class DBAccess {
 			String orderKey, String orderType) {
 		String sqlstr = "";
 
-		orderType = StringUtils.isEmpty(orderType) ? "ASC" : orderType.toUpperCase();
+		orderType = DataType.IsNullOrEmpty(orderType) ? "ASC" : orderType.toUpperCase();
 
 		if (pageIdx < 1) {
 			pageIdx = 1;
 		}
 
 		if (pageIdx == 1) {
-			sqlstr = "SELECT TOP " + pageSize + " * FROM (" + sql + ") T1" + (StringUtils.isEmpty(orderKey) ? ""
+			sqlstr = "SELECT TOP " + pageSize + " * FROM (" + sql + ") T1" + (DataType.IsNullOrEmpty(orderKey) ? ""
 					: String.format(" ORDER BY T1.%1$s %2$s", orderKey, orderType));
 		} else {
 			sqlstr = "SELECT TOP " + pageSize + " * FROM (" + sql + ") T1" + " WHERE T1." + key
 					+ (orderType.equals("ASC") ? " > " : " < ") + "(" + " SELECT "
 					+ (orderType.equals("ASC") ? "MAX(T3." : "MIN(T3.") + key + ") FROM (" + " SELECT TOP ((" + pageIdx
 					+ " - 1) * 10) T2." + key + "FROM (" + sql + ") T2"
-					+ (StringUtils.isEmpty(orderKey) ? ""
+					+ (DataType.IsNullOrEmpty(orderKey) ? ""
 							: String.format(" ORDER BY T2.%1$s %2$s", orderKey, orderType))
-					+ " ) T3)" + (StringUtils.isEmpty(orderKey) ? ""
+					+ " ) T3)" + (DataType.IsNullOrEmpty(orderKey) ? ""
 							: String.format(" ORDER BY T.%1$s %2$s", orderKey, orderType));
 		}
 
@@ -3609,15 +3682,15 @@ public class DBAccess {
 	/**
 	 * 通用Oracle查询分页返回DataTable
 	 * 
-	 * @param sql
+	 * param sql
 	 *            SQL语句，不带排序（Order By）语句
-	 * @param pageSize
+	 * param pageSize
 	 *            每页记录数量
-	 * @param pageIdx
+	 * param pageIdx
 	 *            请求页码
-	 * @param orderKey
+	 * param orderKey
 	 *            排序字段（此字段必须包含在返回字段中）
-	 * @param orderType
+	 * param orderType
 	 *            排序方式，ASC/DESC
 	 * @return
 	 */
@@ -3630,10 +3703,10 @@ public class DBAccess {
 		int start = (pageIdx - 1) * pageSize + 1;
 		int end = pageSize * pageIdx;
 
-		orderType = StringUtils.isEmpty(orderType) ? "ASC" : orderType.toUpperCase();
+		orderType = DataType.IsNullOrEmpty(orderType) ? "ASC" : orderType.toUpperCase();
 
 		String sqlstr = "SELECT * FROM ( SELECT T1.*, ROWNUM RN " + "FROM (SELECT * FROM  (" + sql + ") T2 "
-				+ (StringUtils.isEmpty(orderType) ? "" : String.format("ORDER BY T2.%1$s %2$s", orderKey, orderType))
+				+ (DataType.IsNullOrEmpty(orderType) ? "" : String.format("ORDER BY T2.%1$s %2$s", orderKey, orderType))
 				+ ") T1 WHERE ROWNUM <= " + end + " ) WHERE RN >=" + start;
 
 		return RunSQLReturnTable(sqlstr);
@@ -3642,15 +3715,15 @@ public class DBAccess {
 	/**
 	 * 通用DM查询分页返回DataTable
 	 *
-	 * @param sql
+	 * param sql
 	 *            SQL语句，不带排序（Order By）语句
-	 * @param pageSize
+	 * param pageSize
 	 *            每页记录数量
-	 * @param pageIdx
+	 * param pageIdx
 	 *            请求页码
-	 * @param orderKey
+	 * param orderKey
 	 *            排序字段（此字段必须包含在返回字段中）
-	 * @param orderType
+	 * param orderType
 	 *            排序方式，ASC/DESC
 	 * @return
 	 */
@@ -3663,10 +3736,10 @@ public class DBAccess {
 		int start = (pageIdx - 1) * pageSize + 1;
 		int end = pageSize * pageIdx;
 
-		orderType = StringUtils.isEmpty(orderType) ? "ASC" : orderType.toUpperCase();
+		orderType = DataType.IsNullOrEmpty(orderType) ? "ASC" : orderType.toUpperCase();
 
 		String sqlstr = "SELECT * FROM ( SELECT T1.*, ROWNUM RN " + "FROM (SELECT * FROM  (" + sql + ") T2 "
-				+ (StringUtils.isEmpty(orderType) ? "" : String.format("ORDER BY T2.%1$s %2$s", orderKey, orderType))
+				+ (DataType.IsNullOrEmpty(orderType) ? "" : String.format("ORDER BY T2.%1$s %2$s", orderKey, orderType))
 				+ ") T1 WHERE ROWNUM <= " + end + " ) WHERE RN >=" + start;
 
 		return RunSQLReturnTable(sqlstr);
@@ -3674,24 +3747,24 @@ public class DBAccess {
 	/**
 	 * 通用MySql查询分页返回DataTable
 	 * 
-	 * @param sql
+	 * param sql
 	 *            SQL语句，不带排序（Order By）语句
-	 * @param pageSize
+	 * param pageSize
 	 *            每页记录数量
-	 * @param pageIdx
+	 * param pageIdx
 	 *            请求页码
-	 * @param key
+	 * param key
 	 *            记录主键（不能为空，不能有重复，必须包含在返回字段中）
-	 * @param orderKey
+	 * param orderKey
 	 *            排序字段（此字段必须包含在返回字段中）
-	 * @param orderType
+	 * param orderType
 	 *            排序方式，ASC/DESC
 	 * @return
 	 */
 	private static DataTable RunSQLReturnTable_201612_MySql(String sql, int pageSize, int pageIdx, String key,
 			String orderKey, String orderType) {
 		String sqlstr = "";
-		orderType = StringUtils.isEmpty(orderType) ? "ASC" : orderType.toUpperCase();
+		orderType = DataType.IsNullOrEmpty(orderType) ? "ASC" : orderType.toUpperCase();
 
 		if (pageIdx < 1) {
 			pageIdx = 1;
@@ -3699,7 +3772,7 @@ public class DBAccess {
 
 		sqlstr = "SELECT * FROM (" + sql + ") T1 WHERE T1." + key + (orderType.equals("ASC") ? " >= " : " <= ")
 				+ "(SELECT T2." + key + " FROM (" + sql + ") T2"
-				+ (StringUtils.isEmpty(orderKey) ? "" : String.format(" ORDER BY T2.%1$s %2$s", orderKey, orderType))
+				+ (DataType.IsNullOrEmpty(orderKey) ? "" : String.format(" ORDER BY T2.%1$s %2$s", orderKey, orderType))
 				+ " LIMIT " + ((pageIdx - 1) * pageSize) + ",1) LIMIT " + pageSize;
 
 		return RunSQLReturnTable(sqlstr);
@@ -3707,7 +3780,7 @@ public class DBAccess {
 	/**
 	 * 是否是view
 	 *
-	 * @param tabelOrViewName
+	 * param tabelOrViewName
 	 * @return
 	 */
 	public static boolean IsView(String tabelOrViewName)
@@ -3717,7 +3790,7 @@ public class DBAccess {
 	/**
 	 * 是否是view
 	 * 
-	 * @param tabelOrViewName
+	 * param tabelOrViewName
 	 * @return
 	 */
 	public static boolean IsView(String tabelOrViewName,DBType dbType) {
@@ -3833,4 +3906,183 @@ public class DBAccess {
 
          }
      }
+
+	public static DataTable RunProcReturnTable(String sql, Paras paras)
+	{
+		if (DataType.IsNullOrEmpty(sql))
+		{
+			throw new RuntimeException("要执行的 sql = null ");
+		}
+
+		try
+		{
+			DataTable dt = null;
+			switch (DBAccess.getAppCenterDBType())
+			{
+				case MSSQL:
+					dt = RunProcReturnTable_SQL(sql, paras);
+					break;
+				case MySQL:
+					dt = RunProcReturnTable_MySQL(sql, paras);
+					break;
+				case Oracle:
+				case DM:
+				case PostgreSQL:
+				case UX:
+				case KingBaseR3:
+				case KingBaseR6:
+					throw new RuntimeException("err@RunProcReturnTable数据库类型还未处理！");
+
+				default:
+					throw new RuntimeException("err@RunProcReturnTable发现未知的数据库连接类型！");
+			}
+			return dt;
+		}
+		catch (RuntimeException ex)
+		{
+			bp.da.Log.DebugWriteError(ex.getMessage());
+			throw ex;
+		}
+	}
+	private static DataTable RunProcReturnTable_SQL(String sql, Paras paras)
+	{
+		ResultSet rs = null;
+		Connection conn = null;
+		CallableStatement callableStatement = null;
+		DataTable oratb = new DataTable("otb");
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_MSSQL();
+
+			callableStatement = conn.prepareCall(sql);
+			if (null != paras && paras.size() > 0) {
+
+				PrepareCallProCommand(callableStatement, paras);
+			}
+			rs = callableStatement.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int size = rsmd.getColumnCount();
+			for (int i = 0; i < size; i++) {
+				oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+			}
+			while (rs.next()) {
+				DataRow dr = oratb.NewRow();// 產生一列DataRow
+				for (int i = 0; i < size; i++) {
+					Object val = rs.getObject(i + 1);
+					if (dr != null && dr.columns.size() > 0 && dr.columns.get(i).DataType != null) {
+						if (dr.columns.get(i).DataType.toString().contains("Integer")
+								|| dr.columns.get(i).DataType.toString().contains("Double")) {
+							if (val == null) {
+								dr.setValue(i, 0);
+							} else {
+								dr.setValue(i, val);
+							}
+
+						} else {
+							dr.setValue(i, val);
+						}
+					} else {
+						dr.setValue(i, val);
+					}
+					// dr.setDataType(i, Para.getDAType(val));
+					if (Log.isLoggerDebugEnabled()) {
+						Log.DefaultLogWriteLineDebug("SQL: " + sql);
+						Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + i);
+					}
+				}
+
+				oratb.Rows.add(dr);// DataTable加入此DataRow
+			}
+
+
+			return oratb;
+		} catch (Exception ex) {
+
+			String msg = "@运行更新在(RunSQL_200705_SQL)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
+					+ "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (callableStatement != null)
+					callableStatement.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	private static DataTable RunProcReturnTable_MySQL(String sql, Paras paras)
+	{
+
+		ResultSet rs = null;
+		Connection conn = null;
+		CallableStatement  pstmt = null;
+
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_MySQL();
+			DataTable oratb = new DataTable("otb");
+			String nameLabel = "";
+			if (null != paras && paras.size() > 0) {
+				pstmt = conn.prepareCall(sql);
+				PrepareCallProCommand(pstmt, paras);
+			}
+			rs = pstmt.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int size = rsmd.getColumnCount();
+			for (int i = 0; i < size; i++) {
+				nameLabel = rsmd.getColumnLabel(i + 1);
+				oratb.Columns.Add(nameLabel, Para.getDAType(rsmd.getColumnType(i + 1)));
+			}
+			while (rs.next()) {
+				DataRow dr = oratb.NewRow();// 產生一列DataRow
+				for (int i = 0; i < size; i++) {
+					Object val = rs.getObject(i + 1);
+					// Object val = rs.getObject(i + 1);
+					if (dr != null && dr.columns.size() > 0 && dr.columns.get(i).DataType != null) {
+						if (dr.columns.get(i).DataType.toString().contains("Integer")
+								|| dr.columns.get(i).DataType.toString().contains("Float")) {
+							if (val == null) {
+								dr.setValue(i, 0);
+							} else {
+								dr.setValue(i, val);
+							}
+
+						} else {
+							dr.setValue(i, val);
+						}
+					} else {
+						dr.setValue(i, val);
+					}
+				}
+				oratb.Rows.add(dr);// DataTable加入此DataRow
+			}
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras!=null?paras.getDebugInfo():"" + ", Result: Rows=" + oratb.Rows.size());
+			}
+			return oratb;
+		} catch (Exception ex) {
+			String msg = "@运行查询在(RunSQLReturnTable_200705_MySQL)出错。\n  @SQL: " + sql + "\n  @Param: "
+					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+
 }

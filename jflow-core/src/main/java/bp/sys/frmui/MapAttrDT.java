@@ -14,70 +14,69 @@ import java.util.*;
 public class MapAttrDT extends EntityMyPK
 {
 
-		///文本字段参数属性.
+		///#region 文本字段参数属性.
 	/** 
 	 表单ID
 	*/
-	public final String getFK_MapData()throws Exception
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()throws Exception
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 绑定的枚举ID
 	*/
-	public final String getUIBindKey()throws Exception
+	public final String getUIBindKey() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value) throws Exception
-	{
+	public final void setUIBindKey(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.UIBindKey, value);
 	}
 	/** 
 	 数据类型
 	*/
-	public final int getMyDataType()throws Exception
+	public final int getMyDataType() throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.MyDataType);
 	}
-	public final void setMyDataType(int value) throws Exception
-	{
+	public final void setMyDataType(int value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
-	public final int getFormat()throws Exception
+	public final int getFormat() throws Exception
 	{
 		return this.GetValIntByKey(MapAttrAttr.IsSupperText);
 	}
-	public final void setFormat(int value) throws Exception
-	{
+	public final void setFormat(int value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.IsSupperText, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -87,15 +86,13 @@ public class MapAttrDT extends EntityMyPK
 	/** 
 	 日期字段
 	*/
-	public MapAttrDT()
-	{
+	public MapAttrDT() {
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -105,8 +102,7 @@ public class MapAttrDT extends EntityMyPK
 		map.IndexField = MapAttrAttr.FK_MapData;
 
 
-
-			///基本信息.
+			///#region 基本信息.
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "实体标识", false, false, 1, 100, 20);
 
@@ -121,21 +117,21 @@ public class MapAttrDT extends EntityMyPK
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 
-		map.AddDDLSysEnum(MapAttrAttr.IsSupperText, 2, "格式", true, true, MapAttrAttr.IsSupperText, "@0=yyyy-MM-dd@1=yyyy-MM-dd HH:mm@2=yyyy-MM-dd HH:mm:ss@3=yyyy-MM@4=HH:mm@5=HH:mm:ss@6=MM-dd");
+		map.AddDDLSysEnum(MapAttrAttr.IsSupperText, 2, "格式", true, true, MapAttrAttr.IsSupperText, "@0=yyyy-MM-dd@1=yyyy-MM-dd HH:mm@2=yyyy-MM-dd HH:mm:ss@3=yyyy-MM@4=HH:mm@5=HH:mm:ss@6=MM-dd@7=yyyy");
 
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", true, false, 0, 400, 20, true);
 			//CCS样式
 		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
 
-			/// 基本信息.
+			///#endregion 基本信息.
 
 
-			///傻瓜表单
-		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+			///#region 傻瓜表单
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
 			//文本占单元格数量
-		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
 			//文本跨行
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
@@ -145,10 +141,10 @@ public class MapAttrDT extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
 
-			/// 傻瓜表单。
+			///#endregion 傻瓜表单。
 
 
-			///执行的方法.
+			///#region 执行的方法.
 		RefMethod rm = new RefMethod();
 
 			//rm = new RefMethod();
@@ -161,30 +157,32 @@ public class MapAttrDT extends EntityMyPK
 		rm.Title = "正则表达式";
 		rm.ClassMethodName = this.toString() + ".DoRegularExpression()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings"; //正则表达式
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "事件绑函数";
 		rm.ClassMethodName = this.toString() + ".BindFunction()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-puzzle"; //事件绑定函数。
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "日期输入限制";
 		rm.ClassMethodName = this.toString() + ".DataFieldInputRole()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-ban";
 		map.AddRefMethod(rm);
 
 
-			/// 执行的方法.
+			///#endregion 执行的方法.
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
 	@Override
-	protected boolean beforeInsert()throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		if (this.getFormat() == 0 && this.getMyDataType() == 7)
 		{
 			this.setFormat(1);
@@ -194,8 +192,7 @@ public class MapAttrDT extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		//if (this.Format == 0 && this.MyDataType == 7)
 		//    this.Format = 1;
 
@@ -214,15 +211,14 @@ public class MapAttrDT extends EntityMyPK
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
 		mapAttr.RetrieveFromDBSources();
 		mapAttr.Update();
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 
 		super.afterInsertUpdateAction();
 	}
@@ -231,8 +227,7 @@ public class MapAttrDT extends EntityMyPK
 	 删除后清缓存
 	*/
 	@Override
-	protected void afterDelete()throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//删除相对应的rpt表中的字段
 		if (this.getFK_MapData().contains("ND") == true)
 		{
@@ -241,22 +236,21 @@ public class MapAttrDT extends EntityMyPK
 			DBAccess.RunSQL(sql);
 		}
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterDelete();
 	}
 
 
-		///
+		///#endregion
 
 
-		///方法执行.
+		///#region 方法执行.
 	/** 
 	 绑定函数
 	 
 	 @return 
 	*/
-	public final String BindFunction()throws Exception
-	{
+	public final String BindFunction() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/BindFunction.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -264,8 +258,7 @@ public class MapAttrDT extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DataFieldInputRole()throws Exception
-	{
+	public final String DataFieldInputRole() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/DataFieldInputRole.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -273,8 +266,7 @@ public class MapAttrDT extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoAutoFull()throws Exception
-	{
+	public final String DoAutoFull() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/AutoFull.htm?FK_MapData=" + this.getFK_MapData() + "&ExtType=AutoFull&KeyOfEn=" + this.getKeyOfEn();
 	}
 	/** 
@@ -282,10 +274,9 @@ public class MapAttrDT extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoRegularExpression()throws Exception
-	{
+	public final String DoRegularExpression() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/RegularExpression.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn() + "&MyPK=" + this.getMyPK();
 	}
 
-		/// 方法执行.
+		///#endregion 方法执行.
 }

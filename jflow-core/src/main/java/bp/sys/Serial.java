@@ -1,10 +1,10 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
 import bp.*;
+import bp.en.Map;
+
 import java.util.*;
 
 /** 
@@ -13,7 +13,7 @@ import java.util.*;
 public class Serial extends Entity
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 序列号
 	*/
@@ -21,8 +21,8 @@ public class Serial extends Entity
 	{
 		return this.GetValStringByKey(SerialAttr.IntVal);
 	}
-	public final void setIntVal(String value) throws Exception
-	{
+	public final void setIntVal(String value)  throws Exception
+	 {
 		this.SetValByKey(SerialAttr.IntVal, value);
 	}
 	/** 
@@ -32,28 +32,26 @@ public class Serial extends Entity
 	{
 		return this.GetValStringByKey(SerialAttr.CfgKey);
 	}
-	public final void setCfgKey(String value) throws Exception
-	{
+	public final void setCfgKey(String value)  throws Exception
+	 {
 		this.SetValByKey(SerialAttr.CfgKey, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 
 	/** 
 	 序列号
 	*/
-	public Serial()
-	{
+	public Serial()  {
 	}
 	/** 
 	 map
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -67,18 +65,17 @@ public class Serial extends Entity
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
-	public final int Gener(String CfgKey) throws Exception
-	{
+	public final int Gener(String CfgKey) throws Exception {
 		Paras ps = new Paras();
 		ps.Add("p", CfgKey);
 
-		String sql = "SELECT IntVal Sys_Serial WHERE CfgKey=" + SystemConfig.getAppCenterDBVarStr() + "p";
+		String sql = "SELECT IntVal Sys_Serial WHERE CfgKey=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "p";
 		int val = DBAccess.RunSQLReturnValInt(sql, 0, ps);
 		if (val == 0)
 		{
-			sql = "INSERT INTO Sys_Serial VALUES(" + SystemConfig.getAppCenterDBVarStr() + "p,1)";
+			sql = "INSERT INTO Sys_Serial VALUES(" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "p,1)";
 			DBAccess.RunSQLReturnVal(sql, ps);
 			return 1;
 		}
@@ -86,7 +83,7 @@ public class Serial extends Entity
 		{
 			val++;
 			ps.Add("intV", val);
-			sql = "UPDATE  Sys_Serial SET IntVal=" + SystemConfig.getAppCenterDBVarStr() + "intV WHERE  CfgKey=" + SystemConfig.getAppCenterDBVarStr() + "p";
+			sql = "UPDATE  Sys_Serial SET IntVal=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "intV WHERE  CfgKey=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "p";
 			DBAccess.RunSQLReturnVal(sql);
 			return val;
 		}

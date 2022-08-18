@@ -5,6 +5,7 @@ import bp.en.*;
 import bp.wf.template.*;
 import bp.wf.*;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -28,13 +29,11 @@ public enum FrmTrackSta
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static FrmTrackSta forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FrmTrackSta forValue(int value)
+	{return values()[value];
 	}
 }

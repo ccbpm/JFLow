@@ -1,8 +1,4 @@
 package bp.en;
-
-import bp.da.*;
-import bp.*;
-
 /** 
  用于OID Name 属性的实体继承
 */

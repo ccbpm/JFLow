@@ -1,4 +1,5 @@
 package bp.wf.data;
+
 import bp.en.*;
 import java.util.*;
 
@@ -7,19 +8,19 @@ import java.util.*;
 */
 public class CHs extends Entities
 {
-	private static final long serialVersionUID = 1L;
-		///构造方法属性
+
+		///#region 构造方法属性
 	/** 
 	 时效考核s
 	*/
-	public CHs()
+	public CHs()throws Exception
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///属性
+		///#region 属性
 	/** 
 	 时效考核
 	*/
@@ -29,25 +30,25 @@ public class CHs extends Entities
 		return new CH();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<CH> ToJavaList()
+	public final java.util.List<CH> ToJavaList()throws Exception
 	{
-		return (List<CH>)(Object)this;
+		return (java.util.List<CH>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<CH> Tolist()
+	public final ArrayList<CH> Tolist()throws Exception
 	{
 		ArrayList<CH> list = new ArrayList<CH>();
 		for (int i = 0; i < this.size(); i++)
@@ -57,5 +58,5 @@ public class CHs extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

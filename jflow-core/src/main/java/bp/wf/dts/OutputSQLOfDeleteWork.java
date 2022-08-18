@@ -7,10 +7,10 @@ import bp.dts.RunTimeType;
 import bp.wf.*;
 public class OutputSQLOfDeleteWork extends DataIOEn
 {
-	/** 
+	/**
 	 流程时效考核
-	*/
-	public OutputSQLOfDeleteWork()
+	 */
+	public OutputSQLOfDeleteWork()throws Exception
 	{
 		this.HisDoType = DoType.UnName;
 		this.Title = "生成删除节点数据的sql.";

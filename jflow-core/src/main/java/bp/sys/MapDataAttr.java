@@ -1,5 +1,15 @@
 package bp.sys;
+
+import bp.da.*;
+import bp.sys.base.*;
 import bp.en.*;
+import bp.pub.*;
+import bp.*;
+import java.util.*;
+import java.io.*;
+import java.nio.file.*;
+import java.time.*;
+
 /** 
  映射基础
 */
@@ -17,14 +27,31 @@ public class MapDataAttr extends EntityNoNameAttr
 	 表存储格式0=自定义表,1=指定表,可以修改字段2=执行表不可以修改字段.
 	*/
 	public static final String PTableModel = "PTableModel";
+	/** 
+	 从表数量
+	*/
 	public static final String Dtls = "Dtls";
+	/**
+	 表单类别
+	 */
+	public static final String FK_FrmSort = "FK_FrmSort";
+	/** 
+	 实体主键
+	*/
 	public static final String EnPK = "EnPK";
+	/** 
+	 宽度
+	*/
 	public static final String FrmW = "FrmW";
+	/** 
+	 高度
+	*/
 	public static final String FrmH = "FrmH";
 	/** 
 	 表格列(对傻瓜表单有效)
 	*/
 	public static final String TableCol = "TableCol";
+
 	/** 
 	 来源
 	*/
@@ -46,10 +73,6 @@ public class MapDataAttr extends EntityNoNameAttr
 	*/
 	public static final String DesignerTool11 = "DesignerTool";
 	/** 
-	 表单类别
-	*/
-	public static final String FK_FrmSort = "FK_FrmSort";
-	/** 
 	 表单树类别
 	*/
 	public static final String FK_FormTree = "FK_FormTree";
@@ -57,6 +80,12 @@ public class MapDataAttr extends EntityNoNameAttr
 	 表单类型
 	*/
 	public static final String FrmType = "FrmType";
+	/**
+	 htm表单
+	 */
+	//public static final String HtmlTemplateFile = "HtmlTemplateFile";
+
+
 	/** 
 	 业务类型
 	*/
@@ -72,7 +101,7 @@ public class MapDataAttr extends EntityNoNameAttr
 	/** 
 	 Url(对于嵌入式表单有效)
 	*/
-	public static final String Url = "Url";
+	public static final String UrlExt = "UrlExt";
 	/** 
 	 Tag
 	*/
@@ -94,10 +123,6 @@ public class MapDataAttr extends EntityNoNameAttr
 	*/
 	public static final String Ver = "Ver";
 	/** 
-	 数据源
-	*/
-	public static final String DBSrc = "DBSrc";
-	/** 
 	 应用类型
 	*/
 	public static final String AppType = "AppType";
@@ -110,33 +135,71 @@ public class MapDataAttr extends EntityNoNameAttr
 	*/
 	public static final String FlowCtrls = "FlowCtrls";
 	/** 
-	组织解构.
+	组织结构.
 	*/
 	public static final String OrgNo = "OrgNo";
+	/** 
+	 Icon.
+	*/
+	public static final String Icon = "Icon";
 
 
-		///报表属性(参数的方式存储).
+		///#region DBList类型的实体.
+	/** 
+	 数据源
+	*/
+	public static final String DBSrc = "DBSrc";
+	/** 
+	 数据源类型
+	*/
+	public static final String DBType = "DBType";
+	/** 
+	 单行
+	*/
+	public static final String ExpEn = "ExpEn";
+	/** 
+	 列表
+	*/
+	public static final String ExpList = "ExpList";
+	/** 
+	 表达式
+	*/
+	public static final String ExpCount = "ExpCount";
+	/** 
+	 分页的模式
+	*/
+	public static final String ExpListPageModel = "ExpListPageModel";
+
+		///#endregion DBList类型的实体.
+
+
+		///#region 报表属性(参数的方式存储).
 	/** 
 	 是否关键字查询
 	*/
+	public static final String IsSearchKey = "IsSearchKey";
+
+	/**
+	 是否关键字查询
+	 */
 	public static final String RptIsSearchKey = "RptIsSearchKey";
 	/** 
 	 时间段查询方式
 	*/
-	public static final String RptDTSearchWay = "RptDTSearchWay";
+	public static final String DTSearchWay = "DTSearchWay";
 	/** 
 	 时间字段
 	*/
-	public static final String RptDTSearchKey = "RptDTSearchKey";
+	public static final String DTSearchKey = "DTSearchKey";
 	/** 
 	 查询外键枚举字段
 	*/
 	public static final String RptSearchKeys = "RptSearchKeys";
 
-		/// 报表属性(参数的方式存储).
+		///#endregion 报表属性(参数的方式存储).
 
 
-		///其他计算属性，参数存储.
+		///#region 其他计算属性，参数存储.
 	/** 
 	 最左边的值
 	*/
@@ -154,80 +217,15 @@ public class MapDataAttr extends EntityNoNameAttr
 	*/
 	public static final String MaxEnd = "MaxEnd";
 
-		/// 其他计算属性，参数存储.
+		///#endregion 其他计算属性，参数存储.
 
 
-		///weboffice属性。
-	/** 
-	 是否启用锁定行
-	*/
-	public static final String IsRowLock = "IsRowLock";
-	/** 
-	 是否启用weboffice
-	*/
-	public static final String IsWoEnableWF = "IsWoEnableWF";
-	/** 
-	 是否启用保存
-	*/
-	public static final String IsWoEnableSave = "IsWoEnableSave";
-	/** 
-	 是否只读
-	*/
-	public static final String IsWoEnableReadonly = "IsWoEnableReadonly";
-	/** 
-	 是否启用修订
-	*/
-	public static final String IsWoEnableRevise = "IsWoEnableRevise";
-	/** 
-	 是否查看用户留痕
-	*/
-	public static final String IsWoEnableViewKeepMark = "IsWoEnableViewKeepMark";
-	/** 
-	 是否打印
-	*/
-	public static final String IsWoEnablePrint = "IsWoEnablePrint";
-	/** 
-	 是否启用签章
-	*/
-	public static final String IsWoEnableSeal = "IsWoEnableSeal";
-	/** 
-	 是否启用套红
-	*/
-	public static final String IsWoEnableOver = "IsWoEnableOver";
-	/** 
-	 是否启用公文模板
-	*/
-	public static final String IsWoEnableTemplete = "IsWoEnableTemplete";
-	/** 
-	 是否自动写入审核信息
-	*/
-	public static final String IsWoEnableCheck = "IsWoEnableCheck";
-	/** 
-	 是否插入流程
-	*/
-	public static final String IsWoEnableInsertFlow = "IsWoEnableInsertFlow";
-	/** 
-	 是否插入风险点
-	*/
-	public static final String IsWoEnableInsertFengXian = "IsWoEnableInsertFengXian";
-	/** 
-	 是否启用留痕模式
-	*/
-	public static final String IsWoEnableMarks = "IsWoEnableMarks";
-	/** 
-	 是否启用下载
-	*/
-	public static final String IsWoEnableDown = "IsWoEnableDown";
-
-		/// weboffice属性。
-
-
-		///参数属性.
+		///#region 参数属性.
 	public static final String EnsName = "EnsName";
-	/**
-	 * 是否启用装载填充
-	 */
-	public static final String IsPageLoadFull="IsPageLoadFull";
+	/** 
+	 是否是加密
+	*/
+	public static final String IsJM = "IsJM";
 
-		/// 参数属性.
+		///#endregion 参数属性.
 }

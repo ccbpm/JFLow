@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -13,42 +14,38 @@ import java.util.*;
 public class FrmWorkChecks extends Entities
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 审核组件s
 	*/
-	public FrmWorkChecks()
-	{
+	public FrmWorkChecks() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new FrmWorkCheck();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmWorkCheck> ToJavaList()
-	{
-		return (List<FrmWorkCheck>)(Object)this;
+	public final java.util.List<FrmWorkCheck> ToJavaList() {
+		return (java.util.List<FrmWorkCheck>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmWorkCheck> Tolist()
-	{
+	public final ArrayList<FrmWorkCheck> Tolist()  {
 		ArrayList<FrmWorkCheck> list = new ArrayList<FrmWorkCheck>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +54,5 @@ public class FrmWorkChecks extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

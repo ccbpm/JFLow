@@ -238,7 +238,7 @@ public class FileAccess {
 	    }
 	    /**
 	     * 递归删除目录下的所有文件及子目录下所有文件
-	     * @param file 将要删除的文件目录
+	     * param file 将要删除的文件目录
 	     * @return boolean Returns "true" if all deletions were successful.
 	     *                 If a deletion fails, the method stops attempting to
 	     *                 delete and returns "false".

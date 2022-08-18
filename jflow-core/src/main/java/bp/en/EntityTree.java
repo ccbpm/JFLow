@@ -9,7 +9,7 @@ public abstract class EntityTree extends Entity
 {
 
 		///属性
-	public final boolean getIsRoot() throws Exception
+	public final boolean getIsRoot()
 	{
 		if (this.getParentNo().equals("-1") || this.getParentNo().equals("0"))
 		{
@@ -26,11 +26,11 @@ public abstract class EntityTree extends Entity
 	/** 
 	 唯一标示
 	*/
-	public final String getNo()throws Exception
+	public final String getNo()
 	{
 		return this.GetValStringByKey(EntityTreeAttr.No);
 	}
-	public final void setNo(String value) throws Exception
+	public final void setNo(String value)
 	{
 		this.SetValByKey(EntityTreeAttr.No, value);
 	}
@@ -38,51 +38,47 @@ public abstract class EntityTree extends Entity
 	 名称
 	 * @throws Exception 
 	*/
-	public final String getName() throws Exception
+	public final String getName()
 	{
 		return this.GetValStringByKey(EntityTreeAttr.Name);
 	}
-	public final void setName(String value) throws Exception
+	public final void setName(String value)
 	{
 		this.SetValByKey(EntityTreeAttr.Name, value);
 	}
 	/** 
 	 父节点编号
 	*/
-	public final String getParentNo()throws Exception
+	public String getParentNo()
 	{
 		return this.GetValStringByKey(EntityTreeAttr.ParentNo);
 	}
-	public final void setParentNo(String value) throws Exception
+	public void setParentNo(String value)
 	{
 		this.SetValByKey(EntityTreeAttr.ParentNo, value);
 	}
 	/** 
 	 图标
 	*/
-	public final String getICON()throws Exception
+	public final String getICON()
 	{
 		return this.GetValStringByKey(EntityTreeAttr.ICON);
 	}
-	public final void setICON(String value) throws Exception
+	public final void setICON(String value)
 	{
 		this.SetValByKey(EntityTreeAttr.ICON, value);
 	}
 	/** 
 	 顺序号
 	*/
-	public final int getIdx()throws Exception
+	public int getIdx()
 	{
 		return this.GetValIntByKey(EntityTreeAttr.Idx);
 	}
-	public final void setIdx(int value) throws Exception
+	public void setIdx(int value)
 	{
 		this.SetValByKey(EntityTreeAttr.Idx, value);
 	}
-
-
-		///
-
 
 		///构造函数
 	/** 
@@ -102,7 +98,7 @@ public abstract class EntityTree extends Entity
 	/** 
 	 树结构编号
 	 
-	 @param no 编号
+	 param no 编号
 	 * @throws Exception 
 	*/
 	public EntityTree(String no) throws Exception
@@ -136,8 +132,7 @@ public abstract class EntityTree extends Entity
 	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		if (this.getEnMap().getIsAllowRepeatName() == false)
 		{
 			if (this.getPKCount() == 1)
@@ -211,34 +206,16 @@ public abstract class EntityTree extends Entity
          else
              en.setName(name);
 		en.setParentNo(this.getParentNo());
-	   // en.MenuType = this.MenuType;
-	  //  en.IsDir = false;
-	   // en.TreeNo = this.GenerNewNoByKey(EntityTreeAttr.TreeNo, EntityTreeAttr.ParentNo, this.ParentNo);
 		en.Insert();
 		return en;
 	}
-	/** 
-	 新建子节点
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
 	public  EntityTree DoCreateSubNode() throws Exception
 	{
-		bp.en.Entity tempVar = this.CreateInstance();
-		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
-		en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
-		en.setName("新建节点" + en.getNo());
-		en.setParentNo(this.getNo());
-	 
-		en.Insert();
-
-	
-		return en;
+		return DoCreateSubNode(null);
 	}
 	/** 
 	 新建子节点
-	 
 	 @return 
 	 * @throws Exception 
 	*/

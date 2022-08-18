@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  节点工作批处理
 */
@@ -12,7 +14,7 @@ public enum BatchRole
 	/** 
 	 批量审批
 	*/
-	Ordinary,
+	WorkCheckModel,
 	/** 
 	 分组批量审核
 	*/
@@ -20,13 +22,11 @@ public enum BatchRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static BatchRole forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static BatchRole forValue(int value)
+	{return values()[value];
 	}
 }

@@ -2,6 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
+import bp.en.Map;
 import bp.*;
 import java.util.*;
 
@@ -11,26 +12,16 @@ import java.util.*;
 public class EnVerDtls extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 
 	public EnVerDtls()
 	{
 	}
 
-	public EnVerDtls(String enVerPK) throws Exception
-	{
-		this.Retrieve(EnVerDtlAttr.EnVerPK, enVerPK);
-	}
-
-	public EnVerDtls(String enVerPK, int ver) throws Exception
-	{
-		this.Retrieve(EnVerDtlAttr.EnVerPK, enVerPK, EnVerDtlAttr.EnVer, ver);
-	}
-
-		///
+		///#endregion
 
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -40,16 +31,16 @@ public class EnVerDtls extends EntitiesMyPK
 		return new EnVerDtl();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<EnVerDtl> ToJavaList()
+	public final java.util.List<EnVerDtl> ToJavaList()throws Exception
 	{
 		return (java.util.List<EnVerDtl>)(Object)this;
 	}
@@ -58,7 +49,7 @@ public class EnVerDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<EnVerDtl> Tolist()
+	public final ArrayList<EnVerDtl> Tolist()throws Exception
 	{
 		ArrayList<EnVerDtl> list = new ArrayList<EnVerDtl>();
 		for (int i = 0; i < this.size(); i++)
@@ -68,6 +59,6 @@ public class EnVerDtls extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

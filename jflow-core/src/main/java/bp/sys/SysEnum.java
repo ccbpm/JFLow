@@ -1,11 +1,11 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
-import bp.web.WebUser;
+import bp.difference.*;
 import bp.*;
+import bp.en.Map;
+
 import java.util.*;
 
 /** 
@@ -16,38 +16,26 @@ public class SysEnum extends EntityMyPK
 	/** 
 	 得到一个String By LabKey.
 	 
-	 @param EnumKey
-	 @param intKey
+	 param EnumKey
+	 param intKey
 	 @return 
-	 * @throws Exception 
 	*/
-	public static String GetLabByPK(String EnumKey, int intKey) throws Exception
-	{
+	public static String GetLabByPK(String EnumKey, int intKey) throws Exception {
 		SysEnum en = new SysEnum(EnumKey, intKey);
 		return en.getLab();
 	}
 
 
-		///实现基本的方法
-	/** 
-	 关联外键
-	*/
-	public final String getRefPK() throws Exception
-	{
-		return this.GetValStringByKey(SysEnumAttr.RefPK);
-	}
-	public final void setRefPK(String value) throws Exception
-	{
-		this.SetValByKey(SysEnumAttr.RefPK, value);
-	}
+		///#region 实现基本的方法
 	public final String getOrgNo() throws Exception
 	{
 		return this.GetValStringByKey(SysEnumAttr.OrgNo);
 	}
-	public final void setOrgNo(String value) throws Exception
-	{
+	public final void setOrgNo(String value)  throws Exception
+	 {
 		this.SetValByKey(SysEnumAttr.OrgNo, value);
 	}
+
 	/** 
 	 标签
 	*/
@@ -55,82 +43,79 @@ public class SysEnum extends EntityMyPK
 	{
 		return this.GetValStringByKey(SysEnumAttr.Lab);
 	}
-	public final void setLab(String value) throws Exception
-	{
+	public final void setLab(String value)
+	 {
 		this.SetValByKey(SysEnumAttr.Lab, value);
 	}
 	/** 
 	 标签
 	*/
-	public final String getLang() throws Exception
+	public final String getLang()
 	{
 		return this.GetValStringByKey(SysEnumAttr.Lang);
 	}
-	public final void setLang(String value) throws Exception
-	{
+	public final void setLang(String value)
+	 {
 		this.SetValByKey(SysEnumAttr.Lang, value);
 	}
 	/** 
 	 Int val
 	*/
-	public final int getIntKey() throws Exception
+	public final int getIntKey()
 	{
 		return this.GetValIntByKey(SysEnumAttr.IntKey);
 	}
-	public final void setIntKey(int value) throws Exception
-	{
+	public final void setIntKey(int value)
+	 {
 		this.SetValByKey(SysEnumAttr.IntKey, value);
 	}
 	/** 
 	 EnumKey
 	*/
-	public final String getEnumKey() throws Exception
+	public final String getEnumKey()
 	{
 		return this.GetValStringByKey(SysEnumAttr.EnumKey);
 	}
-	public final void setEnumKey(String value) throws Exception
-	{
+	public final void setEnumKey(String value)
+	 {
 		this.SetValByKey(SysEnumAttr.EnumKey, value);
 	}
 
-		///
+
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 SysEnum
 	*/
-	public SysEnum()
-	{
+	public SysEnum()  {
 	}
 	/** 
 	 税务编号
 	 
-	 @param _No 编号
-	 * @throws Exception 
+	 param enumKey 编号
 	*/
-	public SysEnum(String enumKey, int val) throws Exception
-	{
+	public SysEnum(String enumKey, int val) throws Exception {
 		this.setEnumKey(enumKey);
-		this.setLang(WebUser.getSysLang());
+		this.setLang(bp.web.WebUser.getSysLang());
 		this.setIntKey(val);
 		this.setMyPK(this.getEnumKey() + "_" + this.getLang() + "_" + this.getIntKey());
 		int i = this.RetrieveFromDBSources();
 		if (i == 0)
 		{
-			i = this.Retrieve(SysEnumAttr.EnumKey, enumKey, SysEnumAttr.Lang, WebUser.getSysLang(), SysEnumAttr.IntKey, this.getIntKey());
+			i = this.Retrieve(SysEnumAttr.EnumKey, enumKey, SysEnumAttr.Lang, bp.web.WebUser.getSysLang(), SysEnumAttr.IntKey, this.getIntKey());
 			SysEnums ses = new SysEnums();
 			ses.Full(enumKey);
 			if (i == 0)
 			{
 				//尝试注册系统的枚举的配置.
 				bp.sys.SysEnums myee = new SysEnums(enumKey);
-				throw new RuntimeException("@ EnumKey=" + getEnumKey() + " Val=" + val + " Lang=" + WebUser.getSysLang() + " ...Error");
+				throw new RuntimeException("@ EnumKey=" + getEnumKey() + " Val=" + val + " Lang=" + bp.web.WebUser.getSysLang() + " ...Error");
 			}
 		}
 	}
-	public SysEnum(String enumKey, String Lang, int val) throws Exception
-	{
+	public SysEnum(String enumKey, String Lang, int val) throws Exception {
 		this.setEnumKey(enumKey);
 		this.setLang(Lang);
 		this.setIntKey(val);
@@ -153,14 +138,13 @@ public class SysEnum extends EntityMyPK
 	 Map
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
-		Map map = new Map(bp.wf.Glo.SysEnum(), "枚举数据");
+		Map map = new Map(bp.sys.base.Glo.SysEnum(), "枚举数据");
 
 			/*
 			* 为了能够支持 cloud 我们做了如下变更.
@@ -171,6 +155,8 @@ public class SysEnum extends EntityMyPK
 
 		map.AddMyPK();
 		map.AddTBString(SysEnumAttr.Lab, null, "Lab", true, false, 1, 300, 8);
+
+			//不管是那个模式  就是短号. 
 		map.AddTBString(SysEnumAttr.EnumKey, null, "EnumKey", true, false, 1, 100, 8);
 		map.AddTBInt(SysEnumAttr.IntKey, 0, "Val", true, false);
 		map.AddTBString(SysEnumAttr.Lang, "CH", "语言", true, false, 0, 10, 8);
@@ -181,36 +167,37 @@ public class SysEnum extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
-
-	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
-	{
+	public final void ResetPK() throws Exception {
 		if (this.getLang() == null && this.getLang().equals(""))
 		{
-			this.setLang(WebUser.getSysLang());
+			this.setLang(bp.web.WebUser.getSysLang());
 		}
 
-		this.setMyPK(this.getEnumKey() + "_" + this.getLang() + "_" + this.getIntKey());
-
-		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			this.setRefPK(this.getOrgNo() + "_" + this.getEnumKey()); //关联的主键.
+			this.setMyPK(this.getEnumKey() + "_" + this.getLang() + "_" + this.getIntKey() + "_" + bp.web.WebUser.getOrgNo()); //关联的主键.
 		}
-														  //  else
-														  //    this.RefPK = this.OrgNo + "_" + this.EnumKey; //关联的主键.
+
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.SAAS)
+		{
+			this.setMyPK(this.getEnumKey() + "_" + this.getLang() + "_" + this.getIntKey());
+		}
+	}
+
+	@Override
+	protected boolean beforeUpdateInsertAction() throws Exception {
+		ResetPK();
 
 		return super.beforeUpdateInsertAction();
 	}
 
 	/** 
 	 枚举类型新增保存后在Frm_RB中增加新的枚举值
-	 * @throws Exception 
 	*/
 	@Override
-	protected void afterInsert() throws Exception
-	{
+	protected void afterInsert() throws Exception {
 		//获取引用枚举的表单
 		String sql = " select  distinct(FK_MapData)from Sys_FrmRB where EnumKey='" + this.getEnumKey() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -246,22 +233,11 @@ public class SysEnum extends EntityMyPK
 				FrmRB frmrb1 = new FrmRB();
 				frmrb1.setMyPK(fk_mapdata + "_" + this.getEnumKey() + "_" + this.getIntKey());
 
-
 				frmrb.setFK_MapData(fk_mapdata);
 				frmrb.setKeyOfEn(this.getEnumKey());
 				frmrb.setEnumKey(this.getEnumKey());
 				frmrb.setLab(this.getLab());
 				frmrb.setIntKey(this.getIntKey());
-				if (RBShowModel == 0)
-				{
-					frmrb.setX(frmrb1.getX());
-					frmrb.setY(frmrb1.getY() + 40);
-				}
-				if (RBShowModel == 3)
-				{
-					frmrb.setX(frmrb1.getX() + 100);
-					frmrb.setY(frmrb1.getY());
-				}
 				frmrb.Insert();
 			}
 

@@ -2,9 +2,7 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.en.*;
-import bp.web.WebUser;
 import bp.wf.*;
-import bp.wf.port.WFEmp;
 
 /** 
  向预期的工作人员发送提醒消息 的摘要说明
@@ -14,7 +12,7 @@ public class DTS_SendMsgToWarningWorker extends Method
 	/** 
 	 向预期的工作人员发送提醒消息
 	*/
-	public DTS_SendMsgToWarningWorker()
+	public DTS_SendMsgToWarningWorker()throws Exception
 	{
 		this.Title = "向预期的工作人员发送提醒消息";
 		this.Help = "该方法每天的8点自动执行";
@@ -34,12 +32,11 @@ public class DTS_SendMsgToWarningWorker extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getIsAdmin() == true)
+		if (bp.web.WebUser.getIsAdmin() == true)
 		{
 			return true;
 		}
@@ -49,10 +46,9 @@ public class DTS_SendMsgToWarningWorker extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 
 		/*查找一天预警1次的消息记录，并执行推送。*/
@@ -68,20 +64,20 @@ public class DTS_SendMsgToWarningWorker extends Method
 			String empNo = dr.getValue("FK_Emp").toString();
 			String empName = dr.getValue("FK_EmpText").toString();
 
-			WFEmp emp = new WFEmp(empNo);
+			bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(empNo);
 
 			if (way == CHAlertWay.ByEmail)
 			{
 				String titleMail = "";
 				String docMail = "";
-				//  BP.WF.Dev2Interface.Port_SendEmail(emp.Email, titleMail, "");
+				//  bp.wf.Dev2Interface.Port_SendEmail(emp.Email, titleMail, "");
 			}
 
 			if (way == CHAlertWay.BySMS)
 			{
 				String titleMail = "";
 				String docMail = "";
-				//BP.WF.Dev2Interface.Port_SendMsg(emp.Email, titleMail, "");
+				//bp.wf.Dev2Interface.Port_SendMsg(emp.Email, titleMail, "");
 			}
 		}
 		return "执行成功...";

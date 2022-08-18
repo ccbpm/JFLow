@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  分流规则
 */
@@ -20,13 +22,11 @@ public enum FLRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static FLRole forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FLRole forValue(int value) 
+	{return values()[value];
 	}
 }

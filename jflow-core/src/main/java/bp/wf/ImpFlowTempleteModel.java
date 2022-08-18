@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  导入流程的模式
 */
@@ -24,13 +26,11 @@ public enum ImpFlowTempleteModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static ImpFlowTempleteModel forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static ImpFlowTempleteModel forValue(int value) 
+	{return values()[value];
 	}
 }

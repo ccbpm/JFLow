@@ -2,13 +2,9 @@ package bp.sys.frmui;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.sys.*;
-import bp.tools.FtpUtil;
-import bp.web.WebUser;
 import bp.*;
-import bp.sys.*;
-import java.util.*;
+import bp.tools.FtpUtil;
 
 /** 
  附件
@@ -19,12 +15,11 @@ public class FrmAttachmentExt extends EntityMyPK
 	 访问权限.
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsView = true;
 		uac.IsInsert = false;
-		if (WebUser.getNo().equals("admin") || WebUser.getIsAdmin() == true)
+		if (bp.web.WebUser.getNo().equals("admin") || bp.web.WebUser.getIsAdmin() == true)
 		{
 			uac.IsUpdate = true;
 			uac.IsDelete = true;
@@ -34,41 +29,35 @@ public class FrmAttachmentExt extends EntityMyPK
 	}
 
 
-		///参数属性.
+		///#region 参数属性.
 	/** 
 	 是否可见？
 	*/
-	public final boolean getIsVisable()throws Exception
-	{
+	public final boolean isVisable()  {
 		return this.GetParaBoolen(FrmAttachmentAttr.IsVisable, true);
 	}
-	public final void setIsVisable(boolean value) throws Exception
-	{
-		this.SetPara(FrmAttachmentAttr.IsVisable, value);
+	public final void setVisable(boolean value)
+	{this.SetPara(FrmAttachmentAttr.IsVisable, value);
 	}
 	/** 
 	 附件类型
 	*/
-	public final int getFileType()throws Exception
-	{
+	public final int getFileType()  {
 		return this.GetParaInt(FrmAttachmentAttr.FileType);
 	}
-	public final void setFileType(int value) throws Exception
-	{
-		this.SetPara(FrmAttachmentAttr.FileType, value);
+	public final void setFileType(int value)
+	{this.SetPara(FrmAttachmentAttr.FileType, value);
 	}
 	/** 
 	 使用上传附件的 - 控件类型
 	 0=批量.
 	 1=单个。
 	*/
-	public final int getUploadCtrl()throws Exception
-	{
+	public final int getUploadCtrl()  {
 		return this.GetParaInt(FrmAttachmentAttr.UploadCtrl);
 	}
-	public final void setUploadCtrl(int value) throws Exception
-	{
-		this.SetPara(FrmAttachmentAttr.UploadCtrl, value);
+	public final void setUploadCtrl(int value)
+	{this.SetPara(FrmAttachmentAttr.UploadCtrl, value);
 	}
 	/** 
 	 上传校验
@@ -76,47 +65,43 @@ public class FrmAttachmentExt extends EntityMyPK
 	 1=不能为空.
 	 2=每个类别下不能为空.
 	*/
-	public final UploadFileNumCheck getUploadFileNumCheck()throws Exception
-	{
+	public final UploadFileNumCheck getUploadFileNumCheck() {
 		return UploadFileNumCheck.forValue(this.GetValIntByKey(FrmAttachmentAttr.UploadFileNumCheck));
 	}
-	public final void setUploadFileNumCheck(UploadFileNumCheck value)throws Exception
-	{
-		this.SetPara(FrmAttachmentAttr.UploadFileNumCheck, value.getValue());
+	public final void setUploadFileNumCheck(UploadFileNumCheck value)
+	{this.SetPara(FrmAttachmentAttr.UploadFileNumCheck, value.getValue());
 	}
 
 
-		/// 参数属性.
+		///#endregion 参数属性.
 
 
-		///属性
+		///#region 属性
 	/** 
 	 节点编号
 	*/
-	public final int getFK_Node()throws Exception
+	public final int getFK_Node()
 	{
 		return this.GetValIntByKey(FrmAttachmentAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
+	public final void setFKNode(int value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.FK_Node, value);
 	}
 	/** 
 	 上传类型（单个的，多个，指定的）
 	*/
-	public final AttachmentUploadType getUploadType()throws Exception
-	{
+	public final AttachmentUploadType getUploadType() {
 		return AttachmentUploadType.forValue(this.GetValIntByKey(FrmAttachmentAttr.UploadType));
 	}
-	public final void setUploadType(AttachmentUploadType value)throws Exception
-	{
+	public final void setUploadType(AttachmentUploadType value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.UploadType, value.getValue());
 	}
 	/** 
 	 类型名称
 	*/
-	public final String getUploadTypeT()throws Exception
-	{
+	public final String getUploadTypeT() {
 		if (this.getUploadType() == AttachmentUploadType.Multi)
 		{
 			return "多附件";
@@ -134,77 +119,64 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 是否可以上传
 	*/
-	public final boolean getIsUpload()throws Exception
+	public final boolean isUpload()
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsUpload);
 	}
-	public final void setIsUpload(boolean value) throws Exception
-	{
+	public final void setUpload(boolean value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.IsUpload, value);
 	}
 	/** 
 	 是否可以下载
 	*/
-	public final boolean getIsDownload()throws Exception
+	public final boolean isDownload()
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsDownload);
 	}
-	public final void setIsDownload(boolean value) throws Exception
-	{
+	public final void setDownload(boolean value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.IsDownload, value);
 	}
 	/** 
 	 附件删除方式
 	*/
-	public final AthDeleteWay getHisDeleteWay()throws Exception
-	{
+	public final AthDeleteWay getHisDeleteWay() {
 		return AthDeleteWay.forValue(this.GetValIntByKey(FrmAttachmentAttr.DeleteWay));
 	}
-	public final void setHisDeleteWay(AthDeleteWay value)throws Exception
-	{
+	public final void setHisDeleteWay(AthDeleteWay value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.DeleteWay, value.getValue());
 	}
 
-	/** 
-	 是否可以排序?
-	*/
-	public final boolean getIsOrder()throws Exception
-	{
-		return this.GetValBooleanByKey(FrmAttachmentAttr.IsOrder);
-	}
-	public final void setIsOrder(boolean value) throws Exception
-	{
-		this.SetValByKey(FrmAttachmentAttr.IsOrder, value);
-	}
+
 	/** 
 	 自动控制大小
 	*/
-	public final boolean getIsAutoSize()throws Exception
+	public final boolean isAutoSize()
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsAutoSize);
 	}
-	public final void setIsAutoSize(boolean value) throws Exception
-	{
+	public final void setAutoSize(boolean value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.IsAutoSize, value);
 	}
 	/** 
 	 IsShowTitle
 	*/
-	public final boolean getIsShowTitle()throws Exception
+	public final boolean isShowTitle()
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsShowTitle);
 	}
-	public final void setIsShowTitle(boolean value) throws Exception
-	{
+	public final void setShowTitle(boolean value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.IsShowTitle, value);
 	}
 	/** 
 	 是否是节点表单.
-	 * @throws Exception 
 	*/
-	public final boolean getIsNodeSheet() throws Exception
-	{
-		if (this.getFK_MapData().startsWith("ND") == true)
+	public final boolean isNodeSheet() {
+		if (this.getFKMapData().startsWith("ND") == true)
 		{
 			return true;
 		}
@@ -213,19 +185,18 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 备注列
 	*/
-	public final boolean getIsNote()throws Exception
+	public final boolean isNote()
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsNote);
 	}
-	public final void setIsNote(boolean value) throws Exception
-	{
+	public final void setNote(boolean value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.IsNote, value);
 	}
 	/** 
 	 附件名称
 	*/
-	public final String getName()throws Exception
-	{
+	public final String getName() {
 		String str = this.GetValStringByKey(FrmAttachmentAttr.Name);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
@@ -233,99 +204,69 @@ public class FrmAttachmentExt extends EntityMyPK
 		}
 		return str;
 	}
-	public final void setName(String value) throws Exception
-	{
+	public final void setName(String value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.Name, value);
 	}
 	/** 
 	 类别
 	*/
-	public final String getSort()throws Exception
+	public final String getSort()
 	{
 		return this.GetValStringByKey(FrmAttachmentAttr.Sort);
 	}
-	public final void setSort(String value) throws Exception
-	{
+	public final void setSort(String value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.Sort, value);
 	}
 	/** 
 	 要求的格式
 	*/
-	public final String getExts()throws Exception
+	public final String getExts()
 	{
 		return this.GetValStringByKey(FrmAttachmentAttr.Exts);
 	}
-	public final void setExts(String value) throws Exception
-	{
+	public final void setExts(String value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.Exts, value);
 	}
 
 	/** 
 	 附件标识
 	*/
-	public final String getNoOfObj()throws Exception
+	public final String getNoOfObj()
 	{
 		return this.GetValStringByKey(FrmAttachmentAttr.NoOfObj);
 	}
 
-	/** 
-	 Y
-	*/
-	public final float getY()throws Exception
-	{
-		return this.GetValFloatByKey(FrmAttachmentAttr.Y);
-	}
-	public final void setY(float value) throws Exception
-	{
-		this.SetValByKey(FrmAttachmentAttr.Y, value);
-	}
-	/** 
-	 X
-	*/
-	public final float getX()throws Exception
-	{
-		return this.GetValFloatByKey(FrmAttachmentAttr.X);
-	}
-	public final void setX(float value) throws Exception
-	{
-		this.SetValByKey(FrmAttachmentAttr.X, value);
-	}
-	/** 
-	 W
-	*/
-	public final float getW()throws Exception
-	{
-		return this.GetValFloatByKey(FrmAttachmentAttr.W);
-	}
-	public final void setW(float value) throws Exception
-	{
-		this.SetValByKey(FrmAttachmentAttr.W, value);
-	}
+
 	/** 
 	 H
 	*/
-	public final float getH()throws Exception
+	public final float getH()
 	{
 		return this.GetValFloatByKey(FrmAttachmentAttr.H);
 	}
-	public final void setH(float value) throws Exception
-	{
+	public final void setH(float value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.H, value);
 	}
 	/** 
 	 数据控制方式
 	*/
-	public final AthCtrlWay getHisCtrlWay()throws Exception
-	{
+	public final AthCtrlWay getHisCtrlWay() {
 		return AthCtrlWay.forValue(this.GetValIntByKey(FrmAttachmentAttr.CtrlWay));
 	}
-	public final void setHisCtrlWay(AthCtrlWay value)throws Exception
-	{
+	public final void setHisCtrlWay(AthCtrlWay value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.CtrlWay, value.getValue());
 	}
 	/** 
 	 是否是合流汇总多附件？
 	*/
+	/**
+	 是否是合流汇总多附件？
+	 */
 	public final boolean getIsHeLiuHuiZong()throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsHeLiuHuiZong);
@@ -334,9 +275,9 @@ public class FrmAttachmentExt extends EntityMyPK
 	{
 		this.SetValByKey(FrmAttachmentAttr.IsHeLiuHuiZong, value);
 	}
-	/** 
+	/**
 	 该附件是否汇总到合流节点上去？
-	*/
+	 */
 	public final boolean getIsToHeLiuHZ()throws Exception
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsToHeLiuHZ);
@@ -348,86 +289,78 @@ public class FrmAttachmentExt extends EntityMyPK
 	/** 
 	 文件展现方式
 	*/
-	public final FileShowWay getFileShowWay()throws Exception
-	{
+	public final FileShowWay getFileShowWay() {
 		return FileShowWay.forValue(this.GetParaInt(FrmAttachmentAttr.FileShowWay));
 	}
 	public final void setFileShowWay(FileShowWay value)throws Exception
-	{
-		this.SetPara(FrmAttachmentAttr.FileShowWay, value.getValue());
+	{this.SetPara(FrmAttachmentAttr.FileShowWay, value.getValue());
 	}
 	/** 
 	 上传方式（对于父子流程有效）
 	*/
-	public final AthUploadWay getAthUploadWay()throws Exception
-	{
+	public final AthUploadWay getAthUploadWay() {
 		return AthUploadWay.forValue(this.GetValIntByKey(FrmAttachmentAttr.AthUploadWay));
 	}
-	public final void setAthUploadWay(AthUploadWay value)throws Exception
-	{
+	public final void setAthUploadWay(AthUploadWay value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.AthUploadWay, value.getValue());
 	}
 	/** 
 	 FK_MapData
 	*/
-	public final String getFK_MapData()throws Exception
+	public final String getFKMapData()
 	{
 		return this.GetValStrByKey(FrmAttachmentAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)
+	 {
 		this.SetValByKey(FrmAttachmentAttr.FK_MapData, value);
 	}
 
 	/** 
 	 是否要转换成html
 	*/
-	public final boolean getIsTurn2Html()throws Exception
+	public final boolean isTurn2Html()
 	{
 		return this.GetValBooleanByKey(FrmAttachmentAttr.IsTurn2Html);
 	}
 
-		///
+		///#endregion
 
 
-		///快捷键
+		///#region 快捷键
 	/** 
 	 是否启用快捷键
 	*/
-	public final boolean getFastKeyIsEnable()throws Exception
-	{
+	public final boolean getFastKeyIsEnable() {
 		return this.GetParaBoolen(FrmAttachmentAttr.FastKeyIsEnable);
 	}
-	public final void setFastKeyIsEnable(boolean value) throws Exception
-	{
-		this.SetPara(FrmAttachmentAttr.FastKeyIsEnable, value);
+	public final void setFastKeyIsEnable(boolean value)throws Exception
+	{this.SetPara(FrmAttachmentAttr.FastKeyIsEnable, value);
 	}
 	/** 
 	 启用规则
 	*/
-	public final String getFastKeyGenerRole()throws Exception
-	{
+	public final String getFastKeyGenerRole() {
 		return this.GetParaString(FrmAttachmentAttr.FastKeyGenerRole);
 	}
-	public final void setFastKeyGenerRole(String value) throws Exception
-	{
-		this.SetPara(FrmAttachmentAttr.FastKeyGenerRole, value);
+	public final void setFastKeyGenerRole(String value)throws Exception
+	{this.SetPara(FrmAttachmentAttr.FastKeyGenerRole, value);
 	}
 
-		/// 快捷键
+		///#endregion 快捷键
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 附件
 	*/
-	public FrmAttachmentExt()
-	{
+	public FrmAttachmentExt() {
 	}
 	/** 
 	 附件
 	 
-	 @param mypk 主键
+	 param mypk 主键
 	*/
 	public FrmAttachmentExt(String mypk)throws Exception
 	{
@@ -438,8 +371,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -451,7 +383,7 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddMyPK();
 
 
-			///基本属性。
+			///#region 基本属性。
 		map.AddTBString(FrmAttachmentAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
 		map.AddTBString(FrmAttachmentAttr.NoOfObj, null, "附件标识", true, true, 0, 50, 20);
 		map.AddTBInt(FrmAttachmentAttr.FK_Node, 0, "节点控制(对sln有效)", false, false);
@@ -471,9 +403,9 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddTBInt(FrmAttachmentAttr.FileMaxSize, 10240, "附件最大限制(KB)", true, false);
 		map.AddDDLSysEnum(FrmAttachmentAttr.UploadFileNumCheck, 0, "上传校验方式", true, true, FrmAttachmentAttr.UploadFileNumCheck, "@0=不用校验@1=不能为空@2=每个类别下不能为空");
 
-			//for tianye group 
 		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay, "@0=保存到web服务器@1=保存到数据库@2=ftp服务器");
-		//@hongyan.
+
+
 		map.AddBoolean(FrmAttachmentAttr.IsIdx, false, "是否排序?", true, true);
 
 
@@ -482,11 +414,7 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddBoolean(FrmAttachmentAttr.IsTurn2Html, false, "是否转换成html(方便手机浏览)", true, true, true);
 
-			//位置.
-		map.AddTBFloat(FrmAttachmentAttr.X, 5, "X", false, false);
-		map.AddTBFloat(FrmAttachmentAttr.Y, 5, "Y", false, false);
 
-		map.AddTBFloat(FrmAttachmentAttr.W, 40, "宽度", true, false);
 		map.AddTBFloat(FrmAttachmentAttr.H, 150, "高度", true, false);
 
 			//附件是否显示
@@ -496,12 +424,13 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddDDLSysEnum(FrmAttachmentAttr.PicUploadType, 0, "图片附件上传方式", true, true, FrmAttachmentAttr.PicUploadType, "@0=拍照上传或者相册上传@1=只能拍照上传");
 		map.SetHelperAlert(FrmAttachmentAttr.PicUploadType, "该功能只使用于移动端图片文件上传的方式.");
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 
 
-			/// 基本属性。
+			///#endregion 基本属性。
 
 
-			///权限控制。
+			///#region 权限控制。
 			//hzm新增列
 			// map.AddTBInt(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的", false, false);
 
@@ -509,14 +438,16 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddBoolean(FrmAttachmentAttr.IsUpload, true, "是否可以上传", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsDownload, true, "是否可以下载", true, true);
-		map.AddBoolean(FrmAttachmentAttr.IsOrder, false, "是否可以排序", true, true);
 
 		map.AddBoolean(FrmAttachmentAttr.IsAutoSize, true, "自动控制大小", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsNote, true, "是否增加备注", true, true);
 		map.AddBoolean(FrmAttachmentAttr.IsExpCol, true, "是否启用扩展列", true, true);
 
 		map.AddBoolean(FrmAttachmentAttr.IsShowTitle, true, "是否显示标题列", true, true);
+
 		map.AddDDLSysEnum(FrmAttachmentAttr.UploadType, 0, "上传类型", true, false, FrmAttachmentAttr.CtrlWay, "@0=单个@1=多个@2=指定");
+		map.SetHelperAlert(FrmAttachmentAttr.UploadType, "单附件：请使用字段单附件组件。");
+
 
 		map.AddDDLSysEnum(FrmAttachmentAttr.AthUploadWay, 0, "控制上传控制方式", true, true, FrmAttachmentAttr.AthUploadWay, "@0=继承模式@1=协作模式");
 
@@ -526,10 +457,10 @@ public class FrmAttachmentExt extends EntityMyPK
 			//map.AddDDLSysEnum(FrmAttachmentAttr.DataRef, 0, "数据引用", true, true, FrmAttachmentAttr.DataRef,
 			//    "@0=当前组件ID@1=指定的组件ID");
 
-			/// 权限控制。
+			///#endregion 权限控制。
 
 
-			///节点相关
+			///#region 节点相关
 			//map.AddDDLSysEnum(FrmAttachmentAttr.DtlOpenType, 0, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, 
 			//    "@0=不能删除@1=删除所有@2=只能删除自己上传的");
 		map.AddBoolean(FrmAttachmentAttr.IsToHeLiuHZ, true, "该附件是否要汇总到合流节点上去？(对子线程节点有效)", true, true, true);
@@ -539,48 +470,108 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddDDLSysEnum(FrmAttachmentAttr.ReadRole, 0, "阅读规则", true, true, FrmAttachmentAttr.ReadRole, "@0=不控制@1=未阅读阻止发送@2=未阅读做记录");
 
-			/// 节点相关
+			///#endregion 节点相关
 
 
-			///其他属性。
+			///#region 其他属性。
 			//参数属性.
 		map.AddTBAtParas(3000);
 
-			/// 其他属性。
+			///#endregion 其他属性。
 
+
+			///#region 基本配置.
 		RefMethod rm = new RefMethod();
-		rm.Title = "高级配置";
 			//  rm.Icon = "/WF/Admin/CCFormDesigner/Img/Menu/CC.png";
 			//rm.ClassMethodName = this.ToString() + ".DoAdv";
 			// rm.refMethodType = RefMethodType.RightFrameOpen;
 			//  map.AddRefMethod(rm);
+		rm = new RefMethod();
+		rm.Title = "测试FTP服务器";
+		rm.ClassMethodName = this.toString() + ".DoTestFTPHost";
+		rm.refMethodType = RefMethodType.Func;
+		rm.Icon = "icon-fire";
+		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
+		rm.Title = "重命名标记";
+		rm.ClassMethodName = this.toString() + ".ResetAthName";
+		rm.getHisAttrs().AddTBString("F", null, "命名后的标记", true, false, 0, 100, 50);
+		rm.refMethodType = RefMethodType.Func;
+		rm.Icon = "icon-note";
+
+		String msg = "说明：";
+		msg += "\t\n 1. 每个附件都有一个标记比如，Ath1,Ath2, FJ. ";
+		msg += "\t\n 2. 这个标记在一个表单中不能重复，这个标记也叫附件的小名。";
+		msg += "\t\n 3. 在父子流程，或者多表单流程中，这个标记可以用于继承附件的展示。";
+		msg += "\t\n 4. 比如：一个父流程的附件组件的标记为Ath1, 一个子流程的表单的附件表单要看到这个附件信息，就需要把两个小名保持一致。";
+		rm.Warning = msg;
+		map.AddRefMethod(rm);
+
+
+			///#endregion 基本配置.
+
+
+
+			///#region 高级设置.
+		rm = new RefMethod();
+		rm.GroupName = "实验中功能";
 		rm.Title = "类别设置";
 		rm.ClassMethodName = this.toString() + ".DoSettingSort";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "测试FTP服务器";
-		rm.ClassMethodName = this.toString() + ".DoTestFTPHost";
-		rm.refMethodType = RefMethodType.Func;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
+		rm.GroupName = "实验中功能";
 		rm.Title = "设置扩展列";
 		rm.ClassMethodName = this.toString() + ".DtlOfAth";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		map.AddRefMethod(rm);
+			// map.AddRefMethod(rm);
+
+			///#endregion 基本配置.
+
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
-	public final String DtlOfAth()throws Exception
-	{
+	/** 
+	 重命名表单标记.
+	 
+	 param fname
+	 @return 
+	*/
+	public final String ResetAthName(String fname) throws Exception {
+		//检查一下是否有重名的？
+		FrmAttachments ens = new FrmAttachments();
+		ens.Retrieve(FrmAttachmentAttr.FK_MapData, this.getFKMapData());
+		for (FrmAttachment item : ens.ToJavaList())
+		{
+			if (item.getNoOfObj().equals(fname) == true)
+			{
+				return "err@修改失败，该表单中已经存在该标记了.";
+			}
+		}
+
+		//修改模版.
+		String myPKNew = this.getFKMapData() + "_" + fname;
+		String sql = "UPDATE Sys_FrmAttachment SET MyPK='" + myPKNew + "', NoOfObj='" + fname + "' WHERE MyPK='" + this.getMyPK() + "' ";
+		DBAccess.RunSQL(sql);
+
+		//修改分组信息，不然就丢失了.
+		sql = "UPDATE Sys_GroupField SET CtrlID='" + myPKNew + "'  WHERE CtrlID='" + this.getMyPK() + "' ";
+		DBAccess.RunSQL(sql);
+
+		//修改：数据库.
+		sql = "UPDATE Sys_FrmAttachmentDB SET NoOfObj='" + fname + "',FK_FrmAttachment='" + myPKNew + "'  WHERE FK_FrmAttachment='" + this.getMyPK() + "'";
+		DBAccess.RunSQL(sql);
+
+		return "执行成功: 您需要关闭表单设计器，然后重新进入。";
+	}
+
+	public final String DtlOfAth() {
 		String url = "../../Admin/FoolFormDesigner/MapDefDtlFreeFrm.htm?FK_MapDtl=" + this.getMyPK() + "&For=" + this.getMyPK();
 		return url;
 	}
@@ -590,7 +581,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	 
 	 @return 
 	*/
-	public String DoTestFTPHost() {
+	public final String DoTestFTPHost() throws Exception {
 		FtpUtil ftpUtil;
 		try {
 			ftpUtil = bp.wf.Glo.getFtpUtil();
@@ -600,41 +591,37 @@ public class FrmAttachmentExt extends EntityMyPK
 			return "err@" + e.getMessage();
 		}
 		return ftpUtil.openConnection();
-
 	}
 	/** 
 	 固定模式类别设置
 	 
 	 @return 
 	*/
-	public final String DoSettingSort()throws Exception
-	{
-		return "../../Admin/FoolFormDesigner/AttachmentSortSetting.htm?FK_MapData=" + this.getFK_MapData() + "&MyPK=" + this.getMyPK() + "&Ath=" + this.getNoOfObj();
+	public final String DoSettingSort() {
+		return "../../Admin/FoolFormDesigner/AttachmentSortSetting.htm?FK_MapData=" + this.getFKMapData() + "&MyPK=" + this.getMyPK() + "&Ath=" + this.getNoOfObj();
 	}
 	/** 
 	 执行高级设置.
 	 
 	 @return 
 	*/
-	public final String DoAdv()throws Exception
-	{
-		return "/WF/Admin/FoolFormDesigner/Attachment.aspx?FK_MapData=" + this.getFK_MapData() + "&MyPK=" + this.getMyPK() + "&Ath=" + this.getNoOfObj();
+	public final String DoAdv() {
+		return "/WF/Admin/FoolFormDesigner/Attachment.aspx?FK_MapData=" + this.getFKMapData() + "&MyPK=" + this.getMyPK() + "&Ath=" + this.getNoOfObj();
 	}
 
 	public boolean IsUse = false;
 	@Override
-	protected boolean beforeUpdateInsertAction()throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		if (this.getFK_Node() == 0)
 		{
 			//适应设计器新的规则 by dgq 
-			if (!DataType.IsNullOrEmpty(this.getNoOfObj()) && this.getNoOfObj().contains(this.getFK_MapData()))
+			if (!DataType.IsNullOrEmpty(this.getNoOfObj()) && this.getNoOfObj().contains(this.getFKMapData()))
 			{
 				this.setMyPK(this.getNoOfObj());
 			}
 			else
 			{
-				this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj());
+				this.setMyPK(this.getFKMapData() + "_" + this.getNoOfObj());
 			}
 		}
 
@@ -645,36 +632,34 @@ public class FrmAttachmentExt extends EntityMyPK
 			{
 				this.setHisCtrlWay(AthCtrlWay.WorkID);
 			}
-			this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
+			this.setMyPK(this.getFKMapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
 		}
 
 		if (this.getHisCtrlWay() != AthCtrlWay.WorkID)
 		{
 			this.setAthUploadWay(AthUploadWay.Interwork);
 		}
-		//如果是pworkid. 就不让其删除或者上传.
-        if (this.getHisCtrlWay() == AthCtrlWay.PWorkID
-            || this.getHisCtrlWay() == AthCtrlWay.PWorkID
-            || this.getHisCtrlWay() == AthCtrlWay.P2WorkID
-            || this.getHisCtrlWay() == AthCtrlWay.P3WorkID
-            || this.getHisCtrlWay() == AthCtrlWay.RootFlowWorkID
-            )
-        {
-            this.SetValByKey(FrmAttachmentAttr.DeleteWay, 0);
-            this.SetValByKey(FrmAttachmentAttr.IsUpload, 0);
-        }
 
 
-			///处理分组.
-			//更新相关的分组信息.
-		if (this.getIsVisable() == true && this.getFK_Node() == 0)
+		//如果是pworkid. 就不让其删除或者上传. 
+		if (this.getHisCtrlWay() == AthCtrlWay.PWorkID || this.getHisCtrlWay() == AthCtrlWay.PWorkID || this.getHisCtrlWay() == AthCtrlWay.P2WorkID || this.getHisCtrlWay() == AthCtrlWay.P3WorkID || this.getHisCtrlWay() == AthCtrlWay.RootFlowWorkID)
+		{
+			this.SetValByKey(FrmAttachmentAttr.DeleteWay, 0);
+			this.SetValByKey(FrmAttachmentAttr.IsUpload, 0);
+		}
+
+
+
+			///#region 处理分组.
+		//更新相关的分组信息.
+		if (this.isVisable() == true && this.getFK_Node() == 0)
 		{
 			GroupField gf = new GroupField();
-			int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
+			int i = gf.Retrieve(GroupFieldAttr.FrmID, this.getFKMapData(), GroupFieldAttr.CtrlID, this.getMyPK());
 			if (i == 0)
 			{
 				gf.setLab(this.getName());
-				gf.setFrmID(this.getFK_MapData());
+				gf.setFrmID(this.getFKMapData());
 				gf.setCtrlType("Ath");
 				//gf.CtrlID = this.MyPK;
 				gf.Insert();
@@ -682,38 +667,38 @@ public class FrmAttachmentExt extends EntityMyPK
 			else
 			{
 				gf.setLab(this.getName());
-				gf.setFrmID(this.getFK_MapData());
+				gf.setFrmID(this.getFKMapData());
 				gf.setCtrlType("Ath");
 				//gf.CtrlID = this.MyPK;
 				gf.Update();
 			}
 		}
 
-		if (this.getIsVisable() == false)
+		//如果不显示.
+		if (this.isVisable() == false)
 		{
 			GroupField gf = new GroupField();
-			gf.Delete(GroupFieldAttr.FrmID, this.getFK_MapData(), GroupFieldAttr.CtrlID, this.getMyPK());
+			gf.Delete(GroupFieldAttr.FrmID, this.getFKMapData(), GroupFieldAttr.CtrlID, this.getMyPK());
 		}
 
-			/// 处理分组.
+			///#endregion 处理分组.
 
 
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeInsert()throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		//在属性实体集合插入前，clear父实体的缓存.
-		bp.sys.Glo.ClearMapDataAutoNum(this.getFK_MapData());
+		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFKMapData());
 
 
 		if (this.getFK_Node() == 0)
 		{
-			this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj());
+			this.setMyPK(this.getFKMapData() + "_" + this.getNoOfObj());
 		}
 		else
 		{
-			this.setMyPK(this.getFK_MapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
+			this.setMyPK(this.getFKMapData() + "_" + this.getNoOfObj() + "_" + this.getFK_Node());
 		}
 
 		return super.beforeInsert();
@@ -722,29 +707,36 @@ public class FrmAttachmentExt extends EntityMyPK
 	 插入之后
 	*/
 	@Override
-	protected void afterInsert()throws Exception
-	{
+	protected void afterInsert() throws Exception {
 		GroupField gf = new GroupField();
 		if (this.getFK_Node() == 0 && gf.IsExit(GroupFieldAttr.CtrlID, this.getMyPK()) == false)
 		{
-			gf.setFrmID(this.getFK_MapData());
+			gf.setFrmID(this.getFKMapData());
 			gf.setCtrlID(this.getMyPK());
 			gf.setCtrlType("Ath");
 			gf.setLab(this.getName());
 			gf.setIdx(0);
 			gf.Insert(); //插入.
+
 		}
 		super.afterInsert();
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		FrmAttachment ath = new FrmAttachment();
 		ath.setMyPK(this.getMyPK());
 		ath.RetrieveFromDBSources();
 		ath.setIsToHeLiuHZ(this.getIsToHeLiuHZ());
 		ath.setIsHeLiuHuiZong(this.getIsHeLiuHuiZong());
+		ath.Update();
+
+		//强制设置,保存到ftp服务器上.
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			ath.setAthSaveWay(AthSaveWay.FTPServer);
+		}
+
 		ath.Update();
 
 
@@ -758,7 +750,7 @@ public class FrmAttachmentExt extends EntityMyPK
 		}
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFKMapData());
 
 		super.afterInsertUpdateAction();
 	}
@@ -767,8 +759,7 @@ public class FrmAttachmentExt extends EntityMyPK
 	 删除之后.
 	*/
 	@Override
-	protected void afterDelete()throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		GroupFields gfs = new GroupFields();
 		gfs.RetrieveByLike(GroupFieldAttr.CtrlID, this.getMyPK() + "%");
 		gfs.Delete();
@@ -782,9 +773,8 @@ public class FrmAttachmentExt extends EntityMyPK
 			attr.Delete();
 		}
 
-
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFKMapData());
 
 		super.afterDelete();
 	}

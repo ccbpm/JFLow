@@ -1,10 +1,8 @@
 package bp.wf.port;
 
-import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.sys.CCBPMRunModel;
-import bp.web.*;
+import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -17,60 +15,54 @@ public class Depts extends EntitiesNoName
 	 查询全部。
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	public int RetrieveAll() throws Exception
-	{
-		if (WebUser.getNo().equals("admin") == true)
+	public int RetrieveAll() throws Exception {
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return super.RetrieveAll();
 		}
 
-		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			QueryObject qo = new QueryObject(this);
-			qo.AddWhere(DeptAttr.No, " = ", WebUser.getFK_Dept());
+			qo.AddWhere(DeptAttr.No, " = ", bp.web.WebUser.getFK_Dept());
 			qo.addOr();
-			qo.AddWhere(DeptAttr.ParentNo, " = ", WebUser.getFK_Dept());
+			qo.AddWhere(DeptAttr.ParentNo, " = ", bp.web.WebUser.getFK_Dept());
 			return qo.DoQuery();
 		}
 
-		return this.Retrieve("OrgNo", WebUser.getOrgNo());
+		return this.Retrieve("OrgNo", bp.web.WebUser.getOrgNo(), null);
 	}
 	/** 
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new Dept();
 	}
 	/** 
 	 create ens
 	*/
-	public Depts()
-	{
+	public Depts()  {
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Dept> ToJavaList()
-	{
-		return (List<Dept>)(Object)this;
+	public final java.util.List<Dept> ToJavaList() {
+		return (java.util.List<Dept>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Dept> Tolist()
-	{
+	public final ArrayList<Dept> Tolist()  {
 		ArrayList<Dept> list = new ArrayList<Dept>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -79,5 +71,5 @@ public class Depts extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,10 +1,6 @@
 package bp.sys.frmui;
 
-import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.*;
-import bp.sys.*;
 import java.util.*;
 
 /** 
@@ -13,33 +9,30 @@ import java.util.*;
 public class MapAttrChecks extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 实体属性s
 	*/
-	public MapAttrChecks()
-	{
+	public MapAttrChecks() {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapAttrCheck();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrCheck> ToJavaList()
-	{
+	public final java.util.List<MapAttrCheck> ToJavaList() {
 		return (java.util.List<MapAttrCheck>)(Object)this;
 	}
 	/** 
@@ -47,8 +40,7 @@ public class MapAttrChecks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrCheck> Tolist()
-	{
+	public final ArrayList<MapAttrCheck> Tolist()  {
 		ArrayList<MapAttrCheck> list = new ArrayList<MapAttrCheck>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +49,5 @@ public class MapAttrChecks extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

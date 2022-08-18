@@ -5,6 +5,10 @@ import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.en.*;
+import bp.difference.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.Glo;
 import bp.wf.rpt.RptDfine;
 
 /** 
@@ -17,21 +21,18 @@ public class WF_Admin_RptDfine extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_RptDfine()
-	{
+	public WF_Admin_RptDfine() throws Exception {
 	}
 
 
-		///执行父类的重写方法.
+		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception
-	{
+	protected String DoDefaultMethod() throws Exception {
 		String msg = "";
 		try
 		{
@@ -55,21 +56,19 @@ public class WF_Admin_RptDfine extends WebContralBase
 					"@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + CommonUtils.getRequest().getRequestURI());
 		}
 
-		
+		//找不不到标记就抛出异常.
 	}
 
-		/// 执行父类的重写方法.
+		///#endregion 执行父类的重写方法.
 
 
-		///报表设计器. - 第2步选择列.
+		///#region 报表设计器. - 第2步选择列.
 	/** 
 	 初始化方法
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String S2ColsChose_Init() throws Exception
-	{
+	public final String S2ColsChose_Init() throws Exception {
 		DataSet ds = new DataSet();
 		String rptNo = this.GetRequestVal("RptNo");
 
@@ -112,7 +111,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 		//系统字段.
 		MapAttrs mattrsOfSystem = new MapAttrs();
-		String sysFields = bp.wf.Glo.getFlowFields();
+		String sysFields = Glo.getFlowFields();
 		for (MapAttr item : mattrs.ToJavaList())
 		{
 			if (sysFields.contains(item.getKeyOfEn()))
@@ -129,10 +128,8 @@ public class WF_Admin_RptDfine extends WebContralBase
 	 选择列的保存.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String S2ColsChose_Save() throws Exception
-	{
+	public final String S2ColsChose_Save() throws Exception {
 		//报表列表.
 		String rptNo = this.GetRequestVal("RptNo");
 
@@ -150,7 +147,10 @@ public class WF_Admin_RptDfine extends WebContralBase
 			fields += "FK_Dept,";
 		}
 
-		//构造一个空的集合.
+		//字段组合.
+		fields += bp.wf.rpt.RptDfine.PublicFiels;
+
+		//构造一个空的集合，如果有数据，就把旧数据删除掉.
 		MapAttrs mrattrsOfRpt = new MapAttrs();
 		mrattrsOfRpt.Delete(MapAttrAttr.FK_MapData, rptNo);
 
@@ -160,32 +160,98 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 		for (MapAttr attr : allAttrs.ToJavaList())
 		{
-			attr.setUIVisible( true);
-
-
-				///处理特殊字段.
-			if (attr.getKeyOfEn().equals("FK_NY"))
+			//如果包含了指定的字段，就执行插入操作.
+			if (fields.contains("," + attr.getKeyOfEn() + ",") == false)
 			{
-				attr.setMyDataType(DataType.AppString);
-			}
-
-			if (attr.getKeyOfEn().equals("FK_Dept"))
-			{
-				attr.setLGType(FieldTypeS.FK);
-				attr.setUIBindKey("bp.port.Depts");
-				attr.setUIContralType( UIContralType.DDL);
-			}
-
-				/// 处理特殊字段.
-
-			//增加上必要的字段.
-			if (attr.getKeyOfEn().equals("Title") || attr.getKeyOfEn().equals("WorkID") || attr.getKeyOfEn().equals("OID"))
-			{
-				attr.setFK_MapData(rptNo);
-				attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
-				attr.DirectInsert();
 				continue;
 			}
+
+			attr.setFK_MapData(rptNo);
+			attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
+
+
+				///#region 判断特殊的字段.
+			switch (attr.getKeyOfEn())
+			{
+				case GERptAttr.WFSta:
+					attr.setUIBindKey("WFSta");
+					attr.setUIContralType(UIContralType.DDL);
+					attr.setLGType(FieldTypeS.Enum);
+					attr.setUIVisible(false);
+					attr.setDefVal( "0");
+					attr.setMaxLen(100);
+					attr.setUIVisible(true);
+					attr.Insert();
+					continue;
+				case GERptAttr.FK_Dept:
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					attr.setUIVisible(false);
+					attr.setDefVal( "");
+					attr.setMaxLen(100);
+					attr.setUIVisible(false);
+					attr.Insert();
+					continue;
+				case GERptAttr.FK_NY:
+					attr.setUIBindKey("BP.Pub.NYs");
+					attr.setUIContralType(UIContralType.DDL);
+					attr.setLGType(FieldTypeS.FK);
+					attr.setUIVisible(true);
+					attr.setUIIsEnable(false);
+					//attr.setGroupID(groupID;
+					attr.Insert();
+					continue;
+				case GERptAttr.Title:
+					attr.setUIWidth(120);
+					attr.setUIVisible(true);
+					attr.setIdx( 0);
+					attr.Insert();
+					continue;
+				case GERptAttr.FlowStarter:
+					attr.setUIIsEnable(false);
+					attr.setUIVisible(false);
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					attr.Insert();
+					continue;
+				case GERptAttr.FlowEmps:
+					attr.setUIIsEnable(false);
+					attr.setUIVisible(false);
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					attr.Insert();
+					continue;
+				case GERptAttr.WFState:
+					attr.setUIIsEnable(false);
+					attr.setUIVisible(false);
+					attr.setUIBindKey("");
+					//attr.setUIBindKey("bp.port.Depts";
+					attr.setUIContralType(UIContralType.TB);
+					attr.setLGType(FieldTypeS.Normal);
+					attr.setMyDataType(DataType.AppInt);
+					attr.Insert();
+					continue;
+				case GERptAttr.FlowEndNode:
+					//attr.setLGType(FieldTypeS.FK);
+					//attr.setUIBindKey("BP.WF.Template.NodeExts";
+					//attr.setUIContralType(UIContralType.DDL);
+					break;
+				case "FK_Emp":
+					break;
+				default:
+					break;
+			}
+
+				///#endregion
+
+
+			attr.setUIVisible(true);
 
 			//如果包含了指定的字段，就执行插入操作.
 			if (fields.contains("," + attr.getKeyOfEn() + ",") == true)
@@ -200,19 +266,16 @@ public class WF_Admin_RptDfine extends WebContralBase
 		return "保存成功.";
 	}
 
-		///
+		///#endregion
 
 
-		///报表设计器. - 第3步设置列的顺序.
+		///#region 报表设计器. - 第3步设置列的顺序.
 	/** 
 	 初始化方法
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String S3ColsLabel_Init() throws NumberFormatException, Exception
-	{
+	public final String S3ColsLabel_Init() throws Exception {
 		String rptNo = this.GetRequestVal("RptNo");
 
 		//判断rptNo是否存在于mapdata中
@@ -253,24 +316,27 @@ public class WF_Admin_RptDfine extends WebContralBase
 		mattrsOfRpt.RemoveEn(rptNo + "_OID");
 		mattrsOfRpt.RemoveEn(rptNo + "_Title");
 
-		return mattrsOfRpt.ToJson();
+		return mattrsOfRpt.ToJson("dt");
 	}
 	/** 
 	 保存列的顺序名称.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String S3ColsLabel_Save() throws Exception
-	{
+	public final String S3ColsLabel_Save() throws Exception {
 		String orders = this.GetRequestVal("Orders");
 		//格式为  @KeyOfEn,Lable,idx  比如： @DianHua,电话,1@Addr,地址,2
 
 		String rptNo = this.GetRequestVal("RptNo");
 
+		DBAccess.RunSQL("UPDATE Sys_MapAttr SET Idx=10000 WHERE FK_MapData='" + rptNo + "'");
+
 		String[] strs = orders.split("[@]", -1);
-		for (String item : strs)
+		//重新对table排序
+		for (int i = 0; i < strs.length; i++)
 		{
+			String item = strs[i];
+
 			if (DataType.IsNullOrEmpty(item) == true)
 			{
 				continue;
@@ -280,15 +346,28 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 			String mypk = rptNo + "_" + vals[0];
 
-			MapAttr attr = new MapAttr();
-			attr.setMyPK(mypk);
-			attr.Retrieve();
-
-			attr.setName( vals[1]);
-			attr.setIdx( Integer.parseInt(vals[2]));
-
-			attr.Update(); //执行更新.
+			// 更新顺序.
+			DBAccess.RunSQL("UPDATE Sys_MapAttr SET Idx=" + i + " WHERE No='" + mypk + "'");
 		}
+
+		//foreach (string item in strs)
+		//{
+		//    if (DataType.IsNullOrEmpty(item) == true)
+		//        continue;
+
+		//    string[] vals = item.Split(',');
+
+		//    string mypk = rptNo + "_" + vals[0];
+
+		//    MapAttr attr = new MapAttr();
+		//    attr.setMyPK(mypk);
+		//    attr.Retrieve();
+
+		//    attr.setName(vals[1];
+		//    attr.setIdx( int.Parse(vals[2]);
+
+		//    attr.Update(); //执行更新.
+		//}
 
 		MapAttr myattr = new MapAttr();
 		myattr.setMyPK(rptNo + "_OID");
@@ -300,19 +379,18 @@ public class WF_Admin_RptDfine extends WebContralBase
 		myattr = new MapAttr();
 		myattr.setMyPK(rptNo + "_Title");
 		myattr.RetrieveFromDBSources();
-		myattr.setIdx( -100);
+		myattr.setIdx(-100);
 		myattr.setName("标题");
 		myattr.Update();
 
 		return "保存成功..";
 	}
 
-		///
+		///#endregion
 
 
-		///报表设计器 - 第4步骤.
-	public final String S5SearchCond_Init() throws Exception
-	{
+		///#region 报表设计器 - 第4步骤.
+	public final String S5SearchCond_Init() throws Exception {
 		//报表编号.
 		String rptNo = this.GetRequestVal("RptNo");
 
@@ -351,11 +429,11 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 		//查询出来枚举与外键类型的字段集合.
 		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo,"Idx");
+		attrs.Retrieve(MapAttrAttr.FK_MapData, rptNo, "Idx");
 		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
 
 
-			///检查是否有日期字段.
+			///#region 检查是否有日期字段.
 		boolean isHave = false;
 		for (MapAttr mattr : attrs.ToJavaList())
 		{
@@ -389,23 +467,20 @@ public class WF_Admin_RptDfine extends WebContralBase
 			ds.Tables.add(dtAttrs.ToDataTableField("Sys_MapAttrOfDate"));
 		}
 
-			///
+			///#endregion
 
 		//返回数据.
 		return bp.tools.Json.ToJson(ds);
 	}
-	public final String getRptNo()
-	{
+	public final String getRptNo() throws Exception {
 		return this.GetRequestVal("RptNo");
 	}
 	/** 
 	 查询条件保存.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String S5SearchCond_Save() throws Exception
-	{
+	public final String S5SearchCond_Save() throws Exception {
 		MapData md = new MapData();
 		md.setNo(this.getRptNo());
 		md.RetrieveFromDBSources();
@@ -417,21 +492,21 @@ public class WF_Admin_RptDfine extends WebContralBase
 		String IsSearchKey = this.GetRequestVal("IsSearchKey");
 		if (IsSearchKey.equals("0"))
 		{
-			md.setRptIsSearchKey(false);
+			md.setSearchKey(false);
 		}
 		else
 		{
-			md.setRptIsSearchKey(true);
+			md.setSearchKey(true);
 		}
-		md.SetPara("RptStringSearchKeys", this.GetRequestVal("RptStringSearchKeys"));
+		md.SetPara("StringSearchKeys", this.GetRequestVal("StringSearchKeys"));
 		//查询方式.
 		int dtSearchWay = this.GetRequestValInt("DTSearchWay");
-		md.setRptDTSearchWay(DTSearchWay.forValue(dtSearchWay));
+		md.setDTSearchWay(DTSearchWay.forValue(dtSearchWay));
+
 
 		//日期字段.
 		String DTSearchKey = this.GetRequestVal("DTSearchKey");
-		md.setRptDTSearchKey(DTSearchKey);
-
+		md.setDTSearchKey (DTSearchKey);
 
 		//是否查询自己部门发起
 		md.SetPara("IsSearchNextLeavel", this.GetRequestValBoolen("IsSearchNextLeavel"));
@@ -441,5 +516,5 @@ public class WF_Admin_RptDfine extends WebContralBase
 		return "保存成功.";
 	}
 
-		///
+		///#endregion
 }

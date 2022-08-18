@@ -2,12 +2,19 @@ package bp.tools;
 
 import bp.da.DataRow;
 import bp.da.DataTable;
+import bp.da.DataType;
 import bp.en.*;
+import bp.en.Map;
 import bp.en.*;
+import bp.en.Map;
 import bp.en.*;
+import bp.en.Map;
 import bp.en.*;
+import bp.en.Map;
 import bp.en.*;
+import bp.en.Map;
 import bp.en.*;
+import bp.en.Map;
 
 public class Entitis2Json {
 	private volatile static Entitis2Json _instance = null;
@@ -25,7 +32,7 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json List格式数据
 	 * 
-	 * @param ens 实体集合类
+	 * param ens 实体集合类
 	 * @return
 	 * @throws Exception
 	 */
@@ -36,8 +43,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json List格式数据
 	 * 
-	 * @param ens       实体集合类
-	 * @param hidenKeys 需要隐藏的列，如：@No@Name
+	 * param ens       实体集合类
+	 * param hidenKeys 需要隐藏的列，如：@No@Name
 	 * @return
 	 * @throws Exception
 	 */
@@ -48,8 +55,8 @@ public class Entitis2Json {
 	/**
 	 * 将Entitis转换为树形的json
 	 * 
-	 * @param ens    实体集合类
-	 * @param rootNo 根节点编号
+	 * param ens    实体集合类
+	 * param rootNo 根节点编号
 	 * @return
 	 * @throws Exception
 	 */
@@ -60,7 +67,7 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json格式数据
 	 * 
-	 * @param ens 实体集合类
+	 * param ens 实体集合类
 	 * @return
 	 * @throws Exception
 	 */
@@ -71,8 +78,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json格式数据用于分页
 	 * 
-	 * @param ens       实体集合类
-	 * @param totalRows 总行数
+	 * param ens       实体集合类
+	 * param totalRows 总行数
 	 * @return
 	 * @throws Exception
 	 */
@@ -83,8 +90,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json格式数据
 	 * 
-	 * @param ens       实体集合类
-	 * @param hidenKeys 需要隐藏的列，如：@No@Name
+	 * param ens       实体集合类
+	 * param hidenKeys 需要隐藏的列，如：@No@Name
 	 * @return
 	 * @throws Exception
 	 */
@@ -95,9 +102,9 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json格式数据用于分页
 	 * 
-	 * @param ens       实体集合类
-	 * @param totalRows 总行数
-	 * @param hidenKeys 需要隐藏的列，如：@No@Name
+	 * param ens       实体集合类
+	 * param totalRows 总行数
+	 * param hidenKeys 需要隐藏的列，如：@No@Name
 	 * @return
 	 * @throws Exception
 	 */
@@ -109,7 +116,7 @@ public class Entitis2Json {
 	/**
 	 * 将实体集合类转为json格式 包含列名和数据
 	 * 
-	 * @param ens 实体集合类
+	 * param ens 实体集合类
 	 * @return Json格式数据
 	 * @throws Exception
 	 */
@@ -120,8 +127,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体集合类转为json格式 包含列名和数据
 	 * 
-	 * @param ens       实体集合类
-	 * @param totalRows 总行数
+	 * param ens       实体集合类
+	 * param totalRows 总行数
 	 * @return Json格式数据
 	 * @throws Exception
 	 */
@@ -132,8 +139,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体集合类转为json格式 包含列名和数据
 	 * 
-	 * @param ens       实体集合类
-	 * @param hidenKeys 需要隐藏的列，如：@No@Name
+	 * param ens       实体集合类
+	 * param hidenKeys 需要隐藏的列，如：@No@Name
 	 * @return
 	 * @throws Exception
 	 */
@@ -144,9 +151,9 @@ public class Entitis2Json {
 	/**
 	 * 将实体集合类转为json格式 包含列名和数据
 	 * 
-	 * @param ens       实体集合类
-	 * @param totalRows 总行数
-	 * @param hidenKeys 需要隐藏的列，如：@No@Name
+	 * param ens       实体集合类
+	 * param totalRows 总行数
+	 * param hidenKeys 需要隐藏的列，如：@No@Name
 	 * @return
 	 * @throws Exception
 	 */
@@ -158,8 +165,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json格式List
 	 * 
-	 * @param ens
-	 * @param hidenKeys 隐藏字段
+	 * param ens
+	 * param hidenKeys 隐藏字段
 	 * @return
 	 * @throws Exception
 	 */
@@ -168,15 +175,15 @@ public class Entitis2Json {
 		StringBuilder append = new StringBuilder();
 		append.append("[");
 
-		for (Object en : ens) {
+		for (Entity en : ens) {
 			append.append("{");
-			for (Attr attr : attrs) {
-				if (!StringHelper.isNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
+			for (Attr attr : attrs.ToJavaList()) {
+				if (!DataType.IsNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
 					continue;
 				}
 
 				String strValue = ((Entity) en).GetValStrByKey(attr.getKey());
-				if (!StringHelper.isNullOrEmpty(strValue) && strValue.lastIndexOf("\\") > -1) {
+				if (!DataType.IsNullOrEmpty(strValue) && strValue.lastIndexOf("\\") > -1) {
 					strValue = strValue.substring(0, strValue.lastIndexOf("\\"));
 				}
 				append.append(attr.getKey() + ":'" + strValue + "',");
@@ -194,8 +201,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json格式
 	 * 
-	 * @param ens
-	 * @param hidenKeys
+	 * param ens
+	 * param hidenKeys
 	 * @return
 	 * @throws Exception
 	 */
@@ -205,15 +212,15 @@ public class Entitis2Json {
 		StringBuilder append = new StringBuilder();
 		append.append("{rows:[");
 
-		for (Object en : ens) {
+		for (Entity en : ens) {
 			append.append("{");
-			for (Attr attr : attrs) {
-				if (!StringHelper.isNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
+			for (Attr attr : attrs.ToJavaList()) {
+				if (!DataType.IsNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
 					continue;
 				}
 
 				String strValue = ((Entity) en).GetValStrByKey(attr.getKey());
-				if (!StringHelper.isNullOrEmpty(strValue) && strValue.lastIndexOf("\\") > -1) {
+				if (!DataType.IsNullOrEmpty(strValue) && strValue.lastIndexOf("\\") > -1) {
 					strValue = strValue.substring(0, strValue.lastIndexOf("\\"));
 				}
 				append.append(attr.getKey() + ":'" + strValue + "',");
@@ -239,8 +246,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体类转为json格式 包含列名和数据
 	 * 
-	 * @param ens
-	 * @param hidenKeys
+	 * param ens
+	 * param hidenKeys
 	 * @return
 	 * @throws Exception
 	 */
@@ -251,11 +258,11 @@ public class Entitis2Json {
 		append.append("{");
 		// 整理列名
 		append.append("columns:[");
-		for (Attr attr : attrs) {
+		for (Attr attr : attrs.ToJavaList()) {
 			if (!attr.getUIVisible()) {
 				continue;
 			}
-			if (!StringHelper.isNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
+			if (!DataType.IsNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
 				continue;
 			}
 			if (attr.getIsRefAttr() || attr.getIsFK() || attr.getIsEnum()) {
@@ -278,10 +285,10 @@ public class Entitis2Json {
 		// 整理数据
 		boolean bHaveData = false;
 		append.append(",data:{rows:[");
-		for (Object en : ens) {
+		for (Entity en : ens) {
 			bHaveData = true;
 			append.append("{");
-			for (Attr attr : attrs) {
+			for (Attr attr : attrs.ToJavaList()) {
 				if (attr.getIsRefAttr() || attr.getIsFK() || attr.getIsEnum()) {
 					append.append(attr.getKey() + "Text:'" + ((Entity) en).GetValRefTextByKey(attr.getKey()) + "',");
 					continue;
@@ -304,8 +311,8 @@ public class Entitis2Json {
 	/**
 	 * 将实体转为树形
 	 * 
-	 * @param ens
-	 * @param rootNo
+	 * param ens
+	 * param rootNo
 	 */
 	private StringBuilder appendMenus = new StringBuilder();
 	private StringBuilder appendMenuSb = new StringBuilder();
@@ -337,7 +344,7 @@ public class Entitis2Json {
 		appendMenuSb.setLength(0);
 
 		appendMenuSb.append("[");
-		for (Object item : ens) {
+		for (Entity item : ens) {
 			if (!parentEn.getNo().equals(((EntityTree) item).getParentNo())) {
 				continue;
 			}
@@ -361,11 +368,11 @@ public class Entitis2Json {
 	/**
 	 * DataTable 转换为Tree结构数据
 	 * 
-	 * @param table  数据源
-	 * @param idCol  id列名
-	 * @param txtCol name列名
-	 * @param rela   父id列名
-	 * @param pId    父id值
+	 * param table  数据源
+	 * param idCol  id列名
+	 * param txtCol name列名
+	 * param rela   父id列名
+	 * param pId    父id值
 	 * @return
 	 */
 	public final String TransDataTable2TreeJson(DataTable table, String idCol, String txtCol, String rela, String pId) {
@@ -433,7 +440,7 @@ public class Entitis2Json {
 	/**
 	 * 去除特殊字符
 	 * 
-	 * @param s
+	 * param s
 	 * @return
 	 */
 	public final String ReplaceIllgalChart(String s) {

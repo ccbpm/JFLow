@@ -125,7 +125,7 @@ public abstract class EntitiesTree extends Entities
 	/** 
 	 查询他的子节点
 	 
-	 @param en
+	 param en
 	 @return 
 	 * @throws Exception 
 	*/
@@ -139,7 +139,7 @@ public abstract class EntitiesTree extends Entities
 	/** 
 	 获取它的子节点
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public final EntitiesTree GenerHisChinren(EntityTree en)throws Exception

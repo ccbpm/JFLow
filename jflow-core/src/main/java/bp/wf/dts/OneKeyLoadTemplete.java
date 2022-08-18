@@ -9,15 +9,15 @@ import bp.wf.template.*;
 import bp.wf.*;
 import java.io.*;
 
-/** 
+/**
  Method 的摘要说明
-*/
+ */
 public class OneKeyLoadTemplete extends Method
 {
-	/** 
+	/**
 	 不带有参数的方法
-	*/
-	public OneKeyLoadTemplete()
+	 */
+	public OneKeyLoadTemplete()throws Exception
 	{
 		this.Title = "一键恢复流程模版目录";
 		this.Help = "此功能是一键备份流程的逆向操作.";
@@ -30,21 +30,20 @@ public class OneKeyLoadTemplete extends Method
 
 
 	}
-	/** 
+	/**
 	 设置执行变量
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	@Override
-	public void Init()
-	{
+	public void Init()  {
 	}
-	/** 
+	/**
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo() 
 	{
 		if (!WebUser.getNo().equals("admin"))
 		{
@@ -59,7 +58,7 @@ public class OneKeyLoadTemplete extends Method
 		String msg = "";
 
 
-			///检查数据文件是否完整.
+		///检查数据文件是否完整.
 		String path = "C:/CCFlowTemplete";
 		if ((new File(path)).isDirectory() == false)
 		{
@@ -87,10 +86,10 @@ public class OneKeyLoadTemplete extends Method
 			msg += "@错误：约定的文件不存在，" + file;
 		}
 
-			/// 检查数据文件是否完整.
+		/// 检查数据文件是否完整.
 
 
-			///1 装载流程基础表数据.
+		///1 装载流程基础表数据.
 		DataSet ds = new DataSet();
 		ds.readXml(path + "/FlowTables.xml");
 
@@ -103,10 +102,10 @@ public class OneKeyLoadTemplete extends Method
 			item.DirectInsert(); //插入数据.
 		}
 
-			/// 1 装载流程基础表数据.
+		/// 1 装载流程基础表数据.
 
 
-			///2 组织结构.
+		///2 组织结构.
 		ds = new DataSet();
 		ds.readXml(path + "/PortTables.xml");
 
@@ -144,21 +143,21 @@ public class OneKeyLoadTemplete extends Method
 		}
 
 		//EmpDepts.
-		bp.gpm.DeptEmps eds = new bp.gpm.DeptEmps();
+		DeptEmps eds = new DeptEmps();
 		eds.ClearTable();
 		dt = ds.GetTableByName("Port_DeptEmp");
 		Object tempVar4 = QueryObject.InitEntitiesByDataTable(eds, dt, null);
-		eds = tempVar4 instanceof bp.gpm.DeptEmps ? (bp.gpm.DeptEmps)tempVar4 : null;
-		for (bp.gpm.DeptEmp item : eds.ToJavaList())
+		eds = tempVar4 instanceof DeptEmps ? (DeptEmps)tempVar4 : null;
+		for (DeptEmp item : eds.ToJavaList())
 		{
 			item.DirectInsert(); //插入数据.
 		}
 
 
-			/// 2 组织结构.
+		/// 2 组织结构.
 
 
-			///3 恢复系统数据.
+		///3 恢复系统数据.
 		ds = new DataSet();
 		ds.readXml(path + "/SysTables.xml");
 
@@ -200,10 +199,10 @@ public class OneKeyLoadTemplete extends Method
 		//    }
 		//}
 
-			/// 3 恢复系统数据.
+		/// 3 恢复系统数据.
 
 
-			///4.备份表单相关数据.
+		///4.备份表单相关数据.
 		if (1 == 2)
 		{
 			String pathOfTables = path + "/SFTables";
@@ -220,14 +219,14 @@ public class OneKeyLoadTemplete extends Method
 				String sql = "SELECT * FROM " + item.getNo();
 				ds = new DataSet();
 				ds.Tables.add(DBAccess.RunSQLReturnTable(sql));
-				ds.WriteXml(pathOfTables + "/" + item.getNo() + ".xml");
+				ds.WriteXml(pathOfTables + "/" + item.getNo() + ".xml",XmlWriteMode.WriteSchema, ds);
 			}
 		}
 
-			/// 4 备份表单相关数据.
+		/// 4 备份表单相关数据.
 
 
-			///5.恢复表单数据.
+		///5.恢复表单数据.
 		//删除所有的流程数据.
 		MapDatas mds = new MapDatas();
 		mds.RetrieveAll();
@@ -242,7 +241,7 @@ public class OneKeyLoadTemplete extends Method
 		SysFormTrees fss = new SysFormTrees();
 		fss.ClearTable();
 
-		// 调度表单文件。         
+		// 调度表单文件。
 		String frmPath = path + "/Form";
 		File dirInfo = new File(frmPath);
 		File[] dirs = dirInfo.listFiles();
@@ -283,7 +282,7 @@ public class OneKeyLoadTemplete extends Method
 					ds.readXml(f);
 
 					MapData md = MapData.ImpMapData(ds);
-					md.setFK_FrmSort(fs.getNo());
+					md.setFK_FormTree(fs.getNo());
 					md.Update();
 				}
 				catch (RuntimeException ex)
@@ -292,10 +291,10 @@ public class OneKeyLoadTemplete extends Method
 				}
 			}
 		}
-			/// 5.恢复表单数据.
+		/// 5.恢复表单数据.
 
 
-			///6.恢复流程数据.
+		///6.恢复流程数据.
 		//删除所有的流程数据.
 		Flows flsEns = new Flows();
 		flsEns.RetrieveAll();
@@ -340,7 +339,7 @@ public class OneKeyLoadTemplete extends Method
 			for (String filePath : fls)
 			{
 				msg += "\t\n@开始调度流程模板文件:" + filePath;
-				Flow myflow = Flow.DoLoadFlowTemplate(fs.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+				Flow myflow = bp.wf.template.TemplateGlo.LoadFlowTemplate(fs.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
 				msg += "\t\n@流程:" + myflow.getName() + "装载成功。";
 
 				File info = new File(filePath);
@@ -354,7 +353,7 @@ public class OneKeyLoadTemplete extends Method
 			}
 		}
 
-			///#endregion 6.恢复流程数据.
+		///#endregion 6.恢复流程数据.
 
 		Log.DefaultLogWriteLineInfo(msg);
 

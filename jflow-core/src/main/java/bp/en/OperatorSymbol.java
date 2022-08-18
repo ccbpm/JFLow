@@ -1,8 +1,5 @@
 package bp.en;
 
-import bp.en.*;
-import bp.web.*;
-import bp.*;
 
 public enum OperatorSymbol
 {
@@ -30,7 +27,7 @@ public enum OperatorSymbol
 		return this.ordinal();
 	}
 
-	public static OperatorSymbol forValue(int value) throws Exception
+	public static OperatorSymbol forValue(int value)
 	{
 		return values()[value];
 	}

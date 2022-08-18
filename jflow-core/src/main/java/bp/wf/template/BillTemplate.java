@@ -6,6 +6,8 @@ import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
 import bp.wf.*;
+import bp.wf.template.frm.*;
+
 import java.io.*;
 
 /** 
@@ -20,7 +22,7 @@ public class BillTemplate extends EntityNoName
 	 * @throws Exception 
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -138,7 +140,7 @@ public class BillTemplate extends EntityNoName
 	/** 
 	 获得单据文件流
 	 
-	 @param oid
+	 param oid
 	 @return 
 	 * @throws Exception 
 	*/
@@ -164,7 +166,7 @@ public class BillTemplate extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{

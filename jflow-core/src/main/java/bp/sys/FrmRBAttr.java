@@ -1,5 +1,10 @@
 package bp.sys;
-import bp.en.EntityMyPKAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.*;
+import java.util.*;
+
 /** 
  单选框
 */

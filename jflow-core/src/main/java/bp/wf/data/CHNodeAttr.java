@@ -1,8 +1,10 @@
 package bp.wf.data;
+
+
 public class CHNodeAttr
 {
 
-		///属性
+		///#region 属性
 	public static final String MyPK = "MyPK";
 	/** 
 	 工作ID
@@ -42,5 +44,5 @@ public class CHNodeAttr
 	public static final String ChanZhi = "ChanZhi";
 
 
-		/// 属性
+		///#endregion 属性
 }

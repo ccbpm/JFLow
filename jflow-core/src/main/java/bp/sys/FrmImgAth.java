@@ -1,26 +1,24 @@
 package bp.sys;
+
 import bp.en.*;
-import bp.en.Map;
 
 /** 
  图片附件
 */
 public class FrmImgAth extends EntityMyPK
 {
-	private static final long serialVersionUID = 1L;
 
-	///属性
+		///#region 属性
 	/** 
 	 名称
-	 * @throws Exception 
 	*/
 	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(FrmImgAthAttr.Name);
 	}
-	public final void setName(String value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.Name, value);
+	public final void setName(boolean val)  throws Exception
+	 {
+		this.SetValByKey(FrmImgAthAttr.Name, val);
 	}
 	/** 
 	 控件ID
@@ -29,13 +27,67 @@ public class FrmImgAth extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthAttr.CtrlID);
 	}
-	public final void setCtrlID(String value) throws Exception
-	{
+	public final void setCtrlID(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthAttr.CtrlID, value);
 	}
+
+	public final float getH() throws Exception
+	{
+		return this.GetValFloatByKey(FrmImgAthAttr.H);
+	}
+	public final void setH(float value)  throws Exception
+	 {
+		this.SetValByKey(FrmImgAthAttr.H, value);
+	}
+
+
+	public final float getW() throws Exception
+	{
+		return this.GetValFloatByKey(FrmImgAthAttr.W);
+	}
+	public final void setW(float value)  throws Exception
+	 {
+		this.SetValByKey(FrmImgAthAttr.W, value);
+	}
+
+
 	/** 
-	 Y
+	 FK_MapData
 	*/
+	public final String getFK_MapData() throws Exception
+	{
+		return this.GetValStrByKey(FrmImgAthAttr.FK_MapData);
+	}
+	public final void setFK_MapData(String val)  throws Exception
+	 {
+		this.SetValByKey(FrmImgAthAttr.FK_MapData, val);
+	}
+	/** 
+	 是否可编辑
+	*/
+	public final boolean isEdit() throws Exception
+	{
+		return this.GetValBooleanByKey(FrmImgAthAttr.IsEdit);
+	}
+	public final void setIsEdit(boolean val)  throws Exception
+	 {
+		this.SetValByKey(FrmImgAthAttr.IsEdit, val);
+	}
+	/** 
+	 是否必填，2016-11-1
+	*/
+	public final boolean isRequired() throws Exception
+	{
+		return this.GetValBooleanByKey(FrmImgAthAttr.IsRequired);
+	}
+	public final void setIsRequired(boolean val)  throws Exception
+	 {
+		this.SetValByKey(FrmImgAthAttr.IsRequired, val);
+	}
+	/**
+	 Y
+	 */
 	public final float getY() throws Exception
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.Y);
@@ -44,9 +96,9 @@ public class FrmImgAth extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAthAttr.Y, value);
 	}
-	/** 
+	/**
 	 X
-	*/
+	 */
 	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(FrmImgAthAttr.X);
@@ -55,78 +107,22 @@ public class FrmImgAth extends EntityMyPK
 	{
 		this.SetValByKey(FrmImgAthAttr.X, value);
 	}
-	/** 
-	 H
-	*/
-	public final float getH() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAthAttr.H);
-	}
-	public final void setH(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.H, value);
-	}
-	/** 
-	 W
-	*/
-	public final float getW() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAthAttr.W);
-	}
-	public final void setW(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.W, value);
-	}
-	/** 
-	 FK_MapData
-	*/
-	public final String getFK_MapData() throws Exception
-	{
-		return this.GetValStrByKey(FrmImgAthAttr.FK_MapData);
-	}
-	public final void setFK_MapData(String value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.FK_MapData, value);
-	}
-	/** 
-	 是否可编辑
-	*/
-	public final boolean getIsEdit() throws Exception
-	{
-		return this.GetValBooleanByKey(FrmImgAthAttr.IsEdit);
-	}
-	public final void setIsEdit(boolean value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.IsEdit, value);
-	}
-	/** 
-	 是否必填，2016-11-1
-	*/
-	public final boolean getIsRequired() throws Exception
-	{
-		return this.GetValBooleanByKey(FrmImgAthAttr.IsRequired);
-	}
-	public final void setIsRequired(boolean value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthAttr.IsRequired, value);
-	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 图片附件
 	*/
-	public FrmImgAth()
-	{
+	public FrmImgAth()  {
 	}
 	/** 
 	 图片附件
 	 
-	 @param mypk
+	 param mypk
 	*/
-	public FrmImgAth(String mypk) throws Exception
+	public FrmImgAth(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -135,8 +131,7 @@ public class FrmImgAth extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -151,12 +146,6 @@ public class FrmImgAth extends EntityMyPK
 		map.AddTBString(FrmImgAthAttr.Name, null, "中文名称", true, false, 0, 200, 20);
 
 
-		map.AddTBFloat(FrmImgAthAttr.X, 5, "X", true, false);
-		map.AddTBFloat(FrmImgAthAttr.Y, 5, "Y", false, false);
-
-		map.AddTBFloat(FrmImgAthAttr.H, 200, "H", true, false);
-		map.AddTBFloat(FrmImgAthAttr.W, 160, "W", false, false);
-
 		map.AddTBInt(FrmImgAthAttr.IsEdit, 1, "是否可编辑", true, true);
 		map.AddTBInt(FrmImgAthAttr.IsRequired, 0, "是否必填项", true, true);
 		map.AddTBString(MapAttrAttr.GUID, null, "GUID", true, false, 0, 128, 20);
@@ -165,15 +154,20 @@ public class FrmImgAth extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		this.setMyPK(this.getFK_MapData() + "_" + this.getCtrlID());
-		MapAttr attr = new MapAttr(this.getMyPK());
-		attr.setName(this.getName());
-		attr.Update();
+
+		MapAttr attr = new MapAttr();
+		attr.setMyPK(this.getMyPK());
+		if (attr.RetrieveFromDBSources() == 1)
+		{
+			attr.setName(this.getName());
+			attr.Update();
+		}
+
 		return super.beforeUpdateInsertAction();
 	}
 }

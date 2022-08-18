@@ -52,9 +52,9 @@ public class Cryptos {
 	/**
 	 * 使用HMAC-SHA1进行消息签名, 返回字节数组,长度为20字节.
 	 * 
-	 * @param input
+	 * param input
 	 *            原始输入字符数组
-	 * @param key
+	 * param key
 	 *            HMAC-SHA1密钥
 	 */
 	public static byte[] hmacSha1(byte[] input, byte[] key) {
@@ -72,11 +72,11 @@ public class Cryptos {
 	/**
 	 * 校验HMAC-SHA1签名是否正确.
 	 * 
-	 * @param expected
+	 * param expected
 	 *            已存在的签名
-	 * @param input
+	 * param input
 	 *            原始输入字符串
-	 * @param key
+	 * param key
 	 *            密钥
 	 */
 	public static boolean isMacValid(byte[] expected, byte[] input, byte[] key) {
@@ -102,7 +102,7 @@ public class Cryptos {
 	/**
 	 * 使用AES加密原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            原始输入字符数组
 	 * @throws Exception
 	 */
@@ -117,9 +117,9 @@ public class Cryptos {
 	/**
 	 * 使用AES加密原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            原始输入字符数组
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
 	 * @throws Exception
 	 */
@@ -134,9 +134,9 @@ public class Cryptos {
 	/**
 	 * 使用AES加密原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            原始输入字符数组
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
 	 * @throws Exception
 	 */
@@ -147,11 +147,11 @@ public class Cryptos {
 	/**
 	 * 使用AES加密原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            原始输入字符数组
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
-	 * @param iv
+	 * param iv
 	 *            初始向量
 	 * @throws Exception
 	 */
@@ -162,7 +162,7 @@ public class Cryptos {
 	/**
 	 * 使用AES解密字符串, 返回原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            Hex编码的加密字符串
 	 * @throws Exception
 	 */
@@ -176,9 +176,9 @@ public class Cryptos {
 	/**
 	 * 使用AES解密字符串, 返回原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            Hex编码的加密字符串
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
 	 * @throws Exception
 	 */
@@ -193,9 +193,9 @@ public class Cryptos {
 	/**
 	 * 使用AES解密字符串, 返回原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            Hex编码的加密字符串
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
 	 * @throws Exception
 	 */
@@ -206,11 +206,11 @@ public class Cryptos {
 	/**
 	 * 使用AES解密字符串, 返回原始字符串.
 	 * 
-	 * @param input
+	 * param input
 	 *            Hex编码的加密字符串
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
-	 * @param iv
+	 * param iv
 	 *            初始向量
 	 * @throws Exception
 	 */
@@ -221,11 +221,11 @@ public class Cryptos {
 	/**
 	 * 使用AES加密或解密无编码的原始字节数组, 返回无编码的字节数组结果.
 	 * 
-	 * @param input
+	 * param input
 	 *            原始字节数组
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
-	 * @param mode
+	 * param mode
 	 *            Cipher.ENCRYPT_MODE 或 Cipher.DECRYPT_MODE
 	 */
 	private static byte[] aes(byte[] input, byte[] key, int mode) throws Exception {
@@ -240,13 +240,13 @@ public class Cryptos {
 	/**
 	 * 使用AES加密或解密无编码的原始字节数组, 返回无编码的字节数组结果.
 	 * 
-	 * @param input
+	 * param input
 	 *            原始字节数组
-	 * @param key
+	 * param key
 	 *            符合AES要求的密钥
-	 * @param iv
+	 * param iv
 	 *            初始向量
-	 * @param mode
+	 * param mode
 	 *            Cipher.ENCRYPT_MODE 或 Cipher.DECRYPT_MODE
 	 * @throws NoSuchPaddingException
 	 * @throws NoSuchAlgorithmException
@@ -284,7 +284,7 @@ public class Cryptos {
 	/**
 	 * 生成AES密钥,可选长度为128,192,256位.
 	 * 
-	 * @param keysize
+	 * param keysize
 	 *            密钥长度
 	 * @return AES密钥
 	 * @throws NoSuchAlgorithmException

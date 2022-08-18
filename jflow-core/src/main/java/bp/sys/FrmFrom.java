@@ -10,13 +10,11 @@ public enum FrmFrom
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static FrmFrom forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FrmFrom forValue(int value) 
+	{return values()[value];
 	}
 }

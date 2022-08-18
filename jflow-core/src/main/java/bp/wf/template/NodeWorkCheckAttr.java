@@ -1,5 +1,12 @@
 package bp.wf.template;
-import bp.en.EntityNoAttr;
+
+import bp.da.*;
+import bp.sys.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
 
 /** 
  审核组件
@@ -14,21 +21,21 @@ public class NodeWorkCheckAttr extends EntityNoAttr
 	 是否可以审批
 	*/
 	public static final String FWCSta = "FWCSta";
-	/** 
+	/**
 	 X
-	*/
+	 */
 	public static final String FWC_X = "FWC_X";
-	/** 
+	/**
 	 Y
-	*/
+	 */
 	public static final String FWC_Y = "FWC_Y";
 	/** 
 	 H
 	*/
 	public static final String FWC_H = "FWC_H";
-	/** 
+	/**
 	 W
-	*/
+	 */
 	public static final String FWC_W = "FWC_W";
 	/** 
 	 应用类型
@@ -103,17 +110,14 @@ public class NodeWorkCheckAttr extends EntityNoAttr
 	 审核意见版本号控制
 	*/
 	public static final String FWCVer = "FWCVer";
-
 	/** 
 	 签批字段
 	*/
 	public static final String CheckField = "CheckField";
-
-	/**
-	 * 编号对应的字段
-	 */
+	/** 
+	 编号对应的字段
+	*/
 	public static final String BillNoField = "BillNoField";
-
 	/** 
 	 审核意见立场 不同意、不通过、同意、赞成
 	*/

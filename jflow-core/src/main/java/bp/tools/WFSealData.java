@@ -1,8 +1,10 @@
 package bp.tools;
 
 import bp.da.DBAccess;
+import bp.da.DataType;
 import bp.da.Depositary;
 import bp.en.*;
+import bp.en.Map;
 
 /**
  * 表单签名信息
@@ -79,7 +81,7 @@ public class WFSealData extends EntityMyPK
 	 * 
 	 * @return
 	 */
-	public final void UpdateColumn()
+	public final void UpdateColumn()throws Exception
 	{
 		
 		String sql = "";
@@ -110,7 +112,7 @@ public class WFSealData extends EntityMyPK
 			default:
 				throw new RuntimeException("@未判断的数据库类型。");
 		}
-		if (!StringHelper.isNullOrEmpty(sql))
+		if (!DataType.IsNullOrEmpty(sql))
 		{
 			DBAccess.RunSQL(sql);
 		}
@@ -120,7 +122,7 @@ public class WFSealData extends EntityMyPK
 	 * EnMap
 	 */
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -151,7 +153,7 @@ public class WFSealData extends EntityMyPK
 	@Override
 	public Entities getGetNewEntities()
 	{
-		return new WFSealDatas();
+		return new bp.tools.WFSealDatas();
 	}
 	// 重写
 }

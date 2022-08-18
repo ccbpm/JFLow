@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  节点完成转向处理
 */
@@ -18,19 +20,21 @@ public enum TurnToDeal
 	*/
 	SpecUrl,
 	/** 
+	 发送后关闭
+	*/
+	TurntoClose,
+	/** 
 	 按条件转向
 	*/
 	TurnToByCond;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static TurnToDeal forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static TurnToDeal forValue(int value)
+	{return values()[value];
 	}
 }

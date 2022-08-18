@@ -22,13 +22,11 @@ public enum WhenOverSize
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static WhenOverSize forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static WhenOverSize forValue(int value)
+	{return values()[value];
 	}
 }

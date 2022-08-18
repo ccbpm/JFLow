@@ -1,10 +1,5 @@
 package bp.sys.xml;
 
-import bp.da.*;
-import bp.en.*;
-import bp.sys.*;
-import bp.*;
-import bp.sys.*;
 
 /** 
  SQLList 的摘要说明，属性的配置。
@@ -12,27 +7,27 @@ import bp.sys.*;
 public class SQLList extends XmlEn
 {
 
-		///属性
-	public final String getNo()
+		///#region 属性
+	public final String getNo()  throws Exception
 	{
 		return this.GetValStringByKey(SQLListAttr.No);
 	}
-	public final String getSQL()
+	public final String getSQL()  throws Exception
 	{
 		return this.GetValStringByKey(SQLListAttr.SQL);
 	}
 	/** 
 	 备注
 	*/
-	public final String getNote()
+	public final String getNote()  throws Exception
 	{
 		return this.GetValStringByKey(SQLListAttr.Note);
 	}
 
-		///
+		///#endregion
 
 
-		///构造
+		///#region 构造
 	/** 
 	 查询
 	*/
@@ -42,9 +37,9 @@ public class SQLList extends XmlEn
 	/** 
 	 按照SQL来查询
 	 
-	 @param no
+	 param no
 	*/
-	public SQLList(String no) throws Exception
+	public SQLList(String no) throws Exception 
 	{
 		this.RetrieveByPK("No", no);
 	}
@@ -52,10 +47,10 @@ public class SQLList extends XmlEn
 	 获取一个实例
 	*/
 	@Override
-	public XmlEns getGetNewEntities()
+	public XmlEns getGetNewEntities()throws Exception
 	{
 		return new SQLLists();
 	}
 
-		///
+		///#endregion
 }

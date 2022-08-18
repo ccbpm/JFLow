@@ -1,4 +1,5 @@
 package bp.wf.template;
+
 import bp.en.*;
 import java.util.*;
 
@@ -10,12 +11,10 @@ public class Selectors extends Entities
 	/** 
 	 Accpter
 	*/
-	public Selectors()
-	{
+	public Selectors() throws Exception {
 	}
 
-	public Selectors(String fk_flow) throws Exception
-	{
+	public Selectors(String fk_flow) throws Exception {
 		String sql = "select NodeId from WF_Node where FK_Flow='" + fk_flow + "'";
 		this.RetrieveInSQL(sql);
 	}
@@ -23,29 +22,26 @@ public class Selectors extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new Selector();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Selector> ToJavaList()
-	{
-		return (List<Selector>)(Object)this;
+	public final java.util.List<Selector> ToJavaList() {
+		return (java.util.List<Selector>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Selector> Tolist()
-	{
+	public final ArrayList<Selector> Tolist()  {
 		ArrayList<Selector> list = new ArrayList<Selector>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -54,5 +50,5 @@ public class Selectors extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

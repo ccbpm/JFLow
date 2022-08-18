@@ -12,18 +12,16 @@ import java.util.*;
 public class RptTemplates extends Entities
 {
 
-		///构造
-	public RptTemplates()
-	{
+		///#region 构造
+	public RptTemplates() throws Exception {
 	}
 
 	/** 
 	 查询
 	 
-	 @param EnsName
+	 param EnsName
 	*/
-	public RptTemplates(String EnsName) throws Exception
-	{
+	public RptTemplates(String EnsName) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(RptTemplateAttr.EnsName, EnsName);
 		qo.DoQuery();
@@ -32,29 +30,27 @@ public class RptTemplates extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new RptTemplate();
 	}
 
 
-		///
+		///#endregion
 
 
-		///查询方法
+		///#region 查询方法
 
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<RptTemplate> ToJavaList()
-	{
+	public final java.util.List<RptTemplate> ToJavaList() {
 		return (java.util.List<RptTemplate>)(Object)this;
 	}
 	/** 
@@ -62,8 +58,7 @@ public class RptTemplates extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<RptTemplate> Tolist()
-	{
+	public final ArrayList<RptTemplate> Tolist()  {
 		ArrayList<RptTemplate> list = new ArrayList<RptTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -72,6 +67,6 @@ public class RptTemplates extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

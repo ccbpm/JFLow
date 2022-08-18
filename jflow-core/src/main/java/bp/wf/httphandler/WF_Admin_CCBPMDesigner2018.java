@@ -1,14 +1,12 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
+import bp.difference.*;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.web.*;
-import bp.port.*;
-import bp.en.*;
-import bp.wf.*;
 import bp.wf.template.*;
-import bp.wf.xml.*;
+import bp.*;
+import bp.wf.*;
 
 import java.net.URLDecoder;
 import java.util.*;
@@ -21,39 +19,17 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	   /** 
 	 构造函数
 	   */
-	public WF_Admin_CCBPMDesigner2018()
-	{
+	public WF_Admin_CCBPMDesigner2018() throws Exception {
 	}
 
 
-		///执行父类的重写方法.
-	/** 
-	 默认执行的方法
-	 
-	 @return 
-	*/
-	@Override
-	protected String DoDefaultMethod()
-	{
-
-		return "err@没有判断的标记:" + this.getDoType();
-	}
-
-		/// 执行父类的重写方法.
-
-
-
-
-
-		///节点相关 Nodes
+		///#region 节点相关 Nodes
 	/** 
 	 创建流程节点并返回编号
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String CreateNode() throws Exception
-	{
+	public final String CreateNode() throws Exception {
 		try
 		{
 			String x = this.GetRequestVal("X");
@@ -72,7 +48,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 				iY = (int)Double.parseDouble(y);
 			}
 
-			Node node = bp.wf.template.TemplateGlo.NewNode(this.getFK_Flow(), iX, iY, icon);
+			Node node = TemplateGlo.NewNode(this.getFK_Flow(), iX, iY, icon);
 
 			Hashtable ht = new Hashtable();
 			ht.put("NodeID", node.getNodeID());
@@ -80,19 +56,23 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 
 
 
-				/////2019.11.08 增加如果是极简版, 就设置初始化参数.
+				///#region //2019.11.08 增加如果是极简版, 就设置初始化参数.
 			Flow fl = new Flow(this.getFK_Flow());
 			if (fl.getFlowFrmModel() != FlowFrmModel.Ver2019Earlier)
 			{
 				FrmNode fm = new FrmNode();
 				fm.setFK_Flow(this.getFK_Flow());
-				fm.setFK_Frm("ND" + Integer.parseInt(this.getFK_Flow() + "01"));
+				fm.setFKFrm("ND" + Integer.parseInt(this.getFK_Flow() + "01"));
+				if (fl.getFlowDevModel() == FlowDevModel.JiJian)
+				{
+					fm.setEnableFWC(FrmWorkCheckSta.Enable);
+				}
 				fm.setFK_Node(node.getNodeID());
 				fm.setFrmSln(FrmSln.Readonly);
 				fm.Insert();
 			}
 
-				/// //2019.11.08 增加如果是极简版.
+				///#endregion //2019.11.08 增加如果是极简版.
 
 
 			return bp.tools.Json.ToJsonEntityModel(ht);
@@ -106,20 +86,18 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 根据节点编号删除流程节点
 	 
 	 @return 执行结果
-	 * @throws Exception 
 	*/
-	public final String DeleteNode() throws Exception
-	{
+	public final String DeleteNode() throws Exception {
 		try
 		{
-			bp.wf.Node node = new bp.wf.Node();
+			Node node = new Node();
 			node.setNodeID(this.getFK_Node());
 			if (node.RetrieveFromDBSources() == 0)
 			{
 				return "err@删除失败,没有删除到数据，估计该节点已经别删除了.";
 			}
 
-			if (node.getIsStartNode() == true)
+			if (node.isStartNode() == true)
 			{
 				return "err@开始节点不允许被删除。";
 			}
@@ -136,15 +114,12 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 修改节点名称
 	 
 	 @return 
-	 * @throws Exception 
-	 * @throws NumberFormatException 
 	*/
-	public final String Node_EditNodeName() throws NumberFormatException, Exception
-	{
+	public final String Node_EditNodeName() throws Exception {
 		String FK_Node = this.GetValFromFrmByKey("NodeID");
 		String NodeName = URLDecoder.decode(this.GetValFromFrmByKey("NodeName"), "UTF-8");
 
-		bp.wf.Node node = new bp.wf.Node();
+		Node node = new Node();
 		node.setNodeID(Integer.parseInt(FK_Node));
 		int iResult = node.RetrieveFromDBSources();
 		if (iResult > 0)
@@ -160,29 +135,27 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 修改节点运行模式
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Node_ChangeRunModel() throws Exception
-	{
+	public final String Node_ChangeRunModel() throws Exception {
 		String runModel = GetValFromFrmByKey("RunModel");
-		bp.wf.Node node = new bp.wf.Node(this.getFK_Node());
+		Node node = new Node(this.getFK_Node());
 		//节点运行模式
 		switch (runModel)
 		{
 			case "NodeOrdinary":
-				node.setHisRunModel(bp.wf.RunModel.Ordinary);
+				node.setHisRunModel(RunModel.Ordinary);
 				break;
 			case "NodeFL":
-				node.setHisRunModel(bp.wf.RunModel.FL);
+				node.setHisRunModel(RunModel.FL);
 				break;
 			case "NodeHL":
-				node.setHisRunModel(bp.wf.RunModel.HL);
+				node.setHisRunModel(RunModel.HL);
 				break;
 			case "NodeFHL":
-				node.setHisRunModel(bp.wf.RunModel.FHL);
+				node.setHisRunModel(RunModel.FHL);
 				break;
 			case "NodeSubThread":
-				node.setHisRunModel(bp.wf.RunModel.SubThread);
+				node.setHisRunModel(RunModel.SubThread);
 				break;
 		}
 		node.Update();
@@ -190,20 +163,18 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		return "设置成功.";
 	}
 
-		/// end Node
+		///#endregion end Node
 
 	/** 
 	 删除连接线
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Direction_Delete() throws Exception
-	{
+	public final String Direction_Delete() throws Exception {
 		try
 		{
 			Directions di = new Directions();
-			di.Retrieve(DirectionAttr.FK_Flow, this.getFK_Flow(), DirectionAttr.Node, this.getFK_Node(), DirectionAttr.ToNode, this.GetValFromFrmByKey("ToNode"));
+			di.Retrieve(DirectionAttr.FK_Flow, this.getFK_Flow(), DirectionAttr.Node, this.getFK_Node(), DirectionAttr.ToNode, this.GetValFromFrmByKey("ToNode"), null);
 			for (Direction direct : di.ToJavaList())
 			{
 				direct.Delete();
@@ -215,8 +186,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			return "@err:" + ex.getMessage();
 		}
 	}
-	 public final String Direction_Init() throws Exception
-	 {
+	public final String Direction_Init() throws Exception {
 		try
 		{
 			String pk = this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.GetValFromFrmByKey("ToNode");
@@ -235,15 +205,13 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		{
 			return "@err:" + ex.getMessage();
 		}
-	 }
+	}
 	/** 
 	 
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Direction_Save() throws Exception
-	{
+	public final String Direction_Save() throws Exception {
 		try
 		{
 			String pk = this.getFK_Flow() + "_" + this.getFK_Node() + "_" + this.GetValFromFrmByKey("ToNode");
@@ -264,22 +232,19 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 			return "@err:" + ex.getMessage();
 		}
 	}
-
 	/** 
 	 添加标签
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String CreatLabNote() throws Exception
-	{
+	public final String CreatLabNote() throws Exception {
 		try
 		{
 			LabNote lb = new LabNote();
 
 			//获取当前流程已经存在的数量
 			LabNotes labNotes = new LabNotes();
-			int num = labNotes.Retrieve(LabNoteAttr.FK_Flow, this.getFK_Flow());
+			int num = labNotes.Retrieve(LabNoteAttr.FK_Flow, this.getFK_Flow(), null);
 
 			String Name = this.GetValFromFrmByKey("LabName");
 			int x = Integer.parseInt(this.GetValFromFrmByKey("X"));
@@ -305,8 +270,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		}
 	}
 
-	public final void CheckBillFrm() throws Exception
-	{
+	public final void CheckBillFrm() throws Exception {
 		GEEntity en = new GEEntity(this.getEnsName());
 		en.CheckPhysicsTable();
 	}

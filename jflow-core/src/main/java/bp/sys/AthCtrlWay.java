@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 public enum AthCtrlWay
 {
@@ -35,7 +34,8 @@ public enum AthCtrlWay
 	/** 
 	 根流程的WorkID
 	*/
-    RootFlowWorkID;
+	RootFlowWorkID;
+
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
@@ -44,7 +44,7 @@ public enum AthCtrlWay
 		return this.ordinal();
 	}
 
-	public static AthCtrlWay forValue(int value) throws Exception
+	public static AthCtrlWay forValue(int value)
 	{
 		return values()[value];
 	}

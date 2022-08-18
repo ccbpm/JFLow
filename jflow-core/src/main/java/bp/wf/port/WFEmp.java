@@ -1,234 +1,156 @@
 package bp.wf.port;
 
-import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.wf.*;
 import bp.port.*;
-import bp.web.*;
-import bp.wf.*;
-import java.util.*;
-import java.time.*;
 
-/** 
+/**
  操作员
 */
 public class WFEmp extends EntityNoName
 {
 
-		///基本属性
-	public final String getHisAlertWayT() throws Exception
-	{
-		return this.GetValRefTextByKey(WFEmpAttr.AlertWay);
-	}
-	public final AlertWay getHisAlertWay()throws Exception
-	{
-		return AlertWay.forValue(this.GetValIntByKey(WFEmpAttr.AlertWay));
-	}
-	public final void setHisAlertWay(AlertWay value)throws Exception
-	{
-		SetValByKey(WFEmpAttr.AlertWay, value.getValue());
-	}
-	/** 
-	 用户状态
+		///#region 基本属性
+	/**
+	 编号
 	*/
-	public final int getUseSta()throws Exception
-	{
-		return this.GetValIntByKey(WFEmpAttr.UseSta);
-	}
-	public final void setUseSta(int value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.UseSta, value);
-	}
-	/** 
-	 部门编号
-	*/
-	public final String getFK_Dept()throws Exception
-	{
-		return this.GetValStringByKey(WFEmpAttr.FK_Dept);
-	}
-	public final void setFK_Dept(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.FK_Dept, value);
-	}
-	/** 
-	token
-	*/
-	public final String getToken()throws Exception
-	{
-		return this.GetValStringByKey(WFEmpAttr.Token);
-	}
-	public final void setToken(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.Token, value);
-	}
-	/** 
-	 风格文件
-	*/
-	public final String getStyle()throws Exception
-	{
-		return this.GetValStringByKey(WFEmpAttr.Style);
-	}
-	public final void setStyle(String value) throws Exception
-	{
-		this.SetValByKey(WFEmpAttr.Style, value);
-	}
 
-	/** 
-	 电话
+	public final String getNo()
+	{
+		return this.GetValStringByKey(EntityNoNameAttr.No);
+	}
+	public final void setNo(String value)
+	 {
+		this.SetValByKey(EmpAttr.No, value);
+	}
+	/**
+	 用户ID:SAAS模式下UserID是可以重复的.
 	*/
-	public final String getTel()throws Exception
-	{
-		return this.GetValStringByKey(WFEmpAttr.Tel);
-	}
-	public final void setTel(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.Tel, value);
-	}
-	public final int getIdx()throws Exception
-	{
-		return this.GetValIntByKey(WFEmpAttr.Idx);
-	}
-	public final void setIdx(int value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.Idx, value);
-	}
-
-	public final String getEmail()throws Exception
-	{
-		return this.GetValStringByKey(WFEmpAttr.Email);
-	}
-	public final void setEmail(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.Email, value);
-	}
-	public final String getAuthor()throws Exception
-	{
-		return this.GetValStrByKey(WFEmpAttr.Author);
-	}
-	public final void setAuthor(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.Author, value);
-	}
-	public final String getAuthorDate()throws Exception
-	{
-		return this.GetValStringByKey(WFEmpAttr.AuthorDate);
-	}
-	public final void setAuthorDate(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.AuthorDate, value);
-	}
-	public final String getAuthorToDate()throws Exception
-	{
-		return this.GetValStringByKey(WFEmpAttr.AuthorToDate);
-	}
-	public final void setAuthorToDate(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.AuthorToDate, value);
-	}
-	/** 
-	 授权的流程
-	*/
-	public final String getAuthorFlows()throws Exception
-	{
-		String s = this.GetValStringByKey(WFEmpAttr.AuthorFlows);
-		s = s.replace(",", "','");
-		return "('" + s + "')";
-	}
-	public final void setAuthorFlows(String value) throws Exception
-	{
-			//授权流程为空时的bug  解决
-		if (!DataType.IsNullOrEmpty(value))
+	public final String getUserID()  {
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.SAAS)
 		{
-			SetValByKey(WFEmpAttr.AuthorFlows, value.substring(1));
+			return this.GetValStringByKey(WFEmpAttr.UserID);
+		}
+
+		return this.GetValStringByKey(WFEmpAttr.No);
+	}
+	public final void setUserID(String value)
+	 {
+		this.SetValByKey(WFEmpAttr.UserID, value);
+
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.SAAS)
+		{
+			this.SetValByKey(WFEmpAttr.No, bp.web.WebUser.getOrgNo() + "_" + value);
 		}
 		else
 		{
-			SetValByKey(WFEmpAttr.AuthorFlows, "");
+			this.SetValByKey(WFEmpAttr.No, value);
 		}
-			//SetValByKey(WFEmpAttr.AuthorFlows, value.Substring(1));
 	}
-	/** 
+
+	/**
+	 Token
+	*/
+	public final String getToken()
+	{
+		return this.GetValStringByKey(WFEmpAttr.Token);
+	}
+	public final void setToken(String value)
+	 {
+		this.SetValByKey(WFEmpAttr.Token, value);
+	}
+	/**
+	 组织编号
+	*/
+	public final String getOrgNo()
+	{
+		return this.GetValStringByKey(WFEmpAttr.OrgNo);
+	}
+	public final void setOrgNo(String value)
+	 {
+		this.SetValByKey(WFEmpAttr.OrgNo, value);
+	}
+	/**
+	 用户状态
+	*/
+	public final int getUseSta()
+	{
+		return this.GetValIntByKey(WFEmpAttr.UseSta);
+	}
+	public final void setUseSta(int value)
+	{SetValByKey(WFEmpAttr.UseSta, value);
+	}
+	/**
+	 部门编号
+	*/
+	public final String getFK_Dept()
+	{
+		return this.GetValStringByKey(WFEmpAttr.FK_Dept);
+	}
+	public final void setFK_Dept(String value)
+	{SetValByKey(WFEmpAttr.FK_Dept, value);
+	}
+
+	/**
+	 电话
+	*/
+	public final String getTel()
+	{
+		return this.GetValStringByKey(WFEmpAttr.Tel);
+	}
+	public final void setTel(String value)
+	{SetValByKey(WFEmpAttr.Tel, value);
+	}
+
+	public final String getEmail()
+	{
+		return this.GetValStringByKey(WFEmpAttr.Email);
+	}
+	public final void setEmail(String value)
+	{SetValByKey(WFEmpAttr.Email, value);
+	}
+
+	/**
 	 发起流程.
 	*/
-	public final String getStartFlows()throws Exception
+	public final String getStartFlows()
 	{
 		return this.GetValStrByKey(WFEmpAttr.StartFlows);
 	}
-	public final void setStartFlows(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.StartFlows, value);
+	public final void setStartFlows(String value)
+	{SetValByKey(WFEmpAttr.StartFlows, value);
 	}
-	/** 
+	/**
 	 图片签名密码
 	*/
-	public final String getSPass()throws Exception
+	public final String getSPass()
 	{
 		return this.GetValStringByKey(WFEmpAttr.SPass);
 	}
-	public final void setSPass(String value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.SPass, value);
+	public final void setSPass(String value)
+	{SetValByKey(WFEmpAttr.SPass, value);
 	}
 
-	/** 
-	 授权方式
-	*/
-	public final AuthorWay getHisAuthorWay()throws Exception
-	{
-		return AuthorWay.forValue(this.getAuthorWay());
-	}
-	/** 
-	 授权方式
-	*/
-	public final int getAuthorWay()throws Exception
-	{
-		return this.GetValIntByKey(WFEmpAttr.AuthorWay);
-	}
-	public final void setAuthorWay(int value) throws Exception
-	{
-		SetValByKey(WFEmpAttr.AuthorWay, value);
-	}
-	public final boolean getAuthorIsOK() throws Exception
-	{
-		int b = this.GetValIntByKey(WFEmpAttr.AuthorWay);
-		if (b == 0)
-		{
-			return false; //不授权.
-		}
-
-			// if (DataType.IsNullOrEmpty(this.Author) == true)
-			//  return false;
-
-		if (this.getAuthorToDate().length() < 4)
-		{
-			return true; //没有填写时间,当做无期限
-		}
-
-		Date dt = DataType.ParseSysDateTime2DateTime(this.getAuthorToDate());
-		if (dt.compareTo(new Date()) < 0)
-		{
-			return false;
-		}
-
-		return true;
+		///#endregion
+	/**
+	 UI界面上的访问控制
+	 */
+	@Override
+	public UAC getHisUAC()  {
+		UAC uac = new UAC();
+		uac.OpenForSysAdmin();
+		return uac;
 	}
 
-		///
-
-
-		///构造函数
-	/** 
+		///#region 构造函数
+	/**
 	 操作员
 	*/
-	public WFEmp()
-	{
+	public WFEmp()  {
 	}
-	/** 
+	/**
 	 操作员
-	 
-	 @param no
-	 * @throws Exception 
+
+	 param userID
 	*/
 	public WFEmp(String no) throws Exception
 	{
@@ -247,12 +169,11 @@ public class WFEmp extends EntityNoName
 			this.CheckPhysicsTable();
 		}
 	}
-	/** 
+	/**
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -260,40 +181,33 @@ public class WFEmp extends EntityNoName
 
 		Map map = new Map("WF_Emp", "操作员");
 
+
+
 		map.AddTBStringPK(WFEmpAttr.No, null, "No", true, true, 1, 50, 36);
 		map.AddTBString(WFEmpAttr.Name, null, "Name", true, false, 0, 50, 20);
+
 		map.AddTBInt(WFEmpAttr.UseSta, 1, "用户状态0禁用,1正常.", true, true);
 
 		map.AddTBString(WFEmpAttr.Tel, null, "Tel", true, true, 0, 50, 20);
 		map.AddTBString(WFEmpAttr.FK_Dept, null, "FK_Dept", true, true, 0, 100, 36);
 		map.AddTBString(WFEmpAttr.Email, null, "Email", true, true, 0, 50, 20);
 
-		map.AddDDLSysEnum(WFEmpAttr.AlertWay, 3, "收听方式", true, true, WFEmpAttr.AlertWay);
-		map.AddTBString(WFEmpAttr.Author, null, "授权人", true, true, 0, 50, 20);
-		map.AddTBString(WFEmpAttr.AuthorDate, null, "授权日期", true, true, 0, 50, 20);
-
-		map.AddTBString(WFEmpAttr.Token, null, "token", true, true, 0, 200, 20);
-		 
-			//0不授权， 1完全授权，2，指定流程范围授权. 
-		map.AddTBInt(WFEmpAttr.AuthorWay, 0, "授权方式", true, true);
-		map.AddTBDate(WFEmpAttr.AuthorToDate, null, "授权到日期", true, true);
-
-		map.AddTBString(WFEmpAttr.AuthorFlows, null, "可以执行的授权流程", true, true, 0, 3900, 0);
-
 		map.AddTBString(WFEmpAttr.Stas, null, "岗位s", true, true, 0, 3000, 20);
-		map.AddTBString(WFEmpAttr.Depts, null, "Deptss", true, true, 0, 100, 36);
+		map.AddTBString(WFEmpAttr.Depts, null, "部门s", true, true, 0, 100, 36);
 
-		map.AddTBString(WFEmpAttr.Msg, null, "Msg", true, true, 0, 4000, 20);
-		map.AddTBString(WFEmpAttr.Style, null, "Style", true, true, 0, 4000, 20);
+		map.AddTBString(WFEmpAttr.Msg, null, "消息", true, true, 0, 4000, 20);
 
-			//map.AddTBStringDoc(WFEmpAttr.StartFlows, null, "可以发起的流程", true, true);
+			//如果是集团模式或者是SAAS模式.
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != bp.sys.CCBPMRunModel.Single)
+		{
+			map.AddTBString(WFEmpAttr.UserID, null, "用户ID", true, false, 0, 50, 30);
+		}
 
 			//隶属组织.
-		map.AddTBString("OrgNo", null, "OrgNo", true, true, 0, 100, 20);
+		map.AddTBString(WFEmpAttr.OrgNo, null, "OrgNo", true, true, 0, 100, 20);
 
 		map.AddTBString(WFEmpAttr.SPass, null, "图片签名密码", true, true, 0, 200, 20);
 
-		map.AddTBInt(WFEmpAttr.Idx, 0, "Idx", false, false);
 
 		map.AddTBAtParas(3500); //增加字段.
 
@@ -301,13 +215,12 @@ public class WFEmp extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///方法
+		///#region 方法
 	@Override
-	protected boolean beforeUpdate() throws Exception
-	{
+	protected boolean beforeUpdate() throws Exception {
 		String msg = "";
 		//if (this.Email.Length == 0)
 		//{
@@ -322,7 +235,7 @@ public class WFEmp extends EntityNoName
 		//}
 
 		//EmpStations ess = new EmpStations();
-		//ess.Retrieve(EmpStationAttr.FK_Emp, this.getNo());
+		//ess.Retrieve(EmpStationAttr.FK_Emp, this.No);
 		//string sts = "";
 		//foreach (EmpStation es in ess)
 		//{
@@ -338,40 +251,18 @@ public class WFEmp extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		this.setUseSta(1);
 		return super.beforeInsert();
 	}
 
-		///
+		///#endregion
 
-	public static void DTSData() throws Exception
-	{
-		String sql = "select No from Port_Emp where No not in (select No from WF_Emp)";
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		for (DataRow dr : dt.Rows)
-		{
-			bp.port.Emp emp1 = new bp.port.Emp(dr.getValue("No").toString());
-			bp.wf.port.WFEmp empWF = new bp.wf.port.WFEmp();
-			empWF.Copy(emp1);
-			try
-			{
-				empWF.setUseSta(1);
-				empWF.DirectInsert();
-			}
-			catch (java.lang.Exception e)
-			{
-			}
-		}
-	}
-	public final void DoUp() throws Exception
-	{
+	public final void DoUp()  {
 		this.DoOrderUp("FK_Dept", this.getFK_Dept(), "Idx");
 		return;
 	}
-	public final void DoDown() throws Exception
-	{
+	public final void DoDown()  {
 		this.DoOrderDown("FK_Dept", this.getFK_Dept(), "Idx");
 		return;
 	}

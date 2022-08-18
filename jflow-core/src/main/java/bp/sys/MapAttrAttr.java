@@ -1,5 +1,13 @@
 package bp.sys;
+
+import bp.da.*;
 import bp.en.*;
+import bp.pub.*;
+import bp.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
+import java.math.*;
 
 /** 
  实体属性
@@ -115,6 +123,10 @@ public class MapAttrAttr extends EntityMyPKAttr
 	*/
 	public static final String GroupID = "GroupID";
 	/** 
+	 图标
+	*/
+	public static final String ICON = "ICON";
+	/** 
 	 是否是签字
 	*/
 	public static final String IsSigan = "IsSigan";
@@ -122,6 +134,8 @@ public class MapAttrAttr extends EntityMyPKAttr
 	 字体大小
 	*/
 	public static final String FontSize = "FontSize";
+
+
 	/** 
 	 x
 	*/
@@ -146,7 +160,7 @@ public class MapAttrAttr extends EntityMyPKAttr
 	/** 
 	 文本合并单元格数
 	*/
-	public static final String TextColSpan = "TextColSpan";
+	public static final String LabelColSpan = "LabelColSpan";
 
 	/** 
 	 合并行数
@@ -175,16 +189,19 @@ public class MapAttrAttr extends EntityMyPKAttr
 	public static final String TBModel = "TBModel";
 
 	public static final String CSSCtrl = "CSSCtrl";
-	public static final String CSSLabel="CSSLabel";
-	public static final String ICON = "ICON";
- 
-		///参数属性.
+
+	public static final String CSSLabel = "CSSLabel";
+
+
+		///#region 参数属性.
 	/** 
 	 是否必填
 	*/
 	public static final String UIIsInput = "UIIsInput";
 
-		/// 参数属性.
+	public static final String TextModel="TextModel";
+
+		///#endregion 参数属性.
 
 	/** 
 	 数值字段是否合计
@@ -201,11 +218,9 @@ public class MapAttrAttr extends EntityMyPKAttr
 	public static final String IsSupperText = "IsSupperText";
 	public static final String IsRichText = "IsRichText";
 	public static final String IsSecret = "IsSecret";
-
 	/** 
 	 默认值设置方式
 	*/
 	public static final String DefValType = "DefValType";
-
-	public static final String DefaultVal = "10002";
+	public static final String DefaultVal = "";
 }

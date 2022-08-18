@@ -1,4 +1,12 @@
 package bp.wf.template;
+
+import bp.da.*;
+import bp.en.*;
+import bp.port.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
+
 /** 
  选择接受人属性
 */

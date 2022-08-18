@@ -1,12 +1,6 @@
 package bp.wf.data;
 
-import bp.da.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.template.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -15,7 +9,7 @@ import java.util.*;
 public class GenerWorkFlowViews extends Entities
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -27,29 +21,29 @@ public class GenerWorkFlowViews extends Entities
 	/** 
 	 流程实例集合
 	*/
-	public GenerWorkFlowViews()
+	public GenerWorkFlowViews()throws Exception
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<GenerWorkFlowView> ToJavaList()
+	public final java.util.List<GenerWorkFlowView> ToJavaList()throws Exception
 	{
-		return (List<GenerWorkFlowView>)(Object)this;
+		return (java.util.List<GenerWorkFlowView>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<GenerWorkFlowView> Tolist()
+	public final ArrayList<GenerWorkFlowView> Tolist()throws Exception
 	{
 		ArrayList<GenerWorkFlowView> list = new ArrayList<GenerWorkFlowView>();
 		for (int i = 0; i < this.size(); i++)
@@ -59,5 +53,5 @@ public class GenerWorkFlowViews extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -11,33 +11,30 @@ import java.util.*;
 public class MapDataTemplates extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 映射基础s
 	*/
-	public MapDataTemplates()
-	{
+	public MapDataTemplates() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapDataTemplate();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDataTemplate> ToJavaList()
-	{
+	public final java.util.List<MapDataTemplate> ToJavaList() {
 		return (java.util.List<MapDataTemplate>)(Object)this;
 	}
 	/** 
@@ -45,8 +42,7 @@ public class MapDataTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapDataTemplate> Tolist()
-	{
+	public final ArrayList<MapDataTemplate> Tolist()  {
 		ArrayList<MapDataTemplate> list = new ArrayList<MapDataTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -55,5 +51,5 @@ public class MapDataTemplates extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,9 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.*;
-import java.io.*;
-
 /** 
  相关功能类型
 */
@@ -33,7 +29,7 @@ public enum RefMethodType
 		return this.ordinal();
 	}
 
-	public static RefMethodType forValue(int value) throws Exception
+	public static RefMethodType forValue(int value)
 	{
 		return values()[value];
 	}

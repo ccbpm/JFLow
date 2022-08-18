@@ -17,7 +17,7 @@ public class EntityDBAccess
 	/** 
 	 删除
 	 
-	 @param en
+	 param en
 	 @return 
 	 * @throws Exception 
 	*/
@@ -39,8 +39,8 @@ public class EntityDBAccess
 	/** 
 	 更新
 	 
-	 @param en 产生要更新的语句
-	 @param keys 要更新的属性(null,认为更新全部)
+	 param en 产生要更新的语句
+	 param keys 要更新的属性(null,认为更新全部)
 	 @return sql
 	 * @throws Exception 
 	*/
@@ -139,8 +139,8 @@ public class EntityDBAccess
 	/** 
 	 查询
 	 
-	 @param en 实体
-	 @param sql 组织的查询语句
+	 param en 实体
+	 param sql 组织的查询语句
 	 @return 
 	*/
 	public static int Retrieve(Entity en, String sql)throws Exception
@@ -174,7 +174,7 @@ public class EntityDBAccess
 	}
 	private static void fullDate(DataTable dt, Entity en, Attrs attrs)throws Exception
 	{
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			en.getRow().SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey()));
 		}
@@ -207,7 +207,7 @@ public class EntityDBAccess
 			{
 				Entity en = ens.getGetNewEntity();
 				//Entity  en = en1.CreateInstance();
-				for (Attr attr : attrs)
+				for (Attr attr : attrs.ToJavaList())
 				{
 					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 				}

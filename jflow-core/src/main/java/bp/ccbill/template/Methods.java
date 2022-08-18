@@ -1,27 +1,27 @@
 package bp.ccbill.template;
+
+import bp.da.*;
 import bp.en.*;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
- 表单方法
+ 实体方法
 */
-public class Methods extends EntitiesMyPK
+public class Methods extends EntitiesNoName
 {
-	private static final long serialVersionUID = 1L;
 	/** 
-	 表单方法
+	 实体方法
 	*/
-	public Methods()
-	{
+	public Methods() {
 	}
 	/** 
-	 表单方法
+	 实体方法
 	 
-	 @param nodeid 方法IDID
-	 * @throws Exception 
+	 param nodeid 方法IDID
 	*/
-	public Methods(int nodeid) throws Exception
-	{
+	public Methods(int nodeid) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MethodAttr.MethodID, nodeid);
 		qo.DoQuery();
@@ -30,28 +30,25 @@ public class Methods extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new Method();
 	}
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Method> ToJavaList()
-	{
-		return (List<Method>)(Object)this;
+	public final java.util.List<Method> ToJavaList() {
+		return (java.util.List<Method>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Method> Tolist()
-	{
+	public final ArrayList<Method> Tolist()  {
 		ArrayList<Method> list = new ArrayList<Method>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -60,5 +57,5 @@ public class Methods extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,12 +1,11 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.tools.DateUtils;
 import bp.en.*;
-import bp.wf.data.*;
+import bp.tools.DateUtils;
+import bp.wf.*;
 
 /** 
  页面功能实体
@@ -14,26 +13,23 @@ import bp.wf.data.*;
 public class WF_CCBill_Opt extends WebContralBase
 {
 
-		///构造方法.
+		///#region 构造方法.
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_Opt()
-	{
+	public WF_CCBill_Opt() throws Exception {
 	}
 
-		/// 构造方法.
+		///#endregion 构造方法.
 
 
-		///关联单据.
+		///#region 关联单据.
 	/** 
 	 设置父子关系.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String RefBill_Done() throws Exception
-	{
+	public final String RefBill_Done() throws Exception {
 		try
 		{
 			String frmID = this.GetRequestVal("FrmID");
@@ -66,16 +62,14 @@ public class WF_CCBill_Opt extends WebContralBase
 	 单据初始化
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String RefBill_Init() throws Exception
-	{
+	public final String RefBill_Init() throws Exception {
 		DataSet ds = new DataSet();
 
 
-			///查询显示的列
-		MapAttrs mapattrs = new MapAttrs();
-		mapattrs.Retrieve(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.Idx);
+			///#region 查询显示的列
+		MapAttrs mattrs = new MapAttrs();
+		mattrs.Retrieve(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.Idx);
 
 		DataRow row = null;
 		DataTable dt = new DataTable("Attrs");
@@ -88,7 +82,7 @@ public class WF_CCBill_Opt extends WebContralBase
 		//设置标题、单据号位于开始位置
 
 
-		for (MapAttr attr : mapattrs.ToJavaList())
+		for (MapAttr attr : mattrs.ToJavaList())
 		{
 			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
 			if (searchVisable.equals("0"))
@@ -103,16 +97,16 @@ public class WF_CCBill_Opt extends WebContralBase
 			row.setValue("KeyOfEn", attr.getKeyOfEn());
 			row.setValue("Name", attr.getName());
 			row.setValue("Width", attr.getUIWidthInt());
-			row.setValue("UIContralType", attr.getUIContralType());
-			row.setValue("LGType", attr.getLGType());
+			row.setValue("UIContralType", attr.getUIContralType().getValue());
+			row.setValue("LGType", attr.getLGType().getValue());
 			dt.Rows.add(row);
 		}
 		ds.Tables.add(dt);
 
-			/// 查询显示的列
+			///#endregion 查询显示的列
 
 
-			///查询语句
+			///#region 查询语句
 
 		MapData md = new MapData(this.getFrmID());
 
@@ -123,31 +117,31 @@ public class WF_CCBill_Opt extends WebContralBase
 		QueryObject qo = new QueryObject(rpts);
 
 
-			///关键字字段.
+			///#region 关键字字段.
 		String keyWord = this.GetRequestVal("SearchKey");
 
 		if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			qo.addLeftBracket();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
 			{
-				qo.AddWhere("Title", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+				qo.AddWhere("Title", " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 			qo.addOr();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
 			{
-				qo.AddWhere("BillNo", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+				qo.AddWhere("BillNo", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("BillNo", " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+				qo.AddWhere("BillNo", " LIKE ", "'%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 
-			qo.getMyParas().Add("SKey", keyWord);
+			qo.getMyParas().Add("SKey", keyWord, false);
 			qo.addRightBracket();
 
 		}
@@ -156,10 +150,10 @@ public class WF_CCBill_Opt extends WebContralBase
 			qo.AddHD();
 		}
 
-			/// 关键字段查询
+			///#endregion 关键字段查询
 
 
-			///时间段的查询
+			///#region 时间段的查询
 		String dtFrom = this.GetRequestVal("DTFrom");
 		String dtTo = this.GetRequestVal("DTTo");
 		if (DataType.IsNullOrEmpty(dtFrom) == false)
@@ -184,20 +178,20 @@ public class WF_CCBill_Opt extends WebContralBase
 
 			qo.addAnd();
 			qo.addLeftBracket();
-			qo.setSQL(  " RDT>= '" + dtFrom + "'");
+			qo.setSQL(" RDT>= '" + dtFrom + "'");
 			qo.addAnd();
 			qo.setSQL("RDT <= '" + dtTo + "'");
 			qo.addRightBracket();
 		}
 
-			/// 时间段的查询
+			///#endregion 时间段的查询
 
 		qo.DoQuery("OID", this.getPageSize(), this.getPageIdx());
 
 
-			///
+			///#endregion
 
-		DataTable mydt = rpts.ToDataTableField();
+		DataTable mydt = rpts.ToDataTableField("dt");
 		mydt.TableName = "DT";
 
 		ds.Tables.add(mydt); //把数据加入里面.
@@ -205,6 +199,5 @@ public class WF_CCBill_Opt extends WebContralBase
 		return bp.tools.Json.ToJson(ds);
 	}
 
-		/// 关联单据.
-
+		///#endregion 关联单据.
 }

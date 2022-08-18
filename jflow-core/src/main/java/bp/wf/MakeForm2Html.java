@@ -1,816 +1,42 @@
 package bp.wf;
 
-import bp.sys.*;
-import bp.tools.AesEncodeUtil;
-import bp.tools.BaseFileUtils;
-import bp.tools.HtmlToPdfInterceptor;
-import bp.tools.QrCodeUtil;
-import bp.tools.ZipCompress;
-import bp.da.*;
 import bp.difference.SystemConfig;
+import bp.sys.*;
+import bp.da.*;
 import bp.en.*;
+import bp.tools.*;
 import bp.web.*;
 import bp.port.*;
+import bp.wf.rpt.*;
 import bp.wf.template.*;
-import java.util.*;
-import javax.imageio.ImageIO;
+//import bp.tools.ZipCompress;
+//import iTextSharp.text.*;
+//import iTextSharp.text.pdf.*;
+import bp.*;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
+
+import java.util.*;
 import java.io.*;
 import java.nio.file.*;
-import java.text.SimpleDateFormat;
+import java.time.*;
 
-public class MakeForm2Html {
-	/**
-	 * 生成
-	 * 
-	 * @param mapData
-	 * @param frmID
-	 * @param workid
-	 * @param en
-	 * @param path
-	 * @param flowNo
-	 * @return
-	 * @throws Exception 
-	 */
+public class MakeForm2Html
+{
 
-	public static StringBuilder GenerHtmlOfFree(MapData mapData, String frmID, long workid, Entity en, String path,
-			String flowNo, String FK_Node) throws Exception {
-		return GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo, FK_Node, null);
+	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path, String flowNo, String FK_Node) throws Exception {
+		return GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, FK_Node, NodeFormType.FoolForm);
 	}
 
-	public static StringBuilder GenerHtmlOfFree(MapData mapData, String frmID, long workid, Entity en, String path,
-			String flowNo) throws Exception {
-		return GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo, null, null);
-	}
-
-	public static StringBuilder GenerHtmlOfFree(MapData mapData, String frmID, long workid, Entity en, String path) throws Exception {
-		return GenerHtmlOfFree(mapData, frmID, workid, en, path, null, null, null);
-	}
-
-	public static StringBuilder GenerHtmlOfFree(MapData mapData, String frmID, long workid, Entity en, String path, String flowNo, String FK_Node, String basePath) throws Exception
-	{
-		StringBuilder sb = new StringBuilder();
-
-		//字段集合.
-		MapAttrs mapAttrs = new MapAttrs(frmID);
-
-		Attrs attrs = en.getEnMap().getAttrs();
-
-		String appPath = "";
-		float wtX = MapData.GenerSpanWeiYi(mapData, 1200);
-		//float wtX = 0;
-		float x = 0;
-
-
-			///输出竖线与标签 & 超连接 Img.
-		FrmLabs labs = mapData.getFrmLabs();
-		for (FrmLab lab : labs.ToJavaList())
-		{
-			 x = lab.getX() + wtX;
-             sb.append("\t\n<DIV name=u2 style='position:absolute;left:" + x + "px;top:" + lab.getY() + "px;text-align:left;' >");
-             sb.append("\t\n<span style='color:" + lab.getFontColorHtml()+ ";font-family: " + lab.getFontName() + ";font-size: " + lab.getFontSize() + "px;' >" + lab.getTextHtml() + "</span>");
-             sb.append("\t\n</DIV>");
-		}
-
-		 FrmLines lines = new FrmLines();
-        lines.Retrieve(FrmLineAttr.FK_MapData, mapData.getNo(), FrmLineAttr.Y1);
-        for(FrmLine line :lines.ToJavaList() )
-        {
-        	 if (line.getX1() == line.getX2())
-             {
-            	  /* 一道竖线 */
-                 float h = line.getY1() - line.getY2();
-                 h = Math.abs(h);
-                 if (line.getY1() < line.getY2())
-                 {
-                     x = line.getX1() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "'  name='YLine' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY1()+ "px; width:" + line.getBorderWidth() + "px; height:" + h + "px;background-color:" + line.getBorderColorHtml() + "\" />");
-                 }
-                 else
-                 {
-                     x = line.getX2() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "' name='YLine' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY2() + "px; width:" + line.getBorderWidth() + "px; height:" + h + "px;background-color:" + line.getBorderColorHtml()  + "\" />");
-                 }
-             }
-        	 else
-             {
-                 /* 一道横线 */
-                 float w = line.getX2() - line.getX1();
-
-                 if (line.getX1() < line.getX2())
-                 {
-                     x = line.getX1() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "' name='line' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY1()+ "px; width:" + w + "px; height:" + line.getBorderWidth() + "px;background-color:" + line.getBorderColorHtml() + "\" />");
-                 }
-                 else
-                 {
-                     x = line.getX2() + wtX;
-                     sb.append("\t\n<img id='" + line.getMyPK() + "' name='line' style=\"padding:0px;position:absolute; left:" + x + "px; top:" + line.getY2() + "px; width:" + w + "px; height:" + line.getBorderWidth() + "px;background-color:" + line.getBorderColorHtml() + "\" />");
-                 }
-             }
-        }
-
-        FrmLinks links = mapData.getFrmLinks();
-        for(FrmLink link :links.ToJavaList())
-        {
-        	  String url = link.getURLExt();
-              if (url.contains("@"))
-              {
-                  for (MapAttr attr : mapAttrs.ToJavaList())
-                  {
-                      if (url.contains("@") == false)
-                          break;
-                      url = url.replace("@" + attr.getKeyOfEn(), en.GetValStrByKey(attr.getKeyOfEn()));
-                  }
-              }
-              x = link.getX() + wtX;
-              sb.append("\t\n<DIV id=u2 style='position:absolute;left:" + x + "px;top:" + link.getY() + "px;text-align:left;' >");
-              sb.append("\t\n<span style='color:" + link.getFontColorHtml() + ";font-family: " + link.getFontName() + ";font-size: " + link.getFontSize() + "px;' > <a href=\"" + url + "\" target='" + link.getTarget() + "'> " + link.getLabel() + "</a></span>");
-              sb.append("\t\n</DIV>");
-        }
-       
-
-        FrmImgs imgs = mapData.getFrmImgs();
-        for(FrmImg img :imgs.ToJavaList())
-        {
-            float y = img.getY();
-            String imgSrc = "";
-
-           //  ////#region 图片类型
-            if (img.getHisImgAppType() == ImgAppType.Img)
-            {
-                //数据来源为本地.
-                if (img.getImgSrcType() == 0)
-                {
-                    if (img.getImgPath().contains(";") == false)
-                        imgSrc = img.getImgPath();
-                }
-
-                //数据来源为指定路径.
-                if (img.getImgSrcType() == 1)
-                {
-                    //图片路径不为默认值
-                    imgSrc = img.getImgURL();
-                    if (imgSrc.contains("@"))
-                    {
-                        /*如果有变量*/
-                        imgSrc = bp.wf.Glo.DealExp(imgSrc, en, "");
-                    }
-                }
-
-                x = img.getX() + wtX;
-                // 由于火狐 不支持onerror 所以 判断图片是否存在
-                imgSrc = "icon.png";
-
-                sb.append("\t\n<div id=" + img.getMyPK() + " style='position:absolute;left:" + x + "px;top:" + y + "px;text-align:left;vertical-align:top' >");
-                if (DataType.IsNullOrEmpty(img.getLinkURL()) == false)
-                    sb.append("\t\n<a href='" + img.getLinkURL() + "' target=" + img.getLinkTarget() + " ><img src='" + imgSrc + "'  onerror=\"this.src='/DataUser/ICON/CCFlow/LogBig.png'\"  style='padding: 0px;margin: 0px;border-width: 0px;width:" + img.getW() + "px;height:" + img.getH() + "px;' /></a>");
-                else
-                    sb.append("\t\n<img src='" + imgSrc + "'  onerror=\"this.src='/DataUser/ICON/CCFlow/LogBig.png'\"  style='padding: 0px;margin: 0px;border-width: 0px;width:" + img.getW() + "px;height:" + img.getH() + "px;' />");
-                sb.append("\t\n</div>");
-                
-                continue;
-            }
-         
-
-           //  ////#region 二维码
-            
-            if (img.getHisImgAppType() == ImgAppType.QRCode)
-            {
-                x = img.getX() + wtX;
-                String pk = String.valueOf(en.getPKVal());
-                String myPK = frmID + "_" + img.getMyPK() + "_" + pk;
-                FrmEleDB frmEleDB = new FrmEleDB();
-                frmEleDB.setMyPK(myPK);
-                if (frmEleDB.RetrieveFromDBSources() == 0)
-                {
-                    //生成二维码
-                }
-
-                sb.append("\t\n<DIV id=" + img.getMyPK() + " style='position:absolute;left:" + x + "px;top:" + y + "px;text-align:left;vertical-align:top' >");
-                sb.append("\t\n<img src='" + frmEleDB.getTag2() + "' style='padding: 0px;margin: 0px;border-width: 0px;width:" + img.getW() + "px;height:" + img.getH() + "px;' />");
-                sb.append("\t\n</DIV>");
-
-                continue;
-            }
-          //  ////#endregion
-
-           //  ////#region 电子签章
-            //图片类型
-            if (img.getHisImgAppType() == ImgAppType.Seal)
-            {
-                //获取登录人岗位
-                String stationNo = "";
-                //签章对应部门
-                String fk_dept = WebUser.getFK_Dept();
-                //部门来源类别
-                String sealType = "0";
-                //签章对应岗位
-                String fk_station = img.getTag0();
-                //表单字段
-                String sealField = "";
-                String sql = "";
-
-                //重新加载 可能有缓存
-                img.RetrieveFromDBSources();
-                //0.不可以修改，从数据表中取，1可以修改，使用组合获取并保存数据
-                if ((img.getIsEdit() == 1))
-                {
-                   //  ////#region 加载签章
-                    //如果设置了部门与岗位的集合进行拆分
-                    if (!DataType.IsNullOrEmpty(img.getTag0()) && img.getTag0().contains("^") && img.getTag0().split("^").length == 4)
-                    {
-                        fk_dept = img.getTag0().split("^")[0];
-                        fk_station = img.getTag0().split("^")[1];
-                        sealType = img.getTag0().split("^")[2];
-                        sealField = img.getTag0().split("^")[3];
-                        //如果部门没有设定，就获取部门来源
-                        if (fk_dept == "all")
-                        {
-                            //默认当前登陆人
-                            fk_dept = WebUser.getFK_Dept();
-                            //发起人
-                            if (sealType == "1")
-                            {
-                                sql = "SELECT FK_Dept FROM WF_GenerWorkFlow WHERE WorkID=" + en.GetValStrByKey("OID");
-                                fk_dept = DBAccess.RunSQLReturnString(sql);
-                            }
-                            //表单字段
-                            if (sealType == "2" && !DataType.IsNullOrEmpty(sealField))
-                            {
-                                //判断字段是否存在
-                                for (MapAttr attr: mapAttrs.ToJavaList())
-                                {
-                                    if (attr.getKeyOfEn() == sealField)
-                                    {
-                                        fk_dept = en.GetValStrByKey(sealField);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    //判断本部门下是否有此人
-                    sql = String.format(" select FK_Station from Port_DeptStation where FK_Dept ='{0}' and FK_Station in (select FK_Station from " + bp.wf.Glo.getEmpStation()+ " where FK_Emp='{1}')", fk_dept, WebUser.getNo());
-                    DataTable dt = DBAccess.RunSQLReturnTable(sql);
-                    for (DataRow dr : dt.Rows)
-                    {
-                        if (fk_station.contains(dr.getValue(0).toString() + ","))
-                        {
-                            stationNo = dr.getValue(0).toString();
-                            break;
-                        }
-                    }
-                    ////#endregion 加载签章
-
-                    imgSrc = CCFlowAppPath + "DataUser/Seal/" + fk_dept + "_" + stationNo + ".png";
-                    //设置主键
-                    String myPK = DataType.IsNullOrEmpty(img.getEnPK()) ? "seal" : img.getEnPK();
-                    myPK = myPK + "_" + en.GetValStrByKey("OID") + "_" + img.getMyPK();
-
-                   
-
-                    //添加控件
-                    x = img.getX() + wtX;
-                    sb.append("\t\n<DIV id=" + img.getMyPK() + " style='position:absolute;left:" + x + "px;top:" + y + "px;text-align:left;vertical-align:top' >");
-                    sb.append("\t\n<img src='" + imgSrc + "' onerror=\"javascript:this.src='" + appPath + "DataUser/Seal/Def.png'\" style=\"padding: 0px;margin: 0px;border-width: 0px;width:" + img.getW() + "px;height:" + img.getH() + "px;\" />");
-                    sb.append("\t\n</DIV>");
-                }
-                else
-                {
-                }
-            }
-         //   ////#endregion
-        }
-
-
-        FrmBtns btns = mapData.getFrmBtns();
-        for (FrmBtn btn : btns.ToJavaList())
-        {
-            x = btn.getX() + wtX;
-            sb.append("\t\n<DIV id=u2 style='position:absolute;left:" + x + "px;top:" + btn.getY() + "px;text-align:left;' >");
-            sb.append("\t\n<span >");
-
-            String doDoc = bp.wf.Glo.DealExp(btn.getEventContext(), en, null);
-            doDoc = doDoc.replaceAll("~", "'");
-            switch (btn.getHisBtnEventType())
-            {
-                case Disable:
-                    sb.append("<input type=button class=Btn value='" + btn.getLab().replace("&nbsp;", " ") + "' disabled='disabled'/>");
-                    break;
-                case RunExe:
-                case RunJS:
-                    sb.append("<input type=button class=Btn value=\"" +btn.getLab().replace("&nbsp;", " ") + "\" enable=true onclick=\"" + doDoc + "\" />");
-                    break;
-                default:
-                    sb.append("<input type=button value='" + btn.getLab() + "' />");
-                    break;
-            }
-            sb.append("\t\n</span>");
-            sb.append("\t\n</DIV>");
-        }
-			/// 输出 rb.
-        FrmRBs myrbs = mapData.getFrmRBs();
-        for (FrmRB rb : myrbs.ToJavaList())
-        {
-            x = rb.getX() + wtX;
-            sb.append("<DIV id='F" + rb.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + rb.getY() + "px; height:16px;text-align: left;word-break: keep-all;' >");
-            sb.append("<span style='word-break: keep-all;font-size:12px;'>");
-
-            if (rb.getIntKey() == en.GetValIntByKey(rb.getKeyOfEn()))
-                sb.append("<b>" + rb.getLab() + "</b>");
-            else
-                sb.append(rb.getLab());
-
-            sb.append("</span>");
-            sb.append("</DIV>");
-        }
-
-			///输出数据控件.
-		int fSize = 0;
-		for (MapAttr attr : mapAttrs.ToJavaList())
-		{
-			//处理隐藏字段，如果是不可见并且是启用的就隐藏.
-			if (attr.getUIVisible()== false && attr.getUIIsEnable())
-			{
-				sb.append("<input type=text value='" + en.GetValStrByKey(attr.getKeyOfEn()) + "' style='display:none;' />");
-				continue;
-			}
-
-			if (attr.getUIVisible()== false)
-			{
-				continue;
-			}
-
-			x = attr.getX() + wtX;
-			if (attr.getLGType()== FieldTypeS.Enum || attr.getLGType()== FieldTypeS.FK)
-			{
-				sb.append("<DIV id='F" + attr.getKeyOfEn() + "' style='position:absolute; left:" + x + "px; top:" + attr.getY() + "px;  height:16px;text-align: left;word-break: keep-all;' >");
-			}
-			else
-			{
-				sb.append("<DIV id='F" + attr.getKeyOfEn() + "' style='position:absolute; left:" + x + "px; top:" + attr.getY() + "px; width:" + attr.getUIWidth() + "px; height:16px;text-align: left;word-break: keep-all;' >");
-			}
-
-			sb.append("<span>");
-
-
-				///add contrals.
-			if (attr.getMaxLen() >= 3999 && attr.getTBModel() == TBModel.RichText)
-			{
-				sb.append(en.GetValStrByKey(attr.getKeyOfEn()));
-
-				sb.append("</span>");
-				sb.append("</DIV>");
-				continue;
-			}
-
-
-				///通过逻辑类型，输出相关的控件.
-			String text = "";
-			switch (attr.getLGType())
-			{
-				case Normal: // 输出普通类型字段.
-					if (attr.getIsSigan() == true)
-					{
-						text = en.GetValStrByKey(attr.getKeyOfEn());
-						text = SignPic(text);
-						break;
-					}
-					if (attr.getMyDataType() == 1 && attr.getUIContralType().getValue()== DataType.AppString)
-					{
-						if (attrs.Contains(attr.getKeyOfEn() + "Text") == true)
-						{
-							text = en.GetValRefTextByKey(attr.getKeyOfEn());
-						}
-						if (DataType.IsNullOrEmpty(text))
-						{
-							if (attrs.Contains(attr.getKeyOfEn() + "T") == true)
-							{
-								text = en.GetValStrByKey(attr.getKeyOfEn() + "T");
-							}
-						}
-					}
-					else
-					{
-						text = en.GetValStrByKey(attr.getKeyOfEn());
-					}
-					break;
-				case Enum:
-					if (attr.getUIContralType()== UIContralType.CheckBok)
-					{
-						String s = en.GetValStrByKey(attr.getKeyOfEn()) + ",";
-						SysEnums enums = new SysEnums(attr.getUIBindKey());
-						for (SysEnum se : enums.ToJavaList())
-						{
-							if (s.indexOf(se.getIntKey() + ",") != -1)
-							{
-								text += se.getLab() + " ";
-							}
-						}
-
-					}
-					else
-					{
-						text = en.GetValRefTextByKey(attr.getKeyOfEn());
-					}
-					break;
-				case FK:
-					text = en.GetValRefTextByKey(attr.getKeyOfEn());
-					break;
-				default:
-					break;
-			}
-
-				/// 通过逻辑类型，输出相关的控件.
-
-
-				/// add contrals.
-
-
-			if (attr.getIsBigDoc())
-			{
-				//这几种字体生成 pdf都乱码
-				text = text.replace("仿宋,", "宋体,");
-				text = text.replace("仿宋;", "宋体;");
-				text = text.replace("仿宋\"", "宋体\"");
-				text = text.replace("黑体,", "宋体,");
-				text = text.replace("黑体;", "宋体;");
-				text = text.replace("黑体\"", "宋体\"");
-				text = text.replace("楷体,", "宋体,");
-				text = text.replace("楷体;", "宋体;");
-				text = text.replace("楷体\"", "宋体\"");
-				text = text.replace("隶书,", "宋体,");
-				text = text.replace("隶书;", "宋体;");
-				text = text.replace("隶书\"", "宋体\"");
-			}
-
-			if (attr.getMyDataType() == DataType.AppBoolean)
-			{
-				if (DataType.IsNullOrEmpty(text) || text.equals("0"))
-				{
-					text = "[&#10005]" + attr.getName();
-				}
-				else
-				{
-					text = "[&#10004]" + attr.getName();
-				}
-			}
-
-			sb.append(text);
-
-			sb.append("</span>");
-			sb.append("</DIV>");
-		}
-
-
-
-
-			/// 输出数据控件.
-
-
-			///输出明细.
-		int dtlsCount = 0;
-		MapDtls dtls = new MapDtls(frmID);
-		for (MapDtl dtl : dtls.ToJavaList())
-		{
-			if (dtl.getIsView() == false)
-			{
-				continue;
-			}
-
-			dtlsCount++;
-			x = dtl.getX() + wtX;
-			float y = dtl.getY();
-
-			sb.append("<DIV id='Fd" + dtl.getNo() + "' style='position:absolute; left:" + x + "px; top:" + y + "px; width:" + dtl.getW() + "px; height:" + dtl.getH() + "px;text-align: left;' >");
-			sb.append("<span>");
-
-			MapAttrs attrsOfDtls = new MapAttrs(dtl.getNo());
-
-			sb.append("<table style='wdith:100%' >");
-			sb.append("<tr>");
-			for (MapAttr item : attrsOfDtls.ToJavaList())
-			{
-				if (item.getKeyOfEn().equals("OID"))
-				{
-					continue;
-				}
-				if (item.getUIVisible()== false)
-				{
-					continue;
-				}
-
-				sb.append("<th class='DtlTh'>" + item.getName() + "</th>");
-			}
-			sb.append("</tr>");
-			/// 输出标题.
-
-
-			///输出数据.
-			GEDtls gedtls = new GEDtls(dtl.getNo());
-			gedtls.Retrieve(GEDtlAttr.RefPK, workid, "OID");
-			for (GEDtl gedtl : gedtls.ToJavaList())
-			{
-				sb.append("<tr>");
-
-				for (MapAttr item : attrsOfDtls.ToJavaList())
-				{
-					if (item.getKeyOfEn().equals("OID") || item.getUIVisible()== false)
-					{
-						continue;
-					}
-
-					if (item.getUIContralType()== UIContralType.DDL)
-					{
-						sb.append("<td class='DtlTd'>" + gedtl.GetValRefTextByKey(item.getKeyOfEn()) + "</td>");
-						continue;
-					}
-
-					if (item.getIsNum())
-					{
-						sb.append("<td class='DtlTd' style='text-align:right' >" + gedtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
-						continue;
-					}
-
-					sb.append("<td class='DtlTd'>" + gedtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
-				}
-				sb.append("</tr>");
-			}
-			/// 输出数据.
-
-
-			sb.append("</table>");
-
-			//string src = "";
-			//if (dtl.HisEditModel == EditModel.TableModel)
-			//{
-			//    src = SystemConfig.getCCFlowWebPath() + "WF/CCForm/Dtl.htm?EnsName=" + dtl.No + "&RefPKVal=" + en.PKVal + "&IsReadonly=1";
-			//}
-			//else
-			//{
-			//    src = appPath + "WF/CCForm/DtlCard.htm?EnsName=" + dtl.No + "&RefPKVal=" + en.PKVal + "&IsReadonly=1";
-			//}
-
-			//sb.Append("<iframe ID='F" + dtl.No + "' onload= 'F" + dtl.No + "load();'  src='" + src + "' frameborder=0  style='position:absolute;width:" + dtl.W + "px; height:" + dtl.H + "px;text-align: left;'  leftMargin='0'  topMargin='0' scrolling=auto /></iframe>");
-
-			sb.append("</span>");
-			sb.append("</DIV>");
-		}
-
-			/// 输出明细.
-
-
-			///审核组件
-		if (flowNo != null)
-		{
-			NodeWorkCheck fwc = new NodeWorkCheck(frmID);
-			if (fwc.getHisFrmWorkCheckSta() != FrmWorkCheckSta.Disable)
-			{
-				x = fwc.getFwcX() + wtX;
-				sb.append("<DIV id='DIVWC" + fwc.getNo() + "' style='position:absolute; left:" + x + "px; top:" + fwc.getFwcY() + "px; width:" + fwc.getFwcW() + "px; height:" + fwc.getFwcH() + "px;text-align: left;' >");
-				sb.append("<table   style='border: 1px outset #C0C0C0;padding: inherit; margin: 0;border-collapse:collapse;width:100%;' >");
-
-
-					///生成审核信息.
-				if (flowNo != null)
-				{
-					String sql = "SELECT EmpFrom, EmpFromT,RDT,Msg,NDFrom,NDFromT FROM ND" + Integer.parseInt(flowNo) + "Track WHERE WorkID=" + workid + " AND ActionType=" + ActionType.WorkCheck.getValue() + " ORDER BY RDT ";
-					DataTable dt = DBAccess.RunSQLReturnTable(sql);
-
-					//获得当前待办的人员,把当前审批的人员排除在外,不然就有默认同意的意见可以打印出来.
-					sql = "SELECT FK_Emp, FK_Node FROM WF_GenerWorkerList WHERE IsPass!=1 AND WorkID=" + workid;
-					DataTable dtOfTodo = DBAccess.RunSQLReturnTable(sql);
-
-					for (DataRow dr : dt.Rows)
-					{
-
-
-							///排除正在审批的人员.
-						String nodeID = dr.getValue("NDFrom").toString();
-						String empFrom = dr.getValue("EmpFrom").toString();
-						if (dtOfTodo.Rows.size() != 0)
-						{
-							boolean isHave = false;
-							for (DataRow mydr : dtOfTodo.Rows)
-							{
-								if (!mydr.getValue("FK_Node").toString().equals(nodeID))
-								{
-									continue;
-								}
-
-								if (!mydr.getValue("FK_Emp").toString().equals(empFrom))
-								{
-									continue;
-								}
-								isHave = true;
-							}
-
-							if (isHave == true)
-							{
-								continue;
-							}
-						}
-
-							/// 排除正在审批的人员.
-
-						sb.append("<tr>");
-						sb.append("<td valign=middle style='border-style: solid;padding: 4px;text-align: left;color: #333333;font-size: 12px;border-width: 1px;border-color: #C2D5E3;' >" + dr.getValue("NDFromT") + "</td>");
-						String msg = dr.getValue("Msg").toString();
-
-						msg += "<br>";
-						msg += "<br>";
-						msg += "审核人:" + dr.getValue("EmpFromT") + " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期:" + dr.getValue("RDT").toString();
-
-						sb.append("<td colspan=3 valign=middle style='border-style: solid;padding: 4px;text-align: left;color: #333333;font-size: 12px;border-width: 1px;border-color: #C2D5E3;' >" + msg + "</td>");
-						sb.append("</tr>");
-					}
-				}
-				sb.append("</table>");
-
-					/// 生成审核信息.
-				sb.append("</DIV>");
-			}
-		}
-
-			/// 审核组件
-
-
-			///父子流程组件
-		if (flowNo != null)
-		{
-			FrmSubFlow subFlow = new FrmSubFlow(frmID);
-			if (subFlow.getHisFrmSubFlowSta() != FrmSubFlowSta.Disable)
-			{
-				x = subFlow.getSfX() + wtX;
-				sb.append("<DIV id='DIVWC" + subFlow.getNo() + "' style='position:absolute; left:" + x + "px; top:" + subFlow.getSfY() + "px; width:" + subFlow.getSfW() + "px; height:" + subFlow.getSfH() + "px;text-align: left;' >");
-				sb.append("<span>");
-
-				String src = appPath + "WF/WorkOpt/SubFlow.htm?s=2";
-				String fwcOnload = "";
-
-				if (subFlow.getHisFrmSubFlowSta() == FrmSubFlowSta.Readonly)
-				{
-					src += "&DoType=View";
-				}
-
-				src += "&r=q";
-				sb.append("<iframe ID='FSF" + subFlow.getNo() + "' " + fwcOnload + "  src='" + src + "' frameborder=0 style='padding:0px;border:0px;'  leftMargin='0'  topMargin='0' width='" + subFlow.getSfW() + "' height='" + subFlow.getSfH() + "'   scrolling=auto/></iframe>");
-
-				sb.append("</span>");
-				sb.append("</DIV>");
-			}
-		}
-
-			/// 父子流程组件
-
-
-			///输出附件
-		FrmAttachments aths = new FrmAttachments(frmID);
-		
-		for (FrmAttachment ath : aths.ToJavaList())
-		{
-
-			if (ath.getUploadType() == AttachmentUploadType.Single)
-			{
-				/* 单个文件 */
-				FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, String.valueOf(workid), ath.getMyPK());
-				Object tempVar = athDBs.GetEntityByKey(FrmAttachmentDBAttr.FK_FrmAttachment, ath.getMyPK());
-				FrmAttachmentDB athDB = tempVar instanceof FrmAttachmentDB ? (FrmAttachmentDB)tempVar : null;
-				x = ath.getX() + wtX;
-				float y = ath.getY();
-				sb.append("<DIV id='Fa" + ath.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + y + "px; text-align: left;float:left' >");
-				//  sb.Append("<span>");
-				sb.append("<DIV>");
-
-				sb.append("附件没有转化:" + athDB.getFileName());
-
-
-				sb.append("</DIV>");
-				sb.append("</DIV>");
-			}
-
-			if (ath.getUploadType() == AttachmentUploadType.Multi)
-			{
-				x = ath.getX() + wtX;
-				sb.append("<DIV id='Fd" + ath.getMyPK() + "' style='position:absolute; left:" + x + "px; top:" + ath.getY() + "px; width:" + ath.getW() + "px; height:" + ath.getH() + "px;text-align: left;' >");
-				sb.append("<span>");
-				sb.append("<ul>");
-
-				//判断是否有这个目录.
-				if ((new File(path + "/pdf/")).isDirectory() == false)
-				{
-					(new File(path + "/pdf/")).mkdirs();
-				}
-
-				//文件加密
-				boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
-				FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, String.valueOf(workid), ath.getMyPK());
-
-				for (FrmAttachmentDB item : athDBs.ToJavaList())
-				{
-					//获取文件是否加密
-					boolean isEncrypt = item.GetParaBoolen("IsEncrypt");
-					if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
-					{
-						try
-						{
-							String toFile = path + "/pdf/" + item.getFileName();
-							if ((new File(toFile)).isFile() == false)
-							{
-								//把文件copy到,
-								////获取文件是否加密
-								
-								String file = item.GenerTempFile(ath.getAthSaveWay());
-								String fileTempDecryPath = file;
-								if (fileEncrypt == true && isEncrypt == true)
-								{
-									fileTempDecryPath = file + ".tmp";
-									AesEncodeUtil.decryptFile(file, fileTempDecryPath);
-
-								}
-
-								Files.copy(Paths.get(fileTempDecryPath), Paths.get(toFile), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
-							}
-
-							sb.append("<li><a href='" + item.getFileName() + "'>" + item.getFileName() + "</a></li>");
-						}
-						catch (RuntimeException ex)
-						{
-							sb.append("<li>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</li>");
-						}
-					}
-
-					if (ath.getAthSaveWay() == AthSaveWay.IISServer)
-					{
-						try
-						{
-							String toFile = path + "/pdf/" + item.getFileName();
-							if ((new File(toFile)).isFile() == false)
-							{
-								//把文件copy到,
-								String fileTempDecryPath = item.getFileFullName();
-								if (fileEncrypt == true && isEncrypt == true)
-								{
-									fileTempDecryPath = item.getFileFullName() + ".tmp";
-									AesEncodeUtil.decryptFile(item.getFileFullName(), fileTempDecryPath);
-
-								}
-
-								//把文件copy到,
-								Files.copy(Paths.get(fileTempDecryPath), Paths.get(path + "/pdf/" + item.getFileName()), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
-							}
-							sb.append("<li><a href='" + item.getFileName() + "'>" + item.getFileName() + "</a></li>");
-						}
-						catch (RuntimeException ex)
-						{
-							sb.append("<li>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</li>");
-						}
-					}
-
-				}
-				sb.append("</ul>");
-
-				sb.append("</span>");
-				sb.append("</DIV>");
-			}
-		}
-
-			/// 输出附件.
-
-		return sb;
-	}
-
-	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path,
-			String flowNo, String FK_Node, String basePath) throws Exception {
-		return GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, FK_Node, basePath, NodeFormType.FoolForm);
-	}
-
-	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path,
-			String flowNo, String FK_Node) throws Exception {
-		return GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, FK_Node, null, NodeFormType.FoolForm);
-	}
-
-	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path,
-			String flowNo) throws Exception {
-		return GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, null, null, NodeFormType.FoolForm);
+	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path, String flowNo) throws Exception {
+		return GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, null, NodeFormType.FoolForm);
 	}
 
 	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path) throws Exception {
-		return GenerHtmlOfFool(mapData, frmID, workid, en, path, null, null, null, NodeFormType.FoolForm);
+		return GenerHtmlOfFool(mapData, frmID, workid, en, path, null, null, NodeFormType.FoolForm);
 	}
 
-
-	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path, String flowNo, String FK_Node, String basePath, NodeFormType formType) throws Exception
-	{
+//ORIGINAL LINE: private static StringBuilder GenerHtmlOfFool(MapData mapData, string frmID, Int64 workid, Entity en, string path, string flowNo = null, string FK_Node = null, NodeFormType formType = NodeFormType.FoolForm)
+	private static StringBuilder GenerHtmlOfFool(MapData mapData, String frmID, long workid, Entity en, String path, String flowNo, String FK_Node, NodeFormType formType) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		//字段集合.
 		MapAttrs mapAttrs = new MapAttrs(frmID);
@@ -849,7 +75,16 @@ public class MakeForm2Html {
 					frmIDs += "'ND" + dr.getValue(0).toString() + "',";
 				}
 			}
-			frmIDs = frmIDs.substring(0, frmIDs.length() - 1);
+
+			if (frmIDs.equals(""))
+			{
+				frmIDs = "'" + mapData.getNo() + "'";
+			}
+			else
+			{
+				frmIDs = frmIDs.substring(0, frmIDs.length() - 1);
+			}
+
 			GenerWorkFlow gwf = new GenerWorkFlow(workid);
 			if (gwf.getWFState() == WFState.Complete)
 			{
@@ -869,14 +104,14 @@ public class MakeForm2Html {
 
 		//生成表头.
 		String frmName = mapData.getName();
-		if (SystemConfig.getAppSettings().get("CustomerNo").equals("TianYe"))
+		if (bp.difference.SystemConfig.getAppSettings().get("CustomerNo").equals("TianYe"))
 		{
 			frmName = "";
 		}
 
 		sb.append(" <table style='width:950px;height:auto;' >");
 
-		///生成头部信息.
+		///#region 生成头部信息.
 		sb.append("<tr>");
 
 		sb.append("<td colspan=4 >");
@@ -887,7 +122,7 @@ public class MakeForm2Html {
 
 		//二维码显示
 		boolean IsHaveQrcode = true;
-		if (SystemConfig.GetValByKeyBoolen("IsShowQrCode", false) == false)
+		if (bp.difference.SystemConfig.GetValByKeyBoolen("IsShowQrCode", false) == false)
 		{
 			IsHaveQrcode = false;
 		}
@@ -932,7 +167,7 @@ public class MakeForm2Html {
 		sb.append("</table>");
 
 		sb.append("</td>");
-		/// 生成头部信息.
+		///#endregion 生成头部信息.
 
 		if (DataType.IsNullOrEmpty(FK_Node) == false && DataType.IsNullOrEmpty(flowNo) == false)
 		{
@@ -944,11 +179,11 @@ public class MakeForm2Html {
 				if (gf == null)
 				{
 					gf = new GroupField();
-					gf.setOID( 100);
+					gf.setOID(100);
 					gf.setFrmID(nd.getNodeFrmID());
 					gf.setCtrlType("FWC");
 					gf.setCtrlID("FWCND" + nd.getNodeID());
-					gf.setIdx( 100);
+					gf.setIdx(100);
 					gf.setLab("审核信息");
 					gfs.AddEntity(gf);
 				}
@@ -966,7 +201,7 @@ public class MakeForm2Html {
 				sb.append(" </tr>");
 			}
 
-			///输出字段.
+			///#region 输出字段.
 			if (gf.getCtrlID().equals("") && gf.getCtrlType().equals(""))
 			{
 				boolean isDropTR = true;
@@ -978,26 +213,31 @@ public class MakeForm2Html {
 					{
 						continue;
 					}
+					if (attr.getGroupID() != attr.getGroupID())
+					{
+						continue;
+					}
+					//处理分组数据，非当前分组的数据不输出
 					if (attr.getGroupID() != gf.getOID())
 					{
 						continue;
 					}
-					
+
 					String text = "";
 
 					switch (attr.getLGType())
 					{
 						case Normal: // 输出普通类型字段.
-							if (attr.getMyDataType() == 1 && attr.getUIContralType().getValue()== DataType.AppString)
+							if (attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString)
 							{
 
-								if (attrs.Contains(attr.getKeyOfEn() + "Text") == true)
+								if (attrs.contains(attr.getKeyOfEn() + "Text") == true)
 								{
 									text = en.GetValRefTextByKey(attr.getKeyOfEn());
 								}
 								if (DataType.IsNullOrEmpty(text))
 								{
-									if (attrs.Contains(attr.getKeyOfEn() + "T") == true)
+									if (attrs.contains(attr.getKeyOfEn() + "T") == true)
 									{
 										text = en.GetValStrByKey(attr.getKeyOfEn() + "T");
 									}
@@ -1009,14 +249,14 @@ public class MakeForm2Html {
 								if (attr.getIsSigan() == true)
 								{
 									String SigantureNO = en.GetValStrByKey(attr.getKeyOfEn());
-									String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
+									String src = bp.difference.SystemConfig.getHostURL() + "/DataUser/Siganture/";
 									text = "<img src='" + src + SigantureNO + ".JPG' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.JPG\"' style='height:50px;'  alt='图片丢失' /> ";
 								}
 								else
 								{
 									text = en.GetValStrByKey(attr.getKeyOfEn());
 								}
-								if (attr.getIsRichText() == true)
+								if (attr.getTextModel() == 3)
 								{
 									text = text.replace("white-space: nowrap;", "");
 								}
@@ -1024,7 +264,7 @@ public class MakeForm2Html {
 
 							break;
 						case Enum:
-							if (attr.getUIContralType()== UIContralType.CheckBok)
+							if (attr.getUIContralType() == UIContralType.CheckBok)
 							{
 								String s = en.GetValStrByKey(attr.getKeyOfEn()) + ",";
 								SysEnums enums = new SysEnums(attr.getUIBindKey());
@@ -1083,7 +323,7 @@ public class MakeForm2Html {
 					{
 						isDropTR = true;
 						html += " <tr>";
-						html += " <td  class='FDesc' style='width:143px' >" + attr.getName() + "</td>";
+						html += " <td  class='FoolFrmFieldCtrl' style='width:143px' >" + attr.getName() + "</td>";
 						html += " <td  ColSpan=3 style='width:712.5px' class='FContext'>";
 						html += text;
 						html += " </td>";
@@ -1096,7 +336,7 @@ public class MakeForm2Html {
 					{
 						isDropTR = true;
 						html += " <tr>";
-						html += " <td ColSpan=4 class='FDesc' >" + attr.getName() + "</td>";
+						html += " <td ColSpan=4 class='FoolFrmFieldCtrl' >" + attr.getName() + "</td>";
 						html += " </tr>";
 						html += " <tr>";
 						html += " <td ColSpan=4 class='FContext'>";
@@ -1109,7 +349,7 @@ public class MakeForm2Html {
 					if (isDropTR == true)
 					{
 						html += " <tr>";
-						html += " <td class='FDesc' style='width:143px'>" + attr.getName() + "</td>";
+						html += " <td class='FoolFrmFieldCtrl' style='width:143px'>" + attr.getName() + "</td>";
 						html += " <td class='FContext' style='width:332px'>";
 						html += text;
 						html += " </td>";
@@ -1119,7 +359,7 @@ public class MakeForm2Html {
 
 					if (isDropTR == false)
 					{
-						html += " <td  class='FDesc'style='width:143px'>" + attr.getName() + "</td>";
+						html += " <td  class='FoolFrmFieldCtrl'style='width:143px'>" + attr.getName() + "</td>";
 						html += " <td class='FContext' style='width:332px'>";
 						html += text;
 						html += " </td>";
@@ -1131,9 +371,9 @@ public class MakeForm2Html {
 				sb.append(html); //增加到里面.
 				continue;
 			}
-			/// 输出字段.
+			///#endregion 输出字段.
 
-			///如果是从表.
+			///#region 如果是从表.
 			if (gf.getCtrlType().equals("Dtl"))
 			{
 				if (DataType.IsNullOrEmpty(gf.getCtrlID()) == true)
@@ -1150,7 +390,7 @@ public class MakeForm2Html {
 				{
 				}
 
-				///输出标题.
+				///#region 输出标题.
 				sb.append("<tr><td valign=top colspan=4 >");
 
 				sb.append("<table style='wdith:100%' >");
@@ -1161,7 +401,7 @@ public class MakeForm2Html {
 					{
 						continue;
 					}
-					if (item.getUIVisible()== false)
+					if (item.getUIVisible() == false)
 					{
 						continue;
 					}
@@ -1169,10 +409,10 @@ public class MakeForm2Html {
 					sb.append("<th stylle='width:" + item.getUIWidthInt() + "px;'>" + item.getName() + "</th>");
 				}
 				sb.append("</tr>");
-				/// 输出标题.
+				///#endregion 输出标题.
 
 
-				///输出数据.
+				///#region 输出数据.
 				GEDtls dtls = new GEDtls(gf.getCtrlID());
 				dtls.Retrieve(GEDtlAttr.RefPK, workid,"OID");
 				for (GEDtl dtl : dtls.ToJavaList())
@@ -1181,35 +421,34 @@ public class MakeForm2Html {
 
 					for (MapAttr item : attrsOfDtls.ToJavaList())
 					{
-						if (item.getKeyOfEn().equals("OID") || item.getUIVisible()== false)
+
+						if (item.getKeyOfEn().equals("OID") || item.getUIVisible() == false)
 						{
 							continue;
 						}
-
 						String text = "";
-
 						switch (item.getLGType())
 						{
 							case Normal: // 输出普通类型字段.
-								if (item.getMyDataType() == 1 && item.getUIContralType().getValue()== DataType.AppString)
+								if (item.getMyDataType() == 1 && item.getUIContralType().getValue() == DataType.AppString)
 								{
 
-									if (attrs.Contains(item.getKeyOfEn() + "Text") == true)
+									if (attrs.contains(item.getKeyOfEn() + "Text") == true)
 									{
-										text = en.GetValRefTextByKey(item.getKeyOfEn());
+										text = dtl.GetValRefTextByKey(item.getKeyOfEn());
 									}
 									if (DataType.IsNullOrEmpty(text))
 									{
-										if (attrs.Contains(item.getKeyOfEn() + "T") == true)
+										if (attrs.contains(item.getKeyOfEn() + "T") == true)
 										{
-											text = en.GetValStrByKey(item.getKeyOfEn() + "T");
+											text = dtl.GetValStrByKey(item.getKeyOfEn() + "T");
 										}
 									}
 								}
 								else
 								{
 
-									text = en.GetValStrByKey(item.getKeyOfEn());
+									text = dtl.GetValStrByKey(item.getKeyOfEn());
 
 									if (item.getIsRichText() == true)
 									{
@@ -1219,7 +458,7 @@ public class MakeForm2Html {
 
 								break;
 							case Enum:
-								if (item.getUIContralType()== UIContralType.CheckBok)
+								if (item.getUIContralType() == UIContralType.CheckBok)
 								{
 									String s = en.GetValStrByKey(item.getKeyOfEn()) + ",";
 									SysEnums enums = new SysEnums(item.getUIBindKey());
@@ -1234,18 +473,17 @@ public class MakeForm2Html {
 								}
 								else
 								{
-									text = en.GetValRefTextByKey(item.getKeyOfEn());
+									text = dtl.GetValRefTextByKey(item.getKeyOfEn());
 								}
 								break;
 							case FK:
-								text = en.GetValRefTextByKey(item.getKeyOfEn());
+								text = dtl.GetValRefTextByKey(item.getKeyOfEn());
 								break;
 							default:
 								break;
 						}
 
-
-						if (item.getUIContralType()== UIContralType.DDL)
+						if (item.getUIContralType() == UIContralType.DDL)
 						{
 							sb.append("<td>" + text + "</td>");
 							continue;
@@ -1261,7 +499,7 @@ public class MakeForm2Html {
 					}
 					sb.append("</tr>");
 				}
-				/// 输出数据.
+				///#endregion 输出数据.
 
 
 				sb.append("</table>");
@@ -1269,9 +507,9 @@ public class MakeForm2Html {
 				sb.append(" </td>");
 				sb.append(" </tr>");
 			}
-			/// 如果是从表.
+			///#endregion 如果是从表.
 
-			///如果是附件.
+			///#region 如果是附件.
 			if (gf.getCtrlType().equals("Ath"))
 			{
 				if (DataType.IsNullOrEmpty(gf.getCtrlID()) == true)
@@ -1280,8 +518,10 @@ public class MakeForm2Html {
 				}
 				FrmAttachment ath = new FrmAttachment();
 				ath.setMyPK(gf.getCtrlID());
-				if(ath.RetrieveFromDBSources()==0)
+				if (ath.RetrieveFromDBSources() == 0)
+				{
 					continue;
+				}
 				if (ath.getIsVisable() == false)
 				{
 					continue;
@@ -1291,7 +531,7 @@ public class MakeForm2Html {
 				sb.append("  <th colspan=4><b>" + gf.getLab() + "</b></th>");
 				sb.append(" </tr>");
 
-				FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, String.valueOf(workid), ath.getMyPK());
+				FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, String.valueOf(workid), ath.getMyPK(), workid);
 
 
 				if (ath.getUploadType() == AttachmentUploadType.Single)
@@ -1316,9 +556,9 @@ public class MakeForm2Html {
 					{
 						String fileTo = path + "/pdf/" + item.getFileName();
 						//加密信息
-						boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+						boolean fileEncrypt = bp.difference.SystemConfig.getIsEnableAthEncrypt();
 						boolean isEncrypt = item.GetParaBoolen("IsEncrypt");
-						///从ftp服务器上下载.
+						///#region 从ftp服务器上下载.
 						if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
 						{
 							try
@@ -1328,7 +568,7 @@ public class MakeForm2Html {
 									(new File(fileTo)).delete(); //rn "err@删除已经存在的文件错误,请检查iis的权限:" + ex.getMessage();
 								}
 
-								//把文件copy到,                                  
+								//把文件copy到,
 								String file = item.GenerTempFile(ath.getAthSaveWay());
 
 								String fileTempDecryPath = file;
@@ -1340,17 +580,17 @@ public class MakeForm2Html {
 								}
 								Files.copy(Paths.get(fileTempDecryPath), Paths.get(fileTo), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 
-								sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + FK_Node + "/" + workid + "/" + "pdf/" + item.getFileName() + "'>" + item.getFileName() + "</a></li>");
+								sb.append("<li><a href='" + bp.difference.SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + FK_Node + "/" + workid + "/" + "pdf/" + item.getFileName() + "'>" + item.getFileName() + "</a></li>");
 							}
-							catch (RuntimeException ex)
+							catch (RuntimeException | IOException ex)
 							{
 								sb.append("<li>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</li>");
 							}
 						}
-						/// 从ftp服务器上下载.
+						///#endregion 从ftp服务器上下载.
 
 
-						///从iis服务器上下载.
+						///#region 从iis服务器上下载.
 						if (ath.getAthSaveWay() == AthSaveWay.IISServer)
 						{
 							try
@@ -1367,7 +607,7 @@ public class MakeForm2Html {
 								//把文件copy到,
 								Files.copy(Paths.get(fileTempDecryPath), Paths.get(fileTo), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 
-								sb.append("<li><a href='" + SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/" + "pdf/" + item.getFileName() + "'>" + item.getFileName() + "</a></li>");
+								sb.append("<li><a href='" + bp.difference.SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/" + "pdf/" + item.getFileName() + "'>" + item.getFileName() + "</a></li>");
 							}
 							catch (RuntimeException ex)
 							{
@@ -1381,7 +621,7 @@ public class MakeForm2Html {
 				}
 
 			}
-			/// 如果是附件.
+			///#endregion 如果是附件.
 
 			//如果是IFrame页面
 			if (gf.getCtrlType().equals("Frame") && flowNo != null)
@@ -1399,7 +639,7 @@ public class MakeForm2Html {
 				String url = frame.getURL();
 
 				//替换URL的
-				url = url.replace("@basePath", basePath);
+				url = url.replace("@basePath", bp.difference.SystemConfig.getHostURLOfBS());
 				//替换系统参数
 				url = url.replace("@WebUser.No", WebUser.getNo());
 				url = url.replace("@WebUser.Name;", WebUser.getName());
@@ -1436,7 +676,7 @@ public class MakeForm2Html {
 			}
 
 
-			///审核组件
+			///#region 审核组件
 			if (gf.getCtrlType().equals("FWC") && flowNo != null)
 			{
 				NodeWorkCheck fwc = new NodeWorkCheck(frmID);
@@ -1455,7 +695,7 @@ public class MakeForm2Html {
 				if (bl)
 				{
 					String tTable = "ND" + Integer.parseInt(flowNo) + "Track";
-					sql = "SELECT a.No, a.SignType FROM Port_Emp a, " + tTable + " b WHERE a.No=b.EmpFrom AND B.WorkID=" + workid;
+					sql = "SELECT a." + bp.sys.base.Glo.getUserNo() + ", a.SignType FROM Port_Emp a, " + tTable + " b WHERE a." + Glo.UserNo + "=b.EmpFrom AND B.WorkID=" + workid;
 
 					dtTrack = DBAccess.RunSQLReturnTable(sql);
 					dtTrack.TableName = "SignType";
@@ -1471,7 +711,7 @@ public class MakeForm2Html {
 
 				String html = ""; // "<table style='width:100%;valign:middle;height:auto;' >";
 
-				///生成审核信息.
+				///#region 生成审核信息.
 				sql = "SELECT NDFromT,Msg,RDT,EmpFromT,EmpFrom,NDFrom FROM ND" + Integer.parseInt(flowNo) + "Track WHERE WorkID=" + workid + " AND ActionType=" + ActionType.WorkCheck.getValue() + " ORDER BY RDT ";
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
@@ -1481,7 +721,7 @@ public class MakeForm2Html {
 
 				for (DataRow dr : dt.Rows)
 				{
-					///排除正在审批的人员.
+					///#region 排除正在审批的人员.
 					String nodeID = dr.getValue("NDFrom").toString();
 					String empFrom = dr.getValue("EmpFrom").toString();
 					if (dtOfTodo.Rows.size() != 0)
@@ -1506,7 +746,7 @@ public class MakeForm2Html {
 							continue;
 						}
 					}
-					/// 排除正在审批的人员.
+					///#endregion 排除正在审批的人员.
 
 
 					html += "<tr>";
@@ -1527,9 +767,9 @@ public class MakeForm2Html {
 						String singType = "0";
 						for (DataRow drTrack : dtTrack.Rows)
 						{
-							if (drTrack.getValue("No").toString().equals(dr.getValue("EmpFrom").toString()))
+							if (drTrack.get("No").toString().equals(dr.getValue("EmpFrom").toString()))
 							{
-								singType = drTrack.getValue("SignType").toString();
+								singType = drTrack.get("SignType").toString();
 								break;
 							}
 						}
@@ -1542,7 +782,7 @@ public class MakeForm2Html {
 
 						if (singType.equals("1"))
 						{
-							String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
+							String src = bp.difference.SystemConfig.getHostURL() + "/DataUser/Siganture/";
 							empStrs = "<img src='" + src + dr.getValue("EmpFrom") + ".JPG' title='" + dr.getValue("EmpFromT") + "' style='height:60px;'  alt='图片丢失' /> ";
 						}
 
@@ -1552,7 +792,7 @@ public class MakeForm2Html {
 					html += " <td colspan=3 valign=middle style='font-size:18px'>" + msg + "</td>";
 					html += " </tr>";
 				}
-				/// 生成审核信息.
+				///#endregion 生成审核信息.
 
 				sb.append(" " + html);
 			}
@@ -1562,8 +802,243 @@ public class MakeForm2Html {
 		return sb;
 	}
 
-	private static String GetDtlHtmlByID(MapDtl dtl, long workid, float width) throws Exception
+
+//	private static void GenerHtmlOfDevelop(MapData mapData, String frmID, long workid, Entity en, String path, String indexFile, String flowNo)
+//	{
+//		GenerHtmlOfDevelop(mapData, frmID, workid, en, path, indexFile, flowNo, null);
+//	}
+//
+//	private static void GenerHtmlOfDevelop(MapData mapData, String frmID, long workid, Entity en, String path, String indexFile)
+//	{
+//		GenerHtmlOfDevelop(mapData, frmID, workid, en, path, indexFile, null, null);
+//	}
+
+//ORIGINAL LINE: private static void GenerHtmlOfDevelop(MapData mapData, string frmID, Int64 workid, Entity en, string path,string indexFile, string flowNo = null, string FK_Node = null)
+//	private static void GenerHtmlOfDevelop(MapData mapData, String frmID, long workid, Entity en, String path, String indexFile, String flowNo, String FK_Node) throws Exception {
+//		String htmlString = DataType.ReadTextFile(indexFile);
+//		HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+//
+//		//用于创建新节点
+//		HtmlAgilityPack.HtmlNode createnode = doc.DocumentNode.SelectSingleNode("/p");
+//
+//		//将字符串转换成 HtmlDocument
+//		doc.LoadHtml(htmlString);
+//		//字段集合.
+//		MapAttrs mapAttrs = new MapAttrs(frmID);
+//
+//		//获取审核组件的信息
+//		String sql = "SELECT NDFromT,Msg,RDT,EmpFromT,EmpFrom,NDFrom FROM ND" + Integer.parseInt(flowNo) + "Track WHERE WorkID=" + workid + " AND ActionType=" + ActionType.WorkCheck.getValue() + " ORDER BY RDT ";
+//		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+//
+//		HtmlAgilityPack.HtmlNode node = null;
+//		for (MapAttr attr : mapAttrs.ToJavaList())
+//		{
+//			//处理隐藏字段，如果是不可见并且是启用的就隐藏.
+//			if (attr.getUIVisible()== false)
+//			{
+//				continue;
+//			}
+//			String text = en.GetValStrByKey(attr.getKeyOfEn());
+//			//外键或者外部数据源
+//			if ((attr.getLGType() == FieldTypeS.Normal && attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL) || (attr.getLGType() == FieldTypeS.FK && attr.getMyDataType() == DataType.AppString))
+//			{
+//				if (mapAttrs.contains(attr.getKeyOfEn() + "Text") == true)
+//				{
+//					text = en.GetValRefTextByKey(attr.getKeyOfEn());
+//				}
+//				if (DataType.IsNullOrEmpty(text))
+//				{
+//					if (mapAttrs.contains(attr.getKeyOfEn() + "T") == true)
+//					{
+//						text = en.GetValStrByKey(attr.getKeyOfEn() + "T");
+//					}
+//				}
+//				node = doc.GetElementbyId("DDL_" + attr.getKeyOfEn());
+//				HtmlAgilityPack.HtmlNode parentNode = node.ParentNode;
+//				HtmlAgilityPack.HtmlNode newNode = HtmlAgilityPack.HtmlNode.CreateNode("<span>" + text + "</span>");
+//				parentNode.AppendChild(newNode);
+//				node.Remove();
+//				continue;
+//			}
+//			//枚举、枚举下拉框
+//			if (attr.getMyDataType() == DataType.AppInt && attr.getLGType() == FieldTypeS.Enum)
+//			{
+//				text = en.GetValStrByKey(attr.getKeyOfEn());
+//				//如果是下拉框
+//				if (attr.getUIContralType() == UIContralType.DDL)
+//				{
+//					text = en.GetValRefTextByKey(attr.getKeyOfEn() + "Text");
+//					node = doc.GetElementbyId("DDL_" + attr.getKeyOfEn());
+//					HtmlAgilityPack.HtmlNode parentNode = node.ParentNode;
+//					HtmlAgilityPack.HtmlNode newNode = HtmlAgilityPack.HtmlNode.CreateNode("<span>" + text + "</span>");
+//					parentNode.AppendChild(newNode);
+//					node.Remove();
+//					continue;
+//				}
+//				doc.GetElementbyId("RB_" + attr.getKeyOfEn() + "_" + text).SetAttributeValue("checked", "checked");
+//				continue;
+//			}
+//			//枚举复选框
+//			if (attr.getMyDataType() == DataType.AppString && attr.getLGType() == FieldTypeS.Enum)
+//			{
+//				text = en.GetValStrByKey(attr.getKeyOfEn());
+//				String s = en.GetValStrByKey(attr.getKeyOfEn()) + ",";
+//				SysEnums enums = new SysEnums(attr.getUIBindKey());
+//				for (SysEnum se : enums.ToJavaList())
+//				{
+//					if (s.indexOf(se.getIntKey() + ",") != -1)
+//					{
+//						doc.GetElementbyId("CB_" + attr.getKeyOfEn() + "_" + se.getIntKey()).SetAttributeValue("checked", "checked");
+//					}
+//					doc.GetElementbyId("CB_" + attr.getKeyOfEn() + "_" + se.getIntKey()).SetAttributeValue("disabled", "disabled");
+//				}
+//
+//				continue;
+//			}
+//
+//			if (attr.getMyDataType() == DataType.AppBoolean)
+//			{
+//				if (DataType.IsNullOrEmpty(text) || text.equals("0"))
+//				{
+//					doc.GetElementbyId("CB_" + attr.getKeyOfEn()).SetAttributeValue("checked", "");
+//				}
+//				else
+//				{
+//					doc.GetElementbyId("CB_" + attr.getKeyOfEn()).SetAttributeValue("checked", "checked");
+//				}
+//
+//				doc.GetElementbyId("CB_" + attr.getKeyOfEn()).SetAttributeValue("disabled", "disabled");
+//				continue;
+//
+//			}
+//			if (attr.getMyDataType() == DataType.AppString)
+//			{
+//				//签批字段
+//				if (attr.getUIContralType() == UIContralType.SignCheck)
+//				{
+//					node = doc.GetElementbyId("TB_" + attr.getKeyOfEn());
+//					DataTable mydt = GetWorkcheckInfoByNodeIDs(dt, text);
+//					if (mydt.Rows.size() == 0)
+//					{
+//						node.Remove();
+//						continue;
+//					}
+//					String _html = "<div style='min-height:17px;'>";
+//					_html += "<table style='width:100%'><tbody>";
+//					for (DataRow dr : mydt.Rows)
+//					{
+//						_html += "<tr><td style='border: 1px solid #D6DDE6;'>";
+//						_html += "<div style='word-wrap: break-word;line-height:20px;padding:5px;padding-left:50px;'><font color='#999'>" + dr.getValue(1).toString() + "</font></div>";
+//						_html += "<div style='text-align:right;padding-right:5px'>" + dr.getValue(3).toString() + "(" + dr.getValue(2).toString() + ")</div>";
+//						_html += "</td></tr>";
+//					}
+//					_html += "</tbody></table></div>";
+//					HtmlAgilityPack.HtmlNode parentNode = node.ParentNode;
+//					HtmlAgilityPack.HtmlNode newNode = HtmlAgilityPack.HtmlNode.CreateNode(_html);
+//					parentNode.AppendChild(newNode);
+//					node.Remove();
+//					continue;
+//				}
+//				//字段附件
+//				if (attr.getUIContralType() == UIContralType.AthShow)
+//				{
+//					continue;
+//				}
+//				//签名
+//				if (attr.IsSigan == true)
+//				{
+//					continue;
+//				}
+//
+//			}
+//
+//			if (attr.IsBigDoc)
+//			{
+//				//这几种字体生成 pdf都乱码
+//				text = text.replace("仿宋,", "宋体,");
+//				text = text.replace("仿宋;", "宋体;");
+//				text = text.replace("仿宋\"", "宋体\"");
+//				text = text.replace("黑体,", "宋体,");
+//				text = text.replace("黑体;", "宋体;");
+//				text = text.replace("黑体\"", "宋体\"");
+//				text = text.replace("楷体,", "宋体,");
+//				text = text.replace("楷体;", "宋体;");
+//				text = text.replace("楷体\"", "宋体\"");
+//				text = text.replace("隶书,", "宋体,");
+//				text = text.replace("隶书;", "宋体;");
+//				text = text.replace("隶书\"", "宋体\"");
+//				doc.GetElementbyId("TB_" + attr.getKeyOfEn()).InnerHtml = text;
+//				doc.GetElementbyId("TB_" + attr.getKeyOfEn()).SetAttributeValue("disabled", "disabled");
+//				continue;
+//			}
+//
+//
+//			//如果是字符串
+//			doc.GetElementbyId("TB_" + attr.getKeyOfEn()).SetAttributeValue("value", text);
+//			doc.GetElementbyId("TB_" + attr.getKeyOfEn()).SetAttributeValue("disabled", "disabled");
+//		}
+//		//获取从表
+//		MapDtls dtls = new MapDtls(frmID);
+//		for (MapDtl dtl : dtls)
+//		{
+//			if (dtl.IsView == false)
+//			{
+//				continue;
+//			}
+//			String html = GetDtlHtmlByID(dtl, workid, mapData.FrmW);
+//			node = doc.DocumentNode.SelectSingleNode("//img[@data-key='" + dtl.getNo() + "']");
+//			HtmlAgilityPack.HtmlNode parentNode = node.ParentNode;
+//			HtmlAgilityPack.HtmlNode newNode = HtmlAgilityPack.HtmlNode.CreateNode(html);
+//			parentNode.AppendChild(newNode);
+//			node.Remove();
+//		}
+//		//获取附件
+//		FrmAttachments aths = new FrmAttachments(frmID);
+//		for (FrmAttachment ath : aths)
+//		{
+//			if (ath.IsVisable == false)
+//			{
+//				continue;
+//			}
+//			node = doc.DocumentNode.SelectSingleNode("//img[@data-key='" + ath.MyPK + "']");
+//			String html = GetAthHtmlByID(ath, workid, path);
+//			HtmlAgilityPack.HtmlNode parentNode = node.ParentNode;
+//			HtmlAgilityPack.HtmlNode newNode = HtmlAgilityPack.HtmlNode.CreateNode(html);
+//			parentNode.AppendChild(newNode);
+//			node.Remove();
+//		}
+//		doc.Save(indexFile, Encoding.UTF8);
+//		return;
+//	}
+
+	private static DataTable GetWorkcheckInfoByNodeIDs(DataTable dt, String nodeId)
 	{
+		DataTable mydt = dt;
+		if (DataType.IsNullOrEmpty(nodeId) == true)
+		{
+			return mydt;
+		}
+		String[] nodeIds = nodeId.split("[,]", -1);
+		for (int i = 0;i < nodeIds.length; i++)
+		{
+			if (DataType.IsNullOrEmpty(nodeIds[i]) == true)
+			{
+				continue;
+			}
+			//获取到值
+			DataRow[] rows = dt.Select("NDFrom=" + nodeIds[i]);
+			for (DataRow dr : rows)
+			{
+				DataRow myrow = mydt.NewRow();
+				myrow.ItemArray = dr.ItemArray;
+				mydt.Rows.add(myrow);
+
+			}
+		}
+		return mydt;
+	}
+
+	private static String GetDtlHtmlByID(MapDtl dtl, long workid, float width) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		MapAttrs attrsOfDtls = new MapAttrs(dtl.getNo());
 		int columNum = 0;
@@ -1573,15 +1048,19 @@ public class MakeForm2Html {
 			{
 				continue;
 			}
-			if (item.getUIVisible()== false)
+			if (item.getUIVisible() == false)
 			{
 				continue;
 			}
 			columNum++;
 		}
-		int columWidth = (int)width * (100 / columNum);
+		if (columNum == 0)
+		{
+			return "";
+		}
+		int columWidth = (int)100 / columNum;
 
-		sb.append("<table style='wdith:100%' >");
+		sb.append("<table style='width:100%' >");
 		sb.append("<tr>");
 
 		for (MapAttr item : attrsOfDtls.ToJavaList())
@@ -1590,47 +1069,138 @@ public class MakeForm2Html {
 			{
 				continue;
 			}
-			if (item.getUIVisible()== false)
+			if (item.getUIVisible() == false)
 			{
 				continue;
 			}
-			sb.append("<th class='DtlTh' style='width:" + columWidth + "px'>" + item.getName() + "</th>");
+			sb.append("<th class='DtlTh' style='width:" + columWidth + "%'>" + item.getName() + "</th>");
 		}
 		sb.append("</tr>");
-		/// 输出标题.
+		///#endregion 输出标题.
 
 
-		///输出数据.
+		///#region 输出数据.
 		GEDtls gedtls = new GEDtls(dtl.getNo());
 		gedtls.Retrieve(GEDtlAttr.RefPK, workid, "OID");
 		for (GEDtl gedtl : gedtls.ToJavaList())
 		{
 			sb.append("<tr>");
 
-			for (MapAttr item : attrsOfDtls.ToJavaList())
+			for (MapAttr attr : attrsOfDtls.ToJavaList())
 			{
-				if (item.getKeyOfEn().equals("OID") || item.getUIVisible()== false)
+				//处理隐藏字段，如果是不可见并且是启用的就隐藏.
+				if (attr.getKeyOfEn().equals("OID") || attr.getUIVisible()== false)
 				{
 					continue;
 				}
 
-				if (item.getUIContralType()== UIContralType.DDL)
+				String text = "";
+
+				switch (attr.getLGType())
 				{
-					sb.append("<td class='DtlTd'>" + gedtl.GetValRefTextByKey(item.getKeyOfEn()) + "</td>");
-					continue;
+					case Normal: // 输出普通类型字段.
+						if (attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString)
+						{
+
+							if (attrsOfDtls.contains(attr.getKeyOfEn() + "Text") == true)
+							{
+								text = gedtl.GetValRefTextByKey(attr.getKeyOfEn());
+							}
+							if (DataType.IsNullOrEmpty(text))
+							{
+								if (attrsOfDtls.contains(attr.getKeyOfEn() + "T") == true)
+								{
+									text = gedtl.GetValStrByKey(attr.getKeyOfEn() + "T");
+								}
+							}
+						}
+						else
+						{
+							//判断是不是图片签名
+							if (attr.getIsSigan() == true)
+							{
+								String SigantureNO = gedtl.GetValStrByKey(attr.getKeyOfEn());
+								String src = bp.difference.SystemConfig.getHostURL() + "/DataUser/Siganture/";
+								text = "<img src='" + src + SigantureNO + ".JPG' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.JPG\"' style='height:50px;'  alt='图片丢失' /> ";
+							}
+							else
+							{
+								text = gedtl.GetValStrByKey(attr.getKeyOfEn());
+							}
+							if (attr.getTextModel() == 3)
+							{
+								text = text.replace("white-space: nowrap;", "");
+							}
+						}
+
+						break;
+					case Enum:
+						if (attr.getUIContralType() == UIContralType.CheckBok)
+						{
+							String s = gedtl.GetValStrByKey(attr.getKeyOfEn()) + ",";
+							SysEnums enums = new SysEnums(attr.getUIBindKey());
+							for (SysEnum se : enums.ToJavaList())
+							{
+								if (s.indexOf(se.getIntKey() + ",") != -1)
+								{
+									text += se.getLab() + " ";
+								}
+							}
+
+						}
+						else
+						{
+							text = gedtl.GetValRefTextByKey(attr.getKeyOfEn());
+						}
+						break;
+					case FK:
+						text = gedtl.GetValRefTextByKey(attr.getKeyOfEn());
+						break;
+					default:
+						break;
 				}
 
-				if (item.getIsNum())
+				if (attr.getIsBigDoc())
 				{
-					sb.append("<td class='DtlTd' style='text-align:right;' >" + gedtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
-					continue;
+					//这几种字体生成 pdf都乱码
+					text = text.replace("仿宋,", "宋体,");
+					text = text.replace("仿宋;", "宋体;");
+					text = text.replace("仿宋\"", "宋体\"");
+					text = text.replace("黑体,", "宋体,");
+					text = text.replace("黑体;", "宋体;");
+					text = text.replace("黑体\"", "宋体\"");
+					text = text.replace("楷体,", "宋体,");
+					text = text.replace("楷体;", "宋体;");
+					text = text.replace("楷体\"", "宋体\"");
+					text = text.replace("隶书,", "宋体,");
+					text = text.replace("隶书;", "宋体;");
+					text = text.replace("隶书\"", "宋体\"");
 				}
 
-				sb.append("<td class='DtlTd' >" + gedtl.GetValStrByKey(item.getKeyOfEn()) + "</td>");
+				if (attr.getMyDataType() == DataType.AppBoolean)
+				{
+					if (DataType.IsNullOrEmpty(text) || text.equals("0"))
+					{
+						text = "否";
+					}
+					else
+					{
+						text = "是";
+					}
+				}
+				if (attr.getIsNum())
+				{
+					sb.append("<td class='DtlTd' style='text-align:right;' >" + text + "</td>");
+				}
+				else
+				{
+					sb.append("<td class='DtlTd' >" + text + "</td>");
+				}
 			}
+
 			sb.append("</tr>");
 		}
-		/// 输出数据.
+		///#endregion 输出数据.
 
 
 		sb.append("</table>");
@@ -1640,90 +1210,98 @@ public class MakeForm2Html {
 		return sb.toString();
 	}
 
-	private static String GetAthHtmlByID(FrmAttachment ath, long workid, String path) throws IOException, Exception {
+	private static String GetAthHtmlByID(FrmAttachment ath, long workid, String path) throws Exception {
 		StringBuilder sb = new StringBuilder();
 
-		if (ath.getUploadType() == AttachmentUploadType.Multi) {
+		if (ath.getUploadType() == AttachmentUploadType.Multi)
+		{
 
-			// 判断是否有这个目录.
-			if ((new File(path + "/pdf/")).isDirectory() == false) {
+
+			//判断是否有这个目录.
+			if ((new File(path + "/pdf/")).isDirectory() == false)
+			{
 				(new File(path + "/pdf/")).mkdirs();
 			}
 
-			// 文件加密
-			boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
-			FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, String.valueOf(workid), ath.getMyPK());
+			//文件加密
+			boolean fileEncrypt = bp.difference.SystemConfig.getIsEnableAthEncrypt();
+			FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, String.valueOf(workid), ath.getMyPK(), workid);
 			sb.append("<table id = 'ShowTable' class='table' style='width:100%'>");
 			sb.append("<thead><tr style = 'border:0px;'>");
-			sb.append(
-					"<th style='width:50px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>序</th>");
-			sb.append(
-					"<th style = 'min -width:200px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>文件名</th>");
-			sb.append(
-					"<th style = 'width:50px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>大小KB</th>");
-			sb.append(
-					"<th style = 'width:120px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>上传时间</th>");
-			sb.append(
-					"<th style = 'width:80px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>上传人</th>");
+			sb.append("<th style='width:50px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>序</th>");
+			sb.append("<th style = 'min -width:200px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>文件名</th>");
+			sb.append("<th style = 'width:50px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>大小KB</th>");
+			sb.append("<th style = 'width:120px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>上传时间</th>");
+			sb.append("<th style = 'width:80px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>上传人</th>");
 			sb.append("</thead>");
 			sb.append("<tbody>");
 			int idx = 0;
-			for (FrmAttachmentDB item : athDBs.ToJavaList()) {
+			for (FrmAttachmentDB item : athDBs.ToJavaList())
+			{
 				idx++;
 				sb.append("<tr>");
 				sb.append("<td class='Idx'>" + idx + "</td>");
-				// 获取文件是否加密
+				//获取文件是否加密
 				boolean isEncrypt = item.GetParaBoolen("IsEncrypt");
-				if (ath.getAthSaveWay() == AthSaveWay.FTPServer) {
-					try {
+				if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
+				{
+					try
+					{
 						String toFile = path + "/pdf/" + item.getFileName();
-						if ((new File(toFile)).isFile() == false) {
-							// 获取文件是否加密
+						if ((new File(toFile)).isFile() == false)
+						{
+							//获取文件是否加密
 							String file = item.GenerTempFile(ath.getAthSaveWay());
 							String fileTempDecryPath = file;
-							if (fileEncrypt == true && isEncrypt == true) {
+							if (fileEncrypt == true && isEncrypt == true)
+							{
 								fileTempDecryPath = file + ".tmp";
 								AesEncodeUtil.decryptFile(file, fileTempDecryPath);
 
 							}
 
-							Files.copy(Paths.get(fileTempDecryPath), Paths.get(toFile),
-									StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+							Files.copy(Paths.get(fileTempDecryPath), Paths.get(toFile), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 						}
 
 						sb.append("<td  title='" + item.getFileName() + "'>" + item.getFileName() + "</td>");
-					} catch (RuntimeException ex) {
-						sb.append("<td>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage()
-								+ "}</font>)</td>");
+					}
+					catch (RuntimeException ex)
+					{
+						sb.append("<td>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</td>");
 					}
 				}
 
-				if (ath.getAthSaveWay() == AthSaveWay.IISServer) {
-					try {
+				if (ath.getAthSaveWay() == AthSaveWay.IISServer)
+				{
+					try
+					{
 						String toFile = path + "/pdf/" + item.getFileName();
-						if ((new File(toFile)).isFile() == false) {
-							// 把文件copy到,
+						if ((new File(toFile)).isFile() == false)
+						{
+							//把文件copy到,
 							String fileTempDecryPath = item.getFileFullName();
-							if (fileEncrypt == true && isEncrypt == true) {
+							if (fileEncrypt == true && isEncrypt == true)
+							{
 								fileTempDecryPath = item.getFileFullName() + ".tmp";
 								AesEncodeUtil.decryptFile(item.getFileFullName(), fileTempDecryPath);
 
 							}
 
-							// 把文件copy到,
-							Files.copy(Paths.get(fileTempDecryPath), Paths.get(path + "/pdf/" + item.getFileName()),
-									StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+							//把文件copy到,
+							Files.copy(Paths.get(fileTempDecryPath), Paths.get(path + "/pdf/" + item.getFileName()), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 						}
 						sb.append("<td>" + item.getFileName() + "</td>");
-					} catch (RuntimeException ex) {
-						sb.append("<td>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage()
-								+ "}</font>)</td>");
+					}
+					catch (RuntimeException ex)
+					{
+						sb.append("<td>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</td>");
 					}
 				}
 				sb.append("<td>" + item.getFileSize() + "KB</td>");
 				sb.append("<td>" + item.getRDT() + "</td>");
 				sb.append("<td>" + item.getRecName() + "</td>");
 				sb.append("</tr>");
+
 
 			}
 			sb.append("</tbody>");
@@ -1732,533 +1310,897 @@ public class MakeForm2Html {
 		}
 		return sb.toString();
 	}
-
 	/**
-	 * 树形表单转成PDF.
-	 * @throws Exception 
-	 */
+	 单表单，多表单打印PDF
 
-	public static String MakeCCFormToPDF(Node node, long workid, String flowNo, String fileNameFormat,
-			boolean urlIsHostUrl, String basePath) throws Exception {
-		return MakeCCFormToPDF(node, workid, flowNo, fileNameFormat, urlIsHostUrl, basePath, null);
-	}
-
-	
-	public static String MakeCCFormToPDF(Node node, long workid, String flowNo, String fileNameFormat,
-			boolean urlIsHostUrl, String basePath, String htmlString) throws Exception {
-		// 根据节点信息获取表单方案
+	 param node 节点属性
+	 param workid 流程实例WorkID
+	 param flowNo 流程编号
+	 param pdfName 生成PDF的名称
+	 param filePath 生成PDF的路径
+	 @return
+	 @exception Exception
+	*/
+	public static String MakeCCFormToPDF(Node node, long workid, String flowNo, String pdfName, String filePath) throws Exception {
+		//根据节点信息获取表单方案
 		MapData md = new MapData("ND" + node.getNodeID());
 		String resultMsg = "";
 		GenerWorkFlow gwf = null;
 
-		// 获取主干流程信息
-		if (flowNo != null) {
+		//获取主干流程信息
+		if (flowNo != null)
+		{
 			gwf = new GenerWorkFlow(workid);
 		}
 
-		// 存放信息地址
-		String hostURL = SystemConfig.GetValByKey("HostURL", "");
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/"
-				+ workid;
+		//存放信息地址
+		String hostURL = bp.difference.SystemConfig.GetValByKey("HostURL", "");
+		String path = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid;
 		String frmID = node.getNodeFrmID();
 
-		// 处理正确的文件名.
-		if (fileNameFormat == null) {
-			if (flowNo != null) {
-				fileNameFormat = DBAccess.RunSQLReturnStringIsNull(
-						"SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + workid, "" + String.valueOf(workid));
-			} else {
-				fileNameFormat = String.valueOf(workid);
+		//处理正确的文件名.
+		if (DataType.IsNullOrEmpty(pdfName) == true)
+		{
+			if (DataType.IsNullOrEmpty(flowNo) == false)
+			{
+				pdfName = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + workid, String.valueOf(workid));
+			}
+			else
+			{
+				pdfName = String.valueOf(workid);
 			}
 		}
 
-		if (DataType.IsNullOrEmpty(fileNameFormat) == true) {
-			fileNameFormat = String.valueOf(workid);
-		}
-
-		fileNameFormat = bp.da.DataType.PraseStringToFileName(fileNameFormat);
+		pdfName = DataType.PraseStringToFileName(pdfName);
 
 		Hashtable ht = new Hashtable();
 
-		if (node.getHisFormType().getValue() == NodeFormType.FoolForm.getValue()
-				|| node.getHisFormType().getValue() == NodeFormType.FreeForm.getValue()
-				|| node.getHisFormType().getValue() == NodeFormType.RefOneFrmTree.getValue()
-				|| node.getHisFormType().getValue() == NodeFormType.FoolTruck.getValue()
-				|| node.getHisFormType() == NodeFormType.Develop) {
+			///#region 单表单打印
+		if (node.getHisFormType().getValue() == NodeFormType.FoolForm.getValue() || node.getHisFormType().getValue() == NodeFormType.RefOneFrmTree.getValue() || node.getHisFormType().getValue() == NodeFormType.FoolTruck.getValue() || node.getHisFormType() == NodeFormType.Develop)
+		{
 			resultMsg = setPDFPath("ND" + node.getNodeID(), workid, flowNo, gwf);
-			if (resultMsg.indexOf("err@") != -1) {
+			if (resultMsg.indexOf("err@") != -1)
+			{
 				return resultMsg;
 			}
 
-			String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID()
-					+ "/" + workid + "/index.htm";
+			String billUrl = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/index.htm";
 
-			resultMsg = MakeHtmlDocument(frmID, workid, flowNo, fileNameFormat, urlIsHostUrl, path, billUrl,
-					"ND" + node.getNodeID(), basePath, htmlString);
+			//resultMsg = MakeHtmlDocument(frmID, workid, flowNo, path, billUrl, "ND" + node.getNodeID());
 
-			if (resultMsg.indexOf("err@") != -1) {
+			if (resultMsg.indexOf("err@") != -1)
+			{
 				return resultMsg;
 			}
 
-			ht.put("htm", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser") + "/InstancePacketOfData/" + "ND"
-					+ node.getNodeID() + "/" + workid + "/index.htm");
+			ht.put("htm", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser") + "/InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/index.htm");
+			//生成pdf文件
+			String pdfPath = filePath;
+			if (DataType.IsNullOrEmpty(pdfPath) == true)
+			{
+				pdfPath = path + "/pdf";
+			}
 
-			/// 把所有的文件做成一个zip文件.
-			// 生成pdf文件
-			String pdfPath = path + "/pdf";
-
-			if ((new File(pdfPath)).isDirectory() == false) {
+			if ((new File(pdfPath)).isDirectory() == false)
+			{
 				(new File(pdfPath)).mkdirs();
 			}
 
-			String pdfFile = pdfPath + "/" + fileNameFormat + ".pdf";
-			String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
-			try {
+			String pdfFile = pdfPath + "/" + pdfName + ".pdf";
+			String pdfFileExe = bp.difference.SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
+			try
+			{
 				Html2Pdf(pdfFileExe, billUrl, pdfFile);
-				if (urlIsHostUrl == false) {
-					ht.put("pdf",
-							SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + "ND"
-									+ node.getNodeID() + "/" + workid + "/pdf/"
-									+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
-				} else {
-					ht.put("pdf",
-							SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + "ND"
-									+ node.getNodeID() + "/" + workid + "/pdf/"
-									+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
+				if (DataType.IsNullOrEmpty(filePath) == true)
+				{
+					ht.put("pdf", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/pdf/" + pdfName + ".pdf");
 				}
-			} catch (RuntimeException ex) {
+				else
+				{
+					ht.put("pdf", pdfPath + "/" + DataType.PraseStringToUrlFileName(pdfName) + ".pdf");
+				}
+			}
+			catch (RuntimeException ex)
+			{
 				throw new RuntimeException("err@html转PDF错误:PDF的路径" + pdfPath + "可能抛的异常" + ex.getMessage());
 			}
 
-			// 生成压缩文件
-			String zipFile = path + "/../" + fileNameFormat + ".zip";
+			//生成压缩文件
+			String zipFile = path + "/../" + pdfName + ".zip";
 
 			File finfo = new File(zipFile);
-			ZipFilePath = finfo.getPath(); // 文件路径.
+			ZipFilePath =finfo.getName();
 
-		  File zipFileFile = new File(zipFile);
-    		try {
-    			while (zipFileFile.exists() == true) {
-    				zipFileFile.delete();
-    			}
-    			// 执行压缩.
-    			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
-    			fz.zip();
-    			ht.put("zip", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid +"/"+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
-    		} catch (Exception ex) {
-    			ht.put("zip","err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + pdfPath + ",zipFile=" + finfo.getName());
-    		}
-
-    		if (zipFileFile.exists() == false)
-    			ht.put("zip","err@压缩文件未生成成功,请在点击一次.");
-
-            
-            //把所有的文件做成一个zip文件.
-            
-            return bp.tools.Json.ToJsonEntitiesNoNameMode(ht);
-		}
-
-		if (node.getHisFormType().getValue() == NodeFormType.SheetTree.getValue()) {
-
-			// 生成pdf文件
-			String pdfPath = path + "/pdf";
-			String pdfTempPath = path + "/pdfTemp";
-
-			DataRow dr = null;
-			resultMsg = setPDFPath("ND" + node.getNodeID(), workid, flowNo, gwf);
-			if (resultMsg.indexOf("err@") != -1) {
-				return resultMsg;
+			File zipFileFile = new File(zipFile);
+			try {
+				while (zipFileFile.exists() == true) {
+					zipFileFile.delete();
+				}
+				// 执行压缩.
+				ZipCompress fz = new ZipCompress(zipFile, pdfPath);
+				fz.zip();
+				ht.put("zip", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid +"/"+ DataType.PraseStringToUrlFileName(pdfName) + ".zip");
+			} catch (Exception ex) {
+				ht.put("zip","err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + pdfPath + ",zipFile=" + finfo.getName());
 			}
+			if (zipFileFile.exists() == false)
+				ht.put("zip","err@压缩文件未生成成功,请在点击一次.");
 
-			// 获取绑定的表单
-			FrmNodes nds = new FrmNodes(node.getFK_Flow(), node.getNodeID());
-			for (FrmNode item : nds.ToJavaList()) {
-				// 判断当前绑定的表单是否启用
-				if (item.getFrmEnableRoleInt() == FrmEnableRole.Disable.getValue()) {
-					continue;
-				}
 
-				// 判断 who is pk
-				if (flowNo != null && item.getWhoIsPK() == WhoIsPK.PWorkID) // 如果是父子流程
-				{
-					workid = gwf.getPWorkID();
-				}
-				// 获取表单的信息执行打印
-				String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID()
-						+ "/" + workid + "/" + item.getFK_Frm() + "index.htm";
-				resultMsg = MakeHtmlDocument(item.getFK_Frm(), workid, flowNo, fileNameFormat, urlIsHostUrl, path,
-						billUrl, "ND" + node.getNodeID(), basePath);
-
-				if (resultMsg.indexOf("err@") != -1) {
-					return resultMsg;
-				}
-
-				ht.put("htm_" + item.getFK_Frm(),
-						SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "/InstancePacketOfData/" + "ND"
-								+ node.getNodeID() + "/" + workid + "/" + item.getFK_Frm() + "index.htm");
-
-				/// 把所有的文件做成一个zip文件.
-				if ((new File(pdfTempPath)).isDirectory() == false) {
-					(new File(pdfTempPath)).mkdirs();
-				}
-
-				fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
-				String pdfFormFile = pdfTempPath + "/" + item.getFK_Frm() + ".pdf";
-				String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
-				try {
-					Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-
-				} catch (RuntimeException ex) {
-					/* 有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
-					Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-				}
-
-			}
-
-			// pdf合并
-			 String pdfFile = pdfPath + "/" + fileNameFormat + ".pdf"; 
-    		//开始合并处理
-    		 if (new File(pdfPath).exists() == false)
-	        	 new File(pdfPath).mkdirs();
-    		 
-    		 PDFMergerUtility merger=new PDFMergerUtility();
-    		 String[] fileInFolder=BaseFileUtils.getFiles(pdfTempPath);
-    		 for(int i=0;i<fileInFolder.length;i++){
-    			merger.addSource(fileInFolder[i]);
-    		  }
-    		 merger.setDestinationFileName(pdfFile);
-    		 merger.mergeDocuments();
-    		 
-    		 //合并完删除文件夹
-    		 BaseFileUtils.deleteDirectory(pdfTempPath);
-    		 if (urlIsHostUrl == false)
-    			 ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS","../../DataUser/") + "InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
-             else
-            	 ht.put("pdf", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/pdf/" + DataType.PraseStringToUrlFileName(fileNameFormat) + ".pdf");
-    		
-    		//生成压缩文件
-             String zipFile = path + "/" + fileNameFormat + ".zip";
-
-             File finfo = new File(zipFile);
-             ZipFilePath =finfo.getName();
-             
-             File zipFileFile = new File(zipFile);
-     		try {
-     			while (zipFileFile.exists() == true) {
-     				zipFileFile.delete();
-     			}
-     			// 执行压缩.
-     			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
-     			fz.zip();
-     			ht.put("zip", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid +"/"+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
-     		} catch (Exception ex) {
-     			ht.put("zip","err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + pdfPath + ",zipFile=" + finfo.getName());
-     		}
-
-     		if (zipFileFile.exists() == false)
-     			ht.put("zip","err@压缩文件未生成成功,请在点击一次.");
-     		
-     		
 
 			return bp.tools.Json.ToJsonEntitiesNoNameMode(ht);
 		}
 
+			///#endregion 单表单打印
+
+			///#region 多表单合并PDF打印
+		if (node.getHisFormType().getValue() == NodeFormType.SheetTree.getValue())
+		{
+			String pdfPath = filePath;
+			//生成pdf文件
+			//生成pdf文件
+			if (DataType.IsNullOrEmpty(pdfPath) == true)
+			{
+				pdfPath = path + "/pdf";
+			}
+			String pdfTempPath = path + "/pdfTemp";
+
+			DataRow dr = null;
+			resultMsg = setPDFPath("ND" + node.getNodeID(), workid, flowNo, gwf);
+			if (resultMsg.indexOf("err@") != -1)
+			{
+				return resultMsg;
+			}
+
+			//获取绑定的表单
+			FrmNodes nds = new FrmNodes(node.getFK_Flow(), node.getNodeID());
+			for (FrmNode item : nds.ToJavaList())
+			{
+				//判断当前绑定的表单是否启用
+				if (item.getFrmEnableRoleInt() == FrmEnableRole.Disable.getValue())
+				{
+					continue;
+				}
+
+				//判断 who is pk
+				if (flowNo != null && item.getWhoIsPK() == WhoIsPK.PWorkID) //如果是父子流程
+				{
+					workid = gwf.getPWorkID();
+				}
+				//获取表单的信息执行打印
+				String billUrl = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/" + item.getFKFrm() + "index.htm";
+				//resultMsg = MakeHtmlDocument(item.getFKFrm(), workid, flowNo, path, billUrl, "ND" + node.getNodeID());
+
+				if (resultMsg.indexOf("err@") != -1)
+				{
+					return resultMsg;
+				}
+
+				ht.put("htm_" + item.getFKFrm(), bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "/InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/" + item.getFKFrm() + "index.htm");
+
+				///#region 把所有的文件做成一个zip文件.
+				if ((new File(pdfTempPath)).isDirectory() == false)
+				{
+					(new File(pdfTempPath)).mkdirs();
+				}
+
+				String pdfFormFile = pdfTempPath + "/" + item.getFKFrm() + ".pdf";
+				String pdfFileExe = bp.difference.SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
+				try
+				{
+					Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
+
+				}
+				catch (RuntimeException ex)
+				{
+					/*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
+					Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
+				}
+
+			}
+
+			//pdf合并
+			String pdfFile = pdfPath + "/" + pdfName + ".pdf";
+			//开始合并处理
+			if (new File(pdfPath).exists() == false)
+				new File(pdfPath).mkdirs();
+
+			PDFMergerUtility merger=new PDFMergerUtility();
+			String[] fileInFolder= BaseFileUtils.getFiles(pdfTempPath);
+			for(int i=0;i<fileInFolder.length;i++){
+				merger.addSource(fileInFolder[i]);
+			}
+			merger.setDestinationFileName(pdfFile);
+			merger.mergeDocuments();
+
+
+
+			//生成压缩文件
+			String zipFile = path + "/../" + pdfName + ".zip";
+
+			File finfo = new File(zipFile);
+			ZipFilePath = finfo.getPath(); //文件路径.
+
+			// 执行压缩.
+			File zipFileFile = new File(zipFile);
+			try {
+				while (zipFileFile.exists() == true) {
+					zipFileFile.delete();
+				}
+			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
+			fz.zip();
+			ht.put("zip", SystemConfig.GetValByKey("HostURL","") + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid +"/"+ DataType.PraseStringToUrlFileName(pdfName) + ".zip");
+		} catch (Exception ex) {
+			ht.put("zip","err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + pdfPath + ",zipFile=" + finfo.getName());
+		}
+
+		if (zipFileFile.exists() == false)
+			ht.put("zip","err@压缩文件未生成成功,请在点击一次.");
+
+
+
+		return bp.tools.Json.ToJsonEntitiesNoNameMode(ht);
+		}
+
+			///#endregion 多表单合并PDF打印
+
 		return "warning@不存在需要打印的表单";
 
 	}
+	/**
+	 单据打印
 
-	public static String MakeBillToPDF(String frmId, long workid, String basePath, boolean urlIsHostUrl) throws Exception {
-		return MakeBillToPDF(frmId, workid, basePath, urlIsHostUrl, null);
-	}
-
-	public static String MakeBillToPDF(String frmId, long workid, String basePath) throws Exception {
-		return MakeBillToPDF(frmId, workid, basePath, false, null);
-	}
-
-
-	public static String MakeBillToPDF(String frmId, long workid, String basePath, boolean urlIsHostUrl,
-			String htmlString) throws Exception {
+	 param frmId 表单ID
+	 param workid 数据ID
+	 param filePath PDF路径
+	 param pdfName PDF名称
+	 @return
+	*/
+	public static String MakeBillToPDF(String frmId, long workid, String filePath, String pdfName) throws Exception {
 		String resultMsg = "";
 
-		// 获取单据的属性信息
+		//  获取单据的属性信息
 		bp.ccbill.FrmBill bill = new bp.ccbill.FrmBill(frmId);
-		String fileNameFormat = null;
 
-		// 存放信息地址
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + bill.getNo() + "/" + workid;
+		//存放信息地址
+		String path = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + bill.getNo() + "/" + workid;
 
-		// 处理正确的文件名.
-		if (fileNameFormat == null) {
-			fileNameFormat = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM Frm_GenerBill WHERE WorkID=" + workid,
-					"" + String.valueOf(workid));
+		if (DataType.IsNullOrEmpty(pdfName) == true)
+		{
+			pdfName = String.valueOf(workid);
 		}
 
-		if (DataType.IsNullOrEmpty(fileNameFormat) == true) {
-			fileNameFormat = String.valueOf(workid);
-		}
-
-		fileNameFormat = bp.da.DataType.PraseStringToFileName(fileNameFormat);
+		pdfName = DataType.PraseStringToFileName(pdfName);
 
 		Hashtable ht = new Hashtable();
-
-		// 生成pdf文件
-		String pdfPath = path + "/pdf";
-
+		String pdfPath = filePath;
+		//生成pdf文件
+		if (DataType.IsNullOrEmpty(pdfPath) == true)
+		{
+			pdfPath = path + "/pdf";
+		}
 		DataRow dr = null;
 		resultMsg = setPDFPath(frmId, workid, null, null);
-		if (resultMsg.indexOf("err@") != -1) {
+		if (resultMsg.indexOf("err@") != -1)
+		{
 			return resultMsg;
 		}
 
-		// 获取表单的信息执行打印
-		String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + bill.getNo() + "/" + workid + "/"
-				+ "index.htm";
-		resultMsg = MakeHtmlDocument(bill.getNo(), workid, null, fileNameFormat, urlIsHostUrl, path, billUrl, frmId,
-				basePath, htmlString);
+		//获取表单的信息执行打印
+		String billUrl = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + bill.getNo() + "/" + workid + "/" + "index.htm";
+		//resultMsg = MakeHtmlDocument(bill.getNo(), workid, null, path, billUrl, frmId);
 
-		if (resultMsg.indexOf("err@") != -1) {
+		if (resultMsg.indexOf("err@") != -1)
+		{
 			return resultMsg;
 		}
 
-		ht.put("htm", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + frmId + "/"
-				+ workid + "/" + "index.htm");
+		ht.put("htm", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + frmId + "/" + workid + "/" + "index.htm");
 
-		/// 把所有的文件做成一个zip文件.
-		if ((new File(pdfPath)).isDirectory() == false) {
+		///#region 把所有的文件做成一个zip文件.
+		if ((new File(pdfPath)).isDirectory() == false)
+		{
 			(new File(pdfPath)).mkdirs();
 		}
 
-		fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
-		String pdfFormFile = pdfPath + "/" + bill.getName() + ".pdf"; // 生成的路径.
-		String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
-		try {
+		String pdfFormFile = pdfPath + "/" + pdfName + ".pdf"; //生成的路径.
+		String pdfFileExe = bp.difference.SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
+		try
+		{
 			Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-			if (urlIsHostUrl == false) {
-				ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/"
-						+ frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
-			} else {
-				ht.put("pdf", SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + frmId + "/"
-						+ workid + "/pdf/" + bill.getName() + ".pdf");
+			if (DataType.IsNullOrEmpty(filePath) == true)
+			{
+				ht.put("pdf", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + pdfName + ".pdf");
 			}
-		} catch (RuntimeException ex) {
-			/* 有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
-			fileNameFormat = DBAccess.GenerGUID();
-			pdfFormFile = pdfPath + "/" + fileNameFormat + ".pdf";
+			else
+			{
+				ht.put("pdf", pdfPath + "/" + pdfName + ".pdf");
+			}
+		}
+		catch (RuntimeException ex)
+		{
+
+			pdfFormFile = pdfPath + "/" + pdfName + ".pdf";
 
 			Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-			ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "") + "/InstancePacketOfData/" + frmId + "/" + workid
-					+ "/pdf/" + bill.getName() + ".pdf");
+			ht.put("pdf", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "") + "/InstancePacketOfData/" + frmId + "/" + workid + "/pdf/" + bill.getName() + ".pdf");
 		}
 
-		// 生成压缩文件
-		String zipFile = path + "/../" + fileNameFormat + ".zip";
+		//生成压缩文件
+		String zipFile = path + "/../" + pdfName + ".zip";
 
 		File finfo = new File(zipFile);
-		ZipFilePath = finfo.getPath(); // 文件路径.
-		 File zipFileFile = new File(zipFile);
+		ZipFilePath = finfo.getPath(); //文件路径.
+
+		File zipFileFile = new File(zipFile);
 
 		try {
 			while (zipFileFile.exists() == true) {
- 				zipFileFile.delete();
- 			}
- 			// 执行压缩.
- 			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
- 			fz.zip();
- 			
-		
+				zipFileFile.delete();
+			}
+			// 执行压缩.
+			ZipCompress fz = new ZipCompress(zipFile, pdfPath);
+			fz.zip();
+
+
 			ht.put("zip", SystemConfig.getHostURLOfBS() + "/DataUser/InstancePacketOfData/" + frmId + "/"
-					+ DataType.PraseStringToUrlFileName(fileNameFormat) + ".zip");
+					+ DataType.PraseStringToUrlFileName(pdfName) + ".zip");
 		} catch (RuntimeException ex) {
 			ht.put("zip", "err@生成zip文件遇到权限问题:" + ex.getMessage() + " @Path:" + pdfPath);
 		}
 		return bp.tools.Json.ToJsonEntitiesNoNameMode(ht);
 	}
 
-	public static String MakeFormToPDF(String frmId, String frmName, Node node, long workid, String flowNo,
-			String fileNameFormat, boolean urlIsHostUrl, String basePath) throws Exception {
+	public static String MakeFormToPDF(String frmId, String frmName, Node node, long workid, String flowNo, String fileNameFormat, boolean urlIsHostUrl, String basePath) throws Exception {
 
 		String resultMsg = "";
 		GenerWorkFlow gwf = null;
 
-		// 获取主干流程信息
-		if (flowNo != null) {
+		//获取主干流程信息
+		if (flowNo != null)
+		{
 			gwf = new GenerWorkFlow(workid);
 		}
 
-		// 存放信息地址
-		String hostURL = SystemConfig.GetValByKey("HostURL", "");
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/"
-				+ workid;
+		//存放信息地址
+		String hostURL = bp.difference.SystemConfig.GetValByKey("HostURL", "");
+		String path = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid;
 
-		// 处理正确的文件名.
-		if (fileNameFormat == null) {
-			if (flowNo != null) {
-				fileNameFormat = DBAccess.RunSQLReturnStringIsNull(
-						"SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + workid, "" + String.valueOf(workid));
-			} else {
+		//处理正确的文件名.
+		if (fileNameFormat == null)
+		{
+			if (flowNo != null)
+			{
+				fileNameFormat = DBAccess.RunSQLReturnStringIsNull("SELECT Title FROM WF_GenerWorkFlow WHERE WorkID=" + workid, "" + String.valueOf(workid));
+			}
+			else
+			{
 				fileNameFormat = String.valueOf(workid);
 			}
 		}
 
-		if (DataType.IsNullOrEmpty(fileNameFormat) == true) {
+		if (DataType.IsNullOrEmpty(fileNameFormat) == true)
+		{
 			fileNameFormat = String.valueOf(workid);
 		}
 
-		fileNameFormat = bp.da.DataType.PraseStringToFileName(fileNameFormat);
+		fileNameFormat = DataType.PraseStringToFileName(fileNameFormat);
 
 		Hashtable ht = new Hashtable();
 
-		// 生成pdf文件
+		//生成pdf文件
 		String pdfPath = path + "/pdf";
+
 
 		DataRow dr = null;
 		resultMsg = setPDFPath("ND" + node.getNodeID(), workid, flowNo, gwf);
-		if (resultMsg.indexOf("err@") != -1) {
+		if (resultMsg.indexOf("err@") != -1)
+		{
 			return resultMsg;
 		}
 
-		// 获取绑定的表单
+		//获取绑定的表单
 		FrmNode frmNode = new FrmNode();
 		frmNode.Retrieve(FrmNodeAttr.FK_Frm, frmId);
 
-		// 判断当前绑定的表单是否启用
-		if (frmNode.getFrmEnableRoleInt() == FrmEnableRole.Disable.getValue()) {
+		//判断当前绑定的表单是否启用
+		if (frmNode.getFrmEnableRoleInt() == FrmEnableRole.Disable.getValue())
+		{
 			return "warning@" + frmName + "没有被启用";
 		}
 
-		// 判断 who is pk
-		if (flowNo != null && frmNode.getWhoIsPK() == WhoIsPK.PWorkID) // 如果是父子流程
+		//判断 who is pk
+		if (flowNo != null && frmNode.getWhoIsPK() == WhoIsPK.PWorkID) //如果是父子流程
 		{
 			workid = gwf.getPWorkID();
 		}
 
-		// 获取表单的信息执行打印
-		String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/"
-				+ workid + "/" + frmNode.getFK_Frm() + "index.htm";
-		resultMsg = MakeHtmlDocument(frmNode.getFK_Frm(), workid, flowNo, fileNameFormat, urlIsHostUrl, path, billUrl,
-				"ND" + node.getNodeID(), basePath);
+		//获取表单的信息执行打印
+		String billUrl = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/" + frmNode.getFKFrm() + "index.htm";
+		//resultMsg = MakeHtmlDocument(frmNode.getFKFrm(), workid, flowNo, path, billUrl, "ND" + node.getNodeID());
 
-		if (resultMsg.indexOf("err@") != -1) {
+		if (resultMsg.indexOf("err@") != -1)
+		{
 			return resultMsg;
 		}
 
-		// ht.Add("htm", SystemConfig.GetValByKey("HostURLOfBS",
-		// "../../DataUser/") + "/InstancePacketOfData/" + "ND" + node.NodeID +
-		// "/" + workid + "/" + frmNode.FK_Frm + "index.htm");
+		// ht.Add("htm", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "/InstancePacketOfData/" + "ND" + node.NodeID + "/" + workid + "/" + frmNode.FK_Frm + "index.htm");
 
-		/// 把所有的文件做成一个zip文件.
-		if ((new File(pdfPath)).isDirectory() == false) {
+		///#region 把所有的文件做成一个zip文件.
+		if ((new File(pdfPath)).isDirectory() == false)
+		{
 			(new File(pdfPath)).mkdirs();
 		}
 
 		fileNameFormat = fileNameFormat.substring(0, fileNameFormat.length() - 1);
-		String pdfFormFile = pdfPath + "/" + frmNode.getFK_Frm() + ".pdf";
-		String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
-		try {
+		String pdfFormFile = pdfPath + "/" + frmNode.getFKFrm() + ".pdf";
+		String pdfFileExe = bp.difference.SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
+		try
+		{
 			Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-			if (urlIsHostUrl == false) {
-				ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/"
-						+ "ND" + node.getNodeID() + "/" + workid + "/pdf/" + frmNode.getFK_Frm() + ".pdf");
-			} else {
-				ht.put("pdf", SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + "ND"
-						+ node.getNodeID() + "/" + workid + "/pdf/" + frmNode.getFK_Frm() + ".pdf");
+			if (urlIsHostUrl == false)
+			{
+				ht.put("pdf", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "../../DataUser/") + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/pdf/" + frmNode.getFKFrm() + ".pdf");
+			}
+			else
+			{
+				ht.put("pdf", bp.difference.SystemConfig.GetValByKey("HostURL", "") + "/DataUser/InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/pdf/" + frmNode.getFKFrm() + ".pdf");
 			}
 
-		} catch (RuntimeException ex) {
-			/* 有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
-			fileNameFormat = DBAccess.GenerGUID();
+
+		}
+		catch (RuntimeException ex)
+		{
+			/*有可能是因为文件路径的错误， 用补偿的方法在执行一次, 如果仍然失败，按照异常处理. */
+			fileNameFormat = DBAccess.GenerGUID(0, null, null);
 			pdfFormFile = pdfPath + "/" + fileNameFormat + ".pdf";
 
 			Html2Pdf(pdfFileExe, resultMsg, pdfFormFile);
-			ht.put("pdf", SystemConfig.GetValByKey("HostURLOfBS", "") + "/InstancePacketOfData/" + "ND"
-					+ node.getNodeID() + "/" + workid + "/pdf/" + frmNode.getFK_Frm() + ".pdf");
+			ht.put("pdf", bp.difference.SystemConfig.GetValByKey("HostURLOfBS", "") + "/InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/pdf/" + frmNode.getFKFrm() + ".pdf");
 		}
 
 		return bp.tools.Json.ToJsonEntitiesNoNameMode(ht);
 
+
 	}
 
-	
-	// 前期文件的准备
+	/**
+	 读取合并的pdf文件名称
+
+	 param Directorypath 目录
+	 param outpath 导出的路径
+	*/
+//	public static void MergePDF(String Directorypath, String outpath)
+//	{
+//		ArrayList<String> filelist2 = new ArrayList<String>();
+//		File di2 = new File(Directorypath);
+//		File[] ff2 = di2.GetFiles("*.pdf");
+//		BubbleSort(ff2);
+//		for (File temp : ff2)
+//		{
+//			filelist2.add(Directorypath + "/" + temp.getName());
+//		}
+//
+//		PdfReader reader;
+//		//iTextSharp.text.Rectangle rec = new iTextSharp.text.Rectangle(1403, 991);
+//		Document document = new Document();
+////C# TO JAVA CONVERTER TODO TASK: C# to Java Converter cannot determine whether this System.IO.FileStream is input or output:
+//		PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(outpath, FileMode.Create));
+//		document.Open();
+//		PdfContentByte cb = writer.DirectContent;
+//		PdfImportedPage newPage;
+//		for (int i = 0; i < filelist2.size(); i++)
+//		{
+//			reader = new PdfReader(filelist2.get(i));
+//			int iPageNum = reader.NumberOfPages;
+//			for (int j = 1; j <= iPageNum; j++)
+//			{
+//				document.NewPage();
+//				newPage = writer.GetImportedPage(reader, j);
+//				cb.AddTemplate(newPage, 0, 0);
+//			}
+//		}
+//		document.Close();
+//	}
+	/**
+	 冒泡排序
+
+	 param arr 文件名数组
+	*/
+//	public static void BubbleSort(File[] arr)
+//	{
+//		for (int i = 0; i < arr.length; i++)
+//		{
+//			for (int j = i; j < arr.length; j++)
+//			{
+//				if (arr[i].LastWriteTime.compareTo(arr[j].LastWriteTime) > 0) //按创建时间（升序）
+//				{
+//					File temp = arr[i];
+//					arr[i] = arr[j];
+//					arr[j] = temp;
+//				}
+//			}
+//		}
+//	}
+
+
+	//前期文件的准备
 	private static String setPDFPath(String frmID, long workid, String flowNo, GenerWorkFlow gwf) throws Exception {
-		// 准备目录文件.
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
-		try {
+		//准备目录文件.
+		String path = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
+		try
+		{
 
-			path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
-			if ((new File(path)).isDirectory() == false) {
+			path = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
+			if ((new File(path)).isDirectory() == false)
+			{
 				(new File(path)).mkdirs();
 			}
 
-			path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/" + workid;
-			if ((new File(path)).isDirectory() == false) {
+			path = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/" + workid;
+			if ((new File(path)).isDirectory() == false)
+			{
 				(new File(path)).mkdirs();
 			}
 
-			// 把模版文件copy过去.
-			String templateFilePath = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
+			//把模版文件copy过去.
+			String templateFilePath = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
 			File dir = new File(templateFilePath);
 			File[] finfos = dir.listFiles();
-			if (finfos.length == 0) {
+			if (finfos.length == 0)
+			{
 				return "err@不存在模板文件";
 			}
-			for (File fl : finfos) {
-				if (fl.getName().contains("ShuiYin")) {
+			for (File fl : finfos)
+			{
+				if (fl.getName().contains("ShuiYin"))
+				{
 					continue;
 				}
 
-				if (fl.getName().contains("htm")) {
+				if (fl.getName().contains("htm"))
+				{
 					continue;
 				}
-				if ((new File(path + "/" + fl.getPath())).isFile() == true) {
+				if ((new File(path + "/" + fl.getPath())).isFile() == true)
+				{
 					(new File(path + "/" + fl.getPath())).delete();
 				}
-				Files.copy(Paths.get(fl.getPath()), Paths.get(path + "/" + fl.getName()),
-						StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(fl.getPath()), Paths.get(path + "/" + fl.getName()), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 			}
 
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex)
+		{
 			return "err@读写文件出现权限问题，请联系管理员解决。" + ex.getMessage();
 		}
 
-		String hostURL = SystemConfig.GetValByKey("HostURL", "");
+		String hostURL = bp.difference.SystemConfig.GetValByKey("HostURL", "");
 		String billUrl = hostURL + "/DataUser/InstancePacketOfData/" + frmID + "/" + workid + "/index.htm";
 
 		// begin生成二维码.
-		if(SystemConfig.GetValByKeyBoolen("IsShowQrCode",false) == true){
-            /*说明是图片文件.*/
-            String qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?FrmID=" + frmID + "&WorkID=" + workid + "&FlowNo=" + flowNo;
-            if (flowNo != null)
-            {
-                gwf = new GenerWorkFlow(workid);
-                qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getFK_Node() + "_" + gwf.getStarter() + "_" + gwf.getFK_Dept();
-            }
-            
-            //二维码的生成
-            QrCodeUtil.createQrCode(qrUrl,path,"QR.png");
-        }
-		// end生成二维码.
+		String pathQR = path + "/QR.png"; // key.Replace("OID.Img@AppPath", bp.difference.SystemConfig.getPathOfWebApp());
+		if (bp.difference.SystemConfig.GetValByKeyBoolen("IsShowQrCode", false) == true)
+		{
+			/*说明是图片文件.*/
+			String qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?FrmID=" + frmID + "&WorkID=" + workid + "&FlowNo=" + flowNo;
+			if (flowNo != null)
+			{
+				gwf = new GenerWorkFlow(workid);
+				qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getFK_Node() + "_" + gwf.getStarter() + "_" + gwf.getFK_Dept();
+			}
+
+			//二维码的生成
+			QrCodeUtil.createQrCode(qrUrl,path,"QR.png","");
+
+		}
+		//end生成二维码.
 		return "";
 	}
 
-	
+//	private static String DownLoadFielToMemoryStream(String url)
+//	{
+//		Object tempVar = System.Net.HttpWebRequest.Create(url);
+//		var wreq = tempVar instanceof System.Net.HttpWebRequest ? (System.Net.HttpWebRequest)tempVar : null;
+//		Object tempVar2 = wreq.GetResponse();
+//		System.Net.HttpWebResponse response = tempVar2 instanceof System.Net.HttpWebResponse ? (System.Net.HttpWebResponse)tempVar2 : null;
+////C# TO JAVA CONVERTER TODO TASK: C# to Java Converter cannot determine whether this System.IO.MemoryStream is input or output:
+//		MemoryStream ms = null;
+//		try (var stream = response.GetResponseStream())
+//		{
+//
+////ORIGINAL LINE: Byte[] buffer = new Byte[response.ContentLength];
+//			byte[] buffer = new byte[response.ContentLength];
+//			int offset = 0, actuallyRead = 0;
+//			do
+//			{
+//				actuallyRead = stream.Read(buffer, offset, buffer.length - offset);
+//				offset += actuallyRead;
+//			} while (actuallyRead > 0);
+////C# TO JAVA CONVERTER TODO TASK: C# to Java Converter cannot determine whether this System.IO.MemoryStream is input or output:
+//			ms = new MemoryStream(buffer);
+//		}
+//		response.Close();
+//		return Convert.ToBase64String(ms.ToArray());
+//
+//	}
 
 	/**
-	 * zip文件路径.
-	 */
+	 zip文件路径.
+	*/
 	public static String ZipFilePath = "";
 
 	public static String CCFlowAppPath = "/";
 
-	public static String MakeHtmlDocument(String frmID, long workid, String flowNo, String fileNameFormat,
-			boolean urlIsHostUrl, String path, String indexFile, String nodeID, String basePath) throws Exception {
-		return MakeHtmlDocument(frmID, workid, flowNo, fileNameFormat, urlIsHostUrl, path, indexFile, nodeID, basePath,
-				null);
-	}
+//	public static String GetHtml(String url) throws IOException {
+//		String html = "";
+//		HttpWebRequest rt = null;
+//		HttpWebResponse rs = null;
+//		InputStream stream = null;
+//		InputStreamReader sr = null;
+//
+//		try
+//		{
+//			rt = (HttpWebRequest)WebRequest.Create(url);
+//			rs = (HttpWebResponse)rt.GetResponse();
+//			stream = rs.GetResponseStream();
+//			sr = new InputStreamReader(stream, System.Text.Encoding.Default);
+//			html = sr.ReadToEnd();
+//
+//		}
+//		catch (RuntimeException ee)
+//		{
+//			new RuntimeException("发生异常:" + ee.getMessage());
+//		}
+//		finally
+//		{
+//			sr.close();
+//			stream.close();
+//			rs.Close();
+//		}
+//		return html;
+//	}
 
-	
+
+
+//	public static String MakeHtmlDocument(String frmID, long workid, String flowNo, String path, String indexFile, String nodeID)throws Exception
+//	{
+//		try
+//		{
+//			GenerWorkFlow gwf = null;
+//			if (flowNo != null)
+//			{
+//				gwf = new GenerWorkFlow(workid);
+//			}
+//
+//			///#region 定义变量做准备.
+//			//生成表单信息.
+//			MapData mapData = new MapData(frmID);
+//
+//			if (mapData.getHisFrmType() == FrmType.Url)
+//			{
+//				String url = mapData.getUrlExt();
+//
+//				//替换系统参数
+//				url = url.replace("@WebUser.No", WebUser.getNo());
+//				url = url.replace("@WebUser.Name;", WebUser.getName());
+//				url = url.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
+//				url = url.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+//
+//				//替换参数
+//				if (url.indexOf("?") > 0)
+//				{
+//					//获取url中的参数
+//					String urlParam = url.substring(url.indexOf('?'));
+//					String[] paramss = url.split("[&]", -1);
+//					for (String param : paramss)
+//					{
+//						if (DataType.IsNullOrEmpty(param) || param.indexOf("@") == -1)
+//						{
+//							continue;
+//						}
+//						String[] paramArr = param.split("[=]", -1);
+//						if (paramArr.length == 2 && paramArr[1].indexOf('@') == 0)
+//						{
+//							if (paramArr[1].indexOf("@WebUser.") == 0)
+//							{
+//								continue;
+//							}
+//							url = url.replace(paramArr[1], gwf.GetValStrByKey(paramArr[1].substring(1)));
+//						}
+//					}
+//
+//				}
+//				url = url.replace("@basePath", bp.difference.SystemConfig.getHostURLOfBS());
+//				if (url.contains("http") == false)
+//				{
+//					url = bp.difference.SystemConfig.getHostURLOfBS() + url;
+//				}
+//
+//				String str = "<iframe style='width:100%;height:auto;' ID='" + mapData.getNo() + "'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe></div>";
+//				String docs1 = DataType.ReadTextFile(bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexUrl.htm");
+//				StringBuilder sb1 = new StringBuilder();
+//				WebClient MyWebClient = new WebClient();
+//				MyWebClient.Credentials = CredentialCache.DefaultCredentials; //获取或设置用于向Internet资源的请求进行身份验证的网络凭据
+//
+//
+//				byte[] pageData = MyWebClient.DownloadData(url); //从指定网站下载数据
+//				String pageHtml = Encoding.UTF8.GetString(pageData); //如果获取网站页面采用的是UTF-8，则使用这句
+//
+//				docs1 = docs1.replace("@Width", mapData.getFrmW() + "px");
+//				docs1 = docs1.replace("@Height", mapData.getFrmH() + "px");
+//				if (gwf != null)
+//				{
+//					docs1 = docs1.replace("@Title", gwf.getTitle());
+//				}
+//				DataType.WriteFile(indexFile, pageHtml);
+//				return indexFile;
+//			}
+//			else if (mapData.getHisFrmType() == FrmType.Develop)
+//			{
+//				GEEntity enn = new GEEntity(frmID, workid);
+//				String ddocs = DataType.ReadTextFile(bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexDevelop.htm");
+//				String htmlString = DBAccess.GetBigTextFromDB("Sys_MapData", "No", mapData.getNo(), "HtmlTemplateFile");
+//
+//
+//				htmlString = htmlString.replace("../../DataUser", bp.difference.SystemConfig.HostURLOfBS + "/DataUser");
+//				htmlString = htmlString.replace("../DataUser", bp.difference.SystemConfig.HostURLOfBS + "/DataUser");
+//				ddocs = ddocs.replace("@Docs", htmlString);
+//
+//				ddocs = ddocs.replace("@Height", mapData.FrmH.toString() + "px");
+//				ddocs = ddocs.replace("@Title", mapData.getName());
+//
+//				DataType.WriteFile(indexFile, ddocs);
+//			   GenerHtmlOfDevelop(mapData, mapData.getNo(), workid, enn, path, indexFile, flowNo, nodeID);
+//
+//				return indexFile;
+//			}
+//			 GEEntity en = new GEEntity(frmID, workid);
+//
+//
+//
+//				///#region 生成水文.
+//
+//			String rdt = "";
+//			if (en.getEnMap().getAttrs().contains("RDT"))
+//			{
+//				rdt = en.GetValStringByKey("RDT");
+//				if (rdt.length() > 10)
+//				{
+//					rdt = rdt.substring(0, 10);
+//				}
+//			}
+//			//先判断节点中水印的设置
+//			//判断是否打印水印
+//			boolean isPrintShuiYin = bp.difference.SystemConfig.GetValByKeyBoolen("IsPrintBackgroundWord", false);
+//			Node nd = null;
+//			if (gwf != null)
+//			{
+//				nd = new Node(gwf.getFK_Node());
+//			}
+//			if (isPrintShuiYin == true)
+//			{
+//				String words = "";
+//				if (nd.getNodeID() != 0)
+//				{
+//					words = nd.getShuiYinModle();
+//				}
+//
+//				if (DataType.IsNullOrEmpty(words) == true)
+//				{
+//					words = Glo.getPrintBackgroundWord();
+//				}
+//				words = words.replace("@RDT", rdt);
+//
+//				if (words.contains("@") == true)
+//				{
+//					words = Glo.DealExp(words, en);
+//				}
+//
+//				String templateFilePathMy = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
+//				WaterImageManage wim = new WaterImageManage();
+//				wim.DrawWords(templateFilePathMy + "ShuiYin.png", words, Float.parseFloat("0.15"), ImagePosition.Center, path + "/ShuiYin.png");
+//			}
+//
+//
+//				///#endregion
+//
+//			//生成 表单的 html.
+//			StringBuilder sb = new StringBuilder();
+//
+//
+//				///#region 替换模版文件..
+//			//首先判断是否有约定的文件.
+//			String docs = "";
+//			String tempFile = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/" + mapData.getNo() + ".htm";
+//			if ((new File(tempFile)).isFile() == false)
+//			{
+//				if (gwf != null)
+//				{
+//
+//					if (nd.getHisFormType() == NodeFormType.Develop)
+//					{
+//						mapData.HisFrmType = FrmType.Develop;
+//					}
+//					else if (nd.getHisFormType() == NodeFormType.FoolForm || nd.getHisFormType() == NodeFormType.FoolTruck)
+//					{
+//						mapData.HisFrmType = FrmType.FoolForm;
+//					}
+//					else if (nd.getHisFormType() == NodeFormType.SelfForm)
+//					{
+//						mapData.HisFrmType = FrmType.Url;
+//					}
+//				}
+//
+//				if (mapData.HisFrmType == FrmType.FoolForm)
+//				{
+//					docs = DataType.ReadTextFile(bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexFool.htm");
+//					sb = bp.wf.MakeForm2Html.GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, nodeID, nd.getHisFormType());
+//					docs = docs.replace("@Width", mapData.FrmW.toString() + "px");
+//				}
+//
+//			}
+//
+//
+//
+//
+//			docs = docs.replace("@Docs", sb.toString());
+//
+//			docs = docs.replace("@Height", mapData.FrmH.toString() + "px");
+//
+//			String dateFormat = Date.now().toString("yyyy年MM月dd日 HH时mm分ss秒");
+//			docs = docs.replace("@PrintDT", dateFormat);
+//
+//			if (flowNo != null)
+//			{
+//				gwf = new GenerWorkFlow(workid);
+//				gwf.setWorkID(workid);
+//				gwf.RetrieveFromDBSources();
+//
+//				docs = docs.replace("@Title", gwf.getTitle());
+//
+//				if (gwf.getWFState() == WFState.Runing)
+//				{
+//					if (bp.difference.SystemConfig.getCustomerNo().equals("TianYe") && gwf.getNodeName().contains("反馈") == true)
+//					{
+//						nd = new Node(gwf.getFK_Node());
+//						if (nd.isEndNode() == true)
+//						{
+//							//让流程自动结束.
+//							bp.wf.Dev2Interface.Flow_DoFlowOver(workid, "打印并自动结束", 0);
+//						}
+//					}
+//				}
+//
+//				//替换模版尾部的打印说明信息.
+//				String pathInfo = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/" + flowNo + ".txt";
+//				if ((new File(pathInfo)).isFile() == false)
+//				{
+//					pathInfo = bp.difference.SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/Default.txt";
+//				}
+//
+//				docs = docs.replace("@EndInfo", DataType.ReadTextFile(pathInfo));
+//			}
+//
+//			//indexFile =  bp.difference.SystemConfig.getPathOfDataUser() + "/InstancePacketOfData/" + frmID + "/" + workid + "/index.htm";
+//			DataType.WriteFile(indexFile, docs);
+//
+//			return indexFile;
+//		}
+//		catch (RuntimeException ex)
+//		{
+//			return "err@报表生成错误:" + ex.getMessage();
+//		}
+//	}
+public static String MakeHtmlDocument(String frmID, long workid, String flowNo, String fileNameFormat,
+									  boolean urlIsHostUrl, String path, String indexFile, String nodeID, String basePath) throws Exception {
+	return MakeHtmlDocument(frmID, workid, flowNo, fileNameFormat, urlIsHostUrl, path, indexFile, nodeID, basePath,
+			null);
+}
+
+
 	public static String MakeHtmlDocument(String frmID, long workid, String flowNo, String fileNameFormat,
-			boolean urlIsHostUrl, String path, String indexFile, String nodeID, String basePath, String htmlString) throws Exception {
+										  boolean urlIsHostUrl, String path, String indexFile, String nodeID, String basePath, String htmlString) throws Exception {
 		try {
 			GenerWorkFlow gwf = null;
 			if (flowNo != null) {
@@ -2270,7 +2212,7 @@ public class MakeForm2Html {
 			MapData mapData = new MapData(frmID);
 
 			if (mapData.getHisFrmType() == FrmType.Url) {
-				String url = mapData.getUrl();
+				String url = mapData.getUrlExt();
 				// 替换系统参数
 				url = url.replace("@WebUser.No", WebUser.getNo());
 				url = url.replace("@WebUser.Name;", WebUser.getName());
@@ -2302,13 +2244,13 @@ public class MakeForm2Html {
 				}
 
 				String sb="<iframe style='width:100%;height:auto;' ID='" + mapData.getNo() + "'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe></div>";
-            	String  docs = DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexUrl.htm");
-            	docs = docs.replace("@Docs", sb.toString());
-            	docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
-            	docs = docs.replace("@Height", String.valueOf(mapData.getFrmH())+"px");
-            	if(gwf!=null)
-            		docs = docs.replace("@Title", gwf.getTitle());
-            	 DataType.WriteFile(indexFile, docs);
+				String  docs = DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexUrl.htm");
+				docs = docs.replace("@Docs", sb.toString());
+				docs = docs.replace("@Width", String.valueOf(mapData.getFrmW())+"px");
+				docs = docs.replace("@Height", String.valueOf(mapData.getFrmH())+"px");
+				if(gwf!=null)
+					docs = docs.replace("@Title", gwf.getTitle());
+				DataType.WriteFile(indexFile, docs);
 				return indexFile;
 			} else if (mapData.getHisFrmType() == FrmType.Develop) {
 				String ddocs = bp.da.DataType.ReadTextFile(
@@ -2319,7 +2261,7 @@ public class MakeForm2Html {
 				// 获取从表
 				MapDtls dtls = new MapDtls(frmID);
 				for (MapDtl dtl : dtls.ToJavaList()) {
-					if (dtl.getIsView() == false) {
+					if (dtl.isView() == false) {
 						continue;
 					}
 					String html = GetDtlHtmlByID(dtl, workid, mapData.getFrmW());
@@ -2349,7 +2291,7 @@ public class MakeForm2Html {
 			/// 生成水文.
 
 			String rdt = "";
-			if (en.getEnMap().getAttrs().Contains("RDT")) {
+			if (en.getEnMap().getAttrs().contains("RDT")) {
 				rdt = en.GetValStringByKey("RDT");
 				if (rdt.length() > 10) {
 					rdt = rdt.substring(0, 10);
@@ -2374,7 +2316,7 @@ public class MakeForm2Html {
 			}
 
 			String templateFilePathMy = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
-            paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png",words,path + "/ShuiYin.png");
+			//paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png",words,path + "/ShuiYin.png");
 
 
 			///
@@ -2403,14 +2345,14 @@ public class MakeForm2Html {
 				if (mapData.getHisFrmType() == FrmType.FoolForm) {
 					docs = bp.da.DataType.ReadTextFile(
 							SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexFool.htm");
-					sb = bp.wf.MakeForm2Html.GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, nodeID, basePath,
-							nd.getHisFormType());
+//					sb = bp.wf.MakeForm2Html.GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, nodeID, basePath,
+//							nd.getHisFormType());
 					docs = docs.replace("@Width", mapData.getFrmW() + "px");
 				} else if (mapData.getHisFrmType() == FrmType.FreeFrm) {
 					docs = bp.da.DataType.ReadTextFile(
 							SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexFree.htm");
-					sb = bp.wf.MakeForm2Html.GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo, nodeID,
-							basePath);
+//					sb = bp.wf.MakeForm2Html.GenerHtmlOfFree(mapData, frmID, workid, en, path, flowNo, nodeID,
+//							basePath);
 					docs = docs.replace("@Width", (mapData.getFrmW() * 1.5) + "px");
 				}
 			}
@@ -2432,7 +2374,7 @@ public class MakeForm2Html {
 				if (gwf.getWFState() == WFState.Runing) {
 					if (SystemConfig.getCustomerNo().equals("TianYe") && gwf.getNodeName().contains("反馈") == true) {
 						nd = new Node(gwf.getFK_Node());
-						if (nd.getIsEndNode() == true) {
+						if (nd.isEndNode() == true) {
 							// 让流程自动结束.
 							bp.wf.Dev2Interface.Flow_DoFlowOver(workid, "打印并自动结束", 0);
 						}
@@ -2460,60 +2402,8 @@ public class MakeForm2Html {
 			return "err@报表生成错误:" + ex.getMessage();
 		}
 	}
-
-	private static void paintWaterMarkPhoto(String targerImagePath,String words,String srcImagePath) {
-        Integer degree = -15;
-        OutputStream os = null;
-        try {
-            Image srcImage = ImageIO.read(new File(srcImagePath));
-            BufferedImage bufImage = new BufferedImage(srcImage.getWidth(null), srcImage.getHeight(null), BufferedImage.TYPE_INT_RGB);
-            // 得到画布对象
-            Graphics2D graphics2D = bufImage.createGraphics();
-            // 设置对线段的锯齿状边缘处理
-            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            graphics2D.drawImage(srcImage.getScaledInstance(srcImage.getWidth(null), srcImage.getHeight(null), Image.SCALE_SMOOTH),
-                    0, 0, null);
-            if (null != degree) {
-                // 设置水印旋转角度及坐标
-                graphics2D.rotate(Math.toRadians(degree), (double) bufImage.getWidth() / 2, (double) bufImage.getHeight() / 2);
-            }
-            // 透明度
-            float alpha = 0.25f;
-            graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha));
-            // 设置颜色和画笔粗细
-            graphics2D.setColor(Color.gray);
-            graphics2D.setStroke(new BasicStroke(10));
-            graphics2D.setFont(new Font("SimSun", Font.ITALIC, 18));
-            // 绘制图案或文字
-            String cont = words;
-            String dateStr = new SimpleDateFormat("YYYY-MM-dd").format(new Date());
-            int charWidth1 = 8;
-            int charWidth2 = 8;
-            int halfGap = 12;
-            graphics2D.drawString(cont, (srcImage.getWidth(null) - cont.length() * charWidth1) / 2,
-                    (srcImage.getHeight(null) - (charWidth1 + halfGap)) / 2);
-            graphics2D.drawString(dateStr, (srcImage.getWidth(null) - dateStr.length() * charWidth2) / 2,
-                    (srcImage.getHeight(null) + (charWidth2 + halfGap)) / 2);
- 
-            graphics2D.dispose();
- 
-            os = new FileOutputStream(targerImagePath);
-            // 生成图片 (可设置 jpg或者png格式)
-            ImageIO.write(bufImage, "png", os);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (os != null) {
-                    os.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-	
-	public static boolean Html2Pdf(String pdfFileExe, String htmFile, String pdf) {
+	public static void Html2Pdf(String pdfFileExe, String htmFile, String pdf)
+	{
 		bp.da.Log.DebugWriteInfo("@开始生成PDF" + pdfFileExe + "@pdf=" + pdf + "@htmFile=" + htmFile);
 		StringBuilder cmd = new StringBuilder();
 		if (System.getProperty("os.name").indexOf("Windows") == -1) {
@@ -2551,38 +2441,44 @@ public class MakeForm2Html {
 			result = false;
 			e.printStackTrace();
 		}
-		return result;
+		//return result;
 	}
-
 	/**
-	 * 签名
-	 * 
-	 * @param userNo
-	 * @return
-	 * @throws Exception
-	 */
+	 签名
+
+	 param userNo
+	 @return
+	*/
 	private static String SignPic(String userNo) throws Exception {
 
-		if (DataType.IsNullOrEmpty(userNo)) {
+		if (DataType.IsNullOrEmpty(userNo))
+		{
 			return "";
 		}
-		// 如果文件存在
-		String path = SystemConfig.getPathOfDataUser() + "Siganture/" + userNo + ".jpg";
+		//如果文件存在
+		String path = bp.difference.SystemConfig.getPathOfDataUser() + "Siganture/" + userNo + ".jpg";
 
-		if ((new File(path)).isFile() == false) {
-			path = SystemConfig.getPathOfDataUser() + "Siganture/" + userNo + ".JPG";
-			if ((new File(path)).isFile() == true) {
+		if ((new File(path)).isFile() == false)
+		{
+			path = bp.difference.SystemConfig.getPathOfDataUser() + "Siganture/" + userNo + ".JPG";
+			if ((new File(path)).isFile() == true)
+			{
 				return "<img src='" + path + "' style='border:0px;width:100px;height:30px;'/>";
-			} else {
+			}
+			else
+			{
 				Emp emp = new Emp(userNo);
 				return emp.getName();
 			}
-		} else {
+		}
+		else
+		{
 			return "<img src='" + path + "' style='border:0px;width:100px;height:30px;'/>";
 		}
 
 	}
 
+
 }
 
-///
+///#endregion

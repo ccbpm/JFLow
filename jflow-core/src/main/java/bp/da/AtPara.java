@@ -7,32 +7,31 @@ public class AtPara
 	/** 
 	 工作
 	*/
-	public final String getFK_Work()
+	public final String getFK_Work()  throws Exception
 	{
 		return this.GetValStrByKey("FK_Work");
 	}
-	public final String getFK_ZJ()
+	public final String getFK_ZJ()  throws Exception
 	{
 		return this.GetValStrByKey("FK_ZJ");
 	}
-	public final int getOID()
+	public final int getOID()  throws Exception
 	{
 		return this.GetValIntByKey("OID");
 	}
-	public final String getDoType()
+	public final String getDoType()  throws Exception
 	{
 		return this.GetValStrByKey("DoType");
 	}
-	public AtPara()
+	public AtPara()throws Exception
 	{
 	}
 	/** 
 	 执行一个para
 	 
-	 @param para
+	 param para
 	*/
-	public AtPara(String para)
-	{
+	public AtPara(String para)  {
 		if (para == null)
 		{
 			return;
@@ -68,8 +67,7 @@ public class AtPara
 			}
 		}
 	}
-	public final void SetVal(String key, String val)
-	{
+	public final void SetVal(String key, String val)  {
 		try
 		{
 			this.getHisHT().put(key, val);
@@ -79,8 +77,7 @@ public class AtPara
 			this.getHisHT().put(key, val);
 		}
 	}
-	public final String GetValStrByKey(String key)
-	{
+	public final String GetValStrByKey(String key)  {
 		Object tempVar = this.getHisHT().get(key);
 		String str = tempVar instanceof String ? (String)tempVar : null;
 		if (str == null)
@@ -89,16 +86,14 @@ public class AtPara
 		}
 		return str;
 	}
-	public final boolean GetValBoolenByKey(String key)
-	{
+	public final boolean GetValBoolenByKey(String key)  {
 		if (this.GetValIntByKey(key) == 0)
 		{
 			return false;
 		}
 		return true;
 	}
-	public final boolean GetValBoolenByKey(String key, boolean isNullAsVal)
-	{
+	public final boolean GetValBoolenByKey(String key, boolean isNullAsVal)  {
 		String str = this.GetValStrByKey(key);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
@@ -117,7 +112,7 @@ public class AtPara
 		return GetValFloatByKey(key, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
+
 //ORIGINAL LINE: public float GetValFloatByKey(string key, float isNullAsVal = 0)
 	public final float GetValFloatByKey(String key, float isNullAsVal)
 	{
@@ -131,15 +126,12 @@ public class AtPara
 		}
 	}
 
-	public final int GetValIntByKey(String key)
-	{
+	public final int GetValIntByKey(String key)  {
 		return GetValIntByKey(key, 0);
 	}
 
-//C# TO JAVA CONVERTER NOTE: Java does not support optional parameters. Overloaded method(s) are created above:
-//ORIGINAL LINE: public int GetValIntByKey(string key, int isNullAsVal = 0)
-	public final int GetValIntByKey(String key, int isNullAsVal)
-	{
+
+	public final int GetValIntByKey(String key, int isNullAsVal)  {
 		String str = this.GetValStrByKey(key);
 		if (str.equals("undefined") || DataType.IsNullOrEmpty(str))
 		{

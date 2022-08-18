@@ -1,11 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.sys.*;
-import bp.*;
-import java.time.*;
-import java.math.*;
-
 /** 
  附件类型
 */
@@ -39,7 +33,7 @@ public enum AdjunctType
 		return this.ordinal();
 	}
 
-	public static AdjunctType forValue(int value) throws Exception
+	public static AdjunctType forValue(int value) 
 	{
 		return values()[value];
 	}

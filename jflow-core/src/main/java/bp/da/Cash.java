@@ -14,7 +14,6 @@ import bp.en.SQLCash;
 import bp.en.SqlBuilder;
 import bp.sys.*;
 import bp.tools.ConvertTools;
-import bp.tools.StringHelper;
 
 /**
  * Cash 的摘要说明。
@@ -197,7 +196,7 @@ public class Cash {
 	/**
 	 * 为部分数据做的缓冲处理
 	 * 
-	 * @param clName
+	 * param clName
 	 * @return
 	 */
 	public static Entities GetEnsDataExt(String clName) {
@@ -220,8 +219,8 @@ public class Cash {
 	/**
 	 * 为部分数据做的缓冲处理
 	 * 
-	 * @param clName
-	 * @param obj
+	 * param clName
+	 * param obj
 	 */
 	public static void SetEnsDataExt(String clName, Entities obj) {
 		if (clName == null || obj == null) {
@@ -253,7 +252,6 @@ public class Cash {
 		if (clName == null)
 			return;
 
-		// throw new Exception("clName.不能为空。");
 		if (map == null) {
 			getMap_Cash().remove(clName);
 			return;
@@ -302,15 +300,15 @@ public class Cash {
 	/**
 	 * 删除 like 名称的缓存对象。
 	 * 
-	 * @param likeKey
+	 * param likeKey
 	 * @return
 	 */
 	public static int DelObjFormApplication(String likeKey) {
 		int i = 0;
 		if (SystemConfig.getIsBSsystem()) {
 			String willDelKeys = "";
-			for (String key : getBS_Cash().keySet()) {
-				if (!key.contains(likeKey)) {
+			for (Object key : getBS_Cash().keySet()) {
+				if (!key.toString().contains(likeKey)) {
 					continue;
 				}
 				willDelKeys += "@" + key;
@@ -326,8 +324,8 @@ public class Cash {
 			}
 		} else {
 			String willDelKeys = "";
-			for (String key : CS_Cash.keySet()) {
-				if (!key.contains(likeKey)) {
+			for (Object key : CS_Cash.keySet()) {
+				if (!key.toString().contains(likeKey)) {
 					continue;
 				}
 				willDelKeys += "@" + key;
@@ -383,8 +381,8 @@ public class Cash {
 	/**
 	 * RemoveObj
 	 * 
-	 * @param key
-	 * @param where
+	 * param key
+	 * param where
 	 */
 	public static void RemoveObj(String key, Depositary where) {
 		if (!Cash.IsExits(key, where)) {
@@ -469,13 +467,13 @@ public class Cash {
 		}
 	}
 
-	public static String GetBillStr(String cfile, boolean isCheckCash) {
+	public static String GetBillStr(String cfile, boolean isCheckCash) throws Exception {
 		String val = (String) ((getBill_Cash().get(cfile) instanceof String) ? getBill_Cash().get(cfile) : null);
 		if (isCheckCash == true) {
 			val = null;
 		}
 
-		if (StringHelper.isNullOrEmpty(val)) {
+		if (DataType.IsNullOrEmpty(val)) {
 			String file = null;
 			if (cfile.contains(":")) {
 				file = cfile;
@@ -510,8 +508,8 @@ public class Cash {
 				Attr attrN = new Attr();
 				attrN.setKey(perKey + "." + attr.getKey());
 
-				// attrN.Key = attrN.Key.replace("\\f2","");
-				// attrN.Key = attrN.Key.replace("\\f3", "");
+				// attrN.Key = attrN.getKey().replace("\\f2","");
+				// attrN.Key = attrN.getKey().replace("\\f3", "");
 
 				if (attr.getIsRefAttr()) {
 					attrN.setField(perKey + "." + attr.getKey() + "Text");
@@ -541,7 +539,7 @@ public class Cash {
 		return paras;
 	}
 
-	public static String[] GetBillParas_Gener(String cfile, Attrs attrs) {
+	public static String[] GetBillParas_Gener(String cfile, Attrs attrs) throws Exception {
 		// Attrs attrs = en.getEnMap().getAttrs();
 		String[] paras = new String[300];
 		String Billstr = Cash.GetBillStr(cfile, true);
@@ -566,7 +564,7 @@ public class Cash {
 					haveError = true;
 					String findKey = null;
 					int keyLen = 0;
-					for (Attr attr : attrs) {
+					for (Attr attr : attrs.ToJavaList()) {
 						if (real.contains(attr.getKey())) {
 							if (keyLen <= attr.getKey().length()) {
 								keyLen = attr.getKey().length();

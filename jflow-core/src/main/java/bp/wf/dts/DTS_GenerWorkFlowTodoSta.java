@@ -2,9 +2,9 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.en.*;
-import bp.web.WebUser;
 import bp.wf.*;
-import bp.wf.port.WFEmp;
+
+import java.util.Date;
 
 
 /** 
@@ -15,7 +15,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 	/** 
 	 更新WF_GenerWorkerFlow.TodoSta状态.
 	*/
-	public DTS_GenerWorkFlowTodoSta()
+	public DTS_GenerWorkFlowTodoSta()throws Exception
 	{
 		this.Title = "更新WF_GenerWorkerFlow.TodoSta状态.";
 		this.Help = "该方法每天的8点自动执行";
@@ -36,12 +36,11 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getIsAdmin() == true)
+		if (bp.web.WebUser.getIsAdmin() == true)
 		{
 			return true;
 		}
@@ -51,12 +50,11 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
-		//系统期望的是，每一个人仅发一条信息.  "您有xx个预警工作，yy个预期工作，请及时处理。"
+		//系统期望的是，每一个人仅发一条信息.  "您有xx个预警工作，yy个预期工作，请及时处理。”
 
 		DataTable dtEmps = new DataTable();
 		dtEmps.Columns.Add("EmpNo", String.class);
@@ -66,19 +64,14 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 		String timeDT = DataType.getCurrentDateByFormart("yyyy-MM-dd");
 		String sql = "";
 
-		//查询出预警的工作.
-		//sql = " SELECT DISTINCT FK_Emp,COUNT(FK_Emp) as Num , 0 as DBType FROM WF_GenerWorkerlist A WHERE a.DTOfWarning =< '" + timeDT + "' AND a.SDT <= '" + timeDT + "' AND A.IsPass=0  ";
-		//sql += "  UNION ";
-		//sql += "SELECT DISTINCT FK_Emp,COUNT(FK_Emp) as Num , 1 as DBType FROM WF_GenerWorkerlist A WHERE  a.SDT >'" + timeDT + "' AND A.IsPass=0 ";
-
 		sql = "SELECT * FROM WF_GenerWorkerlist A WHERE a.DTOfWarning >'" + timeDT + "' AND a.SDT <'" + timeDT + "' AND A.IsPass=0 ORDER BY FK_Node,FK_Emp ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 
-			///向预警人员发消息.
+			///#region 向预警人员发消息.
 		// 向预警的人员发消息.
 		Node nd = new Node();
-		WFEmp emp = new WFEmp();
+		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp();
 		for (DataRow dr : dt.Rows)
 		{
 			long workid = Long.parseLong(dr.getValue("WorkID").toString());
@@ -112,14 +105,14 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 				continue;
 			}
 
-			if (!fk_emp.equals(emp.getNo()))
+			if (!emp.getNo().equals(fk_emp))
 			{
 				emp.setNo(fk_emp);
 				emp.Retrieve();
 			}
 		}
 
-			/// 向预警人员发消息.
+			///#endregion 向预警人员发消息.
 
 		if (dt.Rows.size() >= 1)
 		{

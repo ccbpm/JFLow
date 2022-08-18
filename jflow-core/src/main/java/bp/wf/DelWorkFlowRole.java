@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  删除流程规则
  @0=不能删除
@@ -33,13 +35,11 @@ public enum DelWorkFlowRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static DelWorkFlowRole forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static DelWorkFlowRole forValue(int value)
+	{return values()[value];
 	}
 }

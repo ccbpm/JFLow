@@ -1,22 +1,17 @@
 package bp.difference.handler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Enumeration;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
-import bp.en.Attr;
-import bp.en.Attrs;
-import bp.en.Entity;
-import bp.en.FieldType;
-import bp.en.UIContralType;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+import bp.da.*;
+import bp.sys.Glo;
 import org.apache.http.protocol.HttpContext;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -27,24 +22,21 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.Region;
 
-import bp.da.DBType;
-import bp.da.DataRow;
-import bp.da.DataSet;
-import bp.da.DataTable;
-import bp.da.DataType;
-import bp.da.Log;
-import bp.sys.*;
-import bp.tools.StringHelper;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
+import bp.en.Attr;
+import bp.en.Attrs;
+import bp.en.Entity;
+import bp.en.FieldType;
+import bp.sys.UIConfig;
 import bp.web.WebUser;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public abstract class WebContralBase {
 	/**
 	 * 获得Form数据.
 	 * 
-	 * @param key key
+	 * param key
+	 *            key
 	 * @return 返回值
 	 */
 	public final String GetValFromFrmByKey(String key, String isNullAsVal) {
@@ -64,8 +56,8 @@ public abstract class WebContralBase {
 		if (val == null) {
 			if (isNullAsVal != null)
 				return isNullAsVal;
-			return "";
-			// throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
+            return "";
+			//throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
 		}
 
 		val = val.replace("'", "~");
@@ -75,26 +67,27 @@ public abstract class WebContralBase {
 	/**
 	 * 获得Form数据.
 	 * 
-	 * @param key key
+	 * param key
+	 *            key
 	 * @return 返回值
 	 */
 	public final String GetValFromFrmByKey(String key) {
 		String val = getRequest().getParameter(key);
-		if (val == null && key.contains("DDL_") == false) {
+		if (val == null && key.toString().contains("DDL_") == false) {
 			val = this.getRequest().getParameter("DDL_" + key);
 		}
 
-		if (val == null && key.contains("TB_") == false) {
+		if (val == null && key.toString().contains("TB_") == false) {
 			val = getRequest().getParameter("TB_" + key);
 		}
 
-		if (val == null && key.contains("CB_") == false) {
+		if (val == null && key.toString().contains("CB_") == false) {
 			val = getRequest().getParameter("CB_" + key);
 		}
 
 		if (val == null) {
 			return "";
-			// throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
+			//throw new RuntimeException("@获取Form参数错误,参数集合不包含[" + key + "]");
 		}
 
 		val = val.replace("'", "~");
@@ -103,30 +96,68 @@ public abstract class WebContralBase {
 
 	public float GetValFloatFromFrmByKey(String key) {
 		String str = this.GetValFromFrmByKey(key);
-		if (DataType.IsNullOrEmpty(str) == true)
+		if (str == null || str == "")
 			throw new RuntimeException("@参数:" + key + "没有取到值.");
 		return Float.parseFloat(str);
 	}
 
 	public BigDecimal GetValDecimalFromFrmByKey(String key) {
 		String str = this.GetValFromFrmByKey(key);
-		if (DataType.IsNullOrEmpty(str) == true)
+		if (str == null || str == "")
 			throw new RuntimeException("@参数:" + key + "没有取到值.");
 		return new BigDecimal(str);
 	}
 
 	public int getIndex() {
 		String str = getRequest().getParameter("Index");
-		if (DataType.IsNullOrEmpty(str) == true)
+		if (str == null || str == "")
 			return 1;
 		return Integer.parseInt(str);
+	}
+	public String getDomain()throws Exception
+	{
+		String str = this.GetRequestVal("Domain");
+		if (DataType.IsNullOrEmpty(str) == true)
+			return null;
+		return str;
+
+	}
+	/// <summary>
+	/// 组织编号
+	/// </summary>
+	public String getOrgNo()throws Exception
+	{
+
+		String str = this.GetRequestVal("OrgNo");
+		if (DataType.IsNullOrEmpty(str) == true)
+			return null;
+		return str;
+
+	}
+	public String getDoWhat()throws Exception
+	{
+
+		String str = this.GetRequestVal("DoWhat");
+		if (str == null || str.equals("")|| str.equals("null"))
+			return null;
+		return str;
+
+	}
+	public String getUserNo(){
+		String str = this.GetRequestVal("UserNo");
+		if (str == null || str.equals("") || str.equals("null"))
+			return null;
+		return str;
+
 	}
 
 	/**
 	 * 执行方法
 	 * 
-	 * @param myEn       对象名
-	 * @param methodName 方法
+	 * param myEn
+	 *            对象名
+	 * param methodName
+	 *            方法
 	 * @return 返回执行的结果，执行错误抛出异常
 	 * @throws Exception
 	 */
@@ -135,7 +166,9 @@ public abstract class WebContralBase {
 		java.lang.Class tp = myEn.getClass();
 		java.lang.reflect.Method mp = null;
 
-		mp = tp.getMethod(methodName);
+		 
+			mp = tp.getMethod(methodName);
+		 
 
 		if (mp == null) {
 			/* 没有找到方法名字，就执行默认的方法. */
@@ -154,38 +187,27 @@ public abstract class WebContralBase {
 
 			tempVar = mp.invoke(this, paras);
 
-		} catch (InvocationTargetException ex) {
 
-			StringWriter sw = new StringWriter();
-			ex.printStackTrace(new PrintWriter(sw, true));
-
-			String str = sw.toString();
-			int idx = str.indexOf("@");
-			if (idx >= 0) {
-				String str1 = str.substring(idx);
-				String str2 = str1.substring(0, str1.indexOf(".") + 1);
-				return str2;
-			}
-			return "err@"+str;
-
-		} catch (Exception e) {
+		} catch (InvocationTargetException e ) {
 
 			String msg = null;
 
-			if (e.getCause() != null) {
+			if(e.getTargetException()!=null && e.getTargetException().getCause()!=null)
+				msg = e.getTargetException().getCause().getMessage();
+			if (msg==null && e.getCause() != null) {
 				msg = e.getCause().getMessage();
 			}
 
 			if (msg == null)
+
 				msg = e.getMessage();
 
 			// 如果有url返回.
-			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0 || (msg.indexOf("err@") == 0)))
+			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0 ||(msg.indexOf("err@")==0)))
 				return msg;
 
 			String str = "";
-			if (e.getCause() != null && e.getCause().getMessage() != null
-					&& e.getCause().getMessage().indexOf("wait") > -1) {
+			if (e.getCause() != null && e.getCause().getMessage().indexOf("wait") > -1) {
 				str += "@错误原因可能是数据库连接异常";
 			}
 
@@ -198,6 +220,7 @@ public abstract class WebContralBase {
 
 			Log.DebugWriteError("bp.wf.HttpHangerBase.DoMethod()" + errInfo);
 			return errInfo;
+
 
 		}
 		return (String) ((tempVar instanceof String) ? tempVar : null); // 调用由此
@@ -212,24 +235,25 @@ public abstract class WebContralBase {
 	 * @throws Exception
 	 */
 	protected String DoDefaultMethod() throws Exception {
-
-		if (this.getDoType().contains(">") == true)
+		
+		if (this.getDoType().contains(">")==true)
 			return "err@非法的脚本植入";
-
+		
 		return "@子类没有重写该[" + this.getDoType() + "]方法.";
 	}
 
 	/**
 	 * 公共方法获取值
 	 * 
-	 * @param param 参数名
+	 * param param
+	 *            参数名
 	 * @return
 	 */
 	public final String GetRequestVal(String param) {
 
 		String val = getRequest().getParameter(param);
 
-		if (StringHelper.isNullOrEmpty(val)) {
+		if (DataType.IsNullOrEmpty(val)) {
 			val = getRequest().getParameter(param);
 		}
 
@@ -247,7 +271,8 @@ public abstract class WebContralBase {
 	/**
 	 * 公共方法获取值
 	 * 
-	 * @param param 参数名
+	 * param param
+	 *            参数名
 	 * @return
 	 */
 	public final int GetRequestValInt(String param) {
@@ -265,7 +290,7 @@ public abstract class WebContralBase {
 	/**
 	 * 公共方法获取值
 	 * 
-	 * @param param
+	 * param param
 	 * @return
 	 */
 	public final long GetRequestValInt64(String param) {
@@ -283,7 +308,7 @@ public abstract class WebContralBase {
 	/**
 	 * 数据
 	 * 
-	 * @param param
+	 * param param
 	 * @return
 	 */
 	public final float GetRequestValFloat(String param) {
@@ -319,14 +344,13 @@ public abstract class WebContralBase {
 		}
 		return urlExt;
 	}
-
 	public final String getRequestParasOfAll() {
 		String urlExt = "";
 		String rawUrl = this.getRequest().getQueryString();
 		rawUrl = "&" + rawUrl.substring(rawUrl.indexOf('?') + 1);
 		String[] paras = rawUrl.split("[&]", -1);
 		for (String para : paras) {
-
+			
 			if (para == null || para.equals("") || para.contains("=") == false) {
 				continue;
 			}
@@ -337,16 +361,18 @@ public abstract class WebContralBase {
 
 			urlExt += "&" + para;
 		}
-
-		Enumeration enu = getRequest().getParameterNames();
-		while (enu.hasMoreElements()) {
-
+		
+		 Enumeration enu = getRequest().getParameterNames();
+		while (enu.hasMoreElements())
+		{
+			
 			String key = (String) enu.nextElement();
-			if (urlExt.contains(key + "=") == true)
-				continue;
-
-			urlExt += "&" + key + "=" + getRequest().getParameter(key);
+			 if (urlExt.contains(key+"=") == true)
+              continue;
+			
+			 urlExt += "&" + key + "=" + getRequest().getParameter(key);
 		}
+
 
 		return urlExt;
 	}
@@ -370,8 +396,9 @@ public abstract class WebContralBase {
 		}
 		return str;
 	}
+	
 
-	public String getName() {
+	public String getName() throws Exception {
 		String str = getRequest().getParameter("Name");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return null;
@@ -402,55 +429,38 @@ public abstract class WebContralBase {
 		return doType;
 	}
 
-	public String getDoWhat() {
-
-		String str = this.GetRequestVal("DoWhat");
-		if (str == null || str.equals("") || str.equals("null"))
-			return null;
-		return str;
-
-	}
-
-	public String getUserNo() {
-		String str = this.GetRequestVal("UserNo");
-		if (str == null || str.equals("") || str.equals("null"))
-			return null;
-		return str;
-
-	}
-
-	public final String getEnsName() {
+	public final String getEnsName()throws Exception {
 		String str = this.GetRequestVal("EnsName");
 
 		if (str == null || str.equals("") || str.equals("null")) {
 			str = this.GetRequestVal("FK_MapData");
 		}
-
+		
 		if (str == null || str.equals("") || str.equals("null")) {
 			str = this.GetRequestVal("FrmID");
 		}
 
 		if (str == null || str.equals("") || str.equals("null")) {
 			if (this.getEnName() == null)
-				return null;
-			return this.getEnName() + "s";
+                return null;
+            return this.getEnName() + "s";
 		}
 
 		return str;
 	}
-
-	public final String getTreeEnsName() {
+	
+	public final String getTreeEnsName()throws Exception {
 		String str = this.GetRequestVal("TreeEnsName");
 
 		if (str == null || str.equals("") || str.equals("null")) {
 			if (this.getEnName() == null)
-				return null;
-			return this.getEnName() + "s";
+                return null;
+            return this.getEnName() + "s";
 		}
 
 		return str;
 	}
-
+	
 	public final String getMyPK() {
 		String str = this.GetRequestVal("MyPK");
 		if (str == null || str.equals("") || str.equals("null")) {
@@ -477,7 +487,7 @@ public abstract class WebContralBase {
 		return str;
 	}
 
-	public final String getEnumKey() {
+	public String getEnumKey() {
 		String str = this.GetRequestVal("EnumKey");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return null;
@@ -511,9 +521,9 @@ public abstract class WebContralBase {
 	 */
 	public final String getFK_MapExt() {
 		String str = this.GetRequestVal("FK_MapExt");
-		if (StringHelper.isNullOrEmpty(str)) {
+		if (DataType.IsNullOrEmpty(str)) {
 			str = this.GetRequestVal("MyPK");
-			if (StringHelper.isNullOrEmpty(str)) {
+			if (DataType.IsNullOrEmpty(str)) {
 				return null;
 			}
 		}
@@ -525,19 +535,20 @@ public abstract class WebContralBase {
 	 */
 	public final String getFK_Flow() {
 		String str = this.GetRequestVal("FK_Flow");
-		if (DataType.IsNullOrEmpty(str)) {
+		if ( DataType.IsNullOrEmpty(str)) {
 			return null;
 		}
 		return str;
 	}
-
+	
 	public final String getPFlowNo() {
 		String str = this.GetRequestVal("PFlowNo");
-		if (DataType.IsNullOrEmpty(str)) {
+		if ( DataType.IsNullOrEmpty(str)) {
 			return null;
 		}
 		return str;
 	}
+	 
 
 	public final int getPNodeID() {
 		String str = this.GetRequestVal("PNodeID");
@@ -547,8 +558,10 @@ public abstract class WebContralBase {
 
 		return Integer.parseInt(str);
 	}
-
-	public final long getPFID() {
+	
+	 
+	
+	public final long getPFID() { 
 		String str = getRequest().getParameter("PFID");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return 0;
@@ -564,7 +577,7 @@ public abstract class WebContralBase {
 
 		return Integer.parseInt(str);
 	}
-
+	
 	/**
 	 * 节点ID
 	 */
@@ -576,7 +589,7 @@ public abstract class WebContralBase {
 		return nodeID;
 	}
 
-	public final long getFID() throws Exception {
+	public final long getFID() { 
 		String str = getRequest().getParameter("FID");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return 0;
@@ -585,7 +598,8 @@ public abstract class WebContralBase {
 	}
 
 	public long getWorkID() {
-
+		if(_workID!=0)
+			return _workID;
 		String str = this.GetRequestVal("WorkID");
 		if (str == null || str.equals("") || str.equals("null"))
 			str = this.GetRequestVal("PKVal");
@@ -593,10 +607,13 @@ public abstract class WebContralBase {
 		if (str == null || str.equals("") || str.equals("null"))
 			str = this.GetRequestVal("OID");
 
-		if (str == null || str.equals("") || str.equals("null") || str.equals("undefined"))
+		if (str == null || str.equals("") || str.equals("null"))
 			return 0;
 
 		return Integer.parseInt(str);
+	}
+	public void setWorkID(long value){
+		_workID = value;
 	}
 
 	/**
@@ -659,7 +676,7 @@ public abstract class WebContralBase {
 	/**
 	 * 获得Int数据
 	 * 
-	 * @param key
+	 * param key
 	 * @return
 	 */
 	public final int GetValIntFromFrmByKey(String key) {
@@ -672,7 +689,7 @@ public abstract class WebContralBase {
 
 	public final boolean GetValBoolenFromFrmByKey(String key) {
 		String val = this.GetValFromFrmByKey(key, "0");
-		if (val.equals("on") || val.equals("1"))
+		if (val == "on" || val == "1")
 			return true;
 		if (val == null || val.equals("") || val.equals("0")) {
 			return false;
@@ -698,7 +715,7 @@ public abstract class WebContralBase {
 	/*
 	 * 表单ID
 	 */
-	public final String getFrmID() throws Exception {
+	public final String getFrmID() {
 		String str = this.GetRequestVal("FrmID");
 		if (str == null || str.equals("") || str.equals("null")) {
 			return this.GetRequestVal("FK_MapData");
@@ -707,7 +724,7 @@ public abstract class WebContralBase {
 		return str;
 	}
 
-	private long WorkID;
+	private long _workID=0;
 
 	public long getPWorkID() {
 
@@ -718,7 +735,7 @@ public abstract class WebContralBase {
 		return this.GetRequestValInt("CWorkID");
 	}
 
-	/// 属性参数.
+	/// #region 属性参数.
 	/**
 	 * @于庆海翻译.
 	 * 
@@ -755,13 +772,195 @@ public abstract class WebContralBase {
 	/// </summary>
 	public boolean getIsMobile() {
 		String v = this.GetRequestVal("IsMobile");
-		if (v != null && v.equals("1"))
+		if (v != null && v == "1")
 			return true;
 
 		if (Glo.getRequest().getRequestURI().contains("/CCMobile/"))
 			return true;
 
 		return false;
+	}
+	
+	protected String ExportDGExcel(DataSet ds,  String title,String params) throws Exception {
+		
+		DataTable dt = ds.GetTableByName("GroupSearch");
+		DataTable AttrsOfNum = ds.GetTableByName("AttrsOfNum");
+		DataTable AttrsOfGroup = ds.GetTableByName("AttrsOfGroup"); 		
+
+		String fileName = title+"Ep" + title + ".xls";
+		String fileDir = SystemConfig.getPathOfTemp();
+		String filePth = SystemConfig.getPathOfTemp();
+		// 参数及变量设置
+		// 如果导出目录没有建立，则建立.
+		File file = new File(fileDir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+
+		filePth = filePth + "/" + fileName;
+		file = new File(filePth);
+		if (file.exists()) {
+			file.delete();
+		}
+
+		// String httpFilePath =
+		// Glo.getCCFlowAppPath()+"DataUser/Temp/"+fileName;
+		int headerRowIndex = 0; // 文件标题行序
+		int titleRowIndex = 1; // 列标题行序
+		int countCell = 0;// 显示的列数
+		// 第一步，创建一个webbook，对应一个Excel文件
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+		HSSFSheet sheet = wb.createSheet(title+"Ep" + title);
+		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+		HSSFRow row = null;
+		// 第四步，创建单元格，并设置值表头 设置表头居中
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+		HSSFFont font = null;
+		HSSFDataFormat fmt = wb.createDataFormat();
+		HSSFCell cell = null;
+
+		// 生成标题
+
+		row = sheet.createRow((int) titleRowIndex);
+		int index = 0;// 控制列 qin 15.9.21
+		//添加序号
+		cell = row.createCell(index);
+		cell.setCellStyle(style);
+		cell.setCellValue("序号");
+		index += 1;
+		countCell++;
+		for (DataRow attr : AttrsOfGroup.Rows) {
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue(attr.getValue("Name").toString());
+			index += 1;
+			countCell++;
+		}
+		for (DataRow attr : AttrsOfNum.Rows) {
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue(attr.getValue("Name").toString());
+			index += 1;
+			countCell++;
+		}
+		DataRow dr = null;
+		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
+			dr = dt.Rows.get(i - 2);
+			row = sheet.createRow(i);
+			// 生成文件内容
+			index = 0;
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue(dr.getValue("IDX").toString());
+			index += 1;
+			for (DataRow attr : AttrsOfGroup.Rows) {
+				
+				cell = row.createCell(index);
+				cell.setCellStyle(style);
+				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn")+"T").toString());
+				index += 1;
+			}
+			for (DataRow attr : AttrsOfNum.Rows) {
+							
+				cell = row.createCell(index);
+				cell.setCellStyle(style);
+				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn").toString()).toString());
+				index += 1;
+			}
+
+		}
+		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
+
+		row = sheet.createRow((int) creatorRowIndex);
+		
+		// 生成文件内容
+		index = 0;
+		cell = row.createCell(index);
+		cell.setCellStyle(style);
+		cell.setCellValue("汇总");
+		index += 1;
+		for (DataRow attr : AttrsOfGroup.Rows) {
+			
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			cell.setCellValue("");
+			index += 1;
+		}
+
+		for (DataRow attr : AttrsOfNum.Rows) {
+			double d =0;
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			for(DataRow dtr : dt.Rows){
+				d += Double.parseDouble(dtr.getValue(attr.getValue("KeyOfEn").toString()).toString());
+			}
+			if(params.contains(attr.getValue("KeyOfEn")+"=AVG")){
+				if(dt.Rows.size()!=0){
+					DecimalFormat df = new DecimalFormat("#.0000");            
+					d = Double.valueOf(df.format(d/dt.Rows.size()));
+				}
+					
+			}
+			
+			if(Integer.parseInt(attr.getValue("MyDataType").toString()) == DataType.AppInt){
+				if(params.contains(attr.getValue("KeyOfEn")+"=AVG"))
+					cell.setCellValue(d);
+				else
+					cell.setCellValue((int)d);
+			}else{
+				cell.setCellValue(d);
+			}
+			
+			index += 1;
+		}
+		
+
+		// 列标题单元格样式设定
+		HSSFCellStyle titleStyle = wb.createCellStyle();
+		/*
+		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
+		 */
+		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		font = wb.createFont();
+		font.setBold(true);
+		titleStyle.setFont(font);
+		row = sheet.createRow((int) 0);
+		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+		cell = row.createCell(headerRowIndex);
+		cell.setCellValue(title);
+		cell.setCellStyle(titleStyle);
+
+		// 生成制单人
+		// 制表人单元格样式设定
+		HSSFCellStyle userStyle = wb.createCellStyle();
+		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		creatorRowIndex = creatorRowIndex+1;
+
+		row = sheet.createRow((int) creatorRowIndex);
+
+		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+		cell = row.createCell(0);
+		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
+		cell.setCellStyle(userStyle);
+		// 第六步，将文件存到指定位置
+		try {
+			FileOutputStream fout = new FileOutputStream(filePth);
+			wb.write(fout);
+			fout.flush();
+			fout.close();
+			return "/DataUser/Temp/" + fileName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return fileName;
+		}
+
 	}
 
 	protected String ExportDGToExcel(DataSet ds, String title, String params) throws Exception {
@@ -929,7 +1128,7 @@ public abstract class WebContralBase {
 
 		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
 		cell = row.createCell(0);
-		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDataTimeCNOfShort());
+		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
 		cell.setCellStyle(userStyle);
 		// 第六步，将文件存到指定位置
 		try {
@@ -945,9 +1144,10 @@ public abstract class WebContralBase {
 
 	}
 
+
 	protected String ExportDGToExcel(DataTable dt, Entity en, String title, Attrs mapAttrs) throws Exception {
 
-		String fileName = title + "_" + bp.da.DataType.getCurrentDataCNOfLong() + "_" + WebUser.getNo() + ".xls";
+		String fileName = title + "_" + bp.da.DataType.getCurrentDateCNOfLong() + "_" + WebUser.getNo() + ".xls";
 		String fileDir = SystemConfig.getPathOfTemp();
 		String filePth = SystemConfig.getPathOfTemp();
 		// 参数及变量设置
@@ -981,7 +1181,7 @@ public abstract class WebContralBase {
 
 		// 生成标题
 		Attrs attrs = null;
-		if (mapAttrs != null)
+		if(mapAttrs!=null)
 			attrs = mapAttrs;
 		else
 			attrs = en.getEnMap().getAttrs();
@@ -992,7 +1192,7 @@ public abstract class WebContralBase {
 		else {
 			selectedAttrs = new Attrs();
 
-			for (Attr attr : attrs) {
+			for (Attr attr : attrs.ToJavaList()) {
 
 				boolean contain = false;
 
@@ -1015,23 +1215,23 @@ public abstract class WebContralBase {
 				continue;
 			if (attr.getKey().equals("OID"))
 				continue;
-
+			
 			if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
 				continue;
-
-			if (attr.getIsFKorEnum())
-				continue;
-			if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt")
-					|| attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
-					|| attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
-				continue;
-
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			if (attr.getMyFieldType() == FieldType.RefText)
-				cell.setCellValue(attr.getDesc().replace("名称", ""));
-			else
-				cell.setCellValue(attr.getDesc());
+			
+			 if (attr.getIsFKorEnum())
+                 continue;
+             if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt") 
+                 || attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
+                 || attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
+                 continue;
+             
+             cell = row.createCell(index);
+ 			 cell.setCellStyle(style);
+             if(attr.getMyFieldType() == FieldType.RefText)
+            	 cell.setCellValue(attr.getDesc().replace("名称",""));  
+             else
+            	 cell.setCellValue(attr.getDesc());
 			index += 1;
 			countCell++;
 		}
@@ -1041,76 +1241,53 @@ public abstract class WebContralBase {
 			row = sheet.createRow(i);
 			// 生成文件内容
 			index = 0;
+
 			for (int j = 0; j < selectedAttrs.size(); j++) {
 				Attr attr = selectedAttrs.get(j);
 				if (attr.getKey().equals("MyNum"))
 					continue;
 				if (attr.getKey().equals("OID"))
 					continue;
-				if (attr.getIsFKorEnum())
-					continue;
-
+				 if (attr.getIsFKorEnum())
+                     continue;
+				
 				if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
 					continue;
-
-				if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt")
-						|| attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
-						|| attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
-					continue;
-
+				
+	             if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt") 
+	                 || attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
+	                 || attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
+	                 continue;
+	             
+				
 				String str = "";
 				if (attr.getMyDataType() == DataType.AppBoolean) {
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle 
-							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 						str = dr.getValue(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
+					else if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+						str = dr.getValue(attr.getKey().toLowerCase()).equals(1) ? "是" : "否";
 					else
 						str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
 				} else {
-					String text = "";
-					Object obj;
-					if (attr.getIsFKorEnum() || attr.getIsFK()){
-						obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.Oracle
-								? attr.getKey().toUpperCase() + "Text"
-								: attr.getKey() + "Text");
-					    obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-							  ? attr.getKey().toUpperCase() + "Text"
-							  : attr.getKey() + "Text");
-					    obj = dr.getValue(SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
-								  ? attr.getKey().toUpperCase() + "Text"
-								  : attr.getKey() + "Text");
-				    } else if (attr.getUIContralType() == UIContralType.DDL && attr.getMyDataType() == DataType.AppString){
-						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.Oracle ? attr.getKey().toUpperCase() + "T"
-										: attr.getKey() + "T");
-						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ? attr.getKey().toUpperCase() + "T"
-										: attr.getKey() + "T");
-						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 ? attr.getKey().toUpperCase() + "T"
-										: attr.getKey() + "T");
+					String text ="";
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
+						Object obj = dr.getValue((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
+						if(obj == null)
+							text = "";
+						else
+							text =  obj.toString();
 					}else{
-						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.Oracle ? attr.getKey().toUpperCase()
-										: attr.getKey());
-						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ? attr.getKey().toUpperCase()
-										: attr.getKey());
-						obj = dr.getValue(
-								SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 ? attr.getKey().toUpperCase()
-										: attr.getKey());
+						Object obj = dr.getValue(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
+						if(obj == null)
+							text = "";
+						else
+							text =  obj.toString();
 					}
-
-					if (obj == null)
-						text = "";
-					else
-						text = obj.toString();
-
-					if (DataType.IsNullOrEmpty(text) == false
-							&& (text.contains("\n") == true || text.contains("\r") == true)) {
-						str = "" + text.replaceAll("\n", "  ");
-						str = "" + text.replaceAll("\r", "  ");
-					} else {
+					
+					if(DataType.IsNullOrEmpty(text)==false && (text.contains("\n")==true ||text.contains("\r")==true)){
+						str =""+text.replaceAll("\n", "  ");
+					    str =""+text.replaceAll("\r", "  ");
+					}else{
 						str = text;
 					}
 				}
@@ -1155,14 +1332,44 @@ public abstract class WebContralBase {
 
 		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
 		cell = row.createCell(0);
-		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDataTimeCNOfShort());
+		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
 		cell.setCellStyle(userStyle);
 		// 第六步，将文件存到指定位置
 		try {
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			wb.write(bos);
+			byte[] brray = bos.toByteArray();
+			InputStream is = new ByteArrayInputStream(brray);
+
 			FileOutputStream fout = new FileOutputStream(filePth);
-			wb.write(fout);
+
+			BufferedInputStream in=null;
+			BufferedOutputStream out=null;
+			in=new BufferedInputStream(is);
+			out=new BufferedOutputStream(fout);
+			int len=-1;
+			byte[] b=new byte[1024];
+			while((len=in.read(b))!=-1){
+				out.write(b,0,len);
+			}
+			in.close();
+			out.close();
+
+
+			/*BufferedWriter br = new BufferedWriter(osw);
+			br.write(printMe);
 			fout.flush();
+			br.close();
 			fout.close();
+			osw.close();*/
+
+			//wb.write(fout);
+			//fout.flush();
+			//fout.close();
 			return "/DataUser/Temp/" + fileName;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1171,196 +1378,240 @@ public abstract class WebContralBase {
 
 	}
 
-	/*
-	 * public static String DataTableToExcel(DataTable dt, String filename, String
-	 * header, String creator, boolean date, boolean index, boolean download) {
-	 * 
-	 * String file = SystemConfig.getPathOfTemp() + filename;
-	 * 
-	 * String dir = SystemConfig.getPathOfTemp(); String name = filename; long len =
-	 * 0; HSSFRow row = null, headerRow = null, dateRow = null, sumRow = null,
-	 * creatorRow = null; HSSFCell cell = null; int r = 0; int c = 0; int
-	 * headerRowIndex = 0; //文件标题行序 int dateRowIndex = 0; //日期行序 int titleRowIndex =
-	 * 0; //列标题行序 int sumRowIndex = 0; //合计行序 int creatorRowIndex = 0; //创建人行序 float
-	 * DEF_ROW_HEIGHT = 20; //默认行高 float charWidth = 0; //单个字符宽度 int columnWidth =
-	 * 0; //列宽，像素 boolean isDate; //是否是日期格式，否则是日期时间格式 int decimalPlaces = 2; //小数位数
-	 * boolean qian; //是否使用千位分隔符 ArrayList sumColumns = new ArrayList(); //合计列序号集合
-	 * File files = new File(dir); if (files.exists() == false) files.mkdirs();
-	 * 
-	 * 
-	 * /* //一个字符的像素宽度，以Arial，10磅，i进行测算 Bitmap bmp = new Bitmap(10, 10); using () {
-	 * using (Graphics g = Graphics.FromImage(bmp)) { charWidth =
-	 * g.MeasureString("i", new Font("Arial", 10)).Width; } }
-	 */
-	// 序
-	/*
-	 * if (index && dt.Columns.contains("序") == false) {
-	 * dt.Columns.Add("序").ExtendedProperties.Add("width", 50);
-	 * dt.Columns.get("序").setOrdinal(0);
-	 * 
-	 * for (int i = 0; i < dt.Rows.size(); i++) dt.Rows.get(i).setValue("序", i + 1);
-	 * } //合计列 for (DataColumn col : dt.Columns) { if
-	 * (col.ExtendedProperties.ContainsKey("sum") == false) continue;
-	 * 
-	 * sumColumns.add(col.getOrdinal()); }
-	 * 
-	 * headerRowIndex = StringHelper.isNullOrEmpty(header) ? -1 : 0; dateRowIndex =
-	 * date ? (headerRowIndex + 1) : -1; titleRowIndex = date ? dateRowIndex + 1 :
-	 * headerRowIndex == -1 ? 0 : 1; sumRowIndex = sumColumns.size() == 0 ? -1 :
-	 * titleRowIndex + dt.Rows.size() + 1; creatorRowIndex =
-	 * StringHelper.isNullOrEmpty(creator) ? -1 : sumRowIndex == -1 ? titleRowIndex
-	 * + dt.Rows.size() + 1 : sumRowIndex + 1;
-	 * 
-	 * FileInputStream fs = new FileInputStream(file); HSSFWorkbook wb = new
-	 * HSSFWorkbook(); HSSFSheet sheet = wb.createSheet("Sheet1");
-	 * sheet.setDefaultRowHeightInPoints(DEF_ROW_HEIGHT); HSSFFont font = null;
-	 * HSSFDataFormat fmt = wb.createDataFormat();
-	 * 
-	 * if (headerRowIndex != -1) headerRow = sheet.createRow(headerRowIndex); if
-	 * (date) dateRow = sheet.createRow(dateRowIndex); if (sumRowIndex != -1) sumRow
-	 * = sheet.createRow(sumRowIndex); if (creatorRowIndex != -1) creatorRow =
-	 * sheet.createRow(creatorRowIndex);
-	 * 
-	 * ///单元格样式定义 //列标题单元格样式设定 HSSFCellStyle titleStyle = wb.createCellStyle();
-	 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-	 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-	 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-	 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-	 * titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER); font =
-	 * wb.createFont(); font.setBold(true); titleStyle.setFont(font);
-	 * 
-	 * //“序”列标题样式设定 HSSFCellStyle idxTitleStyle = wb.createCellStyle();
-	 * idxTitleStyle.cloneStyleFrom(titleStyle);
-	 * idxTitleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-	 * 
-	 * //文件标题单元格样式设定 HSSFCellStyle headerStyle = wb.createCellStyle();
-	 * headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-	 * headerStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER); font =
-	 * wb.createFont(); font.setFontHeightInPoints((short)12); font.setBold(true);
-	 * headerStyle.setFont(font);
-	 * 
-	 * //制表人单元格样式设定 HSSFCellStyle userStyle = wb.createCellStyle();
-	 * userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-	 * userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-	 * 
-	 * //单元格样式设定 HSSFCellStyle cellStyle = wb.createCellStyle();
-	 * cellStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-	 * cellStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-	 * cellStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-	 * cellStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-	 * cellStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-	 * 
-	 * //数字单元格样式设定 HSSFCellStyle numCellStyle = wb.createCellStyle();
-	 * numCellStyle.cloneStyleFrom(cellStyle);
-	 * numCellStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-	 * 
-	 * //“序”列单元格样式设定 HSSFCellStyle idxCellStyle = wb.createCellStyle();
-	 * idxCellStyle.cloneStyleFrom(cellStyle);
-	 * idxCellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-	 * 
-	 * //日期单元格样式设定 HSSFCellStyle dateCellStyle = wb.createCellStyle();
-	 * dateCellStyle.cloneStyleFrom(cellStyle);
-	 * dateCellStyle.setDataFormat(fmt.getFormat("yyyy-m-d;@"));
-	 * 
-	 * //日期时间单元格样式设定 HSSFCellStyle timeCellStyle = wb.createCellStyle();
-	 * timeCellStyle.cloneStyleFrom(cellStyle);
-	 * timeCellStyle.setDataFormat(fmt.getFormat("yyyy-m-d h:mm;@"));
-	 * 
-	 * //千分位单元格样式设定 HSSFCellStyle qCellStyle = wb.createCellStyle();
-	 * qCellStyle.cloneStyleFrom(cellStyle);
-	 * qCellStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-	 * qCellStyle.setDataFormat(fmt.getFormat("#,##0_ ;@"));
-	 * 
-	 * //小数点、千分位单元格样式设定 Dictionary<String, HSSFCellStyle> cstyles = new
-	 * Dictionary<String, HSSFCellStyle>(); HSSFCellStyle cstyle = null; ///
-	 * 
-	 * //输出列标题 row = sheet.createRow(titleRowIndex);
-	 * row.setHeightInPoints(DEF_ROW_HEIGHT);
-	 * 
-	 * for (DataColumn col : dt.Columns) { cell = row.createCell(c++);
-	 * cell.setCellValue(col.ColumnName); cell.setCellStyle(col.ColumnName == "序" ?
-	 * idxTitleStyle : titleStyle);
-	 * 
-	 * columnWidth = col.ExtendedProperties.ContainsKey("width") ?
-	 * ((Integer)col.ExtendedProperties.get("width")).intValue() : 100;
-	 * sheet.setColumnWidth(c - 1, (int)(Math.ceil(columnWidth / charWidth) + 0.72)
-	 * * 256);
-	 * 
-	 * if (headerRow != null) headerRow.createCell(c - 1); if (dateRow != null)
-	 * dateRow.createCell(c - 1); if (sumRow != null) sumRow.createCell(c - 1); if
-	 * (creatorRow != null) creatorRow.createCell(c - 1);
-	 * 
-	 * //定义数字列单元格样式 switch (col.DataType.getName()) { case "Single": case "Double":
-	 * case "Decimal": decimalPlaces = col.ExtendedProperties.ContainsKey("dots") ?
-	 * ((Integer)col.ExtendedProperties.get("dots")).intValue() : 2; qian =
-	 * col.ExtendedProperties.ContainsKey("k") ?
-	 * (Boolean)col.ExtendedProperties.get("k") : false;
-	 * 
-	 * if (decimalPlaces > 0 && !qian) { cstyle = wb.createCellStyle();
-	 * cstyle.cloneStyleFrom(qCellStyle); cstyle.setDataFormat(fmt.getFormat("0." +
-	 * StringHelper.padLeft(decimalPlaces, '0') + "_ ;@")); } else if (decimalPlaces
-	 * == 0 && qian) { cstyle = wb.createCellStyle();
-	 * cstyle.cloneStyleFrom(qCellStyle); } else if (decimalPlaces > 0 && qian) {
-	 * cstyle = wb.createCellStyle(); cstyle.cloneStyleFrom(qCellStyle);
-	 * cstyle.setDataFormat(fmt.GetFormat("#,##0." +
-	 * StringHelper.padLeft(decimalPlaces, '0') + "_ ;@")); }
-	 * 
-	 * cstyles.put(col.ColumnName, cstyle); break; default: break; }
-	 * 
-	 * //输出文件标题 if (headerRow != null) { sheet.addMergedRegion(new
-	 * Region(headerRowIndex, (short)headerRowIndex, 0, (short)(dt.Columns.size() -
-	 * 1))); cell = headerRow.getCell(0); cell.setCellValue(header);
-	 * cell.setCellStyle(headerStyle); headerRow.setHeightInPoints(26); } //输出日期 if
-	 * (dateRow != null) { sheet.addMergedRegion(new Region(dateRowIndex,
-	 * (short)dateRowIndex, 0, (short)( dt.Columns.size() - 1))); cell =
-	 * dateRow.getCell(0); cell.SetCellValue("日期：" +
-	 * DateTime.Today.ToString("yyyy-MM-dd")); cell.setCellStyle(userStyle);
-	 * dateRow.setHeightInPoints(DEF_ROW_HEIGHT); } //输出制表人 if (creatorRow != null)
-	 * { sheet.addMergedRegion(new Region(creatorRowIndex, (short)creatorRowIndex,
-	 * 0, (short)(dt.Columns.size() - 1))); cell = creatorRow.getCell(0);
-	 * cell.setCellValue("制表人：" + creator); cell.setCellStyle(userStyle);
-	 * creatorRow.setHeightInPoints(DEF_ROW_HEIGHT); }
-	 * 
-	 * r = titleRowIndex + 1; //输出查询结果 for (DataRow dr : dt.Rows) { row =
-	 * sheet.createRow(r++); row.setHeightInPoints(DEF_ROW_HEIGHT); c = 0;
-	 * 
-	 * for(DataColumn col: dt.Columns) { cell = row.createCell(c++);
-	 * 
-	 * switch (col.DataType.getName()) { case "Boolean":
-	 * cell.setCellStyle(cellStyle);
-	 * cell.setCellValue(dr.getValue(col.ColumnName).equals(true) ? "是" : "否");
-	 * break; case "DateTime": isDate = col.ExtendedProperties.ContainsKey("isdate")
-	 * ? (Boolean)col.ExtendedProperties.get("isdate") : false;
-	 * 
-	 * cell.setCellStyle(isDate ? dateCellStyle : timeCellStyle);
-	 * cell.setCellValue(String.valueOf(dr.getValue(col.ColumnName))); break; case
-	 * "Int16": case "Int32": case "Int64": qian =
-	 * col.ExtendedProperties.ContainsKey("k") ?
-	 * (Boolean)col.ExtendedProperties.get("k") : false;
-	 * 
-	 * cell.setCellStyle(col.ColumnName == "序" ? idxCellStyle : qian ? qCellStyle :
-	 * numCellStyle); cell.setCellValue(((Long)dr.getValue(col.ColumnName))); break;
-	 * case "Single": case "Double": case "Decimal":
-	 * cell.setCellStyle(cstyles.get(col.ColumnName));
-	 * cell.setCellValue(((Double)dr.getValue(col.ColumnName))); break; default:
-	 * cell.setCellStyle(cellStyle);
-	 * cell.setCellValue(String.valueOf(dr.getValue(col.ColumnName))); break; } } }
-	 * //合计 if (sumRow != null) { sumRow.setHeightInPoints(DEF_ROW_HEIGHT);
-	 * 
-	 * for (c = 0; c < dt.Columns.size(); c++) { cell = sumRow.getCell(c);
-	 * cell.setCellStyle(cellStyle);
-	 * 
-	 * if (sumColumns.contains(c) == false) continue;
-	 * 
-	 * cell.SetCellFormula(string.Format("SUM({0}:{1})", GetCellName(c,
-	 * titleRowIndex + 1), GetCellName(c, titleRowIndex + dt.Rows.size()))); } }
-	 * 
-	 * wb.write(fs); len = fs; }
-	 * 
-	 * 
-	 * return null; }
-	 */
+	protected String ExportTempToExcel(DataTable dt, Entity en, String title, Attrs mapAttrs) throws Exception {
 
+		String fileName = title + "_" + bp.da.DataType.getCurrentDateCNOfLong() + "_" + WebUser.getNo() + ".xls";
+		String fileDir = SystemConfig.getPathOfTemp();
+		String filePth = SystemConfig.getPathOfTemp();
+		// 参数及变量设置
+		// 如果导出目录没有建立，则建立.
+		File file = new File(fileDir);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+
+		filePth = filePth + "/" + fileName;
+		file = new File(filePth);
+		if (file.exists()) {
+			file.delete();
+		}
+
+		int headerRowIndex = 0; // 文件标题行序
+		int titleRowIndex = 1; // 列标题行序
+		int countCell = 0;// 显示的列数
+		// 第一步，创建一个webbook，对应一个Excel文件
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+		HSSFSheet sheet = wb.createSheet(en.getEnMap().getPhysicsTable());
+		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+		HSSFRow row = null;
+		// 第四步，创建单元格，并设置值表头 设置表头居中
+		HSSFCellStyle style = wb.createCellStyle();
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+		HSSFFont font = null;
+		HSSFDataFormat fmt = wb.createDataFormat();
+		HSSFCell cell = null;
+
+		// 生成标题
+		Attrs attrs = null;
+		if(mapAttrs!=null)
+			attrs = mapAttrs;
+		else
+			attrs = en.getEnMap().getAttrs();
+		Attrs selectedAttrs = null;
+		UIConfig cfg = new UIConfig(en);
+		if (cfg.getShowColumns().length == 0)
+			selectedAttrs = attrs;
+		else {
+			selectedAttrs = new Attrs();
+
+			for (Attr attr : attrs.ToJavaList()) {
+
+				boolean contain = false;
+
+				for (String col : cfg.getShowColumns()) {
+					if (col.equals(attr.getKey())) {
+						contain = true;
+						break;
+					}
+				}
+
+				if (contain)
+					selectedAttrs.Add(attr);
+			}
+		}
+		row = sheet.createRow((int) titleRowIndex);
+		int index = 0;// 控制列 qin 15.9.21
+		for (int i = 0; i < selectedAttrs.size(); i++) {
+			Attr attr = selectedAttrs.get(i);
+			if (attr.getKey().equals("MyNum"))
+				continue;
+			if (attr.getKey().equals("OID"))
+				continue;
+
+			if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
+				continue;
+
+			if (attr.getIsFKorEnum())
+				continue;
+			if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt")
+					|| attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
+					|| attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
+				continue;
+
+			cell = row.createCell(index);
+			cell.setCellStyle(style);
+			if(attr.getMyFieldType() == FieldType.RefText)
+				cell.setCellValue(attr.getDesc().replace("名称",""));
+			else
+				cell.setCellValue(attr.getDesc());
+			index += 1;
+			countCell++;
+		}
+		DataRow dr = null;
+		int temp=0;
+		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
+			dr = dt.Rows.get(i - 2);
+			row = sheet.createRow(i);
+			// 生成文件内容
+			index = 0;
+			if(temp>1)
+				continue;
+			for (int j = 0; j < selectedAttrs.size(); j++) {
+				Attr attr = selectedAttrs.get(j);
+				if (attr.getKey().equals("MyNum"))
+					continue;
+				if (attr.getKey().equals("OID"))
+					continue;
+				if (attr.getIsFKorEnum())
+					continue;
+
+				if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
+					continue;
+
+				if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt")
+						|| attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
+						|| attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
+					continue;
+
+
+				String str = "";
+				if (attr.getMyDataType() == DataType.AppBoolean) {
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+						str = dr.getValue(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
+					else if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+						str = dr.getValue(attr.getKey().toLowerCase()).equals(1) ? "是" : "否";
+					else
+						str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
+				} else {
+					String text ="";
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
+						Object obj = dr.getValue((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
+						if(obj == null)
+							text = "";
+						else
+							text =  obj.toString();
+					}else{
+						Object obj = dr.getValue(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
+						if(obj == null)
+							text = "";
+						else
+							text =  obj.toString();
+					}
+
+					if(DataType.IsNullOrEmpty(text)==false && (text.contains("\n")==true ||text.contains("\r")==true)){
+						str =""+text.replaceAll("\n", "  ");
+						str =""+text.replaceAll("\r", "  ");
+					}else{
+						str = text;
+					}
+				}
+				if (str == null || str.equals("") || str.equals("null")) {
+					str = " ";
+				}
+				cell = row.createCell(index);
+				cell.setCellStyle(style);
+				cell.setCellValue(str);
+				index += 1;
+			}
+			temp+=1;
+		}
+
+		// 列标题单元格样式设定
+		HSSFCellStyle titleStyle = wb.createCellStyle();
+		/*
+		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
+		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
+		 */
+		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		font = wb.createFont();
+		font.setBold(true);
+		titleStyle.setFont(font);
+		row = sheet.createRow((int) 0);
+		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+		cell = row.createCell(headerRowIndex);
+		cell.setCellValue(title);
+		cell.setCellStyle(titleStyle);
+
+		// 生成制单人
+		// 制表人单元格样式设定
+		HSSFCellStyle userStyle = wb.createCellStyle();
+		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
+
+		row = sheet.createRow((int) creatorRowIndex);
+
+		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+		cell = row.createCell(0);
+		//cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDataTimeCNOfShort());
+		cell.setCellStyle(userStyle);
+		// 第六步，将文件存到指定位置
+		try {
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			wb.write(bos);
+			byte[] brray = bos.toByteArray();
+			InputStream is = new ByteArrayInputStream(brray);
+
+			FileOutputStream fout = new FileOutputStream(filePth);
+
+			BufferedInputStream in=null;
+			BufferedOutputStream out=null;
+			in=new BufferedInputStream(is);
+			out=new BufferedOutputStream(fout);
+			int len=-1;
+			byte[] b=new byte[1024];
+			while((len=in.read(b))!=-1){
+				out.write(b,0,len);
+			}
+			in.close();
+			out.close();
+
+
+			/*BufferedWriter br = new BufferedWriter(osw);
+			br.write(printMe);
+			fout.flush();
+			br.close();
+			fout.close();
+			osw.close();*/
+
+			//wb.write(fout);
+			//fout.flush();
+			//fout.close();
+			return "/DataUser/Temp/" + fileName;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return fileName;
+		}
+
+	}
 	/// <summary>
 	/// 获取单元格的显示名称，格式如A1,B2
 	/// </summary>
@@ -1398,15 +1649,15 @@ public abstract class WebContralBase {
 
 	// BaseController
 
-	public HttpServletRequest getRequest() {
+	public static HttpServletRequest getRequest() {
 		return ContextHolderUtils.getRequest();
 	}
 
-	public HttpServletResponse getResponse() throws Exception {
+	public HttpServletResponse getResponse() {
 		return ContextHolderUtils.getResponse();
 	}
 
-	public String getParamter(String key) {
+	public String getParamter(String key){
 		return getRequest().getParameter(key);
 	}
 
@@ -1415,7 +1666,8 @@ public abstract class WebContralBase {
 	 */
 	public final int getaddRowNum() {
 		try {
-			int i = Integer.parseInt(ContextHolderUtils.getRequest().getParameter("addRowNum"));
+			int i = Integer.parseInt(ContextHolderUtils.getRequest()
+					.getParameter("addRowNum"));
 			if (ContextHolderUtils.getRequest().getParameter("IsCut") == null) {
 				return i;
 			} else {
@@ -1427,7 +1679,7 @@ public abstract class WebContralBase {
 	}
 
 	public final int getIsWap() {
-		if (ContextHolderUtils.getRequest().getParameter("IsWap") == null)
+		if(ContextHolderUtils.getRequest().getParameter("IsWap")==null)
 			return 0;
 		if (ContextHolderUtils.getRequest().getParameter("IsWap").equals("1")) {
 			return 1;
@@ -1440,7 +1692,6 @@ public abstract class WebContralBase {
 
 		return str;
 	}
-
 	public int getPageIdx() {
 		String str = ContextHolderUtils.getRequest().getParameter("PageIdx");
 		if (str == null || str.equals("") || str.equals("null"))
@@ -1467,60 +1718,44 @@ public abstract class WebContralBase {
 		return ContextHolderUtils.getRequest().getParameter("Key");
 	}
 
-	public final String getActionType() {
+	public final String getActionType()throws Exception
+	{
 		String s = ContextHolderUtils.getRequest().getParameter("ActionType");
-		if (s == null) {
+		if (s == null)
+		{
 			s = ContextHolderUtils.getRequest().getParameter("DoType");
 		}
 
 		return s;
 	}
 
-	public final long getOID() {
+	public final long getOID()throws Exception
+	{
 		String str = this.GetRequestVal("RefOID"); // context.Request.QueryString["RefOID"];
 		if (DataType.IsNullOrEmpty(str) == true)
-			str = this.GetRequestVal("OID"); // context.Request.QueryString["OID"];
+			str = this.GetRequestVal("OID");  //context.Request.QueryString["OID"];
 
 		if (DataType.IsNullOrEmpty(str) == true)
-			str = "0";
+			str="0";
 
 		return Long.parseLong(str);
 
 	}
 
-	public String getEnName() {
+	public String getEnName()throws Exception
+	{
 		return GetRequestVal("EnName");
 	}
-
-	public String getRefNo() {
+	public String getRefNo()throws Exception
+	{
 		return GetRequestVal("RefNo");
 	}
 
-	/// <summary>
-	/// 组织编号
-	/// </summary>
-	public String getOrgNo() {
-
-		String str = this.GetRequestVal("OrgNo");
-		if (DataType.IsNullOrEmpty(str) == true)
-			return null;
-		return str;
-
-	}
-
-	public String getDomain() {
-		String str = this.GetRequestVal("Domain");
-		if (DataType.IsNullOrEmpty(str) == true)
-			return null;
-		return str;
-
-	}
-
-	public final String getFK_Emp() {
+	public final String getFK_Emp()throws Exception
+	{
 		return GetRequestVal("FK_Emp");
 	}
-
-	public final String getPageID()
+	public String getPageID()throws Exception
 	{
 		String pageID = this.GetRequestVal("PageID");
 		 if (DataType.IsNullOrEmpty(pageID) == true)
@@ -1531,13 +1766,16 @@ public abstract class WebContralBase {
 		return pageID;
 	}
 
-	public boolean getIsCC() {
+	public boolean getIsCC()throws Exception
+	{
 		String s = ContextHolderUtils.getRequest().getParameter("Paras");
-		if (s == null) {
+		if (s == null)
+		{
 			return false;
 		}
 
-		if (s.contains("IsCC")) {
+		if (s.contains("IsCC"))
+		{
 			return true;
 		}
 		return false;
@@ -1546,26 +1784,35 @@ public abstract class WebContralBase {
 	public final int getallRowCount() {
 		int i = 0;
 		try {
-			i = Integer.parseInt(ContextHolderUtils.getRequest().getParameter("rowCount"));
+			i = Integer.parseInt(ContextHolderUtils.getRequest().getParameter(
+					"rowCount"));
 		} catch (java.lang.Exception e) {
 			return 0;
 		}
 		return i;
 	}
-
-	public final String getTB_Doc() {
+	public final String getTB_Doc()throws Exception
+	{
 		return GetRequestVal("TB_Doc");
 	}
 
-	public String getSID() {
+	public String getSID()throws Exception
+	{
 		return GetRequestVal("SID");
 	}
+	public String getVals()
+	{
+		String str = this.GetRequestVal("Vals");
+		if (DataType.IsNullOrEmpty(str))
+			return null;
+		return str;
+	}
 
-	// public String FK_Node;
-	// public String FID;
-	// public String WorkID;
-	// public String FK_Flow;
-	// public String MyPK;
+	//public String FK_Node;
+	//public String FID;
+	//public String WorkID;
+	//public String FK_Flow;
+	//public String MyPK;
 
 //	public void setMyPK(String myPK) {
 //		MyPK = myPK;
@@ -1583,34 +1830,30 @@ public abstract class WebContralBase {
 
 	/**
 	 * 输出Alert
-	 * 
-	 * @param response
-	 * @param msg
+	 * param response
+	 * param msg
 	 * @throws IOException
 	 */
-	protected void printAlert(HttpServletResponse response, String msg) throws IOException {
+	protected void printAlert(HttpServletResponse response, String msg) throws IOException{
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.write("<script language='javascript'>alert('" + msg + "');</script>");
 		out.flush();
 	}
-
-	protected void printAlertReload(HttpServletResponse response, String msg, String url) throws IOException {
+	protected void printAlertReload(HttpServletResponse response, String msg,String url) throws IOException{
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		out.write("<script language='javascript'>alert('" + msg + "');window.location.href='" + url + "';</script>");
+		out.write("<script language='javascript'>alert('" + msg + "');window.location.href='"+url+"';</script>");
 		out.flush();
 	}
-
-	protected void windowReload(HttpServletResponse response, String url) throws IOException {
+	protected void windowReload(HttpServletResponse response, String url) throws IOException{
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		out.write("<script language='javascript'>window.location.href='" + url + "';</script>");
+		out.write("<script language='javascript'>window.location.href='"+url+"';</script>");
 		out.flush();
 	}
-
-	protected void wirteMsg(HttpServletResponse response, String msg) throws IOException {
-		if (null == msg) {
+	protected void wirteMsg(HttpServletResponse response, String msg) throws IOException{
+		if(null == msg){
 			return;
 		}
 		response.setContentType("text/html; charset=utf-8");
@@ -1618,10 +1861,10 @@ public abstract class WebContralBase {
 		out.write(msg);
 		out.flush();
 	}
-
-	protected void winCloseWithMsg(HttpServletResponse response, String mess) throws IOException {
-		// this.ResponseWriteRedMsg(mess);
-		// return;
+	protected void winCloseWithMsg(HttpServletResponse response, String mess) throws IOException
+	{
+		//this.ResponseWriteRedMsg(mess);
+		//return;
 		mess = mess.replace("'", "＇");
 
 		mess = mess.replace("\"", "＂");
@@ -1633,11 +1876,13 @@ public abstract class WebContralBase {
 		mess = mess.replace(",", "，");
 		mess = mess.replace(":", "：");
 
+
 		mess = mess.replace("<", "［");
 		mess = mess.replace(">", "］");
 
 		mess = mess.replace("[", "［");
 		mess = mess.replace("]", "］");
+
 
 		mess = mess.replace("@", "\\n@");
 
@@ -1649,15 +1894,14 @@ public abstract class WebContralBase {
 		out.flush();
 	}
 
-	protected void winCloseWithMsg1(HttpServletResponse response, String val) throws IOException {
+	protected void winCloseWithMsg1(HttpServletResponse response,String val) throws IOException{
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		out.write("<script language='javascript'> if(window.opener != undefined){window.top.returnValue = '" + val
-				+ "';} else { window.returnValue = '" + val + "';} window.close(); </script>");
+		out.write("<script language='javascript'> if(window.opener != undefined){window.top.returnValue = '" + val + "';} else { window.returnValue = '" + val + "';} window.close(); </script>");
 		out.flush();
 	}
 
-	protected void winClose(HttpServletResponse response) throws IOException {
+	protected void winClose(HttpServletResponse response) throws IOException{
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.write("<script language='javascript'> window.close();</script>");

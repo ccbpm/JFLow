@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
 　连接到哪个库上．
@@ -48,7 +48,7 @@ public enum DBUrlType
 		return this.ordinal();
 	}
 
-	public static DBUrlType forValue(int value) throws Exception
+	public static DBUrlType forValue(int value) 
 	{
 		return values()[value];
 	}

@@ -1,20 +1,13 @@
 package bp.sys.xml;
 
-import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.sys.*;
-import bp.sys.*;
-import bp.*;
-import bp.sys.*;
-
 /** 
  
 */
 public class RegularExpressions extends XmlEns
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 正则表达模版
 	*/
@@ -22,10 +15,10 @@ public class RegularExpressions extends XmlEns
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///重写基类属性或方法。
+		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
 	*/
@@ -38,24 +31,22 @@ public class RegularExpressions extends XmlEns
 	 文件路径
 	*/
 	@Override
-	public String getFile()
+	public String getFile()throws Exception
 	{
-		return SystemConfig.getPathOfData() + "/XML/RegularExpression.xml";
+		return bp.difference.SystemConfig.getPathOfData() + "XML/RegularExpression.xml";
 	}
 	/** 
 	 物理表名
 	*/
 	@Override
-	public String getTableName()
-	{
+	public String getTableName()  {
 		return "Item";
 	}
 	@Override
-	public Entities getRefEns()
-	{
+	public Entities getRefEns()  {
 		return null;
 	}
 
-		///
+		///#endregion
 
 }

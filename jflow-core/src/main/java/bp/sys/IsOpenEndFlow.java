@@ -1,11 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.web.*;
-import bp.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
 
 /** 
  结束流程 窗口
@@ -28,7 +22,7 @@ public enum IsOpenEndFlow
 		return this.ordinal();
 	}
 
-	public static IsOpenEndFlow forValue(int value) throws Exception
+	public static IsOpenEndFlow forValue(int value) 
 	{
 		return values()[value];
 	}

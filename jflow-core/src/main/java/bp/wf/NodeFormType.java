@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  节点表单类型
 */
@@ -9,9 +11,9 @@ public enum NodeFormType
 	 傻瓜表单.
 	*/
 	FoolForm(0),
-	/** 
+	/**
 	 自由表单.
-	*/
+	 */
 	FreeForm(1),
 	/** 
 	 嵌入式表单.
@@ -21,10 +23,6 @@ public enum NodeFormType
 	 SDKForm
 	*/
 	SDKForm(3),
-	/** 
-	 SL表单
-	*/
-	SLForm(4),
 	/** 
 	 表单树
 	*/
@@ -58,6 +56,10 @@ public enum NodeFormType
 	*/
 	Develop(12),
 	/** 
+	 开发者表单
+	*/
+	ChapterFrm(13),
+	/** 
 	 禁用(对多表单流程有效)
 	*/
 	DisableIt(100);
@@ -66,8 +68,7 @@ public enum NodeFormType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, NodeFormType> mappings;
-	private static java.util.HashMap<Integer, NodeFormType> getMappings()
-	{
+	private static java.util.HashMap<Integer, NodeFormType> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (NodeFormType.class)
@@ -81,19 +82,16 @@ public enum NodeFormType
 		return mappings;
 	}
 
-	private NodeFormType(int value) 
-	{
-		intValue = value;
+	private NodeFormType(int value)
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
-	public static NodeFormType forValue(int value) 
-	{
-		return getMappings().get(value);
+	public static NodeFormType forValue(int value)
+	{return getMappings().get(value);
 	}
 }

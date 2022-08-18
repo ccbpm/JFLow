@@ -1,4 +1,7 @@
 package bp.wf;
+
+import bp.*;
+
 /** 
  消息标记
 */
@@ -118,7 +121,7 @@ public class SendReturnMsgFlag
 	public static final String IsStopFlow = "IsStopFlow";
 
 
-		///系统变量
+		///#region 系统变量
 	/** 
 	 工作ID
 	*/
@@ -160,5 +163,5 @@ public class SendReturnMsgFlag
 	*/
 	public static final String VarTreadWorkIDs = "VarTreadWorkIDs";
 
-		/// 系统变量
+		///#endregion 系统变量
 }

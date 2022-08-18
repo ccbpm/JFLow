@@ -1,71 +1,64 @@
 package bp.port;
 
-import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.*;
 import java.util.*;
-import java.io.*;
 
-/**
- * 操作员
- */
+/** 
+ 操作员
+*/
 // </summary>
-public class Emps extends EntitiesNoName {
+public class Emps extends EntitiesNoName
+{
 
-	private static final long serialVersionUID = 1L;
-
-	/// 构造方法
-	/**
-	 * 得到它的 Entity
-	 */
+		///#region 构造方法
+	/** 
+	 得到它的 Entity 
+	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getGetNewEntity()  {
 		return new Emp();
 	}
-
-	/**
-	 * 操作员s
-	 */
+	/** 
+	 操作员s
+	*/
 	public Emps() {
 	}
-
-	/**
-	 * 操作员s
-	 * @throws Exception 
-	 */
+	/** 
+	 操作员s
+	*/
 	public Emps(String deptNo) throws Exception {
 
 		this.Retrieve(EmpAttr.FK_Dept, deptNo);
 
 	}
 
-	/// 构造方法
+		///#endregion 构造方法
 
-	public final String reseet() {
+	public final String reseet()  {
 		return "ceshi";
 	}
 
-	/// 重写查询,add by stone 2015.09.30 为了适应能够从 webservice 数据源查询数据.
-	/**
-	 * 重写查询全部适应从WS取数据需要
-	 * 
-	 * @return
-	 * @throws Exception 
-	 */
+
+		///#region 重写查询,add by zhoupeng 2015.09.30 为了适应能够从 webservice 数据源查询数据.
+	/** 
+	 重写查询全部适应从WS取数据需要
+	 
+	 @return 
+	*/
 	@Override
 	public int RetrieveAll() throws Exception {
-	
+		//if (bp.web.WebUser.getNo() != "admin")
+		//    throw new Exception("@您没有查询的权限.");
+
+
 		return super.RetrieveAll();
 
 	}
-
-	/**
-	 * 重写重数据源查询全部适应从WS取数据需要
-	 * 
-	 * @return
-	 * @throws Exception 
-	 */
+	/** 
+	 重写重数据源查询全部适应从WS取数据需要
+	 
+	 @return 
+	*/
 	@Override
 	public int RetrieveAllFromDBSource() throws Exception {
 
@@ -73,31 +66,32 @@ public class Emps extends EntitiesNoName {
 
 	}
 
-	/// 重写查询.
+		///#endregion 重写查询.
 
-	/// 为了适应自动翻译成java的需要,把实体转换成List.
-	/**
-	 * 转化成 java list,C#不能调用.
-	 * 
-	 * @return List
-	 */
+
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
+	 @return List
+	*/
 	public final java.util.List<Emp> ToJavaList() {
-		return (java.util.List<Emp>)(Object) this;
+		return (java.util.List<Emp>)(Object)this;
 	}
-
-	/**
-	 * 转化成list
-	 * 
-	 * @return List
-	 */
-	public final ArrayList<Emp> Tolist() {
+	/** 
+	 转化成list
+	 
+	 @return List
+	*/
+	public final ArrayList<Emp> Tolist()  {
 		ArrayList<Emp> list = new ArrayList<Emp>();
-		for (int i = 0; i < this.size(); i++) {
-			list.add((Emp) this.get(i));
+		for (int i = 0; i < this.size(); i++)
+		{
+			list.add((Emp)this.get(i));
 		}
 		return list;
 	}
 
-	/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

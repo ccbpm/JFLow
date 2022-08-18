@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -27,13 +28,11 @@ public enum FrmWorkCheckSta
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static FrmWorkCheckSta forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FrmWorkCheckSta forValue(int value)
+	{return values()[value];
 	}
 }

@@ -4,8 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.wf.*;
 import bp.port.*;
-import bp.web.WebUser;
-
+import bp.*;
 import java.util.*;
 
 /** 
@@ -14,23 +13,20 @@ import java.util.*;
 public class GenerWorkerLists extends Entities
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new GenerWorkerList();
 	}
 	/** 
 	 GenerWorkerList
 	*/
-	public GenerWorkerLists()
-	{
+	public GenerWorkerLists()  {
 	}
-	public GenerWorkerLists(long workId) throws Exception
-	{
+	public GenerWorkerLists(long workId) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
 		qo.addOrderBy(GenerWorkerListAttr.RDT);
@@ -40,12 +36,10 @@ public class GenerWorkerLists extends Entities
 	/** 
 	 
 	 
-	 @param workId
-	 @param nodeId
-	 * @throws Exception 
+	 param workId
+	 param nodeId
 	*/
-	public GenerWorkerLists(long workId, int nodeId) throws Exception
-	{
+	public GenerWorkerLists(long workId, int nodeId) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
 		qo.addAnd();
@@ -53,8 +47,7 @@ public class GenerWorkerLists extends Entities
 		qo.DoQuery();
 		return;
 	}
-	public GenerWorkerLists(long workId, int nodeId, String FK_Emp) throws Exception
-	{
+	public GenerWorkerLists(long workId, int nodeId, String FK_Emp) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
 		qo.addAnd();
@@ -67,13 +60,11 @@ public class GenerWorkerLists extends Entities
 	/** 
 	 构造工作人员集合
 	 
-	 @param workId 工作ID
-	 @param nodeId 节点ID
-	 @param isWithEmpExts 是否包含为分配的人员
-	 * @throws Exception 
+	 param workId 工作ID
+	 param nodeId 节点ID
+	 param isWithEmpExts 是否包含为分配的人员
 	*/
-	public GenerWorkerLists(long workId, int nodeId, boolean isWithEmpExts) throws Exception
-	{
+	public GenerWorkerLists(long workId, int nodeId, boolean isWithEmpExts) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.addLeftBracket();
 		qo.AddWhere(GenerWorkerListAttr.WorkID, workId);
@@ -95,7 +86,7 @@ public class GenerWorkerLists extends Entities
 		}
 
 		RememberMe rm = new RememberMe();
-		rm.setFK_Emp(WebUser.getNo());
+		rm.setFK_Emp(bp.web.WebUser.getNo());
 		rm.setFK_Node(nodeId);
 		if (rm.RetrieveFromDBSources() == 0)
 		{
@@ -103,22 +94,22 @@ public class GenerWorkerLists extends Entities
 		}
 
 		GenerWorkerList wl = (GenerWorkerList)this.get(0);
-		String[] emps = rm.getEmps().split("[@]", -1);
-		for (String emp : emps)
+		String[] myEmpStrs = rm.getEmps().split("[@]", -1);
+		for (String emp : myEmpStrs)
 		{
 			if (emp == null || emp.equals(""))
 			{
 				continue;
 			}
 
-			if (this.GetsizeByKey(GenerWorkerListAttr.FK_Emp, emp) >= 1)
+			if (this.GetCountByKey(GenerWorkerListAttr.FK_Emp, emp) >= 1)
 			{
 				continue;
 			}
 
 			GenerWorkerList mywl = new GenerWorkerList();
 			mywl.Copy(wl);
-			mywl.setIsEnable(false);
+			mywl.setEnable(false);
 			mywl.setFK_Emp(emp);
 			bp.wf.port.WFEmp myEmp = new bp.wf.port.WFEmp(emp);
 			mywl.setFK_EmpText(myEmp.getName());
@@ -138,12 +129,10 @@ public class GenerWorkerLists extends Entities
 	/** 
 	 工作者
 	 
-	 @param workId 工作者ID
-	 @param flowNo 流程编号
-	 * @throws Exception 
+	 param workId 工作者ID
+	 param flowNo 流程编号
 	*/
-	public GenerWorkerLists(long workId, String flowNo) throws Exception
-	{
+	public GenerWorkerLists(long workId, String flowNo) throws Exception {
 		if (workId == 0)
 		{
 			return;
@@ -157,33 +146,31 @@ public class GenerWorkerLists extends Entities
 		qo.DoQuery();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<GenerWorkerList> ToJavaList()
-	{
-		return (List<GenerWorkerList>)(Object)this;
+	public final java.util.List<GenerWorkerList> ToJavaList() {
+		return (java.util.List<GenerWorkerList>)(Object)this;
 	}
 	/** 
 	 转化成list 为了翻译成java的需要
 	 
 	 @return List
 	*/
-	public final ArrayList<bp.wf.GenerWorkerList> Tolist()
-	{
-		ArrayList<bp.wf.GenerWorkerList> list = new ArrayList<bp.wf.GenerWorkerList>();
+	public final ArrayList<GenerWorkerList> Tolist()  {
+		ArrayList<GenerWorkerList> list = new ArrayList<GenerWorkerList>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((bp.wf.GenerWorkerList)this.get(i));
+			list.add((GenerWorkerList)this.get(i));
 		}
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

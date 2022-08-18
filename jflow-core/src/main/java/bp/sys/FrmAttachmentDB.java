@@ -1,10 +1,11 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
+import bp.difference.*;
 import bp.en.*;
-import bp.en.Map;
+import bp.*;
 import bp.tools.FtpUtil;
+
 import java.io.*;
 
 /** 
@@ -12,101 +13,77 @@ import java.io.*;
 */
 public class FrmAttachmentDB extends EntityMyPK
 {
-	private static final long serialVersionUID = 1L;
-	  /// <summary>
-    /// 向下移動
-    /// </summary>
-    public void DoDownTabIdx() throws Exception
-    {
-        this.DoOrderDown(FrmAttachmentDBAttr.RefPKVal, this.getRefPKVal(),
-            FrmAttachmentDBAttr.FK_FrmAttachment, this.getFK_FrmAttachment(), FrmAttachmentDBAttr.Idx);
-    }
-    /// <summary>
-    /// 向上移動
-    /// </summary>
-    public void DoUpTabIdx() throws Exception
-    {
-        this.DoOrderUp(FrmAttachmentDBAttr.RefPKVal, this.getRefPKVal(),
-           FrmAttachmentDBAttr.FK_FrmAttachment, this.getFK_FrmAttachment(), FrmAttachmentDBAttr.Idx);
 
-        //  this.DoOrderUp(FrmAttachmentDBAttr.FK_MapData, this.FK_MapData, FrmAttachmentDBAttr.Idx);
-    }
-
-
-	///属性
+		///#region 属性
 	/** 
 	 类别
 	*/
-	public final String getSort() throws Exception
+	public final String getSort()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.Sort);
 	}
-	public final void setSort(String value) throws Exception
-	{
+	public final void setSort(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.Sort, value);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT() throws Exception 
-	{
+	public final String getRDT()  {
 		String str = this.GetValStringByKey(FrmAttachmentDBAttr.RDT);
 		return str.substring(5, 16);
 	}
-	public final void setRDT(String value) throws Exception
-	{
+	public final void setRDT(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.RDT, value);
 	}
 	/** 
 	 文件
 	*/
-	public final String getFileFullName() throws Exception
+	public final String getFileFullName()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FileFullName);
 	}
-	public final void setFileFullName(String value) throws Exception
-	{
-		String str = value;
+	public final void setFileFullName(String value)
+	{String str = value;
 		str = str.replace("~", "-");
 		str = str.replace("'", "-");
 		str = str.replace("*", "-");
 
-			//str = str.replace("/", "\\");
-			//str = str.replace("/", "\\");
-			//str = str.replace("/", "\\");
-			//str = str.replace("/", "\\");
+			//str = str.Replace("/", "\\");
+			//str = str.Replace("/", "\\");
+			//str = str.Replace("/", "\\");
+			//str = str.Replace("/", "\\");
 
 		this.SetValByKey(FrmAttachmentDBAttr.FileFullName, str);
 	}
 	/** 
 	 上传GUID
 	*/
-	public final String getUploadGUID() throws Exception
+	public final String getUploadGUID()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.UploadGUID);
 	}
-	public final void setUploadGUID(String value) throws Exception
-	{
+	public final void setUploadGUID(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.UploadGUID, value);
 	}
 	/** 
 	 附件路径
 	*/
-	public final String getFilePathName() throws Exception
-	{
+	public final String getFilePathName()  {
 
 		return this.getFileFullName().substring(this.getFileFullName().lastIndexOf('/') + 1);
 	}
 	/** 
 	 附件名称
 	*/
-	public final String getFileName() throws Exception
+	public final String getFileName()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FileName);
 	}
-	public final void setFileName(String value) throws Exception
-	{
-		String str = value;
+	public final void setFileName(String value)
+	{String str = value;
 		str = str.replace("~", "-");
 		str = str.replace("'", "-");
 		str = str.replace("*", "-");
@@ -121,26 +98,26 @@ public class FrmAttachmentDB extends EntityMyPK
 	/** 
 	 附件扩展名
 	*/
-	public final String getFileExts() throws Exception
+	public final String getFileExts()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FileExts);
 	}
-	public final void setFileExts(String value) throws Exception
-	{
+	public final void setFileExts(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.FileExts, value.replace(".", ""));
 	}
 	/** 
 	 相关附件
 	*/
-	public final String getFK_FrmAttachment() throws Exception
+	public final String getFK_FrmAttachment()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FK_FrmAttachment);
 	}
-	public final void setFK_FrmAttachment(String value) throws Exception
-	{
+	public final void setFK_FrmAttachment(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.FK_FrmAttachment, value);
 
-			//@sly.
+
 		if (DataType.IsNullOrEmpty(this.getFK_MapData()) == true)
 		{
 			throw new RuntimeException("err@错误:请首先给FK_MapData赋值..");
@@ -153,56 +130,56 @@ public class FrmAttachmentDB extends EntityMyPK
 	/** 
 	 主键值
 	*/
-	public final String getRefPKVal() throws Exception
+	public final String getRefPKVal()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.RefPKVal);
 	}
-	public final void setRefPKVal(String value) throws Exception
-	{
+	public final void setRefPKVal(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.RefPKVal, value);
 	}
 	/** 
 	 工作ID.
 	*/
-	public final long getFID() throws Exception 
+	public final long getFID()
 	{
 		return this.GetValInt64ByKey(FrmAttachmentDBAttr.FID);
 	}
-	public final void setFID(long value) throws Exception 
-	{
+	public final void setFID(long value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.FID, value);
 	}
 	/** 
 	 MyNote
 	*/
-	public final String getMyNote() throws Exception
+	public final String getMyNote()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.MyNote);
 	}
-	public final void setMyNote(String value) throws Exception
-	{
+	public final void setMyNote(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.MyNote, value);
 	}
 	/** 
 	 记录人
 	*/
-	public final String getRec() throws Exception 
+	public final String getRec()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.Rec);
 	}
-	public final void setRec(String value) throws Exception
-	{
+	public final void setRec(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.Rec, value);
 	}
 	/** 
 	 记录人名称
 	*/
-	public final String getRecName()  throws Exception  
+	public final String getRecName()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.RecName);
 	}
-	public final void setRecName(String value) throws Exception
-	{
+	public final void setRecName(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.RecName, value);
 	}
 
@@ -211,23 +188,23 @@ public class FrmAttachmentDB extends EntityMyPK
 	/** 
 	 所在部门
 	*/
-	public final String getFK_Dept() throws Exception
+	public final String getFK_Dept()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value) throws Exception
-	{
+	public final void setFK_Dept(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.FK_Dept, value);
 	}
 	/** 
 	 所在部门名称
 	*/
-	public final String getFK_DeptName() throws Exception
+	public final String getFK_DeptName()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FK_DeptName);
 	}
-	public final void setFK_DeptName(String value) throws Exception
-	{
+	public final void setFK_DeptName(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.FK_DeptName, value);
 	}
 
@@ -235,63 +212,62 @@ public class FrmAttachmentDB extends EntityMyPK
 	/** 
 	 附件编号
 	*/
-	public final String getFK_MapData() throws Exception
+	public final String getFK_MapData()
 	{
 		return this.GetValStringByKey(FrmAttachmentDBAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFK_MapData(String value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.FK_MapData, value);
 	}
-	/** 
+	/**
 	 文件大小
 	*/
-	public final float getFileSize() throws Exception
+	public final float getFileSize()
 	{
 		return this.GetValFloatByKey(FrmAttachmentDBAttr.FileSize);
 	}
-	public final void setFileSize(float value) throws Exception
-	{
+	public final void setFileSize(float value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.FileSize, value / 1024);
 	}
 	/** 
 	 是否锁定行?
 	*/
-	public final boolean getIsRowLock() throws Exception
+	public final boolean isRowLock()
 	{
 		return this.GetValBooleanByKey(FrmAttachmentDBAttr.IsRowLock);
 	}
-	public final void setIsRowLock(boolean value) throws Exception
-	{
+	public final void setRowLock(boolean value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.IsRowLock, value);
 	}
 	/** 
 	 显示顺序
 	*/
-	public final int getIdx() throws Exception
+	public final int getIdx()
 	{
 		return this.GetValIntByKey(FrmAttachmentDBAttr.Idx);
 	}
-	public final void setIdx(int value) throws Exception
-	{
+	public final void setIdx(int value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.Idx, value);
 	}
 	/** 
 	 附件扩展名
 	*/
-	public final int getNodeID()  throws Exception 
+	public final int getNodeID()
 	{
 		return this.GetValIntByKey(FrmAttachmentDBAttr.NodeID);
 	}
-	public final void setNodeID(int value) throws Exception
-	{
+	public final void setNodeID(int value)
+	 {
 		this.SetValByKey(FrmAttachmentDBAttr.NodeID, value);
 	}
 	/** 
 	 附件类型
 	*/
-	public final AttachmentUploadType getHisAttachmentUploadType() throws Exception
-	{
+	public final AttachmentUploadType getHisAttachmentUploadType()  {
 		if (this.getMyPK().contains("_") && this.getMyPK().length() < 32)
 		{
 			return AttachmentUploadType.Single;
@@ -302,23 +278,21 @@ public class FrmAttachmentDB extends EntityMyPK
 		}
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 附件数据存储
 	*/
-	public FrmAttachmentDB()
-	{
+	public FrmAttachmentDB()  {
 	}
 	/** 
 	 附件数据存储
 	 
-	 @param mypk
-	 * @throws Exception 
+	 param mypk
 	*/
-	public FrmAttachmentDB(String mypk) throws Exception
+	public FrmAttachmentDB(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -327,8 +301,7 @@ public class FrmAttachmentDB extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -379,67 +352,64 @@ public class FrmAttachmentDB extends EntityMyPK
 	 生成文件.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	private String MakeFullFileFromFtp() throws Exception
-	{
+	private String MakeFullFileFromFtp()  {
 		String pathOfTemp = SystemConfig.getPathOfTemp();
 		if ((new File(pathOfTemp)).isDirectory() == false)
 		{
 			(new File(pathOfTemp)).mkdirs();
 		}
-		String tempFile = SystemConfig.getPathOfTemp() + this.getFileName();
+
+		String tempFile = pathOfTemp + DBAccess.GenerGUID() + "." + this.getFileExts();
+
+		//  string tempFile =  bp.difference.SystemConfig.getPathOfTemp() + + this.FileName;
 
 		if ((new File(tempFile)).isFile() == true)
 		{
 			(new File(tempFile)).delete();
 		}
 
+		/*FtpConnection conn = new FtpConnection(SystemConfig.getFTPServerIP(), SystemConfig.getFTPServerPort(), SystemConfig.getFTPUserNo(), SystemConfig.getFTPUserPassword());
+
+		conn.GetFile(this.getFileFullName(), tempFile, false, FileAttributes.Archive);*/
 
 		return tempFile;
 	}
+	public final String DoDown() throws Exception {
+
+		return "执行成功.";
+	}
+
 	/** 
 	 重写
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected void afterDelete() throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//判断删除excel数据提取的数据
 		if (DataType.IsNullOrEmpty(this.getFK_FrmAttachment()))
 		{
 			return;
 		}
 
-		//是一个流程先判断流程是否结束，如果结束了，就不让删除.
-	 //   string nodeID = this.FK_MapData.replace("ND", "");
-	  //  if (DataType.IsNumStr(nodeID) = true)
-	   // {
-		//}
-
-
-
 		FrmAttachment ath = new FrmAttachment(this.getFK_FrmAttachment());
 		try
 		{
 			// @于庆海需要翻译.
-			if (ath.getAthSaveWay() == AthSaveWay.IISServer)
+			if (ath.getAthSaveWay() == bp.sys.AthSaveWay.IISServer)
 			{
 				(new File(this.getFileFullName())).delete();
 			}
 
-			if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
+			if (ath.getAthSaveWay() == bp.sys.AthSaveWay.FTPServer)
 			{
 				FtpUtil ftpUtil = bp.wf.Glo.getFtpUtil();
-
 				String fullName = this.getFileFullName();
 				ftpUtil.deleteFile(fullName);
 			}
@@ -449,44 +419,56 @@ public class FrmAttachmentDB extends EntityMyPK
 			Log.DebugWriteError(ex.getMessage());
 		}
 
-
-		 super.afterDelete();
+		super.afterDelete();
 	}
 
 
 
-		///
+		///#endregion
 
 	/** 
 	 获得临时文件
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 
-	public final String GenerTempFile() throws Exception
-	{
-		return GenerTempFile(AthSaveWay.IISServer);
+	public final String GenerTempFile() throws Exception {
+		return GenerTempFile(bp.sys.AthSaveWay.IISServer);
 	}
 
-
-	public final String GenerTempFile(AthSaveWay saveWay) throws Exception
+//ORIGINAL LINE: public string GenerTempFile(AthSaveWay saveWay = BP.Sys.AthSaveWay.IISServer)
+	public final String GenerTempFile(AthSaveWay saveWay)
 	{
-		if (saveWay == AthSaveWay.IISServer)
+		if (saveWay == bp.sys.AthSaveWay.IISServer)
 		{
 			return this.getFileFullName();
 		}
 
-		if (saveWay == AthSaveWay.FTPServer)
+		if (saveWay == bp.sys.AthSaveWay.FTPServer)
 		{
 			return this.MakeFullFileFromFtp();
 		}
 
-		if (saveWay == AthSaveWay.DB)
+		if (saveWay == bp.sys.AthSaveWay.DB)
 		{
 			throw new RuntimeException("@尚未处理存储到db里面的文件.");
 		}
 
 		throw new RuntimeException("@尚未处理存储到db里面的文件.");
+	}
+
+	/** 
+	 向下移動
+	*/
+	public final void DoDownTabIdx() throws Exception {
+		this.DoOrderDown(FrmAttachmentDBAttr.RefPKVal, this.getRefPKVal(), FrmAttachmentDBAttr.FK_FrmAttachment, this.getFK_FrmAttachment(), FrmAttachmentDBAttr.Idx);
+	}
+	/** 
+	 向上移動
+	*/
+	public final void DoUpTabIdx() throws Exception {
+		this.DoOrderUp(FrmAttachmentDBAttr.RefPKVal, this.getRefPKVal(), FrmAttachmentDBAttr.FK_FrmAttachment, this.getFK_FrmAttachment(), FrmAttachmentDBAttr.Idx);
+
+		//  this.DoOrderUp(FrmAttachmentDBAttr.FK_MapData, this.FK_MapData, FrmAttachmentDBAttr.Idx);
 	}
 }

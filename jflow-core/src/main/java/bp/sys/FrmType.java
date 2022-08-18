@@ -11,9 +11,9 @@ public enum FrmType
 	 傻瓜表单
 	*/
 	FoolForm(0),
-	/** 
+	/**
 	 自由表单
-	*/
+	 */
 	FreeFrm(1),
 	/** 
 	 URL表单(自定义)
@@ -38,14 +38,25 @@ public enum FrmType
 	/** 
 	 开发者表单
 	*/
-	Develop(8);
+	Develop(8),
+	/** 
+	 WPS表单
+	*/
+	WPSFrm(9),
+	/** 
+	 外部数据源列表
+	*/
+	DBList(100),
+	/** 
+	 章节表单
+	*/
+	ChapterFrm(10);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FrmType> mappings;
-	private static java.util.HashMap<Integer, FrmType> getMappings()
-	{
+	private static java.util.HashMap<Integer, FrmType> getMappings() {
 		if (mappings == null)
 		{
 			synchronized (FrmType.class)
@@ -60,18 +71,15 @@ public enum FrmType
 	}
 
 	private FrmType(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
-	public static FrmType forValue(int value) 
-	{
-		return getMappings().get(value);
+	public static FrmType forValue(int value)
+	{return getMappings().get(value);
 	}
 }

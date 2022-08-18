@@ -1,5 +1,6 @@
 package bp.sys;
 
+
 /** 
  业务单元基类
  1. 重写该类为业务单元子类.
@@ -20,7 +21,7 @@ public abstract class BuessUnitBase
 	/** 
 	 执行的方法
 	*/
-	public String DoIt()
+	public String DoIt()throws Exception
 	{
 		return null;
 	}

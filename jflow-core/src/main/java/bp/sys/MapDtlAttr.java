@@ -1,5 +1,10 @@
 package bp.sys;
+
+import bp.da.*;
 import bp.en.*;
+import bp.*;
+import java.util.*;
+
 /** 
  明细
 */
@@ -94,6 +99,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String EditModel = "EditModel";
 	/** 
+	 自定义url。
+	*/
+	public static final String UrlDtl = "UrlDtl";
+	/** 
 	 移动端显示方式
 	*/
 	public static final String MobileShowModel = "MobileShowModel";
@@ -106,6 +115,11 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String FilterSQLExp = "FilterSQLExp";
 	/** 
+	 排序表达式.
+	*/
+	public static final String OrderBySQLExp = "OrderBySQLExp";
+
+	/** 
 	 列自动计算表达式
 	*/
 	public static final String ColAutoExp = "ColAutoExp";
@@ -117,22 +131,23 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 是否可见
 	*/
 	public static final String IsView = "IsView";
-	/** 
+	/**
 	 x
-	*/
+	 */
 	public static final String X = "X";
-	/** 
+	/**
 	 Y
-	*/
+	 */
 	public static final String Y = "Y";
-	/** 
+	/**
 	 H高度
-	*/
+	 */
 	public static final String H = "H";
-	/** 
+	/**
 	 w宽度
-	*/
+	 */
 	public static final String W = "W";
+
 	/** 
 	 宽度
 	*/
@@ -145,14 +160,6 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 是否启用多附件
 	*/
 	public static final String IsEnableAthM = "IsEnableAthM";
-	/** 
-	 是否启用一对多
-	*/
-	public static final String IsEnableM2M = "IsEnableM2M";
-	/** 
-	 是否启用一对多多
-	*/
-	public static final String IsEnableM2MM = "IsEnableM2MM";
 	/** 
 	 多表头列
 	*/
@@ -187,11 +194,21 @@ public class MapDtlAttr extends EntityNoNameAttr
 	public static final String ImpModel = "ImpModel";
 
 
-		///参数属性.
+		///#region 参数属性.
 	public static final String IsEnableLink = "IsEnableLink";
 	public static final String LinkLabel = "LinkLabel";
+	public static final String ExcType = "ExcType";
 	public static final String LinkUrl = "LinkUrl";
 	public static final String LinkTarget = "LinkTarget";
+
+
+
+	public static final String IsEnableLink2 = "IsEnableLink2";
+	public static final String LinkLabel2 = "LinkLabel2";
+	public static final String ExcType2 = "ExcType2";
+	public static final String LinkUrl2 = "LinkUrl2";
+	public static final String LinkTarget2 = "LinkTarget2";
+
 	/** 
 	 从表存盘方式(失去焦点自动存盘，手工存盘)
 	*/
@@ -201,10 +218,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String DtlAddRecModel = "DtlAddRecModel";
 
-		/// 参数属性.
+		///#endregion 参数属性.
 
 
-		///参数属性.
+		///#region 参数属性.
 	/** 
 	 是否启用锁定
 	*/
@@ -218,10 +235,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 	*/
 	public static final String SubThreadGroupMark = "SubThreadGroupMark";
 
-		/// 参数属性.
+		///#endregion 参数属性.
 
 
-		///导入导出属性.
+		///#region 导入导出属性.
 	/** 
 	 是否可以导入
 	*/
@@ -246,6 +263,18 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 列的中文名称
 	*/
 	public static final String ImpSQLNames = "ImpSQLNames";
+	/** 
+	 从表最小集合
+	*/
+	public static final String NumOfDtl = "NumOfDtl";
+	/** 
+	 是否拷贝第一条数据
+	*/
+	public static final String IsCopyFirstData = "IsCopyFirstData";
+	/** 
+	 行数据初始化字段
+	*/
+	public static final String InitDBAttrs = "InitDBAttrs";
 
-		///
+		///#endregion
 }

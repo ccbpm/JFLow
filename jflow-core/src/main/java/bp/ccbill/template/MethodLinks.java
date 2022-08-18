@@ -1,50 +1,41 @@
 package bp.ccbill.template;
 
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.ccbill.*;
 import java.util.*;
 
 /** 
  连接方法
 */
-public class MethodLinks extends EntitiesMyPK
+public class MethodLinks extends EntitiesNoName
 {
 	/** 
 	 连接方法
 	*/
-	public MethodLinks()
-	{
+	public MethodLinks()  {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MethodLink();
 	}
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<MethodLink> ToJavaList()
-	{
-		return (List<MethodLink>)(Object)this;
+	public final java.util.List<MethodLink> ToJavaList() {
+		return (java.util.List<MethodLink>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<MethodLink> Tolist()
-	{
+	public final ArrayList<MethodLink> Tolist()  {
 		ArrayList<MethodLink> list = new ArrayList<MethodLink>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -53,5 +44,5 @@ public class MethodLinks extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

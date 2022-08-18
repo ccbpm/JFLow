@@ -1,50 +1,43 @@
 package bp.sys.xml;
 
-import bp.da.*;
-import bp.en.*;
-import bp.sys.*;
-import bp.sys.*;
-import bp.*;
-import bp.sys.*;
-
 /** 
   RegularExpression 正则表达模版
 */
 public class RegularExpression extends XmlEn
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 编号
 	*/
-	public final String getNo()
+	public final String getNo()  throws Exception
 	{
 		return this.GetValStringByKey("No");
 	}
 	/** 
 	 名称
 	*/
-	public final String getName()
+	public final String getName()  throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
-	public final String getNote()
+	public final String getNote()  throws Exception
 	{
 		return this.GetValStringByKey("Note");
 	}
-	public final String getForCtrl()
+	public final String getForCtrl()  throws Exception
 	{
 		return this.GetValStringByKey("ForCtrl");
 	}
-	public final String getExp()
+	public final String getExp()  throws Exception
 	{
 		return this.GetValStringByKey("Exp");
 	}
 
-		///
+		///#endregion
 
 
-		///构造
+		///#region 构造
 	/** 
 	 节点扩展信息
 	*/
@@ -60,5 +53,5 @@ public class RegularExpression extends XmlEn
 		return new RegularExpressions();
 	}
 
-		///
+		///#endregion
 }

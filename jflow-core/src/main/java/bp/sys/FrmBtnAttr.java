@@ -1,5 +1,11 @@
 package bp.sys;
-import bp.en.EntityMyPKAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.pub.*;
+import bp.*;
+import java.util.*;
+
 /** 
  按钮
 */

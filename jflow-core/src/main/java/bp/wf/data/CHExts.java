@@ -8,8 +8,8 @@ import java.util.*;
 */
 public class CHExts extends Entities
 {
-	private static final long serialVersionUID = 1L;
-	///构造方法属性
+
+		///#region 构造方法属性
 	/** 
 	 时效考核s
 	*/
@@ -17,10 +17,10 @@ public class CHExts extends Entities
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///属性
+		///#region 属性
 	/** 
 	 时效考核
 	*/
@@ -30,25 +30,25 @@ public class CHExts extends Entities
 		return new CHExt();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<CHExt> ToJavaList()
+	public final java.util.List<CHExt> ToJavaList()throws Exception
 	{
-		return (List<CHExt>)(Object)this;
+		return (java.util.List<CHExt>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<CHExt> Tolist()
+	public final ArrayList<CHExt> Tolist()throws Exception
 	{
 		ArrayList<CHExt> list = new ArrayList<CHExt>();
 		for (int i = 0; i < this.size(); i++)
@@ -58,5 +58,5 @@ public class CHExts extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -1,8 +1,6 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.port.*;
-import bp.web.WebUser;
 import bp.en.*;
 import bp.wf.*;
 
@@ -14,7 +12,7 @@ public class Tool_Repair extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public Tool_Repair()
+	public Tool_Repair()throws Exception
 	{
 		this.Title = "修复因显示不出来到达节点下拉框而导致的，发送不下去的bug引起的垃圾数据";
 		this.Help = "此bug已经修复掉了,如果仍然出现类似的问题，有可能是其他问题引起的.";
@@ -30,12 +28,11 @@ public class Tool_Repair extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -48,12 +45,11 @@ public class Tool_Repair extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
-		String sql = "SELECT * FROM WF_GENERWORKFLOW WHERE WFState=2 ";
+		String sql = "SELECT WorkID,TODOEMPS,FK_NODE FROM WF_GENERWORKFLOW WHERE (WFState=2 OR  WFState=5) ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		String msg = "";
@@ -64,7 +60,7 @@ public class Tool_Repair extends Method
 			String nodeID = dr.getValue("FK_NODE").toString();
 
 			GenerWorkerLists gwls = new GenerWorkerLists();
-			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.IsPass, 0);
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.IsPass, 0, null);
 			for (GenerWorkerList gwl : gwls.ToJavaList())
 			{
 				if (todoEmps.contains(gwl.getFK_Emp() + ",") == false)
@@ -77,9 +73,8 @@ public class Tool_Repair extends Method
 					GenerWorkFlow gwf = new GenerWorkFlow(workid);
 					msg += "<br>@流程:" + gwf.getFlowName() + "节点:" + gwf.getFK_Node() + "," + gwf.getNodeName() + " workid: " + workid + "title:" + gwf.getTitle() + " todoEmps:" + gwf.getTodoEmps();
 					msg += "不包含:" + gwl.getFK_Emp() + "," + gwl.getFK_EmpText();
-
 					gwf.setTodoEmps(gwf.getTodoEmps() + gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ";");
-					gwf.Update();
+				   // gwf.Update();
 				}
 			}
 		}

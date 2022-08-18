@@ -1,11 +1,5 @@
 package bp.wf.data;
-
-import bp.da.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -14,7 +8,7 @@ import java.util.*;
 public class Monitors extends Entities
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -26,29 +20,29 @@ public class Monitors extends Entities
 	/** 
 	 流程监控集合
 	*/
-	public Monitors()
+	public Monitors()throws Exception
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Monitor> ToJavaList()
+	public final java.util.List<Monitor> ToJavaList()throws Exception
 	{
-		return (List<Monitor>)(Object)this;
+		return (java.util.List<Monitor>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Monitor> Tolist()
+	public final ArrayList<Monitor> Tolist()throws Exception
 	{
 		ArrayList<Monitor> list = new ArrayList<Monitor>();
 		for (int i = 0; i < this.size(); i++)
@@ -58,5 +52,5 @@ public class Monitors extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

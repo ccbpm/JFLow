@@ -1,11 +1,21 @@
 package bp.wf;
+
+import bp.da.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.sys.*;
+import bp.en.*;
+import bp.wf.template.*;
+import bp.*;
+import java.util.*;
+
 /** 
  流程实例
 */
 public class GenerWorkFlowAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -38,6 +48,10 @@ public class GenerWorkFlowAttr
 	 完成时间
 	*/
 	public static final String CDT = "CDT";
+	/** 
+	 挂起时间
+	*/
+	public static final String HungupTime = "HungupTime";
 	/** 
 	 得分
 	*/
@@ -188,11 +202,6 @@ public class GenerWorkFlowAttr
 	*/
 	public static final String HuiQianTaskSta = "HuiQianTaskSta";
 	/** 
-	 数量
-	*/
-	public static final String MyNum = "MyNum";
-
-	/** 
 	 域/系统编号
 	*/
 	public static final String Domain = "Domain";
@@ -203,5 +212,6 @@ public class GenerWorkFlowAttr
 	public static final String OrgNo = "OrgNo";
 
 
-		///
+
+		///#endregion
 }

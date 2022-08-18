@@ -1,9 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.*;
+
 import java.util.*;
 
 /** 
@@ -22,18 +20,18 @@ public class EnVers extends EntitiesMyPK
 	/** 
 	 实体版本号集合
 	*/
-	public EnVers()
+	public EnVers()throws Exception
 	{
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<EnVer> ToJavaList()
+	public final java.util.List<EnVer> ToJavaList()throws Exception
 	{
 		return (java.util.List<EnVer>)(Object)this;
 	}
@@ -42,7 +40,7 @@ public class EnVers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<EnVer> Tolist()
+	public final ArrayList<EnVer> Tolist()throws Exception
 	{
 		ArrayList<EnVer> list = new ArrayList<EnVer>();
 		for (int i = 0; i < this.size(); i++)
@@ -52,5 +50,5 @@ public class EnVers extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

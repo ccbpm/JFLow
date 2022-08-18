@@ -2,11 +2,13 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.en.*;
+import bp.port.*;
 import bp.sys.*;
 import bp.tools.DateUtils;
 import bp.web.WebUser;
 import bp.wf.template.*;
 import bp.wf.*;
+import java.time.*;
 import java.util.Date;
 
 /** 
@@ -17,7 +19,7 @@ public class AutoRunWF_Task extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public AutoRunWF_Task()
+	public AutoRunWF_Task()throws Exception
 	{
 		this.Title = "自动启动流程，使用扫描WF_Task表的模式.";
 		this.Help = "自动启动任务方式的流程, WF_Task";
@@ -45,10 +47,9 @@ public class AutoRunWF_Task extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		String info = "";
 		String sql = "SELECT * FROM WF_Task WHERE TaskSta=0 ORDER BY Starter";
@@ -70,7 +71,7 @@ public class AutoRunWF_Task extends Method
 		}
 
 
-			///自动启动流程
+			///#region 自动启动流程
 		for (DataRow dr : dt.Rows)
 		{
 			String mypk = dr.getValue("MyPK").toString();
@@ -120,7 +121,7 @@ public class AutoRunWF_Task extends Method
 				String fTable = "ND" + Integer.parseInt(fl.getNo() + "01");
 				MapData md = new MapData(fTable);
 				//sql = "";
-				sql = "SELECT * FROM " + md.getPTable() + " WHERE MainPK='" + mypk + "' AND WFState=1";
+				sql = "SELECT * FROM " + md.getPTable()+ " WHERE MainPK='" + mypk + "' AND WFState=1";
 				try
 				{
 					if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
@@ -134,15 +135,21 @@ public class AutoRunWF_Task extends Method
 					continue;
 				}
 
-				if (!starter.equals(WebUser.getNo()))
+				if (!bp.web.WebUser.getNo().equals(starter))
 				{
-					WebUser.Exit();
-					bp.port.Emp empadmin = new bp.port.Emp(starter);
-					WebUser.SignInOfGener(empadmin);
+					bp.web.WebUser.Exit();
+					Emp empadmin = new Emp(starter);
+					bp.web.WebUser.SignInOfGener(empadmin, "CH", false, false, null, null);
 				}
 
-				Work wk = fl.NewWork();
-				workID = wk.getOID();
+				//创建workid.
+				workID = bp.wf.Dev2Interface.Node_CreateBlankWork(fk_flow, WebUser.getNo());
+
+				Node nd = new Node(Integer.parseInt(fk_flow + "01"));
+				Work wk = nd.getHisWork();
+				wk.setOID(workID);
+				wk.RetrieveFromDBSources();
+
 				String[] strs = paras.split("[@]", -1);
 				for (String str : strs)
 				{
@@ -196,7 +203,7 @@ public class AutoRunWF_Task extends Method
 				//删除流程数据
 				if (workID != 0)
 				{
-					bp.wf.Dev2Interface.Flow_DoDeleteFlowByReal(workID);
+					Dev2Interface.Flow_DoDeleteFlowByReal(workID);
 				}
 
 				//如果发送错误。
@@ -214,7 +221,7 @@ public class AutoRunWF_Task extends Method
 			}
 		}
 
-			/// 自动启动流程
+			///#endregion 自动启动流程
 
 		return info;
 	}

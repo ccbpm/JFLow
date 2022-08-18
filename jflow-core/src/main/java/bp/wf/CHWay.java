@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  考核规则
 */
@@ -16,17 +18,19 @@ public enum CHWay
 	/** 
 	 按照工作量考核
 	*/
-	ByWorkNum;
+	ByWorkNum,
+	/** 
+	 是否是考核质量点
+	*/
+	IsQuality;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static CHWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static CHWay forValue(int value)
+	{return values()[value];
 	}
 }

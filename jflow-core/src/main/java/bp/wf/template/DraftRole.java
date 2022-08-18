@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-import bp.wf.*;
 
 /** 
  草稿规则
@@ -22,13 +21,11 @@ public enum DraftRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static DraftRole forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static DraftRole forValue(int value)
+	{return values()[value];
 	}
 }

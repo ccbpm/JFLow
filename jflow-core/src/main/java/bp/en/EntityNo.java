@@ -1,9 +1,5 @@
 package bp.en;
 
-import bp.en.*;
-import bp.da.*;
-import bp.*;
-
 /** 
  NoEntity 的摘要说明。
 */
@@ -19,11 +15,11 @@ public abstract class EntityNo extends Entity
 	/** 
 	 编号
 	*/
-	public String getNo()throws Exception
+	public String getNo()
 	{
 		return this.GetValStringByKey(EntityNoNameAttr.No);
 	}
-	public void setNo(String value) throws Exception
+	public void setNo(String value)
 	{
 		this.SetValByKey(EntityNoNameAttr.No, value);
 	}
@@ -39,8 +35,7 @@ public abstract class EntityNo extends Entity
 	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 
 		Attr attr = this.getEnMap().GetAttrByKey("No");
 		if (attr.getUIVisible() == true && attr.getUIIsReadonly() && this.getEnMap().getIsAutoGenerNo() && this.getNo().length() == 0)
@@ -61,20 +56,23 @@ public abstract class EntityNo extends Entity
 	/** 
 	 通过编号得到实体。
 	 
-	 @param _no 编号
+	 param _no 编号
 	 * @throws Exception 
 	*/
-	public EntityNo(String _no) throws Exception
-	{
+	public EntityNo(String _no)  {
 		if (_no == null || _no.equals(""))
 		{
 			throw new RuntimeException(this.getEnDesc() + "@对表[" + this.getEnDesc() + "]进行查询前必须指定编号。");
 		}
 
 		this.setNo(_no);
-		if (this.Retrieve() == 0)
-		{
-			throw new RuntimeException("@没有" + this.getEnMap().getPhysicsTable() + ", No = " + getNo() + "的记录。");
+		try {
+			if (this.Retrieve() == 0)
+			{
+				throw new RuntimeException("@没有" + this.getEnMap().getPhysicsTable() + ", No = " + getNo() + "的记录。");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	@Override
@@ -134,7 +132,7 @@ public abstract class EntityNo extends Entity
 	/** 
 	 按 No 查询。
 	 
-	 @param _No No
+	 param _No No
 	 @return 
 	 * @throws Exception 
 	*/

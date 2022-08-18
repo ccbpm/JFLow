@@ -44,8 +44,7 @@ public class AttrOfOneVSM
 		return _ensOfMM;
 	}
 	public final void setEnsOfMM(Entities value)
-	{
-		_ensOfMM = value;
+	{_ensOfMM = value;
 	}
 	/** 
 	 多对多的实体
@@ -59,8 +58,7 @@ public class AttrOfOneVSM
 		return _ensOfM;
 	}
 	public final void setEnsOfM(Entities value)
-	{
-		_ensOfM = value;
+	{_ensOfM = value;
 	}
 	/** 
 	 M的实体属性在多对多的实体中
@@ -73,7 +71,7 @@ public class AttrOfOneVSM
 	{
 		return _Desc; //edited by liuxc,2014-10-18 "<font color=blue ><u>" + _Desc + "</u></font>";
 	}
-	public final void setDesc(String value) throws Exception
+	public final void setDesc(String value)
 	{
 		_Desc = value;
 	}
@@ -88,7 +86,7 @@ public class AttrOfOneVSM
 	{
 		return _AttrOfOneInMM;
 	}
-	public final void setAttrOfOneInMM(String value) throws Exception
+	public final void setAttrOfOneInMM(String value)
 	{
 		_AttrOfOneInMM = value;
 	}
@@ -104,7 +102,7 @@ public class AttrOfOneVSM
 	{
 		return _AttrOfMInMM;
 	}
-	public final void setAttrOfMInMM(String value) throws Exception
+	public final void setAttrOfMInMM(String value)
 	{
 		_AttrOfMInMM = value;
 	}
@@ -119,7 +117,7 @@ public class AttrOfOneVSM
 	{
 		return _AttrOfMText;
 	}
-	public final void setAttrOfMText(String value) throws Exception
+	public final void setAttrOfMText(String value)
 	{
 		_AttrOfMText = value;
 	}
@@ -134,7 +132,7 @@ public class AttrOfOneVSM
 	{
 		return _AttrOfMValue;
 	}
-	public final void setAttrOfMValue(String value) throws Exception
+	public final void setAttrOfMValue(String value)
 	{
 		_AttrOfMValue = value;
 	}
@@ -152,15 +150,15 @@ public class AttrOfOneVSM
 	/** 
 	 AttrOfOneVSM
 	 
-	 @param _ensOfMM
-	 @param _ensOfM
-	 @param AttrOfOneInMM
-	 @param AttrOfMInMM
-	 @param AttrOfMText
-	 @param AttrOfMValue
-	 * @throws Exception 
+	 param _ensOfMM
+	 param _ensOfM
+	 param AttrOfOneInMM
+	 param AttrOfMInMM
+	 param AttrOfMText
+	 param AttrOfMValue
+	 * @
 	*/
-	public AttrOfOneVSM(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc) throws Exception
+	public AttrOfOneVSM(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String AttrOfMText, String AttrOfMValue, String desc)
 	{
 		this.setEnsOfM(_ensOfM);
 		this.setEnsOfMM(_ensOfMM);

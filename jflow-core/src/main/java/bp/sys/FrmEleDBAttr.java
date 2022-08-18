@@ -1,5 +1,10 @@
 package bp.sys;
-import bp.en.EntityMyPKAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.*;
+import java.util.*;
+
 /** 
  表单元素扩展DB
 */

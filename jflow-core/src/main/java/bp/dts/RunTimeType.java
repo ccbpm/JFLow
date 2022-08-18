@@ -33,7 +33,7 @@ public enum RunTimeType
 		return this.ordinal();
 	}
 
-	public static RunTimeType forValue(int value) throws Exception
+	public static RunTimeType forValue(int value) 
 	{
 		return values()[value];
 	}

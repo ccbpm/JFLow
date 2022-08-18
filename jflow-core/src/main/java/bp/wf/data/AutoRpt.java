@@ -1,93 +1,84 @@
 package bp.wf.data;
-
-import bp.dts.Auto_Rpt_Dtl_DTS;
-import bp.en.EntityMyPK;
+import bp.en.*;
 import bp.en.Map;
-import bp.en.RefMethod;
-import bp.en.RefMethodType;
-import bp.wf.Dev2Interface;
+import bp.wf.*;
 
-public class AutoRpt  extends EntityMyPK {
+/** 
+ 自动报表
+*/
+public class AutoRpt extends EntityNoName
+{
 
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-   ///#region 属性
+		///#region 属性
 	/** 
 	 发起时间点
-	 * @throws Exception 
 	*/
-	public final String getStartDT() throws Exception
+	public final String getStartDT()
 	{
 		return this.GetValStringByKey(AutoRptAttr.StartDT);
 	}
-	public final void setStartDT(String value) throws Exception
+	public final void setStartDT(String value)
 	{
 		this.SetValByKey(AutoRptAttr.StartDT, value);
 	}
 	/** 
 	 执行的时间点.
-	 * @throws Exception 
 	*/
-	public final String getDots() throws Exception
+	public final String getDots()
 	{
 		return this.GetValStringByKey(AutoRptAttr.Dots);
 	}
-	public final void setDots(String value) throws Exception
+	public final void setDots(String value)
 	{
 		this.SetValByKey(AutoRptAttr.Dots, value);
 	}
 	/** 
 	 执行时间
-	 * @throws Exception 
 	*/
-	public final String getDTOfExe() throws Exception
+	public final String getDTOfExe()
 	{
 		return this.GetValStringByKey(AutoRptAttr.DTOfExe);
 	}
-	public final void setDTOfExe(String value) throws Exception
+	public final void setDTOfExe(String value)
 	{
 		this.SetValByKey(AutoRptAttr.DTOfExe, value);
 	}
 	/** 
 	 到达的人员
-	 * @throws Exception 
 	*/
-	public final String getToEmps() throws Exception
+	public final String getToEmps()
 	{
 		return this.GetValStringByKey(AutoRptAttr.ToEmps);
 	}
-	public final void setToEmps(String value) throws Exception
+	public final void setToEmps(String value)
 	{
 		this.SetValByKey(AutoRptAttr.ToEmps, value);
 	}
-	public final String getToEmpOfSQLs() throws Exception
+	public final String getToEmpOfSQLs()
 	{
 		return this.GetValStringByKey(AutoRptAttr.ToEmpOfSQLs);
 	}
-	public final void setToEmpOfSQLs(String value) throws Exception
+	public final void setToEmpOfSQLs(String value)
 	{
 		this.SetValByKey(AutoRptAttr.ToEmpOfSQLs, value);
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#endregion
 
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#region 构造函数
+		///#endregion
+
+
+		///#region 构造函数
 	/** 
 	 AutoRpt
 	*/
-//C# TO JAVA CONVERTER WARNING: The following constructor is declared outside of its associated class:
-//ORIGINAL LINE: public AutoRpt()
 	public AutoRpt()
 	{
 
 	}
 	/** 
 	 重写基类方法
-	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -115,23 +106,23 @@ public class AutoRpt  extends EntityMyPK {
 		map.SetHelperAlert(AutoRptAttr.Dots, "系统的日志，曾经发起的时间点记录.格式为:2020-09-10 20:22,2020-09-10 22:22");
 
 			//
-		map.AddDtl(new AutoRptDtls(), AutoRptDtlAttr.AutoRptNo);
+		map.AddDtl(new AutoRptDtls(), AutoRptDtlAttr.AutoRptNo, null);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "手工执行";
 		rm.ClassMethodName = this.toString() + ".DoIt";
-		rm.refMethodType=RefMethodType.Func;
+		rm.refMethodType = RefMethodType.Func;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#endregion
 
-	public final String DoIt() throws Exception
+		///#endregion
+
+	public final String DoIt()throws Exception
 	{
-		Auto_Rpt_Dtl_DTS dts = new Auto_Rpt_Dtl_DTS();
+		bp.wf.dts.Auto_Rpt_Dtl_DTS dts = new bp.wf.dts.Auto_Rpt_Dtl_DTS();
 		Object tempVar = dts.Do();
 		String str = tempVar instanceof String ? (String)tempVar : null;
 
@@ -139,5 +130,4 @@ public class AutoRpt  extends EntityMyPK {
 
 		return str;
 	}
-
 }

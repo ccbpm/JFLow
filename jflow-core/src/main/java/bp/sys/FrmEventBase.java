@@ -1,16 +1,14 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.web.*;
 import bp.sys.*;
+import bp.difference.*;
 import bp.*;
 import java.time.*;
-import java.util.Date;
-import java.util.Enumeration;
 import java.math.*;
+import java.util.Date;
 
 /** 
  表单事件基类
@@ -18,29 +16,28 @@ import java.math.*;
 public abstract class FrmEventBase
 {
 
-		///要求子类强制重写的属性.
+		///#region 要求子类强制重写的属性.
 	/** 
 	 表单编号
 	 该参数用于说明要把此事件注册到那一个表单模版上.
 	*/
 	public abstract String getFrmNo();
 
-		/// 要求子类重写的属性.
+		///#endregion 要求子类重写的属性.
 
 
-		///常用属性.
+		///#region 常用属性.
 	/** 
 	 工作ID
 	*/
-	public final int getOID()
+	public final int getOID() throws Exception
 	{
 		return this.GetValInt("OID");
 	}
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
-	{
+	public final long getWorkID() throws Exception {
 		if (this.getOID() == 0)
 		{
 			return this.GetValInt64("WorkID"); //有可能开始节点的WorkID=0
@@ -57,14 +54,14 @@ public abstract class FrmEventBase
 	/** 
 	 传过来的WorkIDs集合，子流程.
 	*/
-	public final String getWorkIDs()
+	public final String getWorkIDs() throws Exception
 	{
 		return this.GetValStr("WorkIDs");
 	}
 	/** 
 	 编号集合s
 	*/
-	public final String getNos()
+	public final String getNos() throws Exception
 	{
 		return this.GetValStr("Nos");
 	}
@@ -72,27 +69,24 @@ public abstract class FrmEventBase
 	  行数据
 	*/
 	private Row Row;
-	public final Row getRow()
-	{
+	public final Row getRow()  {
 		return Row;
 	}
 	public final void setRow(Row value)
-	{
-		Row = value;
+	{Row = value;
 	}
 
-		/// 常用属性.
+		///#endregion 常用属性.
 
 
-		///数据字段的方法
+		///#region 数据字段的方法
 	/** 
 	 时间参数
 	 
-	 @param key 时间字段
+	 param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final Date GetValDateTime(String key)
-	{
+	public final Date GetValDateTime(String key) throws Exception {
 		try
 		{
 			String str = this.getRow().GetValByKey(key).toString();
@@ -106,7 +100,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取字符串参数
 	 
-	 @param key key
+	 param key key
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final String GetValStr(String key)
@@ -123,7 +117,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取Int64的数值
 	 
-	 @param key 键值
+	 param key 键值
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final long GetValInt64(String key)
@@ -133,7 +127,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取int的数值
 	 
-	 @param key 键值
+	 param key 键值
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final int GetValInt(String key)
@@ -143,7 +137,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取Boolen值
 	 
-	 @param key 字段
+	 param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final boolean GetValBoolen(String key)
@@ -157,54 +151,49 @@ public abstract class FrmEventBase
 	/** 
 	 获取decimal的数值
 	 
-	 @param key 字段
+	 param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final BigDecimal GetValDecimal(String key)
 	{
-		return new BigDecimal(this.GetValStr(key));
+		return  new BigDecimal(this.GetValStr(key));
 	}
 
-		/// 获取参数方法
+		///#endregion 获取参数方法
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 表单事件基类
 	*/
-	public FrmEventBase()
-	{
+	public FrmEventBase() throws Exception {
 	}
 
-		/// 构造方法
+		///#endregion 构造方法
 
 
-		///节点表单事件
-	public String FrmLoadAfter()
-	{
+		///#region 节点表单事件
+	public String FrmLoadAfter() throws Exception {
 		return null;
 	}
-	public String FrmLoadBefore()
-	{
+	public String FrmLoadBefore() throws Exception {
 		return null;
 	}
 
-		///
+		///#endregion
 
 
-		///要求子类重写的方法(节点事件).
+		///#region 要求子类重写的方法(节点事件).
 	/** 
 	 保存后
 	*/
-	public String SaveAfter()
-	{
+	public String SaveAfter() throws Exception {
 		return null;
 	}
 	/** 
 	 保存前
 	*/
-	public String SaveBefore()
-	{
+	public String SaveBefore() throws Exception {
 		return null;
 	}
 	/** 
@@ -212,28 +201,25 @@ public abstract class FrmEventBase
 	 
 	 @return 
 	*/
-	public String CreateOID()
-	{
+	public String CreateOID() throws Exception {
 		return null;
 	}
 
-		/// 要求子类重写的方法(节点事件).
+		///#endregion 要求子类重写的方法(节点事件).
 
 
-		///基类方法.
+		///#region 基类方法.
 	/** 
 	 执行事件
 	 
-	 @param eventType 事件类型
-	 @param en 实体参数
-	 * @throws Exception 
+	 param eventType 事件类型
+	 param en 实体参数
 	*/
-	public final String DoIt(String eventType, Entity en, Row row, String atPara) throws Exception
-	{
+	public final String DoIt(String eventType, Entity en, Row row, String atPara) throws Exception {
 		this.setRow(row);
 
 
-			///处理参数.
+			///#region 处理参数.
 		Row r = en.getRow();
 		try
 		{
@@ -264,9 +250,8 @@ public abstract class FrmEventBase
 		if (SystemConfig.getIsBSsystem() == true)
 		{
 			/*如果是bs系统, 就加入外部url的变量.*/
-			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
-			while (enu.hasMoreElements()) {
-				String key = (String) enu.nextElement();
+			for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet())
+			{
 				String val = ContextHolderUtils.getRequest().getParameter(key);
 				try
 				{
@@ -277,14 +262,12 @@ public abstract class FrmEventBase
 					this.getRow().put(key, val);
 				}
 			}
-			
-			
 		}
 
-			/// 处理参数.
+			///#endregion 处理参数.
 
 
-			///执行事件.
+			///#region 执行事件.
 		switch (eventType)
 		{
 			case EventListFrm.CreateOID: // 节点表单事件。
@@ -301,7 +284,9 @@ public abstract class FrmEventBase
 				throw new RuntimeException("@没有判断的事件类型:" + eventType);
 		}
 
+			///#endregion 执行事件.
+
 	}
 
-		/// 基类方法.
+		///#endregion 基类方法.
 }

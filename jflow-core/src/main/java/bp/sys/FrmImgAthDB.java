@@ -2,8 +2,9 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.*;
+import bp.en.Map;
+
 import java.util.*;
 
 /** 
@@ -12,7 +13,7 @@ import java.util.*;
 public class FrmImgAthDB extends EntityMyPK
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 类别
 	*/
@@ -20,19 +21,19 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.Sort);
 	}
-	public final void setSort(String value) throws Exception
-	{
+	public final void setSort(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.Sort, value);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT() throws Exception 
+	public final String getRDT() throws Exception
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.RDT);
 	}
-	public final void setRDT(String value) throws Exception
-	{
+	public final void setRDT(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.RDT, value);
 	}
 	/** 
@@ -42,15 +43,14 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.FileFullName);
 	}
-	public final void setFileFullName(String value) throws Exception
-	{
+	public final void setFileFullName(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.FileFullName, value);
 	}
 	/** 
 	 附件路径
 	*/
-	public final String getFilePathName() throws Exception
-	{
+	public final String getFilePathName() throws Exception {
 		return this.getFileFullName().substring(this.getFileFullName().lastIndexOf('/') + 1);
 	}
 	/** 
@@ -60,8 +60,8 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.FileName);
 	}
-	public final void setFileName(String value) throws Exception
-	{
+	public final void setFileName(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.FileName, value);
 	}
 	/** 
@@ -71,8 +71,8 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.FileExts);
 	}
-	public final void setFileExts(String value) throws Exception
-	{
+	public final void setFileExts(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.FileExts, value.replace(".",""));
 	}
 	/** 
@@ -82,8 +82,8 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.FK_FrmImgAth);
 	}
-	public final void setFK_FrmImgAth(String value) throws Exception
-	{
+	public final void setFK_FrmImgAth(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.FK_FrmImgAth, value);
 	}
 	/** 
@@ -93,8 +93,8 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.RefPKVal);
 	}
-	public final void setRefPKVal(String value) throws Exception
-	{
+	public final void setRefPKVal(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.RefPKVal, value);
 	}
 	/** 
@@ -104,30 +104,30 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.MyNote);
 	}
-	public final void setMyNote(String value) throws Exception
-	{
+	public final void setMyNote(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.MyNote, value);
 	}
 	/** 
 	 记录人
 	*/
-	public final String getRec() throws Exception 
+	public final String getRec() throws Exception
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.Rec);
 	}
-	public final void setRec(String value) throws Exception
-	{
+	public final void setRec(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.Rec, value);
 	}
 	/** 
 	 记录人名称
 	*/
-	public final String getRecName()  throws Exception 
+	public final String getRecName() throws Exception
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.RecName);
 	}
-	public final void setRecName(String value) throws Exception
-	{
+	public final void setRecName(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.RecName, value);
 	}
 	/** 
@@ -137,38 +137,41 @@ public class FrmImgAthDB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAthDBAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAthDBAttr.FK_MapData, value);
 	}
-	/** 
-	 文件大小
-	*/
-	public final float getFileSize() throws Exception
+	public final void setFK_MapData(String val)
 	{
-		return this.GetValFloatByKey(FrmImgAthDBAttr.FileSize);
+			this.SetValByKey(FrmImgAthDBAttr.FK_MapData, val);
 	}
-	public final void setFileSize(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAthDBAttr.FileSize, value / 1024);
-	}
+/** 
+ 文件大小
+*/
+public final float getFileSize()
+{
+	return this.GetValFloatByKey(FrmImgAthDBAttr.FileSize);
+}
+public final void setFileSize(float value)
+{
+	this.SetValByKey(FrmImgAthDBAttr.FileSize, value / 1024);
+}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 剪切图片附件数据存储
 	*/
-	public FrmImgAthDB()
-	{
+	public FrmImgAthDB()  {
 	}
 	/** 
 	 剪切图片附件数据存储
 	 
-	 @param mypk
+	 param mypk
 	*/
-	public FrmImgAthDB(String mypk) throws Exception
+	public FrmImgAthDB(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -177,8 +180,7 @@ public class FrmImgAthDB extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -216,8 +218,7 @@ public class FrmImgAthDB extends EntityMyPK
 	 @return 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		this.setMyPK(this.getFK_FrmImgAth() + "_" + this.getRefPKVal());
 		return super.beforeInsert();
 	}
@@ -227,11 +228,10 @@ public class FrmImgAthDB extends EntityMyPK
 	 @return 
 	*/
 	@Override
-	protected boolean beforeUpdate() throws Exception
-	{
+	protected boolean beforeUpdate() throws Exception {
 		this.setMyPK(this.getFK_FrmImgAth() + "_" + this.getRefPKVal());
 		return super.beforeUpdate();
 	}
 
-		///
+		///#endregion
 }

@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  子线程启动方式
 */
@@ -20,13 +22,11 @@ public enum SubFlowStartWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static SubFlowStartWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static SubFlowStartWay forValue(int value)
+	{return values()[value];
 	}
 }

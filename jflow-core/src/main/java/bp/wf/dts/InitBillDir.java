@@ -7,16 +7,16 @@ import bp.dts.RunTimeType;
 import bp.en.*;
 import bp.port.*;
 import bp.tools.DateUtils;
-import bp.wf.template.*;
 import java.io.*;
 import java.util.Date;
+import bp.wf.template.*;
 
 public class InitBillDir extends DataIOEn
 {
-	/** 
+	/**
 	 流程时效考核
-	*/
-	public InitBillDir()
+	 */
+	public InitBillDir()throws Exception
 	{
 		this.HisDoType = DoType.UnName;
 		this.Title = "<font color=green><b>创建单据目录(运行在每次更改单据文号或每年一天)</b></font>";
@@ -24,10 +24,10 @@ public class InitBillDir extends DataIOEn
 		this.FromDBUrl = DBUrlType.AppCenterDSN;
 		this.ToDBUrl = DBUrlType.AppCenterDSN;
 	}
-	/** 
+	/**
 	 创建单据目录
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	@Override
 	public void Do() throws Exception
 	{
@@ -37,7 +37,7 @@ public class InitBillDir extends DataIOEn
 		}
 		Depts Depts = new Depts();
 		QueryObject qo = new QueryObject(Depts);
-  //      qo.AddWhere("Grade", " < ", 4);
+		//      qo.AddWhere("Grade", " < ", 4);
 		qo.DoQuery();
 
 		BillTemplates funcs = new BillTemplates();

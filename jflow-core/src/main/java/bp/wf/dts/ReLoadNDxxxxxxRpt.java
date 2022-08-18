@@ -1,6 +1,5 @@
 package bp.wf.dts;
 
-import bp.web.WebUser;
 import bp.en.*;
 import bp.wf.*;
 
@@ -12,7 +11,7 @@ public class ReLoadNDxxxxxxRpt extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public ReLoadNDxxxxxxRpt()
+	public ReLoadNDxxxxxxRpt()throws Exception
 	{
 		this.Title = "清除并重新装载流程报表";
 		this.Help = "删除NDxxxRpt表数据，重新装载，此功能估计要执行很长时间，如果数据量较大有可能在web程序上执行失败。";
@@ -28,12 +27,11 @@ public class ReLoadNDxxxxxxRpt extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -46,10 +44,9 @@ public class ReLoadNDxxxxxxRpt extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		String msg = "";
 

@@ -1,9 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -14,17 +11,14 @@ public class FrmOrgs extends EntitiesMM
 	/** 
 	 表单对应组织
 	*/
-	public FrmOrgs()
-	{
+	public FrmOrgs()  {
 	}
 	/** 
 	 表单对应组织
 	 
-	 @param EmpNo EmpNo 
-	 * @throws Exception 
+	 param EmpNo EmpNo
 	*/
-	public FrmOrgs(String orgNo) throws Exception
-	{
+	public FrmOrgs(String orgNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmOrgAttr.OrgNo, orgNo);
 		qo.DoQuery();
@@ -33,29 +27,26 @@ public class FrmOrgs extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmOrg();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmOrg> ToJavaList()
-	{
-		return (List<FrmOrg>)(Object)this;
+	public final java.util.List<FrmOrg> ToJavaList() {
+		return (java.util.List<FrmOrg>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmOrg> Tolist()
-	{
+	public final ArrayList<FrmOrg> Tolist()  {
 		ArrayList<FrmOrg> list = new ArrayList<FrmOrg>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -64,5 +55,5 @@ public class FrmOrgs extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

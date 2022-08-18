@@ -2,11 +2,7 @@ package bp.sys.frmui;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.sys.*;
-import bp.*;
-import bp.sys.*;
-import java.util.*;
 
 /** 
  装饰图片
@@ -14,13 +10,12 @@ import java.util.*;
 public class ExtImg extends EntityMyPK
 {
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -30,43 +25,40 @@ public class ExtImg extends EntityMyPK
 	/** 
 	 装饰图片
 	*/
-	public ExtImg()
-	{
+	public ExtImg() {
 	}
 	/** 
 	 装饰图片
 	 
-	 @param mypk
-	 * @throws Exception 
+	 param mypk
 	*/
-	public ExtImg(String mypk) throws Exception
+	public ExtImg(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
 
-	public final String getKeyOfEn()throws Exception
+	public final String getKeyOfEn()
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
-	public final String getFK_MapData()throws Exception
+	public final String getFKMapData()
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)
+	 {
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -108,25 +100,24 @@ public class ExtImg extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.ColSpan, 0, "单元格数量", false, true);
 
 			//跨单元格
-		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 			//跨行
 		map.AddDDLSysEnum(MapAttrAttr.RowSpan, 1, "行数", true, true, "RowSpanAttrString", "@1=跨1个行@2=跨2行@3=跨3行");
 
-		map.AddTBInt(MapAttrAttr.UIWidth, 0, "宽度", true, false);
-		map.AddTBInt(MapAttrAttr.UIHeight, 0, "高度", true, false);
+		map.AddTBFloat(MapAttrAttr.UIWidth, 0, "宽度", true, false);
+		map.AddTBFloat(MapAttrAttr.UIHeight, 0, "高度", true, false);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
 	@Override
-	protected void afterInsertUpdateAction()  throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		//在属性实体集合插入前，clear父实体的缓存.
-		bp.sys.Glo.ClearMapDataAutoNum(this.getFK_MapData());
+		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFKMapData());
 
 
-		bp.sys.FrmImg imgAth = new bp.sys.FrmImg();
+		FrmImg imgAth = new FrmImg();
 		imgAth.setMyPK(this.getMyPK());
 		imgAth.RetrieveFromDBSources();
 		imgAth.Update();
@@ -136,30 +127,31 @@ public class ExtImg extends EntityMyPK
 		{
 			MapAttrString attr = new MapAttrString(this.getMyPK());
 			attr.SetValByKey(MapAttrAttr.ColSpan, this.GetValStrByKey(MapAttrAttr.ColSpan));
-			attr.SetValByKey(MapAttrAttr.TextColSpan, this.GetValStrByKey(MapAttrAttr.TextColSpan));
+			attr.SetValByKey(MapAttrAttr.LabelColSpan, this.GetValStrByKey(MapAttrAttr.LabelColSpan));
 			attr.SetValByKey(MapAttrAttr.RowSpan, this.GetValStrByKey(MapAttrAttr.RowSpan));
 
 			attr.SetValByKey(MapAttrAttr.Name, this.GetValStrByKey(FrmImgAttr.Name)); //名称.
 
-			attr.SetValByKey(MapAttrAttr.X, this.GetValStrByKey(FrmImgAttr.X));
-			attr.SetValByKey(MapAttrAttr.Y, this.GetValStrByKey(FrmImgAttr.Y));
+
+			attr.SetValByKey(MapAttrAttr.UIWidth, this.GetValStrByKey(MapAttrAttr.UIWidth));
+			attr.SetValByKey(MapAttrAttr.UIHeight, this.GetValStrByKey(MapAttrAttr.UIHeight));
 			attr.Update();
 		}
 
 		super.afterInsertUpdateAction();
+
 	}
 	@Override
-	protected void afterDelete() throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//把相关的字段也要删除.
 		MapAttrString attr = new MapAttrString();
 		attr.setMyPK(this.getMyPK());
-		attr.setFK_MapData(this.getFK_MapData());
+		attr.setFK_MapData(this.getFKMapData());
 		attr.Delete();
 
 		super.afterDelete();
 	}
 
 
-		///
+		///#endregion
 }

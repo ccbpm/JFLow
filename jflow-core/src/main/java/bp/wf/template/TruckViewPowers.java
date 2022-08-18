@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -15,36 +16,32 @@ public class TruckViewPowers extends EntitiesNoName
 	/** 
 	 流程轨迹权限s
 	*/
-	public TruckViewPowers()
-	{
+	public TruckViewPowers() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new TruckViewPower();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<TruckViewPower> ToJavaList()
-	{
-		return (List<TruckViewPower>)(Object)this;
+	public final java.util.List<TruckViewPower> ToJavaList() {
+		return (java.util.List<TruckViewPower>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<TruckViewPower> Tolist()
-	{
+	public final ArrayList<TruckViewPower> Tolist()  {
 		ArrayList<TruckViewPower> list = new ArrayList<TruckViewPower>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -53,5 +50,5 @@ public class TruckViewPowers extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

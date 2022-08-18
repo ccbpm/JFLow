@@ -1,27 +1,26 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
+import bp.sys.frmui.*;
+import bp.difference.*;
+
 /** 
  图片
 */
 public class FrmImg extends EntityMyPK
 {
-	private static final long serialVersionUID = 1L;
 
-	///属性
+		///#region 属性
 	/** 
 	 中文名称
-	 * @throws Exception 
 	*/
 	public final String getName() throws Exception
 	{
 		return this.GetValStringByKey(FrmImgAttr.Name);
 	}
-	public final void setName(String value) throws Exception
-	{
+	public final void setName(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.Name, value);
 	}
 	/** 
@@ -31,8 +30,8 @@ public class FrmImg extends EntityMyPK
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
@@ -42,13 +41,10 @@ public class FrmImg extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAttr.EnPK);
 	}
-	public final void setEnPK(String value) throws Exception
-	{
+	public final void setEnPK(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.EnPK, value);
 	}
-	/** 
-	 是否可以编辑
-	*/
 	public final int getIsEdit() throws Exception
 	{
 		return this.GetValIntByKey(FrmImgAttr.IsEdit);
@@ -60,12 +56,11 @@ public class FrmImg extends EntityMyPK
 	/** 
 	 应用类型
 	*/
-	public final ImgAppType getHisImgAppType() throws Exception
-	{
+	public final ImgAppType getHisImgAppType() throws Exception {
 		return ImgAppType.forValue(this.GetValIntByKey(FrmImgAttr.ImgAppType));
 	}
-	public final void setHisImgAppType(ImgAppType value) throws Exception
-	{
+	public final void setHisImgAppType(ImgAppType value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.ImgAppType, value.getValue());
 	}
 	/** 
@@ -75,8 +70,8 @@ public class FrmImg extends EntityMyPK
 	{
 		return this.GetValIntByKey(FrmImgAttr.ImgSrcType);
 	}
-	public final void setImgSrcType(int value) throws Exception
-	{
+	public final void setImgSrcType(int value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.ImgSrcType, value);
 	}
 
@@ -84,8 +79,8 @@ public class FrmImg extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAttr.Tag0);
 	}
-	public final void setTag0(String value) throws Exception
-	{
+	public final void setTag0(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.Tag0, value);
 	}
 
@@ -93,8 +88,8 @@ public class FrmImg extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAttr.LinkTarget);
 	}
-	public final void setLinkTarget(String value) throws Exception
-	{
+	public final void setLinkTarget(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.LinkTarget, value);
 	}
 	/** 
@@ -104,78 +99,37 @@ public class FrmImg extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmImgAttr.LinkURL);
 	}
-	public final void setLinkURL(String value) throws Exception
-	{
+	public final void setLinkURL(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.LinkURL, value);
 	}
-	public final String getImgPath() throws Exception
-	{
+	public final String getImgPath() throws Exception {
 		String src = this.GetValStringByKey(FrmImgAttr.ImgPath);
-		if (DataType.IsNullOrEmpty(src)) {
-			src =  "DataUser/ICON/" + SystemConfig.getCustomerNo() + "/LogBiger.png";
+		if (DataType.IsNullOrEmpty(src))
+		{
+			if (DataType.IsNullOrEmpty(src)) {
+				src =  "DataUser/ICON/" + SystemConfig.getCustomerNo() + "/LogBiger.png";
+			}
 		}
 		return src;
 	}
-	public final void setImgPath(String value) throws Exception
-	{
+	public final void setImgPath(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.ImgPath, value);
 	}
-	public final String getImgURL() throws Exception
-	{
+	public final String getImgURL() throws Exception {
 		String src = this.GetValStringByKey(FrmImgAttr.ImgURL);
-		if (DataType.IsNullOrEmpty(src) || src.contains("component/Img")) {
+		if (DataType.IsNullOrEmpty(src) || src.contains("component/Img"))
+		{
 			src =  "DataUser/ICON/" + SystemConfig.getCustomerNo() + "/LogBiger.png";
 		}
 		return src;
 	}
-	public final void setImgURL(String value) throws Exception
-	{
+	public final void setImgURL(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.ImgURL, value);
 	}
-	/** 
-	 Y
-	*/
-	public final float getY() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAttr.Y);
-	}
-	public final void setY(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAttr.Y, value);
-	}
-	/** 
-	 X
-	*/
-	public final float getX() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAttr.X);
-	}
-	public final void setX(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAttr.X, value);
-	}
-	/** 
-	 H
-	*/
-	public final float getH() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAttr.H);
-	}
-	public final void setH(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAttr.H, value);
-	}
-	/** 
-	 W
-	*/
-	public final float getW() throws Exception
-	{
-		return this.GetValFloatByKey(FrmImgAttr.W);
-	}
-	public final void setW(float value) throws Exception
-	{
-		this.SetValByKey(FrmImgAttr.W, value);
-	}
+
 	/** 
 	 FK_MapData
 	*/
@@ -183,27 +137,58 @@ public class FrmImg extends EntityMyPK
 	{
 		return this.GetValStrByKey(FrmImgAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmImgAttr.FK_MapData, value);
 	}
+	public final void setFK_MapData(String val)  throws Exception
+	 {
+		this.SetValByKey(FrmImgAttr.FK_MapData, val);
+	}
+	public final float getUIWidth() throws Exception
+	{
+		return this.GetValFloatByKey(MapAttrAttr.UIWidth);
+	}
+	public final void setUIWidth(float value)  throws Exception
+	 {
+		this.SetValByKey(MapAttrAttr.UIWidth, value);
+	}
+	/** 
+	 X
+	*/
+	public final float getUIHeight() throws Exception
+	{
+		return this.GetValFloatByKey(MapAttrAttr.UIHeight);
+	}
+	public final void setUIHeight(float value)  throws Exception
+	 {
+		this.SetValByKey(MapAttrAttr.UIHeight, value);
+	}
 
-		///
+	public final void setX(float value) throws Exception
+	{
+		this.SetValByKey(FrmImgAttr.X, value);
+	}
+	public final void setY(float value) throws Exception
+	{
+		this.SetValByKey(FrmImgAttr.Y, value);
+	}
+
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 图片
 	*/
-	public FrmImg()
-	{
+	public FrmImg()  {
 	}
 	/** 
 	 图片
 	 
-	 @param mypk
+	 param mypk
 	*/
-	public FrmImg(String mypk) throws Exception
+	public FrmImg(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -212,8 +197,7 @@ public class FrmImg extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -228,11 +212,11 @@ public class FrmImg extends EntityMyPK
 
 		map.AddTBInt(FrmImgAttr.ImgAppType, 0, "应用类型", false, false);
 
-		map.AddTBFloat(FrmImgAttr.X, 5, "X", true, false);
-		map.AddTBFloat(FrmImgAttr.Y, 5, "Y", false, false);
+		map.AddTBFloat(MapAttrAttr.X, 5, "X", true, false);
+		map.AddTBFloat(MapAttrAttr.Y, 5, "Y", false, false);
 
-		map.AddTBFloat(FrmImgAttr.H, 200, "H", true, false);
-		map.AddTBFloat(FrmImgAttr.W, 160, "W", false, false);
+		map.AddTBFloat(MapAttrAttr.UIWidth, 200, "H", true, false);
+		map.AddTBFloat(MapAttrAttr.UIHeight, 160, "H", true, false);
 
 		map.AddTBString(FrmImgAttr.ImgURL, null, "ImgURL", true, false, 0, 200, 20);
 		map.AddTBString(FrmImgAttr.ImgPath, null, "ImgPath", true, false, 0, 200, 20);
@@ -249,21 +233,20 @@ public class FrmImg extends EntityMyPK
 		map.AddTBString(FrmImgAttr.Name, null, "中文名称", true, false, 0, 500, 20);
 		map.AddTBString(FrmImgAttr.EnPK, null, "英文名称", true, false, 0, 500, 20);
 		map.AddTBInt(MapAttrAttr.ColSpan, 0, "单元格数量", false, true);
-		map.AddTBInt(MapAttrAttr.TextColSpan, 1, "文本单元格数量", false, true);
+		map.AddTBInt(MapAttrAttr.LabelColSpan, 1, "文本单元格数量", false, true);
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", false, true);
 
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", bp.sys.frmui.MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		if (DataType.IsNullOrEmpty(this.getKeyOfEn()) == false)
 		{
 			this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
@@ -271,19 +254,5 @@ public class FrmImg extends EntityMyPK
 		return super.beforeInsert();
 	}
 
-	/** 
-	 是否存在相同的数据?
-	 
-	 @return 
-	 * @throws Exception 
-	*/
-	public final boolean IsExitGenerPK() throws Exception
-	{
-		String sql = "SELECT COUNT(*) FROM Sys_FrmImg WHERE FK_MapData='" + this.getFK_MapData() + "' AND X=" + this.getX() + " AND Y=" + this.getY();
-		if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
-		{
-			return false;
-		}
-		return true;
-	}
+
 }

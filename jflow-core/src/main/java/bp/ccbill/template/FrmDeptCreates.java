@@ -1,4 +1,5 @@
 package bp.ccbill.template;
+
 import bp.en.*;
 import java.util.*;
 
@@ -7,22 +8,19 @@ import java.util.*;
 */
 public class FrmDeptCreates extends EntitiesMM
 {
-	private static final long serialVersionUID = 1L;
-	///构造函数.
+
+		///#region 构造函数.
 	/** 
 	 单据可创建的部门
 	*/
-	public FrmDeptCreates()
-	{
+	public FrmDeptCreates()  {
 	}
 	/** 
 	 单据可创建的部门
 	 
-	 @param nodeID 单据ID
-	 * @throws Exception 
+	 param nodeID 单据ID
 	*/
-	public FrmDeptCreates(int nodeID) throws Exception
-	{
+	public FrmDeptCreates(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmDeptCreateAttr.FrmID, nodeID);
 		qo.DoQuery();
@@ -30,11 +28,9 @@ public class FrmDeptCreates extends EntitiesMM
 	/** 
 	 单据可创建的部门
 	 
-	 @param StationNo StationNo 
-	 * @throws Exception 
+	 param StationNo StationNo
 	*/
-	public FrmDeptCreates(String StationNo) throws Exception
-	{
+	public FrmDeptCreates(String StationNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FrmDeptCreateAttr.FK_Dept, StationNo);
 		qo.DoQuery();
@@ -43,31 +39,28 @@ public class FrmDeptCreates extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new FrmDeptCreate();
 	}
 
-		/// 构造函数.
+		///#endregion 构造函数.
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmDeptCreate> ToJavaList()
-	{
-		return (List<FrmDeptCreate>)(Object)this;
+	public final java.util.List<FrmDeptCreate> ToJavaList()  {
+		return (java.util.List<FrmDeptCreate>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmDeptCreate> Tolist()
-	{
+	public final ArrayList<FrmDeptCreate> Tolist()  {
 		ArrayList<FrmDeptCreate> list = new ArrayList<FrmDeptCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -76,5 +69,5 @@ public class FrmDeptCreates extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

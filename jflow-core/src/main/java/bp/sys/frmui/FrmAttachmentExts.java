@@ -10,60 +10,53 @@ import java.util.*;
 public class FrmAttachmentExts extends EntitiesMyPK
 {
 
-	private static final long serialVersionUID = 1L;
-	///构造
+		///#region 构造
 	/** 
 	 附件s
 	*/
-	public FrmAttachmentExts()
-	{
+	public FrmAttachmentExts()  {
 	}
 	/** 
 	 附件s
 	 
-	 @param fk_mapdata s
-	 * @throws Exception 
+	 param fk_mapdata s
 	*/
-	public FrmAttachmentExts(String fk_mapdata) throws Exception
-	{
+	public FrmAttachmentExts(String fk_mapdata) throws Exception {
 		this.Retrieve(FrmAttachmentAttr.FK_MapData, fk_mapdata, FrmAttachmentAttr.FK_Node, 0);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmAttachmentExt();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmAttachment> ToJavaList()
-	{
-		return (java.util.List<FrmAttachment>)(Object)this;
+	public final java.util.List<FrmAttachmentExt> ToJavaList() {
+		return (java.util.List<FrmAttachmentExt>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmAttachment> Tolist()
-	{
-		ArrayList<FrmAttachment> list = new ArrayList<FrmAttachment>();
+	public final ArrayList<FrmAttachmentExt> Tolist()  {
+		ArrayList<FrmAttachmentExt> list = new ArrayList<FrmAttachmentExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
-			list.add((FrmAttachment)this.get(i));
+			list.add((FrmAttachmentExt)this.get(i));
 		}
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

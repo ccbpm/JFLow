@@ -1,10 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
-import bp.*;
-import java.util.*;
 import java.math.*;
 
 /** 
@@ -13,8 +10,8 @@ import java.math.*;
 public class GloVar extends EntityNoName
 {
 
-		///属性
-	public final Object getValOfObject() throws Exception
+		///#region 属性
+	public final Object getValOfObject()  throws Exception
 	{
 		return this.GetValByKey(GloVarAttr.Val);
 	}
@@ -22,7 +19,7 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final String getVal() throws Exception
+	public final String getVal()  throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.Val);
 	}
@@ -30,7 +27,7 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final float getValOfFloat()
+	public final float getValOfFloat()throws Exception
 	{
 		try
 		{
@@ -45,7 +42,7 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final int getValOfInt() throws Exception
+	public final int getValOfInt()throws Exception
 	{
 		try
 		{
@@ -60,11 +57,11 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final BigDecimal getValOfDecimal()
+	public final BigDecimal getValOfDecimal()throws Exception
 	{
 		try
 		{
-			return this.GetValDecimalByKey(GloVarAttr.Val,4);
+			return this.GetValDecimalByKey(GloVarAttr.Val,0);
 		}
 		catch (java.lang.Exception e)
 		{
@@ -75,7 +72,7 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final boolean getValOfBoolen() throws Exception
+	public final boolean getValOfBoolen()  throws Exception
 	{
 		return this.GetValBooleanByKey(GloVarAttr.Val);
 	}
@@ -86,7 +83,7 @@ public class GloVar extends EntityNoName
 	/** 
 	 note
 	*/
-	public final String getNote() throws Exception
+	public final String getNote()  throws Exception
 	{
 		return this.GetValStringByKey(GloVarAttr.Note);
 	}
@@ -94,19 +91,7 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Note, value);
 	}
-	/** 
-	 分组值
-	*/
-	public final String getGroupKey() throws Exception
-	{
-		return this.GetValStringByKey(GloVarAttr.GroupKey);
-	}
-	public final void setGroupKey(String value) throws Exception
-	{
-		this.SetValByKey(GloVarAttr.GroupKey, value);
-	}
-	
-	public final int getIdx() throws Exception
+	public final int getIdx()  throws Exception
 	{
 		return this.GetValIntByKey(GloVarAttr.Idx);
 	}
@@ -114,11 +99,22 @@ public class GloVar extends EntityNoName
 	{
 		this.SetValByKey(GloVarAttr.Idx, value);
 	}
+	/** 
+	 分组值
+	*/
+	public final String getGroupKey()  throws Exception
+	{
+		return this.GetValStringByKey(GloVarAttr.GroupKey);
+	}
+	public final void setGroupKey(String value) throws Exception
+	{
+		this.SetValByKey(GloVarAttr.GroupKey, value);
+	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 全局变量
 	*/
@@ -128,21 +124,19 @@ public class GloVar extends EntityNoName
 	/** 
 	 全局变量
 	 
-	 @param mypk
+	 param no
 	*/
-	public GloVar(String no) throws Exception
-	{
+	public GloVar(String no) throws Exception {
 		this.setNo(no);
 		this.Retrieve();
 	}
-	 /** 
+	/** 
 	 键值
 	 
-	 @param key key
-	 @param isNullAsVal 
-	 */
-	public GloVar(String key, Object isNullAsVal) throws Exception
-	{
+	 param key key
+	 param isNullAsVal
+	*/
+	public GloVar(String key, Object isNullAsVal) throws Exception {
 		try
 		{
 			this.setNo(key);
@@ -161,7 +155,7 @@ public class GloVar extends EntityNoName
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -169,7 +163,6 @@ public class GloVar extends EntityNoName
 		}
 
 		Map map = new Map("Sys_GloVar", "全局变量");
-
 
 		map.AddTBStringPK(GloVarAttr.No, null, "键", true, false, 1, 50, 20);
 		map.AddTBString(GloVarAttr.Name, null, "名称", true, false, 0, 120, 20);
@@ -181,19 +174,18 @@ public class GloVar extends EntityNoName
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 
-		///公共属性.
+		///#region 公共属性.
 	/** 
 	 公共假期
 	*/
 	private static String _Holidays = null;
 	/** 
 	 一个月份的假期.
-	 * @throws Exception 
 	*/
-	public static String getHolidays() throws Exception
+	public static String getHolidays()throws Exception
 	{
 		if (_Holidays != null)
 		{
@@ -217,6 +209,6 @@ public class GloVar extends EntityNoName
 		_Holidays = value;
 	}
 
-		///
+		///#endregion
 
 }

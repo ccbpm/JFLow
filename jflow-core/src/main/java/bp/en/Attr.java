@@ -35,7 +35,7 @@ public class Attr
 
 		attr.setUIRefKeyText(this.getUIRefKeyText());
 		attr.setUIVisible(this.getUIVisible());
-
+		attr.setUIIsEnable(!this.getUIIsReadonly());
 
 
 		switch (this.getMyFieldType())
@@ -44,22 +44,20 @@ public class Attr
 			case PKEnum:
 				attr.setUIContralType(this.getUIContralType());
 				attr.setLGType(FieldTypeS.Enum);
-				attr.setUIIsEnable(this.getUIIsReadonly());
 				break;
 			case FK:
 			case PKFK:
 				attr.setUIContralType(this.getUIContralType());
 				attr.setLGType(FieldTypeS.FK);
-					//attr.setMyDataType((int)FieldType.FK;
 				attr.setUIRefKey("No");
 				attr.setUIRefKeyText("Name");
-				attr.setUIIsEnable(this.getUIIsReadonly());
 				break;
 			default:
 				attr.setUIContralType(UIContralType.TB);
 				attr.setLGType(FieldTypeS.Normal);
 
-				attr.setUIIsEnable(!this.getUIIsReadonly());
+				if (this.getIsSupperText()== 1)
+					attr.setTextModel(3);
 				switch (this.getMyDataType())
 				{
 					case DataType.AppBoolean:
@@ -201,7 +199,7 @@ public class Attr
 				}
 				else if (this.getMyDataType() == DataType.AppDateTime)
 				{
-					return "输入日期时间类型" + DataType.getSysDataTimeFormat();
+					return "输入日期时间类型" + DataType.getSysDateTimeFormat();
 				}
 				else if (this.getMyDataType() == DataType.AppString)
 				{
@@ -248,15 +246,14 @@ public class Attr
 	/** 
 	 构造函数
 	 
-	 @param key
-	 @param field
-	 @param defaultVal
-	 @param dataType
-	 @param isPK
-	 @param desc
+	 param key
+	 param field
+	 param defaultVal
+	 param dataType
+	 param isPK
+	 param desc
 	*/
-	public Attr(String key, String field, Object defaultVal, int dataType, boolean isPK, String desc, int minLength, int maxlength)
-	{
+	public Attr(String key, String field, Object defaultVal, int dataType, boolean isPK, String desc, int minLength, int maxlength)  {
 		this._key = key;
 		this._field = field;
 		this._desc = desc;
@@ -269,8 +266,7 @@ public class Attr
 		this._minLength = minLength;
 		this._maxLength = maxlength;
 	}
-	public Attr(String key, String field, Object defaultVal, int dataType, boolean isPK, String desc)
-	{
+	public Attr(String key, String field, Object defaultVal, int dataType, boolean isPK, String desc)  {
 		this._key = key;
 		this._field = field;
 		this._desc = desc;
@@ -298,7 +294,7 @@ public class Attr
 	{
 		return this._key;
 	}
-	public final void setKey(String value) throws Exception
+	public final void setKey(String value)
 	{
 		if (value != null)
 		{
@@ -318,7 +314,7 @@ public class Attr
 	{
 		return this._field;
 	}
-	public final void setField(String value) throws Exception
+	public final void setField(String value)
 	{
 		if (value != null)
 		{
@@ -331,7 +327,7 @@ public class Attr
 	{
 		return this._DefValType;
 	}
-	public final void setDefValType(int value) throws Exception
+	public final void setDefValType(int value)
 	{
 		if (value != 0)
 		{
@@ -351,15 +347,14 @@ public class Attr
 		}
 		return _defaultVal.toString();
 	}
-	public final void setDefaultValOfReal(String value) throws Exception
+	public final void setDefaultValOfReal(String value)
 	{
 		_defaultVal = value;
 	}
 	/** 
 	 字段默认值
 	*/
-	public final Object getDefaultVal()
-	{
+	public final Object getDefaultVal()  {
 		switch (this.getMyDataType())
 		{
 			case DataType.AppString :
@@ -465,8 +460,7 @@ public class Attr
 	}
 
 	public final void setDefaultVal(Object value)
-	{
-		this._defaultVal = value;
+	{this._defaultVal = value;
 	}
 	/** 
 	 数据类型。
@@ -479,7 +473,7 @@ public class Attr
 	{
 		return this._dataType;
 	}
-	public final void setMyDataType(int value) throws Exception
+	public final void setMyDataType(int value)
 	{
 		this._dataType = value;
 	}
@@ -502,8 +496,7 @@ public class Attr
 		return this._FieldType;
 	}
 	public final void setMyFieldType(FieldType value)
-	{
-		this._FieldType = value;
+	{this._FieldType = value;
 	}
 	/** 
 	 描述。
@@ -513,7 +506,7 @@ public class Attr
 	{
 		return this._desc;
 	}
-	public final void setDesc(String value) throws Exception
+	public final void setDesc(String value)
 	{
 		this._desc = value;
 	}
@@ -583,7 +576,7 @@ public class Attr
 				}
 		}
 	}
-	public final void setMaxLength(int value) throws Exception
+	public final void setMaxLength(int value)
 	{
 		this._maxLength = value;
 	}
@@ -598,7 +591,7 @@ public class Attr
 	{
 		return this._minLength;
 	}
-	public final void setMinLength(int value) throws Exception
+	public final void setMinLength(int value)
 	{
 		this._minLength = value;
 	}
@@ -640,7 +633,7 @@ public class Attr
 			return this._UIWidth;
 		}
 	}
-	public final void setUIWidth(float value) throws Exception
+	public final void setUIWidth(float value)
 	{
 		this._UIWidth = value;
 	}
@@ -653,7 +646,7 @@ public class Attr
 	{
 		return this._UIHeight * 10;
 	}
-	public final void setUIHeight(int value) throws Exception
+	public final void setUIHeight(int value)
 	{
 		this._UIHeight = value;
 	}
@@ -666,7 +659,7 @@ public class Attr
 	{
 		return this._UIVisible;
 	}
-	public final void setUIVisible(boolean value) throws Exception
+	public final void setUIVisible(boolean value)
 	{
 		this._UIVisible = value;
 	}
@@ -684,7 +677,7 @@ public class Attr
 	{
 		return this._UIIsReadonly;
 	}
-	public final void setUIIsReadonly(boolean value) throws Exception
+	public final void setUIIsReadonly(boolean value)
 	{
 		this._UIIsReadonly = value;
 	}
@@ -697,8 +690,7 @@ public class Attr
 		return this._UIContralType;
 	}
 	public final void setUIContralType(UIContralType value)
-	{
-		this._UIContralType = value;
+	{this._UIContralType = value;
 	}
 	private String _UIBindKey = null;
 	/** 
@@ -710,7 +702,7 @@ public class Attr
 	{
 		return this._UIBindKey;
 	}
-	public final void setUIBindKey(String value) throws Exception
+	public final void setUIBindKey(String value)
 	{
 		this._UIBindKey = value;
 	}
@@ -720,7 +712,7 @@ public class Attr
 	{
 		return this._IsSupperText;
 	}
-	public final void setIsSupperText(int value) throws Exception
+	public final void setIsSupperText(int value)
 	{
 		this._IsSupperText = value;
 	}
@@ -738,16 +730,14 @@ public class Attr
 		}
 	}
 	private Entity _HisFKEn = null;
-	public final Entity getHisFKEn() throws Exception
-	{
+	public final Entity getHisFKEn()  {
 	   return this.getHisFKEns().getGetNewEntity();
 	}
 	private Entities _HisFKEns = null;
 	/** 
 	 它关联的ens.这个只有在,这个属性是fk, 时有效。
 	*/
-	public final Entities getHisFKEns()
-	{
+	public final Entities getHisFKEns()  {
 		if (_HisFKEns == null)
 		{
 
@@ -774,8 +764,7 @@ public class Attr
 		return _HisFKEns;
 	}
 	public final void setHisFKEns(Entities value)
-	{
-		_HisFKEns = value;
+	{_HisFKEns = value;
 	}
 	private String _UIRefKey = null;
 	/** 
@@ -786,7 +775,7 @@ public class Attr
 	{
 		return this._UIRefKey;
 	}
-	public final void setUIRefKeyValue(String value) throws Exception
+	public final void setUIRefKeyValue(String value)
 	{
 		this._UIRefKey = value;
 	}
@@ -798,7 +787,7 @@ public class Attr
 	{
 		return this._UIRefText;
 	}
-	public final void setUIRefKeyText(String value) throws Exception
+	public final void setUIRefKeyText(String value)
 	{
 		this._UIRefText = value;
 	}

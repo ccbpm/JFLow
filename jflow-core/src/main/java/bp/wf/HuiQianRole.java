@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  会签模式
 */
@@ -19,8 +21,7 @@ public enum HuiQianRole
 
 	private int intValue;
 	private static java.util.HashMap<Integer, HuiQianRole> mappings;
-	private static java.util.HashMap<Integer, HuiQianRole> getMappings()
-	{
+	private static java.util.HashMap<Integer, HuiQianRole> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (HuiQianRole.class)
@@ -35,18 +36,15 @@ public enum HuiQianRole
 	}
 
 	private HuiQianRole(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue() {
 		return intValue;
 	}
 
 	public static HuiQianRole forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

@@ -5,6 +5,7 @@ import bp.sys.*;
 import bp.en.*;
 import bp.wf.data.*;
 import bp.web.*;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -31,13 +32,11 @@ public enum SpecOperWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static SpecOperWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static SpecOperWay forValue(int value) 
+	{return values()[value];
 	}
 }

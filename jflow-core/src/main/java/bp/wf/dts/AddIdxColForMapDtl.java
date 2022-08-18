@@ -1,9 +1,8 @@
 package bp.wf.dts;
+
 import bp.da.*;
 import bp.en.*;
 import bp.sys.*;
-import bp.web.WebUser;
-
 
 /** 
  生成模版的垃圾数据 
@@ -13,7 +12,7 @@ public class AddIdxColForMapDtl extends Method
 	/** 
 	 生成模版的垃圾数据
 	*/
-	public AddIdxColForMapDtl()
+	public AddIdxColForMapDtl()throws Exception
 	{
 		this.Title = "为所有的从表增加一个隐藏的Id列.";
 		this.Help = "用户VSTO表单.";
@@ -36,12 +35,11 @@ public class AddIdxColForMapDtl extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getIsAdmin() == true)
+		if (bp.web.WebUser.getIsAdmin())
 		{
 			return true;
 		}
@@ -51,10 +49,9 @@ public class AddIdxColForMapDtl extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		MapDtls dtls = new MapDtls();
 		dtls.RetrieveAll();
@@ -71,8 +68,8 @@ public class AddIdxColForMapDtl extends Method
 			ma.setFK_MapData(item.getNo());
 			ma.setKeyOfEn("Idx");
 			ma.setName("Idx");
-			ma.setLGType( FieldTypeS.Normal);
-			ma.setUIVisible( false);
+			ma.setLGType(FieldTypeS.Normal);
+			ma.setUIVisible(false);
 			ma.setDefVal("0");
 			ma.setMyDataType(DataType.AppInt);
 			ma.Insert();

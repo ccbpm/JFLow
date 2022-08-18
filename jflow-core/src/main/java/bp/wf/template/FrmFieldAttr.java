@@ -1,5 +1,6 @@
 package bp.wf.template;
-import bp.en.EntityNoNameAttr;
+
+import bp.en.*;
 
 /** 
  Frm属性

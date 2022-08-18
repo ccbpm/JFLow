@@ -1,15 +1,20 @@
 package bp.sys;
-import java.util.ArrayList;
 
-import bp.en.EntitiesMyPK;
-import bp.en.Entity;
+import bp.en.*;
+import java.util.*;
 
 /** 
  语言 
 */
 public class Langues extends EntitiesMyPK
 {
-	/** 
+	/**
+	 * 实体集合
+	 */
+	public Langues() throws Exception {
+	}
+
+	/**
 	 得到它的 Entity
 	*/
 	@Override
@@ -19,13 +24,13 @@ public class Langues extends EntitiesMyPK
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<Langue> ToJavaList()
+	public final java.util.List<Langue> ToJavaList()throws Exception
 	{
 		return (java.util.List<Langue>)(Object)this;
 	}
@@ -34,7 +39,7 @@ public class Langues extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Langue> Tolist()
+	public final ArrayList<Langue> Tolist()throws Exception
 	{
 		ArrayList<Langue> list = new ArrayList<Langue>();
 		for (int i = 0; i < this.size(); i++)
@@ -44,5 +49,5 @@ public class Langues extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

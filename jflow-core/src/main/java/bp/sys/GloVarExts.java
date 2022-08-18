@@ -1,10 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
-import java.math.*;
 
 /** 
  全局变量s
@@ -13,11 +10,11 @@ public class GloVarExts extends EntitiesNoName
 {
 
 
-		///构造
+		///#region 构造
 	/** 
 	 全局变量s
 	*/
-	public GloVarExts()
+	public GloVarExts()throws Exception
 	{
 	}
 	/** 
@@ -29,16 +26,16 @@ public class GloVarExts extends EntitiesNoName
 		return new GloVarExt();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GloVarExt> ToJavaList()
+	public final java.util.List<GloVarExt> ToJavaList()throws Exception
 	{
 		return (java.util.List<GloVarExt>)(Object)this;
 	}
@@ -47,7 +44,7 @@ public class GloVarExts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<GloVarExt> Tolist()
+	public final ArrayList<GloVarExt> Tolist()throws Exception
 	{
 		ArrayList<GloVarExt> list = new ArrayList<GloVarExt>();
 		for (int i = 0; i < this.size(); i++)
@@ -57,5 +54,5 @@ public class GloVarExts extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

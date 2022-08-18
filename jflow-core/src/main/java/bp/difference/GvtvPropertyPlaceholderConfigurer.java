@@ -6,8 +6,6 @@ import java.util.Properties;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
-import bp.sys.*;
-
 public class GvtvPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
 	protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props) {
@@ -18,10 +16,10 @@ public class GvtvPropertyPlaceholderConfigurer extends PropertyPlaceholderConfig
 			if (key.endsWith(".encryption") && null != value) {
 				props.remove(key);
 
-				key = key.substring(0, key.length() - 11);
+				key = key.substring(0, key.toString().length() - 11);
 
 				try {
-					value = Glo.String_JieMi(value.trim());
+					value = bp.sys.base.Glo.String_JieMi(value.trim());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

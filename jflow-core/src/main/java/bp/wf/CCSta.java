@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  抄送状态
 */
@@ -24,13 +26,11 @@ public enum CCSta
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static CCSta forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static CCSta forValue(int value) 
+	{return values()[value];
 	}
 }

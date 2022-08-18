@@ -13,33 +13,30 @@ import java.util.*;
 public class MapAttrFixeds extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 系统定位组件s
 	*/
-	public MapAttrFixeds()
-	{
+	public MapAttrFixeds() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapAttrFixed();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrFixed> ToJavaList()
-	{
+	public final java.util.List<MapAttrFixed> ToJavaList() {
 		return (java.util.List<MapAttrFixed>)(Object)this;
 	}
 	/** 
@@ -47,8 +44,7 @@ public class MapAttrFixeds extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrFixed> Tolist()
-	{
+	public final ArrayList<MapAttrFixed> Tolist()  {
 		ArrayList<MapAttrFixed> list = new ArrayList<MapAttrFixed>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +53,5 @@ public class MapAttrFixeds extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -25,7 +25,7 @@ public enum FlowAppType
 		return this.ordinal();
 	}
 
-	public static FlowAppType forValue(int value) throws Exception
+	public static FlowAppType forValue(int value) 
 	{
 		return values()[value];
 	}

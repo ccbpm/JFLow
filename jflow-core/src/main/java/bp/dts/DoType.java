@@ -1,6 +1,5 @@
 package bp.dts;
 
-
 /** 
  执行类型
 */
@@ -39,7 +38,7 @@ public enum DoType
 		return this.ordinal();
 	}
 
-	public static DoType forValue(int value) throws Exception
+	public static DoType forValue(int value) 
 	{
 		return values()[value];
 	}

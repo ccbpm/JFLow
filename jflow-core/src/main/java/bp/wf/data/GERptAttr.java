@@ -1,4 +1,5 @@
 package bp.wf.data;
+
 /** 
   属性
 */

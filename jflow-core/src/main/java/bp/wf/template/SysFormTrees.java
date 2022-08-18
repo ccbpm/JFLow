@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.port.*;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -15,21 +16,23 @@ public class SysFormTrees extends EntitiesTree
 	/** 
 	 独立表单树s
 	*/
-	public SysFormTrees()
-	{
+	public SysFormTrees()  {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new SysFormTree();
 	}
-
 	@Override
-	public int RetrieveAll() throws Exception
-	{
+	public int RetrieveAll() throws Exception {
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS || bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		{
+			return this.Retrieve(SysFormTreeAttr.OrgNo, bp.web.WebUser.getOrgNo(), null);
+		}
+
+
 		int i = super.RetrieveAll();
 		if (i == 0)
 		{
@@ -44,27 +47,26 @@ public class SysFormTrees extends EntitiesTree
 			fs.Insert();
 			i = super.RetrieveAll();
 		}
+
 		return i;
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<SysFormTree> ToJavaList()
-	{
-		return (List<SysFormTree>)(Object)this;
+	public final java.util.List<SysFormTree> ToJavaList() {
+		return (java.util.List<SysFormTree>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<SysFormTree> Tolist()
-	{
+	public final ArrayList<SysFormTree> Tolist()  {
 		ArrayList<SysFormTree> list = new ArrayList<SysFormTree>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -73,5 +75,5 @@ public class SysFormTrees extends EntitiesTree
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -3,9 +3,6 @@ package bp.sys;
 import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
-import bp.web.WebUser;
-import bp.*;
-import java.util.*;
 import java.math.*;
 
 /** 
@@ -14,10 +11,9 @@ import java.math.*;
 public class GEDtl extends EntityOID
 {
 
-		///构造函数
+		///#region 构造函数
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.FK_MapDtl;
 	}
 	@Override
@@ -25,7 +21,7 @@ public class GEDtl extends EntityOID
 	{
 		return this.FK_MapDtl;
 	}
-	public final String getRDT() throws Exception
+	public final String getRDT()  throws Exception
 	{
 		return this.GetValStringByKey(GEDtlAttr.RDT);
 	}
@@ -33,7 +29,7 @@ public class GEDtl extends EntityOID
 	{
 		this.SetValByKey(GEDtlAttr.RDT, value);
 	}
-	public final String getRec() throws Exception
+	public final String getRec()  throws Exception
 	{
 		return this.GetValStringByKey(GEDtlAttr.Rec);
 	}
@@ -44,7 +40,7 @@ public class GEDtl extends EntityOID
 	/** 
 	 关联的PK值
 	*/
-	public final String getRefPK() throws Exception
+	public final String getRefPK()  throws Exception
 	{
 		return this.GetValStringByKey(GEDtlAttr.RefPK);
 	}
@@ -52,7 +48,7 @@ public class GEDtl extends EntityOID
 	{
 		this.SetValByKey(GEDtlAttr.RefPK, value);
 	}
-	public final long getRefPKInt64() throws Exception
+	public final long getRefPKInt64()  throws Exception
 	{
 		return this.GetValInt64ByKey(GEDtlAttr.RefPK);
 	}
@@ -63,7 +59,7 @@ public class GEDtl extends EntityOID
 	/** 
 	 行是否锁定
 	*/
-	public final boolean getIsRowLock() throws Exception
+	public final boolean getIsRowLock()  throws Exception
 	{
 		return this.GetValBooleanByKey(GEDtlAttr.IsRowLock);
 	}
@@ -74,7 +70,7 @@ public class GEDtl extends EntityOID
 	/** 
 	 关联的PKint
 	*/
-	public final int getRefPKInt() throws Exception
+	public final int getRefPKInt()  throws Exception
 	{
 		return this.GetValIntByKey(GEDtlAttr.RefPK);
 	}
@@ -82,7 +78,7 @@ public class GEDtl extends EntityOID
 	{
 		this.SetValByKey(GEDtlAttr.RefPK, value);
 	}
-	public final long getFID() throws Exception
+	public final long getFID()  throws Exception
 	{
 		return this.GetValInt64ByKey(GEDtlAttr.FID);
 	}
@@ -103,7 +99,7 @@ public class GEDtl extends EntityOID
 	/** 
 	 通用从表
 	 
-	 @param nodeid 节点ID
+	 param fk_mapdtl 节点ID
 	*/
 	public GEDtl(String fk_mapdtl)
 	{
@@ -112,26 +108,23 @@ public class GEDtl extends EntityOID
 	/** 
 	 通用从表
 	 
-	 @param nodeid 节点ID
-	 @param _oid OID
+	 param fk_mapdtl 节点ID
+	 param _oid OID
 	*/
-	public GEDtl(String fk_mapdtl, int _oid) throws Exception
-	{
+	public GEDtl(String fk_mapdtl, int _oid)  {
 		this.FK_MapDtl = fk_mapdtl;
 		this.setOID(_oid);
 	}
 
-		///
+		///#endregion
 
 
-		///Map
+		///#region Map
 	/** 
 	 重写基类方法
-	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -142,8 +135,17 @@ public class GEDtl extends EntityOID
 			throw new RuntimeException("没有给" + this.FK_MapDtl + "值，您不能获取它的Map。");
 		}
 
-		bp.sys.MapDtl md = new bp.sys.MapDtl(this.FK_MapDtl);
-		this.set_enMap(md.GenerMap());
+		MapDtl md = null;
+		try {
+			md = new MapDtl(this.FK_MapDtl);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			this.set_enMap(md.GenerMap());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return this.get_enMap();
 	}
 	/** 
@@ -159,10 +161,10 @@ public class GEDtl extends EntityOID
 
 		return new GEDtls(this.FK_MapDtl);
 	}
-	public final boolean IsChange(GEDtl dtl) throws Exception
+	public final boolean IsChange(GEDtl dtl)throws Exception
 	{
 		Attrs attrs = dtl.getEnMap().getAttrs();
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			if (this.GetValByKey(attr.getKey()) == dtl.GetValByKey(attr.getKey()))
 			{
@@ -176,7 +178,7 @@ public class GEDtl extends EntityOID
 		return false;
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception
+	protected boolean beforeUpdate() throws Exception 
 	{
 		return super.beforeUpdate();
 	}
@@ -184,10 +186,9 @@ public class GEDtl extends EntityOID
 	 记录人
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert() throws Exception 
 	{
 		// 判断是否有变化的项目，决定是否执行储存。
 		MapAttrs mattrs = new MapAttrs(this.FK_MapDtl);
@@ -240,11 +241,11 @@ public class GEDtl extends EntityOID
 			return false;
 		}
 
-		this.setRec(WebUser.getNo());
+		this.setRec(bp.web.WebUser.getNo());
 		this.setRDT(DataType.getCurrentDataTime());
 
 		return super.beforeInsert();
 	}
 
-		///
+		///#endregion
 }

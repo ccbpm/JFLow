@@ -2,7 +2,6 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.difference.SystemConfig;
-import bp.port.*;
 import bp.en.*;
 import bp.sys.*;
 import bp.web.WebUser;
@@ -10,37 +9,35 @@ import bp.wf.template.*;
 import bp.wf.*;
 import java.io.*;
 
-/** 
+/**
  Method 的摘要说明
-*/
+ */
 public class LoadTemplete extends Method
 {
-	/** 
+	/**
 	 不带有参数的方法
-	*/
-	public LoadTemplete()
-	{
+	 */
+	public LoadTemplete() throws Exception {
 		this.Title = "装载流程演示模板";
 		this.Help = "为了帮助各位爱好者学习与掌握ccflow, 特提供一些流程模板与表单模板以方便学习。";
 		this.Help += "@这些模板的位于" + SystemConfig.getPathOfWebApp() + "SDKFlowDemo/FlowDemo/";
 		this.GroupName = "流程维护";
 
 	}
-	/** 
+	/**
 	 设置执行变量
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	@Override
-	public void Init()
-	{
+	public void Init()  {
 	}
-	/** 
+	/**
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
 		if (WebUser.getNo().equals("admin") == true)
 		{
@@ -57,7 +54,7 @@ public class LoadTemplete extends Method
 		String msg = "";
 
 
-			///#region 处理表单.
+		///#region 处理表单.
 		// 调度表单文件。
 		SysFormTrees fss = new SysFormTrees();
 		fss.ClearTable();
@@ -113,7 +110,6 @@ public class LoadTemplete extends Method
 				try
 				{
 					MapData md = MapData.ImpMapData(ds);
-					md.setFK_FrmSort(fs.getNo());
 					md.setFK_FormTree(fs.getNo());
 					md.setAppType("0");
 					md.Update();
@@ -127,10 +123,10 @@ public class LoadTemplete extends Method
 			}
 		}
 
-			///#endregion 处理表单.
+		///#endregion 处理表单.
 
 
-			///#region 处理流程.
+		///#region 处理流程.
 		FlowSorts sorts = new FlowSorts();
 		sorts.ClearTable();
 		dirInfo = new File(SystemConfig.getPathOfWebApp() + "SDKFlowDemo/FlowDemo/Flow/");
@@ -166,7 +162,7 @@ public class LoadTemplete extends Method
 				msg += "\t\n@开始调度流程模板文件:" + filePath;
 				Log.DefaultLogWriteLineInfo("@开始调度流程模板文件:" + filePath);
 
-				Flow myflow = Flow.DoLoadFlowTemplate(fs.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+				Flow myflow = bp.wf.template.TemplateGlo.LoadFlowTemplate(fs.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
 				msg += "\t\n@流程:[" + myflow.getName() + "]装载成功。";
 
 				File info = new File(filePath);
@@ -206,7 +202,7 @@ public class LoadTemplete extends Method
 					msg += "\t\n@开始调度流程模板文件:" + filePath;
 					Log.DefaultLogWriteLineInfo("@开始调度流程模板文件:" + filePath);
 
-					Flow myflow = Flow.DoLoadFlowTemplate(subFlowSort.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
+					Flow myflow = bp.wf.template.TemplateGlo.LoadFlowTemplate(subFlowSort.getNo(), filePath, ImpFlowTempleteModel.AsTempleteFlowNo);
 					msg += "\t\n@流程:" + myflow.getName() + "装载成功。";
 
 					File info = new File(filePath);
@@ -228,7 +224,7 @@ public class LoadTemplete extends Method
 			fl.DoCheck();
 		}
 
-			///#endregion 处理流程.
+		///#endregion 处理流程.
 
 
 

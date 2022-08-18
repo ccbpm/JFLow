@@ -27,7 +27,7 @@ public abstract class EntityOID extends Entity
 	/** 
 	 OID, 如果是空的就返回 0 . 
 	*/
-	public final long getOID()
+	public long getOID()
 	{
 		try
 		{
@@ -38,7 +38,7 @@ public abstract class EntityOID extends Entity
 			return 0;
 		}
 	}
-	public  void setOID(long value) throws Exception
+	public  void setOID(long value)
 	{
 		this.SetValByKey(EntityOIDAttr.OID, value);
 	}
@@ -56,7 +56,7 @@ public abstract class EntityOID extends Entity
 	/** 
 	 根据OID构造实体
 	 
-	 @param oid oid
+	 param oid oid
 	 * @throws Exception 
 	*/
 	protected EntityOID(int oid) throws Exception
@@ -91,7 +91,7 @@ public abstract class EntityOID extends Entity
 		try
 		{
 				// 生成数据库判断语句。
-			String selectSQL = "SELECT " + this.getPKField() + " FROM " + this.getEnMap().getPhysicsTable() + " WHERE OID=" + this.getHisDBVarStr() + "v";
+			String selectSQL = "SELECT " + this.getPK_Field() + " FROM " + this.getEnMap().getPhysicsTable() + " WHERE OID=" + this.getHisDBVarStr() + "v";
 			Paras ens = new Paras();
 			ens.Add("v", this.getOID());
 
@@ -113,7 +113,7 @@ public abstract class EntityOID extends Entity
 			/* DEL BY PENG 2008-04-27
 			// 生成数据库判断语句。
 			string selectSQL="SELECT "+this.PKField + " FROM "+ this.getEnMap().getPhysicsTable() + " WHERE " ;
-			switch(this.EnMap.EnDBUrl.DBType )
+			switch(this.getEnMap().EnDBUrl.DBType )
 			{
 				case MSSQL:
 					selectSQL +=SqlBuilder.GetKeyConditionOfMS(this);
@@ -125,11 +125,11 @@ public abstract class EntityOID extends Entity
 					selectSQL +=SqlBuilder.GetKeyConditionOfOracle(this);
 					break; 
 				default:
-					throw new Exception("没有设计到。"+this.EnMap.EnDBUrl.DBType);
+					throw new Exception("没有设计到。"+this.getEnMap().EnDBUrl.DBType);
 			}
 
 			// 从数据库里面查询，判断有没有。
-			switch(this.EnMap.EnDBUrl.DBUrlType )
+			switch(this.getEnMap().EnDBUrl.DBUrlType )
 			{
 				case DBUrlType.AppCenterDSN:
 					return DBAccess.IsExits()( selectSQL) ;
@@ -140,7 +140,7 @@ public abstract class EntityOID extends Entity
 				case DBUrlType.DBAccessOfOracle:
 					return DBAccessOfOracle.getIsExits()( selectSQL) ;
 				default:
-					throw new Exception("没有设计到。"+this.EnMap.EnDBUrl.DBType);				
+					throw new Exception("没有设计到。"+this.getEnMap().EnDBUrl.DBType);				
 			}
 			*/
 	}
@@ -224,7 +224,7 @@ public abstract class EntityOID extends Entity
 
 		return true;
 	}
-	protected String getSerialKey()
+	protected String getSerialKey()throws Exception
 	{
 		return "OID";
 	}
@@ -294,7 +294,7 @@ public abstract class EntityOID extends Entity
 	/** 
 	 按照指定的OID 保存
 	 
-	 @param oid
+	 param oid
 	 * @throws Exception 
 	*/
 	public final void SaveAsOID(long oid) throws Exception

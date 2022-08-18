@@ -2,8 +2,9 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.*;
+import bp.en.Map;
+
 import java.util.*;
 
 /** 
@@ -12,7 +13,7 @@ import java.util.*;
 public class FrmRB extends EntityMyPK
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 提示
 	*/
@@ -20,8 +21,8 @@ public class FrmRB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmRBAttr.Tip);
 	}
-	public final void setTip(String value) throws Exception
-	{
+	public final void setTip(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmRBAttr.Tip, value);
 	}
 
@@ -32,8 +33,8 @@ public class FrmRB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmRBAttr.SetVal);
 	}
-	public final void setSetVal(String value) throws Exception
-	{
+	public final void setVal(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmRBAttr.SetVal, value);
 	}
 	/** 
@@ -43,8 +44,8 @@ public class FrmRB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmRBAttr.Script);
 	}
-	public final void setScript(String value) throws Exception
-	{
+	public final void setScript(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmRBAttr.Script, value);
 	}
 
@@ -55,45 +56,61 @@ public class FrmRB extends EntityMyPK
 	{
 		return this.GetValStringByKey(FrmRBAttr.FieldsCfg);
 	}
-	public final void setFieldsCfg(String value) throws Exception
-	{
+	public final void setFieldsCfg(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmRBAttr.FieldsCfg, value);
 	}
 	public final String getLab() throws Exception
 	{
 		return this.GetValStringByKey(FrmRBAttr.Lab);
 	}
-	public final void setLab(String value) throws Exception
-	{
-		this.SetValByKey(FrmRBAttr.Lab, value);
+
+	public final void setLab(String val)  throws Exception
+	 {
+		this.SetValByKey(FrmRBAttr.Lab, val);
 	}
 	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(FrmRBAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)  throws Exception
+	 {
 		this.SetValByKey(FrmRBAttr.KeyOfEn, value);
 	}
+
 	public final int getIntKey() throws Exception
 	{
 		return this.GetValIntByKey(FrmRBAttr.IntKey);
 	}
-	public final void setIntKey(int value) throws Exception
-	{
-		this.SetValByKey(FrmRBAttr.IntKey, value);
+	public final void setIntKey(int val)  throws Exception
+	 {
+		this.SetValByKey(FrmRBAttr.IntKey, val);
 	}
-	/** 
-	  Y
-	*/
-	public final float getY() throws Exception
+
+	public final String getFK_MapData() throws Exception
 	{
-		return this.GetValFloatByKey(FrmRBAttr.Y);
+		return this.GetValStrByKey(FrmRBAttr.FK_MapData);
 	}
-	public final void setY(float value) throws Exception
+	public final void setFK_MapData(String val)  throws Exception
+	 {
+		this.SetValByKey(FrmRBAttr.FK_MapData, val);
+	}
+	public final String getEnumKey() throws Exception
 	{
-		this.SetValByKey(FrmRBAttr.Y, value);
+		return this.GetValStrByKey(FrmRBAttr.EnumKey);
 	}
+	public final void setEnumKey(String val)  throws Exception
+	 {
+		this.SetValByKey(FrmRBAttr.EnumKey, val);
+	}
+	public final int getFontSize() throws Exception {
+		return this.GetParaInt(FrmRBAttr.FontSize, 12);
+	}
+	public final void setFontSize(int value)throws Exception
+	{this.SetPara(FrmRBAttr.FontSize, value);
+	}
+
+
 	public final float getX() throws Exception
 	{
 		return this.GetValFloatByKey(FrmRBAttr.X);
@@ -102,42 +119,29 @@ public class FrmRB extends EntityMyPK
 	{
 		this.SetValByKey(FrmRBAttr.X, value);
 	}
-	public final String getFK_MapData() throws Exception
+
+	/**
+	 Y
+	 */
+	public final float getY() throws Exception
 	{
-		return this.GetValStrByKey(FrmRBAttr.FK_MapData);
+		return this.GetValFloatByKey(FrmRBAttr.Y);
 	}
-	public final void setFK_MapData(String value) throws Exception
+	public final void setY(float value) throws Exception
 	{
-		this.SetValByKey(FrmRBAttr.FK_MapData, value);
-	}
-	public final String getEnumKey() throws Exception
-	{
-		return this.GetValStrByKey(FrmRBAttr.EnumKey);
-	}
-	public final void setEnumKey(String value) throws Exception
-	{
-		this.SetValByKey(FrmRBAttr.EnumKey, value);
-	}
-	public final int getFontSize() throws Exception
-	{
-		return this.GetParaInt(FrmRBAttr.FontSize, 12);
-	}
-	public final void setFontSize(int value) throws Exception
-	{
-		this.SetPara(FrmRBAttr.FontSize, value);
+		this.SetValByKey(FrmRBAttr.Y, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 单选框
 	*/
-	public FrmRB()
-	{
+	public FrmRB()  {
 	}
-	public FrmRB(String mypk) throws Exception
+	public FrmRB(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -146,14 +150,13 @@ public class FrmRB extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 		Map map = new Map("Sys_FrmRB", "单选框");
-	  //      map.EnDBUrl = new DBUrl(DBUrlType.DBAccessOfMSSQL1);
+			//      map.EnDBUrl = new DBUrl(DBUrlType.DBAccessOfMSSQL1);
 
 		map.IndexField = FrmImgAthDBAttr.FK_MapData;
 
@@ -162,7 +165,9 @@ public class FrmRB extends EntityMyPK
 		map.AddTBString(FrmRBAttr.KeyOfEn, null, "字段", true, false, 0, 300, 20);
 		map.AddTBString(FrmRBAttr.EnumKey, null, "枚举值", true, false, 0, 30, 20);
 		map.AddTBString(FrmRBAttr.Lab, null, "标签", true, false, 0, 500, 20);
+
 		map.AddTBInt(FrmRBAttr.IntKey, 0, "IntKey", true, false);
+
 
 		map.AddTBInt(MapAttrAttr.UIIsEnable, 0, "是否启用", true, false);
 
@@ -183,18 +188,16 @@ public class FrmRB extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeUpdateInsertAction();
 	}

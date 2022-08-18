@@ -4,25 +4,24 @@ package bp.en;
 */
 public enum FieldTypeS
 {
-	/** 
+	/**
 	 普通类型
-	*/
+	 */
 	Normal(0),
-	/** 
+	/**
 	 枚举类型
-	*/
+	 */
 	Enum(1),
-	/** 
+	/**
 	 外键
-	*/
+	 */
 	FK(2);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FieldTypeS> mappings;
-	private static java.util.HashMap<Integer, FieldTypeS> getMappings()
-	{
+	private static java.util.HashMap<Integer, FieldTypeS> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (FieldTypeS.class)
@@ -37,8 +36,7 @@ public enum FieldTypeS
 	}
 
 	private FieldTypeS(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 

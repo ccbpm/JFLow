@@ -11,11 +11,9 @@ import java.io.*;
 */
 public class SysDocFiles extends Entities
 {
-	public SysDocFiles()
-	{
+	public SysDocFiles() throws Exception {
 	}
-	public SysDocFiles(String _tableName, String _key) throws Exception
-	{
+	public SysDocFiles(String _tableName, String _key) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SysDocFileAttr.EnName, _tableName);
 		qo.addAnd();
@@ -26,20 +24,18 @@ public class SysDocFiles extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new SysDocFile();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<SysDocFile> ToJavaList()
-	{
+	public final java.util.List<SysDocFile> ToJavaList() {
 		return (java.util.List<SysDocFile>)(Object)this;
 	}
 	/** 
@@ -47,8 +43,7 @@ public class SysDocFiles extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<SysDocFile> Tolist()
-	{
+	public final ArrayList<SysDocFile> Tolist()  {
 		ArrayList<SysDocFile> list = new ArrayList<SysDocFile>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +52,5 @@ public class SysDocFiles extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

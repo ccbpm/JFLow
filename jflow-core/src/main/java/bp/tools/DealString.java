@@ -1,7 +1,6 @@
 package bp.tools;
 
-import bp.da.DBAccess;
-import bp.difference.SystemConfig;
+import bp.da.DataType;
 
 /**
  * 功能：字符串处理函数集
@@ -31,7 +30,7 @@ public class DealString
 		return inputString;
 	}
 	
-	public final void setInputString(String value) throws Exception
+	public final void setInputString(String value)
 	{
 		inputString = value;
 	}
@@ -44,7 +43,7 @@ public class DealString
 		return outString;
 	}
 	
-	public final void setOutString(String value) throws Exception
+	public final void setOutString(String value)
 	{
 		outString = value;
 	}
@@ -57,7 +56,7 @@ public class DealString
 		return noteMessage;
 	}
 	
-	public final void setNoteMessage(String value) throws Exception
+	public final void setNoteMessage(String value)
 	{
 		noteMessage = value;
 	}
@@ -66,9 +65,16 @@ public class DealString
 	public DealString()
 	{
 	}
-	
+	public static String trimEnd(String str,String endChart){
+		if(DataType.IsNullOrEmpty(str)==true)
+			return "";
+		while(str.endsWith(endChart)){
+			str = str.substring(0,str.length()-endChart.length());
+		}
+		return str;
+	}
 	// 公共方法
-	public final void ConvertToChineseNum()
+	public final void ConvertToChineseNum()throws Exception
 	{
 		String numList = "零壹贰叁肆伍陆柒捌玖";
 		String rmbList = "分角元拾佰仟万拾佰仟亿拾佰仟万";
@@ -192,7 +198,6 @@ public class DealString
         }
         return new String(charr);
     }
-
-
+	
 	
 }

@@ -111,18 +111,17 @@ public class Para
 	/**
 	 * 参数
 	 */
-	public Para()
-	{
+	public Para()  {
 	}
 	
 	/**
 	 * 构造参数
 	 * 
-	 * @param _paraName
+	 * param _paraName
 	 *            参数名称
-	 * @param _DAType
+	 * param _DAType
 	 *            System.Data.SqlDbType
-	 * @param _val
+	 * param _val
 	 *            值
 	 */
 

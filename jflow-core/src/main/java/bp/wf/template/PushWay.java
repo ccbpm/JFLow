@@ -1,12 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.web.*;
-import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  推送的方式
@@ -44,13 +37,11 @@ public enum PushWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static PushWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static PushWay forValue(int value) 
+	{return values()[value];
 	}
 }

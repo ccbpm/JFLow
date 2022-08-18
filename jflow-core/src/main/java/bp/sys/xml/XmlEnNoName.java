@@ -1,8 +1,9 @@
 package bp.sys.xml;
 
+
 public abstract class XmlEnNoName extends XmlEn
 {
-	public final String getNo()
+	public final String getNo()  throws Exception
 	{
 		return this.GetValStringByKey("No");
 	}
@@ -10,7 +11,7 @@ public abstract class XmlEnNoName extends XmlEn
 	{
 		this.SetVal("No", value);
 	}
-	public  String getName()
+	public String getName()  throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
@@ -21,7 +22,7 @@ public abstract class XmlEnNoName extends XmlEn
 	public XmlEnNoName()
 	{
 	}
-	public XmlEnNoName(String no) throws Exception
+	public XmlEnNoName(String no) throws Exception 
 	{
 	   int i = this.RetrieveByPK("No", no);
 	   if (i == 0)

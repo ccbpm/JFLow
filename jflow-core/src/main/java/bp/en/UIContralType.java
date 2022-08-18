@@ -72,6 +72,10 @@ public enum UIContralType
 	 系统定位
 	*/
 	Fixed(16),
+	/**
+	 * 公文正文组件
+	 */
+	GovDocFile(110),
 	/** 
 	 发文字号
 	*/
@@ -97,8 +101,7 @@ public enum UIContralType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, UIContralType> mappings;
-	private static java.util.HashMap<Integer, UIContralType> getMappings()
-	{
+	private static java.util.HashMap<Integer, UIContralType> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (UIContralType.class)
@@ -113,8 +116,7 @@ public enum UIContralType
 	}
 
 	private UIContralType(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 

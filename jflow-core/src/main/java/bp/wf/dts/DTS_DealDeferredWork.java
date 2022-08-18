@@ -3,10 +3,8 @@ package bp.wf.dts;
 import bp.da.*;
 import bp.port.*;
 import bp.en.*;
-import bp.sys.*;
 import bp.web.*;
 import bp.wf.*;
-import bp.wf.Glo;
 
 /** 
  处理延期的任务 的摘要说明
@@ -16,7 +14,7 @@ public class DTS_DealDeferredWork extends Method
 	/** 
 	 处理延期的任务
 	*/
-	public DTS_DealDeferredWork()
+	public DTS_DealDeferredWork()throws Exception
 	{
 		this.Title = "处理逾期的任务";
 		this.Help = "需要每天执行一次,对于已经逾期的工作,按照逾期的规则处理。";
@@ -48,15 +46,11 @@ public class DTS_DealDeferredWork extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
-		//string sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <='" + DataType.getCurrentDate() + "' ORDER BY FK_Emp";
-		//改成小于号SDT <'" + DataType.getCurrentDate()
 		String sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <'" + DataType.getCurrentDate() + "' ORDER BY FK_Emp";
-		//string sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <='2013-12-30' ORDER BY FK_Emp";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		String msg = "";
 		String dealWorkIDs = "";
@@ -76,13 +70,13 @@ public class DTS_DealDeferredWork extends Method
 			}
 			dealWorkIDs += "," + workid + ",";
 
-			if (!FK_Emp.equals(WebUser.getNo()))
+			if (!WebUser.getNo().equals(FK_Emp))
 			{
 				Emp emp = new Emp(FK_Emp);
-				WebUser.SignInOfGener(emp);
+				WebUser.SignInOfGener(emp, "CH", false, false, null, null);
 			}
 
-			bp.wf.template.NodeExt nd = new bp.wf.template.NodeExt();
+			Node nd = new Node();
 			nd.setNodeID(fk_node);
 			nd.Retrieve();
 
@@ -109,14 +103,14 @@ public class DTS_DealDeferredWork extends Method
 					if (DataType.IsNullOrEmpty(nd.getDoOutTime()))
 					{
 						/*如果是空的,没有特定的点允许，就让其它向下执行。*/
-						msg += bp.wf.Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
+						msg += Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
 					}
 					else
 					{
 						int nextNode = Dev2Interface.Node_GetNextStepNode(fk_flow, workid);
 						if (nd.getDoOutTime().contains(String.valueOf(nextNode))) //如果包含了当前点的ID,就让它执行下去.
 						{
-							msg += bp.wf.Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
+							msg += Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
 						}
 					}
 					break;
@@ -126,16 +120,16 @@ public class DTS_DealDeferredWork extends Method
 						throw new RuntimeException("@设置错误,没有设置要跳转的下一步节点.");
 					}
 					int nextNodeID = Integer.parseInt(nd.getDoOutTime());
-					msg += bp.wf.Dev2Interface.Node_SendWork(fk_flow, workid, null, null, nextNodeID, null).ToMsgOfText();
+					msg += Dev2Interface.Node_SendWork(fk_flow, workid, null, null, nextNodeID, null).ToMsgOfText();
 					break;
 				case AutoShiftToSpecUser: //移交给指定的人员.
-					msg += bp.wf.Dev2Interface.Node_Shift(workid, nd.getDoOutTime(), "来自ccflow的自动消息:(" + WebUser.getName() + ")工作未按时处理(" + nd.getName() + "),现在移交给您。");
+					msg += Dev2Interface.Node_Shift(workid, nd.getDoOutTime(), "来自ccflow的自动消息:(" + WebUser.getName() + ")工作未按时处理(" + nd.getName() + "),现在移交给您。");
 					break;
 				case SendMsgToSpecUser: //向指定的人员发消息.
-					bp.wf.Dev2Interface.Port_SendMsg(nd.getDoOutTime(), "来自ccflow的自动消息:(" + WebUser.getName() + ")工作未按时处理(" + nd.getName() + ")", "感谢您选择ccflow.", "SpecEmp" + workid);
+					Dev2Interface.Port_SendMsg(nd.getDoOutTime(), "来自ccflow的自动消息:(" + WebUser.getName() + ")工作未按时处理(" + nd.getName() + ")", "感谢您选择ccflow.", "SpecEmp" + workid);
 					break;
 				case DeleteFlow: //删除流程.
-					msg += bp.wf.Dev2Interface.Flow_DoDeleteFlowByReal(workid, true);
+					msg += Dev2Interface.Flow_DoDeleteFlowByReal(workid, true);
 					break;
 				case RunSQL:
 					msg += DBAccess.RunSQL(nd.getDoOutTime());
@@ -145,7 +139,7 @@ public class DTS_DealDeferredWork extends Method
 			}
 		}
 		Emp emp1 = new Emp("admin");
-		WebUser.SignInOfGener(emp1);
+		WebUser.SignInOfGener(emp1, "CH", false, false, null, null);
 		return msg;
 
 	}

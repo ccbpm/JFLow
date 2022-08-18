@@ -1,8 +1,9 @@
 package bp.wf.httphandler;
 
-import bp.difference.SystemConfig;
-import bp.difference.handler.CommonUtils;
+import bp.difference.*;
+import bp.*;
 import bp.difference.handler.WebContralBase;
+import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -13,16 +14,14 @@ public class WF_Admin_Multilingual extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Multilingual()
-	{
+	public WF_Admin_Multilingual() throws Exception {
 	}
 	/** 
 	 获得使用的语言.
 	 
 	 @return 使用的语言
 	*/
-	public final String GetLangue()
-	{
+	public final String GetLangue() throws Exception {
 		Hashtable ht = new Hashtable();
 
 		if (SystemConfig.getIsMultilingual() == true)
@@ -39,15 +38,14 @@ public class WF_Admin_Multilingual extends WebContralBase
 	}
 
 
-		///执行父类的重写方法.
+		///#region 执行父类的重写方法.
 	/** 
 	 默认执行的方法
 	 
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod()
-	{
+	protected String DoDefaultMethod() throws Exception {
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -57,23 +55,22 @@ public class WF_Admin_Multilingual extends WebContralBase
 		}
 
 		//找不不到标记就抛出异常.
-		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" +CommonUtils.getRequest().getRequestURI());
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + ContextHolderUtils.getRequest().getRequestURI());
 	}
 
-		/// 执行父类的重写方法.
+		///#endregion 执行父类的重写方法.
 
 
-		///ccform
+		///#region ccform
 	/** 
 	 表单的配置
 	 
 	 @return 
 	*/
-	public final String CCForm_Init()
-	{
+	public final String CCForm_Init() throws Exception {
 		return "";
 	}
 
-		/// xxx 界面方法.
+		///#endregion xxx 界面方法.
 
 }

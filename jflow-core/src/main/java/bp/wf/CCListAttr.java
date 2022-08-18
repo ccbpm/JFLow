@@ -1,12 +1,19 @@
 package bp.wf;
-import bp.en.EntityMyPKAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.*;
+import java.util.*;
+
 /** 
  抄送 属性
 */
 public class CCListAttr extends EntityMyPKAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 标题
 	*/
@@ -43,23 +50,6 @@ public class CCListAttr extends EntityMyPKAttr
 	 抄送给人员名称
 	*/
 	public static final String CCToName = "CCToName";
-	/** 
-	 抄送给到部门
-	*/
-	public static final String CCToDept = "CCToDept";
-	/** 
-	 抄送给部门名称
-	*/
-	public static final String CCToDeptName = "CCToDeptName";
-	/** 
-	 抄送到组织编号
-	*/
-	public static final String CCToOrgNo = "CCToOrgNo";
-	/** 
-	 抄送给组织名称
-	*/
-	public static final String CCToOrgName = "CCToOrgName";
-
 	/** 
 	 审核时间（回复时间）
 	*/
@@ -101,5 +91,10 @@ public class CCListAttr extends EntityMyPKAttr
 	*/
 	public static final String OrgNo = "OrgNo";
 
-		///
+		///#endregion
+
+	public static final String CCToOrgNo = "CCToOrgNo";
+	public static final String CCToOrgName = "CCToOrgName";
+	public static final String CCToDept = "CCToDept";
+	public static final String CCToDeptName = "CCToDeptName";
 }

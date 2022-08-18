@@ -14,13 +14,13 @@ public class SqlBuilder
 	/** 
 	 得到主健
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static String GetKeyConditionOfMS(Entity en)throws Exception
 	{
 		// 判断特殊情况。
-		switch (en.getPKField())
+		switch (en.getPK_Field())
 		{
 			case "OID":
 				return " OID=:OID";
@@ -32,7 +32,7 @@ public class SqlBuilder
 				break;
 		}
 
-		if (en.getEnMap().getAttrs().Contains("OID"))
+		if (en.getEnMap().getAttrs().contains("OID"))
 		{
 			int key = en.GetValIntByKey("OID");
 			if (key == 0)
@@ -74,13 +74,13 @@ public class SqlBuilder
 	/** 
 	 得到主健
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static String GetKeyConditionOfOLE(Entity en)throws Exception
 	{
 		// 判断特殊情况。
-		if (en.getEnMap().getAttrs().Contains("OID"))
+		if (en.getEnMap().getAttrs().contains("OID"))
 		{
 			int key = en.GetValIntByKey("OID");
 			if (key == 0)
@@ -93,11 +93,11 @@ public class SqlBuilder
 				return en.getEnMap().getPhysicsTable() + ".OID=" + key;
 			}
 		}
-		//			if (en.getEnMap().getAttrs().Contains("MID"))
+		//			if (en.getEnMap().getAttrs().contains("MID"))
 		//			{
 		//				int key=en.GetValIntByKey("MID");
 		//				if (key==0)
-		//					throw new Exception("@在执行["+en.EnMap.EnDesc+ " " +en.getEnMap().getPhysicsTable() +"]，没有给PK MID 赋值,不能进行查询操作。");
+		//					throw new Exception("@在执行["+en.getEnMap().EnDesc+ " " +en.getEnMap().getPhysicsTable() +"]，没有给PK MID 赋值,不能进行查询操作。");
 		//				return en.getEnMap().getPhysicsTable()+".MID="+key ;
 		//			}
 
@@ -133,7 +133,7 @@ public class SqlBuilder
 	/** 
 	 得到主健
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static String GenerWhereByPK(Entity en, String dbStr)throws Exception
@@ -142,11 +142,11 @@ public class SqlBuilder
 		{
 			if (dbStr.equals("?"))
 			{
-				return en.getEnMap().getPhysicsTable() + "." + en.getPKField() + "=" + dbStr;
+				return en.getEnMap().getPhysicsTable() + "." + en.getPK_Field() + "=" + dbStr;
 			}
 			else
 			{
-				return en.getEnMap().getPhysicsTable() + "." + en.getPKField() + "=" + dbStr + en.getPK();
+				return en.getEnMap().getPhysicsTable() + "." + en.getPK_Field() + "=" + dbStr + en.getPK();
 			}
 		}
 
@@ -170,7 +170,7 @@ public class SqlBuilder
 	/** 
 	 
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static Paras GenerParasPK(Entity en)throws Exception
@@ -284,7 +284,7 @@ public class SqlBuilder
 		Map enMap = en.getEnMap();
 		Attrs attrs = enMap.getAttrs();
 		String physicsTable = enMap.getPhysicsTable();
-		for (Attr attr : attrs) {
+		for (Attr attr : attrs.ToJavaList()) {
 			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK
 					|| attr.getMyFieldType() == FieldType.PKEnum) {
 				if (attr.getMyDataType() == DataType.AppString) {
@@ -346,7 +346,7 @@ public class SqlBuilder
 	/** 
 	 查询全部信息
 	 
-	 @param en 实体
+	 param en 实体
 	 @return sql
 	 * @throws Exception 
 	*/
@@ -357,7 +357,7 @@ public class SqlBuilder
 	/** 
 	 查询
 	 
-	 @param en 实体
+	 param en 实体
 	 @return string
 	 * @throws Exception 
 	*/
@@ -489,7 +489,7 @@ public class SqlBuilder
 				continue;
 			}
 			//string enumTable = "Enum_"+attr.getKey();
-			from += " (SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ,";
+			from += " (SELECT Lab, IntKey FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ,";
 		}
 		from = from.substring(0, from.length() - 1);
 		return from;
@@ -602,14 +602,14 @@ public class SqlBuilder
 	/** 
 	 生成sql.
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static String GenerCreateTableSQLOfMS(Entity en)throws Exception
 	{
 		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null)
 		{
-			return "DELETE FROM "+Glo.SysEnum()+" where enumkey='sdsf44a23'";
+			return "DELETE FROM "+bp.sys.base.Glo.SysEnum()+" where enumkey='sdsf44a23'";
 		}
 
 		//    throw new Exception(en.ToString() +" map error "+en.GetType() );
@@ -621,7 +621,7 @@ public class SqlBuilder
 			throw new RuntimeException("@" + en.getEnDesc() + " , [" + en.getEnMap().getPhysicsTable() + "]没有属性/字段集合 attrs.size() = 0 ,能执行数据表的创建.");
 		}
 
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			if (attr.getMyFieldType() == FieldType.RefText)
 			{
@@ -688,14 +688,14 @@ public class SqlBuilder
 	/** 
 	 执行PSQL.
 	 
-	 @param en 实体
+	 param en 实体
 	 @return 生成的SQL
 	*/
 	public static String GenerCreateTableSQLOfPostgreSQL(Entity en)throws Exception
 	{
 		if (en.getEnMap().getPhysicsTable().equals("") || en.getEnMap().getPhysicsTable() == null)
 		{
-			return "DELETE FROM "+Glo.SysEnum()+" where enumkey='sdsf44a23'";
+			return "DELETE FROM "+bp.sys.base.Glo.SysEnum()+" where enumkey='sdsf44a23'";
 		}
 
 		//    throw new Exception(en.ToString() +" map error "+en.GetType() );
@@ -707,7 +707,7 @@ public class SqlBuilder
 			throw new RuntimeException("@" + en.getEnDesc() + " , [" + en.getEnMap().getPhysicsTable() + "]没有属性/字段集合 attrs.size() = 0 ,能执行数据表的创建.");
 		}
 
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			if (attr.getMyFieldType() == FieldType.RefText)
 			{
@@ -859,7 +859,7 @@ public class SqlBuilder
 	/** 
 	 生成sql.
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static String GenerCreateTableSQLOfOra(Entity en)throws Exception
@@ -1021,7 +1021,7 @@ public class SqlBuilder
 	/** 
 	 生成sql.
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static String GenerCreateTableSQLOfMySQL(Entity en)throws Exception
@@ -1129,19 +1129,14 @@ public class SqlBuilder
 				table = en1.getEnMap().getPhysicsTable();
 				tableAttr = "T" + attr.getKey() + "";
 				from = from + " LEFT OUTER JOIN " + table + "   " + tableAttr + " ON " + enTable + "." + attr.getField() + "=" + tableAttr + "." + en1.getEnMap().GetFieldByKey(attr.getUIRefKeyValue());
-				//where=where+" AND "+" ("+en.getEnMap().getPhysicsTable()+"."+attr.Field+"="+en1.getEnMap().getPhysicsTable()+"_"+attr.getKey()+"."+en1.getEnMap().getAttrs().GetFieldByKey(attr.UIRefKeyValue )+" ) "  ;
 				continue;
 			}
 			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
 			{
-				//from= from+ " LEFT OUTER JOIN "+table+" AS "+tableAttr+ " ON "+enTable+"."+attr.Field+"="+tableAttr+"."+en1.getEnMap().getAttrs().GetFieldByKey( attr.UIRefKeyValue );
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON " + enTable + "." + attr.getField() + "=" + tableAttr + ".IntKey ";
-				//	where=where+" AND  ("+en.getEnMap().getPhysicsTable()+"."+attr.Field+"= Enum_"+attr.getKey()+".IntKey ) ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON " + enTable + "." + attr.getField() + "=" + tableAttr + ".IntKey ";
 			}
 		}
-		//from=from+", "+en.getEnMap().getPhysicsTable();
-		//where="("+where+")";			
 		return from + "  WHERE (1=1) ";
 	}
 
@@ -1150,7 +1145,7 @@ public class SqlBuilder
 		String from = " FROM " + en.getEnMap().getPhysicsTable();
 
 		//去除原因有时获取外键不正确
-		//if (en.EnMap.HisFKAttrs.size() == 0)
+		//if (en.getEnMap().HisFKAttrs.size() == 0)
 		//    return from + " WHERE (1=1)";
 
 		String mytable = en.getEnMap().getPhysicsTable();
@@ -1188,7 +1183,7 @@ public class SqlBuilder
 	/** 
 	 GenerFormWhere
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	public static String GenerFormWhereOfMS(Entity en, Map map)throws Exception
@@ -1226,7 +1221,7 @@ public class SqlBuilder
 			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
 			{
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON ISNULL(" + enTable + "." + attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + ".IntKey ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON ISNULL(" + enTable + "." + attr.getField() + ", " + en.GetValIntByKey(attr.getKey()) + ")=" + tableAttr + ".IntKey ";
 			}
 		}
 
@@ -1235,7 +1230,7 @@ public class SqlBuilder
 	/** 
 	 GenerFormWhere
 	 
-	 @param en
+	 param en
 	 @return 
 	*/
 	protected static String GenerFormWhereOfMSOLE(Entity en)throws Exception
@@ -1273,7 +1268,7 @@ public class SqlBuilder
 			if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum)
 			{
 				tableAttr = "Enum_" + attr.getKey();
-				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON IIf( ISNULL(" + enTable + "." + attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + ", " + enTable + "." + attr.getField() + ")=" + tableAttr + ".IntKey ";
+				from = from + " LEFT OUTER JOIN ( SELECT Lab, IntKey FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' )  Enum_" + attr.getKey() + " ON IIf( ISNULL(" + enTable + "." + attr.getField() + "), " + en.GetValIntByKey(attr.getKey()) + ", " + enTable + "." + attr.getField() + ")=" + tableAttr + ".IntKey ";
 			}
 
 			from = from + ")";
@@ -1396,8 +1391,8 @@ public class SqlBuilder
 	/** 
 	 SelectSQLOfInformix
 	 
-	 @param en
-	 @param topNum
+	 param en
+	 param topNum
 	 @return 
 	*/
 	protected static String SelectSQLOfInformix(Entity en, int topNum)throws Exception
@@ -1525,8 +1520,8 @@ public class SqlBuilder
 	/** 
 	 得到sql of select
 	 
-	 @param en 实体
-	 @param top top
+	 param en 实体
+	 param en Entity
 	 @return sql
 	*/
 	public static String SelectCountSQL(Entity en)throws Exception
@@ -1549,8 +1544,8 @@ public class SqlBuilder
 	/** 
 	 建立SelectSQLOfOLE 
 	 
-	 @param en 要执行的en
-	 @param topNum 最高查询个数
+	 param en 要执行的en
+	 param topNum 最高查询个数
 	 @return 返回查询sql
 	*/
 	public static String SelectSQLOfOLE(Entity en, int topNum)throws Exception
@@ -1624,8 +1619,8 @@ public class SqlBuilder
 	/** 
 	 生成sqlserver标准的sql
 	 
-	 @param en 实体类
-	 @param topNum 前几行
+	 param en 实体类
+	 param topNum 前几行
 	 @return 生成的SQL
 	 * @throws Exception 
 	*/
@@ -1772,8 +1767,8 @@ public class SqlBuilder
 	/** 
 	 生成postgresql标准的sql
 	 
-	 @param en 实体类
-	 @param topNum 前几行
+	 param en 实体类
+	 param topNum 前几行
 	 @return 生成的SQL
 	*/
 	public static String SelectSQLOfPostgreSQL(Entity en, int topNum)throws Exception
@@ -1809,7 +1804,7 @@ public class SqlBuilder
 					}
 					else
 					{
-					 //   val = val + ",COALESCE(" + mainTable + attr.Field + ", '" + attr.getDefaultVal() + "') AS " + attr.getKey();
+					 //   val = val + ",COALESCE(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') AS " + attr.getKey();
 						val = val + ",COALESCE(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') AS " + attr.getKey();
 
 					}
@@ -2040,8 +2035,8 @@ public class SqlBuilder
 	/** 
 	 建立selectSQL 
 	 
-	 @param en 要执行的en
-	 @param  最高查询个数
+	 param en 要执行的en
+	 param  en
 	 @return 返回查询sql
 	*/
 	public static String SelectCountSQLOfMS(Entity en)throws Exception
@@ -2364,8 +2359,8 @@ public class SqlBuilder
 	/** 
 	 产生要更新的sql 语句
 	 
-	 @param en 要更新的entity
-	 @param keys 要更新的keys
+	 param en 要更新的entity
+	 param keys 要更新的keys
 	 @return sql
 	 * @throws Exception 
 	*/
@@ -2420,7 +2415,7 @@ public class SqlBuilder
 						{
 
 							String doc = en.GetValStringByKey(attr.getKey());
-							if (map.getAttrs().Contains("DocLength"))
+							if (map.getAttrs().contains("DocLength"))
 							{
 								en.SetValByKey("DocLength", doc.length());
 							}
@@ -2583,7 +2578,7 @@ public class SqlBuilder
 		}
 
 		String mykeys = "@";
-		for (String key : keys)
+		for (Object key : keys)
 		{
 			mykeys += key + "@";
 		}
@@ -2614,7 +2609,7 @@ public class SqlBuilder
 					{
 						String doc = en.GetValStrByKey(attr.getKey()).replace('\'', '~');
 
-						if (map.getAttrs().Contains("DocLength"))
+						if (map.getAttrs().contains("DocLength"))
 						{
 							en.SetValByKey("DocLength", doc.length());
 						}
@@ -2700,7 +2695,7 @@ public class SqlBuilder
 					{
 						String doc = en.GetValStrByKey(attr.getKey()).replace('\'', '~');
 
-						if (map.getAttrs().Contains("DocLength"))
+						if (map.getAttrs().contains("DocLength"))
 						{
 							en.SetValByKey("DocLength", doc.length());
 						}
@@ -2790,7 +2785,7 @@ public class SqlBuilder
 		String mykeys = "@";
 		if (keys != null)
 		{
-			for (String key : keys)
+			for (Object key : keys)
 			{
 				mykeys += key + "@";
 			}
@@ -2972,22 +2967,17 @@ public class SqlBuilder
 		}
 
 		String dbVarStr = en.getHisDBVarStr();
-		//  string dbstr = en.HisDBVarStr;
 		Map map = en.getEnMap();
 		String val = "";
 		for (Attr attr : map.getAttrs())
 		{
 			if (attr.getMyFieldType() == FieldType.RefText || attr.getIsPK())
-			{
 				continue;
-			}
 
 			if (keys != null)
 			{
-				if (mykey.contains("@" + attr.getKey() + ",") == false)
-				{
+				if (mykey.toString().contains("@" + attr.getKey() + ",") == false)
 					continue;
-				}
 			}
 
 			if (dbVarStr.equals("?"))
@@ -3010,7 +3000,7 @@ public class SqlBuilder
 
 				if (keys != null)
 				{
-					if (mykey.contains("@" + attr.getKey() + ",") == false)
+					if (mykey.toString().contains("@" + attr.getKey() + ",") == false)
 					{
 						continue;
 					}
@@ -3018,7 +3008,7 @@ public class SqlBuilder
 
 				val = val + "," + attr.getField() + "=" + attr.getField();
 			}
-			//   throw new Exception("@生成SQL出现错误:" + map.EnDesc + "，" + en.ToString() + "，要更新的字段为空。");
+			//   throw new Exception("@生成SQL出现错误:" + map.getEnDesc() + "，" + en.ToString() + "，要更新的字段为空。");
 		}
 		if (!DataType.IsNullOrEmpty(val))
 		{
@@ -3049,7 +3039,7 @@ public class SqlBuilder
 	/** 
 	 Delete sql
 	 
-	 @param en
+	 param en
 	 @return 
 	 * @throws Exception 
 	*/
@@ -3132,7 +3122,7 @@ public class SqlBuilder
 	/** 
 	 Insert 
 	 
-	 @param en
+	 param en
 	 @return 
 	 * @throws Exception 
 	*/
@@ -3145,7 +3135,7 @@ public class SqlBuilder
 			throw new RuntimeException("@实体：" + en.toString() + " ,Attrs属性集合信息丢失，导致无法生成SQL。");
 		}
 
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			if (attr.getMyFieldType() == FieldType.RefText)
 			{
@@ -3169,7 +3159,7 @@ public class SqlBuilder
 
 					if (attr.getUIIsDoc() && attr.getKey().equals("Doc"))
 					{
-						if (attrs.Contains("DocLength"))
+						if (attrs.contains("DocLength"))
 						{
 							en.SetValByKey("DocLength", str.length());
 						}
@@ -3177,7 +3167,7 @@ public class SqlBuilder
 						if (str.length() >= 2000)
 						{
 							SysDocFile.SetValV2(en.toString(), en.getPKVal().toString(), str);
-							if (attrs.Contains("DocLength"))
+							if (attrs.contains("DocLength"))
 							{
 								en.SetValByKey("DocLength", str.length());
 							}
@@ -3285,8 +3275,8 @@ public class SqlBuilder
 	 <p>注：目前只对MSSQL/ORACLE/MYSQL三种数据库做兼容</p>
 	 <p>added by liuxc,2017-03-07</p>
 	 
-	 @param expression 要判断的表达式，在SQL中的写法
-	 @param isNullBack 判断的表达式为NULL，返回值的表达式，在SQL中的写法
+	 param expression 要判断的表达式，在SQL中的写法
+	 param isNullBack 判断的表达式为NULL，返回值的表达式，在SQL中的写法
 	 @return 
 	*/
 	public static String GetIsNullInSQL(String expression, String isNullBack)

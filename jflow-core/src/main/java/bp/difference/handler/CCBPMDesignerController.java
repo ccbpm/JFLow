@@ -16,7 +16,7 @@ public class CCBPMDesignerController extends HttpHandlerBase {
 	 * @return
 	 */
 	@RequestMapping(value = "/ProcessRequest")
-	public final void ProcessRequest()
+	public final void ProcessRequest()throws Exception
 	{
 		WF_Admin_CCBPMDesigner  CCBPMDHandler = new WF_Admin_CCBPMDesigner();
 		super.ProcessRequestPost(CCBPMDHandler);

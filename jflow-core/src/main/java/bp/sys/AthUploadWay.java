@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  附件上传方式
@@ -23,7 +22,7 @@ public enum AthUploadWay
 		return this.ordinal();
 	}
 
-	public static AthUploadWay forValue(int value) throws Exception
+	public static AthUploadWay forValue(int value)
 	{
 		return values()[value];
 	}

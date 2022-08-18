@@ -1,11 +1,5 @@
 package bp.sys.xml;
 
-import bp.da.*;
-import bp.sys.*;
-import bp.en.*;
-import bp.sys.*;
-import bp.*;
-import bp.sys.*;
 
 /** 
   RegularExpressionDtl 正则表达模版
@@ -13,42 +7,42 @@ import bp.sys.*;
 public class RegularExpressionDtl extends XmlEn
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 编号
 	*/
-	public final String getItemNo()
+	public final String getItemNo()  throws Exception
 	{
 		return this.GetValStringByKey("ItemNo");
 	}
 	/** 
 	 名称
 	*/
-	public final String getName()
+	public final String getName()  throws Exception
 	{
 		return this.GetValStringByKey("Name");
 	}
-	public final String getNote()
+	public final String getNote()  throws Exception
 	{
 		return this.GetValStringByKey("Note");
 	}
-	public final String getExp()
+	public final String getExp()  throws Exception
 	{
 		return this.GetValStringByKey("Exp");
 	}
-	public final String getForEvent()
+	public final String getForEvent()  throws Exception
 	{
 		return this.GetValStringByKey("ForEvent");
 	}
-	public final String getMsg() throws Exception
+	public final String getMsg()  throws Exception
 	{
 		return this.GetValStringByKey("Msg");
 	}
 
-		///
+		///#endregion
 
 
-		///构造
+		///#region 构造
 	/** 
 	 节点扩展信息
 	*/
@@ -64,5 +58,5 @@ public class RegularExpressionDtl extends XmlEn
 		return new RegularExpressionDtls();
 	}
 
-		///
+		///#endregion
 }

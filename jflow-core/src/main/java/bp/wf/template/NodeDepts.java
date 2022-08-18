@@ -3,28 +3,26 @@ package bp.wf.template;
 import bp.da.*;
 import bp.en.*;
 import bp.wf.port.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
 /** 
  节点部门
 */
-public class NodeDepts extends EntitiesMM
+public class NodeDepts extends EntitiesMyPK
 {
 	/** 
 	 节点部门
 	*/
-	public NodeDepts()
-	{
+	public NodeDepts()  {
 	}
 	/** 
 	 节点部门
 	 
-	 @param NodeID 节点ID
-	 * @throws Exception 
+	 param NodeID 节点ID
 	*/
-	public NodeDepts(int NodeID) throws Exception
-	{
+	public NodeDepts(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeDeptAttr.FK_Node, NodeID);
 		qo.DoQuery();
@@ -33,29 +31,26 @@ public class NodeDepts extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new NodeDept();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<NodeDept> ToJavaList()
-	{
-		return (List<NodeDept>)(Object)this;
+	public final java.util.List<NodeDept> ToJavaList() {
+		return (java.util.List<NodeDept>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeDept> Tolist()
-	{
+	public final ArrayList<NodeDept> Tolist()  {
 		ArrayList<NodeDept> list = new ArrayList<NodeDept>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -64,6 +59,6 @@ public class NodeDepts extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
 }

@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  日志类型
 */
@@ -72,11 +74,11 @@ public enum ActionType
 	/** 
 	 挂起
 	*/
-	HungUp(15),
+	Hungup(15),
 	/** 
 	 取消挂起
 	*/
-	UnHungUp(16),
+	UnHungup(16),
 	/** 
 	 强制移交
 	*/
@@ -134,6 +136,10 @@ public enum ActionType
 	*/
 	HuiQian(30),
 	/** 
+	 调整流程
+	*/
+	Adjust(31),
+	/** 
 	 信息
 	*/
 	Info(100);
@@ -142,8 +148,7 @@ public enum ActionType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, ActionType> mappings;
-	private static java.util.HashMap<Integer, ActionType> getMappings()
-	{
+	private static java.util.HashMap<Integer, ActionType> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (ActionType.class)
@@ -157,19 +162,16 @@ public enum ActionType
 		return mappings;
 	}
 
-	private ActionType(int value) 
-	{
-		intValue = value;
+	private ActionType(int value)
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static ActionType forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

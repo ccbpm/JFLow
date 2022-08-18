@@ -1,11 +1,4 @@
 package bp.sys.xml;
-
-import bp.da.*;
-import bp.en.*;
-import bp.sys.*;
-import bp.*;
-import bp.sys.*;
-
 /** 
  ActiveAttr 的摘要说明。
  考核过错行为的数据元素
@@ -15,39 +8,39 @@ import bp.sys.*;
 public class ActiveAttr extends XmlEn
 {
 
-		///属性
+		///#region 属性
 	/** 
 	 选择这个属性时间需要的条件
 	*/
-	public final String getCondition()
+	public final String getCondition()  throws Exception
 	{
 		return this.GetValStringByKey(ActiveAttrAttr.Condition);
 	}
-	public final String getAttrKey()
+	public final String getAttrKey()  throws Exception
 	{
 		return this.GetValStringByKey(ActiveAttrAttr.AttrKey);
 	}
-	public final String getAttrName()
+	public final String getAttrName()  throws Exception
 	{
 		return this.GetValStringByKey(ActiveAttrAttr.AttrName);
 	}
-	public final String getExp()
+	public final String getExp()  throws Exception
 	{
 		return this.GetValStringByKey(ActiveAttrAttr.Exp);
 	}
-	public final String getExpApp()
+	public final String getExpApp()  throws Exception
 	{
 		return this.GetValStringByKey(ActiveAttrAttr.ExpApp);
 	}
-	public final String getFor()
+	public final String getFor()  throws Exception
 	{
 		return this.GetValStringByKey(ActiveAttrAttr.For);
 	}
 
-		///
+		///#endregion
 
 
-		///构造
+		///#region 构造
 	public ActiveAttr()
 	{
 	}
@@ -55,10 +48,9 @@ public class ActiveAttr extends XmlEn
 	 获取一个实例
 	*/
 	@Override
-	public XmlEns getGetNewEntities()
-	{
+	public XmlEns getGetNewEntities() throws Exception {
 		return new ActiveAttrs();
 	}
 
-		///
+		///#endregion
 }

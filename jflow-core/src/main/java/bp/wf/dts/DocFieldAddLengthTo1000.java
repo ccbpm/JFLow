@@ -1,11 +1,8 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.port.*;
 import bp.en.*;
 import bp.sys.*;
-import bp.web.WebUser;
-import bp.wf.*;
 
 /** 
  扩充Doc字段的长度 的摘要说明
@@ -15,7 +12,7 @@ public class DocFieldAddLengthTo1000 extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public DocFieldAddLengthTo1000()
+	public DocFieldAddLengthTo1000()throws Exception
 	{
 		this.Title = "扩充Doc字段的长度";
 		this.Help = "为doc类型的字段扩充长度，低于1000的字符扩充为1000.";
@@ -35,12 +32,11 @@ public class DocFieldAddLengthTo1000 extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -50,16 +46,15 @@ public class DocFieldAddLengthTo1000 extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		String strs = "开始执行....";
-		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.MyDataType, DataType.AppString, MapAttrAttr.FK_MapData);
+		MapAttrs mattrs = new MapAttrs();
+		mattrs.Retrieve(MapAttrAttr.MyDataType, DataType.AppString, MapAttrAttr.FK_MapData);
 		strs += "<br>@如下字段受到了影响。";
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : mattrs.ToJavaList())
 		{
 			if (attr.getUIHeightInt() > 50 && attr.getMaxLen() < 1000)
 			{

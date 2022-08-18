@@ -9,15 +9,15 @@ import bp.sys.*;
 import bp.wf.template.*;
 import bp.web.*;
 
-/** 
+/**
  ccbpm服务
-*/
+ */
 public class ccbpmServices extends Method
 {
-	/** 
+	/**
 	 ccbpm服务
-	*/
-	public ccbpmServices()
+	 */
+	public ccbpmServices()throws Exception
 	{
 		this.Title = "ccbpm流程服务 ";
 		this.Help = "1,自动发送邮件. 2,自动发起流程. 3,自动执行节点任务..";
@@ -26,23 +26,21 @@ public class ccbpmServices extends Method
 		this.GroupName = "流程自动执行定时任务";
 	}
 	@Override
-	public void Init()
-	{
+	public void Init()  {
 	}
-	/** 
+	/**
 	 当前的操纵员是否可以执行这个方法
-	*/
+	 */
 	@Override
-	public boolean getIsCanDo()
-	{
+	public boolean getIsCanDo()  {
 		return true;
 	}
-	/** 
+	/**
 	 开始执行方法.
-	 
-	 @return 
-	 * @throws Exception 
-	*/
+
+	 @return
+	  * @throws Exception
+	 */
 	@Override
 	public Object Do() throws Exception
 	{
@@ -77,10 +75,10 @@ public class ccbpmServices extends Method
 
 		return "执行完成...";
 	}
-	/** 
+	/**
 	 逾期流程
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	private void DoOverDueFlow() throws Exception
 	{
 		//特殊处理天津的需求.
@@ -89,7 +87,7 @@ public class ccbpmServices extends Method
 			DoTianJinSpecFunc();
 		}
 
-			/// 流程逾期
+		/// 流程逾期
 		//判断是否有流程逾期的消息设置
 		DataTable dt = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
@@ -116,10 +114,10 @@ public class ccbpmServices extends Method
 			continue;
 		}
 
-			/// 流程逾期
+		/// 流程逾期
 
 
-			/// 流程预警
+		/// 流程预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
 		sql += " WHERE a.SDTOfFlowWarning<='" + DataType.getCurrentDataTime() + "' ";
@@ -144,11 +142,11 @@ public class ccbpmServices extends Method
 			continue;
 		}
 
-			///  流程预警
+		///  流程预警
 		DataTable generTab = null;
 
 
-			///节点预警
+		///节点预警
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
 		sql += " WHERE a.SDTOfNode>='" + DataType.getCurrentDataTime() + "' ";
@@ -164,7 +162,7 @@ public class ccbpmServices extends Method
 			String compleateTime = row.getValue("SDTOfNode") + "";
 			String starter = row.getValue("Starter") + "";
 			Node node = new Node(fk_node);
-			if (node.getIsStartNode())
+			if (node.isStartNode())
 			{
 				continue;
 			}
@@ -216,10 +214,10 @@ public class ccbpmServices extends Method
 			}
 		}
 
-			///  节点预警
+		///  节点预警
 
 
-			///找到要节点逾期的数据.
+		///找到要节点逾期的数据.
 
 		sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
@@ -229,7 +227,7 @@ public class ccbpmServices extends Method
 		generTab = DBAccess.RunSQLReturnTable(sql);
 
 
-			/// 找到要逾期的数据.
+		/// 找到要逾期的数据.
 
 		// 遍历循环,逾期表进行处理.
 		String msg = "";
@@ -249,7 +247,7 @@ public class ccbpmServices extends Method
 			boolean isLogin = false;
 			for (GenerWorkerList item : gwls.ToJavaList())
 			{
-				if (item.getIsEnable() == false)
+				if (item.isEnable() == false)
 				{
 					continue;
 				}
@@ -268,12 +266,12 @@ public class ccbpmServices extends Method
 			try
 			{
 				Node node = new Node(fk_node);
-				if (node.getIsStartNode())
+				if (node.isStartNode())
 				{
 					continue;
 				}
 
-					///启动逾期消息设置
+				///启动逾期消息设置
 				PushMsgs pushMsgs = new PushMsgs();
 				int count = pushMsgs.Retrieve(PushMsgAttr.FK_Flow, node.getFK_Flow(), PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListNode.NodeOverDue);
 				int maxDay = 0;
@@ -321,7 +319,7 @@ public class ccbpmServices extends Method
 
 				}
 
-					/// 启动逾期消息设置
+				/// 启动逾期消息设置
 
 				//获得该节点的处理内容.
 				String doOutTime = node.GetValStrByKey(NodeAttr.DoOutTime);
@@ -337,7 +335,7 @@ public class ccbpmServices extends Method
 							Node jumpToNode = new Node(jumpNode);
 
 							//设置默认同意.
-							bp.wf.Dev2Interface.WriteTrackWorkCheck(jumpToNode.getFK_Flow(), node.getNodeID(), workid, 0, "同意（预期自动审批）", null);
+							bp.wf.Dev2Interface.WriteTrackWorkCheck(jumpToNode.getFK_Flow(), node.getNodeID(), workid, 0, "同意（预期自动审批）", null,null);
 
 							//执行发送.
 							info = bp.wf.Dev2Interface.Node_SendWork(fk_flow, workid, null, null, jumpToNode.getNodeID(), null).ToMsgOfText();
@@ -457,10 +455,10 @@ public class ccbpmServices extends Method
 		}
 		bp.da.Log.DefaultLogWriteLine(LogType.Info, "结束扫描逾期流程数据.");
 	}
-	/** 
+	/**
 	 特殊处理天津的流程
 	 当指定的节点，到了10号，15号自动向下发送.
-	*/
+	 */
 	private void DoTianJinSpecFunc() throws Exception
 	{
 		int day = Integer.parseInt(DataType.getCurrentDay());
@@ -474,7 +472,7 @@ public class ccbpmServices extends Method
 		}
 
 
-			///#region 找到要逾期的数据.
+		///#region 找到要逾期的数据.
 		DataTable generTab = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
@@ -493,7 +491,7 @@ public class ccbpmServices extends Method
 
 		generTab = DBAccess.RunSQLReturnTable(sql);
 
-			///#endregion 找到要逾期的数据.
+		///#endregion 找到要逾期的数据.
 
 		// 遍历循环,逾期表进行处理.
 		String msg = "";
@@ -519,7 +517,7 @@ public class ccbpmServices extends Method
 					WorkNode firstwn = new WorkNode(workid, Integer.parseInt(fk_node));
 					String sendIfo = firstwn.NodeSend().ToMsgOfText();
 					msg = "流程  '" + node.getFlowName() + "',标题: '" + title + "'的应该完成时间为'" + compleateTime + "',当前节点'" + node.getName() +
-						  "'超时处理规则为'自动发送到下一节点',发送消息为:" + sendIfo;
+							"'超时处理规则为'自动发送到下一节点',发送消息为:" + sendIfo;
 
 					//输出消息.
 					Log.DefaultLogWriteLine(LogType.Info, msg);
@@ -527,7 +525,7 @@ public class ccbpmServices extends Method
 				catch (RuntimeException ex)
 				{
 					msg = "流程  '" + node.getFlowName() + "',标题: '" + title + "'的应该完成时间为'" + compleateTime + "',当前节点'" + node.getName() +
-						  "'超时处理规则为'自动发送到下一节点',发送异常:" + ex.getMessage();
+							"'超时处理规则为'自动发送到下一节点',发送异常:" + ex.getMessage();
 					Log.DefaultLogWriteLine(LogType.Error, msg);
 				}
 			}
@@ -538,15 +536,15 @@ public class ccbpmServices extends Method
 		}
 		Log.DefaultLogWriteLine(LogType.Info, "结束扫描逾期流程数据.");
 	}
-	/** 
+	/**
 	 发送消息
-	 * @throws Exception 
-	*/
+	 * @throws Exception
+	 */
 	private void DoSendMsg() throws Exception
 	{
 		int idx = 0;
 
-			///发送消息
+		///发送消息
 		SMSs sms = new SMSs();
 		QueryObject qo = new QueryObject(sms);
 		sms.Retrieve(SMSAttr.EmailSta, MsgSta.UnRun.getValue());
@@ -558,17 +556,17 @@ public class ccbpmServices extends Method
 				sm.Update();
 				continue;
 			}
-			try
-			{
-				sm.SendEmailNowAsync(sm.getEmail(), sm.getTitle(), sm.getDocOfEmail(),sm.getSendToEmpNo());
-			}
-			catch (RuntimeException ex)
-			{
-				bp.da.Log.DefaultLogWriteLineError(ex.getMessage());
-			}
+//			try
+//			{
+//				sm.SendEmailNowAsync(sm.getEmail(), sm.getTitle(), sm.getDocOfEmail());
+//			}
+//			catch (RuntimeException ex)
+//			{
+//				bp.da.Log.DefaultLogWriteLineError(ex.getMessage());
+//			}
 		}
 
-			/// 发送消息
+		/// 发送消息
 	}
-	
+
 }

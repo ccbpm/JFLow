@@ -1,12 +1,9 @@
 package bp.en;
-
-import bp.en.*;
-import bp.sys.Glo;
 import bp.web.*;
 
 import java.util.Enumeration;
 
-import bp.*;
+
 import bp.da.DataType;
 
 /** 
@@ -28,7 +25,7 @@ public class AttrOfSearch
 	{
 		return _IsHidden;
 	}
-	public final void setIsHidden(boolean value) throws Exception
+	public final void setIsHidden(boolean value)
 	{
 		_IsHidden = value;
 	}
@@ -43,7 +40,7 @@ public class AttrOfSearch
 	{
 		return _SymbolEnable;
 	}
-	public final void setSymbolEnable(boolean value) throws Exception
+	public final void setSymbolEnable(boolean value)
 	{
 		_SymbolEnable = value;
 	}
@@ -59,7 +56,7 @@ public class AttrOfSearch
 	{
 		return _Lab;
 	}
-	public final void setLab(String value) throws Exception
+	public final void setLab(String value)
 	{
 		_Lab = value;
 	}
@@ -74,16 +71,15 @@ public class AttrOfSearch
 	{
 		return _DefaultVal;
 	}
-	public final void setDefaultVal(String value) throws Exception
+	public final void setDefaultVal(String value)
 	{
 		_DefaultVal = value;
 	}
 	/** 
 	 默认值
-	 * @throws Exception 
+	 * @
 	*/
-	public final String getDefaultValRun() throws Exception
-	{
+	public final String getDefaultValRun() throws Exception {
 		if (_DefaultVal == null)
 		{
 			return null;
@@ -116,21 +112,27 @@ public class AttrOfSearch
 				return _DefaultVal.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
 			}
 
+			if (_DefaultVal.contains("@WebUser.OrgNo"))
+			{
+				return _DefaultVal.replace("@WebUser.OrgNo", WebUser.getOrgNo());
+			}
+
+
 			if (_DefaultVal.contains("@WebUser.FK_DeptNameOfFull"))
 			{
 				return _DefaultVal.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
 			}
 
 				// 处理传递过来的参数。
-			Enumeration enu = Glo.getRequest().getParameterNames();
+			Enumeration enu = bp.sys.base.Glo.getRequest().getParameterNames();
 			while (enu.hasMoreElements()) {
 				// 判断是否有内容，hasNext()
 				String k = (String) enu.nextElement();
-				if (DataType.IsNullOrEmpty(k))
+				if (bp.da.DataType.IsNullOrEmpty(k))
 				{
 					continue;
 				}
-				return _DefaultVal.replace("@" + k, Glo.getRequest().getParameter(k));
+				return _DefaultVal.replace("@" + k, bp.sys.base.Glo.getRequest().getParameter(k));
 			}
 			
 			
@@ -148,7 +150,7 @@ public class AttrOfSearch
 	{
 		return _defaultSymbol;
 	}
-	public final void setDefaultSymbol(String value) throws Exception
+	public final void setDefaultSymbol(String value)
 	{
 		_defaultSymbol = value;
 	}
@@ -163,7 +165,7 @@ public class AttrOfSearch
 	{
 		return _RefAttr;
 	}
-	public final void setRefAttrKey(String value) throws Exception
+	public final void setRefAttrKey(String value)
 	{
 		_RefAttr = value;
 	}
@@ -178,7 +180,7 @@ public class AttrOfSearch
 	{
 		return _Key;
 	}
-	public final void setKey(String value) throws Exception
+	public final void setKey(String value)
 	{
 		_Key = value;
 	}
@@ -193,7 +195,7 @@ public class AttrOfSearch
 	{
 		return _TBWidth;
 	}
-	public final void setTBWidth(int value) throws Exception
+	public final void setTBWidth(int value)
 	{
 		_TBWidth = value;
 	}
@@ -204,9 +206,9 @@ public class AttrOfSearch
 		///构造方法
 	/** 
 	 构造一个普通的查询属性
-	 * @throws Exception 
+	 * @
 	*/
-	public AttrOfSearch(String key, String lab, String refAttr, String DefaultSymbol, String defaultValue, int tbwidth, boolean isHidden) throws Exception
+	public AttrOfSearch(String key, String lab, String refAttr, String DefaultSymbol, String defaultValue, int tbwidth, boolean isHidden)
 	{
 		this.setKey(key);
 		this.setLab(lab);

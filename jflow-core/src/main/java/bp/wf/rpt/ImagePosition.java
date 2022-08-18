@@ -1,8 +1,5 @@
 package bp.wf.rpt;
 
-import bp.wf.*;
-import java.util.*;
-import java.io.*;
 
 /*
 * 
@@ -37,7 +34,7 @@ public enum ImagePosition
 		return this.ordinal();
 	}
 
-	public static ImagePosition forValue(int value) throws Exception
+	public static ImagePosition forValue(int value) 
 	{
 		return values()[value];
 	}

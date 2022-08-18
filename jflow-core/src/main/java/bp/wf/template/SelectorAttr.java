@@ -1,5 +1,8 @@
 package bp.wf.template;
-import bp.en.EntityNoNameAttr;
+
+
+import bp.en.*;
+
 
 /** 
  Selector属性

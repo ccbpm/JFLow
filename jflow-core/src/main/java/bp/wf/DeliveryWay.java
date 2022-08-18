@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  投递方式
 */
@@ -9,6 +11,10 @@ public enum DeliveryWay
 	 按岗位(以部门为纬度)
 	*/
 	ByStation(0),
+	/** 
+	 本部门内的人员
+	*/
+	FindSpecDeptEmpsInStationlist(19),
 	/** 
 	 按部门
 	*/
@@ -81,10 +87,6 @@ public enum DeliveryWay
 	 从人员到人员
 	*/
 	ByFromEmpToEmp(18),
-	/**
-	 * 本部门内的人员
-	 */
-	FindSpecDeptEmpsInStationlist(19),
 	/** 
 	 按照岗位计算-范围内的
 	*/
@@ -101,9 +103,13 @@ public enum DeliveryWay
 	 按照部门领导计算
 	*/
 	ByDeptLeader(23),
-	/**
-	 * 找自己的直属领导
-	 */
+	/** 
+	 按照部门分管领导计算
+	*/
+	ByDeptShipLeader(28),
+	/** 
+	 找自己的直属领导.
+	*/
 	ByEmpLeader(50),
 	/** 
 	 按照用户组计算(本组织范围内)
@@ -130,13 +136,23 @@ public enum DeliveryWay
 	*/
 	BySelfUrl(44),
 	/** 
-	 按照自定义API/URL
+	 按照设置的WebAPI接口获取的数据计算
 	*/
 	ByAPIUrl(45),
-	/**
-	 * 按照绑定部门人员选择器
-	 */
-	ByDeptAndEmpField(46),	
+	/** 
+	 发送人的上级部门的负责人
+	 就是找上级领导主管.
+	*/
+	BySenderParentDeptLeader(46),
+	/** 
+	 发送人上级部门指定的岗位
+	*/
+	BySenderParentDeptStations(47),
+	/** 
+	 外部用户
+	*/
+	ByGuest(51),
+
 	/** 
 	 按照ccflow的BPM模式处理
 	*/
@@ -146,8 +162,7 @@ public enum DeliveryWay
 
 	private int intValue;
 	private static java.util.HashMap<Integer, DeliveryWay> mappings;
-	private static java.util.HashMap<Integer, DeliveryWay> getMappings()
-	{
+	private static java.util.HashMap<Integer, DeliveryWay> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (DeliveryWay.class)
@@ -162,18 +177,15 @@ public enum DeliveryWay
 	}
 
 	private DeliveryWay(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static DeliveryWay forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

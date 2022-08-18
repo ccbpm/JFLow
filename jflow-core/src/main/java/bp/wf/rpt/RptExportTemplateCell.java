@@ -1,6 +1,8 @@
 package bp.wf.rpt;
+
 import bp.da.DataType;
-/** 
+
+/**
  报表导出模板字段与单元格绑定信息对象
 */
 public class RptExportTemplateCell
@@ -11,7 +13,7 @@ public class RptExportTemplateCell
 	 单元格行号
 	*/
 	private int RowIdx;
-	public final int getRowIdx()
+	public final int getRowIdx()throws Exception
 	{
 		return RowIdx;
 	}
@@ -24,7 +26,7 @@ public class RptExportTemplateCell
 	 单元格列号
 	*/
 	private int ColumnIdx;
-	public final int getColumnIdx()
+	public final int getColumnIdx()throws Exception
 	{
 		return ColumnIdx;
 	}
@@ -36,7 +38,7 @@ public class RptExportTemplateCell
 	/** 
 	 获取单元格名称
 	*/
-	public final String getCellName()
+	public final String getCellName()throws Exception
 	{
 		if (DataType.IsNullOrEmpty(_cellName))
 		{
@@ -50,7 +52,7 @@ public class RptExportTemplateCell
 	  单元格所属sheet表名
 	*/
 	private String SheetName;
-	public final String getSheetName()
+	public final String getSheetName()throws Exception
 	{
 		return SheetName;
 	}
@@ -63,7 +65,7 @@ public class RptExportTemplateCell
 	 字段所属fk_mapdata
 	*/
 	private String FK_MapData;
-	public final String getFK_MapData()
+	public final String getFK_MapData()throws Exception
 	{
 		return FK_MapData;
 	}
@@ -76,7 +78,7 @@ public class RptExportTemplateCell
 	 字段英文名
 	*/
 	private String KeyOfEn;
-	public final String getKeyOfEn()
+	public final String getKeyOfEn()throws Exception
 	{
 		return KeyOfEn;
 	}
@@ -89,7 +91,7 @@ public class RptExportTemplateCell
 	 明细表字段所属fk_mapdata
 	*/
 	private String FK_DtlMapData;
-	public final String getFK_DtlMapData()
+	public final String getFK_DtlMapData()throws Exception
 	{
 		return FK_DtlMapData;
 	}
@@ -102,7 +104,7 @@ public class RptExportTemplateCell
 	 明细表字段英文名
 	*/
 	private String DtlKeyOfEn;
-	public final String getDtlKeyOfEn()
+	public final String getDtlKeyOfEn()throws Exception
 	{
 		return DtlKeyOfEn;
 	}
@@ -114,8 +116,8 @@ public class RptExportTemplateCell
 	/** 
 	 获取单元格的显示名称，格式如A1,B2
 	 
-	 @param columnIdx 单元格列号
-	 @param rowIdx 单元格行号
+	 param columnIdx 单元格列号
+	 param rowIdx 单元格行号
 	 @return 
 	*/
 	public static String GetCellName(int columnIdx, int rowIdx)
@@ -142,11 +144,11 @@ public class RptExportTemplateCell
 		switch (alphaCount)
 		{
 			case 1:
-				return (char)(col + 64)+"" + row;
+				return (char)(col + 64) + "" + row;
 			case 2:
-				return (char)((col / 26) + 64)+"" + (char)((col % 26) + 64) + row;
+				return (char)((col / 26) + 64) + "" + (char)((col % 26) + 64) + row;
 			case 3:
-				return (char)((col / 26 / 26) + 64)+"" + (char)(((col - col / 26 / 26 * 26 * 26) / 26) + 64) + (char)((col % 26) + 64) + row;
+				return (char)((col / 26 / 26) + 64) + "" + (char)(((col - col / 26 / 26 * 26 * 26) / 26) + 64) + "" + (char)((col % 26) + 64) + row;
 		}
 
 		return "Unkown";

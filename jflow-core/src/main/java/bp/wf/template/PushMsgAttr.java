@@ -1,4 +1,6 @@
 package bp.wf.template;
+
+
 /** 
  消息推送属性
 */
@@ -30,7 +32,7 @@ public class PushMsgAttr
 	public static final String Tag = "Tag";
 
 
-		///消息设置.
+		///#region 消息设置.
 	/** 
 	 是否启用发送邮件
 	*/
@@ -56,7 +58,7 @@ public class PushMsgAttr
 	*/
 	public static final String MobilePushEnable = "MobilePushEnable";
 
-		/// 消息设置.
+		///#endregion 消息设置.
 
 	/** 
 	 短信字段

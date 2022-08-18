@@ -1,11 +1,13 @@
 package bp.wf.data;
 
-import bp.en.EntityNoNameAttr;
+import bp.en.*;
 
-public class AutoRptAttr  extends EntityNoNameAttr{
-	//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	 ///#region 基本属性
-	/** 
+/** 
+ 自动报表 属性
+*/
+public class AutoRptAttr extends EntityNoNameAttr
+{
+	/**
 	 到达人员（可以为空）
 	*/
 	public static final String ToEmps = "ToEmps";
@@ -22,6 +24,5 @@ public class AutoRptAttr  extends EntityNoNameAttr{
 	 执行的时间点
 	*/
 	public static final String Dots = "Dots";
-//C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:
-	///#endregion
+
 }

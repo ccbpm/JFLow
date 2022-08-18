@@ -1,11 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-import bp.en.*;
-import bp.web.*;
-import bp.*;
-import java.math.*;
-
 public enum MsgShowType
 {
 	/** 
@@ -28,7 +22,7 @@ public enum MsgShowType
 		return this.ordinal();
 	}
 
-	public static MsgShowType forValue(int value) throws Exception
+	public static MsgShowType forValue(int value)
 	{
 		return values()[value];
 	}

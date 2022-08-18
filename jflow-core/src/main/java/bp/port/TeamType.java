@@ -1,50 +1,54 @@
 package bp.port;
 
 import bp.en.*;
-import bp.en.Map;
 
-/**
- * 用户组类型
- */
-public class TeamType extends EntityNoName {
+/** 
+  用户组类型
+*/
+public class TeamType extends EntityNoName
+{
 
-	private static final long serialVersionUID = 1L;
+		///#region 属性
 
-	/// 实现基本的方方法
+		///#endregion
+
+
+		///#region 实现基本的方方法
 	@Override
-	public UAC getHisUAC() throws Exception {
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
 
-	///
+		///#endregion
 
-	/// 构造方法
-	/**
-	 * 用户组类型
-	 */
-	public TeamType() {
+
+		///#region 构造方法
+	/** 
+	 用户组类型
+	*/
+	public TeamType()  {
 	}
-
-	/**
-	 * 用户组类型
-	 * 
-	 * @param _No
-	 * @throws Exception 
-	 */
-	public TeamType(String _No) throws Exception {
+	/** 
+	 用户组类型
+	 
+	 param _No
+	*/
+	public TeamType(String _No)
+	{
 		super(_No);
 	}
 
-	///
+		///#endregion
 
-	/**
-	 * 用户组类型Map
-	 */
+	/** 
+	 用户组类型Map
+	*/
 	@Override
-	public Map getEnMap() throws Exception {
-		if (this.get_enMap() != null) {
+	public bp.en.Map getEnMap() {
+		if (this.get_enMap() != null)
+		{
 			return this.get_enMap();
 		}
 		Map map = new Map("Port_TeamType", "用户组类型");

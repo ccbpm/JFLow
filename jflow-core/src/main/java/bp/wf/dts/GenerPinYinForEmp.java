@@ -1,12 +1,8 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.port.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.web.WebUser;
-import bp.wf.*;
-
+import bp.port.*;
 /** 
  修改人员编号 的摘要说明
 */
@@ -15,7 +11,7 @@ public class GenerPinYinForEmp extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public GenerPinYinForEmp()
+	public GenerPinYinForEmp()throws Exception
 	{
 		this.Title = "为人员生成拼音，放入到 Port_Emp.PinYin 字段里.";
 		this.Help = "为了检索方便，为所有的人员生成拼音, 方便在会签，移交，接受人查询。";
@@ -34,12 +30,11 @@ public class GenerPinYinForEmp extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getIsAdmin() == true)
+		if (bp.web.WebUser.getIsAdmin() == true)
 		{
 			return true;
 		}
@@ -52,24 +47,23 @@ public class GenerPinYinForEmp extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		if (DBAccess.IsView("Port_Emp", bp.difference.SystemConfig.getAppCenterDBType()) == true)
 		{
 			return "port_emp 是一个视图无法生成拼音.";
 		}
 
-		if (DBAccess.IsExitsTableCol("Port_Emp", bp.gpm.EmpAttr.PinYin) == false)
+		if (DBAccess.IsExitsTableCol("Port_Emp", EmpAttr.PinYin) == false)
 		{
 			return "port_emp 不包含PinYin 这一列,无法生成拼音.";
 		}
 
-		bp.gpm.Emps emps = new bp.gpm.Emps();
+		Emps emps = new Emps();
 		emps.RetrieveAll();
-		for (bp.gpm.Emp item : emps.ToJavaList())
+		for (Emp item : emps.ToJavaList() )
 		{
 			if (item.getPinYin().contains("/") == true)
 			{

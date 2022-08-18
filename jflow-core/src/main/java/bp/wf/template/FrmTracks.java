@@ -1,11 +1,11 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.wf.template.*;
 import bp.wf.*;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -15,23 +15,21 @@ import java.util.*;
 public class FrmTracks extends Entities
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 轨迹图标组件s
 	*/
-	public FrmTracks()
-	{
+	public FrmTracks() throws Exception {
 	}
 	/** 
 	 轨迹图标组件s
 	 
-	 @param fk_mapdata s
+	 param fk_mapdata s
 	*/
-	public FrmTracks(String fk_mapdata) throws Exception
-	{
-		if (SystemConfig.getIsDebug())
+	public FrmTracks(String fk_mapdata) throws Exception {
+		if (bp.difference.SystemConfig.getIsDebug())
 		{
-			this.Retrieve("No", fk_mapdata);
+			this.Retrieve("No", fk_mapdata, null);
 		}
 		else
 		{
@@ -42,22 +40,20 @@ public class FrmTracks extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmTrack();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List
+		///#region 为了适应自动翻译成java的需要,把实体转换成List
 	/** 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmTrack> ToJavaList()
-	{
-		return (List<FrmTrack>)(Object)this;
+	public final java.util.List<FrmTrack> ToJavaList() {
+		return (java.util.List<FrmTrack>)(Object)this;
 	}
 
 	/** 
@@ -65,8 +61,7 @@ public class FrmTracks extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmTrack> Tolist()
-	{
+	public final ArrayList<FrmTrack> Tolist()  {
 		ArrayList<FrmTrack> list = new ArrayList<FrmTrack>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -75,5 +70,5 @@ public class FrmTracks extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

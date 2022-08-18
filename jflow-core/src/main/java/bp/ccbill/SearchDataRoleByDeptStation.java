@@ -1,5 +1,7 @@
 package bp.ccbill;
 
+import bp.*;
+
 public enum SearchDataRoleByDeptStation
 {
 	/** 
@@ -15,8 +17,7 @@ public enum SearchDataRoleByDeptStation
 
 	private int intValue;
 	private static java.util.HashMap<Integer, SearchDataRoleByDeptStation> mappings;
-	private static java.util.HashMap<Integer, SearchDataRoleByDeptStation> getMappings()
-	{
+	private static java.util.HashMap<Integer, SearchDataRoleByDeptStation> getMappings() {
 		if (mappings == null)
 		{
 			synchronized (SearchDataRoleByDeptStation.class)
@@ -30,19 +31,16 @@ public enum SearchDataRoleByDeptStation
 		return mappings;
 	}
 
-	private SearchDataRoleByDeptStation(int value) 
-	{
-		intValue = value;
+	private SearchDataRoleByDeptStation(int value)
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static SearchDataRoleByDeptStation forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

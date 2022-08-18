@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  明细表工作方式
@@ -23,7 +22,7 @@ public enum DtlModel
 		return this.ordinal();
 	}
 
-	public static DtlModel forValue(int value) throws Exception
+	public static DtlModel forValue(int value)
 	{
 		return values()[value];
 	}

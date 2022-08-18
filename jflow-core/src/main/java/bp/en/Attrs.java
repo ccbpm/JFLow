@@ -19,7 +19,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	
 
 	///关于属性的增加 String
-	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -35,24 +35,24 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		attr.setMyFieldType(_FieldType);
 		this.Add(attr);
 	}
-	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		AddTBString(key, key, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
-	public final void AddTBString(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception
+	public final void AddTBString(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
 	{
 		AddTBString(key, field, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0, 2000, 300, 300);
 	}
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, int rows) throws Exception
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, int rows)
 	{
 		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, rows);
 	}
-	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, int rows) throws Exception
+	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, int rows)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -72,10 +72,10 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 增加附件
 	 
-	 @param fileDesc
-	 * @throws Exception 
+	 param fileDesc
+	 * @
 	*/
-	public final void AddMyFile(String fileDesc) throws Exception
+	public final void AddMyFile(String fileDesc)
 	{
 		this.AddTBString(EntityNoMyFileAttr.MyFileName, null, fileDesc, false, false, 0, 100, 200);
 		this.AddTBString(EntityNoMyFileAttr.MyFilePath, null, "MyFilePath", false, false, 0, 100, 200);
@@ -96,15 +96,15 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 增加一个普通的类型。
 	 
-	 @param key 键
-	 @param _Field 字段
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
+	 param key 键
+	 param _Field 字段
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
 	*/
-	public final void AddTBInt(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBInt(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -120,18 +120,18 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 增加一个普通的类型。字段值与属性相同。
 	 
-	 @param key 键		 
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
+	 param key 键
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
 	*/
-	public final void AddTBInt(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBInt(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBInt(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
-	public final void AddBoolen(String key, boolean defaultVal, String desc) throws Exception
+	public final void AddBoolen(String key, boolean defaultVal, String desc)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -158,7 +158,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 
 		///关于属性的增加 Float类型
-	public final void AddTBFloat(String key, String _Field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBFloat(String key, String _Field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -170,7 +170,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		attr.setUIIsReadonly(isReadonly);
 		this.Add(attr);
 	}
-	public final void AddTBFloat(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBFloat(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBFloat(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
@@ -179,7 +179,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 
 		///Decimal类型
-	public final void AddTBDecimal(String key, String _Field, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDecimal(String key, String _Field, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -191,7 +191,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		attr.setUIIsReadonly(isReadonly);
 		this.Add(attr);
 	}
-	public final void AddTBDecimal(String key, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDecimal(String key, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBDecimal(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
@@ -200,7 +200,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 
 		///日期
-	public final void AddTBDate(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDate(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -214,20 +214,20 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		this.Add(attr);
 	}
 
-	public final void AddTBDate(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDate(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBDate(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 	/** 
 	 增加日期类型的控健(默认日期是当前日期)
 	 
-	 @param key key
-	 @param desc desc
-	 @param uiVisable uiVisable
-	 @param isReadonly isReadonly
-	 * @throws Exception 
+	 param key key
+	 param desc desc
+	 param uiVisable uiVisable
+	 param isReadonly isReadonly
+	 * @
 	*/
-	public final void AddTBDate(String key, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDate(String key, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBDate(key, key, DataType.dateToStr(new Date(), DataType.getSysDataFormat()), desc, uiVisable, isReadonly);
 	}
@@ -238,14 +238,14 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 增加日期类型的控健
 	 
-	 @param key 健值
-	 @param defaultVal 默认值
-	 @param desc 描述
-	 @param uiVisable 是不是可见
-	 @param isReadonly 是不是只读
-	 * @throws Exception 
+	 param key 健值
+	 param defaultVal 默认值
+	 param desc 描述
+	 param uiVisable 是不是可见
+	 param isReadonly 是不是只读
+	 * @
 	*/
-	public final void AddTBDateTime(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDateTime(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -260,48 +260,48 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		attr.setUIWidth(100);
 		this.Add(attr);
 	}
-	public final void AddTBDateTime(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDateTime(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
 	{
 		this.AddTBDateTime(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
-	public final void AddTBDateTime(String key, String desc, boolean uiVisable, boolean isReadonly) throws Exception
+	public final void AddTBDateTime(String key, String desc, boolean uiVisable, boolean isReadonly)
 	{
-		this.AddTBDateTime(key, key, DataType.dateToStr(new Date(), DataType.getSysDataTimeFormat()), desc, uiVisable, isReadonly);
+		this.AddTBDateTime(key, key, DataType.dateToStr(new Date(), DataType.getSysDateTimeFormat()), desc, uiVisable, isReadonly);
 	}
 
 
 		///于帮定自定义,枚举类型有关系的操作。
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey) throws Exception
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
 	{
 		this.AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, null);
 	}
 	/** 
 	 /
 	 
-	 @param key
-	 @param field
-	 @param defaultVal
-	 @param desc
-	 @param isUIVisable
-	 @param isUIEnable
-	 @param sysEnumKey
-	 * @throws Exception 
+	 param key
+	 param field
+	 param defaultVal
+	 param desc
+	 param isUIVisable
+	 param isUIEnable
+	 param sysEnumKey
+	 * @
 	*/
-	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey) throws Exception
+	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
 	{
 		this.AddDDLSysEnum(key, field, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, null);
 	}
 	/** 
 	 自定义枚举类型
 	 
-	 @param key 键
-	 @param field 字段
-	 @param defaultVal 默认
-	 @param desc 描述
-	 @param sysEnumKey Key
-	 * @throws Exception 
+	 param key 键
+	 param field 字段
+	 param defaultVal 默认
+	 param desc 描述
+	 param sysEnumKey Key
+	 * @
 	*/
-	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal) throws Exception
+	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -320,17 +320,17 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 自定义枚举类型
 	 
-	 @param key 键		
-	 @param defaultVal 默认
-	 @param desc 描述
-	 @param sysEnumKey Key
-	 * @throws Exception 
+	 param key 键
+	 param defaultVal 默认
+	 param desc 描述
+	 param sysEnumKey Key
+	 * @
 	*/
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVals) throws Exception
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVals)
 	{
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, cfgVals);
 	}
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable) throws Exception
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable)
 	{
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, key);
 	}
@@ -342,17 +342,17 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 于实体有关系的操作。
 	 
-	 @param key 健值
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param dataType DataType类型
-	 @param desc 描述
-	 @param ens 实体集合
-	 @param refKey 关联的建
-	 @param refText 关联的Text
-	 * @throws Exception 
+	 param key 健值
+	 param field 字段
+	 param defaultVal 默认值
+	 param dataType DataType类型
+	 param desc 描述
+	 param ens 实体集合
+	 param refKey 关联的建
+	 param refText 关联的Text
+	 * @
 	*/
-	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, FieldType _fildType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, FieldType _fildType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -364,7 +364,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
 		attr.setUIBindKey(ens.toString());
-		//attr.UIBindKeyOfEn = ens.getGetNewEntity().ToString();
+		//attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
 		attr.setHisFKEns(ens);
 
 		attr.setHisFKEns(ens);
@@ -377,13 +377,13 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 		///DDLSQL
 
-	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql) throws Exception
+	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql)
 	{
 		AddDDLSQL(key, defaultVal, desc, sql, true);
 	}
 
 
-	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable) throws Exception
+	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable)
 	{
 		if (defaultVal == null)
 		{
@@ -435,24 +435,23 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 		/// DDLSQL
 
-	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, field, defaultVal, dataType, FieldType.FK, desc, ens, refKey, refText, uiIsEnable);
 	}
 	/** 
 	 于实体有关系的操作。字段与属性名称相同。
 	 
-	 @param key 健值
-	 @param field 字段
-	 @param defaultVal 默认值
-	 @param dataType DataType类型
-	 @param desc 描述
-	 @param ens 实体集合
-	 @param refKey 关联的建
-	 @param refText 关联的Text
-	 * @throws Exception 
+	 param key 健值
+	 param defaultVal 默认值
+	 param dataType DataType类型
+	 param desc 描述
+	 param ens 实体集合
+	 param refKey 关联的建
+	 param refText 关联的Text
+	 * @
 	*/
-	public final void AddDDLEntities(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
 	{
 		AddDDLEntities(key, key, defaultVal, dataType, desc, ens, refKey, refText, uiIsEnable);
 	}
@@ -461,11 +460,11 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 
 		///entityNoName
-	public final void AddDDLEntities(String key, Object defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, Object defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, field, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
@@ -474,7 +473,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 
 		///EntitiesSimpleTree
-	public final void AddDDLEntities(String key, Object defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, Object defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
@@ -483,17 +482,17 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 
 		///EntitiesOIDName
-	public final void AddDDLEntities(String key, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppInt, desc, ens, "OID", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable) throws Exception
+	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable)
 	{
 		this.AddDDLEntities(key, field, defaultVal, DataType.AppInt, desc, ens, "OID", "Name", uiIsEnable);
 	}
 
 
-	public final Attrs Clone() throws Exception
+	public final Attrs Clone()
 	{
 		Attrs attrs = new Attrs();
 		for (Attr attr : this)
@@ -505,11 +504,10 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 下一个Attr 是否是 Doc 类型.
 	 
-	 @param key
+	 param CurrentKey
 	 @return 
 	*/
-	public final Attr NextAttr(String CurrentKey)
-	{
+	public final Attr NextAttr(String CurrentKey)  {
 		int i = this.GetIndexByKey(CurrentKey);
 
 		if (this.size() > i)
@@ -519,8 +517,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 		return this.get(i + 1) instanceof Attr ? (Attr)this.get(i + 1) : null;
 	}
-	public final Attr PrvAttr(String CurrentKey)
-	{
+	public final Attr PrvAttr(String CurrentKey)  {
 		int i = this.GetIndexByKey(CurrentKey);
 
 		if (this.size() < i)
@@ -533,11 +530,10 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 是否包含属性key。
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final boolean Contains(String key)
-	{
+	public final boolean contains(String key)  {
 		for (Attr attr : this)
 		{
 			if (attr.getKey().equals(key))
@@ -547,8 +543,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		}
 		return false;
 	}
-	public final boolean ContainsUpper(String key)
-	{
+	public final boolean ContainsUpper(String key)  {
 		for (Attr attr : this)
 		{
 			if (attr.getKey().toUpperCase().equals(key.toUpperCase()))
@@ -578,11 +573,10 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 通过Key ， 取出他的Index.
 	 
-	 @param key Key
+	 param key Key
 	 @return index
 	*/
-	public final int GetIndexByKey(String key)
-	{
+	public final int GetIndexByKey(String key)  {
 		for (int i = 0 ; i < this.size() ; i++)
 		{
 			if (this.get(i).getKey().equals(key))
@@ -594,8 +588,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	}
 
 
-	public final Attr GetAttrByKey(String key)
-	{
+	public final Attr GetAttrByKey(String key)  {
 		for (Attr item : this)
 		{
 			if (item.getKey().equals(key))
@@ -605,11 +598,10 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		}
 		return null;
 	}
-	public final Attr GetAttrByKeyOfEn(String Field)
-	{
+	public final Attr GetAttrByKeyOfEn(String Field)  {
 		for (Attr item : this)
 		{
-			if (item.getField().equals(Field))
+			if (DataType.IsNullOrEmpty(item.getField())==false && item.getField().equals(Field))
 			{
 				return item;
 			}
@@ -619,11 +611,10 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 属性集合
 	 
-	 @param cfgKeys 约定的字段格式
-	 * @throws Exception 
+	 param cfgKeys 约定的字段格式
+	 * @
 	*/
-	public Attrs(String cfgKeys) throws Exception
-	{
+	public Attrs(String cfgKeys)  {
 
 		/**
 		 *  根据约定的格式的字符串生成集合.
@@ -677,10 +668,9 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 	/** 
 	 转换为mapattrs
-	 * @throws Exception 
+	 * @
 	*/
-	public final MapAttrs ToMapAttrs() throws Exception
-	{
+	public final MapAttrs ToMapAttrs()  {
 		MapAttrs mapAttrs = new MapAttrs();
 		for (Attr item : this)
 		{
@@ -706,20 +696,21 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 			mattr.setDefValReal(item.getDefaultValOfReal());
 			mattr.setDefValType(item.getDefValType());
 
-			mattr.setUIIsEnable(item.getUIIsReadonly());
+			mattr.setUIIsEnable(!item.getUIIsReadonly());
 
-			if (item.getMyFieldType() == FieldType.Normal || item.getMyFieldType() == FieldType.PK)
+			if (item.getIsSupperText() == 1)
+				mattr.setTextModel(3);
+			if (item.getUIHeight() > 10)
 			{
-				if (item.getMyDataType() == DataType.AppInt || item.getMyDataType() == DataType.AppFloat || item.getMyDataType() == DataType.AppDouble || item.getMyDataType() == DataType.AppMoney || item.getMyDataType() == DataType.AppString || item.getMyDataType() == DataType.AppDate || item.getMyDataType() == DataType.AppDateTime)
-				{
-					mattr.setUIIsEnable(!item.getUIIsReadonly());
-				}
+				if (item.UIIsLine == true)
+					mattr.setColSpan(4);
+				else
+					mattr.setColSpan(3);
 			}
-
-	
-			if (item.UIIsLine == true)
+			else
 			{
-				mattr.setColSpan(3);
+				if (item.UIIsLine == true)
+					mattr.setColSpan(3);
 			}
 
 				//帮助url.
@@ -743,7 +734,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 		return mapAttrs;
 	}
-	public final void Add(Attr attr) throws Exception
+	public final void Add(Attr attr)
 	{
 		if (attr.getField() == null || attr.getField().equals(""))
 		{
@@ -756,11 +747,11 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	/** 
 	 加入一个属性。
 	 
-	 @param attr attr
-	 @param isAddHisRefText isAddHisRefText
-	 * @throws Exception 
+	 param attr attr
+	 param isAddHisRefText isAddHisRefText
+	 * @
 	*/
-	public final void Add(Attr attr, boolean isAddHisRefText, boolean isAddHisRefName) throws Exception
+	public final void Add(Attr attr, boolean isAddHisRefText, boolean isAddHisRefName)
 	{
 		for (Attr myattr : this)
 		{
@@ -782,7 +773,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 			this.AddRefAttrName(attr);
 		}
 	}
-	private void AddRefAttrText(Attr attr) throws Exception
+	private void AddRefAttrText(Attr attr)
 	{
 		if (attr.getMyFieldType() == FieldType.Enum && attr.getMyDataType() == DataType.AppString)
 		{
@@ -822,7 +813,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 
 		}
 	}
-	private void AddRefAttrName(Attr attr) throws Exception
+	private void AddRefAttrName(Attr attr)
 	{
 		if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.PKFK)
 		{

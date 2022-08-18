@@ -1,4 +1,6 @@
 package bp.sys;
+import bp.sys.base.FormEventBase;
+import bp.sys.base.FormEventBaseDtl;
 import bp.tools.Cryptos;
 import bp.da.*;
 import bp.difference.ContextHolderUtils;
@@ -13,6 +15,7 @@ import java.math.*;
 */
 public class Glo
 {
+
 	/// <summary>
     /// 获得真实UserNo,如果是SAAS模式.
     /// </summary>
@@ -41,14 +44,16 @@ public class Glo
 
 	/** 
 	 清楚设置的缓存.
-	 @param frmID
+	 param frmID
 	 * @throws Exception 
 	*/
 	public static void ClearMapDataAutoNum(String frmID) throws Exception
 	{
 		//执行清空缓存到的AutoNum.
-		MapData md = new MapData(frmID);
-		md.ClearAutoNumCash(true); //更新缓存.
+		MapData md = new MapData();
+		md.setNo(frmID);
+		if(md.RetrieveFromDBSources()!=0)
+			md.ClearAutoNumCash(true); //更新缓存.
 	}
 
 	/** 
@@ -63,9 +68,9 @@ public class Glo
 	/** 
 	 获得真实的数据类型
 	 
-	 @param attrs 属性集合
-	 @param key key
-	 @param val 值
+	 param attrs 属性集合
+	 param key key
+	 param val 值
 	 @return 返回val真实的数据类型.
 	*/
 	public static Object GenerRealType(Attrs attrs, String key, Object val)
@@ -104,7 +109,7 @@ public class Glo
 	/** 
 	 获得节点事件实体
 	 
-	 @param enName 实例名称
+	 param enName 实例名称
 	 @return 获得节点事件实体,如果没有就返回为空.
 	*/
 	public static BuessUnitBase GetBuessUnitEntityByEnName(String enName)
@@ -130,8 +135,8 @@ public class Glo
 	/** 
 	 获得事件实体String，根据编号或者流程标记
 	 
-	 @param flowMark 流程标记
-	 @param flowNo 流程编号
+	 param flowMark 流程标记
+	 param flowNo 流程编号
 	 @return null, 或者流程实体.
 	*/
 	public static String GetBuessUnitEntityStringByFlowMark(String flowMark, String flowNo)
@@ -146,8 +151,8 @@ public class Glo
 	/** 
 	 获得业务单元.
 	 
-	 @param flowMark 流程标记
-	 @param flowNo 流程编号
+	 param flowMark 流程标记
+	 param flowNo 流程编号
 	 @return null, 或者流程实体.
 	*/
 	public static BuessUnitBase GetBuessUnitEntityByFlowMark(String flowMark, String flowNo)
@@ -183,7 +188,7 @@ public class Glo
 	/** 
 	 获得节点事件实体
 	 
-	 @param enName 实例名称
+	 param enName 实例名称
 	 @return 获得节点事件实体,如果没有就返回为空.
 	*/
 	public static FormEventBase GetFormEventBaseByEnName(String enName)
@@ -232,7 +237,7 @@ public class Glo
 	/** 
 	 获得节点事件实体
 	 
-	 @param enName 实例名称
+	 param enName 实例名称
 	 @return 获得节点事件实体,如果没有就返回为空.
 	*/
 	public static FormEventBaseDtl GetFormDtlEventBaseByEnName(String dtlEnName)
@@ -320,7 +325,7 @@ public class Glo
 	/** 
 	 写入一条消息
 	 
-	 @param msg 消息
+	 param msg 消息
 	*/
 	public static void WriteLineInfo(String msg)
 	{
@@ -329,7 +334,7 @@ public class Glo
 	/** 
 	 写入一条警告
 	 
-	 @param msg 消息
+	 param msg 消息
 	*/
 	public static void WriteLineWarning(String msg)
 	{
@@ -338,7 +343,7 @@ public class Glo
 	/** 
 	 写入一条错误
 	 
-	 @param msg 消息
+	 param msg 消息
 	*/
 	public static void WriteLineError(String msg)
 	{
@@ -352,10 +357,10 @@ public class Glo
 	/** 
 	 写入用户日志
 	 
-	 @param logType 类型
-	 @param empNo 操作员编号
-	 @param msg 信息
-	 @param ip IP
+	 param logType 类型
+	 param empNo 操作员编号
+	 param msg 信息
+	 param ip IP
 	 * @throws Exception 
 	*/
 	public static void WriteUserLog(String logType, String empNo, String msg, String ip) throws Exception
@@ -372,9 +377,9 @@ public class Glo
 	/** 
 	 写入用户日志
 	 
-	 @param logType 日志类型
-	 @param empNo 操作员编号
-	 @param msg 消息
+	 param logType 日志类型
+	 param empNo 操作员编号
+	 param msg 消息
 	*/
 	public static void WriteUserLog(String logType, String empNo, String msg)
 	{
@@ -387,10 +392,10 @@ public class Glo
 	 产生消息,senderEmpNo是为了保证写入消息的唯一性，receiveid才是真正的接收者.
 	 如果插入失败.
 	 
-	 @param fromEmpNo 发送人
-	 @param now 发送时间
-	 @param msg 消息内容
-	 @param sendToEmpNo 接受人
+	 param fromEmpNo 发送人
+	 param now 发送时间
+	 param msg 消息内容
+	 param sendToEmpNo 接受人
 	*/
 	public static void SendMessageToCCIM(String fromEmpNo, String sendToEmpNo, String msg, String now)
 	{
@@ -400,7 +405,7 @@ public class Glo
 	/** 
 	 处理生成提示信息,不友好的提示.
 	 
-	 @param alertInfo 从系统里抛出的错误信息.
+	 param alertInfo 从系统里抛出的错误信息.
 	 @return 返回的友好提示信息.
 	*/
 	public static String GenerFriendlyAlertHtmlInfo(String alertInfo)
@@ -430,7 +435,7 @@ public class Glo
 	/** 
 	 字符串的解密
 	 
-	 @param str 加密的字符串
+	 param str 加密的字符串
 	 @return 返回解密后的字符串
 	*/
 	public static String String_JieMi(String str)

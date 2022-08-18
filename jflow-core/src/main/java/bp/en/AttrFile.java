@@ -1,7 +1,5 @@
 package bp.en;
 
-import bp.*;
-import java.io.*;
 
 /** 
  属性
@@ -15,7 +13,7 @@ public class AttrFile
 		this.FileNo = fileno;
 		this.FileName = filename;
 	}
-	public AttrFile()
+	public AttrFile()throws Exception
 	{
 	}
 }

@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  运行模式
 */
@@ -30,8 +32,7 @@ public enum RunModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, RunModel> mappings;
-	private static java.util.HashMap<Integer, RunModel> getMappings()
-	{
+	private static java.util.HashMap<Integer, RunModel> getMappings() {
 		if (mappings == null)
 		{
 			synchronized (RunModel.class)
@@ -46,18 +47,15 @@ public enum RunModel
 	}
 
 	private RunModel(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
-	public static RunModel forValue(int value) 
-	{
-		return getMappings().get(value);
+	public static RunModel forValue(int value)
+	{return getMappings().get(value);
 	}
 }

@@ -1,11 +1,6 @@
 package bp.wf.data;
 
-import bp.da.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -14,7 +9,7 @@ import java.util.*;
 public class MyJoinFlows extends Entities
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -26,31 +21,31 @@ public class MyJoinFlows extends Entities
 	/** 
 	 我参与的流程集合
 	*/
-	public MyJoinFlows()
+	public MyJoinFlows()throws Exception
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<MyJoinFlow> ToJavaList()
+	public final java.util.List<MyJoinFlow> ToJavaList()throws Exception
 	{
-		return (List<MyJoinFlow>)(Object)this;
+		return (java.util.List<MyJoinFlow>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<MyJoinFlow> Tolist()
+	public final ArrayList<MyJoinFlow> Tolist()throws Exception
 	{
-		ArrayList<MyJoinFlow> list = new ArrayList<MyJoinFlow>();
+		ArrayList<MyJoinFlow> list = new ArrayList<>();
 		for (int i = 0; i < this.size(); i++)
 		{
 			list.add((MyJoinFlow)this.get(i));
@@ -58,5 +53,5 @@ public class MyJoinFlows extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

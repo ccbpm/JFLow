@@ -1,5 +1,6 @@
 package bp.wf.template;
 
+
 /** 
  条件数据源
 */
@@ -38,6 +39,14 @@ public enum ConnDataFrom
 	*/
 	Url(7),
 	/** 
+	 按WebApi返回值
+	*/
+	WebApi(8),
+	/** 
+	 按照审核组件立场
+	*/
+	WorkCheck(9),
+	/** 
 	 操作符
 	*/
 	CondOperator(100);
@@ -46,8 +55,7 @@ public enum ConnDataFrom
 
 	private int intValue;
 	private static java.util.HashMap<Integer, ConnDataFrom> mappings;
-	private static java.util.HashMap<Integer, ConnDataFrom> getMappings()
-	{
+	private static java.util.HashMap<Integer, ConnDataFrom> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (ConnDataFrom.class)
@@ -61,19 +69,16 @@ public enum ConnDataFrom
 		return mappings;
 	}
 
-	private ConnDataFrom(int value) 
-	{
-		intValue = value;
+	private ConnDataFrom(int value)
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue() {
 		return intValue;
 	}
 
 	public static ConnDataFrom forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

@@ -26,13 +26,11 @@ public enum PercentModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static PercentModel forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static PercentModel forValue(int value) 
+	{return values()[value];
 	}
 }

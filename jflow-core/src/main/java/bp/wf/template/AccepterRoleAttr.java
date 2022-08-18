@@ -1,13 +1,13 @@
 package bp.wf.template;
-import bp.en.EntityOIDNameAttr;
+
 
 /** 
  接受人规则属性
 */
-public class AccepterRoleAttr extends EntityOIDNameAttr
+public class AccepterRoleAttr extends bp.en.EntityOIDNameAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 节点编号
 	*/
@@ -28,5 +28,5 @@ public class AccepterRoleAttr extends EntityOIDNameAttr
 	public static final String Tag4 = "Tag4";
 	public static final String Tag5 = "Tag5";
 
-		///
+		///#endregion
 }

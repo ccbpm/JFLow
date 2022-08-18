@@ -4,18 +4,18 @@ package bp.en;
 /** 
  具有编号名称的基类实体
 */
-public abstract class EntityNoName extends EntityNo
+public abstract class 	EntityNoName extends EntityNo
 {
 	private static final long serialVersionUID = 1L;
 		///属性
 	/** 
 	 名称
 	*/
-	public final String getName()throws Exception
+	public final String getName()
 	{
 		return this.GetValStringByKey(EntityNoNameAttr.Name);
 	}
-	public final void setName(String value) throws Exception
+	public final void setName(String value)
 	{
 		this.SetValByKey(EntityNoNameAttr.Name, value);
 	}
@@ -29,11 +29,10 @@ public abstract class EntityNoName extends EntityNo
 	/** 
 	 
 	 
-	 @param _No
+	 param _No
 	 * @throws Exception 
 	*/
-	protected EntityNoName(String _No) throws Exception
-	{
+	protected EntityNoName(String _No)  {
 		super(_No);
 	}
 
@@ -48,8 +47,7 @@ public abstract class EntityNoName extends EntityNo
 	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		if (this.getNo().trim().length() == 0)
 		{
 			if (this.getEnMap().getIsAutoGenerNo())

@@ -1,38 +1,66 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.difference.handler.WebContralBase;
+import bp.en.Entity;
 import bp.sys.*;
-import bp.tools.StringHelper;
 import bp.web.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.Glo;
 
 /** 
  页面功能实体
 */
-public class WF_CCFormr_Components extends WebContralBase
+public class WF_CCFormr_Components extends bp.difference.handler.WebContralBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_CCFormr_Components()
-	{
+	public WF_CCFormr_Components() throws Exception {
 
 	}
+	/** 
+	 视图组件
+	 
+	 @return 
+	*/
+	public final String DataView_Init() throws Exception {
+		Entity en = new bp.sys.frmui.MapAttrDataView(this.getMyPK());
 
+		String sql = en.GetValStringByKey(MapAttrAttr.DefaultVal);
 
-		/// 公文文号 .
+		sql = Glo.DealExp(sql, null, null);
+
+		if (this.getWorkID() != 0)
+		{
+			sql = sql.replace("@WorkID", String.valueOf(this.getWorkID()));
+			sql = sql.replace("@OID", String.valueOf(this.getWorkID()));
+		}
+
+		if (this.getOID() != 0)
+		{
+			sql = sql.replace("@WorkID", String.valueOf(this.getOID()));
+			sql = sql.replace("@OID", String.valueOf(this.getOID()));
+		}
+
+		if (this.getFID() != 0)
+		{
+			sql = sql.replace("@FID", String.valueOf(this.getFID()));
+		}
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
+	}
+
+		///#region  公文文号 .
 	/** 
 	 初始化字号编辑器
 	 
 	 @return 当前的字号信息.
-	 * @throws Exception 
 	*/
-	public final String DocWord_Init() throws Exception
-	{
+	public final String DocWord_Init() throws Exception {
 		//创建实体.
 		GEEntity en = new GEEntity(this.getFrmID(), this.getOID());
-
 
 		//查询字段.
 		String ptable = en.getEnMap().getPhysicsTable(); //获得存储表.
@@ -79,7 +107,7 @@ public class WF_CCFormr_Components extends WebContralBase
 		}
 
 		//处理大小写.
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			dt.Columns.get(0).setColumnName("DocWordKey");
 			dt.Columns.get(1).setColumnName("DocWordName");
@@ -109,7 +137,7 @@ public class WF_CCFormr_Components extends WebContralBase
 			lsh = DBAccess.RunSQLReturnStringIsNull(sql, "");
 			if (DataType.IsNullOrEmpty(lsh) == true)
 			{
-				lsh = "001";
+				lsh = "";
 			}
 
 			dt.Rows.get(0).setValue("DocWordYear",year);
@@ -139,10 +167,8 @@ public class WF_CCFormr_Components extends WebContralBase
 	 重新生成字号
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DocWord_ReGenerDocWord() throws Exception
-	{
+	public final String DocWord_ReGenerDocWord() throws Exception {
 		//创建实体.
 		GEEntity en = new GEEntity(this.getFrmID(), this.getOID());
 
@@ -161,14 +187,15 @@ public class WF_CCFormr_Components extends WebContralBase
 		}
 
 		//生成一个新的流水号.
-		sql = "SELECT MAX(DocWordLSH) AS No FROM " + ptable + " WHERE DocWordKey='" + word + "' AND DocWordYear='" + ny + "'";
+		sql = "SELECT max(cast(DocWordLSH as UNSIGNED INTEGER)) AS No FROM " + ptable + " WHERE DocWordKey='" + word + "' AND DocWordYear='" + ny + "'";
 		lsh = DBAccess.RunSQLReturnStringIsNull(sql, "");
 		if (DataType.IsNullOrEmpty(lsh) == true)
 		{
-			lsh = "0";
+			return lsh = "1";
 		}
 
-		String str = StringHelper.padLeft(String.valueOf(Integer.parseInt(lsh) + 1), 3,'0'); //将返回的数字加+1并格式化为000三位数;请严格按照000格式不够位数补0不然会影响其他地方
+	  int a = Integer.parseInt(lsh) + 1;
+	   String str = String.valueOf(a);
 		return str;
 	}
 
@@ -176,10 +203,8 @@ public class WF_CCFormr_Components extends WebContralBase
 	 保存重新生成的字号和保存字号
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DocWord_Save() throws Exception
-	{
+	public final String DocWord_Save() throws Exception {
 
 
 		//创建实体.
@@ -214,10 +239,8 @@ public class WF_CCFormr_Components extends WebContralBase
 	 选择一个空闲的编号
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String DocWord_GenerBlankNum() throws Exception
-	{
+	public final String DocWord_GenerBlankNum() throws Exception {
 		//创建实体.
 		GEEntity en = new GEEntity(this.getFrmID(), this.getOID());
 
@@ -262,14 +285,13 @@ public class WF_CCFormr_Components extends WebContralBase
 				}
 
 				//请严格按照000格式不够位数补0不然会影响其他地方 不允许使用000编号
-
-				  num += StringHelper.padLeft(String.valueOf(new Integer(i)), 3,'0') + ",";
+				  num += (new Integer(i)).toString(Integer.parseInt("000")) + ",";
 			}
 		}
 
 		return num;
 	}
 
-		/// 公文文号.
+		///#endregion 公文文号.
 
 }

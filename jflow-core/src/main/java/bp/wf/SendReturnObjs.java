@@ -2,15 +2,35 @@ package bp.wf;
 
 import java.util.ArrayList;
 
+
+
 /** 
  工作发送返回对象集合.
 */
 public class SendReturnObjs extends ArrayList<SendReturnObj>
 {
-
-		///获取系统变量.
-	public final long getVarWorkID()
+	public final boolean getIsStopFlow()
 	{
+		for (SendReturnObj item : this)
+		{
+			if (item.MsgFlag.equals(SendReturnMsgFlag.IsStopFlow))
+			{
+				if (item.MsgOfText.equals("1"))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+		//throw new Exception("@没有找到系统变量IsStopFlow");
+		return false;
+	}
+
+		///#region 获取系统变量.
+	public final long getVarWorkID() throws Exception {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarWorkID))
@@ -20,8 +40,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		}
 		return 0;
 	}
-	public final boolean getIsStopFlow()
-	{
+	public final boolean isStopFlow() throws Exception {
 	   for (SendReturnObj item : this)
 	   {
 		   if (item.MsgFlag.equals(SendReturnMsgFlag.IsStopFlow))
@@ -43,8 +62,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 到达节点ID
 	*/
-	public final int getVarToNodeID()
-	{
+	public final int getVarToNodeID() throws Exception {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarToNodeID))
@@ -57,8 +75,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 到达节点IDs
 	*/
-	public final String getVarToNodeIDs()
-	{
+	public final String getVarToNodeIDs() throws Exception {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarToNodeIDs))
@@ -71,8 +88,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 到达节点名称
 	*/
-	public final String getVarToNodeName()
-	{
+	public final String getVarToNodeName() throws Exception {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarToNodeName))
@@ -85,8 +101,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 到达的节点名称
 	*/
-	public final String getVarCurrNodeName()
-	{
+	public final String getVarCurrNodeName() throws Exception {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarCurrNodeName))
@@ -96,8 +111,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		}
 		return null;
 	}
-	public final int getVarCurrNodeID()
-	{
+	public final int getVarCurrNodeID() throws Exception {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarCurrNodeID))
@@ -110,8 +124,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 接受人
 	*/
-	public final String getVarAcceptersName()
-	{
+	public final String getVarAcceptersName() throws Exception {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarAcceptersName))
@@ -124,8 +137,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 接受人IDs
 	*/
-	public final String getVarAcceptersID()
-	{
+	public final String getVarAcceptersID()  {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarAcceptersID))
@@ -138,8 +150,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 文本提示信息.
 	*/
-	public final String getMsgOfText()
-	{
+	public final String getMsgOfText()  {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.MsgOfText))
@@ -153,8 +164,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 分流向子线程发送时产生的子线程的WorkIDs, 多个有逗号分开.
 	*/
-	public final String getVarTreadWorkIDs()
-	{
+	public final String getVarTreadWorkIDs()  {
 		for (SendReturnObj item : this)
 		{
 			if (item.MsgFlag.equals(SendReturnMsgFlag.VarTreadWorkIDs))
@@ -165,22 +175,19 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		return null;
 	}
 
-		///
+		///#endregion
 
 	/** 
 	 构造
 	*/
-	public SendReturnObjs()
-	{
+	public SendReturnObjs()  {
 	}
 	/** 
 	 根据指定格式的字符串生成一个事例获取相关变量
 	 
-	 @param specText 指定格式的字符串
-	 * @throws Exception 
-	 * @throws NumberFormatException 
+	 param specText 指定格式的字符串
 	*/
-	public SendReturnObjs(String specText) throws NumberFormatException, Exception
+	public SendReturnObjs(String specText)
 	{
 		this.LoadSpecText(specText);
 	}
@@ -195,10 +202,10 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 增加消息
 	 
-	 @param msgFlag 消息标记
-	 @param msg 文本消息
-	 @param msgOfHtml html消息
-	 @param type 消息类型
+	 param msgFlag 消息标记
+	 param msg 文本消息
+	 param msgOfHtml html消息
+	 param type 消息类型
 	*/
 	public final void AddMsg(String msgFlag, String msg, String msgOfHtml, SendReturnMsgType type)
 	{
@@ -225,8 +232,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	 
 	 @return 
 	*/
-	public final String ToMsgOfSpecText()
-	{
+	public final String ToMsgOfSpecText()  {
 		String msg = "";
 		for (SendReturnObj item : this)
 		{
@@ -245,15 +251,14 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	/** 
 	 装载指定的文本，生成这个对象。
 	 
-	 @param text 指定格式的文本
-	 * @throws Exception 
-	 * @throws NumberFormatException 
+	 param text 指定格式的文本
 	*/
-	public final void LoadSpecText(String text) throws NumberFormatException, Exception
+	public final void LoadSpecText(String text)
 	{
 		String[] strs = text.split("[$]", -1);
 		for (String str : strs)
 		{
+
 			String[] sp = str.split("[^]", -1);
 			this.AddMsg(sp[0], sp[2], null, SendReturnMsgType.forValue(Integer.parseInt(sp[1])));
 		}
@@ -263,8 +268,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	 
 	 @return 
 	*/
-	public final String ToMsgOfText()
-	{
+	public final String ToMsgOfText()  {
 		if (this.OutMessageText != null)
 		{
 			return this.OutMessageText;
@@ -292,7 +296,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 				{
 
 ///#warning 不应该出现.
-				  //  bp.da.Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
+				  //  Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
 					continue;
 				}
 				msg += "@" + item.MsgOfText;
@@ -303,8 +307,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		msg.replace("@@", "@");
 		return msg;
 	}
-	public final String ToJson()
-	{
+	public final String ToJson()  {
 		if (this.OutMessageText != null)
 		{
 			return this.OutMessageText;
@@ -332,7 +335,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 				{
 
 ///#warning 不应该出现.
-					//  bp.da.Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
+					//  Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
 					continue;
 				}
 				msg += "@" + item.MsgOfText;
@@ -349,8 +352,7 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 	 
 	 @return 
 	*/
-	public final String ToMsgOfHtml()
-	{
+	public final String ToMsgOfHtml()  {
 		if (this.OutMessageHtml != null)
 		{
 			return this.OutMessageHtml;

@@ -1,14 +1,11 @@
 package bp.en;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
+
 import bp.da.DataType;
 import bp.da.Log;
 import bp.difference.SystemConfig;
 import bp.sys.*;
+import bp.sys.base.EventBase;
 import bp.tools.StringUtils;
 /**
  * ClassFactory 的摘要说明。
@@ -22,12 +19,12 @@ public class ClassFactory {
 	/**
 	 * 得到一个事件实体
 	 * 
-	 * @param className
+	 * param className
 	 *            类名称
 	 * @return bp.sys.EventBase
 	 */
-	public static bp.sys.EventBase GetEventBase(String className) {
-		className = bp.sys.Glo.DealClassEntityName(className);
+	public static bp.sys.base.EventBase GetEventBase(String className) {
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_Evbase == null || Htable_Evbase.isEmpty()) {
 			Htable_Evbase = new Hashtable();
 			String cl = "bp.sys.EventBase";
@@ -40,12 +37,12 @@ public class ClassFactory {
 				}
 			}
 		}
-		bp.sys.EventBase ens = (EventBase) ((Htable_Evbase.get(className) instanceof EventBase)
+		bp.sys.base.EventBase ens = (EventBase) ((Htable_Evbase.get(className) instanceof EventBase)
 				? Htable_Evbase.get(className) : null);
 		return ens;
 	}
  
-	private static Hashtable objects = new Hashtable(); 
+	private static final HashMap<String,Object> objects = new HashMap<>();
 	/// <summary>
 	/// 尽量不用此方法来获取事例
 	/// </summary>
@@ -54,7 +51,7 @@ public class ClassFactory {
 	public static Object GetObject_OK(String className) throws Exception {
 		if (DataType.IsNullOrEmpty(className) == true)
 			return "err@要转化类名称为空...";
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		Class clazz = Class.forName(className);
 		return clazz.newInstance();
 	}
@@ -62,13 +59,13 @@ public class ClassFactory {
 	/**
 	 * 根据一个抽象的基类，取出此系统中从他上面继承的子类集合。 非抽象的类。
 	 * 
-	 * @param baseEnsName
+	 * param baseEnsName
 	 *            抽象的类名称
 	 * @return ArrayList
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static ArrayList GetObjects(String baseEnsName) {
-		baseEnsName = bp.sys.Glo.DealClassEntityName(baseEnsName);
+		baseEnsName = bp.sys.base.Glo.DealClassEntityName(baseEnsName);
 		ArrayList list = (ArrayList) objects.get(baseEnsName);
 
 		if (list != null && list.size()!=0) {
@@ -79,22 +76,14 @@ public class ClassFactory {
 			list = new ArrayList();
 			Class parent = Class.forName(baseEnsName);
 			Set<Class<?>> set = bp.tools.ClassScaner.scan("bp",parent);
-			for (Iterator<Class<?>> it = set.iterator(); it.hasNext();) {
-				Class<?> clazz = it.next();
+			for (Class<?> clazz : set) {
 				try {
 					list.add(clazz.newInstance());
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
+				} catch (InstantiationException | IllegalAccessException e) {
 					e.printStackTrace();
 				}
 			}
-			Collections.sort(list, new Comparator<Object>() {
-				@Override
-				public int compare(Object o1, Object o2) {
-					return o1.getClass().getName().compareTo(o2.getClass().getName());
-				}
-			});
+			list.sort(Comparator.comparing(o -> o.getClass().getName()));
 			Log.DebugWriteInfo("扫描 " + baseEnsName + " 父类，共 " + set.size() + " 子类：" + set);
 			objects.put(baseEnsName, list);
 			return list;
@@ -105,37 +94,37 @@ public class ClassFactory {
 		return null;
 	}
 
-	private static Hashtable<String, Object> Htable_En;
+	private static HashMap<String, Object> Htable_En;
 
 	/**
 	 * 得到一个实体
-	 * 
-	 * @param className
+	 * last-modified  22/7/2
+	 * @author wanglu
+	 * 修改ClassFactory中 集合类为线程安全集合类
+	 * param className
 	 *            类名称
 	 * @return En
 	 */
-	public static Entity GetEn(String className) {
+	public static Entity GetEn(String className) throws Exception {
 		// 判断标记初始化实体.
-		if (className.contains(".") == false) {
-			if (className.contains("Dtl") == true) {
+		if (!className.contains(".")) {
+			if (className.contains("Dtl")) {
 				return new GEDtl(className); // 明细表.
 			} else {
 				return new GEEntity(className); // 表单实体.
 			}
 		}
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 
 		if (Htable_En == null) {
-			Htable_En = new Hashtable<String, Object>();
+			Htable_En = new HashMap<>();
 			String cl = "bp.en.Entity";
 			ArrayList al = ClassFactory.GetObjects(cl);
 			for (Object en : al) {
-				if (null == en || StringUtils.isEmpty(en.getClass().getName()))
+				if (null == en || DataType.IsNullOrEmpty(en.getClass().getName()))
 					continue;
-				if (Htable_En.containsKey(en.getClass().getName()) == false) {
+				if (!Htable_En.containsKey(en.getClass().getName())) {
 					Htable_En.put(en.getClass().getName(), en);
-				} else {
-					continue;
 				}
 			}
 		}
@@ -143,10 +132,13 @@ public class ClassFactory {
 		
 		if (tmp==null)
 			return null;
-		 
-		 Entity en= (Entity)tmp; 
-		 en.setRow(null); //把值设置为空.
-		 return en;		  
+		/*
+		  22/7/2
+		  最后修改： wanglu
+		  这里应该返回新对象实例而不是原始对象，
+		  如果返回原始对象，多线程下会操作同一个内存地址，抢占资源，导致异常。
+		 */
+		return  (Entity)tmp.getClass().newInstance();
 	}
 
 	private static Hashtable<String, Object> Htable_Method;
@@ -154,12 +146,12 @@ public class ClassFactory {
 	/*
 	 * 得到一个实体
 	 * 
-	 * @param className 类名称
+	 * param className 类名称
 	 * 
 	 * @return En
 	 */
 	public static Method GetMethod(String className) {
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_Method == null) {
 			Htable_Method = new Hashtable();
 			String cl = "bp.en.Method";
@@ -175,13 +167,13 @@ public class ClassFactory {
 	// 获取 ens
 	public static Hashtable<String, Object> Htable_Ens;
 
-	public static Entities GetEns(String className) {
+	public static Entities GetEns(String className)  {
 
 		if (className.contains(".") == false) {
 			bp.sys.GEEntitys myens = new bp.sys.GEEntitys(className);
 			return myens;
 		}
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		// if (Htable_Ens == null || Htable_Ens.isEmpty()) {
 		Htable_Ens = new Hashtable<String, Object>();
 		String cl = "bp.en.Entities";
@@ -204,17 +196,17 @@ public class ClassFactory {
 	/**
 	 * 得到一个实体
 	 * 
-	 * @param className
+	 * param className
 	 *            类名称
 	 * @return En
 	 */
-	public static Entities GetEnsNew(String className) {
+	public static Entities GetEnsNew(String className) throws Exception {
 
 		if (className.contains(".") == false) {
 			bp.sys.GEEntitys myens = new bp.sys.GEEntitys(className);
 			return myens;
 		}
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		// 实例化这个类
 		try {
 
@@ -252,7 +244,7 @@ public class ClassFactory {
 	/**
 	 * 得到一个实体
 	 * 
-	 * @param className
+	 * param className
 	 *            类名称
 	 * @return En
 	 */
@@ -265,7 +257,7 @@ public class ClassFactory {
 				Htable_XmlEns.put(en.getClass().getName(), en);
 			}
 		}
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		Object tmp = Htable_XmlEns.get(className);
 		return ((bp.sys.xml.XmlEns) ((tmp instanceof bp.sys.xml.XmlEns) ? tmp : null));
 	}
@@ -276,7 +268,7 @@ public class ClassFactory {
 	/**
 	 * 得到一个实体
 	 * 
-	 * @param className
+	 * param className
 	 *            类名称
 	 * @return En
 	 */
@@ -289,7 +281,7 @@ public class ClassFactory {
 				Htable_XmlEn.put(en.getClass().getName(), en);
 			}
 		}
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		Object tmp = Htable_XmlEn.get(className);
 		return ((bp.sys.xml.XmlEn) ((tmp instanceof bp.sys.xml.XmlEn) ? tmp : null));
 	}
@@ -326,14 +318,14 @@ public class ClassFactory {
 	/// <param name="className">类名称</param>
 	/// <returns>En</returns>
 	public static Object GetHandlerPage(String className) {
-		className = bp.sys.Glo.DealClassEntityName(className);
+		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_HandlerPage == null) {
 			Htable_HandlerPage = new Hashtable();
-			String cl = "WebContralBase";
+			String cl = "bp.difference.handler.WebContralBase";
 			ArrayList al = ClassFactory.GetObjects(cl);
 			for (Object en : al) {
 				String key = "";
-				if (null == en || DataType.IsNullOrEmpty(key = en.toString()))
+				if (null == en || DataType.IsNullOrEmpty(key = en.getClass().getName()))
 					continue;
 
 				if (Htable_HandlerPage.containsKey(key) == false)

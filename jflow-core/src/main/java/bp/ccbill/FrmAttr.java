@@ -1,14 +1,14 @@
 package bp.ccbill;
 
-import bp.en.EntityOIDNameAttr;
+import bp.*;
 
 /** 
  实体表单 - Attr
 */
-public class FrmAttr extends EntityOIDNameAttr
+public class FrmAttr extends bp.en.EntityOIDNameAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作模式
 	*/
@@ -38,6 +38,10 @@ public class FrmAttr extends EntityOIDNameAttr
 	*/
 	public static final String ColorSet = "ColorSet";
 	/** 
+	 按照指定字段的颜色显示表格行的颜色
+	*/
+	public static final String RowColorSet = "RowColorSet";
+	/** 
 	 字段求和求平均设置
 	*/
 	public static final String FieldSet = "FieldSet";
@@ -46,19 +50,19 @@ public class FrmAttr extends EntityOIDNameAttr
 	*/
 	public static final String RefBill = "RefBill";
 
-		///
+		///#endregion
 
 
-		///隐藏属性.
+		///#region 隐藏属性.
 	/** 
 	 要显示的列
 	*/
 	public static final String ShowCols = "ShowCols";
 
-		/// 隐藏属性
+		///#endregion 隐藏属性
 
 
-		///按钮信息.
+		///#region 按钮信息.
 	/** 
 	 按钮New标签
 	*/
@@ -94,6 +98,10 @@ public class FrmAttr extends EntityOIDNameAttr
 	*/
 	public static final String BtnDelLable = "BtnDelLable";
 	/** 
+	 数据版本
+	*/
+	public static final String BtnDataVer = "BtnDataVer";
+	/** 
 	 按钮del启用规则
 	*/
 	public static final String BtnDelEnable = "BtnDelEnable";
@@ -122,10 +130,10 @@ public class FrmAttr extends EntityOIDNameAttr
 	*/
 	public static final String BtnGroupEnable = "BtnGroupEnable";
 
-		///
+		///#endregion
 
 
-		///打印
+		///#region 打印
 	public static final String BtnPrintHtml = "BtnPrintHtml";
 	public static final String BtnPrintHtmlEnable = "BtnPrintHtmlEnable";
 
@@ -138,10 +146,10 @@ public class FrmAttr extends EntityOIDNameAttr
 	public static final String BtnPrintCCWord = "BtnPrintCCWord";
 	public static final String BtnPrintCCWordEnable = "BtnPrintCCWordEnable";
 
-		///
+		///#endregion
 
 
-		///按钮.
+		///#region 按钮.
 	/** 
 	 导出zip文件
 	*/
@@ -159,11 +167,11 @@ public class FrmAttr extends EntityOIDNameAttr
 	*/
 	public static final String RefBillRole = "RefBillRole";
 
-		/// 按钮.
+		///#endregion 按钮.
 
 
 
-		///集合的操作.
+		///#region 集合的操作.
 	/** 
 	 导入Excel
 	*/
@@ -181,7 +189,7 @@ public class FrmAttr extends EntityOIDNameAttr
 	*/
 	public static final String BtnExpExcelEnable = "BtnExpExcelEnable";
 
-		/// 集合的操作.
+		///#endregion 集合的操作.
 
 	/** 
 	 行打开模式

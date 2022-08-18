@@ -8,22 +8,19 @@ import java.util.*;
 */
 public class StationCreates extends EntitiesMM
 {
-	private static final long serialVersionUID = 1L;
-	///构造函数.
+
+		///#region 构造函数.
 	/** 
 	 单据可创建的工作岗位
 	*/
-	public StationCreates()
-	{
+	public StationCreates() {
 	}
 	/** 
 	 单据可创建的工作岗位
 	 
-	 @param nodeID 单据ID
-	 * @throws Exception 
+	 param nodeID 单据ID
 	*/
-	public StationCreates(int nodeID) throws Exception
-	{
+	public StationCreates(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(StationCreateAttr.FrmID, nodeID);
 		qo.DoQuery();
@@ -31,11 +28,9 @@ public class StationCreates extends EntitiesMM
 	/** 
 	 单据可创建的工作岗位
 	 
-	 @param StationNo StationNo 
-	 * @throws Exception 
+	 param StationNo StationNo
 	*/
-	public StationCreates(String StationNo) throws Exception
-	{
+	public StationCreates(String StationNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(StationCreateAttr.FK_Station, StationNo);
 		qo.DoQuery();
@@ -44,29 +39,28 @@ public class StationCreates extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new StationCreate();
 	}
 
-		/// 构造函数.
+		///#endregion 构造函数.
 
 
-	//为了适应自动翻译成java的需要,把实体转换成List.
-	/**
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/** 
+	 转化成 java list,C#不能调用.
+	 
 	 @return List
 	*/
-	public final List<StationCreate> ToJavaList()
-	{
-		return (List<StationCreate>)(Object)this;
+	public final java.util.List<StationCreate> ToJavaList() {
+		return (java.util.List<StationCreate>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<StationCreate> Tolist()
-	{
+	public final ArrayList<StationCreate> Tolist()  {
 		ArrayList<StationCreate> list = new ArrayList<StationCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -75,5 +69,5 @@ public class StationCreates extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

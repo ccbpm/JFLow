@@ -13,33 +13,30 @@ import java.util.*;
 public class MapAttrEnums extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 实体属性s
 	*/
-	public MapAttrEnums()
-	{
+	public MapAttrEnums() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapAttrEnum();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrEnum> ToJavaList()
-	{
+	public final java.util.List<MapAttrEnum> ToJavaList() {
 		return (java.util.List<MapAttrEnum>)(Object)this;
 	}
 	/** 
@@ -47,8 +44,7 @@ public class MapAttrEnums extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrEnum> Tolist()
-	{
+	public final ArrayList<MapAttrEnum> Tolist()  {
 		ArrayList<MapAttrEnum> list = new ArrayList<MapAttrEnum>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,5 +53,5 @@ public class MapAttrEnums extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

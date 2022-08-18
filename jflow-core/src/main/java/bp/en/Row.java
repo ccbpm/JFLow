@@ -1,18 +1,16 @@
 package bp.en;
 import java.util.Hashtable;
-
-import org.omg.CORBA.TypeCode;
-
 import bp.da.DataColumn;
 import bp.da.DataRow;
 import bp.da.DataTable;
-import bp.tools.StringHelper;
+import bp.da.DataType;
 
 /**
  * Row 的摘要说明。 用来处理一条记录
  */
 public class Row extends Hashtable<String, Object>
 {
+
 	/**
 	 * 
 	 */
@@ -22,12 +20,11 @@ public class Row extends Hashtable<String, Object>
 	/**
 	 * 初始化数据.
 	 * 
-	 * @param attrs
+	 * param attrs
 	 */
-	public final void LoadAttrs(Attrs attrs)
-	{
+	public final void LoadAttrs(Attrs attrs)  {
 		this.clear();
-		for (Attr attr : attrs)
+		for (Attr attr : attrs.ToJavaList())
 		{
 			switch (attr.getMyDataType())
 			{
@@ -50,7 +47,7 @@ public class Row extends Hashtable<String, Object>
 	/**
 	 * LoadAttrs
 	 * 
-	 * @param attrs
+	 * param dt
 	 */
 	public final void LoadDataTable(DataTable dt, DataRow dr)
 	{
@@ -66,8 +63,8 @@ public class Row extends Hashtable<String, Object>
 	/**
 	 * 设置一个值by key .
 	 * 
-	 * @param key
-	 * @param val
+	 * param key
+	 * param val
 	 */
 	public final void SetValByKey(String key, Object val)
 	{
@@ -80,7 +77,7 @@ public class Row extends Hashtable<String, Object>
 			return;
 		}
 		
-		if (val.getClass() == TypeCode.class)
+		if (val.getClass() == Enum.class)
 		{
 			this.put(key, ((Integer) val).intValue());
 		} else
@@ -94,7 +91,7 @@ public class Row extends Hashtable<String, Object>
 	public final boolean GetBoolenByKey(String key)
 	{
 		Object obj = this.get(key);
-		if (obj == null || StringHelper.isNullOrEmpty(obj.toString())
+		if (obj == null || DataType.IsNullOrEmpty(obj.toString())
 				|| obj.toString().equals("0"))
 		{
 			return false;

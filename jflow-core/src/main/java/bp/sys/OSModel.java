@@ -1,12 +1,6 @@
 package bp.sys;
 
-
-import bp.da.*;
-import bp.web.*;
 import bp.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
 
 /** 
  组织结构类型
@@ -24,13 +18,11 @@ public enum OSModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static OSModel forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static OSModel forValue(int value)
+	{return values()[value];
 	}
 }

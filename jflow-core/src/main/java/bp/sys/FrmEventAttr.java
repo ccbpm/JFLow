@@ -1,4 +1,16 @@
 package bp.sys;
+
+import bp.da.*;
+import bp.en.*;
+import bp.port.*;
+import bp.web.*;
+import bp.difference.*;
+import bp.*;
+import java.util.*;
+import java.io.*;
+import java.time.*;
+import java.math.*;
+
 /** 
  事件属性
 */
@@ -33,6 +45,10 @@ public class FrmEventAttr
 	*/
 	public static final String EventDoType = "EventDoType";
 	/** 
+	 数据源
+	*/
+	public static final String FK_DBSrc = "FK_DBSrc";
+	/** 
 	 执行内容
 	*/
 	public static final String DoDoc = "DoDoc";
@@ -46,7 +62,7 @@ public class FrmEventAttr
 	public static final String MsgError = "MsgError";
 
 
-		///消息设置.
+		///#region 消息设置.
 	/** 
 	 控制方式
 	*/
@@ -92,5 +108,5 @@ public class FrmEventAttr
 	*/
 	public static final String MonthedParas = "MonthedParas";
 
-		/// 消息设置.
+		///#endregion 消息设置.
 }

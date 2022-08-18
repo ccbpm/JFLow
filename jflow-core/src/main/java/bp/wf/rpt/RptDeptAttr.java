@@ -1,11 +1,12 @@
 package bp.wf.rpt;
+
 /** 
  报表部门
 */
 public class RptDeptAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 报表ID
 	*/
@@ -15,5 +16,5 @@ public class RptDeptAttr
 	*/
 	public static final String FK_Dept = "FK_Dept";
 
-		///
+		///#endregion
 }

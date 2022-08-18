@@ -11,7 +11,7 @@ public class PinYinF4jUtils
 	/**
 	 * 将汉字转换为全拼
 	 * 
-	 * @param src
+	 * param src
 	 * @return String
 	 */
 	public static String getPinYin(String src)
@@ -54,7 +54,7 @@ public class PinYinF4jUtils
 	/**
 	 * 提取每个汉字的首字母
 	 * 
-	 * @param str
+	 * param str
 	 * @return String
 	 */
 	public static String getPinYinHeadChar(String str)
@@ -79,7 +79,7 @@ public class PinYinF4jUtils
 	/**
 	 * 将字符串转换成ASCII码
 	 * 
-	 * @param cnStr
+	 * param cnStr
 	 * @return String
 	 */
 	public static String getCnASCII(String cnStr)
@@ -99,7 +99,7 @@ public class PinYinF4jUtils
 	/**
 	 * 获取字符串内的所有汉字的汉语拼音并大写每个字的首字母
 	 * 
-	 * @param chinese
+	 * param chinese
 	 * @return
 	 */
 	public static String spell(String chinese)

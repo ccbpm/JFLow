@@ -1,5 +1,6 @@
 package bp.wf.template;
 
+
 /** 
  条件属性
 */
@@ -65,9 +66,13 @@ public class CondAttr
 	 顺序号
 	*/
 	public static final String Idx = "Idx";
+	/** 
+	 数据源
+	*/
+	public static final String FK_DBSrc = "FK_DBSrc";
 
 
-		///属性。
+		///#region 属性。
 	/** 
 	 指定人员方式
 	*/
@@ -77,5 +82,5 @@ public class CondAttr
 	*/
 	public static final String SpecOperPara = "SpecOperPara";
 
-		/// 属性。
+		///#endregion 属性。
 }

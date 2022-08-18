@@ -2,32 +2,44 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.difference.SystemConfig;
+import bp.difference.handler.CommonFileUtils;
 import bp.difference.handler.WebContralBase;
+import bp.pub.PubClass;
 import bp.sys.*;
 import bp.tools.FtpUtil;
-import bp.tools.ZipCompress;
 import bp.web.*;
 import bp.en.*;
+import bp.tools.ZipCompress;
+import bp.*;
+import bp.wf.*;
+import bp.wf.Glo;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.URLDecoder;
 import java.nio.file.*;
+import java.util.Date;
 
 /**
- * 页面功能实体
+ 页面功能实体
  */
-public class WF_CommEntity extends WebContralBase {
+public class WF_CommEntity extends WebContralBase
+{
 
 	/**
-	 * 构造函数
+	 构造函数
 	 */
-	public WF_CommEntity() {
+	public WF_CommEntity() throws Exception {
 	}
 
-	/// 从表.
+
+	///#region 从表.
 	/**
-	 * 初始化
-	 * 
-	 * @return
-	 * @throws Exception
+	 初始化
+
+	 @return
 	 */
 	public final String Dtl_Save() throws Exception {
 		try {
@@ -60,13 +72,13 @@ public class WF_CommEntity extends WebContralBase {
 						continue;
 					}
 
-					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true) {
+					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == false) {
 						String val = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
 						item.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true) {
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == false) {
 						String val = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
 						if (val.equals("-1")) {
 							item.SetValByKey(attr.getKey(), 0);
@@ -109,13 +121,13 @@ public class WF_CommEntity extends WebContralBase {
 						continue;
 					}
 
-					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true) {
+					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == false) {
 						val = this.GetValFromFrmByKey("DDL_" + i + "_" + attr.getKey());
 						dtl.SetValByKey(attr.getKey(), val);
 						continue;
 					}
 
-					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true) {
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == false) {
 						val = this.GetValFromFrmByKey("CB_" + i + "_" + attr.getKey(), "-1");
 						if (val.equals("-1")) {
 							dtl.SetValByKey(attr.getKey(), 0);
@@ -152,15 +164,12 @@ public class WF_CommEntity extends WebContralBase {
 			return "err@" + ex.getMessage();
 		}
 	}
-
 	/**
-	 * 保存
-	 * 
-	 * @return
-	 * @throws Exception
+	 保存
+
+	 @return
 	 */
 	public final String Dtl_Init() throws Exception {
-		// 定义容器.
 		DataSet ds = new DataSet();
 
 		// 查询出来从表数据.
@@ -189,7 +198,7 @@ public class WF_CommEntity extends WebContralBase {
 		if (dtl.getHisUAC().IsImp) {
 			md.SetPara("IsImp", "1");
 		}
-
+		md.SetPara("EntityPK", dtl.getPK_Field());
 		/// 加入权限信息.
 
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
@@ -287,7 +296,7 @@ public class WF_CommEntity extends WebContralBase {
 		if (enumKeys.length() > 2) {
 			enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
 			// Sys_Enum
-			String sqlEnum = "SELECT * FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
+			String sqlEnum = "SELECT * FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
 			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 			dtEnum.TableName = "Sys_Enum";
 
@@ -325,8 +334,7 @@ public class WF_CommEntity extends WebContralBase {
 			refPKVal = refPKVal.replace("/", "_");
 		}
 		String filename = refPKVal + "_" + en.toString() + "_" + DataType.getCurrentDate() + "_" + name + ".xls";
-		String filePath = ExportDGToExcel(dtls.ToDataTableField(), en, name, null);
-
+		String filePath = bp.tools.ExportExcelUtil.ExportTempToExcel(dtls.ToDataTableField(), en, name, null);
 		filePath = SystemConfig.getPathOfTemp() + filename;
 
 		String tempPath = SystemConfig.getPathOfTemp() + refPKVal + "/";
@@ -366,14 +374,14 @@ public class WF_CommEntity extends WebContralBase {
 				+ ".zip";
 	}
 
-	/// 从表.
+	///#endregion 从表.
 
-	/// 实体的操作.
+
+	///#region 实体的操作.
 	/**
-	 * 实体初始化
-	 * 
-	 * @return
-	 * @throws Exception
+	 实体初始化
+
+	 @return
 	 */
 	public final String EntityOnly_Init() throws Exception {
 		try {
@@ -655,7 +663,7 @@ public class WF_CommEntity extends WebContralBase {
 			if (enumKeys.length() > 2) {
 				enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
 				// Sys_Enum
-				String sqlEnum = "SELECT * FROM "+bp.wf.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
+				String sqlEnum = "SELECT * FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 				dtEnum.TableName = "Sys_Enum";
 
@@ -745,9 +753,246 @@ public class WF_CommEntity extends WebContralBase {
 	}
 
 	/**
-	 * 删除实体多附件上传的信息
-	 * 
+	 实体Entity 单附件上传
+	 @return
+	 */
+	public final String EntityAth_Upload() throws Exception {
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
+		if (contentType == null || contentType.indexOf("multipart/form-data") == -1)
+			return "err@附件上传页面Form表单类型设置错误";
+		MultipartHttpServletRequest mrequest = CommonFileUtils.getMultipartHttpServletRequest(request);
+		if(mrequest.getFileMap().size()==0)
+			return "err@请选择要上传的文件。";
+		MultipartFile file = mrequest.getFile("file");
+		//获取保存文件信息的实体
+		String enName = this.getEnName();
+		Entity en = null;
+		//是否是空白记录.
+		boolean isBlank = DataType.IsNullOrEmpty(this.getPKVal());
+		if (isBlank == true)
+			return "err@请先保存实体信息然后再上传文件";
+		else
+			en = ClassFactory.GetEn(this.getEnName());
+
+		if (en == null)
+			return "err@参数类名不正确.";
+		en.setPKVal(this.getPKVal());
+		int i = en.RetrieveFromDBSources();
+		if (i == 0)
+			return "err@数据[" + this.getEnName() + "]主键为[" + en.getPKVal() + "]不存在，或者没有保存。";
+
+		//获取文件的名称
+		String fullfileName =file.getOriginalFilename();
+		if (fullfileName.indexOf("/") >= 0)
+			fullfileName = fullfileName.substring(fullfileName.lastIndexOf("/") + 1);
+		String fileName = fullfileName.substring(0, fullfileName.lastIndexOf('.'));
+		//文件后缀
+		String ext =fullfileName.replace(fileName+".","");
+
+		//文件大小
+		float size = file.getSize() / 1024;
+
+		//保存位置
+		String filepath = "";
+
+
+		//如果是天业集团则保存在ftp服务器上
+		if (SystemConfig.getCustomerNo().equals("TianYe") || SystemConfig.getIsUploadFileToFTP() == true)
+		{
+			String guid = DBAccess.GenerGUID(0, null, null);
+
+			//把文件临时保存到一个位置.
+			String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
+			try
+			{
+				CommonFileUtils.upload(request, "file", new File(temp));
+			}
+			catch (RuntimeException ex)
+			{
+				(new File(temp)).delete();
+				CommonFileUtils.upload(request, "file", new File(temp));
+			}
+
+			String ny = DataType.getCurrentDateByFormart("yyyy_MM");
+			String workDir = ny + "/Helper/";
+			boolean isOK =false;
+			FtpUtil ftpUtil = bp.wf.Glo.getFtpUtil();
+
+			ftpUtil.changeWorkingDirectory(workDir,true);
+
+			// 把文件放在FTP服务器上去.
+			isOK=ftpUtil.uploadFile( guid +"."+ ext,temp);
+
+			ftpUtil.releaseConnection();
+			//删除临时文件
+			(new File(temp)).delete();
+
+
+			//删除临时文件
+			(new File(temp)).delete();
+
+			//设置路径.
+			filepath = ny + "/Helper/" + guid+"." + ext;
+
+		}
+		else
+		{
+			String fileSavePath = en.getEnMap().FJSavePath;
+
+			if (DataType.IsNullOrEmpty(fileSavePath) == true)
+			{
+				fileSavePath = SystemConfig.getPathOfDataUser() + enName;
+			}
+
+			if ((new File(fileSavePath)).isDirectory() == false)
+			{
+				(new File(fileSavePath)).mkdirs();
+			}
+
+			filepath = fileSavePath + "/" + this.getPKVal() + "." + ext;
+
+			//存在文件则删除
+			if ((new File(filepath)).isFile() == true)
+			{
+				(new File(filepath)).delete();
+			}
+
+			File info = new File(filepath);
+			CommonFileUtils.upload(request, "file",info);
+		}
+
+		//需要这样写 @李国文.
+		en.SetValByKey("MyFileName", fileName);
+		en.SetValByKey("MyFilePath", filepath);
+		en.SetValByKey("MyFileExt", ext);
+		en.SetValByKey("MyFileSize", size);
+		en.SetValByKey("WebPath", filepath);
+
+		en.Update();
+		return "文件保存成功";
+	}
+	/**
+	 * 单实体多附件上传
 	 * @return
+	 * @throws Exception
+	 */
+	public final String EntityMultiAth_Upload() throws Exception {
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
+		if (contentType == null || contentType.indexOf("multipart/form-data") == -1)
+			return "err@附件上传页面Form表单类型设置错误";
+		MultipartHttpServletRequest mrequest = CommonFileUtils.getMultipartHttpServletRequest( request);
+		if(mrequest.getFileMap().size()==0)
+			return "err@请选择要上传的文件。";
+		MultipartFile file = mrequest.getFile("file");
+		//获取保存文件信息的实体
+		String enName = this.getEnName();
+		Entity en = null;
+
+		//是否是空白记录.
+		boolean isBlank = DataType.IsNullOrEmpty(this.getPKVal());
+		if (isBlank == true)
+			return "err@请先保存实体信息然后再上传文件";
+		else
+			en = ClassFactory.GetEn(this.getEnName());
+
+		if (en == null)
+			return "err@参数类名不正确.";
+		en.setPKVal(this.getPKVal());
+		int i = en.RetrieveFromDBSources();
+		if (i == 0)
+		{
+			return "err@数据[" + this.getEnName() + "]主键为[" + en.getPKVal()+ "]不存在，或者没有保存。";
+		}
+
+		//获取文件的名称
+		String fullfileName =file.getOriginalFilename();
+		if (fullfileName.indexOf("/") >= 0)
+			fullfileName = fullfileName.substring(fullfileName.lastIndexOf("/") + 1);
+		String fileName = fullfileName.substring(0, fullfileName.lastIndexOf('.'));
+		//文件后缀
+		String ext =fullfileName.replace(fileName,"");
+
+		//文件大小
+		float size = file.getSize() / 1024;
+
+		//保存位置
+		String filepath = "";
+
+		//如果是天业集团则保存在ftp服务器上
+		if (SystemConfig.getCustomerNo().equals("TianYe") || SystemConfig.getIsUploadFileToFTP() == true)
+		{
+			String guid = DBAccess.GenerGUID(0, null, null);
+
+			//把文件临时保存到一个位置.
+			String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
+			try
+			{
+				CommonFileUtils.upload(request, "file", new File(temp));
+			}
+			catch (RuntimeException ex)
+			{
+				(new File(temp)).delete();
+				CommonFileUtils.upload(request, "file", new File(temp));
+			}
+
+
+			String ny = DataType.getCurrentDateByFormart("yyyy_MM");
+			String workDir = ny + "/Helper/";
+			boolean isOK =false;
+			FtpUtil ftpUtil = bp.wf.Glo.getFtpUtil();
+
+			ftpUtil.changeWorkingDirectory(workDir,true);
+
+			// 把文件放在FTP服务器上去.
+			isOK=ftpUtil.uploadFile( guid + ext,temp);
+
+			ftpUtil.releaseConnection();
+			//删除临时文件
+			(new File(temp)).delete();
+
+			//设置路径.
+			filepath = ny + "/Helper/" + guid + ext;
+
+		}
+		else
+		{
+
+			String savePath = SystemConfig.getPathOfDataUser() + enName + "/" + this.getPKVal();
+
+			if ((new File(savePath)).isDirectory() == false)
+			{
+				(new File(savePath)).mkdirs();
+			}
+			savePath = savePath + "/" + fileName + ext;
+			//存在文件则删除
+			if ((new File(savePath)).isDirectory() == true)
+			{
+				(new File(savePath)).delete();
+			}
+
+			File info = new File(savePath);
+			CommonFileUtils.upload(request, "file",info);
+			filepath = "/DataUser/" + enName + "/" + this.getPKVal() + "/" + fileName + ext;
+		}
+		//保存上传的文件
+		SysFileManager fileManager = new SysFileManager();
+		fileManager.setAttrFileNo(this.GetRequestVal("FileNo"));
+		fileManager.setAttrFileName(URLDecoder.decode(this.GetRequestVal("FileName"), "UTF-8"));
+		fileManager.setEnName(this.getEnName());
+		fileManager.setRefVal(this.getPKVal());
+		fileManager.setMyFileName(fileName);
+		fileManager.setMyFilePath(filepath);
+		fileManager.setMyFileExt(ext);
+		fileManager.setMyFileSize(size);
+		fileManager.setWebPath(filepath);
+		fileManager.Insert();
+		return fileManager.ToJson(true);
+	}
+	/**
+	 删除实体多附件上传的信息
+	 @return
 	 */
 	public final String EntityMultiFile_Delete() throws Exception {
 		int oid = (int) this.getOID();
@@ -772,14 +1017,13 @@ public class WF_CommEntity extends WebContralBase {
 		fileManager.Delete();
 		return fileManager.getMyFileName() + "删除成功";
 	}
-
 	/**
-	 * 实体初始化
-	 * 
-	 * @return
-	 * @throws Exception
+	 实体初始化
+
+	 @return
 	 */
 	public final String Entity_Init() throws Exception {
+
 		try {
 			// 是否是空白记录.
 			boolean isBlank = DataType.IsNullOrEmpty(this.getPKVal());
@@ -804,7 +1048,7 @@ public class WF_CommEntity extends WebContralBase {
 			}
 
 			// 获得描述.
-			Map map = en.getEnMap();
+			Map map = en.getEnMapInTime();
 
 			String pkVal = this.getPKVal();
 
@@ -885,14 +1129,14 @@ public class WF_CommEntity extends WebContralBase {
 				} else {
 					dr.setValue("FunPara", "true");
 				}
-
+				dr.setValue("ClassMethodName",item.ClassMethodName);
 				dtM.Rows.add(dr); // 增加到rows.
 			}
 
 			/// 增加 上方法.
 
 			/// 加入一对多的实体编辑
-			AttrsOfOneVSM oneVsM = en.getEnMap().getAttrsOfOneVSM();
+			AttrsOfOneVSM oneVsM = map.getAttrsOfOneVSM();
 			String sql = "";
 			int i = 0;
 			if (oneVsM.size() > 0) {
@@ -978,7 +1222,7 @@ public class WF_CommEntity extends WebContralBase {
 			/// 增加 一对多.
 
 			/// 从表
-			EnDtls enDtls = en.getEnMap().getDtls();
+			EnDtls enDtls = map.getDtls();
 			for (EnDtl enDtl : enDtls) {
 				// 判断该dtl是否要显示?
 				Entity myEnDtl = enDtl.getEns().getGetNewEntity(); // 获取他的en
@@ -988,9 +1232,13 @@ public class WF_CommEntity extends WebContralBase {
 				}
 
 				DataRow dr = dtM.NewRow();
-				String url = "Dtl.htm?EnName=" + this.getEnName() + "&PK=" + this.getPKVal() + "&EnsName="
-						+ enDtl.getEnsName() + "&RefKey=" + enDtl.getRefKey() + "&RefVal=" + en.getPKVal().toString()
-						+ "&MainEnsName=" + en.toString();
+
+				String url = "";
+				if (enDtl.getDtlEditerModel() == DtlEditerModel.DtlBatch)
+					url = "DtlBatch.htm?EnName=" + this.getEnName() + "&PK=" + this.getPKVal() + "&EnsName=" + enDtl.getEnsName()  + "&RefKey=" + enDtl.getRefKey() + "&RefVal=" + en.getPKVal().toString() + "&MainEnsName=" + en.toString();
+				else
+					url = "DtlSearch.htm?EnName=" + this.getEnName() + "&PK=" + this.getPKVal() + "&EnsName=" + enDtl.getEnsName()  + "&RefKey=" + enDtl.getRefKey() + "&RefVal=" + en.getPKVal().toString() + "&MainEnsName=" + en.toString();
+
 				try {
 					i = DBAccess.RunSQLReturnValInt(
 							"SELECT COUNT(*) FROM " + enDtl.getEns().getGetNewEntity().getEnMap().getPhysicsTable()
@@ -1009,7 +1257,7 @@ public class WF_CommEntity extends WebContralBase {
 				dr.setValue("Title", enDtl.getDesc() + "(" + i + ")");
 				dr.setValue("Url", url);
 				dr.setValue("GroupName", enDtl.getGroupName());
-
+				dr.setValue("Icon",enDtl.Icon);
 				dr.setValue("RefMethodType", RefMethodType.RightFrameOpen.getValue());
 
 				dtM.Rows.add(dr);
@@ -1025,120 +1273,130 @@ public class WF_CommEntity extends WebContralBase {
 		}
 	}
 
-	/// 实体的操作.
+	///#endregion 实体的操作.
 
 	public final String Branches_SearchByKey() throws Exception {
 
-		String key = this.GetRequestVal("Key"); // 查询关键字.
+		String key = this.GetRequestVal("Key"); //查询关键字.
 
-		String ensOfM = this.GetRequestVal("EnsOfM"); // 多的实体.
+		String ensOfM = this.GetRequestVal("EnsOfM"); //多的实体.
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
-		QueryObject qo = new QueryObject(ensMen); // 集合.
+		QueryObject qo = new QueryObject(ensMen); //集合.
 		qo.AddWhere("No", " LIKE ", "%" + key + "%");
 		qo.addOr();
 		qo.AddWhere("Name", " LIKE ", "%" + key + "%");
 		qo.DoQuery();
 
-		return ensMen.ToJson();
+		return ensMen.ToJson("dt");
 	}
 
-	/// 部门人员模式.
+
+	///#region 部门人员模式.
 	public final String BranchesAndLeaf_SearchByNodeID() throws Exception {
 		String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
-		String key = this.GetRequestVal("Key"); // 查询关键字.
-		String ensOfM = this.GetRequestVal("EnsOfM"); // 多的实体.
+		String key = this.GetRequestVal("Key"); //查询关键字.
+		String ensOfM = this.GetRequestVal("EnsOfM"); //多的实体.
 
-		// 如果是部门人员信息，关联的有兼职部门
-		if ((ensOfM.equals("bp.port.Emps") == true || ensOfM.equals("bp.gpm.Emps") == true)
-				&& defaultGroupAttrKey.equals("FK_Dept") == true) {
-			String sql = "Select  E.No , E.Name ,D.Name AS FK_DeptText,-1 AS TYPE  From Port_DeptEmp DE, Port_Emp E,Port_Dept D Where DE.FK_Emp = E.No And DE.FK_Dept = D.No AND  D.No='"
-					+ key + "'";
+		//如果是部门人员信息，关联的有兼职部门.
+		String emp1s = bp.sys.base.Glo.DealClassEntityName("bp.port.Emps");
+		String emp2s = bp.sys.base.Glo.DealClassEntityName("bp.port.Emps");
+
+		if ((ensOfM.equals(emp1s) == true || ensOfM.equals(emp2s) == true) && defaultGroupAttrKey.equals("FK_Dept") == true)
+		{
+			String sql = "Select  E." + bp.sys.base.Glo.getUserNo() + " , E.Name ,D.Name AS FK_DeptText,-1 AS TYPE  From Port_DeptEmp DE, Port_Emp E,Port_Dept D Where DE.FK_Emp = E.No And DE.FK_Dept = D.No AND  D.No='" + key + "'";
 
 			sql += " union ";
-			sql += "select  E.No , E.Name ,D.Name AS FK_DeptText,0 AS TYPE From Port_Emp E,Port_Dept D Where E.Fk_Dept = D.No AND  D.No='"
-					+ key + "' ORDER BY TYPE DESC";
+			sql += "select  E." + bp.sys.base.Glo.getUserNo() + " , E.Name ,D.Name AS FK_DeptText,0 AS TYPE From Port_Emp E,Port_Dept D Where E.Fk_Dept = D.No AND  D.No='" + key + "' ORDER BY TYPE DESC";
 			DataTable dtt = DBAccess.RunSQLReturnTable(sql);
-			DataTable dt = dtt.clone();
+			DataTable dt = dtt;
 			String emps = "";
-			for (DataRow drr : dtt.Rows) {
-				if (emps.contains(drr.getValue("No").toString() + ",") == true) {
+			for (DataRow drr : dtt.Rows)
+			{
+				if (emps.contains(drr.get("No").toString() + ",") == true)
+				{
 					continue;
 				}
-				emps += drr.getValue("No").toString() + ",";
+				emps += drr.get("No").toString() + ",";
 
 				DataRow dr = dt.NewRow();
-				dr.setValue("No", drr.getValue("No"));
-				dr.setValue("Name", drr.getValue("Name"));
-				dr.setValue("FK_DeptText", drr.getValue("FK_DeptText"));
-				dr.setValue("type", drr.getValue("TYPE"));
+				dr.setValue("No", drr.get("No"));
+				dr.setValue("Name", drr.get("Name"));
+				dr.setValue("FK_DeptText", drr.get("FK_DeptText"));
+				dr.setValue("type", drr.get("TYPE"));
 				dt.Rows.add(dr);
 			}
-			for (DataColumn col : dt.Columns) {
+			for (DataColumn col : dt.Columns)
+			{
 				String colName = col.ColumnName.toLowerCase();
-				switch (colName) {
-				case "no":
-					col.ColumnName = "No";
-					break;
-				case "name":
-					col.ColumnName = "Name";
-					break;
-				case "fk_depttext":
-					col.ColumnName = "FK_DeptText";
-					break;
-				case "type":
-					col.ColumnName = "TYPE";
-					break;
-				default:
-					break;
+				switch (colName)
+				{
+					case "no":
+						col.ColumnName = "No";
+						break;
+					case "name":
+						col.ColumnName = "Name";
+						break;
+					case "fk_depttext":
+						col.ColumnName = "FK_DeptText";
+						break;
+					case "type":
+						col.ColumnName = "TYPE";
+						break;
+					default:
+						break;
 				}
 			}
 			return bp.tools.Json.ToJson(dt);
 		}
 
+
+
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
-		QueryObject qo = new QueryObject(ensMen); // 集合.
+		QueryObject qo = new QueryObject(ensMen); //集合.
 		qo.AddWhere(defaultGroupAttrKey, key);
 		qo.DoQuery();
 
-		return ensMen.ToJson();
-	}
 
+		return ensMen.ToJson("dt");
+	}
 	public final String BranchesAndLeaf_SearchByKey() throws Exception {
 		String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
 
-		String key = this.GetRequestVal("Key"); // 查询关键字.
+		String key = this.GetRequestVal("Key"); //查询关键字.
 
-		String ensOfM = this.GetRequestVal("EnsOfM"); // 多的实体.
+		String ensOfM = this.GetRequestVal("EnsOfM"); //多的实体.
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
-		QueryObject qo = new QueryObject(ensMen); // 集合.
+		QueryObject qo = new QueryObject(ensMen); //集合.
 		qo.AddWhere("No", " LIKE ", "%" + key + "%");
 		qo.addOr();
 		qo.AddWhere("Name", " LIKE ", "%" + key + "%");
 		qo.DoQuery();
 
-		return ensMen.ToJson();
+		return ensMen.ToJson("dt");
 	}
-
 	public final String BranchesAndLeaf_Delete() throws Exception {
-		try {
+		try
+		{
 			String dot2DotEnName = this.GetRequestVal("Dot2DotEnName");
 			String AttrOfOneInMM = this.GetRequestVal("AttrOfOneInMM");
 			String AttrOfMInMM = this.GetRequestVal("AttrOfMInMM");
 			Entity mm = ClassFactory.GetEn(dot2DotEnName);
 			mm.Delete(AttrOfOneInMM, this.getPKVal(), AttrOfMInMM, this.GetRequestVal("Key"));
 			return "删除成功.";
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex)
+		{
 			return "err@" + ex.getMessage();
 		}
 	}
+	/**
+	 初始化		dt.Rows[3]	error CS0103: 当前上下文中不存在名称"dt”
+	 */
 
 	/**
-	 * 初始化
-	 * 
-	 * @return
-	 * @throws Exception
+	 @return
 	 */
 	public final String BranchesAndLeaf_Init() throws Exception {
 		String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
@@ -1183,13 +1441,15 @@ public class WF_CommEntity extends WebContralBase {
 		if (DataType.IsNullOrEmpty(rootNo) == true) {
 			rootNo = vsM.RootNo;
 		}
-		if (rootNo.equals("@WebUser.FK_Dept") || rootNo.equals("WebUser.getFK_Dept()")) {
+		if (rootNo.equals("@WebUser.FK_Dept") || rootNo.equals("WebUser.FK_Dept")) {
 			rootNo = WebUser.getFK_Dept();
 		}
-		if (rootNo.equals("@WebUser.OrgNo") || rootNo.equals("WebUser.getOrgNo()")) {
+		if (rootNo.equals("@WebUser.OrgNo") || rootNo.equals("WebUser.OrgNo")) {
 			rootNo = WebUser.getOrgNo();
 		}
 
+		if (DataType.IsNullOrEmpty(rootNo) == true)
+			rootNo = "0";
 		/// 生成树目录.
 		String ensOfM = this.GetRequestVal("EnsOfM"); // 多的实体.
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
@@ -1211,12 +1471,12 @@ public class WF_CommEntity extends WebContralBase {
 
 		int IsExitIdx = 0; // 判断改类是否存在Idx
 		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true
-				&& tree.getEnMap().getAttrs().Contains("Idx") == true) {
+				&& tree.getEnMap().getAttrs().contains("Idx") == true) {
 			IsExitIdx = 1;
 		}
 
 		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "ParentNo") == true
-				&& tree.getEnMap().getAttrs().Contains("ParentNo") == true) {
+				&& tree.getEnMap().getAttrs().contains("ParentNo") == true) {
 			IsExitParentNo = 1;
 		}
 
@@ -1327,42 +1587,49 @@ public class WF_CommEntity extends WebContralBase {
 		return bp.tools.Json.ToJson(ds);
 	}
 
+
 	public final String BranchesAndLeaf_GetTreesByParentNo() throws Exception {
 		String rootNo = GetRequestVal("RootNo");
-		if (DataType.IsNullOrEmpty(rootNo)) {
+		if (DataType.IsNullOrEmpty(rootNo))
+		{
 			rootNo = "0";
 		}
 
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
-		String ensOfM = this.GetRequestVal("EnsOfM"); // 多的实体.
-		ensOfM = bp.sys.Glo.DealClassEntityName(ensOfM);
+		String ensOfM = this.GetRequestVal("EnsOfM"); //多的实体.
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
 		Entity enMen = ensMen.getGetNewEntity();
 
 		Attr attr = enMen.getEnMap().GetAttrByKey(defaultGroupAttrKey);
-		if (attr == null) {
+		if (attr == null)
+		{
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不存在，请确认是否删除了该属性?";
 		}
 
-		if (attr.getMyFieldType() == FieldType.Normal) {
+		if (attr.getMyFieldType() == FieldType.Normal)
+		{
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不能是普通字段，必须是外键或者枚举.";
 		}
 
 		Entities trees = attr.getHisFKEns();
-		// 判断改类是否存在Idx
+		//判断改类是否存在Idx
 		Entity tree = trees.getGetNewEntity();
-		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true
-				&& tree.getEnMap().getAttrs().Contains("Idx") == true) {
-			trees.Retrieve("ParentNo", rootNo, "Idx");
-		} else {
-			trees.Retrieve("ParentNo", rootNo);
+		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true && tree.getEnMap().getAttrs().contains("Idx") == true)
+		{
+			trees.Retrieve("ParentNo",rootNo,"Idx");
+		}
+		else
+		{
+			trees.Retrieve("ParentNo", rootNo, null);
 		}
 
 		DataTable dt = trees.ToDataTableField("DBTrees");
-		// 如果没有parnetNo 列，就增加上, 有可能是分组显示使用这个模式.
-		if (dt.Columns.contains("ParentNo") == false) {
+		//如果没有parnetNo 列，就增加上, 有可能是分组显示使用这个模式.
+		if (dt.Columns.contains("ParentNo") == false)
+		{
 			dt.Columns.Add("ParentNo");
-			for (DataRow dr : dt.Rows) {
+			for (DataRow dr : dt.Rows)
+			{
 				dr.setValue("ParentNo", rootNo);
 			}
 		}
@@ -1370,53 +1637,63 @@ public class WF_CommEntity extends WebContralBase {
 
 	}
 
-	/// 部门人员模式.
+	///#endregion 部门人员模式.
 
-	/// 分组数据.
+
+	///#region 分组数据.
 	/**
-	 * 执行保存
-	 * 
-	 * @return
-	 * @throws Exception
+	 执行保存
+
+	 @return
 	 */
 	public final String Dot2Dot_Save() throws Exception {
 
-		try {
+		try
+		{
 			String eles = this.GetRequestVal("ElesAAA");
 
-			// 实体集合.
+			//实体集合.
 			String dot2DotEnsName = this.GetRequestVal("Dot2DotEnsName");
 			String attrOfOneInMM = this.GetRequestVal("AttrOfOneInMM");
 			String attrOfMInMM = this.GetRequestVal("AttrOfMInMM");
 			boolean saveType = this.GetRequestValBoolen("SaveType");
-			// 获得点对点的实体.
+			//获得点对点的实体.
 			Entity en = ClassFactory.GetEns(dot2DotEnsName).getGetNewEntity();
-			if (saveType == true) {
-				// 选择的值保存在一个字段中
+			if (saveType == true)
+			{
+				//选择的值保存在一个字段中
 				String para = this.GetRequestVal("Para");
 				String paraVal = this.GetRequestVal("ParaVal");
 
 				String para1 = this.GetRequestVal("Para1");
 				String paraVal1 = this.GetRequestVal("ParaVal1");
 
-				// 首先删除.
-				if (DataType.IsNullOrEmpty(para) == true) {
+				//首先删除.
+				if (DataType.IsNullOrEmpty(para) == true)
+				{
 					en.Delete(attrOfOneInMM, this.getPKVal());
-				} else if (DataType.IsNullOrEmpty(para1) == true) {
+				}
+				else if (DataType.IsNullOrEmpty(para1) == true)
+				{
 					en.Delete(attrOfOneInMM, this.getPKVal(), para, paraVal);
-				} else if (DataType.IsNullOrEmpty(para) == false && DataType.IsNullOrEmpty(para1) == false) {
+				}
+				else if (DataType.IsNullOrEmpty(para) == false && DataType.IsNullOrEmpty(para1) == false)
+				{
 					en.Delete(attrOfOneInMM, this.getPKVal(), para, paraVal, para1, paraVal1);
 				}
 
-				if (DataType.IsNullOrEmpty(eles) == true) {
+				if (DataType.IsNullOrEmpty(eles) == true)
+				{
 					return "没有选择值";
 				}
 				en.SetValByKey(attrOfOneInMM, this.getPKVal());
 				en.SetValByKey(attrOfMInMM, eles);
-				if (en.getRow().containsKey(para)) {
+				if (en.getRow().containsKey(para))
+				{
 					en.SetValByKey(para, paraVal);
 				}
-				if (en.getRow().containsKey(para1)) {
+				if (en.getRow().containsKey(para1))
+				{
 					en.SetValByKey(para1, paraVal1);
 				}
 
@@ -1425,11 +1702,15 @@ public class WF_CommEntity extends WebContralBase {
 
 			}
 
+
+
 			en.Delete(attrOfOneInMM, this.getPKVal());
 
 			String[] strs = eles.split("[,]", -1);
-			for (String str : strs) {
-				if (DataType.IsNullOrEmpty(str) == true) {
+			for (String str : strs)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+				{
 					continue;
 				}
 
@@ -1438,21 +1719,21 @@ public class WF_CommEntity extends WebContralBase {
 				en.Insert();
 			}
 			return "数据保存成功.";
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex)
+		{
 			return "err@" + ex.getMessage();
 		}
 	}
-
 	/**
-	 * 获得分组的数据源
-	 * 
-	 * @return
-	 * @throws Exception
+	 获得分组的数据源
+
+	 @return
 	 */
 	public final String Dot2Dot_GenerGroupEntitis() throws Exception {
 		String key = this.GetRequestVal("DefaultGroupAttrKey");
 
-		// 实体集合.
+		//实体集合.
 		String ensName = this.GetRequestVal("EnsOfM");
 		Entities ens = ClassFactory.GetEns(ensName);
 		Entity en = ens.getGetNewEntity();
@@ -1460,30 +1741,35 @@ public class WF_CommEntity extends WebContralBase {
 		Attrs attrs = en.getEnMap().getAttrs();
 		Attr attr = attrs.GetAttrByKey(key);
 
-		if (attr == null) {
+		if (attr == null)
+		{
 			return "err@设置的分组外键错误[" + key + "],不存在[" + ensName + "]或者已经被删除.";
 		}
 
-		if (attr.getMyFieldType() == FieldType.Normal) {
+		if (attr.getMyFieldType() == FieldType.Normal)
+		{
 			return "err@设置的默认分组[" + key + "]不能是普通字段.";
 		}
 
-		if (attr.getMyFieldType() == FieldType.FK) {
+		if (attr.getMyFieldType() == FieldType.FK)
+		{
 			Entities ensFK = attr.getHisFKEns();
 			ensFK.clear();
 			ensFK.RetrieveAll();
-			return ensFK.ToJson();
+			return ensFK.ToJson("dt");
 		}
 
-		if (attr.getMyFieldType() == FieldType.Enum) {
+		if (attr.getMyFieldType() == FieldType.Enum)
+		{
 			/* 如果是枚举 */
 			SysEnums ses = new SysEnums();
-			ses.Retrieve(SysEnumAttr.IntKey, attr.getUIBindKey());
+			ses.Retrieve(SysEnumAttr.IntKey, attr.getUIBindKey(), null);
 		}
 
 		return "err@设置的默认分组[" + key + "]不能是普通字段.";
 	}
 
-	/// 分组数据.
+	///#endregion 分组数据.
+
 
 }

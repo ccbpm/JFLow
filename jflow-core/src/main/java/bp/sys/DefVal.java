@@ -2,7 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
+import bp.en.Map;
 
 /** 
  默认值
@@ -10,12 +10,11 @@ import bp.*;
 public class DefVal extends EntityMyPK
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 父节点编号
-	 * @throws Exception 
 	*/
-	public final String getParentNo() throws Exception
+	public final String getParentNo()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.ParentNo);
 	}
@@ -25,20 +24,19 @@ public class DefVal extends EntityMyPK
 	}
 	/** 
 	 是否父节点
-	 * @throws Exception 
 	*/
-	public final String getIsParent() throws Exception
+	public final String isParent()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.IsParent);
 	}
-	public final void setIsParent(String value) throws Exception
+	public final void setParent(String value) throws Exception
 	{
 		this.SetValByKey(DefValAttr.IsParent, value);
 	}
 	/** 
 	 词汇类别
 	*/
-	public final String getWordsSort() throws Exception
+	public final String getWordsSort()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.WordsSort);
 	}
@@ -49,7 +47,7 @@ public class DefVal extends EntityMyPK
 	/** 
 	 节点编号
 	*/
-	public final String getFK_MapData() throws Exception
+	public final String getFK_MapData()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.FK_MapData);
 	}
@@ -60,7 +58,7 @@ public class DefVal extends EntityMyPK
 	/** 
 	 节点对应字段
 	*/
-	public final String getAttrKey() throws Exception
+	public final String getAttrKey()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.AttrKey);
 	}
@@ -71,7 +69,7 @@ public class DefVal extends EntityMyPK
 	/** 
 	 是否历史词汇
 	*/
-	public final String getLB() throws Exception
+	public final String getLB()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.LB);
 	}
@@ -82,7 +80,7 @@ public class DefVal extends EntityMyPK
 	/** 
 	 人员编号
 	*/
-	public final String getFK_Emp() throws Exception
+	public final String getFK_Emp()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.FK_Emp);
 	}
@@ -93,7 +91,7 @@ public class DefVal extends EntityMyPK
 	/** 
 	 节点文本
 	*/
-	public final String getCurValue() throws Exception
+	public final String getCurValue()  throws Exception
 	{
 		return this.GetValStringByKey(DefValAttr.CurValue);
 	}
@@ -102,10 +100,10 @@ public class DefVal extends EntityMyPK
 		this.SetValByKey(DefValAttr.CurValue, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 
 	/** 
 	 默认值
@@ -117,7 +115,7 @@ public class DefVal extends EntityMyPK
 	 map
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -145,8 +143,8 @@ public class DefVal extends EntityMyPK
 
 		map.AddTBString(DefValAttr.FK_MapData, null, "实体", false, false, 0, 100, 20);
 		map.AddTBString(DefValAttr.FK_Emp, null, "人员", false, true, 0, 100, 10);
-		//map.AddTBString(DefValAttr.AttrKey, null, "节点对应字段", false, false, 0, 50, 20);
-		map.AddTBString(DefValAttr.AttrKey, null, "字段", true, false, 0, 100, 4);
+		map.AddTBString(DefValAttr.AttrKey, null, "节点对应字段", false, false, 0, 50, 20);
+
 			//map.AddTBInt(DefValAttr.WordsSort, 0, "词汇类型", false, false);//1,2,3... 退回-移交-表单...(暂时)
 		map.AddTBInt(DefValAttr.LB, 0, "类别", false, false); //我的，历史,系统，
 		map.AddTBString(DefValAttr.CurValue, null, "文本", false, true, 0, 4000, 10);
@@ -155,10 +153,10 @@ public class DefVal extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception
+	protected boolean beforeInsert() throws Exception 
 	{
 		//设置主键.
 		this.setMyPK(DBAccess.GenerGUID());

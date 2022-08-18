@@ -14,8 +14,8 @@ public class AttrFiles extends ArrayList<AttrFile> implements Serializable
 	/** 
 	 增加文件
 	 
-	 @param fileNo
-	 @param fileName
+	 param fileNo
+	 param fileName
 	*/
 	public final void Add(String fileNo, String fileName)
 	{

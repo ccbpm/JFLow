@@ -1,31 +1,27 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.web.*;
 import bp.port.*;
 import bp.en.*;
-import bp.wf.*;
 import bp.wf.Glo;
 import bp.wf.template.*;
+import bp.*;
 import bp.wf.*;
 
 /** 
  页面功能实体
 */
-public class WF_WorkOpt_Selecter extends WebContralBase
+public class WF_WorkOpt_Selecter extends bp.difference.handler.WebContralBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_WorkOpt_Selecter()
-	{
+	public WF_WorkOpt_Selecter() throws Exception {
 
 	}
 
-	public final String ByStation_ShowEmps() throws Exception
-	{
+	public final String ByStation_ShowEmps() throws Exception {
 		String staNo = this.GetRequestVal("StaNo");
 		String sql = "";
 		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
@@ -34,7 +30,7 @@ public class WF_WorkOpt_Selecter extends WebContralBase
 		}
 		else
 		{
-			sql = "SELECT A.No, A.Name,A.FK_Dept FROM Port_Emp A, Port_DeptEmpStation B WHERE A.No=B.FK_Emp AND A.OrgNo='" + WebUser.getOrgNo() + "' AND B.FK_Station='" + staNo + "'";
+			sql = "SELECT A." + Glo.UserNo + ", A.Name,A.FK_Dept FROM Port_Emp A, Port_DeptEmpStation B WHERE A.No=B.FK_Emp AND A.OrgNo='" + bp.web.WebUser.getOrgNo() + "' AND B.FK_Station='" + staNo + "'";
 		}
 
 		DataTable db = DBAccess.RunSQLReturnTable(sql);
@@ -43,9 +39,8 @@ public class WF_WorkOpt_Selecter extends WebContralBase
 	}
 
 
-		/// 界面 .
-	public final String SelectEmpsByTeamStation_Init() throws Exception
-	{
+		///#region  界面 .
+	public final String SelectEmpsByTeamStation_Init() throws Exception {
 		String TeamNo = this.GetRequestVal("TeamNo");
 		String sql = "";
 		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
@@ -54,16 +49,15 @@ public class WF_WorkOpt_Selecter extends WebContralBase
 		}
 		else
 		{
-			sql = "SELECT A.No, A.Name,A.FK_Dept FROM Port_Emp A, Port_TeamEmp B WHERE A.No=B.FK_Emp AND A.OrgNo='" + WebUser.getOrgNo() + "' AND B.FK_Team='" + TeamNo + "'";
+			sql = "SELECT A." + bp.sys.base.Glo.getUserNo() + ", A.Name,A.FK_Dept FROM Port_Emp A, Port_TeamEmp B WHERE A.No=B.FK_Emp AND A.OrgNo='" + bp.web.WebUser.getOrgNo() + "' AND B.FK_Team='" + TeamNo + "'";
 		}
 
 		DataTable db = DBAccess.RunSQLReturnTable(sql);
 		return bp.tools.Json.ToJson(db);
 	}
 
-		/// 界面方法.
-	public final String AddSelectEmp() throws Exception
-	{
+		///#endregion 界面方法.
+	public final String AddSelectEmp() throws Exception {
 		//获得前台传来的参数
 		String FK_Node = this.GetRequestVal("FK_Node");
 		String WorkID = this.GetRequestVal("WorkID");
@@ -87,8 +81,7 @@ public class WF_WorkOpt_Selecter extends WebContralBase
 		}
 		return "err@添加人员失败";
 	}
-	public final String DelSelectEmp() throws Exception
-	{
+	public final String DelSelectEmp() throws Exception {
 		String MyPK = this.GetRequestVal("MyPK");
 		SelectAccper selectAccper = new SelectAccper(MyPK);
 		if (selectAccper.Delete() == 0)
@@ -101,10 +94,8 @@ public class WF_WorkOpt_Selecter extends WebContralBase
 	 关键字查询
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Selecter_SearchByKey() throws Exception
-	{
+	public final String Selecter_SearchByKey() throws Exception {
 
 		String key = this.GetRequestVal("Key"); //查询关键字.
 
@@ -116,6 +107,6 @@ public class WF_WorkOpt_Selecter extends WebContralBase
 		qo.AddWhere("Name", " LIKE ", "%" + key + "%");
 		qo.DoQuery();
 
-		return ensMen.ToJson();
+		return ensMen.ToJson("dt");
 	}
 }

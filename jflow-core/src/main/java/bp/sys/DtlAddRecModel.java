@@ -1,7 +1,5 @@
 package bp.sys;
 
-import bp.*;
-
 /** 
  明细表存盘方式
 */
@@ -23,7 +21,7 @@ public enum DtlAddRecModel
 		return this.ordinal();
 	}
 
-	public static DtlAddRecModel forValue(int value) throws Exception
+	public static DtlAddRecModel forValue(int value)
 	{
 		return values()[value];
 	}

@@ -1,5 +1,10 @@
 package bp.sys;
-import bp.en.EntityOIDNameAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.*;
+import java.util.*;
+
 /** 
  扩展控件属性
 */

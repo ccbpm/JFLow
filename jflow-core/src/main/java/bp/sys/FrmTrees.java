@@ -15,21 +15,23 @@ public class FrmTrees extends EntitiesTree
 	/** 
 	 独立表单树s
 	*/
-	public FrmTrees()
-	{
+	public FrmTrees()  {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmTree();
 	}
 
 	@Override
-	public int RetrieveAll() throws Exception
-	{
+	public int RetrieveAll() throws Exception {
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			return this.Retrieve("OrgNo", bp.web.WebUser.getOrgNo());
+		}
+
 		int i = super.RetrieveAll();
 		if (i == 0)
 		{
@@ -48,14 +50,13 @@ public class FrmTrees extends EntitiesTree
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmTree> ToJavaList()
-	{
+	public final java.util.List<FrmTree> ToJavaList() {
 		return (java.util.List<FrmTree>)(Object)this;
 	}
 	/** 
@@ -63,8 +64,7 @@ public class FrmTrees extends EntitiesTree
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmTree> Tolist()
-	{
+	public final ArrayList<FrmTree> Tolist()  {
 		ArrayList<FrmTree> list = new ArrayList<FrmTree>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -73,5 +73,5 @@ public class FrmTrees extends EntitiesTree
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

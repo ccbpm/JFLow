@@ -1,4 +1,11 @@
 package bp.wf;
+
+import bp.wf.*;
+import bp.web.*;
+import bp.en.*;
+import bp.da.*;
+import bp.*;
+
 /** 
  执行内容列表
 */
@@ -20,6 +27,9 @@ public class DoWhatList
 	public static final String MyFlow = "MyFlow";
 	public static final String FlowFX = "FlowFX";
 	public static final String DealWork = "DealWork";
+	public static final String Bill = "Bill";
+	public static final String Home = "Home";
+
 	/** 
 	 处理消息连接
 	*/

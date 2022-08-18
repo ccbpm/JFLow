@@ -3,12 +3,11 @@ package bp.ccbill;
 import bp.da.*;
 import bp.en.*;
 import bp.wf.*;
-import bp.wf.data.*;
 import bp.wf.template.*;
 import bp.sys.*;
 import bp.ccbill.template.*;
+import bp.*;
 import java.util.*;
-import java.time.*;
 
 /** 
  实体表单s
@@ -16,42 +15,38 @@ import java.time.*;
 public class FrmDicts extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 实体表单s
 	*/
-	public FrmDicts()
-	{
+	public FrmDicts() throws Exception {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmDict();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FrmDict> ToJavaList()
-	{
-		return (List<FrmDict>)(Object)this;
+	public final java.util.List<FrmDict> ToJavaList() {
+		return (java.util.List<FrmDict>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmDict> Tolist()
-	{
+	public final ArrayList<FrmDict> Tolist()  {
 		ArrayList<FrmDict> list = new ArrayList<FrmDict>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -60,5 +55,5 @@ public class FrmDicts extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

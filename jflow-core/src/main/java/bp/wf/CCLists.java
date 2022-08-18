@@ -1,5 +1,10 @@
 package bp.wf;
+
+import bp.da.*;
 import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -8,33 +13,29 @@ import java.util.*;
 public class CCLists extends EntitiesMyPK
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new CCList();
 	}
 	/** 
 	 抄送
 	*/
-	public CCLists()
-	{
+	public CCLists() throws Exception {
 	}
 
 
 	/** 
 	 查询出来所有的抄送信息
 	 
-	 @param fk_node
-	 @param workid
-	 @param fid
-	 * @throws Exception 
+	 param fk_node
+	 param workid
+	 param fid
 	*/
-	public CCLists(int fk_node, long workid, long fid) throws Exception
-	{
+	public CCLists(int fk_node, long workid, long fid) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(CCListAttr.FK_Node, fk_node);
 		qo.addAnd();
@@ -49,26 +50,24 @@ public class CCLists extends EntitiesMyPK
 		qo.DoQuery();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<CCList> ToJavaList()
-	{
-		return (List<CCList>)(Object)this;
+	public final java.util.List<CCList> ToJavaList() {
+		return (java.util.List<CCList>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<CCList> Tolist()
-	{
+	public final ArrayList<CCList> Tolist()  {
 		ArrayList<CCList> list = new ArrayList<CCList>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -77,5 +76,5 @@ public class CCLists extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

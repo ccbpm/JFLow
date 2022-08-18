@@ -1,26 +1,28 @@
 package bp.wf.template;
+
+import bp.da.*;
 import bp.en.*;
+import bp.wf.port.*;
+import bp.*;
+import bp.wf.*;
 import java.util.*;
 
 /** 
  节点人员
 */
-public class NodeEmps extends EntitiesMM
+public class NodeEmps extends EntitiesMyPK
 {
 	/** 
 	 节点人员
 	*/
-	public NodeEmps()
-	{
+	public NodeEmps()  {
 	}
 	/** 
 	 节点人员
 	 
-	 @param NodeID 节点ID
-	 * @throws Exception 
+	 param NodeID 节点ID
 	*/
-	public NodeEmps(int NodeID) throws Exception
-	{
+	public NodeEmps(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeEmpAttr.FK_Node, NodeID);
 		qo.DoQuery();
@@ -28,11 +30,9 @@ public class NodeEmps extends EntitiesMM
 	/** 
 	 节点人员
 	 
-	 @param EmpNo EmpNo 
-	 * @throws Exception 
+	 param EmpNo EmpNo 
 	*/
-	public NodeEmps(String EmpNo) throws Exception
-	{
+	public NodeEmps(String EmpNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(NodeEmpAttr.FK_Emp, EmpNo);
 		qo.DoQuery();
@@ -41,29 +41,26 @@ public class NodeEmps extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new NodeEmp();
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<NodeEmp> ToJavaList()
-	{
-		return (List<NodeEmp>)(Object)this;
+	public final java.util.List<NodeEmp> ToJavaList() {
+		return (java.util.List<NodeEmp>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeEmp> Tolist()
-	{
+	public final ArrayList<NodeEmp> Tolist()  {
 		ArrayList<NodeEmp> list = new ArrayList<NodeEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -72,5 +69,5 @@ public class NodeEmps extends EntitiesMM
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

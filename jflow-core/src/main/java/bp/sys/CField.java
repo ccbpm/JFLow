@@ -1,12 +1,8 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.en.Map;
-import bp.en.*;
-import bp.*;
-import java.util.*;
+
 
 /** 
  列选择
@@ -14,14 +10,11 @@ import java.util.*;
 public class CField extends EntityMyPK
 {
 
-	private static final long serialVersionUID = 1L;
-
-	///基本属性
+		///#region 基本属性
 	/** 
 	 列选择
-	 * @throws Exception 
 	*/
-	public final String getAttrs() throws Exception
+	public final String getAttrs()  throws Exception
 	{
 		return this.GetValStringByKey(CFieldAttr.Attrs);
 	}
@@ -32,7 +25,7 @@ public class CField extends EntityMyPK
 	/** 
 	 操作员ID
 	*/
-	public final String getFK_Emp()throws Exception
+	public final String getFK_Emp()  throws Exception
 	{
 		return this.GetValStringByKey(CFieldAttr.FK_Emp);
 	}
@@ -43,7 +36,7 @@ public class CField extends EntityMyPK
 	/** 
 	 属性
 	*/
-	public final String getEnsName()throws Exception
+	public final String getEnsName()  throws Exception
 	{
 		return this.GetValStringByKey(CFieldAttr.EnsName);
 	}
@@ -52,10 +45,10 @@ public class CField extends EntityMyPK
 		this.SetValByKey(CFieldAttr.EnsName, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 列选择
 	*/
@@ -65,14 +58,10 @@ public class CField extends EntityMyPK
 	/** 
 	 列选择
 	 
-	 @param FK_Emp 工作人员ID
-	 @param className 类名称
-	 @param attrKey 属性
-	 @param Attrs 值
-	 * @throws Exception 
+	 param FK_Emp 工作人员ID
+	 param className 类名称
 	*/
-	public CField(String FK_Emp, String className) throws Exception
-	{
+	public CField(String FK_Emp, String className) throws Exception {
 		int i = this.Retrieve(CFieldAttr.FK_Emp, FK_Emp, CFieldAttr.EnsName, className);
 		if (i == 0)
 		{
@@ -85,7 +74,7 @@ public class CField extends EntityMyPK
 	 map
 	*/
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -101,7 +90,7 @@ public class CField extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
@@ -110,9 +99,8 @@ public class CField extends EntityMyPK
 		return super.beforeUpdateInsertAction();
 	}
 
-	public static Attrs GetMyAttrs(Entities ens, Map map) throws Exception
-	{
-		String vals = SystemConfig.GetConfigXmlEns("ListAttrs", ens.toString());
+	public static Attrs GetMyAttrs(Entities ens, Map map)  {
+		String vals = bp.difference.SystemConfig.GetConfigXmlEns("ListAttrs", ens.toString());
 		if (vals == null)
 		{
 			return map.getAttrs();

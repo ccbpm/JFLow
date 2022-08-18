@@ -65,9 +65,9 @@ public class NamedParameterStatement extends PreparedStatementWrapper
 	 * Creates a NamedParameterStatement. Wraps a call to c.
 	 * {@link Connection#prepareStatement(java.lang.String) prepareStatement}.
 	 * 
-	 * @param conn
+	 * param conn
 	 *            the database connection
-	 * @param sql
+	 * param sql
 	 *            the parameterized sql
 	 * @throws Exception
 	 *             if the statement could not be created
@@ -93,7 +93,7 @@ public class NamedParameterStatement extends PreparedStatementWrapper
 	/**
 	 * Returns the indexes for a parameter.
 	 * 
-	 * @param name
+	 * param name
 	 *            parameter name
 	 * @return parameter indexes
 	 * @throws IllegalArgumentException
@@ -113,7 +113,7 @@ public class NamedParameterStatement extends PreparedStatementWrapper
 	 * Parses a sql with named parameters. The parameter-index mappings are put
 	 * into the map, and the parsed sql is returned.
 	 * 
-	 * @param sql
+	 * param sql
 	 *            sql with named parameters
 	 * @return the parsed sql
 	 */

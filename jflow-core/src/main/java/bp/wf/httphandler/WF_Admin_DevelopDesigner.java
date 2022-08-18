@@ -1,45 +1,47 @@
 package bp.wf.httphandler;
 
-import bp.tools.BaseFileUtils;
-import bp.wf.*;
-import bp.web.*;
+import bp.difference.handler.CommonFileUtils;
+import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.difference.handler.WebContralBase;
-import bp.en.*;
-import bp.wf.template.*;
-import net.sf.json.JSON;
-import net.sf.json.JSONObject;
 import bp.ccbill.*;
-import org.apache.tools.ant.taskdefs.Length;
+import bp.difference.*;
+import bp.*;
+import bp.sys.CCFormAPI;
+import bp.tools.FileAccess;
+import bp.wf.*;
+import bp.wf.Dev2Interface;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.stream.Stream;
 
-public class WF_Admin_DevelopDesigner extends WebContralBase
+import static bp.difference.handler.WebContralBase.getRequest;
+
+public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBase
 {
 
-
-		///执行父类的重写方法.
+		///#region 执行父类的重写方法.
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_DevelopDesigner()
-	{
+	public WF_Admin_DevelopDesigner() throws Exception {
 
 	}
 	/** 
 	 表单初始化
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Designer_Init() throws Exception
-	{
+	public final String Designer_Init() throws Exception {
+		//获取htmlfrom 信息.
 		String htmlCode = DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
+
+		if (DataType.IsNullOrEmpty(htmlCode) == true)
+		{
+			htmlCode = "<h3>请插入表单模板.</h3>";
+		}
+
 		//把数据同步到DataUser/CCForm/HtmlTemplateFile/文件夹下
 		String filePath = SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/";
 		if ((new File(filePath)).isDirectory() == false)
@@ -47,57 +49,146 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 			(new File(filePath)).mkdirs();
 		}
 		filePath = filePath + this.getFK_MapData() + ".htm";
-		//写入到html 中
-		bp.da.DataType.WriteFile(filePath, htmlCode);
-		return htmlCode;
 
+		//写入到html 中
+		DataType.WriteFile(filePath, htmlCode);
+		return htmlCode;
 	}
 	/** 
 	 保存表单
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String SaveForm() throws Exception
-	{
+	public final String SaveForm() throws Exception {
 		//获取html代码
 		String htmlCode = this.GetRequestVal("HtmlCode");
-		if (DataType.IsNullOrEmpty(htmlCode) == false)
+		if (DataType.IsNullOrEmpty(htmlCode) == true)
 		{
-			htmlCode = URLDecoder.decode(htmlCode, "UTF-8");
-			//保存到DataUser/CCForm/HtmlTemplateFile/文件夹下
-			String filePath = SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/";
-			if ((new File(filePath)).isDirectory() == false)
-			{
-				(new File(filePath)).mkdirs();
-			}
-
-			filePath = filePath + this.getFK_MapData() + ".htm";
-			//写入到html 中
-			bp.da.DataType.WriteFile(filePath, htmlCode);
-
-			//保存类型。
-			MapData md = new MapData(this.getFK_MapData());
-			if (md.getHisFrmType() != FrmType.Develop)
-			{
-				md.setHisFrmType(FrmType.Develop);
-				md.Update();
-			}
-			// HtmlTemplateFile 保存到数据库中
-			DBAccess.SaveBigTextToDB(htmlCode, "Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
-
-			//检查数据完整性
-			GEEntity en = new GEEntity(this.getFK_MapData());
-			en.CheckPhysicsTable();
-			return "保存成功";
+			return "err@表单内容不能为空.";
 		}
-		return "保存成功.";
+
+		if (htmlCode.contains("err@") == true)
+		{
+			return "err@错误" + htmlCode;
+		}
+
+		htmlCode = URLDecoder.decode(htmlCode, "UTF8");
+
+		return Dev2Interface.SaveDevelopForm(htmlCode, this.getFK_MapData());
+
 	}
 
-		///
+		///#endregion
 
-	public final String Fields_Init() throws Exception
-	{
+
+		///#region 插入模版.
+	/** 
+	 获取开发者表单模板目录
+	 
+	 @return 
+	*/
+	public final String Template_Init() throws Exception {
+		DataSet ds = new DataSet();
+		String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolDevelopDesigner/";
+		File dirFile = new File(path);
+
+		File[] files = dirFile.listFiles(); //获取子文件夹
+		//模版类型
+		DataTable dt = new DataTable();
+		dt.TableName = "dirs";
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
+		DataRow dr = dt.NewRow();
+		//模版信息
+		DataTable filesDt = new DataTable();
+		filesDt.TableName = "temps";
+		filesDt.Columns.Add("No");
+		filesDt.Columns.Add("Name");
+		filesDt.Columns.Add("Dir");
+		DataRow tempdr = filesDt.NewRow();
+
+		for (File item : files)
+		{
+			//模版分类
+			dr = dt.NewRow();
+			dr.setValue("No", item);
+			dr.setValue("Name", item.getName());
+			dt.Rows.add(dr);
+
+			//获取模版
+			File[] itemfiles = item.listFiles();
+			if(itemfiles==null)
+				continue;
+
+
+			for (File temp : itemfiles)
+			{
+				if(temp.getName().endsWith(".htm")==false)
+					continue;
+				tempdr = filesDt.NewRow();
+				tempdr.setValue("No", temp);
+				tempdr.setValue("Name", temp.getName());
+				tempdr.setValue("Dir", item.getName());
+				filesDt.Rows.add(tempdr);
+			}
+		}
+
+		ds.Tables.add(dt);
+		ds.Tables.add(filesDt);
+
+		return bp.tools.Json.ToJson(ds);
+	}
+	/** 
+	 根据名称获取开发者表单文件内容
+	 
+	 @return 
+	*/
+	public final String Template_GenerHtml() throws Exception {
+		String fileName = this.GetRequestVal("DevTempName");
+		String fielDir = this.GetRequestVal("DevTempDir");
+		String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolDevelopDesigner/" + fielDir + "/";
+
+
+		String filePath = path + fileName;
+		String strHtml = FileAccess.readFileByBytes(filePath);;
+		return strHtml;
+	}
+
+	public final String Template_Imp() throws Exception {
+		//File files = HttpContextHelper.RequestFiles(); //context.Request.Files;
+		File xmlFile = null;
+		String fileName = "";
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+			//return "err@请选择要上传的流程模版。";
+
+
+			//设置文件名
+			//String fileNewName = (new File(files.get(0).FileName)).getName(); // DateTime.Now.ToString("yyyyMMddHHmmssff") + "_" + System.IO.Path.GetFileName(files[0].FileName);
+			fileName = CommonFileUtils.getOriginalFilename(request, "file");
+			//文件存放路径
+			String filePath = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolDevelopDesigner/" + "" + fileName;
+			String savePath = SystemConfig.getPathOfDataUser() + "JSLibData" + "/" + fileName;
+			xmlFile = new File(savePath);
+			if (xmlFile.exists()) {
+				xmlFile.delete();
+			}
+
+			try {
+				CommonFileUtils.upload(request, "file", xmlFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
+			}
+		}
+		return "模板" + fileName + "导入成功";
+	}
+
+
+		///#endregion 插入模版.
+
+	public final String Fields_Init() throws Exception {
 		String html = DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFrmID(), "HtmlTemplateFile");
 		return html;
 	}
@@ -106,14 +197,9 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	 格式化html的文档.
 	 
 	 @return 
-	 * @throws Exception 
 	*/
-	public final String Designer_FormatHtml() throws Exception
-	{
+	public final String Designer_FormatHtml() throws Exception {
 		String html = DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFrmID(), "HtmlTemplateFile");
-
-
-
 
 		return "替换成功.";
 		//return html;
@@ -124,8 +210,7 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String ResetFrm_Init()
-	{
+	public final String ResetFrm_Init() throws Exception {
 		//删除html
 		String filePath = SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/" + this.getFK_MapData() + ".htm";
 		if ((new File(filePath)).isFile() == true)
@@ -147,18 +232,14 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 	}
 
 
-		///复制表单
-	/** 
-	 复制表单属性和表单内容
-	 * @throws Exception 
-	*/
-	public final void DoCopyFrm() throws Exception
-	{
+		///#region 复制表单
+
+	public final void DoCopyFrm() throws Exception {
 		String fromFrmID = GetRequestVal("FromFrmID");
 		String toFrmID = GetRequestVal("ToFrmID");
 		String toFrmName = GetRequestVal("ToFrmName");
 
-			///原表单信息
+			///#region 原表单信息
 		//表单信息
 		MapData fromMap = new MapData(fromFrmID);
 		//单据信息
@@ -170,21 +251,21 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 		fromDict.setNo(fromFrmID);
 		int DictCount = fromDict.RetrieveFromDBSources();
 
-			/// 原表单信息
+			///#endregion 原表单信息
 
 
-			///复制表单
+			///#region 复制表单
 		MapData toMapData = new MapData();
 		toMapData = fromMap;
 		toMapData.setNo(toFrmID);
-		toMapData.setName( toFrmName);
+		toMapData.setName(toFrmName);
 		toMapData.Insert();
 		if (billCount != 0)
 		{
 			FrmBill toBill = new FrmBill();
 			toBill = fromBill;
 			toBill.setNo(toFrmID);
-			toBill.setName( toFrmName);
+			toBill.setName(toFrmName);
 			toBill.setEntityType(EntityType.FrmBill);
 			toBill.Update();
 		}
@@ -193,14 +274,14 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 			FrmDict toDict = new FrmDict();
 			toDict = fromDict;
 			toDict.setNo(toFrmID);
-			toDict.setName( toFrmName);
+			toDict.setName(toFrmName);
 			toDict.setEntityType(EntityType.FrmDict);
 			toDict.Update();
 		}
 
-			/// 复制表单
+			///#endregion 复制表单
 
-		MapData.ImpMapData(toFrmID, bp.sys.CCFormAPI.GenerHisDataSet_AllEleInfo(fromFrmID));
+		MapData.ImpMapData(toFrmID, CCFormAPI.GenerHisDataSet_AllEleInfo(fromFrmID));
 
 		//清空缓存
 		toMapData.RepairMap();
@@ -209,45 +290,6 @@ public class WF_Admin_DevelopDesigner extends WebContralBase
 
 	}
 
-		/// 复制表单
-     ///region 插入模版.
-	/// <summary>
-	/// 获取开发者表单模板目录
-	/// </summary>
-	/// <returns></returns>
-	public String Template_Init() throws Exception {
-		String path = SystemConfig.getPathOfDataUser() + "Style\\TemplateFoolDevelopDesigner\\";
-		String[] fileInFolder= BaseFileUtils.getFiles(path);
-		DataTable dt = new DataTable();
-		dt.Columns.Add("OriginalPath");
-		dt.Columns.Add("FullPath");
-		for (int i =0;i< fileInFolder.length;i++ ) {
-			DataRow newRow = dt.NewRow();
-			String subFile =fileInFolder[i];
-			 if(subFile.endsWith(".htm")) {
-				 newRow.setValue("OriginalPath", subFile.substring(subFile.lastIndexOf("\\")+1,subFile.length()));
-				 newRow.setValue("FullPath", subFile);
-				 dt.Rows.add(newRow);
-			 } else {
-				 continue;
-			 }
-		}
-		return bp.tools.Json.ToJson(dt);
-	}
-	/// <summary>
-	/// 根据名称获取开发者表单文件内容
-	/// </summary>
-	/// <returns></returns>
-	public String Template_GenerHtml()
-	{
-		String fileName = this.GetRequestVal("DevTempName");
-		String path = SystemConfig.getPathOfDataUser() + "Style\\TemplateFoolDevelopDesigner\\";
+		///#endregion 复制表单
 
-		String filePath = path + fileName;
-
-		String strHtml = DataType.ReadTextFile(filePath,"UTF-8");
-
-		return strHtml;
-	}
-	//endregion 插入模版.
 }

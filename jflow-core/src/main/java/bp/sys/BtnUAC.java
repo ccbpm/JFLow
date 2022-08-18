@@ -1,10 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.pub.*;
-import bp.*;
-import java.util.*;
 
 /** 
  按钮访问
@@ -39,7 +34,7 @@ public enum BtnUAC
 		return this.ordinal();
 	}
 
-	public static BtnUAC forValue(int value) throws Exception
+	public static BtnUAC forValue(int value) 
 	{
 		return values()[value];
 	}

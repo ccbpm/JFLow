@@ -1,17 +1,12 @@
 package bp.sys.xml;
 
-import bp.da.*;
-import bp.sys.*;
-import bp.en.*;
-import bp.*;
-import bp.sys.*;
 
 public abstract class XmlMenu extends XmlEnNoName
 {
 	/** 
 	 功能编号
 	*/
-	public final String getImg()
+	public final String getImg()  throws Exception
 	{
 		return this.GetValStringByKey("Img");
 	}
@@ -19,26 +14,26 @@ public abstract class XmlMenu extends XmlEnNoName
 	/** 
 	 URL
 	*/
-	public final String getUrl()
+	public final String getUrl()  throws Exception
 	{
 		return this.GetValStringByKey("Url");
 	}
-	public final String getTarget()
+	public final String getTarget()  throws Exception
 	{
 		return this.GetValStringByKey("Target");
 	}
 	/** 
 	 菜单
 	*/
-	public XmlMenu()
+	public XmlMenu()throws Exception
 	{
 	}
 	/** 
 	 菜单
 	 
-	 @param no
+	 param no
 	*/
-	public XmlMenu(String no) throws Exception
+	public XmlMenu(String no) throws Exception 
 	{
 		this.RetrieveByPK("No", no);
 	}

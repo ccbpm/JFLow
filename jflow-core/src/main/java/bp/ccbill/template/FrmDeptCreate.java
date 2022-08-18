@@ -1,6 +1,6 @@
 package bp.ccbill.template;
+
 import bp.en.*;
-import bp.en.Map;
 
 /** 
  单据可创建的部门
@@ -10,14 +10,13 @@ import bp.en.Map;
 */
 public class FrmDeptCreate extends EntityMM
 {
-	private static final long serialVersionUID = 1L;
-		///基本属性
+
+		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return uac;
@@ -25,43 +24,40 @@ public class FrmDeptCreate extends EntityMM
 	/** 
 	单据
 	*/
-	public final String getFrmID() throws Exception
+	public final String getFrmID()
 	{
 		return this.GetValStringByKey(FrmDeptCreateAttr.FrmID);
 	}
-	public final void setFrmID(String value) throws Exception
-	{
+	public final void setFrmID(String value)
+	 {
 		this.SetValByKey(FrmDeptCreateAttr.FrmID, value);
 	}
 	/** 
 	 部门
-	 * @throws Exception 
 	*/
-	public final String getFK_Dept() throws Exception
+	public final String getFK_Dept()
 	{
 		return this.GetValStringByKey(FrmDeptCreateAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value) throws Exception
-	{
+	public final void setFK_Dept(String value)
+	 {
 		this.SetValByKey(FrmDeptCreateAttr.FK_Dept, value);
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 单据可创建的部门
 	*/
-	public FrmDeptCreate()
-	{
+	public FrmDeptCreate()  {
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -70,11 +66,11 @@ public class FrmDeptCreate extends EntityMM
 		Map map = new Map("Frm_DeptCreate", "单据部门");
 
 		map.AddTBStringPK(FrmDeptCreateAttr.FrmID, null, "表单", true, true, 1, 100, 100);
-		map.AddDDLEntitiesPK(FrmDeptCreateAttr.FK_Dept, null, "可以创建部门", new bp.gpm.Depts(), true);
+		map.AddDDLEntitiesPK(FrmDeptCreateAttr.FK_Dept, null, "可以创建部门", new bp.port.Depts(), true);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 }

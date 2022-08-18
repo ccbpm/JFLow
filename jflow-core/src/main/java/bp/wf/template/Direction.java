@@ -1,12 +1,8 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
 import bp.port.*;
-import bp.wf.template.*;
 import bp.wf.*;
-import java.util.*;
 
 /** 
  节点方向
@@ -19,67 +15,64 @@ import java.util.*;
 public class Direction extends EntityMyPK
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	节点
-	 * @throws Exception 
 	*/
 	public final int getNode() throws Exception
 	{
 		return this.GetValIntByKey(DirectionAttr.Node);
 	}
-	public final void setNode(int value) throws Exception
-	{
+	public final void setNode(int value)  throws Exception
+	 {
 		this.SetValByKey(DirectionAttr.Node, value);
 	}
 	public final String getFK_Flow() throws Exception
 	{
 		return this.GetValStringByKey(DirectionAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value) throws Exception
-	{
+	public final void setFK_Flow(String value)  throws Exception
+	 {
 		this.SetValByKey(DirectionAttr.FK_Flow, value);
 	}
 	/** 
 	 转向的节点
-	 * @throws Exception 
 	*/
 	public final int getToNode() throws Exception
 	{
 		return this.GetValIntByKey(DirectionAttr.ToNode);
 	}
-	public final void setToNode(int value) throws Exception
-	{
+	public final void setToNode(int value)  throws Exception
+	 {
 		this.SetValByKey(DirectionAttr.ToNode, value);
 	}
 	public final int getIdx() throws Exception
 	{
 		return this.GetValIntByKey(DirectionAttr.Idx);
 	}
-	public final void setIdx(int value) throws Exception
-	{
+	public final void setIdx(int value)  throws Exception
+	 {
 		this.SetValByKey(DirectionAttr.Idx, value);
 	}
-	   public final String getDes() throws Exception
-	   {
-		   return this.GetValStringByKey(DirectionAttr.Des);
-	   }
-	   public final void setDes(String value) throws Exception
-	   {
-		   this.SetValByKey(DirectionAttr.Des, value);
-	   }
+	public final String getDes() throws Exception
+	{
+		return this.GetValStringByKey(DirectionAttr.Des);
+	}
+	public final void setDes(String value)  throws Exception
+	 {
+		this.SetValByKey(DirectionAttr.Des, value);
+	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 节点方向
 	*/
-	public Direction()
-	{
+	public Direction()  {
 	}
-	public Direction(String mypk) throws Exception
+	public Direction(String mypk)throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -88,8 +81,7 @@ public class Direction extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -102,13 +94,14 @@ public class Direction extends EntityMyPK
 			/*
 			 * MyPK 是一个复合主键 是由 Node+'_'+ToNode+'_'+DirType 组合的. 比如: 101_102_1
 			 */
-		map.AddMyPK();
+		map.AddMyPK(true);
 		map.AddTBString(DirectionAttr.FK_Flow, null, "流程", true, true, 0, 4, 0, false);
 		map.AddTBInt(DirectionAttr.Node, 0, "从节点", false, true);
 		map.AddTBInt(DirectionAttr.ToNode, 0, "到节点", false, true);
-
+		map.AddTBString(DirectionAttr.ToNodeName, null, "到达节点名称", true, true, 0, 300, 300, false);
 			//map.AddTBInt(DirectionAttr.CondExpModel, 0, "条件计算方式", false, true);
 		map.AddTBInt(DirectionAttr.Idx, 0, "计算优先级顺序", true, true);
+
 		map.AddTBString(DirectionAttr.Des, null, "流程", true, true, 0, 100, 0, false);
 
 			//相关功能。
@@ -122,47 +115,44 @@ public class Direction extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
+	@Override
+	protected boolean beforeUpdateInsertAction() throws Exception {
+		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode());
+		return super.beforeUpdateInsertAction();
+	}
 	/** 
 	 处理pk 
 	 
 	 @return 
-	 * @throws Exception 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception
-	{
+	protected boolean beforeInsert() throws Exception {
 		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode());
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception
-	{
+	protected boolean beforeDelete() throws Exception {
 		this.setMyPK(this.getFK_Flow() + "_" + this.getNode() + "_" + this.getToNode());
 		return super.beforeDelete();
 	}
 	/** 
 	 上移
-	 * @throws Exception 
 	*/
-	public final void DoUp() throws Exception
-	{
+	public final void DoUp() throws Exception {
 		this.DoOrderUp(DirectionAttr.Node, String.valueOf(this.getNode()), DirectionAttr.Idx);
 		this.UpdateHisToNDs();
 	}
 	/** 
 	 下移
-	 * @throws Exception 
 	*/
-	public final void DoDown() throws Exception
-	{
+	public final void DoDown() throws Exception {
 		this.DoOrderDown(DirectionAttr.Node, String.valueOf(this.getNode()), DirectionAttr.Idx);
 		this.UpdateHisToNDs();
 	}
 
-	public final void UpdateHisToNDs() throws Exception
-	{
+	public final void UpdateHisToNDs() throws Exception {
 		//获得方向集合处理toNodes
 		Directions mydirs = new Directions(this.getNode());
 

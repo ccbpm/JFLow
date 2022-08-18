@@ -1,31 +1,27 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
- GroupFields
+ 分组-集合
 */
 public class GroupFields extends EntitiesOID
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 GroupFields
 	*/
-	public GroupFields()
+	public GroupFields()throws Exception
 	{
 	}
 	/** 
 	 GroupFields
 	 
-	 @param enName 名称
-	 * @throws Exception 
+	 param enName 名称
 	*/
-	public GroupFields(String enName) throws Exception
-	{
+	public GroupFields(String enName) throws Exception {
 		int i = this.Retrieve(GroupFieldAttr.FrmID, enName, GroupFieldAttr.Idx);
 		if (i == 0)
 		{
@@ -57,12 +53,10 @@ public class GroupFields extends EntitiesOID
 	/** 
 	 查询
 	 
-	 @param enName
+	 param enName
 	 @return 
-	 * @throws Exception 
 	*/
-	public final int RetrieveFieldGroup(String enName) throws Exception
-	{
+	public final int RetrieveFieldGroup(String enName) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GroupFieldAttr.FrmID, enName);
 		qo.addAnd();
@@ -91,17 +85,12 @@ public class GroupFields extends EntitiesOID
 		}
 		return num;
 	}
-
-		///
-
-
-		///为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupField> ToJavaList()
+	public final java.util.List<GroupField> ToJavaList()throws Exception
 	{
 		return (java.util.List<GroupField>)(Object)this;
 	}
@@ -110,7 +99,7 @@ public class GroupFields extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupField> Tolist()
+	public final ArrayList<GroupField> Tolist()throws Exception
 	{
 		ArrayList<GroupField> list = new ArrayList<GroupField>();
 		for (int i = 0; i < this.size(); i++)
@@ -120,5 +109,5 @@ public class GroupFields extends EntitiesOID
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

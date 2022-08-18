@@ -1,5 +1,6 @@
 package bp.wf;
 
+
 /** 
  抄送到岗位计算方式
 */
@@ -32,13 +33,11 @@ public enum CCStaWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static CCStaWay forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static CCStaWay forValue(int value)
+	{return values()[value];
 	}
 }

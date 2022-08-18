@@ -2,7 +2,6 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.en.*;
-import bp.web.WebUser;
 import bp.wf.*;
 
 /** 
@@ -13,7 +12,7 @@ public class GenerCH extends Method
 	/** 
 	 生成考核数据
 	*/
-	public GenerCH()
+	public GenerCH()throws Exception
 	{
 		this.Title = "生成考核数据（为所有的流程,根据最新配置的节点考核信息，生成考核数据。）";
 		this.Help = "需要先删除运行时生成的数据，然后为每个流程的每个节点运行数据自动生成。";
@@ -31,12 +30,11 @@ public class GenerCH extends Method
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
-	 * @throws Exception 
 	*/
 	@Override
-	public boolean getIsCanDo() throws Exception
+	public boolean getIsCanDo()
 	{
-		if (WebUser.getNo().equals("admin") == true)
+		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
 			return true;
 		}
@@ -46,10 +44,9 @@ public class GenerCH extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
 		String err = "";
 		try
@@ -58,19 +55,19 @@ public class GenerCH extends Method
 			DBAccess.RunSQL("DELETE FROM WF_CH");
 
 			//查询全部的数据.
-			bp.wf.Nodes nds = new Nodes();
+			Nodes nds = new Nodes();
 			nds.RetrieveAll();
 
 			for (Node nd : nds.ToJavaList())
 			{
 				String sql = "SELECT * FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "TRACK WHERE NDFrom=" + nd.getNodeID() + " ORDER BY WorkID, RDT ";
-				DataTable dt = DBAccess.RunSQLReturnTable(sql);
+				bp.da.DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				String priRDT = null;
 				String sdt = null;
 				for (DataRow dr : dt.Rows)
 				{
 					//向下发送.
-					int atInt = (Integer)dr.getValue(bp.wf.TrackAttr.ActionType);
+					int atInt = (Integer)dr.getValue(TrackAttr.ActionType);
 					ActionType at = ActionType.forValue(atInt);
 					switch (at)
 					{
@@ -88,12 +85,12 @@ public class GenerCH extends Method
 					long fid = Long.parseLong(dr.getValue(TrackAttr.FID).toString());
 
 					//当前的人员，如果不是就让其登录.
-					String fk_emp = dr.getValue(bp.wf.TrackAttr.EmpFrom) instanceof String ? (String)dr.getValue(bp.wf.TrackAttr.EmpFrom) : null;
-					if (!fk_emp.equals(WebUser.getNo()))
+					String fk_emp = dr.getValue(TrackAttr.EmpFrom) instanceof String ? (String)dr.getValue(TrackAttr.EmpFrom) : null;
+					if (!bp.web.WebUser.getNo().equals(fk_emp))
 					{
 						try
 						{
-							bp.wf.Dev2Interface.Port_Login(fk_emp);
+							Dev2Interface.Port_Login(fk_emp);
 						}
 						catch (RuntimeException ex)
 						{
@@ -119,7 +116,7 @@ public class GenerCH extends Method
 		}
 
 		//登录.
-		bp.wf.Dev2Interface.Port_Login("admin");
+		Dev2Interface.Port_Login("admin");
 		return "执行成功,有如下信息:" + err;
 	}
 }

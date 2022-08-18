@@ -14,52 +14,50 @@ import java.util.*;
 public class MapAttrDocWordReceive extends EntityMyPK
 {
 
-		///文本字段参数属性.
+		///#region 文本字段参数属性.
 	/** 
 	 表单ID
 	*/
-	public final String getFK_MapData()throws Exception
+	public final String getFK_MapData() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()throws Exception
+	public final String getKeyOfEn() throws Exception
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 控件类型
 	*/
-	public final UIContralType getUIContralType()throws Exception
-	{
+	public final UIContralType getUIContralType() throws Exception {
 		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
 	}
-	public final void setUIContralType(UIContralType value)throws Exception
-	{
+	public final void setUIContralType(UIContralType value)  throws Exception
+	 {
 		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -69,15 +67,14 @@ public class MapAttrDocWordReceive extends EntityMyPK
 	/** 
 	 实体属性
 	*/
-	public MapAttrDocWordReceive()
-	{
+	public MapAttrDocWordReceive() {
 	}
 	/** 
 	 实体属性
 	*/
-	public MapAttrDocWordReceive(String myPK)throws Exception
+	public MapAttrDocWordReceive(String mypk)throws Exception
 	{
-		this.setMyPK(myPK);
+		this.setMyPK(getMyPK());
 		this.Retrieve();
 
 	}
@@ -85,8 +82,7 @@ public class MapAttrDocWordReceive extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -95,7 +91,7 @@ public class MapAttrDocWordReceive extends EntityMyPK
 		Map map = new Map("Sys_MapAttr", "收文字号");
 
 
-			///基本字段信息.
+			///#region 基本字段信息.
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 		map.AddTBString(MapAttrAttr.Name, null, "字段中文名", true, false, 0, 200, 20, true);
@@ -112,17 +108,17 @@ public class MapAttrDocWordReceive extends EntityMyPK
 
 		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
-			/// 基本字段信息.
+			///#endregion 基本字段信息.
 
 
-			///傻瓜表单
+			///#region 傻瓜表单
 			//单元格数量 2013-07-24 增加
-		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨5个单元格@6=跨6个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨5个单元格@6=跨6个单元格");
 		map.SetHelperAlert(MapAttrAttr.ColSpan, "对于傻瓜表单有效: 标识该字段TextBox横跨的宽度,占的单元格数量.");
 
 			//文本占单元格数量
-		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "Label单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨6个单元格@6=跨6个单元格");
-		map.SetHelperAlert(MapAttrAttr.TextColSpan, "对于傻瓜表单有效: 标识该字段Lable，标签横跨的宽度,占的单元格数量.");
+		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "Label单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨6个单元格@6=跨6个单元格");
+		map.SetHelperAlert(MapAttrAttr.LabelColSpan, "对于傻瓜表单有效: 标识该字段Lable，标签横跨的宽度,占的单元格数量.");
 
 			//文本跨行.
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
@@ -135,15 +131,14 @@ public class MapAttrDocWordReceive extends EntityMyPK
 		map.SetHelperAlert(MapAttrAttr.Idx, "对傻瓜表单有效:用于调整字段在同一个分组中的顺序.");
 
 
-			/// 傻瓜表单
+			///#endregion 傻瓜表单
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction()throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		//设置公文字号.
 		this.setUIContralType(UIContralType.DocWordReceive);
 		return super.beforeUpdateInsertAction();
@@ -153,8 +148,7 @@ public class MapAttrDocWordReceive extends EntityMyPK
 	 删除
 	*/
 	@Override
-	protected void afterDelete()throws Exception
-	{
+	protected void afterDelete() throws Exception {
 		//删除相对应的rpt表中的字段
 		if (this.getFK_MapData().contains("ND") == true)
 		{
@@ -164,23 +158,22 @@ public class MapAttrDocWordReceive extends EntityMyPK
 		}
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 
 		super.afterDelete();
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
 		mapAttr.RetrieveFromDBSources();
 		mapAttr.Update();
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
 		super.afterInsertUpdateAction();
 	}
 
-		///
+		///#endregion
 }

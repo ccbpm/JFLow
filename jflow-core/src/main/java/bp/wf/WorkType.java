@@ -1,5 +1,6 @@
 package bp.wf;
 
+
 /** 
  工作类型
 */
@@ -16,13 +17,11 @@ public enum WorkType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static WorkType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static WorkType forValue(int value) 
+	{return values()[value];
 	}
 }

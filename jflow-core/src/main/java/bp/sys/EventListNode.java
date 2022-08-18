@@ -1,11 +1,14 @@
 package bp.sys;
+
+import bp.*;
+
 /** 
  事件标记列表
 */
 public class EventListNode
 {
 
-		///节点表单事件
+		///#region 节点表单事件
 	/** 
 	 保存后
 	*/
@@ -17,11 +20,10 @@ public class EventListNode
 	public static final String FrmLoadAfter = "FrmLoadAfter";
 	public static final String FrmLoadBefore = "FrmLoadBefore";
 
-		/// 节点表单事件
+		///#endregion 节点表单事件
 
 
-
-		///节点事件
+		///#region 节点事件
 	/** 
 	 节点发送前
 	*/
@@ -99,5 +101,5 @@ public class EventListNode
 	*/
 	public static final String FlowOverDue = "FlowOverDue";
 
-		/// 节点事件
+		///#endregion 节点事件
 }

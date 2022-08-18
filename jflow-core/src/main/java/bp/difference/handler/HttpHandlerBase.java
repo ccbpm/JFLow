@@ -1,29 +1,31 @@
 package bp.difference.handler;
 
-import bp.da.DataType;
-import bp.difference.ContextHolderUtils;
-import bp.tools.StringHelper;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import bp.da.DataType;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
+import bp.tools.StringHelper;
 
 public abstract class HttpHandlerBase
 {
 	/** 
 	 * 获取 "Handler业务处理类"的Type
-	 * 注意： "Handler业务处理类"必须继承自WebContralBase</p>
+	 * 注意： "Handler业务处理类"必须继承自bp.wf.httphandler.WebContralBase</p>
 	*/
 	public abstract java.lang.Class getCtrlType();
 
-	public final boolean getIsReusable()
+	public final boolean getIsReusable()throws Exception
 	{
 		return false;
 	}
 	
 	public void ProcessRequestPost(Object mycontext)
-	{
+	{	
 		PrintWriter out =null;
 		//创建 ctrl 对象.
 		Object tempVar = mycontext;
@@ -32,8 +34,8 @@ public abstract class HttpHandlerBase
 		
 		
 		String mName=ctrl.GetRequestVal("DoMethod");			
-		String msg="";
-		if (mName==null || mName.equals("null")	)
+		String msg="";			
+		if (mName==null || mName=="null")		
 			msg ="方法[" + ctrl.getDoType() + "]类[" + this.getCtrlType().toString() + "]";
 		else
 			msg ="方法[" + mName+ "]类[" + this.getCtrlType().toString() + "]，";	 
@@ -46,14 +48,20 @@ public abstract class HttpHandlerBase
 		{
 			//执行方法返回json.
 			String data = ctrl.DoMethod(ctrl, ctrl.getDoType());
-			if(data==null)
-			    data="";
+
 			//返回执行的结果.
+			//ctrl.context.Response.Write(data);
 			this.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 			this.getResponse().setCharacterEncoding("UTF-8");
 			out = this.getResponse().getWriter();
+            if(SystemConfig.getIsDebug()==false && data.toUpperCase().indexOf("@SQL:")!=-1 && data.toUpperCase().indexOf("@SQL_")==-1){
+                data = data.substring(0,data.toUpperCase().indexOf("@SQL"));
+            }
+
 			out.write(data);
-			 
+			
+		
+		      
 		}
 		catch (Exception ex)
 		{
@@ -92,7 +100,7 @@ public abstract class HttpHandlerBase
         return ContextHolderUtils.getRequest();
     }
 
-    public HttpServletResponse getResponse()throws Exception {
+    public HttpServletResponse getResponse() {
         return ContextHolderUtils.getResponse();
     }
 
@@ -286,11 +294,24 @@ public abstract class HttpHandlerBase
         return s;
     }
 
+//	public void setMyPK(String myPK) {
+//		MyPK = myPK;
+//	}
+
+//	@PostConstruct
+//	public void init(){
+//		HttpServletRequest request = ContextHolderUtils.getRequest();
+//		//setFK_Node(request.getParameter("FK_Node"));
+//		//setFID(request.getParameter("FID"));
+//		//setWorkID(request.getParameter("WorkID"));
+//		//setFK_Flow(request.getParameter("FK_Flow"));
+//		//setMyPK(request.getParameter("MyPK"));
+//	}
 
     /**
      * 输出Alert
-     * @param response
-     * @param msg
+     * param response
+     * param msg
      * @throws IOException
      */
     protected void printAlert(HttpServletResponse response, String msg) throws IOException{

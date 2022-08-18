@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -12,8 +9,8 @@ import java.util.*;
 public class GEEntityWordFrm extends Entity
 {
 
-///属性。
-	public final int getOID() throws Exception
+///#region 属性。
+	public final int getOID()throws Exception
 	{
 	   return this.GetValIntByKey(GEEntityWordFrmAttr.OID);
 	}
@@ -24,22 +21,21 @@ public class GEEntityWordFrm extends Entity
 	/** 
 	 最后修改人
 	*/
-	  public final String getLastEditer() throws Exception
-	  {
+	  public final String getLastEditer() throws Exception {
 		 return this.GetValStringByKey(GEEntityWordFrmAttr.LastEditer);
 	  }
-	  public final void setLastEditer(String value) throws Exception
+	  public final void setLastEditer(String value)throws Exception
 	  {
 		  this.SetValByKey(GEEntityWordFrmAttr.LastEditer, value);
 	  }
 	/** 
 	 记录时间
 	*/
-	   public final String getRDT() throws Exception
+	   public final String getRDT()throws Exception
 	   {
 		  return this.GetValStringByKey(GEEntityWordFrmAttr.RDT);
 	   }
-	   public final void setRDT(String value) throws Exception
+	   public final void setRDT(String value)throws Exception
 	   {
 		   this.SetValByKey(GEEntityWordFrmAttr.RDT, value);
 	   }
@@ -47,33 +43,32 @@ public class GEEntityWordFrm extends Entity
 	/** 
 	 文件路径
 	*/
-	   public final String getFilePath() throws Exception
+	   public final String getFilePath()throws Exception
 	   {
 		   return this.GetValStringByKey(GEEntityWordFrmAttr.FilePath);
 	   }
-	   public final void setFilePath(String value) throws Exception
+	   public final void setFilePath(String value)throws Exception
 	   {
 		   this.SetValByKey(GEEntityWordFrmAttr.FilePath, value);
 	   }
 
-/// 属性。
+///#endregion 属性。
 
 
 
-		///构造函数
+		///#region 构造函数
 	@Override
 	public String getPK()
 	{
 		return "OID";
 	}
-	@Override
-	public String getPKField()
+
+	public String getPK_Field()throws Exception
 	{
 		return "OID";
 	}
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.FK_MapData;
 	}
 	@Override
@@ -94,7 +89,7 @@ public class GEEntityWordFrm extends Entity
 	/** 
 	 通用实体
 	 
-	 @param nodeid 节点ID
+	 param fk_mapdata 节点ID
 	*/
 	public GEEntityWordFrm(String fk_mapdata)
 	{
@@ -103,28 +98,21 @@ public class GEEntityWordFrm extends Entity
 	/** 
 	 通用实体
 	 
-	 @param nodeid 节点ID
-	 @param _oid OID
-	 * @throws Exception 
+	 param fk_mapdata
+	 param pk
 	*/
-	public GEEntityWordFrm(String fk_mapdata, Object pk) throws Exception
-	{
+	public GEEntityWordFrm(String fk_mapdata, Object pk) throws Exception {
 		this.FK_MapData=fk_mapdata;
 		this.setPKVal(pk);
 		this.Retrieve();
 	}
 
-		///
 
-
-		///Map
 	/** 
 	 重写基类方法
-	 * @throws Exception 
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -135,7 +123,11 @@ public class GEEntityWordFrm extends Entity
 			throw new RuntimeException("没有给" + this.FK_MapData + "值，您不能获取它的Map。");
 		}
 
-		this.set_enMap(bp.sys.MapData.GenerHisMap(this.FK_MapData));
+		try {
+			this.set_enMap(MapData.GenerHisMap(this.FK_MapData));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return this.get_enMap();
 	}
 	/** 
@@ -151,10 +143,10 @@ public class GEEntityWordFrm extends Entity
 		return new GEEntityWordFrms(this.FK_MapData);
 	}
 
-		///
+		///#endregion
 
 	private ArrayList _Dtls = null;
-	public final ArrayList getDtls()
+	public final ArrayList getDtls()throws Exception
 	{
 		if (_Dtls == null)
 		{

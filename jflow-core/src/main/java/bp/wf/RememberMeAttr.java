@@ -1,11 +1,19 @@
 package bp.wf;
+
+import bp.da.*;
+import bp.en.*;
+import bp.wf.*;
+import bp.port.*;
+import bp.*;
+import java.util.*;
+
 /** 
  记忆我 属性
 */
 public class RememberMeAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作节点
 	*/
@@ -39,5 +47,5 @@ public class RememberMeAttr
 	*/
 	public static final String EmpsExt = "EmpsExt";
 
-		///
+		///#endregion
 }

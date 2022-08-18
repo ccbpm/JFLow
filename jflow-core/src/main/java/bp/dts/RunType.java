@@ -1,6 +1,5 @@
 package bp.dts;
 
-
 /** 
  运行类型
 */
@@ -30,7 +29,7 @@ public enum RunType
 		return this.ordinal();
 	}
 
-	public static RunType forValue(int value) throws Exception
+	public static RunType forValue(int value) 
 	{
 		return values()[value];
 	}

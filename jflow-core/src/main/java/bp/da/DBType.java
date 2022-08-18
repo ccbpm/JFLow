@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
  数据库类型
@@ -46,14 +46,17 @@ public enum DBType
 	/**
 	 * 人大金仓R6
 	 */
-	KingBaseR6(8);
+	KingBaseR6(9),
+	/**
+	 * 优炫
+	 */
+	UX(10);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, DBType> mappings;
-	private static java.util.HashMap<Integer, DBType> getMappings()
-	{
+	private static java.util.HashMap<Integer, DBType> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (DBType.class)
@@ -68,8 +71,7 @@ public enum DBType
 	}
 
 	private DBType(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
@@ -78,8 +80,7 @@ public enum DBType
 		return intValue;
 	}
 
-	public static DBType forValue(int value)
-	{
-		return getMappings().get(value);
+	public static DBType forValue(int value) 
+	{return getMappings().get(value);
 	}
 }

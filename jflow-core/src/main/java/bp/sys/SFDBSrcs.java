@@ -1,5 +1,6 @@
 package bp.sys;
 
+import bp.ccbill.DBListDBSrc;
 import bp.da.*;
 import bp.en.*;
 import bp.*;
@@ -11,27 +12,24 @@ import java.util.*;
 public class SFDBSrcs extends EntitiesNoName
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 数据源s
 	*/
-	public SFDBSrcs()
-	{
+	public SFDBSrcs()  {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new SFDBSrc();
 	}
 
-		///
+		///#endregion
 
 	@Override
-	public int RetrieveAll() throws Exception
-	{
+	public int RetrieveAll() throws Exception {
 		int i = this.RetrieveAllFromDBSource();
 		if (i == 0)
 		{
@@ -49,8 +47,7 @@ public class SFDBSrcs extends EntitiesNoName
 	 
 	 @return 返回查询的个数
 	*/
-	public final int RetrieveDBSrc() throws Exception
-	{
+	public final int RetrieveDBSrc() throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SFDBSrcAttr.DBSrcType, " < ", 100);
 		int i = qo.DoQuery();
@@ -65,8 +62,7 @@ public class SFDBSrcs extends EntitiesNoName
 	 
 	 @return 返回查询的个数
 	*/
-	public final int RetrieveWCSrc() throws Exception
-	{
+	public final int RetrieveWCSrc() throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(SFDBSrcAttr.DBSrcType, "= ", DBSrcType.WebServices.getValue());
 		int i = qo.DoQuery();
@@ -77,14 +73,13 @@ public class SFDBSrcs extends EntitiesNoName
 		return i;
 	}
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<SFDBSrc> ToJavaList()
-	{
+	public final java.util.List<SFDBSrc> ToJavaList() {
 		return (java.util.List<SFDBSrc>)(Object)this;
 	}
 	/** 
@@ -92,8 +87,7 @@ public class SFDBSrcs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SFDBSrc> Tolist()
-	{
+	public final ArrayList<SFDBSrc> Tolist()  {
 		ArrayList<SFDBSrc> list = new ArrayList<SFDBSrc>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -102,5 +96,5 @@ public class SFDBSrcs extends EntitiesNoName
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

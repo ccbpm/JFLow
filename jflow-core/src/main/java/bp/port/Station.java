@@ -1,72 +1,79 @@
 package bp.port;
 
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
-import bp.web.WebUser;
+import bp.sys.*;
+import bp.difference.*;
 
+/** 
+ 岗位
+*/
+public class Station extends EntityNoName
+{
 
-/**
- * 岗位
- */
-public class Station extends EntityNoName {
-	private static final long serialVersionUID = 1L;
-
-	/// 属性
-	public final String getFK_StationType() throws Exception{
+		///#region 属性
+	public final String getFKStationType()
+	{
 		return this.GetValStrByKey(StationAttr.FK_StationType);
 	}
-
-	public final void setFK_StationType(String value) throws Exception {
+	public final void setFK_StationType(String value)
+	 {
 		this.SetValByKey(StationAttr.FK_StationType, value);
 	}
-
-	/**
-	 * 组织编码
-	 */
-	public final String getOrgNo() throws Exception{
+	/** 
+	 组织编码
+	*/
+	public final String getOrgNo()
+	{
 		return this.GetValStrByKey(StationAttr.OrgNo);
 	}
-
-	public final void setOrgNo(String value) throws Exception{
+	public final void setOrgNo(String value)
+	 {
 		this.SetValByKey(StationAttr.OrgNo, value);
 	}
+	public final int getIdx()
+	{
+		return this.GetValIntByKey(StationAttr.Idx);
+	}
+	public final void setIdx(int value)
+	 {
+		this.SetValByKey(StationAttr.Idx, value);
+	}
 
-	///
+		///#endregion
 
-	/// 实现基本的方方法
+
+		///#region 实现基本的方方法
 	@Override
-	public UAC getHisUAC() throws Exception {
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
 	}
 
-	///
+		///#endregion
 
-	/// 构造方法
-	/**
-	 * 岗位
-	 */
-	public Station() {
+
+		///#region 构造方法
+	/** 
+	 岗位
+	*/
+	public Station()  {
 	}
-
-	/**
-	 * 岗位
-	 * 
-	 * @param _No
-	 * @throws Exception 
-	 */
+	/** 
+	 岗位
+	 
+	 param _No
+	*/
 	public Station(String _No) throws Exception {
 		super(_No);
 	}
-
-	/**
-	 * EnMap
-	 */
+	/** 
+	 EnMap
+	*/
 	@Override
-	public Map getEnMap() throws Exception {
-		if (this.get_enMap() != null) {
+	public bp.en.Map getEnMap()  {
+		if (this.get_enMap() != null)
+		{
 			return this.get_enMap();
 		}
 
@@ -77,22 +84,42 @@ public class Station extends EntityNoName {
 		map.AddTBStringPK(StationAttr.No, null, "编号", true, true, 1, 50, 200);
 		map.AddTBString(StationAttr.Name, null, "名称", true, false, 0, 100, 200);
 		map.AddDDLEntities(StationAttr.FK_StationType, null, "类型", new StationTypes(), true);
-		map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, false, 0, 50, 250);
-		map.AddSearchAttr(StationAttr.FK_StationType);
 
-		if (SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.Single) {
 
-		} else {
-			try {
-				map.AddHidden(StationTypeAttr.OrgNo, "=", WebUser.getOrgNo());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        //#region 根据组织结构类型不同.
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", false, false, 0, 50, 250);
+			map.AddHidden(StationAttr.OrgNo, "=", bp.web.WebUser.getOrgNo()); //加隐藏条件.
 		}
+
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		{
+			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
+			if (bp.difference.SystemConfig.getGroupStationModel() == 0)
+				map.AddHidden(StationAttr.OrgNo, "=", bp.web.WebUser.getOrgNo());//每个组织都有自己的岗责体系的时候. 加隐藏条件.
+		}
+
+		map.AddTBInt(StationAttr.Idx, 0, "顺序号", true, false);
+			//根据组织结构类型不同.
+
+
+		map.AddSearchAttr(StationAttr.FK_StationType);
 
 		this.set_enMap(map);
 		return this.get_enMap();
+	}
+
+		///#endregion
+
+	@Override
+	protected boolean beforeUpdateInsertAction() throws Exception {
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			this.setOrgNo(bp.web.WebUser.getOrgNo());
+		}
+
+		return super.beforeUpdateInsertAction();
 	}
 
 

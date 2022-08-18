@@ -1,4 +1,6 @@
 package bp.sys;
+
+
 public class GEEntityWordFrmAttr
 {
 	/** 

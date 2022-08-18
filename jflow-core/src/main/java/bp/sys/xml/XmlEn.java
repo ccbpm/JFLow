@@ -1,12 +1,7 @@
 package bp.sys.xml;
 
 import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.*;
-import bp.sys.*;
-import java.util.*;
-import java.io.*;
 import java.math.*;
 
 /** 
@@ -15,9 +10,9 @@ import java.math.*;
 public abstract class XmlEn
 {
 
-		///获取值
+		///#region 获取值
 	private Row _row = null;
-	public final Row getRow()
+	public final Row getRow()throws Exception
 	{
 		if (this._row == null)
 		{
@@ -26,18 +21,16 @@ public abstract class XmlEn
 			//    throw new Exception("xmlEn 没有被实例化。");
 		return this._row;
 	}
-	public final void setRow(Row value)
-	{
-		this._row = value;
+	public final void setRow(Row value)throws Exception
+	{this._row = value;
 	}
 	/** 
 	 获取一个对象
 	 
-	 @param attrKey
+	 param attrKey
 	 @return 
 	*/
-	public final Object GetValByKey(String attrKey)
-	{
+	public final Object GetValByKey(String attrKey) throws Exception {
 		if (this._row == null)
 		{
 			return null;
@@ -45,7 +38,7 @@ public abstract class XmlEn
 
 		return this.getRow().GetValByKey(attrKey);
 	}
-	public final int GetValIntByKey(String key)
+	public final int GetValIntByKey(String key)throws Exception
 	{
 		try
 		{
@@ -56,17 +49,17 @@ public abstract class XmlEn
 			throw new RuntimeException("key=" + key + "不能向int 类型转换。val=" + this.GetValByKey(key));
 		}
 	}
-	public final BigDecimal GetValDecimalByKey(String key)
+	public final BigDecimal GetValDecimalByKey(String key)throws Exception
 	{
 		return (BigDecimal)this.GetValByKey(key);
 	}
 	/** 
 	 获取一个对象
 	 
-	 @param attrKey
+	 param attrKey
 	 @return 
 	*/
-	public final String GetValStringByKey(String attrKey)
+	public final String GetValStringByKey(String attrKey)throws Exception
 	{
 		if (this._row == null)
 		{
@@ -83,17 +76,17 @@ public abstract class XmlEn
 			throw new RuntimeException(" @XMLEN Error Attr=[" + attrKey + "], ClassName= " + this.toString() + " , File =" + this.getGetNewEntities().getFile() + " , Error = " + ex.getMessage());
 		}
 	}
-	public final String GetValStringHtmlByKey(String attrKey)
+	public final String GetValStringHtmlByKey(String attrKey)  throws Exception
 	{
 		return this.GetValStringByKey(attrKey).replace("\n", "<BR>").replace(" ", "&nbsp;");
 	}
 	/** 
 	 获取一个对象
 	 
-	 @param key
+	 param key
 	 @return 
 	*/
-	public final boolean GetValBoolByKey(String key)
+	public final boolean GetValBoolByKey(String key)throws Exception
 	{
 		String val = this.GetValStringByKey(key);
 		if (DataType.IsNullOrEmpty(val))
@@ -110,15 +103,15 @@ public abstract class XmlEn
 			return false;
 		}
 	}
-	public final void SetVal(String k, Object val)
+	public final void SetVal(String k, Object val)throws Exception
 	{
 		this.getRow().SetValByKey(k, val);
 	}
 
-		/// 获取值
+		///#endregion 获取值
 
 
-		///构造函数
+		///#region 构造函数
 	/** 
 	 构造函数
 	*/
@@ -126,7 +119,7 @@ public abstract class XmlEn
 	{
 	}
 
-	public final int RetrieveByPK(String key, String val) throws Exception
+	public final int RetrieveByPK(String key, String val)throws Exception
 	{
 		Object tempVar = Cash.GetObj(this.getGetNewEntities().toString(), Depositary.Application);
 		XmlEns ens = tempVar instanceof XmlEns ? (XmlEns)tempVar : null;
@@ -134,6 +127,7 @@ public abstract class XmlEn
 		{
 			ens = this.getGetNewEntities();
 			ens.RetrieveAll();
+			//Cash.SetConn(this.GetNewEntities.ToString(), Depositary.Application) as XmlEns;
 		}
 
 		int i = 0;
@@ -158,8 +152,7 @@ public abstract class XmlEn
 		}
 		return 0;
 	}
-	public final int Retrieve(String key, String val, String key1, String val1) throws Exception
-	{
+	public final int Retrieve(String key, String val, String key1, String val1) throws Exception {
 		Object tempVar = Cash.GetObj(this.getGetNewEntities().toString(), Depositary.Application);
 		XmlEns ens = tempVar instanceof XmlEns ? (XmlEns)tempVar : null;
 		if (ens == null)
@@ -185,11 +178,11 @@ public abstract class XmlEn
 		return 0;
 	}
 
-		/// 构造函数
+		///#endregion 构造函数
 
 
-		///需要子类实现的方法
-	public abstract XmlEns getGetNewEntities();
+		///#region 需要子类实现的方法
+	public abstract XmlEns getGetNewEntities() throws Exception;
 
-		/// 需要子类实现的方法
+		///#endregion 需要子类实现的方法
 }

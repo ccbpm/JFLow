@@ -13,42 +13,38 @@ import java.util.*;
 public class MapFrameExts extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 框架s
 	*/
-	public MapFrameExts()
-	{
+	public MapFrameExts() throws Exception {
 	}
 	/** 
 	 框架s
 	 
-	 @param frmID 表单ID
+	 param frmID 表单ID
 	*/
-	public MapFrameExts(String frmID)throws Exception
-	{
+	public MapFrameExts(String frmID) throws Exception {
 		this.Retrieve(MapFrameAttr.FK_MapData, frmID);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new MapFrameExt();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrameExt> ToJavaList()
-	{
+	public final java.util.List<MapFrameExt> ToJavaList() {
 		return (java.util.List<MapFrameExt>)(Object)this;
 	}
 	/** 
@@ -56,8 +52,7 @@ public class MapFrameExts extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapFrameExt> Tolist()
-	{
+	public final ArrayList<MapFrameExt> Tolist()  {
 		ArrayList<MapFrameExt> list = new ArrayList<MapFrameExt>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -66,5 +61,5 @@ public class MapFrameExts extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

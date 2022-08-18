@@ -8,12 +8,11 @@ public class GETree extends EntityNoName
 
 		///构造
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.PhysicsTable;
 	}
 	@Override
-	public UAC getHisUAC() throws Exception
+	public UAC getHisUAC()
 	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
@@ -26,11 +25,10 @@ public class GETree extends EntityNoName
 	/** 
 	 编号
 	 
-	 @param no 编号
+	 param no 编号
 	 * @throws Exception 
 	*/
-	public GETree(String no) throws Exception
-	{
+	public GETree(String no) throws Exception {
 		super(no);
 
 	}
@@ -40,7 +38,7 @@ public class GETree extends EntityNoName
 		this.Desc = tableDesc;
 	}
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		Map map = new Map(this.PhysicsTable, this.Desc);
 		map.setIsAutoGenerNo(true);

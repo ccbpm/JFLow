@@ -1,61 +1,79 @@
 package bp.wf.xml;
 
-import java.util.List;
-
-import bp.difference.SystemConfig;
+import bp.da.*;
 import bp.en.*;
-import bp.sys.xml.XmlEn;
-import bp.sys.xml.XmlEns;
-
+import bp.sys.xml.*;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
 
 /** 
  
 */
 public class AdminMenus extends XmlEns
 {
-	private static final long serialVersionUID = 1L;
-		///构造
+
+		///#region 构造
 	/** 
 	 考核率的数据元素
 	*/
-	public AdminMenus()
-	{
+	public AdminMenus()  {
 	}
 
-		///
+		///#endregion
 
 
-		///重写基类属性或方法。
+		///#region 重写基类属性或方法。
 	/** 
 	 得到它的 Entity 
 	*/
-	@Override
-	public XmlEn getGetNewEntity()
-	{
+	public XmlEn getGetNewEntity() {
 		return new AdminMenu();
 	}
 	@Override
-	public String getFile()
-	{
-		return SystemConfig.getPathOfWebApp() + "DataUser/XML/AdminMenu.xml";
+	public String getFile() throws Exception {
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			return bp.difference.SystemConfig.getPathOfWebApp() + "DataUser/XML/AdminMenu.xml";
+		}
+
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			if (bp.web.WebUser.getNo().equals("admin") == true)
+			{
+				return bp.difference.SystemConfig.getPathOfWebApp() + "DataUser/XML/AdminMenuSAAS.xml";
+			}
+			else
+			{
+				return bp.difference.SystemConfig.getPathOfWebApp() + "DataUser/XML/Admin2MenuSAAS.xml";
+			}
+		}
+
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		{
+			if (bp.web.WebUser.getNo().equals("admin") == true)
+			{
+				return bp.difference.SystemConfig.getPathOfWebApp() + "DataUser/XML/AdminMenuGroup.xml";
+			}
+			else
+			{
+				return bp.difference.SystemConfig.getPathOfWebApp() + "DataUser/XML/Admin2MenuGroup.xml";
+			}
+		}
+		throw new RuntimeException("err@系统错误....");
 	}
 	/** 
 	 物理表名
 	*/
 	@Override
-	public String getTableName()
-	{
+	public String getTableName()  {
 		return "Item";
 	}
 	@Override
-	public Entities getRefEns()
-	{
+	public Entities getRefEns()  {
 		return null; //new BP.ZF1.AdminAdminMenus();
 	}
 
-	public final List<AdminMenu> ToJavaList()
-	{
-		return (List<AdminMenu>)(Object)this;
-	}
+		///#endregion
 
 }

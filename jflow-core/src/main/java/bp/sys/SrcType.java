@@ -1,4 +1,10 @@
 package bp.sys;
+
+import bp.da.*;
+import bp.en.*;
+import bp.web.*;
+import bp.difference.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -37,14 +43,17 @@ public enum SrcType
 	/** 
 	 系统字典表
 	*/
-	SysDict(7);
+	SysDict(7),
+	/** 
+	 WebApi接口
+	*/
+	WebApi(8);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, SrcType> mappings;
-	private static java.util.HashMap<Integer, SrcType> getMappings()
-	{
+	private static java.util.HashMap<Integer, SrcType> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (SrcType.class)
@@ -59,18 +68,15 @@ public enum SrcType
 	}
 
 	private SrcType(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return intValue;
 	}
 
 	public static SrcType forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

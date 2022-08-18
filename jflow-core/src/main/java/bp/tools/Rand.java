@@ -1,7 +1,7 @@
 package bp.tools;
 
+import com.jcraft.jsch.jce.MD5;
 import org.springframework.util.DigestUtils;
-import sun.security.provider.MD5;
 
 import java.util.Calendar;
 
@@ -9,18 +9,18 @@ public class Rand {
     /**
      * 生成随机数字
      *
-     * @param length 生成长度
+     * param length 生成长度
      * @return
      */
-    public static String Number(int length) throws Exception{
+    public static String Number(int length) throws InterruptedException {
         return Str(length, false);
     }
 
     /**
      * 生成随机数字
      *
-     * @param Length 生成长度
-     * @param Sleep  是否要在生成前将当前线程阻止以避免重复
+     * param Length 生成长度
+     * param Sleep  是否要在生成前将当前线程阻止以避免重复
      * @return
      */
     public static String Number(int Length, boolean Sleep) throws Exception {
@@ -38,7 +38,7 @@ public class Rand {
     /**
      * 生成随机字母与数字
      *
-     * @param Length 生成长度
+     * param Length 生成长度
      * @return
      */
     public static String Str(int Length)throws Exception {
@@ -48,11 +48,11 @@ public class Rand {
     /**
      * 生成随机字母与数字
      *
-     * @param Length 生成长度
-     * @param Sleep  是否要在生成前将当前线程阻止以避免重复
+     * param Length 生成长度
+     * param Sleep  是否要在生成前将当前线程阻止以避免重复
      * @return
      */
-    public static String Str(int Length, boolean Sleep) throws Exception{
+    public static String Str(int Length, boolean Sleep) throws InterruptedException {
         if (Sleep) {
             Thread.sleep(2);
         }
@@ -71,7 +71,7 @@ public class Rand {
     /**
      * 生成随机纯字母随机数
      *
-     * @param Length 生成长度
+     * param Length 生成长度
      * @return
      */
     public static String Str_char(int Length) throws Exception{
@@ -81,8 +81,8 @@ public class Rand {
     /**
      * 生成随机纯字母随机数
      *
-     * @param Length 生成长度
-     * @param Sleep  是否要在生成前将当前线程阻止以避免重复
+     * param Length 生成长度
+     * param Sleep  是否要在生成前将当前线程阻止以避免重复
      * @return
      */
     public static String Str_char(int Length, boolean Sleep) throws Exception{
@@ -103,15 +103,13 @@ public class Rand {
     /**
      * MD5 16位加密
      *
-     * @param ConvertString
+     * param ConvertString
      * @return
      */
 
     public static String GetMd5Str(String ConvertString) {
-        //MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
         MD5 md5 = new MD5();
         String t2 =DigestUtils.md5DigestAsHex(ConvertString.getBytes());
-        //String t2 = BitConverter.ToString(md5.ComputeHash(UTF8Encoding.Default.GetBytes(ConvertString)), 4, 8);
         t2 = t2.replace("-", "");
         return t2;
     }

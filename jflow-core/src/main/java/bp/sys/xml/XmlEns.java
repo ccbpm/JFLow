@@ -2,27 +2,21 @@ package bp.sys.xml;
 
 import bp.da.*;
 import bp.difference.SystemConfig;
-import bp.sys.*;
 import bp.en.*;
-import bp.*;
-import bp.sys.*;
 import java.util.*;
+import java.io.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.io.*;
-import java.math.*;
 
 /** 
  XmlEn 的摘要说明。
 */
 public abstract class XmlEns extends ArrayList<Object>
 {
-	public final int LoadXmlFile(String file)
-	{
+	public final int LoadXmlFile(String file) throws Exception {
 		return LoadXmlFile(file, this.getTableName());
 	}
-	public final int LoadXmlFile(String file, String table)
-	{
+	public final int LoadXmlFile(String file, String table) throws Exception {
 		DataSet ds = new DataSet();
 		ds.readXml(file);
 		DataTable dt = ds.GetTableByName(table);
@@ -35,8 +29,7 @@ public abstract class XmlEns extends ArrayList<Object>
 		}
 		return dt.Rows.size();
 	}
-	public final boolean Contine(String key, String val)
-	{
+	public final boolean Contine(String key, String val) throws Exception {
 		for (XmlEn en : this.ToJavaListXmlEns())
 		{
 			if (en.GetValStringByKey(key).equals(val))
@@ -48,7 +41,7 @@ public abstract class XmlEns extends ArrayList<Object>
 	}
 
 
-		///构造
+		///#region 构造
 	/** 
 	 构造
 	*/
@@ -57,20 +50,18 @@ public abstract class XmlEns extends ArrayList<Object>
 
 	}
 
-		/// 构造
+		///#endregion 构造
 
 
-		///查询方法
-	public final String getTname()
-	{
+		///#region 查询方法
+	public final String getTname() throws Exception {
 		String tname = this.getFile().replace(".TXT", "").replace(".txt", "");
-		tname = tname.substring(tname.lastIndexOf("\\") + 1) + this.getTableName() + "_X";
+		tname = tname.substring(tname.lastIndexOf("/") + 1) + this.getTableName() + "_X";
 		return tname;
 	}
 
-	private DataTable GetTableTxts(java.io.File[] fis)
-	{
-		Object tempVar = bp.da.Cash.GetObj(this.getTname(), Depositary.Application);
+	private DataTable GetTableTxts(List<File> fis) throws Exception {
+		Object tempVar = Cash.GetObj(this.getTname(), Depositary.Application);
 		DataTable cdt = tempVar instanceof DataTable ? (DataTable)tempVar : null;
 		if (cdt != null)
 		{
@@ -83,12 +74,11 @@ public abstract class XmlEns extends ArrayList<Object>
 			dt = GetTableTxt(dt, fi);
 		}
 
-		bp.da.Cash.AddObj(this.getTname(), Depositary.Application, dt);
+		Cash.AddObj(this.getTname(), Depositary.Application, dt);
 		return dt;
 	}
-	private DataTable GetTableTxt()
-	{
-		Object tempVar = bp.da.Cash.GetObj(this.getTname(), Depositary.Application);
+	private DataTable GetTableTxt() throws Exception {
+		Object tempVar = Cash.GetObj(this.getTname(), Depositary.Application);
 		DataTable cdt = tempVar instanceof DataTable ? (DataTable)tempVar : null;
 		if (cdt != null)
 		{
@@ -99,10 +89,10 @@ public abstract class XmlEns extends ArrayList<Object>
 		java.io.File fi = new java.io.File(this.getFile());
 		dt = GetTableTxt(dt, fi);
 
-		bp.da.Cash.AddObj(this.getTname(), Depositary.Application, dt);
+		Cash.AddObj(this.getTname(), Depositary.Application, dt);
 		return dt;
 	}
-	private DataTable GetTableTxt(DataTable dt, File file)
+	private DataTable GetTableTxt(DataTable dt, java.io.File file)
 	{
 		BufferedReader br = null;
 		FileInputStream fis = null;
@@ -139,7 +129,7 @@ public abstract class XmlEns extends ArrayList<Object>
 									.Add(new DataColumn(ojbkey, String.class));
 						}
 					}
-					
+
 					DataRow dr = dt.NewRow();
 					for (String ojbkey : ht.keySet())
 					{
@@ -148,29 +138,29 @@ public abstract class XmlEns extends ArrayList<Object>
 						 * warning dr[ojbkey] = ht.get(ojbkey);
 						 */
 					}
-					
+
 					if (ht.keySet().size() > 1)
 					{
 						dt.Rows.add(dr);
 					}
-					
+
 					ht.clear(); // clear hashtable.
 					continue;
 				}
-				
+
 				int idx = lin.indexOf("=");
 				if (idx == -1)
 				{
 					throw new RuntimeException(this.getFile()
 							+ "@不符合规则 key =val 的规则。");
 				}
-				
+
 				key = lin.substring(0, idx);
 				if (key.equals(""))
 				{
 					continue;
 				}
-				
+
 				val = lin.substring(idx + 1);
 				ht.put(key, val);
 			}
@@ -189,15 +179,12 @@ public abstract class XmlEns extends ArrayList<Object>
 				ex.printStackTrace();
 			}
 		}
-		
+
 		return dt;
 	}
-	public final DataTable GetTable() throws Exception
-	{
-		Object tempVar = Cash.GetObj(this.getTname(),
-				Depositary.Application);
-		DataTable cdt = (DataTable) ((tempVar instanceof DataTable) ? tempVar
-				: null);
+	public final DataTable GetTable() throws Exception {
+		Object tempVar = Cash.GetObj(this.getTname(), Depositary.Application);
+		DataTable cdt = tempVar instanceof DataTable ? (DataTable)tempVar : null;
 		if (cdt != null)
 		{
 			return cdt;
@@ -207,25 +194,22 @@ public abstract class XmlEns extends ArrayList<Object>
 		{
 			return this.GetTableTxt();
 		}
-		
+
 		if (filePath.toLowerCase().indexOf(".xml") > 0)
 		{
 			DataSet ds1 = new DataSet();
-			ds1.readXml(filePath);
+			ds1.readXml(this.getFile());
 			DataTable mdt = ds1.GetTableByName(this.getTableName());
-			/*
-			 * warning DataTable mdt = ds1.Tables[this.getTableName()];
-			 */
 			if (mdt == null)
 			{
 				mdt = new DataTable();
 			}
-			
-			Cash.AddObj(this.getTname(), Depositary.Application, mdt);
-			
-			return ds1.GetTableByName(this.getTableName());
 
+			Cash.AddObj(this.getTname(), Depositary.Application, mdt);
+
+			return ds1.GetTableByName(this.getTableName());
 		}
+
 		if(SystemConfig.getIsJarRun()){
 			DataTable dt = new DataTable(this.getTableName());
 			//读取jar包获取jar包中含有filePath的文件
@@ -300,9 +284,9 @@ public abstract class XmlEns extends ArrayList<Object>
 			Cash.AddObj(this.getTname(), Depositary.Application, dt);
 			return dt;
 		}
-		// 说明这个是目录
-		File di = new File(this.getFile());
-		if (!di.exists())
+		/* 说明这个是目录 */
+		java.io.File di = new java.io.File(this.getFile());
+		if (di.exists() == false)
 		{
 			throw new RuntimeException("文件不存在:" + this.getFile());
 		}
@@ -313,187 +297,101 @@ public abstract class XmlEns extends ArrayList<Object>
 			fis = getListFiles(this.getFile(), "txt", true);
 			return this.GetTableTxts(fis);
 		}
-		
-		DataTable dt = new DataTable(this.getTableName());
 
+		DataTable dt = new DataTable(this.getTableName());
 		if (fis.size() == 0)
 		{
 			return dt;
 		}
-		
+
 		DataTable tempDT = new DataTable();
-		
-		for (File fi : fis)
+		for (java.io.File fi : fis)
 		{
-			
+
 			DataSet ds = new DataSet("myds");
 			try
 			{
 				ds.readXml(this.getFile() + fi.getName());
-			} catch (RuntimeException ex)
+			}
+			catch (RuntimeException ex)
 			{
-				throw new RuntimeException("读取文件:" + fi.getName()
-						+ "错误。Exception=" + ex.getMessage());
+				throw new RuntimeException("读取文件:" + fi.getName() + "错误。Exception=" + ex.getMessage());
 			}
 			try
 			{
-				// ds.
+				//ds.
 				if (dt.Columns.size() == 0)
 				{
-					// 如果表还是空的，没有任何结构。
+					/* 如果表还是空的，没有任何结构。*/
 					try
 					{
 						dt = ds.GetTableByName(this.getTableName());
-					
-					} catch (RuntimeException ex)
+					}
+					catch (RuntimeException ex)
 					{
-						throw new RuntimeException("可能是没有在" + fi.getName()
-								+ "文件中找到表:" + this.getTableName()
-								+ " exception=" + ex.getMessage());
+						throw new RuntimeException("可能是没有在" + fi.getName() + "文件中找到表:" + this.getTableName() + " exception=" + ex.getMessage());
 					}
 					tempDT = dt;
-				
 					continue;
 				}
-				
+
 				DataTable mydt = ds.GetTableByName(this.getTableName());
-				
 				if (mydt == null)
 				{
 					throw new RuntimeException("无此表:" + this.getTableName());
 				}
-				
+
 				if (mydt.Rows.size() == 0)
 				{
 					continue;
 				}
-				
+
 				for (DataRow mydr : mydt.Rows)
 				{
+					//dt.ImportRow(mydr);
 					DataRow dr = dt.NewRow();
-					
+
 					for (DataColumn dc : tempDT.Columns)
 					{
+						//string "sd";
 						if (dc.ColumnName.indexOf("_Id") != -1)
 						{
 							continue;
 						}
-						
+
 						try
 						{
 							Object obj = mydr.getValue(dc.ColumnName);
-							dr.put(dc.ColumnName, obj);
-							
-						} catch (RuntimeException ex)
+							dr.setValue(dc.ColumnName, obj);
+						}
+						catch (RuntimeException ex)
 						{
-							throw new RuntimeException("xml 配置错误，多个文件中的属性不对称。"
-									+ ex.getMessage());
+							throw new RuntimeException("xml 配置错误，多个文件中的属性不对称。" + ex.getMessage());
 						}
 					}
-					
+
 					dt.Rows.add(dr);
 				}
-			} catch (RuntimeException ex)
+			}
+			catch (RuntimeException ex)
 			{
-				throw new RuntimeException("获取数据出现错误:fileName=" + fi.getName()
-						+ " clasName=" + this.toString() + " MoreInfo="
-						+ ex.getMessage());
+				throw new RuntimeException("获取数据出现错误:fileName=" + fi.getName() + " clasName=" + this.toString() + " MoreInfo=" + ex.getMessage());
 			}
 		}
 		Cash.AddObj(this.getTname(), Depositary.Application, dt);
 		return dt;
 	}
-	private DataTable GetTableTxts(List<File> fis)
-	{
-		
-		Object tempVar = Cash.GetObj(this.getTname(),
-				Depositary.Application);
-		DataTable cdt = (DataTable) ((tempVar instanceof DataTable) ? tempVar
-				: null);
-		if (cdt != null)
-		{
-			return cdt;
-		}
-		
-		DataTable dt = new DataTable(this.getTableName());
-		for (File fi : fis)
-		{
-			dt = GetTableTxt(dt, fi);
-		}
-		
-		Cash.AddObj(this.getTname(), Depositary.Application, dt);
-		return dt;
-	}
-	
-	
-	/**
-	 * @param path
-	 *            文件路径
-	 * @param suffix
-	 *            后缀名, 为空则表示所有文件
-	 * @param isdepth
-	 *            是否遍历子目录
-	 * @return list
-	 */
-	private List<File> getListFiles(String path, String suffix, boolean isdepth)
-	{
-		List<File> lstFileNames = new ArrayList<File>();
-		File file = new File(path);
-		return listFile(lstFileNames, file, suffix, isdepth);
-	}
-	
-	private List<File> listFile(List<File> lstFileNames, File f, String suffix,
-			boolean isdepth)
-	{
-		// 若是目录, 采用递归的方法遍历子目录
-		if (f.isDirectory())
-		{
-			File[] t = f.listFiles();
-			for (int i = 0; i < t.length; i++)
-			{
-				if (isdepth || t[i].isFile())
-				{
-					listFile(lstFileNames, t[i], suffix, isdepth);
-				}
-			}
-		} else
-		{
-			String filePath = f.getAbsolutePath();
-			if (!suffix.equals(""))
-			{
-				int begIndex = filePath.lastIndexOf("."); // 最后一个.(即后缀名前面的.)的索引
-				String tempsuffix = "";
-				
-				if (begIndex != -1)
-				{
-					tempsuffix = filePath.substring(begIndex + 1,
-							filePath.length());
-					if (tempsuffix.equals(suffix))
-					{
-						lstFileNames.add(f);
-					}
-				}
-			} else
-			{
-				lstFileNames.add(f);
-			}
-		}
-		return lstFileNames;
-	}
-	
-	public int RetrieveAllFromDBSource() throws Exception
-	{
-		bp.da.Cash.RemoveObj(this.getTname());
+	public int RetrieveAllFromDBSource() throws Exception {
+		Cash.RemoveObj(this.getTname());
 		return this.RetrieveAll();
 	}
 	/** 
 	 装载XML
-	 * @throws Exception 
 	*/
-	public int RetrieveAll() throws Exception
+	public int RetrieveAll() throws Exception 
 	{
 		this.clear(); // 清所有的信息。
-		Object tempVar = bp.da.Cash.GetObj(this.toString(), Depositary.Application);
+		Object tempVar = Cash.GetObj(this.toString(), Depositary.Application);
 		XmlEns ens = tempVar instanceof XmlEns ? (XmlEns)tempVar : null;
 		if (ens != null)
 		{
@@ -514,11 +412,10 @@ public abstract class XmlEns extends ArrayList<Object>
 			this.Add(en);
 		}
 
-		bp.da.Cash.AddObj(this.toString(), Depositary.Application, this);
+		Cash.AddObj(this.toString(), Depositary.Application, this);
 		return dt.Rows.size();
 	}
-	public final void FullEnToCash(String pk) throws Exception
-	{
+	public final void FullEnToCash(String pk) throws Exception {
 		this.RetrieveAll();
 		XmlEn myen = this.getGetNewEntity();
 		for (XmlEn en : this.ToJavaListXmlEns())
@@ -526,9 +423,22 @@ public abstract class XmlEns extends ArrayList<Object>
 			Cash.AddObj(myen.toString() + en.GetValByKey(pk), Depositary.Application, en);
 		}
 	}
-
-	public final int RetrieveByLength(String key, int len) throws Exception
+	/**
+	 * param path
+	 *            文件路径
+	 * param suffix
+	 *            后缀名, 为空则表示所有文件
+	 * param isdepth
+	 *            是否遍历子目录
+	 * @return list
+	 */
+	private List<File> getListFiles(String path, String suffix, boolean isdepth)
 	{
+		List<File> lstFileNames = new ArrayList<File>();
+		File file = new File(path);
+		return listFile(lstFileNames, file, suffix, isdepth);
+	}
+	public final int RetrieveByLength(String key, int len) throws Exception {
 		this.clear(); //清所有的信息
 		DataTable dt = this.GetTable();
 		int i = 0;
@@ -545,12 +455,10 @@ public abstract class XmlEns extends ArrayList<Object>
 		}
 		return i;
 	}
-	public final int Retrieve(String key, Object val) throws Exception
-	{
+	public final int Retrieve(String key, Object val) throws Exception {
 		return RetrieveBy(key, val);
 	}
-	public final int Retrieve(String key, Object val, String key1, String val1) throws Exception
-	{
+	public final int Retrieve(String key, Object val, String key1, String val1) throws Exception {
 		this.clear(); //清所有的信息
 		DataTable dt = this.GetTable();
 		if (dt == null)
@@ -579,16 +487,53 @@ public abstract class XmlEns extends ArrayList<Object>
 		}
 		return i;
 	}
+	private List<File> listFile(List<File> lstFileNames, File f, String suffix,
+								boolean isdepth)
+	{
+		// 若是目录, 采用递归的方法遍历子目录
+		if (f.isDirectory())
+		{
+			File[] t = f.listFiles();
+			for (int i = 0; i < t.length; i++)
+			{
+				if (isdepth || t[i].isFile())
+				{
+					listFile(lstFileNames, t[i], suffix, isdepth);
+				}
+			}
+		} else
+		{
+			String filePath = f.getAbsolutePath();
+			if (!suffix.equals(""))
+			{
+				int begIndex = filePath.lastIndexOf("."); // 最后一个.(即后缀名前面的.)的索引
+				String tempsuffix = "";
+
+				if (begIndex != -1)
+				{
+					tempsuffix = filePath.substring(begIndex + 1,
+							filePath.length());
+					if (tempsuffix.equals(suffix))
+					{
+						lstFileNames.add(f);
+					}
+				}
+			} else
+			{
+				lstFileNames.add(f);
+			}
+		}
+		return lstFileNames;
+	}
+
 	/** 
 	 按照键值查询
 	 
-	 @param key 要查询的健
-	 @param val 值
+	 param key 要查询的健
+	 param val 值
 	 @return 返回查询的个数
-	 * @throws Exception 
 	*/
-	public final int RetrieveBy(String key, Object val) throws Exception
-	{
+	public final int RetrieveBy(String key, Object val) throws Exception {
 		if (val == null)
 		{
 			return 0;
@@ -616,8 +561,7 @@ public abstract class XmlEns extends ArrayList<Object>
 		return i;
 	}
 
-	public final int RetrieveBy(String key, Object val, String orderByAttr) throws Exception
-	{
+	public final int RetrieveBy(String key, Object val, String orderByAttr) throws Exception {
 		DataTable dt = this.GetTable();
 
 		this.clear(); //清所有的信息.
@@ -636,12 +580,11 @@ public abstract class XmlEns extends ArrayList<Object>
 		return i;
 	}
 
-		///
+		///#endregion
 
 
-	///公共方法
-	public final XmlEn Find(String key, Object val)
-	{
+		///#region 公共方法
+	public final XmlEn Find(String key, Object val) throws Exception {
 		for (XmlEn en : this.ToJavaListXmlEns())
 		{
 			if (val.toString().equals(en.GetValStringByKey(key)))
@@ -652,8 +595,7 @@ public abstract class XmlEns extends ArrayList<Object>
 		return null;
 
 	}
-	public final boolean getIsExits(String key, Object val)
-	{
+	public final boolean IsExits(String key, Object val) throws Exception {
 		for (XmlEn en : this.ToJavaListXmlEns())
 		{
 			if (val.toString().equals(en.GetValStringByKey(key)))
@@ -664,13 +606,12 @@ public abstract class XmlEns extends ArrayList<Object>
 		return false;
 	}
 
-		///
+		///#endregion
 
 
 
-		/// 增加 便利访问
-	public final XmlEn GetEnByKey(String key, String val)
-	{
+		///#region  增加 便利访问
+	public final XmlEn GetEnByKey(String key, String val) throws Exception {
 		for (XmlEn en : this.ToJavaListXmlEns())
 		{
 			if (en.GetValStringByKey(key).equals(val))
@@ -681,12 +622,17 @@ public abstract class XmlEns extends ArrayList<Object>
 		return null;
 
 	}
-
+	/** 
+	 根据位置取得数据
+	*/
+	public final XmlEn get(int index)
+	{
+		return (XmlEn)this.get(index);
+	}
 	/** 
 	 获取数据
 	*/
-	public final XmlEn get(String key, String val)
-	{
+	public final XmlEn get(String key, String val) throws Exception {
 		for (XmlEn en : this.ToJavaListXmlEns())
 		{
 			if (en.GetValStringByKey(key).equals(val))
@@ -699,7 +645,7 @@ public abstract class XmlEns extends ArrayList<Object>
 	/** 
 	 增加一个xml en to Ens.
 	 
-	 @param entity
+	 param entity
 	 @return 
 	*/
 	public int Add(XmlEn entity)
@@ -707,8 +653,7 @@ public abstract class XmlEns extends ArrayList<Object>
 		this.add(entity);
 		return this.size();
 	}
-	public int Add(XmlEns ens)
-	{
+	public int Add(XmlEns ens) throws Exception {
 		if (ens == null)
 		{
 			return 0;
@@ -721,18 +666,16 @@ public abstract class XmlEns extends ArrayList<Object>
 		return ens.size();
 	}
 
-		///
+		///#endregion
 
 
-		///与 entities 接口
+		///#region 与 entities 接口
 	/** 
 	 把数据装入一个实例集合中（把xml数据装入物理表中）
 	 
-	 @param ens 实体集合
-	 * @throws Exception 
+	 param ens 实体集合
 	*/
-	public final void FillXmlDataIntoEntities(Entities ens) throws Exception
-	{
+	public final void FillXmlDataIntoEntities(Entities ens) throws Exception {
 		this.RetrieveAll(); // 查询出来全部的数据。
 		Entity en1 = ens.getGetNewEntity();
 
@@ -782,8 +725,7 @@ public abstract class XmlEns extends ArrayList<Object>
 			en.Save();
 		}
 	}
-	public final void FillXmlDataIntoEntities() throws Exception
-	{
+	public final void FillXmlDataIntoEntities() throws Exception {
 		if (this.getRefEns() == null)
 		{
 			return;
@@ -791,24 +733,25 @@ public abstract class XmlEns extends ArrayList<Object>
 		this.FillXmlDataIntoEntities(this.getRefEns());
 	}
 
-		///
+		///#endregion
 
 
 
-		///子类实现xml 信息的描述.
-	public abstract XmlEn getGetNewEntity();
+		///#region 子类实现xml 信息的描述.
+	public abstract XmlEn getGetNewEntity() throws Exception;
 	/** 
 	 获取它所在的xml file 位置.
 	*/
-	public abstract String getFile();
+	public abstract String getFile() throws Exception;
 	/** 
 	 物理表名称(可能一个xml文件中有n个Table.)
 	*/
 	public abstract String getTableName();
 	public abstract Entities getRefEns();
 
+		///#endregion
 
-	public final DataTable ToDataTable()
+	public final DataTable ToDataTable()throws Exception
 	{
 		DataTable dt = new DataTable(this.getTableName());
 
@@ -836,9 +779,8 @@ public abstract class XmlEns extends ArrayList<Object>
 
 		return dt;
 	}
-	public List<XmlEn> ToJavaListXmlEns()
+	public List<XmlEn> ToJavaListXmlEns()throws Exception
 	{
 		return (List<XmlEn>)(Object)this;
 	}
-	
 }

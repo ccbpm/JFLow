@@ -1,11 +1,4 @@
 package bp.pub;
-
-import bp.da.*;
-import bp.en.*;
-import bp.web.*;
-import bp.sys.*;
-import bp.*;
-
 /** 
  柱状图显示类型
 */
@@ -39,7 +32,7 @@ public enum ColumnChartShowType
 		return this.ordinal();
 	}
 
-	public static ColumnChartShowType forValue(int value) throws Exception
+	public static ColumnChartShowType forValue(int value)
 	{
 		return values()[value];
 	}

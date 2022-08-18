@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
  保管位置
@@ -23,7 +23,7 @@ public enum Depositary
 		return this.ordinal();
 	}
 
-	public static Depositary forValue(int value) throws Exception
+	public static Depositary forValue(int value) 
 	{
 		return values()[value];
 	}

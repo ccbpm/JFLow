@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  运行模式
@@ -23,7 +22,7 @@ public enum AthRunModel
 		return this.ordinal();
 	}
 
-	public static AthRunModel forValue(int value) throws Exception
+	public static AthRunModel forValue(int value)
 	{
 		return values()[value];
 	}

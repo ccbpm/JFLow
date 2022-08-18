@@ -1,5 +1,6 @@
 package bp.wf.template;
 
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -26,13 +27,11 @@ public enum FlowDeptDataRightCtrlType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue()  {
 		return this.ordinal();
 	}
 
-	public static FlowDeptDataRightCtrlType forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static FlowDeptDataRightCtrlType forValue(int value)
+	{return values()[value];
 	}
 }

@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
  时间计算方式
@@ -23,7 +23,7 @@ public enum TWay
 		return this.ordinal();
 	}
 
-	public static TWay forValue(int value) throws Exception
+	public static TWay forValue(int value)
 	{
 		return values()[value];
 	}

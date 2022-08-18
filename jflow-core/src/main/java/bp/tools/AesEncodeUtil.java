@@ -36,7 +36,7 @@ public class AesEncodeUtil {
     /**
      * 加密
      * 
-     * @param
+     * param
      * @return
      */
     public static byte[] encryptAES(byte[] input, int inputOffset, int inputLength) {
@@ -125,8 +125,8 @@ public class AesEncodeUtil {
 
     /**
      * 
-     * @param strSrcFile 原始文件
-     * @param strDestFile 加密后的文件
+     * param strSrcFile 原始文件
+     * param strDestFile 加密后的文件
      * @throws Exception
      */
     // 加密文件
@@ -180,7 +180,7 @@ public class AesEncodeUtil {
     /**
      * 测试
      * 
-     * @param args
+     * param args
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {

@@ -1,6 +1,11 @@
 package bp.sys;
 
-import bp.en.EntityTreeAttr;
+import bp.da.*;
+import bp.en.*;
+import bp.port.*;
+import bp.sys.*;
+import bp.*;
+import java.util.*;
 
 /** 
  属性

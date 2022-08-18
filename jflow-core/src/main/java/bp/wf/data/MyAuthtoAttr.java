@@ -1,11 +1,12 @@
 package bp.wf.data;
+
 /** 
- 我发起的流程
+ 我授权的流程
 */
 public class MyAuthtoAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 工作ID
 	*/
@@ -155,5 +156,5 @@ public class MyAuthtoAttr
 	*/
 	public static final String GUID = "GUID";
 
-		///
+		///#endregion
 }

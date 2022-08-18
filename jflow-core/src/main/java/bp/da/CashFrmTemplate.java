@@ -14,8 +14,8 @@ public class CashFrmTemplate
 	/** 
 	 放入表单
 	 
-	 @param frmID 表单ID
-	 @param ds 表单模版
+	 param frmID 表单ID
+	 param ds 表单模版
 	 * @throws Exception 
 	*/
 	public static void Put(String frmID, DataSet ds) throws Exception
@@ -43,7 +43,7 @@ public class CashFrmTemplate
 	/** 
 	 移除
 	 
-	 @param frmID 表单ID
+	 param frmID 表单ID
 	*/
 	public static void Remove(String frmID)
 	{
@@ -61,11 +61,10 @@ public class CashFrmTemplate
 	/** 
 	 获得表单DataSet模式的模版数据
 	 
-	 @param frmID 表单ID
+	 param frmID 表单ID
 	 @return 表单模版
 	*/
-	public static DataSet GetFrmDataSetModel(String frmID)
-	{
+	public static DataSet GetFrmDataSetModel(String frmID) throws Exception {
 		synchronized (lockObj)
 		{
 			if (_hts == null)
@@ -85,7 +84,7 @@ public class CashFrmTemplate
 	/** 
 	 获得表单json模式的模版数据
 	 
-	 @param frmID 表单ID
+	 param frmID 表单ID
 	 @return json
 	*/
 	public static String GetFrmJsonModel(String frmID)

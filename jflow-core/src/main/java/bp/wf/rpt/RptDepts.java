@@ -1,9 +1,7 @@
 package bp.wf.rpt;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.wf.*;
+
 import java.util.*;
 
 /** 
@@ -12,7 +10,7 @@ import java.util.*;
 public class RptDepts extends Entities
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 报表与部门集合
 	*/
@@ -20,10 +18,10 @@ public class RptDepts extends Entities
 	{
 	}
 
-		///
+		///#endregion
 
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
@@ -33,25 +31,25 @@ public class RptDepts extends Entities
 		return new RptDept();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<RptDept> ToJavaList()
+	public final java.util.List<RptDept> ToJavaList()throws Exception
 	{
-		return (List<RptDept>)(Object)this;
+		return (java.util.List<RptDept>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<RptDept> Tolist()
+	public final ArrayList<RptDept> Tolist()throws Exception
 	{
 		ArrayList<RptDept> list = new ArrayList<RptDept>();
 		for (int i = 0; i < this.size(); i++)
@@ -61,5 +59,5 @@ public class RptDepts extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

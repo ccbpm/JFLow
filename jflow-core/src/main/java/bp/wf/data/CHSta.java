@@ -19,8 +19,7 @@ public enum CHSta
 
 	private int intValue;
 	private static java.util.HashMap<Integer, CHSta> mappings;
-	private static java.util.HashMap<Integer, CHSta> getMappings()
-	{
+	private static java.util.HashMap<Integer, CHSta> getMappings() {
 		if (mappings == null)
 		{
 			synchronized (CHSta.class)
@@ -34,9 +33,8 @@ public enum CHSta
 		return mappings;
 	}
 
-	private CHSta(int value) 
-	{
-		intValue = value;
+	private CHSta(int value)
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
@@ -45,7 +43,7 @@ public enum CHSta
 		return intValue;
 	}
 
-	public static CHSta forValue(int value) 
+	public static CHSta forValue(int value)
 	{
 		return getMappings().get(value);
 	}

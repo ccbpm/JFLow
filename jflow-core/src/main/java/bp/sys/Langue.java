@@ -1,10 +1,8 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
-import bp.*;
-import java.util.*;
+
 
 /** 
  语言
@@ -12,12 +10,11 @@ import java.util.*;
 public class Langue extends EntityMyPK
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 模块：比如 ccform.
-	 * @throws Exception 
 	*/
-	public final String getModel() throws Exception
+	public final String getModel()  throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Model);
 	}
@@ -28,7 +25,7 @@ public class Langue extends EntityMyPK
 	/** 
 	 类别：比如Label,Field
 	*/
-	public final String getSort() throws Exception
+	public final String getSort()  throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Sort);
 	}
@@ -39,7 +36,7 @@ public class Langue extends EntityMyPK
 	/** 
 	 关联的主键: 比如:LabelID, KeyOfEn
 	*/
-	public final String getSortKey() throws Exception
+	public final String getSortKey()  throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.SortKey);
 	}
@@ -50,7 +47,7 @@ public class Langue extends EntityMyPK
 	/** 
 	 语言
 	*/
-	public final String getLang() throws Exception
+	public final String getLang()  throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Langue);
 	}
@@ -61,7 +58,7 @@ public class Langue extends EntityMyPK
 	/** 
 	 值
 	*/
-	public final String getVal() throws Exception
+	public final String getVal()  throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.Val);
 	}
@@ -69,7 +66,7 @@ public class Langue extends EntityMyPK
 	{
 		this.SetValByKey(LangueAttr.Val, value);
 	}
-	public final String getModelKey() throws Exception
+	public final String getModelKey()  throws Exception
 	{
 		return this.GetValStringByKey(LangueAttr.ModelKey);
 	}
@@ -78,20 +75,20 @@ public class Langue extends EntityMyPK
 		this.SetValByKey(LangueAttr.ModelKey, value);
 	}
 
-		///
+		///#endregion
 
 
 
-		///构造方法
+		///#region 构造方法
 	public Langue()
 	{
 	}
-	public Langue(String pk) throws Exception
+	public Langue(String pk) throws Exception 
 	{
 		super(pk);
 	}
 	@Override
-	public Map getEnMap() throws Exception
+	public bp.en.Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -115,7 +112,7 @@ public class Langue extends EntityMyPK
 		return this.get_enMap();
 	}
 
-		///
+		///#endregion
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception

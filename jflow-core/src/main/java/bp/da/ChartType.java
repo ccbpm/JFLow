@@ -1,6 +1,6 @@
 package bp.da;
 
-import bp.*;
+
 
 /** 
  图表类型
@@ -27,7 +27,7 @@ public enum ChartType
 		return this.ordinal();
 	}
 
-	public static ChartType forValue(int value) throws Exception
+	public static ChartType forValue(int value) 
 	{
 		return values()[value];
 	}

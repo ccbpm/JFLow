@@ -1,4 +1,8 @@
 package bp.sys.frmui;
+
+import bp.*;
+import bp.sys.*;
+
 /** 
  组件列表（一个表单仅有一个字段）
 */

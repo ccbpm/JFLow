@@ -1,5 +1,7 @@
 package bp.wf;
 
+import bp.*;
+
 /** 
  已读回执类型
 */
@@ -24,13 +26,11 @@ public enum ReadReceipts
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()
-	{
+	public int getValue() {
 		return this.ordinal();
 	}
 
-	public static ReadReceipts forValue(int value) throws Exception
-	{
-		return values()[value];
+	public static ReadReceipts forValue(int value)
+	{return values()[value];
 	}
 }

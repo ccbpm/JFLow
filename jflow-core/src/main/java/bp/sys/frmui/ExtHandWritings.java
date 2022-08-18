@@ -1,9 +1,6 @@
 package bp.sys.frmui;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.sys.*;
 import java.util.*;
 
 /** 
@@ -12,33 +9,30 @@ import java.util.*;
 public class ExtHandWritings extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 手写签名版s
 	*/
-	public ExtHandWritings()
-	{
+	public ExtHandWritings()  {
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new ExtHandWriting();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtHandWriting> ToJavaList()
-	{
+	public final java.util.List<ExtHandWriting> ToJavaList() {
 		return (java.util.List<ExtHandWriting>)(Object)this;
 	}
 	/** 
@@ -46,8 +40,7 @@ public class ExtHandWritings extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtHandWriting> Tolist()
-	{
+	public final ArrayList<ExtHandWriting> Tolist()  {
 		ArrayList<ExtHandWriting> list = new ArrayList<ExtHandWriting>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -56,5 +49,5 @@ public class ExtHandWritings extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

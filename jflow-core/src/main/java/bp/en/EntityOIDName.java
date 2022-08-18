@@ -16,7 +16,7 @@ public abstract class EntityOIDName extends EntityOID
 		return "OID";
 	}
 	@Override
-	public String getPKField()
+	public String getPK_Field()
 	{
 		return "OID";
 	}
@@ -29,11 +29,10 @@ public abstract class EntityOIDName extends EntityOID
 	/** 
 	 构造
 	 
-	 @param oid OID
+	 param oid OID
 	 * @throws Exception 
 	*/
-	protected EntityOIDName(int oid) throws Exception
-	{
+	protected EntityOIDName(int oid) throws Exception {
 		super(oid);
 	}
 
@@ -45,11 +44,11 @@ public abstract class EntityOIDName extends EntityOID
 	 名称
 	 * @throws Exception 
 	*/
-	public final String getName() throws Exception
+	public final String getName()
 	{
 		return this.GetValStringByKey(EntityOIDNameAttr.Name);
 	}
-	public final void setName(String value) throws Exception
+	public final void setName(String value)
 	{
 		this.SetValByKey(EntityOIDNameAttr.Name, value);
 	}

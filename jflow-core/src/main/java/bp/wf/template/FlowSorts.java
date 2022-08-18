@@ -1,13 +1,7 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
 import bp.sys.*;
-import bp.web.WebUser;
-import bp.wf.*;
-import bp.wf.Glo;
-
 import java.util.*;
 
 /** 
@@ -18,62 +12,69 @@ public class FlowSorts extends EntitiesTree
 	/** 
 	 流程类别s
 	*/
-	public FlowSorts()
-	{
+	public FlowSorts()  {
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity()  {
 		return new FlowSort();
 	}
+	/** 
+	 
+	 
+	 @return 
+	*/
 	@Override
-	public int RetrieveAll() throws Exception
-	{
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+	public int RetrieveAll() throws Exception {
+		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
-			return this.Retrieve(FlowSortAttr.OrgNo, WebUser.getOrgNo(), FlowSortAttr.Idx);
+			return this.Retrieve(FlowSortAttr.OrgNo, bp.web.WebUser.getOrgNo(), FlowSortAttr.Idx);
 		}
 
 		int i = super.RetrieveAll(FlowSortAttr.Idx);
 		if (i == 0)
 		{
 			FlowSort fs = new FlowSort();
+			fs.setName("流程树");
+			fs.setNo("100");
+			fs.setParentNo("0");
+			fs.Insert();
+
+			fs = new FlowSort();
 			fs.setName("公文类");
 			fs.setNo("01");
+			fs.setParentNo("100");
 			fs.Insert();
 
 			fs = new FlowSort();
 			fs.setName("办公类");
 			fs.setNo("02");
+			fs.setParentNo("100");
 			fs.Insert();
-			i = super.RetrieveAll();
+			i = super.RetrieveAll(FlowSortAttr.Idx);
 		}
-
 		return i;
 	}
 
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<FlowSort> ToJavaList()
-	{
-		return (List<FlowSort>)(Object)this;
+	public final java.util.List<FlowSort> ToJavaList() {
+		return (java.util.List<FlowSort>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FlowSort> Tolist()
-	{
+	public final ArrayList<FlowSort> Tolist()  {
 		ArrayList<FlowSort> list = new ArrayList<FlowSort>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -82,5 +83,5 @@ public class FlowSorts extends EntitiesTree
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

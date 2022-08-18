@@ -1,5 +1,8 @@
 package bp.sys;
-import bp.en.EntityNoNameAttr;
+
+import bp.en.*;
+
+
 /** 
  全局变量
 */

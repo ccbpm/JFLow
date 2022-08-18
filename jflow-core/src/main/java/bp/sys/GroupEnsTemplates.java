@@ -1,9 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.*;
+
 import java.util.*;
 
 /** 
@@ -12,17 +10,16 @@ import java.util.*;
 public class GroupEnsTemplates extends EntitiesOID
 {
 
-		///构造
-	public GroupEnsTemplates()
+		///#region 构造
+	public GroupEnsTemplates()throws Exception
 	{
 	}
 	/** 
 	 
 	 
-	 @param emp
+	 param emp
 	*/
-	public GroupEnsTemplates(String emp) throws Exception
-	{
+	public GroupEnsTemplates(String emp) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(GroupEnsTemplateAttr.Rec, emp);
 		qo.addOr();
@@ -39,23 +36,12 @@ public class GroupEnsTemplates extends EntitiesOID
 		return new GroupEnsTemplate();
 	}
 
-
-		///
-
-
-		///查询方法
-
-
-		///
-
-
-		///为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupEnsTemplate> ToJavaList()
+	public final java.util.List<GroupEnsTemplate> ToJavaList()throws Exception
 	{
 		return (java.util.List<GroupEnsTemplate>)(Object)this;
 	}
@@ -64,7 +50,7 @@ public class GroupEnsTemplates extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupEnsTemplate> Tolist()
+	public final ArrayList<GroupEnsTemplate> Tolist()throws Exception
 	{
 		ArrayList<GroupEnsTemplate> list = new ArrayList<GroupEnsTemplate>();
 		for (int i = 0; i < this.size(); i++)
@@ -74,5 +60,5 @@ public class GroupEnsTemplates extends EntitiesOID
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

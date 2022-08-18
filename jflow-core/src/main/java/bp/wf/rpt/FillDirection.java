@@ -1,9 +1,5 @@
 package bp.wf.rpt;
 
-import bp.wf.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
 
 public enum FillDirection
 {
@@ -15,8 +11,7 @@ public enum FillDirection
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FillDirection> mappings;
-	private static java.util.HashMap<Integer, FillDirection> getMappings()
-	{
+	private static java.util.HashMap<Integer, FillDirection> getMappings()  {
 		if (mappings == null)
 		{
 			synchronized (FillDirection.class)
@@ -31,18 +26,15 @@ public enum FillDirection
 	}
 
 	private FillDirection(int value)
-	{
-		intValue = value;
+	{intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()
-	{
+	public int getValue() {
 		return intValue;
 	}
 
 	public static FillDirection forValue(int value)
-	{
-		return getMappings().get(value);
+	{return getMappings().get(value);
 	}
 }

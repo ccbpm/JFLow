@@ -1,7 +1,5 @@
 package bp.en;
 
-import bp.en.*;
-import bp.*;
 
 /** 
  工作模式
@@ -28,7 +26,7 @@ public enum Dot2DotModel
 		return this.ordinal();
 	}
 
-	public static Dot2DotModel forValue(int value) throws Exception
+	public static Dot2DotModel forValue(int value) 
 	{
 		return values()[value];
 	}

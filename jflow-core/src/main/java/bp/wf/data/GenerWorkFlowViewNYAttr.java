@@ -1,5 +1,7 @@
 package bp.wf.data;
-import bp.en.EntityNoNameAttr;
+
+import bp.en.*;
+
 
 /** 
  月份

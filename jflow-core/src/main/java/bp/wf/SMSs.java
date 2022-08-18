@@ -5,6 +5,7 @@ import bp.en.*;
 import bp.web.*;
 import bp.sys.*;
 import bp.wf.port.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -16,32 +17,28 @@ public class SMSs extends Entities
 	 获得实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new SMS();
 	}
-	public SMSs()
-	{
+	public SMSs() throws Exception {
 	}
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<SMS> ToJavaList()
-	{
-		return (List<SMS>)(Object)this;
+	public final java.util.List<SMS> ToJavaList() {
+		return (java.util.List<SMS>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<SMS> Tolist()
-	{
+	public final ArrayList<SMS> Tolist()  {
 		ArrayList<SMS> list = new ArrayList<SMS>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -50,5 +47,5 @@ public class SMSs extends Entities
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

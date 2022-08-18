@@ -3,6 +3,7 @@ package bp.wf;
 import bp.da.*;
 import bp.wf.*;
 import bp.en.*;
+import bp.*;
 
 /** 
  普通工作s
@@ -10,23 +11,21 @@ import bp.en.*;
 public class GEWorks extends Works
 {
 
-		///重载基类方法
+		///#region 重载基类方法
 	/** 
 	 节点ID
 	*/
 	public int NodeID = 0;
 
-		///
+		///#endregion
 
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity
-	 * @throws Exception 
 	*/
 	@Override
-	public Entity getGetNewEntity() throws Exception
-	{
+	public Entity getGetNewEntity()  {
 		if (this.NodeID == 0)
 		{
 			return new GEWork();
@@ -36,20 +35,19 @@ public class GEWorks extends Works
 	/** 
 	 普通工作ID
 	*/
-	public GEWorks()
-	{
+	public GEWorks() throws Exception {
 	}
 	/** 
 	 普通工作ID
 	 
-	 @param nodeid
+	 param nodeid
 	*/
-	public GEWorks(int nodeid, String nodeFrmID)
+	public GEWorks(int nodeid, String nodeFrmID) throws Exception
 	{
 		this.NodeID = nodeid;
 		this.NodeFrmID = nodeFrmID;
 	}
 	public String NodeFrmID = "";
 
-		///
+		///#endregion
 }

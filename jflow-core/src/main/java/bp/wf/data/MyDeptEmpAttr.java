@@ -1,9 +1,9 @@
 package bp.wf.data;
-import bp.en.EntityNoNameAttr;
+
 /** 
   属性 
 */
-public class MyDeptEmpAttr extends EntityNoNameAttr
+public class MyDeptEmpAttr extends bp.en.EntityNoNameAttr
 {
 	/** 
 	 流程编号

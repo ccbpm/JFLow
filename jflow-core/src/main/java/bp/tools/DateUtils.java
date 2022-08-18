@@ -44,7 +44,7 @@ public class DateUtils
 	 * 
 	 * @return Date
 	 */
-	public static String getCurrentDate()
+	public static String getCurrentDate()throws Exception
 	{
 		return format(new Date(System.currentTimeMillis()),
 				YEAR_MONTH_DAY_PATTERN_MIDLINE);
@@ -59,7 +59,7 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定年数，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param ammount
+	 * param ammount
 	 *            要增加年的数目
 	 * @return 结果日期对象
 	 */
@@ -75,7 +75,7 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定月数，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param ammount
+	 * param ammount
 	 *            要增加月的数目
 	 * @return 结果日期对象
 	 */
@@ -90,7 +90,7 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定天数，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param ammount
+	 * param ammount
 	 *            要增加天的数目
 	 * @return 结果日期对象
 	 */
@@ -107,7 +107,7 @@ public class DateUtils
 	 * 
 	 * @return Date
 	 */
-	public static Date currentDate()
+	public static Date currentDate()throws Exception
 	{
 		return new Date(System.currentTimeMillis());
 	}
@@ -117,7 +117,7 @@ public class DateUtils
 	 * 
 	 * @return Date
 	 */
-	public static Timestamp currentTimestamp()
+	public static Timestamp currentTimestamp()throws Exception
 	{
 		return new Timestamp(System.currentTimeMillis());
 	}
@@ -178,7 +178,7 @@ public class DateUtils
 	/**
 	 * 从数据库服务器获取当前时间并根据传入的patter转换成字符串形式。
 	 * 
-	 * @param pattern
+	 * param pattern
 	 *            日期pattern
 	 * @return 返回当前时间根据传入pattern转换后的字符串
 	 * @throws SQLException
@@ -206,7 +206,7 @@ public class DateUtils
 	/**
 	 * 获取给定日期对象的年
 	 * 
-	 * @param date
+	 * param date
 	 *            日期对象
 	 * @return 年
 	 */
@@ -220,7 +220,7 @@ public class DateUtils
 	/**
 	 * 获取给定日期对象的月
 	 * 
-	 * @param date
+	 * param date
 	 *            日期对象
 	 * @return 月
 	 */
@@ -234,7 +234,7 @@ public class DateUtils
 	/**
 	 * 获取给定日期对象的天
 	 * 
-	 * @param date
+	 * param date
 	 *            日期对象
 	 * @return 天
 	 */
@@ -248,7 +248,7 @@ public class DateUtils
 	/**
 	 * 获取给定日期对象的时
 	 * 
-	 * @param date
+	 * param date
 	 *            日期对象
 	 * @return 时
 	 */
@@ -262,7 +262,7 @@ public class DateUtils
 	/**
 	 * 获取给定日期对象的分
 	 * 
-	 * @param date
+	 * param date
 	 *            日期对象
 	 * @return 分
 	 */
@@ -276,7 +276,7 @@ public class DateUtils
 	/**
 	 * 获取给定日期对象的秒
 	 * 
-	 * @param date
+	 * param date
 	 *            日期对象
 	 * @return 秒
 	 */
@@ -290,7 +290,7 @@ public class DateUtils
 	/**
 	 * 获取传入日期的年和月的Integer形式（yyyyMM）。
 	 * 
-	 * @param date
+	 * param date
 	 *            要转换的日期对象
 	 * @return 转换后的Integer对象
 	 */
@@ -302,7 +302,7 @@ public class DateUtils
 	/**
 	 * 将年月的整数形式（yyyyMM）转换为日期对象返回。
 	 * 
-	 * @param yearMonth
+	 * param yearMonth
 	 *            年月的整数形式（yyyyMM）
 	 * @return 日期类型
 	 * @throws ParseException
@@ -316,7 +316,7 @@ public class DateUtils
 	/**
 	 * 将年月的字符串（yyyyMM）转换为日期对象返回。
 	 * 
-	 * @param yearMonth
+	 * param yearMonth
 	 *            年月的字符串（yyyyMM）
 	 * @return 日期类型
 	 * @throws ParseException
@@ -330,9 +330,9 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定年数，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param date
+	 * param date
 	 *            要操作的日期对象
-	 * @param ammount
+	 * param ammount
 	 *            要增加年的数目
 	 * @return 结果日期对象
 	 */
@@ -348,9 +348,9 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定月数，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param date
+	 * param date
 	 *            要操作的日期对象
-	 * @param ammount
+	 * param ammount
 	 *            要增加月的数目
 	 * @return 结果日期对象
 	 */
@@ -365,9 +365,9 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定天数，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param date
+	 * param date
 	 *            要操作的日期对象
-	 * @param ammount
+	 * param ammount
 	 *            要增加天的数目
 	 * @return 结果日期对象
 	 */
@@ -382,9 +382,9 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定分钟，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param date
+	 * param date
 	 *            要操作的日期对象
-	 * @param ammount
+	 * param ammount
 	 *            要增加分钟的数目
 	 * @return 结果日期对象
 	 */
@@ -399,9 +399,9 @@ public class DateUtils
 	/**
 	 * 将某个日期增加指定小时，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param date
+	 * param date
 	 *            要操作的日期对象
-	 * @param ammount
+	 * param ammount
 	 *            要增加分钟的数目
 	 * @return 结果日期对象
 	 */
@@ -416,9 +416,9 @@ public class DateUtils
 	/**
 	 * 将给定整数形式的年月增加指定月数，并返回结果。如果传入负数，则为减。
 	 * 
-	 * @param yearMonth
+	 * param yearMonth
 	 *            要操作的年月
-	 * @param ammount
+	 * param ammount
 	 *            要增加的月数
 	 * @return 结果年月
 	 * @throws ParseException
@@ -432,9 +432,9 @@ public class DateUtils
 	/**
 	 * 返回给定的beforeDate比afterDate早的年数。如果beforeDate晚于afterDate，则 返回负数。
 	 * 
-	 * @param beforeDate
+	 * param beforeDate
 	 *            要比较的早的日期
-	 * @param afterDate
+	 * param afterDate
 	 *            要比较的晚的日期
 	 * @return beforeDate比afterDate早的年数，负数表示晚。
 	 */
@@ -484,9 +484,9 @@ public class DateUtils
 	/**
 	 * 返回给定的beforeDate比afterDate早的月数。如果beforeDate晚于afterDate，则 返回负数。
 	 * 
-	 * @param beforeDate
+	 * param beforeDate
 	 *            要比较的早的日期
-	 * @param afterDate
+	 * param afterDate
 	 *            要比较的晚的日期
 	 * @return beforeDate比afterDate早的月数，负数表示晚。
 	 */
@@ -536,9 +536,9 @@ public class DateUtils
 	/**
 	 * 返回给定的beforeDate比afterDate早的天数。如果beforeDate晚于afterDate，则 返回负数。
 	 * 
-	 * @param beforeDate
+	 * param beforeDate
 	 *            要比较的早的日期
-	 * @param afterDate
+	 * param afterDate
 	 *            要比较的晚的日期
 	 * @return beforeDate比afterDate早的天数，负数表示晚。
 	 */
@@ -588,9 +588,9 @@ public class DateUtils
 	/**
 	 * 获取beforeDate和afterDate之间相差的完整年数，精确到天。负数表示晚。
 	 * 
-	 * @param beforeDate
+	 * param beforeDate
 	 *            要比较的早的日期
-	 * @param afterDate
+	 * param afterDate
 	 *            要比较的晚的日期
 	 * @return beforeDate比afterDate早的完整年数，负数表示晚。
 	 */
@@ -635,9 +635,9 @@ public class DateUtils
 	/**
 	 * 获取beforeDate和afterDate之间相差的完整年数，精确到月。负数表示晚。
 	 * 
-	 * @param beforeDate
+	 * param beforeDate
 	 *            要比较的早的日期
-	 * @param afterDate
+	 * param afterDate
 	 *            要比较的晚的日期
 	 * @return beforeDate比afterDate早的完整年数，负数表示晚。
 	 */
@@ -674,9 +674,9 @@ public class DateUtils
 	/**
 	 * 获取beforeDate和afterDate之间相差的完整月数，精确到天。负数表示晚。
 	 * 
-	 * @param beforeDate
+	 * param beforeDate
 	 *            要比较的早的日期
-	 * @param afterDate
+	 * param afterDate
 	 *            要比较的晚的日期
 	 * @return beforeDate比afterDate早的完整月数，负数表示晚。
 	 */
@@ -713,11 +713,11 @@ public class DateUtils
 	/**
 	 * 根据传入的年、月、日构造日期对象
 	 * 
-	 * @param year
+	 * param year
 	 *            年
-	 * @param month
+	 * param month
 	 *            月
-	 * @param date
+	 * param date
 	 *            日
 	 * @return 返回根据传入的年、月、日构造的日期对象
 	 */
@@ -731,9 +731,9 @@ public class DateUtils
 	/**
 	 * 根据传入的日期格式化pattern将传入的日期格式化成字符串。
 	 * 
-	 * @param date
+	 * param date
 	 *            要格式化的日期对象
-	 * @param pattern
+	 * param pattern
 	 *            日期格式化pattern
 	 * @return 格式化后的日期字符串
 	 */
@@ -749,7 +749,7 @@ public class DateUtils
 	/**
 	 * 将传入的日期按照默认形势转换成字符串（yyyy-MM-dd）
 	 * 
-	 * @param date
+	 * param date
 	 *            要格式化的日期对象
 	 * @return 格式化后的日期字符串
 	 */
@@ -761,9 +761,9 @@ public class DateUtils
 	/**
 	 * 根据传入的日期格式化patter将传入的字符串转换成日期对象
 	 * 
-	 * @param dateStr
+	 * param dateStr
 	 *            要转换的字符串
-	 * @param pattern
+	 * param pattern
 	 *            日期格式化pattern
 	 * @return 转换后的日期对象
 	 * @throws ParseException
@@ -786,7 +786,7 @@ public class DateUtils
 	/**
 	 * 将传入的字符串按照默认格式转换为日期对象（yyyy-MM-dd）
 	 * 
-	 * @param dateStr
+	 * param dateStr
 	 *            要转换的字符串
 	 * @return 转换后的日期对象
 	 * @throws ParseException
@@ -800,7 +800,7 @@ public class DateUtils
 	/**
 	 * 要进行合法性验证的年月数值
 	 * 
-	 * @param yearMonth
+	 * param yearMonth
 	 *            验证年月数值
 	 * @return 年月是否合法
 	 */
@@ -813,7 +813,7 @@ public class DateUtils
 	/**
 	 * 要进行合法性验证的年月字符串
 	 * 
-	 * @param yearMonthStr
+	 * param yearMonthStr
 	 *            验证年月字符串
 	 * @return 年月是否合法
 	 */
@@ -848,7 +848,7 @@ public class DateUtils
 	/**
 	 * 获取一个月的最大天数
 	 * 
-	 * @param date
+	 * param date
 	 *            要计算月份
 	 * @return int 一个月的最大天数
 	 */
@@ -862,9 +862,9 @@ public class DateUtils
 	/**
 	 * 获取从from到to的年月Integer形式值的列表
 	 * 
-	 * @param from
+	 * param from
 	 *            从
-	 * @param to
+	 * param to
 	 *            到
 	 * @return 年月Integer形式值列表
 	 * @throws ParseException
@@ -923,7 +923,7 @@ public class DateUtils
 	/**
 	 * 分割年月日成数组
 	 * 
-	 * @param ymd
+	 * param ymd
 	 * @return
 	 * @throws ParseException
 	 */
@@ -939,7 +939,7 @@ public class DateUtils
 	/**
 	 * 清除时间字符串的格式信息
 	 * 
-	 * @param ymd
+	 * param ymd
 	 * @return
 	 */
 	public static String clearFormat(String ymd) throws ParseException
@@ -952,9 +952,9 @@ public class DateUtils
 	/**
 	 * 指定两个日期比较，目标日期比源日期迟返回true，反之，返回false
 	 * 
-	 * @param ymd1
+	 * param ymd1
 	 *            源日期
-	 * @param ymd2
+	 * param ymd2
 	 *            目标日期
 	 */
 	public static boolean isLast(String ymd1, String ymd2)
@@ -969,8 +969,8 @@ public class DateUtils
 	}
 	
 	/**
-	 * @param symd
-	 * @param eymd
+	 * param symd
+	 * param eymd
 	 * @return
 	 * @throws ParseException
 	 */
@@ -990,11 +990,16 @@ public class DateUtils
 		int days = (int) ((longEnd - longStart) / (1000 * 60 * 60 * 24));
 		return days;
 	}
-	
+
+	public static boolean betweenDays(Date date1,Date date2){
+		if(date2.getTime() - date1.getTime()>=0)
+			return true;
+		return false;
+	}
 	/**
 	 * 取得当前日期是多少周
 	 * 
-	 * @param date
+	 * param date
 	 * @return
 	 */
 	public static int getWeekOfYear(Date date)
@@ -1056,7 +1061,7 @@ public class DateUtils
 	/**
 	 * 得到某一年周的总数
 	 * 
-	 * @param year
+	 * param year
 	 * @return
 	 */
 	public static int getMaxWeekNumOfYear(int year)
@@ -1070,8 +1075,8 @@ public class DateUtils
 	/**
 	 * 得到某年某周的第一天
 	 * 
-	 * @param year
-	 * @param week
+	 * param year
+	 * param week
 	 * @return
 	 */
 	public static Date getFirstDayOfWeek(int year, int week)
@@ -1081,7 +1086,7 @@ public class DateUtils
 		c.set(Calendar.MONTH, Calendar.JANUARY);
 		c.set(Calendar.DATE, 1);
 		
-		Calendar cal = (GregorianCalendar) c.clone();
+		Calendar cal = (GregorianCalendar) c;
 		cal.add(Calendar.DATE, week * 7);
 		
 		return getFirstDayOfWeek(cal.getTime());
@@ -1090,8 +1095,8 @@ public class DateUtils
 	/**
 	 * 得到某年某周的最后一天
 	 * 
-	 * @param year
-	 * @param week
+	 * param year
+	 * param week
 	 * @return
 	 */
 	public static Date getLastDayOfWeek(int year, int week)
@@ -1101,7 +1106,7 @@ public class DateUtils
 		c.set(Calendar.MONTH, Calendar.JANUARY);
 		c.set(Calendar.DATE, 1);
 		
-		Calendar cal = (GregorianCalendar) c.clone();
+		Calendar cal = (GregorianCalendar) c;
 		cal.add(Calendar.DATE, week * 7);
 		
 		return getLastDayOfWeek(cal.getTime());
@@ -1110,7 +1115,7 @@ public class DateUtils
 	/**
 	 * 取得当前日期所在周的第一天
 	 * 
-	 * @param date
+	 * param date
 	 * @return
 	 */
 	public static Date getFirstDayOfWeek(Date date)
@@ -1125,11 +1130,10 @@ public class DateUtils
 	/**
 	 * 获得 上xxx周的第一天
 	 * 
-	 * @param prevNum
+	 * param prevNum
 	 * @return
 	 */
-	public static Date getFirstDayOfPrevWeek(int prevNum)
-	{
+	public static Date getFirstDayOfPrevWeek(int prevNum) throws Exception {
 		Date currentDate = currentDate();
 		int weekNum = getWeekOfYear(currentDate);
 		return getFirstDayOfWeek(getYear(currentDate), weekNum - prevNum);
@@ -1138,11 +1142,10 @@ public class DateUtils
 	/**
 	 * 获得 上xxx周的最后一天
 	 * 
-	 * @param prevNum
+	 * param prevNum
 	 * @return
 	 */
-	public static Date getLastDayOfPrevWeek(int prevNum)
-	{
+	public static Date getLastDayOfPrevWeek(int prevNum) throws Exception {
 		Date currentDate = currentDate();
 		int weekNum = getWeekOfYear(currentDate);
 		return getLastDayOfWeek(getYear(currentDate), weekNum - prevNum);
@@ -1151,11 +1154,10 @@ public class DateUtils
 	/**
 	 * 获得 下xxx周的第一天
 	 * 
-	 * @param prevNum
+	 * param nextNum
 	 * @return
 	 */
-	public static Date getFirstDayOfNextWeek(int nextNum)
-	{
+	public static Date getFirstDayOfNextWeek(int nextNum) throws Exception {
 		Date currentDate = currentDate();
 		int weekNum = getWeekOfYear(currentDate);
 		return getFirstDayOfWeek(getYear(currentDate), weekNum + nextNum);
@@ -1164,11 +1166,10 @@ public class DateUtils
 	/**
 	 * 获得 下xxx周的最后一天
 	 * 
-	 * @param prevNum
+	 * param nextNum
 	 * @return
 	 */
-	public static Date getLastDayOfNextWeek(int nextNum)
-	{
+	public static Date getLastDayOfNextWeek(int nextNum) throws Exception {
 		Date currentDate = currentDate();
 		int weekNum = getWeekOfYear(currentDate);
 		return getLastDayOfWeek(getYear(currentDate), weekNum + nextNum);
@@ -1177,7 +1178,7 @@ public class DateUtils
 	/**
 	 * 取得当前日期所在周的最后一天
 	 * 
-	 * @param date
+	 * param date
 	 * @return
 	 */
 	public static Date getLastDayOfWeek(Date date)

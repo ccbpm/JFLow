@@ -2,10 +2,7 @@ package bp.ccbill;
 
 import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.wf.template.*;
-import bp.wf.*;
-import bp.ccbill.template.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -67,7 +64,7 @@ public class TrackAttr extends EntityMyPKAttr
 	public static final String FrmName = "FrmName";
 
 
-		///流程相关信息.
+		///#region 流程相关信息.
 	/** 
 	 FID
 	*/
@@ -88,7 +85,10 @@ public class TrackAttr extends EntityMyPKAttr
 	 节点名字
 	*/
 	public static final String NodeName = "NodeName";
+	/** 
+	 流程的WorkID.
+	*/
+	public static final String WorkIDOfFlow = "WorkIDOfFlow";
 
-	public static final String WorkIDOfFlow="WorkIDOfFlow";
-		/// 流程相关信息.
+		///#endregion 流程相关信息.
 }

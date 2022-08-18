@@ -1,5 +1,12 @@
 package bp.wf.template;
-import bp.en.EntityTreeAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.port.*;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
 
 /** 
  属性

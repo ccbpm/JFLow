@@ -3,7 +3,6 @@ package bp.wf.dts;
 import bp.da.*;
 import bp.en.*;
 import bp.sys.*;
-import bp.web.WebUser;
 import bp.wf.*;
 
 /** 
@@ -14,7 +13,7 @@ public class ClearDB extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public ClearDB()
+	public ClearDB()throws Exception
 	{
 		this.Title = "清除流程运行的数据(此功能要在测试环境里运行)";
 		this.Help = "清除所有流程运行的数据，包括待办工作。";
@@ -48,12 +47,11 @@ public class ClearDB extends Method
 	 执行
 	 
 	 @return 返回执行结果
-	 * @throws Exception 
 	*/
 	@Override
-	public Object Do() throws Exception
+	public Object Do()throws Exception
 	{
-		if (!WebUser.getNo().equals("admin"))
+		if (!bp.web.WebUser.getNo().equals("admin"))
 		{
 			return "非法的用户执行。";
 		}

@@ -1,11 +1,13 @@
 package bp.wf.data;
+
+
 /** 
  逾期流程属性
 */
 public class DelayAttr
 {
 
-		///属性
+		///#region 属性
 	public static final String MyPK = "MyPK";
 	/** 
 	 工作ID
@@ -47,10 +49,6 @@ public class DelayAttr
 	 节点名称
 	*/
 	public static final String NodeName = "NodeName";
-	/** 
-	 发起人工作部门
-	*/
-	public static final String WorkerDept = "WorkerDept";
 	/** 
 	 标题
 	*/
@@ -104,5 +102,5 @@ public class DelayAttr
 	*/
 	public static final String Sender = "Sender";
 
-		///
+		///#endregion
 }

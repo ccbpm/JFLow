@@ -17,7 +17,7 @@ public class BaseController {
 		return ContextHolderUtils.getRequest();
 	}
 
-	public HttpServletResponse getResponse() throws Exception{
+	public HttpServletResponse getResponse() {
 		return ContextHolderUtils.getResponse();
 	}
 	
@@ -96,7 +96,7 @@ public class BaseController {
 		return ContextHolderUtils.getRequest().getParameter("Key");
 	}
 
-	public final String getActionType()
+	public final String getActionType()throws Exception
 	{
 		String s = ContextHolderUtils.getRequest().getParameter("ActionType");
 		if (s == null)
@@ -112,7 +112,7 @@ public class BaseController {
 		return ContextHolderUtils.getRequest().getParameter(key);
 	}
 	
-	public final Long getOID()
+	public final Long getOID()throws Exception
 	{
 		 String str = this.GetRequestVal("RefOID"); // context.Request.QueryString["RefOID"];
          if (DataType.IsNullOrEmpty(str) == true)
@@ -124,35 +124,35 @@ public class BaseController {
          return Long.parseLong(str);
 		
 	}
-	public String getFK_Flow()
+	public String getFK_Flow()throws Exception
 	{
 		return GetRequestVal("FK_Flow");
 	}
-	public String getEnName()
+	public String getEnName()throws Exception
 	{
 		return GetRequestVal("EnName");
 	}
-	public String getRefNo()
+	public String getRefNo()throws Exception
 	{
 		return GetRequestVal("RefNo");
 	}
-	public String getEnsName()
+	public String getEnsName()throws Exception
 	{
 		return GetRequestVal("EnsName");
 	}
-	public final String getFK_Emp()
+	public final String getFK_Emp()throws Exception
 	{
 		return GetRequestVal("FK_Emp");
 	}
-	public final String getPageID()
+	public final String getPageID()throws Exception
 	{
 		return GetRequestVal("PageID");
 	}
-	public long getWorkID()
+	public long getWorkID()throws Exception
 	{
 		return Long.parseLong(StringHelper.isEmpty(getParamter("WorkID"), "0"));
 	}
-	public boolean getIsCC()
+	public boolean getIsCC()throws Exception
 	{
 		String s = ContextHolderUtils.getRequest().getParameter("Paras");
 		if (s == null)
@@ -166,7 +166,7 @@ public class BaseController {
 		}
 		return false;
 	}
-	public String getDoType()
+	public String getDoType()throws Exception
 	{
 		return ContextHolderUtils.getRequest().getParameter("DoType");
 	}
@@ -180,12 +180,12 @@ public class BaseController {
 		}
 		return i;
 	}	
-	public final String getTB_Doc()
+	public final String getTB_Doc()throws Exception
 	{
 		return GetRequestVal("TB_Doc");
 	}	
  
-	public String getSID()
+	public String getSID()throws Exception
 	{
 		return GetRequestVal("SID");
 	}
@@ -227,8 +227,8 @@ public class BaseController {
 	
 	/**
 	 * 输出Alert
-	 * @param response
-	 * @param msg
+	 * param response
+	 * param msg
 	 * @throws IOException
 	 */
 	protected void printAlert(HttpServletResponse response, String msg) throws IOException{
@@ -311,6 +311,9 @@ public class BaseController {
 		return Integer.parseInt(str);
 	}
 
+//	public void setFK_Node(String fK_Node) {
+//		FK_Node = fK_Node;
+//	}
 
 	public long getFID() {
 		String str = ContextHolderUtils.getRequest().getParameter("FID");

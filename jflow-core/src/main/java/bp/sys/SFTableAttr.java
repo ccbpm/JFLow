@@ -1,5 +1,12 @@
 package bp.sys;
-import bp.en.EntityNoNameAttr;
+
+import bp.da.*;
+import bp.en.*;
+import bp.web.*;
+import bp.difference.*;
+import bp.*;
+import java.util.*;
+
 /** 
  用户自定义表
 */
@@ -47,7 +54,7 @@ public class SFTableAttr extends EntityNoNameAttr
 	public static final String NoGenerModel = "NoGenerModel";
 
 
-		///链接到其他系统获取数据的属性。
+		///#region 链接到其他系统获取数据的属性。
 	/** 
 	 数据源
 	*/
@@ -84,6 +91,10 @@ public class SFTableAttr extends EntityNoNameAttr
 	 加入日期
 	*/
 	public static final String RDT = "RDT";
+	/** 
+	 组织编号
+	*/
+	public static final String OrgNo = "OrgNo";
 
-		/// 链接到其他系统获取数据的属性。
+		///#endregion 链接到其他系统获取数据的属性。
 }

@@ -11,47 +11,42 @@ import java.util.*;
 public class FrmImgAthDBs extends EntitiesMyPK
 {
 
-		///构造
+		///#region 构造
 	/** 
 	 剪切图片附件数据存储s
 	*/
-	public FrmImgAthDBs()
-	{
+	public FrmImgAthDBs() throws Exception {
 	}
 
-	public FrmImgAthDBs(String fk_mapdata) throws Exception
-	{
+	public FrmImgAthDBs(String fk_mapdata) throws Exception {
 		this.Retrieve(FrmImgAthDBAttr.FK_MapData, fk_mapdata);
 	}
 	/** 
 	 剪切图片附件数据存储s
 	 
-	 @param fk_mapdata s
+	 param fk_mapdata s
 	*/
-	public FrmImgAthDBs(String fk_mapdata, String pkval) throws Exception
-	{
+	public FrmImgAthDBs(String fk_mapdata, String pkval) throws Exception {
 		this.Retrieve(FrmImgAthDBAttr.FK_MapData, fk_mapdata, FrmImgAthDBAttr.RefPKVal, pkval);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
-	{
+	public Entity getGetNewEntity() {
 		return new FrmImgAthDB();
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmImgAthDB> ToJavaList()
-	{
+	public final java.util.List<FrmImgAthDB> ToJavaList() {
 		return (java.util.List<FrmImgAthDB>)(Object)this;
 	}
 	/** 
@@ -59,8 +54,7 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmImgAthDB> Tolist()
-	{
+	public final ArrayList<FrmImgAthDB> Tolist()  {
 		ArrayList<FrmImgAthDB> list = new ArrayList<FrmImgAthDB>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -69,5 +63,5 @@ public class FrmImgAthDBs extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

@@ -18,7 +18,7 @@ public class WeiXin
 	public final String GenerAccessToken() throws Exception
 	{
 		String url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=" + SystemConfig.getWX_CorpID() + "&corpsecret=" + SystemConfig.getWX_AppSecret() + "";
-		String json = bp.tools.HttpClientUtil.doGet(url);
+		String json = HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
 			if(jd.get("errcode").toString().equals("0")){
@@ -33,7 +33,7 @@ public class WeiXin
 	//获取公众号token
 	public final String GetGZHToken() throws Exception{
 		String url = "https://api.weixin.qq.com/sns/oauth2/access_token?grant_type=client_credential&appid=" + SystemConfig.getWXGZH_Appid() + "&secret=" + SystemConfig.getWXGZH_AppSecret() + "";
-		String json = bp.tools.HttpClientUtil.doGet(url);
+		String json = HttpClientUtil.doGet(url);
 		if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
 			if(jd.get("errcode").toString().equals("0")){
@@ -49,7 +49,7 @@ public class WeiXin
     public String getUserInfo(String code, String accessToken) throws Exception
     {
     	String url = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserinfo?access_token=" + accessToken + "&code=" + code + "&agentid=2";
-        String json = bp.tools.HttpClientUtil.doGet(url);
+        String json = HttpClientUtil.doGet(url);
         
         if(DataType.IsNullOrEmpty(json)==false){
 			JSONObject jd = JSONObject.fromObject(json);
@@ -145,8 +145,8 @@ public class WeiXin
 	/** 
 	 POST方式请求 微信返回信息
 	 
-	 @param parameters 参数
-	 @param URL 请求地址
+	 param parameters 参数
+	 param URL 请求地址
 	 @return 返回字符
 	 * @throws Exception 
 	*/

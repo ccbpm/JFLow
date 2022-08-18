@@ -1,11 +1,12 @@
 package bp.wf.template;
+
 /** 
  节点属性
 */
 public class NodeAttr
 {
 
-		///新属性
+		///#region 新属性
 	/** 
 	 审核组件状态
 	*/
@@ -63,17 +64,23 @@ public class NodeAttr
 	public static final String GroupStaNDs = "GroupStaNDs";
 	public static final String IsHandOver = "IsHandOver";
 	public static final String IsCanDelFlow = "IsCanDelFlow";
+
+	public static final String USSWorkIDRole = "USSWorkIDRole";
+
+
+
 	/** 
 	 是否可以原路返回
 	*/
 	public static final String IsBackTracking = "IsBackTracking";
+	/** 
+	 是否重新计算接受人？
+	*/
+	public static final String IsBackResetAccepter = "IsBackResetAccepter";
+	/** 
+	 是否删除其他的子线程?
+	*/
 	public static final String IsKillEtcThread = "IsKillEtcThread";
-	 
-
-	/**
-	 * 是否删除中间节点信息
-	 */
-	public static final String IsDeleteModel="IsDeleteModel";
 	/** 
 	 是否启用退回考核规则
 	*/
@@ -117,10 +124,6 @@ public class NodeAttr
 	*/
 	public static final String ReturnRole = "ReturnRole";
 	/** 
-	 可触发子流程
-	*/
-	public static final String SFActiveFlows = "SFActiveFlows";
-	/** 
 	 转向处理
 	*/
 	public static final String TurnToDeal = "TurnToDeal";
@@ -133,10 +136,10 @@ public class NodeAttr
 	*/
 	public static final String WorkloadDel = "Workload";
 
-		///
+		///#endregion
 
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 OID
 	*/
@@ -165,10 +168,6 @@ public class NodeAttr
 	 是否分配工作
 	*/
 	public static final String IsTask = "IsTask";
-	/** 
-	 是否是业务单元？
-	*/
-	public static final String IsBUnit = "IsBUnit";
 	/** 
 	 节点工作类型
 	*/
@@ -262,10 +261,6 @@ public class NodeAttr
 	*/
 	public static final String DoOutTimeCond = "DoOutTimeCond";
 	/** 
-	 是否允许子线程接受人员重复？
-	*/
-	public static final String IsAllowRepeatEmps = "IsAllowRepeatEmps";
-	/** 
 	 是否启动自动运行？
 	*/
 	public static final String AutoRunEnable = "AutoRunEnable";
@@ -322,6 +317,10 @@ public class NodeAttr
 	*/
 	public static final String CondModel = "CondModel";
 	/** 
+	 抢办发送后处理规则
+	*/
+	public static final String QiangBanSendAfterRole = "QiangBanSendAfterRole";
+	/** 
 	 子流程启动方式
 	*/
 	public static final String SubFlowStartWay = "SubFlowStartWay";
@@ -349,14 +348,14 @@ public class NodeAttr
 	 批处理
 	*/
 	public static final String BatchRole = "BatchRole";
-	/** 
-	 批处理参数
-	*/
-	public static final String BatchParas = "BatchParas";
-	/** 
-	 批处理总数
-	*/
-	public static final String BatchListCount = "BatchListCount";
+	///// <summary>
+	///// 批处理参数 
+	///// </summary>
+	//public const string BatchParas = "BatchParas";
+	///// <summary>
+	///// 批处理总数
+	///// </summary>
+	//public const string BatchListCount = "BatchListCount";
 	/** 
 	 自动跳转规则-1
 	*/
@@ -369,6 +368,14 @@ public class NodeAttr
 	 自动跳转规则-3
 	*/
 	public static final String AutoJumpRole2 = "AutoJumpRole2";
+	/** 
+	 自动跳转规则-3 按照SQL
+	*/
+	public static final String AutoJumpExp = "AutoJumpExp";
+	/** 
+	 跳转事件
+	*/
+	public static final String SkipTime = "SkipTime";
 	/** 
 	 是否是客户执行节点?
 	*/
@@ -389,9 +396,10 @@ public class NodeAttr
 	 子流程运行到该节点时，让父流程自动运行到下一步
 	*/
 	public static final String IsToParentNextNode = "IsToParentNextNode";
+	/** 
+	 是否发送草稿子流程？
+	*/
 	public static final String IsSendDraftSubFlow = "IsSendDraftSubFlow";
-	
-	
 	/** 
 	 该节点是否是游离状态
 	*/
@@ -401,19 +409,19 @@ public class NodeAttr
 	*/
 	public static final String IsSendBackNode = "IsSendBackNode";
 
-		///
+		///#endregion
 
 
-		///父子流程
+		///#region 父子流程
 	/** 
 	 (当前节点为启动子流程节点时)是否检查所有子流程结束后,该节点才能向下发送?
 	*/
 	public static final String IsCheckSubFlowOver_del = "IsCheckSubFlowOver_del";
 
-		///
+		///#endregion
 
 
-		///移动设置.
+		///#region 移动设置.
 	/** 
 	 手机工作模式
 	*/
@@ -431,11 +439,11 @@ public class NodeAttr
 	*/
 	public static final String MPad_SrcModel = "MPad_SrcModel";
 
-		/// 移动设置.
+		///#endregion 移动设置.
 
 
 
-		///未来处理人.
+		///#region 未来处理人.
 	/** 
 	 是否计算未来处理人
 	*/
@@ -450,8 +458,7 @@ public class NodeAttr
 	public static final String IsFullSAAlert = "IsFullSAAlert";
 
 	public static final String RefOneFrmTreeType = "RefOneFrmTreeType";
-	 
 
-		/// 未来处理人.
+		///#endregion 未来处理人.
 
 }

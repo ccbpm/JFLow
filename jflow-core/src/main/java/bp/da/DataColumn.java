@@ -26,7 +26,7 @@ public class DataColumn
 	
 	public Object DataType;
 	
-	public Object getDataType()
+	public Object getDataType()throws Exception
 	{
 		return DataType;
 	}
@@ -39,7 +39,7 @@ public class DataColumn
 	/**
 	 * DataColumn被建立時，一定要指定欄名
 	 * 
-	 * @param columnName
+	 * param columnName
 	 *            欄名
 	 */
 	public DataColumn(String columnName)
@@ -48,7 +48,7 @@ public class DataColumn
 		this.oldColumnName = columnName;
 	}
 	
-	public DataColumn()
+	public DataColumn()throws Exception
 	{
 		
 	}
@@ -78,7 +78,7 @@ public class DataColumn
 	/**
 	 * 給DataColumnCollection加入DataColumn時設定所屬的DataTable的方法，同一個package才用到
 	 * 
-	 * @param table
+	 * param table
 	 */
 	void setTable(DataTable table)
 	{
@@ -90,7 +90,7 @@ public class DataColumn
 	 * 
 	 * @return DataTable
 	 */
-	public DataTable getTable()
+	public DataTable getTable()throws Exception
 	{
 		return this.table;
 	}
@@ -101,8 +101,7 @@ public class DataColumn
 	 * @return
 	 */
 	@Override
-	public String toString()
-	{
+	public String toString()  {
 		return this.ColumnName;
 	}
 

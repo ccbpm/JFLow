@@ -1,10 +1,7 @@
 package bp.wf;
 
-import bp.da.DBAccess;
-import bp.da.DBType;
-import bp.da.DataTable;
-import bp.difference.SystemConfig;
-import bp.en.QueryObject;
+import bp.da.*;
+import bp.*;
 
 /** 
  审核工作节点
@@ -28,7 +25,7 @@ public class WorkCheck
 	{
 		this.FlowNo = flowNo;
 		this.NodeID = nodeID;
-		this.WorkID=workid;
+		this.WorkID = workid;
 		this.FID = fid;
 	}
 	/** 
@@ -36,13 +33,12 @@ public class WorkCheck
 	 
 	 @return 
 	*/
-	public final int GetMyPK32()
-	{
+	public final int GetMyPK32() throws Exception {
 		try
 		{
 			int newPK = Integer.parseInt(String.valueOf(this.WorkID)) + this.NodeID + Integer.parseInt(this.FlowNo);
 			String myPk = "";
-			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID={0} AND FK_Node={1} AND FK_Flow='{2}' ORDER BY RDT DESC";
+			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID=%1$s AND FK_Node=%2$s AND FK_Flow='%3$s' ORDER BY RDT DESC";
 			DataTable dt = DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
 			if (dt != null && dt.Rows.size() > 0)
 			{
@@ -63,13 +59,12 @@ public class WorkCheck
 	 
 	 @return 
 	*/
-	public final long GetMyPK()
-	{
+	public final long GetMyPK() throws Exception {
 		try
 		{
 			long newPK = Long.parseLong(String.valueOf(this.WorkID)) + this.NodeID + Long.parseLong(this.FlowNo);
 			String myPk = "";
-			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID={0} AND FK_Node={1} AND FK_Flow='{2}' ORDER BY RDT DESC";
+			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID=%1$s AND FK_Node=%2$s AND FK_Flow='%3$s' ORDER BY RDT DESC";
 
 
 			DataTable dt = DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
@@ -87,80 +82,52 @@ public class WorkCheck
 			return 0;
 		}
 	}
-	public final Tracks getHisWorkChecks() throws Exception
-	{
+		public final Tracks getHisWorkChecks() throws Exception {
 		if (_HisWorkChecks == null)
 		{
-			Long workIdStr;
+			_HisWorkChecks = new Tracks();
+			bp.en.QueryObject qo = new bp.en.QueryObject(_HisWorkChecks);
+
 			if (this.FID != 0)
-			{ 
-				workIdStr = this.FID;
+			{
+				qo.AddWhere(TrackAttr.WorkID, this.FID);
+				qo.addOr();
+				qo.AddWhere(TrackAttr.WorkID, this.WorkID);
 			}
 			else
 			{
-				workIdStr = this.WorkID;
-			}
-			_HisWorkChecks = new Tracks();
+				qo.AddWhere(TrackAttr.WorkID, this.WorkID);
 
-			String sql ="SELECT MyPK,ActionType,ActionTypeText,FID,WorkID,NDFrom,NDFromT,NDTo,NDToT,"
-			+"EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,WorkTimeSpan,Msg,NodeData,Tag,Exer"
-			+ " FROM ND" + Integer.parseInt(this.FlowNo) + "Track t1, port_emp t2, port_dept t3  "
-			+ "WHERE ( t1.WorkID = " + workIdStr + " OR t1.FID = " + workIdStr + " )"
-			+ " AND t1.empfrom = t2.NO AND t3.NO = t2.FK_Dept ORDER BY t3.idx,t2.idx";
-			
-			if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-					||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
-				sql ="SELECT	ISNULL( MyPK, 0 ) MyPK,	ISNULL( ActionType, 0 ) ActionType,	ActionTypeText,	ISNULL( FID, 0 ) FID,"
-						+"ISNULL( WorkID, 0 ) WorkID,ISNULL( NDFrom, 0 ) NDFrom,NDFromT,ISNULL( NDTo, 0 ) NDTo,NDToT,"
-						+"EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,ISNULL( WorkTimeSpan, 0.0 ) AS WorkTimeSpan,Msg,NodeData,Tag,Exer"
-						+ " FROM ND" + Integer.parseInt(this.FlowNo) + "Track t1, port_emp t2, port_dept t3  "
-						+ "WHERE ( t1.WorkID = " + workIdStr + " OR t1.FID = " + workIdStr + " )"
-						+ " AND t1.empfrom = t2.NO AND t3.NO = t2.FK_Dept ORDER BY t3.idx,t2.idx,t1.RDT ASC";
+				if (this.WorkID != 0)
+				{
+					qo.addOr();
+					qo.AddWhere(TrackAttr.FID, this.WorkID);
+				}
 			}
+
+			qo.addOrderByDesc(TrackAttr.RDT);
+
+			String sql = qo.getSQL();
+			sql = sql.replace("WF_Track", "ND" + Integer.parseInt(this.FlowNo) + "Track");
 			DataTable dt = null;
+
+				//修复track 表.
 			try
 			{
-				dt = DBAccess.RunSQLReturnTable(sql);
+				dt = DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
 			}
 			catch (RuntimeException ex)
 			{
 				Track.CreateOrRepairTrackTable(this.FlowNo);
-				dt = DBAccess.RunSQLReturnTable(sql);
+				dt = DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
 			}
 
-			QueryObject.InitEntitiesByDataTable(_HisWorkChecks, dt, null);
-			
-			
+			//dt.DefaultView.Sort = "RDT desc";
+
+			//放入到track里面.
+			bp.en.QueryObject.InitEntitiesByDataTable(_HisWorkChecks, dt, null);
 		}
 		return _HisWorkChecks;
-
-		
-		/*QueryObject qo = new QueryObject(_HisWorkChecks);
-
-		if (this.FID != 0)
-		{
-			qo.AddWhere(TrackAttr.WorkID, this.FID);
-			qo.addOr();
-			qo.AddWhere(TrackAttr.FID, this.FID);
-		}
-		else
-		{
-			qo.AddWhere(TrackAttr.WorkID, this.WorkID);
-
-			if (this.WorkID != 0)
-			{
-				qo.addOr();
-				qo.AddWhere(TrackAttr.FID, this.WorkID);
-			}
-		}
-
-		qo.addOrderBy(TrackAttr.RDT);
-
-		String sql = qo.getSQL();
-		sql = sql.replace("WF_Track", "ND" + Integer.parseInt(this.FlowNo) + "Track");
-		
-*/
-			//修复track 表.
 	}
 	private Tracks _HisWorkChecks = null;
 }

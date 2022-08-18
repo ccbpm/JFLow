@@ -1,79 +1,54 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
 import bp.sys.*;
-import bp.*;
-import bp.sys.*;
-import java.util.*;
-
 /** 
  实体属性
 */
 public class MapAttrCheck extends EntityMyPK
 {
 
-		///文本字段参数属性.
+		///#region 文本字段参数属性.
 
 
 	/** 
 	 表单ID
 	*/
-	public final String getFK_MapData()throws Exception
+	public final String getFKMapData()
 	{
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFKMapData(String value)
+	 {
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
-	/** 
-	 最大长度
-	*/
-	public final int getMaxLen()throws Exception
+	public final String getFrmID()
 	{
-		return this.GetValIntByKey(MapAttrAttr.MaxLen);
-	}
-	public final void setMaxLen(int value) throws Exception
-	{
-		this.SetValByKey(MapAttrAttr.MaxLen, value);
+		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
 
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()throws Exception
+	public final String getKeyOfEn()
 	{
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value) throws Exception
-	{
+	public final void setKeyOfEn(String value)
+	 {
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
-	/** 
-	 控件类型
-	*/
-	public final UIContralType getUIContralType()throws Exception
-	{
-		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
-	}
-	public final void setUIContralType(UIContralType value)throws Exception
-	{
-		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
-	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC() throws Exception
-	{
+	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -83,15 +58,14 @@ public class MapAttrCheck extends EntityMyPK
 	/** 
 	 实体属性
 	*/
-	public MapAttrCheck()
-	{
+	public MapAttrCheck() {
 	}
 	/** 
 	 实体属性
 	*/
-	public MapAttrCheck(String myPK)throws Exception
+	public MapAttrCheck(String mypk)throws Exception
 	{
-		this.setMyPK(myPK);
+		this.setMyPK(mypk);
 		this.Retrieve();
 
 	}
@@ -99,8 +73,7 @@ public class MapAttrCheck extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public Map getEnMap() throws Exception
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -109,7 +82,7 @@ public class MapAttrCheck extends EntityMyPK
 		Map map = new Map("Sys_MapAttr", "签批字段");
 
 
-			///基本字段信息.
+			///#region 基本字段信息.
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 		map.AddTBString(MapAttrAttr.Name, null, "字段中文名", true, false, 0, 200, 20, true);
@@ -145,17 +118,17 @@ public class MapAttrCheck extends EntityMyPK
 			*/
 		map.AddDDLSQL(MapAttrAttr.CSSCtrl, "0", "自定义样式", MapAttrString.getSQLOfCSSAttr(), true);
 
-			/// 基本字段信息.
+			///#endregion 基本字段信息.
 
 
-			///傻瓜表单
+			///#region 傻瓜表单
 			//单元格数量 2013-07-24 增加
-		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数量", true, true, "ColSpanAttrDT", "@0=跨0个单元格@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨5个单元格@6=跨6个单元格");
+		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨5个单元格@6=跨6个单元格");
 		map.SetHelperAlert(MapAttrAttr.ColSpan, "对于傻瓜表单有效: 标识该字段TextBox横跨的宽度,占的单元格数量.");
 
 			//文本占单元格数量
-		map.AddDDLSysEnum(MapAttrAttr.TextColSpan, 1, "Label单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨6个单元格@6=跨6个单元格");
-		map.SetHelperAlert(MapAttrAttr.TextColSpan, "对于傻瓜表单有效: 标识该字段Lable，标签横跨的宽度,占的单元格数量.");
+		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "Label单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨6个单元格@6=跨6个单元格");
+		map.SetHelperAlert(MapAttrAttr.LabelColSpan, "对于傻瓜表单有效: 标识该字段Lable，标签横跨的宽度,占的单元格数量.");
 
 
 			//文本跨行
@@ -169,7 +142,7 @@ public class MapAttrCheck extends EntityMyPK
 		map.SetHelperAlert(MapAttrAttr.Idx, "对傻瓜表单有效:用于调整字段在同一个分组中的顺序.");
 
 
-			/// 傻瓜表单
+			///#endregion 傻瓜表单
 
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
@@ -186,16 +159,35 @@ public class MapAttrCheck extends EntityMyPK
 		rm.Warning = "您确定要转化为文本框组件吗？";
 		map.AddRefMethod(rm);
 
+		rm = new RefMethod();
+		rm.Title = "帮助弹窗显示";
+		rm.ClassMethodName = this.toString() + ".DoFieldBigHelper()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "视频教程";
+		rm.ClassMethodName = this.toString() + ".DoVideo()";
+		rm.refMethodType = RefMethodType.LinkeWinOpen;
+		map.AddRefMethod(rm);
+
 		this.set_enMap(map);
 		return this.get_enMap();
+	}
+	public final String DoFieldBigHelper() {
+		return "../../Admin/FoolFormDesigner/MapExt/FieldBigHelper.htm?FK_MapData=" + this.getFrmID() + "&KeyOfEn=" + this.getKeyOfEn();
+	}
+
+	public final String DoVideo() {
+		return "https://www.bilibili.com/video/BV1EK411T7U4";
 	}
 	/** 
 	 设置签批组件
 	 
 	 @return 执行结果
 	*/
-	public final String DoSetTextBox()throws Exception
-	{
+	public final String DoSetTextBox() throws Exception {
 		MapAttrString en = new MapAttrString(this.getMyPK());
 		en.setUIContralType(UIContralType.TB);
 		en.setUIIsEnable(true);
@@ -208,8 +200,7 @@ public class MapAttrCheck extends EntityMyPK
 	/** 
 	 字段分组查询语句
 	*/
-	public static String getSQLOfGroupAttr()
-	{
+	public static String getSQLOfGroupAttr() {
 		return "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'  AND (CtrlType IS NULL OR CtrlType='')  ";
 	}
 
@@ -217,48 +208,44 @@ public class MapAttrCheck extends EntityMyPK
 	 删除
 	*/
 	@Override
-	protected void afterDelete()throws Exception
-	{
-
+	protected void afterDelete() throws Exception {
 
 		//删除相对应的rpt表中的字段
-		if (this.getFK_MapData().contains("ND") == true)
+		if (this.getFrmID().contains("ND") == true)
 		{
-			String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+			String fk_mapData = this.getFrmID().substring(0, this.getFrmID().length() - 2) + "Rpt";
 			String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() + "T' OR KeyOfEn='" + this.getKeyOfEn() + "')";
 			DBAccess.RunSQL(sql);
 		}
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFrmID());
 
 		super.afterDelete();
 	}
 
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception
-	{
+	protected void afterInsertUpdateAction() throws Exception {
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
 		mapAttr.RetrieveFromDBSources();
 		mapAttr.Update();
 
 		//调用frmEditAction, 完成其他的操作.
-		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFrmID());
 
 		super.afterInsertUpdateAction();
 	}
 
 
-		///
+		///#endregion
 
-	public final String DoRenameField(String newField)throws Exception
-	{
+	public final String DoRenameField(String newField) throws Exception {
 		String sql = "";
-		if (this.getFK_MapData().indexOf("ND") == 0)
+		if (this.getFrmID().indexOf("ND") == 0)
 		{
-			String strs = this.getFK_MapData().replace("ND", "");
+			String strs = this.getFrmID().replace("ND", "");
 			strs = strs.substring(0, strs.length() - 2);
 
 			String rptTable = "ND" + strs + "Rpt";
@@ -273,7 +260,7 @@ public class MapAttrCheck extends EntityMyPK
 		}
 		else
 		{
-			sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "', MyPK='" + this.getFK_MapData() + "_" + newField + "'  WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
+			sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "', MyPK='" + this.getFrmID() + "_" + newField + "'  WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFrmID() + "'";
 			DBAccess.RunSQL(sql);
 		}
 
@@ -281,65 +268,19 @@ public class MapAttrCheck extends EntityMyPK
 	}
 
 
-
-		///重载.
+		///#region 重载.
 	@Override
-	protected boolean beforeUpdateInsertAction()throws Exception
-	{
+	protected boolean beforeUpdateInsertAction() throws Exception {
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());
 		attr.RetrieveFromDBSources();
 
-
-			///自动扩展字段长度. 需要翻译.
-		if (attr.getMaxLen() < this.getMaxLen())
-		{
-			attr.setMaxLen(this.getMaxLen());
-
-			String sql = "";
-			MapData md = new MapData();
-			md.setNo(this.getFK_MapData());
-			if (md.RetrieveFromDBSources() == 1)
-			{
-				if (DBAccess.IsExitsTableCol(md.getPTable(), this.getKeyOfEn()) == true)
-				{
-					if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
-					{
-						sql = "ALTER TABLE " + md.getPTable() + " ALTER column " + this.getKeyOfEn() + " NVARCHAR(" + attr.getMaxLen() + ")";
-					}
-
-					if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
-					{
-						sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR(" + attr.getMaxLen() + ")";
-					}
-
-					if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.DM)
-					{
-						sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR2(" + attr.getMaxLen() + ")";
-					}
-					if (SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-							|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
-					{
-						sql = "ALTER table " + md.getPTable() + " ALTER COLUMN " + attr.getField() + " TYPE CHARACTER VARYING(" + attr.getMaxLen() + ")";
-					}
-					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
-					{
-						sql = "ALTER table " + md.getPTable() + " alter " + attr.getField() + " type character varying(" + attr.getMaxLen() + ")";
-					}
-
-					DBAccess.RunSQL(sql); //如果是oracle如果有nvarchar与varchar类型，就会出错.
-				}
-			}
-		}
-
-			/// 自动扩展字段长度.
-
 		//强制设置为签批组件.
-		this.setUIContralType(UIContralType.SignCheck);
+		this.SetValByKey(MapAttrAttr.UIContralType, UIContralType.SignCheck.getValue());
 
 		//默认值.
 		String defval = this.GetValStrByKey("ExtDefVal");
-		if (defval.equals("") || defval.equals("0"))
+		if (defval.equals("") == true || defval.equals("0") == true)
 		{
 			String defVal = this.GetValStrByKey("DefVal");
 			if (defval.contains("@") == true)
@@ -355,7 +296,7 @@ public class MapAttrCheck extends EntityMyPK
 		//执行保存.
 		attr.Save();
 
-		if (this.GetValStrByKey("GroupID").equals("无"))
+		if (this.GetValStrByKey("GroupID").equals("无") == true)
 		{
 			this.SetValByKey("GroupID", "0");
 		}
@@ -363,5 +304,5 @@ public class MapAttrCheck extends EntityMyPK
 		return super.beforeUpdateInsertAction();
 	}
 
-		///
+		///#endregion
 }

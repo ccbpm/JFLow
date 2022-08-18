@@ -1,8 +1,10 @@
 package bp.sys;
-import bp.en.EntityOIDAttr;
+
+import bp.en.*;
+
 
 /** 
- GroupField
+ 分组 - 属性
 */
 public class GroupFieldAttr extends EntityOIDAttr
 {
@@ -11,11 +13,11 @@ public class GroupFieldAttr extends EntityOIDAttr
 	*/
 	public static final String FrmID = "FrmID";
 	/** 
-	 Lab
+	 标签
 	*/
 	public static final String Lab = "Lab";
 	/** 
-	 Idx
+	 顺序
 	*/
 	public static final String Idx = "Idx";
 	/** 
@@ -34,8 +36,8 @@ public class GroupFieldAttr extends EntityOIDAttr
 	 手机端是否折叠显示？
 	*/
 	public static final String IsZDMobile = "IsZDMobile";
-	/**
-	 * 分组显示的模式
-	 */
-	public static final String ShowType="ShowType";
+	/** 
+	 分组显示的模式 显示 PC端折叠 隐藏
+	*/
+	public static final String ShowType = "ShowType";
 }

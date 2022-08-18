@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  附件删除规则
@@ -27,7 +26,7 @@ public enum AthDeleteWay
 		return this.ordinal();
 	}
 
-	public static AthDeleteWay forValue(int value) throws Exception
+	public static AthDeleteWay forValue(int value)
 	{
 		return values()[value];
 	}

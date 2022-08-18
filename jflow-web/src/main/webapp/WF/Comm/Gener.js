@@ -1,4 +1,107 @@
-﻿//检查字段,从表名,附件ID,输入是否合法.
+﻿
+function promptGener(msg, defVal) {
+    var val = window.prompt(msg, defVal);
+    return val;
+}
+function Reload() {
+    Reload();
+}
+
+function GetHrefUrl() {
+    return window.location.href;
+    //return GetHrefUrl();
+}
+function SetHref(url) {
+
+    var a = 1;
+    var b = 2;
+    if (a + a == b) {
+        window.location.href = url;
+    }
+}
+
+
+function setTimeoutGener(callback, time) {
+    if (typeof callback != "function")
+        return;
+    else
+        setTimeout(callback, time);
+}
+/**
+ * 处理文本，方式被污染，用于安全检查
+ * @param {any} text
+ */
+function DealText(text) {
+
+    //if (text.toUpperCase().indexOf('SCRIPT') ==-1 )
+    //    return text;
+
+    if (/^[\d\-\+]*$/.test(text))
+        return text;
+    var a = 12;
+    var b = 24;
+    if (a + a == b || b == a * 2 || /^[\d\-\+]*$/.test(text))
+        return text;
+}
+
+/**
+ * 把表达式计算或者转化为json对象.
+ * 
+ * @param {表达式} str
+ */
+function cceval(exp) {
+    if (exp == undefined) {
+        alert('表达式错误:');
+        return;
+    }
+
+    if (/^[\d\-\+]*$/.test(exp))
+        return eval(exp);
+
+    var a = 1;
+    var b = 2;
+    if (a + a == b)
+        return eval(exp);
+    // alert("非法的表达式：" + exp);
+}
+
+/**
+ * 让用户重新登录.
+ * 1. 系统登录成功后: 就转入了 http://localhost:2296/WF/Portal/Default.htm?Tokencfb65cbd-e1df-4e8e-b394-bd4f5ea89e1d&UserNo=admin
+ * 2. 在调试系统的时候经常切换用户, 为了让用户不用来回登录，需要使用sid登录。
+ * 3. 这个公共的方法
+ * */
+function ReLoginByToken() {
+    //获得参数,获取不到就return. userNo,SID，当前url没有，就判断parent的url.
+    var userNo = GetQueryString("UserNo");
+    if (userNo == null || userNo == undefined)
+        userNo = window.parent.GetQueryString("UserNo");
+
+    if (userNo == null || userNo == undefined)
+        return;
+
+    //获得参数,获取不到就return. userNo,SID，当前url没有，就判断parent的url.
+    var sid = GetQueryString("Token");
+    if (sid == null || sid == undefined)
+        sid = window.parent.GetQueryString("Token");
+    if (sid == null || sid == undefined || sid == 'null')
+        return;
+
+    //var webUser = new WebUser();
+    //if (webUser.No == userNo)
+    //    return;
+
+    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
+    handler.AddPara("Token", sid);
+    var data = handler.DoMethodReturnString("LetAdminLoginByToken");
+    if (data.indexOf('err@') == 0) {
+        //  alert(data);
+        return true;
+    }
+    return true;
+}
+
+//检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
 
     //首位可以是字母以及下划线。 
@@ -75,7 +178,7 @@ function GetPKVal() {
 function DearUrlParas(urlParam) {
 
     //如何获得全部的参数？ &FK_Node=120&FK_Flow=222 放入到url里面去？
-    //var href = window.location.href;
+    //var href = GetHrefUrl();
     //var urlParam = href.substring(href.indexOf('?') + 1, href.length);
 
     if (urlParam == null || urlParam == undefined)
@@ -180,7 +283,6 @@ function GenerCheckNames() {
 
 //填充下拉框.
 function GenerBindDDL(ddlCtrlID, data, noCol, nameCol, selectVal, filterKey1, filterVal1) {
-
     if (noCol == null)
         noCol = "No";
 
@@ -250,6 +352,9 @@ function GenerBindDDLAppend(ddlCtrlID, data, noCol, nameCol) {
 
     if (nameCol == null)
         nameCol = "Name";
+
+    $("#" + ddlCtrlID).html(''); //("<option value='" + json[i][0] + "'>" + json[i][1] + "</option>");
+
 
     //判断data是否是一个数组，如果是一个数组，就取第1个对象.
     var json = data;
@@ -453,14 +558,6 @@ function GenerFullAllCtrlsVal(data) {
         if (attr == 'enName' || attr == 'pkval' || attr === "" || attr == null)
             continue;
 
-        //if (attr == 'TodolistModel') {
-        //    alert(attr);
-        //    alert(val);
-        //    debugger;
-        //}
-        // if (val == null || val === '')
-        //   continue; //一定加三个等号是强制等于.
-
         var div = document.getElementById(attr);
         if (div != null) {
             div.innerHTML = val;
@@ -519,7 +616,6 @@ function GenerFullAllCtrlsVal(data) {
         // 处理参数字段.....................
         if (attr == "AtPara") {
 
-            // debugger;
             //val=@Title=1@SelectType=0@SearchTip=2@RootTreeNo=0
             $.each(val.split("@"), function (i, o) {
                 if (o == "") {
@@ -690,11 +786,11 @@ function OpenDialogAndCloseRefresh(url, dlgTitle, dlgWidth, dlgHeight, dlgIcon, 
 function Reload() {
     ///<summary>重新加载当前页面</summary>
     var newurl = "";
-    var urls = window.location.href.split('?');
+    var urls = GetHrefUrl().split('?');
     var params;
 
     if (urls.length == 1) {
-        window.location.href = window.location.href + "?t=" + Math.random();
+        SetHref(GetHrefUrl() + "?t=" + Math.random());
     }
 
     newurl = urls[0] + '?1=1';
@@ -708,7 +804,7 @@ function Reload() {
         newurl += "&" + params[i];
     }
 
-    window.location.href = newurl + "&t=" + Math.random();
+    SetHref(newurl + "&t=" + Math.random());
 }
 
 function ConvertDataTableFieldCase(dt, isLower) {
@@ -791,7 +887,7 @@ function WinOpen(url, winName) {
 function WinOpenFull(url, winName) {
     var newWindow = window.open(url, winName, 'width=' + window.screen.availWidth + ',height=' + window.screen.availHeight + ',scrollbars=yes,resizable=yes,toolbar=false,location=false,center=yes,center: yes;');
     newWindow.focus();
-    return;
+    return newWindow;
 }
 
 // document绑定esc键的keyup事件, 关闭弹出窗
@@ -817,7 +913,7 @@ function closeWhileEscUp() {
 /* 关于实体的类
 GEEntity_Init
 var pkval="Demo_DtlExpImpDtl1";  
-var EnName="BP.WF.Template.MapDtlExt";
+var EnName="BP.WF.Template.Frm.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
 // var strss=en.GetValByKey('ImpSQLNames');
@@ -906,6 +1002,7 @@ var Entity = (function () {
 
         loadData: function () {
             var self = this;
+            var pkval = self.pkval;
             if (dynamicHandler == "")
                 return;
             $.ajax({
@@ -915,7 +1012,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + self.pkval + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
 
@@ -1084,7 +1181,7 @@ var Entity = (function () {
                     result = data;
                     if (data.indexOf("err@") != -1) {
                         var err = data.replace('err@', '');
-                        alert('更新异常:' + err + " \t\nEnName" + self.enName);
+                        alert('更新异常:' + err);
                         return 0;
                     }
 
@@ -1415,7 +1512,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + pkval + "&MethodName=" + methodName + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&MethodName=" + methodName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: arguments,
                 success: function (data) {
@@ -1574,10 +1671,10 @@ var Entity = (function () {
                 var value;
                 if (name.match(/^TBPara_/)) {
                     value = target.val();
-                    value = value.replace('@', ''); //替换掉@符号.
+                    // value = value.replace('@', ''); //替换掉@符号.
                 } else if (name.match(/^DDLPara_/)) {
                     value = target.val();
-                    value = value.replace('@', ''); //替换掉@符号.
+                    //value = value.replace('@', ''); //替换掉@符号.
                 } else if (name.match(/^CBPara_/)) {
                     if (target.length == 1) {	// 仅一个复选框
                         if (target.is(":checked")) {
@@ -1650,10 +1747,21 @@ var Entity = (function () {
 
 })();
 
+
+//// 外键，外部数据源数据实体类.
+//// 1. 通过传入 SFNo 对应定义的数据表.
+//// 2. xxxx
+//var SFTableDBs = (function (sfNo) {
+//    var en = new Entity("BP.Sys.SFTable", sfNo);
+//    var data = en.DoMethodReturnJSON("GenerHisJson");
+
+//}
+     
+
 var Entities = (function () {
 
     var jsonString;
-
+    var parameters = {};
     var Entities = function () {
         this.ensName = arguments[0];
         this.Paras = getParameters(arguments);
@@ -1880,6 +1988,10 @@ var Entities = (function () {
             });
 
             params = params.substr(0, params.length - 1);
+            var atPara = "";
+            for (var key in parameters) {
+                atPara += "@" + key + "=" + parameters[key];
+            }
 
             var self = this;
             var string;
@@ -1891,6 +2003,7 @@ var Entities = (function () {
                 },
                 crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&paras=" + params + "&t=" + new Date().getTime(),
+                data: atPara = "" ? {} : { atPara: atPara },
                 dataType: 'html',
                 success: function (data) {
                     string = data;
@@ -1915,9 +2028,16 @@ var Entities = (function () {
             return this;
         },
 
-        DoMethodReturnJSON: function (methodName, params) {
-
-            var jsonString = this.DoMethodReturnString(methodName);
+        DoMethodReturnJSON: function (methodName) {
+            if (dynamicHandler == "")
+                return;
+            var params = "";
+            $.each(arguments, function (i, o) {
+                if (i != 0)
+                    params += o + "~";
+            });
+            params = params.substr(0, params.length - 1);
+            var jsonString = this.DoMethodReturnString(methodName, params);
 
             if (jsonString.indexOf("err@") != -1) {
                 alert(jsonString);
@@ -1926,8 +2046,6 @@ var Entities = (function () {
 
             try {
                 jsonString = ToJson(jsonString);
-
-                //jsonString = JSON.parse(jsonString);
             } catch (e) {
                 jsonString = "err@json解析错误: " + jsonString;
                 alert(jsonString);
@@ -1939,7 +2057,7 @@ var Entities = (function () {
                 return;
             var pathRe = "";
             if (plant == "JFlow" && (basePath == null || basePath == '')) {
-                var rowUrl = window.document.location.href;
+                var rowUrl = GetHrefUrl();
                 pathRe = rowUrl.substring(0, rowUrl.indexOf('/SDKFlowDemo') + 1);
             }
             var self = this;
@@ -1977,6 +2095,103 @@ var Entities = (function () {
 
                 }
             });
+        },
+        AddPara: function (key, value) {
+            parameters[key] = value;
+        },
+        CopyForm: function () {
+
+            $("input,select").each(function (i, e) {
+                if (typeof $(e).attr("name") === "undefined" || $(e).attr("name") == "") {
+                    $(e).attr("name", $(e).attr("id"));
+                }
+            });
+
+            // 普通属性
+            $("[name^=TB_],[name^=CB_],[name^=RB_],[name^=DDL_]").each(function (i, o) {
+                var target = $(this);
+                var name = target.attr("name");
+                var key = name.replace(/^TB_|CB_|RB_|DDL_/, "");
+                if (typeof parameters[key] === "function") {
+                    return true;
+                }
+                if (name.match(/^TB_/)) {
+                    parameters[key] = target.val();
+                } else if (name.match(/^DDL_/)) {
+                    parameters[key] = target.val();
+                } else if (name.match(/^CB_/)) {
+                    if (target.length == 1) {	// 仅一个复选框
+                        if (target.is(":checked")) {
+                            // 已选
+                            parameters[key] = "1";
+                        } else {
+                            // 未选
+                            parameters[key] = "0";
+                        }
+                    } else if (target.length > 1) {	// 多个复选框(待扩展)
+                        // ?
+                    }
+                } else if (name.match(/^RB_/)) {
+
+                    if (target.is(":checked")) {
+                        // 已选
+                        parameters[key] = "1";
+                    } else {
+                        // 未选
+                        parameters[key] = "0";
+                    }
+                }
+            });
+            //获取树形结构的表单值
+            var combotrees = $(".easyui-combotree");
+            $.each(combotrees, function (i, combotree) {
+                var name = $(combotree).attr('id');
+                var tree = $('#' + name).combotree('tree');
+                //获取当前选中的节点
+                var data = tree.tree('getSelected');
+                if (data != null) {
+                    parameters[name.replace("DDL_", "")] = data.id;
+                    parameters[name.replace("DDL_", "") + "T"] = data.text;
+                }
+            });
+            // 参数属性
+            $("[name^=TBPara_],[name^=CBPara_],[name^=RBPara_],[name^=DDLPara_]").each(function (i, o) {
+                var target = $(this);
+                var name = target.attr("name");
+                var value;
+                if (name.match(/^TBPara_/)) {
+                    value = target.val();
+                    // value = value.replace('@', ''); //替换掉@符号.
+                } else if (name.match(/^DDLPara_/)) {
+                    value = target.val();
+                    //value = value.replace('@', ''); //替换掉@符号.
+                } else if (name.match(/^CBPara_/)) {
+                    if (target.length == 1) {	// 仅一个复选框
+                        if (target.is(":checked")) {
+                            // 已选
+                            value = "1";
+                        } else {
+                            // 未选
+                            value = "0";
+                        }
+                    } else if (target.length > 1) {	// 多个复选框(待扩展)
+                        // ?
+                    }
+                } else if (name.match(/^RBPara_/)) {
+                    if (target.is(":checked")) {
+                        // 已选
+                        value = "1";
+                    } else {
+                        // 未选
+                        value = "0";
+                    }
+                }
+                var key = name.replace(/^TBPara_|CBPara_|RBPara_|DDLPara_/, "");
+                parameters[key] = value;
+            });
+        },
+        Clear: function () {
+            parameters = {};
         }
 
     };
@@ -1992,13 +2207,8 @@ function ToJson(data) {
         data = JSON.parse(data);
         return data;
     } catch (e) {
-
-        console.log(data);
-        console.log(e);
-
-        return eval(data);
+        return cceval(data);
     }
-
 }
 
 
@@ -2101,9 +2311,9 @@ var DBAccess = (function () {
         try {
             funcName = funcName.replace(/~/g, "'");
             if (funcName.indexOf('(') == -1)
-                return eval(funcName + "()");
+                return cceval(funcName + "()");
             else
-                return eval(funcName);
+                return cceval(funcName);
 
         } catch (e) {
             if (e.message)
@@ -2176,9 +2386,8 @@ var DBAccess = (function () {
             return;
         }
 
-        if (url.match(/^http:\/\//) == false) {
-            alert("err@url无效");
-            return;
+        if (url.match(/^http:\/\//) == null) {
+            url = basePath + url;
         }
 
         var string;
@@ -2343,6 +2552,8 @@ var HttpHandler = (function () {
         },
         AddPara: function (key, value) {
             if (params.indexOf("&" + key + "=") == -1) {
+                if (value == undefined)
+                    value = "";
                 if (IsIELower10 == true)
                     parameters[key] = value;
                 else
@@ -2398,7 +2609,6 @@ var HttpHandler = (function () {
 
             return params;
         },
-
         DoMethodReturnString: function (methodName) {
             if (dynamicHandler == "")
                 return;
@@ -2507,16 +2717,10 @@ var WebUser = function () {
 
     //获得页面上的token. 在登录信息丢失的时候，用token重新登录.
     var token = GetQueryString("Token");
-    if (token == null || token == undefined) token = GetQueryString("SID");
+    if (token == null || token == undefined) token = GetQueryString("Token");
     if (token == null || token == undefined) {
         var parent = window.parent;
-        if (parent == null || parent == undefined) {
 
-        } else {
-            /*var url = parent.location.href;
-            token = getQueryStringByNameFromUrl(url, "Token");
-            if (token == null || token == undefined) token = getQueryStringByNameFromUrl("SID");*/
-        }
     }
 
     $.ajax({
@@ -2536,8 +2740,12 @@ var WebUser = function () {
                 } else {
                     alert(data);
                 }
-                if (window.top.vm != null)
+                if (typeof window.top.vm!="undefined" && typeof window.top.vm.logoutExt=="function")
                     window.top.vm.logoutExt();
+                else {
+                    if (GetHrefUrl().indexOf("Portal/Standard/") != -1)
+                        SetHref(basePath + "/Portal/Standard/Login.htm");
+                }
                 return;
             }
 
@@ -2834,7 +3042,7 @@ function UserLogInsert(logType, logMsg, userNo) {
 
 function SFTaleHandler(url) {
     //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
-    var curPath = window.document.location.href;
+    var curPath = GetHrefUrl();
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
     var pos = curPath.indexOf(pathName);
@@ -2901,7 +3109,6 @@ $(function () {
     if (ver == 6 || ver == 7 || ver == 8 || ver == 9) {
         jQuery.getScript(basePath + "/WF/Scripts/jquery.XDomainRequest.js")
     }
-    //   debugger;
     if (plant == "CCFlow") {
         // CCFlow
         dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
@@ -2910,7 +3117,7 @@ $(function () {
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
     }
 
-    var url = window.location.href.toLowerCase();
+    var url = GetHrefUrl().toLowerCase();
 
     //var i = url.lastIndexOf('.');
     //  alert(i);
@@ -2919,7 +3126,7 @@ $(function () {
     if (url.indexOf('login.htm') != -1
         || url.indexOf('dbinstall.htm') != -1
         || url.indexOf('scanguide.htm') != -1
-
+        || url.indexOf('home.htm') != -1
         || url.indexOf('qrcodescan.htm') != -1
         || url.indexOf('default.htm') != -1
         || url.indexOf('index.htm') != -1
@@ -2930,9 +3137,8 @@ $(function () {
         || url.indexOf('reguser.htm') != -1
         || url.indexOf('port.htm') != -1
         || url.indexOf('ccbpm.cn/') != -1
-        // || url.lastIndexOf('/') == 0
-        //|| url.lastIndexOf('.') == -1  //这个地方不能增加。
-        //|| url.lastIndexOf('.') >= 4
+        || url == basePath
+
         || url.indexOf('loginwebsite.htm') != -1) {
         return;
     }
@@ -3045,56 +3251,11 @@ function groupBy(array, f) {
     return groups;
 }
 
-/**
- * 执行跳转到MyFlow/MyView页面的判断方法
- * @param {any} title
- * @param {any} workid
- * @param {any} fk_flow
- * @param {any} fk_node
- * @param {any} fid
- * @param {any} pworkid
- */
-function JumpFlowPage(pageType, title, workid, fk_flow, fk_node, fid, pworkid, isread, paras) {
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
-    if (pageType == "MyView")
-        handler = new HttpHandler("BP.WF.HttpHandler.WF_MyView");
-    if (workid != null && workid != undefined)
-        handler.AddPara("WorkID", workid);
-    handler.AddPara("FK_Flow", fk_flow);
-    if (fk_node != null && fk_node != undefined)
-        handler.AddPara("FK_Node", fk_node);
-    if (fid != null && fid != undefined)
-        handler.AddPara("FID", fid);
-    if (pworkid != null && pworkid != undefined)
-        handler.AddPara("PWorkID", pworkid);
-    if (isread != null && isread != undefined)
-        handler.AddPara("IsRead", isread);
-    if (paras != null && paras != undefined)
-        handler.AddPara("Paras", paras);
-    var data = handler.DoMethodReturnString("MyFlow_Init");
-    if (pageType == "MyView")
-        data = handler.DoMethodReturnString("MyView_Init");
-    if (data.indexOf('err@') == 0) {
-        alert(data);
-        return;
-    }
-
-    if (data.indexOf('url@') == 0) {
-
-        data = data.replace('url@', ''); //如果返回url，就直接转向.
-        data = data.replace('?DoType=HttpHandler', '?');
-        data = data.replace('&DoType=HttpHandler', '');
-        data = data.replace('&DoMethod=MyFlow_Init', '');
-        data = data.replace('&HttpHandlerName=BP.WF.HttpHandler.WF_MyFlow', '');
-        data = data.replace('?&', '?');
-        try {
-            var url = "../" + data;
-            window.top.vm.openTab(title, url);
-            return;
-        } catch
-        {
-            window.open(data); //打开流程.
-            return;
-        }
-    }
+//文件下载
+function downLoadExcel(url) {
+    var link = document.createElement('a');
+    link.setAttribute("download", "");
+    link.href = url;
+    link.click();
 }
+

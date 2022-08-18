@@ -7,7 +7,7 @@ function treeNodeManage(dowhat, nodeNo, callback, scope) {
     switch (dowhat) {
         case "sample": //新建同级节点
 
-            var val = window.prompt('请输入名称', '新建节点');
+            var val = promptGener('请输入名称', '新建节点');
             if (val == null)
                 return;
 
@@ -27,7 +27,7 @@ function treeNodeManage(dowhat, nodeNo, callback, scope) {
             break;
         case "children": //新建下级节点
 
-            var val = window.prompt('请输入名称', '新建节点');
+            var val = promptGener('请输入名称', '新建节点');
             if (val == null)
               return;
 
@@ -69,7 +69,7 @@ function CreateSampleNode() {
         treeNodeManage("sample", node.id, function (js) {
             if (js) {
                 var parentNode = $('#enTree').tree('getParent', node.target);
-                var pushData = eval('(' + js + ')');
+                var pushData = cceval('(' + js + ')');
                 $('#enTree').tree('append', {
                     parent: (parentNode ? parentNode.target : null),
                     data: [{
@@ -91,7 +91,7 @@ function CreateSubNode() {
     if (node) {
         treeNodeManage("children", node.id, function (js) {
             if (js) {
-                var pushData = eval('(' + js + ')');
+                var pushData = cceval('(' + js + ')');
                 $('#enTree').tree('append', {
                     parent: (node ? node.target : null),
                     data: [{

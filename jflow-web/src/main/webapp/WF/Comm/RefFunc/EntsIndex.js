@@ -11,7 +11,7 @@ window.onload = function () {
                 tabsList: [], // 打开的tab页面
                 showPagesAction: false, // 打开tabs操作选项
                 selectedTabsIndex: -1, // 当前所选的tab 索引
-                selectedTabsIndexUrl: '', 
+                selectedTabsIndexUrl: '',
                 sideBarOpen: true,
                 inFullScreenMode: false, // 是否处于全屏模式
                 showThemePicker: false, // 显示主题选择器
@@ -60,7 +60,7 @@ window.onload = function () {
                 this.subMenuData = this.menuTreeData[index]
                 this.subMenuTitle = this.menuTreeData[index].Name
                 if (this.subMenuTitle.length > 4)
-                    $(".line").css("width", (70 - (this.subMenuTitle.length-4)*8)+"px");
+                    $(".line").css("width", (70 - (this.subMenuTitle.length - 4) * 8) + "px");
                 this.sideBarOpen = true
                 this.bindDropdown(this.subMenuData.type)
                 this.initChildContextMenu()
@@ -86,7 +86,7 @@ window.onload = function () {
                 }
                 this.fullScreen()
             },
-           
+
             // 改变侧边栏大小
             resizeSideBar: function () {
                 this.sideBarOpen = !this.sideBarOpen
@@ -186,10 +186,37 @@ window.onload = function () {
 
                 //写入日志.
                 UserLogInsert("MenuClick", menu.Title + "@" + menu.Icon + "@" + menu.Url);
+                if (menu.RefMethodType == 0 && menu.FunPara == "false") {
+                    var warning = menu.Warning;
+                    if (warning == "null" || warning == "")
+                        warning = "确定要执行吗？";
+                    warning = warning.replace(/,\s+/g, ",");
+                    warning = warning.replace(/\s+/g, "\r\n");
 
-                this.openTab(menu.Title, menu.Url, alignRight);
+                    if (menu.RefMethodType == 0 && menu.FunPara == "false") {
+                        var warning = menu.Warning;
+                        if (warning == "null" || warning == "")
+                            warning = "确定要执行吗？";
+                        warning = warning.replace(/,\s+/g, ",");
+                        warning = warning.replace(/\s+/g, "\r\n");
+                        var _this = this;
+                        layer.confirm(warning, function (index) {
+
+                            layer.close(index);
+                            _this.openTab(menu.Title, menu.Url, alignRight);
+                        });
+                        return;
+                    }
+
+                }
+
+                //菜单打开方式
+                if (menu.RefMethodType == 2)
+                    window.open(menu.Url, menu.Title);
+                else
+                    this.openTab(menu.Title, menu.Url, alignRight);
             },
-            openTab: function (name, src, alignRight) {              
+            openTab: function (name, src, alignRight) {
 
 
                 //如果发起实体类的流程，是通过一个页面中专过去的.
@@ -247,6 +274,12 @@ window.onload = function () {
                 }
 
             },
+            changeSelectTab: function (index) {
+                this.selectedTabsIndex = index;
+                this.tabsList[this.selectedTabsIndex];
+                if (index == -1)
+                    this.reLoadCurrentPage();
+            },
             generatePickerBody: function () {
                 var tag = "<div style=\"padding-left:10px;padding-right:10px;padding-top:10px\">" +
                     "<form class=\"layui-form layui-form-pane\" action=\"\">" +
@@ -288,7 +321,7 @@ window.onload = function () {
                 var layout = document.getElementById("layout-data")
                 if (!this.classicalLayout) {
                     try {
-                        this.classicalLayout = false                       
+                        this.classicalLayout = false
                         layout.innerHTML = "\n                        .g-admin-layout .layui-side{\n                            width: 220px\n                        }\n                        .g-admin-layout .layui-logo, .layui-side-menu .layui-nav{\n                            background-color: white;\n                            position: absolute;\n                            \n                            height: 50px;\n                            line-height:50px;\n                            color: #333;\n                            box-shadow: none;\n                        }\n                        .layui-side-menu .layui-side-scroll{\n                            background-color: white;\n                            width: 220px\n                        }\n                        .g-admin-pagetabs, .g-admin-layout .layui-body, .g-admin-layout .layui-footer, .g-admin-layout .g-layout-left{\n                            left:220px;\n                        }\n                        .layui-side-menu .layui-nav .layui-nav-item a{\n                            height: 30px;\n                            line-height: 30px;\n                            color:#5f626e;\n                            display: flex;\n                            align-items: center;\n                        }\n                        .layui-side-menu .layui-nav .layui-nav-item .layui-icon{\n                            margin-top: -14px;\n                        }          \n                    ";
                         localStorage.setItem("classicalLayout", "0")
 
@@ -307,13 +340,21 @@ window.onload = function () {
             refreshMenuTree: function (data) {
                 //this.menuTreeData = new MenuConvertTools(data).convertToTreeData()
                 this.menuTreeData = new MenuConvertTools(data).convertToTreeData()
-                layer.close(loading);
-                //this.openThemePicker();
-                //var color = localStorage.getItem("themeColor")
-                //console.log(color)
-                // chooseTheme(color)
                 this.classicalLayout = parseInt(localStorage.getItem('classicalLayout')) === 1
-                this.updateLayout()
+                this.updateLayout();
+                var _this = this;
+                //classMethodName
+                var methodName = GetQueryString("ClassMethodName");
+                methodName = methodName || "";
+                if (methodName != "") {
+                    $.each(data, function (i, item) {
+                        if (item.ClassMethodName && item.ClassMethodName.indexOf(methodName) != -1) {
+                            _this.openTabByMenu(item);
+                            _this.selectedId = item.No;
+                            return false;
+                        }
+                    })
+                }
             },
             closeDropdown: function (e) {
                 try {
@@ -339,7 +380,7 @@ window.onload = function () {
                 clearTimeout(this.closeTimeout)
                 this.closeTimeout = null
             },
-            
+
             initMenus: function () {
                 /* var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
                 var data = handler.DoMethodReturnString("Default_Init");
@@ -349,18 +390,18 @@ window.onload = function () {
                 }
                 if (data.indexOf('url@') == 0) {
                     var url = data.replace('url@', '');
-                    window.location.href = url;
+                    SetHref(url);
                     return;
                 }
                 data = JSON.parse(data);*/
-               var httpHandler = new HttpHandler("BP.WF.HttpHandler.WF_CommEntity");
+                var httpHandler = new HttpHandler("BP.WF.HttpHandler.WF_CommEntity");
                 var enName = GetQueryString("EnName");
                 var type = GetQueryString("type");
                 var pkVal = GetPKVal();
                 var isTree = GetQueryString("isTree");
-                var isReadonly = GetQueryString("isReadonly");
+                var isReadonly = GetQueryString("IsReadonly");
                 httpHandler.AddPara("EnName", enName);
-              
+                httpHandler.AddPara("IsReadonly", isReadonly);
                 if (pkVal != null) {
                     httpHandler.AddPara("PKVal", pkVal);
                 }
@@ -374,13 +415,13 @@ window.onload = function () {
                 //解析json.
                 frmData = JSON.parse(data);
                 dtM = frmData["dtM"];
-             
+
 
                 this.refreshMenuTree(dtM);
-              
+
 
             },
-         
+
             bindDropdown: function (type) {
                 var _this = this
                 this.$nextTick(function () {
@@ -398,323 +439,10 @@ window.onload = function () {
                                 currentChildContextMenuNodes[i].removeEventListener('contextmenu', null)
                             }
                         }
-                        if (type === 'flow') {
-                            var topFlowNodeItems = [
-                                { title: '<i class=icon-plus></i> 新建流程', id: "NewFlow", Icon: "icon-plus" },
-                                { title: '<i class=icon-star></i> 目录属性', id: "EditSort", Icon: "icon-options" },
-                                { title: '<i class=icon-folder></i> 新建目录', id: "NewSort", Icon: "icon-magnifier-add" },
-                                {
-                                    title: '<i class=icon-share-alt ></i> 导入流程模版',
-                                    id: "ImpFlowTemplate",
-                                    Icon: "icon-plus"
-                                },
-                                //{ title: '新建下级目录', id: 5 },
-                                { title: '<i class=icon-close></i> 删除目录', id: "DeleteSort", Icon: "icon-close" }
-                            ]
 
-                            var tfOptions = {
-                                trigger: 'contextmenu',
-                                data: topFlowNodeItems,
-                                click: function (data, oThis) {
-                                    _this.topFlowNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.idx)
-                                }
-                            }
-                            var topFlowNodeItems = document.querySelectorAll('.flow-node')
-                            for (var i = 0; i < topFlowNodeItems.length; i++) {
-                                tfOptions.elem = topFlowNodeItems[i]
-                                dropdown.render(tfOptions)
-                            }
-
-
-                            var childFlowNodeItems = [
-                                { title: '<i class=icon-star></i> 流程属性', id: "Attr", Icon: "icon-options" },
-                                { title: '<i class=icon-settings></i> 设计流程', id: "Designer", Icon: "icon-settings" },
-                                { title: '<i class=icon-plane></i> 测试容器', id: "Start", Icon: "icon-paper-plane" },
-                                { title: '<i class=icon-docs></i> 复制流程', id: "Copy", Icon: "icon-docs" },
-                                { title: '<i class=icon-close></i> 删除流程', id: "Delete", Icon: "icon-close" }
-                            ]
-                            var cfOptions = {
-                                trigger: 'contextmenu',
-                                data: childFlowNodeItems,
-                                click: function (data, oThis) {
-                                    var dataset = $(this.elem)[0].dataset
-                                    _this.childFlowNodeOption(data.id, dataset.no, dataset.name, dataset.pidx, dataset.idx)
-                                }
-                            }
-                            var childFlowNodeItems = document.querySelectorAll('.flow-node-child')
-                            for (var i = 0; i < childFlowNodeItems.length; i++) {
-                                cfOptions.elem = childFlowNodeItems[i]
-                                dropdown.render(cfOptions)
-                            }
-                            currentTopContextMenuNodes = topFlowNodeItems
-                            currentChildContextMenuNodes = childFlowNodeItems
-                            return
-                        }
-
-                        if (type === 'form') {
-                            var topFormNodeItems = [
-                                { title: '<i class=icon-plus></i> 新建表单', id: "NewFrm", Icon: "icon-plus" },
-                                { title: '<i class=icon-star></i> 重命名', id: "EditSort", Icon: "icon-options" },
-                                { title: '<i class=icon-folder></i> 新建目录', id: "NewFrmSort", Icon: "icon-magnifier-add" },
-                                {
-                                    title: '<i class=icon-share-alt ></i> 导入表单模版',
-                                    id: "ImpFlowTemplate",
-                                    Icon: "icon-plus"
-                                },
-                                //{ title: '新建下级目录', id: 5 },
-                                { title: '<i class=icon-close></i> 删除目录', id: "DeleteSort", Icon: "icon-close" }
-                            ]
-
-                            var tfOptions = {
-                                trigger: 'contextmenu',
-                                data: topFormNodeItems,
-                                click: function (data, oThis) {
-                                    _this.topFormNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.idx)
-                                }
-                            }
-
-                            var topFormNodeItems = document.querySelectorAll('.form-node')
-                            for (var i = 0; i < topFormNodeItems.length; i++) {
-                                tfOptions.elem = topFormNodeItems[i]
-                                dropdown.render(tfOptions)
-                            }
-
-
-                            var childFormNodeItems = [
-                                { title: '<i class=icon-star></i> 表单属性', id: "Attr", Icon: "icon-options" },
-                                { title: '<i class=icon-settings></i> 设计表单', id: "Designer", Icon: "icon-settings" },
-                                { title: '<i class=icon-plane></i> 运行表单', id: "Start", Icon: "icon-paper-plane" },
-                                { title: '<i class=icon-docs></i> 复制表单', id: "Copy", Icon: "icon-docs" },
-                                { title: '<i class=icon-close></i> 删除表单', id: "Delete", Icon: "icon-close" }
-                            ]
-                            var cfOptions = {
-                                trigger: 'contextmenu',
-                                data: childFormNodeItems,
-                                click: function (data, oThis) {
-                                    var dataset = $(this.elem)[0].dataset
-                                    _this.childFormNodeOption(data.id, dataset.no, dataset.name, dataset.pidx, dataset.idx)
-                                }
-                            }
-                            var childFormNodeItems = document.querySelectorAll('.form-node-child')
-                            for (var i = 0; i < childFormNodeItems.length; i++) {
-                                cfOptions.elem = childFormNodeItems[i]
-                                dropdown.render(cfOptions)
-                            }
-                            currentTopContextMenuNodes = topFormNodeItems
-                            currentChildContextMenuNodes = childFormNodeItems
-                        }
                     })
                 })
             },
-            NewSort: function (currentElem, sameLevel) {
-                //只能创建同级.
-                sameLevel = true;
-                //例子2
-                layer.prompt({
-                    value: '',
-                    title: '新建' + (sameLevel ? '同级' : '子级') + '流程类别',
-                }, function (value, index, elem) {
-                    layer.close(index);
-                    var en = new Entity("BP.WF.Template.FlowSort", currentElem);
-                    var data = "";
-                    if (sameLevel == true) {
-                        data = en.DoMethodReturnString("DoCreateSameLevelNodeMy", value);
-                    } else {
-                        data = en.DoMethodReturnString("DoCreateSubNodeMy", value);
-                    }
-                    layer.msg("创建成功" + data);
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 2000);
-                });
-            },
-            DeleteSort: function (no) {
-
-                if (window.confirm("确定要删除吗?") == false)
-                    return;
-
-                var en = new Entity("BP.WF.Template.FlowSort", no);
-                var data = en.Delete();
-                layer.msg(data);
-
-                //如果有错误.
-                if (data.indexOf("err@") == 0)
-                    return;
-
-                setTimeout(function () {
-                    window.location.reload()
-                }, 2000)
-            },
-
-            ImpFlowTemplate: function (data) {
-                var sortNo = data;
-                url = "./../Admin/Template/ImpFrmLocal.htm?SortNo=" + sortNo + "&Lang=CH";
-                this.openTab("导入表单模版", url);
-            },
-            
-            NewFlow: function (data, name) {
-
-                ////  if (runModelType == 0)
-                //   url = "../CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + flowSort + "&s=" + Math.random();
-                //else
-                url = "../Admin/CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + data + "&From=Flows.htm&RunModel=1&s=" + Math.random();
-                this.openTab("新建流程", url);
-
-            },
-            NewFrm: function (data, name) {
-                url = "../Admin/FoolFormDesigner/NewFrmGuide.htm?SortNo=" + data + "&From=Frms.htm&RunModel=1&s=" + Math.random();
-                this.openTab("新建表单", url);
-            },
-            childFormNodeOption: function (key, data, name, pidx, idx) {
-
-                switch (key) {
-                    case "Attr":
-                        this.flowAttr(data, name);
-                        break;
-                    case "Designer":
-                        this.Designer(data, name);
-                        break;
-                    case "Start":
-                        this.StartFrm(data, name);
-                        break;
-                    case "Copy":
-                        this.copyFrm(data);
-                        break;
-                    case "Delete":
-                        this.DeleteFlow(data, pidx, idx);
-                        break;
-                }
-            },
-
-            topFormNodeOption: function (key, data, name) {
-                switch (key) {
-                    case "EditSort":
-                        this.EditSort(data, name);
-                        break;
-                    case "ImpFlowTemplate":
-                        this.ImpFlowTemplate(data);
-                        break;
-                    case "NewSort":
-                        this.NewSort(data, true);
-                        break;
-                    case "DeleteSort":
-                        this.DeleteSort(data);
-                        break;
-                    case "NewFlow":
-                        this.NewFlow(data, name);
-                        break;
-                    case "NewFrm":
-                        this.NewFrm(data, name);
-                        break;
-                    default:
-                        alert("没有判断的命令" + key);
-                        break;
-                }
-            },
-
-            childFlowNodeOption: function (key, data, name, pidx, idx) {
-                console.log(key, data, name, pidx, idx)
-                switch (key) {
-                    case "Attr":
-                        this.fFlowAttr(data, name);
-                        break;
-                    case "Designer":
-                        this.fDesigner(data, name);
-                        break;
-                    case "Start":
-                        this.fTestFlow(data, name);
-                        break;
-                    case "Copy":
-                        this.fCopyFlow(data);
-                        break;
-                    case "Delete":
-                        this.fDeleteFlow(data, pidx, idx);
-                        break;
-                }
-            },
-
-            topFlowNodeOption: function (key, data, name) {
-
-                switch (key) {
-                    case "EditSort":
-                        this.fEditSort(data, name);
-                        break;
-                    case "ImpFlowTemplate":
-                        this.fImpFlowTemplate(data);
-                        break;
-                    case "NewSort":
-                        this.fNewSort(data, true);
-                        break;
-                    case "DeleteSort":
-                        this.fDeleteSort(data);
-                        break;
-                    case "NewFlow":
-                        this.fNewFlow(data, name);
-                        break;
-                    default:
-                        alert("没有判断的命令" + key);
-                        break;
-                }
-            },
-
-            fNewFlow: function (data, name) {
-                url = "../Admin/CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + data + "&From=Flows.htm&RunModel=1&s=" + Math.random();
-                this.openTab("新建流程", url);
-
-            },
-            fDeleteSort: function (no) {
-
-                if (window.confirm("确定要删除吗?") == false)
-                    return;
-
-                var en = new Entity("BP.WF.Template.FlowSort", no);
-                var data = en.Delete();
-                layer.msg(data);
-
-                //如果有错误.
-                if (data.indexOf("err@") == 0)
-                    return;
-
-                setTimeout(function () {
-                    window.location.reload()
-                }, 2000)
-            },
-
-            fImpFlowTemplate: function (data) {
-                var fk_sort = data;
-                url = "./../Admin/AttrFlow/Imp.htm?FK_FlowSort=" + fk_sort + "&Lang=CH";
-                this.openTab("导入流程模版", url);
-            },
-
-            fNewSort: function (currentElem, sameLevel) {
-
-                //只能创建同级.
-                sameLevel = true;
-
-                //例子2
-                layer.prompt({
-                    value: '',
-                    title: '新建' + (sameLevel ? '同级' : '子级') + '流程类别',
-                }, function (value, index, elem) {
-                    layer.close(index);
-                    var en = new Entity("BP.WF.Template.FlowSort", currentElem);
-                    var data = "";
-                    if (sameLevel == true) {
-                        data = en.DoMethodReturnString("DoCreateSameLevelNodeMy", value);
-                    } else {
-                        data = en.DoMethodReturnString("DoCreateSubNodeMy", value);
-                    }
-
-                    layer.msg("创建成功" + data);
-                    //this.EditSort(data, "编辑");
-                    //return;
-
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 2000);
-                });
-            },
-
             openLayer: function (uri, name, w, h) {
                 //console.log(uri, name);
 
@@ -736,126 +464,6 @@ window.onload = function () {
                     shadeClose: true
                 })
             },
-
-            fEditSort: function (no, name) {
-                var url = "../Comm/EnOnly.htm?EnName=BP.WF.Template.FlowSort&No=" + no;
-                this.openLayer(url, "目录:" + name);
-            },
-
-            fDeleteFlow: function (no, pidx, idx) {
-                var msg = "提示: 确定要删除该流程吗?";
-                msg += "\t\n1.如果该流程下有实例，您不能删除。";
-                msg += "\t\n2.该流程为子流程的时候，被引用也不能删除.";
-                if (window.confirm(msg) == false)
-                    return;
-
-                var load = layer.msg("正在处理,请稍候...", {
-                    icon: 16,
-                    anim: 5
-                })
-                var _this = this
-                setTimeout(function () {
-                    //开始执行删除.
-                    var flow = new Entity("BP.WF.Flow", no);
-                    var data = flow.DoMethodReturnString("DoDelete");
-                    layer.msg(data);
-                    if (data.indexOf("err@") == 0)
-                        return;
-
-
-                    layer.close(load)
-                    _this.subMenuData.children[pidx].children.splice(idx, 1)
-                    var leaveItems = _this.subMenuData.children[pidx].children
-                    _this.$set(_this.subMenuData.children[pidx], 'children', leaveItems)
-                }, 120)
-            },
-            fCopyFlow: function (no) {
-                if (window.confirm("确定要执行流程复制吗?") == false)
-                    return;
-                var flow = new Entity("BP.WF.Flow", no);
-                var data = flow.DoMethodReturnString("DoCopy");
-                layer.msg(data);
-                setTimeout(function () {
-                    window.location.reload();
-                }, 2000);
-            },
-            fDesigner: function (no, name) {
-                var sid = GetQueryString("SID");
-                var webUser = new WebUser();
-                var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-                this.openTab(name, url);
-            },
-            fFlowAttr: function (no, name) {
-                var url = "../Comm/En.htm?EnName=BP.WF.Template.FlowExt&No=" + no;
-                this.openTab(name, url);
-                //this.openLayer(url, name,900);
-            },
-            fTestFlow: function (no, name) {
-                var url = "../Admin/TestingContainer/TestFlow2020.htm?FK_Flow=" + no;
-                window.top.vm.fullScreenOpen(url, name);
-                // this.openLayer(url, name);
-            },
-            Designer: function (no, name) {
-                var sid = GetQueryString("SID");
-                var webUser = new WebUser();
-                var url = "../Admin/CCFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + no + "&FrmID=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-                this.openTab(name, url);
-            },
-            EditSort: function (no, name) {
-
-                var val = prompt("请输入名称", name);
-                if (val == null || val == '')
-                    return;
-
-                var en = new Entity("BP.WF.Template.SysFormTree", no);
-                en.Name = val;
-                en.Update();
-            },
-            StartFrm: function (no, name) {
-                var sid = GetQueryString("SID");
-                var webUser = new WebUser();
-                var url = "../Admin/CCFormDesigner/GoToRunFrm.htm?FK_MapData=" + no + "&FrmID=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-                this.openTab(name, url);
-            },
-            flowAttr: function (no, name) {
-                var sid = GetQueryString("SID");
-                var webUser = new WebUser();
-                var url = "../Admin/CCFormDesigner/GoToFrmAttr.htm?FK_MapData=" + no + "&FrmID=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-                this.openTab(name, url);
-            },
-            copyFrm: function (no) {
-                if (window.confirm("确定要执行表单复制吗?") == false)
-                    return;
-                var flow = new Entity("BP.Sys.MapData", no);
-                var data = flow.DoMethodReturnString("DoCopy");
-                layer.msg(data);
-                setTimeout(function () {
-                    window.location.reload();
-                }, 2000);
-            },
-            DeleteFlow: function (no, pidx, idx) {
-                var msg = "提示: 确定要删除该表单吗?";
-                //   msg += "\t\n1.如果该流程下有实例，您不能删除。";
-                //  msg += "\t\n2.该流程为子流程的时候，被引用也不能删除.";
-                if (window.confirm(msg) == false)
-                    return;
-
-                var load = layer.msg("正在处理,请稍候...", {
-                    icon: 16,
-                    anim: 5
-                })
-                var _this = this
-                setTimeout(function () {
-                    var en = new Entity("BP.Sys.MapData", no);
-                    en.Delete();
-                    //  var data = flow.DoMethodReturnString("DoDelete");
-                    layer.close(load);
-                    // layer.msg(data);
-                    _this.subMenuData.children[pidx].children.splice(idx, 1)
-                    var leaveItems = _this.subMenuData.children[pidx].children
-                    _this.$set(_this.subMenuData.children[pidx], 'children', leaveItems)
-                }, 120)
-            },
             calcClassList: function (item, type) {
                 var cList = []
                 if (item.type === 'flow') cList.push(type === 1 ? 'flow-node' : 'flow-node-child')
@@ -864,10 +472,15 @@ window.onload = function () {
             }
         },
         mounted: function () {
-            var param = document.location.search.substr(1);           
-            selectedTabsurl = "../RefFunc/EnOnly.htm?" + param;
+
+
+            var url = GetHrefUrl();
+            url = url.replace("En.htm", "EnOnly.htm");
+
+            selectedTabsurl = url;// "../RefFunc/EnOnly.htm?EnName=" + GetQueryString("EnName") + "&PKVal=" + pkval; // GetQueryString("PKVal");
+            //alert(selectedTabsurl);
             this.selectedTabsIndexUrl = selectedTabsurl;
-            
+
             this.initMenus()
             var _this = this
             setTimeout(function () {

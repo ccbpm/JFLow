@@ -15,7 +15,7 @@
 
     <link href="../../Style/skin/css/Default.css" rel="stylesheet" />
     <link href="../../Style/skin/adminfont/iconfont.css" rel="stylesheet" />
-    
+
 
     <script type="text/javascript" src="../../Scripts/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../Scripts/bootstrap/js/jquery.cokie.min.js"></script>
@@ -89,7 +89,7 @@
 
                 OpenBootStrapModal(url, "eudlgframe", this.document.title + ' : 详细', 650, 600, "icon-edit", false, function () { }, null, function () {
 
-                    window.location.href = window.location.href
+                    Reload();
 
                 });
                 return;
@@ -123,7 +123,8 @@
 
             OpenBootStrapModal(url, "eudlgframe", this.document.title + ' : 详细', windowW, windowH, "icon-edit", false, function () { }, null, function () {
 
-                window.location.href = window.location.href
+                Reload();
+                //window.location.href = window.location.href
 
             });
 
@@ -161,7 +162,7 @@
 
             frmData = frmData;
             var Sys_GroupFields = frmData.Sys_GroupField;
-            var mapAtrrs = frmData.Sys_MapAttr;
+            var mapAttrs = frmData.Sys_MapAttr;
             var dtls = frmData.Dtls;
 
             var html = "<table class='table' id='Table1'>";
@@ -169,8 +170,8 @@
             html += "<th>序</th>";
 
 
-            for (var i = 0; i < mapAtrrs.length; i++) {
-                var mapAttr = mapAtrrs[i];
+            for (var i = 0; i < mapAttrs.length; i++) {
+                var mapAttr = mapAttrs[i];
                 mapAttr = new Entity("BP.Sys.SysMapAttr", mapAttr);
                 if (mapAttr.UIVisible == "0")
                     continue;
@@ -198,12 +199,12 @@
                 if (pkval == dtl.WorkID)
                     pkval = dtl.WorkID;
 
-                html += "<tr ondblclick='OpenEn(\"" + pkval + "\")'>";
+                html += "<tr>"; // ondblclick='OpenEn(\"" + pkval + "\")'
                 html += "<td class='Idx'>" + (i + 1) + "</td>";
 
 
-                for (var attrIdx = 0; attrIdx < mapAtrrs.length; attrIdx++) {
-                    var mapAttr = mapAtrrs[attrIdx];
+                for (var attrIdx = 0; attrIdx < mapAttrs.length; attrIdx++) {
+                    var mapAttr = mapAttrs[attrIdx];
                     mapAttr = new Entity("BP.Sys.SysMapAttr", mapAttr);
                     if (mapAttr.UIVisible == "0") {
                         html += "<input type='hidden' id='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' name='TB_" + pkval + "_" + mapAttr.KeyOfEn + "' value='" + dtl[mapAttr.KeyOfEn] + "' />";
@@ -245,7 +246,7 @@
                     pkval = dtl.NodeID;
                 if (pkval == dtl.WorkID)
                     pkval = dtl.WorkID;
-                for (var attrIdx = 0; attrIdx < mapAtrrs.length; attrIdx++) {
+                for (var attrIdx = 0; attrIdx < mapAttrs.length; attrIdx++) {
                     var mapAttr = mapAttrs[attrIdx];
                     if (mapAttr.LGType == "0" && mapAttr.MyDataType == "1" && mapAttr.UIContralType == "1") {
                         if ($("#TB_" + pkval + "_" + mapAttr.KeyOfEn + "Text").length == 1) {
@@ -375,7 +376,7 @@
 
                 checkedStr = "";
 
-                return "<label style='font-weight:50;' ><input  " + enableAttr + " value='" + defValue + "' " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + pkval + "_" + mapAttr.KeyOfEn + "'  name='CB_" + pkval + "_" + mapAttr.KeyOfEn + "' " + checkedStr + " />" + mapAttr.Name + "</label>";
+                return "<label style='font-weight:50;' ><input  " + enableAttr + " value='1' " + (defValue == 1 ? "checked='checked'" : "") + " type='checkbox' id='CB_" + pkval + "_" + mapAttr.KeyOfEn + "'  name='CB_" + pkval + "_" + mapAttr.KeyOfEn + "' " + checkedStr + " />" + mapAttr.Name + "</label>";
             }
 
             //枚举类型.
@@ -493,7 +494,7 @@
                 var fn;
                 try {
                     if (mapAttr.UIBindKey) {
-                        fn = eval(mapAttr.UIBindKey);
+                        fn = cceval(mapAttr.UIBindKey);
                     }
                 } catch (e) {
                 }
@@ -526,7 +527,7 @@
             dtl.OID = newRowIdx;
             dtl.RefPK = GetQueryString("RefVal");
 
-            var mapAtrrs = frmData.Sys_MapAttr;
+            var mapAttrs = frmData.Sys_MapAttr;
 
             var html = "";
             html += "<tr>";
@@ -535,8 +536,8 @@
 
             var hidden = "";
 
-            for (var attrIdx = 0; attrIdx < mapAtrrs.length; attrIdx++) {
-                var mapAttr = mapAtrrs[attrIdx];
+            for (var attrIdx = 0; attrIdx < mapAttrs.length; attrIdx++) {
+                var mapAttr = mapAttrs[attrIdx];
                 mapAttr = new Entity("BP.Sys.SysMapAttr", mapAttr);
                 if (mapAttr.UIVisible == "0") {
                     html += "<input type='hidden' id='TB_" + newRowIdx + "_" + mapAttr.KeyOfEn + "' name='TB_" + newRowIdx + "_" + mapAttr.KeyOfEn + "' value='" + dtl[mapAttr.KeyOfEn] + "' />";
@@ -567,7 +568,7 @@
                 return;
             }
             //   alert(data);
-            window.location.href = window.location.href;
+            Reload();
         }
 
         function Delete(pkval) {
@@ -583,7 +584,7 @@
             en.SetPKVal(pkval);
             en.Delete();
 
-            window.location.href = window.location.href;
+            Reload();
         }
 
         function CloseIt() {
@@ -616,12 +617,9 @@
             var url = "";
             if (data.indexOf('err@') == 0) {
                 alert(data);
+                return;
             }
-            //if (plant != 'CCFlow') {
-            //   var currentPath = window.document.location.href;
-            //   var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
             data = basePath + "/" + data;
-            //}
             window.open(data);
             return;
 
@@ -635,7 +633,7 @@
                 <!--  <input type='button' value='保存' id='Btn_Save' onclick='Save()' />-->
             </div>
         </div>
-        <form id="divCCForm" method="post">
+        <form id="divCCForm">
             <div id="mytable"> </div>
         </form>
         <div id="Msg"></div>

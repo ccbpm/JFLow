@@ -19,6 +19,10 @@
     <script src="../Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../Scripts/echartsjs/echarts.min.js" type="text/javascript"></script>
     <script src="Gener.js" type="text/javascript"></script>
+    <script src="Search.js" type="text/javascript"></script>
+    <script src="../Scripts/xss.js" type="text/javascript"></script>
+    <script src="../Scripts/layui/ext/xmSelect.js" type="text/javascript"></script>
+    <style id="theme-data"></style>
     <style type="text/css">
         .layui-table-view {
             margin-right: 10px;
@@ -41,7 +45,15 @@
             height: 28px !important;
             line-height: 28px !important;
         }
-
+        .input-icon {
+            position: absolute;
+            left: calc(100% - 40px);
+            top: 1px;
+            height: 28px !important;
+            line-height: 28px !important;
+            text-align: center;
+            color: #d2d2d2;
+        }
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -65,7 +77,8 @@
         }
     </style>
     <script type="text/javascript">
-        var searchFields = new Array(); //DDL的查询条件
+        //查询的文本字段
+        var fields = [];
         //定义公共个变量.
         var webUser = new WebUser();
 
@@ -73,6 +86,11 @@
         var OrderBy = this.GetQueryString("OrderBy");
         var OrderWay = this.GetQueryString("OrderWay");
         var NumKey = this.GetQueryString("NumKey");
+
+        //页面设置信息
+        var cfg = new Entity("BP.Sys.EnCfg");
+        cfg.No = ensName;
+        cfg.RetrieveFromDBSources();
 
         //当前用户页面信息.
         var ur = new Entity("BP.Sys.UserRegedit");
@@ -92,7 +110,24 @@
          */
         $(function () {
 
-            InitToolbar();  //初始化按钮
+            InitToolbar("group");  //初始化按钮
+            $('.toolbar').on('click', function () {
+                var id = this.id;
+                switch (id) {
+                    case "Search":
+                        SearchIt();
+                        //查询
+                        Group_Search();
+                        break;
+                    case "ToSearch":
+                        var url = GetHrefUrl().replace("Group.htm", "Search.htm");
+                        SetHref(url);
+                        break;
+                    default: break;
+
+                }
+            });
+
             //显示内容
             DealGroupContent();
             //分析项目
@@ -103,123 +138,6 @@
 
         });
 
-        /**
-         *
-         * 初始化工具栏操作
-         *
-         */
-        function InitToolbar() {
-
-            //创建处理器.
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-            handler.AddUrlData();  //增加参数.
-
-            //获得map基本信息.
-            mapBase = handler.DoMethodReturnJSON("Group_MapBaseInfo");
-
-            document.title = mapBase.EnDesc;
-
-            if (mapBase.IsView == "false") {
-                layer.alert("对不起，您没有查看的权限！");
-                return;
-            }
-
-            //获得查询信息，包含了查询数据表.
-            var data = handler.DoMethodReturnString("Group_SearchAttrs");
-            if (data.indexOf("err@") != -1) {
-                layer.alert(data);
-                console.log(data);
-                return;
-            }
-            data = JSON.parse(data);
-            //绑定外键枚举查询条件.
-            searchAttrs = data["Attrs"];
-
-            //当前用户页面信息.
-            var searchUr = new Entity("BP.Sys.UserRegedit");
-            searchUr.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
-            searchUr.RetrieveFromDBSources();
-            var json = AtParaToJson(searchUr.Vals);
-
-            var _html = "";
-            if (mapBase.IsShowSearchKey == "1") {
-                _html += '<div class="layui-inline">';
-                _html += '<label class="layui-form-label">关键字:</label>';
-                _html += '<div class="layui-input-inline">';
-                _html += '<input type="text" id="TB_Key" name="TB_Key" value="' + searchUr.SearchKey + '"  autocomplete="off" class="layui-input" />';
-                _html += '</div>';
-                _html += '</div>';
-            }
-
-            if (mapBase.DTSearchWay != "0") {
-                _html += '<div class="layui-inline">';
-                _html += '<label class="layui-form-label">' + mapBase.DTSearchLable + ':</label>';
-                var info = "data-info=\"yyyy-MM-dd\"";
-                if (mapBase.DTSearchWay != "1")
-                    info = "data-info=\"yyyy-MM-dd HH:mm\"";
-
-                _html += '<div class="layui-input-inline" style="width:145px">';
-                _html += '<input type="text" id="TB_DTFrom" name="TB_DTFrom" value="' + searchUr.DTFrom + '"' + info + '   class="layui-input" />';
-                _html += '</div>';
-                _html += '</div>';
-                _html += '<div class="layui-inline" ">';
-                _html += '<label class="layui-form-label" style="width:20px">到:</label>';
-                _html += '<div class="layui-input-inline" style="width:145px">';
-                _html += '<input type="text" id="TB_DTTo" name="TB_DTTo" value="' + searchUr.DTTo + '"' + info + ' class="layui-input" />';
-                _html += '</div>';
-                _html += '</div>';
-            }
-
-            for (var i = searchAttrs.length - 1; i >= 0; i--) {
-
-                var attr = searchAttrs[i];
-                _html += '<div class="layui-inline ">';
-                _html += '<label class="layui-form-label">' + attr.Name + ':</label>';
-                _html += '<div class="layui-input-inline" style="width:145px">';
-                _html += '<select name="CXDDL_' + attr.Field + '" ID="DDL_' + attr.Field + '">' + InitDDLOperation(data, attr, "all") + '</select>';
-
-                _html += '</div>';
-                _html += '</div>';
-                searchFields.push({ type: "select", id: "DDL_" + attr.Field });
-            }
-
-            //增加操作按钮
-            _html += '<div class="layui-inline">';
-            _html += '<div class="layui-input-inline">';
-            _html += '<input type="button" class="layui-btn" id="searchBtn" onclick="Search()"  style="margin-left: 15px" value="分析"/>';
-
-            _html += '<input type="button" class="layui-btn layui-btn-primary" id="searchBtn" onclick="ToSearch()"  style="margin-left: 15px" value="查询"/>';
-
-            // _html += '<input type="button" class="layui-btn layui-btn-primary" onclick="Exp()" value="导出"/>';
-
-            _html += '</div>';
-            $("#toolBar").html(_html);
-
-            //绑定外键枚举查询条件.
-            var attrs = data["Attrs"];
-
-
-
-
-
-            //为查询外键赋值.
-            for (var i = 0; i < attrs.length; i++) {
-                var attr = attrs[i];
-                var selectVal = json[attr.Field];
-
-                if (selectVal == undefined || selectVal == "")
-                    selectVal = "all";
-
-                $("#DDL_" + attr.Field).val(selectVal);
-            }
-
-        }
-
-        //到查询页面.
-        function ToSearch() {
-            var url = "Search.htm?EnsName=" + GetQueryString("EnsName");
-            window.location.href = url;
-        }
 
         /**
          *
@@ -322,7 +240,7 @@
 
                 _html += '</div>'
                 $("#Content").html(_html);
-                
+
                 return false;
             }
             if (groupCount.length > 1) {
@@ -369,24 +287,7 @@
             ur.CfgKy = ensName;
             ur.Save();
 
-            var searchUr = new Entity("BP.Sys.UserRegedit");
-            searchUr.MyPK = webUser.No + "_" + ensName + "_SearchAttrs";
-            searchUr.RetrieveFromDBSources();
-
-
-            //增加时间条件的查询
-            if ($("#TB_DTFrom").length > 0) {
-                searchUr.DTFrom = $("#TB_DTFrom").val();
-                searchUr.DTTo = $("#TB_DTTo").val();
-            }
-            //增加下拉框的查询条件
-            var vals = "";
-            $.each(searchFields, function () {
-                var id = this.id.replace("DDL_", "");
-                vals += "@" + id + "=" + $("#" + this.id).val();
-            });
-            searchUr.Vals = vals;
-            searchUr.Update();
+            SearchIt();
 
             Group_Search();
         }
@@ -523,7 +424,7 @@
                             url += "&" + o.KeyOfEn + "=" + data[o.KeyOfEn];
                     });
 
-                    return "<a href=\"javascript:WinOpen('" + url + "', 'wincommgroup',900,900);\"  class='btn btn-default btn - sm easyui- linkbutton'>详细</a>"
+                    return "<a href=\"javascript:WinOpen('" + url + "', 'wincommgroup',900,900);\"  class='btn btn-default btn - sm easyui- linkbutton'>查看</a>"
                 }
             });
 
@@ -798,7 +699,7 @@
             myChart.setOption(option);
         }
 
-        function Search() {
+        function SearchIt() {
             //保存查询条件.
             var ensName = GetQueryString("EnsName");
             var ur = new Entity("BP.Sys.UserRegedit");
@@ -810,6 +711,23 @@
             else
                 ur.SearchKey = "";
 
+            //增加字段查询
+            var val = "";
+            for (var i = 0; i < fields.length; i++) {
+                var field = fields[i];
+                var strs = $("input[name='TB_" + field + "']");
+                if (strs.length == 1) {
+                    ur.SetPara(field, $("#TB_" + field).val());
+                } else {
+                    if ($("#TB_" + field + "_0").val() == "" && $("#TB_" + field + "_1").val() == "")
+                        ur.SetPara(field, "");
+                    else
+                        ur.SetPara(field, $("#TB_" + field + "_0").val() + "," + $("#TB_" + field + "_1").val());
+                }
+
+
+            }
+
             //设置查询时间.
             if ($("#TB_DTFrom").length == 1)
                 ur.DTFrom = $("#TB_DTFrom").val();
@@ -819,11 +737,13 @@
 
             //获得外键的查询条件,存储里面去.
             var str = "";
-            $("select[name^='CXDDL_']").each(function () {
-                var id = $(this).attr("id");
-                id = id.replace("DDL_", "");
-                str += "@" + id + "=" + $(this).val();
+            $.each(dllKey, function (i, key) {
+                str += "@" + key + "=" + $("#DDL_" + key).val();
             });
+
+            $.each(treeKey, function (i, key) {
+                str += "@" + key + "=" + $("#Tree_" + key).val();
+            })
 
             ur.FK_Emp = webUser.No;
             ur.CfgKey = "SearchAttrs";
@@ -831,8 +751,7 @@
             ur.FK_MapData = ensName;
             ur.SetPara("RecCount", count);
             ur.Save();
-            //查询
-            Group_Search();
+
 
         }
 
@@ -853,7 +772,6 @@
                 return;
             }
 
-            //data = GetLocalWFPreHref() + data;
 
             window.open(data);
             return;
@@ -876,8 +794,8 @@
 <body>
     <div class="layui-body layui-tab-content site-demo site-demo-body" style="left:0px !important">
         <form class="layui-form">
-            <div id="toolBar" class="layui-header layui-card" style="height:auto;padding:10px"></div>
-            <div class="layui-col-md2">
+            <div id="toolbar" class="layui-header layui-card" style="height:auto;padding:10px"></div>
+            <div class="layui-col-md3">
                 <div class="layui-card">
                     <div class="layui-card-header">分组条件</div>
                     <div id="CheckBoxList">
@@ -914,7 +832,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-col-md10">
+            <div class="layui-col-md9">
                 <div class="layui-card" id="Content" style="margin-left:20px;height:550px">
 
                 </div>
@@ -925,7 +843,7 @@
     </div>
 
     <script>
-        layui.use(['layedit', 'table', 'element','laydate'], function () {
+        layui.use(['layedit', 'table', 'element', 'laydate'], function () {
             var table = layui.table;
             var form = layui.form;
             form.on('checkbox(switch)', function (data) {
@@ -941,7 +859,7 @@
                     , format: $("#TB_DTTo").attr("data-info")
                 });
             }
-            
+
         });
     </script>
     <script type="text/javascript">
@@ -976,6 +894,21 @@
             }
             return operations;
         }
+    </script>
+    <script>
+        $(function () {
+            var theme = filterXSS(localStorage.getItem("themeColorInfo"));
+            if (theme == null || theme == undefined || theme == "")
+                return;
+            var data = JSON.parse(theme);
+            var html = "\n .layui-btn{\n background-color:" + data.selectedMenu + ";\n}\n .layui-laypage .layui-laypage-curr .layui-laypage-em{\n background-color:" + data.selectedMenu + ";\n}";
+            html += "\n .layui-laypage input:focus,.layui-laypage select:focus{\n border-color:" + data.selectedMenu + " !important\n}";
+            html += "\n .layui-form-select dl dd.layui-this{\n background-color:" + data.selectedMenu + " !important;\n}";
+            html += "\n .layui-tab-title .layui-this{\n background-color:" + data.selectedMenu + " !important;\n} \n .layui-tab-title>.layui-this{\n color:#fff;\n} \n .layui-tab-title li {border: 1px solid " + data.selectedMenu + ";}";
+            html += "\n .layui-a-this{\n background-color:" + data.selectedMenu + ";\n color: #fff;\n}";
+            var styleScope = document.getElementById("theme-data");
+            styleScope.innerHTML = filterXSS(html);
+        })
     </script>
 </body>
 </html>

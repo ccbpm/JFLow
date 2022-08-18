@@ -8,7 +8,7 @@ function MenuConvertTools(data) {
 MenuConvertTools.prototype.getSystemMenus = function () {
 
     var endtM = this.data;
-
+    console.log(GetQueryString("EnName"))
     var mypk = new WebUser().No + "_Funcs_HS_" + GetQueryString("EnName");
     var userRegedit = new Entity("BP.Sys.UserRegedit");
     userRegedit.SetPKVal(mypk);
@@ -24,8 +24,10 @@ MenuConvertTools.prototype.getSystemMenus = function () {
     GroupName.push(Gl);
     for (var i = 0; i < endtM.length; i++) {
         var en = endtM[i];
-        if (en.GroupName == null) 
+        
+        if (en.GroupName == null || en.GroupName == "") 
             continue;
+        
         if (GroupNames.indexOf(en.GroupName) == -1) {
             j++;
             GroupNames[j] = en.GroupName;
@@ -34,7 +36,7 @@ MenuConvertTools.prototype.getSystemMenus = function () {
             GroupName.push(Gl);
         }
     }
-
+   
 
     //生成菜单.
     var adminMenuNodes = [];
@@ -66,9 +68,12 @@ MenuConvertTools.prototype.getSystemMenus = function () {
 
             var moduleEn = endtM[idx];
             
+            if (moduleEn.RefAttrKey != null && moduleEn.RefAttrKey !="")
+                continue;
+            console.log(moduleEn)
             if (moduleEn.GroupName == null || moduleEn.GroupName == "")
                 moduleEn.GroupName = "基本信息";
-            if (moduleEn.GroupName !== systemNode.Name)
+            if (moduleEn.GroupName != systemNode.Name)
                 continue; //如果不是本系统的.
             moduleEn.children = [];
            /* var myName = moduleEn.GroupName;
@@ -90,6 +95,7 @@ MenuConvertTools.prototype.getSystemMenus = function () {
                 moduleEn.Icon = "icon-drop";
             }
             systemNode.children.push(moduleEn);
+            //console.log(systemNode.children);
         }
         //console.log(systemNode);
         adminMenuNodes.push(systemNode)

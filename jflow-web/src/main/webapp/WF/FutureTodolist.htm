@@ -32,7 +32,6 @@
     <script src="./Scripts/config.js" type="text/javascript"></script>
     <script src="./Comm/Gener.js" type="text/javascript"></script>
     <script src="Scripts/layui/layui/lay/modules/layer.js"  type="text/javascript"></script>
-    <script src="AppClassic/comm.js" type="text/javascript"></script>
     <script type="text/javascript">
         function GroupBarClick(groupName) {
 
@@ -103,14 +102,12 @@
             handler.AddUrlData();
             var data = handler.DoMethodReturnString("FutureTodolist_Init");
 
-
-
             if (data.indexOf('err@') == 0) {
                 alert(data);
                 return;
             }
 
-            data = eval('(' + data + ')');
+            data = cceval('(' + data + ')');
 
             //设置表头.
             var groupBy = GetQueryString("GroupBy");

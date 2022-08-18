@@ -58,7 +58,8 @@ function CCFrom_GenerBillsByBillNo(billNo) {
 function CCFrom_FrmPower(frmID) {
     var handler = new HttpHandler("BP.CCBill.WF_CCBill_API");
     handler.AddPara("FrmID", frmID);
-    var data = handler.DoMethodReturnJSON("CCFrom_FrmPower");
+    handler.AddPara("IsReadonly", GetQueryString("IsReadonly"));
+    var data = handler.DoMethodReturnJSON("CCFrom_ToolBar_Init");
     return data;
 }
 
@@ -66,10 +67,10 @@ function CCFrom_FrmPower(frmID) {
 /**
  * 获得表单的Url.
  * @param {表单ID} frmID
- * @param {主键} pkval
+ * @param {主键} oid
  */
-function CCFrom_FrmOptionUrlByOID(frmID, pkval) {
-    return "../WF/CCBill/MyBill.htm?FrmID=" + frmID + "&OID=" + pkval;
+function CCFrom_FrmOptionUrlByOID(frmID, oid) {
+    return "../WF/CCBill/MyBill.htm?FrmID=" + frmID + "&OID=" + oid;
 }
 
 /**
@@ -125,7 +126,6 @@ function CCForm_SaveAsDraftByOID(frmID, oid) {
     var handler = new HttpHandler("BP.CCBill.WF_CCBill");
     handler.AddPara("FrmID", frmID);
     handler.AddPara("OID", oid);
-
 }
 
 /**

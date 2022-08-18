@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>驰骋工作流程管理系统</title>
     <link href="../Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
-    <link href="../Scripts/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <link href="../Comm/fonts/font-awesome.css" rel="stylesheet">
     <link href="../Style/skin/css/style.css" rel="stylesheet" type="text/css" />
     <link href="../Style/skin/css/animate.css" rel="stylesheet" type="text/css" />
 </head>
@@ -52,12 +52,11 @@
                                     <button type="button" class="btn btn-success" id="btn_Startup" onclick="Save()">保存修改</button>
 
                                     <a href="Author.htm">设置委托</a>
+
+                                    <a href="javascript:ClearCash()">清除缓存</a>
+
                                 </div>
                             </div>
- 
-
-
-
                         </div>
                     </td>
 
@@ -117,6 +116,16 @@
         //页面启动函数.
         $(function () {
 
+            var webUser = new WebUser();
+
+            if (webUser.CCBPMRunModel == 2)
+            {
+                SetHref( "../../App/Setting/Default.htm");
+                return;
+            }
+
+
+
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Setting");
             var data = handler.DoMethodReturnString("Default_Init");
             if (data.indexOf('err@') == 0) {
@@ -147,6 +156,13 @@
             $("#Author").html(data.Author);
             return;
         });
+
+        function ClearCash()
+        {
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Setting");
+            var data = handler.DoMethodReturnString("Default_ClearCash");
+            alert(data);
+        }
         function Save() {
             var UserName = $("#UserName").val();
             var Tel = $("#Tel").val();

@@ -44,7 +44,9 @@
         if ($.isArray(opts.data) && opts.data.length > 0) {
             datas = opts.data;
         } else if ($.trim(opts.sql) != "") {
-            datas = executeSql(opts.sql, opts.valueField, opts.textField, values);
+
+            datas = exeSrc(opts.sql, opts.valueField, opts.textField, values);
+
         } else if ($.trim(opts.url) != "") {
             datas = requestUrl(opts.url, valueField, textField, text);
         }
@@ -114,39 +116,39 @@
         return datas;
     }
 
-    function executeSql(sql, valueField, textField, key) {
+    function exeSrc(sql, valueField, textField, key) {
         var datas = [];
-        var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCFrom");
-        if (sql && $.trim(key) != "") {
-            key = key.replace("'", "");
-            var _sql = sql.replace(/@Key/g, key).replace(/~/g, "'");
-            handler.AddPara("SQL", _sql);
-            var dt = handler.DoMethodReturnString("RunSQL_Init");
-            if ($.isArray(dt)) {
-                $.each(dt, function (i, o) {
-                    var option = {};
-                    option[valueField] = o[valueField];
-                    option[textField] = o[textField];
-                    datas.push(option);
-                });
-            }
-            /*
-            if (values) {
-            var machesData = [];
-            $.each(values.split(","), function (i, o) {
-            $.each(datas, function (index, object) {
-            if (o == object[valueField]) {
-            var option = {};
-            option[valueField] = object[valueField];
-            option[textField] = object[textField];
-            machesData.push(option);
-            }
-            });
-            });
-            datas = machesData;
-            }
-            */
-        }
+        //var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCFrom");
+        //if (sql && $.trim(key) != "") {
+        //    key = key.replace("'", "");
+        //    var _sql = sql.replace(/@Key/g, key).replace(/~/g, "'");
+        //    handler.AddPara("SQL", _sql);
+        //    var dt = handler.DoMethodReturnString("RunSQL_Init");
+        //    if ($.isArray(dt)) {
+        //        $.each(dt, function (i, o) {
+        //            var option = {};
+        //            option[valueField] = o[valueField];
+        //            option[textField] = o[textField];
+        //            datas.push(option);
+        //        });
+        //    }
+        //    /*
+        //    if (values) {
+        //    var machesData = [];
+        //    $.each(values.split(","), function (i, o) {
+        //    $.each(datas, function (index, object) {
+        //    if (o == object[valueField]) {
+        //    var option = {};
+        //    option[valueField] = object[valueField];
+        //    option[textField] = object[textField];
+        //    machesData.push(option);
+        //    }
+        //    });
+        //    });
+        //    datas = machesData;
+        //    }
+        //    */
+        //}
         return datas;
     }
 
@@ -403,7 +405,7 @@
             opts.width = p.width();
         }
         var header = t.find('.main-container');
-        t._outerWidth(opts.width);
+        //t._outerWidth(opts.width);
         resize(target);
         $(window).bind("resize", function () {
             resize(target);
@@ -455,7 +457,7 @@
 
     $.fn.mselector.parseOptions = function (target) {
         var t = $(target);
-        return $.extend({}, $.parser.parseOptions(target, ["width", "data", {
+        return $.extend({}, parseOptions(target, ["width", "data", {
             "fit": "boolean",
             "valueField": "string",
             "textField": "string",
@@ -481,3 +483,45 @@
     };
 
 })(jQuery);
+function parseOptions(target, properties) {
+    var t = $(target);
+    var options = {};
+
+    var s = $.trim(t.attr('data-options'));
+    if (s) {
+        if (s.substring(0, 1) != '{') {
+            s = '{ ' + s + ' } ';
+        }
+        options = (new Function('return ' + s))();
+    }
+    $.map(['width', 'height', 'left', 'top', 'minWidth', 'maxWidth', 'minHeight', 'maxHeight'], function (p) {
+        var pv = $.trim(target.style[p] || '');
+        if (pv) {
+            if (pv.indexOf('%') == -1) {
+                pv = parseInt(pv) || undefined;
+            }
+            options[p] = pv;
+        }
+    });
+
+    if (properties) {
+        var opts = {};
+        for (var i = 0; i < properties.length; i++) {
+            var pp = properties[i];
+            if (typeof pp == 'string') {
+                opts[pp] = t.attr(pp);
+            } else {
+                for (var name in pp) {
+                    var type = pp[name];
+                    if (type == 'boolean') {
+                        opts[name] = t.attr(name) ? (t.attr(name) == 'true') : undefined;
+                    } else if (type == 'number') {
+                        opts[name] = t.attr(name) == '0' ? 0 : parseFloat(t.attr(name)) || undefined;
+                    }
+                }
+            }
+        }
+        $.extend(options, opts);
+    }
+    return options;
+}

@@ -203,6 +203,7 @@ function cleanAll(KeyOfEn, frmType) {
             SetCtrlUnMustInput(FKMapAttrs[i]);
             CleanCtrlVal(FKMapAttrs[i]);
         }
+        layui.form.render();
     }
 
 
@@ -244,6 +245,7 @@ function setEnable(FK_MapData, KeyOfEn, selectVal, frmType) {
             NDMapAttrs.push(key);
 
         }
+        layui.form.render();
     }
     //@Title=3@OID=2@RDT=1@FID=3@CDT=2@Rec=1@Emps=3@FK_Dept=2@FK_NY=3
     if (cfgs) {
@@ -425,7 +427,11 @@ function SetCtrlMustInput(key) {
         }
            
     }
-    $("#Lab_" + key).before("<span style='color: red' class='mustInput' data-keyofen='"+key+"'>*</span>");
+    if ($("#Lab_" + key).length == 0)
+        $("#Span_" + key).append("<font color=red>*</font>");
+    else
+        $("#Lab_" + key).before("<span style='color: red' class='mustInput' data-keyofen='" + key + "'>*</span>");
+    
 }
 
 //设置可不必填?
@@ -643,7 +649,6 @@ function SetCtrlVal(key, value) {
 
     ctrl = $("input[name='CB_" + key + "']");
     if (ctrl.length == 1) {
-        ctrl.val(value);
         if (parseInt(value) <= 0)
             ctrl.attr('checked', false);
         else {
@@ -664,16 +669,24 @@ function SetCtrlVal(key, value) {
         }
         return;
     }
-
-    ctrl = $('input:radio[name=RB_' + key + ']');
+    ctrl = document.getElementsByName("RB_" + key);
     if (ctrl.length > 0) {
-        var checkVal = $('input:radio[name=RB_' + key + ']:checked').val();
-        if (checkVal != null && checkVal != undefined)
-            document.getElementById("RB_" + key + "_" + checkVal).checked = false;
-        if ($("#RB_" + key + "_" + value).length == 1)
-            document.getElementById("RB_" + key + "_" + value).checked = true;
-        return;
+        for (var i = 0; i < ctrl.length; i++) {
+            if (value == ctrl[i].value) {
+                $(ctrl[i]).next().click();
+            }
+
+        }
     }
+    //ctrl = $('input:radio[name=RB_' + key + ']');
+    //if (ctrl.length > 0) {
+    //    var checkVal = $('input:radio[name=RB_' + key + ']:checked').val();
+    //    if (checkVal != null && checkVal != undefined)
+    //        document.getElementById("RB_" + key + "_" + checkVal).checked = false;
+    //    if ($("#RB_" + key + "_" + value).length == 1)
+    //        document.getElementById("RB_" + key + "_" + value).checked = true;
+    //    return;
+    //}
 }
 
 //清空值?

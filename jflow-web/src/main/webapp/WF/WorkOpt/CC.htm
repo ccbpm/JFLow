@@ -7,7 +7,7 @@
     2，需要 FK_Flow, FK_Node,WorkID, FID.
     3, 调用方法 CC.htm?FK_Flow=001&FK_Node=103&WorkID=232&FID=23
     -->
-    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    
     <link href="../Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/components-rounded.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/font-awesome.css" rel="stylesheet" />
@@ -88,9 +88,9 @@
             // 如果您要把该页面转入其他页面，请按照如下方式处理.
             var webuser = new WebUser();
             if (webuser.CustomerNo == "GXJSZX") {
-                var url = window.location.href;
+                var url = GetHrefUrl();
                 url = url.replace('CC.htm?', '../../App/gxjtoaPicker/userOrgPicker.html?IsCC=1&');
-                window.location.href = url;
+                SetHref(url);
                 return;
             }
 
@@ -174,7 +174,7 @@
             cc.MyPK = mypk;
             cc.SetPKVal(mypk);
             cc.Delete();
-            window.location.href = window.location.href;
+            Reload();
             return;
         }
 
@@ -193,7 +193,7 @@
             handler.AddPara("FK_Node", GetQueryString("FK_Node"));
             var data = handler.DoMethodReturnString("CC_Send");
 
-            window.location.href = window.location.href;
+            Reload();
 
             $(".foot").hide();
         }

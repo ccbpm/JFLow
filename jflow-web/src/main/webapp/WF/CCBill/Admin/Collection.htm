@@ -59,6 +59,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .item-op {
             width: 10%;
             display: flex;
@@ -109,9 +110,9 @@
         //转到菜单
         function ToMenu() {
             var moduleNo = GetQueryString("ModuleNo");
-            var module = new Entity("BP.GPM.Menu2020.Module", moduleNo);
-            var url = "../GPM/Menus.htm?SystemNo=" + module.SystemNo;
-            window.top.vm.openTab(name, url);
+            var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
+            var url = "../../GPM/Menus.htm?SystemNo=" + module.SystemNo;
+            OpenTopWindowTab(name, url);
         }
 
         //转到菜单
@@ -123,7 +124,7 @@
             OpenLayuiDialog(url, '', 9000, 0, null, false);
 
             //   OpenDialogAndCloseRefresh(url,"",9000,900,)
-            //  window.top.vm.openTab(name, url);
+            //  OpenTopWindowTab(name, url);
         }
 
         function GoToFrmD() {
@@ -137,19 +138,19 @@
             if (frmID == undefined)
                 frmID = GetQueryString("FrmID");
 
-            //  var module = new Entity("BP.GPM.Menu2020.Module", moduleNo);
-            var url = "../Admin/CCFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frmID + "&FrmID=" + frmID;
+            //  var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
+            var url = basePath + "/WF/Admin/FoolFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frmID + "&FrmID=" + frmID;
 
-            window.top.vm.openTab(frmID, url);
+            OpenTopWindowTab(frmID, url);
         }
         //到达集合组件.
         function GoToMethodD() {
             var moduleNo = GetQueryString("ModuleNo");
-            var module = new Entity("BP.GPM.Menu2020.Module", moduleNo);
-            var url = "../CCBill/Admin/Method.htm?SystemNo=" + module.SystemNo;
+            var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
+            var url = basePath + "/WF/CCBill/Admin/Method.htm?SystemNo=" + module.SystemNo;
             url += "&ModuleNo=" + moduleNo;
             url += "&FrmID=" + GetQueryString("FrmID");
-            window.top.vm.openTab(name, url);
+            OpenTopWindowTab(name, url);
         }
 
         function NewMethod() {
@@ -175,14 +176,24 @@
         <div class="row fixed">
             <div class="item item-name">序</div>
             <div class="item item-other">名称</div>
-            <div class="item item-other">类型</div>
-            <div class="item item-docs">内容</div>
-            <div class="item item-other">启用？</div>
-            <div class="item item-op">权限</div>
             <div class="item item-other">
+                类型&nbsp;&nbsp;
+                <div class="item item-content">
+                    <a href="https://www.bilibili.com/video/BV15P4y1p7Sj" target="_blank" class="icon-camrecorder"><font color="blue">&nbsp;集合组件</font></a>
+                </div>
+
+            </div>
+            <div class="item item-docs">
+                <div style="margin-right: 6px"> 内容</div>
                 <div class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs" onclick="NewMethod()">
                     <i class="icon-plus" style="margin-right: 6px"></i>+新建组件
                 </div>
+
+            </div>
+            <div class="item item-other">启用？</div>
+            <div class="item item-op">权限</div>
+            <div class="item item-other">
+
             </div>
         </div>
 
@@ -195,13 +206,9 @@
                          style="text-align: left" :data-no="en.No" :data-name="en.Name">
                         <span><i :class="en.Icon" style="margin-right: 8px"> </i> {{en.Name}}</span>
                     </div>
-
                     <!--<div class="item item-other ">{{en.Name}} </div>
-
     <span><i :class="method.Icon" style="margin-right: 8px"> </i> {{method.Name}}</span>-->
-
-
-                    <div class="item item-other" v-html="en.MethodModel"></div>              
+                    <div class="item item-other" v-html="en.MethodModel"></div>
                     <div class="item item-docs" v-html="en.Docs"></div>
                     <div class="item item-other">
                         <form class="layui-form" action="">
@@ -215,10 +222,12 @@
                         </form>
                     </div>
                     <div class="item item-op" v-html="en.enCtrlWayText"></div>
-                    <div class="item item-other" @click.stop="DeleteIt(en.No)">
+                    <div v-if="en.IsDelete==true" class="item item-other" @click.stop="DeleteIt(en.No)">
                         <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs c-btn">
                             <i class="layui-icon layui-icon-delete layui-font-12"></i> 删除
                         </button>
+                    </div>
+                    <div v-if="en.IsDelete==false" class="item item-other" >
                     </div>
                 </div>
 
@@ -226,6 +235,30 @@
         </div>
     </div>
 
+    <!--<hr />-->
+    <!--<fieldset>
+        <legend>其他设置 </legend>
+        <div id="Btns">
+            <ul>
+                <li> <a href="javascript:SearchCond()">查询条件定义 </a></li>
+                <li>  <a href="javascript:SearchCond()">多表头定义 </a></li>
+                <li> <a href="javascript:SearchCond()">设置显示的列 </a></li>
+                <li> <a href="javascript:SearchCond()">表单事件 </a></li>
+                <li> <a href="javascript:SearchCond()">数据查询权限 </a></li>
+                <li> <a href="javascript:SearchCond()">数据查询权限 </a></li>
+                <li> <a href="javascript:SearchCond()">颜色设置 </a></li>
+                <li> <a href="javascript:SearchCond()">字段求和求平均设置 </a></li>
+            </ul>
+        </div>
+    </fieldset>-->
+
+
     <script src="Collection.js"></script>
+
+    <script type="text/javascript">
+        function SearchCond() {
+            //xxx..x
+        }
+    </script>
 </body>
 </html>

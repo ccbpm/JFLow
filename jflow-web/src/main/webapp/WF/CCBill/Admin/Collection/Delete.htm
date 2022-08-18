@@ -34,7 +34,7 @@
                 return;
             }
 
-            debugger;
+           // debugger;
             var en = new Entity("BP.CCBill.Template.Collection");
             en.FrmID = GetQueryString("FrmID");
             en.MethodID = pageID;
@@ -47,7 +47,7 @@
             en.Insert();
 
             var url = "../../../Comm/En.htm?EnName=BP.CCBill.Template.Collection&No=" + en.No;
-            window.location.href = url;
+            SetHref(url);
         }
 
     </script>

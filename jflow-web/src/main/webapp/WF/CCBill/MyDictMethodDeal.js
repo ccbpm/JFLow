@@ -6,10 +6,7 @@
 */
 function DoMethond(methodID) {
 
-    debugger;
-
     //不同的方法类型执行不同的操作.
-    //var en = new Entity("BP.CCBill.Template.Method", methodID);
     var en = GetMethoh(methodID);
 
     if (en.RefMethodType == MethodModel.Link) {
@@ -96,7 +93,7 @@ function DoGenerMethond(en) {
 
             //afterOper=1 关闭提示窗口刷新页面
             if (afterOper == 1)
-                window.location.href = window.location.href;
+                Reload();
 
             //afterOper=2 关闭提示窗口跳转到Search.htm
             if (afterOper == 2) {
@@ -104,7 +101,7 @@ function DoGenerMethond(en) {
                     window.close();
                 }
                 else
-                    window.location.href = "./SearchDict.htm?FrmID=" + GetQueryString("FrmID");
+                    SetHref("./SearchDict.htm?FrmID=" + GetQueryString("FrmID"));
             }
         });
         return;
@@ -126,7 +123,7 @@ function DoGenerMethond(en) {
         //afterOper=0 关闭提示窗口，不做任何操作
         //afterOper=1 关闭提示窗口刷新页面
         if (afterOper == 1)
-            window.location.href = window.location.href;
+            Reload();
 
         //afterOper=2 关闭提示窗口跳转到Search.htm
         if (afterOper == 2) {
@@ -136,7 +133,7 @@ function DoGenerMethond(en) {
                 return;
             }
 
-            window.location.href = "./SearchDict.htm?FrmID=" + GetQueryString("FrmID");
+            SetHref("./SearchDict.htm?FrmID=" + GetQueryString("FrmID"));
         }
     });
 }

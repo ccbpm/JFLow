@@ -48,10 +48,11 @@
             en.Tag1 = $("#TB_Url").val();
             en.Icon = "icon-drop";
             en.WorkWhere = 1; //在集合里使用.
+            en.IsEnable = 1;
             en.Insert();
 
             var url = "../../../Comm/En.htm?EnName=BP.CCBill.Template.MethodLink&No=" + en.No;
-            window.location.href = url;
+            SetHref(url);
         }
 
         function GenerPinYin() {
@@ -66,7 +67,7 @@
             if (name == "")
                 return;
 
-            var handler = new HttpHandler("BP.Cloud.HttpHandler.Admin_CCFormDesigner");
+            var handler = new HttpHandler("BP.WF.HttpHandler.Admin_CCFormDesigner");
             handler.AddPara("IsQuanPin", isQuanPin);
             handler.AddPara("TB_Name", encodeURIComponent(name));
             var data = handler.DoMethodReturnString("NewFrmGuide_GenerPinYin");
@@ -104,7 +105,7 @@
         <ul>
             <li> 用于解决不能实现的对实体的操作个性化较强的功能。 </li>
             <li> 比如：您输入的url为:  http://ccbpm.cn/MyUrl.htm </li>
-            <li> 系统将解析为: http://ccbpm.cn/MyUrl.htm?WorkID=xxxx&FrmID=xxxx&UserNo=xxxx&SID=xxxx </li>
+            <li> 系统将解析为: http://ccbpm.cn/MyUrl.htm?WorkID=xxxx&FrmID=xxxx&UserNo=xxxx&Token=xxxx </li>
             <li> 该链接显示在查询工具栏上。 </li>
         </ul>
         <legend> 帮助</legend>

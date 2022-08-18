@@ -119,31 +119,31 @@
         //转到菜单
         function ToMenu() {
             var moduleNo = GetQueryString("ModuleNo");
-            var module = new Entity("BP.GPM.Menu2020.Module", moduleNo);
-            var url = "../GPM/Menus.htm?SystemNo=" + module.SystemNo;
-            window.top.vm.openTab(name, url);
+            var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
+            var url = basePath + "/WF/GPM/Menus.htm?SystemNo=" + module.SystemNo;
+            OpenTopWindowTab(name, url);
         }
 
         //转到菜单
         function ToDictAttr() {
 
             var frmID = GetQueryString("FrmID");
-            var url = "../../Comm/En.htm?EnName=BP.CCBill.FrmDict&No=" + frmID;
+            var url = basePath + "/WF/Comm/En.htm?EnName=BP.CCBill.FrmDict&No=" + frmID;
 
             OpenLayuiDialog(url, '', 9000, 0, null, false);
 
             //   OpenDialogAndCloseRefresh(url,"",9000,900,)
-            //  window.top.vm.openTab(name, url);
+            //  OpenTopWindowTab(name, url);
         }
 
         //到达集合组件.
         function ToCollectionAttr() {
             var moduleNo = GetQueryString("ModuleNo");
-            var module = new Entity("BP.GPM.Menu2020.Module", moduleNo);
-            var url = "../CCBill/Admin/Collection.htm?SystemNo=" + module.SystemNo;
+            var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
+            var url = basePath + "/WF/CCBill/Admin/Collection.htm?SystemNo=" + module.SystemNo;
             url += "&ModuleNo=" + moduleNo;
             url += "&FrmID=" + GetQueryString("FrmID");
-            window.top.vm.openTab(name, url);
+            OpenTopWindowTab(name, url);
         }
 
         function GoToFrmD() {
@@ -157,10 +157,10 @@
             if (frmID == undefined)
                 frmID = GetQueryString("FrmID");
 
-            //  var module = new Entity("BP.GPM.Menu2020.Module", moduleNo);
-            var url = "../Admin/CCFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frmID + "&FrmID=" + frmID;
+            //  var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
+            var url = basePath + "/WF/Admin/FoolFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frmID + "&FrmID=" + frmID;
 
-            window.top.vm.openTab(frmID, url);
+            OpenTopWindowTab(frmID, url);
         }
     </script>
 </head>
@@ -197,7 +197,14 @@
             </div>
             <div class="item item-name"><i class="icon-app"></i> 组件(方法)名</div>
             <div class="item item-other">方法模式</div>
-            <div class="item item-docs">内容</div>
+            <div class="item item-docs">
+                内容 &nbsp;&nbsp;    <!--<a href="javascript:alert('请在栏目上点右键');">+新建组件</a>-->
+
+                <div class="item item-content">
+                    <a href="https://www.bilibili.com/video/BV12P4y1p74h/" target="_blank" class="icon-camrecorder"><font color="blue">&nbsp;实体组件</font></a>
+                </div>
+
+            </div>
             <div class="item item-other">启用？</div>
             <div class="item item-other">列表显示？</div>
             <div class="item item-op">权限</div>

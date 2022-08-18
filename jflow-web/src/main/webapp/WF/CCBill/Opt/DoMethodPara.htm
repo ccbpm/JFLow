@@ -15,6 +15,8 @@
     <script src="../../Comm/JScript.js" type="text/javascript"></script>
     <script src="DoMethodPara.js" type="text/javascript"></script>
     <script src="../../Scripts/layui/layui/layui.js" type="text/javascript"></script>
+    <script src="../../Comm/JS/Calendar/WdatePicker.js"></script>
+    <link href="../../Comm/JS/Calendar/skin/WdatePicker.css" rel="stylesheet" />
     <style type="text/css">
         .layui-row {
             margin-bottom: 4px;
@@ -75,9 +77,9 @@
                             layer.alert('系统错误:' + data);
                             return;
                         }
-                       
+
                         break;
-                    case 1: 
+                    case 1:
                         Skip.addJs('../../../DataUser/JSLibData/Method/' + mypk + '.js');
                         data = ExecScript(methodFunc)
                         break;
@@ -99,26 +101,26 @@
                         parent.layer.close(index); //再执行关闭
 
                         layer.close(index);
-                    });    
-                  
+                    });
+
                     return;
                 }
                 layer.alert(data);
                 //关闭提示窗口并刷新.
                 if (methodFunc.WhatAreYouTodo == 1) {
                     //$("#Msg").html(data);
-                    window.location.href = window.location.href;
+                    Reload();
                     return;
                 }
                 //转入到Search.htm页面上去.
                 if (methodFunc.WhatAreYouTodo == 2) {
-                    window.location.href = "SearchDict.htm?FrmID=" + GetQueryString("FrmID");
+                    SetHref("SearchDict.htm?FrmID=" + GetQueryString("FrmID"));
                     return;
                 }
             })
 
 
-            
+
         }
 
         //执行的SCRIPT.
@@ -160,8 +162,8 @@
 
             //执行这个 script.
             try {
-                var data = eval(func.MethodID + "(" + paras + ")");
-                debugger
+                var data = cceval(func.MethodID + "(" + paras + ")");
+               // debugger
                 if (data == undefined || data == "")
                     data = "执行成功";
                 layer.alert(data);

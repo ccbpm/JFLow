@@ -41,8 +41,6 @@ new Vue({
             // todo 需要重新实现接口
 
             var frmID = GetQueryString("No");
-
-            // debugger;
             // 方法排序..
             var handler = new HttpHandler("BP.CCBill.WF_CCBill_Admin_MethodDoc");
             handler.AddPara("FrmID", frmID);
@@ -94,7 +92,7 @@ new Vue({
         // 是否启用
         changemapAttrEnableStatus(mapAttr, ctrl) {
             // 当前启用状态
-            //var en = new Entity("BP.CCBill.Template.mapAttr", mapAttr.No);
+            //var en = new Entity("BP.CCBill.Template.Frm.MapAttr", mapAttr.No);
             //if (en.IsEnable == 0)
             //    en.IsEnable = 1; // mapAttr.IsEnable;
             //else
@@ -224,14 +222,14 @@ function AttrFrm(enName, title, pkVal) {
 
 
 function DesignerFlow(no, name) {
-    var sid = GetQueryString("SID");
+    var sid = GetQueryString("Token");
     var webUser = new WebUser();
-    var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-    window.top.vm.openTab(name, url);
+    var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
+    OpenTopWindowTab(name, url);
 }
 
 function addTab(no, name, url) {
-    window.top.vm.openTab(name, url);
+    OpenTopWindowTab(name, url);
 }
 
 
@@ -266,7 +264,7 @@ function Edit(mypk, ftype, gf, fk_mapdtl) {
     }
 
     /*OpenLayuiDialog(url, "eudlgframe", title, 800, 500, "icon-edit", true, null, null, null, function () {
-        window.location.href = window.location.href;
+        Reload();
     });*/
 
     OpenLayuiDialog(url, title, 730, 80, "auto");
@@ -279,7 +277,7 @@ function EditEnum(fk_mapdata, mypk, keyOfEn) {
     var url = '../../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrEnum&PKVal=' + mypk + '&s=' + Math.random();
 
     /*OpenLayuiDialog(url, "eudlgframe", '枚举' + keyOfEn + '属性', 730, 500, "icon-property", true, null, null, null, function () {
-        window.location.href = window.location.href;
+        Reload();
     });*/
     OpenLayuiDialog(url, '外键字段:' + keyOfEn + '属性', 730, 80, "auto");
 }
@@ -289,7 +287,7 @@ function EditTableSQL(mypk, keyOfEn) {
     var url = '../../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFSQL&PKVal=' + mypk + '&s=' + Math.random();
 
     /* OpenLayuiDialog(url, "eudlgframe", '外键SQL字段:' + keyOfEn + '属性', 730, 500, "icon-property", true, null, null, null, function () {
-         window.location.href = window.location.href;
+         Reload();
      });*/
     OpenLayuiDialog(url, '外键字段:' + keyOfEn + '属性', 730, 80, "auto");
 }
@@ -299,7 +297,7 @@ function EditTable(fk_mapData, mypk, keyOfEn) {
     var url = '../../../Comm/En.htm?EnName=BP.Sys.FrmUI.MapAttrSFTable&PKVal=' + mypk + '&s=' + Math.random();
 
     /* OpenLayuiDialog(url, "eudlgframe", '外键字段:' + keyOfEn + '属性', 730, 500, "icon-property", true, null, null, null, function () {
-         window.location.href = window.location.href;
+         Reload();
      });*/
     OpenLayuiDialog(url, '外键字段:' + keyOfEn + '属性', 730, 80, "auto");
 }
@@ -307,7 +305,7 @@ function EditTable(fk_mapData, mypk, keyOfEn) {
 function NewPara() {
     var url = "../../../Admin/FoolFormDesigner/FieldTypeList.htm?DoType=AddF&FK_MapData=" + GetQueryString("No");
     /* OpenLayuiDialog(url, "eudlgframe", "新建参数", 800, 500, "icon-edit", true, null, null, null, function () {
-         window.location.href = window.location.href;
+         Reload();
      });*/
     OpenLayuiDialog(url, '新建参数', 900, 80, "auto", true);
 }
@@ -318,9 +316,9 @@ function Delete(no) {
     var en = new Entity("BP.Sys.MapAttr");
     en.No = no;
     en.Delete();
-    window.location.href = window.location.href;
+    Reload();
 }
 function TomapAttrDoc() {
-    window.location.href = "Default.htm?No=" + GetQueryString("No");
+    SetHref("Default.htm?No=" + GetQueryString("No"));
 }
  

@@ -37,12 +37,13 @@ new Vue({
                 data = data.replace('&HttpHandlerName=BP.WF.HttpHandler.WF_MyCC', '');
                 data = data.replace('?&', '?');
                 //如果返回url，就直接转向.
-                window.location.href = "../../" + data;
+                SetHref("../../" + data);
                 return;
             }
         },
         //查询
         StartFlow: function (No, Name) {
+
             var frmIDOfDict = GetQueryString("FrmID");
             var workIDOfDict = GetQueryString("WorkID");
 
@@ -55,17 +56,17 @@ new Vue({
             }
 
             var url = "FlowCenter.htm?WorkID=" + workIDOfDict + "&FrmID=" + frmIDOfDict + "&MenuNo=" + No + "&FlowNo=" + Name;
-            window.location.href = url;
+            SetHref(url);
             return;
         }
     },
     mounted: function () {
+
         // fix firefox bug
         document.body.ondrop = function (event) {
             event.preventDefault();
             event.stopPropagation();
         }
-        //debugger;
         //获得数据源.
         var handler = new HttpHandler("BP.CCBill.WF_CCBill_OptOneFlow");
         handler.AddUrlData();
@@ -119,7 +120,7 @@ new Vue({
 })
 
 function addTab(no, name, url) {
-    window.top.vm.openTab(name, url);
+    OpenTopWindowTab(name, url);
 }
 
 /**
@@ -140,7 +141,7 @@ function StartFlow(flowNo) {
     }
 
     var url = "FlowCenter.htm?WorkID=" + workIDOfDict + "&FrmID=" + frmIDOfDict + "&MenuNo=" + method.No + "&FlowNo=" + flowNo;
-    window.location.href = url;
+    SetHref(url);
     return;
 
 
@@ -150,7 +151,7 @@ function StartFlow(flowNo) {
     //    var en = new Entity("BP.CCBill.Template.MethodFlowNewEntity", menuNo);
     //    var workID = en.DoMethodReturnString("CreateWorkID");
     //    var url = "../../MyFlowGener.htm?FK_Flow=" + en.FlowNo + "&FrmID=" + en.FrmID + "&WorkID=" + workID + "&FK_Node=" + en.FlowNo + "01";
-    //    window.location.href = url;
+    //    SetHref(url);
     //    return;
     //}
 
@@ -159,7 +160,7 @@ function StartFlow(flowNo) {
     //    var en = new Entity("BP.CCBill.Template.MethodFlowNewEntity", menuNo);
     //    var workID = en.DoMethodReturnString("CreateWorkID");
     //    var url = "../../MyFlowGener.htm?FK_Flow=" + en.FlowNo + "&FrmID=" + en.FrmID + "&WorkID=" + workID + "&FK_Node=" + en.FlowNo + "01";
-    //    window.location.href = url;
+    //    SetHref(url);
     //    return;
     //}
 

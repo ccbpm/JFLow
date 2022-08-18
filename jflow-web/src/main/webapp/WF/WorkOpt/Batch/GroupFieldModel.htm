@@ -36,7 +36,7 @@
                 return;
             }
 
-            data = eval('(' + data + ')');
+            data = cceval('(' + data + ')');
 
             var works = data.Works; //数据.
             var mapAttrs = data.Sys_MapAttr; //要显示的字段.
@@ -56,10 +56,11 @@
             thead += "<th>标题</th>";
             thead += "<th>发起人</th>";
             thead += "<th>接收日期</th>";
-            var files = node.GetPara("BatchFields");
+            var files = node.GetPara("BatchFields") || "";
+            var editFiles = node.GetPara("EditFields") || "";
             for (var i = 0; i < mapAttrs.length; i++) {
                 var attr = mapAttrs[i];
-                if (files == undefined)
+                if (files == "")
                     continue;
                 if (files.indexOf(attr.KeyOfEn) == -1)
                     continue;
@@ -104,7 +105,10 @@
                         continue;
                     if (mapAttr.Name == "审核意见")
                         continue;
-                    tbody += "<td>" + wk[mapAttr.KeyOfEn] + "</td>";
+                    if (editFiles.indexOf(mapAttr.KeyOfEn) < 0)
+                        tbody += "<td>" + wk[mapAttr.KeyOfEn] + "</td>";
+                    else
+                        tbody += "<td><input type='text' id='TB_" + wk.WorkID + "_" + mapAttr.KeyOfEn + "' name='TB_" + wk.WorkID + "_" + mapAttr.KeyOfEn + "' value='" + wk[mapAttr.KeyOfEn] + "'></td>";
                 }
 
                 // 启用审核组件并且可编辑 ，如果是：每个记录后面都有一个意见框.的模式.
@@ -121,17 +125,22 @@
             //处理按钮权限
             var bar = "";
             var btns = data.Sys_BtnLab[0];
-            bar += '<button type=button onclick="Send()" >' + btns.SendLab + '</button>';
+            bar += '<button type=button id=Btn_Send onclick="Send()" >' + btns.SendLab + '</button>';
 
             if (btns.ReturnRole != 0) {
-                bar += '<button type=button onclick="Btn_Return()" >' + btns.ReturnLab + '</button>';
+                bar += '&nbsp;&nbsp;<button type=button onclick="Btn_Return()" id=Btn_Return >' + btns.ReturnLab + '</button>';
             }
 
             if (btns.DelEnable != 0) {
-                bar += '<button type=button onclick="Btn_Delete()">' + btns.DelLab + '</button>';
+                bar += '&nbsp;&nbsp;<button type=button onclick="Btn_Delete()" id=Btn_Delete >' + btns.DelLab + '</button>';
             }
 
-            bar += '<button type=button   onclick="Btn_Back()">返回</button>';
+            if (btns.EndFlowEnable != 0) {
+                bar += '&nbsp;&nbsp;<button type=button onclick="Btn_EndFlow()" id=EndFlowEnable >' + btns.EndFlowLab + '</button>';
+            }
+
+
+            bar += '&nbsp;&nbsp;<button type=button   onclick="Btn_Back()" >返回</button>';
 
             $("#btnDiv").append(bar);
         }
@@ -139,7 +148,7 @@
         function To(url) {
             WinOpen(url);
             return;
-            window.location.href = url;
+            SetHref(url);
             return;
         }
 
@@ -156,7 +165,9 @@
         }
 
         function Send() {
-            var BatchCheckNoteModel = node.GetPara("BatchCheckNoteModel")
+
+            var BatchCheckNoteModel = node.GetPara("BatchCheckNoteModel");
+
             //如果是 每条记录单独的意见，就提示一下。
             if (BatchCheckNoteModel == "1") {
                 if (window.confirm('确定要执行吗？') == false)
@@ -164,11 +175,12 @@
             }
 
             $("#Btn_Send").val("正在执行请稍候...");
+
             //判断审核组件的状态，如果启用了. 并且审核意见填写模式为一个 统一 的意见.
             var sta = node.FWCSta;
             var checkNote = ""; //审核意见.
             if (sta == 1 && BatchCheckNoteModel == "0") {
-                var checkNote = window.prompt('请输入审核意见', "同意");
+                var checkNote = promptGener('请输入审核意见', "同意");
                 if (checkNote == null || checkNote == '' || checkNote == undefined)
                     return;
             }
@@ -193,9 +205,10 @@
                 $("#Table2").html("");
                 $("#btnDiv").html("");
 
-                window.location.href = window.location.href;
+                Reload();
 
             });
+
             $("#batchModal").modal("hidden");
 
         }
@@ -235,18 +248,19 @@
             data = data.replace(/@/g, '<br/>@');
             $("#msgContent").html(data);
             $('#batchModal').on('hidden.bs.modal', function () {
-                window.location.href = window.location.href;
+                Reload();
 
             });
             $("#batchModal").modal("hidden");
         }
 
         function Btn_Back() {
+
             var type = GetQueryString("Type");
             if (type == 0)
-                window.location.href = "Batch.htm";
+                SetHref("Batch.htm");
             if (type == 1)
-                window.location.href = "Batch.htm?FK_Node=" + GetQueryString("FK_Node");
+                SetHref("Batch.htm?FK_Node=" + GetQueryString("FK_Node"));
         }
 
         function InitMapAttr(mapAttr) {
@@ -475,7 +489,7 @@
                 var fn;
                 try {
                     if (mapAttr.UIBindKey) {
-                        fn = eval(mapAttr.UIBindKey);
+                        fn = cceval(mapAttr.UIBindKey);
                     }
                 } catch (e) {
                 }

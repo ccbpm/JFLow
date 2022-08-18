@@ -16,7 +16,7 @@ function InitPage() {
     if (data == "[]")
         return;
 
-    data = eval('(' + data + ')');
+    data = cceval('(' + data + ')');
 
     //日志列表.
     var tracks = data["Track"];
@@ -74,7 +74,7 @@ function InitPage() {
             continue;
         }
         var at = track.ActionType;
-        if (at == ActionType.ForwardFL)
+        if (at == ActionType.ForwardFL && track.NDFrom!=parseInt(GetQueryString("FK_Flow"))+"01")
             continue;
         //增加一个子线程的节点
         if (isHaveThread == true) {
@@ -112,8 +112,6 @@ function InitPage() {
         //内容.
         var doc = "";
         doc += img + track.NDFromT + " - " + track.ActionTypeText;
-
-
 
         if (at == ActionType.Return) {
             doc += "<p><span>退回到:</span><font color=green>" + track.NDToT + "</font><span>退回给:</span><font color=green>" + track.EmpToT + "</font></p>";
@@ -359,6 +357,9 @@ function OpenSubFlowTable(obj,workid,fk_node) {
     //显示一个table,包含启动的子流程名称和启动的子流程实例
     var _html = "";
     var gwfs = new Entities("BP.WF.GenerWorkFlows");
+    if (workid == null || workid == undefined)
+        workid = 0;
+
     gwfs.Retrieve("PWorkID", workid, "PNodeID", fk_node);
     nodeSubFlows.forEach(function (subFlow) {
         _html += subFlow.SubFlowName + "<br>";
@@ -515,11 +516,11 @@ var ActionType = {
     /// <summary>
     /// 挂起
     /// </summary>
-    HungUp: 15,
+    Hungup: 15,
     /// <summary>
     /// 取消挂起
     /// </summary>
-    UnHungUp: 16,
+    UnHungup: 16,
     /// <summary>
     /// 强制移交
     /// </summary>
@@ -609,10 +610,10 @@ function ActionTypeStr(at) {
             return "../../Img/Action/RebackOverFlow.png";
         case ActionType.FlowOverByCoercion:
             return "../../Img/Action/FlowOverByCoercion.png";
-        case ActionType.HungUp:
-            return "../../Img/Action/HungUp.png";
-        case ActionType.UnHungUp:
-            return "../../Img/Action/UnHungUp.png";
+        case ActionType.Hungup:
+            return "../../Img/Action/Hungup.png";
+        case ActionType.UnHungup:
+            return "../../Img/Action/UnHungup.png";
         case ActionType.ShiftByCoercion:
             return "../../Img/Action/ShiftByCoercion.png";
         case ActionType.Press:

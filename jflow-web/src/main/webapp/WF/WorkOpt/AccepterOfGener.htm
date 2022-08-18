@@ -7,7 +7,7 @@
     2，需要 FK_Flow, FK_Node,WorkID, FID.
     3, 调用方法 ReturnWork.htm?FK_Flow=001&FK_Node=103&WorkID=232&FID=23
     -->
-    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    
     <link href="../Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/components-rounded.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/font-awesome.css" rel="stylesheet" />
@@ -129,7 +129,7 @@
                 + '<button type="button" class="close" style="color:#000;opacity:1;" data-dismiss="modal" aria-hidden="true">&times;</button>'
                 + '<h4 class="modal-title">接受人</h4>'
                 + '</div>'
-                + '<div class="modal-body" style="border-radius: 0px; width:100%;">'
+                + '<div class="modal-body" style="border-radius: 0px; ">'
                 + '<iframe style="width:100%;border:0px;height:400px;" id="iframeSelectEmpsForm" name="iframeSelectEmpsForm"></iframe>'
                 + '</div>'
                 + '</div><!-- /.modal-content -->'
@@ -139,16 +139,8 @@
             $('body').append($(selectEmpModalHtml));
 
             //获得部门编号.
-            var dept = getQueryStringByNameFromUrl("?" + $.cookie('CCS'), "FK_Dept");
-
-            if (dept == null || dept == '' || dept == undefined) {
-                var u = new WebUser();
-                dept = u.FK_Dept;
-            }
-
-            if (dept == undefined) {
-                dept = "0";
-            }
+            var u = new WebUser();
+            var dept = u.FK_Dept;
 
             var IsSelectMore = isSigleSelect == false ? 1 : 0;
             var url = "SelectEmps.htm?FK_Dept=" + dept + "&FK_Node=" + GetQueryString("FK_Node") + "&IsSelectMore=" + IsSelectMore + "&s=" + Math.random();
@@ -228,23 +220,23 @@
         }
 
         function Ref() {
-            window.location.href = window.location.href;
+            Reload();
         }
 
         function Up(mypk) {
             var en = new Entity("BP.WF.Template.SelectAccper", mypk);
             en.DoMethodReturnString("DoUp");
-            window.location.href = window.location.href;
+            Reload();
         }
         function Down(mypk) {
             var en = new Entity("BP.WF.Template.SelectAccper", mypk);
             en.DoMethodReturnString("DoDown");
-            window.location.href = window.location.href;
+            Reload();
         }
         function DeleteIt(mypk) {
             var en = new Entity("BP.WF.Template.SelectAccper", mypk);
             en.Delete();
-            window.location.href = window.location.href;
+            Reload();
             return;
         }
 
@@ -266,7 +258,7 @@
 
             if (data.indexOf('err@') == 0) {
                 alert(data);
-                window.location.href = window.location.href;
+                Reload();
                 return;
             }
 
@@ -429,7 +421,7 @@
                 if (window.parent != null && window.parent.returnWorkWindowClose != null) {
                     window.parent.close();
                     if (window.parent.parent != null && window.parent.parent != undefined
-                        && pareUrl.indexOf("test") == -1 && pareUrl.indexOf("Test") == -1)
+                        && pareUrl.indexOf("test") != -1 && pareUrl.indexOf("Test") != -1)
                         window.parent.parent.close();
                     window.parent.returnWorkWindowClose();
                 }
@@ -602,6 +594,25 @@
     </div>
     <div class="techMsg" style="text-align: left;padding-left:25px; display:none;">
     </div>
+
+
+
+    <table class="table table-striped" id="Table1" style="width:98%;padding:5px; margin:10px;">
+        <!-- <caption>下一步接受人员列表</caption>-->
+        <thead>
+            <tr id="title" class="Sum">
+                <td style="width:40px; font-weight:bolder">#</td>
+                <!--<th>编号 </th>-->
+                <td style="width:30%; font-weight:bolder">姓名</td>
+                <!--<td style="width:40%; font-weight:bolder">部门  &nbsp; - &nbsp;  <a href="javascript:Ref()">刷新</a></td>-->
+                <td style="width:40%; font-weight:bolder">部门</td>
+
+                <td style="width:60px; font-weight:bolder" colspan="3">操作</td>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
     <div style="margin-left:20px">
         <div style="float:left;margin-top:4px">
 
@@ -643,23 +654,6 @@
 
     </div>
 
-
-    <table class="table table-striped" id="Table1" style="width:98%;padding:5px; margin:10px;">
-        <!-- <caption>下一步接受人员列表</caption>-->
-        <thead>
-            <tr id="title" class="Sum">
-                <td style="width:40px; font-weight:bolder">#</td>
-                <!--<th>编号 </th>-->
-                <td style="width:30%; font-weight:bolder">姓名</td>
-                <!--<td style="width:40%; font-weight:bolder">部门  &nbsp; - &nbsp;  <a href="javascript:Ref()">刷新</a></td>-->
-                <td style="width:40%; font-weight:bolder">部门</td>
-
-                <td style="width:60px; font-weight:bolder" colspan="3">操作</td>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
     <br />
 
 

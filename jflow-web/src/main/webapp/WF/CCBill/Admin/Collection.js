@@ -37,9 +37,6 @@ new Vue({
                         var obj = $(this.elem)[0].dataset;
                         console.log(obj);
 
-                        //    var obj = $(this.elem)[0].dataset;
-                        //    debugger;
-
                         _this.topNodeOption(data.id, obj.no, obj.name, obj.idx);
                     }
                 }, {
@@ -50,8 +47,6 @@ new Vue({
 
                         var obj = $(this.elem)[0].dataset;
                         console.log(obj);
-                        //  debugger;
-
                         _this.topNodeOption(data.id, obj.no, obj.name, obj.idx);
                     }
                 }]
@@ -72,12 +67,6 @@ new Vue({
                     trigger: 'contextmenu',
                     data: childNodeMenuItems,
                     click: function (data, othis) {
-                        debugger;
-                        //_this.childNodeOption(data.id, $(this.elem)[0].dataset.No, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.pidx, $(this.elem)[0].dataset.idx)
-
-                        // var obj = $(this.elem)[0].dataset;
-                        // console.log(obj);
-
                         var obj = $(this.elem)[0].dataset;
                         console.log(obj);
 
@@ -90,8 +79,6 @@ new Vue({
                     trigger: 'click',
                     data: childNodeMenuItems,
                     click: function (data, othis) {
-
-                        debugger;
 
                         var obj = $(this.elem)[0].dataset;
                         var no = obj.No;
@@ -152,8 +139,6 @@ new Vue({
             // todo 需要重新实现接口
 
             var frmID = GetQueryString("No");
-
-            // debugger;
             // 方法排序..
             var handler = new HttpHandler("BP.CCBill.WF_CCBill_Admin");
             handler.AddPara("FrmID", frmID);
@@ -227,26 +212,30 @@ new Vue({
             event.stopPropagation();
         }
 
-        var frmID = GetQueryString("FrmID");
-        var ens = new Entities("BP.CCBill.Template.Collections");
-        ens.Retrieve("FrmID", frmID, "Idx");
+        var handler = new HttpHandler("BP.CCBill.WF_CCBill_Admin");
+        handler.AddPara("FrmID", GetQueryString("FrmID"));
+        var ds = handler.DoMethodReturnString("Collection_Init");
+        if (ds.indexOf("err@") != -1) {
+            layer.alert(data);
+            return;
+        }
 
-       // debugger;
-
-        ens = obj2arr(ens);
+        var ens = JSON.parse(ds);
         var btnStyle = "class='layui-btn layui-btn-primary layui-border-blue layui-btn-xs'";
         ens.forEach(function (en) {
 
-            if (en.Mark === "FlowNewEntity") {
+            if (en.Mark === "FlowNewEntity" || en.Mark === "FlowEntityBatchStart"  ) {
                 var doc = "<a " + btnStyle + "  href=\"javascript:DesignerFlow('" + en.FlowNo + "','" + en.Name + "');\" >设计流程</a>";
                 en.Docs = doc;
             }
             var url = "./PowerCenter.htm?CtrlObj=Menu&CtrlPKVal=" + en.No + "&CtrlGroup=Menu";
 
             en.enCtrlWayText = "<a " + btnStyle + "  href =\"javascript:OpenLayuiDialog('" + url + "','" + en.No + "','700',0,null,false);\" >权限</a>";
-            //   if (en.Mark==="")
-            //if (mapAttr.LGType == 2)
-            //     mapAttr.Name = "<a " + btnStyle + " href=\"javascript:EditTable('" + mapAttr.FK_MapData + "','" + mapAttr.MyPK + "','" + mapAttr.KeyOfEn + "');\" > " + mapAttr.Name + "</a>";
+            if (en.MethodID == "Delete" || en.MethodID == "New" || en.MethodID == "Search"
+                || en.MethodID == "Group" || en.MethodID == "ExpExcel" || en.MethodID == "ImpExcel")
+                en.IsDelete = false;
+            else
+                en.IsDelete = true;
         })
 
         this.mapAttrs = ens;
@@ -290,14 +279,14 @@ function AttrFrm(enName, title, pkVal) {
 
 
 function DesignerFlow(no, name) {
-    var sid = GetQueryString("SID");
+    var sid = GetQueryString("Token");
     var webUser = new WebUser();
-    var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-    window.top.vm.openTab(name, url);
+    var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
+    OpenTopWindowTab(name, url);
 }
 
 function addTab(no, name, url) {
-    window.top.vm.openTab(name, url);
+    OpenTopWindowTab(name, url);
 }
 
 

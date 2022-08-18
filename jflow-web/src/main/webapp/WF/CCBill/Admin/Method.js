@@ -37,9 +37,6 @@ new Vue({
                         var obj = $(this.elem)[0].dataset;
                         console.log(obj);
 
-                        //    var obj = $(this.elem)[0].dataset;
-                        //    debugger;
-
                         _this.topNodeOption(data.id, obj.no, obj.name, obj.idx);
                     }
                 }, {
@@ -50,7 +47,6 @@ new Vue({
 
                         var obj = $(this.elem)[0].dataset;
                         console.log(obj);
-                        //  debugger;
 
                         _this.topNodeOption(data.id, obj.no, obj.name, obj.idx);
                     }
@@ -72,8 +68,6 @@ new Vue({
                     trigger: 'contextmenu',
                     data: childNodeMenuItems,
                     click: function (data, othis) {
-                        debugger;
-
                         var obj = $(this.elem)[0].dataset;
                         console.log(obj);
 
@@ -85,9 +79,6 @@ new Vue({
                     trigger: 'click',
                     data: childNodeMenuItems,
                     click: function (data, othis) {
-
-                        debugger;
-
                         var obj = $(this.elem)[0].dataset;
                         var no = obj.No;
                         if (no == undefined)
@@ -165,7 +156,7 @@ new Vue({
         },
         flowAttr: function (no, name) {
             var url = "../Comm/En.htm?EnName=BP.WF.Template.FlowExt&No=" + no;
-            window.top.vm.openTab(name, url);
+            OpenTopWindowTab(name, url);
             //this.openLayer(url, name,900);
         },
 
@@ -177,7 +168,7 @@ new Vue({
             layer.msg(data);
             setTimeout(function () {
                 window.location.reload();
-            }, 2000);
+            }, 800);
         },
         DeleteMethon: function (no, pidx, idx) {
 
@@ -356,7 +347,7 @@ new Vue({
 
                 setTimeout(function () {
                     window.location.reload();
-                }, 2000);
+                }, 800);
             });
         },
         updateSort(rootNo, sortNos) {
@@ -377,8 +368,6 @@ new Vue({
                 alert("没有获得当前分组的ID");
                 return;
             }
-
-            // debugger;
             // 方法排序..
             var handler = new HttpHandler("BP.CCBill.WF_CCBill_Admin");
             handler.AddPara("GroupID", currentNodeId);
@@ -563,7 +552,7 @@ new Vue({
                 if (method.MethodModel == MethodModel.SingleDictGenerWorkFlows) {
                     method.MethodModel = "流程汇总";
                     if (method.Icon == "") method.Icon = "icon-layers";
-                    doc = "对该实体所有启动的流程进行列表汇总,固定的功能.";
+                    doc = "所有启动的流程进行列表汇总.";
                 }
 
                 //实体新建流程.
@@ -574,7 +563,7 @@ new Vue({
 
                 //实体其他业务流程.
                 if (method.MethodModel == MethodModel.FlowEtc) {
-                    method.MethodModel = "实体其他业务流程";
+                    method.MethodModel = "其他业务流程:" + method.FlowNo;
                     doc = "<a  " + btnStyle + " href=\"javascript:DesignerFlow('" + method.MethodID + "','" + method.Name + "');\" ><i class=icon-heart ></i>设计流程 </a> ";
                 }
 
@@ -637,14 +626,14 @@ function AttrFrm(enName, title, pkVal) {
 
 
 function DesignerFlow(no, name) {
-    var sid = GetQueryString("SID");
+    var sid = GetQueryString("Token");
     var webUser = new WebUser();
-    var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-    window.top.vm.openTab(name, url);
+    var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
+    OpenTopWindowTab(name, url);
 }
 
 function addTab(no, name, url) {
-    window.top.vm.openTab(name, url);
+    OpenTopWindowTab(name, url);
 }
 
 
@@ -655,7 +644,7 @@ function addTab(no, name, url) {
 
 //新建:分组.
 function NewGroup() {
-    var val = window.prompt("请输入分组名", "基本信息");
+    var val = promptGener("请输入分组名", "基本信息");
     if (!val)
         return null;
 
@@ -671,7 +660,7 @@ function NewGroup() {
 function EditGroupName(groupID) {
 
     var en = new Entity("BP.CCBill.Template.GroupMethod", groupID);
-    var val = window.prompt("请输入分组名", en.Name);
+    var val = promptGener("请输入分组名", en.Name);
     if (!val)
         return null;
 
@@ -695,7 +684,7 @@ function NewMethod(groupID) {
 function EditMethodName(methodID) {
 
     var en = new Entity("BP.CCBill.Template.Method", groupID);
-    var val = window.prompt("请输入方法名", en.Name);
+    var val = promptGener("请输入方法名", en.Name);
     if (!val)
         return null;
     en.Name = val;

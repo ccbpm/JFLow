@@ -11,14 +11,14 @@
         }
     },
     methods: {
-        expandMenus: function(status) {
+        expandMenus: function (status) {
             for (var i = 0; i < this.flowNodes.length; i++) {
                 this.flowNodes[i].open = status
             }
         },
-        bindMenu: function() {
+        bindMenu: function () {
             var _this = this
-            layui.use('dropdown', function() {
+            layui.use('dropdown', function () {
                 var dropdown = layui.dropdown
                 var topNodeItems = [
                     { title: '<i class=icon-plus></i> 新建流程', id: "NewFlow", Icon: "icon-plus" },
@@ -26,21 +26,22 @@
                     { title: '<i class=icon-folder></i> 新建目录', id: "NewSort", Icon: "icon-magnifier-add" },
                     { title: '<i class=icon-pencil></i> 修改名称', id: "EditSortName", Icon: "icon-magnifier-add" },
                     { title: '<i class=icon-share-alt ></i> 导入流程模版', id: "ImpFlowTemplate", Icon: "icon-plus" },
-                    //{ title: '新建下级目录', id: 5 },
+                   // { title: '<i class=icon-share-alt ></i> 批量导入流程模版', id: "BatchImpFlowTemplate", Icon: "icon-plus" },
+                    { title: '<i class=icon-share-alt ></i> 批量导出流程模版', id: "BatchExpFlowTemplate", Icon: "icon-plus" },
                     { title: '<i class=icon-close></i> 删除目录', id: "DeleteSort", Icon: "icon-close" }
                 ]
                 var tRenderOptions = [{
                     elem: '.item-top-dp',
                     trigger: 'contextmenu',
                     data: topNodeItems,
-                    click: function(data, oThis) {
+                    click: function (data, oThis) {
                         _this.topNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.idx)
                     }
                 }, {
                     elem: '.t-btn',
                     trigger: 'click',
                     data: topNodeItems,
-                    click: function(data, oThis) {
+                    click: function (data, oThis) {
                         _this.topNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.idx)
                     }
                 }]
@@ -52,22 +53,22 @@
                     { title: '<i class=icon-star></i> 流程属性', id: "Attr" },
                     { title: '<i class=icon-settings></i> 设计流程', id: "Designer" },
                     { title: '<i class=icon-plane></i> 测试容器', id: "Start" },
-                    { title: '<i class=icon-docs></i> 复制流程', id: "Copy"},
-                    { title: '<i class=icon-pencil></i> 修改名称', id: "EditFlowName"},
+                    { title: '<i class=icon-docs></i> 复制流程', id: "Copy" },
+                    { title: '<i class=icon-pencil></i> 修改名称', id: "EditFlowName" },
                     { title: '<i class=icon-close></i> 删除流程', id: "Delete" }
                 ]
                 var cRenderOptions = [{
                     elem: '.item-name-dp',
                     trigger: 'contextmenu',
                     data: childNodeMenuItems,
-                    click: function(data, othis) {
+                    click: function (data, othis) {
                         _this.childNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.pidx, $(this.elem)[0].dataset.idx)
                     }
                 }, {
                     elem: '.c-btn',
                     trigger: 'click',
                     data: childNodeMenuItems,
-                    click: function(data, othis) {
+                    click: function (data, othis) {
                         _this.childNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.pidx, $(this.elem)[0].dataset.idx)
                     }
                 }]
@@ -77,7 +78,7 @@
         },
 
         //如果w=0 则是100%的宽度.
-        openLayer: function(uri, name, w, h) {
+        openLayer: function (uri, name, w, h) {
             //console.log(uri, name);
 
             if (w == 0)
@@ -99,38 +100,51 @@
             })
         },
 
-        Designer: function(no, name) {
-            var sid = GetQueryString("SID");
+        Designer: function (no, name) {
+            var sid = GetQueryString("Token");
             var webUser = new WebUser();
-            var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-            window.top.vm.openTab(name, url);
+            var url = basePath + "/WF/Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
+            // OpenTopWindowTab(name, url);
+            var self = WinOpenFull(url, "xx");
+            var loop = setInterval(function () {
+                if (self.closed) {
+                   //管理员登录
+                    var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
+                    handler.AddPara("Token", GetQueryString("Token"));
+                    handler.AddPara("UserNo", GetQueryString("UserNo"));
+                    handler.DoMethodReturnString("Default_LetAdminerLogin");
+                    clearInterval(loop)
+                }
+            }, 1);
+
         },
-        EditSort: function(no, name) {
-            var url = "../Comm/EnOnly.htm?EnName=BP.WF.Template.FlowSort&No=" + no;
+        EditSort: function (no, name) {
+            var url = basePath + "/WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FlowSort&No=" + no;
             this.openLayer(url, "目录:" + name);
         },
-        testFlow: function(no, name) {
-            var url = "../Admin/TestingContainer/TestFlow2020.htm?FK_Flow=" + no;
-            window.top.vm.fullScreenOpen(url, name);
+        testFlow: function (no, name) {
+            var url = basePath + "/WF/Admin/TestingContainer/TestFlow2020.htm?FK_Flow=" + no;
+            //window.top.vm.fullScreenOpen(url, name);
+            OpenTopWindowTab(name, url);
             // this.openLayer(url, name);
         },
-        flowAttr: function(no, name) {
-            var url = "../Comm/En.htm?EnName=BP.WF.Template.FlowExt&No=" + no;
-            window.top.vm.openTab(name, url);
+        flowAttr: function (no, name) {
+            var url = basePath + "/WF/Comm/En.htm?EnName=BP.WF.Template.FlowExt&No=" + no;
+            OpenTopWindowTab(name, url);
             //this.openLayer(url, name,900);
         },
 
-        copyFlow: function(no) {
+        copyFlow: function (no) {
             if (window.confirm("确定要执行流程复制吗?") == false)
                 return;
             var flow = new Entity("BP.WF.Flow", no);
             var data = flow.DoMethodReturnString("DoCopy");
             layer.msg(data);
-            setTimeout(function() {
+            setTimeout(function () {
                 window.location.reload();
-            }, 2000);
+            }, 800);
         },
-        DeleteFlow: function(no, pidx, idx) {
+        DeleteFlow: function (no, pidx, idx) {
             var msg = "提示: 确定要删除该流程吗?";
             msg += "\t\n1.如果该流程下有实例，您不能删除。";
             msg += "\t\n2.该流程为子流程的时候，被引用也不能删除.";
@@ -156,7 +170,7 @@
             this.$set(this.flowNodes[pidx], 'children', leaveItems)
         },
 
-        childNodeOption: function(key, data, name, pidx, idx) {
+        childNodeOption: function (key, data, name, pidx, idx) {
 
             switch (key) {
                 case "Attr":
@@ -180,7 +194,7 @@
             }
         },
 
-        topNodeOption: function(key, data, name, idx) {
+        topNodeOption: function (key, data, name, idx) {
 
             switch (key) {
                 case "EditSort":
@@ -191,6 +205,12 @@
                     break;
                 case "ImpFlowTemplate":
                     this.ImpFlowTemplate(data);
+                    break;
+                case "BatchImpFlowTemplate":
+                    this.BatchImpFlowTemplate(data);
+                    break;
+                case "BatchExpFlowTemplate":
+                    this.BatchExpFlowTemplate(data,name);
                     break;
                 case "NewSort":
                     this.NewSort(data, true);
@@ -222,13 +242,13 @@
             layer.msg("修改成功.");
 
         },
-        NewFlow: function(data, name) {
+        NewFlow: function (data, name) {
 
-            ////  if (runModelType == 0)
-            //   url = "../CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + flowSort + "&s=" + Math.random();
-            //else
-            url = "../Admin/CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + data + "&From=Flows.htm&RunModel=1&s=" + Math.random();
-            addTab("NewFlow", "新建流程", url);
+            url = basePath + "/WF/Admin/CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + data + "&From=Flows.htm&RunModel=1&s=" + Math.random();
+            url += "&UserNo=" + GetQueryString("UserNo");
+            url += "&Token=" + GetQueryString("Token");
+            window.open(url);
+            //  addTab("NewFlow", "新建流程", url);
 
         },
         EditFlowName(id, name, pidx, idx) {
@@ -242,18 +262,42 @@
 
 
             this.flowNodes[pidx].children[idx].Name = val;
-                //Todo:wanglu , 修改名称.
-                // $("#" + id).val(val);
-                // var ctl = $("#" + id);
+            //Todo:wanglu , 修改名称.
+            // $("#" + id).val(val);
+            // var ctl = $("#" + id);
             layer.msg("修改成功.");
 
         },
-        ImpFlowTemplate: function(data) {
-            var fk_flow = data;
-            url = "./../Admin/AttrFlow/Imp.htm?FK_Flow=" + fk_flow + "&Lang=CH";
+        ImpFlowTemplate: function (data) {
+            var fk_flowSort = data;
+            url = basePath + "/WF/Admin/AttrFlow/Imp.htm?FK_FlowSort=" + fk_flowSort + "&Lang=CH";
             addTab("ImpFlowTemplate", "导入流程模版", url);
         },
-        DeleteSort: function(no) {
+        BatchImpFlowTemplate: function (data) {
+            var fk_flowSort = data;
+            url = basePath + "/WF/Admin/AttrFlow/Imp.htm?FK_FlowSort=" + fk_flowSort + "&Lang=CH";
+            addTab("ImpFlowTemplate", "导入流程模版", url);
+        },
+        BatchExpFlowTemplate: function (flowSortNo,flowSortName) {
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
+            handler.AddPara("FK_Sort", flowSortNo);
+            handler.AddPara("FlowSortName", flowSortName);
+            var data = handler.DoMethodReturnString("Flow_BatchExpFlowTemplate");
+            if (data.indexOf("err@") != -1) {
+                layer.alert(data);
+                return;
+            }
+            var url = data.replace("url@", "");
+            if (url.indexOf("resources") == -1) {
+                SetHref(basePath + "/" + url);
+                return;
+            }
+
+            //这个是针对Springboot jar包发布后的下载
+            SetHref(basePath + "/WF/Ath/DownloadByPath?filePath=" + encodeURIComponent(url));
+        },
+
+        DeleteSort: function (no) {
 
             if (window.confirm("确定要删除吗?") == false)
                 return;
@@ -266,12 +310,12 @@
             if (data.indexOf("err@") == 0)
                 return;
 
-            setTimeout(function() {
+            setTimeout(function () {
                 window.location.reload()
             }, 2000)
         },
 
-        NewSort: function(currentElem, sameLevel) {
+        NewSort: function (currentElem, sameLevel) {
 
             //只能创建同级.
             sameLevel = true;
@@ -280,7 +324,7 @@
             layer.prompt({
                 value: '',
                 title: '新建' + (sameLevel ? '同级' : '子级') + '流程类别',
-            }, function(value, index, elem) {
+            }, function (value, index, elem) {
                 layer.close(index);
                 var en = new Entity("BP.WF.Template.FlowSort", currentElem);
                 var data = "";
@@ -294,9 +338,9 @@
                 //this.EditSort(data, "编辑");
                 //return;
 
-                setTimeout(function() {
+                setTimeout(function () {
                     window.location.reload();
-                }, 2000);
+                }, 800);
             });
         },
         updateSort(rootNo, sortNos) {
@@ -309,30 +353,35 @@
         },
         updateFlow(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId) {
             // todo 需要重新实现接口
+            return;
 
-            return
             // 流程排序..
-            console.log(sortNo, flowNos);
+            //console.log(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId);
+            //  return;
+
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
-            handler.AddPara("SortNo", sortNo);
-            handler.AddPara("EnNos", flowNos);
+            handler.AddPara("SortNo", sortNo); //所在的组编号.
+            handler.AddPara("EnNos", flowNos); // 流程编号.
+
+            // alert("sortNo-" + sortNo + "   -SortNos" + flowNos);
+
             var data = handler.DoMethodReturnString("Flows_Move");
             layer.msg(data)
         },
-        initSortArea: function() {
+        initSortArea: function () {
             var _this = this
-            this.$nextTick(function() {
+            this.$nextTick(function () {
                 var sortContainer = this.$refs['sort-main']
                 new Sortable(sortContainer, {
                     animation: 150,
                     dataIdAttr: 'data-id',
                     ghostClass: 'blue-background-class',
-                    onStart: function( /**Event*/ evt) {
+                    onStart: function ( /**Event*/ evt) {
                         _this.loadingDialog = layer.msg('正在移动...', {
                             timeout: 900 * 1000
                         })
                     },
-                    onEnd: function(evt) {
+                    onEnd: function (evt) {
                         layer.close(_this.loadingDialog)
                         var arr = this.toArray();
                         // 一级菜单的排序，默认为1
@@ -350,12 +399,12 @@
                         animation: 150,
                         dataIdAttr: 'data-id',
                         ghostClass: 'blue-background-class',
-                        onStart: function( /**Event*/ evt) {
+                        onStart: function ( /**Event*/ evt) {
                             _this.loadingDialog = layer.msg('正在移动...', {
                                 timeout: 900 * 1000
                             })
                         },
-                        onEnd: function(evt) {
+                        onEnd: function (evt) {
 
                             /**
                              * 这里区分两种情况，一种是跨列移动，一种非跨列移动
@@ -369,18 +418,18 @@
                              * 假如非跨列，此时被移出的和移入的为同一个，使用前两个参数或者后两个参数都可以实现
                              */
                             layer.close(_this.loadingDialog)
-                            var pastNodeArrStr = Array.from(evt.from.querySelectorAll('div[data-id]')).map(function(item) {
+                            var pastNodeArrStr = Array.from(evt.from.querySelectorAll('div[data-id]')).map(function (item) {
                                 return item.dataset.id
                             }).join(',')
                             var pastNodeId = evt.from.dataset.pid
-                            var currentNodeArrStr = Array.from(evt.to.querySelectorAll('div[data-id]')).map(function(item) {
+                            var currentNodeArrStr = Array.from(evt.to.querySelectorAll('div[data-id]')).map(function (item) {
                                 return item.dataset.id
                             }).join(',')
                             var currentNodeId = evt.to.dataset.pid
-                                // 二级菜单的排序
+                            // 二级菜单的排序
                             _this.updateFlow(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId)
-                                // 二级菜单的排序
-                                // _this.updateFlow(evt.item.dataset.pid, arr.join(','));
+                            // 二级菜单的排序
+                            // _this.updateFlow(evt.item.dataset.pid, arr.join(','));
                         }
                     })
                 }
@@ -388,9 +437,9 @@
             })
         }
     },
-    mounted: function() {
+    mounted: function () {
         // fix firefox bug
-        document.body.ondrop = function(event) {
+        document.body.ondrop = function (event) {
             event.preventDefault();
             event.stopPropagation();
         }
@@ -399,7 +448,7 @@
         var fss = handler.DoMethodReturnJSON("Flows_InitSort");
 
         var nodes = fss;
-        nodes = nodes.filter(function(item) {
+        nodes = nodes.filter(function (item) {
             console.log(item)
             return item.Name !== '流程树';
         })
@@ -429,5 +478,5 @@
 })
 
 function addTab(no, name, url) {
-    window.top.vm.openTab(name, url);
+    OpenTopWindowTab(name, url);
 }

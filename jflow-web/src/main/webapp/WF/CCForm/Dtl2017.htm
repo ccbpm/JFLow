@@ -35,8 +35,8 @@
     <script src="../Comm/JS/TBHelpDiv.js" type="text/javascript"></script>
 
     <script src="../Comm/JS/Calendar/WdatePicker.js" type="text/javascript"></script>
-    <link href="../Comm/JS/Calendar/My97DatePicker.htm" rel="stylesheet" type="text/css" />
-
+    <!--<link href="../Comm/JS/Calendar/My97DatePicker.htm" rel="stylesheet" type="text/css" />-->
+    <script src="../Scripts/bootstrap/BootstrapUIDialog.js"></script>
     <link href="../Scripts/bootstrap/css/font-awesome.css" rel="stylesheet" type="text/css" />
 
     <script type="text/javascript" src="../Scripts/config.js"></script>
@@ -48,8 +48,9 @@
         th, td {
             white-space: normal;
         }
-        .pagination-detail{
-            color:black !important;
+
+        .pagination-detail {
+            color: black !important;
         }
     </style>
 
@@ -59,11 +60,12 @@
         var mapExts;  //mapExts扩展
         var isEditable;
         var ensName = GetQueryString("EnsName");
-        var frmType = GetQueryString("FrmType");
-        frmType = frmType == null || frmType == undefined ? "" : frmType;
         var isShowFull = GetQueryString("IsShowFull");
         isShowFull = isShowFull == null || isShowFull == undefined || isShowFull == "" ? "0 " : isShowFull;
-
+        var webUser = new WebUser();
+        var AthParams = {};
+        var athRefPKVal = 0;
+        AthParams.AthInfo = {};
         //页面数据
         var pageData = {
             DBDtl: [{ OID: 0, RowData: {} }],
@@ -128,7 +130,7 @@
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
             handler.AddJson(param);
             var data = handler.DoMethodReturnString(method);
-            if (data.indexOf("err@") != -1) {
+            if (data.indexOf("err@") != -1 && data.indexOf("err@不允许保存") == -1) {
                 alert('保存数据出错' + data);
                 return;
             }
@@ -252,7 +254,7 @@
                 linkUrl += '&FK_MapData=' + GetQueryString("FK_MapData");
 
             if (sys_MapDtl.LinkTarget == "_self") {
-                window.location.href = linkUrl;
+                SetHref(linkUrl);
                 return;
             }
 
@@ -284,13 +286,27 @@
                 url = "Ath.htm?IsBTitle=1&PKVal=" + dtlOID + "&Ath=AthMDtl&FK_MapData=" + GetQueryString("EnsName") + "&FK_FrmAttachment=" + dtlName + "_AthMDtl&WorkID=" + workID + "&FK_Node=" + fk_node + "&FK_Flow=" + fk_flow + "&FFK_MapData=" + FFK_MapData + "&IsReadonly=" + IsReadonly;
                 WinOpen(url);
             } else {
-                parent.OpenBootStrapModalByContent(url, "AthTable_Init('" + dtlName + "_AthMDtl','Div_" + dtlName + "_AthMDtl'," + dtlOID + ")", 'Div_' + dtlName + '_AthMDtl', "从表多附件", 800, 500, "icon-property", null, null, null, function () {
-                    //关闭窗口事件
-                    var rowCurrentIndex = parseInt($($(index).parent().parent().children()[0]).text()) - 1;
-                    content.$("#Ath_" + rowCurrentIndex).html(AthNum);
-                    content.$("#TB_AthNum_" + rowCurrentIndex).val(AthNum);
+                if (typeof parent.OpenBootStrapModalByContent != "undefined")
+                    parent.OpenBootStrapModalByContent(url, "AthTable_Init('" + dtlName + "_AthMDtl','Div_" + dtlName + "_AthMDtl'," + dtlOID + ")", 'Div_' + dtlName + '_AthMDtl', "从表多附件", 800, 500, "icon-property", null, null, null, function () {
+                        //关闭窗口事件
+                        AthNum = $("#athModel_" + dtlName + "_AthMDtl").find("a").length;
+                        var rowCurrentIndex = parseInt($($(index).parent().parent().children()[0]).text()) - 1;
+                        content.$("#Ath_" + rowCurrentIndex).html(AthNum);
+                        content.$("#TB_AthNum_" + rowCurrentIndex).val(AthNum);
 
-                });
+                    });
+                if (typeof parent.OpenOtherLayuiDialog != "undefined") {
+                    var W = parent.window.innerWidth / 2;
+                    parent.OpenOtherLayuiDialog("AthTable_Init('" + dtlName + "_AthMDtl','Div_" + dtlName + "_AthMDtl'," + dtlOID + ")", "从表多附件", W, 70, 'Div_' + dtlName + '_AthMDtl', false, false, false, null, function () {
+                        //关闭窗口事件
+                        AthNum = $("#athModel_" + dtlName + "_AthMDtl").find("a").length;
+                        var rowCurrentIndex = parseInt($($(index).parent().parent().children()[0]).text()) - 1;
+                        $("#Ath_" + rowCurrentIndex).html(AthNum);
+                        $("#TB_AthNum_" + rowCurrentIndex).val(AthNum);
+
+                    }, null, "black", true);
+
+                }
                 //, function () {
                 //   //获取DtlAthIFrame的numOfAths值
                 //   AthNum = parent.document.getElementById("DtlAthIFrame").contentWindow.numOfAths;
@@ -302,6 +318,27 @@
                 }
             }
 
+        }
+
+        function OpenVerAndMark() {
+            var url = "./FrmDBVerAndRemark.htm?FrmID=" + sys_MapDtl.FK_MapData + "&RFrmID=" + sys_MapDtl.FK_MapData + "&Field=" + sys_MapDtl.No + "&FieldType=1" + "&RefPKVal=" + GetQueryString("RefPKVal") + "&IsReadonly=" + GetQueryString("IsReadonly");
+            if (typeof parent.OpenLayuiDialog != "undefined") {
+                var W = parent.window.innerWidth / 2;
+                parent.OpenLayuiDialog(url,"审阅&版本",W,"100","r");
+                return;
+            }
+            if (typeof parent.OpenBootStrapModal != "undefined") {
+                var W = parent.window.innerWidth / 2;
+                var H = parent.window.innerHeight-240;
+                parent.OpenBootStrapModal(url,"VerRemark","审阅&版本", W, H);
+                return;
+            }
+            if (typeof OpenBootStrapModal != "undefined") {
+                var W = parent.window.innerWidth / 2;
+                var H = parent.window.innerHeight - 240;
+                OpenBootStrapModal(url, "VerRemark", "审阅&版本", W, H);
+                return;
+            }
         }
 
         //插入行.
@@ -331,6 +368,8 @@
             if (statisticsFlag && newRowIndex > 0) {	// 统计行不计
                 newRowIndex--;
             }
+
+
 
             var threadTh = getUseHeadTh();
             $.each(threadTh, function (k, threadThObj) {
@@ -371,7 +410,11 @@
                                 $(obj.target).parent().parent().data().data[$(obj.target).data().KeyOfEn] =
                                     $(obj.target).val();
                             });
-
+                            var val = workNodeData.Blank[0][o.data().KeyOfEn];
+                            //必填项设置选中第一个值
+                            if (o.data().UIIsInput == 1 && (val == null || val == undefined || val == "")) {
+                                workNodeData.Blank[0][o.data().KeyOfEn] = $(tmplate).children()[0].value;
+                            }
 
                             //对于只读的下拉框做如下处理  为只读的下拉框赋值
                             if (o.data().UIIsEnable == "0") {
@@ -403,6 +446,7 @@
 
                     //处理复选框  设置表格中数据的值
                     var textVal = workNodeData.Blank[0][o.data().KeyOfEn];
+
                     //var ckEle = $.grep(tmplate, function (obj) {
                     //  return $(obj).attr('name') == 'CB_' + o.data().KeyOfEn || $(obj).attr('name') == 'CB_' + o.data().KeyOfEn + '_' + newRowIndex;
                     //})
@@ -464,11 +508,16 @@
                     defVal = workNodeData.Blank[0][mapAttr.KeyOfEn];
                 }
 
-                if (mapAttr.DefValType == 0 && mapAttr.DefVal == "10002" && (defVal == "10002" || defVal == "10002.0000"))
-                    defVal = "";
+
                 trData.data[mapAttr.KeyOfEn] = defVal;
             })
 
+            //判断是否复制第一行数据
+            if (sys_MapDtl.IsCopyFirstData == 1 && newRowIndex != 0) {
+
+                var tr = $($('table tbody tr')[0]);
+                trData = tr.data();
+            }
             trData.data["OID"] = 0;
             insertTr.data(trData);
             insertTr.append($('<td> <a href="#" onclick="deleteRow(this)" >移除</a></td>'));
@@ -576,6 +625,7 @@
         var sys_MapDtl; //从表的属性
         var isMulti = false;
         var mapAttrs = [];
+        var dbDtl;
         function InitPage() {
 
             var isReadonly = GetQueryString("IsReadonly");
@@ -618,7 +668,17 @@
             var sys_mapExtDtl = data["Sys_MapExt"]; //扩展信息.
             mapAttrs = sys_mapAttr;
             mapExts = sys_mapExtDtl;
-            var dbDtl = data["DBDtl"]; //从表数据.
+            dbDtl = data["DBDtl"]; //从表数据.
+            var dbVerPK = GetQueryString("DBVerPK");
+            if (dbVerPK && dbVerPK != "") {
+                handler.Clear();
+                handler.AddPara("MyPK", dbVerPK);
+                var json = handler.DoMethodReturnString("ChartFrm_GetDtlDataByVer");
+                if (json && json != "") {
+                    json = JSON.parse(json);
+                    dbDtl = json[sys_MapDtl.PTable];
+                }
+            }
 
             var uiBindKeys = data["UIBindKey"];
             if (uiBindKeys.length != 0) {
@@ -807,9 +867,19 @@
 
                     imgStr += '<img title="选项" style="width: 40px;padding: 0px 5px;cursor:pointer;" src="../Img/Btn/Option.gif" onclick="Option(' + impModel + ');" />';
                 }
-                if (frmType != "0" && isShowFull != "1")
+
+                //var isShowVerBtn = GetQueryString("IsShowVerBtn");
+                //isShowVerBtn = isShowVerBtn == null || isShowVerBtn == undefined || isShowVerBtn == "" ? "0" : isShowVerBtn;
+               // if (isShowVerBtn == "1") {
+                    //增加数据审阅和版本的信息
+                //    imgStr += '<img title="审阅&版本" style="width: 30px;padding: 0px 5px;cursor:pointer;" src="../Img/Btn/FrmDBVer.png" onclick="OpenVerAndMark()" />'
+
+               // }
+                if (isShowFull != "1")
                     imgStr += '<img title="全屏显示" style="width: 30px;padding: 0px 5px;cursor:pointer;" src="../Img/Full.png" onclick="WindowOpenDtl()" />'
                 var delTh = $($(th).append(imgStr));
+
+
 
                 var delThData;
 
@@ -859,10 +929,10 @@
                 if (isMulti == true)
                     $('#dtlDiv div table thead').append(secondTr);
             }
-            if (frmType != "0" && isShowFull != "1")
-                $('#dtlDiv div table thead tr').bind("dblclick", function () {
-                    WindowOpenDtl();
-                });
+            //if (isShowFull != "1")
+            //$('#dtlDiv div table thead tr').bind("dblclick", function () {
+            //    WindowOpenDtl();
+            //});
             // 表头over --------------------
 
             //如果不能新增，就把新增按钮去掉.
@@ -1004,7 +1074,7 @@
                                             }
 
                                         }
-
+                                        textVal = GetValByDefVal(textVal, mapAttr);
                                         tmplate.val(textVal);
                                     }
                                     //处理单选按钮。。。 还没做
@@ -1023,10 +1093,10 @@
 
 
                                     if (o.data().UIIsEnable == "0") {
-                                        if ($(tbodyTrObj).data().hasOwnProperty('data')) {//没有数据时会报错,导致发送失败
+                                        /**if ($(tbodyTrObj).data().hasOwnProperty('data')) {//没有数据时会报错,导致发送失败
                                             var ddlValue = $(tbodyTrObj).data().data[o.data().KeyOfEn];
                                             var ddlText = $(tbodyTrObj).data().data[o.data().KeyOfEn + "TEXT"] || $(tbodyTrObj).data().data[o.data().KeyOfEn + "Text"];
-                                            if (tmplate.length > 1)
+                                            if (tmplate.length > 1 &&(ddlText == null || ddlText==undefined))
                                                 ddlText = $(tbodyTrObj).data().data[o.data().KeyOfEn + "T"];
                                             var option = $('<option select="selected" value="' + ddlValue + '">' + ddlText + '</option>');
                                             if (tmplate.length > 1) {
@@ -1036,7 +1106,7 @@
                                                 $(tmplate).children().remove();
                                                 $(tmplate).append(option);
                                             }
-                                        }
+                                        }*/
                                     } else {
                                         $(tmplate).bind('change', function (obj) {
                                             $(obj.target).parent().parent().data().data[$(obj.target).data().KeyOfEn] = $(obj.target).val();
@@ -1079,8 +1149,8 @@
                 window.columnExp = [];
                 // 解析统计规则字符串
                 $.each(sys_MapDtl.ColAutoExp.split("@"), function (i, e) {
-                    if (e.indexOf(":") != -1) {
-                        var sp = e.split(":");
+                    if (e.indexOf("=") != -1) {
+                        var sp = e.split("=");
                         columnExp.push({
                             "KeyOfEn": sp[0], // 字段
                             "exp": sp[1]		// 表达式
@@ -1092,7 +1162,7 @@
 
                 /**
                 * 统计行
-                * "ColAutoExp":"@ShuLiang:Sum@DanJia:Sum@XiaoJi:Sum"
+                * "ColAutoExp":"@ShuLiang=Sum@DanJia=Sum@XiaoJi=Sum"
                 */
                 if (typeof sys_MapDtl.ColAutoExp != "undefined" && sys_MapDtl.ColAutoExp != "") {
                     addStatisticsRow();
@@ -1149,7 +1219,70 @@
 
         }
 
-
+        /**
+         * 默认值的转化
+         * @param defVal 默认值
+         * @param attr 字段属性
+         */
+        function GetValByDefVal(defVal, attr) {
+            switch (defVal) {
+                case "@WebUser.No":
+                case "@CurrWorker":
+                    return webUser.No;
+                case "@WebUser.Name":
+                    return webUser.Name;
+                case "@WebUser.FK_Dept":
+                    return webUser.FK_Dept;
+                case "@WebUser.FK_DeptName":
+                    return webUser.FK_DeptName;
+                case "@WebUser.FK_DeptNameOfFull":
+                case "@WebUser.FK_DeptFullName":
+                    return webUser.FK_DeptNameOfFull;
+                case "@WebUser.OrgNo":
+                    return webUser.OrgNo;
+                case "@WebUser.OrgName":
+                    return webUser.OrgName;
+                case "@RDT":
+                    var dataFormat = "yyyy-MM-dd";
+                    switch (attr.IsSupperText) {
+                        case 0: break;
+                        case 1:
+                            dataFormat = "yyyy-MM-dd HH:mm";
+                            break;
+                        case 2:
+                            dataFormat = "yyyy-MM-dd HH:mm:ss";
+                            break;
+                        case 3:
+                            dataFormat = "yyyy-MM";
+                            break;
+                        case 4:
+                            dataFormat = "HH:mm";
+                            break;
+                        case 5:
+                            dataFormat = "HH:mm:ss";
+                            break;
+                        case 6:
+                            dataFormat = "MM-dd";
+                            break;
+                        case 7:
+                            dataFormat = "yyyy";
+                        default:
+                            alert("没有找到指定的时间类型");
+                            return;
+                    }
+                    return FormatDate(new Date(), dataFormat);
+                case "@FK_ND":
+                    return FormatDate(new Date(), "yyyy-MM");
+                case "@yyyy年MM月dd日":
+                case "@yyyy年MM月dd日HH时mm分":
+                case "@yy年MM月dd日":
+                case "@yy年MM月dd日HH时mm分":
+                case "@yyyy-MM-dd":
+                    return FormatDate(new Date(), defVal.replace("@", ""));
+                default:
+                    return defVal;
+            }
+        }
         function triggerStatistics() {
             $.each(getUseHeadTh(), function (i, th) {
                 var matchesColumn = [];
@@ -1204,10 +1337,12 @@
             statisticsRow.data().customRowType = "statistics";
             // 遍历表头
             $.each(getUseHeadTh(), function (i, th) {
+                if ($(th).css("display") == "none")
+                    return true;
                 var coltype = $(th).data().coltype;
                 if (typeof coltype != "undefined" && coltype == "SN") {	// 统计行行号列
                     //statisticsRow.append("<td>" + ($("#dtlDiv div table tbody tr").length + 1) + "</td>");
-                    statisticsRow.append("<td>&nbsp;</td>");
+                    statisticsRow.append("<td>合计</td>");
                 } else {	// 其它列
                     var matchesColumn = $.grep(window.columnExp, function (val) {	// 根据表头的colname与待统计列的KeyOfEn对比
                         return val.KeyOfEn == $(th).data().colname;
@@ -1311,25 +1446,31 @@
                 var sum = 0;
                 //判断值是否含有小数
                 var flag = false;
+                var bit = 0;
                 $(":input[name=" + name + "]").each(function (i, e) {
                     var val = $(e).val();
                     val = val.replace(/,/g, "");
                     val = val.replace(/￥/g, "");
+                    //保留小数位数
+                    bit = val.substring(val.indexOf(".") + 1).length;
                     sum += parseFloat(val);
                     if ($(e).val().indexOf('.') >= 0)
                         flag = true;
                 });
                 if (flag) {
-                    if (!/\./.test(sum))
-                        sum += '.00';
+                    var num = 0;
+                    if (/\./.test(sum))
+                        num = sum.toString().substring(sum.toString().indexOf(".") + 1).length;
+                    else
+                        sum += ".";
+                    //补全小数位数
+                    for (var k = num; k < bit; k++) {
+                        sum += "0";
+                    }
                     //防止出现相加小数位数不正确的情况
-                    parseFloat(sum).toFixed(2);
+                    parseFloat(sum).toFixed(bit);
                 }
                 expVal = sum;
-
-
-                //sum = formatNumber(sum, 2, ',');
-
                 template.val(sum);
             } else if (exp == "Avg") {	// 平均数
                 var sum = 0;
@@ -1383,8 +1524,8 @@
                 min = formatNumber(min, 0, ',');
                 template.val(min);
             }
-
-            if (DXTemplate.length == 1)
+            DXTemplate = DXTemplate || "";
+            if (DXTemplate!="")
                 DXTemplate.val(Rmb2DaXie(expVal));
         }
 
@@ -1412,7 +1553,7 @@
 
             //表格查询模式导入
             if (impModel == 1) {
-                var url = window.location.href;
+                var url = GetHrefUrl();
                 url = url.replace('Dtl.htm', 'DtlImp.htm');
                 url = url.replace('Dtl2017.htm', 'DtlImp.htm');
                 url = url.replace('Dtl2018.htm', 'DtlImp.htm');
@@ -1420,7 +1561,7 @@
 
             //excel模式导入方式
             if (impModel == 2) {
-                var url = window.location.href;
+                var url = GetHrefUrl();
                 url = url.replace('Dtl.htm', 'DtlImpByExcel.htm');
                 url = url.replace('Dtl2017.htm', 'DtlImpByExcel.htm');
                 url = url.replace('Dtl2018.htm', 'DtlImpByExcel.htm');
@@ -1428,7 +1569,7 @@
 
             //单据模式
             if (impModel == 3) {
-                var url = window.location.href;
+                var url = GetHrefUrl();
                 url = url.replace('Dtl.htm', 'DtlImpByBill.htm');
                 url = url.replace('Dtl2017.htm', 'DtlImpByBill.htm');
                 url = url.replace('Dtl2018.htm', 'DtlImpByBill.htm');
@@ -1458,13 +1599,29 @@
                 });
                 return;
             }
-            
+
             //window.location.href = url;
             WinOpenIt(url);
         }
 
         function WinOpenIt(url) {
-            var self = window.open(url, 'newwindow', 'height=500, width=700, top=150, left=150, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');//window.open(url);
+            var dtl_ImpMapExt = $.grep(mapExts, function (ext) { return ext.ExtType == "DtlImp" });
+
+            var title = "导入数据";
+            var digWidth = 900;
+            var digHeight = 450;
+            if (dtl_ImpMapExt.length > 0) {
+                digWidth = dtl_ImpMapExt[0].W;
+                digHeight = dtl_ImpMapExt[0].H;
+
+                var atPara = dtl_ImpMapExt[0].AtPara;
+                var reg = new RegExp("(^|@)Title=([^@]*)(@|$)");
+                var results = atPara.match(reg);
+                if (results != null) {
+                    title = unescape(results[2]);
+                }
+            }
+            var self = window.open(url, 'newwindow', 'height='+digHeight+', width='+digWidth+', top=150, left=150, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no');//window.open(url);
             var loop = setInterval(function () {
                 if (self.closed) {
                     clearInterval(loop);
@@ -1475,22 +1632,26 @@
         }
         //选项 导出功能.
         function ExpOption() {
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
-            handler.AddPara("EnsName", GetQueryString("EnsName"));
-            handler.AddPara("WorkId", GetQueryString("WorkId"));
-            handler.AddPara("FID", GetQueryString("FID"));
-            //查询集合
-            var data = handler.DoMethodReturnString("SearchDtl_Exp");
-            var url = "";
-            if (data.indexOf('err@') == 0) {
-                alert(data);
+            var ensName = GetQueryString("EnsName");
+            var workid = GetQueryString("WorkId");
+            var fid = GetQueryString("FID");
+            if (plant != 'CCFlow')
+                downLoadExcel(basePath + "/WF/Export/Search_Exp?type=searchDtl&EnsName=" + ensName + "&WorkId=" + workid + "&FID=" + fid);
+            else {
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_Comm");
+                handler.AddPara("EnsName", ensName);
+                handler.AddPara("WorkId", workid);
+                handler.AddPara("FID", fid);
+                //查询集合
+                var data = handler.DoMethodReturnString("SearchDtl_Exp");
+                var url = "";
+                if (data.indexOf('err@') == 0) {
+                    alert(data);
+                    return;
+                }
+                data = basePath + data;
+                window.open(data);
             }
-
-            data = basePath + data;
-
-            window.open(data);
-            return;
-
         }
 
         //根据表格中编辑过的值，设置表格TR 的 data
@@ -1501,6 +1662,7 @@
             //input text
             //select
             //循环  td
+            var keys = "";
             $.each(tdArr, function (i, tdObj) {
                 tdObj = $(tdObj);
                 var text = tdObj.find('input[type=text]');
@@ -1508,6 +1670,7 @@
                 var select = tdObj.find('select');
                 var checkbox = tdObj.find('input[type=checkbox]');
                 var radio = tdObj.find('input[type=radio]');
+                var hidden = tdObj.find('input[type=hidden]');
                 var keyOfEn = '', value = '';
                 if (text.length == 3) { // 小范围多选
                     for (var idx = 0; idx < 3; idx++) {
@@ -1540,6 +1703,14 @@
                     if (name.indexOf('DDL_') == 0) {
                         keyOfEn = name.substring(4);
                         value = select.val();
+
+                        //判断是不是外部数据源
+                        if (tr.find("input[name=TB_" + keyOfEn + "T]").length != 0) {
+                            var val = select.children('option:checked').text();
+                            trData[keyOfEn + "T"] = val;
+                            keys += keyOfEn + "T,";
+                        }
+
                     }
                 }
                 else if (checkbox.length == 1) {
@@ -1558,6 +1729,14 @@
                         }
                     });
 
+                } else if (hidden.length == 1) {
+                    var name = hidden.attr('name');
+                    if (name.indexOf('TB_') == 0) {
+                        keyOfEn = name.substring(3);
+                        if (keys.indexOf(keyOfEn) != -1)
+                            return true;
+                        value = hidden.val();
+                    }
                 }
                 if (radio.length != 0) {
                     var name = $(radio[0]).attr('name');
@@ -1640,7 +1819,7 @@
 
                 var str = '';
                 var defValue = ConvertDefVal(workNodeData, mapAttr.DefVal, mapAttr.KeyOfEn);
-
+                defValue = GetValByDefVal(defValue, mapAttr);
                 var isInOneRow = false; //是否占一整行
                 var islabelIsInEle = false; //
 
@@ -1714,7 +1893,9 @@
                                 dateFmt = "yyyy-MM";
                             } else if (frmDate == 6) {
                                 dateFmt = "MM-dd";
-                            } else
+                            } else if (frmDate ==7) {
+                                dateFmt = "yyyy";
+                            }else
                                 dateFmt = "yyyy-MM-dd";
 
                             if (mapAttr.UIIsEnable == 1) {
@@ -1736,7 +1917,9 @@
                                 dateFmt = "HH:mm";
                             } else if (frmDate == 5) {
                                 dateFmt = "HH:mm:ss";
-                            } else
+                            } else if (frmDate == 7) {
+                                dateFmt = "yyyy";
+                            }else
                                 dateFmt = "yyyy-MM-dd HH:mm";
 
                             if (mapAttr.UIIsEnable == 1) {
@@ -1807,8 +1990,14 @@
                             var bit;
                             if (defVal != null && defVal !== "" && defVal.indexOf(".") >= 0)
                                 bit = defVal.substring(defVal.indexOf(".") + 1).length;
+                            else
+                                bit = 2;
 
-                            eleHtml += "<input  class='form-control' style='text-align:right;' onblur='valitationAfter(this, \"float\")' onkeydown='valitationBefore(this, \"float\")' onkeyup=" + '"' + "valitationAfter(this, 'float'); if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'float'); if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
+                            var minMax = GetNumberMinMax(mapAttr);
+                            var dataInfo = "";
+                            if (minMax.length == 2)
+                                dataInfo = " data-min='" + minMax[0] + "' data-max='" + minMax[1] + "'";
+                            eleHtml += "<input  class='form-control' style='text-align:right;' " + dataInfo + " onblur='valitationAfter(this, \"float\")' onkeydown='valitationBefore(this, \"float\")' onkeyup=" + '"' + "valitationAfter(this, 'float'); if(!(value.indexOf('-')==0&&value.length==1)&&isNaN(value))execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'float'); if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
                         }
                         if ((mapAttr.MyDataType == 2 && mapAttr.LGType != 1)) {//AppInt
                             var enableAttr = '';
@@ -1817,7 +2006,12 @@
                             } else {
                                 enableAttr = "disabled='disabled'";
                             }
-                            eleHtml += "<input style='text-align:right;' onblur='valitationAfter(this, \"int\")' onkeydown='valitationBefore(this, \"int\")' onkeyup=" + '"' + "valitationAfter(this, 'int'); if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int'); if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
+
+                            var minMax = GetNumberMinMax(mapAttr);
+                            var dataInfo = "";
+                            if (minMax.length == 2)
+                                dataInfo = " data-min='" + minMax[0] + "' data-max='" + minMax[1] + "'";
+                            eleHtml += "<input style='text-align:right;' " + dataInfo + " onblur='valitationAfter(this, \"int\")' onkeydown='valitationBefore(this, \"int\")' onkeyup=" + '"' + "valitationAfter(this, 'int'); if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int'); if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " name='TB_" + mapAttr.KeyOfEn + "'/>";
                         }
 
 
@@ -1834,6 +2028,8 @@
                             var bit;
                             if (defVal != null && defVal !== "" && defVal.indexOf(".") >= 0)
                                 bit = defVal.substring(defVal.indexOf(".") + 1).length;
+                            else
+                                bit = 2;
                             eleHtml += "<input value='" + defValue + "' style='text-align:right;' class='form-control' onfocus='removeplaceholder(this," + bit + ");' onblur='addplaceholder(this," + bit + ");numberFormat (this, " + bit + ") ' onkeyup=" + '"' +
                                 "limitLength(this," + bit + ");" + '"' +
                                 " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' +
@@ -1897,6 +2093,25 @@
 
             return eleHtml;
         }
+        var numString = ",";
+        function GetNumberMinMax(mapAttr) {
+            var isEnableNumEnterLimit = GetPara(mapAttr.AtPara, "IsEnableNumEnterLimit");
+            isEnableNumEnterLimit = isEnableNumEnterLimit == null || isEnableNumEnterLimit == "" || isEnableNumEnterLimit == undefined || isEnableNumEnterLimit == "0" ? false : true;
+            if (isEnableNumEnterLimit == false)
+                return [];
+            if (numString.indexOf("," + mapAttr.KeyOfEn + ",") == -1)
+                numString += mapAttr.KeyOfEn + ",";
+            var min = 0, max = 0;
+            if (isEnableNumEnterLimit == true) {
+                min = GetPara(mapAttr.AtPara, "MinNum");
+                if (min == undefined || min == "")
+                    min = 0;
+                max = GetPara(mapAttr.AtPara, "MaxNum");
+                if (max == undefined || max == "")
+                    max = 100000;
+                return [min, max];
+            }
+        }
 
         //只能输入数字
         function keyDown(event) {
@@ -1943,24 +2158,28 @@
             isChange = val;
         }
         var isDelRowAlert = false;
-
+        var dtlCount = 0;
         //从表全部数据保存 还有问题 需要调整
         function SaveAll() {
+            dtlCount = 0;
+            var isReadonly = GetQueryString("IsReadonly");
+            if ((sys_MapDtl.IsDelete == "1" || sys_MapDtl.IsInsert == "1" || sys_MapDtl.IsUpdate == "1") && sys_MapDtl.IsReadonly == "0" && isReadonly != "1") {
+
+            } else {
+                return;
+            }
+
             // 1=自由表单模式 2=傻瓜表单模式 不需要自动保存
             if (window.EditModel == 1 || window.EditModel == 2) {
+                dtlCount = dbDtl.length;
                 return;
             }
-            /**
-            * 页面失去焦点之后, 无法重新加载?
-            * 从表生成后如果有统计, 并不自动计算, 所以在初始化完成后触发onblur事件(页面自动计算设计之初就是onblur事件)
-            */
-            //console.log("已禁用SaveAll");
-            //return;
 
-            if (isDelRowAlert == true) {
-                isDelRowAlert = false;
-                return;
-            }
+
+            // if (isDelRowAlert == true) {
+            //   isDelRowAlert = false;
+            //    return;
+            //}
 
             if (GetQueryString("IsReadonly") == 1)
                 return;
@@ -2010,6 +2229,7 @@
                     needSaveCount--;
                     continue;
                 }
+                dtlCount++;
                 rowData.DoType = "Dtl_SaveRow";
                 rowData.FK_MapDtl = GetQueryString("EnsName");
                 rowData.RefPKVal = GetQueryString("RefPKVal");
@@ -2064,13 +2284,13 @@
                 BindMapExt();
             }
         }
-        //$(function () {
-        //    var bodyHeight = $(document).height();
-        //    var headHeight = $("#dtlDiv div table thead").height();
-        //    $("#dtlDiv div table tbody").height(bodyHeight - headHeight - 75);
-        //    $("#dtlDiv").height(bodyHeight - 35);
-
-        //});
+        //从表最小集合判断
+        function CheckDtlNum() {
+            var num = sys_MapDtl.NumOfDtl;
+            if (dtlCount < num) {
+                return false;
+            }
+        }
 
 
 
@@ -2258,6 +2478,7 @@
         var curRowIndex = 0;
         //处理MapExt
         function AfterBindEn_DealMapExt(tr, rowIndex) {
+            var numberSet = numString;
             var workNode = workNodeData;
             var mapExtArr = workNode.Sys_MapExt; // 扩展信息
             var WorkId = GetQueryString("WorkId")
@@ -2381,6 +2602,8 @@
                             tb.data(mapExt)
                             tb.attr(mapExt.Tag, "CheckRegInput('" + tb.attr('id') + "','','" + mapExt.Tag1 + "')");
                         }
+                        if (numberSet != "" && numberSet.indexOf("," + mapExt.AttrOfOper + ",") != -1)
+                            numberSet = numberSet.replace("," + mapExt.AttrOfOper + ",", "");
                         break;
                     case "InputCheck": //输入检查
                         if (mapExt.AttrOfOper.length == 0 || mapExt.Tag1.length == 0 || mapExt.Tag2.length == 0) {
@@ -2441,6 +2664,8 @@
                                 dateFmt = "HH:mm:ss";
                             } else if (frmDate == 6) {
                                 dateFmt = "MM-dd";
+                            } else if (frmDate == 7) {
+                                dateFmt = "yyyy";
                             }
 
                             var mapextDoc = mapExt.Doc;
@@ -2450,8 +2675,8 @@
                                     WdatePicker({
                                         dateFmt: dateFmt, onpicked: function (dp) {
                                             $(this).blur(); //失去焦点
-                                            var  id = ctrl[0].id;
-                                            curRowIndex = id.substring(id.lastIndexOf("_")+1);
+                                            var id = ctrl[0].id;
+                                            curRowIndex = id.substring(id.lastIndexOf("_") + 1);
                                             DBAccess.RunFunctionReturnStr(mapextDoc);
                                         }
                                     });
@@ -2460,7 +2685,7 @@
                                         dateFmt: dateFmt, minDate: minDate, onpicked: function (dp) {
                                             $(this).blur(); //失去焦点
                                             var id = ctrl[0].id;
-                                            curRowIndex = id.substring(id.lastIndexOf("_")+ 1);
+                                            curRowIndex = id.substring(id.lastIndexOf("_") + 1);
                                             DBAccess.RunFunctionReturnStr(mapextDoc);
                                         }
                                     });
@@ -2470,14 +2695,17 @@
                         }
 
                         ctrl.data().MapExt = mapExt;
+                        if (numberSet != "" && numberSet.indexOf("," + mapExt.AttrOfOper + ",") != -1 && mapExt.Tag == "change")
+                            numberSet = numberSet.replace("," + mapExt.AttrOfOper + ",", "");
+
                         ctrl.bind(mapExt.Tag, function (obj) {
                             var id = ctrl[0].id;
                             curRowIndex = id.substring(id.lastIndexOf("_") + 1);
                             var mapExtThis = $(obj.target).data().MapExt;
                             if (mapExtThis.Doc.indexOf("(") != -1)
-                                eval(mapExtThis.Doc);
+                                cceval(mapExtThis.Doc);
                             else
-                                eval(mapExtThis.Doc + '(this)');
+                                cceval(mapExtThis.Doc + '(this)');
                         });
                         break;
                     case "DataFieldInputRole": //时间限制
@@ -2508,6 +2736,8 @@
                                     dateFmt = "HH:mm:ss";
                                 } else if (frmDate == 6) {
                                     dateFmt = "MM-dd";
+                                } else if (frmDate == 7) {
+                                    dateFmt = "yyyy";
                                 }
 
                                 var minDate = '%y-%M-#{%d}';
@@ -2637,6 +2867,9 @@
                                     if (extObjAr.length == 0) {
                                         // alert("mapExt:" + mapExt.AttrOfOper + "配置有误");
                                     } else {
+                                        var mapExts = [];
+
+
                                         extDocObj1 = extObjAr[0].KeyOfEn;
                                         $(tr).find('[name=TB_' + mapExt.AttrOfOper + ']').attr('disabled', true);
                                         var targetObj = $(tr).find('[name=TB_' + extDocObj1 + ']');
@@ -2645,20 +2878,40 @@
                                             if (targetObj.length == 0) {
                                                 targetObj = $(tr).find('[name=RB_' + extDocObj1 + ']')
                                                 if (targetObj.length > 0) {
-                                                    targetObj.data().mapExt = mapExt;
+                                                    if (targetObj.data().mapExt == undefined)
+                                                        mapExts.push(mapExt);
+                                                    else {
+                                                        mapExts = targetObj.data().mapExt;
+                                                        mapExts.push(mapExt);
+                                                    }
+                                                    targetObj.data().mapExt = mapExts;
                                                     targetObj.bind('click', function (obj) {
                                                         AutoFull(tr, obj, "RB_");
                                                     });
                                                 }
                                             } else {
-                                                targetObj.data().mapExt = mapExt;
+                                                if (targetObj.data().mapExt == undefined)
+                                                    mapExts.push(mapExt);
+                                                else {
+                                                    mapExts = targetObj.data().mapExt;
+                                                    mapExts.push(mapExt);
+                                                }
+                                                targetObj.data().mapExt = mapExts;
                                                 targetObj.bind('change', function (obj) {
                                                     AutoFull(tr, obj, "DDL_");
                                                 });
                                             }
 
                                         } else {
-                                            targetObj.data().mapExt = mapExt;
+                                            if (targetObj.data().mapExt == undefined)
+                                                mapExts.push(mapExt);
+                                            else {
+                                                mapExts = targetObj.data().mapExt;
+                                                mapExts.push(mapExt);
+                                            }
+
+
+                                            targetObj.data().mapExt = mapExts;
                                             targetObj.bind('blur', function (obj) {
                                                 AutoFull(tr, obj, "TB_");
                                             });
@@ -2693,6 +2946,30 @@
                         break;
                 }
             }
+
+            if (numberSet != "") {
+                var strs = numberSet.split(",");
+                for (var i = 0; i < strs.length; i++) {
+                    if (strs[i] == "")
+                        continue;
+                    $(tr).find('[name=TB_' + strs[i] + ']').bind("change", function () {
+                        var expVal = $(this).val();//获取要转换的值
+                        var min = $(this).attr("data-min");
+                        var max = $(this).attr("data-max");
+                        if (min && parseInt(expVal) < parseInt(min)) {
+                            alert("值不能小于设置的最小值:" + min);
+                            expVal = min;
+                            $(this).val(expVal);
+                        }
+                        if (max && parseInt(expVal) > parseInt(max)) {
+                            alert("值不能大于设置的最大值:" + max);
+                            expVal = max;
+                            $(this).val(expVal);
+                        }
+                    });
+                }
+            }
+
         }
 
         /**Pop弹出框的处理**/
@@ -2729,47 +3006,130 @@
 
         function AutoFull(tr, obj, dataType) {
             //替换
-            var mapExt = $(obj.target).data().mapExt;
-            var mapExtDoc = mapExt.Doc;
-            var evelStr = mapExt.Doc;
-            var tmpResult = 1;
-            var tr = $(obj.target).parent().parent();
-            var attrOfOperEle = $(obj.target).parent().parent().find('[name=TB_' + mapExt.AttrOfOper + "]");
-            for (var m = 0; m < workNodeData.Sys_MapAttr.length; m++) {
-                var mapAttr = workNodeData.Sys_MapAttr[m];
-                var hasKeyOfEn = true;
-                while (hasKeyOfEn) {
-                    var mapExdDocKeyOfEnIndex = mapExtDoc.indexOf('@' + mapAttr.KeyOfEn);
-                    var tranValue = mapAttr.KeyOfEn;
-                    if (mapExdDocKeyOfEnIndex == -1) {
-                        mapExdDocKeyOfEnIndex = mapExtDoc.indexOf('@' + mapAttr.Name);
-                        tranValue = mapAttr.Name;
-                        if (mapExdDocKeyOfEnIndex == -1)
-                            hasKeyOfEn = false;
+            var mapExts = $(obj.target).data().mapExt;
+            $.each(mapExts, function (i, mapExt) {
+                var mapExtDoc = mapExt.Doc;
+                var evelStr = mapExt.Doc;
+                var tmpResult = 1;
+                var tr = $(obj.target).parent().parent();
+                var attrOfOperEle = $(obj.target).parent().parent().find('[name=TB_' + mapExt.AttrOfOper + "]");
+                var targets = [];
+                var index = -1;
+                for (var i = 0; i < mapExt.Doc.length; i++) {	// 对于复杂表达式需要重点测试
+                    var c = mapExt.Doc.charAt(i);
+                    if (c == "(") {
+                        index++;
+                    } else if (c == ")") {
+                        targets.push(mapExt.Doc.substring(index + 1, i));
+                        i++;
+                        index = i;
+                    } else if (/[\+\-|*\/]/.test(c)) {
+                        targets.push(mapExt.Doc.substring(index + 1, i));
+                        index = i;
                     }
-                    if (mapExdDocKeyOfEnIndex != -1) {
-                        //判断参数后面是否是一个运算操作符
-                        var optionVal = mapExtDoc.substring(mapExdDocKeyOfEnIndex + tranValue.length + 1, mapExdDocKeyOfEnIndex + tranValue.length + 2);
-
-                        if (mapExdDocKeyOfEnIndex >= 0 && (optionVal == '+' || optionVal == '-' || optionVal == '*' || optionVal == '/' || optionVal == '')) {
-                            mapExtDoc = mapExtDoc.replace('@' + tranValue, "parseFloat($(tr).find('[name=" + dataType + mapAttr.KeyOfEn + "]').val().replace(/,/g,'').replace(/￥/g,''))");
-                        } else {
-                            hasKeyOfEn = false;
+                }
+                if (index + 1 < mapExt.Doc.length) {
+                    targets.push(mapExt.Doc.substring(index + 1, mapExt.Doc.length));
+                }
+                var isResult = true;
+                $.each(targets, function (i, o) {
+                    if (o.indexOf("@") == -1)
+                        return true;
+                    var target = o.replace("@", "");
+                    //判断字段是否存在
+                    var type = ["TB_", "DDL_", "RB_", "CB_"];
+                    var isHave = false;
+                    for (var k = 0; k < type.length - 1; k++) {
+                        var element = $(tr).find('[name=' + type[k] + target + ']');
+                        if (element.length != 0) {
+                            isHave = true;
+                            mapExtDoc = mapExtDoc.replace('@' + target, "parseFloat($(tr).find('[name=" + type[k] + target + "]').val().replace(/,/g,'').replace(/￥/g,''))");
+                            break;
                         }
                     }
-                    
+                    //寻找主表单是否存在 $("#TB_" + extObj.AttrOfOper, parent.document)
+                    if (isHave == false) {
+                        for (var k = 0; k < type.length - 1; k++) {
+                            var element = $("#" + type[k] + target, parent.document)
+                            if (element.length != 0) {
+                                isHave = true;
+                                mapExtDoc = mapExtDoc.replace('@' + target, "parseFloat($(\"#" + type[k] + target + "\", parent.document).val().replace(/,/g,'').replace(/￥/g,''))");
+                                break;
+                            }
+                        }
+                    }
+                    if (isHave == false) {
+                        alert(target + "对应的字段值没有找到");
+                        isResult = false;
+                        return false;
+                    }
+
+                });
+
+                if (isResult == true) {
+                    tmpResult = eval(mapExtDoc);
+
+                    var mapAttr = $.grep(workNodeData.Sys_MapAttr, function (item) {
+                        return item.MyPK == mapExt.FK_MapData + "_" + mapExt.AttrOfOper;
+                    })
+
+                    //修改值
+                    if (mapAttr[0].MyDataType == 2)
+                        tmpResult = parseInt(tmpResult);
+                    else
+                        tmpResult = formatNumber(tmpResult, 2, ',');
+                    attrOfOperEle.val(tmpResult);
+                    attrOfOperEle.trigger("change"); // 触发合计计算
+
+
+                    $(tr).data().data[$(obj.target).data().mapExt.AttrOfOper] = tmpResult;
                 }
-            }
+                return;
 
-            tmpResult = eval(mapExtDoc);
+                for (var m = 0; m < workNodeData.Sys_MapAttr.length; m++) {
+                    var mapAttr = workNodeData.Sys_MapAttr[m];
+                    var hasKeyOfEn = true;
+                    while (hasKeyOfEn) {
+                        var mapExdDocKeyOfEnIndex = mapExtDoc.indexOf('@' + mapAttr.KeyOfEn);
+                        var tranValue = mapAttr.KeyOfEn;
+                        if (mapExdDocKeyOfEnIndex == -1) {
+                            mapExdDocKeyOfEnIndex = mapExtDoc.indexOf('@' + mapAttr.Name);
+                            tranValue = mapAttr.Name;
+                            if (mapExdDocKeyOfEnIndex == -1)
+                                hasKeyOfEn = false;
+                        }
+                        if (mapExdDocKeyOfEnIndex != -1) {
+                            //判断参数后面是否是一个运算操作符
+                            var optionVal = mapExtDoc.substring(mapExdDocKeyOfEnIndex + tranValue.length + 1, mapExdDocKeyOfEnIndex + tranValue.length + 2);
 
-            //修改值
-            tmpResult = formatNumber(tmpResult, 2, ',');
-            attrOfOperEle.val(tmpResult);
-            attrOfOperEle.trigger("change"); // 触发合计计算
+                            if (mapExdDocKeyOfEnIndex >= 0 && (optionVal == '+' || optionVal == '-' || optionVal == '*' || optionVal == '/' || optionVal == '')) {
+                                mapExtDoc = mapExtDoc.replace('@' + tranValue, "parseFloat($(tr).find('[name=" + dataType + mapAttr.KeyOfEn + "]').val().replace(/,/g,'').replace(/￥/g,''))");
+                            } else {
+                                hasKeyOfEn = false;
+                            }
+                        }
+
+                    }
+                }
+
+                tmpResult = cceval(mapExtDoc);
+
+                var mapAttr = $.grep(workNodeData.Sys_MapAttr, function (item) {
+                    return item.MyPK == mapExt.FK_MapData + "_" + mapExt.AttrOfOper;
+                })
+
+                //修改值
+                if (mapAttr[0].MyDataType == 2)
+                    tmpResult = parseInt(tmpResult);
+                else
+                    tmpResult = formatNumber(tmpResult, 2, ',');
+                attrOfOperEle.val(tmpResult);
+                attrOfOperEle.trigger("change"); // 触发合计计算
 
 
-            $(tr).data().data[$(obj.target).data().mapExt.AttrOfOper] = tmpResult;
+                $(tr).data().data[$(obj.target).data().mapExt.AttrOfOper] = tmpResult;
+            });
+
 
         }
 
@@ -2788,8 +3148,6 @@
                     enums = $.grep(enums, function (value) {
                         return value.EnumKey == mapAttr.UIBindKey;
                     });
-
-
                     $.each(enums, function (i, obj) {
                         if (obj.IntKey == -1)
                             return false;
@@ -2997,20 +3355,18 @@
 
 
         function WindowOpenDtl() {
-            var url = window.location.href;
+            var url = GetHrefUrl();
             //获取屏幕的长宽
-            var W = window.parent.document.body.clientWidth-40;
-            var H = window.parent.document.body.clientHeight-40;
-            window.parent.OpenBootStrapModal(url+"&IsShowFull=1", "dtlFrame", '编辑', W, H, "icon-property", false, function () { }, null, function () {
-                window.location.href = url;
-            });
+            var W = window.parent.document.body.clientWidth - 40;
+            var H = window.parent.document.body.clientHeight - 40;
+            window.parent.OpenLayuiDialog(url + "&IsShowFull=1", '编辑', W, 80, 'auto', true);
             return;
 
             var self = window.open(url);
             var loop = setInterval(function () {
                 if (self.closed) {
                     clearInterval(loop);
-                    window.location.href = url;
+                    SetHref(url);
                 }
             }, 1);
         }

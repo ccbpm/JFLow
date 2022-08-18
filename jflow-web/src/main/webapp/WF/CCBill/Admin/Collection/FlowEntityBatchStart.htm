@@ -56,7 +56,7 @@
             handler.AddPara("GroupID", groupID); // 方法的的GroupID..
             handler.AddPara("ModuleNo", GetQueryString("ModuleNo"));
             handler.AddPara("IsCanBatch", 1);
-            var data = handler.DoMethodReturnString("FlowBatchBaseData_Save");
+            var data = handler.DoMethodReturnString("FlowEntityBatchStart_Save");
 
             if (data.indexOf('err@') == 0) {
                 alert(data);
@@ -68,7 +68,7 @@
 
             alert("创建成功,将要进入菜单属性页面.");
             var url = "../../../Comm/En.htm?EnName=BP.CCBill.Template.MethodFlowBaseData&No=" + data;
-            window.location.href = url;
+            SetHref(url);
             return;
 
             var html = "<ul>";
@@ -92,7 +92,7 @@
             if (name == "")
                 return;
 
-            var handler = new HttpHandler("BP.Cloud.HttpHandler.Admin_CCFormDesigner");
+            var handler = new HttpHandler("BP.WF.HttpHandler.Admin_CCFormDesigner");
             handler.AddPara("IsQuanPin", isQuanPin);
             handler.AddPara("TB_Name", encodeURIComponent(name));
             var data = handler.DoMethodReturnString("NewFrmGuide_GenerPinYin");
@@ -120,19 +120,18 @@
             <li> <div id="Msg"></div></li>
         </ul>
 
-        <legend> 帮助 </legend>
+        <legend> 批量发起流程 </legend>
         <ol>
-            <li>比如:基础资料变更、法人变更、企业变更、状态变更。 </li>
-            <li>就是对当前按选择一行（一个实体的基础数据变更). </li>
-            <li>流程结束后，系统就会把这些字段同步到实体中去. </li>
+            <li>比如：批量发起注销流程、入党申请流程、采购流程。 </li>
+            <li>就是对选择的多个实体进行批量启动一个流程。 </li>
         </ol>
 
         <legend> 开发说明 </legend>
         <ol>
-            <li> 点击确定后，系统自动创建一个流程，并且开流程为极简模式。 </li>
+            <li>点击确定后，系统自动创建一个流程，并且开流程为极简模式。 </li>
             <li>此流程的表单，是从当前实体表单中复制而来的。 </li>
-            <li> 您可以根据自己的需要新增与删除字段。 </li>
-            <li> 可以在方法属性里，设置数据同步方式与同步内容。 </li>
+            <li>您可以根据自己的需要新增与删除字段。 </li>
+            <li>可以在方法属性里，设置数据同步方式与同步内容。 </li>
         </ol>
     </fieldset>
 

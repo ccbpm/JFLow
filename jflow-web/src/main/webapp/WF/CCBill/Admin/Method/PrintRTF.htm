@@ -49,10 +49,11 @@
             en.UrlExt = $("#TB_Url").val();
             en.Tag1 = $("#TB_Url").val();
             en.Icon = "icon-drop";
+            en.IsEnable = 1;
             en.Insert();
 
             var url = "../../../Comm/En.htm?EnName=BP.CCBill.Template.MethodLink&No=" + en.No;
-            window.location.href = url;
+            SetHref(url);
         }
         ///转到bill.
         function ToBill() {

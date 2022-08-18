@@ -16,6 +16,9 @@
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../../Scripts/config.js" type="text/javascript"></script>
     <script src="../../Comm/Gener.js" type="text/javascript"></script>
+    <script src="../../../Admin/AttrFlow/Limit/DDLBar.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../../../DataUser/OverrideFiles/WorkCheck/WorkCheck.js" ></script>
+    <script type="text/javascript" src="../../../DataUser/OverrideFiles/WorkCheck/XTXSAB.js" ></script>
     <script type="text/javascript" language="javascript">
 
         var nodeID = GetQueryString("FK_Node");
@@ -26,8 +29,16 @@
             InitPage();
 
         });
+        function closespan(){
 
+            $('#batchStampDiv').modal('hide');
+        };
+        function closeMsgspan(){
+
+            $('#batchMsgDiv').modal('hide');
+        };
         function InitPage() {
+            $('#batchMsgDiv').modal('hide');
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_Batch");
             handler.AddPara("FK_Node", nodeID);
@@ -37,7 +48,7 @@
                 return;
             }
 
-            data = eval('(' + data + ')');
+            data = cceval('(' + data + ')');
 
             var works = data.Works; //数据.
             var mapAttrs = data.Sys_MapAttr; //要显示的字段.
@@ -57,7 +68,8 @@
             thead += "<th>标题</th>";
             thead += "<th>发起人</th>";
             thead += "<th>接收日期</th>";
-            var files = node.GetPara("BatchFields");
+            var files = node.GetPara("BatchFields")||"";
+            var editFiles = node.GetPara("EditFields") || "";
             for (var i = 0; i < mapAttrs.length; i++) {
                 var attr = mapAttrs[i];
                 if (files == undefined)
@@ -66,7 +78,8 @@
                     continue;
                 if (attr.Name == "审核意见")
                     continue;
-                thead += "<th>" + attr.Name + "</th>";
+                    thead += "<th>" + attr.Name + "</th>";
+              
             }
 
             //判断该节点是否启用审核组件
@@ -101,16 +114,19 @@
                     var mapAttr = mapAttrs[idx];
                     if (files == undefined)
                         continue;
-                    if (files.indexOf(attr.KeyOfEn) == -1)
+                    if (files.indexOf(mapAttr.KeyOfEn) < 0)
                         continue;
                     if (mapAttr.Name == "审核意见")
                         continue;
-                    tbody += "<td>" + wk[mapAttr.KeyOfEn] + "</td>";
+                    if (editFiles.indexOf(mapAttr.KeyOfEn)<0)
+                        tbody += "<td>" + wk[mapAttr.KeyOfEn] + "</td>";
+                    else
+                        tbody += "<td><input type= 'text' size='6' id='TB_"+ wk.WorkID + "_" + mapAttr.KeyOfEn + "' name='TB_" + wk.WorkID + "_" + mapAttr.KeyOfEn + "' value='" + wk[mapAttr.KeyOfEn]+"'></td>";
                 }
 
                 // 启用审核组件并且可编辑 ，如果是：每个记录后面都有一个意见框.的模式.
                 if (sta == 1 && BatchCheckNoteModel == "1") {
-                    tbody += "<td><textarea class='form-control'  style='height:50px;width:240px;' name='TB_" + works[i].OID + "_WorkCheck_Doc' id='TB_" + works[i].OID + "_WorkCheck_Doc' type='text'   ></textarea></td>";
+                    tbody += "<td><textarea class='form-control'  style='height:50px;width:240px;' name='TB_" + works[i].OID + "_WorkCheck_Doc' id='TB_" + works[i].OID + "_WorkCheck_Doc' type='text'   >"+ works[i].msg+"</textarea></td>";
                 }
 
                 tbody += "</tr>";
@@ -123,7 +139,9 @@
             var bar = "";
             var btns = data.Sys_BtnLab[0];
             bar += '<button type=button onclick="Send()" id=Btn_Send >' + btns.SendLab + '</button>';
-
+            bar += '<button type=button onclick="BatchStamp(1)" id=Btn_Send> 批量盖章</button>';
+            bar += '<button type=button onclick="BatchStamp(2)" id=Btn_Send> 批量签名</button>';
+            bar += '<button type=button onclick="BatchMsg()" id=Btn_Send> 批量意见</button>';
             //bar += '<div id=toNode />';
 
 
@@ -173,7 +191,7 @@
         function To(url) {
             WinOpen(url);
             return;
-            window.location.href = url;
+            SetHref(url);
             return;
         }
 
@@ -245,7 +263,7 @@
             var sta = node.FWCSta;
             var checkNote = ""; //审核意见.
             if (sta == 1 && BatchCheckNoteModel == "0") {
-                var checkNote = window.prompt('请输入审核意见', "同意");
+                var checkNote = promptGener('请输入审核意见', "同意");
                 if (checkNote == null || checkNote == '' || checkNote == undefined)
                     return;
             }
@@ -280,7 +298,7 @@
                 $("#Table2").html("");
                 $("#btnDiv").html("");
 
-                window.location.href = window.location.href;
+                Reload();
 
             });
             $("#batchModal").modal("hidden");
@@ -327,7 +345,7 @@
             }
             var url = "";
             var fk_node = GetQueryString("FK_Node");
-            var isFrameCross = window.location.href.indexOf(basePath) == -1 ? 1 : 0;
+            var isFrameCross = GetHrefUrl().indexOf(basePath) == -1 ? 1 : 0;
             if (workIds.indexOf(",") == -1)
                 url = "../ReturnWork.htm?FK_Node=" + fk_node + "&WorkID=" + workIds + "&s=" + Math.random() + "&isFrameCross=" + isFrameCross;
             else {
@@ -337,7 +355,7 @@
 
 
             OpenBootStrapModal(url, "ReturnModel", "退回", 600, 400, null, null, null, null, function () {
-                window.location.href = window.location.href.replace("#", "");
+                SetHref(GetHrefUrl().replace("#", ""));
             });
         }
 
@@ -363,7 +381,7 @@
             data = data.replace(/@/g, '<br/>@');
             $("#msgContent").html(data);
             $('#batchModal').on('hidden.bs.modal', function () {
-                window.location.href = window.location.href;
+                Reload();
 
             });
             $("#batchModal").modal("hidden");
@@ -388,11 +406,11 @@
         function Btn_Back() {
             var type = GetQueryString("Type");
             if (type == 0)
-                window.location.href = "../../Batch.htm";
+                SetHref("../../Batch.htm");
             else if (type == 1)
-                window.location.href = "../../Batch.htm?FK_Node=" + GetQueryString("FK_Node");
+                SetHref("../../Batch.htm?FK_Node=" + GetQueryString("FK_Node"));
             else
-                window.location.href = "../../Batch.htm";
+                SetHref("../../Batch.htm");
         }
 
         function InitMapAttr(mapAttr) {
@@ -621,7 +639,7 @@
                 var fn;
                 try {
                     if (mapAttr.UIBindKey) {
-                        fn = eval(mapAttr.UIBindKey);
+                        fn = cceval(mapAttr.UIBindKey);
                     }
                 } catch (e) {
                 }
@@ -643,6 +661,38 @@
         function ReloadPage() {
             window.location.reload();
         }
+        function BatchMsg(){
+            //获取选择的行数
+            var isHave = false;
+            var workid = 0;
+            $("input[type='checkbox']:checked").each(function () {
+                var id = $(this).attr('id');
+                if (id != null && id != undefined) {
+                    isHave = true;
+                    workid = id.replace("CB_", "");
+                    return false;
+                }
+
+            });
+            if (isHave == false) {
+                alert("请选择批处理的待办数据");
+                return;
+            }
+            $('#batchMsgDiv').modal().show();
+        }
+        function batchSubmitMsg(){
+
+            var batchMsg = ($('#batchmsg').val());
+            //document.getElementsByTagName('textarea').val(batchMsg);
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_Batch");
+            handler.AddPara("batchMsg", batchMsg);
+            handler.AddPara("FK_Node", nodeID);
+            handler.AddFormData();
+            var data = handler.DoMethodReturnString("Batch_WriteMsg");
+            $('#batchMsgDiv').modal('hide');
+            alert(data);
+            ReloadPage();
+        }
     </script>
 </head>
 <body class="gray-bg">
@@ -650,6 +700,11 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <h3 id="title">  </h3>
         <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <span id="btnDiv"></span>
+                </div>
+            </div>
             <form id="divCCForm" method="post">
                 <table class="table  table-striped">
                     <thead id="Table1"></thead>
@@ -697,6 +752,162 @@
                 </div>
             </div><!-- /.modal-content -->'
         </div><!-- /.modal-dialog -->'
+    </div>
+
+    <div class="modal fade" id="batchStampDiv" data-backdrop="static">
+        <div class="modal-dialog" style="width:40%;height:40%">
+            <div class="modal-content" style="height:90%">
+                <div class="modal-body" style="margin:0px;padding:0px;height:210px;background: #fff;">
+                    <div class="modal-top" style="background: #226a62;height: 42px ;width:100%;float: left">
+                        <span style="float: left; color: #fff;display: block  ;line-height: 42px;text-indent: 16px;"> &nbsp;&nbsp;&nbsp;证书认证</span>
+                        <span id="closeSpan" onclick="closespan()" style="background: url('../../../DataUser/Style/Img/close.png') no-repeat 0px 12px; float: right ; display: block; width:36px;height:36px;"></span>
+
+                    </div>
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+                                <table width="100%" border="0"  cellpadding="0" cellspacing="0" style=" margin: 20px 0 0 80px">
+                                    <tr>
+                                        <td valign="top" height="151">
+                                            <form method="post" ID="LoginForm" name="LoginForm">
+                                                <table id="bs" width="90%" border="0" align="center"
+                                                       cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td height="15" colspan="2"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="70" class="font1">
+                                                            选择证书
+                                                        </td>
+                                                        <td>
+                                                            <select id="UserList" name="UserList" style="width: 100px">
+                                                                <option value="volvo">请选择证书</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td >
+                                                            &nbsp;
+                                                        </td>
+                                                        <td>
+                                                            &nbsp;
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font1">
+                                                            证书密码
+                                                        </td>
+                                                        <td>
+                                                            <input type="password" name="pwd1" id="UserPwd" size="30" maxlength="16" >
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td >
+                                                            &nbsp;
+                                                        </td>
+                                                        <td>
+                                                            &nbsp;
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td width="70%">
+                                                            <input type="button"  onclick="btnonsubmit()"
+                                                                   style="border: none;  width: 100px; height: 30px; float: right;background: #009688;text-align: center;line-height: 30px;color: #fff;"
+                                                                   value="批量盖章" name="B1">
+                                                        </td>
+
+                                                        <!--<td width="65">
+                                                            <input type="button"  onclick="getbtnonsubmit()"
+                                                                   style="border: none;width: 58px; height: 30px;"
+                                                                   value="1获取身份证号码" name="B1">
+                                                        </td>-->
+                                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="4" height="110"></td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="batchMsgDiv" data-backdrop="static">
+        <div class="modal-dialog" style="width:40%;height:40%">
+            <div class="modal-content" style="height:90%">
+                <div class="modal-body" style="margin:0px;padding:0px;height:210px;background: #fff;">
+                    <div class="modal-top" style="background: #226a62;height: 42px ;width:100%;float: left">
+                        <span style="float: left; color: #fff;display: block  ;line-height: 42px;text-indent: 16px;"> &nbsp;&nbsp;&nbsp;审核意见</span>
+                        <span id="closeSpan" onclick="closeMsgspan()" style="background: url('../../../DataUser/Style/Img/close.png') no-repeat 0px 12px; float: right ; display: block; width:36px;height:36px;"></span>
+
+                    </div>
+
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td>
+                                <table width="100%" border="0"  cellpadding="0" cellspacing="0" style=" margin: 20px 0 0 80px">
+                                    <tr>
+                                        <td valign="top" height="151">
+                                            <form method="post" ID="LoginForm" name="LoginForm">
+                                                <table id="bs" width="90%" border="0" align="center"
+                                                       cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td height="15" colspan="2"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="70%" class="font1">
+                                                            输入审核意见
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td ></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <textarea id="batchmsg" name="batchmsg" style="height:80px;width:340px;" type="text"></textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="70%">
+
+                                                            <input type="button"  onclick="batchSubmitMsg()"
+                                                                   style="border: none;  width: 100px; height: 30px; float: center;background: #009688;text-align: center;line-height: 30px;color: #fff;"
+                                                                   value="确定" name="B1">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="4" height="110"></td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>

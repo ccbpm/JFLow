@@ -6,6 +6,7 @@
  * @param {any} keyVal 选择替换的值
  */
 function GetDataTableByDB(dbSrc, dbType, dbSource, keyVal) {
+   // debugger
     if (dbSrc == null || dbSrc == undefined || dbSrc == "")
         return null;
     //处理sql，url参数.
@@ -23,6 +24,82 @@ function GetDataTableByDB(dbSrc, dbType, dbSource, keyVal) {
     dataObj = DBAccess.RunDBSrc(dbSrc, dbType, dbSource);
     return dataObj;
 }
+/**
+* 文本自动完成表格展示
+*/
+function showDataGrid(tbid, selectVal, mapExtMyPK) {
+    //debugger
+    var mapExt = new Entity("BP.Sys.MapExt", mapExtMyPK);
+    var dataObj = GetDataTableByDB(mapExt.Tag4, mapExt.DBType, mapExt.FK_DBSrc, selectVal );
+    var columns = mapExt.Tag3;
+    $("#divInfo").remove();
+    $("#" + tbid).after("<div style='position:absolute;z-index:999;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);width:100%' id='divInfo'><table class='layui-hide' id='autoTable' lay-filter='autoTable'></table></div>");
+   
+    var searchTableColumns = [{
+        field: "",
+        title: "序号",
+        templet: function (d) {
+            return d.LAY_TABLE_INDEX + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
+
+        }
+
+    }];
+
+    //显示列的中文名称.
+    if (typeof columns == "string" && columns!="") {
+        $.each(columns.split(","), function (i, o) {
+            var exp = o.split("=");
+            var field;
+            var title;
+            if (exp.length == 1) {
+                field = title = exp[0];
+            } else if (exp.length == 2) {
+                field = exp[0];
+                title = exp[1];
+            }
+            if (!isLegalName(field)) {
+                return true;
+            }
+            searchTableColumns.push({
+                field: field,
+                title: title
+
+            });
+        });
+    } else {
+        searchTableColumns.push({
+            field: "No",
+            title: "编号"
+
+        });
+        searchTableColumns.push({
+            field: "Name",
+            title: "名称"
+
+        });
+    }
+    //debugger
+        var ispagination = dataObj.length > 20 ? true : false;
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: "#autoTable",
+                id: "autoTable",
+                cols: [searchTableColumns],
+                data:dataObj
+            })
+            //监听行单击事件（双击事件为：rowDouble）
+            table.on('row(autoTable)', function (obj) {
+                var data = obj.data;
+                $("#" + tbid).val(data.No);
+                $("#divInfo").remove();
+                FullIt(data.No, mapExt.MyPK, tbid);
+                
+            });
+        })
+   
+}
+
 /**
  * 获取文本字段的小范围多选或者单选的数据
  * @param {any} mapExt
@@ -51,14 +128,21 @@ function GetDataTableOfTBChoice(mapExt, frmData, defVal) {
                 if (data == undefined)
                     data = frmData[mapExt.Tag2];
                 if (data == undefined) {
-                    var enums = flowData.Sys_Enum;
+                    var enums = frmData.Sys_Enum;
                     enums = $.grep(enums, function (value) {
                         return value.EnumKey == mapExt.Tag2;
                     });
+                    if (enums.length == 0) {
+                        enums = new Entities("BP.Sys.SysEnums");
+                        enums.Retrieve("EnumKey", mapExt.Tag2);
+                        frmData[mapExt.Tag2] = enums;
+                    }
+                  //  debugger
+                    data = [];
                     $.each(enums, function (i, o) {
                         data.push({
                             value: o.IntKey,
-                            no: o.Lab,
+                            name: o.Lab,
                             selected: defVal.indexOf("," + o.IntKey + ",") != -1 ? true : false
                         })
                     });
@@ -70,7 +154,7 @@ function GetDataTableOfTBChoice(mapExt, frmData, defVal) {
                 $.each(enums, function (i, o) {
                     data.push({
                         value: o.IntKey,
-                        no: o.Lab,
+                        name: o.Lab,
                         selected: defVal.indexOf("," + o.IntKey + ",") != -1 ? true : false
 
                     })
@@ -272,22 +356,31 @@ function FullIt(selectVal, refPK, elementId) {
         oid = 0;
         return;
     }
+    if (selectVal == null || selectVal == undefined)
+        return;
+    //执行确定后执行的JS
+    var mapExt = new Entity("BP.Sys.MapExt");
+    mapExt.SetPKVal(refPK);
+    var i = mapExt.RetrieveFromDBSources();
+
+    var backFunc = mapExt.Tag5;
+    if (backFunc != null && backFunc != "" && backFunc != undefined)
+        DBAccess.RunFunctionReturnStr(DealSQL(backFunc, selectVal));
+
     var mypk = "";
     if (refPK.indexOf("FullData") != -1)
         mypk = refPK;
-    else
+    else {
         mypk = refPK + "_FullData";
+        mapExt.SetPKVal(mypk);
+        i = mapExt.RetrieveFromDBSources();
+    }
+        
 
     //获得对象.
-    var mapExt = new Entity("BP.Sys.MapExt");
-    mapExt.SetPKVal(mypk);
-    var i = mapExt.RetrieveFromDBSources();
-
     //没有填充其他控件
     if (i == 0)
         return;
-
-
     //执行填充主表的控件.
     FullCtrl(selectVal, elementId, mapExt);
 
@@ -297,6 +390,7 @@ function FullIt(selectVal, refPK, elementId) {
     //执行填充从表.
     FullDtl(selectVal, mapExt,oid);
 
+    layui.form.render();
     //执行确定后执行的JS
     var backFunc = mapExt.Tag2;
     if (backFunc != null && backFunc != "" && backFunc != undefined)
@@ -463,6 +557,8 @@ function FullCtrlDDL(selectVal, ctrlID, mapExt) {
         return;
 
     var dbSrcs = doc.split('$'); //获得集合.
+    if(selectVal.indexOf(",")!=-1)
+            selectVal = "'"+selectVal.replace(/,/g,"','")+"'";
     for (var i = 0; i < dbSrcs.length; i++) {
 
         var dbSrc = dbSrcs[i];
@@ -470,11 +566,12 @@ function FullCtrlDDL(selectVal, ctrlID, mapExt) {
             continue;
         var ctrlID = dbSrc.substring(0, dbSrc.indexOf(':'));
         var src = dbSrc.substring(dbSrc.indexOf(':') + 1);
-
+       
         var db = GetDataTableByDB(src, mapExt.DBType, mapExt.FK_DBSrc, selectVal); //获得数据源.
         //重新绑定下拉框.
         GenerBindDDL("DDL_" + ctrlID, db);
     }
+	layui.form.render("select");
 }
 //填充明细.
 function FullDtl(selectVal, mapExt,oid) {
@@ -487,8 +584,11 @@ function FullDtl(selectVal, mapExt,oid) {
     var url = GetLocalWFPreHref();
     var dataObj;
 
-    if (dbType == 1) {
-
+    if (dbType == 3) {
+        if(selectVal.indexOf(",")!=-1)
+            selectVal = "'"+selectVal.replace(/,/g,"','")+"'";
+        var dtls = dbSrc.Split('$');
+      
         dbSrc = DealSQL(DealExp(dbSrc), selectVal, kvs);
         dataObj = DBAccess.RunDBSrc(dbSrc, 1);
 
@@ -501,6 +601,7 @@ function FullDtl(selectVal, mapExt,oid) {
         handler.AddPara("FK_MapExt", mapExt.MyPK);
         handler.AddPara("KVs", kvs);
         handler.AddPara("DoTypeExt", "ReqDtlFullList");
+        handler.AddPara("DtlKey", selectVal);
         handler.AddPara("OID", oid);
         var data = handler.DoMethodReturnString("HandlerMapExt");
         if (data == "")
@@ -510,7 +611,7 @@ function FullDtl(selectVal, mapExt,oid) {
             alert(data);
             return;
         }
-        dataObj = eval("(" + data + ")"); //转换为json对象 	
+        dataObj = cceval("(" + data + ")"); //转换为json对象 	
     }
 
     for (var i in dataObj.Head) {
@@ -565,5 +666,45 @@ function DealSQL(dbSrc, key, kvs) {
     }
 
     return dbSrc;
+}
+
+/**
+ * 保存EleDB
+ * @param {any} rows
+ */
+function SaveFrmEleDBs(rows, keyOfEn, mapExt, pkval) {
+   // debugger
+    pkval = pkval == null || pkval == undefined || pkval == 0 ? pageData.WorkID : pkval;
+    //删除
+    var ens = new Entities("BP.Sys.FrmEleDBs");
+    ens.Delete("FK_MapData", mapExt.FK_MapData, "EleID", keyOfEn, "RefPKVal", pkval);
+    //保存
+    $.each(rows, function (i, row) {
+        var frmEleDB = new Entity("BP.Sys.FrmEleDB");
+        frmEleDB.MyPK = keyOfEn + "_" + pkval + "_" + row.No;
+        frmEleDB.FK_MapData = mapExt.FK_MapData;
+        frmEleDB.EleID = keyOfEn;
+        frmEleDB.RefPKVal = pkval;
+        frmEleDB.Tag1 = row.No;
+        frmEleDB.Tag2 = row.Name;
+        frmEleDB.Insert();
+    })
+}
+/**
+ * 删除保存的数据
+ * @param {any} keyOfEn
+ * @param {any} oid
+ * @param {any} No
+ */
+function Delete_FrmEleDB(keyOfEn, oid, No) {
+    var frmEleDB = new Entity("BP.Sys.FrmEleDB");
+    frmEleDB.MyPK = keyOfEn + "_" + oid + "_" + No;
+    frmEleDB.Delete();
+}
+function isLegalName(name) {
+    if (!name) {
+        return false;
+    }
+    return name.match(/^[a-zA-Z\$_][a-zA-Z\d\$_]*$/);
 }
 

@@ -3,12 +3,12 @@ var oldValue = "";
 var oid;
 var highlightindex = -1;
 function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt, TBModel) {
-    openDiv(sender, tbid);
+    //openDiv(sender, tbid);
     var mapExt = new Entity("BP.Sys.MapExt", fk_mapExt);
     var myEvent = window.event || arguments[0];
     var myKeyCode = myEvent.keyCode;
     // 获得ID为divinfo里面的DIV对象 .  
-    var autoNodes = $("#divinfo").children("div");
+    var autoNodes = $("#autoComplete").children("div");
     if (myKeyCode == 38) {
         if (highlightindex != -1) {
             autoNodes.eq(highlightindex).css("background-color", "white");
@@ -52,7 +52,7 @@ function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt, TBModel) {
             var strs = textInputText.split('|');
             autoNodes.eq(highlightindex).css("background-color", "white");
             $("#" + tbid).val(strs[0]);
-            $("#divinfo").hide();
+            $("#autodiv").remove();
             oldValue = strs[0];
 
             // 填充.
@@ -62,16 +62,17 @@ function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt, TBModel) {
     }
     else {
         if (selectVal != oldValue) {
-            $("#divinfo").empty();
+            $("#autodiv").remove();
             //获得对象.
             var dataObj = GenerDB(mapExt.Tag4, selectVal, mapExt.DBType, mapExt.FK_DBSrc);
             if ($.isEmptyObject(dataObj)) {
-                $("#divinfo").hide();
+                //$("#divinfo").hide();
                 return;
             }
 
             //简洁模式
             if (TBModel == "Simple") {
+                $("#" + tbid).after("<div id='autodiv'><div id='autoComplete' style='position:absolute;z-index:999'></div>");
                 $.each(dataObj, function (idx, item) {
 
                     var no = item.No;
@@ -82,8 +83,10 @@ function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt, TBModel) {
                     if (name == undefined)
                         name = item.NAME;
 
-
-                    $("#divinfo").append("<div style='" + itemStyle + "' name='" + idx + "' onmouseover='MyOver(this)' onmouseout='MyOut(this)' onclick=\"ItemClick('" + sender.id + "','" + no + "','" + tbid + "','" + fk_mapExt + "');\" value='" + no + "'>" + no + '|' + name + "</div>");
+                   
+                    var left = $("#autodiv").offset().left;
+                    $("#autoComplete").css("left", left + "px");
+                    $("#autoComplete").append("<div style='" + itemStyle + "' name='" + idx + "' onmouseover='MyOver(this)' onmouseout='MyOut(this)' onclick=\"ItemClick('" + sender.id + "','" + no + "','" + tbid + "','" + fk_mapExt + "');\" value='" + no + "'>" + no + '|' + name + "</div></div>");
                 });
 
             }
@@ -94,17 +97,28 @@ function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt, TBModel) {
 
             oldValue = selectVal;
 
+            document.onclick = function () {
+                $("#autodiv").remove();
+            }
+        
         }
+       
     }
 }
 
+
+
 //文本自动填充 表格模式
 function showDataGrid(sender, tbid, dataObj, mapExt) {
+   // debugger
     var columns = mapExt.Tag3;
-    $("#divinfo").append(" <table id='viewGrid'></table>");
+    $("#autodiv").remove();
+    $("#" + tbid).after("<div id='autodiv' style=''><div id='autoComplete' style='position:absolute;z-index:999'></div></div>");
+    $("#autoComplete").append(" <table id='viewGrid'></table>");
     //取消DIV的宽度
-    document.getElementById("divinfo").style.width = "";
-
+    //document.getElementById("divinfo").style.width = "";
+    var left = $("#autodiv").offset().left;
+    $("#autoComplete").css("left", left + "px");
     var searchTableColumns = [{
         //title: 'Number',//标题  可不加  
         formatter: function (value, row, index) {
@@ -173,8 +187,7 @@ function showDataGrid(sender, tbid, dataObj, mapExt) {
             }
         };
         options.onClickRow = function (row, element) {
-            $("#divinfo").empty();
-            $("#divinfo").css("display", "none");
+            $("#autodiv").remove();
             highlightindex = -1;
             $("#" + tbid).val(row.No);
 
@@ -183,6 +196,8 @@ function showDataGrid(sender, tbid, dataObj, mapExt) {
         };
         $('#viewGrid').bootstrapTable(options);
         $('#viewGrid').bootstrapTable("load", dataObj);
+
+       
     }
 
 
@@ -494,6 +509,8 @@ function DDLAnsc(selectVal, ddlChild, fk_mapExt, param) {
     // 获取原来选择值.
     var oldVal = null;
     var ddl = document.getElementById(ddlChild);
+    if (ddl == null) return;
+
 
     if (ddl == null) {
         alert(ddlChild + "丢失,或者该字段被删除.");
@@ -570,13 +587,14 @@ function DDLAnsc(selectVal, ddlChild, fk_mapExt, param) {
 function hiddenDiv() {
     $("#divinfo").empty();
     $("#divinfo").css("display", "none");
+    $("#autodiv").remove();
 }
 var itemStyle = 'padding:2px;color: #000000;background-color:white;width:100%;border-bottom: 1px solid #336699;';
 var itemStyleOfS = 'padding:2px;color: #000000;background-color:green;width:100%';
 function ItemClick(sender, val, tbid, fk_mapExt) {
 
-    $("#divinfo").empty();
-    $("#divinfo").css("display", "none");
+    $("#autodiv").remove();
+    //$("#divinfo").css("display", "none");
     highlightindex = -1;
     oldValue = val;
 
@@ -584,11 +602,12 @@ function ItemClick(sender, val, tbid, fk_mapExt) {
 
     // 填充.
     FullIt(oldValue, fk_mapExt, tbid);
+
 }
 
 function MyOver(sender) {
     if (highlightindex != -1) {
-        $("#divinfo").children("div").eq(highlightindex).css("background-color", "white");
+        $("#autoComplete").children("div").eq(highlightindex).css("background-color", "white");
     }
 
     highlightindex = $(sender).attr("name");
@@ -621,46 +640,7 @@ function CheckInput(oInput, filter) {
     }
     return re.test(oInput);
 }
-//正则表达式检查
-function CheckRegInput(oInput, filter, tipInfo) {
-    var mapExt = $('#' + oInput).data();
-    var filter = mapExt.Doc.replace(/【/g, '[').replace(/】/g, ']').replace(/（/g, '(').replace(/）/g, ')').replace(/｛/g, '{').replace(/｝/g, '}');
-    var oInputVal = $("#" + oInput).val();
-    var result = true;
-    if (oInput != '') {
-        var re = filter;
-        if (typeof (filter) == "string") {
-            if (filter.indexOf('/') == 0) {
-                filter = filter.substr(1, filter.length - 2);
-            }
 
-            re = new RegExp(filter);
-        } else {
-            re = filter;
-        }
-        result = re.test(oInputVal);
-    }
-    if (!result) {
-        $("#" + oInput).addClass('errorInput');
-        var errorId = oInput + "error";
-        if ($("#" + errorId).length == 0) {
-            var span = $("<span id='" + errorId + "' style='color:red'></span>");
-            $("#" + oInput).parent().append(span);
-        }
-        $("#" + errorId).html(tipInfo);
-
-    } else {
-        $("#" + oInput).removeClass('errorInput');
-        var errorId = oInput + "error";
-        if ($("#" + errorId).length != 0)
-            $("#" + errorId).remove();
-        //$("[name=" + oInput + ']').parent().removeChild($("#" + errorId));
-
-
-
-    }
-    return result;
-}
 //输入检查
 function txtTest_Onkeyup(ele, filter, message) {
     if (ele == null) return;
@@ -754,7 +734,7 @@ function TB_ClickNum(ele, defVal) {
 
 //获取WF之前路径
 function GetLocalWFPreHref() {
-    var url = window.location.href;
+    var url = GetHrefUrl();
     if (url.indexOf('/WF/') >= 0) {
         var index = url.indexOf('/WF/');
         url = url.substring(0, index);
@@ -992,6 +972,7 @@ function FullCtrlDDL(selectVal, ctrlID, mapExt) {
         //重新绑定下拉框.
         GenerBindDDL("DDL_" + ctrlID, db);
     }
+	layui.form.render("select");
 }
 //填充明细.
 function FullDtl(selectVal, mapExt) {
@@ -1003,7 +984,7 @@ function FullDtl(selectVal, mapExt) {
     var url = GetLocalWFPreHref();
     var dataObj;
 
-    if (dbType == 1) {
+    if (dbType == 3) {
 
         dbSrc = DealSQL(DealExp(dbSrc), e, kvs);
         dataObj = DBAccess.RunDBSrc(dbSrc, 1);
@@ -1026,7 +1007,7 @@ function FullDtl(selectVal, mapExt) {
             alert(data);
             return;
         }
-        dataObj = eval("(" + data + ")"); //转换为json对象 	
+        dataObj = cceval("(" + data + ")"); //转换为json对象 	
     }
 
     for (var i in dataObj.Head) {

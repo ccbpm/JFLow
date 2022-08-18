@@ -1,6 +1,6 @@
 ﻿
 function InitBar(optionKey) {
-
+    console.log(optionKey)
     var html = "菜单类型:";
     html += "<select id='changBar' onchange='changeOption()'>";
 
@@ -41,16 +41,18 @@ function GetDBDtl() {
     var json = [
 
         { "No": "Html", "Name": "Html文本", "GroupNo": "A", "Url": "Html.htm" },
-        { "No": "HtmlVar", "Name": "变量文本", "GroupNo": "A", "Url": "HtmlVar.htm" },
+        { "No": "HtmlVar", "Name": "变量文本-单数值模式", "GroupNo": "A", "Url": "HtmlVar.htm" },
+     { "No": "HtmlVarGroup", "Name": "变量文本-分组模式(beta)", "GroupNo": "A", "Url": "HtmlVarGroup.htm" },
 
-        { "No": "ChartLine", "Name": "折线图", "GroupNo": "B", "Url": "ChartLine.htm" },
-        { "No": "ChartPie", "Name": "饼图", "GroupNo": "B", "Url": "ChartPie.htm" },
-        { "No": "ChartZZT", "Name": "柱状图", "GroupNo": "B", "Url": "ChartZZT.htm" },
-        { "No": "ChartRate", "Name": "百分比扇形图", "GroupNo": "B", "Url": "ChartRate.htm" },
+        { "No": "ChartLine", "Name": "饼、柱、折线图", "GroupNo": "B", "Url": "ChartLine.htm" },
+        /* { "No": "ChartPie", "Name": "饼图", "GroupNo": "B", "Url": "ChartPie.htm" },*/
+       /* { "No": "ChartRate", "Name": "百分比扇形图", "GroupNo": "B", "Url": "ChartRate.htm" },*/
         { "No": "ChartRing", "Name": "环形图", "GroupNo": "B", "Url": "ChartRing.htm" },
+        { "No": "ChartChina", "Name": "中国地图", "GroupNo": "B", "Url": "ChartChina.htm" },
 
         { "No": "Table", "Name": "简单表格", "GroupNo": "C", "Url": "Table.htm" },
-        { "No": "Tab", "Name": "标签页", "GroupNo": "C", "Url": "Tab.htm" }
+        { "No": "Tab", "Name": "标签页", "GroupNo": "C", "Url": "Tab.htm" },
+        { "No": "iFrame", "Name": "框架模式(beta)", "GroupNo": "C", "Url": "iFrame.htm" }
 
     ];
     return json;
@@ -64,7 +66,7 @@ function Close() {
 
 function Back() {
     var url = "../Menus.htm";
-    window.location.href = url;
+    SetHref(url);
 }
 
 function Adv() {
@@ -89,7 +91,7 @@ function changeOption() {
     var optionKey = optionKey = sele[index].value;
     var url = GetUrl(optionKey);
 
-    window.location.href = url + "?MenuNo=" + pageID + "&PageID=" + pageID;
+    SetHref(url + "?MenuNo=" + pageID + "&PageID=" + pageID);
 }
 
 function GetUrl(optionKey) {

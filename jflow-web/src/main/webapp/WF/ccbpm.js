@@ -7,24 +7,23 @@
 */
 var isEqualsDomain = false;  //调用ccbpm.js的页面和ccbpm.js域是否相同
 var ccbpmPath = GetPath();
-//var ccbpmPath = remotePath;
 var paramData = {};
 var writeImg = "";//审核写字板
-var FWCVer=0;
+var FWCVer = 0;
 $(function () {
-    if (window.location.href.indexOf(ccbpmPath) == -1)
+    if (GetHrefUrl().indexOf(ccbpmPath) == -1)
         isEqualsDomain = true;
     //引入关联的js
-    jQuery.getScript(ccbpmPath + "/WF/Scripts/config.js", function () {
-        jQuery.getScript(ccbpmPath + "/WF/Scripts/QueryString.js", function () {
-            jQuery.getScript(ccbpmPath + "/WF/Comm/Gener.js", function () {
+    jQuery.getScript(DealText( ccbpmPath + "/WF/Scripts/config.js"), function () {
+        jQuery.getScript(DealText( ccbpmPath + "/WF/Scripts/QueryString.js"), function () {
+            jQuery.getScript(DealText( ccbpmPath + "/WF/Comm/Gener.js"), function () {
                 if ($('#ccbpmJS').length != 0) {
                     var url = $('#ccbpmJS')[0].src;
-                    var SID = getQueryStringByNameFromUrl(url, "SID");
+                    var SID = getQueryStringByNameFromUrl(url, "Token");
                     //用户登陆
                     if (SID != null && SID != undefined) {
                         var handler = new HttpHandler("BP.WF.HttpHandler.WF");
-                        handler.AddPara("SID", SID);
+                        handler.AddPara("Token", SID);
                         handler.AddPara("DoWhat", "PortLogin");
 
                         var data = handler.DoMethodReturnString("Port_Init");
@@ -49,7 +48,6 @@ $(window).load(function () {
         IsReadonly: GetQueryString("IsReadonly")
     }
 
-
     
     if ($("#ToolBar").length == 1 || $("#Toolbar").length == 1) {
         if ($('#ccbpmJS').length == 1) {
@@ -68,16 +66,22 @@ $(window).load(function () {
         }
 
     }
-        
+
+    //审核组件
     if ($("#WorkCheck").length == 1) {
-        Skip.addJs(ccbpmPath + "/WF/WorkOpt/WorkCheck.js");
-        NodeWorkCheck_Init();
+        loadScript(ccbpmPath + "/WF/WorkOpt/WorkCheck.js", function () {
+            NodeWorkCheck_Init();
+        });  
+    }
+    //单个附件
+    if ($("[name=AthSingle]").length != 0) {
+        loadScript(ccbpmPath + "/WF/CCForm/AthSingle.js");
     }
        
     if ($("#FlowBBS").length == 1)
         loadScript(ccbpmPath + "/WF/WorkOpt/FlowBBS.js");
     if ($("#JobSchedule").length == 1)
-        loadScript(ccbpmPath + "/WF/WorkOpt/JobSchedule.js");
+        loadScript(ccbpmPath + "/WF/WorkOpt/OneWork/JobSchedule.js");
 
 });
 
@@ -94,9 +98,5 @@ function GetPath() {
     }
     return null;
 }
-
-
-
-//Skip.addJs(rootObject, "test.js")//test.js文件中含有funciotn test(){alert("test");}
 
 

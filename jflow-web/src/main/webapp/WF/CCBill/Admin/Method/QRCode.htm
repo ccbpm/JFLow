@@ -44,11 +44,12 @@
             en.MethodModel = MethodModel.QRCode; //设置为链接按钮.
             en.RefMethodType = 1;
             en.UrlExt = "./OptComponents/QRCode.htm";
+            en.IsEnable = 1;
             //en.SetPKVal(en.FrmID + "_" + en.MethodID);
             en.Insert();
 
             var url = "../../../Comm/En.htm?EnName=BP.CCBill.Template.MethodQRCode&No=" + en.No;
-            window.location.href = url;
+            SetHref(url);
         }
 
     </script>

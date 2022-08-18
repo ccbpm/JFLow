@@ -21,7 +21,7 @@ new Vue({
 
             if (window.confirm("确定要删除吗?") == false)
                 return;
-            var en = new Entity("BP.GPM.Menu2020.TabDtl", no);
+            var en = new Entity("BP.CCFast.CCMenu.TabDtl", no);
             var data = en.Delete();
             layer.msg(data);
 
@@ -34,14 +34,13 @@ new Vue({
             }, 1000)
         },
         EditIt: function (no, docModel) {
-            var url = "../../Comm/EnOnly.htm?EnName=BP.GPM.Menu2020.TabDtl&No=" + no;
+            var url = "../../Comm/EnOnly.htm?EnName=BP.CCFast.CCMenu.TabDtl&No=" + no;
             OpenLayuiDialog(url, '', 900, 80, "auto", true);
         },
         MoveItem(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId) {
             // todo 需要重新实现接口
 
             var no = GetQueryString("PageID");
-            // debugger;
             // 方法排序..
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_GPM_Window");
             handler.AddPara("PageID", no);
@@ -109,7 +108,7 @@ new Vue({
 
         var refNo = GetQueryString("RefMenuNo");
 
-        var ens = new Entities("BP.GPM.Menu2020.TabDtls");
+        var ens = new Entities("BP.CCFast.CCMenu.TabDtls");
         ens.Retrieve("RefMenuNo", refNo,"Idx");
 
         this.myEns = ens.TurnToArry();

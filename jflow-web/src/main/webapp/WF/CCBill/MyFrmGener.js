@@ -28,9 +28,9 @@ function ToolBar_Init(entityType) {
         var fromPage = GetQueryString("From");
         fromPage = fromPage == null || fromPage == undefined ? "" : fromPage;
         switch (this.name) {
-            case "Add":
+            case "New":
                 if (methodNo != "" && pworkid != 0) {
-                    window.location.href = "./Opt/GotoLink.htm?FrmID=" + GetQueryString("FrmID") + "&MethodNo=" + methodNo + "&WorkID=" + pworkid + "&DoType=Bill";
+                    SetHref("./Opt/GotoLink.htm?FrmID=" + GetQueryString("FrmID") + "&MethodNo=" + methodNo + "&WorkID=" + pworkid + "&DoType=Bill");
                     return;
                 }
                 var handler = new HttpHandler("BP.CCBill.WF_CCBill");
@@ -45,12 +45,23 @@ function ToolBar_Init(entityType) {
                     return;
                 }
                 if (entityType == 1)
-                    window.location.href = 'MyBill.htm?FrmID=' + GetQueryString("FrmID") + "&WorkID=" + data;
+                    SetHref('MyBill.htm?FrmID=' + GetQueryString("FrmID") + "&WorkID=" + data);
                 else
-                    window.location.href = 'MyDict.htm?FrmID=' + GetQueryString("FrmID") + "&WorkID=" + data;
+                    SetHref('MyDict.htm?FrmID=' + GetQueryString("FrmID") + "&WorkID=" + data);
 
                 break;
             case "Save":
+                //保存从表数据
+                $("[name=Dtl]").each(function (i, obj) {
+                    var contentWidow = obj.contentWindow;
+                    if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
+                        contentWidow.SaveAll();
+                    }
+                });
+                if (checkBlanks() == false) {
+                    layer.alert("必填项不能为空");
+                    return;
+                }
                 //保存信息
                 layui.form.on('submit(Save)', function (data) {
                     this.innerHTML = "<i class='iconfont icon-baocun'></i>正在保存";
@@ -76,10 +87,26 @@ function ToolBar_Init(entityType) {
                         return false;
                     }
                     layer.alert("保存成功");
+                    if (typeof isSaveAfterCloseOfBill != "undefined" && isSaveAfterCloseOfBill == true) {
+                        var index = parent.parent.layer.getFrameIndex(window.parent.name);
+                        parent.parent.layer.close(index);
+                    }
+
                     return false;
                 })
                 break;
             case "Submit":
+                //保存从表数据
+                $("[name=Dtl]").each(function (i, obj) {
+                    var contentWidow = obj.contentWindow;
+                    if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
+                        contentWidow.SaveAll();
+                    }
+                });
+                if (checkBlanks() == false) {
+                    layer.alert("必填项不能为空");
+                    return;
+                }
                 //保存信息
                 layui.form.on('submit(Submit)', function (data) {
                     this.innerHTML = "<i class='iconfont icon-baocun'></i>正在提交";
@@ -106,6 +133,10 @@ function ToolBar_Init(entityType) {
                         return false;
                     }
                     layer.alert("提交成功");
+                    if (typeof isSaveAfterCloseOfBill != "undefined" && isSaveAfterCloseOfBill == true) {
+                        var index = parent.parent.layer.getFrameIndex(window.parent.name);
+                        parent.parent.layer.close(index);
+                    }
 
                     return false;
                 })
@@ -138,15 +169,15 @@ function ToolBar_Init(entityType) {
                         window.parent.layer.close(layer.index);
                     } else {
                         if (entityType == 1)
-                            window.location.href = 'SearchBill.htm?FrmID=' + GetQueryString("FrmID");
+                            SetHref('SearchBill.htm?FrmID=' + GetQueryString("FrmID"));
                         else
-                            window.location.href = 'SearchDict.htm?FrmID=' + GetQueryString("FrmID");
+                            SetHref('SearchDict.htm?FrmID=' + GetQueryString("FrmID"));
                     }
                 });
                 break;
             case "DataVer":
                 var url = "./OptComponents/DataVer.htm?FrmID=" + GetQueryString("FrmID") + "&WorkID=" + GetQueryString("WorkID");
-                window.location.href = url;
+                SetHref(url);
                 break;
             case "Search":
                 if (entityType == 1) {
@@ -155,11 +186,11 @@ function ToolBar_Init(entityType) {
                         url += "&MethodNo=" + methodNo;
                     if (pworkid != 0)
                         url += "&PWorkID=" + pworkid;
-                    window.location.href = url;
+                    SetHref(url);
                 }
                    
                 else
-                    window.location.href = "SearchDict.htm?FrmID=" + GetQueryString("FrmID");
+                    SetHref("SearchDict.htm?FrmID=" + GetQueryString("FrmID"));
                 
                 break;
             case "Group":
@@ -168,20 +199,17 @@ function ToolBar_Init(entityType) {
                     url += "&MethodNo=" + methodNo;
                 if (pworkid != 0)
                     url += "&PWorkID=" + pworkid;
-                window.location.href = url;
+                SetHref(url);
                 break;
             case "Print":
                 var type = $(this).data("type");
                 var url = "";
-                if (type == "HTML") {
-                    url = "../WorkOpt/Packup.htm?FrmID=" + GetQueryString("FrmID") + "&WorkID=" + GetQueryString("WorkID") + "&SourceType=Bill&FileType=htm";
+                if (type == "HTML" || type == "PDF") {
+                    url = "../WorkOpt/Packup.htm?FrmID=" + GetQueryString("FrmID") + "&WorkID=" + GetQueryString("WorkID") + "&SourceType=Bill&FileType=" + type;
                     OpenLayuiDialog(url, "打印ZIP", window.innerWidth / 2, Window.innerHeight / 2, "auto");
                     break;
                 }
-                if (type == "PDF") {
-                    PrintPDF();
-                    break;
-                }
+               
                 if (type == "RTF") {
                     url = "../WorkOpt/PrintDoc.htm?FrmID=" + GetQueryString("FrmID") + "&WorkID=" + GetQueryString("WorkID") + "&SourceType=Bill";
                     OpenLayuiDialog(url, "打印RTF", window.innerWidth / 2, 50, "auto");
@@ -220,13 +248,13 @@ function keyDown(e) {
 
 function SearchBill() {
     var url = "SearchBill.htm?FrmID=" + GetQueryString("FrmID");
-    window.location.href = url;
+    SetHref(url);
 }
 
 
 function DraftBox() {
     var url = "Draft.htm?FrmID=" + GetQueryString("FrmID");
-    window.location.href = url;
+    SetHref(url);
 }
 
 function RefBill(frmID) {
@@ -236,7 +264,7 @@ function RefBill(frmID) {
     var H = document.body.clientHeight - 40;
     var url = "Opt/RefBill.htm?PFrmID=" + frmID + "&WorkID=" + GetQueryString("WorkID") + "&FrmID=" + GetQueryString("FrmID");
     OpenBootStrapModal(url, "eudlgframe", "关联单据", W, H, "icon-property", null, null, null, function () {
-        window.location.href = window.location.href;
+        Reload();
     }, null, "black");
 }
 

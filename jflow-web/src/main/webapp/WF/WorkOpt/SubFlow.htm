@@ -44,7 +44,7 @@
             }
 
             //查询出来所有子流程的数据.
-            var sf = new Entity("BP.WF.Template.FrmSubFlow", GetQueryString("FK_Node"));
+            var sf = new Entity("BP.WF.Template.SFlow.FrmSubFlow", GetQueryString("FK_Node"));
             var node = new Entity("BP.WF.Node", GetQueryString("FK_Node"));
           
             var html = "";
@@ -72,7 +72,7 @@
 
             var gwf = null;
 
-            var subFlows = new Entities("BP.WF.Template.SubFlowHands");
+            var subFlows = new Entities("BP.WF.Template.SFlow.SubFlowHands");
             subFlows.Retrieve("FK_Node", nodeID, "SubFlowType", 0, "Idx");
 
             //要兼容旧版本.
@@ -83,7 +83,7 @@
                     if (flowNo == null || flowNo == "")
                         continue;
 
-                    var en = new Entity("BP.WF.Template.SubFlowHand");
+                    var en = new Entity("BP.WF.Template.SFlow.SubFlowHand");
                     en.FK_Node = nodeID;
                     en.SubFlowNo = flowNo;
                      
@@ -95,6 +95,9 @@
 
             //遍历子流程配置。
             var pworkID = GetQueryString("WorkID");
+            if (pworkID == null || pworkID == undefined)
+                pworkID = 0;
+
             for (var i = 0; i < subFlows.length; i++) {
 
                 var subFlow = subFlows[i];
@@ -201,12 +204,6 @@
                     else
                         html += "<td nowrap>" + item.RDT + "</td>";
 
-                    //流程备注.
-                    if (item.FlowNote == null)
-                        html += "<td title='" + item.FlowNote + "'></td>";
-                    else
-                        html += "<td title='" + item.FlowNote + "'>" + item.FlowNote + "</td>";
-
                     html += "</tr>";
 
                  
@@ -223,6 +220,9 @@
 
 
         function InsertSubFlows(flowNo, fid, workid, layer, html) {
+
+            if (workid == null || workid == undefined)
+                workid = 0;
 
             //该流程的子流程信息, 并按照流程排序.
             var gwfs = new Entities("BP.WF.GenerWorkFlows");
@@ -274,7 +274,7 @@
                     html += "<td nowrap>" + item.RDT + "</td>";
 
                 //流程备注.
-                htm += "<td title='" + item.FlowNote + "'>" + item.FlowNote + "</td>";
+              //  htm += "<td title='" + item.FlowNote + "'>" + item.FlowNote + "</td>";
 
                 html += "</tr>";
                 //加载他下面的子流程.

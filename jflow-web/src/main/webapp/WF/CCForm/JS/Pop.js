@@ -126,35 +126,74 @@ function clickEvent(mapExt, targetId, objtr, url, mtagsId, target,oid) {
     var height = mapExt.H;
     var iframeId = mapExt.MyPK;
     var title = mapExt.GetPara("Title");
-    if (window.parent && window.parent.OpenBootStrapModal) {
-        var data = "";
-        var paras = "";
-        if (objtr == "" || objtr == null || objtr == undefined) {
-            //获取表单中字段的数据
-            paras = getPageData();
-        }
-        else {
-            data = $(objtr).data().data;
-            Object.keys(data).forEach(function (key) {
-                if (key == "OID" || key == "FID" || key == "Rec" || key == "RefPK" || key == "RDT") { }
-                else {
-                    paras += "@" + key + "=" + data[key];
-                }
-            });
-        }
 
+    if (width > window.innerWidth || width < window.innerWidth / 2)
+        width = window.innerWidth * 4 / 5;
+    if (height > window.innerHeight || height < window.innerHeight / 2)
+        height = 250;
+    else
+        height = height / window.innerHeight * 100;
 
-        window.parent.OpenBootStrapModal(url + "&AtParas=" + paras, iframeId, title, width, height, "icon-edit", true, function () {
+    //参数传递
+    var data = "";
+    var paras = "";
+    if (objtr == "" || objtr == null || objtr == undefined) {
+        //获取表单中字段的数据
+        paras = getPageData();
+    }
+    else {
+        data = $(objtr).data().data;
+        Object.keys(data).forEach(function (key) {
+            if (key == "OID" || key == "FID" || key == "Rec" || key == "RefPK" || key == "RDT") { }
+            else {
+                paras += "@" + key + "=" + data[key];
+            }
+        });
+    }
+
+    if (window.parent && typeof window.parent.OpenLayuiDialog == "function") {
+        window.parent.OpenLayuiDialog(url + "&AtParas=" + paras, title, width, 80, "auto", false, true, true, function () {
             var selectType = mapExt.GetPara("SelectType");
-            var iframe = window.parent.frames[iframeId];
-            if (iframe) {
+            var iframe = $(window.parent.frames["dlg"]).find("iframe");
+            if (iframe.length > 0) {
+                iframe = iframe[0].contentWindow;
                 var selectedRows = iframe.selectedRows;
                 if (iframe.Save)
-                        selectedRows = iframe.Save();
+                    selectedRows = iframe.Save();
                 if ($.isArray(selectedRows)) {
 
                     var mtags = $("#" + mtagsId);
-                    mtags.mtags("loadData", GetInitJsonData(mapExt, oid,""));
+                    mtags.mtags("loadData", GetInitJsonData(mapExt, oid, ""));
+                    target.val(mtags.mtags("getText"));
+                    // 单选复制当前表单
+                    if (selectType == "0" && selectedRows.length == 1) {
+                        FullIt(selectedRows[0].No, mapExt.MyPK, targetId);
+                    }
+                    var No = "";
+                    if (selectedRows != null && $.isArray(selectedRows))
+                        $.each(selectedRows, function (i, selectedRow) {
+                            No += selectedRow.No + ",";
+                        });
+                    //执行JS
+                    var backFunc = mapExt.Tag5;
+                    if (backFunc != null && backFunc != "" && backFunc != undefined)
+                        DBAccess.RunFunctionReturnStr(DealSQL(backFunc, No));
+
+                }
+            }
+        });
+    } else {
+        window.OpenBootStrapModal(url + "&AtParas=" + paras, iframeId, title, width, height, "icon-edit", true, function () {
+            var selectType = mapExt.GetPara("SelectType");
+            var iframe = window.frames[iframeId];
+            if (iframe) {
+                var selectedRows = iframe.selectedRows;
+                if (iframe.Save)
+                    selectedRows = iframe.Save();
+                if ($.isArray(selectedRows)) {
+
+                    var mtags = $("#" + mtagsId);
+                    mtags.mtags("loadData", GetInitJsonData(mapExt, oid, ""));
                     target.val(mtags.mtags("getText"));
                     // 单选复制当前表单
                     if (selectType == "0" && selectedRows.length == 1) {
@@ -175,9 +214,8 @@ function clickEvent(mapExt, targetId, objtr, url, mtagsId, target,oid) {
         }, null, function () {
 
         }, "div_" + iframeId);
-        return;
     }
-
+    
 }
 //***************************************树干模式.*****************************************************************
 function PopBranches(mapExt, val, targetId, index,oid,objtr) {
@@ -250,68 +288,117 @@ function clickBranchesEvent(mapExt, targetId, objtr, url, mtagsId, target, oid) 
     var height = mapExt.H;
     var iframeId = mapExt.MyPK;
     var title = mapExt.GetPara("Title");
-
-    if (window.parent && window.parent.OpenBootStrapModal) {
-            var data = "";
-            var paras = "";
-            if (objtr == "" || objtr == null || objtr == undefined) {
-                //获取表单中字段的数据
-                paras = getPageData();
-            }
+    if (width > window.innerWidth || width < window.innerWidth / 2)
+        width = window.innerWidth * 4 / 5;
+    if (height > window.innerHeight || height < window.innerHeight / 2)
+        height = 50;
+    else
+        height = height / window.innerHeight * 100;
+    //传递参数
+    var data = "";
+    var paras = "";
+    if (objtr == "" || objtr == null || objtr == undefined) {
+        //获取表单中字段的数据
+        paras = getPageData();
+    }
+    else {
+        data = $(objtr).data().data;
+        Object.keys(data).forEach(function (key) {
+            if (key == "OID" || key == "FID" || key == "Rec" || key == "RefPK" || key == "RDT") { }
             else {
-                data = $(objtr).data().data;
-                Object.keys(data).forEach(function (key) {
-                    if (key == "OID" || key == "FID" || key == "Rec" || key == "RefPK" || key == "RDT") { }
-                    else {
-                        paras += "@" + key + "=" + data[key];
-                    }
-                });
+                paras += "@" + key + "=" + data[key];
             }
-            window.parent.OpenBootStrapModal(url+"&AtParas="+paras, iframeId, title, width, height, "icon-edit", true, function () {
-                var selectType = mapExt.GetPara("SelectType");
-                var iframe = window.parent.frames[iframeId];
-                
-                if (iframe) {
-                    //删除保存的数据
-                    var initJsonData = [];
-                    initJsonData = Delete_FrmEleDBs(mapExt.FK_MapData, mapExt.AttrOfOper, oid, initJsonData);
-                    var nodes = iframe.GetCheckNodes();
-                    
-                    mtags = $("#" + mtagsId);
-                   
-                    if ($.isArray(nodes)) {
-                        $.each(nodes, function (i, node) {
-                            initJsonData.push({
-                                "No": node.No,
-                                "Name": node.Name
-                            });
+        });
+    }
+    if (window.parent && typeof window.parent.OpenLayuiDialog == "function") {
+        window.parent.OpenLayuiDialog(url + "&AtParas=" + paras, title, width, 80, "auto", false, true, true, function () {
+            var selectType = mapExt.GetPara("SelectType");
+            var iframe = $(window.parent.frames["dlg"]).find("iframe");
+            if (iframe.length > 0) {
+                iframe = iframe[0].contentWindow;
+                //删除保存的数据
+                var initJsonData = [];
+                initJsonData = Delete_FrmEleDBs(mapExt.FK_MapData, mapExt.AttrOfOper, oid, initJsonData);
+                var nodes = iframe.GetCheckNodes();
+
+                mtags = $("#" + mtagsId);
+
+                if ($.isArray(nodes)) {
+                    $.each(nodes, function (i, node) {
+                        initJsonData.push({
+                            "No": node.No,
+                            "Name": node.Name
                         });
+                    });
 
-                        mtags.mtags("loadData", initJsonData);
-                        $("#" + targetId).val(mtags.mtags("getText"));
+                    mtags.mtags("loadData", initJsonData);
+                    $("#" + targetId).val(mtags.mtags("getText"));
 
-                        // 单选复制当前表单
-                        if (selectType == "0" && nodes.length == 1) {
-                            FullIt(nodes[0].No, mapExt.MyPK, targetId);
-                        }
-
-                        //执行JS方法
-                        var No = "";
-                        if (nodes != null && $.isArray(nodes))
-                            $.each(nodes, function (i, nodes) {
-                                No += nodes.No + ",";
-                            });
-                        //执行JS
-                        var backFunc = mapExt.Tag5;
-                        if (backFunc != null && backFunc != "" && backFunc != undefined)
-                            DBAccess.RunFunctionReturnStr(DealSQL(backFunc, No));
+                    // 单选复制当前表单
+                    if (selectType == "0" && nodes.length == 1) {
+                        FullIt(nodes[0].No, mapExt.MyPK, targetId);
                     }
-                }
-            }, null, function () {
 
-            }, "div_" + iframeId);
-            return;
-        }
+                    //执行JS方法
+                    var No = "";
+                    if (nodes != null && $.isArray(nodes))
+                        $.each(nodes, function (i, nodes) {
+                            No += nodes.No + ",";
+                        });
+                    //执行JS
+                    var backFunc = mapExt.Tag5;
+                    if (backFunc != null && backFunc != "" && backFunc != undefined)
+                        DBAccess.RunFunctionReturnStr(DealSQL(backFunc, No));
+                }
+            }
+        })
+    } else {
+        window.OpenBootStrapModal(url + "&AtParas=" + paras, iframeId, title, width, height, "icon-edit", true, function () {
+            var selectType = mapExt.GetPara("SelectType");
+            var iframe = window.frames[iframeId];
+
+            if (iframe) {
+                //删除保存的数据
+                var initJsonData = [];
+                initJsonData = Delete_FrmEleDBs(mapExt.FK_MapData, mapExt.AttrOfOper, oid, initJsonData);
+                var nodes = iframe.GetCheckNodes();
+
+                mtags = $("#" + mtagsId);
+
+                if ($.isArray(nodes)) {
+                    $.each(nodes, function (i, node) {
+                        initJsonData.push({
+                            "No": node.No,
+                            "Name": node.Name
+                        });
+                    });
+
+                    mtags.mtags("loadData", initJsonData);
+                    $("#" + targetId).val(mtags.mtags("getText"));
+
+                    // 单选复制当前表单
+                    if (selectType == "0" && nodes.length == 1) {
+                        FullIt(nodes[0].No, mapExt.MyPK, targetId);
+                    }
+
+                    //执行JS方法
+                    var No = "";
+                    if (nodes != null && $.isArray(nodes))
+                        $.each(nodes, function (i, nodes) {
+                            No += nodes.No + ",";
+                        });
+                    //执行JS
+                    var backFunc = mapExt.Tag5;
+                    if (backFunc != null && backFunc != "" && backFunc != undefined)
+                        DBAccess.RunFunctionReturnStr(DealSQL(backFunc, No));
+                }
+            }
+        }, null, function () {
+
+        }, "div_" + iframeId);
+
+    }
+  
 }
 
 /******************************************  表格查询 **********************************/
@@ -700,7 +787,7 @@ function SaveVal_FrmEleDB(fk_mapdata, keyOfEn, oid, val1, val2, tag5) {
  * 获取页面数据
  * */
 function getPageData() {
-    var formss = $('#divCCForm').serialize();
+    var formss = $('#divCCForm').serialize()||"";
     var params = "";
     var formArr = formss.split('&');
     var formArrResult = [];
@@ -778,7 +865,7 @@ function getPageData() {
 
 //获取WF之前路径
 function GetLocalWFPreHref() {
-    var url = window.location.href;
+    var url = GetHrefUrl();
     if (url.indexOf('/WF/') >= 0) {
         var index = url.indexOf('/WF/');
         url = url.substring(0, index);

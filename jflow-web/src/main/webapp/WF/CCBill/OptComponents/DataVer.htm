@@ -183,12 +183,12 @@
                 return;
             var en = new Entity("BP.Sys.EnVer", mypk);
             en.Delete(); //已经在删除的逻辑里写了删除dtl数据。
-            window.location.href = window.location.href;
+            Reload();
         }
 
         function NewVer() {
 
-            var val = window.prompt("备注*", "");
+            var val = promptGener("备注*", "");
             if (val == null || val == undefined) return;
             if (val == "") val = "无";
 
@@ -211,7 +211,7 @@
         //应用此数据.
         function AppFieldData(keyOfEn) {
 
-            var val = window.prompt("请输入要复原的版本号: (请输入数字,1,2,3)", "1");
+            var val = promptGener("请输入要复原的版本号: (请输入数字,1,2,3)", "1");
             if (val == undefined || val == null)
                 return;
 
@@ -232,7 +232,7 @@
             if (data.indexOf("err@") == 0) {
                 return;
             }
-            window.location.href = window.location.href;
+            Reload();
         }
 
         function Ver() {
@@ -240,7 +240,7 @@
             var frmID = GetQueryString("FrmID");
             var workID = GetQueryString("WorkID");
             url = "DataVer.htm?FrmID=" + frmID + "&WorkID=" + workID;
-            window.location.href = url;
+            SetHref(url);
             return;
         }
 
@@ -249,7 +249,7 @@
             var frmID = GetQueryString("FrmID");
             var workID = GetQueryString("WorkID");
             url = "../MyDict.htm?FrmID=" + frmID + "&WorkID=" + workID;
-            window.location.href = url;
+            SetHref(url);
             return;
             //var md = new Entity("BP.Sys.MapData", frmID);
             //EntityType = md.EntityType;

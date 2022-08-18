@@ -562,6 +562,8 @@ function DDLAnsc(selectVal, ddlChild, fk_mapExt, param) {
     // 获取原来选择值.
     var oldVal = null;
     var ddl = document.getElementById(ddlChild);
+    if (ddl == null) return;
+
 
     if (ddl == null) {
         alert(ddlChild + "丢失,或者该字段被删除.");
@@ -680,7 +682,7 @@ function FullDtl(selectVal, fk_mapExt, mapExt) {
             alert(data);
             return;
         }
-        dataObj = eval("(" + data + ")"); //转换为json对象 	
+        dataObj = cceval("(" + data + ")"); //转换为json对象 	
     }
 
     for (var i in dataObj.Head) {
@@ -1046,7 +1048,7 @@ function TB_ClickNum(ele, defVal) {
 
 //获取WF之前路径
 function GetLocalWFPreHref() {
-    var url = window.location.href;
+    var url = GetHrefUrl();
     if (url.indexOf('/WF/') >= 0) {
         var index = url.indexOf('/WF/');
         url = url.substring(0, index);

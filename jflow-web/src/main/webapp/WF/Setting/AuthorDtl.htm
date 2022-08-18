@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>授权详细信息</title>
-    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    
     <link href="../Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" />
     <link href="../Scripts/bootstrap/css/components-rounded.css" rel="stylesheet" />
     <link href="../CCForm/JS/mselector.css" rel="stylesheet" type="text/css" />
@@ -188,7 +188,7 @@
                 else
                     en.Update();
             }
-            window.location.href = 'Author.htm';
+            SetHref('Author.htm');
 
 
         }
@@ -297,7 +297,7 @@
                            onclick="Save();" />
 
                     <input type="button" name="Btn_Sa2ve" value="返回" id="Btn_bACK"
-                           onclick="javascript: window.location.href = 'Author.htm'" />
+                           onclick="javascript: SetHref('Author.htm');" />
 
                 </td>
             </tr>

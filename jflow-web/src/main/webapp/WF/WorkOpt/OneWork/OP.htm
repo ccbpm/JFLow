@@ -59,7 +59,7 @@
         });
 
         function RollbackIt() {
-            window.location.href = "../Rollback.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow");
+            SetHref("../Rollback.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Flow=" + GetQueryString("FK_Flow"));
         }
 
         //回滚流程
@@ -128,7 +128,7 @@
          //催办.
         function Press(fk_flow, workid, fid) {
 
-            var msg = window.prompt('请输入催办信息', '该工作因为xxx原因，需要您优先处理.');
+            var msg = promptGener('请输入催办信息', '该工作因为xxx原因，需要您优先处理.');
             if (msg == null)
                 return;
 
@@ -189,11 +189,11 @@
 
 
         //撤销挂起
-        function addUnHungUp() {
+        function addUnHungup() {
 
             var html = addBlockBegin("取消挂起");
 
-            html += "功能执行:<a href=\"javascript:DoFunc('OP_UnHungUp','" + workid + "','" + fk_flow + "','" + fk_node + "')\" >点击执行取消挂起流程</a>。";
+            html += "功能执行:<a href=\"javascript:DoFunc('OP_UnHungup','" + workid + "','" + fk_flow + "','" + fk_node + "')\" >点击执行取消挂起流程</a>。";
             html += "<br />说明：解除流程挂起的状态。";
 
             html += addBlockEnd();
@@ -249,7 +249,7 @@
             if (confirm('您确定要执行吗？') == false)
                 return;
             var url = '../../GetTask.aspx?DoType=Tackback&FK_Flow=' + fk_flow + '&FK_Node=' + fk_node + '&ToNode=' + toNode + '&WorkID=' + workid;
-            window.location.href = url;
+            SetHref(url);
         }
 
         function UnSend(fk_flow, workID, fid) {

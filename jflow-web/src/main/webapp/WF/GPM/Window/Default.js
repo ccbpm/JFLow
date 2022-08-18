@@ -1,4 +1,4 @@
-﻿
+﻿    
 new Vue({
     el: '#myEnParas',
     data: {
@@ -21,7 +21,7 @@ new Vue({
 
             if (window.confirm("确定要删除吗?") == false)
                 return;
-            var en = new Entity("BP.GPM.Home.WindowTemplate", no);
+            var en = new Entity("BP.CCFast.Portal.WindowTemplate", no);
             var data = en.Delete();
             layer.msg(data);
 
@@ -34,14 +34,13 @@ new Vue({
             }, 2000)
         },
         EditIt: function (no, docModel) {
-            var url = "../../Comm/En.htm?EnName=BP.GPM.Home.WindowExt." + docModel + "&No=" + no;
-            OpenLayuiDialog(url, '', 900, 80, "auto", false);
+            var url = "../../Comm/En.htm?EnName=BP.CCFast.Portal.WindowExt." + docModel + "&No=" + no;
+            OpenLayuiDialog(url, '', 1100, 89, "auto", false);
         },
         MoveItem(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId) {
             // todo 需要重新实现接口
 
             var no = GetQueryString("PageID");
-            // debugger;
             // 方法排序..
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_GPM_Window");
             handler.AddPara("PageID", no);
@@ -109,7 +108,7 @@ new Vue({
 
         var PageID = GetQueryString("PageID");
 
-        var ens = new Entities("BP.GPM.Home.WindowTemplates");
+        var ens = new Entities("BP.CCFast.Portal.WindowTemplates");
         ens.Retrieve("PageID", PageID);
 
         this.myEns = ens.TurnToArry(); 

@@ -7,15 +7,17 @@
 4.  MapExt2021.js 文件是一个公用的文件，用于处理扩展业务逻辑的，它在多个地方别调用了.
 */
 var isReadonly = false;
+var IsSave = false;//是否已经保存
 //初始化函数
 $(function () {
     //增加css样式
     $('head').append('<link href="../../DataUser/Style/GloVarsCSS.css" rel="stylesheet" type="text/css" />');
     initPageParam(); //初始化参数.
-
+    if (pageData.IsNew == 0) //数据编辑字段
+        IsSave = true;
     //隐藏保存按钮.
-    if (window.location.href.indexOf('&IsReadonly=1') > 1
-        || window.location.href.indexOf('&IsEdit=0') > 1) {
+    if (GetHrefUrl().indexOf('&IsReadonly=1') > 1
+        || GetHrefUrl().indexOf('&IsEdit=0') > 1) {
         isReadonly = true;
         $("#Save").hide();
         $("#SaveAndClose").hide();
@@ -44,6 +46,8 @@ $(function () {
  * 网页页面参数获取
  */
 var pageData = {};
+var richTextType = getConfigByKey("RichTextType", 'tinymce');
+
 function initPageParam() {
     pageData.FK_Flow = GetQueryString("FK_Flow");
     pageData.FK_Node = GetQueryString("FK_Node");
@@ -59,6 +63,7 @@ function initPageParam() {
     pageData.IsStartFlow = GetQueryString("IsStartFlow"); //是否是启动流程页面 即发起流程
     pageData.DoType1 = GetQueryString("DoType");
     pageData.FK_MapData = GetQueryString("FK_MapData");
+    pageData.IsNew = GetQueryString("IsNew")||"0";
 }
 
 /**
@@ -67,7 +72,7 @@ function initPageParam() {
 var frmData = null;
 function GenerFrm() {
 
-    var href = window.location.href;
+    var href = GetHrefUrl();
     var urlParam = href.substring(href.indexOf('?') + 1, href.length);
     urlParam = urlParam.replace('&DoType=', '&DoTypeDel=xx');
 
@@ -85,7 +90,7 @@ function GenerFrm() {
 
     if (data.indexOf('url@') == 0) {
         data = data.replace('url@', '');
-        window.location.href = data;
+        SetHref(data);
         return;
     }
     try {
@@ -135,7 +140,7 @@ function GenerFrm() {
 
     //解析表单数据
     $('head').append('<link href="../../DataUser/Style/FoolFrmStyle/Default.css" rel="stylesheet" type="text/css" />');
-    Skip.addJs("./FrmFool2021.js?ver=" + Math.random());
+    Skip.addJs("./FrmFool.js?ver=" + Math.random());
     GenerFoolFrm(frmData);
 
     //获得sys_mapdata.
@@ -178,6 +183,7 @@ function GenerFrm() {
                     elem: "#" + id
                     , height: 200
                     , images_upload_url: images_upload_url
+                    , paste_data_images: true
                 });
             })
 
@@ -222,7 +228,7 @@ function GenerFrm() {
     })
     
 }
-var IsSave = false;
+
 /**
  * 保存一条从表数据
  * @param {any} isSaveAndNew 是不是保存且新增
@@ -232,6 +238,12 @@ function Save(isSaveAndNew) {
     var index = layer.msg('正在保存，请稍后..', {
         icon: 16
         , shade: 0.01
+    });
+    $("[name=Dtl]").each(function (i, obj) {
+        var contentWidow = obj.contentWindow;
+        if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
+            contentWidow.SaveAll();
+        }
     });
     //监听提交
     layui.form.on('submit(Save)', function (data) {
@@ -249,17 +261,20 @@ function Save(isSaveAndNew) {
         layer.close(index);
         if (data.indexOf("err@") != -1) {
             layer.alert(data);
+            return;
         }
-        layer.alert("数据保存成功");
+
+        //layer.alert("数据保存成功");
 
         if (isSaveAndNew == false) {
-            window.location.href = window.location.href + "&IsSave=true";
+            layer.alert("数据保存成功");
+            //SetHref(GetHrefUrl() + "&IsSave=true");
             IsSave = true;
             return false;
         }
         IsSave = false;
-        var url = "DtlFrm.htm?EnsName=" + GetQueryString("EnsName") + "&RefPKVal=" + GetQueryString("RefPKVal") + "&OID=0";
-        window.location.href = url;
+        var url = "DtlFrm.htm?EnsName=" + GetQueryString("EnsName") + "&RefPKVal=" + GetQueryString("RefPKVal") + "&OID=0&IsNew=1";
+        SetHref(url);
         return false;
     });
 
@@ -358,6 +373,12 @@ function DeleteDtlFrm() {
  * 关闭弹出窗
  */
 function CloseIt() {
+    dtlFrm_Delete();
+    var index = parent.layer.getFrameIndex(window.name);
+    parent.layer.close(index);
+}
+
+function dtlFrm_Delete() {
     if (IsSave == false) {
         var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
         handler.AddPara("EnsName", GetQueryString("EnsName"));
@@ -370,6 +391,4 @@ function CloseIt() {
             return;
         }
     }
-    var index = parent.layer.getFrameIndex(window.name);
-    parent.layer.close(index);
 }

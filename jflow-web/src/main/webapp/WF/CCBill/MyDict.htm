@@ -21,7 +21,7 @@
     <script src="../Scripts/config.js" type="text/javascript"></script>
     <script src="../Comm/Gener.js" type="text/javascript"></script>
     <script src="../Scripts/QueryString.js" type="text/javascript"></script>
-    <script src="../CCForm/FrmEnd2021.js?ver=1" type="text/javascript"></script>
+    <script src="../CCForm/FrmEnd.js?ver=1" type="text/javascript"></script>
     <script src="../Comm/JScript.js" type="text/javascript"></script>
 
     <!--用户可配置的文件，内容可修改-->
@@ -31,7 +31,7 @@
     <script src="../../DataUser/JSLibData/CCFormRef.js" type="text/javascript"></script>
     <script src="../Scripts/download.js"></script>
 
-    <script type="text/javascript" src="../CCForm/FrmGener2021.js"></script>
+    <script type="text/javascript" src="../CCForm/FrmGener.js"></script>
 
 
     <script src="MyFrmGener.js" type="text/javascript"></script>
@@ -39,7 +39,7 @@
     <script id="view" type="text/html">
         <div class="layui-btn-container">
             {{#  layui.each(d, function(index, item){ }}
-            <button type="button" class="layui-btn layui-btn-sm" name="{{item.No}}" {{# if(item.No=="Save"|| item.No=="Submit"){}} lay-submit="" lay-filter="{{item.No}}" {{#  }; }} data-type="{{=item.Type}}"><i class="iconfont icon-{{item.Icon}}"></i>{{item.Name}}</button>
+            <button type="button" class="layui-btn layui-btn-sm" name="{{item.BtnID}}" {{# if(item.BtnID=="Save"|| item.BtnID=="Submit"){}} lay-submit="" lay-filter="{{item.BtnID}}" {{#  }; }} data-type="{{=item.Type}}"><i class="iconfont icon-{{item.Icon}}"></i>{{item.BtnLab}}</button>
             {{#  }); }}
         </div>
     </script>
@@ -54,7 +54,7 @@
 
         .input-icon {
             position: absolute;
-            left: 1px;
+            left: calc(100% - 40px);
             top: 1px;
             width: 38px;
             line-height: 36px;
@@ -63,7 +63,7 @@
         }
 
         .ccdate {
-            padding-left: 40px;
+            padding-right: 40px;
         }
 
         .layui-row {
@@ -93,7 +93,9 @@
                     layer.alert(workID);
                     return;
                 }
-                window.location.href = window.location.href;
+                var url = GetHrefUrl();
+                url = replaceParamVal(url, "WorkID", workID);
+                SetHref(url);
             }
             ToolBar_Init(2);
         })
@@ -101,7 +103,7 @@
 </head>
 <body style="background-color:#f2f2f2">
     <div id="MyDict" class="layui-layout layui-layout-admin">
-        <form id="divCCForm" enctype="multipart/form-data" method="post" class="layui-form">
+        <form id="divCCForm" enctype="multipart/form-data" method="post" class="layui-form" autocomplete=off>
             <!--头部按钮-->
             <div class="layui-header" style="background-color: white">
                 <div class="layui-btn-container" id="ToolBar" style="margin:10px 10px 0px 10px"></div>

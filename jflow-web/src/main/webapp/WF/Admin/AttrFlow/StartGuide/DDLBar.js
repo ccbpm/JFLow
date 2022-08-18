@@ -32,7 +32,6 @@ function InitBar(optionKey) {
     html += "<button  id='Btn_Help' class='cc-btn-tab btn-setting' onclick='Adv()' value='高级设置' />高级设置</button>";
     html += "<button  id='Btn_Help' class='cc-btn-tab btn-save' onclick='HelpOnline()' value='在线帮助' />在线帮助</button>";
 
-
     document.getElementById("bar").innerHTML = html;
     $("#changBar option[value='" + optionKey + "']").attr("selected", "selected");
 }
@@ -59,7 +58,7 @@ function changeOption() {
     var optionKey = optionKey = sele[index].value;
     var url = GetUrl(optionKey);
 
-    window.location.href = url + "?FK_Flow=" + flowNo;
+    SetHref( url + "?FK_Flow=" + flowNo);
 }
 
 function GetUrl(optionKey) {
@@ -112,7 +111,7 @@ function SaveAndClose() {
 function OpenEasyUiDialogExt(url, title, w, h, isReload) {
     OpenEasyUiDialog(url, "eudlgframe", title, w, h, "icon-property", true, null, null, null, function () {
         if (isReload == true) {
-            window.location.href = window.location.href;
+            Reload();
         }
     });
 }

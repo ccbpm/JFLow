@@ -29,6 +29,9 @@
     <script src="../../Scripts/CodeMirror/addon/hint/show-hint.js"></script>
     <script src="../../Scripts/CodeMirror/addon/hint/sql-hint.js"></script>
     <script src="../Admin.js"></script>
+    <script src="../../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/EasyUIUtility.js" type="text/javascript"></script>
     <script src="../../Scripts/LoadSql.js"></script>
 
     <script type="text/javascript">
@@ -38,12 +41,12 @@
 
             $("#Msg").html("正在加载,请稍后......");
 
-           
+
             var en = null;
             if (mypk != null && mypk != undefined && mypk != "") {
-                en = new Entity("BP.Sys.FrmEvent",mypk);
+                en = new Entity("BP.Sys.FrmEvent", mypk);
             }
-            
+
             //初始化groupID.
             var nodeID = GetQueryString("FK_Node");
 
@@ -70,15 +73,19 @@
             GenerBindDDL("DDL_FK_DBSrc", ens, "No", "Name", "");
             if (en != null) {
                 GenerFullAllCtrlsVal(en);
-                if (en.EventDoType == 2) {
-                    $("#DBSrc").show();
+                if (en.EventDoType == 1 || en.EventDoType == 2 || en.EventDoType == 3
+                    || en.EventDoType == 8) {
+                    en.DoDoc = en.DoDoc.replace(/~/g, "'");
                     $("#TB_Doc").val(en.DoDoc);
                 }
-                 else
+                if (en.EventDoType == 2) {
+                    $("#DBSrc").show();
+                }
+                else
                     $("#DBSrc").hide();
             }
-               
-           
+
+
 
         });
 
@@ -104,7 +111,7 @@
 
         function Save() {
 
-            var en = new Entity("BP.Sys.FrmEvent");
+            var en = new Entity("BP.Sys.FrmEvent", "0");
             en.CopyForm();
             en.FK_Node = GetQueryString("FK_Node");
             en.EventSource = 2;//节点事件
@@ -134,11 +141,11 @@
                 en.SetPKVal(en.FK_Event + Math.random());
                 en.Insert();
             }
-           
+
 
             Back();
 
-            //window.location.href = window.location.href;
+            //Reload();
             return;
         }
 
@@ -165,13 +172,21 @@
 
         function Back() {
             var url = "Action.htm?FK_Node=" + GetQueryString("FK_Node");
-            window.location.href = url;
+            SetHref(url);
         }
 
         function Help() {
             WinOpen('ActionHelp.htm');
         }
+        function CRUDSFDBSrcs() {
+            var url = "../../Comm/Search.htm?EnsName=BP.Sys.SFDBSrcs";
+            OpenEasyUiDialog(url, null, "维护数据源", 1100, 600, "icon - library", false, null, null, null, dlgClosedFunc);
+        }
+        function dlgClosedFunc() {
+            window.location.reload();
+        }
     </script>
+
 </head>
 <body>
     <div class="container-full">
@@ -223,6 +238,7 @@
                         </td>
                         <td>
                             <select id="DDL_FK_DBSrc" name="DDL_FK_DBSrc"></select>
+                            <a href="#" onclick="CRUDSFDBSrcs()">维护数据源</a>
                         </td>
                     </tr>
                     <tr>
@@ -244,7 +260,7 @@
                             执行成功信息提示(可为空)
                         </td>
                         <td colspan="1">
-                            <input type="text" id="MsgOK" name="MsgOK" />
+                            <input type="text" id="TB_MsgOK" name="TB_MsgOK" />
                         </td>
                     </tr>
                     <tr>
@@ -252,7 +268,7 @@
                             执行失败时提示(可为空)
                         </td>
                         <td>
-                            <input type="text" id="MsgError" name="MsgError" />
+                            <input type="text" id="TB_MsgError" name="TB_MsgError" />
                         </td>
                     </tr>
                 </table>
@@ -260,26 +276,61 @@
                 <br />
 
                 <fieldset>
+
                     <legend id="help"></legend>
                     <ul>
-                        <li>执行的结果如果返回的err@ 系统就会认为您要抛出异常了.</li>
+                        <li>执行的结果如果不符合预想结果，可以直接throw出异常，我们调用的时候会抛出异常，终止程序继续运行.</li>
                         <li>返回其他的信息的时候系统就会提示出来.</li>
 
                         <li>执行的内容,支持ccbpm的表达式.比如: UPDATE XXX SET xxxx=@MyFiledName </li>
 
                     </ul>
+                    <legend>关于url</legend>
+                    <ul>
+                        <li>请正确的配置一个url地址 </li>
+                        <li>如果该url地址在本机上，您需要配置绝对路径就好,比如：  /DataUser/xxx.jsp </li>
+                        <li>如果是另外的服务器，请使用绝对的路径，比如 : http://192.168.1.111/xxx.jsp  </li>
+                        <li> 系统会在您的url上面增加WorkID, UserNo, SID 等参数.  </li>
+                        <li> 比如1：您配置的是 /DataUser/xxx.jsp 系统解析执行的时候会是 /DataUser/xxx.jsp?WorkID=1101&UserNo=zhangsan&Token=xxxxxxxx </li>
+                        <li> 比如：您配置的是 /DataUser/xxx.jsp?DoType=xxx 系统解析执行的时候会是 /DataUser/xxx.jsp?DoType=xxx&WorkID=1101&UserNo=zhangsan&Token=xxxxxxxx </li>
+                        <li>根据WorkID您可以获取您所需要的其他参数。  </li>
+                    </ul>
+
+                    <legend>关于EventBase类</legend>
+                    <ul>
+                        <li>它是一个子类，按照要求，从基类上集成下来并且写入到与bp的包名或者命名空间里，如下图：</li>
+                        <li>java 与.net 一样语法与基类名称：</li>
+                        <li><img src="ActionDtl.png" id="HelpImg" class="HelpImg" /></li>
+                    </ul>
+
+                    <legend>SQL表达式</legend>
+                    <ul>
+                        <li>1. 支持ccbpm表达式,什么是bpm表达式,请参考. </li>
+                        <li>2. 支持 @PTable 表达式, 比如: UPDATE @PTable SET MyFile1='@WebUser.No' WHERE OID=@WorkID </li>
+                    </ul>
+                    <legend>存储过程</legend>
+                    <ul>
+                        <li>1. 支持 @WebUser.No 表达式, 比如: EXECUTE P_ChangeUserDeptName @_userNo='@WebUser.No',@_orgNo='@WebUser.OrgNo'; </li>
+                    </ul>
+
+                    <legend>关于WebAPI</legend>
+                    <ul>
+                        <li>1. WebAPI的输入格式：@WebApiHost/DataUser/FrmEvent?id=51184 </li>
+                        <li>2. 接口地址支持固定参数，或者ccbpm内置参数，或者流程表单参数，比如:http://demo.ccflow.org/DataUser/FrmEvent?id=@FK_Node </li>
+                        <li>3. 调用事件时，无论成功与否，都不会影响流程正常运行，如果需要阻断流程执行，请自定义方法，比如抛出异常。</li>
+                        <li><img src="WebAPI.png" id="HelpImg" class="HelpImg" /></li>
+                    </ul>
+
                 </fieldset>
             </div>
 
-            </span>
 
         </form>
 
     </div>
 
-        </form>
+    </form>
 
-    </div>
 
 </body>
 </html>

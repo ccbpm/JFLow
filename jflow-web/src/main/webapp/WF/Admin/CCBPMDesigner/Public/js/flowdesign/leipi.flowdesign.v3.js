@@ -158,6 +158,8 @@
             $.each(processData.list, function (i, row) {
                 var nodeDiv = document.createElement('div');
                 var nodeId = "window" + row.id, badge = 'badge-inverse', icon = 'icon-star';
+
+
                 if (lastProcessId == 0)//第一步
                 {
                     badge = 'badge-info';
@@ -171,7 +173,7 @@
                     .attr("process_to", row.process_to)
                     .attr("process_id", row.id)
                     .addClass("process-step btn btn-small")//给节点名称添加一个span元素
-                    .html('<span class="process-flag badge ' + badge + '"  alt=' + nodeId + ' ><i class="' + icon + ' icon-white"></i></span>&nbsp;<span id="span_' + row.id + '"  >' + row.process_name + '</span>')
+                    .html('<span class="process-flag badge ' + badge + '"  alt=' + nodeId + ' title="点击右键,执行相关操作" ><i class="' + icon + ' icon-white"></i></span>&nbsp;<span id="span_' + row.id + '"   title="点击右键,执行相关操作" >' + row.process_name + '</span>')
                     .mousedown(function (e) {
                         if (e.which == 3) { //右键绑定
                             _canvas.find('#leipi_active_id').val(row.id);
@@ -242,6 +244,17 @@
                             contextmenu.bindings = defaults.canvasLabMenu;
                             $(this).contextMenu('canvasLabMenu', contextmenu);
                         }
+                    })
+                    .dblclick(function (e) {
+                        console.log('e', e.currentTarget.id);
+                        var activeId = e.currentTarget.id.replace('lab', ''); //右键当前的ID
+                        var windowtext = $("#lab" + activeId).text();
+                        windowtext = windowtext.replace(/(^\s*)|(\s*$)/g, ""); //去掉左右空格.
+                        $("#alertModal3 div:eq(2) button").attr("class", "btn btn-primary savetext" + activeId);
+                        $("#alertModal3 div:eq(2) button").attr("onclick", "saveLabName(\"" + activeId + "\")");
+                        var xiuNodename = '<input style="width:90%" id="TB_LAB_' + activeId + '" type="text" value="' + windowtext + '">'
+                        $("#lab" + activeId + " span").html();
+                        labAlert(xiuNodename);
                     });
                 _canvas.append(labDiv);
             });
@@ -317,22 +330,23 @@
 
             $("#lineSet").click(function () {
 
-
                 var fromNodeID = c.sourceId.replace('window', '');
                 var targetId = c.targetId.replace('window', '');
 
-
                 var flowNo = GetQueryString("FK_Flow");
                 var url = "";
-                if (window.location.href.indexOf("/WF/Admin/CCBPMDesigner") == -1)
+                if (GetHrefUrl().indexOf("/WF/Admin/CCBPMDesigner") == -1)
                     url = "/WF/Admin/";
                 else
                     url = "../";
-                url += "Cond/ConditionLine.htm?FK_Flow=" + flowNo + "&FK_MainNode=" + fromNodeID + "&FK_Node=" + fromNodeID + "&ToNodeID=" + targetId + "&CondType=2&Lang=CH&t=" + new Date().getTime();
+                url += "Cond2020/ConditionLine.htm?FK_Flow=" + flowNo + "&FK_MainNode=" + fromNodeID + "&FK_Node=" + fromNodeID + "&ToNodeID=" + targetId + "&CondType=2&Lang=CH&t=" + new Date().getTime();
                 $("#LineModal").hide();
                 $(".modal-backdrop").hide();
                 var w = window.innerWidth - 240;
                 var h = window.innerHeight - 120;
+
+                CondDir(fromNodeID);
+                return;
                 OpenEasyUiDialog(url, flowNo + fromNodeID + "DIRECTION" + targetId, "设置方向条件" + fromNodeID + "->" + targetId, w, h, "icon-property", true, null, null, null, function () {
 
                 });
@@ -455,13 +469,13 @@
                             jsPlumb.connect({
                                 source: "window" + sourceId,
                                 target: "window" + targetId,
-                                 overlays: [
+                                overlays: [
                                     ['Label', {
                                         label: '<label style="font-size:14px;margin-bottom:25px;margin-left:-20px;color:#00a6ac;">' + (linedes == null ? '' : linedes) + '</label>', width: 12, length: 12, location: 0.5, id: "des_" + sourceId + "_" + targetId, events: {
                                             click: function (labelOverlay, originalEvent) {
                                             }
                                         }
-                                 }]]
+                                    }]]
                                 /* ,labelStyle : { cssClass:"component label" }
                                 ,label : id +" - "+ n*/
                             });

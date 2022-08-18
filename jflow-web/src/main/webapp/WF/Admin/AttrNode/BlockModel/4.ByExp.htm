@@ -21,17 +21,29 @@
     <script src="../../Admin.js"></script>
     <script>
         $(function () {
+
             InitBar(BlockModel.ByExp);
+
+            var nodeID = GetQueryString("FK_Node");
+            var node = new Entity("BP.WF.Node", nodeID);
+            $("#TB_Exp").val(node.BlockExp);
+
         });
         function Save() {
+
+            var exp = $("#TB_Exp").val();
+            if (exp == null || exp == '') {
+                alert('err@您必须输入表达式，请参考格式要求.');
+                return;
+            }
+
             $("#Btn_Save").html("正在保存请稍候...");
             var nodeID = GetQueryString("FK_Node");
             var node = new Entity("BP.WF.Node", nodeID);
             node.BlockModel = BlockModel.ByExp;
-            if (!$("#TB_Exp").val());
-            node.BlockExp = $("#TB_Exp").val();
+            node.BlockExp = exp;// $("#TB_Exp").val();
             node.Update();
-            window.location.href = window.location.href;
+            Reload();
         }
     </script>
 </head>
@@ -45,13 +57,13 @@
                 <label for="RB_BlockModel_4">按照表达式阻塞</label>
             </legend>
             <br />
-            <input type="text" id="TB_Exp" name="TB_Exp" runat="server" style="width: 95%" />
+            <input type="text" id="TB_Exp" name="TB_Exp" style="width: 95%" />
         </fieldset>
 
 
-        <fieldset id="help" >
-            <legend id="help" >
-                 帮助:
+        <fieldset id="help">
+            <legend id="help">
+                帮助:
             </legend>
 
             <br />
@@ -67,4 +79,4 @@
 
     </form>
 </body>
-</html >
+</html>

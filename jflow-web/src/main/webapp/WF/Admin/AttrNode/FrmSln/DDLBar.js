@@ -20,6 +20,8 @@ function InitBar(optionKey) {
     html += "<option value=" + FormSlnType.FreeForm + "  disabled='disabled' >&nbsp;&nbsp;自由表单</option>";
     html += "<option value=" + FormSlnType.FoolTruck + " >&nbsp;&nbsp;累加模式表单</option>";
     html += "<option value=" + FormSlnType.Developer + " >&nbsp;&nbsp;开发者表单</option>";
+    html += "<option value=" + FormSlnType.changeOption + " >&nbsp;&nbsp;章节表单(beta)</option>";
+
     // html += "<option value=" + FormSlnType.WebOffice + "  >&nbsp;&nbsp;公文表单(weboffice)</option>";
 
 
@@ -30,7 +32,7 @@ function InitBar(optionKey) {
 
 
     html += "<option value=null  disabled='disabled'>+绑定表单库里的表单</option>";
-    html += "<option value=" + FormSlnType.RefOneFrmTree + " >&nbsp;&nbsp;绑定表单库的表单</option>";
+    html += "<option value=" + FormSlnType.RefOneFrmTree + " >&nbsp;&nbsp;绑定单表单</option>";
     html += "<option value=" + FormSlnType.SheetTree + " >&nbsp;&nbsp;绑定多表单(表单树)</option>";
 
     html += "</select >";
@@ -44,8 +46,6 @@ function InitBar(optionKey) {
     //  html += "<input  id='Btn_Help' type=button onclick='Help()' value='视频帮助' />";
     html += "<button  id='Btn_Help' type=button onclick='HelpOnline()' value='在线帮助' />在线帮助</button>";
 
-
-
     document.getElementById("bar").innerHTML = html;
     $("#changBar option[value='" + optionKey + "']").attr("selected", "selected");
 }
@@ -55,7 +55,7 @@ function OldVer() {
     var nodeID = GetQueryString("FK_Node");
     var flowNo = GetQueryString("FK_Flow");
     var url = '../NodeFromWorkModel.htm?FK_Flow=' + flowNo + '&FK_Node=' + nodeID;
-    window.location.href = url;
+    SetHref(url);
 }
 function Imp() {
     var url = "../../Template/From.htm";
@@ -173,7 +173,7 @@ function changeOption() {
             url = "0.FoolForm.htm";
             break;
     }
-    window.location.href = url + "?FK_Node=" + nodeID;
+    SetHref( url + "?FK_Node=" + nodeID);
 }
 
 
@@ -193,7 +193,7 @@ function OpenEasyUiDialogExt(url, title, w, h, isReload) {
 
     OpenEasyUiDialog(url, "eudlgframe", title, w, h, "icon-property", true, null, null, null, function () {
         if (isReload == true) {
-            window.location.href = window.location.href;
+            Reload();
         }
     });
 }

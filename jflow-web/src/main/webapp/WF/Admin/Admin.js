@@ -32,7 +32,7 @@ $(document).ready(function () {
     //设置自动提示.
     initToggle();
 
-    //设置  class="Help" class="HelpImg" 的图片 点击直接可以全屏放大打开.  @lz
+    //设置 class="Help" class="HelpImg"  的图片 点击直接可以全屏放大打开.  @lz
     SetHelpImg();
 
     //设置放大的img容器   
@@ -43,6 +43,15 @@ $(document).ready(function () {
 
     //如何给按钮自动增加标签?
     AddBtnIcon();
+
+
+    /* $(".cs-content-box legend").click(function () {  //给每个li元素添加点击事件
+         $(".cs-content-box legend").removeClass('up');
+         $(this).addClass('up');       
+         $(this).parent().children(".cs-help").slideDown();
+         $(this).parent().siblings().children(".cs-help").slideUp();
+     });*/
+
 })
 
 function AddBtnIcon() {
@@ -123,7 +132,6 @@ function AddBtnIcon() {
 style = ''
 //动态添加新风格  
 function SetCSS() {
-
     //处理 ToolBar.
     //body下添加一个父Div
     var div = document.createElement('div');
@@ -142,6 +150,7 @@ function SetCSS() {
 
         var _html = $(obj).html();
         if (obj.id.indexOf("help") != -1) {
+
             $(obj).html("");
 
             var helpImg = basePath + "/WF/Admin/Img/Help.png";
@@ -153,15 +162,16 @@ function SetCSS() {
 
     //bar风格
     $('#bar').attr('class', 'cs-tr cs-bar');
-    //删除重复的说明标题
-    var leg = $("legend");
-    for (var i = 0; i < leg.length; i++) {
-        if (leg.eq(i).text() == "说明")
-            leg.eq(i).remove();
-    }
+    ////删除重复的说明标题
+    //var leg = $("legend");
+    //for (var i = 0; i < leg.length; i++) {
+    //    if (leg.eq(i).text() == "说明")
+    //        leg.eq(i).remove();
+    //}
 }
 //设置帮助页面内容 
 function SetHelpPage() {
+    return;
 
     var legends = $("legend#help");
     //隐藏所有兄弟级元素
@@ -183,6 +193,7 @@ function showPage() {
     legends.siblings().show();
 }
 function HelpDiv() {
+
     $("form").find("div").each(function () {
         if (this.className.toLowerCase() == "help") {
 
@@ -193,8 +204,7 @@ function HelpDiv() {
             this.css('color', 'Gray');
             this.css('display', 'none');
 
-            alert(this.id);
-
+            //alert(this.id);
         }
     });
 }
@@ -274,36 +284,6 @@ function CheckSQLTextArea() {
             this.placeholder = msg;
             this.value = FormatSQL(this.value);
 
-            //alert(this.id);
-            // alert(basePath);
-            ////开始为这个文本框设置sql模式的显示.
-            //if (isLoadSQLJS == false) {
-            //    /*加载相关的JS*/
-            //    $.getScript(basePath + '/Scripts/codemirror/doc/docs.css', function () {
-            //    });
-
-            //    $.getScript(basePath + '/Scripts/codemirror/lib/codemirror.css', function () {
-            //    });
-
-            //    $.getScript(basePath + '/Scripts/codemirror/theme/eclipse.css', function () {
-            //    });
-
-            //    //加载js.
-            //    $.getScript(basePath + '/Scripts/codemirror/lib/codemirror.js', function () {
-            //        $.getScript(basePath + '/Scripts/codemirror/mode/javascript/javascript.js', function () {
-            //            $.getScript(basePath + '/Scripts/codemirror/addon/selection/active-line.js', function () {
-            //                $.getScript(basePath + '/Scripts/codemirror/addon/edit/matchbrackets.js', function () {
-            //                    isLoadSQLJS = true;
-            //                    LoadCodeMirror(this.id);
-            //                    alert('ss');
-            //                });
-            //            });
-            //        });
-            //    });
-            //    isLoadSQLJS = true;
-            //} else {
-            //    LoadCodeMirror(this.id);
-            //}
         }
     });
 }
@@ -391,16 +371,7 @@ function ShowFrmFields(divID) {
 }
 
 
-//< link rel = "stylesheet" href = "../../Scripts/codemirror/doc/docs.css" />
-//    <link rel="stylesheet" href="../../Scripts/codemirror/lib/codemirror.css" />
-//    <link rel="stylesheet" href="../../Scripts/codemirror/theme/eclipse.css" />
-//    <link rel="stylesheet" href="../../Scripts/codemirror/theme/elegant.css" />
-//    <link rel="stylesheet" href="../../Scripts/codemirror/theme/erlang-dark.css" />
-//    <link rel="stylesheet" href="../../Scripts/codemirror/theme/idea.css" />
-//    <script src="../../Scripts/codemirror/lib/codemirror.js"></script>
-//    <script src="../../Scripts/codemirror/mode/javascript/javascript.js" type="text/javascript"></script>
-//    <script src="../../Scripts/codemirror/addon/selection/active-line.js" type="text/javascript"></script>
-//    <script src="../../Scripts/codemirror/addon/edit/matchbrackets.js" type="text/javascript"></script>
+
 
 
 function CheckIsSQL(sql) {
@@ -424,6 +395,8 @@ function FormatSQL(sql) {
 function initToggle() {
 
     var legends = document.getElementsByTagName('legend');
+    return;
+
 
     for (var i = 0, len = legends.length; i < len; i++) {
 
@@ -433,8 +406,11 @@ function initToggle() {
 
         if (lengID.indexOf('help') == -1)
             continue;
-
-        en.innerHTML = "<font color=red><b>" + en.innerHTML + "</b></font>";
+        //if (en.innerHTML) {
+        //    en.innerHTML = "<label>" + en.innerHTML + "</label>";
+        //} else {
+        //    en.innerHTML = "<label>说明</label>";
+        //}
 
         en.onclick = function () {
 

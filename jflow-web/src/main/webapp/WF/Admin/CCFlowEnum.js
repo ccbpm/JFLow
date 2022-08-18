@@ -89,6 +89,8 @@ if (typeof DeliveryWay == "undefined") {
         DeliveryWay.ByDeptLeader = 23,
         //找直属领导.
         DeliveryWay.ByEmpLeader = 50,
+        //找分管领导 - ShipLeader ccflow不负责维护.
+        DeliveryWay.ByDeptShipLeader = 28,
         //按照用户组计算(全集团)
         DeliveryWay.ByTeamOrgOnly = 24,
         //仅按用户组计算.
@@ -101,8 +103,14 @@ if (typeof DeliveryWay == "undefined") {
         DeliveryWay.BySelfUrl = 44,
         //按API/URL
         DeliveryWay.ByAPIUrl = 45,
-        //按照部门人员选择器
-        DeliveryWay.ByDeptAndEmpField = 46,
+        //发送人的上级部门的负责人
+        DeliveryWay.BySenderParentDeptLeader = 46,
+        //发送人上级部门指定的岗位
+        DeliveryWay.BySenderParentDeptStations = 47,
+
+        //外部用户可以发起
+        DeliveryWay.ByGuest = 51,
+
         // 按照ccflow的BPM模式处理
         DeliveryWay.ByCCFlowBPM = 100
 }
@@ -124,7 +132,11 @@ if (typeof SelectorModel == "undefined") {
         SelectorModel.TeamOrgOnly = 10,
         SelectorModel.TeamOnly = 11,
         SelectorModel.TeamDeptOnly = 12,
-        SelectorModel.ByStationAI = 13
+        SelectorModel.ByStationAI = 13,
+        SelectorModel.ByWebAPI = 14,
+        SelectorModel.ByMyDeptEmps = 15
+
+
 
 
 }
@@ -477,7 +489,10 @@ if (typeof AutoStart == "undefined") {
         /// <summary>
         /// 触发试启动
         /// </summary>
-        AutoStart.ByTrigger = 3
+        AutoStart.ByTrigger = 3,
+        AutoStart.ByDesigneeAdv = 4,
+        AutoStart.ByDesigneeAdminSendTo02Node=5
+
 }
 //前置导航
 if (typeof StartGuideWay == "undefined") {
@@ -861,3 +876,26 @@ if (typeof BindFrmsNodeEnableRole == "undefined") {
         BindFrmsNodeEnableRole.ByDat1a = 1,
         BindFrmsNodeEnableRole.ByDa3ta = 1
 }
+
+if (typeof TemplateFileModel == "undefined") {
+    var TemplateFileModel = {}
+    /// <summary>
+    /// 旧版本的rtf模版格式
+    /// </summary>
+    TemplateFileModel.RTF = 0,
+    /// <summary>
+    /// VSTo的Word模板方式
+   /// </summary>
+    TemplateFileModel.VSTOForWord = 1,
+    /// <summary>
+    /// VSTO的Excel模板方式
+    /// </summary>
+    TemplateFileModel.VSTOForExcel = 2,
+   /// <summary>
+    /// WPS的模板方式
+    /// </summary>
+    TemplateFileModel.WPS = 3
+}
+
+
+

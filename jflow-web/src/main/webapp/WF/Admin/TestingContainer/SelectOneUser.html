@@ -13,15 +13,22 @@
 
         var flowNo = GetQueryString("FK_Flow");
         var workID = GetQueryString("WorkID");
-        var adminer = GetQueryString("Adminer");
-        var adminerSID = GetQueryString("AdminerSID");
-        var SID = GetQueryString("SID");
+        var userNo = GetQueryString("UserNo");
+        var token = GetQueryString("Token");
+
+        var tester = GetQueryString("Tester");
+
 
         //页面启动函数.
         $(function () {
 
-            if (adminerSID == null || adminerSID == undefined) {
-                alert("没有找到，adminerSID, 请确认上一步操作的问题. ");
+            if (token == null || userNo == undefined) {
+                alert("没有找到，Token, 请确认上一步操作的问题. ");
+                return;
+            }
+
+            if (workID == 0 || workID == undefined) {
+                alert("丢失了workid.");
                 return;
             }
 
@@ -31,10 +38,11 @@
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
             handler.AddUrlData();
             handler.DoMethodReturnString("Default_LetAdminerLogin");
+            window.parent.InitPageUserInfo();
+
 
             var ens = handler.DoMethodReturnJSON("SelectOneUser_Init");
 
-            window.parent.InitPageUserInfo();
             //   var webUser = new WebUser();
             //    $("#userInfo").html("<h3>用户信息：<font color=green>" + webUser.No + "," + webUser.Name + " </font> 部门编号:<font color=green>" + webUser.FK_Dept + "</font> 部门名称: <font color=green>" + webUser.FK_DeptName + "</font></h3>");
 
@@ -53,8 +61,9 @@
 
             html += "<th>状态</th>";
             html += "<th>IsPass</th>";
+            html += "<th>节点类型</th>";
 
-            html += "<th>操作</th>";
+           // html += "<th>操作</th>";
             html += "</tr>";
 
             for (var i = 0; i < ens.length; i++) {
@@ -84,10 +93,10 @@
 
                 if (en.IsPass == 0 && en.FK_Node == gwf.FK_Node) {
                     html += "<td><b><font color=green>待办</font></b></td>";
-                    html += "<td><a href=\"javascript:ChangUser('" + en.FK_Emp + "','" + en.FK_Node + "','" + en.WorkID + "','" + en.FID + "')\">切换用户执行工作</a></td>";
+                    html += "<td><a href=\"javascript:ChangUser('" + en.FK_Emp + "','" + en.FK_Node + "','" + en.WorkID + "','" + en.FID + "')\">切换用户</a><br/><a href=\"javascript:ChangUser('" + en.FK_Emp + "','" + en.FK_Node + "','" + en.WorkID + "','" + en.FID + "',1)\">移动端</a></td>";
                 } else if (en.IsPass == 0 && en.FID != 0) {
                     html += "<td><b><font color=green>待办</font></b></td>";
-                    html += "<td><a href=\"javascript:ChangUser('" + en.FK_Emp + "','" + en.FK_Node + "','" + en.WorkID + "','" + en.FID + "')\">切换用户执行工作</a></td>";
+                    html += "<td><a href=\"javascript:ChangUser('" + en.FK_Emp + "','" + en.FK_Node + "','" + en.WorkID + "','" + en.FID + "')\">切换用户</a><br/><a href=\"javascript:ChangUser('" + en.FK_Emp + "','" + en.FK_Node + "','" + en.WorkID + "','" + en.FID + "',1)\">移动端</a></td>";
 
                 } else if (en.IsPass == -2) {
                     html += "<td>分流</td>";
@@ -100,12 +109,13 @@
                     html += "<td>已处理</td>";
                     html += "<td> - </td>";
                 }
+
                 html += "</tr>";
             }
             html += "</table>";
             $("#gwls").html(html);
 
-            
+
 
             //******************************** 绑定流程信息 **/
             var gwf = new Entity("BP.WF.GenerWorkFlow", workID);
@@ -130,14 +140,22 @@
             html += "<td>" + gwf.FK_Node + "," + gwf.NodeName + "</td>";
             html += "<th>当前待办人员</th>";
             html += "<td>" + gwf.TodoEmps + "</td>";
-            html += "</tr>";
+
+            html += "<td colspan=2> <b>";
+            html += "<a href='javascript:Skip();' >实例运维：跳转-调整-删除-移交-强制结束</a></b>";
+            html += "</td>";
 
             html += "</table>";
             $("#gwf").html(html);
 
         });
 
-        function ChangUser(empNo, nodeID, workid, fid) {
+        function Skip() {
+            var url = "../../Comm/En.htm?EnName=BP.WF.Data.GenerWorkFlowView&PKVal=" + workID + "&FK_Flow=" + GetQueryString("FK_Flow") + "&WFSta=all";
+            SetHref(url);
+        }
+
+        function ChangUser(empNo, nodeID, workid, fid, isMobile) {
 
             //当这个人登录。
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
@@ -148,8 +166,8 @@
             var adminer = GetQueryString("Adminer");
             handler.AddPara("Adminer", adminer);
 
-            var adminerSID = GetQueryString("AdminerSID");
-            handler.AddPara("AdminerSID", adminerSID);
+            var AdminerToken = GetQueryString("AdminerToken");
+            handler.AddPara("AdminerToken", AdminerToken);
 
             var orgNo = GetQueryString("OrgNo");
 
@@ -158,8 +176,8 @@
             if (orgNo != webUser.OrgNo) {
                 alert(" 系统错误: " + orgNo + " curr:" + webUser.OrgNo + ", 出现了组织结构编号不一致.");
                 return;
-            }
 
+            }
             handler.AddPara("OrgNo", orgNo);
 
             var data = handler.DoMethodReturnString("SelectOneUser_ChangUser");
@@ -167,10 +185,15 @@
                 alert(data);
                 return;
             }
-            window.open('../../MyFlow.htm?FK_Flow=' + flowNo + '&WorkID=' + workid + "&FID=" + fid + "&FK_Node=" + nodeID, '_self');
+            if (isMobile == 1)
+                window.open('../../../CCMobile/MyFlow.htm?FK_Flow=' + flowNo + '&WorkID=' + workid + "&FID=" + fid + "&FK_Node=" + nodeID, '_self');
+            else
+                window.open('../../MyFlow.htm?FK_Flow=' + flowNo + '&WorkID=' + workid + "&FID=" + fid + "&FK_Node=" + nodeID, '_self');
+
+
             window.parent.InitPageUserInfo();
         }
-        
+
         function GetWFState(wfstate) {
             switch (parseInt(wfstate)) {
                 case 0:
@@ -195,6 +218,11 @@
     </script>
 </head>
 <body>
+
+    <h4 style="text-align:center">
+
+        <!--| <a href="javascript:Skip();">回滚</a>-->
+    </h4>
     <div id="userInfo"></div>
 
     <center>

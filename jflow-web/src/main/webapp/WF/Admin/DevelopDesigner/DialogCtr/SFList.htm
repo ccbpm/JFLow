@@ -190,7 +190,7 @@
             var _Html = "";
 
             _Html += "<span leipiplugins='select' id='SS_" + KeyOfEn + "' title='下拉框' name='leipiNewField'   data-sfTable='"+sfTableNo+"'>";
-            _Html += "<select id='DDL_" + KeyOfEn + "' name='DDL_" + KeyOfEn + "' data-type='" + srcType + "'  data-key='"+KeyOfEn+"'   class='form-control'>";
+            _Html += "<select id='DDL_" + KeyOfEn + "' name='DDL_" + KeyOfEn + "' data-type='" + srcType + "'  data-key='"+KeyOfEn+"'   class='form-control' style='width:80%'>";
             _Html += "<option value=''>" +KeyOfEn+ "</option>";
             _Html += "</select>";
             _Html += "</span>";
@@ -224,7 +224,7 @@
 
             }
             alert(data);
-            window.location.href = window.location.href; //刷新页面.
+            Reload(); //刷新页面.
         }
 
         //编辑.
@@ -245,7 +245,7 @@
             if (sfType == "7")
                 ensName = 'BP.Sys.SFTableDict';
             var url = '../../../Comm/En.htm?EnName=' + ensName + '&No=' + fk_sftable;
-            // window.location.href = url;
+            // SetHref(url);
 
             //获取页面的大小
             var W = document.body.clientWidth - 120;
@@ -260,7 +260,7 @@
 
 
             OpenEasyUiDialog(url, "eudlgframe", "新建字典表", 800, 500, "icon-edit", true, null, null, null, function () {
-                window.location.href = window.location.href;
+                Reload();
             });
         }
 

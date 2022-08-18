@@ -13,13 +13,7 @@
     <base target="_self" />
     <script src="../Admin.js"></script>
     <style>
-        #Btn_Save {
-            background-image: url(../../Img/Btn/Save.png) !important;
-        }
-
-        #Btn_Back {
-            background-image: url(../../Img/Btn/Back.png) !important;
-        }
+       
 
     </style>
     <script type="text/javascript">
@@ -168,7 +162,7 @@
 
             var url = '';
             url = 'PushMessage.htm?FK_Node=' + GetQueryString('FK_Node') + '&FK_Flow=' + GetQueryString('FK_Flow') + '&m' + Math.random();
-            window.location.href = url;
+            SetHref(url);
         }
     </script>
 </head>
@@ -200,6 +194,10 @@
                     <td>
                         <select name="DDL_SMS_Fields" id="DDL_SMS_Fields" class="frmfields">
                         </select>
+                        <ul>
+                            <li>字段里必须存储的是人员账号,如果是多个人员账号就用逗号分开. 比如:zhangsan,lisi</li>
+                            <li>可以使用隐藏字段作为参数字段.</li>
+                        </ul>
                     </td>
                 </tr>
                 <tr>

@@ -57,35 +57,45 @@
             html += "<th>#</th>";
             html += "<th>标题</th>";
             var files = "";
-            files = node.GetPara("BatchFields");
+            files = node.GetPara("BatchFields")||"";
 
+            var editFiles = node.GetPara("EditFields") || "";
             var num = 2;
-            for (var i = 0; i < mapAttrs.length; i++) {
-
-                var en = mapAttrs[i];
-
-                if (files == undefined)
-                    continue;
-                if (files.indexOf(en.KeyOfEn) == -1)
-                    continue;
-
-                html += "<th>" + en.Name + "</th>";
-                num++;
-            }
+            $.each(mapAttrs, function (i, mapAttr) {
+                if (files == "")
+                    return true;
+                if (files.indexOf(mapAttr.KeyOfEn) == -1)
+                    return true;
+                html += "<th>" + mapAttr.Name + "</th>";
+            })
             html += "</tr>";
-
             html += "<tr>";
-            for (var i = 0; i < num; i++) {
-                html += "<td></td>";
-            }
+            html += "<td></td>";
+            html += "<td>只读</td>";
+            $.each(mapAttrs, function (i, mapAttr) {
+                if (files == "")
+                    return true;
+                if (files.indexOf(mapAttr.KeyOfEn) == -1)
+                    return true;
+                if (editFiles.indexOf(mapAttr.KeyOfEn) == -1)
+                    html += "<td>只读</td>";
+                else
+                    html += "<td>可编辑</td>";
+            });
             html += "</tr>";
             html += "</table>";
             $("#list").html(html);
 
         });
         function GotoFields() {
-            var url = "BatchStartFields.htm" + "?FK_Node=" + GetQueryString("FK_Node") + "&FK_Flow=" + GetQueryString("FK_Flow");
-            OpenEasyUiDialogExtCloseFunc(url, '设置字段', 800, 500, function () {
+            var url = "BatchStartFields.htm" + "?Type=Add&FK_Node=" + GetQueryString("FK_Node") + "&FK_Flow=" + GetQueryString("FK_Flow");
+            OpenEasyUiDialogExtCloseFunc(url, '设置显示的字段', 800, 500, function () {
+                window.location.reload();
+            });
+        }
+        function GotoEditFields() {
+            var url = "BatchStartFields.htm" + "?Type=Edit&FK_Node=" + GetQueryString("FK_Node") + "&FK_Flow=" + GetQueryString("FK_Flow");
+            OpenEasyUiDialogExtCloseFunc(url, '设置可编辑的字段', 800, 500, function () {
                 window.location.reload();
             });
         }
@@ -104,7 +114,7 @@
             node.SetPara("BatchCheckListCount", listCount);
             node.Update();
 
-            window.location.href = window.location.href;
+            Reload();
 
         }
 
@@ -141,7 +151,11 @@
         </fieldset>
 
         <fieldset>
-            <legend> 显示的字段列表 - <input type="button" onclick="GotoFields()" value="设置显示的字段" /> </legend>
+            <legend>
+                显示的字段列表
+                - <input type="button" class="cc-btn" style="line-height:25px" onclick="GotoFields()" value="设置显示的字段" />
+                - <input type="button" class="cc-btn" style="line-height:25px" onclick="GotoEditFields()" value="设置可编辑的字段" />
+            </legend>
             <br />
             <div id="list"></div>
 

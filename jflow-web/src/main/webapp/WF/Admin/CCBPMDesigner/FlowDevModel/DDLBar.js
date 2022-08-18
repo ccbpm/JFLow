@@ -22,6 +22,21 @@ function InitBar(optionKey) {
     }
     html += "</select>";
 
+    var sorts = new Entities("BP.WF.Admin.FlowSorts");
+    sorts.RetrieveAll();
+    html += "&nbsp;存放目录:";
+    html += "<select id=DDL_FlowSort >";
+    var sortNo = GetQueryString("SortNo");
+    for (var i = 0; i < sorts.length; i++) {
+        var sort = sorts[i];
+
+        if (sortNo == sort.No)
+            html += "<option selected=true value=" + sort.No + ">" + sort.Name + "</option>";
+        else
+            html += "<option  value=" + sort.No + ">" + sort.Name + "</option>";
+    }
+    html += "</select>";
+
     var from = GetQueryString("From");
 
     if (from == "Flows.htm")
@@ -29,14 +44,22 @@ function InitBar(optionKey) {
 
     document.getElementById("bar").innerHTML = html;
     $("#changBar option[value='" + optionKey + "']").attr("selected", "selected");
+
+
+
 }
 
 //创建流程.
 function Save() {
 
     var newFlowInfo = getNewFlowInfo();
+    if (newFlowInfo.FlowFrmModel == FlowDevModel.RefOneFrmTree && newFlowInfo.FrmID == "") {
+        alert("请选择绑定的表单");
+        return;
+    }
     $("#Btn_Save").val("正在创建,请稍后");
     setTimeout(function () {
+
         var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner_FlowDevModel");
         handler.AddPara("SortNo", newFlowInfo.FlowSort);
         handler.AddPara("FlowName", newFlowInfo.FlowName);
@@ -45,10 +68,15 @@ function Save() {
         handler.AddPara("FrmID", newFlowInfo.FrmID);
         var data = handler.DoMethodReturnString("FlowDevModel_Save");
 
+        if (data.indexOf('err@') == 0) {
+            alert(data);
+            return;
+        }
+
         var webUser = new WebUser();
-        var url = "../Designer.htm?FK_Flow=" + data + "&OrgNo=" + webUser.OrgNo + "&SID=" + webUser.SID + "&UserNo=" + webUser.No + "&From=Ver2021";
+        var url = "../Designer.htm?FK_Flow=" + data + "&OrgNo=" + webUser.OrgNo + "&Token=" + webUser.Token + "&UserNo=" + webUser.No + "&From=Ver2021";
         //  var url = "";
-        window.location.href = url;
+        SetHref(url);
     }, 1000);
 
 }
@@ -68,8 +96,8 @@ function GetDBGroup() {
         //{ "No": "B", "Name": "服务的模式" },
         { "No": "C", "Name": "绑定表单库模式" },
         { "No": "D", "Name": "自定义表单模式" },
-        { "No": "E", "Name": "物联网流程模式" },
-        { "No": "F", "Name": "敏捷应用" }
+        { "No": "E", "Name": "物联网流程模式" }
+        /*{ "No": "F", "Name": "敏捷应用" }*/
 
     ];
     return json;
@@ -89,9 +117,9 @@ function GetDBDtl() {
         { "No": 5, "Name": "SDK表单", "GroupNo": "D", "Url": "5.SDKFrm.htm" },
         { "No": 6, "Name": "嵌入式表单", "GroupNo": "D", "Url": "6.SelfFrm.htm" },
         { "No": 7, "Name": "物联网流程", "GroupNo": "E", "Url": "7.InternetOfThings.htm" },
-        { "No": 8, "Name": "决策树模式", "GroupNo": "E", "Url": "8.Tree.htm" },
-        { "No": 9, "Name": "实体(车辆、固定资产)", "GroupNo": "F", "Url": "9.Dict.htm" },
-        { "No": 10, "Name": "单据(车辆维修记录、固资使用记录)", "GroupNo": "F", "Url": "10.Bill.htm" }
+        { "No": 8, "Name": "决策树模式", "GroupNo": "E", "Url": "8.Tree.htm" }
+        //{ "No": 9, "Name": "实体(车辆、固定资产)", "GroupNo": "F", "Url": "9.Dict.htm" },
+        //{ "No": 10, "Name": "单据(车辆维修记录、固资使用记录)", "GroupNo": "F", "Url": "10.Bill.htm" }
 
     ];
     return json;
@@ -103,7 +131,7 @@ function HelpOnline() {
 }
 function changeOption() {
     //获得流程类别.
-    var sortNo = GetQueryString("SortNo");
+    var sortNo = $("#DDL_FlowSort").val(); // GetQueryString("SortNo");
     var from = GetQueryString("From");
 
     var obj = document.getElementById("changBar");
@@ -113,7 +141,7 @@ function changeOption() {
 
     var url = GetUrl(optionKey);
 
-    window.location.href = url + "?SortNo=" + sortNo + "&From=" + from;
+    SetHref(url + "?SortNo=" + sortNo + "&From=" + from);
 }
 //高级设置.
 function AdvSetting() {

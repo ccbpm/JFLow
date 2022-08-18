@@ -21,7 +21,6 @@
     <!-- 自己的系统风格统一end -->
     <script src="DDLBar.js" type="text/javascript"></script>
     <script src="../../CCFlowEnum.js" type="text/javascript"></script>
-
     <script type="text/javascript">
 
         var nodeID = 0;
@@ -112,7 +111,7 @@
 
             //设置当前节点从表权限
             var mypk = mapDtl.No + '_' + currNodeID;
-            var mapDtlSln = new Entity("BP.WF.Template.MapDtlExt");
+            var mapDtlSln = new Entity("BP.WF.Template.Frm.MapDtlExt");
             mapDtlSln.SetPKVal(mypk);
             if (mapDtlSln.RetrieveFromDBSources() == 0) {
                 mapDtlSln.CopyJSON(mapDtl);
@@ -179,7 +178,7 @@
 
             var url = "../../../Comm/EnOnly.htm?EnName=BP.Sys.FrmUI.FrmAttachmentExt&MyPK=" + athSln.MyPK;
             OpenEasyUiDialog(url, "eudlgframe", '附件权限', 600, 500, "icon-property", true, null, null, null, function () {
-                // window.location.href = window.location.href;
+                // Reload();
             });
 
         }
@@ -188,7 +187,7 @@
             var url = "../../../Comm/EnOnly.htm?EnName=BP.WF.Template.FoolTruckNodeFrm&MyPK=" + mypk;
 
             OpenEasyUiDialog(url, "eudlgframe", '表单方案', 600, 300, "icon-property", true, null, null, null, function () {
-                window.location.href = window.location.href;
+                Reload();
             });
         }
 
@@ -269,7 +268,7 @@
             flow.DoMethodReturnString("DoCheck");
 
             alert('设置成功.');
-            window.location.href = window.location.href;
+            Reload();
         }
     </script>
 </head>
@@ -301,7 +300,7 @@
 
 
     <fieldset>
-        <legend id="help">说明</legend>
+        <legend id="help"></legend>
         <ul>
             <li>该表单是以傻瓜表单展示，也叫累加表单，也叫轨迹表单。</li>
             <li>每个节点上都有自己的一个字段集合, 当前节点的表单是以前表单按照走过的顺序累加（默认字段只读）加上当前节点表单拼接而成的。</li>

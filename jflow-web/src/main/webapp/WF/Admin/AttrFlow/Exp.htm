@@ -9,9 +9,6 @@
     <script src="../../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
     <script src="../../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="../../Scripts/EasyUIUtility.js" type="text/javascript"></script>
-    <link href="../../Scripts/SyntaxHighlighter/Styles/shCoreDefault.css" rel="stylesheet" type="text/css" />
-    <script src="../../Scripts/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
-    <script src="../../Scripts/SyntaxHighlighter/shBrushCSharp.js" type="text/javascript"></script>
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
     <script type="text/javascript" src="../../Scripts/config.js"></script>
     <script type="text/javascript" src="../../Comm/Gener.js"></script>
@@ -25,7 +22,6 @@
     <script language="javascript" type="text/javascript">
         //初始化页面函数.....
         $(function () {
-
 
             //  $("#Msg").html("<img src='../../Img/loading.gif' /><font color=blue>ccbpm 正在生成代码.</font>");
 
@@ -63,7 +59,7 @@
 
             if (data.indexOf('url@') == 0) {
                 var url = data.replace('url@', '');
-                window.location.href = url;
+                SetHref(url);
                 return;
             }
 
@@ -71,6 +67,10 @@
             return;
         }
 
+        function Imp()
+        {
+            SetHref( "Imp.htm?FK_Flow=" + GetQueryString("FK_Flow"));
+        }
     </script>
 
 
@@ -78,8 +78,7 @@
 <body>
 
     <div id="bar" class="cs-tr cs-bar">
-       
-        <!--<input type="button" id="Btn_Exp" style="background-color:#F7F6F9" value="导出" />-->
+        流程模板管理\\ <a href="javascript:Imp()" >模板导入</a> -  <b>模板导出</b>
     </div>
 
 

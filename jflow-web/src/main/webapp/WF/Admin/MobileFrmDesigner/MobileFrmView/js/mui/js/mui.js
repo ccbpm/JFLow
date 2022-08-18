@@ -2873,7 +2873,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 								mui.toast('再按一次退出应用');
 								setTimeout(function() {
 									$.__back__first = null;
-								}, 2000);
+								}, 800);
 							} else {
 								if (new Date().getTime() - $.__back__first < 2000) {
 									plus.runtime.quit();
@@ -3316,7 +3316,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  */
 (function($) {
 	var originAnchor = document.createElement('a');
-	originAnchor.href = window.location.href;
+	originAnchor.href = GetHrefUrl();
 	$.plusReady(function() {
 		$.ajaxSettings = $.extend($.ajaxSettings, {
 			xhr: function(settings) {
@@ -7331,7 +7331,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 
 		} else {
 			//H5版本(确认index为0，取消index为1)
-			var result = window.prompt(text);
+			var result = promptGener(text);
 			if (result) {
 				callback({
 					index: 0,

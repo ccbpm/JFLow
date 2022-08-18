@@ -13,6 +13,8 @@
 
 var optionKey = 0;
 var flowNo = null;
+var w = window.innerWidth / 2;
+var h = window.innerHeight - 40;
 function InitBar(optionKey) {
 
     var nodeID = GetQueryString("FK_Node");
@@ -39,9 +41,7 @@ function InitBar(optionKey) {
 
         html += "<option value=" + DeliveryWay.ByStation + ">&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位计算</option>";
         html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的人员计算</option>";
-
         html += "<option value=" + DeliveryWay.ByDeptAndStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位与部门交集计算</option>";
-
 
         if (webUser.CCBPMRunModel == 1) {
             html += "<option value=" + DeliveryWay.ByTeamOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(全集团)</option>";
@@ -71,6 +71,7 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.FindSpecDeptEmps + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门范围内的岗位集合里面的人员.</option>";
         html += "<option value=" + DeliveryWay.ByDeptLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的领导(主管,负责人).</option>";
         html += "<option value=" + DeliveryWay.ByEmpLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找指定节点的人员直属领导.</option>";
+        //  html += "<option value=" + DeliveryWay.ByDeptShipLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的分管领导.</option>";
 
         // 与按照岗位智能计算不同的是，仅仅找本部门的人员.
     }
@@ -80,11 +81,18 @@ function InitBar(optionKey) {
     html += "<option value=" + DeliveryWay.ByDeptAndEmpField + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的部门人员选择器计算</option>";
 
     if (isSatrtNode == false) {
+        html += "<option value=null disabled='disabled' >+按上一个节点的处理人身份</option>";
+        html += "<option value=" + DeliveryWay.BySenderParentDeptLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;发送人上级部门的负责人.</option>";
+        html += "<option value=" + DeliveryWay.BySenderParentDeptStations + ">&nbsp;&nbsp;&nbsp;&nbsp;发送人上级部门岗位下的人员(需绑定岗位).</option>";
+    }
+
+    if (isSatrtNode == false) {
         html += "<option value=null disabled='disabled' >+按指定节点处理人</option>";
         html += "<option value=" + DeliveryWay.ByStarter + " >&nbsp;&nbsp;&nbsp;&nbsp;与开始节点处理人相同</option>";
         html += "<option value=" + DeliveryWay.ByPreviousNodeEmp + ">&nbsp;&nbsp;&nbsp;&nbsp;与上一节点处理人相同</option>";
         html += "<option value=" + DeliveryWay.BySpecNodeEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;与指定节点处理人相同</option>";
     }
+
 
     if (isSatrtNode == false) {
         html += "<option value=null disabled='disabled' >+按自定义SQL查询</option>";
@@ -106,13 +114,13 @@ function InitBar(optionKey) {
             html += "<option value=" + DeliveryWay.BySelectedForPrj + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“项目组人员选择器”选择接受人</option>";
         }
     }
-    //debugger
-
     html += "<option value=null disabled='disabled' >+其他方式</option>";
 
     if (isSatrtNode == true) {
 
         html += "<option value=" + DeliveryWay.BySelected_1 + ">&nbsp;&nbsp;&nbsp;&nbsp;所有的人员都可以发起.</option>";
+        html += "<option value=" + DeliveryWay.ByGuest + ">&nbsp;&nbsp;&nbsp;&nbsp;仅外部用户可以发起.</option>";
+
 
         if (webUser.CCBPMRunModel == 1)
             html += "<option value=" + DeliveryWay.BySelectedOrgs + ">&nbsp;&nbsp;&nbsp;&nbsp;指定的组织可以发起(对集团版有效).</option>";
@@ -152,7 +160,7 @@ function InitBar(optionKey) {
 //批处理.
 function Batch() {
     var url = "Batch.htm?NodeID=" + GetQueryString("FK_Node") + "&FK_Flow=" + GetQueryString("FK_Flow");
-    window.location.href = url;
+    SetHref(url);
 }
 
 function SaveRole() {
@@ -190,7 +198,7 @@ function OldVer() {
     var flowNo = GetQueryString("FK_Flow");
 
     var url = '../NodeAccepterRole.aspx?FK_Flow=' + flowNo + '&FK_Node=' + nodeID;
-    window.location.href = url;
+    SetHref(url);
 }
 function Help() {
 
@@ -216,7 +224,7 @@ function OpenDot2DotStations() {
     var url = "../../../Comm/RefFunc/Dot2Dot.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeStations";
     url += "&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Station&EnsOfM=BP.Port.Stations";
     url += "&DefaultGroupAttrKey=FK_StationType&NodeID=" + nodeID + "&PKVal=" + nodeID;
-    OpenEasyUiDialogExtCloseFunc(url, '设置岗位', 800, 500, function () {
+    OpenEasyUiDialogExtCloseFunc(url, '设置岗位', w, h, function () {
         Baseinfo.stas = getStas();
     });
 }
@@ -225,11 +233,10 @@ function OpenBranchesAndLeafStations() {
 
     var nodeID = GetQueryString("FK_Node");
     var url = "../../../Comm/RefFunc/BranchesAndLeaf.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeStations&Dot2DotEnName=BP.WF.Template.NodeStation&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Station&EnsOfM=BP.Port.Stations&DefaultGroupAttrKey=FK_StationType&NodeID=" + nodeID + "&PKVal=" + nodeID;
-    OpenEasyUiDialogExtCloseFunc(url, '设置岗位', 800, 500, function () {
+    OpenEasyUiDialogExtCloseFunc(url, '设置岗位', w * 1.5, h, function () {
         Baseinfo.stas = getStas();
     });
 }
-
 
 /*
  * 获取节点绑定的岗位
@@ -255,7 +262,7 @@ function BindDeptTree() {
 
     var url = "../../../Comm/RefFunc/Branches.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeDepts&Dot2DotEnName=BP.WF.Template.NodeDept&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Dept&EnsOfM=BP.WF.Port.Depts&DefaultGroupAttrKey=&RootNo=" + rootNo + "&NodeID=" + nodeID + "&PKVal=" + nodeID;
 
-    OpenEasyUiDialogExtCloseFunc(url, '绑定部门', 500, 600, function () {
+    OpenEasyUiDialogExtCloseFunc(url, '绑定部门', w, h, function () {
         Baseinfo.depts = getDepts();
     });
 }
@@ -268,7 +275,7 @@ function BindDeptTreeGroup() {
     if (webUser.CCBPMRunModel == 0 || webUser.CCBPMRunModel == 2)
         rootNo = webUser.OrgNo;
     if (webUser.CCBPMRunModel == 1) {
-        var orgs = new Entities("BP.WF.Port.Admin2.Orgs");
+        var orgs = new Entities("BP.WF.Port.Admin2Group.Orgs");
         orgs.RetrieveCond("No", "=", "ParentNo");
         if (orgs.length != 0) {
             rootNo = orgs[0].No;
@@ -278,7 +285,7 @@ function BindDeptTreeGroup() {
 
     var url = "../../../Comm/RefFunc/Branches.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeDepts&Dot2DotEnName=BP.WF.Template.NodeDept&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Dept&EnsOfM=BP.WF.Port.Depts&DefaultGroupAttrKey=&RootNo=" + rootNo + "&NodeID=" + nodeID + "&PKVal=" + nodeID;
 
-    OpenEasyUiDialogExtCloseFunc(url, '绑定部门', 500, 600, function () {
+    OpenEasyUiDialogExtCloseFunc(url, '绑定部门', w, h, function () {
         Baseinfo.depts = getDepts();
     });
 }
@@ -292,7 +299,7 @@ function OpenDot2DotTeams() {
     var url = "../../../Comm/RefFunc/Dot2Dot.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeTeams";
     url += "&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Team&EnsOfM=BP.Port.Teams";
     url += "&DefaultGroupAttrKey=FK_TeamType&NodeID=" + nodeID + "&PKVal=" + nodeID;
-    OpenEasyUiDialogExtCloseFunc(url, '设置用户组', 800, 500, function () {
+    OpenEasyUiDialogExtCloseFunc(url, '设置用户组', w, h, function () {
         Baseinfo.stas = getStas();
     });
 }
@@ -301,7 +308,7 @@ function OpenBranchesAndLeafTeams() {
 
     var nodeID = GetQueryString("FK_Node");
     var url = "../../../Comm/RefFunc/BranchesAndLeaf.htm?EnName=BP.WF.Template.NodeSheet&Dot2DotEnsName=BP.WF.Template.NodeTeams&Dot2DotEnName=BP.WF.Template.NodeTeam&AttrOfOneInMM=FK_Node&AttrOfMInMM=FK_Team&EnsOfM=BP.Port.Teams&DefaultGroupAttrKey=FK_TeamType&NodeID=" + nodeID + "&PKVal=" + nodeID;
-    OpenEasyUiDialogExtCloseFunc(url, '设置用户组', 800, 500, function () {
+    OpenEasyUiDialogExtCloseFunc(url, '设置用户组', w, h, function () {
         Baseinfo.stas = getStas();
     });
 }
@@ -478,6 +485,9 @@ function changeOption() {
         case DeliveryWay.ByDeptLeader:
             roleName = "23.ByDeptLeader.htm";
             break;
+        case DeliveryWay.ByDeptShipLeader:
+            roleName = "28.ByDeptShipLeader.htm";
+            break;
         case DeliveryWay.ByEmpLeader:
             roleName = "50.ByEmpLeader.htm";
             break;
@@ -505,11 +515,17 @@ function changeOption() {
         case DeliveryWay.ByAPIUrl:
             roleName = "45.ByAPIUrl.htm";
             break;
-        case DeliveryWay.ByDeptAndEmpField:
-            roleName = "46.ByDeptAndEmpField.htm";
+        case DeliveryWay.BySenderParentDeptLeader:
+            roleName = "46.BySenderParentDeptLeader.htm";
+            break;
+        case DeliveryWay.BySenderParentDeptStations:
+            roleName = "47.BySenderParentDeptStations.htm";
             break;
         case DeliveryWay.ByCCFlowBPM:
             roleName = "100.ByCCFlowBPM.htm";
+            break;
+        case DeliveryWay.ByGuest:
+            roleName = "51.ByGuest.htm";
             break;
         default:
             roleName = "0.ByStation.htm";
@@ -518,7 +534,7 @@ function changeOption() {
 
     // alert(roleName);
 
-    window.location.href = roleName + "?FK_Node=" + nodeID + "&FK_Flow=" + flowNo;
+    SetHref( roleName + "?FK_Node=" + nodeID + "&FK_Flow=" + flowNo);
 }
 function SaveAndClose() {
     Save();
@@ -551,7 +567,7 @@ function OpenEasyUiDialogExt(url, title, w, h, isReload) {
 
     OpenEasyUiDialog(url, "eudlgframe", title, w, h, "icon-property", true, null, null, null, function () {
         if (isReload == true) {
-            window.location.href = window.location.href;
+            Reload();
         }
     });
 }

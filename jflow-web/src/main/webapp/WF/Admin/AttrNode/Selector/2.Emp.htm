@@ -54,7 +54,7 @@
                 if (webUser.CCBPMRunModel == 2)
                     rootNo = webUser.OrgNo;
                 if (webUser.CCBPMRunModel == 1) {
-                    var orgs = new Entities("BP.WF.Port.Admin2.Orgs");
+                    var orgs = new Entities("BP.WF.Port.Admin2Group.Orgs");
                     orgs.RetrieveCond("No", "=", "ParentNo");
                     if (orgs.length != 0) {
                         rootNo = orgs[0].No;
@@ -72,6 +72,11 @@
             var nodeID = GetQueryString("FK_Node");
             var node = new Entity("BP.WF.Template.Selector", nodeID);
             node.SelectorModel = SelectorModel.Emp;
+            node.Update();
+
+
+            var node = new Entity("BP.WF.Node", nodeID);
+            node.DeliveryWay = 4 ;
             node.Update();
 
             alert("保存成功.");

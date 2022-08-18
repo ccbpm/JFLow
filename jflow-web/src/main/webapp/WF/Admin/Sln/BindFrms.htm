@@ -119,7 +119,7 @@
             else
                 frmNode.DoMethodReturnString("DoDown");
 
-            window.location.href = window.location.href;
+            Reload();
         }
 
         //删除.
@@ -131,7 +131,7 @@
             var frmNode = new Entity("BP.WF.Template.FrmNode", no);
             frmNode.Delete();
 
-            window.location.href = window.location.href;
+            Reload();
         }
 
         //设计表单.
@@ -142,16 +142,16 @@
 
             //自由表单.
             if (mapdata.FrmType == 1) {
-                url = "../CCFormDesigner/FormDesigner.htm?FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&IsFirst=1";
+                url = "../CCFormDesigner/FormDesigner.htm?FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&FK_Flow=" + fk_flow + "&IsFirst=1";
             }
 
             //开发者表单.
             if (mapdata.FrmType == 8) {
-                url = "../DevelopDesigner/Designer.htm?FrmID=" + fk_mapData + "&FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&IsFirst=1";
+                url = "../DevelopDesigner/Designer.htm?FrmID=" + fk_mapData + "&FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&FK_Flow=" + fk_flow  + "&IsFirst=1";
             }
 
             if (url == "")
-                url = "../FoolFormDesigner/Designer.htm?FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&IsFirst=1";
+                url = "../FoolFormDesigner/Designer.htm?FK_MapData=" + fk_mapData + "&FK_Node=" + GetQueryString("FK_Node") + "&FK_Flow=" + fk_flow + "&IsFirst=1";
 
             WinOpen(url);
             //alert(fk_mapData);
@@ -165,17 +165,17 @@
             var W = document.body.clientWidth - 80;
             var H = document.body.clientHeight - 40;
             OpenEasyUiDialog(url, "eudlgframe", '编辑', W, H, "icon-edit", true, null, null, null, function () {
-                window.location.href = window.location.href;
+                Reload();
             });
         }
         function ToBindFrms() {
             var url = "BindFrmsDtl.htm?FK_Node=" + fk_node + '&FK_Flow=' + fk_flow + '&DoType=SelectedFrm';
-            window.location.href = url;
+            SetHref(url);
         }
     </script>
 </head>
 <body class="easyui-layout">
-    <div class="container-full">
+    <div class="container-full" style=" padding-top:10px;">
         <div data-options="region:'center'">
             <table id="Table1" class="table table-hover table-bordered">
                 <tr class="GroupTitle">

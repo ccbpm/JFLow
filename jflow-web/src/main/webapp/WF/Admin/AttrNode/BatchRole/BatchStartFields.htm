@@ -25,7 +25,7 @@
     </style>
     <script type="text/javascript" language="javascript">
         var fk_node = GetQueryString("FK_Node");
-
+        var type = GetQueryString("Type") || "Add";
         var node = new Entity("BP.WF.Node", fk_node);
 
         //页面启动函数.
@@ -48,14 +48,16 @@
             var attrs = new Entities("BP.Sys.MapAttrs");
             attrs.Retrieve("FK_MapData", "ND" + fk_node);
             //增加处理.
-            var BatchFields = node.GetPara("BatchFields");
+            var BatchFields = node.GetPara("BatchFields")||"";
+            if (type == "Edit")
+                BatchFields = node.GetPara("EditFields") || "";
             for (var i = 0; i < attrs.length; i++) {
                 var item = attrs[i];
                 if (item.UIVisible == false)
                     continue;
                 var newRow = "";
                 newRow = "<tr ><td class=Idx>" + i + "</td>";
-                if (BatchFields == undefined || BatchFields.indexOf(item.KeyOfEn) == -1) {
+                if (BatchFields == "" || BatchFields.indexOf(item.KeyOfEn) == -1) {
                     newRow += "<td><label><input name='CB_Node' type='checkbox' value='" + item.KeyOfEn + "' />" + item.KeyOfEn + "</label></td>";
 
                 } else {
@@ -81,7 +83,10 @@
             var cb = $("input[name='CB_Node']:checked").each(function (j) {
                 checkBoxIDs += $(this).val() + ","; //获得所有的 checkBox ID传入到后台去,用于解决checkbox控件，在没有被选择的时候，没有值的问题。
             });
-            node.SetPara("BatchFields", checkBoxIDs)
+            if (type == "Add")
+                node.SetPara("BatchFields", checkBoxIDs)
+            if (type == "Edit")
+                node.SetPara("EditFields", checkBoxIDs);
             node.Update();
             //alert(checkBoxIDs)
             //var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrNode");
@@ -95,7 +100,7 @@
             //    alert(data);
             //    return;
             //}
-            window.location.href = window.location.href;
+            Reload();
             return;
 
         }

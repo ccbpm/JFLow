@@ -10,10 +10,6 @@
     <script src="../../Scripts/easyUI/jquery-1.8.0.min.js" type="text/javascript"></script>
     <script src="../../Scripts/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="../../Scripts/EasyUIUtility.js" type="text/javascript"></script>
-    <link href="../../Scripts/SyntaxHighlighter/Styles/shCoreDefault.css" rel="stylesheet"
-          type="text/css" />
-    <script src="../../Scripts/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
-    <script src="../../Scripts/SyntaxHighlighter/shBrushCSharp.js" type="text/javascript"></script>
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
 
     <script src="../../Comm/JScript.js" type="text/javascript"></script>
@@ -35,6 +31,7 @@
         });
         //流程导入.
         function Imp_Done() {
+
             $("#Btn_Imp").val("正在导入...");
             var fk_flowSort = GetQueryString("FK_FlowSort");
             var fk_flow = GetQueryString("FK_Flow");
@@ -63,12 +60,11 @@
 
             layer.load();
             //提交数据
-            var doMethod = "Imp_Done";
             var httpHandlerName = "BP.WF.HttpHandler.WF_Admin_AttrFlow";
             $("#cc").form("submit", {
                 type: 'POST',
                 dataType: 'html',
-                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + doMethod + "&HttpHandlerName=" + httpHandlerName + "&FK_Flow=" + fk_flow + "&FK_Sort=" + fk_flowSort + "&ImpWay=" + impWay + "&SpecFlowNo=" + spenFlowNo,
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=Imp_Done&HttpHandlerName=" + httpHandlerName + "&FK_Flow=" + fk_flow + "&FK_Sort=" + fk_flowSort + "&ImpWay=" + impWay + "&SpecFlowNo=" + spenFlowNo,
                 onSubmit: function (param) {
                     //return false; //这里可以做表单的验证，如果验证失败，就return false 来终止表单提交
                 },
@@ -79,7 +75,7 @@
                         return;
                     }
 
-                    var json = eval('(' + data + ')');
+                    var json = cceval('(' + data + ')');
 
                     $.messager.alert("提示", json.Msg, "icon-info", function () {
                         //打开新建的流程
@@ -98,15 +94,22 @@
         function ImpFlowPublic() {
             var fk_flowSort = GetQueryString("FK_FlowSort");
             var url = "../Template/Flow.htm?SortNo=" + fk_flowSort;
-            window.location.href = url;
+            SetHref(url);
         }
         function Imp_DoneBPM() {
             alert("已经取消了支持.");
             return;
         }
+        function Exp() {
+            SetHref( "Exp.htm?FK_Flow=" + GetQueryString("FK_Flow"));
+        }
     </script>
 </head>
 <body>
+    <div id="bar" class="cs-tr cs-bar">
+        流程模板管理\\<b>模板导入</b> -  <a href="javascript:Exp()">模板导出</a>
+    </div>
+
     <div class="pd10">
         <form id="cc" name="cc" action="" enctype="multipart/form-data" method="post">
             <fieldset>
@@ -161,10 +164,10 @@
                 <legend>从云服务器导入</legend>
                 <ul>
                     <!--<li>
-                    <a href="#">
-                        <img src="../CCBPMDesigner/Img/FlowPrivate.png" />从私有云导入
-                    </a>
-                </li>-->
+                        <a href="#">
+                            <img src="../CCBPMDesigner/Img/FlowPrivate.png" />从私有云导入
+                        </a>
+                    </li>-->
                     <li>
                         <a href="javascript:ImpFlowPublic();">
                             <img src="../CCBPMDesigner/Img/FlowPublic.png" />从共有云导入
@@ -175,20 +178,20 @@
 
 
             <!--<fieldset>
-            <legend>从云服务器导入(暂停开放) </legend>
-            <ul>
-                <li>
-                    <a href="#">
-                        <img src="../CCBPMDesigner/Img/FlowPrivate.png" />从私有云导入
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <img src="../CCBPMDesigner/Img/FlowPublic.png" />从共有云导入
-                    </a>
-                </li>
-            </ul>
-        </fieldset>-->
+                <legend>从云服务器导入(暂停开放) </legend>
+                <ul>
+                    <li>
+                        <a href="#">
+                            <img src="../CCBPMDesigner/Img/FlowPrivate.png" />从私有云导入
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="../CCBPMDesigner/Img/FlowPublic.png" />从共有云导入
+                        </a>
+                    </li>
+                </ul>
+            </fieldset>-->
             <fieldset>
                 <legend>
                     <img src="../../Img/Btn/Help.gif" />关于流程模版

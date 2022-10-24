@@ -1,52 +1,68 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>jflow-web</groupId>
+	<artifactId>jflow-web</artifactId> 
+	<packaging>jar</packaging>
+	
+	<name>jflow-web</name>
+		
 	<parent>
 		<groupId>jflow</groupId>
 		<artifactId>jflow</artifactId>
 		<version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
 	</parent>
-	<groupId>jflow-web</groupId>
-	<artifactId>jflow-web</artifactId> 
-	<packaging>war</packaging>
+	
 	<properties>
-	    
-		<webserver.port>8080</webserver.port>
-		
+		<java.version>1.8</java.version>
+
+		<!--<java.version>11.0.2</java.version>-->
+
 	</properties>
 	
-	<dependencies>
-	
+	<dependencies>	
 		<dependency>
 			<groupId>jflow-core</groupId>
 			<artifactId>jflow-core</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
-
-		<!-- connection pool -->
-		<dependency>
-		     <groupId>com.alibaba</groupId>
-		     <artifactId>druid</artifactId>
-		     <version>1.0.15</version>
-		     <exclusions>
-		     	<exclusion>
-                    <groupId>com.alibaba</groupId>
-                    <artifactId>jconsole</artifactId>
-		     	</exclusion>
-		     	<exclusion>
-                    <groupId>com.alibaba</groupId>
-                    <artifactId>tools</artifactId>
-		     	</exclusion>
-		     </exclusions>
-		</dependency>
 		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<!-- 打war包的时候请使用这段代码，如果在开发工具中运行的时候请注释exclusions这段代码 -->
+			<!-- <exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions> -->
+		</dependency>
+		<!-- 打war包需要增加的依赖，使用开发工具运行的时候请注释这块代码 -->
+		<!-- <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency> -->
 		<!-- jdbc driver -->
+<!--		<dependency>-->
+<!--			<groupId>mysql</groupId>-->
+<!--			<artifactId>mysql-connector-java</artifactId>-->
+<!--			<scope>runtime</scope>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.30</version>
-			<scope>runtime</scope>
+			<version>8.0.27</version>
 		</dependency>
 		<dependency>
 			<groupId>com.oracle</groupId>
@@ -55,33 +71,46 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/ojdbc14-10.2.0.4.0.jar</systemPath>
 		</dependency>
+		<!--<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>2.0.7</version>
+		</dependency>-->
 		<dependency>
-			<groupId>dm.jdbc.driver</groupId>
-			<artifactId>dm</artifactId>
-			<version>1.0.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/dm-1.0.0.jar</systemPath>
+		   <groupId>com.kingbase8</groupId>
+		   <artifactId>kingbase8</artifactId>
+		   <version>8.2.0</version>
+		   <scope>system</scope>
+		   <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/kingbase8-8.2.0.jar</systemPath>
 		</dependency>
+	<!--	<dependency>
+		   <groupId>com.kingbase8</groupId>
+		   <artifactId>kingbase8</artifactId>
+		   <version>8.6.0</version>
+		   <scope>system</scope>
+		   <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/kingbase8-8.6.0.jar</systemPath>
+		</dependency>-->
+
+		<!--<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>12.1.0.1-atlassian-hosted</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/ojdbc6-12.1.0.1-atlassian-hosted.jar</systemPath>
+		</dependency>-->
+		
 		<dependency>
 			<groupId>net.sourceforge.jtds</groupId>
 			<artifactId>jtds</artifactId>
-			<version>1.2.8</version>
 			<scope>runtime</scope>
 		</dependency>
-		
-		<!-- servlet -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
+			<groupId>javax.jws</groupId>
+			<artifactId>javax.jws-api</artifactId>
+			<version>1.1</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-        
-		
+
+
 	</dependencies>
 	
 	<!-- 设定中央仓库 -->
@@ -117,40 +146,58 @@
 		</pluginRepository>
 	</pluginRepositories>
 	
-	<!-- 可以访问本工程下的class -->
-	<build>  
-		<outputDirectory>${project.basedir}/src/main/webapp/WEB-INF/classes/</outputDirectory>
-        <plugins>  
-            <!-- war 打包插件, 设定war包名称不带版本号 -->
+	<build>
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
+				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory> 
-					<warName>${project.artifactId}</warName>
-				</configuration>
-			</plugin> 
-            <!-- Eclipse 插件 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<wtpversion>2.0</wtpversion>
-					<jeeversion>5.0</jeeversion>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<!-- tomcat7插件 -->
 			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<port>${webserver.port}</port>
-					<path>/${project.artifactId}</path>
-					<uriEncoding>${project.build.sourceEncoding}</uriEncoding>
+					<!--打包时允许添加本地jar包-->
+					<includeSystemScope>true</includeSystemScope>
 				</configuration>
 			</plugin>
-        </plugins>  
-    </build> 
+
+		</plugins>
+
+		<!--这个是打jar包增加的配置-->
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/webapp/lib</directory>
+				<targetPath>BOOT-INF/lib/</targetPath>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.jar</include>
+				</includes>
+			</resource>
+
+			<resource>
+				<directory>src/main/webapp</directory>
+				<!--注意此次必须要放在此目录下才能被访问到-->
+				<targetPath>BOOT-INF/classes/resources</targetPath>
+				<!--<targetPath>META-INF/resources</targetPath>-->
+				<includes>
+					<include>**/**</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+		<finalName>jflow-web</finalName>
+	</build>
+
 	<description>驰骋工作流程引擎</description>
 	<url>http://jflow.cn</url>
 	<organization>

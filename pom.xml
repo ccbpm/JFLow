@@ -5,57 +5,59 @@
 	<artifactId>jflow</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.8.RELEASE</version>
+		<relativePath/>
+	</parent>
+	
 	<modules>
 		<module>jflow-core</module>
 		<module>jflow-web</module>
-  </modules>
+  	</modules>
 	
-		<properties>
-		
+	<properties>
+		<!--<jdk.version>11.0.2</jdk.version>-->
 		<jdk.version>1.8</jdk.version>
-		<slf4j.version>1.7.12</slf4j.version>
-		<javax.transaction.version>1.0.1B</javax.transaction.version>
+		<!--指定tomcat版本号-->
+		<!--<tomcat.version>9.0.58</tomcat.version>-->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<org.apache.poi.version>3.11</org.apache.poi.version>
 		<org.apache.ant.version>1.9.7</org.apache.ant.version>
- 		<spring.version>4.2.9.RELEASE</spring.version>
-		<!--<spring.version>3.2.0.RELEASE</spring.version>-->
 		<dom4j.version>1.6.1</dom4j.version>
 		<pinyin4j.version>2.5.0</pinyin4j.version>
-		<commons-lang.version>2.5</commons-lang.version>
 		<javax.mail.version>1.6.0</javax.mail.version>
-		<junit.version>4.7</junit.version>
-		<jackson.version>1.9.13 </jackson.version>
-		<jackson2.version>2.1.2</jackson2.version>
 		<commons-fileupload.version>1.2.1</commons-fileupload.version>
 		<commons-io.version>2.4</commons-io.version>
 		<commons-lang3.version>3.7</commons-lang3.version>
 		<commons-net.version>3.5</commons-net.version>
-		<httpclient.version>4.5.2</httpclient.version>
+		<httpclient.version>4.5.1</httpclient.version>
 		<org.htmlparser.version>2.1</org.htmlparser.version>
-		<org.aspectj.version>1.6.10</org.aspectj.version>
-		<aspectj.version>1.7.4</aspectj.version>
 		<cglib.version>3.1</cglib.version>
 		<cxf.version>2.6.16</cxf.version>
 		<com.googlecode.json-simple.version>1.1.1</com.googlecode.json-simple.version>
-		<com.github.livesense.version>1.0.5</com.github.livesense.version>
+		<!--<com.github.livesense.version>1.0.5</com.github.livesense.version>-->
 		<com.sun.version>1.5.0</com.sun.version>
 		<jaxen.version>1.1.4</jaxen.version>
-		<commons-codec.version>1.9</commons-codec.version>
+		<commons-codec.version>1.10</commons-codec.version>
 		<morph.version>1.1.1</morph.version>
 		<com.jcraft.version>0.1.54</com.jcraft.version>
 		<com.google.auto.version>0.6</com.google.auto.version>
 
-            <!-- Qrcode 二维码需要的jar包 -->
+
+		<!-- Qrcode 二维码需要的jar包 -->
 		<com.google.zxing.version>2.2</com.google.zxing.version>
 	</properties>
+	
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
+			<!--<dependency>
 				<groupId>com.github.livesense</groupId>
 				<artifactId>jodconverter-core</artifactId>
 				<version>${com.github.livesense.version}</version>
-			</dependency>
+			</dependency>-->
 		 	<dependency>
 				<groupId>com.jcraft</groupId>
 				<artifactId>jsch</artifactId>
@@ -118,18 +120,13 @@
 				<version>${pinyin4j.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>${commons-lang.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>commons-net</groupId>
 				<artifactId>commons-net</artifactId>
 				<version>${commons-net.version}</version>
 			</dependency>
 			<dependency>
-				<groupId >com.sun.mail </groupId >
-            <artifactId >javax.mail </artifactId >
+				<groupId>com.sun.mail</groupId>
+				<artifactId>javax.mail</artifactId>
 				<version>${javax.mail.version}</version>
 			</dependency>
 			<dependency>
@@ -142,127 +139,11 @@
 				<artifactId>commons-codec</artifactId>
 				<version>${commons-codec.version}</version>
 			</dependency>
-			
-			<!-- Servlet -->
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>2.5</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>jsp-api</artifactId>
-				<version>2.1</version>
-				<scope>provided</scope>
-			</dependency>
+		
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>jstl</artifactId>
 				<version>1.2</version>
-			</dependency>
-
-			<!-- SPRING begin -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-beans</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-aop</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-tx</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-expression</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-				
-			<!-- spring orm -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-jdbc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<!-- SPRING end -->
-			
-			<!-- AOP begin -->
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjrt</artifactId>
-				<version>${aspectj.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjweaver</artifactId>
-				<version>${aspectj.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>cglib</groupId>
-				<artifactId>cglib</artifactId>
-				<version>${cglib.version}</version>
-			</dependency>
-			<!-- AOP end -->
-
-			<!-- WEB begin -->
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-webmvc</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-oxm</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<!-- WEB end -->
-
-			<!-- JSON begin -->
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>${jackson2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson2.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson2.version}</version>
 			</dependency>
 			
 			<!-- cxf start -->
@@ -331,12 +212,12 @@
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
-				<version>${jackson.version}</version>
+				<version>1.9.13</version>
 			</dependency>
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-core-asl</artifactId>
-				<version>${jackson.version}</version>
+				<version>1.9.13</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.json-lib</groupId>
@@ -352,31 +233,6 @@
 				<version>1.1.1</version>
 			</dependency>
 	
-			<!-- LOGGING begin -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<!-- common-logging 实际调用slf4j -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<!-- java.util.logging 实际调用slf4j -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>jul-to-slf4j</artifactId>
-				<version>${slf4j.version}</version>
-			</dependency>
-			<!-- LOGGING end -->
-
 			<!-- commons-fileupload -->
 			<dependency>
 				<groupId>commons-fileupload</groupId>
@@ -419,11 +275,7 @@
 			    <artifactId>javase</artifactId>
 			    <version>${com.google.zxing.version}</version>
 			</dependency>
-			<!--<dependency>
-				<groupId>dm</groupId>
-				<artifactId>dm</artifactId>
-				<systemPath>${project.basedir}/jflow-web/src/main/webapp/WEB-INF/lib/dm-1.0.0.jar</systemPath>
-			</dependency>-->
+			
 		</dependencies>
 	</dependencyManagement>
 	
@@ -432,7 +284,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
@@ -442,7 +293,7 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	
 	<reporting>
 
 		<plugins>
@@ -452,7 +303,6 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
-
 				</configuration>
 			</plugin>
 			<plugin>

@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="/WF/Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Scripts/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <link href="/WF/Style/skin/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/css/animate.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/font/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--通用js-->
+    <script src="/WF/Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/config.js" type="text/javascript"></script>
+    <script src="/WF/Comm/Gener.js" type="text/javascript"></script>
+    <link href="css/icons.css" rel="stylesheet" />
+    <style type="text/css">
+    </style>
+    <script type="text/javascript">
+        var workID = GetQueryString("WorkID"); //workid 子线程的ID
+        $(function () {
+
+            var en = new Entity("BP.JianYu.ND1Rpt", GetQueryString("WorkID"));
+            //调用公共类库的方法:执行批量主表赋值
+            GenerFullAllCtrlsVal(en);
+            var nodeid = GetQueryString("FK_Node");
+            if (nodeid == 105) {
+                $("#TB_ZhiWuFanBiLi").attr("readOnly", "true");
+                $("#TB_ZhiWuFanZengjiaRen").attr("readOnly", "true");
+                $("#TB_ZhiWuFanHeJiRen").attr("readOnly", "true");
+                $("#TB_FeiZhiWuFanBiLi").attr("readOnly", "true");
+                $("#TB_FeiZhiWuFanZengjiaRen").attr("readOnly", "true");
+                $("#TB_FeiZhiWuFanHeJiRen").attr("readOnly", "true");
+            }
+        });
+        
+        //犯人清单
+        function OpenFanrenList() {
+            var url = "FanrenList.htm?WorkID=" + GetQueryString("WorkID");
+            WinOpen(url);
+        }
+
+        function Save() {
+           //alert("3433");
+            //比例更新到nd1rpt表中.
+            var nd1rpt = new Entity("BP.JianYu.ND1Rpt", GetQueryString("WorkID"));
+            debugger;
+            nd1rpt.ZhiWuFanBiLi = $("#TB_ZhiWuFanBiLi").val();
+            //alert(nd1rpt.ZhiWuFanBiLi);
+            nd1rpt.ZhiWuFanZengjiaRen = $("#TB_ZhiWuFanZengjiaRen").val();
+            nd1rpt.ZhiWuFanHeJiRen = $("#TB_ZhiWuFanHeJiRen").val();
+            nd1rpt.FeiZhiWuFanBiLi = $("#TB_FeiZhiWuFanBiLi").val();
+            nd1rpt.FeiZhiWuFanZengjiaRen = $("#TB_FeiZhiWuFanZengjiaRen").val();
+            nd1rpt.FeiZhiWuFanHeJiRen = $("#TB_FeiZhiWuFanHeJiRen").val();
+            nd1rpt.Update();
+            return true;
+        }
+
+        //统计报表.
+        function TongJi() {
+            var url = "ND104OfTongji.htm?WorkID=" + GetQueryString("WorkID");
+            WinOpen(url);
+        }
+        function Subthread() {
+            var url = "/WF/WorkOpt/ThreadDtl.htm?WorkID=" + GetQueryString("WorkID");
+            WinOpen(url);
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <div>
+            <div class="header">
+                <h2>名额分配</h2>
+                <h3 style="margin-top: 10px;">职务犯已经减刑比例:XXX% &nbsp;&nbsp;&nbsp;&nbsp;非职务犯已经减刑比例:XXX%&nbsp;&nbsp;&nbsp;&nbsp;总比例:XXX%</h3>
+                <h3>本次摸底上报职务犯人数:XX人&nbsp;&nbsp;&nbsp;&nbsp;本次摸底上报非职务犯人数:XXX人&nbsp;&nbsp;&nbsp;&nbsp;总和:XXX人&nbsp;&nbsp;&nbsp;&nbsp;监狱总人数：XXX人 （职务犯：XXX  非职务犯：XXX）</h3>
+            </div>
+            <div>
+                <table class='table table-bordered'>
+                    <tr>
+                        <td><h3>职务犯：</h3></td>
+                        <td><input name="TB_ZhiWuFanBiLi" id="TB_ZhiWuFanBiLi" />%</td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;<h3>+</h3>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td><input name="TB_ZhiWuFanZengjiaRen" id="TB_ZhiWuFanZengjiaRen" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td><input name="TB_ZhiWuFanHeJiRen" id="TB_ZhiWuFanHeJiRen" /></td>
+                    </tr>
+                    <tr>
+                        <td><h3>非职务犯：</h3></td>
+                        <td><input name="TB_FeiZhiWuFanBiLi" id="TB_FeiZhiWuFanBiLi" />%</td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;<h3>+</h3>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td><input name="TB_FeiZhiWuFanZengjiaRen" id="TB_FeiZhiWuFanZengjiaRen" /></td>
+                        <td>&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td><input name="TB_FeiZhiWuFanHeJiRen" id="TB_FeiZhiWuFanHeJiRen" /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+       
+    </form>
+    
+</body>
+</html>

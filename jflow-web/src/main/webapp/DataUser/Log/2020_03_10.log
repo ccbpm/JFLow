@@ -1,0 +1,146 @@
+-----------------------------------------------------------------------------------------------------
+10日15时22分14秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+列名 'OrgNo' 无效。
+10日15时22分14秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+列名 'OrgNo' 无效。
+10日15时22分15秒Info:System');"SQL=ALTER TABLE Sys_Enum ADD OrgNo NVARCHAR(100) DEFAULT '' NULL,异常信息:各表中的列名必须唯一。在表 'Sys_Enum' 中多次指定了列名 'OrgNo'。
+10日15时22分15秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时22分15秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时22分16秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时22分16秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时22分16秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时22分20秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时22分21秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时22分21秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时22分22秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分04秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分05秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分05秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分06秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分29秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分29秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分30秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分30秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分30秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分30秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分31秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分31秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分44秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分45秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时24分46秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时24分46秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时25分07秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时25分07秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时25分08秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时25分08秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时25分30秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时25分30秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时25分31秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时25分31秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时25分37秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时25分37秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时25分38秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时25分38秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时27分01秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时27分01秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时27分02秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时27分03秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时27分17秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时27分17秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时27分18秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时27分18秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时27分22秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时27分23秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时27分24秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时27分24秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时28分56秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时28分56秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时28分57秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时28分57秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时29分11秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分12秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时29分12秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分13秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时29分26秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分27秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时29分28秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分28秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时29分36秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分36秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时29分37秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分37秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+-----------------------------------------------------------------------------------------------------
+10日15时29分57秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分57秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时29分58秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时29分59秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+-----------------------------------------------------------------------------------------------------
+10日15时30分24秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时30分25秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时30分25秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时30分26秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时31分11秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时31分12秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时31分12秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时31分12秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时31分12秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时31分12秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时31分12秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时31分13秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时31分16秒Fatal:System');"SQL=SELECT column_name as FName,data_type as FType,CHARACTER_MAXIMUM_LENGTH as FLen from information_schema.columns where table_name='WF_Emp' Exception=事务(进程 ID 58)与另一个进程被死锁在 锁 资源上，并且已被选作死锁牺牲品。请重新运行该事务。
+10日15时31分16秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时31分16秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+-----------------------------------------------------------------------------------------------------
+10日15时32分16秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时32分16秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时32分17秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时32分17秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时32分19秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时32分20秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时32分20秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时32分21秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时34分31秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时34分32秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时34分32秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时34分32秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时34分32秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时34分33秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时34分33秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时34分33秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分23秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分23秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分24秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分24秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分34秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分34秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分35秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分35秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分36秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分37秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分37秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分37秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分37秒Info:System');"SQL=INSERT INTO Sys_Enum ([MyPK],[Lab],[EnumKey],[IntKey],[Lang],[RealNo],[OrgNo] ) VALUES ( 'UseSta_CH_0','禁用','UseSta',0,'CH','',''),异常信息:列名 'RealNo' 无效。
+10日15时36分38秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分54秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分54秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分55秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分55秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分56秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分56秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分56秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时36分57秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时36分57秒Info:System');"SQL=INSERT INTO Sys_Enum ([MyPK],[Lab],[EnumKey],[IntKey],[Lang],[RealNo],[OrgNo] ) VALUES ( 'UseSta_CH_0','禁用','UseSta',0,'CH','',''),异常信息:列名 'RealNo' 无效。
+10日15时36分57秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时37分05秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时37分05秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时37分05秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时37分06秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时37分07秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时37分07秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时37分07秒Fatal:System');"SQL= SELECT TOP 99999 MyPK, Lab, EnumKey,ISNULL(IntKey,0) IntKey,ISNULL(Lang, 'CH') Lang, RealNo, OrgNo FROM Sys_Enum WHERE (1=1) AND ( ( Sys_Enum.EnumKey =@EnumKey) AND ( Sys_Enum.Lang =@Lang) ) ORDER BY IntKey Exception=列名 'RealNo' 无效。
+10日15时37分08秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+10日15时37分08秒Info:System');"SQL=INSERT INTO Sys_Enum ([MyPK],[Lab],[EnumKey],[IntKey],[Lang],[RealNo],[OrgNo] ) VALUES ( 'UseSta_CH_0','禁用','UseSta',0,'CH','',''),异常信息:列名 'RealNo' 无效。
+10日15时37分08秒Info:System');"SQL=exec sp_rename 'Sys_Enum.[RealNo]','RealNo','column';,异常信息:参数 @objname 不明确或所声明的 @objtype (column)有误。
+-----------------------------------------------------------------------------------------------------
+10日19时17分02秒Fatal:System');"SQL= SELECT  TOP 1  Port_Emp.No, Port_Emp.Name, Port_Emp.Pass, Port_Emp.FK_Dept, Port_Dept_FK_Dept.Name AS FK_DeptText, Port_Emp.SID, Port_Emp.Tel, Port_Emp.Email, Port_Emp.PinYin, Port_Emp.QQ, Port_Emp.QQAppID, Port_Emp.OrgNo,ISNULL(Port_Emp.Idx,0)   Idx FROM Port_Emp LEFT JOIN Port_Dept AS Port_Dept_FK_Dept ON Port_Emp.FK_Dept=Port_Dept_FK_Dept.No WHERE (1=1)  AND Port_Emp.No=@No Exception=列名 'OrgNo' 无效。
+10日19时17分03秒Info:System');"SQL=INSERT INTO Port_DeptEmp ([FK_Dept],[FK_Emp],[OrgNo] ) VALUES ( '23','23','chichengsoft'),异常信息:列名 'OrgNo' 无效。

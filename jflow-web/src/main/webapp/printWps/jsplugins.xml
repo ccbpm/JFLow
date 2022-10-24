@@ -1,0 +1,3 @@
+<jsplugins>
+  <jspluginonline name="HelloWps" type="wps" url="http://localhost:8099/printWps"/>
+</jsplugins>

@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>驰骋表单设计器\\导入导出\\从数据源导入</title>
+    <link href="../../../../Scripts/easyUI145/themes/icon.css" rel="stylesheet" type="text/css" />
+    <link href="../../../../Scripts/easyUI145/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <link href="../../../../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/css" />
+    <script src="../../../../Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="../../../../Scripts/easyUI145/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="../../../../Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="../../../../Scripts/config.js" type="text/javascript"></script>
+    <script src="../../../../Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="../../../../Comm/Gener.js" type="text/javascript"></script>
+    <script src="DDLBar.js" type="text/javascript"></script>
+    <script src="../../../CCFlowEnum.js"></script>
+    <script type="text/javascript">
+
+        //页面启动函数.
+        var frmID = GetQueryString("FK_MapData");
+        var flowNo = GetQueryString("FK_Flow");
+        var nodeID = GetQueryString("FK_Node");
+
+        var btnFrmLib = null;
+        var selFrmNode = null;
+        var Btn_Flows = null;
+        $(function () {
+
+            InitBar("ExternalDataSourseImp");
+
+            //数据源集合.
+            var ens = new Entities("BP.Sys.SFDBSrcs");
+            ens.RetrieveAll();
+
+            var html = "<ul>";
+
+            for (var i = 0; i < ens.length; i++) {
+                var en = ens[i];
+
+                html += "<li><a href=''>" + en.No + " - " + en.Name + " - " + en.DBSrcTypeText + "</a></li>";
+            }
+
+            html += "</ul>";
+
+            //加载完成.
+            $("#Msg").html(html);
+        });
+        function NewDB()
+        {
+            var url = "";
+        }
+    </script>
+</head>
+<body>
+
+    <div id="bar"></div>
+
+    <fieldset style="height: 90%;">
+        <legend>选择数据源：<a href="javascript:NewDB();">新建数据源</a></legend>
+
+        <div id="Msg">
+        </div>
+
+        <legend>帮助 </legend>
+        <ul>
+            <ol>第1步请选择数据源.</ol>
+            <ol>第2步请选表.</ol>
+            <ol>第3步设置关系. </ol>
+        </ul>
+    </fieldset>
+
+
+</body>
+</html>

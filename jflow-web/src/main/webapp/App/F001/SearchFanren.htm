@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link href="/WF/Scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/WF/Style/skin/adminfont/iconfont.css" rel="stylesheet" />
+    <link href="/WF/Style/skin/css/Default.css" rel="stylesheet" />
+
+    <!--<link href="/WF/Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Scripts/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <link href="/WF/Style/skin/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/css/animate.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/font/iconfont.css" rel="stylesheet" type="text/css" />-->
+    <!--通用js-->
+    <script src="/WF/Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/config.js" type="text/javascript"></script>
+    <script src="/WF/Comm/Gener.js" type="text/javascript"></script>
+    <link href="css/icons.css" rel="stylesheet" />
+    <style type="text/css">
+    </style>
+    <script type="text/javascript">
+        var workID = GetQueryString("WorkID"); //workid 子线程的ID
+        var fid = GetQueryString("FID"); //fid.
+        $(function () {
+
+            ////传入数据调用ajax. 返回查询犯人的接口.
+            //var data = "";
+            ////获得.
+            //var ens = new Entities("BP.JianYu.Fanrens");
+            //ens.Retrieve("WorkIDOfSubthread", workID);
+            //console.log(ens);
+            //var html = "<table class='table table-bordered table - hover' >";
+            //html += "<tr>";
+            //html += "<th>编号</th>";
+            //html += "<th>名称</th>";
+            //html += "<th>监区</th>"; //监区
+            //html += "<th>分监区</th>"; //分监区
+            //html += "<th>操作</th>"; //分监区
+            //html += "</tr>";
+
+            //for (var i = 0; i < ens.length; i++) {
+
+            //    var en = ens[i];
+            //    html += "<tr>";
+
+            //    html += "<td>" + en.MyPK + "</td>";
+            //    html += "<td>" + en.Name + "</td>";
+
+            //    html += "<td>" + en.JianQuNo + en.JianQuNoText + "</td>"; //监区
+            //    html += "<td>" + en.FenJianQuNo + en.FenJianQuNoText + "</td>"; //分监区
+            //    html += "<td><a href=\"javascript:Del('" + en.MyPK + "')\" >删除</a></td>"; //分监区
+
+            //    html += "</tr>";
+            //}
+            //html += "</table>";
+            //$("#docs").html(html);
+
+            ////console.log(html);
+            //var handler = new HttpHandler("BP.JianYu.AppHandler");
+            //handler.AddPara("Ens", data);
+
+        });
+
+        //保存查询结果.
+        function Del(id) {
+
+            if (window.confirm('您确定要删除吗？') == false)
+                return;
+
+            var en = new Entity("BP.JianYu.Fanren", id);
+            en.Delete();
+            window.location.href = window.location.href;
+        }
+        //保存查询结果.
+        function AddNew() {
+
+            var webUser = new WebUser();
+            var name = window.prompt('请输入编号', "001");
+
+            var en = new Entity("BP.JianYu.Fanren");
+            en.FenJianQuNo = webUser.FK_Dept;
+            en.MyPK = workID + "_" + name;
+            en.Name = name;
+            en.WorkIDOfSubthread = workID;
+            en.WorkID = fid;
+            en.Insert();
+
+            window.location.href = window.location.href;
+        }
+
+        //执行发送到下一步.
+        function SendIt() {
+            if (window.confirm('确定要发送吗？') == false)
+                return;
+            //  $("#toolbar").hid();
+            $("#toolbar").html("正在发送请稍后.");
+
+            var handler = new HttpHandler("BP.JianYu.AppHandler");
+            handler.AddUrlData();
+            var data = handler.DoMethodReturnString("ND102_SendIt");
+            $("#toolbar").html("发送成功...");
+            $("#docs").html(data);
+        }
+        function Chart() {
+            var url = "/WF/WorkOpt/OneWork/Chart.htm?WorkID=" + GetQueryString("WorkID") + "&FK_Node=" + GetQueryString("FK_Node");
+            url += "&FID=" + GetQueryString("FID") + "&FK_Flow=001";
+            WinOpen(url);
+        }
+    </script>
+</head>
+<body>
+
+    <div id="toolbar">
+        <a href="javascript:AddNew();"> 新增</a> 
+        |<a href="javascript:Chart();"> 流程图</a>
+    </div>
+
+    <table>
+        <tr>
+            <td>批次 </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>业务类型 </td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>考核截止日期 </td>
+            <td> <input type="text" id="TB_CHFrom" /> </td>
+        </tr>
+        <tr>
+            <td>间隔截止日期 </td>
+            <td> <input type="text" id="TB_JianGe" /> </td>
+        </tr>
+
+        <tr>
+            <td>余刑较短截止日期 </td>
+            <td> <input type="text" id="TB_JianGe" /> </td>
+        </tr>
+        <tr>
+            <td>余刑较长截止日期 </td>
+            <td> <input type="text" id="TB_JianGe" /> </td>
+        </tr>
+        <tr>
+            <td>备注 </td>
+            <td> <textarea type="text" id="TB_JianGe" /></textarea> </td>
+        </tr>
+    </table>
+    <button onclick="Search()"> 查询</button>
+    <button> 查询</button>
+    <div id="docs">
+    </div>
+
+</body>
+</html>

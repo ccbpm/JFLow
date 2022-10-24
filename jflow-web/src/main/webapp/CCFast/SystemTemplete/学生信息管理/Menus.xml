@@ -1,0 +1,361 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <MySystem>
+    <No>34f54561-d</No>
+    <Name>学生信息管理</Name>
+    <IsEnable>1</IsEnable>
+    <Icon>icon-briefcase</Icon>
+    <OrgNo />
+    <Idx>0</Idx>
+  </MySystem>
+  <Modules>
+    <No>0eaa948f-9397-41cb-9473-7109ed18306a</No>
+    <Name>学生信息</Name>
+    <SystemNo>34f54561-d</SystemNo>
+    <SystemNoText>学生信息管理</SystemNoText>
+    <Icon>icon-folder</Icon>
+    <Idx>0</Idx>
+    <IsEnable>1</IsEnable>
+    <OrgNo />
+  </Modules>
+  <Modules>
+    <No>142f9454-3c99-4f0c-b55e-aa79b1f7b234</No>
+    <Name>其他</Name>
+    <SystemNo>34f54561-d</SystemNo>
+    <SystemNoText>学生信息管理</SystemNoText>
+    <Icon>icon-folder</Icon>
+    <Idx>0</Idx>
+    <IsEnable>1</IsEnable>
+    <OrgNo />
+  </Modules>
+  <Menus>
+    <No>1ad3e072-64a7-4fdd-8a53-2c4c852b177e</No>
+    <Name>信息发布</Name>
+    <MenuModel>Info</MenuModel>
+    <Mark>Info</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/WF/Comm/Search.htm?EnsName=BP.CCOA.CCInfo.Infos</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-location-pin</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>0</Idx>
+  </Menus>
+  <Menus>
+    <No>297174f8-05a0-4532-afd0-f80f0d10aae2</No>
+    <Name>班级管理</Name>
+    <MenuModel>Dict</MenuModel>
+    <Mark />
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>Dict_BanJiGuanLi</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon />
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText>学生信息</ModuleNoText>
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>1</Idx>
+  </Menus>
+  <Menus>
+    <No>57eda397-636f-4b90-83ed-009b7466574a</No>
+    <Name>测试数据源</Name>
+    <MenuModel>DBList</MenuModel>
+    <Mark>DB_CeShiShuJuYuan</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>DB_CeShiShuJuYuan</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-book-open</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>1</ListModel>
+    <ListModelText>视图模式</ListModelText>
+    <OrgNo />
+    <Idx>2</Idx>
+  </Menus>
+  <Menus>
+    <No>66daf1f0-b091-4ccc-81b8-f55f3dbd327f</No>
+    <Name>任务</Name>
+    <MenuModel>Task</MenuModel>
+    <Mark>Task</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/CCFast/Task/Task.htm</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-note</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>3</Idx>
+  </Menus>
+  <Menus>
+    <No>6862426a-52bd-4b09-9ce9-f91235f7d549</No>
+    <Name>存储过程的数据源</Name>
+    <MenuModel>DBList</MenuModel>
+    <Mark>DB_CunChuGuoChengDeShuJuYuan</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>DB_CunChuGuoChengDeShuJuYuan</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-book-open</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>1</ListModel>
+    <ListModelText>视图模式</ListModelText>
+    <OrgNo />
+    <Idx>4</Idx>
+  </Menus>
+  <Menus>
+    <No>6a6933ef-8a59-41ea-b560-63fac7dc96ed</No>
+    <Name>日历&amp;日程</Name>
+    <MenuModel>Calendar</MenuModel>
+    <Mark>Calendar</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/CCFast/Calendar/Month.htm</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-calendar</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>5</Idx>
+  </Menus>
+  <Menus>
+    <No>736116ff-9a49-4251-844d-d518572e05f0</No>
+    <Name>学生信息</Name>
+    <MenuModel>Dict</MenuModel>
+    <Mark />
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>Dict_XueShengXinXi</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon />
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>1</ListModel>
+    <ListModelText>视图模式</ListModelText>
+    <OrgNo />
+    <Idx>6</Idx>
+  </Menus>
+  <Menus>
+    <No>7b5a8039-4759-4d82-868a-791fc32e4ffa</No>
+    <Name>统计分析</Name>
+    <MenuModel>Windows</MenuModel>
+    <Mark />
+    <Tag1>RptWhite</Tag1>
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt />
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-screen-desktop</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>7</Idx>
+  </Menus>
+  <Menus>
+    <No>81835089-7694-495f-a0b7-bec058b023ec</No>
+    <Name>信息发布类型维护</Name>
+    <MenuModel>Info</MenuModel>
+    <Mark>Info</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/WF/Comm/Ens.htm?EnsName=BP.CCOA.CCInfo.InfoTypes</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-note</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>8</Idx>
+  </Menus>
+  <Menus>
+    <No>9da3d181-21e4-4041-a05b-6ef445580461</No>
+    <Name>信息发布</Name>
+    <MenuModel>Info</MenuModel>
+    <Mark>Info</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/WF/Comm/Search.htm?EnsName=BP.CCOA.CCInfo.Infos</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-note</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>9</Idx>
+  </Menus>
+  <Menus>
+    <No>a9e2b8ba-4909-463c-ada5-c3a3c820fc9a</No>
+    <Name>知识管理</Name>
+    <MenuModel>KnowledgeManagement</MenuModel>
+    <Mark>KnowledgeManagement</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/CCFast/KnowledgeManagement/Default.htm</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-eyeglass</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>10</Idx>
+  </Menus>
+  <Menus>
+    <No>b2cb5330-9522-46b0-8012-075f709dc3de</No>
+    <Name>数据源</Name>
+    <MenuModel>DBList</MenuModel>
+    <Mark>DB_ShuJuYuan</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>DB_ShuJuYuan</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-book-open</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>1</ListModel>
+    <ListModelText>视图模式</ListModelText>
+    <OrgNo />
+    <Idx>11</Idx>
+  </Menus>
+  <Menus>
+    <No>b88cfbbc-a3cb-4d9a-9e05-b56abbdc8df8</No>
+    <Name>记事本</Name>
+    <MenuModel>Notepad</MenuModel>
+    <Mark>Notepad</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/CCFast/Notepad/Notepad.htm</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-note</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>12</Idx>
+  </Menus>
+  <Menus>
+    <No>fb7726c4-1b59-4645-9e19-18af021852c3</No>
+    <Name>工作日志</Name>
+    <MenuModel>WorkRec</MenuModel>
+    <Mark>WorkRec</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/CCFast/WorkRec/Default.htm</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-doc</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>13</Idx>
+  </Menus>
+  <Menus>
+    <No>ffc61266-da21-430d-b716-8599dc0cfc73</No>
+    <Name>信息发布</Name>
+    <MenuModel>Info</MenuModel>
+    <Mark>Info</Mark>
+    <Tag1 />
+    <FrmID />
+    <FlowNo />
+    <OpenWay>1</OpenWay>
+    <OpenWayText>本窗口</OpenWayText>
+    <UrlExt>/WF/Comm/Search.htm?EnsName=BP.CCOA.CCInfo.Infos</UrlExt>
+    <MobileUrlExt />
+    <IsEnable>1</IsEnable>
+    <Icon>icon-note</Icon>
+    <SystemNo>34f54561-d</SystemNo>
+    <ModuleNo>0eaa948f-9397-41cb-9473-7109ed18306a</ModuleNo>
+    <ModuleNoText />
+    <ListModel>0</ListModel>
+    <ListModelText>编辑模式</ListModelText>
+    <OrgNo />
+    <Idx>14</Idx>
+  </Menus>
+</NewDataSet>

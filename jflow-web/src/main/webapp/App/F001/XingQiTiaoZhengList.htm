@@ -1,0 +1,268 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="/WF/Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Scripts/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <link href="/WF/Style/skin/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/css/animate.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/font/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--通用js-->
+    <script src="/WF/Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/config.js" type="text/javascript"></script>
+    <script src="/WF/Comm/Gener.js" type="text/javascript"></script>
+    <script src="../../WF/CCForm/JS/wpslib/project.js"></script>
+    <script src="../../WF/CCForm/JS/wpslib/wpsjsrpcsdk.js"></script>
+
+    <script type="text/javascript" src="/WF/Scripts/bootstrap/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/WF/Scripts/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        var workID = GetQueryString("WorkID"); //workid 子线程的ID
+        $(function () {
+
+            //传入数据调用ajax. 返回查询犯人的接口.
+            var data = "";
+
+            var flowNo = "001";
+            var nodeID = GetQueryString("FK_Node");
+            if (nodeID.indexOf('1') == 0)
+                flowNo = '001';
+
+            if (nodeID.indexOf('3') == 0)
+                flowNo = '003';
+            if (nodeID.indexOf('4') == 0)
+                flowNo = '004';
+            //获得.
+            var ens = new Entities("BP.JianYu.Fanrens");
+
+            if (flowNo == '001')
+                ens.Retrieve("WorkIDOf001", workID, "DelFlag", 0);
+
+            else if (flowNo == '003') {
+                //获取父workID
+                var sql = "select PWorkID,FenJianQuNo from  ND3Rpt  WHERE OID=" + workID;
+                var jsonstr = DBAccess.RunSQLReturnTable(sql);
+                ens.Retrieve("WorkIDOf001", jsonstr[0].PWorkID, "FenJianQuNo", jsonstr[0].FenJianQuNo, "DelFlag", 0);
+            } else if (flowNo == '004') {
+                //获取父workID
+                var sql = "select PWorkID,JianQuNo from  ND4Rpt  WHERE OID=" + workID;
+                var jsonstr = DBAccess.RunSQLReturnTable(sql);
+                ens.Retrieve("WorkIDOf001", jsonstr[0].PWorkID, "FenJianQuNo", jsonstr[0].JianQuNo, "DelFlag", 0);
+            }
+
+            var jianqus = new Entities("BP.JianYu.JianQus");
+            jianqus.RetrieveAll();
+
+            var html = "<table class='table table-bordered table - hover' >";
+            html += "<caption>罪犯列表，合计：" + ens.length + "名.</caption>";
+            html += "<tr>";
+            html += "<th>编号 CRID</th>";
+            html += "<th>姓名</th>";
+            html += "<th>罪犯类型</th>";
+            html += "<th>计划可减刑期</th>";
+            html += "<th>分监区审批可减刑期</th>";
+            html += "<th>监区审批可减刑期</th>";
+            html += "<th>刑罚科审批可减刑期</th>";
+            html += "<th>评审委员会审批减刑期</th>";
+            html += "<th>省局审批可减刑期</th>";
+            html += "<th>监狱审批可减刑期</th>";
+            html += "</tr>";
+
+            for (var idx = 0; idx < jianqus.length; idx++) {
+                var jq = jianqus[idx];
+
+                for (var i = 0; i < ens.length; i++) {
+
+                    var en = ens[i];
+                    if (en.JianQuNo != jq.No)
+                        continue;
+                    // html += "<tr>";
+                    //  html += "<th colsapn=5>" + jq.No + " - " + jq.Name + "</th>";
+                    // html += "</tr>";
+
+                    html += "<tr>";
+                    html += "<td>" + en.CRID + "</td>";
+                    html += "<td>" + en.Name + "</td>";
+                    html += "<td>" + en.ZuiFanLX + "</td>";
+                    html += "<td><input name='TB_JiHuaKeJia'  onblur=SaveValue(this,'" + en.MyPK + "') value='" + en.JiHuaKeJia + "' disabled='disabled'/>个月</td>";
+                    
+                    //分监区会议记录
+                    if (nodeID == 305)
+                        html += "<td><input name='TB_FenJianQuShenPiKeJia'   onblur=SaveValue(this,'" + en.MyPK + "')  value='" + en.FenJianQuShenPiKeJia + "'/>个月</td>";
+                     else
+                        html += "<td><input name='TB_FenJianQuShenPiKeJia'  value='" + en.FenJianQuShenPiKeJia + "'  disabled='disabled'/>个月</td>";
+                    //监区会议记录
+                    if (nodeID == 405)
+                        html += "<td><input name='TB_JianQuShenPiKeJianXi'   onblur=SaveValue(this,'" + en.MyPK + "')  value='" + en.JianQuShenPiKeJianXi + "'  />个月</td>";
+                    else
+                        html += "<td><input name='TB_JianQuShenPiKeJianXi'  value='" + en.JianQuShenPiKeJianXi + "'  disabled='disabled'/>个月</td>";
+                    //刑罚科会议记录
+                    if (nodeID == 115)
+                        html += "<td><input name='TB_XingFaKeShenPiKeJian'   onblur=SaveValue(this,'" + en.MyPK + "')   value='" + en.XingFaKeShenPiKeJian + "' />个月</td>";
+                    else
+                        html += "<td><input name='TB_XingFaKeShenPiKeJian'   value='" + en.XingFaKeShenPiKeJian + "' disabled='disabled'/>个月</td>";
+                    //评审委员会会议记录
+                    if (nodeID == 119)
+                        html += "<td><input name='TB_PingShenWeiYuanHuiSh'   onblur=SaveValue(this,'" + en.MyPK + "')  value='" + en.PingShenWeiYuanHuiSh + "'/>个月</td>";
+                    else
+                        html += "<td><input name='TB_PingShenWeiYuanHuiSh' value='" + en.PingShenWeiYuanHuiSh + "'  disabled='disabled'/>个月</td>";
+                    //刑罚处会议记录
+                    if (nodeID == 134)
+                        html += "<td><input name='TB_ShengJuShenPiKeJianX'   onblur=SaveValue(this,'" + en.MyPK + "')  value='" + en.ShengJuShenPiKeJianX + "'/>个月</td>";
+                    else
+                        html += "<td><input name='TB_ShengJuShenPiKeJianX'  value='" + en.ShengJuShenPiKeJianX + "'  disabled='disabled'/>个月</td>";
+                    //狱长办公会议记录
+                    if (nodeID == 154)
+                        html += "<td><input name='TB_JianYuShenPiKeJianXi'   onblur=SaveValue(this,'" + en.MyPK + "')  value='" + en.JianYuShenPiKeJianXi + "'/>个月</td>";
+                    else
+                        html += "<td><input name='TB_JianYuShenPiKeJianXi'  value='" + en.JianYuShenPiKeJianXi + "'  disabled='disabled'/>个月</td>";
+                    html += "</tr>";
+                }
+            }
+            html += "</table>";
+            $("#docs").html(html);
+
+            ////console.log(html);
+            //var handler = new HttpHandler("BP.JianYu.AppHandler");
+            //handler.AddPara("Ens", data);
+        });
+
+        function OpenIt(mypk, workidFanRen) {
+
+            var en = new Entity("BP.JianYu.Fanren", mypk);
+            workidFanRen = en.DoMethodReturnString("DoMakeWorkIDOfFanren");
+
+            var url = "/WF/MyView.htm?FK_Flow=008&WorkID=" + workidFanRen;
+            // if (nodeID == 202)
+            //  url += "&FrmID=xxxxxx";
+            window.open(url);
+        }
+        function SaveValue(ipt, mypk) {
+
+            var nam = ipt.name.split("_")[1];
+            var en = new Entity("BP.JianYu.Fanren", mypk);
+            en[nam] = ipt.value;
+            en.Update();
+            window.location.href = window.location.href;
+        }
+
+        function openDialog(ipt, mypk) {
+
+
+            //$('#myModal').modal('show');
+
+        }
+
+
+        function Save() {
+            return true;
+        }
+
+        function initHTML() {
+            var htmnian = "";
+            for (var i = 1; i < 5; i++) {
+                htmnian += '<li><a href = "#" onclick=javascript:setValue("nian_value",'+i+');> '+i+'</a> </li >';
+               
+            }
+            $("#Nian_li").html(htmnian);
+
+            var htmyue = "";
+            for (var i = 1; i < 12; i++) {
+                htmyue += '<li><a href = "#" onclick=javascript:setValue("yue_value",' + i + ');> ' + i + '</a> </li >';
+
+            }
+            $("#yue_li").html(htmyue);
+
+            var htmri = "";
+            for (var i = 1; i < 30; i=i+5) {
+                htmri += '<li><a href = "#" onclick=javascript:setValue("ri_value",' + i + ');> ' + i + '</a> </li >';
+
+            }
+            $("#ri_li").html(htmri);
+        }
+        function setValue(id, value) {
+            document.getElementById(id).value=value;
+        }
+        
+    </script>
+</head>
+<body>
+    <form>
+
+        <div id="docs">
+        </div>
+
+    </form>
+
+    <!-- 模态框（Modal） -->
+    <!--<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myModalLabel">调整刑期</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div style="padding: 100px 100px 10px;">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
+                                            年
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="Nian_li">
+                                        </ul>
+                                    </div>--><!-- /btn-group -->
+                                    <!--<input type="text" id="nian_value" width="20">
+                                </div>--><!-- /input-group -->
+                            <!--</div>--><!-- /.col-lg-6 -->
+
+                            <!--<div class="col-lg-6">
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
+                                            月
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="yue_li">
+                                        </ul>
+                                    </div>--><!-- /btn-group -->
+                                    <!--<input type="text" id="yue_value" width="20">
+                                </div>--><!-- /input-group -->
+                            <!--</div>--><!-- /.col-lg-6 -->
+
+                            <!--<div class="col-lg-6">
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default  dropdown-toggle" data-toggle="dropdown">
+                                            日
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" id="ri_li">
+                                        </ul>
+                                    </div>--><!-- /btn-group -->
+                                    <!--<input type="text" id="ri_value" width="20">
+                                </div>--><!-- /input-group -->
+                            <!--</div>--><!-- /.col-lg-6 -->
+
+                        <!--</div>--><!-- /.row -->
+                    <!--</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">提交</button>
+                </div>
+            </div>--><!-- /.modal-content -->
+        <!--</div>--><!-- /.modal-dialog -->
+    <!--</div>-->
+
+</body>
+</html>

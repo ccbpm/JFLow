@@ -1,0 +1,43 @@
+JFlow �� CCFlow Эͬ��������.  
+-----------------------------------------------
+��λ:
+
+    Ϊ�˸���Ч��Эͬ��������������ظ��޸ģ����븲�ǳ���ɵ��˷ѣ����ƶ����¹���.
+
+    1, ����jflow�κ����ⶼ��Ҫ��ccflow����֤, ���ccflow���������޸�ccflow��bug.
+
+    2, ���ǽ�������ִ��jflow ��ccflow�Ĵ���ͬ����ȷ��ccflow�����ǰ̨�����µ�.
+
+    3, �����jflow���Գ�������г��ֵ�ǰ��̨���ֵ�bug, ��Ҫͬ���޸�ccflow����.
+
+
+    ���λ����
+
+        17:30 2017-11-17
+
+
+
+
+
+
+
+
+
+
+1. ����Request����ķ���. add by zhoupeng.
+================================================
+	
+			Enumeration enu = bp.sys.Glo.getRequest().getParameterNames();
+			while (enu.hasMoreElements())
+			{
+				// �ж��Ƿ������ݣ�hasNext()
+				String key = (String) enu.nextElement();
+				r.put(key, bp.sys.Glo.getRequest().getParameter(key));
+			}
+
+
+2. ��string ת���� decimal.
+================================================
+
+BigDecimal bd = new BigDecimal(this.GetValStrByKey(key));
+		return bd.setScale(4, BigDecimal.ROUND_HALF_UP);

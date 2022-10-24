@@ -1,0 +1,421 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="/WF/Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Scripts/bootstrap/bootstrap-table/src/bootstrap-table.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Scripts/bootstrap/css/font-awesome.css" rel="stylesheet">
+    <link href="/WF/Style/skin/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/css/animate.css" rel="stylesheet" type="text/css" />
+    <link href="/WF/Style/skin/font/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--通用js-->
+    <script src="/WF/Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="/WF/Scripts/config.js" type="text/javascript"></script>
+    <script src="/WF/Comm/Gener.js" type="text/javascript"></script>
+    <script src="../../WF/CCForm/JS/wpslib/project.js"></script>
+    <script src="../../WF/CCForm/JS/wpslib/wpsjsrpcsdk.js"></script>
+    <script src="../../WF/Scripts/bootstrap/bootstrap-table/src/bootstrap-table.js"></script>
+    <link href="css/icons.css" rel="stylesheet" />
+    <script type="text/javascript">
+
+        var workID = GetQueryString("WorkID"); //workid 子线程的ID
+        $(function () {
+
+            //传入数据调用ajax. 返回查询犯人的接口.
+            var data = "";
+
+            var flowNo = "002";
+            var nodeID = GetQueryString("FK_Node");
+            if (nodeID.indexOf('1') == 0)
+                flowNo = '001';
+            if (nodeID.indexOf('2') == 0)
+                flowNo = '002';
+
+            //获得.
+            var ens = new Entities("BP.JianYu.Fanrens");
+
+           /* if (flowNo == '001')
+                ens.Retrieve("WorkIDOf001", workID, "DelFlag", 0);
+            else if (flowNo == '002')*/
+                ens.Retrieve("WorkIDOf002", workID, "DelFlag", 0);
+            /*else if (flowNo == '003') {
+                //获取父workID
+                var sql = "select PWorkID,FenJianQuNo from  ND3Rpt  WHERE OID=" + workID;
+                var jsonstr = DBAccess.RunSQLReturnTable(sql);
+                ens.Retrieve("WorkIDOf001", jsonstr[0].PWorkID, "FenJianQuNo", jsonstr[0].FenJianQuNo,"DelFlag", 0);
+            } else if (flowNo == '004') {
+                //获取父workID
+                var sql = "select PWorkID,JianQuNo from  ND4Rpt  WHERE OID=" + workID;
+                var jsonstr = DBAccess.RunSQLReturnTable(sql);
+                ens.Retrieve("WorkIDOf001", jsonstr[0].PWorkID, "FenJianQuNo", jsonstr[0].JianQuNo, "DelFlag", 0);
+            }*/
+
+            var jianqus = new Entities("BP.JianYu.JianQus");
+            jianqus.RetrieveAll();
+
+            //获取被删除的犯人名单
+            var enHs = new Entities("BP.JianYu.Fanrens");
+            enHs.Retrieve("WorkIDOf002", workID, "DelFlag", 1);
+
+            //获取本批次的犯人名单
+            var enHJ = new Entities("BP.JianYu.Fanrens");
+            enHJ.Retrieve("WorkIDOf002", workID,);
+
+            var html = "<div style='overflow:auto; padding:20px; width:100%;HEIGHT: 500px;white-space: nowrap'  align=center><table id='table' class='table fl-table' >";
+            html += "<ul class=\"nav nav-pills\" role=\"tablist\">\n" +
+                "  <li role=\"presentation\"><a href=\"#\">罪犯列表:</li>\n"+
+                "  <li role=\"presentation\"><a href=\"#\">合计 <span class=\"badge\">" + enHJ.length + "名</span></a></li>\n" +
+                "  <li role=\"presentation\"><a href=\"#\">审批人数<span class=\"badge\">" + ens.length + "名</span></a></li>\n" +
+                "  <li role=\"presentation\"><a href=\"#\">删除人数 <span class=\"badge\">" + enHs.length + "名</span></a></li>\n" +
+                "</ul>"
+            // html += "<caption><span style='font-weight:bold;'>罪犯列表，合计：" + enHJ.length + "名.审批人数：" + ens.length + "名.删除人数：" + enHs.length + "名.</span></caption>";
+            html += "<thead style='color: #fff;background-color: #4FC3A1;'><tr>";
+            html += "<th>编号 CRID</th>";
+            html += "<th width='6%'>姓名</th>";
+            html += "<th width='5%'>年龄</th>";
+            html += "<th width='5%'>监区</th>"; //监区
+            html += "<th width='5%'>分监区</th>"; //分监区
+            html += "<th width='6%'>入监日期</th>";
+            html += "<th width='6%'>罪名</th>";
+            html += "<th width='6%'>罪犯类型</th>";
+            html += "<th width='5%'>罪犯类别</th>";
+            html += "<th width='6%'>原判刑期</th>";
+            html += "<th width='6%'>现刑期</th>";
+            html += "<th width='5%'>减刑间隔</th>";
+            html += "<th width='5%'>减刑幅度</th>";
+            html += "<th width='5%'>表扬次数</th>";
+            html += "<th width='5%'>年累计分</th>";
+            html += "<th width='6%'>是否老病残</th>";
+            html += "<th width='6%'>是否立功</th>";
+            html += "<th width='6%'>是否重大立功</th>";
+            html += "<th width='6%'>是否职务犯</th>";
+            if (nodeID == "202" )
+            html += "<th>操作</th>";   //分监区
+            html += "</tr></thead>";
+
+            for (var idx = 0; idx < jianqus.length; idx++) {
+                var jq = jianqus[idx];
+
+                for (var i = 0; i < ens.length; i++) {
+
+                    var en = ens[i];
+                    if (en.JianQuNo != jq.No)
+                        continue;
+                   /* html += "<tr>";
+                    html += "<th colsapn=5>" + jq.No + " - " + jq.Name + "</th>";
+                    html += "</tr>";*/
+                    var lbc = "否";
+                    if (en.ShiFouLBC == 1)
+                        lbc = "是";
+                    var lg = "否";
+                    if (en.ShiFouLG == 1)
+                        lg = "是";
+                    var zdlg = "否";
+                    if (en.ShiFouZDLG == 1)
+                        zdlg = "是";
+                    var zwf = "否";
+                    if (en.zwf == 1)
+                        zwf = "是";
+                    html += "<tr>";
+
+                    html += "<td>" + en.CRID + "</td>";
+                    html += "<td> <a href=\"javascript:OpenIt('" + en.MyPK + "','" + en.WorkIDOf008 + "')\" >" + en.Name + "</a></td>";
+                    html += "<td>" + en.Age + "</td>";
+                    html += "<td>" + en.JianQuNoText + "</td>";  //监区+ en.JianQuNo
+                    html += "<td>" + en.FenJianQuNoText + "</td>"; //分监区+ en.FenJianQuNo
+
+                    html += "<td>" + en.DTComein + "</td>";
+                    html += "<td>" + en.ZuiMing + "</td>";
+                    html += "<td>" + en.ZuiFanLX + "</td>";
+                    html += "<td>" + en.ZuiFanLB + "</td>";
+                    html += "<td>" + en.YuanPanXQ + "</td>";
+                    html += "<td>" + en.XianXQ + "</td>";
+                    html += "<td>" + en.JianXingJG + "</td>";
+                    html += "<td>" + en.JianXingFD + "</td>";
+                    html += "<td>" + en.BiaoYangCS + "</td>";
+                    html += "<td>" + en.NianLeiJF + "</td>";
+                    html += "<td>" + lbc + "</td>";
+                    html += "<td>" + lg + "</td>";
+                    html += "<td>" + zdlg + "</td>";
+                    html += "<td>" + zwf + "</td>";
+                    html += "<td>"; //分监区
+                    if (nodeID == "202")
+                        html += " <a href=\"javascript:Del('" + en.MyPK + "','" + en.WorkIDOf008 + "')\" ><img src='../../WF/Img/Btn/Delete.png'> 删除</a> ";
+
+                   // if (nodeID == 111)
+                    //    html += "<a href=\"javascript:JianXingBook('" + en.MyPK + "')\" ><img src='../../WF/Img/FileType/doc.gif'>减刑建议书</a>";
+
+                   // if (flowNo == '002')
+                    //    html += "<a href=\"javascript:JiFenTable('" + en.WorkIDOf008 + "','" + en.MyPK + "','" + en.CRID + "')\" ><img src='../../WF/Img/FileType/doc.gif'>计分考核表</a> ";
+
+                    html += "</td>"; //分监区
+
+                    html += "</tr>";
+                }
+            }
+            html += "</table>";
+
+
+            if(enHs.length > 0 ){
+            html += "<table class='table table-bordered table - hover' >";
+            html += "<caption>删除列表，合计：" + enHs.length + "名.</caption>";
+            html += "<tr>";
+            //html += "<th>编号 CRID</th>";
+                html += "<th width='6%'>姓名</th>";
+                html += "<th width='5%'>年龄</th>";
+                html += "<th width='5%'>监区</th>"; //监区
+                html += "<th width='5%'>分监区</th>"; //分监区
+                html += "<th width='6%'>入监日期</th>";
+                html += "<th width='6%'>罪名</th>";
+                html += "<th width='6%'>罪犯类型</th>";
+                html += "<th width='5%'>罪犯类别</th>";
+                html += "<th width='6%'>原判刑期</th>";
+                html += "<th width='6%'>现刑期</th>";
+                html += "<th width='5%'>减刑间隔</th>";
+                html += "<th width='5%'>减刑幅度</th>";
+                html += "<th width='5%'>表扬次数</th>";
+                html += "<th width='5%'>年累计分</th>";
+                html += "<th width='6%'>是否老病残</th>";
+                html += "<th width='6%'>是否立功</th>";
+                html += "<th width='6%'>是否重大立功</th>";
+                html += "<th width='6%'>是否职务犯</th>";
+            if (nodeID == "202" )
+                html += "<th width='10%'>操作</th>";   //分监区
+            html += "</tr>";
+
+            for (var idx = 0; idx < jianqus.length; idx++) {
+                var jq = jianqus[idx];
+
+                for (var i = 0; i < enHs.length; i++) {
+
+                    var en = enHs[i];
+                    if (en.JianQuNo != jq.No)
+                        continue;
+                    /* html += "<tr>";
+                     html += "<th colsapn=5>" + jq.No + " - " + jq.Name + "</th>";
+                     html += "</tr>";*/
+                    var lbc = "否";
+                    if (en.ShiFouLBC == 1)
+                        lbc = "是";
+                    var lg = "否";
+                    if (en.ShiFouLG == 1)
+                        lg = "是";
+                    var zdlg = "否";
+                    if (en.ShiFouZDLG == 1)
+                        zdlg = "是";
+                    var zwf = "否";
+                    if (en.zwf == 1)
+                        zwf = "是";
+                    html += "<tr>";
+
+                   // html += "<td>" + en.CRID + "</td>";
+                    html += "<td> <a href=\"javascript:OpenIt('" + en.MyPK + "','" + en.WorkIDOf008 + "')\" >" + en.Name + "</a></td>";
+                    html += "<td>" + en.Age + "</td>";
+                    html += "<td>" + en.JianQuNo + en.JianQuNoText + "</td>";  //监区
+                    html += "<td>" + en.FenJianQuNo + en.FenJianQuNoText + "</td>"; //分监区
+
+                    html += "<td>" + en.DTComein + "</td>";
+                    html += "<td>" + en.ZuiMing + "</td>";
+                    html += "<td>" + en.ZuiFanLX + "</td>";
+                    html += "<td>" + en.ZuiFanLB + "</td>";
+                    html += "<td>" + en.YuanPanXQ + "</td>";
+                    html += "<td>" + en.XianXQ + "</td>";
+                    html += "<td>" + en.JianXingJG + "</td>";
+                    html += "<td>" + en.JianXingFD + "</td>";
+                    html += "<td>" + en.BiaoYangCS + "</td>";
+                    html += "<td>" + en.NianLeiJF + "</td>";
+                    html += "<td>" + lbc + "</td>";
+                    html += "<td>" + lg + "</td>";
+                    html += "<td>" + zdlg + "</td>";
+                    html += "<td>" + zwf + "</td>";
+                    html += "<td>"; //分监区
+                    if (nodeID == "202" )
+                        html += " <a href=\"javascript:DelRe('" + en.MyPK + "')\" > 加入审批名单</a> ";
+
+                    html += "</td>"; //分监区
+
+                    html += "</tr>";
+                }
+            }
+            html += "</table></div>";
+            }
+            $("#docs").html(html);
+
+            // $('#table').bootstrapTable('destroy').bootstrapTable({
+            //     fixedColumns: false, // 固定列
+            //     fixedNumber: 0, //固定列数
+            //     height: 800, // <-----固定表头------
+            // });
+            ////console.log(html);
+            //var handler = new HttpHandler("BP.JianYu.AppHandler");
+            //handler.AddPara("Ens", data);
+        });
+
+        //生成计分考核表
+        function JiFenTable(workidFanRen,mypk,crid) {
+
+            if (workidFanRen == 0) {
+                var en = new Entity("BP.JianYu.Fanren", mypk);
+                workidFanRen = en.DoMethodReturnString("DoMakeWorkIDOfFanren");
+            }
+            //获取中间表数据放入表单表中
+            var handler = new HttpHandler("BP.JianYu.AppHandler");
+            handler.AddUrlData();
+            handler.AddPara("CRID", crid);
+            handler.AddPara("WorkidFanRen", workidFanRen);
+            handler.DoMethodReturnString("DoJiFenZongHeBiao");
+
+            var url = "/WF/CCForm/Frm.htm?FK_Flow=002&FK_Node=201&WorkID=" + workidFanRen +"&FrmID=Frm_JiFenKaoHeZongHeBiao&FK_MapData=Frm_JiFenKaoHeZongHeBiao&OpenWPS=1";
+           // if (nodeID == 202)
+             //   url += "&FrmID=xxxxxx";
+            window.open(url);
+        }
+        /* 调用的方法 */
+        function fillTemplate() {
+            // var filePath = GetDemoPath("样章2.docx");
+
+            //var filePath = prompt("请输入打开文件路径（本地或是url）：", GetDemoPath("样章.docx"))
+            // var uploadPath = "BP.WF.Dev2Interface.UploadFile"
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
+            handler.AddUrlData();
+            var data = handler.DoMethodReturnString("WpsFrm_Init");
+            if (data.indexOf('err@') == 0) {
+                alert('装载表单出错,请查看控制台console,或者反馈给管理员.' + data);
+                console.log(data);
+                return;
+            }
+            var url1 = document.location.host;
+
+            wpsTempURL = document.location.protocol + "//" + url1 + data;
+            var uploadPath = dynamicHandler + "?DoType=HttpHandler&DoMethod=WpsFrm_SaveFile&HttpHandlerName=BP.WF.HttpHandler.WF_CCForm&FrmID=" + frmID + "&WorkID=" + oid;
+            var uploadFieldName = "fileField";
+
+            var invokeParam = {
+                "fileName": wpsTempURL,
+                "templateDataUrl": wpsData,
+                "childDatas": childDatas,
+
+                "uploadPath": uploadPath, // 保存文档上传接口
+                //"fileName": filePath,
+                "uploadFieldName": uploadFieldName,
+                "userName": "东方不败"
+
+            }; //根据需求任意定义
+            WpsInvoke.InvokeAsHttp(
+                projInfo.type,
+                projInfo.name, //wps加载项的名字，在实际项目中写上对应的名字
+                "OpenDoc", //要调用的在wps加载项中的函数名
+                JSON.stringify(invokeParam), //调用的在wps加载项中的函数要传递的数据，是一个json对象，根据业务系统需求任意定义
+                callbackFunc, //回调函数，wps加载项中InvokeFromSystemDemo这个函数的返回值作为这个函数的参数
+                true) //设置wps是否显示到最前面来
+
+            //OpenDoc(param);
+        }
+        function OpenIt(mypk, workidFanRen) {
+
+            var en = new Entity("BP.JianYu.Fanren", mypk);
+            workidFanRen = en.DoMethodReturnString("DoMakeWorkIDOfFanren");
+
+            var url = "/WF/MyView.htm?FK_Flow=008&WorkID=" + workidFanRen;
+           // if (nodeID == 202)
+              //  url += "&FrmID=xxxxxx";
+            
+            window.open(url);
+        }
+
+        //打开减刑建议书.
+        function JianXingBook(mypk) {
+
+            var en = new Entity("BP.JianYu.Fanren", mypk);
+            var url = en.DoMethodReturnString("DoJianXing");
+
+            url = url.replace('url@', '');
+            window.open(url);
+        }
+
+        //逻辑删除，改变状态
+        function Del(id) {
+
+            if (window.confirm('您确定要删除吗？') == false)
+                return;
+
+            var en = new Entity("BP.JianYu.Fanren", id);
+            en.DelFlag = 1;
+            en.Update();
+            window.location.href = window.location.href;
+        }
+        //加回到审批列表，改变状态
+        function DelRe(id) {
+
+            if (window.confirm('您确定要加入到审批名单吗？') == false)
+                return;
+
+            var en = new Entity("BP.JianYu.Fanren", id);
+            en.DelFlag = 0;
+            en.Update();
+            window.location.href = window.location.href;
+        }
+        //保存查询结果.
+        function AddNew() {
+
+            var webUser = new WebUser();
+            var name = window.prompt('请输入编号', "001");
+
+            var en = new Entity("BP.JianYu.Fanren");
+            en.FenJianQuNo = webUser.FK_Dept;
+            en.MyPK = workID + name;
+            en.Name = name;
+            en.WorkIDOfSubthread = workID;
+            en.WorkID = fid;
+            en.Insert();
+
+            window.location.href = window.location.href;
+        }
+
+        function Save() {
+            return true;
+        }
+    </script>
+    <style>
+        /*.fl-table thead{*/
+        /*    display: none!important;*/
+        /*}*/
+        .fl-table tbody tr:nth-child(even) {
+            background: #F8F8F8;
+        }
+        .fl-table {
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: normal;
+            border: none;
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 100%;
+            white-space: nowrap;
+            background-color: white;
+        }
+        .fl-table td {
+            border-right: 1px solid #e7eaec;
+            font-size: 12px;
+        }
+        .nav > li > a:hover, .nav > li > a:focus{
+            background-color: #fff;
+        }
+        .nav > li > a{
+          color: #333;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+    <form>
+
+        <div id="docs">
+        </div>
+
+    </form>
+
+</body>
+</html>

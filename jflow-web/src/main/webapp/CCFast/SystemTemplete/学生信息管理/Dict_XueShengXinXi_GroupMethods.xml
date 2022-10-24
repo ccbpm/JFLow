@@ -1,0 +1,48 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <GroupMethods>
+    <No>c44045e2-aec5-4cef-b4f4-074b568493e5</No>
+    <FrmID>Dict_XueShengXinXi</FrmID>
+    <Name>相关操作</Name>
+    <Icon>icon-home</Icon>
+    <OrgNo />
+    <Idx>0</Idx>
+    <AtPara />
+  </GroupMethods>
+  <Methods>
+    <No>9260af22-a43b-4bb4-baa9-545b4f11ece9</No>
+    <Name>日常记录</Name>
+    <MethodID>FrmBBS</MethodID>
+    <GroupID>c44045e2-aec5-4cef-b4f4-074b568493e5</GroupID>
+    <MethodModel>FrmBBS</MethodModel>
+    <Tag1>FrmBBS</Tag1>
+    <Mark>FrmBBS</Mark>
+    <FrmID>Dict_XueShengXinXi</FrmID>
+    <FlowNo />
+    <Icon>icon-film</Icon>
+    <Docs />
+    <RefMethodType>1</RefMethodType>
+    <RefMethodTypeText>模态窗口打开</RefMethodTypeText>
+    <IsMyBillToolBar>1</IsMyBillToolBar>
+    <IsMyBillToolExt>0</IsMyBillToolExt>
+    <IsSearchBar>0</IsSearchBar>
+    <PopHeight>0</PopHeight>
+    <PopWidth>0</PopWidth>
+    <WarningMsg />
+    <MsgSuccess />
+    <MsgErr />
+    <WhatAreYouTodo>0</WhatAreYouTodo>
+    <WhatAreYouTodoText>关闭提示窗口</WhatAreYouTodoText>
+    <MethodDocTypeOfFunc>0</MethodDocTypeOfFunc>
+    <MethodDocTypeOfFuncText>SQL</MethodDocTypeOfFuncText>
+    <DTSDataWay>0</DTSDataWay>
+    <DTSDataWayText>不同步</DTSDataWayText>
+    <DTSSpecFiels />
+    <DTSWhenFlowOver>0</DTSWhenFlowOver>
+    <DTSWhenNodeOver>0</DTSWhenNodeOver>
+    <IsEnable>1</IsEnable>
+    <IsList>0</IsList>
+    <IsHavePara>0</IsHavePara>
+    <Idx>0</Idx>
+  </Methods>
+</NewDataSet>

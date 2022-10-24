@@ -1,0 +1,129 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <Collections>
+    <No>Dict_BanJiGuanLi_Delete</No>
+    <Name>删除</Name>
+    <MethodID>Delete</MethodID>
+    <MethodModel>Delete</MethodModel>
+    <Tag1 />
+    <Mark>Delete</Mark>
+    <FrmID>Dict_BanJiGuanLi</FrmID>
+    <FlowNo />
+    <Icon />
+    <Docs />
+    <PopHeight>0</PopHeight>
+    <PopWidth>0</PopWidth>
+    <WarningMsg />
+    <MsgSuccess />
+    <MsgErr />
+    <WhatAreYouTodo>0</WhatAreYouTodo>
+    <WhatAreYouTodoText>关闭提示窗口</WhatAreYouTodoText>
+    <IsEnable>1</IsEnable>
+    <Idx>2</Idx>
+  </Collections>
+  <Collections>
+    <No>Dict_BanJiGuanLi_ExpExcel</No>
+    <Name>导出Excel</Name>
+    <MethodID>ExpExcel</MethodID>
+    <MethodModel>ExpExcel</MethodModel>
+    <Tag1 />
+    <Mark>ExpExcel</Mark>
+    <FrmID>Dict_BanJiGuanLi</FrmID>
+    <FlowNo />
+    <Icon />
+    <Docs />
+    <PopHeight>0</PopHeight>
+    <PopWidth>0</PopWidth>
+    <WarningMsg />
+    <MsgSuccess />
+    <MsgErr />
+    <WhatAreYouTodo>0</WhatAreYouTodo>
+    <WhatAreYouTodoText>关闭提示窗口</WhatAreYouTodoText>
+    <IsEnable>1</IsEnable>
+    <Idx>4</Idx>
+  </Collections>
+  <Collections>
+    <No>Dict_BanJiGuanLi_Group</No>
+    <Name>分析</Name>
+    <MethodID>Group</MethodID>
+    <MethodModel>Group</MethodModel>
+    <Tag1 />
+    <Mark>Group</Mark>
+    <FrmID>Dict_BanJiGuanLi</FrmID>
+    <FlowNo />
+    <Icon />
+    <Docs />
+    <PopHeight>0</PopHeight>
+    <PopWidth>0</PopWidth>
+    <WarningMsg />
+    <MsgSuccess />
+    <MsgErr />
+    <WhatAreYouTodo>0</WhatAreYouTodo>
+    <WhatAreYouTodoText>关闭提示窗口</WhatAreYouTodoText>
+    <IsEnable>0</IsEnable>
+    <Idx>3</Idx>
+  </Collections>
+  <Collections>
+    <No>Dict_BanJiGuanLi_ImpExcel</No>
+    <Name>导入Excel</Name>
+    <MethodID>ImpExcel</MethodID>
+    <MethodModel>ImpExcel</MethodModel>
+    <Tag1 />
+    <Mark>ImpExcel</Mark>
+    <FrmID>Dict_BanJiGuanLi</FrmID>
+    <FlowNo />
+    <Icon />
+    <Docs />
+    <PopHeight>0</PopHeight>
+    <PopWidth>0</PopWidth>
+    <WarningMsg />
+    <MsgSuccess />
+    <MsgErr />
+    <WhatAreYouTodo>0</WhatAreYouTodo>
+    <WhatAreYouTodoText>关闭提示窗口</WhatAreYouTodoText>
+    <IsEnable>1</IsEnable>
+    <Idx>5</Idx>
+  </Collections>
+  <Collections>
+    <No>Dict_BanJiGuanLi_New</No>
+    <Name>新建</Name>
+    <MethodID>New</MethodID>
+    <MethodModel>New</MethodModel>
+    <Tag1 />
+    <Mark>New</Mark>
+    <FrmID>Dict_BanJiGuanLi</FrmID>
+    <FlowNo />
+    <Icon />
+    <Docs />
+    <PopHeight>0</PopHeight>
+    <PopWidth>0</PopWidth>
+    <WarningMsg />
+    <MsgSuccess />
+    <MsgErr />
+    <WhatAreYouTodo>0</WhatAreYouTodo>
+    <WhatAreYouTodoText>关闭提示窗口</WhatAreYouTodoText>
+    <IsEnable>1</IsEnable>
+    <Idx>1</Idx>
+  </Collections>
+  <Collections>
+    <No>Dict_BanJiGuanLi_Search</No>
+    <Name>查询</Name>
+    <MethodID>Search</MethodID>
+    <MethodModel>Search</MethodModel>
+    <Tag1 />
+    <Mark>Search</Mark>
+    <FrmID>Dict_BanJiGuanLi</FrmID>
+    <FlowNo />
+    <Icon />
+    <Docs />
+    <PopHeight>0</PopHeight>
+    <PopWidth>0</PopWidth>
+    <WarningMsg />
+    <MsgSuccess />
+    <MsgErr />
+    <WhatAreYouTodo>0</WhatAreYouTodo>
+    <WhatAreYouTodoText>关闭提示窗口</WhatAreYouTodoText>
+    <IsEnable>1</IsEnable>
+    <Idx>0</Idx>
+  </Collections>
+</NewDataSet>

@@ -2,6 +2,7 @@ package bp.tools;
 import java.awt.geom.Arc2D.Float;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -1000,6 +1001,30 @@ public class Json
 			ds.Tables.add(dt);
 		}
 		return ds;
+	}
+
+	public static Hashtable<String, String> JsonToHashMap(String JsonStrin){
+		HashMap<String, String> data = new HashMap<String, String>();
+		Hashtable<String, String> ht = new Hashtable<String, String>();
+		try{
+			// 将json字符串转换成jsonObject
+			JSONObject jsonObject = JSONObject.fromObject(JsonStrin);
+			@SuppressWarnings("rawtypes")
+			Iterator it = jsonObject.keys();
+			// 遍历jsonObject数据，添加到Map对象
+			while (it.hasNext())
+			{
+				String key = String.valueOf(it.next()).toString();
+				String value = (String) jsonObject.get(key).toString();
+				data.put(key, value);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			//JOptionPane.showMessageDialog(null,"ERROR:["+e+"]");
+		}
+		//System.out.println(data);
+		ht.putAll(data);
+		return ht;
 	}
 
 }

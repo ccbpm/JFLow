@@ -1188,20 +1188,22 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	*/
 	public int RetrieveIn(String key, String vals) throws Exception
 	{
+		return RetrieveIn(key,vals,null);
+	}
+	public int RetrieveIn(String key,String vals, String orderby)throws Exception
+	{
 		QueryObject qo = new QueryObject(this);
 
 		if (vals.contains("(") == false)
-		{
 			qo.AddWhere(key, " IN ", "(" + vals + ")");
-		}
 		else
-		{
 			qo.AddWhere(key, " IN ", vals);
-		}
+
+		if (DataType.IsNullOrEmpty(orderby)==false)
+			qo.addOrderBy(orderby);
 
 		return qo.DoQuery();
 	}
-
 
 
 	public int RetrieveInSQL(String attr, String sql) throws Exception

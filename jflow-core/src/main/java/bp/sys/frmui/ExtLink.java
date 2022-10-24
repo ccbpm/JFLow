@@ -116,6 +116,7 @@ public class ExtLink extends EntityMyPK
 		map.SetHelperAlert(MapAttrAttr.LabelColSpan, "对于傻瓜表单有效: 标识该字段Lable，标签横跨的宽度,占的单元格数量.");
 
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
+		map.AddTBFloat(MapAttrAttr.UIHeight, 23, "高度", true, false);
 
 			///#endregion 通用的属性.
 

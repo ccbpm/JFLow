@@ -225,10 +225,10 @@ public class QueryObject
 		String strs = "";
 		for (DataRow dr : dt.Rows)
 		{
-			strs += dr.getValue(0).toString() + ",";
+			strs += "'"+dr.getValue(0).toString() + "',";
 		}
-		strs = StringHelper.substring(strs, strs.length() - 1, 0);
-		this.AddWhereIn(attr, strs);
+		strs = strs.substring(0, strs.length() - 1);
+		this.AddWhereIn(attr, "("+strs+")");
 	}
 	/** 
 	 增加条件,vals 必须是sql可以识别的字串．
@@ -365,11 +365,21 @@ public class QueryObject
 	*/
 	public final void AddWhereIsNull(String attr) throws Exception
 	{
-		this.setSQL("(" + attr2Field(attr) + "  IS NULL OR  " + attr2Field(attr) + "='' )");
+		if(DBAccess.getAppCenterDBType().equals(DBType.KingBaseR3) ||
+				DBAccess.getAppCenterDBType().equals(DBType.KingBaseR6)){
+			this.setSQL("(" + attr2Field(attr) + "  IS  NULL )");
+		}else {
+			this.setSQL("(" + attr2Field(attr) + "  IS NULL OR  " + attr2Field(attr) + "='' )");
+		}
 	}
 	public final void AddWhereIsNotNull(String attr) throws Exception
 	{
-		this.setSQL("(" + attr2Field(attr) + "  IS NOT NULL AND  " + attr2Field(attr) + "!='' )");
+		if(DBAccess.getAppCenterDBType().equals(DBType.KingBaseR3) ||
+				DBAccess.getAppCenterDBType().equals(DBType.KingBaseR6)){
+			this.setSQL("(" + attr2Field(attr) + "  IS NOT NULL )");
+		}else {
+			this.setSQL("(" + attr2Field(attr) + "  IS NOT NULL AND  " + attr2Field(attr) + "!='' )");
+		}
 	}
 	public final void AddWhereField(String attr, String exp, String val) throws Exception
 	{

@@ -1,6 +1,7 @@
 package bp.ccbill;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.en.*;
@@ -123,22 +124,22 @@ public class WF_CCBill_Opt extends WebContralBase
 		if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			qo.addLeftBracket();
-			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 			{
-				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+				qo.AddWhere("Title", " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("Title", " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 			qo.addOr();
-			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 			{
-				qo.AddWhere("BillNo", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+				qo.AddWhere("BillNo", " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("BillNo", " LIKE ", "'%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+				qo.AddWhere("BillNo", " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 
 			qo.getMyParas().Add("SKey", keyWord, false);

@@ -15,9 +15,14 @@ import org.springframework.util.ResourceUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * 文件操作工具类 实现文件的创建、删除、复制、压缩、解压以及目录的创建、删除、复制、压缩解压等功能
@@ -1136,6 +1141,34 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
          }
      }
 
+    public static String[] getFileNames(String folder) throws Exception {
+        if(SystemConfig.getIsJarRun()){
+            if(folder.endsWith("/")==false)
+                folder +="/";
+            Resource[] resources =  new PathMatchingResourcePatternResolver().getResources(ResourceUtils.CLASSPATH_URL_PREFIX+folder + "*.*");
+            String[] retS=new String[resources.length];
+            int i =0;
+            for(Resource resource : resources){
+                retS[i]=resource.getFilename();
+                i++;
+            }
+            return retS;
+        }
+        File _folder=new File(folder);
+        String[] filesInFolder;
+        if(_folder.isDirectory()){
+            filesInFolder=_folder.list();
+            String[] retS=new String[filesInFolder.length];
+            for(int i=0;i<filesInFolder.length;i++){
+                retS[i]=filesInFolder[i];
+            }
+            return retS;
+        }else{
+            throw new IOException("路径不是文件夹！");
+        }
+    }
+
+
     /***
      * 获取指定目录下的所有的文件（不包括文件夹），采用了递归
      *
@@ -1176,14 +1209,15 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      * param obj
      * @return
      */
-    public static ArrayList<File>GetDirectories(Object obj){
+    public static ArrayList<File>GetDirectories(Object obj) {
+        ArrayList<File> files = new ArrayList<File>();
         File directory = null;
         if (obj instanceof File) {
             directory = (File) obj;
         } else {
             directory = new File(obj.toString());
         }
-        ArrayList<File> files = new ArrayList<File>();
+
         if (directory.isDirectory()) {
             File[] fileArr = directory.listFiles();
             for (int i = 0; i < fileArr.length; i++) {
@@ -1194,5 +1228,32 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
         }
         return files;
     }
+
+    public static ArrayList<String> GetDirectories(String basePath) throws Exception{
+        basePath = "BOOT-INF/classes/"+basePath;
+        ArrayList<String> files = new ArrayList<String>();
+        ClassLoader classLoader = BaseFileUtils.class.getClassLoader();
+        URL url = classLoader.getResource(basePath);
+        String urlStr = url.toString();
+        // 找到!/ 截断之前的字符串
+        String jarPath = urlStr.substring(0, urlStr.indexOf("!/") + 2);
+        URL jarURL = new URL(jarPath);
+        JarURLConnection jarCon = (JarURLConnection) jarURL.openConnection();
+        JarFile jarFile = jarCon.getJarFile();
+        Enumeration<JarEntry> jarEntrys = jarFile.entries();
+        while (jarEntrys.hasMoreElements()) {
+            JarEntry entry = jarEntrys.nextElement();
+            // 简单的判断路径，如果想做到像Spring，Ant-Style格式的路径匹配需要用到正则。
+            String name = entry.getName();
+            if (name.startsWith(basePath) && !name.equals(basePath)) {
+                if (entry.isDirectory()) {
+                    // 文件夹 迭代
+                    files.add(name);
+                }
+            }
+        }
+        return files;
+    }
+
 
 }

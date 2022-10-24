@@ -5,6 +5,8 @@ import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.sys.*;
 import bp.web.*;
+
+import java.text.DecimalFormat;
 import java.util.*;
 import java.io.*;
 import java.math.*;
@@ -167,6 +169,10 @@ public abstract class EnObj implements Serializable
 						break;
 					case 6:
 						dataFormat = "MM-dd";
+					case 7:
+						dataFormat = "yyyy";
+					case 8:
+						dataFormat = "MM";
 						break;
 					default:
 						throw new RuntimeException("没有找到指定的时间类型");
@@ -362,6 +368,12 @@ public abstract class EnObj implements Serializable
 						case 6:
 							dataFormat = "MM-dd";
 							break;
+						case 7:
+							dataFormat = "yyyy";
+							break;
+						case 8:
+							dataFormat = "MM";
+							break;
 						default:
 							throw new RuntimeException("没有找到指定的时间类型");
 					}
@@ -393,6 +405,20 @@ public abstract class EnObj implements Serializable
 						}
 					}
 					continue;
+				case "@FK_YF":
+					if (attr.getUIIsReadonly() == true)
+					{
+						this.SetValByKey(attr.getKey(), DataType.getCurrentMonth());
+					}
+					else
+					{
+						if (DataType.IsNullOrEmpty(myval) || v.equals(myval))
+						{
+							this.SetValByKey(attr.getKey(), DataType.getCurrentMonth());
+						}
+					}
+					continue;
+
 				case "@yyyy年MM月dd日":
 				case "@yyyy年MM月dd日HH时mm分":
 				case "@yy年MM月dd日":
@@ -464,7 +490,7 @@ public abstract class EnObj implements Serializable
 		exp = exp.replace("~", "'");
 
 		//首先替换加; 的。
-		exp = exp.replace("@= WebUser.getNo();", WebUser.getNo());
+		exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
 		exp = exp.replace("@WebUser.Name;", WebUser.getName());
 		exp = exp.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
 		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
@@ -1292,9 +1318,9 @@ public abstract class EnObj implements Serializable
 	{
 		try
 		{
-			return Double.parseDouble(this.GetValStrByKey(key));
+			return new DecimalFormat().parse(this.GetValStrByKey(key)).doubleValue();//Double.parseDouble(this.GetValStrByKey(key));
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			throw new RuntimeException("@表[" + this.getEnDesc() + "]在获取属性[" + key + "]值,出现错误，不能将[" + this.GetValStringByKey(key) + "]转换为double类型.错误信息：" + ex.getMessage());
 		}

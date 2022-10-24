@@ -342,7 +342,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		{
 			return "err@附件ID:" + ath.getNoOfObj() + "已经存在.";
 		}
-		bp.sys.CCFormAPI.CreateOrSaveAthMulti(this.getFK_MapData(), this.GetRequestVal("AthNo"), "我的附件", 100, 200);
+		bp.sys.CCFormAPI.CreateOrSaveAthMulti(this.getFK_MapData(), this.GetRequestVal("AthNo"), "我的附件");
 		return ath.getMyPK();
 	}
 
@@ -482,11 +482,11 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		dtl.setNo(this.getFK_MapDtl());
 		if (dtl.RetrieveFromDBSources() == 0)
 		{
-			bp.sys.CCFormAPI.CreateOrSaveDtl(this.getFK_MapData(), this.getFK_MapDtl(), this.getFK_MapDtl(), 100, 200);
+			bp.sys.CCFormAPI.CreateOrSaveDtl(this.getFK_MapData(), this.getFK_MapDtl(), this.getFK_MapDtl());
 		}
 		else
 		{
-			bp.sys.CCFormAPI.CreateOrSaveDtl(this.getFK_MapData(), this.getFK_MapDtl(), dtl.getName(), dtl.getX(), dtl.getY());
+			bp.sys.CCFormAPI.CreateOrSaveDtl(this.getFK_MapData(), this.getFK_MapDtl(), dtl.getName());
 		}
 
 		return "创建成功.";

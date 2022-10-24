@@ -152,11 +152,11 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 			String SID = this.GetRequestVal("Token");
 			try
 			{
-				Dev2Interface.Port_Login(this.getFK_Emp());
-				Dev2Interface.Port_GenerToken(this.getFK_Emp());
-				return "登录成功.";
+				bp.wf.Dev2Interface.Port_Login(this.getFK_Emp());
+				String token = Dev2Interface.Port_GenerToken(this.getFK_Emp());
+				return token;
 			}
-			catch (RuntimeException ex)
+			catch (Exception ex)
 			{
 				return "err@" + ex.getMessage();
 			}
@@ -164,14 +164,15 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 
 		try
 		{
-			Dev2Interface.Port_Login(this.getFK_Emp(), this.getOrgNo());
-			Dev2Interface.Port_GenerToken(this.getFK_Emp());
-			return "登录成功.";
+			bp.wf.Dev2Interface.Port_Login(this.getFK_Emp(), this.getOrgNo());
+			String token = Dev2Interface.Port_GenerToken(this.getFK_Emp());
+			return token;
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
+
 
 	}
 
@@ -192,12 +193,13 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 
 		//选择的人员登录
 		bp.wf.Dev2Interface.Port_Login(testerNo);
-		bp.wf.Dev2Interface.Port_GenerToken(testerNo);
+		String token = bp.wf.Dev2Interface.Port_GenerToken(testerNo);
 
 		//组织url发起该流程.
 		String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&TesterNo=" + testerNo;
 		url += "&OrgNo=" + WebUser.getOrgNo();
 		url += "&UserNo=" + WebUser.getNo();
+		url += "&Token=" + token;
 		return url;
 	}
 	/** 

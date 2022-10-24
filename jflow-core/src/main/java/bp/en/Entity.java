@@ -6,6 +6,7 @@ import bp.sys.*;
 import bp.sys.xml.XmlEn;
 import bp.tools.StringHelper;
 import bp.web.*;
+import bp.web.WebUser;
 
 import java.util.*;
 import java.io.*;
@@ -802,7 +803,7 @@ public abstract class Entity extends EnObj implements Serializable
 				default:
 					throw new RuntimeException("error");
 			}
-			String str = String.valueOf(DBAccess.RunSQLReturnValInt(sql, 1));
+			String str = String.valueOf(DBAccess.RunSQLReturnValLong(sql, 1));
 			if (str.equals("0") || str.equals(""))
 			{
 				str = "1";

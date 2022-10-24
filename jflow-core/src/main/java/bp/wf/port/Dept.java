@@ -75,6 +75,8 @@ public class Dept extends EntityNoName
 	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
+		uac.IsInsert=false;
+
 		return uac;
 	}
 	/** 
@@ -83,27 +85,27 @@ public class Dept extends EntityNoName
 	@Override
 	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
-		{
 			return this.get_enMap();
-		}
 
 		Map map = new Map("Port_Dept", "部门");
-
 		map.setAdjunctType(AdjunctType.None);
-
 		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 30, 40);
 		map.AddTBString(DeptAttr.Name, null,"名称", true, false, 0, 60, 200);
-		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, false, 0, 30, 40);
-		map.AddTBString(DeptAttr.OrgNo, null, "隶属组织", true, false, 0, 50, 250);
-
+		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, true, 0, 30, 40);
+		map.AddTBString(DeptAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
 		map.AddTBString(DeptAttr.Leader, null, "Leader", true, false, 0, 50, 250);
 		map.AddTBInt(DeptAttr.Idx, 0, "Leader", true, false);
-
 			//map.AddTBString(DeptAttr.FK_Unit, "1", "隶属单位", false, false, 0, 50, 10);
-
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
+	@Override
+	protected boolean beforeDelete() throws Exception {
+		//检查是否可以删除.
+		bp.port.Dept dept = new bp.port.Dept(this.getNo());
+		dept.CheckIsCanDelete();
+		return super.beforeDelete();
+	}
 		///#endregion
 }

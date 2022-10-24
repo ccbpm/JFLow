@@ -4,6 +4,8 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.pub.*;
+import bp.web.WebUser;
+
 import java.io.*;
 import java.math.*;
 
@@ -499,15 +501,15 @@ public class MapAttr extends EntityMyPK
 
 		switch (s.toLowerCase()) {
 			case "@webuser.no":
-				return bp.web.WebUser.getNo();
+				return WebUser.getNo();
 			case "@webuser.name":
-				return bp.web.WebUser.getName();
+				return WebUser.getName();
 			case "@webuser.fk_dept":
-				return bp.web.WebUser.getFK_Dept();
+				return WebUser.getFK_Dept();
 			case "@webuser.fk_deptname":
-				return bp.web.WebUser.getFK_DeptName();
+				return WebUser.getFK_DeptName();
 			case "@webuser.fk_deptfullname":
-				return bp.web.WebUser.getFK_DeptNameOfFull();
+				return WebUser.getFK_DeptNameOfFull();
 			case "@fk_ny":
 				return DataType.getCurrentYearMonth();
 			case "@fk_nd":
@@ -703,8 +705,7 @@ public class MapAttr extends EntityMyPK
 		{
 			return true;
 		}
-			//if (this.ColSpan == 4 && this.MyDataType == DataType.AppString)
-			//    return true;
+
 		return false;
 	}
 	/** 
@@ -1080,7 +1081,7 @@ public class MapAttr extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.TextModel, 0, "TextModel", true, true);
 		map.AddTBInt(MapAttrAttr.IsSupperText, 0, "是否是大文本", true, true);
 		map.AddTBInt(MapAttrAttr.FontSize, 0, "字体大小", true, true);
-		map.AddTBInt(MapAttrAttr.LabelColSpan, 0, "LabelColSpan", true, true);
+		map.AddTBInt(MapAttrAttr.LabelColSpan, 1, "LabelColSpan", true, true);
 
 
 

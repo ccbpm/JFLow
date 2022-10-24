@@ -31,7 +31,14 @@ public class Dept extends EntityTree
 	 {
 		this.SetValByKey(DeptAttr.NameOfPath, value);
 	}
-
+	public final String getOrgNo()
+	{
+		return this.GetValStringByKey(DeptAttr.OrgNo);
+	}
+	public final void setOrgNo(String value)
+	{
+		SetValByKey(DeptAttr.OrgNo, value);
+	}
 
 		///#endregion
 
@@ -78,7 +85,7 @@ public class Dept extends EntityTree
 		map.AddTBString(DeptAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(DeptAttr.NameOfPath, null, "部门路径", true, false, 0, 100, 30);
 
-		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, false, 0, 100, 30);
+		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, true, 0, 100, 30);
 		map.AddTBString(DeptAttr.OrgNo, null, "OrgNo", true, true, 0, 50, 30);
 		map.AddDDLEntities(DeptAttr.Leader, null, "部门领导", new bp.port.Emps(), true);
 		map.AddTBInt(DeptAttr.Idx, 0, "序号", false, true);
@@ -88,8 +95,6 @@ public class Dept extends EntityTree
 			//rm.ClassMethodName = this.ToString() + ".History";
 			//rm.refMethodType = RefMethodType.RightFrameOpen;
 			//map.AddRefMethod(rm);
-
-
 			///#region 增加点对多属性
 		rm.Title = "重置该部门一下的部门路径";
 		rm.ClassMethodName = this.toString() + ".DoResetPathName";
@@ -128,10 +133,6 @@ public class Dept extends EntityTree
 			rootNo = "@WebUser.OrgNo";
 		}
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new bp.port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", bp.port.EmpAttr.FK_Dept, bp.port.EmpAttr.Name, bp.port.EmpAttr.No, rootNo);
-
-
-
-			///#endregion
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -222,7 +223,45 @@ public class Dept extends EntityTree
 			}
 		}
 	}
-	/** 
+
+	public void CheckIsCanDelete() throws Exception {
+		String err = "";
+		String sql = "select count(*) FROM Port_Emp WHERE FK_Dept='" + this.getNo() + "'";
+		int num = DBAccess.RunSQLReturnValInt(sql);
+		if (num != 0)
+			err += "err@该部门下有" + num + "个人员数据，您不能删除.";
+
+		sql = "select count(*) FROM Port_DeptEmp WHERE FK_Dept='" + this.getNo() + "'";
+		num = DBAccess.RunSQLReturnValInt(sql);
+		if (num != 0)
+			err += "err@该部门在人员部门信息表里有" + num + "笔数据,您不能删除.";
+
+		sql = "select count(*) FROM Port_DeptEmpStation WHERE FK_Dept='" + this.getNo() + "'";
+		num = DBAccess.RunSQLReturnValInt(sql);
+		if (num != 0)
+			err += "err@该部门在人员部门岗位表里有" + num + "笔数据,您不能删除.";
+
+		//检查是否有子级部门.
+		sql = "select count(*) FROM Port_Dept WHERE ParentNo='" + this.getNo() + "'";
+		if (num != 0)
+			err += "err@该部门有" + num + "个子部门,您不能删除.";
+
+		//是不是组织？.
+		sql = "select count(*) FROM Port_Org WHERE OrgNo='" + this.getNo() + "'";
+		if (num != 0)
+			err += "err@该部门是一个组织,您不能删除.";
+
+		if (DataType.IsNullOrEmpty(err) == false)
+			 throw new Exception(err);
+	}
+
+	@Override
+	protected boolean beforeDelete() throws Exception {
+		this.CheckIsCanDelete();
+		return super.beforeDelete();
+	}
+
+	/**
 	 执行排序
 	 
 	 param deptIDs

@@ -35,6 +35,14 @@ public enum DeliveryWay
 	 按表单选择人员
 	*/
 	ByPreviousNodeFormEmpsField(5),
+	/**
+	 岗位
+	 */
+	ByPreviousNodeFormStations(52),
+	/**
+	 部门
+	 */
+	ByPreviousNodeFormDepts(53),
 	/** 
 	 与上一节点的人员相同
 	*/

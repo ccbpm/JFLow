@@ -622,13 +622,7 @@ public abstract class XmlEns extends ArrayList<Object>
 		return null;
 
 	}
-	/** 
-	 根据位置取得数据
-	*/
-	public final XmlEn get(int index)
-	{
-		return (XmlEn)this.get(index);
-	}
+
 	/** 
 	 获取数据
 	*/

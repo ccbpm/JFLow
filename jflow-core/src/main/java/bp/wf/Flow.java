@@ -1711,7 +1711,6 @@ public class Flow extends bp.en.EntityNoName
 			md.ClearCash();
 		}
 
-			///#endregion
 
 		try
 		{
@@ -1768,6 +1767,9 @@ public class Flow extends bp.en.EntityNoName
 
 			for (Node nd : nds.ToJavaList())
 			{
+				//流程是极简模式，设置每一个节点的NodeFrmID为开始节点表单
+				if(this.getFlowDevModel() == FlowDevModel.JiJian)
+					nd.SetValByKey(NodeAttr.NodeFrmID,"ND"+Integer.parseInt(this.getNo())+"01");
 				//设置它的位置类型.
 				// nd.RetrieveFromDBSources();
 				nd.SetValByKey(NodeAttr.NodePosType, nd.GetHisNodePosType().getValue());
@@ -1858,7 +1860,10 @@ public class Flow extends bp.en.EntityNoName
 							}
 						}
 						break;
+
 					case ByPreviousNodeFormEmpsField:
+					case ByPreviousNodeFormStations:
+					case ByPreviousNodeFormDepts:
 						//去rpt表中，查询是否有这个字段.
 						String str1 = String.valueOf(nd.getNodeID()).substring(0, String.valueOf(nd.getNodeID()).length() - 2);
 						MapAttrs rptAttrs = new MapAttrs();
@@ -1869,11 +1874,7 @@ public class Flow extends bp.en.EntityNoName
 							/*检查节点字段是否有FK_Emp字段*/
 							msg += "@错误:您设置了该节点的访问规则是[06.按上一节点表单指定的字段值作为本步骤的接受人]，但是您没有在节点属性的[访问规则设置内容]里设置指定的表单字段，详细参考开发手册.";
 						}
-						//if (mattrs.contains(BP.Sys.MapAttrAttr.KeyOfEn, "FK_Emp") == false)
-						//{
-						//    /*检查节点字段是否有FK_Emp字段*/
-						//    msg += "@错误:您设置了该节点的访问规则是按指定节点表单人员，但是您没有在节点表单中增加FK_Emp字段，详细参考开发手册 .";
-						//}
+
 						break;
 					case BySelected: // 由上一步发送人员选择
 						if (nd.isStartNode())
@@ -2272,7 +2273,10 @@ public class Flow extends bp.en.EntityNoName
 	private final static String PathFlowDesc;
 	static
 	{
-		PathFlowDesc = SystemConfig.getPathOfDataUser() + "FlowDesc/";
+		String path= SystemConfig.getPathOfDataUser() + "FlowDesc/";
+		if(SystemConfig.getIsJarRun()==true)
+			path = SystemConfig.getPhysicalPath()+"DataUser/FlowDesc/";
+		PathFlowDesc = path;
 	}
 	/** 
 	 生成流程模板
@@ -2291,6 +2295,7 @@ public class Flow extends bp.en.EntityNoName
 		name = path + name + ".xml";
 		return name;
 	}
+
 	/** 
 	 生成流程模板
 	 
@@ -2327,63 +2332,7 @@ public class Flow extends bp.en.EntityNoName
 
 	//xml文件是否正在操作中
 	private static boolean isXmlLocked;
-	/** 
-	 备份当前流程到用户xml文件
-	 用户每次保存时调用
-	 捕获异常写入日志,备份失败不影响正常保存
-	*/
-//	public final void WriteToXml() throws Exception {
-//		try
-//		{
-//			String name = this.getNo() + "." + this.getName();
-//			name = bp.tools.StringExpressionCalculate.ReplaceBadCharOfFileName(name);
-//			String path = PathFlowDesc + name + "/";
-//			DataSet ds = GetFlow(path);
-//			if (ds == null)
-//			{
-//				return;
-//			}
-//
-//			String directory = this.getNo() + "." + this.getName();
-//			directory = bp.tools.StringExpressionCalculate.ReplaceBadCharOfFileName(directory);
-//			path = PathFlowDesc + directory + "/";
-//			String xmlName = path + "Flow" + ".xml";
-//
-//			if (!isXmlLocked)
-//			{
-//				if (!DataType.IsNullOrEmpty(path))
-//				{
-//					if (!(new File(path)).isDirectory())
-//					{
-//						(new File(path)).mkdirs();
-//					}
-//					else if ((new File(xmlName)).isFile())
-//					{
-//						Date time = File.GetLastWriteTime(xmlName);
-//						String xmlNameOld = path + "Flow" + time.toString("@yyyyMMddHHmmss") + ".xml";
-//
-//						isXmlLocked = true;
-//						if ((new File(xmlNameOld)).isFile())
-//						{
-//							(new File(xmlNameOld)).delete();
-//						}
-//						Files.move(Paths.get(xmlName), Paths.get(xmlNameOld));
-//					}
-//				}
-//
-//				if (DataType.IsNullOrEmpty(xmlName) == false)
-//				{
-//					ds.WriteXml(xmlName);
-//					isXmlLocked = false;
-//				}
-//			}
-//		}
-//		catch (RuntimeException | IOException e)
-//		{
-//			isXmlLocked = false;
-//			Log.DebugWriteError("流程模板文件备份错误:" + e.getMessage());
-//		}
-//	}
+
 	public final DataSet GetFlow(String path) throws Exception {
 		// 把所有的数据都存储在这里。
 		DataSet ds = new DataSet();
@@ -4217,7 +4166,6 @@ public class Flow extends bp.en.EntityNoName
 	public final String DoCopy() throws Exception {
 		//获取当前流程的模板数据
 		String path = this.GenerFlowXmlTemplete();
-		;
 		bp.wf.Flow flow = TemplateGlo.LoadFlowTemplate(this.getFK_FlowSort(), path, ImpFlowTempleteModel.AsNewFlow, null);
 		flow.DoCheck(); //要执行一次检查.
 		return flow.getNo();

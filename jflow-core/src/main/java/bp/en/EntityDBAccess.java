@@ -174,10 +174,12 @@ public class EntityDBAccess
 	}
 	private static void fullDate(DataTable dt, Entity en, Attrs attrs)throws Exception
 	{
+		Row row = en.getRow();
 		for (Attr attr : attrs.ToJavaList())
 		{
-			en.getRow().SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey()));
+			row.SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey()));
 		}
+		en.setRow(row);
 	}
 	public static int Retrieve(Entities ens, String sql)throws Exception
 	{

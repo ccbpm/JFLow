@@ -1001,7 +1001,10 @@ public class Cond extends EntityMyPK
 		return false;
 	}
 	private boolean CheckIsPass(Entity en) throws Exception {
-
+		MapAttr attr = new MapAttr(this.getFKAttr());
+		attr.setMyPK(this.getFKAttr());
+		if(attr.RetrieveFromDBSources()==0)
+			throw new RuntimeException("err@到达【" + this.getToNodeID() + "】方向条件设置错误,原来做方向条件的字段:" + this.getFKAttr() + ",已经不存在了.");
 		try
 		{
 			switch (this.getFKOperator().trim().toLowerCase())
@@ -1010,6 +1013,13 @@ public class Cond extends EntityMyPK
 				case "!=":
 				case "budingyu":
 				case "budengyu": //不等于.
+					if(attr.getIsNum()==true){
+						if(en.GetValDoubleByKey(this.getAttrKey())!=Double.parseDouble(this.getOperatorValue().toString()))
+							return true;
+						else
+							return false;
+					}
+
 					if (en.GetValStringByKey(this.getAttrKey()).equals(this.getOperatorValue().toString()) == false)
 					{
 						return true;
@@ -1020,6 +1030,12 @@ public class Cond extends EntityMyPK
 					}
 				case "=": // 如果是 =
 				case "dengyu":
+					if(attr.getIsNum()==true){
+						if(en.GetValDoubleByKey(this.getAttrKey())==Double.parseDouble(this.getOperatorValue().toString()))
+							return true;
+						else
+							return false;
+					}
 					if (en.GetValStringByKey(this.getAttrKey()).equals(this.getOperatorValue().toString().replace("\"", "")) == true)
 					{
 						return true;

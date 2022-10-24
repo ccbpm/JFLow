@@ -176,6 +176,9 @@ public class WF_Setting extends WebContralBase
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 				String tempFilePath = SystemConfig.getPathOfWebApp() + "DataUser/Siganture/" + empNo + ".jpg";
+				if (SystemConfig.getIsJarRun())
+					tempFilePath = SystemConfig.getPhysicalPath()+"DataUser/Siganture/" + empNo + ".jpg";
+
 				File tempFile = new File(tempFilePath);
 				if (tempFile.exists()) {
 					tempFile.delete();

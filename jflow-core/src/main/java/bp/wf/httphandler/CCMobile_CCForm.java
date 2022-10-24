@@ -17,6 +17,7 @@ import net.sf.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
@@ -89,7 +90,7 @@ public class CCMobile_CCForm extends WebContralBase
 					}
 
 					String val = this.GetValFromFrmByKey("TB_" + attr.getKey() + "_" + pkval, null);
-					item.SetValByKey(attr.getKey(), val);
+					item.SetValByKey(attr.getKey(),  URLDecoder.decode(val, "UTF-8"));
 					continue;
 				}
 
@@ -98,14 +99,14 @@ public class CCMobile_CCForm extends WebContralBase
 				{
 
 					String val = this.GetValFromFrmByKey("TB_" + attr.getKey() + "_" + pkval, null);
-					item.SetValByKey(attr.getKey(), val);
+					item.SetValByKey(attr.getKey(), URLDecoder.decode(val, "UTF-8"));
 					continue;
 				}
 
 				if (attr.getUIContralType() == UIContralType.DDL)
 				{
 					String val = this.GetValFromFrmByKey("DDL_" + attr.getKey() + "_" + pkval);
-					item.SetValByKey(attr.getKey(), val);
+					item.SetValByKey(attr.getKey(), URLDecoder.decode(val, "UTF-8"));
 					continue;
 				}
 
@@ -426,7 +427,7 @@ public class CCMobile_CCForm extends WebContralBase
 				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
 
 				if (isOK==false)
-					throw new com.sun.star.uno.Exception("err文件上传失败，请检查ftp服务器配置信息");
+					throw new RuntimeException("err文件上传失败，请检查ftp服务器配置信息");
 
 				dbUpload.Insert();
 			}

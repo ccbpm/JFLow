@@ -109,6 +109,7 @@ public class MySystems extends EntitiesNoName
 	*/
 	public final String ImpSystem_Init() throws Exception {
 		String path = SystemConfig.getPathOfWebApp() + "/CCFast/SystemTemplete/";
+		bp.da.Log.DefaultLogWriteLine(LogType.Info, "导入地址:" + path);
 		String[] strs=bp.tools.BaseFileUtils.getFiles (path);
 
 		DataTable dt = new DataTable();

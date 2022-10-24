@@ -774,11 +774,11 @@ public class CCFormAPI extends Dev2Interface
 	*/
 	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas) throws Exception
 	{
-		return GenerDBForCCFormDtl(frmID, dtl, pkval, atParas, "0");
+		return GenerDBForCCFormDtl(frmID, dtl, pkval, atParas, "0",0);
 	}
 
 
-	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas, String dtlRefPKVal) throws Exception
+	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas, String dtlRefPKVal,long fid) throws Exception
 	{
 		//数据容器,就是要返回的对象.
 		DataSet myds = new DataSet();
@@ -998,6 +998,43 @@ public class CCFormAPI extends Dev2Interface
 		GEDtls dtls = new GEDtls(dtl.getNo());
 		DataTable dtDtl = GetDtlInfo(dtl,  en,dtlRefPKVal);
 
+		//从表数据的填充
+		if (dtDtl.Rows.size() == 0 && DataType.IsNullOrEmpty(dtl.getInitDBAttrs()) == false)
+		{
+			String[] keys = dtl.getInitDBAttrs().split(",");
+			GEDtl endtl = null;
+			MapAttr attr = null;
+			for(String keyOfEn : keys)
+			{
+				Entity ent  = dtl.getMapAttrs().GetEntityByKey(dtl.getNo() + "_" + keyOfEn);
+				if (ent == null)
+					continue;
+				attr =(MapAttr) ent ;
+				if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == true)
+					continue;
+				DataTable dt = null;
+				//枚举字段
+				if(attr.getLGType() == FieldTypeS.Enum && attr.getMyDataType() == DataType.AppInt)
+					dt = myds.GetTableByName(attr.getUIBindKey());
+				//外键、外部数据源
+				if ((attr.getLGType() == FieldTypeS.FK && attr.getMyDataType() == DataType.AppString)
+						|| (attr.getLGType() == FieldTypeS.Normal && attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL))
+					dt = myds.GetTableByName(attr.getUIBindKey());;
+				if (dt == null)
+					continue;
+				for(DataRow dr : dt.Rows)
+				{
+					endtl = new GEDtl(dtl.getNo());
+					endtl.ResetDefaultVal();
+					endtl.SetValByKey(keyOfEn, dr.getValue("No"));
+					endtl.setRefPK(dtlRefPKVal);
+					endtl.setFID(fid);
+					endtl.Insert();
+				}
+
+			}
+			dtDtl = GetDtlInfo(dtl, en, dtlRefPKVal);
+		}
 
 		// 为明细表设置默认值.
 		MapAttrs dtlAttrs = new MapAttrs(dtl.getNo());
@@ -1072,34 +1109,13 @@ public class CCFormAPI extends Dev2Interface
 			{
 				String exp=dtl.getFilterSQLExp();
 				exp=Glo.DealExp(exp, en);
-				//exp=exp.replace(oldChar, newChar)
 
 				exp = exp.replace("''", "'");
 
 				if (exp.substring(0, 5).toLowerCase().contains("and") == false)
 					exp = " AND " + exp;
 				qo.setSQL(exp);
-				/*if (exp.contains("!="))
-				{
-					exp=exp.replace("!=", "=");
 
-					String[] strs = exp.split("[=]", -1);
-
-					if (strs.length >= 2)
-					{
-						qo.addAnd();
-						qo.AddWhere(strs[0].trim(), "!=" , strs[1].trim());
-					}
-				}else
-				{
-
-					String[] strs = exp.split("[=]", -1);
-					if (strs.length == 2)
-					{
-						qo.addAnd();
-						qo.AddWhere(strs[0].trim(), strs[1].trim());
-					}
-				}*/
 			}
 
 			//增加排序.

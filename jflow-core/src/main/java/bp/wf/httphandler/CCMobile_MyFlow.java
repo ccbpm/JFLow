@@ -366,11 +366,30 @@ public class CCMobile_MyFlow extends WebContralBase
 		WF_CCForm ccfrm = new WF_CCForm();
 		String str = ccfrm.FrmGener_Save();
 
+		Flow fl = new Flow(this.getFK_Flow());
+		Node nd = new Node(this.getFK_Node());
+		Work wk = nd.getHisWork();
+		if (this.getWorkID() != 0)
+		{
+			wk.setOID(this.getWorkID());
+			wk.RetrieveFromDBSources();
+		}
+		wk.ResetDefaultVal(null, null, 0);
+		String title = bp.wf.WorkFlowBuessRole.GenerTitle(fl, wk);
+		//修改RPT表的标题
+		wk.SetValByKey(GERptAttr.Title, title);
+		wk.Update();
+
+		GenerWorkFlow gwf = new GenerWorkFlow();
+		gwf.setWorkID(this.getWorkID());
+		int i = gwf.RetrieveFromDBSources();
+		gwf.setTitle(title); //标题.
+		gwf.Update();
+
 		// 这里保存的时候，需要保存到草稿,没有看到PC端对应的方法。
 		String nodeIDStr = String.valueOf(this.getFK_Node());
 		if (nodeIDStr.endsWith("01") == true)
 		{
-			Flow fl = new Flow(this.getFK_Flow());
 			if (fl.getDraftRole() == DraftRole.SaveToDraftList)
 			{
 				Dev2Interface.Node_SetDraft(this.getFK_Flow(), this.getWorkID());

@@ -15,22 +15,12 @@ public class FrmSubFlowAttr extends EntityNoAttr
 	 状态
 	*/
 	public static final String SFSta = "SFSta";
-	/**
-	 X
-	 */
-	public static final String SF_X = "SF_X";
-	/**
-	 Y
-	 */
-	public static final String SF_Y = "SF_Y";
+
 	/**
 	 H
 	 */
 	public static final String SF_H = "SF_H";
-	/**
-	 W
-	 */
-	public static final String SF_W = "SF_W";
+
 	/** 
 	 应用类型
 	*/

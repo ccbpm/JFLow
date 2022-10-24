@@ -1,6 +1,9 @@
 package bp.wf.port.admin2group;
 
 import bp.en.*;
+import bp.sys.FrmTree;
+import bp.wf.template.FlowSort;
+import bp.wf.template.FlowSorts;
 
 /** 
  组织管理员-
@@ -72,5 +75,21 @@ public class OAFrmTree extends EntityMyPK
 		this.setFK_Emp(oa.getFK_Emp());
 
 		return super.beforeInsert();
+	}
+
+	@Override
+	protected void afterInsert() throws Exception {
+		//插入入后更改OrgAdminer中
+		String str = "";
+		bp.sys.FrmTrees enTrees = new bp.sys.FrmTrees();
+		enTrees.RetrieveInSQL("SELECT FrmTreeNo FROM Port_OrgAdminerFrmTree WHERE  FK_Emp='" + this.getFK_Emp() + "' AND OrgNo='" + this.getOrgNo() + "'");
+		for (FrmTree item : enTrees.ToJavaList())
+		{
+			str += "(" + item.getNo() + ")" + item.getName() + ";";
+		}
+		OrgAdminer adminer = new OrgAdminer(this.GetValStringByKey("RefOrgAdminer"));
+		adminer.SetValByKey("FrmTrees", str);
+		adminer.Update();
+		super.afterInsert();
 	}
 }

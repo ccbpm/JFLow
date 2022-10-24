@@ -35,11 +35,11 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 
 		if (nd.getHisRunModel() == RunModel.SubThread)
 		{
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+			sql = "SELECT a.*, b.Starter,b.StarterName,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}
 		else
 		{
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+			sql = "SELECT a.*, b.Starter,b.StarterName,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}
 
 		//获取待审批的流程信息集合
@@ -124,7 +124,7 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		int idx = -1;
 		String msg = "";
-
+		String msg1 = "";
 		//判断是否有传递来的参数.
 		int toNode = this.GetRequestValInt("ToNode");
 		String toEmps = this.GetRequestVal("ToEmps");
@@ -144,94 +144,101 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 			if(frmNodes.size()!=0)
 				frmNode = (FrmNode) frmNodes.get(0);
 		}
-		for (DataRow dr : dt.Rows)
-		{
-			long workid = Long.parseLong(dr.getValue(0).toString());
-			String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
-			if (cb.equals("on") == false)
+		int countS=0;
+		int countF=0;
+		try {
+			for (DataRow dr : dt.Rows)
 			{
-				continue;
-			}
+				long workid = Long.parseLong(dr.getValue(0).toString());
+				String cb = this.GetValFromFrmByKey("CB_" + workid, "0");
+				if (cb.equals("on") == false)
+				{
+					continue;
+				}
 
-			//是否启用了审核组件？
-			if (nd.getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
-			{
-				//绑定多表单，获取启用审核组件的表单
-
-				if(frmNode!=null){
-					GEEntity en = new GEEntity(frmNode.getFKFrm(),workid);
-					en.SetValByKey(frmNode.getCheckField(),en.GetValStrByKey(frmNode.getCheckField())+","+nd.getNodeID());
-					en.Update();
-				}else{
-					NodeWorkCheck workCheck = new NodeWorkCheck(nd.getNodeID()) ;
-					if(DataType.IsNullOrEmpty(workCheck.getCheckField())==false){
-						GEEntity en = new GEEntity(nd.getNodeFrmID(),workid);
-						en.SetValByKey(workCheck.getCheckField(),en.GetValStrByKey(workCheck.getCheckField())+","+nd.getNodeID());
+				//是否启用了审核组件？
+				if (nd.getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
+				{
+					//绑定多表单，获取启用审核组件的表单
+					if(frmNode!=null){
+						GEEntity en = new GEEntity(frmNode.getFKFrm(),workid);
+						en.SetValByKey(frmNode.getCheckField(),en.GetValStrByKey(frmNode.getCheckField())+","+nd.getNodeID());
 						en.Update();
+					}else{
+						NodeWorkCheck workCheck = new NodeWorkCheck(nd.getNodeID()) ;
+						if(DataType.IsNullOrEmpty(workCheck.getCheckField())==false){
+							GEEntity en = new GEEntity(nd.getNodeFrmID(),workid);
+							en.SetValByKey(workCheck.getCheckField(),en.GetValStrByKey(workCheck.getCheckField())+","+nd.getNodeID());
+							en.Update();
+						}
+					}
+
+					//获取审核意见的值
+					String checkNote = "";
+
+					//选择的多条记录一个意见框.
+					int model = nd.GetParaInt("BatchCheckNoteModel", 0);
+
+					//多条记录一个意见.
+					if (model==0)
+					{
+						checkNote = this.GetRequestVal("CheckNote");
+					}
+
+					//每条记录都有自己的意见.
+					if (model==1)
+					{
+						checkNote = this.GetValFromFrmByKey("TB_" + workid + "_WorkCheck_Doc", null);
+					}
+
+					if (model==2)
+					{
+						checkNote = " ";
+					}
+
+					//写入审核意见.
+					if (DataType.IsNullOrEmpty(checkNote) == false)
+					{
+						Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid, Long.parseLong(dr.getValue("FID").toString()), checkNote, null, null);
 					}
 				}
 
-				//获取审核意见的值
-				String checkNote = "";
-
-				//选择的多条记录一个意见框.
-				int model = nd.GetParaInt("BatchCheckNoteModel", 0);
-
-				//多条记录一个意见.
-				if (model==0)
+				//设置字段的默认值.
+				Work wk = nd.getHisWork();
+				wk.setOID(workid);
+				wk.Retrieve();
+				wk.ResetDefaultVal(null, null, 0);
+				if (DataType.IsNullOrEmpty(editFiles) == false)
 				{
-					checkNote = this.GetRequestVal("CheckNote");
+					String[] files = editFiles.split(",");
+					String val = "";
+					for(String key : files)
+					{
+						if (DataType.IsNullOrEmpty(key) == true)
+							continue;
+						val =  this.GetRequestVal("TB_"+ workid+"_"+key);
+						wk.SetValByKey(key, val);
+					}
 				}
+				wk.Update();
 
-				//每条记录都有自己的意见.
-				if (model==1)
-				{
-					checkNote = this.GetValFromFrmByKey("TB_" + workid + "_WorkCheck_Doc", null);
-				}
-
-				if (model==2)
-				{
-					checkNote = " ";
-				}
-
-				//写入审核意见.
-				if (DataType.IsNullOrEmpty(checkNote) == false)
-				{
-					Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid, Long.parseLong(dr.getValue("FID").toString()), checkNote, null, null);
-				}
+				//执行工作发送.
+				msg1 += "@对工作(" + dr.getValue("Title") + ")处理情况如下";
+				SendReturnObjs objs = Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, toNode, toEmps);
+				countS++;
+				msg1 += objs.ToMsgOfHtml();
+				msg1 += "<br/>";
 			}
-
-			//设置字段的默认值.
-			Work wk = nd.getHisWork();
-			wk.setOID(workid);
-			wk.Retrieve();
-			wk.ResetDefaultVal(null, null, 0);
-			if (DataType.IsNullOrEmpty(editFiles) == false)
-			{
-				String[] files = editFiles.split(",");
-				String val = "";
-				for(String key : files)
-				{
-					if (DataType.IsNullOrEmpty(key) == true)
-						continue;
-					val =  this.GetRequestVal("TB_"+ workid+"_"+key);
-					wk.SetValByKey(key, val);
-				}
-			}
-			wk.Update();
-
-			//执行工作发送.
-			msg += "@对工作(" + dr.getValue("Title") + ")处理情况如下";
-			SendReturnObjs objs = Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, toNode, toEmps);
-			msg += objs.ToMsgOfHtml();
-			msg += "<br/>";
+		}catch(Exception ex){
+			countF++;
+			//throw new Exception(ex.getMessage());
 		}
 
-		if (msg.equals(""))
+		if (msg1.equals(""))
 		{
-			msg = "没有选择需要处理的工作";
+			msg1 = "没有选择需要处理的工作";
 		}
-
+		msg +="本次批量发送成功"+countS+"件，失败"+countF+"件。<br>"+msg1;
 		return msg;
 	}
 
@@ -249,11 +256,11 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 
 		if (nd.getHisRunModel() == RunModel.SubThread)
 		{
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+			sql = "SELECT a.*, b.Starter,b.StarterName,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}
 		else
 		{
-			sql = "SELECT a.*, b.Starter,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
+			sql = "SELECT a.*, b.Starter,b.StarterName,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.WorkID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}
 
 		//获取待审批的流程信息集合

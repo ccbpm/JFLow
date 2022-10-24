@@ -87,19 +87,22 @@ public class UAC
 	*/
 	public final UAC OpenForSysAdmin() 
 	{
-		if (WebUser.getNo().equals("admin") == true)
-		{
+//		if (WebUser.getNo().equals("admin") == true)
+//		{
+//			this.OpenAll();
+//		}
+		if(bp.web.WebUser.getIsAdmin())
 			this.OpenAll();
-		}
-
 		return this;
 	}
 	public final UAC OpenForAppAdmin() 
 	{
-		if (WebUser.getNo() != null && WebUser.getNo().contains("admin") == true)
-		{
+//		if (WebUser.getNo() != null && WebUser.getNo().contains("admin") == true)
+//		{
+//			this.OpenAll();
+//		}
+		if(bp.web.WebUser.getIsAdmin())
 			this.OpenAll();
-		}
 		return this;
 	}
 

@@ -14,7 +14,6 @@ import bp.tools.StringHelper;
 import bp.wf.ActionType;
 import bp.wf.GenerWorkerLists;
 import bp.wf.httphandler.WF_WorkOpt_OneWork;
-import com.sun.star.util.DateTime;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,7 +22,6 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
 
 /**

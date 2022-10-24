@@ -1028,4 +1028,18 @@ public class MapExt extends EntityMyPK
 		exp = exp.replace("~", "'");
 		return exp;
 	}
+
+	/// <summary>
+	/// 保存大块html文本
+	/// </summary>
+	/// <returns></returns>
+	public String SaveBigNoteHtmlText(String text) throws Exception {
+		DBAccess.SaveBigTextToDB(text, "Sys_MapExt", "MyPK", this.getMyPK(), "HtmlText");
+		return "保存成功！";
+	}
+
+	public String ReadBigNoteHtmlText() throws Exception {
+		String doc =DBAccess.GetBigTextFromDB("Sys_MapExt", "MyPK", this.getMyPK(), "HtmlText");
+		return doc;
+	}
 }

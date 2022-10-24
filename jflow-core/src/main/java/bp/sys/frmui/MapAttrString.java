@@ -680,7 +680,7 @@ public class MapAttrString extends EntityMyPK
 	public final String DoSetCheck() throws Exception {
 		this.setUIContralType(UIContralType.SignCheck);
 		this.setUIIsEnable(false);
-		this.setUIVisible(false);
+		this.setUIVisible(true);
 		this.Update();
 		return "设置成功,当前文本框已经是签批组件了,请关闭掉当前的窗口.";
 	}
@@ -840,9 +840,11 @@ public class MapAttrString extends EntityMyPK
 							break;
 						case Oracle:
 						case DM:
+							sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR2(" + attr.getMaxLen() + ")";
+							break;
 						case KingBaseR3:
 						case KingBaseR6:
-							sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR2(" + attr.getMaxLen() + ")";
+							sql = "ALTER table " + md.getPTable() + " ALTER COLUMN " + attr.getField() + " TYPE NVARCHAR2(" + attr.getMaxLen() + ")";
 							break;
 						case PostgreSQL:
 						case UX:

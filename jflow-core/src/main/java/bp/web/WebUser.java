@@ -506,7 +506,7 @@ public class WebUser
 				return v;
 			}
 			if (valKey.equals("No") && DataType.IsNullOrEmpty(v)==true)
-				return null;
+				return "";
 		} catch (java.lang.Exception e) {
 
 		}
@@ -523,12 +523,12 @@ public class WebUser
 			}
 
 			if (DataType.IsNullOrEmpty(val) == true) {
-				return isNullAsVal;
+				return "";
 			}
 			return val;
 		} catch (java.lang.Exception e2) {
 			e2.printStackTrace();
-			return isNullAsVal;
+			return "";
 		}
 	}
 	/**

@@ -29,7 +29,14 @@ public class OrgAdminer extends EntityMyPK
 	 {
 		this.SetValByKey(OrgAdminerAttr.OrgNo, value);
 	}
-
+	public final String getEmpName() throws Exception
+	{
+		return this.GetValStringByKey(OrgAdminerAttr.EmpName);
+	}
+	public final void setEmpName(String value)  throws Exception
+	{
+		this.SetValByKey(OrgAdminerAttr.EmpName, value);
+	}
 		///#endregion
 
 
@@ -38,8 +45,8 @@ public class OrgAdminer extends EntityMyPK
 	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
-			//uac.IsDelete = false;
-		   // uac.IsInsert = false;
+		uac.IsDelete = true;
+		uac.IsInsert = false;
 		return uac;
 	}
 	/** 
@@ -49,7 +56,6 @@ public class OrgAdminer extends EntityMyPK
 	}
 	/** 
 	 组织管理员
-	 
 	 param mypk
 	*/
 	public OrgAdminer(String mypk)throws Exception
@@ -69,13 +75,12 @@ public class OrgAdminer extends EntityMyPK
 		Map map = new Map("Port_OrgAdminer", "组织管理员");
 		map.AddMyPK(true);
 		map.AddTBString(OrgAdminerAttr.OrgNo, null, "组织", true, false, 0, 50, 20);
-		map.AddDDLEntities(OrgAdminerAttr.FK_Emp, null, "管理员", new Emps(), false);
-
+		map.AddTBString(OrgAdminerAttr.FK_Emp, null, "管理员名称", true, true, 0, 50, 20);
+		map.AddTBString(OrgAdminerAttr.EmpName, null, "管理员名称", true, true, 0, 50, 20);
 		map.AddTBStringDoc("FlowSorts", null, "管理的流程目录", true, true, true, 10);
 		map.AddTBStringDoc("FrmTrees", null, "管理的表单目录", true, true, true, 10);
 
 		map.getAttrsOfOneVSM().AddGroupPanelModel(new OAFlowSorts(), new bp.wf.template.FlowSorts(), OAFlowSortAttr.RefOrgAdminer, OAFlowSortAttr.FlowSortNo, "流程目录权限", null, "Name", "No");
-
 		map.getAttrsOfOneVSM().AddGroupPanelModel(new OAFrmTrees(), new bp.sys.FrmTrees(), OAFrmTreeAttr.RefOrgAdminer, OAFrmTreeAttr.FrmTreeNo, "表单目录权限", null, "Name", "No");
 
 		map.AddHidden("OrgNo", " = ", "@WebUser.OrgNo");
@@ -105,6 +110,11 @@ public class OrgAdminer extends EntityMyPK
 			str += "(" + item.getNo() + ")" + item.getName() + ";";
 		}
 		this.SetValByKey("FrmTrees", str);
+		if(this.getEmpName().isEmpty()){
+			Emp emp = new Emp(this.getFK_Emp());
+			this.SetValByKey(OrgAdminerAttr.EmpName,emp.getName());
+			this.setMyPK(this.getOrgNo() + "_" + this.getFK_Emp());
+		}
 
 		return super.beforeUpdateInsertAction();
 	}

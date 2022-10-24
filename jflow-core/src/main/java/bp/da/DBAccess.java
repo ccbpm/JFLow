@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.UUID;
+
+import bp.web.WebUser;
 import org.apache.commons.lang3.StringUtils;
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.en.Map;
 import bp.tools.CRC32Helper;
-import bp.tools.StringHelper;
 import bp.web.*;
 
 
@@ -39,14 +39,12 @@ public class DBAccess {
 		switch (SystemConfig.getAppCenterDBType())
 		{
 			case MySQL:
+			case KingBaseR3:
+			case KingBaseR6:
 				if (defaultVal.getClass() == Integer.class || defaultVal.getClass() == Float.class || defaultVal.getClass() == BigDecimal.class)
-				{
 					sql = "ALTER TABLE " + table + " ALTER COLUMN " + colName + " SET DEFAULT " + defaultVal.toString();
-				}
 				else
-				{
 					sql = "ALTER TABLE " + table + " ALTER COLUMN " + colName + " SET DEFAULT '" + defaultVal.toString() + "'";
-				}
 				break;
 			case MSSQL:
 				sql = "SELECT  b.name FROM sysobjects b join syscolumns a on b.id = a.cdefault WHERE a.id = object_id('" + table + "') AND a.name = '" + colName + "'";
@@ -263,7 +261,7 @@ public class DBAccess {
 
 					/*如果没有此列，就自动创建此列.*/
 					//修改数据类型   oracle 不存在image类型   edited by qin 16.7.1
-					String sql = "ALTER TABLE " + tableName + " ADD  COLUMN  " + saveToFileField + " blob ";
+					String sql = "ALTER TABLE " + tableName + " ADD  COLUMN  " + saveToFileField + "  blob ";
 					DBAccess.RunSQL(sql);
 					SaveBytesToDB(bytes,tableName, tablePK, pkVal, saveToFileField);
 					return;
@@ -1916,11 +1914,14 @@ public class DBAccess {
 					DataRow dr = oratb.NewRow();// 產生一列DataRow
 					for (int i = 0; i < size; i++) {
 						Object val = rs.getObject(i + 1);
-						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
+						if (SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 &&(rsmd.getColumnType(i + 1)==2 ||rsmd.getColumnType(i + 1)==3)) {
 							if (val == null) {
 								dr.setValue(i, 0);
 							} else {
-								dr.setValue(i, val);
+								if(val.toString().indexOf(".")!=-1)
+									dr.setValue(i, rs.getBigDecimal(i+1));
+								else
+									dr.setValue(i, rs.getBigDecimal(i+1).longValue());
 							}
 
 						} else {
@@ -1943,11 +1944,14 @@ public class DBAccess {
 					for (int i = 0; i < size; i++) {
 
 						Object val = rs.getObject(i + 1);
-						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
+						if (SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 &&(rsmd.getColumnType(i + 1)==2 ||rsmd.getColumnType(i + 1)==3)) {
 							if (val == null) {
 								dr.setValue(i, 0);
 							} else {
-								dr.setValue(i, val);
+								if(val.toString().indexOf(".")!=-1)
+									dr.setValue(i, rs.getBigDecimal(i+1));
+								else
+									dr.setValue(i, rs.getBigDecimal(i+1).longValue());
 							}
 
 						} else {
@@ -2017,8 +2021,10 @@ public class DBAccess {
 					else
 						val = "";
 				}
-
-				ht.put(attr.getKey(), val);
+				if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3)
+					ht.put(attr.getKey(), bp.sys.base.Glo.GenerRealType(attr,val));
+				else
+					ht.put(attr.getKey(), val);
 
 			}
 			if (Log.isLoggerDebugEnabled()) {
@@ -2150,7 +2156,10 @@ public class DBAccess {
 						else
 							val = "";
 					}
-					ht.put(attr.getKey(), val);
+					if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3)
+						ht.put(attr.getKey(), bp.sys.base.Glo.GenerRealType(attr,val));
+					else
+						ht.put(attr.getKey(), val);
 				}
 				ens.add(en); // 加入里面去.
 			}
@@ -2808,7 +2817,6 @@ public class DBAccess {
 	public static int RunSQLReturnValInt(Paras ps, int IsNullReturnVal) {
 		return RunSQLReturnValInt(ps.SQL, ps, IsNullReturnVal);
 	}
-
 	public static int RunSQLReturnValInt(String sql, int IsNullReturnVal) {
 		Object obj = "";
 		obj = DBAccess.RunSQLReturnVal(sql);
@@ -2819,6 +2827,21 @@ public class DBAccess {
 				return Integer.parseInt(obj.toString().substring(0, obj.toString().indexOf(".")));
 			} else {
 				return Integer.parseInt(obj.toString());
+			}
+
+		}
+	}
+
+	public static long RunSQLReturnValLong(String sql, int IsNullReturnVal) {
+		Object obj = "";
+		obj = DBAccess.RunSQLReturnVal(sql);
+		if (obj == null || obj.toString().equals("")) {
+			return IsNullReturnVal;
+		} else {
+			if (obj.toString().indexOf(".") != -1) {
+				return Long.parseLong(obj.toString().substring(0, obj.toString().indexOf(".")));
+			} else {
+				return Long.parseLong(obj.toString());
 			}
 
 		}

@@ -107,6 +107,10 @@ public class SFDBSrc extends EntityNoName
 				return DBType.MySQL;
 			case Informix:
 				return DBType.Informix;
+			case KingBaseR3:
+				return DBType.KingBaseR3;
+			case KingBaseR6:
+				return DBType.KingBaseR6;
 			default:
 				throw new RuntimeException("err@HisDBType没有判断的数据库类型.");
 		}
@@ -864,7 +868,7 @@ public class SFDBSrc extends EntityNoName
 		String runPlant = bp.difference.SystemConfig.getRunOnPlant();
 		if (runPlant.equals("CCFlow") == false && runPlant.equals("bp")==false)
 		{
-			map.AddTBString(SFDBSrcAttr.UserID, null, "数据库登录用户ID", true, false, 0, 30, 20);
+		   map.AddTBString(SFDBSrcAttr.UserID, null, "数据库登录用户ID", true, false, 0, 30, 20);
 			map.AddTBString(SFDBSrcAttr.Password, null, "密码", true, false, 0, 30, 20);
 			map.AddTBString(SFDBSrcAttr.IP, null, "IP地址/数据库实例名", true, false, 0, 500, 20);
 		}

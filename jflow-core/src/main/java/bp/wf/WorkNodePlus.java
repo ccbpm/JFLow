@@ -785,33 +785,91 @@ public class WorkNodePlus
 		//按照岗位删除.
 		if (nd.getGenerWorkerListDelRole() == 2)
 		{
-			NodeStations nss = new NodeStations();
-			nss.Retrieve(NodeStationAttr.FK_Node, gwf.getFK_Node(), null);
-			if (nss.size() == 0)
-			{
-				throw new RuntimeException("err@流程设计错误: 您设置了待办按照岗位删除的规则,但是在当前节点上，您没有设置岗位。");
-			}
-			//定义岗位人员
-			String station = "SELECT FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + WebUser.getNo() + "'";
-			station = DBAccess.RunSQLReturnString(station);
-			String stationEmp = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station ='" + station + "'";
-			//获得要删除的人员.
-			String sql = " SELECT FK_Emp FROM WF_GenerWorkerlist WHERE ";
-			sql += " WorkID=" + gwf.getWorkID() + " AND FK_Node=" + gwf.getFK_Node() + " AND IsPass=0 ";
-			sql += " AND FK_Emp IN (" + stationEmp + ")";
-			//获得要删除的数据.
+			//1. 求出来: 当前人员的岗位集合与节点岗位集合的交集， 表示：当前人员用这些岗位做了这个节点的事情.
+			String sqlGroupMy = "SELECT A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node="+nd.getNodeID()+" AND A.FK_Emp='"+WebUser.getNo()+"'" ;
+			DataTable dtGroupMy = DBAccess.RunSQLReturnTable(sqlGroupMy);
+			String stasGroupMy = "";
+			for (int i = 0; i < dtGroupMy.Rows.size(); i++)
+				stasGroupMy +=",'" + dtGroupMy.Rows.get(i).getValue(0).toString()+ "'";
 
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			for (int i = 0; i < dt.Rows.size(); i++)
+			//2. 遍历: 当前的操作员，一个个的判断是否可以删除.
+			GenerWorkerLists gwls = new GenerWorkerLists();
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getWorkID(), GenerWorkerListAttr.FK_Node, nd.getNodeID());
+
+			for (GenerWorkerList item : gwls.ToJavaList())
 			{
-				String empNo = dt.Rows.get(i).getValue(0).toString();
-				if (WebUser.getNo().equals(empNo))
-				{
+				if (item.getIsEnable() == false)
 					continue;
+				if (item.getFK_Emp().equals(WebUser.getNo()) == true)
+					continue; //要把自己排除在外.
+
+				String sqlGroupUser = "SELECT A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + nd.getNodeID() + " AND A.FK_Emp='" + item.getFK_Emp() + "'";
+				DataTable dtGroupUser = DBAccess.RunSQLReturnTable(sqlGroupUser);
+				String tempNo="";
+				// 判断  sqlGroupMy  >= sqlGroupUser  是否包含,如果包含，就是删除对象.
+				int isCanDel = 1;
+				for (int i = 0; i < dtGroupUser.Rows.size(); i++){
+					tempNo = "'" + dtGroupUser.Rows.get(i).getValue(0).toString()+ "'";
+					if (stasGroupMy.contains(tempNo) == false)
+						isCanDel = 0;
 				}
-				sql = "UPDATE WF_GenerWorkerlist SET IsPass=1 WHERE WorkID=" + gwf.getWorkID() + " AND FK_Node=" + gwf.getFK_Node() + " AND FK_Emp='" + empNo + "'";
-				DBAccess.RunSQL(sql);
+				//符合删除的条件.
+				if (isCanDel == 1)
+				{
+					item.setIsEnable(false) ;
+					item.setIsPassInt(1);
+					item.Update();
+				}
 			}
+
+			//地瓜土豆问题.
+			// 3 检查同岗位的人员是否有交集: 潘茄的人,马铃薯的人，都分别审批了，需要删除 潘茄+马铃薯岗位的人.
+			// 3.1 找出来处理人中，用到人岗位集合， 就是说已经消耗掉的岗位集合.
+			String sql = "SELECT B.FK_Station,A.FK_Emp FROM WF_GenerWorkerlist A, WF_NodeStation B, Port_DeptEmpStation C";
+			sql += " WHERE A.FK_Node=B.FK_Node AND A.FK_Emp=C.FK_Emp AND B.FK_Station=C.FK_Station AND A.WorkID=" + gwf.getWorkID() +
+					" AND A.FK_Node=" + nd.getNodeID();
+			sql += " AND (A.IsPass=1 OR A.FK_Emp='"+bp.web.WebUser.getNo()+"') ";
+
+			DataTable dtStationsUsed = DBAccess.RunSQLReturnTable(sql);
+			String stasUseed = "";
+			for (int i = 0; i < dtStationsUsed.Rows.size(); i++)
+			{
+				DataRow dr = dtStationsUsed.Rows.get(i);
+				stasUseed += ",'" + dr.getValue(0).toString() + "'";
+			}
+
+			// 3.2 扫描剩余的待办人员，这些待办的人员的使用的本节点的岗位集合 是否 在消耗掉的岗位集合中，如果有，就删除他的待办.
+			gwls = new GenerWorkerLists();
+			gwls.Retrieve("WorkID", gwf.getWorkID(), "IsPass", 0);
+			for(GenerWorkerList item : gwls.ToJavaList())
+			{
+				if (item.getFK_Emp().equals(WebUser.getNo()) == true)
+					continue;
+
+				//未处理的人的岗位集合.
+				String sqlGroupUser = "SELECT A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B WHERE " +
+						"A.FK_Station=B.FK_Station AND B.FK_Node=" + nd.getNodeID() + " AND A.FK_Emp='" + item.getFK_Emp() + "'";
+				DataTable dtGroupUser = DBAccess.RunSQLReturnTable(sqlGroupUser);
+
+				// 判断  sqlGroupMy  >= sqlGroupUser  是否包含,如果包含，就是删除对象.
+				boolean isCanDel = true;
+				for (int i = 0; i < dtGroupUser.Rows.size(); i++)
+				{
+					DataRow dr = dtGroupUser.Rows.get(i);
+					String staNo = "'" + dr.getValue(0).toString() + "'";
+					if (stasUseed.contains(staNo) == false)
+						isCanDel = false;
+				}
+
+				//符合删除的条件.
+				if (isCanDel == true)
+				{
+					item.setIsEnable(false) ;
+					item.setIsPassInt(1);
+					item.Update();
+				}
+			}
+			//endregion  检查同岗位的人员是否有交集: 潘茄的人,马铃薯的人，都分别审批了，需要删除 潘茄+马铃薯岗位的人.
 		}
 	}
 	/** 

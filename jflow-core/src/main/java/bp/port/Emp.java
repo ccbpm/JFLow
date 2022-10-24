@@ -5,9 +5,11 @@ import bp.en.*;
 import bp.sys.*;
 import bp.tools.Cryptos;
 import bp.tools.Encodes;
+import bp.web.WebUser;
+
 
 import java.util.regex.*;
-/** 
+/**
  Emp 的摘要说明。
 */
 public class Emp extends EntityNoName
@@ -47,7 +49,7 @@ public class Emp extends EntityNoName
 	{
 		this.SetValByKey(EmpAttr.SID, value);
 	}
-	/** 
+	/**
 	 用户ID:SAAS模式下UserID是可以重复的.
 	*/
 	public final String getUserID()  {
@@ -61,26 +63,24 @@ public class Emp extends EntityNoName
 	public final void setUserID(String value)
 	 {
 		this.SetValByKey(EmpAttr.UserID, value);
-
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			if (value.startsWith(bp.web.WebUser.getOrgNo() + "_") == true)
+			if (value.startsWith(WebUser.getOrgNo() + "_") == true)
 			{
-				this.SetValByKey(EmpAttr.UserID, value.replace(bp.web.WebUser.getOrgNo() + "_",""));
+				this.SetValByKey(EmpAttr.UserID, value.replace(WebUser.getOrgNo() + "_",""));
 				this.SetValByKey(EmpAttr.No, value);
 			}
 			else
 			{
-				this.SetValByKey(EmpAttr.No, bp.web.WebUser.getOrgNo() + "_" + value);
+				this.SetValByKey(EmpAttr.No, WebUser.getOrgNo() + "_" + value);
 			}
 		}
-
 		else
 		{
 			this.SetValByKey(EmpAttr.No, value);
 		}
 	}
-	/** 
+	/**
 	 组织编号
 	*/
 	public final String getOrgNo()
@@ -92,7 +92,7 @@ public class Emp extends EntityNoName
 		this.SetValByKey(EmpAttr.OrgNo, value);
 	}
 
-	/** 
+	/**
 	 部门编号
 	*/
 	public final String getFK_Dept()
@@ -103,14 +103,14 @@ public class Emp extends EntityNoName
 	 {
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
-	/** 
+	/**
 	 部门编号
 	*/
 	public final String getFK_DeptText()
 	{
 		return this.GetValRefTextByKey(EmpAttr.FK_Dept);
 	}
-	/** 
+	/**
 	 密码
 	*/
 	public final String getPass()
@@ -145,12 +145,10 @@ public class Emp extends EntityNoName
 	 {
 		this.SetValByKey(EmpAttr.Email, value);
 	}
-
 		///#endregion
 
-
 		///#region 公共方法
-	/** 
+	/**
 	 权限管理.
 	*/
 	@Override
@@ -159,9 +157,9 @@ public class Emp extends EntityNoName
 		uac.OpenForAppAdmin();
 		return uac;
 	}
-	/** 
+	/**
 	 检查密码(可以重写此方法)
-	 
+
 	 param pass 密码
 	 @return 是否匹配成功
 	*/
@@ -186,11 +184,11 @@ public class Emp extends EntityNoName
 
 	private static byte[] Keys = {0x12, (byte)0xCD, 0x3F, 0x34, 0x78, (byte)0x90, 0x56, 0x7B};
 
-	/** 
+	/**
 	 加密字符串
-	 
+
 	 param pass
-	 @return 
+	 @return
 	*/
 	/*public static String EncryptPass(String pass)
 	{
@@ -209,9 +207,9 @@ public class Emp extends EntityNoName
 
 	*//**
 	 解密字符串
-	 
+
 	 param pass
-	 @return 
+	 @return
 	*//*
 	public static String DecryptPass(String pass)
 	{
@@ -220,7 +218,7 @@ public class Emp extends EntityNoName
 //ORIGINAL LINE: byte[] data = Convert.FromBase64String(pass);
 		byte[] data = Convert.FromBase64String(pass); //定义字节数组，用来存储要解密的字符串
 		ByteArrayOutputStream MStream = new ByteArrayOutputStream(); //实例化内存流对象
-		//使用内存流实例化解密流对象       
+		//使用内存流实例化解密流对象
 		CryptoStream CStream = new CryptoStream(MStream, descsp.CreateDecryptor(Keys, Keys), CryptoStreamMode.Write);
 		CStream.Write(data, 0, data.length); //向解密流中写入数据
 		CStream.FlushFinalBlock(); //释放解密流
@@ -231,14 +229,14 @@ public class Emp extends EntityNoName
 
 
 		///#region 构造函数
-	/** 
+	/**
 	 操作员
 	*/
 	public Emp() {
 	}
-	/** 
+	/**
 	 操作员
-	 
+
 	 param userID 编号
 	*/
 	public Emp(String userID) throws Exception {
@@ -256,7 +254,7 @@ public class Emp extends EntityNoName
 			}
 			else
 			{
-				this.SetValByKey("No", bp.web.WebUser.getOrgNo() + "_" + userID);
+				this.SetValByKey("No", WebUser.getOrgNo() + "_" + userID);
 			}
 		}
 		else
@@ -265,7 +263,7 @@ public class Emp extends EntityNoName
 		}
 		this.Retrieve();
 	}
-	/** 
+	/**
 	 重写基类方法
 	*/
 	@Override
@@ -283,20 +281,14 @@ public class Emp extends EntityNoName
 		map.IndexField = EmpAttr.FK_Dept;
 
 			///#endregion
-
-
 			///#region 字段
 			/* 关于字段属性的增加 .. */
 			//map.IsEnableVer = true;
-
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 1, 50, 30);
 
-
 			//如果是集团模式或者是SAAS模式.
-		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
+		if (bp.difference.SystemConfig.getCCBPMRunModel()  == CCBPMRunModel.SAAS)
 			map.AddTBString(EmpAttr.UserID, null, "用户ID", true, false, 0, 50, 30);
-		}
 
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 200, 30);
 
@@ -313,18 +305,14 @@ public class Emp extends EntityNoName
 		map.SetHelperAlert(EmpAttr.Leader, "这里是领导的登录帐号，不是中文名字，用于流程的接受人规则中。");
 		map.AddTBString(EmpAttr.LeaderName, null, "直属部门领导", true, true, 0, 20, 130);
 
-		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
-			map.AddTBString(EmpAttr.OrgNo, null, "组织编号", true, false, 0, 50, 50);
-		}
-		else
-		{
-			map.AddTBString(EmpAttr.OrgNo, null, "组织编号", false, false, 0, 50, 50);
-		}
+			map.AddTBString(EmpAttr.OrgNo, null, "组织编号", true, true, 0, 50, 50);
 
 		map.AddTBInt(EmpAttr.EmpSta, 0, "EmpSta", false, false);
 		map.AddTBInt(EmpAttr.Idx, 0, "Idx", false, false);
 			///#endregion 字段
+
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single && WebUser.getNo().equals("admin")==false)
+			map.AddHidden("OrgNo", "=", "@WebUser.OrgNo");
 
 		map.AddSearchAttr(EmpAttr.FK_Dept);
 
@@ -341,10 +329,10 @@ public class Emp extends EntityNoName
 		map.AddRefMethod(rm);
 
 			//节点绑定部门. 节点绑定部门.
-		map.getAttrsOfOneVSM().AddBranches(new DeptEmps(), new Depts(), bp.port.DeptEmpAttr.FK_Emp, bp.port.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
+		//map.getAttrsOfOneVSM().AddBranches(new DeptEmps(), new Depts(), bp.port.DeptEmpAttr.FK_Emp, bp.port.DeptEmpAttr.FK_Dept, "部门维护", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept");
 
 			//用户组
-		map.getAttrsOfOneVSM().Add(new TeamEmps(), new Teams(), TeamEmpAttr.FK_Emp, TeamEmpAttr.FK_Team, TeamAttr.Name, TeamAttr.No, "用户组", Dot2DotModel.Default);
+		//map.getAttrsOfOneVSM().Add(new TeamEmps(), new Teams(), TeamEmpAttr.FK_Emp, TeamEmpAttr.FK_Team, TeamAttr.Name, TeamAttr.No, "用户组", Dot2DotModel.Default);
 
 		rm = new RefMethod();
 		rm.Title = "修改密码";
@@ -398,15 +386,15 @@ public class Emp extends EntityNoName
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
+		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true)
+			this.setOrgNo(WebUser.getOrgNo());
 		//增加拼音，以方便查找.
 		if (DataType.IsNullOrEmpty(this.getName()) == true)
-		{
-			throw new RuntimeException("err@名称不能为空.");
-		}
+			throw new RuntimeException("名称不能为空.");
 
-		if (bp.web.WebUser.getIsAdmin() == false && this.getNo().equals(bp.web.WebUser.getNo())==false)
+		if (WebUser.getIsAdmin() == false && this.getNo().equals(WebUser.getNo())==false)
 		{
-			throw new RuntimeException("err@非管理员无法操作.");
+			throw new RuntimeException("非管理员无法操作.");
 		}
 
 		if (DataType.IsNullOrEmpty(this.getEmail()) == false)
@@ -420,6 +408,16 @@ public class Emp extends EntityNoName
 			}
 		}
 
+		//设置orgNo.
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single && DataType.IsNullOrEmpty(this.getFK_Dept())==false)
+		{
+
+			Dept dept = new Dept();
+			dept.setNo(this.getFK_Dept());
+			dept.RetrieveFromDBSources();
+			this.setOrgNo(dept.getOrgNo());
+		}
+
 		String pinyinQP = DataType.ParseStringToPinyin(this.getName()).toLowerCase();
 		String pinyinJX = DataType.ParseStringToPinyinJianXie(this.getName()).toLowerCase();
 		this.setPinYin("," + pinyinQP + "," + pinyinJX + ",");
@@ -430,7 +428,6 @@ public class Emp extends EntityNoName
 
 		String depts = "";
 		String stas = "";
-
 		for (DeptEmpStation item : des.ToJavaList())
 		{
 			Dept dept = new Dept();
@@ -467,7 +464,7 @@ public class Emp extends EntityNoName
 		return super.beforeDelete();
 	}
 
-	/** 
+	/**
 	 保存后修改WF_Emp中的邮箱
 	*/
 	@Override
@@ -496,7 +493,7 @@ public class Emp extends EntityNoName
 
 		super.afterInsertUpdateAction();
 	}
-	/** 
+	/**
 	 删除之后要做的事情
 	*/
 	@Override
@@ -551,13 +548,13 @@ public class Emp extends EntityNoName
 		return py;
 	}
 
-	/** 
+	/**
 	 向上移动
 	*/
 	public final void DoUp()  {
 		this.DoOrderUp(EmpAttr.FK_Dept, this.getFK_Dept(), EmpAttr.Idx);
 	}
-	/** 
+	/**
 	 向下移动
 	*/
 	public final void DoDown()  {
@@ -582,7 +579,7 @@ public class Emp extends EntityNoName
 	}
 
 
-	/** 
+	/**
 	 获取集合
 	*/
 	@Override
@@ -598,10 +595,10 @@ public class Emp extends EntityNoName
 
 
 		///#region 方法测试代码.
-	/** 
+	/**
 	 禁用、启用用户
-	 
-	 @return 
+
+	 @return
 	*/
 	public final String DoUnEnable() throws Exception {
 		String userNo = this.getNo();
@@ -609,7 +606,7 @@ public class Emp extends EntityNoName
 		String wfSql = "";
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			wfSql = " AND OrgNo='" + bp.web.WebUser.getOrgNo() + "'";
+			wfSql = " AND OrgNo='" + WebUser.getOrgNo() + "'";
 			userNo = this.getUserID();
 		}
 		String sql = "";
@@ -637,25 +634,25 @@ public class Emp extends EntityNoName
 
 	}
 
-	/** 
+	/**
 	 测试
-	 
-	 @return 
+
+	 @return
 	*/
 	public final String ResetIsPass()  {
 		return "执行成功.";
 	}
-	/** 
+	/**
 	 ChangePass
-	 
+
 	 param oldpass
 	 param pass1
 	 param pass2
-	 @return 
+	 @return
 	*/
 	public final String ChangePass(String oldpass, String pass1, String pass2)
 	{
-		if (bp.web.WebUser.getNo().equals(this.getUserID()) == false)
+		if (WebUser.getNo().equals(this.getUserID()) == false)
 		{
 			return "err@sss";
 		}

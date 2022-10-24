@@ -8,7 +8,6 @@ import bp.en.*;
 */
 public class DeptEmpStation extends EntityMyPK
 {
-
 		///#region 基本属性
 	/** 
 	 UI界面上的访问控制
@@ -58,6 +57,14 @@ public class DeptEmpStation extends EntityMyPK
 		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp() + "_" + this.getFK_Station());
 	}
 
+	public final String getOrgNo()
+	{
+		return this.GetValStringByKey(DeptEmpStationAttr.OrgNo);
+	}
+	public final void setOrgNo(String value)
+	{
+		SetValByKey(DeptEmpStationAttr.OrgNo, value);
+	}
 		///#endregion
 
 

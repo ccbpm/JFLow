@@ -565,7 +565,8 @@ public class DataType {
 		Reader is = null;
 		String line = "";
 		try {
-			if(SystemConfig.getIsJarRun()){
+			if(SystemConfig.getIsJarRun() &&(filePath.indexOf("DataUser/")!=-1 &&filePath.indexOf("DataUser/Siganture/")==-1 &&filePath.indexOf("DataUser/UploadFile/")==-1 &&
+					filePath.indexOf("DataUser/FlowDesc/")==-1 && filePath.indexOf("DataUser/Temp/")==-1 )){
 				ClassPathResource classPathResource = new ClassPathResource(filePath);
 				InputStream inputStream = classPathResource.getInputStream();
 				StringBuilder stringBuilder = new StringBuilder();
@@ -1455,15 +1456,34 @@ public class DataType {
 	 * 当前的日期时间
 	 */
 	public static String getCurrentDateTimeCN() {
+		Date date = new Date();
 		SimpleDateFormat matter = new SimpleDateFormat(DataType.getSysDateFormatCN());
 		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-		return matter.format(new Date()) + "，" + GetWeekName(dayOfWeek);
+		return matter.format(date) + "，" + GetWeekName(dayOfWeek);
 	}
 
-	private static String GetWeekName(int dw) {
-		final String dayNames[] = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
-		return dayNames[dw];
+	private static String GetWeekName(int weekDay) {
+		if(Calendar.MONDAY == weekDay){
+			return "星期一";
+		}else if(Calendar.TUESDAY==weekDay){
+			return "星期二";
+		}else if(Calendar.WEDNESDAY==weekDay){
+			return "星期三";
+		}else if(Calendar.THURSDAY==weekDay){
+			return "星期四";
+		}else if(Calendar.FRIDAY==weekDay){
+			return "星期五";
+		}else if(Calendar.SATURDAY==weekDay){
+			return "星期六";
+		}else {
+			return "星期日";
+		}
+	}
+
+	public static void main(String[] args){
+		System.out.println(getCurrentDateTimeCN());
 	}
 
 	/**

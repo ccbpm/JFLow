@@ -41,7 +41,7 @@ public class FindWorker
 
 		// 如果执行了两次发送，那前一次的轨迹就需要被删除,这里是为了避免错误。
 		ps = new Paras();
-		ps.Add("WorkID", this.WorkID);
+		ps.Add("WorkID", town.getHisWork().getOID());
 		ps.Add("FK_Node", town.getHisNode().getNodeID());
 		ps.SQL = "DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + dbStr + "WorkID AND FK_Node =" + dbStr + "FK_Node";
 		DBAccess.RunSQL(ps);
@@ -321,6 +321,24 @@ public class FindWorker
 					if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected || town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelectedForPrj)
 					{
 						Node toNode = this.town.getHisNode();
+						Node currNode = this.currWn.getHisNode();
+						if (toNode.isResetAccepter() == false && toNode.getHisToNDs().contains("@" + currNode.getNodeID()) == true &&
+								currNode.getHisToNDs().contains("@" + toNode.getNodeID()) == true)
+						{
+							sql = "SELECT EmpFrom From ND" + Integer.valueOf(toNode.getFK_Flow()) + "Track WHERE WorkID=" + this.WorkID + " AND NDFrom=" + toNode.getNodeID() + " AND NDTo=" + currNode.getNodeID() + " AND ActionType IN(0,1,6,7,11)";
+							DataTable dtt = DBAccess.RunSQLReturnTable(sql);
+							if (dtt.Rows.size() > 0)
+							{
+								for (DataRow drr : dtt.Rows)
+								{
+									DataRow dr = dt.NewRow();
+									dr.setValue(0, drr.getValue(0).toString());
+
+									dt.Rows.add(dr);
+								}
+								return dt;
+							}
+						}
 						Selector select = new Selector(toNode.getNodeID());
 						if (select.getSelectorModel() == SelectorModel.GenerUserSelecter)
 						{
@@ -675,6 +693,97 @@ public class FindWorker
 			return dt;
 		}
 
+		///#region  按照上一个节点表单指定字段的 【岗位】处理。
+		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStations)
+		{
+			// 检查接受人员规则,是否符合设计要求.
+			String specEmpFields = town.getHisNode().getDeliveryParas();
+			if (DataType.IsNullOrEmpty(specEmpFields))
+			{
+				specEmpFields = "SysSendEmps";
+			}
+
+			if (this.currWn.rptGe.getEnMap().getAttrs().contains(specEmpFields) == false)
+			{
+				throw new RuntimeException("@您设置的接受人规则是按照表单指定的字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
+			}
+
+			//判断该字段是否启用了pop返回值？
+			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal=" + this.WorkID + " AND EleID='" + specEmpFields + "'";
+			String emps = "";
+			DataTable dtVals = DBAccess.RunSQLReturnTable(sql);
+
+			//获取接受人并格式化接受人,
+			if (dtVals.Rows.size() > 0)
+			{
+				for (DataRow dr : dtVals.Rows)
+				{
+					emps += dr.getValue(0).toString() + ",";
+				}
+			}
+			else
+			{
+				emps = this.currWn.rptGe.GetValStringByKey(specEmpFields);
+			}
+
+
+			emps = emps.replace(" ", ""); //去掉空格.
+
+			String stas="";
+			if (emps.contains(",") && emps.contains(";"))
+			{
+				/*如果包含,; 例如 xxx,岗位1;333,岗位2;*/
+				String[] myemps1 = emps.split("[;]", -1);
+				for (String str : myemps1)
+				{
+					if (DataType.IsNullOrEmpty(str))
+					{
+						continue;
+					}
+
+
+					String[] ss = str.split("[,]", -1);
+					stas+=",'"+ss[0]+"'";
+
+				}
+				if (dt.Rows.size() == 0 && town.getHisNode().getHisWhenNoWorker() == false)
+					throw new RuntimeException("@输入的接受人员信息错误;[" + emps + "]。");
+
+			}
+
+			emps = emps.replace(";", ",");
+			emps = emps.replace("；", ",");
+			emps = emps.replace("，", ",");
+			emps = emps.replace("、", ",");
+			emps = emps.replace("@", ",");
+
+			if (DataType.IsNullOrEmpty(emps) && town.getHisNode().getHisWhenNoWorker() == false)
+			{
+				throw new RuntimeException("@没有在字段xx[" + this.currWn.getHisWork().getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人，工作无法向下发送。");
+			}
+
+			// 把它加入接受人员列表中.
+			String[] myemps = emps.split("[,]", -1);
+			for (String s : myemps)
+			{
+				if (DataType.IsNullOrEmpty(s))
+				{
+					continue;
+				}
+
+				stas+=",'"+s+"'";
+			}
+
+			//根据岗位：集合获取信息.
+			stas=stas.substring(1);
+
+			sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN(" + stas + ") AND FK_Dept='" + WebUser.getFK_Dept() + "'";
+			dt = DBAccess.RunSQLReturnTable(sql);
+			if (dt.Rows.size()  == 0 && town.getHisNode().getHisWhenNoWorker() == false)
+				throw new Exception("err@按照字段岗位找接受人错误，当前部门下没有您选择的岗位人员.");
+			return dt;
+		}
+
 			///#endregion 按照上一个节点表单指定字段的人员处理。
 
 
@@ -748,14 +857,16 @@ public class FindWorker
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDept)
 		{
 			ps = new Paras();
+			sql= "select No,Name from Port_Emp where FK_Dept in(select FK_dept from wf_nodeDept where FK_Node =" + dbStr + "FK_Node)";
 			ps.Add("FK_Node", this.town.getHisNode().getNodeID());
-			ps.Add("WorkID", this.currWn.getHisWork().getOID());
-			ps.SQL = "SELECT FK_Emp FROM WF_SelectAccper WHERE FK_Node=" + dbStr + "FK_Node AND WorkID=" + dbStr + "WorkID AND AccType=0 ORDER BY IDX";
+			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
-			if (dt.Rows.size() > 0)
+			if (dt.Rows.size() == 0)
 			{
-				return dt;
+				bp.wf.template.BtnLab btnLab = new BtnLab(this.town.getHisNode().getNodeID());
+				throw new Exception("err@按照 [按绑定的部门计算] 计算接收人的时候出现错误，没有找到人，请检查节点["+btnLab.getName()+"]绑定的部门下的人员.");
 			}
+			return dt;
 		}
 
 			///#endregion 判断节点部门里面是否设置了部门，如果设置了，就按照它的部门处理。
@@ -1113,14 +1224,21 @@ public class FindWorker
 			///#region 发送人上级部门指定的岗位 2022.2.20 beijing. by zhoupeng
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySenderParentDeptStations)
 		{
-			String deptNo = WebUser.getDeptParentNo();
-			sql = "SELECT A.FK_Emp FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + town.getHisNode().getNodeID() + " AND A.FK_Dept='" + deptNo + "'";
+			//当前人员身份 sf
+			Hashtable sf = GetEmpDeptBySFModel();
+			empDept = sf.get("DeptNo").toString();
+			empNo = sf.get("EmpNo").toString();
+
+			bp.port.Dept dept = new bp.port.Dept(empDept);
+			String deptNo = dept.getParentNo();
+
+			sql = "SELECT A.FK_Emp,FK_Dept FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + town.getHisNode().getNodeID() + " AND A.FK_Dept='" + deptNo + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size() == 0)
+			/*if (dt.Rows.size() == 0)
 			{
 				Dept pDept = new Dept(deptNo);
 				throw new RuntimeException("err@按照 [发送人上级部门指定的岗位] 计算接收人的时候出现错误，没有找到人，请检查节点绑定的岗位以及该部门【" + pDept.getName() + "】下的人员设置的岗位.");
-			}
+			}*/
 			return dt;
 		}
 
@@ -1798,6 +1916,10 @@ public class FindWorker
 
 					DataRow dr = dt.NewRow();
 					dr.setValue(0, row.getValue(0));
+
+					if (row.table.Columns.size() == 2)
+						dr.setValue(1, row.getValue(1));
+
 					dt.Rows.add(dr);
 				}
 				return dt;

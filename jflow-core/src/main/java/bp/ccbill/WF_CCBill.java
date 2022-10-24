@@ -1538,7 +1538,8 @@ public class WF_CCBill extends WebContralBase
 
 				if (attr.getMyDataType() != DataType.AppString)
 				{
-					continue;
+					if(attr.getMyDataType() != DataType.AppMoney)
+						continue;
 				}
 
 				//排除枚举值关联refText.
@@ -1561,7 +1562,7 @@ public class WF_CCBill extends WebContralBase
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
 						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
@@ -1573,7 +1574,7 @@ public class WF_CCBill extends WebContralBase
 				}
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 				{
 					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
@@ -1620,7 +1621,7 @@ public class WF_CCBill extends WebContralBase
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 					}
@@ -1633,7 +1634,7 @@ public class WF_CCBill extends WebContralBase
 				}
 				qo.addAnd();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 				{
 					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 				}
@@ -2465,7 +2466,7 @@ public class WF_CCBill extends WebContralBase
 
 
 		///#region 单据导出
-	public final String Search_Exp() throws Exception {
+	/*public final String Search_Exp() throws Exception {
 		FrmBill frmBill = new FrmBill(this.getFrmID());
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
@@ -2473,6 +2474,19 @@ public class WF_CCBill extends WebContralBase
 		String filename = frmBill.getName() + "_" + DataType.getCurrentDateTimeCNOfLong() + ".xls";
 		String filePath = bp.tools.ExportExcelUtil.ExportDGToExcel(Search_Data(), rpts.getGetNewEntity(), filename,null);
 		return filePath;
+	}*/
+
+	public final void Search_Exp() throws Exception
+	{
+		FrmBill frmBill = new FrmBill(this.getFrmID());
+		GEEntitys rpts = new GEEntitys(this.getFrmID());
+		MapAttrs mapAttrs = new MapAttrs();
+		Attrs attrs = new Attrs();
+		mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
+
+		for (MapAttr attr : mapAttrs.ToJavaList())
+			attrs.Add(attr.getHisAttr());
+		bp.tools.ExportExcelUtil.ExportDGToExcel(Search_Data(), rpts.getGetNewEntity(), frmBill.getName(), attrs);
 	}
 
 	public final DataTable Search_Data() throws Exception {
@@ -2549,7 +2563,7 @@ public class WF_CCBill extends WebContralBase
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
 						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
@@ -2561,7 +2575,7 @@ public class WF_CCBill extends WebContralBase
 				}
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 				{
 					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
@@ -2608,7 +2622,7 @@ public class WF_CCBill extends WebContralBase
 					isFirst = false;
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 					}
@@ -2621,7 +2635,7 @@ public class WF_CCBill extends WebContralBase
 				}
 				qo.addAnd();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 				{
 					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 				}
@@ -2868,7 +2882,7 @@ public class WF_CCBill extends WebContralBase
 		}
 
 		//从excel里面获得数据表.
-		DataTable dt = DBLoad.ReadExcelFileToDataTable(file.getAbsolutePath());
+		DataTable dt = DBLoad.GetTableByExt(file.getAbsolutePath());
 
 		//删除临时文件
 		//(new File(filePath)).delete();

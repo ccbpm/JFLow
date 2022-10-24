@@ -128,7 +128,7 @@ public class WF_CCBill_OptComponents extends WebContralBase
 		if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			qo.addLeftBracket();
-			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 			{
 				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
@@ -137,7 +137,7 @@ public class WF_CCBill_OptComponents extends WebContralBase
 				qo.AddWhere("Title", " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 			qo.addOr();
-			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 			{
 				qo.AddWhere("BillNo", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}

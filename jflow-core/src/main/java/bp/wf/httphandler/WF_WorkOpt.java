@@ -80,11 +80,30 @@ public class WF_WorkOpt extends WebContralBase
 	 @return 
 	*/
 	public final String PrintDoc_Init() throws Exception {
-		String frmID = "";
-		Node nd = null;
-		if (this.getFK_Node() != 0 && this.getFK_Node() != 9999)
-		{
+		String billNo = this.GetRequestVal("FK_Bill");
+		FrmPrintTemplate templete = new FrmPrintTemplate();
+		if(DataType.IsNullOrEmpty(billNo)==false){
+			templete.setMyPK(billNo);
+			int count = templete.RetrieveFromDBSources();
+			if(count ==0)
+				return "err@表单模板的编号["+billNo+"]数据不存在,请查看设计是否正确";
+		}
+		String frmID=this.getFrmID();
+		if(DataType.IsNullOrEmpty(frmID)==false){
+			FrmPrintTemplates templetes = new FrmPrintTemplates();
+			templetes.Retrieve(FrmPrintTemplateAttr.FrmID, frmID);
+			if(templetes.size()==0)
+				return "err@当前节点上没有绑定单据模板。";
+			if(templetes.size()>1)
+				return templetes.ToJson("dt");
+			templete = (FrmPrintTemplate)templetes.get(0);
+		}
+		Node nd =null;
+		if(DataType.IsNullOrEmpty(frmID)==true&&(this.getFK_Node() != 0 && this.getFK_Node() != 9999)){
 			nd = new Node(this.getFK_Node());
+			if (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm)
+				return "err@SDK表单、嵌入式表单暂时不支持打印功能";
+
 			if (nd.getHisFormType() == NodeFormType.SheetTree)
 			{
 				//获取该节点绑定的表单
@@ -93,70 +112,43 @@ public class WF_WorkOpt extends WebContralBase
 				mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node() + " AND FrmEnableRole !=5");
 				return "info@" + bp.tools.Json.ToJson(mds.ToDataTableField("dt"));
 			}
-
 			frmID = "ND" + this.getFK_Node();
-
-			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree  || nd.getHisFlow().getFlowDevModel() == FlowDevModel.JiJian)
 			{
 				frmID = nd.getNodeFrmID();
+				MapData md = new MapData(frmID);
+				FrmPrintTemplates templetes = new FrmPrintTemplates();
+				if(md.getHisFrmType() == FrmType.ChapterFrm){
+					//如果是章节表单，需要获取当前表单上关联的表单
+					String sql = "SELECT CtrlID From Sys_GroupField Where CtrlType='ChapterFrmLinkFrm' AND FrmID='"+frmID+"'";
+					DataTable dt = DBAccess.RunSQLReturnTable(sql);
+					String val = "'"+frmID+"'";
+					for(DataRow dr :dt.Rows){
+						val+=",'"+dr.getValue(0)+"'";
+					}
+
+
+					templetes.RetrieveIn(FrmPrintTemplateAttr.FrmID,val);
+				}else{
+					templetes.Retrieve(FrmPrintTemplateAttr.FrmID, frmID);
+				}
+				if(templetes.size()==0)
+					return "err@当前节点上没有绑定单据模板。";
+				if(templetes.size()>1)
+					return templetes.ToJson("dt");
+				templete = (FrmPrintTemplate)templetes.get(0);
 			}
-
-			if (nd.getHisFormType() == NodeFormType.SDKForm || nd.getHisFormType() == NodeFormType.SelfForm)
-			{
-				return "err@SDK表单、嵌入式表单暂时不支持打印功能";
-			}
 		}
+		//单据的打印
+		String sourceType = this.GetRequestVal("SourceType");
+		if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
+			return PrintDoc_FormDoneIt(null, this.getWorkID(), this.getFID(), frmID, templete);
 
-		if (DataType.IsNullOrEmpty(frmID) == true)
-		{
-			frmID = this.GetRequestVal("FrmID");
-		}
+		if (nd != null && nd.getHisFormType() == NodeFormType.RefOneFrmTree)
+			return PrintDoc_FormDoneIt(null, this.getWorkID(), this.getFID(), templete.getFrmID(), templete);
+		return PrintDoc_DoneIt(templete.getMyPK());
 
-		if (DataType.IsNullOrEmpty(frmID) == true)
-		{
-			frmID = this.GetRequestVal("FK_Bill");
-		}
 
-		if (DataType.IsNullOrEmpty(frmID) == true)
-		{
-			frmID = this.getFrmID();
-		}
-
-		FrmPrintTemplates templetes = new FrmPrintTemplates();
-		String billNo = this.GetRequestVal("FK_Bill");
-		if (billNo == null)
-		{
-			templetes.Retrieve(FrmPrintTemplateAttr.FrmID, frmID, null);
-		}
-		else
-		{
-			templetes.Retrieve(FrmPrintTemplateAttr.FrmID, frmID, FrmPrintTemplateAttr.No, billNo, null);
-		}
-
-		if (templetes.size() == 0)
-		{
-			return "err@当前节点上没有绑定单据模板。";
-		}
-
-		if (templetes.size() == 1)
-		{
-			FrmPrintTemplate templete = templetes.get(0) instanceof FrmPrintTemplate ? (FrmPrintTemplate)templetes.get(0) : null;
-
-			//单据的打印
-			String sourceType = this.GetRequestVal("SourceType");
-			if (DataType.IsNullOrEmpty(sourceType) == false && sourceType.equals("Bill"))
-			{
-				return PrintDoc_FormDoneIt(null, this.getWorkID(), this.getFID(), frmID, templete);
-			}
-
-			if (nd != null && nd.getHisFormType() == NodeFormType.RefOneFrmTree)
-			{
-				return PrintDoc_FormDoneIt(null, this.getWorkID(), this.getFID(), frmID, templete);
-			}
-
-			return PrintDoc_DoneIt(templete.getMyPK());
-		}
-		return templetes.ToJson("dt");
 	}
 	/** 
 	 执行打印
@@ -211,6 +203,10 @@ public class WF_WorkOpt extends WebContralBase
 		String billInfo = "";
 
 		String ccformId = this.GetRequestVal("CCFormID");
+
+		if(ccformId.equals("undefined") ||ccformId.equals("") || ccformId.equals(null)){
+			ccformId = func.getFrmID();
+		}
 		if (DataType.IsNullOrEmpty(ccformId) == false)
 		{
 			return PrintDoc_FormDoneIt(nd, this.getWorkID(), this.getFID(), ccformId, func);
@@ -220,8 +216,7 @@ public class WF_WorkOpt extends WebContralBase
 		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
 
-		String file = DateUtils.getYear(new Date()) + "_" + WebUser.getFK_Dept() + "_" + func.getNo() + "_"
-				+ getWorkID() + ".doc";
+		String file = DateUtils.getYear(new Date()) + "_" + WebUser.getFK_Dept() + "_" + func.getMyPK() + "_"+ getWorkID() + ".doc";
 		bp.pub.RTFEngine rtf = new bp.pub.RTFEngine();
 
 		String[] paths;
@@ -303,9 +298,9 @@ public class WF_WorkOpt extends WebContralBase
 				if (DBAccess.IsExitsTableCol(trackTable, "WriteDB") == true)
 					isHaveWriteDB = true;
 				if (isHaveWriteDB == true)
-					ps.SQL = "SELECT MyPK,NDFrom,ActionType,FK_Dept,EmpFrom,EmpFromT,RDT,Msg,WriteDB FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
+					ps.SQL = "SELECT MyPK,NDFrom,ActionType,EmpFrom,EmpFromT,RDT,Msg,WriteDB FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 				else
-					ps.SQL = "SELECT MyPK,NDFrom,ActionType,FK_Dept,EmpFrom,EmpFromT,RDT,Msg FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
+					ps.SQL = "SELECT MyPK,NDFrom,ActionType,EmpFrom,EmpFromT,RDT,Msg FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 
 				//ps.SQL = "SELECT * FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 				ps.Add(TrackAttr.ActionType, ActionType.WorkCheck.getValue());
@@ -498,9 +493,9 @@ public class WF_WorkOpt extends WebContralBase
 					if (DBAccess.IsExitsTableCol(trackTable, "WriteDB") == true)
 						isHaveWriteDB = true;
 					if(isHaveWriteDB==true)
-						ps.SQL = "SELECT MyPK,NDFrom,ActionType,FK_Dept,EmpFrom,EmpFromT,RDT,Msg,WriteDB FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
+						ps.SQL = "SELECT MyPK,NDFrom,ActionType,EmpFrom,EmpFromT,RDT,Msg,WriteDB FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 					else
-						ps.SQL = "SELECT MyPK,NDFrom,ActionType,FK_Dept,EmpFrom,EmpFromT,RDT,Msg FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
+						ps.SQL = "SELECT MyPK,NDFrom,ActionType,EmpFrom,EmpFromT,RDT,Msg FROM " + trackTable + " WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 
 					//ps.SQL = "SELECT * FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track WHERE ActionType=" + SystemConfig.getAppCenterDBVarStr() + "ActionType AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID";
 					ps.Add(TrackAttr.ActionType, ActionType.WorkCheck.getValue());
@@ -2232,7 +2227,7 @@ public class WF_WorkOpt extends WebContralBase
 				if (wcDesc.getSigantureEnabel() !=4 && wcDesc.getSigantureEnabel() != 5 )
 					row.setValue("WriteStamp", "");
 				else
-				row.setValue("WriteStamp",DBAccess.GetBigTextFromDB(trackTable, "MyPK", tk.getMyPK(), "FrmDB"));
+				   row.setValue("WriteStamp",DBAccess.GetBigTextFromDB(trackTable, "MyPK", tk.getMyPK(), "FrmDB"));
 				tkDt.Rows.add(row);
 
 

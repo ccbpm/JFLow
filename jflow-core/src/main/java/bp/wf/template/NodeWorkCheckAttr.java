@@ -21,22 +21,12 @@ public class NodeWorkCheckAttr extends EntityNoAttr
 	 是否可以审批
 	*/
 	public static final String FWCSta = "FWCSta";
-	/**
-	 X
-	 */
-	public static final String FWC_X = "FWC_X";
-	/**
-	 Y
-	 */
-	public static final String FWC_Y = "FWC_Y";
+
 	/** 
 	 H
 	*/
 	public static final String FWC_H = "FWC_H";
-	/**
-	 W
-	 */
-	public static final String FWC_W = "FWC_W";
+
 	/** 
 	 应用类型
 	*/

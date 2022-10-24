@@ -1,5 +1,6 @@
 package bp.port;
 
+import bp.da.DataType;
 import bp.en.*;
 import bp.sys.*;
 import bp.difference.*;
@@ -87,7 +88,7 @@ public class StationType extends EntityNoName
 
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", false, false, 0, 50, 250);
+			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
 			map.AddHidden(StationAttr.OrgNo, "=", bp.web.WebUser.getOrgNo()); //加隐藏条件.
 		}
 
@@ -106,6 +107,8 @@ public class StationType extends EntityNoName
 	}
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
+		if(DataType.IsNullOrEmpty(this.getName())==true)
+			throw new RuntimeException("请输入岗位类型名称");
 		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			this.setOrgNo(bp.web.WebUser.getOrgNo());

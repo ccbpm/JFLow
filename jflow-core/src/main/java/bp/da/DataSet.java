@@ -317,7 +317,8 @@ public class DataSet {
 		String line = null;
 		StringBuffer strBuffer = new StringBuffer();
 		int pathType =0;
-		if(path.indexOf("DataUser/")!=-1 || path.indexOf("WF/")!=-1)
+		if((path.indexOf("DataUser/")!=-1 &&path.indexOf("DataUser/Siganture/")==-1 && path.indexOf("DataUser/UploadFile/")==-1 &&
+		 path.indexOf("DataUser/FlowDesc/")==-1 && path.indexOf("DataUser/Temp/")==-1 )|| path.indexOf("WF/")!=-1)
 			pathType =1;
 		try {
 			String encoding = "UTF-8"; // 字符编码

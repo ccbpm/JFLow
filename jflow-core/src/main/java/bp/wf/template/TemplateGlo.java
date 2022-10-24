@@ -4,20 +4,16 @@ import bp.da.*;
 import bp.sys.*;
 import bp.tools.DateUtils;
 import bp.web.*;
-import bp.port.*;
 import bp.wf.*;
 import bp.en.*;
 import bp.wf.Glo;
-import bp.wf.template.*;
 import bp.difference.*;
 import bp.wf.template.sflow.*;
 import bp.wf.template.ccen.*;
 import bp.wf.template.frm.*;
-import bp.*;
-import bp.wf.*;
+
 import java.io.*;
 import java.nio.file.*;
-import java.time.*;
 import java.util.Date;
 
 /** 
@@ -174,11 +170,25 @@ public class TemplateGlo
 			GroupField gf = new GroupField();
 			for (DataColumn dc : mydtGF.Columns)
 			{
-				String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+				String val = dr.getValue(dc.ColumnName)!=null? dr.getValue(dc.ColumnName).toString(): null;
+				if (val == null)
+					continue;
+				switch (dc.ColumnName.toLowerCase())
+				{
+					case "enname":
+					case "keyofen":
+					case "ctrlid": //升级傻瓜表单的时候,新增加的字段 add by zhoupeng 2016.11.21
+					case "frmid": //升级傻瓜表单的时候,新增加的字段 add by zhoupeng 2016.11.21
+						val = val.replace("ND" + oldFlowID, "ND" + flowID);
+						break;
+					default:
+						break;
+				}
 				gf.SetValByKey(dc.ColumnName, val);
 			}
 			int oldID = Math.toIntExact(gf.getOID());
 			gf.setOID(DBAccess.GenerOID());
+			gf.DirectInsert();
 			dr.setValue("OID", gf.getOID()); //给他一个新的OID.
 
 			// 属性。
@@ -1357,16 +1367,14 @@ public class TemplateGlo
 					}
 					break;
 				case "Sys_GroupField":
-					for (DataRow dr : dt.Rows)
+					/*for (DataRow dr : dt.Rows)
 					{
 						GroupField gf = new GroupField();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.getValue(dc.ColumnName)!=null? dr.getValue(dc.ColumnName).toString(): null;
 							if (val == null)
-							{
 								continue;
-							}
 							switch (dc.ColumnName.toLowerCase())
 							{
 								case "enname":
@@ -1380,8 +1388,10 @@ public class TemplateGlo
 							}
 							gf.SetValByKey(dc.ColumnName, val);
 						}
+						if(gf.getCtrlID().contains("_AthMDtl")==true)
+							continue;
 						gf.InsertAsOID(gf.getOID());
-					}
+					}*/
 					break;
 				case "WF_NodeCC":
 					for (DataRow dr : dt.Rows)
@@ -1749,7 +1759,8 @@ public class TemplateGlo
 	*/
 	public static boolean CheckPower(String flowNo)
 	{
-		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.GroupInc)
+        return true;
+		/**if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.GroupInc)
 		{
 			return true;
 		}
@@ -1773,7 +1784,7 @@ public class TemplateGlo
 			throw new RuntimeException("err@您没有权限对该流程修改.");
 		}
 
-		return true;
+		return true;**/
 	}
 
 	/** 

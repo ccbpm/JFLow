@@ -1093,8 +1093,22 @@ public class WorkNode
 			}
 
 			wl.setFK_EmpText(emp.getName());
-			wl.setFK_Dept(emp.getFK_Dept());
-			wl.setFK_DeptT(emp.getFK_DeptText());
+			if (dt.Rows.get(0).table.Columns.contains("FK_Dept"))
+			{
+				wl.setFK_Dept(dt.Rows.get(0).getValue(1).toString());
+				Dept dept = new Dept(wl.getFK_Dept());
+				wl.setFK_DeptT(dept.getName());
+				if (dept.RetrieveFromDBSources() == 0)
+				{
+					wl.setFK_Dept(emp.getFK_Dept());
+					wl.setFK_DeptT(emp.getFK_DeptText());
+				}
+			}
+			else
+			{
+				wl.setFK_Dept(emp.getFK_Dept());
+				wl.setFK_DeptT(emp.getFK_DeptText());
+			}
 			wl.setWhoExeIt(town.getHisNode().getWhoExeIt()); //设置谁执行它.
 
 			//应完成日期.
@@ -1301,8 +1315,22 @@ public class WorkNode
 
 
 				wl.setFK_EmpText(emp.getName());
-				wl.setFK_Dept(emp.getFK_Dept());
-				wl.setFK_DeptT(emp.getFK_DeptText());
+				if (dt.Rows.get(0).table.Columns.contains("FK_Dept"))
+				{
+					wl.setFK_Dept(dt.Rows.get(0).getValue(1).toString());
+					Dept dept = new Dept(wl.getFK_Dept());
+					wl.setFK_DeptT(dept.getName());
+					if (dept.RetrieveFromDBSources() == 0)
+					{
+						wl.setFK_Dept(emp.getFK_Dept());
+						wl.setFK_DeptT(emp.getFK_DeptText());
+					}
+				}
+				else
+				{
+					wl.setFK_Dept(emp.getFK_Dept());
+					wl.setFK_DeptT(emp.getFK_DeptText());
+				}
 				wl.setSender(WebUser.getNo() + "," + WebUser.getName());
 				//wl.WarningHour = town.HisNode.WarningHour;
 				if (town.getHisNode().getHisCHWay() == CHWay.None)
@@ -2399,11 +2427,7 @@ public class WorkNode
 		{
 			for (Object key : this.SendHTOfTemp.keySet())
 			{
-				if (rptGe.getRow().containsKey(key) == true)
-				{
-					this.rptGe.getRow().put((String) key, this.SendHTOfTemp.get(key) instanceof String ? (String)this.SendHTOfTemp.get(key) : null);
-				}
-				else
+				if (rptGe.getRow().containsKey(key) == false)
 				{
 					this.rptGe.getRow().put((String) key, this.SendHTOfTemp.get(key) instanceof String ? (String)this.SendHTOfTemp.get(key) : null);
 				}
@@ -2895,14 +2919,14 @@ public class WorkNode
 		}
 
 
-			///#region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
-
+		///#region 处理审核问题,更新审核组件插入的审核意见中的 到节点，到人员。
+		Paras ps = new Paras();
 		try
 		{
-			Paras ps = new Paras();
+
 			ps.SQL = "UPDATE ND" + Integer.parseInt(toND.getFK_Flow()) + "Track SET NDTo=" + dbStr + "NDTo,NDToT=" + dbStr + "NDToT,EmpTo=" + dbStr + "EmpTo,EmpToT=" + dbStr + "EmpToT WHERE NDFrom=" + dbStr + "NDFrom AND EmpFrom=" + dbStr + "EmpFrom AND WorkID=" + dbStr + "WorkID AND ActionType=" + ActionType.WorkCheck.getValue();
-			ps.Add(TrackAttr.NDTo, toND.getNodeID());
-			ps.Add(TrackAttr.NDToT, toND.getName(), false);
+			ps.Add(TrackAttr.NDTo, this.getHisNode().getNodeID());
+			ps.Add(TrackAttr.NDToT, this.getHisNode().getName(), false);
 			ps.Add(TrackAttr.EmpTo, this.HisRememberMe.getEmpsExt(), false);
 			ps.Add(TrackAttr.EmpToT, this.HisRememberMe.getEmpsExt(), false);
 			ps.Add(TrackAttr.NDFrom, this.getHisNode().getNodeID());
@@ -2929,17 +2953,6 @@ public class WorkNode
 				DBAccess.RunSQL(updateLengthSql);
 				updateLengthSql = String.format("  alter table %1$s alter column %2$s varchar(2000) ", "ND" + Integer.parseInt(toND.getFK_Flow()) + "Track", "EmpToT");
 				DBAccess.RunSQL(updateLengthSql);
-
-
-				Paras ps = new Paras();
-				ps.SQL = "UPDATE ND" + Integer.parseInt(toND.getFK_Flow()) + "Track SET NDTo=" + dbStr + "NDTo,NDToT=" + dbStr + "NDToT,EmpTo=" + dbStr + "EmpTo,EmpToT=" + dbStr + "EmpToT WHERE NDFrom=" + dbStr + "NDFrom AND EmpFrom=" + dbStr + "EmpFrom AND WorkID=" + dbStr + "WorkID AND ActionType=" + ActionType.WorkCheck.getValue();
-				ps.Add(TrackAttr.NDTo, toND.getNodeID());
-				ps.Add(TrackAttr.NDToT, toND.getName(), false);
-				ps.Add(TrackAttr.EmpTo, this.HisRememberMe.getEmpsExt(), false);
-				ps.Add(TrackAttr.EmpToT, this.HisRememberMe.getEmpsExt(), false);
-				ps.Add(TrackAttr.NDFrom, this.getHisNode().getNodeID());
-				ps.Add(TrackAttr.EmpFrom, WebUser.getNo(), false);
-				ps.Add(TrackAttr.WorkID, this.getWorkID());
 				DBAccess.RunSQL(ps);
 
 
@@ -4167,14 +4180,15 @@ public class WorkNode
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getHisWork().getFID());
 		//记录子线程到达合流节点数
 		int count = gwf.GetParaInt("ThreadCount", 0);
-		gwf.SetPara("ThreadCount", count + 1);
+		count = count+1;
+		gwf.SetPara("ThreadCount", count);
 
 		gwf.Update();
 
 
 		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount", 0));
 
-		BigDecimal passRate = numPassed.divide(numAll.multiply(BigDecimal.valueOf(100)));
+		BigDecimal passRate = numPassed.divide(numAll,BigDecimal.ROUND_CEILING).multiply(BigDecimal.valueOf(100));
 		if (toNode.getPassRate().compareTo(passRate) <= 0)
 		{
 			/* 这时已经通过,可以让主线程看到待办. */

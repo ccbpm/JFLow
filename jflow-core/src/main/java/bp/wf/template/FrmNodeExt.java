@@ -299,7 +299,7 @@ public class FrmNodeExt extends EntityMyPK
 
 	public final String DoBatchSetting() throws Exception {
 		//return "../../Admin/Sln/BindFrms.htm?FK_Node=" + this.FK_Node + "&FK_Flow=" + this.FK_Flow;
-		return "../../Admin/AttrNode/FrmSln/BatchEditSln.htm?NodeID=" + this.getFK_Node();
+		return "../../Admin/AttrNode/FrmSln/BatchEditSln.htm?NodeID=" + this.getFK_Node() +"&FrmID="+ this.getFKFrm()+"&MyPK="+this.getMyPK();
 
 	}
 	/** 

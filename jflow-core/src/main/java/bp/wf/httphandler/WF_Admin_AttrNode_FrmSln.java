@@ -134,7 +134,8 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		SysEnums myses = new SysEnums("SigantureEnabel");
 		ds.Tables.add(myses.ToDataTableField("SigantureEnabel"));
 
-		String sql = Glo.getSQLOfCheckField().replace("@FK_Frm", this.getFrmID());
+		String sql = Glo.getSQLOfCheckField();
+		sql = sql.replace("@FK_Frm", this.getFrmID());
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "CheckFields";
 		ds.Tables.add(dt);
@@ -152,7 +153,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		//单机模式下
 		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
-			sql += "SELECT  b.NAME AS SortName, a.No, A.Name,";
+			sql += "SELECT  b.NAME AS SortName, a.no AS \"No\", A.name AS \"Name\",";
 			sql += "A.PTable,";
 			sql += "A.OrgNo ";
 			sql += "FROM ";
@@ -172,7 +173,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		// 云服务器环境下
 		if (Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			sql += "SELECT  b.NAME AS SortName, a.No, A.Name, ";
+			sql += "SELECT  b.NAME AS SortName, a.no AS \"No\", A.name AS \"Name\", ";
 			sql += "A.PTable, ";
 			sql += "A.OrgNo ";
 			sql += "FROM ";
@@ -191,7 +192,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		//集团模式下
 		if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 		{
-			sql += " SELECT  b.NAME AS SortName, a.No, A.Name,";
+			sql += " SELECT  b.NAME AS SortName, a.no AS \"No\", A.name AS \"Name\",";
 			sql += "A.PTable,";
 			sql += "A.OrgNo, '" + WebUser.getOrgName() + "' as OrgName ";
 			sql += "FROM ";
@@ -209,7 +210,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 
 			sql += " UNION  ";
 
-			sql += " SELECT  '- 共享 -' AS SortName, A.No, A.Name, ";
+			sql += " SELECT  '- 共享 -' AS SortName, a.no AS \"No\", A.name AS \"Name\", ";
 			sql += " A.PTable, A.OrgNo, '其他组织' as OrgName ";
 			sql += " FROM ";
 			sql += " Sys_MapData A,  WF_FrmOrg B, Port_Org C ";

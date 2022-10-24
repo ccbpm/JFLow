@@ -804,8 +804,11 @@ public class WF_Comm_Sys extends WebContralBase
 			try {
 				CommonFileUtils.upload(request, "edit", xmlFile);
 			} catch (Exception e) {
-				e.printStackTrace();
-				return "err@执行失败";
+				try{
+					CommonFileUtils.upload(request, "Files", xmlFile);
+				}catch(Exception e1){
+					return "err@执行失败";
+				}
 			}
 		}
 		Hashtable ht = new Hashtable();

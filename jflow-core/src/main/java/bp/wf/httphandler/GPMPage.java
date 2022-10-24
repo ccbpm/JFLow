@@ -110,29 +110,29 @@ public class GPMPage extends WebContralBase
 	public final String Organization_Init() throws Exception {
 
 		bp.port.Depts depts = new bp.port.Depts();
-		String parentNo = this.GetRequestVal("ParentNo");
 		QueryObject qo = new QueryObject(depts);
-		if (DataType.IsNullOrEmpty(parentNo) == false)
-		{
-			if (parentNo.equals("0") == true)
-			{
-				qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
-				qo.addOr();
-				qo.AddWhereInSQL(bp.port.DeptAttr.ParentNo, "SELECT No From Port_Dept WHERE ParentNo='0'");
-			}
-			else
-			{
-				qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
-				//qo.addOr();
-				//qo.AddWhere(bp.port.DeptAttr.No, parentNo);
-			}
-
+		if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.Single){
+			qo.AddWhere(bp.port.DeptAttr.ParentNo, 0);
+			qo.addOr();
+			qo.AddWhereInSQL(bp.port.DeptAttr.ParentNo, "SELECT No From Port_Dept WHERE ParentNo='0'");
 		}
+		if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.GroupInc || SystemConfig.getCCBPMRunModel()==CCBPMRunModel.SAAS){
+			qo.AddWhere(bp.port.DeptAttr.No, WebUser.getOrgNo());
+		}
+
 		qo.addOrderBy(bp.port.DeptAttr.Idx);
 		qo.DoQuery();
-
 		return depts.ToJson("dt");
+	}
+	public final String Organization_GetDeptsByParentNo() throws Exception {
 
+		bp.port.Depts depts = new bp.port.Depts();
+		String parentNo = GetRequestVal("ParentNo");
+		QueryObject qo = new QueryObject(depts);
+		qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
+		qo.addOrderBy(bp.port.DeptAttr.Idx);
+		qo.DoQuery();
+		return depts.ToJson("dt");
 	}
 	/** 
 	 获取本部门及人员信息
@@ -476,7 +476,7 @@ public class GPMPage extends WebContralBase
 	*/
 	public final String GPM_Search() throws Exception {
 		String searchKey = this.GetRequestVal("searchKey");
-		String sql = "SELECT e.No AS No,e.Name AS Name,d.Name AS deptName,e.Email AS Email,e.Tel AS Tel from Port_Dept d,Port_Emp e " + "where d.No=e.FK_Dept AND (e.No LIKE '%" + searchKey + "%' or e.NAME LIKE '%" + searchKey + "%' or d.Name LIKE '%" + searchKey + "%' or e.Tel LIKE '%" + searchKey + "%')";
+		String sql = "SELECT e.no AS \"No\",e.name AS \"Name\", d.No AS FK_Dept,d.Name AS deptName,e.Email AS Email,e.Tel AS Tel from Port_Dept d,Port_Emp e " + "where d.No=e.FK_Dept AND (e.No LIKE '%" + searchKey + "%' or e.NAME LIKE '%" + searchKey + "%' or d.Name LIKE '%" + searchKey + "%' or e.Tel LIKE '%" + searchKey + "%')";
 		if (DataType.IsNullOrEmpty(WebUser.getOrgNo()) == false)
 		{
 			sql += " AND e.OrgNo='" + WebUser.getOrgNo() + "'";

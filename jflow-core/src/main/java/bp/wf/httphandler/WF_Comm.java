@@ -881,6 +881,10 @@ public class WF_Comm extends WebContralBase
 
 		String paras = this.GetRequestVal("paras");
 
+		if(DataType.IsNullOrEmpty(paras)){
+			paras = this.GetRequestVal("Paras");
+		}
+
 		//执行该方法.
 		Object[] myparas = new Object[0];
 
@@ -1936,7 +1940,7 @@ public class WF_Comm extends WebContralBase
 						isFirst = false;
 						/* 第一次进来。 */
 						qo.addLeftBracket();
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 						{
 							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 						}
@@ -1963,7 +1967,7 @@ public class WF_Comm extends WebContralBase
 						qo.addOr();
 					}
 
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 					}
@@ -2041,7 +2045,7 @@ public class WF_Comm extends WebContralBase
 							isFirst = false;
 							/* 第一次进来。 */
 							qo.addLeftBracket();
-							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 							{
 								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 							}
@@ -2056,7 +2060,7 @@ public class WF_Comm extends WebContralBase
 						}
 						qo.addOr();
 
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 						{
 							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 						}
@@ -2551,7 +2555,7 @@ public class WF_Comm extends WebContralBase
 						isFirst = false;
 						/* 第一次进来。 */
 						qo.addLeftBracket();
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 						{
 							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 						}
@@ -2578,7 +2582,7 @@ public class WF_Comm extends WebContralBase
 						qo.addOr();
 					}
 
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
 						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
 					}
@@ -2655,7 +2659,7 @@ public class WF_Comm extends WebContralBase
 							isFirst = false;
 							/* 第一次进来。 */
 							qo.addLeftBracket();
-							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 							{
 								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 							}
@@ -2670,7 +2674,7 @@ public class WF_Comm extends WebContralBase
 						}
 						qo.addOr();
 
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBVarStr().equals("?"))
+						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 						{
 							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
 						}
@@ -3169,6 +3173,29 @@ public class WF_Comm extends WebContralBase
 		if (rm.getHisAttrs() == null || rm.getHisAttrs().isEmpty())
 		{
 			String infos = "";
+			if(pks.length==1){
+				rm.HisEn = en;
+				// 如果是link.
+				if (rm.refMethodType == RefMethodType.LinkModel || rm.refMethodType == RefMethodType.LinkeWinOpen || rm.refMethodType == RefMethodType.RightFrameOpen)
+				{
+					Object tempVar = rm.Do(null);
+					String url = tempVar instanceof String ? (String)tempVar : null;
+					if (DataType.IsNullOrEmpty(url))
+						return "err@应该返回的url.";
+					return "url@" + url;
+				}
+
+				Object obj = rm.Do(null);
+				if (obj == null)
+					return "close@info";
+
+				String result = obj.toString();
+				if (result.indexOf("url@") != -1)
+					return result;
+
+				result = result.replace("@", "\t\n");
+				return "close@" + result;
+			}
 			for (String mypk : pks)
 			{
 				if (DataType.IsNullOrEmpty(mypk) == true)
@@ -3177,7 +3204,7 @@ public class WF_Comm extends WebContralBase
 				}
 
 				en.setPKVal(mypk);
-				en.Retrieve();
+				en.RetrieveFromDBSources();
 				rm.HisEn = en;
 
 				// 如果是link.
@@ -3921,7 +3948,7 @@ public class WF_Comm extends WebContralBase
 			/*批处理的方式.*/
 			en.setPKVal(pk);
 
-			en.Retrieve();
+			en.RetrieveFromDBSources();
 			msg = DoOneEntity(en, this.getIndex());
 			if (msg == null)
 			{
@@ -3943,7 +3970,7 @@ public class WF_Comm extends WebContralBase
 			}
 
 			en.setPKVal(mypk);
-			en.Retrieve();
+			en.RetrieveFromDBSources();
 
 			String s = DoOneEntity(en, this.getIndex());
 			if (s != null)
@@ -4407,31 +4434,23 @@ public class WF_Comm extends WebContralBase
 	public final String WebUser_Init() throws Exception {
 		Hashtable ht = new Hashtable();
 
-		//需要同步.
-		String userNo = bp.web.WebUser.getNo();
-		if (DataType.IsNullOrEmpty(userNo) == true)
+		String token = this.GetRequestVal("Token");
+		if(DataType.IsNullOrEmpty(token)==false &&(token.equals("undefined")==true ||  token.equals("null")==true))
+			token="";
+		if(DataType.IsNullOrEmpty(token) == false)
+			bp.wf.Dev2Interface.Port_LoginByToken(token);
+
+		if (DataType.IsNullOrEmpty(token)==true)
 		{
-			String token = WebUser.getToken();
-			if(DataType.IsNullOrEmpty(token))
-				token = this.GetRequestVal("Token");
-			if (DataType.IsNullOrEmpty(token) == true)
+			String userNo = WebUser.getNo();
+			if (DataType.IsNullOrEmpty(userNo) == true)
 			{
-				ht.put("No", "");
-				ht.put("Name", "");
-				ht.put("FK_Dept", "");
-				ht.put("FK_DeptName", "");
-				ht.put("FK_DeptNameOfFull", "");
-				ht.put("Tel", "");
+				token = WebUser.getToken();
+				if (DataType.IsNullOrEmpty(token) == true)
+					throw new Exception("err@ 登录已过期，请重新登录!");
 
-				ht.put("CustomerNo", SystemConfig.getCustomerNo());
-				ht.put("CustomerName", SystemConfig.getCustomerName());
-				ht.put("IsAdmin", 0);
-				ht.put("OrgNo", "");
-				ht.put("OrgName", "");
-				return Json.ToJson(ht);
+				bp.wf.Dev2Interface.Port_LoginByToken(token);
 			}
-
-			Dev2Interface.Port_LoginByToken(token);
 		}
 
 		ht.put("No", WebUser.getNo());

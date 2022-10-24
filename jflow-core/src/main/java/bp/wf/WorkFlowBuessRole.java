@@ -477,7 +477,7 @@ public class WorkFlowBuessRole
 			String sql = "";
 			int num = 0;
 			String supposeBillNo = billNo; //假设单据号，长度与真实单据号一致
-			ArrayList<Map.Entry<Integer, Integer>> loc = new ArrayList<Map.Entry<Integer, Integer>>(); //流水号位置，流水号位数
+			ArrayList<Map.Entry<Integer, Integer>> loc = new ArrayList<Map.Entry<Integer, Integer>>();   //流水号位置，流水号位数
 			String lsh; //流水号设置码
 			int lshIdx = -1; //流水号设置码所在位置
 			java.util.Map<Integer, Integer>  map = new HashMap<Integer, Integer>();
@@ -500,6 +500,13 @@ public class WorkFlowBuessRole
 					map.put(lshIdx, i);
 				}
 			}
+
+			Iterator<Map.Entry<Integer, Integer>> iterator = map.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry<Integer, Integer> entry = iterator.next();
+				loc.add(entry);
+			}
+
 
 			//数据库中查找符合的单据号集合,NOTE:此处需要注意，在LIKE中带有左广方括号时，要使用一对广播号将其转义
 			sql = "SELECT BillNo FROM " + flowPTable + " WHERE BillNo LIKE '" + supposeBillNo.replace("[", "[[]") + "'" + (flowPTable.toLowerCase().equals("wf_generworkflow") ? (" AND WorkID <> " + workid) : (" AND OID <> " + workid)) + " ORDER BY BillNo DESC";
@@ -569,7 +576,9 @@ public class WorkFlowBuessRole
 				//拼接单据号
 				for (java.util.Map.Entry<Integer, Integer> kv : loc)
 				{
-					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + StringHelper.padLeft(mlsh.get(kv.getKey()).toString(), kv.getValue(), '0') + (kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
+					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) +
+							StringHelper.padLeft(mlsh.get(kv.getKey()).toString(), kv.getValue(), '0') +
+							(kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
 				}
 			}
 
@@ -1046,10 +1055,84 @@ public class WorkFlowBuessRole
 			return dt;
 		}
 
+
+		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormEmpsField)
+		{
+			// 检查接受人员规则,是否符合设计要求.
+			String specEmpFields = toNode.getDeliveryParas();
+			if (DataType.IsNullOrEmpty(specEmpFields))
+			{
+				specEmpFields = "SysSendEmps";
+			}
+
+			if (enParas.getEnMap().getAttrs().contains(specEmpFields) == false)
+			{
+				throw new RuntimeException("@您设置的接受人规则是按照表单指定的字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
+			}
+
+			String stas="";
+			//获取接受人并格式化接受人,
+			String emps = enParas.GetValStringByKey(specEmpFields);
+			emps = emps.replace(" ", "");
+			if (emps.contains(",") && emps.contains(";"))
+			{
+				/*如果包含,; 例如 zhangsan,张三;lisi,李四;*/
+				String[] myemps1 = emps.split("[;]", -1);
+				for (String str : myemps1)
+				{
+					if (DataType.IsNullOrEmpty(str))
+					{
+						continue;
+					}
+
+					String[] ss = str.split("[,]", -1);
+
+					stas+=",'"+ss[0]+"'";
+
+				}
+				if (dt.Rows.size() == 0)
+				{
+					throw new RuntimeException("@输入的接受人员信息错误;[" + emps + "]。");
+				}
+
+			}else {
+
+				emps = emps.replace(";", ",");
+				emps = emps.replace("；", ",");
+				emps = emps.replace("，", ",");
+				emps = emps.replace("、", ",");
+				emps = emps.replace("@", ",");
+
+				if (DataType.IsNullOrEmpty(emps)) {
+					throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人，工作无法向下发送。");
+				}
+
+				// 把它加入接受人员列表中.
+				String[] myemps = emps.split("[,]", -1);
+				for (String s : myemps) {
+					if (DataType.IsNullOrEmpty(s)) {
+						continue;
+					}
+
+					//if (DBAccess.RunSQLReturnValInt("SELECT COUNT(NO) AS NUM FROM Port_Emp WHERE NO='" + s + "' or name='"+s+"'", 0) == 0)
+					//    continue;
+
+
+					stas+=",'"+s+"'";
+
+				}
+			}
+
+			//根据岗位：集合获取信息.
+			stas = stas.substring(1);
+			sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN(" + stas + ") AND FK_Dept='" + WebUser.getFK_Dept() + "'";
+			dt = DBAccess.RunSQLReturnTable(sql);
+
+			if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
+				throw new Exception("err@按照字段岗位找接受人错误，当前部门下没有您选择的岗位人员." );
+			return dt;
+		}
 			///#endregion 按照上一个节点表单指定字段的人员处理。
-
-
-
 
 			///#region 按部门与岗位的交集计算.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)

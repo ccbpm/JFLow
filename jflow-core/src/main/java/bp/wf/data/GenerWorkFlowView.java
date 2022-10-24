@@ -498,10 +498,8 @@ public class GenerWorkFlowView extends Entity
 
 		map.AddSearchAttr(GenerWorkFlowViewAttr.FK_Flow);
 		map.AddSearchAttr(GenerWorkFlowViewAttr.WFSta);
-			//map.AddSearchAttr(GenerWorkFlowViewAttr.FK_Dept);
-		map.AddSearchAttr(GenerWorkFlowViewAttr.FK_Flow, 130);
-		map.AddSearchAttr(GenerWorkFlowViewAttr.WFSta, 130);
-		map.AddSearchAttr(GenerWorkFlowViewAttr.FK_NY, 4000);
+
+
 
 			//把不等于 0 的去掉.
 		map.AddHidden(GenerWorkFlowViewAttr.WFState, "!=", "0");
@@ -619,7 +617,7 @@ public class GenerWorkFlowView extends Entity
 		rm.Title = "强制结束";
 		rm.Warning = "您确定要结束吗？";
 		rm.ClassMethodName = this.toString() + ".DoFlowOver";
-		rm.refMethodType = RefMethodType.Func;
+		rm.getHisAttrs().AddTBString("beizhu", null, "备注", true, false, 0, 100, 300);
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -879,8 +877,8 @@ public class GenerWorkFlowView extends Entity
 		}
 	}
 
-	public String DoFlowOver() throws Exception {
-		bp.wf.Dev2Interface.Flow_DoFlowOver(this.getWorkID(), "强制结束");
+	public String DoFlowOver(String note) throws Exception {
+		bp.wf.Dev2Interface.Flow_DoFlowOver(this.getWorkID(), note,0);
 
 		return "执行成功.";
 	}

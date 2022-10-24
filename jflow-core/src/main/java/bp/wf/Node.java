@@ -2367,6 +2367,10 @@ public class Node extends Entity
 		this.SetValByKey(BtnAttr.HuiQianRole, value.getValue());
 	}
 
+	public final boolean isResetAccepter()
+	{
+		return this.GetValBooleanByKey(NodeAttr.IsResetAccepter);
+	}
 
 	/** 
 	 重写基类方法
@@ -2404,7 +2408,7 @@ public class Node extends Entity
 
 			//为铁路局,会签子流程. 增加
 		map.AddTBInt(NodeAttr.IsSendDraftSubFlow, 0, "是否发送草稿子流程？", false, false);
-
+		map.AddTBInt(NodeAttr.IsResetAccepter, 0, "可逆节点时是否重新计算接收人", false, false);
 
 			//map.AddTBString(NodeAttr.FK_FlowSort, null, "FK_FlowSort", false, true, 0, 4, 10);
 			//map.AddTBString(NodeAttr.FK_FlowSortT, null, "FK_FlowSortT", false, true, 0, 100, 10);

@@ -17,7 +17,7 @@ public class OrgAdminers extends EntitiesMyPK
 	/** 
 	 组织s
 	*/
-	public OrgAdminers() throws Exception {
+	public OrgAdminers()  {
 	}
 	/** 
 	 得到它的 Entity

@@ -1,6 +1,7 @@
 package bp.wf.template;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.wf.*;
 import bp.sys.*;
@@ -70,9 +71,13 @@ public class FlowTabs extends EntitiesMyPK
 		String rptNo = "ND" + Integer.parseInt(flowNo) + "Rpt";
 		GEEntitys ens = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ens);
+		qo.AddWhere(GERptAttr.WFState,">",1);
+		qo.addAnd();
+		qo.addLeftBracket();
 		qo.AddWhere(GERptAttr.FlowEmps, " LIKE ", "%" + bp.web.WebUser.getNo() + "%");
 		qo.addOr();
 		qo.AddWhere(GERptAttr.FlowStarter, bp.web.WebUser.getNo());
+		qo.addRightBracket();
 		qo.addOrderBy("RDT");
 		qo.Top = 100;
 		qo.DoQuery();
@@ -230,26 +235,26 @@ public class FlowTabs extends EntitiesMyPK
 				if (i == 1)
 				{
 					qo.addLeftBracket();
-					if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
-						qo.AddWhere(attr.getKey(), " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
 
 				qo.addOr();
 
-				if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 				{
-					qo.AddWhere(attr.getKey(), " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 			}
 
@@ -289,26 +294,26 @@ public class FlowTabs extends EntitiesMyPK
 				{
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 					{
-						qo.AddWhere(field, " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(field, " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+						qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
 					}
 					qo.getMyParas().Add(field, fieldValue, false);
 					continue;
 				}
 				qo.addAnd();
 
-				if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 				{
-					qo.AddWhere(field, " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(field, " LIKE ", "'%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+					qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
 				}
 				qo.getMyParas().Add(field, fieldValue, false);
 

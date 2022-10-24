@@ -94,8 +94,15 @@ public class Org extends EntityNoName
 	public UAC getHisUAC()  {
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
-			//uac.IsDelete = false;
-			//uac.IsInsert = false;
+			uac.IsDelete = false;
+		/*if (DataType.IsNullOrEmpty(this.getNo()) == true)
+		{
+			uac.IsUpdate = true;
+			uac.IsInsert = true;
+			return uac;
+		}*/
+		uac.IsInsert = false;
+		uac.IsUpdate = true;
 		return uac;
 	}
 	/** 
@@ -149,195 +156,54 @@ public class Org extends EntityNoName
 		rm.Warning = "您确定要取消独立组织吗？系统将要删除该组织以及该组织的管理员，但是不删除部门数据.";
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "在集团下新增组织";
-		rm.ClassMethodName = this.toString() + ".AddOrg";
-		rm.getHisAttrs().AddTBString("no", null, "组织编号", true, false, 0, 100, 100);
-		rm.getHisAttrs().AddTBString("name", null, "组织名称", true, false, 0, 100, 100);
-
-		rm.getHisAttrs().AddTBString("adminer", null, "管理员编号", true, false, 0, 100, 100);
-		rm.getHisAttrs().AddTBString("adminName", null, "管理员名称", true, false, 0, 100, 100);
-
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "把指定的部门设置为组织";
-		rm.ClassMethodName = this.toString() + ".AddOrgByDept";
-		rm.getHisAttrs().AddTBString("adminer", null, "部门编号", true, false, 0, 100, 100);
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "发布菜单权限";
-		rm.ClassMethodName = this.toString() + ".AddClearUserRegedit";
-		rm.refMethodType = RefMethodType.Func;
-		map.AddRefMethod(rm);
+		//管理员.
+		map.AddDtl(new OrgAdminers(), OrgAdminerAttr.OrgNo, null, DtlEditerModel.DtlSearch, "icon-people");
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
-		///#endregion
-	/** 
-	 清除缓存
-	 
-	 @return 
-	*/
-	public final String AddClearUserRegedit() throws Exception {
-		DBAccess.RunSQL("DELETE FROM Sys_UserRegedit WHERE OrgNo='" + WebUser.getOrgNo() + "' AND CfgKey='Menus'");
-		return "执行成功.";
-	}
-	/** 
-	 在集团下新增组织
-	 
-	 param orgNo
-	 param orgName
-	 @return 
-	*/
-	public final String AddOrg(String orgNo, String orgName, String adminerNo, String adminerName)throws Exception
-	{
-
-		Dept dept = new Dept();
-		dept.setNo(orgNo);
-		if (dept.RetrieveFromDBSources() != 0)
-		{
-			return "err@部门编号已经存在.";
-		}
-		//取出来根目录.
-		dept.Retrieve(DeptAttr.ParentNo, "0");
-
-		bp.port.Emp emp = new bp.port.Emp();
-		emp.setNo(adminerNo);
-		if (emp.RetrieveFromDBSources() != 0)
-		{
-			return "err@管理员编号已经存在.";
-		}
-
-		try
-		{
-
-			//增加部门信息.
-			Dept mydept = new Dept();
-			mydept.setParentNo(dept.getNo());
-			mydept.setNo(orgNo);
-			mydept.setName(orgName);
-			mydept.setOrgNo(orgNo);
-			mydept.Insert();
-
-			//增加组织.
-			Org org = new Org();
-			org.Copy(mydept);
-			org.setAdminer(emp.getNo());
-			org.setAdminerName(emp.getName());
-			org.Insert();
-
-
-
-				///#region 创建子部门.
-			mydept.setNo(DBAccess.GenerGUID(0, null, null));
-			mydept.setName("部门1");
-			mydept.setParentNo(orgNo);
-			mydept.Insert();
-
-			mydept.setNo(DBAccess.GenerGUID(0, null, null));
-			mydept.setName("部门2");
-			mydept.setParentNo(orgNo);
-			mydept.Insert();
-
-				///#endregion 创建子部门.
-
-			//增加人员。
-			emp.setName (adminerName);
-			emp.setFK_Dept  (orgNo);
-			emp.setOrgNo( orgNo);
-			emp.setIsPass ("123");
-			emp.Insert();
-
-			//增加管理员.
-			OrgAdminer oa = new OrgAdminer();
-			oa.setFK_Emp(emp.getNo());
-			oa.setOrgNo(org.getNo());
-			oa.setMyPK(oa.getOrgNo() + "_" + emp.getName());
-			oa.Insert();
-
-			//增加流程树.
-			bp.wf.template.FlowSort fs = new bp.wf.template.FlowSort();
-			fs.setNo(org.getNo());
-			fs.setParentNo("100");
-			fs.setName(org.getName());
-			fs.setOrgNo(org.getNo());
-			fs.DirectInsert();
-			EntityTree en = fs.DoCreateSubNode("办公流程");
-			en.SetValByKey("OrgNo", org.getNo());
-			en.Update();
-
-			en = fs.DoCreateSubNode("人力资源流程");
-			en.SetValByKey("OrgNo", org.getNo());
-			en.Update();
-
-			//增加表单树.
-			bp.sys.FrmTree ft = new bp.sys.FrmTree();
-			ft.setNo(org.getNo());
-			ft.setParentNo("100");
-			ft.setName(org.getName());
-			ft.setOrgNo(org.getNo());
-			ft.DirectInsert();
-
-			en = ft.DoCreateSubNode("办公表单");
-			en.SetValByKey("OrgNo", org.getNo());
-			en.Update();
-
-			en = ft.DoCreateSubNode("人力表单");
-			en.SetValByKey("OrgNo", org.getNo());
-			en.Update();
-
-			return "增加成功...";
-		}
-		catch (RuntimeException ex)
-		{
-			//删除数据.
-			dept.Delete("OrgNo", orgNo);
-			emp.Delete("OrgNo", orgNo);
-
-			return ex.getMessage();
-		}
-	}
-	public final String AddOrgByDept(String deptNo) throws Exception {
-		Dept en = new Dept();
-		en.setNo(deptNo);
-		if (en.RetrieveFromDBSources() == 0)
-		{
-			return "err@";
-		}
-
-		return "ok.";
-	}
-
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
 
-		this.SetValByKey("FlowNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_Flow WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
-		this.SetValByKey("FrmNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Sys_MapData WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
+		this.SetValByKey("FlowNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_Flow WHERE OrgNo='" + this.getNo() + "'"));
+		this.SetValByKey("FrmNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Sys_MapData WHERE OrgNo='" + this.getNo() + "' AND No NOT like 'ND%'"));
 
-		this.SetValByKey("Users", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Emp WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
-		this.SetValByKey("Depts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Dept WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
-		this.SetValByKey("GWFS", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + WebUser.getOrgNo() + "' AND WFState!=3"));
-		this.SetValByKey("GWFSOver", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + WebUser.getOrgNo() + "' AND WFState=3"));
-
-		//map.AddTBInt("FlowNums", 0, "流程数", true, true);
-		//map.AddTBInt("FrmNums", 0, "表单数", true, true);
-		//map.AddTBInt("Users", 0, "用户数", true, true);
-		//map.AddTBInt("Depts", 0, "部门数", true, true);
-		//map.AddTBInt("GWFS", 0, "运行中流程", true, true);
-		//map.AddTBInt("GWFSOver", 0, "结束的流程", true, true);
-
+		this.SetValByKey("Users", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Emp WHERE OrgNo='" + this.getNo() + "'"));
+		this.SetValByKey("Depts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Dept WHERE OrgNo='" + this.getNo()+ "'"));
+		this.SetValByKey("GWFS", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + this.getNo() + "' AND WFState NOT IN(0,3,7)"));
+		this.SetValByKey("GWFSOver", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + this.getNo()+ "' AND WFState=3"));
 		return super.beforeUpdateInsertAction();
 	}
 
+	protected  boolean beforeInsert() throws Exception {
+		//判断当前的组织是否存在
+		Org org = new Org();
+		org.setNo(this.getNo());
+		if (org.RetrieveFromDBSources() != 0)
+			throw new Exception("err@组织编号:" + this.getNo() + "已存在,请重新输入组织编号");
+		if (DataType.IsNullOrEmpty(this.getAdminer()) == false) {
+			bp.port.Emp emp = new bp.port.Emp();
+			emp.setNo(this.getAdminer());
+			if (emp.RetrieveFromDBSources() != 0 && DataType.IsNullOrEmpty(emp.getOrgNo()) == false
+					&& emp.getOrgNo().equals(this.getNo()) == false)
+				throw new Exception("err@该人员:" + this.getAdminer() + "已经在其他组织中存在");
+			//二级管理员不存在。插入一条信息
+			if (emp.RetrieveFromDBSources() == 0) {
+				//增加人员。
+				emp.setName(this.getAdminerName());
+				emp.setFK_Dept(this.getNo());
+				emp.setOrgNo(this.getNo());
+				emp.setIsPass("123");
+				emp.Insert();
+			}
+		}
+
+		return true;
+	}
 	public final String DeleteOrg() throws Exception {
 		if (WebUser.getNo().equals("admin") == false)
-		{
 			return "err@只有admin帐号才可以执行。";
-		}
 
 		//流程类别.
 		bp.wf.template.FlowSorts fss = new bp.wf.template.FlowSorts();
@@ -346,11 +212,8 @@ public class Org extends EntityNoName
 		{
 			Flows fls = new Flows();
 			fls.Retrieve(bp.wf.template.FlowAttr.FK_FlowSort, en.getNo(), null);
-
 			if (fls.size() != 0)
-			{
 				return "err@在流程目录：" + en.getName() + "有[" + fls.size() + "]个流程没有删除。";
-			}
 		}
 
 		//表单类别.
@@ -360,11 +223,8 @@ public class Org extends EntityNoName
 		{
 			bp.sys.MapDatas mds = new bp.sys.MapDatas();
 			mds.Retrieve(bp.sys.MapDataAttr.FK_FormTree, en.getNo(), null);
-
 			if (!mds.isEmpty())
-			{
 				return "err@在表单目录：" + en.getName() + "有[" + mds.size() + "]个表单没有删除。";
-			}
 		}
 
 		OrgAdminers oas = new OrgAdminers();
@@ -375,26 +235,30 @@ public class Org extends EntityNoName
 
 		fss.Delete(OrgAdminerAttr.OrgNo, this.getNo()); //删除流程目录.
 		ftTrees.Delete(bp.sys.FrmTreeAttr.OrgNo, this.getNo()); //删除表单目录。
-
+		//更新到admin的组织下.
+		String sqls = "UPDATE Port_Emp SET OrgNo='" + bp.web.WebUser.getOrgNo() + "' WHERE  OrgNo='" + this.getNo() + "'";
+		sqls += "@UPDATE Port_Dept SET OrgNo='" + bp.web.WebUser.getOrgNo() + "' WHERE  OrgNo='" + this.getNo() + "'";
+		sqls += "@UPDATE Port_DeptEmp SET OrgNo='" + bp.web.WebUser.getOrgNo() + "' WHERE  OrgNo='" + this.getNo() + "'";
+		sqls += "@UPDATE Port_DeptEmpStation SET OrgNo='" + bp.web.WebUser.getOrgNo() + "' WHERE  OrgNo='" + this.getNo() + "'";
+		DBAccess.RunSQLs(sqls);
 		this.Delete();
 		return "info@成功注销组织,请关闭窗口刷新页面.";
 	}
-
+	/// <summary>
+	/// 更改管理员（admin才能操作）
+	/// </summary>
+	/// <param name="adminer"></param>
+	/// <returns></returns>
 	public final String ChangeAdminer(String adminer) throws Exception {
 		if (WebUser.getNo().equals("admin") == false)
-		{
 			return "err@非admin管理员，您无法执行该操作.";
-		}
 
 		bp.port.Emp emp = new bp.port.Emp();
 		emp.setUserID (adminer);
 		if (emp.RetrieveFromDBSources() == 0)
-		{
 			return "err@管理员编号错误.";
-		}
 
 		String old = this.getAdminer();
-
 		this.setAdminer(emp.getUserID());
 		this.setAdminerName(emp.getName());
 		this.Update();
@@ -412,206 +276,15 @@ public class Org extends EntityNoName
 		//检查超级管理员是否存在？
 		return "修改成功,请关闭当前记录重新打开.";
 	}
-
+	/// <summary>
+	/// 调用admin2Group的检查.
+	/// 1. 是否出现错误.
+	/// 1. 数据是否完整.
+	/// </summary>
+	/// <returns></returns>
 	public final String DoCheck() throws Exception {
-		String err = "";
-
-
-			///#region 组织结构信息检查.
-		//检查orgNo的部门是否存在？
-		Dept dept = new Dept();
-		dept.setNo(this.getNo());
-		if (dept.RetrieveFromDBSources() == 0)
-		{
-			return "err@部门组织结构树上缺少[" + this.getNo() + "]的部门.";
-		}
-
-		if (this.getName().equals(dept.getName()) == false)
-		{
-			this.setName(dept.getName());
-			err += "info@部门名称与组织名称已经同步.";
-		}
-
-		Dept deptParent = new Dept();
-		deptParent.setNo(this.getParentNo());
-		if (deptParent.RetrieveFromDBSources() == 0)
-		{
-			return "err@部门组织结构树上父级缺少[" + this.getNo() + "]的部门.";
-		}
-
-		if (this.getParentName().equals(deptParent.getName()) == false)
-		{
-			this.setParentName(deptParent.getName());
-			err += "info@父级部门名称与组织名称已经同步.";
-		}
-		this.Update(); //执行更新.
-
-		//设置子集部门，的OrgNo.
-		if (DBAccess.IsView("Port_Dept") == false)
-		{
-			SetSubDeptOrgNo(this.getNo());
-		}
-
-
-			///#endregion 组织结构信息检查.
-
-
-			///#region 检查流程树.
-		bp.wf.template.FlowSort fs = new bp.wf.template.FlowSort();
-		fs.setNo(this.getNo());
-		if (fs.RetrieveFromDBSources() == 1)
-		{
-			fs.setOrgNo(this.getNo());
-			fs.setName("流程树");
-			fs.DirectUpdate();
-		}
-		else
-		{
-			//获得根目录节点.
-			bp.wf.template.FlowSort root = new bp.wf.template.FlowSort();
-			int i = root.Retrieve(bp.wf.template.FlowSortAttr.ParentNo, "0");
-
-			//设置流程树权限.
-			fs.setNo(this.getNo());
-			fs.setName(this.getName());
-			fs.setName("流程树");
-			fs.setParentNo(root.getNo());
-			fs.setOrgNo(this.getNo());
-			fs.setIdx(999);
-			fs.DirectInsert();
-
-			//创建下一级目录.
-			bp.en.EntityTree tempVar = fs.DoCreateSubNode(null);
-			bp.wf.template.FlowSort en = tempVar instanceof bp.wf.template.FlowSort ? (bp.wf.template.FlowSort)tempVar : null;
-
-			en.setName("发文流程");
-			en.setOrgNo(this.getNo());
-			en.setDomain("FaWen");
-			en.DirectUpdate();
-
-			bp.en.EntityTree tempVar2 = fs.DoCreateSubNode(null);
-			en = tempVar2 instanceof bp.wf.template.FlowSort ? (bp.wf.template.FlowSort)tempVar2 : null;
-			en.setName("收文流程");
-			en.setOrgNo(this.getNo());
-			en.setDomain("ShouWen");
-			en.DirectUpdate();
-
-			bp.en.EntityTree tempVar3 = fs.DoCreateSubNode(null);
-			en = tempVar3 instanceof bp.wf.template.FlowSort ? (bp.wf.template.FlowSort)tempVar3 : null;
-			en.setName("业务流程");
-			en.setOrgNo(this.getNo());
-			en.setDomain("Work");
-			en.DirectUpdate();
-			bp.en.EntityTree tempVar4 = fs.DoCreateSubNode(null);
-			en = tempVar4 instanceof bp.wf.template.FlowSort ? (bp.wf.template.FlowSort)tempVar4 : null;
-			en.setName("会议流程");
-			en.setOrgNo(this.getNo());
-			en.setDomain("Meet");
-			en.DirectUpdate();
-		}
-
-			///#endregion 检查流程树.
-
-
-			///#region 检查表单树.
-		//表单根目录.
-		bp.sys.FrmTree ftRoot = new bp.sys.FrmTree();
-		ftRoot.Retrieve(bp.wf.template.FlowSortAttr.ParentNo, "0");
-
-		//设置表单树权限.
-		bp.sys.FrmTree ft = new bp.sys.FrmTree();
-		ft.setNo(this.getNo());
-		if (ft.RetrieveFromDBSources() == 0)
-		{
-			ft.setName(this.getName());
-			ft.setName("表单树");
-			ft.setParentNo(ftRoot.getNo());
-			ft.setOrgNo(this.getNo());
-			ft.setIdx(999);
-			ft.DirectInsert();
-
-			//创建两个目录.
-			Object tempVar5 = ft.DoCreateSubNode(null);
-			bp.sys.FrmTree mySubFT = tempVar5 instanceof bp.sys.FrmTree ? (bp.sys.FrmTree)tempVar5 : null;
-			mySubFT.setName("表单目录1");
-			mySubFT.setOrgNo(this.getNo());
-			mySubFT.DirectUpdate();
-
-
-			Object tempVar6 = ft.DoCreateSubNode(null);
-			mySubFT = tempVar6 instanceof bp.sys.FrmTree ? (bp.sys.FrmTree)tempVar6 : null;
-			mySubFT.setName("表单目录2");
-			mySubFT.setOrgNo(this.getNo());
-			mySubFT.DirectUpdate();
-
-		}
-		else
-		{
-			ft.setName(this.getName());
-			ft.setName("表单树"); //必须这个命名，否则找不到。
-			ft.setParentNo(ftRoot.getNo());
-			ft.setOrgNo(this.getNo());
-			ft.setIdx(999);
-			ft.DirectUpdate();
-		}
-
-			///#endregion 检查表单树.
-
-		if (DataType.IsNullOrEmpty(err) == true)
-		{
-			return "系统正确";
-		}
-
-		//检查表单树.
-		return "err@" + err;
+		bp.wf.port.admin2group.Org org = new bp.wf.port.admin2group.Org(this.getNo());
+		return org.DoCheck();
 	}
-	/** 
-	 设置
-	 
-	 param no
-	*/
-	public final void SetSubDeptOrgNo(String no) throws Exception {
-		//同步当前部门与当前部门的子集部门，设置相同的orgNo.
-		Depts subDepts = new Depts();
-		subDepts.Retrieve(DeptAttr.ParentNo, no, null);
-		for (Dept subDept : subDepts.ToJavaList())
-		{
-			//判断当前部门是否是组织？
-			Org org = new Org();
-			org.setNo(subDept.getNo());
-			if (org.RetrieveFromDBSources() == 1)
-			{
-				continue; //说明当前部门是组织.
-			}
-
-			subDept.setOrgNo(this.getNo());
-			subDept.Update();
-
-			//递归调用.
-			SetSubDeptOrgNo(subDept.getNo());
-		}
-	}
-	/** 
-	 检查组织结构信息.
-	 
-	 @return 
-	*/
-	public final String CheckOrgInfo() throws Exception {
-		/*
-		 * 检查内容如下：
-		 * 1. 与org里面的部门是否存在？
-		 */
-
-
-
-		return "";
-	}
-
-
-	//public string SetSubOrg(string userNo)
-	//{
-	//    BP.WF.Port.Admin2Group.Dept dept = new WF.Port.Admin2Group.Dept(this.No);
-	//    return dept.SetSubOrg(userNo);
-	//}
 
 }

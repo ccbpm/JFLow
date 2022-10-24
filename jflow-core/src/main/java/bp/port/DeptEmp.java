@@ -48,16 +48,7 @@ public class DeptEmp extends EntityMyPK
 	{SetValByKey(DeptEmpAttr.OrgNo, value);
 	}
 
-		///#endregion
 
-
-		///#region 扩展属性
-
-
-		///#endregion
-
-
-		///#region 构造函数
 	/**
 	 工作部门人员信息
 	*/
@@ -81,9 +72,7 @@ public class DeptEmp extends EntityMyPK
 	@Override
 	public bp.en.Map getEnMap()  {
 		if (this.get_enMap() != null)
-		{
 			return this.get_enMap();
-		}
 
 		Map map = new Map("Port_DeptEmp", "部门人员信息");
 		map.IndexField = DeptEmpAttr.FK_Dept;
@@ -97,12 +86,9 @@ public class DeptEmp extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-
 		///#endregion
-
-	/** 
+	/**
 	 更新前做的事情
-	 
 	 return
 	*/
 	@Override

@@ -142,6 +142,9 @@ public class Glo
 	public static Object GenerRealType(Attrs attrs, String key, Object val)
 	{
 		Attr attr = attrs.GetAttrByKey(key);
+		return GenerRealType(attr, val);
+	}
+	public static Object GenerRealType(Attr attr,  Object val){
 		switch (attr.getMyDataType())
 		{
 			case DataType.AppString:
@@ -172,7 +175,6 @@ public class Glo
 		}
 		return val;
 	}
-
 
 		///#region 业务单元.
 	private static Hashtable Htable_BuessUnit = null;

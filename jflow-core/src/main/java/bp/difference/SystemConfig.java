@@ -10,6 +10,7 @@ import bp.sys.CCBPMRunModel;
 import bp.sys.OSModel;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.io.IOUtils;
+import org.springframework.boot.system.ApplicationHome;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -146,6 +147,16 @@ public class SystemConfig {
 			return CCBPMRunModel.SAAS;
 
 		return CCBPMRunModel.Single;
+	}
+
+	/// <summary>
+	/// token验证模式
+	/// 0=宽泛模式, 一个账号可以在多个设备登录.
+	/// 1=唯一模式. 一个账号仅仅在一台设备登录，另外的设备就会失效.
+	/// </summary>
+	public static int getTokenModel()
+	{
+		return SystemConfig.GetValByKeyInt("TokenModel",1);
 	}
 	/**
 	 传入的参数，是否需要类型
@@ -341,7 +352,9 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPathOfTemp() {
-		return getPathOfDataUser() + "Temp";
+		if(SystemConfig.getIsJarRun() == false)
+			return getPathOfDataUser() + "Temp/";
+		return getPhysicalPath()+"DataUser/Temp/";
 	}
 
 	public static String getPathOfWorkDir() {
@@ -458,6 +471,16 @@ public class SystemConfig {
 		}
 	}
 
+	public static String getPhysicalPath(){
+		ApplicationHome home = new ApplicationHome(SystemConfig.class);
+		File jarFile = home.getSource();
+		//项目部署的目录
+		if(jarFile != null){
+			String path = jarFile.getParentFile().getPath()+"/";
+			return path;
+		}
+		return "";
+	}
 	public static boolean getIsBSsystem() {
 		return SystemConfig.GetValByKeyBoolen("IsBSsystem", true);
 	}

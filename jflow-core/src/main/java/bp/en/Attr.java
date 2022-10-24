@@ -36,7 +36,10 @@ public class Attr
 		attr.setUIRefKeyText(this.getUIRefKeyText());
 		attr.setUIVisible(this.getUIVisible());
 		attr.setUIIsEnable(!this.getUIIsReadonly());
-
+		//帮助url.
+		attr.SetPara("HelpUrl", this.HelperUrl);
+		attr.setUIRefKeyText(this.getUIRefKeyText());
+		attr.setUIRefKey(this.getUIRefKeyValue());
 
 		switch (this.getMyFieldType())
 		{
@@ -53,7 +56,7 @@ public class Attr
 				attr.setUIRefKeyText("Name");
 				break;
 			default:
-				attr.setUIContralType(UIContralType.TB);
+				attr.setUIContralType(this.getUIContralType());
 				attr.setLGType(FieldTypeS.Normal);
 
 				if (this.getIsSupperText()== 1)
@@ -62,7 +65,7 @@ public class Attr
 				{
 					case DataType.AppBoolean:
 						attr.setUIContralType(UIContralType.CheckBok);
-						attr.setUIIsEnable(this.getUIIsReadonly());
+						//attr.setUIIsEnable(this.getUIIsReadonly());
 						break;
 					case DataType.AppDate:
 							//if (this.Tag == "1")
@@ -730,14 +733,14 @@ public class Attr
 		}
 	}
 	private Entity _HisFKEn = null;
-	public final Entity getHisFKEn()  {
+	public final Entity getHisFKEn() throws Exception {
 	   return this.getHisFKEns().getGetNewEntity();
 	}
 	private Entities _HisFKEns = null;
 	/** 
 	 它关联的ens.这个只有在,这个属性是fk, 时有效。
 	*/
-	public final Entities getHisFKEns()  {
+	public final Entities getHisFKEns() {
 		if (_HisFKEns == null)
 		{
 
@@ -755,6 +758,24 @@ public class Attr
 				{
 					_HisFKEns = new GENoNames(this.getUIBindKey(), this.getDesc()); // ClassFactory.GetEns(this.getUIBindKey());
 				}
+			}else if(this.getMyFieldType() == FieldType.Normal && this.getUIContralType()==UIContralType.DDL && DataType.IsNullOrEmpty(this.getUIBindKey())==false && this.getUIBindKey().toUpperCase().startsWith("SELECT")){
+				String sqlBindKey = bp.tools.PubGlo.DealExp(this.getUIBindKey(), null);
+				DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
+				//转换成GENoNames
+				try{
+					GENoNames noNames = new GENoNames();
+					GENoName noName = null;
+					for(DataRow dr : dt.Rows){
+						noName = new GENoName(this.getField(),this.getDesc());
+						noName.setNo(dr.getValue(0).toString());
+						noName.setName(dr.getValue(1).toString());
+						noNames.add(noName);
+					}
+					_HisFKEns = noNames;
+				}catch(Exception e){
+					return null;
+				}
+
 			}
 			else
 			{

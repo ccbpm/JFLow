@@ -86,7 +86,7 @@ public class WF_Admin_Cond2020 extends WebContralBase
 			}
 			else
 			{
-				str += " 1=1 "; // + item.AttrKey + item.FK_Operator + item.OperatorValue;
+				str += " 1=1 ";
 			}
 		}
 
@@ -103,7 +103,7 @@ public class WF_Admin_Cond2020 extends WebContralBase
 			case KingBaseR3:
 			case KingBaseR6:
 			case DM:
-				sql = " SELECT No FROM Port_Emp WHERE " + str + "  rownum <=1 ";
+				sql = " SELECT No FROM Port_Emp WHERE (" + str + ") AND  rownum <=1 ";
 				break;
 			default:
 				return "err@没有做的数据库类型判断.";

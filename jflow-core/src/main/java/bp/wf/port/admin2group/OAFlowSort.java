@@ -1,6 +1,8 @@
 package bp.wf.port.admin2group;
 
 import bp.en.*;
+import bp.wf.template.FlowSort;
+import bp.wf.template.FlowSorts;
 
 /** 
  组织管理员
@@ -74,5 +76,21 @@ public class OAFlowSort extends EntityMyPK
 		this.setFK_Emp(oa.getFK_Emp());
 
 		return super.beforeInsert();
+	}
+
+	@Override
+	protected void afterInsert() throws Exception {
+		//插入入后更改OrgAdminer中
+		String str = "";
+		bp.wf.template.FlowSorts ens = new FlowSorts();
+		ens.RetrieveInSQL("SELECT FlowSortNo FROM Port_OrgAdminerFlowSort WHERE  FK_Emp='" + this.getFK_Emp() + "' AND OrgNo='" + this.getOrgNo() + "'");
+		for (FlowSort item : ens.ToJavaList())
+		{
+			str += "(" + item.getNo() + ")" + item.getName() + ";";
+		}
+		OrgAdminer adminer = new OrgAdminer(this.GetValStringByKey("RefOrgAdminer"));
+		adminer.SetValByKey("FlowSorts", str);
+		adminer.Update();
+		super.afterInsert();
 	}
 }

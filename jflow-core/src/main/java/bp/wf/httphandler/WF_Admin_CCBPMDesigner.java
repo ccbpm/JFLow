@@ -214,7 +214,16 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					strs += "@" + dir.getToNode();
 				}
 
-				DBAccess.RunSQL("UPDATE WF_Node SET HisToNDs='" + strs + "' WHERE NodeID=" + item.getNodeID());
+				int nodePosType = 0;
+				if (item.isStartNode() == true)
+					nodePosType = 0;
+				else if (DataType.IsNullOrEmpty(strs) == true)
+					nodePosType = 2;
+				else
+					nodePosType = 1;
+
+				DBAccess.RunSQL("UPDATE WF_Node SET HisToNDs='" + strs + "',NodePosType=" + nodePosType + "  WHERE NodeID=" + item.getNodeID());
+				//DBAccess.RunSQL("UPDATE WF_Node SET HisToNDs='" + strs + "' WHERE NodeID=" + item.getNodeID());
 			}
 
 			//获得字符串格式. $101;@102@103

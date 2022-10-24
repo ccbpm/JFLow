@@ -1282,10 +1282,6 @@ public class NodeExt extends Entity
 		}
 
 
-		if (nd.getHisRunModel() == RunModel.HL || nd.getHisRunModel() == RunModel.FHL)
-		{
-			/*如果是合流点*/
-		}
 
 		//如果启动了会签,并且是抢办模式,强制设置为队列模式.或者组长模式.
 		if (this.getHuiQianRole() != HuiQianRole.None)
@@ -1410,7 +1406,10 @@ public class NodeExt extends Entity
 		{
 			this.SetValByKey(BtnAttr.ThreadEnable, true);
 		}
-
+		if(nd.getHisRunModel() == RunModel.SubThread && this.GetValBooleanByKey("ThreadEnable")==true){
+			this.SetValByKey(BtnAttr.ThreadEnable, false);
+			//throw new Exception("err@子线程不能启用子线程按钮，子线程操作只针对分流,合流,分合流节点有效") ;
+		}
 		//清除所有的缓存.
 		CashEntity.getDCash().clear();
 

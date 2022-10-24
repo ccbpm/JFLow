@@ -1,6 +1,7 @@
 package bp.sys;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 
 /** 
@@ -298,10 +299,10 @@ public class FrmAttachment extends EntityMyPK
 	public final String getSaveTo()  {
 		if (this.getAthSaveWay() == bp.sys.AthSaveWay.IISServer)
 		{
-				//string s = this.GetValStringByKey(FrmAttachmentAttr.SaveTo);
-				//if (s == "" || s == null)
-			return bp.difference.SystemConfig.getPathOfDataUser() + "/UploadFile/" + this.getFK_MapData() + "/";
-				// return s;
+			if(SystemConfig.getIsJarRun() == false)
+				return bp.difference.SystemConfig.getPathOfDataUser() + "/UploadFile/" + this.getFK_MapData() + "/";
+			else
+				return bp.difference.SystemConfig.getPhysicalPath() + "DataUser/UploadFile/" + this.getFK_MapData() + "/";
 		}
 
 		if (this.getAthSaveWay() == bp.sys.AthSaveWay.FTPServer)

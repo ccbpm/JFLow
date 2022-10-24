@@ -1286,7 +1286,7 @@ public class FlowExt extends EntityNoName
 			try
 			{
 				Work wk = nd.getHisWork();
-				DBAccess.RunSQL("DELETE FROM" + wk.getEnMap().getPhysicsTable() + " Where OID=" + workid);
+				DBAccess.RunSQL("DELETE FROM " + wk.getEnMap().getPhysicsTable() + " Where OID=" + workid);
 			}
 			catch (java.lang.Exception e2)
 			{
@@ -2350,6 +2350,7 @@ public class FlowExt extends EntityNoName
 	*/
 	public final String DoSetFWCModel() throws Exception {
 		Nodes nds = new Nodes(this.getNo());
+		GroupField gf = new GroupField();
 		for (Node nd : nds.ToJavaList())
 		{
 			if (nd.isStartNode())
@@ -2373,6 +2374,17 @@ public class FlowExt extends EntityNoName
 				fnd.SetValByKey(NodeAttr.FWCSta, nd.getFrmWorkCheckSta().getValue());
 
 				fnd.Update();
+
+				if (gf.IsExit(GroupFieldAttr.FrmID, "ND"+nd.getNodeID(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
+				{
+					gf = new GroupField();
+					gf.setFrmID("ND" + nd.getNodeID());
+					gf.setCtrlType(GroupCtrlType.FWC);
+					gf.setLab("审核组件");
+					gf.setIdx(0);
+					gf.Insert(); //插入.
+				}
+
 				continue;
 			}
 
@@ -2384,6 +2396,15 @@ public class FlowExt extends EntityNoName
 			nd.setNodeFrmID("ND" + Integer.parseInt(this.getNo()) + "02");
 			nd.setHisFormType(NodeFormType.FoolForm);
 			nd.Update();
+			if (gf.IsExit(GroupFieldAttr.FrmID, "ND"+nd.getNodeID(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
+			{
+				gf = new GroupField();
+				gf.setFrmID("ND" + nd.getNodeID());
+				gf.setCtrlType(GroupCtrlType.FWC);
+				gf.setLab("审核组件");
+				gf.setIdx(0);
+				gf.Insert(); //插入.
+			}
 		}
 
 		return "设置成功...";

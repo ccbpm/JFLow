@@ -2026,7 +2026,6 @@ public class Glo {
 			//sealData.UpdateColumn();
 			///#endregion  更新CA签名.
 
-
 			///#region 其他.
 			//升级表单树. 2015.10.05
 			SysFormTree sft = new SysFormTree();
@@ -3668,7 +3667,7 @@ public class Glo {
 		str += GERptAttr.WFSta + ",";
 		str += GERptAttr.WFState + ",";
 		str += "Rec,";
-		str += "CDT,";
+		str += "CDT,RDT,WFStateText";
 		return str;
 		// return typeof(GERptAttr).GetFields().Select(o => o.getName()).ToList();
 	}

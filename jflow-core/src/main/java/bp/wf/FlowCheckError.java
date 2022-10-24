@@ -325,6 +325,8 @@ public class FlowCheckError
 
 					break;
 				case ByPreviousNodeFormEmpsField:
+				case ByPreviousNodeFormStations:
+				case ByPreviousNodeFormDepts:
 
 					//去rpt表中，查询是否有这个字段
 					String str = String.valueOf(nd.getNodeID()).substring(0, String.valueOf(nd.getNodeID()).length() - 2);
@@ -1110,7 +1112,7 @@ public class FlowCheckError
 			attr.SetValByKey(MapAttrAttr.UIIsEnable, false);
 			attr.SetValByKey(MapAttrAttr.UIIsLine, false);
 			attr.SetValByKey(MapAttrAttr.MinLen, 0);
-			attr.SetValByKey(MapAttrAttr.MaxLen, 20);
+			attr.SetValByKey(MapAttrAttr.MaxLen, 30);
 			attr.SetValByKey(MapAttrAttr.Idx, -100);
 
 			attr.Insert();

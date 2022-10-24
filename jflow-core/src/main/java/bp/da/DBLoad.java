@@ -133,6 +133,64 @@ public class DBLoad
 
 	}
 
+	private static String getValue(HSSFCell xssfCell)
+	{
+		if (xssfCell.getCellType() == xssfCell.CELL_TYPE_BOOLEAN)
+		{
+			// 返回布尔类型的值
+			return String.valueOf(xssfCell.getBooleanCellValue());
+		}
+		if(xssfCell.getCellType() == xssfCell.CELL_TYPE_NUMERIC){
+			// 获取单元格的样式值，即获取单元格格式对应的数值
+			int style = xssfCell.getCellStyle().getDataFormat();
+			// 判断是否是日期格式
+			if (XSSFDateUtil.isCellDateFormatted(xssfCell)) {
+				Date date = xssfCell.getDateCellValue();
+				// 对不同格式的日期类型做不同的输出，与单元格格式保持一致
+				switch (style) {
+					case 178:
+						return new SimpleDateFormat("yyyy'年'M'月'd'日'").format(date);
+
+					case 14:
+						return new SimpleDateFormat("yyyy/MM/dd").format(date);
+
+					case 179:
+						return new SimpleDateFormat("yyyy/MM/dd HH:mm").format(date);
+
+					case 181:
+						return new SimpleDateFormat("yyyy/MM/dd HH:mm a ").format(date);
+
+					case 22:
+						return new SimpleDateFormat(" yyyy/MM/dd HH:mm:ss ").format(date);
+
+					default:
+						break;
+				}
+			} else {
+				switch (style) {
+					// 单元格格式为百分比，不格式化会直接以小数输出
+					case 9:
+						return  new DecimalFormat("0.00%").format(xssfCell.getNumericCellValue());
+
+					// DateUtil判断其不是日期格式，在这里也可以设置其输出类型
+					case 57:
+						return new SimpleDateFormat(" yyyy'年'MM'月' ").format(xssfCell.getDateCellValue());
+
+					default:
+						xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+						return String.valueOf(xssfCell.getStringCellValue());
+				}
+			}
+
+
+		}
+		//其余的格式设置成String，返回String
+		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		// 返回字符串类型的值
+		return String.valueOf(xssfCell.getStringCellValue());
+
+	}
+
 	@SuppressWarnings("resource")
 	public static DataTable ReadExcelFileToDataTable(InputStream is)throws Exception
 	{
@@ -238,70 +296,120 @@ public class DBLoad
 	}
 
 	@SuppressWarnings("resource")
-	public static DataTable GetTableByExt(InputStream is)
-	{
+	public static DataTable GetTableByExt(InputStream is) throws IOException {
 		DataTable Tb = new DataTable("Tb");
 		Tb.Rows.clear();
 		DataColumnCollection collection = new DataColumnCollection(Tb);
-		XSSFWorkbook xssfWorkbook = null;
 
-		try
+
+		/*try
 		{
+			XSSFWorkbook xssfWorkbook = null;
 			xssfWorkbook = new XSSFWorkbook(is);
+			// 循环工作表Sheet , 目前支持一个
+			// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
+			XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
+			if (xssfSheet == null)
+			{
+				return null;
+			}
+			// 循环行Row
+			int row_size = xssfSheet.getPhysicalNumberOfRows();
+			for (int j = 0; j < row_size; j++)
+			{
+				XSSFRow xssfRow = xssfSheet.getRow(j);
+				if (xssfRow == null)
+				{
+					continue;
+				}
+
+				// 循环列Cell
+				int call_num = xssfRow.getPhysicalNumberOfCells();
+				// title
+				if (0 == j)
+				{
+					for (int k = 0; k < call_num; k++)
+					{
+						XSSFCell xssfCell = xssfRow.getCell(k);
+						if (null == xssfCell)
+						{
+							continue;
+						}
+						DataColumn column = new DataColumn(getValue(xssfCell));
+						collection.Add(column);
+					}
+				} else
+				{ // 内容
+					DataRow dataRow = new DataRow(Tb);
+					for (int k = 0; k < call_num; k++)
+					{
+						XSSFCell xssfCell = xssfRow.getCell(k);
+						if (null == xssfCell)
+						{
+							continue;
+						}
+						dataRow.setValue(collection.get(k), getValue(xssfCell));
+					}
+					Tb.Rows.add(dataRow);
+				}
+
+			}
+			Tb.Columns = collection;
 		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		// 循环工作表Sheet , 目前支持一个
-		// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
-		XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);
-		if (xssfSheet == null)
-		{
-			return null;
-		}
-		// 循环行Row
-		int row_size = xssfSheet.getPhysicalNumberOfRows();
-		for (int j = 0; j < row_size; j++)
-		{
-			XSSFRow xssfRow = xssfSheet.getRow(j);
-			if (xssfRow == null)
+		{*/
+			HSSFWorkbook xssfWorkbook = new HSSFWorkbook(is);
+			// 循环工作表Sheet , 目前支持一个
+			// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
+			HSSFSheet hssfSheet = xssfWorkbook.getSheetAt(0);
+			if (hssfSheet == null)
 			{
-				continue;
+				return null;
 			}
-
-			// 循环列Cell
-			int call_num = xssfRow.getPhysicalNumberOfCells();
-			// title
-			if (0 == j)
+			// 循环行Row
+			int row_size = hssfSheet.getPhysicalNumberOfRows();
+			for (int j = 0; j < row_size; j++)
 			{
-				for (int k = 0; k < call_num; k++)
+				HSSFRow xssfRow = hssfSheet.getRow(j);
+				if (xssfRow == null)
 				{
-					XSSFCell xssfCell = xssfRow.getCell(k);
-					if (null == xssfCell)
-					{
-						continue;
-					}
-					DataColumn column = new DataColumn(getValue(xssfCell));
-					collection.Add(column);
+					continue;
 				}
-			} else
-			{ // 内容
-				DataRow dataRow = new DataRow(Tb);
-				for (int k = 0; k < call_num; k++)
-				{
-					XSSFCell xssfCell = xssfRow.getCell(k);
-					if (null == xssfCell)
-					{
-						continue;
-					}
-					dataRow.setValue(collection.get(k), getValue(xssfCell));
-				}
-				Tb.Rows.add(dataRow);
-			}
 
-		}
-		Tb.Columns = collection;
+				// 循环列Cell
+				int call_num = xssfRow.getPhysicalNumberOfCells();
+				// title
+				if (0 == j)
+				{
+					for (int k = 0; k < call_num; k++)
+					{
+						HSSFCell xssfCell = xssfRow.getCell(k);
+						if (null == xssfCell)
+						{
+							continue;
+						}
+						DataColumn column = new DataColumn(getValue(xssfCell));
+						collection.Add(column);
+					}
+				} else
+				{ // 内容
+					DataRow dataRow = new DataRow(Tb);
+					for (int k = 0; k < call_num; k++)
+					{
+						HSSFCell xssfCell = xssfRow.getCell(k);
+						if (null == xssfCell)
+						{
+							continue;
+						}
+						dataRow.setValue(collection.get(k), getValue(xssfCell));
+					}
+					Tb.Rows.add(dataRow);
+				}
+
+			}
+			Tb.Columns = collection;
+		//}
+
+
 		return Tb;
 	}
 

@@ -27,7 +27,7 @@ public class ClassFactory {
 		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_Evbase == null || Htable_Evbase.isEmpty()) {
 			Htable_Evbase = new Hashtable();
-			String cl = "bp.sys.EventBase";
+			String cl = "bp.sys.base.EventBase";
 			ArrayList al = ClassFactory.GetObjects(cl);
 			Htable_Evbase.clear();
 			for (Object en : al) {
@@ -116,7 +116,7 @@ public class ClassFactory {
 		}
 		className = bp.sys.base.Glo.DealClassEntityName(className);
 
-		if (Htable_En == null) {
+		if (Htable_En == null || Htable_En.size()==0) {
 			Htable_En = new HashMap<>();
 			String cl = "bp.en.Entity";
 			ArrayList al = ClassFactory.GetObjects(cl);
@@ -174,19 +174,19 @@ public class ClassFactory {
 			return myens;
 		}
 		className = bp.sys.base.Glo.DealClassEntityName(className);
-		// if (Htable_Ens == null || Htable_Ens.isEmpty()) {
-		Htable_Ens = new Hashtable<String, Object>();
-		String cl = "bp.en.Entities";
-		ArrayList al = ClassFactory.GetObjects(cl);
+		if (Htable_Ens == null || Htable_Ens.isEmpty()) {
+			Htable_Ens = new Hashtable<String, Object>();
+			String cl = "bp.en.Entities";
+			ArrayList al = ClassFactory.GetObjects(cl);
 
-		Htable_Ens.clear();
-		for (Object en : al) {
-			try {
-				Htable_Ens.put(en.getClass().getName(), en);
-			} catch (java.lang.Exception e) {
+			Htable_Ens.clear();
+			for (Object en : al) {
+				try {
+					Htable_Ens.put(en.getClass().getName(), en);
+				} catch (java.lang.Exception e) {
+				}
 			}
 		}
-		// }
 		Entities ens = (Entities) ((Htable_Ens.get(className) instanceof Entities) ? Htable_Ens.get(className) : null);
 
 		// /#warning 会清除 cash 中的数据。

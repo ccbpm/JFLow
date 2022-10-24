@@ -263,7 +263,7 @@ public class WindowTemplate extends EntityNoName
 
 			///#region 内容定义.
 		map.AddTBString(WindowTemplateAttr.MoreUrl, null, "更多链接", false, false, 0, 300, 20, true);
-		map.AddTBStringDoc(WindowTemplateAttr.Docs, null, "内容表达式", false, false);
+		map.AddTBStringDoc(WindowTemplateAttr.Docs, null, "内容表达式", true, false);
 
 			///#endregion 内容定义.
 

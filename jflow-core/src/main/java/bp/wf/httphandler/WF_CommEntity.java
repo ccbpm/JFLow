@@ -636,17 +636,10 @@ public class WF_CommEntity extends WebContralBase
 					DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
 					dt.TableName = attr.getKey();
 
-					// @杜. 翻译当前部分.
-					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-					{
-						dt.Columns.get("NO").setColumnName("No");
-						dt.Columns.get("NAME").setColumnName("Name");
-					}
-					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-					{
-						dt.Columns.get("no").setColumnName("No");
-						dt.Columns.get("name").setColumnName("Name");
-					}
+
+					dt.Columns.get(0).setColumnName("No");
+					dt.Columns.get(1).setColumnName("Name");
+
 
 					ds.Tables.add(dt);
 				}
@@ -1460,7 +1453,7 @@ public class WF_CommEntity extends WebContralBase
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不存在，请确认是否删除了该属性?";
 		}
 
-		if (attr.getMyFieldType() == FieldType.Normal) {
+		if (attr.getMyFieldType() == FieldType.Normal && attr.getUIContralType() != UIContralType.DDL) {
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不能是普通字段，必须是外键或者枚举.";
 		}
 
@@ -1470,15 +1463,21 @@ public class WF_CommEntity extends WebContralBase
 		int IsExitParentNo = 0; // 是否存在ParentNo
 
 		int IsExitIdx = 0; // 判断改类是否存在Idx
-		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true
-				&& tree.getEnMap().getAttrs().contains("Idx") == true) {
-			IsExitIdx = 1;
+		if(tree.getClass().getName().endsWith("GENoName")){
+			IsExitParentNo =0;
+			IsExitIdx =0;
+		}else{
+			if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true
+					&& tree.getEnMap().getAttrs().contains("Idx") == true) {
+				IsExitIdx = 1;
+			}
+
+			if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "ParentNo") == true
+					&& tree.getEnMap().getAttrs().contains("ParentNo") == true) {
+				IsExitParentNo = 1;
+			}
 		}
 
-		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "ParentNo") == true
-				&& tree.getEnMap().getAttrs().contains("ParentNo") == true) {
-			IsExitParentNo = 1;
-		}
 
 		if (IsExitParentNo == 1) {
 			if (IsExitIdx == 1) {
@@ -1497,7 +1496,7 @@ public class WF_CommEntity extends WebContralBase
 		} else {
 			if (IsExitIdx == 1) {
 				trees.RetrieveAll("Idx");
-			} else {
+			} else if(tree.getClass().getName().endsWith("GENoName")==false){
 				trees.RetrieveAll();
 			}
 		}
@@ -1606,7 +1605,7 @@ public class WF_CommEntity extends WebContralBase
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不存在，请确认是否删除了该属性?";
 		}
 
-		if (attr.getMyFieldType() == FieldType.Normal)
+		if (attr.getMyFieldType() == FieldType.Normal && attr.getUIContralType()!=UIContralType.DDL)
 		{
 			return "err@在实体[" + ensOfM + "]指定的分树的属性[" + defaultGroupAttrKey + "]不能是普通字段，必须是外键或者枚举.";
 		}
@@ -1614,13 +1613,15 @@ public class WF_CommEntity extends WebContralBase
 		Entities trees = attr.getHisFKEns();
 		//判断改类是否存在Idx
 		Entity tree = trees.getGetNewEntity();
-		if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true && tree.getEnMap().getAttrs().contains("Idx") == true)
-		{
-			trees.Retrieve("ParentNo",rootNo,"Idx");
-		}
-		else
-		{
-			trees.Retrieve("ParentNo", rootNo, null);
+		if(tree.getClass().getName().endsWith("GENoName")==false){
+			if (DBAccess.IsExitsTableCol(tree.getEnMap().getPhysicsTable(), "Idx") == true && tree.getEnMap().getAttrs().contains("Idx") == true)
+			{
+				trees.Retrieve("ParentNo",rootNo,"Idx");
+			}
+			else
+			{
+				trees.Retrieve("ParentNo", rootNo, null);
+			}
 		}
 
 		DataTable dt = trees.ToDataTableField("DBTrees");
@@ -1746,7 +1747,7 @@ public class WF_CommEntity extends WebContralBase
 			return "err@设置的分组外键错误[" + key + "],不存在[" + ensName + "]或者已经被删除.";
 		}
 
-		if (attr.getMyFieldType() == FieldType.Normal)
+		if (attr.getMyFieldType() == FieldType.Normal && attr.getUIContralType()!=UIContralType.DDL)
 		{
 			return "err@设置的默认分组[" + key + "]不能是普通字段.";
 		}
@@ -1757,6 +1758,24 @@ public class WF_CommEntity extends WebContralBase
 			ensFK.clear();
 			ensFK.RetrieveAll();
 			return ensFK.ToJson("dt");
+		}
+		if (attr.getUIContralType()==UIContralType.DDL && DataType.IsNullOrEmpty(attr.getUIBindKey())==false
+		 && attr.getUIBindKey().toUpperCase().startsWith("SELECT"))
+		{
+			String sqlBindKey = Glo.DealExp(attr.getUIBindKey(), en, null);
+
+			DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+			{
+				dt.Columns.get("NO").ColumnName = "No";
+				dt.Columns.get("NAME").ColumnName = "Name";
+			}
+			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+			{
+				dt.Columns.get("no").ColumnName = "No";
+				dt.Columns.get("name").ColumnName = "Name";
+			}
+			return bp.tools.Json.ToJson(dt);
 		}
 
 		if (attr.getMyFieldType() == FieldType.Enum)

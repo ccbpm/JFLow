@@ -457,9 +457,7 @@ public class WF_MyFlow extends WebContralBase
 		{
 			String val = MyFlow_Init_NoWorkID();
 			if (val != null)
-			{
 				return val;
-			}
 		}
 
 		//子线程退回分流节点
@@ -473,12 +471,7 @@ public class WF_MyFlow extends WebContralBase
 		GenerWorkFlow gwf = new GenerWorkFlow();
 		gwf.setWorkID(this.getWorkID());
 		if (gwf.RetrieveFromDBSources() == 0)
-		{
 			return ("err@该流程ID{" + this.getWorkID() + "}不存在，或者已经被删除.");
-		}
-
-
-
 
 		//手动启动子流程的标志 0父子流程 1 同级子流程
 		String isStartSameLevelFlow = this.GetRequestVal("IsStartSameLevelFlow");
@@ -505,27 +498,19 @@ public class WF_MyFlow extends WebContralBase
 		if (String.valueOf(gwf.getFK_Node()).endsWith("01") == true)
 		{
 			if (gwf.getStarter().equals(WebUser.getNo()) == false)
-			{
 				isCanDo = false; //处理开始节点发送后，撤销的情况，第2个节点打开了，第1个节点撤销了,造成第2个节点也可以发送下去.
-			}
 			else
-			{
 				isCanDo = true; // 开始节点不判断权限.
-			}
 		}
 		else
 		{
 			isCanDo = todEmps.contains(";" + WebUser.getNo() + ",");
 			if (isCanDo == false)
-			{
 				isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
-			}
 		}
 
 		if (isCanDo == false)
-		{
 			return "err@您[" + WebUser.getNo() + "," + WebUser.getName() + "]不能执行当前工作, 当前工作已经运转到[" + gwf.getNodeName() + "],处理人[" + gwf.getTodoEmps() + "]。";
-		}
 
 		String frms = this.GetRequestVal("Frms");
 		if (DataType.IsNullOrEmpty(frms) == false)
@@ -552,9 +537,7 @@ public class WF_MyFlow extends WebContralBase
 
 				//判断是否移动到下一个节点？
 				if (objs.getVarToNodeID() != gwf.getFK_Node())
-				{
 					return "url@MyFlow.htm?WorkID=" + gwf.getWorkID() + "&FK_Node=" + objs.getVarToNodeID() + "&FID=" + gwf.getFID();
-				}
 			}
 			catch (RuntimeException ex)
 			{
@@ -580,9 +563,7 @@ public class WF_MyFlow extends WebContralBase
 					NodeWorkCheck workCheck = new NodeWorkCheck("ND" + this.getCurrND().getNodeID());
 					String msg = Glo.getDefValWFNodeFWCDefInfo(); // 设置默认值;
 					if (workCheck.getFWCIsFullInfo() == true)
-					{
 						msg = workCheck.getFWCDefInfo();
-					}
 					Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), this.getCurrND().getNodeID(), gwf.getWorkID(), gwf.getFID(), msg, workCheck.getFWCOpLabel(), null);
 				}
 
@@ -622,9 +603,7 @@ public class WF_MyFlow extends WebContralBase
 				long pWorkID = Long.parseLong(dt.Rows.get(0).getValue("PWorkID").toString());
 				String pEmp = ""; // dt.Rows.get(0).getValue("PEmp"].ToString();
 				if (DataType.IsNullOrEmpty(pEmp))
-				{
 					pEmp = WebUser.getNo();
-				}
 
 				//设置父子关系.
 				Dev2Interface.SetParentInfo(this.getFK_Flow(), this.getWorkID(), pWorkID);
@@ -686,39 +665,16 @@ public class WF_MyFlow extends WebContralBase
 			String[] strs = this.getRequestParas().split("[&]", -1);
 			for (String str : strs)
 			{
-				if (toUrl.contains(str) == true)
-				{
+				if (toUrl.contains(str) == true || str.contains("DoType=") == true || str.contains("DoMethod=") == true
+					|| str.contains("HttpHandlerName=") == true || str.contains("IsLoadData=") == true || str.contains("IsCheckGuide=") == true)
 					continue;
-				}
-				if (str.contains("DoType=") == true)
-				{
-					continue;
-				}
-				if (str.contains("DoMethod=") == true)
-				{
-					continue;
-				}
-				if (str.contains("HttpHandlerName=") == true)
-				{
-					continue;
-				}
-				if (str.contains("IsLoadData=") == true)
-				{
-					continue;
-				}
-				if (str.contains("IsCheckGuide=") == true)
-				{
-					continue;
-				}
 
 				toUrl += "&" + str;
 			}
 			for (String key : CommonUtils.getRequest().getParameterMap().keySet())
 			{
 				if (toUrl.contains(key + "=") == true)
-				{
 					continue;
-				}
 				toUrl += "&" + key + "=" + ContextHolderUtils.getRequest().getParameter(key);
 			}
 
@@ -727,9 +683,7 @@ public class WF_MyFlow extends WebContralBase
 
 			//增加fk_node
 			if (toUrl.contains("&FK_Node=") == false)
-			{
 				toUrl += "&FK_Node=" + this.getCurrND().getNodeID();
-			}
 
 			//如果是开始节点.
 			if (getCurrND().isStartNode() == true)
@@ -1809,6 +1763,8 @@ public class WF_MyFlow extends WebContralBase
 		Node nd = new Node(this.getFK_Node());
 		gwf.setTodoEmps(WebUser.getNo() + ",");
 		DataTable mydt = GenerDTOfToNodes(gwf, nd);
+		if(mydt==null)
+			return "";
 		return bp.tools.Json.ToJson(mydt);
 	}
 
@@ -2372,8 +2328,12 @@ public class WF_MyFlow extends WebContralBase
 
 			if (this.getPWorkID() != 0)
 			{
-				GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-				Dev2Interface.SetParentInfo(this.getFK_Flow(), this.getWorkID(), this.getPWorkID(), gwf.getPEmp(), gwf.getPNodeID());
+				//有可能是，实体调用
+				GenerWorkFlow gwf = new GenerWorkFlow();
+				gwf.setWorkID(this.getPWorkID());
+				if(gwf.RetrieveFromDBSources() == 1) {
+					Dev2Interface.SetParentInfo(this.getFK_Flow(), this.getWorkID(), this.getPWorkID(), gwf.getPEmp(), gwf.getPNodeID());
+				}
 			}
 			return str;
 		}
@@ -3527,7 +3487,7 @@ public class WF_MyFlow extends WebContralBase
 			///#region 判断当前的节点类型,获得表单的ID.
 		try
 		{
-			if (this.getCurrND().getHisFormType() == NodeFormType.RefOneFrmTree)
+			if (this.getCurrND().getHisFormType() == NodeFormType.RefOneFrmTree )
 			{
 				MapData md = new MapData(this.getCurrND().getNodeFrmID());
 				if (md.getHisFrmType() == FrmType.ChapterFrm)

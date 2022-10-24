@@ -464,6 +464,7 @@ public class AttachmentUploadController extends BaseController {
 			// 替换关键的字串.
 			savePath = savePath.replace("\\\\", "/");
 			try {
+
 				if (savePath.indexOf(":") == -1)
 					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
 
@@ -724,7 +725,7 @@ public class AttachmentUploadController extends BaseController {
 				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
 
 				if (isOK==false)
-					throw new com.sun.star.uno.Exception("err文件上传失败，请检查ftp服务器配置信息");
+					throw new RuntimeException("err文件上传失败，请检查ftp服务器配置信息");
 
 				dbUpload.Insert();
 

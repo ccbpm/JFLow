@@ -2,6 +2,8 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.difference.handler.WebContralBase;
+import bp.en.EntityTree;
+import bp.port.Emp;
 import bp.sys.*;
 import bp.tools.StringHelper;
 import bp.web.*;
@@ -302,36 +304,20 @@ public class WF_Portal extends WebContralBase
 						return "err@该用户已经被禁用.";
 					}
 				}
-				return "url@Default.htm?Token=" + Dev2Interface.Port_GenerToken(WebUser.getNo(), "PC", 4000, true) + "&UserNo=" + emp.getUserID();
+				return "url@Default.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + emp.getUserID();
 			}
 
 			//获得当前管理员管理的组织数量.
-			OrgAdminers adminers = null;
 
 			//查询他管理多少组织.
-			adminers = new OrgAdminers();
+			OrgAdminers adminers = new OrgAdminers();
 			adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getUserID(), null);
 			if (adminers.size() == 0)
 			{
-				Orgs orgs = new Orgs();
-				int i = orgs.Retrieve("Adminer", this.GetRequestVal("TB_No"), null);
-				if (i == 0)
-				{
-					//调用登录方法.
+					//调用登录方法， 普通用户了.
 					Dev2Interface.Port_Login(emp.getUserID(), emp.getOrgNo());
-					return "url@Default.htm?Token=" + Dev2Interface.Port_GenerToken(emp.getUserID(), "PC", 6000, true) + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
-				}
-
-				for (Org org : orgs.ToJavaList())
-				{
-					OrgAdminer oa = new OrgAdminer();
-					oa.setFK_Emp(WebUser.getNo());
-					oa.setOrgNo(org.getNo());
-					oa.Save();
-				}
-				adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getUserID(), null);
+					return "url@Default.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
 			}
-
 
 			//设置他的组织，信息.
 			WebUser.setNo(emp.getUserID()); //登录帐号.
@@ -343,22 +329,12 @@ public class WF_Portal extends WebContralBase
 			bp.wf.Dev2Interface.Port_Login(emp.getUserID(), null, emp.getOrgNo());
 
 			//设置SID.
-			WebUser.setSID(DBAccess.GenerGUID()); //设置SID.
-			emp.setSID(WebUser.getSID()); //设置SID.
-			bp.wf.Dev2Interface.Port_SetSID(emp.getUserID(), WebUser.getSID());
-
-			//执行更新到用户表信息.
-			// WebUser.UpdateSIDAndOrgNoSQL();
+			String token = bp.wf.Dev2Interface.Port_GenerToken("PC");
 
 			//判断是否是多个组织的情况.
 			if (adminers.size() == 1)
-			{
-				return "url@Default.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
-			}
-
-			return "url@SelectOneOrg.htm?SID=" + emp.getSID() + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
-
-
+				return "url@Default.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
+			return "url@SelectOneOrg.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
 		}
 		catch (RuntimeException ex)
 		{
@@ -544,6 +520,47 @@ public class WF_Portal extends WebContralBase
 	 @return 
 	*/
 	public final String Flows_InitSort() throws Exception {
+		String sql = "";
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
+		DataTable dt = null;
+		//集团模式且一个部门下维护一套岗位体系
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		{
+			//如果当前管理员登录的部门是主部门
+			Paras ps = new Paras();
+
+			sql = "SELECT No,Name,ParentNo From WF_FlowSort WHERE No='" + WebUser.getFK_Dept() + "' or parentNo='" + WebUser.getFK_Dept()+"'" ;
+			dt = DBAccess.RunSQLReturnTable(sql);
+			if (dt.Rows.size() == 1)
+			{
+				//根据这个部门编号生成一个流程类别
+				bp.wf.template.FlowSort fs = new bp.wf.template.FlowSort();
+				fs.setNo(WebUser.getOrgNo());
+
+				if(fs.RetrieveFromDBSources()==0) {
+					bp.port.Dept dept = new bp.port.Dept(WebUser.getOrgNo());
+					fs.setParentNo(dept.getParentNo());
+
+					bp.wf.port.admingroup.Org org = new bp.wf.port.admingroup.Org(WebUser.getOrgNo());
+					fs.setName(org.getName()); // WebUser.FK_DeptName;
+					fs.setOrgNo(WebUser.getOrgNo());
+					fs.DirectInsert();
+				}
+				EntityTree subFS1 = fs.DoCreateSubNode("办公类");
+				subFS1.SetValByKey("OrgNo", fs.getNo());
+				subFS1.Update();
+
+				EntityTree subFS2 = fs.DoCreateSubNode("财务类");
+				subFS2.SetValByKey("OrgNo", fs.getNo());
+				subFS2.Update();
+
+			}
+			/*dt.Columns.get(0).setColumnName("No");
+			dt.Columns.get(1).setColumnName("Name");
+			dt.Columns.get(2).setColumnName("ParentNo");
+			return bp.tools.Json.ToJson(dt);*/
+		}
+
 		//求数量.
 		String sqlWhere = "";
 		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
@@ -556,8 +573,8 @@ public class WF_Portal extends WebContralBase
 		}
 
 
-		String sql = "SELECT  FK_FlowSort, WFState, COUNT(*) AS Num FROM WF_GenerWorkFlow WHERE " + sqlWhere + " GROUP BY FK_FlowSort, WFState ";
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		sql = "SELECT  FK_FlowSort, WFState, COUNT(*) AS Num FROM WF_GenerWorkFlow WHERE " + sqlWhere + " GROUP BY FK_FlowSort, WFState ";
+		dt = DBAccess.RunSQLReturnTable(sql);
 		//求内容. 
 		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
@@ -1362,9 +1379,7 @@ public class WF_Portal extends WebContralBase
 			return "err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + path + ",zipFile=" + zipFile;
 		}
 		if(SystemConfig.getIsJarRun()==true){
-			ApplicationHome home = new ApplicationHome(WF_Portal.class);
-			String basePath = home.getSource().getParentFile().toString();
-			return "url@"+basePath+"/resources/DataUser/Temp/"+ flowSortName + ".zip";
+			return "url@DataUser/Temp/" + flowSortName + ".zip";
 		}
 		return "url@DataUser/Temp/" + flowSortName + ".zip";
 	}
@@ -1415,9 +1430,7 @@ public class WF_Portal extends WebContralBase
 			return "err@执行压缩出现错误:" + ex.getMessage() + ",路径tempPath:" + path + ",zipFile=" + zipFile;
 		}
 		if(SystemConfig.getIsJarRun()==true){
-			ApplicationHome home = new ApplicationHome(WF_Portal.class);
-			String basePath = home.getSource().getParentFile().toString();
-			return "url@"+basePath+"/resources/DataUser/Temp/"+ frmTreeName + ".zip";
+			return "url@DataUser/Temp/" + frmTreeName + ".zip";
 		}
 		return "url@DataUser/Temp/" + frmTreeName + ".zip";
 	}

@@ -8,6 +8,7 @@ import bp.ccbill.*;
 import bp.difference.*;
 import bp.*;
 import bp.sys.CCFormAPI;
+import bp.tools.BaseFileUtils;
 import bp.tools.FileAccess;
 import bp.wf.*;
 import bp.wf.Dev2Interface;
@@ -15,6 +16,7 @@ import bp.wf.Dev2Interface;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 
 import static bp.difference.handler.WebContralBase.getRequest;
 
@@ -90,9 +92,7 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 	public final String Template_Init() throws Exception {
 		DataSet ds = new DataSet();
 		String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolDevelopDesigner/";
-		File dirFile = new File(path);
 
-		File[] files = dirFile.listFiles(); //获取子文件夹
 		//模版类型
 		DataTable dt = new DataTable();
 		dt.TableName = "dirs";
@@ -106,30 +106,58 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 		filesDt.Columns.Add("Name");
 		filesDt.Columns.Add("Dir");
 		DataRow tempdr = filesDt.NewRow();
-
-		for (File item : files)
-		{
-			//模版分类
-			dr = dt.NewRow();
-			dr.setValue("No", item);
-			dr.setValue("Name", item.getName());
-			dt.Rows.add(dr);
-
-			//获取模版
-			File[] itemfiles = item.listFiles();
-			if(itemfiles==null)
-				continue;
-
-
-			for (File temp : itemfiles)
-			{
-				if(temp.getName().endsWith(".htm")==false)
+		if(SystemConfig.getIsJarRun()==true){
+			ArrayList<String> files = BaseFileUtils.GetDirectories(path);
+			for(String basePath : files){
+				//模版分类
+				String name =basePath.substring(0,basePath.length()-1);
+				name = name.substring(name.substring(0,name.length()-1).lastIndexOf("/")+1);
+				dr = dt.NewRow();
+				dr.setValue("No", name);
+				dr.setValue("Name", name);
+				dt.Rows.add(dr);
+				//获取子目录下的文件集合
+				String[] childrens = BaseFileUtils.getFileNames(path+name+"/");
+				if(childrens.length==0)
 					continue;
-				tempdr = filesDt.NewRow();
-				tempdr.setValue("No", temp);
-				tempdr.setValue("Name", temp.getName());
-				tempdr.setValue("Dir", item.getName());
-				filesDt.Rows.add(tempdr);
+				for (String item : childrens)
+				{
+					if(item.endsWith(".htm")==false)
+						continue;
+					tempdr = filesDt.NewRow();
+					tempdr.setValue("No", item);
+					tempdr.setValue("Name", item);
+					tempdr.setValue("Dir", name);
+					filesDt.Rows.add(tempdr);
+				}
+			}
+		}else{
+			File dirFile = new File(path);
+			File[] files = dirFile.listFiles(); //获取子文件夹
+			for (File item : files)
+			{
+				//模版分类
+				dr = dt.NewRow();
+				dr.setValue("No", item);
+				dr.setValue("Name", item.getName());
+				dt.Rows.add(dr);
+
+				//获取模版
+				File[] itemfiles = item.listFiles();
+				if(itemfiles==null)
+					continue;
+
+
+				for (File temp : itemfiles)
+				{
+					if(temp.getName().endsWith(".htm")==false)
+						continue;
+					tempdr = filesDt.NewRow();
+					tempdr.setValue("No", temp);
+					tempdr.setValue("Name", temp.getName());
+					tempdr.setValue("Dir", item.getName());
+					filesDt.Rows.add(tempdr);
+				}
 			}
 		}
 
@@ -150,7 +178,7 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 
 
 		String filePath = path + fileName;
-		String strHtml = FileAccess.readFileByBytes(filePath);;
+		String strHtml = DataType.ReadTextFile(filePath);
 		return strHtml;
 	}
 

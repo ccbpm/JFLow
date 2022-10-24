@@ -10,6 +10,10 @@ public class OrgAdminerAttr extends bp.en.EntityMyPKAttr
 	 管理员
 	*/
 	public static final String FK_Emp = "FK_Emp";
+	/**
+	 * 管理员名称
+	 */
+	public static final String EmpName="EmpName";
 	/** 
 	 组织
 	*/

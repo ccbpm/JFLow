@@ -48,6 +48,8 @@ public class CCBill_FlowEvent
 				//设置值.
 				geEn.SetValByKey(String.valueOf(key), row.GetValByKey(String.valueOf(key)));
 			}
+
+			geEn.setOID(dictWorkID);
 			geEn.Update(); //更新.
 
 			//更新从表.

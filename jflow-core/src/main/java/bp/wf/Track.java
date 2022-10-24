@@ -353,7 +353,7 @@ public class Track extends bp.en.Entity
 		map.AddTBString(TrackAttr.NDToT, null, "到节点(名称)", true, false, 0, 999, 900);
 
 		map.AddTBString(TrackAttr.EmpFrom, null, "从人员", true, false, 0, 50, 100);
-		map.AddTBString(TrackAttr.EmpFromT, null, "从人员(名称)", true, false, 0, 30, 100);
+		map.AddTBString(TrackAttr.EmpFromT, null, "从人员(名称)", true, false, 0, 300, 100);
 
 		map.AddTBString(TrackAttr.EmpTo, null, "到人员", true, false, 0, 2000, 100);
 		map.AddTBString(TrackAttr.EmpToT, null, "到人员(名称)", true, false, 0, 2000, 100);

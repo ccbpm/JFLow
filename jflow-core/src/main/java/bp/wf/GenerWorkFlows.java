@@ -1,6 +1,7 @@
 package bp.wf;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.wf.*;
 import bp.port.*;
 import bp.sys.*;
@@ -40,7 +41,7 @@ public class GenerWorkFlows extends Entities
 		if (DataType.IsNullOrEmpty(likeKey) == false)
 		{
 			qo.addAnd();
-			if (bp.difference.SystemConfig.getAppCenterDBVarStr().equals("@") || bp.difference.SystemConfig.getAppCenterDBVarStr().equals("?"))
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 			{
 				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + ",'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + "+'%'"));
 			}

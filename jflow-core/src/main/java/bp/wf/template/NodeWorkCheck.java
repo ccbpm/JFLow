@@ -426,7 +426,9 @@ public class NodeWorkCheck extends Entity
 
 		map.AddDDLSysEnum(NodeWorkCheckAttr.FWCVer, 1, "审核意见保存规则", true, true, NodeWorkCheckAttr.FWCVer, "@0=1个节点1个人保留1个意见@1=保留节点历史意见(默认)");
 
-		String sql = "SELECT KeyOfEn AS No,Name From Sys_MapAttr Where UIContralType=14 AND FK_MapData='ND@NodeID'";
+		map.AddTBString(NodeAttr.NodeFrmID, null, "节点表单ID", false, true, 0, 50, 10);
+
+		String sql = "SELECT KeyOfEn AS No,Name From Sys_MapAttr Where UIContralType=14 AND (FK_MapData='ND@NodeID' OR FK_MapData='@NodeFrmID' )";
 		map.AddDDLSQL(NodeWorkCheckAttr.CheckField, null, "签批字段", sql, true);
 
 		   // map.AddTBString(NodeWorkCheckAttr.CheckField, null, "签批字段", true, false, 0, 50, 10, false);

@@ -30,10 +30,10 @@ public class WF_Admin_Cond extends WebContralBase
 	public final String CondPRI_Init() throws Exception {
 		Directions dirs = new Directions();
 		dirs.Retrieve(DirectionAttr.Node, this.getFK_Node(), DirectionAttr.Idx);
-		//return dirs.ToJson("dt");
+		return dirs.ToJson("dt");
 
 		//按照条件的先后计算.
-		Conds cds = new Conds();
+		/*Conds cds = new Conds();
 		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2, CondAttr.Idx);
 
 		for (Cond item : cds.ToJavaList())
@@ -47,7 +47,7 @@ public class WF_Admin_Cond extends WebContralBase
 			return "info@当前只有[" + cds.size() + "]个条件，无法进行排序.";
 		}
 
-		return cds.ToJson("dt");
+		return cds.ToJson("dt");*/
 	}
 	/** 
 	 移动.

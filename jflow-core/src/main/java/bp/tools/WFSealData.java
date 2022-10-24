@@ -89,8 +89,6 @@ public class WFSealData extends EntityMyPK
 		switch (DBAccess.getAppCenterDBType())
 		{
 			case Oracle:
-			case KingBaseR3:
-			case KingBaseR6:
 			case DM:
 				sql = String.format("ALTER TABLE %1$s modify(%2$s %3$s)",
 						"Sys_WFSealData", WFSealDataAttr.SealData, "CLOB");
@@ -99,6 +97,8 @@ public class WFSealData extends EntityMyPK
 				// DBAccess.RunSQL(SqlBuilder.GenerCreateTableSQLOfInfoMix(this));
 				break;
 			case MSSQL:
+			case KingBaseR3:
+			case KingBaseR6:
 				sql = String.format("alter table %1$s alter column %2$s  %3$s",
 						"Sys_WFSealData", WFSealDataAttr.SealData, "text");
 				break;

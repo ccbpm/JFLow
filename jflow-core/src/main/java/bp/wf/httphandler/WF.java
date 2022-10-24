@@ -746,23 +746,18 @@ public class WF extends WebContralBase
 		WFEmp em = new WFEmp();
 		em.setNo(WebUser.getNo());
 		if (DataType.IsNullOrEmpty(em.getNo()) == true)
-		{
 			return "err@登录信息丢失,请重新登录.";
-		}
 
 		if (em.RetrieveFromDBSources() == 0)
 		{
 			em.setFK_Dept(WebUser.getFK_Dept());
 			em.setName(bp.web.WebUser.getName());
-			//  em.OrgNo = bp.web.WebUser.getOrgNo();
 			em.Insert();
 		}
 
 		json = DBAccess.GetBigTextFromDB("WF_Emp", "No", WebUser.getNo(), "StartFlows");
 		if (DataType.IsNullOrEmpty(json) == false)
-		{
 			return json;
-		}
 
 		//定义容器.
 		DataSet ds = new DataSet();
@@ -2096,7 +2091,7 @@ public class WF extends WebContralBase
 		if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 		{
 			Dev2Interface.Port_Login(this.getUserNo());
-			Dev2Interface.Port_GenerToken(this.getUserNo(), "PC", 40000, true);
+			Dev2Interface.Port_GenerToken("PC");
 
 		}
 

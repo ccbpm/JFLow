@@ -31,6 +31,10 @@ public class NodeAttr
 	 待办处理模式
 	*/
 	public static final String TodolistModel = "TodolistModel";
+	/// <summary>
+	/// 可逆节点时是否重新计算接收人
+	/// </summary>
+	public static final String IsResetAccepter = "IsResetAccepter";
 	/** 
 	 组长确认规则
 	*/

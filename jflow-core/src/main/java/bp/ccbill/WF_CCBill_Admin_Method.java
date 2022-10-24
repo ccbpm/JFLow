@@ -217,9 +217,19 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 			md.Update();
 		}
 
-		//查询出来数据.
+		//查询出来主表数据.
 		MapAttrs mattrs = new MapAttrs(md.getNo());
 		GroupFields gfs = new GroupFields(md.getNo());
+
+		//查询出来从表数据.
+		String frmIDs=  "ND" + Integer.parseInt(fl.getNo() + "01");
+		MapDtls mdtls = new MapDtls(md.getNo());
+		for (MapDtl item : mdtls.ToJavaList())
+		{
+			frmIDs += ",'" + item.getNo() + "'";
+		}
+		MapAttrs attrs = new MapAttrs(frmIDs);
+
 
 		//遍历分组.
 		for (GroupField gs : gfs.ToJavaList())
@@ -265,6 +275,41 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 				mapAttr.setIdx(idx - 1);
 				mapAttr.DirectInsert();
 			}
+			for (MapAttr attr : attrs.ToJavaList())
+			{
+				if (gs.getCtrlType() != "Dtl")
+				{
+					continue;
+				}
+				if (gs.getOID() != attr.getGroupID())
+				{
+					continue;
+				}
+				//是否包含，系统字段？
+				if (Glo.getFlowFields().contains("," + attr.getKeyOfEn()  + ",") == true)
+				{
+					continue;
+				}
+
+				//其他类型的控件，就排除.
+				if (attr.getUIContralType().getValue() >= 5)
+				{
+					continue;
+				}
+
+				if (attr.getUIVisible() == false)
+				{
+					continue;
+				}
+
+				idx++;
+				idx++;
+				attr.setIdx(idx);
+				attr.Update();
+				//  DBAccess.RunSQL("UP")
+
+			}
+
 		}
 
 			///#endregion 处理流程的业务表单 - 字段增加一个影子字段..

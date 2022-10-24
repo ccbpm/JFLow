@@ -307,13 +307,13 @@ public class CCFormAPI
 		switch (ctrlType)
 		{
 			case "Dtl":
-				CreateOrSaveDtl(fk_mapdata, no, name, x, y);
+				CreateOrSaveDtl(fk_mapdata, no, name);
 				break;
 			case "AthMulti":
-				CreateOrSaveAthMulti(fk_mapdata, no, name, x, y);
+				CreateOrSaveAthMulti(fk_mapdata, no, name);
 				break;
 			case "AthSingle":
-				CreateOrSaveAthSingle(fk_mapdata, no, name, x, y);
+				CreateOrSaveAthSingle(fk_mapdata, no, name);
 				break;
 			case "AthImg":
 				CreateOrSaveAthImg(fk_mapdata, no, name, x, y);
@@ -391,7 +391,7 @@ public class CCFormAPI
 	 param x 位置x
 	 param y 位置y
 	*/
-	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name, float x, float y) throws Exception {
+	public static void CreateOrSaveAthSingle(String fk_mapdata, String no, String name) throws Exception {
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
 		ath.setNoOfObj(no);
@@ -400,8 +400,6 @@ public class CCFormAPI
 		ath.RetrieveFromDBSources();
 		ath.setUploadType(AttachmentUploadType.Single);
 		ath.setName(name);
-		ath.setX(x);
-		ath.setY(y);
 		ath.Save();
 	}
 	/** 
@@ -413,7 +411,7 @@ public class CCFormAPI
 	 param x
 	 param y
 	*/
-	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name, float x, float y) throws Exception {
+	public static void CreateOrSaveAthMulti(String fk_mapdata, String no, String name) throws Exception {
 		FrmAttachment ath = new FrmAttachment();
 		ath.setFK_MapData(fk_mapdata);
 		ath.setNoOfObj(no);
@@ -427,8 +425,7 @@ public class CCFormAPI
 
 		ath.setUploadType(AttachmentUploadType.Multi);
 		ath.setName(name);
-		ath.setX(x);
-		ath.setY(y);
+
 		//默认在移动端显示
 		ath.SetPara("IsShowMobile", 1);
 		ath.Save();
@@ -439,10 +436,8 @@ public class CCFormAPI
 	 param fk_mapdata 表单ID
 	 param dtlNo 明细表编号
 	 param dtlName 名称
-	 param x
-	 param y
 	*/
-	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName, float x, float y) throws Exception {
+	public static void CreateOrSaveDtl(String fk_mapdata, String dtlNo, String dtlName) throws Exception {
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(dtlNo);
 
@@ -460,8 +455,6 @@ public class CCFormAPI
 			dtl.setW(500);
 		}
 
-		dtl.setX(x);
-		dtl.setY(y);
 		dtl.setName(dtlName);
 		dtl.setFK_MapData(fk_mapdata);
 

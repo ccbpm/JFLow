@@ -29,12 +29,14 @@ function Runing() {
     else
         vm.openTab('在途', basePath + '/WF/Runing.htm');
 }
+
 function Batch() {
     if (webUser.CCBPMRunModel == 2)
         vm.openTab('在途', basePath + '/App/Batch.htm');
     else
         vm.openTab('在途', basePath + '/WF/Batch.htm');
 }
+
 function Search() {
     if (webUser.CCBPMRunModel == 2)
         vm.openTab('查询', basePath + '/App/Search.htm');
@@ -46,7 +48,6 @@ function Search() {
 function OpenMessage() {
     vm.openTab('消息', basePath + '/WF/Portal/Message.htm');
 }
-
 
 function Infos() {
     vm.openTab('通知', basePath + '/CCFast/Infos/Default.htm');
@@ -60,7 +61,7 @@ function BBS() {
 
 function Fasts() {
     var urlEnd = "?Token=" + GetQueryString("Token") + "&OrgNo=" + GetQueryString("OrgNo") + "&UserNo=" + GetQueryString("UserNo");
-    vm.openTab('低代码', basePath + '/WF/GPM/Menus.htm' + urlEnd);
+    vm.openTab('业务协同', basePath + '/WF/GPM/Menus.htm' + urlEnd);
 }
 
 function Flows() {
@@ -107,7 +108,8 @@ var menuNode;
 // 获取系统菜单
 MenuConvertTools.prototype.getSystemMenus = function () {
 
-    systemNodes = this.data['System'];
+    systemNodes =[];
+    systems = this.data['System'];
     moduleNode = this.data['Module'];
     menuNode = this.data['Menu'];
 
@@ -115,8 +117,12 @@ MenuConvertTools.prototype.getSystemMenus = function () {
 
     var adminMenuNodes = [];
     //循环系统.
-    for (var idx = 0; idx < systemNodes.length; idx++) {
-        var systemNode = systemNodes[idx];
+    for (var idx = 0; idx < systems.length; idx++) {
+        if(systems[idx].No === "System")
+            systems[idx].IsEnable = 1;
+        if(systems[idx].IsEnable == 0)
+            continue;
+        var systemNode = systems[idx];
         if (nonSystemItems.indexOf(systemNode.No) > -1) continue;
         systemNode.children = [];
         systemNode.open = false;
@@ -134,6 +140,10 @@ MenuConvertTools.prototype.getSystemMenus = function () {
             var moduleEn = moduleNode[idxModule];
             if (moduleEn.SystemNo !== systemNode.No)
                 continue; //如果不是本系统的.
+            if(systemNode.No === "System")
+                moduleEn.IsEnable = 1;
+            if(moduleEn.IsEnable == 0)
+                continue;
             moduleEn.children = [];
             if (moduleEn.Icon === "" || moduleEn.Icon == null || moduleEn.Icon === "")
                 moduleEn.Icon = 'icon-list';
@@ -146,6 +156,10 @@ MenuConvertTools.prototype.getSystemMenus = function () {
                 var menu = menuNode[idxMenu];
                 if (moduleEn.No !== menu.ModuleNo)
                     continue; // 不是本模块的。
+                if(systemNode.No === "System")
+                    menu.IsEnable = 1;
+                if(menu.IsEnable == 0)
+                    continue;
                 if (menu.MenuModel == "FlowEntityBatchStart")
                     continue;
 
@@ -165,7 +179,7 @@ MenuConvertTools.prototype.getSystemMenus = function () {
 
                 moduleEn.children.push(menu);
             }
-           systemNode.children.push(moduleEn);
+            systemNode.children.push(moduleEn);
 
         }
         if(this.webUser.No === "admin" || parseInt(this.webUser.IsAdmin) === 1)

@@ -36,6 +36,7 @@ public class AttrOfOneVSM
 	 多对多的实体.
 	*/
 	private Entities _ensOfMM = null;
+	public String GroupName = "";
 	/** 
 	 多对多的实体集合
 	*/

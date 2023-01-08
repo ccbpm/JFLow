@@ -700,6 +700,7 @@ public class MapDtlExt extends EntityNoName
 
 
 			///#region 基础信息.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapDtlAttr.No, null, "编号", true, false, 1, 100, 20);
 		map.AddTBString(MapDtlAttr.Name, null, "名称", true, false, 1, 200, 20);
 		map.AddTBString(MapDtlAttr.Alias, null, "别名", true, false, 0, 100, 20, false);
@@ -811,6 +812,7 @@ public class MapDtlExt extends EntityNoName
 
 
 			///#region 超链接.
+		map.AddGroupAttr("超链接");
 		map.AddBoolean(MapDtlAttr.IsEnableLink, false, "相关功能1", true, true);
 		map.AddTBString(MapDtlAttr.LinkLabel, "", "超连接/功能标签", true, false, 0, 50, 100);
 		map.AddDDLSysEnum(MapDtlAttr.ExcType, 0, "执行类型", true, true, "ExcType", "@0=超链接@1=函数");
@@ -828,7 +830,9 @@ public class MapDtlExt extends EntityNoName
 
 
 			///#region 工作流相关.
+		map.AddGroupAttr("工作流相关");
 			//add 2014-02-21.
+		map.AddGroupAttr("工作流相关");
 		map.AddBoolean(MapDtlAttr.IsCopyNDData, true, "是否允许copy节点数据", true, true);
 		map.AddTBInt(MapDtlAttr.FK_Node, 0, "节点(用户独立表单权限控制)", false, false);
 		map.AddBoolean(MapDtlAttr.IsHLDtl, false, "是否是合流汇总", true, true);
@@ -841,6 +845,7 @@ public class MapDtlExt extends EntityNoName
 
 
 			///#region 相关方法.
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "隐藏字段"; // "设计表单";
@@ -915,6 +920,7 @@ public class MapDtlExt extends EntityNoName
 
 
 			///#region 实验中的功能.
+		map.AddGroupMethod("实验中的功能");
 		rm = new RefMethod();
 		rm.GroupName = "实验中的功能";
 		rm.Title = "列自动计算"; // "设计表单";

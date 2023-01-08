@@ -319,7 +319,8 @@ public class MapDataExt extends EntityNoName
 		map.setCodeStruct("4");
 
 
-			///#region 基本属性.
+		///#region 基本属性.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, false, 1, 190, 20);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", true, false, 0, 500, 20);
@@ -336,7 +337,8 @@ public class MapDataExt extends EntityNoName
 			///#endregion 基本属性.
 
 
-			///#region 设计者信息.
+		///#region 设计者信息.
+		map.AddGroupAttr("设计者信息");
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20,true);
@@ -371,6 +373,7 @@ public class MapDataExt extends EntityNoName
 
 
 			///#region 方法 - 基本功能.
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoPageLoadFull";
@@ -485,7 +488,8 @@ public class MapDataExt extends EntityNoName
 
 
 
-			///#region 方法 - 开发接口.
+		///#region 方法 - 开发接口.
+		map.AddGroupMethod("开发接口");
 		rm = new RefMethod();
 		rm.Title = "调用查询API"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoSearch";

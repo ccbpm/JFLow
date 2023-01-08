@@ -4,12 +4,14 @@ import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.sys.*;
 import bp.web.*;
+
+import java.io.Serializable;
 import java.math.*;
 
 /**
  EnMap 的摘要说明。
  */
-public class Map
+public class Map  implements Serializable
 {
 
 	///帮助.
@@ -567,6 +569,7 @@ public class Map
 
 	 */
 	public final void AddRefMethod(RefMethod rm)  {
+		rm.GroupName = this.currGroupMethodName;
 		this.getHisRefMethods().Add(rm);
 	}
 
@@ -599,6 +602,7 @@ public class Map
 		dtl.setRefKey(refKey);
 		dtl.setGroupName(groupName);
 		dtl.setDtlEditerModel(model);
+		dtl.GroupName = this.currGroupMethodName;
 		dtl.Icon = icon;
 		this.getDtls().Add(dtl);
 	}
@@ -721,13 +725,13 @@ public class Map
 	public final AttrsOfOneVSM getAttrsOfOneVSM()
 	{
 		if (this._AttrsOfOneVSM == null)
-		{
 			this._AttrsOfOneVSM = new AttrsOfOneVSM();
-		}
+		this._AttrsOfOneVSM.GroupName = this.currGroupMethodName;
 		return this._AttrsOfOneVSM;
 	}
 	public final void setAttrsOfOneVSM(AttrsOfOneVSM value)
-	{this._AttrsOfOneVSM = value;
+	{
+		this._AttrsOfOneVSM = value;
 	}
 	/**
 	 通过多实体的类名称取出他的OneVSM属性.
@@ -764,6 +768,10 @@ public class Map
 
 	 */
 	public String IndexField = null;
+	/// <summary>
+	/// 属性字段
+	/// </summary>
+	public String ParaFields = null;
 	/**
 	 实体描述
 	 */
@@ -1499,7 +1507,7 @@ public class Map
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
 		attr.setUIBindKey(sql);
-		attr.setHisFKEns(null);
+		//attr.setHisFKEns(null);
 		attr.setUIIsReadonly(!uiIsEnable);
 		this.getAttrs().Add(attr);
 
@@ -1774,7 +1782,10 @@ public class Map
 			this.AddAttr(attr.getHisAttr());
 		}
 	}
-	public final void AddAttrs(Attrs attrs)
+	public final void AddAttrs(Attrs attrs){
+		AddAttrs(attrs,false);
+	}
+	public final void AddAttrs(Attrs attrs,boolean isClearGroupName)
 	{
 		for (Attr attr : attrs.ToJavaList())
 		{
@@ -1782,7 +1793,7 @@ public class Map
 			{
 				continue;
 			}
-			this.getAttrs().Add(attr);
+			this.getAttrs().Add(attr,isClearGroupName);
 		}
 	}
 	public final void AddAttr(Attr attr)
@@ -1908,6 +1919,26 @@ public class Map
 		AddMyFile(fileDesc, fExt, null);
 	}
 
+	//#region 字段分组方法.
+	public String currGroupAttrName = "基本信息";
+	public void AddGroupAttr(String groupName)
+	{
+		AddGroupAttr(groupName,"");
+	}
+	public void AddGroupAttr(String groupName,String icon)
+	{
+		this.currGroupAttrName = groupName;
+		this.getAttrs().currGroupAttrName = groupName;
+	}
+    //#endregion 字段分组方法.
+
+	//#region 方法分组.
+	public String currGroupMethodName = "基本信息";
+	public void AddGroupMethod(String groupName)
+	{
+		this.currGroupMethodName = groupName;
+	}
+   //#endregion 方法分组.
 
 	///增加大块文本输入
 	public final void AddTBStringDoc()

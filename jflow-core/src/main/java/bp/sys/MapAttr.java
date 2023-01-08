@@ -549,12 +549,12 @@ public class MapAttr extends EntityMyPK
 		//return this.GetValStrByKey(MapAttrAttr.DefVal);
 	}
 	public final void setDefVal(String value)
-	{this.GetValStrByKey(MapAttrAttr.DefVal, value);
+	{this.SetValByKey(MapAttrAttr.DefVal, value);
 	}
-	public final void setDefVal(Object val)
+	/*//public final void setDefVal(Object val)
 	{
 		this.GetValStrByKey(MapAttrAttr.DefVal, val.toString());
-	}
+	}*/
 	public final boolean getDefValOfBool()
 	{
 		return this.GetValBooleanByKey(MapAttrAttr.DefVal, false);

@@ -109,11 +109,17 @@ public class UserLog extends EntityMyPK
 		map.AddTBString(UserLogAttr.EmpName, null, "用户名", true, true, 0, 30, 20);
 		map.AddTBString(UserLogAttr.RDT, null, "记录日期", true, true, 0, 20, 20);
 		map.AddTBString(UserLogAttr.IP, null, "IP", true, true, 0, 200, 20);
-		map.AddTBString(UserLogAttr.LogFlag, null, "标识", true, true, 0, 300, 20);
 		map.AddTBStringDoc(UserLogAttr.Docs, null, "说明", true, true, true);
+
+		map.AddDDLEntities(UserLogAttr.LogFlag, null, "类型", new UserLogTypes(), false);
+		map.AddDDLEntities(UserLogAttr.Level, null, "级别", new UserLogLevels(), false);
 
 		map.DTSearchKey = UserLogAttr.RDT;
 		map.DTSearchWay = DTSearchWay.ByDate;
+
+		//查询条件.
+		map.AddSearchAttr(UserLogAttr.Level);
+		map.AddSearchAttr(UserLogAttr.LogFlag);
 
 		this.set_enMap(map);
 		return this.get_enMap();

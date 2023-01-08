@@ -148,7 +148,7 @@ public class FrmTrack extends Entity
 		}
 
 		Map map = new Map("WF_Node", "轨迹图标组件");
-
+		map.AddGroupAttr("轨迹组件");
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmTrackAttr.FrmTrackLab, "轨迹", "显示标签", true, false, 0, 200, 10, false);

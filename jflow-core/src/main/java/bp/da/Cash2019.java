@@ -1,50 +1,50 @@
 package bp.da;
-import java.util.Hashtable;
+
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
 import bp.en.Entities;
 import bp.en.Row;
+import bp.tools.StringUtils;
 
-/** 
+import java.util.Hashtable;
+
+/**
+ *  hashtable
+ *  	--  entity
+ *  		--  row
+ */
+
+/**
  实体缓存
 */
 public class Cash2019
 {
-	/** 
+
+	 public static String redisKey = SystemConfig.getRedisCacheKey("Case2019");
+	/**
 	 清除所有的实体缓存.
 	*/
-	public static void ClearCash()
+/*	public static void ClearCash()
 	{
-		_hts = null;
-	}
-	/** 
-	 清除指定的缓存数据.
-	 
-	 param enName 实体名称
-	*/
-	public static void ClearCashSpecEnName(String enName) throws Exception {
-		Object tempVar = getHts().get(enName);
-		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
-		if (ht != null)
-		{
-			getHts().remove(enName);
-		}
-	}
+//		_hts = null;
+		ContextHolderUtils.getRedisUtils().del(false,redisKey);
+	}*/
 
-
-		///缓存ht
-	private static Hashtable _hts;
-	public static Hashtable getHts()
-	{
-		if (_hts == null)
-		{
-			_hts = new Hashtable();
-		}
-		return _hts;
-	}
-
-		///
-
-
-		///对实体的操作.
+	//缓存ht
+	// en-pk
+//	private static Hashtable _hts;
+//	public static Hashtable getHts()
+//	{
+//
+//		_hts =ContextHolderUtils.getRedisUtils().hget(false,redisKey);
+//		if (_hts == null)
+//		{
+//			_hts = new Hashtable<>();
+//		}
+//
+//		return _hts;
+//	}
+	///对实体的操作.
 	/** 
 	 把实体放入缓存里面
 	 
@@ -53,52 +53,54 @@ public class Cash2019
 	 param row
 	*/
 	public static void PutRow(String enName, String pkVal, Row row)  {
-		synchronized (lockObj)
-		{
-			Object tempVar = getHts().get(enName);
-			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
-			if (ht == null)
-			{
-				ht = new Hashtable();
-				getHts().put(enName, ht);
-			}
-			if (ht.containsKey(pkVal) == true)
-			{
-				ht.put(pkVal, row);
-			}
-			else
-			{
-				ht.put(pkVal, row);
-			}
-		}
+//		synchronized (lockObj)
+//		{
+//			Object tempVar = getHts().get(enName);
+//			Hashtable<String,Object> ht = tempVar instanceof Hashtable ? (Hashtable<String,Object>)tempVar : null;
+//			if (ht == null)
+//			{
+//				ht = new Hashtable<>();
+//				getHts().put(enName, ht);
+//			}
+//			ht.put(pkVal, row);
+//			ContextHolderUtils.getRedisUtils().hset(false,redisKey,enName,ht, 300);
+		if(StringUtils.isBlank(pkVal)) return;
+			ContextHolderUtils.getRedisUtils().set(false, SystemConfig.getRedisCacheKey(enName + "_"+pkVal), row);
+//		}
 	}
 	public static void UpdateRow(String enName, String pkVal, Row row)  {
-		synchronized (lockObj)
-		{
-			Object tempVar = getHts().get(enName);
-			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
-			if (ht == null)
-			{
-				ht = new Hashtable();
-				getHts().put(enName, ht);
-			}
-			ht.put(pkVal, row);
-		}
+//		synchronized (lockObj)
+//		{
+//			Object tempVar = getHts().get(enName);
+//			Hashtable<String,Object> ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
+//			if (ht == null)
+//			{
+//				ht = new Hashtable<>();
+//				getHts().put(enName, ht);
+//
+//			}
+//			ht.put(pkVal, row);
+//			ContextHolderUtils.getRedisUtils().hset(false,redisKey,enName,ht, 300);
+		if(StringUtils.isBlank(pkVal)) return;
+			ContextHolderUtils.getRedisUtils().set(false, SystemConfig.getRedisCacheKey(enName + "_"+pkVal), row);
+//		}
 	}
 	public static void DeleteRow(String enName, String pkVal)  {
-		synchronized (lockObj)
-		{
-			Object tempVar = getHts().get(enName);
-			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
-			if (ht == null)
-			{
-				ht = new Hashtable();
-				getHts().put(enName, ht);
-			}
-			ht.remove(pkVal.toString());
-		}
+//		synchronized (lockObj)
+//		{
+//			Object tempVar = getHts().get(enName);
+//			Hashtable<String,Object> ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
+//			if (ht == null)
+//			{
+//				ht = new Hashtable<>();
+//				getHts().put(enName, ht);
+//			}
+//			ht.remove(pkVal.toString());
+//			ContextHolderUtils.getRedisUtils().hset(false,redisKey,enName,ht,300);
+		ContextHolderUtils.getRedisUtils().del(false, SystemConfig.getRedisCacheKey(enName + "_"+pkVal));
+//		}
 	}
-	private static Object lockObj = new Object();
+//	private static final Object lockObj = new Object();
 	/** 
 	 获得实体类
 	 
@@ -107,21 +109,24 @@ public class Cash2019
 	 @return row
 	*/
 	public static Row GetRow(String enName, String pkVal)  {
-		synchronized (lockObj)
-		{
-			Object tempVar = getHts().get(enName);
-			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
-			if (ht == null)
-			{
-				return null;
-			}
-			if (ht.containsKey(pkVal) == true)
-			{
-				return ht.get(pkVal) instanceof Row ? (Row)ht.get(pkVal) : null;
-			}
-			return null;
-		}
+//		synchronized (lockObj)
+//		{
+		Object obj = ContextHolderUtils.getRedisUtils().get(false,SystemConfig.getRedisCacheKey(enName + "_"+pkVal));
+		return obj==null ? null : (Row) obj;
+		//			Object tempVar = getHts().get(enName);
+//			Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
+//			if (ht == null)
+//				return null;
+//			if(DataType.IsNullOrEmpty(pkVal)==true)
+//				return null;
+//			if (ht.containsKey(pkVal) == true)
+//			{
+//				return ht.get(pkVal) instanceof Row ? (Row)ht.get(pkVal) : null;
+//			}
+//			return null;
+//		}
 	}
+
 
 		/// 对实体的操作.
 
@@ -133,10 +138,10 @@ public class Cash2019
 	 param ensName 集合实体类名
 	 param ens 实体集合
 	*/
-	public static void PutEns(String ensName, Entities ens)
-	{
-
-	}
+//	public static void PutEns(String ensName, Entities ens)
+//	{
+//
+//	}
 	/** 
 	 获取实体集合类
 	 
@@ -144,11 +149,9 @@ public class Cash2019
 	 param pkVal 主键
 	 @return 实体集合
 	*/
-	public static Entities GetEns(String ensName, Object pkVal)
-	{
-		return null;
-	}
-
-		/// 对实体的集合操作.
+//	public static Entities GetEns(String ensName, Object pkVal)
+//	{
+//		return null;
+//	}
 
 }

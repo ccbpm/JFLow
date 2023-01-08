@@ -782,15 +782,41 @@ public class WorkNodePlus
 			}
 		}
 
-		//按照岗位删除.
+		//按照角色删除,同角色的人员.
 		if (nd.getGenerWorkerListDelRole() == 2)
 		{
-			//1. 求出来: 当前人员的岗位集合与节点岗位集合的交集， 表示：当前人员用这些岗位做了这个节点的事情.
-			String sqlGroupMy = "SELECT A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node="+nd.getNodeID()+" AND A.FK_Emp='"+WebUser.getNo()+"'" ;
+			//1. 求出来: 当前人员的角色集合与节点角色集合的交集， 表示：当前人员用这些角色做了这个节点的事情.
+			//获得当前节点使用的岗位, 首先从临时的变量里找（动态的获取的）,没有就到 NodeStation 里找.
+			String temp = gwf.GetParaString("NodeStas" + gwf.getFK_Node(), ""); //这个变量是上一个节点通过字段选择出来的.
+			String stasSQLIn = "";
+			if (DataType.IsNullOrEmpty(temp) == false)
+			{
+				stasSQLIn = DataType.DealFromatSQLWhereIn(temp);
+			}
+			else
+			{
+				DataTable dtStas = DBAccess.RunSQLReturnTable("SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + nd.getNodeID());
+				if (dtStas.Rows.size() == 0)
+					throw new Exception("err@执行按照岗位删除人员待办出现错误，没有找到节点"+nd.getNodeID()+"-"+nd.getName()+",绑定的岗位.");
+
+				String strs = "";
+				for (DataRow dr : dtStas.Rows)
+				{
+					strs += ",'" + dr.getValue(0).toString() + "'";
+				}
+				stasSQLIn = strs.substring(1);
+			}
+			if (DataType.IsNullOrEmpty(stasSQLIn) == true)
+				throw new Exception("err@没有找到当前节点使用的岗位集合.");
+
+			//求出来我使用的岗位集合.
+			String sqlGroupMy = ""; //我使用岗位.
+			sqlGroupMy = "SELECT FK_Station FROM Port_DeptEmpStation  WHERE FK_Station IN (" + stasSQLIn + ") AND FK_Emp='" + WebUser.getNo() + "'";
 			DataTable dtGroupMy = DBAccess.RunSQLReturnTable(sqlGroupMy);
 			String stasGroupMy = "";
 			for (int i = 0; i < dtGroupMy.Rows.size(); i++)
 				stasGroupMy +=",'" + dtGroupMy.Rows.get(i).getValue(0).toString()+ "'";
+			stasGroupMy = stasGroupMy.substring(1);
 
 			//2. 遍历: 当前的操作员，一个个的判断是否可以删除.
 			GenerWorkerLists gwls = new GenerWorkerLists();
@@ -803,18 +829,18 @@ public class WorkNodePlus
 				if (item.getFK_Emp().equals(WebUser.getNo()) == true)
 					continue; //要把自己排除在外.
 
-				String sqlGroupUser = "SELECT A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + nd.getNodeID() + " AND A.FK_Emp='" + item.getFK_Emp() + "'";
+				String sqlGroupUser = "SELECT FK_Station FROM Port_DeptEmpStation WHERE FK_Station IN (" + stasSQLIn + ") AND FK_Emp='" + item.getFK_Emp() + "'";
 				DataTable dtGroupUser = DBAccess.RunSQLReturnTable(sqlGroupUser);
-				String tempNo="";
+
 				// 判断  sqlGroupMy  >= sqlGroupUser  是否包含,如果包含，就是删除对象.
-				int isCanDel = 1;
-				for (int i = 0; i < dtGroupUser.Rows.size(); i++){
-					tempNo = "'" + dtGroupUser.Rows.get(i).getValue(0).toString()+ "'";
-					if (stasGroupMy.contains(tempNo) == false)
-						isCanDel = 0;
+				boolean isCanDel = true;
+				for (DataRow dr : dtGroupUser.Rows){
+					String staNo = "'" + dr.getValue(0).toString() + "'";
+					if (stasGroupMy.contains(staNo) == false)
+						isCanDel = false;
 				}
 				//符合删除的条件.
-				if (isCanDel == 1)
+				if (isCanDel == true)
 				{
 					item.setIsEnable(false) ;
 					item.setIsPassInt(1);
@@ -823,18 +849,15 @@ public class WorkNodePlus
 			}
 
 			//地瓜土豆问题.
-			// 3 检查同岗位的人员是否有交集: 潘茄的人,马铃薯的人，都分别审批了，需要删除 潘茄+马铃薯岗位的人.
+			// 3 检查同岗位的人员是否有交集: 番茄的人,马铃薯的人，都分别审批了，需要删除 番茄+马铃薯岗位的人.
 			// 3.1 找出来处理人中，用到人岗位集合， 就是说已经消耗掉的岗位集合.
-			String sql = "SELECT B.FK_Station,A.FK_Emp FROM WF_GenerWorkerlist A, WF_NodeStation B, Port_DeptEmpStation C";
-			sql += " WHERE A.FK_Node=B.FK_Node AND A.FK_Emp=C.FK_Emp AND B.FK_Station=C.FK_Station AND A.WorkID=" + gwf.getWorkID() +
-					" AND A.FK_Node=" + nd.getNodeID();
-			sql += " AND (A.IsPass=1 OR A.FK_Emp='"+bp.web.WebUser.getNo()+"') ";
-
+			String sql = "SELECT B.FK_Station,A.FK_Emp FROM WF_GenerWorkerlist A, Port_DeptEmpStation B ";
+			sql += " WHERE A.FK_Emp=B.FK_Emp AND B.FK_Station IN ("+ stasSQLIn + ") AND A.WorkID=" + gwf.getWorkID() + " AND A.FK_Node=" + nd.getNodeID();
+			sql += " AND (A.IsPass=1 OR A.FK_Emp='" + WebUser.getNo() + "') ";
 			DataTable dtStationsUsed = DBAccess.RunSQLReturnTable(sql);
 			String stasUseed = "";
-			for (int i = 0; i < dtStationsUsed.Rows.size(); i++)
+			for (DataRow dr : dtStationsUsed.Rows)
 			{
-				DataRow dr = dtStationsUsed.Rows.get(i);
 				stasUseed += ",'" + dr.getValue(0).toString() + "'";
 			}
 
@@ -847,15 +870,13 @@ public class WorkNodePlus
 					continue;
 
 				//未处理的人的岗位集合.
-				String sqlGroupUser = "SELECT A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B WHERE " +
-						"A.FK_Station=B.FK_Station AND B.FK_Node=" + nd.getNodeID() + " AND A.FK_Emp='" + item.getFK_Emp() + "'";
+				String sqlGroupUser = "SELECT FK_Station FROM Port_DeptEmpStation A  WHERE  FK_Station IN ("+ stasSQLIn + ") AND FK_Emp='" + item.getFK_Emp() + "'";
 				DataTable dtGroupUser = DBAccess.RunSQLReturnTable(sqlGroupUser);
 
 				// 判断  sqlGroupMy  >= sqlGroupUser  是否包含,如果包含，就是删除对象.
 				boolean isCanDel = true;
-				for (int i = 0; i < dtGroupUser.Rows.size(); i++)
+				for (DataRow dr : dtGroupUser.Rows)
 				{
-					DataRow dr = dtGroupUser.Rows.get(i);
 					String staNo = "'" + dr.getValue(0).toString() + "'";
 					if (stasUseed.contains(staNo) == false)
 						isCanDel = false;
@@ -869,7 +890,7 @@ public class WorkNodePlus
 					item.Update();
 				}
 			}
-			//endregion  检查同岗位的人员是否有交集: 潘茄的人,马铃薯的人，都分别审批了，需要删除 潘茄+马铃薯岗位的人.
+			//endregion  检查同岗位的人员是否有交集: 番茄的人,马铃薯的人，都分别审批了，需要删除 番茄+马铃薯岗位的人.
 		}
 	}
 	/** 
@@ -1198,6 +1219,9 @@ public class WorkNodePlus
 					case OverParentFlow: //父流程设置所有子流程结束后，父流程结束
 						msg = SubFlowOver_ParentFlowOver(true, wn.getHisGenerWorkFlow().getPWorkID());
 						break;
+					case SendParentFlowToSpecifiedNode://流程运行到指定的节点 ZKR
+						msg = SubFlowOver_ParentFlowToSpecifiedNode(true,nd,subFlow, wn.getHisGenerWorkFlow().getPWorkID());
+						break;
 					default:
 						break;
 
@@ -1410,7 +1434,7 @@ public class WorkNodePlus
 		//所有子流程结束后，父流程自动结束
 		if (isAllSubFlowOver == true)
 		{
-			if (bp.wf.Dev2Interface.Flow_NumOfSubFlowRuning(pworkid) == 0)
+			if (bp.wf.Dev2Interface.Flow_NumOfSubFlowRuning(pworkid) != 0)
 			{
 				return "";
 			}
@@ -1423,6 +1447,75 @@ public class WorkNodePlus
 
 		return bp.wf.Dev2Interface.Flow_DoFlowOver(gwf.getWorkID(), "父流程[" + gwf.getFlowName() + "],标题为[" + gwf.getTitle() + "]成功结束");
 	}
+
+	/**
+	 子流程结束后，父流程自动结束
+
+	 param isAllSubFlowOver
+	 param pworkid @ZKR
+	 @return
+	 */
+	public static String SubFlowOver_ParentFlowToSpecifiedNode(boolean isAllSubFlowOver,FrmSubFlow nd,SubFlow subFlow, long pworkid) throws Exception {
+		//所有子流程结束后，父流程自动结束
+		if (isAllSubFlowOver == true)
+		{
+			if (bp.wf.Dev2Interface.Flow_NumOfSubFlowRuning(pworkid) != 0)
+				return "";
+		}
+		int skipNodeID = nd.GetValIntByKey("SkipNodeID",0);
+		GenerWorkFlow gwf = new GenerWorkFlow(pworkid);
+		if(skipNodeID==0){
+			if (subFlow.getSubFlowHidTodolist() == true)
+				DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=0 Where WorkID=" + gwf.getWorkID() + " AND FK_Node=" + gwf.getFK_Node() + " AND IsPass=100");
+			throw new Exception("err@所有子流程结束后,父流程跳转到指定节点，指定节点没有设置");
+		}
+		if (gwf.getWFState() == WFState.Complete)
+			return "";
+		//当前登录用户.
+		String currUserNo = WebUser.getNo();
+		try
+		{
+			//获得父流程.
+			String[] strs = gwf.getTodoEmps().split("[;]", -1);
+			strs = strs[0].split("[,]", -1);
+			String empNo = strs[0];
+			if (DataType.IsNullOrEmpty(empNo) == true)
+			{
+				throw new RuntimeException("err@没有找到父流程的处理人.");
+			}
+			Emp emp = new Emp(empNo);
+			//让父流程的userNo登录.
+			bp.wf.Dev2Interface.Port_Login(emp.getNo());
+			SendReturnObjs objs = null;
+			try
+			{
+				objs =  bp.wf.Dev2Interface.Node_SendWork(gwf.getFK_Flow(), gwf.getWorkID(),skipNodeID,null);
+				//切换到当前流程节点.
+				bp.wf.Dev2Interface.Port_Login(currUserNo);
+			}
+			catch (RuntimeException ex)
+			{
+				bp.wf.Dev2Interface.Port_Login(currUserNo);
+				throw new RuntimeException(ex.getMessage());
+			}
+
+			return "@父流程运行到指定节点:<br/>" + objs.ToMsgOfHtml();
+		}
+		catch (RuntimeException ex)
+		{
+			//切换到当前流程节点.
+			bp.wf.Dev2Interface.Port_Login(currUserNo);
+			String info = "这个错误";
+			if (ex.getMessage().contains("WorkOpt/") == true)
+			{
+				info += "@流程设计错误:自动运行到的指定节点["+skipNodeID+"]的接收人规则是由上一个人员来选择的,导致不能自动运行到指定节点.";
+				return info;
+			}
+
+			return "@在最后一个子流程完成后，让父流程运行到指定节点时，出现错误:" + ex.getMessage();
+		}
+	}
+
 	/** 
 	 子流程结束后，处理同级子流程
 	 

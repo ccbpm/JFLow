@@ -34,12 +34,16 @@ public class FindWorker
 	public final DataTable FindByWorkFlowModel() throws Exception {
 		this.town = town;
 
+
+		Node toNode = town.getHisNode();
+
 		DataTable dt = new DataTable();
 		dt.Columns.Add("No", String.class);
 		String sql;
 		String FK_Emp;
 
 		// 如果执行了两次发送，那前一次的轨迹就需要被删除,这里是为了避免错误。
+
 		ps = new Paras();
 		ps.Add("WorkID", town.getHisWork().getOID());
 		ps.Add("FK_Node", town.getHisNode().getNodeID());
@@ -320,7 +324,6 @@ public class FindWorker
 				{
 					if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelected || town.getHisNode().getHisDeliveryWay() == DeliveryWay.BySelectedForPrj)
 					{
-						Node toNode = this.town.getHisNode();
 						Node currNode = this.currWn.getHisNode();
 						if (toNode.isResetAccepter() == false && toNode.getHisToNDs().contains("@" + currNode.getNodeID()) == true &&
 								currNode.getHisToNDs().contains("@" + toNode.getNodeID()) == true)
@@ -692,9 +695,10 @@ public class FindWorker
 			}
 			return dt;
 		}
-
+		//#endregion 按照上一个节点表单指定字段的人员处理。
 		///#region  按照上一个节点表单指定字段的 【岗位】处理。
-		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStations)
+		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsAI
+				|| town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsOnly)
 		{
 			// 检查接受人员规则,是否符合设计要求.
 			String specEmpFields = town.getHisNode().getDeliveryParas();
@@ -705,13 +709,16 @@ public class FindWorker
 
 			if (this.currWn.rptGe.getEnMap().getAttrs().contains(specEmpFields) == false)
 			{
-				throw new RuntimeException("@您设置的接受人规则是按照表单指定的字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
+				throw new RuntimeException("@您设置的接受人规则是按照表单指定的岗位字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
 			}
 
 			//判断该字段是否启用了pop返回值？
 			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal=" + this.WorkID + " AND EleID='" + specEmpFields + "'";
 			String emps = "";
 			DataTable dtVals = DBAccess.RunSQLReturnTable(sql);
+
+			//获得岗位信息.
+			String stas = "";
 
 			//获取接受人并格式化接受人,
 			if (dtVals.Rows.size() > 0)
@@ -726,10 +733,8 @@ public class FindWorker
 				emps = this.currWn.rptGe.GetValStringByKey(specEmpFields);
 			}
 
-
 			emps = emps.replace(" ", ""); //去掉空格.
 
-			String stas="";
 			if (emps.contains(",") && emps.contains(";"))
 			{
 				/*如果包含,; 例如 xxx,岗位1;333,岗位2;*/
@@ -741,53 +746,106 @@ public class FindWorker
 						continue;
 					}
 
-
 					String[] ss = str.split("[,]", -1);
-					stas+=",'"+ss[0]+"'";
+					stas += "," + ss[0];
 
 				}
 				if (dt.Rows.size() == 0 && town.getHisNode().getHisWhenNoWorker() == false)
-					throw new RuntimeException("@输入的接受人员信息错误;[" + emps + "]。");
-
-			}
-
-			emps = emps.replace(";", ",");
-			emps = emps.replace("；", ",");
-			emps = emps.replace("，", ",");
-			emps = emps.replace("、", ",");
-			emps = emps.replace("@", ",");
-
-			if (DataType.IsNullOrEmpty(emps) && town.getHisNode().getHisWhenNoWorker() == false)
-			{
-				throw new RuntimeException("@没有在字段xx[" + this.currWn.getHisWork().getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人，工作无法向下发送。");
-			}
-
-			// 把它加入接受人员列表中.
-			String[] myemps = emps.split("[,]", -1);
-			for (String s : myemps)
-			{
-				if (DataType.IsNullOrEmpty(s))
 				{
-					continue;
+					throw new RuntimeException("@输入的接受人员岗位信息错误;[" + emps + "]。");
+				}
+				else
+				{
+					return dt;
+				}
+			}else
+			{
+				emps = emps.replace(";", ",");
+				emps = emps.replace("；", ",");
+				emps = emps.replace("，", ",");
+				emps = emps.replace("、", ",");
+				emps = emps.replace("@", ",");
+
+				if (DataType.IsNullOrEmpty(emps) && town.getHisNode().getHisWhenNoWorker() == false)
+				{
+					throw new RuntimeException("@没有在字段[" + this.currWn.getHisWork().getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人，工作无法向下发送。");
 				}
 
-				stas+=",'"+s+"'";
+				// 把它加入接受人员列表中.
+				String[] myemps = emps.split("[,]", -1);
+				for (String s : myemps)
+				{
+					if (DataType.IsNullOrEmpty(s))
+					{
+						continue;
+					}
+					stas += "," + s;
+				}
 			}
 
 			//根据岗位：集合获取信息.
-			stas=stas.substring(1);
+			stas = stas.substring(1);
 
-			sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN(" + stas + ") AND FK_Dept='" + WebUser.getFK_Dept() + "'";
-			dt = DBAccess.RunSQLReturnTable(sql);
-			if (dt.Rows.size()  == 0 && town.getHisNode().getHisWhenNoWorker() == false)
-				throw new Exception("err@按照字段岗位找接受人错误，当前部门下没有您选择的岗位人员.");
+			//把这次的岗位s存储到临时变量,以方便用到下一个节点多人处理规则，按岗位删除时用到。
+			this.currWn.getHisGenerWorkFlow().SetPara("NodeStas" + town.getHisNode().getNodeID(), stas);
+
+			// 仅按岗位计算.以下都有要重写.
+			if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsOnly)
+			{
+				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStations(stas);
+				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
+				{
+					throw new RuntimeException("err@按照字段岗位(仅按岗位计算)找接受人错误,当前部门下没有您选择的岗位人员.");
+				}
+
+				return dt;
+			}
+
+			///#region 按岗位智能计算, 还是集合模式.
+			if (toNode.getDeliveryStationReqEmpsWay() == 0)
+			{
+				String deptNo = WebUser.getFK_Dept();
+				dt = WorkFlowBuessRole.FindWorker_GetEmpsByDeptAI(stas, deptNo);
+				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
+				{
+					throw new RuntimeException("err@按照字段岗位(智能)找接受人错误,当前部门与父级部门下没有您选择的岗位人员.");
+				}
+				return dt;
+			}
+			///#endregion 按岗位智能计算, 要判断切片模式,还是集合模式.
+
+			///#region 按岗位智能计算, 切片模式. 需要对每个岗位都要找到接受人，然后把这些接受人累加起来.
+			if (toNode.getDeliveryStationReqEmpsWay() == 1 || toNode.getDeliveryStationReqEmpsWay() == 2)
+			{
+				String deptNo = WebUser.getFK_Dept();
+				String[] temps = stas.split("[,]", -1);
+				for (String str : temps)
+				{
+					//求一个岗位下的人员.
+ 					DataTable mydt1 = WorkFlowBuessRole.FindWorker_GetEmpsByDeptAI(str, deptNo);
+
+					//如果是严谨模式.
+					if (toNode.getDeliveryStationReqEmpsWay() == 1 && mydt1.Rows.size() == 0)
+					{
+						Station st = new Station(str);
+						throw new RuntimeException("@岗位[" + st.getName() + "]下，没有找到人不能发送下去，请检查组织结构是否完整。");
+					}
+
+					//累加.
+					for (DataRow dr : mydt1.Rows)
+					{
+						DataRow mydr = dt.NewRow();
+						mydr.setValue(0,dr.getValue(0).toString());
+						dt.Rows.add(mydr);
+					}
+				}
+			}
+			///#endregion 按岗位智能计算, 切片模式.
 			return dt;
 		}
+		///#endregion 按照上一个节点表单指定字段的[岗位]人员处理.
 
-			///#endregion 按照上一个节点表单指定字段的人员处理。
-
-
-			///#region 为省立医院增加，按照指定的部门范围内的岗位计算..
+		///#region 为省立医院增加，按照指定的部门范围内的岗位计算..
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.FindSpecDeptEmpsInStationlist)
 		{
 			//sql = "SELECT pdes.FK_Emp AS No"
@@ -1081,7 +1139,6 @@ public class FindWorker
 				int i = sas.QueryAccepterPriSetting(this.town.getHisNode().getNodeID());
 				if (i == 0)
 				{
-					Node toNode = this.town.getHisNode();
 					GenerWorkFlow gwf = new GenerWorkFlow(this.WorkID);
 					if (DataType.IsNullOrEmpty(toNode.getDeliveryParas()) == true)
 					{
@@ -1170,7 +1227,6 @@ public class FindWorker
 				int i = sas.QueryAccepterPriSetting(this.town.getHisNode().getNodeID());
 				if (i == 0)
 				{
-					Node toNode = this.town.getHisNode();
 					throw new RuntimeException("url@./WorkOpt/AccepterOfOrg.htm?FK_Flow=" + toNode.getFK_Flow() + "&FK_Node=" + this.currWn.getHisNode().getNodeID() + "&ToNode=" + toNode.getNodeID() + "&WorkID=" + this.WorkID);
 				}
 
@@ -1239,7 +1295,18 @@ public class FindWorker
 				Dept pDept = new Dept(deptNo);
 				throw new RuntimeException("err@按照 [发送人上级部门指定的岗位] 计算接收人的时候出现错误，没有找到人，请检查节点绑定的岗位以及该部门【" + pDept.getName() + "】下的人员设置的岗位.");
 			}*/
-			return dt;
+			if (dt.Rows.size() > 0)
+				return dt;
+			else
+			{
+				if (this.town.getHisNode().getHisWhenNoWorker() == false) {
+					bp.port.Dept pDept = new bp.port.Dept(deptNo);
+					throw new Exception("err@按照 [发送人上级部门指定的岗位] 计算接收人的时候出现错误，没有找到人，请检查节点绑定的岗位以及该部门【" + pDept.getName() + "】下的人员设置的岗位.");
+				}
+				else
+					return dt;
+			}
+			
 		}
 
 			///#endregion 发送人的上级部门的负责人 2022.2.20 beijing.

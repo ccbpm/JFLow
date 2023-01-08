@@ -328,88 +328,39 @@ public class SystemConfig {
 		CS_DBConnctionDic = new Hashtable<String, Object>();
 	}
 
+	/*****************************************项目中使用到的路径*******************************************************/
 	/**
-	 * 应用程序路径
-	 * 
+	 * WebApp Path
+	 *
 	 * @return
 	 */
-	public static String getPhysicalApplicationPath() {
-		return "D:\\JJFlow\\trunk\\JJFlow\\";
+	public static String getPathOfWebApp(){
+		HttpServletRequest request = bp.sys.base.Glo.getRequest();
+		if (SystemConfig.getIsBSsystem()) {
+			if (request == null || request.getSession() == null) {
+				return bp.wf.Glo.getHostURL() + "/";
+			} else {
+				if(getIsJarRun() == true )
+					return "resources/";
+				String path = bp.sys.base.Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
+				return path;
+			}
+		} else {
+			return "";
+		}
 	}
-
 	/**
-	 * 文件放置的路径
-	 * 
+	 * ccflow网站目录
+	 *
 	 * @return
 	 */
-	public static String getPathOfUsersFiles() {
-		return "/Data/Files/";
+	public static String getCCFlowWebPath() {
+		return bp.wf.Glo.getCCFlowAppPath();
 	}
 
 	/**
-	 * 临时文件路径
-	 * 
-	 * @return
-	 */
-	public static String getPathOfTemp() {
-		if(SystemConfig.getIsJarRun() == false)
-			return getPathOfDataUser() + "Temp/";
-		return getPhysicalPath()+"DataUser/Temp/";
-	}
-
-	public static String getPathOfWorkDir() {
-		return "D:/JFlow/trunk/";
-	}
-
-	public static String getPathOfFDB() {
-		return getPathOfWebApp() + "/DataUser/FDB/";
-	}
-
-	/**
-	 * 数据文件
-	 * 
-	 * @return
-	 */
-	public static String getPathOfData() {
-
-		bp.da.Log.DebugWriteInfo(getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()
-				+"/Data/");
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()  + "/Data/";
-	}
-
-	public static String getPathOfDataUser(){
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString() + "DataUser/";
-	}
-
-	/**
-	 * XmlFilePath
-	 * 
-	 * @return
-	 */
-	public static String getPathOfXML()throws Exception {
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/XML/";
-	}
-
-	public static String getPathOfAppUpdate()throws Exception {
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/AppUpdate/";
-	}
-
-	public static String getPathOfCyclostyleFile()throws Exception {
-		return getPathOfWebApp() + "DataUser/CyclostyleFile/";
-	}
-
-	/**
-	 * 应用程序名称
-	 * 
-	 * @return
-	 */
-	public static String getAppName() {
-		return "JJFlow";
-	}
-
-	/**
-	 * ccflow物理目录
-	 * 
+	 * 本机运行或者war包发布的物理地址
+	 *
 	 * @return
 	 */
 	public static String getCCFlowAppPath() {
@@ -419,58 +370,10 @@ public class SystemConfig {
 		return getPathOfWebApp();
 	}
 
-	/*
-	 * 集成的框架.
-	 */
-	public static String getRunOnPlant() {
-
-		String str = (String) SystemConfig.getAppSettings().get("RunOnPlant");
-		if (str == null) {
-			return "bp";
-		}
-
-		return str;
-
-	}
-
 	/**
-	 * ccflow网站目录
-	 * 
+	 * 打包后的物理地址
 	 * @return
 	 */
-	public static String getCCFlowWebPath() {
-		return bp.wf.Glo.getCCFlowAppPath();
-	}
-
-
-
-	public static boolean getIsJarRun(){
-        Object str =  SystemConfig.getAppSettings().get("IsStartJarPackage");
-        if(str == null || str.toString().equals("0"))
-            return false;
-        return true;
-    }
-	/**
-	 * WebApp Path
-	 * 
-	 * @return
-	 */
-	public static String getPathOfWebApp(){
-		HttpServletRequest request = bp.sys.base.Glo.getRequest();
-		if (SystemConfig.getIsBSsystem()) {
-			if (request == null || request.getSession() == null) {
-				return bp.wf.Glo.getHostURL() + "/";
-			} else {
-			    if(getIsJarRun() == true )
-			        return "resources/";
-				String path = bp.sys.base.Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
-				return path;
-			}
-		} else {
-			return "";
-		}
-	}
-
 	public static String getPhysicalPath(){
 		ApplicationHome home = new ApplicationHome(SystemConfig.class);
 		File jarFile = home.getSource();
@@ -481,11 +384,110 @@ public class SystemConfig {
 		}
 		return "";
 	}
-	public static boolean getIsBSsystem() {
-		return SystemConfig.GetValByKeyBoolen("IsBSsystem", true);
+	/**
+	 * 数据文件
+	 * 路径：WF/Data/
+	 * @return
+	 */
+	public static String getPathOfData() {
+
+		bp.da.Log.DebugWriteInfo(getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()
+				+"/Data/");
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString()  + "/Data/";
+	}
+	/**
+	 * XmlFilePath
+	 * 路径：WF/Data/XML
+	 * @return
+	 */
+	public static String getPathOfXML()throws Exception {
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/XML/";
 	}
 
+	/**
+	 * 自定义的文件
+	 * 路径 DataUser/
+	 * 部分文件由于读取，部分文件路径需要上传
+	 * @return
+	 */
+	public static String getPathOfDataUser(){
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString() + "DataUser/";
+	}
+
+	/**
+	 * 存储打印模板的路径
+	 * 路径 DataUser/CyclostyleFile/
+	 * 区分jar包发布
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getPathOfCyclostyleFile()throws Exception {
+		if(SystemConfig.getIsJarRun() == false)
+			return getPathOfDataUser() + "CyclostyleFile/";
+		return getPhysicalPath() + "DataUser/CyclostyleFile/";
+	}
+
+	/**
+	 * 临时文件路径
+	 *  路径 DataUser/Temp/
+	 *  多用于临时存储上传的文件 区分 jar
+	 * @return
+	 */
+	public static String getPathOfTemp() {
+		if(SystemConfig.getIsJarRun() == false)
+			return getPathOfDataUser() + "Temp/";
+		return getPhysicalPath()+"DataUser/Temp/";
+	}
+
+	/**
+	 * 临时文件路径
+	 *  路径 DataUser/Temp/
+	 *  多用于临时存储上传的文件 区分 jar
+	 * @return
+	 */
+	public static String getPathOfInstancePacketOfData() {
+		if(SystemConfig.getIsJarRun() == false)
+			return getPathOfDataUser() + "InstancePacketOfData/";
+		return getPhysicalPath()+"DataUser/InstancePacketOfData/";
+	}
+
+
+	public static String getPathOfFDB() {
+		return getPathOfWebApp() + "/DataUser/FDB/";
+	}
+	/**
+	 * 应用程序名称
+	 * 
+	 * @return
+	 */
+	public static String getAppName() {
+		return "JJFlow";
+	}
+
+
+	/*
+	 * 集成的框架.
+	 */
+	public static String getRunOnPlant() {
+		String str = (String) SystemConfig.getAppSettings().get("RunOnPlant");
+		if (str == null) {
+			return "bp";
+		}
+		return str;
+
+	}
+	public static boolean getIsJarRun(){
+        Object str =  SystemConfig.getAppSettings().get("IsStartJarPackage");
+        if(str == null || str.toString().equals("0"))
+            return false;
+        return true;
+    }
+	public static boolean getIsBSsystem() {
+		return SystemConfig._IsBSsystem;
+		//return SystemConfig.GetValByKeyBoolen("IsBSsystem", true);
+	}
 	public static void setIsBSsystem(boolean value) {
+
 		SystemConfig._IsBSsystem = value;
 	}
 
@@ -510,12 +512,6 @@ public class SystemConfig {
 	 */
 	 public static String getSysName() {
 		String s = getAppSettings().get("SysName").toString();
-//		 String s = null;
-//		 try {
-//			 s = new String(s1.getBytes("iso-8859-1"),"utf-8");
-//		 } catch (UnsupportedEncodingException e) {
-//			 e.printStackTrace();
-//		 }
 
 		 if (s == null) {
 			s = "请在web.propertoes中配置SysName名称";
@@ -551,18 +547,6 @@ public class SystemConfig {
 		}
 	}
 
-	/**
-	 * 到的路径.PageOfAfterAuthorizeLogin
-	 * @return
-	 */
-	public static String getPageOfAfterAuthorizeLogin() {
-		/*
-		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
-		 * + "" + getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
-		 */
-		return bp.sys.base.Glo.class.getClass().getResource("/").getPath() + ""
-				+ getAppSettings().get("PageOfAfterAuthorizeLogin").toString();
-	}
 
 	/**
 	 * 丢失session 到的路径
@@ -570,10 +554,6 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPageOfLostSession() {
-		/*
-		 * warning return BP.Glo.getHttpContextCurrent().Request.ApplicationPath
-		 * + "" + getAppSettings().get("PageOfLostSession").toString();
-		 */
 		return bp.sys.base.Glo.class.getClass().getResource("/").getPath() + ""
 				+ getAppSettings().get("PageOfLostSession").toString();
 	}
@@ -647,15 +627,6 @@ public class SystemConfig {
 			return false;
 		}
 	}
-
-	public static boolean getIsOpenSQLCheck() {
-		if (getAppSettings().get("IsOpenSQLCheck").toString().equals("0")) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
 	/**
 	 * 是不是多系统工作
 	 * 
@@ -695,20 +666,6 @@ public class SystemConfig {
 		}
 	}
 
-	// 处理临时缓存
-	/**
-	 * 放在 Temp 中的cash 多少时间失效。0, 表示永久不失效
-	 * 
-	 * @return
-	 */
-	private static int getCashFail() {
-		try {
-			return Integer.parseInt(getAppSettings().get("CashFail").toString());
-		} catch (java.lang.Exception e) {
-			return 0;
-		}
-	}
-
 	/**
 	 * 当前的 TempCash 是否失效了
 	 * 
@@ -719,7 +676,6 @@ public class SystemConfig {
 		return true;
 	}
 
-	public static Date _CashFailDateTime = new Date(0);
 
 	// 客户配置信息
 	/**
@@ -1315,5 +1271,23 @@ public class SystemConfig {
 				return FieldCaseModel.None;
 		}
 	}
+
+	/**
+	 * session 存储redis的ID
+	 */
+	public static final String DEFAULT_SESSION_KEY_PREFIX = "ccflow:redisCache:sessionId:";
+	public static String getRedisSessionKey(String SessionId)
+	{
+		return DEFAULT_SESSION_KEY_PREFIX + SessionId;
+
+	}
+	public static  String DEFAULT_CACHE_KEY_PREFIX = "";
+	public static String getRedisCacheKey(String key){
+		if(DataType.IsNullOrEmpty(DEFAULT_CACHE_KEY_PREFIX))
+			DEFAULT_CACHE_KEY_PREFIX = SystemConfig.GetValByKey("RedisCacheKeyPrefix","ccflow:redisCache:");
+		return DEFAULT_CACHE_KEY_PREFIX+key;
+	}
+
+
 
 }

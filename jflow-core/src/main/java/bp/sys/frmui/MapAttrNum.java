@@ -119,6 +119,7 @@ public class MapAttrNum extends EntityMyPK
 
 
 			///#region 基本信息.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "实体标识", false, false, 1, 100, 20);
 
@@ -148,6 +149,7 @@ public class MapAttrNum extends EntityMyPK
 
 
 			///#region 傻瓜表单
+		map.AddGroupAttr("傻瓜表单");
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
 			//文本占单元格数量
@@ -168,6 +170,7 @@ public class MapAttrNum extends EntityMyPK
 
 
 			///#region 执行的方法.
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "正则表达式";

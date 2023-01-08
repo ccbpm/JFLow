@@ -3,6 +3,10 @@ package bp.wf.httphandler;
 import bp.da.*;
 import bp.difference.handler.CommonFileUtils;
 import bp.difference.handler.WebContralBase;
+import bp.port.DeptEmp;
+import bp.port.DeptEmpAttr;
+import bp.port.DeptEmps;
+import bp.port.Emp;
 import bp.tools.FileAccess;
 import bp.wf.port.*;
 import bp.web.*;
@@ -110,11 +114,16 @@ public class GPMPage extends WebContralBase
 	public final String Organization_Init() throws Exception {
 
 		bp.port.Depts depts = new bp.port.Depts();
+		String parentNo = this.GetRequestVal("ParentNo");
 		QueryObject qo = new QueryObject(depts);
 		if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.Single){
-			qo.AddWhere(bp.port.DeptAttr.ParentNo, 0);
-			qo.addOr();
-			qo.AddWhereInSQL(bp.port.DeptAttr.ParentNo, "SELECT No From Port_Dept WHERE ParentNo='0'");
+			if (parentNo.equals("0") == true) {
+				qo.AddWhere(bp.port.DeptAttr.ParentNo, parentNo);
+				qo.addOr();
+				qo.AddWhereInSQL(bp.port.DeptAttr.ParentNo, "SELECT No From Port_Dept Where ParentNo='0'");
+			}
+			else
+				qo.AddWhere(bp.port.DeptAttr.ParentNo,parentNo);
 		}
 		if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.GroupInc || SystemConfig.getCCBPMRunModel()==CCBPMRunModel.SAAS){
 			qo.AddWhere(bp.port.DeptAttr.No, WebUser.getOrgNo());
@@ -1051,5 +1060,56 @@ public class GPMPage extends WebContralBase
 		return "执行完成.";
 	}
 
+	public String EnpDepts_Init() throws Exception {
+		String empNo = this.getFK_Emp();
+		if(DataType.IsNullOrEmpty(empNo)==true)
+			return "err@参数FK_Emp不能为空";
+		Emp emp = new Emp(empNo);
+		DataSet ds = new DataSet();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		//获取当前人员所在的部门及兼职部门
+		String sql = "SELECT B.No AS \'FK_Dept\',B.Name AS \'FK_DeptText\',A.MyPK AS \'MyPK\' From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			sql +=" B.OrgNo='"+WebUser.getOrgNo()+"'";
+		Paras ps = new Paras();
+		ps.SQL = sql;
+		ps.Add("FK_Emp",empNo);
+		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+		if(dt.Rows.size()==0){
+			DeptEmp deptEmp =new DeptEmp();
+			deptEmp.setFK_Dept(emp.getFK_Dept());
+			deptEmp.setFK_Emp(emp.getNo());
+			deptEmp.setMyPK(emp.getFK_Dept() + "_" + emp.getNo());
+			deptEmp.Insert();
+			DataRow dr = dt.NewRow();
+			dr.setValue(0,emp.getFK_Dept());
+			dr.setValue(1,emp.getFK_DeptText());
+			dr.setValue(2,deptEmp.getMyPK());
+			dt.Rows.AddRow(dr);
+		}
+		dt.TableName = "Port_DeptEmp";
+		ds.Tables.add(dt);
+		ps.clear();
+		//获取岗位
+		sql="SELECT B.No AS \'FK_Station\',B.Name AS \'FK_StationText\' ,A.FK_Dept From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			sql +=" B.OrgNo='"+WebUser.getOrgNo()+"'";
 
+		ps.SQL = sql;
+		ps.Add("FK_Emp",empNo);
+		dt = DBAccess.RunSQLReturnTable(ps);
+		dt.TableName = "Port_DeptEmpStation";
+		ds.Tables.add(dt);
+		return bp.tools.Json.ToJson(ds);
+	}
+
+	/**
+	 取消人员部门岗位管理关系
+	 @return
+	 */
+	public final String DeptEmpStation_Dele() throws Exception {
+		String sql = "delete from Port_DeptEmpStation where FK_Emp='" + this.GetRequestVal("FK_Emp") + "' and FK_Dept='" + this.GetRequestVal("FK_Dept") + "'";
+		DBAccess.RunSQL(sql);
+		return "执行成功 ";
+	}
 }

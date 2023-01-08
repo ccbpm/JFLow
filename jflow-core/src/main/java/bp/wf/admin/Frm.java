@@ -100,7 +100,7 @@ public class Frm extends EntityNoName
 		}
 
 			//表单的运行类型.
-		map.AddDDLSysEnum(MapDataAttr.FrmType, Integer.parseInt(FrmType.FoolForm.toString()), "表单类型", true, true, MapDataAttr.FrmType);
+		map.AddDDLSysEnum(MapDataAttr.FrmType, FrmType.FoolForm.getValue(), "表单类型", true, true, MapDataAttr.FrmType);
 
 			//表单解析 0 普通 1 页签展示
 		map.AddDDLSysEnum(MapDataAttr.FrmShowType, 0, "表单展示方式", true, true, "表单展示方式", "@0=普通方式@1=页签方式");

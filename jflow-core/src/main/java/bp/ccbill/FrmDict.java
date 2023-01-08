@@ -255,7 +255,9 @@ public class FrmDict extends EntityNoName
 		map.setCodeStruct("4");
 
 
-			///#region 基本属性.
+		///#region 基本属性.
+		map.AddGroupAttr("基本信息");
+		map.AddGroupAttr("基本信息");
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.SetHelperAlert(MapDataAttr.No, "也叫表单ID,系统唯一.");
 
@@ -270,6 +272,7 @@ public class FrmDict extends EntityNoName
 
 
 			///#region 外观.
+		map.AddGroupAttr("外观");
 		map.AddDDLSysEnum(FrmAttr.RowOpenModel, 2, "行记录打开模式", true, true, "RowOpenMode", "@0=新窗口打开@1=在本窗口打开@2=弹出窗口打开,关闭后不刷新列表@3=弹出窗口打开,关闭后刷新列表");
 		String cfg = "@0=MyDictFrameWork.htm 实体与实体相关功能编辑器";
 		cfg += "@1=MyDict.htm 实体编辑器";
@@ -288,7 +291,9 @@ public class FrmDict extends EntityNoName
 			///#endregion 外观.
 
 
-			///#region 实体表单.
+		///#region 实体表单.
+		map.AddGroupAttr("实体表单");
+		map.AddGroupAttr("实体表单");
 		map.AddDDLSysEnum(FrmDictAttr.EntityType, 0, "业务类型", true, false, FrmDictAttr.EntityType, "@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
 		map.SetHelperAlert(FrmDictAttr.EntityType, "该实体的类型,@0=单据@1=编号名称实体@2=树结构实体.");
 
@@ -313,6 +318,12 @@ public class FrmDict extends EntityNoName
 		msg += "\t\n 3. 配置格式: 字段名@函数名; 比如:  FlowEmps@DealFlowEmps; ";
 		msg += "\t\n 4. 函数写入到 /DataUser/JSLibData/SearchSelf.js";
 		map.SetHelperAlert("ForamtFunc", msg);
+		//数据钻取
+		map.AddTBString(EnCfgAttr.Drill, null, "数据钻取", true, false, 0, 200, 60, true);
+		msg = "显示钻取链接的字段";
+		msg += "\t\n 格式: @Age@JinE@ShouYi";
+		msg += "\t\n 显示在Search, En组件里面.";
+		map.SetHelperAlert(EnCfgAttr.Drill, msg);
 
 			///#endregion 实体表单.
 
@@ -369,7 +380,9 @@ public class FrmDict extends EntityNoName
 			///#endregion 查询按钮权限.
 
 
-			///#region 设计者信息.
+		///#region 设计者信息.
+		map.AddGroupAttr("设计者信息");
+		map.AddGroupAttr("设计者信息");
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
@@ -387,10 +400,12 @@ public class FrmDict extends EntityNoName
 		map.AddTBString(FrmDictAttr.Tag1, null, "Tag1", false, false, 0, 4000, 20);
 		map.AddTBString(FrmDictAttr.Tag2, null, "Tag2", false, false, 0, 500, 20);
 
-			///#endregion 扩展参数.
+		///#endregion 扩展参数.
 
 
-			///#region 基本功能.
+		///#region 基本功能.
+		map.AddGroupMethod("基本功能");
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -462,9 +477,11 @@ public class FrmDict extends EntityNoName
 			///#endregion 基本功能.
 
 
-			///#region 报表定义.
+			///#region 查询定义.
+		map.AddGroupMethod("查询定义");
+		map.AddGroupMethod("查询定义");
 		rm = new RefMethod();
-		rm.GroupName = "查询定义";
+//		rm.GroupName = "查询定义";
 		rm.Title = "设置显示的列"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsChose";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -472,7 +489,7 @@ public class FrmDict extends EntityNoName
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "查询定义";
+//		rm.GroupName = "查询定义";
 		rm.Title = "设置多表头"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRptMTitle";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -480,7 +497,7 @@ public class FrmDict extends EntityNoName
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "查询定义";
+//		rm.GroupName = "查询定义";
 		rm.Title = "列的顺序"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsIdxAndLabel";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -488,7 +505,7 @@ public class FrmDict extends EntityNoName
 			//   map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "查询定义";
+//		rm.GroupName = "查询定义";
 		rm.Title = "查询条件"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_SearchCond";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -500,13 +517,14 @@ public class FrmDict extends EntityNoName
 
 
 			///#region 权限规则.
+		map.AddGroupMethod("权限规则");
 		rm = new RefMethod();
 		rm.Title = "创建规则"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoCreateRole";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmDictAttr.BtnNewLable;
-		rm.GroupName = "权限规则";
+//		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -515,7 +533,7 @@ public class FrmDict extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmDictAttr.BtnSaveLable;
-		rm.GroupName = "权限规则";
+//		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 			//rm = new RefMethod();
@@ -533,7 +551,7 @@ public class FrmDict extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmDictAttr.BtnDelLable;
-		rm.GroupName = "权限规则";
+//		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -542,7 +560,7 @@ public class FrmDict extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmDictAttr.BtnDataVer;
-		rm.GroupName = "权限规则";
+//		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 
@@ -552,20 +570,17 @@ public class FrmDict extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmDictAttr.BtnSearchLabel;
-		rm.GroupName = "权限规则";
+//		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "数据查询权限规则";
 		rm.ClassMethodName = this.toString() + ".DoSearchDataRole()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "权限规则";
+//		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
-			///#endregion
-
-
-
+		///#endregion
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

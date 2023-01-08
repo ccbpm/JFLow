@@ -81,6 +81,7 @@ public class KMTree extends EntityTree
 	}
 	public KMTree(String mypk)throws Exception
 	{
+		this.setNo(mypk);
 		this.Retrieve();
 	}
 	/** 

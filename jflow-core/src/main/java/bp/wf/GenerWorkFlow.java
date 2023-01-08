@@ -783,6 +783,7 @@ public class GenerWorkFlow extends Entity
 		}
 
 		Map map = new Map("WF_GenerWorkFlow", "流程实例");
+		map.setDepositaryOfMap(Depositary.Application);
 
 		map.AddTBIntPK(GenerWorkFlowAttr.WorkID, 0, "WorkID", true, true); //主键.
 		map.AddTBInt(GenerWorkFlowAttr.FID, 0, "流程ID", true, true);

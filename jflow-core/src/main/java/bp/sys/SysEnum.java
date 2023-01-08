@@ -80,6 +80,17 @@ public class SysEnum extends EntityMyPK
 	 {
 		this.SetValByKey(SysEnumAttr.EnumKey, value);
 	}
+	/**
+	 StrKey
+	*/
+	public final String getStrKey()
+	{
+		return this.GetValStringByKey(SysEnumAttr.StrKey);
+	}
+	public final void setStrKey(String value)
+	 {
+		this.SetValByKey(SysEnumAttr.StrKey, value);
+	}
 
 
 		///#endregion
@@ -162,6 +173,8 @@ public class SysEnum extends EntityMyPK
 		map.AddTBString(SysEnumAttr.Lang, "CH", "语言", true, false, 0, 10, 8);
 
 		map.AddTBString(SysEnumMainAttr.OrgNo, null, "OrgNo", true, false, 0, 50, 8);
+
+		map.AddTBString(SysEnumAttr.StrKey, null, "StrKey", true, false, 1, 100, 8);
 
 		this.set_enMap(map);
 		return this.get_enMap();

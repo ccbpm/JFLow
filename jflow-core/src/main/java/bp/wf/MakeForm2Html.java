@@ -43,6 +43,8 @@ public class MakeForm2Html
 
 		//字段集合.
 		MapAttrs mapAttrs = new MapAttrs(frmID);
+		//获取当前表单的联动项
+		FrmRBs frmRBs = new FrmRBs(frmID);
 		Attrs attrs = null;
 		GroupFields gfs = null;
 		if (formType == NodeFormType.FoolTruck && DataType.IsNullOrEmpty(FK_Node) == false)
@@ -90,11 +92,44 @@ public class MakeForm2Html
 
 			mapAttrs = new MapAttrs();
 			mapAttrs.RetrieveIn(MapAttrAttr.FK_MapData, "(" + frmIDs + ")", "GroupID, Idx");
+			frmRBs = new FrmRBs();
+			frmRBs.RetrieveIn(FrmRBAttr.FK_MapData, "(" + frmIDs + ")");
 		}
 		else
 		{
 			gfs = new GroupFields(frmID);
 			attrs = en.getEnMap().getAttrs();
+		}
+
+		String hideField = ",";
+		String showField = ",";
+		if (frmRBs.size() > 0)
+		{
+			for (MapAttr mapAttr : mapAttrs.ToJavaList())
+			{
+				if (mapAttr.GetParaBoolen("IsEnableJS") == true)
+				{
+					String val = en.GetValStrByKey(mapAttr.getKeyOfEn());
+					FrmRB rb = (FrmRB)frmRBs.GetEntityByKey(mapAttr.getMyPK() + "_" + val);
+					if (rb == null)
+						continue;
+					String cfgs = rb.getFieldsCfg();
+					if (DataType.IsNullOrEmpty(cfgs) == true)
+						continue;
+					AtPara atPara = new AtPara(cfgs);
+					//获取显示的字段
+					for(String key : atPara.getHisHT().keySet())
+					{
+						int keyVal = atPara.GetValIntByKey(key);
+						if (keyVal == 0)
+							continue;
+						if (keyVal == 3)
+							hideField += key + ",";
+						if (keyVal == 2 || keyVal == 4)
+							showField += key + ",";
+					}
+				}
+			}
 		}
 
 		//生成表头.
@@ -190,9 +225,12 @@ public class MakeForm2Html
 				for (MapAttr attr : mapAttrs.ToJavaList())
 				{
 					//1.处理隐藏字段，如果是不可见并且是启用的就隐藏. 2.处理分组数据，非当前分组的数据不输出
-					if (attr.getUIVisible() == false || attr.getGroupID() != gf.getOID())
+					if (attr.getUIVisible() == false && showField.contains("," + attr.getKeyOfEn() + ",") == false)
 						continue;
-					
+					if(hideField.contains("," + attr.getKeyOfEn() + ",") == true)
+						continue;
+					if(attr.getGroupID() != gf.getOID())
+						continue;
 					String text = "";
 
 					switch (attr.getLGType())
@@ -360,7 +398,20 @@ public class MakeForm2Html
 				catch (RuntimeException ex)
 				{
 				}
-
+				int columNum = 0;
+				for (MapAttr item : attrsOfDtls.ToJavaList())
+				{
+					if (item.getKeyOfEn().equals("OID"))
+					{
+						continue;
+					}
+					if (item.getUIVisible() == false)
+					{
+						continue;
+					}
+					columNum++;
+				}
+				int columWidth = (int)100 / columNum;
 				///#region 输出标题.
 				sb.append("<tr><td valign=top colspan=4 >");
 
@@ -373,7 +424,7 @@ public class MakeForm2Html
 					if (item.getUIVisible()== false)
 						continue;
 
-					sb.append("<th stylle='width:" + item.getUIWidthInt() + "px;'>" + item.getName() + "</th>");
+					sb.append("<th stylle='width:" + columWidth + "%;'>" + item.getName() + "</th>");
 				}
 				sb.append("</tr>");
 				///#endregion 输出标题.
@@ -1391,7 +1442,7 @@ public class MakeForm2Html
 
 		//存放信息地址
 		String hostURL = SystemConfig.GetValByKey("HostURL", "");
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid;
+		String path = SystemConfig.getPathOfInstancePacketOfData() + "ND" + node.getNodeID() + "/" + workid;
 		String frmID = node.getNodeFrmID();
 
 		//处理正确的文件名.
@@ -1419,7 +1470,7 @@ public class MakeForm2Html
 				return resultMsg;
 			}
 
-			String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/index.htm";
+			String billUrl = SystemConfig.getPathOfInstancePacketOfData() +"ND" + node.getNodeID() + "/" + workid + "/index.htm";
 
 			resultMsg = MakeHtmlDocument(frmID, workid, flowNo, path, billUrl, "ND" + node.getNodeID());
 
@@ -1439,7 +1490,11 @@ public class MakeForm2Html
 			}
 
 			String pdfFile = pdfPath + "/" + pdfName + ".pdf";
-			String pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
+			String pdfFileExe ="";
+			if(SystemConfig.getIsJarRun()==false)
+				pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
+			else
+				pdfFileExe = SystemConfig.getPhysicalPath() + "DataUser/ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
 			try
 			{
 				Html2Pdf(pdfFileExe, billUrl, pdfFile);
@@ -1509,7 +1564,7 @@ public class MakeForm2Html
 				if (flowNo != null && item.getWhoIsPK() == WhoIsPK.PWorkID) //如果是父子流程
 					workid = gwf.getPWorkID();
 				//获取表单的信息执行打印
-				String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/" + item.getFKFrm() + "index.htm";
+				String billUrl = SystemConfig.getPathOfInstancePacketOfData() +  "ND" + node.getNodeID() + "/" + workid + "/" + item.getFKFrm() + "index.htm";
 				resultMsg = MakeHtmlDocument(item.getFKFrm(), workid, flowNo, path, billUrl, "ND" + node.getNodeID());
 
 				if (resultMsg.indexOf("err@") != -1)
@@ -1601,7 +1656,7 @@ public class MakeForm2Html
 		bp.ccbill.FrmBill bill = new bp.ccbill.FrmBill(frmId);
 
 		//存放信息地址
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + bill.getNo() + "/" + workid;
+		String path = SystemConfig.getPathOfInstancePacketOfData() + bill.getNo() + "/" + workid;
 
 		if (DataType.IsNullOrEmpty(pdfName) == true)
 		{
@@ -1625,7 +1680,7 @@ public class MakeForm2Html
 		}
 
 		//获取表单的信息执行打印
-		String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + bill.getNo() + "/" + workid + "/" + "index.htm";
+		String billUrl = SystemConfig.getPathOfInstancePacketOfData() + bill.getNo() + "/" + workid + "/" + "index.htm";
 		resultMsg = MakeHtmlDocument(bill.getNo(), workid, null, path, billUrl, frmId);
 
 		if (resultMsg.indexOf("err@") != -1)
@@ -1701,7 +1756,7 @@ public class MakeForm2Html
 
 		//存放信息地址
 		String hostURL = SystemConfig.GetValByKey("HostURL", "");
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid;
+		String path = SystemConfig.getPathOfInstancePacketOfData() + "ND" + node.getNodeID() + "/" + workid;
 
 		//处理正确的文件名.
 		if (fileNameFormat == null)
@@ -1753,7 +1808,7 @@ public class MakeForm2Html
 		}
 
 		//获取表单的信息执行打印
-		String billUrl = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + "ND" + node.getNodeID() + "/" + workid + "/" + frmNode.getFKFrm() + "index.htm";
+		String billUrl = SystemConfig.getPathOfInstancePacketOfData() + "ND" + node.getNodeID() + "/" + workid + "/" + frmNode.getFKFrm() + "index.htm";
 		resultMsg = MakeHtmlDocument(frmNode.getFKFrm(), workid, flowNo, path, billUrl, "ND" + node.getNodeID());
 
 		if (resultMsg.indexOf("err@") != -1)
@@ -1821,21 +1876,21 @@ public class MakeForm2Html
 	//前期文件的准备
 	private static String setPDFPath(String frmID, long workid, String flowNo, GenerWorkFlow gwf) throws Exception {
 		// 准备目录文件.
-		String path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
+		String path = "";
 		try {
 
-			path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/";
+			path = SystemConfig.getPathOfInstancePacketOfData() + frmID + "/";
 			if ((new File(path)).isDirectory() == false) {
 				(new File(path)).mkdirs();
 			}
 
-			path = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/" + frmID + "/" + workid;
+			path = SystemConfig.getPathOfInstancePacketOfData() + frmID + "/" + workid;
 			if ((new File(path)).isDirectory() == false) {
 				(new File(path)).mkdirs();
 			}
 
 			// 把模版文件copy过去.
-			String templateFilePath = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
+			String templateFilePath = SystemConfig.getPathOfInstancePacketOfData() + "Template/";
 			File dir = new File(templateFilePath);
 			File[] finfos = dir.listFiles();
 			if (finfos.length == 0) {
@@ -1939,7 +1994,7 @@ public class MakeForm2Html
 				}
 
 				String str = "<iframe style='width:100%;height:auto;' ID='" + mapData.getNo() + "'    src='" + url + "' frameborder=0  leftMargin='0'  topMargin='0' scrolling=auto></iframe></div>";
-				String docs1 = DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexUrl.htm");
+				String docs1 = DataType.ReadTextFile(SystemConfig.getPathOfInstancePacketOfData()+"Template/indexUrl.htm");
 
 				docs1 = docs1.replace("@Width", mapData.getFrmW() + "px");
 				if (gwf != null)
@@ -1953,7 +2008,7 @@ public class MakeForm2Html
 			if (mapData.getHisFrmType() == FrmType.Develop)
 			{
 				GEEntity enn = new GEEntity(frmID, workid);
-				String ddocs = DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexDevelop.htm");
+				String ddocs = DataType.ReadTextFile(SystemConfig.getPathOfInstancePacketOfData()+"Template/indexDevelop.htm");
 				String htmlString = DBAccess.GetBigTextFromDB("Sys_MapData", "No", mapData.getNo(), "HtmlTemplateFile");
 
 
@@ -1972,7 +2027,7 @@ public class MakeForm2Html
 			if (mapData.getHisFrmType() == FrmType.ChapterFrm)
 			{
 				GEEntity enn = new GEEntity(frmID, workid);
-				String ddocs = DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexChapterFrm.htm");
+				String ddocs = DataType.ReadTextFile(SystemConfig.getPathOfInstancePacketOfData()+"Template/indexChapterFrm.htm");
 				String htmlString = DBAccess.GetBigTextFromDB("Sys_MapData", "No",mapData.getNo(), "HtmlTemplateFile");
 
 
@@ -2030,7 +2085,7 @@ public class MakeForm2Html
 					words = Glo.DealExp(words, en);
 				}
 
-				String templateFilePathMy = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/";
+				String templateFilePathMy = SystemConfig.getPathOfInstancePacketOfData()+"Template/";
 				paintWaterMarkPhoto(templateFilePathMy + "ShuiYin.png", words,  path + "/ShuiYin.png");
 			}
 
@@ -2042,7 +2097,7 @@ public class MakeForm2Html
 			///#region 替换模版文件..
 			//首先判断是否有约定的文件.
 			String docs = "";
-			String tempFile = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/" +mapData.getNo() + ".htm";
+			String tempFile = SystemConfig.getPathOfInstancePacketOfData()+"Template/" +mapData.getNo() + ".htm";
 			if ((new File(tempFile)).isFile() == false)
 			{
 				if (gwf != null)
@@ -2064,7 +2119,7 @@ public class MakeForm2Html
 
 				if (mapData.getHisFrmType() == FrmType.FoolForm)
 				{
-					docs = DataType.ReadTextFile(SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/indexFool.htm");
+					docs = DataType.ReadTextFile(SystemConfig.getPathOfInstancePacketOfData()+"Template/indexFool.htm");
 					sb = GenerHtmlOfFool(mapData, frmID, workid, en, path, flowNo, nodeID, nd.getHisFormType());
 					docs = docs.replace("@Width", mapData.getFrmW() + "px");
 				}
@@ -2086,16 +2141,15 @@ public class MakeForm2Html
 
 
 				//替换模版尾部的打印说明信息.
-				String pathInfo = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/" + flowNo + ".txt";
+				String pathInfo = SystemConfig.getPathOfInstancePacketOfData()+"Template/EndInfo/" + flowNo + ".txt";
 				if (new File(pathInfo).exists() == false)
 				{
-					pathInfo = SystemConfig.getPathOfDataUser() + "InstancePacketOfData/Template/EndInfo/Default.txt";
+					pathInfo = SystemConfig.getPathOfInstancePacketOfData()+"Template/EndInfo/Default.txt";
 				}
 
 				docs = docs.replace("@EndInfo", DataType.ReadTextFile(pathInfo));
 			}
 
-			//indexFile =  SystemConfig.getPathOfDataUser() + "/InstancePacketOfData/" + frmID + "/" + workid + "/index.htm";
 			DataType.WriteFile(indexFile, docs);
 
 			return indexFile;
@@ -2161,29 +2215,48 @@ public class MakeForm2Html
 	public static boolean Html2Pdf(String pdfFileExe, String htmFile, String pdf) {
 		bp.da.Log.DebugWriteInfo("@开始生成PDF" + pdfFileExe + "@pdf=" + pdf + "@htmFile=" + htmFile);
 		StringBuilder cmd = new StringBuilder();
+		File file = new File(pdf);
+		File parent = file.getParentFile();
+		//如果pdf保存路径不存在，则创建路径
+		if (!parent.exists()) {
+			parent.mkdirs();
+		}
 		if (System.getProperty("os.name").indexOf("Windows") == -1) {
 			// 非windows 系统
-			pdfFileExe = "/home/ubuntu/wkhtmltox/bin/wkhtmltopdf";
+			pdfFileExe = "wkhtmltopdf";
+			Log.DebugWriteInfo("linux生成");
 		}
-		cmd.append(pdfFileExe);
-		cmd.append(" ");
-		cmd.append(" --header-line");// 页眉下面的线
-		// cmd.append(" --header-center 这里是页眉这里是页眉这里是页眉这里是页眉 ");//页眉中间内容
-		cmd.append(" --margin-top 3cm ");// 设置页面上边距 (default 10mm)
-		// cmd.append(" --header-html
-		// file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("/style/pdf/head.html"));//
-		// (添加一个HTML页眉,后面是网址)
-		cmd.append(" --header-spacing 5 ");// (设置页眉和内容的距离,默认0)
-		// cmd.append(" --footer-center (设置在中心位置的页脚内容)");//设置在中心位置的页脚内容
-		// cmd.append(" --footer-html
-		// file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("/style/pdf/foter.html"));//
-		// (添加一个HTML页脚,后面是网址)
-		cmd.append(" --footer-line");// * 显示一条线在页脚内容上)
-		cmd.append(" --footer-spacing 5 ");// (设置页脚和内容的距离)
+//		cmd.append(pdfFileExe);
+//		cmd.append(" ");
+//		cmd.append(" --header-line");// 页眉下面的线
+//		// cmd.append(" --header-center 这里是页眉这里是页眉这里是页眉这里是页眉 ");//页眉中间内容
+//		cmd.append(" --margin-top 3cm ");// 设置页面上边距 (default 10mm)
+//		cmd.append(htmFile);
+//		// cmd.append(" --header-html
+//		// file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("/style/pdf/head.html"));//
+//		// (添加一个HTML页眉,后面是网址)
+//		cmd.append(" --header-spacing 5 ");// (设置页眉和内容的距离,默认0)
+//		// cmd.append(" --footer-center (设置在中心位置的页脚内容)");//设置在中心位置的页脚内容
+//		// cmd.append(" --footer-html
+//		// file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("/style/pdf/foter.html"));//
+//		// (添加一个HTML页脚,后面是网址)
+//		cmd.append(" --footer-line");// * 显示一条线在页脚内容上)
+//		cmd.append(" --footer-spacing 5 ");// (设置页脚和内容的距离)
+//		cmd.append(" ");
+//		cmd.append(pdf);
 
+		cmd.append(pdfFileExe);
+		cmd.append(" -T 28mm -B 26mm -L 26mm -R 22mm ");
 		cmd.append(htmFile);
-		cmd.append(" ");
+		cmd.append(" --disable-external-links ");//不要链接到远程网页
+		cmd.append(" --enable-local-file-access ");//允许访问本地资源文件（Linux必须加此项）
+		cmd.append(" --footer-font-name SimSun ");//页码字体名称
+		cmd.append(" --footer-font-size 10 ");//页码字体大小
+		cmd.append(" --footer-right ——[page]—— ");//页码右对齐样式
+		cmd.append(" --footer-spacing 10 ");//页脚和内容之间的间距，单位为 mm （默认 0）
 		cmd.append(pdf);
+		Log.DebugWriteInfo("wkhtmltopdf执行命令行：" + cmd);
+
 		boolean result = true;
 		try {
 			Process proc = Runtime.getRuntime().exec(cmd.toString());

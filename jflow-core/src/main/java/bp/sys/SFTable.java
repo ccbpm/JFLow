@@ -22,11 +22,9 @@ public class SFTable extends EntityNoName
 		return GenerHisDataTable(null);
 	}
 
-//ORIGINAL LINE: public DataTable GenerHisDataTable(Hashtable ht = null)
 	public final DataTable GenerHisDataTable(Hashtable ht) throws Exception {
 		//创建数据源.
 		SFDBSrc src = new SFDBSrc(this.getFK_SFDBSrc());
-
 
 		///BP类
 		if (this.getSrcType() == SrcType.BPClass)
@@ -148,7 +146,7 @@ public class SFTable extends EntityNoName
 
 		if (this.getSrcType() == SrcType.SysDict)
 		{
-			String sql = "SELECT MyPK, BH AS \"No\", \"Name\" FROM Sys_SFTableDtl where FK_SFTable='" + this.getNo() + "'";
+			String sql = "SELECT MyPK, BH AS \"No\", Name as \"Name\" FROM Sys_SFTableDtl where FK_SFTable='" + this.getNo() + "'";
 			return src.RunSQLReturnTable(sql);
 		}
 
@@ -753,6 +751,13 @@ public class SFTable extends EntityNoName
 
 		map.AddTBString(SFTableAttr.OrgNo, null, "组织编号", false, false, 0, 100, 20);
 
+		map.AddTBString(SFTableAttr.AtPara, null, "AtPara", false, false, 0, 50, 20);
+
+		for (int i = 0; i < 50; i++)
+		{
+			map.AddTBString("BH" + i, null, "编号", true, true, 0, 3, 20);
+			map.AddTBString("Name" + i, null, "名称", true, false, 0, 50, 20);
+		}
 			//查找.
 		map.AddSearchAttr(SFTableAttr.FK_SFDBSrc);
 
@@ -799,7 +804,7 @@ public class SFTable extends EntityNoName
 		///#endregion
 
 	public final String DoAttr()  {
-		return SystemConfig.getCCFlowWebPath() + "WF/Comm/EnOnly.htm?EnsName=BP.Sys.SFTable&No=" + this.getNo();
+		return SystemConfig.getCCFlowWebPath() + "WF/Comm/EnOnly.htm?EnName=BP.Sys.SFTable&No=" + this.getNo();
 	}
 	public final String DoNew()  {
 		return SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTable/Default.htm?DoType=New&FromApp=SL&s=0.3256071044807922";

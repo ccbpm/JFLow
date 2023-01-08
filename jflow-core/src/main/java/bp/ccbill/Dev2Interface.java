@@ -534,6 +534,13 @@ public class Dev2Interface
 		return "删除成功.";
 	}
 
+	public static String MyBill_DeleteBills(String frmID, String workIds) throws Exception {
+		FrmBill fb = new FrmBill(frmID);
+		String sqls = "DELETE FROM Frm_GenerBill WHERE WorkID in (" + workIds + ")";
+		sqls += "@DELETE FROM " + fb.getPTable() + " WHERE OID in (" + workIds + ")";
+		DBAccess.RunSQLs(sqls);
+		return "删除成功.";
+	}
 
 	/** 
 	 删除实体

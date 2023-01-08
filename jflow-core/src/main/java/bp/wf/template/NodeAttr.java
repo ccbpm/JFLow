@@ -463,6 +463,8 @@ public class NodeAttr
 
 	public static final String RefOneFrmTreeType = "RefOneFrmTreeType";
 
+	public static final String SubFlowX="SubFlowX";
+	public static final String SubFlowY="SubFlowY";
 		///#endregion 未来处理人.
 
 }

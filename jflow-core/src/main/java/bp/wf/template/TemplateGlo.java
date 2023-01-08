@@ -1363,7 +1363,7 @@ public class TemplateGlo
 							}
 							ne.SetValByKey(dc.ColumnName, val);
 						}
-						ne.DirectInsert();
+						ne.Insert();
 					}
 					break;
 				case "Sys_GroupField":

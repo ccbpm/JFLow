@@ -1,6 +1,7 @@
 package bp.port;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.sys.*;
 import bp.tools.Cryptos;
@@ -341,6 +342,15 @@ public class Emp extends EntityNoName
 		rm.getHisAttrs().AddTBString("pass2", null, "再次输入", true, false, 0, 100, 100);
 		map.AddRefMethod(rm);
 
+		//平铺模式.
+		try {
+			map.getAttrsOfOneVSM().AddGroupPanelModel(new TeamEmps(), new Teams(),
+					TeamEmpAttr.FK_Emp,
+					TeamEmpAttr.FK_Team, "用户组", TeamAttr.FK_TeamType);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		rm = new RefMethod();
 		rm.Title = "修改主部门";
 		rm.ClassMethodName = this.toString() + ".DoEditMainDept";
@@ -457,10 +467,13 @@ public class Emp extends EntityNoName
 	@Override
 	protected boolean beforeDelete() throws Exception {
 		if (this.getNo().toLowerCase().equals("admin") == true)
-		{
 			throw new RuntimeException("err@管理员账号不能删除.");
+		if(SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single){
+			//如果是组织的主要管理员时不能删除
+			String sql="SELECT COUNT(*) From Port_Org WHERE No='"+WebUser.getOrgNo()+"' AND Adminer='"+this.getNo()+"'";
+			if(DBAccess.RunSQLReturnValInt(sql)==1)
+				throw new RuntimeException("err@组织"+WebUser.getOrgName()+"的主要管理员账号不能删除.");
 		}
-
 		return super.beforeDelete();
 	}
 
@@ -485,6 +498,10 @@ public class Emp extends EntityNoName
 		deptEmp.setFK_Dept(this.getFK_Dept());
 		deptEmp.setFK_Emp(this.getNo());
 		deptEmp.setMyPK(this.getFK_Dept() + "_" + this.getNo());
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != bp.sys.CCBPMRunModel.Single)
+		{
+			deptEmp.setOrgNo(this.getOrgNo());
+		}
 		if (deptEmp.IsExit("MyPK", deptEmp.getMyPK()) == false)
 		{
 			deptEmp.Insert();
@@ -602,6 +619,14 @@ public class Emp extends EntityNoName
 	*/
 	public final String DoUnEnable() throws Exception {
 		String userNo = this.getNo();
+		if(userNo.equals("admin"))
+			throw new RuntimeException("err@管理员账号不能禁用.");
+		if(SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single){
+			//如果是组织的主要管理员时不能删除
+			String sql="SELECT COUNT(*) From Port_Org WHERE No='"+WebUser.getOrgNo()+"' AND Adminer='"+this.getNo()+"'";
+			if(DBAccess.RunSQLReturnValInt(sql)==1)
+				throw new RuntimeException("err@组织"+WebUser.getOrgName()+"的主要管理员账号不能禁用.");
+		}
 		//判断当前人员是否有待办
 		String wfSql = "";
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)

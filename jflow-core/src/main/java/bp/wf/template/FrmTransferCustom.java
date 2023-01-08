@@ -159,6 +159,7 @@ public class FrmTransferCustom extends Entity
 		}
 
 		Map map = new Map("WF_Node", "流转自定义组件");
+		map.AddGroupAttr("流转自定义");
 
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);

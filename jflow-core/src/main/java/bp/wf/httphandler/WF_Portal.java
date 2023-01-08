@@ -168,7 +168,11 @@ public class WF_Portal extends WebContralBase
 	public final String Login_VerifyCode() throws Exception {
 		return bp.tools.Verify.DrawImage(5, this.getClass().getName() + "_VerifyCode");
 	}
-	/** 
+
+	public final String CheckEncryptEnable() {
+		return bp.difference.SystemConfig.getIsEnablePasswordEncryption() ? "1":"0";
+	}
+	/**
 	 登录.
 	 
 	 @return 
@@ -208,6 +212,10 @@ public class WF_Portal extends WebContralBase
 			userNo = userNo.trim();
 
 			String pass = this.GetRequestVal("TB_PW");
+			if (bp.difference.SystemConfig.getIsEnablePasswordEncryption() == true) {
+				pass = Encodes.decodeBase64String(pass);
+			}
+
 			if (pass == null)
 			{
 				pass = this.GetRequestVal("TB_Pass");
@@ -295,6 +303,7 @@ public class WF_Portal extends WebContralBase
 			if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 			{
 				//调用登录方法.
+				String token = Dev2Interface.Port_GenerToken(emp.getNo(),"PC");
 				Dev2Interface.Port_Login(emp.getUserID());
 				if (DBAccess.IsExitsTableCol("Port_Emp", "EmpSta") == true)
 				{
@@ -304,7 +313,7 @@ public class WF_Portal extends WebContralBase
 						return "err@该用户已经被禁用.";
 					}
 				}
-				return "url@Default.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + emp.getUserID();
+				return "url@Default.htm?Token=" + token + "&UserNo=" + emp.getUserID();
 			}
 
 			//获得当前管理员管理的组织数量.
@@ -314,22 +323,26 @@ public class WF_Portal extends WebContralBase
 			adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getUserID(), null);
 			if (adminers.size() == 0)
 			{
-					//调用登录方法， 普通用户了.
-					Dev2Interface.Port_Login(emp.getUserID(), emp.getOrgNo());
-					return "url@Default.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
+				//调用登录方法， 普通用户了.
+				String token = Dev2Interface.Port_GenerToken(emp.getNo(),"PC");
+				Dev2Interface.Port_Login(emp.getUserID(), emp.getOrgNo());
+				return "url@Default.htm?Token=" + token+ "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
 			}
+
+
+
+			ClearOldSession();
+			//设置SID.
+			String token = bp.wf.Dev2Interface.Port_GenerToken(emp.getNo(),"PC");
 
 			//设置他的组织，信息.
 			WebUser.setNo(emp.getUserID()); //登录帐号.
 			WebUser.setFK_Dept(emp.getFK_Dept());
 			WebUser.setFK_DeptName(emp.getFK_DeptText());
 
-			ClearOldSession();
 			//执行登录.
 			bp.wf.Dev2Interface.Port_Login(emp.getUserID(), null, emp.getOrgNo());
 
-			//设置SID.
-			String token = bp.wf.Dev2Interface.Port_GenerToken("PC");
 
 			//判断是否是多个组织的情况.
 			if (adminers.size() == 1)
@@ -555,10 +568,7 @@ public class WF_Portal extends WebContralBase
 				subFS2.Update();
 
 			}
-			/*dt.Columns.get(0).setColumnName("No");
-			dt.Columns.get(1).setColumnName("Name");
-			dt.Columns.get(2).setColumnName("ParentNo");
-			return bp.tools.Json.ToJson(dt);*/
+
 		}
 
 		//求数量.
@@ -691,13 +701,27 @@ public class WF_Portal extends WebContralBase
 	 @return 
 	*/
 	public final String Flows_Move() throws Exception {
-		String sortNo = this.GetRequestVal("SortNo");
-		String[] flowNos = this.GetRequestVal("EnNos").split("[,]", -1);
+		String sourceSortNo = this.GetRequestVal("SourceSortNo");
+		String sourceFlowNos[] = this.GetRequestVal("SourceFlowNos").split("[,]", -1);
+		String toSortNo = this.GetRequestVal("ToSortNo");
+		String toFlowNos[] = this.GetRequestVal("ToFlowNos").split("[,]", -1);
+		String flowNos[] = sourceFlowNos;
 		for (int i = 0; i < flowNos.length; i++)
 		{
 			String flowNo = flowNos[i];
 
-			String sql = "UPDATE WF_Flow SET FK_FlowSort ='" + sortNo + "',Idx=" + i + " WHERE No='" + flowNo + "'";
+			String sql = "UPDATE WF_Flow SET FK_FlowSort ='" + sourceSortNo + "',Idx=" + i + " WHERE No='" + flowNo + "'";
+			DBAccess.RunSQL(sql);
+		}
+		//如果是在同一个流程类别中拖动流程顺序
+		if (sourceSortNo.equals(toSortNo) == true)
+			return "流程顺序移动成功..";
+		flowNos = toFlowNos;
+		for (int i = 0; i < flowNos.length; i++)
+		{
+			String flowNo = flowNos[i];
+
+			String sql = "UPDATE WF_Flow SET FK_FlowSort ='" + toSortNo + "',Idx=" + i + " WHERE No='" + flowNo + "'";
 			DBAccess.RunSQL(sql);
 		}
 		return "流程顺序移动成功..";
@@ -895,6 +919,13 @@ public class WF_Portal extends WebContralBase
 					}
 					break;
 				}
+				//用户组？
+				String myteams = DBAccess.RunSQLReturnString("select FK_Team from Port_TeamEmp where FK_Emp='"+WebUser.getNo()+"'");
+				if (pc.getCtrlModel().equals("Teams") == true&& DataType.IsHaveIt(pc.getIDs(), myteams) == true)
+				{
+					systemsCopy.AddEntity(item);
+					break;
+				}
 			}
 		}
 
@@ -975,6 +1006,13 @@ public class WF_Portal extends WebContralBase
 						{
 							modulesCopy.AddEntity(module);
 						}
+						break;
+					}
+					//用户组？
+					String myteams = DBAccess.RunSQLReturnString("select FK_Team from Port_TeamEmp where FK_Emp='"+WebUser.getNo()+"'");
+					if (pc.getCtrlModel().equals("Teams") == true&& DataType.IsHaveIt(pc.getIDs(), myteams) == true)
+					{
+						modulesCopy.AddEntity(module);
 						break;
 					}
 				}
@@ -1066,6 +1104,14 @@ public class WF_Portal extends WebContralBase
 							menusCopy.AddEntity(menu);
 							break;
 						}
+
+					}
+					//用户组？
+					String myteams = DBAccess.RunSQLReturnString("select FK_Team from Port_TeamEmp where FK_Emp='"+WebUser.getNo()+"'");
+					if (pc.getCtrlModel().equals("Teams") == true&& DataType.IsHaveIt(pc.getIDs(), myteams) == true)
+					{
+						menusCopy.AddEntity(menu);
+						break;
 					}
 				}
 			}

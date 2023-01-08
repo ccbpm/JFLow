@@ -210,11 +210,12 @@ public abstract class EnObj implements Serializable
 		DataTable dt = null;
 		if (fk_node != 0 && fk_node != 999999 && fk_flow != null)
 		{
-			String sql2 = "SELECT MyPK,DefVal FROM Sys_FrmSln WHERE FK_MapData = '" + fk_mapdata + "' and FK_Flow = '" + fk_flow + "' AND FK_Node = " + fk_node;
+			String sql2 = "SELECT MyPK,DefVal,UIIsEnable FROM Sys_FrmSln WHERE FK_MapData = '" + fk_mapdata + "' and FK_Flow = '" + fk_flow + "' AND FK_Node = " + fk_node;
 			dt = DBAccess.RunSQLReturnTable(sql2);
 		}
 
 		Attrs attrs = this.getEnMap().getAttrs();
+		boolean isReadonly = true;
 		for (Attr attr : attrs.ToJavaList())
 		{
 			if (attr.getIsRefAttr())
@@ -224,7 +225,7 @@ public abstract class EnObj implements Serializable
 
 			String tempVar = attr.getDefaultValOfReal();
 			String v = tempVar instanceof String ? (String)tempVar : null;
-
+			isReadonly = attr.getUIIsReadonly();
 			//先判断是否设置了字段权限
 			if (dt != null)
 			{
@@ -236,6 +237,7 @@ public abstract class EnObj implements Serializable
 					if (myp1k.equals(mypk) == true)
 					{
 						v = dr.getValue(1) instanceof String ? (String)dr.getValue(1) : null;
+						isReadonly = dr.getValue(2).toString().equals("1")==true?false:true;
 						break;
 					}
 				}
@@ -253,7 +255,7 @@ public abstract class EnObj implements Serializable
 			{
 				case "@WebUser.No":
 				case "@CurrWorker":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), WebUser.getNo());
 					}
@@ -266,7 +268,7 @@ public abstract class EnObj implements Serializable
 					}
 					continue;
 				case "@WebUser.Name":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), WebUser.getName());
 					}
@@ -279,7 +281,7 @@ public abstract class EnObj implements Serializable
 					}
 					continue;
 				case "@WebUser.FK_Dept":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), WebUser.getFK_Dept());
 					}
@@ -292,7 +294,7 @@ public abstract class EnObj implements Serializable
 					}
 					continue;
 				case "@WebUser.FK_DeptName":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), WebUser.getFK_DeptName());
 					}
@@ -306,7 +308,7 @@ public abstract class EnObj implements Serializable
 					continue;
 				case "@WebUser.FK_DeptNameOfFull":
 				case "@WebUser.FK_DeptFullName":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), WebUser.getFK_DeptNameOfFull());
 					}
@@ -319,7 +321,7 @@ public abstract class EnObj implements Serializable
 					}
 					continue;
 				case "@WebUser.OrgNo":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), WebUser.getOrgNo());
 					}
@@ -332,7 +334,7 @@ public abstract class EnObj implements Serializable
 					}
 					continue;
 				case "@WebUser.OrgName":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), WebUser.getOrgName());
 					}
@@ -378,7 +380,7 @@ public abstract class EnObj implements Serializable
 							throw new RuntimeException("没有找到指定的时间类型");
 					}
 
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						/** if (myval == v)
 						*/
@@ -393,7 +395,7 @@ public abstract class EnObj implements Serializable
 					}
 					continue;
 				case "@FK_ND":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), DataType.getCurrentYear());
 					}
@@ -406,7 +408,7 @@ public abstract class EnObj implements Serializable
 					}
 					continue;
 				case "@FK_YF":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), DataType.getCurrentMonth());
 					}
@@ -423,7 +425,7 @@ public abstract class EnObj implements Serializable
 				case "@yyyy年MM月dd日HH时mm分":
 				case "@yy年MM月dd日":
 				case "@yy年MM月dd日HH时mm分":
-					if (attr.getUIIsReadonly() == true)
+					if (isReadonly == true)
 					{
 						this.SetValByKey(attr.getKey(), DataType.getCurrentDateByFormart(v.replace("@", "")));
 					}
@@ -454,7 +456,6 @@ public abstract class EnObj implements Serializable
 							this.SetValByKey(attr.getKey(), sql);
 							continue;
 						}
-
 						try
 						{
 							//这里有异常就要跑出来
@@ -751,31 +752,60 @@ public abstract class EnObj implements Serializable
 	/** 
 	 实体的 map 信息。	
 	*/
-	//public abstract void EnMap();		
+	//public abstract void EnMap();
+	private final ThreadLocal<Row> local = new ThreadLocal<>();
+
+
+
 	private Row _row = null;
 	public final Row getRow()
 	{
-		if (this._row == null)
-		{
-			this._row = new Row();
-			this._row.LoadAttrs(this.getEnMap().getAttrs());
+
+		Row tmpRow = local.get();
+		if(tmpRow == null) {
+			if (this._row != null) {
+				String pkval = this._row.get(this.getPK()) == null ? "" : this._row.get(this.getPK()).toString();
+				if (!DataType.IsNullOrEmpty(pkval)) {
+					Row row = bp.da.Cash2019.GetRow(this.toString(), pkval);
+					if (row != null) {
+						this._row = row;
+					}
+					local.set(this._row);
+				}
+				return this._row;
+			}else {
+				this._row = new Row();
+				this._row.LoadAttrs(this.getEnMap().getAttrs());
+				return this._row;
+			}
 		}
-		return this._row;
+
+		return tmpRow;
+
+//		if (this._row == null)
+//		{
+//			this._row = new Row();
+//			this._row.LoadAttrs(this.getEnMap().getAttrs());
+//		}
+//
+//		return this._row;
 	}
 
 
  
 	public final void setRow(Row value)
-	{this._row = value;
+	{
+		this._row = value;
+		if(value==null){
+			return;
+		}
+		bp.da.Cash2019.PutRow(this.toString(),this._row.GetValStrByKey(this.getPK()),value);
 	}
 
-		///
+	///关于属性的操作。
 
 
-		///关于属性的操作。
-
-
-		///设置值方法
+	///设置值方法
 	/** 
 	 设置object类型的值
 	 

@@ -1,6 +1,7 @@
 package bp.wf;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.tools.DateUtils;
 import bp.tools.StringHelper;
 import bp.wf.template.*;
@@ -669,10 +670,6 @@ public class WorkFlowBuessRole
 
 			///#endregion 首先判断是否配置了获取下一步接受人员的sql.
 
-
-
-
-
 			///#region 按绑定部门计算,该部门一人处理标识该工作结束(子线程)..
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySetDeptAsSubthread)
 		{
@@ -1055,8 +1052,9 @@ public class WorkFlowBuessRole
 			return dt;
 		}
 
-
-		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormEmpsField)
+		//#region 按照上一个节点表单指定字段的【岗位】处理。
+		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsAI ||
+				toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsOnly)
 		{
 			// 检查接受人员规则,是否符合设计要求.
 			String specEmpFields = toNode.getDeliveryParas();
@@ -1067,7 +1065,7 @@ public class WorkFlowBuessRole
 
 			if (enParas.getEnMap().getAttrs().contains(specEmpFields) == false)
 			{
-				throw new RuntimeException("@您设置的接受人规则是按照表单指定的字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
+				throw new Exception("@您设置的接受人规则是按照表单指定的岗位字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
 			}
 
 			String stas="";
@@ -1076,7 +1074,7 @@ public class WorkFlowBuessRole
 			emps = emps.replace(" ", "");
 			if (emps.contains(",") && emps.contains(";"))
 			{
-				/*如果包含,; 例如 zhangsan,张三;lisi,李四;*/
+				/*如果包含,; 例如 xx,岗位1;222,岗位2;*/
 				String[] myemps1 = emps.split("[;]", -1);
 				for (String str : myemps1)
 				{
@@ -1087,16 +1085,12 @@ public class WorkFlowBuessRole
 
 					String[] ss = str.split("[,]", -1);
 
-					stas+=",'"+ss[0]+"'";
+					stas+=",'"+ss[0];
 
 				}
-				if (dt.Rows.size() == 0)
-				{
-					throw new RuntimeException("@输入的接受人员信息错误;[" + emps + "]。");
-				}
-
+				if (DataType.IsNullOrEmpty(stas))
+					throw new Exception("@输入的接受人员的岗位信息错误;[" + emps + "]。");
 			}else {
-
 				emps = emps.replace(";", ",");
 				emps = emps.replace("；", ",");
 				emps = emps.replace("，", ",");
@@ -1104,7 +1098,7 @@ public class WorkFlowBuessRole
 				emps = emps.replace("@", ",");
 
 				if (DataType.IsNullOrEmpty(emps)) {
-					throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人，工作无法向下发送。");
+					throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人的岗位，工作无法向下发送。");
 				}
 
 				// 把它加入接受人员列表中.
@@ -1113,26 +1107,71 @@ public class WorkFlowBuessRole
 					if (DataType.IsNullOrEmpty(s)) {
 						continue;
 					}
-
-					//if (DBAccess.RunSQLReturnValInt("SELECT COUNT(NO) AS NUM FROM Port_Emp WHERE NO='" + s + "' or name='"+s+"'", 0) == 0)
-					//    continue;
-
-
-					stas+=",'"+s+"'";
-
+					stas+=",'"+s;
 				}
 			}
 
 			//根据岗位：集合获取信息.
 			stas = stas.substring(1);
-			sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN(" + stas + ") AND FK_Dept='" + WebUser.getFK_Dept() + "'";
-			dt = DBAccess.RunSQLReturnTable(sql);
+			// 仅按岗位计算.以下都有要重写.
+			if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsOnly)
+			{
+				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStations(stas);
+				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
+				{
+					throw new RuntimeException("err@按照字段岗位(仅按岗位计算)找接受人错误,当前部门下没有您选择的岗位人员.");
+				}
 
-			if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
-				throw new Exception("err@按照字段岗位找接受人错误，当前部门下没有您选择的岗位人员." );
-			return dt;
+				return dt;
+			}
+
+			///#region 按岗位智能计算, 集合模式.
+			if (toNode.getDeliveryStationReqEmpsWay() == 0)
+			{
+				String deptNo = WebUser.getFK_Dept();
+				dt = WorkFlowBuessRole.FindWorker_GetEmpsByDeptAI(stas, deptNo);
+				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
+				{
+					throw new RuntimeException("err@按照字段岗位(智能)找接受人错误,当前部门与父级部门下没有您选择的岗位人员.");
+				}
+				return dt;
+			}
+			///#endregion 按岗位智能计算, 要判断切片模式,还是集合模式.
+
+			///#region 按岗位智能计算, 切片模式. 需要对每个岗位都要找到接受人，然后把这些接受人累加起来.
+			if (toNode.getDeliveryStationReqEmpsWay() == 1 || toNode.getDeliveryStationReqEmpsWay() == 2)
+			{
+				String deptNo = WebUser.getFK_Dept();
+				String[] temps = stas.split("[,]", -1);
+				for (String str : temps)
+				{
+					//求一个岗位下的人员.
+					DataTable mydt1 = WorkFlowBuessRole.FindWorker_GetEmpsByDeptAI(str, deptNo);
+
+					//如果是严谨模式.
+					if (toNode.getDeliveryStationReqEmpsWay() == 1 && mydt1.Rows.size() == 0)
+					{
+						Station st = new Station(str);
+						throw new RuntimeException("@岗位[" + st.getName() + "]下，没有找到人不能发送下去，请检查组织结构是否完整。");
+					}
+
+					//累加.
+					for (DataRow dr : mydt1.Rows)
+					{
+						DataRow mydr = dt.NewRow();
+						mydr.setValue(0,dr.get(0).toString());
+						dt.Rows.add(mydr);
+					}
+				}
+				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
+					throw new Exception("err@按照字段岗位(智能,切片)找接受人错误,当前部门与父级部门下没有您选择的岗位人员.");
+
+				return dt;
+			}
+ 			//#endregion 按岗位智能计算, 切片模式.
+			throw new Exception("err@没有判断的模式....");
 		}
-			///#endregion 按照上一个节点表单指定字段的人员处理。
+			///#endregion 按照上一个节点表单指定字段的【岗位】处理。
 
 			///#region 按部门与岗位的交集计算.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
@@ -1828,6 +1867,123 @@ public class WorkFlowBuessRole
 	}
 
 		///#endregion 执行抄送.
+	/**
+	 按照部门编号，与岗位集合智能计算接受人.
+
+	 @param stas 岗位编号
+	 @param deptNo 部门编号
+	 @return
+	 */
+	public static DataTable FindWorker_GetEmpsByDeptAI(String stas, String deptNo) throws Exception {
+		DataTable dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptNo);
+		if (dt.Rows.size() == 0)
+		{
+			//本部门的父级.
+			Dept deptMy = new Dept(deptNo);
+			dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptMy.getParentNo());
+
+			//本级部门的祖父级,不在向上判断了.
+			if (dt.Rows.size() == 0 && deptMy.getParentNo().equals("0") == false)
+			{
+				Dept deptParent = new Dept(deptMy.getParentNo());
+				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptParent.getParentNo());
+			}
+
+			//扫描评级部门.
+			if (dt.Rows.size() == 0)
+			{
+				String deptNos = "";
+				Depts depts = new Depts();
+				depts.Retrieve(DeptAttr.ParentNo, deptMy.getParentNo());
+				for (Dept mydept : depts.ToJavaList())
+				{
+					deptNos += "," + mydept.getNo();
+				}
+
+				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptNos);
+			}
+			return dt;
+		}
+		return dt;
+	}
+
+	public static DataTable FindWorker_GetEmpsByStations(String stas)
+	{
+		String sqlEnd = "";
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			sqlEnd = " AND OrgNo='" + WebUser.getOrgNo() + "'";
+		}
+		//处理合法的 in 字段.
+		if (stas.contains("'") == false)
+		{
+			String[] temps = stas.split("[,]", -1);
+			String mystrs = "";
+			for (String temp : temps)
+			{
+				mystrs += ",'" + temp + "'";
+			}
+
+			mystrs = mystrs.substring(1);
+			stas = mystrs;
+		}
+
+		String sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN (" + stas + ") " + sqlEnd;
+		return DBAccess.RunSQLReturnTable(sql);
+	}
+	/**
+	 获取部门与岗位的交集.
+
+	 @param stas 岗位集合s
+	 @param depts 部门集合s
+	 @return
+	 */
+	public static DataTable FindWorker_GetEmpsByStationsAndDepts(String stas, String depts)
+	{
+		String sqlEnd = "";
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			sqlEnd = " AND OrgNo='" + WebUser.getOrgNo() + "'";
+		}
+
+		//是单个的.
+		if (stas.contains(",") == false && depts.contains(",") == false)
+		{
+			String sql1 = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station='" + stas + "' AND FK_Dept='" + depts + "' ";// + sqlEnd;
+			return DBAccess.RunSQLReturnTable(sql1);
+		}
+
+		//处理合法的 in 字段.
+		if (stas.contains("'") == false)
+		{
+			String[] temps = stas.split("[,]", -1);
+			String mystrs = "";
+			for (String temp : temps)
+			{
+				mystrs += ",'" + temp + "'";
+			}
+
+			mystrs = mystrs.substring(1);
+			stas = mystrs;
+		}
+
+		//处理合法的in 字段.
+		if (depts.contains("'") == false)
+		{
+			String[] temps = depts.split("[,]", -1);
+			String mystrs = "";
+			for (String temp : temps)
+			{
+				mystrs += ",'" + temp + "'";
+			}
+
+			mystrs = mystrs.substring(1);
+			depts = mystrs;
+		}
+
+		String sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN(" + stas + ") AND FK_Dept IN (" + depts + ") ";// + sqlEnd;
+		return DBAccess.RunSQLReturnTable(sql);
+	}
 
 
 }

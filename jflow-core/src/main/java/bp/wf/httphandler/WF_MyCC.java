@@ -642,13 +642,25 @@ public class WF_MyCC extends WebContralBase
 
 			}
 
+			if (btnLab.GetValBooleanByKey(BtnAttr.ShowParentFormEnableMyCC) && this.getPWorkID() != 0)
+			{
+				/*如果要查看父流程.*/
+				dr = dt.NewRow();
+				dr.setValue("No", "ParentForm");
+				dr.setValue("Name", btnLab.getShowParentFormLab());
+				dr.setValue("Oper", "");
 
+				dt.Rows.add(dr);
+			}
 			//加载轨迹.
-			dr = dt.NewRow();
-			dr.setValue("No", "Track");
-			dr.setValue("Name", "轨迹");
-			dr.setValue("Oper", "");
-			dt.Rows.add(dr);
+			if (btnLab.GetValBooleanByKey(BtnAttr.TrackEnableMyCC)){
+				dr = dt.NewRow();
+				dr.setValue("No", "Track");
+				dr.setValue("Name", "轨迹");
+				dr.setValue("Oper", "");
+				dt.Rows.add(dr);
+			}
+
 
 
 				///#region 加载流程抄送 - 按钮

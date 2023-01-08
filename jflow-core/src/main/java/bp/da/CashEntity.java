@@ -1,4 +1,6 @@
 package bp.da;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import java.util.*;
 
@@ -6,21 +8,15 @@ public class CashEntity
 {
 
 		///Hashtable 属性
-	private static Hashtable _Cash;
-	public static Hashtable getDCash()throws Exception
+	private static Hashtable<String, Object> _Cash = new Hashtable<>();
+	private static String dCashKey = SystemConfig.getRedisCacheKey("DCash");
+	public static  Hashtable<String, Object> getDCash()throws Exception
 	{
-		if (_Cash == null)
-		{
-			_Cash = new Hashtable();
-		}
+		_Cash = ContextHolderUtils.getRedisUtils().hget(false,dCashKey);
 		return _Cash;
 	}
-
-		///
-
 	/** 
 	 把实体放入缓存里面
-	 
 	 param enName
 	 param ens
 	 param enPK
@@ -40,9 +36,9 @@ public class CashEntity
 		{
 			ht.put(en.GetValStrByKey(enPK), en);
 		}
-
 		// 把实体集合放入.
 		CashEntity.getDCash().put(enName + "Ens", ens);
+		ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName + "Ens",ens);
 	}
 	public static Entities GetEns(String enName) throws Exception {
 		Object tempVar = CashEntity.getDCash().get(enName + "Ens");
@@ -65,9 +61,10 @@ public class CashEntity
 			CashEntity.getDCash().put(enName, ht);
 		}
 		ht.put(key, en);
-
 		//清除集合.
 		CashEntity.getDCash().remove(enName + "Ens");
+		//ContextHolderUtils.getRedisUtils().hset(false,enName,ht);
+		ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
 	}
 	/** 
 	 获取一个实体
@@ -103,6 +100,8 @@ public class CashEntity
 		ht.remove(pkVal);
 		//清除集合.
 		CashEntity.getDCash().remove(enName + "Ens");
+		ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName,ht);
+		ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
 	}
 	/** 
 	 插入
@@ -119,7 +118,6 @@ public class CashEntity
 			return;
 		}
 
-		//edited by liuxc,2014-8-21 17:21
 		if (ht.containsKey(pkVal))
 		{
 			ht.put(pkVal, en);
@@ -131,5 +129,7 @@ public class CashEntity
 
 		//清除集合.
 		CashEntity.getDCash().remove(enName + "Ens");
+		ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName,ht);
+		ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
 	}
 }

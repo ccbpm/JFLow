@@ -80,6 +80,7 @@ public class Knowledge extends EntityNoName
 	}
 	public Knowledge(String mypk)throws Exception
 	{
+		this.setNo(mypk);
 		this.Retrieve();
 	}
 	/** 
@@ -115,6 +116,7 @@ public class Knowledge extends EntityNoName
 		map.AddTBString(KnowledgeAttr.Rec, null, "记录人", false, false, 0, 100, 10);
 		map.AddTBString(KnowledgeAttr.RecName, null, "记录人名称", false, false, 0, 100, 10, true);
 		map.AddTBDateTime(KnowledgeAttr.RDT, null, "记录时间", false, false);
+		map.AddMyFile("上传附件");
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -151,17 +153,17 @@ public class Knowledge extends EntityNoName
 		en.setKnowledgeNo(this.getNo());
 		en.Insert();
 
-		KMDtl dtl = new KMDtl();
-		dtl.setName("文件1");
-		dtl.setRefTreeNo(en.getNo());
-		dtl.setKnowledgeNo(this.getNo());
-		dtl.Insert();
-
-		dtl = new KMDtl();
-		dtl.setName("文件2");
-		dtl.setRefTreeNo(en.getNo());
-		dtl.setKnowledgeNo(this.getNo());
-		dtl.Insert();
+//		KMDtl dtl = new KMDtl();
+//		dtl.setName("文件1");
+//		dtl.setRefTreeNo(en.getNo());
+//		dtl.setKnowledgeNo(this.getNo());
+//		dtl.Insert();
+//
+//		dtl = new KMDtl();
+//		dtl.setName("文件2");
+//		dtl.setRefTreeNo(en.getNo());
+//		dtl.setKnowledgeNo(this.getNo());
+//		dtl.Insert();
 
 
 		en = new KMTree();
@@ -170,17 +172,17 @@ public class Knowledge extends EntityNoName
 		en.setKnowledgeNo(this.getNo());
 		en.Insert();
 
-		dtl = new KMDtl();
-		dtl.setName("文件1");
-		dtl.setRefTreeNo(en.getNo());
-		dtl.setKnowledgeNo(this.getNo());
-		dtl.Insert();
-
-		dtl = new KMDtl();
-		dtl.setName("文件2");
-		dtl.setRefTreeNo(en.getNo());
-		dtl.setKnowledgeNo(this.getNo());
-		dtl.Insert();
+//		dtl = new KMDtl();
+//		dtl.setName("文件1");
+//		dtl.setRefTreeNo(en.getNo());
+//		dtl.setKnowledgeNo(this.getNo());
+//		dtl.Insert();
+//
+//		dtl = new KMDtl();
+//		dtl.setName("文件2");
+//		dtl.setRefTreeNo(en.getNo());
+//		dtl.setKnowledgeNo(this.getNo());
+//		dtl.Insert();
 
 			///#endregion 初始化目录数据
 

@@ -1,124 +1,87 @@
 package bp.da;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Hashtable;
+
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.en.Attr;
 import bp.en.Attrs;
-import bp.en.ClassFactory;
 import bp.en.Entities;
 import bp.en.Entity;
 import bp.en.Map;
 import bp.en.SQLCash;
-import bp.en.SqlBuilder;
-import bp.sys.*;
 import bp.tools.ConvertTools;
 
 /**
  * Cash 的摘要说明。
  */
 public class Cash {
-	
-	public static Hashtable<String, String> EnumKeySQL_Cash;
 
-	public static String getCaseWhenSQL(String mTable, String key, String field, String enumKey, int def, String tag)
-			throws Exception {
-		String mykey = mTable + "" + key + "" + field + "" + enumKey + def;
-
-		if (EnumKeySQL_Cash == null)
-			EnumKeySQL_Cash = new Hashtable();
-
-		String sql = EnumKeySQL_Cash.get(mykey);
-		if (sql != null)
-			return sql;
-
-		SysEnums ses = null;
-		if (DataType.IsNullOrEmpty(tag) == true) {
-
-			ses = new SysEnums(enumKey);
-			if (ses.size() == 0) {
-				bp.sys.xml.EnumInfoXml xml = new bp.sys.xml.EnumInfoXml(enumKey);
-				ses.RegIt(enumKey, xml.getVals());
-			}
-		} else {
-			ses = new SysEnums();
-			ses.RegIt(enumKey, tag);
-			// ses.LoadIt(enumKey);
-		}
-
-		sql = " CASE " + mTable + field;
-		for (SysEnum se1 : ses.ToJavaList()) {
-			sql += " WHEN " + se1.getIntKey() + " THEN '" + se1.getLab() + "'";
-		}
-
-		SysEnum se = (SysEnum) ses.GetEntityByKey(SysEnumAttr.IntKey, def);
-		if (se == null) {
-			sql += " END \"" + key + "Text\"";
-		} else {
-			sql += " WHEN NULL THEN '" + se.getLab() + "' END \"" + key + "Text\"";
-		}
-		EnumKeySQL_Cash.put(mykey, sql);
-
-		return sql;
-
-	}
-	
-	static {
-		if (!SystemConfig.getIsBSsystem()) {
+	public static final  Hashtable<String, Object> CS_Cash = new Hashtable<>();
+	public   Cash(){
+		/*if (!SystemConfig.getIsBSsystem()) {
 			CS_Cash = new Hashtable<String, Object>();
-		}
+		}*/
 	}
-	public static Hashtable<String, Object> CS_Cash;
+	private static String bsCashKey = SystemConfig.getRedisCacheKey("BSCash");
+	private static  Hashtable<String, Object> _BS_Cash = new Hashtable<>();
+	public static Hashtable<String, Object> getBS_Cash() {
+		_BS_Cash =ContextHolderUtils.getRedisUtils().hget(false,bsCashKey);
+		return _BS_Cash;
+	}
 
 	// Bill_Cash 单据模板cash.
-	private static Hashtable _Bill_Cash;
-
-	public static Hashtable getBill_Cash() {
-		if (_Bill_Cash == null) {
-			_Bill_Cash = new Hashtable();
-		}
+	private static String billCashKey = SystemConfig.getRedisCacheKey("BillCash");
+	private static  Hashtable<String, Object> _Bill_Cash = new Hashtable<>();
+	public static Hashtable<String, Object> getBill_Cash() {
+		_Bill_Cash= ContextHolderUtils.getRedisUtils().hget(false,billCashKey);
 		return _Bill_Cash;
 	}
 
 	// BS_Cash
-	private static Hashtable<String, Object> _BS_Cash;
-
-	public static Hashtable<String, Object> getBS_Cash() {
-		if (_BS_Cash == null) {
-			_BS_Cash = new Hashtable<String, Object>();
-		}
-		return _BS_Cash;
-	}
-
 	public static void ClearCash() {
-		if (_BS_Cash != null)
+		if (_BS_Cash != null){
 			_BS_Cash.clear();
+			ContextHolderUtils.getRedisUtils().del(false,bsCashKey);
+		}
 
-		if (_SQL_Cash != null)
+		if (_SQL_Cash != null){
 			_SQL_Cash.clear();
+			ContextHolderUtils.getRedisUtils().del(false,sqlCashKey);
+		}
 
-		if (_EnsData_Cash != null)
+
+		if (_EnsData_Cash != null){
 			_EnsData_Cash.clear();
+			ContextHolderUtils.getRedisUtils().del(false,ensDataCashKey);
+		}
 
-		if (_Map_Cash != null)
+
+		if (_Map_Cash != null){
 			_Map_Cash.clear();
+			ContextHolderUtils.getRedisUtils().del(false,mapCashKey);
+		}
 
-		if (_EnsData_Cash_Ext != null)
+
+		if (_EnsData_Cash_Ext != null){
 			_EnsData_Cash_Ext.clear();
+			ContextHolderUtils.getRedisUtils().del(false,ensCashExtKey);
+		}
 
-		if (_Bill_Cash != null)
+
+		if (_Bill_Cash != null){
 			_Bill_Cash.clear();
+			ContextHolderUtils.getRedisUtils().del(false,billCashKey);
+		}
+
 
 	}
 
 	// SQL cash
-	private static Hashtable<String, Object> _SQL_Cash;
-
-	public static Hashtable<String, Object> getSQL_Cash() {
-		if (_SQL_Cash == null) {
-			_SQL_Cash = new Hashtable<String, Object>();
-		}
+	private static String sqlCashKey = SystemConfig.getRedisCacheKey("SQLCash");
+	private static  Hashtable<String, Object> _SQL_Cash = new Hashtable<>();
+	public static  Hashtable<String, Object> getSQL_Cash() {
+		_SQL_Cash  = ContextHolderUtils.getRedisUtils().hget(false,sqlCashKey);
 		return _SQL_Cash;
 	}
 
@@ -132,64 +95,55 @@ public class Cash {
 			throw new RuntimeException("clName.  csh 参数有一个为空。");
 		}
 		getSQL_Cash().put(clName, csh);
+		ContextHolderUtils.getRedisUtils().hset(false,sqlCashKey,clName,csh);
+	}
+	public static void DelSQL(String clName){
+		if (clName == null ) {
+			throw new RuntimeException("clName参数有一个为空。");
+		}
+		ContextHolderUtils.getRedisUtils().hdel(false,sqlCashKey,clName);
 	}
 
-	public static void InitSQL() throws Exception {
-		ArrayList<Entity> al = ClassFactory.GetObjects("Entity");
-		for (Entity en : al) {
-			String sql = SqlBuilder.Retrieve(en);
-		}
-	}
+
 
 	// EnsData cash
-	private static Hashtable<String, Object> _EnsData_Cash;
-
+	private static String ensDataCashKey = SystemConfig.getRedisCacheKey("EnsDataCash");
+	private static  Hashtable<String, Object> _EnsData_Cash = new Hashtable<>();
 	public static Hashtable<String, Object> getEnsData_Cash() {
-		if (_EnsData_Cash == null) {
-			_EnsData_Cash = new Hashtable<String, Object>();
-		}
+		_EnsData_Cash = ContextHolderUtils.getRedisUtils().hget(false,ensDataCashKey);
 		return _EnsData_Cash;
 	}
-
 	public static Entities GetEnsData(String clName) {
 		Entities tempVar = (Entities) getEnsData_Cash().get(clName);
 		Entities ens = (Entities) ((tempVar instanceof Entities) ? tempVar : null);
-		if (ens == null) {
+		if (ens == null)
 			return null;
-		}
-
-		if (ens.size() == 0) {
+		if (ens.size() == 0)
 			return null;
-		}
-		// throw new Exception(clName + "个数为0");
 		return ens;
 	}
 
 	public static void EnsDataSet(String clName, Entities obj) {
 		if (obj.size() == 0) {
-			/**
-			 * obj.RetrieveAll();
-			 */
 
 			// throw new Exception(clName +
 			// "设置个数为0 ， 请确定这个缓存实体，是否有数据？sq=select * from " +
 			// obj.getGetNewEntity().getEnMap().getPhysicsTable());
 		}
-
 		getEnsData_Cash().put(clName, obj);
+		ContextHolderUtils.getRedisUtils().hset(false,ensDataCashKey,clName,obj);
 	}
 
 	public static void remove(String clName) {
 		getEnsData_Cash().remove(clName);
+		ContextHolderUtils.getRedisUtils().hdel(false,ensDataCashKey,clName);
 	}
 
 	// EnsData cash 扩展 临时的cash 文件。
-	private static Hashtable<String, Object> _EnsData_Cash_Ext;
-
+	private static String ensCashExtKey = SystemConfig.getRedisCacheKey("EnsDataCashExt");
+	private static  Hashtable<String, Object> _EnsData_Cash_Ext = new Hashtable<>();
 	public static Hashtable<String, Object> getEnsData_Cash_Ext() {
-		if (_EnsData_Cash_Ext == null) {
-			_EnsData_Cash_Ext = new Hashtable<String, Object>();
-		}
+		_EnsData_Cash_Ext = ContextHolderUtils.getRedisUtils().hget(false,ensCashExtKey);
 		return _EnsData_Cash_Ext;
 	}
 
@@ -203,6 +157,7 @@ public class Cash {
 		// 判断是否失效了。
 		if (SystemConfig.getIsTempCashFail()) {
 			getEnsData_Cash_Ext().clear();
+			ContextHolderUtils.getRedisUtils().del(false,ensCashExtKey);
 			return null;
 		}
 
@@ -227,15 +182,17 @@ public class Cash {
 			throw new RuntimeException("clName.  obj 参数有一个为空。");
 		}
 		getEnsData_Cash_Ext().put(clName, obj);
+		ContextHolderUtils.getRedisUtils().hset(false,ensCashExtKey,clName,obj);
 	}
 
-	// map cash
+	private static String mapCashKey = SystemConfig.getRedisCacheKey("MapCash");
 	private static Hashtable<String, Object> _Map_Cash;
 
 	public static Hashtable<String, Object> getMap_Cash() {
 		if (_Map_Cash == null) {
 			_Map_Cash = new Hashtable<String, Object>();
 		}
+		//_Map_Cash = ContextHolderUtils.getRedisUtils().hget(false,mapCashKey);
 		return _Map_Cash;
 	}
 
@@ -254,10 +211,12 @@ public class Cash {
 
 		if (map == null) {
 			getMap_Cash().remove(clName);
+			//ContextHolderUtils.getRedisUtils().hdel(false,mapCashKey,clName);
 			return;
 		}
 
 		getMap_Cash().put(clName, map);
+		//ContextHolderUtils.getRedisUtils().hset(false,mapCashKey,clName,map);
 	}
 
 	// 取出对象
@@ -268,33 +227,29 @@ public class Cash {
 		if (where == Depositary.None) {
 			throw new RuntimeException("您没有把(" + key + ")放到session or application 里面不能找出他们.");
 		}
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			if (where == Depositary.Application)
-			// return BP.Glo.HttpContextCurrent.Cache(key);
 			{
-				return getBS_Cash().get(key); // BP.Glo.HttpContextCurrent.Cache(key);
+				return getBS_Cash().get(key);
 			} else {
-				/*
-				 * warning return BP.Glo.getHttpContextCurrent().Session(key);
-				 */
 				return ContextHolderUtils.getSession().getAttribute(key);
 			}
-		} else {
+		/*} else {
 			return CS_Cash.get(key);
-		}
+		}*/
 	}
 
 	public static Object GetObj(String key) {
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			Object obj = getBS_Cash().get(key); // Cash.GetObjFormApplication(key,
 												// null);
 			if (obj == null) {
 				obj = Cash.GetObjFormSession(key);
 			}
 			return obj;
-		} else {
+		/*} else {
 			return CS_Cash.get(key);
-		}
+		}*/
 	}
 
 	/**
@@ -305,7 +260,7 @@ public class Cash {
 	 */
 	public static int DelObjFormApplication(String likeKey) {
 		int i = 0;
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			String willDelKeys = "";
 			for (Object key : getBS_Cash().keySet()) {
 				if (!key.toString().contains(likeKey)) {
@@ -322,7 +277,7 @@ public class Cash {
 				getBS_Cash().remove(s);
 				i++;
 			}
-		} else {
+		/*} else {
 			String willDelKeys = "";
 			for (Object key : CS_Cash.keySet()) {
 				if (!key.toString().contains(likeKey)) {
@@ -339,31 +294,31 @@ public class Cash {
 				CS_Cash.remove(s);
 				i++;
 			}
-		}
+		}*/
 
 		return i;
 	}
 
 	public static Object GetObjFormApplication(String key, Object isNullAsVal) {
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			Object obj = getBS_Cash().get(key); // BP.Glo.HttpContextCurrent.Cache(key);
 			if (obj == null) {
 				return isNullAsVal;
 			} else {
 				return obj;
 			}
-		} else {
+		/*} else {
 			Object obj = CS_Cash.get(key);
 			if (obj == null) {
 				return isNullAsVal;
 			} else {
 				return obj;
 			}
-		}
+		}*/
 	}
 
 	public static Object GetObjFormSession(String key) {
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			try {
 				/*
 				 * warning return BP.Glo.getHttpContextCurrent().Session(key);
@@ -372,9 +327,9 @@ public class Cash {
 			} catch (java.lang.Exception e) {
 				return null;
 			}
-		} else {
+		/*} else {
 			return CS_Cash.get(key);
-		}
+		}*/
 	}
 
 	// remove Obj
@@ -389,7 +344,7 @@ public class Cash {
 			return;
 		}
 
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			if (where == Depositary.Application) {
 				/*
 				 * warning BP.Glo.getHttpContextCurrent().Cache.remove(key);
@@ -400,14 +355,16 @@ public class Cash {
 				 */
 				ContextHolderUtils.getSession().removeAttribute(key);
 			}
-		} else {
+		/*} else {
 			CS_Cash.remove(key);
-		}
+		}*/
 	}
 
 	// 放入对象
 	public static void RemoveObj(String key) {
+
 		getBS_Cash().remove(key);
+		ContextHolderUtils.getRedisUtils().hdel(false,bsCashKey,key);
 	}
 
 	public static void AddObj(String key, Depositary where, Object obj) {
@@ -425,22 +382,23 @@ public class Cash {
 		// if (Cash.IsExits(key, where))
 		// return;
 
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			if (where == Depositary.Application) {
 				getBS_Cash().put(key, obj);
 			} else {
 				/*
 				 * warning BP.Glo.getHttpContextCurrent().Session(key) = obj;
 				 */
-				ContextHolderUtils.getSession().setAttribute(key, obj);
+				//ContextHolderUtils.getSession().setAttribute(key, obj);
 			}
-		} else {
+		/*} else {
 			if (CS_Cash.containsKey(key)) {
 				CS_Cash.put(key, obj);
 			} else {
 				CS_Cash.put(key, obj);
 			}
-		}
+			ContextHolderUtils.getRedisUtils().hset(false,billCashKey,key,obj);
+		}*/
 	}
 
 	// 判断对象是不是存在
@@ -448,23 +406,15 @@ public class Cash {
 	 * 判断对象是不是存在
 	 */
 	public static boolean IsExits(String key, Depositary where) {
-		if (SystemConfig.getIsBSsystem()) {
+		//if (SystemConfig.getIsBSsystem()) {
 			if (where == Depositary.Application) {
-				/*
-				 * warning if (BP.Glo.getHttpContextCurrent().Cache(key) ==
-				 * null) { return false; } else { return true; }
-				 */
 				return true;
 			} else {
-				/*
-				 * warning if (BP.Glo.getHttpContextCurrent().Session(key) ==
-				 * null) { return false; } else { return true; }
-				 */
 				return true;
 			}
-		} else {
+		/*} else {
 			return CS_Cash.containsKey(key);
-		}
+		}*/
 	}
 
 	public static String GetBillStr(String cfile, boolean isCheckCash) throws Exception {
@@ -488,6 +438,7 @@ public class Cash {
 				throw new RuntimeException("@读取单据模板时出现错误。cfile=" + cfile + " @Ex=" + ex.getMessage());
 			}
 			_Bill_Cash.put(cfile, val);
+			ContextHolderUtils.getRedisUtils().hset(false,billCashKey,cfile,val);
 		}
 		return val.substring(0);
 	}

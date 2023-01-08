@@ -35,6 +35,32 @@ public class Glo {
 
 	///#region 新建节点-流程-默认值.
 
+	//获得外部的参数.
+	public static  Hashtable GenerBSParas()
+	{
+
+		Hashtable ht=new Hashtable();
+		if (SystemConfig.getIsBSsystem() == true)
+		{
+			String expKeys = ",OID,DoType,HttpHandlerName,DoMethod,t,PWorkID,WorkID,";
+			for (String k : CommonUtils.getRequest().getParameterMap().keySet())
+			{
+				if (k == null )	continue;
+				if (expKeys.contains(','+k+',')) continue;
+
+				if (ht.containsKey(k))
+				{
+					ht.put(k, bp.sys.Glo.getRequest().getParameter(k));
+				}
+				else
+				{
+					ht.put(k, bp.sys.Glo.getRequest().getParameter(k));
+				}
+			}
+		}
+
+		return ht;
+	}
 
 	/**
 	 * 删除垃圾数据
@@ -1193,13 +1219,182 @@ public class Glo {
 		return err;
 	}
 
+	/**
+	 * 升级pop窗体格式.
+	 * @return
+	 * @throws Exception
+	 */
+	public static String UpdataTSModel() throws Exception {
+            ////#region 节点属性pop窗体.
+		if (DBAccess.IsExitsTableCol("WF_Node", "NodeStations") == true)
+		{
+			//删除可能存在的垃圾数据.
+			DBAccess.RunSQL("DELETE  FROM WF_NodeStation WHERE FK_Node NOT IN (SELECT NodeID FROM WF_Node)");
+			DBAccess.RunSQL("DELETE  FROM WF_NodeStation WHERE FK_Station NOT IN (SELECT No FROM Port_Station)");
+
+			//求节点集合.
+			DataTable dt = DBAccess.RunSQLReturnTable("SELECT DISTINCT FK_Node FROM WF_NodeStation");
+			for (DataRow dr : dt.Rows)
+			{
+				String nodeID = dr.getValue(0).toString();
+				String sql = "SELECT No,Name FROM Port_Station WHERE NO IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node='" + nodeID + "')";
+				DataTable dt1 = DBAccess.RunSQLReturnTable(sql);
+				String ids = "";
+				String names = "";
+				for (DataRow item : dt1.Rows)
+				{
+					ids += item.getValue(0).toString() + ",";
+					names += item.getValue(1).toString() + ",";
+				}
+				sql = "UPDATE WF_Node SET NodeStations='" + ids + "',NodeStationsT='" + names + "' WHERE NodeID=" + nodeID;
+				DBAccess.RunSQL(sql);
+			}
+		}
+		if (DBAccess.IsExitsTableCol("WF_Node", "NodeEmps") == true)
+		{
+			//删除可能存在的垃圾数据.
+			DBAccess.RunSQL("DELETE  FROM WF_NodeEmp WHERE FK_Node NOT IN (SELECT NodeID FROM WF_Node)");
+			DBAccess.RunSQL("DELETE  FROM WF_NodeEmp WHERE FK_Emp NOT IN (SELECT No FROM Port_Emp)");
+
+			//求节点集合.
+			DataTable dt = DBAccess.RunSQLReturnTable("SELECT DISTINCT FK_Node FROM WF_NodeEmp");
+			for (DataRow dr : dt.Rows)
+			{
+				String nodeID = dr.getValue(0).toString();
+				String sql = "SELECT No,Name FROM Port_Emp WHERE NO IN (SELECT FK_Emp FROM WF_NodeEmp WHERE FK_Node='" + nodeID + "')";
+				DataTable dt1 = DBAccess.RunSQLReturnTable(sql);
+				String ids = "";
+				String names = "";
+				for (DataRow item : dt1.Rows)
+				{
+					ids += item.getValue(0).toString() + ",";
+					names += item.getValue(1).toString() + ",";
+				}
+				sql = "UPDATE WF_Node SET NodeEmps='" + ids + "',NodeEmpsT='" + names + "' WHERE NodeID=" + nodeID;
+				DBAccess.RunSQL(sql);
+			}
+		}
+		if (DBAccess.IsExitsTableCol("WF_Node", "NodeDepts") == true)
+		{
+			//删除可能存在的垃圾数据.
+			DBAccess.RunSQL("DELETE  FROM WF_NodeDept WHERE FK_Node NOT IN (SELECT NodeID FROM WF_Node)");
+			DBAccess.RunSQL("DELETE  FROM WF_NodeDept WHERE FK_Dept NOT IN (SELECT No FROM Port_Dept)");
+
+			//求节点集合.
+			DataTable dt = DBAccess.RunSQLReturnTable("SELECT DISTINCT FK_Node FROM WF_NodeDept");
+			for (DataRow dr : dt.Rows)
+			{
+				String nodeID = dr.getValue(0).toString();
+				String sql = "SELECT No,Name FROM Port_Dept WHERE NO IN (SELECT FK_Dept FROM WF_NodeDept WHERE FK_Node='" + nodeID + "')";
+				DataTable dt1 = DBAccess.RunSQLReturnTable(sql);
+				String ids = "";
+				String names = "";
+				for (DataRow item : dt1.Rows)
+				{
+					ids += item.getValue(0).toString() + ",";
+					names += item.getValue(1).toString() + ",";
+				}
+				sql = "UPDATE WF_Node SET NodeDepts='" + ids + "',NodeDeptsT='" + names + "' WHERE NodeID=" + nodeID;
+				DBAccess.RunSQL(sql);
+			}
+		}
+		////#endregion 节点属性pop窗体.
+
+		////#region 升级枚举编辑格式.. Sys_Enums
+		if (DBAccess.IsExitsTableCol("Sys_EnumMain", "Val0") == false)
+		{
+			//补全SysEnumMain的字段（Idx0-29 , Val0-29）
+			SysEnumMain ses = new SysEnumMain();
+			ses.CheckPhysicsTable();
+
+			//删除可能存在的垃圾数据.
+			DBAccess.RunSQL("DELETE  FROM Sys_EnumMain WHERE No NOT IN (SELECT EnumKey FROM Sys_Enum)");
+
+			//求EnumKey集合.
+			SysEnumMains sysEnumMains = new SysEnumMains();
+			sysEnumMains.RetrieveAll();
+
+			for (SysEnumMain sem : sysEnumMains.ToJavaList())
+			{
+				String cfgVal = sem.getCfgVal();
+				AtPara atPara = sem.getatPara();
+				String enName = atPara.GetValStrByKey("EnName");
+				//如果是Int型枚举就批量增加Idx0-29
+				if (enName == "TS.Sys.SysEnumMainInt")
+				{
+					for (int i = 0; i < 30; i++)
+					{
+						sem.SetValByKey("Idx" + i, i);
+					}
+					//更新数据
+					sem.DirectUpdate();
+				}
+				//判断格式是否有@
+				if (cfgVal.indexOf("@") == -1)
+				{
+					throw new Exception("err@SysEnumMain的CfgVal格式不正确,请检查.");
+				}
+
+				String[] strs = cfgVal.split("@");
+				int idx = -1;
+				for (String str : strs)
+				{
+					if (DataType.IsNullOrEmpty(str))
+						continue;
+
+					//判断格式是否有=
+					if (str.indexOf("=") == -1)
+						throw new Exception("err@SysEnumMain的CfgVal格式不正确,请检查.");
+
+					String[] strVal = str.split("=");
+					idx++;
+					sem.SetValByKey("Idx" + idx, strVal[0]);
+					sem.SetValByKey("Val" + idx, strVal[1]);
+				}
+				//更新数据
+				sem.DirectUpdate();
+			}
+		}
+		////#endregion 升级枚举编辑格式.
+
+		////#region 升级外键格式.. Sys_SFTablDtls 不升级也可以用的少.
+		if (DBAccess.IsExitsTableCol("Sys_SFTabl", "Name0") == false)
+		{
+			//补全Sys_SFTabl的字段（BH0-49 , Name0-49）
+			SFTable sft = new SFTable();
+			sft.CheckPhysicsTable();
+
+			//删除可能存在的垃圾数据.
+			DBAccess.RunSQL("DELETE  FROM Sys_SFTable WHERE No NOT IN (SELECT FK_SFTable FROM Sys_SFTableDtl)");
+
+			//求SFTableDtls集合.
+			DataTable dt = DBAccess.RunSQLReturnTable("SELECT DISTINCT FK_SFTable FROM Sys_SFTableDtl");
+
+			for (DataRow dr : dt.Rows)
+			{
+				String fk_SFTable = dr.getValue(0).toString();
+				String sql = "SELECT BH,Name,Idx FROM Sys_SFTableDtl WHERE FK_SFTable='" + fk_SFTable + "'";
+				DataTable dt1 = DBAccess.RunSQLReturnTable(sql);
+				int i = -1;
+				for (DataRow item : dt1.Rows)
+				{
+					i++;
+					sql = "UPDATE Sys_SFTable SET BH" + i + "='" + item.getValue(0).toString() + "',Name" + i + "='" + item.getValue(1).toString() + "' WHERE No='" + fk_SFTable + "'";
+					DBAccess.RunSQL(sql);
+				}
+			}
+		}
+		////#endregion 升级外键格式.
+
+		return "升级成功.";
+	}
 
 	///#region 执行安装/升级.
 	/**
 	 * 当前版本号-为了升级使用.
 	 * 20200602:升级方向条件.
 	 */
-	public static int Ver = 20220405;
+	public static int Ver = 20220406;
 
 	/**
 	 * 执行升级
@@ -1236,6 +1431,7 @@ public class Glo {
 			DBAccess.RunSQL("UPDATE Sys_GroupField SET FrmID=enName WHERE FrmID IS null");
 		}
 
+
 		//升级.
 		Auth ath = new Auth();
 		ath.CheckPhysicsTable();
@@ -1271,6 +1467,8 @@ public class Glo {
 		}
         //#endregion 升级文本框字段类型
 
+		//升级支持ts.
+		UpdataTSModel();
 
 		MapData mapData = new MapData();
 		mapData.CheckPhysicsTable();
@@ -1473,6 +1671,8 @@ public class Glo {
 
 			//保存数据
 			String cfgVal = enumMain.getCfgVal();
+			AtPara atPara = enumMain.getatPara();
+			String enName = atPara.GetValStrByKey("EnName");
 			String[] strs = cfgVal.split("[@]", -1);
 			for (String s : strs) {
 				if (DataType.IsNullOrEmpty(s) == true) {
@@ -1481,15 +1681,38 @@ public class Glo {
 
 				String[] vk = s.split("[=]", -1);
 				SysEnum se = new SysEnum();
-				se.setIntKey(Integer.parseInt(vk[0]));
+				se.setEnumKey(enumMain.getNo());
+				se.setLang(WebUser.getSysLang());
+				//根据EnName判断是Int枚举还是String枚举
+				if (enName.equals("TS.Sys.SysEnumMainInt"))
+				{
+					se.setIntKey(Integer.parseInt(vk[0]));
+					if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+						se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getIntKey() + "_" + WebUser.getOrgNo()); //关联的主键.
+
+					if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.SAAS)
+						se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getIntKey());
+				}
+
+				if (enName.equals("TS.Sys.SysEnumMainString"))
+				{
+					se.setStrKey(vk[0].toString());
+					if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+						se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getStrKey() + "_" + WebUser.getOrgNo()); //关联的主键.
+
+					if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.SAAS)
+						se.setMyPK(se.getEnumKey() + "_" + se.getLang() + "_" + se.getStrKey());
+				}
 				String[] kvsValues = new String[vk.length - 1];
 				for (int i = 0; i < kvsValues.length; i++) {
 					kvsValues[i] = vk[i + 1];
 				}
 				se.setLab(StringHelper.join("=", kvsValues));
-				se.setEnumKey(enumMain.getNo());
-				se.setLang(WebUser.getSysLang());
-				se.Insert();
+				//如果存在就更新
+				if (se.IsExit("MyPK", se.getMyPK()))
+					se.DirectUpdate();
+				else
+					se.DirectInsert();
 			}
 		}
 
@@ -2679,6 +2902,8 @@ public class Glo {
 
 		Emp empGPM = new Emp();
 		empGPM.CheckPhysicsTable();
+
+		DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
 
 		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		DBAccess.RunSQLScript(sqlscript);
@@ -4814,7 +5039,7 @@ public class Glo {
 
 			for (Object key : row.keySet()) {
 				//值为空或者null不替换
-				if (row.get(key) == null || row.get(key).equals("") == true) {
+				if (row.get(key) == null) {
 					continue;
 				}
 				if (exp.contains("@" + key + ";")) {

@@ -13,8 +13,16 @@ import bp.wf.data.*;
 import bp.wf.template.frm.*;
 import bp.*;
 import bp.wf.*;
+import com.google.common.collect.Lists;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 import java.util.*;
 import java.time.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /** 
  流程
@@ -328,13 +336,11 @@ public class FlowExt extends EntityNoName
 
 		Map map = new Map("WF_Flow", "流程模版");
 
+		map.AddGroupAttr("基本属性");
 
 			///#region 基本属性。
 		map.AddTBStringPK(FlowAttr.No, null, "编号", true, true, 1, 4, 3);
 		map.SetHelperUrl(FlowAttr.No, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661868&doc_id=31094"); //使用alert的方式显示帮助信息.
-
-			// map.AddDDLEntities(FlowAttr.FK_FlowSort, null, "类别", new FlowSorts(), true);
-
 			//处理流程类别.
 		String sql = "";
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
@@ -432,7 +438,7 @@ public class FlowExt extends EntityNoName
 
 			///#region 表单数据.
 
-			//批量发起 add 2013-12-27. 
+		map.AddGroupAttr("数据&表单");
 		map.AddBoolean(FlowAttr.IsBatchStart, false, "是否可以批量发起流程？(如果是就要设置发起的需要填写的字段,多个用逗号分开)", true, true, true);
 		map.AddTBString(FlowAttr.BatchStartFields, null, "发起字段s", true, false, 0, 100, 10, true);
 		map.SetHelperUrl(FlowAttr.IsBatchStart, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3952886&doc_id=31094");
@@ -515,35 +521,39 @@ public class FlowExt extends EntityNoName
 			 FlowAttr.DTSField, "@0=字段名相同@1=按设置的字段匹配");
 			map.SetHelperUrl(FlowAttr.DTSField, "http://ccbpm.mydoc.io/?v=5404&t=17895");
 			*/
-
-
-
-			///#endregion 数据同步方案
-
+		///#endregion 数据同步方案
+		map.AddTBString(FlowAttr.AdvEmps, null, "高级查询人员", true, false, 0, 100, 10, true);
+		msg = "用于指定人员查询流程实例数据集合的设置.";
+		msg += "\t\n 存储格式：人员编号以逗号分割如zhangsan,lisi,";
+		map.SetHelperAlert(FlowAttr.AdvEmps, msg);
+		//#endregion 表单数据.
 
 			///#region 轨迹信息
+		map.AddGroupAttr("轨迹");
 		map.AddBoolean(FlowAttr.IsFrmEnable, false, "是否显示表单", true, true, false);
 		map.AddBoolean(FlowAttr.IsTruckEnable, true, "是否显示轨迹图", true, true, false);
 		map.AddBoolean(FlowAttr.IsTimeBaseEnable, true, "是否显示时间轴", true, true, false);
 		map.AddBoolean(FlowAttr.IsTableEnable, true, "是否显示时间表", true, true, false);
 		map.AddBoolean(FlowAttr.IsOPEnable, false, "是否显示操作", true, true, false);
+		//@ZKR
+		map.AddDDLSysEnum(FlowAttr.SubFlowShowType, 0, "子流程轨迹图显示模式", true, true, FlowAttr.SubFlowShowType, "@0=平铺模式显示@1=合并模式显示");
 		map.AddDDLSysEnum(FlowAttr.TrackOrderBy, 0, "排序方式", true, true, FlowAttr.TrackOrderBy, "@0=按照时间先后顺序@1=倒序(新发生的在前面)");
 
 			///#endregion 轨迹信息
 
 
 			///#region 开发者信息.
-		map.AddTBString(FlowAttr.DesignerNo, null, "设计者编号", true, true, 0, 50, 10, false);
-		map.AddTBString(FlowAttr.DesignerName, null, "设计者名称", true, true, 0, 50, 10, false);
-		map.AddTBDateTime(FlowAttr.DesignTime, null, "创建时间", true, true);
-		map.AddTBString(FlowAttr.OrgNo, null, "组织编号", true, true, 0, 50, 10, false);
+		map.AddTBString(FlowAttr.DesignerNo, null, "设计者编号", false, true, 0, 50, 10, false);
+		map.AddTBString(FlowAttr.DesignerName, null, "设计者名称", false, true, 0, 50, 10, false);
+		map.AddTBDateTime(FlowAttr.DesignTime, null, "创建时间", false, true);
+		map.AddTBString(FlowAttr.OrgNo, null, "组织编号", false, true, 0, 50, 10, false);
 			// map.AddTBStringDoc(FlowAttr.Note, null, "流程描述", true, false, true);
 
 			///#endregion 开发者信息.
 
 
-			///#region 基本功能.
-			//map.AddRefMethod(rm);
+		///#region 基本功能.
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "自动发起";
@@ -561,12 +571,6 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-ban";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "发起前置导航";
-			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/StartGuide.png";
-			//rm.ClassMethodName = this.ToString() + ".DoStartGuide()";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "发起前置导航";
@@ -594,13 +598,20 @@ public class FlowExt extends EntityNoName
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
+		rm.Title = "轨迹查看权限";
+		rm.Icon = "../../WF/Img/Setting.png";
+		rm.ClassMethodName = this.toString() + ".DoTruckRight()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-briefcase";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
 		rm.Title = "修改ICON"; // "调用事件接口";
 		rm.ClassMethodName = this.toString() + ".DoNodesICON";
 			//  rm.Icon = "../../WF/Img/Event.png";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-heart";
 		map.AddRefMethod(rm);
-
 
 		rm = new RefMethod();
 		rm.Title = "版本管理";
@@ -621,158 +632,70 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-settings";
 		map.AddRefMethod(rm);
 
-
 		rm = new RefMethod();
-		rm.Title = "批量发起";
-		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/AutoStart.png";
-		rm.ClassMethodName = this.toString() + ".DoBatchStart()";
+		rm.Title = "流程模版";
+		rm.Icon = "../../WF/Img/undo.png";
+		rm.ClassMethodName = this.toString() + ".DoExps()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.Icon = "icon-calculator";
+		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "独立表单树";
-			//rm.Icon = "../../WF/Img/Btn/DTS.gif";
-			//rm.ClassMethodName = this.ToString() + ".DoFlowFormTree()";
-			//map.AddRefMethod(rm);
-
-			///#endregion 流程设置.
-
-
-			///#region 时限规则
-
+		//#region 时限规则
+		map.AddGroupMethod("时限规则");
 		rm = new RefMethod();
 		rm.Title = "计划时间计算规则";
-		rm.GroupName = "时限规则";
 		rm.ClassMethodName = this.toString() + ".DoSDTOfFlow";
-			//rm.Icon = "../../WF/Img/Event.png";
+		//rm.Icon = "../../WF/Img/Event.png";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-clock";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "时限规则";
-		rm.Title = "时限规则";
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
 		rm.ClassMethodName = this.toString() + ".DoDeadLineRole()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-			// rm.GroupName = "实验中的功能";
+		// rm.GroupName = "实验中的功能";
 		rm.Icon = "icon-clock";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "时限规则";
 		rm.Title = "预警、超期消息事件";
 		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/OvertimeRole.png";
 		rm.ClassMethodName = this.toString() + ".DoOverDeadLineRole()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-energy";
-			// rm.GroupName = "实验中的功能";
 		map.AddRefMethod(rm);
+		//#endregion 时限规则
 
-
-			///#endregion 时限规则
-
-
-			///#region 模拟测试.
-			//rm = new RefMethod();
-			//rm.GroupName = "模拟测试";
-			//rm.Title = "调试运行"; // "设计检查报告";
-			////rm.ToolTip = "检查流程设计的问题。";
-			//rm.Icon = "../../WF/Img/EntityFunc/Flow/Run.png";
-			//rm.ClassMethodName = this.ToString() + ".DoRunIt";
-			//rm.refMethodType = RefMethodType.LinkeWinOpen;
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.GroupName = "模拟测试";
-			//rm.Title = "检查报告"; // "设计检查报告";
-			//rm.Icon = "../../WF/Img/EntityFunc/Flow/CheckRpt.png";
-			//rm.ClassMethodName = this.ToString() + ".DoCheck2018Url";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Icon = "icon-paper-plane";
-			//// map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.GroupName = "模拟测试";
-			//rm.Title = "检查报告(旧)"; // "设计检查报告";
-			//rm.Icon = "../../WF/Img/EntityFunc/Flow/CheckRpt.png";
-			//rm.ClassMethodName = this.ToString() + ".DoCheck";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Icon = "icon-paper-plane";
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.GroupName = "模拟测试";
-			//rm.Title = "测试容器"; // "设计检查报告";
-			//rm.Icon = "../../WF/Img/EntityFunc/Flow/CheckRpt.png";
-			//rm.ClassMethodName = this.ToString() + ".TestingContainer";
-			//rm.refMethodType = RefMethodType.LinkeWinOpen;
-			//rm.Icon = "icon-paper-plane";
-			//map.AddRefMethod(rm);
-
-			///#endregion 模拟测试.
-
-
-			///#region 流程模版管理.
-			//rm = new RefMethod();
-			//rm.Title = "模版导入";
-			//rm.Icon = "../../WF/Img/redo.png";
-			//rm.ClassMethodName = this.ToString() + ".DoImp()";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.GroupName = "流程模版";
-			//rm.Icon = "icon-paper-plane";
-			//map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		   // rm.Title = "模版导出";
-		rm.Title = "流程模版";
-
-		rm.Icon = "../../WF/Img/undo.png";
-		rm.ClassMethodName = this.toString() + ".DoExps()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-			//    rm.GroupName = "流程模版";
-		rm.Icon = "icon-paper-plane";
-		map.AddRefMethod(rm);
-
-			///#endregion 流程模版管理.
-
-
-			///#region 开发接口.
+        //#region 开发接口.
+		map.AddGroupMethod("开发接口");
 		rm = new RefMethod();
 		rm.Title = "与业务表数据同步";
-			// rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/DTS.png";
-
 		rm.ClassMethodName = this.toString() + ".DoDTSBTable()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "开发接口";
 		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "URL调用接口";
-			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/URL.png";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/URL.png";
 		rm.ClassMethodName = this.toString() + ".DoAPI()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "开发接口";
 		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "SDK开发接口";
-			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/API.png";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/API.png";
 		rm.ClassMethodName = this.toString() + ".DoAPICode()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "开发接口";
 		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "代码事件开发接口";
-			// rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/API.png";
 		rm.ClassMethodName = this.toString() + ".DoAPICodeFEE()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "开发接口";
 		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
 
@@ -780,44 +703,24 @@ public class FlowExt extends EntityNoName
 		rm.Title = "流程属性自定义";
 		rm.ClassMethodName = this.toString() + ".DoFlowAttrExt()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "开发接口";
 		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
+        //#endregion 开发接口.
 
-			///#endregion 开发接口.
-
-
-			///#region 流程运行维护.
-		rm = new RefMethod();
-		rm.Icon = "../../WF/Img/Btn/DTS.gif";
-		rm.Title = "重生成报表数据"; // "删除数据";
-		rm.Warning = "您确定要执行吗? 注意:此方法耗费资源。"; // "您确定要执行删除流程数据吗？";
-		rm.ClassMethodName = this.toString() + ".DoReloadRptData";
-		rm.GroupName = "流程维护";
-		rm.Icon = "icon-briefcase";
-		map.AddRefMethod(rm);
-
+        //#region 流程运行维护.
+		map.AddGroupMethod("流程维护");
 		rm = new RefMethod();
 		rm.Title = "重生成流程标题";
 		rm.Icon = "../../WF/Img/Btn/DTS.gif";
 		rm.ClassMethodName = this.toString() + ".DoGenerTitle()";
-			//设置相关字段.
-			//rm.RefAttrKey = FlowAttr.TitleRole;
+		//设置相关字段.
+		//rm.RefAttrKey = FlowAttr.TitleRole;
 		rm.RefAttrLinkLabel = "重新生成流程标题";
 		rm.refMethodType = RefMethodType.Func;
 		rm.Target = "_blank";
 		rm.Warning = "您确定要根据新的规则重新产生标题吗？";
-		rm.GroupName = "流程维护";
 		rm.Icon = "icon-briefcase";
-
-
-			//设置相关字段.
-			/* rm.RefAttrKey = FlowAttr.TitleRoleNodes;
-			 rm.RefAttrLinkLabel = "重新生成流程标题";
-			 rm.Target = "_blank";*/
 		map.AddRefMethod(rm);
-
-
 
 		rm = new RefMethod();
 		rm.Title = "重生成FlowEmps字段";
@@ -827,16 +730,13 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.Func;
 		rm.Target = "_blank";
 		rm.Warning = "您确定要重新生成吗？";
-		rm.GroupName = "流程维护";
 		rm.Icon = "icon-briefcase";
-
 		map.AddRefMethod(rm);
 
-			//带有参数的方法.
+		//带有参数的方法.
 		rm = new RefMethod();
-		rm.GroupName = "流程维护";
 		rm.Title = "重命名节点表单字段";
-			//  rm.Warning = "您确定要处理吗？";
+		//  rm.Warning = "您确定要处理吗？";
 		rm.getHisAttrs().AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
 		rm.getHisAttrs().AddTBString("FieldNew", null, "新字段英文名", true, false, 0, 100, 100);
 		rm.getHisAttrs().AddTBString("FieldNewName", null, "新字段中文名", true, false, 0, 100, 100);
@@ -852,22 +752,10 @@ public class FlowExt extends EntityNoName
 		rm.ClassMethodName = this.toString() + ".DoFlowFields()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-briefcase";
-		rm.GroupName = "流程维护";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Icon = "../../WF/Img/Btn/Delete.gif";
-			//rm.Title = "删除该流程全部数据"; // this.ToE("DelFlowData", "删除数据"); // "删除数据";
-			//rm.Warning = "您确定要执行删除流程数据吗? \t\n该流程的数据删除后，就不能恢复，请注意删除的内容。";// "您确定要执行删除流程数据吗？";
-			//rm.ClassMethodName = this.ToString() + ".DoDelData";
-			//rm.Icon = "icon-briefcase";
-			//rm.GroupName = "流程维护";
-			//map.AddRefMethod(rm);
-
-
-			//带有参数的方法.
+		//带有参数的方法.
 		rm = new RefMethod();
-		rm.GroupName = "流程维护";
 		rm.Title = "删除指定日期范围内的流程";
 		rm.Warning = "您确定要删除吗？";
 		rm.Icon = "../../WF/Img/Btn/Delete.gif";
@@ -882,17 +770,14 @@ public class FlowExt extends EntityNoName
 		rm = new RefMethod();
 		rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Title = "按工作ID删除"; // this.ToE("DelFlowData", "删除数据"); // "删除数据";
-		rm.GroupName = "流程维护";
 		rm.ClassMethodName = this.toString() + ".DoDelDataOne";
 		rm.getHisAttrs().AddTBInt("WorkID", 0, "输入工作ID", true, false);
 		rm.getHisAttrs().AddTBString("beizhu", null, "删除备注", true, false, 0, 100, 100);
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
-
-			//带有参数的方法.
+		//带有参数的方法.
 		rm = new RefMethod();
-		rm.GroupName = "流程维护";
 		rm.Title = "强制设置接收人";
 		rm.getHisAttrs().AddTBInt("WorkID", 0, "输入工作ID", true, false);
 		rm.getHisAttrs().AddTBInt("NodeID", 0, "节点ID", true, false);
@@ -903,9 +788,8 @@ public class FlowExt extends EntityNoName
 
 
 		rm = new RefMethod();
-			//   rm.Icon = "../../WF/Img/Btn/Delete.gif";
+		//   rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Title = "按工作ID强制结束"; // this.ToE("DelFlowData", "删除数据"); // "删除数据";
-		rm.GroupName = "流程维护";
 		rm.ClassMethodName = this.toString() + ".DoStopFlow";
 		rm.getHisAttrs().AddTBInt("WorkID", 0, "输入工作ID", true, false);
 		rm.Icon = "icon-briefcase";
@@ -916,19 +800,16 @@ public class FlowExt extends EntityNoName
 		rm.Title = "回滚流程";
 		rm.Icon = "../../WF/Img/Btn/Back.png";
 		rm.ClassMethodName = this.toString() + ".DoRebackFlowData()";
-			// rm.Warning = "您确定要回滚它吗？";
+		// rm.Warning = "您确定要回滚它吗？";
 		rm.getHisAttrs().AddTBInt("workid", 0, "请输入要会滚WorkID", true, false);
 		rm.getHisAttrs().AddTBInt("nodeid", 0, "回滚到的节点ID", true, false);
 		rm.getHisAttrs().AddTBString("note", null, "回滚原因", true, false, 0, 600, 200);
 		rm.Icon = "icon-briefcase";
-		rm.GroupName = "流程维护";
 		map.AddRefMethod(rm);
+        //#endregion 流程运行维护.
 
-			///#endregion 流程运行维护.
-
-
-			///#region 流程监控.
-
+        //#region 流程监控.
+		map.AddGroupMethod("流程监控");
 		rm = new RefMethod();
 		rm.Title = "设计报表"; // "报表运行";
 		rm.Icon = "../../WF/Img/Btn/Rpt.gif";
@@ -937,29 +818,28 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "监控面板";
-			//rm.Icon = ../../Admin/CCBPMDesigner/Img/Monitor.png";
-			//rm.ClassMethodName = this.ToString() + ".DoDataManger_Welcome()";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.GroupName = "流程监控";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "监控面板";
+		//rm.Icon = ../../Admin/CCBPMDesigner/Img/Monitor.png";
+		//rm.ClassMethodName = this.ToString() + ".DoDataManger_Welcome()";
+		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.GroupName = "流程监控";
+		//map.AddRefMethod(rm);
 
-//		rm = new RefMethod();
-//		rm.Title = "图形分析";
-//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
-//		rm.ClassMethodName = this.toString() + ".DoDataManger_DataCharts()";
-//		rm.refMethodType = RefMethodType.LinkeWinOpen;
-//		rm.GroupName = "流程监控";
-//		rm.Icon = "icon-briefcase";
-//		map.AddRefMethod(rm);
+		//  rm = new RefMethod();
+		//rm.Title = "图形分析";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
+		//rm.ClassMethodName = this.ToString() + ".DoDataManger_DataCharts()";
+		//rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		//rm.GroupName = "流程监控";
+		//rm.Icon = "icon-briefcase";
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "综合查询";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Search.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_Search()";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.GroupName = "流程监控";
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
@@ -968,120 +848,64 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_Group()";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.GroupName = "流程监控";
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
 
+		//rm = new RefMethod();
+		//rm.Title = "实例增长分析";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Grow.png";
+		//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceGrowOneFlow()";
+		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.GroupName = "流程监控";
+		//rm.Visable = false;
+		//map.AddRefMethod(rm);
 
+		//rm = new RefMethod();
+		//rm.Title = "逾期未完成实例";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Warning.png";
+		//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceWarning()";
+		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.GroupName = "流程监控";
+		//map.AddRefMethod(rm);
 
-
-			//rm = new RefMethod();
-			//rm.Title = "实例增长分析";
-			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Grow.png";
-			//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceGrowOneFlow()";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.GroupName = "流程监控";
-			//rm.Visable = false;
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = "逾期未完成实例";
-			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Warning.png";
-			//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceWarning()";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.GroupName = "流程监控";
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = "逾期已完成实例";
-			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/overtime.png";
-			//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceOverTimeOneFlow()";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Visable = false;
-			//rm.GroupName = "流程监控";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "逾期已完成实例";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/overtime.png";
+		//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceOverTimeOneFlow()";
+		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.Visable = false;
+		//rm.GroupName = "流程监控";
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "删除日志";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/log.png";
 		rm.ClassMethodName = this.toString() + ".DoDataManger_DeleteLog()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "流程监控";
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
+        //#endregion 流程监控.
 
-
-
-			///#endregion 流程监控.
-
-
-			///#region 实验中的功能
-
-		rm = new RefMethod();
-		rm.Title = "节点属性批量设置";
-		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/RptOrder.png";
-		rm.ClassMethodName = this.toString() + ".DoNodeAttrsBatchSetting()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "实验中的功能";
-		rm.Visable = false;
-		rm.Icon = "icon-briefcase";
-		map.AddRefMethod(rm);
-
-//		rm = new RefMethod();
-//		rm.Title = "数据订阅-实验中";
-//		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/RptOrder.png";
-//		rm.ClassMethodName = this.toString() + ".DoDataManger_RptOrder()";
-//		rm.refMethodType = RefMethodType.RightFrameOpen;
-//		rm.GroupName = "实验中的功能";
-//		rm.Visable = false;
-//		rm.Icon = "icon-briefcase";
-//		map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = "流程轨迹表单";
-			//rm.Icon = "../../WF/Img/Btn/DTS.gif";
-			//rm.ClassMethodName = this.ToString() + ".DoBindFlowExt()";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.GroupName = "实验中的功能";
-			//map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "批量设置节点";
-		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
-		rm.ClassMethodName = this.toString() + ".DoNodeAttrs()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "实验中的功能";
-		rm.Icon = "icon-briefcase";
-			// map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "轨迹查看权限";
-		rm.Icon = "../../WF/Img/Setting.png";
-		rm.ClassMethodName = this.toString() + ".DoTruckRight()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "实验中的功能";
-		rm.Icon = "icon-briefcase";
-		map.AddRefMethod(rm);
-
+        //#region 实验中的功能
+		map.AddGroupMethod("实验中的功能");
 		rm = new RefMethod();
 		rm.Title = "数据源管理(如果新增数据源后需要关闭重新打开)";
 		rm.ClassMethodName = this.toString() + ".DoDBSrc";
 		rm.Icon = "../../WF/Img/Btn/DTS.gif";
-			//设置相关字段.
+		//设置相关字段.
 		rm.RefAttrKey = FlowAttr.DTSDBSrc;
 		rm.RefAttrLinkLabel = "数据源管理";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
-		rm.GroupName = "实验中的功能";
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "业务表字段同步配置";
 		rm.ClassMethodName = this.toString() + ".DoBTable";
-		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
-			//设置相关字段.
+		rm.Icon = bp.wf.Glo.getCCFlowAppPath()+ "WF/Img/Btn/DTS.gif";
+		//设置相关字段.
 		rm.RefAttrKey = FlowAttr.DTSField;
 		rm.RefAttrLinkLabel = "业务表字段同步配置";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
@@ -1089,58 +913,34 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
-
-
 		rm = new RefMethod();
 		rm.Title = "一键设置审核组件工作模式";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
 		rm.refMethodType = RefMethodType.Func;
 		rm.Warning = "您确定要设置审核组件模式吗？ \t\n 1, 第2个节点以后的节点表单都指向第2个节点表单.  \t\n  2, 结束节点都设置为只读模式. ";
-		rm.GroupName = "实验中的功能";
 		rm.ClassMethodName = this.toString() + ".DoSetFWCModel()";
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "删除NDxxxRpt表,多余字段.";
-		rm.ClassMethodName = this.toString() + ".DoDeleteFields()";
-		rm.refMethodType = RefMethodType.Func;
-		rm.Warning = "您确定要设置审核组件模式吗？ \t\n 1, 表NDxxxRpt是自动创建的.  \t\n  2, 在设置流程过程中有些多余的字段会生成到NDxxRpt表里. \t\n 3,这里是删除数据字段为null 并且是多余的字段.";
-		rm.GroupName = "实验中的功能";
-		rm.Icon = "icon-briefcase";
-		map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "删除NDxxRpt表,多余字段.";
+		//rm.ClassMethodName = this.ToString() + ".DoDeleteFields()";
+		//rm.RefMethodType = RefMethodType.Func;
+		//rm.Warning = "您确定要执行吗？ \t\n 1, 表NDxxxRpt是自动创建的.  \t\n  2, 在设置流程过程中有些多余的字段会生成到NDxxRpt表里. \t\n 3,这里是删除数据字段为null 并且是多余的字段.";
+		//rm.GroupName = "实验中的功能";
+		//rm.Icon = "icon-briefcase";
+		//map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "删除NDxxxRpt表,数据为null的多余字段.";
-		rm.ClassMethodName = this.toString() + ".DoDeleteFieldsIsNull()";
-		rm.refMethodType = RefMethodType.Func;
-		rm.Warning = "您确定要设置审核组件模式吗？ \t\n 1, 表NDxxxRpt是自动创建的.  \t\n  2, 在设置流程过程中有些多余的字段会生成到NDxxxRpt表里. \t\n 3,这里是删除数据字段为null 并且是多余的字段.";
-		rm.GroupName = "实验中的功能";
-		rm.Icon = "icon-briefcase";
-		map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "删除NDxRpt表,数据为null的多余字段.";
+		//rm.ClassMethodName = this.ToString() + ".DoDeleteFieldsIsNull()";
+		//rm.RefMethodType = RefMethodType.Func;
+		//rm.Warning = "您确定要执行吗？ \t\n 1, 表NDxxxRpt是自动创建的.  \t\n  2, 在设置流程过程中有些多余的字段会生成到NDxxxRpt表里. \t\n 3,这里是删除数据字段为null 并且是多余的字段.";
+		//rm.GroupName = "实验中的功能";
+		//rm.Icon = "icon-briefcase";
+		//map.AddRefMethod(rm);
+       //#endregion 实验中的功能
 
-			///#endregion 实验中的功能
-
-			//rm = new RefMethod();
-			//rm.Title = "设置自动发起"; // "报表运行";
-			//rm.Icon = "/WF/Img/Btn/View.gif";
-			//rm.ClassMethodName = this.ToString() + ".DoOpenRpt()";
-			////rm.Icon = "/WF/Img/Btn/Table.gif"; 
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = this.ToE("Event", "事件"); // "报表运行";
-			//rm.Icon = "/WF/Img/Btn/View.gif";
-			//rm.ClassMethodName = this.ToString() + ".DoOpenRpt()";
-			////rm.Icon = "/WF/Img/Btn/Table.gif";
-			//map.AddRefMethod(rm);
-
-			//rm = new RefMethod();
-			//rm.Title = this.ToE("FlowExtDataOut", "数据转出定义");  //"数据转出定义";
-			// rm.Icon = "/WF/Img/Btn/Table.gif";
-			//rm.ToolTip = "在流程完成时间，流程数据转储存到其它系统中应用。";
-			//rm.ClassMethodName = this.ToString() + ".DoExp";
-			//map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -1191,33 +991,51 @@ public class FlowExt extends EntityNoName
 	 @return 
 	*/
 	public final String DoDelFlows(String dtFrom, String dtTo, boolean isDelCurrFlow) throws Exception {
-		//if (bp.web.WebUser.getNo() != "admin")
 		if (WebUser.getIsAdmin() == false)
-		{
 			return "非管理员用户，不能删除。";
-		}
 
 
 		String sql = "";
 		if (isDelCurrFlow == true)
-		{
 			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "'  AND FK_Flow='" + this.getNo() + "' ";
-		}
 		else
-		{
 			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "' ";
-		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		String msg = "如下流程ID被删除:";
-		for (DataRow dr : dt.Rows)
-		{
-			long workid = Long.parseLong(dr.getValue("WorkID").toString());
-			String fk_flow = dr.getValue("FK_Flow").toString();
-			DoDelFlowByWorkID(workid, fk_flow);
-			msg += " " + workid;
+		//线程执行删除流程
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
+		final int POOL_SIZE = dt.Rows.size();
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(
+				POOL_SIZE,
+				POOL_SIZE,
+				POOL_SIZE, TimeUnit.SECONDS,
+				new ArrayBlockingQueue<>(POOL_SIZE),
+				new ThreadPoolExecutor.CallerRunsPolicy());
+		List<CompletableFuture<Void>> futures = Lists.newArrayList();
+		try{
+			for (DataRow dr : dt.Rows)
+			{
+				long workid = Long.parseLong(dr.getValue("WorkID").toString());
+				String fk_flow = dr.getValue("FK_Flow").toString();
+				msg += " " + workid;
+				CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+					try {
+						DoDelFlowByWorkID(workid, fk_flow);
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}, executor);
+				futures.add(future);
+			}
+			CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+			executor.shutdown();
+		}catch(Exception e){
+			throw new RuntimeException("部分流程数据删除成功:"+msg);
 		}
+
 		return msg;
 	}
 	public final void DoDelFlowByWorkID(long workid, String fk_flow) throws Exception {
@@ -2223,7 +2041,10 @@ public class FlowExt extends EntityNoName
 			///#region 更新PTale 后的业务处理
 		// 同步流程数据表.
 		String ndxxRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
-		Flow fl = new Flow(this.getNo());
+		Flow fl = new Flow();
+		fl.setNo(this.getNo());
+		fl.RetrieveFromDBSources();
+		fl.Update();
 		MapData md = new MapData(ndxxRpt);
 		if (md.getPTable().equals(fl.getPTable()) == false)
 		{

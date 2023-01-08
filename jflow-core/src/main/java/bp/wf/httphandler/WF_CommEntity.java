@@ -503,65 +503,35 @@ public class WF_CommEntity extends WebContralBase
 				groupTitle = "@" + en.getPK() + ",基本信息," + map.getEnDesc() + "";
 			}
 
-			// 增加上.
+			/// 字段属性.
+			Attrs attrs = en.getEnMap().getAttrs();
+			MapAttrs mapAttrs = new MapAttrs();
+			//获取Map中的分组
 			DataTable dtGroups = new DataTable("Sys_GroupField");
 			dtGroups.Columns.Add("OID");
 			dtGroups.Columns.Add("Lab");
-			dtGroups.Columns.Add("Tip");
-			dtGroups.Columns.Add("CtrlType");
-			dtGroups.Columns.Add("CtrlID");
-
-			String[] strs = groupTitle.split("[@]", -1);
-			for (String str : strs) {
-				if (DataType.IsNullOrEmpty(str)) {
+			String groupName = "";
+			String groupNames = "";
+			for(Attr attr : attrs)
+			{
+				if (attr.getMyFieldType() == FieldType.RefText)
 					continue;
+				groupName = attr.GroupName;
+				if (groupNames.contains(groupName + ",") == false)
+				{
+					DataRow dr = dtGroups.NewRow();
+					groupNames += groupName + ",";
+					dr.setValue("OID",groupName);
+					dr.setValue("Lab",groupName);
+					dtGroups.Rows.add(dr);
 				}
 
-				String[] vals = str.split("[=]", -1);
-				if (vals.length == 1) {
-					vals = str.split("[,]", -1);
-				}
-
-				if (vals.length == 0) {
-					continue;
-				}
-
-				DataRow dr = dtGroups.NewRow();
-				dr.setValue("OID", vals[0]);
-				dr.setValue("Lab", vals[1]);
-				if (vals.length == 3) {
-					dr.setValue("Tip", vals[2]);
-				}
-				dtGroups.Rows.add(dr);
+				MapAttr mapAttr = attr.getToMapAttr();
+				mapAttr.SetPara("GroupName", attr.GroupName);
+				mapAttrs.AddEntity(mapAttr);
 			}
 			ds.Tables.add(dtGroups);
-
-			/// 增加上分组信息.
-
-			/// 字段属性.
-			MapAttrs attrs = en.getEnMap().getAttrs().ToMapAttrs();
-			DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
-			// sys_MapAttrs.Columns.remove(MapAttrAttr.GroupID);
-			// sys_MapAttrs.Columns.Add("GroupID");
-
-			sys_MapAttrs.Columns.get(MapAttrAttr.GroupID).setDataType(String.class); // 改变列类型.
-
-			// 给字段增加分组.
-			String currGroupID = "";
-			for (DataRow drAttr : sys_MapAttrs.Rows) {
-				if (currGroupID.equals("") == true) {
-					currGroupID = dtGroups.Rows.get(0).getValue("OID").toString();
-				}
-
-				String keyOfEn = drAttr.getValue(MapAttrAttr.KeyOfEn).toString();
-				for (DataRow drGroup : dtGroups.Rows) {
-					String field = drGroup.getValue("OID").toString();
-					if (keyOfEn.equals(field)) {
-						currGroupID = field;
-					}
-				}
-				drAttr.setValue(MapAttrAttr.GroupID, currGroupID);
-			}
+			DataTable sys_MapAttrs = mapAttrs.ToDataTableField("Sys_MapAttr");
 			ds.Tables.add(sys_MapAttrs);
 
 			/// 字段属性.
@@ -1076,6 +1046,7 @@ public class WF_CommEntity extends WebContralBase
 			dtM.Columns.Add("RefAttrKey");
 			// 判断Func是否有参数
 			dtM.Columns.Add("FunPara");
+			dtM.Columns.Add("ClassMethodName");
 
 			RefMethods rms = map.getHisRefMethods();
 			for (RefMethod item : rms) {
@@ -1208,6 +1179,7 @@ public class WF_CommEntity extends WebContralBase
 						}
 					}
 					dr.setValue("Title", vsM.getDesc() + "(" + i + ")");
+					dr.setValue("GroupName",vsM.GroupName);
 					dtM.Rows.add(dr);
 				}
 			}
@@ -1302,7 +1274,11 @@ public class WF_CommEntity extends WebContralBase
 			sql += " union ";
 			sql += "select  E." + bp.sys.base.Glo.getUserNo() + " , E.Name ,D.Name AS FK_DeptText,0 AS TYPE From Port_Emp E,Port_Dept D Where E.Fk_Dept = D.No AND  D.No='" + key + "' ORDER BY TYPE DESC";
 			DataTable dtt = DBAccess.RunSQLReturnTable(sql);
-			DataTable dt = dtt;
+			DataTable dt = new DataTable();
+			dt.Columns.Add("No", String.class);
+			dt.Columns.Add("Name", String.class);
+			dt.Columns.Add("FK_DeptText", String.class);
+			dt.Columns.Add("type", String.class);
 			String emps = "";
 			for (DataRow drr : dtt.Rows)
 			{

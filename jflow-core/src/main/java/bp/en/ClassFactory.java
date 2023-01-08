@@ -1,12 +1,14 @@
 package bp.en;
-import java.util.*;
 
 import bp.da.DataType;
 import bp.da.Log;
 import bp.difference.SystemConfig;
-import bp.sys.*;
+import bp.sys.GEDtl;
+import bp.sys.GEEntity;
 import bp.sys.base.EventBase;
-import bp.tools.StringUtils;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 /**
  * ClassFactory 的摘要说明。
  */
@@ -42,19 +44,19 @@ public class ClassFactory {
 		return ens;
 	}
  
-	private static final HashMap<String,Object> objects = new HashMap<>();
+	private static final ConcurrentHashMap<String,Object> objects = new ConcurrentHashMap<>();
 	/// <summary>
 	/// 尽量不用此方法来获取事例
 	/// </summary>
 	/// <param name="className"></param>
 	/// <returns></returns>
-	public static Object GetObject_OK(String className) throws Exception {
-		if (DataType.IsNullOrEmpty(className) == true)
-			return "err@要转化类名称为空...";
-		className = bp.sys.base.Glo.DealClassEntityName(className);
-		Class clazz = Class.forName(className);
-		return clazz.newInstance();
-	}
+//	public static Object GetObject_OK(String className) throws Exception {
+//		if (DataType.IsNullOrEmpty(className) == true)
+//			return "err@要转化类名称为空...";
+//		className = bp.sys.base.Glo.DealClassEntityName(className);
+//		Class clazz = Class.forName(className);
+//		return clazz.newInstance();
+//	}
 
 	/**
 	 * 根据一个抽象的基类，取出此系统中从他上面继承的子类集合。 非抽象的类。
@@ -64,7 +66,7 @@ public class ClassFactory {
 	 * @return ArrayList
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static ArrayList GetObjects(String baseEnsName) {
+	public static synchronized ArrayList GetObjects(String baseEnsName) {
 		baseEnsName = bp.sys.base.Glo.DealClassEntityName(baseEnsName);
 		ArrayList list = (ArrayList) objects.get(baseEnsName);
 
@@ -85,7 +87,7 @@ public class ClassFactory {
 			}
 			list.sort(Comparator.comparing(o -> o.getClass().getName()));
 			Log.DebugWriteInfo("扫描 " + baseEnsName + " 父类，共 " + set.size() + " 子类：" + set);
-			objects.put(baseEnsName, list);
+			objects.putIfAbsent(baseEnsName, list);
 			return list;
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
@@ -141,7 +143,7 @@ public class ClassFactory {
 		return  (Entity)tmp.getClass().newInstance();
 	}
 
-	private static Hashtable<String, Object> Htable_Method;
+	private static ConcurrentHashMap<String, Object> Htable_Method = new ConcurrentHashMap<>();
 
 	/*
 	 * 得到一个实体
@@ -153,11 +155,11 @@ public class ClassFactory {
 	public static Method GetMethod(String className) {
 		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_Method == null) {
-			Htable_Method = new Hashtable();
+//			Htable_Method = new Hashtable();
 			String cl = "bp.en.Method";
 			ArrayList<Method> al = ClassFactory.GetObjects(cl);
 			for (Method en : al) {
-				Htable_Method.put(en.getClass().getName(), en);
+				Htable_Method.putIfAbsent(en.getClass().getName(), en);
 			}
 		}
 		Object tmp = Htable_Method.get(className);
@@ -165,7 +167,7 @@ public class ClassFactory {
 	}
 
 	// 获取 ens
-	public static Hashtable<String, Object> Htable_Ens;
+	public static ConcurrentHashMap<String, Object> Htable_Ens = new ConcurrentHashMap<>();
 
 	public static Entities GetEns(String className)  {
 
@@ -175,14 +177,14 @@ public class ClassFactory {
 		}
 		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_Ens == null || Htable_Ens.isEmpty()) {
-			Htable_Ens = new Hashtable<String, Object>();
+//			Htable_Ens = new Hashtable<String, Object>();
 			String cl = "bp.en.Entities";
 			ArrayList al = ClassFactory.GetObjects(cl);
 
 			Htable_Ens.clear();
 			for (Object en : al) {
 				try {
-					Htable_Ens.put(en.getClass().getName(), en);
+					Htable_Ens.putIfAbsent(en.getClass().getName(), en);
 				} catch (java.lang.Exception e) {
 				}
 			}
@@ -215,27 +217,26 @@ public class ClassFactory {
 			return obj;
 		} catch (Exception e1) {
 			e1.printStackTrace();
-			if (1 == 1)
-				return null;
+			return null;
 		}
 
 		// if (Htable_Ens == null || Htable_Ens.isEmpty()) {
-		Htable_Ens = new Hashtable<String, Object>();
-		String cl = "bp.en.Entities";
-		ArrayList al = ClassFactory.GetObjects(cl);
-
-		Htable_Ens.clear();
-		for (Object en : al) {
-			try {
-				Htable_Ens.put(en.getClass().getName(), en);
-			} catch (java.lang.Exception e) {
-			}
-		}
-		// }
-		Entities ens = (Entities) ((Htable_Ens.get(className) instanceof Entities) ? Htable_Ens.get(className) : null);
-
-		// /#warning 会清除 cash 中的数据。
-		return ens;
+//		Htable_Ens = new Hashtable<String, Object>();
+//		String cl = "bp.en.Entities";
+//		ArrayList al = ClassFactory.GetObjects(cl);
+//
+//		Htable_Ens.clear();
+//		for (Object en : al) {
+//			try {
+//				Htable_Ens.putIfAbsent(en.getClass().getName(), en);
+//			} catch (java.lang.Exception e) {
+//			}
+//		}
+//		// }
+//		Entities ens = (Entities) ((Htable_Ens.get(className) instanceof Entities) ? Htable_Ens.get(className) : null);
+//
+//		// /#warning 会清除 cash 中的数据。
+//		return ens;
 	}
 
 	// 获取 ens

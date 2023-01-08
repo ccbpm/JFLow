@@ -84,7 +84,7 @@ public class Glo
 	*/
 	public static String DealClassEntityName(String enName)
 	{
-		if (DataType.IsNullOrEmpty(enName) == true)
+		if (DataType.IsNullOrEmpty(enName))
 		{
 			return "";
 		}

@@ -680,17 +680,9 @@ public class GenerWorkFlowView extends Entity
 		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
 
-		String file = "c:/temp/" + this.getWorkID() + ".txt";
-		try
-		{
-			DBAccess.GetFileFromDB(file, trackTable, "MyPK", mypk, "FrmDB");
-		}
-		catch (RuntimeException ex)
-		{
-			infos += "@ 错误:" + fl.getNo() + " - Rec" + wk.getRec() + " db=" + wk.getOID() + " - " + fl.getName();
-		}
-
-		String json = DataType.ReadTextFile(file);
+		String json =DBAccess.GetBigTextFromDB(trackTable, "MyPK", mypk, "FrmDB") ;
+		if(DataType.IsNullOrEmpty(json)==true)
+			return "不需要更新数据";
 		DataTable dtVal = bp.tools.Json.ToDataTable(json);
 
 		DataRow mydr = dtVal.Rows.get(0);

@@ -3,6 +3,7 @@ package bp.difference.handler;
 import javax.servlet.http.HttpServletRequest;
 
 import bp.da.DataType;
+import bp.difference.SystemConfig;
 import bp.web.WebUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 	 */
 	@RequestMapping(value = "/ProcessRequest")
 	public final void ProcessRequest(HttpServletRequest request) throws Exception {
+		SystemConfig.setIsBSsystem(true);
 		//处理Token信息
 		DealToken();
 		WF_Comm CommHandler = new WF_Comm();
@@ -52,22 +54,19 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 			|| doType.contains("index")
 			|| doType.contains("admiin")
 			|| doType.contains("dbinstall")
-			|| doType.contains("default_logout"))
+			|| doType.contains("default_logout")
+			|| doType.contains("checkencryptenable"))
 			return;
 		String token = this.GetRequestVal("Token");
 		if(DataType.IsNullOrEmpty(token)==false &&(token.equals("undefined")==true ||  token.equals("null")==true))
 			token="";
-		if(DataType.IsNullOrEmpty(token)==false){
+		if(DataType.IsNullOrEmpty(token)==false && DataType.IsNullOrEmpty(WebUser.getToken())==true){
 			bp.wf.Dev2Interface.Port_LoginByToken(token);
 			return;
 		}
 		if(DataType.IsNullOrEmpty(WebUser.getNo())==true){
-			token = WebUser.getToken();
-			if (DataType.IsNullOrEmpty(token)==true)
 				throw new Exception("err@登录信息丢失，请重新登录");
-			bp.wf.Dev2Interface.Port_LoginByToken(token);
 		}
-
 	}
 
 }

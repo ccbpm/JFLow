@@ -1,29 +1,38 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.CommonFileUtils;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
 import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
-import bp.en.Map;
-import bp.sys.*;
-import bp.sys.xml.*;
-import bp.tools.DataTableConvertJson;
-import bp.web.*;
 import bp.en.*;
-import bp.difference.*;
-import bp.tools.*;
-import bp.*;
-import bp.wf.*;
+import bp.sys.*;
+import bp.sys.xml.ActiveAttrAttr;
+import bp.sys.xml.ActiveAttrs;
+import bp.sys.xml.SQLList;
+import bp.tools.DataTableConvertJson;
+import bp.tools.DateUtils;
+import bp.tools.HttpClientUtil;
+import bp.tools.Json;
+import bp.web.GuestUser;
+import bp.web.WebUser;
+import bp.wf.Dev2Interface;
 import bp.wf.Glo;
+import bp.wf.Node;
+import bp.wf.NodeFormType;
 import bp.wf.port.WFEmp;
 import net.sf.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.util.*;
-import java.io.*;
-import java.nio.file.*;
-import java.time.*;
-import java.math.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  页面功能实体
@@ -31,6 +40,7 @@ import java.math.*;
 public class WF_Comm extends WebContralBase
 {
 
+	public ConcurrentHashMap<String, Object> ClsCache = new ConcurrentHashMap<>();
 	///#region 树的实体.
 	/**
 	 获得树的结构
@@ -189,162 +199,76 @@ public class WF_Comm extends WebContralBase
 		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 
 		//属性集合.
-		DataTable dtAttrs = attrs.ToDataTableField("dt");
+		DataTable dtAttrs = attrs.ToDataTableField();
 		dtAttrs.TableName = "Sys_MapAttrs";
 
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtAttrs); //把描述加入.
 
-		//查询结果
-		QueryObject qo = new QueryObject(ens);
-
-		Enumeration enu = getRequest().getParameterNames();
-		while (enu.hasMoreElements())
+		//增加分组的查询条件
+		UserRegedit ur = new UserRegedit();
+		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
+		ur.RetrieveFromDBSources();
+		AtPara ap = new AtPara(ur.getVals());
+		String vals = "";
+		for (String str : ap.getHisHT().keySet())
 		{
-			String mykey = (String) enu.nextElement();
-			if (mykey.indexOf("EnsName") != -1)
-			{
-				continue;
-			}
-
-
-			if (mykey.equals("OID") || mykey.equals("MyPK"))
-			{
-				continue;
-			}
-
-			if (mykey.equals("FK_Dept"))
-			{
-				this.setFK_Dept(getRequest().getParameter(mykey));
-				continue;
-			}
-			boolean isExist = false;
-			boolean IsInt = false;
-			boolean IsDouble = false;
-			boolean IsFloat = false;
-			boolean IsMoney = false;
-			for (Attr attr : en.getEnMap().getAttrs())
-			{
-				if (attr.getKey().equals(mykey))
-				{
-					isExist = true;
-					if (attr.getMyDataType() == DataType.AppInt)
-					{
-						IsInt = true;
-					}
-					if (attr.getMyDataType() == DataType.AppDouble)
-					{
-						IsDouble = true;
-					}
-					if (attr.getMyDataType() == DataType.AppFloat)
-					{
-						IsFloat = true;
-					}
-					if (attr.getMyDataType() == DataType.AppMoney)
-					{
-						IsMoney = true;
-					}
-					break;
-				}
-			}
-
-			if (isExist == false)
-			{
-				continue;
-			}
-
-			if (getRequest().getParameter(mykey).equals("mvals"))
-			{
-				//如果用户多项选择了，就要找到它的选择项目.
-
-				UserRegedit sUr = new UserRegedit();
-				sUr.setMyPK(WebUser.getNo() + this.getEnsName() + "_SearchAttrs");
-				sUr.RetrieveFromDBSources();
-
-				/* 如果是多选值 */
-				String cfgVal = sUr.getMVals();
-				AtPara ap = new AtPara(cfgVal);
-				String instr = ap.GetValStrByKey(mykey);
-				String val = "";
-				if (instr == null || instr.equals(""))
-				{
-					if (mykey.equals("FK_Dept") || mykey.equals("FK_Unit"))
-					{
-						if (mykey.equals("FK_Dept"))
-						{
-							val = WebUser.getFK_Dept();
-						}
-					}
-					else
-					{
-						continue;
-					}
-				}
-				else
-				{
-					instr = instr.replace("..", ".");
-					instr = instr.replace(".", "','");
-					instr = instr.substring(2);
-					instr = instr.substring(0, instr.length() - 2);
-					qo.AddWhereIn(mykey, instr);
-				}
-			}
+			String val =  this.GetRequestVal(str);
+			if (DataType.IsNullOrEmpty(val) == false)
+				vals += "@" + str + "=" + val;
 			else
-			{
-				String val = getRequest().getParameter(mykey);
-				if (IsInt == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(mykey, Integer.parseInt(val));
-				}
-				else if (IsDouble == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(mykey, Double.parseDouble(val));
-				}
-				else if (IsFloat == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(mykey, Float.parseFloat(val));
-				}
-				else if (IsMoney == true && DataType.IsNullOrEmpty(val) == false)
-				{
-					qo.AddWhere(mykey, new BigDecimal(val));
-				}
-				else
-				{
-					qo.AddWhere(mykey, val);
-				}
-			}
-			qo.addAnd();
+				vals += "@" + str + "=" + ap.getHisHT().get(str);
+		}
+		ur.SetValByKey(UserRegeditAttr.Vals, vals);
+		//查询结果@HongYan
+		QueryObject qo = Search_Data(ens, en, map, ur);
+		//获取配置信息
+		EnCfg encfg = new EnCfg();
+		encfg.setNo(this.getEnsName());
+		encfg.RetrieveFromDBSources();
+
+		//增加排序
+		String orderBy = "";
+		boolean isDesc = false;
+		if (DataType.IsNullOrEmpty(ur.getOrderBy()) == false)
+		{
+			orderBy = ur.getOrderBy();
+			isDesc = ur.getOrderWay().equals("desc") == true ? true : false;
 		}
 
-		if (this.getFK_Dept() != null && (this.GetRequestVal("FK_Emp") == null || this.GetRequestVal("FK_Emp").equals("all")))
+		if (DataType.IsNullOrEmpty(ur.getOrderBy()) == true && encfg != null)
 		{
-			if (this.getFK_Dept().length() == 2)
+			orderBy = encfg.GetValStrByKey("OrderBy");
+			if (orderBy.indexOf(",") != -1)
 			{
-				qo.AddWhere("FK_Dept", " = ", "all");
-				qo.addAnd();
+				String[] str = orderBy.split(",");
+				orderBy = str[0];
 			}
-			else
-			{
-				if (this.getFK_Dept().length() == 8)
-				{
-					qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
-				}
-				else
-				{
-					qo.AddWhere("FK_Dept", " like ", this.getFK_Dept() + "%");
-				}
+			isDesc = encfg.GetValBooleanByKey("IsDeSc");
+		}
 
-				qo.addAnd();
+		if (DataType.IsNullOrEmpty(orderBy) == false)
+		{
+			try
+			{
+				if (isDesc)
+					qo.addOrderByDesc(orderBy);
+				else
+					qo.addOrderBy(orderBy);
+			}
+			catch (Exception ex)
+			{
+				encfg.SetValByKey("OrderBy", orderBy);
 			}
 		}
 
-		qo.AddHD();
+
 		qo.DoQuery();
-		DataTable dt = ens.ToDataTableField("dt");
+		DataTable dt = ens.ToDataTableField();
 		dt.TableName = "Group_Dtls";
 		ds.Tables.add(dt);
 
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
 
 	/**
@@ -1886,7 +1810,7 @@ public class WF_Comm extends WebContralBase
 
 	 @return
 	 */
-	public final QueryObject Search_Data(Entities ens, Entity en, Map map, UserRegedit ur) throws Exception {
+		public final QueryObject Search_Data(Entities ens, Entity en, Map map, UserRegedit ur) throws Exception {
 
 		//获得关键字.
 		AtPara ap = new AtPara(ur.getVals());
@@ -2195,11 +2119,13 @@ public class WF_Comm extends WebContralBase
 				{
 
 					qo.addLeftBracket();
+					dtFrom += " 00:00";
 					dtTo += " 23:59:59";
 					qo.setSQL(map.getPhysicsTable() + "." + map.DTSearchKey + " >= '" + dtFrom + "'");
 					qo.addAnd();
 					qo.setSQL(map.getPhysicsTable() + "." + map.DTSearchKey + " <= '" + dtTo + "'");
 					qo.addRightBracket();
+
 				}
 
 			}
@@ -2273,6 +2199,14 @@ public class WF_Comm extends WebContralBase
 					qo.addRightBracket();
 					continue;
 
+				}
+
+				//如果传参上有这个值的查询
+				String val = this.GetRequestVal(attr.getRefAttrKey());
+				if (DataType.IsNullOrEmpty(val) == false)
+				{
+					attr.setDefaultSymbol("=");
+					attr.setDefaultVal(val);
 				}
 
 				//获得真实的数据类型.
@@ -2376,7 +2310,7 @@ public class WF_Comm extends WebContralBase
 			if (attr != null && attr.getIsFK() && attr.getHisFKEn().getIsTreeEntity() == true)
 			{
 				//需要获取当前数据选中的数据和子级(先阶段只处理部门信息)
-				DataTable dt = DBAccess.RunSQLReturnTable(bp.wf.Dev2Interface.GetDeptNoSQLByParentNo(val));
+				DataTable dt = DBAccess.RunSQLReturnTable(bp.wf.Dev2Interface.GetDeptNoSQLByParentNo(val,attr.getHisFKEn().getEnMap().getPhysicsTable()));
 				qo.AddWhereIn(attr.getKey(), dt);
 				qo.addRightBracket();
 				continue;
@@ -2408,10 +2342,14 @@ public class WF_Comm extends WebContralBase
 
 		for (Attr attr : map.getAttrs())
 		{
-			if (DataType.IsNullOrEmpty(this.GetRequestVal(attr.getField())))
+			if(DataType.IsNullOrEmpty(attr.getField()))
+				continue;			if (DataType.IsNullOrEmpty(this.GetRequestVal(attr.getField())))
 				continue;
 
 			if (keys.contains(attr.getField()))
+				continue;
+
+			if(attr.getField().equals("Token"))
 				continue;
 
 			String val = this.GetRequestVal(attr.getField());
@@ -3248,23 +3186,24 @@ public class WF_Comm extends WebContralBase
 		DataSet ds = new DataSet();
 
 		//转化为json 返回到前台解析. 处理有参数的方法.
-		MapAttrs attrs = rm.getHisAttrs().ToMapAttrs();
+		Attrs attrs = rm.getHisAttrs();
+		MapAttrs mapAttrs = attrs.ToMapAttrs();
 
 		//属性.
-		DataTable mapAttrs = attrs.ToDataTableField("Sys_MapAttrs");
-		ds.Tables.add(mapAttrs);
+		DataTable attrDt = mapAttrs.ToDataTableField("Sys_MapAttrs");
+		ds.Tables.add(attrDt);
 
 
 		///#region 该方法的默认值.
 		DataTable dtMain = new DataTable();
 		dtMain.TableName = "MainTable";
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : mapAttrs.ToJavaList())
 		{
 			dtMain.Columns.Add(attr.getKeyOfEn(), String.class);
 		}
 
 		DataRow mydrMain = dtMain.NewRow();
-		for (MapAttr item : attrs.ToJavaList())
+		for (MapAttr item : mapAttrs.ToJavaList())
 		{
 			String v = item.getDefValReal();
 			if (v.indexOf('@') == -1)
@@ -3329,7 +3268,7 @@ public class WF_Comm extends WebContralBase
 
 
 		///#region 加入该方法的外键.
-		for (DataRow dr : mapAttrs.Rows)
+		for (DataRow dr : attrDt.Rows)
 		{
 			String lgType = dr.getValue("LGType").toString();
 			if (lgType.equals("2") == false)
@@ -3362,7 +3301,7 @@ public class WF_Comm extends WebContralBase
 		}
 
 		//加入sql模式的外键.
-		for (Attr attr : rm.getHisAttrs())
+		for (Attr attr :attrs)
 		{
 			if (attr.getIsRefAttr() == true)
 			{
@@ -3420,14 +3359,14 @@ public class WF_Comm extends WebContralBase
 		dtEnum.Columns.Add("IntKey", String.class);
 		dtEnum.TableName = "Sys_Enum";
 
-		for (MapAttr item : attrs.ToJavaList())
+		for (Attr item : attrs.ToJavaList())
 		{
-			if (item.getLGType() != FieldTypeS.Enum)
+			if (item.getIsEnum()==false)
 			{
 				continue;
 			}
 
-			SysEnums ses = new SysEnums(item.getUIBindKey());
+			SysEnums ses = new SysEnums(item.getUIBindKey(),item.UITag);
 			for (SysEnum se : ses.ToJavaList())
 			{
 				DataRow drEnum = dtEnum.NewRow();
@@ -3954,6 +3893,10 @@ public class WF_Comm extends WebContralBase
 			{
 				return "close@info";
 			}
+			else if (msg.indexOf("@") != -1)
+			{
+				return msg;
+			}
 			else
 			{
 				return "info@" + msg;
@@ -4378,31 +4321,59 @@ public class WF_Comm extends WebContralBase
 		//@樊雷伟 , 这个方法需要同步.
 
 		//获得两个参数.
+//		String httpHandlerName = this.GetRequestVal("HttpHandlerName");
+//		httpHandlerName = httpHandlerName.replace("BP.WF.HttpHandler","bp.wf.httphandler");
+//		httpHandlerName = httpHandlerName.replace("BP.CCBill","bp.ccbill");
+//		//httpHandlerName = httpHandlerName.replace("BP.IC","bp.ic");
+//		String methodName = this.GetRequestVal("DoMethod");
+//
+//		Object tempVar = ClassFactory.GetHandlerPage(httpHandlerName);
+//		if(tempVar!=null){
+//			WebContralBase en = tempVar instanceof WebContralBase ? (WebContralBase)tempVar : null;
+//			if (en == null)
+//			{
+//				return "err@页面处理类名[" + httpHandlerName + "],没有获取到，请检查拼写错误？";
+//			}
+//			en.context = this.context;
+//			en.setWorkID(0); //从缓存中获取时，WorkID的初始值有可能不为0
+//			return en.DoMethod(en, methodName);
+//		}
+//
+//
+//		Object type = java.lang.Class.forName(httpHandlerName);
+//		Object tempVar2 = ((Class) type).newInstance();
+//		WebContralBase en = tempVar2 instanceof WebContralBase ? (WebContralBase)tempVar2 : null;
+//		//en.context = this.context;
+//		return en.DoMethod(en, methodName);
+		//获得两个参数.
 		String httpHandlerName = this.GetRequestVal("HttpHandlerName");
-		httpHandlerName = httpHandlerName.replace("BP.WF.HttpHandler","bp.wf.httphandler");
-		httpHandlerName = httpHandlerName.replace("BP.CCBill","bp.ccbill");
+		httpHandlerName = httpHandlerName.replace("BP.WF.HttpHandler", "bp.wf.httphandler");
+		httpHandlerName = httpHandlerName.replace("BP.CCBill", "bp.ccbill");
 		//httpHandlerName = httpHandlerName.replace("BP.IC","bp.ic");
 		String methodName = this.GetRequestVal("DoMethod");
-
-		Object tempVar = ClassFactory.GetHandlerPage(httpHandlerName);
-		if(tempVar!=null){
-			WebContralBase en = tempVar instanceof WebContralBase ? (WebContralBase)tempVar : null;
-			if (en == null)
-			{
+		Object tempVar = ClsCache.get(httpHandlerName);
+		if (tempVar == null) {
+			tempVar = ClassFactory.GetHandlerPage(httpHandlerName);
+		}
+		if (tempVar != null) {
+			WebContralBase en = tempVar instanceof WebContralBase ? (WebContralBase) tempVar : null;
+			if (en == null) {
 				return "err@页面处理类名[" + httpHandlerName + "],没有获取到，请检查拼写错误？";
 			}
+			ClsCache.putIfAbsent(httpHandlerName, en);
 			en.context = this.context;
 			en.setWorkID(0); //从缓存中获取时，WorkID的初始值有可能不为0
 			return en.DoMethod(en, methodName);
 		}
-
-
-		Object type = java.lang.Class.forName(httpHandlerName);
-		Object tempVar2 = ((Class) type).newInstance();
-		WebContralBase en = tempVar2 instanceof WebContralBase ? (WebContralBase)tempVar2 : null;
+		Class<?> type = java.lang.Class.forName(httpHandlerName);
+		Object tempVar2 = type.newInstance();
+		WebContralBase en = tempVar2 instanceof WebContralBase ? (WebContralBase) tempVar2 : null;
+		ClsCache.putIfAbsent(httpHandlerName, en);
+		if (en == null) {
+			return "err@页面处理类名[" + httpHandlerName + "],没有获取到，请检查拼写错误？";
+		}
 		//en.context = this.context;
 		return en.DoMethod(en, methodName);
-
 	}
 
 	/**
@@ -4444,13 +4415,7 @@ public class WF_Comm extends WebContralBase
 		{
 			String userNo = WebUser.getNo();
 			if (DataType.IsNullOrEmpty(userNo) == true)
-			{
-				token = WebUser.getToken();
-				if (DataType.IsNullOrEmpty(token) == true)
 					throw new Exception("err@ 登录已过期，请重新登录!");
-
-				bp.wf.Dev2Interface.Port_LoginByToken(token);
-			}
 		}
 
 		ht.put("No", WebUser.getNo());

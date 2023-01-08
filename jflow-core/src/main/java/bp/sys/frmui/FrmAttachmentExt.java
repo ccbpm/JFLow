@@ -379,7 +379,7 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		Map map = new Map("Sys_FrmAttachment", "附件");
 		map.IndexField = MapAttrAttr.FK_MapData;
-
+		map.AddGroupAttr("基础信息");
 		map.AddMyPK();
 
 
@@ -403,7 +403,7 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddTBInt(FrmAttachmentAttr.FileMaxSize, 10240, "附件最大限制(KB)", true, false);
 		map.AddDDLSysEnum(FrmAttachmentAttr.UploadFileNumCheck, 0, "上传校验方式", true, true, FrmAttachmentAttr.UploadFileNumCheck, "@0=不用校验@1=不能为空@2=每个类别下不能为空");
 
-		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay, "@0=保存到web服务器@1=保存到数据库@2=ftp服务器");
+		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "保存方式", true, true, FrmAttachmentAttr.AthSaveWay, "@0=保存到web服务器@1=保存到数据库@2=ftp服务器@3=阿里云OSS");
 
 
 		map.AddBoolean(FrmAttachmentAttr.IsIdx, false, "是否排序?", true, true);
@@ -433,7 +433,7 @@ public class FrmAttachmentExt extends EntityMyPK
 			///#region 权限控制。
 			//hzm新增列
 			// map.AddTBInt(FrmAttachmentAttr.DeleteWay, 0, "附件删除规则(0=不能删除1=删除所有2=只能删除自己上传的", false, false);
-
+		map.AddGroupAttr("权限控制");
 		map.AddDDLSysEnum(FrmAttachmentAttr.DeleteWay, 1, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, "@0=不能删除@1=删除所有@2=只能删除自己上传的");
 
 		map.AddBoolean(FrmAttachmentAttr.IsUpload, true, "是否可以上传", true, true);
@@ -460,7 +460,8 @@ public class FrmAttachmentExt extends EntityMyPK
 			///#endregion 权限控制。
 
 
-			///#region 节点相关
+			///#region 流程相关
+		map.AddGroupAttr("流程相关");
 			//map.AddDDLSysEnum(FrmAttachmentAttr.DtlOpenType, 0, "附件删除规则", true, true, FrmAttachmentAttr.DeleteWay, 
 			//    "@0=不能删除@1=删除所有@2=只能删除自己上传的");
 		map.AddBoolean(FrmAttachmentAttr.IsToHeLiuHZ, true, "该附件是否要汇总到合流节点上去？(对子线程节点有效)", true, true, true);
@@ -470,7 +471,7 @@ public class FrmAttachmentExt extends EntityMyPK
 
 		map.AddDDLSysEnum(FrmAttachmentAttr.ReadRole, 0, "阅读规则", true, true, FrmAttachmentAttr.ReadRole, "@0=不控制@1=未阅读阻止发送@2=未阅读做记录");
 
-			///#endregion 节点相关
+			///#endregion 流程相关
 
 
 			///#region 其他属性。
@@ -480,7 +481,8 @@ public class FrmAttachmentExt extends EntityMyPK
 			///#endregion 其他属性。
 
 
-			///#region 基本配置.
+			///#region 基本功能.
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 			//  rm.Icon = "/WF/Admin/CCFormDesigner/Img/Menu/CC.png";
 			//rm.ClassMethodName = this.ToString() + ".DoAdv";
@@ -509,11 +511,12 @@ public class FrmAttachmentExt extends EntityMyPK
 		map.AddRefMethod(rm);
 
 
-			///#endregion 基本配置.
+			///#endregion 基本功能.
 
 
 
 			///#region 高级设置.
+		map.AddGroupMethod("实验中功能");
 		rm = new RefMethod();
 		rm.GroupName = "实验中功能";
 		rm.Title = "类别设置";
@@ -743,9 +746,10 @@ public class FrmAttachmentExt extends EntityMyPK
 		//判断是否是字段附件
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
-		if (mapAttr.RetrieveFromDBSources() != 0 && mapAttr.getName().equals(this.getName()) == false)
+		if (mapAttr.RetrieveFromDBSources() != 0 )
 		{
 			mapAttr.setName(this.getName());
+			mapAttr.setUIHeight(this.getH());
 			mapAttr.Update();
 		}
 

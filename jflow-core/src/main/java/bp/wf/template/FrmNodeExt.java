@@ -120,6 +120,7 @@ public class FrmNodeExt extends EntityMyPK
 
 
 			///#region 基本信息.
+		map.AddGroupAttr("基本信息");
 		map.AddMyPK(true);
 			//map.AddTBString(FrmNodeAttr.FK_Frm, null, "表单", true, true, 0, 300, 20);
 		 map.AddDDLEntities(FrmNodeAttr.FK_Frm, null, "表单", new MapDatas(), false);
@@ -190,6 +191,7 @@ public class FrmNodeExt extends EntityMyPK
 
 
 			///#region 相关功能..
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 		rm.Title = "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoDFrm()";
@@ -243,6 +245,7 @@ public class FrmNodeExt extends EntityMyPK
 
 
 			///#region 表单元素权限.
+		map.AddGroupMethod("表单元素权限");
 		rm = new RefMethod();
 		rm.GroupName = "表单元素权限";
 		rm.Title = "字段权限";

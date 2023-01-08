@@ -163,6 +163,7 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 基本属性.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单@8=开发者表单");
 			//map.AddDDLSysEnum(MapDataAttr.FrmModel, 0, "单据模板", true, true, "BillFrmModel", "@0=系统预置@1=用户新增");
@@ -194,9 +195,9 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 单据属性.
+		map.AddGroupAttr("单据属性");
 			//map.AddDDLSysEnum(FrmBillAttr.FrmBillWorkModel, 0, "工作模式", true, false, FrmBillAttr.FrmBillWorkModel,
 			//    "@0=独立表单@1=单据工作模式");
-
 		map.AddDDLSysEnum(FrmBillAttr.EntityType, 0, "业务类型", true, false, FrmBillAttr.EntityType, "@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
 		map.SetHelperAlert(FrmBillAttr.EntityType, "该实体的类型,@0=单据@1=编号名称实体@2=树结构实体.");
 
@@ -281,6 +282,7 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 设计者信息.
+		map.AddGroupAttr("设计者信息");
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
@@ -303,6 +305,7 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 基本功能.
+		map.AddGroupMethod("基本设置");
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -385,6 +388,7 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 权限规则.
+		map.AddGroupMethod("权限规则");
 		rm = new RefMethod();
 		rm.Title = "创建规则"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoCreateRole";
@@ -442,6 +446,7 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 报表定义.
+		map.AddGroupMethod("报表定义");
 		rm = new RefMethod();
 		rm.GroupName = "报表定义";
 		rm.Title = "设置显示的列"; // "设计表单";

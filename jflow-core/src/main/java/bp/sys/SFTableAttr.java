@@ -95,6 +95,10 @@ public class SFTableAttr extends EntityNoNameAttr
 	 组织编号
 	*/
 	public static final String OrgNo = "OrgNo";
+	/**
+	 AtPara
+	*/
+	public static final String AtPara = "AtPara";
 
 		///#endregion 链接到其他系统获取数据的属性。
 }

@@ -5,6 +5,7 @@ import bp.difference.handler.WebContralBase;
 import bp.web.*;
 import bp.wf.Glo;
 import bp.wf.template.*;
+import bp.wf.template.sflow.SubFlows;
 import bp.wf.xml.*;
 import bp.wf.port.admin2group.*;
 import bp.difference.*;
@@ -149,6 +150,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		String sql = "";
 		try
 		{
+			Flow flow = new Flow(this.getFK_Flow());
 
 			StringBuilder sBuilder = new StringBuilder();
 
@@ -226,23 +228,36 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				//DBAccess.RunSQL("UPDATE WF_Node SET HisToNDs='" + strs + "' WHERE NodeID=" + item.getNodeID());
 			}
 
-			//获得字符串格式. $101;@102@103
-			//   string[] mystr = mystrs.Split('$');
-
+			//获取所有子流程
+			String subs = this.GetRequestVal("SubFlows");
+			int subFlowShowType = flow.GetValIntByKey(FlowAttr.SubFlowShowType);
+			if(DataType.IsNullOrEmpty(subs)==false && subFlowShowType==0){
+				String[]  subFlows = subs.split("[@]", -1);
+				for(String item :subFlows){
+					if (DataType.IsNullOrEmpty(item) == true)
+						continue;
+					String[] strs = item.split("[,]", -1);
+					sBuilder.append("UPDATE WF_NodeSubFlow SET X=" + strs[1] + ",Y=" + strs[2] + " WHERE MyPK=" + strs[0] + ";");
+				}
+			}
 			//保存节点位置. @101,2,30@102,3,1
 			String[] nodes = this.GetRequestVal("Nodes").split("[@]", -1);
 			for (String item : nodes)
 			{
 				if (DataType.IsNullOrEmpty(item) == true)
-				{
 					continue;
-				}
 
 				String[] strs = item.split("[,]", -1);
 				String nodeID = strs[0]; //获得nodeID.
-
-
-				sBuilder.append("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + ",Name='" + strs[3] + "' WHERE NodeID=" + strs[0] + ";");
+				if( subFlowShowType==1 && subs.indexOf(nodeID)!=-1){
+					String sub = subs.substring(subs.indexOf("@\""+nodeID)+1);
+					if(sub.contains("@")==true)
+						sub = sub.substring(0,sub.indexOf("@"));
+					String[] subInfo = sub.split("[,]", -1);
+					sBuilder.append("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + ",Name='" + strs[3] + "',SubFlowX="+subInfo[1]+", SubFlowY="+subInfo[2]+" WHERE NodeID=" + strs[0] + ";");
+				}else{
+					sBuilder.append("UPDATE WF_Node SET X=" + strs[1] + ",Y=" + strs[2] + ",Name='" + strs[3] + "' WHERE NodeID=" + strs[0] + ";");
+				}
 			}
 
 			DBAccess.RunSQLs(sBuilder.toString());
@@ -1118,5 +1133,19 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	}
 
 		///#endregion
+	/**
+	 NodeStationGroup_init
+	 @return
+	 */
+	public final String AdminerChange() throws Exception {
 
+		String mysql = "SELECT ";
+		mysql += "No as \"No\", ";
+		mysql += "Name as \"Name\", ";
+		mysql += "UseSta as \"UseSta\", ";
+		mysql += "RootOfDept as \"RootOfDept\" ";
+		mysql += " FROM  WF_Emp WHERE No LIKE '" + this.GetRequestVal("UserNo") + "@%' ";
+		DataTable dt = DBAccess.RunSQLReturnTable(mysql);
+		return bp.tools.Json.ToJson(dt);
+	}
 }

@@ -15,8 +15,8 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 {
 
 	private static final long serialVersionUID = 1L;
-	
-	
+
+	public String currGroupAttrName = "基本信息";
 
 	///关于属性的增加 String
 	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
@@ -314,7 +314,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		attr.setUIBindKey(sysEnumKey);
 		attr.UITag = cfgVal;
 		attr.setUIVisible(isUIVisable);
-		attr.setUIIsReadonly(isUIEnable);
+		attr.setUIIsReadonly(!isUIEnable);
 		this.Add(attr);
 	}
 	/** 
@@ -412,7 +412,6 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		attr.setUIContralType(UIContralType.DDL);
 
 		attr.setUIBindKey(sql);
-		attr.setHisFKEns(null);
 		attr.setUIIsReadonly(!uiIsEnable);
 		this.Add(attr);
 
@@ -736,13 +735,19 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	}
 	public final void Add(Attr attr)
 	{
+		Add(attr,false);
+	}
+	public void Add(Attr attr, boolean isClearGroupName)
+	{
+		if (isClearGroupName == false)
+			attr.GroupName = this.currGroupAttrName;
+
 		if (attr.getField() == null || attr.getField().equals(""))
 		{
-			throw new RuntimeException("@属性设置错误：您不能设置 key='" + attr.getKey() + "', " + attr.getDesc() + ",得字段值为空,有可能数据库设置的大小写敏感导致的错误。");
+			attr.setField(attr.getKey());
+			// throw new Exception("@属性设置错误：您不能设置 key='" + attr.Key + "', " + attr.Desc + ",得字段值为空");
 		}
-
-		//boolean k = attr.getIsKeyEqualField();
-		this.Add(attr, true, false);
+		this.Add(attr, true, false, isClearGroupName);
 	}
 	/** 
 	 加入一个属性。
@@ -751,7 +756,10 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 	 param isAddHisRefText isAddHisRefText
 	 * @
 	*/
-	public final void Add(Attr attr, boolean isAddHisRefText, boolean isAddHisRefName)
+	public final void Add(Attr attr, boolean isAddHisRefText, boolean isAddHisRefName){
+		Add(attr,isAddHisRefText,isAddHisRefName,false);
+	}
+	public final void Add(Attr attr, boolean isAddHisRefText, boolean isAddHisRefName, boolean isClearGroupName)
 	{
 		for (Attr myattr : this)
 		{
@@ -760,6 +768,9 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 				return;
 			}
 		}
+
+		if (isClearGroupName==false)
+			attr.GroupName = this.currGroupAttrName;
 
 		this.add(attr);
 
@@ -783,6 +794,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		{
 
 			Attr myattr = new Attr();
+			myattr.GroupName = this.currGroupAttrName;
 			myattr.setMyFieldType(FieldType.RefText);
 			myattr.setMyDataType(DataType.AppString);
 			myattr.setUIContralType(UIContralType.TB);
@@ -819,6 +831,7 @@ public class Attrs extends ArrayList<Attr> implements Serializable
 		{
 
 			Attr myattr = new Attr();
+			myattr.GroupName = this.currGroupAttrName;
 			myattr.setMyFieldType(FieldType.Normal);
 			myattr.setMyDataType(DataType.AppString);
 			myattr.setUIContralType(UIContralType.TB);

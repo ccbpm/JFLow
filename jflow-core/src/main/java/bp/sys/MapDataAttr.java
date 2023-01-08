@@ -226,6 +226,9 @@ public class MapDataAttr extends EntityNoNameAttr
 	 是否是加密
 	*/
 	public static final String IsJM = "IsJM";
-
+	/**
+	 数据钻取
+	 */
+	public static final String Drill = "Drill";
 		///#endregion 参数属性.
 }

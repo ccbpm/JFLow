@@ -23,7 +23,7 @@ import java.math.*;
 public class WF_RptDfine extends WebContralBase
 {
 
-		///#region 属性.
+	///#region 属性.
 	/** 
 	 查询类型
 	*/

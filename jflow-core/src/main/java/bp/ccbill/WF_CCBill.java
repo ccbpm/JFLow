@@ -697,6 +697,9 @@ public class WF_CCBill extends WebContralBase
 		return bp.ccbill.Dev2Interface.MyBill_Delete(this.getFrmID(), this.getWorkID());
 	}
 
+	public String MyBill_Deletes() throws Exception {
+		return bp.ccbill.Dev2Interface.MyBill_DeleteBills(this.getFrmID(), this.GetRequestVal("WorkIDs"));
+	}
 
 	//删除实体
 	public final String MyDict_Delete() throws Exception {
@@ -1909,6 +1912,7 @@ public class WF_CCBill extends WebContralBase
 		}
 
 		String expList = md.getExpList();
+		expList =bp.wf.Glo.DealExp(expList, null);
 
 		//取出来查询条件.
 		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getFrmID() + "_SearchAttrs");

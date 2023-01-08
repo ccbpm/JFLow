@@ -246,6 +246,7 @@ public class FlowSheet extends EntityNoName
 
 
 			///#region 基本属性。
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(FlowAttr.No, null, "编号", true, true, 1, 10, 3);
 		map.SetHelperUrl(FlowAttr.No, "http://ccbpm.mydoc.io/?v=5404&t=17023"); //使用alert的方式显示帮助信息.
 

@@ -108,6 +108,8 @@ public class BtnAttr
 	 轨迹是否启用
 	*/
 	public static final String TrackEnable = "TrackEnable";
+	public static final String TrackEnableMyView = "TrackEnableMyView";
+	public static final String TrackEnableMyCC = "TrackEnableMyCC";
 	/** 
 	 抄送
 	*/
@@ -162,6 +164,8 @@ public class BtnAttr
 	 是否启用查看父流程
 	*/
 	public static final String ShowParentFormEnable = "ShowParentFormEnable";
+	public static final String ShowParentFormEnableMyView = "ShowParentFormEnableMyView";
+	public static final String ShowParentFormEnableMyCC = "ShowParentFormEnableMyCC";
 	/** 
 	 数据批阅标签
 	*/
@@ -170,6 +174,7 @@ public class BtnAttr
 	 数据批阅
 	*/
 	public static final String FrmDBRemarkEnable = "FrmDBRemarkEnable";
+	public static final String FrmDBRemarkEnableMyView = "FrmDBRemarkEnableMyView";
 	/** 
 	 审核
 	*/
@@ -432,4 +437,10 @@ public class BtnAttr
 	*/
 	public static final String PressLab = "PressLab";
 	public static final String PressEnable = "PressEnable";
+	/**
+	 * 回滚
+	 */
+	public static final String RollbackLab = "RollbackLab";
+	public static final String RollbackEnable = "RollbackEnable";
+
 }

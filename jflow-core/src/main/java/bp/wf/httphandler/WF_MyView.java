@@ -204,13 +204,13 @@ public class WF_MyView extends WebContralBase
 		{
 
 			DataRow dr = dt.NewRow();
-			if (this.getIsMobile() == false)
+			/*if (this.getIsMobile() == false)
 			{
 				dr.setValue("No", "Close");
 				dr.setValue("Name", "关闭");
 				dr.setValue("Oper", "Close();");
 				dt.Rows.add(dr);
-			}
+			}*/
 
 
 			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
@@ -296,7 +296,7 @@ public class WF_MyView extends WebContralBase
 					{
 						dr = dt.NewRow();
 						dr.setValue("No", "Press");
-						dr.setValue("Name", "催办");
+						dr.setValue("Name", btnLab.GetValStringByKey(BtnAttr.PressLab));
 						dr.setValue("Oper", "Press();");
 						dt.Rows.add(dr);
 					}
@@ -304,11 +304,11 @@ public class WF_MyView extends WebContralBase
 				case Complete: // 完成.
 				case Delete: // 逻辑删除..
 					/*恢复使用流程*/
-					if (WebUser.getNo().equals("admin") == true || powers.contains("FlowDataRollback") == true)
+					if (WebUser.getNo().equals("admin") == true || powers.contains("FlowDataRollback") == true || (gwf.getEmps().contains(WebUser.getNo()) == true && btnLab.GetValBooleanByKey(BtnAttr.RollbackEnable) == true))
 					{
 						dr = dt.NewRow();
 						dr.setValue("No", "Rollback");
-						dr.setValue("Name", "回滚");
+						dr.setValue("Name",  btnLab.GetValStringByKey(BtnAttr.RollbackLab));
 						dr.setValue("Oper", "");
 						dt.Rows.add(dr);
 					}
@@ -318,12 +318,24 @@ public class WF_MyView extends WebContralBase
 					break;
 			}
 
-			dr = dt.NewRow();
-			dr.setValue("No", "Track");
-			dr.setValue("Name", "轨迹");
-			dr.setValue("Oper", "");
-			dt.Rows.add(dr);
+			if (btnLab.GetValBooleanByKey(BtnAttr.ShowParentFormEnableMyView) && this.getPWorkID() != 0)
+			{
+				/*如果要查看父流程.*/
+				dr = dt.NewRow();
+				dr.setValue("No", "ParentForm");
+				dr.setValue("Name", btnLab.getShowParentFormLab());
+				dr.setValue("Oper", "");
 
+				dt.Rows.add(dr);
+			}
+
+			if (btnLab.GetValBooleanByKey(BtnAttr.TrackEnableMyView)){
+				dr = dt.NewRow();
+				dr.setValue("No", "Track");
+				dr.setValue("Name",  btnLab.getTrackLab());
+				dr.setValue("Oper", "");
+				dt.Rows.add(dr);
+			}
 				///#endregion 根据流程权限控制规则获取可以操作的按钮功能
 
 
@@ -394,7 +406,7 @@ public class WF_MyView extends WebContralBase
 			}
 
 			//数据批阅
-			if (btnLab.getFrmDBRemarkEnable() != 0)
+			if (btnLab.GetValIntByKey(BtnAttr.FrmDBRemarkEnableMyView) != 0)
 			{
 				dr = dt.NewRow();
 				dr.setValue("No", "FrmDBRemark");

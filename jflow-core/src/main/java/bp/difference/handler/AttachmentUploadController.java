@@ -13,6 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bp.tools.OSSUploadFileUtils;
 import bp.pub.PubClass;
 import bp.sys.*;
 import bp.wf.ExecEvent;
@@ -209,10 +210,41 @@ public class AttachmentUploadController extends BaseController {
 			}
 
 			if (dbAtt.getAthSaveWay() == AthSaveWay.DB) {
-
 				PubClass.DownloadFile(downDB.getFileFullName(), downDB.getFileName());
 			}
 
+			//OSS下载
+			if (dbAtt.getAthSaveWay() == AthSaveWay.OSS) {
+				OSSUploadFileUtils ossUploadFileUtils = new OSSUploadFileUtils();
+				String guid = bp.da.DBAccess.GenerGUID();
+				// 文件保存的路径
+				String tempFile = SystemConfig.getPathOfTemp() +"/" + "" + guid + downDB.getFileExts();
+
+				// 下载文件到本地
+				ossUploadFileUtils.downloadFile( downDB.getFileName(), tempFile);
+
+				// #region 文件下载
+				tempFile = PubClass.toUtf8String(request, tempFile);
+
+				response.setContentType("application/octet-stream;charset=utf8");
+				response.setHeader("Content-Disposition",
+						"attachment;filename=" + PubClass.toUtf8String(request, downDB.getFileName()));
+				response.setHeader("Connection", "close");
+				// 读取目标文件，通过response将目标文件写到客户端
+				// 读取文件
+				InputStream in = new FileInputStream(new File(tempFile));
+				OutputStream out = response.getOutputStream();
+				// 写文件
+				int b;
+				while ((b = in.read()) != -1) {
+					out.write(b);
+				}
+				in.close();
+				out.close();
+
+				// 删除临时文件
+				new File(tempFile).delete();
+			}
 			return;
 
 		} catch (Exception e) {
@@ -590,8 +622,9 @@ public class AttachmentUploadController extends BaseController {
 		}
 		/// #endregion 文件上传的iis服务器上 or db数据库里.
 
-		/// #region 保存到数据库 / FTP服务器上.
-		if (athDesc.getAthSaveWay() == AthSaveWay.DB || athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+		/// #region 保存到数据库 / FTP服务器上./Oss服务器上
+		if (athDesc.getAthSaveWay() == AthSaveWay.DB || athDesc.getAthSaveWay() == AthSaveWay.FTPServer
+		|| athDesc.getAthSaveWay() == AthSaveWay.OSS ) {
 			String guid = bp.da.DBAccess.GenerGUID();
 
 			// 把文件临时保存到一个位置.
@@ -674,7 +707,7 @@ public class AttachmentUploadController extends BaseController {
 			}
 
 
-			if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
+			if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer || athDesc.getAthSaveWay() == AthSaveWay.OSS) {
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
 				String ny = sdf.format(new Date());
@@ -716,13 +749,31 @@ public class AttachmentUploadController extends BaseController {
 					isOK=ftpUtil.uploadFile(guid + "." + dbUpload.getFileExts(),temp);
 					ftpUtil.releaseConnection();
 				}
+				// 设置路径.
+				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
+				//start 保存到OSS
+				if (athDesc.getAthSaveWay() == AthSaveWay.OSS ) {
+					try {
+						// 构造临时对象
+						InputStream inputStream = item.getInputStream();
 
+						OSSUploadFileUtils ossUploadFileUtils = new OSSUploadFileUtils();
+
+						String fileNameU = guid+fileName;
+
+						String filepath = ossUploadFileUtils.uploadFile(workDir+fileNameU, inputStream);
+
+						dbUpload.setFileFullName(filepath);
+
+					}catch(Exception ex){
+						System.out.println("err@上传附件错误:" + ex.getMessage());
+						throw new Exception("err@上传附件错误：" + ex.getMessage());
+					}
+				}
+				//end 保存到OSS
 				// 删除临时文件
 				tempFile.delete();
 				new File(SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp").delete();
-
-				// 设置路径.
-				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
 
 				if (isOK==false)
 					throw new RuntimeException("err文件上传失败，请检查ftp服务器配置信息");
@@ -739,6 +790,7 @@ public class AttachmentUploadController extends BaseController {
 				bp.sys.base.Glo.WriteLineError("@AthUploadeAfter事件返回信息，文件：" + dbUpload.getFileName() + "，" + msg);
 		}
 		/// #endregion 保存到数据库.
+
 		return;
 	}
 

@@ -167,7 +167,7 @@ public class FlowTabs extends EntitiesMyPK
 	}
 
 
-	public final String Search_SearchData(String flowNo, int pageIdx, int pageSize) throws Exception {
+	public final String Search_SearchData(String flowNo, String pageIdx, String pageSize) throws Exception {
 		//表单编号
 		String rptNo = "ND" + Integer.parseInt(flowNo) + "Rpt";
 
@@ -423,7 +423,7 @@ public class FlowTabs extends EntitiesMyPK
 		}
 		ur.SetPara("Count", qo.GetCount());
 		ur.Update();
-		qo.DoQuery("OID", pageSize, pageIdx);
+		qo.DoQuery("OID", Integer.parseInt(pageSize), Integer.parseInt(pageIdx));
 
 		return bp.tools.Json.ToJson(ens.ToDataTableField("Search_Data"));
 

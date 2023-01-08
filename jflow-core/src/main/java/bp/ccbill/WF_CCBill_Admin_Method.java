@@ -191,8 +191,6 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		nd.setName(this.getName());
 
 		nd.Update();
-
-
 			///#endregion 创建一个流程.
 
 
@@ -201,13 +199,10 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		WF_Admin_FoolFormDesigner_ImpExp handlerFrm = new WF_Admin_FoolFormDesigner_ImpExp();
 
 		handlerFrm.Imp_CopyFrm("ND" + Integer.parseInt(flowNo + "01"), this.getFrmID());
+		///#endregion 把表单导入到流程上去.
 
 
-
-			///#endregion 把表单导入到流程上去.
-
-
-			///#region 第3步： 处理流程的业务表单 - 字段增加一个影子字段.
+		///#region 第3步： 处理流程的业务表单 - 字段增加一个影子字段.
 		//处理字段数据.增加一个列.
 		String frmID = "ND" + Integer.parseInt(fl.getNo() + "01");
 		MapData md = new MapData(frmID);
@@ -230,6 +225,15 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		}
 		MapAttrs attrs = new MapAttrs(frmIDs);
 
+		//查出附件数据
+		String oldMapID = "";
+		MapData mdFrom = new MapData(this.getFrmID());
+		DataTable sysMapData = md.ToDataTableField("Sys_MapData");
+		if (sysMapData.Rows.size() == 1)
+		{
+			oldMapID = sysMapData.Rows.get(0).getValue("No").toString();
+		}
+		DataTable sysFrmAttachment = mdFrom.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
 
 		//遍历分组.
 		for (GroupField gs : gfs.ToJavaList())
@@ -275,6 +279,8 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 				mapAttr.setIdx(idx - 1);
 				mapAttr.DirectInsert();
 			}
+
+			//遍历从表字段
 			for (MapAttr attr : attrs.ToJavaList())
 			{
 				if (gs.getCtrlType() != "Dtl")
@@ -308,6 +314,35 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 				attr.Update();
 				//  DBAccess.RunSQL("UP")
 
+			}
+
+			//插入附件
+			if(gs.getCtrlType() == "Ath"){
+				for (DataRow dr : sysFrmAttachment.Rows)
+				{
+					idx++;
+					FrmAttachment en = new FrmAttachment();
+					for (DataColumn dc : sysFrmAttachment.Columns)
+					{
+						Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
+						if (val == null)
+						{
+							continue;
+						}
+
+						en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, frmID));
+					}
+					en.setMyPK(frmID + "_" + en.GetValByKey("NoOfObj"));
+
+
+					try
+					{
+						en.Insert();
+					}
+					catch (java.lang.Exception e2)
+					{
+					}
+				}
 			}
 
 		}

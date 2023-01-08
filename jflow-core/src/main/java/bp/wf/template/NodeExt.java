@@ -264,7 +264,8 @@ public class NodeExt extends Entity
 		map.IndexField = NodeAttr.FK_Flow;
 
 
-			///#region  基础属性。
+		///#region  基础属性。
+		map.AddGroupAttr("基本信息");
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 			// map.SetHelperUrl(NodeAttr.NodeID, "http://ccbpm.mydoc.io/?v=5404&t=17901");
 		map.SetHelperUrl(NodeAttr.NodeID, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3576080&doc_id=31094");
@@ -338,7 +339,9 @@ public class NodeExt extends Entity
 			///#endregion  基础属性
 
 
-			///#region 分合流子线程属性
+			///#region 运行模式
+		map.AddGroupAttr("运行模式");
+		map.AddGroupAttr("运行模式");
 		map.AddDDLSysEnum(NodeAttr.RunModel, 0, "节点类型", true, false, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=子线程");
 		map.SetHelperUrl(NodeAttr.RunModel, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661853&doc_id=31094"); //增加帮助.
 
@@ -392,6 +395,7 @@ public class NodeExt extends Entity
 
 
 			///#region 自动跳转规则
+		map.AddGroupAttr("跳转规则");
 		map.AddBoolean(NodeAttr.AutoJumpRole0, false, "处理人就是发起人", true, true, true);
 		map.SetHelperUrl(NodeAttr.AutoJumpRole0, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3980077&doc_id=31094"); //增加帮助
 
@@ -414,13 +418,14 @@ public class NodeExt extends Entity
 
 			//最后增加按钮权限..
 		BtnLab lab = new BtnLab();
-		map.AddAttrs(lab.getEnMap().getAttrs());
+		map.AddAttrs(lab.getEnMap().getAttrs(),true);
 
 			//节点工具栏,主从表映射.
 		map.AddDtl(new NodeToolbars(), NodeToolbarAttr.FK_Node, null);
 
 
 			///#region 基础功能.
+		map.AddGroupMethod("基本信息");
 		RefMethod rm = null;
 		rm = new RefMethod();
 		rm.Title = "接收人规则";
@@ -577,13 +582,13 @@ public class NodeExt extends Entity
 
 
 			///#region 表单设置.
+		map.AddGroupMethod("表单设置");
 		rm = new RefMethod();
 		rm.Title = "表单方案";
 			//rm.Icon = "../../WF/Admin/CCFormDesigner/Img/Form.png";
 		rm.Icon = "icon-present";
 		rm.ClassMethodName = this.toString() + ".DoSheet";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -593,18 +598,44 @@ public class NodeExt extends Entity
 			//rm.Icon = ../../Img/Mobile.png";
 		rm.ClassMethodName = this.toString() + ".DoSortingMapAttrs";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.Title = "节点组件";
-			//rm.Icon = "../../WF/Img/Components.png";
+		rm.Title = "审核组件";
+		//rm.Icon = "../../WF/Img/Components.png";
 		rm.Icon = "icon-puzzle";
-			//rm.Icon = ../../Img/Mobile.png";
-		rm.ClassMethodName = this.toString() + ".DoFrmNodeComponent";
+		//rm.Icon = ../../Img/Mobile.png";
+		rm.ClassMethodName = this.toString() + ".DoFrmNodeWorkCheck";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "父子流程组件";
+		//rm.Icon = "../../WF/Img/Components.png";
+		rm.Icon = "icon-puzzle";
+		//rm.Icon = ../../Img/Mobile.png";
+		rm.ClassMethodName = this.toString() + ".DoFrmSubFlow";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "轨迹组件";
+		//rm.Icon = "../../WF/Img/Components.png";
+		rm.Icon = "icon-puzzle";
+		//rm.Icon = ../../Img/Mobile.png";
+		rm.ClassMethodName = this.toString() + ".DoFrmTrack";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "流转自定义组件";
+		//rm.Icon = "../../WF/Img/Components.png";
+		rm.Icon = "icon-puzzle";
+		//rm.Icon = ../../Img/Mobile.png";
+		rm.ClassMethodName = this.toString() + ".DoFrmTransferCustom";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+
 
 		rm = new RefMethod();
 		rm.Title = "批量处理";
@@ -613,7 +644,6 @@ public class NodeExt extends Entity
 
 		rm.ClassMethodName = this.toString() + ".DoBatchStartFields()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "表单设置";
 		map.AddRefMethod(rm);
 
 
@@ -648,6 +678,7 @@ public class NodeExt extends Entity
 
 
 			///#region 父子流程.
+		map.AddGroupMethod("父子流程");
 		rm = new RefMethod();
 		rm.Title = "父子流程表单组件";
 			//rm.Icon = "../../WF/Admin/AttrNode/Img/SubFlows.png";
@@ -688,6 +719,7 @@ public class NodeExt extends Entity
 
 
 			///#region 考核.
+		map.AddGroupMethod("考核规则");
 		rm = new RefMethod();
 		rm.Title = "设置考核规则";
 			//rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
@@ -710,6 +742,7 @@ public class NodeExt extends Entity
 
 
 			///#region 实验中的功能
+		map.AddGroupMethod("实验中的功能");
 		rm = new RefMethod();
 		rm.Title = "自定义属性(通用)";
 		rm.ClassMethodName = this.toString() + ".DoSelfParas()";
@@ -938,6 +971,34 @@ public class NodeExt extends Entity
 	*/
 	public final String DoSortingMapAttrs() throws Exception {
 		return "../../Admin/MobileFrmDesigner/Default.htm?FK_Flow=" + this.getFK_Flow() + "&FK_MapData=ND" + this.getNodeID() + "&FK_Node=" + this.getNodeID() + "&t=" + DataType.getCurrentDateTime();
+	}
+	/// <summary>
+	/// 审核组件
+	/// </summary>
+	/// <returns></returns>
+	public String DoFrmNodeWorkCheck() throws Exception {
+		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.NodeWorkCheck&PKVal=" + this.getNodeID() + "&t=" + DataType.getCurrentDateTime();
+	}
+	/// <summary>
+	/// 父子流程组件
+	/// </summary>
+	/// <returns></returns>
+	public String DoFrmSubFlow() throws Exception {
+		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.SFlow.FrmSubFlow&PKVal=" + this.getNodeID() + "&t=" + DataType.getCurrentDateTime();
+	}
+	/// <summary>
+	/// 轨迹组件
+	/// </summary>
+	/// <returns></returns>
+	public String DoFrmTrack() throws Exception {
+		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmTrack&PKVal=" + this.getNodeID() + "&t=" + DataType.getCurrentDateTime();
+	}
+	/// <summary>
+	/// 流转自定义
+	/// </summary>
+	/// <returns></returns>
+	public String DoFrmTransferCustom() throws Exception {
+		return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmTransferCustom&PKVal=" + this.getNodeID() + "&t=" + DataType.getCurrentDateTime();
 	}
 
 		///#endregion 表单相关.
@@ -1411,7 +1472,7 @@ public class NodeExt extends Entity
 			//throw new Exception("err@子线程不能启用子线程按钮，子线程操作只针对分流,合流,分合流节点有效") ;
 		}
 		//清除所有的缓存.
-		CashEntity.getDCash().clear();
+		Cash.ClearCash();
 
 		return super.beforeUpdate();
 	}

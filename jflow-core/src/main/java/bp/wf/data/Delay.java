@@ -339,7 +339,7 @@ public class Delay extends EntityMyPK
 
 		map.AddDDLSysEnum(DelayAttr.WFState, 0, "状态", true, true, DelayAttr.WFState);
 
-		map.AddTBInt(DelayAttr.FK_Dept, 0, "隶属部门", false, true);
+		map.AddTBString(DelayAttr.FK_Dept, null, "隶属部门", false, true,0,50,50);
 		map.AddTBString(DelayAttr.DeptName, null, "隶属部门", true, true, 0, 50, 40);
 		map.AddDDLEntities(DelayAttr.FK_Flow, null, "流程", new Flows(), false);
 		  //  map.AddTBString(DelayAttr.FlowName, null, "流程名称", true, true, 0, 50, 40);
@@ -349,7 +349,7 @@ public class Delay extends EntityMyPK
 		map.AddTBString(DelayAttr.RDT, null, "接受日期", true, true, 0, 50, 30);
 		map.AddTBString(DelayAttr.SDT, null, "应完成日期", true, true, 0, 50, 50);
 		map.AddTBInt(DelayAttr.FID, 0, "FID", false, false);
-		map.AddTBInt(DelayAttr.FK_FlowSort, 0, "流程类别", false, true);
+		map.AddTBString(DelayAttr.FK_FlowSort, null, "流程类别", false, true,0,50,50);
 		map.AddTBString(DelayAttr.SysType, null, "SysType", false, true, 0, 50, 5);
 		   // map.AddTBString(DelayAttr.SDTOfNode, null, "节点应完成日期", true, true, 0, 50, 70);
 		map.AddTBString(DelayAttr.PressTimes, null, "催办次数", false, true, 0, 50, 5);
@@ -359,7 +359,7 @@ public class Delay extends EntityMyPK
 		map.AddTBString(DelayAttr.Sender, null, "发送者", true, true, 0, 50, 50);
 
 			//查询条件.
-		map.AddSearchAttr(DelayAttr.WFState, 130);
+		//map.AddSearchAttr(DelayAttr.WFState, 130);
 		map.AddSearchAttr(DelayAttr.FK_Flow, 130);
 
 
@@ -377,6 +377,6 @@ public class Delay extends EntityMyPK
 
 	public final String DoOpenTrack()
 	{
-		return "../WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
+		return "/WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 }

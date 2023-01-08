@@ -146,7 +146,7 @@ public class Org extends EntityNoName
 	 @return 
 	*/
 	public final String AddClearUserRegedit() throws Exception {
-		DBAccess.RunSQL("DELETE FROM Sys_UserRegedit WHERE OrgNo='" + WebUser.getOrgNo() + "' AND CfgKey='Menus'");
+		DBAccess.RunSQL("DELETE FROM Sys_UserRegedit WHERE OrgNo='" + this.getNo() + "' AND CfgKey='Menus'");
 		return "执行成功.";
 	}
 
@@ -154,13 +154,13 @@ public class Org extends EntityNoName
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
 
-		this.SetValByKey("FlowNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_Flow WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
-		this.SetValByKey("FrmNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Sys_MapData WHERE OrgNo='" + WebUser.getOrgNo() + "' AND No NOT like 'ND%'"));
+		this.SetValByKey("FlowNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_Flow WHERE OrgNo='" + this.getNo() + "'"));
+		this.SetValByKey("FrmNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Sys_MapData WHERE OrgNo='" + this.getNo() + "' AND No NOT like 'ND%'"));
 
-		this.SetValByKey("Users", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Emp WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
-		this.SetValByKey("Depts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Dept WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
-		this.SetValByKey("GWFS", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + WebUser.getOrgNo() + "' AND WFState NOT IN(0,3,7)"));
-		this.SetValByKey("GWFSOver", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + WebUser.getOrgNo() + "' AND WFState=3"));
+		this.SetValByKey("Users", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Emp WHERE OrgNo='" + this.getNo() + "'"));
+		this.SetValByKey("Depts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Port_Dept WHERE OrgNo='" + this.getNo() + "'"));
+		this.SetValByKey("GWFS", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + this.getNo() + "' AND WFState NOT IN(0,3,7)"));
+		this.SetValByKey("GWFSOver", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_GenerWorkFlow WHERE OrgNo='" + this.getNo() + "' AND WFState=3"));
 		return super.beforeUpdateInsertAction();
 	}
 

@@ -164,7 +164,7 @@ public class EnCfg extends EntityNo
 			return this.get_enMap();
 		}
 		Map map = new Map("Sys_EnCfg", "实体配置");
-
+		map.AddGroupAttr("基础信息");
 		map.AddTBStringPK(EnCfgAttr.No, null, "实体名称", true, false, 1, 100, 60);
 
 		///#region 基本信息设置.
@@ -217,6 +217,7 @@ public class EnCfg extends EntityNo
 		///#endregion 查询排序.
 
 		///#region 附件保存路径.
+		map.AddGroupAttr("查询排序");
 		map.AddTBString(EnCfgAttr.FJSavePath, null, "附加保存路径", true, false, 0, 100, 60);
 		map.AddTBString(EnCfgAttr.FJWebPath, null, "附件Web路径", true, false, 0, 100, 60);
 		///#endregion 附件保存路径.
@@ -242,9 +243,18 @@ public class EnCfg extends EntityNo
 		msg += "\t\n 3. 配置格式: 字段名@函数名; 比如:  FlowEmps@DealFlowEmps; ";
 		msg += "\t\n 4. 函数写入到 \\DataUser\\JSLibData\\SearchSelf.js";
 		map.SetHelperAlert("ForamtFunc", msg);
+
+		//数据钻取
+		map.AddTBString(EnCfgAttr.Drill, null, "数据钻取", true, false, 0, 200, 60, true);
+		msg = "显示钻取链接的字段";
+		msg += "\t\n 格式: @Age@JinE@ShouYi";
+		msg += "\t\n 显示在Search, En组件里面.";
+		map.SetHelperAlert(EnCfgAttr.Drill, msg);
 		///#endregion 其他高级设置.
 
+
 		///#region  Search.按钮配置信息.
+		map.AddGroupAttr("工具栏按钮");
 		map.AddBoolean("BtnsShowLeft", false, "按钮显示到左边?", true, true, false);
 		msg = "配置的按钮显示位置.";
 		msg += "\t\n1.默认配置的按钮显示在右边位置. ";
@@ -279,6 +289,7 @@ public class EnCfg extends EntityNo
 
 
 		///#region 双击/单击行的配置.
+		map.AddGroupAttr("双击/单击行的配置");
 		String cfg = "@0=En.htm 实体与实体相关功能编辑器";
 		cfg += "@1=EnOnly.htm 实体编辑器";
 		cfg += "@2=/CCForm/FrmGener.htm 傻瓜表单解析器";
@@ -308,7 +319,7 @@ public class EnCfg extends EntityNo
 
 
 		///#region 执行的方法.
-
+		map.AddGroupMethod("执行的方法");
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -336,17 +347,17 @@ public class EnCfg extends EntityNo
 		map.AddRefMethod(rm);
 
 
-		rm = new RefMethod();
-		rm.Title = "字段颜色范围设置";
-		rm.ClassMethodName = this.toString() + ".FieldColors()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
-
-		rm = new RefMethod();
-		rm.Title = "字段求和/平均设置";
-		rm.ClassMethodName = this.toString() + ".FieldAvgSum()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		map.AddRefMethod(rm);
+//		rm = new RefMethod();
+//		rm.Title = "字段颜色范围设置";
+//		rm.ClassMethodName = this.toString() + ".FieldColors()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		map.AddRefMethod(rm);
+//
+//		rm = new RefMethod();
+//		rm.Title = "字段求和/平均设置";
+//		rm.ClassMethodName = this.toString() + ".FieldAvgSum()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();

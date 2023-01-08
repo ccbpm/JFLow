@@ -11,6 +11,8 @@ import bp.wf.template.*;
 import bp.*;
 import bp.wf.*;
 
+import java.util.Hashtable;
+
 /** 
  页面功能实体
 */
@@ -124,17 +126,19 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		{
 			String token = this.GetRequestVal("Token");
 			String userNo = Dev2Interface.Port_LoginByToken(token);
-			Dev2Interface.Port_GenerToken(userNo);
-			return userNo;
+			//Dev2Interface.Port_GenerToken(userNo);
+			WF_Comm comm = new WF_Comm();
+			return comm.WebUser_Init();
 		}
 		catch (RuntimeException ex)
 		{
 			//@ 多人用同一个账号登录，就需要加上如下代码.
 			if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 			{
-				Dev2Interface.Port_Login(this.getUserNo());
 				Dev2Interface.Port_GenerToken(this.getUserNo());
-				return this.getUserNo();
+				Dev2Interface.Port_Login(this.getUserNo());
+				WF_Comm comm = new WF_Comm();
+				return comm.WebUser_Init();
 			}
 			return ex.getMessage();
 		}
@@ -152,8 +156,8 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 			String SID = this.GetRequestVal("Token");
 			try
 			{
+				String token = Dev2Interface.Port_GenerToken(this.getFK_Emp(),"PC");
 				bp.wf.Dev2Interface.Port_Login(this.getFK_Emp());
-				String token = Dev2Interface.Port_GenerToken(this.getFK_Emp());
 				return token;
 			}
 			catch (Exception ex)
@@ -164,8 +168,8 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 
 		try
 		{
+			String token = Dev2Interface.Port_GenerToken(this.getFK_Emp(),"PC");
 			bp.wf.Dev2Interface.Port_Login(this.getFK_Emp(), this.getOrgNo());
-			String token = Dev2Interface.Port_GenerToken(this.getFK_Emp());
 			return token;
 		}
 		catch (Exception ex)
@@ -192,8 +196,9 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		fl.Update();
 
 		//选择的人员登录
+		String token = bp.wf.Dev2Interface.Port_GenerToken(testerNo,"PC");
 		bp.wf.Dev2Interface.Port_Login(testerNo);
-		String token = bp.wf.Dev2Interface.Port_GenerToken(testerNo);
+
 
 		//组织url发起该流程.
 		String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&TesterNo=" + testerNo;

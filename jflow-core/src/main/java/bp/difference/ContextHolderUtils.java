@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import bp.difference.redis.RedisUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
@@ -13,6 +14,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import bp.difference.handler.CommonUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * JFlow上下文工具类
@@ -25,6 +29,8 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	
 	// 数据源设置
 	private DataSource dataSource;
+
+	private static RedisUtils redisUtils;
 	
 	// 第三方系统session中的用户编码，设置后将不用再调用登录方法，直接获取当前session进行登录。
 	private static String userNoSessionKey;
@@ -47,7 +53,15 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	 * @return
 	 */
 	public static HttpServletRequest getRequest() {
-		return CommonUtils.getRequest();
+		HttpServletRequest request = null;
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		if (requestAttributes != null) {
+			ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
+			request = servletRequestAttributes.getRequest();
+		}
+		if (request == null)
+			request = CommonUtils.getRequest();
+		return request;
 	}
 
 	public static HttpServletResponse getResponse() {
@@ -71,6 +85,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 				Cookie cookie = new Cookie(name, value);
 				cookie.setMaxAge(expiry);
 				getResponse().addCookie(cookie);
+				getRequest().setAttribute(name,value);
 			} else {
 				for (Cookie cookie : cookies) {
 					if (name.equals(cookie.getName())) {
@@ -98,6 +113,7 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 				cookie.setPath("/");
 				cookie.setMaxAge(expiry);
 				getResponse().addCookie(cookie);
+				getRequest().setAttribute(name,value);
 			} else {
 				for (Cookie cookie : cookies) {
 					if (name.equals(cookie.getName())) {
@@ -168,6 +184,20 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	}
 
 	/**
+	 * 获取数据源
+	 */
+	public static RedisUtils getRedisUtils() {
+		return redisUtils;
+	}
+
+	/**
+	 * 获取数据源
+	 */
+	public void setRedisUtils(RedisUtils redisUtils) {
+		this.redisUtils = redisUtils;
+	}
+
+	/**
 	 * 获取第三方系统session中的用户编码
 	 * @return
 	 */
@@ -202,7 +232,9 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	public void setApplicationContext(ApplicationContext arg0) throws BeansException {
 		ContextHolderUtils.springContext = arg0;
 	}
-
+	public ApplicationContext getApplicationContext(){
+		return ContextHolderUtils.springContext;
+	}
 	@Override
 	public void destroy() throws Exception {
 		ContextHolderUtils.springContext = null;

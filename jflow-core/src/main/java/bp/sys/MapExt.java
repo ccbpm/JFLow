@@ -783,75 +783,110 @@ public class MapExt extends EntityMyPK
 	*/
 	public final String GetDataTableByField(String field, String paras, String sqlWhere, String oid) throws Exception {
 		//执行SQL获取
-		if (this.getDBType().equals("0") == true && this.getRow().containsKey(field) == true)
+		if (this.getDBType().equals("0") == false)
+			return "err@数据源类型不是按照SQL查询,DBType="+this.getDBType();
+		if(this.getRow().containsKey(field) == true)
+			return "err@传的参数不正确,Field=" + field+"在Sys_MapExt表中不存在";
+
+		String sql = this.GetValStringByKey(field);
+		if (DataType.IsNullOrEmpty(sql) == true)
+			return "err@字段" + field + "执行的SQL为空";
+		GEEntity en = null;
+		if (DataType.IsNullOrEmpty(oid) == false && oid.contains("_") == false)
+			en = new GEEntity(this.getFK_MapData(), Long.parseLong(oid));
+		if (this.getExtType() == MapExtXmlList.FullData && field.equals("Tag")==true)
 		{
-			String sql = this.GetValStringByKey(field);
-			if (DataType.IsNullOrEmpty(sql) == true)
+			String[] strs = sql.split("$");
+			DataSet ds = new DataSet();
+			for(String str : strs)
 			{
-				return "err@字段" + field + "执行的SQL为空";
-			}
-			if (DataType.IsNullOrEmpty(sqlWhere) == false)
-			{
-				if (sql.toLowerCase().indexOf("where") == -1)
+				if (DataType.IsNullOrEmpty(str) == true)
+					continue;
+				String[] ss = str.split(":");
+				if(ss.length == 2)
 				{
-					sql += "WHERE 1=1";
-				}
 
-				sql += sqlWhere;
-			}
-			GEEntity en = null;
-			if (DataType.IsNullOrEmpty(oid) == false && oid.contains("_") == false)
-			{
-				en = new GEEntity(this.getFK_MapData(), Long.parseLong(oid));
-			}
+					sql = DealExp(ss[1], paras, en);
+					DataTable dtt = null;
+					if (DataType.IsNullOrEmpty(this.getFK_DBSrc()) == false && this.getFK_DBSrc().equals("local") == false)
+					{
+						SFDBSrc sfdb = new SFDBSrc(this.getFK_DBSrc());
+						dtt = sfdb.RunSQLReturnTable(sql);
+					}
+					else
+						dtt = DBAccess.RunSQLReturnTable(sql);
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+					{
+						dtt.Columns.get("NO").ColumnName = "No";
+						dtt.Columns.get("NAME").ColumnName = "Name";
 
-			sql = DealExp(sql, paras, en);
+						//判断是否存在PARENTNO列，避免转换失败
+						if (dtt.Columns.contains("PARENTNO") == true)
+							dtt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+					}
 
-		   if (sql.contains("@") == true)
-		   {
-				return "err@字段" + field + "执行的SQL中有@符号";
-		   }
+					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+					{
+						dtt.Columns.get("no").ColumnName = "No";
+						dtt.Columns.get("name").ColumnName = "Name";
 
-			DataTable dt = null;
-			if (DataType.IsNullOrEmpty(this.getFK_DBSrc()) == false && this.getFK_DBSrc().equals("local") == false)
-			{
-				SFDBSrc sfdb = new SFDBSrc(this.getFK_DBSrc());
-				dt = sfdb.RunSQLReturnTable(sql);
-			}
-			else
-			{
-				dt = DBAccess.RunSQLReturnTable(sql);
-			}
+						//判断是否存在PARENTNO列，避免转换失败
+						if (dtt.Columns.contains("parentno") == true)
+							dtt.Columns.get("parentno").ColumnName = "ParentNo";
+					}
 
-			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-			{
-				dt.Columns.get("NO").ColumnName = "No";
-				dt.Columns.get("NAME").ColumnName = "Name";
-
-				//判断是否存在PARENTNO列，避免转换失败
-				if (dt.Columns.contains("PARENTNO") == true)
-				{
-					dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+					dtt.TableName = ss[0];
+					ds.Tables.add(dtt);
 				}
 			}
-
-			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-			{
-				dt.Columns.get("no").ColumnName = "No";
-				dt.Columns.get("name").ColumnName = "Name";
-
-				//判断是否存在PARENTNO列，避免转换失败
-				if (dt.Columns.contains("parentno") == true)
-				{
-					dt.Columns.get("parentno").ColumnName = "ParentNo";
-				}
-			}
-
-			return bp.tools.Json.ToJson(dt);
-
+			return bp.tools.Json.ToJson(ds);
 		}
-		String msg = this.getDBType().equals("1") == true ? "执行url返回JSON" : "执行JS返回的JSON";
-		return "err@执行有误，是根据" + msg;
+		if (DataType.IsNullOrEmpty(sqlWhere) == false)
+		{
+			if (sql.toLowerCase().indexOf("where") == -1)
+				sql += "WHERE 1=1";
+
+			sql += sqlWhere;
+		}
+
+
+		sql = DealExp(sql, paras, en);
+
+	   if (sql.contains("@") == true)
+			return "err@字段" + field + "执行的SQL中有@符号";
+
+		DataTable dt = null;
+		if (DataType.IsNullOrEmpty(this.getFK_DBSrc()) == false && this.getFK_DBSrc().equals("local") == false)
+		{
+			SFDBSrc sfdb = new SFDBSrc(this.getFK_DBSrc());
+			dt = sfdb.RunSQLReturnTable(sql);
+		}
+		else
+		{
+			dt = DBAccess.RunSQLReturnTable(sql);
+		}
+
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		{
+			dt.Columns.get("NO").ColumnName = "No";
+			dt.Columns.get("NAME").ColumnName = "Name";
+
+			//判断是否存在PARENTNO列，避免转换失败
+			if (dt.Columns.contains("PARENTNO") == true)
+				dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
+		}
+
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			dt.Columns.get("no").ColumnName = "No";
+			dt.Columns.get("name").ColumnName = "Name";
+
+			//判断是否存在PARENTNO列，避免转换失败
+			if (dt.Columns.contains("parentno") == true)
+				dt.Columns.get("parentno").ColumnName = "ParentNo";
+		}
+
+		return bp.tools.Json.ToJson(dt);
 	}
 
 

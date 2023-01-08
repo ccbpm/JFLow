@@ -335,7 +335,7 @@ public class App_OneFlow extends WebContralBase
             case Oracle:
             case KingBaseR3:
             case KingBaseR6:
-                ht.put("Dept_GWF_OverCounts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE  IsPass=0 AND FK_Flow='"+this.getFK_Flow()+"' AND FK_Dept='" +WebUser.getFK_Dept() + "' AND  convert(varchar(100),SDT,120) < CONVERT(varchar(100), GETDATE(), 120)"));
+                ht.put("Dept_GWF_OverCounts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE  IsPass=0 AND FK_Flow='"+this.getFK_Flow()+"' AND FK_Dept='" +WebUser.getFK_Dept() + "' AND  to_char(to_date(SDT,'yyyy-mm-dd,hh24:mi'),'yyyymmdd HH:mm')  < to_char(sysdate ,'yyyymmdd HH:mm')"));
                 break;
             case MSSQL:
                 ht.put("Dept_GWF_OverCounts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE  IsPass=0 AND FK_Flow='"+this.getFK_Flow()+"' AND FK_Dept='" +WebUser.getFK_Dept() + "' AND  convert(varchar(100),SDT,120) < CONVERT(varchar(100), GETDATE(), 120)"));

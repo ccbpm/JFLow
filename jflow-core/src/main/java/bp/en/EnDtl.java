@@ -31,6 +31,7 @@ public class EnDtl
 	 明细
 	 */
 	private Entities _Ens = null;
+	public String GroupName = null;
 	/**
 	 获取或设置 他的集合
 	 */

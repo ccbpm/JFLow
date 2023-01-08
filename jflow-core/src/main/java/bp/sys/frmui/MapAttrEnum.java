@@ -104,9 +104,8 @@ public class MapAttrEnum extends EntityMyPK
 		Map map = new Map("Sys_MapAttr", "枚举字段");
 		map.IndexField = MapAttrAttr.FK_MapData;
 
-
-
-			///#region 基本信息.
+			///#region 基本属性.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "实体标识", false, false, 1, 100, 20);
 
@@ -170,10 +169,11 @@ public class MapAttrEnum extends EntityMyPK
 
 
 
-			///#endregion 基本信息.
+			///#endregion 基本属性.
 
 
 			///#region 傻瓜表单。
+		map.AddGroupAttr("傻瓜表单");
 			//单元格数量 2013-07-24 增加。
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 
@@ -194,7 +194,8 @@ public class MapAttrEnum extends EntityMyPK
 			///#endregion 傻瓜表单。
 
 
-			///#region 执行的方法.
+			///#region 基本功能.
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -229,19 +230,30 @@ public class MapAttrEnum extends EntityMyPK
 		map.AddRefMethod(rm);
 
 
+//		rm = new RefMethod();
+//		rm.Title = "帮助弹窗显示";
+//		rm.ClassMethodName = this.toString() + ".DoFieldBigHelper()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		rm.Icon = "icon-settings";
+//		map.AddRefMethod(rm);
+
 		rm = new RefMethod();
-		rm.Title = "帮助弹窗显示";
-		rm.ClassMethodName = this.toString() + ".DoFieldBigHelper()";
+		rm.Title = "字段名链接";
+		rm.ClassMethodName = this.toString() + ".DoFieldNameLink()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-settings";
 		map.AddRefMethod(rm);
 
 
 
-			///#endregion 执行的方法.
+			///#endregion 基本功能.
 
 		this.set_enMap(map);
 		return this.get_enMap();
+	}
+
+	public final String DoFieldNameLink() throws Exception {
+		return "../../Admin/FoolFormDesigner/MapExt/FieldNameLink.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
 
 	public final String DoFieldBigHelper() throws Exception {

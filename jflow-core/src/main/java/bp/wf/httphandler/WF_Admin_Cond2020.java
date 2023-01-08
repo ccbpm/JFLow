@@ -119,5 +119,14 @@ public class WF_Admin_Cond2020 extends WebContralBase
 			return "err@不符合规范. <font color=blue>" + str + "</font>";
 		}
 	}
+	/**
+	 初始化岗位数据
+	 @return
+	 */
+	public final String SelectStation_StationTypes() throws Exception {
+		String sql = "select No,Name FROM port_StationType WHERE No in (SELECT Fk_StationType from Port_Station WHERE OrgNo ='" + this.GetRequestVal("OrgNo") + "')";
 
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
+	}
 }

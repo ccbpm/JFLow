@@ -1176,7 +1176,14 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 			//        dt.Columns.get(j).ColumnName = dt.Columns.get(j).ColumnName.ToUpper();
 			//    }
 			//}
+			//获取子流程
+			SubFlows subFlows = new SubFlows(this.getFK_Flow());
+			ds.Tables.add(subFlows.ToDataTableField("WF_NodeSubFlow"));
 
+			//获取发起的子流程
+			GenerWorkFlows gwfs = new GenerWorkFlows();
+			gwfs.Retrieve(GenerWorkFlowAttr.PWorkID, this.getWorkID(), "WorkID");
+			ds.Tables.add(gwfs.ToDataTableField("WF_GenerWorkFlow"));
 			String str = bp.tools.Json.ToJson(ds);
 			//  DataType.WriteFile("c:\\GetFlowTrackJsonData_CCflow.txt", str);
 			return str;

@@ -114,7 +114,7 @@ public class Collection extends EntityNoName
 		}
 
 		Map map = new Map("Frm_Collection", "集合方法");
-
+		map.AddGroupAttr("基本属性");
 			//主键.
 		map.AddTBStringPK(CollectionAttr.No, null, "编号", true, true, 0, 50, 10);
 		map.AddTBString(CollectionAttr.Name, null, "方法名", true, false, 0, 300, 10);
@@ -135,6 +135,7 @@ public class Collection extends EntityNoName
 
 
 			///#region 外观.
+		map.AddGroupAttr("外观");
 		map.AddTBInt(CollectionAttr.PopHeight, 0, "弹窗高度", true, false);
 		map.AddTBInt(CollectionAttr.PopWidth, 0, "弹窗宽度", true, false);
 
@@ -142,7 +143,8 @@ public class Collection extends EntityNoName
 
 
 			///#region 对功能有效
-			//对功能有效.
+		//对功能有效.
+		map.AddGroupAttr("对功能有效");
 		map.AddTBString(CollectionAttr.WarningMsg, null, "功能执行警告信息", true, false, 0, 300, 10);
 		map.AddTBString(CollectionAttr.MsgSuccess, null, "成功提示信息", true, false, 0, 300, 10, true);
 		map.AddTBString(CollectionAttr.MsgErr, null, "失败提示信息", true, false, 0, 300, 10, true);

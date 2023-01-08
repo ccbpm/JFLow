@@ -1,5 +1,8 @@
 package bp.wf.data;
 
+import bp.difference.SystemConfig;
+import bp.sys.CCBPMRunModel;
+import bp.web.WebUser;
 import bp.wf.*;
 import bp.en.*;
 import bp.en.Map;
@@ -443,8 +446,7 @@ public class MyDeptTodolist extends Entity
 		map.AddTBStringDoc(MyDeptTodolistAttr.FlowNote, null, "备注", true, false,true);
 		  //  MyDeptTodolistAttr.WorkerDept
 			////作为隐藏字段.
-			//map.AddTBString(MyDeptTodolistAttr.WorkerDept, null, "工作人员部门编号", 
-			//    false, false, 0, 30, 10);
+		map.AddTBString(MyDeptTodolistAttr.OrgNo, null, "组织编号",false, false, 0, 100, 10);
 
 		map.AddDDLEntities(MyDeptTodolistAttr.FK_Emp, null, "当前处理人", new bp.wf.data.MyDeptEmps(), false);
 		map.AddTBIntPK(MyDeptTodolistAttr.WorkID, 0, "工作ID", true, true);
@@ -454,9 +456,12 @@ public class MyDeptTodolist extends Entity
 		map.AddSearchAttr(MyDeptTodolistAttr.FK_Emp, 130);
 
 			////增加隐藏的查询条件.
-			//AttrOfSearch search = new AttrOfSearch(MyDeptTodolistAttr.WorkerDept, "部门",
-			//    MyDeptTodolistAttr.WorkerDept, "=", bp.web.WebUser.getFK_Dept(), 0, true);
-			//map.AttrsOfSearch.Add(search);
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			AttrOfSearch search = new AttrOfSearch(MyDeptTodolistAttr.OrgNo, "组织",
+					MyDeptTodolistAttr.OrgNo, "=",WebUser.getOrgNo(), 0, true);
+			map.getAttrsOfSearch().Add(search);
+		}
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "轨迹";

@@ -369,6 +369,12 @@ public class WF extends WebContralBase
 		if ((new File(SystemConfig.getPathOfWebApp() + (path))).isFile() == false)
 		{
 			path = "/DataUser/Siganture/" + no + ".JPG";
+			if (SystemConfig.getIsJarRun()){
+				if ((new File(SystemConfig.getPhysicalPath() + (path))).isFile() == true)
+				{
+					return "";
+				}
+			}
 			if ((new File(SystemConfig.getPathOfWebApp() + (path))).isFile() == true)
 			{
 				return "";
@@ -2288,5 +2294,32 @@ public class WF extends WebContralBase
 	}
 
 		///#endregion 处理page接口.
+	/**
+	 Author_InitLeft
+	 @return
+	 */
+	public final String Author_InitLeft() throws Exception {
 
+		String sql = "SELECT Auther,AuthName, FK_Flow,FlowName, COUNT(FK_Flow) as Num   FROM V_WF_AuthTodolist ";
+		sql += "WHERE AutherToEmpNo = '" + WebUser.getNo() + "'";
+		sql += " AND TakeBackDT >= '" + this.GetRequestVal("nowDate") + "'";
+		sql += "     GROUP BY Auther, AuthName, FK_Flow, FlowName  ";
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
+	}
+	/**
+	 Author_InitDocs
+	 @return
+	 */
+	public final String Author_InitDocs() throws Exception {
+
+		String sql = "SELECT *  FROM V_WF_AuthTodolist ";
+		sql += "WHERE AutherToEmpNo = '" + WebUser.getNo() + "' and Auther ='" + this.GetRequestVal("author")
+				+ "' and FK_Flow ='" + this.GetRequestVal("flowNo") + "'";
+		sql += "  AND TakeBackDT >= '" + this.GetRequestVal("nowDate") + "'";
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
+	}
 }

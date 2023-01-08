@@ -120,6 +120,23 @@ public class Cond extends EntityMyPK
 	 {
 		this.SetValByKey(CondAttr.FK_Flow, value);
 	}
+	public final String getRefPKVal()
+	{
+		return this.GetValStringByKey(CondAttr.RefPKVal);
+	}
+	public final void setRefPKVal(String value)
+	{
+		this.SetValByKey(CondAttr.RefPKVal, value);
+	}
+	public final String getDataFromText()
+	{
+		return this.GetValStringByKey(CondAttr.DataFromText);
+	}
+	public final void setDataFromText(String value)
+	{
+		this.SetValByKey(CondAttr.DataFromText, value);
+	}
+
 	/** 
 	 隶属流程编号，用于备份删除.
 	*/
@@ -1183,6 +1200,9 @@ public class Cond extends EntityMyPK
 					throw new RuntimeException("err@流程完成条件设置错误，没有给FK_Flow赋值。");
 				}
 			}
+			//for vue版本数据格式.增加一个主从表的标记字段.
+			if (this.getCondType() == CondType.Dir)
+				this.setRefPKVal(this.getFK_Flow() + '_' + this.getFK_Node() + '_' + this.getToNodeID());
 		}
 
 		return super.beforeUpdateInsertAction();

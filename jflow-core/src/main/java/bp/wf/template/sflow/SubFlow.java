@@ -257,7 +257,8 @@ public class SubFlow extends EntityMyPK
 
 
 		map.AddTBInt(SubFlowAttr.Idx, 0, "顺序", true, false);
-
+		map.AddTBInt(SubFlowAttr.X, 0, "X", true, false);
+		map.AddTBInt(SubFlowAttr.Y, 0, "Y", true, false);
 
 			//为中科软增加. 批量发送后，需要隐藏父流程的待办.
 		map.AddTBInt(SubFlowAttr.SubFlowHidTodolist, 0, "批量发送后是否隐藏父流程待办", true, false);

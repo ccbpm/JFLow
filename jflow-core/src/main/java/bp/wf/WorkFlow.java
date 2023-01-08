@@ -1242,7 +1242,7 @@ public class WorkFlow
 		//DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow   WHERE WorkID=" + this.WorkID);
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist WHERE WorkID=" + this.getWorkID());
 
-		String sql = "SELECT count(*) FROM WF_GenerWorkerlist WHERE  FID=" + this.getFID();
+		String sql = "SELECT count(DISTINCT WorkID) FROM WF_GenerWorkerlist  WHERE  FID=" + this.getFID();
 		int num = DBAccess.RunSQLReturnValInt(sql);
 		if (DBAccess.RunSQLReturnValInt(sql) == 0)
 		{

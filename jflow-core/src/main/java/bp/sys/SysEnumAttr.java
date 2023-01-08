@@ -31,4 +31,8 @@ public class SysEnumAttr
 	 OrgNo
 	*/
 	public static final String OrgNo = "OrgNo";
+	/**
+	 StrKey
+	*/
+	public static final String StrKey = "StrKey";
 }

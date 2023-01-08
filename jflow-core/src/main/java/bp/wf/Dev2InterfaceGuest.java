@@ -80,7 +80,7 @@ public class Dev2InterfaceGuest
 
 
 		Emp empStarter = new Emp(WebUser.getNo());
-		Work wk = fl.NewWork(empStarter, htPara);
+		Work wk = fl.NewWork(empStarter, htPara,nd);
 		long workID = wk.getOID();
 
 

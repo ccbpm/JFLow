@@ -145,7 +145,7 @@ public class OrganizationAPI {
 
         if (bp.difference.SystemConfig.getCCBPMRunModel() != bp.sys.CCBPMRunModel.Single) {
             AtPara ap = new AtPara(keyVals);
-            bp.wf.admin.Org org = new bp.wf.admin.Org();
+            bp.wf.port.admin2group.Org org = new bp.wf.port.admin2group.Org();
             org.setNo(orgNo);
             if(org.RetrieveFromDBSources()==0){
                 org.setName(name);
@@ -158,6 +158,7 @@ public class OrganizationAPI {
                     org.SetValByKey(key, ap.GetValStrByKey(key));
                 }
                 org.Insert();
+                org.DoCheck();
             }
 
             OrgAdminer oa = new OrgAdminer();
@@ -282,16 +283,17 @@ public class OrganizationAPI {
             en.setNo( no);
             if (en.RetrieveFromDBSources() == 0)
             {
+                for (String item : ap.getHisHT().keySet())
+                {
+                    if (DataType.IsNullOrEmpty(item) == true)
+                        continue;
+                    en.SetValByKey(item, ap.GetValStrByKey(item));
+                }
                 en.setName(name);
                 en.setOrgNo (orgNo);
                 en.Insert();
             }
-            for (String item : ap.getHisHT().keySet())
-            {
-                if (DataType.IsNullOrEmpty(item) == true)
-                    continue;
-                en.SetValByKey(item, ap.GetValStrByKey(item));
-            }
+
             en.setName(name);
             en.setOrgNo(orgNo);
             en.Update();

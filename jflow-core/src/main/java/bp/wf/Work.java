@@ -217,10 +217,9 @@ public abstract class Work extends Entity
 	public void Copy(DataRow dr) throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
-			if (attr.getKey().equals(WorkAttr.Rec) || attr.getKey().equals(WorkAttr.FID) || attr.getKey().equals(WorkAttr.OID) || attr.getKey().equals("No") || attr.getKey().equals("Name"))
-			{
+			if (attr.getKey().equals(WorkAttr.Rec) || attr.getKey().equals(WorkAttr.FID) || attr.getKey().equals(WorkAttr.OID)
+					|| attr.getKey().equals("BillNo") || attr.getKey().equals("No") || attr.getKey().equals("Name"))
 				continue;
-			}
 
 			try
 			{

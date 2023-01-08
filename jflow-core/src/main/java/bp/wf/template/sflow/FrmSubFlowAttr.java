@@ -82,4 +82,8 @@ public class FrmSubFlowAttr extends EntityNoAttr
 	 所有子流程完成后父流程自动发送
 	*/
 	public static final String AllSubFlowOverRole = "AllSubFlowOverRole";
+	/**
+	 * 所有子流程结束后父流程运行到的节点
+	 */
+	public static final String SkipNodeID ="SkipNodeID";
 }

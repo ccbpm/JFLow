@@ -1,5 +1,6 @@
 package bp.en;
 
+import java.io.Serializable;
 import java.util.*;
 
 /** 
@@ -23,6 +24,7 @@ public class SQLCash
 		this.Update = SqlBuilder.UpdateForPara(en, null);
 		this.Delete = SqlBuilder.DeleteForPara(en);
 		this.Select = SqlBuilder.RetrieveForPara(en);
+		this._UpdateSQLs=new Hashtable();
 	}
 	/** 
 	 获取指定的key, 返回更新的语句。
@@ -72,6 +74,9 @@ public class SQLCash
 			_UpdateSQLs = new Hashtable();
 		}
 		return _UpdateSQLs;
+	}
+	public final void setUpdateSQLs(Hashtable updateSQLs){
+		this._UpdateSQLs = updateSQLs;
 	}
 
 		///

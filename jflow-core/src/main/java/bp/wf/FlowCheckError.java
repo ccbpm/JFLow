@@ -325,7 +325,8 @@ public class FlowCheckError
 
 					break;
 				case ByPreviousNodeFormEmpsField:
-				case ByPreviousNodeFormStations:
+				case ByPreviousNodeFormStationsAI:
+				case ByPreviousNodeFormStationsOnly:
 				case ByPreviousNodeFormDepts:
 
 					//去rpt表中，查询是否有这个字段

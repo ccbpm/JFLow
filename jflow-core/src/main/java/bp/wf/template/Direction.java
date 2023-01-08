@@ -14,7 +14,6 @@ import bp.wf.*;
 */
 public class Direction extends EntityMyPK
 {
-
 		///#region 基本属性
 	/** 
 	节点
@@ -64,8 +63,6 @@ public class Direction extends EntityMyPK
 	}
 
 		///#endregion
-
-
 		///#region 构造方法
 	/** 
 	 节点方向
@@ -90,10 +87,9 @@ public class Direction extends EntityMyPK
 		Map map = new Map("WF_Direction", "节点方向信息");
 
 		map.IndexField = DirectionAttr.FK_Flow;
-
-			/*
-			 * MyPK 是一个复合主键 是由 Node+'_'+ToNode+'_'+DirType 组合的. 比如: 101_102_1
-			 */
+		/*
+		 * MyPK 是一个复合主键 是由 Node+'_'+ToNode+'_'+DirType 组合的. 比如: 101_102_1
+		 */
 		map.AddMyPK(true);
 		map.AddTBString(DirectionAttr.FK_Flow, null, "流程", true, true, 0, 4, 0, false);
 		map.AddTBInt(DirectionAttr.Node, 0, "从节点", false, true);

@@ -1,35 +1,28 @@
 package bp.difference.handler;
 
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.Enumeration;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-
 import bp.da.*;
-import bp.sys.Glo;
-import org.apache.http.protocol.HttpContext;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.Region;
-
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.en.Attr;
 import bp.en.Attrs;
 import bp.en.Entity;
 import bp.en.FieldType;
+import bp.sys.Glo;
 import bp.sys.UIConfig;
 import bp.web.WebUser;
+import org.apache.http.protocol.HttpContext;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.util.Region;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Enumeration;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class WebContralBase {
 	/**
@@ -39,6 +32,7 @@ public abstract class WebContralBase {
 	 *            key
 	 * @return 返回值
 	 */
+
 	public final String GetValFromFrmByKey(String key, String isNullAsVal) {
 		String val = getRequest().getParameter(key);
 		if (val == null && key.contains("DDL_") == false) {
@@ -151,6 +145,9 @@ public abstract class WebContralBase {
 
 	}
 
+	// 简易缓存机制
+	private final ConcurrentHashMap<String, Method> MethodCache = new ConcurrentHashMap<>();
+
 	/**
 	 * 执行方法
 	 * 
@@ -163,65 +160,57 @@ public abstract class WebContralBase {
 	 */
 	public final String DoMethod(WebContralBase myEn, String methodName) throws Exception {
 
-		java.lang.Class tp = myEn.getClass();
-		java.lang.reflect.Method mp = null;
-
-		 
-			mp = tp.getMethod(methodName);
-		 
-
-		if (mp == null) {
-			/* 没有找到方法名字，就执行默认的方法. */
-			String str = myEn.DoDefaultMethod();
-
-			if (str == null || "".equals(str))
-				return "err@方法:" + methodName + "没有翻译..";
-
-			return str;
-		}
+//		java.lang.Class tp = myEn.getClass();
+//		java.lang.reflect.Method mp = null;
+//
+//
+//			mp = tp.getMethod(methodName);
+//
+//
+//		if (mp == null) {
+//			/* 没有找到方法名字，就执行默认的方法. */
+//			String str = myEn.DoDefaultMethod();
+//
+//			if (str == null || "".equals(str))
+//				return "err@方法:" + methodName + "没有翻译..";
+//
+//			return str;
+//		}
 
 		// 执行该方法.
 		Object[] paras = null;
 		Object tempVar = null;
 		try {
-
+			java.lang.reflect.Method mp = MethodCache.get(methodName);
+			if(mp == null){
+				Class<? extends WebContralBase> tp = myEn.getClass();
+				mp = tp.getMethod(methodName);
+				MethodCache.putIfAbsent(methodName, mp);
+			}
 			tempVar = mp.invoke(this, paras);
-
-
 		} catch (InvocationTargetException e ) {
-
 			String msg = null;
-
 			if(e.getTargetException()!=null && e.getTargetException().getCause()!=null)
 				msg = e.getTargetException().getCause().getMessage();
 			if (msg==null && e.getCause() != null) {
 				msg = e.getCause().getMessage();
 			}
-
 			if (msg == null)
-
 				msg = e.getMessage();
-
 			// 如果有url返回.
 			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0 ||(msg.indexOf("err@")==0)))
 				return msg;
-
 			String str = "";
 			if (e.getCause() != null && e.getCause().getMessage().indexOf("wait") > -1) {
 				str += "@错误原因可能是数据库连接异常";
 			}
-
 			String myParas = getRequest().getQueryString();
-
 			String errInfo = "err@页面类[" + myEn.toString() + ",方法[" + methodName + "]执行错误.";
 			errInfo += "\t\n@参数:" + myParas;
 			errInfo += "\t\n@Msg:" + msg;
 			errInfo += "\t\n@getStackTrace:" + e.getStackTrace();
-
 			Log.DebugWriteError("bp.wf.HttpHangerBase.DoMethod()" + errInfo);
 			return errInfo;
-
-
 		}
 		return (String) ((tempVar instanceof String) ? tempVar : null); // 调用由此
 																		// MethodInfo

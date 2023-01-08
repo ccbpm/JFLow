@@ -24,6 +24,8 @@ public class SubFlowAttr extends bp.en.EntityOIDNameAttr
 	 顺序号
 	*/
 	public static final String Idx = "Idx";
+	public static final String X="X";
+	public static final String Y="Y";
 	/** 
 	 批量发送后是否隐藏父流程的待办.
 	*/

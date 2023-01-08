@@ -1,28 +1,13 @@
 package bp.da;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class AtPara
+public class AtPara  implements Serializable
 {
 	/** 
 	 工作
 	*/
-	public final String getFK_Work()  throws Exception
-	{
-		return this.GetValStrByKey("FK_Work");
-	}
-	public final String getFK_ZJ()  throws Exception
-	{
-		return this.GetValStrByKey("FK_ZJ");
-	}
-	public final int getOID()  throws Exception
-	{
-		return this.GetValIntByKey("OID");
-	}
-	public final String getDoType()  throws Exception
-	{
-		return this.GetValStrByKey("DoType");
-	}
 	public AtPara()throws Exception
 	{
 	}
@@ -160,6 +145,10 @@ public class AtPara
 			_HisHT = new Hashtable();
 		}
 		return _HisHT;
+	}
+
+	public final void setHisHT(Hashtable ht){
+		this._HisHT = ht;
 	}
 	public final String GenerAtParaStrs()
 	{

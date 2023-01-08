@@ -4,6 +4,7 @@ import bp.difference.handler.CommonFileUtils;
 import bp.sys.*;
 import bp.da.*;
 import bp.en.*;
+import bp.web.WebUser;
 import bp.wf.template.*;
 import bp.difference.*;
 import bp.tools.*;
@@ -889,5 +890,59 @@ public class WF_Admin_AttrNode extends bp.difference.handler.WebContralBase
 	}
 
 		///#endregion
+	/**
+	 NodeStationGroup_init
+	 @return
+	 */
+	public final String NodeStationGroup_Init() throws Exception {
 
+		String sql = "select No as \"No\", Name as \"Name\" FROM port_StationType where No in " +
+				"(select Fk_StationType from Port_Station where OrgNo ='" + this.GetRequestVal("orgNo") + "') group by No,Name";
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
+	}
+	/**
+	 删除,该组织下已经保存的岗位.
+	 @return
+	 */
+	public final void NodeStationGroup_Dele() throws Exception {
+		String sql = "DELETE FROM WF_NodeStation WHERE FK_Station IN (SELECT No FROM Port_Station WHERE OrgNo='" + this.GetRequestVal("orgNo") + "') AND FK_Node=" + this.GetRequestVal("nodeID");
+		DBAccess.RunSQL(sql);
+	}
+	/**
+	 删除,该组织下已经保存的岗位.
+	 @return
+	 */
+	public final void NodeDept_Dele() throws Exception {
+		String sql = "DELETE FROM WF_NodeDept WHERE FK_Node=" + this.GetRequestVal("nodeID");
+		DBAccess.RunSQL(sql);
+	}
+	/**
+	 删除,该组织下已经保存的岗位.
+	 @return
+	 */
+	public final void NodeDeptGroup_Dele() throws Exception {
+		String sql = "DELETE FROM WF_NodeDept WHERE FK_Node=" + this.GetRequestVal("nodeID") + " AND FK_Dept IN (SELECT No FROM Port_Dept WHERE OrgNo='" + this.GetRequestVal("orgNo") + "')";
+		DBAccess.RunSQL(sql);
+	}
+
+	/**
+	 WF_Node_Up
+	 @return
+	 */
+	public final void WF_Node_Up() throws Exception {
+		String sql = "UPDATE WF_Node SET NodeAppType=" + this.GetRequestVal("appType") + " WHERE NodeID=" + this.GetRequestVal("nodeID");
+		DBAccess.RunSQL(sql);
+	}
+	/**
+	 NodeStationGroup_init
+	 @return
+	 */
+	public final String NodeAppType() throws Exception {
+
+		String sql = "SELECT NodeAppType FROM WF_Node WHERE NodeID=" + this.GetRequestVal("FK_Node");
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
+	}
 }

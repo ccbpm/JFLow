@@ -21,6 +21,10 @@ public class UserLogAttr
 	*/
 	public static final String LogFlag = "LogFlag";
 	/** 
+	 级别
+	*/
+	public static final String Level = "Level";
+	/** 
 	 处理内容
 	*/
 	public static final String Docs = "Docs";

@@ -152,6 +152,10 @@ public class MyDeptTodolistAttr
 	 GUID
 	*/
 	public static final String GUID = "GUID";
+	/**
+	 OrgNo
+	 */
+	public static final String OrgNo = "OrgNo";
 
 		///#endregion
 }

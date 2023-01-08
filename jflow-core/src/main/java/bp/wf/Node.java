@@ -196,6 +196,7 @@ public class Node extends Entity
 		return obj;
 	}
 	public final NodeSimples getHisToNodeSimples() throws Exception {
+//		Object tempVar = this.GetRefObject("HisToNodesSipm");
 		Object tempVar = this.GetRefObject("HisToNodesSipm");
 		NodeSimples obj = tempVar instanceof NodeSimples ? (NodeSimples)tempVar : null;
 		if (obj == null)
@@ -1798,6 +1799,17 @@ public class Node extends Entity
 	 {
 		this.SetValByKey(NodeAttr.CCWriteTo, value.getValue());
 	}
+
+	/**
+	 按照岗位智能获取人员模式
+	 0=集合模式,1=切片-严谨模式. 2=切片-宽泛模式
+	 */
+	public final int getDeliveryStationReqEmpsWay()
+	{
+		int val = this.GetParaInt("StationReqEmpsWay", 0);
+		return val;
+	}
+
 	/** 
 	 Int type
 	*/
@@ -2433,7 +2445,8 @@ public class Node extends Entity
 
 			///#region 子流程信息
 		map.AddTBInt(FrmSubFlowAttr.SFSta, 0, "父子流程组件", false, false);
-
+		map.AddTBInt(NodeAttr.SubFlowX, 0, "子流程设计器位置X", false, false);
+		map.AddTBInt(NodeAttr.SubFlowY, 0, "子流程设计器位置Y", false, false);
 			///#endregion 子流程信息
 
 

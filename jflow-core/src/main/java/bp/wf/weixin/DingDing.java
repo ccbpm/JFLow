@@ -20,7 +20,6 @@ public class DingDing
 				Object token  = jd.get("access_token");
 				return token.toString();
 			}
-			
 		}
 
 		return "err@获取accessToken失败";

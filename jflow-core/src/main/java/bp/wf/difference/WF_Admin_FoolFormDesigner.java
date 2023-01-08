@@ -1,13 +1,21 @@
 package bp.wf.difference;
 
+import bp.da.DBAccess;
+import bp.da.DataTable;
 import bp.da.DataType;
+import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.wf.httphandler.*;
 
 import java.util.*;
 
-   public class WF_Admin_FoolFormDesigner
+   public class WF_Admin_FoolFormDesigner extends WebContralBase
    {
+	   /**
+		构造函数
+		*/
+	   public WF_Admin_FoolFormDesigner() throws Exception {
+	   }
 		/** 
 		 获取webservice方法列表
 		 
@@ -107,4 +115,24 @@ import java.util.*;
 //
 //				return mtds;
 //		}
+
+
+	   public final String SysEnumList_SelectEnum() throws Exception {
+		   String sql = "";
+		   String EnumName = this.GetRequestVal("EnumName");
+		   if (EnumName == "")
+			   sql = "SELECT * FROM Sys_EnumMain";
+		   else
+			   sql = "SELECT * FROM Sys_EnumMain WHERE (No like '%" + EnumName + "%') OR (Name like '%" + EnumName + "%')";
+		   DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		   return bp.tools.Json.ToJson(dt);
+	   }
+
+	   public final String SysEnumList_MapAttrs() throws Exception {
+		   String  sql = "SELECT A.FK_MapData,A.KeyOfEn,A.Name From Sys_MapAttr A,Sys_MapData B Where A.FK_MapData=B.No " +
+				   "AND A.UIBindKey='" + this.GetRequestVal("UIBindKey") + "' AND B.OrgNo='" + this.GetRequestVal("OrgNo") + "'";
+
+		   DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		   return bp.tools.Json.ToJson(dt);
+	   }
    }

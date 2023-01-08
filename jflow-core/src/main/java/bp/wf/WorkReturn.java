@@ -1400,7 +1400,7 @@ public class WorkReturn
 					inStr += "'" + s + "',";
 				}
 				inStr = inStr.substring(0, inStr.length() - 1);
-				if (inStr.contains(",") == true)
+				if (inStr.contains(",") == false)
 				{
 					qo.AddWhere(GenerWorkerListAttr.FK_Node, Integer.parseInt(inStr));
 				}

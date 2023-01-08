@@ -97,7 +97,12 @@ public class MapAttrString extends EntityMyPK
 	 {
 		this.SetValByKey(MapAttrAttr.UIIsEnable, val);
 	}
-
+	public final int getTextModel(){
+		return this.GetValIntByKey(MapAttrAttr.TextModel);
+	}
+	public final void setTextModel(int value){
+		this.SetValByKey(MapAttrAttr.TextModel, value);
+	}
 		///#endregion
 
 
@@ -140,6 +145,7 @@ public class MapAttrString extends EntityMyPK
 
 
 			///#region 基本字段信息.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapAttrAttr.MyPK, null, "主键", false, false, 0, 200, 20);
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", false, false, 1, 100, 20);
 		map.AddTBString(MapAttrAttr.Name, null, "字段中文名", true, false, 0, 200, 20, true);
@@ -186,7 +192,7 @@ public class MapAttrString extends EntityMyPK
 
 
 			///#region 傻瓜表单
-
+		map.AddGroupAttr("傻瓜表单");
 			//单元格数量 2013-07-24 增加
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨5个单元格@6=跨6个单元格");
 		map.SetHelperAlert(MapAttrAttr.ColSpan, "对于傻瓜表单有效: 标识该字段TextBox横跨的宽度,占的单元格数量.");
@@ -225,6 +231,7 @@ public class MapAttrString extends EntityMyPK
 
 
 			///#region 基本功能.
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -296,6 +303,7 @@ public class MapAttrString extends EntityMyPK
 
 
 			///#region 输入多选.
+		map.AddGroupMethod("输入内容多选");
 		rm = new RefMethod();
 		rm.GroupName = "输入内容多选";
 		rm.Title = "小范围多选(combox)";
@@ -331,6 +339,7 @@ public class MapAttrString extends EntityMyPK
 		rm.Icon = "icon-magnifier";
 		map.AddRefMethod(rm);
 
+		//  map.AddGroupMethod("移动端扫码录入");
 		rm = new RefMethod();
 		rm.Title = "移动端扫码录入";
 		rm.ClassMethodName = this.toString() + ".DoQRCode()";
@@ -343,6 +352,7 @@ public class MapAttrString extends EntityMyPK
 
 
 			///#region 高级设置.
+		map.AddGroupMethod("高级设置");
 		rm = new RefMethod();
 		rm.GroupName = "高级设置";
 		rm.Title = "字段重命名";
@@ -810,7 +820,7 @@ public class MapAttrString extends EntityMyPK
 		//attr.setIsRichText(this.GetValBooleanByKey(MapAttrAttr.IsRichText)); //是否是富文本？
 		//attr.setSupperText(this.GetValIntByKey(MapAttrAttr.IsSupperText)); //是否是大块文本？
 
-		if (attr.getTextModel() == 2 || attr.getTextModel() == 3)
+		if (this.getTextModel() == 2 || this.getTextModel() == 3)
 		{
 			attr.setMaxLen(4000);
 			this.SetValByKey(MapAttrAttr.MaxLen, 4000);

@@ -296,7 +296,8 @@ public class DBList extends EntityNoName
 		map.setCodeStruct("4");
 
 
-			///#region 基本属性.
+		///#region 基本属性.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.SetHelperAlert(MapDataAttr.No, "也叫表单ID,系统唯一.");
 
@@ -310,6 +311,7 @@ public class DBList extends EntityNoName
 
 
 			///#region 数据源.
+		map.AddGroupAttr("数据源");
 		map.AddTBInt(MapDataAttr.DBType, 0, "数据源类型", true, true);
 		map.AddTBString(MapDataAttr.DBSrc, null, "数据源", false, false, 0, 600, 20);
 
@@ -320,11 +322,10 @@ public class DBList extends EntityNoName
 		map.AddTBString(DBListAttr.MainTablePK, null, "列表数据源主表主键", false, false, 0, 50, 20, false);
 		map.AddTBString(MapDataAttr.ExpCount, null, "列表总数", false, false, 0, 600, 20, true);
 
-
 			///#endregion 数据源.
 
-
-			///#region 外观.
+		///#region 外观.
+		map.AddGroupAttr("外观");
 		map.AddDDLSysEnum(FrmAttr.RowOpenModel, 2, "行记录打开模式", true, true, "RowOpenMode", "@0=新窗口打开@1=在本窗口打开@2=弹出窗口打开,关闭后不刷新列表@3=弹出窗口打开,关闭后刷新列表");
 		String cfg = "@0=MyDictFrameWork.htm 实体与实体相关功能编辑器";
 		cfg += "@1=MyDict.htm 实体编辑器";

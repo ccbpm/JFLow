@@ -1098,7 +1098,6 @@ public class CCFormAPI
 	}
 
 
-//ORIGINAL LINE: public static bp.da.DataSet GenerHisDataSet(string frmID, string frmName = null, MapData md = null)
 	public static bp.da.DataSet GenerHisDataSet(String frmID, String frmName, MapData md) throws Exception {
 		//首先从缓存获取数据.
 		DataSet dsFrm = CashFrmTemplate.GetFrmDataSetModel(frmID);

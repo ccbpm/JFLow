@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 {
 	private static final long serialVersionUID = 1L;
+	public String GroupName = "";
 
 	public AttrsOfOneVSM()
 	{
@@ -23,6 +24,7 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 		{
 			return;
 		}
+		attr.GroupName = this.GroupName;
 		this.add(attr);
 	}
 

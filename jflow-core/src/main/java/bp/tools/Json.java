@@ -1003,9 +1003,9 @@ public class Json
 		return ds;
 	}
 
-	public static Hashtable<String, String> JsonToHashMap(String JsonStrin){
+	public static HashMap<String, String> JsonToHashMap(String JsonStrin){
 		HashMap<String, String> data = new HashMap<String, String>();
-		Hashtable<String, String> ht = new Hashtable<String, String>();
+
 		try{
 			// 将json字符串转换成jsonObject
 			JSONObject jsonObject = JSONObject.fromObject(JsonStrin);
@@ -1022,9 +1022,13 @@ public class Json
 			e.printStackTrace();
 			//JOptionPane.showMessageDialog(null,"ERROR:["+e+"]");
 		}
-		//System.out.println(data);
+		return data;
+	}
+	public static Hashtable<String, String> JsonToHashtable(String JsonStrin){
+		HashMap<String, String> data =JsonToHashMap(JsonStrin);
+		Hashtable<String, String> ht = new Hashtable<String, String>();
+
 		ht.putAll(data);
 		return ht;
 	}
-
 }

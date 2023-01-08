@@ -649,22 +649,15 @@ public class PubClass
 	{
 		try
 		{
-			String sql = "execute  sp_dropextendedproperty 'MS_Description','user',dbo,'table','" + table + "','column'," + col;
-			en.RunSQL(sql);
-		}
-		catch (RuntimeException ex)
-		{
-
-		}
-
-		try
-		{
 			String sql = "execute  sp_addextendedproperty 'MS_Description', '" + note + "', 'user', dbo, 'table', '" + table + "', 'column', '" + col + "'";
 			en.RunSQL(sql);
 		}
 		catch (RuntimeException ex)
 		{
+			String sql = "execute  sp_updateextendedproperty 'MS_Description', '" + note + "', 'user', dbo, 'table', '" + table + "', 'column', '" + col + "'";
+			en.RunSQL(sql);
 		}
+
 	}
 	/**
 	 为表增加解释
@@ -676,18 +669,7 @@ public class PubClass
 	{
 
 		if (en.getEnMap().getEnType() == EnType.View || en.getEnMap().getEnType() == EnType.ThirdPartApp)
-		{
 			return;
-		}
-
-		try
-		{
-			String sql = "execute  sp_dropextendedproperty 'MS_Description','user',dbo,'table','" + en.getEnMap().getPhysicsTable() + "'";
-			en.RunSQL(sql);
-		}
-		catch (RuntimeException ex)
-		{
-		}
 
 		try
 		{
@@ -696,8 +678,9 @@ public class PubClass
 		}
 		catch (RuntimeException ex)
 		{
+			String sql = "execute  sp_updateextendedproperty 'MS_Description', '" + en.getEnDesc() + "', 'user', dbo, 'table', '" + en.getEnMap().getPhysicsTable() + "'";
+			en.RunSQL(sql);
 		}
-
 
 		SysEnums ses = new SysEnums();
 		for (Attr attr : en.getEnMap().getAttrs())

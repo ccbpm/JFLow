@@ -118,22 +118,26 @@ public class FrmNodeComponent extends Entity
 
 		map.setDepositaryOfEntity( Depositary.None);
 		map.setDepositaryOfMap( Depositary.Application);
-
+		map.AddGroupAttr("基本属性");
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true,true, 0, 100, 10);
 
+		map.AddGroupAttr("审核组件");
 		NodeWorkCheck fwc = new NodeWorkCheck();
 		map.AddAttrs(fwc.getEnMap().getAttrs());
 
+		map.AddGroupAttr("父子流程");
 		FrmSubFlow subflow = new FrmSubFlow();
 		map.AddAttrs(subflow.getEnMap().getAttrs());
 
 
 			//轨迹组件.
+		map.AddGroupAttr("轨迹组件");
 		FrmTrack track = new FrmTrack();
 		map.AddAttrs(track.getEnMap().getAttrs());
 
 			//流转自定义组件.
+		map.AddGroupAttr("流转自定义组件");
 		FrmTransferCustom ftt = new FrmTransferCustom();
 		map.AddAttrs(ftt.getEnMap().getAttrs());
 

@@ -79,7 +79,8 @@ public class ClassScaner implements ResourceLoaderAware {
 
             for (int i = 0; i < resources.length; i++) {
                 Resource resource = resources[i];
-                if(resource.getDescription().indexOf("bp/dts")!=-1 ||resource.getDescription().indexOf("bp/difference")!=-1||resource.getDescription().indexOf("bp/tools")!=-1 || resource.getDescription().indexOf("bp/wf/dts")!=-1 || resource.getDescription().indexOf("bp/wf/httphandler")!=-1)
+                String path = resource.getDescription().replace("\\","/");
+                if(path.indexOf("bp/dts")!=-1 ||path.indexOf("bp/difference")!=-1||path.indexOf("bp/tools")!=-1 || path.indexOf("bp/wf/dts")!=-1 || path.indexOf("bp/wf/httphandler")!=-1)
                     continue;
                 if (resource.isReadable()) {
 

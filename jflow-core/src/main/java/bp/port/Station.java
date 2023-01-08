@@ -118,8 +118,10 @@ public class Station extends EntityNoName
 			throw new RuntimeException("请输入岗位名称");
 		if(DataType.IsNullOrEmpty(this.getFKStationType())==true)
 			throw new RuntimeException("请选择岗位类型");
-		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
-			this.setOrgNo(bp.web.WebUser.getOrgNo());
+		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true) {
+			if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+				this.setOrgNo(bp.web.WebUser.getOrgNo());
+		}
 		return super.beforeUpdateInsertAction();
 	}
 

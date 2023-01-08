@@ -3,6 +3,7 @@ package bp.wf.httphandler;
 import bp.ccbill.DBList;
 import bp.da.*;
 import bp.difference.ContextHolderUtils;
+import bp.tools.OSSUploadFileUtils;
 import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
 import bp.difference.handler.CommonUtils;
@@ -20,12 +21,9 @@ import bp.wf.*;
 
 import java.awt.image.BufferedImage;
 import java.net.URLDecoder;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.io.*;
-import bp.wf.data.GERpt;
+
 import bp.wf.template.frm.MapFrmWps;
 import bp.wf.template.sflow.FrmSubFlowAttr;
 
@@ -604,7 +602,7 @@ public class WF_CCForm extends  WebContralBase
 						return "url@../FrmView.htm?1=2" + paras;
 					}
 
-					if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+					if (this.GetRequestValBoolen("Readonly") || this.GetRequestValBoolen("IsEdit")==false) {
 						return "url@FrmGener.htm?1=2" + paras;
 					} else {
 						return "url@FrmGener.htm?1=2" + paras;
@@ -612,7 +610,7 @@ public class WF_CCForm extends  WebContralBase
 				}
 
 				if (md.getHisFrmType() == FrmType.VSTOForExcel || md.getHisFrmType() == FrmType.ExcelFrm) {
-					if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+					if (this.GetRequestValBoolen("Readonly") || this.GetRequestValBoolen("IsEdit")==false) {
 						return "url@FrmVSTO.htm?1=2" + paras;
 					} else {
 						return "url@FrmVSTO.htm?1=2" + paras;
@@ -623,7 +621,7 @@ public class WF_CCForm extends  WebContralBase
 					return "url@../FrmView.htm?1=2" + paras;
 				}
 
-				if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+				if (this.GetRequestValBoolen("Readonly") || this.GetRequestValBoolen("IsEdit")==false) {
 					return "url@FrmGener.htm?1=2" + paras;
 				} else {
 					return "url@FrmGener.htm?1=2" + paras;
@@ -639,7 +637,7 @@ public class WF_CCForm extends  WebContralBase
 			if (IsMobile == true) {
 				return "url@../FrmView.htm?1=2" + paras;
 			}
-			if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+			if (this.GetRequestValBoolen("Readonly") || this.GetRequestValBoolen("IsEdit")==false) {
 				return "url@FrmGener.htm?1=2" + paras;
 			} else {
 				return "url@FrmGener.htm?1=2" + paras;
@@ -647,7 +645,7 @@ public class WF_CCForm extends  WebContralBase
 		}
 
 		if (md.getHisFrmType() == FrmType.VSTOForExcel || md.getHisFrmType() == FrmType.ExcelFrm) {
-			if (this.GetRequestVal("Readonly").equals("1") || this.GetRequestVal("IsEdit").equals("0")) {
+			if (this.GetRequestValBoolen("Readonly") || this.GetRequestValBoolen("IsEdit")==false) {
 				return "url@FrmVSTO.htm?1=2" + paras;
 			} else {
 				return "url@FrmVSTO.htm?1=2" + paras;
@@ -660,7 +658,7 @@ public class WF_CCForm extends  WebContralBase
 
 		if (md.getHisFrmType() == FrmType.ChapterFrm)
 		{
-			if (this.GetRequestVal("Readonly") == "1" || this.GetRequestVal("IsEdit") == "0")
+			if (this.GetRequestValBoolen("Readonly") || this.GetRequestValBoolen("IsEdit")==false)
 				return "url@ChapterFrmView.htm?1=2" + paras;
 			else
 				return "url@ChapterFrm.htm?1=2" + paras;
@@ -1563,7 +1561,7 @@ public class WF_CCForm extends  WebContralBase
 
 			Object tempVar = mes.GetEntityByKey("ExtType", MapExtXmlList.PageLoadFull);
 			MapExt me = tempVar instanceof MapExt ? (MapExt) tempVar : null;
-			if (isLoadData == true && me != null && GetRequestValInt("IsTest") != 1) {
+			if (isLoadData == true && md.isPageLoadFull() && me != null && GetRequestValInt("IsTest") != 1) {
 				// 执行通用的装载方法.
 				MapAttrs attrs = new MapAttrs(this.getEnsName());
 				MapDtls dtls = new MapDtls(this.getEnsName());
@@ -4882,6 +4880,13 @@ public class WF_CCForm extends  WebContralBase
 		delDB.setMyPK(delPK == null ? this.getMyPK() : delPK);
 		delDB.RetrieveFromDBSources();
 		delDB.Delete(); //删除上传的文件.
+		//OSS服务器
+		bp.sys.FrmAttachment myathDesc = new FrmAttachment(delDB.getFK_FrmAttachment());
+		if (myathDesc.getAthSaveWay() == AthSaveWay.OSS){
+			//删除云端文件
+			OSSUploadFileUtils ossUploadFileUtils = new OSSUploadFileUtils();
+			ossUploadFileUtils.deleteFile(myathDesc.getName());
+		}
 		return "删除成功.";
 	}
 	public final String AttachmentUpload_DownByStream() throws Exception {
@@ -5234,7 +5239,7 @@ public class WF_CCForm extends  WebContralBase
 		if (dbs.size() == 0)
 			return "err@文件不存在，不需打包下载。";
 
-		String basePath = SystemConfig.getPathOfDataUser() + "Temp";
+		String basePath = SystemConfig.getPathOfTemp();
 		String tempUserPath = basePath + "/" + WebUser.getNo();
 		String tempFilePath = basePath + "/" + WebUser.getNo() + "/" + this.getWorkID();
 		String zipPath = basePath + "/" + WebUser.getNo();
@@ -5292,8 +5297,6 @@ public class WF_CCForm extends  WebContralBase
 					double percent = 0;
 					FileOutputStream fos = new FileOutputStream(new File(copyToPath));
 					while ((length = is.read(b)) != -1) {
-						// percent += length / (double) new
-						// File(saveTo).supFileSize * 100D; // 计算上传文件的百分比
 						fos.write(b, 0, length); // 向文件输出流写读取的数据
 
 					}
@@ -5304,7 +5307,6 @@ public class WF_CCForm extends  WebContralBase
 				} catch (RuntimeException ex) {
 					ex.getMessage();
 				}
-				// File.Copy(fileTempPath, copyToPath, true);
 			}
 		} catch (Exception ex) {
 			return "err@组织文件期间出现错误:" + ex.getMessage();
@@ -5329,7 +5331,7 @@ public class WF_CCForm extends  WebContralBase
 
 		zipName = DataType.PraseStringToUrlFileName(zipName);
 
-		String url = getRequest().getContextPath() + "DataUser/Temp/" + WebUser.getNo() + "/" + zipName + ".zip";
+		String url = "/DataUser/Temp/" + WebUser.getNo() + "/" + zipName + ".zip";
 		return "url@" + url;
 
 	}

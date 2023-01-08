@@ -63,4 +63,8 @@ public class EnCfgAttr extends EntityNoAttr
 	 是否记录查询条件？
 	*/
 	public static final String IsCond = "IsCond";
+	/**
+	 数据钻取
+	 */
+	public static final String Drill = "Drill";
 }

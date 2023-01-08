@@ -147,6 +147,7 @@ public class MapFrmFool extends EntityNoName
 
 
 			///#region 基本属性.
+		map.AddGroupAttr("基本属性");
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.SetHelperUrl(MapDataAttr.No, "xxxx");
 
@@ -203,6 +204,7 @@ public class MapFrmFool extends EntityNoName
 
 
 			///#region 设计者信息.
+		map.AddGroupAttr("设计者信息");
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
@@ -218,7 +220,7 @@ public class MapFrmFool extends EntityNoName
 
 
 			///#region 基本功能.
-
+		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -343,6 +345,7 @@ public class MapFrmFool extends EntityNoName
 
 
 			///#region 高级功能.
+		map.AddGroupMethod("高级功能");
 		rm = new RefMethod();
 		rm.Title = "版本管理"; // "设计表单";
 		rm.GroupName = "高级功能";
@@ -395,6 +398,7 @@ public class MapFrmFool extends EntityNoName
 
 
 			///#region 开发接口.
+		map.AddGroupMethod("开发接口");
 		rm = new RefMethod();
 		rm.Title = "调用查询API"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoSearch";
@@ -428,7 +432,7 @@ public class MapFrmFool extends EntityNoName
 			//rm.refMethodType = RefMethodType.RightFrameOpen;
 			//rm.Icon = "icon-settings";
 			//map.AddRefMethod(rm);
-
+		map.AddGroupMethod("实验中的功能");
 		rm = new RefMethod();
 		rm.Title = "一键设置表单元素只读";
 		rm.Warning = "您确定要设置吗？所有的元素，包括字段、从表、附件以及其它组件都将会被设置为只读的.";

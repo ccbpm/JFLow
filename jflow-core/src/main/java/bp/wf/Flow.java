@@ -517,7 +517,7 @@ public class Flow extends bp.en.EntityNoName
 	*/
 	public final Work NewWork(String empNo) throws Exception {
 		Emp emp = new Emp(empNo);
-		return NewWork(emp, null);
+		return NewWork(emp, null,null);
 	}
 	/** 
 	 产生一个开始节点的新工作
@@ -526,52 +526,20 @@ public class Flow extends bp.en.EntityNoName
 	 param paras 参数集合,如果是CS调用，要发起子流程，要从其他table里copy数据,就不能从request里面取,可以传递为null.
 	 @return 返回的Work.
 	*/
-	public final Work NewWork(Emp emp, Hashtable paras) throws Exception {
-		// 检查是否可以发起该流程？
-		if (Glo.CheckIsCanStartFlow_InitStartFlow(this) == false)
-		{
-			throw new RuntimeException("err@您违反了该流程的【" + this.getStartLimitRole() + "】限制规则。" + this.getStartLimitAlert());
-		}
+	public final Work NewWork(Emp emp, Hashtable paras,Node nd) throws Exception {
 
 		GenerWorkFlow gwf = new GenerWorkFlow();
-
-
-			///#region 组织参数.
 		//如果是bs系统.
 		if (paras == null)
-		{
 			paras = new Hashtable();
-		}
-		if (SystemConfig.getIsBSsystem() == true)
-		{
-			for (String k : CommonUtils.getRequest().getParameterMap().keySet())
-			{
-				if (k == null || k.equals("OID") || k.equals("WorkID") || paras.containsKey("PWorkID") == true)
-				{
-					continue;
-				}
-
-				if (paras.containsKey(k))
-				{
-					paras.put(k, bp.sys.Glo.getRequest().getParameter(k));
-				}
-				else
-				{
-					paras.put(k, bp.sys.Glo.getRequest().getParameter(k));
-				}
-			}
-		}
-
-			///#endregion 组织参数.
 
 		boolean isDelDraft = false;
 		if (paras.containsKey(StartFlowParaNameList.IsDeleteDraft) && paras.get(StartFlowParaNameList.IsDeleteDraft).toString().equals("1"))
-		{
 			isDelDraft = true;
-		}
 
 		//开始节点.
-		bp.wf.Node nd = new bp.wf.Node(this.getStartNodeID());
+		if (nd==null)
+		  nd = new bp.wf.Node(this.getStartNodeID());
 
 		//从草稿里看看是否有新工作？
 		Work wk = nd.getHisWork();
@@ -593,11 +561,8 @@ public class Flow extends bp.en.EntityNoName
 		boolean IsNewWorkID = false;
 		/*如果要启用草稿,就创建一个新的WorkID .*/
 		if (this.getDraftRole() != DraftRole.None)
-		{
 			IsNewWorkID = true;
-		}
 
-		String errInfo = "";
 		try
 		{
 			//从报表里查询该数据是否存在？
@@ -611,11 +576,9 @@ public class Flow extends bp.en.EntityNoName
 				if (dt.Rows.size() > 0 && IsNewWorkID == false)
 				{
 					wk.setOID(Long.parseLong(dt.Rows.get(0).getValue(0).toString()));
-
 					//查询出来当前gwf.
 					gwf.setWorkID(wk.getOID());
 					gwf.Retrieve();
-
 				}
 			}
 			else
@@ -636,7 +599,7 @@ public class Flow extends bp.en.EntityNoName
 					if (gwf.getWorkID() == 0)
 					{
 						gwf.Delete();
-						return NewWork(emp, paras);
+						return NewWork(emp, paras,nd);
 					}
 
 					gwf.Retrieve();
@@ -649,26 +612,22 @@ public class Flow extends bp.en.EntityNoName
 				/* 说明没有空白,就创建一个空白..*/
 				wk.ResetDefaultVal(null, null, 0);
 				wk.setRec(WebUser.getNo());
-
 				wk.SetValByKey(GERptAttr.WFState, WFState.Blank.getValue());
 
 				/*这里产生WorkID ,这是唯一产生WorkID的地方.*/
 				if (SystemConfig.GetValByKeyInt("GenerWorkIDModel", 0) == 0)
-				{
 					wk.setOID(DBAccess.GenerOID("WorkID"));
-				}
 				else
-				{
 					wk.setOID(DBAccess.GenerOIDByGUID());
-				}
+
+
 
 				//把尽量可能的流程字段放入，否则会出现冲掉流程字段属性.
 				wk.SetValByKey(GERptAttr.FK_NY, DataType.getCurrentYearMonth());
 				wk.SetValByKey(GERptAttr.FK_Dept, emp.getFK_Dept());
 				wk.setFID(0);
 
-
-					///#region 写入work 数据.
+				///#region 写入work 数据.
 				try
 				{
 					wk.DirectInsert();
@@ -678,22 +637,18 @@ public class Flow extends bp.en.EntityNoName
 					wk.CheckPhysicsTable();
 					//检查报表,执行插入数据. 2020.08.18 增加.
 					this.CheckRpt();
-
 					//if (wk.RetrieveFromDBSources()!=0)
-
 					wk.DirectInsert(); //执行插入.
 				}
-
-					///#endregion 写入work 数据.
+				///#endregion 写入work 数据.
 
 				//设置参数.
 				for (Object k : paras.keySet())
 				{
-					if(k == null)
-						continue;
+					if(k == null) continue;
+					//wk.SetValByKey(k.toString(), paras.get(k));
 					rpt.SetValByKey(k.toString(), paras.get(k));
 				}
-
 				//两个表相同，就执行更新.
 				if (this.getPTable().equals(wk.getEnMap().getPhysicsTable()) == true)
 				{
@@ -707,19 +662,17 @@ public class Flow extends bp.en.EntityNoName
 					rpt.setWFState(WFState.Blank);
 					rpt.setFlowStarter(emp.getUserID());
 					rpt.setFK_Ny(DataType.getCurrentYearMonth());
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
-					{
-						rpt.setFlowEmps("@" + emp.getName() + "@");
-					}
-
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
-					{
-						rpt.setFlowEmps("@" + emp.getUserID() + "@");
-					}
-
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
-					{
-						rpt.setFlowEmps("@" + emp.getUserID() + "," + emp.getName() + "@");
+					switch(Glo.getUserInfoShowModel()){
+						case UserNameOnly:
+							rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getName() + "@");
+							break;
+						case UserIDOnly:
+							rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getUserID() + "@");
+							break;
+						case UserIDUserName:
+						default:
+							rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getUserID() + "," + emp.getName() + "@");
+							break;
 					}
 
 					rpt.setFlowEnderRDT(DataType.getCurrentDateTime());
@@ -742,114 +695,53 @@ public class Flow extends bp.en.EntityNoName
 
 					rpt.setTitle(bp.wf.WorkFlowBuessRole.GenerTitle(this, wk));
 					// rpt.Title = WebUser.getNo() + "," + bp.web.WebUser.getName() + "在" + DataType.getCurrentDate()CNOfShort + "发起.";
-
 					rpt.setWFState(WFState.Blank);
 					rpt.setFlowStarter(emp.getUserID());
 
 					rpt.setFlowEndNode(this.getStartNodeID());
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserNameOnly)
-					{
-						rpt.setFlowEmps("@" + emp.getName() + "@");
+					switch(Glo.getUserInfoShowModel()){
+						case UserNameOnly:
+							rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getName() + "@");
+							break;
+						case UserIDOnly:
+							rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getUserID() + "@");
+							break;
+						case UserIDUserName:
+						default:
+							rpt.SetValByKey(GERptAttr.FlowEmps, "@" + emp.getUserID() + "," + emp.getName() + "@");
+							break;
 					}
-
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
-					{
-						rpt.setFlowEmps("@" + emp.getUserID() + "@");
-					}
-
-					if (Glo.getUserInfoShowModel() == UserInfoShowModel.UserIDUserName)
-					{
-						rpt.setFlowEmps("@" + emp.getUserID() + "," + emp.getName() + "@");
-					}
-
 					rpt.setFK_Ny(DataType.getCurrentYearMonth());
 					rpt.setFK_Dept(emp.getFK_Dept());
 					rpt.setFlowEnder(emp.getUserID());
 					rpt.setFlowStarter(emp.getUserID());
 					rpt.SaveAsOID((int)wk.getOID()); //执行保存.
 				}
-
 				//调用 OnCreateWorkID的方法.  add by zhoupeng 2016.12.4 for LIMS.
 				ExecEvent.DoFlow(EventListFlow.FlowOnCreateWorkID, wk, nd, null);
-			}
-
-			if (wk.getOID() != 0)
-			{
-				rpt.setOID(wk.getOID());
-				int i = rpt.RetrieveFromDBSources();
-				if (i == 0)
-				{
-					GenerWorkFlow gwfw = new GenerWorkFlow();
-					gwfw.setWorkID(wk.getOID());
-					gwfw.Delete();
-					throw new RuntimeException("err@没有保存到流程表单数据" + rpt.getEnMap().getPhysicsTable() + ",表单表" + wk.getEnMap().getPhysicsTable() + " 系统错误." + rpt.getOID() + ",请联系管理员.");
-				}
-				rpt.setFID(0);
-				rpt.setFlowStartRDT(DataType.getCurrentDateTime());
-				rpt.setFlowEnderRDT(DataType.getCurrentDateTime());
 			}
 		}
 		catch (RuntimeException ex)
 		{
 			wk.CheckPhysicsTable();
-
 			//检查报表.
 			this.CheckRpt();
-			//int i = wk.DirectInsert();
-			//if (i == 0)
 			throw new RuntimeException("@创建工作失败：请您刷新一次，如果问题仍然存在请反馈给管理员，技术信息：" + ex.getStackTrace() + " @ 技术信息:" + ex.getMessage());
 		}
-
-		//在创建WorkID的时候调用的事件.
-		ExecEvent.DoFlow(EventListFlow.FlowOnCreateWorkID, wk, nd, null);
-
-
-			///#region copy数据.
-		// 记录这个id ,不让其它在复制时间被修改。
-		if (IsNewWorkID == true)
-		{
-			// 处理传递过来的参数。
-			int i = 0;
-			String expKeys = "OID,DoType,HttpHandlerName,DoMethod,t,";
-			for (Object k : paras.keySet())
-			{
-				if (expKeys.indexOf("," + k + ",") != -1)
-				{
-					continue;
-				}
-
-				String str = paras.get(k) instanceof String ? (String)paras.get(k) : null;
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					continue;
-				}
-				i++;
-				wk.SetValByKey(k.toString(), str);
-			}
-		}
-
-			///#endregion copy数据.
-
 
 			///#region 处理删除草稿的需求。
 		if (isDelDraft == true)
 		{
 			//重新设置默认值.
 			wk.ResetDefaultValAllAttr();
-
 			MapDtls dtls = wk.getHisMapDtls();
 			for (MapDtl dtl : dtls.ToJavaList())
 			{
 				DBAccess.RunSQL("DELETE FROM " + dtl.getPTable() + " WHERE RefPK='" + wk.getOID() + "'");
 			}
-
 			//删除附件数据。
 			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='ND" + wk.getNodeID() + "' AND RefPKVal='" + wk.getOID() + "'");
 		}
-
-			///#endregion 处理删除草稿的需求。
-
-
 			///#region 处理开始节点, 如果传递过来 FromTableName 就是要从这个表里copy数据。
 		if (paras.containsKey("FromTableName"))
 		{
@@ -876,8 +768,10 @@ public class Flow extends bp.en.EntityNoName
 			}
 			rpt.Update();
 		}
+		//@yln
+		if(1==1 || 2==0)
+			return wk;
 
-			///#endregion 处理开始节点, 如果传递过来 FromTableName 就是要从这个表里copy数据。
 
 
 			///#region 获取特殊标记变量
@@ -920,9 +814,7 @@ public class Flow extends bp.en.EntityNoName
 				PFIDStr = paras.get("PFID").toString(); //父流程.
 			}
 		}
-
 			///#endregion 获取特殊标记变量
-
 
 			///#region  判断是否装载上一条数据.
 		if (this.isLoadPriData() == true && this.getStartGuideWay() == StartGuideWay.None)
@@ -958,8 +850,6 @@ public class Flow extends bp.en.EntityNoName
 			}
 
 			/* 如果是从另外的一个流程上传递过来的，就考虑另外的流程数据。*/
-
-
 				///#region copy 首先从父流程的 NDxxxRpt copy.
 			long pWorkIDReal = 0;
 			Flow pFlow = new Flow(PFlowNo);
@@ -987,9 +877,6 @@ public class Flow extends bp.en.EntityNoName
 			wk.SetValByKey("BillNo", "");
 			rpt.setBillNo("");
 
-				///#endregion copy 首先从父流程的NDxxxRpt copy.
-
-
 				///#region 从调用的节点上copy.
 			bp.wf.Node fromNd = new bp.wf.Node(Integer.parseInt(PNodeIDStr));
 			Work wkFrom = fromNd.getHisWork();
@@ -1006,7 +893,6 @@ public class Flow extends bp.en.EntityNoName
 				SubFlow subFlow = subFlows.get(0) instanceof SubFlow ? (SubFlow)subFlows.get(0) : null;
 				if (DataType.IsNullOrEmpty(subFlow.getSubFlowCopyFields()) == false)
 				{
-
 
 					Attrs attrs = wkFrom.getEnMap().getAttrs();
 					//父流程把子流程不同字段进行匹配赋值
@@ -1031,8 +917,6 @@ public class Flow extends bp.en.EntityNoName
 			}
 
 				///#endregion 从调用的节点上copy.
-
-
 				///#region 获取web变量.
 			for (Object k : paras.keySet())
 			{
@@ -1044,9 +928,7 @@ public class Flow extends bp.en.EntityNoName
 				wk.SetValByKey(k.toString(), paras.get(k));
 				rpt.SetValByKey(k.toString(), paras.get(k));
 			}
-
 				///#endregion 获取web变量.
-
 
 				///#region 特殊赋值.
 			// 在执行copy后，有可能这两个字段会被冲掉。
@@ -1108,7 +990,6 @@ public class Flow extends bp.en.EntityNoName
 			rpt.Update(); // 更新流程数据表.
 
 				///#endregion 特殊赋值.
-
 
 				///#region 复制其他数据..
 			//复制明细。
@@ -1221,7 +1102,6 @@ public class Flow extends bp.en.EntityNoName
 					}
 				}
 			}
-
 				///#endregion 复制表单其他数据.
 
 
@@ -1271,13 +1151,9 @@ public class Flow extends bp.en.EntityNoName
 					}
 				}
 			}
-
 				///#endregion 复制独立表单数据.
-
 		}
-
 			///#endregion 处理流程之间的数据传递1。
-
 
 			///#region 处理单据编号.
 		//生成单据编号.
@@ -1297,9 +1173,7 @@ public class Flow extends bp.en.EntityNoName
 				rpt.Update();
 			}
 		}
-
 			///#endregion 处理单据编号.
-
 
 			///#region 处理流程之间的数据传递2, 如果是直接要跳转到指定的节点上去.
 		if (paras.containsKey("JumpToNode") == true)
@@ -1329,7 +1203,6 @@ public class Flow extends bp.en.EntityNoName
 			gwf = new GenerWorkFlow(rpt.getOID());
 			rpt.setWFState(WFState.Runing);
 			rpt.Update();
-
 			return wf.GetCurrentWorkNode().getHisWork();
 		}
 
@@ -1403,9 +1276,7 @@ public class Flow extends bp.en.EntityNoName
 			gwf.DirectUpdate();
 		}
 
-			///#endregion 给 generworkflow 初始化数据.
-
-
+		///#endregion 给 generworkflow 初始化数据.
 		return wk;
 	}
 
@@ -1862,7 +1733,8 @@ public class Flow extends bp.en.EntityNoName
 						break;
 
 					case ByPreviousNodeFormEmpsField:
-					case ByPreviousNodeFormStations:
+					case ByPreviousNodeFormStationsAI:
+					case ByPreviousNodeFormStationsOnly:
 					case ByPreviousNodeFormDepts:
 						//去rpt表中，查询是否有这个字段.
 						String str1 = String.valueOf(nd.getNodeID()).substring(0, String.valueOf(nd.getNodeID()).length() - 2);
@@ -3194,7 +3066,7 @@ public class Flow extends bp.en.EntityNoName
 			attr.setUIIsEnable(false);
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);
-			attr.setMaxLen(50);
+			attr.setMaxLen(100);
 			attr.setIdx(-100);
 			attr.Insert();
 		}
@@ -3918,6 +3790,8 @@ public class Flow extends bp.en.EntityNoName
 		map.AddTBInt(FlowAttr.IsTableEnable, 1, "是否显示时间表", true, true);
 		map.AddTBInt(FlowAttr.IsOPEnable, 0, "是否显示操作", true, true);
 		map.AddTBInt(FlowAttr.TrackOrderBy, 0, "排序方式", true, true);
+		//@ZKR
+		map.AddTBInt(FlowAttr.SubFlowShowType, 0, "子流程轨迹图显示模式", true, true);
 
 			// map.AddBoolean(FlowAttr.IsOK, true, "是否启用", true, true);
 		map.AddTBInt(FlowAttr.IsCanStart, 1, "可以独立启动否？", true, true);

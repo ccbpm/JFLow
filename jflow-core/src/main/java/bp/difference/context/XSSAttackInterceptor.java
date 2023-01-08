@@ -1,8 +1,11 @@
 package bp.difference.context;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@Component
 public class XSSAttackInterceptor  implements Filter {
 
     private static final long serialVersionUID = 7427725804042693717L;

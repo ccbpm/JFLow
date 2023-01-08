@@ -14,8 +14,7 @@ import java.util.*;
 public class FrmSubFlow extends Entity
 {
 
-		///#region 属性
-	/** 
+	/**
 	 标签
 	*/
 	public final String getSFLab() throws Exception
@@ -320,13 +319,14 @@ public class FrmSubFlow extends Entity
 		}
 
 		Map map = new Map("WF_Node", "父子流程");
-
+		map.AddGroupAttr("父子流程");
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmSubFlowAttr.SFLab, "子流程", "显示标签", true, false, 0, 200, 10, true);
+		map.AddTBString(NodeAttr.FK_Flow, null, "流程编号", false, false, 0, 5, 10);
 
 
-			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
+		///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		map.AddDDLSysEnum(FrmSubFlowAttr.SFSta, FrmSubFlowSta.Disable.getValue(), "组件状态", true, true, FrmSubFlowAttr.SFSta, "@0=禁用@1=启用@2=只读");
 		map.SetHelperUrl(FrmSubFlowAttr.SFSta, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3982372&doc_id=31094");
@@ -336,8 +336,9 @@ public class FrmSubFlow extends Entity
 		map.AddDDLSysEnum(FrmSubFlowAttr.SFShowCtrl, SFShowCtrl.All.getValue(), "显示控制方式", true, true, FrmSubFlowAttr.SFShowCtrl, "@0=可以看所有的子流程@1=仅仅可以看自己发起的子流程"); //此属性暂时没有用.
 		map.SetHelperAlert(FrmSubFlowAttr.SFShowCtrl, "是对当前节点，一个流程实例下启动的所有子流程的数据权限查看控制。");
 
-		map.AddDDLSysEnum(FrmSubFlowAttr.AllSubFlowOverRole, 0, "所有子流程结束规则", true, true, FrmSubFlowAttr.AllSubFlowOverRole, "@0=不处理@1=当前流程自动运行下一步@2=结束当前流程");
-
+		map.AddDDLSysEnum(FrmSubFlowAttr.AllSubFlowOverRole, 0, "所有子流程结束规则", true, true, FrmSubFlowAttr.AllSubFlowOverRole, "@0=不处理@1=当前流程自动运行下一步@2=结束当前流程@3=当前流程运行到指定的节点");
+		//@ZKR
+		map.AddDDLSQL(FrmSubFlowAttr.SkipNodeID,null,"运行到指定的节点","SELECT NodeID AS No,Name From WF_Node Where FK_Flow='@FK_Flow'");
 		map.AddTBString(FrmSubFlowAttr.SFCaption, "启动子流程", "连接标题", true, false, 0, 100, 10, true);
 
 		map.AddTBString(FrmSubFlowAttr.SFDefInfo, null, "可启动的子流程编号(多个用逗号分开)", false, false, 0, 50, 10, true);

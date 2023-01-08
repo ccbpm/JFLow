@@ -181,6 +181,10 @@ public class FlowAttr
 	 待办字段s
 	*/
 	public static final String BuessFields = "BuessFields";
+	/// <summary>
+	/// 高级查询人员字段
+	/// </summary>
+	public static final String AdvEmps = "AdvEmps";
 	/** 
 	 流程备注的表达式
 	*/
@@ -224,6 +228,10 @@ public class FlowAttr
 	 排序方式
 	*/
 	public static final String TrackOrderBy = "TrackOrderBy";
+	/**
+	 * 子流程在轨迹图中的展示模式
+	 */
+	public static final String SubFlowShowType="SubFlowShowType";
 
 		///#endregion 基本属性
 

@@ -7,6 +7,7 @@ import bp.en.Map;
 import bp.sys.*;
 import bp.en.*;
 import bp.difference.*;
+import org.apache.tomcat.jni.Directory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -641,6 +642,21 @@ public class WF_Comm_Sys extends WebContralBase
 			try
 			{
 				en = obj instanceof Entity ? (Entity)obj : null;
+				String className = en.getClass().getName();
+				switch (className.toUpperCase()) {
+					case "BP.WF.STARTWORK":
+					case "BP.WF.WORK":
+					case "BP.WF.GESTARTWORK":
+					case "BP.EN.GENONAME":
+					case "BP.EN.GETREE":
+					case "BP.WF.GERpt":
+					case "BP.WF.GEENTITY":
+					case "BP.WF.GEWORK":
+					case "BP.SYS.TSENTITYNONAME":
+						continue;
+					default:
+						break;
+				}
 				String s = en.getEnDesc();
 				if (en == null)
 				{
@@ -850,4 +866,75 @@ public class WF_Comm_Sys extends WebContralBase
 	}
 
 		///#endregion
+		/// <summary>
+		/// 系统日志
+		/// </summary>
+		/// <returns></returns>
+		public String SystemLog_Init()
+		{
+			DataTable dt = new DataTable();
+			dt.Columns.Add("No");
+			dt.Columns.Add("Name");
+			dt.Columns.Add("LogType");
+
+			String path = SystemConfig.getPathOfDataUser() + "\\Log\\info";
+			File file =new File(path);    //如果文件夹不存在则创建
+			if  (!file .exists()  && !file .isDirectory()) {
+				file .mkdir();
+			}
+
+			String[] strs =file.list();
+			for (String str : strs)
+			{
+				DataRow dr = dt.NewRow();
+				dr.setValue(0,str);
+				dr.setValue(1,str.substring(0,str.indexOf(".log")));
+				dr.setValue(2, "信息");
+				// dr[1] = str;
+				dt.Rows.add(dr);
+			}
+
+			path = SystemConfig.getPathOfDataUser() + "\\Log\\error";
+			File fileE =new File(path);    //如果文件夹不存在则创建
+			if  (!fileE .exists()  && !fileE .isDirectory()) {
+				fileE .mkdir();
+			}
+			strs = fileE.list();
+			for (String str : strs)
+			{
+				DataRow dr = dt.NewRow();
+				dr.setValue(0,str);
+				dr.setValue(1 ,str.substring(0,str.indexOf(".log")));
+				dr.setValue(2,"错误");
+				dt.Rows.add(dr);
+			}
+			return bp.tools.Json.ToJson(dt);
+		}
+		public String SystemLog_Open() throws Exception {
+			String logType = this.GetRequestVal("LogType");
+			if (logType.equals("信息") == true)
+				logType = "info";
+			else
+				logType = "error";
+
+			String path = SystemConfig.getPathOfDataUser() + "\\Log\\" + logType + "\\" + this.getRefNo();
+			String str = DataType.ReadTextFile2Html(path);
+			return str;
+		}
+
+	/**
+	 * 下载日志文件
+	 * @return 日志文件路径
+	 * @throws Exception
+	 */
+		public String SystemLog_Download() throws Exception{
+			String logType = this.GetRequestVal("LogType");
+			if (logType.equals("信息") == true)
+				logType = "info";
+			else
+				logType = "error";
+
+			String filePath = "@url\\DataUser\\Log\\" + logType + "\\" + this.getRefNo();
+			return filePath;
+		}
 }

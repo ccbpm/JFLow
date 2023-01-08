@@ -173,6 +173,12 @@ public class SysEnumMain extends EntityNoName
 			//参数.
 		map.AddTBString(SysEnumMainAttr.AtPara, null, "AtPara", true, false, 0, 200, 8);
 
+		for (int i = 0; i < 30; i++)
+		{
+			map.AddTBString("Idx" + i, null, "EnumKey", false, false, 0, 50, 8);
+			map.AddTBString("Val" + i, null, "枚举值", false, false, 0, 500, 400);
+		}
+
 		this.set_enMap(map);
 		return this.get_enMap();
 	}

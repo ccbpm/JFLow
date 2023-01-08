@@ -779,10 +779,7 @@ public class WF_MyFlow extends WebContralBase
 
 		String myurl = "MyFlowGener.htm";
 		MapData md = new MapData(this.getCurrND().getNodeFrmID());
-//		if (md.getHisFrmType() == FrmType.ChapterFrm)
-//		{
-//			myurl = "MyFlowTree.htm?NodeFrmType=11";
-//		}
+
 		//处理连接.
 		myurl = this.MyFlow_Init_DealUrl(getCurrND(), myurl);
 		myurl = myurl.replace("DoType=MyFlow_Init&", "");
@@ -794,7 +791,6 @@ public class WF_MyFlow extends WebContralBase
 		return MyFlow_Init_DealUrl(currND, null);
 	}
 
-//ORIGINAL LINE: private string MyFlow_Init_DealUrl(BP.WF.Node currND, string url = null)
 	private String MyFlow_Init_DealUrl(Node currND, String url) throws UnsupportedEncodingException {
 		if (url == null)
 		{
@@ -978,9 +974,7 @@ public class WF_MyFlow extends WebContralBase
 		dt.Columns.Add("Oper");
 		dt.Columns.Add("Role", Integer.class);
 		dt.Columns.Add("Icon");
-
-
-			///#region 处理是否是加签，或者是否是会签模式.
+		///#region 处理是否是加签，或者是否是会签模式.
 		boolean isAskForOrHuiQian = false;
 		BtnLab btnLab = new BtnLab(this.getFK_Node());
 		Node nd = new Node(this.getFK_Node());
@@ -994,19 +988,14 @@ public class WF_MyFlow extends WebContralBase
 
 			///#region 分流点，是否是发送多个子线程，单个子线程退回
 		if (Dev2Interface.Flow_IsCanToFLTread(this.getWorkID(), this.getFID(), this.getFK_Node()) == true)
-		{
-
 			return InitToolBar_ForFenLiu(gwf, dt, nd);
-		}
 
 			///#endregion 分流点，是否是发送多个子线程，单个子线程退回
 
 		if (String.valueOf(this.getFK_Node()).endsWith("01") == false)
 		{
 			if (gwf.getWFState() == WFState.Askfor)
-			{
 				isAskForOrHuiQian = true;
-			}
 
 			/*判断是否是加签状态，如果是，就判断是否是主持人，如果不是主持人，就让其 isAskFor=true ,屏蔽退回等按钮.*/
 			/**说明：针对于组长模式的会签，协作模式的会签加签人仍可以加签*/
@@ -1016,31 +1005,23 @@ public class WF_MyFlow extends WebContralBase
 				if (DataType.IsNullOrEmpty(gwf.getHuiQianZhuChiRen()) == true)
 				{
 					if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
-					{
 						isAskForOrHuiQian = true;
-					}
 				}
-
 				//执行会签后的状态
 				if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && btnLab.getHuiQianLeaderRole().equals(0))
 				{
 					if (!gwf.getHuiQianZhuChiRen().equals(WebUser.getNo()) && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
-					{
 						isAskForOrHuiQian = true;
-					}
 				}
 				else
 				{
 					if (gwf.getHuiQianZhuChiRen().contains(WebUser.getNo() + ",") == false && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
-					{
 						isAskForOrHuiQian = true;
-					}
 				}
-
 			}
 		}
 
-			///#endregion 处理是否是加签，或者是否是会签模式，.
+		///#endregion 处理是否是加签，或者是否是会签模式，.
 
 		DataRow dr = dt.NewRow();
 
@@ -1050,10 +1031,7 @@ public class WF_MyFlow extends WebContralBase
 
 				///#region 是否是会签？.
 			if (isAskForOrHuiQian == true && SystemConfig.getCustomerNo().equals("LIMS"))
-			{
 				return "";
-			}
-
 			if (isAskForOrHuiQian == true)
 			{
 				dr.setValue("No", "Send");
@@ -1663,6 +1641,7 @@ public class WF_MyFlow extends WebContralBase
 
 				///#region  加载自定义的button.
 			NodeToolbars bars = new NodeToolbars();
+			Work work= nd.GetWork(this.getWorkID());
 			bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node(), NodeToolbarAttr.IsMyFlow, 1, NodeToolbarAttr.Idx);
 			for (NodeToolbar bar : bars.ToJavaList())
 			{
@@ -1687,6 +1666,7 @@ public class WF_MyFlow extends WebContralBase
 				else
 				{
 					String urlr3 = bar.getUrl() + "&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
+					urlr3=Glo.DealExp(urlr3,work);
 
 					dr = dt.NewRow();
 					dr.setValue("No", "NodeToolBar");
@@ -1711,17 +1691,24 @@ public class WF_MyFlow extends WebContralBase
 				///#endregion //加载自定义的button.
 
 
-				///#region 加载到达节点下拉框数据源.
+			///#region 加载到达节点下拉框数据源.
 			DataTable dtNodes = GenerDTOfToNodes(gwf, nd);
 			if (dtNodes != null)
-			{
 				ds.Tables.add(dtNodes);
+			///#endregion 加载到达节点下拉框数据源.
+
+			//当前节点是子流程的开始节点，显示可以退回到父流程的子节点信息
+			if(this.getPWorkID()!=0){ //@ZHR
+				//获取退回到父流程的节点
+				GenerWorkerLists gwls = new GenerWorkerLists();
+				int i = gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getPWorkID(),GenerWorkerListAttr.FK_Emp,gwf.getStarter(), GenerWorkerListAttr.RDT);
+				if(i==0)
+					return "err@父流程信息出现异常或者已经结束，子流程工具栏不能显示父流程节点信息";
+				//只能退回到父流程最后处理的节点信息
+				GenerWorkerList gwl = (GenerWorkerList)gwls.get(gwls.size()-1);
+				ds.Tables.add(gwl.ToDataTableField("WF_ParentNode"));
 			}
-
-				///#endregion 加载到达节点下拉框数据源.
-
-
-				///#region 当前节点的流程信息.
+			///#region 在工具栏上显示退回节点的信息.
 			dt = nd.ToDataTableField("WF_Node");
 			dt.Columns.Add("IsBackTrack", Integer.class);
 			dt.Rows.get(0).setValue("IsBackTrack",0);
@@ -1743,8 +1730,7 @@ public class WF_MyFlow extends WebContralBase
 				dt.Rows.get(0).setValue("IsBackTrack",mydt.Rows.get(0).getValue(3)); //是否发送并返回.
 			}
 			ds.Tables.add(dt);
-
-				///#endregion  当前节点的流程信息
+			///#endregion  当前节点的流程信息
 		}
 		catch (RuntimeException ex)
 		{
@@ -1770,13 +1756,9 @@ public class WF_MyFlow extends WebContralBase
 
 	public final DataTable GenerDTOfToNodes(GenerWorkFlow gwf, Node nd) throws Exception {
 		//增加转向下拉框数据.
-		if (nd.getCondModel() == DirCondModel.ByDDLSelected || nd.getCondModel() == DirCondModel.ByButtonSelected)
-		{
-		}
-		else
-		{
+		if (nd.getCondModel() != DirCondModel.ByDDLSelected && nd.getCondModel() != DirCondModel.ByButtonSelected)
 			return null;
-		}
+
 		DataTable dtToNDs = new DataTable("ToNodes");
 		dtToNDs.Columns.Add("No", String.class); //节点ID.
 		dtToNDs.Columns.Add("Name", String.class); //到达的节点名称.
@@ -1845,7 +1827,7 @@ public class WF_MyFlow extends WebContralBase
 				}
 			}
 
-				///#endregion 增加到达延续子流程节点。
+			///#endregion 增加到达延续子流程节点。
 
 
 				///#region 到达其他节点.
@@ -2707,9 +2689,7 @@ public class WF_MyFlow extends WebContralBase
 					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getNo() + "'";
 					String station = DBAccess.RunSQLReturnString(Sql);
 					if (DataType.IsNullOrEmpty(station) == true)
-					{
 						continue;
-					}
 					String[] stations = station.split("[;]", -1);
 					boolean isExit = false;
 					for (String s : stations)
@@ -2721,9 +2701,7 @@ public class WF_MyFlow extends WebContralBase
 						}
 					}
 					if (isExit == false)
-					{
 						continue;
-					}
 					break;
 
 				case ByDept:

@@ -121,6 +121,7 @@ public class KMDtl extends EntityNoName
 	}
 	public KMDtl(String mypk)throws Exception
 	{
+		this.setNo(mypk);
 		this.Retrieve();
 	}
 	/** 

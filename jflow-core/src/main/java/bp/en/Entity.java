@@ -5,12 +5,14 @@ import bp.difference.SystemConfig;
 import bp.sys.*;
 import bp.sys.xml.XmlEn;
 import bp.tools.StringHelper;
-import bp.web.*;
 import bp.web.WebUser;
 
-import java.util.*;
-import java.io.*;
-import java.math.*;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Set;
 
 /** 
  Entity 的摘要说明。
@@ -149,8 +151,15 @@ public abstract class Entity extends EnObj implements Serializable
 			String ensName = str + "s";
 
 			_GetNewEntities = ClassFactory.GetEns(ensName);
-			if (_GetNewEntities != null)
-				return _GetNewEntities;
+//			if (_GetNewEntities != null)
+//				return _GetNewEntities;
+			if (_GetNewEntities != null){
+				try {
+					return _GetNewEntities.getClass().newInstance();
+				} catch (InstantiationException | IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			}
 
 			ArrayList al = ClassFactory.GetObjects("bp.en.Entities");
 			for (Object o : al) {
@@ -161,12 +170,20 @@ public abstract class Entity extends EnObj implements Serializable
 				}
 				if (ens.getGetNewEntity().toString() != null && ens.getGetNewEntity().toString().equals(str)) {
 					_GetNewEntities = ens;
-					return _GetNewEntities;
+					try {
+						return _GetNewEntities.getClass().newInstance();
+					} catch (InstantiationException | IllegalAccessException e) {
+						throw new RuntimeException(e);
+					}
 				}
 			}
 			throw new RuntimeException("@no ens" + this.toString());
 		}
-		return _GetNewEntities;
+		try {
+			return _GetNewEntities.getClass().newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	/** 
 	 类名
@@ -198,7 +215,8 @@ public abstract class Entity extends EnObj implements Serializable
 		return _SQLCash;
 	}
 	public void setSQLCash(SQLCash value)
-	{_SQLCash = value;
+	{
+		_SQLCash = value;
 	}
 	/** 
 	 转化成
@@ -2158,9 +2176,7 @@ public abstract class Entity extends EnObj implements Serializable
 		Object tempVar = this.getRow().GetValByKey("_ATObj_");
 		AtPara at = tempVar instanceof AtPara ? (AtPara)tempVar : null;
 		if (at != null)
-		{
 			return at;
-		}
 		try
 		{
 			String atParaStr = this.GetValStringByKey("AtPara");
@@ -2356,15 +2372,16 @@ public abstract class Entity extends EnObj implements Serializable
 			this.getRow().put("_" + key, "");
 			return;
 		}
+		this.getRow().put("_" + key, "");
 
-		if (obj.getClass() == Enum.class)
+		/*if (obj.getClass() == Enum.class)
 		{
 			this.getRow().put("_" + key, ((Integer) obj).intValue());
 		} else
 		{
 			this.getRow().put("_" + key, obj);
 		}
-
+		this.getRow().put("_" + key, obj);*/
 	}
 	/** 
 	 在插入之前要做的工作。
@@ -2388,12 +2405,12 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @throws Exception
 	*/
 	public int Insert() throws Exception {
-		if (this.beforeInsert() == false)
+		if (!this.beforeInsert())
 		{
 			return 0;
 		}
 
-		if (this.beforeUpdateInsertAction() == false)
+		if (!this.beforeUpdateInsertAction())
 		{
 			return 0;
 		}
@@ -2406,10 +2423,14 @@ public abstract class Entity extends EnObj implements Serializable
 		catch (RuntimeException ex)
 		{
 			this.CheckPhysicsTable();
+			if(ex.getMessage().contains("Parameter not found")){
+				this.setSQLCash(null);
+				return this.Insert();
+			}
 
 			//执行字段扩充检查.
 			boolean isCheck = CheckPhysicsTableAutoExtFieldLength(ex);
-			if (isCheck == true)
+			if (isCheck)
 			{
 				return this.Insert();
 			}
@@ -2815,36 +2836,20 @@ public abstract class Entity extends EnObj implements Serializable
 		catch (RuntimeException ex)
 		{
 
-			if (ex.getMessage().contains("列名") || ex.getMessage().contains("将截断字符串") || ex.getMessage().contains("缺少") || ex.getMessage().contains("的值太大"))
+			if (ex.getMessage().contains("列名") || ex.getMessage().contains("将截断字符串")
+					|| ex.getMessage().contains("缺少") || ex.getMessage().contains("的值太大")
+					|| ex.getMessage().contains("Parameter not found"))
 			{
 				/*说明字符串长度有问题.*/
 				this.CheckPhysicsTable();
-
+				if(ex.getMessage().contains("Parameter not found")==true){
+					this.setSQLCash(null);
+					return this.Update();
+				}
 				//执行字段扩充检查.
 				boolean isCheck = CheckPhysicsTableAutoExtFieldLength(ex);
 				if (isCheck == true)
-				{
 					return this.Update();
-				}
-
-				/***比较参数那个字段长度有问题*/
-				
-				//string errs = "";
-				//foreach (Attr attr in this.getEnMap().getAttrs())
-				//{
-				//    if (attr.getMyDataType() != bp.da.DataType.AppString)
-				//        continue;
-
-				//    if (attr.MaxLength < this.GetValStrByKey(attr.getKey()).Length)
-				//    {
-				//        errs += "@映射里面的" + attr.getKey() + "," + attr.getDesc() + ", 相对于输入的数据:{" + this.GetValStrByKey(attr.getKey()) + "}, 太长。";
-				//    }
-				//}
-
-				//if (errs != "")
-				//    throw new Exception("@执行更新[" + this.ToString() + "]出现错误@错误字段:" + errs + " <br>清你在提交一次。" + ex.Message);
-				//else
-				//    throw ex;
 			}
 
 			Log.DefaultLogWriteLine(LogType.Error, ex.getMessage());
@@ -3952,6 +3957,8 @@ public abstract class Entity extends EnObj implements Serializable
 			return;
 		}
 
+
+
 		//检查是否有对应的主键.
 		String pk = this.getPK();
 		if (pk.contains(",") == false)
@@ -3962,6 +3969,8 @@ public abstract class Entity extends EnObj implements Serializable
 			}
 		}
 
+		//需要清空一下缓存
+		Cash.DelSQL(this.toString());
 		// 如果不是主应用程序的数据库就不让执行检查. 考虑第三方的系统的安全问题.
 		if (this.getEnMap().getEnDBUrl().getDBUrlType() != DBUrlType.AppCenterDSN)
 		{

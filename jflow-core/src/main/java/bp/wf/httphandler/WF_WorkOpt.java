@@ -1,6 +1,7 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
+import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.tools.DateUtils;
@@ -15,10 +16,18 @@ import bp.difference.*;
 import bp.wf.template.sflow.*;
 import bp.wf.template.frm.*;
 import bp.wf.*;
+import com.google.common.collect.Lists;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 
 import java.net.URLDecoder;
 import java.util.*;
 import java.io.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /** 
  页面功能实体g
@@ -1490,55 +1499,8 @@ public class WF_WorkOpt extends WebContralBase
 	 @return 
 	*/
 	public final String HuiQian_Delete() throws Exception {
-		String emp = this.GetRequestVal("FK_Emp");
-		if (this.getFK_Emp().equals(WebUser.getNo()))
-		{
-			return "err@您不能移除您自己";
-		}
 
-		//要找到主持人.
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-		String addLeader = gwf.GetParaString("AddLeader");
-		if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false && addLeader.contains(WebUser.getNo() + ",") == false)
-		{
-			return "err@您不是主持人，您不能删除。";
-		}
-
-		//删除该数据.
-		GenerWorkerList gwlOfMe = new GenerWorkerList();
-		gwlOfMe.Delete(GenerWorkerListAttr.FK_Emp, this.getFK_Emp(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
-
-		//如果已经没有会签待办了,就设置当前人员状态为0.  增加这部分.
-		Paras ps = new Paras();
-		ps.SQL = "SELECT COUNT(WorkID) FROM WF_GenerWorkerList WHERE FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND IsPass=0 ";
-		ps.Add("FK_Node", this.getFK_Node());
-		ps.Add("WorkID", this.getWorkID());
-		if (DBAccess.RunSQLReturnValInt(ps) == 0)
-		{
-			gwf.setHuiQianTaskSta(HuiQianTaskSta.None); //设置为 None . 不能设置会签完成,不然其他的就没有办法处理了.
-			gwf.Update();
-			ps = new Paras();
-			ps.SQL = "UPDATE WF_GenerWorkerList SET IsPass=0 WHERE FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
-			ps.Add("FK_Node", this.getFK_Node());
-			ps.Add("WorkID", this.getWorkID());
-			ps.Add("FK_Emp", WebUser.getNo(), false);
-			DBAccess.RunSQL(ps);
-		}
-
-		//从待办里移除.
-		Emp myemp = new Emp(this.getFK_Emp());
-		String str = gwf.getTodoEmps();
-		str = str.replace(myemp.getUserID() + "," + myemp.getName() + ";", "");
-		str = str.replace(myemp.getName() + ";", "");
-		addLeader = addLeader.replace(this.getFK_Emp() + ",", "");
-		gwf.SetPara("AddLeader", addLeader);
-		gwf.setTodoEmps(str);
-		gwf.Update();
-
-		//删除该人员的审核信息
-		String sql = "DELETE FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID = " + this.getWorkID() + " AND ActionType = " + ActionType.WorkCheck.getValue() + " AND NDFrom = " + this.getFK_Node() + " AND NDTo = " + this.getFK_Node() + " AND EmpFrom = '" + this.getFK_Emp() + "'";
-		DBAccess.RunSQL(sql);
-
+		Dev2Interface.Node_HuiQian_Delete(this.getWorkID(), this.GetRequestVal("FK_Emp"));
 		return HuiQian_Init();
 	}
 	/** 
@@ -1547,126 +1509,11 @@ public class WF_WorkOpt extends WebContralBase
 	 @return 
 	*/
 	public final String HuiQian_AddEmps() throws Exception {
-		String huiQianType = this.GetRequestVal("HuiQianType");
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-		String addLeader = gwf.GetParaString("AddLeader");
-		if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
-		{
-			//判断是不是第二会签主持人
-			if (addLeader.contains(WebUser.getNo() + ",") == false)
-			{
-				return "err@您不是会签主持人，您不能执行该操作。";
-			}
-		}
-
-
-		GenerWorkerList gwlOfMe = new GenerWorkerList();
-		int num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
-
-		Node nd = new Node(this.getFK_Node());
-		if (num == 0)
-		{
-			return "err@没有查询到当前人员的工作列表数据.";
-		}
-
-		String empStrs = this.GetRequestVal("AddEmps");
-		if (DataType.IsNullOrEmpty(empStrs) == true)
-		{
-			return "err@您没有选择人员.";
-		}
-
-
-		String err = "";
-
-		String[] myEmpStrs = empStrs.split("[,]", -1);
-		for (String empStr : myEmpStrs)
-		{
-			if (DataType.IsNullOrEmpty(empStr) == true)
-			{
-				continue;
-			}
-
-			Emp emp = new Emp(empStr);
-
-			//查查是否存在队列里？
-			num = gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, emp.getUserID(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
-
-			if (num == 1)
-			{
-				err += " 人员[" + emp.getUserID() + "," + emp.getName() + "]已经在队列里.";
-				continue;
-			}
-
-			//增加组长
-			if (DataType.IsNullOrEmpty(huiQianType) == false && huiQianType.equals("AddLeader"))
-			{
-				addLeader += emp.getUserID() + ",";
-			}
-
-			//查询出来其他列的数据.
-			gwlOfMe.Retrieve(GenerWorkerListAttr.FK_Emp, WebUser.getNo(), GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node());
-			gwlOfMe.SetPara("HuiQianType", "");
-			gwlOfMe.setFK_Emp(emp.getUserID());
-			gwlOfMe.setFK_EmpText(emp.getName());
-			gwlOfMe.setIsPassInt(-1); //设置不可以用.
-			gwlOfMe.setFK_Dept(emp.getFK_Dept());
-			gwlOfMe.setFK_DeptT(emp.getFK_DeptText()); //部门名称.
-			gwlOfMe.setRead(false);
-			gwlOfMe.SetPara("HuiQianZhuChiRen", WebUser.getNo());
-			//表明后增加的组长
-			if (DataType.IsNullOrEmpty(huiQianType) == false && huiQianType.equals("AddLeader"))
-			{
-				gwlOfMe.SetPara("HuiQianType", huiQianType);
-			}
-
-
-				///#region 计算会签时间.
-			if (nd.getHisCHWay() == CHWay.None)
-			{
-				gwlOfMe.setSDT("无");
-			}
-			else
-			{
-				//给会签人设置应该完成日期. 考虑到了节假日.                
-				Date dtOfShould = Glo.AddDayHoursSpan(new Date(), nd.getTimeLimit(), nd.getTimeLimitHH(), nd.getTimeLimitMM(), nd.getTWay());
-				//应完成日期.
-				gwlOfMe.setSDT(DateUtils.format(dtOfShould, DataType.getSysDateTimeFormat() + ":ss"));
-			}
-
-			//求警告日期.
-			Date dtOfWarning = new Date();
-			if (nd.getWarningDay() == 0)
-			{
-				//  dtOfWarning = "无";
-			}
-			else
-			{
-				//计算警告日期。
-				// 增加小时数. 考虑到了节假日.
-				dtOfWarning = Glo.AddDayHoursSpan(new Date(), (int)nd.getWarningDay(), 0, 0, nd.getTWay());
-			}
-			gwlOfMe.setDTOfWarning(DateUtils.format(dtOfWarning, DataType.getSysDateTimeFormat()));
-
-				///#endregion 计算会签时间.
-
-			gwlOfMe.setSender(WebUser.getNo() + "," + WebUser.getName()); //发送人为当前人.
-			gwlOfMe.setHuiQian(true);
-			gwlOfMe.Insert(); //插入作为待办.
-
-		}
-
-		gwf.SetPara("AddLeader", addLeader);
-		gwf.Update();
-		if (err.equals("") == true)
-		{
-			return "增加成功.";
-		}
-
-		return "err@" + err;
+		return Dev2Interface.Node_HuiQian_AddEmps(this.getWorkID(),
+				this.GetRequestVal("HuiQianType"), this.GetRequestVal("AddEmps"));
 	}
 
 		///#endregion
-
 
 		///#region 与会签相关的.
 	// 查询select集合
@@ -1679,62 +1526,7 @@ public class WF_WorkOpt extends WebContralBase
 	 @return 
 	*/
 	public final String HuiQian_AddLeader() throws Exception {
-		//生成变量.
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-
-		if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianOver)
-		{
-			/*只有一个人的情况下, 并且是会签完毕状态，就执行 */
-			return "info@当前工作已经到您的待办理了,会签工作已经完成.";
-		}
-		String leaders = gwf.GetParaString("AddLeader");
-
-		//获取加签的人
-		GenerWorkerLists gwfs = new GenerWorkerLists();
-		gwfs.Retrieve(GenerWorkerListAttr.WorkID, gwf.getWorkID(), GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.IsPass, -1, null);
-		String empsLeader = "";
-
-
-		for (GenerWorkerList item : gwfs.ToJavaList())
-		{
-			if (leaders.contains(item.getFK_Emp() + ","))
-			{
-				empsLeader += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
-				//发送消息
-				Dev2Interface.Port_SendMsg(item.getFK_Emp(), "bpm会签邀请", "HuiQian" + gwf.getWorkID() + "_" + gwf.getFK_Node() + "_" + item.getFK_Emp(), WebUser.getName() + "邀请您作为工作｛" + gwf.getTitle() + "｝的主持人,请您在{" + item.getSDT() + "}前完成.", "HuiQian", gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
-			}
-
-		}
-		if (DataType.IsNullOrEmpty(empsLeader) == true)
-		{
-			return "没有增加新的主持人";
-		}
-		leaders = "('" + leaders.substring(0, leaders.length() - 1).replace(",", "','") + "')";
-		//恢复他的状态.
-		String sql = "UPDATE WF_GenerWorkerList SET IsPass=0 WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND IsPass=-1 AND FK_Emp In" + leaders;
-		DBAccess.RunSQL(sql);
-
-		gwf.setTodoEmps(gwf.getTodoEmps() + empsLeader);
-		gwf.setHuiQianTaskSta(HuiQianTaskSta.HuiQianing);
-		Node nd = new Node(gwf.getFK_Node());
-		if (nd.getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne && nd.getTodolistModel() == TodolistModel.TeamupGroupLeader)
-		{
-
-			gwf.setHuiQianZhuChiRen(WebUser.getNo());
-			gwf.setHuiQianZhuChiRenName(WebUser.getName());
-		}
-		else
-		{
-			//多人的组长模式或者协作模式
-			if (DataType.IsNullOrEmpty(gwf.getHuiQianZhuChiRen()) == true)
-			{
-				gwf.setHuiQianZhuChiRen(gwf.getTodoEmps());
-			}
-		}
-
-		gwf.Update();
-		return "主持人增加成功";
-
+		return Dev2Interface.Node_HuiQian_AddLeader(this.getWorkID());
 	}
 	/** 
 	 保存并关闭
@@ -1742,121 +1534,7 @@ public class WF_WorkOpt extends WebContralBase
 	 @return 
 	*/
 	public final String HuiQian_SaveAndClose() throws Exception {
-		//生成变量.
-		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-
-		if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianOver)
-		{
-			/*只有一个人的情况下, 并且是会签完毕状态，就执行 */
-			return "info@当前工作已经到您的待办理了,会签工作已经完成.";
-		}
-
-		if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.None)
-		{
-			Paras ps = new Paras();
-			ps.SQL = "SELECT COUNT(WorkID) FROM WF_GenerWorkerList WHERE FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node AND WorkID=" + SystemConfig.getAppCenterDBVarStr() + "WorkID AND (IsPass=0 OR IsPass=-1) AND FK_Emp!=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
-			ps.Add("FK_Node", this.getFK_Node());
-			ps.Add("WorkID", this.getWorkID());
-			ps.Add("FK_Emp", WebUser.getNo(), false);
-			if (DBAccess.RunSQLReturnValInt(ps, 0) == 0)
-			{
-				return "close@您没有设置会签人，请在文本框输入会签人，或者选择会签人。";
-			}
-		}
-
-		//判断当前节点的会签类型.
-		Node nd = new Node(gwf.getFK_Node());
-
-		//设置当前接单是会签的状态.
-		gwf.setHuiQianTaskSta(HuiQianTaskSta.HuiQianing); //设置为会签状态.
-		if (nd.getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne && nd.getTodolistModel() == TodolistModel.TeamupGroupLeader)
-		{
-
-			gwf.setHuiQianZhuChiRen(WebUser.getNo());
-			gwf.setHuiQianZhuChiRenName(WebUser.getName());
-
-
-		}
-		else
-		{
-			//多人的组长模式或者协作模式
-			if (DataType.IsNullOrEmpty(gwf.getHuiQianZhuChiRen()) == true)
-			{
-				gwf.setHuiQianZhuChiRen(gwf.getTodoEmps());
-			}
-		}
-
-
-		//求会签人.
-		GenerWorkerLists gwfs = new GenerWorkerLists();
-		gwfs.Retrieve(GenerWorkerListAttr.WorkID, gwf.getWorkID(), GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.IsPass, -1, null);
-
-		String empsOfHuiQian = "会签人:";
-		for (GenerWorkerList item : gwfs.ToJavaList())
-		{
-			empsOfHuiQian += item.getFK_Emp() + "," + item.getFK_EmpText() + ";";
-
-			//发送消息
-			Dev2Interface.Port_SendMsg(item.getFK_Emp(), "bpm会签邀请", "HuiQian" + gwf.getWorkID() + "_" + gwf.getFK_Node() + "_" + item.getFK_Emp(), WebUser.getName() + "邀请您对工作｛" + gwf.getTitle() + "｝进行会签,请您在{" + item.getSDT() + "}前完成.", "HuiQian", gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
-		}
-
-
-		//改变了节点就把会签状态去掉.
-		gwf.setHuiQianSendToNodeIDStr("");
-		gwf.setTodoEmps(gwf.getTodoEmps() + empsOfHuiQian);
-
-		gwf.Update();
-
-		String sql = "";
-
-		//是否启用会签待办列表, 如果启用了，主持人会签后就转到了HuiQianList.htm里面了.
-		if (Glo.isEnableHuiQianList() == true)
-		{
-			//设置当前操作人员的状态.
-			sql = "UPDATE WF_GenerWorkerList SET IsPass=90 WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND FK_Emp='" + WebUser.getNo() + "'";
-			DBAccess.RunSQL(sql);
-		}
-
-		//恢复他的状态.
-		sql = "UPDATE WF_GenerWorkerList SET IsPass=0 WHERE WorkID=" + this.getWorkID() + " AND FK_Node=" + this.getFK_Node() + " AND IsPass=-1";
-		DBAccess.RunSQL(sql);
-
-		//执行会签,写入日志.
-		Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), gwf.getWorkID(), gwf.getFID(), empsOfHuiQian, ActionType.HuiQian, "执行会签", null, null);
-
-		String str = "";
-		if (nd.getTodolistModel() == TodolistModel.TeamupGroupLeader)
-		{
-			/*如果是组长模式.*/
-			str = "close@保存成功.\t\n该工作已经移动到会签列表中了,等到所有的人会签完毕后,就可以出现在待办列表里.";
-			str += "\t\n如果您要增加或者移除会签人请到会签列表找到该记录,执行操作.";
-
-			//删除自己的意见，以防止其他人员看到.
-			Dev2Interface.DeleteCheckInfo(gwf.getFK_Flow(), this.getWorkID(), gwf.getFK_Node());
-			return str;
-		}
-
-		if (nd.getTodolistModel() == TodolistModel.Teamup)
-		{
-			int toNodeID = this.GetRequestValInt("ToNode");
-			if (toNodeID == 0)
-			{
-				return "Send@[" + nd.getName() + "]会签成功执行.";
-			}
-
-			Node toND = new Node(toNodeID);
-			//如果到达的节点是按照接受人来选择,就转向接受人选择器.
-			if (toND.getHisDeliveryWay() == DeliveryWay.BySelected)
-			{
-				return "url@Accepter.htm?FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&ToNode=" + toNodeID;
-			}
-			else
-			{
-				return "Send@执行发送操作";
-			}
-		}
-
-		return str;
+		return Dev2Interface.Node_HuiQianDone(this.getWorkID(), this.GetRequestValInt("ToNode"));
 	}
 
 		///#endregion
@@ -3307,7 +2985,9 @@ public class WF_WorkOpt extends WebContralBase
 
 		String dotype = GetRequestVal("ShowType");
 		String doc = GetRequestVal("Doc");
-		boolean isCC = GetRequestVal("IsCC").equals("1");
+		boolean isCC = Boolean.parseBoolean(GetRequestVal("IsCC"));
+
+
 		String fwcView = null;
 		if (DataType.IsNullOrEmpty(GetRequestVal("FWCView")) == false)
 		{
@@ -5509,72 +5189,59 @@ public class WF_WorkOpt extends WebContralBase
 		//获得选择的实体信息. 格式为: 001@运输司,002@法制司
 		String selectNos = GetRequestVal("SelectNos");
 		if (DataType.IsNullOrEmpty(selectNos) == true)
-		{
 			return "err@没有选择需要启动子流程的信息";
-		}
-
 		String subFlowMyPK = GetRequestVal("SubFlowMyPK");
-
 		//前置导航的子流程的配置.
 		SubFlowHandGuide subFlow = new SubFlowHandGuide(subFlowMyPK);
 		SubFlowHand subFlowH = new SubFlowHand(subFlowMyPK);
-
+		Hashtable ht=bp.wf.Glo.GenerBSParas();
 		//选择的编号. selectNos格式为 001@开发司,002@运输司,
 		String[] strs = selectNos.split("[,]", -1);
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-		for (String str : strs)
-		{
-			if (DataType.IsNullOrEmpty(str) == true)
+		try{
+			//启用线程的时候设置持有上下文的Request容器
+			ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+			RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
+			final int POOL_SIZE = strs.length;
+			ThreadPoolExecutor executor = new ThreadPoolExecutor(
+					POOL_SIZE,
+					POOL_SIZE,
+					POOL_SIZE, TimeUnit.SECONDS,
+					new ArrayBlockingQueue<>(POOL_SIZE),
+					new ThreadPoolExecutor.CallerRunsPolicy());
+			List<CompletableFuture<Void>> futures = Lists.newArrayList();
+			for (String str : strs)
 			{
-				continue;
-			}
+				if (DataType.IsNullOrEmpty(str) == true)
+					continue;
+				SystemConfig.setIsBSsystem(false);
+				CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+					try {
+						bp.da.Log.DebugWriteInfo("str=" + str + "开始,Time=" + DataType.getCurrentDateTimeCNOfLong());
+						// str的格式为:002@运输司
+						String[] enNoName = str.split("[@]", -1);
+						if (enNoName.length < 2)
+							throw new Exception("err@" + enNoName[0] + "不存在名称");
+						//获得实体的名字,编号.
+						//String enNo = enNoName[0];
+						//String enName = enNoName[1];
+						//发送单个子流程信息
+						SendSingleSubFlow(subFlowH,ht,gwf);
 
-			// str的格式为:002@运输司
-			String[] enNoName = str.split("[@]", -1);
-			if (enNoName.length < 2)
-			{
-				return "err@" + enNoName[0] + "不存在名称";
-			}
-
-			//获得实体的名字,编号.
-			String enNo = enNoName[0];
-			String enName = enNoName[1];
-
-
-			//创建WORKID
-			long workidSubFlow = 0;
-			if (subFlowH.getSubFlowModel() == SubFlowModel.SubLevel)
-			{
-				workidSubFlow = bp.wf.Dev2Interface.Node_CreateBlankWork(subFlowH.getSubFlowNo(), null, null, WebUser.getNo(), null, this.getWorkID(), this.getFID(), this.getFK_Flow(), this.getFK_Node());
-			}
-			if (subFlowH.getSubFlowModel() == SubFlowModel.SameLevel)
-			{
-				workidSubFlow = bp.wf.Dev2Interface.Node_CreateBlankWork(subFlowH.getSubFlowNo(), null, null, WebUser.getNo(), null, gwf.getPWorkID(), gwf.getPFID(), gwf.getPFlowNo(), gwf.getPNodeID());
-			}
-
-			//设置父子关系
-			if (subFlowH.getSubFlowModel() == SubFlowModel.SubLevel)
-			{
-				Dev2Interface.SetParentInfo(subFlowH.getSubFlowNo(), workidSubFlow, this.getWorkID(), WebUser.getNo(), this.getFK_Node());
-			}
-			if (subFlowH.getSubFlowModel() == SubFlowModel.SameLevel)
-			{
-
-				Dev2Interface.SetParentInfo(subFlowH.getSubFlowNo(), workidSubFlow, gwf.getPWorkID(), WebUser.getNo(), gwf.getPNodeID()); //父子关系
-				//设置同级关系
-				GenerWorkFlow subGWF = new GenerWorkFlow(workidSubFlow);
-				subGWF.SetPara("SLFlowNo", this.getFK_Flow());
-				subGWF.SetPara("SLNodeID", this.getFK_Node());
-				subGWF.SetPara("SLWorkID", this.getWorkID());
-				subGWF.SetPara("SLEmp", WebUser.getNo());
-				subGWF.Update();
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}, executor);
+				futures.add(future);
 
 			}
-
-			//发送子流程
-			Dev2Interface.Node_SendWork(subFlowH.getSubFlowNo(), workidSubFlow, 0, enNo);
+			CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+			executor.shutdown();
+			//SystemConfig.setIsBSsystem(true);
+		}catch(Exception ex){
+			Log.DebugWriteError("发送子流程部分失败:"+ex.getMessage());
+			return "err@发送子流程部分失败";
 		}
-
 		if (subFlow.getSubFlowHidTodolist() == true)
 		{
 			//发送子流程后不显示父流程待办，设置父流程已经的待办已经处理 100
@@ -5582,6 +5249,44 @@ public class WF_WorkOpt extends WebContralBase
 
 		}
 		return "发起子流程成功";
+	}
+
+	/**
+	 * 发起单个子流程
+	 * @param subFlowH
+	 * @param ht
+	 * @param gwf
+	 * @throws Exception
+	 */
+	private final void SendSingleSubFlow(SubFlowHand subFlowH,Hashtable ht,GenerWorkFlow gwf) throws Exception {
+		long workidSubFlow = 0;
+		if (subFlowH.getSubFlowModel() == SubFlowModel.SubLevel)
+		{
+			workidSubFlow = bp.wf.Dev2Interface.Node_CreateBlankWork(subFlowH.getSubFlowNo(), ht, null, WebUser.getNo(), null, gwf.getWorkID(), gwf.getFID(), gwf.getFK_Flow(), gwf.getFK_Node());
+		}
+		if (subFlowH.getSubFlowModel() == SubFlowModel.SameLevel)
+		{
+			workidSubFlow = bp.wf.Dev2Interface.Node_CreateBlankWork(subFlowH.getSubFlowNo(), ht, null, WebUser.getNo(), null, gwf.getPWorkID(), gwf.getPFID(), gwf.getPFlowNo(), gwf.getPNodeID());
+		}
+
+		//设置父子关系
+		if (subFlowH.getSubFlowModel() == SubFlowModel.SubLevel)
+		{
+			//Dev2Interface.SetParentInfo(subFlowH.getSubFlowNo(), workidSubFlow, this.getWorkID(), WebUser.getNo(), this.getFK_Node());
+		}
+		if (subFlowH.getSubFlowModel() == SubFlowModel.SameLevel)
+		{
+			//Dev2Interface.SetParentInfo(subFlowH.getSubFlowNo(), workidSubFlow, gwf.getPWorkID(), WebUser.getNo(), gwf.getPNodeID()); //父子关系
+			//设置同级关系
+			GenerWorkFlow subGWF = new GenerWorkFlow(workidSubFlow);
+			subGWF.SetPara("SLFlowNo", gwf.getFK_Flow());
+			subGWF.SetPara("SLNodeID", gwf.getFK_Node());
+			subGWF.SetPara("SLWorkID", gwf.getWorkID());
+			subGWF.SetPara("SLEmp", WebUser.getNo());
+			subGWF.Update();
+		}
+		DBAccess.RunSQL("update wf_generWorkFlow SET WFState=1 where workid="+workidSubFlow);
+		Dev2Interface.Node_SendWork(subFlowH.getSubFlowNo(), workidSubFlow);
 	}
 	/** 
 	 会签子流程-删除草稿

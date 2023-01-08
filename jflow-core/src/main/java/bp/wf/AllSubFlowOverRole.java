@@ -18,7 +18,11 @@ public enum AllSubFlowOverRole
 	/** 
 	 结束父流程
 	*/
-	OverParentFlow;
+	OverParentFlow,
+	/**
+	 * 父流程运行到指定的节点
+	 */
+	SendParentFlowToSpecifiedNode;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

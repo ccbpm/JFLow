@@ -107,13 +107,13 @@ public class StationType extends EntityNoName
 	}
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
-		if(DataType.IsNullOrEmpty(this.getName())==true)
+		if (DataType.IsNullOrEmpty(this.getName()) == true)
 			throw new RuntimeException("请输入岗位类型名称");
-		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
-			this.setOrgNo(bp.web.WebUser.getOrgNo());
+		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true){
+			if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
+				this.setOrgNo(bp.web.WebUser.getOrgNo());
+			}
 		}
-
 		return super.beforeUpdateInsertAction();
 	}
 

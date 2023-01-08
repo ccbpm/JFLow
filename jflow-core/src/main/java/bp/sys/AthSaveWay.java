@@ -17,7 +17,11 @@ public enum AthSaveWay
 	/** 
 	 ftp
 	*/
-	FTPServer;
+	FTPServer,
+	/**
+	 阿里云OSS
+	 */
+	OSS;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

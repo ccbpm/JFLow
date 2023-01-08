@@ -6,6 +6,10 @@ package bp.wf.template;
 */
 public class CondAttr
 {
+	/// <summary>
+	/// 关联的从表-vue版本的数据格式.
+	/// </summary>
+	public static final String RefPKVal = "RefPKVal";
 	/** 
 	 关联的流程编号
 	*/
@@ -14,6 +18,7 @@ public class CondAttr
 	 数据来源
 	*/
 	public static final String DataFrom = "DataFrom";
+	public static final String DataFromText = "DataFromText";
 	/** 
 	 属性Key
 	*/

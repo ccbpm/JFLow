@@ -74,7 +74,18 @@
                 </ul>
             </div>
         </fieldset>
-
+        <fieldset>
+        <legend>岗位计算方式:</legend>
+        <ul>
+            <li>
+                <select name="DDL_StationReqEmpsWay" id="DDL_StationReqEmpsWay" v-model="StationReqEmpsWay">
+                    <option value="0">岗位集合模式</option>
+                    <option value="1">岗位切片-严谨模式</option>
+                    <option value="2">岗位切片-宽泛模式</option>
+                </select>
+            </li>
+        </ul>
+        </fieldset>
         <fieldset>
             <legend>找人算法</legend>
             <ul>
@@ -99,7 +110,7 @@
             <ul>
                 <li>说明:当不同部门申请后,第三个节点接收人为相应部门负责人时.</li>
             </ul>
-            <img src="/WF/Admin/AttrNode/AccepterRole/Img/ShengqingFlow1.png" />
+            <img src="./Img/ShengqingFlow1.png" />
             <legend>场景一配置图</legend>
             <img src="/WF/Admin/AttrNode/AccepterRole/Img/ShengqingPeizhi1.png" />
             <legend>场景二流程图</legend>
@@ -126,7 +137,8 @@
                 node: "",
                 field:"",
                 webuser: null,
-                deliverWay: DeliveryWay.ByStation
+                deliverWay: DeliveryWay.ByStation,
+                StationReqEmpsWay:0
             },
             methods: {
                 OpenDot2DotStations: function () {
@@ -187,6 +199,9 @@
                 this.webuser = new WebUser();
                 this.adminModel = this.webuser.No == "admin" ? 1 : 0;
                 this.orgModel = this.webuser.No == "admin" ? 0 : 1;
+                //岗位计算模式.
+                var val = node.GetPara('StationReqEmpsWay');
+                this.StationReqEmpsWay = val;
             }
         });
 
@@ -200,7 +215,7 @@
         //保存
         function Save() {
             var nodeID = GetQueryString("FK_Node");
-            var node = new Entity("BP.WF.Node", nodeID);
+            var node = new Entity("BP.WF.Template.NodeExt", nodeID);
             if (Baseinfo.SF == 1) {
                 node.SetPara("ShenFenVal", Baseinfo.node);
             }
@@ -211,6 +226,7 @@
             }
             node.SetPara("ShenFenModel", Baseinfo.SF);
             node.DeliveryWay = Baseinfo.deliverWay;
+            node.SetPara('StationReqEmpsWay', Baseinfo.StationReqEmpsWay);
             node.Update();
         }
     </script>

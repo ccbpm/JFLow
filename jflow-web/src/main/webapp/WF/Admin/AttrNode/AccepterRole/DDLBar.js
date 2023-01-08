@@ -71,6 +71,9 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.FindSpecDeptEmps + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门范围内的岗位集合里面的人员.</option>";
         html += "<option value=" + DeliveryWay.ByDeptLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的领导(主管,负责人).</option>";
         html += "<option value=" + DeliveryWay.ByEmpLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找指定节点的人员直属领导.</option>";
+        html += "<option value=" + DeliveryWay.ByTeamOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组</option>";
+        html += "<option value=" + DeliveryWay.ByTeamDeptOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本部门人员)</option>";
+
         //  html += "<option value=" + DeliveryWay.ByDeptShipLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的分管领导.</option>";
         // 与按照岗位智能计算不同的是，仅仅找本部门的人员.
     }
@@ -113,6 +116,16 @@ function InitBar(optionKey) {
             html += "<option value=" + DeliveryWay.BySelectedForPrj + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“项目组人员选择器”选择接受人</option>";
         }
     }
+
+    if (isSatrtNode == false) {
+        html += "<option value=null disabled='disabled' >+按节点表单的数据计算</option>";
+        html += "<option value=" + DeliveryWay.ByPreviousNodeFormEmpsField + " >&nbsp;&nbsp;&nbsp;&nbsp;字段是人员编号</option>";
+        html += "<option value=" + DeliveryWay.ByPreviousNodeFormDepts + " >&nbsp;&nbsp;&nbsp;&nbsp;字段是部门编号</option>";
+        html += "<option value=" + DeliveryWay.ByPreviousNodeFormStationsAI + " >&nbsp;&nbsp;&nbsp;&nbsp;字段是岗位编号(按岗位智能计算)</option>";
+        html += "<option value=" + DeliveryWay.ByPreviousNodeFormStationsOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;字段是岗位编号(仅按岗位计算)</option>";
+        html += "<option value=" + DeliveryWay.ByDtlAsSubThreadEmps + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点的明细表来决定子线程的接受人</option>";
+    }
+
     html += "<option value=null disabled='disabled' >+其他方式</option>";
 
     if (isSatrtNode == true) {
@@ -132,20 +145,17 @@ function InitBar(optionKey) {
             html += "<option value=" + DeliveryWay.BySelectedEmpsOrgModel + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“人员选择器”选择接受人(集团模式)</option>";
         }
 
-
         html += "<option value=" + DeliveryWay.BySelfUrl + " >&nbsp;&nbsp;&nbsp;&nbsp;自定义人员选择器</option>";
         html += "<option value=" + DeliveryWay.ByAPIUrl + " >&nbsp;&nbsp;&nbsp;&nbsp;按照设置的WebAPI接口获取的数据计算</option>";
-        html += "<option value=" + DeliveryWay.ByPreviousNodeFormEmpsField + " >&nbsp;&nbsp;&nbsp;&nbsp;按上一节点表单指定的字段值作为本步骤的接受人</option>";
-        html += "<option value=" + DeliveryWay.ByPreviousNodeFormStations + " >&nbsp;&nbsp;&nbsp;&nbsp;按上一节点表单指定的字段值作为本步骤的岗位接受人</option>";
-        html += "<option value=" + DeliveryWay.ByPreviousNodeFormDepts + " >&nbsp;&nbsp;&nbsp;&nbsp;按上一节点表单指定的字段值作为本步骤的部门接受人</option>";
-
-
-        html += "<option value=" + DeliveryWay.ByDtlAsSubThreadEmps + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点的明细表来决定子线程的接受人</option>";
+     
         html += "<option value=" + DeliveryWay.ByFEE + " >&nbsp;&nbsp;&nbsp;&nbsp;由FEE来决定</option>";
         html += "<option value=" + DeliveryWay.ByFromEmpToEmp + ">&nbsp;&nbsp;&nbsp;&nbsp;按照配置的人员路由列表计算</option>";
         html += "<option value=" + DeliveryWay.ByCCFlowBPM + " >&nbsp;&nbsp;&nbsp;&nbsp;按ccBPM的BPM模式处理</option>";
 
     }
+
+
+
     html += "</select >";
     html += "<button  id='Btn_Save'type=button  onclick='SaveRole()' value='保存' />保存</button>";
     if (GetQueryString("FK_Node").substr(GetQueryString("FK_Node").length - 2) != "01")
@@ -437,11 +447,14 @@ function changeOption() {
         case DeliveryWay.ByPreviousNodeFormEmpsField:
             roleName = "5.ByPreviousNodeFormEmpsField.htm";
             break;
-        case DeliveryWay.ByPreviousNodeFormStations:
-            roleName = "52.ByPreviousNodeFormStations.htm";
-            break;
         case DeliveryWay.ByPreviousNodeFormDepts:
-            roleName = "53.ByPreviousNodeFormDepts.htm";
+            roleName = "52.ByPreviousNodeFormDepts.htm";
+            break;
+        case DeliveryWay.ByPreviousNodeFormStationsAI:
+            roleName = "53.ByPreviousNodeFormStationsAI.htm";
+            break;
+        case DeliveryWay.ByPreviousNodeFormStationsOnly:
+            roleName = "54.ByPreviousNodeFormStationsOnly.htm";
             break;
         case DeliveryWay.ByPreviousNodeEmp:
             roleName = "6.ByPreviousNodeEmp.htm";
@@ -568,7 +581,7 @@ function SaveIt() {
 // 保存之后要做的事情.
 function AfterSave() {
     //清除.
-    DBAccess.RunSQL("UPDATE WF_Emp SET StartFlows=''");
+    AccepterRole_ClearAllOrgStartFlowsCash();
 }
 
 //打开窗体.

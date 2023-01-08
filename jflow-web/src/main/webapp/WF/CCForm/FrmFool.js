@@ -73,7 +73,7 @@ function GenerFoolFrm(wn, isComPare) {
             if (mapAttr.UIIsEnable == 2)
                 DBAccess.RunFunctionReturnStr(tag);
             if (mapAttr.UIIsEnable != 0 && isReadonly != true)
-                FullIt("",mapAttr.MyPK +"_FullData","Btn_"+mapAttr.KeyOfEn,0);
+                FullIt("", mapAttr.MyPK + "_FullData", "Btn_" + mapAttr.KeyOfEn, 0);
         })
 
     })
@@ -105,8 +105,10 @@ function ShowFoolByTable(frmData, tableCol, Sys_GroupFields, node, isComPare) {
             case "Ath": //附件
                 if (gf.CtrlID == "")
                     break;
+
                 if (frmData.Sys_FrmAttachment == undefined || frmData.Sys_FrmAttachment.length == 0)
                     break;
+
                 //创建附件描述信息.
                 var aths = $.grep(frmData.Sys_FrmAttachment, function (ath) { return ath.MyPK == gf.CtrlID });
                 var ath = aths.length > 0 ? aths[0] : null;
@@ -208,7 +210,39 @@ function ShowFoolByTab(frmData, tableCol, Sys_GroupFields, node, isComPare) {
     _html += '<div class="layui-tab layui-tab-brief" lay-filter="Fool">';
     _html += '<ul class="layui-tab-title">';
     var i = 0;
+    var gfs = [];
     $.each(Sys_GroupFields, function (i, gf) {
+        if (gf.CtrlType == 'Ath') {
+            var aths = $.grep(frmData.Sys_FrmAttachment, function (ath) {
+                return ath.MyPK == gf.CtrlID && ath.IsVisable != "0" && ath.NoOfObj != "FrmWorkCheck";
+            });
+            if (aths.length == 0)
+                return true;
+            gf.Ath = aths[0];
+        }
+        if (gf.CtrlType == 'Dtl') {
+            var dtls = $.grep(frmData.Sys_MapDtl, function (dtl) {
+                return dtl.No == gf.CtrlID && dtl.IsView != 0;
+            });
+            if (dtls.length == 0)
+                return true;
+            gf.Dtl = dtls[0];
+        }
+        if (gf.CtrlType == 'FWC') {
+            if (node == null || node.FWCSta == 0)
+                return true;
+            if (frmData.WF_FrmNode != undefined && frmData.WF_FrmNode.length != 0) {
+                if (frmData.WF_FrmNode[0].MyPK != "" && frmData.WF_FrmNode[0].IsEnableFWC == 0) {
+                    return true;
+                }
+            }
+            if (GetHrefUrl().indexOf("AdminFrm.htm") != -1)
+                return true;
+        }
+        gfs.push(gf);
+    });
+
+    $.each(gfs, function (i, gf) {
         if (i == 0)
             _html += "<li class='layui-this'>" + gf.Lab + "</li>";
         else
@@ -218,7 +252,7 @@ function ShowFoolByTab(frmData, tableCol, Sys_GroupFields, node, isComPare) {
     _html += '</ul>';
     _html += '<div class="layui-tab-content">';
 
-    $.each(Sys_GroupFields, function (i, gf) {
+    $.each(gfs, function (i, gf) {
         var contHtml = "";
         if (i == 0)
             contHtml += "<div class='layui-tab-item layui-show'>";
@@ -228,51 +262,28 @@ function ShowFoolByTab(frmData, tableCol, Sys_GroupFields, node, isComPare) {
         ctrlType = ctrlType == null ? "" : ctrlType;
         switch (ctrlType) {
             case "Ath": //附件
-                if (gf.CtrlID == "")
-                    break;
-                //创建附件描述信息.
-                var aths = $.grep(frmData.Sys_FrmAttachment, function (ath) { return ath.MyPK == gf.CtrlID });
-                var ath = aths.length > 0 ? aths[0] : null;
-
-                //附件分组不显示或者是审核组件中的附件
-                if (ath != null && (ath.IsVisable == "0" || ath.NoOfObj == "FrmWorkCheck"))
-                    break;
                 //增加附件分组
                 contHtml += "<div class='layui-row'>"
                 contHtml += "<div class='layui-col-xs12'>";
-                if (ath == null)
+                if (gf.Ath == null)
                     contHtml += "附件" + gf.CtrlID + "信息丢失";
                 else
-                    contHtml += "<div id='Div_" + ath.MyPK + "' name='Ath'></div>";
+                    contHtml += "<div id='Div_" + gf.Ath.MyPK + "' name='Ath'></div>";
                 contHtml += "</div>";
                 contHtml += "</div>";
                 break;
             case "Dtl"://从表
-                var dtls = $.grep(frmData.Sys_MapDtl, function (dtl) {
-                    return dtl.No == gf.CtrlID && dtl.IsView != 0;
-                });
-                var dtl = dtls.length > 0 ? dtls[0] : null;
-                if (dtl == null)
-                    break;
                 contHtml += "<div class='layui-row'>"
                 contHtml += "<div class='layui-col-xs12'>";
-                if (dtl == null)
+                if (gf.Dtl == null)
                     contHtml += "从表" + gf.CtrlID + "信息丢失";
                 else
-                    contHtml += "<div id='Dtl_" + dtl.No + "' name='dtl'>" + Ele_Dtl(dtl, isComPare) + "</div>";
+                    contHtml += "<div id='Dtl_" + gf.Dtl.No + "' name='dtl'>" + Ele_Dtl(gf.Dtl, isComPare) + "</div>";
                 contHtml += "</div>";
                 contHtml += "</div>";
                 break;
             case "FWC"://审核组件
-                if (node == null || node.FWCSta == 0)
-                    break;
-                if (frmData.WF_FrmNode != undefined && frmData.WF_FrmNode.length != 0) {
-                    if (frmData.WF_FrmNode[0].MyPK != "" && frmData.WF_FrmNode[0].IsEnableFWC == 0) {
-                        break;
-                    }
-                }
-                if (GetHrefUrl().indexOf("AdminFrm.htm") != -1)
-                    break;
+
                 //如何有签批字段就不解析
 
                 contHtml += "<div class='layui-row'>"
@@ -317,6 +328,16 @@ function ShowFoolByTab(frmData, tableCol, Sys_GroupFields, node, isComPare) {
     });
     _html += '</div > ';
     _html += '</div>';
+    if ($("#SubFlow").length == 0 && node.SFSta != 0) {
+        Skip.addJs("/WF/WorkOpt/SubFlow.js");
+        _html += gfLabHtml;
+        _html += "<div class='layui-row'>"
+        _html += "<div class='layui-col-xs12'>";
+        _html += "<div id='SubFlow'>" + SubFlow_Init(node) + "</div>";
+        _html += "</div>";
+        _html += "</div>";
+    }
+    return _html;
     return _html;
 }
 /**
@@ -420,6 +441,54 @@ function InitMapAttr(frmData, tableCol, groupID) {
                 continue;
             }
         }
+        //标签为0
+        if (LabelColSpan == 0) {
+            if (colSpan >= tableCol) {
+                if (isDropTR == false) {
+                    html += "</div>";
+                    isDropTR = true;
+                }
+                colWidth = getColSpanClass(colSpan, tableCol);
+                html += "<div class='layui-row FoolFrmFieldRow'>";
+                html += "<div  class='" + colWidth + " FoolFrmFieldInput' id='TD_" + attr.KeyOfEn + "'>" + InitMapAttrOfCtrlFool(frmData, attr) + "</div>";
+                html += "</div>";
+                isDropTR = true;
+                continue;
+            }
+            //线性展示都跨一个单元格
+            //换行的情况
+            if (isDropTR == true) {
+                useColSpan = colSpan;
+                html += "<div class='layui-row FoolFrmFieldRow'>";
+                html += "<div  class='" + colWidth + " FoolFrmFieldInput' id='TD_" + attr.KeyOfEn + "'>" + InitMapAttrOfCtrlFool(frmData, attr) + "</div>";
+                if (useColSpan == tableCol) {
+                    isDropTR = true;
+                    html += "</div>";
+                }
+                else
+                    isDropTR = false;
+                continue;
+            }
+
+            if (isDropTR == false) {
+                useColSpan += colSpan;
+                if (useColSpan > tableCol) {
+                    useColSpan = colSpan;
+                    //自动换行
+                    html += "</div>";
+                    html += "<div class='layui-row FoolFrmFieldRow'>";
+
+                }
+                html += "<div  class='" + colWidth + " FoolFrmFieldInput' id='TD_" + attr.KeyOfEn + "'>" + InitMapAttrOfCtrlFool(frmData, attr) + "</div>";
+                if (useColSpan == tableCol) {
+                    isDropTR = true;
+                    html += "</div>";
+                }
+                else
+                    isDropTR = false;
+                continue;
+            }
+        }
         //解析占一行的情况
         if (colSpan == tableCol) {
             if (isDropTR == false) {
@@ -469,7 +538,7 @@ function InitMapAttr(frmData, tableCol, groupID) {
                 if (attr.UIContralType != 12)
                     html += "<div  class='" + colWidth + " FoolFrmFieldInput' id='TD_" + attr.KeyOfEn + "'>" + InitMapAttrOfCtrlFool(frmData, attr) + "</div>";
             }
-           
+
             if (useColSpan >= tableCol) {
                 isDropTR = true;
                 html += "</div>";
@@ -494,7 +563,7 @@ function InitMapAttr(frmData, tableCol, groupID) {
                     if (attr.UIContralType != 12)
                         html += "<div  class='" + colWidth + " FoolFrmFieldInput' id='TD_" + attr.KeyOfEn + "'>" + InitMapAttrOfCtrlFool(frmData, attr) + "</div>";
                 }
-                
+
             } else {
                 if (attr.UIContralType == 18) {
                     textWidth = getLabelColSpanClass(attr.LabelColSpan + attr.ColSpan, tableCol);
@@ -504,7 +573,7 @@ function InitMapAttr(frmData, tableCol, groupID) {
                     if (attr.UIContralType != 12)
                         html += "<div  class='" + colWidth + " FoolFrmFieldInput' id='TD_" + attr.KeyOfEn + "'>" + InitMapAttrOfCtrlFool(frmData, attr) + "</div>";
                 }
-               
+
             }
             if (useColSpan == tableCol) {
                 isDropTR = true;
@@ -626,7 +695,7 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                         eleHtml += "</div>";
                         return eleHtml;
                     case 6://字段附件
-                        return getFieldAth(mapAttr);
+                        return getFieldAth(mapAttr,frmData.Sys_FrmAttachment);
 
                     case 8://写字板
                         var imgPath = "../";
@@ -640,15 +709,16 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                         if (mapAttr.UIIsEnable == 1) {
                             ondblclick = " ondblclick='figure_Template_HandWrite(\"" + mapAttr.KeyOfEn + "\",\"" + val + "\")'";
                         }
-                        val = imgPath + val.substring(val.indexOf("DataUser"));
-                        var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
+                        val = val || "";
+                        if (val.indexOf("data:image/")==-1)
+                            val = imgPath + val.substring(val.indexOf("DataUser"));                        var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
                         eleHtml += "<img src='" + val + "' " + ondblclick + " onerror=\"this.src='" + imgSrc + "'\"  style='border:0px;height:" + mapAttr.UIHeight + "px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                         return eleHtml;
 
                     case 9://超链接
                         var val = mapAttr.Tag2;
                         //替换@符号的数据
-                        val = DealJsonExp(frmData.MainTable[0],val);
+                        val = DealJsonExp(frmData.MainTable[0], val);
                         return "<a  class='" + ccsCtrl + "' id='Link_" + mapAttr.KeyOfEn + "' href='" + val + "' target='" + mapAttr.Tag1 + "' name='Link_" + mapAttr.KeyOfEn + "' >" + mapAttr.Name + "</a>";
                     case 13://身份证
                         if (mapAttr.KeyOfEn == "IDCardAddress") {
@@ -729,7 +799,7 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                         }
                         //判断是不是大块文本
                         if (mapAttr.TextModel == 2) {
-                            return "<textarea class='layui-textarea'  id='TB_" + mapAttr.KeyOfEn + "' type='text'  " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + " style='height:" + mapAttr.UIHeight + "px'></textarea>"
+                            return "<textarea class='layui-textarea'  id='TB_" + mapAttr.KeyOfEn + "' type='text'  " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + " style='height:" + mapAttr.UIHeight + "px' placeholder='" + (mapAttr.Tip || "输入字符串的最大长度不能超过" + mapAttr.MaxLen) + "' maxLength='" + mapAttr.MaxLen + "'></textarea>"
                         }
                         var baseUrl = "../";
                         if (currentURL.indexOf("AdminFrm.htm") != -1)
@@ -756,20 +826,27 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                         if (mapAttr.IsSigan == "1") {
                             var val = ConvertDefVal(frmData, mapAttr.DefVal, mapAttr.KeyOfEn);
                             var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "'  value='" + val + "' type=hidden />";
-                            eleHtml += "<img src='" + baseUrl + "DataUser/Siganture/" + val + UserIConExt + "' alt='" + val + "' style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
+                            eleHtml += "<img src='" + baseUrl + "DataUser/Siganture/" + val + UserIConExt + "' alt='" + val + "'onerror=\"this.src='/DataUser/Siganture/UnSiganture.jpg'\" style='border:0px;width:100px;height:30px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                             return eleHtml;
                         }
 
-                        return "<div id='DIV_" + mapAttr.KeyOfEn + "' class='ccbpm-input-group'> <input class='" + ccsCtrl + " layui-input'  maxlength=" + mapAttr.MaxLen + "  value='" + mapAttr.DefVal + "' name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "' type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + " /></div>";
+                        return "<div id='DIV_" + mapAttr.KeyOfEn + "' class='ccbpm-input-group'> <input class='" + ccsCtrl + " layui-input'  maxlength=" + mapAttr.MaxLen + "  value='" + mapAttr.DefVal + "' name='TB_" + mapAttr.KeyOfEn + "' id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "' type='text' " + (mapAttr.UIIsEnable == 1 ? '' : ' disabled="disabled"') + "  maxLength='" + mapAttr.MaxLen + "'/></div>";
                 }
                 break;
             case 2://整数
                 var _html = "<div id = 'DIV_" + mapAttr.KeyOfEn + "' class='ccbpm-input-group' >";
+                var minNum = GetPara(mapAttr.AtPara, "NumMin") || "";
+                var maxNum = GetPara(mapAttr.AtPara, "NumMax") || "";
+                var dataInfo = "";
+                if (minNum != "")
+                    dataInfo = " data-min='" + minNum + "'";
+                if (maxNum != "")
+                    dataInfo += " data-max='" + maxNum + "'";
                 if (suffix != "") {
-                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;width:calc(100% - 60px)!important;display:inline'  value='0' style='text-align:right;'  onkeyup=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
+                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;width:calc(100% - 60px)!important;display:inline'  value='0' " + dataInfo + " style='text-align:right;'  onkeyup=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
                     _html += "<label class='layui-input-suffix'>" + suffix + "</label>";
                 } else {
-                    _html += "<input class='" + ccsCtrl + " layui-input'  value='0' style='text-align:right;'  onkeyup=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
+                    _html += "<input class='" + ccsCtrl + " layui-input'  value='0' " + dataInfo + " style='text-align:right;'  onkeyup=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'int');if(isNaN(value) || (value%1 !== 0))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text'" + enableAttr + " id='TB_" + mapAttr.KeyOfEn + "'placeholder='" + (mapAttr.Tip || '') + "'/>";
 
                 }
                 _html += "</div>";
@@ -790,11 +867,19 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                     bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
                 else
                     bit = 2;
+                var minNum = GetPara(mapAttr.AtPara, "NumMin") || "";
+                var maxNum = GetPara(mapAttr.AtPara, "NumMax") || "";
+                var dataInfo = "";
+                if (minNum != "")
+                    dataInfo = " data-min='" + minNum + "'";
+                if (maxNum != "")
+                    dataInfo += " data-max='" + maxNum + "'";
+
                 if (suffix != "") {
-                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;width:calc(100% - 60px)!important;display:inline'  value='0.00'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
+                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;width:calc(100% - 60px)!important;display:inline'  value='0.00' " + dataInfo + "  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
                     _html += "<label class='layui-input-suffix'>" + suffix + "</label>";
                 } else {
-                    _html += "<input class='" + ccsCtrl + " layui-input'  value='0.00'  onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
+                    _html += "<input class='" + ccsCtrl + " layui-input'  value='0.00'  " + dataInfo + "  style='text-align:right;' onkeyup=" + '"' + "valitationAfter(this, 'float');if(isNaN(value)) execCommand('undo');limitLength(this," + bit + ");" + '"' + " onafterpaste=" + '"' + " valitationAfter(this, 'float');if(isNaN(value))execCommand('undo')" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' placeholder='" + (mapAttr.Tip || '') + "'/>";
 
                 }
                 _html += "</div>";
@@ -847,11 +932,20 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                     bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
                 else
                     bit = 2;
+
+                var minNum = GetPara(mapAttr.AtPara, "NumMin") || "";
+                var maxNum = GetPara(mapAttr.AtPara, "NumMax") || "";
+                var dataInfo = "";
+                if (minNum != "")
+                    dataInfo = " data-min='" + minNum + "'";
+                if (maxNum != "")
+                    dataInfo += " data-max='" + maxNum + "'";
+
                 if (suffix != "") {
-                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;width:calc(100% - 60px)!important;display:inline' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',',0)" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " onblur=" + '"' + "FormatMoney(this, " + bit + ", ',',1)" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;width:calc(100% - 60px)!important;display:inline'" + dataInfo + "  onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',',0)" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " onblur=" + '"' + "FormatMoney(this, " + bit + ", ',',1)" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
                     _html += "<label class='layui-input-suffix'>" + suffix + "</label>";
                 } else {
-                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;' onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',',0)" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " onblur=" + '"' + "FormatMoney(this, " + bit + ", ',',1)" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
+                    _html += "<input class='" + ccsCtrl + " layui-input' style='text-align:right;' " + dataInfo + "  onkeyup=" + '"' + "valitationAfter(this, 'money');limitLength(this," + bit + "); FormatMoney(this, " + bit + ", ',',0)" + '"' + " onafterpaste=" + '"' + "valitationAfter(this, 'money');if(isNaN(value))execCommand('undo');" + '"' + " onblur=" + '"' + "FormatMoney(this, " + bit + ", ',',1)" + '"' + " maxlength=" + mapAttr.MaxLen / 2 + "   type='text' id='TB_" + mapAttr.KeyOfEn + "' value='0.00' placeholder='" + (mapAttr.Tip || '') + "'/>";
 
                 }
                 _html += "</div>";
@@ -883,6 +977,7 @@ function GetLab(attr, frmData) {
         case 6://字段附件
         case 8://手写签字版
         case 13://身份证号
+        case 14://签批字段
         case 50: //流程进度图
         case 101://评分
             if (contralType == 1)//外键下拉框
@@ -1019,7 +1114,7 @@ function GetLab(attr, frmData) {
             }
             break;
         case 18://按钮
-            return "<button type='button' class='layui-btn layui-btn-primary layui-btn-sm layui-attr-btn' id='Btn_" + attr.KeyOfEn +"' type='button' >" + attr.Name + "</button>"
+            return "<button type='button' class='layui-btn layui-btn-primary layui-btn-sm layui-attr-btn' id='Btn_" + attr.KeyOfEn + "' type='button' >" + attr.Name + "</button>"
         default:
             return "";
     }

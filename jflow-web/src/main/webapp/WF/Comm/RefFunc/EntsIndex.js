@@ -338,10 +338,9 @@ window.onload = function () {
 
             },
             refreshMenuTree: function (data) {
-                //this.menuTreeData = new MenuConvertTools(data).convertToTreeData()
-                if(data.length==0)
-                    window.location.href = window.location.href.replace("En.htm","EnOnly.htm");
-                this.menuTreeData = new MenuConvertTools(data).convertToTreeData();
+                if (data.length == 0)
+                    window.location.href = window.location.href.replace("En.htm", "EnOnly.htm");
+                this.menuTreeData = new MenuConvertTools(data).convertToTreeData()
                 this.classicalLayout = parseInt(localStorage.getItem('classicalLayout')) === 1
                 this.updateLayout();
                 var _this = this;
@@ -350,7 +349,7 @@ window.onload = function () {
                 methodName = methodName || "";
                 if (methodName != "") {
                     $.each(data, function (i, item) {
-                        if (item.ClassMethodName && item.ClassMethodName.indexOf(methodName) != -1) {
+                        if (item.ClassMethodName && item.ClassMethodName.toLocaleLowerCase().indexOf(methodName.toLocaleLowerCase()) != -1) {
                             _this.openTabByMenu(item);
                             _this.selectedId = item.No;
                             return false;

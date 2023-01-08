@@ -70,7 +70,6 @@
         }
         // 发送成功后刷新页面进入切换用户页面
         function refreshRight() {
-            debugger
             $("#J_iframe").attr('src', "SelectOneUser.html?1=2" + GenerUrlEnd());
         }
 
@@ -83,7 +82,6 @@
                 alert("系统错误，丢失了登录信息 token ,请重新登录。");
                 return;
             }
-
             //访问后台，获得一个工作ID.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
             handler.AddPara("Token", token);
@@ -94,8 +92,8 @@
                 alert(data);
                 return;
             }
-
-            var url = basePath + "/WF/Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + GetQueryString("FK_Flow") + "&UserNo=" + data + "&Token=" + token;
+            data = JSON.parse(data);
+            var url = basePath + "/WF/Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + GetQueryString("FK_Flow") + "&UserNo=" + data.No + "&Token=" + token;
             SetHref(url);
             return;
 
@@ -105,10 +103,8 @@
 
         //页面启动函数.
         var sid = GetQueryString("AdminToken"); //管理员SID.
-        // var workID = GetQueryString("WorkID");
         var userNo = GetQueryString("UserNo");
         var flowNo = GetQueryString("FK_Flow");
-        // var urlEnd = "&FK_Flow=" + flowNo + "&WorkID=" + workID + "&UserNo=" + userNo + "&Token=" + sid;
         function InitPageUserInfo(token) {
             token = token || "";
           
@@ -158,23 +154,12 @@
             html = "<ul style='border:solid 1px #C2D5E3;'>";
             html += "<li style='padding:5px;'><a href='javaScript:void(0)'  onclick='chageFramPage(this)' data-info='SelectOneUser.html?1=2' class='J_menuItem' >切换用户</a></li>";
             html += "<li style='padding:5px;'><a href='javaScript:void(0)'  onclick='chageFramPage(this)' data-info='DBInfo.html?1=2' class='J_menuItem' >数据库信息</a></li>";
-            //      html += "<li style='padding:5px;'><a href='javaScript:void(0)'  onclick='chageFramPage(this)' data-info='../../WFRpt.htm?1=2' class='J_menuItem' >轨迹图</a></li>";
             html += "<li style='padding:5px;'><a href='javascript:Restart();' >重新启动 </a></li>";
             html += "<li style='padding:5px;'><a href='javaScript:void(0)'  onclick='chageFramPage(this)' data-info='SelectGWF.html?1=2' class='J_menuItem' >切换测试实例</a></li>";
-            //   html += "<li style='padding:5px;'><a href='javascript:LetAdminerLogin();' >安全退出 </a></li>";
-
-            //var runModel = GetQueryString("RunModel");
-            //if (runModel != 2) {
-            //    html += "<li style='padding:5px;'><a href='javascript:ToLogin();'  >登录到前台</a></li>";
-            //}
-
             html += "</ul>";
             html += "</li>";
             html += "</ul>";
             $("#Info").html(html);
-
-            // $("#BaseInfo").html();
-
         }
 
         function ToLogin() {
@@ -190,9 +175,7 @@
             var url = $(obj).attr('data-info');
 
         
-            // var adminer = GetQueryString("Adminer"); //管理员.
             var token = GetQueryString("AdminToken"); //管理员SID.
-            var userNo = GetQueryString("UserNo"); //管理员SID.
             if (token == null || token == "null") {
                 alert("系统错误，丢失了登录信息 token ,请重新登录。");
                 return;
@@ -200,11 +183,14 @@
             //访问后台，获得一个工作ID.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
             handler.AddPara("Token", token);
-            handler.AddPara("UserNo", userNo);
             var data = handler.DoMethodReturnString("Default_LetAdminerLogin");
-
+            if(data.indexOf("err@")!=-1){
+                alert(data);
+                return;
+            }
             //先设置缓存为空.
             webUserJsonString = null;
+            webUserJsonString = JSON.parse(data);
             var webUser = new WebUser();
 
             var html = "<table style='width:100%;'>";
@@ -234,17 +220,6 @@
             $("#userInfo").html(html);
 
 
-            //   InitPageUserInfo();
-
-            //if (data.indexOf('err@') == 0) {
-            //    alert(data);
-            //    return;
-            //    //  data = GetQueryString("UserNo");
-            //}
-
-            //if (url.indexOf("SelectOneUser") == 0 || url.indexOf("SelectOneUser") == 0 )
-
-
             $("#J_iframe").attr('src', url + GenerUrlEnd());
             return false
         }
@@ -254,23 +229,16 @@
         function Restart() {
 
             webUserJsonString = null;
-
-            //if (window.confirm('您确认要使用[' + userNo + ']创建一个新的流程吗？') == false)
-            //    return;
             // 使用最初用户登录
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
             handler.AddPara("FK_Emp", userNo);
-            //handler.AddPara("WorkID", workID);
-            //handler.AddPara("Adminer", adminer);
+
             handler.AddPara("Token", sid);
 
             var webUser = new WebUser();
             $("#userInfo").html(webUser.No + "," + webUser.Name);
             var data = handler.DoMethodReturnString("SelectOneUser_ChangUser");
 
-            // 进入流程页面
-            //var url = "Default.html?RunModel=1&FK_Flow=" + flowNo + "&Token=" + sid + "&UserNo=" + userNo;
-            // SetHref(url);
             //访问后台，获得一个工作ID.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
             handler.AddUrlData();
@@ -279,7 +247,6 @@
                 var url = 'error.htm?err=' + workID;
 
                 confirm("测试容器发起错误，请参考以下信息：<\br>" + workID);
-                // window.open(url, '错误信息', 'height=500,width=600,top=200,left=500,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
                 window.close();
             }
             workID = data;
@@ -300,8 +267,6 @@
 
         //如果关闭的时候，就让admin登录.
         function LetAdminerLoginLeft() {
-            //  if (window.confirm('您确定要退出到管理员吗？') == false)
-            //    return;
             LetAdminerLogin();
         }
 
@@ -357,7 +322,6 @@
     </style>
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
-    <!--<div id="Guide"></div>-->
     <div id="wrapper">
         <!--左侧导航开始-->
         <nav class="navbar-default navbar-static-side" role="navigation" style="background-color:#f5f5f5!important;border-right:solid 1px #ccc;">
@@ -368,11 +332,6 @@
                 </div>
                 <div class="sidebar-collapse" id="Info">
                 </div>
-                <!--<div style="background-color:#fff!important;text-align:center;padding:10px;border-top:solid 1px #ccc;border-bottom:solid 1px #ccc;color:#000;font-weight:bold;">
-                    基础功能
-                </div>
-                <div class="sidebar-collapse" id="BaseInfo">
-                </div>-->
             </div>
         </nav>
         <!--左侧导航结束-->

@@ -203,7 +203,8 @@ function InitToolbar(type) {
         //新增
         if (mapBase.IsInsert.toString().toLowerCase() == "true")
             _html += "<button type='button' class='layui-btn layui-btn-radius layui-btn-sm toolbar' id='Add'>新建</button>";
-
+        if (type == "batch" && mapBase.IsDelete.toString().toLowerCase() == "true")
+            _html += "<button type='button' class='layui-btn layui-btn-radius layui-btn-sm toolbar' id='Delete'>删除</button>";
         //导出
         if (cfg.IsExp == 1 || mapBase.IsExp.toString().toLowerCase() == "true")
             _html += "<button type='button' class='layui-btn layui-btn-radius  layui-btn-sm toolbar' id='Exp'>导出Excel/Csv文件</button>";
@@ -219,9 +220,12 @@ function InitToolbar(type) {
     if (type == "group") {
         //分析
         _html += "<button type='button' class='layui-btn layui-btn-radius  layui-btn-sm toolbar' id='Search'>分析</button>";
+        //设置
+        if (new WebUser().IsAdmin == true)
+            _html += "<button type='button' class='layui-btn layui-btn-radius  layui-btn-sm toolbar' id='Setting'>设置</button>";
 
         //查询
-        _html += "<button type='button' class='layui-btn layui-btn-radius  layui-btn-sm toolbar' id='ToSearch'>查询</button>";
+        //_html += "<button type='button' class='layui-btn layui-btn-radius  layui-btn-sm toolbar' id='ToSearch'>查询</button>";
 
     }
     _html += "</div>";
@@ -295,7 +299,12 @@ function InitToolbar(type) {
     })
     //树形结构
     $.each(treeKey, function (i, field) {
-        var treeData = findChildren(data[field], webUser.FK_Dept);
+        var parentNo = 1;
+        if(field.toLowerCase().includes("dept"))
+            parentNo =  webUser.FK_Dept;
+        if(webUser.CCBPMRunModel === 1)
+            parentNo = webUser.OrgNo;
+        var treeData = findChildren(data[field],parentNo);
         xmSelect.render({
             el: "#XmlSelect_" + field,
             autoRow: true,
@@ -331,7 +340,26 @@ function InitToolbar(type) {
             layui.laydate.render({
                 elem: '#' + item.id, //指定元素
                 format: format,
-                type: type
+                type: type,
+                done: function (value, date, endDate) {
+                    //判断结束时间不能小于开始时间
+                    if(value == "")
+                        return;
+                    //比对的时间字段值
+                    var operVal = $('#TB_DTFrom').val();
+                    var msg = "";
+                    var searchLabel = '开始时间';
+                    if (value < operVal && operVal != "") {
+                        msg = "所选日期不能小于[" + searchLabel + "]对应的日期时间";
+                    }
+
+                    if (msg != "") {
+                        layer.alert(msg);
+                        value = "";
+                    }
+
+                    $(this.elem).val(value);
+                }
             });
         })
     }
@@ -537,7 +565,9 @@ var richAttrs = [];
 var dtMs = null;
 function GetColoums(data, thrMultiTitle, secMultiTitle, colorSet, sortColumns, focusField, isBatch) {
 
-    var hideAttrs = cfield.Attrs;
+	colorSet = colorSet || "";
+    colorSet = colorSet.replace(/@/g, "@");   
+	 var hideAttrs = cfield.Attrs;
     var attrs = data.Attrs;
     dtMs = data["dtM"];
 
@@ -804,7 +834,7 @@ function GetColoums(data, thrMultiTitle, secMultiTitle, colorSet, sortColumns, f
                 for (var i = 0; i < fieldColor.length; i++) {
                     var color = fieldColor[i];
                     if (color.From <= row[this.field] && color.To >= row[this.field])
-                        return "<div style='width:20px;height:20px;text-align:center;background:" + color.Color + "'>" + val + "</div>";
+                        return "<div style='width:20px;height:20px;text-align:center;background:" + color.Color + ";color:white'>" + val + "</div>";
                 }
 
             }
@@ -1185,6 +1215,7 @@ function Search(pageType) {
 }
 
 function SearchCondtion() {
+   
     //保存查询条件.
     var ensName = GetQueryString("EnsName");
     ur = GetUserRegedit();
@@ -1240,6 +1271,7 @@ function SearchCondtion() {
 
     ur.FK_Emp = webUser.No;
     ur.CfgKey = "SearchAttrs";
+   
     ur.Vals = str;
     ur.FK_MapData = ensName;
     ur.SetPara("RecCount", count);
@@ -1318,6 +1350,7 @@ function SearchData(pageType, orderBy, orderWay) {
 
 
 function transferHtmlData(tableData) {
+    tableData = JSON.parse(filterXSS(JSON.stringify(tableData)))
     var val = "";
     if (richAttrs.length != 0) {
         $.each(tableData, function (i, item) {
@@ -1325,9 +1358,10 @@ function transferHtmlData(tableData) {
                 val = item[key];
                 if (val != "") {
 
-                    val = htmlEncodeByRegExp(val);
-                    val = val.replace(/<[^>]+>/g, "")
-                    item[key] = val;
+                    // val = htmlEncodeByRegExp(val);
+                    // val = val.replace(/<[^>]+>/g, "")
+                    item[key] = filterXSS(val);
+                    console.log(item[key])
                 }
             })
         });
@@ -1571,6 +1605,23 @@ function executeFunction(jsString, label) {
         else
             cceval(jsString);
     }
+}
+
+//执行删除
+function Delete() {
+    if (batchData.length == 0) {
+        layer.alert("请选择要删除的行");
+        return;
+    }
+    var deleteRow = batchData;
+    //执行删除操作
+    var enName = ensName.substring(0, ensName.length - 1);
+    $.each(deleteRow, function (idx, item) {
+        var en = new Entity(enName);
+        en.Delete(enPK, item[enPK]);
+    })
+    Search("batch");
+    batchData = [];
 }
 
 /* 级联下拉框  param 传到后台的一些参数  例如从表的行数据 主表的字段值 如果param参数在，就不去页面中取KVS 了，PARAM 就是*/

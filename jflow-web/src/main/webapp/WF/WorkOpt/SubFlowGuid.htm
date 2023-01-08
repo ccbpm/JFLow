@@ -47,6 +47,7 @@
                 if (subFlowGuid.SubFlowGuideGroup == null || subFlowGuid.SubFlowGuideGroup == "") {
                     alert("请配置批量启动子流程的分组数据源")
                 }
+                GroupSubFlowGuid(subFlowGuid)
             }
 
             if (subFlowGuid.SubFlowStartModel == 3) {
@@ -56,6 +57,7 @@
                     alert("配置批量启动子流程的SQL语句不包含ParentNo,请联系管理员");
                     return;
                 }
+                TreeSubFlowGuid(subFlowGuid);
             }
         });
         /**
@@ -103,11 +105,20 @@
                 columns: columns
             };
             options.onCheck = function (row, element) {
-                loadSelectGrid(row.No);
+                loadSelectGrid(row.No,row.Name);
 
             };
             options.onUncheck = function (row, element) {
-                remove(row.Name);
+                remove(row.No);
+            };
+            options.onCheckAll = function(rows){
+                selectedRows=[];
+                rows.forEach(row=>{
+                    selectedRows.push({ No: row.No, Name: row.Name });
+                });
+            };
+            options.onUnCheckAll=function(rows){
+                selectedRows=[];
             };
             $('#listGrid').bootstrapTable(options);
             $("#listGrid").bootstrapTable("load", dt);

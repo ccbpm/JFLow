@@ -5,6 +5,7 @@ var uiPlant = 'BS'; //风格文件.
 var basePath = basePath();
 
 function basePath() {
+    debugger
     //jflow下常用目录
     var dirs = ['/WF', '/DataUser', '/GPM', '/App', '/Portal', '/CCMobile', '/CCFast'];
     //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
@@ -12,9 +13,11 @@ function basePath() {
     var curPath = window.document.location.href;
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
+    if(pathName=="/") //说明不存在项目名
+        return curPath;
     var pos = curPath.indexOf(pathName);
     //获取主机地址，如： http://localhost:80  
-    var localhostPaht = curPath.substring(0, pos);
+    var localhostPath = curPath.substring(0, pos);
     //获取带"/"的项目名，如：/jflow-web
     var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
     for (var i = 0; i < dirs.length; i++) {
@@ -24,7 +27,7 @@ function basePath() {
         }
     }
 
-    var path = localhostPaht + projectName;
+    var path = localhostPath + projectName;
     if ("undefined" != typeof ccbpmPath && ccbpmPath != null && ccbpmPath != "") {
         if (ccbpmPath != path)
             return ccbpmPath;

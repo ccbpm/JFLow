@@ -136,7 +136,7 @@ function tableAddTr(fileManager) {
     var html = "";
     html += "<tr>";
     html += "<td>";
-    html += "<img src='../../Img/FileType/" + fileManager.MyFileExt.substr(1) + ".gif' border=0 />" + fileManager.MyFileName+"." + fileManager.MyFileExt;
+    html += "<img src='../../Img/FileType/" + fileManager.MyFileExt.substr(1) + ".gif' border=0 />" + fileManager.MyFileName + fileManager.MyFileExt;
     html += "</td>";
     html += "<td>" + fileManager.RDT + "</td>";
     html += "<td>";

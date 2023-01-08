@@ -78,7 +78,7 @@
                     else if (url.indexOf("http")!= -1)
                         url = url;
                     else
-                        url = "/WF/" + url;
+                        url = basePath+"/WF/" + url;
                     OpenTopWindowTab(title, url);
 
                     return;

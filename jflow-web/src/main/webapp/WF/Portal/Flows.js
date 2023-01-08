@@ -353,17 +353,16 @@
         },
         updateFlow(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId) {
             // todo 需要重新实现接口
-            return;
+            //return;
 
             // 流程排序..
             //console.log(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId);
             //  return;
-
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
-            handler.AddPara("SortNo", sortNo); //所在的组编号.
-            handler.AddPara("EnNos", flowNos); // 流程编号.
-
-            // alert("sortNo-" + sortNo + "   -SortNos" + flowNos);
+            handler.AddPara("SourceSortNo", pastNodeId); //所在的组编号.
+            handler.AddPara("SourceFlowNos", pastNodeArrStr); // 流程编号.
+            handler.AddPara("ToSortNo", currentNodeId); //所在的组编号.
+            handler.AddPara("ToFlowNos", currentNodeArrStr); // 流程编号.
 
             var data = handler.DoMethodReturnString("Flows_Move");
             layer.msg(data)
@@ -421,11 +420,11 @@
                             var pastNodeArrStr = Array.from(evt.from.querySelectorAll('div[data-id]')).map(function (item) {
                                 return item.dataset.id
                             }).join(',')
-                            var pastNodeId = evt.from.dataset.pid
+                            var pastNodeId = evt.from.dataset.id
                             var currentNodeArrStr = Array.from(evt.to.querySelectorAll('div[data-id]')).map(function (item) {
                                 return item.dataset.id
                             }).join(',')
-                            var currentNodeId = evt.to.dataset.pid
+                            var currentNodeId = evt.to.dataset.id
                             // 二级菜单的排序
                             _this.updateFlow(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId)
                             // 二级菜单的排序

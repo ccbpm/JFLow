@@ -1,6 +1,6 @@
 ﻿/// <reference path="frmdevelop2021.js" />
- 
 
+var athDesc = {}
 $(function () {
     Skip.addJs(basePath + "/WF/Scripts/xss.js");
     var theme = filterXSS(localStorage.getItem("themeColorInfo"));
@@ -54,7 +54,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
         $('#TB_' + mapAttr.KeyOfEn).attr("name", "TB_" + mapAttr.KeyOfEn);
         $('#DDL_' + mapAttr.KeyOfEn).attr("name", "DDL_" + mapAttr.KeyOfEn);
         $('#CB_' + mapAttr.KeyOfEn).attr("name", "CB_" + mapAttr.KeyOfEn);
-       
+
 
         //富文本绑数据
         if ($("#editor_" + mapAttr.KeyOfEn).length > 0) {
@@ -100,18 +100,18 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                     bit = attrdefVal.substring(attrdefVal.indexOf(".") + 1).length;
                 else
                     bit = 2;
-                    val = formatNumber(val, bit, ",",1);
+                val = formatNumber(val, bit, ",", 1);
             }
             $('#TB_' + mapAttr.KeyOfEn).val(val);
 
-            if (mapAttr.Tip != "" && mapAttr.UIIsEnable=="1" && pageData.IsReadonly!="1") {
+            if (mapAttr.Tip != "" && mapAttr.UIIsEnable == "1" && pageData.IsReadonly != "1") {
                 $('#TB_' + mapAttr.KeyOfEn).attr("placeholder", mapAttr.Tip);
                 $('#TB_' + mapAttr.KeyOfEn).on("focus", function () {
                     var elementId = this.id;
-                    layer.tips("<span style='color:black;'>"+$(this).attr("placeholder")+"</span>", '#' + elementId, {tips:[3,"#fff"]});
+                    layer.tips("<span style='color:black;'>" + $(this).attr("placeholder") + "</span>", '#' + elementId, { tips: [3, "#fff"] });
                     $(".layui-layer-tips").css("box-shadow", "1px 1px 50px rgb(0 0 0 / 30%)");
                 })
-                
+
             }
             return true;
         }
@@ -147,6 +147,8 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
 
         if (mapAttr.UIContralType == 14) { //签批组件
             $("#TB_" + mapAttr.KeyOfEn).hide();
+            $("#WorkCheck").remove();
+            $("#Group_FWC").hide();
             if (GetHrefUrl().indexOf("AdminFrm.htm") != -1)
                 return true;
             //获取审核组件信息
@@ -265,9 +267,12 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
         var expression = $.grep(expressions, function (mapExt) {
             return mapExt.AttrOfOper == mapAttr.KeyOfEn && mapExt.FK_MapData == mapAttr.FK_MapData;
         });
-        var textModel = mapAttr.TextModel || 0;
-        if (mapAttr.UIIsInput == 1 && mapAttr.UIIsEnable == 1 && textModel!=3) {
+        if (mapAttr.UIIsInput == 1 && mapAttr.UIIsEnable == 1) {
+            if ($("#TB_" + mapAttr.KeyOfEn).hasClass("rich"))
+                layVerify = "";
+            else
                 layVerify = "required";
+
         }
 
 
@@ -387,7 +392,7 @@ var currentURL = GetHrefUrl();
 var laybase = "./";
 if (currentURL.indexOf("CCForm") != -1 || currentURL.indexOf("CCBill") != -1)
     laybase = "../";
-if (currentURL.indexOf("AdminFrm.htm") != -1 || currentURL.indexOf("/Admin/") != -1 || currentURL.indexOf("Comm/RefFunc")!=-1)
+if (currentURL.indexOf("AdminFrm.htm") != -1 || currentURL.indexOf("/Admin/") != -1 || currentURL.indexOf("Comm/RefFunc") != -1)
     laybase = "../../";
 
 //处理 MapExt 的扩展. 工作处理器，独立表单都要调用他.
@@ -440,7 +445,7 @@ function AfterBindEn_DealMapExt(frmData) {
             var isEnableJS = AtPara == "" || AtPara == null || AtPara == undefined || AtPara.indexOf('@IsEnableJS=1') == -1 ? false : true;
 
             //不存在联动其他控件且不存在其他扩展属性
-            
+
             if (isEnableJS == false && (mapExts[mapAttr.MyPK] == undefined || mapExts[mapAttr.MyPK].length == 0))
                 return true;
             var model = mapAttr.LGType == 1 && (mapAttr.UIContralType == 2 || mapAttr.UIContralType == 3) ? "radio" : "select";
@@ -753,7 +758,7 @@ function AfterBindEn_DealMapExt(frmData) {
                                 //选中的值
                                 var selects = new Entities("BP.Sys.FrmEleDBs");
                                 selects.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", pageData.WorkID);
-                                var dt = GetDataTableByDB(mapExt.Doc, mapExt.DBType, mapExt.FK_DBSrc, val);
+                                var dt = GetDataTableByDB(mapExt.Doc, mapExt.DBType, mapExt.FK_DBSrc, val,mapExt,"Doc");
                                 var data = [];
                                 dt.forEach(function (item) {
                                     data.push({
@@ -785,7 +790,7 @@ function AfterBindEn_DealMapExt(frmData) {
                     tbFastInput.after(content);
                     tbFastInput.on("mouseover", function () {
                         $("#" + this.id.replace("TB_", "span_")).show();
-                        
+
                     });
                     tbFastInput.on("blur", function () {
                         $("#" + this.id.replace("TB_", "span_")).hide();
@@ -805,11 +810,28 @@ function AfterBindEn_DealMapExt(frmData) {
                     }
                     break;
 
-                case "FieldNameLink": //大块文本帮助.
+                case "FieldNameLink": //标签名超链接
                     if (mapExt.DoWay == 0)
                         break;
                     var ctrl = $("#Lab_" + mapAttr.KeyOfEn);
-                    $("#Lab_" + mapAttr.KeyOfEn).wrap($('<a href="javascript:void(0)" onclick="GetFieldNameLink(\''+mapAttr.Name+'\',\''+mapExt.MyPK+'\')"></a>'));
+                    $("#Lab_" + mapAttr.KeyOfEn).wrap($('<a href="javascript:void(0)" onclick="GetFieldNameLink(\'' + mapAttr.Name + '\',\'' + mapExt.MyPK + '\')"></a>'));
+                    break;
+                case "ReadOnlyLink"://字段值超链接
+                    if (mapExt.DoWay == 0)
+                        break;
+
+                    var val = $("#TB_" + mapAttr.KeyOfEn).val();
+                    if (val == "")
+                        break;
+                    var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
+                    frmEleDBs.Retrieve("EleID", mapExt.AttrOfOper, "RefPKVal", pageData.WorkID);
+                    var container = $("<div style='width:99%;line-height: 38px;'></div>");
+                    $.each(frmEleDBs, function (idx, item) {
+                        container.append($('<a href="javascript:void(0)" style="margin-right:10px" onclick="GetReadOnlyLink(\'' + mapAttr.Name + '\',\'' + item.Tag1 + '\',\'' + mapExt.MyPK + '\')">' + item.Tag2 + '</a>'))
+                    })
+
+                    $("#TB_" + mapAttr.KeyOfEn).after(container);
+                    $("#TB_" + mapAttr.KeyOfEn).hide();
                     break;
 
                 case "FullData"://POP返回值的处理，放在了POP2021.js
@@ -848,7 +870,7 @@ function AfterBindEn_DealMapExt(frmData) {
     });
 }
 
-function GetFieldNameLink(name,extMyPK) {
+function GetFieldNameLink(name, extMyPK) {
     var en = new Entity("BP.Sys.MapExt");
     en.SetPKVal(extMyPK);
     if (en.RetrieveFromDBSources() == 0) {
@@ -875,8 +897,38 @@ function GetFieldNameLink(name,extMyPK) {
             window.open(doc, '_blank').location
             return;
     }
-    
-       
+
+
+}
+function GetReadOnlyLink(name, val, extMyPK) {
+    var en = new Entity("BP.Sys.MapExt");
+    en.SetPKVal(extMyPK);
+    if (en.RetrieveFromDBSources() == 0) {
+        alert("字段值" + name + ":弹窗提示配置丢失");
+        return
+    }
+    if (en.DoWay == 0)
+        return;
+    var doc = en.Doc;
+    doc = doc.replace("@Key", val).replace("@key", val);
+    doc = DealExp(doc);
+    switch (parseInt(en.DoWay)) {
+        case 0:
+            return;
+        case 1:
+            layer.alert(doc);
+            return;
+        case 2:
+            OpenLayuiDialog(doc, "", window.innerWidth * 2 / 3, 100, "r");
+            return;
+        case 3:
+            OpenLayuiDialog(doc, "", window.innerWidth * 2 / 3, 80, "auto");
+            return;
+        case 4:
+            window.open(doc, '_blank').location
+            return;
+    }
+
 }
 function changeValue(tbval, tbID, type) {
     var strgetSelectValue = "";
@@ -1032,8 +1084,8 @@ function SetDateExt(mapExts, mapAttr) {
             if (mapExt.DoWay == 0)
                 return true;
             $("#Lab_" + mapAttr.KeyOfEn).wrap($('<a href="javascript:void(0)" onclick="GetFieldNameLink(\'' + mapAttr.Name + '\',\'' + mapExt.MyPK + '\')"></a>'));
-        } 
-      
+        }
+
     });
     var isFullData = GetPara(mapAttr.AtPara, "IsFullData");
     isFullData = isFullData == undefined || isFullData == "" || isFullData != "1" ? false : true;
@@ -1394,11 +1446,11 @@ function SetNumberMapExt(mapExts, mapAttr) {
                     break;
                 if (isReadonly == true)
                     break;
-                if ($('#TB_' + mapExt.AttrOfOper).val() == "0") {
+                if ($('#TB_' + mapExt.AttrOfOper).val() == "" || $('#TB_' + mapExt.AttrOfOper).val() ==="0" )
                     ReqDays(mapExt);
                     $('#TB_' + mapExt.Tag1).data({ "ReqDay": mapExt })
                     $('#TB_' + mapExt.Tag2).data({ "ReqDay": mapExt });
-                }
+               
 
                 break;
             case "FieldNameLink":
@@ -1423,8 +1475,8 @@ function SetNumberMapExt(mapExts, mapAttr) {
 
                 $('#TB_' + mapExt.AttrOfOper).bind("change", function () {
                     var expVal = $(this).val();//获取要转换的值
-                    var min = $(o).attr("data-min");
-                    var max = $(o).attr("data-max");
+                    var min = $(this).attr("data-min");
+                    var max = $(this).attr("data-max");
                     if (min && parseInt(expVal) < parseInt(min)) {
                         alert("值不能小于设置的最小值:" + min);
                         expVal = min;
@@ -1496,11 +1548,13 @@ function ReqDays(mapExt) {
     //计算量日期天数
     var StarRDT = $('#TB_' + startField).val();
     var EndRDT = $('#TB_' + endField).val();
-    var demoRDT;
-    demoRDT = StarRDT.split("-");
-    StarRDT = new Date(demoRDT[0] + '-' + demoRDT[1] + '-' + demoRDT[2]);  //转换为yyyy-MM-dd格式
-    demoRDT = EndRDT.split("-");
-    EndRDT = new Date(demoRDT[0] + '-' + demoRDT[1] + '-' + demoRDT[2]);
+    if (StarRDT == "" || EndRDT == "") {
+        $('#TB_' + ResRDT).val(0);
+        return ;
+    }
+  
+    StarRDT = new Date(StarRDT);
+    EndRDT = new Date(EndRDT);
     var countH = parseInt((EndRDT - StarRDT) / 1000 / 60 / 60);//总共的小时数
     res = parseInt(countH / 24); //把相差的毫秒数转换为天数
     //var day = res;
@@ -1512,13 +1566,19 @@ function ReqDays(mapExt) {
         res = "";
     }
     else {
-        //当包含节假日的时候
-        if (RDTRadio == 0) {
+        //当不包含节假日的时候，需要排除节假日
+        if (RDTRadio == 1) {
             var holidayEn = new Entity("BP.Sys.GloVar");
             holidayEn.No = "Holiday";
             if (holidayEn.RetrieveFromDBSources() == 1) {
                 var holidays = holidayEn.Val.split(",");
-                res = res - (holidays.length - 1);
+                StarRDT = FormatDate(StarRDT, "MM-dd");
+                EndRDT = FormatDate(EndRDT, "MM-dd");
+                holidays.forEach(item => {
+                    //判断节假日日期是否在时间范围内
+                    if (StarRDT <= item && item <= EndRDT)
+                        res = res - 1;
+                })
                 //检查计算的天数
                 if (res <= 0) {
                     layer.alert("请假时间内均为节假日");
@@ -1776,14 +1836,14 @@ function calculator(mapExt) {
                         result = parseInt(result);
                     else {
                         var defVal = mapAttr[0].DefVal;
-						var bit = null;
+                        var bit = null;
                         if (defVal != null && defVal !== "" && defVal.indexOf(".") >= 0)
                             bit = defVal.substring(defVal.indexOf(".") + 1).length;
                         if (bit == null || bit == undefined || bit == "")
                             bit = 2;
                         result = numberFormat(result, bit);
                     }
-                        
+
                 } else {
                     result = 0;
                 }
@@ -1952,7 +2012,7 @@ function figure_Template_Map(MapID, UIIsEnable) {
     //    }
     //}
     //if (AtPara == "")
-    AtPara=$("#TB_AtPara").val();
+    AtPara = $("#TB_AtPara").val();
     var baseUrl = "./CCForm/";
     if (currentURL.indexOf("CCForm") != -1)
         baseUrl = "./";
@@ -2179,7 +2239,7 @@ function checkBlanks() {
 
                 break;
             case "SELECT":
-                if (ele.val()==null || ele.val() == "" || ele.val() == -1 || ele.children('option:checked').text() == "*请选择") {
+                if (ele.val() == null || ele.val() == "" || ele.val() == -1 || ele.children('option:checked').text() == "*请选择") {
                     checkBlankResult = false;
                     ele.parent().addClass('errorInput');
                 } else {
@@ -2311,7 +2371,7 @@ function ReqAthFileName(athID) {
  * @param {any} mapAttr
  */
 var FiledFJ = [];
-function getFieldAth(mapAttr) {
+function getFieldAth(mapAttr,aths) {
     var Obj = {};
     //获取上传附件列表的信息及权限信息
     var nodeID = pageData.FK_Node;
@@ -2326,9 +2386,9 @@ function getFieldAth(mapAttr) {
     //获取附件显示的格式
     var athShowModel = GetPara(mapAttr.AtPara, "AthShowModel");
 
-    var ath = new Entity("BP.Sys.FrmAttachment");
-    ath.MyPK = mypk;
-    if (ath.RetrieveFromDBSources() == 0) {
+    let ath = $.grep(aths, function (ath) { return ath.MyPK == mypk });
+    ath = ath.length > 0 ? ath[0] : null;
+    if (ath == null) {
         layer.alert("没有找到附件属性,请联系管理员");
         return;
     }
@@ -2358,7 +2418,7 @@ function getFieldAth(mapAttr) {
     }
     data = JSON.parse(data);
     var dbs = data["DBAths"];
-    var athDesc = data["AthDesc"][0];
+    athDesc = data["AthDesc"][0];
     var css = "style='text-align:left;padding-left:10px;border:1px solid #eee'";
     var clickEvent = "";
     if (athDesc.IsUpload == 1 && isReadonly == false) {
@@ -2401,10 +2461,10 @@ function getFieldAth(mapAttr) {
         var exts = db.FileExts;
         if (getIsImg(exts) == true) {
             var url = GetFileStream(db.MyPK, db.FK_FrmAttachment);
-            eleHtml += "<a id='" + db.MyPK + "' class='image-item athInfo' style='background-image: url(&quot;" + url + "&quot;);' href='javaScript:void(0)' onclick='ShowBigPic(this)' title='" + db.FileName +"'></a>";
+            eleHtml += "<a id='" + db.MyPK + "' class='image-item athInfo' style='background-image: url(&quot;" + url + "&quot;);' href='javaScript:void(0)' onclick='ShowBigPic(this)' title='" + db.FileName + "'></a>";
         } else {
             var url = "./Img/FileType/" + db.FileExts + ".gif";
-            eleHtml += "<a class='image-item' style='font-size:12px;background-color: rgb(0 0 0 / 29%);background-image: url(&quot;" + url + "&quot;);'  href=\"javascript:Down2018('" + db.MyPK + "','" + workID + "')\" title='" + db.FileName+"'><div style='height:75px;background: rgba(255,255,255,0.6);padding-top: 20px;font-weight: bold;text-overflow: ellipsis;overflow: hidden;'>" + db.FileName + "</div></a>"
+            eleHtml += "<a class='image-item' style='font-size:12px;background-color: rgb(0 0 0 / 29%);background-image: url(&quot;" + url + "&quot;);'  href=\"javascript:Down2018('" + db.MyPK + "','" + workID + "')\" title='" + db.FileName + "'><div style='height:75px;background: rgba(255,255,255,0.6);padding-top: 20px;font-weight: bold;text-overflow: ellipsis;overflow: hidden;'>" + db.FileName + "</div></a>"
 
         }
     }
@@ -2444,7 +2504,7 @@ function imgShow(obj, src) {
         if (height > window.innerHeight - 150)
             height = window.innerHeight - 150;
         var width = img.width; //获取图片宽度
-        var imgHtml = "<img src='" + src + "' />";
+        var imgHtml = "<div style='text-align:center'><img src='" + src + "' /></div>";
         //弹出层
         window.parent.layer.open({
             type: 1,
@@ -2454,7 +2514,7 @@ function imgShow(obj, src) {
             shadeClose: true,//点击外围关闭弹窗
             scrollbar: false,//不现实滚动条
             title: "",
-            closeBtn: 0,
+            closeBtn: 1,
             content: imgHtml, //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响  
             cancel: function () {
                 //layer.msg('捕获就是从页面已经存在的元素上，包裹layer的结构', { time: 5000, icon: 6 });  
@@ -2560,7 +2620,7 @@ function UsefulExpresFlow(attrKey, elementID) {
 
 
 //弹出附件
-function OpenAth(title, keyOfEn, athMyPK, atPara, FK_MapData, frmType,isRead) {
+function OpenAth(title, keyOfEn, athMyPK, atPara, FK_MapData, frmType, isRead) {
     var H = 70;
     var W = window.innerWidth / 2;
     var url = url = basePath + "/WF/CCForm/Ath.htm?1=1&AthPK=" + athMyPK + "&OID=" + pageData.WorkID + "&FK_MapData=" + FK_MapData + "&FK_Node=" + pageData.FK_Node + "&IsReadonly=" + isRead;
@@ -2594,6 +2654,9 @@ function OpenAth(title, keyOfEn, athMyPK, atPara, FK_MapData, frmType,isRead) {
         var dbs = data["DBAths"];
         var css = "style='text-align:left;padding-left:10px;border:1px solid #eee'";
         var clickEvent = "";
+        if (athDesc == undefined) {
+            var athDesc = data["AthDesc"][0];
+        }
         if (athDesc.IsUpload == 1 && isReadonly == false)
             clickEvent = "<button type='button' class='layui-btn layui-btn-sm' style='margin:5px' onclick='OpenAth(\"" + title + "\",\"" + keyOfEn + "\",\"" + athMyPK + "\",\"" + atPara + "\",\"" + FK_MapData + "\"," + frmType + ")'><i class='layui-icon layui-icon-upload'></i>上传文件</button>";
 
@@ -2617,7 +2680,7 @@ function OpenAth(title, keyOfEn, athMyPK, atPara, FK_MapData, frmType,isRead) {
         for (var i = 0; i < dbs.length; i++) {
             var db = dbs[i];
             if (isRoot == true)
-                url ="./Img/FileType/" + db.FileExts + ".gif";
+                url = "./Img/FileType/" + db.FileExts + ".gif";
             else
                 url = "../Img/FileType/" + db.FileExts + ".gif";
             var exts = db.FileExts;

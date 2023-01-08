@@ -99,14 +99,10 @@
 
             $('body').append($(selectEmpModalHtml));
 
-            var dept = getQueryStringByNameFromUrl("?" + $.cookie('CCS'), "FK_Dept");
-            if (dept == null || dept == '' || dept == undefined) {
-                dept = $.cookie('FK_Dept');
-            }
-            if (dept == undefined) {
-                var u = new WebUser();
-                dept = u.FK_Dept;
-            }
+            var dept ='0';
+            var u = new WebUser();
+            dept = u.FK_Dept;
+
             var url = "SelectEmps.htm?IsSelectMore=1&FK_Dept=" + dept + "&FK_Node=" + GetQueryString("FK_Node") + "&s=" + Math.random();
             url = url.replace('=101&', '=10102&');
 

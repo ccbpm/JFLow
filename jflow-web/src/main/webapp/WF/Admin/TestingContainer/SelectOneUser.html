@@ -186,6 +186,7 @@
                 alert(data);
                 return;
             }
+            localStorage.setItem('Token',data);
             if (isMobile == 1)
                 window.open('../../../CCMobile/MyFlow.htm?Token='+data+'&FK_Flow=' + flowNo + '&WorkID=' + workid + "&FID=" + fid + "&FK_Node=" + nodeID, '_self');
             else

@@ -106,7 +106,7 @@ FROM
 WHERE
 	A.NodePosType= 0 	AND A.DeliveryWay= 4 
 			AND A.FK_Flow= C.No
-		AND  B.OrgNo= C.OrgNo 
+   AND ((B.OrgNo = C.OrgNo) OR ((B.OrgNo IS NULL) AND (C.OrgNo IS NULL)))
 
 	UNION
 SELECT
@@ -136,8 +136,8 @@ FROM
 	WF_FlowOrg B,
 	Port_Emp C 
 WHERE
-	A.FK_Flow= B.FlowNo 
-	AND B.OrgNo= C.OrgNo 
+	A.FK_Flow= B.FlowNo
+    AND ((B.OrgNo = C.OrgNo) OR ((B.OrgNo IS NULL) AND (C.OrgNo IS NULL)))
 	AND (
 	A.DeliveryWay= 22 
 	OR A.DeliveryWay= 51);

@@ -97,6 +97,8 @@ $(function () {
         $('#ToolBar').html(_html);
         $('#Toolbar').html(_html);
         $(".layui-header").show();
+        if(toolBars.length==0)
+            $(".layui-header").hide();
     }
 
     if (toolbarPos == "1") {
@@ -122,6 +124,52 @@ $(function () {
     if (wf_node != null && wf_node.IsBackTrack == 0)
         InitToNodeDDL(data, wf_node);
 
+    //增加父流程的最后节点
+    if(data["WF_ParentNode"]!=undefined){//@ZKR
+        var parentNode = data["WF_ParentNode"][0];
+        _html = "<button type='button' class='layui-bar layui-btn layui-btn-sm layui-btn-primary' name='" + parentNode.FK_Node + "' enable=true ><img src='/WF/Img/Btn/ParentForm.png'>流程:"+parentNode.FK_Flow+"-"+ parentNode.FK_NodeText + "</button>";
+        //判断SendBtn是否隐藏
+        if($('[name=SendBtn]').is(":hidden")==true){
+            $('[name=SendBtn]').before(_html);
+        }else{
+            if($('[name=SaveBtn]').length!=0)
+                $('[name=SaveBtn]').after(_html);
+            else if($("#DDL_ToNode").length!=0)
+                $("#DDL_ToNode").after(_html);
+            else if($('[name=SendBtn]').length!=0)
+                $('[name=SendBtn]').after(_html);
+        }
+        $('[name='+parentNode.FK_Node+']').bind('click', function () {
+            //增加退回前的事件
+            if (typeof beforeReturn != 'undefined' && beforeReturn instanceof Function)
+                if (beforeReturn() == false)
+                    return false;
+
+            if (typeof Save != 'undefined' && Save instanceof Function)
+                Save(0);
+            //处理退回
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
+            handler.AddPara("ReturnToNode",parentNode.FK_Node+"@"+parentNode.FK_Emp);
+            handler.AddPara("WorkID",GetQueryString("WorkID"));
+            var returnInfo="";
+            if (wf_node.ReturnField != "" && $("#" + wf_node.ReturnField).length == 1) {
+                returnInfo =$("#" + wf_node.ReturnField).val();
+            }
+            if(returnInfo=="")
+                returnInfo="退回到父流程节点";
+            handler.AddPara("ReturnInfo",returnInfo);
+            handler.AddPara("IsBack",0);
+            var data =handler.DoMethodReturnString("DoReturnWork");
+            if(data.indexOf("err@")!=-1){
+                layer.alert(data);
+                return;
+            }
+            layer.alert(data);
+            closeWindow();
+        });
+
+    }
+
     //如果启用的按钮操作太多时，自适应高度
    
     if (toolbarPos == "0") {
@@ -144,6 +192,7 @@ $(function () {
         var oper = $(this).data("info");
         if (oper != null && oper != undefined && oper != "") {
             oper = oper.toString().replace(/~/g, "'");
+            oper = DealExp(oper, webUser, false);
             cceval(oper);
         }
 
@@ -1611,7 +1660,7 @@ function SendSubFlow(subFlowNo, subFlowMyPK) {
 
                     }
                     //显示子流程信息
-                    var html = window.parent.SubFlow_Init(wf_node);
+                    var html = SubFlow_Init(wf_node);
                     $("#SubFlow").html("").html(html);
                 }
 

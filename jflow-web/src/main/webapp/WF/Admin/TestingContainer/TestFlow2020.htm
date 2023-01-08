@@ -237,9 +237,8 @@
         //发起流程。
         function StartIt(empNo, workID) {
 
-            var token = GetQueryString("Token") || GetQueryString("Token") ;
-
             var webUser = new WebUser();
+            var token = GetQueryString("Token") || webUser.Token;
 
             $("#Btn_Reset").val("正在以[" + empNo + "]启动流程,请稍候....");
 
@@ -265,9 +264,7 @@
                 data += "&WorkID=" + workID;
 
             //启动测试容器.
-            //WinOpenFull(data);
-            localStorage.setItem('AdminToken', token)
-            SetHref(data);
+            SetHref(data + "&AdminToken=" + token);
         }
 
         function ClearTester() {

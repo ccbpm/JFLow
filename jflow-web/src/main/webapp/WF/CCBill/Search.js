@@ -449,14 +449,14 @@ function GetColoums(thrMultiTitle, secMultiTitle, colorSet, sortColumns, openMod
             var _html = "";
             var rowstr = JSON.stringify(row);
             rowstr = encodeURIComponent(rowstr);
-            if (row.BillState == 100 || entityType == 100) {
+            /*if (row.BillState == 100 || entityType == 100) {
                 _html += "<a href='javascript:void(0)'onclick='OpenIt(\"" + row.OID + "\"," + entityType + "," + row.BillState + ",\"" + rowstr + "\")'style='color:blue'>详情</a>";
             }
             else
-                _html += "<a href='javascript:void(0)'onclick='OpenIt(\"" + row.OID + "\"," + entityType + "," + row.BillState + ")'style='color:blue'>编辑</a>";
+                _html += "<a href='javascript:void(0)'onclick='OpenIt(\"" + row.OID + "\"," + entityType + "," + row.BillState + ")'style='color:blue'>编辑</a>";*/
             //增加其他的方法
             $.each(methods, function (idx, method) {
-                _html += "<span style='padding: 0px 3px; color:#ccc'>|</span><a href='javascript:void(0)'onclick='DoMethod(\"" + method.No + "\"," + row.OID + ")'style='color:blue'>" + method.Name + "</a>";
+                _html += "<span style='padding: 0px 3px; color:#ccc'>|</span><a href='javascript:void(0)'onclick='DoMethod(\"" + method.No + "\",\"" + row.OID + "\",\"" + rowstr + "\")'style='color:blue'>" + method.Name + "</a>";
             })
             if (isHaveDelOper == true)
                 _html += "<span style='padding: 0px 3px; color:#ccc'>|</span><a href='javascript:void(0)'onclick='DeleteIt(\"" + row.OID + "\"," + entityType + ")' style='color:red'>删除</a>";
@@ -988,12 +988,16 @@ function OpenLink(no, source) {
         return;
     }
     url = url.indexOf("?") == -1 ? url + "?1=1" : url;
-    url += "&FrmID=" + frmID
+    url += "&FrmID=" + frmID;
+    url = DealExp(url);
+    var w = link.PopWidth || window.innerWidth * 2/3;
+    if (w < window.innerWidth * 2 / 3)
+        w = window.innerWidth * 2 / 3;
     if (link.RefMethodType == 0) {//0=模态窗口打开@1=新窗口打开@2=右侧窗口打开@4=转到新页面
-        OpenLayuiDialog(url, link.Name, window.innerWidth * 2 / 3, null, "r", false);
+        OpenLayuiDialog(url, link.Name, w, null, "r", false);
         return;
     }
-    OpenTopWindowTab(link.Name, url);
+    window.top.vm.openTab(link.Name, url);
 }
 /**
  * 列表集合的方法操作
@@ -1115,7 +1119,7 @@ function OpenFlow(no, source) {
             layer.alert(data);
             return;
         }
-        OpenTopWindowTab(flowM.Name, data);
+        window.top.vm.openTab(flowM.Name, data);
 
     });
 }
@@ -1136,7 +1140,7 @@ function OpenFlowEntity(no, source) {
     }
     var menuNo = flowM.FrmID + "_" + flowNo;
     var url = "../CCBill/Opt/StartFlowByNewEntity.htm?FK_Flow=" + flowNo + "&MenuNo=" + menuNo;
-    OpenTopWindowTab(flowM.Name, url);
+    window.top.vm.openTab(flowM.Name, url);
 }
 /**
  * 删除选择的列数据
@@ -1172,7 +1176,11 @@ function DeleteIt(oid, entityType) {
  * @param {any} methodNo
  * @param {any} workid
  */
-function DoMethod(methodNo, workid) {
+function DoMethod(methodNo, workid, jsonStr) {
+    jsonStr = jsonStr || "";
+    jsonStr = decodeURIComponent(jsonStr);
+    if (jsonStr != "")
+        jsonStr = JSON.parse(jsonStr);
     var method = new Entity("BP.CCBill.Template.Method", methodNo);
     if (method.MethodModel === "Bill")
         method.Docs = "./Opt/Bill.htm?FrmID=" + method.Tag1 + "&MethodNo=" + method.No + "&WorkID=" + workid + "&From=Dict";
@@ -1242,16 +1250,39 @@ function DoMethod(methodNo, workid) {
             layer.alert("没有解析的Url-MethodModel:" + method.MethodModel + " - " + method.Mark);
             return;
         }
+        url = DealJsonExp(jsonStr, url);
         if (url.indexOf('?') > 0)
             method.Docs = url + "&FrmID=" + method.FrmID + "&WorkID=" + workid;
         else
             method.Docs = url + "?FrmID=" + method.FrmID + "&WorkID=" + workid;
     }
 
-    if (method.MethodModel === "Func")
+    if (method.MethodModel === "Func") {
         OpenLayuiDialog(method.Docs, method.Name, window.innerWidth / 2, 50, "auto");
-    else
-        OpenTopWindowTab(method.Name, method.Docs);
+    }
+    else {
+        var refmethodType = method.RefMethodType;
+        if (refmethodType == 0 || refmethodType == 1) {//模态窗打开
+            var h = method.PopHeight == 0 ? 70 : method.PopHeight;
+            var w = method.PopWidth == 0 ? window.innerWidth / 2 : method.PopWidth;
+            OpenLayuiDialog(method.Docs, method.Name, w, h, "auto");
+            return;
+        }
+        if (refmethodType == 2) { //新页面打开
+            window.top.vm.openTab(method.Name, method.Docs);
+            return;
+        }
+        if (refmethodType == 3) {//侧滑打开
+            var w = method.PopWidth == 0 ? window.innerWidth / 2 : method.PopWidth;
+            OpenLayuiDialog(method.Docs, method.Name, w, 100, "r");
+            return;
+        }
+        if (refmethodType == 4) {//转新页面
+            window.open(method.Docs);
+            return;
+        }
+
+    }
 
 }
 

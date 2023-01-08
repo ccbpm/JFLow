@@ -843,9 +843,9 @@ new Vue({
             if (menu.MenuModel === "Bill") {
                 menu.MenuModel = "单据";
                 var html = "";
-                html += "<a " + btnStyle + "  href=\"javascript:addTab('" + basePath + "/WF/CCBill/SearchDict.htm?FrmID=" + menu.UrlExt + "','" + menu.Name + "');\"  >打开</a>";
+                html += "<a " + btnStyle + "  href=\"javascript:addTab('" + basePath + "/WF/CCBill/SearchBill.htm?FrmID=" + menu.UrlExt + "','" + menu.Name + "');\"  >打开</a>";
                 html += "<a " + btnStyle + "  href=\"javascript:addTab('" + basePath + "/WF/CCBill/Admin/Collection.htm?FrmID=" + menu.UrlExt + "&ModuleNo=" + menu.ModuleNo + "&MenuModel=" + menu.MenuModel + "','方法:" + menu.Name + "');\" >列表组件</a>";
-                html += "<a " + btnStyle + "  href=\"javascript:addTab('" + basePath + "/WF/CCBill/Admin/Method.htm?FrmID=" + menu.UrlExt + "&ModuleNo=" + menu.ModuleNo + "&MenuModel=" + menu.MenuModel + "','方法:" + menu.Name + "');\" >实体组件</a>";
+                html += "<a " + btnStyle + "  href=\"javascript:addTab('" + basePath + "/WF/CCBill/Admin/Method.htm?FrmID=" + menu.UrlExt + "&ModuleNo=" + menu.ModuleNo + "&MenuModel=" + menu.MenuModel + "','方法:" + menu.Name + "');\" >单据组件</a>";
                 html += "<a " + btnStyle + "  href=\"javascript:AttrFrm('BP.CCBill.FrmBill','" + menu.Name + "','" + menu.UrlExt + "')\" >单据属性</a>";
                 html += "<a " + btnStyle + "  href=\"javascript:GoToFrmDesigner('" + menu.UrlExt + "')\" >表单设计</a>";
                 menu.Docs = html;

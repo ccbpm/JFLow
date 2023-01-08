@@ -43,12 +43,16 @@ public class MvcConfig implements WebMvcConfigurer {
         if (!file.exists()) {
             file.mkdirs();
         }
+        file = new File(webPath+"DataUser/JSLibData");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         System.out.println("静态资源处理：" + webPath + "/DataUser/");
         registry.addResourceHandler("/DataUser/Siganture/**").addResourceLocations("file:" + webPath + "/DataUser/Siganture/");
         registry.addResourceHandler("/DataUser/UploadFile/**").addResourceLocations("file:" + webPath + "/DataUser/UploadFile/");
         registry.addResourceHandler("/DataUser/CyclostyleFile/**").addResourceLocations("file:" + webPath + "/DataUser/CyclostyleFile/");
         registry.addResourceHandler("/DataUser/FlowDesc/**").addResourceLocations("file:" + webPath + "/DataUser/FlowDesc/");
-
+        registry.addResourceHandler("/DataUser/InstancePacketOfData/**").addResourceLocations("file:" + webPath + "/DataUser/InstancePacketOfData/");
         registry.addResourceHandler("/DataUser/Temp/**").addResourceLocations("file:" + webPath + "/DataUser/Temp/");
     }
 }

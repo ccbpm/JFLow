@@ -186,10 +186,7 @@ public class RestFulController {
 			rs.put("msg", ex.getMessage());
 		}
 		return bp.tools.Json.ToJson(rs);
-
 	}
-
-
 
 	/**
 	 * 待办
@@ -294,17 +291,19 @@ public class RestFulController {
 	 * @param jsonString 参数，或者表单字段.
 	 * @param toNodeID 到达的节点ID.如果让系统自动计算就传入0
 	 * @param toEmps 到达的人员IDs,比如:zhangsan,lisi,wangwu. 如果为Null就标识让系统自动计算
+	 * @param fid 子线程的主干流程ID.没有就传入0
+	 * @param pworkid 子流程的父流程ID.没有就传入0
 	 * @return 发送的结果信息.
 	 * @throws Exception 
 	 */
 
     @RequestMapping(value = "/SendWork")
-	public String SendWork(String flowNo, long workid, String jsonString, int toNodeID, String toEmps,String token) throws Exception {
+	public String SendWork(String flowNo, long workid, String jsonString, int toNodeID, String toEmps,String token,long fid,long pworkid) throws Exception {
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
 
-		Hashtable ht = Json.JsonToHashMap("{"+jsonString+"}");
-		bp.wf.SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
-
+		Hashtable ht = Json.JsonToHashtable("{"+jsonString+"}");
+		//bp.wf.SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
+		bp.wf.SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(flowNo, workid, ht, null, toNodeID, toEmps, WebUser.getNo(), WebUser.getName() , WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null, fid, pworkid);
         String msg = objs.ToMsgOfText();
         
         Hashtable myht = new Hashtable();
@@ -507,7 +506,7 @@ public class RestFulController {
 	 * @throws Exception 
 	 */
     @RequestMapping(value = "/Node_ReturnWork")
-   public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg, String token) throws Exception {
+	   public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg, String token) throws Exception {
 	  bp.wf.Dev2Interface.Port_LoginByToken(token);
 	  GenerWorkFlow gwf=new GenerWorkFlow(workID);
       return bp.wf.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg,false);
@@ -527,12 +526,10 @@ public class RestFulController {
 	 */
 
     @RequestMapping(value = "/Flow_DoFlowOverQiangZhi")
-	public  String Flow_DoFlowOverQiangZhi(long workID, String msg, String userNo, String token) throws Exception {
+	public  String Flow_DoFlowOverQiangZhi(long workID, String msg, String token) throws Exception {
 	  bp.wf.Dev2Interface.Port_LoginByToken(token);
-	  LocalWS localWS = new LocalWS();
-	  String sql="select FK_Flow from wf_generworkflow where workid="+workID;
-	  String flowNo=bp.da.DBAccess.RunSQLReturnString(sql);
-	  return localWS.Flow_DoFlowOverQiangZhi(workID,msg, userNo);
+
+	  return Dev2Interface.Flow_DoFlowOver( workID, msg,1);
   }
 /*	@RequestMapping(value = "/Port_Login")
 	public void Port_Login(String userNo) throws Exception {
@@ -632,7 +629,7 @@ public class RestFulController {
 	 * @throws Exception
 	 */
     @RequestMapping(value = "/Runing_UnSend")
-	public String Runing_UnSend(String token,String flowNo, long workID, int unSendToNode,long fid) throws Exception{
+		public String Runing_UnSend(String token,String flowNo, long workID, int unSendToNode,long fid) throws Exception{
 		
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
 		
@@ -847,9 +844,10 @@ public class RestFulController {
 			orgNo = emp.getOrgNo();
 		}
 
+		String token = bp.wf.Dev2Interface.Port_GenerToken(userNo);
 		//执行登录，返回token.
-		bp.wf.Dev2Interface.Port_Login(userNo, orgNo);
-		return bp.wf.Dev2Interface.Port_GenerToken("PC");
+		bp.wf.Dev2Interface.Port_Login(userNo,orgNo);
+		return token;
 	}
 
 	/// <summary>

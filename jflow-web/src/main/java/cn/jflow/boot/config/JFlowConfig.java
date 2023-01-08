@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
 import bp.da.DataType;
+import bp.difference.redis.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,16 +155,18 @@ public class JFlowConfig {
 	 * @return
 	 */
 	@Bean
-	public ContextHolderUtils jflowContextHolderUtils(DataSource dataSource) {
+	public ContextHolderUtils jflowContextHolderUtils(DataSource dataSource,RedisUtils redisUtils) {
 		loadJFlowDatabaseConfig();
 		ContextHolderUtils contextHolderUtils = new ContextHolderUtils();
 		contextHolderUtils.setDataSource(dataSource);
+		contextHolderUtils.setRedisUtils(redisUtils);
 		if(applicationContext != null) {
 			contextHolderUtils.setApplicationContext(applicationContext);
 		}
 		
 		return contextHolderUtils;
 	}
+
 
 	public static ApplicationContext getApplicationContext() {
 		return applicationContext;

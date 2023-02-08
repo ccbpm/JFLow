@@ -1394,7 +1394,7 @@ public class Glo {
 	 * 当前版本号-为了升级使用.
 	 * 20200602:升级方向条件.
 	 */
-	public static int Ver = 20220406;
+	public static int Ver = 20230208;
 
 	/**
 	 * 执行升级

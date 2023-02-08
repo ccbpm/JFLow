@@ -55,7 +55,8 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 			|| doType.contains("admiin")
 			|| doType.contains("dbinstall")
 			|| doType.contains("default_logout")
-			|| doType.contains("checkencryptenable"))
+			|| doType.contains("checkencryptenable")
+			|| doType.contains("ccbpmservices"))
 			return;
 		String token = this.GetRequestVal("Token");
 		if(DataType.IsNullOrEmpty(token)==false &&(token.equals("undefined")==true ||  token.equals("null")==true))

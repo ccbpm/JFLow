@@ -3253,30 +3253,15 @@ $(function () {
 
     var url = GetHrefUrl().toLowerCase();
 
-    //var i = url.lastIndexOf('.');
-    //  alert(i);
-
+    var pageName = window.document.location.pathname.toLowerCase();
+    pageName = pageName.substring(pageName.lastIndexOf("/")+1);
     //不需要权限信息..
-    if (url.indexOf('login.htm') != -1
-        || url.indexOf('dbinstall.htm') != -1
-        || url.indexOf('scanguide.htm') != -1
-        //|| (url.indexOf('home.htm') != -1 && url.indexOf('/portal/standard/') == -1)
-        || url.indexOf('qrcodescan.htm') != -1
-        //|| (url.indexOf('default.htm') != -1 && url.indexOf('/portal/standard/')==-1)
-        || url.indexOf('index.htm') != -1
-        || url.indexOf('gotourl.htm') != -1
-        || url.indexOf('invited.htm') != -1
-        || url.indexOf('registerbywebsite.htm') != -1
-        || url.indexOf('reqpassword.htm') != -1
-        || url.indexOf('reguser.htm') != -1
-        || url.indexOf('port.htm') != -1
-        || url.indexOf('nb.com.cn/') != -1
-        || url == basePath
-
-        || url.indexOf('loginwebsite.htm') != -1) {
+    var listPage = ['login.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn', 'loginwebsite.htm', 'goto.htm'];
+    if (listPage.includes(pageName) || url == basePath || url.indexOf('appcoder/default.htm') != -1) {
         localStorage.setItem('Token', '');
         return;
     }
+
 
     loadWebUser = new WebUser();
 

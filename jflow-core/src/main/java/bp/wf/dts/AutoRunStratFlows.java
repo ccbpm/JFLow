@@ -45,6 +45,12 @@ public class AutoRunStratFlows extends Method
 	@Override
 	public Object Do() throws Exception
 	{
+		String no = "admin";
+		if(DataType.IsNullOrEmpty(WebUser.getNo())==false){
+			no = WebUser.getNo();
+		}
+		bp.port.Emp empadmin = new bp.port.Emp(no);
+		WebUser.SignInOfGener(empadmin);
 		bp.wf.Flows fls = new Flows();
 		fls.RetrieveAll();
 
@@ -141,12 +147,8 @@ public class AutoRunStratFlows extends Method
 					break;
 			}
 		}
-		if (!WebUser.getNo().equals("admin"))
-		{
-			bp.port.Emp empadmin = new bp.port.Emp("admin");
-			WebUser.SignInOfGener(empadmin);
-		}
-
+		empadmin = new bp.port.Emp(no);
+		WebUser.SignInOfGener(empadmin);
 		/// 发送消息
 
 		return "调度完成..";

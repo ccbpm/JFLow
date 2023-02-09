@@ -2903,12 +2903,14 @@ public class Glo {
 		Emp empGPM = new Emp();
 		empGPM.CheckPhysicsTable();
 
-		DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
+		//DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
 
 		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		DBAccess.RunSQLScript(sqlscript);
 
 		Emp empAdmin = new Emp("admin");
+		//生成Token
+		bp.wf.Dev2Interface.Port_GenerToken("admin");
 		WebUser.SignInOfGener(empAdmin, "CH", false, false, null, null);
 
 		///#endregion 执行基本的 sql

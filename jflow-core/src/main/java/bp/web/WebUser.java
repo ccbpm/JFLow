@@ -677,12 +677,16 @@ public class WebUser {
 
             if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS) {
                 String no = DBAccess.RunSQLReturnString("SELECT OrgNo FROM Port_Emp WHERE UserID='" + WebUser.getNo() + "'");
+                if(DataType.IsNullOrEmpty(no)==true)
+                    throw new RuntimeException("err@SAAS模式人员编号为["+WebUser.getNo()+"]的Port_Emp表中组织编号不能为空");
                 setItemValue("OrgNo", no);
                 return no;
             }
 
             if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc) {
                 String no = DBAccess.RunSQLReturnString("SELECT OrgNo FROM Port_Emp WHERE No='" + WebUser.getNo() + "'");
+                if(DataType.IsNullOrEmpty(no)==true)
+                    throw new RuntimeException("err@集团模式人员编号为["+WebUser.getNo()+"]的Port_Emp表中组织编号不能为空");
                 setItemValue("OrgNo", no);
                 return no;
             }

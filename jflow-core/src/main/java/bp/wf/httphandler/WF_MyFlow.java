@@ -1697,17 +1697,7 @@ public class WF_MyFlow extends WebContralBase
 				ds.Tables.add(dtNodes);
 			///#endregion 加载到达节点下拉框数据源.
 
-			//当前节点是子流程的开始节点，显示可以退回到父流程的子节点信息
-			if(this.getPWorkID()!=0){ //@ZHR
-				//获取退回到父流程的节点
-				GenerWorkerLists gwls = new GenerWorkerLists();
-				int i = gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getPWorkID(),GenerWorkerListAttr.FK_Emp,gwf.getStarter(), GenerWorkerListAttr.RDT);
-				if(i==0)
-					return "err@父流程信息出现异常或者已经结束，子流程工具栏不能显示父流程节点信息";
-				//只能退回到父流程最后处理的节点信息
-				GenerWorkerList gwl = (GenerWorkerList)gwls.get(gwls.size()-1);
-				ds.Tables.add(gwl.ToDataTableField("WF_ParentNode"));
-			}
+			
 			///#region 在工具栏上显示退回节点的信息.
 			dt = nd.ToDataTableField("WF_Node");
 			dt.Columns.Add("IsBackTrack", Integer.class);

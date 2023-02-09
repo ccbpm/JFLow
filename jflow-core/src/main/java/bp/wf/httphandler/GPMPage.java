@@ -115,6 +115,8 @@ public class GPMPage extends WebContralBase
 
 		bp.port.Depts depts = new bp.port.Depts();
 		String parentNo = this.GetRequestVal("ParentNo");
+		if(DataType.IsNullOrEmpty(parentNo))
+			parentNo="0";
 		QueryObject qo = new QueryObject(depts);
 		if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.Single){
 			if (parentNo.equals("0") == true) {

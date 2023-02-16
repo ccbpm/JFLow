@@ -33,6 +33,8 @@
   <Item No="502" GroupNo="Org" Name="岗位维护" For="admin" Url="../../WF/Comm/Search.htm?EnsName=BP.Port.Stations"  Icon="icon-note"/>
   <Item No="503" GroupNo="Org" Name="人员台帐" For="admin" Url="../../WF/Comm/Search.htm?EnsName=BP.Port.Emps" Icon="icon-list" />
   <Item No="601" GroupNo="Org" Name="自动报表" For="admin" Url="../../WF/Comm/Search.htm?EnsName=BP.WF.Data.AutoRpts" Icon="icon-pie-chart" />
+  <Item No="505" GroupNo="Org" Name="用户组类型"   Url="../../WF/Comm/Ens.htm?EnsName=BP.Port.TeamTypes"  Icon="icon-pie-chart" />
+  <Item No="506" GroupNo="Org" Name="用户组"   Url="../../WF/Comm/Search.htm?EnsName=BP.Port.Teams"   Icon="icon-pie-chart"/>
 
   <Group No="System" Name="系统管理" Icon="icon-settings" />
   <Item No="670" GroupNo="System" Name="系统枚举" For="admin" Url="../../WF/Admin/FoolFormDesigner/SysEnumList.htm?DoType=AddEnum" Icon="icon-note" />

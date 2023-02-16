@@ -26,7 +26,7 @@ var CommonConfig = {
     IsShowComplteCheckIcon:false,
 
     //附件信息配置
-    IsOnlinePreviewOfAth: true, //是否在线预览
+    IsOnlinePreviewOfAth: false, //是否在线预览
     PreviewPathOfAth: "http://101.43.55.81:8012",//附件预览服务器地址，在上传附件后预览时可配置此处的预览服务器地址
     IsHideMobileBack: false,//是否隐藏移动端返回标签
     RichTextType: 'tinymce',

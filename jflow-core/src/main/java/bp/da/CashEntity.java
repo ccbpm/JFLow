@@ -12,7 +12,10 @@ public class CashEntity
 	private static String dCashKey = SystemConfig.getRedisCacheKey("DCash");
 	public static  Hashtable<String, Object> getDCash()throws Exception
 	{
-		_Cash = ContextHolderUtils.getRedisUtils().hget(false,dCashKey);
+		if(SystemConfig.getRedisIsEnable())
+			_Cash = ContextHolderUtils.getRedisUtils().hget(false,dCashKey);
+		if (_Cash == null)
+			_Cash = new Hashtable();
 		return _Cash;
 	}
 	/** 
@@ -27,9 +30,7 @@ public class CashEntity
 		Object tempVar = CashEntity.getDCash().get(enName);
 		Hashtable ht = tempVar instanceof Hashtable ? (Hashtable)tempVar : null;
 		if (ht == null)
-		{
 			ht = new Hashtable();
-		}
 
 		ht.clear();
 		for (Entity en : ens)
@@ -38,7 +39,8 @@ public class CashEntity
 		}
 		// 把实体集合放入.
 		CashEntity.getDCash().put(enName + "Ens", ens);
-		ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName + "Ens",ens);
+		if(SystemConfig.getRedisIsEnable())
+			ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName + "Ens",ens);
 	}
 	public static Entities GetEns(String enName) throws Exception {
 		Object tempVar = CashEntity.getDCash().get(enName + "Ens");
@@ -63,8 +65,8 @@ public class CashEntity
 		ht.put(key, en);
 		//清除集合.
 		CashEntity.getDCash().remove(enName + "Ens");
-		//ContextHolderUtils.getRedisUtils().hset(false,enName,ht);
-		ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
+		if(SystemConfig.getRedisIsEnable())
+			ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
 	}
 	/** 
 	 获取一个实体
@@ -100,8 +102,10 @@ public class CashEntity
 		ht.remove(pkVal);
 		//清除集合.
 		CashEntity.getDCash().remove(enName + "Ens");
-		ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName,ht);
-		ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
+		if(SystemConfig.getRedisIsEnable()){
+			ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName,ht);
+			ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
+		}
 	}
 	/** 
 	 插入
@@ -129,7 +133,9 @@ public class CashEntity
 
 		//清除集合.
 		CashEntity.getDCash().remove(enName + "Ens");
-		ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName,ht);
-		ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
+		if(SystemConfig.getRedisIsEnable()){
+			ContextHolderUtils.getRedisUtils().hset(false,dCashKey,enName,ht);
+			ContextHolderUtils.getRedisUtils().hdel(false,dCashKey,enName + "Ens");
+		}
 	}
 }

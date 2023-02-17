@@ -93,7 +93,7 @@ public class WebUser {
         if (SystemConfig.getIsBSsystem()) {
             bp.sys.base.Glo.WriteUserLog(em.getNo(), "登录");
         }
-        HashMap<String, Object> ht = new HashMap<>();
+        HashMap<String, String> ht = new HashMap<>();
         //存储WebUser信息
         ht.put("No", em.getNo());
         ht.put("Name", em.getName());
@@ -144,11 +144,17 @@ public class WebUser {
         ht.put("FK_DeptName", em.getFK_DeptText());
 
         ht.put("SysLang", lang);
-
-        String ip = getIp();
-        if (!StringUtils.isBlank(ip)) {
-            ContextHolderUtils.getRedisUtils().set(false, SystemConfig.getRedisCacheKey("WebUser_" + ip), ht,300);
+        if(SystemConfig.getRedisIsEnable()){
+            String ip = getIp();
+            if (!StringUtils.isBlank(ip)) {
+                ContextHolderUtils.getRedisUtils().set(false, SystemConfig.getRedisCacheKey("WebUser_" + ip), ht,300);
+            }
+        }else{
+            for (java.util.Map.Entry<String, String> next: ht.entrySet()) {
+                WebUser.setItemValue(next.getKey(),next.getValue());
+            }
         }
+
         if (SystemConfig.getIsBSsystem()) {
 
             // cookie操作，为适应不同平台，统一使用HttpContextHelper
@@ -239,20 +245,25 @@ public class WebUser {
      * 退回
      */
     public static void Exit() throws Exception {
-        String token = getIp();
-        if(DataType.IsNullOrEmpty(token)==false && WebUser.getIsAdmin()==false) {
-            String guid = DBAccess.GenerGUID();
-            DBAccess.RunSQL("UPDATE WF_Emp SET AtPara=REPLACE(AtPara,'@Token_PC=" + bp.web.WebUser.getToken() + "', '@Token_PC=" + guid + "') WHERE No = '" + bp.web.WebUser.getNo() + "'");
-            ContextHolderUtils.getRedisUtils().del(false, SystemConfig.getRedisCacheKey("WebUser_" + token));
-        } try {
+        if(SystemConfig.getRedisIsEnable()){
+            String token = getIp();
+            if(DataType.IsNullOrEmpty(token)==false && WebUser.getIsAdmin()==false) {
+                String guid = DBAccess.GenerGUID();
+                DBAccess.RunSQL("UPDATE WF_Emp SET AtPara=REPLACE(AtPara,'@Token_PC=" + bp.web.WebUser.getToken() + "', '@Token_PC=" + guid + "') WHERE No = '" + bp.web.WebUser.getNo() + "'");
+                ContextHolderUtils.getRedisUtils().del(false, SystemConfig.getRedisCacheKey("WebUser_" + token));
+            }
+        }
+        try {
             // 清理Session
-			/*WebUser.setNo("");
-			WebUser.setName("");
-			WebUser.setFK_Dept("");
-			WebUser.setFK_DeptName("");
-			WebUser.setSID("");
-			WebUser.setAuth("");
-			WebUser.setSysLang("");*/
+            if(SystemConfig.getRedisIsEnable()==false){
+                WebUser.setNo("");
+                WebUser.setName("");
+                WebUser.setFK_Dept("");
+                WebUser.setFK_DeptName("");
+                WebUser.setSID("");
+                WebUser.setAuth("");
+                WebUser.setSysLang("");
+            }
             if (SystemConfig.getIsBSsystem()) {
 
                 ContextHolderUtils.addCookie("No", "");
@@ -274,41 +285,43 @@ public class WebUser {
      */
     public static String getAuth() throws Exception {
         return getItemValue("Auth");
-		/*String val = GetValFromCookie("Auth", null, false);
-		if (val == null)
-		{
-			val = GetSessionByKey("Auth", null);
-		}
-		return val;*/
     }
 
     public static String getItemValue(String item) {
-        Object obj = ContextHolderUtils.getRedisUtils().get(false, SystemConfig.getRedisCacheKey("WebUser_" + getIp()));
-        if (obj == null)
-            return "";
-        HashMap ht = obj instanceof HashMap ? (HashMap) obj : null;
-        if(ht==null)
-            return "";
-        return ht.get(item) != null ? ht.get(item).toString() : "";
-
+        if(SystemConfig.getRedisIsEnable()){
+            if(DataType.IsNullOrEmpty(getIp())==true)
+                return "";
+            Object obj = ContextHolderUtils.getRedisUtils().get(false, SystemConfig.getRedisCacheKey("WebUser_" + getIp()));
+            if (obj == null)
+                return "";
+            HashMap ht = obj instanceof HashMap ? (HashMap) obj : null;
+            if(ht==null)
+                return "";
+            return ht.get(item) != null ? ht.get(item).toString() : "";
+        }
+        return GetValFromCookie(item, null, true);
     }
 
     public static void setItemValue(String item, String value) {
-        String ip = getIp();
-        if (StringUtils.isBlank(ip)) {
+        if(SystemConfig.getRedisIsEnable()){
+            String ip = getIp();
+            if (StringUtils.isBlank(ip)) {
+                return;
+            }
+            Object obj = ContextHolderUtils.getRedisUtils().get(false, SystemConfig.getRedisCacheKey("WebUser_" + ip));
+            HashMap<String, Object> ht = null;
+            if (obj == null)
+                ht = new HashMap<>();
+            else
+                ht = obj instanceof HashMap ? (HashMap) obj : null;
+            if (value == null) value = "";
+            if (ht != null) {
+                ht.put(item, value);
+                ContextHolderUtils.getRedisUtils().set(false, SystemConfig.getRedisCacheKey("WebUser_" + ip), ht,300);
+            }
             return;
         }
-        Object obj = ContextHolderUtils.getRedisUtils().get(false, SystemConfig.getRedisCacheKey("WebUser_" + ip));
-        HashMap<String, Object> ht = null;
-        if (obj == null)
-            ht = new HashMap<>();
-        else
-            ht = obj instanceof HashMap ? (HashMap) obj : null;
-        if (value == null) value = "";
-        if (ht != null) {
-            ht.put(item, value);
-            ContextHolderUtils.getRedisUtils().set(false, SystemConfig.getRedisCacheKey("WebUser_" + ip), ht,300);
-        }
+        SetSessionByKey(item, value.trim());
     }
 
     public static void setAuth(String value) throws Exception {
@@ -320,15 +333,6 @@ public class WebUser {
      */
     public static String getFK_DeptName() {
         return getItemValue("FK_DeptName");
-		/*try
-		{
-			String val = GetValFromCookie("FK_DeptName", null, true);
-			return val;
-		}
-		catch (java.lang.Exception e)
-		{
-			return "无";
-		}*/
     }
 
     public static void setFK_DeptName(String value) throws Exception {
@@ -339,8 +343,7 @@ public class WebUser {
      * 部门全称
      */
     public static String getFK_DeptNameOfFull() {
-        return getItemValue("FK_DeptNameOfFull");
-		/*String val = GetValFromCookie("FK_DeptNameOfFull", null, true);
+        String val = getItemValue("FK_DeptNameOfFull");
 		if (DataType.IsNullOrEmpty(val))
 		{
 			try
@@ -350,11 +353,8 @@ public class WebUser {
 				ps.SQL = "SELECT NameOfPath FROM Port_Dept WHERE No =" + ps.getDBStr() + "No";
 				ps.Add("No", WebUser.getFK_Dept());
 				val = DBAccess.RunSQLReturnStringIsNull(ps, null);
-
 				if (DataType.IsNullOrEmpty(val))
-				{
 					val = WebUser.getFK_DeptName();
-				}
 
 				WebUser.setFK_DeptNameOfFull(val);
 				return val;
@@ -364,7 +364,7 @@ public class WebUser {
 				val = WebUser.getFK_DeptName();
 			}
 		}
-		return val;*/
+		return val;
     }
 
     public static void setFK_DeptNameOfFull(String value) throws Exception {
@@ -400,14 +400,11 @@ public class WebUser {
      * 当前登录人员的部门
      */
     public static String getFK_Dept() {
-        return getItemValue("FK_Dept");
-		/*String val = GetValFromCookie("FK_Dept", null, false);
+        String val =  getItemValue("FK_Dept");
 		if (val == null)
 		{
 			if (WebUser.getNo() == null)
-			{
 				throw new RuntimeException("@登录信息丢失，请你确认是否启用了cookie? ");
-			}
 
 			String sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + WebUser.getNo() + "'";
 			String dept = DBAccess.RunSQLReturnStringIsNull(sql, null);
@@ -418,17 +415,14 @@ public class WebUser {
 			}
 
 			if (dept == null)
-			{
 				throw new RuntimeException("@err-003 FK_Dept，当前登录人员(" + WebUser.getNo() + ")，没有设置部门。");
-			}
-
-			SetSessionByKey("FK_Dept", dept);
+            setItemValue("FK_Dept", dept);
 			return dept;
 		}
-		return val;*/
+		return val;
     }
 
-    public static void setFK_Dept(String value) throws Exception {
+    public static void setFK_Dept(String value){
         setItemValue("FK_Dept", value);
     }
 
@@ -553,7 +547,6 @@ public class WebUser {
      */
     public static String getNo() {
         return getItemValue("No");
-        //return GetValFromCookie("No", null, true);
     }
 
     public static void setNo(String value) throws Exception {
@@ -564,15 +557,14 @@ public class WebUser {
      * 名称
      */
     public static String getName() {
-        return getItemValue("Name");
-		/*String no = bp.web.WebUser.getNo();
+		String no = bp.web.WebUser.getNo();
 
-		String val = GetValFromCookie("Name", no, true);
+		String val = getItemValue("Name");
+        if(DataType.IsNullOrEmpty(val))
+            val = no;
 		if (val == null)
-		{
 			throw new RuntimeException("@err-002 Name 登录信息丢失。");
-		}
-		return val;*/
+		return val;
     }
 
     public static void setName(String value) throws Exception {
@@ -670,7 +662,7 @@ public class WebUser {
             return "";
         }
         String val =  getItemValue("OrgNo");
-        if (val == null) {
+        if (DataType.IsNullOrEmpty(val)==true) {
             if (WebUser.getNo() == null) {
                 throw new RuntimeException("err@登陆信息丢失，请重新登录.");
             }

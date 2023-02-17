@@ -578,7 +578,8 @@ public class DataType {
         Reader is = null;
         String line = "";
         boolean isRunJar = filePath.indexOf("DataUser/") != -1 && (filePath.indexOf("DataUser/Siganture/") != -1 || filePath.indexOf("DataUser/UploadFile/") != -1 ||
-                filePath.indexOf("DataUser/FlowDesc/") != -1 || filePath.indexOf("DataUser/Temp/") != -1 || filePath.indexOf("DataUser/InstancePacketOfData/") != -1) ? false : true;
+                filePath.indexOf("DataUser/FlowDesc/") != -1 || filePath.indexOf("DataUser/Temp/") != -1
+                || filePath.indexOf("DataUser/JSLibData/") != -1 || filePath.indexOf("DataUser/InstancePacketOfData/") != -1) ? false : true;
         try {
             if (SystemConfig.getIsJarRun() && isRunJar) {
                 ClassPathResource classPathResource = new ClassPathResource(filePath);

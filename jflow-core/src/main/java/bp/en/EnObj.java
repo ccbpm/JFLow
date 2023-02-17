@@ -796,10 +796,12 @@ public abstract class EnObj implements Serializable
 	public final void setRow(Row value)
 	{
 		this._row = value;
-		if(value==null){
-			return;
+		if(SystemConfig.getRedisIsEnable()){
+			if(value==null){
+				return;
+			}
+			bp.da.Cash2019.PutRow(this.toString(),this._row.GetValStrByKey(this.getPK()),value);
 		}
-		bp.da.Cash2019.PutRow(this.toString(),this._row.GetValStrByKey(this.getPK()),value);
 	}
 
 	///关于属性的操作。

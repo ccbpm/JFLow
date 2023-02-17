@@ -1,6 +1,7 @@
 package bp.difference.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@ConditionalOnProperty(name="spring.data.redis.repositories.enabled", havingValue="true", matchIfMissing=false)
 public class RedisUtils
 {
     /**

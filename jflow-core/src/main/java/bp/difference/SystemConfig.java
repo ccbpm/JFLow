@@ -1288,6 +1288,13 @@ public class SystemConfig {
 		return DEFAULT_CACHE_KEY_PREFIX+key;
 	}
 
+	/**
+	 * 是否启用redis
+	 * @return
+	 */
+	public static boolean getRedisIsEnable(){
+		return SystemConfig.GetValByKeyBoolen("RedisIsEnable", true);
+	}
 
 
 }

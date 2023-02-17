@@ -14,7 +14,7 @@
         var flowNo = GetQueryString("FK_Flow");
         var workID = GetQueryString("WorkID");
         var userNo = GetQueryString("UserNo");
-        var token = GetQueryString("Token");
+        var token = GetQueryString("Token") ||GetQueryString("Token");
 
         var tester = GetQueryString("Tester");
 
@@ -33,13 +33,13 @@
             }
 
             var gwf = new Entity("BP.WF.GenerWorkFlow", workID);
-
+            var adminToken = GetQueryString("AdminToken") || localStorage.getItem("AdminToken");
             //访问后台，获得一个工作ID.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
-            handler.AddPara("Token", GetQueryString("AdminToken"));
+            handler.AddPara("Token", adminToken);
             handler.AddPara("UserNo", GetQueryString("UserNo"));
             handler.DoMethodReturnString("Default_LetAdminerLogin");
-            window.parent.InitPageUserInfo(GetQueryString("AdminToken"));
+            window.parent.InitPageUserInfo(adminToken);
 
             handler.AddUrlData();
             var ens = handler.DoMethodReturnJSON("SelectOneUser_Init");
@@ -167,7 +167,7 @@
             var adminer = GetQueryString("Adminer");
             handler.AddPara("Adminer", adminer);
 
-            var AdminerToken = GetQueryString("AdminerToken");
+            var AdminerToken = GetQueryString("AdminerToken") || localStorage.getItem("AdminToken");
             handler.AddPara("AdminerToken", AdminerToken);
 
             var orgNo = GetQueryString("OrgNo");
@@ -186,7 +186,7 @@
                 alert(data);
                 return;
             }
-            localStorage.setItem('Token',data);
+            localStorage.setItem("Token", data);
             if (isMobile == 1)
                 window.open('../../../CCMobile/MyFlow.htm?Token='+data+'&FK_Flow=' + flowNo + '&WorkID=' + workid + "&FID=" + fid + "&FK_Node=" + nodeID, '_self');
             else
@@ -233,9 +233,5 @@
         <div id="gwls"></div>
 
     </center>
-
-
-
-
 </body>
 </html>

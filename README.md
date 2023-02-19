@@ -1,8 +1,8 @@
-### 欢迎使用
-- 欢迎使用.纯国产.纯开源.驰骋工作流引擎.表单引擎.低代码开发平台.
-- 作流程引擎: JFlow
-- 表单引擎:. CCForm
-- 低代码开发平台: 实体、报表、大屏等.
+### 系统组织
+- 关键字.纯国产.纯开源.驰骋工作流引擎.表单引擎.低代码开发平台。
+- 流程引擎: 自研、符合中国国情、功能细致、覆盖面广、贴近中国习惯。
+- 表单引擎:. 傻瓜表单、开发者表单两种类型、简洁、可靠、适应能力强。
+- 低代码开发平台: 实体、报表、大屏等、OA基础应用
 #### 系统概要介绍 
 - 技术交流群:1060674395, 在右上角点:watch,star,fork支持我们,谢谢.
 - 驰骋工作流引擎研发与2003年，具有.net与java两个版本，这两个版本代码结构，数据库结构，设计思想，功能组成， 操作手册，完全相同。 导入导出的流程模版，表单模版两个版本完全通用。
@@ -21,12 +21,6 @@
 - 配置参数丰富，支持流程的基础功能：前进、后退、转向、转发、撤销、抄送、挂起、草稿、任务池共享，也支持高级功能取回审批、项目组、外部用户等等。
 - 数据库脚本可以用代码自动安装完成。只需要新建一个空的数据库，运行项目后访问流程设计器页面，即可进入脚本自动安装的页面。  
 
-#### 生态伙伴-排名不分先后.
-- 与Jeesite代码集成版: https://gitee.com/thinkgem/jeesite4-jflow 
-- 微同商城 https://gitee.com/fuyang_lipengjun/platform
-- 单点登录 https://gitee.com/dotnetchina/BootstrapAdmin
-- Bootstrap Blazor https://gitee.com/dotnetchina/BootstrapAdmin 
-- ccflow 项目已加入 [dotNET China](https://gitee.com/dotnetchina) 组织.
 
 #### 资源下载
 - http://demo.ccflow.org 在线演示.
@@ -84,12 +78,18 @@
 - 草稿
 ![输入图片说明](docs/前端应用/05.草稿.png)
  
-
 ### 版本说明
 1. 主版本 ccflow，.Net Framework 4.5.2，Visual Studio 2017/2019，本项目，分支为 [develop](https://gitee.com/opencc/ccflow/tree/develop/)
 2. 旧版，For Vs2010，.Net Framework 4.0，Visual Studio 2010，本项目，分支为 [forVS2010](https://gitee.com/opencc/ccflow/tree/forVS2010/)
 3. .NetCore版，.Net Core 3.0 Preview 5，Visual Studio 2019，参见另一个项目 [CCFlowForNetcore](https://gitee.com/opencc/CCFlowForNetcore) 
 4. Java版，参见另一个项目 [JFlow](https://gitee.com/opencc/JFlow) 
+
+#### 生态伙伴-排名不分先后.
+- 与Jeesite代码集成版: https://gitee.com/thinkgem/jeesite4-jflow 
+- 微同商城 https://gitee.com/fuyang_lipengjun/platform
+- 单点登录 https://gitee.com/dotnetchina/BootstrapAdmin
+- Bootstrap Blazor https://gitee.com/dotnetchina/BootstrapAdmin 
+- ccflow 项目已加入 [dotNET China](https://gitee.com/dotnetchina) 组织.
 
 
 #### 选择理由?

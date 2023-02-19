@@ -30,7 +30,7 @@
 - http://doc.ccbbpm.cn  操作手册
 - http://ccflow.org/ke.htm 视频教程
 
-#### 后台设计器：
+#### 截图
 - 登录
 ![输入图片说明](docs/00.%E7%99%BB%E5%BD%95.png)
 - 主页

@@ -17,18 +17,18 @@
 - 数据库脚本可以用代码自动安装完成。只需要新建一个空的数据库，运行项目后访问流程设计器页面，即可进入脚本自动安装的页面。  
 
 ##### 生态伙伴-排名不分先后.
-
+- 与Jeesite代码集成版: https://gitee.com/thinkgem/jeesite4-jflow 
 - 微同商城 https://gitee.com/fuyang_lipengjun/platform
 - 单点登录 https://gitee.com/dotnetchina/BootstrapAdmin
 - Bootstrap Blazor https://gitee.com/dotnetchina/BootstrapAdmin 
 - ccflow 项目已加入 [dotNET China](https://gitee.com/dotnetchina) 组织.
 
 ### 资源
-0. http://demo.ccflow.org 在线演示.
-1. http://ccflow.org 官方网站
-2. https://ccfast.cc  驰骋低代码开发平台
-3. http://doc.ccbbpm.cn  操作手册
-4. http://ccflow.org/ke.htm 视频教程
+- http://demo.ccflow.org 在线演示.
+- http://ccflow.org 官方网站
+- https://ccfast.cc  驰骋低代码开发平台
+- http://doc.ccbbpm.cn  操作手册
+- http://ccflow.org/ke.htm 视频教程
 
 ## 后台设计器：
 
@@ -85,7 +85,6 @@
 ### 组成部分
 1. 驰骋工作流程引擎 JFlow
 2. 驰骋表单引擎. CCForm
-3. 组织结构管理, 菜单权限管理. GPM
 
 ### 为什么选择ccflow? ###
 01. CCFlow成长于中国2003年,历史长久,在多种生产、管理环境中成长起来，是国内老牌的工作流程引擎,拥有众多的爱好者,开发者, 100%的核心代码开源.
@@ -103,7 +102,7 @@
 14. CCFlow资料完善（约:16万字)，拥有众多的爱好者,开发者容易得到帮助. CCFlow的代码放在Git上，容易修改代码与我们合并.
 15. CCFlow集成方便, 概念、名词通俗易懂.
 
-### 基础功能 ###
+### 基础功能
 1. 流程引擎设计支持所见即所得的设计：节点设计、表单设计、单据设计、报表定义设计，方向条件设计....
 2. 流程模式简洁只有4种容易理解、线性流程、同表单分合流、异表单分合流、父子流程，没有复杂的概念。
 3. 支持流程的基础功能：前进、后退、转向、转发、撤销、抄送、挂起、草稿、任务池共享，也支持高级功能取回审批、项目组、来宾用户等等。

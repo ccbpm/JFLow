@@ -16,21 +16,21 @@
 - 配置参数丰富，支持流程的基础功能：前进、后退、转向、转发、撤销、抄送、挂起、草稿、任务池共享，也支持高级功能取回审批、项目组、外部用户等等。
 - 数据库脚本可以用代码自动安装完成。只需要新建一个空的数据库，运行项目后访问流程设计器页面，即可进入脚本自动安装的页面。  
 
-##### 生态伙伴-排名不分先后.
+#### 生态伙伴-排名不分先后.
 - 与Jeesite代码集成版: https://gitee.com/thinkgem/jeesite4-jflow 
 - 微同商城 https://gitee.com/fuyang_lipengjun/platform
 - 单点登录 https://gitee.com/dotnetchina/BootstrapAdmin
 - Bootstrap Blazor https://gitee.com/dotnetchina/BootstrapAdmin 
 - ccflow 项目已加入 [dotNET China](https://gitee.com/dotnetchina) 组织.
 
-###### 资源下载
+#### 资源下载
 - http://demo.ccflow.org 在线演示.
 - http://ccflow.org 官方网站
 - https://ccfast.cc  驰骋低代码开发平台
 - http://doc.ccbbpm.cn  操作手册
 - http://ccflow.org/ke.htm 视频教程
 
-##### 后台设计器：
+#### 后台设计器：
 - 登录
 ![输入图片说明](docs/00.%E7%99%BB%E5%BD%95.png)
 - 主页
@@ -38,7 +38,7 @@
 - 组织结构
 ![输入图片说明](docs/01.%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%E7%BB%B4%E6%8A%A4.png)
 
-##### 流程
+#### 流程
 - 流程列表
 ![输入图片说明](docs/%E6%B5%81%E7%A8%8B/00.%E6%B5%81%E7%A8%8B%E5%88%97%E8%A1%A8.png)
 - 设计器
@@ -50,49 +50,37 @@
 - 流程属性
 ![输入图片说明](docs/%E6%B5%81%E7%A8%8B/03.流程属性.png)
 
-##### 表单
+#### 表单
+- 表单目录
+![输入图片说明](docs/表单/00.Frms.png)
 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/110502_0ed3d055_980781.png "屏幕截图.png")
+- 表单设计器
+![输入图片说明](docs/表单/00.FrmD.png)
 
- **流程图2** 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101224_fec4bcfc_980781.png "屏幕截图.png")
+- 表单新建
+![输入图片说明](docs/表单/01.FrmNew.png)
 
-**流程图3**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/110606_e32b449d_980781.png "屏幕截图.png")
+- 从表属性
+![输入图片说明](docs/表单/02.AttrDtl.png)
 
-**丰富节点属性配置项**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101249_37a57e4d_980781.png "屏幕截图.png")
+#### 前端应用
+- 发起
+![输入图片说明](docs/前端应用/01.发起.png)
 
-**丰富流程属性配置项**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101310_d7d1609d_980781.png "屏幕截图.png")
+- 待办
+![输入图片说明](docs/前端应用/02.待办.png)
 
- **傻瓜表单设计器：** 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101354_7f0fe186_980781.png "屏幕截图.png")
+- 在途
+![输入图片说明](docs/前端应用/03.在途.png)
 
- **开发者表单设计器** 
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102312_361bd457_980781.png "屏幕截图.png")
+- 近期
+![输入图片说明](docs/前端应用/04.近期.png)
 
-# 前端流程处理
+- 草稿
+![输入图片说明](docs/前端应用/05.草稿.png)
+ 
 
-**流程发起**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102353_93695172_980781.png "屏幕截图.png")
-
-**待办**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102458_c7ce8d11_980781.png "屏幕截图.png")
-
-**工作处理1**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/111232_1e667f8a_980781.png "屏幕截图.png")
-
-**工作处理2**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/111258_d2754ccf_980781.png "屏幕截图.png")
-
-**工作处理3**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/111324_a899cdfe_980781.png "屏幕截图.png")
-
-**查询**
-![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102647_0299d547_980781.png "屏幕截图.png")
-
-### 版本说明 ### 
+#### 版本说明
 1. 主版本 ccflow，.Net Framework 4.5.2，Visual Studio 2017/2019，本项目，分支为 [develop](https://gitee.com/opencc/ccflow/tree/develop/)
 2. 旧版，For Vs2010，.Net Framework 4.0，Visual Studio 2010，本项目，分支为 [forVS2010](https://gitee.com/opencc/ccflow/tree/forVS2010/)
 3. .NetCore版，.Net Core 3.0 Preview 5，Visual Studio 2019，参见另一个项目 [CCFlowForNetcore](https://gitee.com/opencc/CCFlowForNetcore) 
@@ -179,3 +167,45 @@
 
 
 
+
+#### H5旧版本.
+
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/110502_0ed3d055_980781.png "屏幕截图.png")
+
+ **流程图2** 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101224_fec4bcfc_980781.png "屏幕截图.png")
+
+**流程图3**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/110606_e32b449d_980781.png "屏幕截图.png")
+
+**丰富节点属性配置项**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101249_37a57e4d_980781.png "屏幕截图.png")
+
+**丰富流程属性配置项**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101310_d7d1609d_980781.png "屏幕截图.png")
+
+ **傻瓜表单设计器：** 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/101354_7f0fe186_980781.png "屏幕截图.png")
+
+ **开发者表单设计器** 
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102312_361bd457_980781.png "屏幕截图.png")
+
+#### 前端流程处理
+
+**流程发起**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102353_93695172_980781.png "屏幕截图.png")
+
+**待办**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102458_c7ce8d11_980781.png "屏幕截图.png")
+
+**工作处理1**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/111232_1e667f8a_980781.png "屏幕截图.png")
+
+**工作处理2**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/111258_d2754ccf_980781.png "屏幕截图.png")
+
+**工作处理3**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/111324_a899cdfe_980781.png "屏幕截图.png")
+
+**查询**
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0209/102647_0299d547_980781.png "屏幕截图.png")

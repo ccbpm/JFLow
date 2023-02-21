@@ -10246,10 +10246,7 @@ public class Dev2Interface
 			{
 				GenerWorkFlow gwf = new GenerWorkFlow();
 
-				if (fl.getDraftRole() == DraftRole.None)
-				{
-					return "保存成功";
-				}
+
 
 				//规则设置为写入待办，将状态置为运行中，其他设置为草稿.
 				WFState wfState = WFState.Blank;
@@ -10272,7 +10269,13 @@ public class Dev2Interface
 
 				gwf.setWorkID(workID);
 				int i = gwf.RetrieveFromDBSources();
-
+				//增加PrjNo,PrjName
+				String prjNo = wk.GetValStringByKey("PrjNo");
+				if (DataType.IsNullOrEmpty(prjNo) == false)
+				{
+					gwf.setPrjNo(prjNo);
+					gwf.setPrjName(wk.GetValStringByKey("PrjName"));
+				}
 				gwf.setTitle(title); //标题.
 				if (i == 0)
 				{
@@ -10301,7 +10304,10 @@ public class Dev2Interface
 						gwf.DirectUpdate();
 					}
 				}
-
+				if (fl.getDraftRole() == DraftRole.None)
+				{
+					return "保存成功";
+				}
 				// 产生工作列表.
 				GenerWorkerList gwl = new GenerWorkerList();
 				gwl.setWorkID(workID);

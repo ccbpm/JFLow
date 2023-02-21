@@ -16,12 +16,9 @@ import bp.wf.port.WFEmp;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.axis.encoding.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RestController

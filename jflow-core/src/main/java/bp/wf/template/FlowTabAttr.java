@@ -30,6 +30,10 @@ public class FlowTabAttr extends EntityMyPKAttr
 	public static final String OrgNo = "OrgNo";
 	public static final String Tip = "Tip";
 	public static final String Idx = "Idx";
+	/**
+	 isEnable
+	 */
+	public static final String isEnable = "isEnable";
 
 		///#endregion
 }

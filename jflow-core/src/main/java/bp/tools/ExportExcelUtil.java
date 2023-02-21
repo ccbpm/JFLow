@@ -12,7 +12,9 @@ import bp.pub.PubClass;
 import bp.sys.UIConfig;
 import bp.web.WebUser;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.Region;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import javax.servlet.ServletOutputStream;
 import java.io.*;
@@ -54,7 +56,7 @@ public class ExportExcelUtil{
 			HSSFRow row = null;
 			// 第四步，创建单元格，并设置值表头 设置表头居中
 			HSSFCellStyle style = wb.createCellStyle();
-			style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+			style.setAlignment(HorizontalAlignment.CENTER); // 创建一个居中格式
 			HSSFFont font = null;
 			HSSFDataFormat fmt = wb.createDataFormat();
 			HSSFCell cell = null;
@@ -163,13 +165,13 @@ public class ExportExcelUtil{
 			 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
 			 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
 			 */
-			titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-			titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			titleStyle.setAlignment(HorizontalAlignment.CENTER);
 			font = wb.createFont();
 			font.setBold(true);
 			titleStyle.setFont(font);
 			row = sheet.createRow((int) 0);
-			sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+			sheet.addMergedRegion(new CellRangeAddress(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
 			cell = row.createCell(headerRowIndex);
 			cell.setCellValue(title);
 			cell.setCellStyle(titleStyle);
@@ -177,13 +179,13 @@ public class ExportExcelUtil{
 			// 生成制单人
 			// 制表人单元格样式设定
 			HSSFCellStyle userStyle = wb.createCellStyle();
-			userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-			userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+			userStyle.setAlignment(HorizontalAlignment.RIGHT);
+			userStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 			creatorRowIndex = creatorRowIndex+1;
 
 			row = sheet.createRow((int) creatorRowIndex);
 
-			sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+			sheet.addMergedRegion(new CellRangeAddress(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
 			cell = row.createCell(0);
 			cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
 			cell.setCellStyle(userStyle);
@@ -213,7 +215,7 @@ public class ExportExcelUtil{
 			HSSFRow row = null;
 			// 第四步，创建单元格，并设置值表头 设置表头居中
 			HSSFCellStyle style = wb.createCellStyle();
-			style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+			style.setAlignment(HorizontalAlignment.CENTER); // 创建一个居中格式
 			HSSFFont font = null;
 			HSSFDataFormat fmt = wb.createDataFormat();
 			HSSFCell cell = null;
@@ -347,13 +349,13 @@ public class ExportExcelUtil{
 			 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
 			 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
 			 */
-			titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-			titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			titleStyle.setAlignment(HorizontalAlignment.CENTER);
 			font = wb.createFont();
 			font.setBold(true);
 			titleStyle.setFont(font);
 			row = sheet.createRow((int) 0);
-			sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+			sheet.addMergedRegion(new CellRangeAddress(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
 			cell = row.createCell(headerRowIndex);
 			cell.setCellValue(fileName);
 			cell.setCellStyle(titleStyle);
@@ -361,13 +363,13 @@ public class ExportExcelUtil{
 			// 生成制单人
 			// 制表人单元格样式设定
 			HSSFCellStyle userStyle = wb.createCellStyle();
-			userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-			userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+			userStyle.setAlignment(HorizontalAlignment.RIGHT);
+			userStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 			int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
 
 			row = sheet.createRow((int) creatorRowIndex);
 
-			sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+			sheet.addMergedRegion(new CellRangeAddress(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
 			cell = row.createCell(0);
 			cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
 			cell.setCellStyle(userStyle);
@@ -442,7 +444,7 @@ public class ExportExcelUtil{
 			HSSFRow row = null;
 			// 第四步，创建单元格，并设置值表头 设置表头居中
 			HSSFCellStyle style = wb.createCellStyle();
-			style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+			style.setAlignment(HorizontalAlignment.CENTER); // 创建一个居中格式
 			HSSFFont font = null;
 			HSSFDataFormat fmt = wb.createDataFormat();
 			HSSFCell cell = null;
@@ -578,13 +580,13 @@ public class ExportExcelUtil{
 			 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
 			 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
 			 */
-			titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-			titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			titleStyle.setAlignment(HorizontalAlignment.CENTER);
 			font = wb.createFont();
 			font.setBold(true);
 			titleStyle.setFont(font);
 			row = sheet.createRow((int) 0);
-			sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+			sheet.addMergedRegion(new CellRangeAddress(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
 			cell = row.createCell(headerRowIndex);
 			cell.setCellValue(title);
 			cell.setCellStyle(titleStyle);
@@ -592,13 +594,13 @@ public class ExportExcelUtil{
 			// 生成制单人
 			// 制表人单元格样式设定
 			HSSFCellStyle userStyle = wb.createCellStyle();
-			userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-			userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
+			userStyle.setAlignment(HorizontalAlignment.RIGHT);
+			userStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 			int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
 
 			row = sheet.createRow((int) creatorRowIndex);
 
-			sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+			sheet.addMergedRegion(new CellRangeAddress(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
 			cell = row.createCell(0);
 			//cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDataTimeCNOfShort());
 			cell.setCellStyle(userStyle);

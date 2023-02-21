@@ -1667,7 +1667,13 @@ public class WF_MyFlow extends WebContralBase
 				{
 					String urlr3 = bar.getUrl() + "&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
 					urlr3=Glo.DealExp(urlr3,work);
-
+					if (urlr3.contains("@") == true)
+					{
+						Work work2 = nd.getHisWork();
+						work2.setOID(this.getWorkID());
+						work.Retrieve();
+						urlr3 = Glo.DealExp(urlr3, work);
+					}
 					dr = dt.NewRow();
 					dr.setValue("No", "NodeToolBar");
 					dr.setValue("Name", bar.getTitle());
@@ -1697,7 +1703,7 @@ public class WF_MyFlow extends WebContralBase
 				ds.Tables.add(dtNodes);
 			///#endregion 加载到达节点下拉框数据源.
 
-
+			
 			///#region 在工具栏上显示退回节点的信息.
 			dt = nd.ToDataTableField("WF_Node");
 			dt.Columns.Add("IsBackTrack", Integer.class);
@@ -1906,6 +1912,31 @@ public class WF_MyFlow extends WebContralBase
 				dr = dtToNDs.NewRow();
 				dr.setValue("No", item.getNodeID());
 				dr.setValue("Name", item.getName());
+
+				//判断到达的节点是不是双向箭头的节点
+				if (item.getIsResetAccepter() == false && item.getHisToNDs().contains("@" + nd.getNodeID()) == true
+						&& nd.getHisToNDs().contains("@" + item.getNodeID()) == true)
+				{
+					GenerWorkerLists gwls = new GenerWorkerLists();
+					gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node,
+							item.getNodeID(), GenerWorkerListAttr.IsPass, 1);
+					if (gwls.ToJavaList().size() > 0)
+					{
+						dr.setValue("IsSelectEmps", "0");
+						//设置默认选择的节点.
+						if (defalutSelectedNodeID == item.getNodeID())
+						{
+							dr.setValue("IsSelected","1");
+						}
+						else
+						{
+							dr.setValue("IsSelected", "0");
+						}
+
+						dtToNDs.Rows.add(dr);
+						continue;
+					}
+				}
 
 				if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
 				{

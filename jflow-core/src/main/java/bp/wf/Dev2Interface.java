@@ -4218,10 +4218,18 @@ public class Dev2Interface
 
 //ORIGINAL LINE: public static void Port_SendMessage(string sendToEmpNo, string smsDoc, string emailTitle, string msgType, string msgGroupFlag, string sendEmpNo, string openUrl, string pushModel, Int64 workID, string msgPK = null, string atParas = null)
 	public static void Port_SendMessage(String sendToEmpNo, String smsDoc, String emailTitle, String msgType, String msgGroupFlag, String sendEmpNo, String openUrl, String pushModel, long workID, String msgPK, String atParas) throws Exception {
-		bp.wf.port.WFEmp emp = null;
+		bp.port.Emp emp = null;
 		try
 		{
-			emp = new bp.wf.port.WFEmp(sendToEmpNo);
+			if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			{
+				emp = new bp.port.Emp(WebUser.getOrgNo() + "_" + sendToEmpNo);
+			}
+			else
+			{
+				emp = new bp.port.Emp(sendToEmpNo);
+			}
+			//emp = new bp.wf.port.WFEmp(sendToEmpNo);
 		}
 		catch (RuntimeException ex)
 		{

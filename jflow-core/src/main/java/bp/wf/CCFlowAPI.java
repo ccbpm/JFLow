@@ -626,8 +626,65 @@ public class CCFlowAPI
 
 				///#endregion 增加 groupfields
 
+ 			//#region 处理节点表单是傻瓜表单的特定用户特定权限
+			MapExts nexts = (MapExts)md.getMapExts().GetEntitiesByKey(MapExtAttr.ExtType, "SepcFieldsSepcUsers");
+			GroupFields groupFields = md.getGroupFields();
+			//加入分组表.
+			if (nexts != null && nexts.size() != 0)
+			{
+				String oids = ",";
+				String sq1l = "";
+				String tag1 = "";
+				for (MapExt ext : nexts.ToJavaList())
+				{
+					tag1 = ext.getTag1();
+					tag1 = tag1.replace("，", ",");
+					if (ext.getTag().equals("Emps"))
+						tag1 = "," + tag1 + ",";
 
-				///#region 流程设置信息.
+					if (ext.getTag().equals("Emps") && tag1.contains("," + WebUser.getNo() + ",") == true)
+						oids += ext.getDoc() + ",";
+					if (ext.getTag().equals("Stas") == true)
+					{
+						if (tag1.endsWith(","))
+							tag1 = tag1.substring(0, tag1.length() - 1);
+						tag1 = tag1.replace(",", "','") + "'";
+						sq1l = "SELECT count(*) From Port_DeptEmpStation WHERE FK_Station IN(" + tag1 + ") AND FK_Emp='" + WebUser.getNo() + "'";
+						if (DBAccess.RunSQLReturnValInt(sq1l) != 0)
+							oids += ext.getDoc() + ",";
+					}
+					if (ext.getTag().equals("Depts") == true)
+					{
+						if (tag1.endsWith(","))
+							tag1 = tag1.substring(0, tag1.length() - 1);
+						tag1 = tag1.replace(",", "','") + "'";
+						sq1l = "SELECT count(*) From Port_DeptEmp WHERE FK_Dept IN(" + tag1 + ") AND FK_Emp='" + WebUser.getNo() + "'";
+						if (DBAccess.RunSQLReturnValInt(sq1l) != 0)
+							oids += ext.getDoc() + ",";
+					}
+					if (ext.getTag().equals("SQL") == true)
+					{
+						tag1 = bp.wf.Glo.DealExp(tag1, wk);
+						if (DBAccess.RunSQLReturnValInt(tag1) != 0)
+							oids += ext.getDoc() + ",";
+					}
+				}
+
+				DataTable gfdt = myds.GetTableByName("Sys_GroupField");
+				for (DataRow dr : gfdt.Rows)
+				{
+					if (oids.contains(dr.getValue("OID").toString() + ","))
+						dr.setValue(GroupFieldAttr.ShowType, 2);
+
+
+
+				}
+			}
+                //#endregion 处理节点表单是傻瓜表单的特定用户特定权限
+
+
+
+			///#region 流程设置信息.
 			if (isView == false)
 			{
 				Dev2Interface.Node_SetWorkRead(nd.getNodeID(), realWorkID);

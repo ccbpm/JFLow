@@ -6,7 +6,6 @@ import bp.port.*;
 import bp.sys.*;
 import bp.wf.template.*;
 import bp.difference.*;
-import org.apache.axis2.databinding.types.xsd._byte;
 
 import java.math.*;
 

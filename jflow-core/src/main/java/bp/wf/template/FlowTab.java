@@ -104,6 +104,7 @@ public class FlowTab extends EntityMyPK
 		map.AddTBString(FlowTabAttr.Mark, null, "标记", false, false, 0, 50, 10);
 		map.AddTBString(FlowTabAttr.Tip, null, "Tip", false, false, 0, 200, 10);
 
+		map.AddTBInt(FlowTabAttr.isEnable, 1, "isEnable", true, true);
 		map.AddTBString(FlowTabAttr.UrlExt, null, "url链接", false, false, 0, 300, 10);
 		map.AddTBString(FlowTabAttr.Icon, null, "Icon", false, false, 0, 50, 10);
 		map.AddTBString(FlowTabAttr.OrgNo, null, "OrgNo", false, false, 0, 50, 10);

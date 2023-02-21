@@ -1454,27 +1454,30 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 
 		///#region 杨玉慧  表单设计--表单属性   JS编程
-	public final String InitScript_Init() throws Exception {
-		try
-		{
-			//2019-07-26 zyt改造
-			//String webPath = HttpRuntime.AppDomainAppPath.replace("\\", "/");
-			String filePath = SystemConfig.getPathOfDataUser() + "JSLibData/" + this.getFK_MapData() + "_Self.js";
-			String content =DataType.ReadTextFile(filePath);
-			return content;
+		public final String InitScript_Init() throws Exception {
+			try
+			{
+				//2019-07-26 zyt改造
+				String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
+				if(SystemConfig.getIsJarRun())
+					webPath = SystemConfig.getPhysicalPath()+"/";
+				String filePath = webPath + "DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
+				String content =DataType.ReadTextFile(filePath);
+				return content;
+			}
+			catch (RuntimeException ex)
+			{
+				return "err@" + ex.getMessage();
+			}
 		}
-		catch (RuntimeException ex)
-		{
-			return "err@" + ex.getMessage();
-		}
-	}
 
 	public final String InitScript_Save() throws Exception {
 		try
 		{
 			//2019-07-26 zyt改造
-			//String webPath = HttpRuntime.AppDomainAppPath.Replace("\\", "/");
 			String webPath = SystemConfig.getPathOfWebApp().replace("\\", "/");
+			if(SystemConfig.getIsJarRun())
+				webPath = SystemConfig.getPhysicalPath()+"/";
 			String filePath = webPath + "DataUser/JSLibData/" + this.getFK_MapData() + "_Self.js";
 			String content = this.GetRequestVal("JSDoc"); // this.context.Request.Params["JSDoc"];
 

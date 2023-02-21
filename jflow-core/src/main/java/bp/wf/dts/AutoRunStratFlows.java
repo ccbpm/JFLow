@@ -147,8 +147,11 @@ public class AutoRunStratFlows extends Method
 					break;
 			}
 		}
+
 		empadmin = new bp.port.Emp(no);
 		WebUser.SignInOfGener(empadmin);
+
+
 		/// 发送消息
 
 		return "调度完成..";

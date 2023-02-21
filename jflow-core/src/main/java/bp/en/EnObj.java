@@ -760,27 +760,34 @@ public abstract class EnObj implements Serializable
 	private Row _row = null;
 	public final Row getRow()
 	{
-
 		Row tmpRow = local.get();
-		if(tmpRow == null) {
-			if (this._row != null) {
-				String pkval = this._row.get(this.getPK()) == null ? "" : this._row.get(this.getPK()).toString();
-				if (!DataType.IsNullOrEmpty(pkval)) {
-					Row row = bp.da.Cash2019.GetRow(this.toString(), pkval);
-					if (row != null) {
-						this._row = row;
+		if(SystemConfig.getRedisIsEnable()){
+			if(tmpRow == null) {
+				if (this._row != null) {
+					String pkval = this._row.get(this.getPK()) == null ? "" : this._row.get(this.getPK()).toString();
+					if (!DataType.IsNullOrEmpty(pkval)) {
+						Row row = bp.da.Cash2019.GetRow(this.toString(), pkval);
+						if (row != null) {
+							this._row = row;
+						}
+						local.set(this._row);
 					}
-					local.set(this._row);
+					return this._row;
+				}else {
+					this._row = new Row();
+					this._row.LoadAttrs(this.getEnMap().getAttrs());
+					return this._row;
 				}
-				return this._row;
-			}else {
-				this._row = new Row();
-				this._row.LoadAttrs(this.getEnMap().getAttrs());
-				return this._row;
 			}
-		}
+			return tmpRow;
 
-		return tmpRow;
+		}
+		if (this._row == null)
+		{
+			this._row = new Row();
+			this._row.LoadAttrs(this.getEnMap().getAttrs());
+		}
+		return this._row;
 
 //		if (this._row == null)
 //		{

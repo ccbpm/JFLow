@@ -3,9 +3,7 @@ package bp.sys;
 import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.en.*;
-import bp.*;
 import bp.tools.StringUtils;
-import org.apache.axis2.databinding.types.xsd._byte;
 
 import java.sql.*;
 import java.util.List;

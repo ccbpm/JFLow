@@ -1,5 +1,6 @@
 package bp.port;
 
+import bp.da.DataType;
 import bp.en.*;
 
 /** 
@@ -14,6 +15,14 @@ public class Team extends EntityNoName
 	*/
 	public Team()  {
 	}
+	/**
+	 类型
+	 */
+	public final String getFKTeamType()
+	{
+		return this.GetValStringByKey(TeamAttr.FK_TeamType);
+	}
+
 	/** 
 	 用户组
 	 
@@ -66,6 +75,15 @@ public class Team extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+	@Override
+	protected boolean  beforeUpdateInsertAction() throws Exception {
+		if (DataType.IsNullOrEmpty(this.getName()) == true)
+			throw new Exception("请输入名称");
 
+		if (DataType.IsNullOrEmpty(this.getFKTeamType()) == true)
+			throw new Exception("请选择类型");
+
+		return super.beforeUpdateInsertAction();
+	}
 		///#endregion
 }

@@ -800,6 +800,17 @@ public class TemplateGlo
 									String key = "@" + flowID;
 									val = val.replace(key, "@");
 									break;
+								case "atpara":
+									if(DataType.IsNullOrEmpty(val)==false){
+										AtPara para  = new AtPara(val);
+										String sf = para.GetValStrByKey("ShenFenVal");
+										if(DataType.IsNullOrEmpty(sf)==false){
+											sf = sf.replace(String.valueOf(oldFlowID),String.valueOf(flowID));
+											para.SetVal("ShenFenVal",sf);
+											val = para.GenerAtParaStrs();
+										}
+									}
+									break;
 								default:
 									break;
 							}
@@ -892,6 +903,17 @@ public class TemplateGlo
 									String key = "@" + flowID;
 									val = val.replace(key, "@");
 									break;
+								case "atpara":
+									if(DataType.IsNullOrEmpty(val)==false){
+										AtPara para  = new AtPara(val);
+										String sf = para.GetValStrByKey("ShenFenVal");
+										if(DataType.IsNullOrEmpty(sf)==false){
+											sf = sf.replace(String.valueOf(oldFlowID),String.valueOf(flowID));
+											para.SetVal("ShenFenVal",sf);
+											val = para.GenerAtParaStrs();
+										}
+									}
+									break;
 								default:
 									break;
 							}
@@ -933,6 +955,17 @@ public class TemplateGlo
 								case "groupstands": //去除不必要的替换
 									String key = "@" + flowID;
 									val = val.replace(key, "@");
+									break;
+								case "atpara":
+									if(DataType.IsNullOrEmpty(val)==false){
+										AtPara para  = new AtPara(val);
+										String sf = para.GetValStrByKey("ShenFenVal");
+										if(DataType.IsNullOrEmpty(sf)==false){
+											sf = sf.replace(String.valueOf(oldFlowID),String.valueOf(flowID));
+											para.SetVal("ShenFenVal",sf);
+											val = para.GenerAtParaStrs();
+										}
+									}
 									break;
 								default:
 									break;
@@ -1846,7 +1879,12 @@ public class TemplateGlo
 			{
 				flow.setOrgNo(WebUser.getOrgNo()); //隶属组织
 			}
+			flow.setPTable("ND" + Integer.parseInt(flow.getNo()) + "Rpt");
 
+			//设置创建人，创建日期.
+			flow.SetValByKey(FlowAttr.CreateDate, DataType.getCurrentDateTime());
+			flow.SetValByKey(FlowAttr.Creater, bp.web.WebUser.getNo());
+			flow.SetValByKey("Icon", "icon-people");
 			flow.Insert();
 
 			//如果是集团模式下.
@@ -1975,7 +2013,13 @@ public class TemplateGlo
 			String file = SystemConfig.getPathOfDataUser() + "XML/TempleteSheetOfStartNode.xml";
 			if ((new File(file)).isFile() == false && SystemConfig.getIsJarRun()==false)
 			{
-				throw new RuntimeException("@开始节点表单模版丢失" + file);
+				//throw new RuntimeException("@开始节点表单模版丢失" + file);
+				/*如果存在开始节点表单模版*/
+				DataSet ds = new DataSet();
+				ds.readXml(file);
+
+				String nodeID = "ND" + Integer.parseInt(flow.getNo() + "01");
+				bp.sys.MapData.ImpMapData(nodeID, ds);
 			}
 
 

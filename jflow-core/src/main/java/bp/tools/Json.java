@@ -1,15 +1,7 @@
 package bp.tools;
-import java.awt.geom.Arc2D.Float;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
 
 import bp.da.*;
 import bp.difference.SystemConfig;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -18,7 +10,16 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import org.apache.axis2.databinding.types.soapencoding.Decimal;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import java.awt.geom.Arc2D.Float;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 
 public class Json
@@ -262,7 +263,8 @@ public class Json
 					|| val.getClass().equals(Long.class)
 					|| val.getClass().equals(Float.class)
 					|| val.getClass().equals(Double.class)
-					|| val.getClass().equals(Decimal.class)){
+					//@Todo 待验证 2023-02-15
+					|| val.getClass().equals(BigDecimal.class)){
 				strs += "\"" + key + "\":" + ht.get(key) + ",";
 			}else{
 				strs += "\"" + key + "\":\"" + ToJsonStr ( ht.get(key).toString() ) + "\",";

@@ -1394,7 +1394,7 @@ public class Glo {
 	 * 当前版本号-为了升级使用.
 	 * 20200602:升级方向条件.
 	 */
-	public static int Ver = 20230208;
+	public static int Ver = 20230216;
 
 	/**
 	 * 执行升级
@@ -1563,6 +1563,10 @@ public class Glo {
 		//修复数据表.
 		GroupField gf = new GroupField();
 		gf.CheckPhysicsTable();
+
+		//添加IsEnable
+		bp.wf.template.FlowTab fb = new bp.wf.template.FlowTab();
+		fb.CheckPhysicsTable();
 
 
 		///#endregion 升级优化集团版的应用
@@ -2903,7 +2907,7 @@ public class Glo {
 		Emp empGPM = new Emp();
 		empGPM.CheckPhysicsTable();
 
-		//DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
+		DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
 
 		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		DBAccess.RunSQLScript(sqlscript);
@@ -3253,14 +3257,20 @@ public class Glo {
 
 			FrmTree subFrmTree = (FrmTree) ftree.DoCreateSubNode();
 			subFrmTree.setName("流程独立表单");
+			subFrmTree.setNo("101");
+			subFrmTree.setParentNo("1");
 			subFrmTree.Update();
 
 			subFrmTree = (FrmTree) ftree.DoCreateSubNode();
 			subFrmTree.setName("常用信息管理");
+			subFrmTree.setNo("102");
+			subFrmTree.setParentNo("1");
 			subFrmTree.Update();
 
 			subFrmTree = (FrmTree) ftree.DoCreateSubNode();
 			subFrmTree.setName("常用单据");
+			subFrmTree.setNo("103");
+			subFrmTree.setParentNo("1");
 			subFrmTree.Update();
 
 		}

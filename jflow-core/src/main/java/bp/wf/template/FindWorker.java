@@ -848,40 +848,22 @@ public class FindWorker
 		///#region 为省立医院增加，按照指定的部门范围内的岗位计算..
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.FindSpecDeptEmpsInStationlist)
 		{
-			//sql = "SELECT pdes.FK_Emp AS No"
-			//      + " FROM   Port_DeptEmpStation pdes"
-			//      + " INNER JOIN WF_NodeDept wnd ON wnd.FK_Dept = pdes.FK_Dept"
-			//      + " AND wnd.FK_Node = " + town.HisNode.NodeID
-			//      + " INNER JOIN WF_NodeStation wns ON  wns.FK_Station = pdes.FK_Station"
-			//      + " AND wns.FK_Node =" + town.HisNode.NodeID
-			//      + " ORDER BY pdes.FK_Emp";
-
 			sql = "SELECT A.FK_Emp FROM Port_DeptEmpStation A WHERE A.FK_DEPT ='" + WebUser.getFK_Dept()+ "' AND A.FK_Station in(";
 			sql += "select FK_Station from WF_NodeStation where FK_node=" + town.getHisNode().getNodeID() + ")";
 
 			dt = DBAccess.RunSQLReturnTable(sql);
 
 			if (dt.Rows.size() > 0)
-			{
 				return dt;
-			}
+
+			if (this.town.getHisNode().getHisWhenNoWorker() == false)
+				throw new RuntimeException("@节点访问规则(" + town.getHisNode().getHisDeliveryWay().toString() + ")错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
 			else
-			{
-				if (this.town.getHisNode().getHisWhenNoWorker() == false)
-				{
-					throw new RuntimeException("@节点访问规则(" + town.getHisNode().getHisDeliveryWay().toString() + ")错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
-				}
-				else
-				{
-					return dt;
-				}
-			}
+				return dt;
 		}
+		///#endregion 按部门与岗位的交集计算.
 
-			///#endregion 按部门与岗位的交集计算.
-
-
-			///#region 按部门与岗位的交集计算.
+		///#region 按部门与岗位的交集计算.
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 		{
 			//added by liuxc,2015.6.29.
@@ -892,20 +874,11 @@ public class FindWorker
 			dt = DBAccess.RunSQLReturnTable(sql);
 
 			if (dt.Rows.size() > 0)
-			{
 				return dt;
-			}
+			if (this.town.getHisNode().getHisWhenNoWorker() == false)
+				throw new RuntimeException("@节点访问规则(" + town.getHisNode().getHisDeliveryWay().toString() + ")错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
 			else
-			{
-				if (this.town.getHisNode().getHisWhenNoWorker() == false)
-				{
-					throw new RuntimeException("@节点访问规则(" + town.getHisNode().getHisDeliveryWay().toString() + ")错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
-				}
-				else
-				{
-					return dt;
-				}
-			}
+				return dt;
 		}
 
 			///#endregion 按部门与岗位的交集计算.
@@ -915,14 +888,17 @@ public class FindWorker
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDept)
 		{
 			ps = new Paras();
-			sql= "select No,Name from Port_Emp where FK_Dept in(select FK_dept from wf_nodeDept where FK_Node =" + dbStr + "FK_Node)";
+			sql= "SELECT A.No,A.Name FROM Port_Emp A,Port_DeptEmp B WHERE A.No=B.FK_Emp AND B.FK_Dept IN(SELECT FK_dept FROM WF_NodeDept WHERE FK_Node =" + dbStr + "FK_Node)";
 			ps.Add("FK_Node", this.town.getHisNode().getNodeID());
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
 			if (dt.Rows.size() == 0)
 			{
-				bp.wf.template.BtnLab btnLab = new BtnLab(this.town.getHisNode().getNodeID());
-				throw new Exception("err@按照 [按绑定的部门计算] 计算接收人的时候出现错误，没有找到人，请检查节点["+btnLab.getName()+"]绑定的部门下的人员.");
+				if(this.town.getHisNode().getHisWhenNoWorker() == false){
+					bp.wf.template.BtnLab btnLab = new BtnLab(this.town.getHisNode().getNodeID());
+					throw new Exception("err@按照 [按绑定的部门计算] 计算接收人的时候出现错误，没有找到人，请检查节点["+btnLab.getName()+"]绑定的部门下的人员.");
+				}
+
 			}
 			return dt;
 		}
@@ -939,18 +915,13 @@ public class FindWorker
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
 			if (dt.Rows.size() > 0)
-			{
 				return dt;
-			}
 
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
-			{
 				throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + ps.getSQLNoPara());
-			}
 			else
-			{
 				return dt; //可能处理跳转,在没有处理人的情况下.
-			}
+
 		}
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByTeamOrgOnly)
 		{
@@ -962,14 +933,10 @@ public class FindWorker
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
 			if (dt.Rows.size() > 0)
-			{
 				return dt;
-			}
 
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
-			{
 				throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + ps.getSQLNoPara());
-			}
 
 			return dt; //可能处理跳转,在没有处理人的情况下.
 		}
@@ -984,14 +951,10 @@ public class FindWorker
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
 			if (dt.Rows.size() > 0)
-			{
 				return dt;
-			}
 
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
-			{
 				throw new RuntimeException("@节点访问规则错误 ByTeamDeptOnly :节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + ps.getSQLNoPara());
-			}
 
 			return dt; //可能处理跳转,在没有处理人的情况下.
 		}
@@ -1021,15 +984,10 @@ public class FindWorker
 				dt = DBAccess.RunSQLReturnTable(ps);
 			}
 			if (dt.Rows.size() > 0)
-			{
 				return dt;
-			}
 
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
-			{
-				//   throw new Exception("@节点访问规则错误:节点(" + town.HisNode.NodeID + "," + town.HisNode.Name + "), 仅按岗位计算，没有找到人员:SQL=" + ps.getSQLNoPara());
 				throw new RuntimeException("@节点访问规则错误:流程[" + town.getHisNode().getFlowName() + "]节点[" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "], 仅按岗位计算，没有找到人员。");
-			}
 
 			return dt; //可能处理跳转,在没有处理人的情况下.
 		}
@@ -1503,11 +1461,13 @@ public class FindWorker
 		//按照当前节点的身份计算
 		if (sfModel == 0)
 		{
-			sfVal = String.valueOf(currWn.getHisNode().getNodeID());
+			ht.put("EmpNo", WebUser.getNo());
+			ht.put("DeptNo", WebUser.getFK_Dept());
+			return ht;
 		}
 
 		//按照指定节点的身份计算.
-		if (sfModel == 0 || sfModel == 1)
+		if (sfModel == 1)
 		{
 			if (DataType.IsNullOrEmpty(sfVal))
 			{
@@ -1516,6 +1476,7 @@ public class FindWorker
 			Paras ps = new Paras();
 			ps.SQL = "SELECT FK_Emp,FK_Dept FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node Order By RDT DESC";
 			ps.Add("OID", this.WorkID);
+			//ps.Add("FID", currWn.getHisWork().getFID());
 			ps.Add("FK_Node", Integer.parseInt(sfVal));
 
 			DataTable dt = DBAccess.RunSQLReturnTable(ps);

@@ -4508,6 +4508,7 @@ public class WorkNode
 							{
 								// 为广西计算中心.
 								this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + "," + toND2.getName());
+								this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
 								this.getHisGenerWorkFlow().DirectUpdate();
 
 								NodeSend_24_SameSheet(toND2);
@@ -4523,6 +4524,7 @@ public class WorkNode
 								}
 
 								this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + names);
+								this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
 								this.getHisGenerWorkFlow().DirectUpdate();
 
 								NodeSend_24_UnSameSheet(toNDs); //可能是只发送1个异表单
@@ -4585,6 +4587,7 @@ public class WorkNode
 					}
 
 					this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + names);
+					this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
 					this.getHisGenerWorkFlow().DirectUpdate();
 
 				}
@@ -4655,6 +4658,8 @@ public class WorkNode
 						else
 						{
 							Nodes toNDs4 = this.Func_GenerNextStepNodes();
+							this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+							this.getHisGenerWorkFlow().DirectUpdate();
 							NodeSend_24_UnSameSheet(toNDs4); //可能是只发送1个异表单
 
 							//为计算中心：执行更新.
@@ -9260,6 +9265,8 @@ public class WorkNode
 		{
 			isStart = false;
 		}
+		if (isStart == false)
+			return;
 		if (isStart == true)
 		{
 			this.rptGe.SetValByKey("RDT", DataType.getCurrentDateTimess());

@@ -1,24 +1,22 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.Map;
-import bp.port.*;
 import bp.en.*;
-import bp.tools.DateUtils;
-import bp.web.*;
+import bp.port.Dept;
+import bp.port.Emp;
 import bp.sys.*;
-import bp.wf.GERpt;
+import bp.tools.DateUtils;
+import bp.web.WebUser;
 import bp.wf.Glo;
-import bp.wf.data.*;
-import bp.wf.template.frm.*;
-import bp.*;
 import bp.wf.*;
-import com.google.common.collect.Lists;
+import bp.wf.template.frm.MapDataExt;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.*;
-import java.time.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -1014,7 +1012,7 @@ public class FlowExt extends EntityNoName
 				POOL_SIZE, TimeUnit.SECONDS,
 				new ArrayBlockingQueue<>(POOL_SIZE),
 				new ThreadPoolExecutor.CallerRunsPolicy());
-		List<CompletableFuture<Void>> futures = Lists.newArrayList();
+		List<CompletableFuture<Void>> futures =new ArrayList<CompletableFuture<Void>>();
 		try{
 			for (DataRow dr : dt.Rows)
 			{

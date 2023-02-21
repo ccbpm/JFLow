@@ -316,31 +316,30 @@ public class MySystems extends EntitiesNoName
 		}
 
 		dt = ds.GetTableByName("Methods");
-		for (DataRow dr : dt.Rows)
-		{
-			Method myen = new Method();
-			myen.getRow().LoadDataTable(dt, dr);
+		if(dt!= null) {
+			for (DataRow dr : dt.Rows) {
+				Method myen = new Method();
+				myen.getRow().LoadDataTable(dt, dr);
 
-			myen.setFrmID(realFrmID);
+				myen.setFrmID(realFrmID);
 
-			switch (myen.getMethodModel())
-			{
-				case "FlowEtc": //其他业务流程.
-					myen.setFlowNo(ImpSystem_Imp_Dict_FlowEtc(myen.getFlowNo(), myen.getName(), path, system));
-					break;
-				case "FlowBaseData": //修改基础资料流程
-					myen.setFlowNo(ImpSystem_Imp_Dict_FlowEtc(myen.getFlowNo(), myen.getName(), path, system));
-					break;
-				case "Func": //功能.
-					break;
-				default:
-					break;
+				switch (myen.getMethodModel()) {
+					case "FlowEtc": //其他业务流程.
+						myen.setFlowNo(ImpSystem_Imp_Dict_FlowEtc(myen.getFlowNo(), myen.getName(), path, system));
+						break;
+					case "FlowBaseData": //修改基础资料流程
+						myen.setFlowNo(ImpSystem_Imp_Dict_FlowEtc(myen.getFlowNo(), myen.getName(), path, system));
+						break;
+					case "Func": //功能.
+						break;
+					default:
+						break;
+				}
+				//    en.OrgNo = bp.web.WebUser.getOrgNo();
+				myen.setNo(DBAccess.GenerGUID(0, null, null));
+				myen.DirectInsert();
 			}
-			//    en.OrgNo = bp.web.WebUser.getOrgNo();
-			myen.setNo(DBAccess.GenerGUID(0, null, null));
-			myen.DirectInsert();
 		}
-
 		//导入实体集合.
 		file = path + "/" + frmID + "_Collections.xml";
 		ds.readXml(file);

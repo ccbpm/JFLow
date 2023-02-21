@@ -25,7 +25,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 	 
 	 @return 
 	*/
-	public final void RefOneFrmTree_SetAllNodeFrmUseThisSln() throws Exception {
+	public final String RefOneFrmTree_SetAllNodeFrmUseThisSln() throws Exception {
 		String nodeID = GetRequestVal("FK_Node");
 		Node currNode = new Node(nodeID);
 		String flowNo = currNode.getFK_Flow();
@@ -115,6 +115,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 				}
 			}
 		}
+		return "执行成功.";
 	}
 	/** 
 	 获得下拉框的值.

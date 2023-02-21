@@ -1,7 +1,6 @@
 package bp.tools;
 
 import bp.difference.SystemConfig;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.JarURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -1058,7 +1056,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      * @return 文件列表
      */
     public static List<String> findChildrenList(File dir, boolean searchDirs) {
-        List<String> files = Lists.newArrayList();
+        List<String> files = new ArrayList<String>();
         for (String subFiles : dir.list()) {
             File file = new File(dir + Constant4Comm.STR_SLASH + subFiles);
             boolean isDir = searchDirs && file.isDirectory();

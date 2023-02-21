@@ -13,14 +13,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * ClassFactory 的摘要说明。
  */
 public class ClassFactory {
-
-
+	
+    
 	public static Hashtable Htable_Evbase;
 
 
 	/**
 	 * 得到一个事件实体
-	 *
+	 * 
 	 * param className
 	 *            类名称
 	 * @return bp.sys.EventBase
@@ -43,7 +43,7 @@ public class ClassFactory {
 				? Htable_Evbase.get(className) : null);
 		return ens;
 	}
-
+ 
 	private static final ConcurrentHashMap<String,Object> objects = new ConcurrentHashMap<>();
 	/// <summary>
 	/// 尽量不用此方法来获取事例
@@ -60,7 +60,7 @@ public class ClassFactory {
 
 	/**
 	 * 根据一个抽象的基类，取出此系统中从他上面继承的子类集合。 非抽象的类。
-	 *
+	 * 
 	 * param baseEnsName
 	 *            抽象的类名称
 	 * @return ArrayList
@@ -131,7 +131,7 @@ public class ClassFactory {
 			}
 		}
 		Object tmp = Htable_En.get(className);
-
+		
 		if (tmp==null)
 			return null;
 		/*
@@ -147,9 +147,9 @@ public class ClassFactory {
 
 	/*
 	 * 得到一个实体
-	 *
+	 * 
 	 * param className 类名称
-	 *
+	 * 
 	 * @return En
 	 */
 	public static Method GetMethod(String className) {
@@ -196,7 +196,7 @@ public class ClassFactory {
 
 	/**
 	 * 得到一个实体
-	 *
+	 * 
 	 * param className
 	 *            类名称
 	 * @return En
@@ -243,7 +243,7 @@ public class ClassFactory {
 
 	/**
 	 * 得到一个实体
-	 *
+	 * 
 	 * param className
 	 *            类名称
 	 * @return En
@@ -267,7 +267,7 @@ public class ClassFactory {
 
 	/**
 	 * 得到一个实体
-	 *
+	 * 
 	 * param className
 	 *            类名称
 	 * @return En
@@ -300,7 +300,7 @@ public class ClassFactory {
 					return path;
 				} else if (service.equals("jetty")) {
 					path += System.getProperty("file.separator");// +"lib"+
-					// System.getProperty("file.separator");
+																	// System.getProperty("file.separator");
 					return path;
 				}
 			}

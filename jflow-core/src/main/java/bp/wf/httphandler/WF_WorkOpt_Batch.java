@@ -130,7 +130,7 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 		String toEmps = this.GetRequestVal("ToEmps");
 		String editFiles = nd.GetParaString("EditFields");
 
-		//多表单的签批组件的修改 @Hongyan
+		//多表单的签批组件的修改
 		FrmNode frmNode=null;
 		if(nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree){
 			FrmNodes frmNodes = new FrmNodes();

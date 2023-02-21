@@ -50,6 +50,20 @@ public class NodeSimple extends Entity
 	 {
 		this.SetValByKey(NodeAttr.X, value);
 	}
+	public final String getHisToNDs()
+	{
+		return this.GetValStrByKey(NodeAttr.HisToNDs);
+	}
+	public final void setHisToNDs(String value)
+	{
+		this.SetValByKey(NodeAttr.HisToNDs, value);
+	}
+
+	public final boolean getIsResetAccepter()
+	{
+		return this.GetValBooleanByKey(NodeAttr.IsResetAccepter);
+	}
+
 	/** 
 	 y
 	*/

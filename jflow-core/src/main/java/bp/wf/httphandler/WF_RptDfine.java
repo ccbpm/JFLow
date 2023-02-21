@@ -515,8 +515,9 @@ public class WF_RptDfine extends WebContralBase
 			default:
 				return "err@" + this.getSearchType() + "标记错误.";
 		}
-
-
+		//需要增加状态的查询
+		qo.addAnd();
+		qo.AddWhere(GERptAttr.WFState, ">", 1);
 			///#region 关键字查询
 		String searchKey = ""; //关键字查询
 		if (mapData.isSearchKey())

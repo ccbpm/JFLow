@@ -9,13 +9,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -77,12 +75,12 @@ public class DBLoad
 	@SuppressWarnings("static-access")
 	private static String getValue(XSSFCell xssfCell)
 	{
-		if (xssfCell.getCellType() == xssfCell.CELL_TYPE_BOOLEAN)
+		if (xssfCell.getCellType() == CellType.BOOLEAN)
 		{
 			// 返回布尔类型的值
 			return String.valueOf(xssfCell.getBooleanCellValue());
 		}
-		if(xssfCell.getCellType() == xssfCell.CELL_TYPE_NUMERIC){
+		if(xssfCell.getCellType() == CellType.NUMERIC){
 			// 获取单元格的样式值，即获取单元格格式对应的数值
 			int style = xssfCell.getCellStyle().getDataFormat();
 			// 判断是否是日期格式
@@ -119,7 +117,7 @@ public class DBLoad
 						return new SimpleDateFormat(" yyyy'年'MM'月' ").format(xssfCell.getDateCellValue());
 
 					default:
-						xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+						xssfCell.setCellType(CellType.STRING);
 						return String.valueOf(xssfCell.getStringCellValue());
 				}
 			}
@@ -127,7 +125,7 @@ public class DBLoad
 
 		}
 		//其余的格式设置成String，返回String
-		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		xssfCell.setCellType(CellType.STRING);
 		// 返回字符串类型的值
 		return String.valueOf(xssfCell.getStringCellValue());
 
@@ -135,12 +133,12 @@ public class DBLoad
 
 	private static String getValue(HSSFCell xssfCell)
 	{
-		if (xssfCell.getCellType() == xssfCell.CELL_TYPE_BOOLEAN)
+		if (xssfCell.getCellType() == CellType.BOOLEAN)
 		{
 			// 返回布尔类型的值
 			return String.valueOf(xssfCell.getBooleanCellValue());
 		}
-		if(xssfCell.getCellType() == xssfCell.CELL_TYPE_NUMERIC){
+		if(xssfCell.getCellType() == CellType.NUMERIC){
 			// 获取单元格的样式值，即获取单元格格式对应的数值
 			int style = xssfCell.getCellStyle().getDataFormat();
 			// 判断是否是日期格式
@@ -177,7 +175,7 @@ public class DBLoad
 						return new SimpleDateFormat(" yyyy'年'MM'月' ").format(xssfCell.getDateCellValue());
 
 					default:
-						xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+						xssfCell.setCellType(CellType.STRING);
 						return String.valueOf(xssfCell.getStringCellValue());
 				}
 			}
@@ -185,7 +183,7 @@ public class DBLoad
 
 		}
 		//其余的格式设置成String，返回String
-		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		xssfCell.setCellType(CellType.STRING);
 		// 返回字符串类型的值
 		return String.valueOf(xssfCell.getStringCellValue());
 
@@ -357,56 +355,56 @@ public class DBLoad
 			Tb.Columns = collection;
 		} catch (IOException e)
 		{*/
-			HSSFWorkbook xssfWorkbook = new HSSFWorkbook(is);
-			// 循环工作表Sheet , 目前支持一个
-			// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
-			HSSFSheet hssfSheet = xssfWorkbook.getSheetAt(0);
-			if (hssfSheet == null)
+		HSSFWorkbook xssfWorkbook = new HSSFWorkbook(is);
+		// 循环工作表Sheet , 目前支持一个
+		// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
+		HSSFSheet hssfSheet = xssfWorkbook.getSheetAt(0);
+		if (hssfSheet == null)
+		{
+			return null;
+		}
+		// 循环行Row
+		int row_size = hssfSheet.getPhysicalNumberOfRows();
+		for (int j = 0; j < row_size; j++)
+		{
+			HSSFRow xssfRow = hssfSheet.getRow(j);
+			if (xssfRow == null)
 			{
-				return null;
+				continue;
 			}
-			// 循环行Row
-			int row_size = hssfSheet.getPhysicalNumberOfRows();
-			for (int j = 0; j < row_size; j++)
+
+			// 循环列Cell
+			int call_num = xssfRow.getPhysicalNumberOfCells();
+			// title
+			if (0 == j)
 			{
-				HSSFRow xssfRow = hssfSheet.getRow(j);
-				if (xssfRow == null)
+				for (int k = 0; k < call_num; k++)
 				{
-					continue;
+					HSSFCell xssfCell = xssfRow.getCell(k);
+					if (null == xssfCell)
+					{
+						continue;
+					}
+					DataColumn column = new DataColumn(getValue(xssfCell));
+					collection.Add(column);
 				}
-
-				// 循环列Cell
-				int call_num = xssfRow.getPhysicalNumberOfCells();
-				// title
-				if (0 == j)
+			} else
+			{ // 内容
+				DataRow dataRow = new DataRow(Tb);
+				for (int k = 0; k < call_num; k++)
 				{
-					for (int k = 0; k < call_num; k++)
+					HSSFCell xssfCell = xssfRow.getCell(k);
+					if (null == xssfCell)
 					{
-						HSSFCell xssfCell = xssfRow.getCell(k);
-						if (null == xssfCell)
-						{
-							continue;
-						}
-						DataColumn column = new DataColumn(getValue(xssfCell));
-						collection.Add(column);
+						continue;
 					}
-				} else
-				{ // 内容
-					DataRow dataRow = new DataRow(Tb);
-					for (int k = 0; k < call_num; k++)
-					{
-						HSSFCell xssfCell = xssfRow.getCell(k);
-						if (null == xssfCell)
-						{
-							continue;
-						}
-						dataRow.setValue(collection.get(k), getValue(xssfCell));
-					}
-					Tb.Rows.add(dataRow);
+					dataRow.setValue(collection.get(k), getValue(xssfCell));
 				}
-
+				Tb.Rows.add(dataRow);
 			}
-			Tb.Columns = collection;
+
+		}
+		Tb.Columns = collection;
 		//}
 
 

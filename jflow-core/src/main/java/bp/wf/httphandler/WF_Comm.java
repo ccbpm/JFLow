@@ -3836,6 +3836,7 @@ public class WF_Comm extends WebContralBase
 				continue;
 			}
 			DataRow mydr = dt.NewRow();
+			item.HisEn = en;
 			String myurl = "";
 			if (item.refMethodType != RefMethodType.Func)
 			{

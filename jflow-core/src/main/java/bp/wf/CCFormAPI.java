@@ -12,7 +12,6 @@ import bp.sys.*;
 import bp.difference.*;
 import bp.wf.template.frm.*;
 import bp.*;
-import schemasMicrosoftComOfficeOffice.STInsetMode;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -1074,7 +1073,10 @@ public class CCFormAPI extends Dev2Interface
 
 		return myds;
 	}
-	public static DataTable GetDtlInfo(MapDtl dtl, GEEntity en,String dtlRefPKVal) throws Exception
+	public static DataTable GetDtlInfo(MapDtl dtl, GEEntity en,String dtlRefPKVal) throws Exception {
+		return GetDtlInfo(dtl, en, dtlRefPKVal, false);
+	}
+	public static DataTable GetDtlInfo(MapDtl dtl, GEEntity en,String dtlRefPKVal,boolean isReload) throws Exception
 	{
 		QueryObject qo = null;
 		GEDtls dtls = new GEDtls(dtl.getNo());
@@ -1133,9 +1135,11 @@ public class CCFormAPI extends Dev2Interface
 			return dtls.ToDataTableField();
 		}
 		catch (RuntimeException ex)
-		{
-			dtls.getGetNewEntity().CheckPhysicsTable();
-			return GetDtlInfo(dtl, en,dtlRefPKVal);
+		{   if (isReload == false)
+			return GetDtlInfo(dtl, en, dtlRefPKVal, true);
+		else
+			throw new Exception("获取从表[" + dtl.getName() + "]失败,错误:" + ex.getMessage());
+
 		}
 
 	}

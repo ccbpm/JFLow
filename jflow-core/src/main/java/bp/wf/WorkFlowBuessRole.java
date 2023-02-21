@@ -811,7 +811,7 @@ public class WorkFlowBuessRole
 				/*找开始节点的处理人员. */
 				strs = Integer.parseInt(fl.getNo()) + "01";
 				ps = new Paras();
-				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
+				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ORDER BY CDT ";
 				ps.Add("FK_Node", Integer.parseInt(strs));
 				ps.Add("OID", workid);
 				dt = DBAccess.RunSQLReturnTable(ps);

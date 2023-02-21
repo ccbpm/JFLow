@@ -28,7 +28,7 @@ public class UserLogType extends EntityNoName {
     @Override
     public UAC getHisUAC() {
         UAC uac = new UAC();
-        uac.Readonly(); //@hongyan.
+        uac.Readonly(); 
         return uac;
     }
 //C# TO JAVA CONVERTER TODO TASK: There is no preprocessor in Java:

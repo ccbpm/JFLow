@@ -785,7 +785,7 @@ public class MapExt extends EntityMyPK
 		//执行SQL获取
 		if (this.getDBType().equals("0") == false)
 			return "err@数据源类型不是按照SQL查询,DBType="+this.getDBType();
-		if(this.getRow().containsKey(field) == true)
+		if(DBAccess.IsExitsTableCol("Sys_MapExt",field)==false)
 			return "err@传的参数不正确,Field=" + field+"在Sys_MapExt表中不存在";
 
 		String sql = this.GetValStringByKey(field);

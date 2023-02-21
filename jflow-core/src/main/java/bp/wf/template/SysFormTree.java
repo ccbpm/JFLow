@@ -139,6 +139,8 @@ public class SysFormTree extends EntityTree
 		{
 			this.setOrgNo(bp.web.WebUser.getOrgNo());
 		}
+		if (DataType.IsNullOrEmpty(this.getNo()) == true)
+			this.setNo(String.valueOf(DBAccess.GenerOID(this.toString())));
 		return super.beforeInsert();
 	}
 

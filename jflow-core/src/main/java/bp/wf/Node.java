@@ -171,18 +171,19 @@ public class Node extends Entity
 	public final Nodes getHisToNodes() throws Exception {
 		Object tempVar = this.GetRefObject("HisToNodes");
 		Nodes obj = tempVar instanceof Nodes ? (Nodes)tempVar : null;
+		int hisToNDNum = this.getHisToNDNum();
 		if (obj == null)
 		{
 			obj = new Nodes();
-			if (this.getHisToNDNum() == 0)
+			if (hisToNDNum == 0)
 			{
 				obj = new Nodes();
 			}
-			if (this.getHisToNDNum() == 1)
+			if (hisToNDNum == 1)
 			{
 				obj.AddEntities(this.getHisToNDs());
 			}
-			if (this.getHisToNDNum() > 1)
+			if (hisToNDNum > 1)
 			{
 				String toNodes = this.getHisToNDs().replace("@", ",");
 				if (toNodes.length() > 1)
@@ -196,22 +197,22 @@ public class Node extends Entity
 		return obj;
 	}
 	public final NodeSimples getHisToNodeSimples() throws Exception {
-//		Object tempVar = this.GetRefObject("HisToNodesSipm");
 		Object tempVar = this.GetRefObject("HisToNodesSipm");
 		NodeSimples obj = tempVar instanceof NodeSimples ? (NodeSimples)tempVar : null;
+		int hisToNDNum = this.getHisToNDNum();
 		if (obj == null)
 		{
 			obj = new NodeSimples();
-			if (this.getHisToNDNum() == 0)
+			if (hisToNDNum == 0)
 			{
 				obj = new NodeSimples();
 			}
-			if (this.getHisToNDNum() == 1)
+			if (hisToNDNum == 1)
 			{
 				obj.AddEntities(this.getHisToNDs());
 			}
 
-			if (this.getHisToNDNum() > 1)
+			if (hisToNDNum > 1)
 			{
 				String inStrs = this.getHisToNDs().replace('@', ',');
 				inStrs = inStrs.substring(1);

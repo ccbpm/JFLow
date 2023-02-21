@@ -1334,13 +1334,21 @@ public class WF_CommEntity extends WebContralBase
 		String defaultGroupAttrKey = this.GetRequestVal("DefaultGroupAttrKey");
 
 		String key = this.GetRequestVal("Key"); //查询关键字.
+		String rootno = this.GetRequestVal("RootNo"); //查询根节点.
 
 		String ensOfM = this.GetRequestVal("EnsOfM"); //多的实体.
 		Entities ensMen = ClassFactory.GetEns(ensOfM);
 		QueryObject qo = new QueryObject(ensMen); //集合.
+		qo.addLeftBracket();
 		qo.AddWhere("No", " LIKE ", "%" + key + "%");
 		qo.addOr();
 		qo.AddWhere("Name", " LIKE ", "%" + key + "%");
+		qo.addRightBracket();
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			qo.addAnd();
+			qo.AddWhere("OrgNo", WebUser.getOrgNo());
+		}
 		qo.DoQuery();
 
 		return ensMen.ToJson("dt");

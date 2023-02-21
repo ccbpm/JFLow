@@ -1,5 +1,6 @@
 package bp.port;
 
+import bp.da.DataType;
 import bp.en.*;
 
 /** 
@@ -61,4 +62,14 @@ public class TeamType extends EntityNoName
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+
+	@Override
+	protected boolean beforeUpdateInsertAction() throws Exception {
+		if (DataType.IsNullOrEmpty(this.getName()) == true)
+		{
+			throw new RuntimeException("请输入名称");
+		}
+		return super.beforeUpdateInsertAction();
+	}
+
 }

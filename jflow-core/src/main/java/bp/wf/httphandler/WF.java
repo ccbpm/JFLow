@@ -2052,7 +2052,10 @@ public class WF extends WebContralBase
 	 当前的用户
 	*/
 	public final String getUserNo()  {
-		return this.GetRequestVal("UserNo");
+		String str = this.GetRequestVal("UserNo");
+		if (DataType.IsNullOrEmpty(str) == true)
+			str = this.GetRequestVal("UserID");
+		return str;
 	}
 	/** 
 	 用户的安全校验码(请参考集成章节)

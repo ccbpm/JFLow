@@ -34,6 +34,10 @@ public class FlowAttr
 	 建立的日期。
 	*/
 	public static final String CreateDate = "CreateDate";
+	/// <summary>
+	/// 创建人
+	/// </summary>
+	public static final String Creater = "Creater";
 	/** 
 	 BillTable
 	*/

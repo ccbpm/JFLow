@@ -1,26 +1,18 @@
 package bp.difference.handler;
 
-import bp.da.*;
+import bp.da.DataType;
+import bp.da.Log;
 import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
-import bp.en.Attr;
-import bp.en.Attrs;
-import bp.en.Entity;
-import bp.en.FieldType;
 import bp.sys.Glo;
-import bp.sys.UIConfig;
-import bp.web.WebUser;
 import org.apache.http.protocol.HttpContext;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.Region;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -146,7 +138,7 @@ public abstract class WebContralBase {
 	}
 
 	// 简易缓存机制
-	private final ConcurrentHashMap<String, Method> MethodCache = new ConcurrentHashMap<>();
+	private static final ConcurrentHashMap<String, Method> MethodCache = new ConcurrentHashMap<>();
 
 	/**
 	 * 执行方法
@@ -181,13 +173,13 @@ public abstract class WebContralBase {
 		Object[] paras = null;
 		Object tempVar = null;
 		try {
-			java.lang.reflect.Method mp = MethodCache.get(methodName);
+			java.lang.reflect.Method mp = MethodCache.get(myEn.getClass() + "." +methodName);
 			if(mp == null){
 				Class<? extends WebContralBase> tp = myEn.getClass();
 				mp = tp.getMethod(methodName);
-				MethodCache.putIfAbsent(methodName, mp);
+				MethodCache.put(myEn.getClass() + "." +methodName, mp);
 			}
-			tempVar = mp.invoke(this, paras);
+			tempVar = mp.invoke(myEn, paras);
 		} catch (InvocationTargetException e ) {
 			String msg = null;
 			if(e.getTargetException()!=null && e.getTargetException().getCause()!=null)
@@ -200,15 +192,15 @@ public abstract class WebContralBase {
 			// 如果有url返回.
 			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0 ||(msg.indexOf("err@")==0)))
 				return msg;
-			String str = "";
-			if (e.getCause() != null && e.getCause().getMessage().indexOf("wait") > -1) {
-				str += "@错误原因可能是数据库连接异常";
-			}
+//			String str = "";
+//			if (e.getCause() != null && e.getCause().getMessage().contains("wait")) {
+//				str += "@错误原因可能是数据库连接异常";
+//			}
 			String myParas = getRequest().getQueryString();
 			String errInfo = "err@页面类[" + myEn.toString() + ",方法[" + methodName + "]执行错误.";
 			errInfo += "\t\n@参数:" + myParas;
 			errInfo += "\t\n@Msg:" + msg;
-			errInfo += "\t\n@getStackTrace:" + e.getStackTrace();
+//			errInfo += "\t\n@getStackTrace:" + e.getStackTrace();
 			Log.DebugWriteError("bp.wf.HttpHangerBase.DoMethod()" + errInfo);
 			return errInfo;
 		}
@@ -769,875 +761,6 @@ public abstract class WebContralBase {
 
 		return false;
 	}
-	
-	protected String ExportDGExcel(DataSet ds,  String title,String params) throws Exception {
-		
-		DataTable dt = ds.GetTableByName("GroupSearch");
-		DataTable AttrsOfNum = ds.GetTableByName("AttrsOfNum");
-		DataTable AttrsOfGroup = ds.GetTableByName("AttrsOfGroup"); 		
-
-		String fileName = title+"Ep" + title + ".xls";
-		String fileDir = SystemConfig.getPathOfTemp();
-		String filePth = SystemConfig.getPathOfTemp();
-		// 参数及变量设置
-		// 如果导出目录没有建立，则建立.
-		File file = new File(fileDir);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		filePth = filePth + "/" + fileName;
-		file = new File(filePth);
-		if (file.exists()) {
-			file.delete();
-		}
-
-		// String httpFilePath =
-		// Glo.getCCFlowAppPath()+"DataUser/Temp/"+fileName;
-		int headerRowIndex = 0; // 文件标题行序
-		int titleRowIndex = 1; // 列标题行序
-		int countCell = 0;// 显示的列数
-		// 第一步，创建一个webbook，对应一个Excel文件
-		HSSFWorkbook wb = new HSSFWorkbook();
-		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-		HSSFSheet sheet = wb.createSheet(title+"Ep" + title);
-		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = null;
-		// 第四步，创建单元格，并设置值表头 设置表头居中
-		HSSFCellStyle style = wb.createCellStyle();
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
-		HSSFFont font = null;
-		HSSFDataFormat fmt = wb.createDataFormat();
-		HSSFCell cell = null;
-
-		// 生成标题
-
-		row = sheet.createRow((int) titleRowIndex);
-		int index = 0;// 控制列 qin 15.9.21
-		//添加序号
-		cell = row.createCell(index);
-		cell.setCellStyle(style);
-		cell.setCellValue("序号");
-		index += 1;
-		countCell++;
-		for (DataRow attr : AttrsOfGroup.Rows) {
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue(attr.getValue("Name").toString());
-			index += 1;
-			countCell++;
-		}
-		for (DataRow attr : AttrsOfNum.Rows) {
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue(attr.getValue("Name").toString());
-			index += 1;
-			countCell++;
-		}
-		DataRow dr = null;
-		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
-			dr = dt.Rows.get(i - 2);
-			row = sheet.createRow(i);
-			// 生成文件内容
-			index = 0;
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue(dr.getValue("IDX").toString());
-			index += 1;
-			for (DataRow attr : AttrsOfGroup.Rows) {
-				
-				cell = row.createCell(index);
-				cell.setCellStyle(style);
-				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn")+"T").toString());
-				index += 1;
-			}
-			for (DataRow attr : AttrsOfNum.Rows) {
-							
-				cell = row.createCell(index);
-				cell.setCellStyle(style);
-				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn").toString()).toString());
-				index += 1;
-			}
-
-		}
-		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
-
-		row = sheet.createRow((int) creatorRowIndex);
-		
-		// 生成文件内容
-		index = 0;
-		cell = row.createCell(index);
-		cell.setCellStyle(style);
-		cell.setCellValue("汇总");
-		index += 1;
-		for (DataRow attr : AttrsOfGroup.Rows) {
-			
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue("");
-			index += 1;
-		}
-
-		for (DataRow attr : AttrsOfNum.Rows) {
-			double d =0;
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			for(DataRow dtr : dt.Rows){
-				d += Double.parseDouble(dtr.getValue(attr.getValue("KeyOfEn").toString()).toString());
-			}
-			if(params.contains(attr.getValue("KeyOfEn")+"=AVG")){
-				if(dt.Rows.size()!=0){
-					DecimalFormat df = new DecimalFormat("#.0000");            
-					d = Double.valueOf(df.format(d/dt.Rows.size()));
-				}
-					
-			}
-			
-			if(Integer.parseInt(attr.getValue("MyDataType").toString()) == DataType.AppInt){
-				if(params.contains(attr.getValue("KeyOfEn")+"=AVG"))
-					cell.setCellValue(d);
-				else
-					cell.setCellValue((int)d);
-			}else{
-				cell.setCellValue(d);
-			}
-			
-			index += 1;
-		}
-		
-
-		// 列标题单元格样式设定
-		HSSFCellStyle titleStyle = wb.createCellStyle();
-		/*
-		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-		 */
-		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		font = wb.createFont();
-		font.setBold(true);
-		titleStyle.setFont(font);
-		row = sheet.createRow((int) 0);
-		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
-		cell = row.createCell(headerRowIndex);
-		cell.setCellValue(title);
-		cell.setCellStyle(titleStyle);
-
-		// 生成制单人
-		// 制表人单元格样式设定
-		HSSFCellStyle userStyle = wb.createCellStyle();
-		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		creatorRowIndex = creatorRowIndex+1;
-
-		row = sheet.createRow((int) creatorRowIndex);
-
-		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
-		cell = row.createCell(0);
-		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
-		cell.setCellStyle(userStyle);
-		// 第六步，将文件存到指定位置
-		try {
-			FileOutputStream fout = new FileOutputStream(filePth);
-			wb.write(fout);
-			fout.flush();
-			fout.close();
-			return "/DataUser/Temp/" + fileName;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return fileName;
-		}
-
-	}
-
-	protected String ExportDGToExcel(DataSet ds, String title, String params) throws Exception {
-
-		DataTable dt = ds.GetTableByName("GroupSearch");
-		DataTable AttrsOfNum = ds.GetTableByName("AttrsOfNum");
-		DataTable AttrsOfGroup = ds.GetTableByName("AttrsOfGroup");
-
-		String fileName = title + "Ep" + title + ".xls";
-		String fileDir = SystemConfig.getPathOfTemp();
-		String filePth = SystemConfig.getPathOfTemp();
-		// 参数及变量设置
-		// 如果导出目录没有建立，则建立.
-		File file = new File(fileDir);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		filePth = filePth + "/" + fileName;
-		file = new File(filePth);
-		if (file.exists()) {
-			file.delete();
-		}
-
-		// String httpFilePath =
-		// Glo.getCCFlowAppPath()+"DataUser/Temp/"+fileName;
-		int headerRowIndex = 0; // 文件标题行序
-		int titleRowIndex = 1; // 列标题行序
-		int countCell = 0;// 显示的列数
-		// 第一步，创建一个webbook，对应一个Excel文件
-		HSSFWorkbook wb = new HSSFWorkbook();
-		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-		HSSFSheet sheet = wb.createSheet(title + "Ep" + title);
-		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = null;
-		// 第四步，创建单元格，并设置值表头 设置表头居中
-		HSSFCellStyle style = wb.createCellStyle();
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
-		HSSFFont font = null;
-		HSSFDataFormat fmt = wb.createDataFormat();
-		HSSFCell cell = null;
-
-		// 生成标题
-
-		row = sheet.createRow((int) titleRowIndex);
-		int index = 0;// 控制列 qin 15.9.21
-		// 添加序号
-		cell = row.createCell(index);
-		cell.setCellStyle(style);
-		cell.setCellValue("序号");
-		index += 1;
-		countCell++;
-		for (DataRow attr : AttrsOfGroup.Rows) {
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue(attr.getValue("Name").toString());
-			index += 1;
-			countCell++;
-		}
-		for (DataRow attr : AttrsOfNum.Rows) {
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue(attr.getValue("Name").toString());
-			index += 1;
-			countCell++;
-		}
-		DataRow dr = null;
-		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
-			dr = dt.Rows.get(i - 2);
-			row = sheet.createRow(i);
-			// 生成文件内容
-			index = 0;
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue(dr.getValue("IDX").toString());
-			index += 1;
-			for (DataRow attr : AttrsOfGroup.Rows) {
-
-				cell = row.createCell(index);
-				cell.setCellStyle(style);
-				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn") + "T").toString());
-				index += 1;
-			}
-			for (DataRow attr : AttrsOfNum.Rows) {
-
-				cell = row.createCell(index);
-				cell.setCellStyle(style);
-				cell.setCellValue(dr.getValue(attr.getValue("KeyOfEn").toString()).toString());
-				index += 1;
-			}
-
-		}
-		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
-
-		row = sheet.createRow((int) creatorRowIndex);
-
-		// 生成文件内容
-		index = 0;
-		cell = row.createCell(index);
-		cell.setCellStyle(style);
-		cell.setCellValue("汇总");
-		index += 1;
-		for (DataRow attr : AttrsOfGroup.Rows) {
-
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			cell.setCellValue("");
-			index += 1;
-		}
-
-		for (DataRow attr : AttrsOfNum.Rows) {
-			double d = 0;
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			for (DataRow dtr : dt.Rows) {
-				d += Double.parseDouble(dtr.getValue(attr.getValue("KeyOfEn").toString()).toString());
-			}
-			if (params.contains(attr.getValue("KeyOfEn") + "=AVG")) {
-				if (dt.Rows.size() != 0) {
-					DecimalFormat df = new DecimalFormat("#.0000");
-					d = Double.valueOf(df.format(d / dt.Rows.size()));
-				}
-
-			}
-
-			if (Integer.parseInt(attr.getValue("MyDataType").toString()) == DataType.AppInt) {
-				if (params.contains(attr.getValue("KeyOfEn") + "=AVG"))
-					cell.setCellValue(d);
-				else
-					cell.setCellValue((int) d);
-			} else {
-				cell.setCellValue(d);
-			}
-
-			index += 1;
-		}
-
-		// 列标题单元格样式设定
-		HSSFCellStyle titleStyle = wb.createCellStyle();
-		/*
-		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-		 */
-		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		font = wb.createFont();
-		font.setBold(true);
-		titleStyle.setFont(font);
-		row = sheet.createRow((int) 0);
-		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
-		cell = row.createCell(headerRowIndex);
-		cell.setCellValue(title);
-		cell.setCellStyle(titleStyle);
-
-		// 生成制单人
-		// 制表人单元格样式设定
-		HSSFCellStyle userStyle = wb.createCellStyle();
-		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		creatorRowIndex = creatorRowIndex + 1;
-
-		row = sheet.createRow((int) creatorRowIndex);
-
-		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
-		cell = row.createCell(0);
-		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
-		cell.setCellStyle(userStyle);
-		// 第六步，将文件存到指定位置
-		try {
-			FileOutputStream fout = new FileOutputStream(filePth);
-			wb.write(fout);
-			fout.flush();
-			fout.close();
-			return "/DataUser/Temp/" + fileName;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return fileName;
-		}
-
-	}
-
-
-	protected String ExportDGToExcel(DataTable dt, Entity en, String title, Attrs mapAttrs) throws Exception {
-
-		String fileName = title + "_" + bp.da.DataType.getCurrentDateCNOfLong() + "_" + WebUser.getNo() + ".xls";
-		String fileDir = SystemConfig.getPathOfTemp();
-		String filePth = SystemConfig.getPathOfTemp();
-		// 参数及变量设置
-		// 如果导出目录没有建立，则建立.
-		File file = new File(fileDir);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		filePth = filePth + "/" + fileName;
-		file = new File(filePth);
-		if (file.exists()) {
-			file.delete();
-		}
-
-		int headerRowIndex = 0; // 文件标题行序
-		int titleRowIndex = 1; // 列标题行序
-		int countCell = 0;// 显示的列数
-		// 第一步，创建一个webbook，对应一个Excel文件
-		HSSFWorkbook wb = new HSSFWorkbook();
-		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-		HSSFSheet sheet = wb.createSheet(en.getEnMap().getPhysicsTable());
-		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = null;
-		// 第四步，创建单元格，并设置值表头 设置表头居中
-		HSSFCellStyle style = wb.createCellStyle();
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
-		HSSFFont font = null;
-		HSSFDataFormat fmt = wb.createDataFormat();
-		HSSFCell cell = null;
-
-		// 生成标题
-		Attrs attrs = null;
-		if(mapAttrs!=null)
-			attrs = mapAttrs;
-		else
-			attrs = en.getEnMap().getAttrs();
-		Attrs selectedAttrs = null;
-		UIConfig cfg = new UIConfig(en);
-		if (cfg.getShowColumns().length == 0)
-			selectedAttrs = attrs;
-		else {
-			selectedAttrs = new Attrs();
-
-			for (Attr attr : attrs.ToJavaList()) {
-
-				boolean contain = false;
-
-				for (String col : cfg.getShowColumns()) {
-					if (col.equals(attr.getKey())) {
-						contain = true;
-						break;
-					}
-				}
-
-				if (contain)
-					selectedAttrs.Add(attr);
-			}
-		}
-		row = sheet.createRow((int) titleRowIndex);
-		int index = 0;// 控制列 qin 15.9.21
-		for (int i = 0; i < selectedAttrs.size(); i++) {
-			Attr attr = selectedAttrs.get(i);
-			if (attr.getKey().equals("MyNum"))
-				continue;
-			if (attr.getKey().equals("OID"))
-				continue;
-			
-			if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
-				continue;
-			
-			 if (attr.getIsFKorEnum())
-                 continue;
-             if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt") 
-                 || attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
-                 || attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
-                 continue;
-             
-             cell = row.createCell(index);
- 			 cell.setCellStyle(style);
-             if(attr.getMyFieldType() == FieldType.RefText)
-            	 cell.setCellValue(attr.getDesc().replace("名称",""));  
-             else
-            	 cell.setCellValue(attr.getDesc());
-			index += 1;
-			countCell++;
-		}
-		DataRow dr = null;
-		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
-			dr = dt.Rows.get(i - 2);
-			row = sheet.createRow(i);
-			// 生成文件内容
-			index = 0;
-
-			for (int j = 0; j < selectedAttrs.size(); j++) {
-				Attr attr = selectedAttrs.get(j);
-				if (attr.getKey().equals("MyNum"))
-					continue;
-				if (attr.getKey().equals("OID"))
-					continue;
-				 if (attr.getIsFKorEnum())
-                     continue;
-				
-				if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
-					continue;
-				
-	             if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt") 
-	                 || attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
-	                 || attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
-	                 continue;
-	             
-				
-				String str = "";
-				if (attr.getMyDataType() == DataType.AppBoolean) {
-					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-						str = dr.getValue(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
-					else if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-						str = dr.getValue(attr.getKey().toLowerCase()).equals(1) ? "是" : "否";
-					else
-						str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
-				} else {
-					String text ="";
-					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
-						Object obj = dr.getValue((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
-						if(obj == null)
-							text = "";
-						else
-							text =  obj.toString();
-					}else{
-						Object obj = dr.getValue(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
-						if(obj == null)
-							text = "";
-						else
-							text =  obj.toString();
-					}
-					
-					if(DataType.IsNullOrEmpty(text)==false && (text.contains("\n")==true ||text.contains("\r")==true)){
-						str =""+text.replaceAll("\n", "  ");
-					    str =""+text.replaceAll("\r", "  ");
-					}else{
-						str = text;
-					}
-				}
-				if (str == null || str.equals("") || str.equals("null")) {
-					str = " ";
-				}
-				cell = row.createCell(index);
-				cell.setCellStyle(style);
-				cell.setCellValue(str);
-				index += 1;
-			}
-
-		}
-
-		// 列标题单元格样式设定
-		HSSFCellStyle titleStyle = wb.createCellStyle();
-		/*
-		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-		 */
-		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		font = wb.createFont();
-		font.setBold(true);
-		titleStyle.setFont(font);
-		row = sheet.createRow((int) 0);
-		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
-		cell = row.createCell(headerRowIndex);
-		cell.setCellValue(title);
-		cell.setCellStyle(titleStyle);
-
-		// 生成制单人
-		// 制表人单元格样式设定
-		HSSFCellStyle userStyle = wb.createCellStyle();
-		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
-
-		row = sheet.createRow((int) creatorRowIndex);
-
-		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
-		cell = row.createCell(0);
-		cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
-		cell.setCellStyle(userStyle);
-		// 第六步，将文件存到指定位置
-		try {
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			wb.write(bos);
-			byte[] brray = bos.toByteArray();
-			InputStream is = new ByteArrayInputStream(brray);
-
-			FileOutputStream fout = new FileOutputStream(filePth);
-
-			BufferedInputStream in=null;
-			BufferedOutputStream out=null;
-			in=new BufferedInputStream(is);
-			out=new BufferedOutputStream(fout);
-			int len=-1;
-			byte[] b=new byte[1024];
-			while((len=in.read(b))!=-1){
-				out.write(b,0,len);
-			}
-			in.close();
-			out.close();
-
-
-			/*BufferedWriter br = new BufferedWriter(osw);
-			br.write(printMe);
-			fout.flush();
-			br.close();
-			fout.close();
-			osw.close();*/
-
-			//wb.write(fout);
-			//fout.flush();
-			//fout.close();
-			return "/DataUser/Temp/" + fileName;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return fileName;
-		}
-
-	}
-
-	protected String ExportTempToExcel(DataTable dt, Entity en, String title, Attrs mapAttrs) throws Exception {
-
-		String fileName = title + "_" + bp.da.DataType.getCurrentDateCNOfLong() + "_" + WebUser.getNo() + ".xls";
-		String fileDir = SystemConfig.getPathOfTemp();
-		String filePth = SystemConfig.getPathOfTemp();
-		// 参数及变量设置
-		// 如果导出目录没有建立，则建立.
-		File file = new File(fileDir);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-
-		filePth = filePth + "/" + fileName;
-		file = new File(filePth);
-		if (file.exists()) {
-			file.delete();
-		}
-
-		int headerRowIndex = 0; // 文件标题行序
-		int titleRowIndex = 1; // 列标题行序
-		int countCell = 0;// 显示的列数
-		// 第一步，创建一个webbook，对应一个Excel文件
-		HSSFWorkbook wb = new HSSFWorkbook();
-		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-		HSSFSheet sheet = wb.createSheet(en.getEnMap().getPhysicsTable());
-		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = null;
-		// 第四步，创建单元格，并设置值表头 设置表头居中
-		HSSFCellStyle style = wb.createCellStyle();
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
-		HSSFFont font = null;
-		HSSFDataFormat fmt = wb.createDataFormat();
-		HSSFCell cell = null;
-
-		// 生成标题
-		Attrs attrs = null;
-		if(mapAttrs!=null)
-			attrs = mapAttrs;
-		else
-			attrs = en.getEnMap().getAttrs();
-		Attrs selectedAttrs = null;
-		UIConfig cfg = new UIConfig(en);
-		if (cfg.getShowColumns().length == 0)
-			selectedAttrs = attrs;
-		else {
-			selectedAttrs = new Attrs();
-
-			for (Attr attr : attrs.ToJavaList()) {
-
-				boolean contain = false;
-
-				for (String col : cfg.getShowColumns()) {
-					if (col.equals(attr.getKey())) {
-						contain = true;
-						break;
-					}
-				}
-
-				if (contain)
-					selectedAttrs.Add(attr);
-			}
-		}
-		row = sheet.createRow((int) titleRowIndex);
-		int index = 0;// 控制列 qin 15.9.21
-		for (int i = 0; i < selectedAttrs.size(); i++) {
-			Attr attr = selectedAttrs.get(i);
-			if (attr.getKey().equals("MyNum"))
-				continue;
-			if (attr.getKey().equals("OID"))
-				continue;
-
-			if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
-				continue;
-
-			if (attr.getIsFKorEnum())
-				continue;
-			if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt")
-					|| attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
-					|| attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
-				continue;
-
-			cell = row.createCell(index);
-			cell.setCellStyle(style);
-			if(attr.getMyFieldType() == FieldType.RefText)
-				cell.setCellValue(attr.getDesc().replace("名称",""));
-			else
-				cell.setCellValue(attr.getDesc());
-			index += 1;
-			countCell++;
-		}
-		DataRow dr = null;
-		int temp=0;
-		for (int i = 2; i <= dt.Rows.size() + 1; i++) {
-			dr = dt.Rows.get(i - 2);
-			row = sheet.createRow(i);
-			// 生成文件内容
-			index = 0;
-			if(temp>1)
-				continue;
-			for (int j = 0; j < selectedAttrs.size(); j++) {
-				Attr attr = selectedAttrs.get(j);
-				if (attr.getKey().equals("MyNum"))
-					continue;
-				if (attr.getKey().equals("OID"))
-					continue;
-				if (attr.getIsFKorEnum())
-					continue;
-
-				if (attr.getUIVisible() == false && attr.getMyFieldType() != FieldType.RefText)
-					continue;
-
-				if (attr.getKey().equals("MyFilePath") || attr.getKey().equals("MyFileExt")
-						|| attr.getKey().equals("WebPath") || attr.getKey().equals("MyFileH")
-						|| attr.getKey().equals("MyFileW") || attr.getKey().equals("MyFileSize"))
-					continue;
-
-
-				String str = "";
-				if (attr.getMyDataType() == DataType.AppBoolean) {
-					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-						str = dr.getValue(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
-					else if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-						str = dr.getValue(attr.getKey().toLowerCase()).equals(1) ? "是" : "否";
-					else
-						str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
-				} else {
-					String text ="";
-					if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase){
-						Object obj = dr.getValue((attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey()).toUpperCase());
-						if(obj == null)
-							text = "";
-						else
-							text =  obj.toString();
-					}else{
-						Object obj = dr.getValue(attr.getIsFKorEnum() ? (attr.getKey() + "Text") : attr.getKey());
-						if(obj == null)
-							text = "";
-						else
-							text =  obj.toString();
-					}
-
-					if(DataType.IsNullOrEmpty(text)==false && (text.contains("\n")==true ||text.contains("\r")==true)){
-						str =""+text.replaceAll("\n", "  ");
-						str =""+text.replaceAll("\r", "  ");
-					}else{
-						str = text;
-					}
-				}
-				if (str == null || str.equals("") || str.equals("null")) {
-					str = " ";
-				}
-				cell = row.createCell(index);
-				cell.setCellStyle(style);
-				cell.setCellValue(str);
-				index += 1;
-			}
-			temp+=1;
-		}
-
-		// 列标题单元格样式设定
-		HSSFCellStyle titleStyle = wb.createCellStyle();
-		/*
-		 * titleStyle.setBorderTop(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderBottom(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderLeft(HSSFBorderFormatting.BORDER_THIN);
-		 * titleStyle.setBorderRight(HSSFBorderFormatting.BORDER_THIN);
-		 */
-		titleStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		font = wb.createFont();
-		font.setBold(true);
-		titleStyle.setFont(font);
-		row = sheet.createRow((int) 0);
-		sheet.addMergedRegion(new Region(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
-		cell = row.createCell(headerRowIndex);
-		cell.setCellValue(title);
-		cell.setCellStyle(titleStyle);
-
-		// 生成制单人
-		// 制表人单元格样式设定
-		HSSFCellStyle userStyle = wb.createCellStyle();
-		userStyle.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-		userStyle.setVerticalAlignment(HSSFCellStyle.ALIGN_CENTER);
-		int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
-
-		row = sheet.createRow((int) creatorRowIndex);
-
-		sheet.addMergedRegion(new Region(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
-		cell = row.createCell(0);
-		//cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDataTimeCNOfShort());
-		cell.setCellStyle(userStyle);
-		// 第六步，将文件存到指定位置
-		try {
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			wb.write(bos);
-			byte[] brray = bos.toByteArray();
-			InputStream is = new ByteArrayInputStream(brray);
-
-			FileOutputStream fout = new FileOutputStream(filePth);
-
-			BufferedInputStream in=null;
-			BufferedOutputStream out=null;
-			in=new BufferedInputStream(is);
-			out=new BufferedOutputStream(fout);
-			int len=-1;
-			byte[] b=new byte[1024];
-			while((len=in.read(b))!=-1){
-				out.write(b,0,len);
-			}
-			in.close();
-			out.close();
-
-
-			/*BufferedWriter br = new BufferedWriter(osw);
-			br.write(printMe);
-			fout.flush();
-			br.close();
-			fout.close();
-			osw.close();*/
-
-			//wb.write(fout);
-			//fout.flush();
-			//fout.close();
-			return "/DataUser/Temp/" + fileName;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return fileName;
-		}
-
-	}
-	/// <summary>
-	/// 获取单元格的显示名称，格式如A1,B2
-	/// </summary>
-	/// <param name="columnIdx">单元格列号</param>
-	/// <param name="rowIdx">单元格行号</param>
-	/// <returns></returns>
-	public static String GetCellName(int columnIdx, int rowIdx) {
-		int[] maxs = new int[] { 26, 26 * 26 + 26, 26 * 26 * 26 + (26 * 26 + 26) + 26 };
-		int col = columnIdx + 1;
-		int row = rowIdx + 1;
-
-		if (col > maxs[2])
-
-			return "列序号不正确，超出最大值";
-
-		int alphaCount = 1;
-
-		for (int m : maxs) {
-			if (m < col)
-				alphaCount++;
-		}
-
-		switch (alphaCount) {
-		case 1:
-			return (char) (col + 64) + "" + row;
-		case 2:
-			return (char) ((col / 26) + 64) + "" + (char) ((col % 26) + 64) + row;
-		case 3:
-			return (char) ((col / 26 / 26) + 64) + "" + (char) (((col - col / 26 / 26 * 26 * 26) / 26) + 64) + ""
-					+ (char) ((col % 26) + 64) + row;
-		}
-
-		return "Unkown";
-	}
-
-	// BaseController
-
 	public static HttpServletRequest getRequest() {
 		return ContextHolderUtils.getRequest();
 	}
@@ -1646,26 +769,7 @@ public abstract class WebContralBase {
 		return ContextHolderUtils.getResponse();
 	}
 
-	public String getParamter(String key){
-		return getRequest().getParameter(key);
-	}
 
-	/**
-	 * 增加列的数量。
-	 */
-	public final int getaddRowNum() {
-		try {
-			int i = Integer.parseInt(ContextHolderUtils.getRequest()
-					.getParameter("addRowNum"));
-			if (ContextHolderUtils.getRequest().getParameter("IsCut") == null) {
-				return i;
-			} else {
-				return i;
-			}
-		} catch (java.lang.Exception e) {
-			return 0;
-		}
-	}
 
 	public final int getIsWap() {
 		if(ContextHolderUtils.getRequest().getParameter("IsWap")==null)
@@ -1686,10 +790,7 @@ public abstract class WebContralBase {
 		if (str == null || str.equals("") || str.equals("null"))
 			return 1;
 		return Integer.parseInt(str);
-		// set
-		// {
-		// ViewState["PageIdx",value;
-		// }
+
 	}
 
 	public int getPageSize() {
@@ -1697,10 +798,7 @@ public abstract class WebContralBase {
 		if (str == null || str.equals("") || str.equals("null"))
 			return 10;
 		return Integer.parseInt(str);
-		// set
-		// {
-		// ViewState["PageIdx",value;
-		// }
+
 	}
 
 	public final String getKey() {
@@ -1770,16 +868,7 @@ public abstract class WebContralBase {
 		return false;
 	}
 
-	public final int getallRowCount() {
-		int i = 0;
-		try {
-			i = Integer.parseInt(ContextHolderUtils.getRequest().getParameter(
-					"rowCount"));
-		} catch (java.lang.Exception e) {
-			return 0;
-		}
-		return i;
-	}
+
 	public final String getTB_Doc()throws Exception
 	{
 		return GetRequestVal("TB_Doc");
@@ -1797,25 +886,6 @@ public abstract class WebContralBase {
 		return str;
 	}
 
-	//public String FK_Node;
-	//public String FID;
-	//public String WorkID;
-	//public String FK_Flow;
-	//public String MyPK;
-
-//	public void setMyPK(String myPK) {
-//		MyPK = myPK;
-//	}
-
-//	@PostConstruct
-//	public void init(){
-//		HttpServletRequest request = ContextHolderUtils.getRequest();
-//		//setFK_Node(request.getParameter("FK_Node"));
-//		//setFID(request.getParameter("FID"));
-//		//setWorkID(request.getParameter("WorkID"));
-//		//setFK_Flow(request.getParameter("FK_Flow"));
-//		//setMyPK(request.getParameter("MyPK"));
-//	}
 
 	/**
 	 * 输出Alert
@@ -1835,60 +905,7 @@ public abstract class WebContralBase {
 		out.write("<script language='javascript'>alert('" + msg + "');window.location.href='"+url+"';</script>");
 		out.flush();
 	}
-	protected void windowReload(HttpServletResponse response, String url) throws IOException{
-		response.setContentType("text/html; charset=utf-8");
-		PrintWriter out = response.getWriter();
-		out.write("<script language='javascript'>window.location.href='"+url+"';</script>");
-		out.flush();
-	}
-	protected void wirteMsg(HttpServletResponse response, String msg) throws IOException{
-		if(null == msg){
-			return;
-		}
-		response.setContentType("text/html; charset=utf-8");
-		PrintWriter out = response.getWriter();
-		out.write(msg);
-		out.flush();
-	}
-	protected void winCloseWithMsg(HttpServletResponse response, String mess) throws IOException
-	{
-		//this.ResponseWriteRedMsg(mess);
-		//return;
-		mess = mess.replace("'", "＇");
 
-		mess = mess.replace("\"", "＂");
-
-		mess = mess.replace(";", "；");
-		mess = mess.replace(")", "）");
-		mess = mess.replace("(", "（");
-
-		mess = mess.replace(",", "，");
-		mess = mess.replace(":", "：");
-
-
-		mess = mess.replace("<", "［");
-		mess = mess.replace(">", "］");
-
-		mess = mess.replace("[", "［");
-		mess = mess.replace("]", "］");
-
-
-		mess = mess.replace("@", "\\n@");
-
-		mess = mess.replace("\r\n", "");
-
-		response.setContentType("text/html; charset=utf-8");
-		PrintWriter out = response.getWriter();
-		out.write("<script language='javascript'>alert('" + mess + "'); window.close()</script>");
-		out.flush();
-	}
-
-	protected void winCloseWithMsg1(HttpServletResponse response,String val) throws IOException{
-		response.setContentType("text/html; charset=utf-8");
-		PrintWriter out = response.getWriter();
-		out.write("<script language='javascript'> if(window.opener != undefined){window.top.returnValue = '" + val + "';} else { window.returnValue = '" + val + "';} window.close(); </script>");
-		out.flush();
-	}
 
 	protected void winClose(HttpServletResponse response) throws IOException{
 		response.setContentType("text/html; charset=utf-8");
@@ -1897,7 +914,5 @@ public abstract class WebContralBase {
 		out.flush();
 	}
 
-//	public void setFK_Node(String fK_Node) {
-//		FK_Node = fK_Node;
-//	}
+
 }

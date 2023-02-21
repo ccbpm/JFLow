@@ -2196,7 +2196,7 @@ public class Flow extends bp.en.EntityNoName
 			String name = this.getName();
 			name = bp.tools.StringExpressionCalculate.ReplaceBadCharOfFileName(name);
 			name = name + ".xml";
-			String filePath = path + name;
+			String filePath = path + "/"+name;
 			ds.WriteXml(filePath, XmlWriteMode.WriteSchema, ds);
 		}
 		return ds;

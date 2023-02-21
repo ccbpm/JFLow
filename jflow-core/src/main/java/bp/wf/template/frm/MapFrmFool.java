@@ -387,6 +387,13 @@ public class MapFrmFool extends EntityNoName
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
+		rm = new RefMethod();
+		rm.Title = "特别控件特别用户权限";
+		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/SpecUserSpecFields.png";
+		rm.ClassMethodName = this.toString() + ".DoSpecFieldsSpecUsers()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-note";
+		map.AddRefMethod(rm);
 
 			//平铺模式.
 		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
@@ -983,6 +990,12 @@ public class MapFrmFool extends EntityNoName
 	}
 	public final String DoInitScript() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
+	}
+
+	public String DoSpecFieldsSpecUsers()
+	{
+		return "../../Admin/FoolFormDesigner/SepcFiledsSepcUsers.htm?FrmID=" +
+				this.getNo() + "&t=" + DataType.getCurrentDataTime();
 	}
 	/** 
 	 傻瓜表单属性.

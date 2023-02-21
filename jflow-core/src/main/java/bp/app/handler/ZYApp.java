@@ -1,27 +1,10 @@
 package bp.app.handler;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Enumeration;
-import java.util.HashMap;
-
-
 import bp.da.DataTable;
 import bp.da.DataType;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
-import bp.port.Emp;
-import bp.tools.HttpClientUtil;
-import bp.web.WebUser;
 import bp.wf.GenerWorkFlow;
 import bp.wf.WFSta;
-import net.sf.json.JSONArray;
-import org.apache.axis.encoding.Base64;
 import org.apache.http.protocol.HttpContext;
-
-import net.sf.json.JSONObject;
-
 public class ZYApp  extends WebContralBase {
 	/** 
 	 初始化数据

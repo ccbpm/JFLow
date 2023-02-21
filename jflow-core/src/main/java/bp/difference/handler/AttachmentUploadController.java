@@ -13,10 +13,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bp.da.LogType;
 import bp.tools.OSSUploadFileUtils;
 import bp.pub.PubClass;
 import bp.sys.*;
 import bp.wf.ExecEvent;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -496,9 +498,9 @@ public class AttachmentUploadController extends BaseController {
 			// 替换关键的字串.
 			savePath = savePath.replace("\\\\", "/");
 			try {
-
-				if (savePath.indexOf(":") == -1)
+				if (savePath.indexOf(":") == -1 && SystemConfig.getIsJarRun() == false)
 					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
+
 
 				File fileInfo = new File(savePath);
 

@@ -16,7 +16,6 @@ import bp.difference.*;
 import bp.wf.template.sflow.*;
 import bp.wf.template.frm.*;
 import bp.wf.*;
-import com.google.common.collect.Lists;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -3892,6 +3891,7 @@ public class WF_WorkOpt extends WebContralBase
 		String sql = "";
 		DataTable dt = new DataTable();
 		dt.Columns.Add("No", String.class);
+		dt.Columns.Add("Name", String.class);
 		dt.TableName = "Selected";
 		if (select.isAutoLoadEmps() == true)
 		{
@@ -3954,6 +3954,7 @@ public class WF_WorkOpt extends WebContralBase
 
 					DataRow dr = dt.NewRow();
 					dr.setValue(0, emp[0]);
+					dr.setValue(1,DBAccess.RunSQLReturnString("SELECT Name FROM Port_Emp WHERE No='" + emp[0] + "'"));
 					dt.Rows.add(dr);
 				}
 			}
@@ -5209,7 +5210,7 @@ public class WF_WorkOpt extends WebContralBase
 					POOL_SIZE, TimeUnit.SECONDS,
 					new ArrayBlockingQueue<>(POOL_SIZE),
 					new ThreadPoolExecutor.CallerRunsPolicy());
-			List<CompletableFuture<Void>> futures = Lists.newArrayList();
+			List<CompletableFuture<Void>> futures = new ArrayList<CompletableFuture<Void>>();
 			for (String str : strs)
 			{
 				if (DataType.IsNullOrEmpty(str) == true)

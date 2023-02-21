@@ -10,7 +10,6 @@ import bp.sys.*;
 */
 public class Dept extends EntityTree
 {
-
 		///#region 属性
 	/** 
 	 父节点的ID
@@ -41,9 +40,7 @@ public class Dept extends EntityTree
 	}
 
 		///#endregion
-
-
-		///#region 构造函数
+	///#region 构造函数
 	/** 
 	 部门
 	*/
@@ -57,10 +54,7 @@ public class Dept extends EntityTree
 	public Dept(String no) throws Exception {
 		super(no);
 	}
-
 		///#endregion
-
-
 		///#region 重写方法
 	@Override
 	public UAC getHisUAC()  {
@@ -77,7 +71,6 @@ public class Dept extends EntityTree
 		{
 			return this.get_enMap();
 		}
-
 		Map map = new Map("Port_Dept", "部门");
 		map.IsEnableVer = true;
 

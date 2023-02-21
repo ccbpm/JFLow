@@ -28,7 +28,7 @@ public class UserLogLevel extends EntityNoName {
     @Override
     public UAC getHisUAC() {
         UAC uac = new UAC();
-        uac.Readonly(); //@hongyan.
+        uac.Readonly();
 
         return uac;
     }

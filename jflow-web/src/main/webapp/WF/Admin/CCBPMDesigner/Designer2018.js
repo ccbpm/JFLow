@@ -12,7 +12,7 @@ var subFlowShowType = flow.SubFlowShowType;
 
 var webUser = new WebUser();
 var basepath = "";
-var flowDevModel = flow.GetPara("FlowDevModel"); //设计模式.
+var flowDevModel = flow.GetPara("FlowDevModel") || flow.FlowDevModel; //设计模式.
 var pageFrom = GetQueryString("From");
 pageFrom = pageFrom == null || pageFrom == undefined ? "" : pageFrom;
 

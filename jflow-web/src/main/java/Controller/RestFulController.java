@@ -4,37 +4,28 @@ import WebServiceImp.LocalWS;
 import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
-import bp.port.DeptEmpStation;
 import bp.port.Emp;
-import bp.port.Station;
-import bp.sys.CCBPMRunModel;
 import bp.sys.MapData;
 import bp.tools.HttpClientUtil;
 import bp.tools.Json;
 import bp.tools.StringUtils;
 import bp.web.WebUser;
 import bp.wf.*;
-import bp.wf.port.WFEmp;
-import bp.wf.port.admin2group.*;
-import org.apache.axis.encoding.Base64;
-import org.apache.axis2.databinding.types.xsd.DateTime;
-import org.json.simple.JSONObject;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import bp.wf.data.GERpt;
+import bp.wf.port.WFEmp;
 import bp.wf.template.Directions;
 import bp.wf.template.FlowExt;
 import bp.wf.template.Selector;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Hashtable;
+import net.sf.json.JSONObject;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Hashtable;
 
 
 @RestController
@@ -74,7 +65,6 @@ public class RestFulController {
 	}
     @RequestMapping(value = "/test")
     public String queryPrestoDemo(HttpServletRequest request, HttpServletResponse response) {
-        //0000002007
 		JSONObject res = new JSONObject();
         String userNo = request.getParameter("userNo");
         //请销假

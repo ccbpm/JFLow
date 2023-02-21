@@ -13,7 +13,6 @@
 	<artifactId>jflow-core</artifactId>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -24,7 +23,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -34,6 +32,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
+
 		<!-- Spring session 依赖 -->
 		<dependency>
 			<groupId>org.springframework.session</groupId>
@@ -42,34 +41,35 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-pool2</artifactId>
-			<version>2.6.2</version>
+			<version>${commons-pool2.version}</version>
 		</dependency>
 
 		<!--Shiro核心框架 -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-core</artifactId>
-			<version>1.4.0</version>
+			<version>${shiro.version}</version>
 		</dependency>
 
 		<!-- Shiro使用Srping框架 -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-spring</artifactId>
-			<version>1.4.0</version>
+			<version>${shiro.version}</version>
 		</dependency>
 
 		<!-- Shiro使用EhCache缓存框架 -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
 			<artifactId>shiro-ehcache</artifactId>
-			<version>1.4.0</version>
+			<version>${shiro.version}</version>
 		</dependency>
 
-		<!-- common tools -->
+		<!-- XML文件读取 -->
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
+			<version>${dom4j.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>xml-apis</groupId>
@@ -77,173 +77,139 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
-			<groupId>jaxen</groupId>
-			<artifactId>jaxen</artifactId>
-		</dependency>
+		<!-- 拼音 -->
 		<dependency>
 			<groupId>com.belerweb</groupId>
 			<artifactId>pinyin4j</artifactId>
+			<version>${pinyin4j.version}</version>
 		</dependency>
+
+		<!-- Apache Commons BEGIN-->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
+		<!-- org.apache.commons.net.ftp -->
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
+			<version>${commons-net.version}</version>
 		</dependency>
+
+		<!-- 文件写入/上传-->
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
 		</dependency>
-		<dependency>
-			<groupId >com.sun.mail </groupId >
-			<artifactId >javax.mail </artifactId >
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.htmlparser</groupId>
-			<artifactId>htmlparser</artifactId>
-		</dependency>
+		<!-- Apache Commons END -->
+
+		<!-- JSON -->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
+			<version>${json-lib.version}</version>
 			<classifier>jdk15</classifier>
 		</dependency>
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.6.2</version>
-		</dependency>
+		<!-- JSON -->
 
-
+		<!-- 生成excel -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
+			<version>${org.apache.poi.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-scratchpad</artifactId>
-		</dependency>
+		<!-- 文件打成压缩包 -->
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
+			<version>${org.apache.ant.version}</version>
 		</dependency>
 
-		<!-- WebService axis -->
-		<dependency>
-			<groupId>org.apache.axis2</groupId>
-			<artifactId>axis2</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.axis</groupId>
-			<artifactId>axis</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-discovery</groupId>
-			<artifactId>commons-discovery</artifactId>
-			<version>0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>axis</groupId>
-			<artifactId>axis-wsdl4j</artifactId>
-			<version>1.5.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.xml.rpc</groupId>
-			<artifactId>javax.xml.rpc-api</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<!-- WebService axis -->
-
+		<!-- 上传文件到FTP/SFTP -->
 		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
-		</dependency>
-
-		<!--<dependency>
-			<groupId>com.github.livesense</groupId>
-			<artifactId>jodconverter-core</artifactId>
-		</dependency>-->
-		<dependency>
-			<groupId>com.google.auto</groupId>
-			<artifactId>auto-common</artifactId>
+			<version>${com.jcraft.version}</version>
 		</dependency>
 
 		<!-- 条形码、二维码生成 -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
+			<version>${com.google.zxing.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>javase</artifactId>
+			<version>${com.google.zxing.version}</version>
 		</dependency>
+
+		<!--多个PDF文件合并-->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.8</version>
-		</dependency>
-		<!--跨域问题-->
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-core</artifactId>
+			<version>${pdfbox.version}</version>
 		</dependency>
 
-
-		<!-- cxf -->
-		<!-- <dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http</artifactId>
-		</dependency> -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
-			<version>4.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-compress</artifactId>
-			<version>1.5</version>
-		</dependency>
+		<!--开发者表单后台打印-->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.13.1</version>
+			<version>${jsoup.version}</version>
 		</dependency>
-		<!--阿里云OOS SDK依赖-->
+		<!--阿里云文件上传-->
 		<dependency>
 			<groupId>com.aliyun.oss</groupId>
 			<artifactId>aliyun-sdk-oss</artifactId>
-			<version>3.15.0</version>
+			<version>${aliyun.sdk.version}</version>
 		</dependency>
+
+
+		<!-- 数据库驱动 -->
+		<!--<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<scope>runtime</scope>
+			</dependency>-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.27</version>
+		</dependency>
+		<!--<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2</version>
+			<scope>runtime</scope>
+		</dependency>-->
+
+
+
+		<!--	<dependency>
+               <groupId>com.kingbase8</groupId>
+               <artifactId>kingbase8</artifactId>
+               <version>8.6</version>
+               <scope>runtime</scope>
+            </dependency>-->
+
+		<!--<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>12.1.0.1</version>
+			<scope>runtime</scope>
+		</dependency>-->
 	</dependencies>
 
 	<build>

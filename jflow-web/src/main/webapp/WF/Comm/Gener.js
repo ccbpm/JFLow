@@ -2684,7 +2684,7 @@ var HttpHandler = (function () {
                         withCredentials: !IsIELower10
                     },
                     crossDomain: !IsIELower10,
-                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
+                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=BP.WF.HttpHandler.WF_Portal&t=" + Math.random(),
                     data: new FormData(),
                     dataType: 'html',
                     contentType: false,

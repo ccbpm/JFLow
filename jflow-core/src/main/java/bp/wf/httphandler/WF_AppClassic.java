@@ -3,6 +3,7 @@ package bp.wf.httphandler;
 import bp.da.*;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
+import bp.tools.Encodes;
 import bp.web.*;
 import bp.port.*;
 import bp.en.*;
@@ -268,6 +269,10 @@ public class WF_AppClassic extends WebContralBase
 			{
 				pass = this.GetRequestVal("TB_Pass");
 			}
+			if (bp.difference.SystemConfig.getIsEnablePasswordEncryption() == true) {
+				pass = Encodes.decodeBase64String(pass);
+			}
+
 
 			Emp emp = new Emp();
 			emp.setUserID (userNo);
@@ -323,6 +328,7 @@ public class WF_AppClassic extends WebContralBase
 			}
 
 			//调用登录方法.
+			Dev2Interface.Port_GenerToken(emp.getUserID());
 			Dev2Interface.Port_Login(emp.getUserID());
 
 

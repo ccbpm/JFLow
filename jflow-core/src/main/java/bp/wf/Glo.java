@@ -2907,7 +2907,7 @@ public class Glo {
 		Emp empGPM = new Emp();
 		empGPM.CheckPhysicsTable();
 
-		DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
+		//DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
 
 		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
 		DBAccess.RunSQLScript(sqlscript);

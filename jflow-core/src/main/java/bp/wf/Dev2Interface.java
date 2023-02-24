@@ -10270,11 +10270,14 @@ public class Dev2Interface
 				gwf.setWorkID(workID);
 				int i = gwf.RetrieveFromDBSources();
 				//增加PrjNo,PrjName
-				String prjNo = wk.GetValStringByKey("PrjNo");
-				if (DataType.IsNullOrEmpty(prjNo) == false)
-				{
-					gwf.setPrjNo(prjNo);
-					gwf.setPrjName(wk.GetValStringByKey("PrjName"));
+				if(wk.getRow().containsKey("PrjNo") == true){
+					String prjNo = wk.GetValStringByKey("PrjNo");
+					if (DataType.IsNullOrEmpty(prjNo) == false)
+					{
+						gwf.setPrjNo(prjNo);
+						if(wk.getRow().containsKey("PrjName") == true)
+							gwf.setPrjName(wk.GetValStringByKey("PrjName"));
+					}
 				}
 				gwf.setTitle(title); //标题.
 				if (i == 0)

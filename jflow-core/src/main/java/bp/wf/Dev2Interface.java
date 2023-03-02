@@ -1836,12 +1836,6 @@ public class Dev2Interface
 		return DB_Todolist(userNo, fk_node, null, null);
 	}
 
-//	public static DataTable DB_Todolist(String userNo)
-//	{
-//		return DB_Todolist(userNo, 0, null, null);
-//	}
-
-//ORIGINAL LINE: public static DataTable DB_Todolist(string userNo, int fk_node = 0, string flowNo = null, string domain = null)
 	public static DataTable DB_Todolist(String userNo, int fk_node, String flowNo, String domain)
 	{
 		String sql = "";
@@ -1943,6 +1937,81 @@ public class Dev2Interface
 			dt.Columns.get("sender").ColumnName = "Sender";
 			dt.Columns.get("atpara").ColumnName = "AtPara";
 		}
+
+		return dt;
+	}
+
+	/**
+	 * 超时工作
+	 * @return
+	 */
+	public static DataTable DB_Timeout(){
+		return DB_Timeout(null);
+	}
+	public static DataTable DB_Timeout(String userNo)
+	{
+		if (userNo == null)
+			userNo = WebUser.getNo();
+
+		String sql = "SELECT A.Title,A.WorkID, A.FK_Flow as FlowNo, A.FlowName,A.FK_Node as NodeID,A.NodeName,";
+		sql += " A.Starter,A.StarterName,A.PRI,B.SDT,B.IsRead,A.WFState,A.RDT,A.BillNo ";
+		sql += " FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B ";
+		sql += " WHERE A.WorkID = B.WorkID AND A.FK_Node = B.FK_Node AND B.SDT >= '" + DataType.getCurrentDate() +(SystemConfig.getAppCenterDBType()== DBType.MSSQL?"' AND LEN(B.SDT) > 8":"' AND LENGTH(B.SDT) > 8 ");
+		sql += " AND B.FK_Emp ='" + userNo + "'";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+
+		//添加oracle的处理
+		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.None)
+		{
+			for (DataColumn column : dt.Columns) {
+				String columnKey = column.ColumnName.toUpperCase();
+				switch (columnKey) {
+					case "TITLE":
+						dt.Columns.get(columnKey).ColumnName = "Title";
+						break;
+					case "WORKID":
+						dt.Columns.get(columnKey).ColumnName = "WorkID";
+						break;
+					case "FLOWNO":
+						dt.Columns.get(columnKey).ColumnName = "FlowNo";
+						break;
+					case "FLOWNAME":
+						dt.Columns.get(columnKey).ColumnName = "FlowName";
+						break;
+					case "NODEID":
+						dt.Columns.get(columnKey).ColumnName = "NodeID";
+						break;
+					case "NODENAME":
+						dt.Columns.get(columnKey).ColumnName = "NodeName";
+						break;
+					case "STARTER":
+						dt.Columns.get(columnKey).ColumnName = "Starter";
+						break;
+					case "STARTERNAME":
+						dt.Columns.get(columnKey).ColumnName = "StarterName";
+						break;
+					case "PRI":
+						dt.Columns.get(columnKey).ColumnName = "PRI";
+						break;
+					case "ISREAD":
+						dt.Columns.get(columnKey).ColumnName = "IsRead";
+						break;
+					case "SDT":
+						dt.Columns.get(columnKey).ColumnName = "SDT";
+						break;
+					case "WFSTATE":
+						dt.Columns.get(columnKey).ColumnName = "WFState";
+						break;
+					case "RDT":
+						dt.Columns.get(columnKey).ColumnName = "RDT";
+						break;
+					case "BILLNO":
+						dt.Columns.get(columnKey).ColumnName = "BillNo";
+						break;
+				}
+			}
+		}
+
 
 		return dt;
 	}
@@ -10247,7 +10316,6 @@ public class Dev2Interface
 				GenerWorkFlow gwf = new GenerWorkFlow();
 
 
-
 				//规则设置为写入待办，将状态置为运行中，其他设置为草稿.
 				WFState wfState = WFState.Blank;
 				if (fl.getDraftRole() == DraftRole.SaveToDraftList)
@@ -10279,6 +10347,7 @@ public class Dev2Interface
 							gwf.setPrjName(wk.GetValStringByKey("PrjName"));
 					}
 				}
+
 				gwf.setTitle(title); //标题.
 				if (i == 0)
 				{
@@ -10307,10 +10376,12 @@ public class Dev2Interface
 						gwf.DirectUpdate();
 					}
 				}
+
 				if (fl.getDraftRole() == DraftRole.None)
 				{
 					return "保存成功";
 				}
+
 				// 产生工作列表.
 				GenerWorkerList gwl = new GenerWorkerList();
 				gwl.setWorkID(workID);

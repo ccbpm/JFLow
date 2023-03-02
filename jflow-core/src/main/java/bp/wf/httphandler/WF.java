@@ -260,10 +260,129 @@ public class WF extends WebContralBase
 		return bp.tools.Json.ToJson(myds);
 	}
 
-		///#endregion
+	public String RecentWork_Init()
+	{
+		/* 近期工作. */
+		String sql = "";
+		String empNo = WebUser.getNo();
+		sql += "SELECT  * FROM WF_GenerWorkFlow  WHERE ";
+		sql += " (Emps LIKE '%@" + empNo + "@%' OR Emps LIKE '%@" + empNo + ",%' OR Emps LIKE '%," + empNo + "@%')";
+		// sql += " AND Starter!='" + empNo + "'"; //不能是我发起的.
 
+		if (DataType.IsNullOrEmpty(this.getFK_Flow()) == false)
+			sql += " AND FK_Flow='" + this.getFK_Flow() + "'"; //如果有流程编号,就按他过滤.
 
-		///#region 综合查询
+		sql += " AND WFState >1 ORDER BY RDT DESC ";
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		//添加oracle的处理
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None) {
+			for (DataColumn column : dt.Columns) {
+				String columnKey = column.ColumnName.toUpperCase();
+				switch (columnKey) {
+					case "PRI":
+						dt.Columns.get(columnKey).ColumnName = "PRI";
+						break;
+					case "WORKID":
+						dt.Columns.get(columnKey).ColumnName = "WorkID";
+						break;
+					case "FID":
+						dt.Columns.get(columnKey).ColumnName = "FID";
+						break;
+					case "WFSTATE":
+						dt.Columns.get(columnKey).ColumnName = "WFState";
+						break;
+					case "WFSTA":
+						dt.Columns.get(columnKey).ColumnName = "WFSta";
+						break;
+					case "WEEKNUM":
+						dt.Columns.get(columnKey).ColumnName = "WeekNum";
+						break;
+					case "TSPAN":
+						dt.Columns.get(columnKey).ColumnName = "TSpan";
+						break;
+					case "TODOSTA":
+						dt.Columns.get(columnKey).ColumnName = "TodoSta";
+						break;
+					case "DEPTNAME":
+						dt.Columns.get(columnKey).ColumnName = "DeptName";
+						break;
+					case "TODOEMPSNUM":
+						dt.Columns.get(columnKey).ColumnName = "TodoEmpsNum";
+						break;
+					case "TODOEMPS":
+						dt.Columns.get(columnKey).ColumnName = "TodoEmps";
+						break;
+					case "TITLE":
+						dt.Columns.get(columnKey).ColumnName = "Title";
+						break;
+					case "TASKSTA":
+						dt.Columns.get(columnKey).ColumnName = "TaskSta";
+						break;
+					case "SYSTYPE":
+						dt.Columns.get(columnKey).ColumnName = "SysType";
+						break;
+					case "STARTERNAME":
+						dt.Columns.get(columnKey).ColumnName = "StarterName";
+						break;
+					case "STARTER":
+						dt.Columns.get(columnKey).ColumnName = "Starter";
+						break;
+					case "SENDER":
+						dt.Columns.get(columnKey).ColumnName = "Sender";
+						break;
+					case "SENDDT":
+						dt.Columns.get(columnKey).ColumnName = "SendDT";
+						break;
+					case "SDTOFNODE":
+						dt.Columns.get(columnKey).ColumnName = "SDTOfNode";
+						break;
+					case "SDTOFFLOW":
+						dt.Columns.get(columnKey).ColumnName = "SDTOfFlow";
+						break;
+					case "RDT":
+						dt.Columns.get(columnKey).ColumnName = "RDT";
+						break;
+					case "PWORKID":
+						dt.Columns.get(columnKey).ColumnName = "PWorkID";
+						break;
+					case "PFLOWNO":
+						dt.Columns.get(columnKey).ColumnName = "PFlowNo";
+						break;
+					case "NODENAME":
+						dt.Columns.get(columnKey).ColumnName = "NodeName";
+						break;
+					case "FLOWNAME":
+						dt.Columns.get(columnKey).ColumnName = "FlowName";
+						break;
+					case "FK_NODE":
+						dt.Columns.get(columnKey).ColumnName = "FK_Node";
+						break;
+					case "FK_FLOWSORT":
+						dt.Columns.get(columnKey).ColumnName = "FK_FlowSort";
+						break;
+					case "FK_FLOW":
+						dt.Columns.get(columnKey).ColumnName = "FK_Dept";
+						break;
+					default:
+						break;
+				}
+
+			}
+		}
+
+		return bp.tools.Json.ToJson(dt);
+	}
+
+	/**
+	 * 近期工作
+	 * @return
+	 */
+	public String Timeout_Init()
+	{
+		DataTable dt = bp.wf.Dev2Interface.DB_Timeout();
+		return bp.tools.Json.ToJson(dt);
+	}
 	/** 
 	 综合查询
 	 

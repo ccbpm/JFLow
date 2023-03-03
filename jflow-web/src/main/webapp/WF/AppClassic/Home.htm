@@ -160,10 +160,9 @@
                     </ul>
                     <ul class="nav navbar-top-links navbar-right">
                         <li><a href="Welcome.htm" class="J_menuItem"><i class="icon iconfont icon-home"></i><span class="lang">主页</span></a></li>
-                        <li><a href="../../WF/Portal/Flows.htm" class="J_menuItem"><i class="icon-organization"></i><span class="lang" data-key="Flow">流程</span></a></li>
-                        <li><a href="../../WF/Portal/Frms.htm" class="J_menuItem"><i class="icon-diamond"></i><span class="lang" data-key="Frm">表单</span></a></li>
-                        <li><a href="../../GPM/Organization.htm" class="J_menuItem"><i class="icon-people"></i><span class="lang" data-key="Org">组织</span></a></li>
-
+                        <li id="Flow"><a href="../../WF/Portal/Flows.htm" class="J_menuItem"><i class="icon-organization"></i><span class="lang" data-key="Flow">流程</span></a></li>
+                        <li id="Frm"><a href="../../WF/Portal/Frms.htm" class="J_menuItem"><i class="icon-diamond"></i><span class="lang" data-key="Frm">表单</span></a></li>
+                        <li id="Org"><a href="../../GPM/Organization.htm" class="J_menuItem"><i class="icon-people"></i><span class="lang" data-key="Org">组织</span></a></li>
 
                         <li><a href='../../WF/Setting/Default.htm' class="J_menuItem lang-setting"><i class="icon iconfont icon-wo"></i><label id="UserName" /></a></li>
                         <li>
@@ -201,6 +200,12 @@
     <script type="text/javascript" language="javascript">
         //页面启动函数.
         $(function () {
+            var webUser = new WebUser();
+            if (webUser.IsAdmin=='0') {
+                $("#Flow").hide();
+                $("#Frm").hide();
+                $("#Org").hide();
+            }
             document.title = window.lang.chichengwfsystem;
             $(".lang-setting").attr("title", window.lang.szgrxx);
 
@@ -225,6 +230,10 @@
             }
             return;
         });
+        var vm = window;
+        function openTab(name, url) {
+            WinOpenFull(url, name);
+        }
 
     </script>
 

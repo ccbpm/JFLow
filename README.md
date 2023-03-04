@@ -2,7 +2,7 @@
 [![输入图片说明](http://ccflow.org/AD/ADccflowTitle.gif)](http://ccflow.org/?frm=jflowGit)
 
 ### 集成合作伙伴
-- 与JFlow的集成商,使用他们的产品,集成我们帮您做好了 ：）。
+- 与JFlow的集成商,使用他们的产品,集成我们帮您做好了 ：）, 我们踩过的坑都帮你填好了，安心使用吧。
 #### 1. IoT DC3 开源物联网平台
 > DC3 是基于 Spring Cloud 的开源可分布式物联网 (IOT) 平台,用于快速开发、部署物联设备接入项目,是一整套物联系统解决方案。
 

@@ -3,9 +3,11 @@
 
 ### 集成合作伙伴
 - 与JFlow的集成商,使用他们的产品,集成我们帮您做好了 ：）。
-##### 1. 物联网 DC3
- - DC3 是基于Spring Cloud的开源可分布式物联网 (IOT)平台,用于快速开发、部署物联设备接入项目，是一整套物联系统解决方案。
- - [![IoT DC3](https://gitee.com/pnoker/iot-dc3/raw/master/docs/images/dc3/logo-blue.png)](https://doc.dc3.site/')
+#### 1. IoT DC3 开源物联网平台
+> DC3 是基于 Spring Cloud 的开源可分布式物联网 (IOT) 平台,用于快速开发、部署物联设备接入项目,是一整套物联系统解决方案。
+
+[![IoT DC3](https://gitee.com/pnoker/iot-dc3/raw/master/docs/images/dc3/logo-blue.png)](https://gitee.com/pnoker/iot-dc3)
+
 #### 2. Jeesite-JFlow
 - 与jeesite5.2集成的工作流版本.
 - 地址:https://gitee.com/thinkgem/jeesite-jflow

@@ -56,7 +56,7 @@
             handler.AddPara("WorkID", workid);
             handler.AddPara("FK_Flow", fk_flow);
             handler.AddPara("FK_Node", fk_node);
-           
+
             var data = null;
             data = handler.DoMethodReturnString(pageType + "_Init");
             if (data.indexOf('err@') == 0) {
@@ -71,22 +71,26 @@
                 data = data.replace('&DoMethod=MyFlow_Init', '');
                 data = data.replace('&HttpHandlerName=BP.WF.HttpHandler.WF_MyFlow', '');
                 data = data.replace('?&', '?');
+                var url = data;
+                url = url.replace('/WF//WF/', '/WF/');
+                if (url.indexOf("http") == -1) {
+                    if (url.indexOf('/WF/') == -1)
+                        url = '/WF/' + url;
+                    url = basePath + url;
+                }
                 try {
-                    var url = data;
-                    if (window.top.location.href.indexOf("WF/") != -1 && window.top.location.href.indexOf("/WF/AppClassic") == -1)
-                        url = "../" + url;
-                    else if (url.indexOf("http")!= -1)
-                        url = url;
-                    else
-                        url = basePath+"/WF/" + url;
-                    OpenTopWindowTab(title, url);
-
-                    return;
+                    if (window.top.vm != undefined) {
+                        window.top.vm.openTab(title, url);
+                        return;
+                    }
+                    window.open(url); //打开流程.
                 } catch (e) {
+                    data = data.replace('/WF//WF/', '/WF/');
                     window.open(data); //打开流程.
                     return;
                 }
             }
+            
         }
 
         //查询
@@ -96,13 +100,13 @@
             window.open(url);
             return;
 
-            // layer.open({
-            //     skin: 'layer-class',
-            //     type: 2,
-            //     title: title + ' : 查询主页',
-            //     area: ['96%', '90%'],
-            //     content: url
-            // });
+            //layer.open({
+            //    skin: 'layer-class',
+            //    type: 2,
+            //    title: title + ' : 查询主页',
+            //    area: ['96%', '90%'],
+            //    content: url
+            //});
         }
 
         //我的流程
@@ -303,8 +307,8 @@
                     listbox += "<li><a href=\"javascript:WinOpenStart('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >我发起的流程</a></li>";
                     listbox += "<li><a href=\"javascript:WinOpenJoin('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >我审批的流程</a></li>";
                     listbox += "<li><a href=\"javascript:WinOpenMyFlow('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >我的流程</a></li>";
-                    // listbox += "<li><a href=\"javascript:WinOpenSearch('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >查询主页</a></li>;
-                    listbox +="</ul></td></tr>";
+                    //listbox += "<li><a href=\"javascript:WinOpenSearch('" + flow.No + "','" + sortName + " - " + flow.Name + "');\" >查询主页</a></li>;
+					listbox +="</ul></td></tr>";
 
                 }
                 listbox += '</tbody></table></div></div></div>';

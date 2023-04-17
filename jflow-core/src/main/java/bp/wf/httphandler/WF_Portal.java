@@ -308,7 +308,7 @@ public class WF_Portal extends WebContralBase
 				if (DBAccess.IsExitsTableCol("Port_Emp", "EmpSta") == true)
 				{
 					String sql = "SELECT EmpSta FROM Port_Emp WHERE No='" + emp.getNo() + "'";
-					if (DBAccess.RunSQLReturnValInt(sql, 1) == 1)
+					if (DBAccess.RunSQLReturnValInt(sql, 0) == 1)
 					{
 						return "err@该用户已经被禁用.";
 					}

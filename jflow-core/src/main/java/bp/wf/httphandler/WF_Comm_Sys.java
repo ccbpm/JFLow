@@ -642,6 +642,8 @@ public class WF_Comm_Sys extends WebContralBase
 			try
 			{
 				en = obj instanceof Entity ? (Entity)obj : null;
+				if(en==null)
+					continue;
 				String className = en.getClass().getName();
 				switch (className.toUpperCase()) {
 					case "BP.WF.STARTWORK":

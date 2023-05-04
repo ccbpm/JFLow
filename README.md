@@ -1,14 +1,9 @@
-#### 我们的品牌
-[![输入图片说明](http://ccflow.org/AD/ADccflowTitle.gif)](http://ccflow.org/?frm=jflowGit)
+ 
 
 ### 集成合作伙伴
 - 与Jeesite集成 ： https://gitee.com/thinkgem/jeesite-jflow
 - 与RuoYi集成 ：https://gitee.com/opencc/RuoYi-JFlow
-#### 1. IoT DC3 开源物联网平台
-> DC3 是基于 Spring Cloud 的开源可分布式物联网 (IOT) 平台,用于快速开发、部署物联设备接入项目,是一整套物联系统解决方案。
-
-[![IoT DC3](https://gitee.com/pnoker/iot-dc3/raw/master/docs/images/dc3/logo-blue.png)](https://gitee.com/pnoker/iot-dc3)
-
+  
 #### 2. Jeesite-JFlow
 - 与jeesite5.2集成的工作流版本.
 - 地址:https://gitee.com/thinkgem/jeesite-jflow

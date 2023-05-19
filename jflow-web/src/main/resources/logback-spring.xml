@@ -43,10 +43,26 @@
 			<level>ERROR</level>
 		</filter>
 	</appender>
+	<appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>${LOG_PATTERN}</pattern>
+		</encoder>
+		<file>${LOG_PATH}/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+			<maxFileSize>${LOG_FILE_MAX_SIZE:-30MB}</maxFileSize>
+			<maxHistory>${LOG_FILE_MAX_HISTORY:-30}</maxHistory>
+		</rollingPolicy>
+		<!-- 记录info级别日志 -->
+		<!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>-->
+	</appender>
 
 	<root level="INFO">
 		<appender-ref ref="CONSOLE"/>
 		<appender-ref ref="DEBUG_FILE"/>
 		<appender-ref ref="ERROR_FILE"/>
+		<appender-ref ref="INFO_FILE"/>
 	</root>
 </configuration>

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.8.RELEASE</version>
+		<version>2.3.11.RELEASE</version>
 		<relativePath/>
 	</parent>
 	
@@ -68,8 +68,39 @@
 		<!-- 上传文件到阿里云 -->
 		<aliyun.sdk.version>3.15.0</aliyun.sdk.version>
 	</properties>
+	<!-- 设定中央仓库 -->
+	<repositories>
+		<repository>
+			<id>jflow-repos</id>
+			<url>http://ccflow.org:8081/repository/maven-public</url>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+		<repository>
+			<id>aliyun-repos</id>
+			<url>https://maven.aliyun.com/repository/public</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>false</enabled></snapshots>
+		</repository>
+
+
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jflow-repos</id>
+			<url>http://ccflow.org:8081/repository/maven-public</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>aliyun-repos</id>
+			<url>https://maven.aliyun.com/repository/public</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>false</enabled></snapshots>
+		</pluginRepository>
+
+	</pluginRepositories>
 	<build>
 		<plugins>
+			<!-- compiler插件 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -77,29 +108,17 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
-					 
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
-	
-	<reporting>
 
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId> 
-                    maven-project-info-reports-plugin 
-                </artifactId>
-			</plugin>
-		</plugins>
-	</reporting>
+	<!--上传jar包-->
+	<distributionManagement>
+		<snapshotRepository>
+			<id>jflow-snapshot</id>
+			<url>http://ccflow.org:8081/repository/jflow-snapshot/</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
